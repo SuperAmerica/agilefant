@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." default="compile" name="AgilEfant">
+	
+    <property file="build-user.properties"/>
+	<property file="build.properties"/>
+	
+    <target name="init" description="Initializes build script">
+		<mkdir dir="${build.dir}"/>
+    	<mkdir dir="${build.classes}"/>
+        <path id="compile.classpath"> 	
+			<fileset dir="${lib}">
+				<include name="*.jar"/>
+				<include name="build/*.jar"/>
+			</fileset>
+		</path>
+    </target>
+	
+    <target name="compile" depends="init" description="Compiles source files">
+		<javac debug="${javac.debug}" destdir="${build.classes}" srcdir="${src}">
+        	<classpath refid="compile.classpath"/>
+		</javac>       
+    </target>
+</project>

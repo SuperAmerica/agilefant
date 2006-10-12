@@ -7,6 +7,7 @@
     <target name="init" description="Initializes build script">
 		<mkdir dir="${build.dir}"/>
     	<mkdir dir="${build.classes}"/>
+    	<mkdir dir="${build.webapp}"/>
         <path id="compile.classpath"> 	
 			<fileset dir="${lib}">
 				<include name="*.jar"/>
@@ -18,6 +19,32 @@
     <target name="compile" depends="init" description="Compiles source files">
 		<javac debug="${javac.debug}" destdir="${build.classes}" srcdir="${src}">
         	<classpath refid="compile.classpath"/>
-		</javac>       
+		</javac>
     </target>
+	
+	<target name="make-jar" depends="compile" description="Makes the jar file">
+		<jar basedir="${build.classes}" includes="**" destfile="${jarFile}"/>	
+	</target>
+		
+	<target name="webapp" depends="make-jar" description="Builds webapp">
+        <copy includeEmptyDirs="true" todir="${build.webapp}">
+            <fileset dir="${webapp.root}"/>
+        </copy>
+        <copy todir="${build.webapp}/WEB-INF/lib/">
+            <fileset dir="${lib}">
+                <include name="*.jar"/>
+                <include name="*.zip"/>
+            </fileset>
+        </copy>
+		<copy todir="${build.webapp}/WEB-INF/lib/">
+			<fileset file="${jarFile}"/>
+		</copy>
+	</target>
+	
+	<target name="deploy-local" depends="webapp" description="Deploys web app to local server">
+		<mkdir dir="${deploy.dir.local}"/>
+		<copy todir="${deploy.dir.local}">
+			<fileset dir="${build.webapp}"/>			
+		</copy>
+	</target>	
 </project>

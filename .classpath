@@ -17,5 +17,8 @@
 	<classpathentry kind="lib" path="lib/webwork-2.2.4.jar"/>
 	<classpathentry kind="lib" path="lib/xwork.jar"/>
 	<classpathentry kind="lib" path="lib/xwork-tiger.jar"/>
+	<classpathentry kind="lib" path="lib/hibernate3.jar"/>
+	<classpathentry kind="lib" path="lib/jstl.jar"/>
+	<classpathentry kind="lib" path="lib/standard.jar"/>
 	<classpathentry kind="output" path="build"/>
 </classpath>

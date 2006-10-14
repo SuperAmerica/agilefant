@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project basedir="." default="compile" name="AgilEfant">
+<project basedir="." default="compile" name="AgilEFant">
 	
     <property file="build-user.properties"/>
 	<property file="build.properties"/>

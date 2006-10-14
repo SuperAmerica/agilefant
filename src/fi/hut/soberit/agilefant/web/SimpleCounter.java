@@ -8,7 +8,7 @@ import com.opensymphony.webwork.interceptor.SessionAware;
 import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
 
-public class SimpleCounter extends ActionSupport implements SessionAware{
+public class SimpleCounter extends ActionSupport implements SessionAware {
 	
 	private static final Logger log = Logger.getLogger(SimpleCounter.class);
 	public static final String COUNTER_PARAM = "simpleCounter";

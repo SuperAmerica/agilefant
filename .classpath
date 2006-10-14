@@ -3,6 +3,7 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="test"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
 	<classpathentry kind="lib" path="lib/commons-logging.jar"/>
 	<classpathentry kind="lib" path="lib/ejb3-persistence.jar"/>
 	<classpathentry kind="lib" path="lib/freemarker.jar"/>
@@ -14,12 +15,11 @@
 	<classpathentry kind="lib" path="lib/oscore.jar"/>
 	<classpathentry kind="lib" path="lib/rife-continuations.jar"/>
 	<classpathentry kind="lib" path="lib/spring.jar"/>
-	<classpathentry kind="lib" path="lib/webwork-2.2.4.jar"/>
-	<classpathentry kind="lib" path="lib/xwork.jar"/>
-	<classpathentry kind="lib" path="lib/xwork-tiger.jar"/>
+	<classpathentry kind="lib" path="lib/webwork-2.2.4.jar" sourcepath="lib-src/webwork-src-2.2.4.jar"/>
 	<classpathentry kind="lib" path="lib/hibernate3.jar"/>
 	<classpathentry kind="lib" path="lib/jstl.jar"/>
 	<classpathentry kind="lib" path="lib/standard.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
+	<classpathentry kind="lib" path="lib/xwork-1.2.1.jar" sourcepath="lib-src/xwork-src-1.2.1.jar"/>
+	<classpathentry kind="lib" path="lib/xwork-tiger-1.2.1.jar" sourcepath="lib-src/xwork-tiger-src-1.2.1.jar"/>
 	<classpathentry kind="output" path="build"/>
 </classpath>

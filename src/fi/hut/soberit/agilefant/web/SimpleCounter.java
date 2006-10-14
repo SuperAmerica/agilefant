@@ -13,13 +13,14 @@ public class SimpleCounter extends ActionSupport implements SessionAware {
 	private static final Logger log = Logger.getLogger(SimpleCounter.class);
 	public static final String COUNTER_PARAM = "simpleCounter";
 	
-	private Map sessionMap;
+	private Map<String, Integer> sessionMap;
 	private int counter;
 	
 	public int getCounter(){
 		return counter;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void setSession(Map sessionMap) {
 		this.sessionMap = sessionMap;
 	}

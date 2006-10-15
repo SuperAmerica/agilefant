@@ -50,4 +50,12 @@ public abstract class GenericDAOHibernate<T> extends HibernateDaoSupport impleme
 	public void remove(Serializable id) {
 		this.remove(this.get(id));
 	}
+	
+	protected T getFirst(Collection<T> list){
+		if (list == null){
+			return null;
+		} else {
+			return list.iterator().next();
+		}
+	}
 }

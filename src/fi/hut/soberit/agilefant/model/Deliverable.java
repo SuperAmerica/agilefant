@@ -13,5 +13,4 @@ public class Deliverable {
 	private Date startDate;
 	private Collection<Sprint> sprints = new HashSet<Sprint>();
 	private User owner;
-
 }

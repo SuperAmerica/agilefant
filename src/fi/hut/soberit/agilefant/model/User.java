@@ -3,7 +3,6 @@ package fi.hut.soberit.agilefant.model;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
-@Entity
 public class User {
 	
 	private int id;

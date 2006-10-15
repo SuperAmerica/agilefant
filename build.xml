@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project basedir="." default="compile" name="AgilEFant">
+<project basedir="." default="webapp" name="AgilEFant">
 	
     <property file="build-user.properties"/>
 	<property file="build.properties"/>
@@ -8,12 +8,25 @@
 		<mkdir dir="${build.dir}"/>
     	<mkdir dir="${build.classes}"/>
     	<mkdir dir="${build.webapp}"/>
-        <path id="compile.classpath"> 	
+    	
+        <path id="compile.classpath">
 			<fileset dir="${lib}">
 				<include name="*.jar"/>
 				<include name="build/*.jar"/>
 			</fileset>
 		</path>
+
+    	<path id="hibernatetoolslib">
+    		<path refid="compile.classpath"/>
+    		<fileset dir="${hibernatetools.dir}">
+    			<include name="*.jar"/>
+    		</fileset>
+    		<path location="${build.classes}"/>
+    	</path>
+    	   
+    	<taskdef name="hibernatetool"
+    	         classname="org.hibernate.tool.ant.HibernateToolTask" 
+    	         classpathref="hibernatetoolslib"/>    	
     </target>
 	
     <target name="compile" depends="init" description="Compiles source files">
@@ -25,11 +38,31 @@
 	<target name="make-jar" depends="compile" description="Makes the jar file">
 		<jar basedir="${build.classes}" includes="**" destfile="${jarFile}"/>	
 	</target>
+	
+	<target name="create-db" depends="compile" description="Creates db using hibernate tools">
+		<hibernatetool destdir="${build.dir}">
+			<annotationconfiguration propertyfile="${conf.dir}/database.properties"
+				configurationfile="${conf.dir}/hibernate.cfg.xml"/>
+			<hbm2ddl export="true" outputfilename="create-db.ddl"/>
+		</hibernatetool>
+	</target>
+	
+	<target name="update-db" depends="compile" description="Creates db using hibernate tools">
+		<hibernatetool destdir="${build.dir}">
+			<annotationconfiguration propertyfile="${conf.dir}/database.properties"
+				configurationfile="${conf.dir}/hibernate.cfg.xml"/>
+			<hbm2ddl export="true" outputfilename="create-db.ddl" update="true"/>
+		</hibernatetool>
+	</target>
+	
 		
 	<target name="webapp" depends="make-jar" description="Builds webapp">
         <copy includeEmptyDirs="true" todir="${build.webapp}">
             <fileset dir="${webapp.root}"/>
         </copy>
+		<copy todir="${build.webapp}/WEB-INF/">
+	    	<fileset dir="${conf.dir}"/>
+		</copy>
         <copy todir="${build.webapp}/WEB-INF/lib/">
             <fileset dir="${lib}">
                 <include name="*.jar"/>
@@ -46,5 +79,9 @@
 		<copy todir="${deploy.dir.local}">
 			<fileset dir="${build.webapp}"/>			
 		</copy>
-	</target>	
+	</target>
+	
+	<target name="clean" description="Removes build directory">
+        <delete dir="${build.dir}"/>
+	</target>
 </project>

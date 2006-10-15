@@ -23,7 +23,6 @@ public class WorkType {
 	}
 	
 	@ManyToOne
-	@Column(nullable=false)
 	public ActivityType getActivityType() {
 		return activityType;
 	}

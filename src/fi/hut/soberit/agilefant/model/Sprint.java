@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.HashSet;
 import javax.persistence.Entity;
 
-@Entity
 public class Sprint {
 	
 	private int id;

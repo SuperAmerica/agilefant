@@ -1,0 +1,38 @@
+<!DOCTYPE xwork PUBLIC "-//OpenSymphony Group//XWork 1.1.1//EN"
+"http://www.opensymphony.com/xwork/xwork-1.1.1.dtd">
+
+<xwork>
+	<!-- Include webwork defaults (from WebWork JAR). -->
+	<include file="webwork-default.xml" />
+
+	<!-- Configuration for the default package. -->
+	<package name="default" extends="webwork-default">
+		<default-interceptor-ref name="completeStack"/>
+
+		<action name="simpleCounter" class="fi.hut.soberit.agilefant.web.SimpleCounter">
+			<result name="success">/WEB-INF/jsp/showCounter.jsp</result>
+		</action>
+		
+		<action name="resetCounter" method="resetCounter" class="fi.hut.soberit.agilefant.web.SimpleCounter">
+			<result name="success">/WEB-INF/jsp/showCounter.jsp</result>
+		</action>
+<!-- Activity type actions -->
+		<action name="listActivityTypes" method="getAll" class="activityTypeAction">
+			<result>/WEB-INF/jsp/listActivityTypes.jsp</result>
+		</action>
+		<action name="editActivityType" method="edit" class="activityTypeAction">
+			<result>/WEB-INF/jsp/editActivityType.jsp</result>
+		</action>
+		<action name="createActivityType" method="create" class="activityTypeAction">
+			<result>/WEB-INF/jsp/editActivityType.jsp</result>
+		</action>
+		<action name="deleteActivityType" method="delete" class="activityTypeAction">
+			<result>/WEB-INF/jsp/listActivityTypes.jsp</result>
+		</action>
+		<action name="storeActivityType" method="store" class="activityTypeAction">
+			<result>/WEB-INF/jsp/listActivityTypes.jsp</result>
+		</action>
+<!-- Work type actions -->
+<!-- TODO -->
+	</package>
+</xwork>

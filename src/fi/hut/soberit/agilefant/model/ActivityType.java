@@ -42,7 +42,7 @@ public class ActivityType {
 		this.name = name;
 	}
 	
-	@OneToMany
+	@OneToMany(mappedBy="activityType")
 	public Collection<WorkType> getWorkTypes() {
 		return workTypes;
 	}

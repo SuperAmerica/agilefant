@@ -41,7 +41,7 @@
 	
 	<target name="create-db" depends="compile" description="Creates db using hibernate tools">
 		<hibernatetool destdir="${build.dir}">
-			<annotationconfiguration propertyfile="${conf.dir}/database.properties"
+			<annotationconfiguration propertyfile="${conf.dir}/database-${database.type}.properties"
 				configurationfile="${conf.dir}/hibernate.cfg.xml"/>
 			<hbm2ddl export="true" outputfilename="create-db.ddl"/>
 		</hibernatetool>
@@ -49,7 +49,7 @@
 	
 	<target name="update-db" depends="compile" description="Creates db using hibernate tools">
 		<hibernatetool destdir="${build.dir}">
-			<annotationconfiguration propertyfile="${conf.dir}/database.properties"
+			<annotationconfiguration propertyfile="${conf.dir}/database-${database.type}.properties"
 				configurationfile="${conf.dir}/hibernate.cfg.xml"/>
 			<hbm2ddl export="true" outputfilename="create-db.ddl" update="true"/>
 		</hibernatetool>
@@ -61,7 +61,10 @@
             <fileset dir="${webapp.root}"/>
         </copy>
 		<copy todir="${build.webapp}/WEB-INF/">
-	    	<fileset dir="${conf.dir}"/>
+	    	<fileset dir="${conf.dir}" excludes="database-*.properties"/>
+		</copy>
+		<copy tofile="${build.webapp}/WEB-INF/database.properties">
+			<fileset file="${conf.dir}/database-${database.type}.properties"/>
 		</copy>
         <copy todir="${build.webapp}/WEB-INF/lib/">
             <fileset dir="${lib}">

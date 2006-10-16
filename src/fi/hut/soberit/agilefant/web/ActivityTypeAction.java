@@ -66,4 +66,28 @@ public class ActivityTypeAction extends ActionSupport {
 		fillable.setName(activityType.getName());
 		fillable.setDescription(activityType.getDescription());
 	}
+
+	public int getActivityTypeId() {
+		return activityTypeId;
+	}
+
+	public void setActivityTypeId(int activityTypeId) {
+		this.activityTypeId = activityTypeId;
+	}
+
+	public ActivityType getActivityType() {
+		return activityType;
+	}
+	
+	public void setActivityType(ActivityType activityType){
+		this.activityType = activityType;
+	}
+
+	public Collection<ActivityType> getActivityTypes() {
+		return activityTypes;
+	}
+
+	public void setActivityTypeDAO(ActivityTypeDAO activityTypeDAO) {
+		this.activityTypeDAO = activityTypeDAO;
+	}
 }

@@ -12,12 +12,33 @@
 		</property>
 	</bean>
 	
-	<bean name="abstractDAO" abstract="true">
+	<bean name="hibernateTransactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>	
+	
+	<bean name="abstractDAOTarget" abstract="true">
 		<property name="sessionFactory" ref="sessionFactory"/>
 	</bean>
+
+	<bean name="activityTypeDAOTarget" parent="abstractDAOTarget" class="fi.hut.soberit.agilefant.db.hibernate.ActivityTypeDAOHibernate"/>
+	<bean name="workTypeDAOTarget" parent="abstractDAOTarget" class="fi.hut.soberit.agilefant.db.hibernate.WorkTypeDAOHibernate"/>
+		
+	<bean name="abstractDAO" abstract="true" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+		<property name="transactionManager" ref="hibernateTransactionManager"/>
+		<property name="transactionAttributes">
+			<props>
+				<prop key="*">PROPAGATION_REQUIRED</prop>
+			</props>
+		</property>
+	</bean>
 	
-	<bean name="activityTypeDAO" parent="abstractDAO" class="fi.hut.soberit.agilefant.db.hibernate.ActivityTypeDAOHibernate"/>
-	<bean name="workTypeDAO" parent="abstractDAO" class="fi.hut.soberit.agilefant.db.hibernate.WorkTypeDAOHibernate"/>
+	<bean name="activityTypeDAO" parent="abstractDAO">
+		<property name="target" ref="activityTypeDAOTarget"/>
+	</bean>
+	
+	<bean name="workTypeDAO" parent="abstractDAO">
+		<property name="target" ref="workTypeDAOTarget"/>
+	</bean>
 
 	<bean name="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
 		<property name="driverClassName">

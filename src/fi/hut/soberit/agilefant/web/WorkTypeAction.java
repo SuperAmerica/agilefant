@@ -94,4 +94,44 @@ public class WorkTypeAction extends ActionSupport{
 		fillable.setDescription(this.workType.getDescription());
 		fillable.setName(this.workType.getName());
 	}
+
+	public int getActivityTypeId() {
+		return activityTypeId;
+	}
+
+	public void setActivityTypeId(int activityTypeId) {
+		this.activityTypeId = activityTypeId;
+	}
+
+	public WorkType getWorkType() {
+		return workType;
+	}
+
+	public void setWorkType(WorkType workType) {
+		this.workType = workType;
+	}
+
+	public int getWorkTypeId() {
+		return workTypeId;
+	}
+
+	public void setWorkTypeId(int workTypeId) {
+		this.workTypeId = workTypeId;
+	}
+
+	public ActivityType getActivityType() {
+		return activityType;
+	}
+
+	public Collection<WorkType> getWorkTypes() {
+		return workTypes;
+	}
+
+	public void setActivityTypeDAO(ActivityTypeDAO activityTypeDAO) {
+		this.activityTypeDAO = activityTypeDAO;
+	}
+
+	public void setWorkTypeDAO(WorkTypeDAO workTypeDAO) {
+		this.workTypeDAO = workTypeDAO;
+	}
 }

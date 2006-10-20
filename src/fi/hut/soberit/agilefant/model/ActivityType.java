@@ -7,6 +7,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 
 @Entity
 public class ActivityType {
@@ -16,7 +18,9 @@ public class ActivityType {
 	private String description;
 	private Collection<WorkType> workTypes = new HashSet<WorkType>();
 	
-	@Id
+	@Id 
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	@Column(nullable = false)
 	public int getId() {
 		return id;
 	}

@@ -49,7 +49,10 @@ public class ActivityTypeAction extends ActionSupport {
 		}
 		this.fillObject(fillable);
 		activityTypeDAO.store(fillable);
-		return Action.SUCCESS;		
+		// updating activitytypes here to make listing work correctly after storing
+		// - turkka
+		activityTypes = activityTypeDAO.getAll();
+		return Action.SUCCESS;
 	}
 	
 	public String delete(){

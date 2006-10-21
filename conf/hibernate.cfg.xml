@@ -10,5 +10,8 @@
 -->
   		<mapping class="fi.hut.soberit.agilefant.model.ActivityType"/>
  		<mapping class="fi.hut.soberit.agilefant.model.WorkType"/>
+ 		<mapping class="fi.hut.soberit.agilefant.model.Deliverable"/>
+ 		<mapping class="fi.hut.soberit.agilefant.model.Sprint"/>
+ 		<mapping class="fi.hut.soberit.agilefant.model.BackLogItem"/> 		 		
 	</session-factory>
 </hibernate-configuration>

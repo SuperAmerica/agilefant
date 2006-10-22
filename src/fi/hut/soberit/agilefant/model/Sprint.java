@@ -1,8 +1,11 @@
 package fi.hut.soberit.agilefant.model;
 
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Locale;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -34,7 +37,7 @@ public class Sprint {
 		this.deliverable = deliverable;
 	}
 	
-	
+	@Column
 	public String getDescription() {
 		return description;
 	}
@@ -75,7 +78,11 @@ public class Sprint {
 	public void setEndDate(Date endDate) {
 	    this.endDate = endDate;
 	}
-	
+	public void setEndDate(String endDate) throws ParseException {
+	    DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT, Locale.ENGLISH);	    
+	    this.startDate = df.parse( endDate);
+	}
+
 	@Column(nullable = false)
 	public Date getStartDate() {
 	    return startDate;
@@ -83,7 +90,11 @@ public class Sprint {
 	public void setStartDate(Date startDate) {
 	    this.startDate = startDate;
 	}
-	
+	public void setStartDate(String startDate) throws ParseException {
+	    DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT, Locale.ENGLISH);	    
+	    this.startDate = df.parse( startDate);
+	}
+
 	
 
 }

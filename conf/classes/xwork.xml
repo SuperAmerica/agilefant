@@ -32,7 +32,80 @@
 		<action name="storeActivityType" method="store" class="activityTypeAction">
 			<result>/WEB-INF/jsp/listActivityTypes.jsp</result>
 		</action>
+<!-- /Activity type actions -->
+
 <!-- Work type actions -->
 <!-- TODO -->
+
+<!-- Deliverable actions -->
+		<action name="listDeliverables" method="getAll" class="deliverableAction">
+			<result>/WEB-INF/jsp/listDeliverables.jsp</result>
+		</action>
+		<action name="editDeliverable" method="edit" class="deliverableAction">
+			<result>/WEB-INF/jsp/editDeliverable.jsp</result>
+		</action>
+		<action name="createDeliverable" method="create" class="deliverableAction">
+			<result>/WEB-INF/jsp/editDeliverable.jsp</result>
+		</action>
+		<action name="deleteDeliverable" method="delete" class="deliverableAction">
+			<result>/WEB-INF/jsp/listDeliverables.jsp</result>
+		</action>
+		<action name="storeDeliverable" method="store" class="deliverableAction">
+			<result>/WEB-INF/jsp/listDeliverables.jsp</result>
+		</action>
+<!-- /Deliverable actions -->	
+<!-- Sprint actions -->
+		<action name="listSprints" method="getAll" class="sprintAction">
+			<result>/WEB-INF/jsp/listSprints.jsp</result>
+		</action>
+		<action name="editSprint" method="edit" class="sprintAction">
+			<result>/WEB-INF/jsp/editSprint.jsp</result>
+		</action>
+		<action name="createSprint" method="create" class="sprintAction">
+			<result>/WEB-INF/jsp/editSprint.jsp</result>
+		</action>
+		<action name="deleteSprint" method="delete" class="sprintAction">
+			<result>/WEB-INF/jsp/listSprints.jsp</result>
+		</action>
+		<action name="storeSprint" method="store" class="sprintAction">
+			<result>/WEB-INF/jsp/listSprints.jsp</result>
+		</action>
+<!-- /Sprint actions -->
+<!-- Backlog actions -->
+		<action name="listBackLogs" method="getAll" class="backLogAction">
+			<result>/WEB-INF/jsp/listBackLogs.jsp</result>
+		</action>
+		<action name="editBackLog" method="edit" class="backLogAction">
+			<result>/WEB-INF/jsp/editBackLog.jsp</result>
+		</action>
+		<action name="createBackLog" method="create" class="backLogAction">
+			<result>/WEB-INF/jsp/editBackLog.jsp</result>
+		</action>
+		<action name="deleteBackLog" method="delete" class="backLogAction">
+			<result>/WEB-INF/jsp/listBackLogs.jsp</result>
+		</action>
+		<action name="storeBackLog" method="store" class="backLogAction">
+			<result>/WEB-INF/jsp/listBackLogs.jsp</result>
+		</action>
+<!-- /Backlog actions -->
+<!-- Task actions -->
+		<action name="listTasks" method="getAll" class="taskAction">
+			<result>/WEB-INF/jsp/listTasks.jsp</result>
+		</action>
+		<action name="editTask" method="edit" class="taskAction">
+			<result>/WEB-INF/jsp/editTask.jsp</result>
+		</action>
+		<action name="createTask" method="create" class="taskAction">
+			<result>/WEB-INF/jsp/editTask.jsp</result>
+		</action>
+		<action name="deleteTask" method="delete" class="taskAction">
+			<result>/WEB-INF/jsp/listTasks.jsp</result>
+		</action>
+		<action name="storeTask" method="store" class="taskAction">
+			<result>/WEB-INF/jsp/listTasks.jsp</result>
+		</action>
+<!-- /Task actions -->
+
+
 	</package>
 </xwork>

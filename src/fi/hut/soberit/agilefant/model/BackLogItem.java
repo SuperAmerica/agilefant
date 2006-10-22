@@ -20,6 +20,7 @@ public class BackLogItem {
 	private Sprint sprint;
 	private Collection<Task> tasks = new HashSet<Task>();
 		
+	@Column
 	public String getDescription() {
 	    return description;
 	}

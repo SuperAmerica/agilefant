@@ -18,6 +18,7 @@ public class Deliverable {
 	
 	private int id;
 	private String name;
+	private String description;
 	private ActivityType type;
 	private Date endDate;
 	private Date startDate;
@@ -80,6 +81,13 @@ public class Deliverable {
 	}
 	public void setType(ActivityType type) {
 	    this.type = type;
+	}
+	@Column
+	public String getDescription() {
+	    return description;
+	}
+	public void setDescription(String description) {
+	    this.description = description;
 	}
 
 	

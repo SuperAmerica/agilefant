@@ -37,7 +37,6 @@ public class Sprint {
 		this.deliverable = deliverable;
 	}
 	
-	@Column
 	public String getDescription() {
 		return description;
 	}
@@ -55,7 +54,7 @@ public class Sprint {
 		this.id = id;
 	}
 	
-	@Column(nullable = false)
+	//@Column(nullable = false)
 	public String getName() {
 		return name;
 	}
@@ -63,7 +62,7 @@ public class Sprint {
 		this.name = name;
 	}
 	
-	@OneToMany
+	@OneToMany(mappedBy="sprint")
 	public Collection<BackLogItem> getBackLogs() {
 	    return backLogs;
 	}
@@ -71,7 +70,7 @@ public class Sprint {
 	    this.backLogs = backLogs;
 	}
 	
-	@Column(nullable = false)
+	//@Column(nullable = false)
 	public Date getEndDate() {
 	    return endDate;
 	}
@@ -83,7 +82,7 @@ public class Sprint {
 	    this.startDate = df.parse( endDate);
 	}
 
-	@Column(nullable = false)
+	//@Column(nullable = false)
 	public Date getStartDate() {
 	    return startDate;
 	}
@@ -94,7 +93,5 @@ public class Sprint {
 	    DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT, Locale.ENGLISH);	    
 	    this.startDate = df.parse( startDate);
 	}
-
-	
 
 }

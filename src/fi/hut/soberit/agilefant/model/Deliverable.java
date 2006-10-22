@@ -25,14 +25,6 @@ public class Deliverable {
 	private Collection<Sprint> sprints = new HashSet<Sprint>();
 	private User owner;
 	
-	@Column(nullable = false)
-	public Date getEndDate() {
-	    return endDate;
-	}
-	public void setEndDate(Date endDate) {
-	    this.endDate = endDate;
-	}
-	
 	@Id 
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	@Column(nullable = false)	
@@ -43,7 +35,7 @@ public class Deliverable {
 	    this.id = id;
 	}
 	
-	@Column(nullable = false)
+	//@Column(nullable = false)
 	public String getName() {
 	    return name;
 	}
@@ -58,7 +50,7 @@ public class Deliverable {
 	    this.owner = owner;
 	}*/
 	
-	@OneToMany	
+	@OneToMany(mappedBy="deliverable")
 	public Collection<Sprint> getSprints() {
 	    return sprints;
 	}
@@ -66,12 +58,20 @@ public class Deliverable {
 	    this.sprints = sprints;
 	}
 	
-	@Column(nullable = false)
+	//@Column(nullable = false)
 	public Date getStartDate() {
 	    return startDate;
 	}
 	public void setStartDate(Date startDate) {
 	    this.startDate = startDate;
+	}
+
+	//@Column(nullable = false)
+	public Date getEndDate() {
+	    return endDate;
+	}
+	public void setEndDate(Date endDate) {
+	    this.endDate = endDate;
 	}
 	
 	@ManyToOne
@@ -82,13 +82,11 @@ public class Deliverable {
 	public void setType(ActivityType type) {
 	    this.type = type;
 	}
-	@Column
+		
 	public String getDescription() {
 	    return description;
 	}
 	public void setDescription(String description) {
 	    this.description = description;
 	}
-
-	
 }

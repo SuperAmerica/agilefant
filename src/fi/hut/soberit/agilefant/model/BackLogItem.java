@@ -38,7 +38,7 @@ public class BackLogItem {
 	    this.id = id;
 	}
 	
-	@Column(nullable = false)
+	//@Column(nullable = false)
 	public String getName() {
 	    return name;
 	}

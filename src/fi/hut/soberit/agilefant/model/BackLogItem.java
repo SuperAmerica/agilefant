@@ -10,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 @Entity
 public class BackLogItem {
@@ -55,14 +56,12 @@ public class BackLogItem {
 	    this.sprint = sprint;
 	}
 	
-	/*
-	@OneToMany 
+	@OneToMany(mappedBy="backLogItem")
 	public Collection<Task> getTasks() {
 	    return tasks;
 	}
 	public void setTasks(Collection<Task> tasks) {
 	    this.tasks = tasks;
-	}*/
-
+	}
 	
 }

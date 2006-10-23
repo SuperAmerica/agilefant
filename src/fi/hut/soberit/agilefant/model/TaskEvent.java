@@ -2,6 +2,15 @@ package fi.hut.soberit.agilefant.model;
 
 import java.util.Date;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
+@Entity
 public abstract class TaskEvent {
 	
 	private int id;
@@ -9,6 +18,9 @@ public abstract class TaskEvent {
 	private Task task;
 	private Date created;
 	
+	@Id 
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	@Column(nullable = false)	
 	public int getId() {
 		return id;
 	}
@@ -16,18 +28,23 @@ public abstract class TaskEvent {
 		this.id = id;
 	}
 	
+	@ManyToOne
 	public User getActor() {
 		return actor;
 	}
 	public void setActor(User actor) {
 		this.actor = actor;
 	}
+	
 	public Date getCreated() {
 		return created;
 	}
 	public void setCreated(Date created) {
 		this.created = created;
 	}
+	
+	@ManyToOne
+	@JoinColumn (nullable = false)	
 	public Task getTask() {
 		return task;
 	}

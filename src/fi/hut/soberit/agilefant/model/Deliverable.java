@@ -43,12 +43,13 @@ public class Deliverable {
 	    this.name = name;
 	}
 	
-	/*public User getOwner() {
+	@ManyToOne
+	public User getOwner() {
 	    return owner;
 	}
 	public void setOwner(User owner) {
 	    this.owner = owner;
-	}*/
+	}
 	
 	@OneToMany(mappedBy="deliverable")
 	public Collection<Sprint> getSprints() {

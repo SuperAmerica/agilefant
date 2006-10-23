@@ -13,7 +13,7 @@
 		</c:otherwise>
 	</c:choose>
 	<ww:form action="storeDeliverable">
-		<ww:hidden name="deliverable.id"/>
+		<ww:hidden name="deliverableId" value="${deliverable.id}"/>
 <!-- 
 <ww:date name="%{new java.util.Date()}" format="dd-MM-yyyy" id="date"/>
 <p>
@@ -35,10 +35,10 @@
 			<p>
 				<c:forEach items="${deliverable.sprints}" var="sprint">
 				<p>
-					<ww:url id="editLink" action="editSprint">
+					<ww:url id="editLink" action="editSprint" includeParams="none">
 						<ww:param name="sprintId" value="${sprint.id}"/>
 					</ww:url>
-					<ww:url id="deleteLink" action="deleteSprint">
+					<ww:url id="deleteLink" action="deleteSprint" includeParams="none">
 						<ww:param name="sprintId" value="${sprint.id}"/>
 					</ww:url>
 					${sprint.name} - <ww:a href="%{editLink}">Edit</ww:a>|<ww:a href="%{deleteLink}">Delete</ww:a>
@@ -46,10 +46,10 @@
 				</c:forEach>
 			</p>
 			<p>
-				<ww:url id="createLink" action="createSprint">
+ 				<ww:url id="createLink" action="createSprint" includeParams="none">
 					<ww:param name="deliverableId" value="${deliverable.id}"/>
 				</ww:url>
-				<ww:a href="%{createLink}">Create new</ww:a>		
+				<ww:a href="%{createLink}">Create new</ww:a>
 			</p>
 		</c:if>
 		<p>

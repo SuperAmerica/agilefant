@@ -48,10 +48,10 @@
 			<result>/WEB-INF/jsp/editDeliverable.jsp</result>
 		</action>
 		<action name="deleteDeliverable" method="delete" class="deliverableAction">
-			<result>/WEB-INF/jsp/listDeliverables.jsp</result>
+			<result type="redirect">listDeliverables.action</result>
 		</action>
 		<action name="storeDeliverable" method="store" class="deliverableAction">
-			<result>/WEB-INF/jsp/listDeliverables.jsp</result>
+			<result type="redirect">listDeliverables.action</result>
 		</action>
 <!-- /Deliverable actions -->	
 <!-- Sprint actions -->
@@ -65,10 +65,10 @@
 			<result>/WEB-INF/jsp/editSprint.jsp</result>
 		</action>
 		<action name="deleteSprint" method="delete" class="sprintAction">
-			<result>/WEB-INF/jsp/listSprints.jsp</result>
+			<result type="redirect">editDeliverable.action?deliverableId=${deliverableId}</result>
 		</action>
 		<action name="storeSprint" method="store" class="sprintAction">
-			<result>/WEB-INF/jsp/listSprints.jsp</result>
+			<result type="redirect">editDeliverable.action?deliverableId=${deliverableId}</result>
 		</action>
 <!-- /Sprint actions -->
 <!-- Backlog actions -->

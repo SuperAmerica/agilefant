@@ -62,7 +62,6 @@ public class SprintAction extends ActionSupport {
 	}
 	
 	public String store(){
-	    
 		if (sprint == null){
 			super.addActionError(super.getText("sprint.missingForm"));
 			return Action.INPUT;			

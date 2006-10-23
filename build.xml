@@ -43,7 +43,7 @@
 		<hibernatetool destdir="${build.dir}">
 			<annotationconfiguration propertyfile="${conf.dir}/database-${database.type}.properties"
 				configurationfile="${conf.dir}/hibernate.cfg.xml"/>
-			<hbm2ddl export="true" outputfilename="create-db.ddl"/>
+			<hbm2ddl export="${hbm2ddl.export}" outputfilename="create-db.ddl"/>
 		</hibernatetool>
 	</target>
 
@@ -51,7 +51,7 @@
 		<hibernatetool destdir="${build.dir}">
 			<annotationconfiguration propertyfile="${conf.dir}/database-${database.type}.properties"
 				configurationfile="${conf.dir}/hibernate.cfg.xml"/>
-			<hbm2ddl drop="true" export="true" outputfilename="create-db.ddl"/>
+			<hbm2ddl drop="true" export="${hbm2ddl.export}" outputfilename="create-db.ddl"/>
 		</hibernatetool>
 	</target>
 	
@@ -59,7 +59,7 @@
 		<hibernatetool destdir="${build.dir}">
 			<annotationconfiguration propertyfile="${conf.dir}/database-${database.type}.properties"
 				configurationfile="${conf.dir}/hibernate.cfg.xml"/>
-			<hbm2ddl export="true" outputfilename="create-db.ddl" update="true"/>
+			<hbm2ddl export="${hbm2ddl.export}" outputfilename="create-db.ddl" update="true"/>
 		</hibernatetool>
 	</target>
 	

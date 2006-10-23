@@ -13,7 +13,7 @@
 		</c:otherwise>
 	</c:choose>
 	<ww:form action="storeSprint">
-		<ww:hidden name="sprint.id"/>
+		<ww:hidden name="sprintId" value="${sprint.id}"/>
 		<ww:hidden name="deliverableId"/>
 <!-- 
 <ww:date name="%{new java.util.Date()}" format="dd-MM-yyyy" id="date"/>
@@ -36,10 +36,10 @@
 			<p>
 				<c:forEach items="${sprint.backLogs}" var="backLog">
 				<p>
-					<ww:url id="editLink" action="editBackLog">
+					<ww:url id="editLink" action="editBackLog" includeParams="none">
 						<ww:param name="backLogId" value="${backLog.id}"/>
 					</ww:url>
-					<ww:url id="deleteLink" action="deleteBackLog">
+					<ww:url id="deleteLink" action="deleteBackLog" includeParams="none">
 						<ww:param name="backLogId" value="${backLog.id}"/>
 					</ww:url>
 					${backLog.name} - <ww:a href="%{editLink}">Edit</ww:a>|<ww:a href="%{deleteLink}">Delete</ww:a>
@@ -47,7 +47,7 @@
 				</c:forEach>
 			</p>
 			<p>
-				<ww:url id="createLink" action="createBackLog">
+				<ww:url id="createLink" action="createBackLog" includeParams="none">
 					<ww:param name="sprintId" value="${sprint.id}"/>
 				</ww:url>
 				<ww:a href="%{createLink}">Create new</ww:a>		

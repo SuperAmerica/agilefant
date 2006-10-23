@@ -7,10 +7,11 @@
 	<p>
 		<c:choose>
 			<c:when test="${empty deliverables}">
-				No activity types were found.
+				No deliverables were found.
 			</c:when>
 			<c:otherwise>
 				<c:forEach items="${deliverables}" var="type">
+				<p>
 					<ww:url id="editLink" action="editDeliverable">
 						<ww:param name="deliverableId" value="${type.id}"/>
 					</ww:url>
@@ -18,6 +19,7 @@
 						<ww:param name="deliverableId" value="${type.id}"/>
 					</ww:url>
 					${type.name} - <ww:a href="%{editLink}">Edit</ww:a>|<ww:a href="%{deleteLink}">Delete</ww:a>
+					</p>
 				</c:forEach>
 			</c:otherwise>
 		</c:choose>			

@@ -1,31 +1,32 @@
 <%@ include file="./inc/_taglibs.jsp" %>
 <html>
-<head>
-	<title>Backlog list - AgilEfant</title>
-</head>
+<ww:head/>
 <body>
 	<ww:actionerror/>
 	<ww:actionmessage/>
 	<c:choose>
-		<c:when test="${backLog.id == 0}">
+		<c:when test="${backLogItem.id == 0}">
 			<h2>Create new backlog</h2>
 		</c:when>
 		<c:otherwise>
-			<h2>Edit backlog: ${backLog.id}</h2>
+			<h2>Edit backlog: ${backLogItem.id}</h2>
 		</c:otherwise>
 	</c:choose>
 	<ww:form action="storeBackLog">
-		<ww:hidden name="backLog.id"/>
+		<ww:hidden name="backLogItem.id"/>
+		<ww:hidden name="sprintId"/>
+		
 		<p>		
-			Name: <ww:textfield name="backLog.name"/>
+			Name: <ww:textfield name="backLogItem.name"/>
 		</p>
 		<p>
-			Description: <ww:textarea name="backLog.description" cols="50" rows="4"/>
+			Description: <ww:textarea name="backLogItem.description" cols="50" rows="4"/>
 		</p>
-		<c:if test="${backLog.id > 0}">
+		<!-- 
+		<c:if test="${backLogItem.id > 0}">
 			<h3>Tasks</h3>
 			<p>
-				<c:forEach items="${backLog.tasks}" var="task">
+				<c:forEach items="${backLogItem.tasks}" var="task">
 					<ww:url id="editLink" action="editTask">
 						<ww:param name="taskId" value="${task.id}"/>
 					</ww:url>
@@ -37,11 +38,12 @@
 			</p>
 			<p>
 				<ww:url id="createLink" action="createTask">
-					<ww:param name="backLogId" value="${backLog.id}"/>
+					<ww:param name="backLogId" value="${backLogItem.id}"/>
 				</ww:url>
 				<ww:a href="%{createLink}">Create new</ww:a>		
 			</p>
 		</c:if>
+		 -->
 		<p>
 			<ww:submit value="Store"/>
 		</p>

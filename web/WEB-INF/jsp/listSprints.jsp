@@ -11,6 +11,7 @@
 			</c:when>
 			<c:otherwise>
 				<c:forEach items="${sprints}" var="sprint">
+				<p>
 					<ww:url id="editLink" action="editSprint">
 						<ww:param name="sprintId" value="${sprint.id}"/>
 					</ww:url>
@@ -18,6 +19,7 @@
 						<ww:param name="sprintId" value="${sprint.id}"/>
 					</ww:url>
 					${sprint.name} - <ww:a href="%{editLink}">Edit</ww:a>|<ww:a href="%{deleteLink}">Delete</ww:a>
+					</p>
 				</c:forEach>
 			</c:otherwise>
 		</c:choose>			

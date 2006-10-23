@@ -1,5 +1,6 @@
 package fi.hut.soberit.agilefant.web;
 
+import java.util.ArrayList;
 import java.util.Collection;	
 
 import com.opensymphony.xwork.Action;
@@ -20,44 +21,74 @@ public class BackLogAction extends ActionSupport {
 	private BackLogItem backLogItem;
 	private BackLogItemDAO backLogItemDAO;
 	private Collection<BackLogItem> backLogItems;
+	private SprintDAO sprintDAO;
+	private Sprint sprint;
+	private int sprintId;
+	
 	
 	public String getAll(){
-		backLogItems = backLogItemDAO.getAll();
+	    	backLogItems = new ArrayList<BackLogItem>();
+		sprint = sprintDAO.get(sprintId);
+		if (sprint == null){
+			backLogItems = backLogItemDAO.getAll();
+		} else {
+		    	backLogItems = sprint.getBackLogs();
+		}    
+//		backLogItems = backLogItemDAO.getAll();
 		return Action.SUCCESS;
 	}
 	
 	public String create(){
+		Sprint sprint =  sprintDAO.get(sprintId);
+		if (sprint == null){
+			super.addActionError(super.getText("backLogItem.sprintNotFound"));
+			return Action.INPUT;
+		}		
 		backLogId = 0;
 		backLogItem = new BackLogItem();
 		return Action.SUCCESS;		
 	}
 	
 	public String edit(){
-		backLogItem = backLogItemDAO.get(backLogId);
-		if (backLogItem == null){
-			super.addActionError(super.getText("activityType.notFound"));
-			return Action.ERROR;
+	    
+		sprint =  sprintDAO.get(sprintId);
+		if (sprint == null){
+			super.addActionError(super.getText("backLogItem.sprintNotFound"));
+			return Action.INPUT;
 		}
+		backLogItem= backLogItemDAO.get(backLogId);
+		if (backLogItem == null){
+			super.addActionError(super.getText("backLogItem.notFound"));
+			return Action.INPUT;
+		}	
 		return Action.SUCCESS;
 	}
 	
 	public String store(){
+	    
 		if (backLogItem == null){
-			super.addActionError(super.getText("activityType.missingForm"));
+			super.addActionError(super.getText("backLogItem.missingForm"));
+			return Action.INPUT;			
+		}
+		sprint =  sprintDAO.get(sprintId);
+		if (sprint == null){
+			super.addActionError(super.getText("backLogItem.sprintNotFound"));
+			return Action.INPUT;
 		}
 		BackLogItem fillable = new BackLogItem();
 		if (backLogId > 0){
-			fillable = backLogItemDAO.get(backLogId);
-			if (fillable == null){
-				super.addActionError(super.getText("activityType.notFound"));
-				return Action.ERROR;
+		    backLogItem = backLogItemDAO.get(backLogId);
+			if (backLogItem == null){
+				super.addActionError(super.getText("backLogItem.notFound"));
+				return Action.INPUT;
 			}
 		}
+	    
 		this.fillObject(fillable);
 		backLogItemDAO.store(fillable);
 		// updating activitytypes here to make listing work correctly after storing
 		// - turkka
-		backLogItems = backLogItemDAO.getAll();
+//		backLogItems = backLogItemDAO.getAll();
 		return Action.SUCCESS;
 	}
 	
@@ -72,8 +103,9 @@ public class BackLogAction extends ActionSupport {
 	}
 	
 	protected void fillObject(BackLogItem fillable){
-		fillable.setName(backLogItem.getName());
-		fillable.setDescription(backLogItem.getDescription());
+	    	fillable.setSprint(this.sprint);
+	    	fillable.setName(this.backLogItem.getName());
+		fillable.setDescription(this.backLogItem.getDescription());
 	}
 
 	public int getDeliverableId() {
@@ -98,5 +130,37 @@ public class BackLogAction extends ActionSupport {
 
 	public void setBackLogItemDAO(BackLogItemDAO backLogItemDAO) {
 		this.backLogItemDAO = backLogItemDAO;
+	}
+
+	public Sprint getSprint() {
+	    return sprint;
+	}
+
+	public void setSprint(Sprint sprint) {
+	    this.sprint = sprint;
+	}
+
+	public SprintDAO getSprintDAO() {
+	    return sprintDAO;
+	}
+
+	public void setSprintDAO(SprintDAO sprintDAO) {
+	    this.sprintDAO = sprintDAO;
+	}
+
+	public int getSprintId() {
+	    return sprintId;
+	}
+
+	public void setSprintId(int sprintId) {
+	    this.sprintId = sprintId;
+	}
+
+	public int getBackLogId() {
+	    return backLogId;
+	}
+
+	public void setBackLogId(int backLogId) {
+	    this.backLogId = backLogId;
 	}
 }

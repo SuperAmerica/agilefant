@@ -77,6 +77,8 @@
 		</action>
 		<action name="editBackLog" method="edit" class="backLogAction">
 			<result>/WEB-INF/jsp/editBackLog.jsp</result>
+			<result name="failed" type="redirect-action">listSettings</result>
+			<result name="input" type="redirect-action">listBackLogs</result>
 		</action>
 		<action name="createBackLog" method="create" class="backLogAction">
 			<result>/WEB-INF/jsp/editBackLog.jsp</result>
@@ -105,7 +107,6 @@
 			<result>/WEB-INF/jsp/listTasks.jsp</result>
 		</action>
 <!-- /Task actions -->
-
 
 	</package>
 </xwork>

@@ -1,10 +1,28 @@
 <%@ include file="./inc/_taglibs.jsp" %>
 <html>
-<head>
-	<title>Backlog list - AgilEfant</title>
-</head>
+<ww:head/>
 <body>
 	<p>
+	
+<ww:if test="hasErrors()">
+  <p style="color: red;">
+  <b>Errors:</b>
+  <ul>
+  <ww:if test="hasActionErrors()">
+  <ww:iterator value="actionErrors">
+    <li style="color: red;"><ww:property/></li>
+  </ww:iterator>
+  </ww:if>
+  <ww:if test="hasFieldErrors()">
+  <ww:iterator value="fieldErrors">
+    <ww:iterator value="value">
+    <li style="color: red;"><ww:property/></li>
+    </ww:iterator>
+  </ww:iterator>
+  </ww:if>
+  </ul>
+  </p>
+</ww:if>
 		<c:choose>
 			<c:when test="${empty backLogs}">
 				No backlogs were found.

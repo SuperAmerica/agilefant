@@ -1,8 +1,6 @@
 <%@ include file="./inc/_taglibs.jsp" %>
 <html>
-<head>
-	<title>Sprint list - AgilEfant</title>
-</head>
+<ww:head/>
 <body>
 	<ww:actionerror/>
 	<ww:actionmessage/>
@@ -16,15 +14,18 @@
 	</c:choose>
 	<ww:form action="storeSprint">
 		<ww:hidden name="sprint.id"/>
+		<ww:hidden name="deliverableId"/>
+<!-- 
 <ww:date name="%{new java.util.Date()}" format="dd-MM-yyyy" id="date"/>
-
+<p>
 
 			Startdate: <ww:datepicker value="%{#date}" showstime="%{true}" format="%d-%m-%Y" name="sprint.startDate"/> 
 		</p>
 		<p>		
 			Enddate: <ww:datepicker value="%{#date}" showstime="%{true}" format="%d-%m-%Y" name="sprint.endDate"/> 
 		</p>
-		<p>		
+ -->
+ 		<p>		
 			Name: <ww:textfield name="sprint.name"/>
 		</p>
 		<p>
@@ -34,6 +35,7 @@
 			<h3>Backlogs</h3>
 			<p>
 				<c:forEach items="${sprint.backLogs}" var="backLog">
+				<p>
 					<ww:url id="editLink" action="editBackLog">
 						<ww:param name="backLogId" value="${backLog.id}"/>
 					</ww:url>
@@ -41,6 +43,7 @@
 						<ww:param name="backLogId" value="${backLog.id}"/>
 					</ww:url>
 					${backLog.name} - <ww:a href="%{editLink}">Edit</ww:a>|<ww:a href="%{deleteLink}">Delete</ww:a>
+					</p>
 				</c:forEach>
 			</p>
 			<p>

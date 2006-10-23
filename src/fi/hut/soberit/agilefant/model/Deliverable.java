@@ -75,7 +75,7 @@ public class Deliverable {
 	}
 	
 	@ManyToOne
-	@JoinColumn (nullable = false)
+//	@JoinColumn (nullable = false)
 	public ActivityType getType() {
 	    return type;
 	}

@@ -46,6 +46,14 @@
 			<hbm2ddl export="true" outputfilename="create-db.ddl"/>
 		</hibernatetool>
 	</target>
+
+	<target name="drop-create-db" depends="compile" description="Creates db using hibernate tools">
+		<hibernatetool destdir="${build.dir}">
+			<annotationconfiguration propertyfile="${conf.dir}/database-${database.type}.properties"
+				configurationfile="${conf.dir}/hibernate.cfg.xml"/>
+			<hbm2ddl drop="true" export="true" outputfilename="create-db.ddl"/>
+		</hibernatetool>
+	</target>
 	
 	<target name="update-db" depends="compile" description="Creates db using hibernate tools">
 		<hibernatetool destdir="${build.dir}">

@@ -84,10 +84,10 @@
 			<result>/WEB-INF/jsp/editBackLog.jsp</result>
 		</action>
 		<action name="deleteBackLog" method="delete" class="backLogAction">
-			<result>/WEB-INF/jsp/listBackLogs.jsp</result>
+			<result type="redirect">editSprint.action?sprintId=${sprintId}&amp;deliverableId=${deliverableId}</result>
 		</action>
 		<action name="storeBackLog" method="store" class="backLogAction">
-			<result>/WEB-INF/jsp/listBackLogs.jsp</result>
+			<result type="redirect">editSprint.action?sprintId=${sprintId}&amp;deliverableId=${deliverableId}</result>
 		</action>
 <!-- /Backlog actions -->
 <!-- Task actions -->

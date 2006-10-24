@@ -37,8 +37,10 @@
 				<p>
 					<ww:url id="editLink" action="editSprint" includeParams="none">
 						<ww:param name="sprintId" value="${sprint.id}"/>
+						<ww:param name="deliverableId" value="${deliverable.id}"/>						
 					</ww:url>
 					<ww:url id="deleteLink" action="deleteSprint" includeParams="none">
+						<ww:param name="deliverableId" value="${deliverable.id}"/>						
 						<ww:param name="sprintId" value="${sprint.id}"/>
 					</ww:url>
 					${sprint.name} - <ww:a href="%{editLink}">Edit</ww:a>|<ww:a href="%{deleteLink}">Delete</ww:a>

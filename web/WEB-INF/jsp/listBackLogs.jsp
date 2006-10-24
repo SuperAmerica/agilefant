@@ -39,7 +39,6 @@
 				</c:forEach>
 			</c:otherwise>
 		</c:choose>			
-	</p>
 	<p>
 		<ww:url id="createBackLogLink" action="createBackLog"/>
 		<ww:a href="%{createBackLogLink}">Create new</ww:a>

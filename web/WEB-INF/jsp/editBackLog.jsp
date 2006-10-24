@@ -13,8 +13,9 @@
 		</c:otherwise>
 	</c:choose>
 	<ww:form action="storeBackLog">
-		<ww:hidden name="backLogItem.id"/>
+		<ww:hidden name="backLogId" value="${backLogItem.id}"/>
 		<ww:hidden name="sprintId"/>
+		<ww:hidden name="deliverableId"/>
 		
 		<p>		
 			Name: <ww:textfield name="backLogItem.name"/>

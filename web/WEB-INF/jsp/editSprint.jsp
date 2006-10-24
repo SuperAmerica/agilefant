@@ -37,10 +37,14 @@
 				<c:forEach items="${sprint.backLogs}" var="backLog">
 				<p>
 					<ww:url id="editLink" action="editBackLog" includeParams="none">
+						<ww:param name="deliverableId" value="${deliverableId}"/>
 						<ww:param name="backLogId" value="${backLog.id}"/>
+						<ww:param name="sprintId" value="${sprint.id}"/>
 					</ww:url>
 					<ww:url id="deleteLink" action="deleteBackLog" includeParams="none">
+						<ww:param name="sprintId" value="${sprint.id}"/>
 						<ww:param name="backLogId" value="${backLog.id}"/>
+						<ww:param name="deliverableId" value="${deliverableId}"/>
 					</ww:url>
 					${backLog.name} - <ww:a href="%{editLink}">Edit</ww:a>|<ww:a href="%{deleteLink}">Delete</ww:a>
 					</p>
@@ -49,6 +53,8 @@
 			<p>
 				<ww:url id="createLink" action="createBackLog" includeParams="none">
 					<ww:param name="sprintId" value="${sprint.id}"/>
+						<ww:param name="backLogId" value="${backLog.id}"/>
+						<ww:param name="deliverableId" value="${deliverableId}"/>
 				</ww:url>
 				<ww:a href="%{createLink}">Create new</ww:a>		
 			</p>

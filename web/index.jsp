@@ -1,1 +1,1 @@
-<% response.sendRedirect("./simpleCounter.action"); %>
+<% response.sendRedirect("./listDeliverables.action"); %>

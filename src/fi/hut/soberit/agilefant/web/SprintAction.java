@@ -47,17 +47,17 @@ public class SprintAction extends ActionSupport {
 	}
 	
 	public String edit(){
-		deliverable =  deliverableDAO.get(deliverableId);
-		if (deliverable == null){
-			super.addActionError(super.getText("sprint.deliverableNotFound"));
-			return Action.INPUT;
-		}
 		sprint = sprintDAO.get(sprintId);
 		if (sprint == null){
 			super.addActionError(super.getText("sprint.notFound"));
 			return Action.INPUT;
 		}
-	    
+		deliverable = sprint.getDeliverable();
+		if (deliverable == null){
+			super.addActionError(super.getText("sprint.deliverableNotFound"));
+			return Action.INPUT;
+		}
+		deliverableId = deliverable.getId();
 		return Action.SUCCESS;
 	}
 	
@@ -73,7 +73,7 @@ public class SprintAction extends ActionSupport {
 		}
 		Sprint fillable = new Sprint();
 		if (sprintId > 0){
-		    sprint = sprintDAO.get(sprintId);
+		    fillable = sprintDAO.get(sprintId);
 			if (sprint == null){
 				super.addActionError(super.getText("sprint.notFound"));
 				return Action.INPUT;

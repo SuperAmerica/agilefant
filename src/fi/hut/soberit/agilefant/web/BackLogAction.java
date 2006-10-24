@@ -77,7 +77,7 @@ public class BackLogAction extends ActionSupport {
 		}
 		BackLogItem fillable = new BackLogItem();
 		if (backLogId > 0){
-		    backLogItem = backLogItemDAO.get(backLogId);
+		    fillable = backLogItemDAO.get(backLogId);
 			if (backLogItem == null){
 				super.addActionError(super.getText("backLogItem.notFound"));
 				return Action.INPUT;

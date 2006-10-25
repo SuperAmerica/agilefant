@@ -7,5 +7,5 @@
 	<bean name="sprintAction" class="fi.hut.soberit.agilefant.web.SprintAction" singleton="false" autowire="byName"/>
 	<bean name="deliverableAction" class="fi.hut.soberit.agilefant.web.DeliverableAction" singleton="false" autowire="byName"/>
 	<bean name="taskAction" class="fi.hut.soberit.agilefant.web.TaskAction" singleton="false" autowire="byName"/>
-	<bean name="backLogAction" class="fi.hut.soberit.agilefant.web.BackLogAction" singleton="false" autowire="byName"/>
+	<bean name="backlogAction" class="fi.hut.soberit.agilefant.web.BacklogAction" singleton="false" autowire="byName"/>
 </beans>

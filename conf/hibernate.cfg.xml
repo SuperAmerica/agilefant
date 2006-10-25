@@ -12,7 +12,7 @@
  		<mapping class="fi.hut.soberit.agilefant.model.WorkType"/>
  		<mapping class="fi.hut.soberit.agilefant.model.Deliverable"/>
  		<mapping class="fi.hut.soberit.agilefant.model.Sprint"/>
- 		<mapping class="fi.hut.soberit.agilefant.model.BackLogItem"/> 		 		
+ 		<mapping class="fi.hut.soberit.agilefant.model.BacklogItem"/> 		 		
  		<mapping class="fi.hut.soberit.agilefant.model.Task"/>
  		<mapping class="fi.hut.soberit.agilefant.model.TaskEvent"/> 		
  		<mapping class="fi.hut.soberit.agilefant.model.User"/>

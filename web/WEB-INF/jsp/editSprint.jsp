@@ -34,24 +34,24 @@
 		<c:if test="${sprint.id > 0}">
 			<h3>Backlogs</h3>
 			<p>
-				<c:forEach items="${sprint.backLogs}" var="backLog">
+				<c:forEach items="${sprint.backlogs}" var="backlog">
 				<p>
-					<ww:url id="editLink" action="editBackLog" includeParams="none">
-						<ww:param name="backLogId" value="${backLog.id}"/>
+					<ww:url id="editLink" action="editBacklog" includeParams="none">
+						<ww:param name="backlogId" value="${backlog.id}"/>
 						<ww:param name="sprintId" value="${sprint.id}"/>
 					</ww:url>
-					<ww:url id="deleteLink" action="deleteBackLog" includeParams="none">
+					<ww:url id="deleteLink" action="deleteBacklog" includeParams="none">
 						<ww:param name="sprintId" value="${sprint.id}"/>
-						<ww:param name="backLogId" value="${backLog.id}"/>
+						<ww:param name="backlogId" value="${backlog.id}"/>
 					</ww:url>
-					${backLog.name} - <ww:a href="%{editLink}">Edit</ww:a>|<ww:a href="%{deleteLink}">Delete</ww:a>
+					${backlog.name} - <ww:a href="%{editLink}">Edit</ww:a>|<ww:a href="%{deleteLink}">Delete</ww:a>
 					</p>
 				</c:forEach>
 			</p>
 			<p>
-				<ww:url id="createLink" action="createBackLog" includeParams="none">
+				<ww:url id="createLink" action="createBacklog" includeParams="none">
 					<ww:param name="sprintId" value="${sprint.id}"/>
-					<ww:param name="backLogId" value="${backLog.id}"/>
+					<ww:param name="backlogId" value="${backlog.id}"/>
 				</ww:url>
 				<ww:a href="%{createLink}">Create new</ww:a>		
 			</p>

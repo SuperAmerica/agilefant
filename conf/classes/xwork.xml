@@ -72,21 +72,21 @@
 		</action>
 <!-- /Sprint actions -->
 <!-- Backlog actions -->
-		<action name="listBackLogs" method="getAll" class="backLogAction">
-			<result>/WEB-INF/jsp/listBackLogs.jsp</result>
+		<action name="listBacklogs" method="getAll" class="backlogAction">
+			<result>/WEB-INF/jsp/listBacklogs.jsp</result>
 		</action>
-		<action name="editBackLog" method="edit" class="backLogAction">
-			<result>/WEB-INF/jsp/editBackLog.jsp</result>
+		<action name="editBacklog" method="edit" class="backlogAction">
+			<result>/WEB-INF/jsp/editBacklog.jsp</result>
 			<result name="failed" type="redirect-action">listSettings</result>
-			<result name="input" type="redirect-action">listBackLogs</result>
+			<result name="input" type="redirect-action">listBacklogs</result>
 		</action>
-		<action name="createBackLog" method="create" class="backLogAction">
-			<result>/WEB-INF/jsp/editBackLog.jsp</result>
+		<action name="createBacklog" method="create" class="backlogAction">
+			<result>/WEB-INF/jsp/editBacklog.jsp</result>
 		</action>
-		<action name="deleteBackLog" method="delete" class="backLogAction">
+		<action name="deleteBacklog" method="delete" class="backlogAction">
 			<result type="redirect">editSprint.action?sprintId=${sprintId}</result>
 		</action>
-		<action name="storeBackLog" method="store" class="backLogAction">
+		<action name="storeBacklog" method="store" class="backlogAction">
 			<result type="redirect">editSprint.action?sprintId=${sprintId}</result>
 		</action>
 <!-- /Backlog actions -->

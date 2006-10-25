@@ -24,24 +24,24 @@
   </p>
 </ww:if>
 		<c:choose>
-			<c:when test="${empty backLogs}">
+			<c:when test="${empty backlogs}">
 				No backlogs were found.
 			</c:when>
 			<c:otherwise>
-				<c:forEach items="${backLogs}" var="backLog">
-					<ww:url id="editLink" action="editBackLog">
-						<ww:param name="backLogId" value="${backLog.id}"/>
+				<c:forEach items="${backlogs}" var="backlog">
+					<ww:url id="editLink" action="editBacklog">
+						<ww:param name="backlogId" value="${backlog.id}"/>
 					</ww:url>
-					<ww:url id="deleteLink" action="deleteBackLog">
-						<ww:param name="backLogId" value="${backLog.id}"/>
+					<ww:url id="deleteLink" action="deleteBacklog">
+						<ww:param name="backlogId" value="${backlog.id}"/>
 					</ww:url>
-					${backLog.name} - <ww:a href="%{editLink}">Edit</ww:a>|<ww:a href="%{deleteLink}">Delete</ww:a>
+					${backlog.name} - <ww:a href="%{editLink}">Edit</ww:a>|<ww:a href="%{deleteLink}">Delete</ww:a>
 				</c:forEach>
 			</c:otherwise>
 		</c:choose>			
 	<p>
-		<ww:url id="createBackLogLink" action="createBackLog"/>
-		<ww:a href="%{createBackLogLink}">Create new</ww:a>
+		<ww:url id="createBacklogLink" action="createBacklog"/>
+		<ww:a href="%{createBacklogLink}">Create new</ww:a>
 	</p>
 </body>
 </html>

@@ -6,46 +6,46 @@ import java.util.Collection;
 import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
 
-import fi.hut.soberit.agilefant.db.BackLogItemDAO;
+import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.db.DeliverableDAO;
 import fi.hut.soberit.agilefant.db.SprintDAO;
 import fi.hut.soberit.agilefant.db.TaskDAO;
-import fi.hut.soberit.agilefant.model.BackLogItem;
+import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.Deliverable;
 import fi.hut.soberit.agilefant.model.Sprint;
 import fi.hut.soberit.agilefant.model.Task;
 
-public class BackLogAction extends ActionSupport {
+public class BacklogAction extends ActionSupport {
 	
-	private int backLogId;
-	private BackLogItem backLogItem;
-	private BackLogItemDAO backLogItemDAO;
-	private Collection<BackLogItem> backLogItems;
+	private int backlogId;
+	private BacklogItem backlogItem;
+	private BacklogItemDAO backlogItemDAO;
+	private Collection<BacklogItem> backlogItems;
 	private SprintDAO sprintDAO;
 	private Sprint sprint;
 	private int sprintId;
 	
 	
 	public String getAll(){
-	    	backLogItems = new ArrayList<BackLogItem>();
+	    	backlogItems = new ArrayList<BacklogItem>();
 		sprint = sprintDAO.get(sprintId);
 		if (sprint == null){
-			backLogItems = backLogItemDAO.getAll();
+			backlogItems = backlogItemDAO.getAll();
 		} else {
-		    	backLogItems = sprint.getBackLogs();
+		    	backlogItems = sprint.getBacklogs();
 		}    
-//		backLogItems = backLogItemDAO.getAll();
+//		backlogItems = backlogItemDAO.getAll();
 		return Action.SUCCESS;
 	}
 	
 	public String create(){
 		Sprint sprint =  sprintDAO.get(sprintId);
 		if (sprint == null){
-			super.addActionError(super.getText("backLogItem.sprintNotFound"));
+			super.addActionError(super.getText("backlogItem.sprintNotFound"));
 			return Action.INPUT;
 		}		
-		backLogId = 0;
-		backLogItem = new BackLogItem();
+		backlogId = 0;
+		backlogItem = new BacklogItem();
 		return Action.SUCCESS;		
 	}
 	
@@ -53,12 +53,12 @@ public class BackLogAction extends ActionSupport {
 	    
 		sprint =  sprintDAO.get(sprintId);
 		if (sprint == null){
-			super.addActionError(super.getText("backLogItem.sprintNotFound"));
+			super.addActionError(super.getText("backlogItem.sprintNotFound"));
 			return Action.INPUT;
 		}
-		backLogItem= backLogItemDAO.get(backLogId);
-		if (backLogItem == null){
-			super.addActionError(super.getText("backLogItem.notFound"));
+		backlogItem= backlogItemDAO.get(backlogId);
+		if (backlogItem == null){
+			super.addActionError(super.getText("backlogItem.notFound"));
 			return Action.INPUT;
 		}	
 		return Action.SUCCESS;
@@ -66,70 +66,70 @@ public class BackLogAction extends ActionSupport {
 	
 	public String store(){
 	    
-		if (backLogItem == null){
-			super.addActionError(super.getText("backLogItem.missingForm"));
+		if (backlogItem == null){
+			super.addActionError(super.getText("backlogItem.missingForm"));
 			return Action.INPUT;			
 		}
 		sprint =  sprintDAO.get(sprintId);
 		if (sprint == null){
-			super.addActionError(super.getText("backLogItem.sprintNotFound"));
+			super.addActionError(super.getText("backlogItem.sprintNotFound"));
 			return Action.INPUT;
 		}
-		BackLogItem fillable = new BackLogItem();
-		if (backLogId > 0){
-		    fillable = backLogItemDAO.get(backLogId);
-			if (backLogItem == null){
-				super.addActionError(super.getText("backLogItem.notFound"));
+		BacklogItem fillable = new BacklogItem();
+		if (backlogId > 0){
+		    fillable = backlogItemDAO.get(backlogId);
+			if (backlogItem == null){
+				super.addActionError(super.getText("backlogItem.notFound"));
 				return Action.INPUT;
 			}
 		}
 	    
 		this.fillObject(fillable);
-		backLogItemDAO.store(fillable);
+		backlogItemDAO.store(fillable);
 		// updating activitytypes here to make listing work correctly after storing
 		// - turkka
-//		backLogItems = backLogItemDAO.getAll();
+//		backlogItems = backlogItemDAO.getAll();
 		return Action.SUCCESS;
 	}
 	
 	public String delete(){
-		backLogItem = backLogItemDAO.get(backLogId);
-		if (backLogItem == null){
+		backlogItem = backlogItemDAO.get(backlogId);
+		if (backlogItem == null){
 			super.addActionError(super.getText("activityType.notFound"));
 			return Action.ERROR;
 		}
-		backLogItemDAO.remove(backLogItem);
+		backlogItemDAO.remove(backlogItem);
 		return Action.SUCCESS;
 	}
 	
-	protected void fillObject(BackLogItem fillable){
+	protected void fillObject(BacklogItem fillable){
 	    	fillable.setSprint(this.sprint);
-	    	fillable.setName(this.backLogItem.getName());
-		fillable.setDescription(this.backLogItem.getDescription());
+	    	fillable.setName(this.backlogItem.getName());
+		fillable.setDescription(this.backlogItem.getDescription());
 	}
 
 	public int getDeliverableId() {
-		return backLogId;
+		return backlogId;
 	}
 
 	public void setDeliverableId(int deliverableId) {
-		this.backLogId = deliverableId;
+		this.backlogId = deliverableId;
 	}
 
-	public BackLogItem getBackLogItem() {
-		return backLogItem;
+	public BacklogItem getBacklogItem() {
+		return backlogItem;
 	}
 	
-	public void setBackLogItem(BackLogItem backLogItem){
-		this.backLogItem = backLogItem;
+	public void setBacklogItem(BacklogItem backlogItem){
+		this.backlogItem = backlogItem;
 	}
 
-	public Collection<BackLogItem> getBackLogItems() {
-		return backLogItems;
+	public Collection<BacklogItem> getBacklogItems() {
+		return backlogItems;
 	}
 
-	public void setBackLogItemDAO(BackLogItemDAO backLogItemDAO) {
-		this.backLogItemDAO = backLogItemDAO;
+	public void setBacklogItemDAO(BacklogItemDAO backlogItemDAO) {
+		this.backlogItemDAO = backlogItemDAO;
 	}
 
 	public Sprint getSprint() {
@@ -156,11 +156,11 @@ public class BackLogAction extends ActionSupport {
 	    this.sprintId = sprintId;
 	}
 
-	public int getBackLogId() {
-	    return backLogId;
+	public int getBacklogId() {
+	    return backlogId;
 	}
 
-	public void setBackLogId(int backLogId) {
-	    this.backLogId = backLogId;
+	public void setBacklogId(int backlogId) {
+	    this.backlogId = backlogId;
 	}
 }

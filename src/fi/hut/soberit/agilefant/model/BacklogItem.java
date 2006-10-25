@@ -13,7 +13,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 @Entity
-public class BackLogItem {
+public class BacklogItem {
 	
 	private int id;
 	private String name;
@@ -56,7 +56,7 @@ public class BackLogItem {
 	    this.sprint = sprint;
 	}
 	
-	@OneToMany(mappedBy="backLogItem")
+	@OneToMany(mappedBy="backlogItem")
 	public Collection<Task> getTasks() {
 	    return tasks;
 	}

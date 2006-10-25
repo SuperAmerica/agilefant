@@ -25,7 +25,7 @@ public class Sprint {
 	private Date startDate;
 	private Date endDate;
 	private Deliverable deliverable;
-	private Collection<BackLogItem> backLogs = new HashSet<BackLogItem>();
+	private Collection<BacklogItem> backlogs = new HashSet<BacklogItem>();
 	private User owner;
 	
 	@ManyToOne 
@@ -63,11 +63,11 @@ public class Sprint {
 	}
 	
 	@OneToMany(mappedBy="sprint")
-	public Collection<BackLogItem> getBackLogs() {
-	    return backLogs;
+	public Collection<BacklogItem> getBacklogs() {
+	    return backlogs;
 	}
-	public void setBackLogs(Collection<BackLogItem> backLogs) {
-	    this.backLogs = backLogs;
+	public void setBacklogs(Collection<BacklogItem> backlogs) {
+	    this.backlogs = backlogs;
 	}
 	
 	//@Column(nullable = false)

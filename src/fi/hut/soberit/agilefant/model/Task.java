@@ -24,7 +24,7 @@ public class Task {
 	private int effortEstimate;
 	private String name;
 	private String description;
-	private BackLogItem backLogItem;
+	private BacklogItem backlogItem;
 	private Date created;
 	private User assignee;
 	private User creator;
@@ -132,11 +132,11 @@ public class Task {
 
 	@ManyToOne
 	@JoinColumn (nullable = false)	
-	public BackLogItem getBackLogItem() {
-	    return backLogItem;
+	public BacklogItem getBacklogItem() {
+	    return backlogItem;
 	}
 
-	public void setBackLogItem(BackLogItem backLogItem) {
-	    this.backLogItem = backLogItem;
+	public void setBacklogItem(BacklogItem backlogItem) {
+	    this.backlogItem = backlogItem;
 	}
 }

@@ -9,7 +9,7 @@ import fi.hut.soberit.agilefant.db.DeliverableDAO;
 import fi.hut.soberit.agilefant.db.SprintDAO;
 import fi.hut.soberit.agilefant.db.TaskDAO;
 import fi.hut.soberit.agilefant.model.Deliverable;
-import fi.hut.soberit.agilefant.model.Sprint;
+import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Task;
 
 public class TaskAction extends ActionSupport {

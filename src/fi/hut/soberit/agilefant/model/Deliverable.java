@@ -14,35 +14,21 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 @Entity
-public class Deliverable {
+public class Deliverable extends Backlog{
 	
-	private int id;
-	private String name;
-	private String description;
+    	private Product product;
 	private ActivityType type;
 	private Date endDate;
 	private Date startDate;
-	private Collection<Sprint> sprints = new HashSet<Sprint>();
+	private Collection<Iteration> iterations = new HashSet<Iteration>();
 	private User owner;
 	
-	@Id 
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	@Column(nullable = false)	
-	public int getId() {
-	    return id;
+	public Product getProduct() {
+	    return product;
 	}
-	public void setId(int id) {
-	    this.id = id;
+	public void setProduct(Product product) {
+	    this.product = product;
 	}
-	
-	//@Column(nullable = false)
-	public String getName() {
-	    return name;
-	}
-	public void setName(String name) {
-	    this.name = name;
-	}
-	
 	@ManyToOne
 	public User getOwner() {
 	    return owner;
@@ -52,11 +38,11 @@ public class Deliverable {
 	}
 	
 	@OneToMany(mappedBy="deliverable")
-	public Collection<Sprint> getSprints() {
-	    return sprints;
+	public Collection<Iteration> getIterations() {
+	    return iterations;
 	}
-	public void setSprints(Collection<Sprint> sprints) {
-	    this.sprints = sprints;
+	public void setIterations(Collection<Iteration> iterations) {
+	    this.iterations = iterations;
 	}
 	
 	//@Column(nullable = false)
@@ -82,12 +68,5 @@ public class Deliverable {
 	}
 	public void setType(ActivityType type) {
 	    this.type = type;
-	}
-		
-	public String getDescription() {
-	    return description;
-	}
-	public void setDescription(String description) {
-	    this.description = description;
 	}
 }

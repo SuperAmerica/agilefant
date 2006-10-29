@@ -12,7 +12,7 @@ import fi.hut.soberit.agilefant.db.SprintDAO;
 import fi.hut.soberit.agilefant.db.TaskDAO;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.Deliverable;
-import fi.hut.soberit.agilefant.model.Sprint;
+import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Task;
 
 public class BacklogAction extends ActionSupport {
@@ -22,7 +22,7 @@ public class BacklogAction extends ActionSupport {
 	private BacklogItemDAO backlogItemDAO;
 	private Collection<BacklogItem> backlogItems;
 	private SprintDAO sprintDAO;
-	private Sprint sprint;
+	private Iteration sprint;
 	private int sprintId;
 	
 	
@@ -32,14 +32,14 @@ public class BacklogAction extends ActionSupport {
 		if (sprint == null){
 			backlogItems = backlogItemDAO.getAll();
 		} else {
-		    	backlogItems = sprint.getBacklogs();
+		    	backlogItems = sprint.getBacklogItems();
 		}    
 //		backlogItems = backlogItemDAO.getAll();
 		return Action.SUCCESS;
 	}
 	
 	public String create(){
-		Sprint sprint =  sprintDAO.get(sprintId);
+		Iteration sprint =  sprintDAO.get(sprintId);
 		if (sprint == null){
 			super.addActionError(super.getText("backlogItem.sprintNotFound"));
 			return Action.INPUT;
@@ -132,11 +132,11 @@ public class BacklogAction extends ActionSupport {
 		this.backlogItemDAO = backlogItemDAO;
 	}
 
-	public Sprint getSprint() {
+	public Iteration getSprint() {
 	    return sprint;
 	}
 
-	public void setSprint(Sprint sprint) {
+	public void setSprint(Iteration sprint) {
 	    this.sprint = sprint;
 	}
 

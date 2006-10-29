@@ -8,7 +8,7 @@ import com.opensymphony.xwork.ActionSupport;
 import fi.hut.soberit.agilefant.db.DeliverableDAO;
 import fi.hut.soberit.agilefant.db.SprintDAO;
 import fi.hut.soberit.agilefant.model.Deliverable;
-import fi.hut.soberit.agilefant.model.Sprint;
+import fi.hut.soberit.agilefant.model.Iteration;
 
 public class DeliverableAction extends ActionSupport {
 	

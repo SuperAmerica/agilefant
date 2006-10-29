@@ -17,15 +17,11 @@ import javax.persistence.OneToMany;
 import javax.persistence.JoinColumn;
 
 @Entity
-public class Sprint {
+public class Iteration extends Backlog{
 	
-	private int id;
-	private String name;
-	private String description;
-	private Date startDate;
-	private Date endDate;
-	private Deliverable deliverable;
-	private Collection<BacklogItem> backlogs = new HashSet<BacklogItem>();
+    	private Date startDate;
+    	private Date endDate;
+    	private Deliverable deliverable;
 	private User owner;
 	
 	@ManyToOne 
@@ -36,40 +32,7 @@ public class Sprint {
 	public void setDeliverable(Deliverable deliverable) {
 		this.deliverable = deliverable;
 	}
-	
-	public String getDescription() {
-		return description;
-	}
-	public void setDescription(String description) {
-		this.description = description;
-	}
-	
-	@Id 
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	@Column(nullable = false)	
-	public int getId() {
-		return id;
-	}
-	public void setId(int id) {
-		this.id = id;
-	}
-	
-	//@Column(nullable = false)
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
-	
-	@OneToMany(mappedBy="sprint")
-	public Collection<BacklogItem> getBacklogs() {
-	    return backlogs;
-	}
-	public void setBacklogs(Collection<BacklogItem> backlogs) {
-	    this.backlogs = backlogs;
-	}
-	
+		
 	//@Column(nullable = false)
 	public Date getEndDate() {
 	    return endDate;
@@ -93,5 +56,4 @@ public class Sprint {
 	    DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT, Locale.ENGLISH);	    
 	    this.startDate = df.parse( startDate);
 	}
-
 }

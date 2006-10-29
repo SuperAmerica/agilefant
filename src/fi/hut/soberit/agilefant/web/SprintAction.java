@@ -10,26 +10,26 @@ import fi.hut.soberit.agilefant.db.DeliverableDAO;
 import fi.hut.soberit.agilefant.db.SprintDAO;
 import fi.hut.soberit.agilefant.model.ActivityType;
 import fi.hut.soberit.agilefant.model.Deliverable;
-import fi.hut.soberit.agilefant.model.Sprint;
+import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.WorkType;
 
 public class SprintAction extends ActionSupport {
 	
 	private int sprintId;
-	private Sprint sprint;
+	private Iteration sprint;
 	private SprintDAO sprintDAO;
-	private Collection<Sprint> sprints;
+	private Collection<Iteration> sprints;
 	private DeliverableDAO deliverableDAO;
 	private Deliverable deliverable;
 	private int deliverableId;
 	
 	public String getAll(){
-	    	sprints = new ArrayList<Sprint>();
+	    	sprints = new ArrayList<Iteration>();
 		deliverable = deliverableDAO.get(deliverableId);
 		if (deliverable == null){
 			sprints = sprintDAO.getAll();
 		} else {
-			sprints = deliverable.getSprints();
+			sprints = deliverable.getIterations();
 		}
 //		sprints = sprintDAO.getAll();
 		return Action.SUCCESS;
@@ -42,7 +42,7 @@ public class SprintAction extends ActionSupport {
 			return Action.INPUT;
 		}
 		sprintId = 0;
-		sprint = new Sprint();
+		sprint = new Iteration();
 		return Action.SUCCESS;		
 	}
 	
@@ -71,7 +71,7 @@ public class SprintAction extends ActionSupport {
 			super.addActionError(super.getText("sprint.deliverableNotFound"));
 			return Action.INPUT;
 		}
-		Sprint fillable = new Sprint();
+		Iteration fillable = new Iteration();
 		if (sprintId > 0){
 		    fillable = sprintDAO.get(sprintId);
 			if (sprint == null){
@@ -97,7 +97,7 @@ public class SprintAction extends ActionSupport {
 		return Action.SUCCESS;
 	}
 	
-	protected void fillObject(Sprint fillable){
+	protected void fillObject(Iteration fillable){
 		fillable.setDeliverable(this.deliverable);
 		fillable.setName(this.sprint.getName());
 		fillable.setDescription(this.sprint.getDescription());
@@ -111,15 +111,15 @@ public class SprintAction extends ActionSupport {
 		this.sprintId = sprintId;
 	}
 
-	public Sprint getSprint() {
+	public Iteration getSprint() {
 		return sprint;
 	}
 	
-	public void setSprint(Sprint sprint){
+	public void setSprint(Iteration sprint){
 		this.sprint = sprint;
 	}
 
-	public Collection<Sprint> getSprints() {
+	public Collection<Iteration> getSprints() {
 		return sprints;
 	}
 

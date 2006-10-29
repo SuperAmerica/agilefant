@@ -18,7 +18,7 @@ public class BacklogItem {
 	private int id;
 	private String name;
 	private String description;
-	private Sprint sprint;
+	private Iteration sprint;
 	private Collection<Task> tasks = new HashSet<Task>();
 		
 	@Column
@@ -49,10 +49,10 @@ public class BacklogItem {
 	
 	@ManyToOne
 	@JoinColumn (nullable = false)
-	public Sprint getSprint() {
+	public Iteration getSprint() {
 	    return sprint;
 	}
-	public void setSprint(Sprint sprint) {
+	public void setSprint(Iteration sprint) {
 	    this.sprint = sprint;
 	}
 	

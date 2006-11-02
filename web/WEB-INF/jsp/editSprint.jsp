@@ -14,7 +14,7 @@
 	</c:choose>
 	<ww:form action="storeSprint">
 		<ww:hidden name="sprintId" value="${sprint.id}"/>
-		<ww:hidden name="deliverableId"/>
+		<ww:hidden name="deliverableId"/> 
 <!-- 
 <ww:date name="%{new java.util.Date()}" format="dd-MM-yyyy" id="date"/>
 <p>
@@ -25,13 +25,15 @@
 			Enddate: <ww:datepicker value="%{#date}" showstime="%{true}" format="%d-%m-%Y" name="sprint.endDate"/> 
 		</p>
  -->
- 		<p>		
+    	<p>		
 			Name: <ww:textfield name="sprint.name"/>
 		</p>
 		<p>
 			Description: <ww:textarea name="sprint.description" cols="50" rows="4"/>
 		</p>
-		<c:if test="${sprint.id > 0}">
+		<c:if test="${sprint.id > 0}">			
+			fixme: old stuff no longer valid, db model changed			
+			<%--
 			<h3>Backlogs</h3>
 			<p>
 				<c:forEach items="${sprint.backlogs}" var="backlog">
@@ -55,11 +57,13 @@
 				</ww:url>
 				<ww:a href="%{createLink}">Create new</ww:a>		
 			</p>
+			--%>
 		</c:if>
 		<p>
 			<ww:submit value="Store"/>
 		</p>
 	</ww:form>	
+
 	<p>
 </body>
 </html>

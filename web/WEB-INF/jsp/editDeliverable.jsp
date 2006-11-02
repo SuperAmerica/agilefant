@@ -33,7 +33,8 @@
 		<c:if test="${deliverable.id > 0}">
 			<h3>Sprints</h3>
 			<p>
-				<c:forEach items="${deliverable.sprints}" var="sprint">
+				<!-- todo: make consistent with new terminology? sprint -> iteration -->
+				<c:forEach items="${deliverable.iterations}" var="sprint">
 				<p>
 					<ww:url id="editLink" action="editSprint" includeParams="none">
 						<ww:param name="sprintId" value="${sprint.id}"/>

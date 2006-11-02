@@ -18,10 +18,9 @@ public class BacklogItem {
 	private int id;
 	private String name;
 	private String description;
-	private Iteration sprint;
+	private Backlog backlog;
 	private Collection<Task> tasks = new HashSet<Task>();
 		
-	@Column
 	public String getDescription() {
 	    return description;
 	}
@@ -47,15 +46,6 @@ public class BacklogItem {
 	    this.name = name;
 	}
 	
-	@ManyToOne
-	@JoinColumn (nullable = false)
-	public Iteration getSprint() {
-	    return sprint;
-	}
-	public void setSprint(Iteration sprint) {
-	    this.sprint = sprint;
-	}
-	
 	@OneToMany(mappedBy="backlogItem")
 	public Collection<Task> getTasks() {
 	    return tasks;
@@ -64,4 +54,12 @@ public class BacklogItem {
 	    this.tasks = tasks;
 	}
 	
+	@ManyToOne
+	@JoinColumn (nullable = false)
+	public Backlog getBacklog() {
+	    return backlog;
+	}
+	public void setBacklog(Backlog backlog) {
+	    this.backlog = backlog;
+	}	
 }

@@ -17,7 +17,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.JoinColumn;
 
 @Entity
-public class Iteration extends Backlog{
+public class Iteration extends Backlog {
 	
     	private Date startDate;
     	private Date endDate;
@@ -25,7 +25,7 @@ public class Iteration extends Backlog{
 	private User owner;
 	
 	@ManyToOne 
-	@JoinColumn (nullable = false)
+	//@JoinColumn (nullable = false)
 	public Deliverable getDeliverable() {
 		return deliverable;
 	}

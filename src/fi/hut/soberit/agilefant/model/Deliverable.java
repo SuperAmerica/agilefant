@@ -14,7 +14,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 @Entity
-public class Deliverable extends Backlog{
+public class Deliverable extends Backlog {
 	
     	private Product product;
 	private ActivityType type;
@@ -23,12 +23,15 @@ public class Deliverable extends Backlog{
 	private Collection<Iteration> iterations = new HashSet<Iteration>();
 	private User owner;
 	
+	@ManyToOne
+	//@JoinColumn (nullable = true)
 	public Product getProduct() {
 	    return product;
 	}
 	public void setProduct(Product product) {
 	    this.product = product;
 	}
+	
 	@ManyToOne
 	public User getOwner() {
 	    return owner;

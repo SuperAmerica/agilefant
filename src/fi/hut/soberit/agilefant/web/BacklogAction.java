@@ -103,7 +103,7 @@ public class BacklogAction extends ActionSupport {
 	}
 	
 	protected void fillObject(BacklogItem fillable){
-	    	fillable.setSprint(this.sprint);
+	    	fillable.setBacklog(this.sprint);
 	    	fillable.setName(this.backlogItem.getName());
 		fillable.setDescription(this.backlogItem.getDescription());
 	}

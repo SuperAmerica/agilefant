@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
+                       "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+ 	<bean id="placeholderConfig"
+	      class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+	  			<value>WEB-INF/configuration.properties</value>
+		  		<value>WEB-INF/database.properties</value>
+		  	</list>
+		</property>
+	</bean>
+	
+	<bean name="abstractDAOTarget" abstract="true">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	
+	<bean name="abstractDAO" abstract="true" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+		<property name="transactionManager" ref="hibernateTransactionManager"/>
+		<property name="transactionAttributes">
+			<props>
+				<prop key="*">PROPAGATION_REQUIRED</prop>
+			</props>
+		</property>
+	</bean>
+	
+	<bean name="productDAOTarget" parent="abstractDAOTarget" class="fi.hut.soberit.agilefant.db.hibernate.ActivityTypeDAOHibernate"/>
+	<bean name="productDAO" parent="abstractDAO">
+		<property name="target" ref="productDAOTarget"/>
+	</bean>
+
+	<bean name="activityTypeDAOTarget" parent="abstractDAOTarget" class="fi.hut.soberit.agilefant.db.hibernate.ActivityTypeDAOHibernate"/>
+	<bean name="workTypeDAOTarget" parent="abstractDAOTarget" class="fi.hut.soberit.agilefant.db.hibernate.WorkTypeDAOHibernate"/>
+	<bean name="deliverableDAOTarget" parent="abstractDAOTarget" class="fi.hut.soberit.agilefant.db.hibernate.DeliverableDAOHibernate"/>
+	<bean name="backlogItemDAOTarget" parent="abstractDAOTarget" class="fi.hut.soberit.agilefant.db.hibernate.BacklogItemDAOHibernate"/>
+	<bean name="sprintDAOTarget" parent="abstractDAOTarget" class="fi.hut.soberit.agilefant.db.hibernate.SprintDAOHibernate"/>
+	<bean name="taskDAOTarget" parent="abstractDAOTarget" class="fi.hut.soberit.agilefant.db.hibernate.TaskDAOHibernate"/>
+	
+	<bean name="activityTypeDAO" parent="abstractDAO">
+		<property name="target" ref="activityTypeDAOTarget"/>
+	</bean>
+	
+	<bean name="workTypeDAO" parent="abstractDAO">
+		<property name="target" ref="workTypeDAOTarget"/>
+	</bean>
+
+	<bean name="deliverableDAO" parent="abstractDAO">
+		<property name="target" ref="deliverableDAOTarget"/>
+	</bean>
+
+
+	<bean name="backlogItemDAO" parent="abstractDAO">
+		<property name="target" ref="backlogItemDAOTarget"/>
+	</bean>
+
+	<bean name="sprintDAO" parent="abstractDAO">
+		<property name="target" ref="sprintDAOTarget"/>
+	</bean>
+
+	<bean name="taskDAO" parent="abstractDAO">
+		<property name="target" ref="taskDAOTarget"/>
+	</bean>
+</beans>

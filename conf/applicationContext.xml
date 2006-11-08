@@ -15,54 +15,7 @@
 	<bean name="hibernateTransactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
 		<property name="sessionFactory" ref="sessionFactory"/>
 	</bean>	
-	
-	<bean name="abstractDAOTarget" abstract="true">
-		<property name="sessionFactory" ref="sessionFactory"/>
-	</bean>
-
-	<bean name="activityTypeDAOTarget" parent="abstractDAOTarget" class="fi.hut.soberit.agilefant.db.hibernate.ActivityTypeDAOHibernate"/>
-	<bean name="workTypeDAOTarget" parent="abstractDAOTarget" class="fi.hut.soberit.agilefant.db.hibernate.WorkTypeDAOHibernate"/>
-	<bean name="deliverableDAOTarget" parent="abstractDAOTarget" class="fi.hut.soberit.agilefant.db.hibernate.DeliverableDAOHibernate"/>
-	<bean name="backlogItemDAOTarget" parent="abstractDAOTarget" class="fi.hut.soberit.agilefant.db.hibernate.BacklogItemDAOHibernate"/>
-	<bean name="sprintDAOTarget" parent="abstractDAOTarget" class="fi.hut.soberit.agilefant.db.hibernate.SprintDAOHibernate"/>
-	<bean name="taskDAOTarget" parent="abstractDAOTarget" class="fi.hut.soberit.agilefant.db.hibernate.TaskDAOHibernate"/>
 		
-	<bean name="abstractDAO" abstract="true" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
-		<property name="transactionManager" ref="hibernateTransactionManager"/>
-		<property name="transactionAttributes">
-			<props>
-				<prop key="*">PROPAGATION_REQUIRED</prop>
-			</props>
-		</property>
-	</bean>
-	
-	<bean name="activityTypeDAO" parent="abstractDAO">
-		<property name="target" ref="activityTypeDAOTarget"/>
-	</bean>
-	
-	<bean name="workTypeDAO" parent="abstractDAO">
-		<property name="target" ref="workTypeDAOTarget"/>
-	</bean>
-
-	<bean name="deliverableDAO" parent="abstractDAO">
-		<property name="target" ref="deliverableDAOTarget"/>
-	</bean>
-
-
-	<bean name="backlogItemDAO" parent="abstractDAO">
-		<property name="target" ref="backlogItemDAOTarget"/>
-	</bean>
-
-
-	<bean name="sprintDAO" parent="abstractDAO">
-		<property name="target" ref="sprintDAOTarget"/>
-	</bean>
-
-
-	<bean name="taskDAO" parent="abstractDAO">
-		<property name="target" ref="taskDAOTarget"/>
-	</bean>
-
 	<bean name="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
 		<property name="driverClassName">
 			<value>${hibernate.connection.driver_class}</value>

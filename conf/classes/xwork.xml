@@ -8,14 +8,12 @@
 	<!-- Configuration for the default package. -->
 	<package name="default" extends="webwork-default">
 		<default-interceptor-ref name="completeStack"/>
-
 		<action name="simpleCounter" class="fi.hut.soberit.agilefant.web.SimpleCounter">
 			<result name="success">/WEB-INF/jsp/showCounter.jsp</result>
-		</action>
-		
+		</action>		
 		<action name="resetCounter" method="resetCounter" class="fi.hut.soberit.agilefant.web.SimpleCounter">
 			<result name="success">/WEB-INF/jsp/showCounter.jsp</result>
-		</action>
+		</action>		
 <!-- Activity type actions -->
 		<action name="listActivityTypes" method="getAll" class="activityTypeAction">
 			<result>/WEB-INF/jsp/listActivityTypes.jsp</result>
@@ -33,7 +31,40 @@
 			<result>/WEB-INF/jsp/listActivityTypes.jsp</result>
 		</action>
 <!-- /Activity type actions -->
-
+<!-- Product actions -->
+		<action name="listProducts" method="list" class="productAction">
+			<result>/WEB-INF/jsp/listProducts.jsp</result>
+		</action>
+		<action name="editProduct" method="edit" class="productAction">
+			<result>/WEB-INF/jsp/editProduct.jsp</result>
+		</action>
+		<action name="createProduct" method="create" class="productAction">
+			<result>/WEB-INF/jsp/editProduct.jsp</result>
+		</action>
+		<action name="deleteProduct" method="delete" class="productAction">
+			<result>/WEB-INF/jsp/listProducts.jsp</result>
+		</action>
+		<action name="storeProduct" method="store" class="productAction">
+			<result>/WEB-INF/jsp/listProducts.jsp</result>
+		</action>
+<!-- /Product actions -->
+<!-- BacklogItem actions -->
+		<action name="listBacklogItems" method="list" class="backlogItemAction">
+			<result>/WEB-INF/jsp/listBacklogItems.jsp</result>
+		</action>
+		<action name="editBacklogItem" method="edit" class="backlogItemAction">
+			<result>/WEB-INF/jsp/editBacklogItem.jsp</result>
+		</action>
+		<action name="createBacklogItem" method="create" class="backlogItemAction">
+			<result>/WEB-INF/jsp/editBacklogItem.jsp</result>
+		</action>
+		<action name="deleteBacklogItem" method="delete" class="backlogItemAction">
+			<result>/WEB-INF/jsp/listBacklogItems.jsp</result>
+		</action>
+		<action name="storeBacklogItem" method="store" class="backlogItemAction">
+			<result>/WEB-INF/jsp/listBacklogItems.jsp</result>
+		</action>
+<!-- /BacklogItem actions -->
 <!-- Work type actions -->
 <!-- TODO -->
 

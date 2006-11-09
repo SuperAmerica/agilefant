@@ -85,6 +85,12 @@
 		</copy>
 	</target>
 	
+	<target name="quick-ui-deploy" depends="init" description="Quickly deploys all jsp to server">
+		<copy todir="${deploy.dir.local}/WEB-INF/jsp/">
+			<fileset dir="${webapp.root}/WEB-INF/jsp/"/>
+		</copy>	
+	</target>
+	
 	<target name="deploy-local" depends="webapp" description="Deploys web app to local server">
 		<mkdir dir="${deploy.dir.local}"/>
 		<copy todir="${deploy.dir.local}">

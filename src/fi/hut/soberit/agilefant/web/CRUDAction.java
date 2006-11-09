@@ -8,7 +8,6 @@ package fi.hut.soberit.agilefant.web;
  */
 public interface CRUDAction {
 	
-	public String list();
 	public String create();
 	public String delete();
 	public String store();

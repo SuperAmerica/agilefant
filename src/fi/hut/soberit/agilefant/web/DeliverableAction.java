@@ -6,70 +6,77 @@ import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
 
 import fi.hut.soberit.agilefant.db.DeliverableDAO;
-import fi.hut.soberit.agilefant.db.SprintDAO;
+import fi.hut.soberit.agilefant.db.ProductDAO;
 import fi.hut.soberit.agilefant.model.Deliverable;
-import fi.hut.soberit.agilefant.model.Iteration;
+import fi.hut.soberit.agilefant.model.Product;
 
-public class DeliverableAction extends ActionSupport {
+public class DeliverableAction extends ActionSupport implements CRUDAction{
 	
 	private int deliverableId;
+	private int productId;
 	private Deliverable deliverable;
 	private DeliverableDAO deliverableDAO;
-	private Collection<Deliverable> deliverables;
-	
-	public String getAll(){
-		deliverables = deliverableDAO.getAll();
-		return Action.SUCCESS;
-	}
-	
+	private ProductDAO productDAO;
+		
 	public String create(){
 		deliverableId = 0;
 		deliverable = new Deliverable();
-		return Action.SUCCESS;		
+		return Action.SUCCESS;
 	}
 	
 	public String edit(){
 		deliverable = deliverableDAO.get(deliverableId);
 		if (deliverable == null){
-			super.addActionError(super.getText("activityType.notFound"));
+			super.addActionError(super.getText("deliverable.notFound"));
 			return Action.ERROR;
 		}
+		productId = deliverable.getProduct().getId();
 		return Action.SUCCESS;
 	}
 	
 	public String store(){
-		if (deliverable == null){
-			super.addActionError(super.getText("activityType.missingForm"));
-		}
-		Deliverable fillable = new Deliverable();
+		Deliverable storable = new Deliverable();
 		if (deliverableId > 0){
-			fillable = deliverableDAO.get(deliverableId);
-			if (fillable == null){
-				super.addActionError(super.getText("activityType.notFound"));
+			storable = deliverableDAO.get(deliverableId);
+			if (storable == null){
+				super.addActionError(super.getText("deliverable.notFound"));
 				return Action.ERROR;
 			}
 		}
-		this.fillObject(fillable);
-		deliverableDAO.store(fillable);
-		// updating activitytypes here to make listing work correctly after storing
-		// - turkka
-		deliverables = deliverableDAO.getAll();
+		this.fillStorable(storable);
+		if (super.hasActionErrors()){
+			return Action.ERROR;
+		}
+		deliverableDAO.store(storable);
 		return Action.SUCCESS;
 	}
 	
 	public String delete(){
 		deliverable = deliverableDAO.get(deliverableId);
 		if (deliverable == null){
-			super.addActionError(super.getText("activityType.notFound"));
+			super.addActionError(super.getText("deliverable.notFound"));
 			return Action.ERROR;
 		}
+		Product product = deliverable.getProduct();
+		productId = product.getId();
+		product.getDeliverables().remove(deliverable);
+		deliverable.setProduct(null);
 		deliverableDAO.remove(deliverable);
 		return Action.SUCCESS;
 	}
 	
-	protected void fillObject(Deliverable fillable){
-		fillable.setName(deliverable.getName());
-		fillable.setDescription(deliverable.getDescription());
+	protected void fillStorable(Deliverable storable){
+		if (storable.getProduct() == null){
+			Product product = productDAO.get(productId);
+			if (product == null){
+				super.addActionError(super.getText("product.notFound"));
+				return;
+			}
+			storable.setProduct(product);
+			product.getDeliverables().add(storable);
+		}
+		storable.setName(deliverable.getName());
+		storable.setDescription(deliverable.getDescription());
 	}
 
 	public int getDeliverableId() {
@@ -88,11 +95,19 @@ public class DeliverableAction extends ActionSupport {
 		this.deliverable = deliverable;
 	}
 
-	public Collection<Deliverable> getDeliverables() {
-		return deliverables;
-	}
-
 	public void setDeliverableDAO(DeliverableDAO deliverableDAO) {
 		this.deliverableDAO = deliverableDAO;
+	}
+
+	public int getProductId() {
+		return productId;
+	}
+
+	public void setProductId(int productId) {
+		this.productId = productId;
+	}
+
+	public void setProductDAO(ProductDAO productDAO) {
+		this.productDAO = productDAO;
 	}
 }

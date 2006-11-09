@@ -10,5 +10,5 @@
 	<bean name="backlogAction" class="fi.hut.soberit.agilefant.web.BacklogAction" singleton="false" autowire="byName"/>
 	
 	<bean name="productAction" class="fi.hut.soberit.agilefant.web.ProductAction" singleton="false" autowire="byName"/>
-	<bean name="backlogItemAction" class="fi.hut.soberit.agilefant.web.BackLogItemAction" singleton="false" autowire="byName"/>
+	<bean name="backlogItemAction" class="fi.hut.soberit.agilefant.web.BacklogItemAction" singleton="false" autowire="byName"/>
 </beans>

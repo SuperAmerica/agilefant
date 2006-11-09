@@ -25,9 +25,14 @@
 		</property>
 	</bean>
 	
-	<bean name="productDAOTarget" parent="abstractDAOTarget" class="fi.hut.soberit.agilefant.db.hibernate.ActivityTypeDAOHibernate"/>
+	<bean name="productDAOTarget" parent="abstractDAOTarget" class="fi.hut.soberit.agilefant.db.hibernate.ProductDAOHibernate"/>
 	<bean name="productDAO" parent="abstractDAO">
 		<property name="target" ref="productDAOTarget"/>
+	</bean>
+	
+	<bean name="backlogDAOTarget" parent="abstractDAOTarget" class="fi.hut.soberit.agilefant.db.hibernate.BacklogDAOHibernate"/>
+	<bean name="backlogDAO" parent="abstractDAO">
+		<property name="target" ref="backlogDAOTarget"/>
 	</bean>
 
 	<bean name="activityTypeDAOTarget" parent="abstractDAOTarget" class="fi.hut.soberit.agilefant.db.hibernate.ActivityTypeDAOHibernate"/>

@@ -32,7 +32,7 @@
 		</action>
 <!-- /Activity type actions -->
 <!-- Product actions -->
-		<action name="listProducts" method="list" class="productAction">
+		<action name="listProducts">
 			<result>/WEB-INF/jsp/listProducts.jsp</result>
 		</action>
 		<action name="editProduct" method="edit" class="productAction">
@@ -49,7 +49,7 @@
 		</action>
 <!-- /Product actions -->
 <!-- BacklogItem actions -->
-		<action name="listBacklogItems" method="list" class="backlogItemAction">
+		<action name="listBacklogItems">
 			<result>/WEB-INF/jsp/listBacklogItems.jsp</result>
 		</action>
 		<action name="editBacklogItem" method="edit" class="backlogItemAction">
@@ -59,17 +59,14 @@
 			<result>/WEB-INF/jsp/editBacklogItem.jsp</result>
 		</action>
 		<action name="deleteBacklogItem" method="delete" class="backlogItemAction">
-			<result>/WEB-INF/jsp/listBacklogItems.jsp</result>
+			<result type="redirect">editBacklog.action?backlogId=${backlogId}</result>
 		</action>
 		<action name="storeBacklogItem" method="store" class="backlogItemAction">
-			<result>/WEB-INF/jsp/listBacklogItems.jsp</result>
+			<result type="redirect">editBacklog.action?backlogId=${backlogId}</result>
 		</action>
 <!-- /BacklogItem actions -->
-<!-- Work type actions -->
-<!-- TODO -->
-
 <!-- Deliverable actions -->
-		<action name="listDeliverables" method="getAll" class="deliverableAction">
+		<action name="listDeliverables">
 			<result>/WEB-INF/jsp/listDeliverables.jsp</result>
 		</action>
 		<action name="editDeliverable" method="edit" class="deliverableAction">
@@ -79,12 +76,14 @@
 			<result>/WEB-INF/jsp/editDeliverable.jsp</result>
 		</action>
 		<action name="deleteDeliverable" method="delete" class="deliverableAction">
-			<result type="redirect">listDeliverables.action</result>
+			<result type="redirect">editProduct.action?productId=${productId}</result>
 		</action>
 		<action name="storeDeliverable" method="store" class="deliverableAction">
-			<result type="redirect">listDeliverables.action</result>
+			<result type="redirect">editProduct.action?productId=${productId}</result>
 		</action>
-<!-- /Deliverable actions -->	
+<!-- /Deliverable actions -->
+<!-- Work type actions -->
+<!-- TODO -->
 <!-- Sprint actions -->
 		<action name="listSprints" method="getAll" class="sprintAction">
 			<result>/WEB-INF/jsp/listSprints.jsp</result>
@@ -103,28 +102,16 @@
 		</action>
 <!-- /Sprint actions -->
 <!-- Backlog actions -->
-		<action name="listBacklogs" method="getAll" class="backlogAction">
-			<result>/WEB-INF/jsp/listBacklogs.jsp</result>
-		</action>
 		<action name="editBacklog" method="edit" class="backlogAction">
-			<result>/WEB-INF/jsp/editBacklog.jsp</result>
-			<result name="failed" type="redirect-action">listSettings</result>
-			<result name="input" type="redirect-action">listBacklogs</result>
+			<result name="editProduct" type="redirect">editProduct.action?productId=${backlogId}</result>
+			<result name="editDeliverable" type="redirect">editDeliverable.action?deliverableId=${backlogId}</result>
 		</action>
-		<action name="createBacklog" method="create" class="backlogAction">
-			<result>/WEB-INF/jsp/editBacklog.jsp</result>
-		</action>
-		<action name="deleteBacklog" method="delete" class="backlogAction">
-			<result type="redirect">editSprint.action?sprintId=${sprintId}</result>
-		</action>
-		<action name="storeBacklog" method="store" class="backlogAction">
-			<result type="redirect">editSprint.action?sprintId=${sprintId}</result>
+		<action name="moveBacklogItem" method="moveBacklogItem" class="backlogAction">
+			<result name="editProduct" type="redirect">editProduct.action?productId=${backlogId}</result>
+			<result name="editDeliverable" type="redirect">editDeliverable.action?deliverableId=${backlogId}</result>
 		</action>
 <!-- /Backlog actions -->
 <!-- Task actions -->
-		<action name="listTasks" method="getAll" class="taskAction">
-			<result>/WEB-INF/jsp/listTasks.jsp</result>
-		</action>
 		<action name="editTask" method="edit" class="taskAction">
 			<result>/WEB-INF/jsp/editTask.jsp</result>
 		</action>
@@ -132,12 +119,11 @@
 			<result>/WEB-INF/jsp/editTask.jsp</result>
 		</action>
 		<action name="deleteTask" method="delete" class="taskAction">
-			<result>/WEB-INF/jsp/listTasks.jsp</result>
+			<result type="redirect">editBacklogItem.action?backlogItemId=${backlogItemId}</result>
 		</action>
 		<action name="storeTask" method="store" class="taskAction">
-			<result>/WEB-INF/jsp/listTasks.jsp</result>
+			<result type="redirect">editBacklogItem.action?backlogItemId=${backlogItemId}</result>
 		</action>
 <!-- /Task actions -->
-
 	</package>
 </xwork>

@@ -5,9 +5,11 @@ import java.util.Collection;
 import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
 
+import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.db.DeliverableDAO;
 import fi.hut.soberit.agilefant.db.SprintDAO;
 import fi.hut.soberit.agilefant.db.TaskDAO;
+import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.Deliverable;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Task;
@@ -15,15 +17,11 @@ import fi.hut.soberit.agilefant.model.Task;
 public class TaskAction extends ActionSupport {
 	
 	private int taskId;
+	private int backlogItemId;
 	private Task task;
 	private TaskDAO taskDAO;
-	private Collection<Task> tasks;
-	
-	public String getAll(){
-		tasks = taskDAO.getAll();
-		return Action.SUCCESS;
-	}
-	
+	private BacklogItemDAO backlogItemDAO;
+		
 	public String create(){
 		taskId = 0;
 		task = new Task();
@@ -33,45 +31,57 @@ public class TaskAction extends ActionSupport {
 	public String edit(){
 		task = taskDAO.get(taskId);
 		if (task == null){
-			super.addActionError(super.getText("activityType.notFound"));
+			super.addActionError(super.getText("task.notFound"));
 			return Action.ERROR;
 		}
+		backlogItemId = task.getBacklogItem().getId();
 		return Action.SUCCESS;
 	}
 	
 	public String store(){
-		if (task == null){
-			super.addActionError(super.getText("activityType.missingForm"));
-		}
-		Task fillable = new Task();
+		Task storable = new Task();
 		if (taskId > 0){
-			fillable = taskDAO.get(taskId);
-			if (fillable == null){
-				super.addActionError(super.getText("activityType.notFound"));
+			storable = taskDAO.get(taskId);
+			if (storable == null){
+				super.addActionError(super.getText("task.notFound"));
 				return Action.ERROR;
 			}
-		}
-		this.fillObject(fillable);
-		taskDAO.store(fillable);
-		// updating activitytypes here to make listing work correctly after storing
-		// - turkka
-		tasks = taskDAO.getAll();
+		}			
+		this.fillStorable(storable);
+		
+		if (super.hasActionErrors()){
+			return Action.ERROR;
+		}		
+		taskDAO.store(storable);
 		return Action.SUCCESS;
 	}
 	
-	public String delete(){
+	public String delete(){		
 		task = taskDAO.get(taskId);
 		if (task == null){
-			super.addActionError(super.getText("activityType.notFound"));
+			super.addActionError(super.getText("task.notFound"));
 			return Action.ERROR;
 		}
+		BacklogItem backlogItem = task.getBacklogItem();
+		backlogItemId = backlogItem.getId();
+		backlogItem.getTasks().remove(task);
+		task.setBacklogItem(null);		
 		taskDAO.remove(task);
 		return Action.SUCCESS;
 	}
 	
-	protected void fillObject(Task fillable){
-		fillable.setName(task.getName());
-		fillable.setDescription(task.getDescription());
+	protected void fillStorable(Task storable){
+		if (storable.getBacklogItem() == null){
+			BacklogItem backlogItem = backlogItemDAO.get(backlogItemId);
+			if (backlogItem == null){
+				super.addActionError(super.getText("backlogItem.notFound"));
+				return;
+			}
+			storable.setBacklogItem(backlogItem);
+			backlogItem.getTasks().add(storable);
+		}
+		storable.setName(task.getName());
+		storable.setDescription(task.getDescription());
 	}
 
 	public int getDeliverableId() {
@@ -90,11 +100,31 @@ public class TaskAction extends ActionSupport {
 		this.task = task;
 	}
 
-	public Collection<Task> getTasks() {
-		return tasks;
-	}
-
 	public void setTaskDAO(TaskDAO taskDAO) {
 		this.taskDAO = taskDAO;
+	}
+
+	public int getBacklogItemId() {
+		return backlogItemId;
+	}
+
+	public void setBacklogItemId(int backlogItemId) {
+		this.backlogItemId = backlogItemId;
+	}
+
+	public int getTaskId() {
+		return taskId;
+	}
+
+	public void setTaskId(int taskId) {
+		this.taskId = taskId;
+	}
+
+	public void setTask(Task task) {
+		this.task = task;
+	}
+
+	public void setBacklogItemDAO(BacklogItemDAO backlogItemDAO) {
+		this.backlogItemDAO = backlogItemDAO;
 	}
 }

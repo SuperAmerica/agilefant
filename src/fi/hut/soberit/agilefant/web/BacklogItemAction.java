@@ -25,10 +25,13 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
 		backlogItemId = 0;
 		backlogItem = new BacklogItem();
 		backlog = backlogDAO.get(backlogId);
+		backlogId = backlog.getId();
 		return Action.SUCCESS;
 	}
 
 	public String delete() {
+		backlogItem = backlogItemDAO.get(backlogItemId);
+		backlogId = backlogItem.getId();
 		backlogItemDAO.remove(backlogItemId);
 		return Action.SUCCESS;
 	}
@@ -40,22 +43,7 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
 			return Action.ERROR;
 		}
 		backlog = backlogItem.getBacklog();
-		return Action.SUCCESS;
-	}
-
-	public String list() {
-		if (backlogId > 0){
-			backlog = backlogDAO.get(backlogId);
-			if (backlog == null){
-				super.addActionError(super.getText("backlog.notFound"));
-				return Action.ERROR;
-			}
-			if (backlog != null){
-				backlogItems = backlog.getBacklogItems();
-			} 
-		} else {
-			backlogItems = backlogItemDAO.getAll();
-		}
+		backlogId = backlog.getId();
 		return Action.SUCCESS;
 	}
 
@@ -69,7 +57,7 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
 			}
 		}
 		this.fillStorable(storable);
-		if (!super.hasActionErrors()){
+		if (super.hasActionErrors()){
 			return Action.ERROR;
 		}
 		backlogItemDAO.store(storable);

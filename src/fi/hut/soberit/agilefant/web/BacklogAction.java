@@ -1,166 +1,80 @@
 package fi.hut.soberit.agilefant.web;
 
-import java.util.ArrayList;
-import java.util.Collection;	
-
 import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
 
+import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
-import fi.hut.soberit.agilefant.db.DeliverableDAO;
-import fi.hut.soberit.agilefant.db.SprintDAO;
-import fi.hut.soberit.agilefant.db.TaskDAO;
+import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.Deliverable;
-import fi.hut.soberit.agilefant.model.Iteration;
-import fi.hut.soberit.agilefant.model.Task;
+import fi.hut.soberit.agilefant.model.Product;
 
 public class BacklogAction extends ActionSupport {
 	
 	private int backlogId;
-	private BacklogItem backlogItem;
+	private BacklogDAO backlogDAO;
+	private int backlogItemId;
 	private BacklogItemDAO backlogItemDAO;
-	private Collection<BacklogItem> backlogItems;
-	private SprintDAO sprintDAO;
-	private Iteration sprint;
-	private int sprintId;
-	
-	
-	public String getAll(){
-	    	backlogItems = new ArrayList<BacklogItem>();
-		sprint = sprintDAO.get(sprintId);
-		if (sprint == null){
-			backlogItems = backlogItemDAO.getAll();
-		} else {
-		    	backlogItems = sprint.getBacklogItems();
-		}    
-//		backlogItems = backlogItemDAO.getAll();
-		return Action.SUCCESS;
-	}
-	
-	public String create(){
-		Iteration sprint =  sprintDAO.get(sprintId);
-		if (sprint == null){
-			super.addActionError(super.getText("backlogItem.sprintNotFound"));
-			return Action.INPUT;
-		}		
-		backlogId = 0;
-		backlogItem = new BacklogItem();
-		return Action.SUCCESS;		
-	}
 	
 	public String edit(){
-	    
-		sprint =  sprintDAO.get(sprintId);
-		if (sprint == null){
-			super.addActionError(super.getText("backlogItem.sprintNotFound"));
-			return Action.INPUT;
-		}
-		backlogItem= backlogItemDAO.get(backlogId);
-		if (backlogItem == null){
-			super.addActionError(super.getText("backlogItem.notFound"));
-			return Action.INPUT;
-		}	
-		return Action.SUCCESS;
-	}
-	
-	public String store(){
-	    
-		if (backlogItem == null){
-			super.addActionError(super.getText("backlogItem.missingForm"));
-			return Action.INPUT;			
-		}
-		sprint =  sprintDAO.get(sprintId);
-		if (sprint == null){
-			super.addActionError(super.getText("backlogItem.sprintNotFound"));
-			return Action.INPUT;
-		}
-		BacklogItem fillable = new BacklogItem();
-		if (backlogId > 0){
-		    fillable = backlogItemDAO.get(backlogId);
-			if (backlogItem == null){
-				super.addActionError(super.getText("backlogItem.notFound"));
-				return Action.INPUT;
-			}
-		}
-	    
-		this.fillObject(fillable);
-		backlogItemDAO.store(fillable);
-		// updating activitytypes here to make listing work correctly after storing
-		// - turkka
-//		backlogItems = backlogItemDAO.getAll();
-		return Action.SUCCESS;
-	}
-	
-	public String delete(){
-		backlogItem = backlogItemDAO.get(backlogId);
-		if (backlogItem == null){
-			super.addActionError(super.getText("activityType.notFound"));
-			return Action.ERROR;
-		}
-		backlogItemDAO.remove(backlogItem);
-		return Action.SUCCESS;
-	}
-	
-	protected void fillObject(BacklogItem fillable){
-	    	fillable.setBacklog(this.sprint);
-	    	fillable.setName(this.backlogItem.getName());
-		fillable.setDescription(this.backlogItem.getDescription());
+		Backlog backlog = backlogDAO.get(backlogId);
+		return solveResult(backlog);
 	}
 
-	public int getDeliverableId() {
+	public int getBacklogId() {
 		return backlogId;
 	}
 
-	public void setDeliverableId(int deliverableId) {
-		this.backlogId = deliverableId;
+	public void setBacklogId(int backlogId) {
+		this.backlogId = backlogId;
 	}
 
-	public BacklogItem getBacklogItem() {
-		return backlogItem;
+	public void setBacklogDAO(BacklogDAO backlogDAO) {
+		this.backlogDAO = backlogDAO;
 	}
 	
-	public void setBacklogItem(BacklogItem backlogItem){
-		this.backlogItem = backlogItem;
+	public String moveBacklogItem(){
+		Backlog backlog = backlogDAO.get(backlogId);
+		BacklogItem backlogItem = backlogItemDAO.get(backlogItemId);
+		if (backlog == null){
+			super.addActionError(super.getText("backlog.notFound"));
+			return Action.ERROR;
+		}
+		if (backlogItem == null){
+			super.addActionError(super.getText("backlogItem.notFound"));
+		}
+		
+		backlogItem.getBacklog().getBacklogItems().remove(backlogItem);
+		backlog.getBacklogItems().add(backlogItem);
+		backlogItem.setBacklog(backlog);
+		backlogItemDAO.store(backlogItem);
+		
+		return this.solveResult(backlog);
+	}
+	
+	protected String solveResult(Backlog backlog){
+		if (backlog == null){
+			super.addActionError(super.getText("backlog.notFound"));
+			return Action.ERROR;
+		} else if (backlog instanceof Product){
+			return "editProduct";
+		} else if (backlog instanceof Deliverable){
+			return "editDeliverable";
+		}
+		super.addActionError(super.getText("backlog.unknownType"));
+		return Action.ERROR;		
 	}
 
-	public Collection<BacklogItem> getBacklogItems() {
-		return backlogItems;
+	public int getBacklogItemId() {
+		return backlogItemId;
+	}
+
+	public void setBacklogItemId(int backlogItemId) {
+		this.backlogItemId = backlogItemId;
 	}
 
 	public void setBacklogItemDAO(BacklogItemDAO backlogItemDAO) {
 		this.backlogItemDAO = backlogItemDAO;
-	}
-
-	public Iteration getSprint() {
-	    return sprint;
-	}
-
-	public void setSprint(Iteration sprint) {
-	    this.sprint = sprint;
-	}
-
-	public SprintDAO getSprintDAO() {
-	    return sprintDAO;
-	}
-
-	public void setSprintDAO(SprintDAO sprintDAO) {
-	    this.sprintDAO = sprintDAO;
-	}
-
-	public int getSprintId() {
-	    return sprintId;
-	}
-
-	public void setSprintId(int sprintId) {
-	    this.sprintId = sprintId;
-	}
-
-	public int getBacklogId() {
-	    return backlogId;
-	}
-
-	public void setBacklogId(int backlogId) {
-	    this.backlogId = backlogId;
 	}
 }

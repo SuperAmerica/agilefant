@@ -36,11 +36,6 @@ public class ProductAction extends ActionSupport implements CRUDAction {
 		return Action.SUCCESS;
 	}
 
-	public String list() {
-		products = productDAO.getAll();
-		return Action.SUCCESS;
-	}
-
 	public String store() {
 		Product storable = new Product();
 		if (productId > 0){
@@ -51,11 +46,11 @@ public class ProductAction extends ActionSupport implements CRUDAction {
 			}
 		}
 		this.fillStorable(storable);
-		if (!super.hasActionErrors()){
+		if (super.hasActionErrors()){
 			return Action.ERROR;
 		}
 		productDAO.store(storable);
-		return Action.SUCCESS;		
+		return Action.SUCCESS;
 	}
 	
 	protected void fillStorable(Product storable){

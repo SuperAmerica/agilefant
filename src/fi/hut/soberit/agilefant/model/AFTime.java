@@ -8,9 +8,9 @@ import java.util.NoSuchElementException;
  * Wrapper class around java.sql.Time for representing times in the
  * "JIRA notation".
  * <p>
- * db.hibernate.TimeUserTime.java enables saving these times into db.
+ * db.hibernate.TimeUserType.java enables saving these time-objects into db.
  * package-info.java defines a annotation shorthand for defining fields of this type. 
- * You should always define hibernate getters like this:
+ * You should always define AFTime-hibernate getters like this:
  * <p><code>
  * &#064;Type(type="af_time")<br>
  * public AFTime getTesttime() { ...
@@ -181,7 +181,7 @@ public class AFTime extends java.sql.Time {
 		if(time == 0)
 			return "0";
 		
-		// divided time into elements 
+		// divide time into elements 
 		
 		long days = time / DAY_IN_MILLIS;
 		time %= DAY_IN_MILLIS;
@@ -192,29 +192,43 @@ public class AFTime extends java.sql.Time {
 		long minutes = time / MINUTE_IN_MILLIS;
 		time %= MINUTE_IN_MILLIS;
 		
+		// rounding minutes properly, as defined by the unit test 
 		if(time >= 30000)
 			minutes++;
 		
-		// form string
+		// form the string
 		
+		// a flag to track when we should 
+		// put space between elements
 		boolean hadPrevious = false;
+		
+		// string to build the result in
 		String result = "";
 		
+		// days
 		if(days != 0) {
 			result += days + "d";
 			hadPrevious = true;
 		}
 		
+		// hours
 		if(hours != 0) {
 			if(hadPrevious) result += " ";
 			result += hours + "h";
 			hadPrevious = true;
 		}
 		
+		// minutes
 		if(minutes != 0) {
 			if(hadPrevious) result += " ";
 			result += minutes + "m";
 		}
+		
+		// check the emptyness once more here,  
+		// since all the fields might've been 0
+		// if time was less than half a minute
+		if(result.length() == 0)
+			result = "0";
 		
 		return result;
 	}		

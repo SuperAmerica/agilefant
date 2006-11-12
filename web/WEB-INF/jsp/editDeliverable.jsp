@@ -1,8 +1,16 @@
 <%@ include file="./inc/_taglibs.jsp" %>
 <%@ include file="./inc/_taglibs.jsp" %>
 <html>
-<body>
+<head>  <link rel="stylesheet" href="/agilefant/static/css/aef07.css" type="text/css">
+</head>
 <%@ include file="./inc/_header.jsp" %>
+<%@ include file="./inc/_navi_left.jsp" %>
+    <div id="upmenu">
+
+      <li class="normal"><a>Help</a>
+
+      </li>
+    </div>
 	<ww:actionerror/>
 	<ww:actionmessage/>
 	<h2>Edit Deliverable</h2>
@@ -13,7 +21,7 @@
 			Name: <ww:textfield name="deliverable.name"/>
 		</p>
 		<p>
-			Description: <ww:textarea name="deliverable.description" cols="50" rows="4"/>
+			Description: <ww:richtexteditor name="deliverable.description" width="600px" toolbarStartExpanded="false"/>
 		</p>
 <%--		<c:if test="${deliverable.id > 0}">
 			<h3>Sprints</h3>
@@ -64,5 +72,4 @@
 		</ul>
 		</p>
 	</c:if>
-</body>
-</html>
+<%@ include file="./inc/_footer.jsp" %>

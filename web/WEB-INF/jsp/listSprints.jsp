@@ -1,9 +1,18 @@
 <%@ include file="./inc/_taglibs.jsp" %>
 <html>
 <head>
+  <link rel="stylesheet" href="/agilefant/static/css/aef07.css" type="text/css">
 	<title>Sprint list - AgilEfant</title>
 </head>
-<body>
+<%@ include file="./inc/_header.jsp" %>
+<%@ include file="./inc/_navi_left.jsp" %>
+    <div id="upmenu">
+
+      <li class="normal"><a>Help</a>
+
+      </li>
+    </div>
+
 	<p>
 		<c:choose>
 			<c:when test="${empty sprints}">
@@ -27,6 +36,4 @@
 	<p>
 		<ww:url id="createSprintLink" action="createSprint"/>
 		<ww:a href="%{createSprintLink}">Create new</ww:a>
-	</p>
-</body>
-</html>
+	</p><%@ include file="./inc/_footer.jsp" %>

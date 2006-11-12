@@ -1,7 +1,17 @@
 <%@ include file="./inc/_taglibs.jsp" %>
 <html>
+<head>  <link rel="stylesheet" href="/agilefant/static/css/aef07.css" type="text/css">
 <ww:head/>
-<body>
+
+</head>
+<%@ include file="./inc/_header.jsp" %>
+<%@ include file="./inc/_navi_left.jsp" %>
+    <div id="upmenu">
+
+      <li class="normal"><a>Help</a>
+
+      </li>
+    </div>
 	<p>
 	
 <ww:if test="hasErrors()">
@@ -43,5 +53,4 @@
 		<ww:url id="createBacklogLink" action="createBacklog"/>
 		<ww:a href="%{createBacklogLink}">Create new</ww:a>
 	</p>
-</body>
-</html>
+<%@ include file="./inc/_footer.jsp" %>

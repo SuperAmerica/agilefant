@@ -2,8 +2,17 @@
 <html>
 <head>
 	<title>Activity type list - AgilEfant</title>
+  <link rel="stylesheet" href="/agilefant/static/css/aef07.css" type="text/css">
 </head>
-<body>
+
+<%@ include file="./inc/_header.jsp" %>
+<%@ include file="./inc/_navi_left.jsp" %>
+<div id="page">
+    <div id="upmenu">
+
+      <li class="normal"><a>Help</a>
+      </li>
+    </div>
 	<p>
 		<c:choose>
 			<c:when test="${empty activityTypes}">
@@ -26,5 +35,4 @@
 		<ww:url id="createActivityTypeLink" action="createActivityType"/>
 		<ww:a href="%{createActivityTypeLink}">Create new</ww:a>
 	</p>
-</body>
-</html>
+<%@ include file="./inc/_footer.jsp" %>

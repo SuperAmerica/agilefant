@@ -1,9 +1,17 @@
 <%@ include file="./inc/_taglibs.jsp" %>
 <html>
-<head>
-	<title>Deliverable list - AgilEfant</title>
+<head>  <link rel="stylesheet" href="/agilefant/static/css/aef07.css" type="text/css">
+<ww:head/>
+<title>Deliverable list - AgilEfant</title>
 </head>
-<body>
+<%@ include file="./inc/_header.jsp" %>
+<%@ include file="./inc/_navi_left.jsp" %>
+    <div id="upmenu">
+
+      <li class="normal"><a>Help</a>
+
+      </li>
+    </div>
 	<p>
 		<c:choose>
 			<c:when test="${empty deliverables}">
@@ -28,5 +36,4 @@
 		<ww:url id="createDeliverableLink" action="createDeliverable" includeParams="none"/>
 		<ww:a href="%{createDeliverableLink}">Create new</ww:a>
 	</p>
-</body>
-</html>
+<%@ include file="./inc/_footer.jsp" %>

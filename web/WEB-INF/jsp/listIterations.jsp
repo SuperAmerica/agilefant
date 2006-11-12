@@ -15,7 +15,7 @@
       </li>
     </div>
     
-<p>Products found:</p>
+<p>Iterations found:</p>
 <p>
 <aef:productList/>
 <c:forEach items="${productList}" var="product">

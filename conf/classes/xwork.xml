@@ -108,5 +108,19 @@
 			<result type="redirect">editBacklogItem.action?backlogItemId=${backlogItemId}</result>
 		</action>
 <!-- /Task actions -->
+<!-- Iteration actions -->
+		<action name="editIteration" method="edit" class="iterationAction">
+			<result>/WEB-INF/jsp/editIteration.jsp</result>
+		</action>
+		<action name="createIteration" method="create" class="iterationAction">
+			<result>/WEB-INF/jsp/editIteration.jsp</result>
+		</action>
+		<action name="deleteIteration" method="delete" class="iterationAction">
+			<result type="redirect">editDeliverable.action?deliverableId=${deliverableId}</result>
+		</action>
+		<action name="storeIteration" method="store" class="iterationAction">
+			<result type="redirect">editDeliverable.action?deliverableId=${deliverableId}</result>
+		</action>
+<!-- /Iteration actions -->
 	</package>
 </xwork>

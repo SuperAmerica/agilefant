@@ -23,31 +23,31 @@
 		<p>
 			Description: <ww:richtexteditor name="deliverable.description" width="600px" toolbarStartExpanded="false"/>
 		</p>
-<%--		<c:if test="${deliverable.id > 0}">
-			<h3>Sprints</h3>
+		<c:if test="${deliverable.id > 0}">
+			<h3>Iterations</h3>
 			<p>
-				<!-- todo: make consistent with new terminology? sprint -> iteration -->
-				<c:forEach items="${deliverable.iterations}" var="sprint">
+				<!-- todo: make consistent with new terminology? iteration -> iteration -->
+				<c:forEach items="${deliverable.iterations}" var="iteration">
 				<p>
-					<ww:url id="editLink" action="editSprint" includeParams="none">
-						<ww:param name="sprintId" value="${sprint.id}"/>
+					<ww:url id="editLink" action="editIteration" includeParams="none">
+						<ww:param name="iterationId" value="${iteration.id}"/>
 						<ww:param name="deliverableId" value="${deliverable.id}"/>						
 					</ww:url>
-					<ww:url id="deleteLink" action="deleteSprint" includeParams="none">
+					<ww:url id="deleteLink" action="deleteIteration" includeParams="none">
 						<ww:param name="deliverableId" value="${deliverable.id}"/>						
-						<ww:param name="sprintId" value="${sprint.id}"/>
+						<ww:param name="iterationId" value="${iteration.id}"/>
 					</ww:url>
-					${sprint.name} - <ww:a href="%{editLink}">Edit</ww:a>|<ww:a href="%{deleteLink}">Delete</ww:a>
+					${iteration.name} - <ww:a href="%{editLink}">Edit</ww:a>|<ww:a href="%{deleteLink}">Delete</ww:a>
 					</p>
 				</c:forEach>
 			</p>
 			<p>
- 				<ww:url id="createLink" action="createSprint" includeParams="none">
+ 				<ww:url id="createLink" action="createIteration" includeParams="none">
 					<ww:param name="deliverableId" value="${deliverable.id}"/>
 				</ww:url>
 				<ww:a href="%{createLink}">Create new</ww:a>
 			</p>
-		</c:if>--%>
+		</c:if>
 		<p>
 			<ww:submit value="Store"/>
 		</p>
@@ -72,4 +72,5 @@
 		</ul>
 		</p>
 	</c:if>
+
 <%@ include file="./inc/_footer.jsp" %>

@@ -2,7 +2,7 @@ package fi.hut.soberit.agilefant.model;
 
 import junit.framework.TestCase;
 
-import static fi.hut.soberit.agilefant.model.Time.*;
+import static fi.hut.soberit.agilefant.model.AFTime.*;
 
 /**
  * @author ekantola
@@ -17,7 +17,7 @@ public class TimeTest extends TestCase {
 		assertEquals(getTime(2, 4, 15), parse("2d 4h 15m"));
 		
 		// Days
-		assertEquals(getTime(2, 0, 0), parse("5d"));
+		assertEquals(getTime(5, 0, 0), parse("5d"));
 		
 		// Hours
 		assertEquals(getTime(0, 4, 0), parse("4h"));
@@ -39,6 +39,25 @@ public class TimeTest extends TestCase {
 		assertEquals(0, parse("0d 0h 0m"));
 		assertEquals(0, parse("0d 0m"));
 		assertEquals(0, parse("0h"));
+
+		// accept extra use of whitespaces 
+		assertEquals(getTime(2, 4, 15), parse("    2d    4h   15m    "));
+		
+		// Don't accept "almost good" input
+		try {
+			parse("2d 4h foo 15m");
+			fail();
+		} catch (IllegalArgumentException e) {
+			
+		}
+
+		// Don't accept "almost good" input
+		try {
+			parse("2d 4h 15m foo ");
+			fail();
+		} catch (IllegalArgumentException e) {
+			
+		}		
 		
 		// Don't accept empty strings
 		try {
@@ -84,31 +103,32 @@ public class TimeTest extends TestCase {
 	
 	public void testToString() {
 		// Test some normal time
-		assertEquals("5d 3h 4m", new Time(getTime(5, 3, 4)).toString());
+		assertEquals("5d 3h 4m", new AFTime(getTime(5, 3, 4)).toString());
 		
 		// Days only
-		assertEquals("2d", new Time(getTime(2, 0, 0)).toString());
+		assertEquals("2d", new AFTime(getTime(2, 0, 0)).toString());
 		
 		// Hours only
-		assertEquals("11h", new Time(getTime(0, 11, 0)).toString());
+		assertEquals("11h", new AFTime(getTime(0, 11, 0)).toString());
 		
 		// Minutes only
-		assertEquals("20m", new Time(getTime(0, 0, 20)).toString());
+		assertEquals("20m", new AFTime(getTime(0, 0, 20)).toString());
 		
 		// Days and minutes
-		assertEquals("3d 57m", new Time(getTime(3, 0, 57)).toString());
+		assertEquals("3d 57m", new AFTime(getTime(3, 0, 57)).toString());
 		
 		// Days and hours
-		assertEquals("5d 10h", new Time(getTime(5, 10, 0)).toString());
+		assertEquals("5d 10h", new AFTime(getTime(5, 10, 0)).toString());
 		
 		// Check that toString rounds values properly
-		assertEquals("6h 39m", new Time(getTime(0, 6, 40) - 30001));
-		assertEquals("6h 40m", new Time(getTime(0, 6, 40) - 30000));
-		assertEquals("6h 40m", new Time(getTime(0, 6, 40) + 29999));
-		assertEquals("6h 41m", new Time(getTime(0, 6, 40) + 30000));
+
+		assertEquals("6h 39m", new AFTime(getTime(0, 6, 40) - 30001).toString());
+		assertEquals("6h 40m", new AFTime(getTime(0, 6, 40) - 30000).toString());
+		assertEquals("6h 40m", new AFTime(getTime(0, 6, 40) + 29999).toString());
+		assertEquals("6h 41m", new AFTime(getTime(0, 6, 40) + 30000).toString());
 		
 		// Zero dates
 		// TODO what is the best output format for this? Should we print some qualifier? 
-		assertEquals("0", new Time(0));
+		assertEquals("0", new AFTime(0).toString());
 	}
 }

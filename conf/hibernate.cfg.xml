@@ -5,9 +5,10 @@
 
 <hibernate-configuration>
 	<session-factory>
-<!-- For some unknown reason package mapping doesn't work
-<mapping package="fi.hut.soberit.agilefant.model"/>
--->
+		<!-- we need the package mapping to make package-info.java work,
+		but it won't map all the package classes -->
+		<mapping package="fi.hut.soberit.agilefant.model"/>
+		
   		<mapping class="fi.hut.soberit.agilefant.model.ActivityType"/>
   		<mapping class="fi.hut.soberit.agilefant.model.Backlog"/>
  		<mapping class="fi.hut.soberit.agilefant.model.BacklogItem"/>

@@ -84,23 +84,6 @@
 <!-- /Deliverable actions -->
 <!-- Work type actions -->
 <!-- TODO -->
-<!-- Sprint actions -->
-		<action name="listSprints" method="getAll" class="sprintAction">
-			<result>/WEB-INF/jsp/listSprints.jsp</result>
-		</action>
-		<action name="editSprint" method="edit" class="sprintAction">
-			<result>/WEB-INF/jsp/editSprint.jsp</result>
-		</action>
-		<action name="createSprint" method="create" class="sprintAction">
-			<result>/WEB-INF/jsp/editSprint.jsp</result>
-		</action>
-		<action name="deleteSprint" method="delete" class="sprintAction">
-			<result type="redirect">editDeliverable.action?deliverableId=${deliverableId}</result>
-		</action>
-		<action name="storeSprint" method="store" class="sprintAction">
-			<result type="redirect">editDeliverable.action?deliverableId=${deliverableId}</result>
-		</action>
-<!-- /Sprint actions -->
 <!-- Backlog actions -->
 		<action name="editBacklog" method="edit" class="backlogAction">
 			<result name="editProduct" type="redirect">editProduct.action?productId=${backlogId}</result>

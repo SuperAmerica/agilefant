@@ -39,7 +39,6 @@
 	<bean name="workTypeDAOTarget" parent="abstractDAOTarget" class="fi.hut.soberit.agilefant.db.hibernate.WorkTypeDAOHibernate"/>
 	<bean name="deliverableDAOTarget" parent="abstractDAOTarget" class="fi.hut.soberit.agilefant.db.hibernate.DeliverableDAOHibernate"/>
 	<bean name="backlogItemDAOTarget" parent="abstractDAOTarget" class="fi.hut.soberit.agilefant.db.hibernate.BacklogItemDAOHibernate"/>
-	<bean name="sprintDAOTarget" parent="abstractDAOTarget" class="fi.hut.soberit.agilefant.db.hibernate.SprintDAOHibernate"/>
 	<bean name="taskDAOTarget" parent="abstractDAOTarget" class="fi.hut.soberit.agilefant.db.hibernate.TaskDAOHibernate"/>
 	
 	<bean name="activityTypeDAO" parent="abstractDAO">
@@ -57,10 +56,6 @@
 
 	<bean name="backlogItemDAO" parent="abstractDAO">
 		<property name="target" ref="backlogItemDAOTarget"/>
-	</bean>
-
-	<bean name="sprintDAO" parent="abstractDAO">
-		<property name="target" ref="sprintDAOTarget"/>
 	</bean>
 
 	<bean name="taskDAO" parent="abstractDAO">

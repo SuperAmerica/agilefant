@@ -26,52 +26,43 @@
 		<ww:hidden name="iterationId" value="${iteration.id}"/>
 		<ww:hidden name="deliverableId"/> 
 
-<ww:date name="%{new java.util.Date()}" format="dd-MM-yyyy" id="date"/>
+<%--<ww:date name="%{new java.util.Date()}" format="dd-MM-yyyy" id="date"/>
 <p>
 
 			Startdate: <ww:datepicker value="%{#date}" showstime="%{true}" format="%d-%m-%Y" name="iteration.startDate"/> 
 		</p>
 		<p>		
 			Enddate: <ww:datepicker value="%{#date}" showstime="%{true}" format="%d-%m-%Y" name="iteration.endDate"/> 
-		</p>
+		</p>--%>
     	<p>		
 			Name: <ww:textfield name="iteration.name"/>
 		</p>
 		<p>
 			Description: <ww:richtexteditor name="iteration.description" width="600px" toolbarStartExpanded="false"/>
 		</p>
-		<c:if test="${iteration.id > 0}">			
-			fixme: old stuff no longer valid, db model changed			
-			<%--
-			<h3>Backlogs</h3>
-			<p>
-				<c:forEach items="${iteration.backlogs}" var="backlog">
-				<p>
-					<ww:url id="editLink" action="editBacklog" includeParams="none">
-						<ww:param name="backlogId" value="${backlog.id}"/>
-						<ww:param name="iterationId" value="${iteration.id}"/>
-					</ww:url>
-					<ww:url id="deleteLink" action="deleteBacklog" includeParams="none">
-						<ww:param name="iterationId" value="${iteration.id}"/>
-						<ww:param name="backlogId" value="${backlog.id}"/>
-					</ww:url>
-					${backlog.name} - <ww:a href="%{editLink}">Edit</ww:a>|<ww:a href="%{deleteLink}">Delete</ww:a>
-					</p>
-				</c:forEach>
-			</p>
-			<p>
-				<ww:url id="createLink" action="createBacklog" includeParams="none">
-					<ww:param name="iterationId" value="${iteration.id}"/>
-					<ww:param name="backlogId" value="${backlog.id}"/>
-				</ww:url>
-				<ww:a href="%{createLink}">Create new</ww:a>		
-			</p>
-			--%>
-		</c:if>
 		<p>
 			<ww:submit value="Store"/>
 		</p>
 	</ww:form>	
 
-	<p>
+	<c:if test="${!empty iteration.backlogItems}">
+		<p>
+			Has backlog items:
+		</p>
+		<p>
+		<ul>
+		<c:forEach items="${iteration.backlogItems}" var="item">
+			<ww:url id="editLink" action="editBacklogItem" includeParams="none">
+				<ww:param name="backlogItemId" value="${item.id}"/>
+			</ww:url>
+			<ww:url id="deleteLink" action="deleteBacklogItem" includeParams="none">
+				<ww:param name="backlogItemId" value="${item.id}"/>
+			</ww:url>
+			<li>
+				${item.name} (${fn:length(item.tasks)} tasks) - <ww:a href="%{editLink}">Edit</ww:a>|<ww:a href="%{deleteLink}">Delete</ww:a>
+			</li>
+		</c:forEach>
+		</ul>
+		</p>
+	</c:if>
 <%@ include file="./inc/_footer.jsp" %>

@@ -37,7 +37,10 @@
 						<ww:param name="deliverableId" value="${deliverable.id}"/>						
 						<ww:param name="iterationId" value="${iteration.id}"/>
 					</ww:url>
-					${iteration.name} - <ww:a href="%{editLink}">Edit</ww:a>|<ww:a href="%{deleteLink}">Delete</ww:a>
+					<ww:url id="createBacklogItemLink" action="createBacklogItem" includeParams="none">
+						<ww:param name="backlogId" value="${iteration.id}"/>
+					</ww:url>
+					${iteration.name} - <ww:a href="%{editLink}">Edit</ww:a>|<ww:a href="%{deleteLink}">Delete</ww:a>|<ww:a href="%{createBacklogItemLink}">Add backlog item</ww:a>
 					</p>
 				</c:forEach>
 			</p>

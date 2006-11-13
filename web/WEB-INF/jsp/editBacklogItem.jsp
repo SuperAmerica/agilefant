@@ -54,6 +54,16 @@
 									<option value="${deliverable.id}">&nbsp;&nbsp;&nbsp;&nbsp;${deliverable.name}</option>
 								</c:otherwise>
 							</c:choose>
+							<c:forEach items="${deliverable.iterations}" var="iteration">
+								<c:choose>
+									<c:when test="${iteration.id == backlogItem.backlog.id}">
+										<option selected="selected" value="${iteration.id}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${iteration.name}</option>
+									</c:when>
+									<c:otherwise>
+										<option value="${iteration.id}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${iteration.name}</option>
+									</c:otherwise>
+								</c:choose>
+							</c:forEach>
 						</c:forEach>						
 					</c:forEach>				
 				</select>
@@ -81,10 +91,12 @@
 			</ul>
 		</p>
 	</c:if>
-	<p>
-		<ww:url id="createLink" action="createTask" includeParams="none">
-			<ww:param name="backlogItemId" value="${backlogItemId}"/>
-		</ww:url>
-		<ww:a href="%{createLink}">Add task</ww:a>
-	</p>
+	<c:if test="${backlogItem.id > 0}">
+		<p>
+			<ww:url id="createLink" action="createTask" includeParams="none">
+				<ww:param name="backlogItemId" value="${backlogItemId}"/>
+			</ww:url>
+			<ww:a href="%{createLink}">Add task</ww:a>
+		</p>
+	</c:if>
 <%@ include file="./inc/_footer.jsp" %>

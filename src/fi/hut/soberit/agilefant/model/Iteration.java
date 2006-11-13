@@ -19,9 +19,9 @@ import javax.persistence.JoinColumn;
 @Entity
 public class Iteration extends Backlog {
 	
-    	private Date startDate;
-    	private Date endDate;
-    	private Deliverable deliverable;
+	private Date startDate;
+	private Date endDate;
+    private Deliverable deliverable;
 	private User owner;
 	
 	@ManyToOne 

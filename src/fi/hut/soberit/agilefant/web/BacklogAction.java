@@ -8,6 +8,7 @@ import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.Deliverable;
+import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Product;
 
 public class BacklogAction extends ActionSupport {
@@ -61,6 +62,8 @@ public class BacklogAction extends ActionSupport {
 			return "editProduct";
 		} else if (backlog instanceof Deliverable){
 			return "editDeliverable";
+		} else if (backlog instanceof Iteration){
+			return "editIteration";
 		}
 		super.addActionError(super.getText("backlog.unknownType"));
 		return Action.ERROR;		

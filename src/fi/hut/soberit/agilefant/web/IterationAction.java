@@ -8,10 +8,8 @@ import com.opensymphony.xwork.ActionSupport;
 
 import fi.hut.soberit.agilefant.db.DeliverableDAO;
 import fi.hut.soberit.agilefant.db.IterationDAO;
-import fi.hut.soberit.agilefant.model.ActivityType;
 import fi.hut.soberit.agilefant.model.Deliverable;
 import fi.hut.soberit.agilefant.model.Iteration;
-import fi.hut.soberit.agilefant.model.WorkType;
 
 public class IterationAction extends ActionSupport {
 	
@@ -21,20 +19,7 @@ public class IterationAction extends ActionSupport {
 	private DeliverableDAO deliverableDAO;
 	private Deliverable deliverable;
 	private int deliverableId;
-	private Collection<Iteration> iterations;
 
-	public String getAll(){
-	    	iterations = new ArrayList<Iteration>();
-		deliverable = deliverableDAO.get(deliverableId);
-		if (deliverable == null){
-			iterations = iterationDAO.getAll();
-		} else {
-			iterations = deliverable.getIterations();
-		}
-//		iterations = iterationDAO.getAll();
-		return Action.SUCCESS;
-	}
-	
 	public String create(){
 		Deliverable deliverable =  deliverableDAO.get(deliverableId);
 		if (deliverable == null){
@@ -81,9 +66,6 @@ public class IterationAction extends ActionSupport {
 		}
 		this.fillObject(fillable);
 		iterationDAO.store(fillable);
-		// updating activitytypes here to make listing work correctly after storing
-		// - turkka
-//		sprints = iterationDAO.getAll();
 		return Action.SUCCESS;
 	}
 	
@@ -119,16 +101,8 @@ public class IterationAction extends ActionSupport {
 		this.iteration = iteration;
 	}
 
-	public Collection<Iteration> getIterations() {
-		return iterations;
-	}
-
 	public void setIterationDAO(IterationDAO iterationDAO) {
 		this.iterationDAO = iterationDAO;
-	}
-
-	public DeliverableDAO getDeliverableDAO() {
-	    return deliverableDAO;
 	}
 
 	public void setDeliverableDAO(DeliverableDAO deliverableDAO) {

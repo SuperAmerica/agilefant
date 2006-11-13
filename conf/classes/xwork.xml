@@ -88,10 +88,12 @@
 		<action name="editBacklog" method="edit" class="backlogAction">
 			<result name="editProduct" type="redirect">editProduct.action?productId=${backlogId}</result>
 			<result name="editDeliverable" type="redirect">editDeliverable.action?deliverableId=${backlogId}</result>
+			<result name="editIteration" type="redirect">editIteration.action?iterationId=${backlogId}</result>
 		</action>
 		<action name="moveBacklogItem" method="moveBacklogItem" class="backlogAction">
 			<result name="editProduct" type="redirect">editProduct.action?productId=${backlogId}</result>
 			<result name="editDeliverable" type="redirect">editDeliverable.action?deliverableId=${backlogId}</result>
+			<result name="editIteration" type="redirect">editIteration.action?iterationId=${backlogId}</result>
 		</action>
 <!-- /Backlog actions -->
 <!-- Task actions -->

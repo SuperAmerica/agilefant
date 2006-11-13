@@ -27,7 +27,7 @@ public class AFTime extends java.sql.Time {
 	public static long SECOND_IN_MILLIS = 1000;
 	public static long MINUTE_IN_MILLIS = 60 * SECOND_IN_MILLIS;
 	public static long HOUR_IN_MILLIS = 60 * MINUTE_IN_MILLIS;
-	public static long DAY_IN_MILLIS = 24 * HOUR_IN_MILLIS;
+	public static long WORKDAY_IN_MILLIS = 8 * HOUR_IN_MILLIS;
 	
 	public AFTime(long time) {
 		super(time);
@@ -69,7 +69,7 @@ public class AFTime extends java.sql.Time {
 			// which fields were read
 			boolean hasFields[] = {false, false, false};
 			// millisecond contribution of each field
-			final long contributions[] = {DAY_IN_MILLIS, HOUR_IN_MILLIS, MINUTE_IN_MILLIS};
+			final long contributions[] = {WORKDAY_IN_MILLIS, HOUR_IN_MILLIS, MINUTE_IN_MILLIS};
 			
 			while(true) {
 				
@@ -183,8 +183,8 @@ public class AFTime extends java.sql.Time {
 		
 		// divide time into elements 
 		
-		long days = time / DAY_IN_MILLIS;
-		time %= DAY_IN_MILLIS;
+		long days = time / WORKDAY_IN_MILLIS;
+		time %= WORKDAY_IN_MILLIS;
 		
 		long hours = time / HOUR_IN_MILLIS;
 		time %= HOUR_IN_MILLIS;

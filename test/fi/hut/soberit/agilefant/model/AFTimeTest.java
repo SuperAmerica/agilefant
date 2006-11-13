@@ -7,9 +7,9 @@ import static fi.hut.soberit.agilefant.model.AFTime.*;
 /**
  * @author ekantola
  */
-public class TimeTest extends TestCase {
+public class AFTimeTest extends TestCase {
 	private long getTime(int days, int hours, int minutes) {
-		return days*DAY_IN_MILLIS + hours*HOUR_IN_MILLIS + minutes*MINUTE_IN_MILLIS;
+		return days*WORKDAY_IN_MILLIS + hours*HOUR_IN_MILLIS + minutes*MINUTE_IN_MILLIS;
 	}
 	
 	public void testParse() {
@@ -58,6 +58,14 @@ public class TimeTest extends TestCase {
 		} catch (IllegalArgumentException e) {
 			
 		}		
+		
+		// Don't accept times with same field given multiple times
+		try {
+			parse("2d 5h 2h");
+			fail();
+		} catch (IllegalArgumentException e) {
+			
+		}
 		
 		// Don't accept empty strings
 		try {
@@ -109,7 +117,7 @@ public class TimeTest extends TestCase {
 		assertEquals("2d", new AFTime(getTime(2, 0, 0)).toString());
 		
 		// Hours only
-		assertEquals("11h", new AFTime(getTime(0, 11, 0)).toString());
+		assertEquals("7h", new AFTime(getTime(0, 7, 0)).toString());
 		
 		// Minutes only
 		assertEquals("20m", new AFTime(getTime(0, 0, 20)).toString());
@@ -118,7 +126,7 @@ public class TimeTest extends TestCase {
 		assertEquals("3d 57m", new AFTime(getTime(3, 0, 57)).toString());
 		
 		// Days and hours
-		assertEquals("5d 10h", new AFTime(getTime(5, 10, 0)).toString());
+		assertEquals("5d 2h", new AFTime(getTime(5, 2, 0)).toString());
 		
 		// Check that toString rounds values properly
 

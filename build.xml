@@ -32,6 +32,7 @@
     <target name="compile" depends="init" description="Compiles source files">
 		<javac debug="${javac.debug}" destdir="${build.classes}" srcdir="${src}">
         	<classpath refid="compile.classpath"/>
+        	<!-- <compilerarg value="-Xlint:deprecation"/> -->
 		</javac>
     </target>
 	

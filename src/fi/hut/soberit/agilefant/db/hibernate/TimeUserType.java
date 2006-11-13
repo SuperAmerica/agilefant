@@ -38,7 +38,9 @@ public class TimeUserType implements UserType {
 	public boolean isMutable() { return true; }
 	
 	public Object deepCopy(Object value) {
-		AFTime time = (AFTime)value;
+		if(value == null)
+			return null;
+		AFTime time = (AFTime)value;		
 		return new AFTime(time.getTime());
 	}	
 

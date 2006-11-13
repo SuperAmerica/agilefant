@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import org.hibernate.annotations.Type;
 
 @Entity
 public class BacklogItem {
@@ -20,7 +21,16 @@ public class BacklogItem {
 	private String description;
 	private Backlog backlog;
 	private Collection<Task> tasks = new HashSet<Task>();
-		
+	private AFTime remainingEffortEstimate; 	
+	
+	@Type(type="af_time")
+	public AFTime getRemainingEffortEstimate() {
+		return remainingEffortEstimate;
+	}
+	public void setRemainingEffortEstimate(AFTime remainingEffortEstimate) {
+		this.remainingEffortEstimate = remainingEffortEstimate;
+	}
+	
 	public String getDescription() {
 	    return description;
 	}

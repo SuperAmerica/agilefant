@@ -25,5 +25,6 @@
 	<classpathentry kind="lib" path="lib/build/jsp-api.jar"/>
 	<classpathentry kind="lib" path="lib/build/servlet-api.jar"/>
 	<classpathentry kind="lib" path="lib/build/fitlibrary.jar"/>
+	<classpathentry kind="lib" path="lib/build/fitnesse.jar"/>
 	<classpathentry kind="output" path="build"/>
 </classpath>

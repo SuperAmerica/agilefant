@@ -13,7 +13,6 @@ public class User {
 	private String password;
 	private String loginName;
 	private String fullName;
-	private String description;
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
@@ -25,15 +24,7 @@ public class User {
 	public void setId(int id) {
 		this.id = id;
 	}
-	
-	public String getDescription() {
-		return description;
-	}
-	
-	public void setDescription(String description) {
-		this.description = description;
-	}
-	
+		
 	public String getFullName() {
 		return fullName;
 	}

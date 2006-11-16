@@ -15,13 +15,15 @@ import javax.persistence.OneToMany;
 import javax.persistence.Entity;
 import javax.persistence.Transient;
 
+import org.hibernate.annotations.Type;
+
 @Entity
 public class Task {
 	 	
 	private int id;
 	private int severity;
 	private int priority;
-	private int effortEstimate;
+	private AFTime effortEstimate;
 	private String name;
 	private String description;
 	private BacklogItem backlogItem;
@@ -103,12 +105,12 @@ public class Task {
 	    this.events = events;
 	}
 
-	@Column(nullable = true)	
-	public int getEffortEstimate() {
+	@Type(type="af_time")
+	public AFTime getEffortEstimate() {
 	    return effortEstimate;
 	}
 
-	public void setEffortEstimate(int effortEstimate) {
+	public void setEffortEstimate(AFTime effortEstimate) {
 	    this.effortEstimate = effortEstimate;
 	}
 

@@ -47,22 +47,25 @@
 
 	<c:if test="${!empty iteration.backlogItems}">
 		<p>
-			Has backlog items:
+			Backlog items:
 		</p>
 		<p>
-		<ul>
-		<c:forEach items="${iteration.backlogItems}" var="item">
-			<ww:url id="editLink" action="editBacklogItem" includeParams="none">
-				<ww:param name="backlogItemId" value="${item.id}"/>
-			</ww:url>
-			<ww:url id="deleteLink" action="deleteBacklogItem" includeParams="none">
-				<ww:param name="backlogItemId" value="${item.id}"/>
-			</ww:url>
-			<li>
-				${item.name} (${fn:length(item.tasks)} tasks) - <ww:a href="%{editLink}">Edit</ww:a>|<ww:a href="%{deleteLink}">Delete</ww:a>
-			</li>
-		</c:forEach>
-		</ul>
+			<display:table name="iteration.backlogItems" id="row" requestURI="editIteration.action">
+				<display:column sortable="true" title="Id" property="id"/>
+				<display:column sortable="true" title="Name" property="name"/>
+				<display:column sortable="true" title="# of tasks">
+					${fn:length(row.tasks)}
+				</display:column>
+				<display:column sortable="false" title="Actions">
+					<ww:url id="editLink" action="editBacklogItem" includeParams="none">
+						<ww:param name="backlogItemId" value="${row.id}"/>
+					</ww:url>
+					<ww:url id="deleteLink" action="deleteBacklogItem" includeParams="none">
+						<ww:param name="backlogItemId" value="${row.id}"/>
+					</ww:url>
+					<ww:a href="%{editLink}">Edit</ww:a>|<ww:a href="%{deleteLink}">Delete</ww:a>
+				</display:column>
+			</display:table>
 		</p>
 	</c:if>
 <%@ include file="./inc/_footer.jsp" %>

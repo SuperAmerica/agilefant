@@ -14,6 +14,7 @@ public abstract class SpringTagSupport extends TagSupport {
 	@Override
 	public final void setPageContext(PageContext pageContext) {
 		super.setPageContext(pageContext);
+		this.pageContext = pageContext;
 		this.applicationContext = WebApplicationContextUtils.getWebApplicationContext(pageContext.getServletContext());
 	}
 	

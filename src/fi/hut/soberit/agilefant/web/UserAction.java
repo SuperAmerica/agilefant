@@ -1,5 +1,6 @@
 package fi.hut.soberit.agilefant.web;
 
+import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
 
 import fi.hut.soberit.agilefant.db.UserDAO;
@@ -12,23 +13,47 @@ public class UserAction extends ActionSupport implements CRUDAction{
 	private UserDAO userDAO;
 
 	public String create() {
-		// TODO Auto-generated method stub
-		return null;
+		userId = 0;
+		user = new User();
+		return Action.SUCCESS;
+		
 	}
 
 	public String delete() {
-		// TODO Auto-generated method stub
-		return null;
+		userDAO.remove(userId);
+		return Action.SUCCESS;
 	}
 
 	public String edit() {
-		// TODO Auto-generated method stub
-		return null;
+		user = userDAO.get(userId);
+		if (user == null){
+			super.addActionError(super.getText("user.notFound"));
+			return Action.ERROR;
+		}
+		return Action.SUCCESS;
 	}
 
 	public String store() {
-		// TODO Auto-generated method stub
-		return null;
+		User storable = new User();
+		if (userId > 0){
+			storable = userDAO.get(userId);
+			if (storable == null){
+				super.addActionError(super.getText("user.notFound"));
+				return Action.ERROR;
+			}
+		}
+		this.fillStorable(storable);
+		if (super.hasActionErrors()){
+			return Action.ERROR;
+		}
+		userDAO.store(storable);
+		return Action.SUCCESS;
+	}
+	
+	protected void fillStorable(User storable){
+		storable.setFullName(this.user.getFullName());
+		storable.setLoginName(this.user.getLoginName());
+		storable.setPassword(this.user.getPassword());		
 	}
 
 	public User getUser() {

@@ -1,4 +1,4 @@
-package fi.hut.soberit.agilefant.fixtures;
+package fi.hut.soberit.agilefant.model;
 
 import fit.ColumnFixture;
 

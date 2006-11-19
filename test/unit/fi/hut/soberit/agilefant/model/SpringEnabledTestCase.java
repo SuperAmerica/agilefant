@@ -1,27 +1,28 @@
 package fi.hut.soberit.agilefant.model;
 
-import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
+import junit.framework.TestCase;
+import fi.hut.soberit.agilefant.util.ExplicitSpringSupport;
 
-public class SpringEnabledTestCase extends AbstractDependencyInjectionSpringContextTests {
-
-	public SpringEnabledTestCase() {
-		setAutowireMode(AUTOWIRE_BY_NAME); 
-	}
-		
+/**
+ * Use for &quot;TestCase&quot;s with spring support. 
+ * <p>
+ * This uses ExplicitSpringSupport to plug the inherited test case 
+ * automatically to spring.
+ * <p>
+ * If you want to use other JUnit testing classes than &quot;TestCase&quot;, 
+ * consult ExplicitSpringSupport. 
+ * 
+ * @see ExplicitSpringSupport
+ * @author Turkka Äijälä
+ */
+public class SpringEnabledTestCase extends TestCase {	
+	
 	/**
-	 * List of spring configs that should be loaded.
-	 * Notice that this is according to project directory, not
-	 * installation directory. 
-	 */ 
-	private static final String[] configLocations = {
-		"file:conf/testApplicationContext.xml",
-		"file:conf/testApplicationContext-daos.xml",
-		"file:conf/applicationContext-actions.xml"}; 
-	                        
-	/**
-	 * Tell configuration locations to spring.
+	 * Constructor which forces a call to loadSpringSupport.  
 	 */
-	protected final String[] getConfigLocations() {
-		return configLocations;
+	SpringEnabledTestCase() {
+		// call loadSpringSupport
+		ExplicitSpringSupport.loadSpringSupport(this);
 	}
+	
 }

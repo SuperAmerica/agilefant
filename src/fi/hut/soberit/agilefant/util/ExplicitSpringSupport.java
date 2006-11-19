@@ -1,5 +1,7 @@
 package fi.hut.soberit.agilefant.util;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
@@ -22,7 +24,7 @@ import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
  * 
  * @author Turkka Äijälä
  */
-public class ExplicitSpringSupport {
+public class ExplicitSpringSupport {	
 	/**
 	 * Spring configuration files.
 	 */
@@ -42,8 +44,19 @@ public class ExplicitSpringSupport {
 	 * @return singleton instance
 	 */
 	private static AbstractApplicationContext getAgilefantSpringContext() {
-		if(agilefantContext == null)
+		if(agilefantContext == null) {
+		
+			// get the static logger
+			Log log = LogFactory.getLog(ExplicitSpringSupport.class);
+			 
+			// inform that we're initializing spring
+			log.info("initializing spring");
+			
+			// create the context
 			agilefantContext = new ClassPathXmlApplicationContext(configLocations);
+			
+			log.info("done initializing spring application context");
+		}
 		
 		return agilefantContext;		
 	}

@@ -4,6 +4,8 @@ import fi.hut.soberit.agilefant.db.UserDAO;
 
 /*
  * Example spring-enabled unit test.
+ * 
+ * @author Turkka Äijälä
  */
 public class UserTest extends SpringEnabledTestCase {
 	
@@ -21,8 +23,11 @@ public class UserTest extends SpringEnabledTestCase {
 	 * Test saving, loading and deleting users. 
 	 */
 	public void testUser() {
-
-		// get old size
+		
+		// if the DAO was null, spring propably did not set it
+		assertNotNull("spring support not working?", userDAO);
+				
+		// get amount of users before any operations
 		int size1 = userDAO.getAll().size();
 		
 		// create a test user object
@@ -38,19 +43,21 @@ public class UserTest extends SpringEnabledTestCase {
 		// request the user object we just created
 		User user2 = userDAO.get(user.getId());
 		
+		assertNotNull("could not get user", user2);
+		
 		// asserts the fields are equal to what we saved 
 		assertEquals(user.getId(), user2.getId());
 		assertEquals(user.getFullName(), user2.getFullName());
 		assertEquals(user.getLoginName(), user2.getLoginName());
 		assertEquals(user.getPassword(), user2.getPassword());
 		
-		// remove
+		// remove the user we added
 		userDAO.remove(user.getId());
 
-		// get new size
+		// get amount of users after all operations
 		int size2 = userDAO.getAll().size();
 		
-		// test that amount of users stayed the same
-		assertEquals(size1, size2);				
+		// test that amount of users was the same before and after operations
+		assertEquals("amount of users differ, possibly a deletion failure?", size1, size2);				
 	}	
 }

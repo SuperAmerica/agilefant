@@ -55,7 +55,7 @@ public class ExplicitSpringSupport {
 			// create the context
 			agilefantContext = new ClassPathXmlApplicationContext(configLocations);
 			
-			log.info("done initializing spring application context");
+			log.info("done initializing spring");
 		}
 		
 		return agilefantContext;		

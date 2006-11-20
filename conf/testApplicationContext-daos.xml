@@ -12,7 +12,7 @@ in directory structures when run in project directory and when run installed.
 
 If you can figure out a way to manage without separate copies of this file,
 please implement. In that case, you should change the filenames in 
-SpringEnabledTestCase.java.
+ExplicitSpringSupport.java.
 
 - Turkka
 

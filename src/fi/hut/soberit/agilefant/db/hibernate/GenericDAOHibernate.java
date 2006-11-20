@@ -2,6 +2,7 @@ package fi.hut.soberit.agilefant.db.hibernate;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.NoSuchElementException;
 
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
@@ -55,7 +56,11 @@ public abstract class GenericDAOHibernate<T> extends HibernateDaoSupport impleme
 		if (list == null){
 			return null;
 		} else {
-			return list.iterator().next();
+			try {
+				return list.iterator().next();
+			} catch(NoSuchElementException e) {
+				return null;
+			}
 		}
 	}
 }

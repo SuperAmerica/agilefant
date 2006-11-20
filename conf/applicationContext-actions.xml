@@ -10,4 +10,5 @@
 	<bean name="iterationAction" class="fi.hut.soberit.agilefant.web.IterationAction" singleton="false" autowire="byName"/>	
 	<bean name="productAction" class="fi.hut.soberit.agilefant.web.ProductAction" singleton="false" autowire="byName"/>
 	<bean name="backlogItemAction" class="fi.hut.soberit.agilefant.web.BacklogItemAction" singleton="false" autowire="byName"/>
+	<bean name="userAction" class="fi.hut.soberit.agilefant.web.UserAction" singleton="false" autowire="byName"/>	
 </beans>

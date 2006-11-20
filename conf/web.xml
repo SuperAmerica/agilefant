@@ -7,7 +7,15 @@
 		 <param-name>contextConfigLocation</param-name>
 		<param-value>WEB-INF/applicationContext*.xml</param-value>
 	</context-param>
- 
+ 	
+	<filter>
+		<filter-name>Acegi Filter Chain Proxy</filter-name>
+		<filter-class>org.acegisecurity.util.FilterToBeanProxy</filter-class>
+ 	 	<init-param>
+			<param-name>targetClass</param-name>
+			<param-value>org.acegisecurity.util.FilterChainProxy</param-value>
+		</init-param>
+	</filter>
  	<filter>
 		<filter-name>hibernateFilter</filter-name>
 		<filter-class>org.springframework.orm.hibernate3.support.OpenSessionInViewFilter</filter-class>
@@ -17,7 +25,12 @@
 		<filter-class>com.opensymphony.webwork.dispatcher.FilterDispatcher</filter-class>
 	</filter>
  
-	 <filter-mapping>
+	<!-- the order matters - acegi must come first -->
+	<filter-mapping>
+	      <filter-name>Acegi Filter Chain Proxy</filter-name>
+	      <url-pattern>/*</url-pattern>
+	</filter-mapping>
+ 	<filter-mapping>
 		<filter-name>hibernateFilter</filter-name>
 		<url-pattern>*.action</url-pattern>
 	</filter-mapping>

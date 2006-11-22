@@ -5,12 +5,15 @@ import com.opensymphony.xwork.ActionSupport;
 
 import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.security.SecurityUtil;
 
 public class UserAction extends ActionSupport implements CRUDAction{
 	
 	private int userId;
 	private User user;
 	private UserDAO userDAO;
+	private String password1;
+	private String password2;
 
 	public String create() {
 		userId = 0;
@@ -50,9 +53,27 @@ public class UserAction extends ActionSupport implements CRUDAction{
 	}
 			
 	protected void fillStorable(User storable){
+		String md5Pw = null;
+		if (password1.length() == 0 && password2.length() == 0){
+			if (storable.getId() == 0){
+				super.addActionError(super.getText("user.missingPassword"));
+				return;
+			}
+			md5Pw = storable.getPassword();
+		} else {
+			if (!password1.equals(password2)){
+				password1 = "";
+				password2 = "";
+				super.addActionError(super.getText("user.passwordsNotEqual"));
+				return;
+			} else {
+				md5Pw = SecurityUtil.MD5(password1);
+			}
+		}
+
 		storable.setFullName(this.user.getFullName());
 		storable.setLoginName(this.user.getLoginName());
-		storable.setPassword(this.user.getPassword());		
+		storable.setPassword(md5Pw);		
 	}
 
 	public User getUser() {
@@ -94,10 +115,26 @@ public class UserAction extends ActionSupport implements CRUDAction{
 				
 		testUser.setFullName("Teppo Testi");
 		testUser.setLoginName("test");		
-		testUser.setPassword(fi.hut.soberit.agilefant.security.SecurityUtil.MD5("test"));
+		testUser.setPassword(SecurityUtil.MD5("test"));
 		
 		userDAO.store(testUser);
 				
 		return Action.SUCCESS;
+	}
+	
+	public String getPassword1() {
+		return password1;
+	}
+
+	public void setPassword1(String password1) {
+		this.password1 = password1;
+	}
+
+	public String getPassword2() {
+		return password2;
+	}
+
+	public void setPassword2(String password2) {
+		this.password2 = password2;
 	}
 }

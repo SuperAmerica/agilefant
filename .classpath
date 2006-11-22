@@ -20,7 +20,6 @@
 	<classpathentry kind="lib" path="lib/standard.jar"/>
 	<classpathentry kind="lib" path="lib/xwork-1.2.1.jar" sourcepath="lib-src/xwork-src-1.2.1.jar"/>
 	<classpathentry kind="lib" path="lib/xwork-tiger-1.2.1.jar" sourcepath="lib-src/xwork-tiger-src-1.2.1.jar"/>
-	<classpathentry kind="var" path="JUNIT_HOME/junit.jar" sourcepath="ECLIPSE_HOME/plugins/org.eclipse.jdt.source_3.1.1/src/org.junit_3.8.1/junitsrc.zip"/>
 	<classpathentry kind="lib" path="lib/build/jsp-api.jar"/>
 	<classpathentry kind="lib" path="lib/build/servlet-api.jar"/>
 	<classpathentry kind="lib" path="lib/build/fitlibrary.jar"/>
@@ -42,5 +41,6 @@
 	<classpathentry kind="lib" path="lib/postgresql-8.1-407.jdbc3.jar"/>
 	<classpathentry kind="lib" path="lib/ehcache-1.2.0_03.jar"/>
 	<classpathentry kind="lib" path="lib/acegi-security-1.0.3.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/3.8.1"/>
 	<classpathentry kind="output" path="build"/>
 </classpath>

@@ -14,24 +14,22 @@
   <div id="t_row">
     <div id="login">
       <form method="post" action="j_acegi_security_check">
-
-      <p>account: <input name="j_username" size="30" type="text">
-      </p><p>password: <input name="j_password" size="30" type="password">
-      </p><p><input value="Log in" type="submit"></p>
-
-      
-    </p></form></div>
+	      <p>
+	      	ID: <input name="j_username" size="30" type="text">	      	
+	      </p>
+	      <p>
+	      	password: <input name="j_password" size="30" type="password">
+	      </p>
+	      <p>
+	      	<input value="Log in" type="submit">
+	      </p>
+      </form>
+    </div>
   </div>
-
-  	<br>
-  	This is a temporary login page for developement purposes.<br>
-  	
-  	<!-- see also SecurityExample.jsp (once logged in).<br> -->
-  	<br>
-  	
-  	<a href="addTestUser.action">Click here</a> to add a test account to your system.<br>
-  	<b>username: </b>test<br>
-  	<b>password: </b>test<br>	
+  
+  <p>
+	Use admin:abc to login. Remember to initialize user data by running insert-users.sql
+  </p>
 
 </div> <!-- page -->
 

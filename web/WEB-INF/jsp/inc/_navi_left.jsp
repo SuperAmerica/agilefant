@@ -9,9 +9,12 @@
   <li><a href="#">My assignments</a></li>
 
   <li class="normal">
-  <a href="#">
-  Select management view<br> (portfolio hierarchy)</a>
-  <br>
+	  <a href="#">
+	  Select management view<br> (portfolio hierarchy)</a>
+  </li>
+  <li class="normal">
+  	<a href="listUsers.action">Manage users</a>
+  </li>
 
   <li class="normal"><a>Create a new</a>
 
@@ -24,6 +27,11 @@
 
     <li class="hidden"><a href="">Business requirement ...</a></li>
     </ul>
+  </li>
+  <li class="normal">
+	  <form action="j_acegi_logout" method="POST">
+    	<input name="exit" type="submit" value="logout"></td></tr>
+	  </form>
   </li>
   
   <!--

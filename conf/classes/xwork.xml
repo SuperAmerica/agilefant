@@ -124,13 +124,29 @@
 			<result type="redirect">editDeliverable.action?deliverableId=${deliverableId}</result>
 		</action>
 <!-- /Iteration actions -->
-
+<!-- User actions -->
+		<action name="listUsers">
+			<result>/WEB-INF/jsp/listUsers.jsp</result>
+		</action>
+		<action name="editUser" method="edit" class="userAction">
+			<result>/WEB-INF/jsp/editUser.jsp</result>
+		</action>
+		<action name="createUser" method="create" class="userAction">
+			<result>/WEB-INF/jsp/editUser.jsp</result>
+		</action>
+		<action name="deleteUser" method="delete" class="userAction">
+			<result type="redirect">listUsers.action</result>
+		</action>
+		<action name="storeUser" method="store" class="userAction">
+			<result type="redirect">listUsers.action</result>
+			<result name="error">/WEB-INF/jsp/editUser.jsp</result>
+		</action>
 	<!-- 
 	Added this to make adding test user addition possible, remove when no longer needed.
 	-->
-	<action name="addTestUser" method="addTestUser" class="userAction">
-		<result>/index.jsp</result>
-	</action>
-
+		<action name="addTestUser" method="addTestUser" class="userAction">
+			<result>/index.jsp</result>
+		</action>
+<!-- /User actions -->
 	</package>
 </xwork>

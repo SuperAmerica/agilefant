@@ -17,4 +17,13 @@
 			Lists all products to variable productList
 	    </description>
 	</tag>
+	
+	<tag>
+		<name>userList</name>
+		<tag-class>fi.hut.soberit.agilefant.web.tag.UserListTag</tag-class>
+		<body-content>JSP</body-content>
+		<description>
+			Lists all users to variable userList
+	    </description>
+	</tag>	
 </taglib>

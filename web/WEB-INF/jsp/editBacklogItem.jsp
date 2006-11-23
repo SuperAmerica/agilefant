@@ -23,6 +23,8 @@
 			Description: <ww:richtexteditor name="backlogItem.description" width="600px" toolbarStartExpanded="false"/>
 		</p>
 		<p>
+			Effort estimate: <ww:textfield name="backlogItem.remainingEffortEstimate"/>
+		<p>
 			<ww:submit value="Store"/>
 		</p>
 	</ww:form>

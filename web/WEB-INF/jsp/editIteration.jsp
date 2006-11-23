@@ -56,6 +56,9 @@
 				<display:column sortable="true" title="# of tasks">
 					${fn:length(row.tasks)}
 				</display:column>
+				<display:column sortable="true" title="Effort estimate" sortProperty="remainingEffortEstimate.time">
+					${row.remainingEffortEstimate}
+				</display:column>
 				<display:column sortable="false" title="Actions">
 					<ww:url id="editLink" action="editBacklogItem" includeParams="none">
 						<ww:param name="backlogItemId" value="${row.id}"/>

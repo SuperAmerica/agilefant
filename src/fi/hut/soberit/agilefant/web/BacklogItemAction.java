@@ -73,6 +73,7 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
 		}
 		storable.setName(this.backlogItem.getName());
 		storable.setDescription(this.backlogItem.getDescription());
+		storable.setRemainingEffortEstimate(this.backlogItem.getRemainingEffortEstimate());
 		if (storable.getId() == 0){
 			storable.setBacklog(backlog);
 		}		

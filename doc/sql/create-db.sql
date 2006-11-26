@@ -1,8 +1,8 @@
 create table ActivityType (id integer not null auto_increment, name varchar(255) not null unique, description varchar(255), primary key (id)) type=InnoDB;
 create table Backlog (backlogtype varchar(31) not null, id integer not null auto_increment, name varchar(255), description varchar(255), startDate datetime, endDate datetime, deliverable_id integer, product_id integer, type_id integer, owner_id integer, primary key (id)) type=InnoDB;
 create table BacklogItem (id integer not null auto_increment, name varchar(255), description varchar(255), remainingEffortEstimate time, backlog_id integer not null, primary key (id)) type=InnoDB;
-create table Task (id integer not null auto_increment, created datetime, effortEstimate integer, severity integer, name varchar(255), priority integer, description varchar(255), creator_id integer, backlogItem_id integer not null, assignee_id integer, primary key (id)) type=InnoDB;
-create table TaskEvent (id integer not null auto_increment, created datetime, actor_id integer, task_id integer not null, primary key (id)) type=InnoDB;
+create table Task (id integer not null auto_increment, created datetime, effortEstimate time, severity integer, name varchar(255), priority integer, description varchar(255), creator_id integer, backlogItem_id integer not null, assignee_id integer, primary key (id)) type=InnoDB;
+create table TaskEvent (id integer not null auto_increment, created datetime, actor_id integer, task_id integer not null, eventType varchar(31), comment varchar(255), effort time, workType_id integer, oldAssignee_id integer, newAssignee_id integer, primary key (id)) type=InnoDB;
 create table User (id integer not null auto_increment, loginName varchar(255), fullName varchar(255), description varchar(255), password varchar(255), primary key (id)) type=InnoDB;
 create table WorkType (id integer not null auto_increment, name varchar(255) not null, description varchar(255), activityType_id integer, primary key (id)) type=InnoDB;
 alter table Backlog add index FK4E86B8DD5600C562 (deliverable_id), add constraint FK4E86B8DD5600C562 foreign key (deliverable_id) references Backlog (id);
@@ -15,4 +15,7 @@ alter table Task add index FK27A9A5E94683E2 (backlogItem_id), add constraint FK2
 alter table Task add index FK27A9A531FA7A4E (assignee_id), add constraint FK27A9A531FA7A4E foreign key (assignee_id) references User (id);
 alter table TaskEvent add index FK80CD17F56E84F892 (task_id), add constraint FK80CD17F56E84F892 foreign key (task_id) references Task (id);
 alter table TaskEvent add index FK80CD17F567C4A468 (actor_id), add constraint FK80CD17F567C4A468 foreign key (actor_id) references User (id);
+alter table TaskEvent add index FK80CD17F54F7702F2 (workType_id), add constraint FK80CD17F54F7702F2 foreign key (workType_id) references WorkType (id) ON DELETE SET NULL;
+alter table TaskEvent add index FK80CD17F5C1D03DC7 (oldAssignee_id), add constraint FK80CD17F5C1D03DC7 foreign key (oldAssignee_id) references User (id) ON DELETE SET NULL;
+alter table TaskEvent add index FK80CD17F5EC8C8CAE (newAssignee_id), add constraint FK80CD17F5EC8C8CAE foreign key (newAssignee_id) references User (id) ON DELETE SET NULL;
 alter table WorkType add index FK5EE3E0BCC65BE32 (activityType_id), add constraint FK5EE3E0BCC65BE32 foreign key (activityType_id) references ActivityType (id);

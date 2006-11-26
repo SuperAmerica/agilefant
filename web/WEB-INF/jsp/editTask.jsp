@@ -25,6 +25,9 @@
 		<p>
 			Description: <ww:richtexteditor name="task.description" width="600px" toolbarStartExpanded="false"/>
 		</p>
+		<p>		
+			Effort left: <ww:textfield name="task.effortEstimate"/>
+		</p>
 		<p>
 			<ww:submit value="Store"/>
 		</p>

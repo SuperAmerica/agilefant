@@ -11,6 +11,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+
+import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.Type;
 
 @Entity
@@ -21,12 +23,24 @@ public class BacklogItem {
 	private String description;
 	private Backlog backlog;
 	private Collection<Task> tasks = new HashSet<Task>();
-	private AFTime remainingEffortEstimate; 	
+	private AFTime remainingEffortEstimate;
+	private AFTime taskEffortLeft;
+
+	@Type(type="af_time")
+	@Formula(value="(select SEC_TO_TIME(SUM(TIME_TO_SEC(t.effortEstimate))) from task t where t.backlogItem_id = id)")
+	public AFTime getTaskEffortLeft() {
+		return taskEffortLeft;
+	}
+	
+	public void setTaskEffortLeft(AFTime taskEffortLeft) {
+		this.taskEffortLeft = taskEffortLeft;
+	}
 	
 	@Type(type="af_time")
 	public AFTime getRemainingEffortEstimate() {
 		return remainingEffortEstimate;
 	}
+	
 	public void setRemainingEffortEstimate(AFTime remainingEffortEstimate) {
 		this.remainingEffortEstimate = remainingEffortEstimate;
 	}

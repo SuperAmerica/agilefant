@@ -13,8 +13,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Entity;
+import javax.persistence.OrderBy;
 import javax.persistence.Transient;
 
+import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.Type;
 
 @Entity
@@ -24,6 +26,7 @@ public class Task {
 	private int severity;
 	private int priority;
 	private AFTime effortEstimate;
+	private AFTime performedEffort;
 	private String name;
 	private String description;
 	private BacklogItem backlogItem;
@@ -97,6 +100,7 @@ public class Task {
 	}
 
 	@OneToMany(mappedBy="task")
+	@OrderBy(value="created")
 	public Collection<TaskEvent> getEvents() {
 	    return events;
 	}
@@ -108,6 +112,17 @@ public class Task {
 	@Type(type="af_time")
 	public AFTime getEffortEstimate() {
 	    return effortEstimate;
+	}
+
+	@Type(type="af_time")
+	@Formula(value="(select SEC_TO_TIME(SUM(TIME_TO_SEC(e.effort))) from taskevent e " +
+			"where e.eventType = 'PerformedWork' and e.task_id = id)")
+	public AFTime getPerformedEffort(){
+		return performedEffort;
+	}
+	
+	public void setPerformedEffort(AFTime performedEffort){
+		this.performedEffort = performedEffort;
 	}
 
 	public void setEffortEstimate(AFTime effortEstimate) {

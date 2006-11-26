@@ -11,14 +11,14 @@
 	padding: 0;
 	position: absolute;
 	bottom: -1px;
-	width: 45em; /* a width is required for Opera, older Mozilla browsers, and Konqueror browsers */
+	width: 75em; /* a width is required for Opera, older Mozilla browsers, and Konqueror browsers */
 }
 
-.tab_header_main a {
+.tab_header_main li a {
     display:block;
     text-decoration:none;
-    padding:2px 0 5px;
-    color: #FFFFFF
+/*    padding:2px 0 5px;*/
+    color: #000
 }
 
 .tab_selected, .tab_unselected, .tab_unselected_over {
@@ -32,16 +32,15 @@
 	font-family: tahoma, verdana, sans-serif;
 	font-size: 85%;
 	text-decoration: none;
-	color: #333;
+	color: #000;
 }
 
 .tab_selected {
-/*	border: 1px solid #666; */
+	border: 2px solid #666; 
 	border-bottom: none;
-	background: #999999;
+	background: #fff;
 	padding-bottom: 6px;
 	margin-top: 0;
-	font-weight:bold;
 }
 
 .tab_unselected, .tab_unselected_over {
@@ -63,17 +62,19 @@
 /*	border: 2px solid #666; */
     display: block;
 	clear: both;
-	background: #999999;
-	padding: 2px;
+/*	background: #999999; 
+	padding: -2px;*/
 }
 
 .tab_contents {
+	border-top: 2px solid #666; ;
 	padding: 1.5em;
 	display: block;
-	background: #DDDDDD;
+	background: #fff;
 	min-height: 300px;
 }
 
 .tab_contents_hidden  {
 	display: none;
 }
+	

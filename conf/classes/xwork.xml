@@ -148,5 +148,10 @@
 			<result>/index.jsp</result>
 		</action>
 <!-- /User actions -->
+
+		<action name="testlayout">
+			<result>/WEB-INF/jsp/newlayout.jsp</result>
+		</action>
+
 	</package>
 </xwork>

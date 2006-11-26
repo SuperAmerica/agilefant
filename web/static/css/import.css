@@ -1,0 +1,30 @@
+body {font-family:Arial, Helvetica, Sans-Serif;background-color:#fff}
+h1 {text-align:center}
+h1,h2,h3 {font-size:1em}
+h1,h2,h3,p {margin:10px 15px}
+code {color:#66f}
+img {border:0}
+#sidebar img {float:right}
+ol {margin:0 0 0 32px;padding:0}
+.hank {cursor:default;font-weight:bold}
+.note {font-size:.75em}
+.thanks {border-top:1px dotted #999;margin-top:20px}
+.notSoImportant {font-style:italic;color:#999}
+a:link,a:visited {color:#000;text-decoration:none}
+a:hover,a:focus {background-color:#ffc}
+/* LAYOUT STUFF */
+#outer_wrapper {min-width:740px;width:100%;background:#fff }
+#wrapper {background:#fff}
+#header {background:#fff;width:100%;margin:0 -2px}
+/* display:inline is in there to prevent an IE Bug (IE doubles margins on floats). */
+#container {width:100%;float:left;display:inline;margin-left:-20px}
+#left {float: left;width:15px;display:inline;margin-left:20px}
+#main {margin-left: 35px;width:auto; margin-top: 1px; margin-bottom: 10px}
+
+#sidebar {padding-left:100%;margin-left:-20px}
+/* this is to make sure IE6 (v6.0.29?) *shows* this element */
+#sidebar p {position:relative}
+/* Because of the 100% width declaration (needed for IE), the lateral margins need to go (or the box would be 2px too wide) */
+#footer {width:100%;clear:both;border-top:1px solid #b0b0b0;border-bottom:1px solid #b0b0b0;background:#ccc}
+#topnavi {background:#b0b0b0;position:absolute;bottom:0;left:0;height:30px;width:100%;}
+#subnavi {border:1px solid #bbb;background:#fafafa;width:100%;height:30px;margin:0 -2px;text-align:center}

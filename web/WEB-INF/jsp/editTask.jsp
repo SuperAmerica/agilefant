@@ -32,4 +32,25 @@
 			<ww:submit value="Store"/>
 		</p>
 	</ww:form>
+	<c:if test="${task.id > 0}">
+		<p>
+			Assigned to: ${task.assignee.fullName}
+		</p>
+		<aef:userList/>
+		<p>
+			<ww:form action="assignTask">
+				<ww:hidden name="taskId" value="${task.id}"/>
+				Reassign to: <ww:select name="assigneeId" list="#attr.userList" listKey="id" listValue="fullName" value="${task.assignee.id}"/>
+				<ww:submit value="Assign"/>
+			</ww:form>
+		</p>
+		<p>
+			<aef:currentUser/>
+			<ww:url id="selfAssignLink" action="assignTask">
+				<ww:param name="taskId" value="${task.id}"/>
+				<ww:param name="assigneeId" value="${currentUser.id}"/>
+			</ww:url>
+			<ww:a href="%{selfAssignLink}">Assign to me</ww:a>
+		</p>
+	</c:if>
 <%@ include file="./inc/_footer.jsp" %>

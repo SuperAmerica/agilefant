@@ -25,5 +25,14 @@
 		<description>
 			Lists all users to variable userList
 	    </description>
-	</tag>	
+	</tag>
+	
+	<tag>
+		<name>currentUser</name>
+		<tag-class>fi.hut.soberit.agilefant.web.tag.CurrentUserTag</tag-class>
+		<body-content>JSP</body-content>
+		<description>
+			Stores currently logged in user to variable currentUser
+	    </description>
+	</tag>
 </taglib>

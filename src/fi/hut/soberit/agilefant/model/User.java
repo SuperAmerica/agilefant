@@ -1,10 +1,14 @@
 package fi.hut.soberit.agilefant.model;
 
+import java.util.Collection;
+import java.util.HashSet;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 @Entity
 public class User {
@@ -13,6 +17,7 @@ public class User {
 	private String password;
 	private String loginName;
 	private String fullName;
+	private Collection<Task> assignments = new HashSet<Task>();
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
@@ -47,5 +52,14 @@ public class User {
 	
 	public void setPassword(String password) {
 		this.password = password;
-	}	
+	}
+	
+    @OneToMany(mappedBy="assignee")
+	public Collection<Task> getAssignments() {
+		return assignments;
+	}
+
+	public void setAssignments(Collection<Task> assignments) {
+		this.assignments = assignments;
+	}
 }

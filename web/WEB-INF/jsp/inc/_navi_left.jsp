@@ -6,7 +6,7 @@
 
   <li><a href="/agilefant">Main page</a></li>
 
-  <li><a href="#">My assignments</a></li>
+  <li><a href="myTasks.action">My tasks</a></li>
 
   <li class="normal">
 	  <a href="#">

@@ -13,6 +13,7 @@ import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.Deliverable;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Task;
+import fi.hut.soberit.agilefant.security.SecurityUtil;
 
 public class TaskAction extends ActionSupport {
 	
@@ -79,6 +80,7 @@ public class TaskAction extends ActionSupport {
 			}
 			storable.setBacklogItem(backlogItem);
 			backlogItem.getTasks().add(storable);
+			storable.setCreator(SecurityUtil.getLoggedUser());
 		}
 		storable.setName(task.getName());
 		storable.setDescription(task.getDescription());

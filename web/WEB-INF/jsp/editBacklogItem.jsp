@@ -75,22 +75,35 @@
 	</c:if>	
 	<c:if test="${!empty backlogItem.tasks}">
 		<p>
-			Has tasks:
+			Tasks:
 		</p>
 		<p>
-			<ul>
-			<c:forEach items="${backlogItem.tasks}" var="task">
-				<ww:url id="editLink" action="editTask" includeParams="none">
-					<ww:param name="taskId" value="${task.id}"/>
-				</ww:url>
-				<ww:url id="deleteLink" action="deleteTask" includeParams="none">
-					<ww:param name="taskId" value="${task.id}"/>
-				</ww:url>
-				<li>
-					${task.name} - <ww:a href="%{editLink}">Edit</ww:a>|<ww:a href="%{deleteLink}">Delete</ww:a>
-				</li>
-			</c:forEach>
-			</ul>
+			<display:table name="backlogItem.tasks" id="row" requestURI="editBacklogItem.action">
+				<display:column sortable="true" title="Id" property="id"/>
+				<display:column sortable="true" title="Name" property="name"/>
+				<display:column sortable="true" title="Effort left" sortProperty="effortEstimate.time">
+					${row.effortEstimate}
+				</display:column>
+				<display:column sortable="true" title="Work performed" sortProperty="performedEffort.time">
+					${row.performedEffort}
+				</display:column>
+				<display:column sortable="true" title="Created" property="created"/>
+				<display:column sortable="true" title="Assignee">
+					${row.assignee.fullName}
+				</display:column>
+				<display:column sortable="true" title="Creator">
+					${row.creator.fullName}
+				</display:column>
+				<display:column sortable="false" title="Actions">
+					<ww:url id="editLink" action="editTask" includeParams="none">
+						<ww:param name="taskId" value="${row.id}"/>
+					</ww:url>
+					<ww:url id="deleteLink" action="deleteTask" includeParams="none">
+						<ww:param name="taskId" value="${row.id}"/>
+					</ww:url>
+					<ww:a href="%{editLink}">Edit</ww:a>|<ww:a href="%{deleteLink}">Delete</ww:a>
+				</display:column>
+			</display:table>
 		</p>
 	</c:if>
 	<c:if test="${backlogItem.id > 0}">

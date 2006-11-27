@@ -7,7 +7,14 @@
 
 	<!-- Configuration for the default package. -->
 	<package name="default" extends="webwork-default">
-		<default-interceptor-ref name="completeStack"/>
+		<interceptors>
+			<interceptor name="refreshUser" class="refreshUserInterceptor"/>
+			<interceptor-stack name="authenticationStack">
+				<interceptor-ref name="completeStack"/>
+				<interceptor-ref name="refreshUser"/>				
+			</interceptor-stack>
+		</interceptors>
+		<default-interceptor-ref name="authenticationStack"/>
 		<action name="simpleCounter" class="fi.hut.soberit.agilefant.web.SimpleCounter">
 			<result name="success">/WEB-INF/jsp/showCounter.jsp</result>
 		</action>		
@@ -109,6 +116,9 @@
 		<action name="storeTask" method="store" class="taskAction">
 			<result type="redirect">editBacklogItem.action?backlogItemId=${backlogItemId}</result>
 		</action>
+		<action name="myTasks">
+			<result>/WEB-INF/jsp/showMyTasks.jsp</result>
+		</action>
 <!-- /Task actions -->
 <!-- Iteration actions -->
 		<action name="editIteration" method="edit" class="iterationAction">
@@ -125,6 +135,9 @@
 		</action>
 <!-- /Iteration actions -->
 <!-- User actions -->
+		<action name="assignTask" class="assignTaskAction">
+			<result type="redirect">editTask.action?taskId=${taskId}</result>
+		</action>
 		<action name="listUsers">
 			<result>/WEB-INF/jsp/listUsers.jsp</result>
 		</action>

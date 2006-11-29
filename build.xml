@@ -54,6 +54,7 @@
 	</target>
 	
 	<target name="run-unit-tests" depends="compile-tests" description="Runs unit tests">	
+    	<mkdir dir="${test-reports.dir}"/>
 		<junit fork="yes" dir="${build.dir}">
 			<classpath refid="compile.unit.classpath"/>
 			<formatter type="xml"/>
@@ -126,5 +127,6 @@
 	
 	<target name="clean" description="Removes build directory">
         <delete dir="${build.dir}"/>
+    	<delete dir="${test-reports.dir}"/>		
 	</target>
 </project>

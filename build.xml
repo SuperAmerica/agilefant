@@ -31,7 +31,12 @@
     	   
     	<taskdef name="hibernatetool"
     	         classname="org.hibernate.tool.ant.HibernateToolTask" 
-    	         classpathref="hibernatetoolslib"/>    	
+    	         classpathref="hibernatetoolslib"/>
+    	
+    	<taskdef name="dbunit" 
+    	    		classname="org.dbunit.ant.DbUnitTask"
+    	    		classpathref="compile.classpath"/>
+    	
     </target>
 	
     <target name="compile" depends="init" description="Compiles source files">

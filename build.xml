@@ -3,6 +3,7 @@
 	
     <property file="build-user.properties"/>
 	<property file="build.properties"/>
+	<property file="conf/database-mysql5.properties"/>
 	
     <target name="init" description="Initializes build script">
 		<mkdir dir="${build.dir}"/>
@@ -133,5 +134,24 @@
 	<target name="clean" description="Removes build directory">
         <delete dir="${build.dir}"/>
     	<delete dir="${test-reports.dir}"/>		
+	</target>
+	
+	<target name="set-original-db" depends="init" description="Updates the database, with default values from the XML file">
+		<dbunit driver="${hibernate.connection.driver_class}"         
+			url="${hibernate.connection.url}"          
+			userid="${hibernate.connection.username}"          
+			password="${hibernate.connection.password}">
+		    <classpath refid="compile.classpath"/>    	
+		    <operation type="CLEAN_INSERT" src="${testdata.dir}/testData.xml" format="xml"/>
+		</dbunit>
+	</target>
+	
+	<target name="export-db" depends="init" description="Exports the database into an XML file">
+		<dbunit driver="${hibernate.connection.driver_class}"         
+					url="${hibernate.connection.url}"          
+					userid="${hibernate.connection.username}"          
+					password="${hibernate.connection.password}">    
+		    <export dest="${testdata.dir}/exportedData.xml" format="xml"/> 
+		</dbunit>
 	</target>
 </project>

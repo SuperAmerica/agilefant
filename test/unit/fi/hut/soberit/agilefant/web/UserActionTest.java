@@ -8,7 +8,9 @@ public class UserActionTest extends AbstractTransactionalSpringContextTests {
 
 	@Override
 	protected String[] getConfigLocations() {
-		return new String[]{"WEB-INF/applicationContext*.xml"};
+		//return new String[]{"WEB-INF/applicationContext*.xml"};
+		return new String[] {"file:conf/applicationContext*.xml"}; 
+//				"file:conf/configuration.properties"};
 	}
 	
 	public void setUserAction(UserAction userAction){

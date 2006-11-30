@@ -86,7 +86,7 @@
                 <include name="*.zip"/>
             </fileset>
         </copy>
-		<mkdir dir="${test-reports.dir}"/>
+		<mkdir dir="${test.reports}"/>
 		<junit fork="true" dir="${build.unit}">
 			<classpath refid="compile.unit.classpath"/>
 			<formatter type="xml"/>
@@ -160,7 +160,7 @@
 	
 	<target name="clean" description="Removes build directory">
         <delete dir="${build.dir}"/>
-    	<delete dir="${test-reports.dir}"/>		
+    	<delete dir="${test.reports}"/>		
 	</target>
 	
 	<target name="set-original-db" depends="init" description="Updates the database, with default values from the XML file">

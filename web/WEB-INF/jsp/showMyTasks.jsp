@@ -1,17 +1,6 @@
 <%@ include file="./inc/_taglibs.jsp" %>
-<html>
-<head>  <link rel="stylesheet" href="/agilefant/static/css/aef07.css" type="text/css">
-<ww:head/>
-
-</head>
 <%@ include file="./inc/_header.jsp" %>
-<%@ include file="./inc/_navi_left.jsp" %>
-    <div id="upmenu">
-
-      <li class="normal"><a>Help</a>
-
-      </li>
-    </div>
+<aef:menu navi="2" /> 
 	<ww:actionerror/>
 	<ww:actionmessage/>
 	<h2>Simple table displaying all tasks assigned to logged in user</h2>

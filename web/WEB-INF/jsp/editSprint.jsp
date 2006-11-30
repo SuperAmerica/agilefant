@@ -1,17 +1,6 @@
 <%@ include file="./inc/_taglibs.jsp" %>
-<html>
-<head>  <link rel="stylesheet" href="/agilefant/static/css/aef07.css" type="text/css">
-<ww:head/>
-
-</head>
 <%@ include file="./inc/_header.jsp" %>
-<%@ include file="./inc/_navi_left.jsp" %>
-    <div id="upmenu">
-
-      <li class="normal"><a>Help</a>
-
-      </li>
-    </div>
+<aef:menu navi="1" /> 
 	<ww:actionerror/>
 	<ww:actionmessage/>
 	<c:choose>
@@ -39,7 +28,7 @@
 			Name: <ww:textfield name="sprint.name"/>
 		</p>
 		<p>
-			Description: <ww:richtexteditor name="sprint.description" width="600px" toolbarStartExpanded="false"/>
+			Description: <ww:textarea cols="40" rows="6" name="sprint.description" />
 		</p>
 		<c:if test="${sprint.id > 0}">			
 			fixme: old stuff no longer valid, db model changed			

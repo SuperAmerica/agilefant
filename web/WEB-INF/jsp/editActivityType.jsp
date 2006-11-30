@@ -1,18 +1,6 @@
 <%@ include file="./inc/_taglibs.jsp" %>
-<html>
-<head>
-  <link rel="stylesheet" href="/agilefant/static/css/aef07.css" type="text/css">
-	<title>Activity type list - AgilEfant</title>
-</head>
 <%@ include file="./inc/_header.jsp" %>
-<%@ include file="./inc/_navi_left.jsp" %>
-    <div id="upmenu">
-
-      <li class="normal"><a>Help</a>
-
-      </li>
-    </div>
-
+<aef:menu navi="1" /> 
 	<ww:actionerror/>
 	<ww:actionmessage/>
 	<c:choose>
@@ -29,7 +17,7 @@
 			Name: <ww:textfield name="activityType.name"/>
 		</p>
 		<p>
-			Description: <ww:richtexteditor name="activityType.description" width="600px" toolbarStartExpanded="false"/>
+			Description: <ww:textarea cols="40" rows="6" name="activityType.description" />
 		</p>
 		<c:if test="${activityType.id > 0}">
 			<h3>Work types</h3>

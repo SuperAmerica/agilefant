@@ -1,18 +1,6 @@
 <%@ include file="./inc/_taglibs.jsp" %>
-<%@ include file="./inc/_taglibs.jsp" %>
-<html>
-<head>  <link rel="stylesheet" href="/agilefant/static/css/aef07.css" type="text/css">
-<ww:head/>
-
-</head>
 <%@ include file="./inc/_header.jsp" %>
-<%@ include file="./inc/_navi_left.jsp" %>
-    <div id="upmenu">
-
-      <li class="normal"><a>Help</a>
-
-      </li>
-    </div>
+<aef:menu navi="1" /> 
 	<ww:actionerror/>
 	<ww:actionmessage/>
 	<h2>Edit task</h2>
@@ -23,7 +11,7 @@
 			Name: <ww:textfield name="task.name"/>
 		</p>
 		<p>
-			Description: <ww:richtexteditor name="task.description" width="600px" toolbarStartExpanded="false"/>
+			Description: <ww:textarea cols="40" rows="6" name="task.description" />
 		</p>
 		<p>		
 			Effort left: <ww:textfield name="task.effortEstimate"/>

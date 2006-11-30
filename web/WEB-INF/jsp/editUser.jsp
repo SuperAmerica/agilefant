@@ -1,16 +1,6 @@
 <%@ include file="./inc/_taglibs.jsp" %>
-<%@ include file="./inc/_taglibs.jsp" %>
-<html>
-<head>  <link rel="stylesheet" href="/agilefant/static/css/aef07.css" type="text/css">
-</head>
 <%@ include file="./inc/_header.jsp" %>
-<%@ include file="./inc/_navi_left.jsp" %>
-    <div id="upmenu">
-
-      <li class="normal"><a>Help</a>
-
-      </li>
-    </div>
+<aef:menu navi="3" /> 
 	<ww:actionerror/>
 	<ww:actionmessage/>
 	<h2>Edit User</h2>

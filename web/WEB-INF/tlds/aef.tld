@@ -35,4 +35,8 @@
 			Stores currently logged in user to variable currentUser
 	    </description>
 	</tag>
+	  <tag-file>
+    <name>menu</name>
+    <path>/WEB-INF/tags/menu.tag</path>
+  </tag-file>
 </taglib>

@@ -1,17 +1,6 @@
 <%@ include file="./inc/_taglibs.jsp" %>
-<html>
-<head>  <link rel="stylesheet" href="/agilefant/static/css/aef07.css" type="text/css">
-<ww:head/>
-
-</head>
 <%@ include file="./inc/_header.jsp" %>
-<%@ include file="./inc/_navi_left.jsp" %>
-    <div id="upmenu">
-
-      <li class="normal"><a>Help</a>
-
-      </li>
-    </div>
+<aef:menu navi="1" /> 
 	<ww:actionerror/>
 	<ww:actionmessage/>
 	<c:choose>
@@ -38,7 +27,7 @@
 			Name: <ww:textfield name="iteration.name"/>
 		</p>
 		<p>
-			Description: <ww:richtexteditor name="iteration.description" width="600px" toolbarStartExpanded="false"/>
+			Description: <ww:textarea cols="40" rows="6" name="iteration.description" />
 		</p>
 		<p>
 			<ww:submit value="Store"/>

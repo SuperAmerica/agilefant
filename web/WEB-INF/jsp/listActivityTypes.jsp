@@ -1,18 +1,6 @@
 <%@ include file="./inc/_taglibs.jsp" %>
-<html>
-<head>
-	<title>Activity type list - AgilEfant</title>
-  <link rel="stylesheet" href="/agilefant/static/css/aef07.css" type="text/css">
-</head>
-
 <%@ include file="./inc/_header.jsp" %>
-<%@ include file="./inc/_navi_left.jsp" %>
-<div id="page">
-    <div id="upmenu">
-
-      <li class="normal"><a>Help</a>
-      </li>
-    </div>
+<aef:menu navi="1" /> 
 	<p>
 		<c:choose>
 			<c:when test="${empty activityTypes}">

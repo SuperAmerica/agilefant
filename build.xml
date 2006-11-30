@@ -9,6 +9,10 @@
 		<mkdir dir="${build.dir}"/>
     	<mkdir dir="${build.classes}"/>
     	<mkdir dir="${build.webapp}"/>
+		<mkdir dir="${build.unit}"/>
+    	<mkdir dir="${test.dir}"/>
+    	<mkdir dir="${test.reports}"/>
+    	<mkdir dir="${test.data}"/>
     	
         <path id="compile.classpath">
 			<fileset dir="${lib}">
@@ -16,10 +20,17 @@
 				<include name="build/*.jar"/>
 			</fileset>
 		</path>
-    	
-    	<path id="compile.unit.classpath">
+
+<!--    	<path id="compile.unit.classpath">
     		<path refid="compile.classpath"/>
 			<path location="${build.classes}"/>
+    	</path>-->
+
+    	<path id="compile.unit.classpath">
+    		<path refid="compile.classpath"/>
+			<pathelement location="${build.classes}"/>
+			<pathelement location="${build.unit}"/>
+    		<pathelement location="${build.unit.classes}"/>
     	</path>
 
     	<path id="hibernatetoolslib">
@@ -60,13 +71,29 @@
 	</target>
 	
 	<target name="run-unit-tests" depends="compile-tests" description="Runs unit tests">	
-    	<mkdir dir="${test-reports.dir}"/>
-		<junit fork="yes" dir="${build.dir}">
+	    <!--Hmm.. ainakin tuon WEB-INF:n tarvitsee, muista kopioista en varma -Touko -->
+		<mkdir dir="${build.unit}/WEB-INF"/>
+		<copy todir="${build.unit}/WEB-INF/">
+	    	<fileset dir="${conf.dir}" excludes="database-*.properties"/>
+		</copy>
+		<copy tofile="${build.unit}/WEB-INF/database.properties">
+			<fileset file="${conf.dir}/database-${database.type}.properties"/>
+		</copy>
+		<mkdir dir="${build.unit}/WEB-INF/lib/"/>
+        <copy todir="${build.unit}/WEB-INF/lib/">
+            <fileset dir="${lib}">
+                <include name="*.jar"/>
+                <include name="*.zip"/>
+            </fileset>
+        </copy>
+		<mkdir dir="${test-reports.dir}"/>
+		<junit fork="true" dir="${build.unit}">
 			<classpath refid="compile.unit.classpath"/>
 			<formatter type="xml"/>
-			<batchtest todir="${test-reports.dir}">
+			<batchtest todir="${test.reports}">
 				<fileset dir="${unit.src}">
 					<include name="**/*.java"/>
+					<exclude name="**/*SpringEnabledTestCase*.java"/>
 				</fileset>
 			</batchtest>
 		</junit>
@@ -151,7 +178,7 @@
 					url="${hibernate.connection.url}"          
 					userid="${hibernate.connection.username}"          
 					password="${hibernate.connection.password}">    
-		    <export dest="${testdata.dir}/exportedData.xml" format="xml"/> 
+		    <export dest="${test.data}/exportedData.xml" format="xml"/> 
 		</dbunit>
 	</target>
 </project>

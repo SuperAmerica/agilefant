@@ -1,3 +1,3 @@
 webapp.name = agilefant
 database.type = mysql5
-deploy.dir.local = /home/ekan/tomcat/webapps/${webapp.name}
+deploy.dir.local = /home/agilefant/tomcat/webapps/${webapp.name}

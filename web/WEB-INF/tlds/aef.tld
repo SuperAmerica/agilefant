@@ -36,8 +36,40 @@
 			Stores currently logged in user to variable currentUser
 	    </description>
 	</tag>
-	  <tag-file>
-    <name>menu</name>
-    <path>/WEB-INF/tags/menu.tag</path>
-  </tag-file>
+
+	<tag>
+		<name>bct</name>
+		<tag-class>fi.hut.soberit.agilefant.web.tag.BreadCrumbTrailTag</tag-class>
+		<body-content>JSP</body-content>
+		<description>
+			Stores currently logged in user to variable currentUser
+	    </description>
+        <attribute>
+            <name>obj</name>
+            <required>false</required>
+			<rtexprvalue>true</rtexprvalue>            
+        </attribute>	    
+	</tag>
+
+	 <tag-file>
+	    <name>menu</name>
+	    <path>/WEB-INF/tags/menu.tag</path>
+ 	 </tag-file>
+
+	<function>
+	  <name>isProduct</name>
+	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
+	  <function-signature>boolean isProduct( java.lang.Object )</function-signature>
+	</function>  	 
+	<function>
+	  <name>isDeliverable</name>
+	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
+	  <function-signature>boolean isDeliverable( java.lang.Object )</function-signature>
+	</function>  	 
+	<function>
+	  <name>isIteration</name>
+	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
+	  <function-signature>boolean isIteration(java.lang.Object)</function-signature>
+	</function>  	 
+	 	 
 </taglib>

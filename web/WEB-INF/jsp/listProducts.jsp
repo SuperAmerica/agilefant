@@ -1,10 +1,13 @@
 <%@ include file="./inc/_taglibs.jsp" %>
 <%@ include file="./inc/_header.jsp" %>
 <aef:menu navi="1" /> 
+
+
 	
 <p>Products found:</p>
 <p>
 <aef:productList/>
+<aef:bct obj="${productList}" /><br/> 
 <c:forEach items="${productList}" var="product">
 	<ww:url id="editLink" action="editProduct" includeParams="none">
 		<ww:param name="productId" value="${product.id}"/>

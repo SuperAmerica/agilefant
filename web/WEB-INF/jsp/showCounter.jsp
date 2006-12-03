@@ -14,13 +14,17 @@
 		You have loaded this page <b>${counter}</b> times.
 	</p>
 	<p>
-		<img src="./chart.png">
+		<img src="./chart2.png">
+	</p>
+	<p>
+		<ww:form action="simpleCounter">
+			<ww:submit action="refreshChart" value="RefreshChart" />
+		</ww:form>
 	</p>
 	<p>
 		<ww:form action="simpleCounter">		
 			<ww:submit value="Refresh"/>
 			<ww:submit action="resetCounter" value="Reset"/>
-			<ww:submit action="refreshChart" value="RefreshChart"/>
 		</ww:form>
 	</p>
 </body>

@@ -2,15 +2,16 @@ package fi.hut.soberit.agilefant.web;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
-import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.data.xy.XYSeries;
-import org.jfree.data.xy.XYSeriesCollection;
+import org.jfree.chart.axis.DateAxis;
+import org.jfree.chart.plot.XYPlot;
+import org.jfree.data.time.*;
 
 import com.opensymphony.webwork.interceptor.SessionAware;
 import com.opensymphony.xwork.Action;
@@ -60,27 +61,27 @@ public class SimpleCounter extends ActionSupport implements SessionAware {
 	}
 	
 	public String refreshChart(){
-//		 Create a simple XY chart
-		XYSeries series = new XYSeries("XYGraph");
-		series.add(1, 1);
-		series.add(1, 2);
-		series.add(2, 1);
-		series.add(3, 9);
-		series.add(4, 10);
-//		 Add the series to your data set
-		XYSeriesCollection dataset = new XYSeriesCollection();
-		dataset.addSeries(series);
-//		 Generate the graph
-		JFreeChart chart1 = ChartFactory.createXYLineChart(
-				"XY Chart", // Title
-				"x-axis", // x-axis Label
-				"y-axis", // y-axis Label
-				dataset, // Dataset
-				PlotOrientation.VERTICAL, // Plot Orientation
-				true, // Show Legend
-				true, // Use tooltips
-				false // Configure chart to generate URLs?
-		);
+//		 Create a time series chart
+		TimeSeries pop = new TimeSeries("Workhours", Day.class);
+		pop.add(new Day(1, 12, 2006), 20);
+		pop.add(new Day(2, 12, 2006), 40);
+		pop.add(new Day(3, 12, 2006), 30);
+		pop.add(new Day(4, 12, 2006), 10);
+		pop.add(new Day(5, 12, 2006), 17);
+		pop.add(new Day(6, 12, 2006), 15);
+		TimeSeriesCollection dataset = new TimeSeriesCollection();
+		dataset.addSeries(pop);
+		JFreeChart chart1 = ChartFactory.createTimeSeriesChart(
+		"Agilefant07 worhours per day",
+		"Date",
+		"Workhours",
+		dataset,
+		true,
+		true,
+		false);
+		XYPlot plot = chart1.getXYPlot();
+		DateAxis axis = (DateAxis) plot.getDomainAxis();
+		axis.setDateFormatOverride(new SimpleDateFormat("yyyy-MM-dd"));	
 		try {
 			String dir="user.dir"; // set to current directory
 			dir=new File(System.getProperty(dir)).getCanonicalPath();

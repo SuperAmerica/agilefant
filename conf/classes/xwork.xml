@@ -17,7 +17,9 @@
 		<default-interceptor-ref name="authenticationStack"/>
 		<action name="simpleCounter" class="fi.hut.soberit.agilefant.web.SimpleCounter">
 			<result name="success">/WEB-INF/jsp/showCounter.jsp</result>
-		</action>		
+		</action>
+		<action name="refreshChart" method="refreshChart" class="fi.hut.soberit.agilefant.web.SimpleCounter">
+			<result name="success">/WEB-INF/jsp/showCounter.jsp</result></action>
 		<action name="resetCounter" method="resetCounter" class="fi.hut.soberit.agilefant.web.SimpleCounter">
 			<result name="success">/WEB-INF/jsp/showCounter.jsp</result>
 		</action>		

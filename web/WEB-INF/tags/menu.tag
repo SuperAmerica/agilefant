@@ -4,8 +4,7 @@
 
    <%@attribute name="navi"%>
    <%@attribute name="subnavi"%>
-   <%@attribute type="java.lang.Object" name="bct"%>
-
+   <%@attribute type="java.util.Collection" name="pageHierarchy"%>
 
 	<div id="menuwrap${navi}">
 	<div id="submenuwrap${subnavi}">
@@ -26,8 +25,6 @@
 </div>
 
 <div id="bct">
-<aef:bct page="${bct}"/>
-
 
 
 <c:set var="size" value="${fn:length(pageHierarchy)}" scope="page" />
@@ -68,14 +65,14 @@
 			</ww:url>
 			<ww:a href="%{taskLink}">${page.name}</ww:a>		
 		</c:when >
+		<c:when test="${aef:isUser(page)}">
+			<ww:url id="userLink" action="listUsers" includeParams="none"/>
+			<ww:a href="%{userLink}">User list</ww:a>		
+		</c:when >
 		
 	</c:choose>
 
 </c:forEach>
-		<c:if test="${aef:isUser(bct)}">
-			<ww:url id="userLink" action="listUsers" includeParams="none"/>
-			<ww:a href="%{userLink}">User list</ww:a>		
-		</c:if>
 
 &nbsp;</div>
 <div id="main">

@@ -1,6 +1,7 @@
 <%@ include file="./inc/_taglibs.jsp" %>
 <%@ include file="./inc/_header.jsp" %>
-<aef:menu navi="1"  bct="${aef:getDeliverable(deliverableId)}"/> 
+<aef:bct deliverableId="${deliverableId}"/>
+<aef:menu navi="1"  pageHierarchy="${pageHierarchy}"/> 
 	<ww:actionerror/>
 	<ww:actionmessage/>
 	<c:choose>

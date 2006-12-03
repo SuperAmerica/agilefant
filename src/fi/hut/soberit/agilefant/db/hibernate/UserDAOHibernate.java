@@ -1,6 +1,5 @@
 package fi.hut.soberit.agilefant.db.hibernate;
 
-import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Expression;
 

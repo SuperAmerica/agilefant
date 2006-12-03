@@ -6,7 +6,6 @@ import org.hibernate.event.PreInsertEvent;
 import org.hibernate.event.PreInsertEventListener;
 
 import fi.hut.soberit.agilefant.model.Task;
-import fi.hut.soberit.agilefant.security.SecurityUtil;
 
 public class TaskEventListener implements PreInsertEventListener{
 

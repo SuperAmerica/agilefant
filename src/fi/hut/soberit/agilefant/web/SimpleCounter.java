@@ -71,7 +71,7 @@ public class SimpleCounter extends ActionSupport implements SessionAware {
 		XYSeriesCollection dataset = new XYSeriesCollection();
 		dataset.addSeries(series);
 //		 Generate the graph
-		JFreeChart chart = ChartFactory.createXYLineChart(
+		JFreeChart chart1 = ChartFactory.createXYLineChart(
 				"XY Chart", // Title
 				"x-axis", // x-axis Label
 				"y-axis", // y-axis Label
@@ -82,7 +82,11 @@ public class SimpleCounter extends ActionSupport implements SessionAware {
 				false // Configure chart to generate URLs?
 		);
 		try {
-			ChartUtilities.saveChartAsPNG(new File("./chart.png"), chart, 500, 300);
+			String dir="user.dir"; // set to current directory
+			dir=new File(System.getProperty(dir)).getCanonicalPath();
+			File b = new File(dir + File.separator + "webapps" + File.separator + "agilefant" + File.separator + "chart2.png");
+			ChartUtilities.saveChartAsPNG(b, chart1, 500, 300);
+			
 		} catch (IOException e) {
 			System.err.println("Problem occurred creating chart.");
 		}

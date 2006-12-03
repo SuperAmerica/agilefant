@@ -1,6 +1,6 @@
 <%@ include file="./inc/_taglibs.jsp" %>
 <%@ include file="./inc/_header.jsp" %>
-<aef:menu navi="1" /> 
+<aef:menu navi="1" bct="${aef:getBacklogItem(backlogItemId)}"  /> 
 	<ww:actionerror/>
 	<ww:actionmessage/>
 	<h2>Edit task</h2>

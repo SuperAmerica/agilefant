@@ -12,7 +12,8 @@ import fi.hut.soberit.agilefant.model.ActivityType;
 import fi.hut.soberit.agilefant.model.WorkType;
 
 public class WorkTypeAction extends ActionSupport{
-	
+
+	private static final long serialVersionUID = -7854997077386161741L;
 	private int workTypeId;
 	private int activityTypeId;
 	private ActivityType activityType;

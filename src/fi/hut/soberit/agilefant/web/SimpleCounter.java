@@ -9,7 +9,8 @@ import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
 
 public class SimpleCounter extends ActionSupport implements SessionAware {
-	
+
+	private static final long serialVersionUID = -5169540628300552058L;
 	private static final Logger log = Logger.getLogger(SimpleCounter.class);
 	public static final String COUNTER_PARAM = "simpleCounter";
 	

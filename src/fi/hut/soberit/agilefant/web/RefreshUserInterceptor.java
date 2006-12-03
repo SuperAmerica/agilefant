@@ -10,7 +10,8 @@ import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.security.SecurityUtil;
 
 public class RefreshUserInterceptor implements Interceptor {
-	
+
+	private static final long serialVersionUID = 1668784370092320107L;
 	private Logger log = Logger.getLogger(RefreshUserInterceptor.class);
 	private UserDAO userDAO;
 

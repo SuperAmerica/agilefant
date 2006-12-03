@@ -4,25 +4,21 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Collection;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Locale;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.JoinColumn;
+import javax.persistence.Transient;
+
+import fi.hut.soberit.agilefant.web.PageItem;
 
 @Entity
-public class Iteration extends Backlog {
+public class Iteration extends Backlog implements PageItem {
 	
 	private Date startDate;
 	private Date endDate;
     private Deliverable deliverable;
-	private User owner;
+//	private User owner;
 	
 	@ManyToOne 
 	//@JoinColumn (nullable = false)
@@ -55,5 +51,20 @@ public class Iteration extends Backlog {
 	public void setStartDate(String startDate) throws ParseException {
 	    DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT, Locale.ENGLISH);	    
 	    this.startDate = df.parse( startDate);
+	}
+	@Transient
+	public Collection<PageItem> getChildren() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Transient
+	public PageItem getParent() {
+		// TODO Auto-generated method stub
+		return getDeliverable();
+	}
+	@Transient
+	public boolean hasChildren() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

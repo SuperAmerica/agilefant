@@ -12,6 +12,7 @@ import fi.hut.soberit.agilefant.security.SecurityUtil;
 
 public class AssignTaskAction extends ActionSupport {
 	
+	private static final long serialVersionUID = 6934367420900867986L;
 	private int assigneeId;
 	private int taskId;
 	private UserDAO userDAO;

@@ -42,10 +42,10 @@
 		<tag-class>fi.hut.soberit.agilefant.web.tag.BreadCrumbTrailTag</tag-class>
 		<body-content>JSP</body-content>
 		<description>
-			Stores currently logged in user to variable currentUser
+			Builds page hierarchy for bread crumb trail links
 	    </description>
         <attribute>
-            <name>obj</name>
+            <name>page</name>
             <required>false</required>
 			<rtexprvalue>true</rtexprvalue>            
         </attribute>	    
@@ -70,6 +70,56 @@
 	  <name>isIteration</name>
 	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
 	  <function-signature>boolean isIteration(java.lang.Object)</function-signature>
+	</function>  	 
+	<function>
+	  <name>isBacklogItem</name>
+	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
+	  <function-signature>boolean isBacklogItem(java.lang.Object)</function-signature>
+	</function>  	 
+	<function>
+	  <name>isTask</name>
+	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
+	  <function-signature>boolean isTask(java.lang.Object)</function-signature>
+	</function>  	 
+	<function>
+	  <name>isUser</name>
+	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
+	  <function-signature>boolean isUser(java.lang.Object)</function-signature>
+	</function>  	 
+	<function>
+	  <name>getProduct</name>
+	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
+	  <function-signature>PageItem getProduct(int)</function-signature>
+	</function>  	 
+	<function>
+	  <name>getDeliverable</name>
+	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
+	  <function-signature>PageItem getDeliverable(int)</function-signature>
+	</function>  	 
+	<function>
+	  <name>getIteration</name>
+	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
+	  <function-signature>PageItem getIteration(int)</function-signature>
+	</function>  	 
+	<function>
+	  <name>getBacklogItem</name>
+	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
+	  <function-signature>PageItem getBacklogItem(int)</function-signature>
+	</function>  	 
+	<function>
+	  <name>getBacklog</name>
+	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
+	  <function-signature>PageItem getBacklog(int)</function-signature>
+	</function>  	 
+	<function>
+	  <name>getTask</name>
+	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
+	  <function-signature>PageItem getTask(int)</function-signature>
+	</function>  	 
+	<function>
+	  <name>init</name>
+	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
+	  <function-signature>void setPageContext(javax.servlet.jsp.PageContext)</function-signature>
 	</function>  	 
 	 	 
 </taglib>

@@ -11,12 +11,15 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.Type;
 
+import fi.hut.soberit.agilefant.web.PageItem;
+
 @Entity
-public class BacklogItem {
+public class BacklogItem implements PageItem {
 	
 	private int id;
 	private String name;
@@ -85,5 +88,21 @@ public class BacklogItem {
 	}
 	public void setBacklog(Backlog backlog) {
 	    this.backlog = backlog;
+	}
+	
+	@Transient
+	public Collection<PageItem> getChildren() {
+		Collection<PageItem> c = new HashSet<PageItem>(this.tasks.size());
+		c.addAll(this.tasks);
+		return c;
+	}
+	@Transient
+	public PageItem getParent() {
+		//TODO: do some checks
+		return (PageItem)getBacklog();
+	}
+	@Transient
+	public boolean hasChildren() {
+		return this.tasks.size() > 0 ? true : false;
 	}	
 }

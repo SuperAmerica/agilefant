@@ -6,7 +6,7 @@ import javax.servlet.jsp.tagext.Tag;
 import fi.hut.soberit.agilefant.db.UserDAO;
 
 public class UserListTag extends SpringTagSupport {
-
+	private static final long serialVersionUID = 8356132939350106553L;
 	public static final String USER_LIST_KEY = "userList";
 	private UserDAO userDAO;
 		

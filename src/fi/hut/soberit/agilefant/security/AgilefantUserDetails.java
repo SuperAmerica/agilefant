@@ -20,6 +20,7 @@ import fi.hut.soberit.agilefant.model.User;
  */
 public class AgilefantUserDetails implements UserDetails {
 
+	private static final long serialVersionUID = 1262586472763367026L;
 	private User user;
 	
 	AgilefantUserDetails(User user) {	

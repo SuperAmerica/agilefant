@@ -9,9 +9,12 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.Transient;
+
+import fi.hut.soberit.agilefant.web.PageItem;
 
 @Entity
-public class User {
+public class User implements PageItem {
 	
 	private int id;
 	private String password;
@@ -61,5 +64,25 @@ public class User {
 
 	public void setAssignments(Collection<Task> assignments) {
 		this.assignments = assignments;
+	}
+	@Transient
+	public Collection<PageItem> getChildren() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Transient
+	public String getName() {
+		// TODO Auto-generated method stub
+		return this.loginName;
+	}
+	@Transient
+	public PageItem getParent() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Transient
+	public boolean hasChildren() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

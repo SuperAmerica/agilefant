@@ -10,6 +10,8 @@ import fi.hut.soberit.agilefant.security.SecurityUtil;
 
 public class TaskEventListener implements PreInsertEventListener{
 
+	private static final long serialVersionUID = -7708348428244828439L;
+
 	public boolean onPreInsert(PreInsertEvent event) {
 		if (event.getEntity() instanceof Task){
 			Task task = (Task)event.getEntity();

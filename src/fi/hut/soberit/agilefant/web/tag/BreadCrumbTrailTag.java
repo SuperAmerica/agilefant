@@ -1,39 +1,46 @@
 package fi.hut.soberit.agilefant.web.tag;
 
-import java.io.IOException;
+
+import java.util.Collection;
+import java.util.Stack;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.Tag;
 
-import fi.hut.soberit.agilefant.model.Deliverable;
-import fi.hut.soberit.agilefant.security.SecurityUtil;
+import fi.hut.soberit.agilefant.web.PageItem;
 
 public class BreadCrumbTrailTag extends SpringTagSupport {
 	
 
-	private Object obj;
+	private static final long serialVersionUID = -8291423940208835187L;
+	public static final String PAGE_HIERARCHY = "pageHierarchy";
+	private PageItem page = null;
+	private Collection<PageItem> hierarchy = new Stack<PageItem>();
 	
 	@Override
 	public int doStartTag() throws JspException {
-		try {
-		if(obj instanceof Deliverable) {
-			Deliverable d = (Deliverable)obj;
-					super.getPageContext().getOut().write("&gt; " + d.getProduct().getName());
-		} else {
-			super.getPageContext().getOut().write("null");
+		if (page != null) {
+			hierarchy.add(page);
+			traverse(page);
+			super.getPageContext().setAttribute(BreadCrumbTrailTag.PAGE_HIERARCHY, hierarchy);			
 		}
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
 		return Tag.EVAL_BODY_INCLUDE;
 	}
-
-	public Object getObj() {
-		return obj;
+	
+	private void traverse(PageItem pi) {
+		PageItem parent = pi.getParent();
+		if (parent != null) { 
+			hierarchy.add(parent);
+			traverse(parent);
+		}
 	}
 
-	public void setObj(Object obj) {
-		this.obj = obj;
+	public PageItem getPage() {
+		return page;
+	}
+
+	public void setPage(PageItem page) {
+		this.page = page;
 	}
 }

@@ -12,7 +12,7 @@ import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Product;
 
 public class BacklogAction extends ActionSupport {
-	
+ 	private static final long serialVersionUID = 8061288993804046816L;
 	private int backlogId;
 	private BacklogDAO backlogDAO;
 	private int backlogItemId;

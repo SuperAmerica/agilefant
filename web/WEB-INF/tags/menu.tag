@@ -1,6 +1,4 @@
-<%@taglib uri="/WEB-INF/tlds/aef.tld" prefix="aef" %><%@ 
-taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %><%@
-taglib uri="/webwork" prefix="ww" %>
+<%@ include file="../jsp/inc/_taglibs.jsp" %>
 
    <%@tag description = "Menu" %>
 
@@ -28,20 +26,56 @@ taglib uri="/webwork" prefix="ww" %>
 </div>
 
 <div id="bct">
- 				<ww:url id="prodLink" action="listProducts" includeParams="none"/>
+<aef:bct page="${bct}"/>
 
-<!-- deliverable -->				
-	<c:if test="${aef:isDeliverable(bct)}">
-				<ww:a href="%{prodLink}">${bct.product.name}</ww:a>		
-	</c:if>
-<!-- iteration -->				
-	<c:if test="${aef:isIteration(bct)}">
-				<ww:a href="%{prodLink}">${bct.deliverable.product.name}</ww:a>	&gt;	
- 				<ww:url id="delivLink" action="editDeliverable" includeParams="none">
- 					<ww:param name="deliverableId" value="${bct.deliverable.id}"/>
- 				</ww:url>
-				<ww:a href="%{delivLink}">${bct.deliverable.name}</ww:a>		
-	</c:if>
+
+
+<c:set var="size" value="${fn:length(pageHierarchy)}" scope="page" />
+<c:forEach var="i" end="${size}" begin="0" step="1">
+
+<!-- kludge, hierarkia on jostain syystä aina käänteisessä järjestyksessä?? -->
+    <c:set var="page" value="${pageHierarchy[size-i]}" scope="page" />
+	<c:choose>
+		<c:when test="${aef:isProduct(page)}">
+			<ww:url id="prodLink" action="listProducts" includeParams="none"/>
+			<ww:a href="%{prodLink}">${page.name}</ww:a>		
+		</c:when>
+		<c:when test="${aef:isDeliverable(page)}">
+			&gt;
+			<ww:url id="delivLink" action="editDeliverable" includeParams="none">
+				<ww:param name="deliverableId" value="${page.id}"/>
+			</ww:url>
+			<ww:a href="%{delivLink}">${page.name}</ww:a>		
+		</c:when >
+		<c:when test="${aef:isIteration(page)}">
+			&gt;
+			<ww:url id="iterLink" action="editIteration" includeParams="none">
+				<ww:param name="iterationId" value="${page.id}"/>
+			</ww:url>
+			<ww:a href="%{iterLink}">${page.name}</ww:a>		
+		</c:when >
+		<c:when test="${aef:isBacklogItem(page)}">
+			&gt;
+			<ww:url id="bliLink" action="editBacklogItem" includeParams="none">
+				<ww:param name="backlogItemId" value="${page.id}"/>
+			</ww:url>
+			<ww:a href="%{bliLink}">${page.name}</ww:a>		
+		</c:when >
+		<c:when test="${aef:isTask(page)}">
+			&gt;
+			<ww:url id="taskLink" action="editTask" includeParams="none">
+				<ww:param name="taskId" value="${page.id}"/>
+			</ww:url>
+			<ww:a href="%{taskLink}">${page.name}</ww:a>		
+		</c:when >
+		
+	</c:choose>
+
+</c:forEach>
+		<c:if test="${aef:isUser(bct)}">
+			<ww:url id="userLink" action="listUsers" includeParams="none"/>
+			<ww:a href="%{userLink}">User list</ww:a>		
+		</c:if>
 
 &nbsp;</div>
 <div id="main">

@@ -1,1 +1,1 @@
-a {height:0}.codewrap {width:60%}input {background-color:#fff} #wrapper {width:expression(documentElement.clientWidth < 780 ? "780px" : "auto" )}
+a {height:0}.codewrap {width:60%} #wrapper {width:expression(documentElement.clientWidth < 780 ? "780px" : "auto" )}

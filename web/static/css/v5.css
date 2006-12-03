@@ -7,8 +7,6 @@ ul,ol,p,h1,h2,h3,h4,dd,blockquote {margin-right:200px}
 p,dd {/*text-align:justify*/}
 h2,h3,h4 {padding:0}
 img {border:0}
-textarea,input {background-color:#fff}
-textarea:focus,input:focus {background-color:#FFFFCC}
 strong {font-weight:600}
 h1 a,h2 a,h3 a {border-bottom:1px dotted #999}
 #content a {border-bottom:1px solid #000}

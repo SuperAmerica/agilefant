@@ -1,6 +1,6 @@
 <%@ include file="./inc/_taglibs.jsp" %>
 <%@ include file="./inc/_header.jsp" %>
-<aef:menu navi="1" /> 
+<aef:menu navi="1"  /> 
 	<ww:actionerror/>
 	<ww:actionmessage/>
 	<h2>Edit product</h2>
@@ -21,7 +21,7 @@
 		<p>
 			Has backlog items:
 		</p>
-		<p>
+		<br/>
 		<ul>
 		<c:forEach items="${product.backlogItems}" var="item">
 			<ww:url id="editLink" action="editBacklogItem" includeParams="none">
@@ -35,6 +35,6 @@
 			</li>
 		</c:forEach>
 		</ul>
-		</p>
+
 	</c:if>
 <%@ include file="./inc/_footer.jsp" %>

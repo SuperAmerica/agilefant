@@ -5,7 +5,7 @@ import javax.servlet.jsp.tagext.Tag;
 import fi.hut.soberit.agilefant.db.ProductDAO;
 
 public class ProductListTag extends SpringTagSupport{
-	
+	private static final long serialVersionUID = 1810440984222729034L;
 	public static final String PRODUCT_LIST_KEY = "productList";
 	private ProductDAO productDAO;
 		

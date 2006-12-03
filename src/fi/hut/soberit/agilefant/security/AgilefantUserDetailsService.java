@@ -20,6 +20,9 @@ import org.acegisecurity.userdetails.UserDetailsService;
 public class AgilefantUserDetailsService implements UserDetailsService {
 
 	private static class AgilefantDataAccessException extends DataAccessException {		
+
+		private static final long serialVersionUID = -4433098907957189538L;
+
 		AgilefantDataAccessException(String msg) {
 			super(msg);
 		}

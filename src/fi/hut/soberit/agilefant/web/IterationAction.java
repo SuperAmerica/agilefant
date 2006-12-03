@@ -1,7 +1,5 @@
 package fi.hut.soberit.agilefant.web;
 
-import java.util.ArrayList;
-import java.util.Collection;	
 
 import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
@@ -12,7 +10,8 @@ import fi.hut.soberit.agilefant.model.Deliverable;
 import fi.hut.soberit.agilefant.model.Iteration;
 
 public class IterationAction extends ActionSupport {
-	
+
+	private static final long serialVersionUID = -448825368336871703L;
 	private int iterationId;
 	private Iteration iteration;
 	private IterationDAO iterationDAO;

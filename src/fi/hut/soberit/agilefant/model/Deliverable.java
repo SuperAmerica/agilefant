@@ -4,17 +4,15 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Transient;
+
+import fi.hut.soberit.agilefant.web.PageItem;
 
 @Entity
-public class Deliverable extends Backlog {
+public class Deliverable extends Backlog implements PageItem {
 	
     	private Product product;
 	private ActivityType type;
@@ -71,5 +69,19 @@ public class Deliverable extends Backlog {
 	}
 	public void setType(ActivityType type) {
 	    this.type = type;
+	}
+	@Transient
+	public Collection<PageItem> getChildren() {
+		Collection<PageItem> c = new HashSet<PageItem>(this.iterations.size());
+		c.addAll(this.iterations);
+		return c;
+	}
+	@Transient
+	public PageItem getParent() {
+		return getProduct();
+	}
+	@Transient
+	public boolean hasChildren() {
+		return this.iterations.size() > 0 ? true : false;
 	}
 }

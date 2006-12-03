@@ -2,6 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 	<head>
 <ww:head />
+<c:out value="${aef:init(pageContext) }"/>
 			<title>agilefant</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />		
 <style type="text/css" media="screen,projection">

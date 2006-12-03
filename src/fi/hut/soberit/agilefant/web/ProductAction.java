@@ -10,7 +10,8 @@ import fi.hut.soberit.agilefant.db.ProductDAO;
 import fi.hut.soberit.agilefant.model.Product;
 
 public class ProductAction extends ActionSupport implements CRUDAction {
-	
+
+	private static final long serialVersionUID = 1834399750050895118L;
 	private ProductDAO productDAO;
 	private int productId;
 	private Product product;

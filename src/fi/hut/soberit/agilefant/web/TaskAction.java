@@ -1,22 +1,18 @@
 package fi.hut.soberit.agilefant.web;
 
-import java.util.Collection;	
 
 import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
 
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
-import fi.hut.soberit.agilefant.db.DeliverableDAO;
-import fi.hut.soberit.agilefant.db.IterationDAO;
 import fi.hut.soberit.agilefant.db.TaskDAO;
 import fi.hut.soberit.agilefant.model.BacklogItem;
-import fi.hut.soberit.agilefant.model.Deliverable;
-import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.security.SecurityUtil;
 
 public class TaskAction extends ActionSupport {
-	
+
+	private static final long serialVersionUID = -8560828440589313663L;
 	private int taskId;
 	private int backlogItemId;
 	private Task task;

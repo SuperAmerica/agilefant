@@ -13,6 +13,8 @@ import fi.hut.soberit.agilefant.model.BacklogItem;
 
 public class BacklogItemAction extends ActionSupport implements CRUDAction {
 	
+
+	private static final long serialVersionUID = -4289013472775815522L;
 	private BacklogDAO backlogDAO;
 	private BacklogItemDAO backlogItemDAO;
 	private int backlogId;

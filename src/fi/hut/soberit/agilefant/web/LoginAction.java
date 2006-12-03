@@ -7,7 +7,8 @@ import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.service.UserManager;
 
 public class LoginAction extends ActionSupport {
-	
+
+	private static final long serialVersionUID = -5808987058405748396L;
 	private String name;
 	private String password;
 	private UserManager userManager;

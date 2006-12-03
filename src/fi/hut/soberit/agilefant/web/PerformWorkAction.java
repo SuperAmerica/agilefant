@@ -9,7 +9,8 @@ import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.WorkType;
 
 public class PerformWorkAction extends ActionSupport {
-	
+
+	private static final long serialVersionUID = 1435602610355587814L;
 	private int taskId;
 	private int amount; // check unit
 	private int workTypeId;

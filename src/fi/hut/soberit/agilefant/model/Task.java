@@ -19,8 +19,10 @@ import javax.persistence.Transient;
 import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.Type;
 
+import fi.hut.soberit.agilefant.web.PageItem;
+
 @Entity
-public class Task {
+public class Task implements PageItem {
 	 	
 	private int id;
 	private int severity;
@@ -155,5 +157,19 @@ public class Task {
 
 	public void setBacklogItem(BacklogItem backlogItem) {
 	    this.backlogItem = backlogItem;
+	}
+	@Transient
+	public Collection<PageItem> getChildren() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Transient
+	public PageItem getParent() {
+		return getBacklogItem();
+	}
+	@Transient
+	public boolean hasChildren() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

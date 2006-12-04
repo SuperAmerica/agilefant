@@ -30,7 +30,7 @@ public class BacklogItem implements PageItem {
 	private AFTime taskEffortLeft;
 
 	@Type(type="af_time")
-	@Formula(value="(select SEC_TO_TIME(SUM(TIME_TO_SEC(t.effortEstimate))) from task t where t.backlogItem_id = id)")
+	@Formula(value="(select SEC_TO_TIME(SUM(TIME_TO_SEC(t.effortEstimate))) from Task t where t.backlogItem_id = id)")
 	public AFTime getTaskEffortLeft() {
 		return taskEffortLeft;
 	}

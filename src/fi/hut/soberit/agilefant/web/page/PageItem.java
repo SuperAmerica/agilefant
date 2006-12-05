@@ -1,4 +1,4 @@
-package fi.hut.soberit.agilefant.web;
+package fi.hut.soberit.agilefant.web.page;
 
 import java.util.Collection;
 

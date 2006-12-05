@@ -10,7 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 
-import fi.hut.soberit.agilefant.web.PageItem;
+import fi.hut.soberit.agilefant.web.page.PageItem;
 
 @Entity
 public class Iteration extends Backlog implements PageItem {

@@ -7,7 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 
-import fi.hut.soberit.agilefant.web.PageItem;
+import fi.hut.soberit.agilefant.web.page.PageItem;
+import fi.hut.soberit.agilefant.web.page.PortfolioPageItem;
 
 @Entity
 public class Product extends Backlog implements PageItem {
@@ -30,7 +31,7 @@ public class Product extends Backlog implements PageItem {
     @Transient
 	public PageItem getParent() {
 		// TODO Auto-generated method stub
-		return null;
+		return new PortfolioPageItem();
 	}
     @Transient
 	public boolean hasChildren() {

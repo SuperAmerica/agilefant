@@ -19,7 +19,7 @@ import javax.persistence.Transient;
 import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.Type;
 
-import fi.hut.soberit.agilefant.web.PageItem;
+import fi.hut.soberit.agilefant.web.page.PageItem;
 
 @Entity
 public class Task implements PageItem {

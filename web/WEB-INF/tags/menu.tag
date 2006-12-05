@@ -30,13 +30,20 @@
 
 
 <c:set var="size" value="${fn:length(pageHierarchy)}" scope="page" />
-<c:forEach var="i" end="${size}" begin="0" step="1">
 
-<!-- kludge, hierarkia on jostain syystä aina käänteisessä järjestyksessä?? -->
-    <c:set var="page" value="${pageHierarchy[size-i]}" scope="page" />
+<!-- 
+
+<cforEach var="i" end="${size}" begin="0" step="1">
+
+    <cset var="page" value="${pageHierarchy[size-i]}" scope="page" />
+     -->
+<c:forEach var="page" items="${pageHierarchy}" >
 	<c:choose>
 		<c:when test="${aef:isProduct(page)}">
-			<ww:url id="prodLink" action="listProducts" includeParams="none"/>
+			&gt;
+			<ww:url id="prodLink" action="editProduct" includeParams="none">
+				<ww:param name="productId" value="${page.id}"/>
+			</ww:url>
 			<ww:a href="%{prodLink}">${page.name}</ww:a>		
 		</c:when>
 		<c:when test="${aef:isDeliverable(page)}">
@@ -70,6 +77,10 @@
 		<c:when test="${aef:isUser(page)}">
 			<ww:url id="userLink" action="listUsers" includeParams="none"/>
 			<ww:a href="%{userLink}">User list</ww:a>		
+		</c:when >
+		<c:when test="${aef:isPortfolio(page)}">
+			<ww:url id="homeLink" action="listProducts" includeParams="none"/>
+			<ww:a href="%{homeLink}">Home</ww:a>		
 		</c:when >
 		
 	</c:choose>

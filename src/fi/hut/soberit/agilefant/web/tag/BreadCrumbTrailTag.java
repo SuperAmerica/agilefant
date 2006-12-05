@@ -1,6 +1,7 @@
 package fi.hut.soberit.agilefant.web.tag;
 
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Stack;
 
@@ -15,7 +16,8 @@ import fi.hut.soberit.agilefant.db.IterationDAO;
 import fi.hut.soberit.agilefant.db.ProductDAO;
 import fi.hut.soberit.agilefant.db.TaskDAO;
 import fi.hut.soberit.agilefant.model.User;
-import fi.hut.soberit.agilefant.web.PageItem;
+import fi.hut.soberit.agilefant.web.page.PageItem;
+import fi.hut.soberit.agilefant.web.page.PortfolioPageItem;
 
 public class BreadCrumbTrailTag extends SpringTagSupport {
 	
@@ -23,7 +25,8 @@ public class BreadCrumbTrailTag extends SpringTagSupport {
 	private static final long serialVersionUID = -8291423940208835187L;
 	public static final String PAGE_HIERARCHY = "pageHierarchy";
 	private PageItem page = null;
-	private Collection<PageItem> hierarchy = new Stack<PageItem>();
+	private ArrayList<PageItem> hierarchy = new ArrayList<PageItem>();
+//	private Collection<PageItem> hierarchy = new Stack<PageItem>();
 		
 	@Override
 	public int doStartTag() throws JspException {
@@ -40,7 +43,7 @@ public class BreadCrumbTrailTag extends SpringTagSupport {
 	private void traverse(PageItem pi) {
 		PageItem parent = pi.getParent();
 		if (parent != null) { 
-			this.hierarchy.add(parent);
+			this.hierarchy.add(0, parent);
 			traverse(parent);
 		}
 	}
@@ -71,6 +74,9 @@ public class BreadCrumbTrailTag extends SpringTagSupport {
 	} 
 	public void setUserId(int id) {
 		this.page = new User();
+	} 
+	public void setPortfolioId(int id) {
+		this.page = new PortfolioPageItem();
 	} 
 
 }

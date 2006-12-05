@@ -79,6 +79,11 @@
             <required>false</required>
 			<rtexprvalue>true</rtexprvalue>            
         </attribute>	    
+        <attribute>
+            <name>portfolioId</name>
+            <required>false</required>
+			<rtexprvalue>true</rtexprvalue>            
+        </attribute>	    
 	</tag>
 
 	 <tag-file>
@@ -115,6 +120,11 @@
 	  <name>isUser</name>
 	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
 	  <function-signature>boolean isUser(java.lang.Object)</function-signature>
+	</function>  	 
+	<function>
+	  <name>isPortfolio</name>
+	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
+	  <function-signature>boolean isPortfolio(java.lang.Object)</function-signature>
 	</function>  	 
 	 	 
 </taglib>

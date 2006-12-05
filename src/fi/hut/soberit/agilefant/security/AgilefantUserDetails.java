@@ -21,10 +21,15 @@ import fi.hut.soberit.agilefant.model.User;
 public class AgilefantUserDetails implements UserDetails {
 
 	private static final long serialVersionUID = 1262586472763367026L;
-	private User user;
+	
+	private String username;
+	private String password;
+	private int userId;
 	
 	AgilefantUserDetails(User user) {	
-		this.user = user;		
+		username = user.getLoginName();
+		password = user.getPassword();
+		userId = user.getId();
 	}
 	
 	public GrantedAuthority[] getAuthorities() {
@@ -33,17 +38,17 @@ public class AgilefantUserDetails implements UserDetails {
 	}
 
 	/**
-	 * Provide password to acegi.
+	 * Provide password for acegi.
 	 */
 	public String getPassword() {
-		return user.getPassword();
+		return password;
 	}
 
 	/**
-	 * Provide username to acegi.
+	 * Provide username for acegi.
 	 */
 	public String getUsername() {
-		return user.getLoginName();
+		return username;
 	}
 
 	public boolean isAccountNonExpired() {		
@@ -63,9 +68,9 @@ public class AgilefantUserDetails implements UserDetails {
 	}
 	
 	/**
-	 * Extra functionality to provide our user object to callers.
+	 * Extra functionality to provide userId for callers.
 	 */
-	public User getUser() {
-		return user;
+	public int getUserId() {
+		return userId;
 	}
 }

@@ -7,24 +7,68 @@ import org.acegisecurity.context.SecurityContextHolder;
 
 import fi.hut.soberit.agilefant.model.User;
 
+/**
+ * Some security-related utilities.
+ * 
+ * @author Turkka Äijälä
+ */
 public class SecurityUtil {
+    
+	/** A thread local variable to save the user object in during the request. */
+	private static ThreadLocal<User> threadLocalUser = new ThreadLocal<User>() {
+        protected synchronized User initialValue() {
+            return null;
+        }
+    };
+	
 	private SecurityUtil() {}
 	
 	/**
-	 * Get currently logged-in user.
+	 * Get id for the currently logged user. It's always valid to call this. 
 	 * 
-	 * @return User object, that has logged in, or null if no user.
+	 * @return logged user id
+	 * @throws IllegalStateException when there's no user logged 
 	 */
-	public static User getLoggedUser() {
+	public static int getLoggedUserId() throws IllegalStateException {
 		if(SecurityContextHolder.getContext().getAuthentication() == null)
-			return null;
+			throw new IllegalStateException("no logged user");
 		
 		AgilefantUserDetails ud = (AgilefantUserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		
-		if(ud == null) 
-			return null;
-				
-		return ud.getUser();	
+		if(ud == null)
+			throw new IllegalStateException("no logged user");
+		
+		return ud.getUserId();
+	}
+	
+	/**
+	 * Set the currently logged-in user (for the current thread/request). 
+	 * <p>
+	 * The purpose is to store the user-object during a single WWW-request.
+	 * This is achieved by saving the object in a thread local variable. (is this ok/valid?) 
+	 * <p>  
+	 * You shouldn't normally call this function.
+	 * 
+	 * @see RefreshUserInterceptor
+	 * @see getLoggedUser
+	 * @param user currently logged user
+	 */
+	public static void setLoggedUser(User user) {		
+		threadLocalUser.set(user);
+	}	
+	
+	/**
+	 * Get currently logged-in user (for the current thread/request) as set by setLoggedUser. 
+	 * <p>
+	 * <b>Currently only valid for webwork-stuff.</b>
+	 * ... since RefreshUserInterceptor ensures proper user is set.
+	 * 
+	 * @see RefreshUserInterceptor
+	 * @see setLoggedUser
+	 * @return User object for the user who's logged in, or null if no user.
+	 */
+	public static User getLoggedUser() {
+		return threadLocalUser.get();
 	}
 	
 	/**

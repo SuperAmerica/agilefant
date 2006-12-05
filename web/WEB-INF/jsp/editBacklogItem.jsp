@@ -65,7 +65,6 @@
 			</p>			
 			<ww:submit value="move"/>
 		</ww:form>
-	</c:if>	
 		<p>
 			Tasks:
 		</p>
@@ -75,6 +74,8 @@
 			</ww:url>
 			<ww:a href="%{createLink}">Add task</ww:a>
 		</p>
+	</c:if>	
+
 	<c:if test="${!empty backlogItem.tasks}">
 
 		<p>

@@ -14,7 +14,7 @@
 		You have loaded this page <b>${counter}</b> times.
 	</p>
 	<p>
-		<img src="./chart2.png">
+		<img src="/agilefant/static/chart2.png">
 	</p>
 	<p>
 		<ww:form action="simpleCounter">

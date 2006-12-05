@@ -4,14 +4,7 @@
 <aef:menu navi="1"  pageHierarchy="${pageHierarchy}"/> 
 	<ww:actionerror/>
 	<ww:actionmessage/>
-	<c:choose>
-		<c:when test="${iteration.id == 0}">
-			<h2>Create new iteration</h2>
-		</c:when>
-		<c:otherwise>
 			<h2>Edit iteration: ${iteration.id}</h2>
-		</c:otherwise>
-	</c:choose>
 	<ww:form action="storeIteration">
 		<ww:hidden name="iterationId" value="${iteration.id}"/>
 		<ww:hidden name="deliverableId"/> 
@@ -33,12 +26,28 @@
 		<p>
 			<ww:submit value="Store"/>
 		</p>
+
+
 	</ww:form>	
 
-	<c:if test="${!empty iteration.backlogItems}">
+
+		<c:if test="${iteration.id > 0}">
+
+
 		<p>
 			Backlog items:
 		</p>
+		<p>
+			<ww:url id="createBacklogItemLink" action="createBacklogItem" includeParams="none">
+				<ww:param name="backlogId" value="${iteration.id}"/>
+			</ww:url>
+			<ww:a href="%{createBacklogItemLink}">Add backlog item</ww:a>		
+		</p>
+</c:if>
+
+	<c:if test="${!empty iteration.backlogItems}">
+
+		
 		<p>
 			<display:table name="iteration.backlogItems" id="row" requestURI="editIteration.action">
 				<display:column sortable="true" title="Id" property="id"/>

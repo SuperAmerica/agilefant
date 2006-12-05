@@ -10,14 +10,14 @@ import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.security.SecurityUtil;
 
-public class TaskAction extends ActionSupport {
+public class HourReportAction extends ActionSupport {
 
 	private static final long serialVersionUID = -8560828440589313663L;
 	private int taskId;
-	private int backlogItemId;
+//	private int backlogItemId;
 	private Task task;
 	private TaskDAO taskDAO;
-	private BacklogItemDAO backlogItemDAO;
+//	private BacklogItemDAO backlogItemDAO;
 		
 	public String create(){
 		taskId = 0;
@@ -31,7 +31,7 @@ public class TaskAction extends ActionSupport {
 			super.addActionError(super.getText("task.notFound"));
 			return Action.ERROR;
 		}
-		backlogItemId = task.getBacklogItem().getId();
+//		backlogItemId = task.getBacklogItem().getId();
 		return Action.SUCCESS;
 	}
 	
@@ -59,28 +59,28 @@ public class TaskAction extends ActionSupport {
 			super.addActionError(super.getText("task.notFound"));
 			return Action.ERROR;
 		}
-		BacklogItem backlogItem = task.getBacklogItem();
-		backlogItemId = backlogItem.getId();
-		backlogItem.getTasks().remove(task);
-		task.setBacklogItem(null);		
+//		BacklogItem backlogItem = task.getBacklogItem();
+//		backlogItemId = backlogItem.getId();
+//		backlogItem.getTasks().remove(task);
+//		task.setBacklogItem(null);		
 		taskDAO.remove(task);
 		return Action.SUCCESS;
 	}
 	
 	protected void fillStorable(Task storable){
-		if (storable.getBacklogItem() == null){
-			BacklogItem backlogItem = backlogItemDAO.get(backlogItemId);
-			if (backlogItem == null){
-				super.addActionError(super.getText("backlogItem.notFound"));
-				return;
-			}
-			storable.setBacklogItem(backlogItem);
-			backlogItem.getTasks().add(storable);
-			storable.setCreator(SecurityUtil.getLoggedUser());
-		}
+//		if (storable.getBacklogItem() == null){
+//			BacklogItem backlogItem = backlogItemDAO.get(backlogItemId);
+//			if (backlogItem == null){
+//				super.addActionError(super.getText("backlogItem.notFound"));
+//				return;
+//			}
+//			storable.setBacklogItem(backlogItem);
+//			backlogItem.getTasks().add(storable);
+//			storable.setCreator(SecurityUtil.getLoggedUser());
+//		}
 		storable.setName(task.getName());
 		storable.setDescription(task.getDescription());
-		storable.setEffortEstimate(task.getEffortEstimate());
+//		storable.setEffortEstimate(task.getEffortEstimate());
 		storable.setPerformedEffort(task.getPerformedEffort());
 	}
 
@@ -103,15 +103,15 @@ public class TaskAction extends ActionSupport {
 	public void setTaskDAO(TaskDAO taskDAO) {
 		this.taskDAO = taskDAO;
 	}
-
-	public int getBacklogItemId() {
-		return backlogItemId;
-	}
-
-	public void setBacklogItemId(int backlogItemId) {
-		this.backlogItemId = backlogItemId;
-	}
-
+//
+//	public int getBacklogItemId() {
+//		return backlogItemId;
+//	}
+//
+//	public void setBacklogItemId(int backlogItemId) {
+//		this.backlogItemId = backlogItemId;
+//	}
+//
 	public int getTaskId() {
 		return taskId;
 	}
@@ -124,7 +124,7 @@ public class TaskAction extends ActionSupport {
 		this.task = task;
 	}
 
-	public void setBacklogItemDAO(BacklogItemDAO backlogItemDAO) {
-		this.backlogItemDAO = backlogItemDAO;
-	}
+//	public void setBacklogItemDAO(BacklogItemDAO backlogItemDAO) {
+//		this.backlogItemDAO = backlogItemDAO;
+//	}
 }

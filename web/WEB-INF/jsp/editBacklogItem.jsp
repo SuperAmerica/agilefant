@@ -66,10 +66,17 @@
 			<ww:submit value="move"/>
 		</ww:form>
 	</c:if>	
-	<c:if test="${!empty backlogItem.tasks}">
 		<p>
 			Tasks:
 		</p>
+		<p>
+			<ww:url id="createLink" action="createTask" includeParams="none">
+				<ww:param name="backlogItemId" value="${backlogItemId}"/>
+			</ww:url>
+			<ww:a href="%{createLink}">Add task</ww:a>
+		</p>
+	<c:if test="${!empty backlogItem.tasks}">
+
 		<p>
 			<display:table name="backlogItem.tasks" id="row" requestURI="editBacklogItem.action">
 				<display:column sortable="true" title="Id" property="id"/>
@@ -100,11 +107,5 @@
 		</p>
 	</c:if>
 	<c:if test="${backlogItem.id > 0}">
-		<p>
-			<ww:url id="createLink" action="createTask" includeParams="none">
-				<ww:param name="backlogItemId" value="${backlogItemId}"/>
-			</ww:url>
-			<ww:a href="%{createLink}">Add task</ww:a>
-		</p>
 	</c:if>
 <%@ include file="./inc/_footer.jsp" %>

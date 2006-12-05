@@ -33,6 +33,12 @@ a:hover,a:focus {background-color:#eef}
 #maintitle {margin:10px 15px; font-size:1em;  }
 #logout { text-align:right; font-size:1em: display: in-line; position:absolute;top:10px;right:15px;width:50%;}
 
+.sortable	{
+	background : #eea;
+}
+.odd	{
+	background : #ccc;
+}
 
 span.right {text-align:right;}
 #menu {

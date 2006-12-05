@@ -68,13 +68,15 @@
 			<result>/WEB-INF/jsp/editBacklogItem.jsp</result>
 		</action>
 		<action name="deleteBacklogItem" method="delete" class="backlogItemAction">
-			<result type="redirect">editBacklog.action?backlogId=${backlogId}</result>
+			<result type="redirect">listProducts.action</result>
+<!-- 			<result type="redirect">editBacklog.action?backlogId=${backlogId}</result> -->
 		</action>
 		<action name="storeBacklogItem" method="store" class="backlogItemAction">
 			<result type="redirect">editBacklog.action?backlogId=${backlogId}</result>
 		</action>
 <!-- /BacklogItem actions -->
 <!-- Deliverable actions -->
+
 		<action name="listDeliverables">
 			<result>/WEB-INF/jsp/listDeliverables.jsp</result>
 		</action>
@@ -166,6 +168,16 @@
 
 		<action name="testlayout">
 			<result>/WEB-INF/jsp/newlayout.jsp</result>
+		</action>
+
+		<action name="hourReport" >
+			<result>/WEB-INF/jsp/hourReport.jsp</result>
+		</action>
+		<action name="hourReport2" method="store" class="hourReportAction">
+			<result>/WEB-INF/jsp/hourReport.jsp</result>
+		</action>
+		<action name="myTasks">
+			<result>/WEB-INF/jsp/showMyTasks.jsp</result>
 		</action>
 
 	</package>

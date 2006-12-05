@@ -18,7 +18,7 @@
 				<display:column sortable="true" title="Id" property="id"/>
 				<display:column sortable="true" title="Name" property="name"/>
 				<display:column sortable="true" title="# of deliverables">
-					${fn:length(row.backlogItems)}
+					${fn:length(row.deliverables)}
 				</display:column>
 				<display:column sortable="false" title="Action">
 					<ww:url id="editLink" action="editProduct" includeParams="none">

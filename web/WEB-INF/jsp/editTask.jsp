@@ -18,9 +18,6 @@
 		<p>		
 			Effort left: <ww:textfield name="task.effortEstimate"/>
 		</p>
-		<p>		
-			Performed effort: <ww:textfield name="task.performedEffort"/>
-		</p>
 		<p>
 			<ww:submit value="Store"/>
 		</p>

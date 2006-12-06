@@ -206,6 +206,9 @@
 		<action name="myTasks">
 			<result>/WEB-INF/jsp/showMyTasks.jsp</result>
 		</action>
+		<action name="managementView">
+			<result>/WEB-INF/jsp/managementView.jsp</result>
+		</action>
 
 	</package>
 </xwork>

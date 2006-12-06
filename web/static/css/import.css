@@ -83,7 +83,12 @@ span.right {text-align:right;}
 div#menuwrap1 #menu li#nav1 a, 
 div#menuwrap2 #menu li#nav2 a,
 div#menuwrap3 #menu li#nav3 a,
-div#menuwrap4 #menu li#nav4 a {
+div#menuwrap4 #menu li#nav4 a,
+div#menuwrap5 #menu li#nav5 a,
+div#menuwrap6 #menu li#nav6 a,
+div#menuwrap7 #menu li#nav7 a,
+div#menuwrap8 #menu li#nav8 a,
+div#menuwrap9 #menu li#nav9 a {
 	background : #fff;
 	border-bottom : 1px solid #fff;
 	color : #000;
@@ -92,7 +97,12 @@ div#menuwrap4 #menu li#nav4 a {
 #menu #submenu1,
 #menu #submenu2,
 #menu #submenu3,
-#menu #submenu4 {
+#menu #submenu4,
+#menu #submenu5,
+#menu #submenu6,
+#menu #submenu7,
+#menu #submenu8,
+#menu #submenu8 {
 	display : none;
 	width: 90%;
 }
@@ -104,7 +114,12 @@ div#submenuwrap {}
 div#menuwrap1 #menu ul#submenu1, 
 div#menuwrap2 #menu ul#submenu2,
 div#menuwrap3 #menu ul#submenu3,
-div#menuwrap4 #menu ul#submenu4 {
+div#menuwrap4 #menu ul#submenu4,
+div#menuwrap5 #menu ul#submenu5,
+div#menuwrap6 #menu ul#submenu6,
+div#menuwrap7 #menu ul#submenu7,
+div#menuwrap8 #menu ul#submenu8,
+div#menuwrap9 #menu ul#submenu9 {
 	display : inline;
 	left : 10px;
 	position : absolute;
@@ -113,7 +128,12 @@ div#menuwrap4 #menu ul#submenu4 {
 div#menuwrap1 #menu ul#submenu1 a, 
 div#menuwrap2 #menu ul#submenu2 a,
 div#menuwrap3 #menu ul#submenu3 a,
-div#menuwrap4 #menu ul#submenu4 a {
+div#menuwrap4 #menu ul#submenu4 a,
+div#menuwrap5 #menu ul#submenu5 a,
+div#menuwrap6 #menu ul#submenu6 a,
+div#menuwrap7 #menu ul#submenu7 a,
+div#menuwrap8 #menu ul#submenu8 a,
+div#menuwrap4 #menu ul#submenu9 a {
 	background : #fff;
 	border : none;
 	border-left : 1px dotted #ccc;
@@ -129,7 +149,12 @@ div#menuwrap4 #menu ul#submenu4 a {
 div#submenuwrap1 #menu li#subnav1 a, 
 div#submenuwrap2 #menu li#subnav2 a,
 div#submenuwrap3 #menu li#subnav3 a,
-div#submenuwrap4 #menu li#subnav4 a {
+div#submenuwrap4 #menu li#subnav4 a,
+div#submenuwrap5 #menu li#subnav5 a,
+div#submenuwrap6 #menu li#subnav6 a,
+div#submenuwrap7 #menu li#subnav7 a,
+div#submenuwrap8 #menu li#subnav8 a,
+div#submenuwrap9 #menu li#subnav9 a {
 	color : #f00;
 }
 

@@ -25,6 +25,9 @@
   <li id="nav5">
   	<a href="listActivityTypes.action">Manage activity & work types</a>
   </li>  
+  <li id="nav6">
+  	<a href="managementView.action">Portfolio hierarchy</a>
+  </li>  
 </ul>
 </div>
 </div>

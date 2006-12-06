@@ -9,6 +9,7 @@ import fi.hut.soberit.agilefant.db.ActivityTypeDAO;
 import fi.hut.soberit.agilefant.model.ActivityType;
 
 public class ActivityTypeAction extends ActionSupport {
+
 	private static final long serialVersionUID = 1342432127514974396L;
 	private int activityTypeId;
 	private ActivityType activityType;
@@ -49,9 +50,6 @@ public class ActivityTypeAction extends ActionSupport {
 		}
 		this.fillObject(fillable);
 		activityTypeDAO.store(fillable);
-		// updating activitytypes here to make listing work correctly after storing
-		// - turkka
-		activityTypes = activityTypeDAO.getAll();
 		return Action.SUCCESS;
 	}
 	

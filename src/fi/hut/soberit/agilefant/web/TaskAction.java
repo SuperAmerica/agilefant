@@ -81,7 +81,6 @@ public class TaskAction extends ActionSupport {
 		storable.setName(task.getName());
 		storable.setDescription(task.getDescription());
 		storable.setEffortEstimate(task.getEffortEstimate());
-		storable.setPerformedEffort(task.getPerformedEffort());
 	}
 
 	public int getDeliverableId() {

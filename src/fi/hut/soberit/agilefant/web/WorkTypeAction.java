@@ -1,8 +1,5 @@
 package fi.hut.soberit.agilefant.web;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
 import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
 
@@ -20,34 +17,23 @@ public class WorkTypeAction extends ActionSupport{
 	private WorkType workType;
 	private WorkTypeDAO workTypeDAO;
 	private ActivityTypeDAO activityTypeDAO;
-	private Collection<WorkType> workTypes;
 	
-	public String getAll(){
-		workTypes = new ArrayList<WorkType>();
-		activityType = activityTypeDAO.get(activityTypeId);
+	public String create(){
+		activityType =  activityTypeDAO.get(activityTypeId);
 		if (activityType == null){
-			workTypes = workTypeDAO.getAll();
-		} else {
-			workTypes = activityType.getWorkTypes();
+			super.addActionError(super.getText("workType.activityTypeNotFound"));
+			return Action.ERROR;
 		}
+		this.workTypeId = 0;
+		this.workType = new WorkType();
 		return Action.SUCCESS;
 	}
 	
-	public String create(){
-		ActivityType activityType =  activityTypeDAO.get(activityTypeId);
-		if (activityType == null){
-			super.addActionError(super.getText("workType.activityTypeNotFound"));
-			return Action.INPUT;
-		}
-		this.workTypeId = 0;
-		return Action.SUCCESS;		
-	}
-	
 	public String edit(){
-		ActivityType activityType =  activityTypeDAO.get(activityTypeId);
+		activityType =  activityTypeDAO.get(activityTypeId);		
 		if (activityType == null){
 			super.addActionError(super.getText("workType.activityTypeNotFound"));
-			return Action.INPUT;
+			return Action.ERROR;
 		}
 		workType = workTypeDAO.get(workTypeId);
 		if (workType == null){
@@ -72,20 +58,21 @@ public class WorkTypeAction extends ActionSupport{
 			super.addActionError(super.getText("workType.missingForm"));
 			return Action.INPUT;			
 		}
-		ActivityType activityType =  activityTypeDAO.get(activityTypeId);
+		activityType =  activityTypeDAO.get(activityTypeId);
 		if (activityType == null){
 			super.addActionError(super.getText("workType.activityTypeNotFound"));
 			return Action.INPUT;
 		}
 		WorkType fillable = new WorkType();
 		if (workTypeId > 0){
-			workType = workTypeDAO.get(workTypeId);
+			fillable = workTypeDAO.get(workTypeId);
 			if (workType == null){
 				super.addActionError(super.getText("workType.notFound"));
 				return Action.INPUT;
 			}
 		}
 		fillObject(fillable);
+		fillable.setActivityType(activityType);
 		workTypeDAO.store(fillable);
 		return Action.SUCCESS;
 	}
@@ -122,10 +109,6 @@ public class WorkTypeAction extends ActionSupport{
 
 	public ActivityType getActivityType() {
 		return activityType;
-	}
-
-	public Collection<WorkType> getWorkTypes() {
-		return workTypes;
 	}
 
 	public void setActivityTypeDAO(ActivityTypeDAO activityTypeDAO) {

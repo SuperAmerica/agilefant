@@ -123,7 +123,7 @@ public class Task implements PageItem {
 		return performedEffort;
 	}
 	
-	public void setPerformedEffort(AFTime performedEffort){
+	protected void setPerformedEffort(AFTime performedEffort){
 		this.performedEffort = performedEffort;
 	}
 

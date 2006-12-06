@@ -1,10 +1,14 @@
 package fi.hut.soberit.agilefant.web;
 
+import java.util.Collection;
+
 import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
 
+import fi.hut.soberit.agilefant.db.ActivityTypeDAO;
 import fi.hut.soberit.agilefant.db.DeliverableDAO;
 import fi.hut.soberit.agilefant.db.ProductDAO;
+import fi.hut.soberit.agilefant.model.ActivityType;
 import fi.hut.soberit.agilefant.model.Deliverable;
 import fi.hut.soberit.agilefant.model.Product;
 
@@ -13,17 +17,30 @@ public class DeliverableAction extends ActionSupport implements CRUDAction{
 	private static final long serialVersionUID = -4636900464606739866L;
 	private int deliverableId;
 	private int productId;
+	private int activityTypeId;
 	private Deliverable deliverable;
 	private DeliverableDAO deliverableDAO;
+	private ActivityTypeDAO activityTypeDAO;
 	private ProductDAO productDAO;
-		
+	private Collection<ActivityType> activityTypes;
+			
 	public String create(){
+		this.prepareActivityTypes();
+		if (this.activityTypes.isEmpty()){
+			super.addActionError("deliverable.activityTypesNotFound");
+			return Action.ERROR;
+		}
 		deliverableId = 0;
 		deliverable = new Deliverable();
 		return Action.SUCCESS;
 	}
 	
 	public String edit(){
+		this.prepareActivityTypes();
+		if (this.activityTypes.isEmpty()){
+			super.addActionError("deliverable.activityTypesNotFound");
+			return Action.ERROR;
+		}
 		deliverable = deliverableDAO.get(deliverableId);
 		if (deliverable == null){
 			super.addActionError(super.getText("deliverable.notFound"));
@@ -74,6 +91,20 @@ public class DeliverableAction extends ActionSupport implements CRUDAction{
 			storable.setProduct(product);
 			product.getDeliverables().add(storable);
 		}
+		if (storable.getActivityType() == null){
+			ActivityType activityType = null;
+			if (activityTypeId > 0){
+				activityType = activityTypeDAO.get(activityTypeId);
+			}
+			if (activityType != null){
+				storable.setActivityType(activityType);
+			} else {
+				super.addActionError(super.getText("deliverable.missingActivityType"));
+				return;
+			}
+		}
+		storable.setEndDate(deliverable.getEndDate());
+		storable.setStartDate(deliverable.getStartDate());
 		storable.setName(deliverable.getName());
 		storable.setDescription(deliverable.getDescription());
 	}
@@ -108,5 +139,29 @@ public class DeliverableAction extends ActionSupport implements CRUDAction{
 
 	public void setProductDAO(ProductDAO productDAO) {
 		this.productDAO = productDAO;
+	}
+
+	public int getActivityTypeId() {
+		return activityTypeId;
+	}
+
+	public void setActivityTypeId(int activityTypeId) {
+		this.activityTypeId = activityTypeId;
+	}
+
+	public void setActivityTypeDAO(ActivityTypeDAO activityTypeDAO) {
+		this.activityTypeDAO = activityTypeDAO;
+	}
+	
+	private void prepareActivityTypes(){
+		this.activityTypes = activityTypeDAO.getAll();
+	}
+
+	public Collection<ActivityType> getActivityTypes() {
+		return activityTypes;
+	}
+
+	public void setActivityTypes(Collection<ActivityType> activityTypes) {
+		this.activityTypes = activityTypes;
 	}
 }

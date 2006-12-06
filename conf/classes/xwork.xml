@@ -15,6 +15,12 @@
 			</interceptor-stack>
 		</interceptors>
 		<default-interceptor-ref name="authenticationStack"/>
+		
+		<global-results>
+			<result name="input">/WEB-INF/jsp/genericError.jsp</result>
+			<result name="error">/WEB-INF/jsp/genericError.jsp</result>
+		</global-results>		
+
 		<action name="simpleCounter" class="fi.hut.soberit.agilefant.web.SimpleCounter">
 			<result name="success">/WEB-INF/jsp/showCounter.jsp</result>
 		</action>
@@ -34,12 +40,32 @@
 			<result>/WEB-INF/jsp/editActivityType.jsp</result>
 		</action>
 		<action name="deleteActivityType" method="delete" class="activityTypeAction">
-			<result>/WEB-INF/jsp/listActivityTypes.jsp</result>
+			<result type="redirect-action">listActivityTypes</result>
 		</action>
 		<action name="storeActivityType" method="store" class="activityTypeAction">
-			<result>/WEB-INF/jsp/listActivityTypes.jsp</result>
+			<result type="redirect-action">listActivityTypes</result>
 		</action>
 <!-- /Activity type actions -->
+<!-- Work type actions -->
+		<action name="editWorkType" method="edit" class="workTypeAction">
+			<result>/WEB-INF/jsp/editWorkType.jsp</result>
+		</action>
+		<action name="createWorkType" method="create" class="workTypeAction">
+			<result>/WEB-INF/jsp/editWorkType.jsp</result>
+		</action>
+		<action name="deleteWorkType" method="delete" class="workTypeAction">
+			<result type="redirect-action">
+				<param name="actionName">editActivityType</param>
+				<param name="activityTypeId">${activityTypeId}</param>
+			</result>
+		</action>
+		<action name="storeWorkType" method="store" class="workTypeAction">
+			<result type="redirect-action">
+				<param name="actionName">editActivityType</param>
+				<param name="activityTypeId">${activityTypeId}</param>
+			</result>
+		</action>
+<!-- /Work type actions -->
 <!-- Product actions -->
 		<action name="listProducts">
 			<result>/WEB-INF/jsp/listProducts.jsp</result>

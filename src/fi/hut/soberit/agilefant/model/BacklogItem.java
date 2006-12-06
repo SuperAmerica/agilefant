@@ -35,7 +35,7 @@ public class BacklogItem implements PageItem {
 		return taskEffortLeft;
 	}
 	
-	public void setTaskEffortLeft(AFTime taskEffortLeft) {
+	protected void setTaskEffortLeft(AFTime taskEffortLeft) {
 		this.taskEffortLeft = taskEffortLeft;
 	}
 	

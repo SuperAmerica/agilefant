@@ -14,8 +14,8 @@ import fi.hut.soberit.agilefant.web.page.PageItem;
 @Entity
 public class Deliverable extends Backlog implements PageItem {
 	
-    	private Product product;
-	private ActivityType type;
+    private Product product;
+	private ActivityType activityType;
 	private Date endDate;
 	private Date startDate;
 	private Collection<Iteration> iterations = new HashSet<Iteration>();
@@ -63,12 +63,11 @@ public class Deliverable extends Backlog implements PageItem {
 	}
 	
 	@ManyToOne
-//	@JoinColumn (nullable = false)
-	public ActivityType getType() {
-	    return type;
+	public ActivityType getActivityType() {
+	    return activityType;
 	}
-	public void setType(ActivityType type) {
-	    this.type = type;
+	public void setActivityType(ActivityType activityType) {
+	    this.activityType = activityType;
 	}
 	@Transient
 	public Collection<PageItem> getChildren() {

@@ -32,6 +32,7 @@
 				<display:column sortable="true" title="# of iterations">
 					${fn:length(row.iterations)}
 				</display:column>
+				<display:column sortable="true" title="Activity" property="activityType.name"/>
 				<display:column sortable="false" title="Actions">
 					<ww:url id="editLink" action="editDeliverable" includeParams="none">
 						<ww:param name="productId" value="${product.id}"/>

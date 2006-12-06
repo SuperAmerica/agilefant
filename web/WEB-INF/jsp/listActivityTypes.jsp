@@ -1,6 +1,6 @@
 <%@ include file="./inc/_taglibs.jsp" %>
 <%@ include file="./inc/_header.jsp" %>
-<aef:menu navi="1" /> 
+<aef:menu navi="5" /> 
 	<p>
 		<c:choose>
 			<c:when test="${empty activityTypes}">
@@ -15,6 +15,7 @@
 						<ww:param name="activityTypeId" value="${type.id}"/>
 					</ww:url>
 					${type.name} - <ww:a href="%{editLink}">Edit</ww:a>|<ww:a href="%{deleteLink}">Delete</ww:a>
+					<br/>
 				</c:forEach>
 			</c:otherwise>
 		</c:choose>			

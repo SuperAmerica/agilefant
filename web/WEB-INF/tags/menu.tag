@@ -31,15 +31,6 @@
 
 <div id="bct">
 
-
-<c:set var="size" value="${fn:length(pageHierarchy)}" scope="page" />
-
-<!-- 
-
-<cforEach var="i" end="${size}" begin="0" step="1">
-
-    <cset var="page" value="${pageHierarchy[size-i]}" scope="page" />
-     -->
 <c:forEach var="page" items="${pageHierarchy}" >
 	<c:choose>
 		<c:when test="${aef:isProduct(page)}">

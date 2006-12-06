@@ -42,5 +42,6 @@
 			</ww:url>
 			<ww:a href="%{selfAssignLink}">Assign to me</ww:a>
 		</p>
+
 	</c:if>
 <%@ include file="./inc/_footer.jsp" %>

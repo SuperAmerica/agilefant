@@ -2,12 +2,9 @@ package fi.hut.soberit.agilefant.web.tag;
 
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Stack;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.Tag;
-
 
 import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;

@@ -103,4 +103,15 @@ public class User implements PageItem {
 	public void setBacklogs(Collection<Backlog> backlogs) {
 		this.backlogs = backlogs;
 	}
+	
+	@Transient
+	public Collection<Assignable> getAssignables() {
+		Collection<Assignable> collection = new HashSet<Assignable>();
+		
+		collection.addAll(getAssignments());		
+		collection.addAll(getBacklogs());
+		collection.addAll(getBacklogItems());
+		
+		return collection;
+	}
 }

@@ -6,6 +6,7 @@ import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.web.page.ManagementPageItem;
 import fi.hut.soberit.agilefant.web.page.PortfolioPageItem;
 
 public class AEFFunctions {
@@ -30,5 +31,8 @@ public class AEFFunctions {
 	} 
 	public static boolean isPortfolio(Object obj) {
 		return obj instanceof PortfolioPageItem;
+	} 
+	public static boolean isManagementPage(Object obj) {
+		return obj instanceof ManagementPageItem;
 	} 
 }

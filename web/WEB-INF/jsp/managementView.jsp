@@ -24,7 +24,9 @@ No products
 			</li>
 			<ul>
 				<c:forEach items="${deliverable.iterations}" var="iteration">
-					<ww:url id="iterationLink" action="managementView" includeParams="none"/>
+					<ww:url id="iterationLink" action="viewIteration" includeParams="none">
+						<ww:param name="iterationId" value="${iteration.id}"/>												
+					</ww:url>
 					<li>
 						<ww:a href="%{iterationLink}">${ iteration.name }</ww:a>
 					</li>

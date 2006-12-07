@@ -79,6 +79,10 @@
 			<ww:url id="homeLink" action="listProducts" includeParams="none"/>
 			<ww:a href="%{homeLink}">Home</ww:a>		
 		</c:when >
+		<c:when test="${aef:isManagementPage(page)}">
+			<ww:url id="homeLink" action="managementView" includeParams="none"/>
+			<ww:a href="%{homeLink}">Home</ww:a>		
+		</c:when >
 		
 	</c:choose>
 

@@ -209,6 +209,9 @@
 		<action name="managementView">
 			<result>/WEB-INF/jsp/managementView.jsp</result>
 		</action>
+		<action name="viewIteration" method="edit" class="iterationAction">
+			<result>/WEB-INF/jsp/viewIteration.jsp</result>
+		</action>
 
 	</package>
 </xwork>

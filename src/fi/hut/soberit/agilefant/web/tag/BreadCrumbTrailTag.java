@@ -13,6 +13,7 @@ import fi.hut.soberit.agilefant.db.IterationDAO;
 import fi.hut.soberit.agilefant.db.ProductDAO;
 import fi.hut.soberit.agilefant.db.TaskDAO;
 import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.web.page.ManagementPageItem;
 import fi.hut.soberit.agilefant.web.page.PageItem;
 import fi.hut.soberit.agilefant.web.page.PortfolioPageItem;
 
@@ -74,6 +75,9 @@ public class BreadCrumbTrailTag extends SpringTagSupport {
 	} 
 	public void setPortfolioId(int id) {
 		this.page = new PortfolioPageItem();
+	} 
+	public void setManagementPageId(int id) {
+		this.page = new ManagementPageItem();
 	} 
 
 }

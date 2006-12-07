@@ -5,6 +5,12 @@
 	<ww:actionerror/>
 	<ww:actionmessage/>
 			<h2>Edit iteration: ${iteration.id}</h2>
+
+					<ww:url id="viewIterationLink" action="viewIteration" includeParams="none">
+						<ww:param name="iterationId" value="${iteration.id}"/>												
+					</ww:url>
+						<ww:a href="%{viewIterationLink}">Management view</ww:a>
+
 	<ww:form action="storeIteration">
 		<ww:hidden name="iterationId" value="${iteration.id}"/>
 		<ww:hidden name="deliverableId"/> 

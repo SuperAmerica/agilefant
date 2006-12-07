@@ -84,6 +84,11 @@
             <required>false</required>
 			<rtexprvalue>true</rtexprvalue>            
         </attribute>	    
+        <attribute>
+            <name>managementPageId</name>
+            <required>false</required>
+			<rtexprvalue>true</rtexprvalue>            
+        </attribute>	    
 	</tag>
 
 	 <tag-file>
@@ -125,6 +130,11 @@
 	  <name>isPortfolio</name>
 	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
 	  <function-signature>boolean isPortfolio(java.lang.Object)</function-signature>
+	</function>  	 
+	<function>
+	  <name>isManagementPage</name>
+	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
+	  <function-signature>boolean isManagementPage(java.lang.Object)</function-signature>
 	</function>  	 
 	 	 
 </taglib>

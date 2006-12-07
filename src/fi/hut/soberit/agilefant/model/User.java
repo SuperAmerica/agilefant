@@ -20,7 +20,9 @@ public class User implements PageItem {
 	private String password;
 	private String loginName;
 	private String fullName;
-	private Collection<Task> assignments = new HashSet<Task>();
+	private Collection<Task> assignments = new HashSet<Task>();	
+	private Collection<Backlog> 	backlogs     = new HashSet<Backlog>();
+	private Collection<BacklogItem> backlogItems = new HashSet<BacklogItem>();
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
@@ -84,5 +86,21 @@ public class User implements PageItem {
 	public boolean hasChildren() {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@OneToMany(mappedBy="assignee")
+	public Collection<BacklogItem> getBacklogItems() {
+		return backlogItems;
+	}
+	public void setBacklogItems(Collection<BacklogItem> backlogItems) {
+		this.backlogItems = backlogItems;
+	}
+
+	@OneToMany(mappedBy="assignee")
+	public Collection<Backlog> getBacklogs() {
+		return backlogs;
+	}
+	public void setBacklogs(Collection<Backlog> backlogs) {
+		this.backlogs = backlogs;
 	}
 }

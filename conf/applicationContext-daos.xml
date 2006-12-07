@@ -46,6 +46,7 @@
 	<bean name="backlogItemDAOTarget" parent="abstractDAOTarget" class="fi.hut.soberit.agilefant.db.hibernate.BacklogItemDAOHibernate"/>
 	<bean name="taskDAOTarget" parent="abstractDAOTarget" class="fi.hut.soberit.agilefant.db.hibernate.TaskDAOHibernate"/>
 	<bean name="userDAOTarget" parent="abstractDAOTarget" class="fi.hut.soberit.agilefant.db.hibernate.UserDAOHibernate"/>
+	<bean name="taskEventDAOTarget" parent="abstractDAOTarget" class="fi.hut.soberit.agilefant.db.hibernate.TaskEventDAOHibernate"/>
 		
 	<bean name="activityTypeDAO" parent="abstractDAO">
 		<property name="target" ref="activityTypeDAOTarget"/>
@@ -70,5 +71,9 @@
 	
 	<bean name="userDAO" parent="abstractDAO">
 		<property name="target" ref="userDAOTarget"/>
-	</bean>		
+	</bean>
+
+	<bean name="taskEventDAO" parent="abstractDAO">
+		<property name="target" ref="taskEventDAOTarget"/>
+	</bean>
 </beans>

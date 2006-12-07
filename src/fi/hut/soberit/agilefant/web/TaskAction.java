@@ -6,8 +6,10 @@ import com.opensymphony.xwork.ActionSupport;
 
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.db.TaskDAO;
+import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.Task;
+import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.security.SecurityUtil;
 
 public class TaskAction extends ActionSupport {
@@ -18,6 +20,7 @@ public class TaskAction extends ActionSupport {
 	private Task task;
 	private TaskDAO taskDAO;
 	private BacklogItemDAO backlogItemDAO;
+	private UserDAO userDAO;
 		
 	public String create(){
 		taskId = 0;
@@ -78,6 +81,11 @@ public class TaskAction extends ActionSupport {
 			backlogItem.getTasks().add(storable);
 			storable.setCreator(SecurityUtil.getLoggedUser());
 		}
+		if (task.getAssignee() != null){
+			User assignee = userDAO.get(task.getAssignee().getId());
+			storable.setAssignee(assignee);
+		}
+		storable.setPriority(task.getPriority());
 		storable.setName(task.getName());
 		storable.setDescription(task.getDescription());
 		storable.setEffortEstimate(task.getEffortEstimate());
@@ -125,5 +133,9 @@ public class TaskAction extends ActionSupport {
 
 	public void setBacklogItemDAO(BacklogItemDAO backlogItemDAO) {
 		this.backlogItemDAO = backlogItemDAO;
+	}
+
+	public void setUserDAO(UserDAO userDAO) {
+		this.userDAO = userDAO;
 	}
 }

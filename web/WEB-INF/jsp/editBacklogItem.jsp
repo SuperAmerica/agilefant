@@ -88,6 +88,12 @@
 				<display:column sortable="true" title="Work performed" sortProperty="performedEffort.time">
 					${row.performedEffort}
 				</display:column>
+				<display:column sortable="true" title="Priority" sortProperty="priority.ordinal">
+					<ww:text name="task.priority.${row.priority}"/>
+				</display:column>
+				<display:column sortable="true" title="Status" sortProperty="status.ordinal">
+					<ww:text name="task.status.${row.status}"/>
+				</display:column>
 				<display:column sortable="true" title="Created" property="created"/>
 				<display:column sortable="true" title="Assignee">
 					${row.assignee.fullName}

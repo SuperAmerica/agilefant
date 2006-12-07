@@ -29,6 +29,17 @@
 	</tag>
 	
 	<tag>
+		<name>priorityList</name>
+		<tag-class>fi.hut.soberit.agilefant.web.tag.PriorityListTag</tag-class>
+		<body-content>JSP</body-content>
+		<description>Lists all priorities</description>
+		<attribute>
+			<name>id</name>
+			<required>true</required>		
+		</attribute>
+	</tag>
+	
+	<tag>
 		<name>currentUser</name>
 		<tag-class>fi.hut.soberit.agilefant.web.tag.CurrentUserTag</tag-class>
 		<body-content>JSP</body-content>

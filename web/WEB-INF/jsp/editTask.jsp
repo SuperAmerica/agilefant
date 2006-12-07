@@ -19,6 +19,16 @@
 			Effort left: <ww:textfield name="task.effortEstimate"/>
 		</p>
 		<p>
+			Priority: <ww:select name="task.priority" value="task.priority.name" list="@fi.hut.soberit.agilefant.model.Priority@values()" listKey="name" listValue="getText('task.priority.' + name())"/>
+		</p>
+		<c:if test="${task.id == 0}">
+			<p>
+				<aef:userList/>
+				<aef:currentUser/>
+				Assignee: <ww:select name="task.assignee.id" list="#attr.userList" listKey="id" listValue="fullName" value="${currentUser.id}"/>
+			</p>
+		</c:if>
+		<p>
 			<ww:submit value="Store"/>
 		</p>
 	</ww:form>

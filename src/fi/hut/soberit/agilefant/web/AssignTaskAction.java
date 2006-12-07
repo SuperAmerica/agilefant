@@ -4,6 +4,7 @@ import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
 
 import fi.hut.soberit.agilefant.db.TaskDAO;
+import fi.hut.soberit.agilefant.db.TaskEventDAO;
 import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.model.AssignEvent;
 import fi.hut.soberit.agilefant.model.Task;
@@ -16,7 +17,8 @@ public class AssignTaskAction extends ActionSupport {
 	private int assigneeId;
 	private int taskId;
 	private UserDAO userDAO;
-	private TaskDAO taskDAO;	
+	private TaskDAO taskDAO;
+	private TaskEventDAO taskEventDAO;
 	
 	public String execute(){
 		User assignee = userDAO.get(assigneeId);
@@ -30,6 +32,7 @@ public class AssignTaskAction extends ActionSupport {
 		task.setAssignee(assignee);
 		task.getEvents().add(event);
 		
+		taskEventDAO.store(event);
 		taskDAO.store(task);
 		
 		return Action.SUCCESS;
@@ -57,5 +60,9 @@ public class AssignTaskAction extends ActionSupport {
 
 	public void setUserDAO(UserDAO userDAO) {
 		this.userDAO = userDAO;
+	}
+
+	public void setTaskEventDAO(TaskEventDAO taskEventDAO) {
+		this.taskEventDAO = taskEventDAO;
 	}
 }

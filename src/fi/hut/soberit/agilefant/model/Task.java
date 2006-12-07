@@ -17,6 +17,7 @@ import javax.persistence.OrderBy;
 import javax.persistence.Transient;
 
 import org.hibernate.annotations.Formula;
+import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.Type;
 
 import fi.hut.soberit.agilefant.web.page.PageItem;
@@ -25,8 +26,8 @@ import fi.hut.soberit.agilefant.web.page.PageItem;
 public class Task implements PageItem {
 	 	
 	private int id;
-	private int severity;
-	private int priority;
+	private Priority priority;
+	private TaskStatus status = TaskStatus.NOT_STARTED;
 	private AFTime effortEstimate;
 	private AFTime performedEffort;
 	private String name;
@@ -131,23 +132,6 @@ public class Task implements PageItem {
 	    this.effortEstimate = effortEstimate;
 	}
 
-	@Column(nullable = true)
-	public int getPriority() {
-	    return priority;
-	}
-	
-	public void setPriority(int priority) {
-	    this.priority = priority;
-	}
-
-	@Column(nullable = true)
-	public int getSeverity() {
-	    return severity;
-	}
-		
-	public void setSeverity(int severity) {
-	    this.severity = severity;
-	}
 
 	@ManyToOne
 	@JoinColumn (nullable = false)	
@@ -171,5 +155,33 @@ public class Task implements PageItem {
 	public boolean hasChildren() {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Type(type="fi.hut.soberit.agilefant.db.hibernate.EnumUserType",
+			parameters = {
+				@Parameter(name="useOrdinal", value="true"),
+				@Parameter(name="enumClassName", value="fi.hut.soberit.agilefant.model.Priority")
+			}
+	)	
+	public Priority getPriority() {
+		return priority;
+	}
+
+	public void setPriority(Priority priority) {
+		this.priority = priority;
+	}
+
+	@Type(type="fi.hut.soberit.agilefant.db.hibernate.EnumUserType",
+			parameters = {
+				@Parameter(name="useOrdinal", value="true"),
+				@Parameter(name="enumClassName", value="fi.hut.soberit.agilefant.model.TaskStatus")
+			}
+	)	
+	public TaskStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(TaskStatus status) {
+		this.status = status;
 	}
 }

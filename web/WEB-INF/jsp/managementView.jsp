@@ -23,7 +23,7 @@ No products
 				<ww:a href="%{deliverableLink}">${ deliverable.name }</ww:a>
 			</li>
 			<ul>
-				<c:forEach items="${product.deliverables.iterations}" var="iteration">
+				<c:forEach items="${deliverable.iterations}" var="iteration">
 					<ww:url id="iterationLink" action="managementView" includeParams="none"/>
 					<li>
 						<ww:a href="%{iterationLink}">${ iteration.name }</ww:a>

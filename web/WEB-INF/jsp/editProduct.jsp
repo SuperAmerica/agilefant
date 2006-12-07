@@ -38,7 +38,7 @@
 						<ww:param name="productId" value="${product.id}"/>
 						<ww:param name="deliverableId" value="${row.id}"/>						
 					</ww:url>
-					<ww:url id="deleteLink" action="deleteIteration" includeParams="none">
+					<ww:url id="deleteLink" action="deleteDeliverable" includeParams="none">
 						<ww:param name="productId" value="${product.id}"/>
 						<ww:param name="deliverableId" value="${row.id}"/>						
 					</ww:url>

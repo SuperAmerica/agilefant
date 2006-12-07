@@ -57,8 +57,6 @@
 		</p>
 		</c:if>		
 	</ww:form>
-
-
 	
 	<c:if test="${!empty product.backlogItems}">
 
@@ -67,6 +65,9 @@
 				<display:column sortable="true" title="Name" property="name"/>
 				<display:column sortable="true" title="# of tasks">
 					${fn:length(row.tasks)}
+				</display:column>
+				<display:column sortable="true" title="Priority" sortProperty="priority.ordinal">
+					<ww:text name="task.priority.${row.priority}"/>
 				</display:column>
 				<display:column sortable="false" title="Actions">
 					<ww:url id="editLink" action="editBacklogItem" includeParams="none">

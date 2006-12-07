@@ -79,6 +79,9 @@
 			<display:column sortable="true" title="# of tasks">
 				${fn:length(row.tasks)}
 			</display:column>
+			<display:column sortable="true" title="Priority" sortProperty="priority.ordinal">
+				<ww:text name="task.priority.${row.priority}"/>
+			</display:column>
 			<display:column sortable="true" title="Effort estimate" sortProperty="remainingEffortEstimate.time">
 				${row.remainingEffortEstimate}
 			</display:column>

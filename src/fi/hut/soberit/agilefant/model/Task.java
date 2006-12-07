@@ -162,7 +162,7 @@ public class Task implements PageItem {
 				@Parameter(name="useOrdinal", value="true"),
 				@Parameter(name="enumClassName", value="fi.hut.soberit.agilefant.model.Priority")
 			}
-	)	
+	)
 	public Priority getPriority() {
 		return priority;
 	}

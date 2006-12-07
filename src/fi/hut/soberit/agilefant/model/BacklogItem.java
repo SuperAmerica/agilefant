@@ -14,6 +14,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 
 import org.hibernate.annotations.Formula;
+import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.Type;
 
 import fi.hut.soberit.agilefant.web.page.PageItem;
@@ -22,6 +23,7 @@ import fi.hut.soberit.agilefant.web.page.PageItem;
 public class BacklogItem implements PageItem {
 	
 	private int id;
+	private Priority priority;
 	private String name;
 	private String description;
 	private Backlog backlog;
@@ -86,6 +88,7 @@ public class BacklogItem implements PageItem {
 	public Backlog getBacklog() {
 	    return backlog;
 	}
+		
 	public void setBacklog(Backlog backlog) {
 	    this.backlog = backlog;
 	}
@@ -104,5 +107,19 @@ public class BacklogItem implements PageItem {
 	@Transient
 	public boolean hasChildren() {
 		return this.tasks.size() > 0 ? true : false;
+	}
+		
+	@Type(type="fi.hut.soberit.agilefant.db.hibernate.EnumUserType",
+			parameters = {
+				@Parameter(name="useOrdinal", value="true"),
+				@Parameter(name="enumClassName", value="fi.hut.soberit.agilefant.model.Priority")
+			}
+	)
+	public Priority getPriority() {
+		return priority;
+	}
+
+	public void setPriority(Priority priority) {
+		this.priority = priority;
 	}	
 }

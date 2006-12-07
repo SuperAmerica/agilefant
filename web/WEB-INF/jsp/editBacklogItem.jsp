@@ -17,6 +17,10 @@
 		</p>
 		<p>
 			Effort estimate: <ww:textfield name="backlogItem.remainingEffortEstimate"/>
+		</p>
+		<p>
+			Priority: <ww:select name="backlogItem.priority" value="backlogItem.priority.name" list="@fi.hut.soberit.agilefant.model.Priority@values()" listKey="name" listValue="getText('task.priority.' + name())"/>
+		</p>
 		<p>
 			<ww:submit value="Store"/>
 		</p>

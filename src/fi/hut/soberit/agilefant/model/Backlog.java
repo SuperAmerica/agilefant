@@ -12,6 +12,7 @@ import javax.persistence.Inheritance;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.InheritanceType;
 import javax.persistence.DiscriminatorType;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 @Entity
@@ -20,12 +21,13 @@ import javax.persistence.OneToMany;
     name="backlogtype",
     discriminatorType=DiscriminatorType.STRING
 )
-public abstract class Backlog {
+public abstract class Backlog implements Assignable {
     
     private int id;
     private String name;
     private String description;
     private Collection<BacklogItem> backlogItems = new HashSet<BacklogItem>();
+    private User assignee;
     
     @OneToMany(mappedBy="backlog")
     public Collection<BacklogItem> getBacklogItems() {
@@ -58,4 +60,12 @@ public abstract class Backlog {
     public void setName(String name) {
         this.name = name;
     }
+    
+    @ManyToOne
+	public User getAssignee() {
+		return assignee;
+	}
+	public void setAssignee(User assignee) {
+		this.assignee = assignee;
+	}
 }

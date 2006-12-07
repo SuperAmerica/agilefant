@@ -23,7 +23,7 @@ import org.hibernate.annotations.Type;
 import fi.hut.soberit.agilefant.web.page.PageItem;
 
 @Entity
-public class Task implements PageItem {
+public class Task implements PageItem, Assignable {
 	 	
 	private int id;
 	private Priority priority;

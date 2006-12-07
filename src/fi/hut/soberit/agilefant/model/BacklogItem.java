@@ -20,7 +20,7 @@ import org.hibernate.annotations.Type;
 import fi.hut.soberit.agilefant.web.page.PageItem;
 
 @Entity
-public class BacklogItem implements PageItem {
+public class BacklogItem implements PageItem, Assignable {
 	
 	private int id;
 	private Priority priority;
@@ -30,6 +30,7 @@ public class BacklogItem implements PageItem {
 	private Collection<Task> tasks = new HashSet<Task>();
 	private AFTime remainingEffortEstimate;
 	private AFTime taskEffortLeft;
+	private User assignee;
 
 	@Type(type="af_time")
 	@Formula(value="(select SEC_TO_TIME(SUM(TIME_TO_SEC(t.effortEstimate))) from Task t where t.backlogItem_id = id)")
@@ -121,5 +122,13 @@ public class BacklogItem implements PageItem {
 
 	public void setPriority(Priority priority) {
 		this.priority = priority;
+	}	
+	
+	@ManyToOne
+	public User getAssignee() {
+		return assignee;
+	}
+	public void setAssignee(User assignee) {
+		this.assignee = assignee;
 	}	
 }

@@ -175,10 +175,19 @@
 	
 	<target name="export-db" depends="init" description="Exports the database into an XML file">
 		<dbunit driver="${hibernate.connection.driver_class}"         
-					url="${hibernate.connection.url}"          
+					url="${hibernate.connection.url}"
 					userid="${hibernate.connection.username}"          
 					password="${hibernate.connection.password}">    
-		    <export dest="${test.data}/exportedData.xml" format="xml"/> 
+		    <export dest="${build.test}/exportedData.xml" format="xml"/>
+		</dbunit>
+	</target>
+	
+	<target name="import-db" depends="init" description="Imports the database from an XML file">
+		<dbunit driver="${hibernate.connection.driver_class}"
+					url="${hibernate.connection.url}"
+					userid="${hibernate.connection.username}"
+					password="${hibernate.connection.password}">
+		    <export dest="${build.test}/exportedData.xml" format="xml"/>
 		</dbunit>
 	</target>
 

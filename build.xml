@@ -181,4 +181,10 @@
 		    <export dest="${test.data}/exportedData.xml" format="xml"/> 
 		</dbunit>
 	</target>
+
+	<target name="count-loc">
+		<exec executable="/bin/sh">
+			<arg value="${basedir}/tools/count-loc.sh"/>
+		</exec>
+	</target>
 </project>

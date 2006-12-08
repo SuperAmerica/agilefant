@@ -156,6 +156,7 @@
 		<copy todir="${deploy.dir.local}">
 			<fileset dir="${build.webapp}"/>			
 		</copy>
+		<touch file="${deploy.dir.local}/WEB-INF/web.xml"/>
 	</target>
 	
 	<target name="clean" description="Removes build directory">

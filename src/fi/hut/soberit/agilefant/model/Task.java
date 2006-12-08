@@ -106,7 +106,7 @@ public class Task implements PageItem, Assignable, EffortContainer {
 	}
 
 	@Type(type="af_time")
-	@Formula(value="(select SEC_TO_TIME(SUM(TIME_TO_SEC(e.effort))) from TaskEvent e " +
+	@Formula(value="(select SUM(e.effort) from TaskEvent e " +
 			"where e.eventType = 'PerformedWork' and e.task_id = id)")
 	public AFTime getPerformedEffort(){
 		return performedEffort;

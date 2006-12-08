@@ -5,7 +5,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.io.Serializable;
+import java.math.BigInteger;
 
+import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.usertype.UserType;
 
@@ -19,7 +21,7 @@ import fi.hut.soberit.agilefant.model.AFTime;
  */
 public class TimeUserType implements UserType {
 	
-	private static final int[] SQL_TYPES = {Types.TIME};
+	private static final int[] SQL_TYPES = {Types.INTEGER};
 
 	/** 
 	 * Get the sql types to use to save our "Time" object. 
@@ -69,10 +71,13 @@ public class TimeUserType implements UserType {
 							  Object owner)
 			throws HibernateException, SQLException {
 		
-		java.sql.Time time = resultSet.getTime(names[0]);
-		if (resultSet.wasNull()) return null;
+		Integer i = (Integer)Hibernate.INTEGER.nullSafeGet(resultSet, names[0]);
 		
-		return new AFTime(time.getTime());
+		if(i == null)
+			return null;
+		
+		return new AFTime( i.intValue() );
+		
 	}
 
 	/**
@@ -83,14 +88,15 @@ public class TimeUserType implements UserType {
 							Object value,
 							int index)
 			throws HibernateException, SQLException {
-
+				
 		if (value == null) {
-			statement.setNull(index, Types.TIME);
+			statement.setNull(index, Types.INTEGER);
 			return;
 		}
 
-		AFTime time = (AFTime)value;
-		statement.setTime(index, time);
+		AFTime time = (AFTime)value;				
+		
+		Hibernate.INTEGER.nullSafeSet(statement, new Integer((int)time.getTime()), index);
 	}	
 	
 	public int hashCode(Object x) throws HibernateException {

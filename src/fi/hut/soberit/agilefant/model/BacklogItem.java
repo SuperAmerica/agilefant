@@ -34,7 +34,7 @@ public class BacklogItem implements PageItem, Assignable, EffortContainer {
 	private User assignee;
 
 	@Type(type="af_time")
-	@Formula(value="(select SEC_TO_TIME(SUM(TIME_TO_SEC(t.effortEstimate))) from Task t where t.backlogItem_id = id)")
+	@Formula(value="(select SUM(t.effortEstimate) from Task t where t.backlogItem_id = id)")
 	public AFTime getEffortEstimate() {
 		return effortEstimate;
 	}

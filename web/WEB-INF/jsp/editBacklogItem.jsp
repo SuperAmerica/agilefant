@@ -16,7 +16,7 @@
 			Description: <ww:textarea cols="40" rows="6" name="backlogItem.description" />
 		</p>
 		<p>
-			Effort estimate: <ww:textfield name="backlogItem.remainingEffortEstimate"/>
+			Allocated effort: <ww:textfield name="backlogItem.allocatedEffort"/>
 		</p>
 		<p>
 			Priority: <ww:select name="backlogItem.priority" value="backlogItem.priority.name" list="@fi.hut.soberit.agilefant.model.Priority@values()" listKey="name" listValue="getText('task.priority.' + name())"/>

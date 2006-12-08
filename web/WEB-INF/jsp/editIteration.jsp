@@ -63,11 +63,14 @@
 				<display:column sortable="true" title="Priority" sortProperty="priority.ordinal">
 					<ww:text name="task.priority.${row.priority}"/>
 				</display:column>
-				<display:column sortable="true" title="Effort estimate" sortProperty="remainingEffortEstimate.time">
-					${row.remainingEffortEstimate}
+				<display:column sortable="true" title="Effort estimate" sortProperty="allocatedEffort.time">
+					${row.allocatedEffort}
 				</display:column>
-				<display:column sortable="true" title="Effort in tasks" sortProperty="taskEffortLeft.time">
-					${row.taskEffortLeft}
+				<display:column sortable="true"	title="Effort left" sortProperty="effortEstimate.time">
+					${row.effortEstimate}
+				</display:column>
+				<display:column sortable="true" title="Performed effort" sortProperty="performedEffort.time">
+					${row.performedEffort}
 				</display:column>
 				<display:column sortable="false" title="Actions">
 					<ww:url id="editLink" action="editBacklogItem" includeParams="none">

@@ -20,7 +20,7 @@ import org.hibernate.annotations.Type;
 import fi.hut.soberit.agilefant.web.page.PageItem;
 
 @Entity
-public class BacklogItem implements PageItem, Assignable {
+public class BacklogItem implements PageItem, Assignable, EffortContainer {
 	
 	private int id;
 	private Priority priority;
@@ -28,27 +28,29 @@ public class BacklogItem implements PageItem, Assignable {
 	private String description;
 	private Backlog backlog;
 	private Collection<Task> tasks = new HashSet<Task>();
-	private AFTime remainingEffortEstimate;
-	private AFTime taskEffortLeft;
+	private AFTime allocatedEffort;
+	private AFTime effortEstimate;
+	private AFTime performedEffort;
 	private User assignee;
 
 	@Type(type="af_time")
 	@Formula(value="(select SEC_TO_TIME(SUM(TIME_TO_SEC(t.effortEstimate))) from Task t where t.backlogItem_id = id)")
-	public AFTime getTaskEffortLeft() {
-		return taskEffortLeft;
+	public AFTime getEffortEstimate() {
+		return effortEstimate;
 	}
 	
-	protected void setTaskEffortLeft(AFTime taskEffortLeft) {
-		this.taskEffortLeft = taskEffortLeft;
+	protected void setEffortEstimate(AFTime taskEffortLeft) {
+		this.effortEstimate = taskEffortLeft;
 	}
 	
 	@Type(type="af_time")
-	public AFTime getRemainingEffortEstimate() {
-		return remainingEffortEstimate;
+	@Column(name="remainingEffortEstimate")
+	public AFTime getAllocatedEffort() {
+		return allocatedEffort;
 	}
 	
-	public void setRemainingEffortEstimate(AFTime remainingEffortEstimate) {
-		this.remainingEffortEstimate = remainingEffortEstimate;
+	public void setAllocatedEffort(AFTime remainingEffortEstimate) {
+		this.allocatedEffort = remainingEffortEstimate;
 	}
 	
 	public String getDescription() {
@@ -130,5 +132,17 @@ public class BacklogItem implements PageItem, Assignable {
 	}
 	public void setAssignee(User assignee) {
 		this.assignee = assignee;
-	}	
+	}
+	
+	@Type(type="af_time")
+	@Formula(value="(select SEC_TO_TIME(SUM(TIME_TO_SEC(e.effort))) from TaskEvent e " +
+			"INNER JOIN Task t ON e.task_id = t.id " +
+			"where e.eventType = 'PerformedWork' and t.backlogItem_id = id)")	
+	public AFTime getPerformedEffort() {
+		return performedEffort;
+	}
+	
+	protected void setPerformedEffort(AFTime performedEffort){
+		this.performedEffort = performedEffort;
+	}
 }

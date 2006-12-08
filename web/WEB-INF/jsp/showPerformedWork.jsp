@@ -6,7 +6,7 @@
 <body>
 	<c:forEach items="${works}" var="work">
 		<p>
-			${work.task.name} - ${work.task.id} - ${work.effort} - ${work.created} - ${work.actor.name}
+			${work.task.name} - ${work.task.id} - ${work.effort} - ${work.created} - ${work.actor.name} - ${work.effort.time}
 		</p>
 	</c:forEach>
 </body>

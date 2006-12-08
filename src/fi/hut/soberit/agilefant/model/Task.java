@@ -1,6 +1,5 @@
 package fi.hut.soberit.agilefant.model;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
@@ -23,7 +22,7 @@ import org.hibernate.annotations.Type;
 import fi.hut.soberit.agilefant.web.page.PageItem;
 
 @Entity
-public class Task implements PageItem, Assignable {
+public class Task implements PageItem, Assignable, EffortContainer {
 	 	
 	private int id;
 	private Priority priority;
@@ -37,17 +36,6 @@ public class Task implements PageItem, Assignable {
 	private User assignee;
 	private User creator;
 	private Collection<TaskEvent> events = new HashSet<TaskEvent>();
-
-	@Transient
-	private Collection<PerformedWork> getPerformedWorks(){
-		Collection<PerformedWork> result = new ArrayList<PerformedWork>();
-		for (TaskEvent event : events){
-			if (event instanceof PerformedWork){
-				result.add((PerformedWork)event);
-			}
-		}
-		return result;
-	}
 
 	public String getDescription() {
 	    return description;
@@ -131,7 +119,6 @@ public class Task implements PageItem, Assignable {
 	public void setEffortEstimate(AFTime effortEstimate) {
 	    this.effortEstimate = effortEstimate;
 	}
-
 
 	@ManyToOne
 	@JoinColumn (nullable = false)	

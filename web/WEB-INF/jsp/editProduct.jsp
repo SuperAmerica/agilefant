@@ -33,6 +33,12 @@
 					${fn:length(row.iterations)}
 				</display:column>
 				<display:column sortable="true" title="Activity" property="activityType.name"/>
+				<display:column sortable="true"	title="Effort left" sortProperty="effortEstimate.time">
+					${row.effortEstimate}
+				</display:column>
+				<display:column sortable="true" title="Performed effort" sortProperty="performedEffort.time">
+					${row.performedEffort}
+				</display:column>
 				<display:column sortable="false" title="Actions">
 					<ww:url id="editLink" action="editDeliverable" includeParams="none">
 						<ww:param name="productId" value="${product.id}"/>
@@ -68,6 +74,15 @@
 				</display:column>
 				<display:column sortable="true" title="Priority" sortProperty="priority.ordinal">
 					<ww:text name="task.priority.${row.priority}"/>
+				</display:column>
+				<display:column sortable="true" title="Effort estimate" sortProperty="allocatedEffort.time">
+					${row.allocatedEffort}
+				</display:column>
+				<display:column sortable="true"	title="Effort left" sortProperty="effortEstimate.time">
+					${row.effortEstimate}
+				</display:column>
+				<display:column sortable="true" title="Performed effort" sortProperty="performedEffort.time">
+					${row.performedEffort}
 				</display:column>
 				<display:column sortable="false" title="Actions">
 					<ww:url id="editLink" action="editBacklogItem" includeParams="none">

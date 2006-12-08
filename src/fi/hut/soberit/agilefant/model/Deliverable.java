@@ -9,6 +9,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 
+import org.hibernate.annotations.Formula;
+import org.hibernate.annotations.Type;
+
 import fi.hut.soberit.agilefant.web.page.PageItem;
 
 @Entity
@@ -20,6 +23,8 @@ public class Deliverable extends Backlog implements PageItem {
 	private Date startDate;
 	private Collection<Iteration> iterations = new HashSet<Iteration>();
 	private User owner;
+	private AFTime effortEstimate;
+	private AFTime performedEffort;
 	
 	@ManyToOne
 	//@JoinColumn (nullable = true)
@@ -82,5 +87,33 @@ public class Deliverable extends Backlog implements PageItem {
 	@Transient
 	public boolean hasChildren() {
 		return this.iterations.size() > 0 ? true : false;
+	}
+	
+	@Transient
+	public AFTime getEffortEstimate() {
+		return this.effortEstimate;
+		//TODO
+	}
+	
+	protected void setEffortEstimate(AFTime effortEstimate){
+		this.effortEstimate = effortEstimate;
+	}
+
+	@Type(type="af_time")
+	@Formula(value="(select SEC_TO_TIME(SUM(TIME_TO_SEC(e.effort))) " + 
+			"from TaskEvent e, Task t, BacklogItem bi, Backlog b "+
+			"where e.eventType = 'PerformedWork' " +
+			"and e.task_id = t.id " +
+			"and t.backlogItem_id = bi.id " +
+			"and bi.backlog_id = b.id " +
+			"and (" +
+				"bi.backlog_id = id " +
+				"or b.deliverable_id = id))")
+	public AFTime getPerformedEffort() {
+		return performedEffort;
+	}
+	
+	protected void setPerformedEffort(AFTime performedEffort){
+		this.performedEffort = performedEffort;
 	}
 }

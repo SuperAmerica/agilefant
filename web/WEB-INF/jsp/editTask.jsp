@@ -31,7 +31,7 @@
 		<p>
 			<ww:submit value="Store"/>
 		</p>
-	</ww:form>
+	</ww:form>	
 	<c:if test="${task.id > 0}">
 		<p>
 			Assigned to: ${task.assignee.fullName}
@@ -52,6 +52,12 @@
 			</ww:url>
 			<ww:a href="%{selfAssignLink}">Assign to me</ww:a>
 		</p>
-
+		<p>
+			<ww:form action="performWork">
+				<ww:hidden name="taskId" value="${task.id}"/>
+				Work amount: <ww:textfield name="amount"/>
+				<ww:submit value="Perform work"/>
+			</ww:form>
+		</p>
 	</c:if>
 <%@ include file="./inc/_footer.jsp" %>

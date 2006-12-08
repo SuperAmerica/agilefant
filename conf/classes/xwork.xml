@@ -212,6 +212,9 @@
 		<action name="viewIteration" method="edit" class="iterationAction">
 			<result>/WEB-INF/jsp/viewIteration.jsp</result>
 		</action>
-
+		
+		<action name="showWork" class="showPerformedWorkAction">
+			<result>/WEB-INF/jsp/showPerformedWork.jsp</result>
+		</action>
 	</package>
 </xwork>

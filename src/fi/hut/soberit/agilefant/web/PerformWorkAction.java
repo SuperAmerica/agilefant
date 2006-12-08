@@ -6,6 +6,7 @@ import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
 
 import fi.hut.soberit.agilefant.db.TaskDAO;
+import fi.hut.soberit.agilefant.db.TaskEventDAO;
 import fi.hut.soberit.agilefant.db.WorkTypeDAO;
 import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.PerformedWork;
@@ -16,10 +17,11 @@ public class PerformWorkAction extends ActionSupport {
 
 	private static final long serialVersionUID = 1435602610355587814L;
 	private int taskId;
-	private AFTime amount; // check unit
+	private AFTime amount; // check unit	
 	private int workTypeId;
 	private TaskDAO taskDAO;
 	private WorkTypeDAO workTypeDAO;
+	private TaskEventDAO taskEventDAO;
 	
 	public String execute(){
 		Task task = taskDAO.get(taskId);
@@ -27,8 +29,8 @@ public class PerformWorkAction extends ActionSupport {
 		event.setActor(SecurityUtil.getLoggedUser());
 		event.setTask(task);
 		event.setEffort(amount);
-//		event.setWorkType(new WorkType())
 		task.getEvents().add(event);
+		taskEventDAO.store(event);
 		taskDAO.store(task);
 		return Action.SUCCESS;
 	}
@@ -71,5 +73,9 @@ public class PerformWorkAction extends ActionSupport {
 
 	public void setWorkTypeId(int workTypeId) {
 		this.workTypeId = workTypeId;
+	}
+
+	public void setTaskEventDAO(TaskEventDAO taskEventDAO) {
+		this.taskEventDAO = taskEventDAO;
 	}
 }

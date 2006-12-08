@@ -71,12 +71,12 @@ public class TimeUserType implements UserType {
 							  Object owner)
 			throws HibernateException, SQLException {
 		
-		Integer i = (Integer)Hibernate.INTEGER.nullSafeGet(resultSet, names[0]);
+		long l = resultSet.getLong(names[0]);
 		
-		if(i == null)
+		if(resultSet.wasNull())
 			return null;
 		
-		return new AFTime( i.intValue() );
+		return new AFTime( l );
 		
 	}
 
@@ -96,7 +96,7 @@ public class TimeUserType implements UserType {
 
 		AFTime time = (AFTime)value;				
 		
-		Hibernate.INTEGER.nullSafeSet(statement, new Integer((int)time.getTime()), index);
+		statement.setLong(index, time.getTime());
 	}	
 	
 	public int hashCode(Object x) throws HibernateException {

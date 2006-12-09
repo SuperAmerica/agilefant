@@ -47,7 +47,25 @@
 			Stores currently logged in user to variable currentUser
 	    </description>
 	</tag>
-
+	
+	<tag>
+		<name>allowedWorkTypes</name>
+		<tag-class>fi.hut.soberit.agilefant.web.tag.AllowedWorkTypesTag</tag-class>
+		<body-content>JSP</body-content>
+		<description>
+			Stores allowed work types to given attribute
+	    </description>
+	    <attribute>
+	    	<name>id</name>
+	    	<required>true</required>	    
+	    </attribute>
+	    <attribute>
+	    	<name>backlogItem</name>
+	    	<required>true</required>
+	    	<rtexprvalue>true</rtexprvalue>
+	    </attribute>
+	</tag>
+	
 	<tag>
 		<name>bct</name>
 		<tag-class>fi.hut.soberit.agilefant.web.tag.BreadCrumbTrailTag</tag-class>

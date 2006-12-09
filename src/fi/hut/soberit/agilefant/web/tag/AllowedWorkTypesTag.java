@@ -14,12 +14,17 @@ import fi.hut.soberit.agilefant.model.WorkType;
 
 public class AllowedWorkTypesTag extends SpringTagSupport {
 	
-	public static final String WORK_TYPE_LIST_KEY = "workTypeList";
 	private BacklogItem backlogItem;
 	
 	@Override
+	public int doEndTag() throws JspException {
+		super.getPageContext().removeAttribute(super.getId());
+		return Tag.EVAL_PAGE;
+	}
+
+	@Override
 	public int doStartTag() throws JspException {
-		Collection<WorkType> result = null;		
+		Collection<WorkType> result = null;
 		if (backlogItem.getBacklog() instanceof Product){
 			WorkTypeDAO workTypeDAO = (WorkTypeDAO)super.getApplicationContext().getBean("workTypeDAO");
 			result = workTypeDAO.getAll();
@@ -34,7 +39,7 @@ public class AllowedWorkTypesTag extends SpringTagSupport {
 				result = deliverable.getActivityType().getWorkTypes();
 			}			
 		}
-		super.getPageContext().setAttribute(AllowedWorkTypesTag.WORK_TYPE_LIST_KEY, result);
+		super.getPageContext().setAttribute(super.getId(), result);
 		
 		return Tag.EVAL_BODY_INCLUDE;
 	}

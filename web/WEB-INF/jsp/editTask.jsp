@@ -58,5 +58,17 @@
 			</ww:url>
 			<ww:a href="%{performWorkLink}">Report work</ww:a>
 		</p>
+<hr/>
+		<p>
+			Event history:
+		</p>
+		<p>
+			<display:table name="task.events" id="row" requestURI="editTask.action">
+				<display:column property="id"/>
+				<display:column property="created"/>
+				<display:column title="Actor" property="actor.name"/>
+				<display:column title="Type" property="class.name"/>
+			</display:table>
+		</p>
 	</c:if>
 <%@ include file="./inc/_footer.jsp" %>

@@ -7,22 +7,33 @@
 <p>
 	Effort left: ${task.effortEstimate}
 </p>
-<ww:form action="performWork">
-	<ww:hidden name="taskId" value="${task.id}"/>
-	<p>
-		Work amount: <ww:textfield name="event.effort"/>
-	</p>
-	<p>
-		New estimate: <ww:textfield name="event.newEstimate"/>
-	</p>
-	<p>
-		Work type: TODO
-	</p>
-	<p>
-		Comment: <ww:textarea name="event.comment" cols="50" rows="5"/>
-	</p>
-	<p>
-		<ww:submit value="Submit"/><ww:submit value="Cancel" action="editTask"/>
-	</p>
-</ww:form>
+<aef:allowedWorkTypes backlogItem="${task.backlogItem}" id="workTypes">
+	<c:choose>
+		<c:when test="${empty workTypes}">
+			<p>
+				No work types avalable. Add those first.
+			</p>				
+		</c:when>
+		<c:otherwise>
+			<ww:form action="performWork">
+				<ww:hidden name="taskId" value="${task.id}"/>
+				<p>
+					Work amount: <ww:textfield name="event.effort"/>
+				</p>
+				<p>
+					New estimate: <ww:textfield name="event.newEstimate"/>
+				</p>
+				<p>
+					Work type: <ww:select name="event.workType.id" list="#attr.workTypes" listKey="id" listValue="name"/>
+				</p>
+				<p>
+					Comment: <ww:textarea name="event.comment" cols="50" rows="5"/>
+				</p>
+				<p>
+					<ww:submit value="Submit"/><ww:submit value="Cancel" action="editTask"/>
+				</p>
+			</ww:form>
+		</c:otherwise>
+	</c:choose>
+</aef:allowedWorkTypes>
 <%@ include file="./inc/_footer.jsp" %>

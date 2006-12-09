@@ -25,7 +25,11 @@
 			<result name="success">/WEB-INF/jsp/showCounter.jsp</result>
 		</action>
 		<action name="refreshChart" method="refreshChart" class="fi.hut.soberit.agilefant.web.SimpleCounter">
-			<result name="success">/WEB-INF/jsp/showCounter.jsp</result></action>
+			<result name="success" type="stream">
+				<param name="contentType">${contentType}</param>
+				<param name="inputName">inputStream</param>
+			</result>
+		</action>
 		<action name="resetCounter" method="resetCounter" class="fi.hut.soberit.agilefant.web.SimpleCounter">
 			<result name="success">/WEB-INF/jsp/showCounter.jsp</result>
 		</action>		
@@ -221,5 +225,13 @@
 		<action name="showWork" class="showPerformedWorkAction">
 			<result>/WEB-INF/jsp/showPerformedWork.jsp</result>
 		</action>
+		<action name="drawChart" method="execute" class="ChartAction">
+			<result name="success" type="stream">
+				<param name="contentType">${contentType}</param>
+				<param name="inputName">inputStream</param>
+			</result>
+		</action>
+		
+		
 	</package>
 </xwork>

@@ -84,7 +84,7 @@ public class Iteration extends Backlog implements PageItem, EffortContainer {
 	}
 
 	@Type(type="af_time")
-	@Formula(value="(select SEC_TO_TIME(SUM(TIME_TO_SEC(e.effort))) from TaskEvent e " +
+	@Formula(value="(select SUM(e.effort) from TaskEvent e " +
 			"INNER JOIN Task t ON e.task_id = t.id " +
 			"INNER JOIN BacklogItem bi ON t.backlogItem_id = bi.id " +
 			"where e.eventType = 'PerformedWork' and bi.backlog_id = id)")

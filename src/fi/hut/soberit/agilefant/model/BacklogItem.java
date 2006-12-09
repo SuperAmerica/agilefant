@@ -135,7 +135,7 @@ public class BacklogItem implements PageItem, Assignable, EffortContainer {
 	}
 	
 	@Type(type="af_time")
-	@Formula(value="(select SEC_TO_TIME(SUM(TIME_TO_SEC(e.effort))) from TaskEvent e " +
+	@Formula(value="(select SUM(e.effort) from TaskEvent e " +
 			"INNER JOIN Task t ON e.task_id = t.id " +
 			"where e.eventType = 'PerformedWork' and t.backlogItem_id = id)")	
 	public AFTime getPerformedEffort() {

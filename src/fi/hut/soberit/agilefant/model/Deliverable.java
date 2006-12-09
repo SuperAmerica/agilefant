@@ -99,7 +99,7 @@ public class Deliverable extends Backlog implements PageItem, EffortContainer {
 	}
 
 	@Type(type="af_time")
-	@Formula(value="(select SEC_TO_TIME(SUM(TIME_TO_SEC(e.effort))) " + 
+	@Formula(value="(select SUM(e.effort) " + 
 			"from TaskEvent e, Task t, BacklogItem bi, Backlog b "+
 			"where e.eventType = 'PerformedWork' " +
 			"and e.task_id = t.id " +

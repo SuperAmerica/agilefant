@@ -5,6 +5,17 @@
 
 	<ww:actionerror/>
 	<ww:actionmessage/>
+
+<%--  TODO: fiksumpi virheekäsittely --%>
+<c:choose>
+	<c:when test="${empty activityTypes}">
+				<ww:url id="workTypeLink" action="listActivityTypes" includeParams="none"/>
+				
+				No activity types avalable. <ww:a href="%{workTypeLink}">Add those first.</ww:a>			
+	</c:when>
+	<c:otherwise>
+
+
 	<h2>Edit Deliverable</h2>
 	<ww:form action="storeDeliverable">
 		<ww:hidden name="deliverableId" value="${deliverable.id}"/>
@@ -108,4 +119,9 @@
 			</display:column>
 		</display:table>
 	</c:if>
+
+	</c:otherwise>
+</c:choose>
+
+
 <%@ include file="./inc/_footer.jsp" %>

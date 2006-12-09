@@ -26,10 +26,11 @@ public class DeliverableAction extends ActionSupport implements CRUDAction{
 			
 	public String create(){
 		this.prepareActivityTypes();
-		if (this.activityTypes.isEmpty()){
-			super.addActionError("deliverable.activityTypesNotFound");
-			return Action.ERROR;
-		}
+		//TODO: fiksumpi virheenkäsittely
+//		if (this.activityTypes.isEmpty()){
+//			super.addActionError("deliverable.activityTypesNotFound");
+//			return Action.ERROR;
+//		}
 		deliverableId = 0;
 		deliverable = new Deliverable();
 		return Action.SUCCESS;

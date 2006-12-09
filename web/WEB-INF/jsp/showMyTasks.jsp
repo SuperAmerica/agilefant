@@ -29,8 +29,48 @@
 				<ww:url id="deleteLink" action="deleteTask" includeParams="none">
 					<ww:param name="taskId" value="${row.id}"/>
 				</ww:url>
-				<ww:a href="%{editLink}">Edit</ww:a>|<ww:a href="%{deleteLink}">Delete</ww:a>
+				<ww:url id="reportLink" action="myTasksReportForm" includeParams="none">
+					<ww:param name="taskId" value="${row.id}"/>
+				</ww:url>
+				<ww:a href="%{editLink}">Edit</ww:a>|<ww:a href="%{deleteLink}">Delete</ww:a>|<ww:a href="%{reportLink}">Report hours</ww:a>
 			</display:column>
 		</display:table>
 	</p>
+	
+<c:if test="${!empty task }">
+<aef:allowedWorkTypes backlogItem="${task.backlogItem}" id="workTypes">
+	<c:choose>
+		<c:when test="${empty workTypes}">
+			<p>
+				<ww:url id="workTypeLink" action="listActivityTypes" includeParams="none"/>
+				
+				No work types avalable. <ww:a href="%{workTypeLink}">Add those first.</ww:a>			
+			</p>				
+		</c:when>
+		<c:otherwise>
+			<ww:form action="myTasksPerformWork">
+				<ww:hidden name="taskId" value="${task.id}"/>
+				<p>
+					Report hours for task ${task.id }
+				</p>
+				<p>
+					Work amount: <ww:textfield name="event.effort"/>
+				</p>
+				<p>
+					New estimate: <ww:textfield name="event.newEstimate"/>
+				</p>
+				<p>
+					Work type: <ww:select name="event.workType.id" list="#attr.workTypes" listKey="id" listValue="name"/>
+				</p>
+				<p>
+					Comment: <ww:textarea name="event.comment" cols="50" rows="5"/>
+				</p>
+				<p>
+					<ww:submit value="Submit"/><ww:submit value="Cancel" action="myTasks"/>
+				</p>
+			</ww:form>
+		</c:otherwise>
+	</c:choose>
+</aef:allowedWorkTypes>
+	</c:if>
 <%@ include file="./inc/_footer.jsp" %>

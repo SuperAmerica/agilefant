@@ -44,9 +44,11 @@
 				    </c:if>
 
 				</display:column>
+<%-- 
 				<display:column sortable="true" title="Effort estimate" sortProperty="remainingEffortEstimate.time">
 					${row.remainingEffortEstimate}
 				</display:column>
+--%>
 				<display:column sortable="true" title="Effort in tasks" sortProperty="taskEffortLeft.time">
 					${row.taskEffortLeft}
 				</display:column>

@@ -205,16 +205,21 @@
 
 <!-- /Perform work -->
 
+<!-- My tasks -->
 
-		<action name="testlayout">
-			<result>/WEB-INF/jsp/newlayout.jsp</result>
-		</action>
-		<action name="hourReport" >
-			<result>/WEB-INF/jsp/hourReport.jsp</result>
-		</action>
+
 		<action name="myTasks">
 			<result>/WEB-INF/jsp/showMyTasks.jsp</result>
 		</action>
+		<action name="myTasksReportForm" method="edit" class="taskAction">
+			<result>/WEB-INF/jsp/showMyTasks.jsp</result>
+		</action>
+	<action name="myTasksPerformWork" class="performWorkAction">
+		<result type="redirect">myTasks.action</result>
+	</action>
+<!-- /My tasks -->
+
+
 		<action name="managementView">
 			<result>/WEB-INF/jsp/managementView.jsp</result>
 		</action>

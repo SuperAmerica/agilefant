@@ -52,6 +52,7 @@
 	<bean name="taskDAOTarget" parent="abstractDAOTarget" class="fi.hut.soberit.agilefant.db.hibernate.TaskDAOHibernate"/>
 	<bean name="userDAOTarget" parent="abstractDAOTarget" class="fi.hut.soberit.agilefant.db.hibernate.UserDAOHibernate"/>
 	<bean name="taskEventDAOTarget" parent="abstractDAOTarget" class="fi.hut.soberit.agilefant.db.hibernate.TaskEventDAOHibernate"/>
+	<bean name="iterationGoalDAOTarget" parent="abstractDAOTarget" class="fi.hut.soberit.agilefant.db.hibernate.IterationGoalDAOHibernate"/>	
 		
 	<bean name="activityTypeDAO" parent="abstractDAO">
 		<property name="target" ref="activityTypeDAOTarget"/>
@@ -81,4 +82,8 @@
 	<bean name="taskEventDAO" parent="abstractDAO">
 		<property name="target" ref="taskEventDAOTarget"/>
 	</bean>
+	
+	<bean name="iterationGoalDAO" parent="abstractDAO">
+		<property name="target" ref="iterationGoalDAOTarget"/>
+	</bean>	
 </beans>

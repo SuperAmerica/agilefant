@@ -4,10 +4,12 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Locale;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 
 import org.hibernate.annotations.Formula;
@@ -23,6 +25,7 @@ public class Iteration extends Backlog implements PageItem, EffortContainer {
     private Deliverable deliverable;
     private AFTime performedEffort;
     private AFTime effortEstimate;
+    private Collection<IterationGoal> iterationGoals = new HashSet<IterationGoal>();
 //	private User owner;
 	
 	@ManyToOne 
@@ -95,4 +98,13 @@ public class Iteration extends Backlog implements PageItem, EffortContainer {
 	protected void setPerformedEffort(AFTime performedEffort){
 		this.performedEffort = performedEffort;
 	}
+	
+	@OneToMany(mappedBy="iteration")
+	public Collection<IterationGoal> getIterationGoals() {
+		return iterationGoals;
+	}
+	public void setIterationGoals(Collection<IterationGoal> iterationGoals) {
+		this.iterationGoals = iterationGoals;
+	}
+
 }

@@ -12,8 +12,8 @@
 	<bean name="backlogItemAction" class="fi.hut.soberit.agilefant.web.BacklogItemAction" singleton="false" autowire="byName"/>
 	<bean name="userAction" class="fi.hut.soberit.agilefant.web.UserAction" singleton="false" autowire="byName"/>	
 	<bean name="assignTaskAction" class="fi.hut.soberit.agilefant.web.AssignTaskAction" singleton="false" autowire="byName"/>	
-	<bean name="performWorkAction" class="fi.hut.soberit.agilefant.web.PerformWorkAction" singleton="false" autowire="byName"/>	
-	
+	<bean name="performWorkAction" class="fi.hut.soberit.agilefant.web.PerformWorkAction" singleton="false" autowire="byName"/>
+	<bean name="chartAction" class="fi.hut.soberit.agilefant.web.ChartAction" singleton="false" autowire="byName"/>	
 	<bean name="showPerformedWorkAction" class="fi.hut.soberit.agilefant.web.ShowPerformedWorkAction" singleton="false" autowire="byName"/>
 	
 	<bean name="refreshUserInterceptor" class="fi.hut.soberit.agilefant.web.RefreshUserInterceptor" autowire="byName"/>

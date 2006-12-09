@@ -61,8 +61,9 @@ public class ChartAction extends ActionSupport {
 		TimeSeries pop = new TimeSeries("Workhours", Day.class);
 		Iterator itr = works.iterator();
 
-		
+		int cc = 0;
 		while(itr.hasNext()){
+
 			performedWork = (PerformedWork)itr.next();
 			AFTime effort = performedWork.getEffort();
 			long worktime = 0;
@@ -78,7 +79,16 @@ public class ChartAction extends ActionSupport {
 			
 			worktime = Math.round(days * 24 + hours + (minutes/60));
 			Date date = performedWork.getCreated();
-			pop.add(new Day(date.getDay(), date.getMonth(), date.getYear()), worktime);
+			String created = new String(date.toString());
+			String yearStr = created.substring((created.length()-4), created.length());
+			
+			int year;
+			try {
+				year = Integer.parseInt(yearStr);
+				pop.add(new Day(date.getDay(), date.getMonth(), year), worktime);
+			} catch (NumberFormatException e) {
+				e.printStackTrace();
+			}	
 		}
 		
 		TimeSeriesCollection dataset = new TimeSeriesCollection();

@@ -6,6 +6,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import org.jfree.chart.ChartFactory;
@@ -18,7 +19,6 @@ import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
 import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
-
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.db.DeliverableDAO;
 import fi.hut.soberit.agilefant.db.IterationDAO;
@@ -43,6 +43,7 @@ public class ChartAction extends ActionSupport {
 	private DeliverableDAO deliverableDAO;
 	private PerformedWorkDAO performedWorkDAO;
 	private Collection<PerformedWork> works;
+
 	
 	
 	public String execute(){
@@ -58,11 +59,16 @@ public class ChartAction extends ActionSupport {
 			works = performedWorkDAO.getPerformedWork(deliverableDAO.get(deliverableId));
 		}
 		TimeSeries pop = new TimeSeries("Workhours", Day.class);
-
-		for(PerformedWork work : works){
+	
+		int day_last=0;
+		int month_last=0;
+		int year_last=0;
+		int worksum=0;
+		int count=0;
+		
+		for(PerformedWork performedWork : works){
 			
 			AFTime effort = performedWork.getEffort();
-			long worktime = 0;
 			long time = effort.getTime();
 			long days = time / AFTime.WORKDAY_IN_MILLIS;
 			time %= AFTime.WORKDAY_IN_MILLIS;
@@ -73,24 +79,36 @@ public class ChartAction extends ActionSupport {
 			long minutes = time / AFTime.MINUTE_IN_MILLIS;
 			time %= AFTime.MINUTE_IN_MILLIS;
 			
-			worktime = Math.round(days * 24 + hours + (minutes/60));
+			int worktime = Math.round(days * 24 + hours + (minutes/60));
 			Date date = performedWork.getCreated();
-			String created = new String(date.toString());
-			String yearStr = created.substring(0, 4);
+			String dateStr = date.toString(); // for debugging purposes
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime(date);
+			int day = calendar.get(Calendar.DAY_OF_MONTH);
+			int month = calendar.get(Calendar.MONTH) + 1; // January == 0
+			int year = calendar.get(Calendar.YEAR);
+			count++;
 			
-			int year;
-			try {
-				year = Integer.parseInt(yearStr);
-				pop.add(new Day(date.getDay(), date.getMonth(), year), worktime);
-			} catch (NumberFormatException e) {
-				e.printStackTrace();
-			}	
+			// day changed, time to pop the previous days hours
+			if ((day!=day_last || month != month_last || year!=year_last) && (count > 1)){
+				pop.add(new Day(day_last, month_last, year_last), worksum);
+				worksum=0;
+			}
+			
+			worksum=worksum+worktime;
+			day_last=day;
+			month_last=month;
+			year_last=year;
+			
 		}
-		
+		if(worksum > 0){ // pop the last days hours
+			pop.add(new Day(day_last, month_last, year_last), worksum);
+		}
+
 		TimeSeriesCollection dataset = new TimeSeriesCollection();
 		dataset.addSeries(pop);
 		JFreeChart chart1 = ChartFactory.createTimeSeriesChart(
-		"Agilefant07 worhours per day",
+		"Agilefant07 workhours per day",
 		"Date",
 		"Workhours",
 		dataset,

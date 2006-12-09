@@ -14,6 +14,7 @@
   		<mapping class="fi.hut.soberit.agilefant.model.Backlog"/>
  		<mapping class="fi.hut.soberit.agilefant.model.BacklogItem"/>
  		<mapping class="fi.hut.soberit.agilefant.model.Deliverable"/>
+ 		<mapping class="fi.hut.soberit.agilefant.model.EstimateHistoryEvent"/>
  		<mapping class="fi.hut.soberit.agilefant.model.Iteration"/>
   		<mapping class="fi.hut.soberit.agilefant.model.PerformedWork"/>
  		<mapping class="fi.hut.soberit.agilefant.model.Product"/>

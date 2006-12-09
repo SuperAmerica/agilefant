@@ -46,18 +46,17 @@
 		</p>
 		<p>
 			<aef:currentUser/>
-			<ww:url id="selfAssignLink" action="assignTask">
+			<ww:url id="selfAssignLink" action="assignTask" includeParams="none">
 				<ww:param name="taskId" value="${task.id}"/>
 				<ww:param name="assigneeId" value="${currentUser.id}"/>
 			</ww:url>
 			<ww:a href="%{selfAssignLink}">Assign to me</ww:a>
 		</p>
 		<p>
-			<ww:form action="performWork">
-				<ww:hidden name="taskId" value="${task.id}"/>
-				Work amount: <ww:textfield name="amount"/>
-				<ww:submit value="Perform work"/>
-			</ww:form>
+			<ww:url id="performWorkLink" action="performWorkForm" includeParams="none">
+				<ww:param name="taskId" value="${task.id}"/>
+			</ww:url>
+			<ww:a href="%{performWorkLink}">Report work</ww:a>
 		</p>
 	</c:if>
 <%@ include file="./inc/_footer.jsp" %>

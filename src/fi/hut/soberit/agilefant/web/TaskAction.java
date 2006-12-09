@@ -6,8 +6,10 @@ import com.opensymphony.xwork.ActionSupport;
 
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.db.TaskDAO;
+import fi.hut.soberit.agilefant.db.TaskEventDAO;
 import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.model.BacklogItem;
+import fi.hut.soberit.agilefant.model.EstimateHistoryEvent;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.security.SecurityUtil;
@@ -19,9 +21,14 @@ public class TaskAction extends ActionSupport {
 	private int backlogItemId;
 	private Task task;
 	private TaskDAO taskDAO;
+	private TaskEventDAO taskEventDAO;
 	private BacklogItemDAO backlogItemDAO;
 	private UserDAO userDAO;
 		
+	public void setTaskEventDAO(TaskEventDAO taskEventDAO) {
+		this.taskEventDAO = taskEventDAO;
+	}
+
 	public String create(){
 		taskId = 0;
 		task = new Task();
@@ -88,7 +95,16 @@ public class TaskAction extends ActionSupport {
 		storable.setPriority(task.getPriority());
 		storable.setName(task.getName());
 		storable.setDescription(task.getDescription());
-		storable.setEffortEstimate(task.getEffortEstimate());
+		if (storable.getId() == 0 || !storable.getEffortEstimate().equals(task.getEffortEstimate())){
+			EstimateHistoryEvent event = new EstimateHistoryEvent();
+			event.setActor(SecurityUtil.getLoggedUser());
+			event.setNewEstimate(task.getEffortEstimate());
+			storable.setEffortEstimate(task.getEffortEstimate());
+			taskDAO.store(storable);
+			event.setTask(storable);
+			storable.getEvents().add(event);
+			taskEventDAO.store(event);
+		}
 	}
 
 	public int getDeliverableId() {

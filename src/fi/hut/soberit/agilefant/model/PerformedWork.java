@@ -6,7 +6,7 @@ import javax.persistence.ManyToOne;
 import org.hibernate.annotations.Type;
 
 @Entity
-public class PerformedWork extends TaskComment{
+public class PerformedWork extends EstimateHistoryEvent{
 	
 	private AFTime effort;
 	private WorkType workType;

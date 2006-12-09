@@ -108,5 +108,4 @@
 			</display:column>
 		</display:table>
 	</c:if>
-
 <%@ include file="./inc/_footer.jsp" %>

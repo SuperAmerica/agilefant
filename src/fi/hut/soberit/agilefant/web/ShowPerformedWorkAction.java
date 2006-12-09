@@ -24,8 +24,7 @@ public class ShowPerformedWorkAction extends ActionSupport {
 	private DeliverableDAO deliverableDAO;
 	private PerformedWorkDAO performedWorkDAO;
 	private Collection<PerformedWork> works;
-	
-	
+		
 	public String execute(){
 		if (taskId > 0){
 			works = performedWorkDAO.getPerformedWork(taskDAO.get(taskId));

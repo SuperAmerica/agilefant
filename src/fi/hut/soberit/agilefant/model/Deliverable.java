@@ -89,9 +89,9 @@ public class Deliverable extends Backlog implements PageItem, EffortContainer {
 		return this.iterations.size() > 0 ? true : false;
 	}
 	
+	@Transient
 	public AFTime getEffortEstimate() {
-		// TODO Auto-generated method stub
-		return null;
+		return effortEstimate;
 	}
 	
 	protected void setEffortEstimate(AFTime effortEstimate){

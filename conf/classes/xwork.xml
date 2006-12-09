@@ -191,15 +191,20 @@
 			<result>/index.jsp</result>
 		</action>
 <!-- /User actions -->
+<!-- Perform work -->
+	<action name="performWorkForm" method="edit" class="taskAction">
+		<result>/WEB-INF/jsp/performWork.jsp</result>
+	</action>
+	<action name="performWork" class="performWorkAction">
+		<result type="redirect">editTask.action?taskId=${task.id}</result>
+	</action>
+
+<!-- /Perform work -->
 
 
 		<action name="testlayout">
 			<result>/WEB-INF/jsp/newlayout.jsp</result>
 		</action>
-		<action name="performWork" class="performWorkAction">
-			<result type="redirect">hourReport.action</result>
-		</action>
-
 		<action name="hourReport" >
 			<result>/WEB-INF/jsp/hourReport.jsp</result>
 		</action>

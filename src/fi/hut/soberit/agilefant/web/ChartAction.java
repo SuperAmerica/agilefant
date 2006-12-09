@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.Date;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartUtilities;
@@ -59,12 +58,9 @@ public class ChartAction extends ActionSupport {
 			works = performedWorkDAO.getPerformedWork(deliverableDAO.get(deliverableId));
 		}
 		TimeSeries pop = new TimeSeries("Workhours", Day.class);
-		Iterator itr = works.iterator();
 
-		int cc = 0;
-		while(itr.hasNext()){
-
-			performedWork = (PerformedWork)itr.next();
+		for(PerformedWork work : works){
+			
 			AFTime effort = performedWork.getEffort();
 			long worktime = 0;
 			long time = effort.getTime();
@@ -80,7 +76,7 @@ public class ChartAction extends ActionSupport {
 			worktime = Math.round(days * 24 + hours + (minutes/60));
 			Date date = performedWork.getCreated();
 			String created = new String(date.toString());
-			String yearStr = created.substring((created.length()-4), created.length());
+			String yearStr = created.substring(0, 4);
 			
 			int year;
 			try {

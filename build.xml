@@ -159,6 +159,11 @@
 		<touch file="${deploy.dir.local}/WEB-INF/web.xml"/>
 	</target>
 	
+	<target name="undeploy-local" description="Undeploys web app on local server">
+		<delete dir="${deploy.dir.local}"/>
+		<delete dir="${catalina.home}/work/Catalina/localhost/${webapp.name}"/>
+	</target>
+	
 	<target name="clean" description="Removes build directory">
         <delete dir="${build.dir}"/>
     	<delete dir="${test.reports}"/>		

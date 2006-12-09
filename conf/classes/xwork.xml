@@ -225,7 +225,7 @@
 		<action name="showWork" class="showPerformedWorkAction">
 			<result>/WEB-INF/jsp/showPerformedWork.jsp</result>
 		</action>
-		<action name="drawChart" method="execute" class="ChartAction">
+		<action name="drawChart" method="execute" class="chartAction">
 			<result name="success" type="stream">
 				<param name="contentType">${contentType}</param>
 				<param name="inputName">inputStream</param>

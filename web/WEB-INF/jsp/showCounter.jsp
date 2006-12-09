@@ -14,17 +14,13 @@
 		You have loaded this page <b>${counter}</b> times.
 	</p>
 	<p>
-		<img src="/agilefant/static/chart2.png">
-	</p>
-	<p>
-		<ww:form action="simpleCounter">
-			<ww:submit action="refreshChart" value="RefreshChart" />
-		</ww:form>
+		<img src="refreshChart.action"/>
 	</p>
 	<p>
 		<ww:form action="simpleCounter">		
 			<ww:submit value="Refresh"/>
 			<ww:submit action="resetCounter" value="Reset"/>
+			<ww:submit action="refreshChart" value="RefreshChart"/>
 		</ww:form>
 	</p>
 </body>

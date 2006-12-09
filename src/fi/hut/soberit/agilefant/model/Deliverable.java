@@ -15,7 +15,7 @@ import org.hibernate.annotations.Type;
 import fi.hut.soberit.agilefant.web.page.PageItem;
 
 @Entity
-public class Deliverable extends Backlog implements PageItem {
+public class Deliverable extends Backlog implements PageItem, EffortContainer {
 	
     private Product product;
 	private ActivityType activityType;
@@ -89,10 +89,9 @@ public class Deliverable extends Backlog implements PageItem {
 		return this.iterations.size() > 0 ? true : false;
 	}
 	
-	@Transient
 	public AFTime getEffortEstimate() {
-		return this.effortEstimate;
-		//TODO
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 	protected void setEffortEstimate(AFTime effortEstimate){

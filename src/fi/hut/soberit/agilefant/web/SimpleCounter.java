@@ -1,10 +1,11 @@
 package fi.hut.soberit.agilefant.web;
 
-import java.io.File;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Map;
-
 import org.apache.log4j.Logger;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartUtilities;
@@ -12,7 +13,6 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.DateAxis;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.data.time.*;
-
 import com.opensymphony.webwork.interceptor.SessionAware;
 import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
@@ -25,6 +25,7 @@ public class SimpleCounter extends ActionSupport implements SessionAware {
 	
 	private Map<String, Integer> sessionMap;
 	private int counter;
+	private byte[] result;
 	
 	public int getCounter(){
 		return counter;
@@ -63,12 +64,16 @@ public class SimpleCounter extends ActionSupport implements SessionAware {
 	public String refreshChart(){
 //		 Create a time series chart
 		TimeSeries pop = new TimeSeries("Workhours", Day.class);
-		pop.add(new Day(1, 12, 2006), 20);
-		pop.add(new Day(2, 12, 2006), 40);
-		pop.add(new Day(3, 12, 2006), 30);
-		pop.add(new Day(4, 12, 2006), 10);
-		pop.add(new Day(5, 12, 2006), 17);
-		pop.add(new Day(6, 12, 2006), 15);
+		Integer count = (Integer)sessionMap.get(SimpleCounter.COUNTER_PARAM);
+		if (count == null){
+			count = new Integer(0);
+		}
+		pop.add(new Day(1, 12, 2006), ((20+(count*5))%100));
+		pop.add(new Day(2, 12, 2006), ((250+(count*1))%100));
+		pop.add(new Day(3, 12, 2006), ((15+(count*4))%100));
+		pop.add(new Day(4, 12, 2006), ((30+(count*3))%100));
+		pop.add(new Day(5, 12, 2006), ((17+(count*2))%100));
+		pop.add(new Day(6, 12, 2006), ((15+(count*20))%100));
 		TimeSeriesCollection dataset = new TimeSeriesCollection();
 		dataset.addSeries(pop);
 		JFreeChart chart1 = ChartFactory.createTimeSeriesChart(
@@ -83,14 +88,16 @@ public class SimpleCounter extends ActionSupport implements SessionAware {
 		DateAxis axis = (DateAxis) plot.getDomainAxis();
 		axis.setDateFormatOverride(new SimpleDateFormat("yyyy-MM-dd"));	
 		try {
-			String dir="user.dir"; // set to current directory
-			dir=new File(System.getProperty(dir)).getCanonicalPath();
-			File b = new File(dir + File.separator + "webapps" + File.separator + "agilefant" + File.separator + "chart2.png");
-			ChartUtilities.saveChartAsPNG(b, chart1, 500, 300);
-			
+			ByteArrayOutputStream out = new ByteArrayOutputStream();
+			ChartUtilities.writeChartAsPNG(out, chart1, 500, 300);
+			result = out.toByteArray();		
 		} catch (IOException e) {
 			System.err.println("Problem occurred creating chart.");
 		}
 		return Action.SUCCESS;
+	}
+	
+	public InputStream getInputStream(){
+		return new ByteArrayInputStream(result);
 	}
 }

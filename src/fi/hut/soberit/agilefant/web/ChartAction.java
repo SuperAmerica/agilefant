@@ -58,6 +58,11 @@ public class ChartAction extends ActionSupport {
 		} else if (deliverableId > 0){
 			works = performedWorkDAO.getPerformedWork(deliverableDAO.get(deliverableId));
 		}
+		
+		
+		/*-------------------------------------------------------------*/
+		// The code for dataset: actual workhours
+		
 		TimeSeries pop = new TimeSeries("Workhours", Day.class);
 	
 		int day_last=0;
@@ -104,9 +109,64 @@ public class ChartAction extends ActionSupport {
 		if(worksum > 0){ // pop the last days hours
 			pop.add(new Day(day_last, month_last, year_last), worksum);
 		}
-
+		
 		TimeSeriesCollection dataset = new TimeSeriesCollection();
 		dataset.addSeries(pop);
+		
+		/*-------------------------------------------------------------*/
+		// The code for dataset: effort estimates
+		
+		TimeSeries hip = new TimeSeries("Effort estimates", Day.class);
+		
+		day_last=0;
+		month_last=0;
+		year_last=0;
+		worksum=0;
+		count=0;
+		
+		for(PerformedWork performedWork : works){
+			
+			AFTime effort = performedWork.getNewEstimate();
+			long time = effort.getTime();
+			long days = time / AFTime.WORKDAY_IN_MILLIS;
+			time %= AFTime.WORKDAY_IN_MILLIS;
+			
+			long hours = time / AFTime.HOUR_IN_MILLIS;
+			time %= AFTime.HOUR_IN_MILLIS;
+			
+			long minutes = time / AFTime.MINUTE_IN_MILLIS;
+			time %= AFTime.MINUTE_IN_MILLIS;
+			
+			int worktime = Math.round(days * 24 + hours + (minutes/60));
+			Date date = performedWork.getCreated();
+			String dateStr = date.toString(); // for debugging purposes
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime(date);
+			int day = calendar.get(Calendar.DAY_OF_MONTH);
+			int month = calendar.get(Calendar.MONTH) + 1; // January == 0
+			int year = calendar.get(Calendar.YEAR);
+			count++;
+			
+			// day changed, time to pop the previous days hours
+			if ((day!=day_last || month != month_last || year!=year_last) && (count > 1)){
+				hip.add(new Day(day_last, month_last, year_last), worksum);
+				worksum=0;
+			}
+			
+			worksum=worksum+worktime;
+			day_last=day;
+			month_last=month;
+			year_last=year;
+			
+		}
+		if(worksum > 0){ // pop the last days hours
+			hip.add(new Day(day_last, month_last, year_last), worksum);
+		}
+		
+		dataset.addSeries(hip);
+		
+		/*-------------------------------------------------------------*/
+		
 		JFreeChart chart1 = ChartFactory.createTimeSeriesChart(
 		"Agilefant07 workhours per day",
 		"Date",

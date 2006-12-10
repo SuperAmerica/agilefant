@@ -14,6 +14,9 @@ import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.DateAxis;
 import org.jfree.chart.plot.XYPlot;
+import org.jfree.chart.renderer.xy.StandardXYItemRenderer;
+import org.jfree.chart.renderer.xy.XYItemRenderer;
+import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.data.time.Day;
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
@@ -74,36 +77,41 @@ public class ChartAction extends ActionSupport {
 		for(PerformedWork performedWork : works){
 			
 			AFTime effort = performedWork.getEffort();
-			long time = effort.getTime();
-			long days = time / AFTime.WORKDAY_IN_MILLIS;
-			time %= AFTime.WORKDAY_IN_MILLIS;
-			
-			long hours = time / AFTime.HOUR_IN_MILLIS;
-			time %= AFTime.HOUR_IN_MILLIS;
-			
-			long minutes = time / AFTime.MINUTE_IN_MILLIS;
-			time %= AFTime.MINUTE_IN_MILLIS;
-			
-			int worktime = Math.round(days * 24 + hours + (minutes/60));
-			Date date = performedWork.getCreated();
-			String dateStr = date.toString(); // for debugging purposes
-			Calendar calendar = Calendar.getInstance();
-			calendar.setTime(date);
-			int day = calendar.get(Calendar.DAY_OF_MONTH);
-			int month = calendar.get(Calendar.MONTH) + 1; // January == 0
-			int year = calendar.get(Calendar.YEAR);
-			count++;
-			
-			// day changed, time to pop the previous days hours
-			if ((day!=day_last || month != month_last || year!=year_last) && (count > 1)){
-				pop.add(new Day(day_last, month_last, year_last), worksum);
-				worksum=0;
+			if(effort!=null){
+				long time = effort.getTime();
+				long days = time / AFTime.WORKDAY_IN_MILLIS;
+				time %= AFTime.WORKDAY_IN_MILLIS;
+				
+				long hours = time / AFTime.HOUR_IN_MILLIS;
+				time %= AFTime.HOUR_IN_MILLIS;
+				
+				long minutes = time / AFTime.MINUTE_IN_MILLIS;
+				time %= AFTime.MINUTE_IN_MILLIS;
+				
+				int worktime = Math.round(days * 24 + hours + (minutes/60));
+				Date date = performedWork.getCreated();
+				String dateStr = date.toString(); // for debugging purposes
+				Calendar calendar = Calendar.getInstance();
+				calendar.setTime(date);
+				int day = calendar.get(Calendar.DAY_OF_MONTH);
+				int month = calendar.get(Calendar.MONTH) + 1; // January == 0
+				int year = calendar.get(Calendar.YEAR);
+				count++;
+				
+//				 day changed, time to pop the previous days hours
+				if ((day!=day_last || month != month_last || year!=year_last) && (count > 1)){
+					pop.add(new Day(day_last, month_last, year_last), worksum);
+					worksum=0;
+				}
+				
+				worksum=worksum+worktime;
+				day_last=day;
+				month_last=month;
+				year_last=year;
 			}
 			
-			worksum=worksum+worktime;
-			day_last=day;
-			month_last=month;
-			year_last=year;
+			
+			
 			
 		}
 		if(worksum > 0){ // pop the last days hours
@@ -115,6 +123,7 @@ public class ChartAction extends ActionSupport {
 		
 		/*-------------------------------------------------------------*/
 		// The code for dataset: effort estimates
+		// we only want to keep the last estimate for the day
 		
 		TimeSeries hip = new TimeSeries("Effort estimates", Day.class);
 		
@@ -127,37 +136,41 @@ public class ChartAction extends ActionSupport {
 		for(PerformedWork performedWork : works){
 			
 			AFTime effort = performedWork.getNewEstimate();
-			long time = effort.getTime();
-			long days = time / AFTime.WORKDAY_IN_MILLIS;
-			time %= AFTime.WORKDAY_IN_MILLIS;
 			
-			long hours = time / AFTime.HOUR_IN_MILLIS;
-			time %= AFTime.HOUR_IN_MILLIS;
-			
-			long minutes = time / AFTime.MINUTE_IN_MILLIS;
-			time %= AFTime.MINUTE_IN_MILLIS;
-			
-			int worktime = Math.round(days * 24 + hours + (minutes/60));
-			Date date = performedWork.getCreated();
-			String dateStr = date.toString(); // for debugging purposes
-			Calendar calendar = Calendar.getInstance();
-			calendar.setTime(date);
-			int day = calendar.get(Calendar.DAY_OF_MONTH);
-			int month = calendar.get(Calendar.MONTH) + 1; // January == 0
-			int year = calendar.get(Calendar.YEAR);
-			count++;
-			
-			// day changed, time to pop the previous days hours
-			if ((day!=day_last || month != month_last || year!=year_last) && (count > 1)){
-				hip.add(new Day(day_last, month_last, year_last), worksum);
-				worksum=0;
-			}
-			
-			worksum=worksum+worktime;
-			day_last=day;
-			month_last=month;
-			year_last=year;
-			
+			if(effort!=null){
+				
+				long time = effort.getTime();
+				long days = time / AFTime.WORKDAY_IN_MILLIS;
+				time %= AFTime.WORKDAY_IN_MILLIS;
+				
+				long hours = time / AFTime.HOUR_IN_MILLIS;
+				time %= AFTime.HOUR_IN_MILLIS;
+				
+				long minutes = time / AFTime.MINUTE_IN_MILLIS;
+				time %= AFTime.MINUTE_IN_MILLIS;
+				
+				int worktime = Math.round(days * 24 + hours + (minutes/60));
+				Date date = performedWork.getCreated();
+				String dateStr = date.toString(); // for debugging purposes
+				Calendar calendar = Calendar.getInstance();
+				calendar.setTime(date);
+				int day = calendar.get(Calendar.DAY_OF_MONTH);
+				int month = calendar.get(Calendar.MONTH) + 1; // January == 0
+				int year = calendar.get(Calendar.YEAR);
+				count++;
+				
+				// day changed, time to pop the previous days hours
+				if ((day!=day_last || month != month_last || year!=year_last) && (count > 1)){
+					hip.add(new Day(day_last, month_last, year_last), worksum);
+					worksum=0;
+				}
+				
+				worksum=worktime; // No summing up
+				day_last=day;
+				month_last=month;
+				year_last=year;
+				
+			}	
 		}
 		if(worksum > 0){ // pop the last days hours
 			hip.add(new Day(day_last, month_last, year_last), worksum);
@@ -177,7 +190,12 @@ public class ChartAction extends ActionSupport {
 		false);
 		XYPlot plot = chart1.getXYPlot();
 		DateAxis axis = (DateAxis) plot.getDomainAxis();
-		axis.setDateFormatOverride(new SimpleDateFormat("yyyy-MM-dd"));	
+		axis.setDateFormatOverride(new SimpleDateFormat("yyyy-MM-dd"));
+		
+		XYItemRenderer rend = plot.getRenderer();
+		XYLineAndShapeRenderer rr = (XYLineAndShapeRenderer)rend;
+		rr.setShapesVisible(true);
+		
 		try {
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
 			ChartUtilities.writeChartAsPNG(out, chart1, 500, 300);

@@ -6,16 +6,11 @@
 	<ww:actionerror/>
 	<ww:actionmessage/>
 	<h2>Edit task</h2>
-	<c:if test="${task.id > 0}">
-		<p>	
-			Work done chart: <img src="drawChart.action?taskId=${task.id}"/>
-		</p>
-	</c:if>
 	<ww:form action="storeTask">
 		<ww:hidden name="backlogItemId"/>
 		<ww:hidden name="taskId" value="${task.id}"/>
 		<p>		
-			Name2: <ww:textfield name="task.name"/>
+			Name: <ww:textfield name="task.name"/>
 		</p>
 		<p>
 			Description: <ww:textarea cols="40" rows="6" name="task.description" />

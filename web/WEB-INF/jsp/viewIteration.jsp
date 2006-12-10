@@ -36,13 +36,8 @@
 				<c:if test="${!empty row.tasks}"> 
 
 					<ww:form action="editTask">
-							<select name="taskId">
-			
-								<c:forEach items="${row.tasks}" var="task">
-											<option value="${task.id}">${task.name}</option>				
-								</c:forEach> 
-							</select>
-					<ww:submit value="Go"/>
+						<ww:select name="taskId" list="#attr.row.tasks" listKey="id" listValue="name"/>					
+						<ww:submit value="Go"/>
 				    </ww:form>
 				    </c:if>
 

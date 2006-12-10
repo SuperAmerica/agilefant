@@ -22,6 +22,9 @@
 			<display:column sortable="true" title="Creator">
 				${row.creator.fullName}
 			</display:column>
+			<display:column sortable="true" title="Priority">
+				${row.priority}
+			</display:column>
 			<display:column sortable="false" title="Actions">
 				<ww:url id="editLink" action="editTask" includeParams="none">
 					<ww:param name="taskId" value="${row.id}"/>

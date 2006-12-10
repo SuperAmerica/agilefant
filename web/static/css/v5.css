@@ -23,22 +23,10 @@ blockquote {margin-left:20px;padding:0 0 0 9px;border-left:1px dotted #999}
 .blockTitle {font-size:.8em;text-align:right;margin:-10px 200px 10px 0}
 
 /* WRAPPER - see MSIE.css for min-width  */
-#wrapper {min-width:780px;padding:0;
-/* To fake a rollover with the background image and make it "clickable" */
-#homepic a img {position:absolute;top:0;left:0;z-index:1;width:450px;height:92px}
-
+#wrapper {min-width:780px;padding:0;}
 /* INNERWRAP - WIDTH to dodge the peekaboo bug - PADDING to avoid a GAP with the wrapper */
-#innerwrapper {width:100%;padding-bottom:1px; repeat-x transparent}
+#innerwrapper {width:100%;padding-bottom:1px; }
 
-/* HEADER    */
-#header {background:#fff;position:absolute;top:0;left:0;height:50px;width:100%;font-size:1em;margin:0;padding:0;color:#333;text-align:center;}
-
-/* Float is no good for Opera7 but needed for MSIE 5 Mac */
-*html #topicons img {float:left}
-#lasticons {display:inline} /* Safari needs this */
-#topicons a {background-color:#fff} #topicons a:hover {background-color:transparent} /* MSIE Win */
-#topicons span {display:none}
-#topicons a:hover span,#topicons a:focus span {font-size:.8em;display:block;position:absolute;top:1px;left:-615px;text-align:right;width:610px}
 
 
 /* TOP LINKS - removing the container and transfering the ID to the UL fails in NN4 */

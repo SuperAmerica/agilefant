@@ -24,5 +24,9 @@
  		<mapping class="fi.hut.soberit.agilefant.model.User"/>
  		<mapping class="fi.hut.soberit.agilefant.model.WorkType"/>
  		<mapping class="fi.hut.soberit.agilefant.model.IterationGoal"/> 		
+ 		
+ 		<mapping class="fi.hut.soberit.agilefant.model.Practice"/>
+ 		<mapping class="fi.hut.soberit.agilefant.model.PracticeTemplate"/>
+ 		<mapping class="fi.hut.soberit.agilefant.model.PracticeAllocation"/> 		
 	</session-factory>
 </hibernate-configuration>

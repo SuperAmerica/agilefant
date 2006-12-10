@@ -86,4 +86,20 @@
 	<bean name="iterationGoalDAO" parent="abstractDAO">
 		<property name="target" ref="iterationGoalDAOTarget"/>
 	</bean>	
+	
+	<bean name="practiceAllocationDAOTarget" parent="abstractDAOTarget" class="fi.hut.soberit.agilefant.db.hibernate.PracticeAllocationDAOHibernate"/>
+	<bean name="practiceAllocationDAO" parent="abstractDAO">
+		<property name="target" ref="practiceAllocationDAOTarget"/>
+	</bean>
+
+	<bean name="practiceDAOTarget" parent="abstractDAOTarget" class="fi.hut.soberit.agilefant.db.hibernate.PracticeDAOHibernate"/>
+	<bean name="practiceDAO" parent="abstractDAO">
+		<property name="target" ref="practiceDAOTarget"/>
+	</bean>
+
+	<bean name="practiceTemplateDAOTarget" parent="abstractDAOTarget" class="fi.hut.soberit.agilefant.db.hibernate.PracticeTemplateDAOHibernate"/>
+	<bean name="practiceTemplateDAO" parent="abstractDAO">
+		<property name="target" ref="practiceTemplateDAOTarget"/>
+	</bean>
+	
 </beans>

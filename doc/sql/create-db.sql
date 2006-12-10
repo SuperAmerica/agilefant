@@ -6,6 +6,9 @@ create table TaskEvent (id integer not null auto_increment, created datetime, ac
 create table User (id integer not null auto_increment, loginName varchar(255), fullName varchar(255), description varchar(255), password varchar(255), primary key (id)) type=InnoDB;
 create table WorkType (id integer not null auto_increment, name varchar(255) not null, description varchar(255), activityType_id integer, primary key (id)) type=InnoDB;
 create table IterationGoal (id integer not null auto_increment, name varchar(255), description varchar(255), iteration_id integer not null, primary key (id)) ENGINE=InnoDB;
+create table Practice (id integer not null auto_increment, name varchar(255), description varchar(255), template_id integer, primary key (id)) ENGINE=InnoDB;
+create table PracticeAllocation (id integer not null auto_increment, status integer, task_id integer, practice_id integer, primary key (id)) ENGINE=InnoDB;
+create table PracticeTemplate (id integer not null auto_increment, primary key (id)) ENGINE=InnoDB;
 alter table Backlog add index FK4E86B8DD5600C562 (deliverable_id), add constraint FK4E86B8DD5600C562 foreign key (deliverable_id) references Backlog (id) ON DELETE CASCADE;
 alter table Backlog add index FK4E86B8DD2D47BAEA (owner_id), add constraint FK4E86B8DD2D47BAEA foreign key (owner_id) references User (id) ON DELETE SET NULL;
 alter table Backlog add index FK4E86B8DDCC65BE32 (activityType_id), add constraint FK4E86B8DDCC65BE32 foreign key (activityType_id) references ActivityType (id) ON DELETE SET NULL;

@@ -1,5 +1,6 @@
 package fi.hut.soberit.agilefant.model;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
@@ -37,6 +38,8 @@ public class Task implements PageItem, Assignable, EffortContainer {
 	private User creator;
 	private Collection<TaskEvent> events = new HashSet<TaskEvent>();
 
+	private Collection<PracticeAllocation> practices = new HashSet<PracticeAllocation>();
+	
 	public String getDescription() {
 	    return description;
 	}
@@ -171,4 +174,26 @@ public class Task implements PageItem, Assignable, EffortContainer {
 	public void setStatus(TaskStatus status) {
 		this.status = status;
 	}
+
+	public void useTemplate(PracticeTemplate template) {
+		
+		ArrayList<PracticeAllocation> practiceAllocations = new ArrayList<PracticeAllocation>();
+		
+		for(Practice p : template.getPractices()) {
+			practiceAllocations.add( new PracticeAllocation(p, this) );
+		}
+		
+		setPractices(practiceAllocations);
+	}
+
+	@OneToMany(mappedBy="task")
+	public Collection<PracticeAllocation> getPractices() {
+		return practices;
+	}
+
+	public void setPractices(Collection<PracticeAllocation> practices) {
+		this.practices = practices;
+	}
+
+	
 }

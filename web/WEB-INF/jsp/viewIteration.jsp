@@ -7,6 +7,9 @@
 			<h2>View iteration: ${iteration.id}</h2>
 
 		<c:if test="${iteration.id > 0}">
+		<p>	
+			<img src="drawChart.action?iterationId=${iteration.id}"/>
+		</p>
 
 		<p>
 			<ww:url id="editIterationLink" action="editIteration" includeParams="none">
@@ -21,7 +24,7 @@
 
 		<p>
 			Backlog items:
-		</p>		
+		</p>
 		<p>
 			<display:table name="iteration.backlogItems" id="row" requestURI="viewIteration.action">
 				<display:column sortable="true" title="Id" property="id"/>

@@ -82,6 +82,8 @@ public class IterationAction extends ActionSupport {
 		fillable.setDeliverable(this.deliverable);
 		fillable.setName(this.iteration.getName());
 		fillable.setDescription(this.iteration.getDescription());
+		fillable.setEndDate(this.iteration.getEndDate());
+		fillable.setStartDate(this.iteration.getStartDate());
 	}
 
 	public int getIterationId() {

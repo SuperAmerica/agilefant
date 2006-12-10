@@ -14,15 +14,23 @@
 	<ww:form action="storeIteration">
 		<ww:hidden name="iterationId" value="${iteration.id}"/>
 		<ww:hidden name="deliverableId"/> 
+<%--
 
-<%--<ww:date name="%{new java.util.Date()}" format="dd-MM-yyyy" id="date"/>
+<ww:date name="%{new java.util.Date()}" format="dd-MM-yyyy" id="date"/>
 <p>
 
 			Startdate: <ww:datepicker value="%{#date}" showstime="%{true}" format="%d-%m-%Y" name="iteration.startDate"/> 
 		</p>
 		<p>		
 			Enddate: <ww:datepicker value="%{#date}" showstime="%{true}" format="%d-%m-%Y" name="iteration.endDate"/> 
-		</p>--%>
+		</p>
+		--%>
+		<p>
+			Start date: <ww:textfield name="iteration.startDate"/>
+		</p>
+		<p>
+			End date: <ww:textfield name="iteration.endDate"/>
+		</p>
     	<p>		
 			Name: <ww:textfield name="iteration.name"/>
 		</p>

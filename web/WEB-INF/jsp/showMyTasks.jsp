@@ -60,7 +60,7 @@
 					Work amount: <ww:textfield name="event.effort"/>
 				</p>
 				<p>
-					New estimate: <ww:textfield name="event.newEstimate"/>
+					New estimate: <ww:textfield name="event.newEstimate" value="${task.effortEstimate}"/>
 				</p>
 				<p>
 					Work type: <ww:select name="event.workType.id" list="#attr.workTypes" listKey="id" listValue="name"/>

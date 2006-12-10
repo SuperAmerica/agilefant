@@ -67,6 +67,12 @@
 				<display:column sortable="true" title="Performed effort" sortProperty="performedEffort.time">
 					${row.performedEffort}
 				</display:column>
+				<display:column sortable="true" title="Start date" >
+					${row.startDate}
+				</display:column>
+				<display:column sortable="true" title="End date" >
+					${row.endDate}
+				</display:column>
 				<display:column sortable="false" title="Actions">
 					<ww:url id="editLink" action="editIteration" includeParams="none">
 						<ww:param name="iterationId" value="${row.id}"/>

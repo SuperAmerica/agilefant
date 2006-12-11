@@ -6,4 +6,9 @@ public enum TaskStatus {
 	public int getOrdinal(){
 		return this.ordinal();
 	}
+
+	public String getName(){
+		return this.name();
+	}
+
 }

@@ -93,6 +93,7 @@ public class TaskAction extends ActionSupport {
 			storable.setAssignee(assignee);
 		}
 		storable.setPriority(task.getPriority());
+		storable.setStatus(task.getStatus());
 		storable.setName(task.getName());
 		storable.setDescription(task.getDescription());
 		if (storable.getId() == 0 || !storable.getEffortEstimate().equals(task.getEffortEstimate())){

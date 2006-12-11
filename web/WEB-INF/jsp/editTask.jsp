@@ -21,6 +21,9 @@
 		<p>
 			Priority: <ww:select name="task.priority" value="task.priority.name" list="@fi.hut.soberit.agilefant.model.Priority@values()" listKey="name" listValue="getText('task.priority.' + name())"/>
 		</p>
+		<p>
+			Status: <ww:select name="task.status" value="task.status.name" list="@fi.hut.soberit.agilefant.model.TaskStatus@values()" listKey="name" listValue="getText('task.status.' + name())"/>
+		</p>
 		<c:if test="${task.id == 0}">
 			<p>
 				<aef:userList/>

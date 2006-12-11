@@ -64,10 +64,43 @@
 		</p>
 		<p>
 			<display:table name="task.events" id="row" requestURI="editTask.action">
-				<display:column property="id"/>
-				<display:column property="created"/>
-				<display:column title="Actor" property="actor.name"/>
-				<display:column title="Type" property="class.name"/>
+				<display:column property="id" sortable="true"/>
+				<display:column property="created" sortable="true"/>
+				<display:column title="Actor"  sortable="true" property="actor.fullName"/>
+				<display:column title="Type" sortable="true">									
+					<c:choose>
+						<c:when test="${aef:isAssignEvent(row)}">
+						Assign							
+						</c:when>
+						<c:when test="${aef:isPerformedWork(row)}">
+						Effort							
+						</c:when>
+						<c:when test="${aef:isEstimateHistoryEvent(row)}">
+						Estimate							
+						</c:when>
+					</c:choose>
+				</display:column>
+				<display:column title="Value" sortable="true">									
+					<c:choose>
+						<c:when test="${aef:isAssignEvent(row)}">
+						${row.newAssignee.fullName}
+						</c:when>
+						<c:when test="${aef:isPerformedWork(row)}">
+						${row.effort}
+						</c:when>
+						<c:when test="${aef:isEstimateHistoryEvent(row)}">
+						${row.newEstimate}
+						</c:when>
+					</c:choose>
+				</display:column>
+				<display:column title="Comment"  sortable="true">									
+					<c:choose>
+						<c:when test="${aef:isTaskComment(row)}">
+						${row.comment} 							
+						</c:when>
+						</c:choose>
+				</display:column>
+
 			</display:table>
 		</p>
 	</c:if>

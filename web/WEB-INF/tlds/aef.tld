@@ -165,5 +165,25 @@
 	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
 	  <function-signature>boolean isManagementPage(java.lang.Object)</function-signature>
 	</function>  	 
+	<function>
+	  <name>isAssignEvent</name>
+	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
+	  <function-signature>boolean isAssignEvent(java.lang.Object)</function-signature>
+	</function>  	 
+	<function>
+	  <name>isTaskComment</name>
+	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
+	  <function-signature>boolean isTaskComment(java.lang.Object)</function-signature>
+	</function>  	 
+	<function>
+	  <name>isEstimateHistoryEvent</name>
+	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
+	  <function-signature>boolean isEstimateHistoryEvent(java.lang.Object)</function-signature>
+	</function>  	 
+	<function>
+	  <name>isPerformedWork</name>
+	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
+	  <function-signature>boolean isPerformedWork(java.lang.Object)</function-signature>
+	</function>  	 
 	 	 
 </taglib>

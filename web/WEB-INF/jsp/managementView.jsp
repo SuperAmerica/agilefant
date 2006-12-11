@@ -39,6 +39,17 @@ No products
 					</ww:url>
 					<li>
 						<ww:a href="%{iterationLink}">${ iteration.name }</ww:a>
+				 		<ul>
+							<c:forEach items="${iteration.iterationGoals}" var="goal">
+								<li>
+									${ goal.name } - <i>${ goal.description } </i>
+			
+								</li>
+							</c:forEach>
+						</ul>
+
+
+
 					</li>
 				</c:forEach>
 			</ul>

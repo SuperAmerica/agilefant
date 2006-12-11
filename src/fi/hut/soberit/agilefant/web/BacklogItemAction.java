@@ -33,7 +33,7 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
 
 	public String delete() {
 		backlogItem = backlogItemDAO.get(backlogItemId);
-		backlogId = backlogItem.getId();
+		backlogId = backlogItem.getId();//??
 		backlogItemDAO.remove(backlogItemId);
 		return Action.SUCCESS;
 	}

@@ -219,6 +219,20 @@
 	</action>
 <!-- /My tasks -->
 
+<!-- IterationGoal actions -->
+		<action name="editIterationGoal" method="edit" class="iterationGoalAction">
+			<result>/WEB-INF/jsp/editIterationGoal.jsp</result>
+		</action>
+		<action name="createIterationGoal" method="create" class="iterationGoalAction">
+			<result>/WEB-INF/jsp/editIterationGoal.jsp</result>
+		</action>
+		<action name="deleteIterationGoal" method="delete" class="iterationGoalAction">
+ 			<result type="redirect">editIteration.action?iterationId=${iterationId}</result>
+		</action>
+		<action name="storeIterationGoal" method="store" class="iterationGoalAction">
+ 			<result type="redirect">editIteration.action?iterationId=${iterationId}</result>
+		</action>
+<!-- /IterationGoal actions -->
 
 		<action name="managementView">
 			<result>/WEB-INF/jsp/managementView.jsp</result>

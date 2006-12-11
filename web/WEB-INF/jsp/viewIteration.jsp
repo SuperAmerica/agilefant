@@ -71,4 +71,24 @@
 			</display:table>
 		</p>
 	</c:if>
+
+	<c:if test="${!empty iteration.iterationGoals}">
+		<p>
+			Iteration goals:
+		</p>
+		<p>
+			<display:table name="iteration.iterationGoals" id="row" requestURI="editIteration.action">
+				<display:column sortable="true" title="Id" property="id"/>
+				<display:column sortable="true" title="Name" property="name"/>
+				<display:column sortable="true" title="Description" property="description"/>
+				<display:column sortable="false" title="Actions">
+					<ww:url id="editLink" action="editIterationGoal" includeParams="none">
+						<ww:param name="iterationGoalId" value="${row.id}"/>
+					</ww:url>
+					<ww:a href="%{editLink}">Edit</ww:a>
+				</display:column>
+			</display:table>
+		</p>
+	</c:if>
+
 <%@ include file="./inc/_footer.jsp" %>

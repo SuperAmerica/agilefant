@@ -92,4 +92,40 @@
 			</display:table>
 		</p>
 	</c:if>
+	
+
+<c:if test="${iteration.id > 0}">
+
+
+		<p>
+			Iteration goals:
+		</p>
+		<p>
+			<ww:url id="createIterationGoalLink" action="createIterationGoal" includeParams="none">
+				<ww:param name="iterationId" value="${iteration.id}"/>
+			</ww:url>
+			<ww:a href="%{createIterationGoalLink}">Add iteration goal</ww:a>		
+		</p>
+</c:if>
+	
+	<c:if test="${!empty iteration.iterationGoals}">
+
+		<p>
+			<display:table name="iteration.iterationGoals" id="row" requestURI="editIteration.action">
+				<display:column sortable="true" title="Id" property="id"/>
+				<display:column sortable="true" title="Name" property="name"/>
+				<display:column sortable="true" title="Description" property="description"/>
+				<display:column sortable="false" title="Actions">
+					<ww:url id="editLink" action="editIterationGoal" includeParams="none">
+						<ww:param name="iterationGoalId" value="${row.id}"/>
+					</ww:url>
+					<ww:url id="deleteLink" action="deleteIterationGoal" includeParams="none">
+						<ww:param name="iterationGoalId" value="${row.id}"/>
+						<ww:param name="iterationId" value="${iteration.id}"/>
+					</ww:url>
+					<ww:a href="%{editLink}">Edit</ww:a>|<ww:a href="%{deleteLink}">Delete</ww:a>
+				</display:column>
+			</display:table>
+		</p>
+	</c:if>
 <%@ include file="./inc/_footer.jsp" %>

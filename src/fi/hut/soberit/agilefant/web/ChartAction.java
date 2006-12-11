@@ -101,7 +101,7 @@ public class ChartAction extends ActionSupport {
 //				 day changed, time to pop the previous days hours
 				if ((day!=day_last || month != month_last || year!=year_last) && (count > 1)){
 					pop.add(new Day(day_last, month_last, year_last), worksum);
-					worksum=0;
+					//worksum=0; Can be used if the effort is wanted per day
 				}
 				
 				worksum=worksum+worktime;

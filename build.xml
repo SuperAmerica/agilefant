@@ -193,4 +193,15 @@
 			<arg value="${basedir}/tools/count-loc.sh"/>
 		</exec>
 	</target>
+	
+	<target name="generate-javadocs" depends="init" description="Generates Javadocs from source code">
+		<!-- TODO: Generate docs for taglibs -->
+		<mkdir dir="${javadoc.dir}"/>
+		<javadoc classpathref="compile.classpath" destdir="${javadoc.dir}" access="private">			
+			<fileset dir="${src}" defaultexcludes="yes">
+			      <include name="**"/>
+			</fileset>
+			<doctitle>AgilEFant 2007 Javadoc</doctitle>
+		</javadoc>
+	</target>
 </project>

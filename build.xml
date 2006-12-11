@@ -47,8 +47,7 @@
     	
     	<taskdef name="dbunit" 
     	    		classname="org.dbunit.ant.DbUnitTask"
-    	    		classpathref="compile.classpath"/>
-    	
+    	    		classpathref="compile.classpath"/>    	
     </target>
 	
     <target name="compile" depends="init" description="Compiles source files">
@@ -203,5 +202,18 @@
 			</fileset>
 			<doctitle>AgilEFant 2007 Javadoc</doctitle>
 		</javadoc>
+	</target>
+	
+	<target name="run-jdepend" depends="compile" description="Runs JDepend">
+		<mkdir dir="${jdepend.dir}"/>
+
+		<jdepend format="xml" outputfile="${jdepend.dir}/jdepend-report.xml">
+			<classespath>
+				<pathelement location="${build.classes}" />
+			</classespath>
+		</jdepend>
+		<style basedir="${jdepend.dir}" destdir="${jdepend.dir}"
+			includes="jdepend-report.xml" 
+			style="${ant.home}/etc/jdepend.xsl" />		
 	</target>
 </project>

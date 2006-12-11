@@ -80,6 +80,10 @@
 				<display:column sortable="true" title="Performed effort" sortProperty="performedEffort.time">
 					${row.performedEffort}
 				</display:column>
+				<display:column sortable="true" title="Assignee">
+					${row.assignee.fullName}
+				</display:column>
+				
 				<display:column sortable="false" title="Actions">
 					<ww:url id="editLink" action="editBacklogItem" includeParams="none">
 						<ww:param name="backlogItemId" value="${row.id}"/>

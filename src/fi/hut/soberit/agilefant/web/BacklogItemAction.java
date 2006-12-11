@@ -8,8 +8,10 @@ import com.opensymphony.xwork.ActionSupport;
 
 import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
+import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
+import fi.hut.soberit.agilefant.model.User;
 
 public class BacklogItemAction extends ActionSupport implements CRUDAction {
 	
@@ -22,6 +24,7 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
 	private BacklogItem backlogItem;
 	private Backlog backlog;
 	private Collection<BacklogItem> backlogItems = new ArrayList<BacklogItem>();
+	private UserDAO userDAO;
 
 	public String create() {
 		backlogItemId = 0;
@@ -73,6 +76,11 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
 				super.addActionError(super.getText("backlog.notFound"));
 			}
 		}
+		if (this.backlogItem.getAssignee() != null){
+			User assignee = userDAO.get(this.backlogItem.getAssignee().getId());
+			storable.setAssignee(assignee);
+		}
+
 		storable.setName(this.backlogItem.getName());
 		storable.setDescription(this.backlogItem.getDescription());
 		storable.setAllocatedEffort(this.backlogItem.getAllocatedEffort());
@@ -128,5 +136,9 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
 
 	public void setBacklogItemDAO(BacklogItemDAO backlogItemDAO) {
 		this.backlogItemDAO = backlogItemDAO;
+	}
+
+	public void setUserDAO(UserDAO userDAO) {
+		this.userDAO = userDAO;
 	}
 }

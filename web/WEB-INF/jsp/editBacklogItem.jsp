@@ -19,8 +19,18 @@
 			Allocated effort: <ww:textfield name="backlogItem.allocatedEffort"/>
 		</p>
 		<p>
-			Priority: <ww:select name="backlogItem.priority" value="backlogItem.priority.name" list="@fi.hut.soberit.agilefant.model.Priority@values()" listKey="name" listValue="getText('task.priority.' + name())"/>
+			Priority: <ww:select name="backlogItem.priority" value="backlogItem.priority.name" list="@fi.hut.soberit.agilefant.model.Priority@values()" listKey="name" listValue="getText('backlogItem.priority.' + name())"/>
 		</p>
+		
+		
+		<c:if test="${backlogItem.id == 0}">
+			<p>
+				<aef:userList/>
+				<aef:currentUser/>
+				Assignee: <ww:select name="backlogItem.assignee.id" list="#attr.userList" listKey="id" listValue="fullName" value="${currentUser.id}"/>
+			</p>
+		</c:if>
+		
 		<p>
 			<ww:submit value="Store"/>
 		</p>
@@ -69,6 +79,14 @@
 			</p>			
 			<ww:submit value="move"/>
 		</ww:form>
+		
+		
+		
+				<p>
+			Assigned to: ${backlogItem.assignee.fullName}
+		</p>
+
+		
 		<p>
 			Tasks:
 		</p>

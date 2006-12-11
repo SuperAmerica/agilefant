@@ -21,6 +21,6 @@ loc "Build code" build.*
 loc "Configuration code" conf -type f \! -path '*/.svn*'
 loc "JavaScript code" web/static -name '*.js'
 loc "Dynamic web content total" web/WEB-INF -type f \! -path '*/.svn*'
-loc "Java Servlet Page code" web/WEB-INF -name '*.jsp'
+loc "JavaServer Pages code" web/WEB-INF -name '*.jsp'
 loc "JSP tag code" web/WEB-INF -name '*.tag'
 loc "JSP TagLib code" web/WEB-INF -name '*.tld'

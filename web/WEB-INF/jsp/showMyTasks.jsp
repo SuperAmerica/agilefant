@@ -4,6 +4,9 @@
 	<ww:actionerror/>
 	<ww:actionmessage/>
 	<h2>Simple table displaying all tasks assigned to logged in user</h2>
+
+	<p><input type="submit" value="Log more work"/></p>
+	
    	<p>
    		<aef:currentUser/>   		
 		<display:table name="${currentUser.assignments}" id="row" requestURI="myTasks.action">
@@ -21,7 +24,7 @@
 			<display:column sortable="true" title="Work performed" sortProperty="performedEffort.time">
 				${row.performedEffort}
 			</display:column>
-			<display:column sortable="false" title="Log Work">
+			<display:column sortable="false" title="Log more work">
 				<!-- TODO remove crude hack -->
 				<input type="text" size="5"/>
 			</display:column>
@@ -46,6 +49,8 @@
 			</display:column>
 		</display:table>
 	</p>
+
+	<p><input type="submit" value="Log more work"/></p>
 	
 <c:if test="${!empty task }">
 <aef:allowedWorkTypes backlogItem="${task.backlogItem}" id="workTypes">

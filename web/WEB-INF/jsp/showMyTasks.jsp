@@ -7,7 +7,13 @@
    	<p>
    		<aef:currentUser/>   		
 		<display:table name="${currentUser.assignments}" id="row" requestURI="myTasks.action">
-			<display:column sortable="true" title="Id" property="id"/>
+			<display:column sortable="true" title="Backlog item">
+									${row.backlogItem.name}			
+			</display:column>
+
+			<display:column sortable="true" title="Priority">
+				${row.priority}
+			</display:column>
 			<display:column sortable="true" title="Name" property="name"/>
 			<display:column sortable="true" title="Effort left" sortProperty="effortEstimate.time">
 				${row.effortEstimate}
@@ -21,9 +27,6 @@
 			</display:column>
 			<display:column sortable="true" title="Creator">
 				${row.creator.fullName}
-			</display:column>
-			<display:column sortable="true" title="Priority">
-				${row.priority}
 			</display:column>
 			<display:column sortable="false" title="Actions">
 				<ww:url id="editLink" action="editTask" includeParams="none">
@@ -65,6 +68,10 @@
 				<p>
 					Work type: <ww:select name="event.workType.id" list="#attr.workTypes" listKey="id" listValue="name"/>
 				</p>
+		<p>
+			Status: <ww:select name="task.status" value="task.status.name" list="@fi.hut.soberit.agilefant.model.TaskStatus@values()" listKey="name" listValue="getText('task.status.' + name())"/>
+		</p>
+				
 				<p>
 					Comment: <ww:textarea name="event.comment" cols="50" rows="5"/>
 				</p>

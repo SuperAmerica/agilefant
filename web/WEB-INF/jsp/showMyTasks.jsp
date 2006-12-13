@@ -21,7 +21,7 @@
 			<display:column sortable="true" title="Work performed" sortProperty="performedEffort.time">
 				${row.performedEffort}
 			</display:column>
-			<display:column sortable="true" title="Log Work" sortable="false">'
+			<display:column sortable="false" title="Log Work">
 				<!-- TODO remove crude hack -->
 				<input type="text" size="5"/>
 			</display:column>

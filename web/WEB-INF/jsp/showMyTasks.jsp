@@ -21,6 +21,10 @@
 			<display:column sortable="true" title="Work performed" sortProperty="performedEffort.time">
 				${row.performedEffort}
 			</display:column>
+			<display:column sortable="true" title="Log Work" sortable="false">'
+				<!-- TODO remove crude hack -->
+				<input type="text" size="5"/>
+			</display:column>
 			<display:column sortable="true" title="Created" property="created"/>
 			<display:column sortable="true" title="Assignee">
 				${row.assignee.fullName}

@@ -155,8 +155,7 @@
 		<copy todir="${deploy.dir.local}">
 			<fileset dir="${build.webapp}"/>			
 		</copy>
-		<!-- TODO removed this so that webapp does not get restarted -->
-		<!--touch file="${deploy.dir.local}/WEB-INF/web.xml"/-->
+		<touch file="${deploy.dir.local}/WEB-INF/web.xml"/>
 	</target>
 	
 	<target name="undeploy-local" description="Undeploys web app on local server">

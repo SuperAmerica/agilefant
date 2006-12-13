@@ -36,9 +36,9 @@ a:hover,a:focus {background-color:#eef}
 .sortable	{
 	background : #eea;
 }
-#.odd	{
-#	background : #ccc;
-#}
+.odd	{
+	background : #ccc;
+}
 
 span.right {text-align:right;}
 #menu {

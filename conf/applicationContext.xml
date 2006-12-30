@@ -36,6 +36,11 @@
 	 	<property name="configLocation">
 	 		<value>/WEB-INF/hibernate.cfg.xml</value>
 	 	</property>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">${hibernate.dialect}</prop>
+			</props>
+		</property>
 	 	<property name="eventListeners">
 	 		<map>
 	 			<entry key="pre-insert">

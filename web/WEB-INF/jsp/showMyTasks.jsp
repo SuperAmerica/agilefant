@@ -1,6 +1,6 @@
 <%@ include file="./inc/_taglibs.jsp" %>
 <%@ include file="./inc/_header.jsp" %>
-<aef:menu navi="2" /> 
+<aef:menu navi="1" /> 
 	<ww:actionerror/>
 	<ww:actionmessage/>
 	<h2>Simple table displaying all tasks assigned to logged in user</h2>
@@ -16,7 +16,7 @@
 			</display:column>
 			<display:column sortable="true" title="Name" property="name"/>
 			<display:column sortable="true" title="Effort left" sortProperty="effortEstimate.time">
-				${row.effortEstimate}
+				<input type="text" size="5" value="${row.effortEstimate}"/>
 			</display:column>
 			<display:column sortable="true" title="Work performed" sortProperty="performedEffort.time">
 				${row.performedEffort}

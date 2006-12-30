@@ -1,6 +1,6 @@
 <%@ include file="./inc/_taglibs.jsp" %>
 <%@ include file="./inc/_header.jsp" %>
-<aef:menu navi="5" /> 
+<aef:menu navi="6" /> 
 	<p>
 		<c:choose>
 			<c:when test="${empty activityTypes}">

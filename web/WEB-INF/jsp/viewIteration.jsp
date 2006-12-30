@@ -1,7 +1,7 @@
 <%@ include file="./inc/_taglibs.jsp" %>
 <%@ include file="./inc/_header.jsp" %>
 <aef:bct managementPageId="0"/>
-<aef:menu navi="6"  pageHierarchy="${pageHierarchy}"/> 
+<aef:menu navi="2"  pageHierarchy="${pageHierarchy}"/> 
 	<ww:actionerror/>
 	<ww:actionmessage/>
 			<h2>View iteration: ${iteration.id}</h2>

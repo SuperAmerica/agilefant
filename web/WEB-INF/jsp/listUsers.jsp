@@ -1,6 +1,6 @@
 <%@ include file="./inc/_taglibs.jsp" %>
 <%@ include file="./inc/_header.jsp" %>
-<aef:menu navi="3" /> 
+<aef:menu navi="7" /> 
 <p>
 	<a href="createUser.action">Create new user</a>
 </p>	

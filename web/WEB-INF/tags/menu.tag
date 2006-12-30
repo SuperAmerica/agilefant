@@ -9,25 +9,13 @@
 	<div id="menuwrap${navi}">
 	<div id="submenuwrap${subnavi}">
 <ul id="menu">
-  <li id="nav1"><a href="/agilefant/listProducts.action">Home</a></li>
-  <li id="nav2"><a href="/agilefant/myTasks.action">My tasks</a></li>
-  <li id="nav3"><a href="/agilefant/listUsers.action">Manage users</a></li>
-<!-- 
-  <li id="nav4"><a href="/agilefant/hourReport.action">Report hours</a>
-    <ul id="submenu4">
-      <li id="subnav1"><a href="#">Tännekin</a></li>
-      <li id="subnav2"><a href="#">Vois</a></li>
-      <li id="subnav3"><a href="#">Laittaa</a></li>
-      <li id="subnav4"><a href="#">Jotain</a></li>
-    </ul>
-     -->
-  </li>
-  <li id="nav5">
-  	<a href="listActivityTypes.action">Manage activity & work types</a>
-  </li>  
-  <li id="nav6">
-  	<a href="managementView.action">Portfolio hierarchy</a>
-  </li>  
+  <li id="nav1"><a href="/agilefant/myTasks.action">Daily work</a></li>
+  <li id="nav2"><a href="/agilefant/viewIteration.action?iterationId=31">Iteration view</a></li>
+  <li id="nav3"><a href="/agilefant">Project view</a></li>
+  <li id="nav4"><a href="/agilefant/listProducts.action">Product view</a></li>
+  <li id="nav5"><a href="managementView.action">Development portfolio</a></li>  
+  <li id="nav6"><a href="listActivityTypes.action">Manage activity & work types</a></li>  
+  <li id="nav7"><a href="/agilefant/listUsers.action">Manage users</a></li>
 </ul>
 </div>
 </div>

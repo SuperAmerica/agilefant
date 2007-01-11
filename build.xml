@@ -87,12 +87,15 @@
         </copy>
 		<mkdir dir="${test.reports}"/>
 		<junit fork="true" dir="${build.unit}">
+			<!-- System property for recognizing ant instead of eclipse-->
+			<sysproperty key="MUURAHAINEN" value="yes"/> 
 			<classpath refid="compile.unit.classpath"/>
 			<formatter type="xml"/>
 			<batchtest todir="${test.reports}">
 				<fileset dir="${unit.src}">
 					<include name="**/*.java"/>
 					<exclude name="**/*SpringEnabledTestCase*.java"/>
+					<exclude name="**/*SpringTestCase*.java"/>
 				</fileset>
 			</batchtest>
 		</junit>

@@ -32,6 +32,13 @@
 			<pathelement location="${build.unit}"/>
     		<pathelement location="${build.unit.classes}"/>
     	</path>
+    	
+    	<path id="compile.fixture.classpath">
+    		<path refid="compile.classpath"/>
+			<pathelement location="${build.classes}"/>
+			<pathelement location="${build.fixture}"/>
+    		<pathelement location="${build.fixture.classes}"/>
+    	</path>
 
     	<path id="hibernatetoolslib">
     		<path refid="compile.classpath"/>
@@ -69,7 +76,7 @@
 		</hibernatetool>
 	</target>
 	
-	<target name="run-unit-tests" depends="compile-tests" description="Runs unit tests">	
+	<target name="run-unit-tests" depends="compile-unit-tests" description="Runs unit tests">	
 	    <!--Hmm.. ainakin tuon WEB-INF:n tarvitsee, muista kopioista en varma -Touko -->
 		<mkdir dir="${build.unit}/WEB-INF"/>
 		<copy todir="${build.unit}/WEB-INF/">
@@ -101,13 +108,20 @@
 		</junit>
 	</target>
 	
-	<target name="compile-tests" depends="webapp">
+	<target name="compile-unit-tests" depends="webapp">
 		<mkdir dir="${build.unit.classes}"/>
 		<javac debug="${javac.debug}" destdir="${build.unit.classes}" srcdir="${unit.src}">
         	<classpath refid="compile.unit.classpath"/>
 	        	<!-- <compilerarg value="-Xlint:deprecation"/> -->
 		</javac>
 	</target>
+	
+	<target name="compile-fitnesse-fixtures" depends="webapp">
+		<mkdir dir="${build.fixture.classes}"/>
+		<javac debug="${javac.debug}" destdir="${build.fixture.classes}" srcdir="${fixture.src}">
+			<classpath refid="compile.fixture.classpath"/>
+		</javac>
+	</target>	
 
 	<target name="drop-create-db" depends="compile" description="Creates db using hibernate tools">
 		<hibernatetool destdir="${build.dir}">

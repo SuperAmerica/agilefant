@@ -70,7 +70,7 @@ public abstract class SpringTestCase extends AbstractTransactionalSpringContextT
 		
 		// copy the right file for database.properties
 		try {
-			File fromFile = new File(toDirStr + File.separator + "database-" + getDatabaseType() + ".properties");
+			File fromFile = new File(toDirStr + File.separator + "database-fortests-" + getDatabaseType() + ".properties");
 			File toFile = new File(toDirStr + File.separator + "database.properties");
 			FileCopyUtils.copy(fromFile, toFile);
 		} catch(FileNotFoundException fe) {

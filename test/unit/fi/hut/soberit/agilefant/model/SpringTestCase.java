@@ -48,7 +48,7 @@ public abstract class SpringTestCase extends AbstractTransactionalSpringContextT
 		String userDir = System.getProperty("user.dir");
 		String fromDirStr = userDir + File.separator + "conf";
 		String toDirStr = userDir + File.separator + "build" + File.separator + "WEB-INF";
-		System.out.println("to : " + toDirStr + ", from : " + fromDirStr);
+//		System.out.println("to : " + toDirStr + ", from : " + fromDirStr);
 
 		// create the directory to copy files to, if it's doesn't exist  
 		File toDir = new File(toDirStr);

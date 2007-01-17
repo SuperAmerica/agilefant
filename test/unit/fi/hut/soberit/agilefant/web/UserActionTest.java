@@ -1,10 +1,9 @@
 package fi.hut.soberit.agilefant.web;
 
-//import org.springframework.test.AbstractTransactionalSpringContextTests;
 import com.opensymphony.xwork.Action;
-
 import fi.hut.soberit.agilefant.model.SpringTestCase;
 import fi.hut.soberit.agilefant.model.User;
+import java.util.Collection;
 
 public class UserActionTest extends SpringTestCase {
 	
@@ -15,8 +14,10 @@ public class UserActionTest extends SpringTestCase {
 	}
 	
 	public void testCreate(){
-		userAction.create();
+		String result = userAction.create();
+		assertEquals(result, Action.SUCCESS);
 		super.assertEquals(0, userAction.getUser().getId());
+		
 		// enpä tiedä, onko nämä seuraavat fiksuja..
 		
 		User u = new User();
@@ -27,9 +28,53 @@ public class UserActionTest extends SpringTestCase {
 		userAction.setPassword2("foobar");
 		userAction.setUser(u);
 		userAction.store();
-		// System.out.println("foobar");
-		this.setComplete();
+		//this.setComplete(); // data is left in the database
 		this.endTransaction();
-//		assertEquals(Action.SUCCESS, userAction.store());
 	}
+	
+	private boolean errorFound(String e) {
+		Collection<String> errors = userAction.getActionErrors();
+		boolean found = false;
+		for(String s: errors) {
+			if(s.equals(e))
+				found = true;
+		}
+		return found;
+	}
+	
+	private User createTestUser(String fullName, String loginName) {
+		User u = new User();
+		u.setFullName(fullName);
+		u.setLoginName(loginName);
+		return u;
+	}
+	
+	
+//	public void testStoreAnd
+	public void testStore_withEmptyPassword() {
+//		User u = createTestUser("Unit TestiKäyttäjä", "unit_tk");
+//		userAction.setUser(u);
+		userAction.setPassword1("");
+		userAction.setPassword2("");
+		String result = userAction.store();
+		assertEquals("Empty password accepted", Action.ERROR, result);
+		assertTrue("user.missingPassword -error not found", 
+				errorFound(userAction.getText("user.missingPassword")));
+	}
+	
+	public void testStore_withDifferentPasswords() {
+//		User u = createTestUser("Unit TestiKäyttäjä", "unit_tk");
+//		userAction.setUser(u);
+		userAction.setPassword1("foobar");
+		userAction.setPassword2("bar");
+		String result = userAction.store();
+		assertEquals("Different passwords accepted", Action.ERROR, result);
+		assertTrue("user.missingPassword -error not found", 
+				errorFound(userAction.getText("user.passwordsNotEqual")));	
+	}
+	
+	
+	/*public void testEdit_withInvalidId() {
+		
+	}*/
 }

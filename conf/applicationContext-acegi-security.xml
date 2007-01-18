@@ -85,6 +85,7 @@
 				/in.html=IS_AUTHENTICATED_ANONYMOUSLY
 				/out.html=IS_AUTHENTICATED_ANONYMOUSLY
 				/static/**=IS_AUTHENTICATED_ANONYMOUSLY
+				/webwork/jscalendar/calendar-blue.css=IS_AUTHENTICATED_ANONYMOUSLY
 				/**=IS_AUTHENTICATED_REMEMBERED
 			</value>
 		</property>

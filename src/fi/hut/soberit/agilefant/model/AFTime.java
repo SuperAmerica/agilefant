@@ -28,6 +28,13 @@ public class AFTime extends java.sql.Time {
 	public static long HOUR_IN_MILLIS = 60 * MINUTE_IN_MILLIS;
 	public static long WORKDAY_IN_MILLIS = 8 * HOUR_IN_MILLIS;
 	
+	public static long WORKDAY_IN_HOURS = WORKDAY_IN_MILLIS / HOUR_IN_MILLIS;
+	
+	// constants for array indices
+	private static final int Days = 0;
+	private static final int Hours = 1;
+	private static final int Minutes = 2; 
+	
 	public AFTime(long time) {
 		super(time);
 	}
@@ -58,10 +65,6 @@ public class AFTime extends java.sql.Time {
 		Scanner scanner = new Scanner(s);
 		
 		try {
-			
-			final int Days = 0;
-			final int Hours = 1;
-			final int Minutes = 2; 
 			
 			// received fields
 			long fields[] = {0, 0, 0};
@@ -174,28 +177,47 @@ public class AFTime extends java.sql.Time {
 		}		
 	}
 	
-	public String toString() {
-		long time = this.getTime();
+	/*
+	 * Get the time divided up to days, hour, minutes.
+	 * @return array with an element for days, hours, minutes, correspondingly 
+	 */
+	private long[] divideToElements() {
+		// array elements for each element
+		long[] elem = {0, 0, 0};
+		
+		// get the time in milliseconds
+		long time = getTime();
 		
 		if(time == 0)
-			return "0";
+			return elem;
 		
-		// divide time into elements 
-		
-		long days = time / WORKDAY_IN_MILLIS;
+		// get amount of days
+		elem[Days] = time / WORKDAY_IN_MILLIS;
+		// calculate remaining milliseconds
 		time %= WORKDAY_IN_MILLIS;
 		
-		long hours = time / HOUR_IN_MILLIS;
+		// similarly
+		elem[Hours] = time / HOUR_IN_MILLIS;
 		time %= HOUR_IN_MILLIS;
 		
-		long minutes = time / MINUTE_IN_MILLIS;
+		elem[Minutes] = time / MINUTE_IN_MILLIS;
 		time %= MINUTE_IN_MILLIS;
 		
 		// rounding minutes properly, as defined by the unit test 
 		if(time >= 30000)
-			minutes++;
+			elem[Minutes]++;
 		
-		// form the string
+		return elem;
+	}
+	
+	/**
+	 * Build a DHM-string out of an element array. Includes 
+	 * only nonzero elements. 
+	 * @param time array of time elements
+	 */
+	private String buildElementString(long[] time) {
+		
+		assert time.length == 3;
 		
 		// a flag to track when we should 
 		// put space between elements
@@ -205,22 +227,22 @@ public class AFTime extends java.sql.Time {
 		String result = "";
 		
 		// days
-		if(days != 0) {
-			result += days + "d";
+		if(time[Days] != 0) {
+			result += time[Days] + "d";
 			hadPrevious = true;
 		}
 		
 		// hours
-		if(hours != 0) {
+		if(time[Hours] != 0) {
 			if(hadPrevious) result += " ";
-			result += hours + "h";
+			result += time[Hours] + "h";
 			hadPrevious = true;
 		}
 		
 		// minutes
-		if(minutes != 0) {
+		if(time[Minutes] != 0) {
 			if(hadPrevious) result += " ";
-			result += minutes + "m";
+			result += time[Minutes] + "m";
 		}
 		
 		// check the emptyness once more here,  
@@ -230,5 +252,63 @@ public class AFTime extends java.sql.Time {
 			result = "0";
 		
 		return result;
-	}		
+	}
+	
+	/**
+	 * Get a "full" string representation, with days, hours and minutes all expressed. 
+	 * Gets you a dhm-string, eg. "5d 3h 4m".
+	 *  
+	 * @return a dhm-string, eg. "5d 3h 4m".
+	 * @see toString
+	 */
+	public String toDHMString() {
+
+		if(getTime() == 0)
+			return "0";
+		
+		// get day, hour, minute elements
+		long[] time = divideToElements();		
+					
+		return buildElementString(time);
+	}
+	
+	/**
+	 * Get a "partial" string representation, with days included in hours. 
+	 * Gets you an hm-string, eg. "43h 4m", instead of "5d 3h 4m".
+	 *  
+	 * @return a hm-string, eg. "43h 4m".
+	 * @see toFullString
+	 */
+
+	public String toHMString() {
+
+		if(getTime() == 0)
+			return "0";
+		
+		// get days, hours, minutes 
+		long[] time = divideToElements();		
+	
+		// form the string
+		
+		// a flag to track when we should 
+		// put space between elements
+		boolean hadPrevious = false;
+		
+		// string to build the result in
+		String result = "";
+		
+		// fix up the hours so that days are included in them
+		time[Hours] += time[Days] * WORKDAY_IN_HOURS;
+		time[Days] = 0;
+		
+		return buildElementString(time);
+	}	
+	
+	/**
+	 * Functionally same as "toHMString".
+	 */
+	public String toString() {
+		// just call toHMString. 
+		return toHMString();
+	}
 }

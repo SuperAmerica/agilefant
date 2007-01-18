@@ -110,26 +110,51 @@ public class AFTimeTest extends TestCase {
 	}
 	
 	public void testToString() {
+		// first test DHM strings
+		/////////////////////////
+		
 		// Test some normal time
-		assertEquals("5d 3h 4m", new AFTime(getTime(5, 3, 4)).toString());
+		assertEquals("5d 3h 4m", new AFTime(getTime(5, 3, 4)).toDHMString());
 		
 		// Days only
-		assertEquals("2d", new AFTime(getTime(2, 0, 0)).toString());
+		assertEquals("2d", new AFTime(getTime(2, 0, 0)).toDHMString());
 		
 		// Hours only
-		assertEquals("7h", new AFTime(getTime(0, 7, 0)).toString());
+		assertEquals("7h", new AFTime(getTime(0, 7, 0)).toDHMString());
 		
 		// Minutes only
-		assertEquals("20m", new AFTime(getTime(0, 0, 20)).toString());
+		assertEquals("20m", new AFTime(getTime(0, 0, 20)).toDHMString());
 		
 		// Days and minutes
-		assertEquals("3d 57m", new AFTime(getTime(3, 0, 57)).toString());
+		assertEquals("3d 57m", new AFTime(getTime(3, 0, 57)).toDHMString());
 		
 		// Days and hours
-		assertEquals("5d 2h", new AFTime(getTime(5, 2, 0)).toString());
-		
-		// Check that toString rounds values properly
+		assertEquals("5d 2h", new AFTime(getTime(5, 2, 0)).toDHMString());
 
+		// then test HM strings
+		/////////////////////////
+		
+		// Test some normal time
+		assertEquals("43h 4m", new AFTime(getTime(5, 3, 4)).toHMString());
+		
+		// Days only
+		assertEquals("16h", new AFTime(getTime(2, 0, 0)).toHMString());
+		
+		// Hours only
+		assertEquals("7h", new AFTime(getTime(0, 7, 0)).toHMString());
+		
+		// Minutes only
+		assertEquals("20m", new AFTime(getTime(0, 0, 20)).toHMString());
+		
+		// Days and minutes
+		assertEquals("24h 57m", new AFTime(getTime(3, 0, 57)).toHMString());
+		
+		// Days and hours
+		assertEquals("42h", new AFTime(getTime(5, 2, 0)).toHMString());
+						
+		// Check that toString rounds values properly
+		/////////////////////////
+		
 		assertEquals("6h 39m", new AFTime(getTime(0, 6, 40) - 30001).toString());
 		assertEquals("6h 40m", new AFTime(getTime(0, 6, 40) - 30000).toString());
 		assertEquals("6h 40m", new AFTime(getTime(0, 6, 40) + 29999).toString());

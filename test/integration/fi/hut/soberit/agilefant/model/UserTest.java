@@ -1,6 +1,7 @@
 package fi.hut.soberit.agilefant.model;
 
 import fi.hut.soberit.agilefant.db.UserDAO;
+import fi.hut.soberit.agilefant.util.SpringEnabledTestCase;
 
 /*
  * Example spring-enabled unit test.

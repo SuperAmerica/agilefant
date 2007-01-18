@@ -12,7 +12,7 @@ import fi.hut.soberit.agilefant.model.ActivityType;
 import fi.hut.soberit.agilefant.model.Deliverable;
 import fi.hut.soberit.agilefant.model.Product;
 
-public class DeliverableAction extends ActionSupport implements CRUDAction{
+public class DeliverableAction extends ActionSupport implements CRUDAction {
 
 	private static final long serialVersionUID = -4636900464606739866L;
 	private int deliverableId;

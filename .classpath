@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="build/test/conf"/>
 	<classpathentry kind="src" path="test/unit"/>
 	<classpathentry kind="src" path="test/fixture"/>
+	<classpathentry kind="src" path="test/util"/>
+	<classpathentry kind="src" path="test/integration"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/commons-logging.jar"/>
 	<classpathentry kind="lib" path="lib/ejb3-persistence.jar"/>
@@ -14,12 +17,12 @@
 	<classpathentry kind="lib" path="lib/ognl.jar"/>
 	<classpathentry kind="lib" path="lib/oscore.jar"/>
 	<classpathentry kind="lib" path="lib/rife-continuations.jar"/>
-	<classpathentry kind="lib" path="lib/webwork-2.2.4.jar" sourcepath="lib-src/webwork-src-2.2.4.jar"/>
+	<classpathentry sourcepath="lib-src/webwork-src-2.2.4.jar" kind="lib" path="lib/webwork-2.2.4.jar"/>
 	<classpathentry kind="lib" path="lib/hibernate3.jar"/>
 	<classpathentry kind="lib" path="lib/jstl.jar"/>
 	<classpathentry kind="lib" path="lib/standard.jar"/>
-	<classpathentry kind="lib" path="lib/xwork-1.2.1.jar" sourcepath="lib-src/xwork-src-1.2.1.jar"/>
-	<classpathentry kind="lib" path="lib/xwork-tiger-1.2.1.jar" sourcepath="lib-src/xwork-tiger-src-1.2.1.jar"/>
+	<classpathentry sourcepath="lib-src/xwork-src-1.2.1.jar" kind="lib" path="lib/xwork-1.2.1.jar"/>
+	<classpathentry sourcepath="lib-src/xwork-tiger-src-1.2.1.jar" kind="lib" path="lib/xwork-tiger-1.2.1.jar"/>
 	<classpathentry kind="lib" path="lib/build/jsp-api.jar"/>
 	<classpathentry kind="lib" path="lib/build/servlet-api.jar"/>
 	<classpathentry kind="lib" path="lib/build/fitlibrary.jar"/>
@@ -47,5 +50,5 @@
 	<classpathentry kind="lib" path="lib/jfreechart-1.0.3.jar"/>
 	<classpathentry kind="lib" path="lib/oro-2.0.8.jar"/>
 	<classpathentry kind="lib" path="lib/build/jdepend-2.9.1.jar"/>
-	<classpathentry kind="output" path="build"/>
+	<classpathentry kind="output" path="eclipse-classes"/>
 </classpath>

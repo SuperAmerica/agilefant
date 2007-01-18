@@ -1,16 +1,12 @@
 package fi.hut.soberit.agilefant.web;
 
-
 import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
 
-import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.db.TaskDAO;
-import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.Task;
-import fi.hut.soberit.agilefant.security.SecurityUtil;
 
-public class HourReportAction extends ActionSupport {
+public class HourReportAction extends ActionSupport implements CRUDAction {
 
 	private static final long serialVersionUID = -8560828440589313663L;
 	private int taskId;

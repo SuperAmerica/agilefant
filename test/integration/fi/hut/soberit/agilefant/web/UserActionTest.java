@@ -1,8 +1,9 @@
 package fi.hut.soberit.agilefant.web;
 
 import com.opensymphony.xwork.Action;
-import fi.hut.soberit.agilefant.model.SpringTestCase;
 import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.util.SpringTestCase;
+
 import java.util.Collection;
 
 public class UserActionTest extends SpringTestCase {

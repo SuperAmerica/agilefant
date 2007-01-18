@@ -1,7 +1,6 @@
-package fi.hut.soberit.agilefant.model;
+package fi.hut.soberit.agilefant.util;
 
 import junit.framework.TestCase;
-import fi.hut.soberit.agilefant.util.ExplicitSpringSupport;
 
 /**
  * Use for &quot;TestCase&quot;s with spring support. 
@@ -20,9 +19,8 @@ public class SpringEnabledTestCase extends TestCase {
 	/**
 	 * Constructor which forces a call to loadSpringSupport.  
 	 */
-	SpringEnabledTestCase() {
+	public SpringEnabledTestCase() {
 		// call loadSpringSupport
 		ExplicitSpringSupport.loadSpringSupport(this);
 	}
-	
 }

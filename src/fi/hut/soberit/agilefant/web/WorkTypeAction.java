@@ -8,7 +8,7 @@ import fi.hut.soberit.agilefant.db.WorkTypeDAO;
 import fi.hut.soberit.agilefant.model.ActivityType;
 import fi.hut.soberit.agilefant.model.WorkType;
 
-public class WorkTypeAction extends ActionSupport{
+public class WorkTypeAction extends ActionSupport implements CRUDAction {
 
 	private static final long serialVersionUID = -7854997077386161741L;
 	private int workTypeId;

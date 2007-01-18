@@ -1,6 +1,5 @@
 package fi.hut.soberit.agilefant.web;
 
-
 import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
 
@@ -9,7 +8,7 @@ import fi.hut.soberit.agilefant.db.IterationDAO;
 import fi.hut.soberit.agilefant.model.Deliverable;
 import fi.hut.soberit.agilefant.model.Iteration;
 
-public class IterationAction extends ActionSupport {
+public class IterationAction extends ActionSupport implements CRUDAction {
 
 	private static final long serialVersionUID = -448825368336871703L;
 	private int iterationId;

@@ -8,7 +8,7 @@ import com.opensymphony.xwork.ActionSupport;
 import fi.hut.soberit.agilefant.db.ActivityTypeDAO;
 import fi.hut.soberit.agilefant.model.ActivityType;
 
-public class ActivityTypeAction extends ActionSupport {
+public class ActivityTypeAction extends ActionSupport implements CRUDAction {
 
 	private static final long serialVersionUID = 1342432127514974396L;
 	private int activityTypeId;

@@ -9,10 +9,9 @@
 		<mkdir dir="${build.dir}"/>
     	<mkdir dir="${build.classes}"/>
     	<mkdir dir="${build.webapp}"/>
-		<mkdir dir="${build.unit}"/>
-    	<mkdir dir="${test.dir}"/>
-    	<mkdir dir="${test.reports}"/>
-    	<mkdir dir="${test.data}"/>
+		<mkdir dir="${build.test.dir}"/>
+		<mkdir dir="${build.test.classes.dir}"/>
+    	<mkdir dir="${test.reports.dir}"/>
     	
         <path id="compile.classpath">
 			<fileset dir="${lib}">
@@ -21,23 +20,16 @@
 			</fileset>
 		</path>
 
-<!--    	<path id="compile.unit.classpath">
+<!--    	<path id="compile.test.classpath">
     		<path refid="compile.classpath"/>
 			<path location="${build.classes}"/>
     	</path>-->
 
-    	<path id="compile.unit.classpath">
+    	<path id="compile.test.classpath">
     		<path refid="compile.classpath"/>
 			<pathelement location="${build.classes}"/>
-			<pathelement location="${build.unit}"/>
-    		<pathelement location="${build.unit.classes}"/>
-    	</path>
-    	
-    	<path id="compile.fixture.classpath">
-    		<path refid="compile.classpath"/>
-			<pathelement location="${build.classes}"/>
-			<pathelement location="${build.fixture}"/>
-    		<pathelement location="${build.fixture.classes}"/>
+			<pathelement location="${build.test.classes.dir}"/>
+			<pathelement location="${build.test.conf.dir}"/>
     	</path>
 
     	<path id="hibernatetoolslib">
@@ -84,31 +76,34 @@
 		</hibernatetool>
 	</target>
 
-	<target name="run-unit-tests" depends="compile-unit-tests" description="Runs unit tests">	
-	    <!--Hmm.. ainakin tuon WEB-INF:n tarvitsee, muista kopioista en varma -Touko -->
-		<mkdir dir="${build.unit}/WEB-INF"/>
-		<copy todir="${build.unit}/WEB-INF/">
+	<target name="test-reports" description="Generate HTML reports from XML test results">
+		<junitreport todir="${test.reports.dir}">
+			<fileset dir="${test.reports.dir}">
+				<include name="TEST-*.xml"/>
+			</fileset>
+			<report todir="${test.reports.dir}"/>
+		</junitreport>
+	</target>
+	
+	<target name="test-prepare-spring" description="Prepare Spring-specific stuff for tests">
+		<copy todir="${build.test.conf.dir}/WEB-INF/">
 	    	<fileset dir="${conf.dir}" excludes="database-*.properties"/>
 		</copy>
-		<copy tofile="${build.unit}/WEB-INF/database.properties">
+		<copy tofile="${build.test.conf.dir}/WEB-INF/database.properties">
 			<!-- old: 			<fileset file="${conf.dir}/database-${database.type}.properties"/> -->
 			<fileset file="${conf.dir}/database-fortests-${database.type}.properties"/>
 		</copy>
-		<mkdir dir="${build.unit}/WEB-INF/lib/"/>
-        <copy todir="${build.unit}/WEB-INF/lib/">
-            <fileset dir="${lib}">
-                <include name="*.jar"/>
-                <include name="*.zip"/>
-            </fileset>
-        </copy>
-		<mkdir dir="${test.reports}"/>
-		<junit fork="true" dir="${build.unit}">
+	</target>
+	
+	<target name="test">
+		<mkdir dir="${build.test.conf.dir}/WEB-INF"/>
+		<mkdir dir="${test.reports.dir}"/>
+		<junit fork="true" dir="${build.test.conf.dir}">
 			<!-- System property for recognizing ant instead of eclipse-->
-			<sysproperty key="MUURAHAINEN" value="yes"/> 
-			<classpath refid="compile.unit.classpath"/>
+			<classpath refid="compile.test.classpath"/>
 			<formatter type="xml"/>
-			<batchtest todir="${test.reports}">
-				<fileset dir="${unit.src}">
+			<batchtest todir="${test.reports.dir}">
+				<fileset dir="${srcdir}">
 					<include name="**/*.java"/>
 					<exclude name="**/*SpringEnabledTestCase*.java"/>
 					<exclude name="**/*SpringTestCase*.java"/>
@@ -117,22 +112,37 @@
 		</junit>
 	</target>
 	
+	<target name="test-unit" depends="compile-tests" description="Runs unit tests">
+		<antcall target="test">
+			<param name="srcdir" value="${test.unit.src}"/>
+		</antcall>
+	</target>
+	
+	<target name="test-integration" depends="compile-tests, test-prepare-spring" description="Runs integration tests">
+		<antcall target="test">
+			<param name="srcdir" value="${test.integration.src}"/>
+		</antcall>
+	</target>
+	
+	<target name="test-all" depends="test-unit, test-integration, test-reports" description="Run all tests and generate HTML reports"/>
+	
 	<!-- ei tarvinne webappia -->
-	<target name="compile-unit-tests" depends="webapp">
-		<mkdir dir="${build.unit.classes}"/>
-		<javac debug="${javac.debug}" destdir="${build.unit.classes}" srcdir="${unit.src}">
-        	<classpath refid="compile.unit.classpath"/>
-	        	<!-- <compilerarg value="-Xlint:deprecation"/> -->
+	<target name="compile-tests" depends="compile">
+		<mkdir dir="${build.test.classes.dir}"/>
+		<javac debug="${javac.debug}" destdir="${build.test.classes.dir}" srcdir="${test.util.src}">
+        	<classpath refid="compile.test.classpath"/>
+		</javac>
+		<javac debug="${javac.debug}" destdir="${build.test.classes.dir}" srcdir="${test.unit.src}">
+        	<classpath refid="compile.test.classpath"/>
+		</javac>
+		<javac debug="${javac.debug}" destdir="${build.test.classes.dir}" srcdir="${test.fixture.src}">
+        	<classpath refid="compile.test.classpath"/>
+		</javac>
+		<javac debug="${javac.debug}" destdir="${build.test.classes.dir}" srcdir="${test.integration.src}">
+        	<classpath refid="compile.test.classpath"/>
 		</javac>
 	</target>
 	
-	<target name="compile-fitnesse-fixtures" depends="webapp">
-		<mkdir dir="${build.fixture.classes}"/>
-		<javac debug="${javac.debug}" destdir="${build.fixture.classes}" srcdir="${fixture.src}">
-			<classpath refid="compile.fixture.classpath"/>
-		</javac>
-	</target>	
-
 	<target name="drop-create-db" depends="compile" description="Creates db using hibernate tools">
 		<hibernatetool destdir="${build.dir}">
 			<annotationconfiguration propertyfile="${conf.dir}/database-${database.type}.properties"
@@ -200,7 +210,7 @@
 	
 	<target name="clean" description="Removes build directory">
         <delete dir="${build.dir}"/>
-    	<delete dir="${test.reports}"/>		
+    	<delete dir="${test.reports.dir}"/>		
 	</target>
 	
 	<target name="set-original-db" depends="init" description="Updates the database, with default values from the XML file">

@@ -8,7 +8,7 @@ import junit.framework.TestCase;
  * 
  * @author Turkka Äijälä
  */
-public class MD5Test extends TestCase {
+public class SecurityUtilTest extends TestCase {
 
 	public void testMD5() {
 		

@@ -1,6 +1,7 @@
 package fi.hut.soberit.agilefant.web;
 
 
+import java.awt.Color;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -13,10 +14,14 @@ import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.DateAxis;
+import org.jfree.chart.plot.CategoryPlot;
+import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
+import org.jfree.chart.renderer.category.CategoryItemRenderer;
 import org.jfree.chart.renderer.xy.StandardXYItemRenderer;
 import org.jfree.chart.renderer.xy.XYItemRenderer;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
+import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.time.Day;
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
@@ -46,9 +51,9 @@ public class ChartAction extends ActionSupport {
 	private DeliverableDAO deliverableDAO;
 	private PerformedWorkDAO performedWorkDAO;
 	private Collection<PerformedWork> works;
+	private int workDone;
 
-	
-	
+
 	public String execute(){
 //		 Create a time series chart
 		
@@ -73,6 +78,7 @@ public class ChartAction extends ActionSupport {
 		int year_last=0;
 		int worksum=0;
 		int count=0;
+		int worktime=0;
 		
 		for(PerformedWork performedWork : works){
 			
@@ -88,9 +94,9 @@ public class ChartAction extends ActionSupport {
 				long minutes = time / AFTime.MINUTE_IN_MILLIS;
 				time %= AFTime.MINUTE_IN_MILLIS;
 				
-				int worktime = Math.round(days * 24 + hours + (minutes/60));
+				worktime = Math.round(days * 24 + hours + (minutes/60));
 				Date date = performedWork.getCreated();
-				String dateStr = date.toString(); // for debugging purposes
+				//String dateStr = date.toString(); // for debugging purposes
 				Calendar calendar = Calendar.getInstance();
 				calendar.setTime(date);
 				int day = calendar.get(Calendar.DAY_OF_MONTH);
@@ -108,10 +114,7 @@ public class ChartAction extends ActionSupport {
 				day_last=day;
 				month_last=month;
 				year_last=year;
-			}
-			
-			
-			
+			}		
 			
 		}
 		if(worksum > 0){ // pop the last days hours
@@ -131,7 +134,8 @@ public class ChartAction extends ActionSupport {
 		month_last=0;
 		year_last=0;
 		worksum=0;
-		count=0;
+		count=0;	
+		worktime=0;
 		
 		for(PerformedWork performedWork : works){
 			
@@ -149,9 +153,9 @@ public class ChartAction extends ActionSupport {
 				long minutes = time / AFTime.MINUTE_IN_MILLIS;
 				time %= AFTime.MINUTE_IN_MILLIS;
 				
-				int worktime = Math.round(days * 24 + hours + (minutes/60));
+				worktime = Math.round(days * 24 + hours + (minutes/60));
 				Date date = performedWork.getCreated();
-				String dateStr = date.toString(); // for debugging purposes
+				//String dateStr = date.toString(); // for debugging purposes
 				Calendar calendar = Calendar.getInstance();
 				calendar.setTime(date);
 				int day = calendar.get(Calendar.DAY_OF_MONTH);
@@ -204,6 +208,146 @@ public class ChartAction extends ActionSupport {
 			System.err.println("Problem occurred creating chart.");
 		}
 		return Action.SUCCESS;
+	}
+	
+	
+	
+	public String barChart(){
+				
+		if (taskId > 0){
+			works = performedWorkDAO.getPerformedWork(taskDAO.get(taskId));
+		} 
+		
+		int worksum=0;
+		int worktime=0;
+		
+		// Get work done total
+		for(PerformedWork performedWork : works){
+			
+			AFTime effort = performedWork.getEffort();
+			if(effort!=null){
+				long time = effort.getTime();
+				long days = time / AFTime.WORKDAY_IN_MILLIS;
+				time %= AFTime.WORKDAY_IN_MILLIS;
+				
+				long hours = time / AFTime.HOUR_IN_MILLIS;
+				time %= AFTime.HOUR_IN_MILLIS;
+				
+				long minutes = time / AFTime.MINUTE_IN_MILLIS;
+				time %= AFTime.MINUTE_IN_MILLIS;
+				
+				worktime = Math.round(days * 24 + hours + (minutes/60));
+				
+				worksum=worksum+worktime;
+			}
+		}
+		// Total sum for done hours
+		int done = worksum; 
+		
+		int effortLeft = 0;
+//		 Get effort estimate left
+		for(PerformedWork performedWork : works){
+			
+			AFTime effort = performedWork.getNewEstimate();
+			
+			if(effort!=null){
+				
+				long time = effort.getTime();
+				long days = time / AFTime.WORKDAY_IN_MILLIS;
+				time %= AFTime.WORKDAY_IN_MILLIS;
+				
+				long hours = time / AFTime.HOUR_IN_MILLIS;
+				time %= AFTime.HOUR_IN_MILLIS;
+				
+				long minutes = time / AFTime.MINUTE_IN_MILLIS;
+				time %= AFTime.MINUTE_IN_MILLIS;
+				
+				effortLeft = Math.round(days * 24 + hours + (minutes/60));			
+			}	
+		}
+		// How many hours work left
+		int left = effortLeft;
+		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+		JFreeChart chart2 = null;
+		
+		if(done > 0 || effortLeft > 0){
+			double donePros = ((double)done / (double)(done+left))*100;
+			dataset.setValue(donePros, "done", "");
+			dataset.setValue((100 - donePros), "left", "");
+			double stringPros = Math.round(donePros); // We want the output neat!
+			chart2 = ChartFactory.createStackedBarChart("",
+					"", ""+ stringPros +" % done", dataset, PlotOrientation.HORIZONTAL,
+					true, true, false);
+		} else {
+			dataset.setValue(workDone, "done", "");
+			dataset.setValue((100 - workDone), "left", "");
+			chart2 = ChartFactory.createStackedBarChart("",
+					"", ""+ workDone +" % done", dataset, PlotOrientation.HORIZONTAL,
+					true, true, false);
+		}
+		
+		
+		
+		CategoryPlot plot = chart2.getCategoryPlot();
+		CategoryItemRenderer renderer = plot.getRenderer();
+		renderer.setSeriesItemLabelsVisible(0, false);
+		renderer.setSeriesPaint(0, Color.green);
+		renderer.setSeriesPaint(1, Color.red);
+		try {
+			ByteArrayOutputStream out = new ByteArrayOutputStream();
+			ChartUtilities.writeChartAsPNG(out, chart2, 200, 100);
+			result = out.toByteArray();		
+		} catch (IOException e) {
+			System.err.println("Problem occurred creating chart.");
+		}
+		return Action.SUCCESS;
+	}
+	
+	public String demoChart(){
+		TimeSeries pop = new TimeSeries("Workhours", Day.class);
+		pop.add(new Day(11, 12, 2006), 11);
+		pop.add(new Day(12, 12, 2006), 21);
+		pop.add(new Day(13, 12, 2006), 36);
+		pop.add(new Day(14, 12, 2006), 53);
+		pop.add(new Day(15, 12, 2006), 53);
+		
+		TimeSeriesCollection dataset = new TimeSeriesCollection();
+		//dataset.addSeries(pop);
+		
+		TimeSeries hip = new TimeSeries("Effort estimates", Day.class);
+		
+		hip.add(new Day(11, 12, 2006), 95);
+		hip.add(new Day(12, 12, 2006), 75);
+		hip.add(new Day(13, 12, 2006), 50);
+		hip.add(new Day(14, 12, 2006), 40);
+		hip.add(new Day(15, 12, 2006), 0);
+		
+		dataset.addSeries(hip);
+		
+		JFreeChart chart1 = ChartFactory.createTimeSeriesChart(
+				"Agilefant07 workhours per day",
+				"Date",
+				"Workhours",
+				dataset,
+				true,
+				true,
+				false);
+				XYPlot plot = chart1.getXYPlot();
+				DateAxis axis = (DateAxis) plot.getDomainAxis();
+				axis.setDateFormatOverride(new SimpleDateFormat("yyyy-MM-dd"));
+				
+				XYItemRenderer rend = plot.getRenderer();
+				XYLineAndShapeRenderer rr = (XYLineAndShapeRenderer)rend;
+				rr.setShapesVisible(true);
+				
+				try {
+					ByteArrayOutputStream out = new ByteArrayOutputStream();
+					ChartUtilities.writeChartAsPNG(out, chart1, 500, 300);
+					result = out.toByteArray();		
+				} catch (IOException e) {
+					System.err.println("Problem occurred creating chart.");
+				}
+				return Action.SUCCESS;
 	}
 	
 	public InputStream getInputStream(){
@@ -304,6 +448,14 @@ public class ChartAction extends ActionSupport {
 
 	public void setWorks(Collection<PerformedWork> works) {
 		this.works = works;
+	}
+	
+	public int getWorkDone() {
+		return workDone;
+	}
+
+	public void setWorkDone(int workDone) {
+		this.workDone = workDone;
 	}
 
 }

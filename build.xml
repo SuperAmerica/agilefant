@@ -86,7 +86,10 @@
 	</target>
 	
 	<target name="test-prepare-spring" description="Prepare Spring-specific stuff for tests">
-		<copy todir="${build.test.conf.dir}/WEB-INF/">
+		<copy todir="${build.test.conf.dir}/WEB-INF/"> <!-- tarvitaanko enää?-->
+	    	<fileset dir="${conf.dir}" excludes="database-*.properties"/>
+		</copy>
+		<copy todir="${build.test.conf.dir}">
 	    	<fileset dir="${conf.dir}" excludes="database-*.properties"/>
 		</copy>
 		<copy tofile="${build.test.conf.dir}/WEB-INF/database.properties">
@@ -98,7 +101,8 @@
 	<target name="test">
 		<mkdir dir="${build.test.conf.dir}/WEB-INF"/>
 		<mkdir dir="${test.reports.dir}"/>
-		<junit fork="true" dir="${build.test.conf.dir}">
+<!--		<junit fork="true" dir="${build.test.conf.dir}"> -->
+			<junit fork="true" dir="${build.test.dir}">
 			<!-- System property for recognizing ant instead of eclipse-->
 			<classpath refid="compile.test.classpath"/>
 			<formatter type="xml"/>

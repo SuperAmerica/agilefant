@@ -10,6 +10,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 
+import org.hibernate.validator.Range;
+
 @Entity
 public class ActivityType {
 	
@@ -17,6 +19,7 @@ public class ActivityType {
 	private String name;
 	private String description;
 	private Collection<WorkType> workTypes = new HashSet<WorkType>();
+	private int targetSpendingPercentage = 0;
 	
 	@Id 
 	@GeneratedValue(strategy=GenerationType.AUTO)
@@ -53,5 +56,14 @@ public class ActivityType {
 	
 	public void setWorkTypes(Collection<WorkType> workTypes) {
 		this.workTypes = workTypes;
+	}
+
+	@Range(min=0, max=100)
+	public int getTargetSpendingPercentage() {
+		return targetSpendingPercentage;
+	}
+
+	public void setTargetSpendingPercentage(int targetSpendingPercentage) {
+		this.targetSpendingPercentage = targetSpendingPercentage;
 	}
 }

@@ -5,7 +5,7 @@ create table Task (id integer not null auto_increment, created datetime, effortE
 create table TaskEvent (id integer not null auto_increment, created datetime, actor_id integer, task_id integer not null, eventType varchar(31), comment varchar(255), effort integer, newEstimate integer, workType_id integer, oldAssignee_id integer, newAssignee_id integer, primary key (id)) type=InnoDB;
 create table User (id integer not null auto_increment, loginName varchar(255), fullName varchar(255), description text, password varchar(255), primary key (id)) type=InnoDB;
 create table WorkType (id integer not null auto_increment, name varchar(255) not null, description text, activityType_id integer, primary key (id)) type=InnoDB;
-create table IterationGoal (id integer not null auto_increment, name varchar(255), description text, iteration_id integer not null, primary key (id)) ENGINE=InnoDB;
+create table IterationGoal (id integer not null auto_increment, name varchar(255), description text, status integer, iteration_id integer not null, primary key (id)) ENGINE=InnoDB;
 create table Practice (id integer not null auto_increment, name varchar(255), description text, template_id integer, primary key (id)) ENGINE=InnoDB;
 create table PracticeAllocation (id integer not null auto_increment, status integer, task_id integer, practice_id integer, primary key (id)) ENGINE=InnoDB;
 create table PracticeTemplate (id integer not null auto_increment, primary key (id)) ENGINE=InnoDB;

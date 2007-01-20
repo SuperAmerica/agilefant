@@ -8,6 +8,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
+import org.hibernate.annotations.Parameter;
+import org.hibernate.annotations.Type;
+
 @Entity
 public class IterationGoal {
 
@@ -15,6 +18,9 @@ public class IterationGoal {
 	private Iteration iteration;
 	private String name;
 	private String description;
+	
+	// the default status is "looking good"
+	private IterationGoalStatus status = IterationGoalStatus.LOOKING_GOOD;
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
@@ -51,6 +57,20 @@ public class IterationGoal {
 
 	public void setIteration(Iteration iteration) {
 		this.iteration = iteration;
+	}
+
+	@Type(type="fi.hut.soberit.agilefant.db.hibernate.EnumUserType",
+			parameters = {
+				@Parameter(name="useOrdinal", value="true"),
+				@Parameter(name="enumClassName", value="fi.hut.soberit.agilefant.model.IterationGoalStatus")
+			}
+	)				
+	public IterationGoalStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(IterationGoalStatus status) {
+		this.status = status;
 	}
 	
 }

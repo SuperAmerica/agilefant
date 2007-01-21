@@ -52,6 +52,8 @@ public class ChartAction extends ActionSupport {
 	private PerformedWorkDAO performedWorkDAO;
 	private Collection<PerformedWork> works;
 	private int workDone;
+	private double effortDone;
+	private double effortLeft;
 
 
 	public String execute(){
@@ -211,8 +213,11 @@ public class ChartAction extends ActionSupport {
 	}
 	
 	
-	
+	// The code for bar chart that will check the work done automatically 
+	/*
 	public String barChart(){
+		
+		
 				
 		if (taskId > 0){
 			works = performedWorkDAO.getPerformedWork(taskDAO.get(taskId));
@@ -302,7 +307,72 @@ public class ChartAction extends ActionSupport {
 		}
 		return Action.SUCCESS;
 	}
+	*/
+	//-----------------
 	
+	
+	
+	
+	/**
+	 * Bar chart takes two parameters, effort done and effort left. 
+	 * The procentage of work compleated is calculated based on theses two numbers.
+	 * Finally the bar chart is returned back as a png-image.
+	 * 
+	 * @param effortDone
+	 * @param effortLeft
+	 * @return
+	 */
+	public String barChart(){
+		
+		// Intitializing variables
+		double done = 0;
+		double left = 0;
+		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+		JFreeChart chart2 = null;
+		
+		
+		if(effortDone > 0){
+			done = effortDone;
+		}
+		
+		if(effortLeft > 0){
+			left = effortLeft;
+		}
+
+		// We want to avoid division by zero
+		if(done > 0 || left > 0){ // Two parameters chart
+			double donePros = ((double)done / (double)(done+left))*100;
+			dataset.setValue(donePros, "done", "");
+			dataset.setValue((100 - donePros), "left", "");
+			double stringPros = Math.round(donePros); // We want the output neat!
+			chart2 = ChartFactory.createStackedBarChart("",
+					"", ""+ stringPros +" % done", dataset, PlotOrientation.HORIZONTAL,
+					true, true, false);
+		} else { // Chart based on one "workDone" parameter
+			dataset.setValue(workDone, "done", "");
+			dataset.setValue((100 - workDone), "left", "");
+			chart2 = ChartFactory.createStackedBarChart("",
+					"", ""+ workDone +" % done", dataset, PlotOrientation.HORIZONTAL,
+					true, true, false);
+		}
+		
+		CategoryPlot plot = chart2.getCategoryPlot();
+		CategoryItemRenderer renderer = plot.getRenderer();
+		renderer.setSeriesItemLabelsVisible(0, false);
+		renderer.setSeriesPaint(0, Color.green);
+		renderer.setSeriesPaint(1, Color.red);
+		try {
+			ByteArrayOutputStream out = new ByteArrayOutputStream();
+			ChartUtilities.writeChartAsPNG(out, chart2, 200, 100);
+			result = out.toByteArray();		
+		} catch (IOException e) {
+			System.err.println("Problem occurred creating chart.");
+		}
+		return Action.SUCCESS;
+	}	
+	
+	// The code under this line creates custom chart for demo purposes
+	/* 
 	public String demoChart(){
 		TimeSeries pop = new TimeSeries("Workhours", Day.class);
 		pop.add(new Day(11, 12, 2006), 11);
@@ -349,6 +419,7 @@ public class ChartAction extends ActionSupport {
 				}
 				return Action.SUCCESS;
 	}
+	*/
 	
 	public InputStream getInputStream(){
 		return new ByteArrayInputStream(result);
@@ -457,5 +528,26 @@ public class ChartAction extends ActionSupport {
 	public void setWorkDone(int workDone) {
 		this.workDone = workDone;
 	}
+
+
+	public double getEffortDone() {
+		return effortDone;
+	}
+
+
+	public void setEffortDone(double effortDone) {
+		this.effortDone = effortDone;
+	}
+
+
+	public double getEffortLeft() {
+		return effortLeft;
+	}
+
+
+	public void setEffortLeft(double effortLeft) {
+		this.effortLeft = effortLeft;
+	}
+
 
 }

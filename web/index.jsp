@@ -1,1 +1,1 @@
-<% response.sendRedirect("./listProducts.action"); %>
+<% response.sendRedirect("./myTasks.action"); %>

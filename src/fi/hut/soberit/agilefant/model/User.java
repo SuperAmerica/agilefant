@@ -65,6 +65,7 @@ public class User implements PageItem {
 		this.fullName = fullName;
 	}
 	
+	@Column(unique=true)
 	public String getLoginName() {
 		return loginName;
 	}

@@ -71,6 +71,11 @@ public class UserAction extends ActionSupport implements CRUDAction{
 				md5Pw = SecurityUtil.MD5(password1);
 			}
 		}
+		User existingUser = userDAO.getUser(this.user.getLoginName());
+		if (existingUser != null && existingUser.getId() != storable.getId()){
+			super.addActionError(super.getText("user.loginNameInUse"));
+			return;
+		}
 
 		storable.setFullName(this.user.getFullName());
 		storable.setLoginName(this.user.getLoginName());

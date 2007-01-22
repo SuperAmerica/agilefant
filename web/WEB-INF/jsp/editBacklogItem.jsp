@@ -21,6 +21,9 @@
 		<p>
 			Priority: <ww:select name="backlogItem.priority" value="backlogItem.priority.name" list="@fi.hut.soberit.agilefant.model.Priority@values()" listKey="name" listValue="getText('backlogItem.priority.' + name())"/>
 		</p>
+		<p>
+			Watch this item: <ww:checkbox name="watch" value="true" fieldValue="true"/>
+		</p>
 		
 		
 		<c:if test="${backlogItem.id == 0}">

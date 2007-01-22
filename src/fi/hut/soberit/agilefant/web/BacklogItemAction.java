@@ -11,7 +11,9 @@ import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
+import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.security.SecurityUtil;
 
 public class BacklogItemAction extends ActionSupport implements CRUDAction {
 	
@@ -25,6 +27,7 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
 	private Backlog backlog;
 	private Collection<BacklogItem> backlogItems = new ArrayList<BacklogItem>();
 	private UserDAO userDAO;
+	private boolean watch = false;
 
 	public String create() {
 		backlogItemId = 0;
@@ -88,6 +91,11 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
 		if (storable.getId() == 0){
 			storable.setBacklog(backlog);
 		}		
+		if (watch) {
+			User user = SecurityUtil.getLoggedUser();
+			storable.getWatchers().put(user.getId(), user);
+			user.getWatchedBacklogItems().add(storable);		
+		}
 	}
 
 	public Backlog getBacklog() {
@@ -141,4 +149,8 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
 	public void setUserDAO(UserDAO userDAO) {
 		this.userDAO = userDAO;
 	}
+	public void setWatch(boolean watch) {
+		this.watch = watch;
+	}
+
 }

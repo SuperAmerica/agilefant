@@ -1,7 +1,9 @@
 package fi.hut.soberit.agilefant.model;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,7 +11,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.MapKey;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 
@@ -34,6 +38,7 @@ public class BacklogItem implements PageItem, Assignable, EffortContainer {
 	private User assignee;
 	private BacklogItemStatus status = BacklogItemStatus.NOT_STARTED;
 	private Collection<IterationGoal> iterationGoals = new HashSet<IterationGoal>();
+	private Map<Integer, User> watchers = new HashMap<Integer, User>();
 
 	@Type(type="af_time")
 	@Formula(value="(select SUM(t.effortEstimate) from Task t where t.backlogItem_id = id)")
@@ -169,5 +174,15 @@ public class BacklogItem implements PageItem, Assignable, EffortContainer {
 
 	public void setIterationGoals(Collection<IterationGoal> iterationGoals) {
 		this.iterationGoals = iterationGoals;
+	}
+
+	@ManyToMany()
+	@MapKey()
+	public Map<Integer, User> getWatchers() {
+		return watchers;
+	}
+
+	public void setWatchers(Map<Integer, User> watchers) {
+		this.watchers = watchers;
 	}
 }

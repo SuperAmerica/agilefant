@@ -37,6 +37,21 @@
 	</ww:form>
 	
 	<c:if test="${backlogItem.id > 0}">
+		<aef:currentUser/>
+		<p>
+			<ww:url id="watchLink" action="watchBacklogItem" includeParams="none">
+				<ww:param name="backlogItemId" value="${backlogItem.id}"/>
+				<ww:param name="watch" value="${empty backlogItem.watchers[currentUser.id]}"/>
+			</ww:url>
+			<c:choose>
+				<c:when test="${empty backlogItem.watchers[currentUser.id]}">
+					<ww:a href="%{watchLink}">Start watching this item</ww:a>
+				</c:when>
+				<c:otherwise>
+					<ww:a href="%{watchLink}">Stop watching this item</ww:a>
+				</c:otherwise>
+			</c:choose>
+		</p>
 		<aef:productList/>
 		<ww:form action="moveBacklogItem">
 			<ww:hidden name="backlogItemId" value="${backlogItem.id}"/>

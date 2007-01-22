@@ -56,6 +56,20 @@
 			<ww:a href="%{selfAssignLink}">Assign to me</ww:a>
 		</p>
 		<p>
+			<ww:url id="watchLink" action="watchTask" includeParams="none">
+				<ww:param name="taskId" value="${task.id}"/>
+				<ww:param name="watch" value="${empty task.watchers[currentUser.id]}"/>
+			</ww:url>
+			<c:choose>
+				<c:when test="${empty task.watchers[currentUser.id]}">
+					<ww:a href="%{watchLink}">Start watching this task</ww:a>
+				</c:when>
+				<c:otherwise>
+					<ww:a href="%{watchLink}">Stop watching this task</ww:a>
+				</c:otherwise>
+			</c:choose>
+		</p>
+		<p>
 			<ww:url id="performWorkLink" action="performWorkForm" includeParams="none">
 				<ww:param name="taskId" value="${task.id}"/>
 			</ww:url>

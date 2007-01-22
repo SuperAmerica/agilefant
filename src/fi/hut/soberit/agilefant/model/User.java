@@ -3,11 +3,13 @@ package fi.hut.soberit.agilefant.model;
 import java.util.Collection;
 import java.util.HashSet;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 
@@ -21,9 +23,29 @@ public class User implements PageItem {
 	private String loginName;
 	private String fullName;
 	private Collection<Task> assignments = new HashSet<Task>();	
-	private Collection<Backlog> 	backlogs     = new HashSet<Backlog>();
+	private Collection<Backlog> backlogs = new HashSet<Backlog>();
 	private Collection<BacklogItem> backlogItems = new HashSet<BacklogItem>();
-	
+	private Collection<Task> watchedTasks = new HashSet<Task>();
+	private Collection<BacklogItem> watchedBacklogItems = new HashSet<BacklogItem>();
+
+	@ManyToMany(cascade={CascadeType.PERSIST}, mappedBy="watchers")
+	public Collection<BacklogItem> getWatchedBacklogItems() {
+		return watchedBacklogItems;
+	}
+
+	public void setWatchedBacklogItems(Collection<BacklogItem> watchedBacklogItems) {
+		this.watchedBacklogItems = watchedBacklogItems;
+	}
+
+	@ManyToMany(cascade={CascadeType.PERSIST}, mappedBy="watchers")
+	public Collection<Task> getWatchedTasks() {
+		return watchedTasks;
+	}
+
+	public void setWatchedTasks(Collection<Task> watchedTasks) {
+		this.watchedTasks = watchedTasks;
+	}
+
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	@Column(nullable = false)

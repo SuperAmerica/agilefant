@@ -3,14 +3,18 @@ package fi.hut.soberit.agilefant.model;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.MapKey;
 import javax.persistence.OneToMany;
 import javax.persistence.Entity;
 import javax.persistence.OrderBy;
@@ -37,6 +41,7 @@ public class Task implements PageItem, Assignable, EffortContainer {
 	private User assignee;
 	private User creator;
 	private Collection<TaskEvent> events = new HashSet<TaskEvent>();
+	private Map<Integer, User> watchers = new HashMap<Integer, User>();
 
 	private Collection<PracticeAllocation> practices = new HashSet<PracticeAllocation>();
 	
@@ -194,6 +199,14 @@ public class Task implements PageItem, Assignable, EffortContainer {
 	public void setPractices(Collection<PracticeAllocation> practices) {
 		this.practices = practices;
 	}
-
 	
+	@ManyToMany()
+	@MapKey()
+	public Map<Integer, User> getWatchers() {
+		return watchers;
+	}
+
+	public void setWatchers(Map<Integer, User> watchers) {
+		this.watchers = watchers;
+	}	
 }

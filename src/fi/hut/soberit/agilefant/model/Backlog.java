@@ -65,6 +65,7 @@ public abstract class Backlog implements Assignable {
 	public User getAssignee() {
 		return assignee;
 	}
+    
 	public void setAssignee(User assignee) {
 		this.assignee = assignee;
 	}

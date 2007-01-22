@@ -262,8 +262,18 @@
 				<param name="contentType">${contentType}</param>
 				<param name="inputName">inputStream</param>
 			</result>
+		</action>		
+		<action name="watchTask" class="watchObjectAction">
+			<result type="redirect-action">
+				<param name="actionName">editTask</param>
+				<param name="taskId">${taskId}</param>
+			</result>
 		</action>
-		
-		
+		<action name="watchBacklogItem" class="watchObjectAction">
+			<result type="redirect-action">
+				<param name="actionName">editBacklogItem</param>
+				<param name="backlogItemId">${backlogItemId}</param>
+			</result>
+		</action>		
 	</package>
 </xwork>

@@ -3,7 +3,7 @@
 <aef:menu navi="1" /> 
 	<ww:actionerror/>
 	<ww:actionmessage/>
-	<h2>Simple table displaying all tasks assigned to logged in user</h2>
+	<h2>Tasks assigned to me</h2>
    	<p>
    		<aef:currentUser/>   		
 		<display:table name="${currentUser.assignments}" id="row" requestURI="myTasks.action">
@@ -83,4 +83,84 @@
 	</c:choose>
 </aef:allowedWorkTypes>
 	</c:if>
+
+	<h2>Backlog items assigned to me</h2>
+   	<p>
+		<display:table name="${currentUser.backlogItems}" id="row" requestURI="myTasks.action">
+			<display:column sortable="true" title="Name" property="name"/>
+			<display:column sortable="true" title="Priority">
+				${row.priority}
+			</display:column>
+			<display:column sortable="true" title="Effort left" sortProperty="effortEstimate.time">
+				${row.effortEstimate}
+			</display:column>
+			<display:column sortable="true" title="Work performed" sortProperty="performedEffort.time">
+				${row.performedEffort}
+			</display:column>
+			<display:column sortable="false" title="Actions">
+				<ww:url id="editLink" action="editBacklogItem" includeParams="none">
+					<ww:param name="backlogItemId" value="${row.id}"/>
+				</ww:url>
+				<ww:a href="%{editLink}">Edit</ww:a>
+			</display:column>
+		</display:table>
+	</p>
+
+<hr/>
+	<h2>Backlog items watched by me</h2>
+   	<p>
+		<display:table name="${currentUser.watchedBacklogItems}" id="row" requestURI="myTasks.action">
+			<display:column sortable="true" title="Name" property="name"/>
+			<display:column sortable="true" title="Priority">
+				${row.priority}
+			</display:column>
+			<display:column sortable="true" title="Effort left" sortProperty="effortEstimate.time">
+				${row.effortEstimate}
+			</display:column>
+			<display:column sortable="true" title="Work performed" sortProperty="performedEffort.time">
+				${row.performedEffort}
+			</display:column>
+			<display:column sortable="false" title="Actions">
+				<ww:url id="editLink" action="editBacklogItem" includeParams="none">
+					<ww:param name="backlogItemId" value="${row.id}"/>
+				</ww:url>
+				<ww:a href="%{editLink}">Edit</ww:a>
+			</display:column>
+		</display:table>
+	</p>
+
+	<h2>Tasks watched by me</h2>
+   	<p>
+		<display:table name="${currentUser.watchedTasks}" id="row" requestURI="myTasks.action">
+			<display:column sortable="true" title="Backlog item">
+									${row.backlogItem.name}			
+			</display:column>
+
+			<display:column sortable="true" title="Priority">
+				${row.priority}
+			</display:column>
+			<display:column sortable="true" title="Name" property="name"/>
+			<display:column sortable="true" title="Effort left" sortProperty="effortEstimate.time">
+				${row.effortEstimate}"
+			</display:column>
+			<display:column sortable="true" title="Work performed" sortProperty="performedEffort.time">
+				${row.performedEffort}
+			</display:column>
+			<display:column sortable="true" title="Created" property="created"/>
+			<display:column sortable="true" title="Assignee">
+				${row.assignee.fullName}
+			</display:column>
+			<display:column sortable="true" title="Creator">
+				${row.creator.fullName}
+			</display:column>
+			<display:column sortable="false" title="Actions">
+				<ww:url id="editLink" action="editTask" includeParams="none">
+					<ww:param name="taskId" value="${row.id}"/>
+				</ww:url>
+				<ww:a href="%{editLink}">Edit</ww:a>
+			</display:column>
+		</display:table>
+	</p>
+
+
 <%@ include file="./inc/_footer.jsp" %>

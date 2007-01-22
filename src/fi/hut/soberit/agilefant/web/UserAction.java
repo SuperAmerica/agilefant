@@ -97,6 +97,13 @@ public class UserAction extends ActionSupport implements CRUDAction{
 		this.userDAO = userDAO;
 	}
 	
+	/*
+	 * For testing
+	 */
+	protected UserDAO getUserDAO() {
+		return userDAO;
+	}
+	
 	/**
 	 * Adds a test user for developement purposes.
 	 * There's a link to this action in the login page.

@@ -32,6 +32,8 @@ public class BacklogItem implements PageItem, Assignable, EffortContainer {
 	private AFTime effortEstimate;
 	private AFTime performedEffort;
 	private User assignee;
+	private BacklogItemStatus status = BacklogItemStatus.NOT_STARTED;
+	private Collection<IterationGoal> iterationGoals = new HashSet<IterationGoal>();
 
 	@Type(type="af_time")
 	@Formula(value="(select SUM(t.effortEstimate) from Task t where t.backlogItem_id = id)")
@@ -144,5 +146,28 @@ public class BacklogItem implements PageItem, Assignable, EffortContainer {
 	
 	protected void setPerformedEffort(AFTime performedEffort){
 		this.performedEffort = performedEffort;
+	}
+
+	@Type(type="fi.hut.soberit.agilefant.db.hibernate.EnumUserType",
+			parameters = {
+				@Parameter(name="useOrdinal", value="true"),
+				@Parameter(name="enumClassName", value="fi.hut.soberit.agilefant.model.BacklogItemStatus")
+			}
+	)	
+	public BacklogItemStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(BacklogItemStatus status) {
+		this.status = status;
+	}
+
+	@OneToMany(mappedBy="backlogItem")
+	public Collection<IterationGoal> getIterationGoals() {
+		return iterationGoals;
+	}
+
+	public void setIterationGoals(Collection<IterationGoal> iterationGoals) {
+		this.iterationGoals = iterationGoals;
 	}
 }

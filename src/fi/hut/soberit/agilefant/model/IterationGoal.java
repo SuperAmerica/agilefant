@@ -18,6 +18,7 @@ public class IterationGoal {
 	private Iteration iteration;
 	private String name;
 	private String description;
+	private BacklogItem backlogItem;
 	
 	// the default status is "looking good"
 	private IterationGoalStatus status = IterationGoalStatus.LOOKING_GOOD;
@@ -73,4 +74,13 @@ public class IterationGoal {
 		this.status = status;
 	}
 	
+	@ManyToOne
+	@JoinColumn (nullable = true)
+	public BacklogItem getBacklogItem() {
+	    return backlogItem;
+	}
+
+	public void setBacklogItem(BacklogItem backlogItem) {
+	    this.backlogItem = backlogItem;
+	}	
 }

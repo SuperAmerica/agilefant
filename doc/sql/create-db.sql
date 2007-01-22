@@ -1,11 +1,11 @@
 create table ActivityType (id integer not null auto_increment, name varchar(255) not null unique, description text, targetSpendingPercentage integer not null check (targetSpendingPercentage>=0 and targetSpendingPercentage<=100), primary key (id)) type=InnoDB;
 create table Backlog (backlogtype varchar(31) not null, id integer not null auto_increment, name varchar(255), description text, startDate datetime, endDate datetime, deliverable_id integer, product_id integer, activityType_id integer, owner_id integer, assignee_id integer, primary key (id)) type=InnoDB;
-create table BacklogItem (id integer not null auto_increment, priority integer, name varchar(255), description text, remainingEffortEstimate integer, backlog_id integer not null, assignee_id integer, primary key (id)) type=InnoDB;
+create table BacklogItem (id integer not null auto_increment, priority integer, name varchar(255), description text, status integer, remainingEffortEstimate integer, backlog_id integer not null, assignee_id integer, primary key (id)) type=InnoDB;
 create table Task (id integer not null auto_increment, created datetime, effortEstimate integer, status integer, name varchar(255), priority integer, description text, creator_id integer, backlogItem_id integer not null, assignee_id integer, primary key (id)) type=InnoDB;
 create table TaskEvent (id integer not null auto_increment, created datetime, actor_id integer, task_id integer not null, eventType varchar(31), comment varchar(255), effort integer, newEstimate integer, workType_id integer, oldAssignee_id integer, newAssignee_id integer, primary key (id)) type=InnoDB;
 create table User (id integer not null auto_increment, loginName varchar(255), fullName varchar(255), description text, password varchar(255), primary key (id)) type=InnoDB;
 create table WorkType (id integer not null auto_increment, name varchar(255) not null, description text, activityType_id integer, primary key (id)) type=InnoDB;
-create table IterationGoal (id integer not null auto_increment, name varchar(255), description text, status integer, iteration_id integer not null, primary key (id)) ENGINE=InnoDB;
+create table IterationGoal (id integer not null auto_increment, name varchar(255), description text, status integer, backlogItem_id integer, iteration_id integer not null, primary key (id)) ENGINE=InnoDB;
 create table Practice (id integer not null auto_increment, name varchar(255), description text, template_id integer, primary key (id)) ENGINE=InnoDB;
 create table PracticeAllocation (id integer not null auto_increment, status integer, task_id integer, practice_id integer, primary key (id)) ENGINE=InnoDB;
 create table PracticeTemplate (id integer not null auto_increment, primary key (id)) ENGINE=InnoDB;

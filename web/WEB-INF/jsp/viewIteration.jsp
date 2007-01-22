@@ -21,6 +21,7 @@
 
 	<c:if test="${!empty iteration.backlogItems}"> 
 
+		<aef:currentUser/>
 
 		<p>
 			Backlog items:
@@ -29,9 +30,24 @@
 			<display:table name="iteration.backlogItems" id="row" requestURI="viewIteration.action">
 				<display:column sortable="true" title="Id" property="id"/>
 				<display:column sortable="true" title="Name" property="name"/>
+
+				<display:column sortable="true" title="Watched by me" >
+					<c:choose>
+						<c:when test="${empty row.watchers[currentUser.id]}">
+							Yes
+						</c:when>
+						<c:otherwise>
+							No
+						</c:otherwise>
+					</c:choose>
+				</display:column>
+
+
+
 				<display:column sortable="true" title="# of tasks">
 					${fn:length(row.tasks)}
 				</display:column>
+
 				<display:column title="Tasks" sortable="false">
 				<c:if test="${!empty row.tasks}"> 
 
@@ -51,17 +67,13 @@
 				</display:column>
 --%>
 				<display:column sortable="false" title="Assignee" >
-					n/a
-				</display:column>
-				<display:column sortable="false" title="Status" >
-					n/a
+					${row.assignee.fullName}
 				</display:column>
 				<display:column sortable="false" title="Priority" >
-					n/a
+					${row.priority}
 				</display:column>
-				<display:column sortable="false" title="Practices done" >
-					n/a
-				</display:column>
+
+
 				<display:column sortable="false" title="Actions">
 					<ww:url id="editLink" action="editBacklogItem" includeParams="none">
 						<ww:param name="backlogItemId" value="${row.id}"/>

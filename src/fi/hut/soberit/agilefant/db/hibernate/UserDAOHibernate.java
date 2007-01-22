@@ -12,9 +12,9 @@ public class UserDAOHibernate extends GenericDAOHibernate<User> implements UserD
 		super(User.class);
 	}
 	
-	public User getUser(String name){
+	public User getUser(String loginName){
 		DetachedCriteria criteria = DetachedCriteria.forClass(this.getPersistentClass());
-		criteria.add(Expression.eq("loginName", name));
+		criteria.add(Expression.eq("loginName", loginName));
 		return super.getFirst(super.getHibernateTemplate().findByCriteria(criteria));
 	}
 }

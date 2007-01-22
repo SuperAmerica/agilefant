@@ -20,7 +20,23 @@
 			</display:column>
 			<display:column sortable="true" title="Work performed" sortProperty="performedEffort.time">
 				${row.performedEffort}
+
 			</display:column>
+			<<display:column sortable="false" title="Log more work" >
+			<aef:allowedWorkTypes backlogItem="${row.backlogItem}" id="workTypes">
+			
+						<ww:form action="myTasksPerformWork">
+							<ww:hidden name="taskId" value="${row.id}"/>
+								<ww:textfield name="event.effort" size="2"/>
+								<ww:select name="event.workType.id" list="#attr.workTypes" listKey="id" listValue="name"/>
+								<ww:submit value="Log"/>
+							</p>
+						</ww:form>
+			
+			</aef:allowedWorkTypes>
+			
+			</display:column>
+			
 			<display:column sortable="true" title="Created" property="created"/>
 			<display:column sortable="true" title="Assignee">
 				${row.assignee.fullName}

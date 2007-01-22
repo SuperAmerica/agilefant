@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
@@ -18,7 +19,7 @@ import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.category.CategoryItemRenderer;
-import org.jfree.chart.renderer.xy.StandardXYItemRenderer;
+//import org.jfree.chart.renderer.xy.StandardXYItemRenderer;
 import org.jfree.chart.renderer.xy.XYItemRenderer;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.data.category.DefaultCategoryDataset;
@@ -73,14 +74,20 @@ public class ChartAction extends ActionSupport {
 		/*-------------------------------------------------------------*/
 		// The code for dataset: actual workhours
 		
-		TimeSeries pop = new TimeSeries("Workhours", Day.class);
-	
+		TimeSeries workSeries = new TimeSeries("Workhours", Day.class);
+			
 		int day_last=0;
 		int month_last=0;
 		int year_last=0;
 		int worksum=0;
 		int count=0;
 		int worktime=0;
+		
+		// The date for the first work effort
+		int day_f=0;
+		int month_f=0;
+		int year_f=0;
+		double totalWorkDone=0;		
 		
 		for(PerformedWork performedWork : works){
 			
@@ -108,8 +115,12 @@ public class ChartAction extends ActionSupport {
 				
 //				 day changed, time to pop the previous days hours
 				if ((day!=day_last || month != month_last || year!=year_last) && (count > 1)){
-					pop.add(new Day(day_last, month_last, year_last), worksum);
+					workSeries.add(new Day(day_last, month_last, year_last), worksum);
 					//worksum=0; Can be used if the effort is wanted per day
+				}else if(count==1){
+					day_f=day;
+					month_f=month;
+					year_f=year;
 				}
 				
 				worksum=worksum+worktime;
@@ -120,17 +131,29 @@ public class ChartAction extends ActionSupport {
 			
 		}
 		if(worksum > 0){ // pop the last days hours
-			pop.add(new Day(day_last, month_last, year_last), worksum);
+			workSeries.add(new Day(day_last, month_last, year_last), worksum);
+			totalWorkDone=worksum;
 		}
 		
+		Date d1 = new GregorianCalendar(year_f, month_f, day_f, 00, 00).getTime();
+		Date d2 = new GregorianCalendar(year_last, month_last, day_last, 00, 00).getTime();
+		long diff = d2.getTime() - d1.getTime();
+		double usedCalendarDays = (double)(diff / (1000 * 60 * 60 * 24));
+
+		
+		double averageDailyProgress = totalWorkDone/usedCalendarDays;
+		
 		TimeSeriesCollection dataset = new TimeSeriesCollection();
-		dataset.addSeries(pop);
+		
+		/*-- Shows the done workhours
+		//dataset.addSeries(workSeries); 
 		
 		/*-------------------------------------------------------------*/
 		// The code for dataset: effort estimates
 		// we only want to keep the last estimate for the day
 		
-		TimeSeries hip = new TimeSeries("Effort estimates", Day.class);
+		TimeSeries estimateSeries = new TimeSeries("Effort estimates", Day.class);
+		TimeSeries trendSeries = new TimeSeries("Estimated progress", Day.class);
 		
 		day_last=0;
 		month_last=0;
@@ -138,6 +161,7 @@ public class ChartAction extends ActionSupport {
 		worksum=0;
 		count=0;	
 		worktime=0;
+		
 		
 		for(PerformedWork performedWork : works){
 			
@@ -167,22 +191,58 @@ public class ChartAction extends ActionSupport {
 				
 				// day changed, time to pop the previous days hours
 				if ((day!=day_last || month != month_last || year!=year_last) && (count > 1)){
-					hip.add(new Day(day_last, month_last, year_last), worksum);
+					estimateSeries.add(new Day(day_last, month_last, year_last), worksum);
 					worksum=0;
 				}
 				
 				worksum=worktime; // No summing up
 				day_last=day;
 				month_last=month;
-				year_last=year;
+				year_last=year;		
 				
 			}	
 		}
 		if(worksum > 0){ // pop the last days hours
-			hip.add(new Day(day_last, month_last, year_last), worksum);
+			estimateSeries.add(new Day(day_last, month_last, year_last), worksum);		
 		}
 		
-		dataset.addSeries(hip);
+		dataset.addSeries(estimateSeries);
+		
+		// Variables that are used to account date setting to the trend line
+		double workRemaining = worksum;
+		int day_tr = day_last;
+		int month_tr = month_last;
+		int year_tr = year_last;
+		
+		if(workRemaining>0){ // To avoid a gap in the graph
+			trendSeries.add(new Day(day_tr, month_tr, year_tr), workRemaining);
+		}
+		
+		while(workRemaining>0){
+			workRemaining = workRemaining - averageDailyProgress;
+			if(workRemaining<0){
+				workRemaining=0;
+			}
+			
+			if(month_tr == 2 && day_tr==29){
+				month_tr=3;
+				day_tr=1;
+			}else if(month_tr==12 && day_tr==31){
+				day_tr=1;
+				month_tr=1;
+				year_tr++;
+			}else if((month_tr==4 || month_tr==6 || month_tr==9 || month_tr==11) && (day_tr==30)){
+				day_tr=1;
+				month_tr++;
+			}else if((month_tr==1 || month_tr==3 || month_tr==5 || month_tr==7 || month_tr==8 || month_tr==10) && (day_tr==31)){
+				day_tr=1;
+				month_tr++;
+			}else {
+				day_tr++;
+			}
+			trendSeries.add(new Day(day_tr, month_tr, year_tr), workRemaining);
+		}
+		dataset.addSeries(trendSeries);
 		
 		/*-------------------------------------------------------------*/
 		

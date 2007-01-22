@@ -76,10 +76,12 @@ public class Iteration extends Backlog implements PageItem, EffortContainer {
 		return false;
 	}
 
-	@Transient
+	@Type(type="af_time")
+	@Formula(value="(select SUM(t.effortEstimate) from Task t " +
+			"INNER JOIN BacklogItem bi ON t.backlogItem_id = bi.id " +
+			"where bi.backlog_id = id)")
 	public AFTime getEffortEstimate() {
 		return this.effortEstimate;
-		//TODO
 	}
 	
 	protected void setEffortEstimate(AFTime effortEstimate){

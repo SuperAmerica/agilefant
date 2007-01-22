@@ -89,7 +89,14 @@ public class Deliverable extends Backlog implements PageItem, EffortContainer {
 		return this.iterations.size() > 0 ? true : false;
 	}
 	
-	@Transient
+	@Type(type="af_time")
+	@Formula(value="(select SUM(t.effortEstimate)" +
+			"from Task t, BacklogItem bi, Backlog b " +
+			"where t.backlogItem_id = bi.id " +
+			"and bi.backlog_id = b.id " +
+			"and (" +
+				"bi.backlog_id = id " +
+				"or b.deliverable_id = id))")
 	public AFTime getEffortEstimate() {
 		return effortEstimate;
 	}

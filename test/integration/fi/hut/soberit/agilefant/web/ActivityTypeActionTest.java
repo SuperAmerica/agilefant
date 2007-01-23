@@ -1,37 +1,38 @@
 package fi.hut.soberit.agilefant.web;
 
 import com.opensymphony.xwork.Action;
-import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.model.ActivityType;
 import fi.hut.soberit.agilefant.util.SpringTestCase;
 import fi.hut.soberit.agilefant.security.SecurityUtil;
 
 import java.util.Collection;
 
 /**
- * JUnit integration testing class for testing class UserAction
+ * JUnit integration testing class for testing class ActivityTypeAction.
+ * Heavily under construction.
  * 
  * @author tvainiok
  */
-public class UserActionTest extends SpringTestCase {
-	private static final String TEST_NAME = "Timo Testuser";
+public class ActivityTypeActionTest extends SpringTestCase {
+/*	private static final String TEST_NAME = "Timo Testuser";
 	private static final String TEST_NAME2 = "Timo Testuser2";
 	private static final String TEST_LOGINNAME = "ttestuse";
 	private static final String TEST_PASS1 = "foobar";
 	private static final String TEST_PASS2 = "asdf56";
-	private static final int INVALID_USERID = -1;
+	private static final int INVALID_USERID = -1;*/
 	
 	// The field and setter to be used by Spring
-	private UserAction userAction; 
+	private ActivityTypeAction activityTypeAction; 
 
-	public void setUserAction(UserAction userAction){
-		this.userAction = userAction;
+	public void setActivityTypeAction(ActivityTypeAction activityTypeAction) {
+		this.activityTypeAction = activityTypeAction;
 	}
 
 	/*
 	 * Checks, if there are any given error countered. 
 	 */
 	private boolean errorFound(String e) {
-		Collection<String> errors = userAction.getActionErrors();
+		Collection<String> errors = activityTypeAction.getActionErrors();
 		boolean found = false;
 		for(String s: errors) {
 			if(s.equals(e))
@@ -40,7 +41,7 @@ public class UserActionTest extends SpringTestCase {
 		return found;
 	}
 	
-	private User setNames(String fullName, String loginName) {
+/*	private User setNames(String fullName, String loginName) {
 		User u = userAction.getUser();
 		u.setFullName(fullName);
 		u.setLoginName(loginName);
@@ -50,25 +51,25 @@ public class UserActionTest extends SpringTestCase {
 	private void setPasswords(String password1, String password2) {
 		this.userAction.setPassword1(password1);
 		this.userAction.setPassword2(password2);
-	}
+	}*/
 
 	/*
-	 * Method for calling userAction.create that is supposed to work (and 
+	 * Method for calling activityTypeAction.create that is supposed to work (and 
 	 * is not a target for testing) Actual testing for method create
 	 * is done in testCreate_XXX -methods
 	 */
 	private void create() {
-		String result = userAction.create();
+		String result = activityTypeAction.create();
 		assertEquals("create() was unsuccessful", result, Action.SUCCESS);
 	}
 
 	/*
-	 * Method for calling userAction.store that is supposed to work (and 
+	 * Method for calling activityTypeAction.store that is supposed to work (and 
 	 * is not a target for testing) Actual testing for method store
 	 * is done in testStore_XXX -methods
 	 */
 	private void store() {
-		String result = userAction.store();
+		String result = activityTypeAction.store();
 		assertEquals("store() was unsuccessful", result, Action.SUCCESS);
 	}
 
@@ -76,14 +77,14 @@ public class UserActionTest extends SpringTestCase {
 	 * Get all stored Users.
 	 * @return all users stored
 	 */
-	private Collection<User> getAllUsers() {
+/*	private Collection<User> getAllUsers() {
 		return this.userAction.getUserDAO().getAll();
-	}
+	}*/
 	
 	/*
 	 * Get user based on loginname.
 	 */
-	private User getUser(String loginName) {
+/*	private User getUser(String loginName) {
 		User result = null;
 		for(User u: getAllUsers()) {
 			if(u.getLoginName().equals(loginName)) {
@@ -94,17 +95,17 @@ public class UserActionTest extends SpringTestCase {
 			}
 		}
 		return result;
-	}
+	}*/
 
 	/*** Actual test methods **/
 	
 	public void testCreate(){
-		String result = userAction.create();
+		String result = activityTypeAction.create();
 		assertEquals("create() was unsuccessful", result, Action.SUCCESS);
-		super.assertEquals("New user had an invalid id", 0, userAction.getUserId());
+		super.assertEquals("New activity type had an invalid id", 0, activityTypeAction.getActivityTypeId());
 	}
 	
-	public void testStore() {
+/*	public void testStore() {
 		this.create();
 		this.setNames(TEST_NAME, TEST_LOGINNAME);
 		this.setPasswords(TEST_PASS1, TEST_PASS1);
@@ -118,9 +119,11 @@ public class UserActionTest extends SpringTestCase {
 		super.assertTrue("Stored user had invalid name", storedUser.getFullName().equals(TEST_NAME)); 
 		super.assertEquals("Stored user had invalid hashed password.",
 				SecurityUtil.MD5(TEST_PASS1), storedUser.getPassword());
+				
 	}
 	
 	public void testEdit() {
+		
 		this.create();
 		this.setNames(TEST_NAME, TEST_LOGINNAME);
 		this.setPasswords(TEST_PASS1, TEST_PASS1);
@@ -136,20 +139,24 @@ public class UserActionTest extends SpringTestCase {
 		super.assertTrue("Updated user had invalid name", fetchedUser.getFullName().equals(TEST_NAME)); 
 		super.assertEquals("Updated user had invalid hashed password.",
 				SecurityUtil.MD5(TEST_PASS1), fetchedUser.getPassword());
+				
 	}
 	
 	public void testEdit_withInvalidId() {
+		
 		userAction.setUserId(INVALID_USERID);
 		String result = userAction.edit();
 		assertEquals("Invalid user id didn't result an error.", Action.ERROR, result);
 		assertTrue("user.missingPassword -error not found", 
 				errorFound(userAction.getText("user.notFound")));
+				
 	}
 	
 	/*
 	 * Change the name of previously stored user and update the user.
 	 */
-	public void testStore_withUpdate() {
+/*	public void testStore_withUpdate() {
+		
 		this.create();
 		this.setNames(TEST_NAME, TEST_LOGINNAME);
 		this.setPasswords(TEST_PASS1, TEST_PASS1);
@@ -168,9 +175,11 @@ public class UserActionTest extends SpringTestCase {
 		super.assertTrue("Updated user had invalid name", updatedUser.getFullName().equals(TEST_NAME2)); 
 		super.assertEquals("Updated user had invalid hashed password.",
 				SecurityUtil.MD5(TEST_PASS2), storedUser.getPassword());
+				
 	}
 
 	public void testStore_withDuplicateLogins() {
+		
 		// 1st user
 		this.create();
 		this.setNames(TEST_NAME, TEST_LOGINNAME);
@@ -229,5 +238,5 @@ public class UserActionTest extends SpringTestCase {
 		}
 		catch(IllegalArgumentException iae) {
 		}
-	}
+	}*/
 }

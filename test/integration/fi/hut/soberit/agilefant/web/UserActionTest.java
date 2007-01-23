@@ -113,11 +113,18 @@ public class UserActionTest extends SpringTestCase {
 		super.assertEquals("store() was unsuccessful", result, Action.SUCCESS);
 		super.assertEquals("The total number of stored users didn't grow up with store().", 
 				n+1, getAllUsers().size());
+		super.assertNotSame("The Stored user should have a proper id number after store()", 
+				0, userAction.getUser().getId());
 		User storedUser = this.getUser(TEST_LOGINNAME);
 		super.assertNotNull("User wasn't stored properly (wasn't found)", storedUser);
-		super.assertTrue("Stored user had invalid name", storedUser.getFullName().equals(TEST_NAME)); 
-		super.assertEquals("Stored user had invalid hashed password.",
+		super.assertTrue("User for editing had an invalid name", storedUser.getFullName().equals(TEST_NAME)); 
+		super.assertEquals("User for editing had an invalid hashed password.",
 				SecurityUtil.MD5(TEST_PASS1), storedUser.getPassword());
+	}
+	
+	public void testStore_withoutCreate() {
+		String result = userAction.store();
+		super.assertEquals("store() was unsuccessful", result, Action.SUCCESS);		
 	}
 	
 	public void testEdit() {
@@ -142,7 +149,7 @@ public class UserActionTest extends SpringTestCase {
 		userAction.setUserId(INVALID_USERID);
 		String result = userAction.edit();
 		assertEquals("Invalid user id didn't result an error.", Action.ERROR, result);
-		assertTrue("user.missingPassword -error not found", 
+		assertTrue("user.notFound -error not found", 
 				errorFound(userAction.getText("user.notFound")));
 	}
 	

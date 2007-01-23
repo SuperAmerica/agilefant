@@ -3,7 +3,6 @@ package fi.hut.soberit.agilefant.web;
 import com.opensymphony.xwork.Action;
 import fi.hut.soberit.agilefant.model.ActivityType;
 import fi.hut.soberit.agilefant.util.SpringTestCase;
-import fi.hut.soberit.agilefant.security.SecurityUtil;
 
 import java.util.Collection;
 
@@ -14,12 +13,11 @@ import java.util.Collection;
  * @author tvainiok
  */
 public class ActivityTypeActionTest extends SpringTestCase {
-/*	private static final String TEST_NAME = "Timo Testuser";
-	private static final String TEST_NAME2 = "Timo Testuser2";
-	private static final String TEST_LOGINNAME = "ttestuse";
-	private static final String TEST_PASS1 = "foobar";
-	private static final String TEST_PASS2 = "asdf56";
-	private static final int INVALID_USERID = -1;*/
+	private static final String TEST_NAME1 = "Testi Act. Type no1";
+	private static final String TEST_NAME2 = "Testi Act. Type no2";
+	private static final String TEST_DESC1 = "Testi Activity Typen 1 kuvaus";
+	private static final String TEST_DESC2 = "Testi Activity Typen 2 kuvaus";
+	private static final int INVALID_ID = -1;
 	
 	// The field and setter to be used by Spring
 	private ActivityTypeAction activityTypeAction; 
@@ -41,17 +39,11 @@ public class ActivityTypeActionTest extends SpringTestCase {
 		return found;
 	}
 	
-/*	private User setNames(String fullName, String loginName) {
-		User u = userAction.getUser();
-		u.setFullName(fullName);
-		u.setLoginName(loginName);
-		return u;
+	private void setContents(String name, String description) {
+		ActivityType at = activityTypeAction.getActivityType();
+		at.setName(name);
+		at.setDescription(description);
 	}
-	
-	private void setPasswords(String password1, String password2) {
-		this.userAction.setPassword1(password1);
-		this.userAction.setPassword2(password2);
-	}*/
 
 	/*
 	 * Method for calling activityTypeAction.create that is supposed to work (and 
@@ -77,25 +69,22 @@ public class ActivityTypeActionTest extends SpringTestCase {
 	 * Get all stored Users.
 	 * @return all users stored
 	 */
-/*	private Collection<User> getAllUsers() {
-		return this.userAction.getUserDAO().getAll();
-	}*/
+	private Collection<ActivityType> getAllActivityTypes() {
+		activityTypeAction.getAll();
+		return activityTypeAction.getActivityTypes();
+	}
 	
 	/*
-	 * Get user based on loginname.
+	 * Get activity type based on details
 	 */
-/*	private User getUser(String loginName) {
-		User result = null;
-		for(User u: getAllUsers()) {
-			if(u.getLoginName().equals(loginName)) {
-				if(result == null)
-					result = u;
-				else
-					fail("Multiple users with same login name : " + loginName);
+	private ActivityType getActivityType(String name, String desc) {
+		for(ActivityType at: getAllActivityTypes()) {
+			if(at.getDescription() == desc && at.getName() == name) {
+				return at;
 			}
 		}
-		return result;
-	}*/
+		return null;
+	}
 
 	/*** Actual test methods **/
 	
@@ -105,114 +94,72 @@ public class ActivityTypeActionTest extends SpringTestCase {
 		super.assertEquals("New activity type had an invalid id", 0, activityTypeAction.getActivityTypeId());
 	}
 	
-/*	public void testStore() {
+	public void testStore() {
 		this.create();
-		this.setNames(TEST_NAME, TEST_LOGINNAME);
-		this.setPasswords(TEST_PASS1, TEST_PASS1);
-		int n = getAllUsers().size();
-		String result = userAction.store();
-		super.assertEquals("store() was unsuccessful", result, Action.SUCCESS);
-		super.assertEquals("The total number of stored users didn't grow up with store().", 
-				n+1, getAllUsers().size());
-		User storedUser = this.getUser(TEST_LOGINNAME);
-		super.assertNotNull("User wasn't stored properly (wasn't found)", storedUser);
-		super.assertTrue("Stored user had invalid name", storedUser.getFullName().equals(TEST_NAME)); 
-		super.assertEquals("Stored user had invalid hashed password.",
-				SecurityUtil.MD5(TEST_PASS1), storedUser.getPassword());
-				
+		this.setContents(TEST_NAME1, TEST_DESC1);
+		int n = getAllActivityTypes().size();
+		String result = activityTypeAction.store();
+		assertEquals("store() was unsuccessful", result, Action.SUCCESS);
+		super.assertEquals("The total number of stored activity types didn't grow up with store().", 
+				n+1, getAllActivityTypes().size());
+		ActivityType storedAT = this.getActivityType(TEST_NAME1, TEST_DESC1);
+		super.assertNotNull("Activity wasn't stored properly (wasn't found)", storedAT);
+		super.assertEquals("Stored activity type had invalid name", TEST_NAME1, storedAT.getName()); 
+		super.assertEquals("Stored activity type had invalid description",
+				TEST_DESC1, storedAT.getDescription());
+//		super.assertNotSame("The Stored activity type should have a proper id number after store()", 
+//				0, activityTypeAction.getActivityType().getId());
 	}
 	
 	public void testEdit() {
-		
 		this.create();
-		this.setNames(TEST_NAME, TEST_LOGINNAME);
-		this.setPasswords(TEST_PASS1, TEST_PASS1);
+		this.setContents(TEST_NAME1, TEST_DESC1);
 		this.store();
 
-		userAction.setUser(null);
-		User temp = this.getUser(TEST_LOGINNAME);
-		userAction.setUserId(temp.getId());
-		String result = userAction.edit();
+		activityTypeAction.setActivityType(null);
+		activityTypeAction.setActivityTypeId(this.getActivityType(TEST_NAME1, TEST_DESC1).getId());
+		String result = activityTypeAction.edit();
 		super.assertEquals("edit() was unsuccessful", result, Action.SUCCESS);
-		User fetchedUser = userAction.getUser();
-		super.assertNotNull("User fetched for editing was null", fetchedUser);
-		super.assertTrue("Updated user had invalid name", fetchedUser.getFullName().equals(TEST_NAME)); 
-		super.assertEquals("Updated user had invalid hashed password.",
-				SecurityUtil.MD5(TEST_PASS1), fetchedUser.getPassword());
+		ActivityType fetchedAT = activityTypeAction.getActivityType();
+		super.assertNotNull("Activity type fetched for editing was null", fetchedAT);
+		super.assertEquals("Activity type for editing had invalid name", fetchedAT.getName(), TEST_NAME1); 
+		super.assertEquals("Activity type for editing had invalid description", fetchedAT.getDescription(), TEST_DESC1);
 				
 	}
 	
 	public void testEdit_withInvalidId() {
-		
-		userAction.setUserId(INVALID_USERID);
-		String result = userAction.edit();
-		assertEquals("Invalid user id didn't result an error.", Action.ERROR, result);
-		assertTrue("user.missingPassword -error not found", 
-				errorFound(userAction.getText("user.notFound")));
+		activityTypeAction.setActivityTypeId(INVALID_ID);
+		String result = activityTypeAction.edit();
+		assertEquals("Invalid activity type  id didn't result an error.", Action.ERROR, result);
+		assertTrue("activityType.notFound -error not found", 
+				errorFound(activityTypeAction.getText("activityType.notFound")));
 				
 	}
 	
 	/*
-	 * Change the name of previously stored user and update the user.
+	 * Change the description of previously stored activity type and update it.
 	 */
-/*	public void testStore_withUpdate() {
-		
+	public void testStore_withUpdate() {
 		this.create();
-		this.setNames(TEST_NAME, TEST_LOGINNAME);
-		this.setPasswords(TEST_PASS1, TEST_PASS1);
-		this.store(); // 
-		
-		User storedUser = this.getUser(TEST_LOGINNAME);		
-		storedUser.setFullName(TEST_NAME2);
-		userAction.setUserId(storedUser.getId());
-		userAction.setUser(storedUser);
-		this.setPasswords(TEST_PASS2, TEST_PASS2);
-		String result = userAction.store();
-		super.assertEquals("store() was unsuccessful", result, Action.SUCCESS);
-
-		User updatedUser = this.getUser(TEST_LOGINNAME);
-		super.assertNotNull("User wasn't stored properly (wasn't found)", updatedUser);
-		super.assertTrue("Updated user had invalid name", updatedUser.getFullName().equals(TEST_NAME2)); 
-		super.assertEquals("Updated user had invalid hashed password.",
-				SecurityUtil.MD5(TEST_PASS2), storedUser.getPassword());
-				
-	}
-
-	public void testStore_withDuplicateLogins() {
-		
-		// 1st user
-		this.create();
-		this.setNames(TEST_NAME, TEST_LOGINNAME);
-		this.setPasswords(TEST_PASS1, TEST_PASS1);
+		this.setContents(TEST_NAME1, TEST_DESC1);
 		this.store();
 
-		// create 2nd user with same login name
-		this.create();
-		this.setNames(TEST_NAME2, TEST_LOGINNAME);
-		String result = userAction.store();
-		assertNotSame("User with duplicate login name was accepted.", Action.SUCCESS, result);	
-		assertTrue("user.loginNameInUse -error not found", 
-				errorFound(userAction.getText("user.loginNameInUse")));
+		ActivityType at = this.getActivityType(TEST_NAME1, TEST_DESC1);
+		at.setName(TEST_NAME2);
+		at.setDescription(TEST_DESC2);
+		activityTypeAction.setActivityTypeId(at.getId());
+		activityTypeAction.setActivityType(at);
+		String result = activityTypeAction.store();
+		super.assertEquals("store() was unsuccessful", result, Action.SUCCESS);
+
+		ActivityType updatedAT = this.getActivityType(TEST_NAME2, TEST_DESC2);
+		super.assertNotNull("Activity Type wasn't stored properly (wasn't found)", updatedAT);
+		super.assertEquals("Activity type for editing had invalid name", updatedAT.getName(), TEST_NAME2); 
+		super.assertEquals("Activity type for editing had invalid description", 
+				updatedAT.getDescription(), TEST_DESC2);				
 	}
 
-	public void testStore_withEmptyPassword() {
-		this.create();
-		this.setPasswords("", "");
-		String result = userAction.store();
-		assertEquals("Empty password accepted", Action.ERROR, result);
-		assertTrue("user.missingPassword -error not found", 
-				errorFound(userAction.getText("user.missingPassword")));
-	}
-	
-	public void testStore_withDifferentPasswords() {
-		this.create();
-		this.setPasswords(TEST_PASS1, TEST_PASS2);
-		String result = userAction.store();
-		assertEquals("Different passwords accepted", Action.ERROR, result);
-		assertTrue("user.missingPassword -error not found", 
-				errorFound(userAction.getText("user.passwordsNotEqual")));	
-	}
-	
+/*
 	public void testDelete() {
 		this.create();
 		this.setNames(TEST_NAME, TEST_LOGINNAME);
@@ -229,12 +176,15 @@ public class ActivityTypeActionTest extends SpringTestCase {
 		User testU = getUser(TEST_LOGINNAME);
 		super.assertNull("The deleted user wasn't properly deleted", testU);
 	}
+	*/
 	
-	public void testDelete_withInvalidId() {
-		userAction.setUserId(INVALID_USERID);
+	// TODO Check.
+/*	public void testDelete_withInvalidId() {
+		this.create();
+		activityTypeAction.setActivityTypeId(INVALID_ID);
 		try {
-			userAction.delete();
-			fail("delete() with invalid id " + INVALID_USERID + " was accepted.");
+			activityTypeAction.delete();
+			fail("delete() with invalid id " + INVALID_ID + " was accepted.");
 		}
 		catch(IllegalArgumentException iae) {
 		}

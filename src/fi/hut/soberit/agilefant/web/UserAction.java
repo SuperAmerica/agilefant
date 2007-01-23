@@ -102,8 +102,10 @@ public class UserAction extends ActionSupport implements CRUDAction{
 		this.userDAO = userDAO;
 	}
 	
-	/*
-	 * For testing
+	/**
+	 * Method added for testing.
+	 * 
+	 * @return UserDAO-object
 	 */
 	protected UserDAO getUserDAO() {
 		return userDAO;

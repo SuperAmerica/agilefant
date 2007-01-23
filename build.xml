@@ -85,7 +85,8 @@
 		</junitreport>
 	</target>
 	
-	<target name="test-prepare-spring" description="Prepare Spring-specific stuff for tests">
+	<!-- depends compile-tests, jotta tulee yhdellä ant-targetilla kuntoon -->
+	<target name="test-prepare-spring" depends="compile-tests" description="Prepare Spring-specific stuff for tests">
 		<copy todir="${build.test.conf.dir}/WEB-INF/"> <!-- tarvitaanko enää?-->
 	    	<fileset dir="${conf.dir}" excludes="database-*.properties"/>
 		</copy>

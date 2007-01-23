@@ -10,30 +10,28 @@ package fi.hut.soberit.agilefant.web;
  */
 public interface CRUDAction {
 	/**
-	 * Creates an object, that can be manipulated and stored.
+	 * Creates an object that can be manipulated and stored.
 	 * 
 	 * @return Result of the action. (See com.opensymphony.xwork.Action)
 	 */
 	public String create();
 
 	/**
-	 * Deletes an object, based on xxxId set.
+	 * Deletes an object.
 	 * 
 	 * @return Result of the action. (See com.opensymphony.xwork.Action)
 	 */
 	public String delete();
 
 	/**
-	 * Stores the object. The stored object is new, if the setXxxId() -method
-	 * wasn't called since create() -method. If setXxxId() -method is called,
-	 * old object with given id is stored with updated content.
+	 * Stores the object. 
 	 * 
 	 * @return Result of the action. (See com.opensymphony.xwork.Action)
 	 */
 	public String store();
 
 	/**
-	 * Fetches the object for editing, based on xxxId set.
+	 * Fetches the object for editing.
 	 * 
 	 * @return Result of the action. (See com.opensymphony.xwork.Action)
 	 */

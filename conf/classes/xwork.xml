@@ -188,12 +188,6 @@
 			<result type="redirect">listUsers.action</result>
 			<result name="error">/WEB-INF/jsp/editUser.jsp</result>
 		</action>
-	<!-- 
-	Added this to make adding test user addition possible, remove when no longer needed.
-		<action name="addTestUser" method="addTestUser" class="userAction">
-			<result>/index.jsp</result>
-		</action>
-	-->
 		
 <!-- /User actions -->
 <!-- Perform work -->

@@ -99,6 +99,19 @@
 		</copy>
 	</target>
 	
+	<!-- fitnesse.dir should be set in build-user.properties -->
+	<target name="test-prepare-fitnesse" depends="compile-tests" description="Prepare Spring-confs for FitNesse">
+		<copy todir="${fitnesse.dir}/conf">
+			<fileset dir="${conf.dir}" excludes="database-*.properties"/>
+		</copy>
+		<copy todir="${fitnesse.dir}/conf/WEB-INF"> 
+	    	<fileset dir="${conf.dir}" excludes="database-*.properties"/>
+		</copy>
+		<copy tofile="${fitnesse.dir}/conf/WEB-INF">
+			<fileset file="${conf.dir}/database-fortests-${database.type}.properties"/>
+		</copy>
+	</target>
+		
 	<target name="test">
 		<mkdir dir="${build.test.conf.dir}/WEB-INF"/>
 		<mkdir dir="${test.reports.dir}"/>

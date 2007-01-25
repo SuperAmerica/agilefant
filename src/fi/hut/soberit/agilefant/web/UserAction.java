@@ -111,32 +111,6 @@ public class UserAction extends ActionSupport implements CRUDAction{
 		return userDAO;
 	}
 	
-	/**
-	 * Adds a test user for developement purposes.
-	 * There's a link to this action in the login page.
-	 * <br><br>
-	 * full name: Teppo Testi<br>
-	 * username: test<br>
-	 * password: test<br>
-	 * 
-	 * @author Turkka Äijälä
-	 */
-	public String addTestUser() {
-		// if already exists, just return
-		if(userDAO.getUser("test") != null)
-			return Action.SUCCESS;
-		
-		User testUser = new User();
-				
-		testUser.setFullName("Teppo Testi");
-		testUser.setLoginName("test");		
-		testUser.setPassword(SecurityUtil.MD5("test"));
-		
-		userDAO.store(testUser);
-				
-		return Action.SUCCESS;
-	}
-	
 	public String getPassword1() {
 		return password1;
 	}

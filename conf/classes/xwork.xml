@@ -19,8 +19,8 @@
 		<global-results>
 			<result name="input">/WEB-INF/jsp/genericError.jsp</result>
 			<result name="error">/WEB-INF/jsp/genericError.jsp</result>
-		</global-results>		
-
+		</global-results>
+		
 		<action name="simpleCounter" class="fi.hut.soberit.agilefant.web.SimpleCounter">
 			<result name="success">/WEB-INF/jsp/showCounter.jsp</result>
 		</action>
@@ -32,7 +32,17 @@
 		</action>
 		<action name="resetCounter" method="resetCounter" class="fi.hut.soberit.agilefant.web.SimpleCounter">
 			<result name="success">/WEB-INF/jsp/showCounter.jsp</result>
-		</action>		
+		</action>
+<!-- Context view -->
+		<action name="contextView" class="fi.hut.soberit.agilefant.web.ContextViewAction">
+			<result type="redirect-action">
+				<param name="actionName">myTasks</param>
+			</result>
+			<result name="success_iteration" type="redirect-action">
+				<param name="actionName">viewIteration</param>
+				<param name="iterationId">${contextObjectId}</param>
+			</result>					
+		</action>
 <!-- Activity type actions -->
 		<action name="listActivityTypes" method="getAll" class="activityTypeAction">
 			<result>/WEB-INF/jsp/listActivityTypes.jsp</result>

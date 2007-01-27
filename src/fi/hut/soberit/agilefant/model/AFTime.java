@@ -1,5 +1,8 @@
 package fi.hut.soberit.agilefant.model;
 
+import java.text.NumberFormat;
+import java.text.ParseException;
+import java.text.ParsePosition;
 import java.util.Scanner;
 import java.util.regex.MatchResult;
 import java.util.NoSuchElementException;
@@ -149,14 +152,37 @@ public class AFTime extends java.sql.Time {
 		    
 		    if(allFalse) {
 		    	// If we got here, we didn't understood any of the input.
-		    	// We should understand bare zeroes however. Let's try parsing those here. 
+		    	// We should understand bare integers and reals as hours however, in addition to dhm - fields. 
+		    	// Let's try parsing those here. 
+	
+		    	// get next token, any sequence of non white space characters
+		    	String token = scanner.findInLine("\\S+");
 		    	
-		    	String findResult = scanner.findInLine("0+");
-		    	if( findResult != null && !scanner.hasNext()) {
-		    		// we understood the zero, return it here
-		    		return 0;
+		    	// if the scanner succeeded finding the token and there's no more input
+		    	if(token != null && !scanner.hasNext()) {
+		    		
+		    		// ParsePosition instance to track the NumberFormat parse - call
+		    		ParsePosition parsePos = new ParsePosition(0);
+		    				    		
+		    		// parse the token according to current number locale
+		    		Number number = NumberFormat.getNumberInstance().parse(token, parsePos);
+		    		
+		    		// fail if got null, parsePosition reports an error or not all input was consumed
+		    		if(number == null || parsePos.getErrorIndex() != -1 || parsePos.getIndex() != token.length())
+		    			throw new IllegalArgumentException("invalid input");
+
+		    		// get the decimal value
+		    		double hours = number.doubleValue();
+		    				    
+		    		// no negative values
+		    		if(hours < 0)		    			
+		    			throw new IllegalArgumentException("negative input not allowed");
+		    		
+		    		// get the decimal hours in milliseconds
+		    		return (long)(hours * (double)HOUR_IN_MILLIS);		    		
 		    	}
 		    	
+		    	// otherwise fail
 		    	throw new IllegalArgumentException("invalid input");
 		    }
 		    

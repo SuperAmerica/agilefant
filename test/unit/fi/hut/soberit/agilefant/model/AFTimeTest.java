@@ -1,5 +1,7 @@
 package fi.hut.soberit.agilefant.model;
 
+import java.text.NumberFormat;
+
 import junit.framework.TestCase;
 
 import static fi.hut.soberit.agilefant.model.AFTime.*;
@@ -33,6 +35,15 @@ public class AFTimeTest extends TestCase {
 		
 		// Minutes left out
 		assertEquals(getTime(1, 7, 0), parse("1d 7h"));
+		
+		// without qualifier
+		assertEquals(getTime(0, 6, 0), parse("6"));
+
+		// without qualifier, decimal number		
+		// first format a decimal string according to current locale
+		String decimalNumber = NumberFormat.getNumberInstance().format(3.5);
+		// parse the formatted string
+		assertEquals(getTime(0, 3, 30), parse(decimalNumber));
 		
 		// Parse zero times properly (note: qualifier can be left out here!)
 		assertEquals(0, parse("0"));
@@ -83,15 +94,27 @@ public class AFTimeTest extends TestCase {
 			
 		}
 		
-		// Don't accept nonzero unqualified numbers
-		// TODO is this the right behavior?
+		// don't accept fields without unit symbol with fields with
+		// unit symbol
 		try {
-			parse("76");
+			parse("76 5m");
 			fail();
-		} catch (IllegalArgumentException e) {
-			
-		}
+		} catch (IllegalArgumentException e) {}
+
+		// don't accept fields without unit symbol with fields with
+		// unit symbol
+		try {
+			parse("1d 76");
+			fail();
+		} catch (IllegalArgumentException e) {}		
 		
+		// don't accept fields without unit symbol with fields with
+		// unit symbol
+		try {
+			parse("2d 76 30m");
+			fail();
+		} catch (IllegalArgumentException e) {}		
+
 		// Negative values not allowed
 		try {
 			parse("-1h");

@@ -93,6 +93,9 @@
 	<bean id="rememberMeServices" class="org.acegisecurity.ui.rememberme.TokenBasedRememberMeServices">
 		<property name="userDetailsService" ref="userDetailsService"/>
 		<property name="key" value="bcba656388094a54afa82757e2de2070"/>
+
+		<!-- uncomment this to change duration of "remember me" -->
+		<!-- <property name="tokenValiditySeconds" value="1209600"/> -->		 
 	</bean>
 
 	<bean id="authenticationManager" class="org.acegisecurity.providers.ProviderManager">

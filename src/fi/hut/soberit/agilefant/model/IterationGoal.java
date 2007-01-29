@@ -23,6 +23,7 @@ public class IterationGoal {
 	private String name;
 	private String description;
 	private Collection<BacklogItem> backlogItems = new HashSet<BacklogItem>();
+	private Integer priority;
 	
 	// the default status is "looking good"
 	private IterationGoalStatus status = IterationGoalStatus.LOOKING_GOOD;
@@ -85,5 +86,14 @@ public class IterationGoal {
 
 	public void setBacklogItems(Collection<BacklogItem> backlogItems) {
 		this.backlogItems = backlogItems;
+	}
+
+	@Column(nullable = true)
+	public Integer getPriority() {
+		return priority;
+	}
+
+	public void setPriority(Integer priority) {
+		this.priority = priority;
 	}	
 }

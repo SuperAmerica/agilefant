@@ -10,6 +10,7 @@ import java.util.Locale;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Transient;
 
 import org.hibernate.annotations.Formula;
@@ -102,6 +103,7 @@ public class Iteration extends Backlog implements PageItem, EffortContainer {
 	}
 	
 	@OneToMany(mappedBy="iteration")
+	@OrderBy("priority")
 	public Collection<IterationGoal> getIterationGoals() {
 		return iterationGoals;
 	}

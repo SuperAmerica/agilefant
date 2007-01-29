@@ -1,9 +1,9 @@
 create table ActivityType (id integer not null auto_increment, name varchar(255) not null unique, description text, targetSpendingPercentage integer not null check (targetSpendingPercentage>=0 and targetSpendingPercentage<=100), primary key (id)) type=InnoDB;
 create table Backlog (backlogtype varchar(31) not null, id integer not null auto_increment, name varchar(255), description text, startDate datetime, endDate datetime, deliverable_id integer, product_id integer, activityType_id integer, owner_id integer, assignee_id integer, primary key (id)) type=InnoDB;
-create table BacklogItem (id integer not null auto_increment, priority integer, name varchar(255), description text, status integer, remainingEffortEstimate integer, iterationGoal_id integer, backlog_id integer not null, assignee_id integer, primary key (id)) type=InnoDB;
-create table BacklogItem_User (watchedBacklogItems_id integer not null, watchers_id integer not null) ENGINE=InnoDB;
+create table BacklogItem (id integer not null auto_increment, name varchar(255), priority integer, description text, status integer, remainingEffortEstimate integer, iterationGoal_id integer, backlog_id integer not null, assignee_id integer, primary key (id)) type=InnoDB;
+create table BacklogItem_User (watchedBacklogItems_id integer not null, watchers_id integer not null, primary key (watchedBacklogItems_id, watchers_id)) ENGINE=InnoDB;
 create table Task (id integer not null auto_increment, created datetime, effortEstimate integer, status integer, name varchar(255), priority integer, description text, creator_id integer, backlogItem_id integer not null, assignee_id integer, primary key (id)) type=InnoDB;
-create table Task_User (watchedTasks_id integer not null, watchers_id integer not null) ENGINE=InnoDB;
+create table Task_User (watchedTasks_id integer not null, watchers_id integer not null, primary key (watchedTasks_id, watchers_id)) ENGINE=InnoDB;
 create table TaskEvent (id integer not null auto_increment, created datetime, actor_id integer, task_id integer not null, eventType varchar(31), comment varchar(255), effort integer, newEstimate integer, workType_id integer, oldAssignee_id integer, newAssignee_id integer, primary key (id)) type=InnoDB;
 create table User (id integer not null auto_increment, loginName varchar(255) unique, fullName varchar(255), description text, password varchar(255), primary key (id)) type=InnoDB;
 create table WorkType (id integer not null auto_increment, name varchar(255) not null, description text, activityType_id integer, primary key (id)) type=InnoDB;
@@ -33,3 +33,6 @@ alter table TaskEvent add index FK80CD17F5C1D03DC7 (oldAssignee_id), add constra
 alter table TaskEvent add index FK80CD17F5EC8C8CAE (newAssignee_id), add constraint FK80CD17F5EC8C8CAE foreign key (newAssignee_id) references User (id) ON DELETE SET NULL;
 alter table WorkType add index FK5EE3E0BCC65BE32 (activityType_id), add constraint FK5EE3E0BCC65BE32 foreign key (activityType_id) references ActivityType (id) ON DELETE CASCADE;
 alter table IterationGoal add index FKBCC95B704157D2A2 (iteration_id), add constraint FKBCC95B704157D2A2 foreign key (iteration_id) references Backlog (id);
+alter table Practice add index FKB013E55B25135ECD (template_id), add constraint FKB013E55B25135ECD foreign key (template_id) references PracticeTemplate (id);
+alter table PracticeAllocation add index FK7A595C9B6E84F892 (task_id), add constraint FK7A595C9B6E84F892 foreign key (task_id) references Task (id);
+alter table PracticeAllocation add index FK7A595C9B909E98D2 (practice_id), add constraint FK7A595C9B909E98D2 foreign key (practice_id) references Practice (id);

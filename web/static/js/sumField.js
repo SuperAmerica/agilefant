@@ -77,7 +77,7 @@ function getTheTable(){
 function getInputElementsToSumUp(){
 
   // The number of the column counting from left, where the elements to be summed reside.
-  var columnNo = 6;
+  var columnNo = 5;
 
   // Check that there are elements to sum up
   var theTable = getTheTable();
@@ -102,9 +102,9 @@ function getInputElementsToSumUp(){
   //
   var theFields = Array();
   for(var i=0; i<theTds.length; i++){
-    var formnode = theTds[i].childNodes[1]; // get the form node
+    var formnode = theTds[i];//.childNodes[1]; // get the form node
     theFields[theFields.length] = formnode.childNodes[3]; //.getElementById("myTasksPerformWork_event_effort");
-    if(debug) alert(theFields[theFields.length-1].firstChild);
+    //if(debug) alert(theFields[theFields.length-1].firstChild);
   }
 
   return theFields;

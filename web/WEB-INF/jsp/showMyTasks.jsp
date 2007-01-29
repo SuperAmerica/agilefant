@@ -7,11 +7,7 @@
 	<ww:url id="editMyTasksLink" action="editMyTasks" includeParams="none"/>
 	
 	View | <ww:a href="%{editMyTasksLink}">Edit</ww:a>
-	<h2>Tasks assigned to me</h2>
-   	<p>
-   	
-   		<aef:currentUser/>   		
-   	
+
    			<aef:userList/>
 		<p>
 			<ww:form action="myTasksSwitchUser">
@@ -19,6 +15,13 @@
 				<ww:submit value="Switch user"/>
 			</ww:form>
 		</p>
+
+
+	<h2>Tasks assigned to me</h2>
+   	<p>
+   	
+   		<aef:currentUser/>   		
+   	
    	
 	<c:choose>
 		<c:when test="${empty user || user == currentUser}">

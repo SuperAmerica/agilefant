@@ -4,7 +4,10 @@
 	<ww:actionerror/>
 	<ww:actionmessage/>
 	
-		Edit | View
+	<ww:url id="showMyTasksLink" action="myTasks" includeParams="none"/>
+	
+	<ww:a href="%{showMyTasksLink}">View</ww:a> | Edit
+	
 	<h2>Tasks assigned to me</h2>
    	<p>
    		<aef:currentUser/>   		

@@ -3,10 +3,25 @@
 <aef:menu navi="1" /> 
 	<ww:actionerror/>
 	<ww:actionmessage/>
+
+	<ww:url id="editMyTasksLink" action="editMyTasks" includeParams="none"/>
 	
-	Edit | View
-	<h2>Tasks assigned to me</h2>
+	View | <ww:a href="%{editMyTasksLink}">Edit</ww:a>
+	<h2>Tasks assigned to </h2>
    	<p>
+   	
+		<c:if test="${empty user}">
+   				<ww:set name="user" value="${currentUser}"/>
+		</c:if>
+   	
+   			<aef:userList/>
+		<p>
+			<ww:form action="">
+				<ww:select name="userId" list="#attr.userList" listKey="id" listValue="fullName" value=""/>
+				<ww:submit value="Select"/>
+			</ww:form>
+		</p>
+   	
    		<aef:currentUser/>   		
 		<display:table name="${currentUser.assignments}" id="row" requestURI="myTasks.action">
 
@@ -87,7 +102,12 @@
 	<h2>Backlog items assigned to me</h2>
    	<p>
 		<display:table name="${currentUser.backlogItems}" id="row" requestURI="myTasks.action">
-			<display:column sortable="true" title="Name" property="name"/>
+			<display:column sortable="true" title="Name">
+				<ww:url id="editLink" action="editBacklogItem" includeParams="none">
+					<ww:param name="backlogItemId" value="${row.id}"/>
+				</ww:url>
+				<ww:a href="%{editLink}">${row.name}</ww:a>
+			</display:column>
 			<display:column sortable="true" title="Priority">
 				${row.priority}
 			</display:column>
@@ -96,12 +116,6 @@
 			</display:column>
 			<display:column sortable="true" title="Work performed" sortProperty="performedEffort.time">
 				${row.performedEffort}
-			</display:column>
-			<display:column sortable="false" title="Actions">
-				<ww:url id="editLink" action="editBacklogItem" includeParams="none">
-					<ww:param name="backlogItemId" value="${row.id}"/>
-				</ww:url>
-				<ww:a href="%{editLink}">Edit</ww:a>
 			</display:column>
 		</display:table>
 	</p>
@@ -110,7 +124,12 @@
 	<h2>Backlog items watched by me</h2>
    	<p>
 		<display:table name="${currentUser.watchedBacklogItems}" id="row" requestURI="myTasks.action">
-			<display:column sortable="true" title="Name" property="name"/>
+			<display:column sortable="true" title="Name">
+				<ww:url id="editLink" action="editBacklogItem" includeParams="none">
+					<ww:param name="backlogItemId" value="${row.id}"/>
+				</ww:url>
+				<ww:a href="%{editLink}">${row.name}</ww:a>
+			</display:column>
 			<display:column sortable="true" title="Priority">
 				${row.priority}
 			</display:column>
@@ -119,12 +138,6 @@
 			</display:column>
 			<display:column sortable="true" title="Work performed" sortProperty="performedEffort.time">
 				${row.performedEffort}
-			</display:column>
-			<display:column sortable="false" title="Actions">
-				<ww:url id="editLink" action="editBacklogItem" includeParams="none">
-					<ww:param name="backlogItemId" value="${row.id}"/>
-				</ww:url>
-				<ww:a href="%{editLink}">Edit</ww:a>
 			</display:column>
 		</display:table>
 	</p>
@@ -139,7 +152,12 @@
 			<display:column sortable="true" title="Priority">
 				${row.priority}
 			</display:column>
-			<display:column sortable="true" title="Name" property="name"/>
+			<display:column sortable="true" title="Name">
+				<ww:url id="editLink" action="editTask" includeParams="none">
+					<ww:param name="taskId" value="${row.id}"/>
+				</ww:url>
+				<ww:a href="%{editLink}">${row.name}</ww:a>
+			</display:column>
 			<display:column sortable="true" title="Effort left" sortProperty="effortEstimate.time">
 				${row.effortEstimate}"
 			</display:column>
@@ -152,12 +170,6 @@
 			</display:column>
 			<display:column sortable="true" title="Creator">
 				${row.creator.fullName}
-			</display:column>
-			<display:column sortable="false" title="Actions">
-				<ww:url id="editLink" action="editTask" includeParams="none">
-					<ww:param name="taskId" value="${row.id}"/>
-				</ww:url>
-				<ww:a href="%{editLink}">Edit</ww:a>
 			</display:column>
 		</display:table>
 	</p>

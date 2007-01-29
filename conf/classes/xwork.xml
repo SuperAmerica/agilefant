@@ -160,9 +160,11 @@
 		<action name="storeTask" method="store" class="taskAction">
 			<result type="redirect">editBacklogItem.action?backlogItemId=${backlogItemId}</result>
 		</action>
+		<!-- 
 		<action name="myTasks">
 			<result>/WEB-INF/jsp/showMyTasks.jsp</result>
 		</action>
+		 -->
 <!-- /Task actions -->
 <!-- Iteration actions -->
 		<action name="editIteration" method="edit" class="iterationAction">
@@ -216,11 +218,14 @@
 		<action name="myTasks">
 			<result>/WEB-INF/jsp/showMyTasks.jsp</result>
 		</action>
+		<action name="editMyTasks">
+			<result>/WEB-INF/jsp/editMyTasks.jsp</result>
+		</action>
 		<action name="myTasksReportForm" method="edit" class="taskAction">
 			<result>/WEB-INF/jsp/showMyTasks.jsp</result>
 		</action>
 	<action name="myTasksPerformWork" class="performWorkAction">
-		<result type="redirect">myTasks.action</result>
+		<result type="redirect">editMyTasks.action</result>
 	</action>
 <!-- /My tasks -->
 

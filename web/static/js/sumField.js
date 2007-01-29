@@ -4,7 +4,7 @@
 // Thanks to the author of "DOM Scripting : Web design with JavaScript and the Document Object Model"
 // for leading the way.
 
-var debug = true;  // for debug alerts
+var debug = false;  // for debug alerts
 
 // Add onchange property to the work logging fields
 function prepareFields(){

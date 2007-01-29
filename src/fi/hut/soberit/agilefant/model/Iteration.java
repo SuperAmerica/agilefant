@@ -103,7 +103,7 @@ public class Iteration extends Backlog implements PageItem, EffortContainer {
 	}
 	
 	@OneToMany(mappedBy="iteration")
-	@OrderBy("priority")
+	@OrderBy("priority, id")
 	public Collection<IterationGoal> getIterationGoals() {
 		return iterationGoals;
 	}

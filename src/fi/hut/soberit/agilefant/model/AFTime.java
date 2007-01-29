@@ -30,6 +30,7 @@ public class AFTime extends java.sql.Time {
 	public static long MINUTE_IN_MILLIS = 60 * SECOND_IN_MILLIS;
 	public static long HOUR_IN_MILLIS = 60 * MINUTE_IN_MILLIS;
 	public static long WORKDAY_IN_MILLIS = 8 * HOUR_IN_MILLIS;
+	public static long DAY_IN_MILLIS = 24 * HOUR_IN_MILLIS;
 	
 	public static long WORKDAY_IN_HOURS = WORKDAY_IN_MILLIS / HOUR_IN_MILLIS;
 	

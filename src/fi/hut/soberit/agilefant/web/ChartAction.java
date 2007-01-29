@@ -11,6 +11,9 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
@@ -39,6 +42,7 @@ import fi.hut.soberit.agilefant.model.PerformedWork;
 
 
 public class ChartAction extends ActionSupport {
+	private static final Log log = LogFactory.getLog(ChartAction.class);
 	
 	private byte[] result;
 	private PerformedWork performedWork;
@@ -70,6 +74,7 @@ public class ChartAction extends ActionSupport {
 			works = performedWorkDAO.getPerformedWork(deliverableDAO.get(deliverableId));
 		}
 		
+		log.debug(taskId);
 		
 		/*-------------------------------------------------------------*/
 		// The code for dataset: actual workhours

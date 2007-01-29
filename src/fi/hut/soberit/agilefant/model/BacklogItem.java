@@ -37,8 +37,8 @@ public class BacklogItem implements PageItem, Assignable, EffortContainer {
 	private AFTime performedEffort;
 	private User assignee;
 	private BacklogItemStatus status = BacklogItemStatus.NOT_STARTED;
-	private Collection<IterationGoal> iterationGoals = new HashSet<IterationGoal>();
 	private Map<Integer, User> watchers = new HashMap<Integer, User>();
+	private IterationGoal iterationGoal;
 
 	@Type(type="af_time")
 	@Formula(value="(select SUM(t.effortEstimate) from Task t where t.backlogItem_id = id)")
@@ -167,15 +167,6 @@ public class BacklogItem implements PageItem, Assignable, EffortContainer {
 		this.status = status;
 	}
 
-	@OneToMany(mappedBy="backlogItem")
-	public Collection<IterationGoal> getIterationGoals() {
-		return iterationGoals;
-	}
-
-	public void setIterationGoals(Collection<IterationGoal> iterationGoals) {
-		this.iterationGoals = iterationGoals;
-	}
-
 	@ManyToMany()
 	@MapKey()
 	public Map<Integer, User> getWatchers() {
@@ -184,5 +175,15 @@ public class BacklogItem implements PageItem, Assignable, EffortContainer {
 
 	public void setWatchers(Map<Integer, User> watchers) {
 		this.watchers = watchers;
+	}
+
+	@ManyToOne
+	@JoinColumn (nullable = true)
+	public IterationGoal getIterationGoal() {
+		return iterationGoal;
+	}
+
+	public void setIterationGoal(IterationGoal iterationGoal) {
+		this.iterationGoal = iterationGoal;
 	}
 }

@@ -1,5 +1,8 @@
 package fi.hut.soberit.agilefant.model;
 
+import java.util.Collection;
+import java.util.HashSet;
+
 import javax.persistence.Column;
 import javax.persistence.JoinColumn;
 import javax.persistence.Entity;
@@ -7,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.Type;
@@ -18,7 +22,7 @@ public class IterationGoal {
 	private Iteration iteration;
 	private String name;
 	private String description;
-	private BacklogItem backlogItem;
+	private Collection<BacklogItem> backlogItems = new HashSet<BacklogItem>();
 	
 	// the default status is "looking good"
 	private IterationGoalStatus status = IterationGoalStatus.LOOKING_GOOD;
@@ -74,13 +78,12 @@ public class IterationGoal {
 		this.status = status;
 	}
 	
-	@ManyToOne
-	@JoinColumn (nullable = true)
-	public BacklogItem getBacklogItem() {
-	    return backlogItem;
+	@OneToMany(mappedBy="iterationGoal")
+	public Collection<BacklogItem> getBacklogItems() {
+		return backlogItems;
 	}
 
-	public void setBacklogItem(BacklogItem backlogItem) {
-	    this.backlogItem = backlogItem;
+	public void setBacklogItems(Collection<BacklogItem> backlogItems) {
+		this.backlogItems = backlogItems;
 	}	
 }

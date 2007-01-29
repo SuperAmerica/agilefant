@@ -224,6 +224,9 @@
 		<action name="myTasksReportForm" method="edit" class="taskAction">
 			<result>/WEB-INF/jsp/showMyTasks.jsp</result>
 		</action>
+		<action name="myTasksSwitchUser" method="edit" class="userAction">
+			<result>/WEB-INF/jsp/showMyTasks.jsp</result>
+		</action>
 	<action name="myTasksPerformWork" class="performWorkAction">
 		<result type="redirect">editMyTasks.action</result>
 	</action>

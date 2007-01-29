@@ -12,6 +12,7 @@
 <!--[if IE 5]><link href="/agilefant/static/css/msie5.css" type="text/css" rel="stylesheet" media="screen,projection" /><![endif]--><!--[if IE 6]><link href="/agilefant/static/css/msie6.css" type="text/css" rel="stylesheet" media="screen,projection" /><![endif]-->
 
 <script type="text/javascript" src="/agilefant/static/js/generic.js"></script>
+<script type="text/javascript" src="/agilefant/static/js/sumField.js"></script>
 <style type="text/css" media="screen">
 <!--
 @import url(/agilefant/static/css/import.css);

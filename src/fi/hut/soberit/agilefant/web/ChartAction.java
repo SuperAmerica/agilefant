@@ -143,7 +143,7 @@ public class ChartAction extends ActionSupport {
 		Date d1 = new GregorianCalendar(year_f, month_f, day_f, 00, 00).getTime();
 		Date d2 = new GregorianCalendar(year_last, month_last, day_last, 00, 00).getTime();
 		long diff = d2.getTime() - d1.getTime();
-		double usedCalendarDays = (double)(diff / (1000 * 60 * 60 * 24));
+		double usedCalendarDays = (double)(diff / (1000 * 60 * 60 * 24)) + 1; // If all the work is done in one day the value is 1
 
 		
 		double averageDailyProgress = totalWorkDone/usedCalendarDays;
@@ -175,8 +175,8 @@ public class ChartAction extends ActionSupport {
 			if(effort!=null){
 				
 				long time = effort.getTime();
-				long days = time / AFTime.WORKDAY_IN_MILLIS;
-				time %= AFTime.WORKDAY_IN_MILLIS;
+				long days = time / AFTime.DAY_IN_MILLIS;
+				time %= AFTime.DAY_IN_MILLIS;
 				
 				long hours = time / AFTime.HOUR_IN_MILLIS;
 				time %= AFTime.HOUR_IN_MILLIS;
@@ -200,7 +200,7 @@ public class ChartAction extends ActionSupport {
 					worksum=0;
 				}
 				
-				worksum=worktime; // No summing up
+				worksum=worksum+worktime; // Summ up the efforts from different tasks
 				day_last=day;
 				month_last=month;
 				year_last=year;		
@@ -222,32 +222,34 @@ public class ChartAction extends ActionSupport {
 		if(workRemaining>0){ // To avoid a gap in the graph
 			trendSeries.add(new Day(day_tr, month_tr, year_tr), workRemaining);
 		}
-		
-		while(workRemaining>0){
-			workRemaining = workRemaining - averageDailyProgress;
-			if(workRemaining<0){
-				workRemaining=0;
+		if(averageDailyProgress > 0){
+			while(workRemaining>0){
+				workRemaining = workRemaining - averageDailyProgress;
+				if(workRemaining<0){
+					workRemaining=0;
+				}
+				
+				if(month_tr == 2 && day_tr==29){
+					month_tr=3;
+					day_tr=1;
+				}else if(month_tr==12 && day_tr==31){
+					day_tr=1;
+					month_tr=1;
+					year_tr++;
+				}else if((month_tr==4 || month_tr==6 || month_tr==9 || month_tr==11) && (day_tr==30)){
+					day_tr=1;
+					month_tr++;
+				}else if((month_tr==1 || month_tr==3 || month_tr==5 || month_tr==7 || month_tr==8 || month_tr==10) && (day_tr==31)){
+					day_tr=1;
+					month_tr++;
+				}else {
+					day_tr++;
+				}
+				trendSeries.add(new Day(day_tr, month_tr, year_tr), workRemaining);
 			}
-			
-			if(month_tr == 2 && day_tr==29){
-				month_tr=3;
-				day_tr=1;
-			}else if(month_tr==12 && day_tr==31){
-				day_tr=1;
-				month_tr=1;
-				year_tr++;
-			}else if((month_tr==4 || month_tr==6 || month_tr==9 || month_tr==11) && (day_tr==30)){
-				day_tr=1;
-				month_tr++;
-			}else if((month_tr==1 || month_tr==3 || month_tr==5 || month_tr==7 || month_tr==8 || month_tr==10) && (day_tr==31)){
-				day_tr=1;
-				month_tr++;
-			}else {
-				day_tr++;
-			}
-			trendSeries.add(new Day(day_tr, month_tr, year_tr), workRemaining);
+			dataset.addSeries(trendSeries);
 		}
-		dataset.addSeries(trendSeries);
+		
 		
 		/*-------------------------------------------------------------*/
 		

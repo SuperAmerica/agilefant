@@ -107,17 +107,14 @@
 		<copy todir="${fitnesse.dir}/conf/WEB-INF"> 
 	    	<fileset dir="${conf.dir}" excludes="database-*.properties"/>
 		</copy>
-		<copy tofile="${fitnesse.dir}/conf/WEB-INF">
-			<fileset file="${conf.dir}/database-fortests-${database.type}.properties"/>
-		</copy>
+		<echo message="${conf.dir}database-fortests-${database.type}.properties"/>
+		<copy file="${conf.dir}database-fortests-${database.type}.properties" tofile="${fitnesse.dir}/conf/WEB-INF/database.properties"/> 
 	</target>
 		
 	<target name="test">
 		<mkdir dir="${build.test.conf.dir}/WEB-INF"/>
 		<mkdir dir="${test.reports.dir}"/>
-<!--		<junit fork="true" dir="${build.test.conf.dir}"> -->
 			<junit fork="true" dir="${build.test.dir}">
-			<!-- System property for recognizing ant instead of eclipse-->
 			<classpath refid="compile.test.classpath"/>
 			<formatter type="xml"/>
 			<batchtest todir="${test.reports.dir}">
@@ -144,7 +141,6 @@
 	
 	<target name="test-all" depends="test-unit, test-integration, test-reports" description="Run all tests and generate HTML reports"/>
 	
-	<!-- ei tarvinne webappia -->
 	<target name="compile-tests" depends="compile">
 		<mkdir dir="${build.test.classes.dir}"/>
 		<javac debug="${javac.debug}" destdir="${build.test.classes.dir}" srcdir="${test.util.src}">

@@ -1,23 +1,53 @@
 <%@ include file="./inc/_taglibs.jsp" %>
 <%@ include file="./inc/_header.jsp" %>
-<aef:bct managementPageId="0"/>
+<aef:bct deliverableId="${deliverableId}"/>
+
 <aef:menu navi="2"  pageHierarchy="${pageHierarchy}"/> 
 	<ww:actionerror/>
 	<ww:actionmessage/>
-			<h2>View iteration: ${iteration.id}</h2>
+		<p>
+			<ww:url id="editIterationLink" action="editIteration" includeParams="none">
+				<ww:param name="iterationId" value="${iteration.id}"/>
+			</ww:url>
+			View | <ww:a href="%{editIterationLink}">Edit </ww:a>		
+
+		</p>
+			
+			
+					<aef:productList/>
+		<ww:form action="viewIteration">
+			<p>
+				<select name="iterationId">
+					<c:forEach items="${productList}" var="product">
+						<c:forEach items="${product.deliverables}" var="deliverable">
+							<c:forEach items="${deliverable.iterations}" var="iter">
+								<c:choose>
+									<c:when test="${iteration.id == iter.id}">
+										<option selected="selected" value="${iter.id}">${iter.name}</option>
+									</c:when>
+									<c:otherwise>
+										<option value="${iter.id}">${iter.name}</option>
+									</c:otherwise>
+								</c:choose>
+							</c:forEach>
+						</c:forEach>						
+					</c:forEach>				
+			<ww:submit value="Select iteration"/>
+				</select>
+			</p>			
+		</ww:form>
+				
+			
+<c:if test="${!empty iteration}">
+			
+			
 
 		<c:if test="${iteration.id > 0}">
 		<p>	
 			<img src="drawChart.action?iterationId=${iteration.id}"/>
 		</p>
 
-		<p>
-			<ww:url id="editIterationLink" action="editIteration" includeParams="none">
-				<ww:param name="iterationId" value="${iteration.id}"/>
-			</ww:url>
-			<ww:a href="%{editIterationLink}">Edit iteration</ww:a>		
-		</p>
-</c:if>
+		</c:if>
 
 	<c:if test="${!empty iteration.backlogItems}"> 
 
@@ -106,5 +136,7 @@
 			</display:table>
 		</p>
 	</c:if>
+
+</c:if>
 
 <%@ include file="./inc/_footer.jsp" %>

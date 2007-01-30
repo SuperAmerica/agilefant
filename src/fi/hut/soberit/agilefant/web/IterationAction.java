@@ -32,8 +32,10 @@ public class IterationAction extends ActionSupport implements CRUDAction {
 	public String edit(){
 		iteration = iterationDAO.get(iterationId);
 		if (iteration == null){
-			super.addActionError(super.getText("iteration.notFound"));
-			return Action.INPUT;
+//			super.addActionError(super.getText("iteration.notFound"));
+//			return Action.INPUT;
+//			TODO: demo kludge
+			return Action.SUCCESS;
 		}
 		deliverable = iteration.getDeliverable();
 		if (deliverable == null){

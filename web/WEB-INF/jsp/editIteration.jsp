@@ -4,13 +4,36 @@
 <aef:menu navi="2"  pageHierarchy="${pageHierarchy}"/> 
 	<ww:actionerror/>
 	<ww:actionmessage/>
-			<h2>Edit iteration: ${iteration.id}</h2>
 
 					<ww:url id="viewIterationLink" action="viewIteration" includeParams="none">
 						<ww:param name="iterationId" value="${iteration.id}"/>												
 					</ww:url>
-						<ww:a href="%{viewIterationLink}">Management view</ww:a>
+						<ww:a href="%{viewIterationLink}">View</ww:a> | Edit
 
+
+					<aef:productList/>
+		<ww:form action="editIteration">
+			<p>
+				<select name="iterationId">
+					<c:forEach items="${productList}" var="product">
+						<c:forEach items="${product.deliverables}" var="deliverable">
+							<c:forEach items="${deliverable.iterations}" var="iter">
+								<c:choose>
+									<c:when test="${iteration.id == iter.id}">
+										<option selected="selected" value="${iter.id}">${iter.name}</option>
+									</c:when>
+									<c:otherwise>
+										<option value="${iter.id}">${iter.name}</option>
+									</c:otherwise>
+								</c:choose>
+							</c:forEach>
+						</c:forEach>						
+					</c:forEach>				
+			<ww:submit value="Select iteration"/>
+				</select>
+			</p>			
+		</ww:form>
+				
 	<ww:form action="storeIteration">
 		<ww:hidden name="iterationId" value="${iteration.id}"/>
 		<ww:hidden name="deliverableId"/> 

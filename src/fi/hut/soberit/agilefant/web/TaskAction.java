@@ -95,7 +95,10 @@ public class TaskAction extends ActionSupport implements CRUDAction {
 		storable.setStatus(task.getStatus());
 		storable.setName(task.getName());
 		storable.setDescription(task.getDescription());
-		if (storable.getId() == 0 || !storable.getEffortEstimate().equals(task.getEffortEstimate())){
+		if (storable.getId() == 0 || 
+			(storable.getEffortEstimate() == null && task.getEffortEstimate() != null) ||			
+			!storable.getEffortEstimate().equals(
+												task.getEffortEstimate())){
 			EstimateHistoryEvent event = new EstimateHistoryEvent();
 			event.setActor(SecurityUtil.getLoggedUser());
 			event.setNewEstimate(task.getEffortEstimate());

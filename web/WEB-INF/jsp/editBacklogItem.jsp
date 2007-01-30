@@ -69,7 +69,7 @@
 				<aef:iterationGoalList id="iterationGoals" backlog="${backlogItem.backlog}"/>
 		<c:if test="${!empty iterationGoals}">
 				
-		Link to iteration goal:	<ww:select name="iterationgGoalId" list="#attr.iterationGoals" listKey="id" listValue="name" value="%{backlogItem.iterationGoal.id}"/>					
+		Link to iteration goal:	<ww:select name="iterationGoalId" list="#attr.iterationGoals" listKey="id" listValue="name" value="%{backlogItem.iterationGoal.id}"/>					
 			<ww:submit value="link"/>
 		</c:if>
 			</p>

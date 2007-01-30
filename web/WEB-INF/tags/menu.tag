@@ -11,7 +11,7 @@
 <ul id="menu">
   <li id="nav1"><a href="/agilefant/myTasks.action">Heartbeat view</a></li>
   <li id="nav2"><a href="/agilefant/viewIteration.action">Iteration view</a></li>
-  <li id="nav3"><a href="#">Project view?</a></li>
+  <li id="nav3"><a href="/agilefant/viewProject.action">Project view</a></li>
   <li id="nav4"><a href="/agilefant/listProducts.action">Product view</a></li>
   <li id="nav5"><a href="managementView.action">Development portfolio</a></li>  
   <li id="nav6"><a href="listActivityTypes.action">Activities & work types</a></li>  

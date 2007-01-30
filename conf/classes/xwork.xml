@@ -290,5 +290,9 @@
 				<param name="backlogItemId">${backlogItemId}</param>
 			</result>
 		</action>		
+
+		<action name="viewProject">
+			<result>/WEB-INF/jsp/viewProject.jsp</result>
+		</action>		
 	</package>
 </xwork>

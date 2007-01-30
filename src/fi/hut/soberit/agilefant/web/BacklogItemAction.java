@@ -11,6 +11,7 @@ import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
+import fi.hut.soberit.agilefant.model.IterationGoal;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.security.SecurityUtil;
@@ -28,6 +29,7 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
 	private Collection<BacklogItem> backlogItems = new ArrayList<BacklogItem>();
 	private UserDAO userDAO;
 	private boolean watch = false;
+	private IterationGoal iterationGoal;
 
 	public String create() {
 		backlogItemId = 0;
@@ -88,6 +90,7 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
 		storable.setDescription(this.backlogItem.getDescription());
 		storable.setAllocatedEffort(this.backlogItem.getAllocatedEffort());
 		storable.setPriority(this.backlogItem.getPriority());
+		storable.setIterationGoal(iterationGoal);
 		if (storable.getId() == 0){
 			storable.setBacklog(backlog);
 		}		
@@ -151,6 +154,10 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
 	}
 	public void setWatch(boolean watch) {
 		this.watch = watch;
+	}
+
+	public void setIterationGoal(IterationGoal iterationGoal) {
+		this.iterationGoal = iterationGoal;
 	}
 
 }

@@ -72,6 +72,9 @@
 				<display:column sortable="false" title="Priority" >
 					${row.priority}
 				</display:column>
+				<display:column sortable="true" title="Iteration Goal">
+					${row.iterationGoal.name}
+				</display:column>
 
 
 				<display:column sortable="false" title="Actions">

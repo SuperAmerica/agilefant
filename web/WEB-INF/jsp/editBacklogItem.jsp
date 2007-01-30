@@ -21,17 +21,23 @@
 		<p>
 			Priority: <ww:select name="backlogItem.priority" value="backlogItem.priority.name" list="@fi.hut.soberit.agilefant.model.Priority@values()" listKey="name" listValue="getText('backlogItem.priority.' + name())"/>
 		</p>
-		<p>
-			Watch this item: <ww:checkbox name="watch" value="true" fieldValue="true"/>
-		</p>
 		
 		
 		<c:if test="${backlogItem.id == 0}">
+		<p>
+			Watch this item: <ww:checkbox name="watch" value="true" fieldValue="true"/>
+		</p>
 			<p>
 				<aef:userList/>
 				<aef:currentUser/>
 				Assignee: <ww:select name="backlogItem.assignee.id" list="#attr.userList" listKey="id" listValue="fullName" value="${currentUser.id}"/>
 			</p>
+				<aef:iterationGoalList id="iterationGoals" backlog="${backlogItem.backlog}"/>
+		<c:if test="${!empty iterationGoals}">
+				
+		Link to iteration goal:	<ww:select name="backlogItem.iterationgGoal.id" list="#attr.iterationGoals" listKey="id" listValue="name" />					
+			<ww:submit value="link"/>
+		</c:if>
 		</c:if>
 		
 		<p>
@@ -55,6 +61,20 @@
 				</c:otherwise>
 			</c:choose>
 		</p>
+
+
+		<ww:form action="linkToIterationGoal">
+			<ww:hidden name="backlogItemId" value="${backlogItem.id}"/>
+			<p>
+				<aef:iterationGoalList id="iterationGoals" backlog="${backlogItem.backlog}"/>
+		<c:if test="${!empty iterationGoals}">
+				
+		Link to iteration goal:	<ww:select name="iterationgGoalId" list="#attr.iterationGoals" listKey="id" listValue="name" value="%{backlogItem.iterationGoal.id}"/>					
+			<ww:submit value="link"/>
+		</c:if>
+			</p>
+		</ww:form>
+
 		<aef:productList/>
 		<ww:form action="moveBacklogItem">
 			<ww:hidden name="backlogItemId" value="${backlogItem.id}"/>
@@ -97,8 +117,7 @@
 			</p>			
 			<ww:submit value="move"/>
 		</ww:form>
-		
-		
+				
 		
 				<p>
 			Assigned to: ${backlogItem.assignee.fullName}

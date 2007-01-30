@@ -17,6 +17,7 @@
 	<bean name="showPerformedWorkAction" class="fi.hut.soberit.agilefant.web.ShowPerformedWorkAction" singleton="false" autowire="byName"/>
 	<bean name="iterationGoalAction" class="fi.hut.soberit.agilefant.web.IterationGoalAction" singleton="false" autowire="byName"/>
 	<bean name="watchObjectAction" class="fi.hut.soberit.agilefant.web.WatchObjectAction" singleton="false" autowire="byName"/>
+	<bean name="linkToIterationGoalAction" class="fi.hut.soberit.agilefant.web.LinkToIterationGoalAction" singleton="false" autowire="byName"/>
 	
 	<bean name="refreshUserInterceptor" class="fi.hut.soberit.agilefant.web.RefreshUserInterceptor" autowire="byName"/>
 </beans>

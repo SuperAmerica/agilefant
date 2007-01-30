@@ -114,6 +114,9 @@
 		<action name="storeBacklogItem" method="store" class="backlogItemAction">
 			<result type="redirect">editBacklog.action?backlogId=${backlogId}</result>
 		</action>
+		<action name="linkToIterationGoal" class="linkToIterationGoalAction">
+			<result type="redirect">editBacklogItem.action?backlogItemId=${backlogItemId}</result>
+		</action>
 <!-- /BacklogItem actions -->
 <!-- Deliverable actions -->
 

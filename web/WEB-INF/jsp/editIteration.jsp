@@ -83,6 +83,9 @@
 				<display:column sortable="true" title="Assignee">
 					${row.assignee.fullName}
 				</display:column>
+				<display:column sortable="true" title="Iteration Goal">
+					${row.iterationGoal.name}
+				</display:column>
 				
 				<display:column sortable="false" title="Actions">
 					<ww:url id="editLink" action="editBacklogItem" includeParams="none">

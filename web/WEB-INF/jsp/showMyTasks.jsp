@@ -17,7 +17,7 @@
 		</p>
 
 
-	<h2>Tasks assigned to me</h2>
+	<h2>Assigned tasks</h2>
    	<p>
    	
    		<aef:currentUser/>   		
@@ -61,7 +61,7 @@
 			</display:column>
 		</display:table>
 
-	<h2>Backlog items assigned to me</h2>
+	<h2>Assigned backlog items</h2>
    	<p>
 		<display:table name="${currentUser.backlogItems}" id="row" requestURI="myTasks.action">
 			<display:column sortable="true" title="Name">
@@ -84,7 +84,7 @@
 
 
 <hr/>
-	<h2>Backlog items watched by me</h2>
+	<h2>Watched backlog items</h2>
    	<p>
 		<display:table name="${currentUser.watchedBacklogItems}" id="row" requestURI="myTasks.action">
 			<display:column sortable="true" title="Name">
@@ -105,7 +105,7 @@
 		</display:table>
 	</p>
 
-	<h2>Tasks watched by me</h2>
+	<h2>Watched tasks</h2>
    	<p>
 		<display:table name="${currentUser.watchedTasks}" id="row" requestURI="myTasks.action">
 			<display:column sortable="true" title="Backlog item">
@@ -174,7 +174,7 @@
 			</display:column>
 		</display:table>
 
-	<h2>Backlog items assigned to me</h2>
+	<h2>Assigned backlog items</h2>
    	<p>
 		<display:table name="${user.backlogItems}" id="row" requestURI="myTasks.action">
 			<display:column sortable="true" title="Name">

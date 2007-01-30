@@ -74,6 +74,7 @@ public class IterationGoalAction extends ActionSupport implements CRUDAction {
 		}
 		storable.setName(this.iterationGoal.getName());
 		storable.setDescription(this.iterationGoal.getDescription());
+		storable.setPriority(this.iterationGoal.getPriority());
 		if (storable.getId() == 0){
 			storable.setIteration(iteration);
 		}		

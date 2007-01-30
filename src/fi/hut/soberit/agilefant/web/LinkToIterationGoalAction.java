@@ -24,9 +24,12 @@ public class LinkToIterationGoalAction extends ActionSupport {
 	private BacklogItemDAO backlogItemDAO;
 	
 	public String execute(){
-		IterationGoal goal = iterationGoalDAO.get(iterationGoalId);
+		IterationGoal goal = null;
 		BacklogItem item = backlogItemDAO.get(backlogItemId);
-		
+
+		if (iterationGoalId > 0 ) {
+			goal = iterationGoalDAO.get(iterationGoalId);
+		}
 		item.setIterationGoal(goal);
 		backlogItemDAO.store(item);
 		

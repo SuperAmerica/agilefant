@@ -32,11 +32,11 @@
 				<aef:currentUser/>
 				Assignee: <ww:select name="backlogItem.assignee.id" list="#attr.userList" listKey="id" listValue="fullName" value="${currentUser.id}"/>
 			</p>
-				<aef:iterationGoalList id="iterationGoals" backlog="${backlogItem.backlog}"/>
+				<aef:iterationGoalList id="iterationGoals" backlogId="${backlogId}"/>
 		<c:if test="${!empty iterationGoals}">
 				
-		Link to iteration goal:	<ww:select name="backlogItem.iterationgGoal.id" list="#attr.iterationGoals" listKey="id" listValue="name" />					
-			<ww:submit value="link"/>
+		Link to iteration goal:	<ww:select name="backlogItem.iterationGoal.id" list="#attr.iterationGoals" listKey="id" listValue="name" />					
+
 		</c:if>
 		</c:if>
 		
@@ -66,10 +66,13 @@
 		<ww:form action="linkToIterationGoal">
 			<ww:hidden name="backlogItemId" value="${backlogItem.id}"/>
 			<p>
-				<aef:iterationGoalList id="iterationGoals" backlog="${backlogItem.backlog}"/>
+				<aef:iterationGoalList id="iterationGoals" backlogId="${backlogId}"/>
 		<c:if test="${!empty iterationGoals}">
-				
-		Link to iteration goal:	<ww:select name="iterationGoalId" list="#attr.iterationGoals" listKey="id" listValue="name" value="%{backlogItem.iterationGoal.id}"/>					
+			<c:set var="goalId" value="0" scope="page"/>
+			<c:if test="${!empty backlogItem.iterationGoal}">
+				<c:set var="goalId" value="${backlogItem.iterationGoal.id}" scope="page"/>
+			</c:if>
+			Link to iteration goal:	<ww:select name="iterationGoalId" list="#attr.iterationGoals" listKey="id" listValue="name" value="${goalId}"/>					
 			<ww:submit value="link"/>
 		</c:if>
 			</p>

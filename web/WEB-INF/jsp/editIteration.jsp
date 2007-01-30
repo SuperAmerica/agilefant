@@ -122,6 +122,7 @@
 				<display:column sortable="true" title="Id" property="id"/>
 				<display:column sortable="true" title="Name" property="name"/>
 				<display:column sortable="true" title="Description" property="description"/>
+				<display:column sortable="true" title="Priority" property="priority"/>
 				<display:column sortable="false" title="Actions">
 					<ww:url id="editLink" action="editIterationGoal" includeParams="none">
 						<ww:param name="iterationGoalId" value="${row.id}"/>

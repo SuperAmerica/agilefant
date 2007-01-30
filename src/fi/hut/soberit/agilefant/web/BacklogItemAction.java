@@ -8,6 +8,8 @@ import com.opensymphony.xwork.ActionSupport;
 
 import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
+import fi.hut.soberit.agilefant.db.GenericDAO;
+import fi.hut.soberit.agilefant.db.IterationGoalDAO;
 import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
@@ -29,7 +31,7 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
 	private Collection<BacklogItem> backlogItems = new ArrayList<BacklogItem>();
 	private UserDAO userDAO;
 	private boolean watch = false;
-	private IterationGoal iterationGoal;
+	private IterationGoalDAO iterationGoalDAO;
 
 	public String create() {
 		backlogItemId = 0;
@@ -85,12 +87,15 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
 			User assignee = userDAO.get(this.backlogItem.getAssignee().getId());
 			storable.setAssignee(assignee);
 		}
+		if (this.backlogItem.getIterationGoal() != null){
+			IterationGoal goal = iterationGoalDAO.get(this.backlogItem.getIterationGoal().getId());
+			storable.setIterationGoal(goal);
+		}
 
 		storable.setName(this.backlogItem.getName());
 		storable.setDescription(this.backlogItem.getDescription());
 		storable.setAllocatedEffort(this.backlogItem.getAllocatedEffort());
 		storable.setPriority(this.backlogItem.getPriority());
-		storable.setIterationGoal(iterationGoal);
 		if (storable.getId() == 0){
 			storable.setBacklog(backlog);
 		}		
@@ -156,8 +161,8 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
 		this.watch = watch;
 	}
 
-	public void setIterationGoal(IterationGoal iterationGoal) {
-		this.iterationGoal = iterationGoal;
+	public void setIterationGoalDAO(IterationGoalDAO iterationGoalDAO) {
+		this.iterationGoalDAO = iterationGoalDAO;
 	}
 
 }

@@ -78,7 +78,7 @@
 	    	<required>true</required>	    
 	    </attribute>
 	    <attribute>
-	    	<name>backlog</name>
+	    	<name>backlogId</name>
 	    	<required>true</required>
 	    	<rtexprvalue>true</rtexprvalue>
 	    </attribute>

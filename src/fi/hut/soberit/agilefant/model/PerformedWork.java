@@ -1,5 +1,7 @@
 package fi.hut.soberit.agilefant.model;
 
+import java.util.Date;
+
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 
@@ -10,6 +12,7 @@ public class PerformedWork extends EstimateHistoryEvent{
 	
 	private AFTime effort;
 	private WorkType workType;
+	private Date workDate;
 	
 	@ManyToOne
 	public WorkType getWorkType() {
@@ -27,5 +30,13 @@ public class PerformedWork extends EstimateHistoryEvent{
 
 	public void setEffort(AFTime effort) {
 		this.effort = effort;
+	}
+
+	public Date getWorkDate() {
+		return workDate;
+	}
+
+	public void setWorkDate(Date workDate) {
+		this.workDate = workDate;
 	}
 }

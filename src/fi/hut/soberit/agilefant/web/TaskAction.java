@@ -7,6 +7,7 @@ import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.db.TaskDAO;
 import fi.hut.soberit.agilefant.db.TaskEventDAO;
 import fi.hut.soberit.agilefant.db.UserDAO;
+import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.EstimateHistoryEvent;
 import fi.hut.soberit.agilefant.model.Task;
@@ -95,14 +96,18 @@ public class TaskAction extends ActionSupport implements CRUDAction {
 		storable.setStatus(task.getStatus());
 		storable.setName(task.getName());
 		storable.setDescription(task.getDescription());
+		
+		AFTime oldEstimate = storable.getEffortEstimate();
+		AFTime newEstimate = task.getEffortEstimate();
+		
 		if (storable.getId() == 0 || 
-			(storable.getEffortEstimate() == null && task.getEffortEstimate() != null) ||			
-			!storable.getEffortEstimate().equals(
-												task.getEffortEstimate())){
+			oldEstimate == null && newEstimate != null ||			
+			(oldEstimate != null && !oldEstimate.equals(newEstimate))){
+			
 			EstimateHistoryEvent event = new EstimateHistoryEvent();
 			event.setActor(SecurityUtil.getLoggedUser());
-			event.setNewEstimate(task.getEffortEstimate());
-			storable.setEffortEstimate(task.getEffortEstimate());
+			event.setNewEstimate(newEstimate);
+			storable.setEffortEstimate(newEstimate);
 			taskDAO.store(storable);
 			event.setTask(storable);
 			storable.getEvents().add(event);

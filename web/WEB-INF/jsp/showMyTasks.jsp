@@ -17,7 +17,7 @@
 
 		<p>
 			<ww:form action="myTasksSwitchUser">
-				<ww:select name="userId" list="#attr.userList" listKey="id" listValue="fullName" value="user.id" />
+				<ww:select name="userId" list="#attr.userList" listKey="id" listValue="fullName" value="${user.id}" />
 				<ww:submit value="Switch user"/>
 			</ww:form>
 		</p>

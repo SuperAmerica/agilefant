@@ -8,24 +8,23 @@
 	
 	View | <ww:a href="%{editMyTasksLink}">Edit</ww:a>
 
-   			<aef:userList/>
-		<p>
-			<ww:form action="myTasksSwitchUser">
-				<ww:select name="userId" list="#attr.userList" listKey="id" listValue="fullName" />
-				<ww:submit value="Switch user"/>
-			</ww:form>
-		</p>
-
-
-	<h2>Assigned tasks</h2>
-   	<p>
-   	
+  		<aef:userList/>
    		<aef:currentUser/>   		
    	
 			<c:if test="${empty user}">
 				<c:set var="user" value="${currentUser}" scope="page"/>
 			</c:if>
-   	
+
+		<p>
+			<ww:form action="myTasksSwitchUser">
+				<ww:select name="userId" list="#attr.userList" listKey="id" listValue="fullName" value="user.id" />
+				<ww:submit value="Switch user"/>
+			</ww:form>
+		</p>
+
+	<h2>Assigned tasks</h2>
+   	<p>
+   	 	
    	
 
 		<display:table name="${user.assignments}" id="row" requestURI="myTasks.action">

@@ -191,29 +191,18 @@ public class TaskActionTest extends SpringTestCase {
 		assertEquals("store() was unsuccessful", result, Action.SUCCESS);
 	}
 
-	/*
-	 * Get all stored Users.
-	 * @return all users stored
-	 */
-/*	private Collection<User> getAllUsers() {
-		return this.userAction.getUserDAO().getAll();
-	}*/
 	
 	/*
-	 * Get user based on loginname.
+	 * Get task based on name and description.
 	 */
-/*	private User getUser(String loginName) {
-		User result = null;
-		for(User u: getAllUsers()) {
-			if(u.getLoginName().equals(loginName)) {
-				if(result == null)
-					result = u;
-				else
-					fail("Multiple users with same login name : " + loginName);
-			}
+	private Task getTask(String name, String desc) {
+		for(Task t: getAllTasks()) {
+			if(t.getName().equals(name) && 
+					t.getDescription().equals(desc)) 
+			return t;	
 		}
-		return result;
-	}*/
+		return null;
+	}
 
 	/*** Actual test methods **/
 	
@@ -238,6 +227,8 @@ public class TaskActionTest extends SpringTestCase {
 		super.assertEquals("The total number of stored tasks didn't grow up with store().", 
 				n+1, getAllTasks().size());
 		
+		Task storedTask = this.getTask(TEST_NAME1, TEST_DESC1);
+//		super.assertSame("Stored used had invalid estimate", TEST_EST1, storedTask.getEffortEstimate());
 		/*this.setPasswords(TEST_PASS1, TEST_PASS1);
 		User storedUser = this.getUser(TEST_LOGINNAME);
 		super.assertNotNull("User wasn't stored properly (wasn't found)", storedUser);

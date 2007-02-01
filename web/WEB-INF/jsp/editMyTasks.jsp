@@ -62,6 +62,9 @@
 			<display:column sortable="true" title="Comment" >
 					<ww:textfield name="event.comment" size="10"/>			
 			</display:column>
+			<display:column sortable="true" title="Work Date" >
+					<ww:textfield name="event.workDate" />			
+			</display:column>
 			
 			<display:column sortable="false" title="Actions">
 								<ww:submit value="Submit"/>

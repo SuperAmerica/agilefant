@@ -5,8 +5,10 @@ import com.opensymphony.xwork.ActionSupport;
 
 import fi.hut.soberit.agilefant.db.DeliverableDAO;
 import fi.hut.soberit.agilefant.db.IterationDAO;
+import fi.hut.soberit.agilefant.db.IterationGoalDAO;
 import fi.hut.soberit.agilefant.model.Deliverable;
 import fi.hut.soberit.agilefant.model.Iteration;
+import fi.hut.soberit.agilefant.model.IterationGoal;
 
 public class IterationAction extends ActionSupport implements CRUDAction {
 
@@ -17,6 +19,8 @@ public class IterationAction extends ActionSupport implements CRUDAction {
 	private DeliverableDAO deliverableDAO;
 	private Deliverable deliverable;
 	private int deliverableId;
+	private IterationGoalDAO iterationGoalDAO;
+	private int iterationGoalId;
 
 	public String create(){
 		Deliverable deliverable =  deliverableDAO.get(deliverableId);
@@ -87,6 +91,26 @@ public class IterationAction extends ActionSupport implements CRUDAction {
 		fillable.setStartDate(this.iteration.getStartDate());
 	}
 
+	public String moveIterationGoal(){
+		Iteration iteration = iterationDAO.get(iterationId);
+		IterationGoal iterationGoal = iterationGoalDAO.get(iterationGoalId);
+		if (iteration == null){
+			super.addActionError(super.getText("iteration.notFound"));
+			return Action.ERROR;
+		}
+		if (iterationGoal == null){
+			super.addActionError(super.getText("iterationGoal.notFound"));
+		}
+		
+		iterationGoal.getIteration().getIterationGoals().remove(iterationGoal);
+		iteration.getIterationGoals().add(iterationGoal);
+		iterationGoal.setIteration(iteration);
+		iterationGoalDAO.store(iterationGoal);
+		
+		return Action.SUCCESS;
+	}
+	
+
 	public int getIterationId() {
 		return iterationId;
 	}
@@ -117,5 +141,17 @@ public class IterationAction extends ActionSupport implements CRUDAction {
 
 	public void setDeliverableId(int deliverableId) {
 	    this.deliverableId = deliverableId;
+	}
+
+	public void setIterationGoalDAO(IterationGoalDAO iterationGoalDAO) {
+		this.iterationGoalDAO = iterationGoalDAO;
+	}
+
+	public void setIterationGoalId(int iterationGoalId) {
+		this.iterationGoalId = iterationGoalId;
+	}
+
+	public int getIterationGoalId() {
+		return iterationGoalId;
 	}
 }

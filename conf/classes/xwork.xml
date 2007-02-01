@@ -248,6 +248,9 @@
 		<action name="storeIterationGoal" method="store" class="iterationGoalAction">
  			<result type="redirect">editIteration.action?iterationId=${iterationId}</result>
 		</action>
+		<action name="moveIterationGoal" method="moveIterationGoal" class="iterationAction">
+ 			<result type="redirect">editIterationGoal.action?iterationGoalId=${iterationGoalId}</result>
+		</action>
 <!-- /IterationGoal actions -->
 
 		<action name="managementView">

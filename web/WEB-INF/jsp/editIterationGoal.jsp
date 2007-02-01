@@ -18,10 +18,39 @@
 		<p>		
 			Priority: <ww:textfield name="iterationGoal.priority" value="${iterationGoal.priority }"/>
 		</p>
+		
 		<p>
 			<ww:submit value="Store"/><ww:submit value="Cancel" action="editIteration"/>
 		</p>
 	</ww:form>
+
+					<aef:productList/>
+
+		<ww:form action="moveIterationGoal">
+		<ww:hidden name="iterationGoalId"/>
+			<p>
+			Move to iteration:
+				<select name="iterationId">
+					<c:forEach items="${productList}" var="product">
+						<c:forEach items="${product.deliverables}" var="deliverable">
+							<c:forEach items="${deliverable.iterations}" var="iter">
+								<c:choose>
+									<c:when test="${iterationId == iter.id}">
+										<option selected="selected" value="${iter.id}">${iter.name}</option>
+									</c:when>
+									<c:otherwise>
+										<option value="${iter.id}">${iter.name}</option>
+									</c:otherwise>
+								</c:choose>
+							</c:forEach>
+						</c:forEach>						
+					</c:forEach>				
+			<ww:submit value="Move"/>
+				</select>
+			</p>			
+		</ww:form>
+				
+
 
 	<c:if test="${!empty iterationGoal.backlogItems}">
 		<p>

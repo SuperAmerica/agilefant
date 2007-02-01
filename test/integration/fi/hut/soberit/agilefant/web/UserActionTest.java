@@ -113,8 +113,8 @@ public class UserActionTest extends SpringTestCase {
 		super.assertEquals("store() was unsuccessful", result, Action.SUCCESS);
 		super.assertEquals("The total number of stored users didn't grow up with store().", 
 				n+1, getAllUsers().size());
-		super.assertNotSame("The Stored user should have a proper id number after store()", 
-				0, userAction.getUser().getId());
+/*		super.assertNotSame("The Stored user should have a proper id number after store()", 
+				0, userAction.getUser().getId()); // Should not.*/
 		User storedUser = this.getUser(TEST_LOGINNAME);
 		super.assertNotNull("User wasn't stored properly (wasn't found)", storedUser);
 		super.assertTrue("User for editing had an invalid name", storedUser.getFullName().equals(TEST_NAME)); 
@@ -123,8 +123,12 @@ public class UserActionTest extends SpringTestCase {
 	}
 	
 	public void testStore_withoutCreate() {
-		String result = userAction.store();
-		super.assertEquals("store() was unsuccessful", result, Action.SUCCESS);		
+		try {
+			String result = userAction.store();
+			fail("Store without create didn't cause an exception.");
+		} catch (NullPointerException e) {
+			
+		}		
 	}
 	
 	public void testEdit() {

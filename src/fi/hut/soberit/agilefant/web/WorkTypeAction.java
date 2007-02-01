@@ -17,6 +17,7 @@ public class WorkTypeAction extends ActionSupport implements CRUDAction {
 	private WorkType workType;
 	private WorkTypeDAO workTypeDAO;
 	private ActivityTypeDAO activityTypeDAO;
+	private int storedWorkTypeId;
 	
 	public String create(){
 		activityType =  activityTypeDAO.get(activityTypeId);
@@ -74,6 +75,9 @@ public class WorkTypeAction extends ActionSupport implements CRUDAction {
 		fillObject(fillable);
 		fillable.setActivityType(activityType);
 		workTypeDAO.store(fillable);
+		
+		storedWorkTypeId = fillable.getId();
+		
 		return Action.SUCCESS;
 	}
 	
@@ -117,5 +121,9 @@ public class WorkTypeAction extends ActionSupport implements CRUDAction {
 
 	public void setWorkTypeDAO(WorkTypeDAO workTypeDAO) {
 		this.workTypeDAO = workTypeDAO;
+	}
+
+	public int getStoredWorkTypeId() {
+		return storedWorkTypeId;
 	}
 }

@@ -1,38 +1,79 @@
 package fi.hut.soberit.agilefant.web;
 
-import com.opensymphony.xwork.Action;
-import fi.hut.soberit.agilefant.model.User;
-import fi.hut.soberit.agilefant.util.SpringTestCase;
-import fi.hut.soberit.agilefant.security.SecurityUtil;
-
 import java.util.Collection;
 
+import com.opensymphony.xwork.Action;
+
+import fi.hut.soberit.agilefant.model.AFTime;
+import fi.hut.soberit.agilefant.model.Backlog;
+import fi.hut.soberit.agilefant.model.BacklogItem;
+import fi.hut.soberit.agilefant.model.Priority;
+import fi.hut.soberit.agilefant.model.Product;
+import fi.hut.soberit.agilefant.model.Task;
+import fi.hut.soberit.agilefant.model.TaskStatus;
+import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.security.SecurityUtil;
+import fi.hut.soberit.agilefant.util.SpringTestCase;
+import fi.hut.soberit.agilefant.db.TaskDAO;
+
 /**
- * JUnit integration testing class for testing class UserAction
+ * JUnit integration testing class for testing class TaskAction.
+ * 
+ * Heavily under construction. Do not copy =)
  * 
  * @author tvainiok
  */
-public class UserActionTest extends SpringTestCase {
-	private static final String TEST_NAME = "Timo Testuser";
-	private static final String TEST_NAME2 = "Timo Testuser2";
-	private static final String TEST_LOGINNAME = "ttestuse";
-	private static final String TEST_LOGINNAME2 = "ttest2";
+public class TaskActionTest extends SpringTestCase {
+	private static final String TEST_NAME1 = "jUnit test -task 1";
+	private static final String TEST_NAME2 = "jUnit test -task 1";
+	private static final String TEST_DESC1 = "Task, missä tehdään vaikka mitä 1";
+	private static final String TEST_DESC2 = "Task, missä tehdään vaikka mitä 2";
+	private static final AFTime TEST_EST1 = new AFTime("4h");
+	private static final AFTime TEST_EST2 = new AFTime("5h");
+	private static final Priority TEST_PRI1 = Priority.CRITICAL;
+	private static final Priority TEST_PRI2 = Priority.TRIVIAL;
+	private static final TaskStatus TEST_STAT1 = TaskStatus.NOT_STARTED;
+	private static final TaskStatus TEST_STAT2 = TaskStatus.STARTED;
+/*	private static final String TEST_LOGINNAME = "ttestuse";
 	private static final String TEST_PASS1 = "foobar";
-	private static final String TEST_PASS2 = "asdf56";
-	private static final int INVALID_USERID = -1;
+	private static final String TEST_PASS2 = "asdf56";*/
+	private static final int INVALID_TASKID = -1;
+	
+	private User user1;
+	private User user2;
 	
 	// The field and setter to be used by Spring
-	private UserAction userAction; 
+	private TaskAction taskAction;
+	private UserAction userAction;
+	private ProductAction productAction;
+	private BacklogItemAction backlogItemAction;
+	//private TaskDAO taskDAO;
+	
+	public void setTaskAction(TaskAction taskAction) {
+		this.taskAction = taskAction;
+	}
 
 	public void setUserAction(UserAction userAction){
 		this.userAction = userAction;
 	}
+	
+	public void setProductAction(ProductAction productAction) {
+		this.productAction = productAction;
+	}
+	
+	public void setBacklogItemACtion(BacklogItemAction backlogItemAction) {
+		this.backlogItemAction = backlogItemAction;
+	}
+	
+/*	public void setTaskDAO(TaskDAO taskDAO) {
+		this.taskDAO = taskDAO;
+	} doesn't work*/
 
 	/*
 	 * Checks, if there are any given error countered. 
 	 */
 	private boolean errorFound(String e) {
-		Collection<String> errors = userAction.getActionErrors();
+		Collection<String> errors = taskAction.getActionErrors();
 		boolean found = false;
 		for(String s: errors) {
 			if(s.equals(e))
@@ -41,50 +82,127 @@ public class UserActionTest extends SpringTestCase {
 		return found;
 	}
 	
-	private User setNames(String fullName, String loginName) {
-		User u = userAction.getUser();
-		u.setFullName(fullName);
-		u.setLoginName(loginName);
-		return u;
+	private void setNameAndDesc(String name, String desc) {
+		Task t = taskAction.getTask();
+		t.setName(name);
+		t.setDescription(desc);
 	}
 	
-	private void setPasswords(String password1, String password2) {
-		this.userAction.setPassword1(password1);
-		this.userAction.setPassword2(password2);
+	private void setUsers(User creator, User assignee) {
+		Task t = taskAction.getTask();
+		t.setCreator(creator);
+		t.setAssignee(assignee);
 	}
 
+	private void setEstimate(AFTime est) {
+		taskAction.getTask().setEffortEstimate(est);
+	}
+	
+	private void setPriority(Priority priority) {
+		taskAction.getTask().setPriority(priority);
+	}
+	
+	private void setStatus(TaskStatus status) {
+		taskAction.getTask().setStatus(status);
+	}
+	
+	private void setBacklogItem(BacklogItem bi) {
+		taskAction.setBacklogItemId(bi.getId());
+		//taskAction.getTask().setBacklogItem(bi);
+	}
+	
+	private User getTestUser(int n) {
+		if(n == 1) {
+			if(this.user1 == null)
+				user1 = UserActionTest.GenerateAndStoreTestUser(this.userAction, 1);
+			return user1;
+		}
+		else {
+			if(this.user2 == null)
+				user2 = UserActionTest.GenerateAndStoreTestUser(this.userAction, 2);
+			return user2;
+		} 
+	}
+	
+	private Backlog getTestBacklog() {
+		this.productAction.create();
+		Product p = this.productAction.getProduct();
+		p.setAssignee(this.getTestUser(1));
+		p.setDescription("FOOBAR");
+		p.setName("Testituote 1");
+		String result = this.productAction.store();
+		assertSame("Product creation failed", Action.SUCCESS, result);
+		Collection<Product> cp = this.productAction.getProductDAO().getAll();
+		for(Product pp: cp) {
+			return pp;
+		}
+		fail("Product not created as supposed");
+		return null;
+	}
+	
+	private BacklogItem getTestBacklogItem(Backlog b) {
+		this.backlogItemAction.setBacklogId(b.getId());
+		this.backlogItemAction.create();
+		BacklogItem bi = this.backlogItemAction.getBacklogItem();
+		bi.setAssignee(this.getTestUser(1));
+		bi.setBacklog(b);
+		bi.setDescription("FOOBAR");
+		bi.setName("FOOBAR");
+		bi.setPriority(TEST_PRI1);
+		bi.setAllocatedEffort(TEST_EST1);
+		bi.setPriority(TEST_PRI1);
+		String result = this.backlogItemAction.store();
+		assertSame("Backlog item creation failed", Action.SUCCESS, result);
+		Collection<BacklogItem> cb = this.backlogItemAction.getBacklogItemDAO().getAll();
+		for(BacklogItem bb : cb) {
+			return bb;
+		}
+		fail("Backlog item not created as supposed");
+		return null;
+		
+	}
+	
+	private Collection<Task> getAllTasks() {
+		return this.taskAction.getTaskDAO().getAll();
+	}
+	
+/*	private void setPasswords(String password1, String password2) {
+		this.userAction.setPassword1(password1);
+		this.userAction.setPassword2(password2);
+	}*/
+
 	/*
-	 * Method for calling userAction.create that is supposed to work (and 
+	 * Method for calling taskAction.create that is supposed to work (and 
 	 * is not a target for testing) Actual testing for method create
 	 * is done in testCreate_XXX -methods
 	 */
 	private void create() {
-		String result = userAction.create();
+		String result = taskAction.create();
 		assertEquals("create() was unsuccessful", result, Action.SUCCESS);
 	}
 
 	/*
-	 * Method for calling userAction.store that is supposed to work (and 
+	 * Method for calling taskAction.store that is supposed to work (and 
 	 * is not a target for testing) Actual testing for method store
 	 * is done in testStore_XXX -methods
 	 */
 	private void store() {
-		String result = userAction.store();
-		assertEquals("store() was unsuccessful", Action.SUCCESS, result);
+		String result = taskAction.store();
+		assertEquals("store() was unsuccessful", result, Action.SUCCESS);
 	}
 
 	/*
 	 * Get all stored Users.
 	 * @return all users stored
 	 */
-	private Collection<User> getAllUsers() {
+/*	private Collection<User> getAllUsers() {
 		return this.userAction.getUserDAO().getAll();
-	}
+	}*/
 	
 	/*
 	 * Get user based on loginname.
 	 */
-	private User getUser(String loginName) {
+/*	private User getUser(String loginName) {
 		User result = null;
 		for(User u: getAllUsers()) {
 			if(u.getLoginName().equals(loginName)) {
@@ -95,58 +213,40 @@ public class UserActionTest extends SpringTestCase {
 			}
 		}
 		return result;
-	}
-	
-	/**
-	 * Generates a test user
-	 * @param UserAction springed UserAction object
-	 * @param numberchosen test user (1 or 2)
-	 * @return
-	 */
-	public static User GenerateAndStoreTestUser(UserAction ua, int number) {
-		UserActionTest uat = new UserActionTest();
-		uat.setUserAction(ua);
-		uat.create();
-		if(number == 1) {
-			uat.setNames(TEST_NAME, TEST_LOGINNAME);
-			uat.setPasswords(TEST_PASS1, TEST_PASS1);
-		}
-		else {
-			uat.setNames(TEST_NAME2, TEST_LOGINNAME2);
-			uat.setPasswords(TEST_PASS2, TEST_PASS2);
-		}
-			
-		uat.store();
-		return uat.getUser(TEST_LOGINNAME);
-	}
+	}*/
 
 	/*** Actual test methods **/
 	
 	public void testCreate(){
-		String result = userAction.create();
+		String result = taskAction.create();
 		assertEquals("create() was unsuccessful", result, Action.SUCCESS);
-		super.assertEquals("New user had an invalid id", 0, userAction.getUserId());
+		super.assertEquals("New user had an invalid id", 0, taskAction.getTaskId());
 	}
 	
 	public void testStore() {
 		this.create();
-		this.setNames(TEST_NAME, TEST_LOGINNAME);
-		this.setPasswords(TEST_PASS1, TEST_PASS1);
-		int n = getAllUsers().size();
-		String result = userAction.store();
+		this.setNameAndDesc(TEST_NAME1, TEST_DESC1);
+		this.setEstimate(TEST_EST1);
+		this.setUsers(this.getTestUser(1), this.getTestUser(2));
+		this.setPriority(TEST_PRI1);
+		this.setStatus(TEST_STAT1);
+		this.setBacklogItem(this.getTestBacklogItem(this.getTestBacklog()));
+		//this.taskAction.getTask().setCreated(created) ?
+		int n = this.getAllTasks().size();
+		String result = taskAction.store();
 		super.assertEquals("store() was unsuccessful", result, Action.SUCCESS);
-		super.assertEquals("The total number of stored users didn't grow up with store().", 
-				n+1, getAllUsers().size());
-/*		super.assertNotSame("The Stored user should have a proper id number after store()", 
-				0, userAction.getUser().getId()); // Should not.*/
+		super.assertEquals("The total number of stored tasks didn't grow up with store().", 
+				n+1, getAllTasks().size());
+		
+		/*this.setPasswords(TEST_PASS1, TEST_PASS1);
 		User storedUser = this.getUser(TEST_LOGINNAME);
 		super.assertNotNull("User wasn't stored properly (wasn't found)", storedUser);
 		super.assertTrue("User for editing had an invalid name", storedUser.getFullName().equals(TEST_NAME)); 
 		super.assertEquals("User for editing had an invalid hashed password.",
-				SecurityUtil.MD5(TEST_PASS1), storedUser.getPassword());
+				SecurityUtil.MD5(TEST_PASS1), storedUser.getPassword());*/
 	}
 	
-	public void testStore_withoutCreate() {
+/*	public void testStore_withoutCreate() {
 		try {
 			String result = userAction.store();
 			fail("Store without create didn't cause an exception.");
@@ -179,12 +279,12 @@ public class UserActionTest extends SpringTestCase {
 		assertEquals("Invalid user id didn't result an error.", Action.ERROR, result);
 		assertTrue("user.notFound -error not found", 
 				errorFound(userAction.getText("user.notFound")));
-	}
+	}*/
 	
 	/*
 	 * Change the name of previously stored user and update the user.
 	 */
-	public void testStore_withUpdate() {
+/*	public void testStore_withUpdate() {
 		this.create();
 		this.setNames(TEST_NAME, TEST_LOGINNAME);
 		this.setPasswords(TEST_PASS1, TEST_PASS1);
@@ -265,4 +365,5 @@ public class UserActionTest extends SpringTestCase {
 		catch(IllegalArgumentException iae) {
 		}
 	}
+*/
 }

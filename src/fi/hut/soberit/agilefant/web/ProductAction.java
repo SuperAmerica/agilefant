@@ -70,6 +70,10 @@ public class ProductAction extends ActionSupport implements CRUDAction {
 	public void setProductDAO(ProductDAO productDAO) {
 		this.productDAO = productDAO;
 	}
+	
+	protected ProductDAO getProductDAO() {
+		return this.productDAO;
+	}
 
 	public int getProductId() {
 		return productId;

@@ -1,5 +1,6 @@
 package fi.hut.soberit.agilefant.util;
 
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.test.AbstractTransactionalSpringContextTests;
 
 public abstract class SpringTestCase extends AbstractTransactionalSpringContextTests {
@@ -12,6 +13,15 @@ public abstract class SpringTestCase extends AbstractTransactionalSpringContextT
 	protected void endOldAndStartNewTransaction() {
 		super.endTransaction();
 		super.startNewTransaction();
+	}
+	
+	/**
+	 * Autowire-by-name given target so that one can autowire also another objects
+	 * 
+	 * @param target to be wired
+	 */
+	public void enableSpring(Object target) {
+		applicationContext.getAutowireCapableBeanFactory().autowireBeanProperties(target, AutowireCapableBeanFactory.AUTOWIRE_BY_NAME, true);
 	}
 	
 }

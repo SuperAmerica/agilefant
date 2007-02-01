@@ -127,12 +127,17 @@ public class TaskAction extends ActionSupport implements CRUDAction {
 		return task;
 	}
 	
+	// TODO - is this used/needed?
 	public void setDeliverable(Task task){
 		this.task = task;
 	}
 
 	public void setTaskDAO(TaskDAO taskDAO) {
 		this.taskDAO = taskDAO;
+	}
+	
+	protected TaskDAO getTaskDAO() {
+		return this.taskDAO;
 	}
 
 	public int getBacklogItemId() {

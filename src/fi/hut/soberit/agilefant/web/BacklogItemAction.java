@@ -153,6 +153,10 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
 	public void setBacklogItemDAO(BacklogItemDAO backlogItemDAO) {
 		this.backlogItemDAO = backlogItemDAO;
 	}
+	
+	protected BacklogItemDAO getBacklogItemDAO() {
+		return this.backlogItemDAO;
+	}
 
 	public void setUserDAO(UserDAO userDAO) {
 		this.userDAO = userDAO;

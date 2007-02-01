@@ -58,7 +58,6 @@
 		</p>
 		<p>
 			<display:table name="iteration.backlogItems" id="row" requestURI="viewIteration.action">
-				<display:column sortable="true" title="Id" property="id"/>
 				<display:column sortable="true" title="Name" property="name"/>
 
 				<display:column sortable="true" title="Watched by me" >
@@ -105,7 +104,13 @@
 				<display:column sortable="true" title="Iteration Goal">
 					${row.iterationGoal.name}
 				</display:column>
-
+				<display:column sortable="true" title="Effort">
+					${row.performedEffort}
+				</display:column>
+				<display:column sortable="true" title="Estimate">
+					${row.effortEstimate}
+				</display:column>
+				
 
 				<display:column sortable="false" title="Actions">
 					<ww:url id="editLink" action="editBacklogItem" includeParams="none">
@@ -113,6 +118,21 @@
 					</ww:url>
 					<ww:a href="%{editLink}">Edit</ww:a>
 				</display:column>
+			  <display:footer>
+			  	<tr>
+			  		<td>Total:</td>
+			  		<td>&nbsp;</td>
+			  		<td>&nbsp;</td>
+			  		<td>&nbsp;</td>
+			  		<td>&nbsp;</td>
+			  		<td>&nbsp;</td>
+			  		<td>&nbsp;</td>
+			  		<td><c:out value="${iteration.performedEffort}" /></td>
+			  		<td><c:out value="${iteration.effortEstimate}" /></td>
+			  	<tr>
+			  </display:footer>				
+
+
 			</display:table>
 		</p>
 	</c:if>

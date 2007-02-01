@@ -86,39 +86,82 @@
 
 		<p>
 			<display:table name="iteration.backlogItems" id="row" requestURI="editIteration.action">
-				<display:column sortable="true" title="Id" property="id"/>
 				<display:column sortable="true" title="Name" property="name"/>
+
+				<display:column sortable="true" title="Watched by me" >
+					<c:choose>
+						<c:when test="${empty row.watchers[currentUser.id]}">
+							Yes
+						</c:when>
+						<c:otherwise>
+							No
+						</c:otherwise>
+					</c:choose>
+				</display:column>
+
+
+
 				<display:column sortable="true" title="# of tasks">
 					${fn:length(row.tasks)}
 				</display:column>
-				<display:column sortable="true" title="Priority" sortProperty="priority.ordinal">
-					<ww:text name="task.priority.${row.priority}"/>
+
+				<display:column title="Tasks" sortable="false">
+				<c:if test="${!empty row.tasks}"> 
+
+					<ww:form action="editTask">
+						<ww:select name="taskId" list="#attr.row.tasks" listKey="id" listValue="name"/>					
+						<ww:submit value="Go"/>
+				    </ww:form>
+				    </c:if>
+
 				</display:column>
-				<display:column sortable="true" title="Effort estimate" sortProperty="allocatedEffort.time">
-					${row.allocatedEffort}
+<%-- 
+				<display:column sortable="true" title="Effort estimate" sortProperty="remainingEffortEstimate.time">
+					${row.remainingEffortEstimate}
 				</display:column>
-				<display:column sortable="true"	title="Effort left" sortProperty="effortEstimate.time">
-					${row.effortEstimate}
+				<display:column sortable="true" title="Effort in tasks" sortProperty="taskEffortLeft.time">
+					${row.taskEffortLeft}
 				</display:column>
-				<display:column sortable="true" title="Performed effort" sortProperty="performedEffort.time">
-					${row.performedEffort}
-				</display:column>
-				<display:column sortable="true" title="Assignee">
+--%>
+				<display:column sortable="false" title="Assignee" >
 					${row.assignee.fullName}
+				</display:column>
+				<display:column sortable="false" title="Priority" >
+					${row.priority}
 				</display:column>
 				<display:column sortable="true" title="Iteration Goal">
 					${row.iterationGoal.name}
 				</display:column>
+				<display:column sortable="true" title="Effort">
+					${row.performedEffort}
+				</display:column>
+				<display:column sortable="true" title="Estimate">
+					${row.effortEstimate}
+				</display:column>
 				
+
 				<display:column sortable="false" title="Actions">
 					<ww:url id="editLink" action="editBacklogItem" includeParams="none">
 						<ww:param name="backlogItemId" value="${row.id}"/>
 					</ww:url>
-					<ww:url id="deleteLink" action="deleteBacklogItem" includeParams="none">
-						<ww:param name="backlogItemId" value="${row.id}"/>
-					</ww:url>
-					<ww:a href="%{editLink}">Edit</ww:a>|<ww:a href="%{deleteLink}">Delete</ww:a>
+					<ww:a href="%{editLink}">Edit</ww:a>
 				</display:column>
+			  <display:footer>
+			  	<tr>
+			  		<td>Total:</td>
+			  		<td>&nbsp;</td>
+			  		<td>&nbsp;</td>
+			  		<td>&nbsp;</td>
+			  		<td>&nbsp;</td>
+			  		<td>&nbsp;</td>
+			  		<td>&nbsp;</td>
+			  		<td><c:out value="${iteration.performedEffort}" /></td>
+			  		<td><c:out value="${iteration.effortEstimate}" /></td>
+			  	<tr>
+			  </display:footer>				
+
+
+				
 			</display:table>
 		</p>
 	</c:if>

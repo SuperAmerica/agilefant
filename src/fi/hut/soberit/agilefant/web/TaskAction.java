@@ -88,7 +88,7 @@ public class TaskAction extends ActionSupport implements CRUDAction {
 			backlogItem.getTasks().add(storable);
 			storable.setCreator(SecurityUtil.getLoggedUser());
 		}
-		if (task.getAssignee() != null){
+		if (task.getAssignee() != null && task.getAssignee().getId() > 0){
 			User assignee = userDAO.get(task.getAssignee().getId());
 			storable.setAssignee(assignee);
 		}

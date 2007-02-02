@@ -28,7 +28,7 @@
 			<p>
 				<aef:userList/>
 				<aef:currentUser/>
-				Assignee: <ww:select name="task.assignee.id" list="#attr.userList" listKey="id" listValue="fullName" value="${currentUser.id}"/>
+				Assignee: <ww:select headerKey="0" headerValue="None" name="task.assignee.id" list="#attr.userList" listKey="id" listValue="fullName" value="${currentUser.id}"/>
 			</p>
 		</c:if>
 		<p>
@@ -43,7 +43,7 @@
 		<p>
 			<ww:form action="assignTask">
 				<ww:hidden name="taskId" value="${task.id}"/>
-				Reassign to: <ww:select name="assigneeId" list="#attr.userList" listKey="id" listValue="fullName" value="${task.assignee.id}"/>
+				Reassign to: <ww:select   headerKey="0" headerValue="None"  name="assigneeId" list="#attr.userList" listKey="id" listValue="fullName" value="${task.assignee.id}"/>
 				<ww:submit value="Assign"/>
 			</ww:form>
 		</p>

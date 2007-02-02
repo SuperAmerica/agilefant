@@ -83,7 +83,7 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
 				super.addActionError(super.getText("backlog.notFound"));
 			}
 		}
-		if (this.backlogItem.getAssignee() != null){
+		if (this.backlogItem.getAssignee() != null && this.backlogItem.getAssignee().getId() > 0){
 			User assignee = userDAO.get(this.backlogItem.getAssignee().getId());
 			storable.setAssignee(assignee);
 		}

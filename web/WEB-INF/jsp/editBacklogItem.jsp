@@ -30,7 +30,7 @@
 			<p>
 				<aef:userList/>
 				<aef:currentUser/>
-				Assignee: <ww:select name="backlogItem.assignee.id" list="#attr.userList" listKey="id" listValue="fullName" value="${currentUser.id}"/>
+				Assignee: <ww:select  headerKey="0" headerValue="None" name="backlogItem.assignee.id" list="#attr.userList" listKey="id" listValue="fullName" value="${currentUser.id}"/>
 			</p>
 				<aef:iterationGoalList id="iterationGoals" backlogId="${backlogId}"/>
 		<c:if test="${!empty iterationGoals}">
@@ -72,7 +72,7 @@
 			<c:if test="${!empty backlogItem.iterationGoal}">
 				<c:set var="goalId" value="${backlogItem.iterationGoal.id}" scope="page"/>
 			</c:if>
-			Link to iteration goal:	<ww:select name="iterationGoalId" list="#attr.iterationGoals" listKey="id" listValue="name" value="${goalId}"/>					
+			Link to iteration goal:	<ww:select headerKey="Select goal" headerValue="0" name="iterationGoalId" list="#attr.iterationGoals" listKey="id" listValue="name" value="${goalId}"/>					
 			<ww:submit value="link"/>
 		</c:if>
 			</p>

@@ -11,6 +11,7 @@ import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.db.GenericDAO;
 import fi.hut.soberit.agilefant.db.IterationGoalDAO;
 import fi.hut.soberit.agilefant.db.UserDAO;
+import fi.hut.soberit.agilefant.model.ActivityType;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.IterationGoal;
@@ -32,6 +33,7 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
 	private UserDAO userDAO;
 	private boolean watch = false;
 	private IterationGoalDAO iterationGoalDAO;
+	private int assigneeId;
 
 	public String create() {
 		backlogItemId = 0;
@@ -83,10 +85,17 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
 				super.addActionError(super.getText("backlog.notFound"));
 			}
 		}
-		if (this.backlogItem.getAssignee() != null && this.backlogItem.getAssignee().getId() > 0){
-			User assignee = userDAO.get(this.backlogItem.getAssignee().getId());
-			storable.setAssignee(assignee);
+		User oldAssignee = storable.getAssignee();
+		User newAssignee = null;
+
+		if ((oldAssignee == null && assigneeId > 0) || 
+			 (oldAssignee != null && oldAssignee.getId() != assigneeId)) {
+			if (assigneeId > 0) {
+				newAssignee = userDAO.get(assigneeId);
+			}
+			storable.setAssignee(newAssignee);
 		}
+				
 		if (this.backlogItem.getIterationGoal() != null){
 			IterationGoal goal = iterationGoalDAO.get(this.backlogItem.getIterationGoal().getId());
 			storable.setIterationGoal(goal);
@@ -170,6 +179,10 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
 
 	public void setIterationGoalDAO(IterationGoalDAO iterationGoalDAO) {
 		this.iterationGoalDAO = iterationGoalDAO;
+	}
+
+	public void setAssigneeId(int assigneeId) {
+		this.assigneeId = assigneeId;
 	}
 
 }

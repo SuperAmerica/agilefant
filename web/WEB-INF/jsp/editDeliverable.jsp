@@ -27,14 +27,7 @@
 			Description: <ww:textarea cols="40" rows="6" name="deliverable.description" />
 		</p>
 		<p>
-			<c:choose>
-				<c:when test="${deliverable.id > 0 && !empty deliverable.activityType}">
-					Activity type: ${deliverable.activityType.name}
-				</c:when>
-				<c:otherwise>
 					Activity type: <ww:select name="activityTypeId" list="#attr.activityTypes" listKey="id" listValue="name" value="${deliverable.activityType.id}"/>
-				</c:otherwise>
-			</c:choose>
 		</p>
 		<p>
 			Start date: <ww:textfield name="deliverable.startDate"/>

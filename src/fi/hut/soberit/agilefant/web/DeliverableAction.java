@@ -92,7 +92,8 @@ public class DeliverableAction extends ActionSupport implements CRUDAction {
 			storable.setProduct(product);
 			product.getDeliverables().add(storable);
 		}
-		if (storable.getActivityType() == null){
+		if (storable.getActivityType() == null ||
+			storable.getActivityType().getId() != activityTypeId){
 			ActivityType activityType = null;
 			if (activityTypeId > 0){
 				activityType = activityTypeDAO.get(activityTypeId);

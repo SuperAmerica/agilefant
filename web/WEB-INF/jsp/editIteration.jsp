@@ -144,7 +144,10 @@
 					<ww:url id="editLink" action="editBacklogItem" includeParams="none">
 						<ww:param name="backlogItemId" value="${row.id}"/>
 					</ww:url>
-					<ww:a href="%{editLink}">Edit</ww:a>
+                    <ww:url id="deleteLink" action="deleteBacklogItem" includeParams="none"> 
+                            <ww:param name="backlogItemId" value="${row.id}"/> 
+                    </ww:url> 
+                    <ww:a href="%{editLink}">Edit</ww:a>|<ww:a href="%{deleteLink}">Delete</ww:a> 					
 				</display:column>
 			  <display:footer>
 			  	<tr>

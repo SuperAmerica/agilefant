@@ -21,24 +21,31 @@
 		<p>
 			Priority: <ww:select name="backlogItem.priority" value="backlogItem.priority.name" list="@fi.hut.soberit.agilefant.model.Priority@values()" listKey="name" listValue="getText('backlogItem.priority.' + name())"/>
 		</p>
+		<aef:userList/>
+		<aef:currentUser/>
 		
-		
-		<c:if test="${backlogItem.id == 0}">
-		<p>
-			Watch this item: <ww:checkbox name="watch" value="true" fieldValue="true"/>
-		</p>
+	<c:choose>
+		<c:when test="${backlogItem.id == 0}">
 			<p>
-				<aef:userList/>
-				<aef:currentUser/>
-				Assignee: <ww:select  headerKey="0" headerValue="None" name="backlogItem.assignee.id" list="#attr.userList" listKey="id" listValue="fullName" value="${currentUser.id}"/>
+				Watch this item: <ww:checkbox name="watch" value="true" fieldValue="true"/>
 			</p>
-				<aef:iterationGoalList id="iterationGoals" backlogId="${backlogId}"/>
-		<c:if test="${!empty iterationGoals}">
-				
-		Link to iteration goal:	<ww:select name="backlogItem.iterationGoal.id" list="#attr.iterationGoals" listKey="id" listValue="name" />					
-
-		</c:if>
-		</c:if>
+				<p>
+					Assignee: <ww:select  headerKey="0" headerValue="None" name="assigneeId" list="#attr.userList" listKey="id" listValue="fullName" value="${currentUser.id}"/>
+				</p>
+					<aef:iterationGoalList id="iterationGoals" backlogId="${backlogId}"/>
+			<c:if test="${!empty iterationGoals}">
+					
+			Link to iteration goal:	<ww:select name="backlogItem.iterationGoal.id" list="#attr.iterationGoals" listKey="id" listValue="name" />					
+	
+			</c:if>
+		</c:when>
+		<c:otherwise>
+			<p>
+				Assignee: <ww:select  headerKey="0" headerValue="None" name="assigneeId" list="#attr.userList" listKey="id" listValue="fullName" value="%{backlogItem.assignee.id}"/>
+			</p>
+			
+		</c:otherwise>			
+	</c:choose>				
 		
 		<p>
 			<ww:submit value="Store"/>
@@ -72,7 +79,7 @@
 			<c:if test="${!empty backlogItem.iterationGoal}">
 				<c:set var="goalId" value="${backlogItem.iterationGoal.id}" scope="page"/>
 			</c:if>
-			Link to iteration goal:	<ww:select headerKey="Select goal" headerValue="0" name="iterationGoalId" list="#attr.iterationGoals" listKey="id" listValue="name" value="${goalId}"/>					
+			Link to iteration goal:	<ww:select headerKey="0" headerValue="None" name="iterationGoalId" list="#attr.iterationGoals" listKey="id" listValue="name" value="${goalId}"/>					
 			<ww:submit value="link"/>
 		</c:if>
 			</p>
@@ -121,10 +128,6 @@
 			<ww:submit value="move"/>
 		</ww:form>
 				
-		
-				<p>
-			Assigned to: ${backlogItem.assignee.fullName}
-		</p>
 
 		
 		<p>

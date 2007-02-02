@@ -26,6 +26,7 @@
 
 					<aef:productList/>
 
+<c:if test="${iterationGoal.id > 0}">
 		<ww:form action="moveIterationGoal">
 		<ww:hidden name="iterationGoalId"/>
 			<p>
@@ -51,7 +52,7 @@
 		</ww:form>
 				
 
-
+</c:if>
 	<c:if test="${!empty iterationGoal.backlogItems}">
 		<p>
 			Backlog items:

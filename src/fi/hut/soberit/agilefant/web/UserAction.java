@@ -7,6 +7,10 @@ import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.security.SecurityUtil;
 
+/**
+ * UserAction
+ * @author khel
+ */
 public class UserAction extends ActionSupport implements CRUDAction{
 
 	private static final long serialVersionUID = 284890678155663442L;
@@ -107,9 +111,9 @@ public class UserAction extends ActionSupport implements CRUDAction{
 	 * 
 	 * @return UserDAO-object
 	 */
-	protected UserDAO getUserDAO() {
+/*	protected UserDAO getUserDAO() {
 		return userDAO;
-	}
+	}*/
 	
 	public String getPassword1() {
 		return password1;

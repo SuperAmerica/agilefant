@@ -91,7 +91,10 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
 			IterationGoal goal = iterationGoalDAO.get(this.backlogItem.getIterationGoal().getId());
 			storable.setIterationGoal(goal);
 		}
-
+		if(this.backlogItem.getName().equals("")) {
+			super.addActionError(super.getText("backlogitem.missingName"));
+			return;
+		}
 		storable.setName(this.backlogItem.getName());
 		storable.setDescription(this.backlogItem.getDescription());
 		storable.setAllocatedEffort(this.backlogItem.getAllocatedEffort());

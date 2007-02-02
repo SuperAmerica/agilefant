@@ -14,6 +14,11 @@ import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.security.SecurityUtil;
 
+/**
+ * Task Action
+ * 
+ * @author khel
+ */
 public class TaskAction extends ActionSupport implements CRUDAction {
 
 	private static final long serialVersionUID = -8560828440589313663L;
@@ -29,12 +34,22 @@ public class TaskAction extends ActionSupport implements CRUDAction {
 		this.taskEventDAO = taskEventDAO;
 	}
 
+	/**
+	 * Creates a new task.
+	 * 
+	 * @return Action.SUCCESS
+	 */
 	public String create(){
 		taskId = 0;
 		task = new Task();
 		return Action.SUCCESS;		
 	}
 	
+	/**
+	 * Fetches a task for editing (based on taskId set)
+	 * 
+	 * @return Action.SUCCESS, if task was found or Action.ERROR if task wasn't found
+	 */
 	public String edit(){
 		task = taskDAO.get(taskId);
 		if (task == null){
@@ -45,6 +60,11 @@ public class TaskAction extends ActionSupport implements CRUDAction {
 		return Action.SUCCESS;
 	}
 	
+	/**
+	 * Stores the task (a new task created with create() or an old one fetched with edit()
+	 * 
+	 * @return Action.SUCCESS if task is saved ok or Action.ERROR if there's something wrong. (more information with getActionErrors())
+	 */
 	public String store(){
 		Task storable = new Task();
 		if (taskId > 0){
@@ -63,6 +83,10 @@ public class TaskAction extends ActionSupport implements CRUDAction {
 		return Action.SUCCESS;
 	}
 	
+	/**
+	 * Deletes a task  (based on taskId set)
+	 * @return Action.SUCCESS if task was deleted or Action.ERROR if task wasn't found
+	 */
 	public String delete(){		
 		task = taskDAO.get(taskId);
 		if (task == null){
@@ -92,6 +116,10 @@ public class TaskAction extends ActionSupport implements CRUDAction {
 			User assignee = userDAO.get(task.getAssignee().getId());
 			storable.setAssignee(assignee);
 		}
+		if(task.getName().equals("")) {
+			super.addActionError(super.getText("task.missingName"));
+			return;			
+		}
 		storable.setPriority(task.getPriority());
 		storable.setStatus(task.getStatus());
 		storable.setName(task.getName());
@@ -115,6 +143,7 @@ public class TaskAction extends ActionSupport implements CRUDAction {
 		}
 	}
 
+	// TODO - should this be so?
 	public int getDeliverableId() {
 		return taskId;
 	}
@@ -152,6 +181,10 @@ public class TaskAction extends ActionSupport implements CRUDAction {
 		return taskId;
 	}
 
+	/**
+	 * Set the task id (used by edit() and delete() -methods)
+	 * @param taskId Id of the wanted task.
+	 */
 	public void setTaskId(int taskId) {
 		this.taskId = taskId;
 	}

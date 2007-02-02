@@ -14,7 +14,10 @@ import fi.hut.soberit.agilefant.model.TaskStatus;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.security.SecurityUtil;
 import fi.hut.soberit.agilefant.util.SpringTestCase;
+import fi.hut.soberit.agilefant.db.BacklogItemDAO;
+import fi.hut.soberit.agilefant.db.ProductDAO;
 import fi.hut.soberit.agilefant.db.TaskDAO;
+import fi.hut.soberit.agilefant.db.UserDAO;
 
 /**
  * JUnit integration testing class for testing class TaskAction.
@@ -34,9 +37,6 @@ public class TaskActionTest extends SpringTestCase {
 	private static final Priority TEST_PRI2 = Priority.TRIVIAL;
 	private static final TaskStatus TEST_STAT1 = TaskStatus.NOT_STARTED;
 	private static final TaskStatus TEST_STAT2 = TaskStatus.STARTED;
-/*	private static final String TEST_LOGINNAME = "ttestuse";
-	private static final String TEST_PASS1 = "foobar";
-	private static final String TEST_PASS2 = "asdf56";*/
 	private static final int INVALID_TASKID = -1;
 	
 	private User user1;
@@ -47,7 +47,11 @@ public class TaskActionTest extends SpringTestCase {
 	private UserAction userAction;
 	private ProductAction productAction;
 	private BacklogItemAction backlogItemAction;
-	//private TaskDAO taskDAO;
+	private TaskDAO taskDAO;
+	private ProductDAO productDAO;
+	private BacklogItemDAO backlogItemDAO;
+	private UserDAO userDAO;
+	private SecurityUtil securityUtil;
 	
 	public void setTaskAction(TaskAction taskAction) {
 		this.taskAction = taskAction;
@@ -61,13 +65,29 @@ public class TaskActionTest extends SpringTestCase {
 		this.productAction = productAction;
 	}
 	
-	public void setBacklogItemACtion(BacklogItemAction backlogItemAction) {
+	public void setBacklogItemAction(BacklogItemAction backlogItemAction) {
 		this.backlogItemAction = backlogItemAction;
 	}
 	
-/*	public void setTaskDAO(TaskDAO taskDAO) {
+	public void setTaskDAO(TaskDAO taskDAO) {
 		this.taskDAO = taskDAO;
-	} doesn't work*/
+	}
+	
+	public void setProductDAO(ProductDAO productDAO) {
+		this.productDAO = productDAO;
+	}
+	
+	public void setBacklogItemDAO(BacklogItemDAO backlogItemDAO) {
+		this.backlogItemDAO = backlogItemDAO;
+	}
+	
+	public void setUserDAO(UserDAO userDAO) {
+		this.userDAO = userDAO;
+	}
+	
+	public void setSecurityUtil(SecurityUtil securityUtil) {
+		this.securityUtil = securityUtil;
+	}
 
 	/*
 	 * Checks, if there are any given error countered. 
@@ -75,7 +95,9 @@ public class TaskActionTest extends SpringTestCase {
 	private boolean errorFound(String e) {
 		Collection<String> errors = taskAction.getActionErrors();
 		boolean found = false;
+		System.out.println("checking for errors.");
 		for(String s: errors) {
+			System.out.println("error " + s);
 			if(s.equals(e))
 				found = true;
 		}
@@ -88,10 +110,12 @@ public class TaskActionTest extends SpringTestCase {
 		t.setDescription(desc);
 	}
 	
-	private void setUsers(User creator, User assignee) {
-		Task t = taskAction.getTask();
-		t.setCreator(creator);
-		t.setAssignee(assignee);
+	private void setLoggedUser(User user) {
+		this.securityUtil.setLoggedUser(user);
+	}
+	
+	private void setAssignee(User assignee) {
+		taskAction.getTask().setAssignee(assignee);
 	}
 
 	private void setEstimate(AFTime est) {
@@ -108,18 +132,45 @@ public class TaskActionTest extends SpringTestCase {
 	
 	private void setBacklogItem(BacklogItem bi) {
 		taskAction.setBacklogItemId(bi.getId());
-		//taskAction.getTask().setBacklogItem(bi);
 	}
 	
+	private void setContents(String name, String desc, User creator, 
+			User assignee, AFTime estimate, Priority priority, 
+			TaskStatus status, BacklogItem backlogItem) {
+		this.setNameAndDesc(name, desc);
+		this.setLoggedUser(creator);
+		this.setAssignee(assignee);
+		this.setEstimate(estimate);
+		this.setPriority(priority);
+		this.setStatus(status);
+		this.setBacklogItem(backlogItem);
+	}
+	
+	private void checkContents(String entity, Task task, String name, String desc, User creator, 
+			User assignee, AFTime estimate, Priority priority, 
+			TaskStatus status, BacklogItem backlogItem) {
+		super.assertEquals("The name of the " + entity + " was wrong", name, task.getName());
+		super.assertEquals("The description of the " + entity + " was wrong", desc, task.getDescription());
+		super.assertEquals("The creator of the " + entity + " was wrong", creator, task.getCreator());
+		super.assertEquals("The assignee of the " + entity + " was wrong", assignee, task.getAssignee());
+		super.assertEquals("The estimate of the " + entity + " was wrong", estimate, task.getEffortEstimate());
+		super.assertEquals("The priority of the " + entity + " was wrong", priority, task.getPriority());
+		super.assertEquals("The status of the " + entity + " was wrong", status, task.getStatus());
+		super.assertEquals("The backlog item of the " + entity + " was wrong", backlogItem, task.getBacklogItem());
+
+	}
+			
 	private User getTestUser(int n) {
 		if(n == 1) {
 			if(this.user1 == null)
-				user1 = UserActionTest.GenerateAndStoreTestUser(this.userAction, 1);
+				user1 = UserActionTest.GenerateAndStoreTestUser(this.userAction, this.userDAO, 1);
+			assertNotNull(user1);
 			return user1;
 		}
 		else {
 			if(this.user2 == null)
-				user2 = UserActionTest.GenerateAndStoreTestUser(this.userAction, 2);
+				user2 = UserActionTest.GenerateAndStoreTestUser(this.userAction, this.userDAO, 2);
+			assertNotNull(user2);
 			return user2;
 		} 
 	}
@@ -132,7 +183,7 @@ public class TaskActionTest extends SpringTestCase {
 		p.setName("Testituote 1");
 		String result = this.productAction.store();
 		assertSame("Product creation failed", Action.SUCCESS, result);
-		Collection<Product> cp = this.productAction.getProductDAO().getAll();
+		Collection<Product> cp = this.productDAO.getAll();
 		for(Product pp: cp) {
 			return pp;
 		}
@@ -153,24 +204,18 @@ public class TaskActionTest extends SpringTestCase {
 		bi.setPriority(TEST_PRI1);
 		String result = this.backlogItemAction.store();
 		assertSame("Backlog item creation failed", Action.SUCCESS, result);
-		Collection<BacklogItem> cb = this.backlogItemAction.getBacklogItemDAO().getAll();
+		Collection<BacklogItem> cb = this.backlogItemDAO.getAll();
 		for(BacklogItem bb : cb) {
 			return bb;
 		}
 		fail("Backlog item not created as supposed");
-		return null;
-		
+		return null;	
 	}
 	
 	private Collection<Task> getAllTasks() {
-		return this.taskAction.getTaskDAO().getAll();
+		return this.taskDAO.getAll();
 	}
 	
-/*	private void setPasswords(String password1, String password2) {
-		this.userAction.setPassword1(password1);
-		this.userAction.setPassword2(password2);
-	}*/
-
 	/*
 	 * Method for calling taskAction.create that is supposed to work (and 
 	 * is not a target for testing) Actual testing for method create
@@ -191,6 +236,10 @@ public class TaskActionTest extends SpringTestCase {
 		assertEquals("store() was unsuccessful", result, Action.SUCCESS);
 	}
 
+	private void edit() {
+		String result = taskAction.edit();
+		assertEquals("edit() was unsuccessful", result, Action.SUCCESS);
+	}
 	
 	/*
 	 * Get task based on name and description.
@@ -203,6 +252,14 @@ public class TaskActionTest extends SpringTestCase {
 		}
 		return null;
 	}
+	
+/*	private Task generateAndStoreTestTask(int n) {
+		this.create();
+		User u1 = this.getTestUser(1);
+		User u2 = this.getTestUser(2);
+		if(n == 1)
+			
+	}*/
 
 	/*** Actual test methods **/
 	
@@ -210,151 +267,129 @@ public class TaskActionTest extends SpringTestCase {
 		String result = taskAction.create();
 		assertEquals("create() was unsuccessful", result, Action.SUCCESS);
 		super.assertEquals("New user had an invalid id", 0, taskAction.getTaskId());
+		super.assertNotNull("Created taskaction had null Task" , taskAction.getTask());
 	}
 	
 	public void testStore() {
 		this.create();
-		this.setNameAndDesc(TEST_NAME1, TEST_DESC1);
-		this.setEstimate(TEST_EST1);
-		this.setUsers(this.getTestUser(1), this.getTestUser(2));
-		this.setPriority(TEST_PRI1);
-		this.setStatus(TEST_STAT1);
-		this.setBacklogItem(this.getTestBacklogItem(this.getTestBacklog()));
-		//this.taskAction.getTask().setCreated(created) ?
+		BacklogItem bi = this.getTestBacklogItem(this.getTestBacklog());
+		User assignee = this.getTestUser(1);
+		User creator = this.getTestUser(2);
+		this.setContents(TEST_NAME1, TEST_DESC1, creator, assignee, 
+				TEST_EST1, TEST_PRI1, TEST_STAT1, bi);
 		int n = this.getAllTasks().size();
 		String result = taskAction.store();
 		super.assertEquals("store() was unsuccessful", result, Action.SUCCESS);
 		super.assertEquals("The total number of stored tasks didn't grow up with store().", 
 				n+1, getAllTasks().size());
-		
 		Task storedTask = this.getTask(TEST_NAME1, TEST_DESC1);
-//		super.assertSame("Stored used had invalid estimate", TEST_EST1, storedTask.getEffortEstimate());
-		/*this.setPasswords(TEST_PASS1, TEST_PASS1);
-		User storedUser = this.getUser(TEST_LOGINNAME);
-		super.assertNotNull("User wasn't stored properly (wasn't found)", storedUser);
-		super.assertTrue("User for editing had an invalid name", storedUser.getFullName().equals(TEST_NAME)); 
-		super.assertEquals("User for editing had an invalid hashed password.",
-				SecurityUtil.MD5(TEST_PASS1), storedUser.getPassword());*/
+		super.assertNotNull("Stored task wasn't found", storedTask);
+		this.checkContents("stored task", storedTask, TEST_NAME1, TEST_DESC1, creator, assignee, 
+				TEST_EST1, TEST_PRI1, TEST_STAT1, bi);
 	}
 	
-/*	public void testStore_withoutCreate() {
+	public void testStore_withEmptyName() {
+		this.create();
+		BacklogItem bi = this.getTestBacklogItem(this.getTestBacklog());
+		User assignee = this.getTestUser(1);
+		User creator = this.getTestUser(2);
+		this.setContents("", TEST_DESC1, creator, assignee, 
+				TEST_EST1, TEST_PRI1, TEST_STAT1, bi);
+		String result = taskAction.store();
+		super.assertEquals("storing task with name missing was successful", Action.ERROR, result);
+		assertTrue("task.missingName -error not found", errorFound(taskAction.getText("task.missingName")));
+	}
+	
+	public void testStore_withoutCreate() {
 		try {
-			String result = userAction.store();
-			fail("Store without create didn't cause an exception.");
-		} catch (NullPointerException e) {
-			
+			String result = taskAction.store();
+			assertEquals("Store without create didn't result an error.", Action.ERROR, result);
+		} catch (NullPointerException e) {	
 		}		
 	}
 	
 	public void testEdit() {
 		this.create();
-		this.setNames(TEST_NAME, TEST_LOGINNAME);
-		this.setPasswords(TEST_PASS1, TEST_PASS1);
+		BacklogItem bi = this.getTestBacklogItem(this.getTestBacklog());
+		User assignee = this.getTestUser(1);
+		User creator = this.getTestUser(2);
+		this.setContents(TEST_NAME1, TEST_DESC1, creator, assignee, 
+				TEST_EST1, TEST_PRI1, TEST_STAT1, bi);
 		this.store();
-
-		userAction.setUser(null);
-		User temp = this.getUser(TEST_LOGINNAME);
-		userAction.setUserId(temp.getId());
-		String result = userAction.edit();
+		taskAction.setTask(null);
+		Task temp = this.getTask(TEST_NAME1, TEST_DESC1);
+		taskAction.setTaskId(temp.getId());
+		String result = taskAction.edit();
 		super.assertEquals("edit() was unsuccessful", result, Action.SUCCESS);
-		User fetchedUser = userAction.getUser();
-		super.assertNotNull("User fetched for editing was null", fetchedUser);
-		super.assertTrue("Updated user had invalid name", fetchedUser.getFullName().equals(TEST_NAME)); 
-		super.assertEquals("Updated user had invalid hashed password.",
-				SecurityUtil.MD5(TEST_PASS1), fetchedUser.getPassword());
+		Task fetchedTask = taskAction.getTask();
+		this.checkContents("task fetched for editing", fetchedTask, TEST_NAME1, TEST_DESC1, creator, assignee, 
+				TEST_EST1, TEST_PRI1, TEST_STAT1, bi);
 	}
 	
 	public void testEdit_withInvalidId() {
-		userAction.setUserId(INVALID_USERID);
+		userAction.setUserId(INVALID_TASKID);
 		String result = userAction.edit();
-		assertEquals("Invalid user id didn't result an error.", Action.ERROR, result);
-		assertTrue("user.notFound -error not found", 
-				errorFound(userAction.getText("user.notFound")));
-	}*/
+		assertEquals("Invalid task id didn't result an error.", Action.ERROR, result);
+		// TODO check the error?
+	}
 	
 	/*
-	 * Change the name of previously stored user and update the user.
+	 * Change the details of previously stored task and update the task.
 	 */
-/*	public void testStore_withUpdate() {
+	public void testStore_withUpdate() {
 		this.create();
-		this.setNames(TEST_NAME, TEST_LOGINNAME);
-		this.setPasswords(TEST_PASS1, TEST_PASS1);
-		this.store(); // 
+		BacklogItem bi = this.getTestBacklogItem(this.getTestBacklog());
+		User assignee = this.getTestUser(1);
+		User creator = this.getTestUser(2);
+		this.setContents(TEST_NAME1, TEST_DESC1, creator, assignee, 
+				TEST_EST1, TEST_PRI1, TEST_STAT1, bi);
+		this.store(); 
+
+		taskAction.setTask(null);
+		taskAction.setTaskId(this.getTask(TEST_NAME1, TEST_DESC1).getId());
+		this.edit();
 		
-		User storedUser = this.getUser(TEST_LOGINNAME);		
-		storedUser.setFullName(TEST_NAME2);
-		userAction.setUserId(storedUser.getId());
-		userAction.setUser(storedUser);
-		this.setPasswords(TEST_PASS2, TEST_PASS2);
-		String result = userAction.store();
+		this.setAssignee(creator);
+		this.setNameAndDesc(TEST_NAME2, TEST_DESC2);
+		this.setPriority(TEST_PRI2);
+		this.setEstimate(TEST_EST2);
+		this.setStatus(TEST_STAT2);
+		
+		String result = taskAction.store();
 		super.assertEquals("store() was unsuccessful", result, Action.SUCCESS);
-
-		User updatedUser = this.getUser(TEST_LOGINNAME);
-		super.assertNotNull("User wasn't stored properly (wasn't found)", updatedUser);
-		super.assertTrue("Updated user had invalid name", updatedUser.getFullName().equals(TEST_NAME2)); 
-		super.assertEquals("Updated user had invalid hashed password.",
-				SecurityUtil.MD5(TEST_PASS2), storedUser.getPassword());
+		
+		Task updatedTask = this.getTask(TEST_NAME2, TEST_DESC2);
+		this.checkContents("updated task", updatedTask, TEST_NAME2, TEST_DESC2, creator, creator, 
+				TEST_EST2, TEST_PRI2, TEST_STAT2, bi);
 	}
 
-	public void testStore_withDuplicateLogins() {
-		// 1st user
-		this.create();
-		this.setNames(TEST_NAME, TEST_LOGINNAME);
-		this.setPasswords(TEST_PASS1, TEST_PASS1);
-		this.store();
-
-		// create 2nd user with same login name
-		this.create();
-		this.setNames(TEST_NAME2, TEST_LOGINNAME);
-		String result = userAction.store();
-		assertNotSame("User with duplicate login name was accepted.", Action.SUCCESS, result);	
-		assertTrue("user.loginNameInUse -error not found", 
-				errorFound(userAction.getText("user.loginNameInUse")));
-	}
-
-	public void testStore_withEmptyPassword() {
-		this.create();
-		this.setPasswords("", "");
-		String result = userAction.store();
-		assertEquals("Empty password accepted", Action.ERROR, result);
-		assertTrue("user.missingPassword -error not found", 
-				errorFound(userAction.getText("user.missingPassword")));
-	}
-	
-	public void testStore_withDifferentPasswords() {
-		this.create();
-		this.setPasswords(TEST_PASS1, TEST_PASS2);
-		String result = userAction.store();
-		assertEquals("Different passwords accepted", Action.ERROR, result);
-		assertTrue("user.missingPassword -error not found", 
-				errorFound(userAction.getText("user.passwordsNotEqual")));	
-	}
-	
 	public void testDelete() {
 		this.create();
-		this.setNames(TEST_NAME, TEST_LOGINNAME);
-		this.setPasswords(TEST_PASS1, TEST_PASS1);
-		String result = userAction.store();
-		assertEquals("store() was unsuccessful", result, Action.SUCCESS);
+		BacklogItem bi = this.getTestBacklogItem(this.getTestBacklog());
+		User assignee = this.getTestUser(1);
+		User creator = this.getTestUser(2);
+		this.setContents(TEST_NAME1, TEST_DESC1, creator, assignee, 
+				TEST_EST1, TEST_PRI1, TEST_STAT1, bi);
+		this.store(); 
 		
-		int n = getAllUsers().size();
-		User u = getUser(TEST_LOGINNAME);
-		userAction.setUserId(u.getId());
-		userAction.delete();
-		super.assertEquals("The number of users didn't decrease with delete().", n-1, getAllUsers().size());
+		int n = getAllTasks().size();
+		taskAction.setTaskId(this.getTask(TEST_NAME1, TEST_DESC1).getId());
+		String result = taskAction.delete();
+		super.assertEquals("delete() was unsuccessful", result, Action.SUCCESS);
+		super.assertEquals("The number of tasks didn't decrease with delete().", n-1, getAllTasks().size());
 		
-		User testU = getUser(TEST_LOGINNAME);
-		super.assertNull("The deleted user wasn't properly deleted", testU);
+		Task test = this.getTask(TEST_NAME1, TEST_DESC1);
+		super.assertNull("The deleted task wasn't properly deleted", test);
 	}
 	
 	public void testDelete_withInvalidId() {
-		userAction.setUserId(INVALID_USERID);
+		userAction.setUserId(INVALID_TASKID);
 		try {
-			userAction.delete();
-			fail("delete() with invalid id " + INVALID_USERID + " was accepted.");
+			String result = userAction.delete();
+			assertEquals("Invalid task id didn't result an error.", Action.ERROR, result);
+			fail("delete() with invalid id " + INVALID_TASKID + " was accepted.");
 		}
 		catch(IllegalArgumentException iae) {
 		}
 	}
-*/
 }

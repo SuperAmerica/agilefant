@@ -1,6 +1,8 @@
 package fi.hut.soberit.agilefant.web;
 
 import com.opensymphony.xwork.Action;
+
+import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.util.SpringTestCase;
 import fi.hut.soberit.agilefant.security.SecurityUtil;
@@ -23,9 +25,14 @@ public class UserActionTest extends SpringTestCase {
 	
 	// The field and setter to be used by Spring
 	private UserAction userAction; 
-
+	private UserDAO userDAO;
+	
 	public void setUserAction(UserAction userAction){
 		this.userAction = userAction;
+	}
+	
+	public void setUserDAO(UserDAO userDAO) {
+		this.userDAO = userDAO;
 	}
 
 	/*
@@ -78,7 +85,8 @@ public class UserActionTest extends SpringTestCase {
 	 * @return all users stored
 	 */
 	private Collection<User> getAllUsers() {
-		return this.userAction.getUserDAO().getAll();
+		//return this.userAction.getUserDAO().getAll();
+		return this.userDAO.getAll();
 	}
 	
 	/*
@@ -103,9 +111,10 @@ public class UserActionTest extends SpringTestCase {
 	 * @param numberchosen test user (1 or 2)
 	 * @return
 	 */
-	public static User GenerateAndStoreTestUser(UserAction ua, int number) {
+	public static User GenerateAndStoreTestUser(UserAction ua, UserDAO ud, int number) {
 		UserActionTest uat = new UserActionTest();
 		uat.setUserAction(ua);
+		uat.setUserDAO(ud);
 		uat.create();
 		if(number == 1) {
 			uat.setNames(TEST_NAME, TEST_LOGINNAME);
@@ -126,6 +135,7 @@ public class UserActionTest extends SpringTestCase {
 		String result = userAction.create();
 		assertEquals("create() was unsuccessful", result, Action.SUCCESS);
 		super.assertEquals("New user had an invalid id", 0, userAction.getUserId());
+		super.assertNotNull("Created UserAction had null Task" , userAction.getUser());	
 	}
 	
 	public void testStore() {

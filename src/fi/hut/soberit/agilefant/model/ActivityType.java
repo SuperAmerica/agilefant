@@ -10,6 +10,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 
+import org.hibernate.annotations.Type;
 import org.hibernate.validator.Range;
 
 @Entity
@@ -32,6 +33,7 @@ public class ActivityType {
 		this.id = id;
 	}
 	
+	@Type(type="text")
 	public String getDescription() {
 		return description;
 	}
@@ -41,6 +43,7 @@ public class ActivityType {
 	}
 	
 	@Column(nullable=false, unique=true)
+	@Type(type="truncated_string")
 	public String getName() {
 		return name;
 	}

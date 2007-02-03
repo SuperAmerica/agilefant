@@ -39,6 +39,7 @@ public class IterationGoal {
 		this.id = id;
 	}	
 	
+	@Type(type="truncated_string")
 	public String getName() {
 		return name;
 	}
@@ -47,6 +48,7 @@ public class IterationGoal {
 		this.name = name;
 	}
 
+	@Type(type="text")
 	public String getDescription() {
 		return description;
 	}

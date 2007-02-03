@@ -60,6 +60,7 @@ public class BacklogItem implements PageItem, Assignable, EffortContainer {
 		this.allocatedEffort = remainingEffortEstimate;
 	}
 	
+	@Type(type="text")
 	public String getDescription() {
 	    return description;
 	}
@@ -78,6 +79,7 @@ public class BacklogItem implements PageItem, Assignable, EffortContainer {
 	}
 	
 	//@Column(nullable = false)
+	@Type(type="truncated_string")
 	public String getName() {
 	    return name;
 	}

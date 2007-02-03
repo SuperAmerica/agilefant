@@ -7,6 +7,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
+import org.hibernate.annotations.Type;
+
 @Entity
 public class WorkType {	
 	
@@ -35,6 +37,7 @@ public class WorkType {
 		this.activityType = activityType;
 	}
 	
+	@Type(type="text")
 	public String getDescription() {
 		return description;
 	}
@@ -44,6 +47,7 @@ public class WorkType {
 	}
 	
 	@Column(nullable=false)
+	@Type(type="truncated_string")
 	public String getName() {
 		return name;
 	}

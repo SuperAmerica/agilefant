@@ -28,6 +28,7 @@ public class Practice {
 	    this.id = id;
 	}
 
+	@Type(type="text")
 	public String getDescription() {
 		return description;
 	}
@@ -36,6 +37,7 @@ public class Practice {
 		this.description = description;
 	}
 
+	@Type(type="truncated_string")
 	public String getName() {
 		return name;
 	}

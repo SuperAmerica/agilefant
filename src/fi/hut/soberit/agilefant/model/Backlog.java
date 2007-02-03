@@ -15,6 +15,8 @@ import javax.persistence.DiscriminatorType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import org.hibernate.annotations.Type;
+
 @Entity
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(
@@ -37,6 +39,7 @@ public abstract class Backlog implements Assignable {
         this.backlogItems = backlogItems;
     }
     
+    @Type(type="text")
     public String getDescription() {
         return description;
     }
@@ -54,6 +57,7 @@ public abstract class Backlog implements Assignable {
         this.id = id;
     }
     
+    @Type(type="truncated_string")
     public String getName() {
         return name;
     }

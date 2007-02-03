@@ -44,7 +44,8 @@ public class Task implements PageItem, Assignable, EffortContainer {
 	private Map<Integer, User> watchers = new HashMap<Integer, User>();
 
 	private Collection<PracticeAllocation> practices = new HashSet<PracticeAllocation>();
-	
+
+	@Type(type="text")
 	public String getDescription() {
 	    return description;
 	}
@@ -64,6 +65,7 @@ public class Task implements PageItem, Assignable, EffortContainer {
 	    this.id = id;
 	}
 
+	@Type(type="truncated_string")
 	public String getName() {
 	    return name;
 	}

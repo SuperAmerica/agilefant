@@ -27,6 +27,22 @@ import org.hibernate.annotations.Type;
 import fi.hut.soberit.agilefant.web.page.PageItem;
 
 @Entity
+/**
+ * Task is a unit which, within a Cycle of Control model, is in interest of 
+ * workers of a team, and sometimes their project manager also.
+ * Task is a sub-part of a BacklogItem, and may be assigned to a named person.
+ * 
+ * Workers are interested in Tasks which have been
+ * assigned to them as things to be done. To know better, which Task should be
+ * tackled next, there is a priority attached to a Task.
+ * Task has a capability to log efforts done to it.
+ * 
+ * Project manager is generally more interested in BacklogItems than Tasks,
+ * but in small projects, of for personal interests, may want to see the progress
+ * of a single Task, too. Also, planning the future work to be assigned, it
+ * may be useful for a Project manager to see the multitude of the tasks assigned 
+ * to each worker, to be able to balance the workload within her crew.
+ */
 public class Task implements PageItem, Assignable, EffortContainer {
 	 	
 	private int id;
@@ -54,6 +70,7 @@ public class Task implements PageItem, Assignable, EffortContainer {
 	    this.description = description;
 	}
 
+	/** TODO tiaijala - what do these @ markings do? */
 	@Id 
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	@Column(nullable = false)	

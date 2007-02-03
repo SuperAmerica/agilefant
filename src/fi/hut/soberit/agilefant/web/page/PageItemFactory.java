@@ -1,6 +1,8 @@
 package fi.hut.soberit.agilefant.web.page;
 
-
+/**
+ * TODO comments jmrantal - What does this factory do? Where needed?
+ */
 public class PageItemFactory {
 
 	private static PageItemFactory instance = null;

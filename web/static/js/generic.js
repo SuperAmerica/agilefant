@@ -1,3 +1,4 @@
+// TODO comment jmrantal - Where does this find what? //
 function MM_findObj(n, d) { // v4.01 //
  var p,i,x;  if(!d) d=document; if((p=n.indexOf("?"))>0&&parent.frames.length) {
  d=parent.frames[n.substring(p+1)].document; n=n.substring(0,p);}

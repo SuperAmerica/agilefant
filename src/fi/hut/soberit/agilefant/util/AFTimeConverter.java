@@ -6,6 +6,9 @@ import com.opensymphony.webwork.util.WebWorkTypeConverter;
 
 import fi.hut.soberit.agilefant.model.AFTime;
 
+/**
+ * TODO comments kheleniu - What is converted to what, and where used?
+ */
 public class AFTimeConverter extends WebWorkTypeConverter {
 
 	@Override

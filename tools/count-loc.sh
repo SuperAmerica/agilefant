@@ -1,5 +1,7 @@
 #! /bin/sh
 
+# TODO comments ekantola - What does this file do? What this is used for?
+
 loc() {
 	echo -n "$1: "
 	shift

@@ -23,6 +23,10 @@ import org.hibernate.annotations.Type;
     name="backlogtype",
     discriminatorType=DiscriminatorType.STRING
 )
+/**
+ * Through Backlog, BacklogItems are appendable 
+ * as a child for the implementing object.
+ */
 public abstract class Backlog implements Assignable {
     
     private int id;

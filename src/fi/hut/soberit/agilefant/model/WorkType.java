@@ -10,6 +10,11 @@ import javax.persistence.ManyToOne;
 import org.hibernate.annotations.Type;
 
 @Entity
+/**
+ * WorkType is a category for a work to be done, reported in Task level.
+ * Percentages of WorkTypes done may be telling whether
+ * the company is doing what is thought it should be doing.
+ */
 public class WorkType {	
 	
 	private int id;

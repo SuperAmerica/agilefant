@@ -24,6 +24,19 @@ import org.hibernate.annotations.Type;
 import fi.hut.soberit.agilefant.web.page.PageItem;
 
 @Entity
+/**
+ * Backlog item is a unit which, within a Cycle of Control model, is in interest of 
+ * project manager and the workers within her team.
+ * Project manager is interested mainly in efforts that are still due to within 
+ * each Backlog item, to be able to check wether the workload of her team
+ * (including each team member) seems to be too low, adequate or too high.
+ * BacklogItem may be assigned to a named person, who then sees it and is later
+ * interested in the progress of the BacklogItem.  
+ * Workers are mainly interested in BacklogItems as things to be done, usually
+ * this means the sub-parts of the BacklogItems, namely Tasks, which have been
+ * assigned to them. To know better, which BacklogItem should be tackled next,
+ * there is a priority attached to a BacklogItem.
+ */
 public class BacklogItem implements PageItem, Assignable, EffortContainer {
 	
 	private int id;

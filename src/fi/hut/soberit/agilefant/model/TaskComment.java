@@ -5,6 +5,9 @@ import javax.persistence.Entity;
 import org.hibernate.annotations.Type;
 
 @Entity
+/**
+ * TODO comments kheleniu - What does this class do?
+ */
 public class TaskComment extends TaskEvent{
 		
 	private String comment;

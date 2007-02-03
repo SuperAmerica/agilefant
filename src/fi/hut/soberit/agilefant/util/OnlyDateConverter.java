@@ -9,6 +9,9 @@ import com.opensymphony.webwork.util.WebWorkTypeConverter;
 import com.opensymphony.xwork.ActionContext;
 import com.opensymphony.xwork.util.TypeConversionException;
 
+/**
+ * TODO comments kheleniu - What is converted to what, and where used?
+ */
 public class OnlyDateConverter extends WebWorkTypeConverter{
 
 	@Override

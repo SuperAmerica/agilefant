@@ -12,7 +12,7 @@ function prepareFields(){
   for(var i=0; i<elems.length; i++){
     elems[i].onchange = function(){ return updateSumField(); }
   }
-  updateSumField();
+  updateSumField(); // initialize the text showing the sum
 }
 
 // If javascript enabled:

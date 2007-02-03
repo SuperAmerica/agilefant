@@ -1,5 +1,9 @@
 #Tue Nov 07 18:02:35 EET 2006
 eclipse.preferences.version=1
+/**
+ * TODO comments kheleniu
+ * (?)Code placement information (within a file), used by Eclipse, for developing purposes.
+ */
 org.eclipse.jdt.core.compiler.codegen.inlineJsrBytecode=enabled
 org.eclipse.jdt.core.compiler.codegen.targetPlatform=1.5
 org.eclipse.jdt.core.compiler.codegen.unusedLocal=preserve

@@ -4,6 +4,9 @@ import java.util.Map;
 
 import com.opensymphony.webwork.util.WebWorkTypeConverter;
 
+/**
+ * TODO comments kheleniu - What is converted to what, and where used?
+ */
 public class EnumConverter extends WebWorkTypeConverter {
 
 	@Override

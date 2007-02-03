@@ -20,6 +20,9 @@ import javax.persistence.ManyToOne;
     name="eventType",
     discriminatorType=DiscriminatorType.STRING
 )
+/**
+ * TODO comments kheleniu - What does this TaskEvent do?
+ */
 public abstract class TaskEvent {
 	
 	private int id;

@@ -2,6 +2,10 @@ package fi.hut.soberit.agilefant.web.page;
 
 import java.util.Collection;
 
+/**
+ * TODO comments jmrantal
+ * (?)ManagementPageItem is an item to be shown in Management view.
+ */
 public class ManagementPageItem implements PageItem {
 
 	public Collection<PageItem> getChildren() {

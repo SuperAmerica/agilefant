@@ -13,6 +13,9 @@ import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.web.page.ManagementPageItem;
 import fi.hut.soberit.agilefant.web.page.PortfolioPageItem;
 
+/**
+ * TODO comments jmrantal -  Where are these needed/called
+ */
 public class AEFFunctions {
 
 	public static boolean isProduct(Object obj) {

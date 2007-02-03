@@ -14,6 +14,15 @@ import org.hibernate.annotations.Type;
 import org.hibernate.validator.Range;
 
 @Entity
+/**
+ * ActivityType represents a work entitity by defining some
+ * WorkTypes which are applicable to this kind of an activity.
+ * E.g. "a customer software project" might  contain "planning", "coding"
+ * and "customer support".
+ * ActivityType has a target percentage, which is defined as the
+ * percentage of all the work that should be spent to work which are
+ * under this particular ActivityType, given by company leaders or such.
+ */
 public class ActivityType {
 	
 	private int id;

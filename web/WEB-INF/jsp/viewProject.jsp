@@ -7,5 +7,9 @@
 <h2>Project view</h2>
 	
 <img src="/agilefant/static/img/gantt.gif">
+<p>
+		<img src="drawGantChart.action"/>
+</p>
+
 
 <%@ include file="./inc/_footer.jsp" %>

@@ -318,7 +318,7 @@
 		<jar basedir="${build.webapp}" includes="**" destfile="${warFile}"/>	
 	</target>
 	
-	<target name="release" depends="clean, war, generate-javadocs, run-jdepend">
+	<target name="release" depends="clean, war, generate-javadocs">
 		<mkdir dir="${release.dir}"/>
 		<mkdir dir="${release.dir}/doc"/>
 		<copy file="${warFile}" todir="${release.dir}"/>

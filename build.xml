@@ -313,4 +313,17 @@
 			includes="jdepend-report.xml" 
 			style="${ant.home}/etc/jdepend.xsl" />		
 	</target>
+	
+	<target name="war" depends="webapp">
+		<jar basedir="${build.webapp}" includes="**" destfile="${warFile}"/>	
+	</target>
+	
+	<target name="release" depends="clean, war, generate-javadocs, run-jdepend">
+		<mkdir dir="${release.dir}"/>
+		<mkdir dir="${release.dir}/doc"/>
+		<copy file="${warFile}" todir="${release.dir}"/>
+		<copy todir="${release.dir}/doc">
+	    	<fileset dir="${doc.dir}"/>
+		</copy>
+	</target>
 </project>

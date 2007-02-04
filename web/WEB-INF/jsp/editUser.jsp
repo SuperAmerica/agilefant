@@ -20,6 +20,9 @@
 			User ID (used in login): <ww:textfield name="user.loginName"/>
 		</p>
 		<p>
+			Email: <ww:textfield name="user.emailAddress" value="${user.emailAddress}"/>
+		</p>
+		<p>
 			Password: <ww:password name="password1"/>
 		<p>
 		<p>

@@ -21,15 +21,19 @@
 				</ww:url>
 				<ww:a href="%{editLink}">${row.name}</ww:a>
 			</display:column>
-			<display:column sortable="true" title="Effort left" sortProperty="effortEstimate.time">
-				${row.effortEstimate}
-			</display:column>
-			<display:column sortable="true" title="Work performed" sortProperty="performedEffort.time">
-				${row.performedEffort}
+			<display:column sortable="false" title="Performed Effort" sortProperty="performedEffort.time">
+							<ww:hidden name="taskId" value="${row.id}"/>
+								<ww:textfield name="event.effort" size="2"/>			
+
+				&nbsp;Total: ${row.performedEffort}
 
 			</display:column>
+			<display:column sortable="false" title="Effort estimate" sortProperty="effortEstimate.time">
+					<ww:textfield name="event.newEstimate" value="${row.effortEstimate}"  size="2"/>			
+				&nbsp;Total: ${row.effortEstimate}
+			</display:column>
 			
-			<display:column sortable="true" title="Work type">
+			<display:column sortable="false" title="Work type">
 						<aef:allowedWorkTypes backlogItem="${row.backlogItem}" id="workTypes">
 	<c:choose>
 			
@@ -48,22 +52,13 @@
 						</aef:allowedWorkTypes>
 			</display:column>
 			
-			<display:column sortable="true" title="Effort" >
-			
-							<ww:hidden name="taskId" value="${row.id}"/>
-								<ww:textfield name="event.effort" size="2"/>			
-			
-			</display:column>
-			<display:column sortable="true" title="New estimate" >
-					<ww:textfield name="event.newEstimate" value="${row.effortEstimate}"/>			
-			</display:column>
-			<display:column sortable="true" title="Status" >
+			<display:column sortable="false" title="Status" >
 <ww:select name="task.status" value="task.status.name" list="@fi.hut.soberit.agilefant.model.TaskStatus@values()" listKey="name" listValue="getText('task.status.' + name())"/>			</display:column>
-			<display:column sortable="true" title="Comment" >
+			<display:column sortable="false" title="Comment" >
 					<ww:textfield name="event.comment" size="10"/>			
 			</display:column>
-			<display:column sortable="true" title="Work Date" >
-					<ww:textfield name="event.workDate" />			
+			<display:column sortable="false" title="Work Date" >
+					<ww:textfield name="event.workDate"  size="5"/>			
 			</display:column>
 			
 			<display:column sortable="false" title="Actions">

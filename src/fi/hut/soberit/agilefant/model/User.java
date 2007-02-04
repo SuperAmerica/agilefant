@@ -22,6 +22,7 @@ public class User implements PageItem {
 	private String password;
 	private String loginName;
 	private String fullName;
+	private String emailAddress;
 	private Collection<Task> assignments = new HashSet<Task>();	
 	private Collection<Backlog> backlogs = new HashSet<Backlog>();
 	private Collection<BacklogItem> backlogItems = new HashSet<BacklogItem>();
@@ -136,5 +137,13 @@ public class User implements PageItem {
 		collection.addAll(getBacklogItems());
 		
 		return collection;
+	}
+
+	public String getEmailAddress() {
+		return emailAddress;
+	}
+
+	public void setEmailAddress(String emailAddress) {
+		this.emailAddress = emailAddress;
 	}
 }

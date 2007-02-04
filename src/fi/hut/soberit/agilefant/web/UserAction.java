@@ -83,6 +83,7 @@ public class UserAction extends ActionSupport implements CRUDAction{
 
 		storable.setFullName(this.user.getFullName());
 		storable.setLoginName(this.user.getLoginName());
+		storable.setEmailAddress(this.user.getEmailAddress());
 		storable.setPassword(md5Pw);		
 	}
 

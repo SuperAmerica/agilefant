@@ -280,6 +280,12 @@
 				<param name="contentType">${contentType}</param>
 				<param name="inputName">inputStream</param>
 			</result>
+		</action>
+		<action name="drawGantChart" method="ganttChart" class="chartAction">
+			<result name="success" type="stream">
+				<param name="contentType">${contentType}</param>
+				<param name="inputName">inputStream</param>
+			</result>
 		</action>		
 		<action name="watchTask" class="watchObjectAction">
 			<result type="redirect-action">

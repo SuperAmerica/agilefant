@@ -670,8 +670,11 @@ public class ChartAction extends ActionSupport {
 				Date iterEndDate = iteration.getEndDate();
 				count++;
 				String iter_name = "Iteraation "+count+"";
-				Task iter1 = new Task(iter_name, iterStartDate, iterEndDate);
-				del1.addSubtask(iter1);
+				if(iterStartDate!=null && iterEndDate!=null){
+					Task iter1 = new Task(iter_name, iterStartDate, iterEndDate);
+					del1.addSubtask(iter1);
+				}
+				
 		    }
 		    
 		    s1.add(del1);
@@ -856,7 +859,6 @@ public class ChartAction extends ActionSupport {
 	public void setEffortLeft(double effortLeft) {
 		this.effortLeft = effortLeft;
 	}
-	
 	
 		
 	public Portfolio getPortfolio() {

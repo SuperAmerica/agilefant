@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="src" path="build/test/conf"/>
 	<classpathentry kind="src" path="test/unit"/>
 	<classpathentry kind="src" path="test/fixture"/>
 	<classpathentry kind="src" path="test/util"/>

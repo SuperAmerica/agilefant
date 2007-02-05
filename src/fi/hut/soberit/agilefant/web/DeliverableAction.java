@@ -1,6 +1,8 @@
 package fi.hut.soberit.agilefant.web;
 
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
 
 import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
@@ -83,6 +85,23 @@ public class DeliverableAction extends ActionSupport implements CRUDAction {
 	}
 	
 	protected void fillStorable(Deliverable storable){
+		Date current = Calendar.getInstance().getTime();
+		if (deliverable.getStartDate() == null){
+			super.addActionError(super.getText("deliverable.missingStartDate"));
+			return;
+		}
+		if (deliverable.getEndDate() == null){
+			super.addActionError(super.getText("deliverable.missingEndDate"));
+			return;
+		}
+		if (deliverable.getStartDate().after(deliverable.getEndDate())){
+			super.addActionError(super.getText("deliverable.startDateAfterEndDate"));
+			return;
+		}
+		if (deliverable.getEndDate().before(current)){
+			super.addActionError(super.getText("deliverable.endDateInPast"));
+			return;
+		}		
 		if (storable.getProduct() == null){
 			Product product = productDAO.get(productId);
 			if (product == null){

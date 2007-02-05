@@ -52,4 +52,8 @@
 	 		</map>
 	 	</property>
 	 </bean>
+	 
+	 <bean name="portfolioManager" class="fi.hut.soberit.agilefant.service.PortfolioManagerImpl">
+		<property name="deliverableDAO" ref="deliverableDAO"/>
+	 </bean>
 </beans>

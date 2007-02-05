@@ -252,8 +252,7 @@
  			<result type="redirect">editIterationGoal.action?iterationGoalId=${iterationGoalId}</result>
 		</action>
 <!-- /IterationGoal actions -->
-
-		<action name="managementView">
+		<action name="managementView" class="portfolioAction">
 			<result>/WEB-INF/jsp/managementView.jsp</result>
 		</action>
 		<action name="viewIteration" method="edit" class="iterationAction">

@@ -29,6 +29,24 @@
 	</tag>
 	
 	<tag>
+		<name>unfinishedTaskList</name>
+		<tag-class>fi.hut.soberit.agilefant.web.tag.UnfinishedTaskListTag</tag-class>
+		<body-content>JSP</body-content>
+		<description>
+			Lists all unfinished tasks for current user to variable unfinishedTaskList
+	    </description>
+	</tag>
+
+	<tag>
+		<name>unfinishedWatchedTasksList</name>
+		<tag-class>fi.hut.soberit.agilefant.web.tag.UnfinishedWatchedTasksListTag</tag-class>
+		<body-content>JSP</body-content>
+		<description>
+			Lists all unfinished tasks, watched by the current user, to variable unfinishedWatchedTasksList
+	    </description>
+	</tag>
+	
+	<tag>
 		<name>priorityList</name>
 		<tag-class>fi.hut.soberit.agilefant.web.tag.PriorityListTag</tag-class>
 		<body-content>JSP</body-content>

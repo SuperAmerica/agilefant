@@ -10,7 +10,10 @@
 
   		<aef:userList/>
    		<aef:currentUser/>   		
-   	
+   		<aef:unfinishedTaskList/>
+   		
+	   	<!-- <aef:unfinishedWatchedTasksList/>  -->
+	   	
 			<c:if test="${empty user}">
 				<c:set var="user" value="${currentUser}" scope="page"/>
 			</c:if>
@@ -27,7 +30,7 @@
    	 	
    	
 
-		<display:table name="${user.assignments}" id="row" requestURI="myTasks.action">
+		<display:table name="${unfinishedTaskList}" id="row" requestURI="myTasks.action">
 
 			<display:column sortable="true" title="Name">
 				<ww:url id="editLink" action="editTask" includeParams="none">

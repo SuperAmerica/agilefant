@@ -88,8 +88,8 @@
 	          <include name="*.emma" />
 	        </fileset>
 
-	        <txt outfile="${coverage.dir}/coverage.txt" />
-	        <html outfile="${coverage.dir}/coverage.html" />
+	        <txt outfile="${coverage.reports.dir}/coverage.txt" />
+	        <html outfile="${coverage.reports.dir}/coverage.html" />
 	      </report>
 	    </emma>		
 	</target>
@@ -318,7 +318,7 @@
 		<jar basedir="${build.webapp}" includes="**" destfile="${warFile}"/>	
 	</target>
 	
-	<target name="release" depends="clean, war, generate-javadocs, run-jdepend">
+	<target name="release" depends="clean, war, generate-javadocs, run-jdepend, drop-create-test-db, emma, test-reports">
 		<mkdir dir="${release.dir}"/>
 		<mkdir dir="${release.dir}/doc"/>
 		<copy file="${warFile}" todir="${release.dir}"/>

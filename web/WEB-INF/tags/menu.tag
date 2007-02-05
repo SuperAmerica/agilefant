@@ -104,21 +104,21 @@
 
 &nbsp;</div>
 
-					<div id="maintitle">Agilefant
-
-						</div>
-										<div id="logout">
-	  <form action="j_acegi_logout" method="post">
+				<div id="maintitle">Agilefant
+				</div>
+				<div id="logout">
+    <ul>
+  	<li id="nav6"><a href="listActivityTypes.action">Activities & work types</a></li>  
+	<li id="nav7"><a href="/agilefant/listUsers.action">Users</a></li>
+	<li><form action="j_acegi_logout" method="post">
     	<input name="exit" type="submit" value="logout"/>
-	  </form>
-
-					
+	  	</form>
+	</li>
+	</ul>
 				</div>
 					
 				</div>
 				<!-- /header -->
-
-
 
 	<div id="menuwrap${navi}">
 	<div id="submenuwrap${subnavi}">
@@ -128,8 +128,6 @@
   <li id="nav3"><a href="/agilefant/viewProject.action">Project</a></li>
   <li id="nav4"><a href="/agilefant/listProducts.action">Product</a></li>
   <li id="nav5"><a href="managementView.action">Development portfolio</a></li>  
-  <li id="nav6"><a href="listActivityTypes.action">Activities & work types</a></li>  
-  <li id="nav7"><a href="/agilefant/listUsers.action">Users</a></li>
 </ul>
 </div>
 </div>

@@ -19,6 +19,7 @@ public class UserAction extends ActionSupport implements CRUDAction{
 	private UserDAO userDAO;
 	private String password1;
 	private String password2;
+	private String email;
 
 	public String create() {
 		userId = 0;
@@ -83,8 +84,8 @@ public class UserAction extends ActionSupport implements CRUDAction{
 
 		storable.setFullName(this.user.getFullName());
 		storable.setLoginName(this.user.getLoginName());
-		storable.setEmailAddress(this.user.getEmailAddress());
-		storable.setPassword(md5Pw);		
+		storable.setPassword(md5Pw);
+		storable.setEmail(this.user.getEmail());
 	}
 
 	public User getUser() {
@@ -130,5 +131,13 @@ public class UserAction extends ActionSupport implements CRUDAction{
 
 	public void setPassword2(String password2) {
 		this.password2 = password2;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 }

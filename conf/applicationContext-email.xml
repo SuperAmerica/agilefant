@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
+                       "http://www.springframework.org/dtd/spring-beans.dtd">
+                      
+<beans>
+ 	
+ 	<bean id="emailUtil" class="fi.hut.soberit.agilefant.util.EmailUtil">
+	
+	 	<property name="smtpHost" value="smtp.hut.fi"/>
+	 	<property name="smtpPort" value="25"/>
+	 	
+	 	<property name="useAuthentication" 	value="false"/>
+	 	<!--
+		 	<property name="login" 				value="abc"/>	 	
+	 		<property name="password" 			value="def"/>	 		 	
+	 	 -->
+
+		<!-- String to postfix user's full name in email with -->
+	 	<property name="namePostfix"		value=" (AGILEFANT)"/>
+	 	
+	 	<!-- String to prefix subject lines in email with -->
+	 	<property name="subjectPrefix"		value="(AGILEFANT) "/>
+ 	
+	</bean>
+	
+</beans>

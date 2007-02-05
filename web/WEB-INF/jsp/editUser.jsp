@@ -20,7 +20,7 @@
 			User ID (used in login): <ww:textfield name="user.loginName"/>
 		</p>
 		<p>
-			Email: <ww:textfield name="user.emailAddress" value="${user.emailAddress}"/>
+			Email: <ww:textfield name="user.email" value="${user.email}"/>
 		</p>
 		<p>
 			Password: <ww:password name="password1"/>
@@ -28,7 +28,7 @@
 		<p>
 			Password again: <ww:password name="password2"/>
 		</p>
-		<p>
+			<p>
 			<ww:submit value="Store"/>
 		</p>
 	</ww:form>

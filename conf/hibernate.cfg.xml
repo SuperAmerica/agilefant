@@ -28,5 +28,17 @@
  		<mapping class="fi.hut.soberit.agilefant.model.Practice"/>
  		<mapping class="fi.hut.soberit.agilefant.model.PracticeTemplate"/>
  		<mapping class="fi.hut.soberit.agilefant.model.PracticeAllocation"/> 		
-	</session-factory>
+ 		
+		<!-- Activate hibernate validation: these listeners will raise an exception
+			 if an annotation validation constraint is violated. -->
+	    <event type="pre-update">
+	        <listener 
+	          class="org.hibernate.validator.event.ValidatePreUpdateEventListener"/>
+	    </event>
+	    <event type="pre-insert">
+	        <listener 
+	          class="org.hibernate.validator.event.ValidatePreInsertEventListener"/>
+	    </event>
+ 		
+	</session-factory>	
 </hibernate-configuration>

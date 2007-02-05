@@ -13,7 +13,9 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 
+import fi.hut.soberit.agilefant.db.hibernate.Email;
 import fi.hut.soberit.agilefant.web.page.PageItem;
+//import org.hibernate.validator.Email;
 
 @Entity
 public class User implements PageItem {
@@ -22,7 +24,7 @@ public class User implements PageItem {
 	private String password;
 	private String loginName;
 	private String fullName;
-	private String emailAddress;
+	private String email;
 	private Collection<Task> assignments = new HashSet<Task>();	
 	private Collection<Backlog> backlogs = new HashSet<Backlog>();
 	private Collection<BacklogItem> backlogItems = new HashSet<BacklogItem>();
@@ -139,11 +141,13 @@ public class User implements PageItem {
 		return collection;
 	}
 
-	public String getEmailAddress() {
-		return emailAddress;
+	@Column(nullable=true)
+	@Email
+	public String getEmail() {
+		return email;
 	}
 
-	public void setEmailAddress(String emailAddress) {
-		this.emailAddress = emailAddress;
+	public void setEmail(String email) {
+		this.email = email;
 	}
 }

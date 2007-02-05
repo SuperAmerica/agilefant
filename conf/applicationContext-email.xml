@@ -6,7 +6,7 @@
  	
  	<bean id="emailUtil" class="fi.hut.soberit.agilefant.util.EmailUtil">
 	
-	 	<property name="smtpHost" value="smtp.hut.fi"/>
+	 	<property name="smtpHost" value="smtp.example.test"/>
 	 	<property name="smtpPort" value="25"/>
 	 	
 	 	<property name="useAuthentication" 	value="false"/>

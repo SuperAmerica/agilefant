@@ -29,6 +29,20 @@ public class Iteration extends Backlog implements PageItem, EffortContainer {
     private Collection<IterationGoal> iterationGoals = new HashSet<IterationGoal>();
 //	private User owner;
 	
+    @Transient
+    public double getCompletionEstimationPercentage() {
+    	// Estimate percentage of completion by calculating
+    	// total time from performed effort + work left, and
+    	// dividing performed effort with it, to get fraction of completion. 
+    	
+    	long performed = getPerformedEffort().getTime();
+    	long estimate = getEffortEstimate().getTime();
+    	
+    	long total = performed + estimate;
+    	
+    	return 100.0*(double)performed/(double)total;
+    }
+    
 	@ManyToOne 
 	//@JoinColumn (nullable = false)
 	public Deliverable getDeliverable() {

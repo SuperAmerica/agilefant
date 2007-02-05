@@ -22,7 +22,6 @@ import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.category.CategoryItemRenderer;
-//import org.jfree.chart.renderer.xy.StandardXYItemRenderer;
 import org.jfree.chart.renderer.xy.XYItemRenderer;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.data.category.DefaultCategoryDataset;
@@ -38,6 +37,11 @@ import fi.hut.soberit.agilefant.db.PerformedWorkDAO;
 import fi.hut.soberit.agilefant.db.TaskDAO;
 import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.PerformedWork;
+import fi.hut.soberit.agilefant.model.Portfolio;
+import fi.hut.soberit.agilefant.model.Deliverable;
+import fi.hut.soberit.agilefant.model.ActivityType;
+import fi.hut.soberit.agilefant.model.Iteration;
+import fi.hut.soberit.agilefant.service.PortfolioManager;
 import org.jfree.data.category.IntervalCategoryDataset;
 import org.jfree.data.gantt.Task;
 import org.jfree.data.gantt.TaskSeries;
@@ -62,6 +66,8 @@ public class ChartAction extends ActionSupport {
 	private int workDone;
 	private double effortDone;
 	private double effortLeft;
+	private PortfolioManager portfolioManager;
+	private Portfolio portfolio;
 
 
 	public String execute(){
@@ -498,18 +504,18 @@ public class ChartAction extends ActionSupport {
 	 * task. 
 	 *
 	 */
-	public String ganttChart(){
+	public String demoGanttChart(){
 
 	        TaskSeries s1 = new TaskSeries("Scheduled");
 	        
 	        Task t1 = new Task(
-	            "Write Proposal", date(1, Calendar.APRIL, 2001), date(5, Calendar.APRIL, 2001)
+	            "Write Proposal", date(1, Calendar.APRIL, 2006), date(5, Calendar.APRIL, 2006)
 	        );
 	        t1.setPercentComplete(1.00);
 	        s1.add(t1);
 	        
 	        Task t2 = new Task(
-	            "Obtain Approval", date(9, Calendar.APRIL, 2001), date(9, Calendar.APRIL, 2001)
+	            "Obtain Approval", date(9, Calendar.APRIL, 2006), date(9, Calendar.APRIL, 2006)
 	        );
 	        t2.setPercentComplete(1.00);
 	        s1.add(t2);
@@ -517,16 +523,16 @@ public class ChartAction extends ActionSupport {
 	        // here is a task split into two subtasks...
 	        Task t3 = new Task(
 	            "Requirements Analysis", 
-	            date(10, Calendar.APRIL, 2001), date(5, Calendar.MAY, 2001)
+	            date(10, Calendar.APRIL, 2006), date(5, Calendar.MAY, 2006)
 	        );
 	        Task st31 = new Task(
 	            "Requirements 1", 
-	            date(10, Calendar.APRIL, 2001), date(25, Calendar.APRIL, 2001)
+	            date(10, Calendar.APRIL, 2006), date(25, Calendar.APRIL, 2006)
 	        );
 	        st31.setPercentComplete(1.0);
 	        Task st32 = new Task(
 	            "Requirements 2", 
-	            date(1, Calendar.MAY, 2001), date(5, Calendar.MAY, 2001)
+	            date(1, Calendar.MAY, 2006), date(5, Calendar.MAY, 2006)
 	        );
 	        st32.setPercentComplete(1.0);
 	        t3.addSubtask(st31);
@@ -536,21 +542,21 @@ public class ChartAction extends ActionSupport {
 	        // and another...
 	        Task t4 = new Task(
 	            "Design Phase", 
-	            date(6, Calendar.MAY, 2001), date(30, Calendar.MAY, 2001)
+	            date(6, Calendar.MAY, 2006), date(30, Calendar.MAY, 2006)
 	        );
 	        Task st41 = new Task(
 	             "Design 1", 
-	             date(6, Calendar.MAY, 2001), date(10, Calendar.MAY, 2001)
+	             date(6, Calendar.MAY, 2006), date(10, Calendar.MAY, 2006)
 	        );
 	        st41.setPercentComplete(1.0);
 	        Task st42 = new Task(
 	            "Design 2", 
-	            date(15, Calendar.MAY, 2001), date(20, Calendar.MAY, 2001)
+	            date(15, Calendar.MAY, 2006), date(20, Calendar.MAY, 2006)
 	        );
 	        st42.setPercentComplete(1.0);
 	        Task st43 = new Task(
 	            "Design 3", 
-	            date(23, Calendar.MAY, 2001), date(30, Calendar.MAY, 2001)
+	            date(23, Calendar.MAY, 2006), date(30, Calendar.MAY, 2006)
 	        );
 	        st43.setPercentComplete(0.50);
 	        t4.addSubtask(st41);
@@ -559,52 +565,52 @@ public class ChartAction extends ActionSupport {
 	        s1.add(t4);
 
 	        Task t5 = new Task(
-	            "Design Signoff", date(2, Calendar.JUNE, 2001), date(2, Calendar.JUNE, 2001)
+	            "Design Signoff", date(2, Calendar.JUNE, 2006), date(2, Calendar.JUNE, 2006)
 	        ); 
 	        s1.add(t5);
 	                        
 	        Task t6 = new Task(
-	            "Alpha Implementation", date(3, Calendar.JUNE, 2001), date(31, Calendar.JULY, 2001)
+	            "Alpha Implementation", date(3, Calendar.JUNE, 2006), date(31, Calendar.JULY, 2006)
 	        );
 	        t6.setPercentComplete(0.60);
 	        
 	        s1.add(t6);
 	        
 	        Task t7 = new Task(
-	            "Design Review", date(1, Calendar.AUGUST, 2001), date(8, Calendar.AUGUST, 2001)
+	            "Design Review", date(1, Calendar.AUGUST, 2006), date(8, Calendar.AUGUST, 2006)
 	        );
 	        t7.setPercentComplete(0.0);
 	        s1.add(t7);
 	        
 	        Task t8 = new Task(
 	            "Revised Design Signoff", 
-	            date(10, Calendar.AUGUST, 2001), date(10, Calendar.AUGUST, 2001)
+	            date(10, Calendar.AUGUST, 2006), date(10, Calendar.AUGUST, 2006)
 	        );
 	        t8.setPercentComplete(0.0);
 	        s1.add(t8);
 	        
 	        Task t9 = new Task(
 	            "Beta Implementation", 
-	            date(12, Calendar.AUGUST, 2001), date(12, Calendar.SEPTEMBER, 2001)
+	            date(12, Calendar.AUGUST, 2006), date(12, Calendar.SEPTEMBER, 2006)
 	        );
 	        t9.setPercentComplete(0.0);
 	        s1.add(t9);
 	        
 	        Task t10 = new Task(
-	            "Testing", date(13, Calendar.SEPTEMBER, 2001), date(31, Calendar.OCTOBER, 2001)
+	            "Testing", date(13, Calendar.SEPTEMBER, 2006), date(31, Calendar.OCTOBER, 2006)
 	        );
 	        t10.setPercentComplete(0.0);
 	        s1.add(t10);
 	        
 	        Task t11 = new Task(
 	            "Final Implementation", 
-	            date(1, Calendar.NOVEMBER, 2001), date(15, Calendar.NOVEMBER, 2001)
+	            date(1, Calendar.NOVEMBER, 2006), date(15, Calendar.NOVEMBER, 2006)
 	        );
 	        t11.setPercentComplete(0.0);
 	        s1.add(t11);
 	        
 	        Task t12 = new Task(
-	            "Signoff", date(28, Calendar.NOVEMBER, 2001), date(30, Calendar.NOVEMBER, 2001)
+	            "Signoff", date(28, Calendar.NOVEMBER, 2006), date(30, Calendar.NOVEMBER, 2006)
 	        );
 	        t12.setPercentComplete(0.0);
 	        s1.add(t12);
@@ -638,7 +644,70 @@ public class ChartAction extends ActionSupport {
 			}
 			return Action.SUCCESS;
 		}	
-
+	
+	/*------------------------------------------------------------*/
+		
+	public String ganttChart(){
+		
+		TaskSeries s1 = new TaskSeries("Scheduled");
+		portfolio = portfolioManager.getCurrentPortfolio();
+		Collection<Deliverable> deliverables = portfolio.getDeliverables();
+		for(Deliverable deliverable : deliverables){
+			Date startDate = deliverable.getStartDate();
+			Date endDate = deliverable.getEndDate();
+			ActivityType act1 = deliverable.getActivityType();
+			String name = act1.getName();
+			Task del1 = new Task(
+		            name, startDate, endDate
+		    );
+		    del1.setPercentComplete(1.00);
+		    
+		    
+		    Collection<Iteration> iterations = deliverable.getIterations();
+		    int count = 0;
+		    for(Iteration iteration : iterations){
+		    	Date iterStartDate = iteration.getStartDate();
+				Date iterEndDate = iteration.getEndDate();
+				count++;
+				String iter_name = "Iteraation "+count+"";
+				Task iter1 = new Task(iter_name, iterStartDate, iterEndDate);
+				del1.addSubtask(iter1);
+		    }
+		    
+		    s1.add(del1);
+		    
+		}
+		
+		TaskSeriesCollection collection = new TaskSeriesCollection();
+        collection.add(s1);
+        
+        IntervalCategoryDataset dataset = collection;
+        
+        // create the chart...
+        JFreeChart chart3 = ChartFactory.createGanttChart(
+            "Gantt Chart Demo",  // chart title
+            "Task",              // domain axis label
+            "Date",              // range axis label
+            dataset,             // data
+            true,                // include legend
+            true,                // tooltips
+            false                // urls
+        );
+        CategoryPlot plot = (CategoryPlot) chart3.getPlot();
+        //      plot.getDomainAxis().setMaxCategoryLabelWidthRatio(10.0f);
+        CategoryItemRenderer renderer = plot.getRenderer();
+        renderer.setSeriesPaint(0, Color.blue);
+        
+        try {
+			ByteArrayOutputStream out = new ByteArrayOutputStream();
+			ChartUtilities.writeChartAsPNG(out, chart3, 500, 300);
+			result = out.toByteArray();		
+		} catch (IOException e) {
+			System.err.println("Problem occurred creating chart.");
+		}
+		return Action.SUCCESS;
+	}	
+		    
 	    /**
 	     * Utility method for creating <code>Date</code> objects.
 	     *
@@ -657,7 +726,7 @@ public class ChartAction extends ActionSupport {
 
 	    }
 	
-	
+
 	/*---------------------------------------------------------------------------*/
 
 	public InputStream getInputStream(){
@@ -786,6 +855,16 @@ public class ChartAction extends ActionSupport {
 
 	public void setEffortLeft(double effortLeft) {
 		this.effortLeft = effortLeft;
+	}
+	
+	
+		
+	public Portfolio getPortfolio() {
+		return portfolio;
+	}
+
+	public void setPortfolioManager(PortfolioManager portfolioManager) {
+		this.portfolioManager = portfolioManager;
 	}
 
 

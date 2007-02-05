@@ -2,7 +2,7 @@
 <%@ include file="./inc/_header.jsp" %>
 <aef:bct userId="${user.id}"/>
 
-<aef:menu navi="3"  pageHierarchy="${pageHierarchy}"/> 
+<aef:menu  pageHierarchy="${pageHierarchy}"/> 
 	<ww:actionerror/>
 	<ww:actionmessage/>
 	<h2>Edit User</h2>

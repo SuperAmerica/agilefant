@@ -1,8 +1,20 @@
 <%@ include file="./inc/_taglibs.jsp" %>
-<%@ include file="./inc/_header.jsp" %>
+<%@ include file="./inc/_header.jsp" %>			
+		<c:choose>
+			<c:when test="${!empty iteration.id}">
+				<c:set var="currentIterationId" value="${iteration.id}" scope="page"/>
+				<c:if test="${iteration.id != previousIterationId}">
+					<c:set var="previousIterationId" value="${iteration.id}" scope="session"/>
+				</c:if>
+			</c:when>
+			<c:otherwise>
+				<c:set var="currentIterationId" value="${previousIterationId}" scope="page"/>
+			</c:otherwise>
+		</c:choose>			
+
 <aef:bct deliverableId="${deliverableId}"/>
 
-<aef:menu navi="2"  pageHierarchy="${pageHierarchy}"/> 
+<aef:menu navi="${contextName}"  pageHierarchy="${pageHierarchy}"/> 
 	<ww:actionerror/>
 	<ww:actionmessage/>
 		<p>
@@ -12,12 +24,12 @@
 			View | <ww:a href="%{editIterationLink}">Edit </ww:a>		
 
 		</p>
-			
-			
-					<aef:productList/>
-		<ww:form action="viewIteration">
+		
+		<aef:productList/>
+		<ww:form action="contextView">
+		<ww:hidden name="contextName" value="iteration"/> 
 			<p>
-				<select name="iterationId">
+				<select name="contextObjectId">
 					<c:forEach items="${productList}" var="product">
 						<c:forEach items="${product.deliverables}" var="deliverable">
 							<c:forEach items="${deliverable.iterations}" var="iter">

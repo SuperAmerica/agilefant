@@ -2,7 +2,7 @@
 <%@ include file="./inc/_header.jsp" %>
 <aef:bct backlogId="${backlogId}"/>
 
-<aef:menu navi="1" pageHierarchy="${pageHierarchy}"/> 
+<aef:menu navi="${contextName}" pageHierarchy="${pageHierarchy}"/> 
 	<ww:actionerror/>
 	<ww:actionmessage/>
 	<h2>Edit backlog item</h2>
@@ -49,6 +49,8 @@
 		
 		<p>
 			<ww:submit value="Store"/>
+    		<ww:submit name="action:contextView" value="Cancel"/>
+			
 		</p>
 	</ww:form>
 	

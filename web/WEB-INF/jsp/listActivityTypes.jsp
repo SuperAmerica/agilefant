@@ -1,6 +1,11 @@
 <%@ include file="./inc/_taglibs.jsp" %>
 <%@ include file="./inc/_header.jsp" %>
-<aef:menu navi="6" /> 
+<aef:menu  /> 
+
+	<p>
+	Activity and work types | <a href="listUsers.action">Users</a>
+	</p>
+
 	<p>
 		<c:choose>
 			<c:when test="${empty activityTypes}">

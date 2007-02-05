@@ -2,7 +2,7 @@
 <%@ include file="./inc/_header.jsp" %>
 <aef:bct backlogItemId="${backlogItemId}"/>
 
-<aef:menu navi="1" pageHierarchy="${pageHierarchy}"/> 
+<aef:menu navi="${contextName}" pageHierarchy="${pageHierarchy}"/> 
 	<ww:actionerror/>
 	<ww:actionmessage/>
 	<h2>Edit task</h2>
@@ -33,6 +33,8 @@
 		</c:if>
 		<p>
 			<ww:submit value="Store"/>
+    		<ww:submit name="action:contextView" value="Cancel"/>
+			
 		</p>
 	</ww:form>	
 	<c:if test="${task.id > 0}">

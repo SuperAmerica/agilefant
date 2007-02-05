@@ -152,6 +152,7 @@
 			
 	        <jvmarg value="-Demma.coverage.out.file=${coverage.dir}/coverage.emma" />
 	        <jvmarg value="-Demma.coverage.out.merge=true" />
+			<jvmarg value="-Djava.net.preferIPv4Stack=true" />
 			
 			<!-- System property for recognizing ant instead of eclipse-->
 			<classpath refid="compile.test.classpath"/>

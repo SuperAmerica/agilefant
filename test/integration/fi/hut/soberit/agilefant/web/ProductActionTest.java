@@ -2,22 +2,12 @@ package fi.hut.soberit.agilefant.web;
 
 import com.opensymphony.xwork.Action;
 
-import fi.hut.soberit.agilefant.model.AFTime;
-import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
-import fi.hut.soberit.agilefant.model.BacklogItemStatus;
-import fi.hut.soberit.agilefant.model.IterationGoal;
-import fi.hut.soberit.agilefant.model.Priority;
 import fi.hut.soberit.agilefant.model.Product;
-import fi.hut.soberit.agilefant.model.Task;
-import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.util.SpringTestCase;
-import fi.hut.soberit.agilefant.security.SecurityUtil;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 
 /**
  * JUnit integration test class for testing class ProductAction
@@ -40,7 +30,7 @@ public class ProductActionTest extends SpringTestCase {
     private static final int productId = 1234567890;
 	private static final int INVALID_PRODUCTID = -1;
     private Collection<BacklogItem> backlogItems = new HashSet<BacklogItem>();
-    private static final User ASSIGNEE = TestUser;
+//    private static final User ASSIGNEE = TestUser;
     
 	private ProductAction productAction; // The field and setter to be used by Spring 
 

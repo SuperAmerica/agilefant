@@ -35,6 +35,11 @@
 		<description>
 			Lists all unfinished tasks for current user to variable unfinishedTaskList
 	    </description>
+	    <attribute>
+	    	<name>userId</name>
+	    	<required>true</required>	  
+	    	<rtexprvalue>true</rtexprvalue>  
+	    </attribute>	    
 	</tag>
 
 	<tag>
@@ -44,6 +49,11 @@
 		<description>
 			Lists all unfinished tasks, watched by the current user, to variable unfinishedWatchedTasksList
 	    </description>
+	    <attribute>
+	    	<name>userId</name>
+	    	<required>true</required>	   
+	    	<rtexprvalue>true</rtexprvalue>
+	    </attribute>	    
 	</tag>
 	
 	<tag>

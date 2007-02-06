@@ -10,13 +10,12 @@
 
   		<aef:userList/>
    		<aef:currentUser/>   		
-   		<aef:unfinishedTaskList/>
    		
-	   	<!-- <aef:unfinishedWatchedTasksList/>  -->
-	   	
 			<c:if test="${empty user}">
 				<c:set var="user" value="${currentUser}" scope="page"/>
 			</c:if>
+			
+   		<aef:unfinishedTaskList userId="${user.id}"/>
 
 		<p>
 			<ww:form action="myTasksSwitchUser">

@@ -4,12 +4,12 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.Tag;
 
 import fi.hut.soberit.agilefant.db.UserDAO;
-import fi.hut.soberit.agilefant.security.SecurityUtil;
 
 public class UnfinishedWatchedTasksListTag extends SpringTagSupport {
 	private static final long serialVersionUID = 8445060838827472218L;
 	public static final String UNFINISHED_TASK_LIST_KEY = "unfinishedWatchedTasksList";
 	private UserDAO userDAO;
+	private int id;
 		
 	@Override
 	public int doStartTag() throws JspException {
@@ -18,8 +18,12 @@ public class UnfinishedWatchedTasksListTag extends SpringTagSupport {
 		
 		super.getPageContext().setAttribute(
 				UnfinishedWatchedTasksListTag.UNFINISHED_TASK_LIST_KEY, 
-				userDAO.getUnfinishedWatchedTasks( SecurityUtil.getLoggedUser() ));
+				userDAO.getUnfinishedWatchedTasks( userDAO.get( id ) ));
 		
 		return Tag.EVAL_BODY_INCLUDE;
 	}
+	
+	public void setUserId(int id) {
+		this.id = id;
+	}		
 }

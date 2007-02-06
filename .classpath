@@ -5,6 +5,7 @@
 	<classpathentry kind="src" path="test/fixture"/>
 	<classpathentry kind="src" path="test/util"/>
 	<classpathentry kind="src" path="test/integration"/>
+	<classpathentry kind="src" path="build/test/conf"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/commons-logging.jar"/>
 	<classpathentry kind="lib" path="lib/ejb3-persistence.jar"/>

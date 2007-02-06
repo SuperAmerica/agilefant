@@ -328,7 +328,7 @@
 		<jar basedir="${build.webapp}" includes="**" destfile="${warFile}"/>	
 	</target>
 	
-	<target name="release" depends="clean, war, generate-javadocs, run-jdepend, drop-create-test-db, emma, test-reports">
+	<target name="release" depends="clean, war, generate-javadocs, doccheck, run-jdepend, drop-create-test-db, emma, test-reports">
 		<mkdir dir="${release.dir}"/>
 		<mkdir dir="${release.dir}/doc"/>
 		<copy file="${warFile}" todir="${release.dir}"/>
@@ -336,4 +336,16 @@
 	    	<fileset dir="${doc.dir}"/>
 		</copy>
 	</target>
+	
+	<target name="doccheck">
+		<mkdir dir="${doccheck.dir}"/>
+		<javadoc 
+			classpathref="compile.classpath"
+			doclet="com.sun.tools.doclets.doccheck.DocCheck"
+			docletpathref="compile.classpath"
+			destdir="${doccheck.dir}"
+			sourcepath="${src}">
+			<package name="fi.hut.soberit.agilefant.*"/>
+		</javadoc>
+	</target>		
 </project>

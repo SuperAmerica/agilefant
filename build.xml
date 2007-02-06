@@ -220,7 +220,15 @@
 			<hbm2ddl export="${hbm2ddl.export}" outputfilename="create-db.ddl" update="true"/>
 		</hibernatetool>
 	</target>
-	
+
+	<target name="update-test-db" depends="compile" description="Creates db using hibernate tools">
+		<hibernatetool destdir="${build.dir}">
+			<annotationconfiguration propertyfile="${conf.dir}/database-fortests-${database.type}.properties"
+				configurationfile="${conf.dir}/hibernate.cfg.xml"/>
+			<hbm2ddl export="${hbm2ddl.export}" outputfilename="create-db.ddl" update="true"/>
+		</hibernatetool>
+	</target>
+
 		
 	<target name="webapp" depends="make-jar" description="Builds webapp">
         <copy includeEmptyDirs="true" todir="${build.webapp}">

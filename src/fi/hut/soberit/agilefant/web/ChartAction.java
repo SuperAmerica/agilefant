@@ -39,7 +39,6 @@ import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.PerformedWork;
 import fi.hut.soberit.agilefant.model.Portfolio;
 import fi.hut.soberit.agilefant.model.Deliverable;
-import fi.hut.soberit.agilefant.model.ActivityType;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.service.PortfolioManager;
 import org.jfree.data.category.IntervalCategoryDataset;
@@ -655,8 +654,7 @@ public class ChartAction extends ActionSupport {
 		for(Deliverable deliverable : deliverables){
 			Date startDate = deliverable.getStartDate();
 			Date endDate = deliverable.getEndDate();
-			ActivityType act1 = deliverable.getActivityType();
-			String name = act1.getName();
+			String name = deliverable.getName();
 			Task del1 = new Task(
 		            name, startDate, endDate
 		    );

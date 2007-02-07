@@ -45,7 +45,7 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
 
 	public String delete() {
 		backlogItem = backlogItemDAO.get(backlogItemId);
-		backlogId = backlogItem.getId();//??
+		// backlogId = backlogItem.getId();//?? removed when testing with jUnit
 		backlogItemDAO.remove(backlogItemId);
 		return Action.SUCCESS;
 	}
@@ -108,6 +108,7 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
 		storable.setDescription(this.backlogItem.getDescription());
 		storable.setAllocatedEffort(this.backlogItem.getAllocatedEffort());
 		storable.setPriority(this.backlogItem.getPriority());
+		storable.setStatus(this.backlogItem.getStatus()); // added after failed jUnit test 
 		if (storable.getId() == 0){
 			storable.setBacklog(backlog);
 		}		

@@ -21,16 +21,11 @@
 			</fileset>
 		</path>
 
-<!--    	<path id="compile.test.classpath">
-    		<path refid="compile.classpath"/>
-			<path location="${build.classes}"/>
-    	</path>-->
-
     	<path id="compile.test.classpath">
     		<path refid="compile.classpath"/>
 			<pathelement location="${build.classes}"/>
 			<pathelement location="${build.test.classes.dir}"/>
-			<pathelement location="${build.test.conf.dir}"/>
+			<pathelement location="${test.conf.dir}"/>
     	</path>
 
     	<path id="hibernatetoolslib">
@@ -131,26 +126,71 @@
 		</junitreport>
 	</target>
 	
-	<!-- depends compile-tests, jotta tulee yhdellä ant-targetilla kuntoon -->
-	<target name="test-prepare-spring" depends="compile-tests" description="Prepare Spring-specific stuff for tests">
-		<copy todir="${build.test.conf.dir}/WEB-INF/"> <!-- tarvitaanko enää?-->
+<!--	<target name="test-prepare-spring-old" depends="compile-tests" description="Prepare Spring-specific stuff for tests">
+		<copy todir="${build.test.conf.dir}/WEB-INF/">
 	    	<fileset dir="${conf.dir}" excludes="database-*.properties"/>
 		</copy>
 		<copy todir="${build.test.conf.dir}">
 	    	<fileset dir="${conf.dir}" excludes="database-*.properties"/>
 		</copy>
 		<copy tofile="${build.test.conf.dir}/WEB-INF/database.properties">
-			<!-- old: 			<fileset file="${conf.dir}/database-${database.type}.properties"/> -->
 			<fileset file="${conf.dir}/database-fortests-${database.type}.properties"/>
+		</copy>
+	</target>-->
+	
+	<target name="copy-spring-files" description="Internal target">
+		<mkdir dir="${destination}/WEB-INF"/>
+		<copy file="${conf.dir}/configuration.properties" 
+			tofile="${destination}/WEB-INF/configuration.properties"/> 
+		<copy file="${conf.dir}/database-fortests-${database.type}.properties"
+			tofile="${destination}/WEB-INF/database.properties"/>
+		<copy file="${conf.dir}/hibernate.cfg.xml"
+			tofile="${destination}/WEB-INF/hibernate.cfg.xml"/>
+		<copy todir="${destination}">
+	    	<fileset dir="${conf.dir}" includes="*.xml"/>
 		</copy>
 	</target>
 	
+	<target name="test-prepare-spring" depends="compile-tests" description="Prepare Spring-specific stuff for jUnit-tests">
+		<antcall target="copy-spring-files">
+			<param name="destination" value="${test.conf.dir}"/>
+		</antcall>
+<!--		<mkdir dir="${test.conf.dir}/WEB-INF"/>
+		<copy file="${conf.dir}/configuration.properties" 
+			tofile="${test.conf.dir}/WEB-INF/configuration.properties"/> 
+		<copy file="${conf.dir}/database-fortests-${database.type}.properties"
+			tofile="${test.conf.dir}/WEB-INF/database.properties"/>
+		<copy file="${conf.dir}/hibernate.cfg.xml"
+			tofile="${test.conf.dir}/WEB-INF/hibernate.cfg.xml"/>
+		<copy todir="${test.conf.dir}">
+	    	<fileset dir="${conf.dir}" includes="*.xml"/>
+		</copy>-->
+	</target>
+
+	<!-- fitnesse.dir must be the directory where fitnesse is driven.
+	     {fitnesse.dir}/conf must be added to fitnesse classpath -->
+	<target name="test-prepare-fitnesse" depends="compile-tests" description="Prepare Spring-specific stuff for Fitnesse-tests">
+		<antcall target="copy-spring-files">
+			<param name="destination" value="${fitnesse.dir}/conf"/>
+		</antcall>
+<!--		<mkdir dir="${fitnesse.dir}/conf/WEB-INF"/>
+		<copy file="${conf.dir}/configuration.properties" 
+			tofile="${fitnesse.dir}/conf/WEB-INF/configuration.properties"/> 
+		<copy file="${conf.dir}/database-fortests-${database.type}.properties"
+			tofile="${fitnesse.dir}/conf/WEB-INF/database.properties"/>
+		<copy file="${conf.dir}/hibernate.cfg.xml"
+			tofile="${fitnesse.dir}/conf/WEB-INF/hibernate.cfg.xml"/>
+		<copy todir="${fitnesse.dir}/conf">
+	    	<fileset dir="${conf.dir}" includes="*.xml"/>
+		</copy>-->
+	</target>
+
 	<target name="test">
-		<mkdir dir="${build.test.conf.dir}/WEB-INF"/>
+		<mkdir dir="${test.conf.dir}/WEB-INF"/>
 		<mkdir dir="${test.reports.dir}"/>
-<!--		<junit fork="true" dir="${build.test.conf.dir}"> -->
-		<junit fork="true" dir="${build.test.dir}" printsummary="true">
-			
+<!--		<junit fork="true" dir="${test.conf.dir}"> -->
+<!--		<junit fork="true" dir="${build.test.dir}" printsummary="true">-->
+		<junit fork="true" printsummary="true">			
 	        <jvmarg value="-Demma.coverage.out.file=${coverage.dir}/coverage.emma" />
 	        <jvmarg value="-Demma.coverage.out.merge=true" />
 			<jvmarg value="-Djava.net.preferIPv4Stack=true" />

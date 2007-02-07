@@ -5,6 +5,8 @@ import fi.hut.soberit.agilefant.util.SpringEnabledTestCase;
 
 /*
  * Example spring-enabled unit test.
+ * Outdated, one should use SpringTestCase instead of SpringEnabledTestCase
+ * See UserActionTest for example. 
  * 
  * @author Turkka Äijälä
  */
@@ -26,7 +28,7 @@ public class UserTest extends SpringEnabledTestCase {
 	/**
 	 * Test saving, loading and deleting users. 
 	 */
-	public void testUser() {
+/*	public void testUser() {
 		
 		// if the DAO was null, spring propably did not set it
 		assertNotNull("spring support not working?", userDAO);
@@ -91,5 +93,5 @@ public class UserTest extends SpringEnabledTestCase {
 		System.out.println(loadedInvalidEmailuser.getEmail());
 		
 		userDAO.remove(invalidEmailuser.getId());
-	}	
+	}*/	
 }

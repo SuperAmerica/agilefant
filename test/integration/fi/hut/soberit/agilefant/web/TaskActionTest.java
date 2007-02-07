@@ -22,13 +22,13 @@ import fi.hut.soberit.agilefant.db.UserDAO;
 /**
  * JUnit integration testing class for testing class TaskAction.
  * 
- * Heavily under construction. Do not copy =)
+ * Under construction. Do not copy =)
  * 
  * @author tvainiok
  */
 public class TaskActionTest extends SpringTestCase {
 	private static final String TEST_NAME1 = "jUnit test -task 1";
-	private static final String TEST_NAME2 = "jUnit test -task 1";
+	private static final String TEST_NAME2 = "jUnit test -task 2";
 	private static final String TEST_DESC1 = "Task, missä tehdään vaikka mitä 1";
 	private static final String TEST_DESC2 = "Task, missä tehdään vaikka mitä 2";
 	private static final AFTime TEST_EST1 = new AFTime("4h");
@@ -51,7 +51,7 @@ public class TaskActionTest extends SpringTestCase {
 	private ProductDAO productDAO;
 	private BacklogItemDAO backlogItemDAO;
 	private UserDAO userDAO;
-	private SecurityUtil securityUtil;
+//	private SecurityUtil securityUtil;
 	
 	public void setTaskAction(TaskAction taskAction) {
 		this.taskAction = taskAction;
@@ -85,9 +85,9 @@ public class TaskActionTest extends SpringTestCase {
 		this.userDAO = userDAO;
 	}
 	
-	public void setSecurityUtil(SecurityUtil securityUtil) {
+/*	public void setSecurityUtil(SecurityUtil securityUtil) {
 		this.securityUtil = securityUtil;
-	}
+	}*/
 
 	/*
 	 * Checks, if there are any given error countered. 
@@ -111,7 +111,7 @@ public class TaskActionTest extends SpringTestCase {
 	}
 	
 	private void setLoggedUser(User user) {
-		this.securityUtil.setLoggedUser(user);
+		SecurityUtil.setLoggedUser(user);
 	}
 	
 	private void setAssignee(User assignee) {
@@ -223,7 +223,7 @@ public class TaskActionTest extends SpringTestCase {
 	 */
 	private void create() {
 		String result = taskAction.create();
-		assertEquals("create() was unsuccessful", result, Action.SUCCESS);
+		assertEquals("create() was unsuccessful", Action.SUCCESS, result);
 	}
 
 	/*
@@ -233,12 +233,19 @@ public class TaskActionTest extends SpringTestCase {
 	 */
 	private void store() {
 		String result = taskAction.store();
-		assertEquals("store() was unsuccessful", result, Action.SUCCESS);
+		assertEquals("store() was unsuccessful", Action.SUCCESS, result);
 	}
 
 	private void edit() {
 		String result = taskAction.edit();
-		assertEquals("edit() was unsuccessful", result, Action.SUCCESS);
+		assertEquals("edit() was unsuccessful", Action.SUCCESS, result);
+	}
+	
+	private void fetchForEditing(String name, String desc) {
+		this.taskAction.setTask(null);
+		taskAction.setTaskId(this.getTask(name, desc).getId());
+		this.edit();
+		super.assertNotNull("Edit() was unsuccesfull", this.taskAction.getTask());
 	}
 	
 	/*
@@ -253,13 +260,40 @@ public class TaskActionTest extends SpringTestCase {
 		return null;
 	}
 	
-/*	private Task generateAndStoreTestTask(int n) {
-		this.create();
-		User u1 = this.getTestUser(1);
-		User u2 = this.getTestUser(2);
-		if(n == 1)
-			
-	}*/
+	/**
+	 * Generates a test task
+	 * @param ta springed TaskAction object
+	 * @param td springed TaskDAO object
+	 * @param effortEstimate Effort estimate for the task
+	 * @param number chosen test user (1 or 2)
+	 * @return Task object, that is stored.
+	 */
+	public static Task GenerateAndStoreTestUser(TaskAction ta, TaskDAO td, BacklogItem bi,
+			AFTime effortEstimate, int number) {
+		TaskActionTest tat = new TaskActionTest();
+		tat.setTaskAction(ta);
+		tat.setTaskDAO(td);
+		tat.create();
+		tat.setEstimate(effortEstimate);
+		User assignee = tat.getTestUser(1);
+		User creator = tat.getTestUser(2);
+		String name;
+		String desc;
+		if(number == 1) {
+			name = TEST_NAME1;
+			desc = TEST_DESC1;
+			tat.setContents(name, desc, creator, assignee, 
+					effortEstimate, TEST_PRI1, TEST_STAT1, bi);
+		}
+		else {
+			name = TEST_NAME2;
+			desc = TEST_DESC2;
+			tat.setContents(name, desc, creator, assignee, 
+					effortEstimate, TEST_PRI2, TEST_STAT2, bi);
+		}	
+		tat.store();
+		return tat.getTask(name, desc);
+	}
 
 	/*** Actual test methods **/
 	
@@ -299,6 +333,31 @@ public class TaskActionTest extends SpringTestCase {
 		super.assertEquals("storing task with name missing was successful", Action.ERROR, result);
 		assertTrue("task.missingName -error not found", errorFound(taskAction.getText("task.missingName")));
 	}
+	
+	public void testStoreAndEdit_withNullEstimates() {
+		this.create();
+		BacklogItem bi = this.getTestBacklogItem(this.getTestBacklog());
+		User assignee = this.getTestUser(1);
+		User creator = this.getTestUser(2);
+		this.setContents(TEST_NAME1, TEST_DESC1, creator, assignee, 
+				null, TEST_PRI1, TEST_STAT1, bi);
+		String result = taskAction.store();
+		super.assertEquals("storing task with null estimate was unsuccesfull", Action.SUCCESS, result);
+		this.fetchForEditing(TEST_NAME1, TEST_DESC1);
+		super.assertNull("Null estimate wasn't null after fetching for editing", 
+				taskAction.getTask().getEffortEstimate());
+		this.setEstimate(TEST_EST1);
+		this.store();
+		this.fetchForEditing(TEST_NAME1, TEST_DESC1);
+		super.assertEquals("Changed estimate wasn't as supposed", TEST_EST1, 
+				taskAction.getTask().getEffortEstimate());
+		this.setEstimate(null);		
+		this.store();
+		this.fetchForEditing(TEST_NAME1, TEST_DESC1);
+		super.assertNull("Setting estimate to null (for a task create before) was unsuccesfull", 
+				taskAction.getTask().getEffortEstimate());
+	}
+
 	
 	public void testStore_withoutCreate() {
 		try {
@@ -383,11 +442,12 @@ public class TaskActionTest extends SpringTestCase {
 	}
 	
 	public void testDelete_withInvalidId() {
-		userAction.setUserId(INVALID_TASKID);
+		taskAction.setTaskId(INVALID_TASKID);
 		try {
-			String result = userAction.delete();
+			String result = taskAction.delete();
 			assertEquals("Invalid task id didn't result an error.", Action.ERROR, result);
-			fail("delete() with invalid id " + INVALID_TASKID + " was accepted.");
+			// TODO - check error.
+//			fail("delete() with invalid id " + INVALID_TASKID + " was accepted.");
 		}
 		catch(IllegalArgumentException iae) {
 		}

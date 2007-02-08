@@ -1,8 +1,7 @@
 			</div>
 
-<div id="footer">
-<p>&copy; 2RoX</p>
-
+			<div id="footer">
+			  <p>&copy; 2RoX</p>
 			</div>
 			</div>
 			<!-- /wrapper -->

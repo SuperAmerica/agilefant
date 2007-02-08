@@ -24,13 +24,12 @@
     <li class="hidden"><a href="">Iteration goal ...</a></li>
     <li class="hidden"><a href="">Activity ...</a>
     <li class="hidden"><a href="">Business goal ...</a></li>
-
     <li class="hidden"><a href="">Business requirement ...</a></li>
     </ul>
   </li>
   <li class="normal">
 	  <form action="j_acegi_logout" method="POST">
-    	<input name="exit" type="submit" value="logout"></td></tr>
+    	<input name="exit" type="submit" value="logout">
 	  </form>
   </li>
   

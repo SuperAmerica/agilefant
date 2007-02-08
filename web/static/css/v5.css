@@ -27,7 +27,9 @@ blockquote {margin-left:20px;padding:0 0 0 9px;border-left:1px dotted #999}
 /* INNERWRAP - WIDTH to dodge the peekaboo bug - PADDING to avoid a GAP with the wrapper */
 #innerwrapper {width:100%;padding-bottom:1px; }
 
-
+/* For login fields' alignment */
+#login   { width: 26em; }
+#login p { text-align: right; }
 
 /* TOP LINKS - removing the container and transfering the ID to the UL fails in NN4 */
 #toplinks {width:600px;position:absolute;text-align:left;top:100px;left:171px}

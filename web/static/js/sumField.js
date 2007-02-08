@@ -1,5 +1,5 @@
 // (c) 2roX 2007
-// author Marjukka Kokkonen
+// @author Marjukka Kokkonen
 //
 // Thanks to the author of "DOM Scripting : Web design with JavaScript and the Document Object Model"
 // for leading the way.
@@ -77,7 +77,7 @@ function getTheTable(){
 function getInputElementsToSumUp(){
 
   // The number of the column counting from left, where the elements to be summed reside.
-  var columnNo = 5;
+  var columnNo = 2;
 
   // Check that there are elements to sum up
   var theTable = getTheTable();
@@ -97,12 +97,13 @@ function getInputElementsToSumUp(){
     if(tRows.length<1)  {    if(debug) alert("There are no 'td' elements to consider. Stopping.");    return false;  }
   }
 
-  // At last, get the input fields from the td elements.
-  // Supposing here that there is nothing but the input field.
+  // At last, get the input fields from the <td> elements.
+  // Supposing here that there is nothing more in the <td>
+  // element but the input field.
   //
   var theFields = Array();
   for(var i=0; i<theTds.length; i++){
-    var formnode = theTds[i];//.childNodes[1]; // get the form node
+    var formnode = theTds[i];
     theFields[theFields.length] = formnode.childNodes[3]; //.getElementById("myTasksPerformWork_event_effort");
     //if(debug) alert(theFields[theFields.length-1].firstChild);
   }

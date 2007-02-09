@@ -151,20 +151,10 @@
 		</copy>
 	</target>
 	
-	<target name="test-prepare-spring" depends="compile-tests" description="Prepare Spring-specific stuff for jUnit-tests">
+	<target name="test-copy-spring-conf-files" depends="compile-tests" description="Copy Spring-specific stuff for jUnit-tests to conf/test">
 		<antcall target="copy-spring-files">
 			<param name="destination" value="${test.conf.dir}"/>
 		</antcall>
-<!--		<mkdir dir="${test.conf.dir}/WEB-INF"/>
-		<copy file="${conf.dir}/configuration.properties" 
-			tofile="${test.conf.dir}/WEB-INF/configuration.properties"/> 
-		<copy file="${conf.dir}/database-fortests-${database.type}.properties"
-			tofile="${test.conf.dir}/WEB-INF/database.properties"/>
-		<copy file="${conf.dir}/hibernate.cfg.xml"
-			tofile="${test.conf.dir}/WEB-INF/hibernate.cfg.xml"/>
-		<copy todir="${test.conf.dir}">
-	    	<fileset dir="${conf.dir}" includes="*.xml"/>
-		</copy>-->
 	</target>
 
 	<!-- fitnesse.dir must be the directory where fitnesse is driven.
@@ -173,16 +163,6 @@
 		<antcall target="copy-spring-files">
 			<param name="destination" value="${fitnesse.dir}/conf"/>
 		</antcall>
-<!--		<mkdir dir="${fitnesse.dir}/conf/WEB-INF"/>
-		<copy file="${conf.dir}/configuration.properties" 
-			tofile="${fitnesse.dir}/conf/WEB-INF/configuration.properties"/> 
-		<copy file="${conf.dir}/database-fortests-${database.type}.properties"
-			tofile="${fitnesse.dir}/conf/WEB-INF/database.properties"/>
-		<copy file="${conf.dir}/hibernate.cfg.xml"
-			tofile="${fitnesse.dir}/conf/WEB-INF/hibernate.cfg.xml"/>
-		<copy todir="${fitnesse.dir}/conf">
-	    	<fileset dir="${conf.dir}" includes="*.xml"/>
-		</copy>-->
 	</target>
 
 	<target name="test">
@@ -211,8 +191,10 @@
 			<param name="srcdir" value="${test.unit.src}"/>
 		</antcall>
 	</target>
-	
-	<target name="test-integration" depends="compile-tests, test-prepare-spring" description="Runs integration tests">
+
+<!--	<target name="test-integration" depends="compile-tests, test-prepare-spring" description="Runs integration tests">-->
+    <!-- conf files not copied implicitly any more -->
+	<target name="test-integration" depends="compile-tests" description="Runs integration tests">
 		<antcall target="test">
 			<param name="srcdir" value="${test.integration.src}"/>
 		</antcall>

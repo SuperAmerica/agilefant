@@ -85,6 +85,9 @@ public abstract class UserTypeFilter implements UserType, ParameterizedType {
         	// create an instance of that class
         	Object classInstance = clazz.newInstance();
         	
+        	if(!(classInstance instanceof UserType))
+        		throw new HibernateException("got a subtype class of invalid type: should be subclass of UserType");
+        	
     		subUserType = (UserType)classInstance;       	
         	
     		// if the SubType is parametrized
@@ -112,8 +115,6 @@ public abstract class UserTypeFilter implements UserType, ParameterizedType {
             throw new HibernateException("invalid subtype", iae);
         } catch (InstantiationException ie) {
             throw new HibernateException("invalid subtype", ie);
-        } catch (ClassCastException cce) {
-        	throw new HibernateException("got a subtype class of invalid type: should be subclass of UserType", cce);
         }
     }	
     

@@ -13,6 +13,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 
+import org.hibernate.annotations.Type;
+
 import fi.hut.soberit.agilefant.db.hibernate.Email;
 import fi.hut.soberit.agilefant.web.page.PageItem;
 //import org.hibernate.validator.Email;
@@ -60,6 +62,7 @@ public class User implements PageItem {
 		this.id = id;
 	}
 		
+	@Type(type="escaped_truncated_varchar")
 	public String getFullName() {
 		return fullName;
 	}
@@ -69,6 +72,7 @@ public class User implements PageItem {
 	}
 	
 	@Column(unique=true)
+	@Type(type="escaped_truncated_varchar")
 	public String getLoginName() {
 		return loginName;
 	}
@@ -77,6 +81,7 @@ public class User implements PageItem {
 		this.loginName = loginName;
 	}
 	
+	@Type(type="truncated_varchar")
 	public String getPassword() {
 		return password;
 	}
@@ -143,6 +148,7 @@ public class User implements PageItem {
 
 	@Column(nullable=true)
 	@Email
+	@Type(type="truncated_varchar")
 	public String getEmail() {
 		return email;
 	}

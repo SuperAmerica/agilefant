@@ -42,7 +42,7 @@ public class WorkType {
 		this.activityType = activityType;
 	}
 	
-	@Type(type="text")
+	@Type(type="escaped_text")
 	public String getDescription() {
 		return description;
 	}
@@ -52,7 +52,7 @@ public class WorkType {
 	}
 	
 	@Column(nullable=false)
-	@Type(type="truncated_string")
+	@Type(type="truncated_varchar")
 	public String getName() {
 		return name;
 	}

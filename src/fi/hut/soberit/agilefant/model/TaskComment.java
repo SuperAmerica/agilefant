@@ -12,7 +12,7 @@ public class TaskComment extends TaskEvent{
 		
 	private String comment;
 
-	@Type(type="text")
+	@Type(type="escaped_text")
 	public String getComment() {
 		return comment;
 	}

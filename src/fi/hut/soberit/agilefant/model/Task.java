@@ -61,7 +61,7 @@ public class Task implements PageItem, Assignable, EffortContainer {
 
 	private Collection<PracticeAllocation> practices = new HashSet<PracticeAllocation>();
 
-	@Type(type="text")
+	@Type(type="escaped_text")
 	public String getDescription() {
 	    return description;
 	}
@@ -82,7 +82,7 @@ public class Task implements PageItem, Assignable, EffortContainer {
 	    this.id = id;
 	}
 
-	@Type(type="truncated_string")
+	@Type(type="truncated_varchar")
 	public String getName() {
 	    return name;
 	}

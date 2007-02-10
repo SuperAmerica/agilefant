@@ -42,7 +42,7 @@ public class ActivityType {
 		this.id = id;
 	}
 	
-	@Type(type="text")
+	@Type(type="escaped_text")
 	public String getDescription() {
 		return description;
 	}
@@ -52,7 +52,7 @@ public class ActivityType {
 	}
 	
 	@Column(nullable=false, unique=true)
-	@Type(type="truncated_string")
+	@Type(type="truncated_varchar")
 	public String getName() {
 		return name;
 	}

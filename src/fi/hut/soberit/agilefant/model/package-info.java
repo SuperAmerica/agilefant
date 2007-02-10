@@ -1,20 +1,38 @@
-/** 
- * Package-level typedef to name our time-usertype 
- * into just time, to avoid writing the full class name all the time. */
+/**
+ * Data model package, consists of Hibernate entity beans.  
+ */
 @TypeDefs(
+	/* Package-level typedefs to avoid writing the long type definitions all the time. */
     {
-    @TypeDef(
-        name="af_time",
-        typeClass = fi.hut.soberit.agilefant.db.hibernate.TimeUserType.class
-    ),
-    @TypeDef(
-            name="truncated_string",
-            typeClass = fi.hut.soberit.agilefant.db.hibernate.TruncatedStringUserType.class
-        )
+	    @TypeDef(
+	        name="af_time",
+	        typeClass = fi.hut.soberit.agilefant.db.hibernate.TimeUserType.class
+	    ),
+	    @TypeDef(
+	        name="truncated_varchar",
+	        typeClass = fi.hut.soberit.agilefant.db.hibernate.StringTruncateFilter.class,
+	        parameters = { @Parameter(name="subtypes", value="fi.hut.soberit.agilefant.db.hibernate.VarcharUserType") }	        
+	    ),
+	    @TypeDef(
+	        name="escaped_varchar",
+	        typeClass = fi.hut.soberit.agilefant.db.hibernate.StringEscapeFilter.class,
+	        parameters = { @Parameter(name="subtypes", value="fi.hut.soberit.agilefant.db.hibernate.VarcharUserType") }
+	    ),
+	    @TypeDef(
+	        name="escaped_truncated_varchar",
+	        typeClass = fi.hut.soberit.agilefant.db.hibernate.StringEscapeFilter.class,
+	        parameters = { @Parameter(name="subtypes", value="fi.hut.soberit.agilefant.db.hibernate.StringTruncateFilter fi.hut.soberit.agilefant.db.hibernate.VarcharUserType") }	        
+	    ),
+	    @TypeDef(
+	        name="escaped_text",
+	        typeClass = fi.hut.soberit.agilefant.db.hibernate.StringEscapeFilter.class,
+	        parameters = { @Parameter(name="subtypes", value="fi.hut.soberit.agilefant.db.hibernate.TextUserType") }
+	    )
     }
 )
 package fi.hut.soberit.agilefant.model;
 
+import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.TypeDefs;
 

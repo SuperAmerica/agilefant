@@ -43,7 +43,7 @@ public abstract class Backlog implements Assignable {
         this.backlogItems = backlogItems;
     }
     
-    @Type(type="text")
+    @Type(type="escaped_text")
     public String getDescription() {
         return description;
     }
@@ -61,7 +61,7 @@ public abstract class Backlog implements Assignable {
         this.id = id;
     }
     
-    @Type(type="truncated_string")
+    @Type(type="escaped_truncated_varchar")
     public String getName() {
         return name;
     }

@@ -28,7 +28,7 @@ public class Practice {
 	    this.id = id;
 	}
 
-	@Type(type="text")
+	@Type(type="escaped_text")
 	public String getDescription() {
 		return description;
 	}
@@ -37,7 +37,7 @@ public class Practice {
 		this.description = description;
 	}
 
-	@Type(type="truncated_string")
+	@Type(type="truncated_varchar")
 	public String getName() {
 		return name;
 	}

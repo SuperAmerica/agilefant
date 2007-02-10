@@ -55,6 +55,9 @@ public abstract class UserTypeFilter implements UserType, ParameterizedType {
     public void setParameterValues(Properties parameters) {
         String subTypes = parameters.getProperty("subtypes");
        
+        if(subTypes == null)
+        	 throw new HibernateException("no subtypes defined for the filter");
+        
         // separate the first token from the subtype list
         
         // find first space
@@ -104,11 +107,13 @@ public abstract class UserTypeFilter implements UserType, ParameterizedType {
         	}
         }
         catch (ClassNotFoundException cnfe) {
-            throw new HibernateException("subclass not found", cnfe);
+            throw new HibernateException("subtype not found", cnfe);
         } catch (IllegalAccessException iae) {
-            throw new HibernateException("invalid subclass", iae);
+            throw new HibernateException("invalid subtype", iae);
         } catch (InstantiationException ie) {
-            throw new HibernateException("invalid subclass", ie);
+            throw new HibernateException("invalid subtype", ie);
+        } catch (ClassCastException cce) {
+        	throw new HibernateException("got a subtype class of invalid type: should be subclass of UserType", cce);
         }
     }	
     

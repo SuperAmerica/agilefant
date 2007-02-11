@@ -35,11 +35,11 @@
 				<ww:url id="editLink" action="editTask" includeParams="none">
 					<ww:param name="taskId" value="${row.id}"/>
 				</ww:url>
-				<ww:a href="%{editLink}">${row.name}</ww:a>
+				<ww:a href="%{editLink}">${aef:out(row.name)}</ww:a>
 			</display:column>
 
 			<display:column sortable="true" title="Backlog item">
-									${row.backlogItem.name}			
+									${aef:out(row.backlogItem.name)}			
 			</display:column>
 
 			<display:column sortable="true" title="Priority">
@@ -56,10 +56,10 @@
 			</display:column>
 			<display:column sortable="true" title="Created" property="created"/>
 			<display:column sortable="true" title="Assignee">
-				${row.assignee.fullName}
+				${aef:out(row.assignee.fullName)}
 			</display:column>
 			<display:column sortable="true" title="Creator">
-				${row.creator.fullName}
+				${aef:out(row.creator.fullName)}
 			</display:column>
 		</display:table>
 </p>	
@@ -72,7 +72,7 @@
 				<ww:url id="editLink" action="editBacklogItem" includeParams="none">
 					<ww:param name="backlogItemId" value="${row.id}"/>
 				</ww:url>
-				<ww:a href="%{editLink}">${row.name}</ww:a>
+				<ww:a href="%{editLink}">${aef:out(row.name)}</ww:a>
 			</display:column>
 
 				<display:column sortable="true" title="Watched by me" >
@@ -104,13 +104,13 @@
 				</display:column>
 
 				<display:column sortable="false" title="Assignee" >
-					${row.assignee.fullName}
+					${aef:out(row.assignee.fullName)}
 				</display:column>
 				<display:column sortable="false" title="Priority" >
 					${row.priority}
 				</display:column>
 				<display:column sortable="true" title="Iteration Goal">
-					${row.iterationGoal.name}
+					${aef:out(row.iterationGoal.name)}
 				</display:column>
 
 			</display:table>
@@ -128,22 +128,8 @@
 				<ww:url id="editLink" action="editBacklogItem" includeParams="none">
 					<ww:param name="backlogItemId" value="${row.id}"/>
 				</ww:url>
-				<ww:a href="%{editLink}">${row.name}</ww:a>
+				<ww:a href="%{editLink}">${aef:out(row.name)}</ww:a>
 			</display:column>
-
-				<display:column sortable="true" title="Watched by me" >
-					<c:choose>
-						<c:when test="${empty row.watchers[currentUser.id]}">
-							Yes
-						</c:when>
-						<c:otherwise>
-							No
-						</c:otherwise>
-					</c:choose>
-				</display:column>
-
-
-
 				<display:column sortable="true" title="# of tasks">
 					${fn:length(row.tasks)}
 				</display:column>
@@ -160,13 +146,13 @@
 				</display:column>
 
 				<display:column sortable="false" title="Assignee" >
-					${row.assignee.fullName}
+					${aef:out(row.assignee.fullName)}
 				</display:column>
 				<display:column sortable="false" title="Priority" >
 					${row.priority}
 				</display:column>
 				<display:column sortable="true" title="Iteration Goal">
-					${row.iterationGoal.name}
+					${aef:out(row.iterationGoal.name)}
 				</display:column>
 
 			</display:table>
@@ -178,7 +164,7 @@
    	<p>
 		<display:table name="${user.watchedTasks}" id="row" requestURI="myTasks.action">
 			<display:column sortable="true" title="Backlog item">
-									${row.backlogItem.name}			
+									${aef:out(row.backlogItem.name)}			
 			</display:column>
 
 			<display:column sortable="true" title="Priority">
@@ -188,7 +174,7 @@
 				<ww:url id="editLink" action="editTask" includeParams="none">
 					<ww:param name="taskId" value="${row.id}"/>
 				</ww:url>
-				<ww:a href="%{editLink}">${row.name}</ww:a>
+				<ww:a href="%{editLink}">${aef:out(row.name)}</ww:a>
 			</display:column>
 			<display:column sortable="true" title="Effort left" sortProperty="effortEstimate.time">
 				${row.effortEstimate}"
@@ -198,10 +184,10 @@
 			</display:column>
 			<display:column sortable="true" title="Created" property="created"/>
 			<display:column sortable="true" title="Assignee">
-				${row.assignee.fullName}
+				${aef:out(row.assignee.fullName)}
 			</display:column>
 			<display:column sortable="true" title="Creator">
-				${row.creator.fullName}
+				${aef:out(row.creator.fullName)}
 			</display:column>
 		</display:table>
 	</p>

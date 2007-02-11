@@ -232,4 +232,17 @@
 	  <function-signature>boolean isPerformedWork(java.lang.Object)</function-signature>
 	</function>  	 
 	 	 
+	<function>
+	  <name>out</name>
+	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
+	  <function-signature>String out(java.lang.String)</function-signature>
+	</function>  	 
+	 	 
+	<function>
+	  <name>cut</name>
+	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
+	  <function-signature>String out(java.lang.String, int)</function-signature>
+	</function>  	 
+	 	 
+	 	 
 </taglib>

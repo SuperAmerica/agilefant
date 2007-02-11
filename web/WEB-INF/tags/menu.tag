@@ -119,11 +119,11 @@
 	<div id="menuwrap${navi}">
 	<div id="submenuwrap${subnavi}">
 <ul id="menu">
-  <li id="nav1"><a href="/agilefant/myTasks.action">Heartbeat</a></li>
-  <li id="nav2"><a href="contextView.action?contextName=iteration&contextObjectId=${previousIterationId}">Iteration</a></li>
-  <li id="nav3"><a href="/agilefant/viewProject.action">Project</a></li>
-  <li id="nav4"><a href="/agilefant/listProducts.action">Product</a></li>
-  <li id="nav5"><a href="managementView.action">Development portfolio</a></li>  
+  <li id="nav1"><a href="/agilefant/contextView.action?contextName=myTasks">Heartbeat</a></li>
+  <li id="nav2"><a href="/agilefant/contextView.action?contextName=iteration&contextObjectId=${previousIterationId}">Iteration</a></li>
+  <li id="nav3"><a href="/agilefant/contextView.action?contextName=project">Project</a></li>
+  <li id="nav4"><a href="/agilefant/contextView.action?contextName=product">Product</a></li>
+  <li id="nav5"><a href="/agilefant/contextView.action?contextName=managementView">Development portfolio</a></li>  
 </ul>
 </div>
 </div>

@@ -42,6 +42,18 @@
 				<param name="actionName">viewIteration</param>
 				<param name="iterationId">${contextObjectId}</param>
 			</result>					
+			<result name="success_project" type="redirect-action">
+				<param name="actionName">viewProject</param>
+			</result>					
+			<result name="success_product" type="redirect-action">
+				<param name="actionName">listProducts</param>
+			</result>					
+			<result name="success_managementView" type="redirect-action">
+				<param name="actionName">managementView</param>
+			</result>					
+			<result name="success_myTasks" type="redirect-action">
+				<param name="actionName">myTasks</param>
+			</result>					
 		</action>
 <!-- Activity type actions -->
 		<action name="listActivityTypes" method="getAll" class="activityTypeAction">

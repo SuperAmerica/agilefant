@@ -1,7 +1,7 @@
 <%@ include file="./inc/_taglibs.jsp" %>
 <%@ include file="./inc/_header.jsp" %>
 <aef:bct productId="${productId}"/>
-<aef:menu navi="1" pageHierarchy="${pageHierarchy}" /> 
+<aef:menu navi="${contextName}" pageHierarchy="${pageHierarchy}" /> 
 
 	<ww:actionerror/>
 	<ww:actionmessage/>
@@ -37,6 +37,8 @@
 		</p>
 		<p>
 			<ww:submit value="Store"/>
+    		<ww:submit name="action:editProduct" value="Cancel"/>
+			
 		</p>
 	</ww:form>		
 		<c:if test="${deliverable.id > 0}">

@@ -54,4 +54,10 @@ public class AEFFunctions {
 	public static boolean isPerformedWork(Object obj) {
 		return obj instanceof PerformedWork;
 	} 
+	public static String out(String s) {
+		return s.length() > 10 ? s.substring(0, 10) + "..." : s;
+	} 
+	public static String out(String s, int length) {
+		return s.length() > length ? s.substring(0, length) + "..." : s;
+	} 
 }

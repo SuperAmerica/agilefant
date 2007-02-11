@@ -30,10 +30,10 @@
 					Activity type: <ww:select name="activityTypeId" list="#attr.activityTypes" listKey="id" listValue="name" value="${deliverable.activityType.id}"/>
 		</p>
 		<p>
-			Start date: <ww:textfield name="deliverable.startDate"/>
+			Start date: <ww:textfield name="deliverable.startDate"/> (Use date pattern: <ww:text name="webwork.date.format"/>)
 		</p>
 		<p>
-			End date: <ww:textfield name="deliverable.endDate"/>
+			End date: <ww:textfield name="deliverable.endDate"/> (Use date pattern: <ww:text name="webwork.date.format"/>)
 		</p>
 		<p>
 			<ww:submit value="Store"/>

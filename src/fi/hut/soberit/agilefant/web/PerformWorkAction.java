@@ -2,22 +2,30 @@ package fi.hut.soberit.agilefant.web;
 
 import fi.hut.soberit.agilefant.db.WorkTypeDAO;
 import fi.hut.soberit.agilefant.model.PerformedWork;
-import fi.hut.soberit.agilefant.model.TaskEvent;
 import fi.hut.soberit.agilefant.model.WorkType;
 
-public class PerformWorkAction extends TaskEventAction {
+public class PerformWorkAction extends TaskEventAction<PerformedWork> {
 	
 	private WorkTypeDAO workTypeDAO;
-	
+	private PerformedWork event;
+		
 	@Override
-	protected void doFillEvent(TaskEvent event) {
-		PerformedWork workEvent = (PerformedWork)event;
-		WorkType workType = workTypeDAO.get(workEvent.getWorkType().getId());
-		workEvent.setWorkType(workType);
-		this.getTask().setEffortEstimate(workEvent.getNewEstimate());
+	public void validate() {
+		super.validate();
+		if (this.getEvent().getEffort() == null){
+			super.addActionError(super.getText("performWork.missingEffort"));			
+		}
+		if (this.getEvent().getNewEstimate() == null){
+			super.addActionError(super.getText("performWork.missingNewEstimate"));
+		}
 	}
 
-	private PerformedWork event;
+	@Override
+	protected void doFillEvent(PerformedWork event) {
+		WorkType workType = workTypeDAO.get(event.getWorkType().getId());
+		event.setWorkType(workType);
+		this.getTask().setEffortEstimate(event.getNewEstimate());
+	}
 	
 	public PerformedWork getEvent(){
 		if (event == null){

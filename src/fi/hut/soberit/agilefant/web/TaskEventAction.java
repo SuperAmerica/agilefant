@@ -9,7 +9,7 @@ import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.TaskEvent;
 import fi.hut.soberit.agilefant.security.SecurityUtil;
 
-public abstract class TaskEventAction extends ActionSupport {
+public abstract class TaskEventAction<T extends TaskEvent> extends ActionSupport {
 	
 	private int taskId;
 	private TaskDAO taskDAO;
@@ -41,14 +41,14 @@ public abstract class TaskEventAction extends ActionSupport {
 	}
 
 	public String execute(){
-		TaskEvent event = this.getEvent();
+		T event = this.getEvent();
 		this.fillEvent(event);
 		
 		taskEventDAO.store(event);
 		return Action.SUCCESS;
 	}
 	
-	protected final void fillEvent(TaskEvent event){
+	protected final void fillEvent(T event){
 		task = taskDAO.get(taskId);
 		event.setActor(SecurityUtil.getLoggedUser());
 		this.doFillEvent(event);
@@ -59,8 +59,8 @@ public abstract class TaskEventAction extends ActionSupport {
 	/**
 	 * Override this to add your code event filling code.
 	 */
-	protected void doFillEvent(TaskEvent event){
+	protected void doFillEvent(T event){
 	}
 	
-	public abstract TaskEvent getEvent();
+	public abstract T getEvent();
 }

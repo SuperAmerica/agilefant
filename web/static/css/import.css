@@ -44,11 +44,13 @@ a:hover,a:focus {background-color:#eef}
 	border-bottom: 1px solid #ccc;
 }
 .listTable td{
+	vertical-align: top;
 	border-top: 1px solid #ccc;
 }
 
 
 th	{
+	text-align: left;
 	background : #dfd;
 }
 

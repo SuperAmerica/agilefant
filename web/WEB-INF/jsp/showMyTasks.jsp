@@ -3,7 +3,8 @@
 <aef:menu navi="1" /> 
 	<ww:actionerror/>
 	<ww:actionmessage/>
-
+<c:set var="did" value="1336" scope="page"/>
+	
 	<ww:url id="editMyTasksLink" action="editMyTasks" includeParams="none"/>
 	
 	View | <ww:a href="%{editMyTasksLink}">Edit</ww:a>
@@ -29,7 +30,7 @@
    	 	
    	
 
-		<display:table name="${unfinishedTaskList}" id="row" requestURI="myTasks.action">
+		<display:table class="listTable"  name="${unfinishedTaskList}" id="row" requestURI="myTasks.action">
 
 			<display:column sortable="true" title="Name">
 				<ww:url id="editLink" action="editTask" includeParams="none">
@@ -67,7 +68,7 @@
    	<p>
 	
 
-		<display:table name="${user.backlogItems}" id="row" requestURI="myTasks.action">
+		<display:table class="listTable" name="${user.backlogItems}" id="row" requestURI="myTasks.action">
 			<display:column sortable="true" title="Name">
 				<ww:url id="editLink" action="editBacklogItem" includeParams="none">
 					<ww:param name="backlogItemId" value="${row.id}"/>
@@ -75,30 +76,19 @@
 				<ww:a href="%{editLink}">${aef:out(row.name)}</ww:a>
 			</display:column>
 
-				<display:column sortable="true" title="Watched by me" >
-					<c:choose>
-						<c:when test="${empty row.watchers[currentUser.id]}">
-							Yes
-						</c:when>
-						<c:otherwise>
-							No
-						</c:otherwise>
-					</c:choose>
-				</display:column>
-
-
-
-				<display:column sortable="true" title="# of tasks">
-					${fn:length(row.tasks)}
-				</display:column>
 
 				<display:column title="Tasks" sortable="false">
 				<c:if test="${!empty row.tasks}"> 
 
-					<ww:form action="editTask">
-						<ww:select name="taskId" list="#attr.row.tasks" listKey="id" listValue="name"/>					
-						<ww:submit value="Go"/>
-				    </ww:form>
+							<c:set var="did" value="${did + 1}" scope="page"/>
+							
+							
+							<a href="javascript:toggleDiv(${did});" title="Click to expand">${fn:length(row.tasks)} tasks, summary etc...</a>
+							<div id="${did}" style="display:none;">
+							<c:forEach items="${row.tasks}" var="task">
+							${aef:out(task.name)} - ${task.status}<br/>
+							</c:forEach>
+							</div>
 				    </c:if>
 
 				</display:column>
@@ -118,29 +108,30 @@
 		
 	</p>
 
-
 <hr/>
 	<h2>Watched backlog items</h2>
    	<p>
 		
-		<display:table name="${user.watchedBacklogItems}" id="row" requestURI="myTasks.action">
+		<display:table  class="listTable" name="${user.watchedBacklogItems}" id="row" requestURI="myTasks.action">
 			<display:column sortable="true" title="Name">
 				<ww:url id="editLink" action="editBacklogItem" includeParams="none">
 					<ww:param name="backlogItemId" value="${row.id}"/>
 				</ww:url>
 				<ww:a href="%{editLink}">${aef:out(row.name)}</ww:a>
 			</display:column>
-				<display:column sortable="true" title="# of tasks">
-					${fn:length(row.tasks)}
-				</display:column>
 
 				<display:column title="Tasks" sortable="false">
 				<c:if test="${!empty row.tasks}"> 
 
-					<ww:form action="editTask">
-						<ww:select name="taskId" list="#attr.row.tasks" listKey="id" listValue="name"/>					
-						<ww:submit value="Go"/>
-				    </ww:form>
+							<c:set var="did" value="${did + 1}" scope="page"/>
+							
+							
+							<a href="javascript:toggleDiv(${did});" title="Click to expand">${fn:length(row.tasks)} tasks, summary etc...</a>
+							<div id="${did}" style="display:none;">
+							<c:forEach items="${row.tasks}" var="task">
+							${aef:out(task.name)} - ${task.status}<br/>
+							</c:forEach>
+							</div>
 				    </c:if>
 
 				</display:column>
@@ -162,7 +153,7 @@
 
 	<h2>Watched tasks</h2>
    	<p>
-		<display:table name="${user.watchedTasks}" id="row" requestURI="myTasks.action">
+		<display:table  class="listTable" name="${user.watchedTasks}" id="row" requestURI="myTasks.action">
 			<display:column sortable="true" title="Backlog item">
 									${aef:out(row.backlogItem.name)}			
 			</display:column>

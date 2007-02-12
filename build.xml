@@ -172,7 +172,7 @@
 <!--		<junit fork="true" dir="${build.test.dir}" printsummary="true">-->
 <!--	<junit fork="true" printsummary="true">			-->
 <!--		<junit fork="true" dir="${basedir}" printsummary="true">			-->
-		<junit fork="yes" dir="${basedir}" printsummary="true">			
+		<junit fork="true" dir="${basedir}" printsummary="true">			
 	        <jvmarg value="-Demma.coverage.out.file=${coverage.dir}/coverage.emma" />
 	        <jvmarg value="-Demma.coverage.out.merge=true" />
 			<jvmarg value="-Djava.net.preferIPv4Stack=true" />

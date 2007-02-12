@@ -7,27 +7,52 @@
 	<h2>Edit product</h2>
 	<ww:form action="storeProduct">
 		<ww:hidden name="productId" value="${product.id}"/>
-		<p>		
-			Name: <ww:textfield name="product.name"/>
-		</p>
-		<p>
-			Description: <ww:textarea name="product.description" cols="40" rows="6" />
-		</p>
-		<p>
-			<ww:submit value="Store"/>
-    		<ww:submit name="action:contextView" value="Cancel"/>
-		</p>
 		
+		<table class="formTable">
+		<tr>
+		<td></td>
+		<td></td>
+		<td></td>	
+		</tr>
+		<tr>
+		<td>Name</td>
+		<td>*</td>
+		<td><ww:textfield size="53" name="product.name"/></td>	
+		</tr>
+		<tr>
+		<td>Description</td>
+		<td></td>
+		<td><ww:textarea name="product.description" cols="40" rows="6" /></td>	
+		</tr>
+		<tr>
+		<td></td>
+		<td></td>
+		<td>			
+			<ww:submit value="Store"/>
+    	<ww:submit name="action:contextView" value="Cancel"/>
+
+		</td>	
+		</tr>
+	  </table>
+
+<!-- TODO -->
 		<c:if test="${product.id > 0}">
-			<h3>Deliverables</h3>
-			<p>
+	
+		<div id="subItems">
+		<div id="subItemHeader">
+			Subitems
+		</div>
+		<div id="subItemContent">
+	</c:if>
+		<c:if test="${product.id > 0}">
+			<p>Deliverables			
  				<ww:url id="createLink" action="createDeliverable" includeParams="none">
 					<ww:param name="productId" value="${product.id}"/>
 				</ww:url>
-				<ww:a href="%{createLink}">Create new</ww:a>
+				<ww:a href="%{createLink}">Create new &raquo;</ww:a>
 			</p>
 
-			<display:table name="product.deliverables" id="row" requestURI="editProduct.action">
+			<display:table class="listTable" name="product.deliverables" id="row" requestURI="editProduct.action">
 				<display:column sortable="true" title="Id" property="id"/>
 				<display:column sortable="true" title="Name" property="name"/>
 				<display:column sortable="true" title="# of iterations">
@@ -52,15 +77,13 @@
 					<ww:a href="%{editLink}">Edit</ww:a>|<ww:a href="%{deleteLink}">Delete</ww:a>
 				</display:column>
 			</display:table>
-		<h3>
-			Has backlog items:
-		</h3>
 
 		<p>
+			Backlog items
 			<ww:url id="createBacklogItemLink" action="createBacklogItem" includeParams="none">
 				<ww:param name="backlogId" value="${product.id}"/>
 			</ww:url>
-			<ww:a href="%{createBacklogItemLink}">Create new</ww:a>		
+			<ww:a href="%{createBacklogItemLink}">Create new &raquo;</ww:a>		
 		</p>
 		</c:if>		
 	</ww:form>
@@ -95,8 +118,12 @@
 					<ww:a href="%{editLink}">Edit</ww:a>|<ww:a href="%{deleteLink}">Delete</ww:a>
 				</display:column>
 			</display:table>
-
-
-
 	</c:if>
+	
+		<c:if test="${product.id > 0}">
+				
+		</div>
+				
+		</div>
+</c:if>
 <%@ include file="./inc/_footer.jsp" %>

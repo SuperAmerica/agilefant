@@ -9,19 +9,30 @@
 	<ww:form action="storeIterationGoal">
 		<ww:hidden name="iterationId"/>
 		<ww:hidden name="iterationGoalId" value="${iterationGoal.id}"/>
-		<p>		
-			Name: <ww:textfield name="iterationGoal.name"/>
-		</p>
-		<p>
-			Description: <ww:textarea cols="40" rows="6" name="iterationGoal.description" />
-		</p>
-		<p>		
-			Priority: <ww:textfield name="iterationGoal.priority" value="${iterationGoal.priority }"/>
-		</p>
-		
-		<p>
-			<ww:submit value="Store"/><ww:submit value="Cancel" action="editIteration"/>
-		</p>
+		<table class="formTable">
+		<tr>
+		<td>Name</td>
+		<td>*</td>
+		<td><ww:textfield name="iterationGoal.name"/></td>	
+		</tr>
+		<tr>
+		<td>Description</td>
+		<td></td>
+		<td><ww:textarea cols="40" rows="6" name="iterationGoal.description" /></td>	
+		</tr>
+		<tr>
+		<td>Priority</td>
+		<td></td>
+		<td><ww:textfield name="iterationGoal.priority" value="${iterationGoal.priority }"/></td>	
+		</tr>
+		<tr>
+		<td></td>
+		<td></td>
+		<td><ww:submit value="Store"/><ww:submit value="Cancel" action="editIteration"/></td>	
+		</tr>
+		</table>
+
+
 	</ww:form>
 
 					<aef:productList/>
@@ -58,7 +69,7 @@
 			Backlog items:
 		</p>
 		<p>
-			<display:table name="iterationGoal.backlogItems" id="row" requestURI="editIterationGoal.action">
+			<display:table class="listTable" name="iterationGoal.backlogItems" id="row" requestURI="editIterationGoal.action">
 				<display:column sortable="true" title="Id" property="id"/>
 				<display:column sortable="true" title="Name" property="name"/>
 

@@ -20,37 +20,78 @@
 	<ww:form action="storeDeliverable">
 		<ww:hidden name="deliverableId" value="${deliverable.id}"/>
 		<ww:hidden name="productId"/>
- 		<p>		
-			Name: <ww:textfield name="deliverable.name"/>
-		</p>
-		<p>
-			Description: <ww:textarea cols="40" rows="6" name="deliverable.description" />
-		</p>
-		<p>
-					Activity type: <ww:select name="activityTypeId" list="#attr.activityTypes" listKey="id" listValue="name" value="${deliverable.activityType.id}"/>
-		</p>
-		<p>
-			Start date: <ww:textfield name="deliverable.startDate"/> (Use date pattern: <ww:text name="webwork.date.format"/>)
-		</p>
-		<p>
-			End date: <ww:textfield name="deliverable.endDate"/> (Use date pattern: <ww:text name="webwork.date.format"/>)
-		</p>
-		<p>
+			
+		<table class="formTable">
+		<tr>
+		<td></td>
+		<td></td>
+		<td></td>	
+		</tr>
+			
+		<tr>
+		<td>Name</td>
+		<td>*</td>
+		<td><ww:textfield name="deliverable.name"/></td>	
+		</tr>
+			
+		<tr>
+		<td>Description</td>
+		<td></td>
+		<td><ww:textarea cols="40" rows="6" name="deliverable.description" /></td>	
+		</tr>
+			
+		<tr>
+		<td>Activity type</td>
+		<td></td>
+		<td><ww:select name="activityTypeId" list="#attr.activityTypes" listKey="id" listValue="name" value="${deliverable.activityType.id}"/></td>	
+		</tr>
+			
+		<tr>
+		<td>Start date</td>
+		<td>*</td>
+		<td><ww:textfield name="deliverable.startDate" /> (Use date pattern: <ww:text name="webwork.date.format"/>)</td>	
+		</tr>
+			
+		<tr>
+		<td>End date</td>
+		<td>*</td>
+		<td><ww:textfield name="deliverable.endDate"/> (Use date pattern: <ww:text name="webwork.date.format"/>)</td>	
+		</tr>
+			
+		<tr>
+		<td></td>
+		<td></td>
+		<td>
 			<ww:submit value="Store"/>
     		<ww:submit name="action:editProduct" value="Cancel"/>
 			
-		</p>
+			</td>	
+		</tr>
+	</table>
+			
+			
+			
 	</ww:form>		
+	
 		<c:if test="${deliverable.id > 0}">
-			<h3>Iterations</h3>
-			<p>
+
+			<div id="subItems">
+		<div id="subItemHeader">
+			Subitems
+		</div>
+		<div id="subItemContent">
+	</c:if>
+
+		<c:if test="${deliverable.id > 0}">
+			
+			<p>Iterations 
  				<ww:url id="createLink" action="createIteration" includeParams="none">
 					<ww:param name="deliverableId" value="${deliverable.id}"/>
 				</ww:url>
-				<ww:a href="%{createLink}">Create new</ww:a>
+				<ww:a href="%{createLink}">Create new &raquo;</ww:a>
 			</p>
 
-			<display:table name="deliverable.iterations" id="row" requestURI="editDeliverable.action">
+			<display:table class="listTable" name="deliverable.iterations" id="row" requestURI="editDeliverable.action">
 				<display:column sortable="true" title="Id" property="id"/>
 				<display:column sortable="true" title="Name" property="name"/>
 				<display:column sortable="true" title="# of backlog items">
@@ -80,18 +121,16 @@
 					<ww:a href="%{editLink}">Edit</ww:a>|<ww:a href="%{deleteLink}">Delete</ww:a>
 				</display:column>
 			</display:table>
-		<h3>
-			Has backlog items:
-		</h3>
-		<p>
+	
+		<p>Backlog items 
 			<ww:url id="createBacklogItemLink" action="createBacklogItem" includeParams="none">
 				<ww:param name="backlogId" value="${deliverable.id}"/>
 			</ww:url>
-			<ww:a href="%{createBacklogItemLink}">Create new</ww:a>		
+			<ww:a href="%{createBacklogItemLink}">Create new &raquo;</ww:a>		
 		</p>
 		</c:if>
 	<c:if test="${!empty deliverable.backlogItems}">
-		<display:table name="deliverable.backlogItems" id="row" requestURI="editDeliverable.action">
+		<display:table class="listTable" name="deliverable.backlogItems" id="row" requestURI="editDeliverable.action">
 			<display:column sortable="true" title="Id" property="id"/>
 			<display:column sortable="true" title="Name" property="name"/>
 			<display:column sortable="true" title="# of tasks">
@@ -121,6 +160,11 @@
 		</display:table>
 	</c:if>
 
+		<c:if test="${deliverable.id > 0}">
+
+</div>
+</div>
+	</c:if>
 	</c:otherwise>
 </c:choose>
 

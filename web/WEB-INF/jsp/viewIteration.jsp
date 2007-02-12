@@ -50,6 +50,17 @@
 		</ww:form>
 				
 			
+			
+		<c:if test="${iteration.id > 0}">
+
+			<div id="subItems">
+		<div id="subItemHeader">
+			Subitems
+		</div>
+		<div id="subItemContent">
+	</c:if>
+
+			
 <c:if test="${!empty iteration}">
 			
 			
@@ -174,5 +185,13 @@
 	</c:if>
 
 </c:if>
+
+
+	
+		<c:if test="${iteration.id > 0}">
+
+</div>
+</div>
+	</c:if>
 
 <%@ include file="./inc/_footer.jsp" %>

@@ -48,44 +48,73 @@
 			Enddate: <ww:datepicker value="%{#date}" showstime="%{true}" format="%d-%m-%Y" name="iteration.endDate"/> 
 		</p>
 		--%>
-		<p>
-			Start date: <ww:textfield name="iteration.startDate"/>
-		</p>
-		<p>
-			End date: <ww:textfield name="iteration.endDate"/>
-		</p>
-    	<p>		
-			Name: <ww:textfield name="iteration.name"/>
-		</p>
-		<p>
-			Description: <ww:textarea cols="40" rows="6" name="iteration.description" />
-		</p>
-		<p>
+		
+		
+		<table class="formTable">
+		<tr>
+		<td></td>
+		<td></td>
+		<td></td>	
+		</tr>
+		<tr>
+		<td>Name</td>
+		<td>*</td>
+		<td><ww:textfield name="iteration.name"/></td>	
+		</tr>
+		<tr>
+		<td>Description</td>
+		<td></td>
+		<td><ww:textarea cols="40" rows="6" name="iteration.description" /></td>	
+		</tr>
+		<tr>
+		<td>Start date</td>
+		<td>*</td>
+		<td><ww:textfield name="iteration.startDate"/></td>	
+		</tr>
+		<tr>
+		<td>End date</td>
+		<td>*</td>
+		<td><ww:textfield name="iteration.endDate"/></td>	
+		</tr>
+		<tr>
+		<td></td>
+		<td></td>
+		<td>
 			<ww:submit value="Store"/>
     		<ww:submit name="action:contextView" value="Cancel"/>
-		</p>
-
+			
+			</td>	
+		</tr>
+	</table>
 	</ww:form>	
 
 
 		<c:if test="${iteration.id > 0}">
 
+			<div id="subItems">
+		<div id="subItemHeader">
+			Subitems
+		</div>
+		<div id="subItemContent">
+	</c:if>
 
-		<p>
-			Backlog items:
-		</p>
-		<p>
+
+
+		<c:if test="${iteration.id > 0}">
+
+
+		<p>Backlog items 
 			<ww:url id="createBacklogItemLink" action="createBacklogItem" includeParams="none">
 				<ww:param name="backlogId" value="${iteration.id}"/>
 			</ww:url>
-			<ww:a href="%{createBacklogItemLink}">Add backlog item</ww:a>		
+			<ww:a href="%{createBacklogItemLink}">Create new &raquo;</ww:a>		
 		</p>
 </c:if>
 
 	<c:if test="${!empty iteration.backlogItems}">
 
 		<p>
-			<display:table name="iteration.backlogItems" id="row" requestURI="editIteration.action">
+			<display:table class="listTable" name="iteration.backlogItems" id="row" requestURI="editIteration.action">
 				<display:column sortable="true" title="Name" property="name"/>
 
 				<display:column sortable="true" title="Watched by me" >
@@ -172,22 +201,18 @@
 
 <c:if test="${iteration.id > 0}">
 
-
-		<p>
-			Iteration goals:
-		</p>
-		<p>
+		<p>Iteration goals
 			<ww:url id="createIterationGoalLink" action="createIterationGoal" includeParams="none">
 				<ww:param name="iterationId" value="${iteration.id}"/>
 			</ww:url>
-			<ww:a href="%{createIterationGoalLink}">Add iteration goal</ww:a>		
+			<ww:a href="%{createIterationGoalLink}">Create new &raquo;</ww:a>		
 		</p>
 </c:if>
 	
 	<c:if test="${!empty iteration.iterationGoals}">
 
 		<p>
-			<display:table name="iteration.iterationGoals" id="row" requestURI="editIteration.action">
+			<display:table class="listTable"  name="iteration.iterationGoals" id="row" requestURI="editIteration.action">
 				<display:column sortable="true" title="Id" property="id"/>
 				<display:column sortable="true" title="Name" property="name"/>
 				<display:column sortable="true" title="Description" property="description"/>
@@ -204,5 +229,13 @@
 				</display:column>
 			</display:table>
 		</p>
+	</c:if>
+	
+	
+	
+		<c:if test="${iteration.id > 0}">
+
+</div>
+</div>
 	</c:if>
 <%@ include file="./inc/_footer.jsp" %>

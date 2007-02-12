@@ -4,6 +4,22 @@ import com.opensymphony.xwork.Action;
 import fi.hut.soberit.agilefant.model.ActivityType;
 import fi.hut.soberit.agilefant.util.SpringTestCase;
 
+
+import fi.hut.soberit.agilefant.model.AFTime;
+import fi.hut.soberit.agilefant.model.Backlog;
+import fi.hut.soberit.agilefant.model.BacklogItem;
+import fi.hut.soberit.agilefant.model.Priority;
+import fi.hut.soberit.agilefant.model.Product;
+import fi.hut.soberit.agilefant.model.Task;
+import fi.hut.soberit.agilefant.model.TaskStatus;
+import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.security.SecurityUtil;
+import fi.hut.soberit.agilefant.util.SpringTestCase;
+import fi.hut.soberit.agilefant.db.BacklogItemDAO;
+import fi.hut.soberit.agilefant.db.ProductDAO;
+import fi.hut.soberit.agilefant.db.TaskDAO;
+import fi.hut.soberit.agilefant.db.UserDAO;
+
 import java.util.Collection;
 
 /**
@@ -15,8 +31,10 @@ import java.util.Collection;
 public class ActivityTypeActionTest extends SpringTestCase {
 	private static final String TEST_NAME1 = "Testi Act. Type no1";
 	private static final String TEST_NAME2 = "Testi Act. Type no2";
+	private static final String TEST_NAME3 = "Testi Act. Type no2";
 	private static final String TEST_DESC1 = "Testi Activity Typen 1 kuvaus";
 	private static final String TEST_DESC2 = "Testi Activity Typen 2 kuvaus";
+	private static final String TEST_DESC3 = "Testi Activity Typen 3 kuvaus";
 	private static final int INVALID_ID = -1;
 	
 	// The field and setter to be used by Spring
@@ -158,35 +176,22 @@ public class ActivityTypeActionTest extends SpringTestCase {
 		super.assertEquals("Activity type for editing had invalid description", 
 				updatedAT.getDescription(), TEST_DESC2);				
 	}
-
-/*
+	
+	/*
+	 * Create a new activityType and delete it. Then check that it is deleted.
+	 */
 	public void testDelete() {
 		this.create();
-		this.setNames(TEST_NAME, TEST_LOGINNAME);
-		this.setPasswords(TEST_PASS1, TEST_PASS1);
-		String result = userAction.store();
-		assertEquals("store() was unsuccessful", result, Action.SUCCESS);
+		this.setContents(TEST_NAME3, TEST_DESC3);
+		this.store();
+		ActivityType at = this.getActivityType(TEST_NAME3, TEST_DESC3);
+		super.assertNotNull("Activity Type wasn't stored properly (wasn't found)", at);
 		
-		int n = getAllUsers().size();
-		User u = getUser(TEST_LOGINNAME);
-		userAction.setUserId(u.getId());
-		userAction.delete();
-		super.assertEquals("The number of users didn't decrease with delete().", n-1, getAllUsers().size());
+		activityTypeAction.setActivityTypeId(at.getId());
+		String result = activityTypeAction.delete();
+		assertEquals("delete() was unsuccessful", result, Action.SUCCESS);
 		
-		User testU = getUser(TEST_LOGINNAME);
-		super.assertNull("The deleted user wasn't properly deleted", testU);
+		ActivityType test3 = this.getActivityType(TEST_NAME3, TEST_DESC3);
+		super.assertNull("The deleted activity type wasn't properly deleted", test3);
 	}
-	*/
-	
-	// TODO Check.
-/*	public void testDelete_withInvalidId() {
-		this.create();
-		activityTypeAction.setActivityTypeId(INVALID_ID);
-		try {
-			activityTypeAction.delete();
-			fail("delete() with invalid id " + INVALID_ID + " was accepted.");
-		}
-		catch(IllegalArgumentException iae) {
-		}
-	}*/
 }

@@ -24,7 +24,7 @@ import org.hibernate.usertype.UserType;
  */
 public class TextUserType implements UserType {
 	
-	private static final int[] SQL_TYPES = {Types.LONGVARCHAR};
+	private static final int[] SQL_TYPES = {Types.CLOB};
 
 	public int[] sqlTypes() { return SQL_TYPES; }
 	public Class returnedClass() { return String.class; }

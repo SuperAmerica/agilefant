@@ -13,23 +13,46 @@
 			</p>
 		</c:if>
 		<ww:hidden name="userId" value="${user.id}"/>
-		<p>		
-			Full name: <ww:textfield name="user.fullName"/>
-		</p>
-		<p>
-			User ID (used in login): <ww:textfield name="user.loginName"/>
-		</p>
-		<p>
-			Email: <ww:textfield name="user.email" value="${user.email}"/>
-		</p>
-		<p>
-			Password: <ww:password name="password1"/>
-		<p>
-		<p>
-			Password again: <ww:password name="password2"/>
-		</p>
-			<p>
-			<ww:submit value="Store"/>
-		</p>
+
+		<table class="formTable">
+		<tr>
+		<td></td>
+		<td></td>
+		<td></td>	
+		</tr>
+		<tr>
+		<td>Full name</td>
+		<td>*</td>
+		<td><ww:textfield name="user.fullName"/></td>	
+		</tr>
+		<tr>
+		<td>User/login id</td>
+		<td>*</td>
+		<td><ww:textfield name="user.loginName"/></td>	
+		</tr>
+		<tr>
+		<td>Email</td>
+		<td></td>
+		<td><ww:textfield name="user.email" value="${user.email}"/></td>	
+		</tr>
+		<tr>
+		<td>Password</td>
+		<td></td>
+		<td><ww:password name="password1"/></td>	
+		</tr>
+		<tr>
+		<td>Confirm password</td>
+		<td></td>
+		<td><ww:password name="password2"/></td>	
+		</tr>
+		<tr>
+		<td></td>
+		<td></td>
+		<td><ww:submit value="Store"/>
+			<ww:submit name="action:listUsers" value="Cancel"/>
+			</td>	
+		</tr>
+		</table>
+
 	</ww:form>
 <%@ include file="./inc/_footer.jsp" %>

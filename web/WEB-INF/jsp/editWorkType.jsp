@@ -14,15 +14,31 @@
 	<ww:form action="storeWorkType">
 		<ww:hidden name="activityTypeId"/>
 		<ww:hidden name="workTypeId" value="${workType.id}"/>
-		<p>		
-			Name: <ww:textfield name="workType.name"/>
-		</p>
-		<p>
-			Description: <ww:textarea cols="40" rows="6" name="workType.description" />
-		</p>
-		<p>
-			<ww:submit value="Store"/>
-		</p>
+
+		<table class="formTable">
+		<tr>
+		<td></td>
+		<td></td>
+		<td></td>	
+		</tr>
+		<tr>
+		<td>Name</td>
+		<td>*</td>
+		<td> <ww:textfield name="workType.name"/></td>	
+		</tr>
+		<tr>
+		<td>Description</td>
+		<td></td>
+		<td><ww:textarea cols="40" rows="6" name="workType.description" /></td>	
+		</tr>
+		<tr>
+		<td></td>
+		<td></td>
+		<td><ww:submit value="Store"/>
+			<ww:submit name="action:editActivityType" value="Cancel"/>
+			</td>	
+		</tr>
+		</table>
+
 	</ww:form>	
-	<p>
 <%@ include file="./inc/_footer.jsp" %>

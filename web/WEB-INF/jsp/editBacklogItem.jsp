@@ -9,54 +9,97 @@
 	<ww:form action="storeBacklogItem">
 		<ww:hidden name="backlogId"/>
 		<ww:hidden name="backlogItemId" value="${backlogItem.id}"/>
-		<p>		
-			Name: <ww:textfield name="backlogItem.name"/>
-		</p>
-		<p>
-			Description: <ww:textarea cols="40" rows="6" name="backlogItem.description" />
-		</p>
-		<p>
-			Allocated effort: <ww:textfield name="backlogItem.allocatedEffort"/>
-		</p>
-		<p>
-			Priority: <ww:select name="backlogItem.priority" value="backlogItem.priority.name" list="@fi.hut.soberit.agilefant.model.Priority@values()" listKey="name" listValue="getText('backlogItem.priority.' + name())"/>
-		</p>
 		<aef:userList/>
 		<aef:currentUser/>
+  	<aef:iterationGoalList id="iterationGoals" backlogId="${backlogId}"/>
+
+		<table class="formTable">
+		<tr>
+		<td></td>
+		<td></td>
+		<td></td>	
+		</tr>
+		<tr>
+		<td>Name</td>
+		<td>*</td>
+		<td><ww:textfield name="backlogItem.name"/></td>	
+		</tr>
+		<tr>
+		<td>Description</td>
+		<td></td>
+		<td><ww:textarea cols="40" rows="6" name="backlogItem.description" /></td>	
+		</tr>
+		<tr>
+		<td>Allocated effort</td>
+		<td></td>
+		<td><ww:textfield name="backlogItem.allocatedEffort"/></td>	
+		</tr>
+		<tr>
+		<td>Priority</td>
+		<td></td>
+		<td><ww:select name="backlogItem.priority" value="backlogItem.priority.name" list="@fi.hut.soberit.agilefant.model.Priority@values()" listKey="name" listValue="getText('backlogItem.priority.' + name())"/></td>	
+		</tr>
+		<tr>
 		
 	<c:choose>
 		<c:when test="${backlogItem.id == 0}">
-			<p>
-				Watch this item: <ww:checkbox name="watch" value="true" fieldValue="true"/>
-			</p>
-				<p>
-					Assignee: <ww:select  headerKey="0" headerValue="None" name="assigneeId" list="#attr.userList" listKey="id" listValue="fullName" value="${currentUser.id}"/>
-				</p>
-					<aef:iterationGoalList id="iterationGoals" backlogId="${backlogId}"/>
+		<td>Watch this item</td>
+		<td></td>
+		<td><ww:checkbox name="watch" value="true" fieldValue="true"/></td>	
+		</tr>
+		<tr>
+		<td>Assignee</td>
+		<td></td>
+		<td><ww:select  headerKey="0" headerValue="None" name="assigneeId" list="#attr.userList" listKey="id" listValue="fullName" value="${currentUser.id}"/></td>	
+
 			<c:if test="${!empty iterationGoals}">
+
+			</tr>
+			<tr>
+			<td>Link to iteration goal</td>
+			<td></td>
+			<td><ww:select name="backlogItem.iterationGoal.id" list="#attr.iterationGoals" listKey="id" listValue="name" /></td>	
 					
-			Link to iteration goal:	<ww:select name="backlogItem.iterationGoal.id" list="#attr.iterationGoals" listKey="id" listValue="name" />					
 	
 			</c:if>
 		</c:when>
 		<c:otherwise>
-			<p>
-				Assignee: <ww:select  headerKey="0" headerValue="None" name="assigneeId" list="#attr.userList" listKey="id" listValue="fullName" value="%{backlogItem.assignee.id}"/>
-			</p>
-			
+			<td>Assignee</td>
+			<td></td>
+			<td><ww:select  headerKey="0" headerValue="None" name="assigneeId" list="#attr.userList" listKey="id" listValue="fullName" value="%{backlogItem.assignee.id}"/></td>	
+
 		</c:otherwise>			
 	</c:choose>				
-		
-		<p>
-			<ww:submit value="Store"/>
+
+
+
+		</tr>
+		<tr>
+		<td></td>
+		<td></td>
+		<td>
+		<ww:submit value="Store"/>
     		<ww:submit name="action:contextView" value="Cancel"/>
+				
 			
-		</p>
+			</td>	
+		</tr>
+</table>
+
 	</ww:form>
 	
 	<c:if test="${backlogItem.id > 0}">
 		<aef:currentUser/>
-		<p>
+		<table class="formTable">
+		<tr>
+		<td></td>
+		<td></td>
+		<td></td>	
+		</tr>
+		<tr>
+		<td>Watch</td>
+		<td></td>
+		<td>
 			<ww:url id="watchLink" action="watchBacklogItem" includeParams="none">
 				<ww:param name="backlogItemId" value="${backlogItem.id}"/>
 				<ww:param name="watch" value="${empty backlogItem.watchers[currentUser.id]}"/>
@@ -69,31 +112,41 @@
 					<ww:a href="%{watchLink}">Stop watching this item</ww:a>
 				</c:otherwise>
 			</c:choose>
-		</p>
-
-
+			
+			</td>	
+		</tr>
+		<tr>
+		<td>Iteration goals</td>
+		<td></td>
+		<td>
 		<ww:form action="linkToIterationGoal">
 			<ww:hidden name="backlogItemId" value="${backlogItem.id}"/>
-			<p>
 				<aef:iterationGoalList id="iterationGoals" backlogId="${backlogId}"/>
-		<c:if test="${!empty iterationGoals}">
+<c:choose>
+		<c:when test="${!empty iterationGoals}">
 			<c:set var="goalId" value="0" scope="page"/>
 			<c:if test="${!empty backlogItem.iterationGoal}">
 				<c:set var="goalId" value="${backlogItem.iterationGoal.id}" scope="page"/>
 			</c:if>
-			Link to iteration goal:	<ww:select headerKey="0" headerValue="None" name="iterationGoalId" list="#attr.iterationGoals" listKey="id" listValue="name" value="${goalId}"/>					
+			<ww:select headerKey="0" headerValue="None" name="iterationGoalId" list="#attr.iterationGoals" listKey="id" listValue="name" value="${goalId}"/>					
 			<ww:submit value="link"/>
-		</c:if>
-			</p>
+		</c:when>
+		<c:otherwise>
+			None
+	</c:otherwise>
+</c:choose>
 		</ww:form>
-
-		<aef:productList/>
+			
+			
+			</td>	
+		</tr>
+		<tr>
+		<td>Backlog</td>
+		<td></td>
+		<td>
+	<aef:productList/>
 		<ww:form action="moveBacklogItem">
 			<ww:hidden name="backlogItemId" value="${backlogItem.id}"/>
-			<p>
-				Move to another backlog:
-			</p>
-			<p>
 				<select name="backlogId">
 					<c:forEach items="${productList}" var="product">
 						<c:choose>
@@ -126,27 +179,36 @@
 						</c:forEach>						
 					</c:forEach>				
 				</select>
-			</p>			
-			<ww:submit value="move"/>
+			<ww:submit value="Move to backlog"/>
 		</ww:form>
 				
+			
+			
+			</td>	
+		</tr>
+		<tr>
+		<td></td>
+		<td></td>
+		<td></td>	
+		</tr>
+		</table>
 
-		
-		<p>
-			Tasks:
-		</p>
-		<p>
+
+
+
+		<div id="subItems">
+		<div id="subItemHeader">
+			Subitems
+		</div>
+		<div id="subItemContent">
+		<p>Tasks 
 			<ww:url id="createLink" action="createTask" includeParams="none">
 				<ww:param name="backlogItemId" value="${backlogItemId}"/>
 			</ww:url>
-			<ww:a href="%{createLink}">Add task</ww:a>
+			<ww:a href="%{createLink}">Create new &raquo;</ww:a>
 		</p>
-	</c:if>	
-
-	<c:if test="${!empty backlogItem.tasks}">
-
 		<p>
-			<display:table name="backlogItem.tasks" id="row" requestURI="editBacklogItem.action">
+			<display:table class="listTable" name="backlogItem.tasks" id="row" requestURI="editBacklogItem.action">
 				<display:column sortable="true" title="Id" property="id"/>
 				<display:column sortable="true" title="Name" property="name"/>
 				<display:column sortable="true" title="Effort left" sortProperty="effortEstimate.time">
@@ -179,7 +241,10 @@
 				</display:column>
 			</display:table>
 		</p>
-	</c:if>
-	<c:if test="${backlogItem.id > 0}">
-	</c:if>
+	
+		</div>
+		</div>
+		
+	</c:if>	
+
 <%@ include file="./inc/_footer.jsp" %>

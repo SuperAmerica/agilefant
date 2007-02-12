@@ -9,46 +9,86 @@
 	<ww:form action="storeTask">
 		<ww:hidden name="backlogItemId"/>
 		<ww:hidden name="taskId" value="${task.id}"/>
-		<p>		
-			Name: <ww:textfield name="task.name"/>
-		</p>
-		<p>
-			Description: <ww:textarea cols="40" rows="6" name="task.description" />
-		</p>
-		<p>		
-			Effort left: <ww:textfield name="task.effortEstimate"/>
-		</p>
-		<p>
-			Priority: <ww:select name="task.priority" value="task.priority.name" list="@fi.hut.soberit.agilefant.model.Priority@values()" listKey="name" listValue="getText('task.priority.' + name())"/>
-		</p>
-		<p>
-			Status: <ww:select name="task.status" value="task.status.name" list="@fi.hut.soberit.agilefant.model.TaskStatus@values()" listKey="name" listValue="getText('task.status.' + name())"/>
-		</p>
+
+		<table class="formTable">
+		<tr>
+		<td></td>
+		<td></td>
+		<td></td>	
+		</tr>
+		<tr>
+			<td>Name</td>
+		<td>*</td>
+		<td><ww:textfield name="task.name"/></td>	
+		</tr>
+		<tr>
+		<td>Description</td>
+		<td></td>
+		<td><ww:textarea cols="40" rows="6" name="task.description" /></td>	
+		</tr>
+		<tr>
+		<td>Effort estimate</td>
+		<td></td>
+		<td><ww:textfield name="task.effortEstimate"/></td>	
+		</tr>
+		<tr>
+		<td>Priority</td>
+		<td></td>
+		<td><ww:select name="task.priority" value="task.priority.name" list="@fi.hut.soberit.agilefant.model.Priority@values()" listKey="name" listValue="getText('task.priority.' + name())"/></td>	
+		</tr>
+		<tr>
+		<td>Status</td>
+		<td></td>
+		<td><ww:select name="task.status" value="task.status.name" list="@fi.hut.soberit.agilefant.model.TaskStatus@values()" listKey="name" listValue="getText('task.status.' + name())"/></td>	
+		</tr>
+		<tr>
+		<td>
+		<c:if test="${task.id == 0}">			
+			Assignee
+		</c:if>	
+			</td>
+		<td></td>
+		<td>
 		<c:if test="${task.id == 0}">
-			<p>
 				<aef:userList/>
 				<aef:currentUser/>
-				Assignee: <ww:select headerKey="0" headerValue="None" name="task.assignee.id" list="#attr.userList" listKey="id" listValue="fullName" value="${currentUser.id}"/>
-			</p>
+				<ww:select headerKey="0" headerValue="None" name="task.assignee.id" list="#attr.userList" listKey="id" listValue="fullName" value="${currentUser.id}"/>
 		</c:if>
-		<p>
-			<ww:submit value="Store"/>
-    		<ww:submit name="action:contextView" value="Cancel"/>
 			
-		</p>
+			
+			</td>	
+		</tr>
+		<tr>
+		<td></td>
+		<td></td>
+		<td>
+						<ww:submit value="Store"/>
+    		<ww:submit name="action:contextView" value="Cancel"/>
+
+			</td>	
+		</tr>
+		</table>
+
 	</ww:form>	
+	
 	<c:if test="${task.id > 0}">
-		<p>
-			Assigned to: ${task.assignee.fullName}
-		</p>
 		<aef:userList/>
-		<p>
+
+		<table class="formTable">
+		<tr>
+		<td></td>
+		<td></td>
+		<td></td>	
+		</tr>
+		<tr>
+		<td>Assignee</td>
+		<td></td>
+		<td>
 			<ww:form action="assignTask">
 				<ww:hidden name="taskId" value="${task.id}"/>
-				Reassign to: <ww:select   headerKey="0" headerValue="None"  name="assigneeId" list="#attr.userList" listKey="id" listValue="fullName" value="${task.assignee.id}"/>
+				<ww:select   headerKey="0" headerValue="None"  name="assigneeId" list="#attr.userList" listKey="id" listValue="fullName" value="${task.assignee.id}"/>
 				<ww:submit value="Assign"/>
 			</ww:form>
-		</p>
 		<p>
 			<aef:currentUser/>
 			<ww:url id="selfAssignLink" action="assignTask" includeParams="none">
@@ -57,7 +97,14 @@
 			</ww:url>
 			<ww:a href="%{selfAssignLink}">Assign to me</ww:a>
 		</p>
-		<p>
+			
+			
+			</td>	
+		</tr>
+		<tr>
+		<td>Watch</td>
+		<td></td>
+		<td>
 			<ww:url id="watchLink" action="watchTask" includeParams="none">
 				<ww:param name="taskId" value="${task.id}"/>
 				<ww:param name="watch" value="${empty task.watchers[currentUser.id]}"/>
@@ -70,19 +117,36 @@
 					<ww:a href="%{watchLink}">Stop watching this task</ww:a>
 				</c:otherwise>
 			</c:choose>
-		</p>
-		<p>
-			<ww:url id="performWorkLink" action="performWorkForm" includeParams="none">
-				<ww:param name="taskId" value="${task.id}"/>
-			</ww:url>
+			
+			
+			</td>	
+		</tr>
+		<tr>
+		<td>Report</td>
+		<td></td>
+		<td>
+			<ww:url id="performWorkLink" action="editMyTasks" includeParams="none"/>
 			<ww:a href="%{performWorkLink}">Report work</ww:a>
-		</p>
-<hr/>
+			
+			
+			</td>	
+		</tr>
+		</table>
+		
+	
+
+		<div id="subItems">
+		<div id="subItemHeader">
+			Subitems
+		</div>
+		<div id="subItemContent">
+
+
 		<p>
-			Event history:
+			Event history
 		</p>
 		<p>
-			<display:table name="task.events" id="row" requestURI="editTask.action">
+			<display:table class="listTable" name="task.events" id="row" requestURI="editTask.action">
 				<display:column property="id" sortable="true"/>
 				<display:column property="created" sortable="true"/>
 				<display:column title="Actor"  sortable="true" property="actor.fullName"/>
@@ -122,5 +186,7 @@
 
 			</display:table>
 		</p>
+	</div>
+	</div>
 	</c:if>
 <%@ include file="./inc/_footer.jsp" %>

@@ -11,9 +11,9 @@
 
 
 <p>
-	<a href="createUser.action">Create new user</a>
+	Users  <a href="createUser.action">Create new &raquo;</a>
 </p>	
-<p>Users found:</p>
+
 <aef:userList/>
 <p>
 	<display:table name="${userList}" id="user" requestURI="listUsers.action">

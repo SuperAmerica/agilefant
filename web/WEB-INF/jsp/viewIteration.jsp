@@ -52,6 +52,9 @@
 			
 			
 		<c:if test="${iteration.id > 0}">
+		<p>	
+			<img src="drawChart.action?iterationId=${iteration.id}"/>
+		</p>
 
 			<div id="subItems">
 		<div id="subItemHeader">
@@ -65,12 +68,6 @@
 			
 			
 
-		<c:if test="${iteration.id > 0}">
-		<p>	
-			<img src="drawChart.action?iterationId=${iteration.id}"/>
-		</p>
-
-		</c:if>
 
 	<c:if test="${!empty iteration.backlogItems}"> 
 

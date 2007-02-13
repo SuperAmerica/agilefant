@@ -19,7 +19,7 @@
 				<ww:url id="editLink" action="editTask" includeParams="none">
 					<ww:param name="taskId" value="${row.id}"/>
 				</ww:url>
-				<ww:a href="%{editLink}">${row.name}</ww:a>
+				<ww:a title="${row.name}" href="%{editLink}">${aef:out(row.name)}</ww:a>
 			</display:column>
 			<display:column sortable="false" title="Performed Effort" sortProperty="performedEffort.time">
 							<ww:hidden name="taskId" value="${row.id}"/>
@@ -66,7 +66,7 @@
 			</display:column>
 		</display:table>
 						</ww:form>
-
+<script type="text/javascript" src="/agilefant/static/js/sumField.js"></script>
 	</p>
 	
 

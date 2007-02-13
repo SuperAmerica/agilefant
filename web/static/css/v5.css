@@ -15,9 +15,6 @@ dt {color:#000}
 kbd,code,pre {color:#66f !important;font-size:1.2em;text-align:left} /* ! is for FF */
 * html code,* html pre {font-size:1em} /* MSIE */
 code a:link,code a:visited {color:blue}
-a:link,a:visited {color:#000;text-decoration:none}
-a:hover,a:active,a:focus {color:#999}
-a.outlink,a.outlink:visited,a.inlink,a.inlink:visited {white-space:nowrap}
 cite,blockquote {color:#333;font: italic 1em Georgia,"Times New Roman",Times,serif}
 blockquote {margin-left:20px;padding:0 0 0 9px;border-left:1px dotted #999}
 .blockTitle {font-size:.8em;text-align:right;margin:-10px 200px 10px 0}
@@ -30,17 +27,6 @@ blockquote {margin-left:20px;padding:0 0 0 9px;border-left:1px dotted #999}
 /* For login fields' alignment */
 #login   { width: 26em; }
 #login p { text-align: right; }
-
-/* TOP LINKS - removing the container and transfering the ID to the UL fails in NN4 */
-#toplinks {width:600px;position:absolute;text-align:left;top:100px;left:171px}
-#toplinks ul,#toplinks li {margin:0;padding:0;list-style-type:none}
-#toplinks li {display:inline}
-#toplinks a:link,#toplinks a:visited {font-size:.7em;text-decoration:none;background-color:transparent}
-#toplinks a:hover,#toplinks a:focus,#toplinks a:active {background-color:#fff;color:#000}
-#toplinks span.popup {display:none;white-space:pre} /* MSIE5 Mac */
-#toplinks a:hover span.popup,#toplinks a:active span.popup,#toplinks a:focus span.popup {font-size:1.2em !important;display:block;position:absolute;top:23px;left:15px;padding:0;margin:0;width:auto;letter-spacing:normal;text-transform:none;color:#333;font-family: verdana, arial, sans-serif;text-align:left;z-index:10;background-image:url(img/clear.gif) !important}
-.left {background:url(img/77.gif) center left no-repeat;padding:0 9px 0 0}	  
-.right {color:#999;background:url(img/77.gif) center right no-repeat;padding:0 10px 0 0}
 
 #nn4 {display:none}
 

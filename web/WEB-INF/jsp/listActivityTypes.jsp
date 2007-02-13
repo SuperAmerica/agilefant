@@ -23,10 +23,10 @@
 			<display:column sortable="true" property="name"/>
 			<display:column sortable="false" title="Actions">			
 					<ww:url id="editLink" action="editActivityType">
-						<ww:param name="activityTypeId" value="${type.id}"/>
+						<ww:param name="activityTypeId" value="${row.id}"/>
 					</ww:url>
 					<ww:url id="deleteLink" action="deleteActivityType">
-						<ww:param name="activityTypeId" value="${type.id}"/>
+						<ww:param name="activityTypeId" value="${row.id}"/>
 					</ww:url>
 					<ww:a href="%{editLink}">Edit</ww:a>|<ww:a href="%{deleteLink}">Delete</ww:a>
 			</display:column>

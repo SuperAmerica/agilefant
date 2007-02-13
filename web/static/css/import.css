@@ -1,6 +1,6 @@
 body {font-family:Arial, Helvetica, Sans-Serif;background-color:#fff}
 h1 {text-align:center}
-h1,h2,h3 {font-size:1.2em}
+h1,h2,h3 {font-size:1.2em; }
 code {color:#66f}
 img {border:0}
 #sidebar img {float:right}
@@ -9,8 +9,8 @@ ol {margin:0 0 0 32px;padding:0}
 .note {font-size:.75em}
 .thanks {border-top:1px dotted #999;margin-top:20px}
 .notSoImportant {font-style:italic;color:#999}
-a:link,a:visited {color:#00f;text-decoration:underline}
-a:hover,a:focus {background-color:#eef}
+a:link,a:visited {color:#00f;text-decoration:none}
+a:hover,a:active {background-color:#eef}
 /* LAYOUT STUFF */
 #outer_wrapper {min-width:740px;width:100%;background:#fff }
 #wrapper {background:#fff}
@@ -20,6 +20,8 @@ a:hover,a:focus {background-color:#eef}
 #left {float: left;width:15px;display:inline;margin-left:20px}
 #bct {margin-left: 35px;width:auto; margin-top: 30px; color:#f00}
 #bct a {color:#f00; text-decoration:none}
+#bct a:hover {background-color:#fee;}
+
 #main {margin-left: 35px;width:auto; margin-top: 10px; margin-bottom: 10px}
 
 #sidebar {padding-left:100%;margin-left:-20px}
@@ -32,34 +34,61 @@ a:hover,a:focus {background-color:#eef}
 #maintitle {margin:10px 15px; font-size:1em;  }
 #logout { text-align:right; font-size:1em; display:inline; position:absolute;top:10px;right:15px;width:50%;}
 
-#subItems {border:1px solid #ccc; margin-top: 20px; display: table; }
-#subItemHeader {padding: 3px; background: #eee;  }
+#subItems {border:1px solid #ccc; margin-top: 20px; }
+#subItemHeader {padding: 3px; background: #E8EBF0;  border-bottom: 1px solid #ccc;}
 #subItemContent {padding: 10px; }
 
-.listTable {
-	
-	padding: 0px;
-	margin: 0;
-	border-top: 1px solid #ccc;
-	border-bottom: 1px solid #ccc;
-}
-.listTable td{
+
+#row  {
 	vertical-align: top;
-	border-top: 1px solid #ccc;
+	border-bottom: 1px solid #ccc; 
 }
 
-
-th	{
+#row td {
+	vertical-align: top;
 	text-align: left;
-	background : #dfd;
 }
 
-.odd	{
-	background : #eee;
+#row th {
+	text-align: left;
+	background : #ddd;
 }
+.even	{
+	background : #eee;
+	
+}
+.odd	{
+	background : #fdfdfd;
+	
+}
+
 
 .formTable td {
 	vertical-align: top;
+}
+
+.chartTable {
+	height: 5px;
+	width: 100px;
+	padding: 0;
+	margin: 0;
+	font-size:5px;
+}
+
+.notStarted {
+	background: #f00;
+}
+.started {
+	background: #f0f;
+}
+.implemented {
+	background: #00f;
+}
+.done {
+	background: #0a0;
+}
+.blocked {
+	background: #fa0;
 }
 
 

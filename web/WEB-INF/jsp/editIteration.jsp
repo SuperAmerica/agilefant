@@ -1,6 +1,7 @@
 <%@ include file="./inc/_taglibs.jsp" %>
 <%@ include file="./inc/_header.jsp" %>
 <aef:bct deliverableId="${deliverableId}"/>
+<c:set var="did" value="1336" scope="page"/>
 <aef:menu navi="${contextName}"  pageHierarchy="${pageHierarchy}"/> 
 	<ww:actionerror/>
 	<ww:actionmessage/>
@@ -91,7 +92,8 @@
 
 		<c:if test="${iteration.id > 0}">
 
-			<div id="subItems">
+<table><tr><td>
+		<div id="subItems">
 		<div id="subItemHeader">
 			Subitems
 		</div>
@@ -117,31 +119,21 @@
 			<display:table class="listTable" name="iteration.backlogItems" id="row" requestURI="editIteration.action">
 				<display:column sortable="true" title="Name" property="name"/>
 
-				<display:column sortable="true" title="Watched by me" >
-					<c:choose>
-						<c:when test="${empty row.watchers[currentUser.id]}">
-							Yes
-						</c:when>
-						<c:otherwise>
-							No
-						</c:otherwise>
-					</c:choose>
-				</display:column>
-
-
-
-				<display:column sortable="true" title="# of tasks">
-					${fn:length(row.tasks)}
-				</display:column>
-
 				<display:column title="Tasks" sortable="false">
 				<c:if test="${!empty row.tasks}"> 
 
-					<ww:form action="editTask">
-						<ww:select name="taskId" list="#attr.row.tasks" listKey="id" listValue="name"/>					
-						<ww:submit value="Go"/>
-				    </ww:form>
-				    </c:if>
+
+							<c:set var="did" value="${did + 1}" scope="page"/>
+							
+							
+							<a href="javascript:toggleDiv(${did});" title="Click to expand">${fn:length(row.tasks)} tasks, summary etc...</a>
+							<div id="${did}" style="display:none;">
+							<c:forEach items="${row.tasks}" var="task">
+							${aef:out(task.name)} - ${task.status}<br/>
+							</c:forEach>
+							</div>
+							
+							</c:if>
 
 				</display:column>
 <%-- 
@@ -185,8 +177,6 @@
 			  		<td>&nbsp;</td>
 			  		<td>&nbsp;</td>
 			  		<td>&nbsp;</td>
-			  		<td>&nbsp;</td>
-			  		<td>&nbsp;</td>
 			  		<td><c:out value="${iteration.performedEffort}" /></td>
 			  		<td><c:out value="${iteration.effortEstimate}" /></td>
 			  	<tr>
@@ -195,6 +185,7 @@
 
 				
 			</display:table>
+
 		</p>
 	</c:if>
 	
@@ -228,6 +219,8 @@
 					<ww:a href="%{editLink}">Edit</ww:a>|<ww:a href="%{deleteLink}">Delete</ww:a>
 				</display:column>
 			</display:table>
+
+
 		</p>
 	</c:if>
 	
@@ -237,5 +230,6 @@
 
 </div>
 </div>
+</td></tr></table>
 	</c:if>
 <%@ include file="./inc/_footer.jsp" %>

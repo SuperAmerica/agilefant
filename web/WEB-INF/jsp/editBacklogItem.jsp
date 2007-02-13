@@ -58,7 +58,7 @@
 			<tr>
 			<td>Link to iteration goal</td>
 			<td></td>
-			<td><ww:select name="backlogItem.iterationGoal.id" list="#attr.iterationGoals" listKey="id" listValue="name" /></td>	
+			<td><ww:select headerKey="0" headerValue="None" name="backlogItem.iterationGoal.id" list="#attr.iterationGoals" listKey="id" listValue="name" /></td>	
 					
 	
 			</c:if>
@@ -195,6 +195,8 @@
 
 
 
+<table><tr><td>
+
 
 		<div id="subItems">
 		<div id="subItemHeader">
@@ -244,6 +246,7 @@
 	
 		</div>
 		</div>
+</td></tr></table>
 		
 	</c:if>	
 

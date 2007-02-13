@@ -75,6 +75,8 @@
 	
 		<c:if test="${deliverable.id > 0}">
 
+<table><tr><td>
+
 			<div id="subItems">
 		<div id="subItemHeader">
 			Subitems
@@ -164,6 +166,8 @@
 
 </div>
 </div>
+</td></tr></table>
+
 	</c:if>
 	</c:otherwise>
 </c:choose>

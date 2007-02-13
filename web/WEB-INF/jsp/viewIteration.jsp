@@ -1,5 +1,7 @@
 <%@ include file="./inc/_taglibs.jsp" %>
 <%@ include file="./inc/_header.jsp" %>			
+<c:set var="did" value="1336" scope="page"/>
+
 		<c:choose>
 			<c:when test="${!empty iteration.id}">
 				<c:set var="currentIterationId" value="${iteration.id}" scope="page"/>
@@ -52,9 +54,14 @@
 			
 			
 		<c:if test="${iteration.id > 0}">
+			<h2>Iteration ${iteration.name}  <ww:date name="iteration.startDate" /> -  <ww:date name="iteration.endDate" /></h2>
+			
+			
 		<p>	
 			<img src="drawChart.action?iterationId=${iteration.id}"/>
 		</p>
+
+<table><tr><td>
 
 			<div id="subItems">
 		<div id="subItemHeader">
@@ -74,36 +81,42 @@
 		<aef:currentUser/>
 
 		<p>
-			Backlog items:
+			Backlog items
 		</p>
 		<p>
 			<display:table name="iteration.backlogItems" id="row" requestURI="viewIteration.action">
 				<display:column sortable="true" title="Name" property="name"/>
 
-				<display:column sortable="true" title="Watched by me" >
-					<c:choose>
-						<c:when test="${empty row.watchers[currentUser.id]}">
-							Yes
-						</c:when>
-						<c:otherwise>
-							No
-						</c:otherwise>
-					</c:choose>
-				</display:column>
-
-
-
-				<display:column sortable="true" title="# of tasks">
-					${fn:length(row.tasks)}
-				</display:column>
 
 				<display:column title="Tasks" sortable="false">
 				<c:if test="${!empty row.tasks}"> 
 
-					<ww:form action="editTask">
-						<ww:select name="taskId" list="#attr.row.tasks" listKey="id" listValue="name"/>					
-						<ww:submit value="Go"/>
-				    </ww:form>
+							<c:set var="did" value="${did + 1}" scope="page"/>
+							
+							<a href="javascript:toggleDiv(${did});" title="Click to expand">${fn:length(row.tasks)} tasks, ??% complete</a>
+
+		<table cellspacing="0" cellpadding="0" border="0" class="chartTable">
+		<tr>
+		<td height="5" width="10%" class="notStarted"><img height="5" src="/agilefant/static/img/clear.gif"></td>
+		<td title="asdasdf" height="5" width="40%"  class="started"><img height="5" src="/agilefant/static/img/clear.gif"></td>
+		<td  height="5" width="10%" class="implemented"><img height="5" src="/agilefant/static/img/clear.gif"></td>
+		<td  height="5" width="20%" class="done"><img height="5" src="/agilefant/static/img/clear.gif"></td>
+		<td  height="5" width="20%" class="blocked"><img height="5" src="/agilefant/static/img/clear.gif"></td>
+		</tr>
+		</table>
+							<div id="${did}" style="display:none;">
+							<c:forEach items="${row.tasks}" var="task">
+								<ww:url id="editLink" action="editTask" includeParams="none">
+									<ww:param name="taskId" value="${task.id}"/>
+								</ww:url>
+								<ww:a href="%{editLink}">${aef:out(task.name)} - ${task.status}</ww:a>								
+								<br/>
+							</c:forEach>
+							</div>
+
+							
+
+
 				    </c:if>
 
 				</display:column>
@@ -149,8 +162,6 @@
 			  		<td>&nbsp;</td>
 			  		<td>&nbsp;</td>
 			  		<td>&nbsp;</td>
-			  		<td>&nbsp;</td>
-			  		<td>&nbsp;</td>
 			  		<td><c:out value="${iteration.performedEffort}" /></td>
 			  		<td><c:out value="${iteration.effortEstimate}" /></td>
 			  	<tr>
@@ -163,12 +174,14 @@
 
 	<c:if test="${!empty iteration.iterationGoals}">
 		<p>
-			Iteration goals:
+			Iteration goals
 		</p>
 		<p>
 			<display:table name="iteration.iterationGoals" id="row" requestURI="editIteration.action">
-				<display:column sortable="true" title="Id" property="id"/>
 				<display:column sortable="true" title="Name" property="name"/>
+				<display:column sortable="true" title="Status" >
+					${row.status}
+				</display:column>
 				<display:column sortable="true" title="Description" property="description"/>
 				<display:column sortable="true" title="Priority" property="priority"/>
 				<display:column sortable="false" title="Actions">
@@ -189,6 +202,8 @@
 
 </div>
 </div>
+</td></tr></table>
+
 	</c:if>
 
 <%@ include file="./inc/_footer.jsp" %>

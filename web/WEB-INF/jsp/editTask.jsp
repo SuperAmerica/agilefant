@@ -135,6 +135,7 @@
 		
 	
 
+<table><tr><td>
 		<div id="subItems">
 		<div id="subItemHeader">
 			Subitems
@@ -188,5 +189,7 @@
 		</p>
 	</div>
 	</div>
+</td></tr></table>
+	
 	</c:if>
 <%@ include file="./inc/_footer.jsp" %>

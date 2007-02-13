@@ -92,7 +92,7 @@ public class BacklogItem implements PageItem, Assignable, EffortContainer {
 	}
 	
 	//@Column(nullable = false)
-	@Type(type="truncated_varchar")
+	@Type(type="escaped_truncated_varchar")
 	public String getName() {
 	    return name;
 	}

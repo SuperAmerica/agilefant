@@ -39,7 +39,7 @@ public class IterationGoal {
 		this.id = id;
 	}	
 	
-	@Type(type="truncated_varchar")
+	@Type(type="escaped_truncated_varchar")
 	public String getName() {
 		return name;
 	}

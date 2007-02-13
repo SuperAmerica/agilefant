@@ -82,7 +82,7 @@ public class Task implements PageItem, Assignable, EffortContainer {
 	    this.id = id;
 	}
 
-	@Type(type="truncated_varchar")
+	@Type(type="escaped_truncated_varchar")
 	public String getName() {
 	    return name;
 	}

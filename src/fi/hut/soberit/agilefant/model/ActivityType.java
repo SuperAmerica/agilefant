@@ -52,7 +52,7 @@ public class ActivityType {
 	}
 	
 	@Column(nullable=false, unique=true)
-	@Type(type="truncated_varchar")
+	@Type(type="escaped_truncated_varchar")
 	public String getName() {
 		return name;
 	}

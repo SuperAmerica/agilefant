@@ -37,7 +37,7 @@ public class Practice {
 		this.description = description;
 	}
 
-	@Type(type="truncated_varchar")
+	@Type(type="escaped_truncated_varchar")
 	public String getName() {
 		return name;
 	}

@@ -32,13 +32,13 @@
 	</c:when>
 	<c:otherwise>
 
-					<ww:url id="viewLink" action="viewDeliverable" includeParams="none">
+					<ww:url id="editLink" action="editDeliverable" includeParams="none">
 						<ww:param name="deliverableId" value="${deliverable.id}"/>												
 					</ww:url>
-						<ww:a href="%{viewLink}">View</ww:a> | Edit
+						View | <ww:a href="%{editLink}">Edit</ww:a> 
 
 					<aef:productList/>
-		<ww:form action="editDeliverable">
+		<ww:form action="viewDeliverable">
 			<p>
 				<select name="deliverableId">
 					<c:forEach items="${productList}" var="product">
@@ -58,11 +58,8 @@
 			</p>			
 		</ww:form>
 
+<c:if test="${!empty deliverable}">
 
-
-	<ww:form action="storeDeliverable">
-		<ww:hidden name="deliverableId" value="${deliverable.id}"/>
-		<ww:hidden name="productId"/>
 			
 		<table class="formTable">
 		<tr>
@@ -73,48 +70,36 @@
 			
 		<tr>
 		<td>Name</td>
-		<td>*</td>
-		<td><ww:textfield name="deliverable.name"/></td>	
+		<td></td>
+		<td>${deliverable.name}</td>	
 		</tr>
 			
 		<tr>
 		<td>Description</td>
 		<td></td>
-		<td><ww:textarea cols="40" rows="6" name="deliverable.description" /></td>	
+		<td>${deliverable.description}</td>	
 		</tr>
 			
 		<tr>
 		<td>Activity type</td>
 		<td></td>
-		<td><ww:select name="activityTypeId" list="#attr.activityTypes" listKey="id" listValue="name" value="${deliverable.activityType.id}"/></td>	
+		<td>${deliverable.activityType.name}</td>	
 		</tr>
 			
 		<tr>
 		<td>Start date</td>
-		<td>*</td>
-		<td><ww:textfield name="deliverable.startDate" /> (Use date pattern: <ww:text name="webwork.date.format"/>)</td>	
+		<td></td>
+		<td><ww:date name="deliverable.startDate" /></td>	
 		</tr>
 			
 		<tr>
 		<td>End date</td>
-		<td>*</td>
-		<td><ww:textfield name="deliverable.endDate"/> (Use date pattern: <ww:text name="webwork.date.format"/>)</td>	
-		</tr>
-			
-		<tr>
 		<td></td>
-		<td></td>
-		<td>
-			<ww:submit value="Store"/>
-    		<ww:submit name="action:editProduct" value="Cancel"/>
-			
-			</td>	
+		<td><ww:date name="deliverable.endDate"/> </td>	
 		</tr>
 	</table>
 			
-			
-			
-	</ww:form>		
+		
 	
 		<c:if test="${deliverable.id > 0}">
 
@@ -209,6 +194,7 @@
 </div>
 </td></tr></table>
 
+	</c:if>
 	</c:if>
 	</c:otherwise>
 </c:choose>

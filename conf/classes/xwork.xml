@@ -43,7 +43,8 @@
 				<param name="iterationId">${contextObjectId}</param>
 			</result>					
 			<result name="success_project" type="redirect-action">
-				<param name="actionName">viewProject</param>
+				<param name="actionName">viewDeliverable</param>
+				<param name="deliverableId">${contextObjectId}</param>
 			</result>					
 			<result name="success_product" type="redirect-action">
 				<param name="actionName">listProducts</param>
@@ -138,6 +139,9 @@
 		<action name="editDeliverable" method="edit" class="deliverableAction">
 			<result>/WEB-INF/jsp/editDeliverable.jsp</result>
 		</action>
+		<action name="viewDeliverable" method="edit" class="deliverableAction">
+			<result>/WEB-INF/jsp/viewDeliverable.jsp</result>
+		</action>
 		<action name="createDeliverable" method="create" class="deliverableAction">
 			<result>/WEB-INF/jsp/editDeliverable.jsp</result>
 		</action>
@@ -194,6 +198,10 @@
 		<action name="storeIteration" method="store" class="iterationAction">
 			<result type="redirect">editDeliverable.action?deliverableId=${deliverableId}</result>
 		</action>
+		<action name="viewIteration" method="edit" class="iterationAction">
+			<result>/WEB-INF/jsp/viewIteration.jsp</result>
+		</action>
+		
 <!-- /Iteration actions -->
 <!-- User actions -->
 		<action name="assignTask" class="assignTaskAction">
@@ -266,9 +274,6 @@
 <!-- /IterationGoal actions -->
 		<action name="managementView" class="portfolioAction">
 			<result>/WEB-INF/jsp/managementView.jsp</result>
-		</action>
-		<action name="viewIteration" method="edit" class="iterationAction">
-			<result>/WEB-INF/jsp/viewIteration.jsp</result>
 		</action>
 		
 		<action name="showWork" class="showPerformedWorkAction">

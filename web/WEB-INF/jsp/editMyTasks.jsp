@@ -53,8 +53,7 @@
 			</display:column>
 			
 			<display:column sortable="false" title="Status" >
-				<ww:select name="task.status" value="#attr.row.status.name" list="@fi.hut.soberit.agilefant.model.TaskStatus@values()" listKey="name" listValue="getText('task.status.' + name())"/>
-			</display:column>
+<ww:select name="task.status" value="task.status.name" list="@fi.hut.soberit.agilefant.model.TaskStatus@values()" listKey="name" listValue="getText('task.status.' + name())"/>			</display:column>
 			<display:column sortable="false" title="Comment" >
 					<ww:textfield name="event.comment" size="10"/>			
 			</display:column>

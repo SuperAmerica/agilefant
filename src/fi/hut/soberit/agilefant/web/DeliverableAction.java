@@ -46,8 +46,9 @@ public class DeliverableAction extends ActionSupport implements CRUDAction {
 		}
 		deliverable = deliverableDAO.get(deliverableId);
 		if (deliverable == null){
-			super.addActionError(super.getText("deliverable.notFound"));
-			return Action.ERROR;
+//			super.addActionError(super.getText("deliverable.notFound"));
+//			return Action.ERROR;
+			return Action.SUCCESS;
 		}
 		productId = deliverable.getProduct().getId();
 		return Action.SUCCESS;

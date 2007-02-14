@@ -2,8 +2,10 @@
 <%@ include file="./inc/_header.jsp" %>
 <aef:menu navi="${contextName}" /> 
 
+<p>
+        <img src="drawGantChart.action"/>
+</p>
 
-	
 <p>Portfolio hierarchy:</p>
 
 <aef:productList/>

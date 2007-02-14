@@ -5,10 +5,5 @@
 	<ww:actionmessage/>
 
 <h2>Project view</h2>
-	
-<p>
-		<img src="drawGantChart.action"/>
-</p>
-
 
 <%@ include file="./inc/_footer.jsp" %>

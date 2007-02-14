@@ -3,6 +3,36 @@
                        "http://www.springframework.org/dtd/spring-beans.dtd">
                       
 <beans>
+
+	<bean name="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+		<property name="host">
+			<value>mail.futurice.fi</value>
+		</property>
+	</bean>
+	
+	<bean name="updateTaskTemplate" class="org.springframework.mail.SimpleMailMessage">
+		<property name="from" value="agilefant@agilefant.org"/>
+		<property name="subject" value="Task updated: {0}"/>
+		<property name="text">
+			<value><![CDATA[Task updated: {0}
+View it from URL: http://hypertorni.dyndns.org/agilefant/editTask.action?taskId={1}
+---
+This message was automatically sent by Agilefant]]>
+			</value>
+		</property>
+	</bean>
+	
+	<bean name="createTaskTemplate" class="org.springframework.mail.SimpleMailMessage">
+		<property name="from" value="agilefant@agilefant.org"/>
+		<property name="subject" value="Task created: {0}"/>
+		<property name="text">
+			<value><![CDATA[New task created: {0}
+View it from URL: http://hypertorni.dyndns.org/agilefant/editTask.action?taskId={1}
+---
+This message was automatically sent by Agilefant]]>
+			</value>
+		</property>
+	</bean>
  	
  	<bean id="emailUtil" class="fi.hut.soberit.agilefant.util.EmailUtil">
 	
@@ -22,5 +52,4 @@
 	 	<property name="subjectPrefix"		value="(AGILEFANT) "/>
  	
 	</bean>
-	
 </beans>

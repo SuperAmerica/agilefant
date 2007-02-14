@@ -45,12 +45,28 @@
 	 		<map>
 	 			<entry key="pre-insert">
 	 				<list>
-						<bean class="fi.hut.soberit.agilefant.db.hibernate.event.TaskEventListener"/>
+						<ref bean="taskEventListener"/>
 						<bean class="fi.hut.soberit.agilefant.db.hibernate.event.TaskEventEventListener"/>
 					</list>
-	 			</entry>	 		
+	 			</entry>
+	 			<entry key="post-insert">
+	 				<list>
+	 					<ref bean="taskEventListener"/>
+	 				</list>	 			
+	 			</entry>
+	 			<entry key="post-update">
+	 				<list>
+	 					<ref bean="taskEventListener"/>
+	 				</list>
+	 			</entry>
 	 		</map>
 	 	</property>
+	 </bean>
+	 
+	 <bean name="taskEventListener" class="fi.hut.soberit.agilefant.db.hibernate.event.TaskEventListener">
+<!-- 	 	<property name="mailSender" ref="mailSender"/>-->
+	 	<property name="createTemplate" ref="createTaskTemplate"/>
+	 	<property name="updateTemplate" ref="updateTaskTemplate"/>
 	 </bean>
 	 
 	 <bean name="portfolioManager" class="fi.hut.soberit.agilefant.service.PortfolioManagerImpl">

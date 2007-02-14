@@ -6,7 +6,7 @@
 
 	<bean name="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
 		<property name="host">
-			<value>mail.futurice.fi</value>
+			<value>mysmtpserver.com</value>
 		</property>
 	</bean>
 	

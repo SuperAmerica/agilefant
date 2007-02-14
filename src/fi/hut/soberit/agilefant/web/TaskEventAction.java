@@ -49,6 +49,11 @@ public abstract class TaskEventAction<T extends TaskEvent> extends ActionSupport
 	}
 	
 	protected final void fillEvent(T event){
+		Task fillable = taskDAO.get(taskId);
+		if (this.task.getStatus() != null){
+			fillable.setStatus(task.getStatus());
+		}
+		task = fillable;
 		task = taskDAO.get(taskId);
 		event.setActor(SecurityUtil.getLoggedUser());
 		this.doFillEvent(event);

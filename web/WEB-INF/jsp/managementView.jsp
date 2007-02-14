@@ -2,6 +2,10 @@
 <%@ include file="./inc/_header.jsp" %>
 <aef:menu navi="${contextName}" /> 
 
+<p>Tähän [alkuaika] ja [loppuaika], defaulttina [nykyhetki-viikko] ja [nykyhetki+3kk]</p>
+
+<p>Gantt-kaavio näyttää asiat vain tältä aikaväliltä</p>
+
 <p>
         <img src="drawGantChart.action"/>
 </p>

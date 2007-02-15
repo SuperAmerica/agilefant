@@ -4,9 +4,14 @@ Quick install guide for AgilEFant 2007
 What you need:
 ---
 MySQL installation (4.1 preferred)
+  http://dev.mysql.com/downloads/mysql/4.1.html
 Tomcat installation
+  http://tomcat.apache.org/download-60.cgi
 AgilEFant 2007 distribution package
+
 Basic knowledge of running MySQL and Tomcat
+  http://tomcat.apache.org/tomcat-6.0-doc/index.html
+  http://dev.mysql.com/doc/
 
 1. Create database
 ---

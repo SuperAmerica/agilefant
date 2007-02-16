@@ -13,16 +13,16 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />		
 <style type="text/css" media="screen,projection">
 <!--
-@import url(/agilefant/static/css/v5.css); 
+@import url(static/css/v5.css); 
 -->
 </style>
-<!--[if IE 5]><link href="/agilefant/static/css/msie5.css" type="text/css" rel="stylesheet" media="screen,projection" /><![endif]--><!--[if IE 6]><link href="/agilefant/static/css/msie6.css" type="text/css" rel="stylesheet" media="screen,projection" /><![endif]-->
+<!--[if IE 5]><link href="static/css/msie5.css" type="text/css" rel="stylesheet" media="screen,projection" /><![endif]--><!--[if IE 6]><link href="static/css/msie6.css" type="text/css" rel="stylesheet" media="screen,projection" /><![endif]-->
 
-<script type="text/javascript" src="/agilefant/static/js/generic.js"></script>
+<script type="text/javascript" src="static/js/generic.js"></script>
 
 <style type="text/css" media="screen">
 <!--
-@import url(/agilefant/static/css/import.css);
+@import url(static/css/import.css);
 -->
 </style>
 
@@ -119,11 +119,11 @@
 	<div id="menuwrap${navi}">
 	<div id="submenuwrap${subnavi}">
 <ul id="menu">
-  <li id="nav1"><a href="/agilefant/contextView.action?contextName=myTasks">Heartbeat</a></li>
-  <li id="nav2"><a href="/agilefant/contextView.action?contextName=iteration&contextObjectId=${previousIterationId}">Iteration</a></li>
-  <li id="nav3"><a href="/agilefant/contextView.action?contextName=project&contextObjectId=${previousDeliverableId}">Project</a></li>
-  <li id="nav4"><a href="/agilefant/contextView.action?contextName=product">Product</a></li>
-  <li id="nav5"><a href="/agilefant/contextView.action?contextName=managementView">Development portfolio</a></li>  
+  <li id="nav1"><a href="contextView.action?contextName=myTasks">Heartbeat</a></li>
+  <li id="nav2"><a href="contextView.action?contextName=iteration&contextObjectId=${previousIterationId}">Iteration</a></li>
+  <li id="nav3"><a href="contextView.action?contextName=project&contextObjectId=${previousDeliverableId}">Project</a></li>
+  <li id="nav4"><a href="contextView.action?contextName=product">Product</a></li>
+  <li id="nav5"><a href="contextView.action?contextName=managementView">Development portfolio</a></li>  
 </ul>
 </div>
 </div>

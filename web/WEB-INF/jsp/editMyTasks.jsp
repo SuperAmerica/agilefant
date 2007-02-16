@@ -66,7 +66,7 @@
 			</display:column>
 		</display:table>
 						</ww:form>
-<script type="text/javascript" src="/agilefant/static/js/sumField.js"></script>
+<script type="text/javascript" src="static/js/sumField.js"></script>
 	</p>
 	
 

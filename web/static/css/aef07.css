@@ -71,7 +71,7 @@ img	{
 #AgilEFant{
         background: #00a;
         display: table-cell;
-	background-image:  url(/agilefant/static/img/AgilEFantBar_w.gif);  
+	background-image:  url(static/img/AgilEFantBar_w.gif);  
 	/*background-image:  url(img/AgilEFantBar2.gif);
         background-repeat: repeat-x;*/
         text-align: center;

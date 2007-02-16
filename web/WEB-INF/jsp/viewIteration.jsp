@@ -97,11 +97,11 @@
 
 		<table cellspacing="0" cellpadding="0" border="0" class="chartTable">
 		<tr>
-		<td height="5" width="10%" class="notStarted"><img height="5" src="/agilefant/static/img/clear.gif"></td>
-		<td title="asdasdf" height="5" width="40%"  class="started"><img height="5" src="/agilefant/static/img/clear.gif"></td>
-		<td  height="5" width="10%" class="implemented"><img height="5" src="/agilefant/static/img/clear.gif"></td>
-		<td  height="5" width="20%" class="done"><img height="5" src="/agilefant/static/img/clear.gif"></td>
-		<td  height="5" width="20%" class="blocked"><img height="5" src="/agilefant/static/img/clear.gif"></td>
+		<td height="5" width="10%" class="notStarted"><img height="5" src="static/img/clear.gif"></td>
+		<td title="asdasdf" height="5" width="40%"  class="started"><img height="5" src="static/img/clear.gif"></td>
+		<td  height="5" width="10%" class="implemented"><img height="5" src="static/img/clear.gif"></td>
+		<td  height="5" width="20%" class="done"><img height="5" src="static/img/clear.gif"></td>
+		<td  height="5" width="20%" class="blocked"><img height="5" src="static/img/clear.gif"></td>
 		</tr>
 		</table>
 							<div id="${did}" style="display:none;">

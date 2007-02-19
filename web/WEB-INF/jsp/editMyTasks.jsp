@@ -70,8 +70,8 @@
 			</display:column>
 			<display:column sortable="false" title="Work Date" >
 
-			    <ww:datepicker value="%{#now}" size="10" showstime="%{true}"  name="event.workDate"/> 
-
+			    <ww:datepicker value="%{#now}" size="10" showstime="%{true}"  format="%{getText('webwork.datepicker.format')}" name="event.workDate"/> 
+			    
 			</display:column>
 			
 			<display:column sortable="false" title="Actions">

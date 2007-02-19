@@ -3,6 +3,15 @@
                        "http://www.springframework.org/dtd/spring-beans.dtd">
                       
 <beans>
+ 	<bean id="placeholderConfig"
+	      class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+	  			<value>WEB-INF/configuration.properties</value>
+	  			<value>WEB-INF/configuration-user.properties</value>
+		  	</list>
+		</property>
+	</bean>
 
 	<bean name="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
 		<property name="host">

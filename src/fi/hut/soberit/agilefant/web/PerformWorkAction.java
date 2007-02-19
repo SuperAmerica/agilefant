@@ -12,9 +12,11 @@ public class PerformWorkAction extends TaskEventAction<PerformedWork> {
 	@Override
 	public void validate() {
 		super.validate();
+		
+		/* Don't require effort anymore
 		if (this.getEvent().getEffort() == null){
 			super.addActionError(super.getText("performWork.missingEffort"));			
-		}
+		}*/
 		if (this.getEvent().getNewEstimate() == null){
 			super.addActionError(super.getText("performWork.missingNewEstimate"));
 		}

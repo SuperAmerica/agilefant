@@ -14,4 +14,5 @@ import fi.hut.soberit.agilefant.model.TaskStatus;
 public interface TaskDAO extends GenericDAO<Task> {
 	
 	public Collection<Task> getTasksByStatusAndBacklogItem(BacklogItem bli, TaskStatus[] statuses);
+	public Collection<Task> getTasksByStatus(TaskStatus[] statuses);
 }

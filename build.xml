@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project basedir="." default="webapp" name="AgilEFant">
 	
-	
     <property file="build-user.properties"/>
 	<property file="build.properties"/>
 	<property file="conf/database-mysql5.properties"/>
@@ -280,15 +279,18 @@
 			<fileset dir="${webapp.root}/WEB-INF/jsp/"/>
 		</copy>	
 	</target>
-	
-	<target name="deploy-local" depends="webapp" description="Deploys web app to local server">
+
+	<target name="deploy-local-web" depends="webapp" description="Deploys web app to local server without reloading webapp">
 		<mkdir dir="${deploy.dir.local}"/>
 		<copy todir="${deploy.dir.local}">
 			<fileset dir="${build.webapp}"/>			
 		</copy>
+	</target>
+
+	<target name="deploy-local" depends="deploy-local-web" description="Deploys web app to local server">
 		<touch file="${deploy.dir.local}/WEB-INF/web.xml"/>
 	</target>
-	
+
 	<target name="undeploy-local" description="Undeploys web app on local server">
 		<delete dir="${deploy.dir.local}"/>
 		<delete dir="${catalina.home}/work/Catalina/localhost/${webapp.name}"/>

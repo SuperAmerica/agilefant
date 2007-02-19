@@ -80,8 +80,11 @@
 
 		<aef:currentUser/>
 
-		<p>
-			Backlog items
+		<p>Backlog items
+			<ww:url id="createBacklogItemLink" action="createBacklogItem" includeParams="none">
+				<ww:param name="backlogId" value="${iteration.id}"/>
+			</ww:url>
+			<ww:a href="%{createBacklogItemLink}">Create new &raquo;</ww:a>
 		</p>
 		<p>
 			<display:table name="iteration.backlogItems" id="row" requestURI="viewIteration.action">

@@ -291,6 +291,12 @@
 				<param name="inputName">inputStream</param>
 			</result>
 		</action>
+		<action name="drawExtendedBarChart" method="extendedBarChart" class="chartAction">
+			<result name="success" type="stream">
+				<param name="contentType">${contentType}</param>
+				<param name="inputName">inputStream</param>
+			</result>
+		</action>
 		<action name="drawDemoChart" method="demoChart" class="chartAction">
 			<result name="success" type="stream">
 				<param name="contentType">${contentType}</param>

@@ -69,8 +69,6 @@ public class TaskDAOHibernate extends GenericDAOHibernate<Task> implements TaskD
 			query += " )";
 		}
 		
-		query += " )";
-		
 		return (Collection<Task>)super.getHibernateTemplate().findByNamedParam(
 				query,
 				ids, 

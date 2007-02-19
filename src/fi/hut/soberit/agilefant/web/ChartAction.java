@@ -15,9 +15,11 @@ import java.util.GregorianCalendar;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartRenderingInfo;
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.DateAxis;
+import org.jfree.chart.entity.StandardEntityCollection;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
@@ -45,6 +47,10 @@ import org.jfree.data.category.IntervalCategoryDataset;
 import org.jfree.data.gantt.Task;
 import org.jfree.data.gantt.TaskSeries;
 import org.jfree.data.gantt.TaskSeriesCollection;
+import org.jfree.chart.imagemap.ImageMapUtilities;
+import org.jfree.chart.labels.StandardCategoryItemLabelGenerator;
+import org.jfree.chart.urls.CategoryURLGenerator;
+import org.jfree.chart.urls.StandardCategoryURLGenerator;
 
 
 public class ChartAction extends ActionSupport {
@@ -67,7 +73,12 @@ public class ChartAction extends ActionSupport {
 	private double effortLeft;
 	private PortfolioManager portfolioManager;
 	private Portfolio portfolio;
-
+	private double notStarted;
+	private double started;
+	private double blocked;
+	private double implemented;
+	private double done;
+	
 
 	public String execute(){
 //		 Create a time series chart
@@ -402,6 +413,7 @@ public class ChartAction extends ActionSupport {
 		// Intitializing variables
 		double done = 0;
 		double left = 0;
+		
 		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 		JFreeChart chart2 = null;
 		
@@ -439,6 +451,51 @@ public class ChartAction extends ActionSupport {
 		try {
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
 			ChartUtilities.writeChartAsPNG(out, chart2, 200, 100);
+			result = out.toByteArray();		
+		} catch (IOException e) {
+			System.err.println("Problem occurred creating chart.");
+		}
+		return Action.SUCCESS;
+	}	
+	
+	/**
+	 * Extended Bar chart takes five parameters, the amount of work not started, started, blocked, implemented and done. 
+	 * Finally the bar chart is returned back as a png-image.
+	 * 
+	 * @return
+	 */
+	public String extendedBarChart(){
+		
+		
+		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+		JFreeChart chart2 = null;
+		
+		double allTypes = 0;
+		allTypes = this.getNotStarted() + this.getStarted() + this.getBlocked() + this.getDone() + this.getImplemented();
+		
+		if(allTypes>0){
+			dataset.setValue(notStarted, "Not started", "");
+			dataset.setValue(started, "Started", "");
+			dataset.setValue(blocked, "Blocked", "");
+			dataset.setValue(implemented, "Implemented", "");
+			dataset.setValue(done, "Done", "");
+			chart2 = ChartFactory.createStackedBarChart(null,
+					null, null, dataset, PlotOrientation.HORIZONTAL,
+					false, false, false);
+			
+		}
+		
+		CategoryPlot plot = chart2.getCategoryPlot();
+		CategoryItemRenderer renderer = plot.getRenderer();
+		renderer.setSeriesItemLabelsVisible(0, false);
+		renderer.setSeriesPaint(0, Color.red);
+		renderer.setSeriesPaint(1, Color.cyan);
+		renderer.setSeriesPaint(2, Color.gray);
+		renderer.setSeriesPaint(3, Color.blue);
+		renderer.setSeriesPaint(4, Color.green);
+		try {
+			ByteArrayOutputStream out = new ByteArrayOutputStream();
+			ChartUtilities.writeChartAsPNG(out, chart2, 100, 5);
 			result = out.toByteArray();		
 		} catch (IOException e) {
 			System.err.println("Problem occurred creating chart.");
@@ -698,10 +755,15 @@ public class ChartAction extends ActionSupport {
         //      plot.getDomainAxis().setMaxCategoryLabelWidthRatio(10.0f);
         CategoryItemRenderer renderer = plot.getRenderer();
         renderer.setSeriesPaint(0, Color.blue);
+        CategoryURLGenerator generator = new StandardCategoryURLGenerator(
+        "index.html", "series", "category"); 
+        renderer.setItemURLGenerator(generator);
+        //renderer.setURLGenerator(new StandardCategoryURLGenerator("gant_chart_juttu.jsp"));
+        ChartRenderingInfo info = new ChartRenderingInfo(new StandardEntityCollection()); 
         
         try {
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
-			ChartUtilities.writeChartAsPNG(out, chart3, 500, 300);
+			ChartUtilities.writeChartAsPNG(out, chart3, 500, 300, info);
 			result = out.toByteArray();		
 		} catch (IOException e) {
 			System.err.println("Problem occurred creating chart.");
@@ -863,9 +925,61 @@ public class ChartAction extends ActionSupport {
 		return portfolio;
 	}
 
+	
 	public void setPortfolioManager(PortfolioManager portfolioManager) {
 		this.portfolioManager = portfolioManager;
 	}
+	
+
+	public double getBlocked() {
+		return blocked;
+	}
+
+
+	public void setBlocked(double blocked) {
+		this.blocked = blocked;
+	}
+
+
+	public double getDone() {
+		return done;
+	}
+
+
+	public void setDone(double done) {
+		this.done = done;
+	}
+
+
+	public double getImplemented() {
+		return implemented;
+	}
+
+
+	public void setImplemented(double implemented) {
+		this.implemented = implemented;
+	}
+
+
+	public double getNotStarted() {
+		return notStarted;
+	}
+
+
+	public void setNotStarted(double notStarted) {
+		this.notStarted = notStarted;
+	}
+
+
+	public double getStarted() {
+		return started;
+	}
+
+
+	public void setStarted(double started) {
+		this.started = started;
+	}
+
 
 
 }

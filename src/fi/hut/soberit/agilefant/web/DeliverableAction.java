@@ -4,6 +4,8 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 
+import javax.persistence.Transient;
+
 import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
 
@@ -137,6 +139,10 @@ public class DeliverableAction extends ActionSupport implements CRUDAction {
 
 	public void setDeliverableId(int deliverableId) {
 		this.deliverableId = deliverableId;
+	}
+	
+	public Collection<Deliverable> getAllDeliverables() {
+		return this.deliverableDAO.getAll();
 	}
 
 	public Deliverable getDeliverable() {

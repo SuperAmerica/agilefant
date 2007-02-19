@@ -2,6 +2,7 @@ package fi.hut.soberit.agilefant.web;
 
 import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
+import java.util.Collection;
 
 import fi.hut.soberit.agilefant.db.DeliverableDAO;
 import fi.hut.soberit.agilefant.db.IterationDAO;
@@ -133,6 +134,10 @@ public class IterationAction extends ActionSupport implements CRUDAction {
 
 	public void setDeliverableDAO(DeliverableDAO deliverableDAO) {
 	    this.deliverableDAO = deliverableDAO;
+	}
+	
+	public Collection<Iteration> getAllIterations() {
+		return this.iterationDAO.getAll();
 	}
 
 	public int getDeliverableId() {

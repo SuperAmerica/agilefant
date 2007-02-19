@@ -1,7 +1,7 @@
 <%@ include file="./inc/_taglibs.jsp" %>
 <%@ include file="./inc/_header.jsp" %>
 <aef:bct deliverableId="${deliverableId}"/>
-<c:set var="did" value="1336" scope="page"/>
+<c:set var="divId" value="1336" scope="page"/>
 <aef:menu navi="${contextName}"  pageHierarchy="${pageHierarchy}"/> 
 	<ww:actionerror/>
 	<ww:actionmessage/>
@@ -30,8 +30,8 @@
 							</c:forEach>
 						</c:forEach>						
 					</c:forEach>				
-			<ww:submit value="Select iteration"/>
 				</select>
+			<ww:submit value="Select iteration"/>
 			</p>			
 		</ww:form>
 				
@@ -117,21 +117,29 @@
 
 		<p>
 			<display:table class="listTable" name="iteration.backlogItems" id="row" requestURI="editIteration.action">
-				<display:column sortable="true" title="Name" property="name"/>
+				<display:column sortable="true" title="Name">
+					${aef:out(row.name)}
+				</display:column>
 
 				<display:column title="Tasks" sortable="false">
 				<c:if test="${!empty row.tasks}"> 
 
 
-							<c:set var="did" value="${did + 1}" scope="page"/>
+							<c:set var="divId" value="${divId + 1}" scope="page"/>
+							<a href="javascript:toggleDiv(${divId});" title="Click to expand">${fn:length(row.tasks)} tasks, ??% complete</a>
 							
+							<table cellspacing="0" cellpadding="0" border="0" class="chartTable">
+							<tr>
+							<td height="5" width="10%" class="notStarted"><img height="5" src="static/img/clear.gif"></td>
+							<td title="asdasdf" height="5" width="40%"  class="started"><img height="5" src="static/img/clear.gif"></td>
+							<td  height="5" width="10%" class="implemented"><img height="5" src="static/img/clear.gif"></td>
+							<td  height="5" width="20%" class="done"><img height="5" src="static/img/clear.gif"></td>
+							<td  height="5" width="20%" class="blocked"><img height="5" src="static/img/clear.gif"></td>
+							</tr>
+							</table>
 							
-							<a href="javascript:toggleDiv(${did});" title="Click to expand">${fn:length(row.tasks)} tasks, summary etc...</a>
-							<div id="${did}" style="display:none;">
-							<c:forEach items="${row.tasks}" var="task">
-							${aef:out(task.name)} - ${task.status}<br/>
-							</c:forEach>
-							</div>
+							<aef:tasklist tasks="${row.tasks}" divId="${divId}"/>
+							
 							
 							</c:if>
 
@@ -145,13 +153,13 @@
 				</display:column>
 --%>
 				<display:column sortable="false" title="Assignee" >
-					${row.assignee.fullName}
+					${aef:out(row.assignee.fullName)}
 				</display:column>
 				<display:column sortable="false" title="Priority" >
 					${row.priority}
 				</display:column>
 				<display:column sortable="true" title="Iteration Goal">
-					${row.iterationGoal.name}
+					${aef:out(row.iterationGoal.name)}
 				</display:column>
 				<display:column sortable="true" title="Effort">
 					${row.performedEffort}
@@ -204,9 +212,14 @@
 
 		<p>
 			<display:table class="listTable"  name="iteration.iterationGoals" id="row" requestURI="editIteration.action">
-				<display:column sortable="true" title="Id" property="id"/>
-				<display:column sortable="true" title="Name" property="name"/>
-				<display:column sortable="true" title="Description" property="description"/>
+				<display:column sortable="true" title="Name">
+					${aef:out(row.name)}
+				</display:column>
+					
+				<display:column sortable="true" title="Description" >
+					${aef:out(row.description)}
+				</display:column>
+					
 				<display:column sortable="true" title="Priority" property="priority"/>
 				<display:column sortable="false" title="Actions">
 					<ww:url id="editLink" action="editIterationGoal" includeParams="none">

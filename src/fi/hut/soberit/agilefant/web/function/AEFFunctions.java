@@ -13,10 +13,13 @@ import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.web.page.ManagementPageItem;
 import fi.hut.soberit.agilefant.web.page.PortfolioPageItem;
 
+
 /**
- * TODO comments jmrantal -  Where are these needed/called
+ * custom functions for jsp pages
  */
 public class AEFFunctions {
+
+	public static final int MAX_STR_LENGTH = 10;
 
 	public static boolean isProduct(Object obj) {
 		return obj instanceof Product;
@@ -54,10 +57,22 @@ public class AEFFunctions {
 	public static boolean isPerformedWork(Object obj) {
 		return obj instanceof PerformedWork;
 	} 
+	/**
+	 * Chop strings to MAX_STR_LENGTH
+	 *  
+	 * @param s string to shorten
+	 * @return shorter string, or original string if length < MAX_STR_LENGTH
+	 */
 	public static String out(String s) {
-		return s.length() > 10 ? s.substring(0, 10) + "..." : s;
-	} 
-	public static String out(String s, int length) {
-		return s.length() > length ? s.substring(0, length) + "..." : s;
+		return s.length() > MAX_STR_LENGTH ? s.substring(0, MAX_STR_LENGTH) + "..." : s;	} 
+	/**
+	 * Shorten strings to specified length
+	 * 
+	 * @param s string to shorten
+	 * @param newLength length
+	 * @return shorter string, or original string if length < newLength 
+	 */
+	public static String out(String s, int newLength) {
+		return s.length() > newLength ? s.substring(0, newLength) + "..." : s;
 	} 
 }

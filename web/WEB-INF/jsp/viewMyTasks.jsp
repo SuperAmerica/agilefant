@@ -3,7 +3,7 @@
 <aef:menu navi="1" /> 
 	<ww:actionerror/>
 	<ww:actionmessage/>
-<c:set var="did" value="1336" scope="page"/>
+<c:set var="divId" value="1336" scope="page"/>
 	
 	<ww:url id="editMyTasksLink" action="editMyTasks" includeParams="none"/>
 	
@@ -65,7 +65,9 @@
 				${row.performedEffort}
 
 			</display:column>
-			<display:column sortable="true" title="Created" property="created"/>
+			<display:column sortable="true" title="Created" >
+				<ww:date name="#attr.row.created" />
+			</display:column>
 			<display:column sortable="true" title="Assignee">
 				${aef:out(row.assignee.fullName)}
 			</display:column>
@@ -93,9 +95,9 @@
 				<display:column title="Tasks" sortable="false">
 				<c:if test="${!empty row.tasks}"> 
 
-							<c:set var="did" value="${did + 1}" scope="page"/>
+							<c:set var="divId" value="${divId + 1}" scope="page"/>
 							
-							<a href="javascript:toggleDiv(${did});" title="Click to expand">${fn:length(row.tasks)} tasks, ??% complete</a>
+							<a href="javascript:toggleDiv(${divId});" title="Click to expand">${fn:length(row.tasks)} tasks, ??% complete</a>
 
 		<table cellspacing="0" cellpadding="0" border="0" class="chartTable">
 		<tr>
@@ -106,16 +108,8 @@
 		<td  height="5" width="20%" class="blocked"><img height="5" src="static/img/clear.gif"></td>
 		</tr>
 		</table>
-							<div id="${did}" style="display:none;">
-							<c:forEach items="${row.tasks}" var="task">
-								<ww:url id="editLink" action="editTask" includeParams="none">
-									<ww:param name="taskId" value="${task.id}"/>
-								</ww:url>
-								<ww:a href="%{editLink}">${aef:out(task.name)} - ${task.status}</ww:a>								
-								<br/>
-							</c:forEach>
-							</div>
-
+		
+		<aef:tasklist tasks="${row.tasks}" divId="${divId}"/>
 
 				    </c:if>
 
@@ -168,9 +162,9 @@
 				<display:column title="Tasks" sortable="false">
 				<c:if test="${!empty row.tasks}"> 
 
-							<c:set var="did" value="${did + 1}" scope="page"/>
+							<c:set var="divId" value="${divId + 1}" scope="page"/>
 							
-							<a href="javascript:toggleDiv(${did});" title="Click to expand">${fn:length(row.tasks)} tasks, ??% complete</a>
+							<a href="javascript:toggleDiv(${divId});" title="Click to expand">${fn:length(row.tasks)} tasks, ??% complete</a>
 
 		<table cellspacing="0" cellpadding="0" border="0" class="chartTable">
 		<tr>
@@ -181,15 +175,8 @@
 		<td  height="5" width="20%" class="blocked"><img height="5" src="static/img/clear.gif"></td>
 		</tr>
 		</table>
-							<div id="${did}" style="display:none;">
-							<c:forEach items="${row.tasks}" var="task">
-								<ww:url id="editLink" action="editTask" includeParams="none">
-									<ww:param name="taskId" value="${task.id}"/>
-								</ww:url>
-								<ww:a href="%{editLink}">${aef:out(task.name)} - ${task.status}</ww:a>								
-								<br/>
-							</c:forEach>
-							</div>
+
+		<aef:tasklist tasks="${row.tasks}" divId="${divId}"/>
 
 
 				    </c:if>
@@ -239,7 +226,9 @@
 			<display:column sortable="true" title="Work performed" sortProperty="performedEffort.time">
 				${row.performedEffort}
 			</display:column>
-			<display:column sortable="true" title="Created" property="created"/>
+			<display:column sortable="true" title="Created" >
+				<ww:date name="#attr.row.created" />
+			</display:column>
 				
 			<display:column sortable="true" title="Assignee">
 				${aef:out(row.assignee.fullName)}

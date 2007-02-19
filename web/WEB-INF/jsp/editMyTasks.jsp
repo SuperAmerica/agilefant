@@ -50,7 +50,13 @@
 								</p>				
 							</c:when>
 			                <c:otherwise>
-			                	<ww:select name="event.workType.id" list="#attr.workTypes" listKey="id" listValue="getText(name)"/>
+			                	
+												<select name="event.workType.id">
+													<c:forEach items="${workTypes}" var="workType">
+																		<option value="${workType.id}" title="${workType.name}">${aef:out(workType.name)}</option>
+													</c:forEach>				
+												</select>
+
 			                </c:otherwise>
 	</c:choose>
 

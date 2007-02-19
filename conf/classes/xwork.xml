@@ -49,8 +49,8 @@
 			<result name="success_product" type="redirect-action">
 				<param name="actionName">listProducts</param>
 			</result>					
-			<result name="success_managementView" type="redirect-action">
-				<param name="actionName">managementView</param>
+			<result name="success_portfolio" type="redirect-action">
+				<param name="actionName">viewPortfolio</param>
 			</result>					
 			<result name="success_myTasks" type="redirect-action">
 				<param name="actionName">myTasks</param>
@@ -239,16 +239,16 @@
 
 
 		<action name="myTasks">
-			<result>/WEB-INF/jsp/showMyTasks.jsp</result>
+			<result>/WEB-INF/jsp/viewMyTasks.jsp</result>
 		</action>
 		<action name="editMyTasks">
 			<result>/WEB-INF/jsp/editMyTasks.jsp</result>
 		</action>
 		<action name="myTasksReportForm" method="edit" class="taskAction">
-			<result>/WEB-INF/jsp/showMyTasks.jsp</result>
+			<result>/WEB-INF/jsp/viewMyTasks.jsp</result>
 		</action>
 		<action name="myTasksSwitchUser" method="edit" class="userAction">
-			<result>/WEB-INF/jsp/showMyTasks.jsp</result>
+			<result>/WEB-INF/jsp/viewMyTasks.jsp</result>
 		</action>
 	<action name="myTasksPerformWork" class="performWorkAction">
 		<result type="redirect">editMyTasks.action</result>
@@ -272,8 +272,8 @@
  			<result type="redirect">editIterationGoal.action?iterationGoalId=${iterationGoalId}</result>
 		</action>
 <!-- /IterationGoal actions -->
-		<action name="managementView" class="portfolioAction">
-			<result>/WEB-INF/jsp/managementView.jsp</result>
+		<action name="viewPortfolio" class="portfolioAction">
+			<result>/WEB-INF/jsp/viewPortfolio.jsp</result>
 		</action>
 		
 		<action name="showWork" class="showPerformedWorkAction">

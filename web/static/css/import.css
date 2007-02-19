@@ -90,6 +90,12 @@ a:hover,a:active {background-color:#eef}
 .blocked {
 	background: #fa0;
 }
+.tasklist {
+	margin-left: 2px;
+}
+.tasklistItem {
+	margin-left: 2px;
+}
 
 
 span.right {text-align:right;}

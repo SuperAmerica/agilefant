@@ -20,6 +20,7 @@
 		<display:column sortable="true" title="Id" property="id"/>
 		<display:column sortable="true" title="Name" property="fullName"/>
 		<display:column sortable="true" title="User ID" property="loginName"/>
+		<display:column sortable="true" title="Email" property="email"/>
 		<display:column sortable="false" title="Actions">
 			<ww:url id="editLink" action="editUser" includeParams="none">
 				<ww:param name="userId" value="${row.id}"/>

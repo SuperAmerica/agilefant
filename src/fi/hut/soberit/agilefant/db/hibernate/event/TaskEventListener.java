@@ -5,6 +5,7 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.HashSet;
 
+import org.antlr.stringtemplate.StringTemplate;
 import org.hibernate.event.PostInsertEvent;
 import org.hibernate.event.PostInsertEventListener;
 import org.hibernate.event.PostUpdateEvent;
@@ -42,7 +43,11 @@ public class TaskEventListener implements PreInsertEventListener, PostInsertEven
 			return;
 		}
 		SimpleMailMessage mail = new SimpleMailMessage(template);
-		mail.setSubject(MessageFormat.format(mail.getSubject(), new Object[]{task.getName()}));
+		
+		StringTemplate subjectTemplate = new StringTemplate(mail.getSubject());
+		subjectTemplate.setAttribute("task", task);
+		mail.setSubject(subjectTemplate.toString());
+		
 		Collection<String> recipients = new HashSet<String>();
 
 		if (mail.getBcc() != null){
@@ -70,7 +75,9 @@ public class TaskEventListener implements PreInsertEventListener, PostInsertEven
 		
 		mail.setBcc(bcc);
 		
-		mail.setText(MessageFormat.format(mail.getText(), new Object[]{task.getName(), task.getId()}));
+		StringTemplate textTemplate = new StringTemplate(mail.getText());
+		textTemplate.setAttribute("task", task);
+		mail.setText(textTemplate.toString());
 		
 		if (mailSender != null){
 			mailSender.send(mail);

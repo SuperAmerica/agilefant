@@ -11,10 +11,10 @@
 	
 	<bean name="updateTaskTemplate" class="org.springframework.mail.SimpleMailMessage">
 		<property name="from" value="agilefant@agilefant.org"/>
-		<property name="subject" value="Task updated: {0}"/>
+		<property name="subject" value="Task updated: $task.name$"/>
 		<property name="text">
-			<value><![CDATA[Task updated: {0}
-View it from URL: http://hypertorni.dyndns.org/agilefant/editTask.action?taskId={1}
+			<value><![CDATA[Task updated: $task.name$
+View it from URL: http://hypertorni.dyndns.org/agilefant/editTask.action?taskId=$task.id$
 ---
 This message was automatically sent by Agilefant]]>
 			</value>
@@ -23,10 +23,10 @@ This message was automatically sent by Agilefant]]>
 	
 	<bean name="createTaskTemplate" class="org.springframework.mail.SimpleMailMessage">
 		<property name="from" value="agilefant@agilefant.org"/>
-		<property name="subject" value="Task created: {0}"/>
+		<property name="subject" value="Task created: $task.name$"/>
 		<property name="text">
-			<value><![CDATA[New task created: {0}
-View it from URL: http://hypertorni.dyndns.org/agilefant/editTask.action?taskId={1}
+			<value><![CDATA[New task created: $task.name$
+View it from URL: http://hypertorni.dyndns.org/agilefant/editTask.action?taskId=$task.id$
 ---
 This message was automatically sent by Agilefant]]>
 			</value>

@@ -6,14 +6,11 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.Locale;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -21,13 +18,14 @@ import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartRenderingInfo;
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.CategoryAxis;
 import org.jfree.chart.axis.DateAxis;
-import org.jfree.chart.axis.DateTickUnit;
 import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.entity.StandardEntityCollection;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
+import org.jfree.chart.renderer.category.BarRenderer;
 import org.jfree.chart.renderer.category.CategoryItemRenderer;
 import org.jfree.chart.renderer.xy.XYItemRenderer;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
@@ -83,8 +81,8 @@ public class ChartAction extends ActionSupport {
 	private double blocked;
 	private double implemented;
 	private double done;
-	private String startDate;
-	private String endDate;
+	private Date startDate;
+	private Date endDate;
 	
 	
 	/**
@@ -101,6 +99,8 @@ public class ChartAction extends ActionSupport {
 			works = performedWorkDAO.getPerformedWork(backlogItemDAO.get(backlogItemId));
 		} else if (iterationId > 0){
 			works = performedWorkDAO.getPerformedWork(iterationDAO.get(iterationId));
+			startDate = iterationDAO.get(iterationId).getStartDate();
+			endDate = iterationDAO.get(iterationId).getEndDate();
 		} else if (deliverableId > 0){
 			works = performedWorkDAO.getPerformedWork(deliverableDAO.get(deliverableId));
 		}
@@ -130,18 +130,20 @@ public class ChartAction extends ActionSupport {
 			AFTime effort = performedWork.getEffort();
 			if(effort!=null){
 				long time = effort.getTime();
-				long days = time / AFTime.WORKDAY_IN_MILLIS;
-				time %= AFTime.WORKDAY_IN_MILLIS;
+				/* not needed, when we want to know the sum in hours only */
+				//long days = time / AFTime.WORKDAY_IN_MILLIS;
+				//time %= AFTime.WORKDAY_IN_MILLIS;
+				//long days = time / AFTime.DAY_IN_MILLIS;
+				//time %= AFTime.DAY_IN_MILLIS; // We remove the full days from the sum
 				
 				long hours = time / AFTime.HOUR_IN_MILLIS;
-				time %= AFTime.HOUR_IN_MILLIS;
+				time %= AFTime.HOUR_IN_MILLIS; // we remove the full hours from the sum
 				
 				long minutes = time / AFTime.MINUTE_IN_MILLIS;
-				time %= AFTime.MINUTE_IN_MILLIS;
+				time %= AFTime.MINUTE_IN_MILLIS; // we remove the full minutes from the sum 
 				
-				worktime = Math.round(days * 24 + hours + (minutes/60));
+				worktime = Math.round(hours + (minutes/60)); // we account the total sum in hours.
 				Date date = performedWork.getCreated();
-				//String dateStr = date.toString(); // for debugging purposes
 				Calendar calendar = Calendar.getInstance();
 				calendar.setTime(date);
 				int day = calendar.get(Calendar.DAY_OF_MONTH);
@@ -177,7 +179,7 @@ public class ChartAction extends ActionSupport {
 		double usedCalendarDays = (double)(diff / (1000 * 60 * 60 * 24)) + 1; // If all the work is done in one day the value is 1
 
 		
-		double averageDailyProgress = totalWorkDone/usedCalendarDays;
+		double averageDailyProgress = totalWorkDone/usedCalendarDays; // Here we account how fast the trendline will drop
 		
 		TimeSeriesCollection dataset = new TimeSeriesCollection();
 		
@@ -206,16 +208,18 @@ public class ChartAction extends ActionSupport {
 			if(effort!=null){
 				
 				long time = effort.getTime();
+				/*
 				long days = time / AFTime.DAY_IN_MILLIS;
 				time %= AFTime.DAY_IN_MILLIS;
-				
+				*/
 				long hours = time / AFTime.HOUR_IN_MILLIS;
 				time %= AFTime.HOUR_IN_MILLIS;
 				
 				long minutes = time / AFTime.MINUTE_IN_MILLIS;
 				time %= AFTime.MINUTE_IN_MILLIS;
 				
-				worktime = Math.round(days * 24 + hours + (minutes/60));
+				//worktime = Math.round(days * 24 + hours + (minutes/60));
+				worktime = Math.round(hours + (minutes/60)); // we want to know the total in hours
 				Date date = performedWork.getCreated();
 				//String dateStr = date.toString(); // for debugging purposes
 				Calendar calendar = Calendar.getInstance();
@@ -294,8 +298,29 @@ public class ChartAction extends ActionSupport {
 		false);
 		XYPlot plot = chart1.getXYPlot();
 		DateAxis axis = (DateAxis) plot.getDomainAxis();
-		axis.setDateFormatOverride(new SimpleDateFormat("yyyy-MM-dd"));
-		axis.setTickUnit(new DateTickUnit(DateTickUnit.DAY, 7));
+		
+		axis.setDateFormatOverride(new SimpleDateFormat("dd-MM-yyyy")); // Here we set how the time axis should look like
+		
+		/* we want to set the start date to be official start day*/
+		Date iterStartDate = this.getStartDate();
+		if(iterStartDate != null){
+			Date min = axis.getMinimumDate();
+			if(min.after(iterStartDate)){
+				axis.setMinimumDate(iterStartDate); // If there is no work done before the start of the iteration
+			}
+		}
+		
+		/* We want to set the end date to be official end day */
+		Date iterEndDate = this.getEndDate();
+		if(iterEndDate != null){
+			Date max = axis.getMaximumDate();
+			if(max.before(iterEndDate)){
+				axis.setMaximumDate(iterEndDate); // If there is no work done after the end of the iteration
+			}
+		}
+		
+		//axis.setTickUnit(new DateTickUnit(DateTickUnit.DAY, 7)); // A way to set how often dates are showing in the time axis
+		
 		XYItemRenderer rend = plot.getRenderer();
 		XYLineAndShapeRenderer rr = (XYLineAndShapeRenderer)rend;
 		rr.setShapesVisible(true);
@@ -382,15 +407,20 @@ public class ChartAction extends ActionSupport {
 		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 		JFreeChart chart2 = null;
 		
+		/*-- We want to show the relative percentages of different work states --*/
 		double allTypes = 0;
 		allTypes = this.getNotStarted() + this.getStarted() + this.getBlocked() + this.getDone() + this.getImplemented();
-		
+		double ns = (this.getNotStarted() / allTypes)*100;
+		double st = (this.getStarted() / allTypes)*100;
+		double bl = (this.getBlocked() / allTypes)*100;
+		double im = (this.getImplemented() / allTypes)*100;
+		double dn = (this.getDone() / allTypes)*100;
 		if(allTypes>0){
-			dataset.setValue(notStarted, "Not started", "");
-			dataset.setValue(started, "Started", "");
-			dataset.setValue(blocked, "Blocked", "");
-			dataset.setValue(implemented, "Implemented", "");
-			dataset.setValue(done, "Done", "");
+			dataset.setValue(ns, "Not started", "");
+			dataset.setValue(st, "Started", "");
+			dataset.setValue(bl, "Blocked", "");
+			dataset.setValue(im, "Implemented", "");
+			dataset.setValue(dn, "Done", "");
 			chart2 = ChartFactory.createStackedBarChart(null,
 					null, null, dataset, PlotOrientation.HORIZONTAL,
 					false, false, false);
@@ -398,17 +428,28 @@ public class ChartAction extends ActionSupport {
 		}
 		
 		CategoryPlot plot = chart2.getCategoryPlot();
-		CategoryItemRenderer renderer = plot.getRenderer();
-		renderer.setSeriesItemLabelsVisible(0, false);
-		renderer.setSeriesVisibleInLegend(0, false);
-		renderer.setSeriesPaint(0, Color.red);
-		renderer.setSeriesPaint(1, Color.cyan);
-		renderer.setSeriesPaint(2, Color.gray);
-		renderer.setSeriesPaint(3, Color.blue);
-		renderer.setSeriesPaint(4, Color.green);
+		BarRenderer renderer = (BarRenderer) plot.getRenderer();
+		CategoryAxis axis = plot.getDomainAxis();
+		
+		/* -- some efforts to get rid of the outline scale, no success so far -- */
+		plot.setDomainGridlinesVisible(false);
+		plot.setRangeGridlinesVisible(false);		
+		axis.setAxisLineVisible(false);
+		axis.setTickLabelsVisible(false);
+		axis.setTickMarksVisible(false);
+		renderer.setDrawBarOutline(false);
+		renderer.setOutlineStroke(null);
+		/*-----------------------------------------*/
+		
+		axis.setCategoryMargin(0.01); // one percent
+		renderer.setSeriesPaint(0, Color.red); // color for not started
+		renderer.setSeriesPaint(1, Color.pink); // color for started
+		renderer.setSeriesPaint(2, Color.blue); // color for blocked
+		renderer.setSeriesPaint(3, Color.green); // color for implemented
+		renderer.setSeriesPaint(4, Color.orange); // color for done
 		try {
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
-			ChartUtilities.writeChartAsPNG(out, chart2, 100, 40);
+			ChartUtilities.writeChartAsPNG(out, chart2, 100, 30);
 			result = out.toByteArray();		
 		} catch (IOException e) {
 			System.err.println("Problem occurred creating chart.");
@@ -417,7 +458,8 @@ public class ChartAction extends ActionSupport {
 	}	
 	
 	/**
-	 * 
+	 * Draws the gantt chart with default settings for viewing 
+	 * current date plus three months
 	 * 
 	 * @return
 	 */	
@@ -461,8 +503,8 @@ public class ChartAction extends ActionSupport {
         
         // create the chart...
         JFreeChart chart3 = ChartFactory.createGanttChart(
-            "Gantt Chart Demo",  // chart title
-            "Task",              // domain axis label
+            "Development portfolio",  // chart title
+            "Activity",              // domain axis label
             "Date",              // range axis label
             dataset,             // data
             true,                // include legend
@@ -485,14 +527,7 @@ public class ChartAction extends ActionSupport {
 		/*-experimental for setting the start date */
 		
 		if(this.getStartDate()!=null){
-			DateFormat df = DateFormat.getDateTimeInstance();
-	        try {
-				Date startingDate = df.parse(this.getStartDate());
-				axis.setMinimumDate(startingDate); // Sets the gantt to show dates starting from today.
-			} catch (ParseException e) { // parsing the date-string failed.
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			axis.setMinimumDate(this.getStartDate());
 		}else {
 			Date startingDate = calendar.getTime();
 			axis.setMinimumDate(startingDate); // Sets the gantt to show dates starting from today.
@@ -513,19 +548,12 @@ public class ChartAction extends ActionSupport {
         }else if((endMonth == 4 || endMonth == 6 || endMonth == 9 || endMonth == 11) && (day>30)){
         	day = 30; 
         }
-        calendar.set(year, endMonth, day);
+        calendar.set(year, endMonth, day); // Sets the ending date
         
         /* --experimental for setting the end date */
         
         if(this.getEndDate()!=null){
-			DateFormat df = DateFormat.getDateTimeInstance();
-	        try {
-				Date endingDate = df.parse(this.getEndDate());
-				axis.setMaximumDate(endingDate); // Sets the gantt to show dates until the specified ending date.
-			} catch (ParseException e) { // parsing the date-string failed.
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			axis.setMinimumDate(this.getEndDate()); // Sets the gantt to show dates until the specified ending date.
 		}else {
 			Date endingDate = calendar.getTime(); // Get the new modified date three month from the original
 	        axis.setMaximumDate(endingDate);
@@ -537,7 +565,6 @@ public class ChartAction extends ActionSupport {
         
         /*----------------------------------------------*/
         
-        //      plot.getDomainAxis().setMaxCategoryLabelWidthRatio(10.0f);
         CategoryItemRenderer renderer = plot.getRenderer();
         renderer.setSeriesPaint(0, Color.blue);
         CategoryURLGenerator generator = new StandardCategoryURLGenerator(
@@ -766,24 +793,29 @@ public class ChartAction extends ActionSupport {
 	}
 
 
-	public String getEndDate() {
+	public Date getEndDate() {
 		return endDate;
 	}
 
 
-	public void setEndDate(String endDate) {
+	public void setEndDate(Date endDate) {
 		this.endDate = endDate;
 	}
 
 
-	public String getStartDate() {
+	public Date getStartDate() {
 		return startDate;
 	}
 
 
-	public void setStartDate(String startDate) {
+	public void setStartDate(Date startDate) {
 		this.startDate = startDate;
 	}
+
+
+
+
+
 
 
 

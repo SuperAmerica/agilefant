@@ -10,6 +10,17 @@ import javax.persistence.ManyToOne;
 import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.Type;
 
+/**
+ * Hibernate entity bean representing a Practice.
+ * A task contains one or more practices, linked trough PracticeAllocation.  
+ * A practice in a task also has a status.
+ * <p> 
+ * Currently practices aren't implemented in the UI.
+ * 
+ * @see fi.hut.soberit.agilefant.model.PracticeAllocation
+ * @see fi.hut.soberit.agilefant.model.PracticeTemplate
+ * @see fi.hut.soberit.agilefant.model.PracticeStatus
+ */
 @Entity
 public class Practice {
 	
@@ -18,14 +29,28 @@ public class Practice {
 	private String description;
 	private PracticeTemplate template;
 
-	@Id 
+	/** 
+	 * Get the id of this object.
+	 * <p>
+	 * The id is unique among all practices. 
+	 */
+	// tag this field as the id
+	@Id
+	// generate automatically
 	@GeneratedValue(strategy=GenerationType.AUTO)
-	@Column(nullable = false)	
+	// not nullable
+	@Column(nullable = false)
 	public int getId() {
-	    return id;
+		return id;
 	}
+	
+	/** 
+	 * Set the id of this object.
+	 * <p>
+	 * You shouldn't normally call this.
+	 */
 	public void setId(int id) {
-	    this.id = id;
+		this.id = id;
 	}
 
 	@Type(type="escaped_text")

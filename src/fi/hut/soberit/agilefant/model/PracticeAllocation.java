@@ -18,6 +18,12 @@ import org.hibernate.annotations.Type;
  * A Task can't directly reference to a practice, since the state
  * of a practice must be contained somewhere. Thus there's an extra 
  * step of practice allocations.
+ * <p>
+ * Currently practices aren't implemented in the UI.
+ * 
+ * @see fi.hut.soberit.agilefant.model.Practice
+ * @see fi.hut.soberit.agilefant.model.PracticeTemplate
+ * @see fi.hut.soberit.agilefant.model.PracticeStatus
  */
 @Entity
 public class PracticeAllocation {
@@ -34,16 +40,29 @@ public class PracticeAllocation {
 		this.task = task;
 	}
 	
-	@Id 
+	/** 
+	 * Get the id of this object.
+	 * <p>
+	 * The id is unique among all practice allocations. 
+	 */
+	// tag this field as the id
+	@Id
+	// generate automatically
 	@GeneratedValue(strategy=GenerationType.AUTO)
-	@Column(nullable = false)	
+	// not nullable
+	@Column(nullable = false)
 	public int getId() {
-	    return id;
+		return id;
 	}
-
+	
+	/** 
+	 * Set the id of this object.
+	 * <p>
+	 * You shouldn't normally call this.
+	 */
 	public void setId(int id) {
-	    this.id = id;
-	}	
+		this.id = id;
+	}
 	
 	@Type(type="fi.hut.soberit.agilefant.db.hibernate.EnumUserType",
 			parameters = {

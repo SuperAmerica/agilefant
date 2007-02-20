@@ -18,6 +18,30 @@ import org.hibernate.annotations.Type;
 
 import fi.hut.soberit.agilefant.web.page.PageItem;
 
+/**
+ * A Hibernate entity bean which represents an iteration. 
+ * <p>
+ * Conceptually, an iteration is a type of a backlog. A iteration-backlog 
+ * represents work (backlog items, tasks) to be done during 
+ * an iteration. Iteration is a time period, a conceptual tool, used to divide and 
+ * manage work. It's usually a few weeks in length.
+ * <p>
+ * Since a deliverable is a backlog, it can contain backlog items, which, in turn,
+ * are smaller containers for work. An iteration is a part of a bigger work container, 
+ * the deliverable.
+ * <p>
+ * An iteration is part of a deliverable. Start- and ending dates can be 
+ * defined, as well as effort estimate and already performed effort.  
+ * <p>
+ * An iteration can contain some iteration goals to which underlying backlog items
+ * can be bound to. Iteration goals are higher level concepts. Multiple backlog items 
+ * can work towards a single iteration goal. 
+ * 
+ * @see fi.hut.soberit.agilefant.model.Backlog
+ * @see fi.hut.soberit.agilefant.model.BacklogItem
+ * @see fi.hut.soberit.agilefant.model.Iteration
+ * @see fi.hut.soberit.agilefant.model.IterationGoal
+ */
 @Entity
 public class Iteration extends Backlog implements PageItem, EffortContainer {
 	
@@ -43,6 +67,7 @@ public class Iteration extends Backlog implements PageItem, EffortContainer {
     	return 100.0*(double)performed/(double)total;
     }
     
+    /** The deliverable, under which this iteration is. */
 	@ManyToOne 
 	//@JoinColumn (nullable = false)
 	public Deliverable getDeliverable() {
@@ -51,14 +76,14 @@ public class Iteration extends Backlog implements PageItem, EffortContainer {
 	public void setDeliverable(Deliverable deliverable) {
 		this.deliverable = deliverable;
 	}
-		
+	
 	//@Column(nullable = false)
 	public Date getEndDate() {
 	    return endDate;
-	}
+	}	
 	public void setEndDate(Date endDate) {
 	    this.endDate = endDate;
-	}
+	}	
 	public void setEndDate(String endDate) throws ParseException {
 	    DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT, Locale.ENGLISH);	    
 	    this.startDate = df.parse( endDate);
@@ -75,22 +100,29 @@ public class Iteration extends Backlog implements PageItem, EffortContainer {
 	    DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT, Locale.ENGLISH);	    
 	    this.startDate = df.parse( startDate);
 	}
+	
+	/** {@inheritDoc} */
 	@Transient
 	public Collection<PageItem> getChildren() {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	/** {@inheritDoc} */
 	@Transient
 	public PageItem getParent() {
 		// TODO Auto-generated method stub
 		return getDeliverable();
 	}
+	
+	/** {@inheritDoc} */
 	@Transient
 	public boolean hasChildren() {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
+	/** {@inheritDoc} */
 	@Type(type="af_time")
 	@Formula(value="(select SUM(t.effortEstimate) from Task t " +
 			"INNER JOIN BacklogItem bi ON t.backlogItem_id = bi.id " +
@@ -103,6 +135,7 @@ public class Iteration extends Backlog implements PageItem, EffortContainer {
 		this.effortEstimate = effortEstimate;
 	}
 
+	/** {@inheritDoc} */
 	@Type(type="af_time")
 	@Formula(value="(select SUM(e.effort) from TaskEvent e " +
 			"INNER JOIN Task t ON e.task_id = t.id " +

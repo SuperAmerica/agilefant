@@ -9,6 +9,11 @@ import fi.hut.soberit.agilefant.model.PerformedWork;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Task;
 
+/**
+ * Interface for a DAO of a PerformedWork.
+ * 
+ * @see GenericDAO
+ */
 public interface PerformedWorkDAO {
 	
 	public Collection<PerformedWork> getPerformedWork(Task task);

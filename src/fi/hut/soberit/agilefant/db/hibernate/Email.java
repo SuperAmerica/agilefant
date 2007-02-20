@@ -9,13 +9,13 @@ import java.lang.annotation.Target;
 import org.hibernate.validator.ValidatorClass;
 
 /**
- * Annotation to enable our custom email validator.
+ * Annotation to enable our hibernate custom email validator.
  * 
  * @author Turkka Äijälä
- * @see EmailValidator
+ * @see fi.hut.soberit.agilefant.db.hibernate.EmailValidator
  */
 @Documented
-@ValidatorClass(EmailValidator.class)
+@ValidatorClass(EmailValidator.class) // bind to EmailValidator
 @Target({ElementType.METHOD, ElementType.FIELD}) 
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Email {

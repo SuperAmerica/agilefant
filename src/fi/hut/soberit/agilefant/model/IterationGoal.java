@@ -15,6 +15,24 @@ import javax.persistence.OneToMany;
 import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.Type;
 
+/**
+ * A Hibernate entity bean which represents an iteration goal. 
+ * <p>
+ * Conceptually, iteration goals divide an iteration to higher 
+ * level goals than backlog items. Several backlog items belonging 
+ * to an iteration might work tovards the same goal. 
+ * <p>
+ * Example iteration goal would be "documentation finished", bound to
+ * "finish javadocs" and "finish user documentation" - backlog items. 
+ * <p>
+ * The IterationGoal is contained under an iteration. Its can be linked 
+ * to several backlog items. It also has a priority number among 
+ * its peers under the same iteration, smaller number meaning more important
+ * goal. 
+ * 
+ * @see fi.hut.soberit.agilefant.model.Iteration
+ * @see fi.hut.soberit.agilefant.model.BacklogItem 
+ */
 @Entity
 public class IterationGoal {
 

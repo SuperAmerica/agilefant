@@ -13,16 +13,21 @@ import javax.persistence.GenerationType;
 import org.hibernate.annotations.Type;
 import org.hibernate.validator.Range;
 
-@Entity
 /**
- * ActivityType represents a work entitity by defining some
+ * Hibernate entity bean representing an activity type.
+ * <p>
+ * Conceptually, ActivityType represents a work entitity by defining some
  * WorkTypes which are applicable to this kind of an activity.
- * E.g. "a customer software project" might  contain "planning", "coding"
- * and "customer support".
+ * Activity type of "customer software project" might contain work types 
+ * "planning", "coding" and "customer support".
+ * <p>
  * ActivityType has a target percentage, which is defined as the
  * percentage of all the work that should be spent to work which are
  * under this particular ActivityType, given by company leaders or such.
+ * 
+ * @see fi.hut.soberit.agilefant.model.WorkType
  */
+@Entity
 public class ActivityType {
 	
 	private int id;
@@ -31,13 +36,26 @@ public class ActivityType {
 	private Collection<WorkType> workTypes = new HashSet<WorkType>();
 	private int targetSpendingPercentage = 0;
 	
-	@Id 
+	/** 
+	 * Get the id of this object.
+	 * <p>
+	 * The id is unique among all activity types. 
+	 */
+	// tag this field as the id
+	@Id
+	// generate automatically
 	@GeneratedValue(strategy=GenerationType.AUTO)
+	// not nullable
 	@Column(nullable = false)
 	public int getId() {
 		return id;
 	}
 	
+	/** 
+	 * Set the id of this object.
+	 * <p>
+	 * You shouldn't normally call this.
+	 */
 	public void setId(int id) {
 		this.id = id;
 	}
@@ -61,6 +79,10 @@ public class ActivityType {
 		this.name = name;
 	}
 	
+	/** 
+	 * Single activity type can contain many work types,
+	 * single worktype is part of a single activity type. 
+	 */
 	@OneToMany(mappedBy="activityType")
 	public Collection<WorkType> getWorkTypes() {
 		return workTypes;

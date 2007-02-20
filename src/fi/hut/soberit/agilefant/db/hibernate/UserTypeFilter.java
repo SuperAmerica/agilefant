@@ -27,7 +27,7 @@ import org.hibernate.usertype.UserType;
  *	    typeClass = your.filter.class,<br>
  *	    parameters = { &#064;Parameter(name="subtypes", value="next.filter another.filter actual.user.type.used") }<br>
  * )</code></p><p>
- * So, parameter "subtypes" is a space separated list of UserTypes, first filters, and lastly the 
+ * So, parameter "subtypes" is a space separated list of first filters, and lastly the 
  * actual user type used to serialize/deserialize the data into the database. 
  * This way you can chain UserTypeFilter implementations.  
  * <p>
@@ -37,10 +37,10 @@ import org.hibernate.usertype.UserType;
  * </code></p>
  * 
  * @author Turkka Äijälä 
- * @see StringTruncateFilter
- * @see StringEscapeFilter
- * @see TextUserType
- * @see VarcharUserType
+ * @see fi.hut.soberit.agilefant.db.hibernate.StringTruncateFilter
+ * @see fi.hut.soberit.agilefant.db.hibernate.StringEscapeFilter
+ * @see fi.hut.soberit.agilefant.db.hibernate.TextUserType
+ * @see fi.hut.soberit.agilefant.db.hibernate.VarcharUserType
  */
 public abstract class UserTypeFilter implements UserType, ParameterizedType {
 	

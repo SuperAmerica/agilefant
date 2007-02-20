@@ -1,5 +1,6 @@
 /**
- * Data model package, consists of Hibernate entity beans.  
+ * Data model package, consists of Hibernate entity beans that map the contents of 
+ * the database to the object oriented model.  
  */
 @TypeDefs(
 	/* Package-level typedefs to avoid writing the long type definitions all the time. */

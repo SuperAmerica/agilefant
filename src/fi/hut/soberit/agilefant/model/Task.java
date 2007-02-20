@@ -28,15 +28,28 @@ import fi.hut.soberit.agilefant.web.page.PageItem;
 
 @Entity
 /**
+ * Hibernate entity bean representing a Task.
+ * <p>
+ * Conceptually task represents some work which is no
+ * further dividable to smaller pieces. It's work of a single
+ * person.
+ * <p>
+ * Technically a Task belongs in a BacklogItem. It has an effort estimate, as well 
+ * as sum of work done. It has a creator and an assignee. The Task also carries
+ * a log of events with it. Since one can "watch" a task, those are also tracked.
+ * <p>
+ * Task also is linked to some practices, but those are not currently implemented 
+ * in the UI.   
+ * <p>
  * Task is a unit which, within a Cycle of Control model, is in interest of 
  * workers of a team, and sometimes their project manager also.
  * Task is a sub-part of a BacklogItem, and may be assigned to a named person.
- * 
+ * <p>
  * Workers are interested in Tasks which have been
  * assigned to them as things to be done. To know better, which Task should be
  * tackled next, there is a priority attached to a Task.
  * Task has a capability to log efforts done to it.
- * 
+ * <p>
  * Project manager is generally more interested in BacklogItems than Tasks,
  * but in small projects, of for personal interests, may want to see the progress
  * of a single Task, too. Also, planning the future work to be assigned, it
@@ -70,16 +83,28 @@ public class Task implements PageItem, Assignable, EffortContainer {
 	    this.description = description;
 	}
 
-	/** TODO tiaijala - what do these @ markings do? */
-	@Id 
+	/** 
+	 * Get the id of this object.
+	 * <p>
+	 * The id is unique among all tasks. 
+	 */
+	// tag this field as the id
+	@Id
+	// generate automatically
 	@GeneratedValue(strategy=GenerationType.AUTO)
-	@Column(nullable = false)	
+	// not nullable
+	@Column(nullable = false)
 	public int getId() {
-	    return id;
+		return id;
 	}
-
+	
+	/** 
+	 * Set the id of this object.
+	 * <p>
+	 * You shouldn't normally call this.
+	 */
 	public void setId(int id) {
-	    this.id = id;
+		this.id = id;
 	}
 
 	@Type(type="escaped_truncated_varchar")
@@ -108,11 +133,13 @@ public class Task implements PageItem, Assignable, EffortContainer {
 	    this.creator = creator;
 	}
 
+	/** {@inheritDoc} */
 	@ManyToOne
 	public User getAssignee() {
 	    return assignee;
 	}
 
+	/** {@inheritDoc} */
 	public void setAssignee(User assignee) {
 	    this.assignee = assignee;
 	}
@@ -156,15 +183,21 @@ public class Task implements PageItem, Assignable, EffortContainer {
 	public void setBacklogItem(BacklogItem backlogItem) {
 	    this.backlogItem = backlogItem;
 	}
+	
+	/** {@inheritDoc} */
 	@Transient
 	public Collection<PageItem> getChildren() {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	/** {@inheritDoc} */
 	@Transient
 	public PageItem getParent() {
 		return getBacklogItem();
 	}
+	
+	/** {@inheritDoc} */
 	@Transient
 	public boolean hasChildren() {
 		// TODO Auto-generated method stub
@@ -199,6 +232,7 @@ public class Task implements PageItem, Assignable, EffortContainer {
 		this.status = status;
 	}
 
+	/** Set task to use a template. Not currently in use. */
 	public void useTemplate(PracticeTemplate template) {
 		
 		ArrayList<PracticeAllocation> practiceAllocations = new ArrayList<PracticeAllocation>();

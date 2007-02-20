@@ -4,10 +4,16 @@ import javax.persistence.Entity;
 
 import org.hibernate.annotations.Type;
 
-@Entity
 /**
- * TODO comments kheleniu - What does this class do?
+ * Hibernate entity bean representing an event where 
+ * a task is commented. Other task events, that wish to carry
+ * a comment, extend this class.
+ * <p>
+ * Contains the comment.
+ * 
+ * @see fi.hut.soberit.agilefant.model.TaskEvent
  */
+@Entity
 public class TaskComment extends TaskEvent{
 		
 	private String comment;

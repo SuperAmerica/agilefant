@@ -14,6 +14,31 @@ import org.hibernate.annotations.Type;
 
 import fi.hut.soberit.agilefant.web.page.PageItem;
 
+/**
+ * A Hibernate entity bean which represents a deliverable. 
+ * <p>
+ * Conceptually, a deliverable is a type of a backlog. A deliverable-backlog 
+ * represents work (iterations, backlog items, tasks) to be done towards 
+ * some project outcome (documents, code, plans, etc.).
+ * <p>
+ * A deliverable is further divided up to smaller containers for work, the iterations.
+ * Deliverable also is a part of a bigger container, the product.
+ * Since a deliverable is a backlog, it can contain backlog items, which, in turn,
+ * are smaller containers for work.
+ * <p>
+ * Example deliverables would be "Acme KillerApp v1.3" or "User Documentation".
+ * <p>
+ * A deliverable is part of a product. It can contain iterations. 
+ * It has an optional starting and ending dates, as well as an owner. A deliverable
+ * is also bound to some activity type. It also carries information on effort estimations 
+ * and amount of performed work. Since a deliverable is a backlog, it can contain 
+ * backlog items, which, in turn, are smaller containers for work. 
+ * 
+ * @see fi.hut.soberit.agilefant.model.Backlog
+ * @see fi.hut.soberit.agilefant.model.BacklogItem
+ * @see fi.hut.soberit.agilefant.model.ActivityType
+ * @see fi.hut.soberit.agilefant.model.Iteration 
+ */
 @Entity
 public class Deliverable extends Backlog implements PageItem, EffortContainer {
 	
@@ -26,6 +51,7 @@ public class Deliverable extends Backlog implements PageItem, EffortContainer {
 	private AFTime effortEstimate;
 	private AFTime performedEffort;
 	
+	/** The product, under which this deliverable belongs. */
 	@ManyToOne
 	//@JoinColumn (nullable = true)
 	public Product getProduct() {
@@ -34,7 +60,7 @@ public class Deliverable extends Backlog implements PageItem, EffortContainer {
 	public void setProduct(Product product) {
 	    this.product = product;
 	}
-	
+
 	@ManyToOne
 	public User getOwner() {
 	    return owner;
@@ -43,6 +69,7 @@ public class Deliverable extends Backlog implements PageItem, EffortContainer {
 	    this.owner = owner;
 	}
 	
+	/** Iterations under this deliverable. */
 	@OneToMany(mappedBy="deliverable")
 	public Collection<Iteration> getIterations() {
 	    return iterations;
@@ -74,21 +101,28 @@ public class Deliverable extends Backlog implements PageItem, EffortContainer {
 	public void setActivityType(ActivityType activityType) {
 	    this.activityType = activityType;
 	}
+		
+	/** {@inheritDoc} */
 	@Transient
 	public Collection<PageItem> getChildren() {
 		Collection<PageItem> c = new HashSet<PageItem>(this.iterations.size());
 		c.addAll(this.iterations);
 		return c;
 	}
+	
+	/** {@inheritDoc} */
 	@Transient
 	public PageItem getParent() {
 		return getProduct();
 	}
+	
+	/** {@inheritDoc} */
 	@Transient
 	public boolean hasChildren() {
 		return this.iterations.size() > 0 ? true : false;
 	}
 	
+	/** {@inheritDoc} */
 	@Type(type="af_time")
 	@Formula(value="(select SUM(t.effortEstimate)" +
 			"from Task t, BacklogItem bi, Backlog b " +
@@ -105,6 +139,7 @@ public class Deliverable extends Backlog implements PageItem, EffortContainer {
 		this.effortEstimate = effortEstimate;
 	}
 
+	/** {@inheritDoc} */
 	@Type(type="af_time")
 	@Formula(value="(select SUM(e.effort) " + 
 			"from TaskEvent e, Task t, BacklogItem bi, Backlog b "+

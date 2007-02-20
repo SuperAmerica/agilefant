@@ -77,7 +77,7 @@ public class StringEscapeFilter extends UserTypeFilter {
 		// go trough all the conversions, apply each
 		// every other element is the conversion character,
 		// every other conversion target 
-		for(int i = 0; i < conversions.length; i += 2) {
+		/*for(int i = 0; i < conversions.length; i += 2) {
 			
 			char from = conversions[i].charAt(0);
 			String to = conversions[i+1];
@@ -85,6 +85,8 @@ public class StringEscapeFilter extends UserTypeFilter {
 			str = handleSingleCharacter(str, from, to); 
 		}
 		
-		return str;
+		return str; */
+		
+		return org.springframework.web.util.HtmlUtils.htmlEscape(str); 
     }
 }

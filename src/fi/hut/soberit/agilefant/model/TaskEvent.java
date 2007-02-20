@@ -14,15 +14,28 @@ import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+/**
+ * Hibernate entity bean representing a task.
+ * <p>
+ * TaskEvent is something that's happened to a task. It might 
+ * be eg. an assignee change, a comment, or logged work.
+ * <p>
+ * Since this is an abstract class, the actual subclass defines 
+ * the event type. The subclasses/event types are:
+ * <p>
+ * AssignEvent - assignee change <br>
+ * TaskComment - comment of task  <br>
+ * EstimateHistoryEvent - task's effort estimate changed <br>
+ * PerformedWork - work done/added towards the task <br>
+ */
 @Entity
+// inheritance implemented in db using a single table
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)
+// subclass types discriminated using string column
 @DiscriminatorColumn(
     name="eventType",
     discriminatorType=DiscriminatorType.STRING
 )
-/**
- * TODO comments kheleniu - What does this TaskEvent do?
- */
 public abstract class TaskEvent {
 	
 	private int id;
@@ -30,37 +43,59 @@ public abstract class TaskEvent {
 	private Task task;
 	private Date created;
 	
-	@Id 
+	/** 
+	 * Get the id of this object.
+	 * <p>
+	 * The id is unique among all task events. 
+	 */
+	// tag this field as the id
+	@Id
+	// generate automatically
 	@GeneratedValue(strategy=GenerationType.AUTO)
-	@Column(nullable = false)	
+	// not nullable
+	@Column(nullable = false)
 	public int getId() {
 		return id;
 	}
+	
+	/** 
+	 * Set the id of this object.
+	 * <p>
+	 * You shouldn't normally call this.
+	 */
 	public void setId(int id) {
 		this.id = id;
 	}
 	
+	/** Set the user whose task this is. */
 	@ManyToOne
 	public User getActor() {
 		return actor;
 	}
+
+	/** Get the user whose task this is. */	
 	public void setActor(User actor) {
 		this.actor = actor;
 	}
 	
+	/** Get the creation date. */
 	public Date getCreated() {
 		return created;
 	}
 	
+	/** Set the creation date. */
 	public void setCreated(Date created) {
 		this.created = created;
 	}
 	
+	/** Get the task, under which this event is. */
 	@ManyToOne
 	@JoinColumn (nullable = false)	
 	public Task getTask() {
 		return task;
 	}
+	
+	/** Set the task, under which this event is. */
 	public void setTask(Task task) {
 		this.task = task;
 	}

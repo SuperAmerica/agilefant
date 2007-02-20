@@ -13,11 +13,15 @@ import fi.hut.soberit.agilefant.model.AFTime;
 
 /**
  * Truncated string - user type.
- * 
+ * <p>
  * Behaves like a normal string, other than it 
  * truncates everything going in the database
  * to 255 characters. Uses the VARCHAR - type.
+ * <p>
+ * This class has been replaced by UserTypeFilters.
  * 
+ * @see fi.hut.soberit.agilefant.db.hibernate.UserTypeFilter
+ * @see fi.hut.soberit.agilefant.db.hibernate.StringTruncateFilter 
  * @author Turkka Äijälä
  */
 public class TruncatedStringUserType implements UserType {

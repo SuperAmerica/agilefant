@@ -11,15 +11,23 @@ import java.util.NoSuchElementException;
  * Wrapper class around java.sql.Time for representing times in the
  * "JIRA notation".
  * <p>
- * db.hibernate.TimeUserType.java enables saving these time-objects into db.
+ * Accepts following notations:
+ * <p>
+ * AFTime mytime = new AFTime("2d 4h 15m");<br>
+ * AFTime mytime = new AFTime("2h 15m"); (elements can be left out)<br>
+ * AFTime mytime = new AFTime("0");<br>
+ * AFTime mytime = new AFTime("2,5"); (or 2.5, depending on system settings)<br>
+ * <p>
+ * TimeUserType enables saving these time-objects into db.
  * package-info.java defines a annotation shorthand for defining fields of this type. 
- * You should always define AFTime-hibernate getters like this:
+ * You should always define AFTime-Hibernate getters like this:
  * <p><code>
  * &#064;Type(type="af_time")<br>
  * public AFTime getTesttime() { ...
  * </code><p>
  * Forgetting &#064;Type makes bad things happen. 
  * 
+ * @see fi.hut.soberit.agilefant.db.hibernate.TimeUserType
  * @author ekantola
  * @author Turkka Äijälä
  */
@@ -143,7 +151,7 @@ public class AFTime extends java.sql.Time {
 		    long time = 0;
 		    for(int i = 0; i < fields.length; i++) {
 		    	
-		    	// did we got this field?
+		    	// did we get this field?
 		    	if(hasFields[i])
 		    		// mark the flag that we got something  
 		    		allFalse = false;
@@ -282,7 +290,8 @@ public class AFTime extends java.sql.Time {
 	}
 	
 	/**
-	 * Get a "full" string representation, with days, hours and minutes all expressed. 
+	 * Get a "full" string representation, with days, hours and minutes all expressed.
+	 * <p> 
 	 * Gets you a dhm-string, eg. "5d 3h 4m".
 	 *  
 	 * @return a dhm-string, eg. "5d 3h 4m".
@@ -300,7 +309,8 @@ public class AFTime extends java.sql.Time {
 	}
 	
 	/**
-	 * Get a "partial" string representation, with days included in hours. 
+	 * Get a "partial" string representation, with days included in hours.
+	 * <p> 
 	 * Gets you an hm-string, eg. "43h 4m", instead of "5d 3h 4m".
 	 *  
 	 * @return a hm-string, eg. "43h 4m".

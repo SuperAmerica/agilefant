@@ -10,17 +10,16 @@ import org.hibernate.HibernateException;
 import org.hibernate.usertype.UserType;
 
 /**
- * UserType, which saves strings as TEXTs (or actually
- * as SQL LONGVARCHARs).
+ * UserType, which saves strings as TEXTs.
  * <p>
- * Normally you wouldn't write UserTypes that doing nothing special,
+ * Normally you wouldn't write UserTypes that do nothing special,
  * you would use Hibernate built-in types instead. This is for the 
  * filtering functionality however: it enables a UserType to be at the
  * bottom of the filtering hierarchy.    
  * 
  * @author Turkka Äijälä
- * @see VarcharUserType
- * @see UserTypeFilter 
+ * @see fi.hut.soberit.agilefant.db.hibernate.VarcharUserType
+ * @see fi.hut.soberit.agilefant.db.hibernate.UserTypeFilter 
  */
 public class TextUserType implements UserType {
 	

@@ -3,6 +3,14 @@ package fi.hut.soberit.agilefant.model;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 
+/**
+ * Hibernate entity bean representing an event where 
+ * assignee of a task changes.
+ * <p>
+ * Contains old and new assignees.
+ * 
+ * @see fi.hut.soberit.agilefant.model.TaskEvent
+ */
 @Entity
 public class AssignEvent extends TaskEvent {
 

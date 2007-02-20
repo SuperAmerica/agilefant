@@ -15,7 +15,7 @@ import fi.hut.soberit.agilefant.model.AFTime;
 
 /**
  * Hibernate user type object, which enables saving our model.Time-classes
- * in JDBC DB, as fields of type "time".  
+ * in database using JDBC, as "INTEGER" fields.  
  * 
  * @author Turkka Äijälä
  */

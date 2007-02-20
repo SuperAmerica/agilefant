@@ -12,14 +12,14 @@ import org.hibernate.usertype.UserType;
 /**
  * UserType, which saves strings as VARCHARs.
  * <p>
- * Normally you wouldn't write UserTypes that doing nothing special,
+ * Normally you wouldn't write UserTypes that do nothing special,
  * you would use Hibernate built-in types instead. This is for the 
  * filtering functionality however: it enables a UserType to be at the
  * bottom of the filtering hierarchy.    
  * 
  * @author Turkka Äijälä
- * @see TextUserType
- * @see UserTypeFilter
+ * @see fi.hut.soberit.agilefant.db.hibernate.TextUserType
+ * @see fi.hut.soberit.agilefant.db.hibernate.UserTypeFilter
  */
 public class VarcharUserType implements UserType {
 	

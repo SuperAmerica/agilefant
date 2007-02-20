@@ -5,7 +5,7 @@ package fi.hut.soberit.agilefant.db.hibernate;
  * to the database. Truncates to 255 characters.
  * 
  * @author Turkka Äijälä
- * @see UserTypeFilter
+ * @see fi.hut.soberit.agilefant.db.hibernate.UserTypeFilter
  */
 public class StringTruncateFilter extends UserTypeFilter {
 	

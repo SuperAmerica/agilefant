@@ -10,7 +10,7 @@ import org.hibernate.validator.Validator;
  * is used to validate if the field is a proper email address. 
  *  
  * @author Turkka Äijälä
- * @see Email
+ * @see fi.hut.soberit.agilefant.db.hibernate.Email
  */
 public class EmailValidator
 	implements Validator<Email>, Serializable {
@@ -22,16 +22,18 @@ public class EmailValidator
 	
 	public boolean isValid(Object value) {
 		
+		// nulls qualify
     	if (value == null) return true;
 
+    	// non-string objects don't qualify
 		if ( !(value instanceof String) ) return false;
 		
 		String string = (String) value;
 	
-		// accept empty strings
+		// empty strings qualify
 		if(string.equals("")) return true;
 		
-		// use commons-validator to validate emails
+		// use commons-validator to validate email addresses
 		return org.apache.commons.validator.EmailValidator.getInstance().isValid(string);
 	}
 }

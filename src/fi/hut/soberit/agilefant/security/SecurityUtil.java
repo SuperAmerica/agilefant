@@ -24,7 +24,8 @@ public class SecurityUtil {
 	private SecurityUtil() {}
 	
 	/**
-	 * Get id for the currently logged user. It's always valid to call this. 
+	 * Get id for the currently logged user. It's always valid to call this, 
+	 * as opposed to setLoggedUser, which is valid only during a web request.
 	 * 
 	 * @return logged user id
 	 * @throws IllegalStateException when there's no user logged 

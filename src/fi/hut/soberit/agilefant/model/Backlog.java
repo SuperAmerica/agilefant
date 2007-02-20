@@ -17,16 +17,36 @@ import javax.persistence.OneToMany;
 
 import org.hibernate.annotations.Type;
 
+/**
+ * Abstract entity, a Hibernate entity bean, which represents a backlog.
+ * <p>
+ * All other entities providing backlog functionality inherit from this class.
+ * Product, Deliverable and Iteration are all backlogs.  
+ * <p>
+ * Conceptually, a backlog is a work log, which can contain some backlog items, 
+ * which in turn can contain some tasks. An example hierarchy would be
+ * <p>
+ * backlog: "iteration 3" <br>  
+ * backlog item : "saving implemented" <br> 
+ * task: "implement saving .foo files" <br>
+ * <p>
+ * Through Backlog, BacklogItems are appendable 
+ * as a child for the implementing object.
+ * 
+ * @see fi.hut.soberit.agilefant.model.Product
+ * @see fi.hut.soberit.agilefant.model.Deliverable
+ * @see fi.hut.soberit.agilefant.model.Iteration
+ * @see fi.hut.soberit.agilefant.model.BacklogItem
+ * @see fi.hut.soberit.agilefant.model.Task
+ */
 @Entity
+// inheritance implemented in db using a single table
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)
+// subclass types discriminated using string column 
 @DiscriminatorColumn(
     name="backlogtype",
     discriminatorType=DiscriminatorType.STRING
 )
-/**
- * Through Backlog, BacklogItems are appendable 
- * as a child for the implementing object.
- */
 public abstract class Backlog implements Assignable {
     
     private int id;
@@ -36,6 +56,7 @@ public abstract class Backlog implements Assignable {
     private User assignee;
     
     @OneToMany(mappedBy="backlog")
+    /** A backlog can contain many backlog items. */
     public Collection<BacklogItem> getBacklogItems() {
         return backlogItems;
     }
@@ -51,15 +72,29 @@ public abstract class Backlog implements Assignable {
         this.description = description;
     }
     
-    @Id 
-    @GeneratedValue(strategy=GenerationType.AUTO)
-    @Column(nullable = false)	    
-    public int getId() {
-        return id;
-    }
-    public void setId(int id) {
-        this.id = id;
-    }
+	/** 
+	 * Get the id of this object.
+	 * <p>
+	 * The id is unique among all Backlogs. 
+	 */
+	// tag this field as the id
+	@Id
+	// generate automatically
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	// not nullable
+	@Column(nullable = false)
+	public int getId() {
+		return id;
+	}
+	
+	/** 
+	 * Set the id of this object.
+	 * <p>
+	 * You shouldn't normally call this.
+	 */
+	public void setId(int id) {
+		this.id = id;
+	}
     
     @Type(type="escaped_truncated_varchar")
     public String getName() {
@@ -69,11 +104,13 @@ public abstract class Backlog implements Assignable {
         this.name = name;
     }
     
+    /** {@inheritDoc} */
     @ManyToOne
 	public User getAssignee() {
 		return assignee;
 	}
     
+    /** {@inheritDoc} */
 	public void setAssignee(User assignee) {
 		this.assignee = assignee;
 	}

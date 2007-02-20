@@ -13,8 +13,22 @@
 	<p>
 		You have loaded this page <b>${counter}</b> times.
 	</p>
+	<p>	
+			<img src="drawChart.action?iterationId=3&startDate=${iteration.startDate}&endDate=${iteration.endDate}"/>
+		</p>
+	
 	<p>
-		<img src="refreshChart.action"/>
+		<img src="drawBarChart.action?effortDone=5&effortLeft=95"/>
+	</p>
+	<p>
+		<img src="drawExtendedBarChart.action?notStarted=5&started=10&blocked=15&implemented=20&done=25"/>
+	</p>
+	<p>
+		<img src="drawGantChart.action"/>
+	</p>
+	
+	<p>
+		usage: < img src="drawBarChart.action?effortDone={double luku}?effortLeft={double luku}"/ > 
 	</p>
 	<p>
 		<ww:form action="simpleCounter">		

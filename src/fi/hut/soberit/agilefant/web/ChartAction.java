@@ -105,7 +105,7 @@ public class ChartAction extends ActionSupport {
 			works = performedWorkDAO.getPerformedWork(deliverableDAO.get(deliverableId));
 		}
 		
-		log.info(taskId);
+		log.info("TaskID = " + taskId);
 		
 		/*-------------------------------------------------------------*/
 		// The code for dataset: actual workhours

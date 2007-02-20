@@ -50,7 +50,7 @@
 		<tr>
 		<td>Assignee</td>
 		<td></td>
-		<td><ww:select  headerKey="0" headerValue="None" name="assigneeId" list="#attr.userList" listKey="id" listValue="fullName" value="${currentUser.id}"/></td>	
+		<td><ww:select  headerKey="0" headerValue="(none)" name="assigneeId" list="#attr.userList" listKey="id" listValue="fullName" value="${currentUser.id}"/></td>	
 
 			<c:if test="${!empty iterationGoals}">
 
@@ -58,7 +58,7 @@
 			<tr>
 			<td>Link to iteration goal</td>
 			<td></td>
-			<td><ww:select headerKey="0" headerValue="None" name="backlogItem.iterationGoal.id" list="#attr.iterationGoals" listKey="id" listValue="name" /></td>	
+			<td><ww:select headerKey="0" headerValue="(none)" name="backlogItem.iterationGoal.id" list="#attr.iterationGoals" listKey="id" listValue="name" /></td>	
 					
 	
 			</c:if>
@@ -66,7 +66,7 @@
 		<c:otherwise>
 			<td>Assignee</td>
 			<td></td>
-			<td><ww:select  headerKey="0" headerValue="None" name="assigneeId" list="#attr.userList" listKey="id" listValue="fullName" value="%{backlogItem.assignee.id}"/></td>	
+			<td><ww:select  headerKey="0" headerValue="(none)" name="assigneeId" list="#attr.userList" listKey="id" listValue="fullName" value="%{backlogItem.assignee.id}"/></td>	
 
 		</c:otherwise>			
 	</c:choose>				
@@ -128,11 +128,11 @@
 			<c:if test="${!empty backlogItem.iterationGoal}">
 				<c:set var="goalId" value="${backlogItem.iterationGoal.id}" scope="page"/>
 			</c:if>
-			<ww:select headerKey="0" headerValue="None" name="iterationGoalId" list="#attr.iterationGoals" listKey="id" listValue="name" value="${goalId}"/>					
+			<ww:select headerKey="0" headerValue="(none)" name="iterationGoalId" list="#attr.iterationGoals" listKey="id" listValue="name" value="${goalId}"/>					
 			<ww:submit value="link"/>
 		</c:when>
 		<c:otherwise>
-			None
+			(none)
 	</c:otherwise>
 </c:choose>
 		</ww:form>

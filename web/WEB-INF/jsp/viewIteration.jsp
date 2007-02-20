@@ -109,7 +109,7 @@
 				<display:column sortable="true" title="Iteration Goal">
 					${aef:out(row.iterationGoal.name)}
 				</display:column>
-				<display:column sortable="true" title="Effort">
+				<display:column sortable="true" title="Effort done">
 					${row.performedEffort}
 				</display:column>
 				<display:column sortable="true" title="Estimate">

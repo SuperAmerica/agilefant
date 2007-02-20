@@ -6,11 +6,14 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Locale;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -19,6 +22,8 @@ import org.jfree.chart.ChartRenderingInfo;
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.DateAxis;
+import org.jfree.chart.axis.DateTickUnit;
+import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.entity.StandardEntityCollection;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
@@ -78,8 +83,15 @@ public class ChartAction extends ActionSupport {
 	private double blocked;
 	private double implemented;
 	private double done;
+	private String startDate;
+	private String endDate;
 	
-
+	
+	/**
+	 * This method draws the iteration burndown chart.
+	 * 
+	 * 
+	 */
 	public String execute(){
 //		 Create a time series chart
 		
@@ -154,7 +166,7 @@ public class ChartAction extends ActionSupport {
 			}		
 			
 		}
-		if(worksum > 0){ // pop the last days hours
+		if((worksum > 0) && (day_last > 0)){ // pop the last days hours
 			workSeries.add(new Day(day_last, month_last, year_last), worksum);
 			totalWorkDone=worksum;
 		}
@@ -226,9 +238,9 @@ public class ChartAction extends ActionSupport {
 				
 			}	
 		}
-		//if(worksum > 0){ // pop the last days hours
+		if(day_last > 0){ // pop the last days hours
 			estimateSeries.add(new Day(day_last, month_last, year_last), worksum);		
-		//}
+		}
 		
 		dataset.addSeries(estimateSeries);
 		
@@ -283,7 +295,7 @@ public class ChartAction extends ActionSupport {
 		XYPlot plot = chart1.getXYPlot();
 		DateAxis axis = (DateAxis) plot.getDomainAxis();
 		axis.setDateFormatOverride(new SimpleDateFormat("yyyy-MM-dd"));
-		
+		axis.setTickUnit(new DateTickUnit(DateTickUnit.DAY, 7));
 		XYItemRenderer rend = plot.getRenderer();
 		XYLineAndShapeRenderer rr = (XYLineAndShapeRenderer)rend;
 		rr.setShapesVisible(true);
@@ -297,106 +309,6 @@ public class ChartAction extends ActionSupport {
 		}
 		return Action.SUCCESS;
 	}
-	
-	
-	// The code for bar chart that will check the work done automatically 
-	/*
-	public String barChart(){
-		
-		
-				
-		if (taskId > 0){
-			works = performedWorkDAO.getPerformedWork(taskDAO.get(taskId));
-		} 
-		
-		int worksum=0;
-		int worktime=0;
-		
-		// Get work done total
-		for(PerformedWork performedWork : works){
-			
-			AFTime effort = performedWork.getEffort();
-			if(effort!=null){
-				long time = effort.getTime();
-				long days = time / AFTime.WORKDAY_IN_MILLIS;
-				time %= AFTime.WORKDAY_IN_MILLIS;
-				
-				long hours = time / AFTime.HOUR_IN_MILLIS;
-				time %= AFTime.HOUR_IN_MILLIS;
-				
-				long minutes = time / AFTime.MINUTE_IN_MILLIS;
-				time %= AFTime.MINUTE_IN_MILLIS;
-				
-				worktime = Math.round(days * 24 + hours + (minutes/60));
-				
-				worksum=worksum+worktime;
-			}
-		}
-		// Total sum for done hours
-		int done = worksum; 
-		
-		int effortLeft = 0;
-//		 Get effort estimate left
-		for(PerformedWork performedWork : works){
-			
-			AFTime effort = performedWork.getNewEstimate();
-			
-			if(effort!=null){
-				
-				long time = effort.getTime();
-				long days = time / AFTime.WORKDAY_IN_MILLIS;
-				time %= AFTime.WORKDAY_IN_MILLIS;
-				
-				long hours = time / AFTime.HOUR_IN_MILLIS;
-				time %= AFTime.HOUR_IN_MILLIS;
-				
-				long minutes = time / AFTime.MINUTE_IN_MILLIS;
-				time %= AFTime.MINUTE_IN_MILLIS;
-				
-				effortLeft = Math.round(days * 24 + hours + (minutes/60));			
-			}	
-		}
-		// How many hours work left
-		int left = effortLeft;
-		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-		JFreeChart chart2 = null;
-		
-		if(done > 0 || effortLeft > 0){
-			double donePros = ((double)done / (double)(done+left))*100;
-			dataset.setValue(donePros, "done", "");
-			dataset.setValue((100 - donePros), "left", "");
-			double stringPros = Math.round(donePros); // We want the output neat!
-			chart2 = ChartFactory.createStackedBarChart("",
-					"", ""+ stringPros +" % done", dataset, PlotOrientation.HORIZONTAL,
-					true, true, false);
-		} else {
-			dataset.setValue(workDone, "done", "");
-			dataset.setValue((100 - workDone), "left", "");
-			chart2 = ChartFactory.createStackedBarChart("",
-					"", ""+ workDone +" % done", dataset, PlotOrientation.HORIZONTAL,
-					true, true, false);
-		}
-		
-		
-		
-		CategoryPlot plot = chart2.getCategoryPlot();
-		CategoryItemRenderer renderer = plot.getRenderer();
-		renderer.setSeriesItemLabelsVisible(0, false);
-		renderer.setSeriesPaint(0, Color.green);
-		renderer.setSeriesPaint(1, Color.red);
-		try {
-			ByteArrayOutputStream out = new ByteArrayOutputStream();
-			ChartUtilities.writeChartAsPNG(out, chart2, 200, 100);
-			result = out.toByteArray();		
-		} catch (IOException e) {
-			System.err.println("Problem occurred creating chart.");
-		}
-		return Action.SUCCESS;
-	}
-	*/
-	//-----------------
-	
-	
 	
 	
 	/**
@@ -488,6 +400,7 @@ public class ChartAction extends ActionSupport {
 		CategoryPlot plot = chart2.getCategoryPlot();
 		CategoryItemRenderer renderer = plot.getRenderer();
 		renderer.setSeriesItemLabelsVisible(0, false);
+		renderer.setSeriesVisibleInLegend(0, false);
 		renderer.setSeriesPaint(0, Color.red);
 		renderer.setSeriesPaint(1, Color.cyan);
 		renderer.setSeriesPaint(2, Color.gray);
@@ -495,7 +408,7 @@ public class ChartAction extends ActionSupport {
 		renderer.setSeriesPaint(4, Color.green);
 		try {
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
-			ChartUtilities.writeChartAsPNG(out, chart2, 100, 5);
+			ChartUtilities.writeChartAsPNG(out, chart2, 100, 40);
 			result = out.toByteArray();		
 		} catch (IOException e) {
 			System.err.println("Problem occurred creating chart.");
@@ -503,206 +416,11 @@ public class ChartAction extends ActionSupport {
 		return Action.SUCCESS;
 	}	
 	
-	// The code under this line creates custom chart for demo purposes
-	/* 
-	public String demoChart(){
-		TimeSeries pop = new TimeSeries("Workhours", Day.class);
-		pop.add(new Day(11, 12, 2006), 11);
-		pop.add(new Day(12, 12, 2006), 21);
-		pop.add(new Day(13, 12, 2006), 36);
-		pop.add(new Day(14, 12, 2006), 53);
-		pop.add(new Day(15, 12, 2006), 53);
-		
-		TimeSeriesCollection dataset = new TimeSeriesCollection();
-		//dataset.addSeries(pop);
-		
-		TimeSeries hip = new TimeSeries("Effort estimates", Day.class);
-		
-		hip.add(new Day(11, 12, 2006), 95);
-		hip.add(new Day(12, 12, 2006), 75);
-		hip.add(new Day(13, 12, 2006), 50);
-		hip.add(new Day(14, 12, 2006), 40);
-		hip.add(new Day(15, 12, 2006), 0);
-		
-		dataset.addSeries(hip);
-		
-		JFreeChart chart1 = ChartFactory.createTimeSeriesChart(
-				"Agilefant07 workhours per day",
-				"Date",
-				"Workhours",
-				dataset,
-				true,
-				true,
-				false);
-				XYPlot plot = chart1.getXYPlot();
-				DateAxis axis = (DateAxis) plot.getDomainAxis();
-				axis.setDateFormatOverride(new SimpleDateFormat("yyyy-MM-dd"));
-				
-				XYItemRenderer rend = plot.getRenderer();
-				XYLineAndShapeRenderer rr = (XYLineAndShapeRenderer)rend;
-				rr.setShapesVisible(true);
-				
-				try {
-					ByteArrayOutputStream out = new ByteArrayOutputStream();
-					ChartUtilities.writeChartAsPNG(out, chart1, 500, 300);
-					result = out.toByteArray();		
-				} catch (IOException e) {
-					System.err.println("Problem occurred creating chart.");
-				}
-				return Action.SUCCESS;
-	}
-	*/
-	
-	/*---------------------------------------------------------------------*/
-	
 	/**
-	 * A simple demonstration application showing how to create a Gantt chart with multiple bars per
-	 * task. 
-	 *
-	 */
-	public String demoGanttChart(){
-
-	        TaskSeries s1 = new TaskSeries("Scheduled");
-	        
-	        Task t1 = new Task(
-	            "Write Proposal", date(1, Calendar.APRIL, 2006), date(5, Calendar.APRIL, 2006)
-	        );
-	        t1.setPercentComplete(1.00);
-	        s1.add(t1);
-	        
-	        Task t2 = new Task(
-	            "Obtain Approval", date(9, Calendar.APRIL, 2006), date(9, Calendar.APRIL, 2006)
-	        );
-	        t2.setPercentComplete(1.00);
-	        s1.add(t2);
-
-	        // here is a task split into two subtasks...
-	        Task t3 = new Task(
-	            "Requirements Analysis", 
-	            date(10, Calendar.APRIL, 2006), date(5, Calendar.MAY, 2006)
-	        );
-	        Task st31 = new Task(
-	            "Requirements 1", 
-	            date(10, Calendar.APRIL, 2006), date(25, Calendar.APRIL, 2006)
-	        );
-	        st31.setPercentComplete(1.0);
-	        Task st32 = new Task(
-	            "Requirements 2", 
-	            date(1, Calendar.MAY, 2006), date(5, Calendar.MAY, 2006)
-	        );
-	        st32.setPercentComplete(1.0);
-	        t3.addSubtask(st31);
-	        t3.addSubtask(st32);
-	        s1.add(t3);
-
-	        // and another...
-	        Task t4 = new Task(
-	            "Design Phase", 
-	            date(6, Calendar.MAY, 2006), date(30, Calendar.MAY, 2006)
-	        );
-	        Task st41 = new Task(
-	             "Design 1", 
-	             date(6, Calendar.MAY, 2006), date(10, Calendar.MAY, 2006)
-	        );
-	        st41.setPercentComplete(1.0);
-	        Task st42 = new Task(
-	            "Design 2", 
-	            date(15, Calendar.MAY, 2006), date(20, Calendar.MAY, 2006)
-	        );
-	        st42.setPercentComplete(1.0);
-	        Task st43 = new Task(
-	            "Design 3", 
-	            date(23, Calendar.MAY, 2006), date(30, Calendar.MAY, 2006)
-	        );
-	        st43.setPercentComplete(0.50);
-	        t4.addSubtask(st41);
-	        t4.addSubtask(st42);
-	        t4.addSubtask(st43);
-	        s1.add(t4);
-
-	        Task t5 = new Task(
-	            "Design Signoff", date(2, Calendar.JUNE, 2006), date(2, Calendar.JUNE, 2006)
-	        ); 
-	        s1.add(t5);
-	                        
-	        Task t6 = new Task(
-	            "Alpha Implementation", date(3, Calendar.JUNE, 2006), date(31, Calendar.JULY, 2006)
-	        );
-	        t6.setPercentComplete(0.60);
-	        
-	        s1.add(t6);
-	        
-	        Task t7 = new Task(
-	            "Design Review", date(1, Calendar.AUGUST, 2006), date(8, Calendar.AUGUST, 2006)
-	        );
-	        t7.setPercentComplete(0.0);
-	        s1.add(t7);
-	        
-	        Task t8 = new Task(
-	            "Revised Design Signoff", 
-	            date(10, Calendar.AUGUST, 2006), date(10, Calendar.AUGUST, 2006)
-	        );
-	        t8.setPercentComplete(0.0);
-	        s1.add(t8);
-	        
-	        Task t9 = new Task(
-	            "Beta Implementation", 
-	            date(12, Calendar.AUGUST, 2006), date(12, Calendar.SEPTEMBER, 2006)
-	        );
-	        t9.setPercentComplete(0.0);
-	        s1.add(t9);
-	        
-	        Task t10 = new Task(
-	            "Testing", date(13, Calendar.SEPTEMBER, 2006), date(31, Calendar.OCTOBER, 2006)
-	        );
-	        t10.setPercentComplete(0.0);
-	        s1.add(t10);
-	        
-	        Task t11 = new Task(
-	            "Final Implementation", 
-	            date(1, Calendar.NOVEMBER, 2006), date(15, Calendar.NOVEMBER, 2006)
-	        );
-	        t11.setPercentComplete(0.0);
-	        s1.add(t11);
-	        
-	        Task t12 = new Task(
-	            "Signoff", date(28, Calendar.NOVEMBER, 2006), date(30, Calendar.NOVEMBER, 2006)
-	        );
-	        t12.setPercentComplete(0.0);
-	        s1.add(t12);
-
-	        TaskSeriesCollection collection = new TaskSeriesCollection();
-	        collection.add(s1);
-	        
-	        IntervalCategoryDataset dataset = collection;
-	        
-	        // create the chart...
-	        JFreeChart chart3 = ChartFactory.createGanttChart(
-	            "Gantt Chart Demo",  // chart title
-	            "Task",              // domain axis label
-	            "Date",              // range axis label
-	            dataset,             // data
-	            true,                // include legend
-	            true,                // tooltips
-	            false                // urls
-	        );
-	        CategoryPlot plot = (CategoryPlot) chart3.getPlot();
-	        //      plot.getDomainAxis().setMaxCategoryLabelWidthRatio(10.0f);
-	        CategoryItemRenderer renderer = plot.getRenderer();
-	        renderer.setSeriesPaint(0, Color.blue);
-	        
-	        try {
-				ByteArrayOutputStream out = new ByteArrayOutputStream();
-				ChartUtilities.writeChartAsPNG(out, chart3, 500, 300);
-				result = out.toByteArray();		
-			} catch (IOException e) {
-				System.err.println("Problem occurred creating chart.");
-			}
-			return Action.SUCCESS;
-		}	
-	
-	/*------------------------------------------------------------*/
-		
+	 * 
+	 * 
+	 * @return
+	 */	
 	public String ganttChart(){
 		
 		TaskSeries s1 = new TaskSeries("Scheduled");
@@ -752,6 +470,73 @@ public class ChartAction extends ActionSupport {
             false                // urls
         );
         CategoryPlot plot = (CategoryPlot) chart3.getPlot();
+        
+        
+        /*----Adjusting the date axis---------*/
+        ValueAxis rangeAxis = plot.getRangeAxis();
+        DateAxis axis = (DateAxis) rangeAxis;
+        Date current = new GregorianCalendar().getTime();
+        Calendar calendar = Calendar.getInstance();
+		calendar.setTime(current);
+		int day = calendar.get(Calendar.DAY_OF_MONTH);
+		int month = calendar.get(Calendar.MONTH) + 1; // January == 0
+		int year = calendar.get(Calendar.YEAR);
+		
+		/*-experimental for setting the start date */
+		
+		if(this.getStartDate()!=null){
+			DateFormat df = DateFormat.getDateTimeInstance();
+	        try {
+				Date startingDate = df.parse(this.getStartDate());
+				axis.setMinimumDate(startingDate); // Sets the gantt to show dates starting from today.
+			} catch (ParseException e) { // parsing the date-string failed.
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}else {
+			Date startingDate = calendar.getTime();
+			axis.setMinimumDate(startingDate); // Sets the gantt to show dates starting from today.
+		}
+		
+		//Date startingDate = calendar.getTime();
+		axis.setMinimumDate(current); // Sets the gantt to show dates starting from today.
+
+        int endMonth = (month + 3) % 13;
+        if(endMonth == 13){
+        	endMonth = 1;
+        }
+        if(endMonth==1 || endMonth==2 || endMonth==3){ 
+        	year++;
+        }
+        if(endMonth == 2 && day>28){
+        	day = 28; // February has only 28 days
+        }else if((endMonth == 4 || endMonth == 6 || endMonth == 9 || endMonth == 11) && (day>30)){
+        	day = 30; 
+        }
+        calendar.set(year, endMonth, day);
+        
+        /* --experimental for setting the end date */
+        
+        if(this.getEndDate()!=null){
+			DateFormat df = DateFormat.getDateTimeInstance();
+	        try {
+				Date endingDate = df.parse(this.getEndDate());
+				axis.setMaximumDate(endingDate); // Sets the gantt to show dates until the specified ending date.
+			} catch (ParseException e) { // parsing the date-string failed.
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}else {
+			Date endingDate = calendar.getTime(); // Get the new modified date three month from the original
+	        axis.setMaximumDate(endingDate);
+		}
+        
+        Date endingDate = calendar.getTime(); // Get the new modified date three month from the original
+        axis.setMaximumDate(endingDate);
+        
+        
+        /*----------------------------------------------*/
+        
         //      plot.getDomainAxis().setMaxCategoryLabelWidthRatio(10.0f);
         CategoryItemRenderer renderer = plot.getRenderer();
         renderer.setSeriesPaint(0, Color.blue);
@@ -978,6 +763,26 @@ public class ChartAction extends ActionSupport {
 
 	public void setStarted(double started) {
 		this.started = started;
+	}
+
+
+	public String getEndDate() {
+		return endDate;
+	}
+
+
+	public void setEndDate(String endDate) {
+		this.endDate = endDate;
+	}
+
+
+	public String getStartDate() {
+		return startDate;
+	}
+
+
+	public void setStartDate(String startDate) {
+		this.startDate = startDate;
 	}
 
 

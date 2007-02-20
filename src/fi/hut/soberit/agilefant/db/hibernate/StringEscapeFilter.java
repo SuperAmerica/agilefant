@@ -7,6 +7,7 @@ package fi.hut.soberit.agilefant.db.hibernate;
  * @see UserTypeFilter
  */
 public class StringEscapeFilter extends UserTypeFilter {
+	private boolean enabled = false;
     
 	/**
 	 * Conversions to apply. 
@@ -58,6 +59,10 @@ public class StringEscapeFilter extends UserTypeFilter {
 	 * Filter downgoing data by applying the HTML ampersand codes.  
 	 */
 	protected Object filterDown(Object ob) {
+		if (!enabled) {
+			return ob;
+		}
+		
 		if(ob == null) return null;
 		if(!(ob instanceof String))
 			return ob;

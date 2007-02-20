@@ -3,19 +3,9 @@
                        "http://www.springframework.org/dtd/spring-beans.dtd">
                       
 <beans>
- 	<bean id="placeholderConfig"
-	      class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-		<property name="locations">
-			<list>
-	  			<value>WEB-INF/configuration.properties</value>
-	  			<value>WEB-INF/configuration-user.properties</value>
-		  	</list>
-		</property>
-	</bean>
-
 	<bean name="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
 		<property name="host">
-			<value>mysmtpserver.com</value>
+			<value>${smtp.host}</value>
 		</property>
 	</bean>
 	
@@ -41,24 +31,5 @@ View it from URL: http://hypertorni.dyndns.org/agilefant/editTask.action?taskId=
 This message was automatically sent by Agilefant]]>
 			</value>
 		</property>
-	</bean>
- 	
- 	<bean id="emailUtil" class="fi.hut.soberit.agilefant.util.EmailUtil">
-	
-	 	<property name="smtpHost" value="${smtp.host}"/>
-	 	<property name="smtpPort" value="25"/>
-	 	
-	 	<property name="useAuthentication" 	value="false"/>
-	 	<!--
-		 	<property name="login" 				value="abc"/>	 	
-	 		<property name="password" 			value="def"/>	 		 	
-	 	 -->
-
-		<!-- String to postfix user's full name in email with -->
-	 	<property name="namePostfix"		value=" (AGILEFANT)"/>
-	 	
-	 	<!-- String to prefix subject lines in email with -->
-	 	<property name="subjectPrefix"		value="(AGILEFANT) "/>
- 	
 	</bean>
 </beans>

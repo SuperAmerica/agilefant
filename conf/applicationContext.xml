@@ -8,6 +8,7 @@
 			<list>
 	  			<value>WEB-INF/configuration.properties</value>
 		  		<value>WEB-INF/database.properties</value>
+		  		<value>WEB-INF/configuration-user.properties</value>
 		  	</list>
 		</property>
 	</bean>

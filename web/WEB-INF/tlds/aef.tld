@@ -305,6 +305,12 @@
 	</function>  	 
 	 	 
 	<function>
+	  <name>outTitle</name>
+	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
+	  <function-signature>String outTitle(java.lang.String)</function-signature>
+	</function>  	 
+	 	 
+	<function>
 	  <name>subString</name>
 	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
 	  <function-signature>String out(java.lang.String, int)</function-signature>

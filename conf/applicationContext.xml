@@ -65,7 +65,7 @@
 	 </bean>
 	 
 	 <bean name="taskEventListener" class="fi.hut.soberit.agilefant.db.hibernate.event.TaskEventListener">
-<!-- 	 	<property name="mailSender" ref="mailSender"/>-->
+ 	 	<property name="mailSender" ref="mailSender"/>
 	 	<property name="createTemplate" ref="createTaskTemplate"/>
 	 	<property name="updateTemplate" ref="updateTaskTemplate"/>
 	 </bean>

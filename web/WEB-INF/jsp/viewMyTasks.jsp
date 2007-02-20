@@ -43,7 +43,7 @@
 				<ww:url id="editLink" action="editTask" includeParams="none">
 					<ww:param name="taskId" value="${row.id}"/>
 				</ww:url>
-				<ww:a title="${row.name}" href="%{editLink}">${aef:out(row.name)}</ww:a>
+				<ww:a title="${row.name}" href="%{editLink}">${aef:outTitle(row.name)}</ww:a>
 			</display:column>
 
 			<display:column sortable="true" title="Backlog item">
@@ -85,7 +85,7 @@
 				<ww:url id="editLink" action="editBacklogItem" includeParams="none">
 					<ww:param name="backlogItemId" value="${row.id}"/>
 				</ww:url>
-				<ww:a title="${row.name}" href="%{editLink}">${aef:out(row.name)}</ww:a>
+				<ww:a title="${row.name}" href="%{editLink}">${aef:outTitle(row.name)}</ww:a>
 			</display:column>
 			<display:column sortable="true" title="Backlog">
 				${aef:html(row.parent.name)}
@@ -153,7 +153,7 @@
 				<ww:url id="editLink" action="editBacklogItem" includeParams="none">
 					<ww:param name="backlogItemId" value="${row.id}"/>
 				</ww:url>
-				<ww:a title="${row.name}" href="%{editLink}">${aef:out(row.name)}</ww:a>
+				<ww:a title="${row.name}" href="%{editLink}">${aef:outTitle(row.name)}</ww:a>
 			</display:column>
 			<display:column sortable="true" title="Backlog">
 				${aef:html(row.parent.name)}
@@ -210,7 +210,7 @@
 				<ww:url id="editLink" action="editTask" includeParams="none">
 					<ww:param name="taskId" value="${row.id}"/>
 				</ww:url>
-				<ww:a title="${row.name}" href="%{editLink}">${aef:out(row.name)}</ww:a>
+				<ww:a title="${row.name}" href="%{editLink}">${aef:outTitle(row.name)}</ww:a>
 			</display:column>
 			<display:column sortable="true" title="Backlog item">
 									${aef:html(row.backlogItem.name)}			

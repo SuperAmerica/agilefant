@@ -64,7 +64,7 @@
 		<p>
 			<display:table name="iteration.backlogItems" id="row" requestURI="viewIteration.action">
 			<display:column sortable="true" title="Name">
-				${aef:out(row.name)}
+				${aef:outTitle(row.name)}
 			</display:column>
 
 
@@ -151,7 +151,7 @@
 		<p>
 			<display:table name="iteration.iterationGoals" id="row" requestURI="editIteration.action">
 			<display:column sortable="true" title="Name">
-				${aef:out(row.name)}
+				${aef:outTitle(row.name)}
 			</display:column>
 				<display:column sortable="true" title="Status" >
 					${row.status}

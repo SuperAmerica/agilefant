@@ -20,6 +20,7 @@ import fi.hut.soberit.agilefant.web.page.PortfolioPageItem;
 public class AEFFunctions {
 
 	public static final int MAX_STR_LENGTH = 10;
+	public static final int MAX_TITLE_LENGTH = 25;
 
 	public static boolean isProduct(Object obj) {
 		return obj instanceof Product;
@@ -66,6 +67,15 @@ public class AEFFunctions {
 	public static String out(String s) {
 		return out(s, MAX_STR_LENGTH, false); 	
 	} 
+	/**
+	 * Chop strings to MAX_TITLE_LENGTH
+	 *  
+	 * @param s string to shorten
+	 * @return shorter string, or original string if length < MAX_TITLE_LENGTH
+	 */
+	public static String outTitle(String s) {
+		return out(s, MAX_TITLE_LENGTH, false);
+	}
 	/**
 	 * Shorten strings to specified length
 	 * 

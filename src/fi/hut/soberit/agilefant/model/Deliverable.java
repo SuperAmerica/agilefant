@@ -31,8 +31,7 @@ import fi.hut.soberit.agilefant.web.page.PageItem;
  * A deliverable is part of a product. It can contain iterations. 
  * It has an optional starting and ending dates, as well as an owner. A deliverable
  * is also bound to some activity type. It also carries information on effort estimations 
- * and amount of performed work. Since a deliverable is a backlog, it can contain 
- * backlog items, which, in turn, are smaller containers for work. 
+ * and amount of performed work.
  * 
  * @see fi.hut.soberit.agilefant.model.Backlog
  * @see fi.hut.soberit.agilefant.model.BacklogItem

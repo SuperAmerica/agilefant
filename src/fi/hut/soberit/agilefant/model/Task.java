@@ -26,17 +26,17 @@ import org.hibernate.annotations.Type;
 
 import fi.hut.soberit.agilefant.web.page.PageItem;
 
-@Entity
 /**
  * Hibernate entity bean representing a Task.
  * <p>
  * Conceptually task represents some work which is no
- * further dividable to smaller pieces. It's work of a single
- * person.
+ * further divided to smaller pieces. It's work of a single person. A task 
+ * is under a backlog item, which is a bigger container of work.
  * <p>
- * Technically a Task belongs in a BacklogItem. It has an effort estimate, as well 
- * as sum of work done. It has a creator and an assignee. The Task also carries
- * a log of events with it. Since one can "watch" a task, those are also tracked.
+ * Technically there's one-to-many relation between backlog item and a task. 
+ * A task has an effort estimate, as well as sum of work done. It has a creator 
+ * and an assignee. The Task also carries a log of events with it. Since one can 
+ * "watch" a task, watches are also tracked.
  * <p>
  * Task also is linked to some practices, but those are not currently implemented 
  * in the UI.   
@@ -56,6 +56,7 @@ import fi.hut.soberit.agilefant.web.page.PageItem;
  * may be useful for a Project manager to see the multitude of the tasks assigned 
  * to each worker, to be able to balance the workload within her crew.
  */
+@Entity
 public class Task implements PageItem, Assignable, EffortContainer {
 	 	
 	private int id;

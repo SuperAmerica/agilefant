@@ -24,7 +24,7 @@ No assigned tasks
 				</select>
 					</p>
 		<p>		
-			Performed effort: <ww:textfield name="amount"/>
+			Effort done: <ww:textfield name="amount"/>
 		</p>
 		<p>
 			<ww:submit value="Store"/>

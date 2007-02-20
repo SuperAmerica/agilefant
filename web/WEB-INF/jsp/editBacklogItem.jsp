@@ -30,7 +30,7 @@
 		<td><ww:textarea cols="40" rows="6" name="backlogItem.description" /></td>	
 		</tr>
 		<tr>
-		<td>Allocated effort</td>
+		<td>Effort estimate</td>
 		<td></td>
 		<td><ww:textfield name="backlogItem.allocatedEffort"/></td>	
 		</tr>

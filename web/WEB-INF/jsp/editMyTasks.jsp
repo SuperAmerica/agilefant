@@ -26,14 +26,14 @@
 				</ww:url>
 				<ww:a title="${row.name}" href="%{editLink}">${aef:out(row.name)}</ww:a>
 			</display:column>
-			<display:column sortable="false" title="Performed Effort" sortProperty="performedEffort.time">
+			<display:column sortable="false" title="Effort done" sortProperty="performedEffort.time">
 							<ww:hidden name="taskId" value="${row.id}"/>
 								<ww:textfield name="event.effort" size="2"/>			
 
 				&nbsp;Total: ${row.performedEffort}
 
 			</display:column>
-			<display:column sortable="false" title="Effort estimate" sortProperty="effortEstimate.time">
+			<display:column sortable="false" title="Effort left" sortProperty="effortEstimate.time">
 					<ww:textfield name="event.newEstimate" value="${row.effortEstimate}"  size="2"/>			
 				&nbsp;Total: ${row.effortEstimate}
 			</display:column>

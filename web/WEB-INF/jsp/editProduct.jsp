@@ -63,7 +63,7 @@
 				<display:column sortable="true"	title="Effort left" sortProperty="effortEstimate.time">
 					${row.effortEstimate}
 				</display:column>
-				<display:column sortable="true" title="Performed effort" sortProperty="performedEffort.time">
+				<display:column sortable="true" title="Effort done" sortProperty="performedEffort.time">
 					${row.performedEffort}
 				</display:column>
 				<display:column sortable="false" title="Actions">
@@ -106,7 +106,7 @@
 				<display:column sortable="true"	title="Effort left" sortProperty="effortEstimate.time">
 					${row.effortEstimate}
 				</display:column>
-				<display:column sortable="true" title="Performed effort" sortProperty="performedEffort.time">
+				<display:column sortable="true" title="Effort done" sortProperty="performedEffort.time">
 					${row.performedEffort}
 				</display:column>
 				<display:column sortable="false" title="Actions">

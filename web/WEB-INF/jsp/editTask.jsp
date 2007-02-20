@@ -27,7 +27,7 @@
 		<td><ww:textarea cols="40" rows="6" name="task.description" /></td>	
 		</tr>
 		<tr>
-		<td>Effort estimate</td>
+		<td>Effort left</td>
 		<td></td>
 		<td><ww:textfield name="task.effortEstimate"/></td>	
 		</tr>

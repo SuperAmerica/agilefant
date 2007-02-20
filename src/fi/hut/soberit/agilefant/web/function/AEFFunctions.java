@@ -64,7 +64,8 @@ public class AEFFunctions {
 	 * @return shorter string, or original string if length < MAX_STR_LENGTH
 	 */
 	public static String out(String s) {
-		return s.length() > MAX_STR_LENGTH ? s.substring(0, MAX_STR_LENGTH) + "..." : s;	} 
+		return out(s, MAX_STR_LENGTH, false); 	
+	} 
 	/**
 	 * Shorten strings to specified length
 	 * 
@@ -73,6 +74,22 @@ public class AEFFunctions {
 	 * @return shorter string, or original string if length < newLength 
 	 */
 	public static String out(String s, int newLength) {
-		return s.length() > newLength ? s.substring(0, newLength) + "..." : s;
+		return out(s, newLength, false); 	
 	} 
+	public static String htmlOut(String s) {
+		return out(s, MAX_STR_LENGTH, true); 	
+	} 
+	public static String htmlOut(String s, int newLength) {
+		return out(s, newLength, true); 	
+	} 
+	private static String out(String s, int newLength, boolean asHtml) {
+		String shortString = s.length() > newLength ? s.substring(0, newLength) + "..." : s;
+		return asHtml ? "<div title=\"" + s + "\">" + shortString + "</div>" : shortString;
+	} 
+	public static int percent(int amount, int total) {
+		return Math.round(total / amount * 100); 	
+	} 
+
+
+
 }

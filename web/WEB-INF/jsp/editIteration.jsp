@@ -11,29 +11,7 @@
 					</ww:url>
 						<ww:a href="%{viewIterationLink}">View</ww:a> | Edit
 
-
-					<aef:productList/>
-		<ww:form action="editIteration">
-			<p>
-				<select name="iterationId">
-					<c:forEach items="${productList}" var="product">
-						<c:forEach items="${product.deliverables}" var="deliverable">
-							<c:forEach items="${deliverable.iterations}" var="iter">
-								<c:choose>
-									<c:when test="${iteration.id == iter.id}">
-										<option selected="selected" value="${iter.id}">${aef:out(iter.name)}</option>
-									</c:when>
-									<c:otherwise>
-										<option value="${iter.id}">${aef:out(iter.name)}</option>
-									</c:otherwise>
-								</c:choose>
-							</c:forEach>
-						</c:forEach>						
-					</c:forEach>				
-				</select>
-			<ww:submit value="Select iteration"/>
-			</p>			
-		</ww:form>
+<aef:iterationmenu iterationId="${iteration.id}"/>
 				
 	<ww:form action="storeIteration">
 		<ww:hidden name="iterationId" value="${iteration.id}"/>
@@ -126,7 +104,7 @@
 
 
 							<c:set var="divId" value="${divId + 1}" scope="page"/>
-							<a href="javascript:toggleDiv(${divId});" title="Click to expand">${fn:length(row.tasks)} tasks, ??% complete</a>
+							<a href="javascript:toggleDiv(${divId});" title="Click to expand">${fn:length(row.tasks)} tasks, <aef:percentDone backlogItemId="${row.id}"/> % complete</a>
 							
 							<table cellspacing="0" cellpadding="0" border="0" class="chartTable">
 							<tr>

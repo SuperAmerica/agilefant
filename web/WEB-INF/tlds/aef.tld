@@ -94,6 +94,21 @@
 	    </attribute>
 	</tag>
 	
+	
+	<tag>
+		<name>percentDone</name>
+		<tag-class>fi.hut.soberit.agilefant.web.tag.PercentDoneTag</tag-class>
+		<body-content>JSP</body-content>
+		<description>
+			Calculates bli's percent done tasks 
+	    </description>
+	    <attribute>
+	    	<name>backlogItemId</name>
+	    	<required>true</required>
+	    	<rtexprvalue>true</rtexprvalue>
+	    </attribute>
+	</tag>
+	
 	<tag>
 		<name>iterationGoalList</name>
 		<tag-class>fi.hut.soberit.agilefant.web.tag.IterationGoalListTag</tag-class>
@@ -109,6 +124,47 @@
 	    	<name>backlogId</name>
 	    	<required>true</required>
 	    	<rtexprvalue>true</rtexprvalue>
+	    </attribute>
+	</tag>
+	
+	<tag>
+		<name>iterationList</name>
+		<tag-class>fi.hut.soberit.agilefant.web.tag.IterationListTag</tag-class>
+		<body-content>JSP</body-content>
+		<description>
+			Stores available iterations
+	    </description>
+	    <attribute>
+	    	<name>id</name>
+	    	<required>true</required>	    
+	    </attribute>
+	</tag>
+	
+	
+	<tag>
+		<name>iterationList</name>
+		<tag-class>fi.hut.soberit.agilefant.web.tag.IterationListTag</tag-class>
+		<body-content>JSP</body-content>
+		<description>
+			Stores available iterations
+	    </description>
+	    <attribute>
+	    	<name>id</name>
+	    	<required>true</required>	    
+	    </attribute>
+	</tag>
+	
+	
+	<tag>
+		<name>deliverableList</name>
+		<tag-class>fi.hut.soberit.agilefant.web.tag.DeliverableListTag</tag-class>
+		<body-content>JSP</body-content>
+		<description>
+			Stores available deliverables
+	    </description>
+	    <attribute>
+	    	<name>id</name>
+	    	<required>true</required>	    
 	    </attribute>
 	</tag>
 	
@@ -174,6 +230,11 @@
 	 <tag-file>
 	    <name>tasklist</name>
 	    <path>/WEB-INF/tags/tasklist.tag</path>
+ 	 </tag-file>
+
+	 <tag-file>
+	    <name>iterationmenu</name>
+	    <path>/WEB-INF/tags/iterationmenu.tag</path>
  	 </tag-file>
 
 	<function>
@@ -244,9 +305,21 @@
 	</function>  	 
 	 	 
 	<function>
-	  <name>cut</name>
+	  <name>subString</name>
 	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
 	  <function-signature>String out(java.lang.String, int)</function-signature>
+	</function>  	 
+	 	 
+	<function>
+	  <name>html</name>
+	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
+	  <function-signature>String htmlOut(java.lang.String)</function-signature>
+	</function>  	 
+	 	 
+	<function>
+	  <name>htmlSubString</name>
+	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
+	  <function-signature>String htmlOut(java.lang.String, int)</function-signature>
 	</function>  	 
 	 	 
 	 	 

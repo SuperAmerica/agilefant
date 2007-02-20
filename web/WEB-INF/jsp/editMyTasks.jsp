@@ -40,33 +40,34 @@
 			
 			<display:column sortable="false" title="Work type">
 						<aef:allowedWorkTypes backlogItem="${row.backlogItem}" id="workTypes">
-	<c:choose>
-			
-							<c:when test="${empty workTypes}">
-								<p>
-									<ww:url id="workTypeLink" action="listActivityTypes" includeParams="none"/>
+							<c:choose>
 									
-									No work types avalable. <ww:a href="%{workTypeLink}">Add those first.</ww:a>			
-								</p>				
-							</c:when>
-			                <c:otherwise>
-			                	
-												<select name="event.workType.id">
-													<c:forEach items="${workTypes}" var="workType">
-																		<option value="${workType.id}" title="${workType.name}">${aef:out(workType.name)}</option>
-													</c:forEach>				
-												</select>
-
-			                </c:otherwise>
-	</c:choose>
+								<c:when test="${empty workTypes}">
+									<p>
+										<ww:url id="workTypeLink" action="listActivityTypes" includeParams="none"/>
+										
+										No work types avalable. <ww:a href="%{workTypeLink}">Add those first.</ww:a>			
+									</p>				
+								</c:when>
+				                <c:otherwise>
+                	
+									<select name="event.workType.id">
+										<c:forEach items="${workTypes}" var="workType">
+											<option value="${workType.id}" title="${workType.name}">${aef:out(workType.name)}</option>
+										</c:forEach>				
+									</select>
+	
+				                </c:otherwise>
+							</c:choose>
 
 						</aef:allowedWorkTypes>
 			</display:column>
 			
 			<display:column sortable="false" title="Status" >
-<ww:select name="task.status" value="#attr.row.status.name" list="@fi.hut.soberit.agilefant.model.TaskStatus@values()" listKey="name" listValue="getText('task.status.' + name())"/>			</display:column>
+				<ww:select name="task.status" value="#attr.row.status.name" list="@fi.hut.soberit.agilefant.model.TaskStatus@values()" listKey="name" listValue="getText('task.status.' + name())"/>			
+			</display:column>
 			<display:column sortable="false" title="Comment" >
-					<ww:textfield required="true" name="event.comment" size="15"/>			
+				<ww:textfield name="event.comment" size="15"/>			
 			</display:column>
 			<display:column sortable="false" title="Work Date" >
 
@@ -75,7 +76,7 @@
 			</display:column>
 			
 			<display:column sortable="false" title="Actions">
-								<ww:submit value="Submit"/>
+					<ww:submit value="Submit"/>
 			</display:column>
 		</display:table>
 						</ww:form>

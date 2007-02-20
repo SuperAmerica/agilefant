@@ -47,7 +47,7 @@
 			</display:column>
 
 			<display:column sortable="true" title="Backlog item">
-									${aef:out(row.backlogItem.name)}			
+									${aef:html(row.backlogItem.name)}			
 			</display:column>
 
 			<display:column sortable="true" title="Priority">
@@ -69,10 +69,10 @@
 				<ww:date name="#attr.row.created" />
 			</display:column>
 			<display:column sortable="true" title="Assignee">
-				${aef:out(row.assignee.fullName)}
+				${aef:html(row.assignee.fullName)}
 			</display:column>
 			<display:column sortable="true" title="Creator">
-				${aef:out(row.creator.fullName)}
+				${aef:html(row.creator.fullName)}
 			</display:column>
 		</display:table>
 	
@@ -88,7 +88,7 @@
 				<ww:a title="${row.name}" href="%{editLink}">${aef:out(row.name)}</ww:a>
 			</display:column>
 			<display:column sortable="true" title="Backlog">
-				${aef:out(row.parent.name)}
+				${aef:html(row.parent.name)}
 			</display:column>
 
 
@@ -97,7 +97,7 @@
 
 							<c:set var="divId" value="${divId + 1}" scope="page"/>
 							
-							<a href="javascript:toggleDiv(${divId});" title="Click to expand">${fn:length(row.tasks)} tasks, ??% complete</a>
+							<a href="javascript:toggleDiv(${divId});" title="Click to expand">${fn:length(row.tasks)} tasks, <aef:percentDone backlogItemId="${row.id}"/> % complete</a>
 
 		<table cellspacing="0" cellpadding="0" border="0" class="chartTable">
 		<tr>
@@ -116,7 +116,7 @@
 				</display:column>
 
 				<display:column sortable="false" title="Assignee" >
-					${aef:out(row.assignee.fullName)}
+					${aef:html(row.assignee.fullName)}
 				</display:column>
 				<display:column sortable="false" title="Priority" >
 					${row.priority}
@@ -126,7 +126,7 @@
 				</display:column>
 				
 				<display:column sortable="true" title="Iteration Goal">
-					${aef:out(row.iterationGoal.name)}
+					${aef:html(row.iterationGoal.name)}
 				</display:column>
 
 			</display:table>
@@ -156,7 +156,7 @@
 				<ww:a title="${row.name}" href="%{editLink}">${aef:out(row.name)}</ww:a>
 			</display:column>
 			<display:column sortable="true" title="Backlog">
-				${aef:out(row.parent.name)}
+				${aef:html(row.parent.name)}
 			</display:column>
 
 				<display:column title="Tasks" sortable="false">
@@ -164,7 +164,9 @@
 
 							<c:set var="divId" value="${divId + 1}" scope="page"/>
 							
-							<a href="javascript:toggleDiv(${divId});" title="Click to expand">${fn:length(row.tasks)} tasks, ??% complete</a>
+							<a href="javascript:toggleDiv(${divId});" title="Click to expand">
+								${fn:length(row.tasks)} tasks, <aef:percentDone backlogItemId="${row.id}"/> % complete
+							</a>
 
 		<table cellspacing="0" cellpadding="0" border="0" class="chartTable">
 		<tr>
@@ -184,7 +186,7 @@
 				</display:column>
 
 				<display:column sortable="false" title="Assignee" >
-					${aef:out(row.assignee.fullName)}
+					${aef:html(row.assignee.fullName)}
 				</display:column>
 				<display:column sortable="false" title="Priority" >
 					${row.priority}
@@ -194,7 +196,7 @@
 				</display:column>
 				
 				<display:column sortable="true" title="Iteration Goal">
-					${aef:out(row.iterationGoal.name)}
+					${aef:html(row.iterationGoal.name)}
 				</display:column>
 
 			</display:table>
@@ -211,7 +213,7 @@
 				<ww:a title="${row.name}" href="%{editLink}">${aef:out(row.name)}</ww:a>
 			</display:column>
 			<display:column sortable="true" title="Backlog item">
-									${aef:out(row.backlogItem.name)}			
+									${aef:html(row.backlogItem.name)}			
 			</display:column>
 
 			<display:column sortable="true" title="Priority">
@@ -231,10 +233,10 @@
 			</display:column>
 				
 			<display:column sortable="true" title="Assignee">
-				${aef:out(row.assignee.fullName)}
+				${aef:html(row.assignee.fullName)}
 			</display:column>
 			<display:column sortable="true" title="Creator">
-				${aef:out(row.creator.fullName)}
+				${aef:html(row.creator.fullName)}
 			</display:column>
 		</display:table>
 

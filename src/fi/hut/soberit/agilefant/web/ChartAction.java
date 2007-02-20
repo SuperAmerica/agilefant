@@ -327,7 +327,7 @@ public class ChartAction extends ActionSupport {
 		
 		try {
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
-			ChartUtilities.writeChartAsPNG(out, chart1, 500, 300);
+			ChartUtilities.writeChartAsPNG(out, chart1, 780, 600);
 			result = out.toByteArray();		
 		} catch (IOException e) {
 			System.err.println("Problem occurred creating chart.");
@@ -575,7 +575,7 @@ public class ChartAction extends ActionSupport {
         
         try {
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
-			ChartUtilities.writeChartAsPNG(out, chart3, 500, 300, info);
+			ChartUtilities.writeChartAsPNG(out, chart3, 780, 600, info);
 			result = out.toByteArray();		
 		} catch (IOException e) {
 			System.err.println("Problem occurred creating chart.");

@@ -35,11 +35,6 @@
 		<c:if test="${iteration.id > 0}">
 			<h2>Iteration ${iteration.name}  <ww:date name="iteration.startDate" /> -  <ww:date name="iteration.endDate" /></h2>
 			
-			
-		<p>	
-			<img src="drawChart.action?iterationId=${iteration.id}"/>
-		</p>
-
 <table><tr><td>
 
 			<div id="subItems">
@@ -180,6 +175,10 @@
 </div>
 </div>
 </td></tr></table>
+
+		<p>	
+			<img src="drawChart.action?iterationId=${iteration.id}"/>
+		</p>
 
 	</c:if>
 

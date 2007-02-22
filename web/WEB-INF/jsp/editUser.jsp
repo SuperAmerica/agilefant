@@ -37,12 +37,12 @@
 		</tr>
 		<tr>
 		<td>Password</td>
-		<td></td>
+		<td>*</td>
 		<td><ww:password name="password1"/></td>	
 		</tr>
 		<tr>
 		<td>Confirm password</td>
-		<td></td>
+		<td>*</td>
 		<td><ww:password name="password2"/></td>	
 		</tr>
 		<tr>

@@ -29,7 +29,7 @@
 		<tr>
 		<td>Effort left</td>
 		<td></td>
-		<td><ww:textfield name="task.effortEstimate"/></td>	
+		<td><ww:textfield name="task.effortEstimate"/>(*h *m, where * positive integer, for example 3h)</td>	
 		</tr>
 		<tr>
 		<td>Priority</td>

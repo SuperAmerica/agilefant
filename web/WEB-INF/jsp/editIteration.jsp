@@ -48,12 +48,12 @@
 		<tr>
 		<td>Start date</td>
 		<td>*</td>
-		<td><ww:textfield name="iteration.startDate"/></td>	
+		<td><ww:textfield name="iteration.startDate"/> (Use date pattern: <ww:text name="webwork.date.format"/>)</td>	
 		</tr>
 		<tr>
 		<td>End date</td>
 		<td>*</td>
-		<td><ww:textfield name="iteration.endDate"/></td>	
+		<td><ww:textfield name="iteration.endDate"/> (Use date pattern: <ww:text name="webwork.date.format"/>)</td>	
 		</tr>
 		<tr>
 		<td></td>

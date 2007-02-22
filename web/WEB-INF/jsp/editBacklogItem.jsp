@@ -22,7 +22,7 @@
 		<tr>
 		<td>Name</td>
 		<td>*</td>
-		<td><ww:textfield name="backlogItem.name"/></td>	
+		<td><ww:textfield size="50" name="backlogItem.name"/></td>	
 		</tr>
 		<tr>
 		<td>Description</td>

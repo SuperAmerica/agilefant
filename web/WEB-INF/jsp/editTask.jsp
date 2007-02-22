@@ -19,7 +19,7 @@
 		<tr>
 			<td>Name</td>
 		<td>*</td>
-		<td><ww:textfield name="task.name"/></td>	
+		<td><ww:textfield size="50" name="task.name"/></td>	
 		</tr>
 		<tr>
 		<td>Description</td>

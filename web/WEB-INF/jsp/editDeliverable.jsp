@@ -74,7 +74,7 @@
 		<tr>
 		<td>Name</td>
 		<td>*</td>
-		<td><ww:textfield name="deliverable.name"/></td>	
+		<td><ww:textfield size="53" name="deliverable.name"/></td>	
 		</tr>
 			
 		<tr>

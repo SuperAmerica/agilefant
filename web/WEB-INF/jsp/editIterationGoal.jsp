@@ -13,7 +13,7 @@
 		<tr>
 		<td>Name</td>
 		<td>*</td>
-		<td><ww:textfield name="iterationGoal.name"/></td>	
+		<td><ww:textfield size="53" name="iterationGoal.name"/></td>	
 		</tr>
 		<tr>
 		<td>Description</td>

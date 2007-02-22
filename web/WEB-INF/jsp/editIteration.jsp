@@ -38,7 +38,7 @@
 		<tr>
 		<td>Name</td>
 		<td>*</td>
-		<td><ww:textfield name="iteration.name"/></td>	
+		<td><ww:textfield size="53" name="iteration.name"/></td>	
 		</tr>
 		<tr>
 		<td>Description</td>

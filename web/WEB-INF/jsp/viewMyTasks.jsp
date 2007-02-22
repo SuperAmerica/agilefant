@@ -17,6 +17,7 @@
 			</c:if>
 			
    		<aef:unfinishedTaskList userId="${user.id}"/>
+   		<aef:unfinishedWatchedTasksList userId="${user.id}"/>
 
 		<p>
 			<ww:form action="myTasksSwitchUser">
@@ -204,7 +205,7 @@
 		
 
 	<p>Watched tasks</p>
-		<display:table  class="listTable" name="${user.watchedTasks}" id="row" requestURI="myTasks.action">
+		<display:table  class="listTable" name="${unfinishedWatchedTasksList}" id="row" requestURI="myTasks.action">
 							
 			<display:column sortable="true" title="Name">
 				<ww:url id="editLink" action="editTask" includeParams="none">

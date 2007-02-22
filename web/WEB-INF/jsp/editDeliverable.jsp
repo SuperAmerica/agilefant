@@ -21,6 +21,15 @@
 	<ww:actionmessage/>
 
 
+<ww:date name="%{new java.util.Date()}" id="start"/>
+<ww:date name="%{new java.util.Date()}" id="end"/>
+		
+<c:if test="${deliverable.id > 0}">
+<ww:date name="%{deliverable.startDate}" id="start"/>
+<ww:date name="%{deliverable.endDate}" id="end"/>
+
+</c:if>
+
 
 
 <%--  TODO: fiksumpi virheekäsittely --%>
@@ -92,13 +101,18 @@
 		<tr>
 		<td>Start date</td>
 		<td>*</td>
-		<td><ww:textfield name="deliverable.startDate" /> (Use date pattern: <ww:text name="webwork.date.format"/>)</td>	
+		<td>
+			    <ww:datepicker value="%{#start}" size="10" showstime="%{true}"  format="%{getText('webwork.datepicker.format')}" name="deliverable.startDate" /> 
+		
+		</td>	
 		</tr>
 			
 		<tr>
 		<td>End date</td>
 		<td>*</td>
-		<td><ww:textfield name="deliverable.endDate"/> (Use date pattern: <ww:text name="webwork.date.format"/>)</td>	
+		<td>
+			    <ww:datepicker value="%{#end}" size="10" showstime="%{true}"  format="%{getText('webwork.datepicker.format')}" name="deliverable.endDate" /> 		
+		</td>	
 		</tr>
 			
 		<tr>

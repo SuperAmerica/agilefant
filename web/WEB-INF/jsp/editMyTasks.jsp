@@ -11,6 +11,7 @@
 	<h2>Tasks assigned to me</h2>
    	<p>
    		<aef:currentUser/>   		
+   		<aef:unfinishedTaskList userId="${currentUser.id}"/>   		
    			
 <ww:date name="%{new java.util.Date()}" format="%{getText('webwork.date.format')}" id="now"/>
 
@@ -18,7 +19,7 @@
    			
 	<ww:form action="myTasksPerformWork">
 
-		<display:table name="${currentUser.assignments}" id="row" requestURI="myTasks.action">
+		<display:table name="${unfinishedTaskList}" id="row" requestURI="myTasks.action">
 
 			<display:column sortable="true" title="Name">
 				<ww:url id="editLink" action="editTask" includeParams="none">

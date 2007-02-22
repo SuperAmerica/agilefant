@@ -16,18 +16,17 @@
 	<ww:form action="storeIteration">
 		<ww:hidden name="iterationId" value="${iteration.id}"/>
 		<ww:hidden name="deliverableId"/> 
-<%--
 
-<ww:date name="%{new java.util.Date()}" format="dd-MM-yyyy" id="date"/>
-<p>
-
-			Startdate: <ww:datepicker value="%{#date}" showstime="%{true}" format="%d-%m-%Y" name="iteration.startDate"/> 
-		</p>
-		<p>		
-			Enddate: <ww:datepicker value="%{#date}" showstime="%{true}" format="%d-%m-%Y" name="iteration.endDate"/> 
-		</p>
-		--%>
+<ww:date name="%{new java.util.Date()}" id="start"/>
+<ww:date name="%{new java.util.Date()}" id="end"/>
 		
+<c:if test="${iteration.id > 0}">
+<ww:date name="%{iteration.startDate}" id="start"/>
+<ww:date name="%{iteration.endDate}" id="end"/>
+
+</c:if>
+
+
 		
 		<table class="formTable">
 		<tr>
@@ -48,12 +47,18 @@
 		<tr>
 		<td>Start date</td>
 		<td>*</td>
-		<td><ww:textfield name="iteration.startDate"/> (Use date pattern: <ww:text name="webwork.date.format"/>)</td>	
+		<td>
+			    <ww:datepicker value="%{#start}" size="10" showstime="%{true}"  format="%{getText('webwork.datepicker.format')}" name="iteration.startDate" /> 
+		
+		</td>	
 		</tr>
 		<tr>
 		<td>End date</td>
 		<td>*</td>
-		<td><ww:textfield name="iteration.endDate"/> (Use date pattern: <ww:text name="webwork.date.format"/>)</td>	
+		<td>
+			    <ww:datepicker value="%{#end}" size="10" showstime="%{true}"  format="%{getText('webwork.datepicker.format')}" name="iteration.endDate" /> 
+		
+		</td>	
 		</tr>
 		<tr>
 		<td></td>
@@ -76,12 +81,6 @@
 			Subitems
 		</div>
 		<div id="subItemContent">
-	</c:if>
-
-
-
-		<c:if test="${iteration.id > 0}">
-
 
 		<p>Backlog items 
 			<ww:url id="createBacklogItemLink" action="createBacklogItem" includeParams="none">

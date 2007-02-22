@@ -24,7 +24,10 @@ public class PercentDoneTag extends SpringTagSupport {
 																	.size();
 		int total = bli.getTasks()
 						  .size();
-		int percentDone = Math.round(done*100/total);
+		int percentDone = 100;
+		if (total > 0) {
+		   percentDone = Math.round(done*100/total);
+		}
 		
 		try
         {

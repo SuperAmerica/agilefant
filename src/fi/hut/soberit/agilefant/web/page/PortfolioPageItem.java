@@ -3,8 +3,7 @@ package fi.hut.soberit.agilefant.web.page;
 import java.util.Collection;
 
 /**
- * TODO comments jmrantal
- * (?) PortfolioPageItem is item to be shown in the portfolio view
+ * PortfolioPageItem for bread crumb trail
  */
 public class PortfolioPageItem implements PageItem {
 

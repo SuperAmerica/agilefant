@@ -32,7 +32,7 @@
 		</tr>
 		<tr>
 		<td>Email</td>
-		<td></td>
+		<td>*</td>
 		<td><ww:textfield name="user.email" value="${user.email}"/></td>	
 		</tr>
 		<tr>

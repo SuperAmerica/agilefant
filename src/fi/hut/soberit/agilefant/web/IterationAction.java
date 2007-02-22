@@ -39,7 +39,6 @@ public class IterationAction extends ActionSupport implements CRUDAction {
 		if (iteration == null){
 //			super.addActionError(super.getText("iteration.notFound"));
 //			return Action.INPUT;
-//			TODO: demo kludge
 			return Action.SUCCESS;
 		}
 		deliverable = iteration.getDeliverable();

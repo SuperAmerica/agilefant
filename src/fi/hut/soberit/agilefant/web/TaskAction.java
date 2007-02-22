@@ -147,7 +147,7 @@ public class TaskAction extends ActionSupport implements CRUDAction {
 	public int getDeliverableId() {
 		return taskId;
 	}
-
+	// TODO - should this be so?
 	public void setDeliverableId(int deliverableId) {
 		this.taskId = deliverableId;
 	}

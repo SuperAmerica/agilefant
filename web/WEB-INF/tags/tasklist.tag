@@ -17,7 +17,7 @@
 		<ww:hidden name="task.name" value="${task.name}"/>
 		<ww:hidden name="taskId" value="${task.id}"/>
 
-		<ww:select name="task.status" value="task.status.name" list="@fi.hut.soberit.agilefant.model.TaskStatus@values()" listKey="name" listValue="getText('task.status.' + name())"/>		
+		<ww:select name="task.status" value="${task.status.name}" list="@fi.hut.soberit.agilefant.model.TaskStatus@values()" listKey="name" listValue="getText('task.status.' + name())"/>		
 						<ww:submit value="Store"/>		
 		</ww:form>
 		</li>								

@@ -87,14 +87,6 @@
 				    </c:if>
 
 				</display:column>
-<%-- 
-				<display:column sortable="true" title="Effort estimate" sortProperty="remainingEffortEstimate.time">
-					${row.remainingEffortEstimate}
-				</display:column>
-				<display:column sortable="true" title="Effort in tasks" sortProperty="taskEffortLeft.time">
-					${row.taskEffortLeft}
-				</display:column>
---%>
 				<display:column sortable="false" title="Assignee" >
 					${aef:out(row.assignee.fullName)}
 				</display:column>
@@ -108,7 +100,14 @@
 					${row.performedEffort}
 				</display:column>
 				<display:column sortable="true" title="Estimate">
-					${row.effortEstimate}
+					<c:choose>
+						<c:when test="!empty ${row.effortEstimate}">
+							${row.effortEstimate}
+						</c:when>
+						<c:otherwise>
+							${row.allocatedEffort}
+						</c:otherwise>
+					</c:choose>
 				</display:column>
 				
 

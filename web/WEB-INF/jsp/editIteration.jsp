@@ -142,7 +142,14 @@
 					${row.performedEffort}
 				</display:column>
 				<display:column sortable="true" title="Estimate">
-					${row.effortEstimate}
+					<c:choose>
+						<c:when test="!empty ${row.effortEstimate}">
+							${row.effortEstimate}
+						</c:when>
+						<c:otherwise>
+							${row.allocatedEffort}
+						</c:otherwise>
+					</c:choose>
 				</display:column>
 				
 

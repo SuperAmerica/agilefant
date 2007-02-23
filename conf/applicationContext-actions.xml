@@ -18,7 +18,9 @@
 	<bean name="iterationGoalAction" class="fi.hut.soberit.agilefant.web.IterationGoalAction" singleton="false" autowire="byName"/>
 	<bean name="watchObjectAction" class="fi.hut.soberit.agilefant.web.WatchObjectAction" singleton="false" autowire="byName"/>
 	<bean name="linkToIterationGoalAction" class="fi.hut.soberit.agilefant.web.LinkToIterationGoalAction" singleton="false" autowire="byName"/>
-	<bean name="portfolioAction" class="fi.hut.soberit.agilefant.web.PortfolioAction" singleton="false" autowire="byName"/>
+	<bean name="portfolioAction" class="fi.hut.soberit.agilefant.web.PortfolioAction" singleton="false" autowire="byName"/>	
+	<bean name="contextStackAction" class="fi.hut.soberit.agilefant.web.ContextStackAction" singleton="false" autowire="byName"/>
 	
 	<bean name="refreshUserInterceptor" class="fi.hut.soberit.agilefant.web.RefreshUserInterceptor" autowire="byName"/>
+	<bean name="contextViewInterceptor" class="fi.hut.soberit.agilefant.web.context.ContextViewInterceptor" autowire="byName"/>
 </beans>

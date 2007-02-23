@@ -9,9 +9,11 @@
 	<package name="default" extends="webwork-default">
 		<interceptors>
 			<interceptor name="refreshUser" class="refreshUserInterceptor"/>
+			<interceptor name="contextView" class="contextViewInterceptor"/>
 			<interceptor-stack name="authenticationStack">
 				<interceptor-ref name="completeStack"/>
-				<interceptor-ref name="refreshUser"/>				
+				<interceptor-ref name="refreshUser"/>
+				<interceptor-ref name="contextView"/>
 			</interceptor-stack>
 		</interceptors>
 		<default-interceptor-ref name="authenticationStack"/>
@@ -324,6 +326,19 @@
 
 		<action name="viewProject">
 			<result>/WEB-INF/jsp/viewProject.jsp</result>
+		</action>
+		
+		<action name="popContext" class="contextStackAction">
+			<result type="redirect-action">
+				<param name="actionName">myTasks</param>
+			</result>
+			<result name="success_iteration" type="redirect-action">
+				<param name="actionName">viewIteration</param>
+				<param name="iterationId">${view.contextObject}</param>
+			</result>
+			<result name="success_editMyTasks" type="redirect-action">
+				<param name="actionName">editMyTasks</param>
+			</result>
 		</action>		
 	</package>
 </xwork>

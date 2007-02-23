@@ -73,4 +73,6 @@
 	 <bean name="portfolioManager" class="fi.hut.soberit.agilefant.service.PortfolioManagerImpl">
 		<property name="deliverableDAO" ref="deliverableDAO"/>
 	 </bean>
+	 
+	 <bean name="contextViewManager" class="fi.hut.soberit.agilefant.web.context.DefaultContextViewManager"/>
 </beans>

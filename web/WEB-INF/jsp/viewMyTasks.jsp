@@ -5,9 +5,11 @@
 	<ww:actionmessage/>
 <c:set var="divId" value="1336" scope="page"/>
 	
-	<ww:url id="editMyTasksLink" action="editMyTasks" includeParams="none"/>
+	<ww:url id="editMyTasksLink" action="editMyTasks" includeParams="none">
+		<ww:param name="contextViewName" value="editMyTasks"/>	
+	</ww:url>
 	
-	View | <ww:a href="%{editMyTasksLink}">Edit</ww:a>
+	View | <a href="editMyTasks.action?contextViewName=editMyTasks">Edit</a>
 
   		<aef:userList/>
    		<aef:currentUser/>   		

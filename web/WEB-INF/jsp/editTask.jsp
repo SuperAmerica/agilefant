@@ -63,7 +63,7 @@
 		<td></td>
 		<td>
 						<ww:submit value="Store"/>
-    		<ww:submit name="action:contextView" value="Cancel"/>
+    		<ww:submit name="action:popContext" value="Cancel"/>
 
 			</td>	
 		</tr>

@@ -8,6 +8,9 @@ public class ContextView implements Serializable{
 	private int contextObject;
 	
 	public ContextView(String name, int objectId){
+		if (name == null){
+			throw new NullPointerException("Context name is null");
+		}
 		this.contextName = name;
 		this.contextObject = objectId;
 	}

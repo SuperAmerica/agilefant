@@ -32,7 +32,8 @@
 		<tr>
 		<td>Effort estimate</td>
 		<td></td>
-		<td><ww:textfield name="backlogItem.allocatedEffort"/></td>	
+		<td><ww:textfield name="backlogItem.allocatedEffort"/>(usage: *h *m, where * integer, for 
+example 3h) </td>	
 		</tr>
 		<tr>
 		<td>Priority</td>

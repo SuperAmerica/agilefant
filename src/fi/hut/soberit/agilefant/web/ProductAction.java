@@ -25,6 +25,10 @@ public class ProductAction extends ActionSupport implements CRUDAction {
 
 	public String delete() {
 		Product p = productDAO.get(productId);
+		if (p == null){
+			super.addActionError(super.getText("product.notFound"));
+			return Action.ERROR;
+		}
 		if(p.getBacklogItems().size() > 0 || p.getDeliverables().size() > 0) {
 			super.addActionError(super.getText("product.notEmptyWhenDeleting"));
 			return Action.ERROR;

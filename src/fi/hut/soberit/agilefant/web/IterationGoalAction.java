@@ -8,6 +8,7 @@ import com.opensymphony.xwork.ActionSupport;
 
 import fi.hut.soberit.agilefant.db.IterationDAO;
 import fi.hut.soberit.agilefant.db.IterationGoalDAO;
+import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.IterationGoal;
 
@@ -32,6 +33,13 @@ public class IterationGoalAction extends ActionSupport implements CRUDAction {
 
 	public String delete() {
 		iterationGoal = iterationGoalDAO.get(iterationGoalId);
+		if (iterationGoal == null){
+			super.addActionError(super.getText("iterationgGoal.notFound"));
+			return Action.ERROR;
+		}
+		for(BacklogItem bi : iterationGoal.getBacklogItems()) {
+			bi.setIterationGoal(null);
+		}
 //		iterationId = iteration.getId();
 		iterationGoalDAO.remove(iterationGoalId);
 		return Action.SUCCESS;

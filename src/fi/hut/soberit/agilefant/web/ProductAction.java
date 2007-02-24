@@ -64,6 +64,10 @@ public class ProductAction extends ActionSupport implements CRUDAction {
 	}
 	
 	protected void fillStorable(Product storable){
+		if(this.product == null) {
+			super.addActionError(super.getText("product.internalError"));
+			return;
+		}
 		storable.setName(this.product.getName());
 		storable.setDescription(this.product.getDescription());		
 	}

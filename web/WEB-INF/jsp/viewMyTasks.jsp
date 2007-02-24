@@ -24,8 +24,7 @@
 		<p>
 			<ww:form action="myTasksSwitchUser">
 				<ww:select name="userId" list="#attr.userList" listKey="id" listValue="fullName" value="${user.id}" />
-				<ww:submit value="Switch to tasks assigned 
-to selected user"/>
+				<ww:submit value="View items for user"/>
 			</ww:form>
 		</p>
 

@@ -29,6 +29,16 @@ public class UserAction extends ActionSupport implements CRUDAction{
 	}
 
 	public String delete() {
+		User u = userDAO.get(userId);
+		if (u == null){
+			super.addActionError(super.getText("user.notFound"));
+			return Action.ERROR;
+		}
+		if(u.getAssignables().size() > 0 || u.getWatchedBacklogItems().size() > 0 
+				|| u.getWatchedTasks().size() > 0) {
+			super.addActionError(super.getText("user.hasLinkedItems"));
+			return Action.ERROR;
+		}
 		userDAO.remove(userId);
 		return Action.SUCCESS;
 	}

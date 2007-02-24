@@ -6,7 +6,9 @@ import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
 
 import fi.hut.soberit.agilefant.db.ActivityTypeDAO;
+import fi.hut.soberit.agilefant.db.DeliverableDAO;
 import fi.hut.soberit.agilefant.model.ActivityType;
+import fi.hut.soberit.agilefant.model.Deliverable;
 
 public class ActivityTypeAction extends ActionSupport implements CRUDAction {
 
@@ -14,6 +16,7 @@ public class ActivityTypeAction extends ActionSupport implements CRUDAction {
 	private int activityTypeId;
 	private ActivityType activityType;
 	private ActivityTypeDAO activityTypeDAO;
+	private DeliverableDAO deliverableDAO;
 	private Collection<ActivityType> activityTypes;
 	
 	public String getAll(){
@@ -59,6 +62,12 @@ public class ActivityTypeAction extends ActionSupport implements CRUDAction {
 			super.addActionError(super.getText("activityType.notFound"));
 			return Action.ERROR;
 		}
+		for(Deliverable d : deliverableDAO.getAll()) {
+			if(d.getActivityType().getId() == activityTypeId) {
+				super.addActionError(super.getText("activityType.deliverablesLinked"));
+				return Action.ERROR;				
+			}
+		}
 		activityTypeDAO.remove(activityType);
 		return Action.SUCCESS;
 	}
@@ -91,4 +100,9 @@ public class ActivityTypeAction extends ActionSupport implements CRUDAction {
 	public void setActivityTypeDAO(ActivityTypeDAO activityTypeDAO) {
 		this.activityTypeDAO = activityTypeDAO;
 	}
+	
+	public void setDeliverableDAO(DeliverableDAO deliverableDAO) {
+		this.deliverableDAO = deliverableDAO;
+	}
+
 }

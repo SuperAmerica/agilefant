@@ -2,6 +2,7 @@ package fi.hut.soberit.agilefant.web;
 
 import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
+import fi.hut.soberit.agilefant.db.hibernate.EmailValidator;
 
 import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.model.User;
@@ -85,6 +86,13 @@ public class UserAction extends ActionSupport implements CRUDAction{
 		storable.setFullName(this.user.getFullName());
 		storable.setLoginName(this.user.getLoginName());
 		storable.setPassword(md5Pw);
+		if(this.user.getEmail() != null) {
+			EmailValidator e = new EmailValidator();
+			if(!e.isValid(this.user.getEmail())) {				
+				super.addActionError(super.getText("user.invalidEmail"));
+				return;				
+			}
+		}
 		storable.setEmail(this.user.getEmail());
 	}
 

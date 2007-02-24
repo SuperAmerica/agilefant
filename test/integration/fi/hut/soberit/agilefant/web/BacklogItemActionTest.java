@@ -10,8 +10,8 @@ import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.BacklogItemStatus;
 import fi.hut.soberit.agilefant.model.Priority;
 import fi.hut.soberit.agilefant.model.Product;
-import fi.hut.soberit.agilefant.model.Task;
-import fi.hut.soberit.agilefant.model.TaskStatus;
+//import fi.hut.soberit.agilefant.model.Task;
+//import fi.hut.soberit.agilefant.model.TaskStatus;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.security.SecurityUtil;
 import fi.hut.soberit.agilefant.util.SpringTestCase;
@@ -439,10 +439,10 @@ public class BacklogItemActionTest extends SpringTestCase {
 		this.store();
 
 		int n = getAllBacklogItems().size();
-		backlogItemAction.setBacklogId(this.getBacklogItem(TEST_NAME1, TEST_DESC1).getId());
+		backlogItemAction.setBacklogItemId(this.getBacklogItem(TEST_NAME1, TEST_DESC1).getId());
 		String result = backlogItemAction.delete();
-		super.assertEquals("delete() was unsuccessful", result, Action.SUCCESS);
-		super.assertEquals("The number of tasks didn't decrease with delete().", n-1, 
+		super.assertEquals("delete() was unsuccessful", Action.SUCCESS, result);
+		super.assertEquals("The number of backlog items didn't decrease with delete().", n-1, 
 				getAllBacklogItems().size());
 		
 		BacklogItem test = this.getBacklogItem(TEST_NAME1, TEST_DESC1);
@@ -451,12 +451,7 @@ public class BacklogItemActionTest extends SpringTestCase {
 	
 	public void testDelete_withInvalidId() {
 		backlogItemAction.setBacklogId(INVALID_BACKLOGITEMID);
-		try {
-			String result = backlogItemAction.delete();
-			assertEquals("Invalid backlog item id didn't result an error.", Action.ERROR, result);
-			fail("delete() with invalid id " + INVALID_BACKLOGITEMID + " was accepted.");
-		}
-		catch(IllegalArgumentException iae) {
-		}
+		String result = backlogItemAction.delete();
+		assertEquals("Invalid backlog item id didn't result an error.", Action.ERROR, result);
 	}
 }

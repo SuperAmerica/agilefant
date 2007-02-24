@@ -21,6 +21,8 @@ import javax.persistence.OrderBy;
 import javax.persistence.Transient;
 
 import org.hibernate.annotations.Formula;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.Type;
 
@@ -146,6 +148,7 @@ public class Task implements PageItem, Assignable, EffortContainer {
 	}
 
 	@OneToMany(mappedBy="task")
+	@OnDelete(action=OnDeleteAction.CASCADE)
 	@OrderBy(value="created")
 	public Collection<TaskEvent> getEvents() {
 	    return events;

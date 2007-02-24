@@ -240,7 +240,7 @@ example 3h) </td>
 					<ww:url id="deleteLink" action="deleteTask" includeParams="none">
 						<ww:param name="taskId" value="${row.id}"/>
 					</ww:url>
-					<ww:a href="%{editLink}">Edit</ww:a>|<ww:a href="%{deleteLink}">Delete</ww:a>
+					<ww:a href="%{editLink}">Edit</ww:a>|<ww:a href="%{deleteLink}" onclick="return confirmDeleteTask()">Delete</ww:a>
 				</display:column>
 			</display:table>
 		</p>

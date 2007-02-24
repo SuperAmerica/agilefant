@@ -12,3 +12,11 @@ function toggleDiv(id)
 		div.style.display = "none";
 	}
 }
+
+function confirmDeleteTask() {
+	if (confirm("Deleting the task will cause all of its events, including logged work, to be deleted. Continue?")) {
+		return true;
+	} else {
+		return false;
+	}
+}

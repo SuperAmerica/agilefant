@@ -107,6 +107,8 @@
 				<div id="maintitle">AgilEfant
 				</div>
 				<div id="logout">
+					<aef:currentUser/>
+					User: ${currentUser.fullName}
 	<form action="j_acegi_logout" method="post">
     	<input name="exit" type="submit" value="logout"/>
 	  	</form>

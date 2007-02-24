@@ -47,7 +47,7 @@
 									<p>
 										<ww:url id="workTypeLink" action="listActivityTypes" includeParams="none"/>
 										
-										No work types avalable. <ww:a href="%{workTypeLink}">Add those first.</ww:a>			
+										No work types avalable. <ww:a href="%{workTypeLink}">Add work types</ww:a>			
 									</p>				
 								</c:when>
 				                <c:otherwise>

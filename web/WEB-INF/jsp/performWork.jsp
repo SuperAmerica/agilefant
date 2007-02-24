@@ -11,7 +11,7 @@
 	<c:choose>
 		<c:when test="${empty workTypes}">
 			<p>
-				No work types avalable. Add those first.
+				No work types avalable. <ww:a href="%{workTypeLink}">Add work types</ww:a>
 			</p>				
 		</c:when>
 		<c:otherwise>

@@ -79,6 +79,10 @@ public class DeliverableAction extends ActionSupport implements CRUDAction {
 			super.addActionError(super.getText("deliverable.notFound"));
 			return Action.ERROR;
 		}
+		if(deliverable.getBacklogItems().size() > 0 || deliverable.getIterations().size() > 0) {
+			super.addActionError(super.getText("deliverable.notEmptyWhenDeleting"));
+			return Action.ERROR;
+		}
 		Product product = deliverable.getProduct();
 		productId = product.getId();
 		product.getDeliverables().remove(deliverable);

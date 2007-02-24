@@ -45,6 +45,14 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
 
 	public String delete() {
 		backlogItem = backlogItemDAO.get(backlogItemId);
+		if(backlogItem == null){
+			super.addActionError(super.getText("backlogItem.notFound"));
+			return Action.ERROR;
+		}
+		if(backlogItem.getTasks().size() > 0) {
+			super.addActionError(super.getText("backlogItem.notEmptyWhenDeleting"));
+			return Action.ERROR;						
+		}
 		// backlogId = backlogItem.getId();//?? removed when testing with jUnit
 		backlogItemDAO.remove(backlogItemId);
 		return Action.SUCCESS;

@@ -79,6 +79,10 @@ public class IterationAction extends ActionSupport implements CRUDAction {
 			super.addActionError(super.getText("activityType.notFound"));
 			return Action.ERROR;
 		}
+		if(iteration.getBacklogItems().size() > 0 || iteration.getIterationGoals().size() > 0) {
+			super.addActionError(super.getText("iteration.notEmptyWhenDeleting"));
+			return Action.ERROR;			
+		}
 		iterationDAO.remove(iteration);
 		return Action.SUCCESS;
 	}

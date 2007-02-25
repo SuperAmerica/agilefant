@@ -2,10 +2,14 @@ package fi.hut.soberit.agilefant.web;
 
 
 import java.awt.Color;
+import java.awt.GradientPaint;
+import java.awt.Paint;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collection;
@@ -83,7 +87,13 @@ public class ChartAction extends ActionSupport {
 	private double done;
 	private Date startDate;
 	private Date endDate;
-	
+	private String startDateString;
+	private String endDateString;	
+	private Color color1;
+	private Color color2;
+	private Color color3;
+	private Color color4;
+	private Color color5;
 	
 	
 	/**
@@ -269,11 +279,14 @@ public class ChartAction extends ActionSupport {
 				/* Adds the last day of the estimated velocity to be the last day of iteration to be 0 */
 				Date end = this.getEndDate();
 				Calendar cal = Calendar.getInstance();
-				cal.setTime(end);
-				referenceSeries.add(new Day(cal.get(Calendar.DAY_OF_MONTH), // The date that has first effort for this iteration 
-						(cal.get(Calendar.MONTH) +1), 
-						cal.get(Calendar.YEAR)), 
-						0); // The value in the end of the baseline					
+				if(end!=null && (cal.get(Calendar.DAY_OF_MONTH))!=day_last){ // We don't want two same dates to one serie
+					cal.setTime(end);
+					referenceSeries.add(new Day(cal.get(Calendar.DAY_OF_MONTH), // The date that has first effort for this iteration 
+							(cal.get(Calendar.MONTH) +1), 
+							cal.get(Calendar.YEAR)), 
+							0); // The value in the end of the baseline	
+				}
+								
 				baseIsSet = true;
 			}
 		}
@@ -437,29 +450,37 @@ public class ChartAction extends ActionSupport {
 	public String extendedBarChart(){
 		
 		
+		
+		
 		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 		JFreeChart chart2 = null;
 		
 		/*-- We want to show the relative percentages of different work states --*/
 		double allTypes = 0;
 		allTypes = this.getNotStarted() + this.getStarted() + this.getBlocked() + this.getDone() + this.getImplemented();
-		double ns = (this.getNotStarted() / allTypes)*100;
-		double st = (this.getStarted() / allTypes)*100;
-		double bl = (this.getBlocked() / allTypes)*100;
-		double im = (this.getImplemented() / allTypes)*100;
-		double dn = (this.getDone() / allTypes)*100;
+		double ns = 20;
+		double st = 20;
+		double bl = 20;
+		double im = 20;
+		double dn = 20;
 		if(allTypes>0){
-			dataset.setValue(ns, "Not started", "");
-			dataset.setValue(st, "Started", "");
-			dataset.setValue(bl, "Blocked", "");
-			dataset.setValue(im, "Implemented", "");
-			dataset.setValue(dn, "Done", "");
-			chart2 = ChartFactory.createStackedBarChart(null,
+			ns = (this.getNotStarted() / allTypes)*100;
+			st = (this.getStarted() / allTypes)*100;
+			bl = (this.getBlocked() / allTypes)*100;
+			im = (this.getImplemented() / allTypes)*100;
+			dn = (this.getDone() / allTypes)*100;
+		}	
+		
+		dataset.setValue(ns, "Not started", "");
+		dataset.setValue(st, "Started", "");
+		dataset.setValue(bl, "Blocked", "");
+		dataset.setValue(im, "Implemented", "");
+		dataset.setValue(dn, "Done", "");
+		chart2 = ChartFactory.createStackedBarChart(null,
 					null, null, dataset, PlotOrientation.HORIZONTAL,
 					false, false, false);
 			
-		}
-		
+	
 		CategoryPlot plot = chart2.getCategoryPlot();
 		BarRenderer renderer = (BarRenderer) plot.getRenderer();
 		//CategoryAxis axis = plot.getDomainAxis();
@@ -469,8 +490,7 @@ public class ChartAction extends ActionSupport {
 		plot.setDomainGridlinesVisible(false);
 		plot.setRangeGridlinesVisible(false);
 		plot.setBackgroundPaint(Color.white);
-		chart2.setBackgroundPaint(Color.white); // Sets the backgroundcolor for the chart
-		//plot.setBackgroundPaint(null);
+		chart2.setBackgroundPaint(Color.white); // Sets the background color for the chart
 		axis.setAxisLineVisible(false);
 		axis.setTickLabelsVisible(false);
 		axis.setTickMarksVisible(false);
@@ -479,11 +499,36 @@ public class ChartAction extends ActionSupport {
 		/*-----------------------------------------*/
 		
 		//axis.setCategoryMargin(0.01); // one percent
-		renderer.setSeriesPaint(0, Color.red); // color for not started
-		renderer.setSeriesPaint(1, Color.pink); // color for started
-		renderer.setSeriesPaint(2, Color.blue); // color for blocked
-		renderer.setSeriesPaint(3, Color.green); // color for implemented
-		renderer.setSeriesPaint(4, Color.orange); // color for done
+		if (color1 != null){
+			renderer.setSeriesPaint(0, this.getColor1()); // color for not started
+		} else {
+			renderer.setSeriesPaint(0, Color.red); // color for not started
+		} 
+		
+		if (color2 != null){
+			renderer.setSeriesPaint(1, this.getColor2()); // color for not started
+		} else {
+			renderer.setSeriesPaint(1, Color.pink); // color for not started
+		} 
+		
+		if (color3 != null){
+			renderer.setSeriesPaint(2, this.getColor3()); // color for not started
+		} else {
+			renderer.setSeriesPaint(2, Color.blue); // color for not started
+		} 
+		
+		if (color4 != null){
+			renderer.setSeriesPaint(3, this.getColor4()); // color for not started
+		} else {
+			renderer.setSeriesPaint(3, Color.green); // color for not started
+		} 
+		
+		if (color5 != null){
+			renderer.setSeriesPaint(4, this.getColor5()); // color for not started
+		} else {
+			renderer.setSeriesPaint(4, Color.orange); // color for not started
+		} 
+		
 		try {
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
 			ChartUtilities.writeChartAsPNG(out, 
@@ -509,11 +554,11 @@ public class ChartAction extends ActionSupport {
 		portfolio = portfolioManager.getCurrentPortfolio();
 		Collection<Deliverable> deliverables = portfolio.getDeliverables();
 		for(Deliverable deliverable : deliverables){
-			Date startDate = deliverable.getStartDate();
-			Date endDate = deliverable.getEndDate();
+			Date starting = deliverable.getStartDate();
+			Date ending = deliverable.getEndDate();
 			String name = deliverable.getName();
 			Task del1 = new Task(
-		            name, startDate, endDate
+		            name, starting, ending
 		    );
 		    del1.setPercentComplete(1.00);
 		    
@@ -565,14 +610,14 @@ public class ChartAction extends ActionSupport {
 		int year = calendar.get(Calendar.YEAR);
 		
 		/*-experimental for setting the start date */
-		
-		if(this.getStartDate()!=null){ // user has provided start date
-			axis.setMinimumDate(this.getStartDate());
+		Date sd = this.parseDate(this.getStartDateString()); 
+		if(sd!=null){ // user has provided start date
+			axis.setMinimumDate(sd);
 		}else { // start date field is left empty
 //			Date startingDate = calendar.getTime();
 			axis.setMinimumDate(current); // Sets the gantt to show dates starting from today.
 		}
-
+		// Here create a calendar object that has a date 3 month from now
         int endMonth = (month + 3) % 13;
         if(endMonth == 13){
         	endMonth = 1;
@@ -588,9 +633,9 @@ public class ChartAction extends ActionSupport {
         calendar.set(year, endMonth, day); // Sets the ending date
         
         /* --experimental for setting the end date */
-        
-        if(this.getEndDate()!=null){ // user has provided an end date
-			axis.setMaximumDate(this.getEndDate()); // Sets the gantt to show dates until the specified ending date.
+        Date ed = this.parseDate(this.getEndDateString()); 
+        if(ed!=null){ // user has provided an end date
+			axis.setMaximumDate(ed); // Sets the gantt to show dates until the specified ending date.
 		}else { // the end date field is left empty
 			Date endingDate = calendar.getTime(); // Get the new modified date three month from the original
 	        axis.setMaximumDate(endingDate);
@@ -632,6 +677,17 @@ public class ChartAction extends ActionSupport {
 	        Date result = calendar.getTime();
 	        return result;
 
+	    }
+	    
+	    private Date parseDate(String str){
+			DateFormat formatter = new SimpleDateFormat(getText("webwork.date.format"));
+			Date date = null;
+			try {
+				date = (Date)formatter.parse(str);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+			return date;
 	    }
 	
 
@@ -844,6 +900,78 @@ public class ChartAction extends ActionSupport {
 	public void setStartDate(Date startDate) {
 		this.startDate = startDate;
 	}
+
+	
+	public Color getColor1() {
+		return color1;
+	}
+
+
+	public void setColor1(Color color1) {
+		this.color1 = color1;
+	}
+
+
+	public Color getColor2() {
+		return color2;
+	}
+
+
+	public void setColor2(Color color2) {
+		this.color2 = color2;
+	}
+
+
+	public Color getColor3() {
+		return color3;
+	}
+
+
+	public void setColor3(Color color3) {
+		this.color3 = color3;
+	}
+
+
+	public Color getColor4() {
+		return color4;
+	}
+
+
+	public void setColor4(Color color4) {
+		this.color4 = color4;
+	}
+
+
+	public Color getColor5() {
+		return color5;
+	}
+
+
+	public void setColor5(Color color5) {
+		this.color5 = color5;
+	}
+
+
+	public String getEndDateString() {
+		return endDateString;
+	}
+
+
+	public void setEndDateString(String endDateString) {
+		this.endDateString = endDateString;
+	}
+
+
+	public String getStartDateString() {
+		return startDateString;
+	}
+
+
+	public void setStartDateString(String startDateString) {
+		this.startDateString = startDateString;
+	}
+
+
 
 
 

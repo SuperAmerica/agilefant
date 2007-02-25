@@ -68,8 +68,9 @@ public class UserDAOHibernate extends GenericDAOHibernate<User> implements UserD
 				values);		
 	}
 	
+	/** {@inheritDoc} */
 	@SuppressWarnings("unchecked")
-	public Collection<BacklogItem> getUnfinishedBacklogitemsByTime(User user, Date start, Date end) {
+	public Collection<BacklogItem> getBacklogItemsByTime(User user, Date start, Date end) {
 
 		final String names[] = {"id", "start", "end"};
 		Object values[] = {user.getId(), start, end};

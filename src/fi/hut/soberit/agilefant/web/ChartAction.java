@@ -85,6 +85,7 @@ public class ChartAction extends ActionSupport {
 	private Date endDate;
 	
 	
+	
 	/**
 	 * This method draws the iteration burndown chart.
 	 * 
@@ -183,15 +184,16 @@ public class ChartAction extends ActionSupport {
 		
 		TimeSeriesCollection dataset = new TimeSeriesCollection();
 		
-		/*-- Shows the done workhours
+		/*-- Remove the comments of the line below if you want to see the actual workhours in the system --*/
 		//dataset.addSeries(workSeries); 
 		
 		/*-------------------------------------------------------------*/
 		// The code for dataset: effort estimates
 		// we only want to keep the last estimate for the day
 		
-		TimeSeries estimateSeries = new TimeSeries("Effort estimates", Day.class);
-		TimeSeries trendSeries = new TimeSeries("Estimated progress", Day.class);
+		TimeSeries estimateSeries = new TimeSeries("Actual velocity", Day.class);
+		TimeSeries trendSeries = new TimeSeries("Trend velocity", Day.class);
+		TimeSeries referenceSeries = new TimeSeries("Estimated velocity", Day.class);
 		
 		day_last=0;
 		month_last=0;
@@ -199,6 +201,8 @@ public class ChartAction extends ActionSupport {
 		worksum=0;
 		count=0;	
 		worktime=0;
+		boolean baseIsSet = false;
+		
 		
 		
 		for(PerformedWork performedWork : works){
@@ -219,7 +223,7 @@ public class ChartAction extends ActionSupport {
 				time %= AFTime.MINUTE_IN_MILLIS;
 				
 				//worktime = Math.round(days * 24 + hours + (minutes/60));
-				worktime = Math.round(hours + (minutes/60)); // we want to know the total in hours
+				worktime = Math.round(hours + (minutes/60)); // we want to know the total rounded up in hours
 				Date date = performedWork.getCreated();
 				//String dateStr = date.toString(); // for debugging purposes
 				Calendar calendar = Calendar.getInstance();
@@ -228,6 +232,21 @@ public class ChartAction extends ActionSupport {
 				int month = calendar.get(Calendar.MONTH) + 1; // January == 0
 				int year = calendar.get(Calendar.YEAR);
 				count++;
+				
+				/* Adds the first days estimate to be the base for the reference chart */
+				if ((day!=day_last || month != month_last || year!=year_last) && (count > 1) && baseIsSet==false){
+					referenceSeries.add(new Day(day_last, month_last, year_last), worksum);
+					
+					/* Adds the last day of the estimated velocity to be the last day of iteration to be 0 */
+					Date end = this.getEndDate();
+					Calendar cal = Calendar.getInstance();
+					cal.setTime(end);
+					referenceSeries.add(new Day(cal.get(Calendar.DAY_OF_MONTH), // The date that has first effort for this iteration 
+							(cal.get(Calendar.MONTH) +1), 
+							cal.get(Calendar.YEAR)), 
+							0); // The value in the end of the baseline					
+					baseIsSet = true;
+				}
 				
 				// day changed, time to pop the previous days hours
 				if ((day!=day_last || month != month_last || year!=year_last) && (count > 1)){
@@ -243,10 +262,24 @@ public class ChartAction extends ActionSupport {
 			}	
 		}
 		if(day_last > 0){ // pop the last days hours
-			estimateSeries.add(new Day(day_last, month_last, year_last), worksum);		
+			estimateSeries.add(new Day(day_last, month_last, year_last), worksum);
+			/* Create the baseline in the case of only one day that has effort estimates */
+			if(baseIsSet==false){
+				referenceSeries.add(new Day(day_last, month_last, year_last), worksum);
+				/* Adds the last day of the estimated velocity to be the last day of iteration to be 0 */
+				Date end = this.getEndDate();
+				Calendar cal = Calendar.getInstance();
+				cal.setTime(end);
+				referenceSeries.add(new Day(cal.get(Calendar.DAY_OF_MONTH), // The date that has first effort for this iteration 
+						(cal.get(Calendar.MONTH) +1), 
+						cal.get(Calendar.YEAR)), 
+						0); // The value in the end of the baseline					
+				baseIsSet = true;
+			}
 		}
 		
 		dataset.addSeries(estimateSeries);
+		dataset.addSeries(referenceSeries);
 		
 		// Variables that are used to account date setting to the trend line
 		double workRemaining = worksum;
@@ -429,11 +462,14 @@ public class ChartAction extends ActionSupport {
 		
 		CategoryPlot plot = chart2.getCategoryPlot();
 		BarRenderer renderer = (BarRenderer) plot.getRenderer();
-		CategoryAxis axis = plot.getDomainAxis();
+		//CategoryAxis axis = plot.getDomainAxis();
+		ValueAxis axis = plot.getRangeAxis();
 		
 		/* -- some efforts to get rid of the outline scale, no success so far -- */
 		plot.setDomainGridlinesVisible(false);
-		plot.setRangeGridlinesVisible(false);		
+		plot.setRangeGridlinesVisible(false);
+		plot.setBackgroundPaint(Color.white);
+		//plot.setBackgroundPaint(null);
 		axis.setAxisLineVisible(false);
 		axis.setTickLabelsVisible(false);
 		axis.setTickMarksVisible(false);
@@ -441,7 +477,7 @@ public class ChartAction extends ActionSupport {
 		renderer.setOutlineStroke(null);
 		/*-----------------------------------------*/
 		
-		axis.setCategoryMargin(0.01); // one percent
+		//axis.setCategoryMargin(0.01); // one percent
 		renderer.setSeriesPaint(0, Color.red); // color for not started
 		renderer.setSeriesPaint(1, Color.pink); // color for started
 		renderer.setSeriesPaint(2, Color.blue); // color for blocked
@@ -449,7 +485,10 @@ public class ChartAction extends ActionSupport {
 		renderer.setSeriesPaint(4, Color.orange); // color for done
 		try {
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
-			ChartUtilities.writeChartAsPNG(out, chart2, 100, 30);
+			ChartUtilities.writeChartAsPNG(out, 
+					chart2, 
+					110, // here we set the width of the total bar in pixels
+					15); // here we set the hight of the bar in pixels
 			result = out.toByteArray();		
 		} catch (IOException e) {
 			System.err.println("Problem occurred creating chart.");
@@ -526,15 +565,12 @@ public class ChartAction extends ActionSupport {
 		
 		/*-experimental for setting the start date */
 		
-		if(this.getStartDate()!=null){
+		if(this.getStartDate()!=null){ // user has provided start date
 			axis.setMinimumDate(this.getStartDate());
-		}else {
-			Date startingDate = calendar.getTime();
-			axis.setMinimumDate(startingDate); // Sets the gantt to show dates starting from today.
+		}else { // start date field is left empty
+//			Date startingDate = calendar.getTime();
+			axis.setMinimumDate(current); // Sets the gantt to show dates starting from today.
 		}
-		
-		//Date startingDate = calendar.getTime();
-		axis.setMinimumDate(current); // Sets the gantt to show dates starting from today.
 
         int endMonth = (month + 3) % 13;
         if(endMonth == 13){
@@ -552,17 +588,13 @@ public class ChartAction extends ActionSupport {
         
         /* --experimental for setting the end date */
         
-        if(this.getEndDate()!=null){
-			axis.setMinimumDate(this.getEndDate()); // Sets the gantt to show dates until the specified ending date.
-		}else {
+        if(this.getEndDate()!=null){ // user has provided an end date
+			axis.setMaximumDate(this.getEndDate()); // Sets the gantt to show dates until the specified ending date.
+		}else { // the end date field is left empty
 			Date endingDate = calendar.getTime(); // Get the new modified date three month from the original
 	        axis.setMaximumDate(endingDate);
 		}
-        
-        Date endingDate = calendar.getTime(); // Get the new modified date three month from the original
-        axis.setMaximumDate(endingDate);
-        
-        
+
         /*----------------------------------------------*/
         
         CategoryItemRenderer renderer = plot.getRenderer();

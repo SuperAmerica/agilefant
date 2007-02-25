@@ -3,8 +3,8 @@ Quick install guide for AgilEFant 2007
 
 What you need:
 ---
-MySQL installation (4.1 preferred)
-  http://dev.mysql.com/downloads/mysql/4.1.html
+MySQL installation (5.0+ preferred)
+  http://dev.mysql.com/downloads/mysql/5.0.html
 Tomcat installation
   http://tomcat.apache.org/download-60.cgi
 AgilEFant 2007 distribution package
@@ -15,21 +15,25 @@ Basic knowledge of running MySQL and Tomcat
 
 1. Create database
 ---
+Login as root and grant privileges to user 'agilefant':
+mysql -u root -e "grant all privileges on agilefant.* to 'agilefant'@'localhost' identified by 'agilefant'"
+
 Login to MySQL using command line tool:
-mysql -u <userName> -p<password>
+mysql -u agilefant -pagilefant
 and create database:
 \. init-db.sql
 \. create-db.sql
+\. insert-users.sql
 These scripts are found in doc/sql directory.
 
 2. Deploy web application
 ---
-Create agilefant directory to your tomcat webbapps directory.
-Copy contents of webapp directory to directory you created.
+Copy supplied AgilEFant war to tomcat webapps directory or build and deploy
+from sources (edit build-user.properties and do "ant deploy-local").
 
 3. Run Tomcat
 ---
 If all goes well, you should be able to access AgilEFant using context 
-path agilefant (http://<yourServer>/agilefant. AgilEFant writes it log 
-to logs/agilefant.log so you might want to check it, in you encounter 
-any problems.
+path agilefant (http://<yourServer>:8080/agilefant. AgilEFant writes a log 
+to logs/agilefant.log under Tomcat home so you might want to check it
+in case you encounter any problems. Also logs/catalina.out can be useful.

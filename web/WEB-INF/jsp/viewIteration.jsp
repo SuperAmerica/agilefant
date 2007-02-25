@@ -43,19 +43,18 @@
 		</div>
 		<div id="subItemContent">
 	</c:if>
-			
 
+	<p>Backlog items
+		<ww:url id="createBacklogItemLink" action="createBacklogItem" includeParams="none">
+			<ww:param name="backlogId" value="${iteration.id}"/>
+		</ww:url>
+		<ww:a href="%{createBacklogItemLink}">Create new &raquo;</ww:a>
+	</p>
 
 	<c:if test="${!empty iteration.backlogItems}"> 
 
 		<aef:currentUser/>
 
-		<p>Backlog items
-			<ww:url id="createBacklogItemLink" action="createBacklogItem" includeParams="none">
-				<ww:param name="backlogId" value="${iteration.id}"/>
-			</ww:url>
-			<ww:a href="%{createBacklogItemLink}">Create new &raquo;</ww:a>
-		</p>
 		<p>
 			<display:table name="iteration.backlogItems" id="row" requestURI="viewIteration.action">
 			<display:column sortable="true" title="Name">

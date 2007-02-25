@@ -2,20 +2,36 @@
 <%@ include file="./inc/_header.jsp" %>
 <aef:menu navi="${contextName}" /> 
 
-<p>Tähän [alkuaika] ja [loppuaika], defaulttina [nykyhetki-viikko] ja [nykyhetki+3kk]</p>
-<p>Gantt-kaavio näyttää asiat vain tältä aikaväliltä</p>
-
-	<ww:form action="#">
+	<ww:form action="viewPortfolio">
 		<ww:hidden name="deliverableId" value="${deliverable.id}"/>
 		<ww:hidden name="productId"/>
 
-Startdate: <ww:textfield size="4" name="startdate"/>  - Enddate: <ww:textfield  size="4" name="enddate"/>
-			<ww:submit value="Select timescale"/> TODO!
+<ww:date name="%{new java.util.Date()}" id="start"/>
+<ww:date name="%{new java.util.Date()}" id="end"/>
+		
+
+<c:if test="${!empty startDate}">
+<ww:date name="${startDate}" id="start"/>
+</c:if>
+
+<c:if test="${!empty endDate}">
+<ww:date name="${startDate}" id="end"/>
+</c:if>
+
+Startdate: 
+<ww:datepicker value="%{#start}" size="10" showstime="%{true}"  format="%{getText('webwork.datepicker.format')}" name="startDate" /> 
+- Enddate: 
+<ww:datepicker value="%{#end}" size="10" showstime="%{true}"  format="%{getText('webwork.datepicker.format')}" name="endDate" /> 
+
+<%-- 
+			<ww:submit value="Select timescale"/>
+			
+--%>			
 		</ww:form>
 
 
 <p>
-        <img src="drawGantChart.action"/>
+        <img src="drawGantChart.action?startDate=${startDate}&endDate=${endDate}"/>
 </p>
 
 <%@ include file="./inc/_footer.jsp" %>

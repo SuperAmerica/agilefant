@@ -13,6 +13,20 @@ import fi.hut.soberit.agilefant.model.TaskStatus;
  */
 public interface TaskDAO extends GenericDAO<Task> {
 	
+	/**
+	 * Get all tasks of the given backlog item, which have one of the given statuses. 
+	 * 
+	 * @param bli backlog item, tasks of which to find
+	 * @param statuses array of accepted statuses
+	 * @return all tasks matching the criteria
+	 */
 	public Collection<Task> getTasksByStatusAndBacklogItem(BacklogItem bli, TaskStatus[] statuses);
+	
+	/**
+	 * Get all tasks, which have one of the given statuses. 
+	 * 
+	 * @param statuses array of accepted statuses
+	 * @return all tasks matching the criteria
+	 */
 	public Collection<Task> getTasksByStatus(TaskStatus[] statuses);
 }

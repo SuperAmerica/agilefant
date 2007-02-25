@@ -16,6 +16,19 @@ public class TaskDAOHibernate extends GenericDAOHibernate<Task> implements TaskD
 		super(Task.class);
 	}
 	
+	/**
+	 * */
+	
+	/**
+	 * Build a HQL "where" - clause, which makes given statuses pass. Fills given id- and value-arrays, with corresponding
+	 * HQL parameter names and values. Starts filling from given index.
+	 * 
+	 * @param allowedStatuses statuses to allow
+	 * @param ids (out) HQL status parameter names
+	 * @param values (out) values for HQL status correspoding ids
+	 * @param startIndex first index of "ids" and "values" to use
+	 * @return where clause 
+	 */
 	private String getStatusClause(TaskStatus[] allowedStatuses, String[] ids, Object[] values, int startIndex) {
 		String query = "";
 		

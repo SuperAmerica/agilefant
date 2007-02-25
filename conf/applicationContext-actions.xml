@@ -13,6 +13,7 @@
 	<bean name="userAction" class="fi.hut.soberit.agilefant.web.UserAction" singleton="false" autowire="byName"/>	
 	<bean name="assignTaskAction" class="fi.hut.soberit.agilefant.web.AssignTaskAction" singleton="false" autowire="byName"/>	
 	<bean name="performWorkAction" class="fi.hut.soberit.agilefant.web.PerformWorkAction" singleton="false" autowire="byName"/>
+	<bean name="bulkPerformWorkAction" class="fi.hut.soberit.agilefant.web.BulkPerformWorkAction" singleton="false" autowire="byName"/>
 	<bean name="chartAction" class="fi.hut.soberit.agilefant.web.ChartAction" singleton="false" autowire="byName"/>	
 	<bean name="showPerformedWorkAction" class="fi.hut.soberit.agilefant.web.ShowPerformedWorkAction" singleton="false" autowire="byName"/>
 	<bean name="iterationGoalAction" class="fi.hut.soberit.agilefant.web.IterationGoalAction" singleton="false" autowire="byName"/>

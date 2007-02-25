@@ -255,6 +255,9 @@
 	<action name="myTasksPerformWork" class="performWorkAction">
 		<result type="redirect">editMyTasks.action</result>
 	</action>
+	<action name="myTasksBulkPerformWork" class="bulkPerformWorkAction">
+		<result type="redirect">editMyTasks.action</result>
+	</action>
 <!-- /My tasks -->
 
 <!-- IterationGoal actions -->

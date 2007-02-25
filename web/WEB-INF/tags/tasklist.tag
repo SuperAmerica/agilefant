@@ -11,7 +11,7 @@
 		<ww:url id="editLink" action="editTask" includeParams="none">
 			<ww:param name="taskId" value="${task.id}"/>
 		</ww:url>
-		<li class="tasklistItem"><ww:a href="%{editLink}" title="${task.name}">${aef:out(task.name)}</ww:a>
+		<li class="tasklistItem"><ww:a href="%{editLink}" title="${task.name}">${aef:subString(task.name, 30)}</ww:a>
 	<ww:form action="storeTask">
 		<ww:hidden name="backlogItemId" value="${task.backlogItem.id}"/>
 		<ww:hidden name="task.name" value="${task.name}"/>

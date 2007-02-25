@@ -16,7 +16,7 @@
 <ww:date name="%{new java.util.Date()}" format="%{getText('webwork.date.format')}" id="now"/>
 
  			
-   			
+ 			   			
 	<ww:form action="myTasksPerformWork">
 
 		<display:table name="${unfinishedTaskList}" id="row" requestURI="myTasks.action">
@@ -47,7 +47,7 @@
 									<p>
 										<ww:url id="workTypeLink" action="listActivityTypes" includeParams="none"/>
 										
-										No work types avalable. <ww:a href="%{workTypeLink}">Add work types</ww:a>			
+										No work types avalable. <ww:a href="%{workTypeLink}">Add those first.</ww:a>			
 									</p>				
 								</c:when>
 				                <c:otherwise>
@@ -73,6 +73,77 @@
 			<display:column sortable="false" title="Work Date" >
 
 			    <ww:datepicker value="%{#now}" size="10" showstime="%{true}"  format="%{getText('webwork.datepicker.format')}" name="event.workDate"/> 
+			    
+			</display:column>
+			
+			<display:column sortable="false" title="Actions">
+					<ww:submit value="Submit"/>
+			</display:column>
+		</display:table>
+						</ww:form>
+ 			
+ 			
+   			
+	<ww:form action="myTasksBulkPerformWork">
+
+		<display:table name="${unfinishedTaskList}" id="row" requestURI="myTasks.action">
+
+			<display:column title="Select">
+						<ww:checkbox id="task_${row.id}"fieldValue="${row.id}" name="events.id"/>
+			</display:column>
+			<display:column sortable="true" title="Name">
+				<ww:url id="editLink" action="editTask" includeParams="none">
+					<ww:param name="taskId" value="${row.id}"/>
+				</ww:url>
+				<ww:a title="${row.name}" href="%{editLink}">${aef:out(row.name)}</ww:a>
+			</display:column>
+			<display:column sortable="false" title="Effort done" sortProperty="performedEffort.time">
+							<ww:hidden name="taskId" value="${row.id}"/>
+								<ww:textfield name="events.effort" size="2"/>			
+
+				&nbsp;Total: ${row.performedEffort}
+
+			</display:column>
+			<display:column sortable="false" title="Effort left" sortProperty="effortEstimate.time">
+					<ww:textfield name="events.newEstimate" value="${row.effortEstimate}"  size="2"/>			
+				&nbsp;Total: ${row.effortEstimate}
+			</display:column>
+			
+			<display:column sortable="false" title="Work type">
+						<aef:allowedWorkTypes backlogItem="${row.backlogItem}" id="workTypes">
+							<c:choose>
+									
+								<c:when test="${empty workTypes}">
+									<p>
+										<ww:url id="workTypeLink" action="listActivityTypes" includeParams="none"/>
+										
+										No work types avalable. <ww:a href="%{workTypeLink}">Add work types</ww:a>			
+									</p>				
+								</c:when>
+				                <c:otherwise>
+                	
+									<select name="events.workType.id">
+										<c:forEach items="${workTypes}" var="workType">
+											<option value="${workType.id}" title="${workType.name}">${aef:out(workType.name)}</option>
+										</c:forEach>				
+									</select>
+	
+				                </c:otherwise>
+							</c:choose>
+
+						</aef:allowedWorkTypes>
+			</display:column>
+<%-- 
+			<display:column sortable="false" title="Status" >
+				<ww:select name="task.status" value="#attr.row.status.name" list="@fi.hut.soberit.agilefant.model.TaskStatus@values()" listKey="name" listValue="getText('task.status.' + name())"/>			
+			</display:column>
+ --%>			
+ 			<display:column sortable="false" title="Comment" >
+				<ww:textfield name="events.comment" size="15"/>			
+			</display:column>
+			<display:column sortable="false" title="Work Date" >
+
+			    <ww:datepicker value="%{#now}" size="10" showstime="%{true}"  format="%{getText('webwork.datepicker.format')}" name="events.workDate"/> 
 			    
 			</display:column>
 			

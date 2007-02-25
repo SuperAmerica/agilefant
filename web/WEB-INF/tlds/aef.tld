@@ -156,6 +156,25 @@
 	
 	
 	<tag>
+		<name>taskStatusList</name>
+		<tag-class>fi.hut.soberit.agilefant.web.tag.TaskStatusListTag</tag-class>
+		<body-content>JSP</body-content>
+		<description>
+			Stores tasks by status
+	    </description>
+	    <attribute>
+	    	<name>id</name>
+	    	<required>true</required>	    
+	    </attribute>
+	    <attribute>
+	    	<name>backlogItemId</name>
+	    	<required>true</required>
+	    	<rtexprvalue>true</rtexprvalue>
+	    </attribute>
+	</tag>
+	
+	
+	<tag>
 		<name>deliverableList</name>
 		<tag-class>fi.hut.soberit.agilefant.web.tag.DeliverableListTag</tag-class>
 		<body-content>JSP</body-content>

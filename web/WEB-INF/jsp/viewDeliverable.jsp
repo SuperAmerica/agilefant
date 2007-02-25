@@ -60,7 +60,7 @@
 
 <c:if test="${!empty deliverable}">
 
-<h2>Iteration</h2>
+<h2>Deliverable</h2>
 			
 		<table class="formTable">
 		<tr>

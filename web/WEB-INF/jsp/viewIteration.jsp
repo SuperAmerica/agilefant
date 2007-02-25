@@ -68,17 +68,11 @@
 
 							<c:set var="divId" value="${divId + 1}" scope="page"/>
 							
-							<a href="javascript:toggleDiv(${divId});" title="Click to expand">${fn:length(row.tasks)} tasks, <aef:percentDone backlogItemId="${row.id}"/> % done</a>
-
-							<table cellspacing="0" cellpadding="0" border="0" class="chartTable">
-							<tr>
-							<td height="5" width="10%" class="notStarted"><img height="5" src="static/img/clear.gif"></td>
-							<td title="asdasdf" height="5" width="40%"  class="started"><img height="5" src="static/img/clear.gif"></td>
-							<td  height="5" width="10%" class="implemented"><img height="5" src="static/img/clear.gif"></td>
-							<td  height="5" width="20%" class="done"><img height="5" src="static/img/clear.gif"></td>
-							<td  height="5" width="20%" class="blocked"><img height="5" src="static/img/clear.gif"></td>
-							</tr>
-							</table>
+							<a href="javascript:toggleDiv(${divId});" title="Click to expand">
+								${fn:length(row.tasks)} tasks, <aef:percentDone backlogItemId="${row.id}"/> % done<br/>
+   								<aef:taskStatusList backlogItemId="${row.id}" id="tsl"/>							   
+ 	<img src="drawExtendedBarChart.action?notStarted=${tsl['notStarted']}&started=${tsl['started']}&blocked=${tsl['started']}&implemented=${tsl['implemented']}&done=${tsl['done']}"/> 
+							</a>
 							<aef:tasklist tasks="${row.tasks}"  contextViewName="viewIteration"  contextObjectId="${iteration.id}" divId="${divId}"/>
 
 							

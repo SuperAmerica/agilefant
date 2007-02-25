@@ -11,11 +11,13 @@
 	<h2>Tasks assigned to me</h2>
    	<p>
    		<aef:currentUser/>   		
-   		<aef:unfinishedTaskList userId="${currentUser.id}"/>   		
+   		<aef:hourReportTaskList id="unfinishedTasks" userId="${currentUser.id}"/>   		
    			
 <ww:date name="%{new java.util.Date()}" format="%{getText('webwork.date.format')}" id="now"/>
  			   			
 	<ww:form action="myTasksPerformWork">
+
+<c:forEach items="${unfinishedTasks}" var="unfinishedTaskList">
 
 		<display:table name="${unfinishedTaskList}" id="row" requestURI="myTasks.action">
 
@@ -78,7 +80,11 @@
 					<ww:submit value="Submit"/>
 			</display:column>
 		</display:table>
+</c:forEach> 			   			
+
+
 						</ww:form>
+
  			
  			
    			

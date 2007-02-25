@@ -156,6 +156,25 @@
 	
 	
 	<tag>
+		<name>hourReportTaskList</name>
+		<tag-class>fi.hut.soberit.agilefant.web.tag.HourReportTaskListTag</tag-class>
+		<body-content>JSP</body-content>
+		<description>
+			Kludge to get tasks for hour report form
+	    </description>
+	    <attribute>
+	    	<name>id</name>
+	    	<required>true</required>	    
+	    </attribute>
+	    <attribute>
+	    	<name>userId</name>
+	    	<required>true</required>	    
+	    	<rtexprvalue>true</rtexprvalue>	    	
+	    </attribute>
+	</tag>
+	
+	
+	<tag>
 		<name>taskStatusList</name>
 		<tag-class>fi.hut.soberit.agilefant.web.tag.TaskStatusListTag</tag-class>
 		<body-content>JSP</body-content>

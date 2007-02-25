@@ -469,6 +469,7 @@ public class ChartAction extends ActionSupport {
 		plot.setDomainGridlinesVisible(false);
 		plot.setRangeGridlinesVisible(false);
 		plot.setBackgroundPaint(Color.white);
+		chart2.setBackgroundPaint(Color.white); // Sets the backgroundcolor for the chart
 		//plot.setBackgroundPaint(null);
 		axis.setAxisLineVisible(false);
 		axis.setTickLabelsVisible(false);

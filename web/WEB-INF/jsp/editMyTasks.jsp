@@ -14,8 +14,6 @@
    		<aef:unfinishedTaskList userId="${currentUser.id}"/>   		
    			
 <ww:date name="%{new java.util.Date()}" format="%{getText('webwork.date.format')}" id="now"/>
-
- 			
  			   			
 	<ww:form action="myTasksPerformWork">
 
@@ -25,7 +23,7 @@
 				<ww:url id="editLink" action="editTask" includeParams="none">
 					<ww:param name="taskId" value="${row.id}"/>
 				</ww:url>
-				<ww:a title="${row.name}" href="%{editLink}">${aef:out(row.name)}</ww:a>
+				<ww:a title="${row.name}" href="%{editLink}&contextViewName=editMyTasks">${aef:out(row.name)}</ww:a>
 			</display:column>
 			<display:column sortable="false" title="Effort done" sortProperty="performedEffort.time">
 							<ww:hidden name="taskId" value="${row.id}"/>
@@ -95,7 +93,7 @@
 				<ww:url id="editLink" action="editTask" includeParams="none">
 					<ww:param name="taskId" value="${row.id}"/>
 				</ww:url>
-				<ww:a title="${row.name}" href="%{editLink}">${aef:out(row.name)}</ww:a>
+				<ww:a title="${row.name}" href="%{editLink}&contextViewName=editMyTasks">${aef:out(row.name)}</ww:a>
 			</display:column>
 			<display:column sortable="false" title="Effort done" sortProperty="performedEffort.time">
 							<ww:hidden name="taskId" value="${row.id}"/>

@@ -6,10 +6,9 @@
 <c:set var="divId" value="1336" scope="page"/>
 	
 	<ww:url id="editMyTasksLink" action="editMyTasks" includeParams="none">
-		<ww:param name="contextViewName" value="editMyTasks"/>	
 	</ww:url>
 	
-	View | <a href="editMyTasks.action?contextViewName=editMyTasks">Edit</a>
+	View | <ww:a href="%{editMyTasksLink}">Edit</ww:a>
 
   		<aef:userList/>
    		<aef:currentUser/>   		
@@ -46,7 +45,7 @@
 				<ww:url id="editLink" action="editTask" includeParams="none">
 					<ww:param name="taskId" value="${row.id}"/>
 				</ww:url>
-				<ww:a title="${row.name}" href="%{editLink}">${aef:outTitle(row.name)}</ww:a>
+				<ww:a title="${row.name}" href="%{editLink}&contextViewName=myTasks">${aef:outTitle(row.name)}</ww:a>
 			</display:column>
 
 			<display:column sortable="true" title="Backlog item">
@@ -54,10 +53,10 @@
 			</display:column>
 
 			<display:column sortable="true" title="Priority">
-				${row.priority}
+				<ww:text name="task.priority.${row.priority}"/>
 			</display:column>
 			<display:column sortable="true" title="Status">
-				${row.status}
+				<ww:text name="task.status.${row.status}"/>
 			</display:column>
 				
 				
@@ -88,7 +87,7 @@
 				<ww:url id="editLink" action="editBacklogItem" includeParams="none">
 					<ww:param name="backlogItemId" value="${row.id}"/>
 				</ww:url>
-				<ww:a title="${row.name}" href="%{editLink}">${aef:outTitle(row.name)}</ww:a>
+				<ww:a title="${row.name}" href="%{editLink}&contextViewName=myTasks">${aef:outTitle(row.name)}</ww:a>
 			</display:column>
 			<display:column sortable="true" title="Backlog">
 				${aef:html(row.parent.name)}
@@ -100,7 +99,7 @@
 
 							<c:set var="divId" value="${divId + 1}" scope="page"/>
 							
-							<a href="javascript:toggleDiv(${divId});" title="Click to expand">${fn:length(row.tasks)} tasks, <aef:percentDone backlogItemId="${row.id}"/> % complete</a>
+							<a href="javascript:toggleDiv(${divId});" title="Click to expand">${fn:length(row.tasks)} tasks, <aef:percentDone backlogItemId="${row.id}"/> % done</a>
 
 		<table cellspacing="0" cellpadding="0" border="0" class="chartTable">
 		<tr>
@@ -112,7 +111,7 @@
 		</tr>
 		</table>
 		
-		<aef:tasklist tasks="${row.tasks}" divId="${divId}"/>
+		<aef:tasklist tasks="${row.tasks}" contextViewName="myTasks" divId="${divId}"/>
 
 				    </c:if>
 
@@ -122,10 +121,10 @@
 					${aef:html(row.assignee.fullName)}
 				</display:column>
 				<display:column sortable="false" title="Priority" >
-					${row.priority}
+				<ww:text name="backlogItem.priority.${row.priority}"/>
 				</display:column>
 				<display:column sortable="true" title="Status">
-					${row.status}
+				<ww:text name="backlogItem.status.${row.status}"/>
 				</display:column>
 				
 				<display:column sortable="true" title="Iteration Goal">
@@ -156,7 +155,7 @@
 				<ww:url id="editLink" action="editBacklogItem" includeParams="none">
 					<ww:param name="backlogItemId" value="${row.id}"/>
 				</ww:url>
-				<ww:a title="${row.name}" href="%{editLink}">${aef:outTitle(row.name)}</ww:a>
+				<ww:a title="${row.name}" href="%{editLink}&contextViewName=myTasks">${aef:outTitle(row.name)}</ww:a>
 			</display:column>
 			<display:column sortable="true" title="Backlog">
 				${aef:html(row.parent.name)}
@@ -168,7 +167,7 @@
 							<c:set var="divId" value="${divId + 1}" scope="page"/>
 							
 							<a href="javascript:toggleDiv(${divId});" title="Click to expand">
-								${fn:length(row.tasks)} tasks, <aef:percentDone backlogItemId="${row.id}"/> % complete
+								${fn:length(row.tasks)} tasks, <aef:percentDone backlogItemId="${row.id}"/> % done
 							</a>
 
 		<table cellspacing="0" cellpadding="0" border="0" class="chartTable">
@@ -181,7 +180,7 @@
 		</tr>
 		</table>
 
-		<aef:tasklist tasks="${row.tasks}" divId="${divId}"/>
+		<aef:tasklist tasks="${row.tasks}" contextViewName="myTasks" divId="${divId}"/>
 
 
 				    </c:if>
@@ -192,10 +191,10 @@
 					${aef:html(row.assignee.fullName)}
 				</display:column>
 				<display:column sortable="false" title="Priority" >
-					${row.priority}
+				<ww:text name="backlogItem.priority.${row.priority}"/>
 				</display:column>
 				<display:column sortable="true" title="Status">
-					${row.status}
+				<ww:text name="backlogItem.status.${row.status}"/>
 				</display:column>
 				
 				<display:column sortable="true" title="Iteration Goal">
@@ -213,17 +212,17 @@
 				<ww:url id="editLink" action="editTask" includeParams="none">
 					<ww:param name="taskId" value="${row.id}"/>
 				</ww:url>
-				<ww:a title="${row.name}" href="%{editLink}">${aef:outTitle(row.name)}</ww:a>
+				<ww:a title="${row.name}" href="%{editLink}&contextViewName=myTasks">${aef:outTitle(row.name)}</ww:a>
 			</display:column>
 			<display:column sortable="true" title="Backlog item">
 									${aef:html(row.backlogItem.name)}			
 			</display:column>
 
 			<display:column sortable="true" title="Priority">
-				${row.priority}
+				<ww:text name="task.priority.${row.priority}"/>
 			</display:column>
 				<display:column sortable="true" title="Status">
-					${row.status}
+				<ww:text name="task.status.${row.status}"/>
 				</display:column>
 			<display:column sortable="true" title="Effort left" sortProperty="effortEstimate.time">
 				${row.effortEstimate}

@@ -44,7 +44,7 @@
 					<ww:url id="viewLink" action="viewDeliverable" includeParams="none">
 						<ww:param name="deliverableId" value="${deliverable.id}"/>												
 					</ww:url>
-						<ww:a href="%{viewLink}">View</ww:a> | Edit
+						<ww:a href="%{viewLink}&contextViewName=editDeliverable&contextObjectId=${deliverable.id}">View</ww:a> | Edit
 
 					<aef:productList/>
 		<ww:form action="editDeliverable">
@@ -67,7 +67,7 @@
 			</p>			
 		</ww:form>
 
-
+<h2>Deliverable</h2>
 
 	<ww:form action="storeDeliverable">
 		<ww:hidden name="deliverableId" value="${deliverable.id}"/>
@@ -120,7 +120,7 @@
 		<td></td>
 		<td>
 			<ww:submit value="Store"/>
-    		<ww:submit name="action:editProduct" value="Cancel"/>
+    		<ww:submit name="action:popContext" value="Cancel"/>
 			
 			</td>	
 		</tr>
@@ -147,7 +147,7 @@
  				<ww:url id="createLink" action="createIteration" includeParams="none">
 					<ww:param name="deliverableId" value="${deliverable.id}"/>
 				</ww:url>
-				<ww:a href="%{createLink}">Create new &raquo;</ww:a>
+				<ww:a href="%{createLink}&contextViewName=editDeliverable&contextObjectId=${deliverable.id}">Create new &raquo;</ww:a>
 			</p>
 
 			<display:table class="listTable" name="deliverable.iterations" id="row" requestURI="editDeliverable.action">
@@ -176,7 +176,7 @@
 						<ww:param name="deliverableId" value="${deliverable.id}"/>						
 						<ww:param name="iterationId" value="${row.id}"/>
 					</ww:url>
-					<ww:a href="%{editLink}">Edit</ww:a>|<ww:a href="%{deleteLink}">Delete</ww:a>
+					<ww:a href="%{editLink}&contextViewName=editDeliverable&contextObjectId=${deliverable.id}">Edit</ww:a>|<ww:a href="%{deleteLink}&contextViewName=editDeliverable&contextObjectId=${deliverable.id}">Delete</ww:a>
 				</display:column>
 			</display:table>
 	
@@ -184,7 +184,7 @@
 			<ww:url id="createBacklogItemLink" action="createBacklogItem" includeParams="none">
 				<ww:param name="backlogId" value="${deliverable.id}"/>
 			</ww:url>
-			<ww:a href="%{createBacklogItemLink}">Create new &raquo;</ww:a>		
+			<ww:a href="%{createBacklogItemLink}&contextViewName=editDeliverable&contextObjectId=${deliverable.id}">Create new &raquo;</ww:a>		
 		</p>
 		</c:if>
 	<c:if test="${!empty deliverable.backlogItems}">
@@ -212,7 +212,7 @@
 				<ww:url id="deleteLink" action="deleteBacklogItem" includeParams="none">
 					<ww:param name="backlogItemId" value="${row.id}"/>
 				</ww:url>
-				<ww:a href="%{editLink}">Edit</ww:a>|<ww:a href="%{deleteLink}">Delete</ww:a>
+				<ww:a href="%{editLink}&contextViewName=editDeliverable&contextObjectId=${deliverable.id}">Edit</ww:a>|<ww:a href="%{deleteLink}&contextViewName=editDeliverable&contextObjectId=${deliverable.id}">Delete</ww:a>
 			</display:column>
 		</display:table>
 	</c:if>

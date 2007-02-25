@@ -26,6 +26,7 @@
 
 </c:if>
 
+<h2>Iteration</h2>
 
 		
 		<table class="formTable">
@@ -65,7 +66,7 @@
 		<td></td>
 		<td>
 			<ww:submit value="Store"/>
-    		<ww:submit name="action:contextView" value="Cancel"/>
+    		<ww:submit name="action:popContext" value="Cancel"/>
 			
 			</td>	
 		</tr>
@@ -86,7 +87,7 @@
 			<ww:url id="createBacklogItemLink" action="createBacklogItem" includeParams="none">
 				<ww:param name="backlogId" value="${iteration.id}"/>
 			</ww:url>
-			<ww:a href="%{createBacklogItemLink}">Create new &raquo;</ww:a>		
+			<ww:a href="%{createBacklogItemLink}&contextViewName=editIteration&contextObjectId=${iteration.id}">Create new &raquo;</ww:a>		
 		</p>
 </c:if>
 
@@ -115,25 +116,17 @@
 							</tr>
 							</table>
 							
-							<aef:tasklist tasks="${row.tasks}" divId="${divId}"/>
+							<aef:tasklist tasks="${row.tasks}"   contextViewName="editIteration"  contextObjectId="${iteration.id}" divId="${divId}"/>
 							
 							
 							</c:if>
 
 				</display:column>
-<%-- 
-				<display:column sortable="true" title="Effort estimate" sortProperty="remainingEffortEstimate.time">
-					${row.remainingEffortEstimate}
-				</display:column>
-				<display:column sortable="true" title="Effort in tasks" sortProperty="taskEffortLeft.time">
-					${row.taskEffortLeft}
-				</display:column>
---%>
 				<display:column sortable="false" title="Assignee" >
 					${aef:out(row.assignee.fullName)}
 				</display:column>
 				<display:column sortable="false" title="Priority" >
-					${row.priority}
+				<ww:text name="backlogItem.priority.${row.priority}"/>
 				</display:column>
 				<display:column sortable="true" title="Iteration Goal">
 					${aef:out(row.iterationGoal.name)}
@@ -160,7 +153,7 @@
                     <ww:url id="deleteLink" action="deleteBacklogItem" includeParams="none"> 
                             <ww:param name="backlogItemId" value="${row.id}"/> 
                     </ww:url> 
-                    <ww:a href="%{editLink}">Edit</ww:a>|<ww:a href="%{deleteLink}">Delete</ww:a> 					
+                    <ww:a href="%{editLink}&contextViewName=editIteration&contextObjectId=${iteration.id}">Edit</ww:a>|<ww:a href="%{deleteLink}&contextViewName=editIteration&contextObjectId=${iteration.id}">Delete</ww:a> 					
 				</display:column>
 			  <display:footer>
 			  	<tr>
@@ -188,7 +181,7 @@
 			<ww:url id="createIterationGoalLink" action="createIterationGoal" includeParams="none">
 				<ww:param name="iterationId" value="${iteration.id}"/>
 			</ww:url>
-			<ww:a href="%{createIterationGoalLink}">Create new &raquo;</ww:a>		
+			<ww:a href="%{createIterationGoalLink}&contextViewName=editIteration&contextObjectId=${iteration.id}">Create new &raquo;</ww:a>		
 		</p>
 </c:if>
 	
@@ -213,7 +206,7 @@
 						<ww:param name="iterationGoalId" value="${row.id}"/>
 						<ww:param name="iterationId" value="${iteration.id}"/>
 					</ww:url>
-					<ww:a href="%{editLink}">Edit</ww:a>|<ww:a href="%{deleteLink}">Delete</ww:a>
+					<ww:a href="%{editLink}&contextViewName=editIteration&contextObjectId=${iteration.id}">Edit</ww:a>|<ww:a href="%{deleteLink}">Delete</ww:a>
 				</display:column>
 			</display:table>
 

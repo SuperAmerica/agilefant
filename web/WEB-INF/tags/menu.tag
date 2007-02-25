@@ -60,7 +60,7 @@
 		<c:when test="${aef:isDeliverable(page)}">
 			&gt;
 			<ww:url id="delivLink" action="editDeliverable" includeParams="none">
-				<ww:param name="deliverableId" value="${page.id}"/>
+<ww:param name="deliverableId" value="${page.id}"/>
 			</ww:url>
 			<ww:a title="Deliverable" href="%{delivLink}">${page.name}</ww:a>		
 		</c:when >
@@ -121,11 +121,11 @@
 	<div id="menuwrap${navi}">
 	<div id="submenuwrap${subnavi}">
 <ul id="menu">
-  <li id="nav1"><a href="contextView.action?contextName=myTasks">Heartbeat</a></li>
-  <li id="nav2"><a href="contextView.action?contextName=iteration&contextObjectId=${previousIterationId}">Iteration</a></li>
-  <li id="nav3"><a href="contextView.action?contextName=project&contextObjectId=${previousDeliverableId}">Project</a></li>
-  <li id="nav4"><a href="contextView.action?contextName=product">Product</a></li>
-  <li id="nav5"><a href="contextView.action?contextName=portfolio">Development portfolio</a></li>  
+  <li id="nav1"><a href="contextView.action?contextName=myTasks&resetContextView=true">Heartbeat</a></li>
+  <li id="nav2"><a href="contextView.action?contextName=iteration&contextObjectId=${previousIterationId}&resetContextView=true">Iteration</a></li>
+  <li id="nav3"><a href="contextView.action?contextName=project&contextObjectId=${previousDeliverableId}&resetContextView=true">Project</a></li>
+  <li id="nav4"><a href="contextView.action?contextName=product&resetContextView=true">Product</a></li>
+  <li id="nav5"><a href="contextView.action?contextName=portfolio&resetContextView=true">Development portfolio</a></li>  
 </ul>
 </div>
 </div>

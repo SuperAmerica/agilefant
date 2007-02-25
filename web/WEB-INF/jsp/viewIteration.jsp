@@ -23,11 +23,12 @@
 			<ww:url id="editIterationLink" action="editIteration" includeParams="none">
 				<ww:param name="iterationId" value="${iteration.id}"/>
 			</ww:url>
-			View | <ww:a href="%{editIterationLink}">Edit </ww:a>		
+			View | <ww:a href="%{editIterationLink}&contextViewName=viewIteration&contextObjectId=${iteration.id}">Edit </ww:a>		
 
 		</p>
 <aef:iterationmenu iterationId="${iteration.id}"/>
 			
+<h2>Iteration</h2>
 
 			
 <c:if test="${!empty iteration}">
@@ -48,7 +49,7 @@
 		<ww:url id="createBacklogItemLink" action="createBacklogItem" includeParams="none">
 			<ww:param name="backlogId" value="${iteration.id}"/>
 		</ww:url>
-		<ww:a href="%{createBacklogItemLink}">Create new &raquo;</ww:a>
+		<ww:a href="%{createBacklogItemLink}&contextViewName=viewIteration&contextObjectId=${iteration.id}">Create new &raquo;</ww:a>
 	</p>
 
 	<c:if test="${!empty iteration.backlogItems}"> 
@@ -67,7 +68,7 @@
 
 							<c:set var="divId" value="${divId + 1}" scope="page"/>
 							
-							<a href="javascript:toggleDiv(${divId});" title="Click to expand">${fn:length(row.tasks)} tasks, <aef:percentDone backlogItemId="${row.id}"/> % complete</a>
+							<a href="javascript:toggleDiv(${divId});" title="Click to expand">${fn:length(row.tasks)} tasks, <aef:percentDone backlogItemId="${row.id}"/> % done</a>
 
 							<table cellspacing="0" cellpadding="0" border="0" class="chartTable">
 							<tr>
@@ -78,7 +79,7 @@
 							<td  height="5" width="20%" class="blocked"><img height="5" src="static/img/clear.gif"></td>
 							</tr>
 							</table>
-							<aef:tasklist tasks="${row.tasks}" divId="${divId}"/>
+							<aef:tasklist tasks="${row.tasks}"  contextViewName="viewIteration"  contextObjectId="${iteration.id}" divId="${divId}"/>
 
 							
 
@@ -90,7 +91,8 @@
 					${aef:out(row.assignee.fullName)}
 				</display:column>
 				<display:column sortable="false" title="Priority" >
-					${row.priority}
+				<ww:text name="backlogItem.priority.${row.priority}"/>
+
 				</display:column>
 				<display:column sortable="true" title="Iteration Goal">
 					${aef:out(row.iterationGoal.name)}
@@ -117,7 +119,7 @@
                     <ww:url id="deleteLink" action="deleteBacklogItem" includeParams="none"> 
                             <ww:param name="backlogItemId" value="${row.id}"/> 
                     </ww:url> 
-                    <ww:a href="%{editLink}&contextViewName=iteration&contextObjectId=${iteration.id}">Edit</ww:a>|<ww:a href="%{deleteLink}">Delete</ww:a> 					
+                    <ww:a href="%{editLink}&contextViewName=viewIteration&contextObjectId=${iteration.id}">Edit</ww:a>|<ww:a href="%{deleteLink}&contextViewName=viewIteration&contextObjectId=${iteration.id}">Delete</ww:a> 					
 					
 				</display:column>
 			  <display:footer>
@@ -158,7 +160,7 @@
 					<ww:url id="editLink" action="editIterationGoal" includeParams="none">
 						<ww:param name="iterationGoalId" value="${row.id}"/>
 					</ww:url>
-					<ww:a href="%{editLink}">Edit</ww:a>
+					<ww:a href="%{editLink}&contextViewName=viewIteration&contextObjectId=${iteration.id}">Edit</ww:a>
 				</display:column>
 			</display:table>
 		</p>

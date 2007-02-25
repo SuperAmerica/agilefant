@@ -28,7 +28,7 @@
 		<tr>
 		<td></td>
 		<td></td>
-		<td><ww:submit value="Store"/><ww:submit value="Cancel" action="editIteration"/></td>	
+		<td><ww:submit value="Store"/><ww:submit value="Cancel" action="popContext"/></td>	
 		</tr>
 		</table>
 

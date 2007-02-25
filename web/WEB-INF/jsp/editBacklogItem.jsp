@@ -80,7 +80,7 @@ example 3h) </td>
 		<td></td>
 		<td>
 		<ww:submit value="Store"/>
-    		<ww:submit name="action:contextView" value="Cancel"/>
+    		<ww:submit name="action:popContext" value="Cancel"/>
 				
 			
 			</td>	
@@ -208,7 +208,7 @@ example 3h) </td>
 			<ww:url id="createLink" action="createTask" includeParams="none">
 				<ww:param name="backlogItemId" value="${backlogItemId}"/>
 			</ww:url>
-			<ww:a href="%{createLink}">Create new &raquo;</ww:a>
+			<ww:a href="%{createLink}&contextViewName=editBacklogItem&contextObjectId=${backlogItemId}">Create new &raquo;</ww:a>
 		</p>
 		<p>
 			<display:table class="listTable" name="backlogItem.tasks" id="row" requestURI="editBacklogItem.action">
@@ -240,7 +240,7 @@ example 3h) </td>
 					<ww:url id="deleteLink" action="deleteTask" includeParams="none">
 						<ww:param name="taskId" value="${row.id}"/>
 					</ww:url>
-					<ww:a href="%{editLink}">Edit</ww:a>|<ww:a href="%{deleteLink}" onclick="return confirmDeleteTask()">Delete</ww:a>
+					<ww:a href="%{editLink}&contextViewName=editBacklogItem&contextObjectId=${backlogItemId}">Edit</ww:a>|<ww:a href="%{deleteLink}&contextViewName=editBacklogItem&contextObjectId=${backlogItemId}" onclick="return confirmDeleteTask()">Delete</ww:a>
 				</display:column>
 			</display:table>
 		</p>

@@ -50,7 +50,7 @@
  				<ww:url id="createLink" action="createDeliverable" includeParams="none">
 					<ww:param name="productId" value="${product.id}"/>
 				</ww:url>
-				<ww:a href="%{createLink}">Create new &raquo;</ww:a>
+				<ww:a href="%{createLink}&contextViewName=editProduct&contextObjectId=${product.id}">Create new &raquo;</ww:a>
 			</p>
 
 			<display:table class="listTable" name="product.deliverables" id="row" requestURI="editProduct.action">
@@ -75,7 +75,7 @@
 						<ww:param name="productId" value="${product.id}"/>
 						<ww:param name="deliverableId" value="${row.id}"/>						
 					</ww:url>
-					<ww:a href="%{editLink}">Edit</ww:a>|<ww:a href="%{deleteLink}">Delete</ww:a>
+					<ww:a href="%{editLink}&contextViewName=editProduct&contextObjectId=${product.id}">Edit</ww:a>|<ww:a href="%{deleteLink}&contextViewName=editProduct&contextObjectId=${product.id}">Delete</ww:a>
 				</display:column>
 			</display:table>
 
@@ -84,7 +84,7 @@
 			<ww:url id="createBacklogItemLink" action="createBacklogItem" includeParams="none">
 				<ww:param name="backlogId" value="${product.id}"/>
 			</ww:url>
-			<ww:a href="%{createBacklogItemLink}">Create new &raquo;</ww:a>		
+			<ww:a href="%{createBacklogItemLink}&contextViewName=editProduct&contextObjectId=${product.id}">Create new &raquo;</ww:a>		
 		</p>
 		</c:if>		
 	</ww:form>
@@ -116,7 +116,7 @@
 					<ww:url id="deleteLink" action="deleteBacklogItem" includeParams="none">
 						<ww:param name="backlogItemId" value="${row.id}"/>
 					</ww:url>
-					<ww:a href="%{editLink}">Edit</ww:a>|<ww:a href="%{deleteLink}">Delete</ww:a>
+					<ww:a href="%{editLink}&contextViewName=editProduct&contextObjectId=${product.id}">Edit</ww:a>|<ww:a href="%{deleteLink}&contextViewName=editProduct&contextObjectId=${product.id}">Delete</ww:a>
 				</display:column>
 			</display:table>
 	</c:if>

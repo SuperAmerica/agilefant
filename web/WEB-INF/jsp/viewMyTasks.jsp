@@ -3,92 +3,245 @@
 <aef:menu navi="1" /> 
 	<ww:actionerror/>
 	<ww:actionmessage/>
+<c:set var="divId" value="1336" scope="page"/>
 	
-	<ww:url id="showMyTasksLink" action="myTasks" includeParams="none"/>
+	<ww:url id="editMyTasksLink" action="editMyTasks" includeParams="none">
+	</ww:url>
 	
-	<ww:a href="%{showMyTasksLink}">View</ww:a> | Edit
-	
-	<h2>Tasks assigned to me</h2>
-   	
-   		<aef:currentUser/>   		
-   		<aef:hourReportTaskList id="unfinishedTasks" userId="${currentUser.id}"/>   		
-   			
-<ww:date name="%{new java.util.Date()}" format="%{getText('webwork.date.format')}" id="now"/>
- 			   			
+	View | <ww:a href="%{editMyTasksLink}">Edit</ww:a>
 
-<c:forEach items="${unfinishedTasks}" var="unfinishedTaskList">
-<p>
-	<ww:form action="myTasksPerformWork">
-		<display:table name="${unfinishedTaskList}" id="row" requestURI="myTasks.action">
+  		<aef:userList/>
+   		<aef:currentUser/>   		
+			<c:if test="${empty user}">
+				<c:set var="user" value="${currentUser}" scope="page"/>
+			</c:if>
+			
+   		<aef:unfinishedTaskList userId="${user.id}"/>
+   		<aef:unfinishedWatchedTasksList userId="${user.id}"/>
+
+		<p>
+			<ww:form action="myTasksSwitchUser">
+				<ww:select name="userId" list="#attr.userList" listKey="id" listValue="fullName" value="${user.id}" />
+				<ww:submit value="View items for user"/>
+			</ww:form>
+		</p>
+
+
+<table><tr><td>
+
+			<div id="subItems">
+		<div id="subItemHeader">
+			Assigned items
+		</div>
+		<div id="subItemContent">
+
+
+	<p>Assigned tasks</p>
+
+		<display:table class="listTable"  name="${unfinishedTaskList}" id="row" requestURI="myTasks.action">
 
 			<display:column sortable="true" title="Name">
 				<ww:url id="editLink" action="editTask" includeParams="none">
 					<ww:param name="taskId" value="${row.id}"/>
 				</ww:url>
-				<ww:a title="${row.name}" href="%{editLink}&contextViewName=editMyTasks">${aef:out(row.name)}</ww:a>
+				<ww:a title="${row.name}" href="%{editLink}&contextViewName=myTasks">${aef:outTitle(row.name)}</ww:a>
 			</display:column>
-			<display:column sortable="false" title="Effort done" sortProperty="performedEffort.time">
-							<ww:hidden name="taskId" value="${row.id}"/>
-								<ww:textfield name="event.effort" size="2"/>			
 
-				&nbsp;Total: ${row.performedEffort}
+			<display:column sortable="true" title="Backlog item">
+									${aef:html(row.backlogItem.name)}			
+			</display:column>
+
+			<display:column sortable="true" title="Priority">
+				<ww:text name="task.priority.${row.priority}"/>
+			</display:column>
+			<display:column sortable="true" title="Status">
+				<ww:text name="task.status.${row.status}"/>
+			</display:column>
+				
+				
+			<display:column sortable="true" title="Effort left" sortProperty="effortEstimate.time">
+				${row.effortEstimate}
+			</display:column>
+			<display:column sortable="true" title="Work performed" sortProperty="performedEffort.time">
+				${row.performedEffort}
 
 			</display:column>
-			<display:column sortable="false" title="Effort left" sortProperty="effortEstimate.time">
-					<ww:textfield name="event.newEstimate" value="${row.effortEstimate}"  size="2"/>			
-				&nbsp;Total: ${row.effortEstimate}
+			<display:column sortable="true" title="Created" >
+				<ww:date name="#attr.row.created" />
 			</display:column>
-			
-			<display:column sortable="false" title="Work type">
-						<aef:allowedWorkTypes backlogItem="${row.backlogItem}" id="workTypes">
-							<c:choose>
-									
-								<c:when test="${empty workTypes}">
-									<p>
-										<ww:url id="workTypeLink" action="listActivityTypes" includeParams="none"/>
-										
-										No work types avalable. <ww:a href="%{workTypeLink}">Add those first.</ww:a>			
-									</p>				
-								</c:when>
-				                <c:otherwise>
-                	
-									<select name="event.workType.id">
-										<c:forEach items="${workTypes}" var="workType">
-											<option value="${workType.id}" title="${workType.name}">${aef:out(workType.name)}</option>
-										</c:forEach>				
-									</select>
-	
-				                </c:otherwise>
-							</c:choose>
-
-						</aef:allowedWorkTypes>
+			<display:column sortable="true" title="Assignee">
+				${aef:html(row.assignee.fullName)}
 			</display:column>
-			
-			<display:column sortable="false" title="Status" >
-				<ww:select name="task.status" value="#attr.row.status.name" list="@fi.hut.soberit.agilefant.model.TaskStatus@values()" listKey="name" listValue="getText('task.status.' + name())"/>			
-			</display:column>
-			<display:column sortable="false" title="Comment" >
-				<ww:textfield name="event.comment" size="15"/>			
-			</display:column>
-			<display:column sortable="false" title="Work Date" >
-
-			    <ww:datepicker value="%{#now}" size="10" showstime="%{true}"  format="%{getText('webwork.datepicker.format')}" name="event.workDate"/> 
-			    
-			</display:column>
-			
-			<display:column sortable="false" title="Actions">
-					<ww:submit value="Submit"/>
+			<display:column sortable="true" title="Creator">
+				${aef:html(row.creator.fullName)}
 			</display:column>
 		</display:table>
-				</ww:form>
+	
+	<p>
+		Total effort left: ${user.assignmentsTotalEffortEstimate}<br>
+		Total performed work: ${user.assignmentsTotalPerformedEffort}<br>
+	</p>
+	
+	<p>Assigned backlog items</p>
+   	
+	
 
-<p>
-</c:forEach> 			   			
+		<display:table class="listTable" name="${user.backlogItems}" id="row" requestURI="myTasks.action">
+			<display:column sortable="true" title="Name">
+				<ww:url id="editLink" action="editBacklogItem" includeParams="none">
+					<ww:param name="backlogItemId" value="${row.id}"/>
+				</ww:url>
+				<ww:a title="${row.name}" href="%{editLink}&contextViewName=myTasks">${aef:outTitle(row.name)}</ww:a>
+			</display:column>
+			<display:column sortable="true" title="Backlog">
+				${aef:html(row.parent.name)}
+			</display:column>
 
+
+				<display:column title="Tasks" sortable="false">
+				<c:if test="${!empty row.tasks}"> 
+
+							<c:set var="divId" value="${divId + 1}" scope="page"/>
+							
+							<a href="javascript:toggleDiv(${divId});" title="Click to expand">
+							   ${fn:length(row.tasks)} tasks, <aef:percentDone backlogItemId="${row.id}"/> % done <br/>
+   								<aef:taskStatusList backlogItemId="${row.id}" id="tsl"/>							   
+ 	<img src="drawExtendedBarChart.action?notStarted=${tsl['notStarted']}&started=${tsl['started']}&blocked=${tsl['started']}&implemented=${tsl['implemented']}&done=${tsl['done']}"/> 
+							  </a>
+		
+							<aef:tasklist tasks="${row.tasks}" contextViewName="myTasks" divId="${divId}"/>
+
+				    </c:if>
+
+				</display:column>
+
+				<display:column sortable="false" title="Assignee" >
+					${aef:html(row.assignee.fullName)}
+				</display:column>
+				<display:column sortable="false" title="Priority" >
+				<ww:text name="backlogItem.priority.${row.priority}"/>
+				</display:column>
+				<display:column sortable="true" title="Status">
+				<ww:text name="backlogItem.status.${row.status}"/>
+				</display:column>
+				
+				<display:column sortable="true" title="Iteration Goal">
+					${aef:html(row.iterationGoal.name)}
+				</display:column>
+
+			</display:table>
+		
+</div>
+</div>
+</td></tr></table>
+
+
+<table><tr><td>
+
+			<div id="subItems">
+		<div id="subItemHeader">
+			Watched items
+		</div>
+		<div id="subItemContent">
 
 		
- 			
- 			
+	<p>Watched backlog items</p>
+
+		
+		<display:table  class="listTable" name="${user.watchedBacklogItems}" id="row" requestURI="myTasks.action">
+			<display:column sortable="true" title="Name">
+				<ww:url id="editLink" action="editBacklogItem" includeParams="none">
+					<ww:param name="backlogItemId" value="${row.id}"/>
+				</ww:url>
+				<ww:a title="${row.name}" href="%{editLink}&contextViewName=myTasks">${aef:outTitle(row.name)}</ww:a>
+			</display:column>
+			<display:column sortable="true" title="Backlog">
+				${aef:html(row.parent.name)}
+			</display:column>
+
+				<display:column title="Tasks" sortable="false">
+				<c:if test="${!empty row.tasks}"> 
+
+							<c:set var="divId" value="${divId + 1}" scope="page"/>
+							
+							<a href="javascript:toggleDiv(${divId});" title="Click to expand">
+								${fn:length(row.tasks)} tasks, <aef:percentDone backlogItemId="${row.id}"/> % done<br/>
+								<aef:taskStatusList backlogItemId="${row.id}" id="taskStatusList"/>
+   								<aef:taskStatusList backlogItemId="${row.id}" id="tsl"/>							   
+ 	<img src="drawExtendedBarChart.action?notStarted=${tsl['notStarted']}&started=${tsl['started']}&blocked=${tsl['started']}&implemented=${tsl['implemented']}&done=${tsl['done']}"/> 
+							</a>
+
+							<aef:tasklist tasks="${row.tasks}" contextViewName="myTasks" divId="${divId}"/>
+
+
+				    </c:if>
+
+				</display:column>
+
+				<display:column sortable="false" title="Assignee" >
+					${aef:html(row.assignee.fullName)}
+				</display:column>
+				<display:column sortable="false" title="Priority" >
+				<ww:text name="backlogItem.priority.${row.priority}"/>
+				</display:column>
+				<display:column sortable="true" title="Status">
+				<ww:text name="backlogItem.status.${row.status}"/>
+				</display:column>
+				
+				<display:column sortable="true" title="Iteration Goal">
+					${aef:html(row.iterationGoal.name)}
+				</display:column>
+
+			</display:table>
+		
+		
+
+	<p>Watched tasks</p>
+		<display:table  class="listTable" name="${unfinishedWatchedTasksList}" id="row" requestURI="myTasks.action">
+							
+			<display:column sortable="true" title="Name">
+				<ww:url id="editLink" action="editTask" includeParams="none">
+					<ww:param name="taskId" value="${row.id}"/>
+				</ww:url>
+				<ww:a title="${row.name}" href="%{editLink}&contextViewName=myTasks">${aef:outTitle(row.name)}</ww:a>
+			</display:column>
+			<display:column sortable="true" title="Backlog item">
+									${aef:html(row.backlogItem.name)}			
+			</display:column>
+
+			<display:column sortable="true" title="Priority">
+				<ww:text name="task.priority.${row.priority}"/>
+			</display:column>
+				<display:column sortable="true" title="Status">
+				<ww:text name="task.status.${row.status}"/>
+				</display:column>
+			<display:column sortable="true" title="Effort left" sortProperty="effortEstimate.time">
+				${row.effortEstimate}
+			</display:column>
+			<display:column sortable="true" title="Work performed" sortProperty="performedEffort.time">
+				${row.performedEffort}
+			</display:column>
+			<display:column sortable="true" title="Created" >
+				<ww:date name="#attr.row.created" />
+			</display:column>
+				
+			<display:column sortable="true" title="Assignee">
+				${aef:html(row.assignee.fullName)}
+			</display:column>
+			<display:column sortable="true" title="Creator">
+				${aef:html(row.creator.fullName)}
+			</display:column>
+		</display:table>
+
+	<p>
+		Total effort left: ${user.watchedTasksTotalEffortEstimate}<br>
+		Total performed work: ${user.watchedTasksTotalPerformedEffort}<br>
+	</p>
+
+</div>
+</div>
+</td></tr></table>
 	
+
 
 <%@ include file="./inc/_footer.jsp" %>

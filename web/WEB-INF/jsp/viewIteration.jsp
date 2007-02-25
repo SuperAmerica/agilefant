@@ -28,7 +28,6 @@
 		</p>
 <aef:iterationmenu iterationId="${iteration.id}"/>
 			
-<h2>Iteration</h2>
 
 			
 <c:if test="${!empty iteration}">

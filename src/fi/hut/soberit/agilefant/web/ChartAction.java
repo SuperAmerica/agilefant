@@ -610,11 +610,16 @@ public class ChartAction extends ActionSupport {
 		int year = calendar.get(Calendar.YEAR);
 		
 		/*-experimental for setting the start date */
-		Date sd = this.parseDate(this.getStartDateString()); 
-		if(sd!=null){ // user has provided start date
-			axis.setMinimumDate(sd);
+		String str1 = this.getStartDateString();
+		if(str1!=null){
+			Date sd = this.parseDate(str1); 
+			if(sd!=null){ // user has provided start date
+				axis.setMinimumDate(sd);
+			}else{
+				axis.setMinimumDate(current); // Sets the gantt to show dates starting from today.
+			}
+		
 		}else { // start date field is left empty
-//			Date startingDate = calendar.getTime();
 			axis.setMinimumDate(current); // Sets the gantt to show dates starting from today.
 		}
 		// Here create a calendar object that has a date 3 month from now
@@ -633,9 +638,16 @@ public class ChartAction extends ActionSupport {
         calendar.set(year, endMonth, day); // Sets the ending date
         
         /* --experimental for setting the end date */
-        Date ed = this.parseDate(this.getEndDateString()); 
-        if(ed!=null){ // user has provided an end date
-			axis.setMaximumDate(ed); // Sets the gantt to show dates until the specified ending date.
+        
+        String str2 = this.getStartDateString();
+        if(str2!=null){
+        	Date ed = this.parseDate(str2);
+        	if(ed!=null){ // user has provided an end date
+    			axis.setMaximumDate(ed); // Sets the gantt to show dates until the specified ending date.
+    		}else { // the end date field is left empty
+    			Date endingDate = calendar.getTime(); // Get the new modified date three month from the original
+    	        axis.setMaximumDate(endingDate);
+    		}
 		}else { // the end date field is left empty
 			Date endingDate = calendar.getTime(); // Get the new modified date three month from the original
 	        axis.setMaximumDate(endingDate);

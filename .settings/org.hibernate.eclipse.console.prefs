@@ -1,7 +1,6 @@
-#Tue Dec 12 00:46:40 EET 2006
-/*
- * TODO comments kheleniu - Where this is used, and, for what? One line of comment is good enough.
- */
-default.configuration=
+#Sat Feb 24 02:19:45 EET 2007
+*=
+*/=
+default.configuration=fantti
 eclipse.preferences.version=1
-hibernate3.enabled=false
+hibernate3.enabled=true

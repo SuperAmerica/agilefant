@@ -78,6 +78,11 @@
 			</display:column>
 		</display:table>
 	
+	<p>
+		Total effort left: ${user.assignmentsTotalEffortEstimate}<br>
+		Total performed work: ${user.assignmentsTotalPerformedEffort}<br>
+	</p>
+	
 	<p>Assigned backlog items</p>
    	
 	
@@ -242,6 +247,10 @@
 			</display:column>
 		</display:table>
 
+	<p>
+		Total effort left: ${user.watchedTasksTotalEffortEstimate}<br>
+		Total performed work: ${user.watchedTasksTotalPerformedEffort}<br>
+	</p>
 
 </div>
 </div>

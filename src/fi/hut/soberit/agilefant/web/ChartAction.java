@@ -1,6 +1,5 @@
 package fi.hut.soberit.agilefant.web;
 
-
 import java.awt.Color;
 import java.awt.GradientPaint;
 import java.awt.Paint;
@@ -41,10 +40,12 @@ import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.db.DeliverableDAO;
+import fi.hut.soberit.agilefant.db.EstimateHistoryDAO;
 import fi.hut.soberit.agilefant.db.IterationDAO;
 import fi.hut.soberit.agilefant.db.PerformedWorkDAO;
 import fi.hut.soberit.agilefant.db.TaskDAO;
 import fi.hut.soberit.agilefant.model.AFTime;
+import fi.hut.soberit.agilefant.model.EstimateHistoryEvent;
 import fi.hut.soberit.agilefant.model.PerformedWork;
 import fi.hut.soberit.agilefant.model.Portfolio;
 import fi.hut.soberit.agilefant.model.Deliverable;
@@ -58,7 +59,6 @@ import org.jfree.chart.imagemap.ImageMapUtilities;
 import org.jfree.chart.labels.StandardCategoryItemLabelGenerator;
 import org.jfree.chart.urls.CategoryURLGenerator;
 import org.jfree.chart.urls.StandardCategoryURLGenerator;
-
 
 public class ChartAction extends ActionSupport {
 	private static final Log log = LogFactory.getLog(ChartAction.class);
@@ -74,6 +74,7 @@ public class ChartAction extends ActionSupport {
 	private IterationDAO iterationDAO;
 	private DeliverableDAO deliverableDAO;
 	private PerformedWorkDAO performedWorkDAO;
+	private EstimateHistoryDAO estimateHistoryDAO;
 	private Collection<PerformedWork> works;
 	private int workDone;
 	private double effortDone;
@@ -1006,6 +1007,11 @@ public class ChartAction extends ActionSupport {
 
 	public void setStartDateString(String startDateString) {
 		this.startDateString = startDateString;
+	}
+
+
+	public void setEstimateHistoryDAO(EstimateHistoryDAO estimateHistoryDAO) {
+		this.estimateHistoryDAO = estimateHistoryDAO;
 	}
 
 

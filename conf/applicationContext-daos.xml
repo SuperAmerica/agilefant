@@ -40,6 +40,11 @@
 		<property name="target" ref="performedWorkDAOTarget"/>
 	</bean>
 	
+	<bean name="estimateHistoryDAOTarget" parent="abstractDAOTarget" class="fi.hut.soberit.agilefant.db.hibernate.EstimateHistoryDAOHibernate"/>
+	<bean name="estimateHistoryDAO" parent="abstractDAO">
+		<property name="target" ref="estimateHistoryDAOTarget"/>
+	</bean>
+	
 	<bean name="backlogDAOTarget" parent="abstractDAOTarget" class="fi.hut.soberit.agilefant.db.hibernate.BacklogDAOHibernate"/>
 	<bean name="backlogDAO" parent="abstractDAO">
 		<property name="target" ref="backlogDAOTarget"/>

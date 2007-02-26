@@ -80,10 +80,10 @@
 				    </c:if>
 
 				</display:column>
-				<display:column sortable="false" title="Assignee" >
+				<display:column sortable="true" title="Assignee" >
 					${aef:out(row.assignee.fullName)}
 				</display:column>
-				<display:column sortable="false" title="Priority" >
+				<display:column sortable="true" title="Priority" >
 				<ww:text name="backlogItem.priority.${row.priority}"/>
 
 				</display:column>

@@ -118,7 +118,7 @@
 				<display:column sortable="false" title="Assignee" >
 					${aef:html(row.assignee.fullName)}
 				</display:column>
-				<display:column sortable="false" title="Priority" >
+				<display:column sortable="true" title="Priority" >
 				<ww:text name="backlogItem.priority.${row.priority}"/>
 				</display:column>
 				<display:column sortable="true" title="Status">
@@ -181,7 +181,7 @@
 				<display:column sortable="false" title="Assignee" >
 					${aef:html(row.assignee.fullName)}
 				</display:column>
-				<display:column sortable="false" title="Priority" >
+				<display:column sortable="true" title="Priority" >
 				<ww:text name="backlogItem.priority.${row.priority}"/>
 				</display:column>
 				<display:column sortable="true" title="Status">

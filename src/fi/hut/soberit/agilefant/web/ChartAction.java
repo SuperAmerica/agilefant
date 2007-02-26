@@ -508,25 +508,25 @@ public class ChartAction extends ActionSupport {
 		if (color2 != null){
 			renderer.setSeriesPaint(1, this.getColor2()); // color for started
 		} else {
-			renderer.setSeriesPaint(1, Color.pink); // color for started
+			renderer.setSeriesPaint(1, Color.yellow); // color for started
 		} 
 		
 		if (color3 != null){
 			renderer.setSeriesPaint(2, this.getColor3()); // color for blocked
 		} else {
-			renderer.setSeriesPaint(2, Color.blue); // color for blocked
+			renderer.setSeriesPaint(2, Color.black); // color for blocked
 		} 
 		
 		if (color4 != null){
 			renderer.setSeriesPaint(3, this.getColor4()); // color for implemented
 		} else {
-			renderer.setSeriesPaint(3, Color.green); // color for implemented
+			renderer.setSeriesPaint(3, Color.cyan); // color for implemented
 		} 
 		
 		if (color5 != null){
 			renderer.setSeriesPaint(4, this.getColor5()); // color for done
 		} else {
-			renderer.setSeriesPaint(4, Color.orange); // color for done
+			renderer.setSeriesPaint(4, Color.green); // color for done
 		} 
 		
 		try {

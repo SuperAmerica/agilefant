@@ -118,7 +118,7 @@ public abstract class Backlog implements Assignable {
 	}
 		
 	/**
-	 * Get the "total estimate" for this backlog item. 
+	 * Get the "total estimate" for this backlog. 
 	 * <p>
 	 * The custom estimate for a backlog item, in the UI, equals BacklogItem.effortEstimate, 
 	 * the summed estimate from contained tasks, if it's not null and >0. 

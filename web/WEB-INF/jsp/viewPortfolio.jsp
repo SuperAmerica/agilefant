@@ -5,7 +5,6 @@
 <h2>Portfolio </h2>
 <p>
 
-<%-- 
 	<ww:form action="viewPortfolio">
 		<ww:hidden name="deliverableId" value="${deliverable.id}"/>
 		<ww:hidden name="productId"/>
@@ -29,11 +28,22 @@ Startdate:
 			<ww:submit value="Select timescale"/>
 			
 		</ww:form>
---%>
 </p>
 
+
+				<ww:url id="imgUrl" action="drawGantChart" includeParams="none">
+					<ww:param name="startDate" >
+						<ww:date name="startDate" />					
+					</ww:param>
+					<ww:param name="endDate" >
+						<ww:date name="endDate" />					
+					</ww:param>
+				</ww:url>
+				
+
+
 <p>
-        <img src="drawGantChart.action"/>
+        <img src="${imgUrl}"/>
 </p>
 
 <%@ include file="./inc/_footer.jsp" %>

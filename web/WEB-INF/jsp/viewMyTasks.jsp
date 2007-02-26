@@ -159,7 +159,7 @@
 				${aef:html(row.parent.name)}
 			</display:column>
 
-				<display:column title="Tasks" sortable="false">
+				<display:column sortable="false" title="Tasks">
 				<c:if test="${!empty row.tasks}"> 
 
 							<c:set var="divId" value="${divId + 1}" scope="page"/>
@@ -178,7 +178,7 @@
 
 				</display:column>
 
-				<display:column sortable="false" title="Assignee" >
+				<display:column sortable="true" title="Assignee" >
 					${aef:html(row.assignee.fullName)}
 				</display:column>
 				<display:column sortable="true" title="Priority" >

@@ -110,8 +110,8 @@ public class ChartAction extends ActionSupport {
 			works = performedWorkDAO.getPerformedWork(backlogItemDAO.get(backlogItemId));
 		} else if (iterationId > 0){
 			works = performedWorkDAO.getPerformedWork(iterationDAO.get(iterationId));
-			startDate = iterationDAO.get(iterationId).getStartDate();
-			endDate = iterationDAO.get(iterationId).getEndDate();
+			startDate = iterationDAO.get(iterationId).getStartDate(); // We set the start date for burndown graph
+			endDate = iterationDAO.get(iterationId).getEndDate();// We set the end date for burndown graph
 		} else if (deliverableId > 0){
 			works = performedWorkDAO.getPerformedWork(deliverableDAO.get(deliverableId));
 		}
@@ -508,7 +508,7 @@ public class ChartAction extends ActionSupport {
 		if (color2 != null){
 			renderer.setSeriesPaint(1, this.getColor2()); // color for started
 		} else {
-			renderer.setSeriesPaint(1, Color.yellow); // color for started
+			renderer.setSeriesPaint(1, new Color(0xff, 0x99, 0x0)  ); // color for started (orange)
 		} 
 		
 		if (color3 != null){
@@ -520,13 +520,13 @@ public class ChartAction extends ActionSupport {
 		if (color4 != null){
 			renderer.setSeriesPaint(3, this.getColor4()); // color for implemented
 		} else {
-			renderer.setSeriesPaint(3, Color.cyan); // color for implemented
+			renderer.setSeriesPaint(3, Color.green); // color for implemented
 		} 
 		
 		if (color5 != null){
 			renderer.setSeriesPaint(4, this.getColor5()); // color for done
 		} else {
-			renderer.setSeriesPaint(4, Color.green); // color for done
+			renderer.setSeriesPaint(4, new Color(0x00, 0x77, 0x00)); // color for done
 		} 
 		
 		try {

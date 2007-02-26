@@ -506,27 +506,27 @@ public class ChartAction extends ActionSupport {
 		} 
 		
 		if (color2 != null){
-			renderer.setSeriesPaint(1, this.getColor2()); // color for not started
+			renderer.setSeriesPaint(1, this.getColor2()); // color for started
 		} else {
-			renderer.setSeriesPaint(1, Color.pink); // color for not started
+			renderer.setSeriesPaint(1, Color.pink); // color for started
 		} 
 		
 		if (color3 != null){
-			renderer.setSeriesPaint(2, this.getColor3()); // color for not started
+			renderer.setSeriesPaint(2, this.getColor3()); // color for blocked
 		} else {
-			renderer.setSeriesPaint(2, Color.blue); // color for not started
+			renderer.setSeriesPaint(2, Color.blue); // color for blocked
 		} 
 		
 		if (color4 != null){
-			renderer.setSeriesPaint(3, this.getColor4()); // color for not started
+			renderer.setSeriesPaint(3, this.getColor4()); // color for implemented
 		} else {
-			renderer.setSeriesPaint(3, Color.green); // color for not started
+			renderer.setSeriesPaint(3, Color.green); // color for implemented
 		} 
 		
 		if (color5 != null){
-			renderer.setSeriesPaint(4, this.getColor5()); // color for not started
+			renderer.setSeriesPaint(4, this.getColor5()); // color for done
 		} else {
-			renderer.setSeriesPaint(4, Color.orange); // color for not started
+			renderer.setSeriesPaint(4, Color.orange); // color for done
 		} 
 		
 		try {
@@ -604,20 +604,33 @@ public class ChartAction extends ActionSupport {
         DateAxis axis = (DateAxis) rangeAxis;
         Date current = new GregorianCalendar().getTime();
         Calendar calendar = Calendar.getInstance();
-		calendar.setTime(current);
-		int day = calendar.get(Calendar.DAY_OF_MONTH);
-		int month = calendar.get(Calendar.MONTH) + 1; // January == 0
-		int year = calendar.get(Calendar.YEAR);
+        int month;
+        int day;
+        int year;
+        if(this.getStartDate()!=null){
+        	calendar.setTime(this.getStartDate());
+    		day = calendar.get(Calendar.DAY_OF_MONTH);
+    		month = calendar.get(Calendar.MONTH) + 1; // January == 0
+    		year = calendar.get(Calendar.YEAR);
+        }else {
+        	calendar.setTime(current);
+    		day = calendar.get(Calendar.DAY_OF_MONTH);
+    		month = calendar.get(Calendar.MONTH) + 1; // January == 0
+    		year = calendar.get(Calendar.YEAR);
+        }
+		
 		
 		/*-experimental for setting the start date */
-		String str1 = this.getStartDateString();
+		if(this.getStartDate()!=null){
+			axis.setMinimumDate(this.getStartDate());
+		/*String str1 = this.getStartDateString();
 		if(str1!=null){
 			Date sd = this.parseDate(str1); 
 			if(sd!=null){ // user has provided start date
 				axis.setMinimumDate(sd);
 			}else{
 				axis.setMinimumDate(current); // Sets the gantt to show dates starting from today.
-			}
+			}*/
 		
 		}else { // start date field is left empty
 			axis.setMinimumDate(current); // Sets the gantt to show dates starting from today.
@@ -639,7 +652,19 @@ public class ChartAction extends ActionSupport {
         
         /* --experimental for setting the end date */
         
-        String str2 = this.getStartDateString();
+        //String str2 = this.getStartDateString();
+        Date d2 = this.getEndDate();
+    	Date d1 = this.getStartDate();
+        if(d1!=null && d2!=null){
+        	if(d1.before(d2)){
+        		axis.setMaximumDate(this.getEndDate());
+        	}else { // the end date field is left empty
+    			Date endingDate = calendar.getTime(); // Get the new modified date three month from the original
+    	        axis.setMaximumDate(endingDate);
+    		}
+        /*}else if(d2!=null){
+			axis.setMaximumDate(this.getEndDate()); */
+		/*
         if(str2!=null){
         	Date ed = this.parseDate(str2);
         	if(ed!=null){ // user has provided an end date
@@ -647,7 +672,7 @@ public class ChartAction extends ActionSupport {
     		}else { // the end date field is left empty
     			Date endingDate = calendar.getTime(); // Get the new modified date three month from the original
     	        axis.setMaximumDate(endingDate);
-    		}
+    		}*/
 		}else { // the end date field is left empty
 			Date endingDate = calendar.getTime(); // Get the new modified date three month from the original
 	        axis.setMaximumDate(endingDate);
@@ -697,7 +722,7 @@ public class ChartAction extends ActionSupport {
 			try {
 				date = (Date)formatter.parse(str);
 			} catch (ParseException e) {
-				e.printStackTrace();
+				System.err.println("Problem occurred parsing string: "+str);
 			}
 			return date;
 	    }

@@ -106,7 +106,7 @@
 							<a href="javascript:toggleDiv(${divId});" title="Click to expand">
 							   ${fn:length(row.tasks)} tasks, <aef:percentDone backlogItemId="${row.id}"/> % done <br/>
    								<aef:taskStatusList backlogItemId="${row.id}" id="tsl"/>							   
- 	<img src="drawExtendedBarChart.action?notStarted=${tsl['notStarted']}&started=${tsl['started']}&blocked=${tsl['started']}&implemented=${tsl['implemented']}&done=${tsl['done']}"/> 
+ 	<img src="drawExtendedBarChart.action?notStarted=${tsl['notStarted']}&started=${tsl['started']}&blocked=${tsl['blocked']}&implemented=${tsl['implemented']}&done=${tsl['done']}"/> 
 							  </a>
 		
 							<aef:tasklist tasks="${row.tasks}" contextViewName="myTasks" divId="${divId}"/>
@@ -168,7 +168,7 @@
 								${fn:length(row.tasks)} tasks, <aef:percentDone backlogItemId="${row.id}"/> % done<br/>
 								<aef:taskStatusList backlogItemId="${row.id}" id="taskStatusList"/>
    								<aef:taskStatusList backlogItemId="${row.id}" id="tsl"/>							   
- 	<img src="drawExtendedBarChart.action?notStarted=${tsl['notStarted']}&started=${tsl['started']}&blocked=${tsl['started']}&implemented=${tsl['implemented']}&done=${tsl['done']}"/> 
+ 	<img src="drawExtendedBarChart.action?notStarted=${tsl['notStarted']}&started=${tsl['started']}&blocked=${tsl['blocked']}&implemented=${tsl['implemented']}&done=${tsl['done']}"/> 
 							</a>
 
 							<aef:tasklist tasks="${row.tasks}" contextViewName="myTasks" divId="${divId}"/>

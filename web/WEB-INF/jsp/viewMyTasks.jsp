@@ -16,7 +16,8 @@
 				<c:set var="user" value="${currentUser}" scope="page"/>
 			</c:if>
 			
-   		<aef:unfinishedTaskList userId="${user.id}"/>
+   		<aef:unfinishedTaskList userId="${user.id}"/> --%>
+   		<%-- <aef:heartbeatTimeBoxLists userId="${user.id}"/> --%>
    		<aef:unfinishedWatchedTasksList userId="${user.id}"/>
 
 		<p>
@@ -85,7 +86,7 @@
 	<p>Assigned backlog items</p>
    	
 	
-
+										  <%-- ${user.backlogItems} --%>
 		<display:table class="listTable" name="${user.backlogItems}" id="row" requestURI="myTasks.action">
 			<display:column sortable="true" title="Name">
 				<ww:url id="editLink" action="editBacklogItem" includeParams="none">

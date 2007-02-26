@@ -33,7 +33,7 @@
 		<tag-class>fi.hut.soberit.agilefant.web.tag.UnfinishedTaskListTag</tag-class>
 		<body-content>JSP</body-content>
 		<description>
-			Lists all unfinished tasks for current user to variable unfinishedTaskList
+			Lists all unfinished tasks for the given user to variable unfinishedTaskList
 	    </description>
 	    <attribute>
 	    	<name>userId</name>
@@ -41,6 +41,36 @@
 	    	<rtexprvalue>true</rtexprvalue>  
 	    </attribute>	    
 	</tag>
+
+	<tag>
+		<name>heartbeatTimeBoxLists</name>
+		<tag-class>fi.hut.soberit.agilefant.web.tag.HeartbeatTimeBoxListsTag</tag-class>
+		<body-content>JSP</body-content>
+		<description>
+			Lists unfinished tasks for the given user to variable unfinishedTaskList, 
+			as well as user's backlog items to variable backlogItemsList. 
+			All intersecting the given timeframe.
+			
+			Timeframe is specified using timeStart and timeEnd, but is by default the current day.
+	    </description>
+	    <attribute>
+	    	<name>userId</name>
+	    	<required>true</required>	  
+	    	<rtexprvalue>true</rtexprvalue>  
+	    </attribute>    
+	    <attribute>
+	    	<name>timeStart</name>
+	    	<required>false</required>	  
+	    	<rtexprvalue>true</rtexprvalue>  
+	    </attribute> 
+
+	    <attribute>
+	    	<name>timeEnd</name>
+	    	<required>false</required>	  
+	    	<rtexprvalue>true</rtexprvalue>  
+	    </attribute> 
+	</tag>
+
 
 	<tag>
 		<name>unfinishedWatchedTasksList</name>

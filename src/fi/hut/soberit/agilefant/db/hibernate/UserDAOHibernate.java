@@ -45,6 +45,16 @@ public class UserDAOHibernate extends GenericDAOHibernate<User> implements UserD
 				new Integer(user.getId()));
 	}
 	
+	private String instanceOf(String item, String clazz) {
+		String clazzTempInstance = "temp_" + clazz.toLowerCase();
+		return "("+item + ".id in (select "+clazzTempInstance+".id from "+clazz+" "+clazzTempInstance+")) ";
+	}
+	
+	private String dateIntersects(String dateContainer) {
+		return "(("+dateContainer+".startDate <= :end and "+dateContainer+".endDate >= :start) " +
+				"or ("+dateContainer+".startDate is null and "+dateContainer+".endDate is null)) ";
+	}
+	
 	/** {@inheritDoc} */
 	@SuppressWarnings("unchecked")
 	public Collection<Task> getUnfinishedTasksByTime(User user, Date start, Date end) {
@@ -56,13 +66,13 @@ public class UserDAOHibernate extends GenericDAOHibernate<User> implements UserD
 				
 				"select distinct t from Task t, Deliverable d, Iteration i where "+ 
 				"t.assignee.id = :id and t.status != 4 and " +
-				"((t.backlogItem.backlog.id in "+
-				"	(select dd.id from Deliverable dd) "+ 
-				"and d.id = t.backlogItem.backlog.id and d.startDate <= :end and d.endDate >= :start ) "+
+				"( " + instanceOf("t.backlogItem.backlog", "Deliverable") + 
+				"and d.id = t.backlogItem.backlog.id and " + dateIntersects("d") + " ) " +
 				"or "+
-				"(t.backlogItem.backlog.id in "+
-				"	(select ii.id from Iteration ii) "+ 
-				"and i.id = t.backlogItem.backlog.id and i.startDate <= :end and i.endDate >= :start ))",
+				"( " + instanceOf("t.backlogItem.backlog", "Iteration") +
+				"and i.id = t.backlogItem.backlog.id and " + dateIntersects("i") + " )" +
+				"or " +
+				instanceOf("t.backlogItem.backlog", "Product"),
 
 				names, 
 				values);		
@@ -79,14 +89,13 @@ public class UserDAOHibernate extends GenericDAOHibernate<User> implements UserD
 				
 				"select distinct bli from BacklogItem bli, Deliverable d, Iteration i where "+ 
 				"bli.assignee.id = :id and " +
-				"((bli.backlog.id in "+
-				"	(select dd.id from Deliverable dd) "+ 
-				"and d.id = bli.backlog.id and d.startDate <= :end and d.endDate >= :start ) "+
+				"( " + instanceOf("bli.backlog", "Deliverable") + 
+				"and d.id = bli.backlog.id and " + dateIntersects("d") + " ) "+
 				"or "+
-				"(bli.backlog.id in "+
-				"	(select ii.id from Iteration ii) "+
-				"and i.id = bli.backlog.id and i.startDate <= :end and i.endDate >= :start ))",
-
+				"( " + instanceOf("bli.backlog", "Iteration") +
+				"and i.id = bli.backlog.id and " + dateIntersects("i") + " )" +
+				"or " +
+				instanceOf("bli.backlog", "Product"),
 				names, 
 				values);	
 		

@@ -58,7 +58,7 @@
 		<p>
 			<display:table name="iteration.backlogItems" id="row" requestURI="viewIteration.action">
 			<display:column sortable="true" title="Name">
-				${aef:outTitle(row.name)}
+				${aef:out(row.name)}
 			</display:column>
 
 
@@ -67,11 +67,18 @@
 
 							<c:set var="divId" value="${divId + 1}" scope="page"/>
 							
-							<a href="javascript:toggleDiv(${divId});" title="Click to expand">
+							<ww:a href="javascript:toggleDiv(${divId});" title="Click to expand">
 								${fn:length(row.tasks)} tasks, <aef:percentDone backlogItemId="${row.id}"/> % done<br/>
    								<aef:taskStatusList backlogItemId="${row.id}" id="tsl"/>							   
- 	<img src="drawExtendedBarChart.action?notStarted=${tsl['notStarted']}&started=${tsl['started']}&blocked=${tsl['blocked']}&implemented=${tsl['implemented']}&done=${tsl['done']}"/> 
-							</a>
+								<ww:url id="imgUrl" action="drawExtendedBarChart" includeParams="none">
+									<ww:param name="notStarted"  value="${tsl['notStarted']}"/>
+									<ww:param name="started"     value="${tsl['started']}"/>
+									<ww:param name="blocked"     value="${tsl['blocked']}"/>
+									<ww:param name="implemented" value="${tsl['implemented']}"/>
+									<ww:param name="done"        value="${tsl['done']}"/>
+								</ww:url>
+			 					<img src="${imgUrl}"/> 
+							</ww:a>
 							<aef:tasklist tasks="${row.tasks}"  contextViewName="viewIteration"  contextObjectId="${iteration.id}" divId="${divId}"/>
 
 							
@@ -139,7 +146,7 @@
 		<p>
 			<display:table name="iteration.iterationGoals" id="row" requestURI="editIteration.action">
 			<display:column sortable="true" title="Name">
-				${aef:outTitle(row.name)}
+				${aef:out(row.name)}
 			</display:column>
 				<display:column sortable="true" title="Status" >
 					${row.status}

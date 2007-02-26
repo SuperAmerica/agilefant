@@ -44,7 +44,7 @@
 				<ww:url id="editLink" action="editTask" includeParams="none">
 					<ww:param name="taskId" value="${row.id}"/>
 				</ww:url>
-				<ww:a title="${row.name}" href="%{editLink}&contextViewName=myTasks">${aef:outTitle(row.name)}</ww:a>
+				<ww:a title="${row.name}" href="%{editLink}&contextViewName=myTasks">${aef:subString(row.name, 25)}</ww:a>
 			</display:column>
 
 			<display:column sortable="true" title="Backlog item">
@@ -91,7 +91,7 @@
 				<ww:url id="editLink" action="editBacklogItem" includeParams="none">
 					<ww:param name="backlogItemId" value="${row.id}"/>
 				</ww:url>
-				<ww:a title="${row.name}" href="%{editLink}&contextViewName=myTasks">${aef:outTitle(row.name)}</ww:a>
+				<ww:a title="${row.name}" href="%{editLink}&contextViewName=myTasks">${aef:subString(row.name, 25)}</ww:a>
 			</display:column>
 			<display:column sortable="true" title="Backlog">
 				${aef:html(row.parent.name)}
@@ -106,7 +106,15 @@
 							<a href="javascript:toggleDiv(${divId});" title="Click to expand">
 							   ${fn:length(row.tasks)} tasks, <aef:percentDone backlogItemId="${row.id}"/> % done <br/>
    								<aef:taskStatusList backlogItemId="${row.id}" id="tsl"/>							   
- 	<img src="drawExtendedBarChart.action?notStarted=${tsl['notStarted']}&started=${tsl['started']}&blocked=${tsl['blocked']}&implemented=${tsl['implemented']}&done=${tsl['done']}"/> 
+								<ww:url id="imgUrl" action="drawExtendedBarChart" includeParams="none">
+									<ww:param name="notStarted"  value="${tsl['notStarted']}"/>
+									<ww:param name="started"     value="${tsl['started']}"/>
+									<ww:param name="blocked"     value="${tsl['blocked']}"/>
+									<ww:param name="implemented" value="${tsl['implemented']}"/>
+									<ww:param name="done"        value="${tsl['done']}"/>
+								</ww:url>
+			 					<img src="${imgUrl}"/> 
+
 							  </a>
 		
 							<aef:tasklist tasks="${row.tasks}" contextViewName="myTasks" divId="${divId}"/>
@@ -153,7 +161,7 @@
 				<ww:url id="editLink" action="editBacklogItem" includeParams="none">
 					<ww:param name="backlogItemId" value="${row.id}"/>
 				</ww:url>
-				<ww:a title="${row.name}" href="%{editLink}&contextViewName=myTasks">${aef:outTitle(row.name)}</ww:a>
+				<ww:a title="${row.name}" href="%{editLink}&contextViewName=myTasks">${aef:subString(row.name, 25)}</ww:a>
 			</display:column>
 			<display:column sortable="true" title="Backlog">
 				${aef:html(row.parent.name)}
@@ -168,7 +176,14 @@
 								${fn:length(row.tasks)} tasks, <aef:percentDone backlogItemId="${row.id}"/> % done<br/>
 								<aef:taskStatusList backlogItemId="${row.id}" id="taskStatusList"/>
    								<aef:taskStatusList backlogItemId="${row.id}" id="tsl"/>							   
- 	<img src="drawExtendedBarChart.action?notStarted=${tsl['notStarted']}&started=${tsl['started']}&blocked=${tsl['blocked']}&implemented=${tsl['implemented']}&done=${tsl['done']}"/> 
+								<ww:url id="imgUrl" action="drawExtendedBarChart" includeParams="none">
+									<ww:param name="notStarted"  value="${tsl['notStarted']}"/>
+									<ww:param name="started"     value="${tsl['started']}"/>
+									<ww:param name="blocked"     value="${tsl['blocked']}"/>
+									<ww:param name="implemented" value="${tsl['implemented']}"/>
+									<ww:param name="done"        value="${tsl['done']}"/>
+								</ww:url>
+			 					<img src="${imgUrl}"/> 
 							</a>
 
 							<aef:tasklist tasks="${row.tasks}" contextViewName="myTasks" divId="${divId}"/>
@@ -203,7 +218,7 @@
 				<ww:url id="editLink" action="editTask" includeParams="none">
 					<ww:param name="taskId" value="${row.id}"/>
 				</ww:url>
-				<ww:a title="${row.name}" href="%{editLink}&contextViewName=myTasks">${aef:outTitle(row.name)}</ww:a>
+				<ww:a title="${row.name}" href="%{editLink}&contextViewName=myTasks">${aef:subString(row.name, 25)}</ww:a>
 			</display:column>
 			<display:column sortable="true" title="Backlog item">
 									${aef:html(row.backlogItem.name)}			

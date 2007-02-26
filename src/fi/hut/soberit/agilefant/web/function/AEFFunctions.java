@@ -19,8 +19,7 @@ import fi.hut.soberit.agilefant.web.page.PortfolioPageItem;
  */
 public class AEFFunctions {
 
-	public static final int MAX_STR_LENGTH = 10;
-	public static final int MAX_TITLE_LENGTH = 25;
+	private static int maxStrLength = 15;
 
 	public static boolean isProduct(Object obj) {
 		return obj instanceof Product;
@@ -65,17 +64,8 @@ public class AEFFunctions {
 	 * @return shorter string, or original string if length < MAX_STR_LENGTH
 	 */
 	public static String out(String s) {
-		return out(s, MAX_STR_LENGTH, false); 	
+		return out(s, maxStrLength, false); 	
 	} 
-	/**
-	 * Chop strings to MAX_TITLE_LENGTH
-	 *  
-	 * @param s string to shorten
-	 * @return shorter string, or original string if length < MAX_TITLE_LENGTH
-	 */
-	public static String outTitle(String s) {
-		return out(s, MAX_TITLE_LENGTH, false);
-	}
 	/**
 	 * Shorten strings to specified length
 	 * 
@@ -87,7 +77,7 @@ public class AEFFunctions {
 		return out(s, newLength, false); 	
 	} 
 	public static String htmlOut(String s) {
-		return out(s, MAX_STR_LENGTH, true); 	
+		return out(s, maxStrLength, true); 	
 	} 
 	public static String htmlOut(String s, int newLength) {
 		return out(s, newLength, true); 	
@@ -95,9 +85,9 @@ public class AEFFunctions {
 	private static String out(String s, int newLength, boolean asHtml) {
 		String shortString = s.length() > newLength ? s.substring(0, newLength) + "..." : s;
 		return asHtml ? "<div title=\"" + s + "\">" + shortString + "</div>" : shortString;
-	} 
-	public static int percent(int amount, int total) {
-		return Math.round(total / amount * 100); 	
+	}
+	public void setMaxStrLength(int maxStrLength) {
+		AEFFunctions.maxStrLength = maxStrLength;
 	} 
 
 

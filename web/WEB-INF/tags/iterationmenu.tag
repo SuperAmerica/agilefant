@@ -13,10 +13,10 @@
 							<c:forEach items="${iterationList}" var="iter">
 								<c:choose>
 									<c:when test="${iterationId == iter.id}">
-										<option selected="selected" value="${iter.id}" title="iter.name">${aef:out(iter.name)}</option>
+										<option selected="selected" value="${iter.id}" title="${iter.name}">${aef:out(iter.name)}</option>
 									</c:when>
 									<c:otherwise>
-										<option value="${iter.id}" title="iter.name">${aef:out(iter.name)}</option>
+										<option value="${iter.id}" title="${iter.name}">${aef:out(iter.name)}</option>
 									</c:otherwise>
 								</c:choose>
 							</c:forEach>

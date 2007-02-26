@@ -47,25 +47,7 @@
 						<ww:a href="%{viewLink}&contextViewName=editDeliverable&contextObjectId=${deliverable.id}">View</ww:a> | Edit
 
 					<aef:productList/>
-		<ww:form action="editDeliverable">
-			<p>
-				<select name="deliverableId">
-					<c:forEach items="${productList}" var="product">
-						<c:forEach items="${product.deliverables}" var="deliv">
-								<c:choose>
-									<c:when test="${deliverable.id == deliv.id}">
-										<option selected="selected" value="${deliv.id}">${deliv.name}</option>
-									</c:when>
-									<c:otherwise>
-										<option value="${deliv.id}">${deliv.name}</option>
-									</c:otherwise>
-								</c:choose>
-						</c:forEach>						
-					</c:forEach>				
-			<ww:submit value="Select deliverable"/>
-				</select>
-			</p>			
-		</ww:form>
+<aef:deliverableMenu deliverableId="${deliverable.id}"/>
 
 <h2>Deliverable</h2>
 
@@ -151,7 +133,9 @@
 			</p>
 
 			<display:table class="listTable" name="deliverable.iterations" id="row" requestURI="editDeliverable.action">
-				<display:column sortable="true" title="Name" property="name"/>
+				<display:column sortable="true" title="Name">
+						${aef:html(row.name)}			
+				</display:column>
 				<display:column sortable="true" title="# of backlog items">
 					${fn:length(row.backlogItems)}
 				</display:column>
@@ -189,7 +173,9 @@
 		</c:if>
 	<c:if test="${!empty deliverable.backlogItems}">
 		<display:table class="listTable" name="deliverable.backlogItems" id="row" requestURI="editDeliverable.action">
-			<display:column sortable="true" title="Name" property="name"/>
+			<display:column sortable="true" title="Name">
+					${aef:html(row.name)}			
+			</display:column>
 			<display:column sortable="true" title="# of tasks">
 				${fn:length(row.tasks)}
 			</display:column>

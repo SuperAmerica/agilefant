@@ -85,9 +85,9 @@ public class TaskEventListener implements PreInsertEventListener, PostInsertEven
 		textTemplate.setAttribute("task", task);
 		mail.setText(textTemplate.toString());
 		
-		if (mailSender != null && recipients.size() > 0){
-			mailSender.send(mail);
-		}
+//		if (mailSender != null && recipients.size() > 0){
+//			mailSender.send(mail);
+//		}
 	}
 
 	public boolean onPreInsert(PreInsertEvent event) {

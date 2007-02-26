@@ -55,35 +55,35 @@
 			<ww:url id="prodLink" action="editProduct" includeParams="none">
 				<ww:param name="productId" value="${page.id}"/>
 			</ww:url>
-			<ww:a title="Product" href="%{prodLink}">${page.name}</ww:a>		
+			<ww:a title="Product: ${page.name}" href="%{prodLink}">${aef:out(page.name)}</ww:a>		
 		</c:when>
 		<c:when test="${aef:isDeliverable(page)}">
 			&gt;
 			<ww:url id="delivLink" action="editDeliverable" includeParams="none">
-<ww:param name="deliverableId" value="${page.id}"/>
+				<ww:param name="deliverableId" value="${page.id}"/>
 			</ww:url>
-			<ww:a title="Deliverable" href="%{delivLink}">${page.name}</ww:a>		
+			<ww:a title="Deliverable: ${page.name}" href="%{delivLink}">${aef:out(page.name)}</ww:a>		
 		</c:when >
 		<c:when test="${aef:isIteration(page)}">
 			&gt;
 			<ww:url id="iterLink" action="editIteration" includeParams="none">
 				<ww:param name="iterationId" value="${page.id}"/>
 			</ww:url>
-			<ww:a title="Iteration" href="%{iterLink}">${page.name}</ww:a>		
+			<ww:a title="Iteration: ${page.name}" href="%{iterLink}">${aef:out(page.name)}</ww:a>		
 		</c:when >
 		<c:when test="${aef:isBacklogItem(page)}">
 			&gt;
 			<ww:url id="bliLink" action="editBacklogItem" includeParams="none">
 				<ww:param name="backlogItemId" value="${page.id}"/>
 			</ww:url>
-			<ww:a title="Backlog Item" href="%{bliLink}">${page.name}</ww:a>		
+			<ww:a title="Backlog Item: ${page.name}" href="%{bliLink}">${aef:out(page.name)}</ww:a>		
 		</c:when >
 		<c:when test="${aef:isTask(page)}">
 			&gt;
 			<ww:url id="taskLink" action="editTask" includeParams="none">
 				<ww:param name="taskId" value="${page.id}"/>
 			</ww:url>
-			<ww:a title="Task" href="%{taskLink}">${page.name}</ww:a>		
+			<ww:a title="Task: ${page.name}" href="%{taskLink}">${aef:out(page.name)}</ww:a>		
 		</c:when >
 		<c:when test="${aef:isUser(page)}">
 			<ww:url id="userLink" action="listUsers" includeParams="none"/>

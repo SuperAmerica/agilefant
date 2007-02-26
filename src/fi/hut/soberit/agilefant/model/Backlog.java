@@ -117,6 +117,14 @@ public abstract class Backlog implements Assignable {
 		this.assignee = assignee;
 	}
 		
+	/**
+	 * Get the "total estimate" for this backlog item. 
+	 * <p>
+	 * The custom estimate for a backlog item, in the UI, equals BacklogItem.effortEstimate, 
+	 * the summed estimate from contained tasks, if it's not null and >0. 
+	 * Otherwise, it's BacklogItem.allocatedEffort. The total estimate for a backlog is sum of 
+	 * these.
+	 */
 	@Type(type="af_time")
 	@Formula(value =
 	"( select SUM(IF((select SUM(t.effortEstimate) FROM Task t WHERE t.backlogItem_id = b.id), " +

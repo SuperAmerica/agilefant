@@ -7,7 +7,8 @@ import com.opensymphony.webwork.util.WebWorkTypeConverter;
 import fi.hut.soberit.agilefant.model.AFTime;
 
 /**
- * TODO comments kheleniu - What is converted to what, and where used?
+ * WebWork converter for converting AFTime objects to and from
+ * ui layer.
  */
 public class AFTimeConverter extends WebWorkTypeConverter {
 

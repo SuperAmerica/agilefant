@@ -1,6 +1,5 @@
 package fi.hut.soberit.agilefant.db.hibernate.event;
 
-import java.text.MessageFormat;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.HashSet;
@@ -17,6 +16,13 @@ import org.springframework.mail.SimpleMailMessage;
 
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
+
+/**
+ * Hibernate listener used to set Task date when one is created. Also
+ * sends email notifications when task is created or updated. Notifications
+ * are sent only when properties of task are modified thus triggering
+ * update event in Hibernate.
+ */
 
 public class TaskEventListener implements PreInsertEventListener, PostInsertEventListener, PostUpdateEventListener{
 

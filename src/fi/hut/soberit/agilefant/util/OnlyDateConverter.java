@@ -15,7 +15,9 @@ import com.opensymphony.xwork.TextProviderSupport;
 import com.opensymphony.xwork.util.TypeConversionException;
 
 /**
- * TODO comments kheleniu - What is converted to what, and where used?
+ * Converts dates. Uses WebWorks i18n and key webwork.date.format 
+ * for finding pattern. This allows different patterns to be used
+ * for different locales.
  */
 public class OnlyDateConverter extends WebWorkTypeConverter implements LocaleProvider{
 	

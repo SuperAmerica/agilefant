@@ -15,6 +15,7 @@ import javax.persistence.DiscriminatorType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.Type;
 
 /**
@@ -54,6 +55,7 @@ public abstract class Backlog implements Assignable {
     private String description;
     private Collection<BacklogItem> backlogItems = new HashSet<BacklogItem>();
     private User assignee;
+    private AFTime totalEstimate; 
     
     @OneToMany(mappedBy="backlog")
     /** A backlog can contain many backlog items. */
@@ -113,5 +115,17 @@ public abstract class Backlog implements Assignable {
     /** {@inheritDoc} */
 	public void setAssignee(User assignee) {
 		this.assignee = assignee;
+	}
+		
+	@Type(type="af_time")
+	@Formula(value =
+	"( select SUM(IF((select SUM(t.effortEstimate) FROM Task t WHERE t.backlogItem_id = b.id), " +
+	"(select SUM(t.effortEstimate) FROM Task t WHERE t.backlogItem_id = b.id), IFNULL(b.remainingEffortEstimate, 0))) " +
+	"from BacklogItem b where b.backlog_id = id )")	
+	public AFTime getTotalEstimate() {
+		return totalEstimate;
+	}
+	public void setTotalEstimate(AFTime totalEstimate) {
+		this.totalEstimate = totalEstimate;
 	}
 }

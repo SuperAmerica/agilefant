@@ -123,7 +123,7 @@
 			  		<td>&nbsp;</td>
 			  		<td>&nbsp;</td>
 			  		<td><c:out value="${iteration.performedEffort}" /></td>
-			  		<td><c:out value="${iteration.effortEstimate}" /></td>
+			  		<td><c:out value="${iteration.totalEstimate}" /></td>
 			  	<tr>
 			  </display:footer>				
 

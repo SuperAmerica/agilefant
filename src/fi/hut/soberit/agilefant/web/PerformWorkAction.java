@@ -18,7 +18,7 @@ public class PerformWorkAction extends TaskEventAction<PerformedWork> {
 			super.addActionError(super.getText("performWork.missingEffort"));			
 		}*/
 		if (this.getEvent().getNewEstimate() == null){
-			super.addActionError(super.getText("performWork.missingNewEstimate"));
+//			super.addActionError(super.getText("performWork.missingNewEstimate"));
 		}
 	}
 

@@ -152,28 +152,28 @@ example 3h) </td>
 					<c:forEach items="${productList}" var="product">
 						<c:choose>
 							<c:when test="${product.id == backlogItem.backlog.id}">
-								<option selected="selected" value="${product.id}">${product.name}</option>
+								<option selected="selected" value="${product.id}" title="${product.name}">${aef:out(product.name)}</option>
 							</c:when>
 							<c:otherwise>
-								<option value="${product.id}">${product.name}</option>
+								<option value="${product.id}" title="${product.name}">${aef:out(product.name)}</option>
 							</c:otherwise>
 						</c:choose>
 						<c:forEach items="${product.deliverables}" var="deliverable">
 							<c:choose>
 								<c:when test="${deliverable.id == backlogItem.backlog.id}">
-									<option selected="selected" value="${deliverable.id}">&nbsp;&nbsp;&nbsp;&nbsp;${deliverable.name}</option>
+									<option selected="selected" value="${deliverable.id}" title="${deliverable.name}">&nbsp;&nbsp;&nbsp;&nbsp;${aef:out(deliverable.name)}</option>
 								</c:when>
 								<c:otherwise>
-									<option value="${deliverable.id}">&nbsp;&nbsp;&nbsp;&nbsp;${deliverable.name}</option>
+									<option value="${deliverable.id}" title="${deliverable.name}">&nbsp;&nbsp;&nbsp;&nbsp;${aef:out(deliverable.name)}</option>
 								</c:otherwise>
 							</c:choose>
 							<c:forEach items="${deliverable.iterations}" var="iteration">
 								<c:choose>
 									<c:when test="${iteration.id == backlogItem.backlog.id}">
-										<option selected="selected" value="${iteration.id}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${iteration.name}</option>
+										<option selected="selected" value="${iteration.id}" title="${iteration.name}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${aef:out(iteration.name)}</option>
 									</c:when>
 									<c:otherwise>
-										<option value="${iteration.id}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${iteration.name}</option>
+										<option value="${iteration.id}" title="${iteration.name}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${aef:out(iteration.name)}</option>
 									</c:otherwise>
 								</c:choose>
 							</c:forEach>
@@ -212,8 +212,9 @@ example 3h) </td>
 		</p>
 		<p>
 			<display:table class="listTable" name="backlogItem.tasks" id="row" requestURI="editBacklogItem.action">
-				<display:column sortable="true" title="Id" property="id"/>
-				<display:column sortable="true" title="Name" property="name"/>
+				<display:column sortable="true" title="Name">
+					${aef:html(row.name)}
+				</display:column>
 				<display:column sortable="true" title="Effort left" sortProperty="effortEstimate.time">
 					${row.effortEstimate}
 				</display:column>
@@ -226,12 +227,14 @@ example 3h) </td>
 				<display:column sortable="true" title="Status" sortProperty="status.ordinal">
 					<ww:text name="task.status.${row.status}"/>
 				</display:column>
-				<display:column sortable="true" title="Created" property="created"/>
+				<display:column sortable="true" title="Created">
+					<ww:date name="#attr.row.created" />
+				</display:column>
 				<display:column sortable="true" title="Assignee">
-					${row.assignee.fullName}
+					${aef:html(row.assignee.fullName)}
 				</display:column>
 				<display:column sortable="true" title="Creator">
-					${row.creator.fullName}
+					${aef:html(row.creator.fullName)}
 				</display:column>
 				<display:column sortable="false" title="Actions">
 					<ww:url id="editLink" action="editTask" includeParams="none">

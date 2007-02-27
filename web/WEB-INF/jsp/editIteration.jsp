@@ -96,7 +96,7 @@
 		<p>
 			<display:table class="listTable" name="iteration.backlogItems" id="row" requestURI="editIteration.action">
 				<display:column sortable="true" title="Name">
-					${aef:out(row.name)}
+					${aef:html(row.name)}
 				</display:column>
 
 				<display:column title="Tasks" sortable="false">
@@ -124,13 +124,13 @@
 
 				</display:column>
 				<display:column sortable="false" title="Assignee" >
-					${aef:out(row.assignee.fullName)}
+					${aef:html(row.assignee.fullName)}
 				</display:column>
 				<display:column sortable="false" title="Priority" >
 				<ww:text name="backlogItem.priority.${row.priority}"/>
 				</display:column>
 				<display:column sortable="true" title="Iteration Goal">
-					${aef:out(row.iterationGoal.name)}
+					${aef:html(row.iterationGoal.name)}
 				</display:column>
 				<display:column sortable="true" title="Effort done">
 					${row.performedEffort}
@@ -191,11 +191,11 @@
 		<p>
 			<display:table class="listTable"  name="iteration.iterationGoals" id="row" requestURI="editIteration.action">
 				<display:column sortable="true" title="Name">
-					${aef:out(row.name)}
+					${aef:html(row.name)}
 				</display:column>
 					
 				<display:column sortable="true" title="Description" >
-					${aef:out(row.description)}
+					${aef:html(row.description)}
 				</display:column>
 					
 				<display:column sortable="true" title="Priority" property="priority"/>

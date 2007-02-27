@@ -102,7 +102,7 @@
 				</display:column>
 				<display:column sortable="true" title="Estimate">
 					<c:choose>
-						<c:when test="!empty ${row.effortEstimate}">
+						<c:when test="${!empty row.effortEstimate}">
 							${row.effortEstimate}
 						</c:when>
 						<c:otherwise>

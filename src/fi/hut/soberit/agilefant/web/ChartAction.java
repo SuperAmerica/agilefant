@@ -348,6 +348,7 @@ public class ChartAction extends ActionSupport {
 		int day_tr = day_last;
 		int month_tr = month_last;
 		int year_tr = year_last;
+		Calendar cal3 = Calendar.getInstance();
 		
 		if(workRemaining>0){ // To avoid a gap in the graph
 			trendSeries.add(new Day(day_tr, month_tr, year_tr), workRemaining);
@@ -359,6 +360,12 @@ public class ChartAction extends ActionSupport {
 					workRemaining=0;
 				}
 				
+				cal3.set(year_tr, month_tr, day_tr);
+				cal3.add(Calendar.DAY_OF_MONTH, 1);
+				day_tr = cal3.get(Calendar.DAY_OF_MONTH);
+				month_tr = cal3.get(Calendar.MONTH);
+				year_tr = cal3.get(Calendar.YEAR);
+				/*
 				if(month_tr == 2 && day_tr==29){
 					month_tr=3;
 					day_tr=1;
@@ -374,7 +381,7 @@ public class ChartAction extends ActionSupport {
 					month_tr++;
 				}else {
 					day_tr++;
-				}
+				}*/
 				trendSeries.add(new Day(day_tr, month_tr, year_tr), workRemaining);
 			}
 			dataset.addSeries(trendSeries);

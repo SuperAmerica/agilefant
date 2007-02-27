@@ -346,12 +346,12 @@ public class ChartAction extends ActionSupport {
 		// Variables that are used to account date setting to the trend line
 		double workRemaining = worksum;
 		int day_tr = day_last;
-		int month_tr = month_last;
+		int month_tr = month_last -1; // Convert to Calendar format 0 equals January...
 		int year_tr = year_last;
 		Calendar cal3 = Calendar.getInstance();
 		
 		if(workRemaining>0){ // To avoid a gap in the graph
-			trendSeries.add(new Day(day_tr, month_tr, year_tr), workRemaining);
+			trendSeries.add(new Day(day_tr, month_tr + 1, year_tr), workRemaining);
 		}
 		if(averageDailyProgress > 0){
 			while(workRemaining>0){
@@ -382,7 +382,7 @@ public class ChartAction extends ActionSupport {
 				}else {
 					day_tr++;
 				}*/
-				trendSeries.add(new Day(day_tr, month_tr, year_tr), workRemaining);
+				trendSeries.add(new Day(day_tr, month_tr +1, year_tr), workRemaining);
 			}
 			dataset.addSeries(trendSeries);
 		}

@@ -193,7 +193,7 @@ public class ChartAction extends ActionSupport {
 		// we only want to keep the last estimate for the day
 		
 		TimeSeries estimateSeries = new TimeSeries("Actual velocity", Day.class);
-		TimeSeries trendSeries = new TimeSeries("Trend velocity", Day.class);
+		TimeSeries trendSeries = new TimeSeries("Reference velocity", Day.class);
 		TimeSeries referenceSeries = new TimeSeries("Estimated velocity", Day.class);
 		
 		day_last=0;
@@ -391,9 +391,9 @@ public class ChartAction extends ActionSupport {
 		/*-------------------------------------------------------------*/
 		
 		JFreeChart chart1 = ChartFactory.createTimeSeriesChart(
-		"Agilefant07 workhours per day",
+		"Project burndown",
 		"Date",
-		"Workhours",
+		"Estimated effort",
 		dataset,
 		true,
 		true,

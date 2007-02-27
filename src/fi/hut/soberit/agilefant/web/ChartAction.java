@@ -1,19 +1,17 @@
 package fi.hut.soberit.agilefant.web;
 
 import java.awt.Color;
-import java.awt.GradientPaint;
-import java.awt.Paint;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.TreeMap;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -21,7 +19,6 @@ import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartRenderingInfo;
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
-import org.jfree.chart.axis.CategoryAxis;
 import org.jfree.chart.axis.DateAxis;
 import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.entity.StandardEntityCollection;
@@ -55,8 +52,6 @@ import org.jfree.data.category.IntervalCategoryDataset;
 import org.jfree.data.gantt.Task;
 import org.jfree.data.gantt.TaskSeries;
 import org.jfree.data.gantt.TaskSeriesCollection;
-import org.jfree.chart.imagemap.ImageMapUtilities;
-import org.jfree.chart.labels.StandardCategoryItemLabelGenerator;
 import org.jfree.chart.urls.CategoryURLGenerator;
 import org.jfree.chart.urls.StandardCategoryURLGenerator;
 
@@ -76,6 +71,7 @@ public class ChartAction extends ActionSupport {
 	private PerformedWorkDAO performedWorkDAO;
 	private EstimateHistoryDAO estimateHistoryDAO;
 	private Collection<PerformedWork> works;
+	private Collection<EstimateHistoryEvent> estimates;
 	private int workDone;
 	private double effortDone;
 	private double effortLeft;
@@ -88,8 +84,6 @@ public class ChartAction extends ActionSupport {
 	private double done;
 	private Date startDate;
 	private Date endDate;
-	private String startDateString;
-	private String endDateString;	
 	private Color color1;
 	private Color color2;
 	private Color color3;
@@ -110,6 +104,7 @@ public class ChartAction extends ActionSupport {
 		} else if (backlogItemId > 0){
 			works = performedWorkDAO.getPerformedWork(backlogItemDAO.get(backlogItemId));
 		} else if (iterationId > 0){
+			estimates = estimateHistoryDAO.getEstimateHistory(iterationDAO.get(iterationId));
 			works = performedWorkDAO.getPerformedWork(iterationDAO.get(iterationId));
 			startDate = iterationDAO.get(iterationId).getStartDate(); // We set the start date for burndown graph
 			endDate = iterationDAO.get(iterationId).getEndDate();// We set the end date for burndown graph
@@ -135,19 +130,14 @@ public class ChartAction extends ActionSupport {
 		int day_f=0;
 		int month_f=0;
 		int year_f=0;
-		double totalWorkDone=0;		
+		double totalWorkDone=0;
 		
 		for(PerformedWork performedWork : works){
 			
 			AFTime effort = performedWork.getEffort();
 			if(effort!=null){
 				long time = effort.getTime();
-				/* not needed, when we want to know the sum in hours only */
-				//long days = time / AFTime.WORKDAY_IN_MILLIS;
-				//time %= AFTime.WORKDAY_IN_MILLIS;
-				//long days = time / AFTime.DAY_IN_MILLIS;
-				//time %= AFTime.DAY_IN_MILLIS; // We remove the full days from the sum
-				
+			
 				long hours = time / AFTime.HOUR_IN_MILLIS;
 				time %= AFTime.HOUR_IN_MILLIS; // we remove the full hours from the sum
 				
@@ -213,29 +203,72 @@ public class ChartAction extends ActionSupport {
 		count=0;	
 		worktime=0;
 		boolean baseIsSet = false;
+		long time2 = 0;
+		Date time3 = null;
 		
+		HashMap<Integer, EstimateHistoryEvent> map = new HashMap<Integer, EstimateHistoryEvent>();
+		TreeMap<Long, EstimateHistoryEvent> map2 = new TreeMap<Long, EstimateHistoryEvent>();
+		Calendar calendar2 = Calendar.getInstance();
 		
-		
-		for(PerformedWork performedWork : works){
+		for(EstimateHistoryEvent estimateEvent : estimates){
 			
-			AFTime effort = performedWork.getNewEstimate();
+			AFTime estimate = estimateEvent.getNewEstimate();
+			Date time4 = estimateEvent.getCreated();
+			if(estimate!=null){
+				if(time3!=null && time4!=null){
+					calendar2.setTime(time3);
+					int date1 = calendar2.get(Calendar.DAY_OF_MONTH);
+					int month1 = calendar2.get(Calendar.MONTH);
+					int year1 = calendar2.get(Calendar.YEAR);
+					calendar2.setTime(time4);
+					int date2 = calendar2.get(Calendar.DAY_OF_MONTH);
+					int month2 = calendar2.get(Calendar.MONTH);
+					int year2 = calendar2.get(Calendar.YEAR);
+					
+					if(date1 != date2 || month1 != month2 || year1 != year2){ // Day changed, time to pop the estimates
+						Collection<EstimateHistoryEvent> values = map.values();
+						for(EstimateHistoryEvent estimateEvent2 : values){
+							
+							Date estimate2 = estimateEvent2.getCreated();
+							time2 = estimate2.getTime();
+							map2.put(time2, estimateEvent2);
+						}
+					}
+				}
+				time3 = time4;
+				int id1 = estimateEvent.getTask().getId();
+				map.put(id1, estimateEvent);
+
+			}
+		}
+		
+		/* for the last day*/
+		Collection<EstimateHistoryEvent> values = map.values();
+		for(EstimateHistoryEvent estimateEvent2 : values){
 			
-			if(effort!=null){
+			Date estimate2 = estimateEvent2.getCreated();
+			time2 = estimate2.getTime();
+			map2.put(time2, estimateEvent2);
+		}
+		
+		Collection<EstimateHistoryEvent> values2 = map2.values();
+		
+		for(EstimateHistoryEvent estimateEvent : values2){
+			
+			AFTime estimate = estimateEvent.getNewEstimate();
+			
+			if(estimate!=null){
 				
-				long time = effort.getTime();
-				/*
-				long days = time / AFTime.DAY_IN_MILLIS;
-				time %= AFTime.DAY_IN_MILLIS;
-				*/
+				long time = estimate.getTime();
+				
 				long hours = time / AFTime.HOUR_IN_MILLIS;
 				time %= AFTime.HOUR_IN_MILLIS;
 				
 				long minutes = time / AFTime.MINUTE_IN_MILLIS;
 				time %= AFTime.MINUTE_IN_MILLIS;
 				
-				//worktime = Math.round(days * 24 + hours + (minutes/60));
 				worktime = Math.round(hours + (minutes/60)); // we want to know the total rounded up in hours
-				Date date = performedWork.getCreated();
+				Date date = estimateEvent.getCreated();
 				//String dateStr = date.toString(); // for debugging purposes
 				Calendar calendar = Calendar.getInstance();
 				calendar.setTime(date);
@@ -246,11 +279,18 @@ public class ChartAction extends ActionSupport {
 				
 				/* Adds the first days estimate to be the base for the reference chart */
 				if ((day!=day_last || month != month_last || year!=year_last) && (count > 1) && baseIsSet==false){
-					referenceSeries.add(new Day(day_last, month_last, year_last), worksum);
+					
+					//referenceSeries.add(new Day(day_last, month_last, year_last), worksum);
+					Date start = this.getStartDate();
+					Calendar cal = Calendar.getInstance();
+					cal.setTime(start);
+					referenceSeries.add(new Day(cal.get(Calendar.DAY_OF_MONTH), // The date that has first effort for this iteration 
+							(cal.get(Calendar.MONTH) +1), 
+							cal.get(Calendar.YEAR)), 
+							worksum); // The value in the beginning of the baseline	
 					
 					/* Adds the last day of the estimated velocity to be the last day of iteration to be 0 */
 					Date end = this.getEndDate();
-					Calendar cal = Calendar.getInstance();
 					cal.setTime(end);
 					referenceSeries.add(new Day(cal.get(Calendar.DAY_OF_MONTH), // The date that has first effort for this iteration 
 							(cal.get(Calendar.MONTH) +1), 
@@ -276,10 +316,18 @@ public class ChartAction extends ActionSupport {
 			estimateSeries.add(new Day(day_last, month_last, year_last), worksum);
 			/* Create the baseline in the case of only one day that has effort estimates */
 			if(baseIsSet==false){
-				referenceSeries.add(new Day(day_last, month_last, year_last), worksum);
+				
+				//referenceSeries.add(new Day(day_last, month_last, year_last), worksum);
+				Date start = this.getStartDate();
+				Calendar cal = Calendar.getInstance();
+				cal.setTime(start);
+				referenceSeries.add(new Day(cal.get(Calendar.DAY_OF_MONTH), // The date that has first effort for this iteration 
+						(cal.get(Calendar.MONTH) +1), 
+						cal.get(Calendar.YEAR)), 
+						worksum); // The value in the beginning of the baseline	
+				
 				/* Adds the last day of the estimated velocity to be the last day of iteration to be 0 */
 				Date end = this.getEndDate();
-				Calendar cal = Calendar.getInstance();
 				if(end!=null && (cal.get(Calendar.DAY_OF_MONTH))!=day_last){ // We don't want two same dates to one serie
 					cal.setTime(end);
 					referenceSeries.add(new Day(cal.get(Calendar.DAY_OF_MONTH), // The date that has first effort for this iteration 
@@ -450,9 +498,6 @@ public class ChartAction extends ActionSupport {
 	 */
 	public String extendedBarChart(){
 		
-		
-		
-		
 		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 		JFreeChart chart2 = null;
 		
@@ -608,7 +653,7 @@ public class ChartAction extends ActionSupport {
         int month;
         int day;
         int year;
-        if(this.getStartDate()!=null){
+        if(this.getStartDate()!=null){ // User has set starting date
         	calendar.setTime(this.getStartDate());
     		day = calendar.get(Calendar.DAY_OF_MONTH);
     		month = calendar.get(Calendar.MONTH) + 1; // January == 0
@@ -622,17 +667,8 @@ public class ChartAction extends ActionSupport {
 		
 		
 		/*-experimental for setting the start date */
-		if(this.getStartDate()!=null){
-			axis.setMinimumDate(this.getStartDate());
-		/*String str1 = this.getStartDateString();
-		if(str1!=null){
-			Date sd = this.parseDate(str1); 
-			if(sd!=null){ // user has provided start date
-				axis.setMinimumDate(sd);
-			}else{
-				axis.setMinimumDate(current); // Sets the gantt to show dates starting from today.
-			}*/
-		
+		if(this.getStartDate()!=null){ // User has set the starting date
+			axis.setMinimumDate(this.getStartDate()); 
 		}else { // start date field is left empty
 			axis.setMinimumDate(current); // Sets the gantt to show dates starting from today.
 		}
@@ -656,24 +692,13 @@ public class ChartAction extends ActionSupport {
         //String str2 = this.getStartDateString();
         Date d2 = this.getEndDate();
     	Date d1 = this.getStartDate();
-        if(d1!=null && d2!=null){
+        if(d1!=null && d2!=null){ // User has set both starting and ending dates
         	if(d1.before(d2)){
         		axis.setMaximumDate(this.getEndDate());
-        	}else { // the end date field is left empty
-    			Date endingDate = calendar.getTime(); // Get the new modified date three month from the original
-    	        axis.setMaximumDate(endingDate);
+        	}else { // Ending date was before starting date, not allowed to be set for axis
+    			Date endingDate = calendar.getTime();
+    	        axis.setMaximumDate(endingDate); // Set ending date three month from user defined starting date.
     		}
-        /*}else if(d2!=null){
-			axis.setMaximumDate(this.getEndDate()); */
-		/*
-        if(str2!=null){
-        	Date ed = this.parseDate(str2);
-        	if(ed!=null){ // user has provided an end date
-    			axis.setMaximumDate(ed); // Sets the gantt to show dates until the specified ending date.
-    		}else { // the end date field is left empty
-    			Date endingDate = calendar.getTime(); // Get the new modified date three month from the original
-    	        axis.setMaximumDate(endingDate);
-    		}*/
 		}else { // the end date field is left empty
 			Date endingDate = calendar.getTime(); // Get the new modified date three month from the original
 	        axis.setMaximumDate(endingDate);
@@ -715,19 +740,7 @@ public class ChartAction extends ActionSupport {
 	        Date result = calendar.getTime();
 	        return result;
 
-	    }
-	    
-	    private Date parseDate(String str){
-			DateFormat formatter = new SimpleDateFormat(getText("webwork.date.format"));
-			Date date = null;
-			try {
-				date = (Date)formatter.parse(str);
-			} catch (ParseException e) {
-				System.err.println("Problem occurred parsing string: "+str);
-			}
-			return date;
-	    }
-	
+	    }	
 
 	/*---------------------------------------------------------------------------*/
 
@@ -990,37 +1003,8 @@ public class ChartAction extends ActionSupport {
 	}
 
 
-	public String getEndDateString() {
-		return endDateString;
-	}
-
-
-	public void setEndDateString(String endDateString) {
-		this.endDateString = endDateString;
-	}
-
-
-	public String getStartDateString() {
-		return startDateString;
-	}
-
-
-	public void setStartDateString(String startDateString) {
-		this.startDateString = startDateString;
-	}
-
-
 	public void setEstimateHistoryDAO(EstimateHistoryDAO estimateHistoryDAO) {
 		this.estimateHistoryDAO = estimateHistoryDAO;
 	}
-
-
-
-
-
-
-
-
-
 
 }

@@ -16,7 +16,7 @@
 				<c:set var="user" value="${currentUser}" scope="page"/>
 			</c:if>
 			
-   		<aef:unfinishedTaskList userId="${user.id}"/> --%>
+   		<aef:unfinishedTaskList userId="${user.id}"/>
    		<%-- <aef:heartbeatTimeBoxLists userId="${user.id}"/> --%>
    		<aef:unfinishedWatchedTasksList userId="${user.id}"/>
 

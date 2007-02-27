@@ -146,11 +146,11 @@
 		<p>
 			<display:table name="iteration.iterationGoals" id="row" requestURI="editIteration.action">
 			<display:column sortable="true" title="Name">
-				${aef:out(row.name)}
+				${aef:subString(row.name,80)}
 			</display:column>
-				<display:column sortable="true" title="Status" >
+				<%--display:column sortable="true" title="Status" >
 					${row.status}
-				</display:column>
+				</display:column--%>
 				<display:column sortable="true" title="Description">
 					${aef:out(row.description)}
 				</display:column>

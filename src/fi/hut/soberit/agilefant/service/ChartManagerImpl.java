@@ -180,7 +180,6 @@ public class ChartManagerImpl implements ChartManager {
 	
 	protected TimeSeriesCollection getDataset(double averageDailyProgress, Collection<EstimateHistoryEvent> values2, Date startDate, Date endDate) {
 		TimeSeries estimateSeries = new TimeSeries("Actual velocity", Day.class);
-		TimeSeries trendSeries = new TimeSeries("Reference velocity", Day.class);
 		TimeSeries referenceSeries = new TimeSeries("Estimated velocity", Day.class);
 		
 		int day_last=0;
@@ -278,22 +277,27 @@ public class ChartManagerImpl implements ChartManager {
 			}
 		}
 		
-		return createTimeSeriesCollection(averageDailyProgress, estimateSeries, trendSeries, referenceSeries, day_last, month_last, year_last, worksum);
-	}
-
-	private TimeSeriesCollection createTimeSeriesCollection(double averageDailyProgress, TimeSeries estimateSeries, TimeSeries trendSeries, TimeSeries referenceSeries, int day_last, int month_last, int year_last, double workSum) {
 		TimeSeriesCollection dataset = new TimeSeriesCollection();
-		
 		dataset.addSeries(estimateSeries);
 		dataset.addSeries(referenceSeries);
 		
+		TimeSeries trendSeries = createTrendSeries(averageDailyProgress, day_last, month_last, year_last, worksum);
+		if (trendSeries != null) {
+			dataset.addSeries(trendSeries);
+		}
+		
+		return dataset;
+	}
+
+	private TimeSeries createTrendSeries(double averageDailyProgress, int day_last, int month_last, int year_last, double workSum) {
 		// Variables that are used to account date setting to the trend line
 		int day_tr = day_last;
 		int month_tr = month_last - 1; // Convert to Calendar format 0 equals January...
 		int year_tr = year_last;
 		Calendar cal3 = Calendar.getInstance();
+		TimeSeries trendSeries = new TimeSeries("Reference velocity", Day.class);
 		
-		if (workSum>0) { // To avoid a gap in the graph
+		if (workSum > 0) { // To avoid a gap in the graph
 			trendSeries.add(new Day(day_tr, month_tr+1, year_tr), workSum);
 		}
 		if (averageDailyProgress > 0) {
@@ -311,9 +315,10 @@ public class ChartManagerImpl implements ChartManager {
 
 				trendSeries.add(new Day(day_tr, month_tr+1, year_tr), workSum);
 			}
-			dataset.addSeries(trendSeries);
+			return trendSeries;
+		} else {
+			return null;
 		}
-		return dataset;
 	}	
 
 	protected JFreeChart getChart(TimeSeriesCollection dataset, Date startDate, Date endDate) {

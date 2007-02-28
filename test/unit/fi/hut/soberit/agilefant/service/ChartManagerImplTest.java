@@ -72,8 +72,4 @@ public class ChartManagerImplTest extends TestCase {
 			add(new PerformedWork(user, task, dayBeforeYesterday, new AFTime("3h"), null, now));
 		}}));
 	}
-
-	public void testGetDataset() {
-		fail("Not yet implemented");
-	}
 }

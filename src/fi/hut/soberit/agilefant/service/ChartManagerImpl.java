@@ -104,6 +104,10 @@ public class ChartManagerImpl implements ChartManager {
 		return map2.values();
 	}
 
+	/**
+	 * @param workCollection Collection of PerformedWork
+	 * @return Average daily work done, in hours
+	 */
 	protected double getAverageDailyProgress(Collection<PerformedWork> workCollection) {
 		/*-------------------------------------------------------------*/
 		// The code for dataset: actual workhours

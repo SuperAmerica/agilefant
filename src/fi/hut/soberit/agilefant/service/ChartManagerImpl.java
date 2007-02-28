@@ -26,14 +26,12 @@ import org.jfree.data.time.Day;
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
 
-import fi.hut.soberit.agilefant.db.BacklogItemDAO;
-import fi.hut.soberit.agilefant.db.DeliverableDAO;
 import fi.hut.soberit.agilefant.db.EstimateHistoryDAO;
 import fi.hut.soberit.agilefant.db.IterationDAO;
 import fi.hut.soberit.agilefant.db.PerformedWorkDAO;
-import fi.hut.soberit.agilefant.db.TaskDAO;
 import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.EstimateHistoryEvent;
+import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.PerformedWork;
 
 /**
@@ -46,13 +44,13 @@ public class ChartManagerImpl implements ChartManager {
 	private PerformedWorkDAO performedWorkDAO;
 	private EstimateHistoryDAO estimateHistoryDAO;
 	
-	protected byte[] getChartImageByteArray(JFreeChart chart1) {
+	protected byte[] getChartImageByteArray(JFreeChart chart) {
 		try {
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
-			ChartUtilities.writeChartAsPNG(out, chart1, 780, 600);
+			ChartUtilities.writeChartAsPNG(out, chart, 780, 600);
 			return out.toByteArray();
 		} catch (IOException e) {
-			log.error("Problem occurred creating chart.");
+			log.warn("Problem occurred creating chart", e);
 			return null;
 		}
 	}
@@ -62,19 +60,18 @@ public class ChartManagerImpl implements ChartManager {
 		// The code for dataset: effort estimates
 		// we only want to keep the last estimate for the day
 		
-		long time2 = 0;
 		Date previousTime = null;
 		
 		HashMap<Integer, EstimateHistoryEvent> map = new HashMap<Integer, EstimateHistoryEvent>();
 		TreeMap<Long, EstimateHistoryEvent> map2 = new TreeMap<Long, EstimateHistoryEvent>();
 		Calendar calendar2 = Calendar.getInstance();
 		
-		for(EstimateHistoryEvent estimateEvent : estimates){
+		for(EstimateHistoryEvent estimateEvent : estimates) {
 			
 			AFTime estimate = estimateEvent.getNewEstimate();
 			Date creationTime = estimateEvent.getCreated();
 			if(estimate!=null){
-				if(previousTime!=null && creationTime!=null){
+				if (previousTime!=null && creationTime!=null) {
 					calendar2.setTime(previousTime);
 					int date1 = calendar2.get(Calendar.DAY_OF_MONTH);
 					int month1 = calendar2.get(Calendar.MONTH);
@@ -84,13 +81,9 @@ public class ChartManagerImpl implements ChartManager {
 					int month2 = calendar2.get(Calendar.MONTH);
 					int year2 = calendar2.get(Calendar.YEAR);
 					
-					if(date1 != date2 || month1 != month2 || year1 != year2){ // Day changed, time to pop the estimates
-						Collection<EstimateHistoryEvent> values = map.values();
-						for(EstimateHistoryEvent estimateEvent2 : values){
-							
-							Date estimate2 = estimateEvent2.getCreated();
-							time2 = estimate2.getTime();
-							map2.put(time2, estimateEvent2);
+					if (date1 != date2 || month1 != month2 || year1 != year2) { // Day changed, time to pop the estimates
+						for (EstimateHistoryEvent estimateEvent2 : map.values()) {
+							map2.put(estimateEvent2.getCreated().getTime(), estimateEvent2);
 						}
 					}
 				}
@@ -103,27 +96,24 @@ public class ChartManagerImpl implements ChartManager {
 		
 		/* for the last day*/
 		Collection<EstimateHistoryEvent> values = map.values();
-		for(EstimateHistoryEvent estimateEvent2 : values){
-			
+		for (EstimateHistoryEvent estimateEvent2 : values){
 			Date estimate2 = estimateEvent2.getCreated();
-			time2 = estimate2.getTime();
-			map2.put(time2, estimateEvent2);
+			map2.put(estimate2.getTime(), estimateEvent2);
 		}
 		
-		Collection<EstimateHistoryEvent> values2 = map2.values();
-		return values2;
+		return map2.values();
 	}
 
-	protected double getAverageDailyProgress(int iterationId) {
+	protected double getAverageDailyProgress(Collection<PerformedWork> workCollection) {
 		/*-------------------------------------------------------------*/
 		// The code for dataset: actual workhours
 		
 		//TimeSeries workSeries = new TimeSeries("Workhours", Day.class);
 		
-		int day_last=0;
-		int month_last=0;
-		int year_last=0;
-		int worksum=0;
+		int lastDay=0;
+		int lastMonth=0;
+		int lastYear=0;
+		int workSum=0;
 		int count=0;
 		int worktime=0;
 		
@@ -133,8 +123,7 @@ public class ChartManagerImpl implements ChartManager {
 		int year_f=0;
 		double totalWorkDone=0;
 		
-		Collection<PerformedWork> works = performedWorkDAO.getPerformedWork(iterationDAO.get(iterationId));
-		for(PerformedWork performedWork : works){
+		for(PerformedWork performedWork : workCollection){
 			
 			AFTime effort = performedWork.getEffort();
 			if(effort!=null){
@@ -156,7 +145,7 @@ public class ChartManagerImpl implements ChartManager {
 				count++;
 				
 //				 day changed, time to pop the previous days hours
-				if ((day!=day_last || month != month_last || year!=year_last) && (count > 1)){
+				if ((day!=lastDay || month != lastMonth || year!=lastYear) && (count > 1)){
 					//workSeries.add(new Day(day_last, month_last, year_last), worksum);
 					//worksum=0; Can be used if the effort is wanted per day
 				}else if(count==1){
@@ -165,24 +154,24 @@ public class ChartManagerImpl implements ChartManager {
 					year_f=year;
 				}
 				
-				worksum=worksum+worktime;
-				day_last=day;
-				month_last=month;
-				year_last=year;
+				workSum=workSum+worktime;
+				lastDay=day;
+				lastMonth=month;
+				lastYear=year;
 			}		
 			
 		}
-		if((worksum > 0) && (day_last > 0)){ // pop the last days hours
+		if((workSum > 0) && (lastDay > 0)){ // pop the last days hours
 			//workSeries.add(new Day(day_last, month_last, year_last), worksum);
-			totalWorkDone=worksum;
+			totalWorkDone=workSum;
 		}
 		
 		Date d1 = new GregorianCalendar(year_f, month_f, day_f, 00, 00).getTime();
-		Date d2 = new GregorianCalendar(year_last, month_last, day_last, 00, 00).getTime();
+		Date d2 = new GregorianCalendar(lastYear, lastMonth, lastDay, 00, 00).getTime();
 		long diff = d2.getTime() - d1.getTime();
-		double usedCalendarDays = (double)(diff / (1000 * 60 * 60 * 24)) + 1; // If all the work is done in one day the value is 1
+		double usedCalendarDays = (double)(diff / AFTime.DAY_IN_MILLIS) + 1; // If all the work is done in one day the value is 1
 		
-		return totalWorkDone/usedCalendarDays;
+		return totalWorkDone / usedCalendarDays;
 	}
 	
 	protected TimeSeriesCollection getDataset(double averageDailyProgress, Collection<EstimateHistoryEvent> values2, Date startDate, Date endDate) {
@@ -285,26 +274,29 @@ public class ChartManagerImpl implements ChartManager {
 			}
 		}
 		
+		return createTimeSeriesCollection(averageDailyProgress, estimateSeries, trendSeries, referenceSeries, day_last, month_last, year_last, worksum);
+	}
+
+	private TimeSeriesCollection createTimeSeriesCollection(double averageDailyProgress, TimeSeries estimateSeries, TimeSeries trendSeries, TimeSeries referenceSeries, int day_last, int month_last, int year_last, double workSum) {
 		TimeSeriesCollection dataset = new TimeSeriesCollection();
 		
 		dataset.addSeries(estimateSeries);
 		dataset.addSeries(referenceSeries);
 		
 		// Variables that are used to account date setting to the trend line
-		double workRemaining = worksum;
 		int day_tr = day_last;
-		int month_tr = month_last -1; // Convert to Calendar format 0 equals January...
+		int month_tr = month_last - 1; // Convert to Calendar format 0 equals January...
 		int year_tr = year_last;
 		Calendar cal3 = Calendar.getInstance();
 		
-		if(workRemaining>0){ // To avoid a gap in the graph
-			trendSeries.add(new Day(day_tr, month_tr + 1, year_tr), workRemaining);
+		if (workSum>0) { // To avoid a gap in the graph
+			trendSeries.add(new Day(day_tr, month_tr+1, year_tr), workSum);
 		}
-		if(averageDailyProgress > 0){
-			while(workRemaining>0){
-				workRemaining = workRemaining - averageDailyProgress;
-				if(workRemaining<0){
-					workRemaining=0;
+		if (averageDailyProgress > 0) {
+			while (workSum>0) {
+				workSum = workSum - averageDailyProgress;
+				if (workSum<0) {
+					workSum=0;
 				}
 				
 				cal3.set(year_tr, month_tr, day_tr);
@@ -313,7 +305,7 @@ public class ChartManagerImpl implements ChartManager {
 				month_tr = cal3.get(Calendar.MONTH);
 				year_tr = cal3.get(Calendar.YEAR);
 
-				trendSeries.add(new Day(day_tr, month_tr +1, year_tr), workRemaining);
+				trendSeries.add(new Day(day_tr, month_tr+1, year_tr), workSum);
 			}
 			dataset.addSeries(trendSeries);
 		}
@@ -369,7 +361,7 @@ public class ChartManagerImpl implements ChartManager {
 		
 		Collection<EstimateHistoryEvent> estimates = estimateHistoryDAO.getEstimateHistory(iterationDAO.get(iterationId));
 		Collection<EstimateHistoryEvent> values2 = filterEstimates(estimates);
-		double averageDailyProgress = getAverageDailyProgress(iterationId);
+		double averageDailyProgress = getAverageDailyProgress(performedWorkDAO.getPerformedWork(iterationDAO.get(iterationId)));
 		TimeSeriesCollection dataset = getDataset(averageDailyProgress, values2, startDate, endDate);
 		JFreeChart chart1 = getChart(dataset, startDate, endDate);
 		

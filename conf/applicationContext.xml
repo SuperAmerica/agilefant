@@ -79,5 +79,10 @@
 	 <bean name="aefFunctions" class="fi.hut.soberit.agilefant.web.function.AEFFunctions">
 		<property name="maxStrLength" value="15"/>
 	 </bean>
-
+	 
+	 <bean name="chartManager" class="fi.hut.soberit.agilefant.service.ChartManagerImpl">
+		<property name="iterationDAO" ref="iterationDAO"/>
+		<property name="performedWorkDAO" ref="performedWorkDAO"/>
+		<property name="estimateHistoryDAO" ref="estimateHistoryDAO"/>
+	 </bean>
 </beans>

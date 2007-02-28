@@ -227,7 +227,7 @@ public class User implements PageItem {
 	 */
 	@Type(type="af_time")
 	@Formula(value=	"(select sum(e.effort) from TaskEvent e, Task t " +
-			"where e.eventType = 'PerformedWork' and t.id = e.task_id and t.assignee_id = id)")	
+			"where e.eventType = 'PerformedWork' and t.id = e.task_id and t.assignee_id = id and t.status != 4)")	
 	public AFTime getAssignmentsTotalPerformedEffort() {
 		return assignmentsTotalPerformedEffort;
 	}
@@ -247,7 +247,7 @@ public class User implements PageItem {
 	 */
 	@Type(type="af_time")
 	@Formula(value=	"(select SUM(t.effortEstimate) from Task t " +
-					"where t.assignee_id = id)")	
+					"where t.assignee_id = id and t.status != 4)")	
 	public AFTime getAssignmentsTotalEffortEstimate() {
 		return assignmentsTotalEffortEstimate;
 	}

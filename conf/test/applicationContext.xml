@@ -56,4 +56,10 @@
 	 <bean name="portfolioManager" class="fi.hut.soberit.agilefant.service.PortfolioManagerImpl">
 		<property name="deliverableDAO" ref="deliverableDAO"/>
 	 </bean>
+	 
+	 <bean name="chartManager" class="fi.hut.soberit.agilefant.service.ChartManagerImpl">
+		<property name="iterationDAO" ref="iterationDAO"/>
+		<property name="performedWorkDAO" ref="performedWorkDAO"/>
+		<property name="estimateHistoryDAO" ref="estimateHistoryDAO"/>
+	 </bean>
 </beans>

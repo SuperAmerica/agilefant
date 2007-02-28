@@ -72,16 +72,6 @@ public class ChartManagerImplTest extends TestCase {
 			add(new PerformedWork(user, task, dayBeforeYesterday, new AFTime("3h"), null, now));
 		}}));
 	}
-	
-	public void testGetAverageDailyProgress() {
-		fail("Not yet implemented");
-		
-		ArrayList<PerformedWork> workCollection = new ArrayList<PerformedWork>() {{
-			add(new PerformedWork(user, task, yesterday, new AFTime("3h"), null, now));
-			add(new PerformedWork(user, task, yesterday, new AFTime("1h"), null, now));
-			add(new PerformedWork(user, task, yesterday, new AFTime("3h"), null, now));
-		}};
-	}
 
 	public void testGetDataset() {
 		fail("Not yet implemented");

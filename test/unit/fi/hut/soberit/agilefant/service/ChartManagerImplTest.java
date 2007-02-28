@@ -20,6 +20,11 @@ public class ChartManagerImplTest extends TestCase {
 	
 	final User user = new User();
 	final Task task = new Task();
+	Task task1 = Task(1);
+	Task task2 = Task(2);
+	Task task3 = Task(3);
+	
+	
 	
 	private ChartManagerImpl cm = new ChartManagerImpl();
 	
@@ -29,16 +34,33 @@ public class ChartManagerImplTest extends TestCase {
 	
 	public void testFilterEstimates_withSingleDay() {
 		Collection<EstimateHistoryEvent> estimates = new ArrayList<EstimateHistoryEvent>() {{
-			add(new EstimateHistoryEvent(user, task, now, new AFTime("1h")));
-			add(new EstimateHistoryEvent(user, task, hourAgo, new AFTime("3h")));
-			add(new EstimateHistoryEvent(user, task, twoHoursAgo, new AFTime("2h")));
+			add(new EstimateHistoryEvent(user, task1, twoHoursAgo, new AFTime("2h")));
+			add(new EstimateHistoryEvent(user, task1, hourAgo, new AFTime("1h")));
+			add(new EstimateHistoryEvent(user, task1, now, new AFTime("3h")));
 		}};
 		
 		Collection<EstimateHistoryEvent> filteredEstimates = cm.filterEstimates(estimates);
 		
 		assertEquals(1, filteredEstimates.size());
-		assertEquals(new AFTime("1h"), filteredEstimates.iterator().next().getNewEstimate());
+		assertEquals(new AFTime("3h"), filteredEstimates.iterator().next().getNewEstimate());
 	}
+	
+	
+	public void testFilterEstimates_withMultipleDays() {
+		Collection<EstimateHistoryEvent> estimates = new ArrayList<EstimateHistoryEvent>() {{
+			add(new EstimateHistoryEvent(user, task1, yesterday, new AFTime("2h")));
+			add(new EstimateHistoryEvent(user, task1, hourAgo, new AFTime("1h")));
+			add(new EstimateHistoryEvent(user, task1, now, new AFTime("3h")));
+			
+		}};
+		
+		Collection<EstimateHistoryEvent> filteredEstimates = cm.filterEstimates(estimates);
+		
+		assertEquals(2, filteredEstimates.size());
+		assertEquals(new AFTime("2h"), filteredEstimates.iterator().next().getNewEstimate());
+	}
+	
+	
 
 	public void testGetAverageDailyProgress_withEmptyCollcetion() {
 		// TODO Should this return Double.NaN instead of 0.0? Would that break things?
@@ -50,6 +72,14 @@ public class ChartManagerImplTest extends TestCase {
 			add(new PerformedWork(user, task, yesterday, new AFTime("2h"), null, now));
 		}}));
 	}
+
+	
+	public Task Task(int Id){
+		Task task = new Task();
+		task.setId(Id);
+		return task;
+	}
+
 	
 	public void testGetAverageDailyProgress_withNullEffort() {
 		assertEquals(0.0, cm.getAverageDailyProgress(new ArrayList<PerformedWork>() {{
@@ -72,4 +102,5 @@ public class ChartManagerImplTest extends TestCase {
 			add(new PerformedWork(user, task, dayBeforeYesterday, new AFTime("3h"), null, now));
 		}}));
 	}
+
 }

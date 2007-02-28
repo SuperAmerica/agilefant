@@ -29,6 +29,14 @@ public class PerformedWork extends EstimateHistoryEvent {
 	private WorkType workType;
 	private Date workDate;
 	
+	public PerformedWork() {}
+
+	public PerformedWork(User actor, Task task, Date created, AFTime newEstimate, AFTime effort, Date workDate) {
+		super(actor, task, created, newEstimate);
+		this.effort = effort;
+		this.workDate = workDate;
+	}
+
 	/** Work type */
 	@ManyToOne
 	public WorkType getWorkType() {

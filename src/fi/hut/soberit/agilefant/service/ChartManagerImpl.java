@@ -46,10 +46,7 @@ public class ChartManagerImpl implements ChartManager {
 	private PerformedWorkDAO performedWorkDAO;
 	private EstimateHistoryDAO estimateHistoryDAO;
 	
-	/* (non-Javadoc)
-	 * @see fi.hut.soberit.agilefant.service.ChartManager#getChartImageByteArray(org.jfree.chart.JFreeChart)
-	 */
-	private byte[] getChartImageByteArray(JFreeChart chart1) {
+	protected byte[] getChartImageByteArray(JFreeChart chart1) {
 		try {
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
 			ChartUtilities.writeChartAsPNG(out, chart1, 780, 600);
@@ -60,16 +57,13 @@ public class ChartManagerImpl implements ChartManager {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see fi.hut.soberit.agilefant.service.ChartManager#getEstimateHistoryEvents(java.util.Collection)
-	 */
-	private Collection<EstimateHistoryEvent> getEstimateHistoryEvents(Collection<EstimateHistoryEvent> estimates) {
+	protected Collection<EstimateHistoryEvent> filterEstimates(Collection<EstimateHistoryEvent> estimates) {
 		/*-------------------------------------------------------------*/
 		// The code for dataset: effort estimates
 		// we only want to keep the last estimate for the day
 		
 		long time2 = 0;
-		Date time3 = null;
+		Date previousTime = null;
 		
 		HashMap<Integer, EstimateHistoryEvent> map = new HashMap<Integer, EstimateHistoryEvent>();
 		TreeMap<Long, EstimateHistoryEvent> map2 = new TreeMap<Long, EstimateHistoryEvent>();
@@ -78,14 +72,14 @@ public class ChartManagerImpl implements ChartManager {
 		for(EstimateHistoryEvent estimateEvent : estimates){
 			
 			AFTime estimate = estimateEvent.getNewEstimate();
-			Date time4 = estimateEvent.getCreated();
+			Date creationTime = estimateEvent.getCreated();
 			if(estimate!=null){
-				if(time3!=null && time4!=null){
-					calendar2.setTime(time3);
+				if(previousTime!=null && creationTime!=null){
+					calendar2.setTime(previousTime);
 					int date1 = calendar2.get(Calendar.DAY_OF_MONTH);
 					int month1 = calendar2.get(Calendar.MONTH);
 					int year1 = calendar2.get(Calendar.YEAR);
-					calendar2.setTime(time4);
+					calendar2.setTime(creationTime);
 					int date2 = calendar2.get(Calendar.DAY_OF_MONTH);
 					int month2 = calendar2.get(Calendar.MONTH);
 					int year2 = calendar2.get(Calendar.YEAR);
@@ -100,7 +94,7 @@ public class ChartManagerImpl implements ChartManager {
 						}
 					}
 				}
-				time3 = time4;
+				previousTime = creationTime;
 				int id1 = estimateEvent.getTask().getId();
 				map.put(id1, estimateEvent);
 
@@ -120,10 +114,7 @@ public class ChartManagerImpl implements ChartManager {
 		return values2;
 	}
 
-	/* (non-Javadoc)
-	 * @see fi.hut.soberit.agilefant.service.ChartManager#getAverageDailyProgress(int)
-	 */
-	private double getAverageDailyProgress(int iterationId) {
+	protected double getAverageDailyProgress(int iterationId) {
 		/*-------------------------------------------------------------*/
 		// The code for dataset: actual workhours
 		
@@ -194,10 +185,7 @@ public class ChartManagerImpl implements ChartManager {
 		return totalWorkDone/usedCalendarDays;
 	}
 	
-	/* (non-Javadoc)
-	 * @see fi.hut.soberit.agilefant.service.ChartManager#getDataset(double, java.util.Collection, java.util.Date, java.util.Date)
-	 */
-	private TimeSeriesCollection getDataset(double averageDailyProgress, Collection<EstimateHistoryEvent> values2, Date startDate, Date endDate) {
+	protected TimeSeriesCollection getDataset(double averageDailyProgress, Collection<EstimateHistoryEvent> values2, Date startDate, Date endDate) {
 		TimeSeries estimateSeries = new TimeSeries("Actual velocity", Day.class);
 		TimeSeries trendSeries = new TimeSeries("Reference velocity", Day.class);
 		TimeSeries referenceSeries = new TimeSeries("Estimated velocity", Day.class);
@@ -324,23 +312,7 @@ public class ChartManagerImpl implements ChartManager {
 				day_tr = cal3.get(Calendar.DAY_OF_MONTH);
 				month_tr = cal3.get(Calendar.MONTH);
 				year_tr = cal3.get(Calendar.YEAR);
-				/*
-				if(month_tr == 2 && day_tr==29){
-					month_tr=3;
-					day_tr=1;
-				}else if(month_tr==12 && day_tr==31){
-					day_tr=1;
-					month_tr=1;
-					year_tr++;
-				}else if((month_tr==4 || month_tr==6 || month_tr==9 || month_tr==11) && (day_tr==30)){
-					day_tr=1;
-					month_tr++;
-				}else if((month_tr==1 || month_tr==3 || month_tr==5 || month_tr==7 || month_tr==8 || month_tr==10) && (day_tr==31)){
-					day_tr=1;
-					month_tr++;
-				}else {
-					day_tr++;
-				}*/
+
 				trendSeries.add(new Day(day_tr, month_tr +1, year_tr), workRemaining);
 			}
 			dataset.addSeries(trendSeries);
@@ -348,11 +320,8 @@ public class ChartManagerImpl implements ChartManager {
 		return dataset;
 	}	
 
-	/* (non-Javadoc)
-	 * @see fi.hut.soberit.agilefant.service.ChartManager#getChart(org.jfree.data.time.TimeSeriesCollection, java.util.Date, java.util.Date)
-	 */
-	private JFreeChart getChart(TimeSeriesCollection dataset, Date startDate, Date endDate) {
-		JFreeChart chart1 = ChartFactory.createTimeSeriesChart(
+	protected JFreeChart getChart(TimeSeriesCollection dataset, Date startDate, Date endDate) {
+		JFreeChart chart = ChartFactory.createTimeSeriesChart(
 		"Project burndown",
 		"Date",
 		"Estimated effort",
@@ -360,25 +329,25 @@ public class ChartManagerImpl implements ChartManager {
 		true,
 		true,
 		false);
-		XYPlot plot = chart1.getXYPlot();
+		XYPlot plot = chart.getXYPlot();
 		DateAxis axis = (DateAxis) plot.getDomainAxis();
 		
 		axis.setDateFormatOverride(new SimpleDateFormat("dd-MM-yyyy")); // Here we set how the time axis should look like
 		
 		/* we want to set the start date to be official start day*/
 		Date iterStartDate = startDate;
-		if(iterStartDate != null){
+		if (iterStartDate != null) {
 			Date min = axis.getMinimumDate();
-			if(min.after(iterStartDate)){
+			if (min.after(iterStartDate)) {
 				axis.setMinimumDate(iterStartDate); // If there is no work done before the start of the iteration
 			}
 		}
 		
 		/* We want to set the end date to be official end day */
 		Date iterEndDate = endDate;
-		if(iterEndDate != null){
+		if (iterEndDate != null) {
 			Date max = axis.getMaximumDate();
-			if(max.before(iterEndDate)){
+			if (max.before(iterEndDate)) {
 				axis.setMaximumDate(iterEndDate); // If there is no work done after the end of the iteration
 			}
 		}
@@ -386,14 +355,11 @@ public class ChartManagerImpl implements ChartManager {
 		//axis.setTickUnit(new DateTickUnit(DateTickUnit.DAY, 7)); // A way to set how often dates are showing in the time axis
 		
 		XYItemRenderer rend = plot.getRenderer();
-		XYLineAndShapeRenderer rr = (XYLineAndShapeRenderer)rend;
+		XYLineAndShapeRenderer rr = (XYLineAndShapeRenderer) rend;
 		rr.setShapesVisible(true);
-		return chart1;
+		return chart;
 	}
 	
-	/* (non-Javadoc)
-	 * @see fi.hut.soberit.agilefant.service.ChartManager#getIterationBurndown(int)
-	 */
 	public byte[] getIterationBurndown(int iterationId) {
 		Date startDate = iterationDAO.get(iterationId).getStartDate(); // We set the start date for burndown graph
 		Date endDate = iterationDAO.get(iterationId).getEndDate();// We set the end date for burndown graph
@@ -402,11 +368,23 @@ public class ChartManagerImpl implements ChartManager {
 		//dataset.addSeries(workSeries); 
 		
 		Collection<EstimateHistoryEvent> estimates = estimateHistoryDAO.getEstimateHistory(iterationDAO.get(iterationId));
-		Collection<EstimateHistoryEvent> values2 = getEstimateHistoryEvents(estimates);
+		Collection<EstimateHistoryEvent> values2 = filterEstimates(estimates);
 		double averageDailyProgress = getAverageDailyProgress(iterationId);
 		TimeSeriesCollection dataset = getDataset(averageDailyProgress, values2, startDate, endDate);
 		JFreeChart chart1 = getChart(dataset, startDate, endDate);
 		
 		return getChartImageByteArray(chart1);
+	}
+
+	public void setEstimateHistoryDAO(EstimateHistoryDAO estimateHistoryDAO) {
+		this.estimateHistoryDAO = estimateHistoryDAO;
+	}
+
+	public void setIterationDAO(IterationDAO iterationDAO) {
+		this.iterationDAO = iterationDAO;
+	}
+
+	public void setPerformedWorkDAO(PerformedWorkDAO performedWorkDAO) {
+		this.performedWorkDAO = performedWorkDAO;
 	}
 }

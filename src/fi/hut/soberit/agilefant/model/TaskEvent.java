@@ -43,6 +43,15 @@ public abstract class TaskEvent {
 	private Task task;
 	private Date created;
 	
+	public TaskEvent() {}
+	
+	public TaskEvent(User actor, Task task, Date created) {
+		super();
+		this.actor = actor;
+		this.task = task;
+		this.created = created;
+	}
+
 	/** 
 	 * Get the id of this object.
 	 * <p>

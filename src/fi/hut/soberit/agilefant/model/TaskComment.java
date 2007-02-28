@@ -1,5 +1,7 @@
 package fi.hut.soberit.agilefant.model;
 
+import java.util.Date;
+
 import javax.persistence.Entity;
 
 import org.hibernate.annotations.Type;
@@ -18,6 +20,12 @@ public class TaskComment extends TaskEvent{
 		
 	private String comment;
 
+	public TaskComment() {}
+	
+	public TaskComment(User actor, Task task, Date created) {
+		super(actor, task, created);
+	}
+	
 	@Type(type="escaped_text")
 	public String getComment() {
 		return comment;

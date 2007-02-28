@@ -1,5 +1,7 @@
 package fi.hut.soberit.agilefant.model;
 
+import java.util.Date;
+
 import javax.persistence.Entity;
 import org.hibernate.annotations.Type;
 
@@ -19,6 +21,13 @@ import org.hibernate.annotations.Type;
 public class EstimateHistoryEvent extends TaskComment {
 	
 	private AFTime newEstimate;
+
+	public EstimateHistoryEvent() {}
+
+	public EstimateHistoryEvent(User actor, Task task, Date created, AFTime newEstimate) {
+		super(actor, task, created);
+		this.newEstimate = newEstimate;
+	}
 
 	@Type(type="af_time")	
 	public AFTime getNewEstimate() {

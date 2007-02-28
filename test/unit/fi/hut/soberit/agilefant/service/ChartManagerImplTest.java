@@ -19,15 +19,15 @@ public class ChartManagerImplTest extends TestCase {
 		
 		final Date now = new Date();
 		final Date hourAgo = new Date(now.getTime() - AFTime.HOUR_IN_MILLIS);
-		final Date twoHoursAgo = new Date(now.getTime() - AFTime.HOUR_IN_MILLIS);
+		final Date twoHoursAgo = new Date(now.getTime() - 2*AFTime.HOUR_IN_MILLIS);
 		final Date yesterday = new Date(now.getTime() - AFTime.DAY_IN_MILLIS);
 		
 		final AFTime hour = new AFTime("1h");
 		
 		Collection<EstimateHistoryEvent> estimates = new ArrayList<EstimateHistoryEvent>() {{
-			new EstimateHistoryEvent(user, task, now, new AFTime("1h"));
-			new EstimateHistoryEvent(user, task, hourAgo, new AFTime("3h"));
-			new EstimateHistoryEvent(user, task, twoHoursAgo, new AFTime("2h"));
+			add(new EstimateHistoryEvent(user, task, now, new AFTime("1h")));
+			add(new EstimateHistoryEvent(user, task, hourAgo, new AFTime("3h")));
+			add(new EstimateHistoryEvent(user, task, twoHoursAgo, new AFTime("2h")));
 		}};
 		
 		Collection<EstimateHistoryEvent> filteredEstimates = cm.filterEstimates(estimates);

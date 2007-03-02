@@ -58,7 +58,12 @@
 		<p>
 			<display:table name="iteration.backlogItems" id="row" requestURI="viewIteration.action">
 			<display:column sortable="true" title="Name">
-				${aef:html(row.name)}
+				<ww:url id="editLink" action="editBacklogItem" includeParams="none">
+					<ww:param name="backlogItemId" value="${row.id}"/>
+				</ww:url>				
+				<ww:a href="%{editLink}">
+					${aef:html(row.name)}
+				</ww:a>
 			</display:column>
 
 
@@ -113,13 +118,14 @@
 				
 
 				<display:column sortable="false" title="Actions">
-					<ww:url id="editLink" action="editBacklogItem" includeParams="none">
+					<%--ww:url id="editLink" action="editBacklogItem" includeParams="none">
 						<ww:param name="backlogItemId" value="${row.id}"/>
-					</ww:url>
+					</ww:url--%>
                     <ww:url id="deleteLink" action="deleteBacklogItem" includeParams="none"> 
                             <ww:param name="backlogItemId" value="${row.id}"/> 
                     </ww:url> 
-                    <ww:a href="%{editLink}&contextViewName=viewIteration&contextObjectId=${iteration.id}">Edit</ww:a>|<ww:a href="%{deleteLink}&contextViewName=viewIteration&contextObjectId=${iteration.id}">Delete</ww:a> 					
+                    <%--ww:a href="%{editLink}&contextViewName=viewIteration&contextObjectId=${iteration.id}">Edit</ww:a>|--%>
+                    <ww:a href="%{deleteLink}&contextViewName=viewIteration&contextObjectId=${iteration.id}">Delete</ww:a> 					
 					
 				</display:column>
 			  <display:footer>

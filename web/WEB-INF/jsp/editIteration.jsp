@@ -96,7 +96,12 @@
 		<p>
 			<display:table class="listTable" name="iteration.backlogItems" id="row" requestURI="editIteration.action">
 				<display:column sortable="true" title="Name">
-					${aef:html(row.name)}
+					<ww:url id="editLink" action="editBacklogItem" includeParams="none">
+					<ww:param name="backlogItemId" value="${row.id}"/>
+					</ww:url>				
+					<ww:a href="%{editLink}">
+						${aef:html(row.name)}
+					</ww:a>
 				</display:column>
 
 				<display:column title="Tasks" sortable="false">
@@ -148,13 +153,14 @@
 				
 
 				<display:column sortable="false" title="Actions">
-					<ww:url id="editLink" action="editBacklogItem" includeParams="none">
+					<%--ww:url id="editLink" action="editBacklogItem" includeParams="none">
 						<ww:param name="backlogItemId" value="${row.id}"/>
-					</ww:url>
+					</ww:url--%>
                     <ww:url id="deleteLink" action="deleteBacklogItem" includeParams="none"> 
                             <ww:param name="backlogItemId" value="${row.id}"/> 
                     </ww:url> 
-                    <ww:a href="%{editLink}&contextViewName=editIteration&contextObjectId=${iteration.id}">Edit</ww:a>|<ww:a href="%{deleteLink}&contextViewName=editIteration&contextObjectId=${iteration.id}">Delete</ww:a> 					
+                    <%-- ww:a href="%{editLink}&contextViewName=editIteration&contextObjectId=${iteration.id}">Edit</ww:a>|--%>
+                    <ww:a href="%{deleteLink}&contextViewName=editIteration&contextObjectId=${iteration.id}">Delete</ww:a> 					
 				</display:column>
 			  <display:footer>
 			  	<tr>
@@ -191,7 +197,12 @@
 		<p>
 			<display:table class="listTable"  name="iteration.iterationGoals" id="row" requestURI="editIteration.action">
 				<display:column sortable="true" title="Name">
-					${aef:html(row.name)}
+					<ww:url id="editLink" action="editIterationGoal" includeParams="none">
+						<ww:param name="iterationGoalId" value="${row.id}"/>
+					</ww:url>							
+					<ww:a href="%{editLink}&contextViewName=editIteration&contextObjectId=${iteration.id}">
+						${aef:html(row.name)}
+					</ww:a>
 				</display:column>
 					
 				<display:column sortable="true" title="Description" >
@@ -200,14 +211,15 @@
 					
 				<display:column sortable="true" title="Priority" property="priority"/>
 				<display:column sortable="false" title="Actions">
-					<ww:url id="editLink" action="editIterationGoal" includeParams="none">
+					<%-- %>ww:url id="editLink" action="editIterationGoal" includeParams="none">
 						<ww:param name="iterationGoalId" value="${row.id}"/>
-					</ww:url>
+					</ww:url--%>
 					<ww:url id="deleteLink" action="deleteIterationGoal" includeParams="none">
 						<ww:param name="iterationGoalId" value="${row.id}"/>
 						<ww:param name="iterationId" value="${iteration.id}"/>
 					</ww:url>
-					<ww:a href="%{editLink}&contextViewName=editIteration&contextObjectId=${iteration.id}">Edit</ww:a>|<ww:a href="%{deleteLink}">Delete</ww:a>
+					<%--ww:a href="%{editLink}&contextViewName=editIteration&contextObjectId=${iteration.id}">Edit</ww:a>|--%>
+					<ww:a href="%{deleteLink}">Delete</ww:a>
 				</display:column>
 			</display:table>
 

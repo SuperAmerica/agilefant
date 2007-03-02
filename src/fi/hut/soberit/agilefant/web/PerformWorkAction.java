@@ -3,6 +3,7 @@ package fi.hut.soberit.agilefant.web;
 import fi.hut.soberit.agilefant.db.WorkTypeDAO;
 import fi.hut.soberit.agilefant.model.PerformedWork;
 import fi.hut.soberit.agilefant.model.WorkType;
+import fi.hut.soberit.agilefant.model.AFTime;
 
 public class PerformWorkAction extends TaskEventAction<PerformedWork> {
 	
@@ -18,6 +19,7 @@ public class PerformWorkAction extends TaskEventAction<PerformedWork> {
 			super.addActionError(super.getText("performWork.missingEffort"));			
 		}*/
 		if (this.getEvent().getNewEstimate() == null){
+			this.getEvent().setNewEstimate(new AFTime("0h"));
 //			super.addActionError(super.getText("performWork.missingNewEstimate"));
 		}
 	}

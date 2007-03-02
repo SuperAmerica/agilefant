@@ -121,7 +121,7 @@
 	<div id="menuwrap${navi}">
 	<div id="submenuwrap${subnavi}">
 <ul id="menu">
-  <li id="nav1"><a href="contextView.action?contextName=myTasks&resetContextView=true">Heartbeat</a></li>
+  <li id="nav1"><a href="contextView.action?contextName=myTasks&resetContextView=true">Daily work</a></li>
   <li id="nav2"><a href="contextView.action?contextName=iteration&contextObjectId=${previousIterationId}&resetContextView=true">Iteration</a></li>
   <li id="nav3"><a href="contextView.action?contextName=project&contextObjectId=${previousDeliverableId}&resetContextView=true">Project</a></li>
   <li id="nav4"><a href="contextView.action?contextName=product&resetContextView=true">Product</a></li>

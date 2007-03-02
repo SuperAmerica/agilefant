@@ -44,7 +44,7 @@
 		<tr>
 		<td>
 		<c:if test="${task.id == 0}">			
-			Assignee
+			Responsible
 		</c:if>	
 			</td>
 		<td></td>
@@ -81,7 +81,7 @@
 		<td></td>	
 		</tr>
 		<tr>
-		<td>Assignee</td>
+		<td>Responsible</td>
 		<td></td>
 		<td>
 			<ww:form action="assignTask">

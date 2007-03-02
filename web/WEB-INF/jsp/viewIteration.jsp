@@ -87,7 +87,7 @@
 				    </c:if>
 
 				</display:column>
-				<display:column sortable="true" title="Assignee" >
+				<display:column sortable="true" title="Responsible" >
 					${aef:html(row.assignee.fullName)}
 				</display:column>
 				<display:column sortable="true" title="Priority" >

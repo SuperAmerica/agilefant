@@ -49,7 +49,7 @@ example 3h) </td>
 		<td><ww:checkbox name="watch" value="true" fieldValue="true"/></td>	
 		</tr>
 		<tr>
-		<td>Assignee</td>
+		<td>Responsible</td>
 		<td></td>
 		<td><ww:select  headerKey="0" headerValue="(none)" name="assigneeId" list="#attr.userList" listKey="id" listValue="fullName" value="${currentUser.id}"/></td>	
 
@@ -65,7 +65,7 @@ example 3h) </td>
 			</c:if>
 		</c:when>
 		<c:otherwise>
-			<td>Assignee</td>
+			<td>Responsible</td>
 			<td></td>
 			<td><ww:select  headerKey="0" headerValue="(none)" name="assigneeId" list="#attr.userList" listKey="id" listValue="fullName" value="%{backlogItem.assignee.id}"/></td>	
 
@@ -230,7 +230,7 @@ example 3h) </td>
 				<display:column sortable="true" title="Created">
 					<ww:date name="#attr.row.created" />
 				</display:column>
-				<display:column sortable="true" title="Assignee">
+				<display:column sortable="true" title="Responsible">
 					${aef:html(row.assignee.fullName)}
 				</display:column>
 				<display:column sortable="true" title="Creator">

@@ -70,7 +70,7 @@
 			<display:column sortable="true" title="Created" >
 				<ww:date name="#attr.row.created" />
 			</display:column>
-			<display:column sortable="true" title="Assignee">
+			<display:column sortable="true" title="Responsible">
 				${aef:html(row.assignee.fullName)}
 			</display:column>
 			<display:column sortable="true" title="Creator">
@@ -124,7 +124,7 @@
 
 				</display:column>
 
-				<display:column sortable="false" title="Assignee" >
+				<display:column sortable="false" title="Responsible" >
 					${aef:html(row.assignee.fullName)}
 				</display:column>
 				<display:column sortable="true" title="Priority" >
@@ -194,7 +194,7 @@
 
 				</display:column>
 
-				<display:column sortable="true" title="Assignee" >
+				<display:column sortable="true" title="Responsible" >
 					${aef:html(row.assignee.fullName)}
 				</display:column>
 				<display:column sortable="true" title="Priority" >
@@ -241,7 +241,7 @@
 				<ww:date name="#attr.row.created" />
 			</display:column>
 				
-			<display:column sortable="true" title="Assignee">
+			<display:column sortable="true" title="Responsible">
 				${aef:html(row.assignee.fullName)}
 			</display:column>
 			<display:column sortable="true" title="Creator">

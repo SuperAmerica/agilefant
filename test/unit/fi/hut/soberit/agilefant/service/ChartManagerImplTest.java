@@ -3,12 +3,17 @@ package fi.hut.soberit.agilefant.service;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Map;
+import java.util.TreeMap;
 
 import fi.hut.soberit.agilefant.model.AFTime;
+import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.EstimateHistoryEvent;
 import fi.hut.soberit.agilefant.model.PerformedWork;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.model.Iteration;
+import fi.hut.soberit.agilefant.model.TaskEvent;
 import junit.framework.TestCase;
 
 public class ChartManagerImplTest extends TestCase {
@@ -24,9 +29,13 @@ public class ChartManagerImplTest extends TestCase {
 	Task task2 = Task(2);
 	Task task3 = Task(3);
 	
-	
+	private Iteration i;
 	
 	private ChartManagerImpl cm = new ChartManagerImpl();
+	
+	public void setUp() {
+		this.i = new Iteration();
+	}
 	
 	public void testFilterEstimates_withEmptyArray() {
 		assertEquals(0, cm.filterEstimates(new ArrayList<EstimateHistoryEvent>()).size());
@@ -39,10 +48,10 @@ public class ChartManagerImplTest extends TestCase {
 			add(new EstimateHistoryEvent(user, task1, now, new AFTime("3h")));
 		}};
 		
-		Collection<EstimateHistoryEvent> filteredEstimates = cm.filterEstimates(estimates);
+		TreeMap<Date, Integer> filteredEstimates = cm.filterEstimates(estimates);
 		
 		assertEquals(1, filteredEstimates.size());
-		assertEquals(new AFTime("3h"), filteredEstimates.iterator().next().getNewEstimate());
+		assertEquals(3, (int)filteredEstimates.get(now));
 	}
 	
 	
@@ -54,13 +63,66 @@ public class ChartManagerImplTest extends TestCase {
 			
 		}};
 		
-		Collection<EstimateHistoryEvent> filteredEstimates = cm.filterEstimates(estimates);
+		TreeMap<Date, Integer> filteredEstimates = cm.filterEstimates(estimates);
 		
 		assertEquals(2, filteredEstimates.size());
-		assertEquals(new AFTime("2h"), filteredEstimates.iterator().next().getNewEstimate());
+		assertEquals(3, (int)filteredEstimates.get(now)); // Today, the latest count
+		assertEquals(2, (int)filteredEstimates.get(yesterday)); // Yesterday we only had one entry
 	}
 	
+	private int sumMap(Map<Date, Integer> map) {
+		int result = 0;
+		for(Date d: map.keySet()) {
+			result += map.get(d);
+		}
+		return result;
+	}
+
 	
+	public void testBacklogItemHadNoTasksOnGivenDate() {
+		BacklogItem bi = new BacklogItem();
+		Task t = new Task();
+		t.setCreated(yesterday);
+		
+		ArrayList<Task> tasks = new ArrayList<Task>();
+		tasks.add(t);
+		bi.setTasks(tasks);
+	
+		assertTrue(cm.backlogItemHadNoTasksOnGivenDate(bi, dayBeforeYesterday));
+		assertFalse(cm.backlogItemHadNoTasksOnGivenDate(bi, yesterday));		
+	
+	}
+	public void testAddEstimatesOfEmptyBacklogItems() {
+		TreeMap<Date, Integer> map = new TreeMap<Date, Integer>();
+		map.put(yesterday, new Integer(2));
+		map.put(dayBeforeYesterday, new Integer(3));
+
+		Iteration iter = new Iteration();
+		
+		int temp = sumMap(map);
+		cm.addEstimatesOfEmptyBacklogItems(map, iter);
+		assertEquals(temp, sumMap(map));
+		
+		// assertEquals()
+
+		BacklogItem bi = new BacklogItem();
+		Task t = new Task();
+		t.setCreated(yesterday);
+		
+		ArrayList<Task> tasks = new ArrayList<Task>();
+		tasks.add(t);
+		bi.setTasks(tasks);
+		bi.setAllocatedEffort(new AFTime("1h"));
+		ArrayList<BacklogItem> backlogItems = new ArrayList<BacklogItem>();
+		backlogItems.add(bi);
+		iter.setBacklogItems(backlogItems);
+		
+		temp = sumMap(map);
+		cm.addEstimatesOfEmptyBacklogItems(map, iter);
+		assertNotSame(temp, sumMap(map));
+	}
+	
+
 
 	public void testGetAverageDailyProgress_withEmptyCollcetion() {
 		// TODO Should this return Double.NaN instead of 0.0? Would that break things?
@@ -69,7 +131,7 @@ public class ChartManagerImplTest extends TestCase {
 	
 	public void testGetAverageDailyProgress_withSinglePerformedWork() {
 		assertEquals(2.0, cm.getAverageDailyProgress(new ArrayList<PerformedWork>() {{
-			add(new PerformedWork(user, task, yesterday, new AFTime("2h"), null, now));
+			add(new PerformedWork(user, task, yesterday, null, new AFTime("2h"), now));
 		}}));
 	}
 
@@ -88,18 +150,19 @@ public class ChartManagerImplTest extends TestCase {
 	}
 	
 	public void testGetAverageDailyProgress_withSingleDay() {
-		assertEquals(3.5, cm.getAverageDailyProgress(new ArrayList<PerformedWork>() {{
-			add(new PerformedWork(user, task, hourAgo, new AFTime("6h"), null, now));
-			add(new PerformedWork(user, task, twoHoursAgo, new AFTime("1h"), null, now));
+		assertEquals(7.0, cm.getAverageDailyProgress(new ArrayList<PerformedWork>() {{
+			add(new PerformedWork(user, task, hourAgo, null, new AFTime("6h"), now));
+			add(new PerformedWork(user, task, twoHoursAgo, null, new AFTime("1h"), now));
 		}}));
 	}
 	
 	public void testGetAverageDailyProgress_withMultipleDays() {
+//		 sorting is done primary based on workingDate and if that is null then based on creationDate
 		assertEquals(6.0, cm.getAverageDailyProgress(new ArrayList<PerformedWork>() {{
-			add(new PerformedWork(user, task, hourAgo, new AFTime("5h"), null, now));
-			add(new PerformedWork(user, task, yesterday, new AFTime("2h"), null, now));
-			add(new PerformedWork(user, task, yesterday, new AFTime("8h"), null, now));
-			add(new PerformedWork(user, task, dayBeforeYesterday, new AFTime("3h"), null, now));
+			add(new PerformedWork(user, task, now, null, new AFTime("5h"), hourAgo));
+			add(new PerformedWork(user, task, now, null, new AFTime("2h"), yesterday));
+			add(new PerformedWork(user, task, now, null, new AFTime("8h"), yesterday));
+			add(new PerformedWork(user, task, now, null, new AFTime("3h"), dayBeforeYesterday)); 
 		}}));
 	}
 

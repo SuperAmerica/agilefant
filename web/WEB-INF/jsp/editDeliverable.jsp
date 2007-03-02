@@ -134,7 +134,12 @@
 
 			<display:table class="listTable" name="deliverable.iterations" id="row" requestURI="editDeliverable.action">
 				<display:column sortable="true" title="Name">
-						${aef:html(row.name)}			
+<ww:url id="editLink" action="editBacklogItem" includeParams="none">
+					<ww:param name="backlogItemId" value="${row.id}"/>
+				</ww:url>
+				<ww:a href="%{editLink}&contextViewName=editDeliverable&contextObjectId=${deliverable.id}">
+						${aef:html(row.name)}
+				</ww:a>			
 				</display:column>
 				<display:column sortable="true" title="# of backlog items">
 					${fn:length(row.backlogItems)}

@@ -256,7 +256,7 @@ public class ChartManagerImpl implements ChartManager {
 	protected TimeSeriesCollection getDataset(double averageDailyProgress, TreeMap<Date, Integer> values2, Date startDate, Date endDate) {
 
 		TimeSeries estimateSeries = new TimeSeries("Actual velocity", Day.class);
-		TimeSeries referenceSeries = new TimeSeries("Estimated velocity", Day.class);
+		TimeSeries referenceSeries = new TimeSeries("Reference velocity", Day.class);
 
 		Collection<Date> dates = values2.keySet();
 
@@ -297,7 +297,7 @@ public class ChartManagerImpl implements ChartManager {
 		// Variables that are used to account date setting to the trend line
 		Calendar calendar = Calendar.getInstance();
 
-		TimeSeries trendSeries = new TimeSeries("Reference velocity", Day.class);
+		TimeSeries trendSeries = new TimeSeries("Estimated velocity", Day.class);
 		calendar.setTime(date);
 		if (lastEstimate > 0) { // To avoid a gap in the graph
 			trendSeries.add(new Day(date), lastEstimate);

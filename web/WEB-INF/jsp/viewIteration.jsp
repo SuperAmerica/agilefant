@@ -183,6 +183,7 @@
 </td></tr></table>
 
 		<p>	
+			<%--img src="static/img/drawChart.png"/--%>
 			<img src="drawChart.action?iterationId=${iteration.id}"/>
 		</p>
 

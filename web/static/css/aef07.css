@@ -243,4 +243,11 @@ img	{
 	height:  100%;
 	}
 
-
+#footer{
+	background: #333;
+	}
+	
+	#footer a:link, #footer a:visited, #footer a:active, #footer a:hover{
+	color: #fff;
+	text-decoration: none;
+	}

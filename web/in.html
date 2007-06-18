@@ -39,8 +39,10 @@
      <div id="wrapper">
 
        <div id="header">
-          <div id="maintitle">Agilefant
-          </div>
+          <div id="maintitle">
+						<img src="http://www.agilefant.org/homepage/pics/fant_small.png" alt="logo"/>
+						<h1>Agilefant</h1>
+					</div>
        </div>
 
        <!-- /header -->
@@ -56,18 +58,20 @@
           <br/>
           <div id="login">
              <form method="post" action="j_acegi_security_check">
-                <p>
-                  ID: <input name="j_username" size="30" type="text" />
-                </p>
-                <p>
-                  password: <input name="j_password" size="30" type="password" />
-                </p>
-                <p>
-                  <input type="checkbox" name="_acegi_security_remember_me" /> login for two weeks
-                </p>
-                <p>
-                  <input value="Log in" type="submit" />
-                </p>
+                <table border="0">
+                <tr>
+                <td>Username</td><td><input name="j_username" size="30" type="text" /></td>
+                </tr>
+                <tr>
+                <td>Password</td><td><input name="j_password" size="30" type="password" /></td>
+                </tr>
+                <tr>
+                <td>&nbsp</td><td>Remember me <input type="checkbox" name="_acegi_security_remember_me" /></td>
+                </tr>
+                <tr>
+                <td>&nbsp;</td><td><input value="Log in" type="submit" /></td>
+                </tr>
+                </table>                
               </form>
             </div>
           <!-- login -->
@@ -78,9 +82,13 @@
         <br/>
         <br/>
 
-      <div id="footer">
-        <p>&copy; 2RoX</p>
-      </div>
+    <div id="footer">
+			  <div id="footerText">
+			  	<a href="http://www.agilefant.org">Agilefant (v. 0.9 rev. 503)</a> |  
+			  	<a href="http://www.soberit.hut.fi">SoberIT</a> | 
+			  	<a href="http://www.hut.fi">Helsinki University of Technology</a> 
+			  </div>
+			</div>
       
     </div>
     <!-- /wrapper -->

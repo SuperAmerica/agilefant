@@ -3,13 +3,6 @@
 <aef:menu /> 
 
 
-	<p>
-	<a href="listActivityTypes.action">Activity and work types</a> | Users
-	</p>
-
-
-
-
 <p>
 	Users  <a href="createUser.action">Create new &raquo;</a>
 </p>	

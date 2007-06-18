@@ -9,7 +9,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 	<head>
 <ww:head />
-			<title>AgilEfant</title>
+			<title>Agilefant</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />		
 <style type="text/css" media="screen,projection">
 <!--
@@ -46,6 +46,11 @@
 			<div id="wrapper">
 				<div id="header">
 					
+<div id="maintitle">
+<img src="http://www.agilefant.org/homepage/pics/fant_small.png" alt="logo"/>
+<h1>Agilefant</h1>
+</div>
+
 <div id="bct">
 
 <c:forEach var="page" items="${pageHierarchy}" >
@@ -104,15 +109,31 @@
 
 &nbsp;</div>
 
-				<div id="maintitle">AgilEfant
-				</div>
 				<div id="logout">
 					<aef:currentUser/>
-					User: ${currentUser.fullName}
-	<form action="j_acegi_logout" method="post">
-    	<input name="exit" type="submit" value="logout"/>
-	  	</form>
-<br/>				<a href="listActivityTypes.action">Settings</a>
+					<table border="0">
+					<tr>
+					<td><!-- User: ${currentUser.fullName} -->
+					
+					<ww:url id="editLink" action="editUser" includeParams="none">
+						<ww:param name="userId" value="${currentUser.id}"/>
+					</ww:url>
+					<ww:a href="%{editLink}">${currentUser.fullName}</ww:a>
+					
+					</td>
+					<td><form action="j_acegi_logout" method="post">
+    	        <input name="exit" type="submit" value="logout"/>
+    	      	</form>
+    	    </td>
+    	    </tr>
+    	    <tr>
+    	    <td>&nbsp;</td>
+    	    <td><a href="listUsers.action">Users</a></td>
+    	    </tr>
+    	    </table>
+<!--  <br/>				<a href="listActivityTypes.action">Activity types</a> | 
+-->		
+
 				</div>
 					
 				</div>
@@ -125,7 +146,8 @@
   <li id="nav2"><a href="contextView.action?contextName=iteration&contextObjectId=${previousIterationId}&resetContextView=true">Iteration</a></li>
   <li id="nav3"><a href="contextView.action?contextName=project&contextObjectId=${previousDeliverableId}&resetContextView=true">Project</a></li>
   <li id="nav4"><a href="contextView.action?contextName=product&resetContextView=true">Product</a></li>
-  <li id="nav5"><a href="contextView.action?contextName=portfolio&resetContextView=true">Development portfolio</a></li>  
+  <li id="nav5"><a href=""><!--  contextView.action?contextName=portfolio&resetContextView=true --> <span style="color: #ccc">Development portfolio</span></a></li>  
+  <li id="nav6"><a href="listActivityTypes.action">Activity types</a></li>
 </ul>
 </div>
 </div>

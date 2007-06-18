@@ -274,10 +274,16 @@
 			<result>/WEB-INF/jsp/editIterationGoal.jsp</result>
 		</action>
 		<action name="deleteIterationGoal" method="delete" class="iterationGoalAction">
- 			<result type="redirect">editIteration.action?iterationId=${iterationId}</result>
+ 			<!-- <result type="redirect">editIteration.action?iterationId=${iterationId}</result> -->
+ 			<result type="redirect-action">
+				<param name="actionName">popContext</param>
+			</result>
 		</action>
 		<action name="storeIterationGoal" method="store" class="iterationGoalAction">
- 			<result type="redirect">editIteration.action?iterationId=${iterationId}</result>
+ 			<!-- <result type="redirect">editIteration.action?iterationId=${iterationId}</result> -->
+ 			<result type="redirect-action">
+				<param name="actionName">popContext</param>
+			</result>
 		</action>
 		<action name="moveIterationGoal" method="moveIterationGoal" class="iterationAction">
  			<result type="redirect">editIterationGoal.action?iterationGoalId=${iterationGoalId}</result>

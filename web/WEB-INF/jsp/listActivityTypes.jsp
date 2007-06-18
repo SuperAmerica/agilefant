@@ -2,11 +2,6 @@
 <%@ include file="./inc/_header.jsp" %>
 <aef:menu  /> 
 
-	<p>
-	Activity and work types | <a href="listUsers.action">Users</a>
-	</p>
-
-
 	<p> Activity types 
 		<ww:url id="createActivityTypeLink" action="createActivityType"/>
 		<ww:a href="%{createActivityTypeLink}">Create new &raquo;</ww:a>

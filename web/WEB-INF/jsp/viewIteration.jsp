@@ -144,29 +144,49 @@
 			</display:table>
 		</p>
 	</c:if>
-
+	
+	<c:if test="${iteration.id > 0}">
+	
+			<p>Iteration goals
+				<ww:url id="createIterationGoalLink" action="createIterationGoal" includeParams="none">
+					<ww:param name="iterationId" value="${iteration.id}"/>
+				</ww:url>
+				<ww:a href="%{createIterationGoalLink}&contextViewName=viewIteration&contextObjectId=${iteration.id}">Create new &raquo;</ww:a>		
+			</p>
+	</c:if>
+	
 	<c:if test="${!empty iteration.iterationGoals}">
 		<p>
-			Iteration goals
-		</p>
-		<p>
 			<display:table name="iteration.iterationGoals" id="row" requestURI="editIteration.action">
-			<display:column sortable="true" title="Name">
-				${aef:subString(row.name,80)}
-			</display:column>
+				<display:column sortable="true" title="Name">
+					<ww:url id="editLink" action="editIterationGoal" includeParams="none">
+						<ww:param name="iterationGoalId" value="${row.id}"/>
+					</ww:url>							
+					<ww:a href="%{editLink}&contextViewName=viewIteration&contextObjectId=${iteration.id}">
+						${aef:html(row.name)}
+					</ww:a>
+				</display:column>
 				<%--display:column sortable="true" title="Status" >
 					${row.status}
 				</display:column--%>
+				
 				<display:column sortable="true" title="Description">
 					${aef:html(row.description)}
 				</display:column>
 					
 				<display:column sortable="true" title="Priority" property="priority"/>
 				<display:column sortable="false" title="Actions">
-					<ww:url id="editLink" action="editIterationGoal" includeParams="none">
+					<%-- <ww:url id="editLink" action="editIterationGoal" includeParams="none">
 						<ww:param name="iterationGoalId" value="${row.id}"/>
+					</ww:url>--%>
+					<ww:url id="deleteLink" action="deleteIterationGoal" includeParams="none">
+						<ww:param name="iterationGoalId" value="${row.id}"/>
+						<ww:param name="iterationId" value="${iteration.id}"/>
+						<ww:param name="contextViewName" value="viewIteration"/>
 					</ww:url>
-					<ww:a href="%{editLink}&contextViewName=viewIteration&contextObjectId=${iteration.id}">Edit</ww:a>
+					
+					<ww:a href="%{deleteLink}">Delete</ww:a>
+					<%--<ww:a href="%{editLink}&contextViewName=viewIteration&contextObjectId=${iteration.id}">Edit</ww:a>--%>
 				</display:column>
 			</display:table>
 		</p>

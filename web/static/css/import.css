@@ -1,6 +1,15 @@
+html {margin: 0; padding: 0; background: #fff}
 body {font-family:Arial, Helvetica, Sans-Serif;background-color:#fff}
-h1 {text-align:center}
-h1,h2,h3 {font-size:1.2em; }
+#header h1{
+	margin: 0px 0px 10px 0px;
+	padding: 20px 0px 0px 0px;
+	color: 333;
+	font: 30pt Lucida, sans-serif; 
+	font-weight: bold;
+	font-style: italic;
+	text-align: left;
+}
+h2,h3 {font-size:1.2em; }
 code {color:#66f}
 img {border:0}
 #sidebar img {float:right}
@@ -14,11 +23,11 @@ a:hover,a:active {background-color:#eef}
 /* LAYOUT STUFF */
 #outer_wrapper {min-width:740px;width:100%;background:#fff }
 #wrapper {background:#fff}
-#header {background:#fff;width:100%;margin:0 -2px}
+#header {background:#fff;width:100%;margin:0 -2px; min-height: 90px;}
 /* display:inline is in there to prevent an IE Bug (IE doubles margins on floats). */
 #container {width:100%;float:left;display:inline;margin-left:-20px}
 #left {float: left;width:15px;display:inline;margin-left:20px}
-#bct {margin-left: 35px;width:auto; margin-top: 30px; color:#f00}
+#bct {margin: 5px 0 10px 35px; width:auto; color:#f00}
 #bct a {color:#f00; text-decoration:none}
 #bct a:hover {background-color:#fee;}
 
@@ -28,13 +37,18 @@ a:hover,a:active {background-color:#eef}
 /* this is to make sure IE6 (v6.0.29?) *shows* this element */
 #sidebar p {position:relative}
 /* Because of the 100% width declaration (needed for IE), the lateral margins need to go (or the box would be 2px too wide) */
-#footer {width:100%;clear:both;border-top:1px solid #ccc;}
+#footer {width:100%;clear:both;border-top:1px solid #ccc; background: #fff;}
+#footer a:link, #footer a:visited, #footer a:active, #footer a:hover{
+	color: #999;
+	text-decoration: none;
+}
 #topnavi {background:#b0b0b0;position:absolute;bottom:0;left:0;height:30px;width:100%;}
 #subnavi {border:1px solid #bbb;background:#fafafa;width:100%;height:30px;margin:0 -2px;text-align:center}
-#maintitle {margin:10px 15px; font-size:1em;  }
-#logout { text-align:right; font-size:1em; display:inline; position:absolute;top:10px;right:15px;width:50%;}
-#footerText {margin:10px 15px;}
-
+#maintitle {margin:5px; font-size:1em; }
+#maintitle img {float:left; margin: 5px 20px;}
+#logout { text-align:right; font-size:1em; display:inline; position:absolute;top:10px;right:15px;}
+#logout td {padding-bottom: 10px; vertical-align: middle;}
+#footerText {padding:10px 15px;}
 #subItems {border:1px solid #ccc; margin-top: 20px; }
 #subItemHeader {padding: 3px; background: #E8EBF0;  border-bottom: 1px solid #ccc;}
 #subItemContent {padding: 10px; }

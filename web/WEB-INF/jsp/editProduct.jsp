@@ -46,7 +46,7 @@
 		<div id="subItemContent">
 	</c:if>
 		<c:if test="${product.id > 0}">
-			<p>Deliverables			
+			<p>Projects		
  				<ww:url id="createLink" action="createDeliverable" includeParams="none">
 					<ww:param name="productId" value="${product.id}"/>
 				</ww:url>

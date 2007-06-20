@@ -146,8 +146,7 @@
   <li id="nav2"><a href="contextView.action?contextName=iteration&contextObjectId=${previousIterationId}&resetContextView=true">Iteration</a></li>
   <li id="nav3"><a href="contextView.action?contextName=project&contextObjectId=${previousDeliverableId}&resetContextView=true">Project</a></li>
   <li id="nav4"><a href="contextView.action?contextName=product&resetContextView=true">Product</a></li>
-  <li id="nav5"><a href=""><!--  contextView.action?contextName=portfolio&resetContextView=true --> <span style="color: #ccc">Development portfolio</span></a></li>  
-  <li id="nav6"><a href="listActivityTypes.action">Activity types</a></li>
+  <li id="nav5"><a href="contextView.action?contextName=portfolio&resetContextView=true">Development portfolio</a></li>  
 </ul>
 </div>
 </div>

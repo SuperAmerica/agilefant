@@ -42,7 +42,7 @@
 
 <c:if test="${!empty deliverable}">
 
-<h2>Deliverable</h2>
+<h2>Project</h2>
 			
 		<table class="formTable">
 		<tr>

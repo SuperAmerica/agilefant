@@ -49,7 +49,7 @@
 					<aef:productList/>
 <aef:deliverableMenu deliverableId="${deliverable.id}"/>
 
-<h2>Deliverable</h2>
+<h2>Project</h2>
 
 	<ww:form action="storeDeliverable">
 		<ww:hidden name="deliverableId" value="${deliverable.id}"/>

@@ -2,6 +2,8 @@
 <%@ include file="./inc/_header.jsp" %>
 <aef:menu  /> 
 
+<a href="contextView.action?contextName=portfolio&resetContextView=true">Portfolio</a> | Activity types
+
 	<p> Activity types 
 		<ww:url id="createActivityTypeLink" action="createActivityType"/>
 		<ww:a href="%{createActivityTypeLink}">Create new &raquo;</ww:a>

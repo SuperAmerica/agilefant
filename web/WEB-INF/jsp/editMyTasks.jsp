@@ -6,7 +6,7 @@
 	
 	<ww:url id="showMyTasksLink" action="myTasks" includeParams="none"/>
 	
-	<ww:a href="%{showMyTasksLink}">View</ww:a> | Edit
+	<ww:a href="%{showMyTasksLink}">My tasks</ww:a> | Report work
 	
 	<h2>Tasks assigned to me</h2>
    		<aef:currentUser/>   		

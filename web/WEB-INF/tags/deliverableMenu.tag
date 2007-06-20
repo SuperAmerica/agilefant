@@ -21,7 +21,7 @@
 								</c:choose>
 							</c:forEach>
 				</select>
-			<ww:submit value="Select deliverable"/>
+			<ww:submit value="Select project"/>
 			</p>			
 		</ww:form>
 				

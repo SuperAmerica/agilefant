@@ -8,7 +8,7 @@
 	<ww:url id="editMyTasksLink" action="editMyTasks" includeParams="none">
 	</ww:url>
 	
-	View | <ww:a href="%{editMyTasksLink}">Edit</ww:a>
+	My tasks | <ww:a href="%{editMyTasksLink}">Report work</ww:a>
 
   		<aef:userList/>
    		<aef:currentUser/>   		

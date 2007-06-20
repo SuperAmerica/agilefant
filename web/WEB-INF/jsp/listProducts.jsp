@@ -25,12 +25,12 @@
 				<display:column title="Description">
 					${aef:html(row.description)}
 				</display:column>
-				<display:column sortable="true" title="Deliverables">
+				<display:column sortable="true" title="Projects">
 					<c:if test="${!empty row.deliverables}"> 
 				
 							<c:set var="divId" value="${divId + 1}" scope="page"/>							
 							<ww:a href="javascript:toggleDiv(${divId});" title="Click to expand">
-								${fn:length(row.deliverables)} deliverables
+								${fn:length(row.deliverables)} projects
 							</ww:a>
 							<aef:hiddenDeliverableList deliverables="${row.deliverables}"  contextViewName="listProducts" divId="${divId}"/>
 					</c:if>

@@ -2,7 +2,7 @@
 <%@ include file="./inc/_header.jsp" %>
 <aef:menu navi="${contextName}" /> 
 
-<h2>Portfolio </h2>
+Portfolio | <a href="listActivityTypes.action">Activity types</a>
 <p>
 
 	<ww:form action="viewPortfolio">
@@ -18,7 +18,7 @@
 </c:if>
 
 <c:if test="${empty endDate}">
-<ww:date name="${startDate}" id="end"/>
+<ww:date name="${endDate}" id="end"/>
 </c:if>
 Startdate: 
 <ww:datepicker value="%{startDate}" size="10" showstime="%{true}"  format="%{getText('webwork.datepicker.format')}" name="startDate" /> 

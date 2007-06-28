@@ -128,10 +128,10 @@
 							</c:if>
 
 				</display:column>
-				<display:column sortable="false" title="Responsible" >
+				<display:column sortable="true" title="Responsible" >
 					${aef:html(row.assignee.fullName)}
 				</display:column>
-				<display:column sortable="false" title="Priority" >
+				<display:column sortable="true" title="Priority" >
 				<ww:text name="backlogItem.priority.${row.priority}"/>
 				</display:column>
 				<display:column sortable="true" title="Iteration Goal">

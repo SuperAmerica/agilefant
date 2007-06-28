@@ -61,17 +61,26 @@
 		
 		<display:table class="listTable" name="${activityType.workTypes}" id="row" requestURI="editActivityType.action?activityTypeId=${activityType.id}">
 			<display:column sortable="true" property="id"/>
-			<display:column sortable="true" property="name"/>
-			<display:column sortable="false" title="Actions">			
+			<display:column sortable="true" title="Name">
 				<ww:url id="editLink" action="editWorkType" includeParams="none">
 					<ww:param name="workTypeId" value="${row.id}"/>
 					<ww:param name="activityTypeId" value="${activityType.id}"/>
 				</ww:url>
+				<ww:a href="%{editLink}">
+					${aef:html(row.name)}
+				</ww:a>
+			</display:column>
+			<display:column sortable="false" title="Actions">			
+				<!-- <ww:url id="editLink" action="editWorkType" includeParams="none">
+					<ww:param name="workTypeId" value="${row.id}"/>
+					<ww:param name="activityTypeId" value="${activityType.id}"/>
+				</ww:url> -->
 				<ww:url id="deleteLink" action="deleteWorkType" includeParams="none">
 					<ww:param name="workTypeId" value="${row.id}"/>
 					<ww:param name="activityTypeId" value="${activityType.id}"/>
 				</ww:url>
-				<ww:a href="%{editLink}">Edit</ww:a>|<ww:a href="%{deleteLink}">Delete</ww:a>
+				<!--<ww:a href="%{editLink}">Edit</ww:a>|-->
+				<ww:a href="%{deleteLink}">Delete</ww:a>
 			</display:column>
 		</display:table>
 </div>

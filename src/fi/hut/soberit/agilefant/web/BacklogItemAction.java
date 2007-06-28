@@ -87,12 +87,6 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
 	}
 	
 	protected void fillStorable(BacklogItem storable){
-		if (backlogId > 0 && storable.getId() == 0){
-			backlog = backlogDAO.get(backlogId);
-			if (backlog == null){
-				super.addActionError(super.getText("backlog.notFound"));
-			}
-		}
 		User oldAssignee = storable.getAssignee();
 		User newAssignee = null;
 
@@ -106,6 +100,7 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
 				
 		if (this.backlogItem.getIterationGoal() != null){
 			IterationGoal goal = iterationGoalDAO.get(this.backlogItem.getIterationGoal().getId());
+			//IterationGoal goal = iterationGoalDAO.get(iterationGoalId);
 			storable.setIterationGoal(goal);
 		}
 		if(this.backlogItem.getName().equals("")) {
@@ -117,14 +112,27 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
 		storable.setAllocatedEffort(this.backlogItem.getAllocatedEffort());
 		storable.setPriority(this.backlogItem.getPriority());
 		storable.setStatus(this.backlogItem.getStatus()); // added after failed jUnit test 
-		if (storable.getId() == 0){
-			storable.setBacklog(backlog);
-		}		
+		
+		backlog = backlogDAO.get(backlogId);
+		if (backlog == null){
+			super.addActionError(super.getText("backlog.notFound"));
+		}
+		if (storable.getId() > 0){
+			storable.getBacklog().getBacklogItems().remove(storable);
+			backlog.getBacklogItems().add(storable);
+		}
+		storable.setBacklog(backlog);
+		
 		if (watch) {
 			User user = SecurityUtil.getLoggedUser();
 			storable.getWatchers().put(user.getId(), user);
 			user.getWatchedBacklogItems().add(storable);		
 		}
+		else {
+			User user = SecurityUtil.getLoggedUser();
+			storable.getWatchers().remove(user.getId());
+		}
+			
 	}
 
 	public Backlog getBacklog() {

@@ -55,7 +55,16 @@
 
 			<display:table class="listTable" name="product.deliverables" id="row" requestURI="editProduct.action">
 				<display:column sortable="true" title="Id" property="id"/>
-				<display:column sortable="true" title="Name" property="name"/>
+		
+				<display:column sortable="true" title="Name">
+					<ww:url id="editLink" action="editDeliverable" includeParams="none">
+						<ww:param name="productId" value="${product.id}"/>
+						<ww:param name="deliverableId" value="${row.id}"/>
+					</ww:url>				
+						<ww:a href="%{editLink}&contextViewName=editProduct&contextObjectId=${product.id}">
+							${aef:html(row.name)}
+						</ww:a>
+				</display:column>		
 				<display:column sortable="true" title="# of iterations">
 					${fn:length(row.iterations)}
 				</display:column>
@@ -67,15 +76,16 @@
 					${row.performedEffort}
 				</display:column>
 				<display:column sortable="false" title="Actions">
-					<ww:url id="editLink" action="editDeliverable" includeParams="none">
+					<!-- <ww:url id="editLink" action="editDeliverable" includeParams="none">
 						<ww:param name="productId" value="${product.id}"/>
 						<ww:param name="deliverableId" value="${row.id}"/>						
-					</ww:url>
+					</ww:url> -->
 					<ww:url id="deleteLink" action="deleteDeliverable" includeParams="none">
 						<ww:param name="productId" value="${product.id}"/>
 						<ww:param name="deliverableId" value="${row.id}"/>						
 					</ww:url>
-					<ww:a href="%{editLink}&contextViewName=editProduct&contextObjectId=${product.id}">Edit</ww:a>|<ww:a href="%{deleteLink}&contextViewName=editProduct&contextObjectId=${product.id}">Delete</ww:a>
+					<!-- <ww:a href="%{editLink}&contextViewName=editProduct&contextObjectId=${product.id}">Edit</ww:a>| -->
+					<ww:a href="%{deleteLink}&contextViewName=editProduct&contextObjectId=${product.id}">Delete</ww:a>
 				</display:column>
 			</display:table>
 
@@ -93,7 +103,14 @@
 
 			<display:table name="product.backlogItems" id="row" requestURI="editProduct.action">
 				<display:column sortable="true" title="Id" property="id"/>
-				<display:column sortable="true" title="Name" property="name"/>
+				<display:column sortable="true" title="Name">
+					<ww:url id="editLink" action="editBacklogItem" includeParams="none">
+						<ww:param name="backlogItemId" value="${row.id}"/>
+					</ww:url>
+					<ww:a href="%{editLink}&contextViewName=editProduct&contextObjectId=${product.id}">
+						${aef:html(row.name)}
+					</ww:a>				
+				</display:column>
 				<display:column sortable="true" title="# of tasks">
 					${fn:length(row.tasks)}
 				</display:column>
@@ -110,13 +127,14 @@
 					${row.performedEffort}
 				</display:column>
 				<display:column sortable="false" title="Actions">
-					<ww:url id="editLink" action="editBacklogItem" includeParams="none">
+				<!-- <ww:url id="editLink" action="editBacklogItem" includeParams="none">
 						<ww:param name="backlogItemId" value="${row.id}"/>
-					</ww:url>
+					</ww:url> -->
 					<ww:url id="deleteLink" action="deleteBacklogItem" includeParams="none">
 						<ww:param name="backlogItemId" value="${row.id}"/>
 					</ww:url>
-					<ww:a href="%{editLink}&contextViewName=editProduct&contextObjectId=${product.id}">Edit</ww:a>|<ww:a href="%{deleteLink}&contextViewName=editProduct&contextObjectId=${product.id}">Delete</ww:a>
+					<!-- <ww:a href="%{editLink}&contextViewName=editProduct&contextObjectId=${product.id}">Edit</ww:a>|-->
+					<ww:a href="%{deleteLink}&contextViewName=editProduct&contextObjectId=${product.id}">Delete</ww:a>
 				</display:column>
 			</display:table>
 	</c:if>

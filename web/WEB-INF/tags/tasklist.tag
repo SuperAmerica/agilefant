@@ -16,7 +16,7 @@
 		</ww:url>
 		<li class="tasklistItem">
 		<ww:a href="%{editLink}&contextViewName=${contextViewName}&contextObjectId=${contextObjectId}" title="${task.name}">
-			${aef:subString(task.name, 30)}
+			${aef:subString(task.name, 40)}
 		</ww:a>
 		<ww:form action="storeTask">
 			<ww:hidden name="backlogItemId" value="${task.backlogItem.id}"/>
@@ -25,6 +25,9 @@
 			<ww:hidden name="taskId" value="${task.id}"/>
 			<ww:hidden name="contextViewName" value="${contextViewName}"/>
 			<ww:hidden name="contextObjectId" value="${contextObjectId}"/>
+			<ww:hidden name="task.effortEstimate" value="${task.effortEstimate}"/>
+			<ww:hidden name="task.description" value="${task.description}"/>			
+			
 	
 			<ww:select name="task.status" value="#attr.task.status.name" list="@fi.hut.soberit.agilefant.model.TaskStatus@values()" listKey="name" listValue="getText('task.status.' + name())"/>		
 							<ww:submit value="Store"/>		

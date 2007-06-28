@@ -134,8 +134,8 @@
 
 			<display:table class="listTable" name="deliverable.iterations" id="row" requestURI="editDeliverable.action">
 				<display:column sortable="true" title="Name">
-<ww:url id="editLink" action="editBacklogItem" includeParams="none">
-					<ww:param name="backlogItemId" value="${row.id}"/>
+				<ww:url id="editLink" action="editIteration" includeParams="none">
+					<ww:param name="iterationId" value="${row.id}"/>
 				</ww:url>
 				<ww:a href="%{editLink}&contextViewName=editDeliverable&contextObjectId=${deliverable.id}">
 						${aef:html(row.name)}
@@ -157,15 +157,17 @@
 				<ww:date name="#attr.row.endDate"/>
 				</display:column>
 				<display:column sortable="false" title="Actions">
-					<ww:url id="editLink" action="editIteration" includeParams="none">
+					<!-- <ww:url id="editLink" action="editIteration" includeParams="none">
 						<ww:param name="iterationId" value="${row.id}"/>
 						<ww:param name="deliverableId" value="${deliverable.id}"/>						
 					</ww:url>
+					-->
 					<ww:url id="deleteLink" action="deleteIteration" includeParams="none">
 						<ww:param name="deliverableId" value="${deliverable.id}"/>						
 						<ww:param name="iterationId" value="${row.id}"/>
 					</ww:url>
-					<ww:a href="%{editLink}&contextViewName=editDeliverable&contextObjectId=${deliverable.id}">Edit</ww:a>|<ww:a href="%{deleteLink}&contextViewName=editDeliverable&contextObjectId=${deliverable.id}">Delete</ww:a>
+					<!-- <ww:a href="%{editLink}&contextViewName=editDeliverable&contextObjectId=${deliverable.id}">Edit</ww:a>|-->
+					<ww:a href="%{deleteLink}&contextViewName=editDeliverable&contextObjectId=${deliverable.id}">Delete</ww:a>
 				</display:column>
 			</display:table>
 	
@@ -179,7 +181,12 @@
 	<c:if test="${!empty deliverable.backlogItems}">
 		<display:table class="listTable" name="deliverable.backlogItems" id="row" requestURI="editDeliverable.action">
 			<display:column sortable="true" title="Name">
+				<ww:url id="editLink" action="editBacklogItem" includeParams="none">
+					<ww:param name="backlogItemId" value="${row.id}"/>
+				</ww:url>
+				<ww:a href="%{editLink}&contextViewName=editDeliverable&contextObjectId=${deliverable.id}">
 					${aef:html(row.name)}			
+				</ww:a>
 			</display:column>
 			<display:column sortable="true" title="# of tasks">
 				${fn:length(row.tasks)}
@@ -197,13 +204,14 @@
 				${row.performedEffort}
 			</display:column>
 			<display:column sortable="false" title="Actions">
-				<ww:url id="editLink" action="editBacklogItem" includeParams="none">
+				<!-- ><ww:url id="editLink" action="editBacklogItem" includeParams="none">
 					<ww:param name="backlogItemId" value="${row.id}"/>
-				</ww:url>
+				</ww:url> -->
 				<ww:url id="deleteLink" action="deleteBacklogItem" includeParams="none">
 					<ww:param name="backlogItemId" value="${row.id}"/>
 				</ww:url>
-				<ww:a href="%{editLink}&contextViewName=editDeliverable&contextObjectId=${deliverable.id}">Edit</ww:a>|<ww:a href="%{deleteLink}&contextViewName=editDeliverable&contextObjectId=${deliverable.id}">Delete</ww:a>
+				<!-- ><ww:a href="%{editLink}&contextViewName=editDeliverable&contextObjectId=${deliverable.id}">Edit</ww:a>|-->
+				<ww:a href="%{deleteLink}&contextViewName=editDeliverable&contextObjectId=${deliverable.id}">Delete</ww:a>
 			</display:column>
 		</display:table>
 	</c:if>

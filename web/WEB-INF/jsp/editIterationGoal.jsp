@@ -66,58 +66,87 @@
 </c:if>
 	<c:if test="${!empty iterationGoal.backlogItems}">
 		<p>
-			Backlog items:
+			Backlog items linked to this goal
 		</p>
 		<p>
-			<display:table class="listTable" name="iterationGoal.backlogItems" id="row" requestURI="editIterationGoal.action">
-				<display:column sortable="true" title="Id" property="id"/>
-				<display:column sortable="true" title="Name" property="name"/>
-
-				<display:column sortable="true" title="Watched by me" >
-					<c:choose>
-						<c:when test="${empty row.watchers[currentUser.id]}">
-							Yes
-						</c:when>
-						<c:otherwise>
-							No
-						</c:otherwise>
-					</c:choose>
-				</display:column>
-
-
-
-				<display:column sortable="true" title="# of tasks">
-					${fn:length(row.tasks)}
+		<display:table class="listTable" name="iterationGoal.backlogItems" id="row" requestURI="editIterationGoal.action">
+				<display:column sortable="true" title="Name">
+					<ww:url id="editLink" action="editBacklogItem" includeParams="none">
+					<ww:param name="backlogItemId" value="${row.id}"/>
+					</ww:url>				
+					<ww:a href="%{editLink}">
+						${aef:html(row.name)}
+					</ww:a>
 				</display:column>
 
 				<display:column title="Tasks" sortable="false">
 				<c:if test="${!empty row.tasks}"> 
 
-					<ww:form action="editTask">
-						<ww:select name="taskId" list="#attr.row.tasks" listKey="id" listValue="name"/>					
-						<ww:submit value="Go"/>
-				    </ww:form>
-				    </c:if>
+							<c:set var="divId" value="${divId + 1}" scope="page"/>
+							<a href="javascript:toggleDiv(${divId});" title="Click to expand">
+								${fn:length(row.tasks)} tasks, <aef:percentDone backlogItemId="${row.id}"/> % complete<br/>
+   								<aef:taskStatusList backlogItemId="${row.id}" id="tsl"/>							   
+								<ww:url id="imgUrl" action="drawExtendedBarChart" includeParams="none">
+									<ww:param name="notStarted"  value="${tsl['notStarted']}"/>
+									<ww:param name="started"     value="${tsl['started']}"/>
+									<ww:param name="blocked"     value="${tsl['blocked']}"/>
+									<ww:param name="implemented" value="${tsl['implemented']}"/>
+									<ww:param name="done"        value="${tsl['done']}"/>
+								</ww:url>
+			 					<img src="${imgUrl}"/> 
+							</a>
+							
+							<aef:tasklist tasks="${row.tasks}"   contextViewName="editIteration"  contextObjectId="${iteration.id}" divId="${divId}"/>
+													
+							</c:if>
 
 				</display:column>
-
-				<display:column sortable="false" title="Responsible" >
-					${row.assignee.fullName}
+				<display:column sortable="true" title="Responsible" >
+					${aef:html(row.assignee.fullName)}
 				</display:column>
-				<display:column sortable="false" title="Priority" >
-					${row.priority}
+				<display:column sortable="true" title="Priority" >
+				<ww:text name="backlogItem.priority.${row.priority}"/>
 				</display:column>
 				<display:column sortable="true" title="Iteration Goal">
-					${row.iterationGoal.name}
+					${aef:html(row.iterationGoal.name)}
 				</display:column>
-
+				<display:column sortable="true" title="Effort done">
+					${row.performedEffort}
+				</display:column>
+				<display:column sortable="true" title="Estimate">
+					<c:choose>
+						<c:when test="${!empty row.effortEstimate}">
+							${row.effortEstimate}
+						</c:when>
+						<c:otherwise>
+							${row.allocatedEffort}
+						</c:otherwise>
+					</c:choose>
+				</display:column>
+				
 
 				<display:column sortable="false" title="Actions">
-					<ww:url id="editLink" action="editBacklogItem" includeParams="none">
+					<%--ww:url id="editLink" action="editBacklogItem" includeParams="none">
 						<ww:param name="backlogItemId" value="${row.id}"/>
-					</ww:url>
-					<ww:a href="%{editLink}">Edit</ww:a>
+					</ww:url--%>
+                    <ww:url id="deleteLink" action="deleteBacklogItem" includeParams="none"> 
+                            <ww:param name="backlogItemId" value="${row.id}"/> 
+                    </ww:url> 
+                    <%-- ww:a href="%{editLink}&contextViewName=editIteration&contextObjectId=${iteration.id}">Edit</ww:a>|--%>
+                    <ww:a href="%{deleteLink}&contextViewName=editIteration&contextObjectId=${iteration.id}">Delete</ww:a> 					
 				</display:column>
+			  <display:footer>
+			  	<tr>
+			  		<td>Total:</td>
+			  		<td>&nbsp;</td>
+			  		<td>&nbsp;</td>
+			  		<td>&nbsp;</td>
+			  		<td>&nbsp;</td>
+			  		<td><c:out value="${iteration.performedEffort}" /></td>
+			  		<td><c:out value="${iteration.totalEstimate}" /></td>
+			  	<tr>
+			  </display:footer>				
+		
 			</display:table>
 		</p>
 	</c:if>	

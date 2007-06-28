@@ -106,10 +106,12 @@ a:hover,a:active {background-color:#eef}
 	background: #fa0;
 }
 .tasklist {
-	margin-left: 2px;
+	margin: 0;
+	padding: 0;
+	list-style-type: none;
 }
 .tasklistItem {
-	margin-left: 2px;
+	margin: 0 0 5px 0;
 }
 
 
@@ -253,4 +255,13 @@ div#submenuwrap9 #menu li#subnav9 a {
 
  #menu ul a:hover {
 	color : #f00 !important;
+}
+
+.formTable textarea {
+	overflow: auto; 
+	overflow-y: scroll;
+}
+
+.formTable select {
+	width: 500px;
 }

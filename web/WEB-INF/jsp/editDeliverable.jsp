@@ -13,8 +13,15 @@
 			</c:otherwise>
 		</c:choose>			
 
+<c:choose>
+	<c:when test="${deliverable.id == 0}">
+		<aef:bct productId="${productId}"/>
+	</c:when>
+	<c:otherwise>
+		<aef:bct deliverableId="${deliverableId}" />
+	</c:otherwise>
+</c:choose>
 
-<aef:bct productId="${productId}"/>
 <aef:menu navi="${contextName}" pageHierarchy="${pageHierarchy}" /> 
 
 	<ww:actionerror/>

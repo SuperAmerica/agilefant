@@ -14,7 +14,9 @@
 			</c:otherwise>
 		</c:choose>			
 
-<aef:bct deliverableId="${deliverableId}"/>
+<c:if test="${iteration.id > 0}">
+	<aef:bct iterationId="${iterationId}"/>
+</c:if>
 
 <aef:menu navi="${contextName}"  pageHierarchy="${pageHierarchy}"/> 
 	<ww:actionerror/>

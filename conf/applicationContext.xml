@@ -2,22 +2,24 @@
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
                        "http://www.springframework.org/dtd/spring-beans.dtd">
 <beans>
- 	<bean id="placeholderConfig"
-	      class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+	<bean id="placeholderConfig"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 		<property name="locations">
 			<list>
-	  			<value>WEB-INF/configuration.properties</value>
-		  		<value>WEB-INF/database.properties</value>
-		  		<value>WEB-INF/configuration-user.properties</value>
-		  	</list>
+				<value>WEB-INF/configuration.properties</value>
+				<value>WEB-INF/database.properties</value>
+				<value>WEB-INF/configuration-user.properties</value>
+			</list>
 		</property>
 	</bean>
-	
-	<bean name="hibernateTransactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
-		<property name="sessionFactory" ref="sessionFactory"/>
-	</bean>	
-		
-	<bean name="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+
+	<bean name="hibernateTransactionManager"
+		class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+	<bean name="dataSource"
+		class="org.apache.commons.dbcp.BasicDataSource">
 		<property name="driverClassName">
 			<value>${hibernate.connection.driver_class}</value>
 		</property>
@@ -30,59 +32,68 @@
 		<property name="url">
 			<value>${hibernate.connection.url}</value>
 		</property>
-	 </bean>
-	 
-	 <bean name="sessionFactory" class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
-	 	<property name="dataSource" ref="dataSource"/>
-	 	<property name="configLocation">
-	 		<value>/WEB-INF/hibernate.cfg.xml</value>
-	 	</property>
+	</bean>
+
+	<bean name="sessionFactory"
+		class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="configLocation">
+			<value>/WEB-INF/hibernate.cfg.xml</value>
+		</property>
 		<property name="hibernateProperties">
 			<props>
-				<prop key="hibernate.dialect">${hibernate.dialect}</prop>
+				<prop key="hibernate.dialect">
+					${hibernate.dialect}
+				</prop>
 			</props>
 		</property>
-	 	<property name="eventListeners">
-	 		<map>
-	 			<entry key="pre-insert">
-	 				<list>
-						<ref bean="taskEventListener"/>
-						<bean class="fi.hut.soberit.agilefant.db.hibernate.event.TaskEventEventListener"/>
+		<property name="eventListeners">
+			<map>
+				<entry key="pre-insert">
+					<list>
+						<ref bean="taskEventListener" />
+						<bean
+							class="fi.hut.soberit.agilefant.db.hibernate.event.TaskEventEventListener" />
 					</list>
-	 			</entry>
-	 			<entry key="post-insert">
-	 				<list>
-	 					<ref bean="taskEventListener"/>
-	 				</list>	 			
-	 			</entry>
-	 			<entry key="post-update">
-	 				<list>
-	 					<ref bean="taskEventListener"/>
-	 				</list>
-	 			</entry>
-	 		</map>
-	 	</property>
-	 </bean>
-	 
-	 <bean name="taskEventListener" class="fi.hut.soberit.agilefant.db.hibernate.event.TaskEventListener">
- 	 	<property name="mailSender" ref="mailSender"/>
-	 	<property name="createTemplate" ref="createTaskTemplate"/>
-	 	<property name="updateTemplate" ref="updateTaskTemplate"/>
-	 </bean>
-	 
-	 <bean name="portfolioManager" class="fi.hut.soberit.agilefant.service.PortfolioManagerImpl">
-		<property name="deliverableDAO" ref="deliverableDAO"/>
-	 </bean>
-	 
-	 <bean name="contextViewManager" class="fi.hut.soberit.agilefant.web.context.DefaultContextViewManager"/>
+				</entry>
+				<entry key="post-insert">
+					<list>
+						<ref bean="taskEventListener" />
+					</list>
+				</entry>
+				<entry key="post-update">
+					<list>
+						<ref bean="taskEventListener" />
+					</list>
+				</entry>
+			</map>
+		</property>
+	</bean>
 
-	 <bean name="aefFunctions" class="fi.hut.soberit.agilefant.web.function.AEFFunctions">
-		<property name="maxStrLength" value="15"/>
-	 </bean>
-	 
-	 <bean name="chartManager" class="fi.hut.soberit.agilefant.service.ChartManagerImpl">
-		<property name="iterationDAO" ref="iterationDAO"/>
-		<property name="performedWorkDAO" ref="performedWorkDAO"/>
-		<property name="estimateHistoryDAO" ref="estimateHistoryDAO"/>
-	 </bean>
+	<bean name="taskEventListener"
+		class="fi.hut.soberit.agilefant.db.hibernate.event.TaskEventListener">
+		<property name="mailSender" ref="mailSender" />
+		<property name="createTemplate" ref="createTaskTemplate" />
+		<property name="updateTemplate" ref="updateTaskTemplate" />
+	</bean>
+
+	<bean name="portfolioManager"
+		class="fi.hut.soberit.agilefant.service.PortfolioManagerImpl">
+		<property name="deliverableDAO" ref="deliverableDAO" />
+	</bean>
+
+	<bean name="contextViewManager"
+		class="fi.hut.soberit.agilefant.web.context.DefaultContextViewManager" />
+
+	<bean name="aefFunctions"
+		class="fi.hut.soberit.agilefant.web.function.AEFFunctions">
+		<property name="maxStrLength" value="15" />
+	</bean>
+
+	<bean name="chartManager"
+		class="fi.hut.soberit.agilefant.service.ChartManagerImpl">
+		<property name="iterationDAO" ref="iterationDAO" />
+		<property name="performedWorkDAO" ref="performedWorkDAO" />
+		<property name="estimateHistoryDAO" ref="estimateHistoryDAO" />
+	</bean>
 </beans>

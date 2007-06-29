@@ -1,6 +1,13 @@
 <%@ include file="./inc/_taglibs.jsp" %>
 <%@ include file="./inc/_header.jsp" %>
-<aef:bct iterationId="${iterationId}"/>
+
+<c:if test="${iterationGoal.id > 0}">
+	<aef:bct iterationGoalId="${iterationGoal.id}"/>
+</c:if>
+<c:if test="${iterationGoal.id == 0}">
+	<aef:bct iterationId="${iterationId}"/>
+</c:if>
+
 <aef:menu navi="${contextName }"  pageHierarchy="${pageHierarchy}"/> 
 
 	<ww:actionerror/>
@@ -60,10 +67,9 @@
 			<ww:submit value="Move"/>
 				</select>
 			</p>			
-		</ww:form>
-				
-
+		</ww:form>		
 </c:if>
+
 	<c:if test="${!empty iterationGoal.backlogItems}">
 		<p>
 			Backlog items linked to this goal

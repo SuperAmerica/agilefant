@@ -1,6 +1,15 @@
 <%@ include file="./inc/_taglibs.jsp" %>
 <%@ include file="./inc/_header.jsp" %>
-<aef:bct deliverableId="${deliverableId}"/>
+
+<c:choose>
+	<c:when test="${iteration.id == 0}">
+		<aef:bct deliverableId="${deliverableId}"/>
+	</c:when>
+	<c:otherwise>
+		<aef:bct iterationId="${iterationId}"/>
+	</c:otherwise>
+</c:choose>
+
 <c:set var="divId" value="1336" scope="page"/>
 <aef:menu navi="${contextName}"  pageHierarchy="${pageHierarchy}"/> 
 	<ww:actionerror/>

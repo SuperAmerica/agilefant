@@ -10,6 +10,7 @@ import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.db.DeliverableDAO;
 import fi.hut.soberit.agilefant.db.IterationDAO;
+import fi.hut.soberit.agilefant.db.IterationGoalDAO;
 import fi.hut.soberit.agilefant.db.ProductDAO;
 import fi.hut.soberit.agilefant.db.TaskDAO;
 import fi.hut.soberit.agilefant.model.User;
@@ -57,7 +58,12 @@ public class BreadCrumbTrailTag extends SpringTagSupport {
 	public void setIterationId(int id) {
 		IterationDAO dao = (IterationDAO)super.getApplicationContext().getBean("iterationDAO");
 		this.page = dao.get(id);
-	} 
+	}
+	public void setIterationGoalId(int id) {
+		IterationGoalDAO dao = (IterationGoalDAO)super.getApplicationContext().getBean("iterationGoalDAO");
+		this.page = dao.get(id);
+	}
+	
 	public void setBacklogItemId(int id) {
 		BacklogItemDAO dao = (BacklogItemDAO)super.getApplicationContext().getBean("backlogItemDAO");
 		this.page = dao.get(id);

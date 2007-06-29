@@ -11,9 +11,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.Type;
+
+import fi.hut.soberit.agilefant.web.page.PageItem;
 
 /**
  * A Hibernate entity bean which represents an iteration goal. 
@@ -34,7 +37,7 @@ import org.hibernate.annotations.Type;
  * @see fi.hut.soberit.agilefant.model.BacklogItem 
  */
 @Entity
-public class IterationGoal {
+public class IterationGoal implements PageItem {
 
 	private int id;
 	private Iteration iteration;
@@ -75,6 +78,24 @@ public class IterationGoal {
 		this.description = description;
 	}
 
+	/** {@inheritDoc} */
+	@Transient
+	public boolean hasChildren() {
+		return false;
+	}
+	
+	/** {@inheritDoc} */
+	@Transient
+	public Collection<PageItem> getChildren() {
+		return null;
+	}
+	
+	/** {@inheritDoc} */
+	@Transient
+	public PageItem getParent() {
+		return getIteration();
+	}
+	
 	@ManyToOne
 	@JoinColumn (nullable = false)
 	public Iteration getIteration() {

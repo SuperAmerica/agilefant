@@ -5,6 +5,7 @@ import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.Deliverable;
 import fi.hut.soberit.agilefant.model.EstimateHistoryEvent;
 import fi.hut.soberit.agilefant.model.Iteration;
+import fi.hut.soberit.agilefant.model.IterationGoal;
 import fi.hut.soberit.agilefant.model.PerformedWork;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Task;
@@ -30,6 +31,9 @@ public class AEFFunctions {
 	public static boolean isIteration(Object obj) {
 		return obj instanceof Iteration;
 	} 
+	public static boolean isIterationGoal(Object obj) {
+		return obj instanceof IterationGoal;
+	}
 	public static boolean isBacklogItem(Object obj) {
 		return obj instanceof BacklogItem;
 	} 

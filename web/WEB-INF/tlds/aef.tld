@@ -261,8 +261,15 @@
         <attribute>
             <name>iterationId</name>
             <required>false</required>
-			<rtexprvalue>true</rtexprvalue>            
-        </attribute>	    
+						<rtexprvalue>true</rtexprvalue>            
+        </attribute>
+        
+        <attribute>
+        	<name>iterationGoalId</name>
+        	<required>false</required>
+        	<rtexprvalue>true</rtexprvalue>   
+        </attribute>
+        
         <attribute>
             <name>productId</name>
             <required>false</required>
@@ -329,6 +336,11 @@
 	  <name>isIteration</name>
 	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
 	  <function-signature>boolean isIteration(java.lang.Object)</function-signature>
+	</function>
+		<function>
+	  <name>isIterationGoal</name>
+	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
+	  <function-signature>boolean isIterationGoal(java.lang.Object)</function-signature>
 	</function>  	 
 	<function>
 	  <name>isBacklogItem</name>

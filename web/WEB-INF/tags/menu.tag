@@ -51,63 +51,6 @@
 <h1>Agilefant</h1>
 </div>
 
-<div id="bct">
-
-<c:forEach var="page" items="${pageHierarchy}" >
-	<c:choose>
-		<c:when test="${aef:isProduct(page)}">
-			&gt;
-			<ww:url id="prodLink" action="editProduct" includeParams="none">
-				<ww:param name="productId" value="${page.id}"/>
-			</ww:url>
-			<ww:a title="Product: ${page.name}" href="%{prodLink}">${aef:out(page.name)}</ww:a>		
-		</c:when>
-		<c:when test="${aef:isDeliverable(page)}">
-			&gt;
-			<ww:url id="delivLink" action="editDeliverable" includeParams="none">
-				<ww:param name="deliverableId" value="${page.id}"/>
-			</ww:url>
-			<ww:a title="Deliverable: ${page.name}" href="%{delivLink}">${aef:out(page.name)}</ww:a>		
-		</c:when >
-		<c:when test="${aef:isIteration(page)}">
-			&gt;
-			<ww:url id="iterLink" action="editIteration" includeParams="none">
-				<ww:param name="iterationId" value="${page.id}"/>
-			</ww:url>
-			<ww:a title="Iteration: ${page.name}" href="%{iterLink}">${aef:out(page.name)}</ww:a>		
-		</c:when >
-		<c:when test="${aef:isBacklogItem(page)}">
-			&gt;
-			<ww:url id="bliLink" action="editBacklogItem" includeParams="none">
-				<ww:param name="backlogItemId" value="${page.id}"/>
-			</ww:url>
-			<ww:a title="Backlog Item: ${page.name}" href="%{bliLink}">${aef:out(page.name)}</ww:a>		
-		</c:when >
-		<c:when test="${aef:isTask(page)}">
-			&gt;
-			<ww:url id="taskLink" action="editTask" includeParams="none">
-				<ww:param name="taskId" value="${page.id}"/>
-			</ww:url>
-			<ww:a title="Task: ${page.name}" href="%{taskLink}">${aef:out(page.name)}</ww:a>		
-		</c:when >
-		<c:when test="${aef:isUser(page)}">
-			<ww:url id="userLink" action="listUsers" includeParams="none"/>
-			<ww:a href="%{userLink}">User list</ww:a>		
-		</c:when >
-		<c:when test="${aef:isPortfolio(page)}">
-			<ww:url id="homeLink" action="listProducts" includeParams="none"/>
-			<ww:a title="Portfolio" href="%{homeLink}">Home</ww:a>		
-		</c:when >
-		<c:when test="${aef:isManagementPage(page)}">
-			<ww:url id="homeLink" action="managementView" includeParams="none"/>
-			<ww:a title="Management view" href="%{homeLink}">Home</ww:a>		
-		</c:when >
-		
-	</c:choose>
-
-</c:forEach>
-
-&nbsp;</div>
 
 				<div id="logout">
 					<aef:currentUser/>
@@ -151,4 +94,79 @@
 </div>
 </div>
 
+<div id="bct">
+
+<c:forEach var="page" items="${pageHierarchy}" >
+	<c:choose>
+		<c:when test="${aef:isProduct(page)}">
+			<ww:url id="prodLink" action="editProduct" includeParams="none">
+				<ww:param name="productId" value="${page.id}"/>
+			</ww:url>
+			<ww:a title="Product: ${page.name}" href="%{prodLink}">${aef:out(page.name)}</ww:a>		
+		</c:when>
+		
+		<c:when test="${aef:isDeliverable(page)}">
+			&gt;
+			<ww:url id="delivLink" action="editDeliverable" includeParams="none">
+				<ww:param name="deliverableId" value="${page.id}"/>
+			</ww:url>
+			<ww:a title="Deliverable: ${page.name}" href="%{delivLink}">${aef:out(page.name)}</ww:a>		
+		</c:when >
+		
+		<c:when test="${aef:isIteration(page)}">
+			&gt;
+			<ww:url id="iterLink" action="editIteration" includeParams="none">
+				<ww:param name="iterationId" value="${page.id}"/>
+			</ww:url>
+			<ww:a title="Iteration: ${page.name}" href="%{iterLink}">${aef:out(page.name)}</ww:a>		
+		</c:when >
+		
+		<c:when test="${aef:isIterationGoal(page)}">
+			&gt;
+			<ww:url id="iterGoalLink" action="editIterationGoal" includeParams="none">
+				<ww:param name="iterationId" value="${page.id}"/>
+			</ww:url>
+			<ww:a title="IterationGoal: ${page.name}" href="%{iterGoalLink)">${aef:out(page.name)}</ww:a>
+		</c:when>
+		
+		<c:when test="${aef:isBacklogItem(page)}">
+			&gt;
+			<ww:url id="bliLink" action="editBacklogItem" includeParams="none">
+				<ww:param name="backlogItemId" value="${page.id}"/>
+			</ww:url>
+			<ww:a title="Backlog Item: ${page.name}" href="%{bliLink}">${aef:out(page.name)}</ww:a>		
+		</c:when >
+		
+		<c:when test="${aef:isTask(page)}">
+			&gt;
+			<ww:url id="taskLink" action="editTask" includeParams="none">
+				<ww:param name="taskId" value="${page.id}"/>
+			</ww:url>
+			<ww:a title="Task: ${page.name}" href="%{taskLink}">${aef:out(page.name)}</ww:a>		
+		</c:when >
+		
+		<c:when test="${aef:isUser(page)}">
+			<ww:url id="userLink" action="listUsers" includeParams="none"/>
+			<ww:a href="%{userLink}">User list</ww:a>		
+		</c:when >
+		
+		<c:when test="${aef:isPortfolio(page)}">
+			<ww:url id="portfolioLink" action="viewPortfolio" includeParams="none"/>
+			<ww:a title="Portfolio" href="%{portfolioLink}">Development portfolio</ww:a>		
+		</c:when >
+		
+		<c:when test="${aef:isManagementPage(page)}">
+			<ww:url id="homeLink" action="managementView" includeParams="none"/>
+			<ww:a title="Management view" href="%{homeLink}">Home</ww:a>		
+		</c:when >
+		
+	</c:choose>
+
+</c:forEach>
+
+&nbsp;</div>
+
+
 <div id="main">
+
+

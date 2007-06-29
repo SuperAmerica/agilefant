@@ -1,6 +1,14 @@
 <%@ include file="./inc/_taglibs.jsp" %>
 <%@ include file="./inc/_header.jsp" %>
-<aef:bct backlogId="${backlogId}"/>
+
+<c:choose>
+	<c:when test="${backlogItem.id == 0}">
+		<aef:bct backlogId="${backlogId}"/>
+	</c:when>
+	<c:otherwise>
+		<aef:bct backlogItemId="${backlogItemId}"/>
+	</c:otherwise>
+</c:choose>
 
 <aef:menu navi="${contextName}" pageHierarchy="${pageHierarchy}"/> 
 	<ww:actionerror/>

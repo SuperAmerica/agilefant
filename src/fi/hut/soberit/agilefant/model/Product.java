@@ -55,9 +55,11 @@ public class Product extends Backlog implements PageItem {
     /** {@inheritDoc} */
     @Transient
 	public PageItem getParent() {
-		// TODO Auto-generated method stub
-		return new PortfolioPageItem();
-	}
+		
+    	// We don't really want to show portfolio as root
+    	//return new PortfolioPageItem();
+    	return null;
+    }
     
     /** {@inheritDoc} */
     @Transient

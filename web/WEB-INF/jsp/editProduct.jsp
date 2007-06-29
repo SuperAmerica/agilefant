@@ -1,6 +1,10 @@
 <%@ include file="./inc/_taglibs.jsp" %>
 <%@ include file="./inc/_header.jsp" %>
-<aef:bct portfolioId="0"/> 
+
+<c:if test="${product.id > 0}">
+	<aef:bct productId="${productId}"/>
+</c:if>
+
 <aef:menu navi="${contextName}"  pageHierarchy="${pageHierarchy}"  /> 
 	<ww:actionerror/>
 	<ww:actionmessage/>

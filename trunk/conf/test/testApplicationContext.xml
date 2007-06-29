@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
+                       "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<!--
+
+This configuration file is used when running spring enabled tests.
+
+It's identical to applicationContext.xml, with the exception that 
+configuration files come from different locations. This is due to differences 
+in directory structures when run in project directory and when run installed.
+
+If you can figure out a way to manage without separate copies of this file,
+please implement. In that case, you should change the filenames in 
+ExplicitSpringSupport.java.
+
+- Turkka
+
+-->
+
+<beans>
+ 	<bean id="placeholderConfig"
+	      class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+	  			<value>file:conf/configuration.properties</value>
+		  		<value>file:conf/database-mysql5.properties</value>
+		  	</list>
+		</property>
+	</bean>
+	
+	<bean name="hibernateTransactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>	
+		
+	<bean name="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+		<property name="driverClassName">
+			<value>${hibernate.connection.driver_class}</value>
+		</property>
+		<property name="username">
+			<value>${hibernate.connection.username}</value>
+		</property>
+		<property name="password">
+			<value>${hibernate.connection.password}</value>
+		</property>
+		<property name="url">
+			<value>${hibernate.connection.url}</value>
+		</property>
+	 </bean>
+	 
+	 <bean name="sessionFactory" class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
+	 	<property name="dataSource" ref="dataSource"/>
+	 	<property name="configLocation">
+	 		<value>file:conf/hibernate.cfg.xml</value>
+	 	</property>
+	 	<property name="eventListeners">
+	 		<map>
+	 			<entry key="pre-insert">
+	 				<list>
+						<bean class="fi.hut.soberit.agilefant.db.hibernate.event.TaskEventListener"/>
+						<bean class="fi.hut.soberit.agilefant.db.hibernate.event.TaskEventEventListener"/>
+					</list>
+	 			</entry>	 		
+	 		</map>
+	 	</property>
+	 </bean>
+</beans>

@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
+                       "http://www.springframework.org/dtd/spring-beans.dtd">
+                       
+<!--
+
+This configuration file is used when running spring enabled tests.
+
+It's identical to applicationContext-daos.xml, with the exception that 
+configuration files come from different locations. This is due to differences 
+in directory structures when run in project directory and when run installed.
+
+If you can figure out a way to manage without separate copies of this file,
+please implement. In that case, you should change the filenames in 
+ExplicitSpringSupport.java.
+
+- Turkka
+
+-->
+                       
+<beans>
+ 	<bean id="placeholderConfig"
+	      class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+	  			<value>file:conf/configuration.properties</value>
+		  		<value>file:conf/database-mysql5.properties</value>
+		  	</list>
+		</property>
+	</bean>
+	
+	<bean name="abstractDAOTarget" abstract="true">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	
+	<bean name="abstractDAO" abstract="true" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+		<property name="transactionManager" ref="hibernateTransactionManager"/>
+		<property name="transactionAttributes">
+			<props>
+				<prop key="*">PROPAGATION_REQUIRED</prop>
+			</props>
+		</property>
+	</bean>
+	
+	<bean name="productDAOTarget" parent="abstractDAOTarget" class="fi.hut.soberit.agilefant.db.hibernate.ProductDAOHibernate"/>
+	<bean name="productDAO" parent="abstractDAO">
+		<property name="target" ref="productDAOTarget"/>
+	</bean>
+	
+	<bean name="iterationDAOTarget" parent="abstractDAOTarget" class="fi.hut.soberit.agilefant.db.hibernate.IterationDAOHibernate"/>
+	<bean name="iterationDAO" parent="abstractDAO">
+		<property name="target" ref="iterationDAOTarget"/>
+	</bean>
+	
+	<bean name="performedWorkDAOTarget" parent="abstractDAOTarget" class="fi.hut.soberit.agilefant.db.hibernate.PerformedWorkDAOHibernate"/>
+	<bean name="performedWorkDAO" parent="abstractDAO">
+		<property name="target" ref="performedWorkDAOTarget"/>
+	</bean>
+	
+	<bean name="backlogDAOTarget" parent="abstractDAOTarget" class="fi.hut.soberit.agilefant.db.hibernate.BacklogDAOHibernate"/>
+	<bean name="backlogDAO" parent="abstractDAO">
+		<property name="target" ref="backlogDAOTarget"/>
+	</bean>
+
+	<bean name="activityTypeDAOTarget" parent="abstractDAOTarget" class="fi.hut.soberit.agilefant.db.hibernate.ActivityTypeDAOHibernate"/>
+	<bean name="workTypeDAOTarget" parent="abstractDAOTarget" class="fi.hut.soberit.agilefant.db.hibernate.WorkTypeDAOHibernate"/>
+	<bean name="deliverableDAOTarget" parent="abstractDAOTarget" class="fi.hut.soberit.agilefant.db.hibernate.DeliverableDAOHibernate"/>
+	<bean name="backlogItemDAOTarget" parent="abstractDAOTarget" class="fi.hut.soberit.agilefant.db.hibernate.BacklogItemDAOHibernate"/>
+	<bean name="taskDAOTarget" parent="abstractDAOTarget" class="fi.hut.soberit.agilefant.db.hibernate.TaskDAOHibernate"/>
+	<bean name="userDAOTarget" parent="abstractDAOTarget" class="fi.hut.soberit.agilefant.db.hibernate.UserDAOHibernate"/>
+	<bean name="taskEventDAOTarget" parent="abstractDAOTarget" class="fi.hut.soberit.agilefant.db.hibernate.TaskEventDAOHibernate"/>
+	<bean name="iterationGoalDAOTarget" parent="abstractDAOTarget" class="fi.hut.soberit.agilefant.db.hibernate.IterationGoalDAOHibernate"/>	
+		
+	<bean name="activityTypeDAO" parent="abstractDAO">
+		<property name="target" ref="activityTypeDAOTarget"/>
+	</bean>
+	
+	<bean name="workTypeDAO" parent="abstractDAO">
+		<property name="target" ref="workTypeDAOTarget"/>
+	</bean>
+
+	<bean name="deliverableDAO" parent="abstractDAO">
+		<property name="target" ref="deliverableDAOTarget"/>
+	</bean>
+
+
+	<bean name="backlogItemDAO" parent="abstractDAO">
+		<property name="target" ref="backlogItemDAOTarget"/>
+	</bean>
+
+	<bean name="taskDAO" parent="abstractDAO">
+		<property name="target" ref="taskDAOTarget"/>
+	</bean>
+	
+	<bean name="userDAO" parent="abstractDAO">
+		<property name="target" ref="userDAOTarget"/>
+	</bean>
+
+	<bean name="taskEventDAO" parent="abstractDAO">
+		<property name="target" ref="taskEventDAOTarget"/>
+	</bean>
+	
+	<bean name="iterationGoalDAO" parent="abstractDAO">
+		<property name="target" ref="iterationGoalDAOTarget"/>
+	</bean>	
+	
+	<bean name="practiceAllocationDAOTarget" parent="abstractDAOTarget" class="fi.hut.soberit.agilefant.db.hibernate.PracticeAllocationDAOHibernate"/>
+	<bean name="practiceAllocationDAO" parent="abstractDAO">
+		<property name="target" ref="practiceAllocationDAOTarget"/>
+	</bean>
+
+	<bean name="practiceDAOTarget" parent="abstractDAOTarget" class="fi.hut.soberit.agilefant.db.hibernate.PracticeDAOHibernate"/>
+	<bean name="practiceDAO" parent="abstractDAO">
+		<property name="target" ref="practiceDAOTarget"/>
+	</bean>
+
+	<bean name="practiceTemplateDAOTarget" parent="abstractDAOTarget" class="fi.hut.soberit.agilefant.db.hibernate.PracticeTemplateDAOHibernate"/>
+	<bean name="practiceTemplateDAO" parent="abstractDAO">
+		<property name="target" ref="practiceTemplateDAOTarget"/>
+	</bean>	
+</beans>

@@ -1,0 +1,1 @@
+<% response.sendRedirect("./myTasks.action"); %>

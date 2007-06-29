@@ -1,0 +1,9 @@
+#Sat Oct 14 01:30:36 EEST 2006
+/*
+ * TODO comments ekantola - Where this is used, and, for what? One line of comment is good enough.
+ */
+DELEGATES_PREFERENCE=delegateValidatorListorg.eclipse.wst.wsdl.validation.internal.eclipse.WSDLDelegatingValidator\=org.eclipse.wst.wsdl.validation.internal.eclipse.Validator;org.eclipse.wst.xsd.core.internal.validation.eclipse.XSDDelegatingValidator\=org.eclipse.wst.xsd.core.internal.validation.eclipse.Validator;
+USER_BUILD_PREFERENCE=enabledBuildValidatorListorg.eclipse.wst.common.componentcore.internal.ModuleCoreValidator;org.eclipse.wst.html.internal.validation.HTMLValidator;org.eclipse.wst.dtd.core.internal.validation.eclipse.Validator;org.eclipse.wst.wsi.ui.internal.WSIMessageValidator;org.eclipse.wst.wsdl.validation.internal.eclipse.WSDLDelegatingValidator;org.eclipse.jst.jsp.core.internal.validation.JSPELValidator;org.eclipse.wst.xsd.core.internal.validation.eclipse.XSDDelegatingValidator;org.eclipse.jst.jsp.core.internal.validation.JSPJavaValidator;org.eclipse.jst.jsp.core.internal.validation.JSPDirectiveValidator;org.eclipse.wst.xml.core.internal.validation.eclipse.Validator;
+USER_MANUAL_PREFERENCE=enabledManualValidatorListorg.eclipse.wst.common.componentcore.internal.ModuleCoreValidator;org.eclipse.wst.html.internal.validation.HTMLValidator;org.eclipse.wst.dtd.core.internal.validation.eclipse.Validator;org.eclipse.wst.wsi.ui.internal.WSIMessageValidator;org.eclipse.wst.wsdl.validation.internal.eclipse.WSDLDelegatingValidator;org.eclipse.jst.jsp.core.internal.validation.JSPELValidator;org.eclipse.wst.xsd.core.internal.validation.eclipse.XSDDelegatingValidator;org.eclipse.jst.jsp.core.internal.validation.JSPJavaValidator;org.eclipse.jst.jsp.core.internal.validation.JSPDirectiveValidator;org.eclipse.wst.xml.core.internal.validation.eclipse.Validator;
+USER_PREFERENCE=overrideGlobalPreferencesfalse
+eclipse.preferences.version=1

@@ -1,4 +1,0 @@
-webapp.name = agilefant
-database.type = mysql5
-deploy.dir.local = /home/agilefant/tomcat/webapps/${webapp.name}
-fitnesse.dir = c:/fitnesse

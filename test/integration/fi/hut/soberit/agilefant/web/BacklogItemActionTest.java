@@ -96,7 +96,7 @@ public class BacklogItemActionTest extends SpringTestCase {
 		this.securityUtil = securityUtil;
 	}*/
 
-	/*
+	/**
 	 * Checks, if there are any given error countered. 
 	 */
 	private boolean errorFound(String e) {
@@ -199,6 +199,12 @@ public class BacklogItemActionTest extends SpringTestCase {
 		} 
 	}
 	
+	/**
+	 * Returns a product backlog for testing.
+	 * 
+	 * @param number Not in use
+	 * @return Product backlog for testing
+	 */
 	private Backlog getTestBacklog(int number) {
 		this.productAction.create();
 		Product p = this.productAction.getProduct();
@@ -240,7 +246,7 @@ public class BacklogItemActionTest extends SpringTestCase {
 		return this.backlogItemDAO.getAll();
 	}
 	
-	/*
+	/**
 	 * Method for calling taskAction.create that is supposed to work (and 
 	 * is not a target for testing) Actual testing for method create
 	 * is done in testCreate_XXX -methods
@@ -251,7 +257,7 @@ public class BacklogItemActionTest extends SpringTestCase {
 		assertEquals("create() was unsuccessful", Action.SUCCESS, result);
 	}
 
-	/*
+	/**
 	 * Method for calling taskAction.store that is supposed to work (and 
 	 * is not a target for testing) Actual testing for method store
 	 * is done in testStore_XXX -methods
@@ -275,7 +281,7 @@ public class BacklogItemActionTest extends SpringTestCase {
 				this.backlogItemAction.getBacklogItem());
 	}
 	
-	/*
+	/**
 	 * Get task based on name and description.
 	 */
 	private BacklogItem getBacklogItem(String name, String desc) {
@@ -401,7 +407,7 @@ public class BacklogItemActionTest extends SpringTestCase {
 		// TODO check the error?
 	}
 	
-	/*
+	/**
 	 * Change the details of previously stored task and update the task.
 	 */
 	public void testStore_withUpdate() {

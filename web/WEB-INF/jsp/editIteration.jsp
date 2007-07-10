@@ -12,6 +12,7 @@
 
 <c:set var="divId" value="1336" scope="page"/>
 <aef:menu navi="${contextName}"  pageHierarchy="${pageHierarchy}"/> 
+
 <ww:actionerror/>
 <ww:actionmessage/>
 				
@@ -131,8 +132,18 @@
 	<c:if test="${!empty iteration.backlogItems}">
 		<div id="subItemContent">
 		<p>
-			<display:table class="listTable" name="iteration.backlogItems" id="row2" requestURI="editIteration.action">
+			<ww:form action="moveSelectedItems">
+			
+			<!-- Return to this backlog after submit -->
+			<ww:hidden name="backlogId" value="${iteration.id}"/>
 
+			<display:table class="listTable" name="iteration.backlogItems" id="row2" requestURI="editIteration.action">
+					
+				<!-- Checkboxes for bulk-moving backlog items -->				
+				<display:column sortable="false" title="">
+						<ww:checkbox name="selected" fieldValue="${row2.id}"/>
+				</display:column>
+				
 				<display:column sortable="true" sortProperty="name" title="Name" class="shortNameColumn">
 					<ww:url id="editLink" action="editBacklogItem" includeParams="none">
 						<ww:param name="backlogItemId" value="${row2.id}"/>
@@ -199,7 +210,7 @@
           </ww:url> 
           <ww:a href="%{deleteLink}&contextViewName=editIteration&contextObjectId=${iteration.id}">Delete</ww:a> 					
 				</display:column>
-		
+
 			  <display:footer>
 			  	<tr>
 			  		<td>Total:</td>
@@ -212,8 +223,19 @@
 			  	<tr>
 			  </display:footer>						
 			</display:table>
+			
+			<aef:productList/>
+			
+			<p>	
+				<aef:backlogDropdown selectName="targetBacklog" 
+						preselectedBacklogId="${iteration.id}"
+						backlogs="${productList}"/>
+				<ww:submit type="button" value="%{'MoveItems'}" label="Move to backlog"/>
+			</p>
+		</ww:form>
 		</p>
 	</div>
+		
 	</c:if>
 </div>
 </td></tr></table>

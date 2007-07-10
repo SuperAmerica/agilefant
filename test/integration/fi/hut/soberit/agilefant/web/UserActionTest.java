@@ -77,7 +77,8 @@ public class UserActionTest extends SpringTestCase {
 	 */
 	private void store() {
 		String result = userAction.store();
-		assertEquals("store() was unsuccessful", Action.SUCCESS, result);
+		assertEquals("store() was unsuccessful: " +
+				userAction.getActionErrors(), Action.SUCCESS, result);
 	}
 
 	/*

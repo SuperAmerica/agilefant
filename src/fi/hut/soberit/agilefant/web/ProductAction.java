@@ -60,6 +60,9 @@ public class ProductAction extends ActionSupport implements CRUDAction {
 			return Action.ERROR;
 		}
 		productDAO.store(storable);
+		if (productId == 0) {
+			productId = storable.getId();
+		}
 		return Action.SUCCESS;
 	}
 	

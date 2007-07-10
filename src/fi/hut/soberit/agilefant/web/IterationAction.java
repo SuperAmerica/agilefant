@@ -69,6 +69,9 @@ public class IterationAction extends ActionSupport implements CRUDAction {
 			}
 		}
 		this.fillObject(fillable);
+		if (super.hasActionErrors()){
+			return Action.ERROR;
+		}
 		iterationDAO.store(fillable);
 		return Action.SUCCESS;
 	}
@@ -88,6 +91,10 @@ public class IterationAction extends ActionSupport implements CRUDAction {
 	}
 	
 	protected void fillObject(Iteration fillable){
+		if(this.iteration.getName().equals("")) {
+			super.addActionError(super.getText("iteration.missingName"));
+			return;
+		}
 		fillable.setDeliverable(this.deliverable);
 		fillable.setName(this.iteration.getName());
 		fillable.setDescription(this.iteration.getDescription());

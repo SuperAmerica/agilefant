@@ -74,18 +74,23 @@ public class IterationGoalAction extends ActionSupport implements CRUDAction {
 	}
 	
 	protected void fillStorable(IterationGoal storable){
-		if (iterationId > 0 && storable.getId() == 0){
-			iteration = iterationDAO.get(iterationId);
-			if (iteration == null){
-				super.addActionError(super.getText("iterationg.notFound"));
-			}
+		iteration = iterationDAO.get(iterationId);
+		if(this.iterationGoal.getName().equals("")) {
+			super.addActionError(super.getText("iterationGoal.missingName"));
+			return;
 		}
-		storable.setName(this.iterationGoal.getName());
-		storable.setDescription(this.iterationGoal.getDescription());
-		storable.setPriority(this.iterationGoal.getPriority());
-		if (storable.getId() == 0){
+		if (iteration == null)
+			super.addActionError(super.getText("iteration.notFound"));
+		else {
+			if (storable.getId() > 0){
+				storable.getIteration().getIterationGoals().remove(storable);
+				iteration.getIterationGoals().add(storable);
+			}
 			storable.setIteration(iteration);
-		}		
+			storable.setName(this.iterationGoal.getName());
+			storable.setDescription(this.iterationGoal.getDescription());
+			//storable.setPriority(this.iterationGoal.getPriority());
+		}
 	}
 
 	public Iteration getIteration() {

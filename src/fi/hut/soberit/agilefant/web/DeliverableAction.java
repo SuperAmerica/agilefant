@@ -93,6 +93,10 @@ public class DeliverableAction extends ActionSupport implements CRUDAction {
 	
 	protected void fillStorable(Deliverable storable){
 		Date current = Calendar.getInstance().getTime();
+		if(this.deliverable.getName().equals("")) {
+			super.addActionError(super.getText("project.missingName"));
+			return;
+		}
 		if (deliverable.getStartDate() == null){
 			super.addActionError(super.getText("deliverable.missingStartDate"));
 			return;

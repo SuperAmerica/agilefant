@@ -22,11 +22,10 @@
 	</c:otherwise>
 </c:choose>
 
+<c:set var="divId" value="1336" scope="page"/>
 <aef:menu navi="${contextName}" pageHierarchy="${pageHierarchy}" /> 
-
-	<ww:actionerror/>
-	<ww:actionmessage/>
-
+<ww:actionerror/>
+<ww:actionmessage/>
 
 <ww:date name="%{new java.util.Date()}" id="start"/>
 <ww:date name="%{new java.util.Date()}" id="end"/>
@@ -48,17 +47,20 @@
 	</c:when>
 	<c:otherwise>
 
-					<ww:url id="viewLink" action="viewDeliverable" includeParams="none">
-						<ww:param name="deliverableId" value="${deliverable.id}"/>												
-					</ww:url>
-						<ww:a href="%{viewLink}&contextViewName=editDeliverable&contextObjectId=${deliverable.id}">View</ww:a> | Edit
-
-					<aef:productList/>
-<aef:deliverableMenu deliverableId="${deliverable.id}"/>
+<aef:productList/>
 
 <h2>Project</h2>
 
-	<ww:form action="storeDeliverable">
+	<c:choose>
+		<c:when test="${deliverableId == 0}">
+			<c:set var="new" value="New" scope="page"/>
+		</c:when>
+		<c:otherwise>
+			<c:set var="new" value="" scope="page"/>
+		</c:otherwise>
+	</c:choose>
+	
+	<ww:form action="store${new}Deliverable">
 		<ww:hidden name="deliverableId" value="${deliverable.id}"/>
 		<ww:hidden name="productId"/>
 			
@@ -72,13 +74,13 @@
 		<tr>
 		<td>Name</td>
 		<td>*</td>
-		<td><ww:textfield size="53" name="deliverable.name"/></td>	
+		<td><ww:textfield size="60" name="deliverable.name"/></td>	
 		</tr>
 			
 		<tr>
 		<td>Description</td>
 		<td></td>
-		<td><ww:textarea cols="40" rows="6" name="deliverable.description" /></td>	
+		<td><ww:textarea cols="70" rows="10" name="deliverable.description" /></td>	
 		</tr>
 			
 		<tr>
@@ -109,7 +111,7 @@
 		<td></td>
 		<td>
 			<ww:submit value="Store"/>
-    		<ww:submit name="action:popContext" value="Cancel"/>
+    		<ww:submit name="action:popContext" value="Back"/>
 			
 			</td>	
 		</tr>
@@ -119,119 +121,149 @@
 			
 	</ww:form>		
 	
-		<c:if test="${deliverable.id > 0}">
-
 <table><tr><td>
-
-			<div id="subItems">
+	<div id="subItems">
 		<div id="subItemHeader">
-			Subitems
+			Iterations 
+ 			<ww:url id="createLink" action="createIteration" includeParams="none">
+				<ww:param name="deliverableId" value="${deliverable.id}"/>
+			</ww:url>
+			<ww:a href="%{createLink}&contextViewName=editDeliverable&contextObjectId=${deliverable.id}">Create new &raquo;</ww:a>
 		</div>
-		<div id="subItemContent">
-	</c:if>
-
 		<c:if test="${deliverable.id > 0}">
-			
-			<p>Iterations 
- 				<ww:url id="createLink" action="createIteration" includeParams="none">
-					<ww:param name="deliverableId" value="${deliverable.id}"/>
-				</ww:url>
-				<ww:a href="%{createLink}&contextViewName=editDeliverable&contextObjectId=${deliverable.id}">Create new &raquo;</ww:a>
-			</p>
-
+		<div id="subItemContent">
+		<p>
 			<display:table class="listTable" name="deliverable.iterations" id="row" requestURI="editDeliverable.action">
-				<display:column sortable="true" title="Name">
-				<ww:url id="editLink" action="editIteration" includeParams="none">
-					<ww:param name="iterationId" value="${row.id}"/>
-				</ww:url>
-				<ww:a href="%{editLink}&contextViewName=editDeliverable&contextObjectId=${deliverable.id}">
+			
+				<display:column sortable="true" sortProperty="name" title="Name" class="shortNameColumn">
+					<ww:url id="editLink" action="editIteration" includeParams="none">
+						<ww:param name="iterationId" value="${row.id}"/>
+					</ww:url>
+					<ww:a href="%{editLink}&contextViewName=editDeliverable&contextObjectId=${deliverable.id}">
 						${aef:html(row.name)}
-				</ww:a>			
+					</ww:a>			
 				</display:column>
+				
 				<display:column sortable="true" title="# of backlog items">
 					${fn:length(row.backlogItems)}
 				</display:column>
+				
 				<display:column sortable="true"	title="Effort left" sortProperty="effortEstimate.time">
 					${row.effortEstimate}
 				</display:column>
+				
 				<display:column sortable="true" title="Effort done" sortProperty="performedEffort.time">
 					${row.performedEffort}
 				</display:column>
+				
 				<display:column sortable="true" title="Start date" >
 				<ww:date name="#attr.row.startDate"/>
 				</display:column>
+				
 				<display:column sortable="true" title="End date" >
 				<ww:date name="#attr.row.endDate"/>
 				</display:column>
+				
 				<display:column sortable="false" title="Actions">
-					<!-- <ww:url id="editLink" action="editIteration" includeParams="none">
-						<ww:param name="iterationId" value="${row.id}"/>
-						<ww:param name="deliverableId" value="${deliverable.id}"/>						
-					</ww:url>
-					-->
 					<ww:url id="deleteLink" action="deleteIteration" includeParams="none">
 						<ww:param name="deliverableId" value="${deliverable.id}"/>						
 						<ww:param name="iterationId" value="${row.id}"/>
 					</ww:url>
-					<!-- <ww:a href="%{editLink}&contextViewName=editDeliverable&contextObjectId=${deliverable.id}">Edit</ww:a>|-->
 					<ww:a href="%{deleteLink}&contextViewName=editDeliverable&contextObjectId=${deliverable.id}">Delete</ww:a>
 				</display:column>
+				
 			</display:table>
-	
-		<p>Backlog items 
-			<ww:url id="createBacklogItemLink" action="createBacklogItem" includeParams="none">
-				<ww:param name="backlogId" value="${deliverable.id}"/>
-			</ww:url>
-			<ww:a href="%{createBacklogItemLink}&contextViewName=editDeliverable&contextObjectId=${deliverable.id}">Create new &raquo;</ww:a>		
 		</p>
-		</c:if>
+	</div>
+	</c:if>
+	<div id="subItemHeader">
+		Backlog items 
+		<ww:url id="createBacklogItemLink" action="createBacklogItem" includeParams="none">
+			<ww:param name="backlogId" value="${deliverable.id}"/>
+		</ww:url>
+		<ww:a href="%{createBacklogItemLink}&contextViewName=editDeliverable&contextObjectId=${deliverable.id}">Create new &raquo;</ww:a>		
+	</div>	
+
 	<c:if test="${!empty deliverable.backlogItems}">
-		<display:table class="listTable" name="deliverable.backlogItems" id="row" requestURI="editDeliverable.action">
-			<display:column sortable="true" title="Name">
+	<div id="subItemContent">
+		<display:table class="listTable" name="deliverable.backlogItems" id="row2" requestURI="editDeliverable.action">
+	
+			<display:column sortable="true" sortProperty="name" title="Name" class="shortNameColumn">
 				<ww:url id="editLink" action="editBacklogItem" includeParams="none">
-					<ww:param name="backlogItemId" value="${row.id}"/>
+					<ww:param name="backlogItemId" value="${row2.id}"/>
 				</ww:url>
 				<ww:a href="%{editLink}&contextViewName=editDeliverable&contextObjectId=${deliverable.id}">
-					${aef:html(row.name)}			
+					${aef:html(row2.name)}			
 				</ww:a>
 			</display:column>
-			<display:column sortable="true" title="# of tasks">
-				${fn:length(row.tasks)}
+	
+			<display:column title="Tasks" sortable="false" class="taskColumn">
+					<c:if test="${!empty row2.tasks}"> 
+						<c:set var="divId" value="${divId + 1}" scope="page"/>
+						<a href="javascript:toggleDiv(${divId});" title="Click to expand">
+							${fn:length(row2.tasks)} tasks, <aef:percentDone backlogItemId="${row2.id}"/> % complete<br/>
+	   					<aef:taskStatusList backlogItemId="${row2.id}" id="tsl"/>							   
+							<ww:url id="imgUrl" action="drawExtendedBarChart" includeParams="none">
+								<ww:param name="notStarted"  value="${tsl['notStarted']}"/>
+								<ww:param name="started"     value="${tsl['started']}"/>
+								<ww:param name="blocked"     value="${tsl['blocked']}"/>
+								<ww:param name="implemented" value="${tsl['implemented']}"/>
+								<ww:param name="done"        value="${tsl['done']}"/>
+							</ww:url>
+							<img src="${imgUrl}"/> 
+						</a>	
+						<aef:tasklist tasks="${row2.tasks}"   contextViewName="editDeliverable"  contextObjectId="${deliverable.id}" divId="${divId}"/>
+					</c:if>
+				</display:column>
+			
+			<display:column sortable="true" sortProperty="assignee.fullName" title="Responsible" >
+				${aef:html(row2.assignee.fullName)}
 			</display:column>
-			<display:column sortable="true" title="Priority" sortProperty="priority.ordinal">
-				<ww:text name="task.priority.${row.priority}"/>
+					
+			<display:column sortable="true" defaultorder="descending" title="Priority">
+				<ww:text name="backlogItem.priority.${row2.priority}"/>
 			</display:column>
-			<display:column sortable="true" title="Effort estimate" sortProperty="allocatedEffort.time">
-				${row.allocatedEffort}
-			</display:column>
-			<display:column sortable="true"	title="Effort left" sortProperty="effortEstimate.time">
-				${row.effortEstimate}
-			</display:column>
-			<display:column sortable="true" title="Effort done" sortProperty="performedEffort.time">
-				${row.performedEffort}
-			</display:column>
+			
+			<display:column sortable="true" title="Effort done">
+					${row2.performedEffort}
+				</display:column>
+	
+				<display:column sortable="true" title="Estimate">
+					<c:choose>
+						<c:when test="${!empty row.effortEstimate}">
+							${row2.effortEstimate}
+						</c:when>
+						<c:otherwise>
+							${row2.allocatedEffort}
+						</c:otherwise>
+					</c:choose>
+				</display:column>
+			
 			<display:column sortable="false" title="Actions">
-				<!-- ><ww:url id="editLink" action="editBacklogItem" includeParams="none">
-					<ww:param name="backlogItemId" value="${row.id}"/>
-				</ww:url> -->
 				<ww:url id="deleteLink" action="deleteBacklogItem" includeParams="none">
-					<ww:param name="backlogItemId" value="${row.id}"/>
+					<ww:param name="backlogItemId" value="${row2.id}"/>
 				</ww:url>
-				<!-- ><ww:a href="%{editLink}&contextViewName=editDeliverable&contextObjectId=${deliverable.id}">Edit</ww:a>|-->
 				<ww:a href="%{deleteLink}&contextViewName=editDeliverable&contextObjectId=${deliverable.id}">Delete</ww:a>
 			</display:column>
+			
+			<display:footer>
+			  	<tr>
+			  		<td>Total:</td>
+			  		<td>&nbsp;</td>
+			  		<td>&nbsp;</td>
+			  		<td>&nbsp;</td>
+			  		<td>&nbsp;</td>
+			  		<td><c:out value="${iteration.performedEffort}" /></td>
+			  		<td><c:out value="${iteration.totalEstimate}" /></td>
+			  	<tr>
+			  </display:footer>
 		</display:table>
+		</div>
 	</c:if>
-
-		<c:if test="${deliverable.id > 0}">
-
-</div>
 </div>
 </td></tr></table>
 
-	</c:if>
-	</c:otherwise>
+</c:otherwise>
 </c:choose>
-
 
 <%@ include file="./inc/_footer.jsp" %>

@@ -103,14 +103,16 @@ a:hover,a:active {
 }
 
 #bct {
-	margin: 5px 0 10px 35px;
+	margin: 5px 0 10px 0px;
 	width: auto;
-	color: #00f;
+	color: #000;
+	font-weight: bold;
 }
 
 #bct a {
 	color: #00f;
 	text-decoration: none;
+	font-weight: normal;
 }
 
 #bct a:hover {
@@ -118,10 +120,10 @@ a:hover,a:active {
 }
 
 #main {
-	margin-left: 35px;
+	padding: 10px;
+	margin: 0 0 0 200px;
 	width: auto;
-	margin-top: 10px;
-	margin-bottom: 10px;
+	border-left: 1px solid #ccc;
 }
 
 #sidebar {
@@ -200,6 +202,7 @@ a:hover,a:active {
 #subItems {
 	border: 1px solid #ccc;
 	margin-top: 20px;
+	width: 850px;
 }
 
 #subItemHeader {
@@ -212,17 +215,17 @@ a:hover,a:active {
 	padding: 10px;
 }
 
-#row {
+#row, #row1, #row2, #row3 {
 	vertical-align: top;
 	border-bottom: 1px solid #ccc;
 }
 
-#row td {
+#row td, #row1 td, #row2 td, #row3 td {
 	vertical-align: top;
 	text-align: left;
 }
 
-#row th {
+#row th, #row1 th, #row2 th, #row3 th {
 	text-align: left;
 	background: #ddd;
 }
@@ -318,7 +321,7 @@ span.right {
 	color: #e50;
 }
 
-div#menuwrapmyTasks #menu li#nav1 a,div#menuwrapiteration #menu li#nav2 a,div#menuwrapproject #menu li#nav3 a,div#menuwrapproduct #menu li#nav4 a,div#menuwrapportfolio #menu li#nav5 a,div#menuwrap1 #menu li#nav1 a,div#menuwrap2 #menu li#nav2 a,div#menuwrap3 #menu li#nav3 a,div#menuwrap4 #menu li#nav4 a,div#menuwrap5 #menu li#nav5 a,div#menuwrap6 #menu li#nav6 a,div#menuwrap7 #menu li#nav7 a,div#menuwrap8 #menu li#nav8 a,div#menuwrap9 #menu li#nav9 a
+div#menuwrapmyTasks #menu li#nav1 a,div#menuwrapiteration #menu li#nav2 a,div#menuwrapproject #menu li#nav2 a,div#menuwrapproduct #menu li#nav2 a,div#menuwrapportfolio #menu li#nav3 a,div#menuwrap1 #menu li#nav1 a,div#menuwrap2 #menu li#nav2 a,div#menuwrap3 #menu li#nav3 a,div#menuwrap4 #menu li#nav4 a,div#menuwrap5 #menu li#nav5 a,div#menuwrap6 #menu li#nav6 a,div#menuwrap7 #menu li#nav7 a,div#menuwrap8 #menu li#nav8 a,div#menuwrap9 #menu li#nav9 a
 	{
 	background: #fff;
 	border-bottom: 1px solid #fff;
@@ -373,4 +376,68 @@ div#submenuwrapmyTasks #menu li#subnav1 a,div#submenuwrapiteration #menu li#subn
 
 .formTable select {
 	width: 500px;
+}
+
+.shortNameColumn div{
+	width: 200px;	
+	white-space: nowrap;
+	overflow: hidden;
+
+}
+.taskColumn div{
+	min-width: 150px;	
+}
+
+.taskColumn div{
+	width: 150px;	
+	white-space: nowrap;
+	overflow: visible;
+}
+/*
+.shortNameColumn{
+	display: block;
+	white-space: nowrap;
+	overflow: hidden;
+	width: 200px;	
+}
+.taskColumn{
+	display: block;
+	white-space: nowrap;
+	overflow: hidden;	
+	width: 150px;
+}
+.iterationGoalColumn{
+	display: block;
+	overflow: hidden;
+	width: 150px;	
+	height: 2.5em;
+}
+*/
+#hierarchyList{
+	padding: 20px 5px 5px 5px;
+	float: left;
+	width: 180px;
+	white-space: nowrap;
+	overflow: hidden;
+/*	border: 1px solid #000;*/
+}
+#hierarchyList ul, #hierarchyList ul ul #hierarchyList ul ul ul{
+	padding: 0 0 0 0;
+	margin: 0 0 0 15px;
+	list-style-type: none;
+}
+#hierarchyList li{
+	padding: 0 0 0 0;
+	margin: 0 0 5px 0;
+	list-style-type: none;
+}
+#hierarchyList .path {
+	color: #e50;
+}
+#hierarchyList .selected {
+	color: #e50;
+	font-weight: bold;
+}
+.inactive{
+	color: #999;
 }

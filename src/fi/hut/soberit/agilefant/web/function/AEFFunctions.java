@@ -20,7 +20,7 @@ import fi.hut.soberit.agilefant.web.page.PortfolioPageItem;
  */
 public class AEFFunctions {
 
-	private static int maxStrLength = 15;
+	private static int maxStrLength = 30;
 
 	public static boolean isProduct(Object obj) {
 		return obj instanceof Product;
@@ -87,8 +87,8 @@ public class AEFFunctions {
 		return out(s, newLength, true); 	
 	} 
 	private static String out(String s, int newLength, boolean asHtml) {
-		String shortString = s.length() > newLength ? s.substring(0, newLength) + "..." : s;
-		return asHtml ? "<div title=\"" + s + "\">" + shortString + "</div>" : shortString;
+		//String shortString = s.length() > newLength ? s.substring(0, newLength) + "..." : s;
+		return asHtml ? "<span title=\"" + s + "\">" + s + "</span>" : s;
 	}
 	public void setMaxStrLength(int maxStrLength) {
 		AEFFunctions.maxStrLength = maxStrLength;

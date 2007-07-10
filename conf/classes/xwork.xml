@@ -47,21 +47,25 @@
 				<param name="actionName">myTasks</param>
 			</result>
 			<result name="success_iteration" type="redirect-action">
-				<param name="actionName">viewIteration</param>
+				<param name="actionName">editIteration</param>
 				<param name="iterationId">${contextObjectId}</param>
 			</result>
 			<result name="success_project" type="redirect-action">
-				<param name="actionName">viewDeliverable</param>
+				<param name="actionName">editDeliverable</param>
 				<param name="deliverableId">${contextObjectId}</param>
 			</result>
 			<result name="success_product" type="redirect-action">
-				<param name="actionName">listProducts</param>
+				<param name="actionName">editProduct</param>
+				<param name="productId">${contextObjectId}</param>
 			</result>
 			<result name="success_portfolio" type="redirect-action">
 				<param name="actionName">viewPortfolio</param>
 			</result>
 			<result name="success_myTasks" type="redirect-action">
 				<param name="actionName">myTasks</param>
+			</result>
+			<result name="success_" type="redirect-action">
+				<param name="actionName">selectBacklog</param>
 			</result>
 		</action>
 		<!-- Activity type actions -->
@@ -128,7 +132,18 @@
 		</action>
 		<action name="storeProduct" method="store"
 			class="productAction">
-			<result>/WEB-INF/jsp/listProducts.jsp</result>
+			<result type="redirect-action">
+				<param name="actionName">contextView</param>
+				<param name="contextName">product</param>
+				<param name="contextObjectId">${productId}</param>
+				<param name="resetContextView">true</param>
+			</result>
+		</action>
+		<action name="storeNewProduct" method="store"
+			class="productAction">
+			<result type="redirect-action">
+				<param name="actionName">popContext</param>
+			</result>
 		</action>
 		<!-- /Product actions -->
 		<!-- BacklogItem actions -->
@@ -150,6 +165,12 @@
 			</result>
 		</action>
 		<action name="storeBacklogItem" method="store"
+			class="backlogItemAction">
+			<result type="redirect">
+				editBacklogItem.action?backlogItemId=${backlogItemId}
+			</result>
+		</action>
+		<action name="storeNewBacklogItem" method="store"
 			class="backlogItemAction">
 			<result type="redirect-action">
 				<param name="actionName">popContext</param>
@@ -186,6 +207,15 @@
 			</result>
 		</action>
 		<action name="storeDeliverable" method="store"
+			class="deliverableAction">
+			<result type="redirect-action">
+				<param name="actionName">contextView</param>
+				<param name="contextName">project</param>
+				<param name="contextObjectId">${deliverableId}</param>
+				<param name="resetContextView">true</param>
+			</result>
+		</action>
+		<action name="storeNewDeliverable" method="store"
 			class="deliverableAction">
 			<result type="redirect-action">
 				<param name="actionName">popContext</param>
@@ -237,6 +267,15 @@
 		</action>
 		<action name="storeTask" method="store" class="taskAction">
 			<result type="redirect-action">
+				<param name="actionName">editTask</param>
+				<param name="taskId">${taskId}</param>
+				<param name="contextViewName">${contextViewName}</param>
+				<param name="contextObjectId">${contextObjectId}</param>
+			</result>
+		</action>
+		<action name="storeNewTask" method="store"
+			class="taskAction">
+			<result type="redirect-action">
 				<param name="actionName">popContext</param>
 			</result>
 		</action>
@@ -258,6 +297,15 @@
 			</result>
 		</action>
 		<action name="storeIteration" method="store"
+			class="iterationAction">
+			<result type="redirect-action">
+				<param name="actionName">contextView</param>
+				<param name="contextName">iteration</param>
+				<param name="contextObjectId">${iterationId}</param>
+				<param name="resetContextView">true</param>
+			</result>			
+		</action>
+		<action name="storeNewIteration" method="store"
 			class="iterationAction">
 			<result type="redirect-action">
 				<param name="actionName">popContext</param>
@@ -345,15 +393,26 @@
 				<param name="actionName">popContext</param>
 			</result>
 		</action>
-		<action name="storeIterationGoal" method="store"
+		<action name="storeIterationGoal" 
+						method="store"
+						class="iterationGoalAction">
+			<!-- <result>/WEB-INF/jsp/editIterationGoal.jsp</result> -->
+		<result type="redirect-action">
+				<param name="actionName">editIterationGoal</param>
+				<param name="iterationGoalId">${iterationGoalId}</param>
+				<param name="contextViewName">editIteration</param>
+				<param name="contextObjectId">${iterationId}</param>
+			</result>
+		</action>
+		<action name="storeNewIterationGoal" method="store"
 			class="iterationGoalAction">
-			<!-- <result type="redirect">editIteration.action?iterationId=${iterationId}</result> -->
 			<result type="redirect-action">
 				<param name="actionName">popContext</param>
 			</result>
 		</action>
-		<action name="moveIterationGoal" method="moveIterationGoal"
-			class="iterationAction">
+		<action name="moveIterationGoal" 
+						method="moveIterationGoal"
+						class="iterationAction">
 			<result type="redirect">
 				editIterationGoal.action?iterationGoalId=${iterationGoalId}
 			</result>
@@ -479,6 +538,10 @@
 			<result name="success_myTasks" type="redirect-action">
 				<param name="actionName">myTasks</param>
 			</result>
+		</action>
+		
+		<action name="selectBacklog">
+			<result>/WEB-INF/jsp/selectBacklog.jsp</result>
 		</action>
 	</package>
 </xwork>

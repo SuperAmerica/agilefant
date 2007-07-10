@@ -33,13 +33,14 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
 	private UserDAO userDAO;
 	private boolean watch = false;
 	private IterationGoalDAO iterationGoalDAO;
+	private int iterationGoalId;
 	private int assigneeId;
 
 	public String create() {
 		backlogItemId = 0;
 		backlogItem = new BacklogItem();
 		backlog = backlogDAO.get(backlogId);
-		backlogId = backlog.getId();
+		//backlogId = backlog.getId();
 		return Action.SUCCESS;
 	}
 
@@ -202,4 +203,21 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
 		this.assigneeId = assigneeId;
 	}
 
+	/**
+	 * Setter for Spring IoC
+	 * 
+	 * @param iterationGoalId iteration goal id to be set
+	 */
+	public void setIterationGoalId(int iterationGoalId){
+		this.iterationGoalId= iterationGoalId;
+	}
+	
+	/**
+	 * Getter for Spring IoC
+	 * 
+	 * @return iteration goal id
+	 */
+	public int getIterationGoalId(){
+		return iterationGoalId;
+	}
 }

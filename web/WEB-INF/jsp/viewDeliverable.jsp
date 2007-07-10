@@ -41,7 +41,6 @@
 						View | <ww:a href="%{editLink}&contextViewName=viewDeliverable&contextObjectId=${deliverable.id}">Edit</ww:a> 
 
 					<aef:productList/>
-<aef:deliverableMenu deliverableId="${deliverable.id}"/>
 
 <c:if test="${!empty deliverable}">
 

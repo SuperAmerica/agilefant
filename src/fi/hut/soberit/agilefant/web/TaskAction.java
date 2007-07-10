@@ -29,6 +29,7 @@ public class TaskAction extends ActionSupport implements CRUDAction {
 	private TaskEventDAO taskEventDAO;
 	private BacklogItemDAO backlogItemDAO;
 	private UserDAO userDAO;
+	private boolean watch = false;
 		
 	public void setTaskEventDAO(TaskEventDAO taskEventDAO) {
 		this.taskEventDAO = taskEventDAO;
@@ -141,6 +142,15 @@ public class TaskAction extends ActionSupport implements CRUDAction {
 			storable.getEvents().add(event);
 			taskEventDAO.store(event);
 		}
+		User user = SecurityUtil.getLoggedUser();
+		if (watch) {
+			storable.getWatchers().put(user.getId(), user);
+			user.getWatchedTasks().add(storable);		
+		}
+		else {
+			storable.getWatchers().remove(user.getId());
+			user.getWatchedTasks().remove(storable);
+		}
 	}
 
 	// TODO - should this be so?
@@ -199,5 +209,9 @@ public class TaskAction extends ActionSupport implements CRUDAction {
 
 	public void setUserDAO(UserDAO userDAO) {
 		this.userDAO = userDAO;
+	}
+	
+	public void setWatch(boolean watch){
+		this.watch = watch;
 	}
 }

@@ -15,8 +15,16 @@
 	<ww:actionmessage/>
 	<h2>Edit backlog item</h2>
 	
-	<ww:form action="storeBacklogItem">
+	<c:choose>
+		<c:when test="${backlogItemId == 0}">
+			<c:set var="new" value="New" scope="page"/>
+		</c:when>
+		<c:otherwise>
+			<c:set var="new" value="" scope="page"/>
+		</c:otherwise>
+	</c:choose>
 		
+		<ww:form action="store${new}BacklogItem">
 		<ww:hidden name="backlogItemId" value="${backlogItem.id}"/>
 		<aef:userList/>
 		<aef:currentUser/>
@@ -101,13 +109,16 @@
 		</tr>
 		
 		<tr>
-		<td>Link to iteration goal</td>
+		<td>Iteration goal</td>
 		<td></td>	
 		
 		<%-- If iteration goals doesn't exist default value is 0--%>
 		<c:choose>
 		<c:when test="${!empty iterationGoals}">
 			<c:set var="goalId" value="0" scope="page"/>
+			<c:if test="${iterationGoalId > 0}">
+				<c:set var="goalId" value="${iterationGoalId}"/>
+			</c:if>
 			<c:if test="${!empty backlogItem.iterationGoal}">
 				<c:set var="goalId" value="${backlogItem.iterationGoal.id}" scope="page"/>
 			</c:if>
@@ -126,16 +137,16 @@
 		</tr>
 		
 		<tr>
-		<td>Responsible</td>
-		<td></td>
-		<c:choose>
-		<c:when test="${backlogItem.id == 0}">
-			<td><ww:select headerKey="0" headerValue="(none)" name="assigneeId" list="#attr.userList" listKey="id" listValue="fullName" value="0"/></td>	
-		</c:when>
-		<c:otherwise>
-			<td><ww:select headerKey="0" headerValue="(none)" name="assigneeId" list="#attr.userList" listKey="id" listValue="fullName" value="%{backlogItem.assignee.id}"/></td>	
-		</c:otherwise>
-		</c:choose>
+			<td>Responsible</td>
+			<td></td>
+			<c:choose>
+				<c:when test="${backlogItem.id == 0}">
+					<td><ww:select headerKey="0" headerValue="(none)" name="assigneeId" list="#attr.userList" listKey="id" listValue="fullName" value="0"/></td>	
+				</c:when>
+				<c:otherwise>
+					<td><ww:select headerKey="0" headerValue="(none)" name="assigneeId" list="#attr.userList" listKey="id" listValue="fullName" value="%{backlogItem.assignee.id}"/></td>	
+				</c:otherwise>
+			</c:choose>
 		</tr>
 		
 		<tr>
@@ -168,8 +179,8 @@
 
 	</ww:form>
 	
-	<c:if test="${backlogItem.id > 0}">
-		<aef:currentUser/>
+	
+	<aef:currentUser/>
 
 	<table>
 	<tr><td>
@@ -182,10 +193,11 @@
 			</ww:url>
 			<ww:a href="%{createLink}&contextViewName=editBacklogItem&contextObjectId=${backlogItemId}">Create new &raquo;</ww:a>
 		</div>
+		<c:if test="${backlogItem.id > 0}">
 		<div id="subItemContent">
 		<p>
 			<display:table class="listTable" name="backlogItem.tasks" id="row" requestURI="editBacklogItem.action">
-				<display:column sortable="true" title="Name">
+				<display:column sortable="true" sortProperty="name" title="Name" class="shortNameColumn">
 					<ww:url id="editLink" action="editTask" includeParams="none">
 						<ww:param name="taskId" value="${row.id}"/>
 					</ww:url>
@@ -199,7 +211,7 @@
 				<display:column sortable="true" title="Work performed" sortProperty="performedEffort.time">
 					${row.performedEffort}
 				</display:column>
-				<display:column sortable="true" title="Priority" sortProperty="priority.ordinal">
+				<display:column sortable="true" title="Priority" defaultorder="descending"  sortProperty="priority.ordinal">
 					<ww:text name="task.priority.${row.priority}"/>
 				</display:column>
 				<display:column sortable="true" title="Status" sortProperty="status.ordinal">
@@ -208,29 +220,26 @@
 				<display:column sortable="true" title="Created">
 					<ww:date name="#attr.row.created" />
 				</display:column>
-				<display:column sortable="true" title="Responsible">
+				<display:column sortable="true" sortProperty="assignee.fullName" title="Responsible">
 					${aef:html(row.assignee.fullName)}
 				</display:column>
-				<display:column sortable="true" title="Creator">
+				<display:column sortable="true" sortProperty="creator.fullName" title="Creator">
 					${aef:html(row.creator.fullName)}
 				</display:column>
 				<display:column sortable="false" title="Actions">
-					<!-- <ww:url id="editLink" action="editTask" includeParams="none">
-						<ww:param name="taskId" value="${row.id}"/>
-					</ww:url> -->
 					<ww:url id="deleteLink" action="deleteTask" includeParams="none">
 						<ww:param name="taskId" value="${row.id}"/>
 					</ww:url>
-					<!-- <ww:a href="%{editLink}&contextViewName=editBacklogItem&contextObjectId=${backlogItemId}">Edit</ww:a>|-->
 					<ww:a href="%{deleteLink}&contextViewName=editBacklogItem&contextObjectId=${backlogItemId}" onclick="return confirmDeleteTask()">Delete</ww:a>
 				</display:column>
 			</display:table>
 		</p>
 	
 		</div>
+		</c:if>	
 		</div>
 </td></tr></table>
 		
-	</c:if>	
+	
 
 <%@ include file="./inc/_footer.jsp" %>

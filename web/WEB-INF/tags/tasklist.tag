@@ -34,7 +34,7 @@
 					
 					<ww:textfield size="5" name="task.effortEstimate" value="${task.effortEstimate}"/>
 					<ww:select name="task.status" value="#attr.task.status.name" list="@fi.hut.soberit.agilefant.model.TaskStatus@values()" listKey="name" listValue="getText('task.status.' + name())"/>		
-					<ww:submit value="Store"/>		
+					<ww:submit name="action:storeNewTask" value="Store"/>		
 				</ww:form>
 				</li>							
 			</c:forEach>

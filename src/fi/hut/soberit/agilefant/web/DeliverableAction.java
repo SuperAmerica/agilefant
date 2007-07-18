@@ -11,6 +11,7 @@ import fi.hut.soberit.agilefant.db.ActivityTypeDAO;
 import fi.hut.soberit.agilefant.db.DeliverableDAO;
 import fi.hut.soberit.agilefant.db.ProductDAO;
 import fi.hut.soberit.agilefant.model.ActivityType;
+import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Deliverable;
 import fi.hut.soberit.agilefant.model.Product;
 
@@ -25,6 +26,7 @@ public class DeliverableAction extends ActionSupport implements CRUDAction {
 	private ActivityTypeDAO activityTypeDAO;
 	private ProductDAO productDAO;
 	private Collection<ActivityType> activityTypes;
+	private Backlog backlog;
 			
 	public String create(){
 		this.prepareActivityTypes();
@@ -35,6 +37,7 @@ public class DeliverableAction extends ActionSupport implements CRUDAction {
 //		}
 		deliverableId = 0;
 		deliverable = new Deliverable();
+		backlog = deliverable;
 		return Action.SUCCESS;
 	}
 	
@@ -51,6 +54,7 @@ public class DeliverableAction extends ActionSupport implements CRUDAction {
 			return Action.SUCCESS;
 		}
 		productId = deliverable.getProduct().getId();
+		backlog = deliverable;
 		return Action.SUCCESS;
 	}
 	
@@ -197,5 +201,9 @@ public class DeliverableAction extends ActionSupport implements CRUDAction {
 
 	public void setActivityTypes(Collection<ActivityType> activityTypes) {
 		this.activityTypes = activityTypes;
+	}
+
+	public Backlog getBacklog() {
+		return backlog;
 	}
 }

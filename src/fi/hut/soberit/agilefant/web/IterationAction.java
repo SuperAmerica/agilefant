@@ -10,12 +10,14 @@ import fi.hut.soberit.agilefant.db.IterationGoalDAO;
 import fi.hut.soberit.agilefant.model.Deliverable;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.IterationGoal;
+import fi.hut.soberit.agilefant.model.Backlog;
 
 public class IterationAction extends ActionSupport implements CRUDAction {
 
 	private static final long serialVersionUID = -448825368336871703L;
 	private int iterationId;
 	private Iteration iteration;
+	private Backlog backlog;
 	private IterationDAO iterationDAO;
 	private DeliverableDAO deliverableDAO;
 	private Deliverable deliverable;
@@ -42,6 +44,11 @@ public class IterationAction extends ActionSupport implements CRUDAction {
 			return Action.SUCCESS;
 		}
 		deliverable = iteration.getDeliverable();
+		
+		/* We need Backlog-class object to generate backlog list in 
+		 * _backlogList.jsp */
+		backlog = iteration;
+		
 		if (deliverable == null){
 			super.addActionError(super.getText("iteration.deliverableNotFound"));
 			return Action.INPUT;
@@ -136,8 +143,13 @@ public class IterationAction extends ActionSupport implements CRUDAction {
 	
 	public void setIteration(Iteration iteration){
 		this.iteration = iteration;
+		this.backlog = iteration;
 	}
 
+	public Backlog getBacklog() {
+		return backlog;
+	}
+	
 	public void setIterationDAO(IterationDAO iterationDAO) {
 		this.iterationDAO = iterationDAO;
 	}

@@ -15,6 +15,8 @@ import javax.persistence.DiscriminatorType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.Type;
 
@@ -54,6 +56,8 @@ public abstract class Backlog implements Assignable {
     private String name;
     private String description;
     private Collection<BacklogItem> backlogItems = new HashSet<BacklogItem>();
+    private Collection<EffortHistory> effortHistory = 
+    	new HashSet<EffortHistory>();
     private User assignee;
     private AFTime totalEstimate; 
     
@@ -135,5 +139,20 @@ public abstract class Backlog implements Assignable {
 	}
 	public void setTotalEstimate(AFTime totalEstimate) {
 		this.totalEstimate = totalEstimate;
+	}
+	/**
+	 * Get all effortHistory objects related to this backlog
+	 * @return the effortHistory
+	 */
+	@OneToMany(mappedBy="backlog")
+	@Cascade(CascadeType.DELETE_ORPHAN)
+	public Collection<EffortHistory> getEffortHistory() {
+		return effortHistory;
+	}
+	/**
+	 * @param effortHistory the effortHistory to set
+	 */
+	public void setEffortHistory(Collection<EffortHistory> effortHistory) {
+		this.effortHistory = effortHistory;
 	}
 }

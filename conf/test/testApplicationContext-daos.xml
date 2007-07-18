@@ -67,6 +67,7 @@ ExplicitSpringSupport.java.
 	<bean name="deliverableDAOTarget" parent="abstractDAOTarget" class="fi.hut.soberit.agilefant.db.hibernate.DeliverableDAOHibernate"/>
 	<bean name="backlogItemDAOTarget" parent="abstractDAOTarget" class="fi.hut.soberit.agilefant.db.hibernate.BacklogItemDAOHibernate"/>
 	<bean name="taskDAOTarget" parent="abstractDAOTarget" class="fi.hut.soberit.agilefant.db.hibernate.TaskDAOHibernate"/>
+	<bean name="effortHistoryDAOTarget" parent="abstractDAOTarget" class="fi.hut.soberit.agilefant.db.hibernate.EffortHistoryDAOHibernate" />
 	<bean name="userDAOTarget" parent="abstractDAOTarget" class="fi.hut.soberit.agilefant.db.hibernate.UserDAOHibernate"/>
 	<bean name="taskEventDAOTarget" parent="abstractDAOTarget" class="fi.hut.soberit.agilefant.db.hibernate.TaskEventDAOHibernate"/>
 	<bean name="iterationGoalDAOTarget" parent="abstractDAOTarget" class="fi.hut.soberit.agilefant.db.hibernate.IterationGoalDAOHibernate"/>	
@@ -90,6 +91,10 @@ ExplicitSpringSupport.java.
 
 	<bean name="taskDAO" parent="abstractDAO">
 		<property name="target" ref="taskDAOTarget"/>
+	</bean>
+	
+	<bean name="effortHistoryDAO" parent="abstractDAO">
+		<property name="target" ref="effortHistoryDAOTarget" />
 	</bean>
 	
 	<bean name="userDAO" parent="abstractDAO">

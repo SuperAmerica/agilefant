@@ -4,8 +4,6 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 
-import javax.persistence.Transient;
-
 import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
 

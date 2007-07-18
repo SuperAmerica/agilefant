@@ -68,6 +68,8 @@
 		class="fi.hut.soberit.agilefant.db.hibernate.BacklogItemDAOHibernate" />
 	<bean name="taskDAOTarget" parent="abstractDAOTarget"
 		class="fi.hut.soberit.agilefant.db.hibernate.TaskDAOHibernate" />
+	<bean name="effortHistoryDAOTarget" parent="abstractDAOTarget"
+		class="fi.hut.soberit.agilefant.db.hibernate.EffortHistoryDAOHibernate" />
 	<bean name="userDAOTarget" parent="abstractDAOTarget"
 		class="fi.hut.soberit.agilefant.db.hibernate.UserDAOHibernate" />
 	<bean name="taskEventDAOTarget" parent="abstractDAOTarget"
@@ -102,6 +104,10 @@
 
 	<bean name="taskEventDAO" parent="abstractDAO">
 		<property name="target" ref="taskEventDAOTarget" />
+	</bean>
+
+	<bean name="effortHistoryDAO" parent="abstractDAO">
+		<property name="target" ref="effortHistoryDAOTarget" />
 	</bean>
 
 	<bean name="iterationGoalDAO" parent="abstractDAO">

@@ -4,11 +4,7 @@ import java.util.Collection;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.Tag;
-
 import fi.hut.soberit.agilefant.db.BacklogDAO;
-import fi.hut.soberit.agilefant.db.IterationDAO;
-import fi.hut.soberit.agilefant.db.IterationGoalDAO;
-import fi.hut.soberit.agilefant.db.ProductDAO;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.IterationGoal;

@@ -13,7 +13,6 @@ import fi.hut.soberit.agilefant.model.PerformedWork;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.model.Iteration;
-import fi.hut.soberit.agilefant.model.TaskEvent;
 import junit.framework.TestCase;
 
 public class ChartManagerImplTest extends TestCase {

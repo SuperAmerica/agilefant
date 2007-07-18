@@ -6,7 +6,7 @@ import fi.hut.soberit.agilefant.model.WorkType;
 import fi.hut.soberit.agilefant.model.AFTime;
 
 public class PerformWorkAction extends TaskEventAction<PerformedWork> {
-	
+
 	private WorkTypeDAO workTypeDAO;
 	private PerformedWork event;
 		

@@ -1,5 +1,8 @@
 package fi.hut.soberit.agilefant.web;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
 
@@ -85,6 +88,17 @@ public class TaskAction extends ActionSupport implements CRUDAction {
 	}
 	
 	/**
+	 * Stores the task (a new task created with create() or an old one fetched with edit()
+	 * 
+	 * @return Action.SUCCESS if task is saved ok or Action.ERROR if there's something wrong. (more information with getActionErrors())
+	 */
+	public Integer storeNew(){
+		Task storable = new Task();		
+		this.fillStorable(storable);		
+		return (Integer) taskDAO.create(storable);
+	}
+	
+	/**
 	 * Deletes a task  (based on taskId set)
 	 * @return Action.SUCCESS if task was deleted or Action.ERROR if task wasn't found
 	 */
@@ -103,6 +117,7 @@ public class TaskAction extends ActionSupport implements CRUDAction {
 	}
 	
 	protected void fillStorable(Task storable){
+		Log logger = LogFactory.getLog(getClass());
 		if (storable.getBacklogItem() == null){
 			BacklogItem backlogItem = backlogItemDAO.get(backlogItemId);
 			if (backlogItem == null){
@@ -138,6 +153,7 @@ public class TaskAction extends ActionSupport implements CRUDAction {
 			event.setNewEstimate(newEstimate);
 			storable.setEffortEstimate(newEstimate);
 			taskDAO.store(storable);
+			logger.info("Storeble task id: " + storable.getId());
 			event.setTask(storable);
 			storable.getEvents().add(event);
 			taskEventDAO.store(event);

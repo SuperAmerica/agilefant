@@ -5,15 +5,8 @@ import com.opensymphony.xwork.ActionSupport;
 
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.db.IterationGoalDAO;
-import fi.hut.soberit.agilefant.db.TaskDAO;
-import fi.hut.soberit.agilefant.db.TaskEventDAO;
-import fi.hut.soberit.agilefant.db.UserDAO;
-import fi.hut.soberit.agilefant.model.AssignEvent;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.IterationGoal;
-import fi.hut.soberit.agilefant.model.Task;
-import fi.hut.soberit.agilefant.model.User;
-import fi.hut.soberit.agilefant.security.SecurityUtil;
 
 public class LinkToIterationGoalAction extends ActionSupport {
 	

@@ -1,56 +1,25 @@
 package fi.hut.soberit.agilefant.web;
 
 import java.util.Collection;
-
 import com.opensymphony.xwork.Action;
-
-import fi.hut.soberit.agilefant.security.SecurityUtil;
 import fi.hut.soberit.agilefant.util.SpringTestCase;
-
-import fi.hut.soberit.agilefant.web.ProductAction;
-import fi.hut.soberit.agilefant.web.BacklogItemAction;
 import fi.hut.soberit.agilefant.web.UserAction;
-
-import fi.hut.soberit.agilefant.web.UserActionTest;
-
 import fi.hut.soberit.agilefant.model.Product;
-import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
-import fi.hut.soberit.agilefant.model.User;
-
 import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.db.ProductDAO;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
+import fi.hut.soberit.agilefant.util.TestUtility;
 
 public class BacklogTest extends SpringTestCase {
 	
-	private ProductAction productAction;
 	private BacklogAction backlogAction;
-	private BacklogItemAction backlogItemAction;
 	private UserDAO userDAO;
 	private UserAction userAction;
 	private ProductDAO productDAO;
 	private BacklogItemDAO backlogItemDAO;
 	
 	/* Dependency injection setters */
-	
-	/**
-	 * Setter for Spring IoC.
-	 * Injected product action is used in product creation.
-	 * @param productAction product action to be set
-	 */
-	public void setProductAction(ProductAction productAction) {
-		this.productAction = productAction;
-	}
-	
-	/**
-	 * Setter for Spring IoC
-	 * Injected backlog item action is used in backlog item creation.
-	 * @param backlogItemAction backlog item to be set
-	 */
-	public void setBacklogItemAction(BacklogItemAction backlogItemAction) {
-		this.backlogItemAction = backlogItemAction;
-	}
 	
 	/**
 	 * Setter for Spring IoC
@@ -100,82 +69,14 @@ public class BacklogTest extends SpringTestCase {
 		this.backlogAction = backlogAction;
 	}
 	
-	/* Utility methods */
-	
-	/**
-	 * Returns a product for testing.
-	 * 
-	 * @param number number for identifying product from name
-	 * @return Product backlog for testing
-	 */
-	private void createTestProduct(int number) {
-		String result = this.productAction.create();
-		assertSame("Product creation failed", Action.SUCCESS, result);
-		
-		Product product = this.productAction.getProduct();
-
-		assertNotNull("Could not retrive product", product);
-		
-		product.setDescription("Product backlog for testing");
-		product.setName("Product test backlog " + number);
-		
-		result = this.productAction.store();
-		assertSame("Product storing failed", Action.SUCCESS, result);
-	}
-	
-	private void createTestItem(int number, Backlog backlog) {
-		backlogItemAction.setBacklog(backlog);
-		backlogItemAction.setBacklogId(backlog.getId());
-		String result = this.backlogItemAction.create();
-		assertSame("Backlog item creation failed", Action.SUCCESS, result);
-		
-		BacklogItem backlogItem = this.backlogItemAction.getBacklogItem();
-
-		assertNotNull("Could not retrive backlog item", backlogItem);	
-
-		backlogItem.setDescription("Backlog item for testing");
-		backlogItem.setName("Test backlog " + number);
-
-		backlogItemAction.setBacklogId(backlog.getId());
-		
-		assertFalse("Product DB is empty", this.productDAO.getAll().isEmpty());		
-		
-		result = this.backlogItemAction.store();
-		
-		assertSame("Backlog item storing failed: " + 
-				backlogItemAction.getActionErrors(), 
-				Action.SUCCESS, result);
-	}
-	
-	/**
-	 * Create and store a user for backlog item creation.
-	 *
-	 */
-	private void createAndStoreUser() {
-		User user = 
-			UserActionTest.GenerateAndStoreTestUser(userAction, userDAO, 1);
-		SecurityUtil.setLoggedUser(user);
-	}
-	
 	/**
 	 * Clears the database from test data.
-	 * We must clear database by hand because of we need transactions to
+	 * We must clear database manually because of we need transactions to
 	 * complete.
 	 */
 	protected void onTearDownInTransaction() throws Exception {
 		super.setComplete();
-		
-		for(User i: this.userDAO.getAll()) {
-			this.userDAO.remove(i.getId());
-		}
-		
-		for(BacklogItem i: this.backlogItemDAO.getAll()) {
-			this.backlogItemDAO.remove(i.getId());
-		}
-		
-		for(Product i: this.productDAO.getAll()) {
-			this.productDAO.remove(i.getId());
-		}	
+		TestUtility.clearData(userDAO, backlogItemDAO, productDAO);
 	}
 	
 	/* Test methods */
@@ -196,17 +97,18 @@ public class BacklogTest extends SpringTestCase {
 		
 		/* Set up database */
 		
-		this.createAndStoreUser();
-		this.createTestProduct(1);
-		this.createTestProduct(2);
+		TestUtility.initUser(userAction, userDAO);
+		for(int i = 0; i < 2; i++) {
+			TestUtility.createTestProduct(i, productDAO);
+		}		
 
 		testBacklogs = productDAO.getAll().toArray(new Product[0]);
+		assertTrue("Product creation failed", 
+				testBacklogs.length != 0);
 		
-		assertEquals("Number of created products is wrong", 
-				testBacklogs.length, 2);
-		
-		this.createTestItem(1, testBacklogs[0]);
-		this.createTestItem(2, testBacklogs[0]);
+		for(int i = 0; i < 2; i++) {		
+			TestUtility.createTestItem(i, testBacklogs[0], backlogItemDAO);
+		}
 		
 		super.endTransaction();
 		

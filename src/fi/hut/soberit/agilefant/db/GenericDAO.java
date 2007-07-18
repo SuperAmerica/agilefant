@@ -67,6 +67,14 @@ public interface GenericDAO<T> {
 	public void store(T object);
 	
 	/**
+	 * Creates and persists a new object
+	 * 
+	 * @param object object instance to store
+	 * @return generated ID 
+	 */
+	public Serializable create(T object);
+	
+	/**
 	 * Refereshed an data model object from the database.
 	 * 
 	 * @param object object instance to refreshed

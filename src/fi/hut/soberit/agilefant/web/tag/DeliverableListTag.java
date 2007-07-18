@@ -2,9 +2,7 @@ package fi.hut.soberit.agilefant.web.tag;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.Tag;
-
 import fi.hut.soberit.agilefant.db.DeliverableDAO;
-import fi.hut.soberit.agilefant.db.ProductDAO;
 
 public class DeliverableListTag extends SpringTagSupport{
 	private static final long serialVersionUID = -7498764572144094830L;

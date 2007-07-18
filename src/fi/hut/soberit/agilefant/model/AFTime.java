@@ -1,7 +1,6 @@
 package fi.hut.soberit.agilefant.model;
 
 import java.text.NumberFormat;
-import java.text.ParseException;
 import java.text.ParsePosition;
 import java.util.Scanner;
 import java.util.regex.MatchResult;
@@ -331,13 +330,6 @@ public class AFTime extends java.sql.Time {
 		long[] time = divideToElements();		
 	
 		// form the string
-		
-		// a flag to track when we should 
-		// put space between elements
-		boolean hadPrevious = false;
-		
-		// string to build the result in
-		String result = "";
 		
 		// fix up the hours so that days are included in them
 		time[Hours] += time[Days] * WORKDAY_IN_HOURS;

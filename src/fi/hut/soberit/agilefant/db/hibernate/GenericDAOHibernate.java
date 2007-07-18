@@ -62,6 +62,11 @@ public abstract class GenericDAOHibernate<T> extends HibernateDaoSupport impleme
 	}
 
 	/** {@inheritDoc} */
+	public Serializable create(T object) {
+		return super.getHibernateTemplate().save(object);
+	}
+		
+	/** {@inheritDoc} */
 	public T get(Serializable id) {
 		return (T)super.getHibernateTemplate().get(this.getPersistentClass(), id);
 	}

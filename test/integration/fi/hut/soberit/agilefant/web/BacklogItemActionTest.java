@@ -301,12 +301,16 @@ public class BacklogItemActionTest extends SpringTestCase {
 		backlogItemAction.setBacklogId(b.getId());
 		String result = backlogItemAction.create();
 		assertEquals("create() was unsuccessful", result, Action.SUCCESS);
-		super.assertEquals("New user had an invalid id", 0, backlogItemAction.getBacklogItem().getId());
-		super.assertEquals("New user had an invalid id", 0, backlogItemAction.getBacklogItemId());
-		super.assertNotNull("Created backlogitemaction had null BacklogItem" , backlogItemAction.getBacklogItem());
+		super.assertEquals("New user had an invalid id", 0, 
+				backlogItemAction.getBacklogItem().getId());
+		super.assertEquals("New user had an invalid id", 0, 
+				backlogItemAction.getBacklogItemId());
+		super.assertNotNull("Created backlogitemaction had null BacklogItem", 
+				backlogItemAction.getBacklogItem());
 	}
 	
 	public void testStore() {
+		BacklogItem storedBI;
 		Backlog backlog = this.getTestBacklog(1);
 		this.create(backlog.getId());
 		User assignee = this.getTestUser(1);
@@ -315,13 +319,18 @@ public class BacklogItemActionTest extends SpringTestCase {
 				TEST_EST1, TEST_PRI1, TEST_STAT1, backlog);
 		int n = this.getAllBacklogItems().size();
 		String result = backlogItemAction.store();
+		
+		
 		super.assertEquals("store() was unsuccessful", result, Action.SUCCESS);
-		super.assertEquals("The total number of stored backlog items didn't grow up with store().", 
-				n+1, getAllBacklogItems().size());
-		BacklogItem storedBI = this.getBacklogItem(TEST_NAME1, TEST_DESC1);
+		super.assertEquals("The total number of stored backlog items didn't " +
+				"grow up with store().", n+1, getAllBacklogItems().size());
+		storedBI = this.getBacklogItem(TEST_NAME1, TEST_DESC1);
 		super.assertNotNull("Stored backlog item wasn't found", storedBI);
-		this.checkContents("stored backlog item", storedBI, TEST_NAME1, TEST_DESC1, creator, TEST_WATCH1,
-				assignee, TEST_EST1, TEST_PRI1, TEST_STAT1, backlog);
+		this.checkContents("stored backlog item", storedBI, 
+				TEST_NAME1, TEST_DESC1, creator, TEST_WATCH1, assignee, 
+				TEST_EST1, TEST_PRI1, TEST_STAT1, backlog);
+		assertFalse("Placeholder task was not created", 
+				storedBI.getTasks().isEmpty());
 	}
 	
 	public void testStore_withDifferentData() {

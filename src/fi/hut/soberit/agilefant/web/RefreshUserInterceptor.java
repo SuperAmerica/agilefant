@@ -1,14 +1,10 @@
 package fi.hut.soberit.agilefant.web;
 
-import org.acegisecurity.context.SecurityContextHolder;
 import org.apache.log4j.Logger;
-
 import com.opensymphony.xwork.ActionInvocation;
 import com.opensymphony.xwork.interceptor.Interceptor;
-
 import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.model.User;
-import fi.hut.soberit.agilefant.security.AgilefantUserDetails;
 import fi.hut.soberit.agilefant.security.SecurityUtil;
 
 /**

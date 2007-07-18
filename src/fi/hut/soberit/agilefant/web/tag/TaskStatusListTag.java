@@ -1,9 +1,6 @@
 package fi.hut.soberit.agilefant.web.tag;
 
 import java.util.HashMap;
-
-import javax.servlet.jsp.JspTagException;
-
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.db.TaskDAO;
 import fi.hut.soberit.agilefant.model.BacklogItem;

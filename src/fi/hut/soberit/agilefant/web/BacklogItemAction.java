@@ -8,10 +8,10 @@ import com.opensymphony.xwork.ActionSupport;
 
 import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
-import fi.hut.soberit.agilefant.db.GenericDAO;
 import fi.hut.soberit.agilefant.db.IterationGoalDAO;
+import fi.hut.soberit.agilefant.db.TaskDAO;
+import fi.hut.soberit.agilefant.db.TaskEventDAO;
 import fi.hut.soberit.agilefant.db.UserDAO;
-import fi.hut.soberit.agilefant.model.ActivityType;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.IterationGoal;
@@ -21,7 +21,6 @@ import fi.hut.soberit.agilefant.security.SecurityUtil;
 
 public class BacklogItemAction extends ActionSupport implements CRUDAction {
 	
-
 	private static final long serialVersionUID = -4289013472775815522L;
 	private BacklogDAO backlogDAO;
 	private BacklogItemDAO backlogItemDAO;
@@ -35,6 +34,11 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
 	private IterationGoalDAO iterationGoalDAO;
 	private int iterationGoalId;
 	private int assigneeId;
+	private TaskDAO taskDAO;
+	private TaskAction taskAction;
+	private TaskEventDAO taskEventDAO;
+
+
 
 	public String create() {
 		backlogItemId = 0;
@@ -49,10 +53,6 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
 		if(backlogItem == null){
 			super.addActionError(super.getText("backlogItem.notFound"));
 			return Action.ERROR;
-		}
-		if(backlogItem.getTasks().size() > 0) {
-			super.addActionError(super.getText("backlogItem.notEmptyWhenDeleting"));
-			return Action.ERROR;						
 		}
 		// backlogId = backlogItem.getId();//?? removed when testing with jUnit
 		backlogItemDAO.remove(backlogItemId);
@@ -71,6 +71,8 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
 	}
 
 	public String store() {
+		Integer storableId;
+		Integer placeholderId;
 		BacklogItem storable = new BacklogItem();
 		if (backlogItemId > 0){
 			storable = backlogItemDAO.get(backlogItemId);
@@ -80,8 +82,32 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
 			}
 		}
 		this.fillStorable(storable);
+		
 		if (super.hasActionErrors()){
 			return Action.ERROR;
+		}
+		
+		/* Set placeholder task properties */
+		if (storable.getId() == 0){
+			Task placeholder = new Task();
+			
+			if(taskAction.create() != Action.SUCCESS) {
+				super.addActionError(super.getText(
+						"placeholder.task.notCreated"));
+				return Action.ERROR;
+			}
+			storableId = (Integer) backlogItemDAO.create(storable);
+			placeholder.setCreator(SecurityUtil.getLoggedUser());
+			placeholder.setName("Placeholder");
+			placeholder.setEffortEstimate(backlogItem.getAllocatedEffort());
+			taskAction.setTask(placeholder);
+			taskAction.setBacklogItemId(storableId);
+			taskAction.setBacklogItemDAO(backlogItemDAO);
+			taskAction.setTaskDAO(taskDAO);
+			taskAction.setTaskEventDAO(taskEventDAO);
+			taskAction.setUserDAO(userDAO);				
+			placeholderId = taskAction.storeNew();
+			storable.setPlaceHolder(taskDAO.get(placeholderId.intValue()));
 		}
 		backlogItemDAO.store(storable);
 		return Action.SUCCESS;
@@ -133,9 +159,20 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
 			User user = SecurityUtil.getLoggedUser();
 			storable.getWatchers().remove(user.getId());
 		}
-			
 	}
-
+	
+//	private void fillTask(Task task, Integer storableId) {
+//		EstimateHistoryEvent event = new EstimateHistoryEvent();
+//		event.setActor(SecurityUtil.getLoggedUser());
+////		event.setNewEstimate(newEstimate);
+////		storable.setEffortEstimate(newEstimate);
+////		taskDAO.store(storable);
+////		event.setTask(storable);
+////		storable.getEvents().add(event);
+////		taskEventDAO.store(event);
+//		task.setBacklogItem(backlogItemDAO.get(storableId));
+//	}
+	
 	public Backlog getBacklog() {
 		return backlog;
 	}
@@ -220,4 +257,47 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
 	public int getIterationGoalId(){
 		return iterationGoalId;
 	}
+
+	/**
+	 * @return the task data access object
+	 */
+	public TaskDAO getTaskDAO() {
+		return taskDAO;
+	}
+
+	/**
+	 * @param taskDAO the task data access object to set
+	 */
+	public void setTaskDAO(TaskDAO taskDAO) {
+		this.taskDAO = taskDAO;
+	}
+
+	/**
+	 * @return the taskAction
+	 */
+	public TaskAction getTaskAction() {
+		return taskAction;
+	}
+
+	/**
+	 * @param taskAction the taskAction to set
+	 */
+	public void setTaskAction(TaskAction taskAction) {
+		this.taskAction = taskAction;
+	}
+
+	/**
+	 * @return the taskEventDAO
+	 */
+	public TaskEventDAO getTaskEventDAO() {
+		return taskEventDAO;
+	}
+
+	/**
+	 * @param taskEventDAO the taskEventDAO to set
+	 */
+	public void setTaskEventDAO(TaskEventDAO taskEventDAO) {
+		this.taskEventDAO = taskEventDAO;
+	}
+	
 }

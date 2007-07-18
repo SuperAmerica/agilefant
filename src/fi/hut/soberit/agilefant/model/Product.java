@@ -8,7 +8,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 
 import fi.hut.soberit.agilefant.web.page.PageItem;
-import fi.hut.soberit.agilefant.web.page.PortfolioPageItem;
 
 /**
  * Hibernate entity bean representing a product.

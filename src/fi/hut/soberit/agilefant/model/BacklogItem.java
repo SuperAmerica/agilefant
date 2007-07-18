@@ -15,8 +15,11 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapKey;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.Type;
@@ -65,6 +68,7 @@ public class BacklogItem implements PageItem, Assignable, EffortContainer {
 	private BacklogItemStatus status = BacklogItemStatus.NOT_STARTED;
 	private Map<Integer, User> watchers = new HashMap<Integer, User>();
 	private IterationGoal iterationGoal;
+	private Task placeHolder;
 
 	/** Total effort estimate (time), summed from tasks. */
 	@Type(type="af_time")
@@ -131,6 +135,7 @@ public class BacklogItem implements PageItem, Assignable, EffortContainer {
 	
 	/** Get the tasks belonging in this backlog item. */
 	@OneToMany(mappedBy="backlogItem")
+	@Cascade(CascadeType.DELETE_ORPHAN)
 	public Collection<Task> getTasks() {
 	    return tasks;
 	}
@@ -241,5 +246,20 @@ public class BacklogItem implements PageItem, Assignable, EffortContainer {
 
 	public void setIterationGoal(IterationGoal iterationGoal) {
 		this.iterationGoal = iterationGoal;
+	}
+
+	/**
+	 * @return the placeHolder
+	 */
+	@OneToOne
+	public Task getPlaceHolder() {
+		return placeHolder;
+	}
+
+	/**
+	 * @param placeHolder the placeHolder to set
+	 */
+	public void setPlaceHolder(Task placeHolder) {
+		this.placeHolder = placeHolder;
 	}
 }

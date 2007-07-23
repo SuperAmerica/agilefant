@@ -114,67 +114,7 @@
 		<c:if test="${!empty product.backlogItems}">
 		<div id="subItemContent">
 			<p>
-				<display:table name="product.backlogItems" id="row2" requestURI="editProduct.action">
-
-					<display:column sortable="true" sortProperty="name" title="Name" class="shortNameColumn">
-						<ww:url id="editLink" action="editBacklogItem" includeParams="none">
-							<ww:param name="backlogItemId" value="${row2.id}"/>
-						</ww:url>
-						<ww:a href="%{editLink}&contextViewName=editProduct&contextObjectId=${product.id}">
-							${aef:html(row2.name)}
-						</ww:a>				
-					</display:column>
-					
-					<display:column title="Tasks" sortable="false" class="taskColumn">
-						<c:if test="${!empty row2.tasks}"> 
-							<c:set var="divId" value="${divId + 1}" scope="page"/>
-							<a href="javascript:toggleDiv(${divId});" title="Click to expand">
-								${fn:length(row2.tasks)} tasks, <aef:percentDone backlogItemId="${row2.id}"/> % complete<br/>
-		   					<aef:taskStatusList backlogItemId="${row2.id}" id="tsl"/>							   
-								<ww:url id="imgUrl" action="drawExtendedBarChart" includeParams="none">
-									<ww:param name="notStarted"  value="${tsl['notStarted']}"/>
-									<ww:param name="started"     value="${tsl['started']}"/>
-									<ww:param name="blocked"     value="${tsl['blocked']}"/>
-									<ww:param name="implemented" value="${tsl['implemented']}"/>
-									<ww:param name="done"        value="${tsl['done']}"/>
-								</ww:url>
-								<img src="${imgUrl}"/> 
-							</a>	
-							<aef:tasklist tasks="${row2.tasks}"   contextViewName="editProduct"  contextObjectId="${product.id}" divId="${divId}"/>
-						</c:if>
-					</display:column>
-					
-					<display:column sortable="true" sortProperty="assignee.fullName" title="Responsible" >
-					${aef:html(row2.assignee.fullName)}
-				</display:column>
-	
-				<display:column sortable="true" defaultorder="descending" title="Priority" >
-					<ww:text name="backlogItem.priority.${row2.priority}"/>
-				</display:column>
-	
-				<display:column sortable="true" title="Effort done">
-					${row2.performedEffort}
-				</display:column>
-	
-				<display:column sortable="true" title="Estimate">
-					<c:choose>
-						<c:when test="${!empty row2.effortEstimate}">
-							${row2.effortEstimate}
-						</c:when>
-						<c:otherwise>
-							${row2.allocatedEffort}
-						</c:otherwise>
-					</c:choose>
-				</display:column>
-					
-					<display:column sortable="false" title="Actions">
-						<ww:url id="deleteLink" action="deleteBacklogItem" includeParams="none">
-							<ww:param name="backlogItemId" value="${row2.id}"/>
-						</ww:url>
-						<ww:a href="%{deleteLink}&contextViewName=editProduct&contextObjectId=${product.id}">Delete</ww:a>
-					</display:column>
-					
-				</display:table>
+				<%@ include file="./inc/_backlogList.jsp" %>			
 			</p>
 		</div>
 		</c:if>

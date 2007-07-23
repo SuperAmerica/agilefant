@@ -24,6 +24,7 @@ import fi.hut.soberit.agilefant.model.TaskEvent;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.model.WorkType;
 import fi.hut.soberit.agilefant.util.SpringTestCase;
+import fi.hut.soberit.agilefant.util.TestUtility;
 
 /**
  * JUnit integration test for PerformWorkAction.
@@ -63,6 +64,7 @@ public class PerformWorkActionTest extends SpringTestCase {
 			
 	// all these DAOs are needed to create the needed infrastructure for the work event
 	private PerformWorkAction performWorkAction;
+	private UserAction userAction;
 	private PerformedWorkDAO performedWorkDAO;
 	private WorkTypeDAO workTypeDAO;
 	private ActivityTypeDAO activityTypeDAO;
@@ -179,19 +181,21 @@ public class PerformWorkActionTest extends SpringTestCase {
 	 */	
 	private Task createTestTask(BacklogItem bli, AFTime effortEstimate, String name, String description) {
 		Task task = new Task();
+		User creator = TestUtility.initUser(userAction, userDAO);
 		
 		task.setBacklogItem(bli);
 		task.setDescription(description);
 		task.setName(name);
 		task.setEffortEstimate(effortEstimate);
+		task.setCreator(creator);
 		
-		taskDAO.store(task);
+		int taskId = (Integer)taskDAO.create(task); // Autounboxing in use
 		
 		assertTrue("stored backlogitem had an invalid id", task.getId()>0);
 		
 		backlogItemDAO.refresh(bli);
 				
-		Task result = taskDAO.get(task.getId());
+		Task result = taskDAO.get(taskId);
 		
 		assertNotNull("getting stored task failed", result);
 		assertEquals("stored task had an invalid name", result.getName(), name);
@@ -261,7 +265,8 @@ public class PerformWorkActionTest extends SpringTestCase {
 		
 		// configure our work event
 		performWork.setWorkType(workType);		
-		performWorkAction.setTaskId(task.getId());		
+		performWorkAction.setTaskId(task.getId());
+		performWorkAction.setTask(task);
 		performWork.setEffort(new AFTime(AFTime.parse(PERFORMWORK_EFFORT)));
 		performWork.setComment(PERFORMWORK_COMMENT);
 		performWork.setCreated(current);
@@ -318,5 +323,13 @@ public class PerformWorkActionTest extends SpringTestCase {
 
 	public void setUserDAO(UserDAO userDAO) {
 		this.userDAO = userDAO;
+	}
+
+	public UserAction getUserAction() {
+		return userAction;
+	}
+
+	public void setUserAction(UserAction userAction) {
+		this.userAction = userAction;
 	}
 }

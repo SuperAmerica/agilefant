@@ -150,12 +150,6 @@
 		<action name="listBacklogItems">
 			<result>/WEB-INF/jsp/listBacklogItems.jsp</result>
 		</action>
-		<action name="updateBacklog" method="update"
-			class="updateBacklogAction">
-			<result type="redirect-action">
-				<param name="actionName">popContext</param>
-			</result>
-		</action>
 		<action name="editBacklogItem" method="edit"
 			class="backlogItemAction">
 			<result>/WEB-INF/jsp/editBacklogItem.jsp</result>

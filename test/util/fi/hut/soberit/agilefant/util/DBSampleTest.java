@@ -14,7 +14,7 @@ import java.io.FileInputStream;
  * Under construction(?)
  * @author mpmerila
  */
-public class DBSampleTest extends DatabaseTestCase {
+public abstract class DBSampleTest extends DatabaseTestCase {
 
 	public DBSampleTest(String name)
     {

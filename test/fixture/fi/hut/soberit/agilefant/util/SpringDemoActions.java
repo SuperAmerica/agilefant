@@ -5,6 +5,11 @@ import fi.hut.soberit.agilefant.util.FitnesseSpringHelper;
 import fi.hut.soberit.agilefant.web.UserAction;
 import com.opensymphony.xwork.Action;
 
+/**
+ * This class has something to do with Fitnesse.
+ * @author agilefant
+ *
+ */
 public class SpringDemoActions extends Fixture {
 	private String userFullName;
 	private String userLoginName;
@@ -25,7 +30,8 @@ public class SpringDemoActions extends Fixture {
 	
 	public SpringDemoActions() {
 		super();
-		helper = new FitnesseSpringHelper();
+		// Super ugly hack to get instance of the abstract class.
+		helper = new FitnesseSpringHelper() {} ;
 	}
 	
 	public void setUp() throws Exception {

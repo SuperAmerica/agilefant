@@ -17,7 +17,7 @@
 					<ww:param name="taskId" value="${task.id}"/>
 				</ww:url>
 				<li class="tasklistItem">
-				<ww:a href="%{editLink}&contextViewName=${contextViewName}&contextObjectId=${contextObjectId}" title="${task.name}">
+				<ww:a href="%{editLink}&contextViewName=${currentAction}&contextObjectId=${contextObjectId}" title="${task.name}">
 					${aef:subString(task.name, 40)}
 				</ww:a>
 				<br/>

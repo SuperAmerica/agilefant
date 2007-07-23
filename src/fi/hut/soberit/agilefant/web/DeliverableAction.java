@@ -161,6 +161,7 @@ public class DeliverableAction extends ActionSupport implements CRUDAction {
 	
 	public void setDeliverable(Deliverable deliverable){
 		this.deliverable = deliverable;
+		this.backlog = deliverable;
 	}
 
 	public void setDeliverableDAO(DeliverableDAO deliverableDAO) {
@@ -196,7 +197,7 @@ public class DeliverableAction extends ActionSupport implements CRUDAction {
 	}
 
 	public Collection<ActivityType> getActivityTypes() {
-		return activityTypes;
+		return this.activityTypes;
 	}
 
 	public void setActivityTypes(Collection<ActivityType> activityTypes) {
@@ -204,6 +205,6 @@ public class DeliverableAction extends ActionSupport implements CRUDAction {
 	}
 
 	public Backlog getBacklog() {
-		return backlog;
+		return this.backlog;
 	}
 }

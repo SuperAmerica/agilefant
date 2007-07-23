@@ -33,6 +33,7 @@ public class IterationAction extends ActionSupport implements CRUDAction {
 		}
 		iterationId = 0;
 		iteration = new Iteration();
+		backlog = iteration;
 		return Action.SUCCESS;		
 	}
 	

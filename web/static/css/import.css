@@ -215,17 +215,17 @@ a:hover,a:active {
 	padding: 10px;
 }
 
-#row, #row1, #row2, #row3 {
+#row, #row1, #row2, #row3, #item {
 	vertical-align: top;
 	border-bottom: 1px solid #ccc;
 }
 
-#row td, #row1 td, #row2 td, #row3 td {
+#row td, #row1 td, #row2 td, #row3 td, #item td {
 	vertical-align: top;
 	text-align: left;
 }
 
-#row th, #row1 th, #row2 th, #row3 th {
+#row th, #row1 th, #row2 th, #row3 th, #item th {
 	text-align: left;
 	background: #ddd;
 }

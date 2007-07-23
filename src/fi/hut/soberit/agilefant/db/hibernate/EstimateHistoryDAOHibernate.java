@@ -14,6 +14,7 @@ import fi.hut.soberit.agilefant.model.Task;
 public class EstimateHistoryDAOHibernate extends HibernateDaoSupport implements
 		EstimateHistoryDAO {
 
+	@SuppressWarnings("unchecked")
 	public Collection<EstimateHistoryEvent> getEstimateHistory(Task task) {
 		return super.getHibernateTemplate().findByNamedParam(
 				"from EstimateHistoryEvent event where event.task.id = :id order by event.created", 
@@ -21,6 +22,7 @@ public class EstimateHistoryDAOHibernate extends HibernateDaoSupport implements
 				new Integer(task.getId()));
 	}
 
+	@SuppressWarnings("unchecked")
 	public Collection<EstimateHistoryEvent> getEstimateHistory(
 			BacklogItem backlogItem) {
 		return super.getHibernateTemplate().findByNamedParam(
@@ -29,6 +31,7 @@ public class EstimateHistoryDAOHibernate extends HibernateDaoSupport implements
 				new Integer(backlogItem.getId()));
 	}
 
+	@SuppressWarnings("unchecked")
 	public Collection<EstimateHistoryEvent> getEstimateHistory(
 			Iteration iteration) {
 		return super.getHibernateTemplate().findByNamedParam(
@@ -37,6 +40,7 @@ public class EstimateHistoryDAOHibernate extends HibernateDaoSupport implements
 				new Integer(iteration.getId()));
 	}
 
+	@SuppressWarnings("unchecked")
 	public Collection<EstimateHistoryEvent> getEstimateHistory(
 			Deliverable deliverable) {
 		return super.getHibernateTemplate().findByNamedParam(

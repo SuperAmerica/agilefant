@@ -11,7 +11,11 @@
 	<classpathentry kind="lib" path="lib/commons-logging.jar"/>
 	<classpathentry kind="lib" path="lib/ejb3-persistence.jar"/>
 	<classpathentry kind="lib" path="lib/freemarker.jar"/>
-	<classpathentry kind="lib" path="lib/hibernate-annotations.jar"/>
+	<classpathentry kind="lib" path="lib/hibernate-annotations.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="http://www.hibernate.org/hib_docs/annotations/api"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="lib" path="lib/javamail.jar"/>
 	<classpathentry kind="lib" path="lib/log4j-1.2.14.jar"/>
 	<classpathentry kind="lib" path="lib/mysql-connector-java-3.1.13-bin.jar"/>
@@ -19,7 +23,11 @@
 	<classpathentry kind="lib" path="lib/oscore.jar"/>
 	<classpathentry kind="lib" path="lib/rife-continuations.jar"/>
 	<classpathentry kind="lib" path="lib/webwork-2.2.4.jar" sourcepath="lib-src/webwork-src-2.2.4.jar"/>
-	<classpathentry kind="lib" path="lib/hibernate3.jar"/>
+	<classpathentry kind="lib" path="lib/hibernate3.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="http://www.hibernate.org/hib_docs/v3/api/"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="lib" path="lib/jstl.jar"/>
 	<classpathentry kind="lib" path="lib/standard.jar"/>
 	<classpathentry kind="lib" path="lib/xwork-1.2.1.jar" sourcepath="lib-src/xwork-src-1.2.1.jar"/>
@@ -28,7 +36,11 @@
 	<classpathentry kind="lib" path="lib/build/servlet-api.jar"/>
 	<classpathentry kind="lib" path="lib/build/fitlibrary.jar"/>
 	<classpathentry kind="lib" path="lib/build/fitnesse.jar"/>
-	<classpathentry kind="lib" path="lib/spring-mock.jar"/>
+	<classpathentry kind="lib" path="lib/spring-mock.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="http://www.springframework.org/docs/api"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="lib" path="lib/commons-dbcp-1.2.1.jar"/>
 	<classpathentry kind="lib" path="lib/spring.jar"/>
 	<classpathentry kind="lib" path="lib/jta.jar"/>
@@ -45,7 +57,11 @@
 	<classpathentry kind="lib" path="lib/postgresql-8.1-407.jdbc3.jar"/>
 	<classpathentry kind="lib" path="lib/ehcache-1.2.0_03.jar"/>
 	<classpathentry kind="lib" path="lib/acegi-security-1.0.3.jar"/>
-	<classpathentry kind="lib" path="lib/build/dbunit-2.1.jar"/>
+	<classpathentry kind="lib" path="lib/build/dbunit-2.1.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="http://dbunit.sourceforge.net/apidocs/"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="lib" path="lib/build/emma_ant.jar"/>
 	<classpathentry kind="lib" path="lib/build/emma.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/3.8.1"/>

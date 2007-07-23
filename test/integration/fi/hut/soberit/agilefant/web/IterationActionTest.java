@@ -3,6 +3,7 @@ package fi.hut.soberit.agilefant.web;
 import com.opensymphony.xwork.Action;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.util.SpringTestCase;
+import fi.hut.soberit.agilefant.util.TestUtility;
 import java.util.Collection;
 
 import fi.hut.soberit.agilefant.model.AFTime;
@@ -21,6 +22,7 @@ import fi.hut.soberit.agilefant.web.TaskAction;
 import fi.hut.soberit.agilefant.web.UserAction;
 import fi.hut.soberit.agilefant.web.UserActionTest;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
+import fi.hut.soberit.agilefant.db.IterationDAO;
 import fi.hut.soberit.agilefant.db.ProductDAO;
 import fi.hut.soberit.agilefant.db.TaskDAO;
 import fi.hut.soberit.agilefant.db.UserDAO;
@@ -51,6 +53,7 @@ public class IterationActionTest extends SpringTestCase {
 	private ProductDAO productDAO;
 	private BacklogItemDAO backlogItemDAO;
 	private UserDAO userDAO;
+	private IterationDAO iterationDAO;
 //	private SecurityUtil securityUtil;
 	
 	public void setTaskAction(TaskAction taskAction) {
@@ -308,9 +311,11 @@ public class IterationActionTest extends SpringTestCase {
 	
 	public void testStore() {
 		this.create();
+		User assignee = TestUtility.initUser(userAction, userDAO, 
+				TestUtility.TestUser.USER1);
+		User creator = TestUtility.initUser(userAction, userDAO, 
+				TestUtility.TestUser.USER2);
 		BacklogItem bi = this.getTestBacklogItem(this.getTestBacklog());
-		User assignee = this.getTestUser(1);
-		User creator = this.getTestUser(2);
 		this.setContents(TEST_NAME1, TEST_DESC1, creator, assignee, 
 				TEST_EST1, TEST_PRI1, TEST_STAT1, bi);
 		int n = this.getAllTasks().size();
@@ -326,9 +331,11 @@ public class IterationActionTest extends SpringTestCase {
 	
 	public void testStore_withEmptyName() {
 		this.create();
+		User assignee = TestUtility.initUser(userAction, userDAO, 
+				TestUtility.TestUser.USER1);
+		User creator = TestUtility.initUser(userAction, userDAO, 
+				TestUtility.TestUser.USER2);
 		BacklogItem bi = this.getTestBacklogItem(this.getTestBacklog());
-		User assignee = this.getTestUser(1);
-		User creator = this.getTestUser(2);
 		this.setContents("", TEST_DESC1, creator, assignee, 
 				TEST_EST1, TEST_PRI1, TEST_STAT1, bi);
 		String result = taskAction.store();
@@ -338,9 +345,11 @@ public class IterationActionTest extends SpringTestCase {
 	
 	public void testStoreAndEdit_withNullEstimates() {
 		this.create();
+		User assignee = TestUtility.initUser(userAction, userDAO, 
+				TestUtility.TestUser.USER1);
+		User creator = TestUtility.initUser(userAction, userDAO, 
+				TestUtility.TestUser.USER2);
 		BacklogItem bi = this.getTestBacklogItem(this.getTestBacklog());
-		User assignee = this.getTestUser(1);
-		User creator = this.getTestUser(2);
 		this.setContents(TEST_NAME1, TEST_DESC1, creator, assignee, 
 				null, TEST_PRI1, TEST_STAT1, bi);
 		String result = taskAction.store();
@@ -371,9 +380,11 @@ public class IterationActionTest extends SpringTestCase {
 	
 	public void testEdit() {
 		this.create();
+		User assignee = TestUtility.initUser(userAction, userDAO, 
+				TestUtility.TestUser.USER1);
+		User creator = TestUtility.initUser(userAction, userDAO, 
+				TestUtility.TestUser.USER2);
 		BacklogItem bi = this.getTestBacklogItem(this.getTestBacklog());
-		User assignee = this.getTestUser(1);
-		User creator = this.getTestUser(2);
 		this.setContents(TEST_NAME1, TEST_DESC1, creator, assignee, 
 				TEST_EST1, TEST_PRI1, TEST_STAT1, bi);
 		this.store();
@@ -399,9 +410,11 @@ public class IterationActionTest extends SpringTestCase {
 	 */
 	public void testStore_withUpdate() {
 		this.create();
+		User assignee = TestUtility.initUser(userAction, userDAO, 
+				TestUtility.TestUser.USER1);
+		User creator = TestUtility.initUser(userAction, userDAO, 
+				TestUtility.TestUser.USER2);
 		BacklogItem bi = this.getTestBacklogItem(this.getTestBacklog());
-		User assignee = this.getTestUser(1);
-		User creator = this.getTestUser(2);
 		this.setContents(TEST_NAME1, TEST_DESC1, creator, assignee, 
 				TEST_EST1, TEST_PRI1, TEST_STAT1, bi);
 		this.store(); 
@@ -426,9 +439,11 @@ public class IterationActionTest extends SpringTestCase {
 
 	public void testDelete() {
 		this.create();
+		User assignee = TestUtility.initUser(userAction, userDAO, 
+				TestUtility.TestUser.USER1);
+		User creator = TestUtility.initUser(userAction, userDAO, 
+				TestUtility.TestUser.USER2);
 		BacklogItem bi = this.getTestBacklogItem(this.getTestBacklog());
-		User assignee = this.getTestUser(1);
-		User creator = this.getTestUser(2);
 		this.setContents(TEST_NAME1, TEST_DESC1, creator, assignee, 
 				TEST_EST1, TEST_PRI1, TEST_STAT1, bi);
 		this.store(); 
@@ -453,5 +468,21 @@ public class IterationActionTest extends SpringTestCase {
 		}
 		catch(IllegalArgumentException iae) {
 		}
+	}
+	
+	public void testMetrics(){
+		Iteration[] iterationArray;
+		TestUtility.createTestIteration(1, iterationDAO);
+		iterationArray = (Iteration[]) iterationDAO.getAll().toArray(new Iteration[0]);
+		TestUtility.createTestItem(iterationArray[0], backlogItemAction);
+		
+	}
+
+	public IterationDAO getIterationDAO() {
+		return iterationDAO;
+	}
+
+	public void setIterationDAO(IterationDAO iterationDAO) {
+		this.iterationDAO = iterationDAO;
 	}
 }

@@ -5,6 +5,7 @@ import com.opensymphony.xwork.Action;
 import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.util.SpringTestCase;
+import fi.hut.soberit.agilefant.util.TestUtility.TestUser;
 import fi.hut.soberit.agilefant.security.SecurityUtil;
 
 import java.util.Collection;
@@ -107,29 +108,57 @@ public class UserActionTest extends SpringTestCase {
 	}
 	
 	/**
-	 * Generates a test user
+	 * Generates a test user or if the given user exists just returns it
 	 * @param UserAction springed UserAction object
-	 * @param numberchosen test user (1 or 2)
-	 * @return
+	 * @param userDAO the UserDAO to be used in generation
+	 * @param number chosen test user (1 or 2)
+	 * @return 
 	 */
-	public static User GenerateAndStoreTestUser(UserAction ua, UserDAO ud, int number) {
+	public static User GenerateAndStoreTestUser(UserAction ua, UserDAO ud, 
+			int number) {
 		UserActionTest uat = new UserActionTest();
 		uat.setUserAction(ua);
 		uat.setUserDAO(ud);
 		uat.create();
 		if(number == 1) {
-			uat.setNames(TEST_NAME, TEST_LOGINNAME);
-			uat.setPasswords(TEST_PASS1, TEST_PASS1);
+			if(uat.getUser(TEST_LOGINNAME) == null) {
+				uat.setNames(TEST_NAME, TEST_LOGINNAME);
+				uat.setPasswords(TEST_PASS1, TEST_PASS1);
+				uat.store();
+			}
+			return uat.getUser(TEST_LOGINNAME);
 		}
 		else {
-			uat.setNames(TEST_NAME2, TEST_LOGINNAME2);
-			uat.setPasswords(TEST_PASS2, TEST_PASS2);
+			if(uat.getUser(TEST_LOGINNAME2) == null) {
+				uat.setNames(TEST_NAME2, TEST_LOGINNAME2);
+				uat.setPasswords(TEST_PASS2, TEST_PASS2);
+				uat.store();
+			}
+			return uat.getUser(TEST_LOGINNAME2);
 		}
 			
-		uat.store();
-		return uat.getUser(TEST_LOGINNAME);
+
 	}
 
+	/**
+	 * Generates a test user using enums
+	 * @param UserAction springed UserAction object
+	 * @param userDAO the UserDAO to be used in generation
+	 * @param chosen test user TestUser.USER1 or TestUser.USER2
+	 * @return 
+	 */
+	public static User GenerateAndStoreTestUser(UserAction userAction, 
+			UserDAO userDAO, TestUser testUser) {
+		switch (testUser) {
+		case USER1:
+			return GenerateAndStoreTestUser(userAction, userDAO, 1);
+		case USER2:
+		default:
+			return GenerateAndStoreTestUser(userAction, userDAO, 2);
+		}
+	}
+	
+	
 	/*** Actual test methods **/
 	
 	public void testCreate(){
@@ -268,12 +297,10 @@ public class UserActionTest extends SpringTestCase {
 	}
 	
 	public void testDelete_withInvalidId() {
+		String result;
 		userAction.setUserId(INVALID_USERID);
-		try {
-			userAction.delete();
-			fail("delete() with invalid id " + INVALID_USERID + " was accepted.");
-		}
-		catch(IllegalArgumentException iae) {
-		}
+		result = userAction.delete();
+		super.assertTrue("Delete with invalid invalid userID did not fail", 
+				result.equals(Action.ERROR));
 	}
 }

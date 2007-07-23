@@ -299,4 +299,12 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
 	public void setTaskEventDAO(TaskEventDAO taskEventDAO) {
 		this.taskEventDAO = taskEventDAO;
 	}
+
+	public String getBacklogItemName() {
+		return backlogItem.getName();
+	}
+
+	public void setBacklogItemName(String backlogItemName) {
+		backlogItem.setName(backlogItemName);
+	}
 }

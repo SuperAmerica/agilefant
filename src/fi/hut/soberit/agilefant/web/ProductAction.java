@@ -7,6 +7,7 @@ import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
 
 import fi.hut.soberit.agilefant.db.ProductDAO;
+import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Product;
 
 public class ProductAction extends ActionSupport implements CRUDAction {
@@ -15,11 +16,13 @@ public class ProductAction extends ActionSupport implements CRUDAction {
 	private ProductDAO productDAO;
 	private int productId;
 	private Product product;
+	private Backlog backlog;
 	private Collection<Product> products = new ArrayList<Product>();
 
 	public String create() {
 		productId = 0;
 		product = new Product();
+		backlog = product;
 		return Action.SUCCESS;
 	}
 
@@ -43,6 +46,7 @@ public class ProductAction extends ActionSupport implements CRUDAction {
 			super.addActionError(super.getText("product.notFound"));
 			return Action.ERROR;
 		}
+		backlog = product;
 		return Action.SUCCESS;
 	}
 
@@ -67,12 +71,12 @@ public class ProductAction extends ActionSupport implements CRUDAction {
 	}
 	
 	protected void fillStorable(Product storable){
-		if(this.product.getName().equals("")) {
-			super.addActionError(super.getText("product.missingName"));
-			return;
-		}
 		if(this.product == null) {
 			super.addActionError(super.getText("product.internalError"));
+			return;
+		}
+		if(this.product.getName().equals("")) {
+			super.addActionError(super.getText("product.missingName"));
 			return;
 		}
 		storable.setName(this.product.getName());
@@ -85,8 +89,13 @@ public class ProductAction extends ActionSupport implements CRUDAction {
 
 	public void setProduct(Product product) {
 		this.product = product;
+		this.backlog = product;
 	}
 
+	public Backlog getBacklog() {
+		return this.backlog;
+	}
+	
 	public void setProductDAO(ProductDAO productDAO) {
 		this.productDAO = productDAO;
 	}
@@ -110,4 +119,5 @@ public class ProductAction extends ActionSupport implements CRUDAction {
 	public void setProducts(Collection<Product> products) {
 		this.products = products;
 	}
+
 }

@@ -95,6 +95,7 @@
 					
 					<c:forEach var="page" items="${pageHierarchy}" >
 						<c:if test="${aef:isProduct(page)}">
+							<c:set var="currentAction" value="editProduct" scope="session" />
 							<c:set var="currentContext" value="product" scope="session"/>
 							<c:set var="currentPageId" value="${page.id}" scope="session" />
 							<c:set var="currentIterationId" value="" scope="session"/>
@@ -102,6 +103,7 @@
 							<c:set var="currentProductId" value="${page.id}" scope="session"/>
 						</c:if>
 						<c:if test="${aef:isDeliverable(page)}">
+							<c:set var="currentAction" value="editDeliverable" scope="session" />
 							<c:set var="currentContext" value="project" scope="session"/>
 							<c:set var="currentPageId" value="${page.id}" scope="session" />
 							<c:set var="currentIterationId" value="" scope="session"/>
@@ -109,6 +111,7 @@
 							<c:set var="currentProductId" value="${page.parent.id}" scope="session"/>
 						</c:if>
 						<c:if test="${aef:isIteration(page)}">
+							<c:set var="currentAction" value="editIteration" scope="session" />
 							<c:set var="currentContext" value="iteration" scope="session"/>
 							<c:set var="currentPageId" value="${page.id}" scope="session" />
 							<c:set var="currentIterationId" value="${page.id}" scope="session"/>

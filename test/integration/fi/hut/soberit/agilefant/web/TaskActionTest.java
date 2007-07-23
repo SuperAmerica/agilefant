@@ -14,6 +14,7 @@ import fi.hut.soberit.agilefant.model.TaskStatus;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.security.SecurityUtil;
 import fi.hut.soberit.agilefant.util.SpringTestCase;
+import fi.hut.soberit.agilefant.util.TestUtility;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.db.ProductDAO;
 import fi.hut.soberit.agilefant.db.TaskDAO;
@@ -306,9 +307,11 @@ public class TaskActionTest extends SpringTestCase {
 	
 	public void testStore() {
 		this.create();
+		User assignee = TestUtility.initUser(userAction, userDAO, 
+				TestUtility.TestUser.USER1);
+		User creator = TestUtility.initUser(userAction, userDAO, 
+				TestUtility.TestUser.USER2);
 		BacklogItem bi = this.getTestBacklogItem(this.getTestBacklog());
-		User assignee = this.getTestUser(1);
-		User creator = this.getTestUser(2);
 		this.setContents(TEST_NAME1, TEST_DESC1, creator, assignee, 
 				TEST_EST1, TEST_PRI1, TEST_STAT1, bi);
 		int n = this.getAllTasks().size();
@@ -324,9 +327,11 @@ public class TaskActionTest extends SpringTestCase {
 	
 	public void testStore_withEmptyName() {
 		this.create();
+		User assignee = TestUtility.initUser(userAction, userDAO, 
+				TestUtility.TestUser.USER1);
+		User creator = TestUtility.initUser(userAction, userDAO, 
+				TestUtility.TestUser.USER2);
 		BacklogItem bi = this.getTestBacklogItem(this.getTestBacklog());
-		User assignee = this.getTestUser(1);
-		User creator = this.getTestUser(2);
 		this.setContents("", TEST_DESC1, creator, assignee, 
 				TEST_EST1, TEST_PRI1, TEST_STAT1, bi);
 		String result = taskAction.store();
@@ -336,9 +341,11 @@ public class TaskActionTest extends SpringTestCase {
 	
 	public void testStoreAndEdit_withNullEstimates() {
 		this.create();
+		User assignee = TestUtility.initUser(userAction, userDAO, 
+				TestUtility.TestUser.USER1);
+		User creator = TestUtility.initUser(userAction, userDAO, 
+				TestUtility.TestUser.USER2);
 		BacklogItem bi = this.getTestBacklogItem(this.getTestBacklog());
-		User assignee = this.getTestUser(1);
-		User creator = this.getTestUser(2);
 		this.setContents(TEST_NAME1, TEST_DESC1, creator, assignee, 
 				null, TEST_PRI1, TEST_STAT1, bi);
 		String result = taskAction.store();
@@ -369,9 +376,11 @@ public class TaskActionTest extends SpringTestCase {
 	
 	public void testEdit() {
 		this.create();
+		User assignee = TestUtility.initUser(userAction, userDAO, 
+				TestUtility.TestUser.USER1);
+		User creator = TestUtility.initUser(userAction, userDAO, 
+				TestUtility.TestUser.USER2);
 		BacklogItem bi = this.getTestBacklogItem(this.getTestBacklog());
-		User assignee = this.getTestUser(1);
-		User creator = this.getTestUser(2);
 		this.setContents(TEST_NAME1, TEST_DESC1, creator, assignee, 
 				TEST_EST1, TEST_PRI1, TEST_STAT1, bi);
 		this.store();
@@ -397,9 +406,11 @@ public class TaskActionTest extends SpringTestCase {
 	 */
 	public void testStore_withUpdate() {
 		this.create();
+		User assignee = TestUtility.initUser(userAction, userDAO, 
+				TestUtility.TestUser.USER1);
+		User creator = TestUtility.initUser(userAction, userDAO, 
+				TestUtility.TestUser.USER2);
 		BacklogItem bi = this.getTestBacklogItem(this.getTestBacklog());
-		User assignee = this.getTestUser(1);
-		User creator = this.getTestUser(2);
 		this.setContents(TEST_NAME1, TEST_DESC1, creator, assignee, 
 				TEST_EST1, TEST_PRI1, TEST_STAT1, bi);
 		this.store(); 
@@ -424,9 +435,11 @@ public class TaskActionTest extends SpringTestCase {
 
 	public void testDelete() {
 		this.create();
+		User assignee = TestUtility.initUser(userAction, userDAO, 
+				TestUtility.TestUser.USER1);
+		User creator = TestUtility.initUser(userAction, userDAO, 
+				TestUtility.TestUser.USER2);
 		BacklogItem bi = this.getTestBacklogItem(this.getTestBacklog());
-		User assignee = this.getTestUser(1);
-		User creator = this.getTestUser(2);
 		this.setContents(TEST_NAME1, TEST_DESC1, creator, assignee, 
 				TEST_EST1, TEST_PRI1, TEST_STAT1, bi);
 		this.store(); 

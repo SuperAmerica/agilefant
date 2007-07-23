@@ -14,6 +14,7 @@ import javax.persistence.InheritanceType;
 import javax.persistence.DiscriminatorType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
@@ -154,5 +155,16 @@ public abstract class Backlog implements Assignable {
 	 */
 	public void setEffortHistory(Collection<EffortHistory> effortHistory) {
 		this.effortHistory = effortHistory;
+	}
+	
+	/**
+	 * Returns default performed effort for backlog. Override in child
+	 * classes to provide functionality.
+	 * 
+	 * @return the performed effort for a backlog
+	 */
+	@Transient
+	public AFTime getPerformedEffort() {
+		return new AFTime(0);
 	}
 }

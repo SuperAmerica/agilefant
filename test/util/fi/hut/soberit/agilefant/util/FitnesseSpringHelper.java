@@ -7,9 +7,14 @@ import org.springframework.test.AbstractTransactionalSpringContextTests;
  * To use, use ownSetup() with target or ownSetup() and enableSpring(target)
  * and ownTearDown() on the end.
  * 
+ * No idea how this class is supposed to be used (with Fitnesse, I presume).
+ * Made it Abstract to supress JUnit warning about non-exixtent tests,
+ * since this class extends JUnit test and is thus run when all tests are
+ * run. (Ville) 
+ * 
  * @author tiaijala, tvainiok
  */
-public class FitnesseSpringHelper extends SpringTestCase {
+public abstract class FitnesseSpringHelper extends SpringTestCase {
 	/**
 	 * Public access to setUp()
 	 * Remember to call enableSpring!

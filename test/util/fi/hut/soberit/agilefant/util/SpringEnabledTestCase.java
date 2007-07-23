@@ -14,7 +14,7 @@ import junit.framework.TestCase;
  * @see ExplicitSpringSupport
  * @author Turkka Äijälä
  */
-public class SpringEnabledTestCase extends TestCase {	
+public abstract class SpringEnabledTestCase extends TestCase {	
 	
 	/**
 	 * Constructor which forces a call to loadSpringSupport.  

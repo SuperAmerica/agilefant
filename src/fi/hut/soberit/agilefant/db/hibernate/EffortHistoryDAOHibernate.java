@@ -23,6 +23,7 @@ public class EffortHistoryDAOHibernate extends
 	 * @param date Date of the effortHistory to be retrieved
 	 * @return  EffortHistory of the seleceted date
 	 */
+	@SuppressWarnings("unchecked")
 	public EffortHistory getByDate(Date date){
 		DetachedCriteria criteria = DetachedCriteria.forClass(this.getPersistentClass());
 		criteria.add(Restrictions.eq("date", date));

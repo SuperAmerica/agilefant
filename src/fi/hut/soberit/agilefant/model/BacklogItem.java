@@ -1,9 +1,11 @@
 package fi.hut.soberit.agilefant.model;
 
+import java.sql.Date;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.SortedMap;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -70,6 +72,34 @@ public class BacklogItem implements PageItem, Assignable, EffortContainer {
 	private IterationGoal iterationGoal;
 	private Task placeHolder;
 
+//	@Transient
+//	public AFTime getOrigEstByDate(Date startDate) {
+//		AFTime origEst;
+//		TaskEvent firstEvent = null;
+//		// Placeholder created before start date
+//		if(placeHolder.getCreated().before(startDate)) {
+//			for(TaskEvent i: placeHolder.getEvents()) {
+//				if(firstEvent == null) {
+//					firstEvent = i;
+//				} else {
+//					if()
+//				}
+//			}
+//		} else {
+//			// Placeholder created after start date
+//			for(TaskEvent i: placeHolder.getEvents()) {
+//				if(firstEvent == null) {
+//					firstEvent = i;
+//				} else {
+//					if(i.getCreated().before(firstEvent.getCreated())) {
+//						firstEvent = i;
+//					}
+//				}
+//			}
+//			origEst = new AFTime(firstEvent.getCreated().getTime());
+//		}
+//	}
+	
 	/** Total effort estimate (time), summed from tasks. */
 	@Type(type="af_time")
 	@Formula(value="(select SUM(t.effortEstimate) from Task t where t.backlogItem_id = id)")

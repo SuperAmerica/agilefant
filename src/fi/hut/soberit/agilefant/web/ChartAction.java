@@ -29,6 +29,7 @@ import org.jfree.data.category.IntervalCategoryDataset;
 import org.jfree.data.gantt.Task;
 import org.jfree.data.gantt.TaskSeries;
 import org.jfree.data.gantt.TaskSeriesCollection;
+import org.jfree.ui.RectangleInsets;
 
 import org.jfree.chart.urls.CategoryURLGenerator;
 import org.jfree.chart.urls.StandardCategoryURLGenerator;
@@ -187,19 +188,20 @@ public class ChartAction extends ActionSupport {
 		
 		/*-- We want to show the relative percentages of different work states --*/
 		double allTypes = 0;
-		allTypes = this.getNotStarted() + this.getStarted() + this.getBlocked() + this.getDone() + this.getImplemented();
+		allTypes = this.getNotStarted() + this.getStarted() + 
+				this.getBlocked() + this.getDone() + this.getImplemented();
 		double ns = 20;
 		double st = 20;
 		double bl = 20;
 		double im = 20;
 		double dn = 20;
 		if(allTypes>0){
-			ns = (this.getNotStarted() / allTypes)*100;
-			st = (this.getStarted() / allTypes)*100;
-			bl = (this.getBlocked() / allTypes)*100;
-			im = (this.getImplemented() / allTypes)*100;
-			dn = (this.getDone() / allTypes)*100;
-		}	
+			ns = (this.getNotStarted() / allTypes)*100.0;
+			st = (this.getStarted() / allTypes)*100.0;
+			bl = (this.getBlocked() / allTypes)*100.0;
+			im = (this.getImplemented() / allTypes)*100.0;
+			dn = (this.getDone() / allTypes)*100.0;
+		}
 		
 		dataset.setValue(ns, "Not started", "");
 		dataset.setValue(st, "Started", "");
@@ -209,8 +211,7 @@ public class ChartAction extends ActionSupport {
 		chart2 = ChartFactory.createStackedBarChart(null,
 					null, null, dataset, PlotOrientation.HORIZONTAL,
 					false, false, false);
-			
-	
+		
 		CategoryPlot plot = chart2.getCategoryPlot();
 		BarRenderer renderer = (BarRenderer) plot.getRenderer();
 		//CategoryAxis axis = plot.getDomainAxis();
@@ -220,7 +221,13 @@ public class ChartAction extends ActionSupport {
 		plot.setDomainGridlinesVisible(false);
 		plot.setRangeGridlinesVisible(false);
 		plot.setBackgroundPaint(Color.white);
-		chart2.setBackgroundPaint(Color.white); // Sets the background color for the chart
+		
+		chart2.setBorderVisible(false); //Disable chart border
+		// Sets the background color for the chart
+		chart2.setBackgroundPaint(Color.white); 
+		// No padding around chart
+		chart2.setPadding(new RectangleInsets(0, 0, 0, 0)); 
+		
 		axis.setAxisLineVisible(false);
 		axis.setTickLabelsVisible(false);
 		axis.setTickMarksVisible(false);

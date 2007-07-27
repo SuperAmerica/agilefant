@@ -8,10 +8,13 @@ import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
 
 import fi.hut.soberit.agilefant.db.ActivityTypeDAO;
+import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.db.DeliverableDAO;
 import fi.hut.soberit.agilefant.db.ProductDAO;
+import fi.hut.soberit.agilefant.db.TaskEventDAO;
 import fi.hut.soberit.agilefant.model.ActivityType;
 import fi.hut.soberit.agilefant.model.Backlog;
+import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.Deliverable;
 import fi.hut.soberit.agilefant.model.Product;
 
@@ -27,6 +30,8 @@ public class DeliverableAction extends ActionSupport implements CRUDAction {
 	private ProductDAO productDAO;
 	private Collection<ActivityType> activityTypes;
 	private Backlog backlog;
+	private TaskEventDAO taskEventDAO;
+	private BacklogItemDAO backlogItemDAO;
 			
 	public String create(){
 		this.prepareActivityTypes();
@@ -42,19 +47,32 @@ public class DeliverableAction extends ActionSupport implements CRUDAction {
 	}
 	
 	public String edit(){
+		Date startDate;
 		this.prepareActivityTypes();
 		if (this.activityTypes.isEmpty()){
 			super.addActionError("deliverable.activityTypesNotFound");
 			return Action.ERROR;
 		}
 		deliverable = deliverableDAO.get(deliverableId);
+		startDate = deliverable.getStartDate();
+		
 		if (deliverable == null){
 //			super.addActionError(super.getText("deliverable.notFound"));
 //			return Action.ERROR;
 			return Action.SUCCESS;
 		}
+		if (startDate == null) {
+			startDate = new Date(0);
+		}
+		
 		productId = deliverable.getProduct().getId();
 		backlog = deliverable;
+		for(BacklogItem i: backlog.getBacklogItems()) {
+			i.setBliOrigEst(taskEventDAO.getBLIOriginalEstimate(i, startDate));
+			i.setTaskSumOrigEst(taskEventDAO.getTaskSumOrigEst(i, startDate));
+			i.setBliEffEst(backlogItemDAO.getBLIEffortLeft(i));
+			i.setTaskSumEffEst(	backlogItemDAO.getTaskSumEffortLeft(i));
+		}
 		return Action.SUCCESS;
 	}
 	
@@ -206,5 +224,33 @@ public class DeliverableAction extends ActionSupport implements CRUDAction {
 
 	public Backlog getBacklog() {
 		return this.backlog;
+	}
+
+	/**
+	 * @return the backlogItemDAO
+	 */
+	public BacklogItemDAO getBacklogItemDAO() {
+		return backlogItemDAO;
+	}
+
+	/**
+	 * @param backlogItemDAO the backlogItemDAO to set
+	 */
+	public void setBacklogItemDAO(BacklogItemDAO backlogItemDAO) {
+		this.backlogItemDAO = backlogItemDAO;
+	}
+
+	/**
+	 * @return the taskEventDAO
+	 */
+	public TaskEventDAO getTaskEventDAO() {
+		return taskEventDAO;
+	}
+
+	/**
+	 * @param taskEventDAO the taskEventDAO to set
+	 */
+	public void setTaskEventDAO(TaskEventDAO taskEventDAO) {
+		this.taskEventDAO = taskEventDAO;
 	}
 }

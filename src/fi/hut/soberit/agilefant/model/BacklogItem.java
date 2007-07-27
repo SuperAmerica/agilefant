@@ -20,6 +20,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.Formula;
@@ -71,34 +73,11 @@ public class BacklogItem implements PageItem, Assignable, EffortContainer {
 	private Map<Integer, User> watchers = new HashMap<Integer, User>();
 	private IterationGoal iterationGoal;
 	private Task placeHolder;
-
-//	@Transient
-//	public AFTime getOrigEstByDate(Date startDate) {
-//		AFTime origEst;
-//		TaskEvent firstEvent = null;
-//		// Placeholder created before start date
-//		if(placeHolder.getCreated().before(startDate)) {
-//			for(TaskEvent i: placeHolder.getEvents()) {
-//				if(firstEvent == null) {
-//					firstEvent = i;
-//				} else {
-//					if()
-//				}
-//			}
-//		} else {
-//			// Placeholder created after start date
-//			for(TaskEvent i: placeHolder.getEvents()) {
-//				if(firstEvent == null) {
-//					firstEvent = i;
-//				} else {
-//					if(i.getCreated().before(firstEvent.getCreated())) {
-//						firstEvent = i;
-//					}
-//				}
-//			}
-//			origEst = new AFTime(firstEvent.getCreated().getTime());
-//		}
-//	}
+	private AFTime bliOrigEst;
+	private AFTime taskSumOrigEst;
+	private AFTime bliEffEst;
+	private AFTime taskSumEffEst;
+	private Log logger = LogFactory.getLog(this.getClass());
 	
 	/** Total effort estimate (time), summed from tasks. */
 	@Type(type="af_time")
@@ -279,6 +258,7 @@ public class BacklogItem implements PageItem, Assignable, EffortContainer {
 	}
 
 	/**
+	 * Returns the placeholder task of this backlog item
 	 * @return the placeHolder
 	 */
 	@OneToOne
@@ -287,9 +267,70 @@ public class BacklogItem implements PageItem, Assignable, EffortContainer {
 	}
 
 	/**
+	 * Sets the placeholder task of this backlog items
 	 * @param placeHolder the placeHolder to set
 	 */
 	public void setPlaceHolder(Task placeHolder) {
 		this.placeHolder = placeHolder;
+	}
+
+	/**
+	 * @return the bLIEffEst
+	 */
+	@Transient
+	public AFTime getBliEffEst() {
+		return bliEffEst;
+	}
+
+	/**
+	 * @param effEst the bLIEffEst to set
+	 */
+	public void setBliEffEst(AFTime effEst) {
+		bliEffEst = effEst;
+	}
+
+	/**
+	 * @return the bLIOrigEst
+	 */
+	@Transient
+	public AFTime getBliOrigEst() {
+		return bliOrigEst;
+	}
+
+	/**
+	 * @param origEst the bLIOrigEst to set
+	 */
+	public void setBliOrigEst(AFTime origEst) {
+		bliOrigEst = origEst;
+	}
+
+	/**
+	 * @return the taskSumEffEst
+	 */
+	@Transient
+	public AFTime getTaskSumEffEst() {
+		return taskSumEffEst;
+	}
+
+	/**
+	 * @param taskSumEffEst the taskSumEffEst to set
+	 */
+	public void setTaskSumEffEst(AFTime taskSumEffEst) {
+		this.taskSumEffEst = taskSumEffEst;
+	}
+
+	/**
+	 * @return the taskSumOrigEst
+	 */
+	@Transient
+	public AFTime getTaskSumOrigEst() {
+		return taskSumOrigEst;
+	}
+
+	/**
+	 * @param taskSumOrigEst the taskSumOrigEst to set
+	 */
+	public void setTaskSumOrigEst(AFTime taskSumOrigEst) {
+		this.taskSumOrigEst = taskSumOrigEst;
 	}
 }

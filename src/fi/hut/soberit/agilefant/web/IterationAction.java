@@ -3,10 +3,14 @@ package fi.hut.soberit.agilefant.web;
 import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
 import java.util.Collection;
+import java.util.Date;
 
+import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.db.DeliverableDAO;
 import fi.hut.soberit.agilefant.db.IterationDAO;
 import fi.hut.soberit.agilefant.db.IterationGoalDAO;
+import fi.hut.soberit.agilefant.db.TaskEventDAO;
+import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.Deliverable;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.IterationGoal;
@@ -20,6 +24,8 @@ public class IterationAction extends ActionSupport implements CRUDAction {
 	private Backlog backlog;
 	private IterationDAO iterationDAO;
 	private DeliverableDAO deliverableDAO;
+	private TaskEventDAO taskEventDAO;
+	private BacklogItemDAO backlogItemDAO;
 	private Deliverable deliverable;
 	private int deliverableId;
 	private IterationGoalDAO iterationGoalDAO;
@@ -39,16 +45,29 @@ public class IterationAction extends ActionSupport implements CRUDAction {
 	
 	public String edit(){
 		iteration = iterationDAO.get(iterationId);
+		Date startDate = iteration.getStartDate();
+
+		
 		if (iteration == null){
 //			super.addActionError(super.getText("iteration.notFound"));
 //			return Action.INPUT;
 			return Action.SUCCESS;
 		}
+		if (startDate == null) {
+			startDate = new Date(0);
+		}
+		
 		deliverable = iteration.getDeliverable();
 		
 		/* We need Backlog-class object to generate backlog list in 
 		 * _backlogList.jsp */
 		backlog = iteration;
+		for(BacklogItem i: backlog.getBacklogItems()) {
+			i.setBliOrigEst(taskEventDAO.getBLIOriginalEstimate(i, startDate));
+			i.setTaskSumOrigEst(taskEventDAO.getTaskSumOrigEst(i, startDate));
+			i.setBliEffEst(backlogItemDAO.getBLIEffortLeft(i));
+			i.setTaskSumEffEst(backlogItemDAO.getTaskSumEffortLeft(i));
+		}
 		
 		if (deliverable == null){
 			super.addActionError(super.getText("iteration.deliverableNotFound"));
@@ -181,5 +200,33 @@ public class IterationAction extends ActionSupport implements CRUDAction {
 
 	public int getIterationGoalId() {
 		return iterationGoalId;
+	}
+
+	/**
+	 * @return the taskEventDAO
+	 */
+	public TaskEventDAO getTaskEventDAO() {
+		return taskEventDAO;
+	}
+
+	/**
+	 * @param taskEventDAO the taskEventDAO to set
+	 */
+	public void setTaskEventDAO(TaskEventDAO taskEventDAO) {
+		this.taskEventDAO = taskEventDAO;
+	}
+
+	/**
+	 * @return the backlogItemDAO
+	 */
+	public BacklogItemDAO getBacklogItemDAO() {
+		return backlogItemDAO;
+	}
+
+	/**
+	 * @param backlogItemDAO the backlogItemDAO to set
+	 */
+	public void setBacklogItemDAO(BacklogItemDAO backlogItemDAO) {
+		this.backlogItemDAO = backlogItemDAO;
 	}
 }

@@ -3,6 +3,9 @@ package fi.hut.soberit.agilefant.model;
 import java.util.Date;
 
 import javax.persistence.Entity;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.hibernate.annotations.Type;
 
 /**
@@ -21,6 +24,7 @@ import org.hibernate.annotations.Type;
 public class EstimateHistoryEvent extends TaskComment {
 	
 	private AFTime newEstimate;
+	private Log logger = LogFactory.getLog(getClass());
 
 	public EstimateHistoryEvent() {}
 

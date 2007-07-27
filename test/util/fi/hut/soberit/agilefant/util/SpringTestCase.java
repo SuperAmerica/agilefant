@@ -5,6 +5,7 @@ import org.springframework.orm.hibernate3.HibernateTransactionManager;
 import org.springframework.test.AbstractTransactionalSpringContextTests;
 import org.springframework.transaction.PlatformTransactionManager;
 
+
 public abstract class SpringTestCase extends AbstractTransactionalSpringContextTests {
 	
 	@Override

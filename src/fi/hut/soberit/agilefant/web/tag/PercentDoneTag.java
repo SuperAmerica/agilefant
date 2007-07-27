@@ -20,10 +20,11 @@ public class PercentDoneTag extends SpringTagSupport {
 		BacklogItemDAO bliDao = (BacklogItemDAO)super.getApplicationContext().getBean("backlogItemDAO");
 		BacklogItem bli = bliDao.get(backlogItemId);
 		
-		int done = dao.getTasksByStatusAndBacklogItem(bli, new TaskStatus[]{TaskStatus.DONE})
-																	.size();
-		int total = bli.getTasks()
-						  .size();
+		int done = dao.getTasksByStatusAndBacklogItem(bli, 
+				new TaskStatus[]{TaskStatus.DONE}).size();
+		
+		//TODO: Use HQL-query instead of arithmetics here to calculate #
+		int total = bliDao.getRealTasks(bli).size();
 		int percentDone = 100;
 		if (total > 0) {
 		   percentDone = Math.round(done*100/total);

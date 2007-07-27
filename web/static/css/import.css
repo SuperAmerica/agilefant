@@ -280,6 +280,10 @@ a:hover,a:active {
 	margin: 0 0 5px 0;
 }
 
+#placeholder {
+	display: inline;
+}
+	
 span.right {
 	text-align: right;
 }
@@ -379,7 +383,7 @@ div#submenuwrapmyTasks #menu li#subnav1 a,div#submenuwrapiteration #menu li#subn
 }
 
 .shortNameColumn div{
-	width: 200px;	
+	width: 180px;	
 	white-space: nowrap;
 	overflow: hidden;
 
@@ -392,6 +396,12 @@ div#submenuwrapmyTasks #menu li#subnav1 a,div#submenuwrapiteration #menu li#subn
 	width: 150px;	
 	white-space: nowrap;
 	overflow: visible;
+}
+
+.iterationGoalColumn div{
+	overflow: hidden;
+	width: 90px;	
+	max-height: 2.5em;
 }
 /*
 .shortNameColumn{

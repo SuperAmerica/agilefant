@@ -2,18 +2,24 @@ package fi.hut.soberit.agilefant.web;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 
 import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
 
+import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.db.ProductDAO;
+import fi.hut.soberit.agilefant.db.TaskEventDAO;
 import fi.hut.soberit.agilefant.model.Backlog;
+import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.Product;
 
 public class ProductAction extends ActionSupport implements CRUDAction {
 
 	private static final long serialVersionUID = 1834399750050895118L;
 	private ProductDAO productDAO;
+	private TaskEventDAO taskEventDAO;
+	private BacklogItemDAO backlogItemDAO;
 	private int productId;
 	private Product product;
 	private Backlog backlog;
@@ -41,12 +47,20 @@ public class ProductAction extends ActionSupport implements CRUDAction {
 	}
 
 	public String edit() {
+		Date startDate = new Date(0);
 		product = productDAO.get(productId);
 		if (product == null){
 			super.addActionError(super.getText("product.notFound"));
 			return Action.ERROR;
 		}
 		backlog = product;
+		for(BacklogItem i: backlog.getBacklogItems()) {
+			i.setBliOrigEst(taskEventDAO.getBLIOriginalEstimate(i, startDate));
+			i.setTaskSumOrigEst(taskEventDAO.getTaskSumOrigEst(i, startDate));
+			i.setBliEffEst(backlogItemDAO.getBLIEffortLeft(i));
+			i.setTaskSumEffEst(	backlogItemDAO.getTaskSumEffortLeft(i));
+		}
+		
 		return Action.SUCCESS;
 	}
 
@@ -118,6 +132,34 @@ public class ProductAction extends ActionSupport implements CRUDAction {
 
 	public void setProducts(Collection<Product> products) {
 		this.products = products;
+	}
+
+	/**
+	 * @return the backlogItemDAO
+	 */
+	public BacklogItemDAO getBacklogItemDAO() {
+		return backlogItemDAO;
+	}
+
+	/**
+	 * @param backlogItemDAO the backlogItemDAO to set
+	 */
+	public void setBacklogItemDAO(BacklogItemDAO backlogItemDAO) {
+		this.backlogItemDAO = backlogItemDAO;
+	}
+
+	/**
+	 * @return the taskEventDAO
+	 */
+	public TaskEventDAO getTaskEventDAO() {
+		return taskEventDAO;
+	}
+
+	/**
+	 * @param taskEventDAO the taskEventDAO to set
+	 */
+	public void setTaskEventDAO(TaskEventDAO taskEventDAO) {
+		this.taskEventDAO = taskEventDAO;
 	}
 
 }

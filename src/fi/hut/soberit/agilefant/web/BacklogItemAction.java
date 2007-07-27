@@ -3,6 +3,9 @@ package fi.hut.soberit.agilefant.web;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
 
@@ -12,6 +15,7 @@ import fi.hut.soberit.agilefant.db.IterationGoalDAO;
 import fi.hut.soberit.agilefant.db.TaskDAO;
 import fi.hut.soberit.agilefant.db.TaskEventDAO;
 import fi.hut.soberit.agilefant.db.UserDAO;
+import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.IterationGoal;
@@ -37,7 +41,8 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
 	private TaskDAO taskDAO;
 	private TaskAction taskAction;
 	private TaskEventDAO taskEventDAO;
-
+	
+	private Log logger = LogFactory.getLog(getClass());
 
 
 	public String create() {
@@ -90,12 +95,14 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
 		/* Set placeholder task properties */
 		if (storable.getId() == 0){
 			Task placeholder = new Task();
+
 			
 			if(taskAction.create() != Action.SUCCESS) {
 				super.addActionError(super.getText(
 						"placeholder.task.notCreated"));
 				return Action.ERROR;
 			}
+			
 			storableId = (Integer) backlogItemDAO.create(storable);
 			placeholder.setCreator(SecurityUtil.getLoggedUser());
 			placeholder.setName("Placeholder");
@@ -108,6 +115,39 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
 			taskAction.setUserDAO(userDAO);				
 			placeholderId = taskAction.storeNew();
 			storable.setPlaceHolder(taskDAO.get(placeholderId.intValue()));
+		}
+		/* Update placeholder effort estimate if backlog item original
+		 * estimate was left null */
+		else if(storable.getPlaceHolder().getEffortEstimate() == null && 
+				backlogItem.getAllocatedEffort() != null) {
+			long phEffort;
+			taskAction.setTaskId(storable.getPlaceHolder().getId());
+			taskAction.setTask(new Task());
+			taskAction.setBacklogItemId(storable.getId());
+			taskAction.setBacklogItemDAO(backlogItemDAO);
+			taskAction.setTaskDAO(taskDAO);
+			taskAction.setTaskEventDAO(taskEventDAO);
+			taskAction.setUserDAO(userDAO);
+			taskAction.getTask().setCreator(
+					storable.getPlaceHolder().getCreator());
+			taskAction.getTask().setName(
+					storable.getPlaceHolder().getName());
+					
+			phEffort = backlogItem.getAllocatedEffort().getTime();
+			taskAction.getTask().setEffortEstimate(new AFTime(phEffort));
+			taskAction.store();
+			
+			/* If backlog item has tasks the TaskSumEffLeft must be
+			 * subtracted from the placeholder effort estimate */
+			if(backlogItemDAO.getTaskSumEffortLeft(storable) != null) {
+				phEffort = backlogItem.getAllocatedEffort().getTime() -
+					backlogItemDAO.getTaskSumEffortLeft(storable).getTime();
+				if(phEffort < 0) {
+					phEffort = 0;
+				}
+			}
+			taskAction.getTask().setEffortEstimate(new AFTime(phEffort));
+			taskAction.store();
 		}
 		backlogItemDAO.store(storable);
 		return Action.SUCCESS;

@@ -118,10 +118,6 @@ public class ChartManagerImpl implements ChartManager {
 
 			AFTime estimate = estimateEvent.getNewEstimate();
 			Date creationTime = estimateEvent.getCreated();
-			if(estimate == null){
-				estimate = new AFTime("0h");
-				estimateEvent.setNewEstimate(estimate);			
-			}
 
 			if(estimate!=null){
 				if (previousTime!=null && creationTime!=null) {

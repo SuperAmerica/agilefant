@@ -329,8 +329,47 @@ public class BacklogItemActionTest extends SpringTestCase {
 		this.checkContents("stored backlog item", storedBI, 
 				TEST_NAME1, TEST_DESC1, creator, TEST_WATCH1, assignee, 
 				TEST_EST1, TEST_PRI1, TEST_STAT1, backlog);
-		assertFalse("Placeholder task was not created", 
-				storedBI.getTasks().isEmpty());
+		assertNotNull("Placeholder task was not created", 
+				storedBI.getPlaceHolder());
+	}
+	
+	/**
+	 * Test storing backlog item when original estimate was null and
+	 * new estimate has value. Placeholder task must get the new value.
+	 */
+	public void testStoreWithOrigNullEstimate() {
+		BacklogItem storedBI;
+		BacklogItem updatedBI = new BacklogItem();
+		Backlog backlog = this.getTestBacklog(1);
+		this.create(backlog.getId());
+		User assignee = this.getTestUser(1);
+		User creator = this.getTestUser(2);
+		
+		
+		this.setContents(TEST_NAME1, TEST_DESC1, creator, TEST_WATCH1, assignee, 
+				null, TEST_PRI1, TEST_STAT1, backlog);
+		String result = backlogItemAction.store();
+		storedBI = this.getBacklogItem(TEST_NAME1, TEST_DESC1);
+		assertNull("Placeholder task doesn't have null estimate", 
+				storedBI.getPlaceHolder().getEffortEstimate());
+		
+		updatedBI.setName(TEST_NAME1);
+		updatedBI.setDescription(TEST_DESC1);
+		
+		backlogItemAction.setBacklogItemId(storedBI.getId());
+		updatedBI.setAllocatedEffort(TEST_EST1);
+		
+		backlogItemAction.setBacklogItem(updatedBI);
+		assertTrue("Storing backlog item failed", 
+				Action.ERROR != backlogItemAction.store());
+		
+		storedBI = this.getBacklogItem(TEST_NAME1, TEST_DESC1);
+		
+		assertEquals("Backlog item effort estimate wasn't updated",
+				TEST_EST1, storedBI.getAllocatedEffort());
+		
+		assertEquals("Placeholder task's estimate wasn't updated", 
+				TEST_EST1, storedBI.getPlaceHolder().getEffortEstimate());
 	}
 	
 	public void testStore_withDifferentData() {

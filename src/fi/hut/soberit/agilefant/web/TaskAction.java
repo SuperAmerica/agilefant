@@ -33,7 +33,9 @@ public class TaskAction extends ActionSupport implements CRUDAction {
 	private BacklogItemDAO backlogItemDAO;
 	private UserDAO userDAO;
 	private boolean watch = false;
-		
+	
+	private Log logger = LogFactory.getLog(getClass());
+	
 	public void setTaskEventDAO(TaskEventDAO taskEventDAO) {
 		this.taskEventDAO = taskEventDAO;
 	}
@@ -69,15 +71,31 @@ public class TaskAction extends ActionSupport implements CRUDAction {
 	 * 
 	 * @return Action.SUCCESS if task is saved ok or Action.ERROR if there's something wrong. (more information with getActionErrors())
 	 */
-	public String store(){
+	public String store() {
 		Task storable = new Task();
+		
+		if(task.getName().equals("")) {
+			super.addActionError(super.getText("task.missingName"));
+			return Action.ERROR;			
+		}
+		
 		if (taskId > 0){
 			storable = taskDAO.get(taskId);
 			if (storable == null){
 				super.addActionError(super.getText("task.notFound"));
 				return Action.ERROR;
+			}			
+			/* Update placeholder effort estimate if task effort estimate
+			 * is changed from null first time. */ 			
+			if (storable.getEffortEstimate() == null &&
+					task.getEffortEstimate() != null &&
+					storable.getBacklogItem().getPlaceHolder() != storable) {
+				updatePlaceholder();
 			}
-		}			
+		} else if (backlogItemDAO.get(backlogItemId).getPlaceHolder() != null) {
+			updatePlaceholder();
+		}
+		
 		this.fillStorable(storable);
 		
 		if (super.hasActionErrors()){
@@ -88,14 +106,79 @@ public class TaskAction extends ActionSupport implements CRUDAction {
 	}
 	
 	/**
-	 * Stores the task (a new task created with create() or an old one fetched with edit()
+	 * Stores a new task.
 	 * 
-	 * @return Action.SUCCESS if task is saved ok or Action.ERROR if there's something wrong. (more information with getActionErrors())
+	 * @return The ID of the newly stored Task
 	 */
-	public Integer storeNew(){
+	public Integer storeNew() {
+		
+		if (task.getName().equals("")) {
+			super.addActionError(super.getText("task.missingName"));
+			return null;			
+		}
+		
+		if (taskId == 0 && 
+				backlogItemDAO.get(backlogItemId).getPlaceHolder() != null) {
+			updatePlaceholder();
+		}
 		Task storable = new Task();		
 		this.fillStorable(storable);		
+		
+		if (super.hasActionErrors() ) {
+			return null;
+		}
+		
 		return (Integer) taskDAO.create(storable);
+	}
+
+	private void updatePlaceholder() {
+		AFTime newEstimate;
+		Log logger = LogFactory.getLog(getClass());
+		
+		// Check if the new task has effort estimate
+		if (this.task.getEffortEstimate() == null) {
+			return;
+		}
+		
+		Task placeholder = backlogItemDAO.get(backlogItemId).getPlaceHolder();
+		if(placeholder == null) {
+			return;
+		}
+		
+		TaskAction phAction = new TaskAction();
+		Task phStorable = new Task();
+		
+		if (placeholder.getEffortEstimate() != null && 
+				placeholder.getEffortEstimate().getTime() == 0) {
+			return;
+		}
+		
+		if(placeholder.getEffortEstimate() != null) {
+			newEstimate = new AFTime(
+				placeholder.getEffortEstimate().getTime() - 
+				this.task.getEffortEstimate().getTime());
+		} 
+		/* Set placeholder original estimate when it previously was null */
+		else if (this.task == placeholder) {
+			newEstimate = this.task.getEffortEstimate();
+		} else {
+			return;
+		}
+		
+		if (newEstimate.getTime() < 0) {
+			newEstimate.setTime(0);
+		}
+		
+		phAction.setTaskDAO(taskDAO);
+		phAction.setTaskEventDAO(taskEventDAO);
+		phAction.setBacklogItemDAO(backlogItemDAO);
+		phStorable.setName(placeholder.getName());
+		phStorable.setEffortEstimate(newEstimate);
+		phAction.setBacklogItemId(backlogItemId);
+		phAction.setTaskId(
+				backlogItemDAO.get(backlogItemId).getPlaceHolder().getId());
+		phAction.setTask(phStorable);
+		phAction.store();
 	}
 	
 	/**
@@ -117,7 +200,6 @@ public class TaskAction extends ActionSupport implements CRUDAction {
 	}
 	
 	protected void fillStorable(Task storable){
-		Log logger = LogFactory.getLog(getClass());
 		if (storable.getBacklogItem() == null){
 			BacklogItem backlogItem = backlogItemDAO.get(backlogItemId);
 			if (backlogItem == null){
@@ -144,6 +226,11 @@ public class TaskAction extends ActionSupport implements CRUDAction {
 		AFTime oldEstimate = storable.getEffortEstimate();
 		AFTime newEstimate = task.getEffortEstimate();
 		
+		/* Task effort estimate cannot be set back to null */
+		if (oldEstimate != null && newEstimate == null) {
+			newEstimate = new AFTime(0);
+		}
+		
 		if (storable.getId() == 0 || 
 			oldEstimate == null && newEstimate != null ||			
 			(oldEstimate != null && !oldEstimate.equals(newEstimate))){
@@ -153,10 +240,9 @@ public class TaskAction extends ActionSupport implements CRUDAction {
 			event.setNewEstimate(newEstimate);
 			storable.setEffortEstimate(newEstimate);
 			taskDAO.store(storable);
-			logger.info("Storeble task id: " + storable.getId());
 			event.setTask(storable);
 			storable.getEvents().add(event);
-			taskEventDAO.store(event);
+			int eventId = (Integer)taskEventDAO.create(event);
 		}
 		User user = SecurityUtil.getLoggedUser();
 		if (watch) {

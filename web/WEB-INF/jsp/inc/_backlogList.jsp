@@ -25,26 +25,39 @@
 		</ww:a></div>
 		</display:column>
 
-		<display:column title="Tasks" sortable="false" class="taskColumn">
-			<c:if test="${!empty item.tasks}">
-				<c:set var="divId" value="${divId + 1}" scope="page" />
-
-
-				<a href="javascript:toggleDiv(${divId});" title="Click to expand">
-				${fn:length(item.tasks)} tasks, <aef:percentDone
-					backlogItemId="${item.id}" /> % complete<br />
-				<aef:taskStatusList backlogItemId="${item.id}" id="tsl" /> <ww:url
-					id="imgUrl" action="drawExtendedBarChart" includeParams="none">
-					<ww:param name="notStarted" value="${tsl['notStarted']}" />
-					<ww:param name="started" value="${tsl['started']}" />
-					<ww:param name="blocked" value="${tsl['blocked']}" />
-					<ww:param name="implemented" value="${tsl['implemented']}" />
-					<ww:param name="done" value="${tsl['done']}" />
-				</ww:url> <img src="${imgUrl}" /> </a>
-				<aef:tasklist tasks="${item.tasks}" contextViewName="${currentAction}"
-					contextObjectId="${backlog.id}" divId="${divId}" />
-
-			</c:if>
+		<display:column title="Status" sortable="false" class="taskColumn">
+			<c:set var="divId" value="${divId + 1}" scope="page" />
+			<c:choose>
+				<c:when test="${!(empty item.tasks || fn:length(item.tasks) == 1)}">
+					<a href="javascript:toggleDiv(${divId});" title="Click to expand">
+					${fn:length(item.tasks) - 1} tasks, <aef:percentDone
+						backlogItemId="${item.id}" /> % complete<br />
+						<aef:taskStatusList backlogItemId="${item.id}" id="tsl" /> 
+						<ww:url
+							id="imgUrl" action="drawExtendedBarChart" includeParams="none">
+								<ww:param name="notStarted" value="${tsl['notStarted']}" />
+								<ww:param name="started" value="${tsl['started']}" />
+								<ww:param name="blocked" value="${tsl['blocked']}" />
+								<ww:param name="implemented" value="${tsl['implemented']}" />
+								<ww:param name="done" value="${tsl['done']}" />
+						</ww:url> 
+						<img src="${imgUrl}" /> 
+					</a>
+					<aef:tasklist tasks="${item.tasks}"
+						contextViewName="${currentAction}" contextObjectId="${backlog.id}"
+						divId="${divId}"/>
+				</c:when>
+				<c:otherwise>
+					<c:if test="${!empty item.placeHolder}">
+						 <a href="javascript:toggleDiv(${divId});" title="Click to expand">
+							<ww:text name="task.status.${item.placeHolder.status}"/>	
+						</a>
+						<aef:tasklist tasks="${item.tasks}"
+							contextViewName="${currentAction}" contextObjectId="${backlog.id}"
+							divId="${divId}" placeholder="true" />
+					</c:if>
+				</c:otherwise>
+			</c:choose>
 		</display:column>
 
 		<display:column sortable="true" sortProperty="assignee.fullName"
@@ -61,7 +74,7 @@
 			<c:when test="${currentContext == 'iteration'}">
 				<display:column sortable="true" sortProperty="iterationGoal.name"
 				title="Iteration Goal" class="iterationGoalColumn">
-				${aef:html(item.iterationGoal.name)}
+				<div>${aef:html(item.iterationGoal.name)}</div>
 				</display:column>
 			</c:when>
 			<c:otherwise>
@@ -69,32 +82,53 @@
 			</c:otherwise>
 		</c:choose>
 
-		<display:column sortable="true" sortProperty="performedEffort"
-			title="Effort done">
+		<display:column sortable="true" sortProperty="bliEffEst" defaultorder="descending"
+			title="Effort Left<br/><span style='white-space: nowrap'>T / BLI</span>">
+			<span style="white-space: nowrap">
+				<c:choose>
+					<c:when test="${item.taskSumEffEst == null}">-</c:when>
+					<c:otherwise>${item.taskSumEffEst}</c:otherwise>
+				</c:choose>
+				 / 
+				<c:choose>
+					<c:when test="${item.bliEffEst == null}">-</c:when>
+					<c:otherwise>${item.bliEffEst}</c:otherwise> 
+				</c:choose>
+			</span>
+		</display:column>
+
+		<display:column sortable="true" sortProperty="bliOrigEst" defaultorder="descending"
+				title="Original Estimate<br/><span style='white-space: nowrap'>T / BLI
+				</span>">
+			<span style="white-space: nowrap">
+				<c:choose>
+					<c:when test="${item.taskSumOrigEst == null}">-</c:when>
+					<c:otherwise>${item.taskSumOrigEst}</c:otherwise>
+				</c:choose>
+				 / 
+				<c:choose>
+					<c:when test="${item.bliOrigEst == null}">-</c:when>
+					<c:otherwise>${item.bliOrigEst}</c:otherwise> 
+				</c:choose>
+			</span>
+		</display:column>
+
+		<display:column sortable="true" sortProperty="performedEffort" defaultorder="descending"
+			title="Work reported">
 			${item.performedEffort}
 		</display:column>
 
-		<display:column sortable="true" sortProperty="performedEffort"
-			title="Original Estimate">
-			${item.performedEffort} / 
-		</display:column>
-		
-		<display:column sortable="true" sortProperty="performedEffort"
-			title="Effort Left">
-			${item.performedEffort} / 
-		</display:column>
-
-		<!-- <display:column sortable="true" title="Estimate">
+<%--		<display:column sortable="true" title="DebugEst">
 			<c:choose>
 				<c:when test="${!empty item.effortEstimate}">
-				${item.effortEstimate}
-			</c:when>
+					${item.effortEstimate}
+				</c:when>
 				<c:otherwise>
-				${item.allocatedEffort}
-			</c:otherwise>
+					${item.allocatedEffort}
+				</c:otherwise>
 			</c:choose>
-		</display:column> -->
-
+		</display:column>
+--%>
 		<display:column sortable="false" title="Actions">
 			<ww:url id="deleteLink" action="deleteBacklogItem"
 				includeParams="none">
@@ -114,8 +148,12 @@
 				<td>&nbsp;</td>
 				<td>&nbsp;</td>
 				<td>&nbsp;</td>
-				<td><c:out value="${backlog.performedEffort}" /></td>
+				<%-- Effort left --%>
+				<td>&nbsp;</td>
+				<%-- Original estimate --%>
 				<td><c:out value="${backlog.totalEstimate}" /></td>
+				<%-- Work reported --%>
+				<td><c:out value="${backlog.performedEffort}" /></td>
 			<tr>
 		</display:footer>
 	</display:table>

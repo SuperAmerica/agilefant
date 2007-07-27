@@ -1,14 +1,18 @@
 package fi.hut.soberit.agilefant.web;
 
 import com.opensymphony.xwork.Action;
-import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.util.SpringTestCase;
 import fi.hut.soberit.agilefant.util.TestUtility;
 import java.util.Collection;
+import java.util.Date;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
+import fi.hut.soberit.agilefant.model.EstimateHistoryEvent;
 import fi.hut.soberit.agilefant.model.Priority;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Task;
@@ -22,9 +26,11 @@ import fi.hut.soberit.agilefant.web.TaskAction;
 import fi.hut.soberit.agilefant.web.UserAction;
 import fi.hut.soberit.agilefant.web.UserActionTest;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
+import fi.hut.soberit.agilefant.db.EstimateHistoryDAO;
 import fi.hut.soberit.agilefant.db.IterationDAO;
 import fi.hut.soberit.agilefant.db.ProductDAO;
 import fi.hut.soberit.agilefant.db.TaskDAO;
+import fi.hut.soberit.agilefant.db.TaskEventDAO;
 import fi.hut.soberit.agilefant.db.UserDAO;
 
 
@@ -40,6 +46,7 @@ public class IterationActionTest extends SpringTestCase {
 	private static final TaskStatus TEST_STAT1 = TaskStatus.NOT_STARTED;
 	private static final TaskStatus TEST_STAT2 = TaskStatus.STARTED;
 	private static final int INVALID_TASKID = -1;
+
 	
 	private User user1;
 	private User user2;
@@ -50,6 +57,8 @@ public class IterationActionTest extends SpringTestCase {
 	private ProductAction productAction;
 	private BacklogItemAction backlogItemAction;
 	private TaskDAO taskDAO;
+	private EstimateHistoryDAO estimateHistoryDAO;
+	private TaskEventDAO taskEventDAO;
 	private ProductDAO productDAO;
 	private BacklogItemDAO backlogItemDAO;
 	private UserDAO userDAO;
@@ -95,8 +104,10 @@ public class IterationActionTest extends SpringTestCase {
 	/*
 	 * Checks, if there are any given error countered. 
 	 */
+	@SuppressWarnings(value = "unchecked")
 	private boolean errorFound(String e) {
-		Collection<String> errors = taskAction.getActionErrors();
+		Collection<String> errors = 
+			(Collection<String>) taskAction.getActionErrors();
 		boolean found = false;
 		System.out.println("checking for errors.");
 		for(String s: errors) {
@@ -470,19 +481,244 @@ public class IterationActionTest extends SpringTestCase {
 		}
 	}
 	
-	public void testMetrics(){
-		Iteration[] iterationArray;
-		TestUtility.createTestIteration(1, iterationDAO);
-		iterationArray = (Iteration[]) iterationDAO.getAll().toArray(new Iteration[0]);
-		TestUtility.createTestItem(iterationArray[0], backlogItemAction);
+	/**
+	 * Test retriving backlog item original estimate from placeholder.
+	 */
+	public void testBLIOrigEstMetrics() {
+		final long MINUTE = 60000;
+		final long HOUR = MINUTE * 60;
+		long estimates[] = {MINUTE, 0, 0, 0};
+		Date estimateDates[] = new Date [4]; // The creation time of the BLI
+		Log logger = LogFactory.getLog(getClass());
+		BacklogItem[] backlogItemArray;
+		String result;
+		StringBuffer taskEvents = new StringBuffer("");
+		AFTime bliOriginalEstimate;
+		AFTime taskSumOrigEst;
+		int iterationId;
+				
+		/* Test setup */
+		TestUtility.initUser(userAction, userDAO);
+		iterationId = TestUtility.createTestIteration(1, iterationDAO);
+		assertNotNull("Iteration creation failed", 
+				iterationDAO.get(iterationId));
+		result = TestUtility.createTestItem(iterationDAO.get(iterationId), 
+				backlogItemAction, estimates[0]);
+		assertFalse("Item creation failed: " + 
+				backlogItemAction.getActionErrors(), 
+				result.equals(Action.ERROR ));
+		backlogItemArray = (BacklogItem[]) 
+				backlogItemDAO.getAll().toArray(new BacklogItem[0]);
+		estimateDates[0] = new Date(
+				backlogItemArray[0].getPlaceHolder().getCreated().getTime());
 		
-	}
+		/* Create 3 additional estimates each placed minute apart and
+		 * having increasing effort estimate. */
+		for(int i = 1; i < 4; i++) {
+			estimateDates[i] = new Date(estimateDates[0].getTime() + i * HOUR);
+			estimates[i] = (i + 1) * MINUTE;
+			TestUtility.addEstimate(
+					backlogItemArray[0].getPlaceHolder().getId(),
+					taskDAO, 
+					estimates[i], 
+					taskEventDAO, 
+					estimateDates[i]);
+		}
 
+		/* BLIOrigEstimate test  code */
+		
+		taskEvents.append("Estimate history: ");
+		for(EstimateHistoryEvent i: 
+			estimateHistoryDAO.getEstimateHistory(backlogItemArray[0])) {
+			taskEvents.append(i.getCreated());
+			taskEvents.append(", ");			
+			taskEvents.append(i.getNewEstimate());
+			taskEvents.append(" | ");
+		}
+		logger.info(taskEvents);
+		
+		/* Test with start date that is before the first estimate.
+		 * Should return the absolute first estimate. */
+		bliOriginalEstimate = taskEventDAO.getBLIOriginalEstimate(
+				backlogItemArray[0], 
+				new Date(estimateDates[0].getTime() - MINUTE));
+		logger.info("Backlog item " + backlogItemArray[0].getId() + 
+				" original estimate " + bliOriginalEstimate);
+		assertEquals("Backlog item estimate incorrect", 
+				bliOriginalEstimate.getTime(), estimates[0]);
+		
+		/* Test each in-between estimate and after last estimate.
+		 * Should return the closest estimate before start date. */
+		for(int i = 0; i < estimateDates.length; i++) {
+			bliOriginalEstimate = taskEventDAO.getBLIOriginalEstimate(
+					backlogItemArray[0], 
+					new Date(estimateDates[i].getTime() + MINUTE));
+			logger.info("Backlog item " + backlogItemArray[0].getId() + 
+					" original estimate " + bliOriginalEstimate);
+			assertEquals("Backlog item estimate incorrect", 
+					bliOriginalEstimate.getTime(), estimates[i]);
+		}
+		
+		assertTrue("Placeholder task not excluded from task retrival", 
+				backlogItemDAO.getRealTasks(backlogItemArray[0]).isEmpty());
+	}
+	
+	public void testTaskSumOrigEst() {
+		Log logger = LogFactory.getLog(getClass());
+		final long MINUTE = 60000;
+		final long HOUR = MINUTE * 60;
+		long estimates[] = {HOUR * 10, 0, 0, 0};
+		BacklogItem[] backlogItemArray;
+		Date[] estimateDates = new Date[4];
+		int iterationId;
+		AFTime taskSumOrigEst;
+		String result;
+		
+		/* Test setup */
+		TestUtility.initUser(userAction, userDAO);
+		iterationId = TestUtility.createTestIteration(1, iterationDAO);
+		assertNotNull("Iteration creation failed", 
+				iterationDAO.get(iterationId));
+		result = TestUtility.createTestItem(iterationDAO.get(iterationId), 
+				backlogItemAction, estimates[0]);
+		assertFalse("Item creation failed: " + 
+				backlogItemAction.getActionErrors(), 
+				result.equals(Action.ERROR ));
+		backlogItemArray = (BacklogItem[]) 
+				backlogItemDAO.getAll().toArray(new BacklogItem[0]);
+		
+		/* Create 4 tasks which each have 4 effort estimates */
+		for(int i = 1; i < 5; i++) {
+
+			int taskId = TestUtility.createTestTask(backlogItemArray[0], 
+					taskAction, HOUR * i);
+			
+			estimateDates[0] = taskDAO.get(taskId).getCreated();
+			
+			/* Create 3 additional estimates each placed minute apart and
+			 * having increasing effort estimate. */
+			for(int j = 0; j < 4; j++) {
+				estimateDates[j] = 
+					new Date(estimateDates[0].getTime() + (j + 1) * HOUR);
+				estimates[j] = HOUR * i + (j + 1) * MINUTE;
+				TestUtility.addEstimate(
+						taskId,
+						taskDAO, 
+						estimates[j], 
+						taskEventDAO, 
+						estimateDates[j]);
+			}
+		}
+		
+		/* Test date before all effort estimate events */
+		taskSumOrigEst = taskEventDAO.getTaskSumOrigEst(backlogItemArray[0], 
+				new Date(estimateDates[0].getTime() - HOUR * 24));
+		logger.info("Start date " + 
+				new Date(estimateDates[0].getTime() - HOUR * 24) + 
+				" Task sum original estimate: " + taskSumOrigEst);
+		assertEquals("Task sum original estimate incorrect",
+				taskSumOrigEst, new AFTime(HOUR * 10));
+		
+		/* Test date after second effort estimate */
+		taskSumOrigEst = taskEventDAO.getTaskSumOrigEst(backlogItemArray[0], 
+				new Date(estimateDates[1].getTime() + MINUTE));
+		logger.info("Start date " + 
+				new Date(estimateDates[1].getTime() + MINUTE) + 
+				" Task sum original estimate: " + taskSumOrigEst);
+		assertEquals("Task sum original estimate incorrect",
+				taskSumOrigEst, new AFTime(HOUR * 10 + MINUTE * 8));
+		
+		/* Test date after all effort estimate events */
+		taskSumOrigEst = taskEventDAO.getTaskSumOrigEst(backlogItemArray[0], 
+				new Date(estimateDates[0].getTime() + HOUR * 24));
+		logger.info("Start date " + 
+				new Date(estimateDates[0].getTime() + HOUR * 24) + 
+				" Task sum original estimate: " + taskSumOrigEst);
+		assertEquals("Task sum original estimate incorrect",
+				taskSumOrigEst, new AFTime(HOUR * 10 + MINUTE * 16));
+	}
+	
+	public void testBLIEffLeft() {
+		final long MINUTE = 60000;
+		final long HOUR = MINUTE * 60;
+		int iterationId;
+		String result;
+		long origEffort = HOUR + 10 * MINUTE;
+		long taskEffort = 20 * MINUTE;
+		long workDone = 10 * MINUTE;
+		int testTaskId;
+		BacklogItem[] backlogItemArray;
+		
+		/* Test setup */
+		TestUtility.initUser(userAction, userDAO);
+		iterationId = TestUtility.createTestIteration(1, iterationDAO);
+		assertNotNull("Iteration creation failed", 
+				iterationDAO.get(iterationId));
+		result = TestUtility.createTestItem(iterationDAO.get(iterationId), 
+				backlogItemAction, origEffort);
+		assertFalse("Item creation failed: " + 
+				backlogItemAction.getActionErrors(), 
+				result.equals(Action.ERROR ));
+		backlogItemArray = (BacklogItem[]) 
+				backlogItemDAO.getAll().toArray(new BacklogItem[0]);
+		
+		/* Test original estimate */
+		assertEquals("Calculating BLI effort left failed",
+				backlogItemDAO.getBLIEffortLeft(backlogItemArray[0]),
+				new AFTime(origEffort));
+		assertNull("Calculation task effort left failed",
+				backlogItemDAO.getTaskSumEffortLeft(backlogItemArray[0]));
+		
+		/* Test creating a new task */
+		testTaskId = TestUtility.createTestTask(
+				backlogItemArray[0], taskAction, taskEffort);
+		assertEquals("Calculation task effort left failed",
+				new AFTime(taskEffort),				
+				backlogItemDAO.getTaskSumEffortLeft(backlogItemArray[0]));
+		assertEquals("Calculating BLI effort left failed",
+				new AFTime(origEffort),
+				backlogItemDAO.getBLIEffortLeft(backlogItemArray[0]));
+		
+		/* Test changing the effort estimate of the task */
+		taskDAO.get(testTaskId).setEffortEstimate(
+				new AFTime(taskEffort - workDone));
+		assertEquals("Calculation task effort left failed",
+				new AFTime(taskEffort - workDone),				
+				backlogItemDAO.getTaskSumEffortLeft(backlogItemArray[0]));
+		assertEquals("Calculating BLI effort left failed",
+				new AFTime(origEffort - workDone),
+				backlogItemDAO.getBLIEffortLeft(backlogItemArray[0]));
+		
+		/* Test creating a new task which decreases placeholder effort left
+		 * to zero */
+		testTaskId = TestUtility.createTestTask(backlogItemArray[0], 
+				taskAction, 100 * HOUR);
+		assertEquals("Placeholder effor estimate decreased bellow zero", 
+				new AFTime(0), 
+				backlogItemArray[0].getPlaceHolder().getEffortEstimate());
+	}
+	
 	public IterationDAO getIterationDAO() {
 		return iterationDAO;
 	}
 
 	public void setIterationDAO(IterationDAO iterationDAO) {
 		this.iterationDAO = iterationDAO;
+	}
+
+	public TaskEventDAO getTaskEventDAO() {
+		return taskEventDAO;
+	}
+
+	public void setTaskEventDAO(TaskEventDAO taskEventDAO) {
+		this.taskEventDAO = taskEventDAO;
+	}
+
+	public EstimateHistoryDAO getEstimateHistoryDAO() {
+		return estimateHistoryDAO;
+	}
+
+	public void setEstimateHistoryDAO(EstimateHistoryDAO estimateHistoryDAO) {
+		this.estimateHistoryDAO = estimateHistoryDAO;
 	}
 }

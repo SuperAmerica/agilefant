@@ -69,6 +69,8 @@ public class BacklogTest extends SpringTestCase {
 		this.backlogAction = backlogAction;
 	}
 	
+	/* Teardown */
+	
 	/**
 	 * Clears the database from test data.
 	 * We must clear database manually because of we need transactions to
@@ -107,7 +109,7 @@ public class BacklogTest extends SpringTestCase {
 				testBacklogs.length != 0);
 		
 		for(int i = 0; i < 2; i++) {		
-			TestUtility.createTestItem(i, testBacklogs[0], backlogItemDAO);
+			TestUtility.createBareTestItem(i, testBacklogs[0], backlogItemDAO);
 		}
 		
 		super.endTransaction();

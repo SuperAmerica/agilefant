@@ -222,12 +222,19 @@ public class ChartAction extends ActionSupport {
 		plot.setRangeGridlinesVisible(false);
 		plot.setBackgroundPaint(Color.white);
 		
+		/* Make background transparent? */
+		//plot.setBackgroundAlpha(100);
+		
 		chart2.setBorderVisible(false); //Disable chart border
 		// Sets the background color for the chart
 		chart2.setBackgroundPaint(Color.white); 
+		
+		/* Make background transparent? */
+		//chart2.setBackgroundImageAlpha(100);
+		
 		// No padding around chart
 		chart2.setPadding(new RectangleInsets(0, 0, 0, 0)); 
-		
+				
 		axis.setAxisLineVisible(false);
 		axis.setTickLabelsVisible(false);
 		axis.setTickMarksVisible(false);

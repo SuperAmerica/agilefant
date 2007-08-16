@@ -1,5 +1,7 @@
 package fi.hut.soberit.agilefant.web;
 
+import java.util.Calendar;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -7,15 +9,19 @@ import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
 
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
+import fi.hut.soberit.agilefant.db.EffortHistoryDAO;
 import fi.hut.soberit.agilefant.db.TaskDAO;
 import fi.hut.soberit.agilefant.db.TaskEventDAO;
 import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.model.AFTime;
+import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
+import fi.hut.soberit.agilefant.model.EffortHistory;
 import fi.hut.soberit.agilefant.model.EstimateHistoryEvent;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.security.SecurityUtil;
+import fi.hut.soberit.agilefant.util.EffortHistoryUpdater;
 
 /**
  * Task Action
@@ -30,6 +36,7 @@ public class TaskAction extends ActionSupport implements CRUDAction {
 	private Task task;
 	private TaskDAO taskDAO;
 	private TaskEventDAO taskEventDAO;
+	private EffortHistoryDAO effortHistoryDAO;
 	private BacklogItemDAO backlogItemDAO;
 	private UserDAO userDAO;
 	private boolean watch = false;
@@ -73,6 +80,7 @@ public class TaskAction extends ActionSupport implements CRUDAction {
 	 */
 	public String store() {
 		Task storable = new Task();
+		Backlog backlog;
 		
 		if(task.getName().equals("")) {
 			super.addActionError(super.getText("task.missingName"));
@@ -102,6 +110,13 @@ public class TaskAction extends ActionSupport implements CRUDAction {
 			return Action.ERROR;
 		}		
 		taskDAO.store(storable);
+		
+		/* Update effort history */
+		backlog = backlogItemDAO.get(backlogItemId).getBacklog();
+
+		EffortHistoryUpdater.updateEffortHistory(effortHistoryDAO,
+				taskEventDAO, backlogItemDAO, backlog);
+		
 		return Action.SUCCESS;
 	}
 	
@@ -146,6 +161,7 @@ public class TaskAction extends ActionSupport implements CRUDAction {
 		}
 		
 		TaskAction phAction = new TaskAction();
+
 		Task phStorable = new Task();
 		
 		if (placeholder.getEffortEstimate() != null && 
@@ -172,6 +188,7 @@ public class TaskAction extends ActionSupport implements CRUDAction {
 		phAction.setTaskDAO(taskDAO);
 		phAction.setTaskEventDAO(taskEventDAO);
 		phAction.setBacklogItemDAO(backlogItemDAO);
+		phAction.setEffortHistoryDAO(effortHistoryDAO);
 		phStorable.setName(placeholder.getName());
 		phStorable.setEffortEstimate(newEstimate);
 		phAction.setBacklogItemId(backlogItemId);
@@ -187,15 +204,22 @@ public class TaskAction extends ActionSupport implements CRUDAction {
 	 */
 	public String delete(){		
 		task = taskDAO.get(taskId);
+		Backlog backlog;
 		if (task == null){
 			super.addActionError(super.getText("task.notFound"));
 			return Action.ERROR;
 		}
+		backlog = task.getBacklogItem().getBacklog();
 		BacklogItem backlogItem = task.getBacklogItem();
 		backlogItemId = backlogItem.getId();
 		backlogItem.getTasks().remove(task);
 		task.setBacklogItem(null);		
 		taskDAO.remove(task);
+		
+		/* Update effort history */
+		EffortHistoryUpdater.updateEffortHistory(effortHistoryDAO, 
+				taskEventDAO, backlogItemDAO, backlog);
+		
 		return Action.SUCCESS;
 	}
 	
@@ -315,5 +339,19 @@ public class TaskAction extends ActionSupport implements CRUDAction {
 	
 	public void setWatch(boolean watch){
 		this.watch = watch;
+	}
+
+	/**
+	 * @return the effortHistoryDAO
+	 */
+	public EffortHistoryDAO getEffortHistoryDAO() {
+		return effortHistoryDAO;
+	}
+
+	/**
+	 * @param effortHistoryDAO the effortHistoryDAO to set
+	 */
+	public void setEffortHistoryDAO(EffortHistoryDAO effortHistoryDAO) {
+		this.effortHistoryDAO = effortHistoryDAO;
 	}
 }

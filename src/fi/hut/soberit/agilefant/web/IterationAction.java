@@ -5,11 +5,13 @@ import com.opensymphony.xwork.ActionSupport;
 import java.util.Collection;
 import java.util.Date;
 
+import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.db.DeliverableDAO;
 import fi.hut.soberit.agilefant.db.IterationDAO;
 import fi.hut.soberit.agilefant.db.IterationGoalDAO;
 import fi.hut.soberit.agilefant.db.TaskEventDAO;
+import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.Deliverable;
 import fi.hut.soberit.agilefant.model.Iteration;
@@ -26,6 +28,7 @@ public class IterationAction extends ActionSupport implements CRUDAction {
 	private DeliverableDAO deliverableDAO;
 	private TaskEventDAO taskEventDAO;
 	private BacklogItemDAO backlogItemDAO;
+	private BacklogDAO backlogDAO;
 	private Deliverable deliverable;
 	private int deliverableId;
 	private IterationGoalDAO iterationGoalDAO;
@@ -46,7 +49,6 @@ public class IterationAction extends ActionSupport implements CRUDAction {
 	public String edit(){
 		iteration = iterationDAO.get(iterationId);
 		Date startDate = iteration.getStartDate();
-
 		
 		if (iteration == null){
 //			super.addActionError(super.getText("iteration.notFound"));
@@ -65,8 +67,14 @@ public class IterationAction extends ActionSupport implements CRUDAction {
 		for(BacklogItem i: backlog.getBacklogItems()) {
 			i.setBliOrigEst(taskEventDAO.getBLIOriginalEstimate(i, startDate));
 			i.setTaskSumOrigEst(taskEventDAO.getTaskSumOrigEst(i, startDate));
-			i.setBliEffEst(backlogItemDAO.getBLIEffortLeft(i));
 			i.setTaskSumEffEst(backlogItemDAO.getTaskSumEffortLeft(i));
+			if (i.getTaskSumEffEst() != null) {
+				i.setBliEffEst(
+						new AFTime(backlogItemDAO.getBLIEffortLeft(i).getTime() -
+						i.getTaskSumEffEst().getTime()));
+			} else {
+				i.setBliEffEst(backlogItemDAO.getBLIEffortLeft(i));
+			}
 		}
 		
 		if (deliverable == null){
@@ -228,5 +236,19 @@ public class IterationAction extends ActionSupport implements CRUDAction {
 	 */
 	public void setBacklogItemDAO(BacklogItemDAO backlogItemDAO) {
 		this.backlogItemDAO = backlogItemDAO;
+	}
+
+	/**
+	 * @return the backlogDAO
+	 */
+	public BacklogDAO getBacklogDAO() {
+		return backlogDAO;
+	}
+
+	/**
+	 * @param backlogDAO the backlogDAO to set
+	 */
+	public void setBacklogDAO(BacklogDAO backlogDAO) {
+		this.backlogDAO = backlogDAO;
 	}
 }

@@ -8,16 +8,21 @@ import org.apache.commons.logging.LogFactory;
 
 import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
+import fi.hut.soberit.agilefant.db.EffortHistoryDAO;
+import fi.hut.soberit.agilefant.db.TaskEventDAO;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.Deliverable;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Product;
+import fi.hut.soberit.agilefant.util.EffortHistoryUpdater;
 
 public class BacklogAction extends ActionSupport {
  	private static final long serialVersionUID = 8061288993804046816L;
 	private int backlogId;
 	private BacklogDAO backlogDAO;
+	private EffortHistoryDAO effortHistoryDAO;
+	private TaskEventDAO taskEventDAO;
 	private int backlogItemId;
 	private int[] backlogItemIds;
 	private int targetBacklogId;
@@ -81,7 +86,7 @@ public class BacklogAction extends ActionSupport {
 			return Action.ERROR;
 		}
 		
-		for (int i = 0; i < this.backlogItemIds.length; i++) {			
+		for (int i = 0; i < this.backlogItemIds.length; i++) {	
 			BacklogItem backlogItem = 
 				this.backlogItemDAO.get(this.backlogItemIds[i]);
 			if (!backlogItem.getBacklog()
@@ -96,7 +101,12 @@ public class BacklogAction extends ActionSupport {
 			
 			backlogItem.setBacklog(targetBacklog);
 			backlogItemDAO.store(backlogItem);
+			
 		}
+		EffortHistoryUpdater.updateEffortHistory(effortHistoryDAO,
+				taskEventDAO, backlogItemDAO, currentBacklog);
+		EffortHistoryUpdater.updateEffortHistory(effortHistoryDAO,
+				taskEventDAO, backlogItemDAO, targetBacklog);
 		
 		return this.solveResult(currentBacklog);
 	}
@@ -142,5 +152,33 @@ public class BacklogAction extends ActionSupport {
 
 	public void setBacklogItemDAO(BacklogItemDAO backlogItemDAO) {
 		this.backlogItemDAO = backlogItemDAO;
+	}
+
+	/**
+	 * @return the effortHistoryDAO
+	 */
+	public EffortHistoryDAO getEffortHistoryDAO() {
+		return effortHistoryDAO;
+	}
+
+	/**
+	 * @param effortHistoryDAO the effortHistoryDAO to set
+	 */
+	public void setEffortHistoryDAO(EffortHistoryDAO effortHistoryDAO) {
+		this.effortHistoryDAO = effortHistoryDAO;
+	}
+
+	/**
+	 * @return the taskEventDAO
+	 */
+	public TaskEventDAO getTaskEventDAO() {
+		return taskEventDAO;
+	}
+
+	/**
+	 * @param taskEventDAO the taskEventDAO to set
+	 */
+	public void setTaskEventDAO(TaskEventDAO taskEventDAO) {
+		this.taskEventDAO = taskEventDAO;
 	}
 }

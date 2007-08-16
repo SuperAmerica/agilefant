@@ -1,6 +1,7 @@
 package fi.hut.soberit.agilefant.web;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 
 import org.apache.commons.logging.Log;
@@ -11,6 +12,7 @@ import com.opensymphony.xwork.ActionSupport;
 
 import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
+import fi.hut.soberit.agilefant.db.EffortHistoryDAO;
 import fi.hut.soberit.agilefant.db.IterationGoalDAO;
 import fi.hut.soberit.agilefant.db.TaskDAO;
 import fi.hut.soberit.agilefant.db.TaskEventDAO;
@@ -18,10 +20,12 @@ import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
+import fi.hut.soberit.agilefant.model.EffortHistory;
 import fi.hut.soberit.agilefant.model.IterationGoal;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.security.SecurityUtil;
+import fi.hut.soberit.agilefant.util.EffortHistoryUpdater;
 
 public class BacklogItemAction extends ActionSupport implements CRUDAction {
 	
@@ -41,6 +45,7 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
 	private TaskDAO taskDAO;
 	private TaskAction taskAction;
 	private TaskEventDAO taskEventDAO;
+	private EffortHistoryDAO effortHistoryDAO;
 	
 	private Log logger = LogFactory.getLog(getClass());
 
@@ -55,12 +60,19 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
 
 	public String delete() {
 		backlogItem = backlogItemDAO.get(backlogItemId);
+		Backlog backlog;
 		if(backlogItem == null){
 			super.addActionError(super.getText("backlogItem.notFound"));
 			return Action.ERROR;
 		}
+		backlog = backlogItem.getBacklog();
 		// backlogId = backlogItem.getId();//?? removed when testing with jUnit
 		backlogItemDAO.remove(backlogItemId);
+		
+		/* Update effort history */
+		EffortHistoryUpdater.updateEffortHistory(effortHistoryDAO, 
+				taskEventDAO, backlogItemDAO, backlog);
+		
 		return Action.SUCCESS;
 	}
 
@@ -72,6 +84,13 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
 		}
 		backlog = backlogItem.getBacklog();
 		backlogId = backlog.getId();
+		backlogItem.setEffortLeft(
+				backlogItem.getPlaceHolder().getEffortEstimate());
+		backlogItem.setBliOrigEst(
+				taskEventDAO.getBLIOriginalEstimate(
+						backlogItem, 
+						backlogItem.getBacklog().getStartDate()));
+		backlogItem.setRealTasks(backlogItemDAO.getRealTasks(backlogItem));
 		return Action.SUCCESS;
 	}
 
@@ -79,13 +98,19 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
 		Integer storableId;
 		Integer placeholderId;
 		BacklogItem storable = new BacklogItem();
+		Backlog newBacklog;
+		Backlog oldBacklog = null;
+		
 		if (backlogItemId > 0){
 			storable = backlogItemDAO.get(backlogItemId);
 			if (storable == null){
 				super.addActionError(super.getText("backlogItem.notFound"));
 				return Action.ERROR;
 			}
+			oldBacklog = storable.getBacklog();
 		}
+		newBacklog = backlogDAO.get(backlogId);
+		
 		this.fillStorable(storable);
 		
 		if (super.hasActionErrors()){
@@ -118,7 +143,8 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
 		}
 		/* Update placeholder effort estimate if backlog item original
 		 * estimate was left null */
-		else if(storable.getPlaceHolder().getEffortEstimate() == null && 
+		else if (storable.getPlaceHolder() != null &&
+				storable.getPlaceHolder().getEffortEstimate() == null && 
 				backlogItem.getAllocatedEffort() != null) {
 			long phEffort;
 			taskAction.setTaskId(storable.getPlaceHolder().getId());
@@ -149,7 +175,40 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
 			taskAction.getTask().setEffortEstimate(new AFTime(phEffort));
 			taskAction.store();
 		}
+		/* Update placeholder if backlog item is given new effort estimate
+		 * in edit backlog item screen. */
+		else if (storable.getPlaceHolder() != null &&
+				storable.getPlaceHolder().getEffortEstimate() != null &&
+				backlogItem.getEffortLeft() != null) {
+			long phEffort;
+			taskAction.setTaskId(storable.getPlaceHolder().getId());
+			taskAction.setTask(new Task());
+			taskAction.setBacklogItemId(storable.getId());
+			taskAction.setBacklogItemDAO(backlogItemDAO);
+			taskAction.setTaskDAO(taskDAO);
+			taskAction.setTaskEventDAO(taskEventDAO);
+			taskAction.setUserDAO(userDAO);
+			taskAction.getTask().setCreator(
+					storable.getPlaceHolder().getCreator());
+			taskAction.getTask().setName(
+					storable.getPlaceHolder().getName());
+					
+			phEffort = backlogItem.getEffortLeft().getTime();
+			taskAction.getTask().setEffortEstimate(new AFTime(phEffort));
+			taskAction.store();
+		}
+			
+		
+		/* Update effort history */
+		if (backlogItemId > 0) {
+			EffortHistoryUpdater.updateEffortHistory(effortHistoryDAO,
+					taskEventDAO, backlogItemDAO, oldBacklog);
+		}
+		EffortHistoryUpdater.updateEffortHistory(effortHistoryDAO,
+				taskEventDAO, backlogItemDAO, newBacklog);
+		
 		backlogItemDAO.store(storable);
+		
 		return Action.SUCCESS;
 	}
 	
@@ -346,5 +405,19 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
 
 	public void setBacklogItemName(String backlogItemName) {
 		backlogItem.setName(backlogItemName);
+	}
+
+	/**
+	 * @return the effortHistoryDAO
+	 */
+	public EffortHistoryDAO getEffortHistoryDAO() {
+		return effortHistoryDAO;
+	}
+
+	/**
+	 * @param effortHistoryDAO the effortHistoryDAO to set
+	 */
+	public void setEffortHistoryDAO(EffortHistoryDAO effortHistoryDAO) {
+		this.effortHistoryDAO = effortHistoryDAO;
 	}
 }

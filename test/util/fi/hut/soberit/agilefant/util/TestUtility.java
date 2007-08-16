@@ -214,6 +214,7 @@ public class TestUtility {
 	 */
 	public static void clearData(UserDAO userDAO, BacklogItemDAO backlogItemDAO,
 			ProductDAO productDAO) throws Exception {
+		
 		for(User i: userDAO.getAll()) {
 			userDAO.remove(i.getId());
 		}
@@ -247,5 +248,11 @@ public class TestUtility {
 		for(Iteration i: iterationDAO.getAll()) {
 			iterationDAO.remove(i.getId());
 		}	
+	}
+	
+	public static void clearData(TaskDAO taskDAO) {
+		for(Task i: taskDAO.getAll()) {
+			taskDAO.remove(i.getId());
+		}
 	}
 }

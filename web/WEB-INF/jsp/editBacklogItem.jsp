@@ -50,11 +50,27 @@
 		<td><ww:textarea cols="70" rows="10" name="backlogItem.description"/></td>	
 		</tr>
 		
-		<tr>
-		<td>Effort estimate</td>
-		<td></td>
-		<td><ww:textfield size="10" name="backlogItem.allocatedEffort"/>(usage: *h *m, e.g. 3h) </td>	
-		</tr>
+		<c:choose>
+		<c:when test="${backlogItem.bliOrigEst == null}">
+			<tr>
+			<td>Effort estimate</td>
+			<td></td>
+			<td><ww:textfield size="10" name="backlogItem.allocatedEffort"/>(usage: *h *m, e.g. 3h) </td>	
+			</tr>
+		</c:when>
+		<c:otherwise>
+			<tr>
+			<td>Original estimate </td>
+			<td></td>
+			<td><ww:label value="${backlogItem.bliOrigEst}"/>
+			</tr>
+			<tr>
+			<td>Effort left</td>
+			<td></td>
+			<td><ww:textfield size="10" name="backlogItem.effortLeft" />(usage: *h *m, e.g. 3h) </td>
+			</tr>
+		</c:otherwise>
+		</c:choose>
 			
 		<tr>
 		<td>Backlog</td>
@@ -184,7 +200,7 @@
 
 	<table>
 	<tr><td>
-
+		<c:if test="${backlogItem.id > 0}">
 		<div id="subItems">
 		<div id="subItemHeader">
 			Tasks 
@@ -193,10 +209,10 @@
 			</ww:url>
 			<ww:a href="%{createLink}&contextViewName=editBacklogItem&contextObjectId=${backlogItemId}">Create new &raquo;</ww:a>
 		</div>
-		<c:if test="${backlogItem.id > 0}">
+		<c:if test="${!empty backlogItem.realTasks}">
 		<div id="subItemContent">
 		<p>
-			<display:table class="listTable" name="backlogItem.tasks" id="row" requestURI="editBacklogItem.action">
+			<display:table class="listTable" name="backlogItem.realTasks" id="row" requestURI="editBacklogItem.action">
 				<display:column sortable="true" sortProperty="name" title="Name" class="shortNameColumn">
 					<ww:url id="editLink" action="editTask" includeParams="none">
 						<ww:param name="taskId" value="${row.id}"/>
@@ -236,8 +252,11 @@
 		</p>
 	
 		</div>
-		</c:if>	
+		</c:if> <%-- No tasks --%>
+		
 		</div>
+		</c:if>	<%-- New item --%>
+		
 </td></tr></table>
 		
 	

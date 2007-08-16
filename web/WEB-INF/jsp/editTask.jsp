@@ -62,8 +62,8 @@
 			<td></td>
 			<td>
 			<select name="" value="" /></td>	
-		</tr>
-		<tr> -->
+		</tr> -->
+		<tr>
 			<td>Priority</td>
 			<td></td>
 			<td><ww:select name="task.priority" value="task.priority.name" list="@fi.hut.soberit.agilefant.model.Priority@values()" listKey="name" listValue="getText('task.priority.' + name())"/></td>	

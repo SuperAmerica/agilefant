@@ -133,7 +133,8 @@ public class TaskEventDAOHibernate extends GenericDAOHibernate<TaskEvent> implem
 				queryValues = new Object[] {task, date};
 				query3 = "from EstimateHistoryEvent e " +
 						"where e.task = :task and " +
-						"e.created <= :date";
+						"e.created <= :date and " +
+						"e.newEstimate != null";
 				
 				query2 = "select max(created) " + query3 + "";
 				
@@ -148,8 +149,8 @@ public class TaskEventDAOHibernate extends GenericDAOHibernate<TaskEvent> implem
 				queryParams = new String[] {"task"};
 				queryValues = new Object[] {task};
 				query3 = "EstimateHistoryEvent e " +
-						"where e.task = :task";
-		
+						"where e.task = :task and " +
+						"e.newEstimate != null";
 				query2 = "select min(created) from " + query3 + "";
 				
 				query = "select f.newEstimate from EstimateHistoryEvent f " +

@@ -12,4 +12,5 @@ public class BacklogDAOHibernate extends GenericDAOHibernate<Backlog> implements
     public BacklogDAOHibernate(){
 	super(Backlog.class);
     }
+    
 }

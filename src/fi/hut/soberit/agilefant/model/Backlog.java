@@ -1,6 +1,7 @@
 package fi.hut.soberit.agilefant.model;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashSet;
 
 import javax.persistence.Column;
@@ -60,7 +61,9 @@ public abstract class Backlog implements Assignable {
     private Collection<EffortHistory> effortHistory = 
     	new HashSet<EffortHistory>();
     private User assignee;
-    private AFTime totalEstimate; 
+    private AFTime totalEstimate;
+    private AFTime bliEffortLeftSum;
+    private AFTime bliOrigEstSum;
     
     @OneToMany(mappedBy="backlog")
     /** A backlog can contain many backlog items. */
@@ -150,6 +153,25 @@ public abstract class Backlog implements Assignable {
 	public Collection<EffortHistory> getEffortHistory() {
 		return effortHistory;
 	}
+	
+	/**
+	 * Get the BLI effort left sum of this backlog
+	 * @return the bli effor left sum
+	 */
+	@Transient
+	public AFTime getBliEffortLeftSum() {
+		long bliEffortLeftSum = 0;
+		for(BacklogItem i: this.getBacklogItems()) {
+			if(i.getBliEffEst() != null) {
+				bliEffortLeftSum += i.getBliEffEst().getTime();
+			}
+			if(i.getTaskSumEffEst() != null) {
+				bliEffortLeftSum += i.getTaskSumEffEst().getTime();
+			}
+		}
+		return new AFTime(bliEffortLeftSum);
+	}
+	
 	/**
 	 * @param effortHistory the effortHistory to set
 	 */
@@ -166,5 +188,30 @@ public abstract class Backlog implements Assignable {
 	@Transient
 	public AFTime getPerformedEffort() {
 		return new AFTime(0);
+	}
+	/**
+	 * @return the bliOrigEstSum
+	 */
+	@Transient
+	public AFTime getBliOrigEstSum() {
+		long bliOrigEstSum = 0L;
+		for(BacklogItem i: this.getBacklogItems()) {
+			if(i.getBliOrigEst() != null) {
+				bliOrigEstSum += i.getBliOrigEst().getTime();
+			} else if(i.getTaskSumOrigEst() != null) {
+				bliOrigEstSum += i.getTaskSumOrigEst().getTime();
+			}
+		}
+		return new AFTime(bliOrigEstSum);
+	}
+	
+	/**
+	 * Return default start date
+	 * 
+	 * @return default start date (epoc)
+	 */
+	@Transient
+	public Date getStartDate() {
+	    return new Date(0);
 	}
 }

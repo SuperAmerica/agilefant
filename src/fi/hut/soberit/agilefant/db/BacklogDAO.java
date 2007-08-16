@@ -8,4 +8,5 @@ import fi.hut.soberit.agilefant.model.Backlog;
  * @see GenericDAO
  */
 public interface BacklogDAO extends GenericDAO<Backlog> {
+	
 }

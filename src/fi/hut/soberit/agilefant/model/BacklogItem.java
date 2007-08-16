@@ -65,6 +65,7 @@ public class BacklogItem implements PageItem, Assignable, EffortContainer {
 	private String description;
 	private Backlog backlog;
 	private Collection<Task> tasks = new HashSet<Task>();
+	private Collection<Task> realTasks;
 	private AFTime allocatedEffort;
 	private AFTime effortEstimate;
 	private AFTime performedEffort;
@@ -77,6 +78,7 @@ public class BacklogItem implements PageItem, Assignable, EffortContainer {
 	private AFTime taskSumOrigEst;
 	private AFTime bliEffEst;
 	private AFTime taskSumEffEst;
+	private AFTime effortLeft;
 	private Log logger = LogFactory.getLog(this.getClass());
 	
 	/** Total effort estimate (time), summed from tasks. */
@@ -99,6 +101,16 @@ public class BacklogItem implements PageItem, Assignable, EffortContainer {
 	
 	public void setAllocatedEffort(AFTime remainingEffortEstimate) {
 		this.allocatedEffort = remainingEffortEstimate;
+	}
+	
+	/** Effort left for this backlog item (from placeholder task */
+	@Transient
+	public AFTime getEffortLeft() {
+		return effortLeft;
+	}
+	
+	public void setEffortLeft(AFTime effortLeft) {
+		this.effortLeft = effortLeft;
 	}
 	
 	@Type(type="escaped_text")
@@ -332,5 +344,20 @@ public class BacklogItem implements PageItem, Assignable, EffortContainer {
 	 */
 	public void setTaskSumOrigEst(AFTime taskSumOrigEst) {
 		this.taskSumOrigEst = taskSumOrigEst;
+	}
+
+	/**
+	 * @return the realTasks
+	 */
+	@Transient
+	public Collection<Task> getRealTasks() {
+		return realTasks;
+	}
+
+	/**
+	 * @param realTasks the realTasks to set
+	 */
+	public void setRealTasks(Collection<Task> realTasks) {
+		this.realTasks = realTasks;
 	}
 }

@@ -9,6 +9,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import org.hibernate.annotations.Type;
+
 import java.sql.Date;
 
 /**
@@ -21,8 +23,8 @@ public class EffortHistory {
 	private int id;
 	private Backlog backlog;
 	private Date date;
-	private int effortLeft;
-	private int originalEstimate;
+	private AFTime effortLeft;
+	private AFTime originalEstimate;
 	
 	/** 
 	 * Get the id of this object.
@@ -81,15 +83,15 @@ public class EffortHistory {
 	 * re-evaluated
 	 * @return the effortLeft
 	 */
-	@Basic
-	public int getEffortLeft() {
+	@Type(type="af_time")
+	public AFTime getEffortLeft() {
 		return effortLeft;
 	}
 
 	/**
 	 * @param effortLeft the effortLeft to set
 	 */
-	public void setEffortLeft(int effortLeft) {
+	public void setEffortLeft(AFTime effortLeft) {
 		this.effortLeft = effortLeft;
 	}
 
@@ -98,15 +100,15 @@ public class EffortHistory {
 	 * should not be updated
 	 * @return the originalEstimate
 	 */
-	@Basic
-	public int getOriginalEstimate() {
+	@Type(type="af_time")
+	public AFTime getOriginalEstimate() {
 		return originalEstimate;
 	}
 
 	/**
 	 * @param originalEstimate the originalEstimate to set
 	 */
-	public void setOriginalEstimate(int originalEstimate) {
+	public void setOriginalEstimate(AFTime originalEstimate) {
 		this.originalEstimate = originalEstimate;
 	}
 	

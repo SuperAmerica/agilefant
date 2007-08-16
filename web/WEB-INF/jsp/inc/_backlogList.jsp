@@ -148,12 +148,14 @@
 				<td>&nbsp;</td>
 				<td>&nbsp;</td>
 				<td>&nbsp;</td>
-				<%-- Effort left --%>
 				<td>&nbsp;</td>
+				<%-- Effort left --%>
+				<td><c:out value="${backlog.bliEffortLeftSum}" /></td>
 				<%-- Original estimate --%>
-				<td><c:out value="${backlog.totalEstimate}" /></td>
+				<td><c:out value="${backlog.bliOrigEstSum}" /></td>
 				<%-- Work reported --%>
 				<td><c:out value="${backlog.performedEffort}" /></td>
+				<td></td>
 			<tr>
 		</display:footer>
 	</display:table>

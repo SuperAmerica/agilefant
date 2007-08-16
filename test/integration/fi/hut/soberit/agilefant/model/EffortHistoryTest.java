@@ -2,14 +2,31 @@ package fi.hut.soberit.agilefant.model;
 
 import fi.hut.soberit.agilefant.util.TestUtility;
 import fi.hut.soberit.agilefant.util.SpringTestCase;
+import fi.hut.soberit.agilefant.web.BacklogItemAction;
+import fi.hut.soberit.agilefant.web.TaskAction;
+import fi.hut.soberit.agilefant.web.UserAction;
+import fi.hut.soberit.agilefant.db.BacklogDAO;
+import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.db.EffortHistoryDAO;
 import fi.hut.soberit.agilefant.db.ProductDAO;
+import fi.hut.soberit.agilefant.db.TaskEventDAO;
+import fi.hut.soberit.agilefant.db.UserDAO;
+import fi.hut.soberit.agilefant.db.TaskDAO;
+
 import java.sql.Date;
 import java.util.GregorianCalendar;
 
 public class EffortHistoryTest extends SpringTestCase {
 	private EffortHistoryDAO effortHistoryDAO;
 	private ProductDAO productDAO;
+	private BacklogItemDAO backlogItemDAO;
+	private BacklogDAO backlogDAO;
+	private BacklogItemAction backlogItemAction;
+	private TaskAction taskAction;
+	private UserAction userAction;
+	private UserDAO userDAO;
+	private TaskDAO taskDAO;
+	private TaskEventDAO taskEventDAO;
 		
 	/**
 	 * Setter for Spring IoC <br/>
@@ -35,8 +52,6 @@ public class EffortHistoryTest extends SpringTestCase {
 	 * complete.
 	 */
 	protected void onTearDownInTransaction() throws Exception {
-		super.setComplete();
-		TestUtility.clearData(productDAO, effortHistoryDAO);
 	}
 	
 	public void testDAO(){
@@ -56,12 +71,14 @@ public class EffortHistoryTest extends SpringTestCase {
 		
 		effortHistory.setBacklog(productArray[0]);
 		effortHistory.setDate(date);
-		effortHistory.setEffortLeft(600000);
+		effortHistory.setEffortLeft(new AFTime(600000));
+		effortHistory.setOriginalEstimate(new AFTime(600000));
 		
 		id = (Integer) effortHistoryDAO.create(effortHistory);
 		assertTrue("Id wasn't returned", id.intValue() != 0);
 		
-		effortHistory = effortHistoryDAO.getByDate(date);
+		effortHistory = 
+			effortHistoryDAO.getByDateAndBacklog(date, productArray[0]);
 		
 		assertTrue("Could not retrieve effortHistory object from database",
 				effortHistoryDAO.getAll().size() != 0);
@@ -70,7 +87,7 @@ public class EffortHistoryTest extends SpringTestCase {
 				effortHistory);
 		
 		assertEquals("Mismatch in effort left value", 
-				effortHistory.getEffortLeft(), 600000);
+				effortHistory.getEffortLeft(), new AFTime(600000));
 		
 		endTransaction();
 		startNewTransaction();
@@ -98,6 +115,119 @@ public class EffortHistoryTest extends SpringTestCase {
 		
 		endTransaction();
 		startNewTransaction();
+		super.setComplete();
+		TestUtility.clearData(productDAO, effortHistoryDAO);
+	}
 
+	/**
+	 * @return the backlogItemAction
+	 */
+	public BacklogItemAction getBacklogItemAction() {
+		return backlogItemAction;
+	}
+
+	/**
+	 * @param backlogItemAction the backlogItemAction to set
+	 */
+	public void setBacklogItemAction(BacklogItemAction backlogItemAction) {
+		this.backlogItemAction = backlogItemAction;
+	}
+
+	/**
+	 * @return the backlogItemDAO
+	 */
+	public BacklogItemDAO getBacklogItemDAO() {
+		return backlogItemDAO;
+	}
+
+	/**
+	 * @param backlogItemDAO the backlogItemDAO to set
+	 */
+	public void setBacklogItemDAO(BacklogItemDAO backlogItemDAO) {
+		this.backlogItemDAO = backlogItemDAO;
+	}
+
+	/**
+	 * @return the taskAction
+	 */
+	public TaskAction getTaskAction() {
+		return taskAction;
+	}
+
+	/**
+	 * @param taskAction the taskAction to set
+	 */
+	public void setTaskAction(TaskAction taskAction) {
+		this.taskAction = taskAction;
+	}
+
+	/**
+	 * @return the backlogDAO
+	 */
+	public BacklogDAO getBacklogDAO() {
+		return backlogDAO;
+	}
+
+	/**
+	 * @param backlogDAO the backlogDAO to set
+	 */
+	public void setBacklogDAO(BacklogDAO backlogDAO) {
+		this.backlogDAO = backlogDAO;
+	}
+
+	/**
+	 * @return the userDAO
+	 */
+	public UserDAO getUserDAO() {
+		return userDAO;
+	}
+
+	/**
+	 * @param userDAO the userDAO to set
+	 */
+	public void setUserDAO(UserDAO userDAO) {
+		this.userDAO = userDAO;
+	}
+
+	/**
+	 * @return the userAction
+	 */
+	public UserAction getUserAction() {
+		return userAction;
+	}
+
+	/**
+	 * @param userAction the userAction to set
+	 */
+	public void setUserAction(UserAction userAction) {
+		this.userAction = userAction;
+	}
+
+	/**
+	 * @return the taskDAO
+	 */
+	public TaskDAO getTaskDAO() {
+		return taskDAO;
+	}
+
+	/**
+	 * @param taskDAO the taskDAO to set
+	 */
+	public void setTaskDAO(TaskDAO taskDAO) {
+		this.taskDAO = taskDAO;
+	}
+
+	/**
+	 * @return the taskEventDAO
+	 */
+	public TaskEventDAO getTaskEventDAO() {
+		return taskEventDAO;
+	}
+
+	/**
+	 * @param taskEventDAO the taskEventDAO to set
+	 */
+	public void setTaskEventDAO(TaskEventDAO taskEventDAO) {
+		this.taskEventDAO = taskEventDAO;
 	}
 }

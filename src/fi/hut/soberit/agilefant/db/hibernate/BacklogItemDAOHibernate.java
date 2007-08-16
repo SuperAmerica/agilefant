@@ -1,5 +1,6 @@
 package fi.hut.soberit.agilefant.db.hibernate;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.orm.hibernate3.HibernateTemplate;
@@ -23,12 +24,16 @@ public class BacklogItemDAOHibernate extends GenericDAOHibernate<BacklogItem> im
 		HibernateTemplate ht = super.getHibernateTemplate();
 		String[] queryParams = {"backlogItem"};
 		Object[] queryValues = {backlogItem};
-		String query = 
-			"from Task t " +
-			"where t.backlogItem = :backlogItem and " +
-			"t != t.backlogItem.placeHolder";
-		return (List<Task>) ht.findByNamedParam(
-				query, queryParams, queryValues);
+		if(backlogItem.getPlaceHolder() != null) {
+			String query = 
+				"from Task t " +
+				"where t.backlogItem = :backlogItem and " +
+				"t != t.backlogItem.placeHolder";
+			return (List<Task>) ht.findByNamedParam(
+					query, queryParams, queryValues);
+		} else {
+			return new ArrayList<Task>(backlogItem.getTasks());
+		}
 	}
 	
 	@SuppressWarnings(value = "unchecked")

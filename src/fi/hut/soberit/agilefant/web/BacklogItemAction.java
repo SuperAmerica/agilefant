@@ -84,8 +84,10 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
 		}
 		backlog = backlogItem.getBacklog();
 		backlogId = backlog.getId();
-		backlogItem.setEffortLeft(
-				backlogItem.getPlaceHolder().getEffortEstimate());
+		if(backlogItem.getPlaceHolder() != null) {
+			backlogItem.setEffortLeft(
+					backlogItem.getPlaceHolder().getEffortEstimate());
+		}
 		backlogItem.setBliOrigEst(
 				taskEventDAO.getBLIOriginalEstimate(
 						backlogItem, 

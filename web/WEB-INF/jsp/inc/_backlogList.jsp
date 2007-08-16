@@ -30,7 +30,15 @@
 			<c:choose>
 				<c:when test="${!(empty item.tasks || fn:length(item.tasks) == 1)}">
 					<a href="javascript:toggleDiv(${divId});" title="Click to expand">
-					${fn:length(item.tasks) - 1} tasks, <aef:percentDone
+					
+					<c:if test="${item.placeHolder != null}">
+						${fn:length(item.tasks) - 1} 
+					</c:if>		
+					<c:if test="${item.placeHolder == null}">
+						${fn:length(item.tasks)} 
+					</c:if>
+					
+					tasks, <aef:percentDone
 						backlogItemId="${item.id}" /> % complete<br />
 						<aef:taskStatusList backlogItemId="${item.id}" id="tsl" /> 
 						<ww:url

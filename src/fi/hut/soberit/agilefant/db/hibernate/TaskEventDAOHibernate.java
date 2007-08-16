@@ -47,6 +47,10 @@ public class TaskEventDAOHibernate extends GenericDAOHibernate<TaskEvent> implem
 			creationDate = creationDateList.get(0);
 		}
 
+		if(backlogItem.getPlaceHolder() == null) {
+			return backlogItem.getEffortEstimate();
+		}
+		
 		if(creationDate.before(date)){
 			queryParams = new String[] {"date", "backlogItem"};
 			queryValues = new Object[] {date, backlogItem};
@@ -96,6 +100,7 @@ public class TaskEventDAOHibernate extends GenericDAOHibernate<TaskEvent> implem
 	public AFTime getTaskSumOrigEst(BacklogItem backlogItem, Date date) {
 		Log logger = LogFactory.getLog(getClass());
 		long taskSum = 0;
+		String placeholderQuery;
 		
 		/* Retrive creation date from backlog item's placeholder task */
 		String[] queryParams;
@@ -116,10 +121,19 @@ public class TaskEventDAOHibernate extends GenericDAOHibernate<TaskEvent> implem
 		/* Retrive list of tasks excluding placeholder task ("real tasks") */
 		queryParams = new String[] {"backlogItem"};
 		queryValues = new Object[] {backlogItem};
+		
+		/* If placeholder is null dont query it */
+		if (backlogItem.getPlaceHolder() != null) {
+			placeholderQuery = " and t != t.backlogItem.placeHolder";
+		} else {
+			placeholderQuery = ""; 
+		}
+		
 		query = 
 			"from Task t " +
-			"where t.backlogItem = :backlogItem and " +
-			"t != t.backlogItem.placeHolder";
+			"where t.backlogItem = :backlogItem" +
+			placeholderQuery;
+		
 		realTasks = (List<Task>) ht.findByNamedParam(
 				query, queryParams, queryValues);
 		if(realTasks.isEmpty() || realTasks.get(0) == null) {

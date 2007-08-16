@@ -50,12 +50,17 @@ public class TaskDAOHibernate extends GenericDAOHibernate<Task> implements TaskD
 	public Collection<Task> getTasksByStatusAndBacklogItem(BacklogItem bli, TaskStatus[] statuses) {
 		String[] ids = new String[statuses.length + 1];
 		Object[] values = new Object[statuses.length + 1];
+		String query;
 		
 		ids[0] = "bliid";
 		values[0] = bli.getId();
 		
-		String query = "from Task t where t.backlogItem.id = :bliid " + 
-			"and t != t.backlogItem.placeHolder";
+		if(bli.getPlaceHolder() != null) {
+			query = "from Task t where t.backlogItem.id = :bliid " + 
+				"and t != t.backlogItem.placeHolder";
+		} else {
+			query =  "from Task t where t.backlogItem.id = :bliid ";
+		}
 		
 		if(statuses != null && statuses.length != 0) {
 			query += " and ( ";			

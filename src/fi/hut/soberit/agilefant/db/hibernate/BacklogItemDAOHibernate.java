@@ -61,11 +61,20 @@ public class BacklogItemDAOHibernate extends GenericDAOHibernate<BacklogItem> im
 		HibernateTemplate ht = super.getHibernateTemplate();
 		String[] queryParams = {"backlogItem"};
 		Object[] queryValues = {backlogItem};
+		String placeholderQuery;
+		
+		/* If placeholder is null don't query it */
+		if (backlogItem.getPlaceHolder() != null) {
+			placeholderQuery = " and t != t.backlogItem.placeHolder";
+		} else {
+			placeholderQuery = ""; 
+		}
+		
 		String query =
 			"select sum(t.effortEstimate) " +
 			"from Task t " +
-			"where t.backlogItem = :backlogItem and " +
-			"t != t.backlogItem.placeHolder";
+			"where t.backlogItem = :backlogItem" +
+			placeholderQuery;
 		results = (List<Long>) 
 				ht.findByNamedParam(query, queryParams, queryValues);
 		if(results.size() > 0 && results.get(0) != null) {

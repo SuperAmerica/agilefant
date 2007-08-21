@@ -47,9 +47,9 @@
 		<tr>
 		<td></td>
 		<td></td>
-		<td><ww:submit value="Store"/>
-			<ww:submit name="action:listUsers" value="Cancel"/>
-			</td>	
+		<td>
+			<ww:submit value="Store"/>
+		</td>	
 		</tr>
 		</table>
 

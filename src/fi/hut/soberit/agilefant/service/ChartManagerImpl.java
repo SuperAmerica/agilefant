@@ -78,6 +78,8 @@ public class ChartManagerImpl implements ChartManager {
 		TimeSeries estimateSeries = new TimeSeries("Actual velocity", Day.class);
 		TimeSeries referenceSeries = new TimeSeries("Reference velocity", Day.class);
 
+		
+		
 		/* First estimateSeries data point is the first original estimate */	
 		BacklogValueInjector.injectMetrics(backlog, 
 				new java.sql.Date(startDate.getTime()), 
@@ -104,7 +106,13 @@ public class ChartManagerImpl implements ChartManager {
 		/* Add effort left data points to estimateSeries*/
 		GregorianCalendar i = new GregorianCalendar();
 		GregorianCalendar end = new GregorianCalendar();
+		end.set(GregorianCalendar.HOUR_OF_DAY, 0);
+		end.set(GregorianCalendar.MINUTE, 0);
+		end.set(GregorianCalendar.SECOND, 0);
 		i.setTime(startDate);
+		i.set(GregorianCalendar.HOUR_OF_DAY, 0);
+		i.set(GregorianCalendar.MINUTE, 0);
+		i.set(GregorianCalendar.SECOND, 0);
 		end.setTime(endDate);
 		while(!i.after(end) && !i.after(GregorianCalendar.getInstance())) {
 			effortHistory = effortHistoryDAO.getByDateAndBacklog(
@@ -153,14 +161,31 @@ public class ChartManagerImpl implements ChartManager {
 				false);
 		XYPlot plot = chart.getXYPlot();
 		DateAxis axis = (DateAxis) plot.getDomainAxis();
-
+		GregorianCalendar newEndDate;
+		GregorianCalendar newStartDate;
 		// Set time axis properties
 		axis.setDateFormatOverride(new SimpleDateFormat("EEE d.M.")); 
-		axis.setMinimumDate(startDate);
+		// Use java.sql.Date to use only days, months and years
 		
-		GregorianCalendar newEndDate = new GregorianCalendar();
-		newEndDate.setTime(endDate);
+		newStartDate = new GregorianCalendar();
+		newStartDate.setTime(startDate);
+		newStartDate.set(GregorianCalendar.HOUR_OF_DAY, 0);
+		newStartDate.set(GregorianCalendar.MINUTE, 0);
+		newStartDate.set(GregorianCalendar.SECOND, 0);
+		
+		axis.setMinimumDate(newStartDate.getTime());
+		
+		newEndDate = new GregorianCalendar();
+		
+		//Use java.sql.Date to use only days, months and years
+		newEndDate.setTime(new java.sql.Date(endDate.getTime()));
+		
+		newEndDate.set(GregorianCalendar.HOUR_OF_DAY, 0);
+		newEndDate.set(GregorianCalendar.MINUTE, 0);
+		newEndDate.set(GregorianCalendar.SECOND, 0);
+		
 		newEndDate.add(GregorianCalendar.DATE, 1);
+		
 		axis.setMaximumDate(newEndDate.getTime());
 		
 		if((endDate.getTime() - startDate.getTime()) < (8*24*60*60*1000))

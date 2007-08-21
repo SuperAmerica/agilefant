@@ -44,7 +44,6 @@
 				<td></td>
 				<td>			
 					<ww:submit value="Store"/>
-    			<ww:submit name="action:contextView" value="Back"/>
 				</td>	
 			</tr>
 	  </table>

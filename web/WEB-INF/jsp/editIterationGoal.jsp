@@ -66,7 +66,7 @@
 				<td></td>
 				<td>
 					<ww:submit value="Store"/>
-					<ww:submit value="Back" action="popContext"/></td>	
+				</td>
 			</tr>
 		</table>
 

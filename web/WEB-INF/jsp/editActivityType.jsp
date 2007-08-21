@@ -33,7 +33,6 @@
 		<td></td>
 		<td></td>
 		<td><ww:submit value="Store"/>
-			<ww:submit name="action:listActivityTypes" value="Cancel"/>
 			</td>	
 		</tr>
 		</table>

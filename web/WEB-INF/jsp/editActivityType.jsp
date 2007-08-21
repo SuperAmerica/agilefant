@@ -1,6 +1,6 @@
 <%@ include file="./inc/_taglibs.jsp" %>
 <%@ include file="./inc/_header.jsp" %>
-<aef:menu /> 
+<aef:menu navi="activityTypes" pageHierarchy="${pageHierarchy}"/>
 	<ww:actionerror/>
 	<ww:actionmessage/>
 	<c:choose>

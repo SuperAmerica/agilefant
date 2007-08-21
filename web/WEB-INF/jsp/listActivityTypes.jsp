@@ -1,10 +1,12 @@
 <%@ include file="./inc/_taglibs.jsp" %>
 <%@ include file="./inc/_header.jsp" %>
-<aef:menu  /> 
+<aef:menu navi="activityTypes" pageHierarchy="${pageHierarchy}"/>
 
-<a href="contextView.action?contextName=portfolio&resetContextView=true">Portfolio</a> | Activity types
+<!-- <a href="contextView.action?contextName=portfolio&resetContextView=true">Portfolio</a> | Activity types
+-->
 
-	<p> Activity types 
+	<h2>Activity types </h2>
+	<p>
 		<ww:url id="createActivityTypeLink" action="createActivityType"/>
 		<ww:a href="%{createActivityTypeLink}">Create new &raquo;</ww:a>
 	</p>

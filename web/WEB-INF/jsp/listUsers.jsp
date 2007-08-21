@@ -1,10 +1,10 @@
 <%@ include file="./inc/_taglibs.jsp" %>
 <%@ include file="./inc/_header.jsp" %>
-<aef:menu /> 
+<aef:menu navi="${contextName}" pageHierarchy="${pageHierarchy}"/>
 
-
-<p>
-	Users  <a href="createUser.action">Create new &raquo;</a>
+<h2>Users</h2>
+<p>  
+	<a href="createUser.action">Create new &raquo;</a>
 </p>	
 
 <aef:userList/>

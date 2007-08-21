@@ -18,6 +18,8 @@ import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.Deliverable;
 import fi.hut.soberit.agilefant.model.Product;
 
+import fi.hut.soberit.agilefant.util.BacklogValueInjector;
+
 public class DeliverableAction extends ActionSupport implements CRUDAction {
 
 	private static final long serialVersionUID = -4636900464606739866L;
@@ -67,12 +69,11 @@ public class DeliverableAction extends ActionSupport implements CRUDAction {
 		
 		productId = deliverable.getProduct().getId();
 		backlog = deliverable;
-		for(BacklogItem i: backlog.getBacklogItems()) {
-			i.setBliOrigEst(taskEventDAO.getBLIOriginalEstimate(i, startDate));
-			i.setTaskSumOrigEst(taskEventDAO.getTaskSumOrigEst(i, startDate));
-			i.setBliEffEst(backlogItemDAO.getBLIEffortLeft(i));
-			i.setTaskSumEffEst(	backlogItemDAO.getTaskSumEffortLeft(i));
-		}
+
+		BacklogValueInjector.injectMetrics(backlog,
+				new java.sql.Date(startDate.getTime()), 
+				taskEventDAO, backlogItemDAO);
+		
 		return Action.SUCCESS;
 	}
 	

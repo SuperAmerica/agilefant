@@ -31,12 +31,12 @@
 	<ww:hidden name="iterationId" value="${iteration.id}"/>
 	<ww:hidden name="deliverableId"/> 
 
-	<ww:date name="%{new java.util.Date()}" id="start"/>
-	<ww:date name="%{new java.util.Date()}" id="end"/>
-		
+	<ww:date name="%{new java.util.Date()}" id="start" format="%{getText('webwork.shortDateTime.format')}"/>	
+	<ww:date name="%{new java.util.Date()}" id="end" format="%{getText('webwork.shortDateTime.format')}"/>
+	
 	<c:if test="${iteration.id > 0}">
-		<ww:date name="%{iteration.startDate}" id="start"/>
-		<ww:date name="%{iteration.endDate}" id="end"/>
+		<ww:date name="%{iteration.startDate}" id="start" format="%{getText('webwork.shortDateTime.format')}"/>
+		<ww:date name="%{iteration.endDate}" id="end" format="%{getText('webwork.shortDateTime.format')}"/>
 	</c:if>
 		
 	<table class="formTable">
@@ -59,14 +59,14 @@
 			<td>Start date</td>
 			<td>*</td>
 			<td>
-				<ww:datepicker value="%{#start}" size="10" showstime="%{true}"  format="%{getText('webwork.datepicker.format')}" name="iteration.startDate" /> 
+				<ww:datepicker value="%{#start}" size="15" showstime="true"  format="%{getText('webwork.datepicker.format')}" name="startDate" /> 
 			</td>	
 		</tr>
 		<tr>
 			<td>End date</td>
 			<td>*</td>
 			<td>
-			  <ww:datepicker value="%{#end}" size="10" showstime="%{true}"  format="%{getText('webwork.datepicker.format')}" name="iteration.endDate" /> 
+			  <ww:datepicker value="%{#end}" size="15" showstime="true"  format="%{getText('webwork.datepicker.format')}" name="endDate" />
 			</td>	
 		</tr>
 		<tr>

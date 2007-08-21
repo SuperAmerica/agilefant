@@ -93,7 +93,8 @@
 	<bean name="chartManager"
 		class="fi.hut.soberit.agilefant.service.ChartManagerImpl">
 		<property name="iterationDAO" ref="iterationDAO" />
-		<property name="performedWorkDAO" ref="performedWorkDAO" />
-		<property name="estimateHistoryDAO" ref="estimateHistoryDAO" />
+		<property name="taskEventDAO" ref="taskEventDAO"/>
+		<property name="backlogItemDAO" ref="backlogItemDAO"/>
+		<property name="effortHistoryDAO" ref="effortHistoryDAO"/>
 	</bean>
 </beans>

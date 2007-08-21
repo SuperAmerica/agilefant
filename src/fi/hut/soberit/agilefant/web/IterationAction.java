@@ -2,6 +2,8 @@ package fi.hut.soberit.agilefant.web;
 
 import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
+
+import java.text.ParseException;
 import java.util.Collection;
 import java.util.Date;
 
@@ -11,12 +13,11 @@ import fi.hut.soberit.agilefant.db.DeliverableDAO;
 import fi.hut.soberit.agilefant.db.IterationDAO;
 import fi.hut.soberit.agilefant.db.IterationGoalDAO;
 import fi.hut.soberit.agilefant.db.TaskEventDAO;
-import fi.hut.soberit.agilefant.model.AFTime;
-import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.Deliverable;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.IterationGoal;
 import fi.hut.soberit.agilefant.model.Backlog;
+import fi.hut.soberit.agilefant.util.BacklogValueInjector;
 
 public class IterationAction extends ActionSupport implements CRUDAction {
 
@@ -33,6 +34,8 @@ public class IterationAction extends ActionSupport implements CRUDAction {
 	private int deliverableId;
 	private IterationGoalDAO iterationGoalDAO;
 	private int iterationGoalId;
+	private String startDate;
+	private String endDate;
 
 	public String create(){
 		Deliverable deliverable =  deliverableDAO.get(deliverableId);
@@ -64,18 +67,9 @@ public class IterationAction extends ActionSupport implements CRUDAction {
 		/* We need Backlog-class object to generate backlog list in 
 		 * _backlogList.jsp */
 		backlog = iteration;
-		for(BacklogItem i: backlog.getBacklogItems()) {
-			i.setBliOrigEst(taskEventDAO.getBLIOriginalEstimate(i, startDate));
-			i.setTaskSumOrigEst(taskEventDAO.getTaskSumOrigEst(i, startDate));
-			i.setTaskSumEffEst(backlogItemDAO.getTaskSumEffortLeft(i));
-			if (i.getTaskSumEffEst() != null) {
-				i.setBliEffEst(
-						new AFTime(backlogItemDAO.getBLIEffortLeft(i).getTime() -
-						i.getTaskSumEffEst().getTime()));
-			} else {
-				i.setBliEffEst(backlogItemDAO.getBLIEffortLeft(i));
-			}
-		}
+		BacklogValueInjector.injectMetrics(backlog,
+				new java.sql.Date(startDate.getTime()), 
+				taskEventDAO, backlogItemDAO);
 		
 		if (deliverable == null){
 			super.addActionError(super.getText("iteration.deliverableNotFound"));
@@ -103,7 +97,14 @@ public class IterationAction extends ActionSupport implements CRUDAction {
 				return Action.INPUT;
 			}
 		}
-		this.fillObject(fillable);
+		
+		try {
+			this.fillObject(fillable);
+		} catch (ParseException e) {
+			super.addActionError(e.toString());
+			return Action.ERROR;
+		}
+		
 		if (super.hasActionErrors()){
 			return Action.ERROR;
 		}
@@ -125,7 +126,7 @@ public class IterationAction extends ActionSupport implements CRUDAction {
 		return Action.SUCCESS;
 	}
 	
-	protected void fillObject(Iteration fillable){
+	protected void fillObject(Iteration fillable) throws ParseException {
 		if(this.iteration.getName().equals("")) {
 			super.addActionError(super.getText("iteration.missingName"));
 			return;
@@ -133,8 +134,8 @@ public class IterationAction extends ActionSupport implements CRUDAction {
 		fillable.setDeliverable(this.deliverable);
 		fillable.setName(this.iteration.getName());
 		fillable.setDescription(this.iteration.getDescription());
-		fillable.setEndDate(this.iteration.getEndDate());
-		fillable.setStartDate(this.iteration.getStartDate());
+		fillable.setEndDate(endDate);
+		fillable.setStartDate(startDate);
 	}
 
 	public String moveIterationGoal(){
@@ -250,5 +251,33 @@ public class IterationAction extends ActionSupport implements CRUDAction {
 	 */
 	public void setBacklogDAO(BacklogDAO backlogDAO) {
 		this.backlogDAO = backlogDAO;
+	}
+
+	/**
+	 * @return the endDate
+	 */
+	public String getEndDate() {
+		return endDate;
+	}
+
+	/**
+	 * @param endDate the endDate to set
+	 */
+	public void setEndDate(String endDate) {
+		this.endDate = endDate;
+	}
+
+	/**
+	 * @return the startDate
+	 */
+	public String getStartDate() {
+		return startDate;
+	}
+
+	/**
+	 * @param startDate the startDate to set
+	 */
+	public void setStartDate(String startDate) {
+		this.startDate = startDate;
 	}
 }

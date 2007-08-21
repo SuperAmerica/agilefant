@@ -2,6 +2,7 @@ package fi.hut.soberit.agilefant.model;
 
 import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
@@ -13,6 +14,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Transient;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.Type;
 
@@ -52,6 +55,8 @@ public class Iteration extends Backlog implements PageItem, EffortContainer {
     private AFTime effortEstimate;
     private Collection<IterationGoal> iterationGoals = new HashSet<IterationGoal>();
 //	private User owner;
+    
+	private Log logger = LogFactory.getLog(getClass());
 	
     @Transient
     public double getCompletionEstimationPercentage() {
@@ -85,8 +90,9 @@ public class Iteration extends Backlog implements PageItem, EffortContainer {
 	    this.endDate = endDate;
 	}	
 	public void setEndDate(String endDate) throws ParseException {
-	    DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT, Locale.ENGLISH);	    
-	    this.startDate = df.parse( endDate);
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+	    df.setLenient(true);
+	    this.endDate = df.parse( endDate);
 	}
 
 	//@Column(nullable = false)
@@ -97,7 +103,8 @@ public class Iteration extends Backlog implements PageItem, EffortContainer {
 	    this.startDate = startDate;
 	}
 	public void setStartDate(String startDate) throws ParseException {
-	    DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT, Locale.ENGLISH);	    
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+	    df.setLenient(true);
 	    this.startDate = df.parse( startDate);
 	}
 	

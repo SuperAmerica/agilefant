@@ -11,8 +11,8 @@ import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.db.ProductDAO;
 import fi.hut.soberit.agilefant.db.TaskEventDAO;
 import fi.hut.soberit.agilefant.model.Backlog;
-import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.Product;
+import fi.hut.soberit.agilefant.util.BacklogValueInjector;
 
 public class ProductAction extends ActionSupport implements CRUDAction {
 
@@ -54,12 +54,9 @@ public class ProductAction extends ActionSupport implements CRUDAction {
 			return Action.ERROR;
 		}
 		backlog = product;
-		for(BacklogItem i: backlog.getBacklogItems()) {
-			i.setBliOrigEst(taskEventDAO.getBLIOriginalEstimate(i, startDate));
-			i.setTaskSumOrigEst(taskEventDAO.getTaskSumOrigEst(i, startDate));
-			i.setBliEffEst(backlogItemDAO.getBLIEffortLeft(i));
-			i.setTaskSumEffEst(	backlogItemDAO.getTaskSumEffortLeft(i));
-		}
+		BacklogValueInjector.injectMetrics(backlog,
+				new java.sql.Date(startDate.getTime()), 
+				taskEventDAO, backlogItemDAO);
 		
 		return Action.SUCCESS;
 	}

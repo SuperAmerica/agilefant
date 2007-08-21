@@ -58,7 +58,7 @@
 							<tr>
 								<td>
 									<ww:url id="editLink" action="editUser" includeParams="none">
-										<ww:param name="userId" value="${currentUser.id}"/>
+										<ww:param name="userId" value="${currentUser.id}" />
 									</ww:url>
 									<ww:a href="%{editLink}">${currentUser.fullName}</ww:a>	
 								</td>
@@ -67,10 +67,6 @@
 	    	        		<input name="exit" type="submit" value="logout"/>
 	    	      		</form>
 	    	    		</td>
-	    	    	</tr>
-	    	    	<tr>
-	    	    		<td>&nbsp;</td>
-	    	    		<td><a href="listUsers.action">Users</a></td>
 	    	    	</tr>
 	    	    </table>
 					</div>
@@ -186,12 +182,18 @@
 				<div id="menuwrap${navi}">
 					<div id="submenuwrap${subnavi}">			
 						<ul id="menu">
+						  <!-- 
 						  <li id="nav1"><a href="contextView.action?contextName=myTasks&resetContextView=true">Daily work</a></li>
 						  <li id="nav2"><a href="contextView.action?contextName=${currentContext}&contextObjectId=${currentPageId}&resetContextView=true">Backlog</a></li>
-						  <!-- <li id="nav2"><a href="contextView.action?contextName=iteration&contextObjectId=${previousIterationId}&resetContextView=true">Iteration</a></li>
+						  <li id="nav2"><a href="contextView.action?contextName=iteration&contextObjectId=${previousIterationId}&resetContextView=true">Iteration</a></li>
 						  <li id="nav3"><a href="contextView.action?contextName=project&contextObjectId=${previousDeliverableId}&resetContextView=true">Project</a></li>
-						  <li id="nav4"><a href="contextView.action?contextName=product&resetContextView=true">Product</a></li> -->
+						  <li id="nav4"><a href="contextView.action?contextName=product&resetContextView=true">Product</a></li>
 						  <li id="nav3"><a href="contextView.action?contextName=portfolio&resetContextView=true">Development portfolio</a></li>  
+						  -->
+						  <li id="nav2"><a href="contextView.action?contextName=${currentContext}&contextObjectId=${currentPageId}&resetContextView=true">Backlog</a></li>
+							<li id="navc"><a href="contextView.action?contextName=users&resetContextView=true">Users</a></li>
+						  <li id="navb"><a href="contextView.action?contextName=activityTypes&resetContextView=true">Activity Types</a></li>
+						  <li id="nava"><a href="contextView.action?contextName=createNew&resetContextView=true">Create New</a></li>
 						</ul>					
 					</div>				
 				</div>

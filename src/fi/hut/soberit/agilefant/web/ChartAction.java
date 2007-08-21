@@ -10,9 +10,6 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartRenderingInfo;
 import org.jfree.chart.ChartUtilities;
@@ -53,8 +50,6 @@ import fi.hut.soberit.agilefant.service.PortfolioManager;
 public class ChartAction extends ActionSupport {
 
 	private static final long serialVersionUID = 1L;
-	
-	private static final Log log = LogFactory.getLog(ChartAction.class);
 	
 	private byte[] result;
 	private PerformedWork performedWork;

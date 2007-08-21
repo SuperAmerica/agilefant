@@ -35,6 +35,8 @@ public class TaskEventDAOHibernate extends GenericDAOHibernate<TaskEvent> implem
 		HibernateTemplate ht = super.getHibernateTemplate();
 		String query2;
 		String query3;
+		
+		/* Check is bli created after or before the given date */
 		String query = "select b.placeHolder.created " +
 				"from BacklogItem b " +
 				"where b.id = :backlogItemId";

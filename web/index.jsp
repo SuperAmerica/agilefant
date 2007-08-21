@@ -1,1 +1,1 @@
-<% response.sendRedirect("./myTasks.action"); %>
+<% response.sendRedirect("./selectBacklog.action"); %>

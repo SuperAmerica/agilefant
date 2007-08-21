@@ -40,14 +40,9 @@ public class EffortHistoryUpdater {
 		}
 		
 		/* Set estimate values to backlog items */
-		for(BacklogItem i: backlog.getBacklogItems()) {
-			i.setBliOrigEst(taskEventDAO.getBLIOriginalEstimate(i, 
-					backlog.getStartDate()));
-			i.setTaskSumOrigEst(taskEventDAO.getTaskSumOrigEst(i, 
-					backlog.getStartDate()));
-			i.setBliEffEst(backlogItemDAO.getBLIEffortLeft(i));
-			i.setTaskSumEffEst(backlogItemDAO.getTaskSumEffortLeft(i));
-		}
+		BacklogValueInjector.injectMetrics(backlog, 
+				new java.sql.Date(backlog.getStartDate().getTime()), 
+				taskEventDAO, backlogItemDAO);
 		
 		effortHistory.setOriginalEstimate(backlog.getBliOrigEstSum());
 		effortHistory.setEffortLeft(backlog.getBliEffortLeftSum());

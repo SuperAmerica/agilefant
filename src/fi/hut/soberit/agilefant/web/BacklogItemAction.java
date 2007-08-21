@@ -1,11 +1,7 @@
 package fi.hut.soberit.agilefant.web;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collection;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
@@ -20,7 +16,6 @@ import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
-import fi.hut.soberit.agilefant.model.EffortHistory;
 import fi.hut.soberit.agilefant.model.IterationGoal;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
@@ -46,8 +41,6 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
 	private TaskAction taskAction;
 	private TaskEventDAO taskEventDAO;
 	private EffortHistoryDAO effortHistoryDAO;
-	
-	private Log logger = LogFactory.getLog(getClass());
 
 
 	public String create() {
@@ -92,7 +85,9 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
 				taskEventDAO.getBLIOriginalEstimate(
 						backlogItem, 
 						backlogItem.getBacklog().getStartDate()));
-		backlogItem.setRealTasks(backlogItemDAO.getRealTasks(backlogItem));
+		
+//		backlogItem.setRealTasks(backlogItemDAO.getRealTasks(backlogItem));
+		backlogItem.setRealTasks(backlogItem.getTasks());
 		return Action.SUCCESS;
 	}
 

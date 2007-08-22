@@ -144,7 +144,8 @@
 				<ww:param name="contextObjectId" value="${backlog.id}" />
 			</ww:url>
 			<ww:a
-					href="%{deleteLink}&contextViewName=${currentAction}">
+					href="%{deleteLink}&contextViewName=${currentAction}"
+					onclick="return confirmDeleteBli()">
 					Delete
 			</ww:a>
 		</display:column>
@@ -156,6 +157,9 @@
 				<td>&nbsp;</td>
 				<td>&nbsp;</td>
 				<td>&nbsp;</td>
+				<c:if test="${currentContext == 'iteration'}">
+					<td>&nbsp;</td>
+				</c:if>
 				<%-- Effort left --%>
 				<td><c:out value="${backlog.bliEffortLeftSum}" /></td>
 				<%-- Original estimate --%>

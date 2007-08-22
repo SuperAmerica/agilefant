@@ -108,7 +108,17 @@
 			<td></td>
 			<td></td>
 			<td>
-				<ww:submit value="Store"/>
+			<c:choose>
+					<c:when test="${iterationId == 0}">
+						<ww:submit value="Create"/>
+					</c:when>
+					<c:otherwise>
+					  <ww:submit value="Save"/>
+ 						<span class="deleteButton">
+ 						<ww:submit action="deleteIteration" value="Delete"/>
+ 					</span>
+					</c:otherwise>
+				</c:choose>
 		</td>	
 		</tr>
 	</table>
@@ -141,6 +151,10 @@
 					
 				<display:column sortable="true" sortProperty="description" title="Description" >
 					${aef:html(row.description)}
+				</display:column>
+	
+				<display:column sortable="false" title="# of backlog items">
+				  ${aef:html(fn:length(row.backlogItems))}
 				</display:column>
 	
 				<display:column sortable="false" title="Actions">

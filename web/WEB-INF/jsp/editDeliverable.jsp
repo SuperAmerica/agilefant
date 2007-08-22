@@ -111,7 +111,7 @@
 		</tr>	
 			
 		<tr>
-		<td>Activity type</td>
+		<td>Project type</td>
 		<td></td>
 		<td><ww:select name="activityTypeId" list="#attr.activityTypes" listKey="id" listValue="name" value="${deliverable.activityType.id}"/></td>	
 		</tr>
@@ -137,7 +137,17 @@
 		<td></td>
 		<td></td>
 		<td>
-			<ww:submit value="Store"/>	
+			<c:choose>
+				<c:when test="${deliverableId == 0}">
+					<ww:submit value="Create"/>
+				</c:when>
+				<c:otherwise>
+				  <ww:submit value="Save"/>
+ 					<span class="deleteButton">
+ 						<ww:submit action="deleteDeliverable" value="Delete"/>
+ 					</span>
+				</c:otherwise>
+			</c:choose>
 		</td>	
 		</tr>
 	</table>
@@ -149,6 +159,7 @@
 <table><tr><td>
 	<c:if test="${deliverable.id > 0}">
 	<div id="subItems">
+	
 		<div id="subItemHeader">
 			Iterations 
  			<ww:url id="createLink" action="createIteration" includeParams="none">
@@ -156,6 +167,7 @@
 			</ww:url>
 			<ww:a href="%{createLink}&contextViewName=editDeliverable&contextObjectId=${deliverable.id}">Create new &raquo;</ww:a>
 		</div>
+		
 		<c:if test="${!empty deliverable.iterations}">
 		<div id="subItemContent">
 		<p>

@@ -137,7 +137,7 @@
 		</action>
 		<action name="deleteProduct" method="delete"
 			class="productAction">
-			<result>/WEB-INF/jsp/listProducts.jsp</result>
+			<result>/WEB-INF/jsp/selectBacklog.jsp</result>
 		</action>
 		<action name="storeProduct" method="store"
 			class="productAction">
@@ -324,8 +324,8 @@
 		</action>
 		<action name="deleteIteration" method="delete"
 			class="iterationAction">
-			<result type="redirect-action">
-				<param name="actionName">popContext</param>
+			<result type="redirect">
+				editDeliverable.action?deliverableId=${deliverableId}
 			</result>
 		</action>
 		<action name="storeIteration" method="store"
@@ -423,9 +423,8 @@
 		</action>
 		<action name="deleteIterationGoal" method="delete"
 			class="iterationGoalAction">
-			<!-- <result type="redirect">editIteration.action?iterationId=${iterationId}</result> -->
-			<result type="redirect-action">
-				<param name="actionName">popContext</param>
+			<result type="redirect">
+				editIteration.action?iterationId=${iterationId}
 			</result>
 		</action>
 		<action name="storeIterationGoal" method="store"

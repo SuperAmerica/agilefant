@@ -5,7 +5,7 @@
 <!-- <a href="contextView.action?contextName=portfolio&resetContextView=true">Portfolio</a> | Activity types
 -->
 
-	<h2>Activity types </h2>
+	<h2>Project types </h2>
 	<p>
 		<ww:url id="createActivityTypeLink" action="createActivityType"/>
 		<ww:a href="%{createActivityTypeLink}">Create new &raquo;</ww:a>
@@ -14,7 +14,7 @@
 	<p>
 		<c:choose>
 			<c:when test="${empty activityTypes}">
-				No activity types were found.
+				No project types were found.
 			</c:when>
 			<c:otherwise>
 		<display:table class="listTable" name="${activityTypes}" id="row" requestURI="listActivityTypes.action">

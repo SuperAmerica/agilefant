@@ -86,8 +86,7 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
 						backlogItem, 
 						backlogItem.getBacklog().getStartDate()));
 		
-//		backlogItem.setRealTasks(backlogItemDAO.getRealTasks(backlogItem));
-		backlogItem.setRealTasks(backlogItem.getTasks());
+		backlogItem.setRealTasks(backlogItemDAO.getRealTasks(backlogItem));
 		return Action.SUCCESS;
 	}
 

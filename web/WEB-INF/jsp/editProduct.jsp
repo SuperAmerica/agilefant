@@ -51,7 +51,17 @@
 				<td></td>
 				<td></td>
 				<td>			
-					<ww:submit value="Store"/>
+				<c:choose>
+					<c:when test="${productId == 0}">
+						<ww:submit value="Create"/>
+					</c:when>
+					<c:otherwise>
+					  <ww:submit value="Save"/>
+ 						<span class="deleteButton">
+ 						<ww:submit action="deleteProduct" value="Delete"/>
+ 					</span>
+					</c:otherwise>
+				</c:choose>
 				</td>	
 			</tr>
 	  </table>

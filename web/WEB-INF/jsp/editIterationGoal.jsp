@@ -73,7 +73,17 @@
 				<td></td>
 				<td></td>
 				<td>
-					<ww:submit value="Store"/>
+				<c:choose>
+					<c:when test="${iterationGoalId == 0}">
+						<ww:submit value="Create"/>
+					</c:when>
+					<c:otherwise>
+					  <ww:submit value="Save"/>
+ 						<span class="deleteButton">
+ 							<ww:submit action="deleteIterationGoal" value="Delete"/>
+ 						</span>
+					</c:otherwise>
+				</c:choose>
 				</td>
 			</tr>
 		</table>
@@ -82,7 +92,7 @@
 	</ww:form>
 		
 	<table><tr><td>
-		<c:if test="${iterationId != 0}">
+		<c:if test="${iterationGoalId != 0}">
 		<div id="subItems">
 			<div id="subItemHeader">
 				Backlog items 
@@ -105,67 +115,50 @@
 						${aef:html(row.name)}
 					</ww:a>
 				</display:column>
-
-				<display:column title="Tasks" sortable="false" class="taskColumn">
-					<c:if test="${!empty row.tasks}"> 
-						<c:set var="divId" value="${divId + 1}" scope="page"/>
-						<a href="javascript:toggleDiv(${divId});" title="Click to expand">
-							${fn:length(row.tasks)} tasks, <aef:percentDone backlogItemId="${row.id}"/> % complete<br/>
-	   					<aef:taskStatusList backlogItemId="${row.id}" id="tsl"/>							   
-							<ww:url id="imgUrl" action="drawExtendedBarChart" includeParams="none">
-								<ww:param name="notStarted"  value="${tsl['notStarted']}"/>
-								<ww:param name="started"     value="${tsl['started']}"/>
-								<ww:param name="blocked"     value="${tsl['blocked']}"/>
-								<ww:param name="implemented" value="${tsl['implemented']}"/>
-								<ww:param name="done"        value="${tsl['done']}"/>
-							</ww:url>
-				 			<img src="${imgUrl}"/> 
-						</a>					
-						<aef:tasklist tasks="${row.tasks}"   contextViewName="editIteration"  contextObjectId="${iteration.id}" divId="${divId}"/>									
+		
+				<display:column title="Status" sortable="false" class="taskColumn">
+			<c:set var="divId" value="${divId + 1}" scope="page" />
+			<c:choose>
+				<c:when test="${!(empty row.tasks || fn:length(row.tasks) == 1)}">
+					<a href="javascript:toggleDiv(${divId});" title="Click to expand">
+					
+					<c:if test="${row.placeHolder != null}">
+						${fn:length(row.tasks) - 1} 
+					</c:if>		
+					<c:if test="${row.placeHolder == null}">
+						${fn:length(row.tasks)} 
 					</c:if>
-				</display:column>
-			
-				<display:column sortable="true" sortProperty="assignee.fullName" title="Responsible" >
-					${aef:html(row.assignee.fullName)}
-				</display:column>
+					
+					tasks, <aef:percentDone
+						backlogItemId="${row.id}" /> % complete<br />
+						<aef:taskStatusList backlogItemId="${row.id}" id="tsl" /> 
+						<ww:url
+							id="imgUrl" action="drawExtendedBarChart" includeParams="none">
+								<ww:param name="notStarted" value="${tsl['notStarted']}" />
+								<ww:param name="started" value="${tsl['started']}" />
+								<ww:param name="blocked" value="${tsl['blocked']}" />
+								<ww:param name="implemented" value="${tsl['implemented']}" />
+								<ww:param name="done" value="${tsl['done']}" />
+						</ww:url> 
+						<img src="${imgUrl}" /> 
+					</a>
+					<aef:tasklist tasks="${row.tasks}"
+						contextViewName="${currentAction}" contextObjectId="${backlog.id}"
+						divId="${divId}"/>
+				</c:when>
+				<c:otherwise>
+					<c:if test="${!empty row.placeHolder}">
+						 <a href="javascript:toggleDiv(${divId});" title="Click to expand">
+							<ww:text name="task.status.${row.placeHolder.status}"/>	
+						</a>
+						<aef:tasklist tasks="${row.tasks}"
+							contextViewName="${currentAction}" contextObjectId="${backlog.id}"
+							divId="${divId}" placeholder="true" />
+					</c:if>
+				</c:otherwise>
+			</c:choose>
+		</display:column>
 		
-				<display:column sortable="true" defaultorder="descending" title="Priority" >
-				<ww:text name="backlogItem.priority.${row.priority}"/>
-				</display:column>
-		
-				<display:column sortable="true" title="Effort done">
-					${row.performedEffort}
-				</display:column>
-		
-				<display:column sortable="true" title="Estimate">
-					<c:choose>
-						<c:when test="${!empty row.effortEstimate}">
-							${row.effortEstimate}
-						</c:when>
-						<c:otherwise>
-							${row.allocatedEffort}
-						</c:otherwise>
-					</c:choose>
-				</display:column>
-				
-			<display:column sortable="false" title="Actions">
-				<ww:url id="deleteLink" action="deleteBacklogItem" includeParams="none"> 
-        	<ww:param name="backlogItemId" value="${row.id}"/> 
-        </ww:url> 
-         <ww:a href="%{deleteLink}&contextViewName=editIteration&contextObjectId=${iteration.id}">Delete</ww:a> 					
-			</display:column>
-			
-			<display:footer>
-			 	<tr>
-			 		<td>Total:</td>
-			 		<td>&nbsp;</td>
-			 		<td>&nbsp;</td>
-			 		<td>&nbsp;</td>
-			 		<td>&nbsp;</td>
-			 		<td><c:out value="${iteration.performedEffort}" /></td>
-			 		<td><c:out value="${iteration.totalEstimate}" /></td>
-			  	<tr>
-			 </display:footer>				
 		
 			</display:table>
 		</p>

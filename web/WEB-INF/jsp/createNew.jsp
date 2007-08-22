@@ -48,7 +48,7 @@
 
 <li>	
 	<ww:url id="createLink" action="createActivityType" includeParams="none"/>
-	<ww:a href="%{createLink}">Create a new activity type &raquo;</ww:a>
+	<ww:a href="%{createLink}">Create a new project type &raquo;</ww:a>
 </li>
 
 <c:if test="${hasActivityTypes}">

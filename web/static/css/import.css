@@ -470,3 +470,6 @@ div#submenuwrapmyTasks #menu li#subnav1 a,div#submenuwrapiteration #menu li#subn
 .inactive{
 	color: #999;
 }
+.deleteButton{
+	margin-left: 75%;
+}

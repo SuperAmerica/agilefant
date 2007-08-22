@@ -274,6 +274,7 @@ public class BacklogItem implements PageItem, Assignable, EffortContainer {
 	 * @return the placeHolder
 	 */
 	@OneToOne
+	@Cascade(CascadeType.DELETE_ORPHAN)
 	public Task getPlaceHolder() {
 		return placeHolder;
 	}

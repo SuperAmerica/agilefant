@@ -184,7 +184,19 @@
 		<td></td>
 		<td></td>
 		<td>
-		<ww:submit value="Store"/>
+			<c:choose>
+				<c:when test="${backlogItemId == 0}">
+					<ww:submit value="Create"/>
+				</c:when>
+				<c:otherwise>
+				  <ww:submit value="Save"/>
+				  <span class="deleteButton">
+						<ww:submit action="deleteBacklogItem" 
+								value="Delete" 
+								onclick="return confirmDeleteBli()"/>
+					</span>
+				</c:otherwise>
+			</c:choose>
 		</td>	
 		</tr>
 		
@@ -243,7 +255,8 @@
 					<ww:url id="deleteLink" action="deleteTask" includeParams="none">
 						<ww:param name="taskId" value="${row.id}"/>
 					</ww:url>
-					<ww:a href="%{deleteLink}&contextViewName=editBacklogItem&contextObjectId=${backlogItemId}" onclick="return confirmDeleteTask()">Delete</ww:a>
+					<ww:a href="%{deleteLink}&contextViewName=editBacklogItem&contextObjectId=${backlogItemId}" 
+						onclick="return confirmDeleteTask()">Delete</ww:a>
 				</display:column>
 			</display:table>
 		</p>

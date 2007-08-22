@@ -108,7 +108,19 @@
 			<td></td>
 			<td></td>
 			<td>
-				<ww:submit value="Store"/>
+				<c:choose>
+				<c:when test="${taskId == 0}">
+					<ww:submit value="Create"/>
+				</c:when>
+				<c:otherwise>
+				  <ww:submit value="Save"/>
+				  <span class="deleteButton">
+						<ww:submit action="deleteTask" 
+								value="Delete" 
+								onclick="return confirmDeleteTask()"/>
+					</span>
+				</c:otherwise>
+			</c:choose>
 			</td>	
 		</tr>
 	</table>

@@ -192,7 +192,7 @@
 						  -->
 						  <li id="nav2"><a href="contextView.action?contextName=${currentContext}&contextObjectId=${currentPageId}&resetContextView=true">Backlog</a></li>
 							<li id="navc"><a href="contextView.action?contextName=users&resetContextView=true">Users</a></li>
-						  <li id="navb"><a href="contextView.action?contextName=activityTypes&resetContextView=true">Activity Types</a></li>
+						  <li id="navb"><a href="contextView.action?contextName=activityTypes&resetContextView=true">Project Types</a></li>
 						  <li id="nava"><a href="contextView.action?contextName=createNew&resetContextView=true">Create New</a></li>
 						</ul>					
 					</div>				
@@ -206,6 +206,7 @@
 						<c:choose>
 							
 							<c:when test="${aef:isProduct(page)}">
+								&gt;
 								<ww:url id="prodLink" action="contextView" includeParams="none">
 									<ww:param name="contextObjectId" value="${page.id}"/>				
 									<ww:param name="resetContextView" value="true"/>	

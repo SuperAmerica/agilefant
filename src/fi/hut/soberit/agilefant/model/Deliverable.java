@@ -1,8 +1,10 @@
 package fi.hut.soberit.agilefant.model;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
@@ -10,6 +12,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 
 import org.hibernate.annotations.Formula;
+import org.hibernate.annotations.OrderBy;
 import org.hibernate.annotations.Type;
 
 import fi.hut.soberit.agilefant.web.page.PageItem;
@@ -45,7 +48,7 @@ public class Deliverable extends Backlog implements PageItem, EffortContainer {
 	private ActivityType activityType;
 	private Date endDate;
 	private Date startDate;
-	private Collection<Iteration> iterations = new HashSet<Iteration>();
+	private List<Iteration> iterations = new ArrayList<Iteration>();
 	private User owner;
 	private AFTime effortEstimate;
 	private AFTime performedEffort;
@@ -70,10 +73,11 @@ public class Deliverable extends Backlog implements PageItem, EffortContainer {
 	
 	/** Iterations under this deliverable. */
 	@OneToMany(mappedBy="deliverable")
-	public Collection<Iteration> getIterations() {
+	@OrderBy(clause="startDate asc, endDate asc")
+	public List<Iteration> getIterations() {
 	    return iterations;
 	}
-	public void setIterations(Collection<Iteration> iterations) {
+	public void setIterations(List<Iteration> iterations) {
 	    this.iterations = iterations;
 	}
 	
@@ -103,8 +107,9 @@ public class Deliverable extends Backlog implements PageItem, EffortContainer {
 		
 	/** {@inheritDoc} */
 	@Transient
-	public Collection<PageItem> getChildren() {
-		Collection<PageItem> c = new HashSet<PageItem>(this.iterations.size());
+	public List<PageItem> getChildren() {
+		List<PageItem> c = 
+			new ArrayList<PageItem>(this.iterations.size());
 		c.addAll(this.iterations);
 		return c;
 	}

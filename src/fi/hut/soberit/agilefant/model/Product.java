@@ -1,11 +1,15 @@
 package fi.hut.soberit.agilefant.model;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
+
+import org.hibernate.annotations.OrderBy;
 
 import fi.hut.soberit.agilefant.web.page.PageItem;
 
@@ -30,23 +34,24 @@ import fi.hut.soberit.agilefant.web.page.PageItem;
 @Entity
 public class Product extends Backlog implements PageItem {
 	
-    private Collection<Deliverable> deliverables = new HashSet<Deliverable>();
+    private List<Deliverable> deliverables = new ArrayList<Deliverable>();
 
     /** Get the collection of deliverables belonging to this product. */
     @OneToMany(mappedBy="product")
-    public Collection<Deliverable> getDeliverables() {
+    @OrderBy(clause="startDate asc, endDate asc")
+    public List<Deliverable> getDeliverables() {
         return deliverables;
     }
     
     /** Set the collection of deliverables belonging to this product. */
-    public void setDeliverables(Collection<Deliverable> deliverables) {
+    public void setDeliverables(List<Deliverable> deliverables) {
         this.deliverables = deliverables;
     }
     
     /** {@inheritDoc} */
     @Transient
-	public Collection<PageItem> getChildren() {
-		Collection<PageItem> c = new HashSet<PageItem>(this.deliverables.size());
+	public List<PageItem> getChildren() {
+		List<PageItem> c = new ArrayList<PageItem>(this.deliverables.size());
 		c.addAll(this.deliverables);
 		return c;
 	}

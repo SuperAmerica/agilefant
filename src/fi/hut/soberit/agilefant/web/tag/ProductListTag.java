@@ -11,8 +11,10 @@ public class ProductListTag extends SpringTagSupport{
 		
 	@Override
 	public int doStartTag() throws JspException {
-		productDAO = (ProductDAO)super.getApplicationContext().getBean("productDAO");
-		super.getPageContext().setAttribute(ProductListTag.PRODUCT_LIST_KEY, productDAO.getAll());
+		productDAO = 
+			(ProductDAO)super.getApplicationContext().getBean("productDAO");
+		super.getPageContext().setAttribute(ProductListTag.PRODUCT_LIST_KEY, 
+				productDAO.getAllOrderByName());
 		return Tag.EVAL_BODY_INCLUDE;
 	}
 }

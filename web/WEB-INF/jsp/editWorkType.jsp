@@ -5,10 +5,10 @@
 	<ww:actionmessage/>
 	<c:choose>
 		<c:when test="${workType.id == 0}">
-			<h2>Create new work type</h2>
+			<h2>Create work type</h2>
 		</c:when>
 		<c:otherwise>
-			<h2>Edit work type: ${workType.name}</h2>
+			<h2>Edit work type</h2>
 		</c:otherwise>
 	</c:choose>
 	<ww:form action="storeWorkType">

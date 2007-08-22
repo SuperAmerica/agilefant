@@ -3,6 +3,7 @@ package fi.hut.soberit.agilefant.web;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Map;
 
 import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
@@ -63,6 +64,7 @@ public class ProductAction extends ActionSupport implements CRUDAction {
 
 	public String store() {
 		Product storable = new Product();
+		
 		if (productId > 0){
 			storable = productDAO.get(productId);
 			if (storable == null){
@@ -74,9 +76,11 @@ public class ProductAction extends ActionSupport implements CRUDAction {
 		if (super.hasActionErrors()){
 			return Action.ERROR;
 		}
-		productDAO.store(storable);
+		
 		if (productId == 0) {
-			productId = storable.getId();
+			productId = (Integer) productDAO.create(storable);
+		} else {
+			productDAO.store(storable);
 		}
 		return Action.SUCCESS;
 	}

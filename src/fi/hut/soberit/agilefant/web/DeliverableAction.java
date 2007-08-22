@@ -14,7 +14,6 @@ import fi.hut.soberit.agilefant.db.ProductDAO;
 import fi.hut.soberit.agilefant.db.TaskEventDAO;
 import fi.hut.soberit.agilefant.model.ActivityType;
 import fi.hut.soberit.agilefant.model.Backlog;
-import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.Deliverable;
 import fi.hut.soberit.agilefant.model.Product;
 
@@ -90,7 +89,12 @@ public class DeliverableAction extends ActionSupport implements CRUDAction {
 		if (super.hasActionErrors()){
 			return Action.ERROR;
 		}
-		deliverableDAO.store(storable);
+		
+		if(deliverableId == 0)
+			deliverableId = (Integer) deliverableDAO.create(storable);
+		else
+			deliverableDAO.store(storable);
+		
 		return Action.SUCCESS;
 	}
 	

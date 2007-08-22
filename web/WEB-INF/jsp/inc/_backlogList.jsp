@@ -121,11 +121,11 @@
 			</span>
 		</display:column>
 
-		<display:column sortable="true" sortProperty="performedEffort" defaultorder="descending"
+<%--		<display:column sortable="true" sortProperty="performedEffort" defaultorder="descending"
 			title="Work reported">
 			${item.performedEffort}
 		</display:column>
-
+--%>
 <%--		<display:column sortable="true" title="DebugEst">
 			<c:choose>
 				<c:when test="${!empty item.effortEstimate}">
@@ -152,7 +152,6 @@
 		<display:footer>
 			<tr>
 				<td>Total:</td>
-				<td>&nbsp;</td>
 				<td>&nbsp;</td>
 				<td>&nbsp;</td>
 				<td>&nbsp;</td>

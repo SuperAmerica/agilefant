@@ -38,11 +38,6 @@ public class IterationAction extends ActionSupport implements CRUDAction {
 	private String endDate;
 
 	public String create(){
-		Deliverable deliverable =  deliverableDAO.get(deliverableId);
-		if (deliverable == null){
-			super.addActionError(super.getText("iteration.deliverableNotFound"));
-			return Action.INPUT;
-		}
 		iterationId = 0;
 		iteration = new Iteration();
 		backlog = iteration;
@@ -108,7 +103,11 @@ public class IterationAction extends ActionSupport implements CRUDAction {
 		if (super.hasActionErrors()){
 			return Action.ERROR;
 		}
-		iterationDAO.store(fillable);
+		
+		if(iterationId == 0)
+			iterationId = (Integer) iterationDAO.create(fillable);
+		else
+			iterationDAO.store(fillable);
 		return Action.SUCCESS;
 	}
 	

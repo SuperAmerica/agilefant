@@ -13,7 +13,14 @@
 <ww:actionerror/>
 <ww:actionmessage/>
 
-	<h2>Edit task</h2>
+	<c:choose>
+		<c:when test="${taskId == 0}">
+			<h2>Create task</h2>
+		</c:when>
+		<c:otherwise>
+			<h2>Edit task</h2>
+		</c:otherwise>
+	</c:choose>
 	
 	<c:choose>
 		<c:when test="${taskId == 0}">

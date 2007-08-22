@@ -13,7 +13,14 @@
 <ww:actionerror/>
 <ww:actionmessage/>
 
-	<h2>Edit iteration goal</h2>
+	<c:choose>
+		<c:when test="${iterationGoalId == 0}">
+			<h2>Create iteration goal</h2>
+		</c:when>
+		<c:otherwise>
+			<h2>Edit iteration goal</h2>
+		</c:otherwise>
+	</c:choose>
 	
 	<c:choose>
 		<c:when test="${iterationGoalId == 0}">
@@ -42,13 +49,14 @@
 				<td></td>
 				<td>
 					<select name="iterationId">
+						<option value="" class="inactive">(select iteration)</option>
 						<c:forEach items="${productList}" var="product">
 							<option value="" class="inactive">${product.name}</option>
 							<c:forEach items="${product.deliverables}" var="deliverable">
 								<option value="" class="inactive">&nbsp;&nbsp;&nbsp;&nbsp;${deliverable.name}</option>
 								<c:forEach items="${deliverable.iterations}" var="iter">
 									<c:choose>
-										<c:when test="${iterationId == iter.id}">
+										<c:when test="${iter.id == currentIterationId}">
 											<option selected="selected" value="${iter.id}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${iter.name}</option>
 										</c:when>
 										<c:otherwise>
@@ -74,7 +82,7 @@
 	</ww:form>
 		
 	<table><tr><td>
-
+		<c:if test="${iterationId != 0}">
 		<div id="subItems">
 			<div id="subItemHeader">
 				Backlog items 
@@ -164,4 +172,5 @@
 		</div>
 	</c:if>	
 	</div>
+	</c:if>
 <%@ include file="./inc/_footer.jsp" %>

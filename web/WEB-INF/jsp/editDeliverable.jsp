@@ -49,7 +49,14 @@
 
 <aef:productList/>
 
-<h2>Project</h2>
+	<c:choose>
+		<c:when test="${deliverableId == 0}">
+			<h2>Create project</h2>
+		</c:when>
+		<c:otherwise>
+			<h2>Edit project</h2>
+		</c:otherwise>
+	</c:choose>
 
 	<c:choose>
 		<c:when test="${deliverableId == 0}">
@@ -62,7 +69,6 @@
 	
 	<ww:form action="store${new}Deliverable">
 		<ww:hidden name="deliverableId" value="${deliverable.id}"/>
-		<ww:hidden name="productId"/>
 			
 		<table class="formTable">
 		<tr>
@@ -82,6 +88,27 @@
 		<td></td>
 		<td><ww:textarea cols="70" rows="10" name="deliverable.description" /></td>	
 		</tr>
+			
+		<tr>
+		<td>Product</td>
+		<td>*</td>
+		<td>
+			
+			<select name="productId">	
+				<option class="inactive" value="">(select product)</option>
+				<c:forEach items="${productList}" var="product">
+					<c:choose>
+						<c:when test="${product.id == currentProductId}">
+							<option selected="selected" value="${product.id}" title="${product.name}">${aef:out(product.name)}</option>
+						</c:when>
+						<c:otherwise>
+							<option value="${product.id}" title="${product.name}">${aef:out(product.name)}</option>
+						</c:otherwise>
+					</c:choose>
+				</c:forEach>	
+			</select>
+		</td>
+		</tr>	
 			
 		<tr>
 		<td>Activity type</td>
@@ -120,6 +147,7 @@
 	</ww:form>		
 	
 <table><tr><td>
+	<c:if test="${deliverable.id > 0}">
 	<div id="subItems">
 		<div id="subItemHeader">
 			Iterations 
@@ -128,7 +156,7 @@
 			</ww:url>
 			<ww:a href="%{createLink}&contextViewName=editDeliverable&contextObjectId=${deliverable.id}">Create new &raquo;</ww:a>
 		</div>
-		<c:if test="${deliverable.id > 0}">
+		<c:if test="${!empty deliverable.iterations}">
 		<div id="subItemContent">
 		<p>
 			<display:table class="listTable" name="deliverable.iterations" id="row" requestURI="editDeliverable.action">
@@ -188,6 +216,7 @@
 	</div>
 	</c:if>
 </div>
+</c:if>
 </td></tr></table>
 
 </c:otherwise>

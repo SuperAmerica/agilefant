@@ -204,7 +204,10 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
 		EffortHistoryUpdater.updateEffortHistory(effortHistoryDAO,
 				taskEventDAO, backlogItemDAO, newBacklog);
 		
-		backlogItemDAO.store(storable);
+		if(backlogItemId == 0)
+			backlogItemId = (Integer) backlogItemDAO.create(storable);
+		else
+			backlogItemDAO.store(storable);
 		
 		return Action.SUCCESS;
 	}

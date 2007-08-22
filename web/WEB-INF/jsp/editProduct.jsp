@@ -9,7 +9,15 @@
 <aef:menu navi="${contextName}"  pageHierarchy="${pageHierarchy}"  /> 
 	<ww:actionerror/>
 	<ww:actionmessage/>
-	<h2>Product</h2>
+	
+	<c:choose>
+		<c:when test="${productId == 0}">
+			<h2>Create product</h2>
+		</c:when>
+		<c:otherwise>
+			<h2>Edit product</h2>
+		</c:otherwise>
+	</c:choose>
 	
 	<c:choose>
 		<c:when test="${productId == 0}">
@@ -51,6 +59,7 @@
 	</ww:form>
 			
 <table><tr><td>
+		<c:if test="${product.id > 0}">
 		<div id="subItems">
 		<div id="subItemHeader">
 			Projects		
@@ -60,7 +69,7 @@
 			<ww:a href="%{createLink}&contextViewName=editProduct&contextObjectId=${product.id}">Create new &raquo;</ww:a>
 		</div>
 
-		<c:if test="${product.id > 0}">
+		<c:if test="${!empty product.deliverables}"> 
 		<div id="subItemContent">
 			<p>
 				<display:table class="listTable" name="product.deliverables" id="row" requestURI="editProduct.action">
@@ -118,6 +127,7 @@
 		</div>
 		</c:if>
 	</div>	
+	</c:if>
 </td></tr></table>
 
 <%@ include file="./inc/_footer.jsp" %>

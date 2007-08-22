@@ -108,8 +108,12 @@ public class TaskAction extends ActionSupport implements CRUDAction {
 		
 		if (super.hasActionErrors()){
 			return Action.ERROR;
-		}		
-		taskDAO.store(storable);
+		}
+		
+		if(taskId == 0)
+			taskId = (Integer) taskDAO.create(storable);
+		else
+			taskDAO.store(storable);
 		
 		/* Update effort history */
 		backlog = backlogItemDAO.get(backlogItemId).getBacklog();

@@ -4,7 +4,16 @@
 <aef:menu navi="users" pageHierarchy="${pageHierarchy}"/> 
 	<ww:actionerror/>
 	<ww:actionmessage/>
-	<h2>Edit User</h2>
+
+	<c:choose>
+		<c:when test="${user.id == 0}">
+			<h2>Create user</h2>
+		</c:when>
+		<c:otherwise>
+			<h2>Edit user</h2>
+		</c:otherwise>
+	</c:choose>
+
 	<ww:form method="POST" action="storeUser">
 		<c:if test="${user.id > 0}">
 			<p>

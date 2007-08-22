@@ -27,7 +27,6 @@ public class IterationGoalAction extends ActionSupport implements CRUDAction {
 		iterationGoalId = 0;
 		iterationGoal = new IterationGoal();
 		iteration = iterationDAO.get(iterationId);
-		iterationId = iteration.getId();
 		return Action.SUCCESS;
 	}
 
@@ -69,7 +68,10 @@ public class IterationGoalAction extends ActionSupport implements CRUDAction {
 		if (super.hasActionErrors()){
 			return Action.ERROR;
 		}
-		iterationGoalDAO.store(storable);
+		if(iterationGoalId == 0)
+			iterationGoalId = (Integer) iterationGoalDAO.create(storable);
+		else
+			iterationGoalDAO.store(storable);
 		return Action.SUCCESS;
 	}
 	

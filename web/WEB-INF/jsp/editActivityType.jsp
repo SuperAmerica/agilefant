@@ -5,10 +5,10 @@
 	<ww:actionmessage/>
 	<c:choose>
 		<c:when test="${activityType.id == 0}">
-			<h2>Create new activity type</h2>
+			<h2>Create activity type</h2>
 		</c:when>
 		<c:otherwise>
-			<h2>Edit activity type: ${activityType.name}</h2>
+			<h2>Edit activity type</h2>
 		</c:otherwise>
 	</c:choose>
 	<ww:form action="storeActivityType">

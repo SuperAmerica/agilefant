@@ -13,7 +13,15 @@
 <aef:menu navi="${contextName}" pageHierarchy="${pageHierarchy}"/> 
 	<ww:actionerror/>
 	<ww:actionmessage/>
-	<h2>Edit backlog item</h2>
+	
+	<c:choose>
+		<c:when test="${backlogItemId == 0}">
+			<h2>Create backlog item</h2>
+		</c:when>
+		<c:otherwise>
+			<h2>Edit backlog item</h2>
+		</c:otherwise>
+	</c:choose>
 	
 	<c:choose>
 		<c:when test="${backlogItemId == 0}">
@@ -77,22 +85,12 @@
 		<td></td>
 		<td>
 		<select name="backlogId">	
-		
-			<%-- logId = backlogItem.backlog.id if editing page
-					 logId = backlogId if creating a new backlog item  --%>
-			<c:choose>
-				<c:when test="${!empty backlogItem.backlog}">
-					<c:set var="logId" value="${backlogItem.backlog.id}" scope="page"/>	
-				</c:when>
-				<c:otherwise>
-					<c:set var="logId" value="${backlogId}" scope="page"/>
-				</c:otherwise>
-			</c:choose>	
-			
+				
 			<%-- Generate a drop-down list showing all backlogs in a hierarchical manner --%>
+			<option class="inactive" value="">(select backlog)</option>
 			<c:forEach items="${productList}" var="product">
 				<c:choose>
-					<c:when test="${product.id == logId}">
+					<c:when test="${product.id == currentPageId}">
 						<option selected="selected" value="${product.id}" title="${product.name}">${aef:out(product.name)}</option>
 					</c:when>
 					<c:otherwise>
@@ -101,7 +99,7 @@
 				</c:choose>
 				<c:forEach items="${product.deliverables}" var="deliverable">
 					<c:choose>
-						<c:when test="${deliverable.id == logId}">
+						<c:when test="${deliverable.id == currentPageId}">
 							<option selected="selected" value="${deliverable.id}" title="${deliverable.name}">&nbsp;&nbsp;&nbsp;&nbsp;${aef:out(deliverable.name)}</option>
 						</c:when>
 						<c:otherwise>
@@ -110,7 +108,7 @@
 					</c:choose>
 					<c:forEach items="${deliverable.iterations}" var="iteration">
 						<c:choose>
-							<c:when test="${iteration.id == logId}">
+							<c:when test="${iteration.id == currentPageId}">
 								<option selected="selected" value="${iteration.id}" title="${iteration.name}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${aef:out(iteration.name)}</option>
 							</c:when>
 							<c:otherwise>

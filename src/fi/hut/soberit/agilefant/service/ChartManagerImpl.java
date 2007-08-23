@@ -45,8 +45,6 @@ public class ChartManagerImpl implements ChartManager {
 	private BacklogItemDAO backlogItemDAO;
 	private TaskEventDAO taskEventDAO;
 	
-	private Log logger = LogFactory.getLog(getClass());
-	
 	/**
 	 * Generates a byte array (a png image file) from a JFreeChart object
 	 * 
@@ -81,8 +79,7 @@ public class ChartManagerImpl implements ChartManager {
 		
 		
 		/* First estimateSeries data point is the first original estimate */	
-		BacklogValueInjector.injectMetrics(backlog, 
-				new java.sql.Date(startDate.getTime()), 
+		BacklogValueInjector.injectMetrics(backlog, startDate, 
 				taskEventDAO, backlogItemDAO);
 
 		effortHistory = effortHistoryDAO.getByDateAndBacklog(
@@ -101,7 +98,7 @@ public class ChartManagerImpl implements ChartManager {
 				effLeft = 0L;
 			}
 		}	
-		estimateSeries.add(new Day(startDate), effLeft/3600000);
+		estimateSeries.add(new Day(startDate), (float)effLeft/3600000.0);
 		
 		/* Add effort left data points to estimateSeries*/
 		GregorianCalendar i = new GregorianCalendar();
@@ -120,13 +117,13 @@ public class ChartManagerImpl implements ChartManager {
 			i.add(Calendar.DATE, 1);
 			if(effortHistory != null)
 				effLeft = effortHistory.getEffortLeft().getTime();
-			estimateSeries.add(new Day(i.getTime()), effLeft/3600000);
+			estimateSeries.add(new Day(i.getTime()), (float)effLeft/3600000.0);
 		}
 
 		/* Reference series first data point is the latest original estimate
 		 * available. The last point is zero */
 		referenceSeries.add(new Day(startDate), 
-				backlog.getBliOrigEstSum().getTime()/3600000);
+				(float)backlog.getBliOrigEstSum().getTime()/3600000.0);
 		
 		/* EndDate should be one day bigger in chart */
 		GregorianCalendar newEndDate = new GregorianCalendar();

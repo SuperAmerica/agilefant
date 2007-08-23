@@ -27,13 +27,12 @@
 <ww:actionerror/>
 <ww:actionmessage/>
 
-<ww:date name="%{new java.util.Date()}" id="start"/>
-<ww:date name="%{new java.util.Date()}" id="end"/>
+<ww:date name="%{new java.util.Date()}" id="start" format="%{getText('webwork.shortDateTime.format')}"/>	
+<ww:date name="%{new java.util.Date()}" id="end" format="%{getText('webwork.shortDateTime.format')}"/>
 		
 <c:if test="${deliverable.id > 0}">
-<ww:date name="%{deliverable.startDate}" id="start"/>
-<ww:date name="%{deliverable.endDate}" id="end"/>
-
+		<ww:date name="%{deliverable.startDate}" id="start" format="%{getText('webwork.shortDateTime.format')}"/>
+		<ww:date name="%{deliverable.endDate}" id="end" format="%{getText('webwork.shortDateTime.format')}"/>
 </c:if>
 
 
@@ -120,8 +119,7 @@
 		<td>Start date</td>
 		<td>*</td>
 		<td>
-			    <ww:datepicker value="%{#start}" size="10" showstime="%{true}"  format="%{getText('webwork.datepicker.format')}" name="deliverable.startDate" /> 
-		
+				<ww:datepicker value="%{#start}" size="15" showstime="true"  format="%{getText('webwork.datepicker.format')}" name="startDate" /> 		
 		</td>	
 		</tr>
 			
@@ -129,7 +127,7 @@
 		<td>End date</td>
 		<td>*</td>
 		<td>
-			    <ww:datepicker value="%{#end}" size="10" showstime="%{true}"  format="%{getText('webwork.datepicker.format')}" name="deliverable.endDate" /> 		
+			  <ww:datepicker value="%{#end}" size="15" showstime="true"  format="%{getText('webwork.datepicker.format')}" name="endDate" />
 		</td>	
 		</tr>
 			

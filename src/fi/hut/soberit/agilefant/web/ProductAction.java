@@ -55,8 +55,7 @@ public class ProductAction extends ActionSupport implements CRUDAction {
 			return Action.ERROR;
 		}
 		backlog = product;
-		BacklogValueInjector.injectMetrics(backlog,
-				new java.sql.Date(startDate.getTime()), 
+		BacklogValueInjector.injectMetrics(backlog, startDate, 
 				taskEventDAO, backlogItemDAO);
 		
 		return Action.SUCCESS;

@@ -61,14 +61,14 @@
 		<c:choose>
 		<c:when test="${backlogItem.bliOrigEst == null}">
 			<tr>
-			<td>Effort estimate</td>
+			<td>Original estimate</td>
 			<td></td>
 			<td><ww:textfield size="10" name="backlogItem.allocatedEffort"/>(usage: *h *m, e.g. 3h) </td>	
 			</tr>
 		</c:when>
 		<c:otherwise>
 			<tr>
-			<td>Original estimate </td>
+			<td>Original estimate</td>
 			<td></td>
 			<td><ww:label value="${backlogItem.bliOrigEst}"/>
 			</tr>
@@ -233,9 +233,11 @@
 				<display:column sortable="true" title="Effort left" sortProperty="effortEstimate.time">
 					${row.effortEstimate}
 				</display:column>
+				<%--
 				<display:column sortable="true" title="Work performed" sortProperty="performedEffort.time">
 					${row.performedEffort}
 				</display:column>
+				--%>
 				<display:column sortable="true" title="Priority" defaultorder="descending"  sortProperty="priority.ordinal">
 					<ww:text name="task.priority.${row.priority}"/>
 				</display:column>

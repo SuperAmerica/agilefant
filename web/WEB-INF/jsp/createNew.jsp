@@ -10,36 +10,72 @@
 
 <li>
 	<ww:url id="createLink" action="createProduct" includeParams="none"/>
-	<ww:a href="%{createLink}">Create a new product  &raquo;</ww:a>
+	<ww:a href="%{createLink}">Create a new product</ww:a>
 </li>
 
-<c:if test="${hasProducts && hasActivityTypes}">
+<c:choose>
+<c:when test="${hasProducts && hasActivityTypes}">
 	<li>	
 		<ww:url id="createLink" action="createDeliverable" includeParams="none"/>
-		<ww:a href="%{createLink}">Create a new project  &raquo;</ww:a>
+		<ww:a href="%{createLink}">Create a new project</ww:a>
 	</li>
-</c:if>
+</c:when>
+<c:otherwise>
+  <li class="inactive">
+  	<ww:label 
+  		value="Create a new project " 
+  		tooltip="Create a product and a project type before creating a project"/>
+  </li>
+</c:otherwise>
+</c:choose>
 
-<c:if test="${hasProjects}">
+<c:choose>
+<c:when test="${hasProjects}">
 	<li>	
 		<ww:url id="createLink" action="createIteration" includeParams="none"/>
-		<ww:a href="%{createLink}">Create a new iteration  &raquo;</ww:a>
+		<ww:a href="%{createLink}">Create a new iteration</ww:a>
 	</li>
-</c:if>
+</c:when>
+<c:otherwise>
+  <li class="inactive">
+  	<ww:label 
+  		value="Create a new iteration"
+  		tooltip="Create a project before creating an iteration"/>
+ 	</li>
+</c:otherwise>
+</c:choose>
 
-<c:if test="${hasIterations}">
+<c:choose>
+<c:when test="${hasIterations}">
 	<li>	
 		<ww:url id="createLink" action="createIterationGoal" includeParams="none"/>
-		<ww:a href="%{createLink}">Create a new iteration goal  &raquo;</ww:a>
+		<ww:a href="%{createLink}">Create a new iteration goal</ww:a>
 	</li>
-</c:if>	
+</c:when>	
+<c:otherwise>
+  <li class="inactive">
+  	<ww:label 
+  		value="Create a new iteration goal"
+ 			tooltip="Create an iteration before creating an iteration goal" />
+ 	</li>
+</c:otherwise>
+</c:choose>
 
-<c:if test="${hasProducts}">
+<c:choose>
+<c:when test="${hasProducts}">
 <li>	
 	<ww:url id="createLink" action="createBacklogItem" includeParams="none"/>
-	<ww:a href="%{createLink}">Create a new backlog item  &raquo;</ww:a>
+	<ww:a href="%{createLink}">Create a new backlog item </ww:a>
 </li>
-</c:if>	
+</c:when>	
+<c:otherwise>
+  <li class="inactive">
+  	<ww:label
+  		value="Create a new backlog item"
+  		tooltip="Create a product before creating a backlog item" />	
+	</li>
+</c:otherwise>
+</c:choose>
 
 <li>	
 	<ww:url id="createLink" action="createUser" includeParams="none"/>
@@ -51,12 +87,14 @@
 	<ww:a href="%{createLink}">Create a new project type &raquo;</ww:a>
 </li>
 
+<!-- 
 <c:if test="${hasActivityTypes}">
 <li>	
 	<ww:url id="createLink" action="createWorkType" includeParams="none"/>
 	<ww:a href="%{createLink}">Create a new work type &raquo;</ww:a>
 </li>
 </c:if>	
+-->
 	
 </ul>
 </p>

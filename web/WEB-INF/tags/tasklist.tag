@@ -27,7 +27,7 @@
 						</ww:a>
 						<br/>
 						
-						<ww:form action="storeNewTask">
+						<ww:form action="quickStoreTask">
 							<ww:hidden name="backlogItemId" value="${task.backlogItem.id}"/>
 							<ww:hidden name="task.name" value="${task.name}"/>
 							<ww:hidden name="task.priority" value="${task.priority}"/>
@@ -40,13 +40,13 @@
 							
 							<ww:textfield size="5" name="task.effortEstimate" value="${task.effortEstimate}"/>
 							<ww:select name="task.status" value="#attr.task.status.name" list="@fi.hut.soberit.agilefant.model.TaskStatus@values()" listKey="name" listValue="getText('task.status.' + name())"/>		
-							<ww:submit name="action:storeNewTask" value="Store"/>		
+							<ww:submit name="action:quickStoreTask" value="Store"/>		
 						</ww:form>
 						</li>
 					</c:if>
 				</c:when>
 				<c:otherwise>
-						<ww:form action="storeNewTask">
+						<ww:form action="quickStoreTask"> 
 							<ww:hidden name="backlogItemId" value="${task.backlogItem.id}"/>
 							<ww:hidden name="task.name" value="${task.name}"/>
 							<ww:hidden name="task.priority" value="${task.priority}"/>
@@ -59,7 +59,7 @@
 							
 							<ww:textfield size="5" name="task.effortEstimate" value="${task.effortEstimate}"/>
 							<ww:select name="task.status" value="#attr.task.status.name" list="@fi.hut.soberit.agilefant.model.TaskStatus@values()" listKey="name" listValue="getText('task.status.' + name())"/>		
-							<ww:submit name="action:storeNewTask" value="Store"/>		
+							<ww:submit name="action:quickStoreTask" value="Store"/>		
 						</ww:form>
 				</c:otherwise>
 				</c:choose>

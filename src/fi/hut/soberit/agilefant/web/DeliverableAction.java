@@ -1,5 +1,6 @@
 package fi.hut.soberit.agilefant.web;
 
+import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
@@ -33,7 +34,9 @@ public class DeliverableAction extends ActionSupport implements CRUDAction {
 	private Backlog backlog;
 	private TaskEventDAO taskEventDAO;
 	private BacklogItemDAO backlogItemDAO;
-			
+	private String startDate;
+	private String endDate;
+	
 	public String create(){
 		this.prepareActivityTypes();
 		//TODO: fiksumpi virheenkäsittely
@@ -69,8 +72,7 @@ public class DeliverableAction extends ActionSupport implements CRUDAction {
 		productId = deliverable.getProduct().getId();
 		backlog = deliverable;
 
-		BacklogValueInjector.injectMetrics(backlog,
-				new java.sql.Date(startDate.getTime()), 
+		BacklogValueInjector.injectMetrics(backlog, startDate, 
 				taskEventDAO, backlogItemDAO);
 		
 		return Action.SUCCESS;
@@ -85,7 +87,14 @@ public class DeliverableAction extends ActionSupport implements CRUDAction {
 				return Action.ERROR;
 			}
 		}
-		this.fillStorable(storable);
+		
+		try {
+			this.fillStorable(storable);
+		} catch (ParseException e) {
+			super.addActionError(e.toString());
+			return Action.ERROR;
+		}
+		
 		if (super.hasActionErrors()){
 			return Action.ERROR;
 		}
@@ -116,28 +125,28 @@ public class DeliverableAction extends ActionSupport implements CRUDAction {
 		return Action.SUCCESS;
 	}
 	
-	protected void fillStorable(Deliverable storable){
+	protected void fillStorable(Deliverable storable) throws ParseException {
 		Date current = Calendar.getInstance().getTime();
 		if(this.deliverable.getName().equals("")) {
 			super.addActionError(super.getText("project.missingName"));
 			return;
 		}
+		
+		deliverable.setStartDate(startDate);
 		if (deliverable.getStartDate() == null){
 			super.addActionError(super.getText("deliverable.missingStartDate"));
 			return;
 		}
+		
+		deliverable.setEndDate(endDate);
 		if (deliverable.getEndDate() == null){
 			super.addActionError(super.getText("deliverable.missingEndDate"));
 			return;
 		}
 		if (deliverable.getStartDate().after(deliverable.getEndDate())){
-			super.addActionError(super.getText("deliverable.startDateAfterEndDate"));
+			super.addActionError(super.getText("backlog.startDateAfterEndDate"));
 			return;
 		}
-		if (deliverable.getEndDate().before(current)){
-			super.addActionError(super.getText("deliverable.endDateInPast"));
-			return;
-		}		
 		if (storable.getProduct() == null){
 			Product product = productDAO.get(productId);
 			if (product == null){
@@ -160,8 +169,8 @@ public class DeliverableAction extends ActionSupport implements CRUDAction {
 				return;
 			}
 		}
-		storable.setEndDate(deliverable.getEndDate());
-		storable.setStartDate(deliverable.getStartDate());
+		storable.setEndDate(endDate);
+		storable.setStartDate(startDate);
 		storable.setName(deliverable.getName());
 		storable.setDescription(deliverable.getDescription());
 	}
@@ -257,5 +266,21 @@ public class DeliverableAction extends ActionSupport implements CRUDAction {
 	 */
 	public void setTaskEventDAO(TaskEventDAO taskEventDAO) {
 		this.taskEventDAO = taskEventDAO;
+	}
+
+	public String getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(String endDate) {
+		this.endDate = endDate;
+	}
+
+	public String getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(String startDate) {
+		this.startDate = startDate;
 	}
 }

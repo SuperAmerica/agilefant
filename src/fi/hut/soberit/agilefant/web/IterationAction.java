@@ -62,8 +62,7 @@ public class IterationAction extends ActionSupport implements CRUDAction {
 		/* We need Backlog-class object to generate backlog list in 
 		 * _backlogList.jsp */
 		backlog = iteration;
-		BacklogValueInjector.injectMetrics(backlog,
-				new java.sql.Date(startDate.getTime()), 
+		BacklogValueInjector.injectMetrics(backlog,	startDate, 
 				taskEventDAO, backlogItemDAO);
 		
 		if (deliverable == null){
@@ -126,15 +125,24 @@ public class IterationAction extends ActionSupport implements CRUDAction {
 	}
 	
 	protected void fillObject(Iteration fillable) throws ParseException {
+		fillable.setEndDate(endDate);
+		fillable.setStartDate(startDate);
 		if(this.iteration.getName().equals("")) {
 			super.addActionError(super.getText("iteration.missingName"));
+			return;
+		}
+		if (fillable.getStartDate().after(fillable.getEndDate())){
+			super.addActionError(super.getText("backlog.startDateAfterEndDate"));
 			return;
 		}
 		fillable.setDeliverable(this.deliverable);
 		fillable.setName(this.iteration.getName());
 		fillable.setDescription(this.iteration.getDescription());
-		fillable.setEndDate(endDate);
-		fillable.setStartDate(startDate);
+		if (fillable.getStartDate().after(fillable.getEndDate())){
+			super.addActionError(
+					super.getText("backlog.startDateAfterEndDate"));
+			return;
+		}
 	}
 
 	public String moveIterationGoal(){

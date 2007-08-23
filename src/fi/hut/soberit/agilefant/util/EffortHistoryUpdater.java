@@ -40,8 +40,7 @@ public class EffortHistoryUpdater {
 		}
 		
 		/* Set estimate values to backlog items */
-		BacklogValueInjector.injectMetrics(backlog, 
-				new java.sql.Date(backlog.getStartDate().getTime()), 
+		BacklogValueInjector.injectMetrics(backlog, backlog.getStartDate(), 
 				taskEventDAO, backlogItemDAO);
 		
 		effortHistory.setOriginalEstimate(backlog.getBliOrigEstSum());

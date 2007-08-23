@@ -24,18 +24,28 @@
 		<tr>
 		<td>Name</td>
 		<td>*</td>
-		<td> <ww:textfield name="workType.name"/></td>	
+		<td> <ww:textfield size="60" name="workType.name"/></td>	
 		</tr>
 		<tr>
 		<td>Description</td>
 		<td></td>
-		<td><ww:textarea cols="40" rows="6" name="workType.description" /></td>	
+		<td><ww:textarea cols="70" rows="10" name="workType.description" /></td>	
 		</tr>
 		<tr>
 		<td></td>
 		<td></td>
 		<td>
-			<ww:submit value="Store"/>
+			<c:choose>
+				<c:when test="${workType.id == 0}">
+					<ww:submit value="Create"/>
+				</c:when>
+				<c:otherwise>
+				  <ww:submit value="Save"/>
+ 					<span class="deleteButton">
+ 						<ww:submit action="deleteWorkType" value="Delete"/>
+ 					</span>
+				</c:otherwise>
+			</c:choose>
 		</td>	
 		</tr>
 		</table>

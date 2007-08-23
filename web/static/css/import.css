@@ -120,7 +120,7 @@ a:hover,a:active {
 }
 
 #main {
-	padding: 10px;
+	padding: 5px;
 	margin: 0 0 0 200px;
 	width: auto;
 	border-left: 1px solid #ccc;
@@ -202,7 +202,7 @@ a:hover,a:active {
 #subItems {
 	border: 1px solid #ccc;
 	margin-top: 20px;
-	width: 850px;
+	width: 785px;
 }
 
 #subItemHeader {
@@ -212,7 +212,8 @@ a:hover,a:active {
 }
 
 #subItemContent {
-	padding: 10px;
+	padding: 5px;
+	margin-bottom: 20px;
 }
 
 #row, #row1, #row2, #row3, #item {
@@ -402,22 +403,26 @@ div#submenuwrapmyTasks #menu li#subnav1 a,div#submenuwrapiteration #menu li#subn
 }
 
 .shortNameColumn div{
-	width: 180px;	
+	width: 170px;	
 	white-space: nowrap;
 	overflow: hidden;
 
 }
-.taskColumn div{
-	min-width: 150px;	
-}
 
 .taskColumn div{
-	width: 150px;	
+	width: 115px;	
 	white-space: nowrap;
 	overflow: visible;
 }
 
 .iterationGoalColumn div{
+	overflow: hidden;
+	width: 90px;	
+	max-height: 2.5em;
+}
+
+
+.responsibleColumn div{
 	overflow: hidden;
 	width: 90px;	
 	max-height: 2.5em;

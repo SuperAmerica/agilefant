@@ -22,18 +22,29 @@
 		<tr>
 		<td>Name</td>
 		<td>*</td>
-		<td><ww:textfield name="activityType.name"/></td>	
+		<td><ww:textfield size="60" name="activityType.name"/></td>	
 		</tr>
 		<tr>
 		<td>Description</td>
 		<td></td>
-		<td><ww:textarea cols="40" rows="6" name="activityType.description" /></td>	
+		<td><ww:textarea cols="70" rows="10" name="activityType.description" /></td>	
 		</tr>
 		<tr>
 		<td></td>
 		<td></td>
-		<td><ww:submit value="Store"/>
-			</td>	
+		<td>
+			<c:choose>
+				<c:when test="${activityType.id == 0}">
+					<ww:submit value="Create"/>
+				</c:when>
+				<c:otherwise>
+				  <ww:submit value="Save"/>
+ 					<span class="deleteButton">
+ 						<ww:submit action="deleteActivityType" value="Delete"/>
+ 					</span>
+				</c:otherwise>
+			</c:choose>
+		</td>	
 		</tr>
 		</table>
 
@@ -44,20 +55,18 @@
 	
 	
 <table><tr><td>
-
+	
 		<div id="subItems">
 		<div id="subItemHeader">
-			Subitems
-		</div>
-		<div id="subItemContent">
-	
-		<p>Work types 
+			Work types
 			<ww:url id="createLink" action="createWorkType" includeParams="none">
 				<ww:param name="activityTypeId" value="${activityType.id}"/>
 			</ww:url>
 			<ww:a href="%{createLink}">Create new &raquo;</ww:a>		
-		</p>
-		
+		</div>
+		<c:if test="${!empty activityType.workTypes}">
+		<div id="subItemContent">
+	
 		<display:table class="listTable" name="${activityType.workTypes}" id="row" requestURI="editActivityType.action?activityTypeId=${activityType.id}">
 			<display:column sortable="true" property="id"/>
 			<display:column sortable="true" title="Name">
@@ -83,6 +92,7 @@
 			</display:column>
 		</display:table>
 </div>
+</c:if>
 </div>
 </td></tr></table>
 

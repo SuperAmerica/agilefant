@@ -25,11 +25,13 @@
 			<!-- <ww:url id="editLink" action="editUser" includeParams="none">
 				<ww:param name="userId" value="${row.id}"/>
 			</ww:url>-->
+			<c:if test="${row.id != 1}">
 			<ww:url id="deleteLink" action="deleteUser" includeParams="none">
 				<ww:param name="userId" value="${row.id}"/>
 			</ww:url>
 			<!-- <ww:a href="%{editLink}">Edit</ww:a>| -->
 			<ww:a href="%{deleteLink}">Delete</ww:a>
+			</c:if>
 		</display:column>
 	</display:table>
 </p>

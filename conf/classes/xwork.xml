@@ -311,6 +311,12 @@
 				<param name="contextObjectId">${contextObjectId}</param>
 			</result>
 		</action>
+		<action name="quickStoreTask" method="store"
+			class="taskAction">
+			<result type="redirect-action">
+				<param name="actionName">popContext</param>
+			</result>
+		</action>
 		<!-- /Task actions -->
 
 		<!-- Iteration actions -->

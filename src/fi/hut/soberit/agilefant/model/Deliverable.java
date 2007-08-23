@@ -1,5 +1,7 @@
 package fi.hut.soberit.agilefant.model;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -88,13 +90,23 @@ public class Deliverable extends Backlog implements PageItem, EffortContainer {
 	public void setStartDate(Date startDate) {
 	    this.startDate = startDate;
 	}
-
+	public void setStartDate(String startDate) throws ParseException {
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+	    df.setLenient(true);
+	    this.startDate = df.parse( startDate);
+	}
+	
 	//@Column(nullable = false)
 	public Date getEndDate() {
 	    return endDate;
 	}
 	public void setEndDate(Date endDate) {
 	    this.endDate = endDate;
+	}
+	public void setEndDate(String endDate) throws ParseException {
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+	    df.setLenient(true);
+	    this.endDate = df.parse( endDate);
 	}
 	
 	@ManyToOne

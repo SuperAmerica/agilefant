@@ -189,18 +189,30 @@ public abstract class Backlog implements Assignable {
 	public AFTime getPerformedEffort() {
 		return new AFTime(0);
 	}
+	
 	/**
-	 * @return the bliOrigEstSum
+	 * Calculates the BliOrigEstSum by summing the max of bliOrigEst and
+	 * taskSumOrigEst.
+	 * 
+	 * @return the bliOrigEstSum the original estimate sum of the bli
 	 */
 	@Transient
 	public AFTime getBliOrigEstSum() {
 		long bliOrigEstSum = 0L;
+		long taskSum = 0L;
+		long bliSum = 0L;
 		for(BacklogItem i: this.getBacklogItems()) {
 			if(i.getBliOrigEst() != null) {
-				bliOrigEstSum += i.getBliOrigEst().getTime();
-			} else if(i.getTaskSumOrigEst() != null) {
-				bliOrigEstSum += i.getTaskSumOrigEst().getTime();
+				bliSum = i.getBliOrigEst().getTime();
+			} else {
+				bliSum = 0L;
 			}
+			if(i.getTaskSumOrigEst() != null) {
+				taskSum = i.getTaskSumOrigEst().getTime();
+			} else {
+				taskSum = 0L;
+			}
+			bliOrigEstSum += Math.max(bliSum, taskSum);
 		}
 		return new AFTime(bliOrigEstSum);
 	}

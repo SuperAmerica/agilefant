@@ -39,6 +39,11 @@ public class UserAction extends ActionSupport implements CRUDAction{
 			super.addActionError(super.getText("user.hasLinkedItems"));
 			return Action.ERROR;
 		}
+		/* Prevent the deletion of administrator*/
+		if(userId == 1){
+			super.addActionError("User cannot be deleted");
+			return Action.ERROR;
+		}
 		userDAO.remove(userId);
 		return Action.SUCCESS;
 	}

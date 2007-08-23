@@ -5,7 +5,7 @@ import fi.hut.soberit.agilefant.db.TaskEventDAO;
 import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
-import java.sql.Date;
+import java.util.Date;
 
 /**
  * Utility class for injecting backlog item metrics into each backlog item.

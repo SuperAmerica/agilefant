@@ -9,8 +9,8 @@
 		requestURI="${currentAction}.action" >
 
 		<!-- Checkboxes for bulk-moving backlog items -->
-		<display:column sortable="false" title="">
-			<ww:checkbox name="selected" fieldValue="${item.id}" />
+		<display:column sortable="false" title="" class="selectColumn">
+			<div><ww:checkbox name="selected" fieldValue="${item.id}" /></div>
 		</display:column>
 
 		<display:column sortable="true" sortProperty="name" title="Name"
@@ -39,7 +39,7 @@
 					</c:if>
 					
 					tasks, <aef:percentDone
-						backlogItemId="${item.id}" /> % complete<br />
+						backlogItemId="${item.id}" />% done<br />
 						<aef:taskStatusList backlogItemId="${item.id}" id="tsl" /> 
 						<ww:url
 							id="imgUrl" action="drawExtendedBarChart" includeParams="none">
@@ -69,8 +69,8 @@
 		</display:column>
 
 		<display:column sortable="true" sortProperty="assignee.fullName"
-			title="Responsible">
-		${aef:html(item.assignee.fullName)}
+			title="Responsible" class="responsibleColumn">
+		<div>${aef:html(item.assignee.fullName)}</div>
 	</display:column>
 
 		<display:column sortable="true" defaultorder="descending"
@@ -91,13 +91,13 @@
 		</c:choose>
 
 		<display:column sortable="true" sortProperty="bliEffEst" defaultorder="descending"
-			title="Effort Left<br/><span style='white-space: nowrap'>T / BLI</span>">
+			title="Effort Left<br/><span style='white-space: nowrap'>T + BLI</span>">
 			<span style="white-space: nowrap">
 				<c:choose>
 					<c:when test="${item.taskSumEffEst == null}">-</c:when>
 					<c:otherwise>${item.taskSumEffEst}</c:otherwise>
 				</c:choose>
-				 / 
+				 + 
 				<c:choose>
 					<c:when test="${item.bliEffEst == null}">-</c:when>
 					<c:otherwise>${item.bliEffEst}</c:otherwise> 
@@ -106,14 +106,14 @@
 		</display:column>
 
 		<display:column sortable="true" sortProperty="bliOrigEst" defaultorder="descending"
-				title="Original Estimate<br/><span style='white-space: nowrap'>T / BLI
+				title="Original Estimate<br/><span style='white-space: nowrap'>T | BLI
 				</span>">
 			<span style="white-space: nowrap">
 				<c:choose>
 					<c:when test="${item.taskSumOrigEst == null}">-</c:when>
 					<c:otherwise>${item.taskSumOrigEst}</c:otherwise>
 				</c:choose>
-				 / 
+				 | 
 				<c:choose>
 					<c:when test="${item.bliOrigEst == null}">-</c:when>
 					<c:otherwise>${item.bliOrigEst}</c:otherwise> 
@@ -152,7 +152,7 @@
 
 		<display:footer>
 			<tr>
-				<td>Total:</td>
+				<td>&nbsp;</td>
 				<td>&nbsp;</td>
 				<td>&nbsp;</td>
 				<td>&nbsp;</td>
@@ -174,8 +174,8 @@
 	<aef:productList />
 
 	<p>
+	<ww:submit type="button" value="%{'MoveItems'}" label="Move selected to" />
 	<aef:backlogDropdown selectName="targetBacklog"
 			preselectedBacklogId="${backlog.id}" backlogs="${productList}" /> 
-		<ww:submit type="button" value="%{'MoveItems'}" label="Move to backlog" />
 	</p>
 </ww:form>

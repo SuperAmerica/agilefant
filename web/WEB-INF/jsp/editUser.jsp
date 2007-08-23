@@ -42,7 +42,7 @@
 		<td>Email</td>
 		<td>*</td>
 		<td><ww:textfield name="user.email" value="${user.email}"/></td>	
-		</tr>
+		</tr>		
 		<tr>
 		<td>Password</td>
 		<td>*</td>
@@ -57,7 +57,27 @@
 		<td></td>
 		<td></td>
 		<td>
-			<ww:submit value="Store"/>
+			<c:choose>
+				<c:when test="${user.id == 0}">
+					<ww:submit value="Create"/>
+				</c:when>
+				<c:otherwise>
+					<%-- Uncomment to prevent administrator password or username change
+					<c:if test="${user.id != 1}">	 
+					--%>
+				  	<ww:submit value="Save"/>
+				  <%-- 
+				  </c:if>
+				  --%>
+				  
+				  <%-- All users cannot be deleted --%>
+				  <c:if test="${user.id != 1}">
+ 					<span class="deleteButton">
+ 						<ww:submit action="deleteUser" value="Delete"/>
+ 					</span>
+ 					</c:if>
+				</c:otherwise>
+			</c:choose>
 		</td>	
 		</tr>
 		</table>

@@ -113,6 +113,17 @@
 		</hibernatetool>
 	</target>
 
+	<target name="create-ddl" depends="compile"
+		description="Creates db using hibernate tools">
+		<hibernatetool destdir="${build.dir}">
+			<annotationconfiguration
+				propertyfile="${conf.dir}/database-${database.type}.properties"
+				configurationfile="${conf.dir}/hibernate.cfg.xml" />
+			<hbm2ddl export="false"
+				outputfilename="create-db.ddl" />
+		</hibernatetool>
+	</target>
+
 	<target name="create-test-db" depends="compile"
 		description="Creates db using hibernate tools">
 		<hibernatetool destdir="${build.dir}">
@@ -134,7 +145,7 @@
 		</junitreport>
 	</target>
 
-	<!--	<target name="test-prepare-spring-old" depends="compile-tests" description="Prepare Spring-specific stuff for tests">
+	<target name="test-prepare-spring-old" depends="compile-tests" description="Prepare Spring-specific stuff for tests">
 		<copy todir="${build.test.conf.dir}/WEB-INF/">
 		<fileset dir="${conf.dir}" excludes="database-*.properties"/>
 		</copy>
@@ -144,7 +155,7 @@
 		<copy tofile="${build.test.conf.dir}/WEB-INF/database.properties">
 		<fileset file="${conf.dir}/database-fortests-${database.type}.properties"/>
 		</copy>
-		</target>-->
+		</target>
 
 	<target name="copy-spring-files" description="Internal target">
 		<mkdir dir="${destination}/WEB-INF" />
@@ -384,6 +395,7 @@
 
 	<target name="run-jdepend" depends="compile"
 		description="Runs JDepend">
+		<!-- 
 		<mkdir dir="${jdepend.dir}" />
 
 		<jdepend format="xml"
@@ -394,13 +406,15 @@
 		</jdepend>
 		<style basedir="${jdepend.dir}" destdir="${jdepend.dir}"
 			includes="jdepend-report.xml" style="${ant.home}/etc/jdepend.xsl" />
+		 -->
 	</target>
 
 	<target name="war" depends="webapp">
 		<jar basedir="${build.webapp}" includes="**"
 			destfile="${warFile}" />
 	</target>
-
+	
+	<!-- 
 	<target name="release"
 		depends="clean, war, generate-javadocs, doccheck, run-jdepend, drop-create-test-db, emma, test-reports">
 		<mkdir dir="${release.dir}" />
@@ -409,6 +423,24 @@
 		<copy todir="${release.dir}/doc">
 			<fileset dir="${doc.dir}" />
 		</copy>
+	</target>  -->
+
+	<target name="release"
+		depends="clean, war, create-ddl"
+		description="Generates release directory" >
+		<mkdir dir="${release.dir}" />
+		<copy file="${warFile}" todir="${release.dir}"/>
+		<copy file="${basedir}/doc/LICENSE" todir="${release.dir}"/>
+		<copy file="${basedir}/doc/sql/insert-users.sql" todir="${release.dir}"/>
+		<copy file="${build.dir}/create-db.ddl" todir="${release.dir}"/>
+		<copy file="${basedir}/doc/Summary_about_used_libraries.txt" todir="${release.dir}"/>
+	</target>
+
+	<target name="release-zip" depends="release"
+		description="Packs all files in release directory to a zip file">
+		<zip destfile="${release.zip.dir}/agilefant.zip"
+			basedir="${release.dir}"
+			update="true"/>
 	</target>
 
 	<target name="doccheck">

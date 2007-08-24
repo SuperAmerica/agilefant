@@ -94,12 +94,12 @@
 			title="Effort Left<br/><span style='white-space: nowrap'>T + BLI</span>">
 			<span style="white-space: nowrap">
 				<c:choose>
-					<c:when test="${item.taskSumEffEst == null}">-</c:when>
+					<c:when test="${item.taskSumEffEst == null}">&mdash;</c:when>
 					<c:otherwise>${item.taskSumEffEst}</c:otherwise>
 				</c:choose>
 				 + 
 				<c:choose>
-					<c:when test="${item.bliEffEst == null}">-</c:when>
+					<c:when test="${item.bliEffEst == null}">&mdash;</c:when>
 					<c:otherwise>${item.bliEffEst}</c:otherwise> 
 				</c:choose>
 			</span>
@@ -110,12 +110,12 @@
 				</span>">
 			<span style="white-space: nowrap">
 				<c:choose>
-					<c:when test="${item.taskSumOrigEst == null}">-</c:when>
+					<c:when test="${item.taskSumOrigEst == null}">&mdash;</c:when>
 					<c:otherwise>${item.taskSumOrigEst}</c:otherwise>
 				</c:choose>
 				 | 
 				<c:choose>
-					<c:when test="${item.bliOrigEst == null}">-</c:when>
+					<c:when test="${item.bliOrigEst == null}">&mdash;</c:when>
 					<c:otherwise>${item.bliOrigEst}</c:otherwise> 
 				</c:choose>
 			</span>

@@ -1,4 +1,6 @@
-Agilefant uses several third party libraries to avoid inventing the wheel again.
+Agilefant employs several third party libraries, which are listed bellow.
+Please note, that Agilefant itself doesn't directly use all these libraries, 
+but their existence is required by some library (e.g. Spring).
 
 --------------------------
 acegi-security:			http://www.acegisecurity.org/

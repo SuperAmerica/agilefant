@@ -42,7 +42,7 @@
 	<c:when test="${empty activityTypes}">
 				<ww:url id="workTypeLink" action="listActivityTypes" includeParams="none"/>
 				
-				No activity types avalable. <ww:a href="%{workTypeLink}">Add activity types</ww:a>			
+				No project types avalable. <ww:a href="%{workTypeLink}">Add project types</ww:a>			
 	</c:when>
 	<c:otherwise>
 

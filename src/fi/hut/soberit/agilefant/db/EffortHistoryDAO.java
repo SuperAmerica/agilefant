@@ -20,12 +20,22 @@ public interface EffortHistoryDAO extends GenericDAO<EffortHistory>{
 	public EffortHistory getByDateAndBacklog(Date date, Backlog backlog);
 	
 	/**
-	 * Get the latest effort history (the nearest object  
+	 * Get the most recent effort history (the nearest object  
 	 * backwards from the given date)
 	 * @param date the date to start the search for
 	 * @param backlog the backlog of the effort history
 	 * @return the effort history object nearest to the date
 	 */
-	public EffortHistory getLatest(Date date, Backlog backlog);
+	public EffortHistory getMostRecent(Date date, Backlog backlog);
 	
+	/**
+	 * Get the latest effort history (the nearest object  
+	 * forward from the given date)
+	 * @param startDate the date to start the search for
+	 * @param endDate the and date to start the search form
+	 * @param backlog the backlog of the effort history
+	 * @return the effort history object nearest to the date forwards
+	 */
+	public EffortHistory getLatest(Date startDate, Date endDate, 
+			Backlog backlog);
 }

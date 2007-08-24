@@ -22,9 +22,9 @@
 </c:when>
 <c:otherwise>
   <li class="inactive">
-  	<ww:label 
-  		value="Create a new project " 
-  		tooltip="Create a product and a project type before creating a project"/>
+  	<span title="Create a product and a project type before creating a project">
+  		Create a new project 
+  	</span>
   </li>
 </c:otherwise>
 </c:choose>
@@ -38,9 +38,9 @@
 </c:when>
 <c:otherwise>
   <li class="inactive">
-  	<ww:label 
-  		value="Create a new iteration"
-  		tooltip="Create a project before creating an iteration"/>
+  	<span title="Create a project before creating an iteration">
+  		Create a new iteration
+  	</span>
  	</li>
 </c:otherwise>
 </c:choose>
@@ -54,9 +54,9 @@
 </c:when>	
 <c:otherwise>
   <li class="inactive">
-  	<ww:label 
-  		value="Create a new iteration goal"
- 			tooltip="Create an iteration before creating an iteration goal" />
+		<span title="Create an iteration before creating an iteration goal">
+	  	Create a new iteration goal
+		</span>
  	</li>
 </c:otherwise>
 </c:choose>
@@ -70,9 +70,9 @@
 </c:when>	
 <c:otherwise>
   <li class="inactive">
-  	<ww:label
-  		value="Create a new backlog item"
-  		tooltip="Create a product before creating a backlog item" />	
+		<span title="Create a product before creating a backlog item">
+  		Create a new backlog item
+ 		</span>
 	</li>
 </c:otherwise>
 </c:choose>

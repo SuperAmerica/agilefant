@@ -36,7 +36,22 @@ public class DeliverableAction extends ActionSupport implements CRUDAction {
 	private BacklogItemDAO backlogItemDAO;
 	private String startDate;
 	private String endDate;
+	private String dateFormat;
 	
+	/**
+	 * @return the dateFormat
+	 */
+	public String getDateFormat() {
+		return dateFormat;
+	}
+
+	/**
+	 * @param dateFormat the dateFormat to set
+	 */
+	public void setDateFormat(String dateFormat) {
+		this.dateFormat = dateFormat;
+	}
+
 	public String create(){
 		this.prepareActivityTypes();
 		//TODO: fiksumpi virheenkäsittely
@@ -132,13 +147,13 @@ public class DeliverableAction extends ActionSupport implements CRUDAction {
 			return;
 		}
 		
-		deliverable.setStartDate(startDate);
+		deliverable.setStartDate(startDate, dateFormat);
 		if (deliverable.getStartDate() == null){
 			super.addActionError(super.getText("deliverable.missingStartDate"));
 			return;
 		}
 		
-		deliverable.setEndDate(endDate);
+		deliverable.setEndDate(endDate, dateFormat);
 		if (deliverable.getEndDate() == null){
 			super.addActionError(super.getText("deliverable.missingEndDate"));
 			return;
@@ -169,8 +184,8 @@ public class DeliverableAction extends ActionSupport implements CRUDAction {
 				return;
 			}
 		}
-		storable.setEndDate(endDate);
-		storable.setStartDate(startDate);
+		storable.setEndDate(endDate, dateFormat);
+		storable.setStartDate(startDate, dateFormat);
 		storable.setName(deliverable.getName());
 		storable.setDescription(deliverable.getDescription());
 	}

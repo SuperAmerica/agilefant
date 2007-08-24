@@ -53,7 +53,8 @@ public class Iteration extends Backlog implements PageItem, EffortContainer {
     private Deliverable deliverable;
     private AFTime performedEffort;
     private AFTime effortEstimate;
-    private Collection<IterationGoal> iterationGoals = new HashSet<IterationGoal>();
+    private Collection<IterationGoal> iterationGoals = 
+    	new HashSet<IterationGoal>();
 //	private User owner;
     
 	private Log logger = LogFactory.getLog(getClass());
@@ -89,8 +90,9 @@ public class Iteration extends Backlog implements PageItem, EffortContainer {
 	public void setEndDate(Date endDate) {
 	    this.endDate = endDate;
 	}	
-	public void setEndDate(String endDate) throws ParseException {
-		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+	public void setEndDate(String endDate, String dateFormat) 
+			throws ParseException {
+		SimpleDateFormat df = new SimpleDateFormat(dateFormat);
 	    df.setLenient(true);
 	    this.endDate = df.parse( endDate);
 	}
@@ -102,8 +104,9 @@ public class Iteration extends Backlog implements PageItem, EffortContainer {
 	public void setStartDate(Date startDate) {
 	    this.startDate = startDate;
 	}
-	public void setStartDate(String startDate) throws ParseException {
-		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+	public void setStartDate(String startDate, String dateFormat) 
+			throws ParseException {
+		SimpleDateFormat df = new SimpleDateFormat(dateFormat);
 	    df.setLenient(true);
 	    this.startDate = df.parse( startDate);
 	}

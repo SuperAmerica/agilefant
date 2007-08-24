@@ -75,32 +75,6 @@ public class ChartManagerImpl implements ChartManager {
 		long effLeft = 0L;
 		TimeSeries estimateSeries = new TimeSeries("Actual velocity", Day.class);
 		TimeSeries referenceSeries = new TimeSeries("Reference velocity", Day.class);
-
-		
-		
-		/* First estimateSeries data point is the first original estimate */	
-		BacklogValueInjector.injectMetrics(backlog, startDate, 
-				taskEventDAO, backlogItemDAO);
-
-		effortHistory = effortHistoryDAO.getByDateAndBacklog(
-				new java.sql.Date(startDate.getTime()), backlog);
-		
-		if (effortHistory != null) {
-			effLeft = effortHistory.getOriginalEstimate().getTime();;
-		} else {
-			/* If no effort history found for given date, use the latest
-			 * if available, if not the use zero. */
-			effortHistory = effortHistoryDAO.getLatest(
-					new java.sql.Date(startDate.getTime()), backlog);
-			if (effortHistory != null) {
-				effLeft = effortHistory.getOriginalEstimate().getTime();
-			} else {
-				effLeft = 0L;
-			}
-		}	
-		estimateSeries.add(new Day(startDate), (float)effLeft/3600000.0);
-		
-		/* Add effort left data points to estimateSeries*/
 		GregorianCalendar i = new GregorianCalendar();
 		GregorianCalendar end = new GregorianCalendar();
 		end.set(GregorianCalendar.HOUR_OF_DAY, 0);
@@ -111,6 +85,59 @@ public class ChartManagerImpl implements ChartManager {
 		i.set(GregorianCalendar.MINUTE, 0);
 		i.set(GregorianCalendar.SECOND, 0);
 		end.setTime(endDate);
+		
+		/* First estimateSeries data point is the first original estimate */	
+		BacklogValueInjector.injectMetrics(backlog, startDate, 
+				taskEventDAO, backlogItemDAO);
+
+		effortHistory = effortHistoryDAO.getByDateAndBacklog(
+				new java.sql.Date(startDate.getTime()), backlog);
+		
+		/* Use start date's effort history as start point for effort left
+		 * series. */
+		if (effortHistory != null) {
+			effLeft = effortHistory.getOriginalEstimate().getTime();
+		} else {
+			/* If no effort history found for start date, use the most
+			 * recent effort left from history */
+			effortHistory = effortHistoryDAO.getMostRecent(
+					new java.sql.Date(startDate.getTime()), backlog);
+			if (effortHistory != null) {
+				effLeft = effortHistory.getEffortLeft().getTime();
+			} else {
+				effortHistory = effortHistoryDAO.getLatest(
+						new java.sql.Date(startDate.getTime()), 
+						new java.sql.Date(endDate.getTime()),
+						backlog);
+				if (effortHistory != null) {
+					effLeft = effortHistory.getOriginalEstimate().getTime();
+					i.setTime(effortHistory.getDate());
+					
+				} else {
+					effLeft = 0L;
+				}
+			}
+		}	
+		estimateSeries.add(new Day(i.getTime()), (float)effLeft/3600000.0);
+		/*
+		 * If first data point is after start date fill previous dates with
+		 * zero data points */
+		if(i.getTime().after(startDate)) {
+			GregorianCalendar fillDate = new GregorianCalendar();
+			fillDate.setTime(startDate);
+			fillDate.set(GregorianCalendar.HOUR_OF_DAY, 0);
+			fillDate.set(GregorianCalendar.MINUTE, 0);
+			fillDate.set(GregorianCalendar.SECOND, 0);
+			while(fillDate.before(i)) {
+				estimateSeries.add(new Day(fillDate.getTime()), 0.0);
+				fillDate.add(Calendar.DATE, 1);
+			}
+		}
+
+		/* Add effort left data points to estimateSeries*/
+	
+		/* Display the effortLeft data point of each effort history day in
+		 * the next day (the effort left "tomorrow morning") */
 		while(!i.after(end) && !i.after(GregorianCalendar.getInstance())) {
 			effortHistory = effortHistoryDAO.getByDateAndBacklog(
 					new java.sql.Date(i.getTimeInMillis()), backlog);

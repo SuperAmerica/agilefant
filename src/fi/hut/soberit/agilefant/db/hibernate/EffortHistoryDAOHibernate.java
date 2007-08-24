@@ -38,7 +38,7 @@ public class EffortHistoryDAOHibernate extends
 	}
 	
 	@SuppressWarnings("unchecked")
-	public EffortHistory getLatest(Date date, Backlog backlog) {
+	public EffortHistory getMostRecent(Date date, Backlog backlog) {
 		
 		List<EffortHistory> resultList;
 		HibernateTemplate ht = super.getHibernateTemplate();
@@ -51,6 +51,39 @@ public class EffortHistoryDAOHibernate extends
 		"e.originalEstimate != null";
 
 		String query2 = "select max(e.date) " + query3 + "";
+
+		String query = "select f from EffortHistory f " +
+		"where f.date = (" + query2 + ") and " +
+		"f.backlog = :backlog " +
+		"order by f.originalEstimate desc";
+				
+		resultList = (List<EffortHistory>)
+			ht.findByNamedParam(query, queryParams, queryValues);
+		
+		if(resultList.isEmpty()) {
+			return null;
+		}
+		return resultList.get(0);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public EffortHistory getLatest(Date startDate, Date endDate, 
+			Backlog backlog) {
+		
+		List<EffortHistory> resultList;
+		HibernateTemplate ht = super.getHibernateTemplate();
+		String[] queryParams = 
+			new String[] {"startDate", "endDate", "backlog"};
+		Object[] queryValues =
+			new Object[] {startDate, endDate, backlog};
+		
+		String query3 = "from EffortHistory e " +
+		"where e.backlog = :backlog and " +
+		"e.date >= :startDate and " +
+		"e.date <= :endDate and " +
+		"e.originalEstimate != null";
+
+		String query2 = "select min(e.date) " + query3 + "";
 
 		String query = "select f from EffortHistory f " +
 		"where f.date = (" + query2 + ") and " +

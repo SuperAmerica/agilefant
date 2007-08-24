@@ -36,7 +36,8 @@ public class IterationAction extends ActionSupport implements CRUDAction {
 	private int iterationGoalId;
 	private String startDate;
 	private String endDate;
-
+	private String dateFormat;
+	
 	public String create(){
 		iterationId = 0;
 		iteration = new Iteration();
@@ -95,7 +96,8 @@ public class IterationAction extends ActionSupport implements CRUDAction {
 		try {
 			this.fillObject(fillable);
 		} catch (ParseException e) {
-			super.addActionError(e.toString());
+			super.addActionError(super.getText("backlog.unparseableDate") + 
+					super.getText("webwork.shortDateTime.format"));
 			return Action.ERROR;
 		}
 		
@@ -125,8 +127,8 @@ public class IterationAction extends ActionSupport implements CRUDAction {
 	}
 	
 	protected void fillObject(Iteration fillable) throws ParseException {
-		fillable.setEndDate(endDate);
-		fillable.setStartDate(startDate);
+		fillable.setEndDate(endDate, dateFormat);
+		fillable.setStartDate(startDate, dateFormat);
 		if(this.iteration.getName().equals("")) {
 			super.addActionError(super.getText("iteration.missingName"));
 			return;
@@ -286,5 +288,19 @@ public class IterationAction extends ActionSupport implements CRUDAction {
 	 */
 	public void setStartDate(String startDate) {
 		this.startDate = startDate;
+	}
+
+	/**
+	 * @return the dateFormat
+	 */
+	public String getDateFormat() {
+		return dateFormat;
+	}
+
+	/**
+	 * @param dateFormat the dateFormat to set
+	 */
+	public void setDateFormat(String dateFormat) {
+		this.dateFormat = dateFormat;
 	}
 }

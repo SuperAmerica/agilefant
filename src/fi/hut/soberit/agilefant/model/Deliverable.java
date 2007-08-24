@@ -90,7 +90,8 @@ public class Deliverable extends Backlog implements PageItem, EffortContainer {
 	public void setStartDate(Date startDate) {
 	    this.startDate = startDate;
 	}
-	public void setStartDate(String startDate) throws ParseException {
+	public void setStartDate(String startDate, String dateFormat) 
+			throws ParseException {
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 	    df.setLenient(true);
 	    this.startDate = df.parse( startDate);
@@ -103,7 +104,8 @@ public class Deliverable extends Backlog implements PageItem, EffortContainer {
 	public void setEndDate(Date endDate) {
 	    this.endDate = endDate;
 	}
-	public void setEndDate(String endDate) throws ParseException {
+	public void setEndDate(String endDate, String dateFormat) 
+			throws ParseException {
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 	    df.setLenient(true);
 	    this.endDate = df.parse( endDate);

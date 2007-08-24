@@ -186,12 +186,13 @@
 		</div>		
 	</c:if>
 	
-</div>
+		</div>
+		<c:if test="${!empty iteration.backlogItems}">
+		<p>	
+			<img src="drawChart.action?iterationId=${iteration.id}"/>
+		</p>
+		</c:if>
 </c:if>
 </td></tr></table>
-
-<p>	
-		<img src="drawChart.action?iterationId=${iteration.id}"/>
-	</p>
 
 <%@ include file="./inc/_footer.jsp" %>

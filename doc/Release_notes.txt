@@ -1,6 +1,9 @@
-Agilefant 1.2.0
 RELEASE NOTES
-28.8.2007
+
+Agilefant 1.2.1 30.8.2007
+- Added xlan/xercses libraries to the distribution package. These libraries were previously distributed with Tomcat.
+
+Agilefant 1.2.0 28.8.2007
 
 CURRENT FUNCTIONALITY
 - Agilefant manages product, project and iteration level backlogs.

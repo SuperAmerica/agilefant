@@ -1,0 +1,21 @@
+Agilefant 1.2.0
+RELEASE NOTES
+28.8.2007
+
+CURRENT FUNCTIONALITY
+- Agilefant manages product, project and iteration level backlogs.
+- All backlogs contain backlog items that can be easily moved between backlogs.
+- Backlog items may be split into individually tracked tasks if needed.
+- Every backlog item and task contains original work estimate and effort left estimate metrics.
+- Numerical effort metrics are presented on every backlog.
+- Graphical effort metrics are shown for each iteration in the form of burndown chart.
+- Burndown chart reflects the velocity of the current work and possible over- or underhead.
+
+CHANGES FROM PREVIOUS VERSION
+- Hour reportin, daily work and development portfolio pages are removed due to immature functionality.
+- User interface is cleaner, simpler and unified through the system.
+- All backlogs are now easily accessible through hierarchical backlog list.
+- Data input and workflow are streamlined.
+- Terminology has been simplified and unified.
+- Simple installation process using a WAR-file.
+- Adoption of the system is guided.

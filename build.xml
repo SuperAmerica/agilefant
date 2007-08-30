@@ -313,7 +313,11 @@
 			<fileset dir="${lib}">
 				<include name="*.jar" />
 				<include name="*.zip" />
+				<include name="*.txt" />
 			</fileset>
+		</copy>
+		<copy todir="${build.webapp}/WEB-INF/lib/licenses/">
+			<fileset dir="${lib}/licenses" />
 		</copy>
 		<copy todir="${build.webapp}/WEB-INF/lib/">
 			<fileset file="${jarFile}" />
@@ -433,6 +437,7 @@
 		<copy file="${basedir}/doc/LICENSE" todir="${release.dir}"/>
 		<copy file="${basedir}/doc/sql/insert-users.sql" todir="${release.dir}"/>
 		<copy file="${build.dir}/create-db.ddl" todir="${release.dir}"/>
+		<copy file="${basedir}/doc/Release_notes.txt" todir="${release.dir}"/>
 		<copy file="${basedir}/doc/Summary_about_used_libraries.txt" todir="${release.dir}"/>
 	</target>
 

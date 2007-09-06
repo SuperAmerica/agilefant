@@ -137,6 +137,15 @@
 						<ul>
 						<%-- Resolve if project is selected or is in 'path' and set variable 'class' accordingly--%>
 						<c:forEach items="${product.deliverables}" var="deliverable">
+							
+							<c:set var="archive" value="" scope="page"/>
+							<c:if test="${aef:isBeforeThisDay(deliverable.endDate)}">
+								<c:set var="archive" value="archive" scope="page"/>
+								<c:if test="${class == 'path' || class == 'selected'}">
+									<c:set var="archive" value="archivePath" scope="page"/>
+								</c:if>
+							</c:if>
+							
 							<c:set var="class" value="" scope="page"/>
 							<c:if test="${deliverable.id == currentProjectId}">
 								<c:set var="class" value="selected" scope="page"/>
@@ -144,16 +153,16 @@
 										<c:set var="class" value="path" scope="page"/>
 								</c:if>
 							</c:if>
-							
+													
 							<%-- Print Project-link--%>
 							<ww:url id="editLink" action="contextView" includeParams="none">
 								<ww:param name="contextObjectId" value="${deliverable.id}"/>				
 								<ww:param name="resetContextView" value="true"/>			
-							</ww:url>
-							<li><ww:a href="%{editLink}&contextName=project" title="Project: ${aef:out(deliverable.name)}"><span class="${class}">${aef:out(deliverable.name)}</span></ww:a></li>
-						
-								
-							<ul>
+							</ww:url>		
+							
+							<li class="${archive}"><ww:a href="%{editLink}&contextName=project" title="Project: ${aef:out(deliverable.name)}"><span class="${class}">${aef:out(deliverable.name)}</span></ww:a></li>
+													
+							<ul class="${archive}">
 							<%-- Resolve if iteration is selected or is in 'path' and set variable 'class' accordingly--%>
 							<c:forEach items="${deliverable.iterations}" var="iteration">
 								<c:set var="class" value="" scope="page"/>

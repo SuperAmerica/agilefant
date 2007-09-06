@@ -165,7 +165,7 @@
 				<%-- Original estimate --%>
 				<td><c:out value="${backlog.bliOrigEstSum}" /></td>
 				<%-- Work reported --%>
-				<td><c:out value="${backlog.performedEffort}" /></td>
+				<td>&nbsp;</td>
 				<td></td>
 			<tr>
 		</display:footer>

@@ -24,7 +24,7 @@
 
 	<bean id="logoutFilter"
 		class="org.acegisecurity.ui.logout.LogoutFilter">
-		<constructor-arg value="/out.html" />
+		<constructor-arg value="/login.jsp?logout=1" />
 		<!-- URL redirected to after logout -->
 		<constructor-arg>
 			<list>
@@ -39,7 +39,7 @@
 		class="org.acegisecurity.ui.webapp.AuthenticationProcessingFilter">
 		<property name="authenticationManager"
 			ref="authenticationManager" />
-		<property name="authenticationFailureUrl" value="/in.html" />
+		<property name="authenticationFailureUrl" value="/login.jsp?error=1" />
 		<property name="defaultTargetUrl" value="/index.jsp" />
 		<property name="filterProcessesUrl"
 			value="/j_acegi_security_check" />
@@ -68,14 +68,14 @@
 		<property name="authenticationEntryPoint">
 			<bean
 				class="org.acegisecurity.ui.webapp.AuthenticationProcessingFilterEntryPoint">
-				<property name="loginFormUrl" value="/in.html" />
+				<property name="loginFormUrl" value="/login.jsp" />
 				<property name="forceHttps" value="false" />
 			</bean>
 		</property>
 		<property name="accessDeniedHandler">
 			<bean
 				class="org.acegisecurity.ui.AccessDeniedHandlerImpl">
-				<property name="errorPage" value="/in.html" />
+				<property name="errorPage" value="/login.jsp?access_denied=1" />
 			</bean>
 		</property>
 	</bean>
@@ -101,6 +101,9 @@
 			<value>
 				CONVERT_URL_TO_LOWERCASE_BEFORE_COMPARISON
 				PATTERN_TYPE_APACHE_ANT
+				/login.jsp=IS_AUTHENTICATED_ANONYMOUSLY
+				/jsp/inc/_taglibs.jsp=IS_AUTHENTICATED_ANONYMOUSLY
+				/jsp/inc/_footer.jsp=IS_AUTHENTICATED_ANONYMOUSLY
 				/in.html=IS_AUTHENTICATED_ANONYMOUSLY
 				/out.html=IS_AUTHENTICATED_ANONYMOUSLY
 				/static/**=IS_AUTHENTICATED_ANONYMOUSLY

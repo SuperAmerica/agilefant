@@ -6,9 +6,8 @@
 <h2>No backlog selected</h2>
 
 <p>
-Please select a backlog from left hand side panel or create a new one from links 
-below. Or you can 
-<a href="contextView.action?contextName=createNew&resetContextView=true">Create 
+Please select a backlog from left hand side panel or you can start by 
+<a href="contextView.action?contextName=createNew&resetContextView=true">creating 
 a new object</a>.
 </p>
 

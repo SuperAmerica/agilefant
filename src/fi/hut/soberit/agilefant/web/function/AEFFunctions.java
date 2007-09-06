@@ -1,5 +1,8 @@
 package fi.hut.soberit.agilefant.web.function;
 
+import java.util.Date;
+import java.util.GregorianCalendar;
+
 import fi.hut.soberit.agilefant.model.AssignEvent;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.Deliverable;
@@ -94,6 +97,7 @@ public class AEFFunctions {
 		AEFFunctions.maxStrLength = maxStrLength;
 	} 
 
-
-
+	public static boolean isBeforeThisDay(Date date) {
+		return date.before(GregorianCalendar.getInstance().getTime());
+	}
 }

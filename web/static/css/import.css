@@ -478,3 +478,15 @@ div#submenuwrapmyTasks #menu li#subnav1 a,div#submenuwrapiteration #menu li#subn
 .deleteButton{
 	margin-left: 75%;
 }
+
+.archive{
+	display: none;
+}
+
+#hierarchyList .archivePath span{
+	color:#666;
+}
+
+.tasklistItem  {
+	position: relative;
+}

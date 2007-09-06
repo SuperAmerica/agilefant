@@ -426,6 +426,11 @@
 	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
 	  <function-signature>String htmlOut(java.lang.String, int)</function-signature>
 	</function>  	 
-	 	 
+	 
+	<function>
+	  <name>isBeforeThisDay</name>
+	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
+	  <function-signature>boolean isBeforeThisDay(java.util.Date)</function-signature>
+	</function>  	  	 
 	 	 
 </taglib>

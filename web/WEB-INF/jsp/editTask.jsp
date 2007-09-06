@@ -57,7 +57,7 @@
 		<tr>
 			<td>Effort left</td>
 			<td></td>
-			<td><ww:textfield size="10" name="task.effortEstimate"/> (usage: *h *m, where * integer, for example 3h)</td>	
+			<td><ww:textfield size="10" name="task.effortEstimate"/><ww:label value="%{getText('webwork.estimateExample')}"/></td>	
 		</tr>
 		<tr>
 			<td>Status</td>

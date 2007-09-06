@@ -10,6 +10,7 @@ import java.util.Date;
 import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.db.DeliverableDAO;
+import fi.hut.soberit.agilefant.db.EffortHistoryDAO;
 import fi.hut.soberit.agilefant.db.IterationDAO;
 import fi.hut.soberit.agilefant.db.IterationGoalDAO;
 import fi.hut.soberit.agilefant.db.TaskEventDAO;
@@ -18,6 +19,7 @@ import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.IterationGoal;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.util.BacklogValueInjector;
+import fi.hut.soberit.agilefant.util.EffortHistoryUpdater;
 
 public class IterationAction extends ActionSupport implements CRUDAction {
 
@@ -33,6 +35,7 @@ public class IterationAction extends ActionSupport implements CRUDAction {
 	private Deliverable deliverable;
 	private int deliverableId;
 	private IterationGoalDAO iterationGoalDAO;
+	private EffortHistoryDAO effortHistoryDAO;
 	private int iterationGoalId;
 	private String startDate;
 	private String endDate;
@@ -71,6 +74,12 @@ public class IterationAction extends ActionSupport implements CRUDAction {
 			return Action.INPUT;
 		}
 		deliverableId = deliverable.getId();
+		
+		/* Update effort history (changing iteration dates might change
+		 * the effort history value!)*/
+		EffortHistoryUpdater.updateEffortHistory(effortHistoryDAO, 
+				taskEventDAO, backlogItemDAO, backlog);
+		
 		return Action.SUCCESS;
 	}
 	
@@ -302,5 +311,13 @@ public class IterationAction extends ActionSupport implements CRUDAction {
 	 */
 	public void setDateFormat(String dateFormat) {
 		this.dateFormat = dateFormat;
+	}
+
+	public EffortHistoryDAO getEffortHistoryDAO() {
+		return effortHistoryDAO;
+	}
+
+	public void setEffortHistoryDAO(EffortHistoryDAO effortHistoryDAO) {
+		this.effortHistoryDAO = effortHistoryDAO;
 	}
 }

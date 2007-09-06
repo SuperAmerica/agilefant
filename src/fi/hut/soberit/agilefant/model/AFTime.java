@@ -1,5 +1,6 @@
 package fi.hut.soberit.agilefant.model;
 
+import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.text.ParsePosition;
 import java.util.Scanner;
@@ -33,9 +34,9 @@ import java.util.NoSuchElementException;
 public class AFTime extends java.sql.Time {
 	private static final long serialVersionUID = 2737253352614021649L;
 
-	public static long SECOND_IN_MILLIS = 1000;
-	public static long MINUTE_IN_MILLIS = 60 * SECOND_IN_MILLIS;
-	public static long HOUR_IN_MILLIS = 60 * MINUTE_IN_MILLIS;
+	public final static long SECOND_IN_MILLIS = 1000;
+	public final static long MINUTE_IN_MILLIS = 60 * SECOND_IN_MILLIS;
+	public final static long HOUR_IN_MILLIS = 60 * MINUTE_IN_MILLIS;
 	
 	/**
 	 * Workday is not a fixed-length concept, don't use this
@@ -98,7 +99,7 @@ public class AFTime extends java.sql.Time {
 				
 				// try reading next int and character - pair
 				try {
-					scanner.next("(\\d+)(\\p{Alpha})");
+					scanner.next("(\\d+)(\\p{Alpha}|min)");
 				} catch(NoSuchElementException e) {
 					// no more elements
 					break;					
@@ -109,7 +110,14 @@ public class AFTime extends java.sql.Time {
 			    
 			    // get the integer and character from groups 1 and 2
 			    long value = Long.parseLong(result.group(1));
-			    char type = result.group(2).charAt(0);
+			    char type;
+			    
+			    // allow min instead of just m
+			    if(result.group(2).contains("min")) {
+			    	type = 'm'; 		    	
+			    } else {
+			    	type = result.group(2).charAt(0);
+				}
 			    
 			    // interperent the value according to the letter
 			    switch(type) {
@@ -173,7 +181,7 @@ public class AFTime extends java.sql.Time {
 		    	
 		    	// if the scanner succeeded finding the token and there's no more input
 		    	if(token != null && !scanner.hasNext()) {
-		    		
+		    			    		
 		    		// ParsePosition instance to track the NumberFormat parse - call
 		    		ParsePosition parsePos = new ParsePosition(0);
 		    				    		
@@ -281,7 +289,7 @@ public class AFTime extends java.sql.Time {
 		// minutes
 		if(time[Minutes] != 0) {
 			if(hadPrevious) result += " ";
-			result += time[Minutes] + "m";
+			result += time[Minutes] + "min";
 		}
 		
 		// check the emptyness once more here,  
@@ -336,7 +344,7 @@ public class AFTime extends java.sql.Time {
 		time[Days] = 0;
 		
 		return buildElementString(time);
-	}	
+	}
 	
 	/**
 	 * Functionally same as "toHMString".

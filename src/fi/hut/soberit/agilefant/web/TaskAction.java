@@ -20,6 +20,7 @@ import fi.hut.soberit.agilefant.model.EffortHistory;
 import fi.hut.soberit.agilefant.model.EstimateHistoryEvent;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.model.TaskStatus;
 import fi.hut.soberit.agilefant.security.SecurityUtil;
 import fi.hut.soberit.agilefant.util.EffortHistoryUpdater;
 
@@ -256,6 +257,13 @@ public class TaskAction extends ActionSupport implements CRUDAction {
 		
 		/* Task effort estimate cannot be set back to null */
 		if (oldEstimate != null && newEstimate == null) {
+			newEstimate = new AFTime(0);
+		}
+		
+		/* If task is set done but no new estimate is peresented zero
+		 * the efforort estimate. */
+		if (task.getStatus() ==  TaskStatus.DONE &&
+				oldEstimate.equals(newEstimate)) {
 			newEstimate = new AFTime(0);
 		}
 		

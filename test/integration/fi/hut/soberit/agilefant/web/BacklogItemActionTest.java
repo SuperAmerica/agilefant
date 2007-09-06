@@ -10,6 +10,7 @@ import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.BacklogItemStatus;
 import fi.hut.soberit.agilefant.model.Priority;
 import fi.hut.soberit.agilefant.model.Product;
+import fi.hut.soberit.agilefant.model.TaskStatus;
 //import fi.hut.soberit.agilefant.model.Task;
 //import fi.hut.soberit.agilefant.model.TaskStatus;
 import fi.hut.soberit.agilefant.model.User;
@@ -36,8 +37,8 @@ public class BacklogItemActionTest extends SpringTestCase {
 	private static final AFTime TEST_EST2 = new AFTime("5h");
 	private static final Priority TEST_PRI1 = Priority.CRITICAL;
 	private static final Priority TEST_PRI2 = Priority.TRIVIAL;
-	private static final BacklogItemStatus TEST_STAT1 = BacklogItemStatus.NOT_STARTED;
-	private static final BacklogItemStatus TEST_STAT2 = BacklogItemStatus.STARTED;
+	private static final TaskStatus TEST_STAT1 = TaskStatus.NOT_STARTED;
+	private static final TaskStatus TEST_STAT2 = TaskStatus.STARTED;
 	private static final boolean TEST_WATCH1 = false;
 	private static final boolean TEST_WATCH2 = true;
 	private static final int INVALID_BACKLOGITEMID = -1;
@@ -136,7 +137,8 @@ public class BacklogItemActionTest extends SpringTestCase {
 		backlogItemAction.getBacklogItem().setPriority(priority);
 	}
 	
-	private void setStatus(BacklogItemStatus status) {
+	private void setStatus(TaskStatus status) {
+		
 		backlogItemAction.getBacklogItem().setStatus(status);
 	}
 	
@@ -146,7 +148,7 @@ public class BacklogItemActionTest extends SpringTestCase {
 	
 	private void setContents(String name, String desc, User creator, boolean watch, 
 			User assignee, AFTime allocatedEffort, Priority priority, 
-			BacklogItemStatus status, Backlog backlog) {
+			TaskStatus status, Backlog backlog) {
 		this.setNameAndDesc(name, desc);
 		this.setLoggedUser(creator);
 		this.backlogItemAction.setWatch(watch);
@@ -159,7 +161,7 @@ public class BacklogItemActionTest extends SpringTestCase {
 	
 	private void checkContents(String entity, BacklogItem bi, String name, String desc, User creator, 
 			boolean watch, User assignee, AFTime estimate, Priority priority, 
-			BacklogItemStatus status, Backlog backlog) {
+			TaskStatus status, Backlog backlog) {
 		super.assertEquals("The name of the " + entity + " was wrong", name, bi.getName());
 		super.assertEquals("The description of the " + entity + " was wrong", desc, bi.getDescription());
 		if(watch) {
@@ -179,7 +181,7 @@ public class BacklogItemActionTest extends SpringTestCase {
 		super.assertEquals("The allocated effort of the " + entity + " was wrong", estimate, 
 				bi.getAllocatedEffort());
 		super.assertEquals("The priority of the " + entity + " was wrong", priority, bi.getPriority());
-		super.assertEquals("The status of the " + entity + " was wrong", status, bi.getStatus());
+		super.assertEquals("The status of the " + entity + " was wrong", status, bi.getPlaceHolder().getStatus());
 		super.assertEquals("The backlog of the " + entity + " was wrong", backlog, bi.getBacklog());
 
 	}

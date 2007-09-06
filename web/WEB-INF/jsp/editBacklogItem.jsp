@@ -63,7 +63,7 @@
 			<tr>
 			<td>Original estimate</td>
 			<td></td>
-			<td><ww:textfield size="10" name="backlogItem.allocatedEffort"/>(usage: *h *m, e.g. 3h) </td>	
+			<td><ww:textfield size="10" name="backlogItem.allocatedEffort"/><ww:label value="%{getText('webwork.estimateExample')}"/></td>
 			</tr>
 		</c:when>
 		<c:otherwise>
@@ -75,11 +75,21 @@
 			<tr>
 			<td>Effort left</td>
 			<td></td>
-			<td><ww:textfield size="10" name="backlogItem.effortLeft" />(usage: *h *m, e.g. 3h) </td>
+			<td><ww:textfield size="10" name="backlogItem.effortLeft" /><ww:label value="%{getText('webwork.estimateExample')}"/></td>
 			</tr>
 		</c:otherwise>
 		</c:choose>
-			
+		
+		<c:if test="${backlogItem.status != null}">
+			<tr>
+			<td>Status</td>
+			<td></td>
+			<td>
+				<ww:select name="backlogItem.status" value="backlogItem.placeHolder.status.name" list="@fi.hut.soberit.agilefant.model.TaskStatus@values()" listKey="name" listValue="getText('task.status.' + name())"/>
+			</td>
+			</tr>
+		</c:if>
+		
 		<tr>
 		<td>Backlog</td>
 		<td></td>

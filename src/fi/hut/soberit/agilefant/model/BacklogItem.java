@@ -70,7 +70,7 @@ public class BacklogItem implements PageItem, Assignable, EffortContainer {
 	private AFTime effortEstimate;
 	private AFTime performedEffort;
 	private User assignee;
-	private BacklogItemStatus status = BacklogItemStatus.NOT_STARTED;
+	private TaskStatus status = TaskStatus.NOT_STARTED;
 	private Map<Integer, User> watchers = new HashMap<Integer, User>();
 	private IterationGoal iterationGoal;
 	private Task placeHolder;
@@ -234,21 +234,38 @@ public class BacklogItem implements PageItem, Assignable, EffortContainer {
 		this.performedEffort = performedEffort;
 	}
 
-	/** Get the status of this backlog item. */
-	@Type(type="fi.hut.soberit.agilefant.db.hibernate.EnumUserType",
-			parameters = {
-				@Parameter(name="useOrdinal", value="true"),
-				@Parameter(name="enumClassName", value="fi.hut.soberit.agilefant.model.BacklogItemStatus")
-			}
-	)
-	public BacklogItemStatus getStatus() {
-		return status;
-	}
+//	/** Get the status of this backlog item. */
+//	@Type(type="fi.hut.soberit.agilefant.db.hibernate.EnumUserType",
+//			parameters = {
+//				@Parameter(name="useOrdinal", value="true"),
+//				@Parameter(name="enumClassName", value="fi.hut.soberit.agilefant.model.BacklogItemStatus")
+//			}
+//	)
+//	public BacklogItemStatus getStatus() {
+//		return status;
+//	}
+//
+//	public void setStatus(BacklogItemStatus status) {
+//		this.status = status;
+//	}
 
-	public void setStatus(BacklogItemStatus status) {
+	/**
+	 * Returns the status of the backlog item.
+	 * @return the status of the backlog item.
+	 */
+	@Transient
+	public TaskStatus getStatus() {
+		return this.status;
+	}
+	
+	/**
+	 * Sets the status of the backlog item.
+	 * @param status the status to set for the backlog item
+	 */	
+	public void setStatus(TaskStatus status) {
 		this.status = status;
 	}
-
+	
 	@ManyToMany()
 	@MapKey()
 	public Map<Integer, User> getWatchers() {

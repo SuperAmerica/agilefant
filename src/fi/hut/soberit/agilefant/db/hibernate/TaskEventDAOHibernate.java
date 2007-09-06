@@ -1,5 +1,6 @@
 package fi.hut.soberit.agilefant.db.hibernate;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -30,7 +31,7 @@ public class TaskEventDAOHibernate extends GenericDAOHibernate<TaskEvent> implem
 	public AFTime getBLIOriginalEstimate(BacklogItem backlogItem, Date date) {
 		String[] queryParams = {"backlogItemId"};
 		Object[] queryValues = {backlogItem.getId()};
-		List<AFTime> resultList;
+		List<AFTime> resultList = null;
 		Date creationDate;
 		HibernateTemplate ht = super.getHibernateTemplate();
 		String query2;
@@ -53,6 +54,9 @@ public class TaskEventDAOHibernate extends GenericDAOHibernate<TaskEvent> implem
 			return backlogItem.getEffortEstimate();
 		}
 		
+		/* If bli is created bafore given date use the closest effort
+		 * estimate event to the given date that is created before
+		 * given date */
 		if(creationDate.before(date)){
 			queryParams = new String[] {"date", "backlogItem"};
 			queryValues = new Object[] {date, backlogItem};
@@ -72,7 +76,12 @@ public class TaskEventDAOHibernate extends GenericDAOHibernate<TaskEvent> implem
 			resultList = (List<AFTime>)
 					ht.findByNamedParam(query, queryParams, queryValues);
 		}
-		else {
+		/* If no result is found or creation date is after the given date
+		 * use the first event in this iteration. */
+		if(resultList == null || 
+				resultList.isEmpty() || 
+				resultList.get(0) == null || 
+				!creationDate.before(date)) {
 			queryParams = new String[] {"backlogItem"};
 			queryValues = new Object[] {backlogItem};
 			query3 = "from EstimateHistoryEvent e, BacklogItem b " +

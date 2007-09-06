@@ -3,6 +3,9 @@ package fi.hut.soberit.agilefant.web;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
 
@@ -18,6 +21,7 @@ import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.IterationGoal;
 import fi.hut.soberit.agilefant.model.Task;
+import fi.hut.soberit.agilefant.model.TaskStatus;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.security.SecurityUtil;
 import fi.hut.soberit.agilefant.util.EffortHistoryUpdater;
@@ -41,7 +45,7 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
 	private TaskAction taskAction;
 	private TaskEventDAO taskEventDAO;
 	private EffortHistoryDAO effortHistoryDAO;
-
+	private Log logger = LogFactory.getLog(getClass());
 
 	public String create() {
 		backlogItemId = 0;
@@ -168,6 +172,7 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
 					phEffort = 0;
 				}
 			}
+
 			taskAction.getTask().setEffortEstimate(new AFTime(phEffort));
 			taskAction.store();
 		}
@@ -188,12 +193,27 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
 					storable.getPlaceHolder().getCreator());
 			taskAction.getTask().setName(
 					storable.getPlaceHolder().getName());
-					
-			phEffort = backlogItem.getEffortLeft().getTime();
+			
+			/* If backlogitem status is set DONE zero the effort left
+			 * if it is not explicitly set */
+			if (backlogItem.getStatus() == TaskStatus.DONE && 
+					storable.getPlaceHolder().getEffortEstimate().
+							equals(backlogItem.getEffortLeft())) {
+				phEffort = 0;
+			} else {
+				phEffort = backlogItem.getEffortLeft().getTime();
+			}
+			
 			taskAction.getTask().setEffortEstimate(new AFTime(phEffort));
+
 			taskAction.store();
 		}
+		
+		/* Set placeholder status */
+		if (storable.getPlaceHolder() != null) {
+			storable.getPlaceHolder().setStatus(backlogItem.getStatus());
 			
+		}
 		
 		/* Update effort history */
 		if (backlogItemId > 0) {
@@ -236,7 +256,6 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
 		storable.setDescription(this.backlogItem.getDescription());
 		storable.setAllocatedEffort(this.backlogItem.getAllocatedEffort());
 		storable.setPriority(this.backlogItem.getPriority());
-		storable.setStatus(this.backlogItem.getStatus()); // added after failed jUnit test 
 		
 		backlog = backlogDAO.get(backlogId);
 		if (backlog == null){

@@ -162,15 +162,19 @@ public class DeliverableAction extends ActionSupport implements CRUDAction {
 			super.addActionError(super.getText("backlog.startDateAfterEndDate"));
 			return;
 		}
-		if (storable.getProduct() == null){
-			Product product = productDAO.get(productId);
-			if (product == null){
-				super.addActionError(super.getText("product.notFound"));
-				return;
-			}
+
+		Product product = productDAO.get(productId);
+		if (product == null){
+			super.addActionError(super.getText("product.notFound"));
+			return;
+		} else if(storable.getProduct() != product){
+			/* Setting the relation in one end of the relation is enought to
+			 * change the relation in both ends! Hibernate takes care of 
+			 * both ends. */
 			storable.setProduct(product);
-			product.getDeliverables().add(storable);
+			// product.getDeliverables().add(storable);
 		}
+		
 		if (storable.getActivityType() == null ||
 			storable.getActivityType().getId() != activityTypeId){
 			ActivityType activityType = null;

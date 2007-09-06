@@ -43,7 +43,7 @@ public class AFTimeTest extends TestCase {
 		// first format a decimal string according to current locale
 		String decimalNumber = NumberFormat.getNumberInstance().format(3.5);
 		// parse the formatted string
-		assertEquals(getTime(0, 3, 30), parse(decimalNumber));
+		assertEquals(decimalNumber, getTime(0, 3, 30), parse(decimalNumber));
 		
 		// Parse zero times properly (note: qualifier can be left out here!)
 		assertEquals(0, parse("0"));
@@ -137,7 +137,7 @@ public class AFTimeTest extends TestCase {
 		/////////////////////////
 		
 		// Test some normal time
-		assertEquals("5d 3h 4m", new AFTime(getTime(5, 3, 4)).toDHMString());
+		assertEquals("5d 3h 4min", new AFTime(getTime(5, 3, 4)).toDHMString());
 		
 		// Days only
 		assertEquals("2d", new AFTime(getTime(2, 0, 0)).toDHMString());
@@ -146,10 +146,10 @@ public class AFTimeTest extends TestCase {
 		assertEquals("7h", new AFTime(getTime(0, 7, 0)).toDHMString());
 		
 		// Minutes only
-		assertEquals("20m", new AFTime(getTime(0, 0, 20)).toDHMString());
+		assertEquals("20min", new AFTime(getTime(0, 0, 20)).toDHMString());
 		
 		// Days and minutes
-		assertEquals("3d 57m", new AFTime(getTime(3, 0, 57)).toDHMString());
+		assertEquals("3d 57min", new AFTime(getTime(3, 0, 57)).toDHMString());
 		
 		// Days and hours
 		assertEquals("5d 2h", new AFTime(getTime(5, 2, 0)).toDHMString());
@@ -158,7 +158,7 @@ public class AFTimeTest extends TestCase {
 		/////////////////////////
 		
 		// Test some normal time
-		assertEquals("43h 4m", new AFTime(getTime(5, 3, 4)).toHMString());
+		assertEquals("43h 4min", new AFTime(getTime(5, 3, 4)).toHMString());
 		
 		// Days only
 		assertEquals("16h", new AFTime(getTime(2, 0, 0)).toHMString());
@@ -167,10 +167,10 @@ public class AFTimeTest extends TestCase {
 		assertEquals("7h", new AFTime(getTime(0, 7, 0)).toHMString());
 		
 		// Minutes only
-		assertEquals("20m", new AFTime(getTime(0, 0, 20)).toHMString());
+		assertEquals("20min", new AFTime(getTime(0, 0, 20)).toHMString());
 		
 		// Days and minutes
-		assertEquals("24h 57m", new AFTime(getTime(3, 0, 57)).toHMString());
+		assertEquals("24h 57min", new AFTime(getTime(3, 0, 57)).toHMString());
 		
 		// Days and hours
 		assertEquals("42h", new AFTime(getTime(5, 2, 0)).toHMString());
@@ -178,10 +178,10 @@ public class AFTimeTest extends TestCase {
 		// Check that toString rounds values properly
 		/////////////////////////
 		
-		assertEquals("6h 39m", new AFTime(getTime(0, 6, 40) - 30001).toString());
-		assertEquals("6h 40m", new AFTime(getTime(0, 6, 40) - 30000).toString());
-		assertEquals("6h 40m", new AFTime(getTime(0, 6, 40) + 29999).toString());
-		assertEquals("6h 41m", new AFTime(getTime(0, 6, 40) + 30000).toString());
+		assertEquals("6h 39min", new AFTime(getTime(0, 6, 40) - 30001).toString());
+		assertEquals("6h 40min", new AFTime(getTime(0, 6, 40) - 30000).toString());
+		assertEquals("6h 40min", new AFTime(getTime(0, 6, 40) + 29999).toString());
+		assertEquals("6h 41min", new AFTime(getTime(0, 6, 40) + 30000).toString());
 		
 		// Zero dates
 		// TODO what is the best output format for this? Should we print some qualifier? 

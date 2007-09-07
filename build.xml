@@ -439,6 +439,7 @@
 		<copy file="${build.dir}/create-db.ddl" todir="${release.dir}"/>
 		<copy file="${basedir}/doc/Release_notes.txt" todir="${release.dir}"/>
 		<copy file="${basedir}/doc/Summary_about_used_libraries.txt" todir="${release.dir}"/>
+		<copy file="${basedir}/doc/Install.txt" todir="${release.dir}"/>	
 	</target>
 
 	<target name="release-zip" depends="release"

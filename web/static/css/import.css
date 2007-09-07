@@ -465,10 +465,10 @@ div#submenuwrapmyTasks #menu li#subnav1 a,div#submenuwrapiteration #menu li#subn
 	margin: 0 0 5px 0;
 	list-style-type: none;
 }
-#hierarchyList .path {
+#hierarchyList .path, #hierarchyList .archivePath .path {
 	color: #e50;
 }
-#hierarchyList .selected {
+#hierarchyList .selected, #hierarchyList .archivePath .selected {
 	color: #e50;
 	font-weight: bold;
 }

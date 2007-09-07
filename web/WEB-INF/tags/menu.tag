@@ -146,11 +146,11 @@
 								</c:if>
 							</c:if>
 							
-							<c:set var="class" value="" scope="page"/>
+							<c:set var="class2" value="" scope="page"/>
 							<c:if test="${deliverable.id == currentProjectId}">
-								<c:set var="class" value="selected" scope="page"/>
+								<c:set var="class2" value="selected" scope="page"/>
 								<c:if test="${!empty currentIterationId}">
-										<c:set var="class" value="path" scope="page"/>
+										<c:set var="class2" value="path" scope="page"/>
 								</c:if>
 							</c:if>
 													
@@ -160,14 +160,14 @@
 								<ww:param name="resetContextView" value="true"/>			
 							</ww:url>		
 							
-							<li class="${archive}"><ww:a href="%{editLink}&contextName=project" title="Project: ${aef:out(deliverable.name)}"><span class="${class}">${aef:out(deliverable.name)}</span></ww:a></li>
+							<li class="${archive}"><ww:a href="%{editLink}&contextName=project" title="Project: ${aef:out(deliverable.name)}"><span class="${class2}">${aef:out(deliverable.name)}</span></ww:a></li>
 													
 							<ul class="${archive}">
 							<%-- Resolve if iteration is selected or is in 'path' and set variable 'class' accordingly--%>
 							<c:forEach items="${deliverable.iterations}" var="iteration">
-								<c:set var="class" value="" scope="page"/>
+								<c:set var="class3" value="" scope="page"/>
 								<c:if test="${iteration.id == currentIterationId}">
-									<c:set var="class" value="selected" scope="page"/>
+									<c:set var="class3" value="selected" scope="page"/>
 								</c:if>
 								
 								<%-- Print Iteration-link--%>
@@ -175,7 +175,7 @@
 									<ww:param name="contextObjectId" value="${iteration.id}"/>				
 									<ww:param name="resetContextView" value="true"/>				
 								</ww:url>
-								<li><ww:a href="%{editLink}&contextName=iteration" title="Iteration: ${aef:out(iteration.name)}"><span class="${class}">${aef:out(iteration.name)}</span></ww:a></li>
+								<li><ww:a href="%{editLink}&contextName=iteration" title="Iteration: ${aef:out(iteration.name)}"><span class="${class3}">${aef:out(iteration.name)}</span></ww:a></li>
 												
 							</c:forEach>
 							</ul>

@@ -130,14 +130,12 @@
 <table><tr><td>
 	<div id="subItems">
 		<div id="subItemHeader">
-			Event history
+			History
 		</div>
 		<c:if test="${task.id > 0}">
 		<div id="subItemContent">
 		<p>
 			<display:table class="listTable" name="task.events" id="row" requestURI="editTask.action">
-
-				<display:column property="id" sortable="true"/>
 
 				<display:column property="created" sortable="true"/>
 

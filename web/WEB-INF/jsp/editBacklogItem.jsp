@@ -174,23 +174,6 @@
 		</tr>
 		
 		<tr>
-		<td>Watch this item</td>
-		<td></td>
-		
-		<%-- BacklogItemAction.store() sets the watch-field to false unless this checkbox is checked --%>
-		<c:choose>
-		<%-- When creating a backlog item watching is off by default--%>
-		<c:when test="${backlogItem.id == 0}">
-			<td><ww:checkbox name="watch" value="false" fieldValue="true"/></td>	
-		</c:when>
-		<c:otherwise>
-			<td><ww:checkbox name="watch" value="${!empty backlogItem.watchers[currentUser.id]}" fieldValue="true"/></td>	
-		</c:otherwise>
-		</c:choose>
-		</tr>
-		
-		
-		<tr>
 		<td></td>
 		<td></td>
 		<td>

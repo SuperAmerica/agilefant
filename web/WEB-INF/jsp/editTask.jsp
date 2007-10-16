@@ -89,22 +89,6 @@
 		</tr>
 		
 		<tr>
-			<td>Watch this item</td>
-			<td></td>
-		
-			<%-- TaskAction.store() sets the watch-field to false unless this checkbox is checked --%>
-			<c:choose>
-				<%-- When creating a task watching is off by default--%>
-				<c:when test="${task.id == 0}">
-					<td><ww:checkbox name="watch" value="false" fieldValue="true"/></td>	
-				</c:when>
-				<c:otherwise>
-					<td><ww:checkbox name="watch" value="${!empty task.watchers[currentUser.id]}" fieldValue="true"/></td>	
-				</c:otherwise>
-			</c:choose>
-		</tr>
-		
-		<tr>
 			<td></td>
 			<td></td>
 			<td>

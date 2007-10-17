@@ -1,8 +1,11 @@
 package fi.hut.soberit.agilefant.model;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Iterator;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -21,6 +24,8 @@ import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.Type;
+
+import fi.hut.soberit.agilefant.util.BacklogItemPriorityComparator;
 
 /**
  * Abstract entity, a Hibernate entity bean, which represents a backlog.
@@ -69,6 +74,42 @@ public abstract class Backlog implements Assignable {
     /** A backlog can contain many backlog items. */
     public Collection<BacklogItem> getBacklogItems() {
         return backlogItems;
+    }
+    @Transient
+    /**
+     * Return a sorted list of backlog items.
+     * Items are sorted first by priority and then by status.
+     */
+    public Collection<BacklogItem> getSortedBacklogItems() {
+    	/* Create two arraylists for temporarily storing the elements */
+    	ArrayList<BacklogItem> sortedList = new ArrayList<BacklogItem>();
+    	ArrayList<BacklogItem> doneItems = new ArrayList<BacklogItem>();
+    	
+    	/* Iterate through the list of backlog's backlogItems */
+    	Iterator<BacklogItem> iter = this.getBacklogItems().iterator();
+    	while (iter.hasNext()) {
+    		BacklogItem bli = iter.next();
+    		
+    		/* If backlog item is marked as done, put it to doneItems-list,
+    		 * otherwise add it to sorted list.
+    		 */
+    		if (bli.getPlaceHolder().getStatus() == TaskStatus.DONE) {
+    			doneItems.add(bli);
+    		}
+    		else {
+    			sortedList.add(bli);
+    		}
+    	}
+    	
+    	/* Sort both lists by priority, highest priority first */
+    	BacklogItemPriorityComparator c = new BacklogItemPriorityComparator();
+    	Collections.sort(sortedList, c);
+    	Collections.sort(doneItems, c);
+    	
+    	/* Add all done items to the end of the list */
+    	sortedList.addAll(doneItems);
+    	
+    	return sortedList;
     }
     public void setBacklogItems(Collection<BacklogItem> backlogItems) {
         this.backlogItems = backlogItems;

@@ -58,7 +58,36 @@
 				<c:otherwise>
 					<c:if test="${!empty item.placeHolder}">
 						 <a href="javascript:toggleDiv(${divId});" title="Click to expand">
-							<ww:text name="task.status.${item.placeHolder.status}"/>	
+							<ww:text name="task.status.${item.placeHolder.status}"/><br />
+							
+							<c:choose>
+							<c:when test="${item.placeHolder.status == 'NOT_STARTED'}" >
+								<ww:url id="imgUrl" action="drawExtendedBarChart" includeParams="none">
+								<ww:param name="notStarted" value="1" /> </ww:url> 
+								<img src="${imgUrl}" /> 
+							</c:when>
+							<c:when test="${item.placeHolder.status == 'STARTED'}" >
+								<ww:url id="imgUrl" action="drawExtendedBarChart" includeParams="none">
+								<ww:param name="started" value="1" /> </ww:url> 
+								<img src="${imgUrl}" />
+							</c:when>
+							<c:when test="${item.placeHolder.status == 'BLOCKED'}" >
+								<ww:url id="imgUrl" action="drawExtendedBarChart" includeParams="none">
+								<ww:param name="blocked" value="1" /> </ww:url> 
+								<img src="${imgUrl}" />
+							</c:when>
+							<c:when test="${item.placeHolder.status == 'IMPLEMENTED'}" >
+								<ww:url id="imgUrl" action="drawExtendedBarChart" includeParams="none">
+								<ww:param name="implemented" value="1" /> </ww:url> 
+								<img src="${imgUrl}" />
+							</c:when>
+							<c:when test="${item.placeHolder.status == 'DONE'}" >
+								<ww:url id="imgUrl" action="drawExtendedBarChart" includeParams="none">
+								<ww:param name="done" value="1" /> </ww:url> 
+								<img src="${imgUrl}" />
+							</c:when>
+							</c:choose>
+								
 						</a>
 						<aef:tasklist tasks="${item.tasks}"
 							contextViewName="${currentAction}" contextObjectId="${backlog.id}"

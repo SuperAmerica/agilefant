@@ -157,7 +157,10 @@
 		<tr>
 		<td>Priority</td>
 		<td></td>
-		<td><ww:select name="backlogItem.priority" value="backlogItem.priority.name" list="@fi.hut.soberit.agilefant.model.Priority@values()" listKey="name" listValue="getText('backlogItem.priority.' + name())"/></td>	
+		<td><ww:select name="backlogItem.priority" value="backlogItem.priority.name" list="#{'UNDEFINED':'undefined', 'BLOCKER':'+++++', 'CRITICAL':'++++', 'MAJOR':'+++', 'MINOR':'++', 'TRIVIAL':'+'}"/></td>
+		<%--
+		If you change something about priorities, remember to update conf/classes/messages.properties as well!
+		--%>	
 		</tr>
 		
 		<tr>

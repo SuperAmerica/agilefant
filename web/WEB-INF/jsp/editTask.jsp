@@ -73,7 +73,10 @@
 		<tr>
 			<td>Priority</td>
 			<td></td>
-			<td><ww:select name="task.priority" value="task.priority.name" list="@fi.hut.soberit.agilefant.model.Priority@values()" listKey="name" listValue="getText('task.priority.' + name())"/></td>	
+			<td><ww:select name="task.priority" value="task.priority.name" list="#{'UNDEFINED':'undefined', 'BLOCKER':'+++++', 'CRITICAL':'++++', 'MAJOR':'+++', 'MINOR':'++', 'TRIVIAL':'+'}"/></td>
+			<%--
+			If you change something about priorities, remember to update conf/classes/messages.properties as well!
+			--%>	
 		</tr>
 		<tr>
 			<td>Responsible</td>

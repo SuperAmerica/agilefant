@@ -8,7 +8,7 @@ package fi.hut.soberit.agilefant.model;
  * @see fi.hut.soberit.agilefant.model.Task
  */ 
 public enum Priority {
-	TRIVIAL, MINOR, MAJOR, CRITICAL, BLOCKER;
+	TRIVIAL, MINOR, MAJOR, CRITICAL, BLOCKER, UNDEFINED;
 	
 	public int getOrdinal(){
 		return this.ordinal();

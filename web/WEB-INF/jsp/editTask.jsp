@@ -98,9 +98,11 @@
 				<c:choose>
 				<c:when test="${taskId == 0}">
 					<ww:submit value="Create"/>
+					<ww:submit action="storeCloseTask" value="Create & Close"/>		
 				</c:when>
 				<c:otherwise>
 				  <ww:submit value="Save"/>
+				  <ww:submit action="storeCloseTask" value="Save & Close"/>
 				  <span class="deleteButton">
 						<ww:submit action="deleteTask" 
 								value="Delete" 

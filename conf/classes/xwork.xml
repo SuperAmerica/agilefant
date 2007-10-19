@@ -188,6 +188,12 @@
 				editBacklogItem.action?backlogItemId=${backlogItemId}
 			</result>
 		</action>
+		<action name="storeCloseBacklogItem" method="store"
+			class="backlogItemAction">
+			<result type="redirect-action">
+				<param name="actionName">popContext</param>
+			</result>
+		</action>
 		<action name="linkToIterationGoal"
 			class="linkToIterationGoalAction">
 			<result type="redirect">
@@ -298,8 +304,6 @@
 			<result type="redirect-action">
 				<param name="actionName">editTask</param>
 				<param name="taskId">${taskId}</param>
-				<param name="contextViewName">${contextViewName}</param>
-				<param name="contextObjectId">${contextObjectId}</param>
 			</result>
 		</action>
 		<action name="storeNewTask" method="store"
@@ -307,8 +311,11 @@
 			<result type="redirect-action">
 				<param name="actionName">editTask</param>
 				<param name="taskId">${taskId}</param>
-				<param name="contextViewName">${contextViewName}</param>
-				<param name="contextObjectId">${contextObjectId}</param>
+			</result>
+		</action>
+		<action name="storeCloseTask" method="store" class="taskAction">
+			<result type="redirect-action">
+				<param name="actionName">popContext</param>
 			</result>
 		</action>
 		<action name="quickStoreTask" method="store"

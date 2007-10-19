@@ -183,9 +183,11 @@
 			<c:choose>
 				<c:when test="${backlogItemId == 0}">
 					<ww:submit value="Create"/>
+					<ww:submit action="storeCloseBacklogItem" value="Create & Close"/>
 				</c:when>
 				<c:otherwise>
 				  <ww:submit value="Save"/>
+				  <ww:submit action="storeCloseBacklogItem" value="Save & Close"/>
 				  <span class="deleteButton">
 						<ww:submit action="deleteBacklogItem" 
 								value="Delete" 

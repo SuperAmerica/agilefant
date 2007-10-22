@@ -171,7 +171,7 @@ public class BacklogTest extends SpringTestCase {
 	/**
 	 * Test moving group of backlog items between to backlogs.
 	 */
-	/*public void testDelete() {
+	public void testDelete() {
 		Product testBacklog0;	
 		Product[] testBacklogs;	
 		Collection<BacklogItem> backlogItems;
@@ -236,5 +236,5 @@ public class BacklogTest extends SpringTestCase {
 				
 		super.endTransaction();
 		super.startNewTransaction();
-	}*/
+	}
 }

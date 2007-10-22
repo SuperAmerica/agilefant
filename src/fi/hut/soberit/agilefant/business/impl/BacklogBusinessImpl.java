@@ -38,10 +38,11 @@ public class BacklogBusinessImpl implements BacklogBusiness {
 			Iterator<BacklogItem> iterator = items.iterator();
 			while( iterator.hasNext() ) {
 				BacklogItem item = iterator.next();
-				if( item.getId() == id )
+				if( item.getId() == id ) {
 					iterator.remove();
-				backlogItemDAO.remove(id); 	//This isn't needed once Cascades are correct for Backlog -> BacklogItem.
-											//Once that's done the test should also work proper.
+					backlogItemDAO.remove(id); 	//This isn't needed once Cascades are correct for Backlog -> BacklogItem.
+												//Once that's done the test should also work proper.
+				}
 			}
 		}
 		

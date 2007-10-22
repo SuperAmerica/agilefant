@@ -261,7 +261,25 @@
 			</result>
 		</action>
 
+		<action name="doActionOnMultipleBacklogItems" method="doActionOnMultipleBacklogItems" class="backlogAction">
+			<result name="move" type="chain">moveSelectedItems</result>
+			<result name="delete" type="chain">deleteSelectedItems</result>
+		</action>
+
 		<action name="moveSelectedItems" method="moveSelectedItems"
+			class="backlogAction">
+			<result name="editProduct" type="redirect">
+				editProduct.action?productId=${backlogId}
+			</result>
+			<result name="editDeliverable" type="redirect">
+				editDeliverable.action?deliverableId=${backlogId}
+			</result>
+			<result name="editIteration" type="redirect">
+				editIteration.action?iterationId=${backlogId}
+			</result>
+		</action>
+
+		<action name="deleteSelectedItems" method="deleteSelectedItems"
 			class="backlogAction">
 			<result name="editProduct" type="redirect">
 				editProduct.action?productId=${backlogId}

@@ -1,6 +1,6 @@
 <%@ include file="./_taglibs.jsp"%>
 
-<ww:form action="moveSelectedItems">
+<ww:form action="doActionOnMultipleBacklogItems">
 
 	<!-- Return to this backlog after submit -->
 	<ww:hidden name="backlogId" value="${backlog.id}" />
@@ -166,7 +166,7 @@
 			</c:choose>
 		</display:column>
 --%>
-		<display:column sortable="false" title="Actions">
+<%--		<display:column sortable="false" title="Actions">
 			<ww:url id="deleteLink" action="deleteBacklogItem"
 				includeParams="none">
 				<ww:param name="backlogItemId" value="${item.id}" />
@@ -177,7 +177,7 @@
 					onclick="return confirmDeleteBli()">
 					Delete
 			</ww:a>
-		</display:column>
+		</display:column> --%>
 
 		<display:footer>
 			<tr>
@@ -194,8 +194,6 @@
 				<%-- Original estimate --%>
 				<td><c:out value="${backlog.bliOrigEstSum}" /></td>
 				<%-- Work reported --%>
-				<td>&nbsp;</td>
-				<td></td>
 			<tr>
 		</display:footer>
 	</display:table>
@@ -203,8 +201,9 @@
 	<aef:productList />
 
 	<p>
-	<ww:submit type="button" value="%{'MoveItems'}" label="Move selected to" />
+	<ww:submit type="button" name="itemAction" value="%{'MoveSelected'}" label="Move selected to" />
 	<aef:backlogDropdown selectName="targetBacklog"
 			preselectedBacklogId="${backlog.id}" backlogs="${productList}" /> 
 	</p>
+	<ww:submit type="button" name="itemAction" value="%{'DeleteSelected'}" label="Delete Selected" />
 </ww:form>

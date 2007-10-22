@@ -168,4 +168,73 @@ public class BacklogTest extends SpringTestCase {
 		super.startNewTransaction();
 	}
 	
+	/**
+	 * Test moving group of backlog items between to backlogs.
+	 */
+	/*public void testDelete() {
+		Product testBacklog0;	
+		Product[] testBacklogs;	
+		Collection<BacklogItem> backlogItems;
+		BacklogItem[] backlogItemArray;
+		String result;
+		int[] backlogItemIds;
+		
+		super.setComplete(); //Do not rollback transaction
+		
+		// Set up database
+		
+		TestUtility.initUser(userAction, userDAO);
+		for(int i = 0; i < 2; i++) {
+			TestUtility.createTestProduct(i, productDAO);
+		}		
+
+		testBacklogs = productDAO.getAll().toArray(new Product[0]);
+		assertTrue("Product creation failed", 
+				testBacklogs.length != 0);
+		
+		for(int i = 0; i < 2; i++) {		
+			TestUtility.createBareTestItem(i, testBacklogs[0], backlogItemDAO);
+		}
+		
+		super.endTransaction();
+		
+		// Set up objects for testing
+		
+		super.startNewTransaction();
+		super.setComplete();
+		
+		backlogItems = backlogItemDAO.getAll();
+		backlogItemArray = backlogItems.toArray(new BacklogItem[0]);
+		
+		testBacklog0 = productDAO.get(testBacklogs[0].getId());
+		
+		assertNotNull("Retrivin backlog failed", testBacklog0);
+		
+		assertTrue("Adding items to backlog failed ",
+				backlogItems.size() > 0);
+		
+		// The actual test code
+		
+		backlogItemIds = new int[backlogItems.size()];
+		
+		for(int i = 0; i < backlogItemArray.length; i++) {
+			backlogItemIds[i] = backlogItemArray[i].getId();
+		}
+		assertEquals("Backlog item ID array generation failed",
+				backlogItemIds.length, backlogItems.size());
+		
+		backlogAction.setBacklogId(testBacklogs[0].getId());
+		backlogAction.setSelected(backlogItemIds);
+		
+		result = backlogAction.deleteSelectedItems();		
+		assertFalse("Deleting items failed " + 
+				backlogAction.getActionErrors(), 
+				result.equals(Action.ERROR));
+		
+		assertEquals("Backlog has invalid number of items",
+				0, testBacklog0.getBacklogItems().size());
+				
+		super.endTransaction();
+		super.startNewTransaction();
+	}*/
 }

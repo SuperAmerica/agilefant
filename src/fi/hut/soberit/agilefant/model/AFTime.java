@@ -1,11 +1,11 @@
 package fi.hut.soberit.agilefant.model;
 
-import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.text.ParsePosition;
+import java.util.Locale;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 import java.util.regex.MatchResult;
-import java.util.NoSuchElementException;
 
 /**
  * Wrapper class around java.sql.Time for representing times in the
@@ -184,9 +184,11 @@ public class AFTime extends java.sql.Time {
 		    			    		
 		    		// ParsePosition instance to track the NumberFormat parse - call
 		    		ParsePosition parsePos = new ParsePosition(0);
-		    				    		
-		    		// parse the token according to current number locale
-		    		Number number = NumberFormat.getNumberInstance().parse(token, parsePos);
+		    		
+		    		// Accepts "," and "." as decimal separator regardless of locale
+		    		NumberFormat format = NumberFormat.getInstance(Locale.US);
+		    		token = token.replaceAll(",", ".");
+		    		Number number = format.parse(token, parsePos);
 		    		
 		    		// fail if got null, parsePosition reports an error or not all input was consumed
 		    		if(number == null || parsePos.getErrorIndex() != -1 || parsePos.getIndex() != token.length())
@@ -194,7 +196,7 @@ public class AFTime extends java.sql.Time {
 
 		    		// get the decimal value
 		    		double hours = number.doubleValue();
-		    				    
+		    		
 		    		// no negative values
 		    		if(hours < 0)		    			
 		    			throw new IllegalArgumentException("negative input not allowed");

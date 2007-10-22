@@ -1,6 +1,7 @@
 package fi.hut.soberit.agilefant.model;
 
 import java.text.NumberFormat;
+import java.util.Locale;
 
 import junit.framework.TestCase;
 
@@ -10,6 +11,7 @@ import static fi.hut.soberit.agilefant.model.AFTime.*;
  * @author ekantola
  */
 public class AFTimeTest extends TestCase {
+	@SuppressWarnings("deprecation")
 	private long getTime(int days, int hours, int minutes) {
 		return days*WORKDAY_IN_MILLIS + hours*HOUR_IN_MILLIS + minutes*MINUTE_IN_MILLIS;
 	}
@@ -44,6 +46,15 @@ public class AFTimeTest extends TestCase {
 		String decimalNumber = NumberFormat.getNumberInstance().format(3.5);
 		// parse the formatted string
 		assertEquals(decimalNumber, getTime(0, 3, 30), parse(decimalNumber));
+			
+		// Test with different locales, should work degardless of the locale
+		Locale.setDefault(Locale.US);
+		assertEquals(getTime(0, 3, 30), parse("3,5"));		
+		assertEquals(getTime(0, 3, 30), parse("3.5"));
+		
+		Locale.setDefault(Locale.GERMAN);
+		assertEquals(getTime(0, 3, 30), parse("3,5"));		
+		assertEquals(getTime(0, 3, 30), parse("3.5"));
 		
 		// Parse zero times properly (note: qualifier can be left out here!)
 		assertEquals(0, parse("0"));

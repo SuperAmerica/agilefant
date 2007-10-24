@@ -22,16 +22,18 @@
 				<c:choose>
 				<c:when test="${placeholder != 'true'}">
 					
-					<ww:a href="%{editLink}&contextViewName=${currentAction}&contextObjectId=${contextObjectId}" title="${task.name}">
+					
 					<c:choose>
 						<c:when test="${task.backlogItem.placeHolder == task}">
 							Backlog item
 						</c:when>
 						<c:otherwise>
+							<ww:a href="%{editLink}&contextViewName=${currentAction}&contextObjectId=${contextObjectId}" title="${task.name}">
 							${aef:subString(task.name, 40)}
+							</ww:a>
 						</c:otherwise>
 					</c:choose>
-						</ww:a>
+						
 						<br/>
 						
 						<ww:form action="quickStoreTask">

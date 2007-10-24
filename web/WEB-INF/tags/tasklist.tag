@@ -21,9 +21,16 @@
 				
 				<c:choose>
 				<c:when test="${placeholder != 'true'}">
-					<c:if test="${task.backlogItem.placeHolder != task}">
-						<ww:a href="%{editLink}&contextViewName=${currentAction}&contextObjectId=${contextObjectId}" title="${task.name}">
+					
+					<ww:a href="%{editLink}&contextViewName=${currentAction}&contextObjectId=${contextObjectId}" title="${task.name}">
+					<c:choose>
+						<c:when test="${task.backlogItem.placeHolder == task}">
+							Backlog item
+						</c:when>
+						<c:otherwise>
 							${aef:subString(task.name, 40)}
+						</c:otherwise>
+					</c:choose>
 						</ww:a>
 						<br/>
 						
@@ -37,13 +44,12 @@
 							<ww:hidden name="task.description" value="${task.description}"/>
 							<ww:hidden name="watch" value="${!empty task.watchers[currentUser.id]}"/>			
 							<ww:hidden name="task.assignee.id" value="${task.assignee.id}"/>
-							
+
 							<ww:textfield size="5" name="task.effortEstimate" value="${task.effortEstimate}"/>
 							<ww:select name="task.status" value="#attr.task.status.name" list="@fi.hut.soberit.agilefant.model.TaskStatus@values()" listKey="name" listValue="getText('task.status.' + name())"/>		
 							<ww:submit name="action:quickStoreTask" value="Store"/>		
 						</ww:form>
 						</li>
-					</c:if>
 				</c:when>
 				<c:otherwise>
 						<ww:form action="quickStoreTask"> 

@@ -51,6 +51,7 @@
 						</ww:url> 
 						<img src="${imgUrl}" /> 
 					</a>
+					
 					<aef:tasklist tasks="${item.tasks}"
 						contextViewName="${currentAction}" contextObjectId="${backlog.id}"
 						divId="${divId}"/>
@@ -91,7 +92,7 @@
 						</a>
 						<aef:tasklist tasks="${item.tasks}"
 							contextViewName="${currentAction}" contextObjectId="${backlog.id}"
-							divId="${divId}" placeholder="true" />
+							divId="${divId}" />
 					</c:if>
 				</c:otherwise>
 			</c:choose>

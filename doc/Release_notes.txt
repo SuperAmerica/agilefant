@@ -1,8 +1,8 @@
 Agilefant
 RELEASE NOTES
-7.9.2007
+23.10.2007
 
-KEY FUNCTIONALITY AGILEFANT 1.2.2
+KEY FUNCTIONALITY AGILEFANT 1.3.1
 + Agilefant manages backlogs at the product, project and iteration
 levels
 + Backlog items can easily be moved between backlogs
@@ -13,6 +13,24 @@ the original effort estimate is also tracked
 + Numerical effort left estimates are displayed for backlogs
 + A burndown graph reflecting the development velocity is displayed
 at the iteration level
+
+CHANGES FROM AGILEFANT 1.2.2
++ Replaced the backlog Delete button with bulk delete option
++ Work estimate now takes ',' and '.' as decimal separator regardless 
+of the locale settings. For example '30,5', and '30.5'.
++ Added 'Save & Close' and 'Create & Close' -buttons to editBacklogItem 
+and editTask JSP-fragments.
++ Added new default priority 'undefined' for backlog items and tasks.
++ Default backlog item list sorting order changed. Orders the list by 
+backlog item priority. Items with 'Done'-status are moved to the end 
+of the list.
++ Added coloured statusbar for backlog items without tasks
++ 'Edit iteration' view default start and end date times are 6:00 and 
+18:00, respectively.
++ Removed 'Watch this' checkbox from edit backlog-item  edit task view
++ Backlog name cell size increased
++ Changed 'Event history' to 'History' in 'Edit task' view
++ Hided id from task history table
 
 CHANGES FROM AGILEFANT 1.2.1
 + Past and future projects & iterations are by default hidden in the

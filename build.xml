@@ -35,12 +35,9 @@
 			<path location="${build.classes}" />
 		</path>
 
-		<taskdef name="hibernatetool"
-			classname="org.hibernate.tool.ant.HibernateToolTask"
-			classpathref="hibernatetoolslib" />
+		<taskdef name="hibernatetool" classname="org.hibernate.tool.ant.HibernateToolTask" classpathref="hibernatetoolslib" />
 
-		<taskdef name="dbunit" classname="org.dbunit.ant.DbUnitTask"
-			classpathref="compile.classpath" />
+		<taskdef name="dbunit" classname="org.dbunit.ant.DbUnitTask" classpathref="compile.classpath" />
 
 		<path id="emma.classpath">
 			<fileset dir="${lib}">
@@ -53,21 +50,29 @@
 			<pathelement location="${build.classes}" />
 		</path>
 
-		<taskdef resource="emma_ant.properties"
-			classpathref="emma.classpath" />
+		<taskdef resource="emma_ant.properties" classpathref="emma.classpath" />
 
+		<!-- Initialization of JMeter and jChav stress testing framework -->
+		<property file="conf/classes/messages.properties" />
+		<tstamp>
+			<format property="build.id" pattern="dMMyyyy-hhmmss" locale="en" />
+		</tstamp>
+		<property description="The location of the install of JMeter" name="jmeter.install.dir" value="/opt/jakarta-jmeter-2.3" />
+		<property description="The directory containing the jchav jars" name="jchav.libs.dir" value="/opt/jchav-1.1.0" />
+		<property description="The JMeter test plan script we want to run" name="jmeter.testplan" value="/opt/jakarta-jmeter-2.3/plans/Agilefant_single_user.jmx" />
+		<property description="The location to store the per run files" name="jmeter.result.dir" value="test/jmeter-results" />
+		<property description="The resulting file location, make sure this is unique for each build" name="jmeter.result.file" value="${jmeter.result.dir}/result_${webwork.agilefantVersionNumber}_${build.id}.xml" />
+		<property description="The location to generate the html and charts to. " name="jchav.result.dir" value="test/jchav-results" />
 	</target>
 
 	<!-- instruments all the classes, runs the tests, and generates reports -->
-	<target name="emma" depends="make-jar, compile-tests"
-		description="Compiles source files">
+	<target name="emma" depends="make-jar, compile-tests" description="Compiles source files">
 		<property name="emma.enabled" value="true" />
 
 		<!-- instrument the jar file and the test classess -->
 		<!-- note: for some reason, doesn't instrument the test classes -->
 		<emma enabled="${emma.enabled}">
-			<instr instrpathref="instr.classpath" mode="overwrite"
-				metadatafile="${coverage.dir}/emma-agilefant.emma" destdir=".">
+			<instr instrpathref="instr.classpath" mode="overwrite" metadatafile="${coverage.dir}/emma-agilefant.emma" destdir=".">
 			</instr>
 		</emma>
 
@@ -87,56 +92,39 @@
 		</emma>
 	</target>
 
-	<target name="compile" depends="init"
-		description="Compiles source files">
-		<javac debug="${javac.debug}" destdir="${build.classes}"
-			srcdir="${src}">
+	<target name="compile" depends="init" description="Compiles source files">
+		<javac debug="${javac.debug}" destdir="${build.classes}" srcdir="${src}">
 			<classpath refid="compile.classpath" />
 			<!-- <compilerarg value="-Xlint:deprecation"/> -->
 		</javac>
 	</target>
 
-	<target name="make-jar" depends="compile"
-		description="Makes the jar file">
-		<jar basedir="${build.classes}" includes="**"
-			destfile="${jarFile}" />
+	<target name="make-jar" depends="compile" description="Makes the jar file">
+		<jar basedir="${build.classes}" includes="**" destfile="${jarFile}" />
 	</target>
 
-	<target name="create-db" depends="compile"
-		description="Creates db using hibernate tools">
+	<target name="create-db" depends="compile" description="Creates db using hibernate tools">
 		<hibernatetool destdir="${build.dir}">
-			<annotationconfiguration
-				propertyfile="${conf.dir}/database-${database.type}.properties"
-				configurationfile="${conf.dir}/hibernate.cfg.xml" />
-			<hbm2ddl export="${hbm2ddl.export}"
-				outputfilename="create-db.ddl" />
+			<annotationconfiguration propertyfile="${conf.dir}/database-${database.type}.properties" configurationfile="${conf.dir}/hibernate.cfg.xml" />
+			<hbm2ddl export="${hbm2ddl.export}" outputfilename="create-db.ddl" />
 		</hibernatetool>
 	</target>
 
-	<target name="create-ddl" depends="compile"
-		description="Creates db using hibernate tools">
+	<target name="create-ddl" depends="compile" description="Creates db using hibernate tools">
 		<hibernatetool destdir="${build.dir}">
-			<annotationconfiguration
-				propertyfile="${conf.dir}/database-${database.type}.properties"
-				configurationfile="${conf.dir}/hibernate.cfg.xml" />
-			<hbm2ddl export="false"
-				outputfilename="create-db.ddl" />
+			<annotationconfiguration propertyfile="${conf.dir}/database-${database.type}.properties" configurationfile="${conf.dir}/hibernate.cfg.xml" />
+			<hbm2ddl export="false" outputfilename="create-db.ddl" />
 		</hibernatetool>
 	</target>
 
-	<target name="create-test-db" depends="compile"
-		description="Creates db using hibernate tools">
+	<target name="create-test-db" depends="compile" description="Creates db using hibernate tools">
 		<hibernatetool destdir="${build.dir}">
-			<annotationconfiguration
-				propertyfile="${conf.dir}/database-fortests-${database.type}.properties"
-				configurationfile="${conf.dir}/hibernate.cfg.xml" />
-			<hbm2ddl export="${hbm2ddl.export}"
-				outputfilename="create-db.ddl" />
+			<annotationconfiguration propertyfile="${conf.dir}/database-fortests-${database.type}.properties" configurationfile="${conf.dir}/hibernate.cfg.xml" />
+			<hbm2ddl export="${hbm2ddl.export}" outputfilename="create-db.ddl" />
 		</hibernatetool>
 	</target>
 
-	<target name="test-reports"
-		description="Generate HTML reports from XML test results">
+	<target name="test-reports" description="Generate HTML reports from XML test results">
 		<junitreport todir="${test.reports.dir}">
 			<fileset dir="${test.reports.dir}">
 				<include name="TEST-*.xml" />
@@ -147,32 +135,27 @@
 
 	<target name="test-prepare-spring-old" depends="compile-tests" description="Prepare Spring-specific stuff for tests">
 		<copy todir="${build.test.conf.dir}/WEB-INF/">
-		<fileset dir="${conf.dir}" excludes="database-*.properties"/>
+			<fileset dir="${conf.dir}" excludes="database-*.properties" />
 		</copy>
 		<copy todir="${build.test.conf.dir}">
-		<fileset dir="${conf.dir}" excludes="database-*.properties"/>
+			<fileset dir="${conf.dir}" excludes="database-*.properties" />
 		</copy>
 		<copy tofile="${build.test.conf.dir}/WEB-INF/database.properties">
-		<fileset file="${conf.dir}/database-fortests-${database.type}.properties"/>
+			<fileset file="${conf.dir}/database-fortests-${database.type}.properties" />
 		</copy>
-		</target>
+	</target>
 
 	<target name="copy-spring-files" description="Internal target">
 		<mkdir dir="${destination}/WEB-INF" />
-		<copy file="${conf.dir}/configuration.properties"
-			tofile="${destination}/WEB-INF/configuration.properties" />
-		<copy
-			file="${conf.dir}/database-fortests-${database.type}.properties"
-			tofile="${destination}/WEB-INF/database.properties" />
-		<copy file="${conf.dir}/hibernate.cfg.xml"
-			tofile="${destination}/WEB-INF/hibernate.cfg.xml" />
+		<copy file="${conf.dir}/configuration.properties" tofile="${destination}/WEB-INF/configuration.properties" />
+		<copy file="${conf.dir}/database-fortests-${database.type}.properties" tofile="${destination}/WEB-INF/database.properties" />
+		<copy file="${conf.dir}/hibernate.cfg.xml" tofile="${destination}/WEB-INF/hibernate.cfg.xml" />
 		<copy todir="${destination}">
 			<fileset dir="${conf.dir}" includes="*.xml" />
 		</copy>
 	</target>
 
-	<target name="test-copy-spring-conf-files" depends="compile-tests"
-		description="Copy Spring-specific stuff for jUnit-tests to conf/test">
+	<target name="test-copy-spring-conf-files" depends="compile-tests" description="Copy Spring-specific stuff for jUnit-tests to conf/test">
 		<antcall target="copy-spring-files">
 			<param name="destination" value="${test.conf.dir}" />
 		</antcall>
@@ -180,8 +163,7 @@
 
 	<!-- fitnesse.dir must be the directory where fitnesse is driven.
 		{fitnesse.dir}/conf must be added to fitnesse classpath -->
-	<target name="test-prepare-fitnesse" depends="compile-tests"
-		description="Prepare Spring-specific stuff for Fitnesse-tests">
+	<target name="test-prepare-fitnesse" depends="compile-tests" description="Prepare Spring-specific stuff for Fitnesse-tests">
 		<antcall target="copy-spring-files">
 			<param name="destination" value="${fitnesse.dir}/conf" />
 		</antcall>
@@ -195,8 +177,7 @@
 		<!--	<junit fork="true" printsummary="true">			-->
 		<!--		<junit fork="true" dir="${basedir}" printsummary="true">			-->
 		<junit fork="true" dir="${basedir}" printsummary="true">
-			<jvmarg
-				value="-Demma.coverage.out.file=${coverage.dir}/coverage.emma" />
+			<jvmarg value="-Demma.coverage.out.file=${coverage.dir}/coverage.emma" />
 			<jvmarg value="-Demma.coverage.out.merge=true" />
 			<jvmarg value="-Djava.net.preferIPv4Stack=true" />
 
@@ -211,8 +192,7 @@
 		</junit>
 	</target>
 
-	<target name="test-unit" depends="compile-tests"
-		description="Runs unit tests">
+	<target name="test-unit" depends="compile-tests" description="Runs unit tests">
 		<antcall target="test">
 			<param name="srcdir" value="${test.unit.src}" />
 		</antcall>
@@ -220,85 +200,61 @@
 
 	<!--	<target name="test-integration" depends="compile-tests, test-prepare-spring" description="Runs integration tests">-->
 	<!-- conf files not copied implicitly any more -->
-	<target name="test-integration" depends="compile-tests"
-		description="Runs integration tests">
+	<target name="test-integration" depends="compile-tests" description="Runs integration tests">
 		<antcall target="test">
 			<param name="srcdir" value="${test.integration.src}" />
 		</antcall>
 	</target>
 
-	<target name="test-all" depends="test-unit, test-integration"
-		description="Run all tests and generate HTML reports" />
+	<target name="test-all" depends="test-unit, test-integration" description="Run all tests and generate HTML reports" />
 
 	<!-- ei tarvinne webappia -->
 	<target name="compile-tests" depends="compile">
 		<mkdir dir="${build.test.classes.dir}" />
-		<javac debug="${javac.debug}"
-			destdir="${build.test.classes.dir}" srcdir="${test.util.src}">
+		<javac debug="${javac.debug}" destdir="${build.test.classes.dir}" srcdir="${test.util.src}">
 			<classpath refid="compile.test.classpath" />
 		</javac>
-		<javac debug="${javac.debug}"
-			destdir="${build.test.classes.dir}" srcdir="${test.unit.src}">
+		<javac debug="${javac.debug}" destdir="${build.test.classes.dir}" srcdir="${test.unit.src}">
 			<classpath refid="compile.test.classpath" />
 		</javac>
-		<javac debug="${javac.debug}"
-			destdir="${build.test.classes.dir}" srcdir="${test.fixture.src}">
+		<javac debug="${javac.debug}" destdir="${build.test.classes.dir}" srcdir="${test.fixture.src}">
 			<classpath refid="compile.test.classpath" />
 		</javac>
-		<javac debug="${javac.debug}"
-			destdir="${build.test.classes.dir}"
-			srcdir="${test.integration.src}">
+		<javac debug="${javac.debug}" destdir="${build.test.classes.dir}" srcdir="${test.integration.src}">
 			<classpath refid="compile.test.classpath" />
 		</javac>
 	</target>
 
-	<target name="drop-create-db" depends="compile"
-		description="Creates db using hibernate tools">
+	<target name="drop-create-db" depends="compile" description="Creates db using hibernate tools">
 		<hibernatetool destdir="${build.dir}">
-			<annotationconfiguration
-				propertyfile="${conf.dir}/database-${database.type}.properties"
-				configurationfile="${conf.dir}/hibernate.cfg.xml" />
-			<hbm2ddl drop="true" export="${hbm2ddl.export}"
-				outputfilename="create-db.ddl" />
+			<annotationconfiguration propertyfile="${conf.dir}/database-${database.type}.properties" configurationfile="${conf.dir}/hibernate.cfg.xml" />
+			<hbm2ddl drop="true" export="${hbm2ddl.export}" outputfilename="create-db.ddl" />
 		</hibernatetool>
 	</target>
 
-	<target name="drop-create-test-db" depends="compile"
-		description="Creates db using hibernate tools">
+	<target name="drop-create-test-db" depends="compile" description="Creates db using hibernate tools">
 		<hibernatetool destdir="${build.dir}">
-			<annotationconfiguration
-				propertyfile="${conf.dir}/database-fortests-${database.type}.properties"
-				configurationfile="${conf.dir}/hibernate.cfg.xml" />
-			<hbm2ddl drop="true" export="${hbm2ddl.export}"
-				outputfilename="create-db.ddl" />
+			<annotationconfiguration propertyfile="${conf.dir}/database-fortests-${database.type}.properties" configurationfile="${conf.dir}/hibernate.cfg.xml" />
+			<hbm2ddl drop="true" export="${hbm2ddl.export}" outputfilename="create-db.ddl" />
 		</hibernatetool>
 	</target>
 
-	<target name="update-db" depends="compile"
-		description="Creates db using hibernate tools">
+	<target name="update-db" depends="compile" description="Creates db using hibernate tools">
 		<hibernatetool destdir="${build.dir}">
-			<annotationconfiguration
-				propertyfile="${conf.dir}/database-${database.type}.properties"
-				configurationfile="${conf.dir}/hibernate.cfg.xml" />
-			<hbm2ddl export="${hbm2ddl.export}"
-				outputfilename="create-db.ddl" update="true" />
+			<annotationconfiguration propertyfile="${conf.dir}/database-${database.type}.properties" configurationfile="${conf.dir}/hibernate.cfg.xml" />
+			<hbm2ddl export="${hbm2ddl.export}" outputfilename="create-db.ddl" update="true" />
 		</hibernatetool>
 	</target>
 
-	<target name="update-test-db" depends="compile"
-		description="Creates db using hibernate tools">
+	<target name="update-test-db" depends="compile" description="Creates db using hibernate tools">
 		<hibernatetool destdir="${build.dir}">
-			<annotationconfiguration
-				propertyfile="${conf.dir}/database-fortests-${database.type}.properties"
-				configurationfile="${conf.dir}/hibernate.cfg.xml" />
-			<hbm2ddl export="${hbm2ddl.export}"
-				outputfilename="create-db.ddl" update="true" />
+			<annotationconfiguration propertyfile="${conf.dir}/database-fortests-${database.type}.properties" configurationfile="${conf.dir}/hibernate.cfg.xml" />
+			<hbm2ddl export="${hbm2ddl.export}" outputfilename="create-db.ddl" update="true" />
 		</hibernatetool>
 	</target>
 
 
-	<target name="webapp" depends="make-jar"
-		description="Builds webapp">
+	<target name="webapp" depends="make-jar" description="Builds webapp">
 		<copy includeEmptyDirs="true" todir="${build.webapp}">
 			<fileset dir="${webapp.root}" />
 		</copy>
@@ -306,8 +262,7 @@
 			<fileset dir="${conf.dir}" excludes="database-*.properties" />
 		</copy>
 		<copy tofile="${build.webapp}/WEB-INF/database.properties">
-			<fileset
-				file="${conf.dir}/database-${database.type}.properties" />
+			<fileset file="${conf.dir}/database-${database.type}.properties" />
 		</copy>
 		<copy todir="${build.webapp}/WEB-INF/lib/">
 			<fileset dir="${lib}">
@@ -324,31 +279,26 @@
 		</copy>
 	</target>
 
-	<target name="quick-ui-deploy" depends="init"
-		description="Quickly deploys all jsp to server">
+	<target name="quick-ui-deploy" depends="init" description="Quickly deploys all jsp to server">
 		<copy todir="${deploy.dir.local}/WEB-INF/jsp/">
 			<fileset dir="${webapp.root}/WEB-INF/jsp/" />
 		</copy>
 	</target>
 
-	<target name="deploy-local-web" depends="webapp"
-		description="Deploys web app to local server without reloading webapp">
+	<target name="deploy-local-web" depends="webapp" description="Deploys web app to local server without reloading webapp">
 		<mkdir dir="${deploy.dir.local}" />
 		<copy todir="${deploy.dir.local}">
 			<fileset dir="${build.webapp}" />
 		</copy>
 	</target>
 
-	<target name="deploy-local" depends="deploy-local-web"
-		description="Deploys web app to local server">
+	<target name="deploy-local" depends="deploy-local-web" description="Deploys web app to local server">
 		<touch file="${deploy.dir.local}/WEB-INF/web.xml" />
 	</target>
 
-	<target name="undeploy-local"
-		description="Undeploys web app on local server">
+	<target name="undeploy-local" description="Undeploys web app on local server">
 		<delete dir="${deploy.dir.local}" />
-		<delete
-			dir="${catalina.home}/work/Catalina/localhost/${webapp.name}" />
+		<delete dir="${catalina.home}/work/Catalina/localhost/${webapp.name}" />
 	</target>
 
 	<target name="clean" description="Removes build directory">
@@ -356,24 +306,15 @@
 		<delete dir="${test.reports.dir}" />
 	</target>
 
-	<target name="set-original-db" depends="init"
-		description="Updates the database, with default values from the XML file">
-		<dbunit driver="${hibernate.connection.driver_class}"
-			url="${hibernate.connection.url}"
-			userid="${hibernate.connection.username}"
-			password="${hibernate.connection.password}">
+	<target name="set-original-db" depends="init" description="Updates the database, with default values from the XML file">
+		<dbunit driver="${hibernate.connection.driver_class}" url="${hibernate.connection.url}" userid="${hibernate.connection.username}" password="${hibernate.connection.password}">
 			<classpath refid="compile.classpath" />
-			<operation type="CLEAN_INSERT"
-				src="${testdata.dir}/testData.xml" format="xml" />
+			<operation type="CLEAN_INSERT" src="${testdata.dir}/testData.xml" format="xml" />
 		</dbunit>
 	</target>
 
-	<target name="export-db" depends="init"
-		description="Exports the database into an XML file">
-		<dbunit driver="${hibernate.connection.driver_class}"
-			url="${hibernate.connection.url}"
-			userid="${hibernate.connection.username}"
-			password="${hibernate.connection.password}">
+	<target name="export-db" depends="init" description="Exports the database into an XML file">
+		<dbunit driver="${hibernate.connection.driver_class}" url="${hibernate.connection.url}" userid="${hibernate.connection.username}" password="${hibernate.connection.password}">
 			<export dest="${build.test}/exportedData.xml" format="xml" />
 		</dbunit>
 	</target>
@@ -384,12 +325,10 @@
 		</exec>
 	</target>
 
-	<target name="generate-javadocs" depends="init"
-		description="Generates Javadocs from source code">
+	<target name="generate-javadocs" depends="init" description="Generates Javadocs from source code">
 		<!-- TODO: Generate docs for taglibs -->
 		<mkdir dir="${javadoc.dir}" />
-		<javadoc classpathref="compile.classpath"
-			destdir="${javadoc.dir}" access="private">
+		<javadoc classpathref="compile.classpath" destdir="${javadoc.dir}" access="private">
 			<fileset dir="${src}" defaultexcludes="yes">
 				<include name="**" />
 			</fileset>
@@ -397,8 +336,7 @@
 		</javadoc>
 	</target>
 
-	<target name="run-jdepend" depends="compile"
-		description="Runs JDepend">
+	<target name="run-jdepend" depends="compile" description="Runs JDepend">
 		<!-- 
 		<mkdir dir="${jdepend.dir}" />
 
@@ -414,10 +352,9 @@
 	</target>
 
 	<target name="war" depends="webapp">
-		<jar basedir="${build.webapp}" includes="**"
-			destfile="${warFile}" />
+		<jar basedir="${build.webapp}" includes="**" destfile="${warFile}" />
 	</target>
-	
+
 	<!-- 
 	<target name="release"
 		depends="clean, war, generate-javadocs, doccheck, run-jdepend, drop-create-test-db, emma, test-reports">
@@ -429,33 +366,45 @@
 		</copy>
 	</target>  -->
 
-	<target name="release"
-		depends="clean, war, create-ddl"
-		description="Generates release directory" >
+	<target name="release" depends="clean, war, create-ddl" description="Generates release directory">
 		<mkdir dir="${release.dir}" />
-		<copy file="${warFile}" todir="${release.dir}"/>
-		<copy file="${basedir}/doc/LICENSE" todir="${release.dir}"/>
-		<copy file="${basedir}/doc/sql/insert-users.sql" todir="${release.dir}"/>
-		<copy file="${build.dir}/create-db.ddl" todir="${release.dir}"/>
-		<copy file="${basedir}/doc/Release_notes.txt" todir="${release.dir}"/>
-		<copy file="${basedir}/doc/Summary_about_used_libraries.txt" todir="${release.dir}"/>
-		<copy file="${basedir}/doc/Install.txt" todir="${release.dir}"/>	
+		<copy file="${warFile}" todir="${release.dir}" />
+		<copy file="${basedir}/doc/LICENSE" todir="${release.dir}" />
+		<copy file="${basedir}/doc/sql/insert-users.sql" todir="${release.dir}" />
+		<copy file="${build.dir}/create-db.ddl" todir="${release.dir}" />
+		<copy file="${basedir}/doc/Release_notes.txt" todir="${release.dir}" />
+		<copy file="${basedir}/doc/Summary_about_used_libraries.txt" todir="${release.dir}" />
+		<copy file="${basedir}/doc/Install.txt" todir="${release.dir}" />
 	</target>
 
-	<target name="release-zip" depends="release"
-		description="Packs all files in release directory to a zip file">
-		<zip destfile="${release.zip.dir}/agilefant.zip"
-			basedir="${release.dir}"
-			update="true"/>
+	<target name="release-zip" depends="release" description="Packs all files in release directory to a zip file">
+		<zip destfile="${release.zip.dir}/agilefant.zip" basedir="${release.dir}" update="true" />
 	</target>
 
 	<target name="doccheck">
 		<mkdir dir="${doccheck.dir}" />
-		<javadoc classpathref="compile.classpath"
-			doclet="com.sun.tools.doclets.doccheck.DocCheck"
-			docletpathref="compile.classpath" destdir="${doccheck.dir}"
-			sourcepath="${src}">
+		<javadoc classpathref="compile.classpath" doclet="com.sun.tools.doclets.doccheck.DocCheck" docletpathref="compile.classpath" destdir="${doccheck.dir}" sourcepath="${src}">
 			<package name="fi.hut.soberit.agilefant.*" />
 		</javadoc>
+	</target>
+
+	<!-- Execute JMeter test plan -->
+	<target name="run-jmeter" depends="init" description="Execute the JMeter test plan, recording the results to a file.">
+		<taskdef name="jmeter" classpath="${jmeter.install.dir}/extras/ant-jmeter.jar" classname="org.programmerplanet.ant.taskdefs.jmeter.JMeterTask" />
+		<jmeter jmeterhome="${jmeter.install.dir}" testplan="${jmeter.testplan}" resultlog="${jmeter.result.file}">
+			<property name="jmeter.save.saveservice.output_format" value="xml" />
+		</jmeter>
+	</target>
+
+	<!-- Produce jChav report from JMeter results -->
+	<target name="run-jchav" depends="init" description="Produce JChav report from the JMeter results">
+		<taskdef name="jchav" classname="com.googlecode.jchav.ant.JChavTask">
+			<classpath>
+				<fileset dir="${jchav.libs.dir}/">
+					<include name="**/*.jar" />
+				</fileset>
+			</classpath>
+		</taskdef>
+		<jchav srcdir="${jmeter.result.dir}" destdir="${jchav.result.dir}" reporttitle="Agilefant Example walk" />
 	</target>
 </project>

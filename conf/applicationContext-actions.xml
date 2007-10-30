@@ -84,4 +84,7 @@
 	<bean name="dailyWorkAction"
 		class="fi.hut.soberit.agilefant.web.DailyWorkAction"
 		autowire="byName" singleton="false" />
+	<bean name="developmentPortfolioAction"
+		class="fi.hut.soberit.agilefant.web.DevelopmentPortfolioAction"
+		singleton="false" autowire="byName" />
 </beans>

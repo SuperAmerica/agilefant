@@ -200,6 +200,7 @@
 						  <li id="nav3"><a href="contextView.action?contextName=portfolio&resetContextView=true">Development portfolio</a></li>  
 						  -->
 						  <li id="nav2"><a href="contextView.action?contextName=${currentContext}&contextObjectId=${currentPageId}&resetContextView=true">Backlog</a></li>
+						  <li id="nav3"><a href="contextView.action?contextName=developmentPortfolio&resetContextView=true">Development Portfolio</a></li>
 							<li id="navc"><a href="contextView.action?contextName=users&resetContextView=true">Users</a></li>
 						  <li id="navb"><a href="contextView.action?contextName=activityTypes&resetContextView=true">Project Types</a></li>
 						  <li id="nava"><a href="contextView.action?contextName=createNew&resetContextView=true">Create New</a></li>

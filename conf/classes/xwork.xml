@@ -73,6 +73,9 @@
 			<result name="success_createNew" type="redirect-action">
 				<param name="actionName">createNew</param>
 			</result>
+			<result name="success_developmentPortfolio" type="redirect-action">
+				<param name="actionName">developmentPortfolio</param>
+			</result>
 			<result name="success_" type="redirect-action">
 				<param name="actionName">selectBacklog</param>
 			</result>
@@ -448,6 +451,12 @@
 			<result>/WEB-INF/jsp/dailyWork.jsp</result>
 		</action>
 		<!-- /Daily work -->
+		
+		<!-- Development portfolio -->
+		<action name="developmentPortfolio" class="developmentPortfolioAction">
+			<result>/WEB-INF/jsp/developmentPortfolio.jsp</result>
+		</action>
+		<!-- /Development portfolio -->
 		
 		<!-- IterationGoal actions -->
 		<action name="editIterationGoal" method="edit"

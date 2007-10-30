@@ -442,7 +442,13 @@
 			<result type="redirect">editMyTasks.action</result>
 		</action>
 		<!-- /My tasks -->
-
+		
+		<!-- Daily work -->
+		<action name="dailyWork">
+			<result>/WEB-INF/jsp/dailyWork.jsp</result>
+		</action>
+		<!-- /Daily work -->
+		
 		<!-- IterationGoal actions -->
 		<action name="editIterationGoal" method="edit"
 			class="iterationGoalAction">

@@ -444,7 +444,7 @@
 		<!-- /My tasks -->
 		
 		<!-- Daily work -->
-		<action name="dailyWork">
+		<action name="dailyWork" class="dailyWorkAction">
 			<result>/WEB-INF/jsp/dailyWork.jsp</result>
 		</action>
 		<!-- /Daily work -->

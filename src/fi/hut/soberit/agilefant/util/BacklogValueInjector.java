@@ -20,6 +20,7 @@ public class BacklogValueInjector {
 	 */
 	public static void injectMetrics(Backlog backlog, Date startDate,
 			TaskEventDAO taskEventDAO, BacklogItemDAO backlogItemDAO) {
+		
 		for(BacklogItem i: backlog.getBacklogItems()) {
 			i.setBliOrigEst(taskEventDAO.getBLIOriginalEstimate(i, startDate));
 			i.setTaskSumOrigEst(taskEventDAO.getTaskSumOrigEst(i, startDate));
@@ -32,6 +33,25 @@ public class BacklogValueInjector {
 			} else {
 				i.setBliEffEst(backlogItemDAO.getBLIEffortLeft(i));
 			}
+			// Calculate and set total effort
+			AFTime totalEff = new AFTime(0);
+			if(i.getBliEffEst() != null){
+				totalEff.add(i.getBliEffEst());
+			}
+			if(i.getTaskSumEffEst() != null){
+				totalEff.add(i.getTaskSumEffEst());
+			}
+			i.setTotalEffortLeft(totalEff);
+			
+			// Calculate and set total original estimate
+			AFTime totalEst = new AFTime(0);
+			if(i.getBliOrigEst() != null){
+				totalEst.add(i.getBliOrigEst());
+			}
+			if(i.getTaskSumOrigEst() != null){
+				totalEst.add(i.getTaskSumOrigEst());
+			}
+			i.setTotalOrigEst(totalEst);			
 		}
 	}
 }

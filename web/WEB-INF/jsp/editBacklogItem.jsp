@@ -228,26 +228,30 @@
 						${aef:html(row.name)}
 					</ww:a>
 				</display:column>
+				<%--
 				<display:column sortable="true" title="Effort left" sortProperty="effortEstimate.time">
 					${row.effortEstimate}
 				</display:column>
-				<%--
+				
 				<display:column sortable="true" title="Work performed" sortProperty="performedEffort.time">
 					${row.performedEffort}
 				</display:column>
-				--%>
+				
 				<display:column sortable="true" title="Priority" defaultorder="descending"  sortProperty="priority.ordinal">
 					<ww:text name="task.priority.${row.priority}"/>
 				</display:column>
+				--%>
 				<display:column sortable="true" title="Status" sortProperty="status.ordinal">
 					<ww:text name="task.status.${row.status}"/>
 				</display:column>
 				<display:column sortable="true" title="Created">
 					<ww:date name="#attr.row.created" />
 				</display:column>
+				<%--
 				<display:column sortable="true" sortProperty="assignee.fullName" title="Responsible">
 					${aef:html(row.assignee.fullName)}
 				</display:column>
+				--%>
 				<display:column sortable="true" sortProperty="creator.fullName" title="Creator">
 					${aef:html(row.creator.fullName)}
 				</display:column>

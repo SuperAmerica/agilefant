@@ -47,7 +47,7 @@
 							<ww:hidden name="watch" value="${!empty task.watchers[currentUser.id]}"/>			
 							<ww:hidden name="task.assignee.id" value="${task.assignee.id}"/>
 
-							<ww:textfield size="5" name="task.effortEstimate" value="${task.effortEstimate}"/>
+						<%-- 	<ww:textfield size="5" name="task.effortEstimate" value="${task.effortEstimate}"/> --%>
 							<ww:select name="task.status" value="#attr.task.status.name" list="@fi.hut.soberit.agilefant.model.TaskStatus@values()" listKey="name" listValue="getText('task.status.' + name())"/>		
 							<ww:submit name="action:quickStoreTask" value="Store"/>		
 						</ww:form>

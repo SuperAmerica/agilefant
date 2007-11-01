@@ -121,32 +121,21 @@
 		</c:choose>
 
 		<display:column sortable="true" sortProperty="bliEffEst" defaultorder="descending"
-			title="Effort Left<br/><span style='white-space: nowrap'>T + BLI</span>">
+			title="Effort Left<br/>">
 			<span style="white-space: nowrap">
 				<c:choose>
-					<c:when test="${item.taskSumEffEst == null}">&mdash;</c:when>
-					<c:otherwise>${item.taskSumEffEst}</c:otherwise>
-				</c:choose>
-				 + 
-				<c:choose>
-					<c:when test="${item.bliEffEst == null}">&mdash;</c:when>
-					<c:otherwise>${item.bliEffEst}</c:otherwise> 
+					<c:when test="${item.totalEffortLeft == null}">&mdash;</c:when>
+					<c:otherwise>${item.totalEffortLeft}</c:otherwise> 
 				</c:choose>
 			</span>
 		</display:column>
 
 		<display:column sortable="true" sortProperty="bliOrigEst" defaultorder="descending"
-				title="Original Estimate<br/><span style='white-space: nowrap'>T | BLI
-				</span>">
+				title="Original Estimate<br/>">
 			<span style="white-space: nowrap">
 				<c:choose>
-					<c:when test="${item.taskSumOrigEst == null}">&mdash;</c:when>
-					<c:otherwise>${item.taskSumOrigEst}</c:otherwise>
-				</c:choose>
-				 | 
-				<c:choose>
-					<c:when test="${item.bliOrigEst == null}">&mdash;</c:when>
-					<c:otherwise>${item.bliOrigEst}</c:otherwise> 
+					<c:when test="${item.totalOrigEst == null}">&mdash;</c:when>
+					<c:otherwise>${item.totalOrigEst}</c:otherwise> 
 				</c:choose>
 			</span>
 		</display:column>

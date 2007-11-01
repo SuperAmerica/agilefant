@@ -79,6 +79,15 @@ public class BacklogItem implements PageItem, Assignable, EffortContainer {
 	private AFTime bliEffEst;
 	private AFTime taskSumEffEst;
 	private AFTime effortLeft;
+	/**
+	 * Sum of bliEffEst and taskSumEffEst.
+	 */
+	private AFTime totalEffortLeft;
+	/**
+	 * Sum sums of bliOrigEst and taskSumOrigEst.
+	 */
+	private AFTime totalOrigEst;	
+	
 	private Log logger = LogFactory.getLog(this.getClass());
 	
 	/** Total effort estimate (time), summed from tasks. */
@@ -378,4 +387,23 @@ public class BacklogItem implements PageItem, Assignable, EffortContainer {
 	public void setRealTasks(Collection<Task> realTasks) {
 		this.realTasks = realTasks;
 	}
+
+	@Transient
+	public AFTime getTotalEffortLeft() {
+		return totalEffortLeft;
+	}
+
+	public void setTotalEffortLeft(AFTime totalEffortLeft) {
+		this.totalEffortLeft = totalEffortLeft;
+	}
+
+	@Transient
+	public AFTime getTotalOrigEst() {
+		return totalOrigEst;
+	}
+
+	public void setTotalOrigEst(AFTime totalOrigEst) {
+		this.totalOrigEst = totalOrigEst;
+	}
+
 }

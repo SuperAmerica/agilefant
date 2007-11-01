@@ -54,11 +54,12 @@
 			<td></td>
 			<td><ww:textarea cols="70" rows="10" name="task.description" /></td>	
 		</tr>
-		<tr>
+<!-- 		<tr>
 			<td>Effort left</td>
 			<td></td>
 			<td><ww:textfield size="10" name="task.effortEstimate"/><ww:label value="%{getText('webwork.estimateExample')}"/></td>	
 		</tr>
+-->		
 		<tr>
 			<td>Status</td>
 			<td></td>
@@ -70,7 +71,7 @@
 			<td>
 			<select name="" value="" /></td>	
 		</tr> -->
-		<tr>
+<!-- 		<tr>
 			<td>Priority</td>
 			<td></td>
 			<td><ww:select name="task.priority" value="task.priority.name" list="#{'UNDEFINED':'undefined', 'BLOCKER':'+++++', 'CRITICAL':'++++', 'MAJOR':'+++', 'MINOR':'++', 'TRIVIAL':'+'}"/></td>
@@ -90,7 +91,7 @@
 				</c:otherwise>
 			</c:choose>
 		</tr>
-		
+ -->		
 		<tr>
 			<td></td>
 			<td></td>

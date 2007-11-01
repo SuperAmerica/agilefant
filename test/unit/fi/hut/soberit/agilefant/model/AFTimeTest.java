@@ -198,4 +198,26 @@ public class AFTimeTest extends TestCase {
 		// TODO what is the best output format for this? Should we print some qualifier? 
 		assertEquals("0", new AFTime(0).toString());
 	}
+	
+	/**
+	 * Test add method of AFTime
+	 */
+	public void testAdd(){
+		AFTime time1 = new AFTime(0);
+		assertEquals("0", time1.toString());
+		AFTime time2 = new AFTime("2h 15min");
+		time1.add(time2);
+		assertEquals("2h 15min", time1.toString());
+		
+		time1 = new AFTime("2h 15min");
+		time2 = new AFTime("1h 15min");
+		time1.add(time2);
+		assertEquals("3h 30min", time1.toString());
+		
+		time1 = new AFTime("0");
+		time2 = new AFTime("0");
+		time1.add(time2);
+		assertEquals("0", time1.toString());
+		
+	}
 }

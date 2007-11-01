@@ -355,4 +355,12 @@ public class AFTime extends java.sql.Time {
 		// just call toHMString. 
 		return toHMString();
 	}
+	
+	/**
+	 * Sums another AFTime to this 
+	 * @param time Time to add
+	 */
+	public void add(AFTime time){
+		super.setTime(this.getTime()+time.getTime());
+	}
 }

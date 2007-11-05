@@ -76,9 +76,11 @@
 				<c:choose>
 					<c:when test="${iterationGoalId == 0}">
 						<ww:submit value="Create"/>
+						<ww:submit action="storeCloseIterationGoal" value="Create & Close"/>
 					</c:when>
 					<c:otherwise>
 					  <ww:submit value="Save"/>
+					  <ww:submit action="storeCloseIterationGoal" value="Save & Close"/>
  						<span class="deleteButton">
  							<ww:submit action="deleteIterationGoal" value="Delete"/>
  						</span>

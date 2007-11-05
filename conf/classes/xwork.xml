@@ -491,6 +491,14 @@
 				<param name="contextObjectId">${iterationId}</param>
 			</result>
 		</action>
+		
+		<action name="storeCloseIterationGoal" method="store"
+			class="iterationGoalAction">
+			<result type="redirect-action">
+				<param name="actionName">popContext</param>
+			</result>
+		</action>
+		
 		<action name="moveIterationGoal" 
 						method="moveIterationGoal"
 						class="iterationAction">

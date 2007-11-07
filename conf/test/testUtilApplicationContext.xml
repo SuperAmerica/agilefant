@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
+                       "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>	 
+	 <bean name="testUtility"
+			class="fi.hut.soberit.agilefant.util.TestUtility">
+		<property name="userDAO" ref="userDAO"/>
+		<property name="productDAO" ref="productDAO"/>
+		<property name="backlogItemDAO" ref="backlogItemDAO"/>
+		<property name="taskDAO" ref="taskDAO"/>
+		<property name="taskEventDAO" ref="taskEventDAO"/>
+		<property name="iterationDAO" ref="iterationDAO"/>
+		<property name="deliverableDAO" ref="deliverableDAO"/>
+	</bean>
+</beans>

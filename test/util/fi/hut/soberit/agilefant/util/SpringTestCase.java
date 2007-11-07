@@ -10,7 +10,9 @@ public abstract class SpringTestCase extends AbstractTransactionalSpringContextT
 	
 	@Override
 	protected String[] getConfigLocations() {
-		return new String[]{"file:conf/applicationContext.xml", "file:conf/applicationContext-*.xml"};
+		return new String[]{"file:conf/applicationContext.xml", 
+				"file:conf/applicationContext-*.xml",
+				"file:conf/test/testUtilApplicationContext.xml"};
 		//return new String[]{"file:conf/applicationContext*.xml"}; // ylempi ainakin tuntuu toimivan tutki, josko jotain erroria antin kautta? 
 	}
 	

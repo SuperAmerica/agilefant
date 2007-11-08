@@ -7,6 +7,6 @@
 				session.getAttribute("currentPageId") + "&resetContextView=true"); %>
 	</c:when>
 	<c:otherwise>
-	<% response.sendRedirect("./selectBacklog.action"); %>
+	<% response.sendRedirect("./dailyWork.action"); %>
 	</c:otherwise>
 </c:choose>

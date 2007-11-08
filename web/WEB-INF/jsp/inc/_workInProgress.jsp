@@ -2,12 +2,19 @@
 
 <h2>Work in progress</h2>
 
+<div id="subItems">
+
+<div id="subItemHeader">
+	Backlog items		
+</div>
+
+<div id="subItemContent">
+
 <display:table name="backlogItemsForUserInProgress" id="item"
 	defaultsort="3" defaultorder="descending" requestURI="dailyWork.action" >
 
 	<!-- Display the backlog item name -->
-	<display:column sortable="true" title="Backlog item"
-		sortProperty="${item.name}">
+	<display:column sortable="true" title="Backlog item">
 		<ww:url id="editLink" action="editBacklogItem" includeParams="none">
 			<ww:param name="backlogItemId" value="${item.id}" />
 		</ww:url>
@@ -17,7 +24,7 @@
 	</display:column>
 
 	<!-- Display the iteration goal -->
-	<display:column sortable="true" title="Iteration goal">
+	<display:column sortable="true" title="Iteration goal" class="iterationGoalColumn">
 		<ww:url id="editLink" action="editIterationGoal" includeParams="none">
 			<ww:param name="iterationGoalId" value="${item.iterationGoal.id}" />
 		</ww:url>
@@ -108,8 +115,7 @@
 	</display:column>
 
 	<!-- Display context -->
-	<display:column sortable="false" title="Context"
-		sortProperty="${item.parentBacklogs}">
+	<display:column sortable="false" title="Context" class="contextColumn">
 		<div>
 		<c:forEach items="${item.parentBacklogs}" var="parent">
 			<c:choose>
@@ -138,7 +144,7 @@
 				<c:out value="${parent.name}" />
 			</ww:a>
 			<c:if test="${aef:isDeliverable(parent)}">
-			(<c:out value="${parent.activityType.name}" />)
+				(<c:out value="${parent.activityType.name}" />)
 			</c:if>
 			<br/>
 		</c:forEach>
@@ -146,3 +152,6 @@
 	</display:column>
 	
 </display:table>
+
+</div>
+</div>

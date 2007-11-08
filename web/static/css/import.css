@@ -420,6 +420,12 @@ div#submenuwrapmyTasks #menu li#subnav1 a,div#submenuwrapiteration #menu li#subn
 	max-height: 2.5em;
 }
 
+.contextColumn div{
+	white-space: nowrap;
+	overflow: hidden;
+	max-width: 400px;	
+	max-height: 4em;
+}
 
 .responsibleColumn div{
 	overflow: hidden;

@@ -17,6 +17,9 @@
 				<interceptor-ref name="refreshUser" />
 				<interceptor-ref name="contextView" />
 			</interceptor-stack>
+			<interceptor-stack name="noAuthenticationStack">
+				<interceptor-ref name="completeStack" />
+			</interceptor-stack>
 		</interceptors>
 		<default-interceptor-ref name="authenticationStack" />
 
@@ -642,6 +645,16 @@
 		
 		<action name="createNew">
 			<result>/WEB-INF/jsp/createNew.jsp</result>
+		</action>
+		
+		<!-- Actions for generating a new password and e-mailing it to an <code>User</code> -->
+		<action name="newPassword">
+			<interceptor-ref name="noAuthenticationStack"/>
+			<result>/WEB-INF/jsp/newPassword.jsp</result>
+		</action>
+		<action name="generateNewPassword" class="fi.hut.soberit.agilefant.web.PasswordAction" method="generate">
+			<interceptor-ref name="noAuthenticationStack"/>
+			<result name="success">success.jsp</result>
 		</action>
 			
 	</package>

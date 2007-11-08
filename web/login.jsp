@@ -88,7 +88,13 @@
                 </table>                
               </form>
             </div>
-          <!-- login -->
+			<!-- login -->
+            
+            <!-- URL to new password generation -->
+            <div id="forgot">
+            	<ww:url id="newPassword" action="newPassword" />
+            	Forgot your password? <ww:a href="${newPassword}">Get a new one!</ww:a>
+            </div>
         </div>
         <!-- main -->
 

@@ -6,7 +6,7 @@
 	<bean name="mailSender"
 		class="org.springframework.mail.javamail.JavaMailSenderImpl">
 		<property name="host">
-			<value>${smtp.host}</value>
+			<value>mail.inet.fi</value>
 		</property>
 	</bean>
 
@@ -20,6 +20,19 @@
 View it from URL: http://hypertorni.dyndns.org/agilefant/editTask.action?taskId=$task.id$
 ---
 This message was automatically sent by Agilefant]]>
+			</value>
+		</property>
+	</bean>
+
+	<bean name="newPasswordTemplate"
+		class="org.springframework.mail.SimpleMailMessage">
+		<property name="from" value="agilefant@agilefant.org" />
+		<property name="subject" value="Your new Agilefant Password" />
+		<property name="text">
+			<value>
+				<![CDATA[Agilefant has generated this new password for you: "$password$". Please log in and change it immediately.
+	---
+	This message was automatically sent by Agilefant]]>
 			</value>
 		</property>
 	</bean>

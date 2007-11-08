@@ -7,4 +7,5 @@
 		class="fi.hut.soberit.agilefant.business.impl.BacklogBusinessImpl" />
 	<bean id="userBusiness"
 		class="fi.hut.soberit.agilefant.business.impl.UserBusinessImpl" />
+	<bean id="passwordBusiness" class="fi.hut.soberit.agilefant.business.impl.PasswordBusinessImpl" />
 </beans>

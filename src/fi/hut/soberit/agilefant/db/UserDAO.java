@@ -2,6 +2,7 @@ package fi.hut.soberit.agilefant.db;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.Task;
@@ -52,4 +53,15 @@ public interface UserDAO extends GenericDAO<User> {
 	 * @return collection of tasks matching the restrictions
 	 */
 	public Collection<BacklogItem> getBacklogItemsByTime(User user, Date start, Date end);
+	
+	/**
+	 * Get backlog items assigned to user.
+	 * <p>
+	 * Refactor: Use criteria API to get started tasks. Now done in business layer
+	 * UserBusinessImpl.java
+	 * 
+	 * @param user the user, whose backlog items are wanted.
+	 * @return list of backlog items assigned to user.
+	 */
+	public List<BacklogItem> getBacklogItemsInProgress(User user);
 }

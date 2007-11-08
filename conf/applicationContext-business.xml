@@ -3,5 +3,8 @@
                        "http://www.springframework.org/dtd/spring-beans.dtd">
 <beans default-autowire="byName">
 
-	<bean id="backlogBusiness" class="fi.hut.soberit.agilefant.business.impl.BacklogBusinessImpl" />
+	<bean id="backlogBusiness"
+		class="fi.hut.soberit.agilefant.business.impl.BacklogBusinessImpl" />
+	<bean id="userBusiness"
+		class="fi.hut.soberit.agilefant.business.impl.UserBusinessImpl" />
 </beans>

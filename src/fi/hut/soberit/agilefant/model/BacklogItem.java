@@ -1,9 +1,11 @@
 package fi.hut.soberit.agilefant.model;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
 
@@ -406,4 +408,32 @@ public class BacklogItem implements PageItem, Assignable, EffortContainer {
 		this.totalOrigEst = totalOrigEst;
 	}
 
+	/**
+	 * Get the backlog items parent backlogs.
+	 * @param item backlog item whose parents are to be get.
+	 * @return list of parent backlogs.
+	 */
+	@Transient
+	public List<Backlog> getParentBacklogs() {
+		List<Backlog> retlist = new ArrayList<Backlog>();
+		Backlog firstParent = getBacklog();
+		
+		if (firstParent instanceof Iteration) {
+			Deliverable deli = ((Iteration)firstParent).getDeliverable();
+			Product prod = deli.getProduct();
+			retlist.add(prod);
+			retlist.add(deli);
+			retlist.add(firstParent);
+		}
+		else if (firstParent instanceof Deliverable) {
+			Product prod = ((Deliverable)firstParent).getProduct();
+			retlist.add(prod);
+			retlist.add(firstParent);
+		}
+		else if (firstParent instanceof Product) {
+			retlist.add(firstParent);
+		}
+		
+		return retlist;
+	}
 }

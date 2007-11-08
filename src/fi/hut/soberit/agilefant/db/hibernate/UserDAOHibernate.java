@@ -2,9 +2,12 @@ package fi.hut.soberit.agilefant.db.hibernate;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Expression;
+import org.hibernate.criterion.Restrictions;
+import org.springframework.orm.hibernate3.HibernateTemplate;
 
 import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.model.BacklogItem;
@@ -99,5 +102,16 @@ public class UserDAOHibernate extends GenericDAOHibernate<User> implements UserD
 				names, 
 				values);	
 		
+	}
+	
+	/** {@inheritDoc} */
+	@SuppressWarnings("unchecked")
+	public List<BacklogItem> getBacklogItemsInProgress(User user) {
+		HibernateTemplate ht = super.getHibernateTemplate();
+		
+		DetachedCriteria crit = DetachedCriteria.forClass(BacklogItem.class);
+		crit.add(Restrictions.eq("assignee", user));
+				
+		return ht.findByCriteria(crit);
 	}
 }

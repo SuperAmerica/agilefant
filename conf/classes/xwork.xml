@@ -64,6 +64,9 @@
 			<result name="success_myTasks" type="redirect-action">
 				<param name="actionName">myTasks</param>
 			</result>
+			<result name="success_dailyWork" type="redirect-action">
+				<param name="actionName">dailyWork</param>
+			</result>
 			<result name="success_users" type="redirect-action">
 				<param name="actionName">listUsers</param>
 			</result>
@@ -626,6 +629,10 @@
 			</result>
 			<result name="success_myTasks" type="redirect-action">
 				<param name="actionName">myTasks</param>
+			</result>
+			
+			<result name="success_dailyWork" type="redirect-action">
+				<param name="actionName">dailyWork</param>
 			</result>
 		</action>
 		

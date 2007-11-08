@@ -5,14 +5,15 @@
 	 Version:	1.3.1
 -->
 
-<aef:menu navi="3" /> 
+<aef:menu navi="1" /> 
 	<ww:actionerror/>
 	<ww:actionmessage/>
 
+<c:set var="currentAction" value="dailyWork" scope="session" />
 
-Work in progress<br/>
-<!-- rjokelai adds here -->
+<%@ include file="./inc/_workInProgress.jsp" %>
 
+<br/>
 Iterations
 
 <!-- mjniemi adds here -->

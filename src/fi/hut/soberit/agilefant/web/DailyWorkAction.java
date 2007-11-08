@@ -29,17 +29,35 @@ public class DailyWorkAction extends ActionSupport {
 	
 	private User user;
 	private UserBusiness userBusiness;
+	private int userId;
 	
 	private List<BacklogItem> backlogItemsForUserInProgress;
+	private List<User> userList;
 	
 	@Override
 	public String execute() throws Exception {
+		if (userId == 0) {
+			userId = SecurityUtil.getLoggedUserId();
+		}
+		
+		user = userBusiness.getUser(userId);
+		
 		backlogItemsForUserInProgress =
 			userBusiness.getBacklogItemsInProgress(user);
+		
+		userList = userBusiness.getAllUsers();
 		
 		return super.execute();
 	}
 
+	public List<User> getUserList() {
+		return userList;
+	}
+	
+	public void setUserList(List<User> userList) {
+		this.userList = userList;
+	}
+	
 	public User getUser() {
 		return user;
 	}
@@ -47,6 +65,14 @@ public class DailyWorkAction extends ActionSupport {
 		this.user = user;
 	}
 	
+	public int getUserId() {
+		return userId;
+	}
+
+	public void setUserId(int userId) {
+		this.userId = userId;
+	}
+
 	public UserBusiness getUserBusiness() {
 		return userBusiness;
 	}

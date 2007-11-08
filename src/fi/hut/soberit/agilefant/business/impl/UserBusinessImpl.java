@@ -1,9 +1,13 @@
 package fi.hut.soberit.agilefant.business.impl;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+
+import org.springframework.beans.support.PropertyComparator;
 
 import fi.hut.soberit.agilefant.business.UserBusiness;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
@@ -44,6 +48,14 @@ public class UserBusinessImpl implements UserBusiness {
 		}
 		
 		return returnItems;
+	}
+	
+	public List<User> getAllUsers() {
+		return (List<User>)userDAO.getAll();
+	}
+	
+	public User getUser(int userId) {
+		return userDAO.get(userId);
 	}
 
 	public UserDAO getUserDAO() {

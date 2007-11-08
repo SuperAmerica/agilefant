@@ -19,4 +19,17 @@ public interface UserBusiness {
 	 * @return list of backlog items for user.
 	 */
 	public List<BacklogItem> getBacklogItemsInProgress(User user);
+	
+	/**
+	 * Get list of all agilefant users.
+	 * @return list of agilefant users.
+	 */
+	public List<User> getAllUsers();
+	
+	/**
+	 * Get user by id.
+	 * @param userId id number of the user
+	 * @return the user with id userId 
+	 */
+	public User getUser(int userId);
 }

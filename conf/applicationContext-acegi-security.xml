@@ -149,6 +149,7 @@
 		class="org.acegisecurity.providers.dao.DaoAuthenticationProvider">
 		<!-- use agilefant user details service -->
 		<property name="userDetailsService" ref="userDetailsService" />
+		<!-- 
 		<property name="userCache">
 			<bean
 				class="org.acegisecurity.providers.dao.cache.EhCacheBasedUserCache">
@@ -164,6 +165,7 @@
 				</property>
 			</bean>
 		</property>
+		 -->
 
 		<!-- use the password encoder defined earlier-->
 		<property name="passwordEncoder" ref="passwordEncoder" />

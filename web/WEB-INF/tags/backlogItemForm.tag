@@ -113,7 +113,7 @@
 			<option class="inactive" value="">(select backlog)</option>
 			<c:forEach items="${productList}" var="product">
 				<c:choose>
-					<c:when test="${product.id == currentPageId}">
+					<c:when test="${product.id == backlogItem.backlog.id}">
 						<option selected="selected" value="${product.id}" title="${product.name}">${aef:out(product.name)}</option>
 					</c:when>
 					<c:otherwise>
@@ -122,7 +122,7 @@
 				</c:choose>
 				<c:forEach items="${product.deliverables}" var="deliverable">
 					<c:choose>
-						<c:when test="${deliverable.id == currentPageId}">
+						<c:when test="${deliverable.id == backlogItem.backlog.id}">
 							<option selected="selected" value="${deliverable.id}" title="${deliverable.name}">&nbsp;&nbsp;&nbsp;&nbsp;${aef:out(deliverable.name)}</option>
 						</c:when>
 						<c:otherwise>
@@ -131,7 +131,7 @@
 					</c:choose>
 					<c:forEach items="${deliverable.iterations}" var="iteration">
 						<c:choose>
-							<c:when test="${iteration.id == currentPageId}">
+							<c:when test="${iteration.id == backlogItem.backlog.id}">
 								<option selected="selected" value="${iteration.id}" title="${iteration.name}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${aef:out(iteration.name)}</option>
 							</c:when>
 							<c:otherwise>

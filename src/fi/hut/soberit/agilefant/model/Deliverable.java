@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -37,6 +38,9 @@ import fi.hut.soberit.agilefant.web.page.PageItem;
  * It has an optional starting and ending dates, as well as an owner. A deliverable
  * is also bound to some activity type. It also carries information on effort estimations 
  * and amount of performed work.
+ * A deliverable has a rank number, which corresponds to its priority. The rank
+ * number doesn't describe the deliverable's absolute rank order; the number
+ * must be compared to all other deliverable's ranks to find out rank order.
  * 
  * @see fi.hut.soberit.agilefant.model.Backlog
  * @see fi.hut.soberit.agilefant.model.BacklogItem
@@ -54,6 +58,7 @@ public class Deliverable extends Backlog implements PageItem, EffortContainer {
 	private User owner;
 	private AFTime effortEstimate;
 	private AFTime performedEffort;
+	private int rank = 0;
 	
 	/** The product, under which this deliverable belongs. */
 	@ManyToOne
@@ -174,5 +179,14 @@ public class Deliverable extends Backlog implements PageItem, EffortContainer {
 	
 	protected void setPerformedEffort(AFTime performedEffort){
 		this.performedEffort = performedEffort;
+	}
+
+	@Column(nullable = false, columnDefinition="integer not null default 0")
+	public int getRank() {
+		return rank;
+	}
+	
+	public void setRank(int rank) {
+		this.rank = rank;
 	}
 }

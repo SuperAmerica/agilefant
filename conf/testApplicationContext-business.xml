@@ -4,4 +4,5 @@
 <beans default-autowire="byName">
 
 	<bean id="backlogBusiness" class="fi.hut.soberit.agilefant.business.impl.BacklogBusinessImpl" />
+	<bean id="deliverableBusiness" class="fi.hut.soberit.agilefant.business.impl.DeliverableBusinessImpl" />
 </beans>

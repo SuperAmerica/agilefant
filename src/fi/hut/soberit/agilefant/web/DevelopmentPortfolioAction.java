@@ -1,27 +1,69 @@
 package fi.hut.soberit.agilefant.web;
 
 import java.util.Date;
+import java.util.Collection;
+
+import fi.hut.soberit.agilefant.model.Deliverable;
 
 import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
+import fi.hut.soberit.agilefant.business.DeliverableBusiness;
 
-//import fi.hut.soberit.agilefant.model.Portfolio;
-//import fi.hut.soberit.agilefant.service.PortfolioManager;
 
 public class DevelopmentPortfolioAction extends ActionSupport {
 	
 	private static final long serialVersionUID = -4749839976470627112L;
 	
-	private String hello = "Hello, here project rank tweaking.";
-
-	public String getHello() {
-		return hello;
+	private DeliverableBusiness deliverableBusiness;
+	
+	private int deliverableId;
+	
+	public Collection<Deliverable> getAll() {
+		return deliverableBusiness.getAll();
 	}
 	
-	@Override
-	public String execute() throws Exception {
-		hello = "Hello, here's rank tweaking.";
-		return super.execute();
+	public Collection<Deliverable> getOngoingRankedDeliverables() {
+		return deliverableBusiness.getOngoingRankedDeliverables();
+	}
+	
+	public Collection<Deliverable> getOngoingUnrankedDeliverables() {
+		return deliverableBusiness.getOngoingUnrankedDeliverables();
+	}
+	
+	public DeliverableBusiness getDeliverableBusiness() {
+		return deliverableBusiness;
+	}
+	
+	public void setDeliverableBusiness(DeliverableBusiness deliverableBusiness) {
+		this.deliverableBusiness = deliverableBusiness;
+	}
+	
+	public String moveDeliverableUp() {
+		deliverableBusiness.moveUp(deliverableId);
+		return Action.SUCCESS;
+	}
+	
+	public String moveDeliverableDown() {
+		deliverableBusiness.moveDown(deliverableId);
+		return Action.SUCCESS;
+	}
+	
+	public String moveDeliverableTop() {
+		deliverableBusiness.moveToTop(deliverableId);
+		return Action.SUCCESS;
+	}
+	
+	public String moveDeliverableBottom() {
+		deliverableBusiness.moveToBottom(deliverableId);
+		return Action.SUCCESS;
+	}
+
+	public int getDeliverableId() {
+		return deliverableId;
+	}
+
+	public void setDeliverableId(int deliverableId) {
+		this.deliverableId = deliverableId;
 	}
 
 }

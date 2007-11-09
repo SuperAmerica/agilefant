@@ -1,5 +1,9 @@
 package fi.hut.soberit.agilefant.db.hibernate;
 
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Date;
+
 import fi.hut.soberit.agilefant.db.IterationDAO;
 import fi.hut.soberit.agilefant.model.Iteration;
 
@@ -10,5 +14,12 @@ public class IterationDAOHibernate extends GenericDAOHibernate<Iteration> implem
 
 	public IterationDAOHibernate(){
 		super(Iteration.class);
+	}
+	
+	/** {@inheritDoc} */
+	public Collection<Iteration> getOngoingIterations() {
+		Date current = Calendar.getInstance().getTime();
+				return super.getHibernateTemplate().find("from Iteration i where i.startDate <= ? and i.endDate >= ? order by i.deliverable.name ASC, i.endDate", 
+				new Object[]{current, current});
 	}
 }

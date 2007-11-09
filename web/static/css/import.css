@@ -393,6 +393,8 @@ div#submenuwrapmyTasks #menu li#subnav1 a,div#submenuwrapiteration #menu li#subn
 	color: #e50; !important;
 }
 
+
+
 .formTable textarea {
 	overflow: auto;
 	overflow-y: scroll;
@@ -404,8 +406,8 @@ div#submenuwrapmyTasks #menu li#subnav1 a,div#submenuwrapiteration #menu li#subn
 
 .shortNameColumn div{
 	width: 170px;	
-	overflow: hidden;
-	max-height: 6em;
+	overflow: visible;
+	/*max-height: 6em;*/
 }
 
 .taskColumn div{
@@ -432,6 +434,16 @@ div#submenuwrapmyTasks #menu li#subnav1 a,div#submenuwrapiteration #menu li#subn
 	width: 90px;	
 	max-height: 2.5em;
 }
+
+.smallBurndownColumn {
+        margin-right: 0;
+        width: 400px;
+}
+
+.smallBurndownColumn div {
+        text-align: right;
+}
+
 /*
 .shortNameColumn{
 	display: block;

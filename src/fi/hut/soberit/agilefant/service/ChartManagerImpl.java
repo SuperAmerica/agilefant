@@ -23,6 +23,7 @@ import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.data.time.Day;
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
+import org.jfree.ui.RectangleInsets;
 
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.db.EffortHistoryDAO;
@@ -45,6 +46,11 @@ public class ChartManagerImpl implements ChartManager {
 	private BacklogItemDAO backlogItemDAO;
 	private TaskEventDAO taskEventDAO;
 	
+	private static final int DEFAULT_WIDTH = 780;
+	private static final int DEFAULT_HEIGHT = 600;
+	private static final int SMALL_WIDTH = 150;
+	private static final int SMALL_HEIGHT = 150;
+	
 	/**
 	 * Generates a byte array (a png image file) from a JFreeChart object
 	 * 
@@ -52,9 +58,21 @@ public class ChartManagerImpl implements ChartManager {
 	 * @return Byte array representing a png image file
 	 */
 	protected byte[] getChartImageByteArray(JFreeChart chart) {
+		return getChartImageByteArray(chart, DEFAULT_WIDTH, DEFAULT_HEIGHT);
+	}
+	
+	/**
+	 * Generates a byte array (a png image file) from a JFreeChart object
+	 * 
+	 * @param chart A chart object from which the image is created
+	 * @param width Width of the created image
+	 * @param height Height of the created image
+	 * @return Byte array representing a png image file
+	 */		
+	protected byte[] getChartImageByteArray(JFreeChart chart, int width, int height) {
 		try {
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
-			ChartUtilities.writeChartAsPNG(out, chart, 780, 600);
+			ChartUtilities.writeChartAsPNG(out, chart, width, height);
 			return out.toByteArray();
 		} catch (IOException e) {
 			log.warn("Problem occurred creating chart", e);
@@ -63,7 +81,7 @@ public class ChartManagerImpl implements ChartManager {
 	}
 
 	/**
-	 * Retrives data from DAOs and inserts it into TimeSeriesCollections
+	 * Retrieves data from DAOs and inserts it into TimeSeriesCollections
 	 * 
 	 * @param backlog The backlog (iteration) of which time series are generated
 	 * @param startDate First day to be plotted
@@ -223,6 +241,37 @@ public class ChartManagerImpl implements ChartManager {
 	}
 	
 	/**
+	 * Remove details from a JFreeChart object representing a burndown graph
+	 * to make it better suited for viewing in small size
+	 * 
+	 * @param burndownChart A chart object to be trimmed
+	 * @return the trimmed JFreeChart object
+	 */		
+	protected JFreeChart trimChart(JFreeChart burndownChart) {
+		JFreeChart chart = burndownChart;
+		XYPlot plot = chart.getXYPlot();
+
+		chart.setTitle("");
+		chart.removeLegend();
+		plot.getRangeAxis().setVisible(false);
+		plot.getDomainAxis().setVisible(false);
+		plot.setDomainGridlinesVisible(false);
+		plot.setRangeGridlinesVisible(false);
+		
+		XYItemRenderer rend = plot.getRenderer();
+		XYLineAndShapeRenderer rr = (XYLineAndShapeRenderer) rend;
+		rr.setShapesVisible(false);
+		rr.setSeriesPaint(0, java.awt.Color.red);
+		rr.setSeriesPaint(1, java.awt.Color.blue);
+
+		// Trims the padding around the chart
+		RectangleInsets ins = new RectangleInsets(-6, -8, -3, -7);
+		chart.setPadding(ins);
+		
+		return chart;
+	}
+
+	/**
 	 * Create an iteration burndown chart as a byte array that is
 	 * interpreted as a .png file
 	 * 
@@ -240,6 +289,24 @@ public class ChartManagerImpl implements ChartManager {
 		return getChartImageByteArray(burndownGraph);
 	}
 
+	/**
+	 * Create a small iteration burndown chart as a byte array that is
+	 * interpreted as a .png file
+	 * 
+	 * @param iterationId Id of the iteration of which the burndown is generated
+	 * @return Byte array representing a png image file
+	 */
+	public byte[] getSmallIterationBurndown(int iterationId) {
+		Iteration iteration = iterationDAO.get(iterationId);
+		Date startDate = iteration.getStartDate();
+		Date endDate = iteration.getEndDate();
+		
+		TimeSeriesCollection effLeftTimeSeries = getDataset(iteration, startDate, endDate);
+		JFreeChart burndownGraph = trimChart(getChart(effLeftTimeSeries, startDate, endDate));
+		
+		return getChartImageByteArray(burndownGraph, SMALL_WIDTH, SMALL_HEIGHT);
+	}
+	
 	/**
 	 * @return the backlogItemDAO
 	 */

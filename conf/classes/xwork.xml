@@ -202,7 +202,7 @@
 			<result type="redirect-action">
 				<param name="actionName">popContext</param>
 			</result>
-		</action>
+		</action>		
 		<action name="linkToIterationGoal"
 			class="linkToIterationGoalAction">
 			<result type="redirect">
@@ -452,6 +452,22 @@
 		</action>
 		<!-- /My tasks -->
 		
+		<!-- These functions are for Saving and Deleting backlog items on daily work page -->
+		
+		<action name="storeBacklogItemInDailyWork" method="store"
+			class="backlogItemAction">
+			<result type="redirect-action">
+				<param name="actionName">dailyWork</param>
+			</result>
+		</action>
+		
+		<action name="deleteBacklogItemInDailyWork" method="delete"
+			class="backlogItemAction">
+			<result type="redirect-action">
+				<param name="actionName">dailyWork</param>
+			</result>
+		</action>
+				
 		<!-- Daily work -->
 		<action name="dailyWork" class="dailyWorkAction">
 			<result>/WEB-INF/jsp/dailyWork.jsp</result>
@@ -504,7 +520,7 @@
 				<param name="actionName">popContext</param>
 			</result>
 		</action>
-		
+
 		<action name="moveIterationGoal" 
 						method="moveIterationGoal"
 						class="iterationAction">
@@ -522,6 +538,12 @@
 			<result>/WEB-INF/jsp/showPerformedWork.jsp</result>
 		</action>
 		<action name="drawChart" method="execute" class="chartAction">
+			<result name="success" type="stream">
+				<param name="contentType">${contentType}</param>
+				<param name="inputName">inputStream</param>
+			</result>
+		</action>
+		<action name="drawSmallChart" method="smallChart" class="chartAction">
 			<result name="success" type="stream">
 				<param name="contentType">${contentType}</param>
 				<param name="inputName">inputStream</param>

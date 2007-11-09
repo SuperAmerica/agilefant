@@ -19,10 +19,9 @@ Currently viewing daily work for user:
 	<ww:submit value="Change" />
 </ww:form>
 
+
 <%@ include file="./inc/_workInProgress.jsp" %>
 
-
-<!-- mjniemi adds here -->
-	
+<%@ include file="./inc/_dailyWorkIterations.jsp" %>
 
 <%@ include file="./inc/_footer.jsp" %>

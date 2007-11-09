@@ -110,6 +110,13 @@ public class ChartAction extends ActionSupport {
 		
 		return Action.SUCCESS;
 	}
+	
+	public String smallChart() {
+		if (iterationId > 0) {
+			result = chartManager.getSmallIterationBurndown(iterationId);
+		}
+		return Action.SUCCESS;
+	}
 
 	/**
 	 * Bar chart takes two parameters, effort done and effort left. 
@@ -241,7 +248,7 @@ public class ChartAction extends ActionSupport {
 		if (color1 != null){
 			renderer.setSeriesPaint(0, this.getColor1()); // color for not started
 		} else {
-			renderer.setSeriesPaint(0, Color.red); // color for not started
+			renderer.setSeriesPaint(0, new Color(0xd3,0xd3, 0xd3)); // color for not started (light gray)
 		} 
 		
 		if (color2 != null){
@@ -253,7 +260,7 @@ public class ChartAction extends ActionSupport {
 		if (color3 != null){
 			renderer.setSeriesPaint(2, this.getColor3()); // color for blocked
 		} else {
-			renderer.setSeriesPaint(2, Color.black); // color for blocked
+			renderer.setSeriesPaint(2, Color.red); // color for blocked
 		} 
 		
 		if (color4 != null){

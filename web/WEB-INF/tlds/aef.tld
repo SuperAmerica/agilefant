@@ -321,6 +321,12 @@
 	    <name>tasklist</name>
 	    <path>/WEB-INF/tags/tasklist.tag</path>
  	 </tag-file>
+ 	 
+ 	 <tag-file>
+ 	 	<name>backlogItemForm</name>
+ 	 	<path>/WEB-INF/tags/backlogItemForm.tag</path>
+ 	 </tag-file>
+ 	 
 
 	 <tag-file>
 	    <name>hiddenDeliverableList</name>

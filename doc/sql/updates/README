@@ -1,0 +1,3 @@
+This directory contains database update sql scripts for every release. Filenames refer to versions which update statement is valid.
+
+If you're fresh installing Agilefant, you won't need to run these scripts as the same information is in the 'create-db.sql'-file.

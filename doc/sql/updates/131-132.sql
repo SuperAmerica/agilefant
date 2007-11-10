@@ -1,0 +1,1 @@
+alter table Backlog add column rank integer not null default 0;

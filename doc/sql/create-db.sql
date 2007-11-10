@@ -36,3 +36,4 @@ alter table IterationGoal add index FKBCC95B704157D2A2 (iteration_id), add const
 alter table Practice add index FKB013E55B25135ECD (template_id), add constraint FKB013E55B25135ECD foreign key (template_id) references PracticeTemplate (id);
 alter table PracticeAllocation add index FK7A595C9B6E84F892 (task_id), add constraint FK7A595C9B6E84F892 foreign key (task_id) references Task (id);
 alter table PracticeAllocation add index FK7A595C9B909E98D2 (practice_id), add constraint FK7A595C9B909E98D2 foreign key (practice_id) references Practice (id);
+alter table Backlog add column rank integer not null default 0;

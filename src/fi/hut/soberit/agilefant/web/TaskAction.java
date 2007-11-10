@@ -1,7 +1,5 @@
 package fi.hut.soberit.agilefant.web;
 
-import java.util.Calendar;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -16,11 +14,10 @@ import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
-import fi.hut.soberit.agilefant.model.EffortHistory;
 import fi.hut.soberit.agilefant.model.EstimateHistoryEvent;
 import fi.hut.soberit.agilefant.model.Task;
-import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.model.TaskStatus;
+import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.security.SecurityUtil;
 import fi.hut.soberit.agilefant.util.EffortHistoryUpdater;
 
@@ -226,6 +223,55 @@ public class TaskAction extends ActionSupport implements CRUDAction {
 				taskEventDAO, backlogItemDAO, backlog);
 		
 		return Action.SUCCESS;
+	}
+	
+	/**
+	 * Transforms a task to BacklogItem
+	 * @author hhaataja
+	 */
+	public String transformToBacklogItem(){
+		Task storable = new Task();
+		BacklogItem backlogItem = new BacklogItem();
+		
+		if(task.getName().equals("")) {
+			super.addActionError(super.getText("task.missingName"));
+			return Action.ERROR;			
+		}
+		
+		// Get Task from database
+		storable = taskDAO.get(taskId);
+		if (storable == null){
+			super.addActionError(super.getText("task.notFound"));
+			return Action.ERROR;
+		}
+		// Inherit from task's backlogItem 
+		backlogItem.setBacklog(storable.getBacklogItem().getBacklog());
+		backlogItem.setAssignee(storable.getBacklogItem().getAssignee());
+		backlogItem.setIterationGoal(storable.getBacklogItem().getIterationGoal());
+		backlogItem.setPriority(storable.getBacklogItem().getPriority());
+		
+		// Inherit from task
+		backlogItem.setName(storable.getName());
+		backlogItem.setDescription(storable.getDescription());
+		backlogItem.setStatus(storable.getStatus());
+		
+		// Set task as placeholder for the new BacklogItem so the history stays consistent. 
+		backlogItem.setPlaceHolder(storable);
+		
+		// Save new BacklogItem
+		backlogItemDAO.store(backlogItem);
+
+		// Remove the parent BacklogItem from task as it is now a placeholder
+		storable.setName("Placeholder");
+		storable.setBacklogItem(backlogItem);
+		
+		// Save new task as placeholder for the new BacklogItem
+		taskDAO.store(storable);
+		
+		// Set BacklogItem id for redirect to show the new BacklogItem just created
+		this.setBacklogItemId(backlogItem.getId());
+		
+		return Action.SUCCESS;		
 	}
 	
 	protected void fillStorable(Task storable){

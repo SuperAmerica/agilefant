@@ -109,9 +109,10 @@
 								value="Delete" 
 								onclick="return confirmDeleteTask()"/>
 					</span>
+				   <ww:submit action="transformToBacklogItem" value="Transform to Backlog Item"/>	
 				</c:otherwise>
-			</c:choose>
-			</td>	
+				</c:choose>
+			</td>			
 		</tr>
 	</table>
 	</ww:form>

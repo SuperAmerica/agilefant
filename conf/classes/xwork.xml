@@ -351,6 +351,12 @@
 				<param name="actionName">popContext</param>
 			</result>
 		</action>
+		<action name="transformToBacklogItem" method="transformToBacklogItem"
+			class="taskAction">
+			<result type="redirect">
+				editBacklogItem.action?backlogItemId=${backlogItemId}
+			</result>
+		</action>
 		<!-- /Task actions -->
 
 		<!-- Iteration actions -->

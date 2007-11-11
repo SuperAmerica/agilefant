@@ -306,6 +306,12 @@ public class TaskAction extends ActionSupport implements CRUDAction {
 			newEstimate = new AFTime(0);
 		}
 		
+		/* Task effort inputting functionality was removed so set effort 
+		 * to 0 for new tasks*/
+		if(oldEstimate == null){
+			oldEstimate = new AFTime(0);
+		}
+		
 		/* If task is set done but no new estimate is peresented zero
 		 * the efforort estimate. */
 		if (task.getStatus() ==  TaskStatus.DONE &&

@@ -58,9 +58,23 @@
           <br/>
           <br/>
     
-    <div class="success">
+    <c:choose>
+     <c:when test="${param.error == 1}">
+      <div class="success">
+    	<p>Failure!</p>
+    	<div class="messages">
+    	<p style="color: #f00;">Invalid username or password</p>
+    	<p>Return to <a href="index.jsp">login page</a></p>
+    	</div>
+      </div>
+     </c:when>
+     <c:otherwise>
+       <div class="success">
     	<p>Success!</p>
     	<div class="messages"><ww:actionmessage/></div>
-    </div>
+    	 <p>Return to <a href="index.jsp">login page</a></p>
+       </div>
+      </c:otherwise>
+     </c:choose>
 
 <%@ include file="./WEB-INF/jsp/inc/_footer.jsp" %>

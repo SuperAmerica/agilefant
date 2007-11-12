@@ -705,7 +705,10 @@
 		<action name="generateNewPassword" class="fi.hut.soberit.agilefant.web.PasswordAction" method="generate">
 			<interceptor-ref name="noAuthenticationStack"/>
 			<result name="success">success.jsp</result>
+			<result name="error">success.jsp?error=1</result>
 		</action>
+		
+		
 			
 	</package>
 </xwork>

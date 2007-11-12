@@ -1,8 +1,8 @@
 Agilefant
 RELEASE NOTES
-23.10.2007
+12.11.2007
 
-KEY FUNCTIONALITY AGILEFANT 1.3.1
+KEY FUNCTIONALITY AGILEFANT 1.3.2
 + Agilefant manages backlogs at the product, project and iteration
 levels
 + Backlog items can easily be moved between backlogs
@@ -13,6 +13,25 @@ the original effort estimate is also tracked
 + Numerical effort left estimates are displayed for backlogs
 + A burndown graph reflecting the development velocity is displayed
 at the iteration level
++ Daily Work generates a personalized view of those backlog items
+assigned to you or some specific user
+
+CHANGES FROM AGILEFANT 1.3.1
++ Tasks can be transformed to backlog items
++ Backlog item and task status colors were changed to more intuitive
++ Added 'forgot my password' functionality 
++ Added 'Save & Close' and 'Create & Close' buttons to Iteration Goal
+edit page
++ Some task functionality removed for clarity: Effort estimate, 
+assignment and priority is now removed
++ Added Development Portfolio view with project prioritizing feature
++ Daily Work view added with 'Work in progress' and 'On going iterations'
+divisions, it's also possible to view other users Daily Work
++ QuickEdit (i.e. drop-down form appears when status text is clicked) 
+for backlog item effort left and status is now available
++ Added JMeter and JChav targets to ant build script. These are needed 
+for performance testing. More information about performance testing is 
+found from the wiki. TestUtility class added for testing purposes.
 
 CHANGES FROM AGILEFANT 1.2.2
 + Replaced the backlog Delete button with bulk delete option

@@ -15,12 +15,12 @@ import fi.hut.soberit.agilefant.model.Task;
  */
 public interface PerformedWorkDAO {
 
-	public Collection<PerformedWork> getPerformedWork(Task task);
+    public Collection<PerformedWork> getPerformedWork(Task task);
 
-	public Collection<PerformedWork> getPerformedWork(BacklogItem backlogItem);
+    public Collection<PerformedWork> getPerformedWork(BacklogItem backlogItem);
 
-	public Collection<PerformedWork> getPerformedWork(Iteration iteration);
+    public Collection<PerformedWork> getPerformedWork(Iteration iteration);
 
-	public Collection<PerformedWork> getPerformedWork(Deliverable task);
-	// public Collection<PerformedWork> getPerformedWork(Product task);
+    public Collection<PerformedWork> getPerformedWork(Deliverable task);
+    // public Collection<PerformedWork> getPerformedWork(Product task);
 }

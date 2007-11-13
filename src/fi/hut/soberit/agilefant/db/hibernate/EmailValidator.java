@@ -14,29 +14,29 @@ import org.hibernate.validator.Validator;
  */
 public class EmailValidator implements Validator<Email>, Serializable {
 
-	private static final long serialVersionUID = 4334203403474352735L;
+    private static final long serialVersionUID = 4334203403474352735L;
 
-	public void initialize(Email parameters) {
-	}
+    public void initialize(Email parameters) {
+    }
 
-	public boolean isValid(Object value) {
+    public boolean isValid(Object value) {
 
-		// nulls qualify
-		if (value == null)
-			return true;
+        // nulls qualify
+        if (value == null)
+            return true;
 
-		// non-string objects don't qualify
-		if (!(value instanceof String))
-			return false;
+        // non-string objects don't qualify
+        if (!(value instanceof String))
+            return false;
 
-		String string = (String) value;
+        String string = (String) value;
 
-		// empty strings qualify
-		if (string.equals(""))
-			return true;
+        // empty strings qualify
+        if (string.equals(""))
+            return true;
 
-		// use commons-validator to validate email addresses
-		return org.apache.commons.validator.EmailValidator.getInstance()
-				.isValid(string);
-	}
+        // use commons-validator to validate email addresses
+        return org.apache.commons.validator.EmailValidator.getInstance()
+                .isValid(string);
+    }
 }

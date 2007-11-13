@@ -8,24 +8,24 @@ import fi.hut.soberit.agilefant.web.context.ContextViewManager;
 
 public class ContextStackAction extends ActionSupport {
 
-	private ContextViewManager contextViewManager;
+    private ContextViewManager contextViewManager;
 
-	private ContextView view;
+    private ContextView view;
 
-	public String execute() {
-		view = contextViewManager.getParentContext();
-		if (view == null) {
-			return Action.SUCCESS;
-		} else {
-			return Action.SUCCESS + "_" + view.getContextName();
-		}
-	}
+    public String execute() {
+        view = contextViewManager.getParentContext();
+        if (view == null) {
+            return Action.SUCCESS;
+        } else {
+            return Action.SUCCESS + "_" + view.getContextName();
+        }
+    }
 
-	public void setContextViewManager(ContextViewManager contextViewManager) {
-		this.contextViewManager = contextViewManager;
-	}
+    public void setContextViewManager(ContextViewManager contextViewManager) {
+        this.contextViewManager = contextViewManager;
+    }
 
-	public ContextView getView() {
-		return view;
-	}
+    public ContextView getView() {
+        return view;
+    }
 }

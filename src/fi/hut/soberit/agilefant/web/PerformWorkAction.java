@@ -7,40 +7,40 @@ import fi.hut.soberit.agilefant.model.WorkType;
 
 public class PerformWorkAction extends TaskEventAction<PerformedWork> {
 
-	private WorkTypeDAO workTypeDAO;
+    private WorkTypeDAO workTypeDAO;
 
-	private PerformedWork event;
+    private PerformedWork event;
 
-	@Override
-	public void validate() {
-		super.validate();
+    @Override
+    public void validate() {
+        super.validate();
 
-		/*
-		 * Don't require effort anymore if (this.getEvent().getEffort() ==
-		 * null){
-		 * super.addActionError(super.getText("performWork.missingEffort")); }
-		 */
-		if (this.getEvent().getNewEstimate() == null) {
-			this.getEvent().setNewEstimate(new AFTime("0h"));
-			// super.addActionError(super.getText("performWork.missingNewEstimate"));
-		}
-	}
+        /*
+         * Don't require effort anymore if (this.getEvent().getEffort() ==
+         * null){
+         * super.addActionError(super.getText("performWork.missingEffort")); }
+         */
+        if (this.getEvent().getNewEstimate() == null) {
+            this.getEvent().setNewEstimate(new AFTime("0h"));
+            // super.addActionError(super.getText("performWork.missingNewEstimate"));
+        }
+    }
 
-	@Override
-	protected void doFillEvent(PerformedWork event) {
-		WorkType workType = workTypeDAO.get(event.getWorkType().getId());
-		event.setWorkType(workType);
-		this.getTask().setEffortEstimate(event.getNewEstimate());
-	}
+    @Override
+    protected void doFillEvent(PerformedWork event) {
+        WorkType workType = workTypeDAO.get(event.getWorkType().getId());
+        event.setWorkType(workType);
+        this.getTask().setEffortEstimate(event.getNewEstimate());
+    }
 
-	public PerformedWork getEvent() {
-		if (event == null) {
-			event = new PerformedWork();
-		}
-		return event;
-	}
+    public PerformedWork getEvent() {
+        if (event == null) {
+            event = new PerformedWork();
+        }
+        return event;
+    }
 
-	public void setWorkTypeDAO(WorkTypeDAO workTypeDAO) {
-		this.workTypeDAO = workTypeDAO;
-	}
+    public void setWorkTypeDAO(WorkTypeDAO workTypeDAO) {
+        this.workTypeDAO = workTypeDAO;
+    }
 }

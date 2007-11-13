@@ -8,9 +8,9 @@ import fi.hut.soberit.agilefant.model.IterationGoal;
  * GenericDAOHibernate.
  */
 public class IterationGoalDAOHibernate extends
-		GenericDAOHibernate<IterationGoal> implements IterationGoalDAO {
+        GenericDAOHibernate<IterationGoal> implements IterationGoalDAO {
 
-	public IterationGoalDAOHibernate() {
-		super(IterationGoal.class);
-	}
+    public IterationGoalDAOHibernate() {
+        super(IterationGoal.class);
+    }
 }

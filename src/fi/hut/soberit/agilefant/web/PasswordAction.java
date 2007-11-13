@@ -15,64 +15,64 @@ import fi.hut.soberit.agilefant.model.User;
  * 
  */
 public class PasswordAction extends ActionSupport {
-	private static final long serialVersionUID = -5808987058415748396L;
+    private static final long serialVersionUID = -5808987058415748396L;
 
-	private PasswordBusiness passwordBusiness;
+    private PasswordBusiness passwordBusiness;
 
-	private UserDAO userDAO;
+    private UserDAO userDAO;
 
-	private String name;
+    private String name;
 
-	private String email;
+    private String email;
 
-	/**
-	 * Generates a new password for an <code>User</code>
-	 * 
-	 * @return
-	 */
-	public String generate() {
-		User user = userDAO.getUser(name);
-		if (user == null)
-			return Action.ERROR; // User not found.
+    /**
+     * Generates a new password for an <code>User</code>
+     * 
+     * @return
+     */
+    public String generate() {
+        User user = userDAO.getUser(name);
+        if (user == null)
+            return Action.ERROR; // User not found.
 
-		else if (!user.getEmail().equals(email))
-			return Action.ERROR; // Wrong e-mail.
+        else if (!user.getEmail().equals(email))
+            return Action.ERROR; // Wrong e-mail.
 
-		passwordBusiness.generateAndMailPassword(user.getId());
-		addActionMessage("A new password has been sent to: " + user.getEmail()
-				+ ".");
-		return Action.SUCCESS;
-	}
+        passwordBusiness.generateAndMailPassword(user.getId());
+        addActionMessage("A new password has been sent to: " + user.getEmail()
+                + ".");
+        return Action.SUCCESS;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public String getEmail() {
-		return email;
-	}
+    public String getEmail() {
+        return email;
+    }
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-	public PasswordBusiness getPasswordBusiness() {
-		return passwordBusiness;
-	}
+    public PasswordBusiness getPasswordBusiness() {
+        return passwordBusiness;
+    }
 
-	public void setPasswordBusiness(PasswordBusiness passwordBusiness) {
-		this.passwordBusiness = passwordBusiness;
-	}
+    public void setPasswordBusiness(PasswordBusiness passwordBusiness) {
+        this.passwordBusiness = passwordBusiness;
+    }
 
-	public UserDAO getUserDAO() {
-		return userDAO;
-	}
+    public UserDAO getUserDAO() {
+        return userDAO;
+    }
 
-	public void setUserDAO(UserDAO userDAO) {
-		this.userDAO = userDAO;
-	}
+    public void setUserDAO(UserDAO userDAO) {
+        this.userDAO = userDAO;
+    }
 }

@@ -8,9 +8,9 @@ import fi.hut.soberit.agilefant.model.ActivityType;
  * GenericDAOHibernate.
  */
 public class ActivityTypeDAOHibernate extends GenericDAOHibernate<ActivityType>
-		implements ActivityTypeDAO {
+        implements ActivityTypeDAO {
 
-	public ActivityTypeDAOHibernate() {
-		super(ActivityType.class);
-	}
+    public ActivityTypeDAOHibernate() {
+        super(ActivityType.class);
+    }
 }

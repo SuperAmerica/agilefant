@@ -26,41 +26,41 @@ import javax.persistence.OneToMany;
 @Entity
 public class PracticeTemplate {
 
-	private int id;
+    private int id;
 
-	private Collection<Practice> practices = new HashSet<Practice>();
+    private Collection<Practice> practices = new HashSet<Practice>();
 
-	/**
-	 * Get the id of this object.
-	 * <p>
-	 * The id is unique among all practice templates.
-	 */
-	// tag this field as the id
-	@Id
-	// generate automatically
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	// not nullable
-	@Column(nullable = false)
-	public int getId() {
-		return id;
-	}
+    /**
+     * Get the id of this object.
+     * <p>
+     * The id is unique among all practice templates.
+     */
+    // tag this field as the id
+    @Id
+    // generate automatically
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    // not nullable
+    @Column(nullable = false)
+    public int getId() {
+        return id;
+    }
 
-	/**
-	 * Set the id of this object.
-	 * <p>
-	 * You shouldn't normally call this.
-	 */
-	public void setId(int id) {
-		this.id = id;
-	}
+    /**
+     * Set the id of this object.
+     * <p>
+     * You shouldn't normally call this.
+     */
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	@OneToMany(mappedBy = "template")
-	public Collection<Practice> getPractices() {
-		return practices;
-	}
+    @OneToMany(mappedBy = "template")
+    public Collection<Practice> getPractices() {
+        return practices;
+    }
 
-	public void setPractices(Collection<Practice> practices) {
-		this.practices = practices;
-	}
+    public void setPractices(Collection<Practice> practices) {
+        this.practices = practices;
+    }
 
 }

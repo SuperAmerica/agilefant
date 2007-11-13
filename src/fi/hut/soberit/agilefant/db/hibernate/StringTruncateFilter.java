@@ -9,21 +9,21 @@ package fi.hut.soberit.agilefant.db.hibernate;
  */
 public class StringTruncateFilter extends UserTypeFilter {
 
-	private static final int TRUNCATE_LENGTH = 255;
+    private static final int TRUNCATE_LENGTH = 255;
 
-	protected Object filterDown(Object ob) {
-		if (ob == null)
-			return null;
-		if (!(ob instanceof String))
-			return ob;
+    protected Object filterDown(Object ob) {
+        if (ob == null)
+            return null;
+        if (!(ob instanceof String))
+            return ob;
 
-		String str = (String) ob;
+        String str = (String) ob;
 
-		// if length more than the limit, truncate
-		if (str.length() > TRUNCATE_LENGTH)
-			str = str.substring(0, TRUNCATE_LENGTH);
+        // if length more than the limit, truncate
+        if (str.length() > TRUNCATE_LENGTH)
+            str = str.substring(0, TRUNCATE_LENGTH);
 
-		return str;
-	}
+        return str;
+    }
 
 }

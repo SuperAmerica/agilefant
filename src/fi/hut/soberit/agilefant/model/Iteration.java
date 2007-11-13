@@ -46,152 +46,152 @@ import fi.hut.soberit.agilefant.web.page.PageItem;
 @Entity
 public class Iteration extends Backlog implements PageItem, EffortContainer {
 
-	private Date startDate;
+    private Date startDate;
 
-	private Date endDate;
+    private Date endDate;
 
-	private Deliverable deliverable;
+    private Deliverable deliverable;
 
-	private AFTime performedEffort;
+    private AFTime performedEffort;
 
-	private AFTime effortEstimate;
+    private AFTime effortEstimate;
 
-	private Collection<IterationGoal> iterationGoals = new HashSet<IterationGoal>();
+    private Collection<IterationGoal> iterationGoals = new HashSet<IterationGoal>();
 
-	// private User owner;
+    // private User owner;
 
-	private Log logger = LogFactory.getLog(getClass());
+    private Log logger = LogFactory.getLog(getClass());
 
-	@Transient
-	public double getCompletionEstimationPercentage() {
-		// Estimate percentage of completion by calculating
-		// total time from performed effort + work left, and
-		// dividing performed effort with it, to get fraction of completion.
+    @Transient
+    public double getCompletionEstimationPercentage() {
+        // Estimate percentage of completion by calculating
+        // total time from performed effort + work left, and
+        // dividing performed effort with it, to get fraction of completion.
 
-		long performed = getPerformedEffort().getTime();
-		long estimate = getEffortEstimate().getTime();
+        long performed = getPerformedEffort().getTime();
+        long estimate = getEffortEstimate().getTime();
 
-		long total = performed + estimate;
+        long total = performed + estimate;
 
-		return 100.0 * (double) performed / (double) total;
-	}
+        return 100.0 * (double) performed / (double) total;
+    }
 
-	/** The deliverable, under which this iteration is. */
-	@ManyToOne
-	// @JoinColumn (nullable = false)
-	public Deliverable getDeliverable() {
-		return deliverable;
-	}
+    /** The deliverable, under which this iteration is. */
+    @ManyToOne
+    // @JoinColumn (nullable = false)
+    public Deliverable getDeliverable() {
+        return deliverable;
+    }
 
-	public void setDeliverable(Deliverable deliverable) {
-		this.deliverable = deliverable;
-	}
+    public void setDeliverable(Deliverable deliverable) {
+        this.deliverable = deliverable;
+    }
 
-	// @Column(nullable = false)
-	public Date getEndDate() {
-		return endDate;
-	}
+    // @Column(nullable = false)
+    public Date getEndDate() {
+        return endDate;
+    }
 
-	public void setEndDate(Date endDate) {
-		this.endDate = endDate;
-	}
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
 
-	public void setEndDate(String endDate, String dateFormat)
-			throws ParseException {
-		SimpleDateFormat df = new SimpleDateFormat(dateFormat);
-		df.setLenient(true);
-		this.endDate = df.parse(endDate);
-	}
+    public void setEndDate(String endDate, String dateFormat)
+            throws ParseException {
+        SimpleDateFormat df = new SimpleDateFormat(dateFormat);
+        df.setLenient(true);
+        this.endDate = df.parse(endDate);
+    }
 
-	// @Column(nullable = false)
-	public Date getStartDate() {
-		return startDate;
-	}
+    // @Column(nullable = false)
+    public Date getStartDate() {
+        return startDate;
+    }
 
-	public void setStartDate(Date startDate) {
-		this.startDate = startDate;
-	}
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
 
-	public void setStartDate(String startDate, String dateFormat)
-			throws ParseException {
-		SimpleDateFormat df = new SimpleDateFormat(dateFormat);
-		df.setLenient(true);
-		this.startDate = df.parse(startDate);
-	}
+    public void setStartDate(String startDate, String dateFormat)
+            throws ParseException {
+        SimpleDateFormat df = new SimpleDateFormat(dateFormat);
+        df.setLenient(true);
+        this.startDate = df.parse(startDate);
+    }
 
-	/**
-	 * Returns current Date with hour of day set in 24-hour clock.
-	 * 
-	 * @param hour
-	 *            The Date's hour of day.
-	 * @return Current Date instance with hour of day set.
-	 */
-	public static Date getTimeOfDayDate(int hour) {
+    /**
+     * Returns current Date with hour of day set in 24-hour clock.
+     * 
+     * @param hour
+     *                The Date's hour of day.
+     * @return Current Date instance with hour of day set.
+     */
+    public static Date getTimeOfDayDate(int hour) {
 
-		java.util.Calendar calendar = java.util.Calendar.getInstance();
-		calendar.set(java.util.Calendar.HOUR_OF_DAY, hour);
-		calendar.set(java.util.Calendar.MINUTE, 0);
-		calendar.set(java.util.Calendar.SECOND, 0);
-		calendar.set(java.util.Calendar.MILLISECOND, 0);
-		return calendar.getTime();
-	}
+        java.util.Calendar calendar = java.util.Calendar.getInstance();
+        calendar.set(java.util.Calendar.HOUR_OF_DAY, hour);
+        calendar.set(java.util.Calendar.MINUTE, 0);
+        calendar.set(java.util.Calendar.SECOND, 0);
+        calendar.set(java.util.Calendar.MILLISECOND, 0);
+        return calendar.getTime();
+    }
 
-	/** {@inheritDoc} */
-	@Transient
-	public Collection<PageItem> getChildren() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    /** {@inheritDoc} */
+    @Transient
+    public Collection<PageItem> getChildren() {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-	/** {@inheritDoc} */
-	@Transient
-	public PageItem getParent() {
-		// TODO Auto-generated method stub
-		return getDeliverable();
-	}
+    /** {@inheritDoc} */
+    @Transient
+    public PageItem getParent() {
+        // TODO Auto-generated method stub
+        return getDeliverable();
+    }
 
-	/** {@inheritDoc} */
-	@Transient
-	public boolean hasChildren() {
-		// TODO Auto-generated method stub
-		return false;
-	}
+    /** {@inheritDoc} */
+    @Transient
+    public boolean hasChildren() {
+        // TODO Auto-generated method stub
+        return false;
+    }
 
-	/** {@inheritDoc} */
-	@Type(type = "af_time")
-	@Formula(value = "(select SUM(t.effortEstimate) from Task t "
-			+ "INNER JOIN BacklogItem bi ON t.backlogItem_id = bi.id "
-			+ "where bi.backlog_id = id)")
-	public AFTime getEffortEstimate() {
-		return this.effortEstimate;
-	}
+    /** {@inheritDoc} */
+    @Type(type = "af_time")
+    @Formula(value = "(select SUM(t.effortEstimate) from Task t "
+            + "INNER JOIN BacklogItem bi ON t.backlogItem_id = bi.id "
+            + "where bi.backlog_id = id)")
+    public AFTime getEffortEstimate() {
+        return this.effortEstimate;
+    }
 
-	protected void setEffortEstimate(AFTime effortEstimate) {
-		this.effortEstimate = effortEstimate;
-	}
+    protected void setEffortEstimate(AFTime effortEstimate) {
+        this.effortEstimate = effortEstimate;
+    }
 
-	/** {@inheritDoc} */
-	@Type(type = "af_time")
-	@Formula(value = "(select SUM(e.effort) from TaskEvent e "
-			+ "INNER JOIN Task t ON e.task_id = t.id "
-			+ "INNER JOIN BacklogItem bi ON t.backlogItem_id = bi.id "
-			+ "where e.eventType = 'PerformedWork' and bi.backlog_id = id)")
-	public AFTime getPerformedEffort() {
-		return performedEffort;
-	}
+    /** {@inheritDoc} */
+    @Type(type = "af_time")
+    @Formula(value = "(select SUM(e.effort) from TaskEvent e "
+            + "INNER JOIN Task t ON e.task_id = t.id "
+            + "INNER JOIN BacklogItem bi ON t.backlogItem_id = bi.id "
+            + "where e.eventType = 'PerformedWork' and bi.backlog_id = id)")
+    public AFTime getPerformedEffort() {
+        return performedEffort;
+    }
 
-	protected void setPerformedEffort(AFTime performedEffort) {
-		this.performedEffort = performedEffort;
-	}
+    protected void setPerformedEffort(AFTime performedEffort) {
+        this.performedEffort = performedEffort;
+    }
 
-	@OneToMany(mappedBy = "iteration")
-	@OrderBy("priority, id")
-	public Collection<IterationGoal> getIterationGoals() {
-		return iterationGoals;
-	}
+    @OneToMany(mappedBy = "iteration")
+    @OrderBy("priority, id")
+    public Collection<IterationGoal> getIterationGoals() {
+        return iterationGoals;
+    }
 
-	public void setIterationGoals(Collection<IterationGoal> iterationGoals) {
-		this.iterationGoals = iterationGoals;
-	}
+    public void setIterationGoals(Collection<IterationGoal> iterationGoals) {
+        this.iterationGoals = iterationGoals;
+    }
 
 }

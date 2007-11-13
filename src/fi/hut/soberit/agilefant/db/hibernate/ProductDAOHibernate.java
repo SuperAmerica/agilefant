@@ -9,15 +9,15 @@ import fi.hut.soberit.agilefant.model.Product;
  * Hibernate implementation of ProductDAO interface using GenericDAOHibernate.
  */
 public class ProductDAOHibernate extends GenericDAOHibernate<Product> implements
-		ProductDAO {
+        ProductDAO {
 
-	public ProductDAOHibernate() {
-		super(Product.class);
-	}
+    public ProductDAOHibernate() {
+        super(Product.class);
+    }
 
-	@SuppressWarnings("unchecked")
-	public List<Product> getAllOrderByName() {
-		final String query = "from Product p order by p.name asc";
-		return (List<Product>) super.getHibernateTemplate().find(query);
-	}
+    @SuppressWarnings("unchecked")
+    public List<Product> getAllOrderByName() {
+        final String query = "from Product p order by p.name asc";
+        return (List<Product>) super.getHibernateTemplate().find(query);
+    }
 }

@@ -25,63 +25,63 @@ import org.hibernate.annotations.Type;
 @Entity
 public class WorkType {
 
-	private int id;
+    private int id;
 
-	private String name;
+    private String name;
 
-	private String description;
+    private String description;
 
-	private ActivityType activityType;
+    private ActivityType activityType;
 
-	/**
-	 * Get the id of this object.
-	 * <p>
-	 * The id is unique among all work types.
-	 */
-	// tag this field as the id
-	@Id
-	// generate automatically
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	// not nullable
-	@Column(nullable = false)
-	public int getId() {
-		return id;
-	}
+    /**
+     * Get the id of this object.
+     * <p>
+     * The id is unique among all work types.
+     */
+    // tag this field as the id
+    @Id
+    // generate automatically
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    // not nullable
+    @Column(nullable = false)
+    public int getId() {
+        return id;
+    }
 
-	/**
-	 * Set the id of this object.
-	 * <p>
-	 * You shouldn't normally call this.
-	 */
-	public void setId(int id) {
-		this.id = id;
-	}
+    /**
+     * Set the id of this object.
+     * <p>
+     * You shouldn't normally call this.
+     */
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	@ManyToOne
-	public ActivityType getActivityType() {
-		return activityType;
-	}
+    @ManyToOne
+    public ActivityType getActivityType() {
+        return activityType;
+    }
 
-	public void setActivityType(ActivityType activityType) {
-		this.activityType = activityType;
-	}
+    public void setActivityType(ActivityType activityType) {
+        this.activityType = activityType;
+    }
 
-	@Type(type = "escaped_text")
-	public String getDescription() {
-		return description;
-	}
+    @Type(type = "escaped_text")
+    public String getDescription() {
+        return description;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	@Column(nullable = false)
-	@Type(type = "escaped_truncated_varchar")
-	public String getName() {
-		return name;
-	}
+    @Column(nullable = false)
+    @Type(type = "escaped_truncated_varchar")
+    public String getName() {
+        return name;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 }

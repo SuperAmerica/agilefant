@@ -16,11 +16,11 @@ import junit.framework.TestCase;
  */
 public abstract class SpringEnabledTestCase extends TestCase {
 
-	/**
-	 * Constructor which forces a call to loadSpringSupport.
-	 */
-	public SpringEnabledTestCase() {
-		// call loadSpringSupport
-		ExplicitSpringSupport.loadSpringSupport(this);
-	}
+    /**
+     * Constructor which forces a call to loadSpringSupport.
+     */
+    public SpringEnabledTestCase() {
+        // call loadSpringSupport
+        ExplicitSpringSupport.loadSpringSupport(this);
+    }
 }

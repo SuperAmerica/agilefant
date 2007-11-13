@@ -8,9 +8,9 @@ import fi.hut.soberit.agilefant.model.PracticeTemplate;
  * GenericDAOHibernate.
  */
 public class PracticeTemplateDAOHibernate extends
-		GenericDAOHibernate<PracticeTemplate> implements PracticeTemplateDAO {
+        GenericDAOHibernate<PracticeTemplate> implements PracticeTemplateDAO {
 
-	public PracticeTemplateDAOHibernate() {
-		super(PracticeTemplate.class);
-	}
+    public PracticeTemplateDAOHibernate() {
+        super(PracticeTemplate.class);
+    }
 }

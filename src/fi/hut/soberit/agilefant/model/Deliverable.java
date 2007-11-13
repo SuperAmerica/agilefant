@@ -48,151 +48,151 @@ import fi.hut.soberit.agilefant.web.page.PageItem;
 @Entity
 public class Deliverable extends Backlog implements PageItem, EffortContainer {
 
-	private Product product;
+    private Product product;
 
-	private ActivityType activityType;
+    private ActivityType activityType;
 
-	private Date endDate;
+    private Date endDate;
 
-	private Date startDate;
+    private Date startDate;
 
-	private List<Iteration> iterations = new ArrayList<Iteration>();
+    private List<Iteration> iterations = new ArrayList<Iteration>();
 
-	private User owner;
+    private User owner;
 
-	private AFTime effortEstimate;
+    private AFTime effortEstimate;
 
-	private AFTime performedEffort;
+    private AFTime performedEffort;
 
-	private int rank = 0;
+    private int rank = 0;
 
-	/** The product, under which this deliverable belongs. */
-	@ManyToOne
-	// @JoinColumn (nullable = true)
-	public Product getProduct() {
-		return product;
-	}
+    /** The product, under which this deliverable belongs. */
+    @ManyToOne
+    // @JoinColumn (nullable = true)
+    public Product getProduct() {
+        return product;
+    }
 
-	public void setProduct(Product product) {
-		this.product = product;
-	}
+    public void setProduct(Product product) {
+        this.product = product;
+    }
 
-	@ManyToOne
-	public User getOwner() {
-		return owner;
-	}
+    @ManyToOne
+    public User getOwner() {
+        return owner;
+    }
 
-	public void setOwner(User owner) {
-		this.owner = owner;
-	}
+    public void setOwner(User owner) {
+        this.owner = owner;
+    }
 
-	/** Iterations under this deliverable. */
-	@OneToMany(mappedBy = "deliverable")
-	@OrderBy(clause = "startDate asc, endDate asc")
-	public List<Iteration> getIterations() {
-		return iterations;
-	}
+    /** Iterations under this deliverable. */
+    @OneToMany(mappedBy = "deliverable")
+    @OrderBy(clause = "startDate asc, endDate asc")
+    public List<Iteration> getIterations() {
+        return iterations;
+    }
 
-	public void setIterations(List<Iteration> iterations) {
-		this.iterations = iterations;
-	}
+    public void setIterations(List<Iteration> iterations) {
+        this.iterations = iterations;
+    }
 
-	// @Column(nullable = false)
-	public Date getStartDate() {
-		return startDate;
-	}
+    // @Column(nullable = false)
+    public Date getStartDate() {
+        return startDate;
+    }
 
-	public void setStartDate(Date startDate) {
-		this.startDate = startDate;
-	}
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
 
-	public void setStartDate(String startDate, String dateFormat)
-			throws ParseException {
-		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-		df.setLenient(true);
-		this.startDate = df.parse(startDate);
-	}
+    public void setStartDate(String startDate, String dateFormat)
+            throws ParseException {
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        df.setLenient(true);
+        this.startDate = df.parse(startDate);
+    }
 
-	// @Column(nullable = false)
-	public Date getEndDate() {
-		return endDate;
-	}
+    // @Column(nullable = false)
+    public Date getEndDate() {
+        return endDate;
+    }
 
-	public void setEndDate(Date endDate) {
-		this.endDate = endDate;
-	}
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
 
-	public void setEndDate(String endDate, String dateFormat)
-			throws ParseException {
-		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-		df.setLenient(true);
-		this.endDate = df.parse(endDate);
-	}
+    public void setEndDate(String endDate, String dateFormat)
+            throws ParseException {
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        df.setLenient(true);
+        this.endDate = df.parse(endDate);
+    }
 
-	@ManyToOne
-	public ActivityType getActivityType() {
-		return activityType;
-	}
+    @ManyToOne
+    public ActivityType getActivityType() {
+        return activityType;
+    }
 
-	public void setActivityType(ActivityType activityType) {
-		this.activityType = activityType;
-	}
+    public void setActivityType(ActivityType activityType) {
+        this.activityType = activityType;
+    }
 
-	/** {@inheritDoc} */
-	@Transient
-	public List<PageItem> getChildren() {
-		List<PageItem> c = new ArrayList<PageItem>(this.iterations.size());
-		c.addAll(this.iterations);
-		return c;
-	}
+    /** {@inheritDoc} */
+    @Transient
+    public List<PageItem> getChildren() {
+        List<PageItem> c = new ArrayList<PageItem>(this.iterations.size());
+        c.addAll(this.iterations);
+        return c;
+    }
 
-	/** {@inheritDoc} */
-	@Transient
-	public PageItem getParent() {
-		return getProduct();
-	}
+    /** {@inheritDoc} */
+    @Transient
+    public PageItem getParent() {
+        return getProduct();
+    }
 
-	/** {@inheritDoc} */
-	@Transient
-	public boolean hasChildren() {
-		return this.iterations.size() > 0 ? true : false;
-	}
+    /** {@inheritDoc} */
+    @Transient
+    public boolean hasChildren() {
+        return this.iterations.size() > 0 ? true : false;
+    }
 
-	/** {@inheritDoc} */
-	@Type(type = "af_time")
-	@Formula(value = "(select SUM(t.effortEstimate)"
-			+ "from Task t, BacklogItem bi, Backlog b "
-			+ "where t.backlogItem_id = bi.id " + "and bi.backlog_id = b.id "
-			+ "and (" + "bi.backlog_id = id " + "or b.deliverable_id = id))")
-	public AFTime getEffortEstimate() {
-		return effortEstimate;
-	}
+    /** {@inheritDoc} */
+    @Type(type = "af_time")
+    @Formula(value = "(select SUM(t.effortEstimate)"
+            + "from Task t, BacklogItem bi, Backlog b "
+            + "where t.backlogItem_id = bi.id " + "and bi.backlog_id = b.id "
+            + "and (" + "bi.backlog_id = id " + "or b.deliverable_id = id))")
+    public AFTime getEffortEstimate() {
+        return effortEstimate;
+    }
 
-	protected void setEffortEstimate(AFTime effortEstimate) {
-		this.effortEstimate = effortEstimate;
-	}
+    protected void setEffortEstimate(AFTime effortEstimate) {
+        this.effortEstimate = effortEstimate;
+    }
 
-	/** {@inheritDoc} */
-	@Type(type = "af_time")
-	@Formula(value = "(select SUM(e.effort) "
-			+ "from TaskEvent e, Task t, BacklogItem bi, Backlog b "
-			+ "where e.eventType = 'PerformedWork' " + "and e.task_id = t.id "
-			+ "and t.backlogItem_id = bi.id " + "and bi.backlog_id = b.id "
-			+ "and (" + "bi.backlog_id = id " + "or b.deliverable_id = id))")
-	public AFTime getPerformedEffort() {
-		return performedEffort;
-	}
+    /** {@inheritDoc} */
+    @Type(type = "af_time")
+    @Formula(value = "(select SUM(e.effort) "
+            + "from TaskEvent e, Task t, BacklogItem bi, Backlog b "
+            + "where e.eventType = 'PerformedWork' " + "and e.task_id = t.id "
+            + "and t.backlogItem_id = bi.id " + "and bi.backlog_id = b.id "
+            + "and (" + "bi.backlog_id = id " + "or b.deliverable_id = id))")
+    public AFTime getPerformedEffort() {
+        return performedEffort;
+    }
 
-	protected void setPerformedEffort(AFTime performedEffort) {
-		this.performedEffort = performedEffort;
-	}
+    protected void setPerformedEffort(AFTime performedEffort) {
+        this.performedEffort = performedEffort;
+    }
 
-	@Column(nullable = false, columnDefinition = "integer not null default 0")
-	public int getRank() {
-		return rank;
-	}
+    @Column(nullable = false, columnDefinition = "integer not null default 0")
+    public int getRank() {
+        return rank;
+    }
 
-	public void setRank(int rank) {
-		this.rank = rank;
-	}
+    public void setRank(int rank) {
+        this.rank = rank;
+    }
 }

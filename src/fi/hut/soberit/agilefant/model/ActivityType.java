@@ -30,78 +30,78 @@ import org.hibernate.validator.Range;
 @Entity
 public class ActivityType {
 
-	private int id;
+    private int id;
 
-	private String name;
+    private String name;
 
-	private String description;
+    private String description;
 
-	private Collection<WorkType> workTypes = new HashSet<WorkType>();
+    private Collection<WorkType> workTypes = new HashSet<WorkType>();
 
-	private int targetSpendingPercentage = 0;
+    private int targetSpendingPercentage = 0;
 
-	/**
-	 * Get the id of this object.
-	 * <p>
-	 * The id is unique among all activity types.
-	 */
-	// tag this field as the id
-	@Id
-	// generate automatically
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	// not nullable
-	@Column(nullable = false)
-	public int getId() {
-		return id;
-	}
+    /**
+     * Get the id of this object.
+     * <p>
+     * The id is unique among all activity types.
+     */
+    // tag this field as the id
+    @Id
+    // generate automatically
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    // not nullable
+    @Column(nullable = false)
+    public int getId() {
+        return id;
+    }
 
-	/**
-	 * Set the id of this object.
-	 * <p>
-	 * You shouldn't normally call this.
-	 */
-	public void setId(int id) {
-		this.id = id;
-	}
+    /**
+     * Set the id of this object.
+     * <p>
+     * You shouldn't normally call this.
+     */
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	@Type(type = "escaped_text")
-	public String getDescription() {
-		return description;
-	}
+    @Type(type = "escaped_text")
+    public String getDescription() {
+        return description;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	@Column(nullable = false, unique = true)
-	@Type(type = "escaped_truncated_varchar")
-	public String getName() {
-		return name;
-	}
+    @Column(nullable = false, unique = true)
+    @Type(type = "escaped_truncated_varchar")
+    public String getName() {
+        return name;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	/**
-	 * Single activity type can contain many work types, single worktype is part
-	 * of a single activity type.
-	 */
-	@OneToMany(mappedBy = "activityType")
-	public Collection<WorkType> getWorkTypes() {
-		return workTypes;
-	}
+    /**
+     * Single activity type can contain many work types, single worktype is part
+     * of a single activity type.
+     */
+    @OneToMany(mappedBy = "activityType")
+    public Collection<WorkType> getWorkTypes() {
+        return workTypes;
+    }
 
-	public void setWorkTypes(Collection<WorkType> workTypes) {
-		this.workTypes = workTypes;
-	}
+    public void setWorkTypes(Collection<WorkType> workTypes) {
+        this.workTypes = workTypes;
+    }
 
-	@Range(min = 0, max = 100)
-	public int getTargetSpendingPercentage() {
-		return targetSpendingPercentage;
-	}
+    @Range(min = 0, max = 100)
+    public int getTargetSpendingPercentage() {
+        return targetSpendingPercentage;
+    }
 
-	public void setTargetSpendingPercentage(int targetSpendingPercentage) {
-		this.targetSpendingPercentage = targetSpendingPercentage;
-	}
+    public void setTargetSpendingPercentage(int targetSpendingPercentage) {
+        this.targetSpendingPercentage = targetSpendingPercentage;
+    }
 }

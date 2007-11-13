@@ -8,10 +8,10 @@ import fi.hut.soberit.agilefant.model.PracticeAllocation;
  * GenericDAOHibernate.
  */
 public class PracticeAllocationDAOHibernate extends
-		GenericDAOHibernate<PracticeAllocation> implements
-		PracticeAllocationDAO {
+        GenericDAOHibernate<PracticeAllocation> implements
+        PracticeAllocationDAO {
 
-	public PracticeAllocationDAOHibernate() {
-		super(PracticeAllocation.class);
-	}
+    public PracticeAllocationDAOHibernate() {
+        super(PracticeAllocation.class);
+    }
 }

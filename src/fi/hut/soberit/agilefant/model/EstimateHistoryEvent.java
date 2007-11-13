@@ -23,25 +23,25 @@ import org.hibernate.annotations.Type;
 @Entity
 public class EstimateHistoryEvent extends TaskComment {
 
-	private AFTime newEstimate;
+    private AFTime newEstimate;
 
-	private Log logger = LogFactory.getLog(getClass());
+    private Log logger = LogFactory.getLog(getClass());
 
-	public EstimateHistoryEvent() {
-	}
+    public EstimateHistoryEvent() {
+    }
 
-	public EstimateHistoryEvent(User actor, Task task, Date created,
-			AFTime newEstimate) {
-		super(actor, task, created);
-		this.newEstimate = newEstimate;
-	}
+    public EstimateHistoryEvent(User actor, Task task, Date created,
+            AFTime newEstimate) {
+        super(actor, task, created);
+        this.newEstimate = newEstimate;
+    }
 
-	@Type(type = "af_time")
-	public AFTime getNewEstimate() {
-		return newEstimate;
-	}
+    @Type(type = "af_time")
+    public AFTime getNewEstimate() {
+        return newEstimate;
+    }
 
-	public void setNewEstimate(AFTime newEstimate) {
-		this.newEstimate = newEstimate;
-	}
+    public void setNewEstimate(AFTime newEstimate) {
+        this.newEstimate = newEstimate;
+    }
 }

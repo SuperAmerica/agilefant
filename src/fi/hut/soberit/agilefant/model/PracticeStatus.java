@@ -12,10 +12,10 @@ package fi.hut.soberit.agilefant.model;
  * @see fi.hut.soberit.agilefant.model.PracticeTemplate
  */
 public enum PracticeStatus {
-	// TODO: mitkä ovat praktiikoiden tilat?
-	NOT_STARTED, STARTED, BLOCKED, IMPLEMENTED, DONE;
+    // TODO: mitkä ovat praktiikoiden tilat?
+    NOT_STARTED, STARTED, BLOCKED, IMPLEMENTED, DONE;
 
-	public int getOrdinal() {
-		return this.ordinal();
-	}
+    public int getOrdinal() {
+        return this.ordinal();
+    }
 }

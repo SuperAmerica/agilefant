@@ -25,95 +25,95 @@ import fi.hut.soberit.agilefant.model.User;
  */
 
 public class TaskEventListener implements PreInsertEventListener,
-		PostInsertEventListener, PostUpdateEventListener {
+        PostInsertEventListener, PostUpdateEventListener {
 
-	private static final long serialVersionUID = -7708348428244828439L;
+    private static final long serialVersionUID = -7708348428244828439L;
 
-	private SimpleMailMessage createTemplate;
+    private SimpleMailMessage createTemplate;
 
-	private SimpleMailMessage updateTemplate;
+    private SimpleMailMessage updateTemplate;
 
-	private MailSender mailSender;
+    private MailSender mailSender;
 
-	public void onPostInsert(PostInsertEvent event) {
-		if (event.getEntity() instanceof Task) {
-			this.notify((Task) event.getEntity(), createTemplate);
-		}
-	}
+    public void onPostInsert(PostInsertEvent event) {
+        if (event.getEntity() instanceof Task) {
+            this.notify((Task) event.getEntity(), createTemplate);
+        }
+    }
 
-	public void onPostUpdate(PostUpdateEvent event) {
-		if (event.getEntity() instanceof Task) {
-			this.notify((Task) event.getEntity(), updateTemplate);
-		}
-	}
+    public void onPostUpdate(PostUpdateEvent event) {
+        if (event.getEntity() instanceof Task) {
+            this.notify((Task) event.getEntity(), updateTemplate);
+        }
+    }
 
-	private void notify(Task task, SimpleMailMessage template) {
-		if (template == null) {
-			return;
-		}
-		SimpleMailMessage mail = new SimpleMailMessage(template);
+    private void notify(Task task, SimpleMailMessage template) {
+        if (template == null) {
+            return;
+        }
+        SimpleMailMessage mail = new SimpleMailMessage(template);
 
-		StringTemplate subjectTemplate = new StringTemplate(mail.getSubject());
-		subjectTemplate.setAttribute("task", task);
-		mail.setSubject(subjectTemplate.toString());
+        StringTemplate subjectTemplate = new StringTemplate(mail.getSubject());
+        subjectTemplate.setAttribute("task", task);
+        mail.setSubject(subjectTemplate.toString());
 
-		Collection<String> recipients = new HashSet<String>();
+        Collection<String> recipients = new HashSet<String>();
 
-		if (mail.getBcc() != null) {
-			for (String bcc : mail.getBcc()) {
-				recipients.add(bcc);
-			}
-		}
+        if (mail.getBcc() != null) {
+            for (String bcc : mail.getBcc()) {
+                recipients.add(bcc);
+            }
+        }
 
-		for (User watcher : task.getWatchers().values()) {
-			if (hasEmail(watcher)) {
-				recipients.add(watcher.getEmail());
-			}
-		}
+        for (User watcher : task.getWatchers().values()) {
+            if (hasEmail(watcher)) {
+                recipients.add(watcher.getEmail());
+            }
+        }
 
-		if (hasEmail(task.getCreator())) {
-			mail.setFrom(task.getCreator().getEmail());
-			recipients.add(task.getCreator().getEmail());
-		}
+        if (hasEmail(task.getCreator())) {
+            mail.setFrom(task.getCreator().getEmail());
+            recipients.add(task.getCreator().getEmail());
+        }
 
-		if (task.getAssignee() != null && this.hasEmail(task.getAssignee())) {
-			recipients.add(task.getAssignee().getEmail());
-		}
+        if (task.getAssignee() != null && this.hasEmail(task.getAssignee())) {
+            recipients.add(task.getAssignee().getEmail());
+        }
 
-		String[] bcc = recipients.toArray(new String[recipients.size()]);
+        String[] bcc = recipients.toArray(new String[recipients.size()]);
 
-		mail.setBcc(bcc);
+        mail.setBcc(bcc);
 
-		StringTemplate textTemplate = new StringTemplate(mail.getText());
-		textTemplate.setAttribute("task", task);
-		mail.setText(textTemplate.toString());
+        StringTemplate textTemplate = new StringTemplate(mail.getText());
+        textTemplate.setAttribute("task", task);
+        mail.setText(textTemplate.toString());
 
-		// if (mailSender != null && recipients.size() > 0){
-		// mailSender.send(mail);
-		// }
-	}
+        // if (mailSender != null && recipients.size() > 0){
+        // mailSender.send(mail);
+        // }
+    }
 
-	public boolean onPreInsert(PreInsertEvent event) {
-		if (event.getEntity() instanceof Task) {
-			Task task = (Task) event.getEntity();
-			task.setCreated(Calendar.getInstance().getTime());
-		}
-		return false;
-	}
+    public boolean onPreInsert(PreInsertEvent event) {
+        if (event.getEntity() instanceof Task) {
+            Task task = (Task) event.getEntity();
+            task.setCreated(Calendar.getInstance().getTime());
+        }
+        return false;
+    }
 
-	private boolean hasEmail(User user) {
-		return (user.getEmail() != null && user.getEmail().length() > 0);
-	}
+    private boolean hasEmail(User user) {
+        return (user.getEmail() != null && user.getEmail().length() > 0);
+    }
 
-	public void setCreateTemplate(SimpleMailMessage createTemplate) {
-		this.createTemplate = createTemplate;
-	}
+    public void setCreateTemplate(SimpleMailMessage createTemplate) {
+        this.createTemplate = createTemplate;
+    }
 
-	public void setMailSender(MailSender mailSender) {
-		this.mailSender = mailSender;
-	}
+    public void setMailSender(MailSender mailSender) {
+        this.mailSender = mailSender;
+    }
 
-	public void setUpdateTemplate(SimpleMailMessage updateTemplate) {
-		this.updateTemplate = updateTemplate;
-	}
+    public void setUpdateTemplate(SimpleMailMessage updateTemplate) {
+        this.updateTemplate = updateTemplate;
+    }
 }

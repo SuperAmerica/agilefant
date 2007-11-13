@@ -9,13 +9,13 @@ import java.util.Collection;
  * 
  */
 public interface PageItem {
-	public Collection<PageItem> getChildren();
+    public Collection<PageItem> getChildren();
 
-	public PageItem getParent();
+    public PageItem getParent();
 
-	public boolean hasChildren();
+    public boolean hasChildren();
 
-	public int getId();
+    public int getId();
 
-	public String getName();
+    public String getName();
 }

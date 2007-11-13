@@ -7,9 +7,9 @@ package fi.hut.soberit.agilefant.model;
  */
 public interface Assignable {
 
-	/** Get the user assigned to this item. */
-	public User getAssignee();
+    /** Get the user assigned to this item. */
+    public User getAssignee();
 
-	/** Assign this item to a user. */
-	public void setAssignee(User assignee);
+    /** Assign this item to a user. */
+    public void setAssignee(User assignee);
 }

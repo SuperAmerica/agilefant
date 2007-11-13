@@ -26,53 +26,53 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  * @author Turkka Äijälä
  */
 public class ExplicitSpringSupport {
-	/**
-	 * Spring configuration files.
-	 */
-	private static final String[] configLocations = {
-			"file:conf/testApplicationContext.xml",
-			"file:conf/testApplicationContext-daos.xml",
-			"file:conf/applicationContext-actions.xml" };
+    /**
+     * Spring configuration files.
+     */
+    private static final String[] configLocations = {
+            "file:conf/testApplicationContext.xml",
+            "file:conf/testApplicationContext-daos.xml",
+            "file:conf/applicationContext-actions.xml" };
 
-	/**
-	 * Singleton instance of the application context. Used to ensure spring is
-	 * only loaded once.
-	 */
-	private static AbstractApplicationContext agilefantContext = null;
+    /**
+     * Singleton instance of the application context. Used to ensure spring is
+     * only loaded once.
+     */
+    private static AbstractApplicationContext agilefantContext = null;
 
-	/**
-	 * Get the singleton isntance
-	 * 
-	 * @return singleton instance
-	 */
-	private static AbstractApplicationContext getAgilefantSpringContext() {
-		if (agilefantContext == null) {
+    /**
+     * Get the singleton isntance
+     * 
+     * @return singleton instance
+     */
+    private static AbstractApplicationContext getAgilefantSpringContext() {
+        if (agilefantContext == null) {
 
-			// get the static logger
-			Log log = LogFactory.getLog(ExplicitSpringSupport.class);
+            // get the static logger
+            Log log = LogFactory.getLog(ExplicitSpringSupport.class);
 
-			// inform that we're initializing spring
-			log.info("initializing spring");
+            // inform that we're initializing spring
+            log.info("initializing spring");
 
-			// create the context
-			agilefantContext = new ClassPathXmlApplicationContext(
-					configLocations);
+            // create the context
+            agilefantContext = new ClassPathXmlApplicationContext(
+                    configLocations);
 
-			log.info("done initializing spring");
-		}
+            log.info("done initializing spring");
+        }
 
-		return agilefantContext;
-	}
+        return agilefantContext;
+    }
 
-	public ExplicitSpringSupport(Object target) {
-		getAgilefantSpringContext().getAutowireCapableBeanFactory()
-				.autowireBeanProperties(target,
-						AutowireCapableBeanFactory.AUTOWIRE_BY_NAME, true);
-	}
+    public ExplicitSpringSupport(Object target) {
+        getAgilefantSpringContext().getAutowireCapableBeanFactory()
+                .autowireBeanProperties(target,
+                        AutowireCapableBeanFactory.AUTOWIRE_BY_NAME, true);
+    }
 
-	public static void loadSpringSupport(Object target) {
-		getAgilefantSpringContext().getAutowireCapableBeanFactory()
-				.autowireBeanProperties(target,
-						AutowireCapableBeanFactory.AUTOWIRE_BY_NAME, true);
-	}
+    public static void loadSpringSupport(Object target) {
+        getAgilefantSpringContext().getAutowireCapableBeanFactory()
+                .autowireBeanProperties(target,
+                        AutowireCapableBeanFactory.AUTOWIRE_BY_NAME, true);
+    }
 }

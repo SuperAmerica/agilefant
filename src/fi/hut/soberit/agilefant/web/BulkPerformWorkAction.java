@@ -14,71 +14,71 @@ import fi.hut.soberit.agilefant.model.WorkType;
 
 public class BulkPerformWorkAction extends TaskEventAction<PerformedWork> {
 
-	private static final long serialVersionUID = -4886214500115776419L;
+    private static final long serialVersionUID = -4886214500115776419L;
 
-	private WorkTypeDAO workTypeDAO;
+    private WorkTypeDAO workTypeDAO;
 
-	@CreateIfNull(value = true)
-	@KeyProperty(value = "id")
-	private Collection<PerformedWork> events = new HashSet<PerformedWork>();
+    @CreateIfNull(value = true)
+    @KeyProperty(value = "id")
+    private Collection<PerformedWork> events = new HashSet<PerformedWork>();
 
-	private TaskEventDAO taskEventDAO;
+    private TaskEventDAO taskEventDAO;
 
-	@Override
-	public void validate() {
-		super.validate();
+    @Override
+    public void validate() {
+        super.validate();
 
-		/*
-		 * Don't require effort anymore if (this.getEvent().getEffort() ==
-		 * null){
-		 * super.addActionError(super.getText("performWork.missingEffort")); }
-		 */
-		// if (this.getEvent().getNewEstimate() == null){
-		// super.addActionError(super.getText("performWork.missingNewEstimate"));
-		// }
-	}
+        /*
+         * Don't require effort anymore if (this.getEvent().getEffort() ==
+         * null){
+         * super.addActionError(super.getText("performWork.missingEffort")); }
+         */
+        // if (this.getEvent().getNewEstimate() == null){
+        // super.addActionError(super.getText("performWork.missingNewEstimate"));
+        // }
+    }
 
-	@Override
-	public String execute() {
-		for (PerformedWork event : events) {
-			if (event.getId() > 0) {
-				fillEvent(event);
-				taskEventDAO.store(event);
+    @Override
+    public String execute() {
+        for (PerformedWork event : events) {
+            if (event.getId() > 0) {
+                fillEvent(event);
+                taskEventDAO.store(event);
 
-			}
-		}
-		return Action.SUCCESS;
-	}
+            }
+        }
+        return Action.SUCCESS;
+    }
 
-	@Override
-	protected void doFillEvent(PerformedWork event) {
+    @Override
+    protected void doFillEvent(PerformedWork event) {
 
-		WorkType workType = workTypeDAO.get(event.getWorkType().getId());
-		event.setWorkType(workType);
-		this.getTask().setEffortEstimate(event.getNewEstimate());
-	}
+        WorkType workType = workTypeDAO.get(event.getWorkType().getId());
+        event.setWorkType(workType);
+        this.getTask().setEffortEstimate(event.getNewEstimate());
+    }
 
-	public Collection<PerformedWork> getEvents() {
-		return events;
-	}
+    public Collection<PerformedWork> getEvents() {
+        return events;
+    }
 
-	public void setEvents(Collection<PerformedWork> events) {
-		this.events = events;
-	}
+    public void setEvents(Collection<PerformedWork> events) {
+        this.events = events;
+    }
 
-	public PerformedWork getEvent() {
-		return null;
-	}
+    public PerformedWork getEvent() {
+        return null;
+    }
 
-	public void setWorkTypeDAO(WorkTypeDAO workTypeDAO) {
-		this.workTypeDAO = workTypeDAO;
-	}
+    public void setWorkTypeDAO(WorkTypeDAO workTypeDAO) {
+        this.workTypeDAO = workTypeDAO;
+    }
 
-	public TaskEventDAO getTaskEventDAO() {
-		return taskEventDAO;
-	}
+    public TaskEventDAO getTaskEventDAO() {
+        return taskEventDAO;
+    }
 
-	public void setTaskEventDAO(TaskEventDAO taskEventDAO) {
-		this.taskEventDAO = taskEventDAO;
-	}
+    public void setTaskEventDAO(TaskEventDAO taskEventDAO) {
+        this.taskEventDAO = taskEventDAO;
+    }
 }

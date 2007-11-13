@@ -33,40 +33,40 @@ import fi.hut.soberit.agilefant.web.page.PageItem;
 @Entity
 public class Product extends Backlog implements PageItem {
 
-	private List<Deliverable> deliverables = new ArrayList<Deliverable>();
+    private List<Deliverable> deliverables = new ArrayList<Deliverable>();
 
-	/** Get the collection of deliverables belonging to this product. */
-	@OneToMany(mappedBy = "product")
-	@OrderBy(clause = "startDate asc, endDate asc")
-	public List<Deliverable> getDeliverables() {
-		return deliverables;
-	}
+    /** Get the collection of deliverables belonging to this product. */
+    @OneToMany(mappedBy = "product")
+    @OrderBy(clause = "startDate asc, endDate asc")
+    public List<Deliverable> getDeliverables() {
+        return deliverables;
+    }
 
-	/** Set the collection of deliverables belonging to this product. */
-	public void setDeliverables(List<Deliverable> deliverables) {
-		this.deliverables = deliverables;
-	}
+    /** Set the collection of deliverables belonging to this product. */
+    public void setDeliverables(List<Deliverable> deliverables) {
+        this.deliverables = deliverables;
+    }
 
-	/** {@inheritDoc} */
-	@Transient
-	public List<PageItem> getChildren() {
-		List<PageItem> c = new ArrayList<PageItem>(this.deliverables.size());
-		c.addAll(this.deliverables);
-		return c;
-	}
+    /** {@inheritDoc} */
+    @Transient
+    public List<PageItem> getChildren() {
+        List<PageItem> c = new ArrayList<PageItem>(this.deliverables.size());
+        c.addAll(this.deliverables);
+        return c;
+    }
 
-	/** {@inheritDoc} */
-	@Transient
-	public PageItem getParent() {
+    /** {@inheritDoc} */
+    @Transient
+    public PageItem getParent() {
 
-		// We don't really want to show portfolio as root
-		// return new PortfolioPageItem();
-		return null;
-	}
+        // We don't really want to show portfolio as root
+        // return new PortfolioPageItem();
+        return null;
+    }
 
-	/** {@inheritDoc} */
-	@Transient
-	public boolean hasChildren() {
-		return this.deliverables.size() > 0 ? true : false;
-	}
+    /** {@inheritDoc} */
+    @Transient
+    public boolean hasChildren() {
+        return this.deliverables.size() > 0 ? true : false;
+    }
 }

@@ -6,9 +6,9 @@ package fi.hut.soberit.agilefant.model;
  */
 public interface EffortContainer {
 
-	/** Get effort estimate. */
-	public AFTime getEffortEstimate();
+    /** Get effort estimate. */
+    public AFTime getEffortEstimate();
 
-	/** Get already performed effort. */
-	public AFTime getPerformedEffort();
+    /** Get already performed effort. */
+    public AFTime getPerformedEffort();
 }

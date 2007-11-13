@@ -28,55 +28,55 @@ import com.opensymphony.xwork.ActionSupport;
 
 public class ContextViewAction extends ActionSupport implements SessionAware {
 
-	public static final String CONTEXT_NAME = "contextName";
+    public static final String CONTEXT_NAME = "contextName";
 
-	public static final String CONTEXT_OBJECT_ID = "contextObjectId";
+    public static final String CONTEXT_OBJECT_ID = "contextObjectId";
 
-	private String contextName;
+    private String contextName;
 
-	private int contextObjectId;
+    private int contextObjectId;
 
-	private Map session;
+    private Map session;
 
-	public String execute() {
-		String existingContext = (String) session.get(CONTEXT_NAME);
-		if (contextName != null && !contextName.equals(existingContext)) {
-			session.remove(CONTEXT_OBJECT_ID);
-		}
-		if (contextName != null) {
-			session.put(CONTEXT_NAME, contextName);
-		}
-		if (contextObjectId > 0) {
-			session.put(CONTEXT_OBJECT_ID, contextObjectId);
-		}
+    public String execute() {
+        String existingContext = (String) session.get(CONTEXT_NAME);
+        if (contextName != null && !contextName.equals(existingContext)) {
+            session.remove(CONTEXT_OBJECT_ID);
+        }
+        if (contextName != null) {
+            session.put(CONTEXT_NAME, contextName);
+        }
+        if (contextObjectId > 0) {
+            session.put(CONTEXT_OBJECT_ID, contextObjectId);
+        }
 
-		if (session.get(CONTEXT_OBJECT_ID) != null) {
-			contextObjectId = (Integer) session.get(CONTEXT_OBJECT_ID);
-		}
+        if (session.get(CONTEXT_OBJECT_ID) != null) {
+            contextObjectId = (Integer) session.get(CONTEXT_OBJECT_ID);
+        }
 
-		String currentContext = (String) session.get(CONTEXT_NAME);
+        String currentContext = (String) session.get(CONTEXT_NAME);
 
-		return (currentContext == null) ? Action.SUCCESS : Action.SUCCESS + "_"
-				+ currentContext;
-	}
+        return (currentContext == null) ? Action.SUCCESS : Action.SUCCESS + "_"
+                + currentContext;
+    }
 
-	public void setSession(Map session) {
-		this.session = session;
-	}
+    public void setSession(Map session) {
+        this.session = session;
+    }
 
-	public String getContextName() {
-		return contextName;
-	}
+    public String getContextName() {
+        return contextName;
+    }
 
-	public void setContextName(String contextName) {
-		this.contextName = contextName;
-	}
+    public void setContextName(String contextName) {
+        this.contextName = contextName;
+    }
 
-	public int getContextObjectId() {
-		return contextObjectId;
-	}
+    public int getContextObjectId() {
+        return contextObjectId;
+    }
 
-	public void setContextObjectId(int contextObjectId) {
-		this.contextObjectId = contextObjectId;
-	}
+    public void setContextObjectId(int contextObjectId) {
+        this.contextObjectId = contextObjectId;
+    }
 }

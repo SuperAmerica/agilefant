@@ -10,31 +10,31 @@ package fi.hut.soberit.agilefant.web;
  * @author khel
  */
 public interface CRUDAction {
-	/**
-	 * Creates an object that can be manipulated and stored.
-	 * 
-	 * @return Result of the action. (See com.opensymphony.xwork.Action)
-	 */
-	public String create();
+    /**
+     * Creates an object that can be manipulated and stored.
+     * 
+     * @return Result of the action. (See com.opensymphony.xwork.Action)
+     */
+    public String create();
 
-	/**
-	 * Deletes an object.
-	 * 
-	 * @return Result of the action. (See com.opensymphony.xwork.Action)
-	 */
-	public String delete();
+    /**
+     * Deletes an object.
+     * 
+     * @return Result of the action. (See com.opensymphony.xwork.Action)
+     */
+    public String delete();
 
-	/**
-	 * Stores the object.
-	 * 
-	 * @return Result of the action. (See com.opensymphony.xwork.Action)
-	 */
-	public String store();
+    /**
+     * Stores the object.
+     * 
+     * @return Result of the action. (See com.opensymphony.xwork.Action)
+     */
+    public String store();
 
-	/**
-	 * Fetches the object for editing.
-	 * 
-	 * @return Result of the action. (See com.opensymphony.xwork.Action)
-	 */
-	public String edit();
+    /**
+     * Fetches the object for editing.
+     * 
+     * @return Result of the action. (See com.opensymphony.xwork.Action)
+     */
+    public String edit();
 }

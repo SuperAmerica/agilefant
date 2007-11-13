@@ -23,63 +23,63 @@ import org.hibernate.annotations.Type;
 @Entity
 public class Practice {
 
-	private int id;
+    private int id;
 
-	private String name;
+    private String name;
 
-	private String description;
+    private String description;
 
-	private PracticeTemplate template;
+    private PracticeTemplate template;
 
-	/**
-	 * Get the id of this object.
-	 * <p>
-	 * The id is unique among all practices.
-	 */
-	// tag this field as the id
-	@Id
-	// generate automatically
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	// not nullable
-	@Column(nullable = false)
-	public int getId() {
-		return id;
-	}
+    /**
+     * Get the id of this object.
+     * <p>
+     * The id is unique among all practices.
+     */
+    // tag this field as the id
+    @Id
+    // generate automatically
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    // not nullable
+    @Column(nullable = false)
+    public int getId() {
+        return id;
+    }
 
-	/**
-	 * Set the id of this object.
-	 * <p>
-	 * You shouldn't normally call this.
-	 */
-	public void setId(int id) {
-		this.id = id;
-	}
+    /**
+     * Set the id of this object.
+     * <p>
+     * You shouldn't normally call this.
+     */
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	@Type(type = "escaped_text")
-	public String getDescription() {
-		return description;
-	}
+    @Type(type = "escaped_text")
+    public String getDescription() {
+        return description;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	@Type(type = "escaped_truncated_varchar")
-	public String getName() {
-		return name;
-	}
+    @Type(type = "escaped_truncated_varchar")
+    public String getName() {
+        return name;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	@ManyToOne
-	public PracticeTemplate getTemplate() {
-		return template;
-	}
+    @ManyToOne
+    public PracticeTemplate getTemplate() {
+        return template;
+    }
 
-	public void setTemplate(PracticeTemplate template) {
-		this.template = template;
-	}
+    public void setTemplate(PracticeTemplate template) {
+        this.template = template;
+    }
 
 }

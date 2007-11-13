@@ -8,124 +8,124 @@ import fi.hut.soberit.agilefant.model.Task;
 
 public class HourReportAction extends ActionSupport implements CRUDAction {
 
-	private static final long serialVersionUID = -8560828440589313663L;
+    private static final long serialVersionUID = -8560828440589313663L;
 
-	private int taskId;
+    private int taskId;
 
-	// private int backlogItemId;
-	private Task task;
+    // private int backlogItemId;
+    private Task task;
 
-	private TaskDAO taskDAO;
+    private TaskDAO taskDAO;
 
-	// private BacklogItemDAO backlogItemDAO;
+    // private BacklogItemDAO backlogItemDAO;
 
-	public String create() {
-		taskId = 0;
-		task = new Task();
-		return Action.SUCCESS;
-	}
+    public String create() {
+        taskId = 0;
+        task = new Task();
+        return Action.SUCCESS;
+    }
 
-	public String edit() {
-		task = taskDAO.get(taskId);
-		if (task == null) {
-			super.addActionError(super.getText("task.notFound"));
-			return Action.ERROR;
-		}
-		// backlogItemId = task.getBacklogItem().getId();
-		return Action.SUCCESS;
-	}
+    public String edit() {
+        task = taskDAO.get(taskId);
+        if (task == null) {
+            super.addActionError(super.getText("task.notFound"));
+            return Action.ERROR;
+        }
+        // backlogItemId = task.getBacklogItem().getId();
+        return Action.SUCCESS;
+    }
 
-	public String store() {
-		Task storable = new Task();
-		if (taskId > 0) {
-			storable = taskDAO.get(taskId);
-			if (storable == null) {
-				super.addActionError(super.getText("task.notFound"));
-				return Action.ERROR;
-			}
-		}
-		this.fillStorable(storable);
+    public String store() {
+        Task storable = new Task();
+        if (taskId > 0) {
+            storable = taskDAO.get(taskId);
+            if (storable == null) {
+                super.addActionError(super.getText("task.notFound"));
+                return Action.ERROR;
+            }
+        }
+        this.fillStorable(storable);
 
-		if (super.hasActionErrors()) {
-			return Action.ERROR;
-		}
-		taskDAO.store(storable);
-		return Action.SUCCESS;
-	}
+        if (super.hasActionErrors()) {
+            return Action.ERROR;
+        }
+        taskDAO.store(storable);
+        return Action.SUCCESS;
+    }
 
-	public String delete() {
-		task = taskDAO.get(taskId);
-		if (task == null) {
-			super.addActionError(super.getText("task.notFound"));
-			return Action.ERROR;
-		}
-		// BacklogItem backlogItem = task.getBacklogItem();
-		// backlogItemId = backlogItem.getId();
-		// backlogItem.getTasks().remove(task);
-		// task.setBacklogItem(null);
-		taskDAO.remove(task);
-		return Action.SUCCESS;
-	}
+    public String delete() {
+        task = taskDAO.get(taskId);
+        if (task == null) {
+            super.addActionError(super.getText("task.notFound"));
+            return Action.ERROR;
+        }
+        // BacklogItem backlogItem = task.getBacklogItem();
+        // backlogItemId = backlogItem.getId();
+        // backlogItem.getTasks().remove(task);
+        // task.setBacklogItem(null);
+        taskDAO.remove(task);
+        return Action.SUCCESS;
+    }
 
-	protected void fillStorable(Task storable) {
-		// if (storable.getBacklogItem() == null){
-		// BacklogItem backlogItem = backlogItemDAO.get(backlogItemId);
-		// if (backlogItem == null){
-		// super.addActionError(super.getText("backlogItem.notFound"));
-		// return;
-		// }
-		// storable.setBacklogItem(backlogItem);
-		// backlogItem.getTasks().add(storable);
-		// storable.setCreator(SecurityUtil.getLoggedUser());
-		// }
-		storable.setName(task.getName());
-		storable.setDescription(task.getDescription());
-		// storable.setEffortEstimate(task.getEffortEstimate());
-		// storable.setPerformedEffort(task.getPerformedEffort());
-	}
+    protected void fillStorable(Task storable) {
+        // if (storable.getBacklogItem() == null){
+        // BacklogItem backlogItem = backlogItemDAO.get(backlogItemId);
+        // if (backlogItem == null){
+        // super.addActionError(super.getText("backlogItem.notFound"));
+        // return;
+        // }
+        // storable.setBacklogItem(backlogItem);
+        // backlogItem.getTasks().add(storable);
+        // storable.setCreator(SecurityUtil.getLoggedUser());
+        // }
+        storable.setName(task.getName());
+        storable.setDescription(task.getDescription());
+        // storable.setEffortEstimate(task.getEffortEstimate());
+        // storable.setPerformedEffort(task.getPerformedEffort());
+    }
 
-	public int getDeliverableId() {
-		return taskId;
-	}
+    public int getDeliverableId() {
+        return taskId;
+    }
 
-	public void setDeliverableId(int deliverableId) {
-		this.taskId = deliverableId;
-	}
+    public void setDeliverableId(int deliverableId) {
+        this.taskId = deliverableId;
+    }
 
-	public Task getTask() {
-		return task;
-	}
+    public Task getTask() {
+        return task;
+    }
 
-	public void setDeliverable(Task task) {
-		this.task = task;
-	}
+    public void setDeliverable(Task task) {
+        this.task = task;
+    }
 
-	public void setTaskDAO(TaskDAO taskDAO) {
-		this.taskDAO = taskDAO;
-	}
+    public void setTaskDAO(TaskDAO taskDAO) {
+        this.taskDAO = taskDAO;
+    }
 
-	//
-	// public int getBacklogItemId() {
-	// return backlogItemId;
-	// }
-	//
-	// public void setBacklogItemId(int backlogItemId) {
-	// this.backlogItemId = backlogItemId;
-	// }
-	//
-	public int getTaskId() {
-		return taskId;
-	}
+    //
+    // public int getBacklogItemId() {
+    // return backlogItemId;
+    // }
+    //
+    // public void setBacklogItemId(int backlogItemId) {
+    // this.backlogItemId = backlogItemId;
+    // }
+    //
+    public int getTaskId() {
+        return taskId;
+    }
 
-	public void setTaskId(int taskId) {
-		this.taskId = taskId;
-	}
+    public void setTaskId(int taskId) {
+        this.taskId = taskId;
+    }
 
-	public void setTask(Task task) {
-		this.task = task;
-	}
+    public void setTask(Task task) {
+        this.task = task;
+    }
 
-	// public void setBacklogItemDAO(BacklogItemDAO backlogItemDAO) {
-	// this.backlogItemDAO = backlogItemDAO;
-	// }
+    // public void setBacklogItemDAO(BacklogItemDAO backlogItemDAO) {
+    // this.backlogItemDAO = backlogItemDAO;
+    // }
 }

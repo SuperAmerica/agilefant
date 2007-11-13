@@ -15,54 +15,54 @@ import fi.hut.soberit.agilefant.security.SecurityUtil;
  */
 public class RefreshUserInterceptor implements Interceptor {
 
-	private static final long serialVersionUID = 1668784370092320107L;
+    private static final long serialVersionUID = 1668784370092320107L;
 
-	private Logger log = Logger.getLogger(RefreshUserInterceptor.class);
+    private Logger log = Logger.getLogger(RefreshUserInterceptor.class);
 
-	private UserDAO userDAO;
+    private UserDAO userDAO;
 
-	public void destroy() {
-	}
+    public void destroy() {
+    }
 
-	public void init() {
-	}
+    public void init() {
+    }
 
-	public String intercept(ActionInvocation invocation) throws Exception {
+    public String intercept(ActionInvocation invocation) throws Exception {
 
-		int userId;
+        int userId;
 
-		try {
-			// get the current user id
-			userId = SecurityUtil.getLoggedUserId();
-		} catch (IllegalStateException e) {
-			// no logged user
+        try {
+            // get the current user id
+            userId = SecurityUtil.getLoggedUserId();
+        } catch (IllegalStateException e) {
+            // no logged user
 
-			log.warn("no user found to be assigned");
+            log.warn("no user found to be assigned");
 
-			SecurityUtil.setLoggedUser(null);
+            SecurityUtil.setLoggedUser(null);
 
-			return invocation.invoke();
-		}
+            return invocation.invoke();
+        }
 
-		// get the user object corresponding to the id
-		User user = userDAO.get(userId);
+        // get the user object corresponding to the id
+        User user = userDAO.get(userId);
 
-		// before the request:
-		// set this user as the logged user
-		SecurityUtil.setLoggedUser(user);
+        // before the request:
+        // set this user as the logged user
+        SecurityUtil.setLoggedUser(user);
 
-		// perform request
-		String result = invocation.invoke();
+        // perform request
+        String result = invocation.invoke();
 
-		// after the request:
-		// reset the logged user
-		SecurityUtil.setLoggedUser(null);
+        // after the request:
+        // reset the logged user
+        SecurityUtil.setLoggedUser(null);
 
-		return result;
-	}
+        return result;
+    }
 
-	public void setUserDAO(UserDAO userDAO) {
-		this.userDAO = userDAO;
-	}
+    public void setUserDAO(UserDAO userDAO) {
+        this.userDAO = userDAO;
+    }
 
 }

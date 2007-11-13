@@ -17,21 +17,21 @@ import org.hibernate.annotations.Type;
 @Entity
 public class TaskComment extends TaskEvent {
 
-	private String comment;
+    private String comment;
 
-	public TaskComment() {
-	}
+    public TaskComment() {
+    }
 
-	public TaskComment(User actor, Task task, Date created) {
-		super(actor, task, created);
-	}
+    public TaskComment(User actor, Task task, Date created) {
+        super(actor, task, created);
+    }
 
-	@Type(type = "escaped_text")
-	public String getComment() {
-		return comment;
-	}
+    @Type(type = "escaped_text")
+    public String getComment() {
+        return comment;
+    }
 
-	public void setComment(String comment) {
-		this.comment = comment;
-	}
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
 }

@@ -25,48 +25,48 @@ import org.hibernate.annotations.Type;
 @Entity
 public class PerformedWork extends EstimateHistoryEvent {
 
-	private AFTime effort;
+    private AFTime effort;
 
-	private WorkType workType;
+    private WorkType workType;
 
-	private Date workDate;
+    private Date workDate;
 
-	public PerformedWork() {
-	}
+    public PerformedWork() {
+    }
 
-	public PerformedWork(User actor, Task task, Date created,
-			AFTime newEstimate, AFTime effort, Date workDate) {
-		super(actor, task, created, newEstimate);
-		this.effort = effort;
-		this.workDate = workDate;
-	}
+    public PerformedWork(User actor, Task task, Date created,
+            AFTime newEstimate, AFTime effort, Date workDate) {
+        super(actor, task, created, newEstimate);
+        this.effort = effort;
+        this.workDate = workDate;
+    }
 
-	/** Work type */
-	@ManyToOne
-	public WorkType getWorkType() {
-		return workType;
-	}
+    /** Work type */
+    @ManyToOne
+    public WorkType getWorkType() {
+        return workType;
+    }
 
-	public void setWorkType(WorkType workType) {
-		this.workType = workType;
-	}
+    public void setWorkType(WorkType workType) {
+        this.workType = workType;
+    }
 
-	/** Amount of work done */
-	@Type(type = "af_time")
-	public AFTime getEffort() {
-		return effort;
-	}
+    /** Amount of work done */
+    @Type(type = "af_time")
+    public AFTime getEffort() {
+        return effort;
+    }
 
-	public void setEffort(AFTime effort) {
-		this.effort = effort;
-	}
+    public void setEffort(AFTime effort) {
+        this.effort = effort;
+    }
 
-	/** date of work */
-	public Date getWorkDate() {
-		return workDate;
-	}
+    /** date of work */
+    public Date getWorkDate() {
+        return workDate;
+    }
 
-	public void setWorkDate(Date workDate) {
-		this.workDate = workDate;
-	}
+    public void setWorkDate(Date workDate) {
+        this.workDate = workDate;
+    }
 }

@@ -11,8 +11,8 @@ import fi.hut.soberit.agilefant.model.Iteration;
  */
 public interface IterationDAO extends GenericDAO<Iteration> {
 
-	/**
-	 * Get all currently ongoing iterations.
-	 */
-	public Collection<Iteration> getOngoingIterations();
+    /**
+     * Get all currently ongoing iterations.
+     */
+    public Collection<Iteration> getOngoingIterations();
 }

@@ -49,168 +49,168 @@ import org.hibernate.usertype.UserType;
  */
 public abstract class UserTypeFilter implements UserType, ParameterizedType {
 
-	/**
-	 * UserType, to which delegate all actual functionality to.
-	 */
-	UserType subUserType;
+    /**
+     * UserType, to which delegate all actual functionality to.
+     */
+    UserType subUserType;
 
-	/**
-	 * Receives the parameters.
-	 */
-	public void setParameterValues(Properties parameters) {
-		String subTypes = parameters.getProperty("subtypes");
+    /**
+     * Receives the parameters.
+     */
+    public void setParameterValues(Properties parameters) {
+        String subTypes = parameters.getProperty("subtypes");
 
-		if (subTypes == null)
-			throw new HibernateException("no subtypes defined for the filter");
+        if (subTypes == null)
+            throw new HibernateException("no subtypes defined for the filter");
 
-		// separate the first token from the subtype list
+        // separate the first token from the subtype list
 
-		// find first space
-		int firstSpace = subTypes.indexOf(' ');
+        // find first space
+        int firstSpace = subTypes.indexOf(' ');
 
-		String currentType;
+        String currentType;
 
-		// if no space
-		if (firstSpace == -1) {
-			// there's only one token, this is the type name
-			currentType = new String(subTypes);
-			// no more subTypes
-			subTypes = null;
-		} else {
-			// everything before the space is the type name
-			currentType = subTypes.substring(0, firstSpace);
-			// update subTypes to exclude the read token
-			subTypes = subTypes.substring(firstSpace + 1);
-		}
+        // if no space
+        if (firstSpace == -1) {
+            // there's only one token, this is the type name
+            currentType = new String(subTypes);
+            // no more subTypes
+            subTypes = null;
+        } else {
+            // everything before the space is the type name
+            currentType = subTypes.substring(0, firstSpace);
+            // update subTypes to exclude the read token
+            subTypes = subTypes.substring(firstSpace + 1);
+        }
 
-		try {
-			// get a Class instance for the type
-			Class clazz = Class.forName(currentType);
+        try {
+            // get a Class instance for the type
+            Class clazz = Class.forName(currentType);
 
-			// create an instance of that class
-			Object classInstance = clazz.newInstance();
+            // create an instance of that class
+            Object classInstance = clazz.newInstance();
 
-			if (!(classInstance instanceof UserType))
-				throw new HibernateException(
-						"got a subtype class of invalid type: should be subclass of UserType");
+            if (!(classInstance instanceof UserType))
+                throw new HibernateException(
+                        "got a subtype class of invalid type: should be subclass of UserType");
 
-			subUserType = (UserType) classInstance;
+            subUserType = (UserType) classInstance;
 
-			// if the SubType is parametrized
-			if (classInstance instanceof ParameterizedType) {
+            // if the SubType is parametrized
+            if (classInstance instanceof ParameterizedType) {
 
-				// forward our parameters for it, only removing the first token
-				// this enables chaining the filters
+                // forward our parameters for it, only removing the first token
+                // this enables chaining the filters
 
-				Properties newParameters = new Properties(parameters);
+                Properties newParameters = new Properties(parameters);
 
-				// replace subtypes with new type list, with first type removed
-				if (subTypes != null) {
-					newParameters.setProperty("subtypes", subTypes);
-				} else
-					// remove the value totally, if there's no more subtypes
-					newParameters.remove("subtypes");
+                // replace subtypes with new type list, with first type removed
+                if (subTypes != null) {
+                    newParameters.setProperty("subtypes", subTypes);
+                } else
+                    // remove the value totally, if there's no more subtypes
+                    newParameters.remove("subtypes");
 
-				ParameterizedType paramUserType = (ParameterizedType) classInstance;
-				paramUserType.setParameterValues(newParameters);
-			}
-		} catch (ClassNotFoundException cnfe) {
-			throw new HibernateException("subtype not found", cnfe);
-		} catch (IllegalAccessException iae) {
-			throw new HibernateException("invalid subtype", iae);
-		} catch (InstantiationException ie) {
-			throw new HibernateException("invalid subtype", ie);
-		}
-	}
+                ParameterizedType paramUserType = (ParameterizedType) classInstance;
+                paramUserType.setParameterValues(newParameters);
+            }
+        } catch (ClassNotFoundException cnfe) {
+            throw new HibernateException("subtype not found", cnfe);
+        } catch (IllegalAccessException iae) {
+            throw new HibernateException("invalid subtype", iae);
+        } catch (InstantiationException ie) {
+            throw new HibernateException("invalid subtype", ie);
+        }
+    }
 
-	/**
-	 * Subclass implemented method, with modifies the data coming "up" in the
-	 * UserType hierarchy, ie. from the database.
-	 * 
-	 * @param ob
-	 *            value to modify
-	 * @return modified value
-	 */
-	protected Object filterUp(Object ob) {
-		// by default no action
-		return ob;
-	}
+    /**
+     * Subclass implemented method, with modifies the data coming "up" in the
+     * UserType hierarchy, ie. from the database.
+     * 
+     * @param ob
+     *                value to modify
+     * @return modified value
+     */
+    protected Object filterUp(Object ob) {
+        // by default no action
+        return ob;
+    }
 
-	/**
-	 * Subclass implemented method, with modifies the data going "down" in the
-	 * UserType hierarchy, ie. to the database.
-	 * 
-	 * @param ob
-	 *            value to modify
-	 * @return modified value
-	 */
-	protected Object filterDown(Object ob) {
-		// by default no action
-		return ob;
-	}
+    /**
+     * Subclass implemented method, with modifies the data going "down" in the
+     * UserType hierarchy, ie. to the database.
+     * 
+     * @param ob
+     *                value to modify
+     * @return modified value
+     */
+    protected Object filterDown(Object ob) {
+        // by default no action
+        return ob;
+    }
 
-	// "UserType" methods, which are implemented by delegating everything to
-	// subUserType.
-	// All data passed down to subUserType is filtered with FilterDown. All data
-	// from
-	// the subUserType is filtered with filterUp.
-	// ///////////
+    // "UserType" methods, which are implemented by delegating everything to
+    // subUserType.
+    // All data passed down to subUserType is filtered with FilterDown. All data
+    // from
+    // the subUserType is filtered with filterUp.
+    // ///////////
 
-	public int[] sqlTypes() {
-		return subUserType.sqlTypes();
-	}
+    public int[] sqlTypes() {
+        return subUserType.sqlTypes();
+    }
 
-	public Class returnedClass() {
-		return subUserType.returnedClass();
-	}
+    public Class returnedClass() {
+        return subUserType.returnedClass();
+    }
 
-	public boolean isMutable() {
-		return subUserType.isMutable();
-	}
+    public boolean isMutable() {
+        return subUserType.isMutable();
+    }
 
-	public Object deepCopy(Object value) {
-		Object ob = subUserType.deepCopy(filterDown(value));
-		return filterUp(ob);
-	}
+    public Object deepCopy(Object value) {
+        Object ob = subUserType.deepCopy(filterDown(value));
+        return filterUp(ob);
+    }
 
-	public boolean equals(Object x, Object y) {
-		return subUserType.equals(filterDown(x), filterDown(y));
-	}
+    public boolean equals(Object x, Object y) {
+        return subUserType.equals(filterDown(x), filterDown(y));
+    }
 
-	public Object replace(Object original, Object target, Object owner)
-			throws HibernateException {
-		Object ob = subUserType.replace(filterDown(original),
-				filterDown(target), owner);
-		return filterUp(ob);
-	}
+    public Object replace(Object original, Object target, Object owner)
+            throws HibernateException {
+        Object ob = subUserType.replace(filterDown(original),
+                filterDown(target), owner);
+        return filterUp(ob);
+    }
 
-	public Object nullSafeGet(ResultSet resultSet, String[] names, Object owner)
-			throws HibernateException, SQLException {
+    public Object nullSafeGet(ResultSet resultSet, String[] names, Object owner)
+            throws HibernateException, SQLException {
 
-		Object ob = subUserType.nullSafeGet(resultSet, names, owner);
+        Object ob = subUserType.nullSafeGet(resultSet, names, owner);
 
-		return filterUp(ob);
-	}
+        return filterUp(ob);
+    }
 
-	public void nullSafeSet(PreparedStatement statement, Object value, int index)
-			throws HibernateException, SQLException {
+    public void nullSafeSet(PreparedStatement statement, Object value, int index)
+            throws HibernateException, SQLException {
 
-		Object filteredValue = filterDown(value);
+        Object filteredValue = filterDown(value);
 
-		subUserType.nullSafeSet(statement, filteredValue, index);
-	}
+        subUserType.nullSafeSet(statement, filteredValue, index);
+    }
 
-	public int hashCode(Object x) throws HibernateException {
-		return subUserType.hashCode(filterDown(x));
-	}
+    public int hashCode(Object x) throws HibernateException {
+        return subUserType.hashCode(filterDown(x));
+    }
 
-	public Serializable disassemble(Object value) throws HibernateException {
-		return subUserType.disassemble(filterDown(value));
-	}
+    public Serializable disassemble(Object value) throws HibernateException {
+        return subUserType.disassemble(filterDown(value));
+    }
 
-	public Object assemble(Serializable cached, Object owner)
-			throws HibernateException {
-		Object ob = subUserType.assemble(cached, owner);
-		return filterUp(ob);
-	}
+    public Object assemble(Serializable cached, Object owner)
+            throws HibernateException {
+        Object ob = subUserType.assemble(cached, owner);
+        return filterUp(ob);
+    }
 }

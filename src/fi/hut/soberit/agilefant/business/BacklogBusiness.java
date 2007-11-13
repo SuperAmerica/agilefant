@@ -27,20 +27,20 @@ package fi.hut.soberit.agilefant.business;
  */
 public interface BacklogBusiness {
 
-	/**
-	 * Delete multiple <code>BacklogItems</code> at once.
-	 * 
-	 * @param backlogItemIds
-	 *            <code>Array</code> containing the IDs of the items to
-	 *            delete.
-	 */
-	public void deleteMultipleItems(int backlogId, int backlogItemIds[]);
+    /**
+     * Delete multiple <code>BacklogItems</code> at once.
+     * 
+     * @param backlogItemIds
+     *                <code>Array</code> containing the IDs of the items to
+     *                delete.
+     */
+    public void deleteMultipleItems(int backlogId, int backlogItemIds[]);
 
-	/**
-	 * Updates effort history associated for one <code>Backlog</code>.
-	 * 
-	 * @param backlogId
-	 *            ID of the backlog to be updated.
-	 */
-	public void updateEffortHistory(int backlogId);
+    /**
+     * Updates effort history associated for one <code>Backlog</code>.
+     * 
+     * @param backlogId
+     *                ID of the backlog to be updated.
+     */
+    public void updateEffortHistory(int backlogId);
 }

@@ -8,5 +8,5 @@ import fi.hut.soberit.agilefant.model.Portfolio;
 
 public interface PortfolioManager {
 
-	public Portfolio getCurrentPortfolio();
+    public Portfolio getCurrentPortfolio();
 }

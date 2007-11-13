@@ -10,42 +10,42 @@ import fi.hut.soberit.agilefant.service.PortfolioManager;
 
 public class PortfolioAction extends ActionSupport {
 
-	private static final long serialVersionUID = -4749839976470627112L;
+    private static final long serialVersionUID = -4749839976470627112L;
 
-	private PortfolioManager portfolioManager;
+    private PortfolioManager portfolioManager;
 
-	private Portfolio portfolio;
+    private Portfolio portfolio;
 
-	private Date startDate;
+    private Date startDate;
 
-	private Date endDate;
+    private Date endDate;
 
-	public Portfolio getPortfolio() {
-		return portfolio;
-	}
+    public Portfolio getPortfolio() {
+        return portfolio;
+    }
 
-	public void setPortfolioManager(PortfolioManager portfolioManager) {
-		this.portfolioManager = portfolioManager;
-	}
+    public void setPortfolioManager(PortfolioManager portfolioManager) {
+        this.portfolioManager = portfolioManager;
+    }
 
-	public String execute() {
-		portfolio = portfolioManager.getCurrentPortfolio();
-		return Action.SUCCESS;
-	}
+    public String execute() {
+        portfolio = portfolioManager.getCurrentPortfolio();
+        return Action.SUCCESS;
+    }
 
-	public Date getEndDate() {
-		return endDate;
-	}
+    public Date getEndDate() {
+        return endDate;
+    }
 
-	public void setEndDate(Date endDate) {
-		this.endDate = endDate;
-	}
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
 
-	public Date getStartDate() {
-		return startDate;
-	}
+    public Date getStartDate() {
+        return startDate;
+    }
 
-	public void setStartDate(Date startDate) {
-		this.startDate = startDate;
-	}
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
 }

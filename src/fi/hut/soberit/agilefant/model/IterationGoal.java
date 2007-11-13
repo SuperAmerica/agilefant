@@ -38,104 +38,104 @@ import fi.hut.soberit.agilefant.web.page.PageItem;
 @Entity
 public class IterationGoal implements PageItem {
 
-	private int id;
+    private int id;
 
-	private Iteration iteration;
+    private Iteration iteration;
 
-	private String name;
+    private String name;
 
-	private String description;
+    private String description;
 
-	private Collection<BacklogItem> backlogItems = new HashSet<BacklogItem>();
+    private Collection<BacklogItem> backlogItems = new HashSet<BacklogItem>();
 
-	private Integer priority;
+    private Integer priority;
 
-	// the default status is "looking good"
-	private IterationGoalStatus status = IterationGoalStatus.LOOKING_GOOD;
+    // the default status is "looking good"
+    private IterationGoalStatus status = IterationGoalStatus.LOOKING_GOOD;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(nullable = false)
-	public int getId() {
-		return id;
-	}
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(nullable = false)
+    public int getId() {
+        return id;
+    }
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	@Type(type = "escaped_truncated_varchar")
-	public String getName() {
-		return name;
-	}
+    @Type(type = "escaped_truncated_varchar")
+    public String getName() {
+        return name;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	@Type(type = "escaped_text")
-	public String getDescription() {
-		return description;
-	}
+    @Type(type = "escaped_text")
+    public String getDescription() {
+        return description;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	/** {@inheritDoc} */
-	@Transient
-	public boolean hasChildren() {
-		return false;
-	}
+    /** {@inheritDoc} */
+    @Transient
+    public boolean hasChildren() {
+        return false;
+    }
 
-	/** {@inheritDoc} */
-	@Transient
-	public Collection<PageItem> getChildren() {
-		return null;
-	}
+    /** {@inheritDoc} */
+    @Transient
+    public Collection<PageItem> getChildren() {
+        return null;
+    }
 
-	/** {@inheritDoc} */
-	@Transient
-	public PageItem getParent() {
-		return getIteration();
-	}
+    /** {@inheritDoc} */
+    @Transient
+    public PageItem getParent() {
+        return getIteration();
+    }
 
-	@ManyToOne
-	@JoinColumn(nullable = false)
-	public Iteration getIteration() {
-		return iteration;
-	}
+    @ManyToOne
+    @JoinColumn(nullable = false)
+    public Iteration getIteration() {
+        return iteration;
+    }
 
-	public void setIteration(Iteration iteration) {
-		this.iteration = iteration;
-	}
+    public void setIteration(Iteration iteration) {
+        this.iteration = iteration;
+    }
 
-	@Type(type = "fi.hut.soberit.agilefant.db.hibernate.EnumUserType", parameters = {
-			@Parameter(name = "useOrdinal", value = "true"),
-			@Parameter(name = "enumClassName", value = "fi.hut.soberit.agilefant.model.IterationGoalStatus") })
-	public IterationGoalStatus getStatus() {
-		return status;
-	}
+    @Type(type = "fi.hut.soberit.agilefant.db.hibernate.EnumUserType", parameters = {
+            @Parameter(name = "useOrdinal", value = "true"),
+            @Parameter(name = "enumClassName", value = "fi.hut.soberit.agilefant.model.IterationGoalStatus") })
+    public IterationGoalStatus getStatus() {
+        return status;
+    }
 
-	public void setStatus(IterationGoalStatus status) {
-		this.status = status;
-	}
+    public void setStatus(IterationGoalStatus status) {
+        this.status = status;
+    }
 
-	@OneToMany(mappedBy = "iterationGoal")
-	public Collection<BacklogItem> getBacklogItems() {
-		return backlogItems;
-	}
+    @OneToMany(mappedBy = "iterationGoal")
+    public Collection<BacklogItem> getBacklogItems() {
+        return backlogItems;
+    }
 
-	public void setBacklogItems(Collection<BacklogItem> backlogItems) {
-		this.backlogItems = backlogItems;
-	}
+    public void setBacklogItems(Collection<BacklogItem> backlogItems) {
+        this.backlogItems = backlogItems;
+    }
 
-	@Column(nullable = true)
-	public Integer getPriority() {
-		return priority;
-	}
+    @Column(nullable = true)
+    public Integer getPriority() {
+        return priority;
+    }
 
-	public void setPriority(Integer priority) {
-		this.priority = priority;
-	}
+    public void setPriority(Integer priority) {
+        this.priority = priority;
+    }
 }

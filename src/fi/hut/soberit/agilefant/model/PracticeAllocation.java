@@ -28,74 +28,74 @@ import org.hibernate.annotations.Type;
 @Entity
 public class PracticeAllocation {
 
-	private int id;
+    private int id;
 
-	private Task task;
+    private Task task;
 
-	private Practice practice;
+    private Practice practice;
 
-	private PracticeStatus status = PracticeStatus.NOT_STARTED;
+    private PracticeStatus status = PracticeStatus.NOT_STARTED;
 
-	PracticeAllocation() {
-	}
+    PracticeAllocation() {
+    }
 
-	PracticeAllocation(Practice practice, Task task) {
-		this.practice = practice;
-		this.task = task;
-	}
+    PracticeAllocation(Practice practice, Task task) {
+        this.practice = practice;
+        this.task = task;
+    }
 
-	/**
-	 * Get the id of this object.
-	 * <p>
-	 * The id is unique among all practice allocations.
-	 */
-	// tag this field as the id
-	@Id
-	// generate automatically
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	// not nullable
-	@Column(nullable = false)
-	public int getId() {
-		return id;
-	}
+    /**
+     * Get the id of this object.
+     * <p>
+     * The id is unique among all practice allocations.
+     */
+    // tag this field as the id
+    @Id
+    // generate automatically
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    // not nullable
+    @Column(nullable = false)
+    public int getId() {
+        return id;
+    }
 
-	/**
-	 * Set the id of this object.
-	 * <p>
-	 * You shouldn't normally call this.
-	 */
-	public void setId(int id) {
-		this.id = id;
-	}
+    /**
+     * Set the id of this object.
+     * <p>
+     * You shouldn't normally call this.
+     */
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	@Type(type = "fi.hut.soberit.agilefant.db.hibernate.EnumUserType", parameters = {
-			@Parameter(name = "useOrdinal", value = "true"),
-			@Parameter(name = "enumClassName", value = "fi.hut.soberit.agilefant.model.PracticeStatus") })
-	public PracticeStatus getStatus() {
-		return status;
-	}
+    @Type(type = "fi.hut.soberit.agilefant.db.hibernate.EnumUserType", parameters = {
+            @Parameter(name = "useOrdinal", value = "true"),
+            @Parameter(name = "enumClassName", value = "fi.hut.soberit.agilefant.model.PracticeStatus") })
+    public PracticeStatus getStatus() {
+        return status;
+    }
 
-	public void setStatus(PracticeStatus status) {
-		this.status = status;
-	}
+    public void setStatus(PracticeStatus status) {
+        this.status = status;
+    }
 
-	@OneToOne
-	public Practice getPractice() {
-		return practice;
-	}
+    @OneToOne
+    public Practice getPractice() {
+        return practice;
+    }
 
-	public void setPractice(Practice practice) {
-		this.practice = practice;
-	}
+    public void setPractice(Practice practice) {
+        this.practice = practice;
+    }
 
-	@ManyToOne
-	@JoinColumn(nullable = true)
-	public Task getTask() {
-		return task;
-	}
+    @ManyToOne
+    @JoinColumn(nullable = true)
+    public Task getTask() {
+        return task;
+    }
 
-	public void setTask(Task task) {
-		this.task = task;
-	}
+    public void setTask(Task task) {
+        this.task = task;
+    }
 
 }

@@ -60,215 +60,215 @@ import fi.hut.soberit.agilefant.web.page.PageItem;
 @Entity
 public class Task implements PageItem, Assignable, EffortContainer {
 
-	private int id;
+    private int id;
 
-	private Priority priority;
+    private Priority priority;
 
-	private TaskStatus status = TaskStatus.NOT_STARTED;
+    private TaskStatus status = TaskStatus.NOT_STARTED;
 
-	private AFTime effortEstimate;
+    private AFTime effortEstimate;
 
-	private AFTime performedEffort;
+    private AFTime performedEffort;
 
-	private String name;
+    private String name;
 
-	private String description;
+    private String description;
 
-	private BacklogItem backlogItem;
+    private BacklogItem backlogItem;
 
-	private Date created;
+    private Date created;
 
-	private User assignee;
+    private User assignee;
 
-	private User creator;
+    private User creator;
 
-	private Collection<TaskEvent> events = new HashSet<TaskEvent>();
+    private Collection<TaskEvent> events = new HashSet<TaskEvent>();
 
-	private Map<Integer, User> watchers = new HashMap<Integer, User>();
+    private Map<Integer, User> watchers = new HashMap<Integer, User>();
 
-	private Collection<PracticeAllocation> practices = new HashSet<PracticeAllocation>();
+    private Collection<PracticeAllocation> practices = new HashSet<PracticeAllocation>();
 
-	@Type(type = "escaped_text")
-	public String getDescription() {
-		return description;
-	}
+    @Type(type = "escaped_text")
+    public String getDescription() {
+        return description;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	/**
-	 * Get the id of this object.
-	 * <p>
-	 * The id is unique among all tasks.
-	 */
-	// tag this field as the id
-	@Id
-	// generate automatically
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	// not nullable
-	@Column(nullable = false)
-	public int getId() {
-		return id;
-	}
+    /**
+     * Get the id of this object.
+     * <p>
+     * The id is unique among all tasks.
+     */
+    // tag this field as the id
+    @Id
+    // generate automatically
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    // not nullable
+    @Column(nullable = false)
+    public int getId() {
+        return id;
+    }
 
-	/**
-	 * Set the id of this object.
-	 * <p>
-	 * You shouldn't normally call this.
-	 */
-	public void setId(int id) {
-		this.id = id;
-	}
+    /**
+     * Set the id of this object.
+     * <p>
+     * You shouldn't normally call this.
+     */
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	@Type(type = "escaped_truncated_varchar")
-	public String getName() {
-		return name;
-	}
+    @Type(type = "escaped_truncated_varchar")
+    public String getName() {
+        return name;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public Date getCreated() {
-		return created;
-	}
+    public Date getCreated() {
+        return created;
+    }
 
-	public void setCreated(Date created) {
-		this.created = created;
-	}
+    public void setCreated(Date created) {
+        this.created = created;
+    }
 
-	@ManyToOne
-	public User getCreator() {
-		return creator;
-	}
+    @ManyToOne
+    public User getCreator() {
+        return creator;
+    }
 
-	public void setCreator(User creator) {
-		this.creator = creator;
-	}
+    public void setCreator(User creator) {
+        this.creator = creator;
+    }
 
-	/** {@inheritDoc} */
-	@ManyToOne
-	public User getAssignee() {
-		return assignee;
-	}
+    /** {@inheritDoc} */
+    @ManyToOne
+    public User getAssignee() {
+        return assignee;
+    }
 
-	/** {@inheritDoc} */
-	public void setAssignee(User assignee) {
-		this.assignee = assignee;
-	}
+    /** {@inheritDoc} */
+    public void setAssignee(User assignee) {
+        this.assignee = assignee;
+    }
 
-	@OneToMany(mappedBy = "task")
-	@OnDelete(action = OnDeleteAction.CASCADE)
-	@OrderBy(value = "created")
-	public Collection<TaskEvent> getEvents() {
-		return events;
-	}
+    @OneToMany(mappedBy = "task")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @OrderBy(value = "created")
+    public Collection<TaskEvent> getEvents() {
+        return events;
+    }
 
-	public void setEvents(Collection<TaskEvent> events) {
-		this.events = events;
-	}
+    public void setEvents(Collection<TaskEvent> events) {
+        this.events = events;
+    }
 
-	@Type(type = "af_time")
-	public AFTime getEffortEstimate() {
-		return effortEstimate;
-	}
+    @Type(type = "af_time")
+    public AFTime getEffortEstimate() {
+        return effortEstimate;
+    }
 
-	@Type(type = "af_time")
-	@Formula(value = "(select SUM(e.effort) from TaskEvent e "
-			+ "where e.eventType = 'PerformedWork' and e.task_id = id)")
-	public AFTime getPerformedEffort() {
-		return performedEffort;
-	}
+    @Type(type = "af_time")
+    @Formula(value = "(select SUM(e.effort) from TaskEvent e "
+            + "where e.eventType = 'PerformedWork' and e.task_id = id)")
+    public AFTime getPerformedEffort() {
+        return performedEffort;
+    }
 
-	protected void setPerformedEffort(AFTime performedEffort) {
-		this.performedEffort = performedEffort;
-	}
+    protected void setPerformedEffort(AFTime performedEffort) {
+        this.performedEffort = performedEffort;
+    }
 
-	public void setEffortEstimate(AFTime effortEstimate) {
-		this.effortEstimate = effortEstimate;
-	}
+    public void setEffortEstimate(AFTime effortEstimate) {
+        this.effortEstimate = effortEstimate;
+    }
 
-	@ManyToOne
-	@JoinColumn(nullable = false)
-	public BacklogItem getBacklogItem() {
-		return backlogItem;
-	}
+    @ManyToOne
+    @JoinColumn(nullable = false)
+    public BacklogItem getBacklogItem() {
+        return backlogItem;
+    }
 
-	public void setBacklogItem(BacklogItem backlogItem) {
-		this.backlogItem = backlogItem;
-	}
+    public void setBacklogItem(BacklogItem backlogItem) {
+        this.backlogItem = backlogItem;
+    }
 
-	/** {@inheritDoc} */
-	@Transient
-	public Collection<PageItem> getChildren() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    /** {@inheritDoc} */
+    @Transient
+    public Collection<PageItem> getChildren() {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-	/** {@inheritDoc} */
-	@Transient
-	public PageItem getParent() {
-		return getBacklogItem();
-	}
+    /** {@inheritDoc} */
+    @Transient
+    public PageItem getParent() {
+        return getBacklogItem();
+    }
 
-	/** {@inheritDoc} */
-	@Transient
-	public boolean hasChildren() {
-		// TODO Auto-generated method stub
-		return false;
-	}
+    /** {@inheritDoc} */
+    @Transient
+    public boolean hasChildren() {
+        // TODO Auto-generated method stub
+        return false;
+    }
 
-	@Type(type = "fi.hut.soberit.agilefant.db.hibernate.EnumUserType", parameters = {
-			@Parameter(name = "useOrdinal", value = "true"),
-			@Parameter(name = "enumClassName", value = "fi.hut.soberit.agilefant.model.Priority") })
-	public Priority getPriority() {
-		return priority;
-	}
+    @Type(type = "fi.hut.soberit.agilefant.db.hibernate.EnumUserType", parameters = {
+            @Parameter(name = "useOrdinal", value = "true"),
+            @Parameter(name = "enumClassName", value = "fi.hut.soberit.agilefant.model.Priority") })
+    public Priority getPriority() {
+        return priority;
+    }
 
-	public void setPriority(Priority priority) {
-		this.priority = priority;
-	}
+    public void setPriority(Priority priority) {
+        this.priority = priority;
+    }
 
-	@Type(type = "fi.hut.soberit.agilefant.db.hibernate.EnumUserType", parameters = {
-			@Parameter(name = "useOrdinal", value = "true"),
-			@Parameter(name = "enumClassName", value = "fi.hut.soberit.agilefant.model.TaskStatus") })
-	public TaskStatus getStatus() {
-		return status;
-	}
+    @Type(type = "fi.hut.soberit.agilefant.db.hibernate.EnumUserType", parameters = {
+            @Parameter(name = "useOrdinal", value = "true"),
+            @Parameter(name = "enumClassName", value = "fi.hut.soberit.agilefant.model.TaskStatus") })
+    public TaskStatus getStatus() {
+        return status;
+    }
 
-	public void setStatus(TaskStatus status) {
-		this.status = status;
-	}
+    public void setStatus(TaskStatus status) {
+        this.status = status;
+    }
 
-	/** Set task to use a template. Not currently in use. */
-	public void useTemplate(PracticeTemplate template) {
+    /** Set task to use a template. Not currently in use. */
+    public void useTemplate(PracticeTemplate template) {
 
-		ArrayList<PracticeAllocation> practiceAllocations = new ArrayList<PracticeAllocation>();
+        ArrayList<PracticeAllocation> practiceAllocations = new ArrayList<PracticeAllocation>();
 
-		for (Practice p : template.getPractices()) {
-			practiceAllocations.add(new PracticeAllocation(p, this));
-		}
+        for (Practice p : template.getPractices()) {
+            practiceAllocations.add(new PracticeAllocation(p, this));
+        }
 
-		setPractices(practiceAllocations);
-	}
+        setPractices(practiceAllocations);
+    }
 
-	@OneToMany(mappedBy = "task")
-	public Collection<PracticeAllocation> getPractices() {
-		return practices;
-	}
+    @OneToMany(mappedBy = "task")
+    public Collection<PracticeAllocation> getPractices() {
+        return practices;
+    }
 
-	public void setPractices(Collection<PracticeAllocation> practices) {
-		this.practices = practices;
-	}
+    public void setPractices(Collection<PracticeAllocation> practices) {
+        this.practices = practices;
+    }
 
-	@ManyToMany()
-	@MapKey()
-	public Map<Integer, User> getWatchers() {
-		return watchers;
-	}
+    @ManyToMany()
+    @MapKey()
+    public Map<Integer, User> getWatchers() {
+        return watchers;
+    }
 
-	public void setWatchers(Map<Integer, User> watchers) {
-		this.watchers = watchers;
-	}
+    public void setWatchers(Map<Integer, User> watchers) {
+        this.watchers = watchers;
+    }
 }

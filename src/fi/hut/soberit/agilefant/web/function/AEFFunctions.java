@@ -22,103 +22,103 @@ import fi.hut.soberit.agilefant.web.page.PortfolioPageItem;
  */
 public class AEFFunctions {
 
-	private static int maxStrLength = 30;
+    private static int maxStrLength = 30;
 
-	public static boolean isProduct(Object obj) {
-		return obj instanceof Product;
-	}
+    public static boolean isProduct(Object obj) {
+        return obj instanceof Product;
+    }
 
-	public static boolean isDeliverable(Object obj) {
-		return obj instanceof Deliverable;
-	}
+    public static boolean isDeliverable(Object obj) {
+        return obj instanceof Deliverable;
+    }
 
-	public static boolean isIteration(Object obj) {
-		return obj instanceof Iteration;
-	}
+    public static boolean isIteration(Object obj) {
+        return obj instanceof Iteration;
+    }
 
-	public static boolean isIterationGoal(Object obj) {
-		return obj instanceof IterationGoal;
-	}
+    public static boolean isIterationGoal(Object obj) {
+        return obj instanceof IterationGoal;
+    }
 
-	public static boolean isBacklogItem(Object obj) {
-		return obj instanceof BacklogItem;
-	}
+    public static boolean isBacklogItem(Object obj) {
+        return obj instanceof BacklogItem;
+    }
 
-	public static boolean isTask(Object obj) {
-		return obj instanceof Task;
-	}
+    public static boolean isTask(Object obj) {
+        return obj instanceof Task;
+    }
 
-	public static boolean isUser(Object obj) {
-		return obj instanceof User;
-	}
+    public static boolean isUser(Object obj) {
+        return obj instanceof User;
+    }
 
-	public static boolean isPortfolio(Object obj) {
-		return obj instanceof PortfolioPageItem;
-	}
+    public static boolean isPortfolio(Object obj) {
+        return obj instanceof PortfolioPageItem;
+    }
 
-	public static boolean isManagementPage(Object obj) {
-		return obj instanceof ManagementPageItem;
-	}
+    public static boolean isManagementPage(Object obj) {
+        return obj instanceof ManagementPageItem;
+    }
 
-	public static boolean isAssignEvent(Object obj) {
-		return obj instanceof AssignEvent;
-	}
+    public static boolean isAssignEvent(Object obj) {
+        return obj instanceof AssignEvent;
+    }
 
-	public static boolean isTaskComment(Object obj) {
-		return obj instanceof TaskComment;
-	}
+    public static boolean isTaskComment(Object obj) {
+        return obj instanceof TaskComment;
+    }
 
-	public static boolean isEstimateHistoryEvent(Object obj) {
-		return obj instanceof EstimateHistoryEvent;
-	}
+    public static boolean isEstimateHistoryEvent(Object obj) {
+        return obj instanceof EstimateHistoryEvent;
+    }
 
-	public static boolean isPerformedWork(Object obj) {
-		return obj instanceof PerformedWork;
-	}
+    public static boolean isPerformedWork(Object obj) {
+        return obj instanceof PerformedWork;
+    }
 
-	/**
-	 * Chop strings to MAX_STR_LENGTH
-	 * 
-	 * @param s
-	 *            string to shorten
-	 * @return shorter string, or original string if length < MAX_STR_LENGTH
-	 */
-	public static String out(String s) {
-		return out(s, maxStrLength, false);
-	}
+    /**
+     * Chop strings to MAX_STR_LENGTH
+     * 
+     * @param s
+     *                string to shorten
+     * @return shorter string, or original string if length < MAX_STR_LENGTH
+     */
+    public static String out(String s) {
+        return out(s, maxStrLength, false);
+    }
 
-	/**
-	 * Shorten strings to specified length
-	 * 
-	 * @param s
-	 *            string to shorten
-	 * @param newLength
-	 *            length
-	 * @return shorter string, or original string if length < newLength
-	 */
-	public static String out(String s, int newLength) {
-		return out(s, newLength, false);
-	}
+    /**
+     * Shorten strings to specified length
+     * 
+     * @param s
+     *                string to shorten
+     * @param newLength
+     *                length
+     * @return shorter string, or original string if length < newLength
+     */
+    public static String out(String s, int newLength) {
+        return out(s, newLength, false);
+    }
 
-	public static String htmlOut(String s) {
-		return out(s, maxStrLength, true);
-	}
+    public static String htmlOut(String s) {
+        return out(s, maxStrLength, true);
+    }
 
-	public static String htmlOut(String s, int newLength) {
-		return out(s, newLength, true);
-	}
+    public static String htmlOut(String s, int newLength) {
+        return out(s, newLength, true);
+    }
 
-	private static String out(String s, int newLength, boolean asHtml) {
-		// String shortString = s.length() > newLength ? s.substring(0,
-		// newLength) + "..." : s;
-		return asHtml ? "<span title=\"" + s + "\">" + s + "</span>" : s;
-	}
+    private static String out(String s, int newLength, boolean asHtml) {
+        // String shortString = s.length() > newLength ? s.substring(0,
+        // newLength) + "..." : s;
+        return asHtml ? "<span title=\"" + s + "\">" + s + "</span>" : s;
+    }
 
-	public void setMaxStrLength(int maxStrLength) {
-		AEFFunctions.maxStrLength = maxStrLength;
-	}
+    public void setMaxStrLength(int maxStrLength) {
+        AEFFunctions.maxStrLength = maxStrLength;
+    }
 
-	public static boolean isBeforeThisDay(Date date) {
-		return date.before(GregorianCalendar.getInstance().getTime());
-	}
+    public static boolean isBeforeThisDay(Date date) {
+        return date.before(GregorianCalendar.getInstance().getTime());
+    }
 }

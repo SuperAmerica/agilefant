@@ -10,66 +10,66 @@ import fi.hut.soberit.agilefant.model.TaskEvent;
 import fi.hut.soberit.agilefant.security.SecurityUtil;
 
 public abstract class TaskEventAction<T extends TaskEvent> extends
-		ActionSupport {
+        ActionSupport {
 
-	private int taskId;
+    private int taskId;
 
-	private TaskDAO taskDAO;
+    private TaskDAO taskDAO;
 
-	private TaskEventDAO taskEventDAO;
+    private TaskEventDAO taskEventDAO;
 
-	private Task task;
+    private Task task;
 
-	public Task getTask() {
-		return task;
-	}
+    public Task getTask() {
+        return task;
+    }
 
-	public void setTask(Task task) {
-		this.task = task;
-	}
+    public void setTask(Task task) {
+        this.task = task;
+    }
 
-	public int getTaskId() {
-		return taskId;
-	}
+    public int getTaskId() {
+        return taskId;
+    }
 
-	public void setTaskId(int taskId) {
-		this.taskId = taskId;
-	}
+    public void setTaskId(int taskId) {
+        this.taskId = taskId;
+    }
 
-	public void setTaskDAO(TaskDAO taskDAO) {
-		this.taskDAO = taskDAO;
-	}
+    public void setTaskDAO(TaskDAO taskDAO) {
+        this.taskDAO = taskDAO;
+    }
 
-	public void setTaskEventDAO(TaskEventDAO taskEventDAO) {
-		this.taskEventDAO = taskEventDAO;
-	}
+    public void setTaskEventDAO(TaskEventDAO taskEventDAO) {
+        this.taskEventDAO = taskEventDAO;
+    }
 
-	public String execute() {
-		T event = this.getEvent();
-		this.fillEvent(event);
+    public String execute() {
+        T event = this.getEvent();
+        this.fillEvent(event);
 
-		taskEventDAO.store(event);
-		return Action.SUCCESS;
-	}
+        taskEventDAO.store(event);
+        return Action.SUCCESS;
+    }
 
-	protected final void fillEvent(T event) {
-		Task fillable = taskDAO.get(taskId);
-		if (this.task.getStatus() != null) {
-			fillable.setStatus(task.getStatus());
-		}
-		task = fillable;
-		task = taskDAO.get(taskId);
-		event.setActor(SecurityUtil.getLoggedUser());
-		this.doFillEvent(event);
-		task.getEvents().add(event);
-		event.setTask(task);
-	}
+    protected final void fillEvent(T event) {
+        Task fillable = taskDAO.get(taskId);
+        if (this.task.getStatus() != null) {
+            fillable.setStatus(task.getStatus());
+        }
+        task = fillable;
+        task = taskDAO.get(taskId);
+        event.setActor(SecurityUtil.getLoggedUser());
+        this.doFillEvent(event);
+        task.getEvents().add(event);
+        event.setTask(task);
+    }
 
-	/**
-	 * Override this to add your code event filling code.
-	 */
-	protected void doFillEvent(T event) {
-	}
+    /**
+     * Override this to add your code event filling code.
+     */
+    protected void doFillEvent(T event) {
+    }
 
-	public abstract T getEvent();
+    public abstract T getEvent();
 }

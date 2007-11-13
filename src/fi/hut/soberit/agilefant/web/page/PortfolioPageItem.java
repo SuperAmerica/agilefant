@@ -7,29 +7,29 @@ import java.util.Collection;
  */
 public class PortfolioPageItem implements PageItem {
 
-	public Collection<PageItem> getChildren() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    public Collection<PageItem> getChildren() {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-	public int getId() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+    public int getId() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
 
-	public String getName() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    public String getName() {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-	public PageItem getParent() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    public PageItem getParent() {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-	public boolean hasChildren() {
-		// TODO Auto-generated method stub
-		return false;
-	}
+    public boolean hasChildren() {
+        // TODO Auto-generated method stub
+        return false;
+    }
 
 }

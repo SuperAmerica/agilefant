@@ -7,9 +7,9 @@ package fi.hut.soberit.agilefant.model;
  * and "done".
  */
 public enum IterationGoalStatus {
-	SKIPPED, LOOKS_BAD, NEEDS_ATTENTION, LOOKING_GOOD, DONE;
+    SKIPPED, LOOKS_BAD, NEEDS_ATTENTION, LOOKING_GOOD, DONE;
 
-	public int getOrdinal() {
-		return this.ordinal();
-	}
+    public int getOrdinal() {
+        return this.ordinal();
+    }
 }

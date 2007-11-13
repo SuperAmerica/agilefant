@@ -11,26 +11,26 @@ import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.IterationGoal;
 
 public class IterationGoalListTag extends SpringTagSupport {
-	private static final long serialVersionUID = 1810440984222729034L;
+    private static final long serialVersionUID = 1810440984222729034L;
 
-	private BacklogDAO backlogDAO;
+    private BacklogDAO backlogDAO;
 
-	private int backlogId;
+    private int backlogId;
 
-	@Override
-	public int doStartTag() throws JspException {
-		backlogDAO = (BacklogDAO) super.getApplicationContext().getBean(
-				"backlogDAO");
-		Backlog backlog = backlogDAO.get(backlogId);
-		if (backlog instanceof Iteration) {
-			Collection<IterationGoal> goals = ((Iteration) backlog)
-					.getIterationGoals();
-			super.getPageContext().setAttribute(super.getId(), goals);
-		}
-		return Tag.EVAL_BODY_INCLUDE;
-	}
+    @Override
+    public int doStartTag() throws JspException {
+        backlogDAO = (BacklogDAO) super.getApplicationContext().getBean(
+                "backlogDAO");
+        Backlog backlog = backlogDAO.get(backlogId);
+        if (backlog instanceof Iteration) {
+            Collection<IterationGoal> goals = ((Iteration) backlog)
+                    .getIterationGoals();
+            super.getPageContext().setAttribute(super.getId(), goals);
+        }
+        return Tag.EVAL_BODY_INCLUDE;
+    }
 
-	public void setBacklogId(int backlogId) {
-		this.backlogId = backlogId;
-	}
+    public void setBacklogId(int backlogId) {
+        this.backlogId = backlogId;
+    }
 }

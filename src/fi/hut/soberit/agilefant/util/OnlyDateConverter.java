@@ -19,45 +19,45 @@ import com.opensymphony.xwork.util.TypeConversionException;
  * pattern. This allows different patterns to be used for different locales.
  */
 public class OnlyDateConverter extends WebWorkTypeConverter implements
-		LocaleProvider {
+        LocaleProvider {
 
-	private TextProvider textProvider = new TextProviderSupport(
-			this.getClass(), this);
+    private TextProvider textProvider = new TextProviderSupport(
+            this.getClass(), this);
 
-	public Locale getLocale() {
-		return ActionContext.getContext().getLocale();
-	}
+    public Locale getLocale() {
+        return ActionContext.getContext().getLocale();
+    }
 
-	@Override
-	public Object convertFromString(Map context, String[] values, Class toClass) {
-		String value = values[0];
+    @Override
+    public Object convertFromString(Map context, String[] values, Class toClass) {
+        String value = values[0];
 
-		DateFormat df = this.getDateFormat();
+        DateFormat df = this.getDateFormat();
 
-		try {
-			return df.parse(value);
-		} catch (ParseException e) {
-			throw new TypeConversionException(e.getMessage());
-		}
-	}
+        try {
+            return df.parse(value);
+        } catch (ParseException e) {
+            throw new TypeConversionException(e.getMessage());
+        }
+    }
 
-	@Override
-	public String convertToString(Map context, Object o) {
-		if (o == null) {
-			return null;
-		}
+    @Override
+    public String convertToString(Map context, Object o) {
+        if (o == null) {
+            return null;
+        }
 
-		Date date = (Date) o;
+        Date date = (Date) o;
 
-		DateFormat df = this.getDateFormat();
+        DateFormat df = this.getDateFormat();
 
-		return df.format(date);
-	}
+        return df.format(date);
+    }
 
-	protected DateFormat getDateFormat() {
-		String pattern = textProvider.getText("webwork.date.format");
-		return new SimpleDateFormat(pattern);
-		// return DateFormat.getDateInstance(DateFormat.SHORT,
-		// ActionContext.getContext().getLocale());
-	}
+    protected DateFormat getDateFormat() {
+        String pattern = textProvider.getText("webwork.date.format");
+        return new SimpleDateFormat(pattern);
+        // return DateFormat.getDateInstance(DateFormat.SHORT,
+        // ActionContext.getContext().getLocale());
+    }
 }

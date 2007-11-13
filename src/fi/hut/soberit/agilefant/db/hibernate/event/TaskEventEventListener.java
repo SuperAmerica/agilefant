@@ -12,13 +12,13 @@ import fi.hut.soberit.agilefant.model.TaskEvent;
  */
 public class TaskEventEventListener implements PreInsertEventListener {
 
-	private static final long serialVersionUID = -4249542180184709345L;
+    private static final long serialVersionUID = -4249542180184709345L;
 
-	public boolean onPreInsert(PreInsertEvent event) {
-		if (event.getEntity() instanceof TaskEvent) {
-			TaskEvent taskEvent = (TaskEvent) event.getEntity();
-			taskEvent.setCreated(Calendar.getInstance().getTime());
-		}
-		return false;
-	}
+    public boolean onPreInsert(PreInsertEvent event) {
+        if (event.getEntity() instanceof TaskEvent) {
+            TaskEvent taskEvent = (TaskEvent) event.getEntity();
+            taskEvent.setCreated(Calendar.getInstance().getTime());
+        }
+        return false;
+    }
 }

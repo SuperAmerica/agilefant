@@ -143,7 +143,7 @@
 		<clover-clean />
 	</target>
 
-	<target name="test-checkstyle" description="Generates a report of code convention violations.">
+	<target name="test-checkstyle-xmlreport" description="Generates a report of code convention violations.">
 		<mkdir dir="${test.reports.checkstyle}" />
 		<taskdef resource="checkstyletask.properties" classpath="${basedir}/lib/checkstyle-all-4.3.jar" />
 		<checkstyle config="${test.conf.dir}/checkstyle/sun_checks.xml" failureProperty="checkstyle.failure" failOnViolation="false">
@@ -153,7 +153,12 @@
 		</checkstyle>
 	</target>
 
-	<target name="test-bamboo" depends="clean,test-clover-enable,compile-tests,test,test-clover-xmlreport,test-clover-clean,test-checkstyle" description="Bamboo uses this target" />
+	<target name="test-checkstyle-htmlreport" depends="test-checkstyle-xmlreport" description="Generates html report of code convention violations.">
+		<xslt in="${test.reports.checkstyle}/checkstyle_report.xml" out="${test.reports.checkstyle}/checkstyle_report.html" style="${test.conf.dir}/checkstyle/checkstyle-noframes-sorted.xsl"/>
+	</target>
+
+
+	<target name="test-bamboo" depends="clean,test-clover-enable,compile-tests,test,test-clover-xmlreport,test-clover-clean,test-checkstyle-xmlreport" description="Bamboo uses this target" />
 
 
 	<target name="compile-tests" depends="compile">

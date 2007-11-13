@@ -93,7 +93,7 @@ public class BacklogTest_getSortedBacklogItems extends TestCase {
 		testlist = (ArrayList<BacklogItem>)this.backlog.getSortedBacklogItems();
 		
 		assertSame("First item does not match",
-				this.notstarted_5, testlist.get(0));
+				this.notstarted_4, testlist.get(0));
 		assertSame("Second item does not match",
 				this.notstarted_4, testlist.get(1));
 		assertSame("Third item does not match",

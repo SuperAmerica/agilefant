@@ -64,9 +64,10 @@ public interface DeliverableDAO extends GenericDAO<Deliverable> {
 	 * @param upperLimitRank
 	 */
 	public void raiseRankBetween(Integer lowLimitRank, Integer upperLimitRank);
-	
+
 	/**
 	 * Finds the biggest Rank among all Deliverables.
+	 * 
 	 * @return
 	 */
 	public List<Integer> findBiggestRank();

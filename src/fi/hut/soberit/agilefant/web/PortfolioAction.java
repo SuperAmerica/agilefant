@@ -9,13 +9,17 @@ import fi.hut.soberit.agilefant.model.Portfolio;
 import fi.hut.soberit.agilefant.service.PortfolioManager;
 
 public class PortfolioAction extends ActionSupport {
-	
+
 	private static final long serialVersionUID = -4749839976470627112L;
+
 	private PortfolioManager portfolioManager;
+
 	private Portfolio portfolio;
+
 	private Date startDate;
+
 	private Date endDate;
-	
+
 	public Portfolio getPortfolio() {
 		return portfolio;
 	}
@@ -24,7 +28,7 @@ public class PortfolioAction extends ActionSupport {
 		this.portfolioManager = portfolioManager;
 	}
 
-	public String execute(){
+	public String execute() {
 		portfolio = portfolioManager.getCurrentPortfolio();
 		return Action.SUCCESS;
 	}

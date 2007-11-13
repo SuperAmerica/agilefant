@@ -6,9 +6,10 @@ import fi.hut.soberit.agilefant.model.WorkType;
 /**
  * Hibernate implementation of WorkTypeDAO interface using GenericDAOHibernate.
  */
-public class WorkTypeDAOHibernate extends GenericDAOHibernate<WorkType> implements WorkTypeDAO {
+public class WorkTypeDAOHibernate extends GenericDAOHibernate<WorkType>
+		implements WorkTypeDAO {
 
-	public WorkTypeDAOHibernate(){
+	public WorkTypeDAOHibernate() {
 		super(WorkType.class);
 	}
 }

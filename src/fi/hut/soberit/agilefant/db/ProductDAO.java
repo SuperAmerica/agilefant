@@ -10,9 +10,10 @@ import fi.hut.soberit.agilefant.model.Product;
  * @see GenericDAO
  */
 public interface ProductDAO extends GenericDAO<Product> {
-	
+
 	/**
 	 * Get all products ordered by name in descending order
+	 * 
 	 * @return all products ordered by name in descending order
 	 */
 	public List<Product> getAllOrderByName();

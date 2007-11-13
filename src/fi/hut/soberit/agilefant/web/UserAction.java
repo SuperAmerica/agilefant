@@ -2,45 +2,53 @@ package fi.hut.soberit.agilefant.web;
 
 import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
-import fi.hut.soberit.agilefant.db.hibernate.EmailValidator;
 
 import fi.hut.soberit.agilefant.db.UserDAO;
+import fi.hut.soberit.agilefant.db.hibernate.EmailValidator;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.security.SecurityUtil;
 
 /**
  * UserAction
+ * 
  * @author khel
  */
-public class UserAction extends ActionSupport implements CRUDAction{
+public class UserAction extends ActionSupport implements CRUDAction {
 
 	private static final long serialVersionUID = 284890678155663442L;
+
 	private int userId;
+
 	private User user;
+
 	private UserDAO userDAO;
+
 	private String password1;
+
 	private String password2;
+
 	private String email;
 
 	public String create() {
 		userId = 0;
 		user = new User();
-		return Action.SUCCESS;		
+		return Action.SUCCESS;
 	}
 
 	public String delete() {
 		User u = userDAO.get(userId);
-		if (u == null){
+		if (u == null) {
 			super.addActionError(super.getText("user.notFound"));
 			return Action.ERROR;
 		}
-		if(u.getAssignables().size() > 0 || u.getWatchedBacklogItems().size() > 0 
+		if (u.getAssignables().size() > 0
+				|| u.getWatchedBacklogItems().size() > 0
 				|| u.getWatchedTasks().size() > 0) {
 			super.addActionError(super.getText("user.hasLinkedItems"));
 			return Action.ERROR;
 		}
-		/* Prevent the deletion of administrator*/
-		if(userId == 1){
+		/* Prevent the deletion of administrator */
+		if (userId == 1) {
 			super.addActionError("User cannot be deleted");
 			return Action.ERROR;
 		}
@@ -50,7 +58,7 @@ public class UserAction extends ActionSupport implements CRUDAction{
 
 	public String edit() {
 		user = userDAO.get(userId);
-		if (user == null){
+		if (user == null) {
 			super.addActionError(super.getText("user.notFound"));
 			return Action.ERROR;
 		}
@@ -59,31 +67,31 @@ public class UserAction extends ActionSupport implements CRUDAction{
 
 	public String store() {
 		User storable = new User();
-		if (userId > 0){
+		if (userId > 0) {
 			storable = userDAO.get(userId);
-			if (storable == null){
+			if (storable == null) {
 				super.addActionError(super.getText("user.notFound"));
 				return Action.ERROR;
 			}
 		}
 		this.fillStorable(storable);
-		if (super.hasActionErrors()){
+		if (super.hasActionErrors()) {
 			return Action.ERROR;
 		}
 		userDAO.store(storable);
 		return Action.SUCCESS;
 	}
-			
-	protected void fillStorable(User storable){
+
+	protected void fillStorable(User storable) {
 		String md5Pw = null;
-		if (password1.length() == 0 && password2.length() == 0){
-			if (storable.getId() == 0){
+		if (password1.length() == 0 && password2.length() == 0) {
+			if (storable.getId() == 0) {
 				super.addActionError(super.getText("user.missingPassword"));
 				return;
 			}
 			md5Pw = storable.getPassword();
 		} else {
-			if (!password1.equals(password2)){
+			if (!password1.equals(password2)) {
 				password1 = "";
 				password2 = "";
 				super.addActionError(super.getText("user.passwordsNotEqual"));
@@ -93,7 +101,7 @@ public class UserAction extends ActionSupport implements CRUDAction{
 			}
 		}
 		User existingUser = userDAO.getUser(this.user.getLoginName());
-		if (existingUser != null && existingUser.getId() != storable.getId()){
+		if (existingUser != null && existingUser.getId() != storable.getId()) {
 			super.addActionError(super.getText("user.loginNameInUse"));
 			return;
 		}
@@ -101,11 +109,11 @@ public class UserAction extends ActionSupport implements CRUDAction{
 		storable.setFullName(this.user.getFullName());
 		storable.setLoginName(this.user.getLoginName());
 		storable.setPassword(md5Pw);
-		if(this.user.getEmail() != null) {
+		if (this.user.getEmail() != null) {
 			EmailValidator e = new EmailValidator();
-			if(!e.isValid(this.user.getEmail())) {				
+			if (!e.isValid(this.user.getEmail())) {
 				super.addActionError(super.getText("user.invalidEmail"));
-				return;				
+				return;
 			}
 		}
 		storable.setEmail(this.user.getEmail());
@@ -130,16 +138,16 @@ public class UserAction extends ActionSupport implements CRUDAction{
 	public void setUserDAO(UserDAO userDAO) {
 		this.userDAO = userDAO;
 	}
-	
+
 	/**
 	 * Method added for testing.
 	 * 
 	 * @return UserDAO-object
 	 */
-/*	protected UserDAO getUserDAO() {
-		return userDAO;
-	}*/
-	
+	/*
+	 * protected UserDAO getUserDAO() { return userDAO; }
+	 */
+
 	public String getPassword1() {
 		return password1;
 	}

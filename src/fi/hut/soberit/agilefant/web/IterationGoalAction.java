@@ -13,14 +13,21 @@ import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.IterationGoal;
 
 public class IterationGoalAction extends ActionSupport implements CRUDAction {
-	
+
 	private static final long serialVersionUID = -8772191083987255387L;
+
 	private IterationDAO iterationDAO;
+
 	private IterationGoalDAO iterationGoalDAO;
+
 	private int iterationId;
+
 	private int iterationGoalId;
+
 	private IterationGoal iterationGoal;
+
 	private Iteration iteration;
+
 	private Collection<IterationGoal> iterationGoals = new ArrayList<IterationGoal>();
 
 	public String create() {
@@ -32,21 +39,21 @@ public class IterationGoalAction extends ActionSupport implements CRUDAction {
 
 	public String delete() {
 		iterationGoal = iterationGoalDAO.get(iterationGoalId);
-		if (iterationGoal == null){
+		if (iterationGoal == null) {
 			super.addActionError(super.getText("iterationgGoal.notFound"));
 			return Action.ERROR;
 		}
-		for(BacklogItem bi : iterationGoal.getBacklogItems()) {
+		for (BacklogItem bi : iterationGoal.getBacklogItems()) {
 			bi.setIterationGoal(null);
 		}
-//		iterationId = iteration.getId();
+		// iterationId = iteration.getId();
 		iterationGoalDAO.remove(iterationGoalId);
 		return Action.SUCCESS;
 	}
 
 	public String edit() {
 		iterationGoal = iterationGoalDAO.get(iterationGoalId);
-		if (iterationGoal == null){
+		if (iterationGoal == null) {
 			super.addActionError(super.getText("iterationgGoal.notFound"));
 			return Action.ERROR;
 		}
@@ -57,41 +64,41 @@ public class IterationGoalAction extends ActionSupport implements CRUDAction {
 
 	public String store() {
 		IterationGoal storable = new IterationGoal();
-		if (iterationGoalId > 0){
+		if (iterationGoalId > 0) {
 			storable = iterationGoalDAO.get(iterationGoalId);
-			if (storable == null){
+			if (storable == null) {
 				super.addActionError(super.getText("iterationgGoal.notFound"));
 				return Action.ERROR;
 			}
 		}
 		this.fillStorable(storable);
-		if (super.hasActionErrors()){
+		if (super.hasActionErrors()) {
 			return Action.ERROR;
 		}
-		if(iterationGoalId == 0)
+		if (iterationGoalId == 0)
 			iterationGoalId = (Integer) iterationGoalDAO.create(storable);
 		else
 			iterationGoalDAO.store(storable);
 		return Action.SUCCESS;
 	}
-	
-	protected void fillStorable(IterationGoal storable){
+
+	protected void fillStorable(IterationGoal storable) {
 		iteration = iterationDAO.get(iterationId);
-		if(this.iterationGoal.getName().equals("")) {
+		if (this.iterationGoal.getName().equals("")) {
 			super.addActionError(super.getText("iterationGoal.missingName"));
 			return;
 		}
 		if (iteration == null)
 			super.addActionError(super.getText("iteration.notFound"));
 		else {
-			if (storable.getId() > 0){
+			if (storable.getId() > 0) {
 				storable.getIteration().getIterationGoals().remove(storable);
 				iteration.getIterationGoals().add(storable);
 			}
 			storable.setIteration(iteration);
 			storable.setName(this.iterationGoal.getName());
 			storable.setDescription(this.iterationGoal.getDescription());
-			//storable.setPriority(this.iterationGoal.getPriority());
+			// storable.setPriority(this.iterationGoal.getPriority());
 		}
 	}
 
@@ -134,6 +141,7 @@ public class IterationGoalAction extends ActionSupport implements CRUDAction {
 	public void setIterationGoalDAO(IterationGoalDAO iterationGoalDAO) {
 		this.iterationGoalDAO = iterationGoalDAO;
 	}
+
 	public Collection<IterationGoal> getIterationGoals() {
 		return iterationGoals;
 	}

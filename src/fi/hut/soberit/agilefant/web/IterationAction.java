@@ -1,11 +1,11 @@
 package fi.hut.soberit.agilefant.web;
 
-import com.opensymphony.xwork.Action;
-import com.opensymphony.xwork.ActionSupport;
-
 import java.text.ParseException;
 import java.util.Collection;
 import java.util.Date;
+
+import com.opensymphony.xwork.Action;
+import com.opensymphony.xwork.ActionSupport;
 
 import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
@@ -14,167 +14,195 @@ import fi.hut.soberit.agilefant.db.EffortHistoryDAO;
 import fi.hut.soberit.agilefant.db.IterationDAO;
 import fi.hut.soberit.agilefant.db.IterationGoalDAO;
 import fi.hut.soberit.agilefant.db.TaskEventDAO;
+import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Deliverable;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.IterationGoal;
-import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.util.BacklogValueInjector;
 import fi.hut.soberit.agilefant.util.EffortHistoryUpdater;
 
 public class IterationAction extends ActionSupport implements CRUDAction {
 
 	private static final long serialVersionUID = -448825368336871703L;
+
 	private int iterationId;
+
 	private Iteration iteration;
+
 	private Backlog backlog;
+
 	private IterationDAO iterationDAO;
+
 	private DeliverableDAO deliverableDAO;
+
 	private TaskEventDAO taskEventDAO;
+
 	private BacklogItemDAO backlogItemDAO;
+
 	private BacklogDAO backlogDAO;
+
 	private Deliverable deliverable;
+
 	private int deliverableId;
+
 	private IterationGoalDAO iterationGoalDAO;
+
 	private EffortHistoryDAO effortHistoryDAO;
+
 	private int iterationGoalId;
+
 	private String startDate;
+
 	private String endDate;
+
 	private String dateFormat;
-	
-	public String create(){
+
+	public String create() {
 		iterationId = 0;
 		iteration = new Iteration();
 		backlog = iteration;
-		return Action.SUCCESS;		
+		return Action.SUCCESS;
 	}
-	
-	public String edit(){
+
+	public String edit() {
 		iteration = iterationDAO.get(iterationId);
 		Date startDate = iteration.getStartDate();
-		
-		if (iteration == null){
-//			super.addActionError(super.getText("iteration.notFound"));
-//			return Action.INPUT;
+
+		if (iteration == null) {
+			// super.addActionError(super.getText("iteration.notFound"));
+			// return Action.INPUT;
 			return Action.SUCCESS;
 		}
 		if (startDate == null) {
 			startDate = new Date(0);
 		}
-		
+
 		deliverable = iteration.getDeliverable();
-		
-		/* We need Backlog-class object to generate backlog list in 
-		 * _backlogList.jsp */
+
+		/*
+		 * We need Backlog-class object to generate backlog list in
+		 * _backlogList.jsp
+		 */
 		backlog = iteration;
-		BacklogValueInjector.injectMetrics(backlog,	startDate, 
-				taskEventDAO, backlogItemDAO);
-		
-		if (deliverable == null){
-			super.addActionError(super.getText("iteration.deliverableNotFound"));
+		BacklogValueInjector.injectMetrics(backlog, startDate, taskEventDAO,
+				backlogItemDAO);
+
+		if (deliverable == null) {
+			super
+					.addActionError(super
+							.getText("iteration.deliverableNotFound"));
 			return Action.INPUT;
 		}
 		deliverableId = deliverable.getId();
-		
-		/* Update effort history (changing iteration dates might change
-		 * the effort history value!)*/
-		EffortHistoryUpdater.updateEffortHistory(effortHistoryDAO, 
+
+		/*
+		 * Update effort history (changing iteration dates might change the
+		 * effort history value!)
+		 */
+		EffortHistoryUpdater.updateEffortHistory(effortHistoryDAO,
 				taskEventDAO, backlogItemDAO, backlog);
-		
+
 		return Action.SUCCESS;
 	}
-	
-	public String store(){
-		if (iteration == null){
+
+	public String store() {
+		if (iteration == null) {
 			super.addActionError(super.getText("iteration.missingForm"));
-			return Action.INPUT;			
+			return Action.INPUT;
 		}
-		deliverable =  deliverableDAO.get(deliverableId);
-		if (deliverable == null){
-			super.addActionError(super.getText("iteration.deliverableNotFound"));
+		deliverable = deliverableDAO.get(deliverableId);
+		if (deliverable == null) {
+			super
+					.addActionError(super
+							.getText("iteration.deliverableNotFound"));
 			return Action.INPUT;
 		}
 		Iteration fillable = new Iteration();
-		if (iterationId > 0){
-		    fillable = iterationDAO.get(iterationId);
-			if (iteration == null){
+		if (iterationId > 0) {
+			fillable = iterationDAO.get(iterationId);
+			if (iteration == null) {
 				super.addActionError(super.getText("iteration.notFound"));
 				return Action.INPUT;
 			}
 		}
-		
+
 		try {
 			this.fillObject(fillable);
 		} catch (ParseException e) {
-			super.addActionError(super.getText("backlog.unparseableDate") + 
-					super.getText("webwork.shortDateTime.format"));
+			super.addActionError(super.getText("backlog.unparseableDate")
+					+ super.getText("webwork.shortDateTime.format"));
 			return Action.ERROR;
 		}
-		
-		if (super.hasActionErrors()){
+
+		if (super.hasActionErrors()) {
 			return Action.ERROR;
 		}
-		
-		if(iterationId == 0)
+
+		if (iterationId == 0)
 			iterationId = (Integer) iterationDAO.create(fillable);
 		else
 			iterationDAO.store(fillable);
 		return Action.SUCCESS;
 	}
-	
-	public String delete(){
+
+	public String delete() {
 		iteration = iterationDAO.get(iterationId);
-		if (iteration == null){
+		if (iteration == null) {
 			super.addActionError(super.getText("activityType.notFound"));
 			return Action.ERROR;
 		}
-		if(iteration.getBacklogItems().size() > 0 || iteration.getIterationGoals().size() > 0) {
-			super.addActionError(super.getText("iteration.notEmptyWhenDeleting"));
-			return Action.ERROR;			
+		if (iteration.getBacklogItems().size() > 0
+				|| iteration.getIterationGoals().size() > 0) {
+			super.addActionError(super
+					.getText("iteration.notEmptyWhenDeleting"));
+			return Action.ERROR;
 		}
 		iterationDAO.remove(iteration);
 		return Action.SUCCESS;
 	}
-	
+
 	protected void fillObject(Iteration fillable) throws ParseException {
 		fillable.setEndDate(endDate, dateFormat);
 		fillable.setStartDate(startDate, dateFormat);
-		if(this.iteration.getName().equals("")) {
+		if (this.iteration.getName().equals("")) {
 			super.addActionError(super.getText("iteration.missingName"));
 			return;
 		}
-		if (fillable.getStartDate().after(fillable.getEndDate())){
-			super.addActionError(super.getText("backlog.startDateAfterEndDate"));
+		if (fillable.getStartDate().after(fillable.getEndDate())) {
+			super
+					.addActionError(super
+							.getText("backlog.startDateAfterEndDate"));
 			return;
 		}
 		fillable.setDeliverable(this.deliverable);
 		fillable.setName(this.iteration.getName());
 		fillable.setDescription(this.iteration.getDescription());
-		if (fillable.getStartDate().after(fillable.getEndDate())){
-			super.addActionError(
-					super.getText("backlog.startDateAfterEndDate"));
+		if (fillable.getStartDate().after(fillable.getEndDate())) {
+			super
+					.addActionError(super
+							.getText("backlog.startDateAfterEndDate"));
 			return;
 		}
 	}
 
-	public String moveIterationGoal(){
+	public String moveIterationGoal() {
 		Iteration iteration = iterationDAO.get(iterationId);
 		IterationGoal iterationGoal = iterationGoalDAO.get(iterationGoalId);
-		if (iteration == null){
+		if (iteration == null) {
 			super.addActionError(super.getText("iteration.notFound"));
 			return Action.ERROR;
 		}
-		if (iterationGoal == null){
+		if (iterationGoal == null) {
 			super.addActionError(super.getText("iterationGoal.notFound"));
 		}
-		
+
 		iterationGoal.getIteration().getIterationGoals().remove(iterationGoal);
 		iteration.getIterationGoals().add(iterationGoal);
 		iterationGoal.setIteration(iteration);
 		iterationGoalDAO.store(iterationGoal);
-		
+
 		return Action.SUCCESS;
 	}
-	
 
 	public int getIterationId() {
 		return iterationId;
@@ -187,8 +215,8 @@ public class IterationAction extends ActionSupport implements CRUDAction {
 	public Iteration getIteration() {
 		return iteration;
 	}
-	
-	public void setIteration(Iteration iteration){
+
+	public void setIteration(Iteration iteration) {
 		this.iteration = iteration;
 		this.backlog = iteration;
 	}
@@ -196,25 +224,25 @@ public class IterationAction extends ActionSupport implements CRUDAction {
 	public Backlog getBacklog() {
 		return backlog;
 	}
-	
+
 	public void setIterationDAO(IterationDAO iterationDAO) {
 		this.iterationDAO = iterationDAO;
 	}
 
 	public void setDeliverableDAO(DeliverableDAO deliverableDAO) {
-	    this.deliverableDAO = deliverableDAO;
+		this.deliverableDAO = deliverableDAO;
 	}
-	
+
 	public Collection<Iteration> getAllIterations() {
 		return this.iterationDAO.getAll();
 	}
 
 	public int getDeliverableId() {
-	    return deliverableId;
+		return deliverableId;
 	}
 
 	public void setDeliverableId(int deliverableId) {
-	    this.deliverableId = deliverableId;
+		this.deliverableId = deliverableId;
 	}
 
 	public void setIterationGoalDAO(IterationGoalDAO iterationGoalDAO) {
@@ -237,7 +265,8 @@ public class IterationAction extends ActionSupport implements CRUDAction {
 	}
 
 	/**
-	 * @param taskEventDAO the taskEventDAO to set
+	 * @param taskEventDAO
+	 *            the taskEventDAO to set
 	 */
 	public void setTaskEventDAO(TaskEventDAO taskEventDAO) {
 		this.taskEventDAO = taskEventDAO;
@@ -251,7 +280,8 @@ public class IterationAction extends ActionSupport implements CRUDAction {
 	}
 
 	/**
-	 * @param backlogItemDAO the backlogItemDAO to set
+	 * @param backlogItemDAO
+	 *            the backlogItemDAO to set
 	 */
 	public void setBacklogItemDAO(BacklogItemDAO backlogItemDAO) {
 		this.backlogItemDAO = backlogItemDAO;
@@ -265,7 +295,8 @@ public class IterationAction extends ActionSupport implements CRUDAction {
 	}
 
 	/**
-	 * @param backlogDAO the backlogDAO to set
+	 * @param backlogDAO
+	 *            the backlogDAO to set
 	 */
 	public void setBacklogDAO(BacklogDAO backlogDAO) {
 		this.backlogDAO = backlogDAO;
@@ -279,7 +310,8 @@ public class IterationAction extends ActionSupport implements CRUDAction {
 	}
 
 	/**
-	 * @param endDate the endDate to set
+	 * @param endDate
+	 *            the endDate to set
 	 */
 	public void setEndDate(String endDate) {
 		this.endDate = endDate;
@@ -293,7 +325,8 @@ public class IterationAction extends ActionSupport implements CRUDAction {
 	}
 
 	/**
-	 * @param startDate the startDate to set
+	 * @param startDate
+	 *            the startDate to set
 	 */
 	public void setStartDate(String startDate) {
 		this.startDate = startDate;
@@ -307,7 +340,8 @@ public class IterationAction extends ActionSupport implements CRUDAction {
 	}
 
 	/**
-	 * @param dateFormat the dateFormat to set
+	 * @param dateFormat
+	 *            the dateFormat to set
 	 */
 	public void setDateFormat(String dateFormat) {
 		this.dateFormat = dateFormat;

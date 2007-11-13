@@ -1,5 +1,7 @@
 package fi.hut.soberit.agilefant.model;
 
+import java.sql.Date;
+
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,37 +13,38 @@ import javax.persistence.ManyToOne;
 
 import org.hibernate.annotations.Type;
 
-import java.sql.Date;
-
 /**
  * Data model for backlog's time estimate history. Backlog items and tasks have
- * original estimates and effort left estimates for how much work is to be 
- * done.
+ * original estimates and effort left estimates for how much work is to be done.
  */
 @Entity
 public class EffortHistory {
 	private int id;
+
 	private Backlog backlog;
+
 	private Date date;
+
 	private AFTime effortLeft;
+
 	private AFTime originalEstimate;
-	
-	/** 
+
+	/**
 	 * Get the id of this object.
 	 * <p>
-	 * The id is unique among all effortHistory items. 
+	 * The id is unique among all effortHistory items.
 	 */
 	// tag this field as the id
 	@Id
 	// generate automatically
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	// not nullable
 	@Column(nullable = false)
 	public int getId() {
 		return id;
 	}
-	
-	/** 
+
+	/**
 	 * Set the id of this object.
 	 * <p>
 	 * You shouldn't normally call this.
@@ -49,47 +52,52 @@ public class EffortHistory {
 	public void setId(int id) {
 		this.id = id;
 	}
-	
+
 	/** The backlog which this effortHistory represents */
 	@ManyToOne
-	@JoinColumn (nullable = false)
+	@JoinColumn(nullable = false)
 	public Backlog getBacklog() {
-	    return backlog;
+		return backlog;
 	}
-		
+
 	public void setBacklog(Backlog backlog) {
-	    this.backlog = backlog;
+		this.backlog = backlog;
 	}
-	
+
 	/**
 	 * Date reports when effortHistory was saved
+	 * 
 	 * @return date when effortHistory was saved
 	 */
 	@Basic
-	public Date getDate(){
+	public Date getDate() {
 		return this.date;
 	}
-	
+
 	/**
 	 * Set the Date
-	 * @param date date to be set
+	 * 
+	 * @param date
+	 *            date to be set
 	 */
-	public void setDate(Date date){
+	public void setDate(Date date) {
 		this.date = date;
 	}
 
 	/**
 	 * EffortLeft is the estimation of the work left and it's continually
 	 * re-evaluated
+	 * 
 	 * @return the effortLeft
 	 */
-	@Type(type="af_time")
+	@Type(type = "af_time")
 	public AFTime getEffortLeft() {
 		return effortLeft;
 	}
 
 	/**
-	 * @param effortLeft the effortLeft to set
+	 * @param effortLeft
+	 *            the effortLeft to set
 	 */
 	public void setEffortLeft(AFTime effortLeft) {
 		this.effortLeft = effortLeft;
@@ -98,19 +106,20 @@ public class EffortHistory {
 	/**
 	 * OriginalEstimate is the initial estimate of work left and this value
 	 * should not be updated
+	 * 
 	 * @return the originalEstimate
 	 */
-	@Type(type="af_time")
+	@Type(type = "af_time")
 	public AFTime getOriginalEstimate() {
 		return originalEstimate;
 	}
 
 	/**
-	 * @param originalEstimate the originalEstimate to set
+	 * @param originalEstimate
+	 *            the originalEstimate to set
 	 */
 	public void setOriginalEstimate(AFTime originalEstimate) {
 		this.originalEstimate = originalEstimate;
 	}
-	
-	
+
 }

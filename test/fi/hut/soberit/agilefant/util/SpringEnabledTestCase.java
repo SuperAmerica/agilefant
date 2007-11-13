@@ -3,21 +3,21 @@ package fi.hut.soberit.agilefant.util;
 import junit.framework.TestCase;
 
 /**
- * Use for &quot;TestCase&quot;s with spring support. 
+ * Use for &quot;TestCase&quot;s with spring support.
  * <p>
- * This uses ExplicitSpringSupport to plug the inherited test case 
- * automatically to spring.
+ * This uses ExplicitSpringSupport to plug the inherited test case automatically
+ * to spring.
  * <p>
- * If you want to use other JUnit testing classes than &quot;TestCase&quot;, 
- * consult ExplicitSpringSupport. 
+ * If you want to use other JUnit testing classes than &quot;TestCase&quot;,
+ * consult ExplicitSpringSupport.
  * 
  * @see ExplicitSpringSupport
  * @author Turkka Äijälä
  */
-public abstract class SpringEnabledTestCase extends TestCase {	
-	
+public abstract class SpringEnabledTestCase extends TestCase {
+
 	/**
-	 * Constructor which forces a call to loadSpringSupport.  
+	 * Constructor which forces a call to loadSpringSupport.
 	 */
 	public SpringEnabledTestCase() {
 		// call loadSpringSupport

@@ -11,7 +11,13 @@ import fi.hut.soberit.agilefant.model.Task;
 public interface EstimateHistoryDAO {
 
 	public Collection<EstimateHistoryEvent> getEstimateHistory(Task task);
-	public Collection<EstimateHistoryEvent> getEstimateHistory(BacklogItem backlogItem);
-	public Collection<EstimateHistoryEvent> getEstimateHistory(Iteration iteration);
-	public Collection<EstimateHistoryEvent> getEstimateHistory(Deliverable deliverable);	
+
+	public Collection<EstimateHistoryEvent> getEstimateHistory(
+			BacklogItem backlogItem);
+
+	public Collection<EstimateHistoryEvent> getEstimateHistory(
+			Iteration iteration);
+
+	public Collection<EstimateHistoryEvent> getEstimateHistory(
+			Deliverable deliverable);
 }

@@ -7,12 +7,14 @@ import fi.hut.soberit.agilefant.model.User;
  * 
  */
 public interface UserManager {
-	
+
 	/**
 	 * Checks users login.
 	 * 
-	 * @param name User name of the user.
-	 * @param password Password of the user.
+	 * @param name
+	 *            User name of the user.
+	 * @param password
+	 *            Password of the user.
 	 * @return User object if name and password mathches.
 	 */
 	public User login(String name, String password);

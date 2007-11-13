@@ -4,7 +4,7 @@ import fi.hut.soberit.agilefant.db.DeliverableDAO;
 import fi.hut.soberit.agilefant.model.Portfolio;
 
 public class PortfolioManagerImpl implements PortfolioManager {
-	
+
 	private DeliverableDAO deliverableDAO;
 
 	public Portfolio getCurrentPortfolio() {
@@ -12,7 +12,7 @@ public class PortfolioManagerImpl implements PortfolioManager {
 		result.setDeliverables(deliverableDAO.getOngoingDeliverables());
 		return result;
 	}
-	
+
 	public void setDeliverableDAO(DeliverableDAO deliverableDAO) {
 		this.deliverableDAO = deliverableDAO;
 	}

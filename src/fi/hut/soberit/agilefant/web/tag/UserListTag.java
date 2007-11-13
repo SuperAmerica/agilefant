@@ -7,13 +7,16 @@ import fi.hut.soberit.agilefant.db.UserDAO;
 
 public class UserListTag extends SpringTagSupport {
 	private static final long serialVersionUID = 8356132939350106553L;
+
 	public static final String USER_LIST_KEY = "userList";
+
 	private UserDAO userDAO;
-		
+
 	@Override
 	public int doStartTag() throws JspException {
-		userDAO = (UserDAO)super.getApplicationContext().getBean("userDAO");
-		super.getPageContext().setAttribute(UserListTag.USER_LIST_KEY, userDAO.getAll());
+		userDAO = (UserDAO) super.getApplicationContext().getBean("userDAO");
+		super.getPageContext().setAttribute(UserListTag.USER_LIST_KEY,
+				userDAO.getAll());
 		return Tag.EVAL_BODY_INCLUDE;
 	}
 }

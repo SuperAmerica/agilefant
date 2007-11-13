@@ -13,9 +13,9 @@ import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.WorkType;
 
 public class AllowedWorkTypesTag extends SpringTagSupport {
-	
+
 	private BacklogItem backlogItem;
-	
+
 	@Override
 	public int doEndTag() throws JspException {
 		super.getPageContext().removeAttribute(super.getId());
@@ -25,26 +25,28 @@ public class AllowedWorkTypesTag extends SpringTagSupport {
 	@Override
 	public int doStartTag() throws JspException {
 		Collection<WorkType> result = null;
-		if (backlogItem.getBacklog() instanceof Product){
-			WorkTypeDAO workTypeDAO = (WorkTypeDAO)super.getApplicationContext().getBean("workTypeDAO");
+		if (backlogItem.getBacklog() instanceof Product) {
+			WorkTypeDAO workTypeDAO = (WorkTypeDAO) super
+					.getApplicationContext().getBean("workTypeDAO");
 			result = workTypeDAO.getAll();
 		} else {
 			Deliverable deliverable = null;
-			if (backlogItem.getBacklog() instanceof Deliverable){
-				deliverable = (Deliverable)backlogItem.getBacklog();
+			if (backlogItem.getBacklog() instanceof Deliverable) {
+				deliverable = (Deliverable) backlogItem.getBacklog();
 			} else {
-				deliverable = ((Iteration)backlogItem.getBacklog()).getDeliverable();
+				deliverable = ((Iteration) backlogItem.getBacklog())
+						.getDeliverable();
 			}
-			if (deliverable.getActivityType() != null){
+			if (deliverable.getActivityType() != null) {
 				result = deliverable.getActivityType().getWorkTypes();
-			}			
+			}
 		}
 		super.getPageContext().setAttribute(super.getId(), result);
-		
+
 		return Tag.EVAL_BODY_INCLUDE;
 	}
-	
-	public void setBacklogItem(BacklogItem backlogItem){
+
+	public void setBacklogItem(BacklogItem backlogItem) {
 		this.backlogItem = backlogItem;
 	}
 }

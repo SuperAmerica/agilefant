@@ -13,40 +13,45 @@ import fi.hut.soberit.agilefant.model.Deliverable;
 public class ActivityTypeAction extends ActionSupport implements CRUDAction {
 
 	private static final long serialVersionUID = 1342432127514974396L;
+
 	private int activityTypeId;
+
 	private ActivityType activityType;
+
 	private ActivityTypeDAO activityTypeDAO;
+
 	private DeliverableDAO deliverableDAO;
+
 	private Collection<ActivityType> activityTypes;
-	
-	public String getAll(){
+
+	public String getAll() {
 		activityTypes = activityTypeDAO.getAll();
 		return Action.SUCCESS;
 	}
-	
-	public String create(){
+
+	public String create() {
 		activityTypeId = 0;
 		activityType = new ActivityType();
-		return Action.SUCCESS;		
+		return Action.SUCCESS;
 	}
-	
-	public String edit(){
+
+	public String edit() {
 		activityType = activityTypeDAO.get(activityTypeId);
-		if (activityType == null){
+		if (activityType == null) {
 			super.addActionError(super.getText("activityType.notFound"));
 			return Action.ERROR;
 		}
 		return Action.SUCCESS;
 	}
-	
-	public String store(){
-		if (activityType == null){
+
+	public String store() {
+		if (activityType == null) {
 			super.addActionError(super.getText("activityType.missingForm"));
 		}
 		ActivityType fillable = new ActivityType();
-		if (activityTypeId > 0){
+		if (activityTypeId > 0) {
 			fillable = activityTypeDAO.get(activityTypeId);
-			if (fillable == null){
+			if (fillable == null) {
 				super.addActionError(super.getText("activityType.notFound"));
 				return Action.ERROR;
 			}
@@ -55,24 +60,25 @@ public class ActivityTypeAction extends ActionSupport implements CRUDAction {
 		activityTypeDAO.store(fillable);
 		return Action.SUCCESS;
 	}
-	
-	public String delete(){
+
+	public String delete() {
 		activityType = activityTypeDAO.get(activityTypeId);
-		if (activityType == null){
+		if (activityType == null) {
 			super.addActionError(super.getText("activityType.notFound"));
 			return Action.ERROR;
 		}
-		for(Deliverable d : deliverableDAO.getAll()) {
-			if(d.getActivityType().getId() == activityTypeId) {
-				super.addActionError(super.getText("activityType.deliverablesLinked"));
-				return Action.ERROR;				
+		for (Deliverable d : deliverableDAO.getAll()) {
+			if (d.getActivityType().getId() == activityTypeId) {
+				super.addActionError(super
+						.getText("activityType.deliverablesLinked"));
+				return Action.ERROR;
 			}
 		}
 		activityTypeDAO.remove(activityType);
 		return Action.SUCCESS;
 	}
-	
-	protected void fillObject(ActivityType fillable){
+
+	protected void fillObject(ActivityType fillable) {
 		fillable.setName(activityType.getName());
 		fillable.setDescription(activityType.getDescription());
 	}
@@ -88,8 +94,8 @@ public class ActivityTypeAction extends ActionSupport implements CRUDAction {
 	public ActivityType getActivityType() {
 		return activityType;
 	}
-	
-	public void setActivityType(ActivityType activityType){
+
+	public void setActivityType(ActivityType activityType) {
 		this.activityType = activityType;
 	}
 
@@ -100,7 +106,7 @@ public class ActivityTypeAction extends ActionSupport implements CRUDAction {
 	public void setActivityTypeDAO(ActivityTypeDAO activityTypeDAO) {
 		this.activityTypeDAO = activityTypeDAO;
 	}
-	
+
 	public void setDeliverableDAO(DeliverableDAO deliverableDAO) {
 		this.deliverableDAO = deliverableDAO;
 	}

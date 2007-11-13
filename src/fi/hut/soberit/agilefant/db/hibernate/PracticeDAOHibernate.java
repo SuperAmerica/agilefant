@@ -6,9 +6,10 @@ import fi.hut.soberit.agilefant.model.Practice;
 /**
  * Hibernate implementation of PracticeDAO interface using GenericDAOHibernate.
  */
-public class PracticeDAOHibernate extends GenericDAOHibernate<Practice> implements PracticeDAO {
+public class PracticeDAOHibernate extends GenericDAOHibernate<Practice>
+		implements PracticeDAO {
 
-	public PracticeDAOHibernate(){
+	public PracticeDAOHibernate() {
 		super(Practice.class);
 	}
 }

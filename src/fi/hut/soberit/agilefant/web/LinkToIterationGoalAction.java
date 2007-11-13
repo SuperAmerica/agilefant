@@ -9,26 +9,30 @@ import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.IterationGoal;
 
 public class LinkToIterationGoalAction extends ActionSupport {
-	
+
 	private static final long serialVersionUID = 6934367420900867986L;
+
 	private int iterationGoalId;
+
 	private int backlogItemId;
+
 	private IterationGoalDAO iterationGoalDAO;
+
 	private BacklogItemDAO backlogItemDAO;
-	
-	public String execute(){
+
+	public String execute() {
 		IterationGoal goal = null;
 		BacklogItem item = backlogItemDAO.get(backlogItemId);
 
-		if (iterationGoalId > 0 ) {
+		if (iterationGoalId > 0) {
 			goal = iterationGoalDAO.get(iterationGoalId);
 		}
 		item.setIterationGoal(goal);
 		backlogItemDAO.store(item);
-		
+
 		return Action.SUCCESS;
 	}
-	
+
 	public int getIterationGoalId() {
 		return iterationGoalId;
 	}

@@ -1,6 +1,5 @@
 package fi.hut.soberit.agilefant.business.impl;
 
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -11,8 +10,6 @@ import fi.hut.soberit.agilefant.db.EffortHistoryDAO;
 import fi.hut.soberit.agilefant.db.TaskEventDAO;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
-import fi.hut.soberit.agilefant.model.EffortHistory;
-import fi.hut.soberit.agilefant.util.BacklogValueInjector;
 import fi.hut.soberit.agilefant.util.EffortHistoryUpdater;
 
 /**
@@ -32,20 +29,22 @@ public class BacklogBusinessImpl implements BacklogBusiness {
 	// @Override
 	public void deleteMultipleItems(int backlogId, int[] backlogItemIds) {
 		Backlog backlog = backlogDAO.get(backlogId);
-		
-		for (int id : backlogItemIds) {		
+
+		for (int id : backlogItemIds) {
 			Collection<BacklogItem> items = backlog.getBacklogItems();
 			Iterator<BacklogItem> iterator = items.iterator();
-			while( iterator.hasNext() ) {
+			while (iterator.hasNext()) {
 				BacklogItem item = iterator.next();
-				if( item.getId() == id ) {
+				if (item.getId() == id) {
 					iterator.remove();
-					backlogItemDAO.remove(id); 	//This isn't needed once Cascades are correct for Backlog -> BacklogItem.
-												//Once that's done the test should also work proper.
+					backlogItemDAO.remove(id); // This isn't needed once
+					// Cascades are correct for
+					// Backlog -> BacklogItem.
+					// Once that's done the test should also work proper.
 				}
 			}
 		}
-		
+
 		updateEffortHistory(backlogId);
 	}
 

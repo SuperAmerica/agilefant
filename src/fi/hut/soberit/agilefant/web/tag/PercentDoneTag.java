@@ -8,41 +8,40 @@ import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.TaskStatus;
 
 public class PercentDoneTag extends SpringTagSupport {
-	
-	private static final long serialVersionUID = 2586151152192294611L;
-	private int backlogItemId;
-	
-	@Override
-    public int doEndTag() throws javax.servlet.jsp.JspTagException
-    {
 
-		TaskDAO dao = (TaskDAO)super.getApplicationContext().getBean("taskDAO");
-		BacklogItemDAO bliDao = (BacklogItemDAO)super.getApplicationContext().getBean("backlogItemDAO");
+	private static final long serialVersionUID = 2586151152192294611L;
+
+	private int backlogItemId;
+
+	@Override
+	public int doEndTag() throws javax.servlet.jsp.JspTagException {
+
+		TaskDAO dao = (TaskDAO) super.getApplicationContext()
+				.getBean("taskDAO");
+		BacklogItemDAO bliDao = (BacklogItemDAO) super.getApplicationContext()
+				.getBean("backlogItemDAO");
 		BacklogItem bli = bliDao.get(backlogItemId);
-		
-		int done = dao.getTasksByStatusAndBacklogItem(bli, 
-				new TaskStatus[]{TaskStatus.DONE}).size();
-		
-		//TODO: Use HQL-query instead of arithmetics here to calculate #
+
+		int done = dao.getTasksByStatusAndBacklogItem(bli,
+				new TaskStatus[] { TaskStatus.DONE }).size();
+
+		// TODO: Use HQL-query instead of arithmetics here to calculate #
 		int total = bliDao.getRealTasks(bli).size();
 		int percentDone = 100;
 		if (total > 0) {
-		   percentDone = Math.round(done*100/total);
+			percentDone = Math.round(done * 100 / total);
 		}
-		
-		try
-        {
-            super.getPageContext().getOut().write( String.valueOf(percentDone) );
-        }
-        catch(java.io.IOException e)
-        {
-            throw new JspTagException("IO Error: " + e.getMessage());
-        }
-        return EVAL_PAGE;
-    }
+
+		try {
+			super.getPageContext().getOut().write(String.valueOf(percentDone));
+		} catch (java.io.IOException e) {
+			throw new JspTagException("IO Error: " + e.getMessage());
+		}
+		return EVAL_PAGE;
+	}
 
 	public void setBacklogItemId(int backlogItemId) {
 		this.backlogItemId = backlogItemId;
 	}
-	
+
 }

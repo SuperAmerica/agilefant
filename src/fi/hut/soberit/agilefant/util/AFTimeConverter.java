@@ -7,8 +7,7 @@ import com.opensymphony.webwork.util.WebWorkTypeConverter;
 import fi.hut.soberit.agilefant.model.AFTime;
 
 /**
- * WebWork converter for converting AFTime objects to and from
- * ui layer.
+ * WebWork converter for converting AFTime objects to and from ui layer.
  */
 public class AFTimeConverter extends WebWorkTypeConverter {
 

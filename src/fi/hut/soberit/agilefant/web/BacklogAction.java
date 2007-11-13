@@ -1,12 +1,10 @@
 package fi.hut.soberit.agilefant.web;
 
-import java.util.ArrayList;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import fi.hut.soberit.agilefant.business.BacklogBusiness;
 import fi.hut.soberit.agilefant.db.BacklogDAO;
@@ -149,8 +147,10 @@ public class BacklogAction extends ActionSupport {
 		backlogBusiness.deleteMultipleItems(backlogId, backlogItemIds);
 
 		/* Update effort history */
-		/*EffortHistoryUpdater.updateEffortHistory(effortHistoryDAO,
-				taskEventDAO, backlogItemDAO, currentBacklog);*/
+		/*
+		 * EffortHistoryUpdater.updateEffortHistory(effortHistoryDAO,
+		 * taskEventDAO, backlogItemDAO, currentBacklog);
+		 */
 
 		return this.solveResult(currentBacklog);
 	}

@@ -15,9 +15,9 @@ import org.hibernate.annotations.Type;
 /**
  * PracticeAllocation is an "allocation" of a practice into a task.
  * <p>
- * A Task can't directly reference to a practice, since the state
- * of a practice must be contained somewhere. Thus there's an extra 
- * step of practice allocations.
+ * A Task can't directly reference to a practice, since the state of a practice
+ * must be contained somewhere. Thus there's an extra step of practice
+ * allocations.
  * <p>
  * Currently practices aren't implemented in the UI.
  * 
@@ -28,34 +28,38 @@ import org.hibernate.annotations.Type;
 @Entity
 public class PracticeAllocation {
 
-	private int id;	
+	private int id;
+
 	private Task task;
+
 	private Practice practice;
+
 	private PracticeStatus status = PracticeStatus.NOT_STARTED;
 
-	PracticeAllocation() {}
-	
+	PracticeAllocation() {
+	}
+
 	PracticeAllocation(Practice practice, Task task) {
 		this.practice = practice;
 		this.task = task;
 	}
-	
-	/** 
+
+	/**
 	 * Get the id of this object.
 	 * <p>
-	 * The id is unique among all practice allocations. 
+	 * The id is unique among all practice allocations.
 	 */
 	// tag this field as the id
 	@Id
 	// generate automatically
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	// not nullable
 	@Column(nullable = false)
 	public int getId() {
 		return id;
 	}
-	
-	/** 
+
+	/**
 	 * Set the id of this object.
 	 * <p>
 	 * You shouldn't normally call this.
@@ -63,13 +67,10 @@ public class PracticeAllocation {
 	public void setId(int id) {
 		this.id = id;
 	}
-	
-	@Type(type="fi.hut.soberit.agilefant.db.hibernate.EnumUserType",
-			parameters = {
-				@Parameter(name="useOrdinal", value="true"),
-				@Parameter(name="enumClassName", value="fi.hut.soberit.agilefant.model.PracticeStatus")
-			}
-	)			
+
+	@Type(type = "fi.hut.soberit.agilefant.db.hibernate.EnumUserType", parameters = {
+			@Parameter(name = "useOrdinal", value = "true"),
+			@Parameter(name = "enumClassName", value = "fi.hut.soberit.agilefant.model.PracticeStatus") })
 	public PracticeStatus getStatus() {
 		return status;
 	}
@@ -88,7 +89,7 @@ public class PracticeAllocation {
 	}
 
 	@ManyToOne
-	@JoinColumn (nullable = true)
+	@JoinColumn(nullable = true)
 	public Task getTask() {
 		return task;
 	}
@@ -96,7 +97,5 @@ public class PracticeAllocation {
 	public void setTask(Task task) {
 		this.task = task;
 	}
-	
-	
-	
+
 }

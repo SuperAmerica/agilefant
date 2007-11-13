@@ -3,7 +3,6 @@ package fi.hut.soberit.agilefant.web;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
-import java.util.Map;
 
 import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
@@ -18,12 +17,19 @@ import fi.hut.soberit.agilefant.util.BacklogValueInjector;
 public class ProductAction extends ActionSupport implements CRUDAction {
 
 	private static final long serialVersionUID = 1834399750050895118L;
+
 	private ProductDAO productDAO;
+
 	private TaskEventDAO taskEventDAO;
+
 	private BacklogItemDAO backlogItemDAO;
+
 	private int productId;
+
 	private Product product;
+
 	private Backlog backlog;
+
 	private Collection<Product> products = new ArrayList<Product>();
 
 	public String create() {
@@ -35,11 +41,11 @@ public class ProductAction extends ActionSupport implements CRUDAction {
 
 	public String delete() {
 		Product p = productDAO.get(productId);
-		if (p == null){
+		if (p == null) {
 			super.addActionError(super.getText("product.notFound"));
 			return Action.ERROR;
 		}
-		if(p.getBacklogItems().size() > 0 || p.getDeliverables().size() > 0) {
+		if (p.getBacklogItems().size() > 0 || p.getDeliverables().size() > 0) {
 			super.addActionError(super.getText("product.notEmptyWhenDeleting"));
 			return Action.ERROR;
 		}
@@ -50,32 +56,32 @@ public class ProductAction extends ActionSupport implements CRUDAction {
 	public String edit() {
 		Date startDate = new Date(0);
 		product = productDAO.get(productId);
-		if (product == null){
+		if (product == null) {
 			super.addActionError(super.getText("product.notFound"));
 			return Action.ERROR;
 		}
 		backlog = product;
-		BacklogValueInjector.injectMetrics(backlog, startDate, 
-				taskEventDAO, backlogItemDAO);
-		
+		BacklogValueInjector.injectMetrics(backlog, startDate, taskEventDAO,
+				backlogItemDAO);
+
 		return Action.SUCCESS;
 	}
 
 	public String store() {
 		Product storable = new Product();
-		
-		if (productId > 0){
+
+		if (productId > 0) {
 			storable = productDAO.get(productId);
-			if (storable == null){
+			if (storable == null) {
 				super.addActionError(super.getText("product.notFound"));
 				return Action.ERROR;
 			}
 		}
 		this.fillStorable(storable);
-		if (super.hasActionErrors()){
+		if (super.hasActionErrors()) {
 			return Action.ERROR;
 		}
-		
+
 		if (productId == 0) {
 			productId = (Integer) productDAO.create(storable);
 		} else {
@@ -83,18 +89,18 @@ public class ProductAction extends ActionSupport implements CRUDAction {
 		}
 		return Action.SUCCESS;
 	}
-	
-	protected void fillStorable(Product storable){
-		if(this.product == null) {
+
+	protected void fillStorable(Product storable) {
+		if (this.product == null) {
 			super.addActionError(super.getText("product.internalError"));
 			return;
 		}
-		if(this.product.getName().equals("")) {
+		if (this.product.getName().equals("")) {
 			super.addActionError(super.getText("product.missingName"));
 			return;
 		}
 		storable.setName(this.product.getName());
-		storable.setDescription(this.product.getDescription());		
+		storable.setDescription(this.product.getDescription());
 	}
 
 	public Product getProduct() {
@@ -109,11 +115,11 @@ public class ProductAction extends ActionSupport implements CRUDAction {
 	public Backlog getBacklog() {
 		return this.backlog;
 	}
-	
+
 	public void setProductDAO(ProductDAO productDAO) {
 		this.productDAO = productDAO;
 	}
-	
+
 	protected ProductDAO getProductDAO() {
 		return this.productDAO;
 	}
@@ -142,7 +148,8 @@ public class ProductAction extends ActionSupport implements CRUDAction {
 	}
 
 	/**
-	 * @param backlogItemDAO the backlogItemDAO to set
+	 * @param backlogItemDAO
+	 *            the backlogItemDAO to set
 	 */
 	public void setBacklogItemDAO(BacklogItemDAO backlogItemDAO) {
 		this.backlogItemDAO = backlogItemDAO;
@@ -156,7 +163,8 @@ public class ProductAction extends ActionSupport implements CRUDAction {
 	}
 
 	/**
-	 * @param taskEventDAO the taskEventDAO to set
+	 * @param taskEventDAO
+	 *            the taskEventDAO to set
 	 */
 	public void setTaskEventDAO(TaskEventDAO taskEventDAO) {
 		this.taskEventDAO = taskEventDAO;

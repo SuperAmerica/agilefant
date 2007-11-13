@@ -15,9 +15,10 @@ import org.hibernate.validator.ValidatorClass;
  * @see fi.hut.soberit.agilefant.db.hibernate.EmailValidator
  */
 @Documented
-@ValidatorClass(EmailValidator.class) // bind to EmailValidator
-@Target({ElementType.METHOD, ElementType.FIELD}) 
+@ValidatorClass(EmailValidator.class)
+// bind to EmailValidator
+@Target( { ElementType.METHOD, ElementType.FIELD })
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Email {
-    String message() default "is not a proper email address";
+	String message() default "is not a proper email address";
 }

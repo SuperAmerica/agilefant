@@ -12,18 +12,23 @@ import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.security.SecurityUtil;
 
 public class AssignTaskAction extends ActionSupport {
-	
+
 	private static final long serialVersionUID = 6934367420900867986L;
+
 	private int assigneeId;
+
 	private int taskId;
+
 	private UserDAO userDAO;
+
 	private TaskDAO taskDAO;
+
 	private TaskEventDAO taskEventDAO;
-	
-	public String execute(){
+
+	public String execute() {
 		User assignee = userDAO.get(assigneeId);
 		Task task = taskDAO.get(taskId);
-		
+
 		AssignEvent event = new AssignEvent();
 		event.setActor(SecurityUtil.getLoggedUser());
 		event.setTask(task);
@@ -31,13 +36,13 @@ public class AssignTaskAction extends ActionSupport {
 		event.setOldAssignee(task.getAssignee());
 		task.setAssignee(assignee);
 		task.getEvents().add(event);
-		
+
 		taskEventDAO.store(event);
 		taskDAO.store(task);
-		
+
 		return Action.SUCCESS;
 	}
-	
+
 	public int getAssigneeId() {
 		return assigneeId;
 	}

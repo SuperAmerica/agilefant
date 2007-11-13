@@ -2,9 +2,8 @@ package fi.hut.soberit.agilefant.db.hibernate;
 
 import java.util.Calendar;
 import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Date;
+import java.util.List;
 
 import fi.hut.soberit.agilefant.db.DeliverableDAO;
 import fi.hut.soberit.agilefant.model.Deliverable;

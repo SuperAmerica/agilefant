@@ -25,8 +25,8 @@ public class PasswordBusinessImpl implements PasswordBusiness {
 		User user = userDAO.get(user_id);
 		String password = generateNewPassword();
 		user.setPassword(passwordEncoder.encodePassword(password, ""));
-		
-		SimpleMailMessage mail = new SimpleMailMessage( newPasswordTemplate );
+
+		SimpleMailMessage mail = new SimpleMailMessage(newPasswordTemplate);
 		StringTemplate bodyTemplate = new StringTemplate(mail.getText());
 		bodyTemplate.setAttribute("password", password);
 		mail.setText(bodyTemplate.toString());

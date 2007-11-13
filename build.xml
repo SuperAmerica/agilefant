@@ -172,55 +172,22 @@
 	<target name="test">
 		<mkdir dir="${test.conf.dir}/WEB-INF" />
 		<mkdir dir="${test.reports.dir}" />
-		<!--		<junit fork="true" dir="${test.conf.dir}"> -->
-		<!--		<junit fork="true" dir="${build.test.dir}" printsummary="true">-->
-		<!--	<junit fork="true" printsummary="true">			-->
-		<!--		<junit fork="true" dir="${basedir}" printsummary="true">			-->
 		<junit fork="true" dir="${basedir}" printsummary="true">
-			<jvmarg value="-Demma.coverage.out.file=${coverage.dir}/coverage.emma" />
-			<jvmarg value="-Demma.coverage.out.merge=true" />
-			<jvmarg value="-Djava.net.preferIPv4Stack=true" />
-
 			<!-- System property for recognizing ant instead of eclipse-->
 			<classpath refid="compile.test.classpath" />
 			<formatter type="xml" />
 			<batchtest todir="${test.reports.dir}">
-				<fileset dir="${srcdir}">
+				<fileset dir="${test.dir}">
 					<include name="**/*Test.java" />
 				</fileset>
 			</batchtest>
 		</junit>
 	</target>
 
-	<target name="test-unit" depends="compile-tests" description="Runs unit tests">
-		<antcall target="test">
-			<param name="srcdir" value="${test.unit.src}" />
-		</antcall>
-	</target>
-
-	<!--	<target name="test-integration" depends="compile-tests, test-prepare-spring" description="Runs integration tests">-->
-	<!-- conf files not copied implicitly any more -->
-	<target name="test-integration" depends="compile-tests" description="Runs integration tests">
-		<antcall target="test">
-			<param name="srcdir" value="${test.integration.src}" />
-		</antcall>
-	</target>
-
-	<target name="test-all" depends="test-unit, test-integration" description="Run all tests and generate HTML reports" />
-
 	<!-- ei tarvinne webappia -->
 	<target name="compile-tests" depends="compile">
 		<mkdir dir="${build.test.classes.dir}" />
-		<javac debug="${javac.debug}" destdir="${build.test.classes.dir}" srcdir="${test.util.src}">
-			<classpath refid="compile.test.classpath" />
-		</javac>
-		<javac debug="${javac.debug}" destdir="${build.test.classes.dir}" srcdir="${test.unit.src}">
-			<classpath refid="compile.test.classpath" />
-		</javac>
-		<javac debug="${javac.debug}" destdir="${build.test.classes.dir}" srcdir="${test.fixture.src}">
-			<classpath refid="compile.test.classpath" />
-		</javac>
-		<javac debug="${javac.debug}" destdir="${build.test.classes.dir}" srcdir="${test.integration.src}">
+		<javac debug="${javac.debug}" destdir="${build.test.classes.dir}" srcdir="${test.dir}">
 			<classpath refid="compile.test.classpath" />
 		</javac>
 	</target>
@@ -389,7 +356,7 @@
 	</target>
 
 	<!-- Execute JMeter test plan -->
-	<target name="run-jmeter" depends="init" description="Execute the JMeter test plan, recording the results to a file.">
+	<target name="test-jmeter" depends="init" description="Execute the JMeter test plan, recording the results to a file.">
 		<taskdef name="jmeter" classpath="${jmeter.install.dir}/extras/ant-jmeter.jar" classname="org.programmerplanet.ant.taskdefs.jmeter.JMeterTask" />
 		<jmeter jmeterhome="${jmeter.install.dir}" testplan="${jmeter.testplan}" resultlog="${jmeter.result.file}">
 			<property name="jmeter.save.saveservice.output_format" value="xml" />
@@ -397,7 +364,7 @@
 	</target>
 
 	<!-- Produce jChav report from JMeter results -->
-	<target name="run-jchav" depends="init" description="Produce JChav report from the JMeter results">
+	<target name="test-jchav" depends="init" description="Produce JChav report from the JMeter results">
 		<taskdef name="jchav" classname="com.googlecode.jchav.ant.JChavTask">
 			<classpath>
 				<fileset dir="${jchav.libs.dir}/">

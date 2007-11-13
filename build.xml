@@ -5,13 +5,16 @@
 	<property file="build.properties" />
 	<property file="conf/database-mysql5.properties" />
 
+	<!-- Clover parameters -->
+	<property name="clover.jar" location="${basedir}/lib/clover.jar"/>
+	<taskdef resource="cloverlib.xml" classpath="${clover.jar}"/>
+	
 	<target name="init" description="Initializes build script">
 		<mkdir dir="${build.dir}" />
 		<mkdir dir="${build.classes}" />
 		<mkdir dir="${build.webapp}" />
 		<mkdir dir="${build.test.dir}" />
 		<mkdir dir="${build.test.classes.dir}" />
-		<mkdir dir="${test.reports.dir}" />
 
 		<path id="compile.classpath">
 			<fileset dir="${lib}">
@@ -25,6 +28,7 @@
 			<pathelement location="${build.classes}" />
 			<pathelement location="${build.test.classes.dir}" />
 			<pathelement location="${test.conf.dir}" />
+			<pathelement path="${clover.jar}" />
 		</path>
 
 		<path id="hibernatetoolslib">
@@ -39,18 +43,9 @@
 
 		<taskdef name="dbunit" classname="org.dbunit.ant.DbUnitTask" classpathref="compile.classpath" />
 
-		<path id="emma.classpath">
-			<fileset dir="${lib}">
-				<include name="build/emma.jar" />
-				<include name="build/emma_ant.jar" />
-			</fileset>
-		</path>
-
 		<path id="instr.classpath">
 			<pathelement location="${build.classes}" />
 		</path>
-
-		<taskdef resource="emma_ant.properties" classpathref="emma.classpath" />
 
 		<!-- Initialization of JMeter and jChav stress testing framework -->
 		<property file="conf/classes/messages.properties" />
@@ -60,36 +55,10 @@
 		<property description="The location of the install of JMeter" name="jmeter.install.dir" value="/opt/jakarta-jmeter-2.3" />
 		<property description="The directory containing the jchav jars" name="jchav.libs.dir" value="/opt/jchav-1.1.0" />
 		<property description="The JMeter test plan script we want to run" name="jmeter.testplan" value="/opt/jakarta-jmeter-2.3/plans/Agilefant_single_user.jmx" />
-		<property description="The location to store the per run files" name="jmeter.result.dir" value="test/jmeter-results" />
+		<property description="The location to store the per run files" name="jmeter.result.dir" value="${test.reports.jmeter}" />
 		<property description="The resulting file location, make sure this is unique for each build" name="jmeter.result.file" value="${jmeter.result.dir}/result_${webwork.agilefantVersionNumber}_${build.id}.xml" />
-		<property description="The location to generate the html and charts to. " name="jchav.result.dir" value="test/jchav-results" />
-	</target>
+		<property description="The location to generate the html and charts to. " name="jchav.result.dir" value="${test.reports.jchav}" />
 
-	<!-- instruments all the classes, runs the tests, and generates reports -->
-	<target name="emma" depends="make-jar, compile-tests" description="Compiles source files">
-		<property name="emma.enabled" value="true" />
-
-		<!-- instrument the jar file and the test classess -->
-		<!-- note: for some reason, doesn't instrument the test classes -->
-		<emma enabled="${emma.enabled}">
-			<instr instrpathref="instr.classpath" mode="overwrite" metadatafile="${coverage.dir}/emma-agilefant.emma" destdir=".">
-			</instr>
-		</emma>
-
-		<!-- run the tests to produce coverage data -->
-		<antcall target="test-all" />
-
-		<!-- produce reports out of the collected data -->
-		<emma enabled="${emma.enabled}">
-			<report sourcepath="${src}">
-				<fileset dir="${coverage.dir}">
-					<include name="*.emma" />
-				</fileset>
-
-				<txt outfile="${coverage.reports.dir}/coverage.txt" />
-				<html outfile="${coverage.reports.dir}/coverage.html" />
-			</report>
-		</emma>
 	</target>
 
 	<target name="compile" depends="init" description="Compiles source files">
@@ -124,27 +93,6 @@
 		</hibernatetool>
 	</target>
 
-	<target name="test-reports" description="Generate HTML reports from XML test results">
-		<junitreport todir="${test.reports.dir}">
-			<fileset dir="${test.reports.dir}">
-				<include name="TEST-*.xml" />
-			</fileset>
-			<report todir="${test.reports.dir}" />
-		</junitreport>
-	</target>
-
-	<target name="test-prepare-spring-old" depends="compile-tests" description="Prepare Spring-specific stuff for tests">
-		<copy todir="${build.test.conf.dir}/WEB-INF/">
-			<fileset dir="${conf.dir}" excludes="database-*.properties" />
-		</copy>
-		<copy todir="${build.test.conf.dir}">
-			<fileset dir="${conf.dir}" excludes="database-*.properties" />
-		</copy>
-		<copy tofile="${build.test.conf.dir}/WEB-INF/database.properties">
-			<fileset file="${conf.dir}/database-fortests-${database.type}.properties" />
-		</copy>
-	</target>
-
 	<target name="copy-spring-files" description="Internal target">
 		<mkdir dir="${destination}/WEB-INF" />
 		<copy file="${conf.dir}/configuration.properties" tofile="${destination}/WEB-INF/configuration.properties" />
@@ -155,39 +103,43 @@
 		</copy>
 	</target>
 
-	<target name="test-copy-spring-conf-files" depends="compile-tests" description="Copy Spring-specific stuff for jUnit-tests to conf/test">
-		<antcall target="copy-spring-files">
-			<param name="destination" value="${test.conf.dir}" />
-		</antcall>
-	</target>
-
-	<!-- fitnesse.dir must be the directory where fitnesse is driven.
-		{fitnesse.dir}/conf must be added to fitnesse classpath -->
-	<target name="test-prepare-fitnesse" depends="compile-tests" description="Prepare Spring-specific stuff for Fitnesse-tests">
-		<antcall target="copy-spring-files">
-			<param name="destination" value="${fitnesse.dir}/conf" />
-		</antcall>
-	</target>
-
 	<target name="test" depends="compile-tests">
 		<mkdir dir="${test.conf.dir}/WEB-INF" />
-		<mkdir dir="${test.reports.dir}" />
+		<mkdir dir="${test.reports.junit}" />
 		<junit fork="true" dir="${basedir}" printsummary="true">
-			<!-- System property for recognizing ant instead of eclipse-->
 			<classpath refid="compile.test.classpath" />
 			<formatter type="xml" />
-			<batchtest todir="${test.reports.dir}">
+			<batchtest todir="${test.reports.junit}">
 				<fileset dir="${test.dir}">
-					<exclude name="**/TestUtility.java"/>
-					<exclude name="**/SpringEnabledTestCase.java"/>
-					<exclude name="**/SpringTestCase.java"/>
+					<exclude name="**/TestUtility.java" />
+					<exclude name="**/SpringEnabledTestCase.java" />
+					<exclude name="**/SpringTestCase.java" />
 					<include name="**/*Test*.java" />
 				</fileset>
 			</batchtest>
 		</junit>
 	</target>
 
-	<!-- ei tarvinne webappia -->
+	<target name="test-clover-enable" description="Enables clover">
+		<clover-setup />
+	</target>
+	
+	<target name="test-clover-clean" description="Cleans clover databases">
+		<clover-clean/>
+	</target>	
+
+	<target name="test-clover-xmlreport" description="Generate xml clover reports">
+		<mkdir dir="${test.reports.clover}" />
+	    <clover-report>
+	       <current outfile="${test.reports.clover}/coverage.xml">
+	          <format type="xml"/>
+	       </current>
+	    </clover-report>
+	</target>
+
+	<target name="test-bamboo" depends="clean,test-clover-enable,compile-tests,test,test-clover-xmlreport,test-clover-clean" description="Bamboo uses this target"/>
+	
+	
 	<target name="compile-tests" depends="compile">
 		<mkdir dir="${build.test.classes.dir}" />
 		<javac debug="${javac.debug}" destdir="${build.test.classes.dir}" srcdir="${test.dir}">
@@ -360,6 +312,7 @@
 
 	<!-- Execute JMeter test plan -->
 	<target name="test-jmeter" depends="init" description="Execute the JMeter test plan, recording the results to a file.">
+		<mkdir dir="${test.reports.jmeter}" />
 		<taskdef name="jmeter" classpath="${jmeter.install.dir}/extras/ant-jmeter.jar" classname="org.programmerplanet.ant.taskdefs.jmeter.JMeterTask" />
 		<jmeter jmeterhome="${jmeter.install.dir}" testplan="${jmeter.testplan}" resultlog="${jmeter.result.file}">
 			<property name="jmeter.save.saveservice.output_format" value="xml" />
@@ -368,6 +321,7 @@
 
 	<!-- Produce jChav report from JMeter results -->
 	<target name="test-jchav" depends="init" description="Produce JChav report from the JMeter results">
+		<mkdir dir="${test.reports.jchav}" />
 		<taskdef name="jchav" classname="com.googlecode.jchav.ant.JChavTask">
 			<classpath>
 				<fileset dir="${jchav.libs.dir}/">

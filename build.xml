@@ -6,9 +6,9 @@
 	<property file="conf/database-mysql5.properties" />
 
 	<!-- Clover parameters -->
-	<property name="clover.jar" location="${basedir}/lib/clover.jar"/>
-	<taskdef resource="cloverlib.xml" classpath="${clover.jar}"/>
-	
+	<property name="clover.jar" location="${basedir}/lib/clover.jar" />
+	<taskdef resource="cloverlib.xml" classpath="${clover.jar}" />
+
 	<target name="init" description="Initializes build script">
 		<mkdir dir="${build.dir}" />
 		<mkdir dir="${build.classes}" />
@@ -123,23 +123,39 @@
 	<target name="test-clover-enable" description="Enables clover">
 		<clover-setup />
 	</target>
-	
+
 	<target name="test-clover-clean" description="Cleans clover databases">
-		<clover-clean/>
-	</target>	
+		<clover-clean />
+	</target>
 
 	<target name="test-clover-xmlreport" description="Generate xml clover reports">
 		<mkdir dir="${test.reports.clover}" />
-	    <clover-report>
-	       <current outfile="${test.reports.clover}/coverage.xml">
-	          <format type="xml"/>
-	       </current>
-	    </clover-report>
+		<clover-report>
+			<current outfile="${test.reports.clover}/coverage.xml">
+				<format type="xml" />
+			</current>
+		</clover-report>
 	</target>
 
-	<target name="test-bamboo" depends="clean,test-clover-enable,compile-tests,test,test-clover-xmlreport,test-clover-clean" description="Bamboo uses this target"/>
-	
-	
+	<target name="test-clover-htmlreport" depends="clean,test-clover-enable,compile-tests,test" description="Generate html clover reports">
+		<mkdir dir="${test.reports.clover}" />
+		<clover-html-report outdir="${test.reports.clover}" title="Agilefant" />
+		<clover-clean />
+	</target>
+
+	<target name="test-checkstyle" description="Generates a report of code convention violations.">
+		<mkdir dir="${test.reports.checkstyle}" />
+		<taskdef resource="checkstyletask.properties" classpath="${basedir}/lib/checkstyle-all-4.3.jar" />
+		<checkstyle config="${test.conf.dir}/checkstyle/sun_checks.xml" failureProperty="checkstyle.failure" failOnViolation="false">
+			<formatter type="xml" tofile="${test.reports.checkstyle}/checkstyle_report.xml" />
+			<fileset dir="src" includes="**/*.java" />
+			<fileset dir="test" includes="**/*.java" />
+		</checkstyle>
+	</target>
+
+	<target name="test-bamboo" depends="clean,test-clover-enable,compile-tests,test,test-clover-xmlreport,test-clover-clean,test-checkstyle" description="Bamboo uses this target" />
+
+
 	<target name="compile-tests" depends="compile">
 		<mkdir dir="${build.test.classes.dir}" />
 		<javac debug="${javac.debug}" destdir="${build.test.classes.dir}" srcdir="${test.dir}">

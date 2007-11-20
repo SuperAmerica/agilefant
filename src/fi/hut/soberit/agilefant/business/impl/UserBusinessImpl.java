@@ -1,6 +1,7 @@
 package fi.hut.soberit.agilefant.business.impl;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -10,6 +11,8 @@ import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.TaskStatus;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.security.SecurityUtil;
+import fi.hut.soberit.agilefant.util.BacklogItemPriorityComparator;
+import fi.hut.soberit.agilefant.util.StartedItemsComparator;
 
 /**
  * 
@@ -41,6 +44,10 @@ public class UserBusinessImpl implements UserBusiness {
                 returnItems.add(bli);
             }
         }
+        
+        /* Sort the list */
+        Collections.sort(returnItems, new BacklogItemPriorityComparator());
+        Collections.sort(returnItems, new StartedItemsComparator());
 
         return returnItems;
     }

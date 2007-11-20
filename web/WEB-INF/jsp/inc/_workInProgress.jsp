@@ -1,17 +1,16 @@
 <%@ include file="./_taglibs.jsp"%>
 
-<h2>Work in progress</h2>
+<h2>Started backlog items</h2>
 
 <div id="subItems">
 
-<div id="subItemHeader">
+<!-- <div id="subItemHeader">
 	Backlog items		
-</div>
+</div>-->
 
 <div id="subItemContent">
 
-<display:table name="backlogItemsForUserInProgress" id="item"
-	defaultsort="3" defaultorder="descending" requestURI="dailyWork.action" >
+<display:table name="backlogItemsForUserInProgress" id="item" requestURI="dailyWork.action" >
 
 	<!-- Display the backlog item name -->
 	<display:column sortable="true" title="Backlog item">
@@ -144,7 +143,12 @@
 				<c:out value="${parent.name}" />
 			</ww:a>
 			<c:if test="${aef:isDeliverable(parent)}">
-				(<c:out value="${parent.activityType.name}" />)
+			<ww:url id="activityTypeActionUrl" action="editActivityType" includeParams="none">
+				<ww:param name="activityTypeId" value="${it.deliverable.activityType.id}" />
+			</ww:url>
+			(<ww:a href="%{activityTypeActionUrl}&contextViewName=dailyWork">
+				<c:out value="${parent.activityType.name}" />
+			</ww:a>)
 			</c:if>
 			<br/>
 		</c:forEach>

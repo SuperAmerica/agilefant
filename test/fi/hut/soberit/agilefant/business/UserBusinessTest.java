@@ -7,6 +7,7 @@ import fi.hut.soberit.agilefant.db.ProductDAO;
 import fi.hut.soberit.agilefant.db.TaskDAO;
 import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.model.BacklogItem;
+import fi.hut.soberit.agilefant.model.Priority;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.TaskStatus;
@@ -133,6 +134,12 @@ public class UserBusinessTest extends SpringTestCase {
         ph3.setStatus(TaskStatus.BLOCKED);
         ph4.setStatus(TaskStatus.IMPLEMENTED);
         ph5.setStatus(TaskStatus.DONE);
+        
+        bli1.setPriority(Priority.BLOCKER);
+        bli2.setPriority(Priority.BLOCKER);
+        bli3.setPriority(Priority.BLOCKER);
+        bli4.setPriority(Priority.BLOCKER);
+        bli5.setPriority(Priority.BLOCKER);
 
         ph3.setAssignee(user);
         ph4.setAssignee(user);

@@ -10,14 +10,6 @@
 	<ww:actionmessage/>
 
 <c:set var="currentAction" value="dailyWork" scope="session" />
-<%--
-Currently viewing daily work for user:
-
-<ww:form>
-	<ww:select name="userId" list="userList" listValue="fullName" listKey="id"
-		value="${userId}"/>
-	<ww:submit value="Change" />
-</ww:form>--%>
 
 
 <%@ include file="./inc/_workInProgress.jsp" %>

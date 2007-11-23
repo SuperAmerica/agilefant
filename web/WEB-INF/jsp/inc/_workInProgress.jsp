@@ -1,19 +1,15 @@
 <%@ include file="./_taglibs.jsp"%>
 
-<h2>Started backlog items</h2>
+<h2>Started items assigned to <c:out value="${user.fullName}" /></h2>
 
 <div id="subItems">
-
-<!-- <div id="subItemHeader">
-	Backlog items		
-</div>-->
 
 <div id="subItemContent">
 
 <display:table name="backlogItemsForUserInProgress" id="item" requestURI="dailyWork.action" >
 
 	<!-- Display the backlog item name -->
-	<display:column sortable="true" title="Backlog item">
+	<display:column sortable="true" title="Name" class="shortNameColumn">
 		<ww:url id="editLink" action="editBacklogItem" includeParams="none">
 			<ww:param name="backlogItemId" value="${item.id}" />
 		</ww:url>
@@ -146,9 +142,9 @@
 			<ww:url id="activityTypeActionUrl" action="editActivityType" includeParams="none">
 				<ww:param name="activityTypeId" value="${it.deliverable.activityType.id}" />
 			</ww:url>
-			(<ww:a href="%{activityTypeActionUrl}&contextViewName=dailyWork">
-				<c:out value="${parent.activityType.name}" />
-			</ww:a>)
+			<ww:a href="%{activityTypeActionUrl}&contextViewName=dailyWork">
+				(<c:out value="${parent.activityType.name}" />)
+			</ww:a>
 			</c:if>
 			<br/>
 		</c:forEach>

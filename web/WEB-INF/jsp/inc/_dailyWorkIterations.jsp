@@ -1,6 +1,6 @@
 <%@ include file="./_taglibs.jsp"%>
 
-<h2>Ongoing iterations</h2>
+<h2>All items assigned to <c:out value="${user.fullName}" /> from ongoing iterations</h2>
 
 <c:if test="${!empty iterations}">
 
@@ -49,6 +49,15 @@
 <display:table class="dailyWorkIteration" name="bliList"
 	id="item" requestURI="${currentAction}.action" >
 	
+	<display:column sortable="true" title="Name" class="shortNameColumn">
+		<ww:url id="editLink" action="editBacklogItem" includeParams="none">
+			<ww:param name="backlogItemId" value="${item.id}" />
+		</ww:url>
+		<div><ww:a href="%{editLink}&contextViewName=dailyWork">
+			${aef:html(item.name)}
+		</ww:a></div>
+	</display:column>
+	<%--
 	<c:set var="divId" value="${divId + 1}" scope="page" />
 	
 	<display:column sortable="true" title="Name" class="shortNameColumn">
@@ -62,21 +71,11 @@
 	
 	<div style="display:none;" id="${divId}">
 	
-	<%--<ww:form action="storeBacklogItem">--%>
+	
 	<aef:backlogItemForm backlogItem="${item}" />
-	<%--
-	<div>
-		<ww:submit action="storeBacklogItemInDailyWork" value="Save"/>
-		<span class="deleteButton">
-			<ww:submit action="deleteBacklogItemInDailyWork" 
-						value="Delete" 
-						onclick="return confirmDeleteBli()"/>
-		</span>
-	</div>
-	</ww:form>
-	--%>
+	
 	</div>	
-	</display:column>
+	</display:column> --%>
 
 	<display:column sortable="true" sortProperty="bliEffEst" defaultorder="descending"
 			title="Effort Left<br/>">

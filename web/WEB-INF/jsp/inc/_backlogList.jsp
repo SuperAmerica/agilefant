@@ -1,5 +1,15 @@
 <%@ include file="./_taglibs.jsp"%>
 
+<script language="javascript" type="text/javascript">
+function validateDeletion() {
+	var conf = confirm("The selected backlog items will be gone forever. Are you sure?");
+	if (conf)
+		return true;
+	else
+		return false;
+}
+</script>
+
 <ww:form action="doActionOnMultipleBacklogItems">
 
 	<!-- Return to this backlog after submit -->
@@ -190,10 +200,19 @@
 
 	<aef:productList />
 
-	<p>
-	<ww:submit type="button" name="itemAction" value="%{'MoveSelected'}" label="Move selected to" />
-	<aef:backlogDropdown selectName="targetBacklog"
-			preselectedBacklogId="${backlog.id}" backlogs="${productList}" /> 
-	</p>
-	<ww:submit type="button" name="itemAction" value="%{'DeleteSelected'}" label="Delete Selected" />
+	<table>
+	<tr>
+		<td>
+			<ww:submit type="button" name="itemAction" value="%{'MoveSelected'}" label="Move selected to" />
+		</td>
+		<td class="backlogDropdownColumn">
+			<aef:backlogDropdown selectName="targetBacklog"
+				preselectedBacklogId="${backlog.id}" backlogs="${productList}" />
+		</td>
+		<td>
+			<ww:submit type="button" name="itemAction" value="%{'DeleteSelected'}"
+				onclick="return validateDeletion()" label="Delete selected" />
+		</td>
+	</tr>
+	</table>
 </ww:form>

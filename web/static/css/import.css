@@ -507,3 +507,11 @@ div#submenuwrapmyTasks #menu li#subnav1 a,div#submenuwrapiteration #menu li#subn
 .tasklistItem  {
 	position: relative;
 }
+
+#deleteButtonRight {
+	text-align: right;
+}
+
+.backlogDropdownColumn select {
+	width: 500px;
+}

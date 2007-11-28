@@ -6,7 +6,7 @@
 </c:if>
 
 <c:set var="divId" value="1336" scope="page"/>
-<aef:menu navi="${contextName}"  pageHierarchy="${pageHierarchy}"  /> 
+<aef:menu navi="backlog"  pageHierarchy="${pageHierarchy}"  /> 
 	<ww:actionerror/>
 	<ww:actionmessage/>
 	

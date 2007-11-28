@@ -8,7 +8,7 @@
 	<aef:bct iterationId="${iterationId}"/>
 </c:if>
 
-<aef:menu navi="${contextName }"  pageHierarchy="${pageHierarchy}"/> 
+<aef:menu navi="backlog"  pageHierarchy="${pageHierarchy}"/> 
 <aef:productList/>
 <ww:actionerror/>
 <ww:actionmessage/>

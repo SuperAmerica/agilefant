@@ -140,7 +140,7 @@
 			</ww:a>
 			<c:if test="${aef:isDeliverable(parent)}">
 			<ww:url id="activityTypeActionUrl" action="editActivityType" includeParams="none">
-				<ww:param name="activityTypeId" value="${it.deliverable.activityType.id}" />
+				<ww:param name="activityTypeId" value="${parent.activityType.id}" />
 			</ww:url>
 			<ww:a href="%{activityTypeActionUrl}&contextViewName=dailyWork">
 				(<c:out value="${parent.activityType.name}" />)

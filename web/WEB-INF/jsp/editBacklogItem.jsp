@@ -10,7 +10,7 @@
 	</c:otherwise>
 </c:choose>
 
-<aef:menu navi="${contextName}" pageHierarchy="${pageHierarchy}"/> 
+<aef:menu navi="backlog" pageHierarchy="${pageHierarchy}"/> 
 	<ww:actionerror/>
 	<ww:actionmessage/>
 	

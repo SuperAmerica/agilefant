@@ -329,7 +329,8 @@ span.right {
 	color: #e50;
 }
 
-div#menuwrapmyTasks #menu li#nav1 a, 
+div#menuwrapmyTasks #menu li#nav1 a,
+div#menuwrapbacklog #menu li#nav2 a, 
 div#menuwrapiteration #menu li#nav2 a,
 div#menuwrapproject #menu li#nav2 a,
 div#menuwrapproduct #menu li#nav2 a,

@@ -45,7 +45,6 @@
 		<td></td>
 		<td></td>	
 		</tr>
-
 		<tr>
 		<td>Name</td>
 		<td>*</td>
@@ -59,7 +58,7 @@
 		</tr>
 		
 		<c:choose>
-		<c:when test="${backlogItem.bliOrigEst == null}">
+		<c:when test="${backlogItem.originalEstimate == null}">
 			<tr>
 			<td>Original estimate</td>
 			<td></td>
@@ -70,7 +69,7 @@
 			<tr>
 			<td>Original estimate</td>
 			<td></td>
-			<td><ww:label value="${backlogItem.bliOrigEst}"/>
+			<td><ww:label value="${backlogItem.originalEstimate}"/></td>
 			</tr>
 			<tr>
 			<td>Effort left</td>
@@ -107,16 +106,16 @@
 						<option value="${product.id}" title="${product.name}">${aef:out(product.name)}</option>
 					</c:otherwise>
 				</c:choose>
-				<c:forEach items="${product.deliverables}" var="deliverable">
+				<c:forEach items="${product.projects}" var="project">
 					<c:choose>
-						<c:when test="${deliverable.id == currentPageId}">
-							<option selected="selected" value="${deliverable.id}" title="${deliverable.name}">&nbsp;&nbsp;&nbsp;&nbsp;${aef:out(deliverable.name)}</option>
+						<c:when test="${project.id == currentPageId}">
+							<option selected="selected" value="${project.id}" title="${project.name}">&nbsp;&nbsp;&nbsp;&nbsp;${aef:out(project.name)}</option>
 						</c:when>
 						<c:otherwise>
-							<option value="${deliverable.id}" title="${deliverable.name}">&nbsp;&nbsp;&nbsp;&nbsp;${aef:out(deliverable.name)}</option>
+							<option value="${project.id}" title="${project.name}">&nbsp;&nbsp;&nbsp;&nbsp;${aef:out(project.name)}</option>
 						</c:otherwise>
 					</c:choose>
-					<c:forEach items="${deliverable.iterations}" var="iteration">
+					<c:forEach items="${project.iterations}" var="iteration">
 						<c:choose>
 							<c:when test="${iteration.id == currentPageId}">
 								<option selected="selected" value="${iteration.id}" title="${iteration.name}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${aef:out(iteration.name)}</option>

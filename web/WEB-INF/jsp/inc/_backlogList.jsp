@@ -38,15 +38,12 @@ function validateDeletion() {
 		<display:column title="Status" sortable="false" class="taskColumn">
 			<c:set var="divId" value="${divId + 1}" scope="page" />
 			<c:choose>
-				<c:when test="${!(empty item.tasks || fn:length(item.tasks) == 1)}">
+				<c:when test="${!(empty item.tasks)}">
 					<a href="javascript:toggleDiv(${divId});" title="Click to expand">
 					
-					<c:if test="${item.placeHolder != null}">
-						${fn:length(item.tasks) - 1} 
-					</c:if>		
-					<c:if test="${item.placeHolder == null}">
-						${fn:length(item.tasks)} 
-					</c:if>
+						
+					${fn:length(item.tasks)} 
+					
 					
 					tasks, <aef:percentDone
 						backlogItemId="${item.id}" />% done<br />
@@ -62,37 +59,37 @@ function validateDeletion() {
 						<img src="${imgUrl}" /> 
 					</a>
 					
-					<aef:tasklist tasks="${item.tasks}"
+					<aef:tasklist backlogItem="${item}"
 						contextViewName="${currentAction}" contextObjectId="${backlog.id}"
 						divId="${divId}"/>
 				</c:when>
 				<c:otherwise>
-					<c:if test="${!empty item.placeHolder}">
+					
 						 <a href="javascript:toggleDiv(${divId});" title="Click to expand">
-							<ww:text name="task.status.${item.placeHolder.status}"/><br />
+							<ww:text name="backlogItem.status.${item.status}"/><br />
 							
 							<c:choose>
-							<c:when test="${item.placeHolder.status == 'NOT_STARTED'}" >
+							<c:when test="${item.status == 'NOT_STARTED'}" >
 								<ww:url id="imgUrl" action="drawExtendedBarChart" includeParams="none">
 								<ww:param name="notStarted" value="1" /> </ww:url> 
 								<img src="${imgUrl}" /> 
 							</c:when>
-							<c:when test="${item.placeHolder.status == 'STARTED'}" >
+							<c:when test="${item.status == 'STARTED'}" >
 								<ww:url id="imgUrl" action="drawExtendedBarChart" includeParams="none">
 								<ww:param name="started" value="1" /> </ww:url> 
 								<img src="${imgUrl}" />
 							</c:when>
-							<c:when test="${item.placeHolder.status == 'BLOCKED'}" >
+							<c:when test="${item.status == 'BLOCKED'}" >
 								<ww:url id="imgUrl" action="drawExtendedBarChart" includeParams="none">
 								<ww:param name="blocked" value="1" /> </ww:url> 
 								<img src="${imgUrl}" />
 							</c:when>
-							<c:when test="${item.placeHolder.status == 'IMPLEMENTED'}" >
+							<c:when test="${item.status == 'IMPLEMENTED'}" >
 								<ww:url id="imgUrl" action="drawExtendedBarChart" includeParams="none">
 								<ww:param name="implemented" value="1" /> </ww:url> 
 								<img src="${imgUrl}" />
 							</c:when>
-							<c:when test="${item.placeHolder.status == 'DONE'}" >
+							<c:when test="${item.status == 'DONE'}" >
 								<ww:url id="imgUrl" action="drawExtendedBarChart" includeParams="none">
 								<ww:param name="done" value="1" /> </ww:url> 
 								<img src="${imgUrl}" />
@@ -100,10 +97,9 @@ function validateDeletion() {
 							</c:choose>
 								
 						</a>
-						<aef:tasklist tasks="${item.tasks}"
+						<aef:tasklist backlogItem="${item}"
 							contextViewName="${currentAction}" contextObjectId="${backlog.id}"
 							divId="${divId}" />
-					</c:if>
 				</c:otherwise>
 			</c:choose>
 		</display:column>
@@ -130,54 +126,25 @@ function validateDeletion() {
 			</c:otherwise>
 		</c:choose>
 
-		<display:column sortable="true" sortProperty="bliEffEst" defaultorder="descending"
+		<display:column sortable="true" sortProperty="effortLeft" defaultorder="descending"
 			title="Effort Left<br/>">
 			<span style="white-space: nowrap">
 				<c:choose>
-					<c:when test="${item.totalEffortLeft == null}">&mdash;</c:when>
-					<c:otherwise>${item.totalEffortLeft}</c:otherwise> 
+					<c:when test="${item.effortLeft == null}">&mdash;</c:when>
+					<c:otherwise>${item.effortLeft}</c:otherwise> 
 				</c:choose>
 			</span>
 		</display:column>
 
-		<display:column sortable="true" sortProperty="bliOrigEst" defaultorder="descending"
+		<display:column sortable="true" sortProperty="originalEstimate" defaultorder="descending"
 				title="Original Estimate<br/>">
 			<span style="white-space: nowrap">
 				<c:choose>
-					<c:when test="${item.totalOrigEst == null}">&mdash;</c:when>
-					<c:otherwise>${item.totalOrigEst}</c:otherwise> 
+					<c:when test="${item.originalEstimate == null}">&mdash;</c:when>
+					<c:otherwise>${item.originalEstimate}</c:otherwise> 
 				</c:choose>
 			</span>
 		</display:column>
-
-<%--		<display:column sortable="true" sortProperty="performedEffort" defaultorder="descending"
-			title="Work reported">
-			${item.performedEffort}
-		</display:column>
---%>
-<%--		<display:column sortable="true" title="DebugEst">
-			<c:choose>
-				<c:when test="${!empty item.effortEstimate}">
-					${item.effortEstimate}
-				</c:when>
-				<c:otherwise>
-					${item.allocatedEffort}
-				</c:otherwise>
-			</c:choose>
-		</display:column>
---%>
-<%--		<display:column sortable="false" title="Actions">
-			<ww:url id="deleteLink" action="deleteBacklogItem"
-				includeParams="none">
-				<ww:param name="backlogItemId" value="${item.id}" />
-				<ww:param name="contextObjectId" value="${backlog.id}" />
-			</ww:url>
-			<ww:a
-					href="%{deleteLink}&contextViewName=${currentAction}"
-					onclick="return confirmDeleteBli()">
-					Delete
-			</ww:a>
-		</display:column> --%>
 
 		<display:footer>
 			<tr>
@@ -192,8 +159,7 @@ function validateDeletion() {
 				<%-- Effort left --%>
 				<td><c:out value="${backlog.bliEffortLeftSum}" /></td>
 				<%-- Original estimate --%>
-				<td><c:out value="${backlog.bliOrigEstSum}" /></td>
-				<%-- Work reported --%>
+				<td><c:out value="${backlog.bliOriginalEstimateSum}" /></td>
 			<tr>
 		</display:footer>
 	</display:table>

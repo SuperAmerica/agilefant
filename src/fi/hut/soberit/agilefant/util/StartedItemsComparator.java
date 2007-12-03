@@ -4,9 +4,9 @@ import java.util.Comparator;
 
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
-import fi.hut.soberit.agilefant.model.Deliverable;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Product;
+import fi.hut.soberit.agilefant.model.Project;
 
 /**
  * A comparator class for the default sorting of Started Items -view.
@@ -41,8 +41,8 @@ public class StartedItemsComparator implements Comparator<BacklogItem> {
         }
 
         /* Compare project ranks first */
-        Deliverable project1 = getProject(o1);
-        Deliverable project2 = getProject(o2);
+        Project project1 = getProject(o1);
+        Project project2 = getProject(o2);
         
         if (project1 == null || project2 == null) {
             return 0;
@@ -80,14 +80,14 @@ public class StartedItemsComparator implements Comparator<BacklogItem> {
      * Get the backlogItems project.
      * @param item backlog item
      */
-    private Deliverable getProject(BacklogItem item) {
+    private Project getProject(BacklogItem item) {
         Backlog backlog = item.getBacklog();
         
-        if (backlog instanceof Deliverable) {
-            return (Deliverable)backlog;
+        if (backlog instanceof Project) {
+            return (Project)backlog;
         }
         else if (backlog instanceof Iteration) {
-            return ((Iteration)backlog).getDeliverable();
+            return ((Iteration)backlog).getProject();
         }
         
         return null;

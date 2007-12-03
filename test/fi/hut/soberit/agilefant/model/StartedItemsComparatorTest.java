@@ -19,22 +19,22 @@ public class StartedItemsComparatorTest extends TestCase {
         /* Create test data */
         Product product = new Product();
         
-        Deliverable project0 = new Deliverable();
+        Project project0 = new Project();
         project0.setRank(0);
         project0.setProduct(product);
-        Deliverable project1 = new Deliverable();
+        Project project1 = new Project();
         project1.setRank(1);
         project0.setProduct(product);
-        Deliverable project2 = new Deliverable();
+        Project project2 = new Project();
         project2.setRank(2);
         project0.setProduct(product);
         
         Iteration iter0 = new Iteration();
-        iter0.setDeliverable(project0);
+        iter0.setProject(project0);
         Iteration iter1 = new Iteration();
-        iter1.setDeliverable(project1);
+        iter1.setProject(project1);
         Iteration iter2 = new Iteration();
-        iter2.setDeliverable(project2);
+        iter2.setProject(project2);
         
         BacklogItem[] bliArray = new BacklogItem[9];
         for (int i = 0; i < 9; i++) {

@@ -129,11 +129,11 @@ public class UserBusinessTest extends SpringTestCase {
         Task ph5 = taskDAO.get(testUtility.createTask(user, "Placeholder 5",
                 bli5));
 
-        ph1.setStatus(TaskStatus.NOT_STARTED);
-        ph2.setStatus(TaskStatus.STARTED);
-        ph3.setStatus(TaskStatus.BLOCKED);
-        ph4.setStatus(TaskStatus.IMPLEMENTED);
-        ph5.setStatus(TaskStatus.DONE);
+        bli1.setStatus(TaskStatus.NOT_STARTED);
+        bli2.setStatus(TaskStatus.STARTED);
+        bli3.setStatus(TaskStatus.BLOCKED);
+        bli4.setStatus(TaskStatus.IMPLEMENTED);
+        bli5.setStatus(TaskStatus.DONE);
         
         bli1.setPriority(Priority.BLOCKER);
         bli2.setPriority(Priority.BLOCKER);
@@ -141,17 +141,7 @@ public class UserBusinessTest extends SpringTestCase {
         bli4.setPriority(Priority.BLOCKER);
         bli5.setPriority(Priority.BLOCKER);
 
-        ph3.setAssignee(user);
-        ph4.setAssignee(user);
-        ph5.setAssignee(user);
-
-        /* Give backlog items their placeholders */
-        bli1.setPlaceHolder(ph1);
-        bli2.setPlaceHolder(ph2);
-        bli3.setPlaceHolder(ph3);
-        bli4.setPlaceHolder(ph4);
-        bli5.setPlaceHolder(ph5);
-
+        
         /* Set the assignees */
         bli3.setAssignee(user);
         bli4.setAssignee(user);
@@ -191,10 +181,10 @@ public class UserBusinessTest extends SpringTestCase {
         for (BacklogItem bli : list) {
             assertFalse(
                     "Failed: the list should not contain backlog items with not started status",
-                    bli.getPlaceHolder().getStatus() == TaskStatus.NOT_STARTED);
+                    bli.getStatus() == TaskStatus.NOT_STARTED);
             assertFalse(
                     "Failed: the list should not contain backlog items with done status",
-                    bli.getPlaceHolder().getStatus() == TaskStatus.DONE);
+                    bli.getStatus() == TaskStatus.DONE);
         }
     }
 

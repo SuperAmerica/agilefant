@@ -114,6 +114,13 @@ drop table if exists PracticeAllocation;
 drop table if exists Practice;
 drop table if exists PracticeTemplate;
 
+-- Add History and BacklogHistory
+alter table Backlog add column history_fk integer;
+create table History (DTYPE integer not null, id integer not null auto_increment, primary key (id)) ENGINE=InnoDB;
+create table HistoryEntry (id integer not null auto_increment, effortLeft integer, originalEstimate integer, date date, history_id integer, primary key (id)) ENGINE=InnoDB;
+alter table Backlog add index FK4E86B8DDC91A641F (history_fk), add constraint FK4E86B8DDC91A641F foreign key (history_fk) references History (id);
+alter table HistoryEntry add index FK9367445EC91A6475 (history_id), add constraint FK9367445EC91A6475 foreign key (history_id) references History (id);
+alter table HistoryEntry add index FK9367445EFD7DC542 (history_id), add constraint FK9367445EFD7DC542 foreign key (history_id) references History (id);
 
 
 

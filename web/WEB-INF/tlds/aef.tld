@@ -80,21 +80,6 @@
 	    	<rtexprvalue>true</rtexprvalue>  
 	    </attribute> 
 	</tag>
-
-
-	<tag>
-		<name>unfinishedWatchedTasksList</name>
-		<tag-class>fi.hut.soberit.agilefant.web.tag.UnfinishedWatchedTasksListTag</tag-class>
-		<body-content>JSP</body-content>
-		<description>
-			Lists all unfinished tasks, watched by the current user, to variable unfinishedWatchedTasksList
-	    </description>
-	    <attribute>
-	    	<name>userId</name>
-	    	<required>true</required>	   
-	    	<rtexprvalue>true</rtexprvalue>
-	    </attribute>	    
-	</tag>
 	
 	<tag>
 		<name>priorityList</name>
@@ -196,25 +181,6 @@
 	
 	
 	<tag>
-		<name>hourReportTaskList</name>
-		<tag-class>fi.hut.soberit.agilefant.web.tag.HourReportTaskListTag</tag-class>
-		<body-content>JSP</body-content>
-		<description>
-			Kludge to get tasks for hour report form
-	    </description>
-	    <attribute>
-	    	<name>id</name>
-	    	<required>true</required>	    
-	    </attribute>
-	    <attribute>
-	    	<name>userId</name>
-	    	<required>true</required>	    
-	    	<rtexprvalue>true</rtexprvalue>	    	
-	    </attribute>
-	</tag>
-	
-	
-	<tag>
 		<name>taskStatusList</name>
 		<tag-class>fi.hut.soberit.agilefant.web.tag.TaskStatusListTag</tag-class>
 		<body-content>JSP</body-content>
@@ -234,11 +200,11 @@
 	
 	
 	<tag>
-		<name>deliverableList</name>
-		<tag-class>fi.hut.soberit.agilefant.web.tag.DeliverableListTag</tag-class>
+		<name>projectList</name>
+		<tag-class>fi.hut.soberit.agilefant.web.tag.ProjectListTag</tag-class>
 		<body-content>JSP</body-content>
 		<description>
-			Stores available deliverables
+			Stores available projects
 	    </description>
 	    <attribute>
 	    	<name>id</name>
@@ -264,7 +230,7 @@
 			<rtexprvalue>true</rtexprvalue>            
         </attribute>	    
         <attribute>
-            <name>deliverableId</name>
+            <name>projectId</name>
             <required>false</required>
 			<rtexprvalue>true</rtexprvalue>            
         </attribute>	    
@@ -322,15 +288,9 @@
 	    <path>/WEB-INF/tags/tasklist.tag</path>
  	 </tag-file>
  	 
- 	 <tag-file>
- 	 	<name>backlogItemForm</name>
- 	 	<path>/WEB-INF/tags/backlogItemForm.tag</path>
- 	 </tag-file>
- 	 
-
 	 <tag-file>
-	    <name>hiddenDeliverableList</name>
-	    <path>/WEB-INF/tags/hiddenDeliverableList.tag</path>
+	    <name>hiddenProjectList</name>
+	    <path>/WEB-INF/tags/hiddenProjectList.tag</path>
  	 </tag-file>
 
 	 <tag-file>
@@ -339,8 +299,8 @@
  	 </tag-file>
 
 	 <tag-file>
-	    <name>deliverableMenu</name>
-	    <path>/WEB-INF/tags/deliverableMenu.tag</path>
+	    <name>projectMenu</name>
+	    <path>/WEB-INF/tags/projectMenu.tag</path>
  	 </tag-file>
 
 	<function>
@@ -349,9 +309,9 @@
 	  <function-signature>boolean isProduct( java.lang.Object )</function-signature>
 	</function>  	 
 	<function>
-	  <name>isDeliverable</name>
+	  <name>isProject</name>
 	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
-	  <function-signature>boolean isDeliverable( java.lang.Object )</function-signature>
+	  <function-signature>boolean isProject( java.lang.Object )</function-signature>
 	</function>  	 
 	<function>
 	  <name>isIteration</name>
@@ -377,37 +337,7 @@
 	  <name>isUser</name>
 	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
 	  <function-signature>boolean isUser(java.lang.Object)</function-signature>
-	</function>  	 
-	<function>
-	  <name>isPortfolio</name>
-	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
-	  <function-signature>boolean isPortfolio(java.lang.Object)</function-signature>
-	</function>  	 
-	<function>
-	  <name>isManagementPage</name>
-	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
-	  <function-signature>boolean isManagementPage(java.lang.Object)</function-signature>
-	</function>  	 
-	<function>
-	  <name>isAssignEvent</name>
-	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
-	  <function-signature>boolean isAssignEvent(java.lang.Object)</function-signature>
-	</function>  	 
-	<function>
-	  <name>isTaskComment</name>
-	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
-	  <function-signature>boolean isTaskComment(java.lang.Object)</function-signature>
-	</function>  	 
-	<function>
-	  <name>isEstimateHistoryEvent</name>
-	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
-	  <function-signature>boolean isEstimateHistoryEvent(java.lang.Object)</function-signature>
-	</function>  	 
-	<function>
-	  <name>isPerformedWork</name>
-	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
-	  <function-signature>boolean isPerformedWork(java.lang.Object)</function-signature>
-	</function>  	 
+	</function>  	   	 
 	 	 
 	<function>
 	  <name>out</name>

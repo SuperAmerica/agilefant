@@ -8,24 +8,19 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
-import fi.hut.soberit.agilefant.db.DeliverableDAO;
-import fi.hut.soberit.agilefant.db.EffortHistoryDAO;
 import fi.hut.soberit.agilefant.db.GenericDAO;
 import fi.hut.soberit.agilefant.db.IterationDAO;
 import fi.hut.soberit.agilefant.db.ProductDAO;
+import fi.hut.soberit.agilefant.db.ProjectDAO;
 import fi.hut.soberit.agilefant.db.TaskDAO;
-import fi.hut.soberit.agilefant.db.TaskEventDAO;
 import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
-import fi.hut.soberit.agilefant.model.Deliverable;
-import fi.hut.soberit.agilefant.model.EffortHistory;
-import fi.hut.soberit.agilefant.model.EstimateHistoryEvent;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Product;
+import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Task;
-import fi.hut.soberit.agilefant.model.TaskEvent;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.security.SecurityUtil;
 import fi.hut.soberit.agilefant.web.BacklogItemAction;
@@ -48,9 +43,7 @@ public class TestUtility extends SpringTestCase {
 
     private TaskDAO taskDAO;
 
-    private TaskEventDAO taskEventDAO;
-
-    private DeliverableDAO deliverableDAO;
+    private ProjectDAO projectDAO;
 
     private IterationDAO iterationDAO;
 
@@ -117,13 +110,13 @@ public class TestUtility extends SpringTestCase {
     public Integer createProject(String name, Date startDate, Date endDate,
             Product product) {
         Integer id;
-        Deliverable project = new Deliverable();
+        Project project = new Project();
         project.setName(name);
         project.setProduct(product);
         project.setStartDate(startDate);
         project.setEndDate(endDate);
-        id = (Integer) deliverableDAO.create(project);
-        pushToCleanupstack(deliverableDAO);
+        id = (Integer) projectDAO.create(project);
+        pushToCleanupstack(projectDAO);
         return id;
     }
 
@@ -155,11 +148,11 @@ public class TestUtility extends SpringTestCase {
      * @return the id of the generated iteration
      */
     public Integer createIteration(String name, Date startDate, Date endDate,
-            Deliverable project) {
+            Project project) {
         Integer id;
         Iteration iteration = new Iteration();
         iteration.setName(name);
-        iteration.setDeliverable(project);
+        iteration.setProject(project);
         iteration.setStartDate(startDate);
         iteration.setEndDate(endDate);
         id = (Integer) iterationDAO.create(iteration);
@@ -176,7 +169,7 @@ public class TestUtility extends SpringTestCase {
      * @return the id of the generated iteration
      */
     public Integer createIteration(String name) {
-        Deliverable project = deliverableDAO.get(createProject(name));
+        Project project = projectDAO.get(createProject(name));
         return createIteration(name, new Date(0), new Date(System
                 .currentTimeMillis() * 2), project);
     }
@@ -246,28 +239,6 @@ public class TestUtility extends SpringTestCase {
         return createTask(creator, name, backlogItem);
     }
 
-    /**
-     * Create a testimate history event.
-     * 
-     * @param actor
-     *                The actor in the event
-     * @param task
-     *                The task the event belongs to
-     * @param created
-     *                The creation date of the event
-     * @param newEstimate
-     *                The new estimate of the event
-     * @return the id of the generated event
-     */
-    public Integer createEstimateHistory(User actor, Task task, Date created,
-            AFTime newEstimate) {
-        Integer id;
-        EstimateHistoryEvent event = new EstimateHistoryEvent(actor, task,
-                created, newEstimate);
-        id = (Integer) taskEventDAO.create(event);
-        pushToCleanupstack(taskEventDAO);
-        return id;
-    }
 
     /**
      * Clean the DB from all content of DAOs in cleanupSet.
@@ -368,7 +339,7 @@ public class TestUtility extends SpringTestCase {
         backlogItemAction.setBacklog(backlog);
         backlogItemAction.setBacklogId(backlog.getId());
         backlogItemAction.setBacklogItemName("Test item");
-        backlogItemAction.getBacklogItem().setAllocatedEffort(
+        backlogItemAction.getBacklogItem().setOriginalEstimate(
                 new AFTime(originalEstimate));
         return backlogItemAction.store();
     }
@@ -388,7 +359,6 @@ public class TestUtility extends SpringTestCase {
             TaskAction taskAction, long estimate) {
         taskAction.create();
         taskAction.setBacklogItemId(backlogItem.getId());
-        taskAction.getTask().setEffortEstimate(new AFTime(estimate));
         taskAction.getTask().setName("Test task");
         return taskAction.storeNew();
     }
@@ -423,42 +393,7 @@ public class TestUtility extends SpringTestCase {
         return user;
     }
 
-    /**
-     * Adds an estimate event to the estimate history of the given item. Doesn't
-     * alter the effor left value of the task.
-     * 
-     * @param taskId
-     *                the Id of the task to add effor history to
-     * @param taskDAO
-     *                the task DAO to use
-     * @param estimate
-     *                the new effort estimate in milliseconds
-     * @param taskEventDAO
-     *                the task event DAO to use
-     * @param createdDate
-     *                the created date to give the new event
-     */
-    public static void addEstimate(int taskId, TaskDAO taskDAO, long estimate,
-            TaskEventDAO taskEventDAO, Date createdDate) {
-        Task task = taskDAO.get(taskId);
-        EstimateHistoryEvent event = new EstimateHistoryEvent();
-        TaskEvent taskEvent;
-        event.setActor(SecurityUtil.getLoggedUser());
-        event.setNewEstimate(new AFTime(estimate));
-        event.setTask(task);
-        task.getEvents().add(event);
-        int eventId = (Integer) taskEventDAO.create(event);
-        taskDAO.store(task);
-        taskEvent = taskEventDAO.get(eventId);
-        taskEvent.setCreated(createdDate);
-        taskEventDAO.store(taskEvent);
-        if (logger.isDebugEnabled()) {
-            logger.debug("Task " + taskId + " Event " + eventId + " created "
-                    + taskEventDAO.get(eventId).getCreated() + " estimate: "
-                    + new AFTime(estimate));
-        }
-    }
-
+    
     /**
      * Clears the database from test data. We must clear database by hand
      * because of we need transactions to complete.
@@ -485,11 +420,11 @@ public class TestUtility extends SpringTestCase {
         clearData(productDAO);
     }
 
-    public static void clearData(ProductDAO productDAO,
-            EffortHistoryDAO effortHistoryDAO) {
-        clearData(effortHistoryDAO);
-        clearData(productDAO);
-    }
+//    public static void clearData(ProductDAO productDAO,
+//            EffortHistoryDAO effortHistoryDAO) {
+//        clearData(effortHistoryDAO);
+//        clearData(productDAO);
+//    }
 
     public static void clearData(ProductDAO productDAO) {
         for (Product i : productDAO.getAll()) {
@@ -497,11 +432,11 @@ public class TestUtility extends SpringTestCase {
         }
     }
 
-    public static void clearData(EffortHistoryDAO effortHistoryDAO) {
-        for (EffortHistory i : effortHistoryDAO.getAll()) {
-            effortHistoryDAO.remove(i.getId());
-        }
-    }
+//    public static void clearData(EffortHistoryDAO effortHistoryDAO) {
+//        for (EffortHistory i : effortHistoryDAO.getAll()) {
+//            effortHistoryDAO.remove(i.getId());
+//        }
+//    }
 
     public static void clearData(IterationDAO iterationDAO) {
         for (Iteration i : iterationDAO.getAll()) {
@@ -590,33 +525,18 @@ public class TestUtility extends SpringTestCase {
     }
 
     /**
-     * @return the taskEventDAO
+     * @return the projectDAO
      */
-    public TaskEventDAO getTaskEventDAO() {
-        return taskEventDAO;
+    public ProjectDAO getProjectDAO() {
+        return projectDAO;
     }
 
     /**
-     * @param taskEventDAO
-     *                the taskEventDAO to set
+     * @param projectDAO
+     *                the projectDAO to set
      */
-    public void setTaskEventDAO(TaskEventDAO taskEventDAO) {
-        this.taskEventDAO = taskEventDAO;
-    }
-
-    /**
-     * @return the deliverableDAO
-     */
-    public DeliverableDAO getDeliverableDAO() {
-        return deliverableDAO;
-    }
-
-    /**
-     * @param deliverableDAO
-     *                the deliverableDAO to set
-     */
-    public void setDeliverableDAO(DeliverableDAO deliverableDAO) {
-        this.deliverableDAO = deliverableDAO;
+    public void setProjectDAO(ProjectDAO projectDAO) {
+        this.projectDAO = projectDAO;
     }
 
     /**

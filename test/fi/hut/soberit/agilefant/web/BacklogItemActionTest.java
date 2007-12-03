@@ -148,7 +148,7 @@ public class BacklogItemActionTest extends SpringTestCase {
     }
 
     private void setAllocatedEffort(AFTime allocatedEffort) {
-        backlogItemAction.getBacklogItem().setAllocatedEffort(allocatedEffort);
+        backlogItemAction.getBacklogItem().setOriginalEstimate(allocatedEffort);
     }
 
     private void setPriority(Priority priority) {
@@ -169,7 +169,6 @@ public class BacklogItemActionTest extends SpringTestCase {
             Priority priority, TaskStatus status, Backlog backlog) {
         this.setNameAndDesc(name, desc);
         this.setLoggedUser(creator);
-        this.backlogItemAction.setWatch(watch);
         this.setAssignee(assignee);
         this.setAllocatedEffort(allocatedEffort);
         this.setPriority(priority);
@@ -185,31 +184,14 @@ public class BacklogItemActionTest extends SpringTestCase {
                 .getName());
         super.assertEquals("The description of the " + entity + " was wrong",
                 desc, bi.getDescription());
-        if (watch) {
-            super.assertFalse(
-                    "Number of watchers set was 0 even though watcher was set",
-                    bi.getWatchers().size() == 0);
-            super.assertTrue("Watching wasn't set as supposed", bi
-                    .getWatchers().containsValue(creator));
-            userDAO.refresh(creator);
-            super
-                    .assertFalse(
-                            "Number of backlog items watched by user was 0 even though shouldn't be",
-                            creator.getWatchedBacklogItems().size() == 0);
-        } else
-            super.assertFalse("Watching was set unlike as supposed", bi
-                    .getWatchers().containsValue(creator));
-        // TODO watcher
-        // super.assertEquals("The creator of the " + entity + " was wrong",
-        // creator, task.getCreator());
         super.assertEquals("The assignee of the " + entity + " was wrong",
                 assignee.getId(), bi.getAssignee().getId());
         super.assertEquals("The allocated effort of the " + entity
-                + " was wrong", estimate, bi.getAllocatedEffort());
+                + " was wrong", estimate, bi.getOriginalEstimate());
         super.assertEquals("The priority of the " + entity + " was wrong",
                 priority, bi.getPriority());
         super.assertEquals("The status of the " + entity + " was wrong",
-                status, bi.getPlaceHolder().getStatus());
+                status, bi.getStatus());
         super.assertEquals("The backlog of the " + entity + " was wrong",
                 backlog, bi.getBacklog());
 
@@ -356,8 +338,6 @@ public class BacklogItemActionTest extends SpringTestCase {
         this.checkContents("stored backlog item", storedBI, TEST_NAME1,
                 TEST_DESC1, creator, TEST_WATCH1, assignee, TEST_EST1,
                 TEST_PRI1, TEST_STAT1, backlog);
-        assertNotNull("Placeholder task was not created", storedBI
-                .getPlaceHolder());
     }
 
     /**
@@ -377,13 +357,13 @@ public class BacklogItemActionTest extends SpringTestCase {
         String result = backlogItemAction.store();
         storedBI = this.getBacklogItem(TEST_NAME1, TEST_DESC1);
         assertNull("Placeholder task doesn't have null estimate", storedBI
-                .getPlaceHolder().getEffortEstimate());
+                .getEffortLeft());
 
         updatedBI.setName(TEST_NAME1);
         updatedBI.setDescription(TEST_DESC1);
 
         backlogItemAction.setBacklogItemId(storedBI.getId());
-        updatedBI.setAllocatedEffort(TEST_EST1);
+        updatedBI.setOriginalEstimate(TEST_EST1);
 
         backlogItemAction.setBacklogItem(updatedBI);
         assertTrue("Storing backlog item failed",
@@ -392,10 +372,8 @@ public class BacklogItemActionTest extends SpringTestCase {
         storedBI = this.getBacklogItem(TEST_NAME1, TEST_DESC1);
 
         assertEquals("Backlog item effort estimate wasn't updated", TEST_EST1,
-                storedBI.getAllocatedEffort());
+                storedBI.getOriginalEstimate());
 
-        assertEquals("Placeholder task's estimate wasn't updated", TEST_EST1,
-                storedBI.getPlaceHolder().getEffortEstimate());
     }
 
     public void testStore_withDifferentData() {

@@ -16,8 +16,8 @@
 	<bean name="workTypeAction"
 		class="fi.hut.soberit.agilefant.web.WorkTypeAction" singleton="false"
 		autowire="byName" />
-	<bean name="deliverableAction"
-			class="fi.hut.soberit.agilefant.web.DeliverableAction"
+	<bean name="projectAction"
+			class="fi.hut.soberit.agilefant.web.ProjectAction"
 			singleton="false" autowire="byName">
 		<property name="dateFormat">
 			<ref local="dateFormat"/>
@@ -45,33 +45,15 @@
 	<bean name="userAction"
 		class="fi.hut.soberit.agilefant.web.UserAction" singleton="false"
 		autowire="byName" />
-	<bean name="assignTaskAction"
-		class="fi.hut.soberit.agilefant.web.AssignTaskAction"
-		singleton="false" autowire="byName" />
-	<bean name="performWorkAction"
-		class="fi.hut.soberit.agilefant.web.PerformWorkAction"
-		singleton="false" autowire="byName" />
-	<bean name="bulkPerformWorkAction"
-		class="fi.hut.soberit.agilefant.web.BulkPerformWorkAction"
-		singleton="false" autowire="byName" />
 	<bean name="chartAction"
 		class="fi.hut.soberit.agilefant.web.ChartAction" singleton="false"
 		autowire="byName" />
-	<bean name="showPerformedWorkAction"
-		class="fi.hut.soberit.agilefant.web.ShowPerformedWorkAction"
-		singleton="false" autowire="byName" />
 	<bean name="iterationGoalAction"
 		class="fi.hut.soberit.agilefant.web.IterationGoalAction"
-		singleton="false" autowire="byName" />
-	<bean name="watchObjectAction"
-		class="fi.hut.soberit.agilefant.web.WatchObjectAction"
 		singleton="false" autowire="byName" />
 	<bean name="linkToIterationGoalAction"
 		class="fi.hut.soberit.agilefant.web.LinkToIterationGoalAction"
 		singleton="false" autowire="byName" />
-	<bean name="portfolioAction"
-		class="fi.hut.soberit.agilefant.web.PortfolioAction" singleton="false"
-		autowire="byName" />
 	<bean name="contextStackAction"
 		class="fi.hut.soberit.agilefant.web.ContextStackAction"
 		singleton="false" autowire="byName" />

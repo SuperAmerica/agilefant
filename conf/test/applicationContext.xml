@@ -41,25 +41,5 @@
 				<prop key="hibernate.dialect">${hibernate.dialect}</prop>
 			</props>
 		</property>
-	 	<property name="eventListeners">
-	 		<map>
-	 			<entry key="pre-insert">
-	 				<list>
-						<bean class="fi.hut.soberit.agilefant.db.hibernate.event.TaskEventListener"/>
-						<bean class="fi.hut.soberit.agilefant.db.hibernate.event.TaskEventEventListener"/>
-					</list>
-	 			</entry>	 		
-	 		</map>
-	 	</property>
-	 </bean>
-	 
-	 <bean name="portfolioManager" class="fi.hut.soberit.agilefant.service.PortfolioManagerImpl">
-		<property name="deliverableDAO" ref="deliverableDAO"/>
-	 </bean>
-	 
-	 <bean name="chartManager" class="fi.hut.soberit.agilefant.service.ChartManagerImpl">
-		<property name="iterationDAO" ref="iterationDAO"/>
-		<property name="performedWorkDAO" ref="performedWorkDAO"/>
-		<property name="estimateHistoryDAO" ref="estimateHistoryDAO"/>
 	 </bean>
 </beans>

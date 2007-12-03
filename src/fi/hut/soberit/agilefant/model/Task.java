@@ -1,11 +1,7 @@
 package fi.hut.soberit.agilefant.model;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,16 +9,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.MapKey;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
 import javax.persistence.Transient;
 
-import org.hibernate.annotations.Formula;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.Type;
 
@@ -35,13 +24,8 @@ import fi.hut.soberit.agilefant.web.page.PageItem;
  * pieces. It's work of a single person. A task is under a backlog item, which
  * is a bigger container of work.
  * <p>
- * Technically there's one-to-many relation between backlog item and a task. A
- * task has an effort estimate, as well as sum of work done. It has a creator
- * and an assignee. The Task also carries a log of events with it. Since one can
- * "watch" a task, watches are also tracked.
- * <p>
- * Task also is linked to some practices, but those are not currently
- * implemented in the UI.
+ * Technically there's one-to-many relation between backlog item and a task. It
+ * has a creator and an assignee.
  * <p>
  * Task is a unit which, within a Cycle of Control model, is in interest of
  * workers of a team, and sometimes their project manager also. Task is a
@@ -58,17 +42,13 @@ import fi.hut.soberit.agilefant.web.page.PageItem;
  * each worker, to be able to balance the workload within her crew.
  */
 @Entity
-public class Task implements PageItem, Assignable, EffortContainer {
+public class Task implements PageItem {
 
     private int id;
 
     private Priority priority;
 
     private TaskStatus status = TaskStatus.NOT_STARTED;
-
-    private AFTime effortEstimate;
-
-    private AFTime performedEffort;
 
     private String name;
 
@@ -78,15 +58,7 @@ public class Task implements PageItem, Assignable, EffortContainer {
 
     private Date created;
 
-    private User assignee;
-
     private User creator;
-
-    private Collection<TaskEvent> events = new HashSet<TaskEvent>();
-
-    private Map<Integer, User> watchers = new HashMap<Integer, User>();
-
-    private Collection<PracticeAllocation> practices = new HashSet<PracticeAllocation>();
 
     @Type(type = "escaped_text")
     public String getDescription() {
@@ -147,48 +119,6 @@ public class Task implements PageItem, Assignable, EffortContainer {
         this.creator = creator;
     }
 
-    /** {@inheritDoc} */
-    @ManyToOne
-    public User getAssignee() {
-        return assignee;
-    }
-
-    /** {@inheritDoc} */
-    public void setAssignee(User assignee) {
-        this.assignee = assignee;
-    }
-
-    @OneToMany(mappedBy = "task")
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @OrderBy(value = "created")
-    public Collection<TaskEvent> getEvents() {
-        return events;
-    }
-
-    public void setEvents(Collection<TaskEvent> events) {
-        this.events = events;
-    }
-
-    @Type(type = "af_time")
-    public AFTime getEffortEstimate() {
-        return effortEstimate;
-    }
-
-    @Type(type = "af_time")
-    @Formula(value = "(select SUM(e.effort) from TaskEvent e "
-            + "where e.eventType = 'PerformedWork' and e.task_id = id)")
-    public AFTime getPerformedEffort() {
-        return performedEffort;
-    }
-
-    protected void setPerformedEffort(AFTime performedEffort) {
-        this.performedEffort = performedEffort;
-    }
-
-    public void setEffortEstimate(AFTime effortEstimate) {
-        this.effortEstimate = effortEstimate;
-    }
-
     @ManyToOne
     @JoinColumn(nullable = false)
     public BacklogItem getBacklogItem() {
@@ -241,34 +171,4 @@ public class Task implements PageItem, Assignable, EffortContainer {
         this.status = status;
     }
 
-    /** Set task to use a template. Not currently in use. */
-    public void useTemplate(PracticeTemplate template) {
-
-        ArrayList<PracticeAllocation> practiceAllocations = new ArrayList<PracticeAllocation>();
-
-        for (Practice p : template.getPractices()) {
-            practiceAllocations.add(new PracticeAllocation(p, this));
-        }
-
-        setPractices(practiceAllocations);
-    }
-
-    @OneToMany(mappedBy = "task")
-    public Collection<PracticeAllocation> getPractices() {
-        return practices;
-    }
-
-    public void setPractices(Collection<PracticeAllocation> practices) {
-        this.practices = practices;
-    }
-
-    @ManyToMany()
-    @MapKey()
-    public Map<Integer, User> getWatchers() {
-        return watchers;
-    }
-
-    public void setWatchers(Map<Integer, User> watchers) {
-        this.watchers = watchers;
-    }
 }

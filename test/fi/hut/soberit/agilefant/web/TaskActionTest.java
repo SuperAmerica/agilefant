@@ -136,14 +136,6 @@ public class TaskActionTest extends SpringTestCase {
         SecurityUtil.setLoggedUser(user);
     }
 
-    private void setAssignee(User assignee) {
-        taskAction.getTask().setAssignee(assignee);
-    }
-
-    private void setEstimate(AFTime est) {
-        taskAction.getTask().setEffortEstimate(est);
-    }
-
     private void setPriority(Priority priority) {
         taskAction.getTask().setPriority(priority);
     }
@@ -161,8 +153,6 @@ public class TaskActionTest extends SpringTestCase {
             TaskStatus status, BacklogItem backlogItem) {
         this.setNameAndDesc(name, desc);
         this.setLoggedUser(creator);
-        this.setAssignee(assignee);
-        this.setEstimate(estimate);
         this.setPriority(priority);
         this.setStatus(status);
         this.setBacklogItem(backlogItem);
@@ -177,10 +167,6 @@ public class TaskActionTest extends SpringTestCase {
                 desc, task.getDescription());
         super.assertEquals("The creator of the " + entity + " was wrong",
                 creator, task.getCreator());
-        super.assertEquals("The assignee of the " + entity + " was wrong",
-                assignee, task.getAssignee());
-        super.assertEquals("The estimate of the " + entity + " was wrong",
-                estimate, task.getEffortEstimate());
         super.assertEquals("The priority of the " + entity + " was wrong",
                 priority, task.getPriority());
         super.assertEquals("The status of the " + entity + " was wrong",
@@ -231,7 +217,7 @@ public class TaskActionTest extends SpringTestCase {
         bi.setDescription("FOOBAR");
         bi.setName("FOOBAR");
         bi.setPriority(TEST_PRI1);
-        bi.setAllocatedEffort(TEST_EST1);
+        bi.setOriginalEstimate(TEST_EST1);
         bi.setPriority(TEST_PRI1);
         String result = this.backlogItemAction.store();
         assertSame("Backlog item creation failed", Action.SUCCESS, result);
@@ -310,7 +296,6 @@ public class TaskActionTest extends SpringTestCase {
         tat.setTaskAction(ta);
         tat.setTaskDAO(td);
         tat.create();
-        tat.setEstimate(effortEstimate);
         User assignee = tat.getTestUser(1);
         User creator = tat.getTestUser(2);
         String name;
@@ -366,7 +351,7 @@ public class TaskActionTest extends SpringTestCase {
         TaskStatus status = task.getStatus();
 
         // Verify that the task was created (+BacklogItem placeholder task)
-        assertEquals(2, bi.getTasks().size());
+        assertEquals(1, bi.getTasks().size());
 
         // 2.Perform the method under test
         this.taskAction.setTaskId(taskId);
@@ -375,7 +360,7 @@ public class TaskActionTest extends SpringTestCase {
         // 3. Verify expected results
         super.assertEquals("transformToBacklogItem() was unsuccessful", result,
                 Action.SUCCESS);
-        assertEquals(0, backlogItemDAO.getRealTasks(bi).size());
+//        assertEquals(0, backlogItemDAO.getRealTasks(bi).size());
         // Retrieve and verify the info on the newly created backlogItem
         Integer newBacklogItemId = this.taskAction.getBacklogItemId();
         BacklogItem newItem = this.backlogItemDAO.get(newBacklogItemId);
@@ -384,7 +369,6 @@ public class TaskActionTest extends SpringTestCase {
         assertEquals(0, status.compareTo(newItem.getStatus()));
 
         assertEquals(task.getBacklogItem().getBacklog(), newItem.getBacklog());
-        assertEquals(task.getAssignee(), newItem.getAssignee());
         assertEquals(task.getBacklogItem().getIterationGoal(), newItem
                 .getIterationGoal());
         System.out.print("PRI: " + bi.getPriority());
@@ -444,21 +428,10 @@ public class TaskActionTest extends SpringTestCase {
         super.assertEquals("storing task with null estimate was unsuccesfull",
                 Action.SUCCESS, result);
         this.fetchForEditing(TEST_NAME1, TEST_DESC1);
-        super.assertNull(
-                "Null estimate wasn't null after fetching for editing",
-                taskAction.getTask().getEffortEstimate());
-        this.setEstimate(TEST_EST1);
         this.store();
         this.fetchForEditing(TEST_NAME1, TEST_DESC1);
-        super.assertEquals("Changed estimate wasn't as supposed", TEST_EST1,
-                taskAction.getTask().getEffortEstimate());
-        this.setEstimate(null);
         this.store();
         this.fetchForEditing(TEST_NAME1, TEST_DESC1);
-        super
-                .assertNull(
-                        "Setting estimate to null (for a task create before) was unsuccesfull",
-                        taskAction.getTask().getEffortEstimate());
     }
 
     public void testStore_withoutCreate() {
@@ -517,10 +490,8 @@ public class TaskActionTest extends SpringTestCase {
         taskAction.setTaskId(this.getTask(TEST_NAME1, TEST_DESC1).getId());
         this.edit();
 
-        this.setAssignee(creator);
         this.setNameAndDesc(TEST_NAME2, TEST_DESC2);
         this.setPriority(TEST_PRI2);
-        this.setEstimate(TEST_EST2);
         this.setStatus(TEST_STAT2);
 
         String result = taskAction.store();

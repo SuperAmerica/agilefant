@@ -2,10 +2,8 @@ package fi.hut.soberit.agilefant.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,18 +11,12 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.MapKey;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
-import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.Type;
 
@@ -71,73 +63,35 @@ public class BacklogItem implements PageItem, Assignable, EffortContainer {
 
     private Collection<Task> tasks = new HashSet<Task>();
 
-    private Collection<Task> realTasks;
-
-    private AFTime allocatedEffort;
-
-    private AFTime effortEstimate;
-
-    private AFTime performedEffort;
-
     private User assignee;
 
     private TaskStatus status = TaskStatus.NOT_STARTED;
 
-    private Map<Integer, User> watchers = new HashMap<Integer, User>();
-
     private IterationGoal iterationGoal;
 
-    private Task placeHolder;
+    // private Task placeHolder;
 
-    private AFTime bliOrigEst;
-
-    private AFTime taskSumOrigEst;
-
-    private AFTime bliEffEst;
-
-    private AFTime taskSumEffEst;
+    private AFTime originalEstimate;
 
     private AFTime effortLeft;
 
     /**
-     * Sum of bliEffEst and taskSumEffEst.
+     * Returns effort left for this item.
+     * 
+     * @return effort left for this backlog item
      */
-    private AFTime totalEffortLeft;
 
-    /**
-     * Sum sums of bliOrigEst and taskSumOrigEst.
-     */
-    private AFTime totalOrigEst;
-
-    private Log logger = LogFactory.getLog(this.getClass());
-
-    /** Total effort estimate (time), summed from tasks. */
     @Type(type = "af_time")
-    @Formula(value = "(select SUM(t.effortEstimate) from Task t where t.backlogItem_id = id)")
-    public AFTime getEffortEstimate() {
-        return effortEstimate;
-    }
-
-    protected void setEffortEstimate(AFTime taskEffortLeft) {
-        this.effortEstimate = taskEffortLeft;
-    }
-
-    /** Amount of effort (time) allocated for this backlog item. */
-    @Type(type = "af_time")
-    @Column(name = "remainingEffortEstimate")
-    public AFTime getAllocatedEffort() {
-        return allocatedEffort;
-    }
-
-    public void setAllocatedEffort(AFTime remainingEffortEstimate) {
-        this.allocatedEffort = remainingEffortEstimate;
-    }
-
-    /** Effort left for this backlog item (from placeholder task */
-    @Transient
     public AFTime getEffortLeft() {
         return effortLeft;
     }
+
+    /**
+     * Sets effort left for this item.
+     * 
+     * @param effort
+     *                left for this backlog item
+     */
 
     public void setEffortLeft(AFTime effortLeft) {
         this.effortLeft = effortLeft;
@@ -186,23 +140,45 @@ public class BacklogItem implements PageItem, Assignable, EffortContainer {
         this.name = name;
     }
 
-    /** Get the tasks belonging in this backlog item. */
+    /**
+     * Gets the tasks belonging in this backlog item.
+     * 
+     * @return Collection of tasks belonging to this backlog item
+     */
     @OneToMany(mappedBy = "backlogItem")
     @Cascade(CascadeType.DELETE_ORPHAN)
     public Collection<Task> getTasks() {
         return tasks;
     }
 
+    /**
+     * Sets the tasks belonging in this backlog item.
+     * 
+     * @param tasks
+     *                Collection of tasks belonging to this backlog item
+     */
+
     public void setTasks(Collection<Task> tasks) {
         this.tasks = tasks;
     }
 
-    /** The backlog, a part of which this backlogitem is. */
+    /**
+     * Returns the backlog, in which this backlog item belongs.
+     * 
+     * @return the backlog, in which this backlog item belongs
+     */
     @ManyToOne
     @JoinColumn(nullable = false)
     public Backlog getBacklog() {
         return backlog;
     }
+
+    /**
+     * Sets the backlog, in which this backlog item belongs.
+     * 
+     * @param backlog
+     *                the backlog, in which this backlog item belongs
+     */
 
     public void setBacklog(Backlog backlog) {
         this.backlog = backlog;
@@ -252,42 +228,16 @@ public class BacklogItem implements PageItem, Assignable, EffortContainer {
         this.assignee = assignee;
     }
 
-    @Type(type = "af_time")
-    @Formula(value = "(select SUM(e.effort) from TaskEvent e "
-            + "INNER JOIN Task t ON e.task_id = t.id "
-            + "where e.eventType = 'PerformedWork' and t.backlogItem_id = id)")
-    public AFTime getPerformedEffort() {
-        return performedEffort;
-    }
-
-    protected void setPerformedEffort(AFTime performedEffort) {
-        this.performedEffort = performedEffort;
-    }
-
-    // /** Get the status of this backlog item. */
-    // @Type(type="fi.hut.soberit.agilefant.db.hibernate.EnumUserType",
-    // parameters = {
-    // @Parameter(name="useOrdinal", value="true"),
-    // @Parameter(name="enumClassName",
-    // value="fi.hut.soberit.agilefant.model.BacklogItemStatus")
-    // }
-    // )
-    // public BacklogItemStatus getStatus() {
-    // return status;
-    // }
-    //
-    // public void setStatus(BacklogItemStatus status) {
-    // this.status = status;
-    // }
-
     /**
      * Returns the status of the backlog item.
      * 
      * @return the status of the backlog item.
      */
-    @Transient
+    @Type(type = "fi.hut.soberit.agilefant.db.hibernate.EnumUserType", parameters = {
+            @Parameter(name = "useOrdinal", value = "true"),
+            @Parameter(name = "enumClassName", value = "fi.hut.soberit.agilefant.model.TaskStatus") })
     public TaskStatus getStatus() {
-        return this.status;
+        return status;
     }
 
     /**
@@ -300,144 +250,53 @@ public class BacklogItem implements PageItem, Assignable, EffortContainer {
         this.status = status;
     }
 
-    @ManyToMany()
-    @MapKey()
-    public Map<Integer, User> getWatchers() {
-        return watchers;
-    }
-
-    public void setWatchers(Map<Integer, User> watchers) {
-        this.watchers = watchers;
-    }
-
+    /**
+     * Gets the iteration goal of the backlog item.
+     * 
+     * @return iterationGoal the iteration goal to of the backlog item
+     */
     @ManyToOne
     @JoinColumn(nullable = true)
     public IterationGoal getIterationGoal() {
         return iterationGoal;
     }
 
+    /**
+     * Sets the iteration goal of the backlog item.
+     * 
+     * @param iterationGoal
+     *                the iteration goal to set for the backlog item
+     */
     public void setIterationGoal(IterationGoal iterationGoal) {
         this.iterationGoal = iterationGoal;
     }
 
     /**
-     * Returns the placeholder task of this backlog item
+     * Returns the placeholder task of this backlog item. DO NOT USE THIS. IT
+     * WILL BE REMOVED IN FOLLOWING VERSIONS.
      * 
+     * @deprecated
+     * @param placeHolder
+     *                the placeHolder
      * @return the placeHolder
      */
-    @OneToOne
-    @Cascade(CascadeType.DELETE_ORPHAN)
-    public Task getPlaceHolder() {
-        return placeHolder;
-    }
+    /*
+     * @OneToOne @Cascade(CascadeType.DELETE_ORPHAN) public Task
+     * getPlaceHolder() { return placeHolder; }
+     */
 
     /**
-     * Sets the placeholder task of this backlog items
+     * Sets the placeholder task of this backlog items. DO NOT USE THIS. IT WILL
+     * BE REMOVED IN FOLLOWING VERSIONS.
      * 
+     * @deprecated
      * @param placeHolder
      *                the placeHolder to set
      */
-    public void setPlaceHolder(Task placeHolder) {
-        this.placeHolder = placeHolder;
-    }
-
-    /**
-     * @return the bLIEffEst
+    /*
+     * public void setPlaceHolder(Task placeHolder) { this.placeHolder =
+     * placeHolder; }
      */
-    @Transient
-    public AFTime getBliEffEst() {
-        return bliEffEst;
-    }
-
-    /**
-     * @param effEst
-     *                the bLIEffEst to set
-     */
-    public void setBliEffEst(AFTime effEst) {
-        bliEffEst = effEst;
-    }
-
-    /**
-     * @return the bLIOrigEst
-     */
-    @Transient
-    public AFTime getBliOrigEst() {
-        return bliOrigEst;
-    }
-
-    /**
-     * @param origEst
-     *                the bLIOrigEst to set
-     */
-    public void setBliOrigEst(AFTime origEst) {
-        bliOrigEst = origEst;
-    }
-
-    /**
-     * @return the taskSumEffEst
-     */
-    @Transient
-    public AFTime getTaskSumEffEst() {
-        return taskSumEffEst;
-    }
-
-    /**
-     * @param taskSumEffEst
-     *                the taskSumEffEst to set
-     */
-    public void setTaskSumEffEst(AFTime taskSumEffEst) {
-        this.taskSumEffEst = taskSumEffEst;
-    }
-
-    /**
-     * @return the taskSumOrigEst
-     */
-    @Transient
-    public AFTime getTaskSumOrigEst() {
-        return taskSumOrigEst;
-    }
-
-    /**
-     * @param taskSumOrigEst
-     *                the taskSumOrigEst to set
-     */
-    public void setTaskSumOrigEst(AFTime taskSumOrigEst) {
-        this.taskSumOrigEst = taskSumOrigEst;
-    }
-
-    /**
-     * @return the realTasks
-     */
-    @Transient
-    public Collection<Task> getRealTasks() {
-        return realTasks;
-    }
-
-    /**
-     * @param realTasks
-     *                the realTasks to set
-     */
-    public void setRealTasks(Collection<Task> realTasks) {
-        this.realTasks = realTasks;
-    }
-
-    @Transient
-    public AFTime getTotalEffortLeft() {
-        return totalEffortLeft;
-    }
-
-    public void setTotalEffortLeft(AFTime totalEffortLeft) {
-        this.totalEffortLeft = totalEffortLeft;
-    }
-
-    @Transient
-    public AFTime getTotalOrigEst() {
-        return totalOrigEst;
-    }
-
-    public void setTotalOrigEst(AFTime totalOrigEst) {
-        this.totalOrigEst = totalOrigEst;
-    }
 
     /**
      * Get the backlog items parent backlogs.
@@ -452,19 +311,38 @@ public class BacklogItem implements PageItem, Assignable, EffortContainer {
         Backlog firstParent = getBacklog();
 
         if (firstParent instanceof Iteration) {
-            Deliverable deli = ((Iteration) firstParent).getDeliverable();
+            Project deli = ((Iteration) firstParent).getProject();
             Product prod = deli.getProduct();
             retlist.add(prod);
             retlist.add(deli);
             retlist.add(firstParent);
-        } else if (firstParent instanceof Deliverable) {
-            Product prod = ((Deliverable) firstParent).getProduct();
+        } else if (firstParent instanceof Project) {
+            Product prod = ((Project) firstParent).getProduct();
             retlist.add(prod);
             retlist.add(firstParent);
         } else if (firstParent instanceof Product) {
             retlist.add(firstParent);
         }
-
         return retlist;
+    }
+
+    /**
+     * Returns the original effort estimate for this backlog item.
+     * 
+     * @return the original effort estimate for this backlog item
+     */
+    @Type(type = "af_time")
+    public AFTime getOriginalEstimate() {
+        return originalEstimate;
+    }
+
+    /**
+     * Sets the original effort estimate for this backlog item.
+     * 
+     * @param originalEstimate
+     *                the original effort estimate for this backlog item
+     */
+    public void setOriginalEstimate(AFTime originalEstimate) {
+        this.originalEstimate = originalEstimate;
     }
 }

@@ -40,18 +40,6 @@
 		<property name="target" ref="iterationDAOTarget" />
 	</bean>
 
-	<bean name="performedWorkDAOTarget" parent="abstractDAOTarget"
-		class="fi.hut.soberit.agilefant.db.hibernate.PerformedWorkDAOHibernate" />
-	<bean name="performedWorkDAO" parent="abstractDAO">
-		<property name="target" ref="performedWorkDAOTarget" />
-	</bean>
-
-	<bean name="estimateHistoryDAOTarget" parent="abstractDAOTarget"
-		class="fi.hut.soberit.agilefant.db.hibernate.EstimateHistoryDAOHibernate" />
-	<bean name="estimateHistoryDAO" parent="abstractDAO">
-		<property name="target" ref="estimateHistoryDAOTarget" />
-	</bean>
-
 	<bean name="backlogDAOTarget" parent="abstractDAOTarget"
 		class="fi.hut.soberit.agilefant.db.hibernate.BacklogDAOHibernate" />
 	<bean name="backlogDAO" parent="abstractDAO">
@@ -62,18 +50,14 @@
 		class="fi.hut.soberit.agilefant.db.hibernate.ActivityTypeDAOHibernate" />
 	<bean name="workTypeDAOTarget" parent="abstractDAOTarget"
 		class="fi.hut.soberit.agilefant.db.hibernate.WorkTypeDAOHibernate" />
-	<bean name="deliverableDAOTarget" parent="abstractDAOTarget"
-		class="fi.hut.soberit.agilefant.db.hibernate.DeliverableDAOHibernate" />
+	<bean name="projectDAOTarget" parent="abstractDAOTarget"
+		class="fi.hut.soberit.agilefant.db.hibernate.ProjectDAOHibernate" />
 	<bean name="backlogItemDAOTarget" parent="abstractDAOTarget"
 		class="fi.hut.soberit.agilefant.db.hibernate.BacklogItemDAOHibernate" />
 	<bean name="taskDAOTarget" parent="abstractDAOTarget"
 		class="fi.hut.soberit.agilefant.db.hibernate.TaskDAOHibernate" />
-	<bean name="effortHistoryDAOTarget" parent="abstractDAOTarget"
-		class="fi.hut.soberit.agilefant.db.hibernate.EffortHistoryDAOHibernate" />
 	<bean name="userDAOTarget" parent="abstractDAOTarget"
 		class="fi.hut.soberit.agilefant.db.hibernate.UserDAOHibernate" />
-	<bean name="taskEventDAOTarget" parent="abstractDAOTarget"
-		class="fi.hut.soberit.agilefant.db.hibernate.TaskEventDAOHibernate" />
 	<bean name="iterationGoalDAOTarget" parent="abstractDAOTarget"
 		class="fi.hut.soberit.agilefant.db.hibernate.IterationGoalDAOHibernate" />
 
@@ -85,10 +69,9 @@
 		<property name="target" ref="workTypeDAOTarget" />
 	</bean>
 
-	<bean name="deliverableDAO" parent="abstractDAO">
-		<property name="target" ref="deliverableDAOTarget" />
+	<bean name="projectDAO" parent="abstractDAO">
+		<property name="target" ref="projectDAOTarget" />
 	</bean>
-
 
 	<bean name="backlogItemDAO" parent="abstractDAO">
 		<property name="target" ref="backlogItemDAOTarget" />
@@ -102,34 +85,8 @@
 		<property name="target" ref="userDAOTarget" />
 	</bean>
 
-	<bean name="taskEventDAO" parent="abstractDAO">
-		<property name="target" ref="taskEventDAOTarget" />
-	</bean>
-
-	<bean name="effortHistoryDAO" parent="abstractDAO">
-		<property name="target" ref="effortHistoryDAOTarget" />
-	</bean>
-
 	<bean name="iterationGoalDAO" parent="abstractDAO">
 		<property name="target" ref="iterationGoalDAOTarget" />
-	</bean>
-
-	<bean name="practiceAllocationDAOTarget" parent="abstractDAOTarget"
-		class="fi.hut.soberit.agilefant.db.hibernate.PracticeAllocationDAOHibernate" />
-	<bean name="practiceAllocationDAO" parent="abstractDAO">
-		<property name="target" ref="practiceAllocationDAOTarget" />
-	</bean>
-
-	<bean name="practiceDAOTarget" parent="abstractDAOTarget"
-		class="fi.hut.soberit.agilefant.db.hibernate.PracticeDAOHibernate" />
-	<bean name="practiceDAO" parent="abstractDAO">
-		<property name="target" ref="practiceDAOTarget" />
-	</bean>
-
-	<bean name="practiceTemplateDAOTarget" parent="abstractDAOTarget"
-		class="fi.hut.soberit.agilefant.db.hibernate.PracticeTemplateDAOHibernate" />
-	<bean name="practiceTemplateDAO" parent="abstractDAO">
-		<property name="target" ref="practiceTemplateDAOTarget" />
 	</bean>
 
 </beans>

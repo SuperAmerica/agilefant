@@ -26,7 +26,7 @@ public class PercentDoneTag extends SpringTagSupport {
                 new TaskStatus[] { TaskStatus.DONE }).size();
 
         // TODO: Use HQL-query instead of arithmetics here to calculate #
-        int total = bliDao.getRealTasks(bli).size();
+        int total = bli.getTasks().size();
         int percentDone = 100;
         if (total > 0) {
             percentDone = Math.round(done * 100 / total);

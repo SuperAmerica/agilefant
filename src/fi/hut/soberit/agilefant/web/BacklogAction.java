@@ -9,14 +9,11 @@ import com.opensymphony.xwork.ActionSupport;
 import fi.hut.soberit.agilefant.business.BacklogBusiness;
 import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
-import fi.hut.soberit.agilefant.db.EffortHistoryDAO;
-import fi.hut.soberit.agilefant.db.TaskEventDAO;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
-import fi.hut.soberit.agilefant.model.Deliverable;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Product;
-import fi.hut.soberit.agilefant.util.EffortHistoryUpdater;
+import fi.hut.soberit.agilefant.model.Project;
 
 public class BacklogAction extends ActionSupport {
     private static final long serialVersionUID = 8061288993804046816L;
@@ -24,10 +21,6 @@ public class BacklogAction extends ActionSupport {
     private int backlogId;
 
     private BacklogDAO backlogDAO;
-
-    private EffortHistoryDAO effortHistoryDAO;
-
-    private TaskEventDAO taskEventDAO;
 
     private int backlogItemId;
 
@@ -122,10 +115,6 @@ public class BacklogAction extends ActionSupport {
             backlogItemDAO.store(backlogItem);
 
         }
-        EffortHistoryUpdater.updateEffortHistory(effortHistoryDAO,
-                taskEventDAO, backlogItemDAO, currentBacklog);
-        EffortHistoryUpdater.updateEffortHistory(effortHistoryDAO,
-                taskEventDAO, backlogItemDAO, targetBacklog);
 
         return this.solveResult(currentBacklog);
     }
@@ -145,12 +134,6 @@ public class BacklogAction extends ActionSupport {
         }
 
         backlogBusiness.deleteMultipleItems(backlogId, backlogItemIds);
-
-        /* Update effort history */
-        /*
-         * EffortHistoryUpdater.updateEffortHistory(effortHistoryDAO,
-         * taskEventDAO, backlogItemDAO, currentBacklog);
-         */
 
         return this.solveResult(currentBacklog);
     }
@@ -181,8 +164,8 @@ public class BacklogAction extends ActionSupport {
             return Action.ERROR;
         } else if (backlog instanceof Product) {
             return "editProduct";
-        } else if (backlog instanceof Deliverable) {
-            return "editDeliverable";
+        } else if (backlog instanceof Project) {
+            return "editProject";
         } else if (backlog instanceof Iteration) {
             return "editIteration";
         }
@@ -224,36 +207,6 @@ public class BacklogAction extends ActionSupport {
 
     public void setBacklogItemDAO(BacklogItemDAO backlogItemDAO) {
         this.backlogItemDAO = backlogItemDAO;
-    }
-
-    /**
-     * @return the effortHistoryDAO
-     */
-    public EffortHistoryDAO getEffortHistoryDAO() {
-        return effortHistoryDAO;
-    }
-
-    /**
-     * @param effortHistoryDAO
-     *                the effortHistoryDAO to set
-     */
-    public void setEffortHistoryDAO(EffortHistoryDAO effortHistoryDAO) {
-        this.effortHistoryDAO = effortHistoryDAO;
-    }
-
-    /**
-     * @return the taskEventDAO
-     */
-    public TaskEventDAO getTaskEventDAO() {
-        return taskEventDAO;
-    }
-
-    /**
-     * @param taskEventDAO
-     *                the taskEventDAO to set
-     */
-    public void setTaskEventDAO(TaskEventDAO taskEventDAO) {
-        this.taskEventDAO = taskEventDAO;
     }
 
     public BacklogBusiness getBacklogBusiness() {

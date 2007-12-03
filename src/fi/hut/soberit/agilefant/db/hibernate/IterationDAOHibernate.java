@@ -23,7 +23,7 @@ public class IterationDAOHibernate extends GenericDAOHibernate<Iteration>
         return super
                 .getHibernateTemplate()
                 .find(
-                        "from Iteration i where i.startDate <= ? and i.endDate >= ? order by i.deliverable.name ASC, i.endDate",
+                        "from Iteration i where i.startDate <= ? and i.endDate >= ? order by i.project.name ASC, i.endDate",
                         new Object[] { current, current });
     }
 }

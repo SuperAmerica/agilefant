@@ -3,19 +3,14 @@ package fi.hut.soberit.agilefant.web.function;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-import fi.hut.soberit.agilefant.model.AssignEvent;
 import fi.hut.soberit.agilefant.model.BacklogItem;
-import fi.hut.soberit.agilefant.model.Deliverable;
-import fi.hut.soberit.agilefant.model.EstimateHistoryEvent;
+import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.IterationGoal;
-import fi.hut.soberit.agilefant.model.PerformedWork;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Task;
-import fi.hut.soberit.agilefant.model.TaskComment;
 import fi.hut.soberit.agilefant.model.User;
-import fi.hut.soberit.agilefant.web.page.ManagementPageItem;
-import fi.hut.soberit.agilefant.web.page.PortfolioPageItem;
+
 
 /**
  * custom functions for jsp pages
@@ -28,8 +23,8 @@ public class AEFFunctions {
         return obj instanceof Product;
     }
 
-    public static boolean isDeliverable(Object obj) {
-        return obj instanceof Deliverable;
+    public static boolean isProject(Object obj) {
+        return obj instanceof Project;
     }
 
     public static boolean isIteration(Object obj) {
@@ -50,30 +45,6 @@ public class AEFFunctions {
 
     public static boolean isUser(Object obj) {
         return obj instanceof User;
-    }
-
-    public static boolean isPortfolio(Object obj) {
-        return obj instanceof PortfolioPageItem;
-    }
-
-    public static boolean isManagementPage(Object obj) {
-        return obj instanceof ManagementPageItem;
-    }
-
-    public static boolean isAssignEvent(Object obj) {
-        return obj instanceof AssignEvent;
-    }
-
-    public static boolean isTaskComment(Object obj) {
-        return obj instanceof TaskComment;
-    }
-
-    public static boolean isEstimateHistoryEvent(Object obj) {
-        return obj instanceof EstimateHistoryEvent;
-    }
-
-    public static boolean isPerformedWork(Object obj) {
-        return obj instanceof PerformedWork;
     }
 
     /**
@@ -109,8 +80,6 @@ public class AEFFunctions {
     }
 
     private static String out(String s, int newLength, boolean asHtml) {
-        // String shortString = s.length() > newLength ? s.substring(0,
-        // newLength) + "..." : s;
         return asHtml ? "<span title=\"" + s + "\">" + s + "</span>" : s;
     }
 

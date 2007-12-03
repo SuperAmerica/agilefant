@@ -8,5 +8,7 @@
 	<bean id="userBusiness"
 		class="fi.hut.soberit.agilefant.business.impl.UserBusinessImpl" />
 	<bean id="passwordBusiness" class="fi.hut.soberit.agilefant.business.impl.PasswordBusinessImpl" />
-	<bean id="deliverableBusiness" class="fi.hut.soberit.agilefant.business.impl.DeliverableBusinessImpl"/>
+	<bean id="projectBusiness" class="fi.hut.soberit.agilefant.business.impl.ProjectBusinessImpl"/>
+	<bean id="backlogItemBusiness" class="fi.hut.soberit.agilefant.business.impl.BacklogItemBusinessImpl"/>
+	<bean id="historyBusiness" class="fi.hut.soberit.agilefant.business.impl.HistoryBusinessImpl"/>
 </beans>

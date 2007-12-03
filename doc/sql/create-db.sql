@@ -1,5 +1,5 @@
 create table ActivityType (id integer not null auto_increment, name varchar(255) not null unique, description text, targetSpendingPercentage integer not null check (targetSpendingPercentage>=0 and targetSpendingPercentage<=100), primary key (id)) type=InnoDB;
-create table Backlog (backlogtype varchar(31) not null, id integer not null auto_increment, name varchar(255), description text, startDate datetime, endDate datetime, deliverable_id integer, product_id integer, activityType_id integer, owner_id integer, assignee_id integer, primary key (id)) type=InnoDB;
+create table Backlog (backlogtype varchar(31) not null, id integer not null auto_increment, name varchar(255), description text, startDate datetime, endDate datetime, project_id integer, product_id integer, activityType_id integer, owner_id integer, assignee_id integer, primary key (id)) type=InnoDB;
 create table BacklogItem (id integer not null auto_increment, name varchar(255), priority integer, description text, status integer, remainingEffortEstimate integer, iterationGoal_id integer, backlog_id integer not null, assignee_id integer, primary key (id)) type=InnoDB;
 create table BacklogItem_User (watchedBacklogItems_id integer not null, watchers_id integer not null, primary key (watchedBacklogItems_id, watchers_id)) ENGINE=InnoDB;
 create table Task (id integer not null auto_increment, created datetime, effortEstimate integer, status integer, name varchar(255), priority integer, description text, creator_id integer, backlogItem_id integer not null, assignee_id integer, primary key (id)) type=InnoDB;
@@ -11,7 +11,7 @@ create table IterationGoal (id integer not null auto_increment, name varchar(255
 create table Practice (id integer not null auto_increment, name varchar(255), description text, template_id integer, primary key (id)) ENGINE=InnoDB;
 create table PracticeAllocation (id integer not null auto_increment, status integer, task_id integer, practice_id integer, primary key (id)) ENGINE=InnoDB;
 create table PracticeTemplate (id integer not null auto_increment, primary key (id)) ENGINE=InnoDB;
-alter table Backlog add index FK4E86B8DD5600C562 (deliverable_id), add constraint FK4E86B8DD5600C562 foreign key (deliverable_id) references Backlog (id) ON DELETE CASCADE;
+alter table Backlog add index FK4E86B8DD5600C562 (project_id), add constraint FK4E86B8DD5600C562 foreign key (project_id) references Backlog (id) ON DELETE CASCADE;
 alter table Backlog add index FK4E86B8DD2D47BAEA (owner_id), add constraint FK4E86B8DD2D47BAEA foreign key (owner_id) references User (id) ON DELETE SET NULL;
 alter table Backlog add index FK4E86B8DDCC65BE32 (activityType_id), add constraint FK4E86B8DDCC65BE32 foreign key (activityType_id) references ActivityType (id) ON DELETE SET NULL;
 alter table Backlog add index FK4E86B8DDA7FE2362 (product_id), add constraint FK4E86B8DDA7FE2362 foreign key (product_id) references Backlog (id) ON DELETE CASCADE;
@@ -37,3 +37,9 @@ alter table Practice add index FKB013E55B25135ECD (template_id), add constraint 
 alter table PracticeAllocation add index FK7A595C9B6E84F892 (task_id), add constraint FK7A595C9B6E84F892 foreign key (task_id) references Task (id);
 alter table PracticeAllocation add index FK7A595C9B909E98D2 (practice_id), add constraint FK7A595C9B909E98D2 foreign key (practice_id) references Practice (id);
 alter table Backlog add column rank integer not null default 0;
+alter table Backlog add column history_fk integer;
+create table History (DTYPE integer not null, id integer not null auto_increment, primary key (id)) ENGINE=InnoDB;
+create table HistoryEntry (id integer not null auto_increment, effortLeft integer, originalEstimate integer, date date, history_id integer, primary key (id)) ENGINE=InnoDB;
+alter table Backlog add index FK4E86B8DDC91A641F (history_fk), add constraint FK4E86B8DDC91A641F foreign key (history_fk) references History (id);
+alter table HistoryEntry add index FK9367445EC91A6475 (history_id), add constraint FK9367445EC91A6475 foreign key (history_id) references History (id);
+alter table HistoryEntry add index FK9367445EFD7DC542 (history_id), add constraint FK9367445EFD7DC542 foreign key (history_id) references History (id);

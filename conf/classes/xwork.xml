@@ -28,21 +28,6 @@
 			<result name="error">/WEB-INF/jsp/genericError.jsp</result>
 		</global-results>
 
-		<action name="simpleCounter"
-			class="fi.hut.soberit.agilefant.web.SimpleCounter">
-			<result name="success">/WEB-INF/jsp/showCounter.jsp</result>
-		</action>
-		<action name="refreshChart" method="refreshChart"
-			class="fi.hut.soberit.agilefant.web.SimpleCounter">
-			<result name="success" type="stream">
-				<param name="contentType">${contentType}</param>
-				<param name="inputName">inputStream</param>
-			</result>
-		</action>
-		<action name="resetCounter" method="resetCounter"
-			class="fi.hut.soberit.agilefant.web.SimpleCounter">
-			<result name="success">/WEB-INF/jsp/showCounter.jsp</result>
-		</action>
 		<!-- Context view -->
 		<action name="contextView"
 			class="fi.hut.soberit.agilefant.web.ContextViewAction">
@@ -54,15 +39,12 @@
 				<param name="iterationId">${contextObjectId}</param>
 			</result>
 			<result name="success_project" type="redirect-action">
-				<param name="actionName">editDeliverable</param>
-				<param name="deliverableId">${contextObjectId}</param>
+				<param name="actionName">editProject</param>
+				<param name="projectId">${contextObjectId}</param>
 			</result>
 			<result name="success_product" type="redirect-action">
 				<param name="actionName">editProduct</param>
 				<param name="productId">${contextObjectId}</param>
-			</result>
-			<result name="success_portfolio" type="redirect-action">
-				<param name="actionName">viewPortfolio</param>
 			</result>
 			<result name="success_myTasks" type="redirect-action">
 				<param name="actionName">myTasks</param>
@@ -191,6 +173,14 @@
 				editBacklogItem.action?backlogItemId=${backlogItemId}
 			</result>
 		</action>
+		
+		<action name="quickStoreBacklogItem" method="quickStoreBacklogItem"
+			class="backlogItemAction">
+			<result type="redirect-action">
+				<param name="actionName">popContext</param>
+			</result>
+		</action>
+
 		<action name="storeNewBacklogItem" method="store"
 			class="backlogItemAction">
 			<result type="redirect">
@@ -211,47 +201,43 @@
 		</action>
 		<!-- /BacklogItem actions -->
 
-		<!-- Deliverable actions -->
-		<action name="listDeliverables">
-			<result>/WEB-INF/jsp/listDeliverables.jsp</result>
+		<!-- Project actions -->
+		<action name="listProjects">
+			<result>/WEB-INF/jsp/listProjects.jsp</result>
 		</action>
-		<action name="editDeliverable" method="edit"
-			class="deliverableAction">
-			<result>/WEB-INF/jsp/editDeliverable.jsp</result>
+		<action name="editProject" method="edit"
+			class="projectAction">
+			<result>/WEB-INF/jsp/editProject.jsp</result>
 		</action>
-		<action name="viewDeliverable" method="edit"
-			class="deliverableAction">
-			<result>/WEB-INF/jsp/viewDeliverable.jsp</result>
+		<action name="createProject" method="create"
+			class="projectAction">
+			<result>/WEB-INF/jsp/editProject.jsp</result>
 		</action>
-		<action name="createDeliverable" method="create"
-			class="deliverableAction">
-			<result>/WEB-INF/jsp/editDeliverable.jsp</result>
-		</action>
-		<action name="deleteDeliverable" method="delete"
-			class="deliverableAction">
+		<action name="deleteProject" method="delete"
+			class="projectAction">
 			<result type="redirect">
 				editProduct.action?productId=${productId}
 			</result>
 		</action>
-		<action name="storeDeliverable" method="store"
-			class="deliverableAction">
+		<action name="storeProject" method="store"
+			class="projectAction">
 			<result type="redirect-action">
 				<param name="actionName">contextView</param>
 				<param name="contextName">project</param>
-				<param name="contextObjectId">${deliverableId}</param>
+				<param name="contextObjectId">${projectId}</param>
 				<param name="resetContextView">true</param>
 			</result>
 		</action>
-		<action name="storeNewDeliverable" method="store"
-			class="deliverableAction">
+		<action name="storeNewProject" method="store"
+			class="projectAction">
 			<result type="redirect-action">
 				<param name="actionName">contextView</param>
 				<param name="contextName">project</param>
-				<param name="contextObjectId">${deliverableId}</param>
+				<param name="contextObjectId">${projectId}</param>
 				<param name="resetContextView">true</param>
 			</result>
 		</action>
-		<!-- /Deliverable actions -->
+		<!-- /Project actions -->
 
 		<!-- Work type actions -->
 		<!-- TODO -->
@@ -262,8 +248,8 @@
 			<result name="editProduct" type="redirect">
 				editProduct.action?productId=${backlogId}
 			</result>
-			<result name="editDeliverable" type="redirect">
-				editDeliverable.action?deliverableId=${backlogId}
+			<result name="editProject" type="redirect">
+				editProject.action?projectId=${backlogId}
 			</result>
 			<result name="editIteration" type="redirect">
 				editIteration.action?iterationId=${backlogId}
@@ -280,8 +266,8 @@
 			<result name="editProduct" type="redirect">
 				editProduct.action?productId=${backlogId}
 			</result>
-			<result name="editDeliverable" type="redirect">
-				editDeliverable.action?deliverableId=${backlogId}
+			<result name="editProject" type="redirect">
+				editProject.action?projectId=${backlogId}
 			</result>
 			<result name="editIteration" type="redirect">
 				editIteration.action?iterationId=${backlogId}
@@ -293,8 +279,8 @@
 			<result name="editProduct" type="redirect">
 				editProduct.action?productId=${backlogId}
 			</result>
-			<result name="editDeliverable" type="redirect">
-				editDeliverable.action?deliverableId=${backlogId}
+			<result name="editProject" type="redirect">
+				editProject.action?projectId=${backlogId}
 			</result>
 			<result name="editIteration" type="redirect">
 				editIteration.action?iterationId=${backlogId}
@@ -306,8 +292,8 @@
 			<result name="editProduct" type="redirect">
 				editProduct.action?productId=${backlogId}
 			</result>
-			<result name="editDeliverable" type="redirect">
-				editDeliverable.action?deliverableId=${backlogId}
+			<result name="editProject" type="redirect">
+				editProject.action?projectId=${backlogId}
 			</result>
 			<result name="editIteration" type="redirect">
 				editIteration.action?iterationId=${backlogId}
@@ -371,7 +357,7 @@
 		<action name="deleteIteration" method="delete"
 			class="iterationAction">
 			<result type="redirect">
-				editDeliverable.action?deliverableId=${deliverableId}
+				editProject.action?projectId=${projectId}
 			</result>
 		</action>
 		<action name="storeIteration" method="store"
@@ -392,10 +378,7 @@
 				<param name="resetContextView">true</param>
 			</result>		
 		</action>
-		<action name="viewIteration" method="edit"
-			class="iterationAction">
-			<result>/WEB-INF/jsp/viewIteration.jsp</result>
-		</action>
+
 		<!-- /Iteration actions -->
 
 		<!-- User actions -->
@@ -422,41 +405,6 @@
 		</action>
 
 		<!-- /User actions -->
-		<!-- Perform work -->
-		<action name="performWorkForm" method="edit"
-			class="taskAction">
-			<result>/WEB-INF/jsp/performWork.jsp</result>
-		</action>
-		<action name="performWork" class="performWorkAction">
-			<result type="redirect">
-				editTask.action?taskId=${task.id}
-			</result>
-		</action>
-		<!-- /Perform work -->
-
-		<!-- My tasks -->
-		<action name="myTasks">
-			<result>/WEB-INF/jsp/viewMyTasks.jsp</result>
-		</action>
-		<action name="editMyTasks">
-			<result>/WEB-INF/jsp/editMyTasks.jsp</result>
-		</action>
-		<action name="myTasksReportForm" method="edit"
-			class="taskAction">
-			<result>/WEB-INF/jsp/viewMyTasks.jsp</result>
-		</action>
-		<action name="myTasksSwitchUser" method="edit"
-			class="userAction">
-			<result>/WEB-INF/jsp/viewMyTasks.jsp</result>
-		</action>
-		<action name="myTasksPerformWork" class="performWorkAction">
-			<result type="redirect">editMyTasks.action</result>
-		</action>
-		<action name="myTasksBulkPerformWork"
-			class="bulkPerformWorkAction">
-			<result type="redirect">editMyTasks.action</result>
-		</action>
-		<!-- /My tasks -->
 		
 		<!-- These functions are for Saving and Deleting backlog items on daily work page -->
 		
@@ -486,22 +434,22 @@
 		</action>
 		
 		<!-- Actions for moving ranked items in list. -->
-		<action name="moveDeliverableUp" class="developmentPortfolioAction" method="moveDeliverableUp">
+		<action name="moveProjectUp" class="developmentPortfolioAction" method="moveProjectUp">
 		<result type="redirect-action">
 			<param name="actionName">developmentPortfolio</param>
 		</result>
 		</action>
-		<action name="moveDeliverableDown" class="developmentPortfolioAction" method="moveDeliverableDown">
+		<action name="moveProjectDown" class="developmentPortfolioAction" method="moveProjectDown">
 		<result type="redirect-action">
 			<param name="actionName">developmentPortfolio</param>
 		</result>
 		</action>
-		<action name="moveDeliverableTop" class="developmentPortfolioAction" method="moveDeliverableTop">
+		<action name="moveProjectTop" class="developmentPortfolioAction" method="moveProjectTop">
 		<result type="redirect-action">
 			<param name="actionName">developmentPortfolio</param>
 		</result>
 		</action> 
-		<action name="moveDeliverableBottom" class="developmentPortfolioAction" method="moveDeliverableBottom">
+		<action name="moveProjectBottom" class="developmentPortfolioAction" method="moveProjectBottom">
 		<result type="redirect-action">
 			<param name="actionName">developmentPortfolio</param>
 		</result>
@@ -559,13 +507,6 @@
 		</action>
 		<!-- /IterationGoal actions -->
 
-		<action name="viewPortfolio" class="portfolioAction">
-			<result>/WEB-INF/jsp/viewPortfolio.jsp</result>
-		</action>
-
-		<action name="showWork" class="showPerformedWorkAction">
-			<result>/WEB-INF/jsp/showPerformedWork.jsp</result>
-		</action>
 		<action name="drawChart" method="execute" class="chartAction">
 			<result name="success" type="stream">
 				<param name="contentType">${contentType}</param>
@@ -605,31 +546,10 @@
 				<param name="inputName">inputStream</param>
 			</result>
 		</action>
-		<action name="watchTask" class="watchObjectAction">
-			<result type="redirect-action">
-				<param name="actionName">editTask</param>
-				<param name="taskId">${taskId}</param>
-			</result>
-		</action>
-		<action name="watchBacklogItem" class="watchObjectAction">
-			<result type="redirect-action">
-				<param name="actionName">editBacklogItem</param>
-				<param name="backlogItemId">${backlogItemId}</param>
-			</result>
-		</action>
-
-		<action name="viewProject">
-			<result>/WEB-INF/jsp/viewProject.jsp</result>
-		</action>
 
 		<action name="popContext" class="contextStackAction">
 			<result type="redirect-action">
 				<param name="actionName">selectBacklog</param>
-			</result>
-			<result name="success_viewIteration"
-				type="redirect-action">
-				<param name="actionName">viewIteration</param>
-				<param name="iterationId">${view.contextObject}</param>
 			</result>
 			<result name="success_editIteration"
 				type="redirect-action">
@@ -637,17 +557,10 @@
 				<param name="iterationId">${view.contextObject}</param>
 			</result>
 
-			<result name="success_viewDeliverable"
+			<result name="success_editProject"
 				type="redirect-action">
-				<param name="actionName">viewDeliverable</param>
-				<param name="deliverableId">
-					${view.contextObject}
-				</param>
-			</result>
-			<result name="success_editDeliverable"
-				type="redirect-action">
-				<param name="actionName">editDeliverable</param>
-				<param name="deliverableId">
+				<param name="actionName">editProject</param>
+				<param name="projectId">
 					${view.contextObject}
 				</param>
 			</result>

@@ -24,14 +24,6 @@ public class BacklogTest_getSortedBacklogItems extends TestCase {
 
     private BacklogItem notstarted_5;
 
-    private Task done_4_ph;
-
-    private Task done_5_ph;
-
-    private Task notstarted_4_ph;
-
-    private Task notstarted_5_ph;
-
     /**
      * Constructor for the test case. Set the test values.
      */
@@ -39,29 +31,19 @@ public class BacklogTest_getSortedBacklogItems extends TestCase {
         this.backlog = new Iteration();
         this.backlogItems = new ArrayList<BacklogItem>();
 
-        /* Create the placeholder tasks */
-        this.done_4_ph = new Task();
-        this.done_4_ph.setStatus(TaskStatus.DONE);
-        this.done_5_ph = new Task();
-        this.done_5_ph.setStatus(TaskStatus.DONE);
-        this.notstarted_4_ph = new Task();
-        this.notstarted_4_ph.setStatus(TaskStatus.NOT_STARTED);
-        this.notstarted_5_ph = new Task();
-        this.notstarted_5_ph.setStatus(TaskStatus.NOT_STARTED);
-
         /* Create the backlog items */
         this.done_4 = new BacklogItem();
         this.done_4.setPriority(Priority.CRITICAL);
-        this.done_4.setPlaceHolder(this.done_4_ph);
+        this.done_4.setStatus(TaskStatus.DONE);
         this.done_5 = new BacklogItem();
         this.done_5.setPriority(Priority.BLOCKER);
-        this.done_5.setPlaceHolder(this.done_5_ph);
+        this.done_5.setStatus(TaskStatus.DONE);
         this.notstarted_4 = new BacklogItem();
         this.notstarted_4.setPriority(Priority.CRITICAL);
-        this.notstarted_4.setPlaceHolder(this.notstarted_4_ph);
+        this.notstarted_4.setStatus(TaskStatus.NOT_STARTED);
         this.notstarted_5 = new BacklogItem();
         this.notstarted_5.setPriority(Priority.BLOCKER);
-        this.notstarted_5.setPlaceHolder(this.notstarted_5_ph);
+        this.notstarted_5.setStatus(TaskStatus.NOT_STARTED);
     }
 
     /**

@@ -56,6 +56,7 @@
 		<property name="configLocation">
 			<value>file:conf/hibernate.cfg.xml</value>
 		</property>
+		<!-- 
 		<property name="eventListeners">
 			<map>
 				<entry key="pre-insert">
@@ -68,5 +69,6 @@
 				</entry>
 			</map>
 		</property>
+		 -->
 	</bean>
 </beans>

@@ -7,15 +7,13 @@ import javax.servlet.jsp.tagext.Tag;
 
 import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
-import fi.hut.soberit.agilefant.db.DeliverableDAO;
+import fi.hut.soberit.agilefant.db.ProjectDAO;
 import fi.hut.soberit.agilefant.db.IterationDAO;
 import fi.hut.soberit.agilefant.db.IterationGoalDAO;
 import fi.hut.soberit.agilefant.db.ProductDAO;
 import fi.hut.soberit.agilefant.db.TaskDAO;
 import fi.hut.soberit.agilefant.model.User;
-import fi.hut.soberit.agilefant.web.page.ManagementPageItem;
 import fi.hut.soberit.agilefant.web.page.PageItem;
-import fi.hut.soberit.agilefant.web.page.PortfolioPageItem;
 
 public class BreadCrumbTrailTag extends SpringTagSupport {
 
@@ -57,9 +55,9 @@ public class BreadCrumbTrailTag extends SpringTagSupport {
         this.page = dao.get(id);
     }
 
-    public void setDeliverableId(int id) {
-        DeliverableDAO dao = (DeliverableDAO) super.getApplicationContext()
-                .getBean("deliverableDAO");
+    public void setProjectId(int id) {
+        ProjectDAO dao = (ProjectDAO) super.getApplicationContext()
+                .getBean("projectDAO");
         this.page = dao.get(id);
     }
 
@@ -95,14 +93,6 @@ public class BreadCrumbTrailTag extends SpringTagSupport {
 
     public void setUserId(int id) {
         this.page = new User();
-    }
-
-    public void setPortfolioId(int id) {
-        this.page = new PortfolioPageItem();
-    }
-
-    public void setManagementPageId(int id) {
-        this.page = new ManagementPageItem();
     }
 
 }

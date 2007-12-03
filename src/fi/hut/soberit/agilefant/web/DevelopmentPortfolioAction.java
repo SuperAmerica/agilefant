@@ -5,63 +5,63 @@ import java.util.Collection;
 import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
 
-import fi.hut.soberit.agilefant.business.DeliverableBusiness;
-import fi.hut.soberit.agilefant.model.Deliverable;
+import fi.hut.soberit.agilefant.business.ProjectBusiness;
+import fi.hut.soberit.agilefant.model.Project;
 
 public class DevelopmentPortfolioAction extends ActionSupport {
 
     private static final long serialVersionUID = -4749839976470627112L;
 
-    private DeliverableBusiness deliverableBusiness;
+    private ProjectBusiness projectBusiness;
 
-    private int deliverableId;
+    private int projectId;
 
-    public Collection<Deliverable> getAll() {
-        return deliverableBusiness.getAll();
+    public Collection<Project> getAll() {
+        return projectBusiness.getAll();
     }
 
-    public Collection<Deliverable> getOngoingRankedDeliverables() {
-        return deliverableBusiness.getOngoingRankedDeliverables();
+    public Collection<Project> getOngoingRankedProjects() {
+        return projectBusiness.getOngoingRankedProjects();
     }
 
-    public Collection<Deliverable> getOngoingUnrankedDeliverables() {
-        return deliverableBusiness.getOngoingUnrankedDeliverables();
+    public Collection<Project> getOngoingUnrankedProjects() {
+        return projectBusiness.getOngoingUnrankedProjects();
     }
 
-    public DeliverableBusiness getDeliverableBusiness() {
-        return deliverableBusiness;
+    public ProjectBusiness getProjectBusiness() {
+        return projectBusiness;
     }
 
-    public void setDeliverableBusiness(DeliverableBusiness deliverableBusiness) {
-        this.deliverableBusiness = deliverableBusiness;
+    public void setProjectBusiness(ProjectBusiness projectBusiness) {
+        this.projectBusiness = projectBusiness;
     }
 
-    public String moveDeliverableUp() {
-        deliverableBusiness.moveUp(deliverableId);
+    public String moveProjectUp() {
+        projectBusiness.moveUp(projectId);
         return Action.SUCCESS;
     }
 
-    public String moveDeliverableDown() {
-        deliverableBusiness.moveDown(deliverableId);
+    public String moveProjectDown() {
+        projectBusiness.moveDown(projectId);
         return Action.SUCCESS;
     }
 
-    public String moveDeliverableTop() {
-        deliverableBusiness.moveToTop(deliverableId);
+    public String moveProjectTop() {
+        projectBusiness.moveToTop(projectId);
         return Action.SUCCESS;
     }
 
-    public String moveDeliverableBottom() {
-        deliverableBusiness.moveToBottom(deliverableId);
+    public String moveProjectBottom() {
+        projectBusiness.moveToBottom(projectId);
         return Action.SUCCESS;
     }
 
-    public int getDeliverableId() {
-        return deliverableId;
+    public int getProjectId() {
+        return projectId;
     }
 
-    public void setDeliverableId(int deliverableId) {
-        this.deliverableId = deliverableId;
+    public void setProjectId(int projectId) {
+        this.projectId = projectId;
     }
 
 }

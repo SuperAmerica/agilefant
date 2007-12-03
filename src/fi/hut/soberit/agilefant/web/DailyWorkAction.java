@@ -14,13 +14,11 @@ import com.opensymphony.xwork.ActionSupport;
 import fi.hut.soberit.agilefant.business.UserBusiness;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.db.IterationDAO;
-import fi.hut.soberit.agilefant.db.TaskEventDAO;
 import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.security.SecurityUtil;
-import fi.hut.soberit.agilefant.util.BacklogValueInjector;
 
 public class DailyWorkAction extends ActionSupport {
     private static final long serialVersionUID = 5732278003634700787L;
@@ -38,8 +36,6 @@ public class DailyWorkAction extends ActionSupport {
     private IterationDAO iterationDAO;
 
     private BacklogItemDAO backlogItemDAO;
-
-    private TaskEventDAO taskEventDAO;
 
     private User user;
 
@@ -72,20 +68,22 @@ public class DailyWorkAction extends ActionSupport {
                 BacklogItem currentBli = bliIt.next();
                 if (currentBli.getAssignee() != null
                         && currentBli.getAssignee().getId() == userId
-                        && currentBli.getPlaceHolder().getStatus() != fi.hut.soberit.agilefant.model.TaskStatus.DONE) {
+                        && currentBli.getStatus() != fi.hut.soberit.agilefant.model.TaskStatus.DONE) {
                     unfinishedBlis.add(currentBli);
                 }
             }
 
             if (!unfinishedBlis.isEmpty()) {
-                BacklogValueInjector.injectMetrics(currentIteration,
-                        currentIteration.getStartDate(), taskEventDAO,
-                        backlogItemDAO);
+                /*
+                 * BacklogValueInjector.injectMetrics(currentIteration,
+                 * currentIteration.getStartDate(), taskEventDAO,
+                 * backlogItemDAO);
+                 */
                 AFTime effLeft = new AFTime("0");
                 Iterator<BacklogItem> iter = unfinishedBlis.iterator();
                 while (iter.hasNext()) {
                     BacklogItem bli = iter.next();
-                    effLeft.add(bli.getTotalEffortLeft());
+                    effLeft.add(bli.getEffortLeft());
                 }
                 bliMap.put(currentIteration, unfinishedBlis);
                 effortLeftMap.put(currentIteration, effLeft);
@@ -111,10 +109,6 @@ public class DailyWorkAction extends ActionSupport {
         userList = userBusiness.getAllUsers();
 
         return super.execute();
-    }
-
-    public void setTaskEventDAO(TaskEventDAO taskEventDAO) {
-        this.taskEventDAO = taskEventDAO;
     }
 
     public void setBacklogItemDAO(BacklogItemDAO backlogItemDAO) {

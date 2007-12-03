@@ -38,8 +38,8 @@ public class UserBusinessImpl implements UserBusiness {
         while (iter.hasNext()) {
             BacklogItem bli = iter.next();
 
-            if (bli.getPlaceHolder().getStatus() != TaskStatus.NOT_STARTED
-                    && bli.getPlaceHolder().getStatus() != TaskStatus.DONE) {
+            if (bli.getStatus() != TaskStatus.NOT_STARTED
+                    && bli.getStatus() != TaskStatus.DONE) {
 
                 returnItems.add(bli);
             }

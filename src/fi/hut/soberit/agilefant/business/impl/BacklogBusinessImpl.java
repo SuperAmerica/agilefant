@@ -4,13 +4,11 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import fi.hut.soberit.agilefant.business.BacklogBusiness;
+import fi.hut.soberit.agilefant.business.HistoryBusiness;
 import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
-import fi.hut.soberit.agilefant.db.EffortHistoryDAO;
-import fi.hut.soberit.agilefant.db.TaskEventDAO;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
-import fi.hut.soberit.agilefant.util.EffortHistoryUpdater;
 
 /**
  * 
@@ -20,9 +18,7 @@ import fi.hut.soberit.agilefant.util.EffortHistoryUpdater;
 public class BacklogBusinessImpl implements BacklogBusiness {
     private BacklogItemDAO backlogItemDAO;
 
-    private EffortHistoryDAO effortHistoryDAO;
-
-    private TaskEventDAO taskEventDAO;
+    private HistoryBusiness historyBusiness;
 
     private BacklogDAO backlogDAO;
 
@@ -37,31 +33,19 @@ public class BacklogBusinessImpl implements BacklogBusiness {
                 BacklogItem item = iterator.next();
                 if (item.getId() == id) {
                     iterator.remove();
-                    backlogItemDAO.remove(id); // This isn't needed once
-                    // Cascades are correct for
-                    // Backlog -> BacklogItem.
-                    // Once that's done the test should also work proper.
+                    backlogItemDAO.remove(id);
                 }
             }
         }
-
-        updateEffortHistory(backlogId);
-    }
-
-    /**
-     * TODO: this implementation is not how a Business object ideally implements
-     * this sort of functionality. There should be no need for static methods,
-     * but rather the logic should simply be contained in non-static methods of
-     * <code>Business</code> objects. At this time the old implementation is
-     * not touched but this method is added here while EffortHistoryUpdater is
-     * deprecated.
-     */
-    // @Override
-    public void updateEffortHistory(int backlogId) {
+        historyBusiness.updateBacklogHistory(backlog.getId());
+    }   
+    
+    public BacklogItem createBacklogItemToBacklog(int backlogId) {
+        BacklogItem backlogItem = new BacklogItem();
+        backlogItem = new BacklogItem();
         Backlog backlog = backlogDAO.get(backlogId);
-
-        EffortHistoryUpdater.updateEffortHistory(effortHistoryDAO,
-                taskEventDAO, backlogItemDAO, backlog);
+        backlogItem.setBacklog(backlog);
+        return backlogItem;
     }
 
     public BacklogItemDAO getBacklogItemDAO() {
@@ -72,27 +56,19 @@ public class BacklogBusinessImpl implements BacklogBusiness {
         this.backlogItemDAO = backlogItemDAO;
     }
 
-    public EffortHistoryDAO getEffortHistoryDAO() {
-        return effortHistoryDAO;
-    }
-
-    public void setEffortHistoryDAO(EffortHistoryDAO effortHistoryDAO) {
-        this.effortHistoryDAO = effortHistoryDAO;
-    }
-
-    public TaskEventDAO getTaskEventDAO() {
-        return taskEventDAO;
-    }
-
-    public void setTaskEventDAO(TaskEventDAO taskEventDAO) {
-        this.taskEventDAO = taskEventDAO;
-    }
-
     public BacklogDAO getBacklogDAO() {
         return backlogDAO;
     }
 
     public void setBacklogDAO(BacklogDAO backlogDAO) {
         this.backlogDAO = backlogDAO;
+    }
+
+    public HistoryBusiness getHistoryBusiness() {
+        return historyBusiness;
+    }
+
+    public void setHistoryBusiness(HistoryBusiness historyBusiness) {
+        this.historyBusiness = historyBusiness;
     }
 }

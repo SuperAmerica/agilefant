@@ -9,18 +9,14 @@ import com.opensymphony.xwork.ActionSupport;
 
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.db.ProductDAO;
-import fi.hut.soberit.agilefant.db.TaskEventDAO;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Product;
-import fi.hut.soberit.agilefant.util.BacklogValueInjector;
 
 public class ProductAction extends ActionSupport implements CRUDAction {
 
     private static final long serialVersionUID = 1834399750050895118L;
 
     private ProductDAO productDAO;
-
-    private TaskEventDAO taskEventDAO;
 
     private BacklogItemDAO backlogItemDAO;
 
@@ -45,7 +41,7 @@ public class ProductAction extends ActionSupport implements CRUDAction {
             super.addActionError(super.getText("product.notFound"));
             return Action.ERROR;
         }
-        if (p.getBacklogItems().size() > 0 || p.getDeliverables().size() > 0) {
+        if (p.getBacklogItems().size() > 0 || p.getProjects().size() > 0) {
             super.addActionError(super.getText("product.notEmptyWhenDeleting"));
             return Action.ERROR;
         }
@@ -61,8 +57,10 @@ public class ProductAction extends ActionSupport implements CRUDAction {
             return Action.ERROR;
         }
         backlog = product;
-        BacklogValueInjector.injectMetrics(backlog, startDate, taskEventDAO,
-                backlogItemDAO);
+        /*
+         * BacklogValueInjector.injectMetrics(backlog, startDate, taskEventDAO,
+         * backlogItemDAO);
+         */
 
         return Action.SUCCESS;
     }
@@ -154,20 +152,4 @@ public class ProductAction extends ActionSupport implements CRUDAction {
     public void setBacklogItemDAO(BacklogItemDAO backlogItemDAO) {
         this.backlogItemDAO = backlogItemDAO;
     }
-
-    /**
-     * @return the taskEventDAO
-     */
-    public TaskEventDAO getTaskEventDAO() {
-        return taskEventDAO;
-    }
-
-    /**
-     * @param taskEventDAO
-     *                the taskEventDAO to set
-     */
-    public void setTaskEventDAO(TaskEventDAO taskEventDAO) {
-        this.taskEventDAO = taskEventDAO;
-    }
-
 }

@@ -10,25 +10,18 @@
 		<mapping package="fi.hut.soberit.agilefant.model"/>
 		
    		<mapping class="fi.hut.soberit.agilefant.model.ActivityType"/>
-  		<mapping class="fi.hut.soberit.agilefant.model.AssignEvent"/>
   		<mapping class="fi.hut.soberit.agilefant.model.Backlog"/>
  		<mapping class="fi.hut.soberit.agilefant.model.BacklogItem"/>
- 		<mapping class="fi.hut.soberit.agilefant.model.Deliverable"/>
- 		<mapping class="fi.hut.soberit.agilefant.model.EstimateHistoryEvent"/>
- 		<mapping class="fi.hut.soberit.agilefant.model.EffortHistory"/>
+ 		<mapping class="fi.hut.soberit.agilefant.model.Project"/>
  		<mapping class="fi.hut.soberit.agilefant.model.Iteration"/>
-  		<mapping class="fi.hut.soberit.agilefant.model.PerformedWork"/>
  		<mapping class="fi.hut.soberit.agilefant.model.Product"/>
  		<mapping class="fi.hut.soberit.agilefant.model.Task"/>
-  		<mapping class="fi.hut.soberit.agilefant.model.TaskComment"/>
- 		<mapping class="fi.hut.soberit.agilefant.model.TaskEvent"/>
  		<mapping class="fi.hut.soberit.agilefant.model.User"/>
  		<mapping class="fi.hut.soberit.agilefant.model.WorkType"/>
- 		<mapping class="fi.hut.soberit.agilefant.model.IterationGoal"/> 		
- 		
- 		<mapping class="fi.hut.soberit.agilefant.model.Practice"/>
- 		<mapping class="fi.hut.soberit.agilefant.model.PracticeTemplate"/>
- 		<mapping class="fi.hut.soberit.agilefant.model.PracticeAllocation"/> 		
+ 		<mapping class="fi.hut.soberit.agilefant.model.IterationGoal"/>
+ 		<mapping class="fi.hut.soberit.agilefant.model.History"/>
+ 		<mapping class="fi.hut.soberit.agilefant.model.BacklogHistory"/> 	
+ 		<mapping class="fi.hut.soberit.agilefant.model.HistoryEntry"/> 	 				
  		
 		<!-- Activate hibernate validation: these listeners will raise an exception
 			 if an annotation validation constraint is violated. -->

@@ -6,44 +6,27 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Date;
-import java.util.GregorianCalendar;
 
 import org.jfree.chart.ChartFactory;
-import org.jfree.chart.ChartRenderingInfo;
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
-import org.jfree.chart.axis.DateAxis;
 import org.jfree.chart.axis.ValueAxis;
-import org.jfree.chart.entity.StandardEntityCollection;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.renderer.category.BarRenderer;
 import org.jfree.chart.renderer.category.CategoryItemRenderer;
-import org.jfree.chart.urls.CategoryURLGenerator;
-import org.jfree.chart.urls.StandardCategoryURLGenerator;
 import org.jfree.data.category.DefaultCategoryDataset;
-import org.jfree.data.category.IntervalCategoryDataset;
-import org.jfree.data.gantt.Task;
-import org.jfree.data.gantt.TaskSeries;
-import org.jfree.data.gantt.TaskSeriesCollection;
 import org.jfree.ui.RectangleInsets;
 
 import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
 
+import fi.hut.soberit.agilefant.business.ChartBusiness;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
-import fi.hut.soberit.agilefant.db.DeliverableDAO;
 import fi.hut.soberit.agilefant.db.IterationDAO;
-import fi.hut.soberit.agilefant.db.PerformedWorkDAO;
+import fi.hut.soberit.agilefant.db.ProjectDAO;
 import fi.hut.soberit.agilefant.db.TaskDAO;
-import fi.hut.soberit.agilefant.model.Deliverable;
-import fi.hut.soberit.agilefant.model.Iteration;
-import fi.hut.soberit.agilefant.model.PerformedWork;
-import fi.hut.soberit.agilefant.model.Portfolio;
-import fi.hut.soberit.agilefant.service.ChartManager;
-import fi.hut.soberit.agilefant.service.PortfolioManager;
 
 public class ChartAction extends ActionSupport {
 
@@ -51,15 +34,13 @@ public class ChartAction extends ActionSupport {
 
     private byte[] result;
 
-    private PerformedWork performedWork;
-
     private int taskId;
 
     private int backlogItemId;
 
     private int iterationId;
 
-    private int deliverableId;
+    private int projectId;
 
     private TaskDAO taskDAO;
 
@@ -67,19 +48,13 @@ public class ChartAction extends ActionSupport {
 
     private IterationDAO iterationDAO;
 
-    private DeliverableDAO deliverableDAO;
-
-    private PerformedWorkDAO performedWorkDAO;
+    private ProjectDAO projectDAO;
 
     private int workDone;
 
     private double effortDone;
 
     private double effortLeft;
-
-    private PortfolioManager portfolioManager;
-
-    private Portfolio portfolio;
 
     private double notStarted;
 
@@ -105,39 +80,22 @@ public class ChartAction extends ActionSupport {
 
     private Color color5;
 
-    private ChartManager chartManager;
+    private ChartBusiness chartBusiness;
 
     /**
      * This method draws the iteration burndown chart.
      */
     public String execute() {
         if (iterationId > 0) {
-            result = chartManager.getIterationBurndown(iterationId);
+            result = chartBusiness.getIterationBurndown(iterationId);
         }
-
-        // Create a time series chart
-        /*
-         * if (taskId > 0){ works =
-         * performedWorkDAO.getPerformedWork(taskDAO.get(taskId)); } else if
-         * (backlogItemId > 0){ works =
-         * performedWorkDAO.getPerformedWork(backlogItemDAO.get(backlogItemId)); }
-         * else if (iterationId > 0){ estimates =
-         * estimateHistoryDAO.getEstimateHistory(iterationDAO.get(iterationId));
-         * works =
-         * performedWorkDAO.getPerformedWork(iterationDAO.get(iterationId));
-         * startDate = iterationDAO.get(iterationId).getStartDate(); // We set
-         * the start date for burndown graph endDate =
-         * iterationDAO.get(iterationId).getEndDate();// We set the end date for
-         * burndown graph } else if (deliverableId > 0){ works =
-         * performedWorkDAO.getPerformedWork(deliverableDAO.get(deliverableId)); }
-         */
 
         return Action.SUCCESS;
     }
 
     public String smallChart() {
         if (iterationId > 0) {
-            result = chartManager.getSmallIterationBurndown(iterationId);
+            result = chartBusiness.getSmallIterationBurndown(iterationId);
         }
         return Action.SUCCESS;
     }
@@ -323,147 +281,6 @@ public class ChartAction extends ActionSupport {
     }
 
     /**
-     * Draws the gantt chart with default settings for viewing current date plus
-     * three months
-     * 
-     * @return
-     */
-    public String ganttChart() {
-
-        TaskSeries s1 = new TaskSeries("Scheduled");
-        portfolio = portfolioManager.getCurrentPortfolio();
-        Collection<Deliverable> deliverables = portfolio.getDeliverables();
-        for (Deliverable deliverable : deliverables) {
-            Date starting = deliverable.getStartDate();
-            Date ending = deliverable.getEndDate();
-            String name = deliverable.getName();
-            Task del1 = new Task(name, starting, ending);
-            del1.setPercentComplete(1.00);
-
-            Collection<Iteration> iterations = deliverable.getIterations();
-            int count = 0;
-            for (Iteration iteration : iterations) {
-                Date iterStartDate = iteration.getStartDate();
-                Date iterEndDate = iteration.getEndDate();
-                count++;
-                String iter_name = "Iteraation " + count + "";
-                if (iterStartDate != null && iterEndDate != null) {
-                    Task iter1 = new Task(iter_name, iterStartDate, iterEndDate);
-                    del1.addSubtask(iter1);
-                }
-
-            }
-
-            s1.add(del1);
-
-        }
-
-        TaskSeriesCollection collection = new TaskSeriesCollection();
-        collection.add(s1);
-
-        IntervalCategoryDataset dataset = collection;
-
-        // create the chart...
-        JFreeChart chart3 = ChartFactory.createGanttChart(
-                "Development portfolio", // chart title
-                "Activity", // domain axis label
-                "Date", // range axis label
-                dataset, // data
-                true, // include legend
-                true, // tooltips
-                false // urls
-                );
-        CategoryPlot plot = (CategoryPlot) chart3.getPlot();
-
-        /*----Adjusting the date axis---------*/
-        ValueAxis rangeAxis = plot.getRangeAxis();
-        DateAxis axis = (DateAxis) rangeAxis;
-        Date current = new GregorianCalendar().getTime();
-        Calendar calendar = Calendar.getInstance();
-        int month;
-        int day;
-        int year;
-        if (this.getStartDate() != null) { // User has set starting date
-            calendar.setTime(this.getStartDate());
-            day = calendar.get(Calendar.DAY_OF_MONTH);
-            month = calendar.get(Calendar.MONTH) + 1; // January == 0
-            year = calendar.get(Calendar.YEAR);
-        } else {
-            calendar.setTime(current);
-            day = calendar.get(Calendar.DAY_OF_MONTH);
-            month = calendar.get(Calendar.MONTH) + 1; // January == 0
-            year = calendar.get(Calendar.YEAR);
-        }
-
-        /*-experimental for setting the start date */
-        if (this.getStartDate() != null) { // User has set the starting date
-            axis.setMinimumDate(this.getStartDate());
-        } else { // start date field is left empty
-            axis.setMinimumDate(current); // Sets the gantt to show dates
-            // starting from today.
-        }
-        // Here create a calendar object that has a date 3 month from now
-        int endMonth = (month + 3) % 13;
-        if (endMonth == 13) {
-            endMonth = 1;
-        }
-        if (endMonth == 1 || endMonth == 2 || endMonth == 3) {
-            year++;
-        }
-        if (endMonth == 2 && day > 28) {
-            day = 28; // February has only 28 days
-        } else if ((endMonth == 4 || endMonth == 6 || endMonth == 9 || endMonth == 11)
-                && (day > 30)) {
-            day = 30;
-        }
-        calendar.set(year, endMonth, day); // Sets the ending date
-
-        /* --experimental for setting the end date */
-
-        // String str2 = this.getStartDateString();
-        Date d2 = this.getEndDate();
-        Date d1 = this.getStartDate();
-        if (d1 != null && d2 != null) { // User has set both starting and ending
-            // dates
-            if (d1.before(d2)) {
-                axis.setMaximumDate(this.getEndDate());
-            } else { // Ending date was before starting date, not allowed to
-                // be set for axis
-                Date endingDate = calendar.getTime();
-                axis.setMaximumDate(endingDate); // Set ending date three
-                // month from user defined
-                // starting date.
-            }
-        } else { // the end date field is left empty
-            Date endingDate = calendar.getTime(); // Get the new modified date
-            // three month from the
-            // original
-            axis.setMaximumDate(endingDate);
-        }
-
-        /*----------------------------------------------*/
-
-        CategoryItemRenderer renderer = plot.getRenderer();
-        renderer.setSeriesPaint(0, Color.blue);
-        CategoryURLGenerator generator = new StandardCategoryURLGenerator(
-                "index.html", "series", "category");
-        renderer.setItemURLGenerator(generator);
-        // renderer.setURLGenerator(new
-        // StandardCategoryURLGenerator("gant_chart_juttu.jsp"));
-        ChartRenderingInfo info = new ChartRenderingInfo(
-                new StandardEntityCollection());
-
-        try {
-            ByteArrayOutputStream out = new ByteArrayOutputStream();
-            ChartUtilities.writeChartAsPNG(out, chart3, 780, 600, info);
-            result = out.toByteArray();
-        } catch (IOException e) {
-            System.err.println("Problem occurred creating chart.");
-        }
-        return Action.SUCCESS;
-    }
-
-    /**
      * Utility method for creating <code>Date</code> objects.
      * 
      * @param day
@@ -507,20 +324,20 @@ public class ChartAction extends ActionSupport {
         this.backlogItemId = backlogItemId;
     }
 
-    public DeliverableDAO getDeliverableDAO() {
-        return deliverableDAO;
+    public ProjectDAO getProjectDAO() {
+        return projectDAO;
     }
 
-    public void setDeliverableDAO(DeliverableDAO deliverableDAO) {
-        this.deliverableDAO = deliverableDAO;
+    public void setProjectDAO(ProjectDAO projectDAO) {
+        this.projectDAO = projectDAO;
     }
 
-    public int getDeliverableId() {
-        return deliverableId;
+    public int getProjectId() {
+        return projectId;
     }
 
-    public void setDeliverableId(int deliverableId) {
-        this.deliverableId = deliverableId;
+    public void setProjectId(int projectId) {
+        this.projectId = projectId;
     }
 
     public IterationDAO getIterationDAO() {
@@ -537,22 +354,6 @@ public class ChartAction extends ActionSupport {
 
     public void setIterationId(int iterationId) {
         this.iterationId = iterationId;
-    }
-
-    public PerformedWork getPerformedWork() {
-        return performedWork;
-    }
-
-    public void setPerformedWork(PerformedWork performedWork) {
-        this.performedWork = performedWork;
-    }
-
-    public PerformedWorkDAO getPerformedWorkDAO() {
-        return performedWorkDAO;
-    }
-
-    public void setPerformedWorkDAO(PerformedWorkDAO performedWorkDAO) {
-        this.performedWorkDAO = performedWorkDAO;
     }
 
     public byte[] getResult() {
@@ -601,14 +402,6 @@ public class ChartAction extends ActionSupport {
 
     public void setEffortLeft(double effortLeft) {
         this.effortLeft = effortLeft;
-    }
-
-    public Portfolio getPortfolio() {
-        return portfolio;
-    }
-
-    public void setPortfolioManager(PortfolioManager portfolioManager) {
-        this.portfolioManager = portfolioManager;
     }
 
     public double getBlocked() {
@@ -707,7 +500,7 @@ public class ChartAction extends ActionSupport {
         this.color5 = color5;
     }
 
-    public void setChartManager(ChartManager chartManager) {
-        this.chartManager = chartManager;
+    public void setChartBusiness(ChartBusiness chartBusiness) {
+        this.chartBusiness = chartBusiness;
     }
 }

@@ -21,9 +21,6 @@ public interface UserDAO extends GenericDAO<User> {
     /** Get all unfinished tasks assigned to a user. */
     public Collection<Task> getUnfinishedTasks(User user);
 
-    /** Get all unfinished tasks watched by a user. */
-    public Collection<Task> getUnfinishedWatchedTasks(User user);
-
     /**
      * Get user's unfished tasks inside certain timeframe.
      * <p>

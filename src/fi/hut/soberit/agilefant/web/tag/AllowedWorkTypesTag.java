@@ -7,7 +7,7 @@ import javax.servlet.jsp.tagext.Tag;
 
 import fi.hut.soberit.agilefant.db.WorkTypeDAO;
 import fi.hut.soberit.agilefant.model.BacklogItem;
-import fi.hut.soberit.agilefant.model.Deliverable;
+import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.WorkType;
@@ -30,15 +30,15 @@ public class AllowedWorkTypesTag extends SpringTagSupport {
                     .getApplicationContext().getBean("workTypeDAO");
             result = workTypeDAO.getAll();
         } else {
-            Deliverable deliverable = null;
-            if (backlogItem.getBacklog() instanceof Deliverable) {
-                deliverable = (Deliverable) backlogItem.getBacklog();
+            Project project = null;
+            if (backlogItem.getBacklog() instanceof Project) {
+                project = (Project) backlogItem.getBacklog();
             } else {
-                deliverable = ((Iteration) backlogItem.getBacklog())
-                        .getDeliverable();
+                project = ((Iteration) backlogItem.getBacklog())
+                        .getProject();
             }
-            if (deliverable.getActivityType() != null) {
-                result = deliverable.getActivityType().getWorkTypes();
+            if (project.getActivityType() != null) {
+                result = project.getActivityType().getWorkTypes();
             }
         }
         super.getPageContext().setAttribute(super.getId(), result);

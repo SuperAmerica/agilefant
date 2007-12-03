@@ -239,6 +239,11 @@
 		<touch file="${deploy.dir.local}/WEB-INF/web.xml" />
 	</target>
 
+	<!-- Deploys the project on local system but does not touch web.xml, therefore Tomcat should not redeploy entire project. -->
+	<target name="deploy-local-notouch" depends="deploy-local-web" description="Deploys web app to local server">
+	</target>
+
+	
 	<target name="undeploy-local" description="Undeploys web app on local server">
 		<delete dir="${deploy.dir.local}" />
 		<delete dir="${catalina.home}/work/Catalina/localhost/${webapp.name}" />

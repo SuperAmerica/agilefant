@@ -11,8 +11,8 @@ import fi.hut.soberit.agilefant.db.UserDAO;
 /**
  * A tag for requesting task and backlog item lists for current user, inside
  * given timeframe. Lists all tasks and backlog items, belonging to a
- * deliverable or iteration, duration of which intersects with given timeframe.
- * Also tasks belonging to a product or a deliverable/iteration with no duration
+ * project or iteration, duration of which intersects with given timeframe.
+ * Also tasks belonging to a product or a project/iteration with no duration
  * specified are listed.
  * 
  * <p>

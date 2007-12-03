@@ -64,12 +64,7 @@ public class TaskDAOHibernate extends GenericDAOHibernate<Task> implements
         ids[0] = "bliid";
         values[0] = bli.getId();
 
-        if (bli.getPlaceHolder() != null) {
-            query = "from Task t where t.backlogItem.id = :bliid "
-                    + "and t != t.backlogItem.placeHolder";
-        } else {
-            query = "from Task t where t.backlogItem.id = :bliid ";
-        }
+        query = "from Task t where t.backlogItem.id = :bliid ";
 
         if (statuses != null && statuses.length != 0) {
             query += " and ( ";

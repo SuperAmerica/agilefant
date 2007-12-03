@@ -53,39 +53,6 @@
 				</prop>
 			</props>
 		</property>
-		<property name="eventListeners">
-			<map>
-				<entry key="pre-insert">
-					<list>
-						<ref bean="taskEventListener" />
-						<bean
-							class="fi.hut.soberit.agilefant.db.hibernate.event.TaskEventEventListener" />
-					</list>
-				</entry>
-				<entry key="post-insert">
-					<list>
-						<ref bean="taskEventListener" />
-					</list>
-				</entry>
-				<entry key="post-update">
-					<list>
-						<ref bean="taskEventListener" />
-					</list>
-				</entry>
-			</map>
-		</property>
-	</bean>
-
-	<bean name="taskEventListener"
-		class="fi.hut.soberit.agilefant.db.hibernate.event.TaskEventListener">
-		<property name="mailSender" ref="mailSender" />
-		<property name="createTemplate" ref="createTaskTemplate" />
-		<property name="updateTemplate" ref="updateTaskTemplate" />
-	</bean>
-
-	<bean name="portfolioManager"
-		class="fi.hut.soberit.agilefant.service.PortfolioManagerImpl">
-		<property name="deliverableDAO" ref="deliverableDAO" />
 	</bean>
 
 	<bean name="contextViewManager"
@@ -96,11 +63,9 @@
 		<property name="maxStrLength" value="15" />
 	</bean>
 
-	<bean name="chartManager"
-		class="fi.hut.soberit.agilefant.service.ChartManagerImpl">
+	<bean name="chartBusiness"
+		class="fi.hut.soberit.agilefant.business.impl.ChartBusinessImpl">
 		<property name="iterationDAO" ref="iterationDAO" />
-		<property name="taskEventDAO" ref="taskEventDAO"/>
 		<property name="backlogItemDAO" ref="backlogItemDAO"/>
-		<property name="effortHistoryDAO" ref="effortHistoryDAO"/>
 	</bean>
 </beans>

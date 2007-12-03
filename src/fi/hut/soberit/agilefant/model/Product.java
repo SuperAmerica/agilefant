@@ -1,6 +1,7 @@
 package fi.hut.soberit.agilefant.model;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -14,44 +15,44 @@ import fi.hut.soberit.agilefant.web.page.PageItem;
 /**
  * Hibernate entity bean representing a product.
  * <p>
- * Conceptually, a product is a type of a backlog. A deliverable-backlog
- * represents work (deliverables, iterations, backlog items, tasks) done / to be
+ * Conceptually, a product is a type of a backlog. A project-backlog
+ * represents work (projects, iterations, backlog items, tasks) done / to be
  * done for the product.
  * <p>
- * A product contains deliverables, which are some partial outcomes of the
+ * A product contains projects, which are some partial outcomes of the
  * product. For example, different versions of the product or some
  * documentation.
  * <p>
  * Product is at the top level of the hiearchy and thus is the biggest container
- * of work. Since a deliverable is a backlog, it can contain backlog items,
+ * of work. Since a project is a backlog, it can contain backlog items,
  * which, in turn, are smaller containers for work.
  * <p>
  * An example product would be "Acme WordProcessor" or "Agilefant 07".
  * 
- * @see fi.hut.soberit.agilefant.model.Deliverable
+ * @see fi.hut.soberit.agilefant.model.Project
  */
 @Entity
 public class Product extends Backlog implements PageItem {
 
-    private List<Deliverable> deliverables = new ArrayList<Deliverable>();
+    private List<Project> projects = new ArrayList<Project>();
 
-    /** Get the collection of deliverables belonging to this product. */
+    /** Get the collection of projects belonging to this product. */
     @OneToMany(mappedBy = "product")
     @OrderBy(clause = "startDate asc, endDate asc")
-    public List<Deliverable> getDeliverables() {
-        return deliverables;
+    public List<Project> getProjects() {
+        return projects;
     }
 
-    /** Set the collection of deliverables belonging to this product. */
-    public void setDeliverables(List<Deliverable> deliverables) {
-        this.deliverables = deliverables;
+    /** Set the collection of projects belonging to this product. */
+    public void setProjects(List<Project> projects) {
+        this.projects = projects;
     }
 
     /** {@inheritDoc} */
     @Transient
     public List<PageItem> getChildren() {
-        List<PageItem> c = new ArrayList<PageItem>(this.deliverables.size());
-        c.addAll(this.deliverables);
+        List<PageItem> c = new ArrayList<PageItem>(this.projects.size());
+        c.addAll(this.projects);
         return c;
     }
 
@@ -67,6 +68,36 @@ public class Product extends Backlog implements PageItem {
     /** {@inheritDoc} */
     @Transient
     public boolean hasChildren() {
-        return this.deliverables.size() > 0 ? true : false;
+        return this.projects.size() > 0 ? true : false;
+    }
+    
+    /**
+     * Returns the sum of Product's sub-backlogs' items' effort left.
+     */
+    @Transient
+    public AFTime getSubBacklogEffortLeftSum() {
+        AFTime result = new AFTime(0);
+        Iterator<Project> it = projects.iterator();
+        while(it.hasNext()) {
+            Project proj = it.next();
+            result.add(proj.getSubBacklogEffortLeftSum());
+            result.add(proj.getBliEffortLeftSum());
+        }
+        return result;
+    }
+    
+    /**
+     * Returns the sum of Product's sub-backlogs' items' original estimate.
+     */
+    @Transient
+    public AFTime getSubBacklogOriginalEstimateSum() {
+        AFTime result = new AFTime(0);
+        Iterator<Project> it = projects.iterator();
+        while(it.hasNext()) {
+            Project proj = it.next();
+            result.add(proj.getSubBacklogOriginalEstimateSum());
+            result.add(proj.getBliOriginalEstimateSum());
+        }
+        return result;
     }
 }

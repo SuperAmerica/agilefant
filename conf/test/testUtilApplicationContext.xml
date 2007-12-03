@@ -8,8 +8,7 @@
 		<property name="productDAO" ref="productDAO"/>
 		<property name="backlogItemDAO" ref="backlogItemDAO"/>
 		<property name="taskDAO" ref="taskDAO"/>
-		<property name="taskEventDAO" ref="taskEventDAO"/>
 		<property name="iterationDAO" ref="iterationDAO"/>
-		<property name="deliverableDAO" ref="deliverableDAO"/>
+		<property name="projectDAO" ref="projectDAO"/>
 	</bean>
 </beans>

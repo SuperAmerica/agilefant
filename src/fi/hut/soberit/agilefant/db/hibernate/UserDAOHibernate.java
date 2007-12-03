@@ -43,16 +43,6 @@ public class UserDAOHibernate extends GenericDAOHibernate<User> implements
                         "id", new Integer(user.getId()));
     }
 
-    /** {@inheritDoc} */
-    @SuppressWarnings("unchecked")
-    public Collection<Task> getUnfinishedWatchedTasks(User user) {
-        return (Collection<Task>) super
-                .getHibernateTemplate()
-                .findByNamedParam(
-                        "from Task t where :id in indices(t.watchers) and t.status != 4",
-                        "id", new Integer(user.getId()));
-    }
-
     private String instanceOf(String item, String clazz) {
         String clazzTempInstance = "temp_" + clazz.toLowerCase();
         return "(" + item + ".id in (select " + clazzTempInstance + ".id from "
@@ -78,11 +68,11 @@ public class UserDAOHibernate extends GenericDAOHibernate<User> implements
                 .getHibernateTemplate()
                 .findByNamedParam(
 
-                        "select distinct t from Task t, Deliverable d, Iteration i where "
+                        "select distinct t from Task t, Project d, Iteration i where "
                                 + "t.assignee.id = :id and t.status != 4 and "
                                 + "( "
                                 + instanceOf("t.backlogItem.backlog",
-                                        "Deliverable")
+                                        "Project")
                                 + "and d.id = t.backlogItem.backlog.id and "
                                 + dateIntersects("d")
                                 + " ) "
@@ -110,9 +100,9 @@ public class UserDAOHibernate extends GenericDAOHibernate<User> implements
         return (Collection<BacklogItem>) super.getHibernateTemplate()
                 .findByNamedParam(
 
-                        "select distinct bli from BacklogItem bli, Deliverable d, Iteration i where "
+                        "select distinct bli from BacklogItem bli, Project d, Iteration i where "
                                 + "bli.assignee.id = :id and " + "( "
-                                + instanceOf("bli.backlog", "Deliverable")
+                                + instanceOf("bli.backlog", "Project")
                                 + "and d.id = bli.backlog.id and "
                                 + dateIntersects("d") + " ) " + "or " + "( "
                                 + instanceOf("bli.backlog", "Iteration")

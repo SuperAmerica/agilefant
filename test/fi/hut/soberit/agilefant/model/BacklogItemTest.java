@@ -14,12 +14,12 @@ public class BacklogItemTest extends TestCase {
      */
     public void testGetParentBacklogs() {
         Product prod = new Product();
-        Deliverable proj = new Deliverable();
+        Project proj = new Project();
         Iteration iter = new Iteration();
         Backlog fake = new Product();
 
         // Set the parents
-        iter.setDeliverable(proj);
+        iter.setProject(proj);
         proj.setProduct(prod);
 
         BacklogItem bli1 = new BacklogItem();

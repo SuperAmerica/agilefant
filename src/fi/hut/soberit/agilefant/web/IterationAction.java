@@ -7,19 +7,16 @@ import java.util.Date;
 import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
 
+import fi.hut.soberit.agilefant.business.HistoryBusiness;
 import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
-import fi.hut.soberit.agilefant.db.DeliverableDAO;
-import fi.hut.soberit.agilefant.db.EffortHistoryDAO;
 import fi.hut.soberit.agilefant.db.IterationDAO;
 import fi.hut.soberit.agilefant.db.IterationGoalDAO;
-import fi.hut.soberit.agilefant.db.TaskEventDAO;
+import fi.hut.soberit.agilefant.db.ProjectDAO;
 import fi.hut.soberit.agilefant.model.Backlog;
-import fi.hut.soberit.agilefant.model.Deliverable;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.IterationGoal;
-import fi.hut.soberit.agilefant.util.BacklogValueInjector;
-import fi.hut.soberit.agilefant.util.EffortHistoryUpdater;
+import fi.hut.soberit.agilefant.model.Project;
 
 public class IterationAction extends ActionSupport implements CRUDAction {
 
@@ -33,21 +30,17 @@ public class IterationAction extends ActionSupport implements CRUDAction {
 
     private IterationDAO iterationDAO;
 
-    private DeliverableDAO deliverableDAO;
-
-    private TaskEventDAO taskEventDAO;
+    private ProjectDAO projectDAO;
 
     private BacklogItemDAO backlogItemDAO;
 
     private BacklogDAO backlogDAO;
 
-    private Deliverable deliverable;
+    private Project project;
 
-    private int deliverableId;
+    private int projectId;
 
     private IterationGoalDAO iterationGoalDAO;
-
-    private EffortHistoryDAO effortHistoryDAO;
 
     private int iterationGoalId;
 
@@ -57,10 +50,13 @@ public class IterationAction extends ActionSupport implements CRUDAction {
 
     private String dateFormat;
 
+    private HistoryBusiness historyBusiness;
+    
     public String create() {
         iterationId = 0;
         iteration = new Iteration();
         backlog = iteration;
+        
         return Action.SUCCESS;
     }
 
@@ -77,30 +73,21 @@ public class IterationAction extends ActionSupport implements CRUDAction {
             startDate = new Date(0);
         }
 
-        deliverable = iteration.getDeliverable();
+        project = iteration.getProject();
 
         /*
          * We need Backlog-class object to generate backlog list in
          * _backlogList.jsp
          */
         backlog = iteration;
-        BacklogValueInjector.injectMetrics(backlog, startDate, taskEventDAO,
-                backlogItemDAO);
 
-        if (deliverable == null) {
+        if (project == null) {
             super
                     .addActionError(super
-                            .getText("iteration.deliverableNotFound"));
+                            .getText("iteration.projectNotFound"));
             return Action.INPUT;
         }
-        deliverableId = deliverable.getId();
-
-        /*
-         * Update effort history (changing iteration dates might change the
-         * effort history value!)
-         */
-        EffortHistoryUpdater.updateEffortHistory(effortHistoryDAO,
-                taskEventDAO, backlogItemDAO, backlog);
+        projectId = project.getId();
 
         return Action.SUCCESS;
     }
@@ -110,11 +97,11 @@ public class IterationAction extends ActionSupport implements CRUDAction {
             super.addActionError(super.getText("iteration.missingForm"));
             return Action.INPUT;
         }
-        deliverable = deliverableDAO.get(deliverableId);
-        if (deliverable == null) {
+        project = projectDAO.get(projectId);
+        if (project == null) {
             super
                     .addActionError(super
-                            .getText("iteration.deliverableNotFound"));
+                            .getText("iteration.projectNotFound"));
             return Action.INPUT;
         }
         Iteration fillable = new Iteration();
@@ -142,6 +129,8 @@ public class IterationAction extends ActionSupport implements CRUDAction {
             iterationId = (Integer) iterationDAO.create(fillable);
         else
             iterationDAO.store(fillable);
+        
+        historyBusiness.updateBacklogHistory(fillable.getId());
         return Action.SUCCESS;
     }
 
@@ -174,7 +163,7 @@ public class IterationAction extends ActionSupport implements CRUDAction {
                             .getText("backlog.startDateAfterEndDate"));
             return;
         }
-        fillable.setDeliverable(this.deliverable);
+        fillable.setProject(this.project);
         fillable.setName(this.iteration.getName());
         fillable.setDescription(this.iteration.getDescription());
         if (fillable.getStartDate().after(fillable.getEndDate())) {
@@ -229,20 +218,20 @@ public class IterationAction extends ActionSupport implements CRUDAction {
         this.iterationDAO = iterationDAO;
     }
 
-    public void setDeliverableDAO(DeliverableDAO deliverableDAO) {
-        this.deliverableDAO = deliverableDAO;
+    public void setProjectDAO(ProjectDAO projectDAO) {
+        this.projectDAO = projectDAO;
     }
 
     public Collection<Iteration> getAllIterations() {
         return this.iterationDAO.getAll();
     }
 
-    public int getDeliverableId() {
-        return deliverableId;
+    public int getProjectId() {
+        return projectId;
     }
 
-    public void setDeliverableId(int deliverableId) {
-        this.deliverableId = deliverableId;
+    public void setProjectId(int projectId) {
+        this.projectId = projectId;
     }
 
     public void setIterationGoalDAO(IterationGoalDAO iterationGoalDAO) {
@@ -255,21 +244,6 @@ public class IterationAction extends ActionSupport implements CRUDAction {
 
     public int getIterationGoalId() {
         return iterationGoalId;
-    }
-
-    /**
-     * @return the taskEventDAO
-     */
-    public TaskEventDAO getTaskEventDAO() {
-        return taskEventDAO;
-    }
-
-    /**
-     * @param taskEventDAO
-     *                the taskEventDAO to set
-     */
-    public void setTaskEventDAO(TaskEventDAO taskEventDAO) {
-        this.taskEventDAO = taskEventDAO;
     }
 
     /**
@@ -347,11 +321,11 @@ public class IterationAction extends ActionSupport implements CRUDAction {
         this.dateFormat = dateFormat;
     }
 
-    public EffortHistoryDAO getEffortHistoryDAO() {
-        return effortHistoryDAO;
+    public HistoryBusiness getHistoryBusiness() {
+        return historyBusiness;
     }
 
-    public void setEffortHistoryDAO(EffortHistoryDAO effortHistoryDAO) {
-        this.effortHistoryDAO = effortHistoryDAO;
+    public void setHistoryBusiness(HistoryBusiness historyBusiness) {
+        this.historyBusiness = historyBusiness;
     }
 }

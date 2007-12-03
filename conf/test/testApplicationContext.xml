@@ -53,15 +53,5 @@ ExplicitSpringSupport.java.
 	 	<property name="configLocation">
 	 		<value>file:conf/hibernate.cfg.xml</value>
 	 	</property>
-	 	<property name="eventListeners">
-	 		<map>
-	 			<entry key="pre-insert">
-	 				<list>
-						<bean class="fi.hut.soberit.agilefant.db.hibernate.event.TaskEventListener"/>
-						<bean class="fi.hut.soberit.agilefant.db.hibernate.event.TaskEventEventListener"/>
-					</list>
-	 			</entry>	 		
-	 		</map>
-	 	</property>
 	 </bean>
 </beans>

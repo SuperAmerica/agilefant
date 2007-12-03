@@ -1,5 +1,7 @@
 package fi.hut.soberit.agilefant.business;
 
+import fi.hut.soberit.agilefant.model.BacklogItem;
+
 /**
  * This description contains generic information on <code>Business</code>
  * classes rather than on <code>BacklogBusiness</code> in particular.
@@ -37,10 +39,12 @@ public interface BacklogBusiness {
     public void deleteMultipleItems(int backlogId, int backlogItemIds[]);
 
     /**
-     * Updates effort history associated for one <code>Backlog</code>.
+     * Creates new backlogItem to given backlog.
      * 
      * @param backlogId
-     *                ID of the backlog to be updated.
+     *                the ID of backlog where the new item should be created
+     * @return created backlog item
      */
-    public void updateEffortHistory(int backlogId);
+
+    public BacklogItem createBacklogItemToBacklog(int backlogId);
 }

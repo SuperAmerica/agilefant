@@ -185,7 +185,7 @@
 		<tag-class>fi.hut.soberit.agilefant.web.tag.TaskStatusListTag</tag-class>
 		<body-content>JSP</body-content>
 		<description>
-			Stores tasks by status
+			Stores tasks by state
 	    </description>
 	    <attribute>
 	    	<name>id</name>

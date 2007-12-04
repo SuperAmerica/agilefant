@@ -55,7 +55,7 @@
 			<td><ww:textarea cols="70" rows="10" name="task.description" /></td>
 		</tr>
 		<tr>
-			<td>Status</td>
+			<td>State</td>
 			<td></td>
 			<td><ww:select name="task.status" value="task.status.name"
 				list="@fi.hut.soberit.agilefant.model.TaskStatus@values()"

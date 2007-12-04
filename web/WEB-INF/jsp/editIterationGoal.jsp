@@ -117,7 +117,7 @@
 					</ww:a>
 					</display:column>
 
-					<display:column title="Status" sortable="false" class="taskColumn">
+					<display:column title="State" sortable="false" class="taskColumn">
 						<c:set var="divId" value="${divId + 1}" scope="page" />
 						<c:choose>
 							<c:when test="${!(empty row.tasks || fn:length(row.tasks) == 1)}">

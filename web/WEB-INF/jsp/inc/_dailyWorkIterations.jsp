@@ -59,7 +59,7 @@
 						</c:choose> </span>
 					</display:column>
 
-					<display:column title="Status" sortable="false" class="taskColumn">
+					<display:column title="State" sortable="false" class="taskColumn">
 						<c:set var="divId" value="${divId + 1}" scope="page" />
 						<c:choose>
 							<c:when

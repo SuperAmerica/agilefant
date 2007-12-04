@@ -85,7 +85,7 @@
 
 		<c:if test="${backlogItem.status != null}">
 			<tr>
-				<td>Status</td>
+				<td>State</td>
 				<td></td>
 				<td><ww:select name="backlogItem.status"
 					value="backlogItem.status.name"
@@ -230,7 +230,7 @@
 						${aef:html(row.name)}
 					</ww:a>
 					</display:column>
-					<display:column sortable="true" title="Status"
+					<display:column sortable="true" title="State"
 						sortProperty="status.ordinal">
 						<ww:text name="task.status.${row.status}" />
 					</display:column>

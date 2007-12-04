@@ -13,7 +13,7 @@ import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.Priority;
 import fi.hut.soberit.agilefant.model.Product;
-import fi.hut.soberit.agilefant.model.TaskStatus;
+import fi.hut.soberit.agilefant.model.State;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.security.SecurityUtil;
 import fi.hut.soberit.agilefant.util.SpringTestCase;
@@ -42,9 +42,9 @@ public class BacklogItemActionTest extends SpringTestCase {
 
     private static final Priority TEST_PRI2 = Priority.TRIVIAL;
 
-    private static final TaskStatus TEST_STAT1 = TaskStatus.NOT_STARTED;
+    private static final State TEST_STAT1 = State.NOT_STARTED;
 
-    private static final TaskStatus TEST_STAT2 = TaskStatus.STARTED;
+    private static final State TEST_STAT2 = State.STARTED;
 
     private static final boolean TEST_WATCH1 = false;
 
@@ -155,9 +155,9 @@ public class BacklogItemActionTest extends SpringTestCase {
         backlogItemAction.getBacklogItem().setPriority(priority);
     }
 
-    private void setStatus(TaskStatus status) {
+    private void setState(State state) {
 
-        backlogItemAction.getBacklogItem().setStatus(status);
+        backlogItemAction.getBacklogItem().setState(state);
     }
 
     private void setBacklog(Backlog backlog) {
@@ -166,19 +166,19 @@ public class BacklogItemActionTest extends SpringTestCase {
 
     private void setContents(String name, String desc, User creator,
             boolean watch, User assignee, AFTime allocatedEffort,
-            Priority priority, TaskStatus status, Backlog backlog) {
+            Priority priority, State state, Backlog backlog) {
         this.setNameAndDesc(name, desc);
         this.setLoggedUser(creator);
         this.setAssignee(assignee);
         this.setAllocatedEffort(allocatedEffort);
         this.setPriority(priority);
-        this.setStatus(status);
+        this.setState(state);
         this.setBacklog(backlog);
     }
 
     private void checkContents(String entity, BacklogItem bi, String name,
             String desc, User creator, boolean watch, User assignee,
-            AFTime estimate, Priority priority, TaskStatus status,
+            AFTime estimate, Priority priority, State state,
             Backlog backlog) {
         super.assertEquals("The name of the " + entity + " was wrong", name, bi
                 .getName());
@@ -190,8 +190,8 @@ public class BacklogItemActionTest extends SpringTestCase {
                 + " was wrong", estimate, bi.getOriginalEstimate());
         super.assertEquals("The priority of the " + entity + " was wrong",
                 priority, bi.getPriority());
-        super.assertEquals("The status of the " + entity + " was wrong",
-                status, bi.getStatus());
+        super.assertEquals("The state of the " + entity + " was wrong",
+                state, bi.getState());
         super.assertEquals("The backlog of the " + entity + " was wrong",
                 backlog, bi.getBacklog());
 
@@ -479,7 +479,7 @@ public class BacklogItemActionTest extends SpringTestCase {
         this.setAssignee(creator);
         this.setPriority(TEST_PRI2);
         this.setAllocatedEffort(TEST_EST2);
-        this.setStatus(TEST_STAT2);
+        this.setState(TEST_STAT2);
 
         String result = backlogItemAction.store();
         super.assertEquals("store() was unsuccessful", result, Action.SUCCESS);

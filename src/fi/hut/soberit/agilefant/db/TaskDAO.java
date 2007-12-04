@@ -4,7 +4,7 @@ import java.util.Collection;
 
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.Task;
-import fi.hut.soberit.agilefant.model.TaskStatus;
+import fi.hut.soberit.agilefant.model.State;
 
 /**
  * Interface for a DAO of a Task.
@@ -15,23 +15,23 @@ public interface TaskDAO extends GenericDAO<Task> {
 
     /**
      * Get all tasks of the given backlog item, which have one of the given
-     * statuses.
+     * states.
      * 
      * @param bli
      *                backlog item, tasks of which to find
-     * @param statuses
-     *                array of accepted statuses
+     * @param states
+     *                array of accepted states
      * @return all tasks matching the criteria
      */
-    public Collection<Task> getTasksByStatusAndBacklogItem(BacklogItem bli,
-            TaskStatus[] statuses);
+    public Collection<Task> getTasksByStateAndBacklogItem(BacklogItem bli,
+            State[] states);
 
     /**
-     * Get all tasks, which have one of the given statuses.
+     * Get all tasks, which have one of the given states.
      * 
-     * @param statuses
-     *                array of accepted statuses
+     * @param states
+     *                array of accepted states
      * @return all tasks matching the criteria
      */
-    public Collection<Task> getTasksByStatus(TaskStatus[] statuses);
+    public Collection<Task> getTasksByState(State[] states);
 }

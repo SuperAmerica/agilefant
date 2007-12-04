@@ -50,9 +50,6 @@ public class IterationGoal implements PageItem {
 
     private Integer priority;
 
-    // the default status is "looking good"
-    private IterationGoalStatus status = IterationGoalStatus.LOOKING_GOOD;
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(nullable = false)
@@ -108,17 +105,6 @@ public class IterationGoal implements PageItem {
 
     public void setIteration(Iteration iteration) {
         this.iteration = iteration;
-    }
-
-    @Type(type = "fi.hut.soberit.agilefant.db.hibernate.EnumUserType", parameters = {
-            @Parameter(name = "useOrdinal", value = "true"),
-            @Parameter(name = "enumClassName", value = "fi.hut.soberit.agilefant.model.IterationGoalStatus") })
-    public IterationGoalStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(IterationGoalStatus status) {
-        this.status = status;
     }
 
     @OneToMany(mappedBy = "iterationGoal")

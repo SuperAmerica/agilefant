@@ -57,9 +57,9 @@
 		<tr>
 			<td>State</td>
 			<td></td>
-			<td><ww:select name="task.status" value="task.status.name"
-				list="@fi.hut.soberit.agilefant.model.TaskStatus@values()"
-				listKey="name" listValue="getText('task.status.' + name())" /></td>
+			<td><ww:select name="task.state" value="task.state.name"
+				list="@fi.hut.soberit.agilefant.model.State@values()"
+				listKey="name" listValue="getText('task.state.' + name())" /></td>
 		</tr>
 		<tr>
 			<td></td>

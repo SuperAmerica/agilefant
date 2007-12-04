@@ -5,7 +5,7 @@ import javax.servlet.jsp.JspTagException;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.db.TaskDAO;
 import fi.hut.soberit.agilefant.model.BacklogItem;
-import fi.hut.soberit.agilefant.model.TaskStatus;
+import fi.hut.soberit.agilefant.model.State;
 
 public class PercentDoneTag extends SpringTagSupport {
 
@@ -22,8 +22,8 @@ public class PercentDoneTag extends SpringTagSupport {
                 .getBean("backlogItemDAO");
         BacklogItem bli = bliDao.get(backlogItemId);
 
-        int done = dao.getTasksByStatusAndBacklogItem(bli,
-                new TaskStatus[] { TaskStatus.DONE }).size();
+        int done = dao.getTasksByStateAndBacklogItem(bli,
+                new State[] { State.DONE }).size();
 
         // TODO: Use HQL-query instead of arithmetics here to calculate #
         int total = bli.getTasks().size();

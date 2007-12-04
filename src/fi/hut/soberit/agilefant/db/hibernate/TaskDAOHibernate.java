@@ -5,7 +5,7 @@ import java.util.Collection;
 import fi.hut.soberit.agilefant.db.TaskDAO;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.Task;
-import fi.hut.soberit.agilefant.model.TaskStatus;
+import fi.hut.soberit.agilefant.model.State;
 
 /**
  * Hibernate implementation of TaskDAO interface using GenericDAOHibernate.
@@ -21,32 +21,32 @@ public class TaskDAOHibernate extends GenericDAOHibernate<Task> implements
      * */
 
     /**
-     * Build a HQL "where" - clause, which makes given statuses pass. Fills
+     * Build a HQL "where" - clause, which makes given states pass. Fills
      * given id- and value-arrays, with corresponding HQL parameter names and
      * values. Starts filling from given index.
      * 
-     * @param allowedStatuses
-     *                statuses to allow
+     * @param allowedStates
+     *                states to allow
      * @param ids
-     *                (out) HQL status parameter names
+     *                (out) HQL state parameter names
      * @param values
-     *                (out) values for HQL status correspoding ids
+     *                (out) values for HQL state correspoding ids
      * @param startIndex
      *                first index of "ids" and "values" to use
      * @return where clause
      */
-    private String getStatusClause(TaskStatus[] allowedStatuses, String[] ids,
+    private String getStateClause(State[] allowedStates, String[] ids,
             Object[] values, int startIndex) {
         String query = "";
 
         boolean prev = false;
         int i = 0;
-        for (TaskStatus status : allowedStatuses) {
+        for (State state : allowedStates) {
             if (prev)
                 query += " or ";
-            query += "( t.status = :status" + i + " )";
-            ids[i + startIndex] = "status" + i;
-            values[i + startIndex] = status;
+            query += "( t.state = :state" + i + " )";
+            ids[i + startIndex] = "state" + i;
+            values[i + startIndex] = state;
             i++;
         }
 
@@ -55,10 +55,10 @@ public class TaskDAOHibernate extends GenericDAOHibernate<Task> implements
 
     /** {@inheritDoc} */
     @SuppressWarnings("unchecked")
-    public Collection<Task> getTasksByStatusAndBacklogItem(BacklogItem bli,
-            TaskStatus[] statuses) {
-        String[] ids = new String[statuses.length + 1];
-        Object[] values = new Object[statuses.length + 1];
+    public Collection<Task> getTasksByStateAndBacklogItem(BacklogItem bli,
+            State[] states) {
+        String[] ids = new String[states.length + 1];
+        Object[] values = new Object[states.length + 1];
         String query;
 
         ids[0] = "bliid";
@@ -66,9 +66,9 @@ public class TaskDAOHibernate extends GenericDAOHibernate<Task> implements
 
         query = "from Task t where t.backlogItem.id = :bliid ";
 
-        if (statuses != null && statuses.length != 0) {
+        if (states != null && states.length != 0) {
             query += " and ( ";
-            query += getStatusClause(statuses, ids, values, 1);
+            query += getStateClause(states, ids, values, 1);
             query += " )";
         }
 
@@ -78,15 +78,15 @@ public class TaskDAOHibernate extends GenericDAOHibernate<Task> implements
 
     /** {@inheritDoc} */
     @SuppressWarnings("unchecked")
-    public Collection<Task> getTasksByStatus(TaskStatus[] statuses) {
-        String[] ids = new String[statuses.length];
-        Object[] values = new Object[statuses.length];
+    public Collection<Task> getTasksByState(State[] states) {
+        String[] ids = new String[states.length];
+        Object[] values = new Object[states.length];
 
         String query = "from Task t";
 
-        if (statuses != null && statuses.length != 0) {
+        if (states != null && states.length != 0) {
             query += " where ( ";
-            query += getStatusClause(statuses, ids, values, 0);
+            query += getStateClause(states, ids, values, 0);
             query += " )";
         }
 

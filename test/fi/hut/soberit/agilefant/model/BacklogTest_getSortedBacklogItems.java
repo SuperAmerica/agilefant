@@ -34,16 +34,16 @@ public class BacklogTest_getSortedBacklogItems extends TestCase {
         /* Create the backlog items */
         this.done_4 = new BacklogItem();
         this.done_4.setPriority(Priority.CRITICAL);
-        this.done_4.setStatus(TaskStatus.DONE);
+        this.done_4.setState(State.DONE);
         this.done_5 = new BacklogItem();
         this.done_5.setPriority(Priority.BLOCKER);
-        this.done_5.setStatus(TaskStatus.DONE);
+        this.done_5.setState(State.DONE);
         this.notstarted_4 = new BacklogItem();
         this.notstarted_4.setPriority(Priority.CRITICAL);
-        this.notstarted_4.setStatus(TaskStatus.NOT_STARTED);
+        this.notstarted_4.setState(State.NOT_STARTED);
         this.notstarted_5 = new BacklogItem();
         this.notstarted_5.setPriority(Priority.BLOCKER);
-        this.notstarted_5.setStatus(TaskStatus.NOT_STARTED);
+        this.notstarted_5.setState(State.NOT_STARTED);
     }
 
     /**
@@ -105,7 +105,7 @@ public class BacklogTest_getSortedBacklogItems extends TestCase {
 
     /**
      * Method for testing the getSortedBacklogItems-method of class Backlog.
-     * Tests with only not started statuses.
+     * Tests with only not started states.
      */
     public void testWithNotStartedOnly() {
         ArrayList<BacklogItem> testlist = new ArrayList<BacklogItem>();
@@ -126,7 +126,7 @@ public class BacklogTest_getSortedBacklogItems extends TestCase {
 
     /**
      * Method for testing the getSortedBacklogItems-method of class Backlog.
-     * Tests with only done statuses.
+     * Tests with only done states.
      */
     public void testWithDoneOnly() {
         ArrayList<BacklogItem> testlist = new ArrayList<BacklogItem>();

@@ -125,7 +125,7 @@
 									title="Click to expand"> <c:out
 									value="${fn:length(row.tasks)}" /> tasks, <aef:percentDone
 									backlogItemId="${row.id}" /> % complete<br />
-								<aef:taskStatusList backlogItemId="${row.id}" id="tsl" /> <ww:url
+								<aef:stateList backlogItemId="${row.id}" id="tsl" /> <ww:url
 									id="imgUrl" action="drawExtendedBarChart" includeParams="none">
 									<ww:param name="notStarted" value="${tsl['notStarted']}" />
 									<ww:param name="started" value="${tsl['started']}" />
@@ -140,7 +140,7 @@
 							<c:otherwise>
 								<a href="javascript:toggleDiv(${divId});"
 									title="Click to expand"> <ww:text
-									name="task.status.${row.status}" /> </a>
+									name="task.state.${row.state}" /> </a>
 								<aef:tasklist backlogItem="${row}"
 									contextViewName="${currentAction}"
 									contextObjectId="${backlog.id}" divId="${divId}" />

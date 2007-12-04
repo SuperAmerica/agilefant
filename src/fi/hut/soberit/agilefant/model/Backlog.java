@@ -78,7 +78,7 @@ public abstract class Backlog implements Assignable {
     @Transient
     /**
      * Return a sorted list of backlog items. Items are sorted first by priority
-     * and then by status.
+     * and then by state.
      */
     public Collection<BacklogItem> getSortedBacklogItems() {
         /* Create two arraylists for temporarily storing the elements */
@@ -94,7 +94,7 @@ public abstract class Backlog implements Assignable {
              * If backlog item is marked as done, put it to doneItems-list,
              * otherwise add it to sorted list.
              */
-            if (bli.getStatus() == TaskStatus.DONE) {
+            if (bli.getState() == State.DONE) {
                 doneItems.add(bli);
             } else {
                 sortedList.add(bli);

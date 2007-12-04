@@ -39,7 +39,7 @@ public class UserDAOHibernate extends GenericDAOHibernate<User> implements
         return (Collection<Task>) super
                 .getHibernateTemplate()
                 .findByNamedParam(
-                        "from Task t where t.assignee.id = :id and t.status != 4",
+                        "from Task t where t.assignee.id = :id and t.state != 4",
                         "id", new Integer(user.getId()));
     }
 
@@ -69,7 +69,7 @@ public class UserDAOHibernate extends GenericDAOHibernate<User> implements
                 .findByNamedParam(
 
                         "select distinct t from Task t, Project d, Iteration i where "
-                                + "t.assignee.id = :id and t.status != 4 and "
+                                + "t.assignee.id = :id and t.state != 4 and "
                                 + "( "
                                 + instanceOf("t.backlogItem.backlog",
                                         "Project")

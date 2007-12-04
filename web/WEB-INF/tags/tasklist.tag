@@ -20,9 +20,9 @@ Effort estimate
 	<ww:hidden name="contextObjectId" value="${contextObjectId}" />
 	<ww:textfield size="5" name="effortLeft"
 		value="${backlogItem.effortLeft}" />
-	<ww:select name="status" value="#attr.backlogItem.status.name"
-		list="@fi.hut.soberit.agilefant.model.TaskStatus@values()"
-		listKey="name" listValue="getText('backlogItem.status.' + name())" />
+	<ww:select name="state" value="#attr.backlogItem.state.name"
+		list="@fi.hut.soberit.agilefant.model.State@values()"
+		listKey="name" listValue="getText('backlogItem.state.' + name())" />
 	<ww:submit name="action:quickStoreBacklogItem" value="Store" />
 </ww:form>
 <hr />
@@ -49,9 +49,9 @@ Effort estimate
 		<ww:hidden name="contextViewName" value="${contextViewName}" />
 		<ww:hidden name="contextObjectId" value="${contextObjectId}" />
 		<ww:hidden name="task.description" value="${task.description}" />
-		<ww:select name="task.status" value="#attr.task.status.name"
-			list="@fi.hut.soberit.agilefant.model.TaskStatus@values()"
-			listKey="name" listValue="getText('task.status.' + name())" />
+		<ww:select name="task.state" value="#attr.task.state.name"
+			list="@fi.hut.soberit.agilefant.model.State@values()"
+			listKey="name" listValue="getText('task.state.' + name())" />
 		<ww:submit name="action:quickStoreTask" value="Store" />
 	</ww:form>
 	</li>

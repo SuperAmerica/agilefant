@@ -83,14 +83,14 @@
 			</c:otherwise>
 		</c:choose>
 
-		<c:if test="${backlogItem.status != null}">
+		<c:if test="${backlogItem.state != null}">
 			<tr>
 				<td>State</td>
 				<td></td>
-				<td><ww:select name="backlogItem.status"
-					value="backlogItem.status.name"
-					list="@fi.hut.soberit.agilefant.model.TaskStatus@values()"
-					listKey="name" listValue="getText('task.status.' + name())" /></td>
+				<td><ww:select name="backlogItem.state"
+					value="backlogItem.state.name"
+					list="@fi.hut.soberit.agilefant.model.State@values()"
+					listKey="name" listValue="getText('task.state.' + name())" /></td>
 			</tr>
 		</c:if>
 		<tr>
@@ -231,8 +231,8 @@
 					</ww:a>
 					</display:column>
 					<display:column sortable="true" title="State"
-						sortProperty="status.ordinal">
-						<ww:text name="task.status.${row.status}" />
+						sortProperty="state.ordinal">
+						<ww:text name="task.state.${row.state}" />
 					</display:column>
 					<display:column sortable="true" title="Created">
 						<ww:date name="#attr.row.created" />

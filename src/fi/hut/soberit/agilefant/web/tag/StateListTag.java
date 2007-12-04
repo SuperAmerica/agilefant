@@ -5,9 +5,9 @@ import java.util.HashMap;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.db.TaskDAO;
 import fi.hut.soberit.agilefant.model.BacklogItem;
-import fi.hut.soberit.agilefant.model.TaskStatus;
+import fi.hut.soberit.agilefant.model.State;
 
-public class TaskStatusListTag extends SpringTagSupport {
+public class StateListTag extends SpringTagSupport {
 
     private static final String NOT_STARTED = "notStarted";
 
@@ -35,18 +35,18 @@ public class TaskStatusListTag extends SpringTagSupport {
                 .getBean("backlogItemDAO");
         BacklogItem bli = bliDao.get(backlogItemId);
 
-        int notStarted = dao.getTasksByStatusAndBacklogItem(bli,
-                new TaskStatus[] { TaskStatus.NOT_STARTED }).size();
-        int started = dao.getTasksByStatusAndBacklogItem(bli,
-                new TaskStatus[] { TaskStatus.STARTED }).size();
-        int pending = dao.getTasksByStatusAndBacklogItem(bli,
-                new TaskStatus[] { TaskStatus.PENDING }).size();
-        int blocked = dao.getTasksByStatusAndBacklogItem(bli,
-                new TaskStatus[] { TaskStatus.BLOCKED }).size();
-        int implemented = dao.getTasksByStatusAndBacklogItem(bli,
-                new TaskStatus[] { TaskStatus.IMPLEMENTED }).size();
-        int done = dao.getTasksByStatusAndBacklogItem(bli,
-                new TaskStatus[] { TaskStatus.DONE }).size();
+        int notStarted = dao.getTasksByStateAndBacklogItem(bli,
+                new State[] { State.NOT_STARTED }).size();
+        int started = dao.getTasksByStateAndBacklogItem(bli,
+                new State[] { State.STARTED }).size();
+        int pending = dao.getTasksByStateAndBacklogItem(bli,
+                new State[] { State.PENDING }).size();
+        int blocked = dao.getTasksByStateAndBacklogItem(bli,
+                new State[] { State.BLOCKED }).size();
+        int implemented = dao.getTasksByStateAndBacklogItem(bli,
+                new State[] { State.IMPLEMENTED }).size();
+        int done = dao.getTasksByStateAndBacklogItem(bli,
+                new State[] { State.DONE }).size();
         
         map.put(NOT_STARTED, notStarted);
         map.put(STARTED, started);

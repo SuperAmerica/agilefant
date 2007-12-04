@@ -47,7 +47,7 @@ function validateDeletion() {
 					
 					tasks, <aef:percentDone
 						backlogItemId="${item.id}" />% done<br />
-						<aef:taskStatusList backlogItemId="${item.id}" id="tsl" /> 
+						<aef:stateList backlogItemId="${item.id}" id="tsl" /> 
 						<ww:url
 							id="imgUrl" action="drawExtendedBarChart" includeParams="none">
 								<ww:param name="notStarted" value="${tsl['notStarted']}" />
@@ -67,35 +67,35 @@ function validateDeletion() {
 				<c:otherwise>
 					
 						 <a href="javascript:toggleDiv(${divId});" title="Click to expand">
-							<ww:text name="backlogItem.status.${item.status}"/><br />
+							<ww:text name="backlogItem.state.${item.state}"/><br />
 							
 							<c:choose>
-							<c:when test="${item.status == 'NOT_STARTED'}" >
+							<c:when test="${item.state == 'NOT_STARTED'}" >
 								<ww:url id="imgUrl" action="drawExtendedBarChart" includeParams="none">
 								<ww:param name="notStarted" value="1" /> </ww:url> 
 								<img src="${imgUrl}" /> 
 							</c:when>
-							<c:when test="${item.status == 'STARTED'}" >
+							<c:when test="${item.state == 'STARTED'}" >
 								<ww:url id="imgUrl" action="drawExtendedBarChart" includeParams="none">
 								<ww:param name="started" value="1" /> </ww:url> 
 								<img src="${imgUrl}" />
 							</c:when>
-							<c:when test="${item.status == 'PENDING'}" >
+							<c:when test="${item.state == 'PENDING'}" >
 								<ww:url id="imgUrl" action="drawExtendedBarChart" includeParams="none">
 								<ww:param name="pending" value="1" /> </ww:url> 
 								<img src="${imgUrl}" />
 							</c:when>
-							<c:when test="${item.status == 'BLOCKED'}" >
+							<c:when test="${item.state == 'BLOCKED'}" >
 								<ww:url id="imgUrl" action="drawExtendedBarChart" includeParams="none">
 								<ww:param name="blocked" value="1" /> </ww:url> 
 								<img src="${imgUrl}" />
 							</c:when>
-							<c:when test="${item.status == 'IMPLEMENTED'}" >
+							<c:when test="${item.state == 'IMPLEMENTED'}" >
 								<ww:url id="imgUrl" action="drawExtendedBarChart" includeParams="none">
 								<ww:param name="implemented" value="1" /> </ww:url> 
 								<img src="${imgUrl}" />
 							</c:when>
-							<c:when test="${item.status == 'DONE'}" >
+							<c:when test="${item.state == 'DONE'}" >
 								<ww:url id="imgUrl" action="drawExtendedBarChart" includeParams="none">
 								<ww:param name="done" value="1" /> </ww:url> 
 								<img src="${imgUrl}" />

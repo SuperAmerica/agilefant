@@ -180,7 +180,7 @@ public class TaskAction extends ActionSupport implements CRUDAction {
         // Inherit from task
         backlogItem.setName(storedTask.getName());
         backlogItem.setDescription(storedTask.getDescription());
-        backlogItem.setStatus(storedTask.getStatus());
+        backlogItem.setState(storedTask.getState());
         // These are null because they are not defined for task
         backlogItem.setEffortLeft(null);
         backlogItem.setOriginalEstimate(null);
@@ -211,7 +211,7 @@ public class TaskAction extends ActionSupport implements CRUDAction {
             return;
         }
         storable.setPriority(task.getPriority());
-        storable.setStatus(task.getStatus());
+        storable.setState(task.getState());
         storable.setName(task.getName());
         storable.setDescription(task.getDescription());
     }

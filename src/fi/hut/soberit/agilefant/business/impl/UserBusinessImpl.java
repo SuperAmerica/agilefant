@@ -8,7 +8,7 @@ import java.util.List;
 import fi.hut.soberit.agilefant.business.UserBusiness;
 import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.model.BacklogItem;
-import fi.hut.soberit.agilefant.model.TaskStatus;
+import fi.hut.soberit.agilefant.model.State;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.security.SecurityUtil;
 import fi.hut.soberit.agilefant.util.BacklogItemPriorityComparator;
@@ -38,8 +38,8 @@ public class UserBusinessImpl implements UserBusiness {
         while (iter.hasNext()) {
             BacklogItem bli = iter.next();
 
-            if (bli.getStatus() != TaskStatus.NOT_STARTED
-                    && bli.getStatus() != TaskStatus.DONE) {
+            if (bli.getState() != State.NOT_STARTED
+                    && bli.getState() != State.DONE) {
 
                 returnItems.add(bli);
             }

@@ -163,4 +163,17 @@ insert into HistoryEntry (effortLeft, originalEstimate, date, history_id) (selec
 UPDATE Task SET status=status+1 WHERE status > 1;
 UPDATE BacklogItem SET status=status+1 WHERE status > 1;
 
+-- Create state fields (will replace status)
+alter table BacklogItem add column state integer;
+alter table Task add column state integer;
+
+-- Copy Task and Backlog status to state
+UPDATE Task SET state = status;
+UPDATE BacklogItem SET state = status;
+
+-- Drop Status fields - IterationGoal's status is unused
+ALTER TABLE Task DROP COLUMN `status`;
+ALTER TABLE BacklogItem DROP COLUMN `status`;
+ALTER TABLE IterationGoal DROP COLUMN `status`;
+
 

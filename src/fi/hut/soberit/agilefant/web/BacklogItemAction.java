@@ -21,7 +21,7 @@ import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.IterationGoal;
-import fi.hut.soberit.agilefant.model.TaskStatus;
+import fi.hut.soberit.agilefant.model.State;
 import fi.hut.soberit.agilefant.model.User;
 
 public class BacklogItemAction extends ActionSupport implements CRUDAction {
@@ -38,7 +38,7 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
 
     private int backlogItemId;
 
-    private TaskStatus status;
+    private State state;
 
     private AFTime effortLeft;
 
@@ -157,7 +157,7 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
     }
 
     /**
-     * Updates backlog item's status and effort left.
+     * Updates backlog item's state and effort left.
      * 
      * 
      */
@@ -169,7 +169,7 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
             return Action.ERROR;
         } else {
             backlogItem.setEffortLeft(this.effortLeft);
-            backlogItem.setStatus(this.status);
+            backlogItem.setState(this.state);
             backlogItemDAO.store(backlogItem);
             historyBusiness.updateBacklogHistory(backlogItem.getBacklog()
                     .getId());
@@ -203,9 +203,9 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
         storable.setDescription(this.backlogItem.getDescription());
         storable.setPriority(this.backlogItem.getPriority());
 
-        // Set efforts and status for backlog item
+        // Set efforts and state for backlog item
 
-        storable.setStatus(backlogItem.getStatus());
+        storable.setState(backlogItem.getState());
 
         /*
          * Set effort left. If this is new item set its effort to be the
@@ -344,12 +344,12 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
         backlogItem.setName(backlogItemName);
     }
 
-    public TaskStatus getStatus() {
-        return status;
+    public State getState() {
+        return state;
     }
 
-    public void setStatus(TaskStatus status) {
-        this.status = status;
+    public void setState(State state) {
+        this.state = state;
     }
 
     public AFTime getEffortLeft() {

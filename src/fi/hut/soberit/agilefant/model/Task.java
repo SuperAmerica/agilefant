@@ -48,7 +48,7 @@ public class Task implements PageItem {
 
     private Priority priority;
 
-    private TaskStatus status = TaskStatus.NOT_STARTED;
+    private State state = State.NOT_STARTED;
 
     private String name;
 
@@ -162,13 +162,13 @@ public class Task implements PageItem {
 
     @Type(type = "fi.hut.soberit.agilefant.db.hibernate.EnumUserType", parameters = {
             @Parameter(name = "useOrdinal", value = "true"),
-            @Parameter(name = "enumClassName", value = "fi.hut.soberit.agilefant.model.TaskStatus") })
-    public TaskStatus getStatus() {
-        return status;
+            @Parameter(name = "enumClassName", value = "fi.hut.soberit.agilefant.model.State") })
+    public State getState() {
+        return state;
     }
 
-    public void setStatus(TaskStatus status) {
-        this.status = status;
+    public void setState(State state) {
+        this.state = state;
     }
 
 }

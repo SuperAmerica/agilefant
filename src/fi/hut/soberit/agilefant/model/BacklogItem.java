@@ -65,7 +65,7 @@ public class BacklogItem implements PageItem, Assignable, EffortContainer {
 
     private User assignee;
 
-    private TaskStatus status = TaskStatus.NOT_STARTED;
+    private State state = State.NOT_STARTED;
 
     private IterationGoal iterationGoal;
 
@@ -229,25 +229,25 @@ public class BacklogItem implements PageItem, Assignable, EffortContainer {
     }
 
     /**
-     * Returns the status of the backlog item.
+     * Returns the state of the backlog item.
      * 
-     * @return the status of the backlog item.
+     * @return the state of the backlog item.
      */
     @Type(type = "fi.hut.soberit.agilefant.db.hibernate.EnumUserType", parameters = {
             @Parameter(name = "useOrdinal", value = "true"),
-            @Parameter(name = "enumClassName", value = "fi.hut.soberit.agilefant.model.TaskStatus") })
-    public TaskStatus getStatus() {
-        return status;
+            @Parameter(name = "enumClassName", value = "fi.hut.soberit.agilefant.model.State") })
+    public State getState() {
+        return state;
     }
 
     /**
-     * Sets the status of the backlog item.
+     * Sets the state of the backlog item.
      * 
-     * @param status
-     *                the status to set for the backlog item
+     * @param state
+     *                the state to set for the backlog item
      */
-    public void setStatus(TaskStatus status) {
-        this.status = status;
+    public void setState(State state) {
+        this.state = state;
     }
 
     /**

@@ -15,7 +15,7 @@ import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.Priority;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Task;
-import fi.hut.soberit.agilefant.model.TaskStatus;
+import fi.hut.soberit.agilefant.model.State;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.security.SecurityUtil;
 import fi.hut.soberit.agilefant.util.SpringTestCase;
@@ -45,9 +45,9 @@ public class TaskActionTest extends SpringTestCase {
 
     private static final Priority TEST_PRI2 = Priority.TRIVIAL;
 
-    private static final TaskStatus TEST_STAT1 = TaskStatus.NOT_STARTED;
+    private static final State TEST_STAT1 = State.NOT_STARTED;
 
-    private static final TaskStatus TEST_STAT2 = TaskStatus.STARTED;
+    private static final State TEST_STAT2 = State.STARTED;
 
     private static final int INVALID_TASKID = -1;
 
@@ -140,8 +140,8 @@ public class TaskActionTest extends SpringTestCase {
         taskAction.getTask().setPriority(priority);
     }
 
-    private void setStatus(TaskStatus status) {
-        taskAction.getTask().setStatus(status);
+    private void setState(State state) {
+        taskAction.getTask().setState(state);
     }
 
     private void setBacklogItem(BacklogItem bi) {
@@ -150,17 +150,17 @@ public class TaskActionTest extends SpringTestCase {
 
     private void setContents(String name, String desc, User creator,
             User assignee, AFTime estimate, Priority priority,
-            TaskStatus status, BacklogItem backlogItem) {
+            State state, BacklogItem backlogItem) {
         this.setNameAndDesc(name, desc);
         this.setLoggedUser(creator);
         this.setPriority(priority);
-        this.setStatus(status);
+        this.setState(state);
         this.setBacklogItem(backlogItem);
     }
 
     private void checkContents(String entity, Task task, String name,
             String desc, User creator, User assignee, AFTime estimate,
-            Priority priority, TaskStatus status, BacklogItem backlogItem) {
+            Priority priority, State state, BacklogItem backlogItem) {
         super.assertEquals("The name of the " + entity + " was wrong", name,
                 task.getName());
         super.assertEquals("The description of the " + entity + " was wrong",
@@ -169,8 +169,8 @@ public class TaskActionTest extends SpringTestCase {
                 creator, task.getCreator());
         super.assertEquals("The priority of the " + entity + " was wrong",
                 priority, task.getPriority());
-        super.assertEquals("The status of the " + entity + " was wrong",
-                status, task.getStatus());
+        super.assertEquals("The state of the " + entity + " was wrong",
+                state, task.getState());
         super.assertEquals("The backlog item of the " + entity + " was wrong",
                 backlogItem, task.getBacklogItem());
 
@@ -348,7 +348,7 @@ public class TaskActionTest extends SpringTestCase {
         // transform)
         String taskName = task.getName();
         String desc = task.getDescription();
-        TaskStatus status = task.getStatus();
+        State state = task.getState();
 
         // Verify that the task was created (+BacklogItem placeholder task)
         assertEquals(1, bi.getTasks().size());
@@ -366,7 +366,7 @@ public class TaskActionTest extends SpringTestCase {
         BacklogItem newItem = this.backlogItemDAO.get(newBacklogItemId);
         assertEquals(taskName, newItem.getName());
         assertEquals(desc, newItem.getDescription());
-        assertEquals(0, status.compareTo(newItem.getStatus()));
+        assertEquals(0, state.compareTo(newItem.getState()));
 
         assertEquals(task.getBacklogItem().getBacklog(), newItem.getBacklog());
         assertEquals(task.getBacklogItem().getIterationGoal(), newItem
@@ -492,7 +492,7 @@ public class TaskActionTest extends SpringTestCase {
 
         this.setNameAndDesc(TEST_NAME2, TEST_DESC2);
         this.setPriority(TEST_PRI2);
-        this.setStatus(TEST_STAT2);
+        this.setState(TEST_STAT2);
 
         String result = taskAction.store();
         super.assertEquals("store() was unsuccessful", result, Action.SUCCESS);

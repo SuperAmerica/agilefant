@@ -10,7 +10,7 @@ import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.Priority;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Task;
-import fi.hut.soberit.agilefant.model.TaskStatus;
+import fi.hut.soberit.agilefant.model.State;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.security.SecurityUtil;
 import fi.hut.soberit.agilefant.util.SpringTestCase;
@@ -101,15 +101,15 @@ public class UserBusinessTest extends SpringTestCase {
 
         /* Create the backlog items */
         int bli1Id = testUtility.createBacklogItem(
-                "Backlog item with not started status", product);
+                "Backlog item with not started state", product);
         int bli2Id = testUtility.createBacklogItem(
-                "Backlog item with started status", product);
+                "Backlog item with started state", product);
         int bli3Id = testUtility.createBacklogItem(
-                "Backlog item with blocked status and assignee", product);
+                "Backlog item with blocked state and assignee", product);
         int bli4Id = testUtility.createBacklogItem(
-                "Backlog item with implemented status and assignee", product);
+                "Backlog item with implemented state and assignee", product);
         int bli5Id = testUtility.createBacklogItem(
-                "Backlog item with done status and assignee", product);
+                "Backlog item with done state and assignee", product);
 
         BacklogItem bli1 = backlogItemDAO.get(bli1Id);
         BacklogItem bli2 = backlogItemDAO.get(bli2Id);
@@ -129,11 +129,11 @@ public class UserBusinessTest extends SpringTestCase {
         Task ph5 = taskDAO.get(testUtility.createTask(user, "Placeholder 5",
                 bli5));
 
-        bli1.setStatus(TaskStatus.NOT_STARTED);
-        bli2.setStatus(TaskStatus.STARTED);
-        bli3.setStatus(TaskStatus.BLOCKED);
-        bli4.setStatus(TaskStatus.IMPLEMENTED);
-        bli5.setStatus(TaskStatus.DONE);
+        bli1.setState(State.NOT_STARTED);
+        bli2.setState(State.STARTED);
+        bli3.setState(State.BLOCKED);
+        bli4.setState(State.IMPLEMENTED);
+        bli5.setState(State.DONE);
         
         bli1.setPriority(Priority.BLOCKER);
         bli2.setPriority(Priority.BLOCKER);
@@ -163,28 +163,28 @@ public class UserBusinessTest extends SpringTestCase {
         assertFalse("Failed: list is empty", list.isEmpty());
 
         assertFalse(
-                "Failed: list should not contain backlog item with status not started",
+                "Failed: list should not contain backlog item with state not started",
                 list.contains(bli1));
         assertFalse(
                 "Failed: list should not contain this backlog item with no assigned user",
                 list.contains(bli2));
         assertTrue(
-                "Failed: list should contain this backlog item with status blocked and an assigned user",
+                "Failed: list should contain this backlog item with state blocked and an assigned user",
                 list.contains(bli3));
         assertTrue(
-                "Failed: list should contain this backlog item with status implemented and an assigned user",
+                "Failed: list should contain this backlog item with state implemented and an assigned user",
                 list.contains(bli4));
         assertFalse(
-                "Failed: list should not contain backlog item with status done and assigned user",
+                "Failed: list should not contain backlog item with state done and assigned user",
                 list.contains(bli5));
 
         for (BacklogItem bli : list) {
             assertFalse(
-                    "Failed: the list should not contain backlog items with not started status",
-                    bli.getStatus() == TaskStatus.NOT_STARTED);
+                    "Failed: the list should not contain backlog items with not started state",
+                    bli.getState() == State.NOT_STARTED);
             assertFalse(
-                    "Failed: the list should not contain backlog items with done status",
-                    bli.getStatus() == TaskStatus.DONE);
+                    "Failed: the list should not contain backlog items with done state",
+                    bli.getState() == State.DONE);
         }
     }
 

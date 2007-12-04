@@ -68,7 +68,7 @@ public class DailyWorkAction extends ActionSupport {
                 BacklogItem currentBli = bliIt.next();
                 if (currentBli.getAssignee() != null
                         && currentBli.getAssignee().getId() == userId
-                        && currentBli.getStatus() != fi.hut.soberit.agilefant.model.TaskStatus.DONE) {
+                        && currentBli.getState() != fi.hut.soberit.agilefant.model.State.DONE) {
                     unfinishedBlis.add(currentBli);
                 }
             }

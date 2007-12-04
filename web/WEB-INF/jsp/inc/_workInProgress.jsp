@@ -47,6 +47,7 @@
 					id="imgUrl" action="drawExtendedBarChart" includeParams="none">
 					<ww:param name="notStarted" value="${tsl['notStarted']}" />
 					<ww:param name="started" value="${tsl['started']}" />
+					<ww:param name="pending" value="${tsl['pending']}" />
 					<ww:param name="blocked" value="${tsl['blocked']}" />
 					<ww:param name="implemented" value="${tsl['implemented']}" />
 					<ww:param name="done" value="${tsl['done']}" />
@@ -72,6 +73,13 @@
 						<ww:url id="imgUrl" action="drawExtendedBarChart"
 							includeParams="none">
 							<ww:param name="started" value="1" />
+						</ww:url>
+						<img src="${imgUrl}" />
+					</c:when>
+					<c:when test="${item.status == 'PENDING'}">
+						<ww:url id="imgUrl" action="drawExtendedBarChart"
+							includeParams="none">
+							<ww:param name="pending" value="1" />
 						</ww:url>
 						<img src="${imgUrl}" />
 					</c:when>

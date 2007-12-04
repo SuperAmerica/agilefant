@@ -59,6 +59,8 @@ public class ChartAction extends ActionSupport {
     private double notStarted;
 
     private double started;
+    
+    private double pending;
 
     private double blocked;
 
@@ -79,6 +81,8 @@ public class ChartAction extends ActionSupport {
     private Color color4;
 
     private Color color5;
+    
+    private Color color6;
 
     private ChartBusiness chartBusiness;
 
@@ -173,16 +177,18 @@ public class ChartAction extends ActionSupport {
 
         /*-- We want to show the relative percentages of different work states --*/
         double allTypes = 0;
-        allTypes = this.getNotStarted() + this.getStarted() + this.getBlocked()
-                + this.getDone() + this.getImplemented();
-        double ns = 20;
-        double st = 20;
-        double bl = 20;
-        double im = 20;
-        double dn = 20;
+        allTypes = this.getNotStarted() + this.getStarted() + this.getPending()
+                + this.getBlocked() + this.getDone() + this.getImplemented();
+        double ns = 100/6;
+        double st = 100/6;
+        double pe = 100/6;
+        double bl = 100/6;
+        double im = 100/6;
+        double dn = 100/6;
         if (allTypes > 0) {
             ns = (this.getNotStarted() / allTypes) * 100.0;
             st = (this.getStarted() / allTypes) * 100.0;
+            pe = (this.getPending() / allTypes) * 100.0;
             bl = (this.getBlocked() / allTypes) * 100.0;
             im = (this.getImplemented() / allTypes) * 100.0;
             dn = (this.getDone() / allTypes) * 100.0;
@@ -190,6 +196,7 @@ public class ChartAction extends ActionSupport {
 
         dataset.setValue(ns, "Not started", "");
         dataset.setValue(st, "Started", "");
+        dataset.setValue(pe, "Pending", "");
         dataset.setValue(bl, "Blocked", "");
         dataset.setValue(im, "Implemented", "");
         dataset.setValue(dn, "Done", "");
@@ -244,24 +251,30 @@ public class ChartAction extends ActionSupport {
             // started
             // (orange)
         }
-
+        
         if (color3 != null) {
-            renderer.setSeriesPaint(2, this.getColor3()); // color for blocked
+            renderer.setSeriesPaint(2, this.getColor3()); // color for pending
         } else {
-            renderer.setSeriesPaint(2, Color.red); // color for blocked
+            renderer.setSeriesPaint(2, new Color(0x61, 0x89, 0xff)); // color for pending
         }
-
+        
         if (color4 != null) {
-            renderer.setSeriesPaint(3, this.getColor4()); // color for
-            // implemented
+            renderer.setSeriesPaint(3, this.getColor3()); // color for blocked
         } else {
-            renderer.setSeriesPaint(3, Color.green); // color for implemented
+            renderer.setSeriesPaint(3, Color.red); // color for blocked
         }
 
         if (color5 != null) {
-            renderer.setSeriesPaint(4, this.getColor5()); // color for done
+            renderer.setSeriesPaint(4, this.getColor4()); // color for
+            // implemented
         } else {
-            renderer.setSeriesPaint(4, new Color(0x00, 0x77, 0x00)); // color
+            renderer.setSeriesPaint(4, Color.green); // color for implemented
+        }
+
+        if (color6 != null) {
+            renderer.setSeriesPaint(5, this.getColor5()); // color for done
+        } else {
+            renderer.setSeriesPaint(5, new Color(0x00, 0x77, 0x00)); // color
             // for
             // done
         }
@@ -284,11 +297,11 @@ public class ChartAction extends ActionSupport {
      * Utility method for creating <code>Date</code> objects.
      * 
      * @param day
-     *                the date.
+     *            the date.
      * @param month
-     *                the month.
+     *            the month.
      * @param year
-     *                the year.
+     *            the year.
      * 
      * @return a date.
      */
@@ -443,6 +456,14 @@ public class ChartAction extends ActionSupport {
     public void setStarted(double started) {
         this.started = started;
     }
+    
+    public double getPending() {
+        return pending;
+    }
+
+    public void setPending(double pending) {
+        this.pending = pending;
+    }
 
     public Date getEndDate() {
         return endDate;
@@ -498,6 +519,14 @@ public class ChartAction extends ActionSupport {
 
     public void setColor5(Color color5) {
         this.color5 = color5;
+    }
+    
+    public Color getColor6() {
+        return color6;
+    }
+
+    public void setColor6(Color color6) {
+        this.color6 = color6;
     }
 
     public void setChartBusiness(ChartBusiness chartBusiness) {

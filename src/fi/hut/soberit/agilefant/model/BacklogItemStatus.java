@@ -7,7 +7,7 @@ package fi.hut.soberit.agilefant.model;
  * "done".
  */
 public enum BacklogItemStatus {
-    NOT_STARTED, STARTED, BLOCKED, IMPLEMENTED, DONE;
+    NOT_STARTED, STARTED, PENDING, BLOCKED, IMPLEMENTED, DONE;
 
     public int getOrdinal() {
         return this.ordinal();

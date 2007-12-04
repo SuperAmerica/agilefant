@@ -1,0 +1,1 @@
+UPDATE Task SET status=status+1 WHERE status>1;

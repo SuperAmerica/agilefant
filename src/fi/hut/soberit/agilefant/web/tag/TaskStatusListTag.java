@@ -9,12 +9,14 @@ import fi.hut.soberit.agilefant.model.TaskStatus;
 
 public class TaskStatusListTag extends SpringTagSupport {
 
-    private static final String BLOCKED = "blocked";
-
     private static final String NOT_STARTED = "notStarted";
 
     private static final String STARTED = "started";
+    
+    private static final String PENDING = "pending";
 
+    private static final String BLOCKED = "blocked";
+    
     private static final String IMPLEMENTED = "implemented";
 
     private static final String DONE = "done";
@@ -33,23 +35,26 @@ public class TaskStatusListTag extends SpringTagSupport {
                 .getBean("backlogItemDAO");
         BacklogItem bli = bliDao.get(backlogItemId);
 
-        int done = dao.getTasksByStatusAndBacklogItem(bli,
-                new TaskStatus[] { TaskStatus.DONE }).size();
-        int implemented = dao.getTasksByStatusAndBacklogItem(bli,
-                new TaskStatus[] { TaskStatus.IMPLEMENTED }).size();
-        int started = dao.getTasksByStatusAndBacklogItem(bli,
-                new TaskStatus[] { TaskStatus.STARTED }).size();
         int notStarted = dao.getTasksByStatusAndBacklogItem(bli,
                 new TaskStatus[] { TaskStatus.NOT_STARTED }).size();
+        int started = dao.getTasksByStatusAndBacklogItem(bli,
+                new TaskStatus[] { TaskStatus.STARTED }).size();
+        int pending = dao.getTasksByStatusAndBacklogItem(bli,
+                new TaskStatus[] { TaskStatus.PENDING }).size();
         int blocked = dao.getTasksByStatusAndBacklogItem(bli,
                 new TaskStatus[] { TaskStatus.BLOCKED }).size();
-
-        map.put(DONE, done);
-        map.put(IMPLEMENTED, implemented);
-        map.put(STARTED, started);
+        int implemented = dao.getTasksByStatusAndBacklogItem(bli,
+                new TaskStatus[] { TaskStatus.IMPLEMENTED }).size();
+        int done = dao.getTasksByStatusAndBacklogItem(bli,
+                new TaskStatus[] { TaskStatus.DONE }).size();
+        
         map.put(NOT_STARTED, notStarted);
+        map.put(STARTED, started);
+        map.put(PENDING, pending);
         map.put(BLOCKED, blocked);
-
+        map.put(IMPLEMENTED, implemented);
+        map.put(DONE, done);
+        
         super.getPageContext().setAttribute(super.getId(), map);
         return EVAL_PAGE;
     }

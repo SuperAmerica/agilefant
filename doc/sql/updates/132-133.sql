@@ -123,5 +123,44 @@ alter table HistoryEntry add index FK9367445EC91A6475 (history_id), add constrai
 alter table HistoryEntry add index FK9367445EFD7DC542 (history_id), add constraint FK9367445EFD7DC542 foreign key (history_id) references History (id);
 
 
+-- UPDATE BACKLOG HISTORY
+
+-- Create procedure for update process
+DROP PROCEDURE IF EXISTS updateHistory;
+DELIMITER $$
+
+CREATE PROCEDURE updateHistory()
+BEGIN
+DECLARE done INT DEFAULT 0;
+DECLARE backlogId INT DEFAULT 0;
+declare historyId INT;
+DECLARE cur1 CURSOR FOR select id from Backlog;
+DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
+open cur1;
+repeat
+	fetch cur1 into backlogId;
+	insert into History (DTYPE) values(1);
+	set historyId = LAST_INSERT_ID();
+	update Backlog bl set history_fk=historyId where bl.id=backlogId;
+	replace into HistoryEntry (effortLeft, originalEstimate, date, history_id) (select sum(effortLeft), sum(originalEstimate), CURRENT_DATE(), historyId from BacklogItem where backlog_id=backlogId);
+until done end repeat;
+
+close cur1;
+end $$
+
+delimiter ;
+
+CALL updateHistory();
+
+-- Drop the procedure
+drop procedure updateHistory;
+
+-- Insert effort history entries to HistoryEntry table, skip items for this date because they were already created in stored procedure
+insert into HistoryEntry (effortLeft, originalEstimate, date, history_id) (select eh.effortLeft,eh.originalEstimate, eh.date, bl.history_fk from EffortHistory eh, Backlog bl where eh.backlog_id=bl.id and eh.date != CURRENT_DATE());
+
+
+-- UPDATE STATUSES TO INCLUDE PENDING STATUS
+UPDATE Task SET status=status+1 WHERE status > 1;
+UPDATE BacklogItem SET status=status+1 WHERE status > 1;
 
 

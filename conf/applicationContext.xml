@@ -63,9 +63,5 @@
 		<property name="maxStrLength" value="15" />
 	</bean>
 
-	<bean name="chartBusiness"
-		class="fi.hut.soberit.agilefant.business.impl.ChartBusinessImpl">
-		<property name="iterationDAO" ref="iterationDAO" />
-		<property name="backlogItemDAO" ref="backlogItemDAO"/>
-	</bean>
+	
 </beans>

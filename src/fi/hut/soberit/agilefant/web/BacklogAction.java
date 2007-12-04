@@ -12,6 +12,7 @@ import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.Iteration;
+import fi.hut.soberit.agilefant.model.Priority;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
 
@@ -27,6 +28,8 @@ public class BacklogAction extends ActionSupport {
     private int[] backlogItemIds;
 
     private int targetBacklogId;
+    
+    private Priority targetPriority;
 
     private BacklogItemDAO backlogItemDAO;
 
@@ -120,6 +123,25 @@ public class BacklogAction extends ActionSupport {
     }
 
     /**
+     * Changes selected <code>BacklogItems'</code> priority
+     * 
+     * @return <code>Action.ERROR</code> if there was an error, otherwise a
+     *         redirect to display current backlog.
+     */
+    public String changePriorityOfSelectedItems() {
+        Backlog currentBacklog = this.backlogDAO.get(backlogId);
+        
+        if (backlogItemIds == null) {
+            super.addActionError(super.getText("backlogItems.notSelected"));
+            return Action.ERROR;
+        }
+
+        backlogBusiness.changePriorityOfMultipleItems(backlogItemIds, targetPriority);
+        
+        return this.solveResult(currentBacklog);
+    }
+    
+    /**
      * Deletes multiple selected <code>BacklogItems</code>.
      * 
      * @return <code>Action.ERROR</code> if there was an error, otherwise a
@@ -142,7 +164,8 @@ public class BacklogAction extends ActionSupport {
      * Perform an action on multiple <code>BacklogItems</code>
      * 
      * @return <code>"move"</code> if the action is to move,
-     *         <code>"delete"</code> if the action is to delete and
+     *         <code>"delete"</code> if the action is to delete,
+     *         <code>"changePriority"</code> if the action is to change priority and
      *         <code>Action.ERROR</code> if the action can't be determined.
      */
     public String doActionOnMultipleBacklogItems() {
@@ -150,9 +173,14 @@ public class BacklogAction extends ActionSupport {
 
         if (itemAction.equals("MoveSelected")) {
             return "move";
-        } else if (itemAction.equals("DeleteSelected")) {
+        }
+        else if (itemAction.equals("DeleteSelected")) {
             return "delete";
         }
+        else if (itemAction.equals("PrioritizeSelected")) {
+            return "changePriority";
+        }
+        
         logger.error("Invalid action on multiple backlog items: " + itemAction);
 
         return Action.ERROR;
@@ -215,5 +243,13 @@ public class BacklogAction extends ActionSupport {
 
     public void setBacklogBusiness(BacklogBusiness backlogBusiness) {
         this.backlogBusiness = backlogBusiness;
+    }
+
+    public Priority getTargetPriority() {
+        return targetPriority;
+    }
+
+    public void setTargetPriority(Priority targetPriority) {
+        this.targetPriority = targetPriority;
     }
 }

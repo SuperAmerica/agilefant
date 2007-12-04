@@ -186,5 +186,15 @@ function validateDeletion() {
 				onclick="return validateDeletion()" label="Delete selected" />
 		</td>
 	</tr>
+	<tr>
+		<td>
+			<ww:submit type="button" name="itemAction" value="%{'PrioritizeSelected'}"
+				label="Change priority to" />
+		</td>
+		<td>
+			<ww:select name="targetPriority"
+				list="#{'UNDEFINED':'undefined', 'BLOCKER':'+++++', 'CRITICAL':'++++', 'MAJOR':'+++', 'MINOR':'++', 'TRIVIAL':'+'}" />
+		</td>
+	</tr>
 	</table>
 </ww:form>

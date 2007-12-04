@@ -6,6 +6,7 @@ import java.util.Stack;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.junit.Ignore;
 
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.db.GenericDAO;
@@ -32,6 +33,7 @@ import fi.hut.soberit.agilefant.web.UserActionTest;
  * Utility class for testing
  * 
  */
+@Ignore
 public class TestUtility extends SpringTestCase {
     private static Log logger = LogFactory.getLog(TestUtility.class);
 

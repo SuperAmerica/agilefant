@@ -9,6 +9,7 @@ import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
+import fi.hut.soberit.agilefant.model.Priority;
 
 /**
  * 
@@ -46,6 +47,15 @@ public class BacklogBusinessImpl implements BacklogBusiness {
         Backlog backlog = backlogDAO.get(backlogId);
         backlogItem.setBacklog(backlog);
         return backlogItem;
+    }
+    
+    /** {@inheritDoc} **/
+    public void changePriorityOfMultipleItems(int[] backlogItemIds,
+            Priority priority) {
+        
+        for (int id : backlogItemIds) {
+            backlogItemDAO.get(id).setPriority(priority);
+        }
     }
 
     public BacklogItemDAO getBacklogItemDAO() {

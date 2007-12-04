@@ -11,4 +11,10 @@
 	<bean id="projectBusiness" class="fi.hut.soberit.agilefant.business.impl.ProjectBusinessImpl"/>
 	<bean id="backlogItemBusiness" class="fi.hut.soberit.agilefant.business.impl.BacklogItemBusinessImpl"/>
 	<bean id="historyBusiness" class="fi.hut.soberit.agilefant.business.impl.HistoryBusinessImpl"/>
+	
+	<bean name="chartBusiness"
+		class="fi.hut.soberit.agilefant.business.impl.ChartBusinessImpl">
+		<property name="iterationDAO" ref="iterationDAO" />
+		<property name="backlogItemDAO" ref="backlogItemDAO"/>
+	</bean>
 </beans>

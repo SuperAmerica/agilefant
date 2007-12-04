@@ -12,7 +12,7 @@ import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.util.SpringTestCase;
 import fi.hut.soberit.agilefant.util.TestUtility;
 
-public class BacklogTest extends SpringTestCase {
+public class BacklogActionTest extends SpringTestCase {
 
     private BacklogAction backlogAction;
 

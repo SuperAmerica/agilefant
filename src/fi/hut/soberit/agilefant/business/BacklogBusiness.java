@@ -1,6 +1,7 @@
 package fi.hut.soberit.agilefant.business;
 
 import fi.hut.soberit.agilefant.model.BacklogItem;
+import fi.hut.soberit.agilefant.model.Priority;
 
 /**
  * This description contains generic information on <code>Business</code>
@@ -47,4 +48,12 @@ public interface BacklogBusiness {
      */
 
     public BacklogItem createBacklogItemToBacklog(int backlogId);
+    
+    /**
+     * Change the priority of multiple <code>BacklogItem</code>s at once.
+     * @param backlogItemIds <code>Array</code> containing the IDs of the items to prioritize
+     * @param priority the new priority to set
+     */
+    public void changePriorityOfMultipleItems(int backlogItemIds[],
+            Priority priority);
 }

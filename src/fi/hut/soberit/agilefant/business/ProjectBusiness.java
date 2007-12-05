@@ -2,6 +2,7 @@ package fi.hut.soberit.agilefant.business;
 
 import java.util.Collection;
 
+import fi.hut.soberit.agilefant.model.ActivityType;
 import fi.hut.soberit.agilefant.model.Project;
 
 /**
@@ -64,4 +65,10 @@ public interface ProjectBusiness {
      */
     public void moveToBottom(int projectId);
 
+    /**
+     * Get all project types.
+     * 
+     * @return collection of project types
+     */
+    public Collection<ActivityType> getProjectTypes();
 }

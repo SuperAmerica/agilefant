@@ -4,7 +4,9 @@ import java.util.Collection;
 import java.util.List;
 
 import fi.hut.soberit.agilefant.business.ProjectBusiness;
+import fi.hut.soberit.agilefant.db.ActivityTypeDAO;
 import fi.hut.soberit.agilefant.db.ProjectDAO;
+import fi.hut.soberit.agilefant.model.ActivityType;
 import fi.hut.soberit.agilefant.model.Project;
 
 public class ProjectBusinessImpl implements ProjectBusiness {
@@ -12,6 +14,8 @@ public class ProjectBusinessImpl implements ProjectBusiness {
     private Project project;
 
     private ProjectDAO projectDAO;
+    
+    private ActivityTypeDAO activityTypeDAO;
 
     /** {@inheritDoc} */
     public Collection<Project> getAll() {
@@ -88,6 +92,11 @@ public class ProjectBusinessImpl implements ProjectBusiness {
         }
     }
 
+    /** {@inheritDoc} **/
+    public Collection<ActivityType> getProjectTypes() {
+        return activityTypeDAO.getAll();
+    }
+    
     /** {@inheritDoc} */
     public ProjectDAO getProjectDAO() {
         return projectDAO;
@@ -96,6 +105,14 @@ public class ProjectBusinessImpl implements ProjectBusiness {
     /** {@inheritDoc} */
     public void setProjectDAO(ProjectDAO projectDAO) {
         this.projectDAO = projectDAO;
+    }
+
+    public ActivityTypeDAO getActivityTypeDAO() {
+        return activityTypeDAO;
+    }
+
+    public void setActivityTypeDAO(ActivityTypeDAO activityTypeDAO) {
+        this.activityTypeDAO = activityTypeDAO;
     }
 
 }

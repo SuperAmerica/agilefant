@@ -6,16 +6,25 @@ import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
 
 import fi.hut.soberit.agilefant.business.ProjectBusiness;
+import fi.hut.soberit.agilefant.model.ActivityType;
 import fi.hut.soberit.agilefant.model.Project;
 
-public class DevelopmentPortfolioAction extends ActionSupport {
+public class ProjectPortfolioAction extends ActionSupport {
 
     private static final long serialVersionUID = -4749839976470627112L;
 
     private ProjectBusiness projectBusiness;
 
     private int projectId;
+    
+    private Collection<ActivityType> projectTypes;
 
+    @Override
+    public String execute() throws Exception {
+        projectTypes = projectBusiness.getProjectTypes();
+        return super.execute();
+    }
+    
     public Collection<Project> getAll() {
         return projectBusiness.getAll();
     }
@@ -64,4 +73,12 @@ public class DevelopmentPortfolioAction extends ActionSupport {
         this.projectId = projectId;
     }
 
+    public Collection<ActivityType> getProjectTypes() {
+        return projectTypes;
+    }
+
+    public void setProjectTypes(Collection<ActivityType> projectTypes) {
+        this.projectTypes = projectTypes;
+    }
+    
 }

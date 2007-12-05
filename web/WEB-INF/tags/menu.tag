@@ -203,7 +203,7 @@ Backlogs
 </li>
 <li id="nav3">
 <a
-	href="contextView.action?contextName=developmentPortfolio&resetContextView=true">
+	href="contextView.action?contextName=projectPortfolio&resetContextView=true">
 Project Portfolio
 </a>
 </li>
@@ -212,12 +212,14 @@ Project Portfolio
 Users
 </a>
 </li>
+<!-- 
 <li id="navb">
 <a
 	href="contextView.action?contextName=activityTypes&resetContextView=true">
 Project Types
 </a>
 </li>
+-->
 <li id="nava">
 <a href="contextView.action?contextName=createNew&resetContextView=true">
 Create New

@@ -56,23 +56,19 @@
 				<param name="actionName">listUsers</param>
 			</result>
 			<result name="success_activityTypes" type="redirect-action">
-				<param name="actionName">listActivityTypes</param>
+				<param name="actionName">projectPortfolio</param>
 			</result>
 			<result name="success_createNew" type="redirect-action">
 				<param name="actionName">createNew</param>
 			</result>
-			<result name="success_developmentPortfolio" type="redirect-action">
-				<param name="actionName">developmentPortfolio</param>
+			<result name="success_projectPortfolio" type="redirect-action">
+				<param name="actionName">projectPortfolio</param>
 			</result>
 			<result name="success_" type="redirect-action">
 				<param name="actionName">selectBacklog</param>
 			</result>
 		</action>
 		<!-- Activity type actions -->
-		<action name="listActivityTypes" method="getAll"
-			class="activityTypeAction">
-			<result>/WEB-INF/jsp/listActivityTypes.jsp</result>
-		</action>
 		<action name="editActivityType" method="edit"
 			class="activityTypeAction">
 			<result>/WEB-INF/jsp/editActivityType.jsp</result>
@@ -83,11 +79,11 @@
 		</action>
 		<action name="deleteActivityType" method="delete"
 			class="activityTypeAction">
-			<result type="redirect-action">listActivityTypes</result>
+			<result type="redirect-action">projectPortfolio</result>
 		</action>
 		<action name="storeActivityType" method="store"
 			class="activityTypeAction">
-			<result type="redirect-action">listActivityTypes</result>
+			<result type="redirect-action">projectPortfolio</result>
 		</action>
 		<!-- /Activity type actions -->
 		<!-- Work type actions -->
@@ -442,34 +438,34 @@
 		</action>
 		<!-- /Daily work -->
 		
-		<!-- Development portfolio -->
-		<action name="developmentPortfolio" class="developmentPortfolioAction">
-			<result>/WEB-INF/jsp/developmentPortfolio.jsp</result>
+		<!-- Project portfolio -->
+		<action name="projectPortfolio" class="projectPortfolioAction">
+			<result>/WEB-INF/jsp/projectPortfolio.jsp</result>
 		</action>
 		
 		<!-- Actions for moving ranked items in list. -->
-		<action name="moveProjectUp" class="developmentPortfolioAction" method="moveProjectUp">
+		<action name="moveProjectUp" class="projectPortfolioAction" method="moveProjectUp">
 		<result type="redirect-action">
-			<param name="actionName">developmentPortfolio</param>
+			<param name="actionName">projectPortfolio</param>
 		</result>
 		</action>
-		<action name="moveProjectDown" class="developmentPortfolioAction" method="moveProjectDown">
+		<action name="moveProjectDown" class="projectPortfolioAction" method="moveProjectDown">
 		<result type="redirect-action">
-			<param name="actionName">developmentPortfolio</param>
+			<param name="actionName">projectPortfolio</param>
 		</result>
 		</action>
-		<action name="moveProjectTop" class="developmentPortfolioAction" method="moveProjectTop">
+		<action name="moveProjectTop" class="projectPortfolioAction" method="moveProjectTop">
 		<result type="redirect-action">
-			<param name="actionName">developmentPortfolio</param>
+			<param name="actionName">projectPortfolio</param>
 		</result>
 		</action> 
-		<action name="moveProjectBottom" class="developmentPortfolioAction" method="moveProjectBottom">
+		<action name="moveProjectBottom" class="projectPortfolioAction" method="moveProjectBottom">
 		<result type="redirect-action">
-			<param name="actionName">developmentPortfolio</param>
+			<param name="actionName">projectPortfolio</param>
 		</result>
 		</action> 
 				
-		<!-- /Development portfolio -->
+		<!-- /Project portfolio -->
 		
 		<!-- IterationGoal actions -->
 		<action name="editIterationGoal" method="edit"

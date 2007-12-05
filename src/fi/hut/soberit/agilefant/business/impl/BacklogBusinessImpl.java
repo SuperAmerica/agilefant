@@ -46,6 +46,7 @@ public class BacklogBusinessImpl implements BacklogBusiness {
         backlogItem = new BacklogItem();
         Backlog backlog = backlogDAO.get(backlogId);
         backlogItem.setBacklog(backlog);
+        backlog.getBacklogItems().add(backlogItem);
         return backlogItem;
     }
     

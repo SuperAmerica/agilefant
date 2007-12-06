@@ -84,6 +84,10 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
         // Id of newly created, not yet persisted backlog item is 0
         backlogItemId = 0;
         backlogItem = backlogBusiness.createBacklogItemToBacklog(backlogId);
+        if(backlogItem == null) {
+            super.addActionError(super.getText("Invalid backlog id!"));
+            return Action.ERROR;
+        }
         backlog = backlogItem.getBacklog();
         backlogId = backlog.getId();
 
@@ -120,6 +124,9 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
         return Action.SUCCESS;
     }
 
+    /**
+     * TODO: refactor this!
+     */
     public String store() {
         Integer storableId;
         BacklogItem storable = new BacklogItem();

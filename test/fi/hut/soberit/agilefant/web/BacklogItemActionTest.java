@@ -13,7 +13,6 @@ import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.IterationGoal;
 import fi.hut.soberit.agilefant.model.Priority;
-import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.State;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
@@ -33,7 +32,7 @@ public class BacklogItemActionTest extends SpringTestCase {
     private TaskDAO taskDAO = null;
     private IterationGoalDAO iterationGoalDAO = null;
     private UserDAO userDAO = null;
-    
+
     private int backlogId;
     private int bliId;
     private int taskId;
@@ -114,10 +113,12 @@ public class BacklogItemActionTest extends SpringTestCase {
         assertEquals(State.BLOCKED, action.getBacklogItem().getState());
         assertEquals("2h 15min", action.getBacklogItem().getEffortLeft()
                 .toString());
-        assertEquals("Test Goal", action.getBacklogItem().getIterationGoal().getName());
-        assertEquals("Test User", action.getBacklogItem().getAssignee().getLoginName());
+        assertEquals("Test Goal", action.getBacklogItem().getIterationGoal()
+                .getName());
+        assertEquals("Test User", action.getBacklogItem().getAssignee()
+                .getLoginName());
     }
-    
+
     /**
      * Test edit operation with invalid bli id.
      */
@@ -128,6 +129,9 @@ public class BacklogItemActionTest extends SpringTestCase {
 
     /**
      * Test store operation.
+     * 
+     * TODO: store operation with invalid id. operation needs to be refactored
+     * first to get rid of fillStorable cludge.
      */
     public void testStore() {
         // execute edit operation
@@ -135,7 +139,7 @@ public class BacklogItemActionTest extends SpringTestCase {
         action.setBacklogItemId(bliId);
         assertEquals("success", action.edit());
         assertNotNull(action.getBacklogItem());
-        
+
         // update bli and execute store
         action.getBacklogItem().setName("Updated");
         action.getBacklogItem().setDescription("Updated");
@@ -144,16 +148,97 @@ public class BacklogItemActionTest extends SpringTestCase {
         action.getBacklogItem().setState(State.IMPLEMENTED);
         action.getBacklogItem().setEffortLeft(new AFTime("1h 15min"));
         assertEquals("success", action.store());
-        
+
         // check that fields are updated
         assertEquals("Updated", backlogItemDAO.get(bliId).getName());
         assertEquals("Updated", backlogItemDAO.get(bliId).getDescription());
         assertEquals(Priority.CRITICAL, backlogItemDAO.get(bliId).getPriority());
-        assertEquals("1h 15min", backlogItemDAO.get(bliId).getOriginalEstimate().toString());
+        assertEquals("1h 15min", backlogItemDAO.get(bliId)
+                .getOriginalEstimate().toString());
         assertEquals(State.IMPLEMENTED, backlogItemDAO.get(bliId).getState());
-        assertEquals("1h 15min", backlogItemDAO.get(bliId).getEffortLeft().toString());
+        assertEquals("1h 15min", backlogItemDAO.get(bliId).getEffortLeft()
+                .toString());
     }
 
+    /**
+     * Test store operation with updating tasks.
+     */
+    public void testStore_updateTasks() {
+        // execute edit operation
+        assertNull(action.getBacklogItem());
+        action.setBacklogItemId(bliId);
+        assertEquals("success", action.edit());
+        assertNotNull(action.getBacklogItem());
+
+        // update bli tasks and execute store
+        ArrayList<Task> tasks = (ArrayList)action.getBacklogItem().getTasks();
+        // edit existing task
+        Task task = tasks.get(0);
+        task.setName("Updated");
+        // create new task
+        Task task2 = new Task();
+        task2.setName("Test Task2");
+        task2.setBacklogItem(action.getBacklogItem());
+        int task2Id = (Integer) taskDAO.create(task2);
+        task2 = taskDAO.get(task2Id);
+        tasks.add(task2);
+        // execute store operation
+        assertEquals("success", action.store());
+
+        // check that tasks are updated
+        assertEquals("Updated", ((Task)((ArrayList)backlogItemDAO.get(bliId).getTasks()).get(0)).getName());
+        assertEquals("Test Task2", ((Task)((ArrayList)backlogItemDAO.get(bliId).getTasks()).get(1)).getName());
+    }
+
+    /**
+     * Test store operation with updating goal.
+     */
+    public void testStore_updateGoal() {    
+        // execute edit operation
+        assertNull(action.getBacklogItem());
+        action.setBacklogItemId(bliId);
+        assertEquals("success", action.edit());
+        assertNotNull(action.getBacklogItem());
+        
+        // update bli goal
+        IterationGoal goal2 = new IterationGoal();
+        goal2.setName("Test Goal2");
+        goal2.setIteration((Iteration) backlogDAO.get(backlogId));
+        int goal2Id = (Integer) iterationGoalDAO.create(goal2);
+        goal2 = iterationGoalDAO.get(goal2Id);
+        action.getBacklogItem().setIterationGoal(goal2);
+        
+        // execute store operation
+        assertEquals("success", action.store());
+
+        // check that goal is updated
+        assertEquals("Test Goal2", backlogItemDAO.get(bliId).getIterationGoal().getName());
+    }
+
+    /**
+     * Test store operation with updating assignee.
+     */
+    public void testStore_updateAssignee() {    
+        // execute edit operation
+        assertNull(action.getBacklogItem());
+        action.setBacklogItemId(bliId);
+        assertEquals("success", action.edit());
+        assertNotNull(action.getBacklogItem());
+        
+        // update bli assignee
+        User user2 = new User();
+        user2.setLoginName("Test User2");
+        int user2Id = (Integer) userDAO.create(user2);
+        user2 = userDAO.get(user2Id);
+        action.setAssigneeId(user2Id);
+        
+        // execute store operation
+        assertEquals("success", action.store());
+
+        // check that assignee is updated
+        assertEquals("Test User2", backlogItemDAO.get(bliId).getAssignee().getLoginName());
+    }    
+    
     /**
      * Test delete operation.
      */
@@ -172,8 +257,8 @@ public class BacklogItemActionTest extends SpringTestCase {
     public void testDelete_invalidId() {
         action.setBacklogItemId(-500);
         assertEquals("error", action.delete());
-    }    
-    
+    }
+
     /**
      * Test create operation.
      */
@@ -194,8 +279,8 @@ public class BacklogItemActionTest extends SpringTestCase {
     public void testCreate_invalidId() {
         action.setBacklogId(-500);
         assertEquals("error", action.create());
-    }  
-    
+    }
+
     /**
      * Test quickStoreBacklogItem used by tasklist.tag
      */
@@ -224,8 +309,8 @@ public class BacklogItemActionTest extends SpringTestCase {
     public void testQuickStoreBacklogItem_invalidId() {
         action.setBacklogItemId(-500);
         assertEquals("error", action.quickStoreBacklogItem());
-    }     
-    
+    }
+
     public void setBacklogDAO(BacklogDAO backlogDAO) {
         this.backlogDAO = backlogDAO;
     }

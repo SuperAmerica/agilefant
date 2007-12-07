@@ -38,7 +38,7 @@ public interface BacklogBusiness {
      *                <code>Array</code> containing the IDs of the items to
      *                delete.
      */
-    public void deleteMultipleItems(int backlogId, int backlogItemIds[]);
+    public void deleteMultipleItems(int backlogId, int backlogItemIds[]) throws ObjectNotFoundException;
 
     /**
      * Creates new backlogItem to given backlog.

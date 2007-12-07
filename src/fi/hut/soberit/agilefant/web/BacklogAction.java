@@ -68,6 +68,7 @@ public class BacklogAction extends ActionSupport {
         }
         if (backlogItem == null) {
             super.addActionError(super.getText("backlogItem.notFound"));
+            return Action.ERROR;
         }
 
         backlogItem.getBacklog().getBacklogItems().remove(backlogItem);
@@ -106,7 +107,9 @@ public class BacklogAction extends ActionSupport {
         for (int i = 0; i < this.backlogItemIds.length; i++) {
             BacklogItem backlogItem = this.backlogItemDAO
                     .get(this.backlogItemIds[i]);
-            if (!backlogItem.getBacklog().getBacklogItems().remove(backlogItem)) {
+            if (backlogItem == null
+                    || !backlogItem.getBacklog().getBacklogItems().remove(
+                            backlogItem)) {
                 super.addActionError(super.getText("backlogItem.notFound"));
                 return Action.ERROR;
             }
@@ -137,6 +140,11 @@ public class BacklogAction extends ActionSupport {
             return Action.ERROR;
         }
 
+        if (targetPriority == null) {
+            super.addActionError(super.getText("Invalid priority!"));
+            return Action.ERROR;
+        }
+
         try {
             backlogBusiness.changePriorityOfMultipleItems(backlogItemIds,
                     targetPriority);
@@ -162,7 +170,12 @@ public class BacklogAction extends ActionSupport {
             return Action.ERROR;
         }
 
-        backlogBusiness.deleteMultipleItems(backlogId, backlogItemIds);
+        try {
+            backlogBusiness.deleteMultipleItems(backlogId, backlogItemIds);
+        } catch (ObjectNotFoundException e) {
+            super.addActionError(super.getText(e.getMessage()));
+            return Action.ERROR;
+        }
 
         return this.solveResult(currentBacklog);
     }

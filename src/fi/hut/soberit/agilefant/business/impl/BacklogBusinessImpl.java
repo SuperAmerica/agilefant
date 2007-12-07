@@ -25,8 +25,13 @@ public class BacklogBusinessImpl implements BacklogBusiness {
     private BacklogDAO backlogDAO;
 
     // @Override
-    public void deleteMultipleItems(int backlogId, int[] backlogItemIds) {
+    public void deleteMultipleItems(int backlogId, int[] backlogItemIds)
+            throws ObjectNotFoundException {
         Backlog backlog = backlogDAO.get(backlogId);
+        if (backlog == null) {
+            throw new ObjectNotFoundException("Backlog id " + backlogId
+                    + " was invalid.");
+        }
 
         for (int id : backlogItemIds) {
             Collection<BacklogItem> items = backlog.getBacklogItems();

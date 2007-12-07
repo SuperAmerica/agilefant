@@ -11,6 +11,7 @@ import junit.framework.TestCase;
 import fi.hut.soberit.agilefant.business.impl.BacklogBusinessImpl;
 import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
+import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.Iteration;
@@ -29,7 +30,7 @@ public class BacklogBusinessTest extends TestCase {
     private BacklogItemDAO bliDAO;
     private BacklogDAO backlogDAO;
 
-    public void testChangePriorityOfMultipleItems() throws Exception{
+    public void testChangePriorityOfMultipleItems() throws Exception {
         bliDAO = createMock(BacklogItemDAO.class);
         backlogBusiness.setBacklogItemDAO(bliDAO);
         BacklogItem bli = new BacklogItem();
@@ -87,7 +88,7 @@ public class BacklogBusinessTest extends TestCase {
         backlogBusiness.setBacklogItemDAO(bliDAO);
         historyBusiness = createMock(HistoryBusiness.class);
         backlogBusiness.setHistoryBusiness(historyBusiness);
-        
+
         Backlog backlog = new Iteration();
         backlog.setId(100);
         BacklogItem bli = new BacklogItem();
@@ -104,12 +105,16 @@ public class BacklogBusinessTest extends TestCase {
         replay(backlogDAO);
         replay(bliDAO);
         replay(historyBusiness);
-        
+
         // run method under test
         int[] bliIds = { bli.getId() };
-        backlogBusiness.deleteMultipleItems(backlog.getId(), bliIds);
+        try {
+            backlogBusiness.deleteMultipleItems(backlog.getId(), bliIds);
+        } catch (ObjectNotFoundException e) {
+            fail();
+        }
         assertFalse(backlog.getBacklogItems().contains(bli));
-        
+
         // verify behavior
         verify(backlogDAO);
         verify(bliDAO);

@@ -100,6 +100,7 @@ public class Project extends Backlog implements PageItem {
         this.startDate = startDate;
     }
 
+    // TODO: Refactor to business layer and remove dateformat parameter    
     public void setStartDate(String startDate, String dateFormat)
             throws ParseException {
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
@@ -116,6 +117,7 @@ public class Project extends Backlog implements PageItem {
         this.endDate = endDate;
     }
 
+    // TODO: Refactor to business layer and remove dateformat parameter
     public void setEndDate(String endDate, String dateFormat)
             throws ParseException {
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");

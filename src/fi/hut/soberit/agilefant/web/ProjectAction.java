@@ -83,13 +83,13 @@ public class ProjectAction extends ActionSupport implements CRUDAction {
             return Action.ERROR;
         }
         project = projectDAO.get(projectId);
-        startDate = project.getStartDate();
 
         if (project == null) {
-            // super.addActionError(super.getText("project.notFound"));
-            // return Action.ERROR;
-            return Action.SUCCESS;
+            super.addActionError("Invalid project id!");
+            return Action.ERROR;
         }
+        startDate = project.getStartDate();
+
         if (startDate == null) {
             startDate = new Date(0);
         }
@@ -153,8 +153,15 @@ public class ProjectAction extends ActionSupport implements CRUDAction {
     }
 
     protected void fillStorable(Project storable) throws ParseException {
-        Date current = Calendar.getInstance().getTime();
-        if (this.project.getName().equals("")) {
+        if (startDate == null) {
+            super.addActionError(super.getText("Invalid startdate!"));
+            return;
+        } else if (endDate == null) {
+            super.addActionError(super.getText("Invalid enddate!"));
+            return;
+        }
+
+        if (this.project.getName() == null || this.project.getName().equals("")) {
             super.addActionError(super.getText("project.missingName"));
             return;
         }

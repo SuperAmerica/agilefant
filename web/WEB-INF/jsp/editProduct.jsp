@@ -96,8 +96,8 @@
 						${fn:length(row.iterations)}
 					</display:column>
 
-					<display:column sortable="true" sortProperty="activityType.name"
-						title="Activity" property="activityType.name" />
+					<display:column sortable="true" sortProperty="projectType.name"
+						title="Activity" property="projectType.name" />
 
 					<display:column sortable="true" title="Effort left"
 						sortProperty="effortLeft.time">

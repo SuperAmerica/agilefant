@@ -24,7 +24,7 @@
 		<tag-class>fi.hut.soberit.agilefant.web.tag.ExistingObjectsTag</tag-class>
 		<body-content>JSP</body-content>
 		<description>
-			Variables hasProducts, hasProjects, hasIterations and hasActivityTypes
+			Variables hasProducts, hasProjects, hasIterations and hasProjectTypes
 			implies weather objects exist
 	   </description>
 	</tag>

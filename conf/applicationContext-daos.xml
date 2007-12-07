@@ -46,8 +46,8 @@
 		<property name="target" ref="backlogDAOTarget" />
 	</bean>
 
-	<bean name="activityTypeDAOTarget" parent="abstractDAOTarget"
-		class="fi.hut.soberit.agilefant.db.hibernate.ActivityTypeDAOHibernate" />
+	<bean name="projectTypeDAOTarget" parent="abstractDAOTarget"
+		class="fi.hut.soberit.agilefant.db.hibernate.ProjectTypeDAOHibernate" />
 	<bean name="workTypeDAOTarget" parent="abstractDAOTarget"
 		class="fi.hut.soberit.agilefant.db.hibernate.WorkTypeDAOHibernate" />
 	<bean name="projectDAOTarget" parent="abstractDAOTarget"
@@ -61,8 +61,8 @@
 	<bean name="iterationGoalDAOTarget" parent="abstractDAOTarget"
 		class="fi.hut.soberit.agilefant.db.hibernate.IterationGoalDAOHibernate" />
 
-	<bean name="activityTypeDAO" parent="abstractDAO">
-		<property name="target" ref="activityTypeDAOTarget" />
+	<bean name="projectTypeDAO" parent="abstractDAO">
+		<property name="target" ref="projectTypeDAOTarget" />
 	</bean>
 
 	<bean name="workTypeDAO" parent="abstractDAO">

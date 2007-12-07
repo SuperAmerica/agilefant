@@ -2,7 +2,9 @@ package fi.hut.soberit.agilefant.business;
 
 import java.util.Collection;
 
-import fi.hut.soberit.agilefant.model.ActivityType;
+import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
+import fi.hut.soberit.agilefant.exception.OperationNotPermittedException;
+import fi.hut.soberit.agilefant.model.ProjectType;
 import fi.hut.soberit.agilefant.model.Project;
 
 /**
@@ -70,5 +72,16 @@ public interface ProjectBusiness {
      * 
      * @return collection of project types
      */
-    public Collection<ActivityType> getProjectTypes();
+    public Collection<ProjectType> getProjectTypes();
+    
+    /**
+     * Delete a project type.
+     * 
+     * @param projectTypeId id of the project type to be deleted.
+     * @throws OperationNotPermittedException if ProjectType has WorkTypes
+     * @throws ObjectNotFoundException if no such object exists
+     */
+    public void deleteProjectType(int projectTypeId)
+        throws OperationNotPermittedException,
+        ObjectNotFoundException;
 }

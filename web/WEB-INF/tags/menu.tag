@@ -215,7 +215,7 @@ Users
 <!-- 
 <li id="navb">
 <a
-	href="contextView.action?contextName=activityTypes&resetContextView=true">
+	href="contextView.action?contextName=projectTypes&resetContextView=true">
 Project Types
 </a>
 </li>

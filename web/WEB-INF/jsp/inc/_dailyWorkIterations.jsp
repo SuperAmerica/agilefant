@@ -22,11 +22,11 @@
 			<ww:param name="iterationId" value="${it.id}" />
 		</ww:url> <ww:a href="%{parentActionUrl}&contextViewName=dailyWork">
 			<u><c:out value="${it.name}" /></u>
-		</ww:a> <ww:url id="activityTypeActionUrl" action="editActivityType"
+		</ww:a> <ww:url id="projectTypeActionUrl" action="editProjectType"
 			includeParams="none">
-			<ww:param name="activityTypeId" value="${it.project.activityType.id}" />
-		</ww:url> <ww:a href="%{activityTypeActionUrl}&contextViewName=dailyWork">
-			<u><c:out value="(${it.project.activityType.name})" /></u>
+			<ww:param name="projectTypeId" value="${it.project.projectType.id}" />
+		</ww:url> <ww:a href="%{projectTypeActionUrl}&contextViewName=dailyWork">
+			<u><c:out value="(${it.project.projectType.name})" /></u>
 		</ww:a></div>
 
 

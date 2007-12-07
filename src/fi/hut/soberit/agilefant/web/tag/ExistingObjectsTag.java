@@ -3,7 +3,7 @@ package fi.hut.soberit.agilefant.web.tag;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.Tag;
 
-import fi.hut.soberit.agilefant.db.ActivityTypeDAO;
+import fi.hut.soberit.agilefant.db.ProjectTypeDAO;
 import fi.hut.soberit.agilefant.db.ProjectDAO;
 import fi.hut.soberit.agilefant.db.IterationDAO;
 import fi.hut.soberit.agilefant.db.ProductDAO;
@@ -17,7 +17,7 @@ public class ExistingObjectsTag extends SpringTagSupport {
 
     public static final String HAS_ITERATIONS = "hasIterations";
 
-    public static final String HAS_ACTIVITYTYPES = "hasActivityTypes";
+    public static final String HAS_PROJECTTYPES = "hasProjectTypes";
 
     private ProductDAO productDAO;
 
@@ -25,7 +25,7 @@ public class ExistingObjectsTag extends SpringTagSupport {
 
     private IterationDAO iterationDAO;
 
-    private ActivityTypeDAO activityTypeDAO;
+    private ProjectTypeDAO projectTypeDAO;
 
     @Override
     public int doStartTag() throws JspException {
@@ -35,8 +35,8 @@ public class ExistingObjectsTag extends SpringTagSupport {
                 .getBean("projectDAO");
         iterationDAO = (IterationDAO) super.getApplicationContext().getBean(
                 "iterationDAO");
-        activityTypeDAO = (ActivityTypeDAO) super.getApplicationContext()
-                .getBean("activityTypeDAO");
+        projectTypeDAO = (ProjectTypeDAO) super.getApplicationContext()
+                .getBean("projectTypeDAO");
         super.getPageContext().setAttribute(ExistingObjectsTag.HAS_PRODUCTS,
                 !productDAO.getAll().isEmpty());
         super.getPageContext().setAttribute(ExistingObjectsTag.HAS_PROJECTS,
@@ -44,8 +44,8 @@ public class ExistingObjectsTag extends SpringTagSupport {
         super.getPageContext().setAttribute(ExistingObjectsTag.HAS_ITERATIONS,
                 !iterationDAO.getAll().isEmpty());
         super.getPageContext().setAttribute(
-                ExistingObjectsTag.HAS_ACTIVITYTYPES,
-                !activityTypeDAO.getAll().isEmpty());
+                ExistingObjectsTag.HAS_PROJECTTYPES,
+                !projectTypeDAO.getAll().isEmpty());
         return Tag.EVAL_BODY_INCLUDE;
     }
 }

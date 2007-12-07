@@ -37,8 +37,8 @@ public class AllowedWorkTypesTag extends SpringTagSupport {
                 project = ((Iteration) backlogItem.getBacklog())
                         .getProject();
             }
-            if (project.getActivityType() != null) {
-                result = project.getActivityType().getWorkTypes();
+            if (project.getProjectType() != null) {
+                result = project.getProjectType().getWorkTypes();
             }
         }
         super.getPageContext().setAttribute(super.getId(), result);

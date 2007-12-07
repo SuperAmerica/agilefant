@@ -176,4 +176,23 @@ ALTER TABLE Task DROP COLUMN `status`;
 ALTER TABLE BacklogItem DROP COLUMN `status`;
 ALTER TABLE IterationGoal DROP COLUMN `status`;
 
+-- Change ActivityType to ProjectType
+ALTER TABLE ActivityType RENAME TO ProjectType;
+
+-- Change Backlog-table accordingly and update projectType_id to be equal as activityType_id
+ALTER TABLE Backlog ADD COLUMN projectType_id integer;
+ALTER TABLE Backlog ADD INDEX FK4E86B8DD3872F902 (projectType_id), ADD CONSTRAINT FK4E86B8DD3872F902 FOREIGN KEY (projectType_id) REFERENCES ProjectType (id);
+UPDATE Backlog SET projectType_id=activityType_id;
+
+-- Change WorkType-table accordingly and update projectType_id to be equal as activityType_id
+ALTER TABLE WorkType ADD COLUMN projectType_id integer;
+ALTER TABLE WorkType ADD INDEX FK5EE3E0B3872F902 (projectType_id), ADD CONSTRAINT FK5EE3E0B3872F902 FOREIGN KEY (projectType_id) REFERENCES ProjectType (id);
+UPDATE WorkType SET projectType_id=activityType_id;
+
+-- Drop the unused columns from both tables
+ALTER TABLE Backlog DROP FOREIGN KEY `FK4E86B8DDCC65BE32`;
+ALTER TABLE Backlog DROP COLUMN activityType_id;
+ALTER TABLE WorkType DROP FOREIGN KEY `FK5EE3E0BCC65BE32`;
+ALTER TABLE WorkType DROP COLUMN activityType_id;
+
 

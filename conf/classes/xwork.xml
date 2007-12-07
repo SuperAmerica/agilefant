@@ -55,7 +55,7 @@
 			<result name="success_users" type="redirect-action">
 				<param name="actionName">listUsers</param>
 			</result>
-			<result name="success_activityTypes" type="redirect-action">
+			<result name="success_projectTypes" type="redirect-action">
 				<param name="actionName">projectPortfolio</param>
 			</result>
 			<result name="success_createNew" type="redirect-action">
@@ -69,20 +69,20 @@
 			</result>
 		</action>
 		<!-- Activity type actions -->
-		<action name="editActivityType" method="edit"
-			class="activityTypeAction">
-			<result>/WEB-INF/jsp/editActivityType.jsp</result>
+		<action name="editProjectType" method="edit"
+			class="projectTypeAction">
+			<result>/WEB-INF/jsp/editProjectType.jsp</result>
 		</action>
-		<action name="createActivityType" method="create"
-			class="activityTypeAction">
-			<result>/WEB-INF/jsp/editActivityType.jsp</result>
+		<action name="createProjectType" method="create"
+			class="projectTypeAction">
+			<result>/WEB-INF/jsp/editProjectType.jsp</result>
 		</action>
-		<action name="deleteActivityType" method="delete"
-			class="activityTypeAction">
+		<action name="deleteProjectType" method="delete"
+			class="projectTypeAction">
 			<result type="redirect-action">projectPortfolio</result>
 		</action>
-		<action name="storeActivityType" method="store"
-			class="activityTypeAction">
+		<action name="storeProjectType" method="store"
+			class="projectTypeAction">
 			<result type="redirect-action">projectPortfolio</result>
 		</action>
 		<!-- /Activity type actions -->
@@ -98,15 +98,15 @@
 		<action name="deleteWorkType" method="delete"
 			class="workTypeAction">
 			<result type="redirect-action">
-				<param name="actionName">editActivityType</param>
-				<param name="activityTypeId">${activityTypeId}</param>
+				<param name="actionName">editProjectType</param>
+				<param name="projectTypeId">${projectTypeId}</param>
 			</result>
 		</action>
 		<action name="storeWorkType" method="store"
 			class="workTypeAction">
 			<result type="redirect-action">
-				<param name="actionName">editActivityType</param>
-				<param name="activityTypeId">${activityTypeId}</param>
+				<param name="actionName">editProjectType</param>
+				<param name="projectTypeId">${projectTypeId}</param>
 			</result>
 		</action>
 		<!-- /Work type actions -->

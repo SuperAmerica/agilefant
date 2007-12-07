@@ -4,16 +4,16 @@ import java.util.Collection;
 
 import com.opensymphony.xwork.Action;
 
-import fi.hut.soberit.agilefant.model.ActivityType;
+import fi.hut.soberit.agilefant.model.ProjectType;
 import fi.hut.soberit.agilefant.util.SpringTestCase;
 
 /**
- * JUnit integration testing class for testing class ActivityTypeAction. Heavily
+ * JUnit integration testing class for testing class ProjectTypeAction. Heavily
  * under construction.
  * 
  * @author tvainiok
  */
-public class ActivityTypeActionTest extends SpringTestCase {
+public class ProjectTypeActionTest extends SpringTestCase {
     private static final String TEST_NAME1 = "Testi Act. Type no1";
 
     private static final String TEST_NAME2 = "Testi Act. Type no2";
@@ -29,17 +29,17 @@ public class ActivityTypeActionTest extends SpringTestCase {
     private static final int INVALID_ID = -1;
 
     // The field and setter to be used by Spring
-    private ActivityTypeAction activityTypeAction;
+    private ProjectTypeAction projectTypeAction;
 
-    public void setActivityTypeAction(ActivityTypeAction activityTypeAction) {
-        this.activityTypeAction = activityTypeAction;
+    public void setProjectTypeAction(ProjectTypeAction projectTypeAction) {
+        this.projectTypeAction = projectTypeAction;
     }
 
     /*
      * Checks, if there are any given error countered.
      */
     private boolean errorFound(String e) {
-        Collection<String> errors = activityTypeAction.getActionErrors();
+        Collection<String> errors = projectTypeAction.getActionErrors();
         boolean found = false;
         for (String s : errors) {
             if (s.equals(e))
@@ -49,44 +49,44 @@ public class ActivityTypeActionTest extends SpringTestCase {
     }
 
     private void setContents(String name, String description) {
-        ActivityType at = activityTypeAction.getActivityType();
+        ProjectType at = projectTypeAction.getProjectType();
         at.setName(name);
         at.setDescription(description);
     }
 
     /*
-     * Method for calling activityTypeAction.create that is supposed to work
+     * Method for calling projectTypeAction.create that is supposed to work
      * (and is not a target for testing) Actual testing for method create is
      * done in testCreate_XXX -methods
      */
     private void create() {
-        String result = activityTypeAction.create();
+        String result = projectTypeAction.create();
         assertEquals("create() was unsuccessful", result, Action.SUCCESS);
     }
 
     /*
-     * Method for calling activityTypeAction.store that is supposed to work (and
+     * Method for calling projectTypeAction.store that is supposed to work (and
      * is not a target for testing) Actual testing for method store is done in
      * testStore_XXX -methods
      */
     private void store() {
-        String result = activityTypeAction.store();
+        String result = projectTypeAction.store();
         assertEquals("store() was unsuccessful", result, Action.SUCCESS);
     }
 
     /*
      * Get all stored Users. @return all users stored
      */
-    private Collection<ActivityType> getAllActivityTypes() {
-        activityTypeAction.getAll();
-        return activityTypeAction.getActivityTypes();
+    private Collection<ProjectType> getAllProjectTypes() {
+        projectTypeAction.getAll();
+        return projectTypeAction.getProjectTypes();
     }
 
     /*
      * Get activity type based on details
      */
-    private ActivityType getActivityType(String name, String desc) {
-        for (ActivityType at : getAllActivityTypes()) {
+    private ProjectType getProjectType(String name, String desc) {
+        for (ProjectType at : getAllProjectTypes()) {
             if (at.getDescription() == desc && at.getName() == name) {
                 return at;
             }
@@ -97,23 +97,23 @@ public class ActivityTypeActionTest extends SpringTestCase {
     /** * Actual test methods * */
 
     public void testCreate() {
-        String result = activityTypeAction.create();
+        String result = projectTypeAction.create();
         assertEquals("create() was unsuccessful", result, Action.SUCCESS);
         super.assertEquals("New activity type had an invalid id", 0,
-                activityTypeAction.getActivityTypeId());
+                projectTypeAction.getProjectTypeId());
     }
 
     public void testStore() {
         this.create();
         this.setContents(TEST_NAME1, TEST_DESC1);
-        int n = getAllActivityTypes().size();
-        String result = activityTypeAction.store();
+        int n = getAllProjectTypes().size();
+        String result = projectTypeAction.store();
         assertEquals("store() was unsuccessful", result, Action.SUCCESS);
         super
                 .assertEquals(
                         "The total number of stored activity types didn't grow up with store().",
-                        n + 1, getAllActivityTypes().size());
-        ActivityType storedAT = this.getActivityType(TEST_NAME1, TEST_DESC1);
+                        n + 1, getAllProjectTypes().size());
+        ProjectType storedAT = this.getProjectType(TEST_NAME1, TEST_DESC1);
         super.assertNotNull("Activity wasn't stored properly (wasn't found)",
                 storedAT);
         super.assertEquals("Stored activity type had invalid name", TEST_NAME1,
@@ -122,7 +122,7 @@ public class ActivityTypeActionTest extends SpringTestCase {
                 TEST_DESC1, storedAT.getDescription());
         // super.assertNotSame("The Stored activity type should have a proper id
         // number after store()",
-        // 0, activityTypeAction.getActivityType().getId());
+        // 0, projectTypeAction.getProjectType().getId());
     }
 
     public void testEdit() {
@@ -130,12 +130,12 @@ public class ActivityTypeActionTest extends SpringTestCase {
         this.setContents(TEST_NAME1, TEST_DESC1);
         this.store();
 
-        activityTypeAction.setActivityType(null);
-        activityTypeAction.setActivityTypeId(this.getActivityType(TEST_NAME1,
+        projectTypeAction.setProjectType(null);
+        projectTypeAction.setProjectTypeId(this.getProjectType(TEST_NAME1,
                 TEST_DESC1).getId());
-        String result = activityTypeAction.edit();
+        String result = projectTypeAction.edit();
         super.assertEquals("edit() was unsuccessful", result, Action.SUCCESS);
-        ActivityType fetchedAT = activityTypeAction.getActivityType();
+        ProjectType fetchedAT = projectTypeAction.getProjectType();
         super.assertNotNull("Activity type fetched for editing was null",
                 fetchedAT);
         super.assertEquals("Activity type for editing had invalid name",
@@ -146,12 +146,12 @@ public class ActivityTypeActionTest extends SpringTestCase {
     }
 
     public void testEdit_withInvalidId() {
-        activityTypeAction.setActivityTypeId(INVALID_ID);
-        String result = activityTypeAction.edit();
+        projectTypeAction.setProjectTypeId(INVALID_ID);
+        String result = projectTypeAction.edit();
         assertEquals("Invalid activity type  id didn't result an error.",
                 Action.ERROR, result);
-        assertTrue("activityType.notFound -error not found",
-                errorFound(activityTypeAction.getText("activityType.notFound")));
+        assertTrue("projectType.notFound -error not found",
+                errorFound(projectTypeAction.getText("projectType.notFound")));
 
     }
 
@@ -163,15 +163,15 @@ public class ActivityTypeActionTest extends SpringTestCase {
         this.setContents(TEST_NAME1, TEST_DESC1);
         this.store();
 
-        ActivityType at = this.getActivityType(TEST_NAME1, TEST_DESC1);
+        ProjectType at = this.getProjectType(TEST_NAME1, TEST_DESC1);
         at.setName(TEST_NAME2);
         at.setDescription(TEST_DESC2);
-        activityTypeAction.setActivityTypeId(at.getId());
-        activityTypeAction.setActivityType(at);
-        String result = activityTypeAction.store();
+        projectTypeAction.setProjectTypeId(at.getId());
+        projectTypeAction.setProjectType(at);
+        String result = projectTypeAction.store();
         super.assertEquals("store() was unsuccessful", result, Action.SUCCESS);
 
-        ActivityType updatedAT = this.getActivityType(TEST_NAME2, TEST_DESC2);
+        ProjectType updatedAT = this.getProjectType(TEST_NAME2, TEST_DESC2);
         super.assertNotNull(
                 "Activity Type wasn't stored properly (wasn't found)",
                 updatedAT);
@@ -182,21 +182,21 @@ public class ActivityTypeActionTest extends SpringTestCase {
     }
 
     /*
-     * Create a new activityType and delete it. Then check that it is deleted.
+     * Create a new projectType and delete it. Then check that it is deleted.
      */
     public void testDelete() {
         this.create();
         this.setContents(TEST_NAME3, TEST_DESC3);
         this.store();
-        ActivityType at = this.getActivityType(TEST_NAME3, TEST_DESC3);
+        ProjectType at = this.getProjectType(TEST_NAME3, TEST_DESC3);
         super.assertNotNull(
                 "Activity Type wasn't stored properly (wasn't found)", at);
 
-        activityTypeAction.setActivityTypeId(at.getId());
-        String result = activityTypeAction.delete();
+        projectTypeAction.setProjectTypeId(at.getId());
+        String result = projectTypeAction.delete();
         assertEquals("delete() was unsuccessful", result, Action.SUCCESS);
 
-        ActivityType test3 = this.getActivityType(TEST_NAME3, TEST_DESC3);
+        ProjectType test3 = this.getProjectType(TEST_NAME3, TEST_DESC3);
         super.assertNull("The deleted activity type wasn't properly deleted",
                 test3);
     }

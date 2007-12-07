@@ -16,19 +16,19 @@ import org.hibernate.validator.Range;
 /**
  * Hibernate entity bean representing an activity type.
  * <p>
- * Conceptually, ActivityType represents a work entitity by defining some
+ * Conceptually, ProjectType represents a work entitity by defining some
  * WorkTypes which are applicable to this kind of an activity. Activity type of
  * "customer software project" might contain work types "planning", "coding" and
  * "customer support".
  * <p>
- * ActivityType has a target percentage, which is defined as the percentage of
+ * ProjectType has a target percentage, which is defined as the percentage of
  * all the work that should be spent to work which are under this particular
- * ActivityType, given by company leaders or such.
+ * ProjectType, given by company leaders or such.
  * 
  * @see fi.hut.soberit.agilefant.model.WorkType
  */
 @Entity
-public class ActivityType {
+public class ProjectType {
 
     private int id;
 
@@ -87,7 +87,7 @@ public class ActivityType {
      * Single activity type can contain many work types, single worktype is part
      * of a single activity type.
      */
-    @OneToMany(mappedBy = "activityType")
+    @OneToMany(mappedBy = "projectType")
     public Collection<WorkType> getWorkTypes() {
         return workTypes;
     }

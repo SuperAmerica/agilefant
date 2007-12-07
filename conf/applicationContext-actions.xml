@@ -10,8 +10,8 @@
 		</constructor-arg>
 	</bean>
 	
-	<bean name="activityTypeAction"
-		class="fi.hut.soberit.agilefant.web.ActivityTypeAction"
+	<bean name="projectTypeAction"
+		class="fi.hut.soberit.agilefant.web.ProjectTypeAction"
 		singleton="false" autowire="byName" />
 	<bean name="workTypeAction"
 		class="fi.hut.soberit.agilefant.web.WorkTypeAction" singleton="false"

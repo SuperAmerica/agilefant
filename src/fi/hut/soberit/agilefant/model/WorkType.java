@@ -20,7 +20,7 @@ import org.hibernate.annotations.Type;
  * single activity type. Activity type of "customer software project" might
  * contain work types "planning", "coding" and "customer support".
  * 
- * @see fi.hut.soberit.agilefant.model.ActivityType
+ * @see fi.hut.soberit.agilefant.model.ProjectType
  */
 @Entity
 public class WorkType {
@@ -31,7 +31,7 @@ public class WorkType {
 
     private String description;
 
-    private ActivityType activityType;
+    private ProjectType projectType;
 
     /**
      * Get the id of this object.
@@ -58,12 +58,12 @@ public class WorkType {
     }
 
     @ManyToOne
-    public ActivityType getActivityType() {
-        return activityType;
+    public ProjectType getProjectType() {
+        return projectType;
     }
 
-    public void setActivityType(ActivityType activityType) {
-        this.activityType = activityType;
+    public void setProjectType(ProjectType projectType) {
+        this.projectType = projectType;
     }
 
     @Type(type = "escaped_text")

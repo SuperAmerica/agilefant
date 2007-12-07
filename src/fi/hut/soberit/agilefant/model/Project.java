@@ -40,7 +40,7 @@ import fi.hut.soberit.agilefant.web.page.PageItem;
  * 
  * @see fi.hut.soberit.agilefant.model.Backlog
  * @see fi.hut.soberit.agilefant.model.BacklogItem
- * @see fi.hut.soberit.agilefant.model.ActivityType
+ * @see fi.hut.soberit.agilefant.model.ProjectType
  * @see fi.hut.soberit.agilefant.model.Iteration
  */
 @Entity
@@ -48,7 +48,7 @@ public class Project extends Backlog implements PageItem {
 
     private Product product;
 
-    private ActivityType activityType;
+    private ProjectType projectType;
 
     private Date endDate;
 
@@ -124,12 +124,12 @@ public class Project extends Backlog implements PageItem {
     }
 
     @ManyToOne
-    public ActivityType getActivityType() {
-        return activityType;
+    public ProjectType getProjectType() {
+        return projectType;
     }
 
-    public void setActivityType(ActivityType activityType) {
-        this.activityType = activityType;
+    public void setProjectType(ProjectType projectType) {
+        this.projectType = projectType;
     }
 
     /** {@inheritDoc} */

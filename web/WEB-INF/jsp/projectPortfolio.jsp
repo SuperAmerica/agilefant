@@ -71,8 +71,8 @@
 
 
 <h2>Project types</h2>
-<p><ww:url id="createActivityTypeLink" action="createActivityType" />
-<ww:a href="%{createActivityTypeLink}">Create new &raquo;</ww:a></p>
+<p><ww:url id="createProjectTypeLink" action="createProjectType" />
+<ww:a href="%{createProjectTypeLink}">Create new &raquo;</ww:a></p>
 
 <p><c:choose>
 	<c:when test="${empty projectTypes}">
@@ -83,16 +83,16 @@
 			requestURI="projectPortfolio.action">
 			<display:column sortable="true" property="id" />
 			<display:column sortable="true" title="Name">
-				<ww:url id="editLink" action="editActivityType">
-					<ww:param name="activityTypeId" value="${row.id}" />
+				<ww:url id="editLink" action="editProjectType">
+					<ww:param name="projectTypeId" value="${row.id}" />
 				</ww:url>
 				<ww:a href="%{editLink}">
 					${aef:html(row.name)}
 				</ww:a>
 			</display:column>
 			<display:column sortable="false" title="Actions">
-				<ww:url id="deleteLink" action="deleteActivityType">
-					<ww:param name="activityTypeId" value="${row.id}" />
+				<ww:url id="deleteLink" action="deleteProjectType">
+					<ww:param name="projectTypeId" value="${row.id}" />
 				</ww:url>
 				<ww:a href="%{deleteLink}">Delete</ww:a>
 			</display:column>

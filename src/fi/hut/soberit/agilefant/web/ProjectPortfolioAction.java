@@ -6,7 +6,7 @@ import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
 
 import fi.hut.soberit.agilefant.business.ProjectBusiness;
-import fi.hut.soberit.agilefant.model.ActivityType;
+import fi.hut.soberit.agilefant.model.ProjectType;
 import fi.hut.soberit.agilefant.model.Project;
 
 public class ProjectPortfolioAction extends ActionSupport {
@@ -17,7 +17,7 @@ public class ProjectPortfolioAction extends ActionSupport {
 
     private int projectId;
     
-    private Collection<ActivityType> projectTypes;
+    private Collection<ProjectType> projectTypes;
 
     @Override
     public String execute() throws Exception {
@@ -73,11 +73,11 @@ public class ProjectPortfolioAction extends ActionSupport {
         this.projectId = projectId;
     }
 
-    public Collection<ActivityType> getProjectTypes() {
+    public Collection<ProjectType> getProjectTypes() {
         return projectTypes;
     }
 
-    public void setProjectTypes(Collection<ActivityType> projectTypes) {
+    public void setProjectTypes(Collection<ProjectType> projectTypes) {
         this.projectTypes = projectTypes;
     }
     

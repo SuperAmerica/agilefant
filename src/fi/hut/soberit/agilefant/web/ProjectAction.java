@@ -8,11 +8,11 @@ import java.util.Date;
 import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
 
-import fi.hut.soberit.agilefant.db.ActivityTypeDAO;
+import fi.hut.soberit.agilefant.db.ProjectTypeDAO;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.db.ProductDAO;
 import fi.hut.soberit.agilefant.db.ProjectDAO;
-import fi.hut.soberit.agilefant.model.ActivityType;
+import fi.hut.soberit.agilefant.model.ProjectType;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
@@ -25,17 +25,17 @@ public class ProjectAction extends ActionSupport implements CRUDAction {
 
     private int productId;
 
-    private int activityTypeId;
+    private int projectTypeId;
 
     private Project project;
 
     private ProjectDAO projectDAO;
 
-    private ActivityTypeDAO activityTypeDAO;
+    private ProjectTypeDAO projectTypeDAO;
 
     private ProductDAO productDAO;
 
-    private Collection<ActivityType> activityTypes;
+    private Collection<ProjectType> projectTypes;
 
     private Backlog backlog;
 
@@ -63,10 +63,10 @@ public class ProjectAction extends ActionSupport implements CRUDAction {
     }
 
     public String create() {
-        this.prepareActivityTypes();
+        this.prepareProjectTypes();
         // TODO: fiksumpi virheenkäsittely
-        // if (this.activityTypes.isEmpty()){
-        // super.addActionError("project.activityTypesNotFound");
+        // if (this.projectTypes.isEmpty()){
+        // super.addActionError("project.projectTypesNotFound");
         // return Action.ERROR;
         // }
         projectId = 0;
@@ -77,9 +77,9 @@ public class ProjectAction extends ActionSupport implements CRUDAction {
 
     public String edit() {
         Date startDate;
-        this.prepareActivityTypes();
-        if (this.activityTypes.isEmpty()) {
-            super.addActionError("project.activityTypesNotFound");
+        this.prepareProjectTypes();
+        if (this.projectTypes.isEmpty()) {
+            super.addActionError("project.projectTypesNotFound");
             return Action.ERROR;
         }
         project = projectDAO.get(projectId);
@@ -191,17 +191,17 @@ public class ProjectAction extends ActionSupport implements CRUDAction {
             // product.getProjects().add(storable);
         }
 
-        if (storable.getActivityType() == null
-                || storable.getActivityType().getId() != activityTypeId) {
-            ActivityType activityType = null;
-            if (activityTypeId > 0) {
-                activityType = activityTypeDAO.get(activityTypeId);
+        if (storable.getProjectType() == null
+                || storable.getProjectType().getId() != projectTypeId) {
+            ProjectType projectType = null;
+            if (projectTypeId > 0) {
+                projectType = projectTypeDAO.get(projectTypeId);
             }
-            if (activityType != null) {
-                storable.setActivityType(activityType);
+            if (projectType != null) {
+                storable.setProjectType(projectType);
             } else {
                 super.addActionError(super
-                        .getText("project.missingActivityType"));
+                        .getText("project.missingProjectType"));
                 return;
             }
         }
@@ -248,28 +248,28 @@ public class ProjectAction extends ActionSupport implements CRUDAction {
         this.productDAO = productDAO;
     }
 
-    public int getActivityTypeId() {
-        return activityTypeId;
+    public int getProjectTypeId() {
+        return projectTypeId;
     }
 
-    public void setActivityTypeId(int activityTypeId) {
-        this.activityTypeId = activityTypeId;
+    public void setProjectTypeId(int projectTypeId) {
+        this.projectTypeId = projectTypeId;
     }
 
-    public void setActivityTypeDAO(ActivityTypeDAO activityTypeDAO) {
-        this.activityTypeDAO = activityTypeDAO;
+    public void setProjectTypeDAO(ProjectTypeDAO projectTypeDAO) {
+        this.projectTypeDAO = projectTypeDAO;
     }
 
-    private void prepareActivityTypes() {
-        this.activityTypes = activityTypeDAO.getAll();
+    private void prepareProjectTypes() {
+        this.projectTypes = projectTypeDAO.getAll();
     }
 
-    public Collection<ActivityType> getActivityTypes() {
-        return this.activityTypes;
+    public Collection<ProjectType> getProjectTypes() {
+        return this.projectTypes;
     }
 
-    public void setActivityTypes(Collection<ActivityType> activityTypes) {
-        this.activityTypes = activityTypes;
+    public void setProjectTypes(Collection<ProjectType> projectTypes) {
+        this.projectTypes = projectTypes;
     }
 
     public Backlog getBacklog() {

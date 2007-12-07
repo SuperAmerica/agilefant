@@ -3,9 +3,9 @@ package fi.hut.soberit.agilefant.web;
 import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
 
-import fi.hut.soberit.agilefant.db.ActivityTypeDAO;
+import fi.hut.soberit.agilefant.db.ProjectTypeDAO;
 import fi.hut.soberit.agilefant.db.WorkTypeDAO;
-import fi.hut.soberit.agilefant.model.ActivityType;
+import fi.hut.soberit.agilefant.model.ProjectType;
 import fi.hut.soberit.agilefant.model.WorkType;
 
 public class WorkTypeAction extends ActionSupport implements CRUDAction {
@@ -14,24 +14,24 @@ public class WorkTypeAction extends ActionSupport implements CRUDAction {
 
     private int workTypeId;
 
-    private int activityTypeId;
+    private int projectTypeId;
 
-    private ActivityType activityType;
+    private ProjectType projectType;
 
     private WorkType workType;
 
     private WorkTypeDAO workTypeDAO;
 
-    private ActivityTypeDAO activityTypeDAO;
+    private ProjectTypeDAO projectTypeDAO;
 
     private int storedWorkTypeId;
 
     public String create() {
-        activityType = activityTypeDAO.get(activityTypeId);
-        if (activityType == null) {
+        projectType = projectTypeDAO.get(projectTypeId);
+        if (projectType == null) {
             super
                     .addActionError(super
-                            .getText("workType.activityTypeNotFound"));
+                            .getText("workType.projectTypeNotFound"));
             return Action.ERROR;
         }
         this.workTypeId = 0;
@@ -40,11 +40,11 @@ public class WorkTypeAction extends ActionSupport implements CRUDAction {
     }
 
     public String edit() {
-        activityType = activityTypeDAO.get(activityTypeId);
-        if (activityType == null) {
+        projectType = projectTypeDAO.get(projectTypeId);
+        if (projectType == null) {
             super
                     .addActionError(super
-                            .getText("workType.activityTypeNotFound"));
+                            .getText("workType.projectTypeNotFound"));
             return Action.ERROR;
         }
         workType = workTypeDAO.get(workTypeId);
@@ -70,11 +70,11 @@ public class WorkTypeAction extends ActionSupport implements CRUDAction {
             super.addActionError(super.getText("workType.missingForm"));
             return Action.INPUT;
         }
-        activityType = activityTypeDAO.get(activityTypeId);
-        if (activityType == null) {
+        projectType = projectTypeDAO.get(projectTypeId);
+        if (projectType == null) {
             super
                     .addActionError(super
-                            .getText("workType.activityTypeNotFound"));
+                            .getText("workType.projectTypeNotFound"));
             return Action.INPUT;
         }
         WorkType fillable = new WorkType();
@@ -86,7 +86,7 @@ public class WorkTypeAction extends ActionSupport implements CRUDAction {
             }
         }
         fillObject(fillable);
-        fillable.setActivityType(activityType);
+        fillable.setProjectType(projectType);
         workTypeDAO.store(fillable);
 
         storedWorkTypeId = fillable.getId();
@@ -95,17 +95,17 @@ public class WorkTypeAction extends ActionSupport implements CRUDAction {
     }
 
     protected void fillObject(WorkType fillable) {
-        fillable.setActivityType(this.activityType);
+        fillable.setProjectType(this.projectType);
         fillable.setDescription(this.workType.getDescription());
         fillable.setName(this.workType.getName());
     }
 
-    public int getActivityTypeId() {
-        return activityTypeId;
+    public int getProjectTypeId() {
+        return projectTypeId;
     }
 
-    public void setActivityTypeId(int activityTypeId) {
-        this.activityTypeId = activityTypeId;
+    public void setProjectTypeId(int projectTypeId) {
+        this.projectTypeId = projectTypeId;
     }
 
     public WorkType getWorkType() {
@@ -124,12 +124,12 @@ public class WorkTypeAction extends ActionSupport implements CRUDAction {
         this.workTypeId = workTypeId;
     }
 
-    public ActivityType getActivityType() {
-        return activityType;
+    public ProjectType getProjectType() {
+        return projectType;
     }
 
-    public void setActivityTypeDAO(ActivityTypeDAO activityTypeDAO) {
-        this.activityTypeDAO = activityTypeDAO;
+    public void setProjectTypeDAO(ProjectTypeDAO projectTypeDAO) {
+        this.projectTypeDAO = projectTypeDAO;
     }
 
     public void setWorkTypeDAO(WorkTypeDAO workTypeDAO) {

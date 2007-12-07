@@ -9,7 +9,7 @@
 		but it won't map all the package classes -->
 		<mapping package="fi.hut.soberit.agilefant.model"/>
 		
-   		<mapping class="fi.hut.soberit.agilefant.model.ActivityType"/>
+   		<mapping class="fi.hut.soberit.agilefant.model.ProjectType"/>
   		<mapping class="fi.hut.soberit.agilefant.model.Backlog"/>
  		<mapping class="fi.hut.soberit.agilefant.model.BacklogItem"/>
  		<mapping class="fi.hut.soberit.agilefant.model.Project"/>

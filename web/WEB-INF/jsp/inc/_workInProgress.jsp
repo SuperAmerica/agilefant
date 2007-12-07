@@ -141,11 +141,11 @@
 				<c:out value="${parent.name}" />
 			</ww:a>
 			<c:if test="${aef:isProject(parent)}">
-			<ww:url id="activityTypeActionUrl" action="editActivityType" includeParams="none">
-				<ww:param name="activityTypeId" value="${parent.activityType.id}" />
+			<ww:url id="projectTypeActionUrl" action="editProjectType" includeParams="none">
+				<ww:param name="projectTypeId" value="${parent.projectType.id}" />
 			</ww:url>
-			<ww:a href="%{activityTypeActionUrl}&contextViewName=dailyWork">
-				(<c:out value="${parent.activityType.name}" />)
+			<ww:a href="%{projectTypeActionUrl}&contextViewName=dailyWork">
+				(<c:out value="${parent.projectType.name}" />)
 			</ww:a>
 			</c:if>
 			<br />

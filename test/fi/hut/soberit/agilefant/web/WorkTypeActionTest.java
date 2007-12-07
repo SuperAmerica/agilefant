@@ -4,9 +4,9 @@ import java.util.Collection;
 
 import com.opensymphony.xwork.Action;
 
-import fi.hut.soberit.agilefant.db.ActivityTypeDAO;
+import fi.hut.soberit.agilefant.db.ProjectTypeDAO;
 import fi.hut.soberit.agilefant.db.WorkTypeDAO;
-import fi.hut.soberit.agilefant.model.ActivityType;
+import fi.hut.soberit.agilefant.model.ProjectType;
 import fi.hut.soberit.agilefant.model.WorkType;
 import fi.hut.soberit.agilefant.util.SpringTestCase;
 
@@ -20,18 +20,18 @@ public class WorkTypeActionTest extends SpringTestCase {
 
     private static final String TEST_DESCRIPTION = "WorkType description";
 
-    private static final String ACTIVITYTYPE_TEST_NAME = "ActivityType name";
+    private static final String PROJECTTYPE_TEST_NAME = "ProjectType name";
 
-    private static final String ACTIVITYTYPE_TEST_DESCRIPTION = "ActivityType name";
+    private static final String PROJECTTYPE_TEST_DESCRIPTION = "ProjectType name";
 
-    private static final int ACTIVITYTYPE_TEST_PERCENTAGE = 23;
+    private static final int PROJECTTYPE_TEST_PERCENTAGE = 23;
 
     WorkTypeDAO workTypeDAO;
 
     // The field and setter to be used by Spring
     private WorkTypeAction workTypeAction;
 
-    private ActivityTypeDAO activityTypeDAO;
+    private ProjectTypeDAO projectTypeDAO;
 
     public void setWorkTypeAction(WorkTypeAction workTypeAction) {
         this.workTypeAction = workTypeAction;
@@ -55,11 +55,11 @@ public class WorkTypeActionTest extends SpringTestCase {
     }
 
     private void configWorkType(String name, String description,
-            ActivityType activityType) {
+            ProjectType projectType) {
         workTypeAction.getWorkType().setName(name);
         workTypeAction.getWorkType().setDescription(description);
-        workTypeAction.getWorkType().setActivityType(activityType);
-        workTypeAction.setActivityTypeId(activityType.getId());
+        workTypeAction.getWorkType().setProjectType(projectType);
+        workTypeAction.setProjectTypeId(projectType.getId());
     }
 
     /*
@@ -112,54 +112,54 @@ public class WorkTypeActionTest extends SpringTestCase {
      *                test user (1 or 2)
      * @return
      */
-    public ActivityType createAndStoreTestActivityType() {
-        ActivityType a = new ActivityType();
-        a.setName(ACTIVITYTYPE_TEST_NAME);
-        a.setDescription(ACTIVITYTYPE_TEST_DESCRIPTION);
-        a.setTargetSpendingPercentage(ACTIVITYTYPE_TEST_PERCENTAGE);
+    public ProjectType createAndStoreTestProjectType() {
+        ProjectType a = new ProjectType();
+        a.setName(PROJECTTYPE_TEST_NAME);
+        a.setDescription(PROJECTTYPE_TEST_DESCRIPTION);
+        a.setTargetSpendingPercentage(PROJECTTYPE_TEST_PERCENTAGE);
 
-        activityTypeDAO.store(a);
+        projectTypeDAO.store(a);
 
         return a;
     }
 
     public void checkItems(WorkType storedWorkType,
-            ActivityType storedActivityType, ActivityType test) {
-        activityTypeDAO.refresh(storedActivityType);
+            ProjectType storedProjectType, ProjectType test) {
+        projectTypeDAO.refresh(storedProjectType);
 
         assertNotNull("worktype was null", storedWorkType);
         assertEquals("worktype had invalid name", storedWorkType.getName(),
                 TEST_NAME);
         assertEquals("worktype had invalid description", storedWorkType
                 .getDescription(), TEST_DESCRIPTION);
-        assertEquals("worktype had an invalid activity type", storedWorkType
-                .getActivityType().getId(), test.getId());
+        assertEquals("worktype had an invalid project type", storedWorkType
+                .getProjectType().getId(), test.getId());
 
-        super.assertNotNull("activitytype was null", storedActivityType);
-        super.assertEquals("activitytype had invalid id", test.getId(),
-                storedActivityType.getId());
-        super.assertTrue("activitytype had invalid name", storedActivityType
-                .getName().equals(ACTIVITYTYPE_TEST_NAME));
-        super.assertTrue("activitytype had invalid description",
-                storedActivityType.getName().equals(
-                        ACTIVITYTYPE_TEST_DESCRIPTION));
-        super.assertTrue("activitytype had invalid worktype-collection",
-                WorkTypeCollectionContainsId(storedActivityType.getWorkTypes(),
+        super.assertNotNull("projecttype was null", storedProjectType);
+        super.assertEquals("projecttype had invalid id", test.getId(),
+                storedProjectType.getId());
+        super.assertTrue("projecttype had invalid name", storedProjectType
+                .getName().equals(PROJECTTYPE_TEST_NAME));
+        super.assertTrue("projecttype had invalid description",
+                storedProjectType.getName().equals(
+                        PROJECTTYPE_TEST_DESCRIPTION));
+        super.assertTrue("projecttype had invalid worktype-collection",
+                WorkTypeCollectionContainsId(storedProjectType.getWorkTypes(),
                         storedWorkType.getId()));
     }
 
-    public void checkStoreResult(ActivityType test) {
+    public void checkStoreResult(ProjectType test) {
         WorkType storedWorkType = workTypeDAO.get(workTypeAction
                 .getStoredWorkTypeId());
-        ActivityType storedActivityType = activityTypeDAO.get(test.getId());
+        ProjectType storedProjectType = projectTypeDAO.get(test.getId());
 
-        checkItems(storedWorkType, storedActivityType, test);
+        checkItems(storedWorkType, storedProjectType, test);
     }
 
     void reset() {
         workTypeAction.setWorkTypeId(0);
         workTypeAction.setWorkType(null);
-        workTypeAction.setActivityTypeId(0);
+        workTypeAction.setProjectTypeId(0);
     }
 
     /** * Actual test methods * */
@@ -167,8 +167,8 @@ public class WorkTypeActionTest extends SpringTestCase {
     public void testCreate() {
         reset();
 
-        ActivityType test = createAndStoreTestActivityType();
-        workTypeAction.setActivityTypeId(test.getId());
+        ProjectType test = createAndStoreTestProjectType();
+        workTypeAction.setProjectTypeId(test.getId());
 
         create();
 
@@ -177,14 +177,14 @@ public class WorkTypeActionTest extends SpringTestCase {
         super.assertNotNull("new work type object was null ", workTypeAction
                 .getWorkType());
 
-        activityTypeDAO.remove(test);
+        projectTypeDAO.remove(test);
     }
 
     public void testStore() {
         reset();
 
-        ActivityType test = createAndStoreTestActivityType();
-        workTypeAction.setActivityTypeId(test.getId());
+        ProjectType test = createAndStoreTestProjectType();
+        workTypeAction.setProjectTypeId(test.getId());
 
         create();
 
@@ -201,7 +201,7 @@ public class WorkTypeActionTest extends SpringTestCase {
 
         checkStoreResult(test);
 
-        activityTypeDAO.remove(test);
+        projectTypeDAO.remove(test);
     }
 
     public void testStore_withoutCreate() {
@@ -212,7 +212,7 @@ public class WorkTypeActionTest extends SpringTestCase {
         assertTrue("Store without create didn't fail",
                 errorFound(workTypeAction.getText("workType.missingForm"))
                         || errorFound(workTypeAction
-                                .getText("workType.activityTypeNotFound"))
+                                .getText("workType.projectTypeNotFound"))
                         || errorFound(workTypeAction
                                 .getText("wotkType.notFound")));
     }
@@ -220,8 +220,8 @@ public class WorkTypeActionTest extends SpringTestCase {
     public void testEdit() {
         reset();
 
-        ActivityType test = createAndStoreTestActivityType();
-        workTypeAction.setActivityTypeId(test.getId());
+        ProjectType test = createAndStoreTestProjectType();
+        workTypeAction.setProjectTypeId(test.getId());
 
         create();
         configWorkType(TEST_NAME, TEST_DESCRIPTION, test);
@@ -230,20 +230,20 @@ public class WorkTypeActionTest extends SpringTestCase {
         WorkType temp = workTypeAction.getWorkType();
         workTypeAction.setWorkType(null);
 
-        workTypeAction.setActivityTypeId(test.getId());
+        workTypeAction.setProjectTypeId(test.getId());
         workTypeAction.setWorkTypeId(workTypeAction.getStoredWorkTypeId());
 
         edit();
 
         WorkType editedWorkType = workTypeAction.getWorkType();
 
-        checkItems(editedWorkType, editedWorkType.getActivityType(), test);
+        checkItems(editedWorkType, editedWorkType.getProjectType(), test);
     }
 
     public void testEdit_withInvalidId() {
         reset();
 
-        workTypeAction.setActivityTypeId(-1);
+        workTypeAction.setProjectTypeId(-1);
         workTypeAction.setWorkTypeId(-1);
 
         String result = workTypeAction.edit();
@@ -254,9 +254,9 @@ public class WorkTypeActionTest extends SpringTestCase {
                         || errorFound(workTypeAction
                                 .getText("workType.notFound"))
                         || errorFound(workTypeAction
-                                .getText("workType.activityTypeNotFound"))
+                                .getText("workType.projectTypeNotFound"))
                         || errorFound(workTypeAction
-                                .getText("workType.activityTypeNotFound")));
+                                .getText("workType.projectTypeNotFound")));
     }
 
     /*
@@ -265,8 +265,8 @@ public class WorkTypeActionTest extends SpringTestCase {
     public void testStore_withUpdate() {
         reset();
 
-        ActivityType test = createAndStoreTestActivityType();
-        workTypeAction.setActivityTypeId(test.getId());
+        ProjectType test = createAndStoreTestProjectType();
+        workTypeAction.setProjectTypeId(test.getId());
 
         create();
         configWorkType(TEST_NAME, TEST_DESCRIPTION, test);
@@ -291,17 +291,17 @@ public class WorkTypeActionTest extends SpringTestCase {
                 .getName(), TEST_NAME + "2");
         super.assertEquals("Updated WorkType had invalid name", updatedWorkType
                 .getDescription(), TEST_DESCRIPTION + "2");
-        super.assertEquals("Updated WorkType had invalid activitytype",
-                updatedWorkType.getActivityType().getId(), test.getId());
+        super.assertEquals("Updated WorkType had invalid projecttype",
+                updatedWorkType.getProjectType().getId(), test.getId());
 
-        activityTypeDAO.remove(test);
+        projectTypeDAO.remove(test);
     }
 
     public void testDelete() {
         reset();
 
-        ActivityType test = createAndStoreTestActivityType();
-        workTypeAction.setActivityTypeId(test.getId());
+        ProjectType test = createAndStoreTestProjectType();
+        workTypeAction.setProjectTypeId(test.getId());
 
         create();
         configWorkType(TEST_NAME, TEST_DESCRIPTION, test);
@@ -320,7 +320,7 @@ public class WorkTypeActionTest extends SpringTestCase {
         WorkType worktype = workTypeDAO.get(id);
         super.assertNull("The deleted user wasn't properly deleted", worktype);
 
-        activityTypeDAO.remove(test);
+        projectTypeDAO.remove(test);
     }
 
     public void testDelete_withInvalidId() {
@@ -336,7 +336,7 @@ public class WorkTypeActionTest extends SpringTestCase {
         }
     }
 
-    public void setActivityTypeDAO(ActivityTypeDAO activityTypeDAO) {
-        this.activityTypeDAO = activityTypeDAO;
+    public void setProjectTypeDAO(ProjectTypeDAO projectTypeDAO) {
+        this.projectTypeDAO = projectTypeDAO;
     }
 }

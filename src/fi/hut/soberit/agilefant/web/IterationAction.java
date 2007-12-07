@@ -137,7 +137,7 @@ public class IterationAction extends ActionSupport implements CRUDAction {
     public String delete() {
         iteration = iterationDAO.get(iterationId);
         if (iteration == null) {
-            super.addActionError(super.getText("activityType.notFound"));
+            super.addActionError(super.getText("projectType.notFound"));
             return Action.ERROR;
         }
         if (iteration.getBacklogItems().size() > 0

@@ -12,7 +12,7 @@
 	</c:otherwise>
 </c:choose>
 <ww:form action="storeWorkType">
-	<ww:hidden name="activityTypeId" />
+	<ww:hidden name="projectTypeId" />
 	<ww:hidden name="workTypeId" value="${workType.id}" />
 
 	<table class="formTable">

@@ -13,7 +13,7 @@
 	</li>
 
 	<c:choose>
-		<c:when test="${hasProducts && hasActivityTypes}">
+		<c:when test="${hasProducts && hasProjectTypes}">
 			<li><ww:url id="createLink" action="createProject"
 				includeParams="none" /> <ww:a href="%{createLink}">Create a new project</ww:a>
 			</li>
@@ -68,7 +68,7 @@
 		includeParams="none" /> <ww:a href="%{createLink}">Create a new user &raquo;</ww:a>
 	</li>
 
-	<li><ww:url id="createLink" action="createActivityType"
+	<li><ww:url id="createLink" action="createProjectType"
 		includeParams="none" /> <ww:a href="%{createLink}">Create a new project type &raquo;</ww:a>
 	</li>
 </ul>

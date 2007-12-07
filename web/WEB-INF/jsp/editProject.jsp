@@ -42,8 +42,8 @@
 
 <%--  TODO: fiksumpi virheenkäsittely --%>
 <c:choose>
-	<c:when test="${empty activityTypes}">
-		<ww:url id="workTypeLink" action="listActivityTypes"
+	<c:when test="${empty projectTypes}">
+		<ww:url id="workTypeLink" action="listProjectTypes"
 			includeParams="none" />	
 				No project types available. <ww:a href="%{workTypeLink}">Add project types</ww:a>
 	</c:when>
@@ -108,9 +108,9 @@
 				<tr>
 					<td>Project type</td>
 					<td></td>
-					<td><ww:select name="activityTypeId"
-						list="#attr.activityTypes" listKey="id" listValue="name"
-						value="${project.activityType.id}" /></td>
+					<td><ww:select name="projectTypeId"
+						list="#attr.projectTypes" listKey="id" listValue="name"
+						value="${project.projectType.id}" /></td>
 				</tr>
 				<tr>
 					<td>Start date</td>

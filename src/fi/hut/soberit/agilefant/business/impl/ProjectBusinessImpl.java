@@ -4,9 +4,11 @@ import java.util.Collection;
 import java.util.List;
 
 import fi.hut.soberit.agilefant.business.ProjectBusiness;
-import fi.hut.soberit.agilefant.db.ActivityTypeDAO;
+import fi.hut.soberit.agilefant.db.ProjectTypeDAO;
 import fi.hut.soberit.agilefant.db.ProjectDAO;
-import fi.hut.soberit.agilefant.model.ActivityType;
+import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
+import fi.hut.soberit.agilefant.exception.OperationNotPermittedException;
+import fi.hut.soberit.agilefant.model.ProjectType;
 import fi.hut.soberit.agilefant.model.Project;
 
 public class ProjectBusinessImpl implements ProjectBusiness {
@@ -15,7 +17,7 @@ public class ProjectBusinessImpl implements ProjectBusiness {
 
     private ProjectDAO projectDAO;
     
-    private ActivityTypeDAO activityTypeDAO;
+    private ProjectTypeDAO projectTypeDAO;
 
     /** {@inheritDoc} */
     public Collection<Project> getAll() {
@@ -93,8 +95,27 @@ public class ProjectBusinessImpl implements ProjectBusiness {
     }
 
     /** {@inheritDoc} **/
-    public Collection<ActivityType> getProjectTypes() {
-        return activityTypeDAO.getAll();
+    public void deleteProjectType(int projectTypeId)
+            throws OperationNotPermittedException,
+            ObjectNotFoundException {
+        
+        ProjectType projectType = projectTypeDAO.get(projectTypeId);
+        
+        if (projectType == null) {
+            throw new ObjectNotFoundException();
+        }
+        
+        if (!projectType.getWorkTypes().isEmpty()) {
+            throw new OperationNotPermittedException(
+                    "Can't delete: project type has work types.");
+        }
+        
+        projectTypeDAO.remove(projectTypeId);
+    }
+    
+    /** {@inheritDoc} **/
+    public Collection<ProjectType> getProjectTypes() {
+        return projectTypeDAO.getAll();
     }
     
     /** {@inheritDoc} */
@@ -107,12 +128,12 @@ public class ProjectBusinessImpl implements ProjectBusiness {
         this.projectDAO = projectDAO;
     }
 
-    public ActivityTypeDAO getActivityTypeDAO() {
-        return activityTypeDAO;
+    public ProjectTypeDAO getProjectTypeDAO() {
+        return projectTypeDAO;
     }
 
-    public void setActivityTypeDAO(ActivityTypeDAO activityTypeDAO) {
-        this.activityTypeDAO = activityTypeDAO;
+    public void setProjectTypeDAO(ProjectTypeDAO projectTypeDAO) {
+        this.projectTypeDAO = projectTypeDAO;
     }
 
 }

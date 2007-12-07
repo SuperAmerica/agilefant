@@ -156,6 +156,9 @@ public class TaskAction extends ActionSupport implements CRUDAction {
      * @author hhaataja
      */
     public String transformToBacklogItem() {
+        // First store the task if any changes were made
+        this.store();
+        
         Task storedTask = new Task();
         BacklogItem backlogItem = new BacklogItem();
 

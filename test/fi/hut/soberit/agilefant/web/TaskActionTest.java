@@ -327,9 +327,10 @@ public class TaskActionTest extends SpringTestCase {
     }
 
     /**
-     * Test for transformToBacklogItem 1. Creates a task 2. Tries to transform
-     * it into a backlogItem 3. Verifies that the item was created and with
-     * correct data
+     * Test for transformToBacklogItem 
+     * 1. Creates a task 
+     * 2. Tries to transform it into a backlogItem 
+     * 3. Verifies that the item was created and with correct data
      * 
      * @author hhaataja
      */
@@ -344,8 +345,7 @@ public class TaskActionTest extends SpringTestCase {
         // Create a task for the BacklogItem
         Integer taskId = TestUtility.createTestTask(bi, taskAction, 15);
         Task task = this.taskDAO.get(taskId);
-        // Store task info (because task is change to a placeholder in
-        // transform)
+        // Store task info (because task is change to a placeholder in transform)
         String taskName = task.getName();
         String desc = task.getDescription();
         State state = task.getState();
@@ -360,7 +360,6 @@ public class TaskActionTest extends SpringTestCase {
         // 3. Verify expected results
         super.assertEquals("transformToBacklogItem() was unsuccessful", result,
                 Action.SUCCESS);
-//        assertEquals(0, backlogItemDAO.getRealTasks(bi).size());
         // Retrieve and verify the info on the newly created backlogItem
         Integer newBacklogItemId = this.taskAction.getBacklogItemId();
         BacklogItem newItem = this.backlogItemDAO.get(newBacklogItemId);
@@ -371,12 +370,64 @@ public class TaskActionTest extends SpringTestCase {
         assertEquals(task.getBacklogItem().getBacklog(), newItem.getBacklog());
         assertEquals(task.getBacklogItem().getIterationGoal(), newItem
                 .getIterationGoal());
-        System.out.print("PRI: " + bi.getPriority());
-        System.out.print("PRI2: " + newItem.getPriority());
         assertEquals(bi.getPriority(), newItem.getPriority());
 
     }
 
+    /**
+     * Test for transformToBacklogItem with storing the task before transform. 
+     * 1. Creates a task 
+     * 2. Modifies the task
+     * 3. Tries to transform it into a backlogItem 
+     * 4. Verifies that the item was created and with correct data
+     * 
+     * @author hhaataja
+     */
+    public void testTransformToBacklogItem_WithStore() {
+
+        // 1. Set up test data
+        // Create two users
+        TestUtility.initUser(userAction, userDAO, TestUtility.TestUser.USER1);
+        TestUtility.initUser(userAction, userDAO, TestUtility.TestUser.USER2);
+        // Create backlogItem
+        BacklogItem bi = this.getTestBacklogItem(this.getTestBacklog());
+        // Create a task for the BacklogItem
+        Integer taskId = TestUtility.createTestTask(bi, taskAction, 15);
+        Task task = this.taskDAO.get(taskId);
+        // Store task info (because task is change to a placeholder in transform)
+        String taskName = "taskname-xyz";
+        String desc = "task-description-xyz";
+        State state = State.STARTED;
+        // Set data for the task
+        task.setName(taskName);
+        task.setDescription(desc);
+        task.setState(state);
+        this.taskAction.setTask(task);
+        
+        // Verify that the task was created (+BacklogItem placeholder task)
+        assertEquals(1, bi.getTasks().size());
+
+        // 2.Perform the method under test
+        this.taskAction.setTaskId(taskId);
+        String result = this.taskAction.transformToBacklogItem();
+
+        // 3. Verify expected results
+        super.assertEquals("transformToBacklogItem() was unsuccessful", result,
+                Action.SUCCESS);
+        // Retrieve and verify the info on the newly created backlogItem
+        Integer newBacklogItemId = this.taskAction.getBacklogItemId();
+        BacklogItem newItem = this.backlogItemDAO.get(newBacklogItemId);
+        assertEquals(taskName, newItem.getName());
+        assertEquals(desc, newItem.getDescription());
+        assertEquals(0, state.compareTo(newItem.getState()));
+
+        assertEquals(task.getBacklogItem().getBacklog(), newItem.getBacklog());
+        assertEquals(task.getBacklogItem().getIterationGoal(), newItem
+                .getIterationGoal());
+        assertEquals(bi.getPriority(), newItem.getPriority());
+
+    }    
+    
     public void testStore() {
         this.create();
         User assignee = TestUtility.initUser(userAction, userDAO,

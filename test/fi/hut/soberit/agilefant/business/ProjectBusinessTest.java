@@ -197,42 +197,6 @@ public class ProjectBusinessTest extends SpringTestCase {
         assertEquals(4, del2.getRank());
         assertEquals(8, del3.getRank());
         assertEquals(2, del4.getRank());
-
-        super.endTransaction();
-        super.startNewTransaction();
-        super.setComplete();
-
-        // Testing with random ranks.
-        del1 = projectDAO.get(delId1);
-        del2 = projectDAO.get(delId2);
-        del3 = projectDAO.get(delId3);
-        del4 = projectDAO.get(delId4);
-        del1.setRank(new java.util.Random().nextInt(64));
-        del2.setRank(new java.util.Random().nextInt(64));
-        del3.setRank(new java.util.Random().nextInt(64));
-        del4.setRank(new java.util.Random().nextInt(64));
-        projectDAO.store(del1);
-        projectDAO.store(del2);
-        projectDAO.store(del3);
-        projectDAO.store(del4);
-
-        projectBusiness.moveToTop(delId1);
-        projectBusiness.moveToTop(delId2);
-        projectBusiness.moveToTop(delId3);
-        projectBusiness.moveToTop(delId4);
-
-        super.endTransaction();
-        super.startNewTransaction();
-        super.setComplete();
-
-        del1 = projectDAO.get(delId1);
-        del2 = projectDAO.get(delId2);
-        del3 = projectDAO.get(delId3);
-        del4 = projectDAO.get(delId4);
-        assertEquals(4, del1.getRank());
-        assertEquals(3, del2.getRank());
-        assertEquals(2, del3.getRank());
-        assertEquals(1, del4.getRank());
     }
 
     /**

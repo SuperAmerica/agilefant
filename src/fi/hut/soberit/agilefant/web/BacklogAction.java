@@ -9,6 +9,7 @@ import com.opensymphony.xwork.ActionSupport;
 import fi.hut.soberit.agilefant.business.BacklogBusiness;
 import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
+import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.Iteration;
@@ -136,7 +137,11 @@ public class BacklogAction extends ActionSupport {
             return Action.ERROR;
         }
 
-        backlogBusiness.changePriorityOfMultipleItems(backlogItemIds, targetPriority);
+        try {
+            backlogBusiness.changePriorityOfMultipleItems(backlogItemIds, targetPriority);
+        } catch (ObjectNotFoundException e) {
+            // TODO rstrom adds behavior
+        }
         
         return this.solveResult(currentBacklog);
     }

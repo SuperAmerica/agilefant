@@ -24,7 +24,7 @@ public class BacklogBusinessTest extends SpringTestCase {
     /**
      * Test changing the priority of multiple <code>BacklogItem</code>s.
      */
-    public void testChangePriorityOfMultipleItems() {
+    public void testChangePriorityOfMultipleItems() throws Exception{
         
         /* Generate the test data */
         Backlog backlog = new Project();

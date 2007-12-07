@@ -7,6 +7,7 @@ import fi.hut.soberit.agilefant.business.BacklogBusiness;
 import fi.hut.soberit.agilefant.business.HistoryBusiness;
 import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
+import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.Priority;
@@ -52,12 +53,17 @@ public class BacklogBusinessImpl implements BacklogBusiness {
         return backlogItem;
     }
     
-    /** {@inheritDoc} **/
+    /** {@inheritDoc} *
+     * @throws ObjectNotFoundException */
     public void changePriorityOfMultipleItems(int[] backlogItemIds,
-            Priority priority) {
+            Priority priority) throws ObjectNotFoundException {
         
         for (int id : backlogItemIds) {
-            backlogItemDAO.get(id).setPriority(priority);
+            BacklogItem bli = backlogItemDAO.get(id);
+            if(bli == null){
+                throw new ObjectNotFoundException("Could not change priority. Object with id "+id+" was not found.");
+            }
+            bli.setPriority(priority);
         }
     }
 

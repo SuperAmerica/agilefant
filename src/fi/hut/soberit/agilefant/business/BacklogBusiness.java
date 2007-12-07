@@ -1,5 +1,6 @@
 package fi.hut.soberit.agilefant.business;
 
+import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.Priority;
 
@@ -55,5 +56,5 @@ public interface BacklogBusiness {
      * @param priority the new priority to set
      */
     public void changePriorityOfMultipleItems(int backlogItemIds[],
-            Priority priority);
+            Priority priority) throws ObjectNotFoundException;
 }

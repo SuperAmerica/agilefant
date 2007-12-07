@@ -40,28 +40,33 @@ public class BacklogBusinessImpl implements BacklogBusiness {
             }
         }
         historyBusiness.updateBacklogHistory(backlog.getId());
-    }   
-    
+    }
+
     public BacklogItem createBacklogItemToBacklog(int backlogId) {
         BacklogItem backlogItem = new BacklogItem();
         backlogItem = new BacklogItem();
         Backlog backlog = backlogDAO.get(backlogId);
-        if(backlog == null)
+        if (backlog == null)
             return null;
         backlogItem.setBacklog(backlog);
         backlog.getBacklogItems().add(backlogItem);
         return backlogItem;
     }
-    
-    /** {@inheritDoc} *
-     * @throws ObjectNotFoundException */
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @throws ObjectNotFoundException
+     */
     public void changePriorityOfMultipleItems(int[] backlogItemIds,
             Priority priority) throws ObjectNotFoundException {
-        
+
         for (int id : backlogItemIds) {
             BacklogItem bli = backlogItemDAO.get(id);
-            if(bli == null){
-                throw new ObjectNotFoundException("Could not change priority. Object with id "+id+" was not found.");
+            if (bli == null) {
+                throw new ObjectNotFoundException(
+                        "Could not change priority. Object with id " + id
+                                + " was not found.");
             }
             bli.setPriority(priority);
         }

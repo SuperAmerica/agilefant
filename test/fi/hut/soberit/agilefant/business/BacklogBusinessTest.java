@@ -1,95 +1,119 @@
 package fi.hut.soberit.agilefant.business;
 
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
+
+import java.util.ArrayList;
+
+import junit.framework.TestCase;
+import fi.hut.soberit.agilefant.business.impl.BacklogBusinessImpl;
 import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
+import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Priority;
-import fi.hut.soberit.agilefant.model.Project;
-import fi.hut.soberit.agilefant.util.SpringTestCase;
 
 /**
  * A spring test case for testing the Backlog business layer.
- * @author rjokelai
- *
+ * 
+ * @author hhaataja, rstrom
+ * 
  */
-public class BacklogBusinessTest extends SpringTestCase {
+public class BacklogBusinessTest extends TestCase {
 
-    private BacklogBusiness backlogBusiness;
-    
-    private BacklogItemDAO backlogItemDAO;
-    
+    private BacklogBusinessImpl backlogBusiness = new BacklogBusinessImpl();
+    private HistoryBusiness historyBusiness;
+    private BacklogItemDAO bliDAO;
     private BacklogDAO backlogDAO;
-        
-    /**
-     * Test changing the priority of multiple <code>BacklogItem</code>s.
-     */
+
     public void testChangePriorityOfMultipleItems() throws Exception{
-        
-        /* Generate the test data */
-        Backlog backlog = new Project();
-        
-        backlog = backlogDAO.get(backlogDAO.create(backlog));
-        
-        
-        BacklogItem bli1 = new BacklogItem();
-        bli1.setPriority(Priority.BLOCKER);
-        bli1.setBacklog(backlog);
-        int bli1id = (Integer)backlogItemDAO.create(bli1);
-        bli1 = backlogItemDAO.get(bli1id);
-        backlog.getBacklogItems().add(bli1);
-        
-        BacklogItem bli2 = new BacklogItem();
-        bli2.setPriority(Priority.MINOR);
-        bli2.setBacklog(backlog);
-        int bli2id = (Integer)backlogItemDAO.create(bli2);
-        bli2 = backlogItemDAO.get(bli2id);
-        backlog.getBacklogItems().add(bli2);
-        
-        BacklogItem bli3 = new BacklogItem();
-        bli3.setBacklog(backlog);
-        int bli3id = (Integer)backlogItemDAO.create(bli3);
-        bli3 = backlogItemDAO.get(bli3id);
-        backlog.getBacklogItems().add(bli3);
-        
-        BacklogItem bli4 = new BacklogItem();
-        bli4.setPriority(Priority.MAJOR);
-        bli4.setBacklog(backlog);
-        int bli4id = (Integer)backlogItemDAO.create(bli4);
-        bli4 = backlogItemDAO.get(bli4id);
-        backlog.getBacklogItems().add(bli4);
-        
-        
-        /* Test */
-        int ids[] = {bli1id, bli2id, bli3id};
-        
+        bliDAO = createMock(BacklogItemDAO.class);
+        backlogBusiness.setBacklogItemDAO(bliDAO);
+        BacklogItem bli = new BacklogItem();
+
+        // Record expected behavior
+        expect(bliDAO.get(68)).andReturn(bli);
+        replay(bliDAO);
+        // run method under test
+        int ids[] = { 68 };
         backlogBusiness.changePriorityOfMultipleItems(ids, Priority.BLOCKER);
+        assertEquals(Priority.BLOCKER, bli.getPriority());
+
+        // verify behavior
+        verify(bliDAO);
+    }
+
+    public void testCreateBacklogItemToBacklog() {
+        backlogDAO = createMock(BacklogDAO.class);
+        backlogBusiness.setBacklogDAO(backlogDAO);
+        Backlog backlog = new Iteration();
+
+        // Record expected behavior
+        expect(backlogDAO.get(68)).andReturn(backlog);
+        replay(backlogDAO);
+        // run method under test
+        BacklogItem bli = backlogBusiness.createBacklogItemToBacklog(68);
+        assertEquals(backlog, bli.getBacklog());
+        assertTrue(backlog.getBacklogItems().contains(bli));
+
+        // verify behavior
+        verify(backlogDAO);
+    }
+
+    public void testCreateBakclogItemToBacklog_notFound() {
+        backlogDAO = createMock(BacklogDAO.class);
+        backlogBusiness.setBacklogDAO(backlogDAO);
+        Backlog backlog = new Iteration();
+
+        // Record expected behavior
+        expect(backlogDAO.get(-100)).andReturn(null);
+        replay(backlogDAO);
+        // run method under test
+        BacklogItem bli = backlogBusiness.createBacklogItemToBacklog(-100);
+        assertEquals(null, bli);
+        assertEquals(0, backlog.getBacklogItems().size());
+
+        // verify behavior
+        verify(backlogDAO);
+    }
+
+    public void testDeleteMultipleItems() {
+        backlogDAO = createMock(BacklogDAO.class);
+        backlogBusiness.setBacklogDAO(backlogDAO);
+        bliDAO = createMock(BacklogItemDAO.class);
+        backlogBusiness.setBacklogItemDAO(bliDAO);
+        historyBusiness = createMock(HistoryBusiness.class);
+        backlogBusiness.setHistoryBusiness(historyBusiness);
         
-        /* Assertions */
-        assertEquals("BacklogItem 1 has wrong priority.",
-                Priority.BLOCKER, bli1.getPriority());
-        assertEquals("BacklogItem 2 has wrong priority.",
-                Priority.BLOCKER, bli2.getPriority());
-        assertEquals("BacklogItem 3 has wrong priority.",
-                Priority.BLOCKER, bli3.getPriority());
-        assertEquals("BacklogItem 4 has wrong priority.",
-                Priority.MAJOR, bli4.getPriority());
+        Backlog backlog = new Iteration();
+        backlog.setId(100);
+        BacklogItem bli = new BacklogItem();
+        bli.setId(68);
+        bli.setBacklog(backlog);
+        ArrayList<BacklogItem> blis = new ArrayList<BacklogItem>();
+        blis.add(bli);
+        backlog.setBacklogItems(blis);
+
+        // Record expected behavior
+        expect(backlogDAO.get(backlog.getId())).andReturn(backlog);
+        bliDAO.remove(bli.getId());
+        historyBusiness.updateBacklogHistory(backlog.getId());
+        replay(backlogDAO);
+        replay(bliDAO);
+        replay(historyBusiness);
         
+        // run method under test
+        int[] bliIds = { bli.getId() };
+        backlogBusiness.deleteMultipleItems(backlog.getId(), bliIds);
+        assertFalse(backlog.getBacklogItems().contains(bli));
+        
+        // verify behavior
+        verify(backlogDAO);
+        verify(bliDAO);
+        verify(historyBusiness);
     }
 
-    
-    public void setBacklogBusiness(BacklogBusiness backlogBusiness) {
-        this.backlogBusiness = backlogBusiness;
-    }
-
-
-    public void setBacklogItemDAO(BacklogItemDAO backlogItemDAO) {
-        this.backlogItemDAO = backlogItemDAO;
-    }
-
-
-    public void setBacklogDAO(BacklogDAO backlogDAO) {
-        this.backlogDAO = backlogDAO;
-    }
-    
 }

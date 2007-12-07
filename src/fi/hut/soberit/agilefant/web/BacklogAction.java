@@ -29,7 +29,7 @@ public class BacklogAction extends ActionSupport {
     private int[] backlogItemIds;
 
     private int targetBacklogId;
-    
+
     private Priority targetPriority;
 
     private BacklogItemDAO backlogItemDAO;
@@ -131,21 +131,23 @@ public class BacklogAction extends ActionSupport {
      */
     public String changePriorityOfSelectedItems() {
         Backlog currentBacklog = this.backlogDAO.get(backlogId);
-        
+
         if (backlogItemIds == null) {
             super.addActionError(super.getText("backlogItems.notSelected"));
             return Action.ERROR;
         }
 
         try {
-            backlogBusiness.changePriorityOfMultipleItems(backlogItemIds, targetPriority);
+            backlogBusiness.changePriorityOfMultipleItems(backlogItemIds,
+                    targetPriority);
         } catch (ObjectNotFoundException e) {
-            // TODO rstrom adds behavior
+            super.addActionError(super.getText(e.getMessage()));
+            return Action.ERROR;
         }
-        
+
         return this.solveResult(currentBacklog);
     }
-    
+
     /**
      * Deletes multiple selected <code>BacklogItems</code>.
      * 
@@ -170,22 +172,21 @@ public class BacklogAction extends ActionSupport {
      * 
      * @return <code>"move"</code> if the action is to move,
      *         <code>"delete"</code> if the action is to delete,
-     *         <code>"changePriority"</code> if the action is to change priority and
-     *         <code>Action.ERROR</code> if the action can't be determined.
+     *         <code>"changePriority"</code> if the action is to change
+     *         priority and <code>Action.ERROR</code> if the action can't be
+     *         determined.
      */
     public String doActionOnMultipleBacklogItems() {
         Log logger = LogFactory.getLog(getClass());
 
         if (itemAction.equals("MoveSelected")) {
             return "move";
-        }
-        else if (itemAction.equals("DeleteSelected")) {
+        } else if (itemAction.equals("DeleteSelected")) {
             return "delete";
-        }
-        else if (itemAction.equals("PrioritizeSelected")) {
+        } else if (itemAction.equals("PrioritizeSelected")) {
             return "changePriority";
         }
-        
+
         logger.error("Invalid action on multiple backlog items: " + itemAction);
 
         return Action.ERROR;

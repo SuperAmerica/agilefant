@@ -1,7 +1,9 @@
 package fi.hut.soberit.agilefant.business;
 
 import java.util.List;
+import java.util.NavigableMap;
 
+import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.User;
 
@@ -21,6 +23,22 @@ public interface UserBusiness {
      * @return list of backlog items for user.
      */
     public List<BacklogItem> getBacklogItemsInProgress(User user);
+    
+    /**
+     * Get all unfinished backlog items assigned to user that belong to an
+     * ongoing iteration or an ongoing project that hasn't been divided into
+     * iterations. The backlog items are returned in a NavigableMap where keys
+     * are backlogs and values are lists of backlog items. Each list contains
+     * the unfinished backlog items that have been assigned to the user in the
+     * key backlog. The keys are sorted so that projects come first, sorted by
+     * their ranks, and iterations come next, sorted by their corresponding
+     * parent projects' ranks.
+     * 
+     * @param user
+     * @return A NavigableMap that maps backlogs to backlog item lists.
+     * 
+     */
+    public NavigableMap<Backlog, List<BacklogItem>> getBacklogItemsAssignedToUser(User user);
 
     /**
      * Get list of all agilefant users.
@@ -37,4 +55,5 @@ public interface UserBusiness {
      * @return the user with id userId
      */
     public User getUser(int userId);
+    
 }

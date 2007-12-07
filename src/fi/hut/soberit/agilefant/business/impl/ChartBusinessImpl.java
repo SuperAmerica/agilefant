@@ -33,6 +33,9 @@ import fi.hut.soberit.agilefant.model.BacklogHistory;
 import fi.hut.soberit.agilefant.model.HistoryEntry;
 import fi.hut.soberit.agilefant.model.Iteration;
 
+import fi.hut.soberit.agilefant.model.Project;
+import fi.hut.soberit.agilefant.db.ProjectDAO;
+
 /**
  * @author mpmerila, ialehto
  */
@@ -40,6 +43,8 @@ public class ChartBusinessImpl implements ChartBusiness {
     private static final Log log = LogFactory.getLog(ChartBusinessImpl.class);
 
     private IterationDAO iterationDAO;
+    
+    private ProjectDAO projectDAO;
 
     private BacklogItemDAO backlogItemDAO;
 
@@ -154,9 +159,9 @@ public class ChartBusinessImpl implements ChartBusiness {
      * @return
      */
     protected JFreeChart getChart(TimeSeriesCollection dataset, Date startDate,
-            Date endDate) {
+            Date endDate, String title) {
         JFreeChart chart = ChartFactory.createTimeSeriesChart(
-                "Iteration burndown", "Date", "Effort left", dataset, true,
+                title, "Date", "Effort left", dataset, true,
                 true, false);
         XYPlot plot = chart.getXYPlot();
         DateAxis axis = (DateAxis) plot.getDomainAxis();
@@ -245,7 +250,28 @@ public class ChartBusinessImpl implements ChartBusiness {
         TimeSeriesCollection effLeftTimeSeries = getDataset(iteration,
                 startDate, endDate);
         JFreeChart burndownGraph = getChart(effLeftTimeSeries, startDate,
-                endDate);
+                endDate, "Iteration burndown");
+
+        return getChartImageByteArray(burndownGraph);
+    }
+    
+    /**
+     * Create a project burndown chart as a byte array that is interpreted as
+     * a .png file
+     * 
+     * @param projectId
+     *                Id of the project of which the burndown is generated
+     * @return Byte array representing a png image file
+     */
+    public byte[] getProjectBurndown(int projectId) {
+        Project project = projectDAO.get(projectId);
+        Date startDate = project.getStartDate();
+        Date endDate = project.getEndDate();
+
+        TimeSeriesCollection effLeftTimeSeries = getDataset(project,
+                startDate, endDate);
+        JFreeChart burndownGraph = getChart(effLeftTimeSeries, startDate,
+                endDate, "Project burndown");
 
         return getChartImageByteArray(burndownGraph);
     }
@@ -266,11 +292,32 @@ public class ChartBusinessImpl implements ChartBusiness {
         TimeSeriesCollection effLeftTimeSeries = getDataset(iteration,
                 startDate, endDate);
         JFreeChart burndownGraph = trimChart(getChart(effLeftTimeSeries,
-                startDate, endDate));
+                startDate, endDate, "Iteration burndown"));
 
         return getChartImageByteArray(burndownGraph, SMALL_WIDTH, SMALL_HEIGHT);
     }
 
+    /**
+     * Create a small project burndown chart as a byte array that is
+     * interpreted as a .png file
+     * 
+     * @param projectId
+     *                Id of the iteration of which the burndown is generated
+     * @return Byte array representing a png image file
+     */
+    public byte[] getSmallProjectBurndown(int projectId) {
+        Project project = projectDAO.get(projectId);
+        Date startDate = project.getStartDate();
+        Date endDate = project.getEndDate();
+
+        TimeSeriesCollection effLeftTimeSeries = getDataset(project,
+                startDate, endDate);
+        JFreeChart burndownGraph = trimChart(getChart(effLeftTimeSeries,
+                startDate, endDate, "Project burndown"));
+
+        return getChartImageByteArray(burndownGraph, SMALL_WIDTH, SMALL_HEIGHT);
+    }
+    
     /**
      * @return the backlogItemDAO
      */
@@ -299,5 +346,13 @@ public class ChartBusinessImpl implements ChartBusiness {
      */
     public void setIterationDAO(IterationDAO iterationDAO) {
         this.iterationDAO = iterationDAO;
+    }
+
+    public ProjectDAO getProjectDAO() {
+        return projectDAO;
+    }
+
+    public void setProjectDAO(ProjectDAO projectDAO) {
+        this.projectDAO = projectDAO;
     }
 }

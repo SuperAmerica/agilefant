@@ -21,5 +21,25 @@ public interface ChartBusiness {
      * @return Byte array representing a png image file
      */
     public abstract byte[] getSmallIterationBurndown(int iterationId);
+    
+    /**
+     * Create a project burndown chart as a byte array that is interpreted as
+     * a .png file
+     * 
+     * @param projectId
+     *                Id of the project of which the burndown is generated
+     * @return Byte array representing a png image file
+     */
+    public abstract byte[] getProjectBurndown(int projectId);
+    
+    /**
+     * Create a small project burndown chart as a byte array that is
+     * interpreted as a .png file
+     * 
+     * @param projectId
+     *                Id of the project of which the burndown is generated
+     * @return Byte array representing a png image file
+     */
+    public abstract byte[] getSmallProjectBurndown(int projectId);
 
 }

@@ -97,9 +97,24 @@ public class ChartAction extends ActionSupport {
         return Action.SUCCESS;
     }
 
+    public String projectChart() {
+        if (projectId > 0) {
+            result = chartBusiness.getProjectBurndown(projectId);
+        }
+
+        return Action.SUCCESS;
+    }
+    
     public String smallChart() {
         if (iterationId > 0) {
             result = chartBusiness.getSmallIterationBurndown(iterationId);
+        }
+        return Action.SUCCESS;
+    }
+    
+    public String smallProjectChart() {
+        if (projectId > 0) {
+            result = chartBusiness.getSmallProjectBurndown(projectId);
         }
         return Action.SUCCESS;
     }

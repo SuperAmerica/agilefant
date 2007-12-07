@@ -212,6 +212,9 @@
 						<div id="subItemContent"><%@ include
 							file="./inc/_backlogList.jsp"%></div>
 					</c:if></div>
+					<c:if test="${empty project.iterations}">
+				        <p><img src="drawProjectChart.action?projectId=${project.id}" /></p>
+			        </c:if>
 				</c:if></td>
 			</tr>
 		</table>

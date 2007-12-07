@@ -216,17 +216,17 @@ a:hover,a:active {
 	margin-bottom: 20px;
 }
 
-#row, #row1, #row2, #row3, #item {
+#row, #row1, #row2, #row3, #item, #item1, #item2 {
 	vertical-align: top;
 	border-bottom: 1px solid #ccc;
 }
 
-#row td, #row1 td, #row2 td, #row3 td, #item td {
+#row td, #row1 td, #row2 td, #row3 td, #item td, #item1 td, #item2 td {
 	vertical-align: top;
 	text-align: left;
 }
 
-#row th, #row1 th, #row2 th, #row3 th, #item th {
+#row th, #row1 th, #row2 th, #row3 th, #item th, #item1 th, #item2 th {
 	text-align: left;
 	background: #ddd;
 }

@@ -61,9 +61,6 @@ public interface UserDAO extends GenericDAO<User> {
 
     /**
      * Get backlog items assigned to user.
-     * <p>
-     * Refactor: Use criteria API to get started tasks. Now done in business
-     * layer UserBusinessImpl.java
      * 
      * @param user
      *                the user, whose backlog items are wanted.

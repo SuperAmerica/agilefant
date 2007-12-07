@@ -2,12 +2,14 @@ package fi.hut.soberit.agilefant.business.impl;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 
 import fi.hut.soberit.agilefant.business.BacklogBusiness;
 import fi.hut.soberit.agilefant.business.HistoryBusiness;
 import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
+import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.Priority;
@@ -45,19 +47,19 @@ public class BacklogBusinessImpl implements BacklogBusiness {
             }
         }
         historyBusiness.updateBacklogHistory(backlog.getId());
-    }
-
+    }   
+    
     public BacklogItem createBacklogItemToBacklog(int backlogId) {
         BacklogItem backlogItem = new BacklogItem();
         backlogItem = new BacklogItem();
         Backlog backlog = backlogDAO.get(backlogId);
-        if (backlog == null)
+        if(backlog == null)
             return null;
         backlogItem.setBacklog(backlog);
         backlog.getBacklogItems().add(backlogItem);
         return backlogItem;
     }
-
+    
     /**
      * {@inheritDoc}
      * 
@@ -65,7 +67,7 @@ public class BacklogBusinessImpl implements BacklogBusiness {
      */
     public void changePriorityOfMultipleItems(int[] backlogItemIds,
             Priority priority) throws ObjectNotFoundException {
-
+        
         for (int id : backlogItemIds) {
             BacklogItem bli = backlogItemDAO.get(id);
             if (bli == null) {
@@ -75,6 +77,16 @@ public class BacklogBusinessImpl implements BacklogBusiness {
             }
             bli.setPriority(priority);
         }
+    }
+
+
+    public AFTime getEffortLeftSum(List<BacklogItem> bliList) {
+        AFTime effSum = new AFTime("0");
+        Iterator<BacklogItem> it = bliList.iterator();
+        while (it.hasNext()) {
+            effSum.add(it.next().getEffortLeft());
+        }
+        return effSum;
     }
 
     public BacklogItemDAO getBacklogItemDAO() {

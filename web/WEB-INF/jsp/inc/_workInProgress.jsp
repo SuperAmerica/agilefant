@@ -6,10 +6,10 @@
 
 <div id="subItemHeader">Backlog items</div>
 <div id="subItemContent"><display:table
-	name="backlogItemsForUserInProgress" id="item" defaultsort="3"
-	defaultorder="descending" requestURI="dailyWork.action">
+	name="backlogItemsForUserInProgress" id="item"
+	requestURI="dailyWork.action">
 	<!-- Display the backlog item name -->
-	<display:column sortable="true" title="Name" class="shortNameColumn">
+	<display:column sortable="true" sortProperty="name" title="Name" class="shortNameColumn">
 		<ww:url id="editLink" action="editBacklogItem" includeParams="none">
 			<ww:param name="backlogItemId" value="${item.id}" />
 		</ww:url>

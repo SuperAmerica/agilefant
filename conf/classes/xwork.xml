@@ -523,13 +523,19 @@
 				<param name="inputName">inputStream</param>
 			</result>
 		</action>
-		<action name="drawSmallChart" method="smallChart" class="chartAction">
+		<action name="drawProjectChart" method="projectChart" class="chartAction">
 			<result name="success" type="stream">
 				<param name="contentType">${contentType}</param>
 				<param name="inputName">inputStream</param>
 			</result>
 		</action>
 		<action name="drawSmallChart" method="smallChart" class="chartAction">
+			<result name="success" type="stream">
+				<param name="contentType">${contentType}</param>
+				<param name="inputName">inputStream</param>
+			</result>
+		</action>
+		<action name="drawSmallProjectChart" method="smallProjectChart" class="chartAction">
 			<result name="success" type="stream">
 				<param name="contentType">${contentType}</param>
 				<param name="inputName">inputStream</param>

@@ -1,6 +1,9 @@
 package fi.hut.soberit.agilefant.business;
 
+import java.util.List;
+
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
+import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.Priority;
 
@@ -57,4 +60,12 @@ public interface BacklogBusiness {
      */
     public void changePriorityOfMultipleItems(int backlogItemIds[],
             Priority priority) throws ObjectNotFoundException;
+    
+    /**
+     * Calculates the sum of effort lefts of the given backlog items 
+     * 
+     * @param bliList List of backlog items 
+     * @return sum of effort lefts
+     */
+    public AFTime getEffortLeftSum(List<BacklogItem> bliList);
 }

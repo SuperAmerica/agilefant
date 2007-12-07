@@ -1,21 +1,21 @@
-//TODO: re-factor this class so that the business layer is used and
-//      the backlogitems are retrieved only once from the database
-
 package fi.hut.soberit.agilefant.web;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.NavigableMap;
+import java.util.NavigableSet;
 
 import com.opensymphony.xwork.ActionSupport;
 
+import fi.hut.soberit.agilefant.business.BacklogBusiness;
 import fi.hut.soberit.agilefant.business.UserBusiness;
-import fi.hut.soberit.agilefant.db.BacklogItemDAO;
-import fi.hut.soberit.agilefant.db.IterationDAO;
 import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.BacklogItem;
+import fi.hut.soberit.agilefant.model.Backlog;
+import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.security.SecurityUtil;
@@ -23,21 +23,17 @@ import fi.hut.soberit.agilefant.security.SecurityUtil;
 public class DailyWorkAction extends ActionSupport {
     private static final long serialVersionUID = 5732278003634700787L;
 
-    private ArrayList<Iteration> iterations;
+    private List<Iteration> iterations;
+    
+    private List<Project> projects;
+    
+    private Map<Backlog, AFTime> effortSums;
 
-    private int bliIndex = 0;
-
-    private int effLeftIndex = 0;
-
-    private HashMap<Iteration, ArrayList<BacklogItem>> bliMap;
-
-    private HashMap<Iteration, AFTime> effortLeftMap;
-
-    private IterationDAO iterationDAO;
-
-    private BacklogItemDAO backlogItemDAO;
+    private NavigableMap<Backlog, List<BacklogItem>> bliMap;
 
     private User user;
+    
+    private BacklogBusiness backlogBusiness;
 
     private UserBusiness userBusiness;
 
@@ -47,52 +43,6 @@ public class DailyWorkAction extends ActionSupport {
 
     private List<User> userList;
 
-    private void generateIterations() {
-        bliMap = new HashMap<Iteration, ArrayList<BacklogItem>>();
-        effortLeftMap = new HashMap<Iteration, AFTime>();
-        iterations = new ArrayList<Iteration>();
-
-        if (user == null) {
-            userId = SecurityUtil.getLoggedUser().getId();
-        }
-
-        Collection<Iteration> ongoingIterations = getOngoingIterations();
-        Iterator<Iteration> iIt = ongoingIterations.iterator();
-        while (iIt.hasNext()) {
-            Iteration currentIteration = iIt.next();
-            Collection<BacklogItem> blItems = currentIteration
-                    .getSortedBacklogItems();
-            Iterator<BacklogItem> bliIt = blItems.iterator();
-            ArrayList<BacklogItem> unfinishedBlis = new ArrayList<BacklogItem>();
-            while (bliIt.hasNext()) {
-                BacklogItem currentBli = bliIt.next();
-                if (currentBli.getAssignee() != null
-                        && currentBli.getAssignee().getId() == userId
-                        && currentBli.getState() != fi.hut.soberit.agilefant.model.State.DONE) {
-                    unfinishedBlis.add(currentBli);
-                }
-            }
-
-            if (!unfinishedBlis.isEmpty()) {
-                /*
-                 * BacklogValueInjector.injectMetrics(currentIteration,
-                 * currentIteration.getStartDate(), taskEventDAO,
-                 * backlogItemDAO);
-                 */
-                AFTime effLeft = new AFTime("0");
-                Iterator<BacklogItem> iter = unfinishedBlis.iterator();
-                while (iter.hasNext()) {
-                    BacklogItem bli = iter.next();
-                    effLeft.add(bli.getEffortLeft());
-                }
-                bliMap.put(currentIteration, unfinishedBlis);
-                effortLeftMap.put(currentIteration, effLeft);
-                iterations.add(currentIteration);
-            }
-        }
-        return;
-    }
-
     @Override
     public String execute() throws Exception {
         if (userId == 0) {
@@ -100,31 +50,44 @@ public class DailyWorkAction extends ActionSupport {
         }
 
         user = userBusiness.getUser(userId);
+        effortSums = new HashMap<Backlog, AFTime>();
 
-        generateIterations();
+
+        bliMap = userBusiness.getBacklogItemsAssignedToUser(user);
+        projects = new ArrayList<Project>();
+        iterations = new ArrayList<Iteration>();
+        
+        NavigableSet<Backlog> backlogs = bliMap.navigableKeySet();
+        Iterator<Backlog> iter = backlogs.iterator();
+
+        while (iter.hasNext()) {
+            Backlog backlog = iter.next();
+            if (backlog instanceof Project) {
+                projects.add((Project)backlog);
+            }
+            else if (backlog instanceof Iteration) {
+                iterations.add((Iteration) backlog);
+            }
+            List<BacklogItem> blis = bliMap.get(backlog);
+            AFTime effLeftSum = backlogBusiness.getEffortLeftSum(blis);
+            effortSums.put(backlog, effLeftSum);
+        }
+        
 
         backlogItemsForUserInProgress = userBusiness
                 .getBacklogItemsInProgress(user);
 
         userList = userBusiness.getAllUsers();
-
+        
         return super.execute();
     }
 
-    public void setBacklogItemDAO(BacklogItemDAO backlogItemDAO) {
-        this.backlogItemDAO = backlogItemDAO;
+    public List<Project> getProjects() {
+        return projects;
     }
 
-    private Collection<Iteration> getOngoingIterations() {
-        return iterationDAO.getOngoingIterations();
-    }
-
-    public Collection<Iteration> getIterations() {
+    public List<Iteration> getIterations() {
         return iterations;
-    }
-
-    public void setIterations(ArrayList<Iteration> iterations) {
-        this.iterations = iterations;
     }
 
     public int getUserId() {
@@ -135,15 +98,11 @@ public class DailyWorkAction extends ActionSupport {
         this.userId = userId;
     }
 
-    public void setIterationDAO(IterationDAO iterationDAO) {
-        this.iterationDAO = iterationDAO;
-    }
-
-    public HashMap<Iteration, ArrayList<BacklogItem>> getBliMap() {
+    public NavigableMap<Backlog, List<BacklogItem>> getBliMap() {
         return bliMap;
     }
 
-    public void setBliMap(HashMap<Iteration, ArrayList<BacklogItem>> bliMap) {
+    public void setBliMap(NavigableMap<Backlog, List<BacklogItem>> bliMap) {
         this.bliMap = bliMap;
     }
 
@@ -180,20 +139,19 @@ public class DailyWorkAction extends ActionSupport {
         this.backlogItemsForUserInProgress = backlogItemsForUserInProgress;
     }
 
-    public ArrayList<BacklogItem> getBliList() {
-        return bliMap.get(iterations.get(bliIndex++));
+    public Map<Backlog, AFTime> getEffortSums() {
+        return effortSums;
     }
 
-    public AFTime getUserEffortLeft() {
-        return effortLeftMap.get(iterations.get(effLeftIndex++));
+    public void setEffortSums(Map<Backlog, AFTime> effortSums) {
+        this.effortSums = effortSums;
     }
 
-    public HashMap<Iteration, AFTime> getEffortLeftMap() {
-        return effortLeftMap;
+    public BacklogBusiness getBacklogBusiness() {
+        return backlogBusiness;
     }
 
-    public void setEffortLeftMap(HashMap<Iteration, AFTime> effortLeftMap) {
-        this.effortLeftMap = effortLeftMap;
+    public void setBacklogBusiness(BacklogBusiness backlogBusiness) {
+        this.backlogBusiness = backlogBusiness;
     }
-
 }

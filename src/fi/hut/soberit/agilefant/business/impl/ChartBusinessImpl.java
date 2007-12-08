@@ -122,21 +122,32 @@ public class ChartBusinessImpl implements ChartBusiness {
 
         history = backlog.getBacklogHistory();
         estimateSeries.add(new Day(i.getTime()), (float) history
-                .getEffortHistoryEntries().get(0).getOriginalEstimate()
+                .getDateEntry(startDate).getOriginalEstimate()
                 .getTime() / 3600000.0);
         referenceSeries.add(new Day(i.getTime()), (float) history
-                .getEffortHistoryEntries().get(0).getOriginalEstimate()
+                .getLatestEntry().getOriginalEstimate()
                 .getTime() / 3600000.0);
         GregorianCalendar newEndDate = new GregorianCalendar();
         newEndDate.setTime(endDate);
         newEndDate.add(GregorianCalendar.DATE, 1);
         referenceSeries.add(new Day(newEndDate.getTime()), 0);
 
-        for (HistoryEntry<?> entry : history.getEffortHistoryEntries()) {
+        /*for (HistoryEntry<?> entry : history.getEffortHistoryEntries()) {
             i.setTime(entry.getDate());
             i.add(Calendar.DATE, 1);
             estimateSeries.add(new Day(i.getTime()), (float) entry
                     .getEffortLeft().getTime() / 3600000.0);
+        }*/
+        
+        GregorianCalendar now = new GregorianCalendar();
+        now.setTime( new Date() );
+        
+        while (!i.after(now)) {
+            HistoryEntry<BacklogHistory> entry = history.getDateEntry(i.getTime()); 
+            i.add(Calendar.DATE, 1);
+            estimateSeries.add(new Day(i.getTime()),
+                    (float) entry.getEffortLeft()
+                            .getTime() / 3600000.0);
         }
 
         TimeSeriesCollection dataset = new TimeSeriesCollection();

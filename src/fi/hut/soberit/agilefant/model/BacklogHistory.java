@@ -50,4 +50,27 @@ public class BacklogHistory extends History<Backlog> {
         }
         return null;
     }
+    
+    /**
+     * Returns the latest <code>HistoryEntry</code> for this history.
+     */
+    @Transient
+    public HistoryEntry<BacklogHistory> getLatestEntry() {
+        return effortHistoryEntries.get(0);
+    }
+    
+    /**
+     * Returns the latest <code>HistoryEntry</code> that is <em>not after</code> the reference Date.
+     * @param date Reference <code>Date</code>
+     * @return
+     */
+    @Transient
+    public HistoryEntry<BacklogHistory> getDateEntry(Date date) {      
+        for( HistoryEntry<BacklogHistory> entry : effortHistoryEntries ) {
+            if( !entry.getDate().after(date) ) {
+                return entry;
+            }
+        }
+        return null;
+    }
 }

@@ -43,7 +43,7 @@
 <%--  TODO: fiksumpi virheenkäsittely --%>
 <c:choose>
 	<c:when test="${empty projectTypes}">
-		<ww:url id="workTypeLink" action="listProjectTypes"
+		<ww:url id="workTypeLink" action="projectPortfolio"
 			includeParams="none" />	
 				No project types available. <ww:a href="%{workTypeLink}">Add project types</ww:a>
 	</c:when>

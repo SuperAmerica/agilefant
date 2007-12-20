@@ -2,17 +2,17 @@ package fi.hut.soberit.agilefant.business.impl;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.NavigableMap;
-import java.util.TreeMap;
+import java.util.Map;
 import java.util.Set;
-import java.util.HashSet;
 
 import fi.hut.soberit.agilefant.business.UserBusiness;
-import fi.hut.soberit.agilefant.db.UserDAO;
-import fi.hut.soberit.agilefant.db.ProjectDAO;
 import fi.hut.soberit.agilefant.db.IterationDAO;
+import fi.hut.soberit.agilefant.db.ProjectDAO;
+import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.Project;
@@ -21,7 +21,6 @@ import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.security.SecurityUtil;
 import fi.hut.soberit.agilefant.util.BacklogItemPriorityComparator;
 import fi.hut.soberit.agilefant.util.StartedItemsComparator;
-import fi.hut.soberit.agilefant.util.BacklogComparator;
 
 /**
  * 
@@ -55,7 +54,7 @@ public class UserBusinessImpl implements UserBusiness {
                 returnItems.add(bli);
             }
         }
-        
+
         /* Sort the list */
         Collections.sort(returnItems, new BacklogItemPriorityComparator());
         Collections.sort(returnItems, new StartedItemsComparator());
@@ -64,12 +63,16 @@ public class UserBusinessImpl implements UserBusiness {
     }
 
     /** {@inheritDoc} */
-    public NavigableMap<Backlog, List<BacklogItem>> getBacklogItemsAssignedToUser(User user) {
+    public Map<Backlog, List<BacklogItem>> getBacklogItemsAssignedToUser(
+            User user) {
+        /* If no user is set, get logged user */
         if (user == null) {
             user = SecurityUtil.getLoggedUser();
         }
-        TreeMap<Backlog, List<BacklogItem>> bliMap =
-            new TreeMap<Backlog, List<BacklogItem>>(new BacklogComparator());
+        /* Create the returned map */
+        Map<Backlog, List<BacklogItem>> bliMap = new HashMap<Backlog, List<BacklogItem>>();
+
+        /* Get all backlog items for user in progress */
         List<BacklogItem> userItems = userDAO.getBacklogItemsInProgress(user);
 
         Set<Backlog> ongoingBacklogs = new HashSet<Backlog>();
@@ -81,29 +84,28 @@ public class UserBusinessImpl implements UserBusiness {
 
         while (iter1.hasNext()) {
             Backlog bl = iter1.next();
-            if (!(bl instanceof Project) || 
-                    ((Project) bl).getIterations().isEmpty()) {
+            if (!(bl instanceof Project)
+                    || ((Project) bl).getIterations().isEmpty()) {
                 okBacklogs.add(bl);
             }
         }
-        
+        /* Sort the backlog items by their priorities */
         Collections.sort(userItems, new BacklogItemPriorityComparator());
         Iterator<BacklogItem> iter2 = userItems.iterator();
 
         while (iter2.hasNext()) {
             BacklogItem bli = iter2.next();
             Backlog backlog = bli.getBacklog();
-            if (bli.getState() != State.DONE &&
-                    backlog != null &&
-                    okBacklogs.contains(backlog)) {
+            if (bli.getState() != State.DONE && backlog != null
+                    && okBacklogs.contains(backlog)) {
                 List<BacklogItem> bliList = bliMap.get(backlog);
                 if (bliList == null) {
                     bliList = new ArrayList<BacklogItem>();
-                    }
+                }
                 bliList.add(bli);
                 bliMap.put(backlog, bliList);
-                }
             }
+        }
 
         return bliMap;
     }

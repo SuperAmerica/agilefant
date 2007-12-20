@@ -9,6 +9,8 @@
 	<property name="clover.jar" location="${basedir}/lib/clover.jar" />
 	<taskdef resource="cloverlib.xml" classpath="${clover.jar}" />
 
+
+
 	<target name="init" description="Initializes build script">
 		<mkdir dir="${build.dir}" />
 		<mkdir dir="${build.classes}" />
@@ -93,6 +95,13 @@
 		</hibernatetool>
 	</target>
 
+	<target name="sync-dbs" depends="create-ddl" description="Synchronise agilefant and aeftest databases">
+		<sql classpath="lib/mysql-connector-java-3.1.13-bin.jar" driver="com.mysql.jdbc.Driver" src="doc/sql/drop-create-databases.sql" url="jdbc:mysql://localhost:3306/agilefant?autoReconnect=true" userid="agilefant" password="agilefant" />
+		<sql classpath="lib/mysql-connector-java-3.1.13-bin.jar" driver="com.mysql.jdbc.Driver" src="build/create-db.ddl" url="jdbc:mysql://localhost:3306/agilefant?autoReconnect=true" userid="agilefant" password="agilefant" />
+		<sql classpath="lib/mysql-connector-java-3.1.7-bin.jar" driver="com.mysql.jdbc.Driver" src="build/create-db.ddl" url="jdbc:mysql://localhost:3306/aeftest?autoReconnect=true" userid="agilefant" password="agilefant" />
+		<sql classpath="lib/mysql-connector-java-3.1.7-bin.jar" driver="com.mysql.jdbc.Driver" src="doc/sql/insert-users.sql" url="jdbc:mysql://localhost:3306/agilefant?autoReconnect=true" userid="agilefant" password="agilefant" />
+	</target>
+
 	<target name="copy-spring-files" description="Internal target">
 		<mkdir dir="${destination}/WEB-INF" />
 		<copy file="${conf.dir}/configuration.properties" tofile="${destination}/WEB-INF/configuration.properties" />
@@ -154,11 +163,11 @@
 	</target>
 
 	<target name="test-checkstyle-htmlreport" depends="test-checkstyle-xmlreport" description="Generates html report of code convention violations.">
-		<xslt in="${test.reports.checkstyle}/checkstyle_report.xml" out="${test.reports.checkstyle}/checkstyle_report.html" style="${test.conf.dir}/checkstyle/checkstyle-noframes-sorted.xsl"/>
+		<xslt in="${test.reports.checkstyle}/checkstyle_report.xml" out="${test.reports.checkstyle}/checkstyle_report.html" style="${test.conf.dir}/checkstyle/checkstyle-noframes-sorted.xsl" />
 	</target>
 
 
-	<target name="test-bamboo" depends="clean,test-clover-enable,compile-tests,test,test-clover-xmlreport,test-clover-clean,test-checkstyle-xmlreport" description="Bamboo uses this target" />
+	<target name="test-bamboo" depends="clean,test-clover-enable,compile-tests,sync-dbs,test,test-clover-xmlreport,test-clover-clean,test-checkstyle-xmlreport" description="Bamboo uses this target" />
 
 
 	<target name="compile-tests" depends="compile">
@@ -243,7 +252,7 @@
 	<target name="deploy-local-notouch" depends="deploy-local-web" description="Deploys web app to local server">
 	</target>
 
-	
+
 	<target name="undeploy-local" description="Undeploys web app on local server">
 		<delete dir="${deploy.dir.local}" />
 		<delete dir="${catalina.home}/work/Catalina/localhost/${webapp.name}" />
@@ -317,7 +326,7 @@
 	<target name="release" depends="clean, war, create-ddl" description="Generates release directory">
 		<mkdir dir="${release.dir}" />
 		<copy file="${warFile}" todir="${release.dir}" />
-		<copy file="${basedir}/doc/LICENSE" todir="${release.dir}" />
+		<copy file="${basedir}/doc/License.txt" todir="${release.dir}" />
 		<copy file="${basedir}/doc/sql/insert-users.sql" todir="${release.dir}" />
 		<copy file="${build.dir}/create-db.ddl" todir="${release.dir}" />
 		<copy file="${basedir}/doc/Release_notes.txt" todir="${release.dir}" />
@@ -357,4 +366,46 @@
 		</taskdef>
 		<jchav srcdir="${jmeter.result.dir}" destdir="${jchav.result.dir}" reporttitle="Agilefant Example walk" />
 	</target>
+
+	<target name="tomcat-start" description="Start Tomcat application">
+		<taskdef name="start" classname="org.apache.catalina.ant.StartTask">
+			<classpath>
+				<fileset dir="lib/">
+					<include name="**/*.jar" />
+				</fileset>
+			</classpath>
+		</taskdef>
+		<start url="http://localhost:8080/manager" username="tomcat" password="m0t0rh0me" path="/agilefant" />
+	</target>
+
+	<target name="tomcat-stop" description="Stop Tomcat application">
+		<taskdef name="stop" classname="org.apache.catalina.ant.StopTask">
+			<classpath>
+				<fileset dir="lib/">
+					<include name="**/*.jar" />
+				</fileset>
+			</classpath>
+		</taskdef>
+		<stop failonerror="no" url="http://localhost:8080/manager" username="tomcat" password="m0t0rh0me" path="/agilefant" />
+	</target>
+	<target name="tomcat-undeploy" description="Deploy Tomcat application">
+		<taskdef name="undeploy" classname="org.apache.catalina.ant.UndeployTask">
+			<classpath>
+				<fileset dir="lib/">
+					<include name="**/*.jar" />
+				</fileset>
+			</classpath>
+		</taskdef>
+		<undeploy url="http://localhost:8080/manager" username="tomcat" password="m0t0rh0me" path="/agilefant" />
+	</target>	
+	<target name="tomcat-deploy" depends="war" description="Deploy Tomcat application">
+		<taskdef name="deploy" classname="org.apache.catalina.ant.DeployTask">
+			<classpath>
+				<fileset dir="lib/">
+					<include name="**/*.jar" />
+				</fileset>
+			</classpath>
+		</taskdef>
+		<deploy url="http://localhost:8080/manager" username="tomcat" password="m0t0rh0me" path="/agilefant" war="file:${warFile}" />
+	</target>	
 </project>

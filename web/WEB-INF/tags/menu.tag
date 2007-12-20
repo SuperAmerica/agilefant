@@ -20,13 +20,15 @@ Agilefant
 
 </head>
 
+<!-- Icons from http://sweetie.sublink.ca/ -->
+
 <body>
 <div id="outer_wrapper">
 <div id="wrapper">
 <div id="header">
 
 <div id="maintitle">
-<img src="http://www.agilefant.org/homepage/pics/fant_small.png"
+<img src="static/img/fant_small.png"
 	alt="logo" />
 <h1>
 Agilefant
@@ -192,23 +194,27 @@ Agilefant
 <ul id="menu">
 <li id="nav1">
 <a href="contextView.action?contextName=dailyWork&resetContextView=true">
+<img src="static/img/dailyWork.png" alt="Daily Work" />
 Daily Work
 </a>
 </li>
 <li id="nav2">
 <a
 	href="contextView.action?contextName=${currentContext}&contextObjectId=${currentPageId}&resetContextView=true">
+<img src="static/img/backlog.png" alt="Backlogs" />
 Backlogs
 </a>
 </li>
 <li id="nav3">
 <a
 	href="contextView.action?contextName=projectPortfolio&resetContextView=true">
+<img src="static/img/portfolio.png" alt="Project Portfolio" />
 Project Portfolio
 </a>
 </li>
 <li id="navc">
 <a href="contextView.action?contextName=users&resetContextView=true">
+<img src="static/img/users.png" alt="Users" />
 Users
 </a>
 </li>
@@ -222,6 +228,7 @@ Project Types
 -->
 <li id="nava">
 <a href="contextView.action?contextName=createNew&resetContextView=true">
+<img src="static/img/new.png" alt="Create New" />
 Create New
 </a>
 </li>

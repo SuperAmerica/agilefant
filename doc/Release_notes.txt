@@ -1,20 +1,27 @@
 Agilefant
 RELEASE NOTES
-12.11.2007
+11.12.2007
 
-KEY FUNCTIONALITY AGILEFANT 1.3.2
-+ Agilefant manages backlogs at the product, project and iteration
-levels
-+ Backlog items can easily be moved between backlogs
-+ Backlog items can be split into individually tracked tasks when
-needed
-+ Every backlog item and task has estimates for effort left estimate;
-the original effort estimate is also tracked
-+ Numerical effort left estimates are displayed for backlogs
-+ A burndown graph reflecting the development velocity is displayed
-at the iteration level
-+ Daily Work generates a personalized view of those backlog items
-assigned to you or some specific user
+Current key functionality includes:
++ backlog management for product, project and iteration levels
++ backlog items can easily be moved between backlogs
++ backlog items can be split into individually tracked tasks when needed
++ backlog items and tasks can have estimates for effort left; the original effort estimate is also recorded
++ for each level (product/project/iteration), the total effort left in the backlog is displayed
++ for iteration level backlogs, a burndown graph displaying the the development velocity is shown
++ Daily Work lists your current work according to project priorities
++ Project Portfolio allows prioritisation of projects
++ mass prioritisation of backlog items
+
+CHANGES FROM AGILEFANT 1.3.2
++ Daily Work view refined
++ Development Portfolio renamed to Project Portfolio and view refined
++ Renamed backlog items' and tasks' status to state
++ Added new state: pending (color: blue)
++ Bulk prioritization of backlog items added
++ Error messages refined
++ Lots of small improvements on GUI
++ Added missing delete confirmation dialogs
 
 CHANGES FROM AGILEFANT 1.3.1
 + Tasks can be transformed to backlog items

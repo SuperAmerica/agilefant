@@ -8,7 +8,7 @@
 	<aef:bct taskId="${taskId}" />
 </c:if>
 
-<aef:menu navi="${contextName}" pageHierarchy="${pageHierarchy}" />
+<aef:menu navi="backlog" pageHierarchy="${pageHierarchy}" />
 
 <ww:actionerror />
 <ww:actionmessage />
@@ -40,44 +40,43 @@
 
 	<table class="formTable">
 		<tr>
-			<td></td>
-			<td></td>
-			<td></td>
-		</tr>
-		<tr>
 			<td>Name</td>
 			<td>*</td>
-			<td><ww:textfield size="60" name="task.name" /></td>
+			<td colspan="2"><ww:textfield size="60" name="task.name" /></td>
 		</tr>
 		<tr>
 			<td>Description</td>
 			<td></td>
-			<td><ww:textarea cols="70" rows="10" name="task.description" /></td>
+			<td colspan="2"><ww:textarea cols="70" rows="10" name="task.description" /></td>
 		</tr>
 		<tr>
 			<td>State</td>
 			<td></td>
-			<td><ww:select name="task.state" value="task.state.name"
+			<td colspan="2"><ww:select name="task.state" value="task.state.name"
 				list="@fi.hut.soberit.agilefant.model.State@values()"
 				listKey="name" listValue="getText('task.state.' + name())" /></td>
 		</tr>
 		<tr>
 			<td></td>
 			<td></td>
-			<td><c:choose>
+			<c:choose>
 				<c:when test="${taskId == 0}">
-					<ww:submit value="Create" />
-					<ww:submit action="storeCloseTask" value="Create & Close" />
+					<td><ww:submit value="Create" />
+					<ww:submit action="storeCloseTask" value="Create & Close" /></td>
 				</c:when>
 				<c:otherwise>
-					<ww:submit value="Save" />
-					<ww:submit action="storeCloseTask" value="Save & Close" />
-					<span class="deleteButton"> <ww:submit action="deleteTask"
-						value="Delete" onclick="return confirmDeleteTask()" /> </span>
-					<ww:submit action="transformToBacklogItem"
-						value="Transform to Backlog Item" />
+					<td><ww:submit value="Save" />
+					<ww:submit action="storeCloseTask" value="Save & Close" /></td>
+					<td class="deleteButton"> <ww:submit action="deleteTask"
+						value="Delete" onclick="return confirmDeleteTask()" /> </td>
+					</tr>
+					<tr>
+					<td></td>
+					<td></td>
+					<td><ww:submit action="transformToBacklogItem"
+						value="Transform to Backlog Item" /></td>
 				</c:otherwise>
-			</c:choose></td>
+			</c:choose>
 		</tr>
 	</table>
 </ww:form>

@@ -168,6 +168,7 @@ public class BacklogItem implements PageItem, Assignable, EffortContainer {
      * @return the backlog, in which this backlog item belongs
      */
     @ManyToOne
+    @Cascade(CascadeType.REFRESH)
     @JoinColumn(nullable = false)
     public Backlog getBacklog() {
         return backlog;

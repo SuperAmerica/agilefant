@@ -33,33 +33,28 @@
 
 	<table class="formTable">
 		<tr>
-			<td></td>
-			<td></td>
-			<td></td>
-		</tr>
-		<tr>
 			<td>Name</td>
 			<td>*</td>
-			<td><ww:textfield size="60" name="product.name" /></td>
+			<td colspan="2"><ww:textfield size="60" name="product.name" /></td>
 		</tr>
 		<tr>
 			<td>Description</td>
 			<td></td>
-			<td><ww:textarea name="product.description" cols="70" rows="10" /></td>
+			<td colspan="2"><ww:textarea name="product.description" cols="70" rows="10" /></td>
 		</tr>
 		<tr>
 			<td></td>
 			<td></td>
-			<td><c:choose>
+			<c:choose>
 				<c:when test="${productId == 0}">
-					<ww:submit value="Create" />
+					<td><ww:submit value="Create" /></td>
 				</c:when>
 				<c:otherwise>
-					<ww:submit value="Save" />
-					<span class="deleteButton"> <ww:submit
-						action="deleteProduct" value="Delete" /> </span>
+					<td><ww:submit value="Save" />
+					<td class="deleteButton"> <ww:submit onclick="return confirmDelete()"
+						action="deleteProduct" value="Delete" /> </td>
 				</c:otherwise>
-			</c:choose></td>
+			</c:choose>
 		</tr>
 	</table>
 
@@ -92,27 +87,43 @@
 						</ww:a>
 					</display:column>
 
-					<display:column sortable="true" title="# of iterations">
+					<display:column sortable="true" sortProperty="projectType.name"
+						title="Project type" property="projectType.name" />
+
+					<display:column sortable="true" title="Iterations">
 						${fn:length(row.iterations)}
 					</display:column>
 
-					<display:column sortable="true" sortProperty="projectType.name"
-						title="Activity" property="projectType.name" />
+					<display:column sortable="true" title="Items">
+						${fn:length(row.backlogItems)}
+					</display:column>
 
 					<display:column sortable="true" title="Effort left"
 						sortProperty="effortLeft.time">
 						${row.totalEffortLeftSum}
-						
 					</display:column>
-					
+
+					<display:column sortable="true" title="Original estimate"
+						sortProperty="originalEstimate.time">
+						${row.totalOriginalEstimateSum}
+					</display:column>
+
+					<display:column sortable="true" title="Start date">
+						<ww:date name="#attr.row.startDate" />
+					</display:column>
+
+					<display:column sortable="true" title="End date">
+						<ww:date name="#attr.row.endDate" />
+					</display:column>
+												
 					<display:column sortable="false" title="Actions">
 						<ww:url id="deleteLink" action="deleteProject"
 							includeParams="none">
 							<ww:param name="productId" value="${product.id}" />
 							<ww:param name="projectId" value="${row.id}" />
 						</ww:url>
-						<ww:a
-							href="%{deleteLink}&contextViewName=editProduct&contextObjectId=${product.id}">Delete</ww:a>
+						<ww:a href="%{deleteLink}&contextViewName=editProduct&contextObjectId=${product.id}"
+							onclick="return confirmDelete()">Delete</ww:a>
 					</display:column>
 				</display:table></p>
 				</div>

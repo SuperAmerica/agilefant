@@ -87,6 +87,12 @@ a:hover,a:active {
 	min-height: 90px;
 }
 
+#layoutEmptyDiv {
+	margin: -1px 0 0 0;
+	height: 1px;
+	clear: both;
+}
+
 /* display:inline is in there to prevent an IE Bug (IE doubles margins on floats). */
 #container {
 	width: 100%;
@@ -149,7 +155,7 @@ a:hover,a:active {
 	text-decoration: none;
 }
 
-#footer a:hover{
+#footer a:hover {
 	color: #e50;
 }
 
@@ -216,17 +222,17 @@ a:hover,a:active {
 	margin-bottom: 20px;
 }
 
-#row, #row1, #row2, #row3, #item, #item1, #item2 {
+#row,#row1,#row2,#row3,#item,#item1,#item2 {
 	vertical-align: top;
 	border-bottom: 1px solid #ccc;
 }
 
-#row td, #row1 td, #row2 td, #row3 td, #item td, #item1 td, #item2 td {
+#row td,#row1 td,#row2 td,#row3 td,#item td,#item1 td,#item2 td {
 	vertical-align: top;
 	text-align: left;
 }
 
-#row th, #row1 th, #row2 th, #row3 th, #item th, #item1 th, #item2 th {
+#row th,#row1 th,#row2 th,#row3 th,#item th,#item1 th,#item2 th {
 	text-align: left;
 	background: #ddd;
 }
@@ -284,7 +290,7 @@ a:hover,a:active {
 #placeholder {
 	display: inline;
 }
-	
+
 span.right {
 	text-align: right;
 }
@@ -312,11 +318,19 @@ span.right {
 	font-weight: normal;
 	line-height: 14px;
 	margin-right: 10px;
-	padding: 2px 10px 2px 10px;
+	padding: 1px 10px 1px 2px;
 	text-decoration: none;
 }
-#menu li#nava a, #menu li#navb a, #menu li#navc a {
-	float:right;
+
+#menu img{
+	margin: 0;
+	padding: 0;
+	vertical-align: bottom;
+	border: none;
+}
+
+#menu li#nava a,#menu li#navb a,#menu li#navc a {
+	float: right;
 }
 
 #menu a:link .active,#menu a:visited .active {
@@ -329,23 +343,7 @@ span.right {
 	color: #e50;
 }
 
-div#menuwrapmyTasks #menu li#nav1 a,
-div#menuwrapbacklog #menu li#nav2 a, 
-div#menuwrapiteration #menu li#nav2 a,
-div#menuwrapproject #menu li#nav2 a,
-div#menuwrapproduct #menu li#nav2 a,
-div#menuwrapportfolio #menu li#nav3 a,
-div#menuwrapusers #menu li#navc a,
-div#menuwrapcreateNew #menu li#nava a,
-div#menuwrap1 #menu li#nav1 a,
-div#menuwrap2 #menu li#nav2 a,
-div#menuwrap3 #menu li#nav3 a,
-div#menuwrap4 #menu li#nav4 a,
-div#menuwrap5 #menu li#nav5 a,
-div#menuwrap6 #menu li#nav6 a,
-div#menuwrap7 #menu li#nav7 a,
-div#menuwrap8 #menu li#nav8 a,
-div#menuwrap9 #menu li#nav9 a
+div#menuwrapmyTasks #menu li#nav1 a,div#menuwrapbacklog #menu li#nav2 a,div#menuwrapiteration #menu li#nav2 a,div#menuwrapproject #menu li#nav2 a,div#menuwrapproduct #menu li#nav2 a,div#menuwrapportfolio #menu li#nav3 a,div#menuwrapusers #menu li#navc a,div#menuwrapcreateNew #menu li#nava a,div#menuwrap1 #menu li#nav1 a,div#menuwrap2 #menu li#nav2 a,div#menuwrap3 #menu li#nav3 a,div#menuwrap4 #menu li#nav4 a,div#menuwrap5 #menu li#nav5 a,div#menuwrap6 #menu li#nav6 a,div#menuwrap7 #menu li#nav7 a,div#menuwrap8 #menu li#nav8 a,div#menuwrap9 #menu li#nav9 a
 	{
 	background: #fff;
 	border-bottom: 1px solid #fff;
@@ -390,10 +388,10 @@ div#submenuwrapmyTasks #menu li#subnav1 a,div#submenuwrapiteration #menu li#subn
 }
 
 #menu ul a:hover {
-	color: #e50; !important;
+	color: #e50;
+	!
+	important;
 }
-
-
 
 .formTable textarea {
 	overflow: auto;
@@ -404,45 +402,54 @@ div#submenuwrapmyTasks #menu li#subnav1 a,div#submenuwrapiteration #menu li#subn
 	width: 500px;
 }
 
-.shortNameColumn div{
-	width: 170px;	
+.shortNameColumn div {
+	width: 170px;
 	overflow: visible;
 	/*max-height: 6em;*/
 }
 
-.taskColumn div{
-	width: 115px;	
+.taskColumn div {
+	width: 115px;
 	white-space: nowrap;
 	overflow: visible;
 }
 
-.iterationGoalColumn div{
+.iterationGoalColumn div {
 	overflow: hidden;
-	width: 90px;	
+	width: 90px;
 	max-height: 2.5em;
 }
 
-.contextColumn div{
+.contextColumn div {
 	white-space: nowrap;
 	overflow: hidden;
-	max-width: 400px;	
+	max-width: 400px;
 	max-height: 4em;
 }
 
-.responsibleColumn div{
+.responsibleColumn div {
 	overflow: hidden;
-	width: 90px;	
+	width: 90px;
 	max-height: 2.5em;
 }
 
-.smallBurndownColumn {
-        margin-right: 0;
-        width: 400px;
+.backlogItemList {
+	vertical-align: top;
 }
 
-.smallBurndownColumn div {
-        text-align: right;
+.dailyWorkBacklogItems {
+	width: 100%;
+	margin: 0;
+	padding: 0;
 }
+
+.smallBurndownColumn {
+	vertical-align: top;
+	text-align: right;
+}
+
+
+
 
 /*
 .shortNameColumn{
@@ -464,47 +471,53 @@ div#submenuwrapmyTasks #menu li#subnav1 a,div#submenuwrapiteration #menu li#subn
 	height: 2.5em;
 }
 */
-#hierarchyList{
+#hierarchyList {
 	padding: 20px 5px 5px 5px;
 	float: left;
 	width: 180px;
 	white-space: nowrap;
 	overflow: hidden;
-/*	border: 1px solid #000;*/
+	/*	border: 1px solid #000;*/
 }
-#hierarchyList ul, #hierarchyList ul ul #hierarchyList ul ul ul{
+
+#hierarchyList ul,#hierarchyList ul ul #hierarchyList ul ul ul {
 	padding: 0 0 0 0;
 	margin: 0 0 0 15px;
 	list-style-type: none;
 }
-#hierarchyList li{
+
+#hierarchyList li {
 	padding: 0 0 0 0;
 	margin: 0 0 5px 0;
 	list-style-type: none;
 }
-#hierarchyList .path, #hierarchyList .archivePath .path {
+
+#hierarchyList .path,#hierarchyList .archivePath .path {
 	color: #e50;
 }
-#hierarchyList .selected, #hierarchyList .archivePath .selected {
+
+#hierarchyList .selected,#hierarchyList .archivePath .selected {
 	color: #e50;
 	font-weight: bold;
 }
-.inactive{
+
+.inactive {
 	color: #999;
 }
-.deleteButton{
-	margin-left: 50%;
+
+td.deleteButton {
+	text-align: right;
 }
 
-.archive{
+.archive {
 	display: none;
 }
 
-#hierarchyList .archivePath span{
-	color:#666;
+#hierarchyList .archivePath span {
+	color: #666;
 }
 
-.tasklistItem  {
+.tasklistItem {
 	position: relative;
 }
 

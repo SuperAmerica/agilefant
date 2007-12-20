@@ -1,5 +1,6 @@
 package fi.hut.soberit.agilefant.business;
 
+import java.util.Collection;
 import java.util.List;
 
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
@@ -41,7 +42,8 @@ public interface BacklogBusiness {
      *                <code>Array</code> containing the IDs of the items to
      *                delete.
      */
-    public void deleteMultipleItems(int backlogId, int backlogItemIds[]) throws ObjectNotFoundException;
+    public void deleteMultipleItems(int backlogId, int backlogItemIds[])
+            throws ObjectNotFoundException;
 
     /**
      * Creates new backlogItem to given backlog.
@@ -52,20 +54,47 @@ public interface BacklogBusiness {
      */
 
     public BacklogItem createBacklogItemToBacklog(int backlogId);
-    
+
     /**
      * Change the priority of multiple <code>BacklogItem</code>s at once.
-     * @param backlogItemIds <code>Array</code> containing the IDs of the items to prioritize
-     * @param priority the new priority to set
+     * 
+     * @param backlogItemIds
+     *                <code>Array</code> containing the IDs of the items to
+     *                prioritize
+     * @param priority
+     *                the new priority to set
      */
     public void changePriorityOfMultipleItems(int backlogItemIds[],
             Priority priority) throws ObjectNotFoundException;
-    
+
     /**
-     * Calculates the sum of effort lefts of the given backlog items 
+     * Moves multiple backlog items to target backlog. Object with one of the
+     * backlog item ids is not found or target backlog with the id is not found,
+     * ObjectNotFoundException is thrown.
      * 
-     * @param bliList List of backlog items 
+     * @param backlogItemIds
+     *                <code>Array</code> of backlog item ids for items to move
+     * @param targetBacklogId
+     *                id of the target backlog
+     */
+
+    public void moveMultipleBacklogItemsToBacklog(int backlogItemIds[],
+            int targetBacklogId) throws ObjectNotFoundException;
+
+    /**
+     * Calculates the sum of effort lefts of the given backlog items
+     * 
+     * @param bliList
+     *                List of backlog items
      * @return sum of effort lefts
      */
     public AFTime getEffortLeftSum(List<BacklogItem> bliList);
+    
+    /**
+     * Calculates the sum of original estimates of the given backlog items
+     * 
+     * @param bliList List of backlog items
+     * @return sum of original estimates
+     */
+    public AFTime getOriginalEstimateSum(Collection<BacklogItem> bliList);
 }

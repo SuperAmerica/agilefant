@@ -2,6 +2,8 @@
 
 <h2>Started items assigned to <c:out value="${user.fullName}" /></h2>
 
+
+<c:if test="${!(empty backlogItemsForUserInProgress)}">
 <div id="subItems">
 
 <div id="subItemHeader">Backlog items</div>
@@ -20,7 +22,7 @@
 
 	<!-- Display the iteration goal -->
 	<display:column sortable="true" title="Iteration goal"
-		class="iterationGoalColumn">
+		class="iterationGoalColumn" sortProperty="iterationGoal.name">
 		<ww:url id="editLink" action="editIterationGoal" includeParams="none">
 			<ww:param name="iterationGoalId" value="${item.iterationGoal.id}" />
 		</ww:url>
@@ -141,12 +143,8 @@
 				<c:out value="${parent.name}" />
 			</ww:a>
 			<c:if test="${aef:isProject(parent)}">
-			<ww:url id="projectTypeActionUrl" action="editProjectType" includeParams="none">
-				<ww:param name="projectTypeId" value="${parent.projectType.id}" />
-			</ww:url>
-			<ww:a href="%{projectTypeActionUrl}&contextViewName=dailyWork">
-				(<c:out value="${parent.projectType.name}" />)
-			</ww:a>
+
+			(<c:out value="${parent.projectType.name}" />)
 			</c:if>
 			<br />
 		</c:forEach></div>
@@ -154,3 +152,4 @@
 
 </display:table></div>
 </div>
+</c:if>

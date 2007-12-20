@@ -6,13 +6,13 @@
 	type="text/css" />
 <title>Agilefant</title>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
-<style type="text/css" media="screen,projection">
-</style>
+
 
 <script type="text/javascript" src="../../static/js/generic.js"></script>
 
 <style type="text/css" media="screen">
 @import url(static/css/import.css);
+@import url(static/css/v5.css);
 </style>
 
 </head>
@@ -41,8 +41,17 @@
 <ww:form action="generateNewPassword.action" cssClass="newPassword">
 	<p>Fill in your username and e-mail below to generate a new
 	password.</p>
-
-	<p>Username <ww:textfield name="name" required="true" /></p>
-	<p>Email <ww:textfield name="email" required="true" /></p>
-	<p><ww:submit /></p>
+	<table>
+	<tr>
+		<td>Username</td>
+		<td><ww:textfield name="name" required="true" /></td>
+	</tr>
+	<tr>
+		<td>Email</td>
+		<td><ww:textfield name="email" required="true" /></td>
+	</tr>
+	<tr>
+		<td><ww:submit /></td>
+	</tr>
+	</table>
 </ww:form> <%@ include file="./inc/_footer.jsp"%>

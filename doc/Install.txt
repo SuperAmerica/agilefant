@@ -1,9 +1,3 @@
 INSTALLATION
 See installation guide in Agilefant wiki documentation:
 http://www.agilefant.org/wiki
-
-UPDATING
-Updating Agilefant to 1.2.2 from previous versions downward to 1.2.0
-requires no changes to the database. Undeploy the previous version from 
-Tomcat manager and follow the installation guide, but omit any database 
-related sections.

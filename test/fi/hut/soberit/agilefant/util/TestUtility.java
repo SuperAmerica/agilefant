@@ -25,8 +25,6 @@ import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.security.SecurityUtil;
 import fi.hut.soberit.agilefant.web.BacklogItemAction;
 import fi.hut.soberit.agilefant.web.TaskAction;
-import fi.hut.soberit.agilefant.web.UserAction;
-import fi.hut.soberit.agilefant.web.UserActionTest;
 
 /**
  * Utility class for testing
@@ -363,35 +361,6 @@ public class TestUtility extends SpringTestCase {
         return taskAction.storeNew();
     }
 
-    /**
-     * Create and log in a user. Do not call this twice in same test case.
-     * 
-     * @param userAction
-     *                action for user creation
-     * @param userDAO
-     *                data access object for user
-     * @return initialized user
-     */
-    public static User initUser(UserAction userAction, UserDAO userDAO) {
-        return initUser(userAction, userDAO, TestUser.USER1);
-    }
-
-    /**
-     * Create and log in a use to use in testing. Two users are available.
-     * 
-     * @param userAction
-     *                action for user creation
-     * @param userDAO
-     *                data access object for user
-     * @return initialized user
-     */
-    public static User initUser(UserAction userAction, UserDAO userDAO,
-            TestUser userNumber) {
-        User user = UserActionTest.GenerateAndStoreTestUser(userAction,
-                userDAO, userNumber);
-        SecurityUtil.setLoggedUser(user);
-        return user;
-    }
 
     
     /**

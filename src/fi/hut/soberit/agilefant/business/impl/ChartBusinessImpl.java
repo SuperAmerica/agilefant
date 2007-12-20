@@ -52,7 +52,7 @@ public class ChartBusinessImpl implements ChartBusiness {
 
     private static final int DEFAULT_HEIGHT = 600;
 
-    private static final int SMALL_WIDTH = 150;
+    private static final int SMALL_WIDTH = 195;
 
     private static final int SMALL_HEIGHT = 150;
 
@@ -121,7 +121,7 @@ public class ChartBusinessImpl implements ChartBusiness {
         end.setTime(endDate);
 
         history = backlog.getBacklogHistory();
-        estimateSeries.add(new Day(i.getTime()), (float) history
+        estimateSeries.add(new Day(i.getTime()), (float) history 
                 .getDateEntry(startDate).getOriginalEstimate()
                 .getTime() / 3600000.0);
         referenceSeries.add(new Day(i.getTime()), (float) history

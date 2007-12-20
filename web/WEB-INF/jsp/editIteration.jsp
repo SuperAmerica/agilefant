@@ -50,25 +50,20 @@
 
 	<table class="formTable">
 		<tr>
-			<td></td>
-			<td></td>
-			<td></td>
-		</tr>
-		<tr>
 			<td>Name</td>
 			<td>*</td>
-			<td><ww:textfield size="60" name="iteration.name" /></td>
+			<td colspan="2"><ww:textfield size="60" name="iteration.name" /></td>
 		</tr>
 		<tr>
 			<td>Description</td>
 			<td></td>
-			<td><ww:textarea cols="70" rows="10"
+			<td colspan="2"><ww:textarea cols="70" rows="10"
 				name="iteration.description" /></td>
 		</tr>
 		<tr>
 			<td>Project</td>
 			<td>*</td>
-			<td><select name="projectId">
+			<td colspan="2"><select name="projectId">
 				<option class="inactive" value="">(select project)</option>
 				<c:forEach items="${productList}" var="product">
 					<option value="" class="inactive">${aef:out(product.name)}</option>
@@ -89,30 +84,30 @@
 		<tr>
 			<td>Start date</td>
 			<td>*</td>
-			<td><ww:datepicker value="%{#start}" size="15" showstime="true"
+			<td colspan="2"><ww:datepicker value="%{#start}" size="15" showstime="true"
 				format="%{getText('webwork.datepicker.format')}" name="startDate" />
 			</td>
 		</tr>
 		<tr>
 			<td>End date</td>
 			<td>*</td>
-			<td><ww:datepicker value="%{#end}" size="15" showstime="true"
+			<td colspan="2"><ww:datepicker value="%{#end}" size="15" showstime="true"
 				format="%{getText('webwork.datepicker.format')}" name="endDate" />
 			</td>
 		</tr>
 		<tr>
 			<td></td>
 			<td></td>
-			<td><c:choose>
+			<c:choose>
 				<c:when test="${iterationId == 0}">
-					<ww:submit value="Create" />
+					<td><ww:submit value="Create" /></td>
 				</c:when>
 				<c:otherwise>
-					<ww:submit value="Save" />
-					<span class="deleteButton"> <ww:submit
-						action="deleteIteration" value="Delete" /> </span>
+					<td><ww:submit value="Save" /></td>
+					<td class="deleteButton"><ww:submit onclick="return confirmDelete()"
+						action="deleteIteration" value="Delete" /></td>
 				</c:otherwise>
-			</c:choose></td>
+			</c:choose>
 		</tr>
 	</table>
 </ww:form>
@@ -132,7 +127,7 @@
 				<div id="subItemContent">
 				<p><display:table class="listTable"
 					name="iteration.iterationGoals" id="row"
-					requestURI="editIteration.action">
+					requestURI="editIteration.action" defaultsort="1">
 
 					<display:column sortable="true" title="Name" sortProperty="name"
 						class="longNameColumn">
@@ -160,7 +155,7 @@
 							<ww:param name="iterationGoalId" value="${row.id}" />
 							<ww:param name="iterationId" value="${iteration.id}" />
 						</ww:url>
-						<ww:a href="%{deleteLink}">Delete</ww:a>
+						<ww:a href="%{deleteLink}" onclick="return confirmDelete()">Delete</ww:a>
 					</display:column>
 
 				</display:table></p>

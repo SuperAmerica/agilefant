@@ -1,8 +1,10 @@
 package fi.hut.soberit.agilefant.business.impl;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import fi.hut.soberit.agilefant.business.BacklogBusiness;
 import fi.hut.soberit.agilefant.business.HistoryBusiness;
@@ -47,27 +49,25 @@ public class BacklogBusinessImpl implements BacklogBusiness {
             }
         }
         historyBusiness.updateBacklogHistory(backlog.getId());
-    }   
-    
+    }
+
     public BacklogItem createBacklogItemToBacklog(int backlogId) {
         BacklogItem backlogItem = new BacklogItem();
         backlogItem = new BacklogItem();
         Backlog backlog = backlogDAO.get(backlogId);
-        if(backlog == null)
+        if (backlog == null)
             return null;
         backlogItem.setBacklog(backlog);
         backlog.getBacklogItems().add(backlogItem);
         return backlogItem;
     }
-    
+
     /**
      * {@inheritDoc}
-     * 
-     * @throws ObjectNotFoundException
      */
     public void changePriorityOfMultipleItems(int[] backlogItemIds,
             Priority priority) throws ObjectNotFoundException {
-        
+
         for (int id : backlogItemIds) {
             BacklogItem bli = backlogItemDAO.get(id);
             if (bli == null) {
@@ -79,13 +79,90 @@ public class BacklogBusinessImpl implements BacklogBusiness {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public void moveMultipleBacklogItemsToBacklog(int backlogItemIds[],
+            int targetBacklogId) throws ObjectNotFoundException {
+        Backlog targetBacklog = backlogDAO.get(targetBacklogId);
+
+        // Store source backlogs of the backlog items to be able to update their
+        // history data.
+
+        Set<Integer> sourceBacklogIds = new HashSet<Integer>();
+
+        if (targetBacklog == null) {
+            throw new ObjectNotFoundException("Target backlog with id: "
+                    + targetBacklogId + " was not found.");
+        }
+
+        for (int id : backlogItemIds) {
+            BacklogItem bli = backlogItemDAO.get(id);
+            if (bli == null) {
+                throw new ObjectNotFoundException("Backlog item with id: " + id
+                        + " was not found.");
+            }
+            Backlog sourceBacklog = bli.getBacklog();
+
+            if (sourceBacklog.getId() != targetBacklog.getId()) {
+                
+                // Store the source backlog ids into the set
+                sourceBacklogIds.add(bli.getBacklog().getId());
+                
+                // Set originalestimate to current effortleft
+                bli.setOriginalEstimate(bli.getEffortLeft());
+                
+                // Set backlog item's backlog to target backlog
+                bli.setBacklog(targetBacklog);
+                backlogItemDAO.store(bli);
+
+                // Remove BLI from source backlog
+                sourceBacklog.getBacklogItems().remove(bli);
+
+                // Store source backlog
+                backlogDAO.store(sourceBacklog);
+
+               
+                
+
+                // Add backlog item to new Backlog's backlog item list
+                targetBacklog.getBacklogItems().add(bli);
+            }
+        }
+
+        backlogDAO.store(targetBacklog);
+        
+        // Update history data for source backlogs
+        for (Integer sourceBacklogId : sourceBacklogIds) {
+            historyBusiness.updateBacklogHistory(sourceBacklogId);
+
+        }
+
+        // Update history data for target backlog
+        historyBusiness.updateBacklogHistory(targetBacklog.getId());
+    }
 
     public AFTime getEffortLeftSum(List<BacklogItem> bliList) {
-        AFTime effSum = new AFTime("0");
+        AFTime effSum = new AFTime(0);
         Iterator<BacklogItem> it = bliList.iterator();
         while (it.hasNext()) {
-            effSum.add(it.next().getEffortLeft());
+            AFTime effLeft = it.next().getEffortLeft();
+            if (effLeft != null)
+                effSum.add(effLeft);
         }
+        return effSum;
+    }
+    
+    /** {@inheritDoc} **/
+    public AFTime getOriginalEstimateSum(Collection<BacklogItem> bliList) {
+        AFTime effSum = new AFTime(0);
+        
+        for (BacklogItem item : bliList) {
+            if (item.getOriginalEstimate() != null) {
+                effSum.add(item.getOriginalEstimate());
+            }
+        }
+        
         return effSum;
     }
 
@@ -113,3 +190,4 @@ public class BacklogBusinessImpl implements BacklogBusiness {
         this.historyBusiness = historyBusiness;
     }
 }
+

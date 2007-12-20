@@ -13,6 +13,11 @@ import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.ProjectType;
 import fi.hut.soberit.agilefant.util.SpringTestCase;
 
+/**
+ * JUnit integration test for ProjectAction.
+ * 
+ * @author
+ */
 public class ProjectActionTest extends SpringTestCase {
     // Class under test
     private ProjectAction projectAction = null;

@@ -24,7 +24,7 @@
 </c:choose>
 
 <c:set var="divId" value="1336" scope="page" />
-<aef:menu navi="${contextName}" pageHierarchy="${pageHierarchy}" />
+<aef:menu navi="backlog" pageHierarchy="${pageHierarchy}" />
 <ww:actionerror />
 <ww:actionmessage />
 
@@ -72,25 +72,20 @@
 
 			<table class="formTable">
 				<tr>
-					<td></td>
-					<td></td>
-					<td></td>
-				</tr>
-				<tr>
 					<td>Name</td>
 					<td>*</td>
-					<td><ww:textfield size="60" name="project.name" /></td>
+					<td colspan="2"><ww:textfield size="60" name="project.name" /></td>
 				</tr>
 				<tr>
 					<td>Description</td>
 					<td></td>
-					<td><ww:textarea cols="70" rows="10"
+					<td colspan="2"><ww:textarea cols="70" rows="10"
 						name="project.description" /></td>
 				</tr>
 				<tr>
 					<td>Product</td>
 					<td>*</td>
-					<td><select name="productId">
+					<td colspan="2"><select name="productId">
 						<option class="inactive" value="">(select product)</option>
 						<c:forEach items="${productList}" var="product">
 							<c:choose>
@@ -108,37 +103,37 @@
 				<tr>
 					<td>Project type</td>
 					<td></td>
-					<td><ww:select name="projectTypeId"
+					<td colspan="2"><ww:select name="projectTypeId"
 						list="#attr.projectTypes" listKey="id" listValue="name"
 						value="${project.projectType.id}" /></td>
 				</tr>
 				<tr>
 					<td>Start date</td>
 					<td>*</td>
-					<td><ww:datepicker value="%{#start}" size="15"
+					<td colspan="2"><ww:datepicker value="%{#start}" size="15"
 						showstime="true" format="%{getText('webwork.datepicker.format')}"
 						name="startDate" /></td>
 				</tr>
 				<tr>
 					<td>End date</td>
 					<td>*</td>
-					<td><ww:datepicker value="%{#end}" size="15" showstime="true"
+					<td colspan="2"><ww:datepicker value="%{#end}" size="15" showstime="true"
 						format="%{getText('webwork.datepicker.format')}" name="endDate" />
 					</td>
 				</tr>
 				<tr>
 					<td></td>
 					<td></td>
-					<td><c:choose>
+					<c:choose>
 						<c:when test="${projectId == 0}">
-							<ww:submit value="Create" />
+							<td><ww:submit value="Create" /></td>
 						</c:when>
 						<c:otherwise>
-							<ww:submit value="Save" />
-							<span class="deleteButton"> <ww:submit
-								action="deleteProject" value="Delete" /> </span>
+							<td><ww:submit value="Save" /></td>
+							<td class="deleteButton"> <ww:submit onclick="return confirmDelete()"
+								action="deleteProject" value="Delete" /> </td>
 						</c:otherwise>
-					</c:choose></td>
+					</c:choose>
 				</tr>
 			</table>
 		</ww:form>
@@ -170,14 +165,20 @@
 					</ww:a>
 							</display:column>
 
-							<display:column sortable="true" title="# of backlog items">
-					${fn:length(row.backlogItems)}
-				</display:column>
+							<display:column sortable="true" title="Items">
+								${fn:length(row.backlogItems)}
+							</display:column>
 							<%-- REFACTOR THIS --%>
 							<display:column sortable="true" title="Effort left"
 								sortProperty="bliEffortLeftSum.time">
-					${row.totalEffortLeftSum}
-				</display:column>
+								${row.totalEffortLeftSum}
+							</display:column>
+
+							<display:column sortable="true" title="Original estimate"
+								sortProperty="bliOriginalEstimateSum.time">
+								${row.totalOriginalEstimateSum}
+							</display:column>
+
 
 							<display:column sortable="true" title="Start date">
 								<ww:date name="#attr.row.startDate" />
@@ -193,8 +194,8 @@
 									<ww:param name="projectId" value="${project.id}" />
 									<ww:param name="iterationId" value="${row.id}" />
 								</ww:url>
-								<ww:a
-									href="%{deleteLink}&contextViewName=editProject&contextObjectId=${project.id}">Delete</ww:a>
+								<ww:a href="%{deleteLink}&contextViewName=editProject&contextObjectId=${project.id}"
+									onclick="return confirmDelete()">Delete</ww:a>
 							</display:column>
 
 						</display:table></p>
@@ -212,8 +213,10 @@
 						<div id="subItemContent"><%@ include
 							file="./inc/_backlogList.jsp"%></div>
 					</c:if></div>
-					<c:if test="${empty project.iterations}">
-				        <p><img src="drawProjectChart.action?projectId=${project.id}" /></p>
+					<c:if test="${!empty project.backlogItems}">
+					    <c:if test="${empty project.iterations}">
+				            <p><img src="drawProjectChart.action?projectId=${project.id}" /></p>
+			            </c:if>
 			        </c:if>
 				</c:if></td>
 			</tr>

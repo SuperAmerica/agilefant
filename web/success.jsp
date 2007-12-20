@@ -63,7 +63,7 @@
       <div class="success">
     	<p>Failure!</p>
     	<div class="messages">
-    	<p style="color: #f00;">Invalid username or password</p>
+    	<p style="color: #f00;">Invalid username or e-mail</p>
     	<p>Return to <a href="index.jsp">login page</a></p>
     	</div>
       </div>

@@ -67,7 +67,7 @@ public abstract class Backlog implements Assignable {
 
     private User assignee;
 
-    private BacklogHistory backlogHistory;
+    private BacklogHistory backlogHistory = new BacklogHistory();
 
     @OneToMany(mappedBy = "backlog")
     /** A backlog can contain many backlog items. */
@@ -175,12 +175,14 @@ public abstract class Backlog implements Assignable {
      * not include effort contained in Project's iterations.
      * 
      * @return the BLI effort left sum
+     * @deprecated Use the history directly rather than through a convenience method.
      */
     @Transient
+    @Deprecated
     public AFTime getBliEffortLeftSum() {
-        return backlogHistory.getCurrentEntry().getEffortLeft();
+        return backlogHistory.getCurrentEffortLeft();
     }
-
+    
     /**
      * Returns the original estimate sum of all this Backlog's BacklogItems.
      * Does Not include original estimates of sub-Backlogs. Does not calculate
@@ -190,7 +192,7 @@ public abstract class Backlog implements Assignable {
      */
     @Transient
     public AFTime getBliOriginalEstimateSum() {
-        return backlogHistory.getCurrentEntry().getOriginalEstimate();
+        return backlogHistory.getCurrentOriginalEstimate();
     }
 
     /**
@@ -218,13 +220,28 @@ public abstract class Backlog implements Assignable {
      * together.
      */
     @Transient
+    @Deprecated
     public AFTime getTotalEffortLeftSum() {
         AFTime result = new AFTime(0);
         result.add(this.getSubBacklogEffortLeftSum());
         result.add(this.getBliEffortLeftSum());
         return result;
+
     }
 
+    /**
+     * Returns the cumulative original estimate sum and bli original estimate sum, added
+     * together.
+     */
+    @Transient
+    @Deprecated
+    public AFTime getTotalOriginalEstimateSum() {
+        AFTime result = new AFTime(0);
+        result.add(this.getSubBacklogOriginalEstimateSum());
+        result.add(this.getBliOriginalEstimateSum());
+        return result;
+    }    
+    
     /**
      * Return default start date
      * 

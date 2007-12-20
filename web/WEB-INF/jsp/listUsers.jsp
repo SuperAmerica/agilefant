@@ -7,9 +7,8 @@
 
 <aef:userList />
 <p><display:table name="${userList}" id="row"
-	requestURI="listUsers.action">
-	<display:column sortable="true" title="Id" property="id" />
-	<display:column sortable="true" title="Name">
+	requestURI="listUsers.action" defaultsort="1">
+	<display:column sortable="true" title="Name" sortProperty="fullName">
 		<ww:url id="editLink" action="editUser" includeParams="none">
 			<ww:param name="userId" value="${row.id}" />
 		</ww:url>

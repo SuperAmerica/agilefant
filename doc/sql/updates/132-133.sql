@@ -29,6 +29,7 @@ drop table if exists estimateHistory;
 drop table if exists minEstimateHistoryEventForTaskWithBliIds;
 drop table if exists taskSumOriginalEstimates;
 drop table if exists blisWithPlaceholderOriginalEstimate;
+drop table if exists taskOriginalEstimate;
 
 -- Create temporary table with backlogitems and its placeholder data
 
@@ -103,7 +104,7 @@ drop table minEstimateHistoryEventForTask;
 drop table estimateHistory;
 drop table minEstimateHistoryEventForTaskWithBliIds;
 drop table taskSumOriginalEstimates;
-
+drop table taskOriginalEstimate;
 
 
 -- Drop effort estimate from Task
@@ -195,4 +196,8 @@ ALTER TABLE Backlog DROP COLUMN activityType_id;
 ALTER TABLE WorkType DROP FOREIGN KEY `FK5EE3E0BCC65BE32`;
 ALTER TABLE WorkType DROP COLUMN activityType_id;
 
+-- Drop created column from Task
+ALTER TABLE Task DROP COLUMN `Created`;
 
+update HistoryEntry set originalEstimate = 0 where originalEstimate is null;
+update HistoryEntry set effortLeft = 0 where effortLeft is null;

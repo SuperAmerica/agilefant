@@ -88,7 +88,7 @@ public class BacklogAction extends ActionSupport {
      */
     public String moveSelectedItems() {
         Log logger = LogFactory.getLog(getClass());
-        Backlog targetBacklog = this.backlogDAO.get(targetBacklogId);
+        // Backlog targetBacklog = this.backlogDAO.get(targetBacklogId);
         Backlog currentBacklog = this.backlogDAO.get(backlogId);
 
         if (backlogItemIds == null) {
@@ -99,28 +99,12 @@ public class BacklogAction extends ActionSupport {
         logger.info("Moving " + backlogItemIds.length + " items + "
                 + " to backlog: " + targetBacklogId);
 
-        if (targetBacklog == null || currentBacklog == null) {
-            super.addActionError(super.getText("backlog.notFound"));
+        try {
+            backlogBusiness.moveMultipleBacklogItemsToBacklog(backlogItemIds,
+                    targetBacklogId);
+        } catch (ObjectNotFoundException e) {
+            super.addActionError(e.getMessage());
             return Action.ERROR;
-        }
-
-        for (int i = 0; i < this.backlogItemIds.length; i++) {
-            BacklogItem backlogItem = this.backlogItemDAO
-                    .get(this.backlogItemIds[i]);
-            if (backlogItem == null
-                    || !backlogItem.getBacklog().getBacklogItems().remove(
-                            backlogItem)) {
-                super.addActionError(super.getText("backlogItem.notFound"));
-                return Action.ERROR;
-            }
-
-            if (!targetBacklog.getBacklogItems().add(backlogItem)) {
-                return Action.ERROR;
-            }
-
-            backlogItem.setBacklog(targetBacklog);
-            backlogItemDAO.store(backlogItem);
-
         }
 
         return this.solveResult(currentBacklog);

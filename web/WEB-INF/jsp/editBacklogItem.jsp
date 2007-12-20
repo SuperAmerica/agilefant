@@ -10,7 +10,7 @@
 	</c:otherwise>
 </c:choose>
 
-<aef:menu navi="${contextName}" pageHierarchy="${pageHierarchy}" />
+<aef:menu navi="backlog" pageHierarchy="${pageHierarchy}" />
 <ww:actionerror />
 <ww:actionmessage />
 
@@ -41,19 +41,14 @@
 
 	<table class="formTable">
 		<tr>
-			<td></td>
-			<td></td>
-			<td></td>
-		</tr>
-		<tr>
 			<td>Name</td>
 			<td>*</td>
-			<td><ww:textfield size="60" name="backlogItem.name" /></td>
+			<td colspan="2"><ww:textfield size="60" name="backlogItem.name" /></td>
 		</tr>
 		<tr>
 			<td>Description</td>
 			<td></td>
-			<td><ww:textarea cols="70" rows="10"
+			<td colspan="2"><ww:textarea cols="70" rows="10"
 				name="backlogItem.description" /></td>
 		</tr>
 		<c:choose>
@@ -61,7 +56,7 @@
 				<tr>
 					<td>Original estimate</td>
 					<td></td>
-					<td><ww:textfield size="10"
+					<td colspan="2"><ww:textfield size="10"
 						name="backlogItem.originalEstimate" /><ww:label
 						value="%{getText('webwork.estimateExample')}" /></td>
 				</tr>
@@ -77,26 +72,25 @@
 				<tr>
 					<td>Effort left</td>
 					<td></td>
-					<td><ww:textfield size="10" name="backlogItem.effortLeft" /><ww:label
+					<td colspan="2"><ww:textfield size="10" name="backlogItem.effortLeft" /><ww:label
 						value="%{getText('webwork.estimateExample')}" /></td>
 				</tr>
 			</c:otherwise>
 		</c:choose>
 
-		<c:if test="${backlogItem.state != null}">
-			<tr>
-				<td>State</td>
-				<td></td>
-				<td><ww:select name="backlogItem.state"
-					value="backlogItem.state.name"
-					list="@fi.hut.soberit.agilefant.model.State@values()"
-					listKey="name" listValue="getText('task.state.' + name())" /></td>
-			</tr>
-		</c:if>
+		<tr>
+			<td>State</td>
+			<td></td>
+			<td colspan="2"><ww:select name="backlogItem.state"
+				value="backlogItem.state.name"
+				list="@fi.hut.soberit.agilefant.model.State@values()"
+				listKey="name" listValue="getText('task.state.' + name())" /></td>
+		</tr>
+
 		<tr>
 			<td>Backlog</td>
 			<td></td>
-			<td><select name="backlogId">
+			<td colspan="2"><select name="backlogId">
 
 				<%-- Generate a drop-down list showing all backlogs in a hierarchical manner --%>
 				<option class="inactive" value="">(select backlog)</option>
@@ -139,6 +133,7 @@
 			<td>Iteration goal</td>
 			<td></td>
 			<%-- If iteration goals doesn't exist default value is 0--%>
+			<td colspan="2">
 			<c:choose>
 				<c:when test="${!empty iterationGoals}">
 					<c:set var="goalId" value="0" scope="page" />
@@ -149,19 +144,20 @@
 						<c:set var="goalId" value="${backlogItem.iterationGoal.id}"
 							scope="page" />
 					</c:if>
-					<td><ww:select headerKey="0" headerValue="(none)"
+					<ww:select headerKey="0" headerValue="(none)"
 						name="backlogItem.iterationGoal.id" list="#attr.iterationGoals"
-						listKey="id" listValue="name" value="${goalId}" /></td>
+						listKey="id" listValue="name" value="${goalId}" />
 				</c:when>
 				<c:otherwise>
-					<td>(none)</td>
+					(none)
 				</c:otherwise>
 			</c:choose>
+			</td>
 		</tr>
 		<tr>
 			<td>Priority</td>
 			<td></td>
-			<td><ww:select name="backlogItem.priority"
+			<td colspan="2"><ww:select name="backlogItem.priority"
 				value="backlogItem.priority.name"
 				list="#{'UNDEFINED':'undefined', 'BLOCKER':'+++++', 'CRITICAL':'++++', 'MAJOR':'+++', 'MINOR':'++', 'TRIVIAL':'+'}" /></td>
 			<%--
@@ -171,35 +167,36 @@
 		<tr>
 			<td>Responsible</td>
 			<td></td>
+			<td colspan="2">
 			<c:choose>
 				<c:when test="${backlogItem.id == 0}">
-					<td><ww:select headerKey="0" headerValue="(none)"
+					<ww:select headerKey="0" headerValue="(none)"
 						name="assigneeId" list="#attr.userList" listKey="id"
-						listValue="fullName" value="0" /></td>
+						listValue="fullName" value="0" />
 				</c:when>
 				<c:otherwise>
-					<td><ww:select headerKey="0" headerValue="(none)"
+					<ww:select headerKey="0" headerValue="(none)"
 						name="assigneeId" list="#attr.userList" listKey="id"
-						listValue="fullName" value="%{backlogItem.assignee.id}" /></td>
+						listValue="fullName" value="%{backlogItem.assignee.id}" />
 				</c:otherwise>
 			</c:choose>
+			</td>
 		</tr>
 		<tr>
 			<td></td>
 			<td></td>
-			<td><c:choose>
-				<c:when test="${backlogItemId == 0}">
-					<ww:submit value="Create" />
-					<ww:submit action="storeCloseBacklogItem" value="Create & Close" />
-				</c:when>
-				<c:otherwise>
-					<ww:submit value="Save" />
-					<ww:submit action="storeCloseBacklogItem" value="Save & Close" />
-					<span class="deleteButton"> <ww:submit
-						action="deleteBacklogItem" value="Delete"
-						onclick="return confirmDeleteBli()" /> </span>
+			<c:choose>
+			<c:when test="${backlogItemId == 0}">
+					<td><ww:submit value="Create" />
+					<ww:submit action="storeCloseBacklogItem" value="Create & Close" /></td>
+			</c:when>
+			<c:otherwise>
+					<td><ww:submit value="Save" />
+					<ww:submit action="storeCloseBacklogItem" value="Save & Close" /></td>
+					<td class="deleteButton"> <ww:submit action="deleteBacklogItem"
+						value="Delete" onclick="return confirmDeleteBli()" />
 				</c:otherwise>
-			</c:choose></td>
+			</c:choose>
 		</tr>
 	</table>
 </ww:form>
@@ -233,9 +230,6 @@
 					<display:column sortable="true" title="State"
 						sortProperty="state.ordinal">
 						<ww:text name="task.state.${row.state}" />
-					</display:column>
-					<display:column sortable="true" title="Created">
-						<ww:date name="#attr.row.created" />
 					</display:column>
 					<display:column sortable="true" sortProperty="creator.fullName"
 						title="Creator">

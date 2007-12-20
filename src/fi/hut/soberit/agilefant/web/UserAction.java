@@ -36,6 +36,11 @@ public class UserAction extends ActionSupport implements CRUDAction {
     }
 
     public String delete() {
+        if (userId == SecurityUtil.getLoggedUserId()) {
+            super.addActionError("Cannot delete user currently logged in");
+            return Action.ERROR;
+        }
+        
         User u = userDAO.get(userId);
         if (u == null) {
             super.addActionError(super.getText("user.notFound"));
@@ -82,10 +87,11 @@ public class UserAction extends ActionSupport implements CRUDAction {
 
     protected void fillStorable(User storable) {
         String md5Pw = null;
+        
+        /* Check that password is correctly formed */
         if (password1.length() == 0 && password2.length() == 0) {
             if (storable.getId() == 0) {
                 super.addActionError(super.getText("user.missingPassword"));
-                return;
             }
             md5Pw = storable.getPassword();
         } else {
@@ -93,7 +99,6 @@ public class UserAction extends ActionSupport implements CRUDAction {
                 password1 = "";
                 password2 = "";
                 super.addActionError(super.getText("user.passwordsNotEqual"));
-                return;
             } else {
                 md5Pw = SecurityUtil.MD5(password1);
             }
@@ -101,17 +106,24 @@ public class UserAction extends ActionSupport implements CRUDAction {
         User existingUser = userDAO.getUser(this.user.getLoginName());
         if (existingUser != null && existingUser.getId() != storable.getId()) {
             super.addActionError(super.getText("user.loginNameInUse"));
-            return;
+        }
+        
+        if (this.user.getFullName() == null ||
+                this.user.getFullName().equalsIgnoreCase("")) {
+            super.addActionError("Full name is required");
         }
 
         storable.setFullName(this.user.getFullName());
         storable.setLoginName(this.user.getLoginName());
         storable.setPassword(md5Pw);
-        if (this.user.getEmail() != null) {
+        if (this.user.getEmail() == null ||
+                this.user.getEmail().equalsIgnoreCase("")) {
+            super.addActionError("Email is required");
+        }
+        else  {
             EmailValidator e = new EmailValidator();
             if (!e.isValid(this.user.getEmail())) {
                 super.addActionError(super.getText("user.invalidEmail"));
-                return;
             }
         }
         storable.setEmail(this.user.getEmail());

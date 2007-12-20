@@ -319,8 +319,8 @@
 			<result>/WEB-INF/jsp/editTask.jsp</result>
 		</action>
 		<action name="deleteTask" method="delete" class="taskAction">
-			<result type="redirect">
-				editBacklogItem.action?backlogItemId=${backlogItemId}
+			<result type="redirect-action">
+				<param name="actionName">popContext</param>
 			</result>
 		</action>
 		<action name="storeTask" method="store" class="taskAction">
@@ -392,11 +392,6 @@
 		<!-- /Iteration actions -->
 
 		<!-- User actions -->
-		<action name="assignTask" class="assignTaskAction">
-			<result type="redirect">
-				editTask.action?taskId=${taskId}
-			</result>
-		</action>
 		<action name="listUsers">
 			<result>/WEB-INF/jsp/listUsers.jsp</result>
 		</action>
@@ -460,6 +455,11 @@
 		</result>
 		</action> 
 		<action name="moveProjectBottom" class="projectPortfolioAction" method="moveProjectBottom">
+		<result type="redirect-action">
+			<param name="actionName">projectPortfolio</param>
+		</result>
+		</action> 
+		<action name="unrankProject" class="projectPortfolioAction" method="unrankProject">
 		<result type="redirect-action">
 			<param name="actionName">projectPortfolio</param>
 		</result>
@@ -615,6 +615,10 @@
 			
 			<result name="success_dailyWork" type="redirect-action">
 				<param name="actionName">dailyWork</param>
+			</result>
+			
+			<result name="success_createNew" type="redirect-action">
+				<param name="actionName">createNew</param>
 			</result>
 		</action>
 		

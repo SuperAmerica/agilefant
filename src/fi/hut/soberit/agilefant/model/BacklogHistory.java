@@ -2,6 +2,7 @@ package fi.hut.soberit.agilefant.model;
 
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.persistence.DiscriminatorValue;
@@ -16,7 +17,7 @@ import org.hibernate.annotations.CascadeType;
 @Entity
 @DiscriminatorValue("1")
 public class BacklogHistory extends History<Backlog> {
-    private List<HistoryEntry<BacklogHistory>> effortHistoryEntries;
+    private List<HistoryEntry<BacklogHistory>> effortHistoryEntries = new LinkedList<HistoryEntry<BacklogHistory>>();
 
     @OneToMany(mappedBy="history")
     @OrderBy(value="date desc")
@@ -56,7 +57,10 @@ public class BacklogHistory extends History<Backlog> {
      */
     @Transient
     public HistoryEntry<BacklogHistory> getLatestEntry() {
-        return effortHistoryEntries.get(0);
+        if( effortHistoryEntries.size() > 0)
+            return effortHistoryEntries.get(0);
+        else
+            return createTemporaryEntry(new Date());
     }
     
     /**
@@ -71,6 +75,46 @@ public class BacklogHistory extends History<Backlog> {
                 return entry;
             }
         }
-        return null;
+        /* Following code is for backlogs where the starting time has been moved backwards beyond when the backlog was created. */
+        return createTemporaryEntry(date);
     }
+    
+    /**
+     * Gotta figure a smarter way to do this.
+     * @param date
+     * @return
+     */
+    @Deprecated
+    private HistoryEntry<BacklogHistory> createTemporaryEntry(Date date) {
+        HistoryEntry<BacklogHistory> faux = new HistoryEntry<BacklogHistory>();
+        faux.setDate( new java.sql.Date(date.getTime()) );
+        faux.setEffortLeft(new AFTime(0) );
+        faux.setOriginalEstimate(new AFTime(0));
+        return faux;
+    }
+    
+    /**
+     * Returns the current effort left for this <code>BacklogHistory</code>
+     * @return
+     */
+    @Transient
+    public AFTime getCurrentEffortLeft() {
+        HistoryEntry<BacklogHistory> entry;
+        entry = getLatestEntry();
+        if(entry != null)
+            return entry.getEffortLeft();
+        return new AFTime(0);
+    }
+    /**
+     * Returns the current original estimate for this <code>BacklogHistory</code>
+     * @return
+     */
+    @Transient
+    public AFTime getCurrentOriginalEstimate() {
+        HistoryEntry<BacklogHistory> entry;
+        entry = getLatestEntry();
+        if(entry != null)
+            return entry.getOriginalEstimate();
+        return new AFTime(0);
+    }    
 }

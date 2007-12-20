@@ -39,6 +39,7 @@ public class BacklogActionTest extends SpringTestCase {
         product = new Product();
         product.setId((Integer) backlogDAO.create(product));
         product = backlogDAO.get(product.getId());
+        
         // create project to product
         project = new Project();
         project.setId((Integer) backlogDAO.create(project));
@@ -49,6 +50,7 @@ public class BacklogActionTest extends SpringTestCase {
         backlogDAO.store(project);
         backlogDAO.store(product);
         project = backlogDAO.get(project.getId());
+        
         // create iteration to project
         iteration = new Iteration();
         iteration.setId((Integer) backlogDAO.create(iteration));
@@ -59,6 +61,7 @@ public class BacklogActionTest extends SpringTestCase {
         backlogDAO.store(iteration);
         backlogDAO.store(project);
         iteration = backlogDAO.get(iteration.getId());
+        
         // create test blis to product
         bli1 = new BacklogItem();
         bli2 = new BacklogItem();

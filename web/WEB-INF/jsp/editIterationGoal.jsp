@@ -37,18 +37,18 @@
 		<tr>
 			<td>Name</td>
 			<td>*</td>
-			<td><ww:textfield size="60" name="iterationGoal.name" /></td>
+			<td colspan="2"><ww:textfield size="60" name="iterationGoal.name" /></td>
 		</tr>
 		<tr>
 			<td>Description</td>
 			<td></td>
-			<td><ww:textarea cols="70" rows="10"
+			<td colspan="2"><ww:textarea cols="70" rows="10"
 				name="iterationGoal.description" /></td>
 		</tr>
 		<tr>
 			<td>Iteration</td>
 			<td></td>
-			<td><select name="iterationId">
+			<td colspan="2"><select name="iterationId">
 				<option value="" class="inactive">(select iteration)</option>
 				<c:forEach items="${productList}" var="product">
 					<option value="" class="inactive">${product.name}</option>
@@ -71,18 +71,18 @@
 		<tr>
 			<td></td>
 			<td></td>
-			<td><c:choose>
+			<c:choose>
 				<c:when test="${iterationGoalId == 0}">
-					<ww:submit value="Create" />
-					<ww:submit action="storeCloseIterationGoal" value="Create & Close" />
+					<td><ww:submit value="Create" />
+					<ww:submit action="storeCloseIterationGoal" value="Create & Close" /></td>
 				</c:when>
 				<c:otherwise>
-					<ww:submit value="Save" />
-					<ww:submit action="storeCloseIterationGoal" value="Save & Close" />
-					<span class="deleteButton"> <ww:submit
-						action="deleteIterationGoal" value="Delete" /> </span>
+					<td><ww:submit value="Save" />
+					<ww:submit action="storeCloseIterationGoal" value="Save & Close" /></td>
+					<td class="deleteButton"> <ww:submit onclick="return confirmDelete()"
+						action="deleteIterationGoal" value="Delete" /> </td>
 				</c:otherwise>
-			</c:choose></td>
+			</c:choose>
 		</tr>
 	</table>
 </ww:form>

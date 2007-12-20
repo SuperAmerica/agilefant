@@ -17,6 +17,7 @@ import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.db.IterationGoalDAO;
 import fi.hut.soberit.agilefant.db.TaskDAO;
 import fi.hut.soberit.agilefant.db.UserDAO;
+import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
@@ -34,7 +35,7 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
 
     private BacklogItemDAO backlogItemDAO;
 
-    private int backlogId;
+    private int backlogId = 0;
 
     private int backlogItemId;
 
@@ -83,30 +84,30 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
     public String create() {
         // Id of newly created, not yet persisted backlog item is 0
         backlogItemId = 0;
-        backlogItem = backlogBusiness.createBacklogItemToBacklog(backlogId);
-        if(backlogItem == null) {
-            super.addActionError(super.getText("Invalid backlog id!"));
-            return Action.ERROR;
-        }
-        backlog = backlogItem.getBacklog();
-        backlogId = backlog.getId();
 
-        historyBusiness.updateBacklogHistory(backlog.getId());
-        return Action.SUCCESS;
+        if (backlogId == 0) {
+            return Action.SUCCESS;
+        } else {
+            backlogItem = backlogBusiness.createBacklogItemToBacklog(backlogId);
+            if(backlogItem == null) {
+                super.addActionError(super.getText("backlog.notFound"));
+                return Action.ERROR;
+            }
+            backlog = backlogItem.getBacklog();
+            backlogId = backlog.getId();
+            return Action.SUCCESS;
+        }
     }
 
     public String delete() {
-        backlogItem = backlogItemBusiness.getBacklogItem(backlogItemId);
-        if (backlogItem == null) {
+        try {
+            backlogItemBusiness.removeBacklogItem(backlogItemId);
+        } catch (ObjectNotFoundException e) {
             super.addActionError(super.getText("backlogItem.notFound"));
             return Action.ERROR;
         }
-        backlog = backlogItem.getBacklog();
-        // backlogId = backlogItem.getId();//?? removed when testing with jUnit
-        backlogItemBusiness.removeBacklogItem(backlogItemId);
 
-        historyBusiness.updateBacklogHistory(backlog.getId());
-
+        // If exception was not thrown from business method, return success.
         return Action.SUCCESS;
     }
 
@@ -150,7 +151,7 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
         }
 
         // Store backlog item
-        backlogItemDAO.store(storable);
+        this.backlogItemId = (Integer) backlogItemDAO.create(storable);
 
         /*
          * This should be handled inside business...
@@ -175,8 +176,26 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
             super.addActionError(super.getText("backlogItem.notFound"));
             return Action.ERROR;
         } else {
-            backlogItem.setEffortLeft(this.effortLeft);
+            
+            // Set the effort left as original estimate if backlog item's
+            // original estimate is null in database
+            if (backlogItem.getOriginalEstimate() == null) {
+                backlogItem.setEffortLeft(this.effortLeft);
+                backlogItem.setOriginalEstimate(this.effortLeft);
+            }
+            else if (backlogItem.getEffortLeft() != null &&
+                    this.effortLeft == null) {
+                backlogItem.setEffortLeft(new AFTime(0));
+            }
+            else {
+                backlogItem.setEffortLeft(this.effortLeft);
+            }
+
             backlogItem.setState(this.state);
+            // set effortleft to 0 if state changed to done
+            if(this.state == State.DONE)
+                backlogItem.setEffortLeft(new AFTime(0));
+
             backlogItemDAO.store(backlogItem);
             historyBusiness.updateBacklogHistory(backlogItem.getBacklog()
                     .getId());
@@ -214,6 +233,12 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
 
         storable.setState(backlogItem.getState());
 
+        // set effortleft to 0 if state changed to done
+        if(backlogItem.getState() == State.DONE) {
+            backlogItem.setEffortLeft(new AFTime(0));
+            this.effortLeft = new AFTime(0);
+        }
+        
         /*
          * Set effort left. If this is new item set its effort to be the
          * original effort. Otherwise set its effort to be the received effort
@@ -222,13 +247,13 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
         if (storable.getOriginalEstimate() == null) {
             storable.setOriginalEstimate(backlogItem.getOriginalEstimate());
             storable.setEffortLeft(backlogItem.getOriginalEstimate());
-        } else if(storable.getEffortLeft() != null && backlogItem.getEffortLeft() == null){
+        } else if (storable.getEffortLeft() != null
+                && backlogItem.getEffortLeft() == null) {
             storable.setEffortLeft(new AFTime(0));
-        }
-        else {
+        } else {
             storable.setEffortLeft(backlogItem.getEffortLeft());
-        }
-
+        }        
+        
         // TODO: REFACTOR THIS when moving backlog items from backlog to another
         // change
         // backlog item's original estimate to current effort left.
@@ -237,8 +262,13 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
         if (backlog == null) {
             super.addActionError(super.getText("backlog.notFound"));
         }
-        if (storable.getId() > 0) {
+        // if we're moving backlogitem, set originalestimate to current
+        // effortleft.
+        if (storable.getId() > 0 && storable.getBacklog() != null
+                && storable.getBacklog() != this.backlog
+                && this.backlog != null) {
             storable.getBacklog().getBacklogItems().remove(storable);
+            storable.setOriginalEstimate(storable.getEffortLeft());
             backlog.getBacklogItems().add(storable);
         }
         storable.setBacklog(backlog);

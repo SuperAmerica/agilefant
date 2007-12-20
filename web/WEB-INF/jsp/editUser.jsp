@@ -22,51 +22,46 @@
 
 	<table class="formTable">
 		<tr>
-			<td></td>
-			<td></td>
-			<td></td>
-		</tr>
-		<tr>
 			<td>Full name</td>
 			<td>*</td>
-			<td><ww:textfield name="user.fullName" /></td>
+			<td colspan="2"><ww:textfield name="user.fullName" /></td>
 		</tr>
 		<tr>
 			<td>User/login id</td>
 			<td>*</td>
-			<td><ww:textfield name="user.loginName" /></td>
+			<td colspan="2"><ww:textfield name="user.loginName" /></td>
 		</tr>
 		<tr>
 			<td>Email</td>
 			<td>*</td>
-			<td><ww:textfield name="user.email" value="${user.email}" /></td>
+			<td colspan="2"><ww:textfield name="user.email" value="${user.email}" /></td>
 		</tr>
 		<tr>
 			<td>Password</td>
 			<td>*</td>
-			<td><ww:password name="password1" /></td>
+			<td colspan="2"><ww:password name="password1" /></td>
 		</tr>
 		<tr>
 			<td>Confirm password</td>
 			<td>*</td>
-			<td><ww:password name="password2" /></td>
+			<td colspan="2"><ww:password name="password2" /></td>
 		</tr>
 		<tr>
 			<td></td>
 			<td></td>
-			<td><c:choose>
+			<c:choose>
 				<c:when test="${user.id == 0}">
-					<ww:submit value="Create" />
+					<td><ww:submit value="Create" /></td>
 				</c:when>
 				<c:otherwise>
-					<ww:submit value="Save" />
+					<td><ww:submit value="Save" /></td>
 					<%-- All users cannot be deleted --%>
 					<c:if test="${user.id != 1}">
-						<span class="deleteButton"> <ww:submit action="deleteUser"
-							value="Delete" /> </span>
+						<td class="deleteButton"> <ww:submit action="deleteUser"
+							onclick="return confirmDelete()" value="Delete" /> </td>
 					</c:if>
 				</c:otherwise>
-			</c:choose></td>
+			</c:choose>
 		</tr>
 	</table>
 

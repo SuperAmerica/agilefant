@@ -68,6 +68,13 @@ public interface ProjectBusiness {
     public void moveToBottom(int projectId);
 
     /**
+     * Clears project's rank.
+     * 
+     * @param project
+     */
+    public void unrank(int projectId);
+
+    /**
      * Get all project types.
      * 
      * @return collection of project types

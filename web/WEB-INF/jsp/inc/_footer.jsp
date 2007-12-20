@@ -1,4 +1,4 @@
-			<div style="clear:both">&nbsp;</div>
+			<div id="layoutEmptyDiv">&nbsp;</div>
 			</div>
 
 			<div id="footer">

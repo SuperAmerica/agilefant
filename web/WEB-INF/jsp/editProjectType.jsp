@@ -15,34 +15,29 @@
 	<ww:hidden name="projectTypeId" value="${projectType.id}" />
 	<table class="formTable">
 		<tr>
-			<td></td>
-			<td></td>
-			<td></td>
-		</tr>
-		<tr>
 			<td>Name</td>
 			<td>*</td>
-			<td><ww:textfield size="60" name="projectType.name" /></td>
+			<td colspan="2"><ww:textfield size="60" name="projectType.name" /></td>
 		</tr>
 		<tr>
 			<td>Description</td>
 			<td></td>
-			<td><ww:textarea cols="70" rows="10"
+			<td colspan="2"><ww:textarea cols="70" rows="10"
 				name="projectType.description" /></td>
 		</tr>
 		<tr>
 			<td></td>
 			<td></td>
-			<td><c:choose>
+			<c:choose>
 				<c:when test="${projectType.id == 0}">
-					<ww:submit value="Create" />
+					<td><ww:submit value="Create" /></td>
 				</c:when>
 				<c:otherwise>
-					<ww:submit value="Save" />
-					<span class="deleteButton"> <ww:submit
-						action="deleteProjectType" value="Delete" /> </span>
+					<td><ww:submit value="Save" /></td>
+					<td class="deleteButton"> <ww:submit onclick="return confirmDelete()"
+						action="deleteProjectType" value="Delete" /> </td>
 				</c:otherwise>
-			</c:choose></td>
+			</c:choose>
 		</tr>
 	</table>
 </ww:form>
@@ -56,11 +51,11 @@
 				<ww:param name="projectTypeId" value="${projectType.id}" />
 			</ww:url> <ww:a href="%{createLink}">Create new &raquo;</ww:a></div>
 			<c:if test="${!empty projectType.workTypes}">
-				<div id="subItemContent"><display:table class="listTable"
+				<div id="subItemContent">
+					<display:table class="listTable" defaultsort="1"
 					name="${projectType.workTypes}" id="row"
 					requestURI="editProjectType.action?projectTypeId=${projectType.id}">
-					<display:column sortable="true" property="id" />
-					<display:column sortable="true" title="Name">
+					<display:column sortable="true" title="Name" sortProperty="name">
 						<ww:url id="editLink" action="editWorkType" includeParams="none">
 							<ww:param name="workTypeId" value="${row.id}" />
 							<ww:param name="projectTypeId" value="${projectType.id}" />
@@ -76,7 +71,7 @@
 							<ww:param name="projectTypeId" value="${projectType.id}" />
 						</ww:url>
 						<!--<ww:a href="%{editLink}">Edit</ww:a>|-->
-						<ww:a href="%{deleteLink}">Delete</ww:a>
+						<ww:a href="%{deleteLink}" onclick="return confirmDelete()">Delete</ww:a>
 					</display:column>
 				</display:table></div>
 			</c:if></div>

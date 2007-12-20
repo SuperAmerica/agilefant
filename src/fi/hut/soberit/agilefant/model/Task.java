@@ -56,8 +56,6 @@ public class Task implements PageItem {
 
     private BacklogItem backlogItem;
 
-    private Date created;
-
     private User creator;
 
     @Type(type = "escaped_text")
@@ -100,14 +98,6 @@ public class Task implements PageItem {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public Date getCreated() {
-        return created;
-    }
-
-    public void setCreated(Date created) {
-        this.created = created;
     }
 
     @ManyToOne

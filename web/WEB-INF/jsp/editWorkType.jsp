@@ -17,33 +17,28 @@
 
 	<table class="formTable">
 		<tr>
-			<td></td>
-			<td></td>
-			<td></td>
-		</tr>
-		<tr>
 			<td>Name</td>
 			<td>*</td>
-			<td><ww:textfield size="60" name="workType.name" /></td>
+			<td colspan="2"><ww:textfield size="60" name="workType.name" /></td>
 		</tr>
 		<tr>
 			<td>Description</td>
 			<td></td>
-			<td><ww:textarea cols="70" rows="10" name="workType.description" /></td>
+			<td colspan="2"><ww:textarea cols="70" rows="10" name="workType.description" /></td>
 		</tr>
 		<tr>
 			<td></td>
 			<td></td>
-			<td><c:choose>
+			<c:choose>
 				<c:when test="${workType.id == 0}">
-					<ww:submit value="Create" />
+					<td><ww:submit value="Create" /></td>
 				</c:when>
 				<c:otherwise>
-					<ww:submit value="Save" />
-					<span class="deleteButton"> <ww:submit
-						action="deleteWorkType" value="Delete" /> </span>
+					<td><ww:submit value="Save" /></td>
+					<td class="deleteButton"> <ww:submit onclick="return confirmDelete()"
+						action="deleteWorkType" value="Delete" /> </td>
 				</c:otherwise>
-			</c:choose></td>
+			</c:choose>
 		</tr>
 	</table>
 

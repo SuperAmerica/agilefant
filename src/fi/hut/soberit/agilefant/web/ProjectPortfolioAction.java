@@ -65,6 +65,11 @@ public class ProjectPortfolioAction extends ActionSupport {
         return Action.SUCCESS;
     }
 
+    public String unrankProject() {
+        projectBusiness.unrank(projectId);
+        return Action.SUCCESS;
+    }
+
     public int getProjectId() {
         return projectId;
     }

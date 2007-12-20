@@ -95,6 +95,15 @@ public class ProjectBusinessImpl implements ProjectBusiness {
     }
 
     /** {@inheritDoc} **/
+    public void unrank(int projectId) {
+        Project project = projectDAO.get(projectId);
+        if (project != null) {
+            project.setRank(0);
+            projectDAO.store(project);
+        }
+    }
+
+    /** {@inheritDoc} **/
     public void deleteProjectType(int projectTypeId)
             throws OperationNotPermittedException,
             ObjectNotFoundException {
@@ -112,7 +121,7 @@ public class ProjectBusinessImpl implements ProjectBusiness {
         
         projectTypeDAO.remove(projectTypeId);
     }
-    
+
     /** {@inheritDoc} **/
     public Collection<ProjectType> getProjectTypes() {
         return projectTypeDAO.getAll();

@@ -23,6 +23,11 @@
 		</ww:a>
 	</display:column>
 	<display:column title="Action">
+		<ww:url id="moveTopLink" action="moveProjectTop">
+			<ww:param name="projectId" value="${row.id}" />
+		</ww:url>
+		<ww:a href="%{moveTopLink}"><img src="static/img/arrow_top.png" alt="Send to top" title="Send to top" /></ww:a>
+		
 		<ww:url id="moveUpLink" action="moveProjectUp">
 			<ww:param name="projectId" value="${row.id}" />
 		</ww:url>
@@ -32,11 +37,6 @@
 			<ww:param name="projectId" value="${row.id}" />
 		</ww:url>
 		<ww:a href="%{moveDownLink}"><img src="static/img/arrow_down.png" alt="Move down" title="Move down" /></ww:a>
-
-		<ww:url id="moveTopLink" action="moveProjectTop">
-			<ww:param name="projectId" value="${row.id}" />
-		</ww:url>
-		<ww:a href="%{moveTopLink}"><img src="static/img/arrow_top.png" alt="Send to top" title="Send to top" /></ww:a>
 
 		<ww:url id="moveBottomLink" action="moveProjectBottom">
 			<ww:param name="projectId" value="${row.id}" />

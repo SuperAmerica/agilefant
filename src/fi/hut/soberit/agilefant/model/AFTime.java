@@ -32,10 +32,6 @@ import java.util.regex.MatchResult;
  * @see fi.hut.soberit.agilefant.db.hibernate.TimeUserType
  * @author ekantola
  * @author Turkka Äijälä
- * 
- * 
- * 
- * 
  */
 public class AFTime extends java.sql.Time {
     private static final long serialVersionUID = 2737253352614021649L;

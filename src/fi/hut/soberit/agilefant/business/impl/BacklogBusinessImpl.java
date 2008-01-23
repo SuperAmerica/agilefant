@@ -210,7 +210,7 @@ public class BacklogBusinessImpl implements BacklogBusiness {
                 Assignment assignment = new Assignment(user, backlog);
                 user.getAssignments().add(assignment);
                 backlog.getAssignments().add(assignment);
-                assignmentDAO.create(assignment);
+                assignmentDAO.store(assignment);
                 userDAO.store(user);
                 backlogDAO.store(backlog);
             }

@@ -136,9 +136,10 @@ public class BacklogBusinessTest extends TestCase {
     public void testSetAssignments() {
         backlogDAO = createMock(BacklogDAO.class);
         userDAO = createMock(UserDAO.class);
+        assignmentDAO = createMock(AssignmentDAO.class);
         backlogBusiness.setBacklogDAO(backlogDAO);
         backlogBusiness.setUserDAO(userDAO);
-        assignmentDAO = createMock(AssignmentDAO.class);
+        backlogBusiness.setAssignmentDAO(assignmentDAO);
 
         Backlog backlog = new Project();
         backlog.setId(100);
@@ -155,7 +156,15 @@ public class BacklogBusinessTest extends TestCase {
 
         // Record expected behavior
         expect(userDAO.get(user1.getId())).andReturn(user1);
+        assignmentDAO.store(assignment1);
+        userDAO.store(user1);
+        backlogDAO.store(backlog);
+        
         expect(userDAO.get(user2.getId())).andReturn(user2);
+        assignmentDAO.store(assignment2);
+        userDAO.store(user2);
+        backlogDAO.store(backlog);
+        
         replay(userDAO);
 
         // run method under test

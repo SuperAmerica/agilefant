@@ -38,7 +38,7 @@ public class User implements PageItem {
     
     private String initials;
 
-    private Collection<Task> assignments = new HashSet<Task>();
+    private Collection<Assignment> assignments = new HashSet<Assignment>();
 
     private Collection<Backlog> backlogs = new HashSet<Backlog>();
 
@@ -182,6 +182,15 @@ public class User implements PageItem {
         this.email = email;
     }
 
+    @OneToMany(mappedBy = "user")
+    public Collection<Assignment> getAssignments() {
+        return assignments;
+    }
+
+    public void setAssignments(Collection<Assignment> assignments) {
+        this.assignments = assignments;
+    }
+
     /**
      * Get the user's initials.
      * @return the initials
@@ -197,4 +206,5 @@ public class User implements PageItem {
     public void setInitials(String initials) {
         this.initials = initials;
     }
+
 }

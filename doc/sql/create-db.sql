@@ -7,6 +7,7 @@ create table ProjectType (id integer not null auto_increment, targetSpendingPerc
 create table Task (id integer not null auto_increment, created datetime, name varchar(255), priority integer, state integer, description text, backlogItem_id integer not null, creator_id integer, primary key (id)) ENGINE=InnoDB;
 create table User (id integer not null auto_increment, loginName varchar(255) unique, email varchar(255), fullName varchar(255), password varchar(255), primary key (id)) ENGINE=InnoDB;
 create table WorkType (id integer not null auto_increment, name varchar(255) not null, description text, projectType_id integer, primary key (id)) ENGINE=InnoDB;
+create table Assignment (id integer not null auto_increment, user_id integer, backlog_id integer, primary key (id)) ENGINE=InnoDB;
 alter table Backlog add index FK4E86B8DDCA187B22 (project_id), add constraint FK4E86B8DDCA187B22 foreign key (project_id) references Backlog (id);
 alter table Backlog add index FK4E86B8DD31FA7A4E (assignee_id), add constraint FK4E86B8DD31FA7A4E foreign key (assignee_id) references User (id);
 alter table Backlog add index FK4E86B8DDC91A641F (history_fk), add constraint FK4E86B8DDC91A641F foreign key (history_fk) references History (id);
@@ -22,3 +23,5 @@ alter table IterationGoal add index FKBCC95B704157D2A2 (iteration_id), add const
 alter table Task add index FK27A9A5E94683E2 (backlogItem_id), add constraint FK27A9A5E94683E2 foreign key (backlogItem_id) references BacklogItem (id);
 alter table Task add index FK27A9A51C5D0ED1 (creator_id), add constraint FK27A9A51C5D0ED1 foreign key (creator_id) references User (id);
 alter table WorkType add index FK5EE3E0B3872F902 (projectType_id), add constraint FK5EE3E0B3872F902 foreign key (projectType_id) references ProjectType (id);
+alter table Assignment add index FKB3FD62EDF63400A2 (backlog_id), add constraint FKB3FD62EDF63400A2 foreign key (backlog_id) references Backlog (id);
+alter table Assignment add index FKB3FD62EDC1610AD2 (user_id), add constraint FKB3FD62EDC1610AD2 foreign key (user_id) references User (id);

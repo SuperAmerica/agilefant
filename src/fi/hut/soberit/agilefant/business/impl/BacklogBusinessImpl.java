@@ -8,13 +8,17 @@ import java.util.Set;
 
 import fi.hut.soberit.agilefant.business.BacklogBusiness;
 import fi.hut.soberit.agilefant.business.HistoryBusiness;
+import fi.hut.soberit.agilefant.db.AssignmentDAO;
 import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
+import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.AFTime;
+import fi.hut.soberit.agilefant.model.Assignment;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.Priority;
+import fi.hut.soberit.agilefant.model.User;
 
 /**
  * 
@@ -27,6 +31,10 @@ public class BacklogBusinessImpl implements BacklogBusiness {
     private HistoryBusiness historyBusiness;
 
     private BacklogDAO backlogDAO;
+    
+    private UserDAO userDAO;
+    
+    private AssignmentDAO assignmentDAO;
 
     // @Override
     public void deleteMultipleItems(int backlogId, int[] backlogItemIds)
@@ -188,6 +196,37 @@ public class BacklogBusinessImpl implements BacklogBusiness {
 
     public void setHistoryBusiness(HistoryBusiness historyBusiness) {
         this.historyBusiness = historyBusiness;
+    }
+
+    public void setAssignments(int[] selectedUserIds, Backlog backlog) {
+        if(selectedUserIds == null) {
+            // New project and no assignees selected or deleting all assignees
+        } else if (backlog.getAssignments().size() == 0) {
+            // New project or project w/o ssigned users.
+            for (int id : selectedUserIds) {
+                User user = userDAO.get(id);
+                if(user == null)
+                    continue;
+                Assignment assignment = new Assignment(user, backlog);
+                user.getAssignments().add(assignment);
+                backlog.getAssignments().add(assignment);
+                assignmentDAO.create(assignment);
+                userDAO.store(user);
+                backlogDAO.store(backlog);
+            }
+        }
+        else {
+            
+        }
+        
+    }
+
+    public void setUserDAO(UserDAO userDAO) {
+        this.userDAO = userDAO;
+    }
+
+    public void setAssignmentDAO(AssignmentDAO assignmentDAO) {
+        this.assignmentDAO = assignmentDAO;
     }
 }
 

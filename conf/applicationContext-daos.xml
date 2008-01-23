@@ -89,4 +89,10 @@
 		<property name="target" ref="iterationGoalDAOTarget" />
 	</bean>
 
+	<bean name="assignmentDAOTarget" parent="abstractDAOTarget"
+		class="fi.hut.soberit.agilefant.db.hibernate.AssignmentDAOHibernate" />
+
+	<bean name="assignmentDAO" parent="abstractDAO">
+		<property name="target" ref="assignmentDAOTarget" />
+	</bean>
 </beans>

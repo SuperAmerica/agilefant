@@ -8,14 +8,22 @@ import static org.easymock.EasyMock.verify;
 import java.util.ArrayList;
 
 import junit.framework.TestCase;
+
+import org.junit.Ignore;
+
 import fi.hut.soberit.agilefant.business.impl.BacklogBusinessImpl;
+import fi.hut.soberit.agilefant.db.AssignmentDAO;
 import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
+import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
+import fi.hut.soberit.agilefant.model.Assignment;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Priority;
+import fi.hut.soberit.agilefant.model.Project;
+import fi.hut.soberit.agilefant.model.User;
 
 /**
  * A spring test case for testing the Backlog business layer.
@@ -23,12 +31,15 @@ import fi.hut.soberit.agilefant.model.Priority;
  * @author hhaataja, rstrom
  * 
  */
+
 public class BacklogBusinessTest extends TestCase {
 
     private BacklogBusinessImpl backlogBusiness = new BacklogBusinessImpl();
     private HistoryBusiness historyBusiness;
     private BacklogItemDAO bliDAO;
     private BacklogDAO backlogDAO;
+    private AssignmentDAO assignmentDAO;
+    private UserDAO userDAO;
 
     public void testChangePriorityOfMultipleItems() throws Exception {
         bliDAO = createMock(BacklogItemDAO.class);
@@ -121,4 +132,40 @@ public class BacklogBusinessTest extends TestCase {
         verify(historyBusiness);
     }
 
+    @Ignore
+    public void testSetAssignments() {
+        backlogDAO = createMock(BacklogDAO.class);
+        userDAO = createMock(UserDAO.class);
+        backlogBusiness.setBacklogDAO(backlogDAO);
+        backlogBusiness.setUserDAO(userDAO);
+        assignmentDAO = createMock(AssignmentDAO.class);
+
+        Backlog backlog = new Project();
+        backlog.setId(100);
+        // create users
+        User user1, user2;
+        user1 = new User();
+        user1.setLoginName("user1");
+        user2 = new User();
+        user2.setLoginName("user2");
+        user1.setId(1);
+        user2.setId(2);
+        Assignment assignment1 = new Assignment(user1, backlog);
+        Assignment assignment2 = new Assignment(user2, backlog);
+
+        // Record expected behavior
+        expect(userDAO.get(user1.getId())).andReturn(user1);
+        expect(userDAO.get(user2.getId())).andReturn(user2);
+        replay(userDAO);
+
+        // run method under test
+        int[] selectedUserIds = { user1.getId(), user2.getId() };
+        assertEquals(0, backlog.getAssignments().size());
+        backlogBusiness.setAssignments(selectedUserIds, backlog);
+        assertEquals(2, backlog.getAssignments().size());
+
+        // verify behavior
+        verify(userDAO);
+
+    }
 }

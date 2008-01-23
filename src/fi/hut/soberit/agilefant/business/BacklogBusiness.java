@@ -5,6 +5,7 @@ import java.util.List;
 
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.AFTime;
+import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.Priority;
 
@@ -97,4 +98,6 @@ public interface BacklogBusiness {
      * @return sum of original estimates
      */
     public AFTime getOriginalEstimateSum(Collection<BacklogItem> bliList);
+    
+    public void setAssignments(int[] selectedUserIds, Backlog backlog);
 }

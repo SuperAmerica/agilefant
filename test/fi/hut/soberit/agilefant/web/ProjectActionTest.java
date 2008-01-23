@@ -6,11 +6,13 @@ import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.db.ProjectDAO;
 import fi.hut.soberit.agilefant.db.ProjectTypeDAO;
+import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.ProjectType;
+import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.util.SpringTestCase;
 
 /**
@@ -26,10 +28,12 @@ public class ProjectActionTest extends SpringTestCase {
     private BacklogDAO backlogDAO = null;
     private ProjectTypeDAO projectTypeDAO = null;
     private BacklogItemDAO backlogItemDAO = null;
+    private UserDAO userDAO = null;
 
     private Backlog product;
     private Backlog project;
     private ProjectType projectType;
+    private User user1, user2;
 
     /**
      * Create test data.
@@ -57,10 +61,16 @@ public class ProjectActionTest extends SpringTestCase {
         // create project type
         projectType = new ProjectType();
         projectType.setName("Test Name");
-        projectType.setId((Integer) projectTypeDAO.create(projectType));
         ((Project) project).setProjectType(projectType);
         projectTypeDAO.store(projectType);
         backlogDAO.store(project);
+        // create users
+        user1 = new User();
+        user1.setLoginName("user1");
+        user2 = new User();
+        user2.setLoginName("user2");
+        user1.setId((Integer) userDAO.create(user1));
+        user2.setId((Integer) userDAO.create(user2));
     }
 
     /**
@@ -70,6 +80,34 @@ public class ProjectActionTest extends SpringTestCase {
         assertEquals("success", projectAction.create());
         assertNotNull(projectAction.getProject());
         assertNotNull(projectAction.getBacklog());
+    }
+
+    public void testCreate_withAssignments() {
+        int[] selectedUserIds = {user1.getId(), user2.getId()};
+        projectAction.setSelectedUserIds(selectedUserIds);
+        projectAction.setProject((Project) project);
+        projectAction.setProjectId(project.getId());
+        projectAction.setStartDate("2007-11-13 06:00");
+        projectAction.setEndDate("2007-11-14 06:00");
+        projectAction.setProductId(product.getId());
+        projectAction.setProjectTypeId(projectType.getId());
+        assertEquals(0, project.getAssignments().size());
+        assertEquals("success", projectAction.store());
+        assertEquals(2, project.getAssignments().size());
+    }
+    
+    public void testCreate_withInvalidAssignments() {
+        int[] selectedUserIds = {-500, user2.getId()};
+        projectAction.setSelectedUserIds(selectedUserIds);
+        projectAction.setProject((Project) project);
+        projectAction.setProjectId(project.getId());
+        projectAction.setStartDate("2007-11-13 06:00");
+        projectAction.setEndDate("2007-11-14 06:00");
+        projectAction.setProductId(product.getId());
+        projectAction.setProjectTypeId(projectType.getId());
+        assertEquals(0, project.getAssignments().size());
+        assertEquals("success", projectAction.store());
+        assertEquals(1, project.getAssignments().size());
     }
 
     /**
@@ -265,5 +303,9 @@ public class ProjectActionTest extends SpringTestCase {
 
     public void setBacklogItemDAO(BacklogItemDAO backlogItemDAO) {
         this.backlogItemDAO = backlogItemDAO;
+    }
+
+    public void setUserDAO(UserDAO userDAO) {
+        this.userDAO = userDAO;
     }
 }

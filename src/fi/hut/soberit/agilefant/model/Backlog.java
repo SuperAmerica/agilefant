@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
@@ -68,6 +69,8 @@ public abstract class Backlog implements Assignable {
     private User assignee;
 
     private BacklogHistory backlogHistory = new BacklogHistory();
+
+    private Collection<Assignment> assignments = new HashSet<Assignment>();
 
     @OneToMany(mappedBy = "backlog")
     /** A backlog can contain many backlog items. */
@@ -175,14 +178,15 @@ public abstract class Backlog implements Assignable {
      * not include effort contained in Project's iterations.
      * 
      * @return the BLI effort left sum
-     * @deprecated Use the history directly rather than through a convenience method.
+     * @deprecated Use the history directly rather than through a convenience
+     *             method.
      */
     @Transient
     @Deprecated
     public AFTime getBliEffortLeftSum() {
         return backlogHistory.getCurrentEffortLeft();
     }
-    
+
     /**
      * Returns the original estimate sum of all this Backlog's BacklogItems.
      * Does Not include original estimates of sub-Backlogs. Does not calculate
@@ -230,8 +234,8 @@ public abstract class Backlog implements Assignable {
     }
 
     /**
-     * Returns the cumulative original estimate sum and bli original estimate sum, added
-     * together.
+     * Returns the cumulative original estimate sum and bli original estimate
+     * sum, added together.
      */
     @Transient
     @Deprecated
@@ -240,8 +244,8 @@ public abstract class Backlog implements Assignable {
         result.add(this.getSubBacklogOriginalEstimateSum());
         result.add(this.getBliOriginalEstimateSum());
         return result;
-    }    
-    
+    }
+
     /**
      * Return default start date
      * 
@@ -261,6 +265,15 @@ public abstract class Backlog implements Assignable {
 
     public void setBacklogHistory(BacklogHistory backlogHistory) {
         this.backlogHistory = backlogHistory;
+    }
+
+    @OneToMany(mappedBy = "backlog")
+    public Collection<Assignment> getAssignments() {
+        return assignments;
+    }
+
+    public void setAssignments(Collection<Assignment> assignments) {
+        this.assignments = assignments;
     }
 
 }

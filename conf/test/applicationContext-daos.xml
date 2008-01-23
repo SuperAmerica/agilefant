@@ -2,79 +2,98 @@
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
                        "http://www.springframework.org/dtd/spring-beans.dtd">
 <beans>
- 	<bean id="placeholderConfig"
-	      class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+	<bean id="placeholderConfig"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 		<property name="locations">
 			<list>
-	  			<value>WEB-INF/configuration.properties</value>
-		  		<value>WEB-INF/database.properties</value>
-		  	</list>
+				<value>WEB-INF/configuration.properties</value>
+				<value>WEB-INF/database.properties</value>
+			</list>
 		</property>
 	</bean>
-	
+
 	<bean name="abstractDAOTarget" abstract="true">
-		<property name="sessionFactory" ref="sessionFactory"/>
+		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
-	
-	<bean name="abstractDAO" abstract="true" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
-		<property name="transactionManager" ref="hibernateTransactionManager"/>
+
+	<bean name="abstractDAO" abstract="true"
+		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+		<property name="transactionManager"
+			ref="hibernateTransactionManager" />
 		<property name="transactionAttributes">
 			<props>
 				<prop key="*">PROPAGATION_REQUIRED</prop>
 			</props>
 		</property>
 	</bean>
-	
-	<bean name="productDAOTarget" parent="abstractDAOTarget" class="fi.hut.soberit.agilefant.db.hibernate.ProductDAOHibernate"/>
+
+	<bean name="productDAOTarget" parent="abstractDAOTarget"
+		class="fi.hut.soberit.agilefant.db.hibernate.ProductDAOHibernate" />
 	<bean name="productDAO" parent="abstractDAO">
-		<property name="target" ref="productDAOTarget"/>
-	</bean>
-	
-	<bean name="iterationDAOTarget" parent="abstractDAOTarget" class="fi.hut.soberit.agilefant.db.hibernate.IterationDAOHibernate"/>
-	<bean name="iterationDAO" parent="abstractDAO">
-		<property name="target" ref="iterationDAOTarget"/>
-	</bean>
-	
-	<bean name="backlogDAOTarget" parent="abstractDAOTarget" class="fi.hut.soberit.agilefant.db.hibernate.BacklogDAOHibernate"/>
-	<bean name="backlogDAO" parent="abstractDAO">
-		<property name="target" ref="backlogDAOTarget"/>
+		<property name="target" ref="productDAOTarget" />
 	</bean>
 
-	<bean name="projectTypeDAOTarget" parent="abstractDAOTarget" class="fi.hut.soberit.agilefant.db.hibernate.ProjectTypeDAOHibernate"/>
-	<bean name="workTypeDAOTarget" parent="abstractDAOTarget" class="fi.hut.soberit.agilefant.db.hibernate.WorkTypeDAOHibernate"/>
-	<bean name="projectDAOTarget" parent="abstractDAOTarget" class="fi.hut.soberit.agilefant.db.hibernate.ProjectDAOHibernate"/>
-	<bean name="backlogItemDAOTarget" parent="abstractDAOTarget" class="fi.hut.soberit.agilefant.db.hibernate.BacklogItemDAOHibernate"/>
-	<bean name="taskDAOTarget" parent="abstractDAOTarget" class="fi.hut.soberit.agilefant.db.hibernate.TaskDAOHibernate"/>
-	<bean name="userDAOTarget" parent="abstractDAOTarget" class="fi.hut.soberit.agilefant.db.hibernate.UserDAOHibernate"/>
-	<bean name="iterationGoalDAOTarget" parent="abstractDAOTarget" class="fi.hut.soberit.agilefant.db.hibernate.IterationGoalDAOHibernate"/>	
-		
-	<bean name="projectTypeDAO" parent="abstractDAO">
-		<property name="target" ref="projectTypeDAOTarget"/>
+	<bean name="iterationDAOTarget" parent="abstractDAOTarget"
+		class="fi.hut.soberit.agilefant.db.hibernate.IterationDAOHibernate" />
+	<bean name="iterationDAO" parent="abstractDAO">
+		<property name="target" ref="iterationDAOTarget" />
 	</bean>
-	
+
+	<bean name="backlogDAOTarget" parent="abstractDAOTarget"
+		class="fi.hut.soberit.agilefant.db.hibernate.BacklogDAOHibernate" />
+	<bean name="backlogDAO" parent="abstractDAO">
+		<property name="target" ref="backlogDAOTarget" />
+	</bean>
+
+	<bean name="projectTypeDAOTarget" parent="abstractDAOTarget"
+		class="fi.hut.soberit.agilefant.db.hibernate.ProjectTypeDAOHibernate" />
+	<bean name="workTypeDAOTarget" parent="abstractDAOTarget"
+		class="fi.hut.soberit.agilefant.db.hibernate.WorkTypeDAOHibernate" />
+	<bean name="projectDAOTarget" parent="abstractDAOTarget"
+		class="fi.hut.soberit.agilefant.db.hibernate.ProjectDAOHibernate" />
+	<bean name="backlogItemDAOTarget" parent="abstractDAOTarget"
+		class="fi.hut.soberit.agilefant.db.hibernate.BacklogItemDAOHibernate" />
+	<bean name="taskDAOTarget" parent="abstractDAOTarget"
+		class="fi.hut.soberit.agilefant.db.hibernate.TaskDAOHibernate" />
+	<bean name="userDAOTarget" parent="abstractDAOTarget"
+		class="fi.hut.soberit.agilefant.db.hibernate.UserDAOHibernate" />
+	<bean name="iterationGoalDAOTarget" parent="abstractDAOTarget"
+		class="fi.hut.soberit.agilefant.db.hibernate.IterationGoalDAOHibernate" />
+
+	<bean name="projectTypeDAO" parent="abstractDAO">
+		<property name="target" ref="projectTypeDAOTarget" />
+	</bean>
+
 	<bean name="workTypeDAO" parent="abstractDAO">
-		<property name="target" ref="workTypeDAOTarget"/>
+		<property name="target" ref="workTypeDAOTarget" />
 	</bean>
 
 	<bean name="projectDAO" parent="abstractDAO">
-		<property name="target" ref="projectDAOTarget"/>
+		<property name="target" ref="projectDAOTarget" />
 	</bean>
 
 
 	<bean name="backlogItemDAO" parent="abstractDAO">
-		<property name="target" ref="backlogItemDAOTarget"/>
+		<property name="target" ref="backlogItemDAOTarget" />
 	</bean>
 
 	<bean name="taskDAO" parent="abstractDAO">
-		<property name="target" ref="taskDAOTarget"/>
+		<property name="target" ref="taskDAOTarget" />
 	</bean>
-	
+
 	<bean name="userDAO" parent="abstractDAO">
-		<property name="target" ref="userDAOTarget"/>
+		<property name="target" ref="userDAOTarget" />
 	</bean>
 
 	<bean name="iterationGoalDAO" parent="abstractDAO">
-		<property name="target" ref="iterationGoalDAOTarget"/>
-	</bean>	
+		<property name="target" ref="iterationGoalDAOTarget" />
+	</bean>
+
+	<bean name="assignmentDAOTarget" parent="abstractDAOTarget"
+		class="fi.hut.soberit.agilefant.db.hibernate.AssignmentDAOHibernate" />
+		
+	<bean name="assignmentDAO" parent="abstractDAO">
+		<property name="target" ref="assignmentDAOTarget" />
+	</bean>
 
 </beans>

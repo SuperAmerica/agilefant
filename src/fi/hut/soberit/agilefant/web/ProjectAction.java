@@ -1,21 +1,25 @@
 package fi.hut.soberit.agilefant.web;
 
 import java.text.ParseException;
-import java.util.Calendar;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
 
-import fi.hut.soberit.agilefant.db.ProjectTypeDAO;
+import fi.hut.soberit.agilefant.business.BacklogBusiness;
+import fi.hut.soberit.agilefant.business.UserBusiness;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.db.ProductDAO;
 import fi.hut.soberit.agilefant.db.ProjectDAO;
-import fi.hut.soberit.agilefant.model.ProjectType;
+import fi.hut.soberit.agilefant.db.ProjectTypeDAO;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
+import fi.hut.soberit.agilefant.model.ProjectType;
+import fi.hut.soberit.agilefant.model.User;
 
 public class ProjectAction extends ActionSupport implements CRUDAction {
 
@@ -47,6 +51,14 @@ public class ProjectAction extends ActionSupport implements CRUDAction {
 
     private String dateFormat;
 
+    private int[] selectedUserIds;
+
+    private BacklogBusiness backlogBusiness;
+
+    private List<User> users = new ArrayList<User>();
+
+    private UserBusiness userBusiness;
+
     /**
      * @return the dateFormat
      */
@@ -72,6 +84,10 @@ public class ProjectAction extends ActionSupport implements CRUDAction {
         projectId = 0;
         project = new Project();
         backlog = project;
+        
+        // populate all users to drop-down list
+        users = userBusiness.getAllUsers();
+        
         return Action.SUCCESS;
     }
 
@@ -130,6 +146,7 @@ public class ProjectAction extends ActionSupport implements CRUDAction {
         else
             projectDAO.store(storable);
 
+        backlogBusiness.setAssignments(selectedUserIds, project);
         return Action.SUCCESS;
     }
 
@@ -312,5 +329,25 @@ public class ProjectAction extends ActionSupport implements CRUDAction {
 
     public void setStartDate(String startDate) {
         this.startDate = startDate;
+    }
+
+    public int[] getSelectedUserIds() {
+        return selectedUserIds;
+    }
+
+    public void setSelectedUserIds(int[] selectedUserIds) {
+        this.selectedUserIds = selectedUserIds;
+    }
+
+    public void setBacklogBusiness(BacklogBusiness backlogBusiness) {
+        this.backlogBusiness = backlogBusiness;
+    }
+
+    public List<User> getUsers() {
+        return users;
+    }
+
+    public void setUserBusiness(UserBusiness userBusiness) {
+        this.userBusiness = userBusiness;
     }
 }

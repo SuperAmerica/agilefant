@@ -32,6 +32,11 @@
 			<td colspan="2"><ww:textfield name="user.loginName" /></td>
 		</tr>
 		<tr>
+			<td>Initials</td>
+			<td>*</td>
+			<td colspan="2"><ww:textfield name="user.initials" size="6" maxlength="5" /></td>
+		</tr>
+		<tr>
 			<td>Email</td>
 			<td>*</td>
 			<td colspan="2"><ww:textfield name="user.email" value="${user.email}" /></td>

@@ -17,6 +17,7 @@
 			</ww:a>
 	</display:column>
 	<display:column sortable="true" title="User ID" property="loginName" />
+	<display:column sortable="true" title="Initials" property="initials" />
 	<display:column sortable="true" title="Email" property="email" />
 	<display:column sortable="false" title="Actions">
 		<c:if test="${row.id != 1}">

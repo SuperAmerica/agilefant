@@ -35,6 +35,8 @@ public class User implements PageItem {
     private String fullName;
 
     private String email;
+    
+    private String initials;
 
     private Collection<Task> assignments = new HashSet<Task>();
 
@@ -178,5 +180,21 @@ public class User implements PageItem {
      */
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    /**
+     * Get the user's initials.
+     * @return the initials
+     */
+    public String getInitials() {
+        return initials;
+    }
+
+    /**
+     * Set the user's initials.
+     * @param initials the initials to set
+     */
+    public void setInitials(String initials) {
+        this.initials = initials;
     }
 }

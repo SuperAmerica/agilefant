@@ -116,6 +116,16 @@ public class UserAction extends ActionSupport implements CRUDAction {
         storable.setFullName(this.user.getFullName());
         storable.setLoginName(this.user.getLoginName());
         storable.setPassword(md5Pw);
+        
+        // Set the initials
+        if (this.user.getInitials() == null ||
+                this.user.getInitials().compareTo("") == 0) {
+            super.addActionError("Initials are required.");
+        }
+        else {
+            storable.setInitials(this.user.getInitials());
+        }
+        
         if (this.user.getEmail() == null ||
                 this.user.getEmail().equalsIgnoreCase("")) {
             super.addActionError("Email is required");

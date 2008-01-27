@@ -176,6 +176,13 @@
 				<param name="actionName">popContext</param>
 			</result>
 		</action>
+		
+		<action name="quickStoreTaskList" method="quickStoreTaskList"
+			class="backlogItemAction">
+			<result type="redirect-action">
+				<param name="actionName">popContext</param>
+			</result>
+		</action>
 
 		<action name="storeNewBacklogItem" method="store"
 			class="backlogItemAction">

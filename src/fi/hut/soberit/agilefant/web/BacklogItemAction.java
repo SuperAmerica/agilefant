@@ -2,6 +2,8 @@ package fi.hut.soberit.agilefant.web;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -65,6 +67,16 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
 
     private BacklogItemBusiness backlogItemBusiness;
 
+    private Map<Integer, State> taskStates = new HashMap<Integer, State>();
+
+    public Map<Integer, State> getTaskStates() {
+        return taskStates;
+    }
+
+    public void setTaskStates(Map<Integer, State> taskStates) {
+        this.taskStates = taskStates;
+    }
+
     public BacklogItemBusiness getBacklogItemBusiness() {
         return backlogItemBusiness;
     }
@@ -89,7 +101,7 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
             return Action.SUCCESS;
         } else {
             backlogItem = backlogBusiness.createBacklogItemToBacklog(backlogId);
-            if(backlogItem == null) {
+            if (backlogItem == null) {
                 super.addActionError(super.getText("backlog.notFound"));
                 return Action.ERROR;
             }
@@ -165,42 +177,27 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
     }
 
     /**
-     * Updates backlog item's state and effort left.
-     * 
-     * 
+     * Updates backlog item's state and effort left and its tasks' states. Used
+     * by tasklist tag.
      */
 
-    public String quickStoreBacklogItem() {
-        backlogItem = backlogItemDAO.get(backlogItemId);
-        if (backlogItem == null) {
-            super.addActionError(super.getText("backlogItem.notFound"));
-            return Action.ERROR;
-        } else {
-            
-            // Set the effort left as original estimate if backlog item's
-            // original estimate is null in database
-            if (backlogItem.getOriginalEstimate() == null) {
-                backlogItem.setEffortLeft(this.effortLeft);
-                backlogItem.setOriginalEstimate(this.effortLeft);
-            }
-            else if (backlogItem.getEffortLeft() != null &&
-                    this.effortLeft == null) {
-                backlogItem.setEffortLeft(new AFTime(0));
-            }
-            else {
-                backlogItem.setEffortLeft(this.effortLeft);
-            }
+    public String quickStoreTaskList() {
 
-            backlogItem.setState(this.state);
-            // set effortleft to 0 if state changed to done
-            if(this.state == State.DONE)
-                backlogItem.setEffortLeft(new AFTime(0));
-
-            backlogItemDAO.store(backlogItem);
-            historyBusiness.updateBacklogHistory(backlogItem.getBacklog()
-                    .getId());
-            return Action.SUCCESS;
+        /** Test code begins */
+        System.err.println("SIZE OF MAP: " + taskStates.size());
+        for (Integer key : taskStates.keySet()) {
+            System.err.println(key + ":" + taskStates.get(key));
         }
+        /** Test code ends */
+
+        try {
+            backlogItemBusiness.updateBacklogItemEffortLeftStateAndTaskStates(
+                    backlogItemId, this.state, this.effortLeft, taskStates);
+        } catch (ObjectNotFoundException e) {
+            addActionError(e.getMessage());
+            return Action.ERROR;
+        }
+        return Action.SUCCESS;
     }
 
     protected void fillStorable(BacklogItem storable) {
@@ -234,11 +231,11 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
         storable.setState(backlogItem.getState());
 
         // set effortleft to 0 if state changed to done
-        if(backlogItem.getState() == State.DONE) {
+        if (backlogItem.getState() == State.DONE) {
             backlogItem.setEffortLeft(new AFTime(0));
             this.effortLeft = new AFTime(0);
         }
-        
+
         /*
          * Set effort left. If this is new item set its effort to be the
          * original effort. Otherwise set its effort to be the received effort
@@ -252,8 +249,8 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
             storable.setEffortLeft(new AFTime(0));
         } else {
             storable.setEffortLeft(backlogItem.getEffortLeft());
-        }        
-        
+        }
+
         // TODO: REFACTOR THIS when moving backlog items from backlog to another
         // change
         // backlog item's original estimate to current effort left.

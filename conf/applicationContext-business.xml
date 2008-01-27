@@ -7,14 +7,20 @@
 		class="fi.hut.soberit.agilefant.business.impl.BacklogBusinessImpl" />
 	<bean id="userBusiness"
 		class="fi.hut.soberit.agilefant.business.impl.UserBusinessImpl" />
-	<bean id="passwordBusiness" class="fi.hut.soberit.agilefant.business.impl.PasswordBusinessImpl" />
-	<bean id="projectBusiness" class="fi.hut.soberit.agilefant.business.impl.ProjectBusinessImpl"/>
-	<bean id="backlogItemBusiness" class="fi.hut.soberit.agilefant.business.impl.BacklogItemBusinessImpl"/>
-	<bean id="historyBusiness" class="fi.hut.soberit.agilefant.business.impl.HistoryBusinessImpl"/>
-	
+	<bean id="passwordBusiness"
+		class="fi.hut.soberit.agilefant.business.impl.PasswordBusinessImpl" />
+	<bean id="projectBusiness"
+		class="fi.hut.soberit.agilefant.business.impl.ProjectBusinessImpl" />
+	<bean id="backlogItemBusiness"
+		class="fi.hut.soberit.agilefant.business.impl.BacklogItemBusinessImpl" />
+	<bean id="historyBusiness"
+		class="fi.hut.soberit.agilefant.business.impl.HistoryBusinessImpl" />
+	<bean id="taskBusiness"
+		class="fi.hut.soberit.agilefant.business.impl.TaskBusinessImpl" />
+
 	<bean name="chartBusiness"
 		class="fi.hut.soberit.agilefant.business.impl.ChartBusinessImpl">
 		<property name="iterationDAO" ref="iterationDAO" />
-		<property name="backlogItemDAO" ref="backlogItemDAO"/>
+		<property name="backlogItemDAO" ref="backlogItemDAO" />
 	</bean>
 </beans>

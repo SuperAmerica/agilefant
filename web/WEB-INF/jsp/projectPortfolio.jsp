@@ -101,8 +101,9 @@ var teams = [<aef:teamJson items="${teamList}"/>]
 				<span style="color: red"> 
 				</c:if>
 				
+				<a href="dailyWork.action?userId=${user.id}">
 				<c:out value="${user.fullName}" />
-				
+				</a>
 				<c:if test="${unassignedUsers[idstring] == 1}"> 
 				</span>
 				</c:if>
@@ -206,8 +207,9 @@ var teams = [<aef:teamJson items="${teamList}"/>]
 				<span style="color: red"> 
 				</c:if>
 				
+				<a href="dailyWork.action?userId=${user.id}">
 				<c:out value="${user.fullName}" />
-				
+				</a>
 				<c:if test="${unassignedUsers[idstring] == 1}"> 
 				</span>
 				</c:if>

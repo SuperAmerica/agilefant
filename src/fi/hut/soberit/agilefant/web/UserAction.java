@@ -76,6 +76,8 @@ public class UserAction extends ActionSupport implements CRUDAction {
         }
         /* Remove assignments before deleting user. */
         backlogBusiness.removeAssignments(u);
+        /* Clear the teams */
+        u.getTeams().clear();
         userDAO.remove(userId);
         return Action.SUCCESS;
     }

@@ -24,7 +24,7 @@
 			<ww:url id="deleteLink" action="deleteUser" includeParams="none">
 				<ww:param name="userId" value="${row.id}" />
 			</ww:url>
-			<ww:a href="%{deleteLink}">Delete</ww:a>
+			<ww:a href="%{deleteLink}" onclick="return confirmDelete()">Delete</ww:a>
 		</c:if>
 	</display:column>
 </display:table></p>
@@ -51,7 +51,7 @@
 		<ww:url id="deleteLink" action="deleteTeam" includeParams="none">
 			<ww:param name="teamId" value="${row.id}" />
 		</ww:url>
-		<ww:a href="%{deleteLink}">Delete</ww:a>
+		<ww:a href="%{deleteLink}" onclick="return confirmDelete()">Delete</ww:a>
 	</display:column>
 </display:table></p>
 <%@ include file="./inc/_footer.jsp"%>

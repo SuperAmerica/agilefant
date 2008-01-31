@@ -35,6 +35,27 @@ function validateDeletion() {
 		</ww:a></div>
 		</display:column>
 
+		<c:choose>
+			<c:when test="${currentContext == 'iteration'}">
+				<display:column sortable="true" sortProperty="iterationGoal.name"
+				title="Iteration Goal" class="iterationGoalColumn">
+				<div>${aef:html(item.iterationGoal.name)}</div>
+				</display:column>
+			</c:when>
+			<c:otherwise>
+				
+			</c:otherwise>
+		</c:choose>
+
+		<display:column sortable="true" title="Responsibles" class="responsibleColumn">
+		<div><aef:responsibleColumn backlogItemId="${item.id}"/></div>
+		</display:column>
+
+		<display:column sortable="true" defaultorder="descending"
+			title="Priority">
+			<ww:text name="backlogItem.priority.${item.priority}" />
+		</display:column>
+
 		<display:column title="State" sortable="false" class="taskColumn">
 			<c:set var="divId" value="${divId + 1}" scope="page" />
 			<c:choose>
@@ -110,26 +131,9 @@ function validateDeletion() {
 			</c:choose>
 		</display:column>
 
-		<display:column sortable="true" title="Responsibles" class="responsibleColumn">
-		<div><aef:responsibleColumn backlogItemId="${item.id}"/></div>
-		</display:column>
+		
 
-		<display:column sortable="true" defaultorder="descending"
-			title="Priority">
-			<ww:text name="backlogItem.priority.${item.priority}" />
-		</display:column>
-
-		<c:choose>
-			<c:when test="${currentContext == 'iteration'}">
-				<display:column sortable="true" sortProperty="iterationGoal.name"
-				title="Iteration Goal" class="iterationGoalColumn">
-				<div>${aef:html(item.iterationGoal.name)}</div>
-				</display:column>
-			</c:when>
-			<c:otherwise>
-				
-			</c:otherwise>
-		</c:choose>
+		
 
 		<display:column sortable="true" sortProperty="effortLeft" defaultorder="descending"
 			title="Effort Left<br/>">

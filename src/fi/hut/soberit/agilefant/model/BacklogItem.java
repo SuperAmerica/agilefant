@@ -334,6 +334,25 @@ public class BacklogItem implements PageItem, Assignable, EffortContainer {
     }
 
     /**
+     * Returns the project related to this <code>BacklogItem</code> if there is one.
+     * Otherwise returns <code>null</code>. This method is used to retrieve the project
+     * which contains the users who can be responsible for this BacklogItem without violating the
+     * "assign to project before assigning to BLI" -ideology.
+     * @return
+     */
+    @Transient
+    public Project getProject() {
+        Backlog parent = getBacklog();
+        if( parent instanceof Iteration ) {
+            return ((Iteration)parent).getProject();
+        } else if( parent instanceof Project ) {
+            return (Project) parent;
+        } else {
+            return null;
+        }
+    }
+    
+    /**
      * Returns the original effort estimate for this backlog item.
      * 
      * @return the original effort estimate for this backlog item

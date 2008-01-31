@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -275,5 +276,16 @@ public abstract class Backlog implements Assignable {
     public void setAssignments(Collection<Assignment> assignments) {
         this.assignments = assignments;
     }
-
+    /**
+     * Convenience method for accessing users assigned for this project.
+     * @return
+     */
+    @Transient
+    public List<User> getResponsibles() {
+        List<User> users = new ArrayList<User>(assignments.size());
+        for( Assignment assignment : assignments ) {
+            users.add(assignment.getUser());
+        }
+        return users;
+    }
 }

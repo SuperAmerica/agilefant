@@ -273,7 +273,7 @@
             <name>productId</name>
             <required>false</required>
 			<rtexprvalue>true</rtexprvalue>            
-        </attribute>	    
+        </attribute>
         <attribute>
             <name>taskId</name>
             <required>false</required>
@@ -417,5 +417,11 @@
 	  <name>listContains</name>
 	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
 	  <function-signature>boolean listContains(java.util.Collection, java.lang.Object)</function-signature>
+	</function>
+	
+	<function>
+	  <name>listSubstract</name>
+	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
+	  <function-signature>java.util.Listsubstract substract(java.util.Collection, java.util.Collection)</function-signature>
 	</function> 
 </taglib>

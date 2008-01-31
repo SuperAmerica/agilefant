@@ -1,8 +1,10 @@
 package fi.hut.soberit.agilefant.web.function;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 import fi.hut.soberit.agilefant.model.Assignment;
 import fi.hut.soberit.agilefant.model.Backlog;
@@ -96,6 +98,12 @@ public class AEFFunctions {
     
     public static boolean listContains(Collection<Object> coll, Object object) {
         return coll.contains(object);
+    }
+    
+    public static List<?> substract(Collection<?> first, Collection<?> second) {
+        List<?> list = new ArrayList<Object>(first);
+        list.removeAll(second);
+        return list;
     }
     
     public static boolean isUserAssignedTo(Backlog backlog, User user) {

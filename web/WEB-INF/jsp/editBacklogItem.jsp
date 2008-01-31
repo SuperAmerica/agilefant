@@ -179,18 +179,28 @@
 			$(document).ready( function() {
 				<ww:set name="userList" value="#attr.userList" />
 				<ww:set name="teamList" value="#attr.teamList" />
-				var users = [<aef:userJson items="${userList}"/>]
-				var teams = [<aef:teamJson items="${teamList}"/>]
+				<c:choose>
+				<c:when test="${backlogItem.project != null}">
+				var others = [<aef:userJson items="${aef:listSubstract(userList, backlogItem.project.responsibles)}"/>];
+				var preferred = [<aef:userJson items="${backlogItem.project.responsibles}"/>];
+				</c:when>
+				<c:otherwise>
+				var others = [<aef:userJson items="${userList}"/>];
+				var preferred = [];
+				</c:otherwise>
+				</c:choose>
+				
+				var teams = [<aef:teamJson items="${teamList}"/>];
 				var selected = [<aef:idJson items="${backlogItem.responsibles}"/>]
-				$('#userselect').multiuserselect({users: [users,[]], groups: teams}).selectusers(selected);
+				$('#userselect').multiuserselect({users: [preferred,others], groups: teams}).selectusers(selected);
 			});
 			</script>
 			<div id="userselect" style="display: none;">
 				<div class="left">
 					<label>Users assigned to this project</label>
-					<ul class="users_0" />
+					<ul class="users_0"></ul>
 					<label>Users not assigned this project</label>
-					<ul class="users_1" />
+					<ul class="users_1"></ul>
 				</div>
 				<div class="right">
 					<label>Teams</label>

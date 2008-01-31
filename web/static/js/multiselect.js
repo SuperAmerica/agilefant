@@ -16,8 +16,9 @@ function test($) {
 			$.each(groups, function(key, group) {
 				$(me).append(
 					$('<li>' + group.name + '</li>').click(function() {
+						var root = (extra!=undefined ? $(extra) : $('body'));
 						$.each(group.users, function(index, user_id) {
-							$(((extra!=undefined?extra+' ':'') + 'input.user_' + user_id)).attr('checked', true);
+							$('input.user_' + user_id, root).attr('checked', true);
 						})
 					})
 				);

@@ -131,26 +131,32 @@
 					<div id="${divId}" style="display: none;">
 					<display:table name="${users}" id="user" class="projectUsers">
 						<display:column title="">
-								<c:set var="flag" value="0" scope="request" />
-								<c:forEach var="usr" items="${assignedUsers}">
-									<c:if test="${usr.id == user.id}">
-										<c:set var="flag" value="1" scope="request" />
-									</c:if>
-								</c:forEach>
-								<c:choose>
-									<c:when test="${flag == 1}">
-										<input type="checkbox" name="selectedUserIds"
-											value="${user.id}" checked="checked" class="user_${user.id}"/>
-									</c:when>
-									<c:otherwise>
-										<input type="checkbox" name="selectedUserIds"
-											value="${user.id}" class="user_${user.id}" />
-									</c:otherwise>
-								</c:choose>
+							<c:set var="flag" value="0" scope="request" />
+							<c:forEach var="usr" items="${assignedUsers}">
+								<c:if test="${usr.id == user.id}">
+									<c:set var="flag" value="1" scope="request" />
+								</c:if>
+							</c:forEach>
+							<c:choose>
+								<c:when test="${flag == 1}">
+									<input type="checkbox" name="selectedUserIds"
+										value="${user.id}" checked="checked" class="user_${user.id}" />
+								</c:when>
+								<c:otherwise>
+									<input type="checkbox" name="selectedUserIds"
+										value="${user.id}" class="user_${user.id}" />
+								</c:otherwise>
+							</c:choose>
 						</display:column>
 
 						<display:column title="User">
+							<c:if test="${unassignedHasWork[user] == 1}">
+								<span style="color: red">
+							</c:if>
 							<c:out value="${user.fullName}" />
+							<c:if test="${unassignedHasWork[user] == 1}">
+								</span>
+							</c:if>
 						</display:column>
 					</display:table>
 					</a>
@@ -158,10 +164,10 @@
 						<div class="right">
 							<label>Teams</label>
 							<ul class="groups" />
-						</div>
-						<script type="text/javascript" src="static/js/jquery-1.2.2.js"></script>
-						<script type="text/javascript" src="static/js/multiselect.js"></script>
-						<script type="text/javascript">
+					</div>
+					<script type="text/javascript" src="static/js/jquery-1.2.2.js"></script>
+					<script type="text/javascript" src="static/js/multiselect.js"></script>
+					<script type="text/javascript">
 						$(document).ready( function() {
 							<aef:teamList />
 							<ww:set name="teamList" value="#attr.teamList" />

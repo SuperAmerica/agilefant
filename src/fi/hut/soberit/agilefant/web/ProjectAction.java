@@ -4,13 +4,16 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
 import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
 
 import fi.hut.soberit.agilefant.business.BacklogBusiness;
+import fi.hut.soberit.agilefant.business.ProjectBusiness;
 import fi.hut.soberit.agilefant.business.UserBusiness;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.db.ProductDAO;
@@ -60,7 +63,11 @@ public class ProjectAction extends ActionSupport implements CRUDAction {
 
     private Collection<User> assignedUsers = new HashSet<User>();
 
+    private Map<User, Integer> unassignedHasWork = new HashMap<User, Integer>();
+
     private UserBusiness userBusiness;
+
+    private ProjectBusiness projectBusiness;
 
     /**
      * @return the dateFormat
@@ -122,6 +129,7 @@ public class ProjectAction extends ActionSupport implements CRUDAction {
         // populate all users to drop-down list
         users = userBusiness.getAllUsers();
         assignedUsers = backlogBusiness.getUsers(project, true);
+        unassignedHasWork = projectBusiness.getUnassignedWorkersMap(project);
 
         return Action.SUCCESS;
     }
@@ -373,5 +381,13 @@ public class ProjectAction extends ActionSupport implements CRUDAction {
 
     public Collection<User> getAssignedUsers() {
         return assignedUsers;
+    }
+    
+	public Map<User, Integer> getUnassignedHasWork() {
+      	return unassignedHasWork;
+    }
+
+    public void setProjectBusiness(ProjectBusiness projectBusiness) {
+        this.projectBusiness = projectBusiness;
     }
 }

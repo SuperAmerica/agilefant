@@ -1,11 +1,13 @@
 package fi.hut.soberit.agilefant.business;
 
 import java.util.Collection;
+import java.util.Map;
 
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.exception.OperationNotPermittedException;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.ProjectType;
+import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.util.ProjectPortfolioData;
 
 /**
@@ -96,10 +98,23 @@ public interface ProjectBusiness {
             throws OperationNotPermittedException, ObjectNotFoundException;
 
     /**
-     * Get a Map that contains information for the users column of the project
+     * Get a ProjectPortfolioData object that contains information for the users column of the project
      * portfolio page.
      * 
-     * @return A map that maps ongoing projects to the user data
+     * @return A ProjectPortfolioData object
      */
     public ProjectPortfolioData getProjectPortfolioData();
+
+    /**
+	* Constructs and returns a map containing informaton on whether a user has
+	* been assigned to some backlog item under the given project without been
+	* assigned to the project itself.
+	*
+	* @param Project
+    *                project that the data is constructed for
+	*
+	* @return A map that maps a user to integer 1 if the user is not assigned to
+	* the project but has work under it, otherwise user is mapped to integer 0
+	*/
+    public Map<User, Integer> getUnassignedWorkersMap(Project project);
 }

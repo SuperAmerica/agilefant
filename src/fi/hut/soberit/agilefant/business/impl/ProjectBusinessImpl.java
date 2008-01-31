@@ -232,6 +232,18 @@ public class ProjectBusinessImpl implements ProjectBusiness {
         return data;
     }
 
+    public Map<User, Integer> getUnassignedWorkersMap(Project project) {
+        Map<User, Integer> unassignedHasWork = new HashMap<User, Integer>();
+        Collection<BacklogItem> blis = getBlisInProjectAndItsIterations(project);
+        Collection<User> assignees = backlogBusiness.getUsers(project, true);
+        Set<User> workers = new HashSet<User>();
+        for (BacklogItem bli : blis)
+             workers.addAll(bli.getResponsibles());
+        for (User worker : workers)
+            unassignedHasWork.put(worker, assignees.contains(worker) ? 0 : 1);
+        return unassignedHasWork;
+    }
+
     /** {@inheritDoc} * */
     public Collection<ProjectType> getProjectTypes() {
         return projectTypeDAO.getAll();

@@ -1,5 +1,6 @@
 package fi.hut.soberit.agilefant.business.impl;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 import java.util.List;
@@ -52,32 +53,6 @@ public class BacklogItemBusinessImpl implements BacklogItemBusiness {
         historyBusiness.updateBacklogHistory(backlog.getId());
     }
 
-    /** {@inheritDoc} */
-    public String getResponsibleInitialsString(BacklogItem bli) {
-        String retval = "";
-        
-        if (bli == null) {
-            return "";
-        }
-        
-        List<User> userList = (List<User>)bli.getResponsibles();
-            
-        int length = userList.size();
-            
-        for (int i = 0; i < length; i++) {
-            User user = userList.get(i);
-
-            retval += user.getInitials().trim();
-
-            if ((length - i) > 1) {
-                retval += ", ";
-            }
-        }
-        
-        return retval;
-    }
-    
-    
     public HistoryBusiness getHistoryBusiness() {
         return historyBusiness;
     }

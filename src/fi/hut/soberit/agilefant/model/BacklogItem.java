@@ -15,6 +15,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Transient;
 
 import org.hibernate.annotations.Cascade;
@@ -364,6 +365,7 @@ public class BacklogItem implements PageItem, Assignable, EffortContainer {
             joinColumns={@JoinColumn(name = "BacklogItem_id")},
             inverseJoinColumns={@JoinColumn(name = "User_id")}
     )
+    @OrderBy("initials")
     public Collection<User> getResponsibles() {
         return responsibles;
     }

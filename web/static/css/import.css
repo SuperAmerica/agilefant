@@ -576,3 +576,10 @@ td.deleteButton {
 	cursor: pointer;
 	text-decoration: underline;
 }
+
+a.unassigned {
+	color: #ff0000;
+}
+a.unassigned:hover {
+	color: #e50;
+}

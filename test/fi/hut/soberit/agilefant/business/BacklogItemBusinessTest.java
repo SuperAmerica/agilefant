@@ -159,45 +159,4 @@ public class BacklogItemBusinessTest extends TestCase {
                         "0h"));
     }
 
-    /**
-     * Test the getResponsibleInitialsString method of BacklogItemBusiness.
-     */
-    public void testGetResponsibleInitialsString() {
-        bliDAO = createMock(BacklogItemDAO.class);
-        bliBusiness.setBacklogItemDAO(bliDAO);
-        
-        User user1 = new User();
-        user1.setInitials("US1");
-        user1.setId(1);
-        User user2 = new User();
-        user2.setInitials("US2");
-        user2.setId(2);
-        
-        BacklogItem bli1 = new BacklogItem();
-        bli1.setId(5);
-        BacklogItem bli2 = new BacklogItem();
-        bli2.setId(6);
-        
-        bli1.setResponsibles(new ArrayList<User>());
-        bli2.setResponsibles(new ArrayList<User>());
-        
-        bli1.getResponsibles().add(user1);
-        bli2.getResponsibles().add(user1);
-        bli2.getResponsibles().add(user2);
-        
-        // Record the behavior
-        expect(bliDAO.get(5)).andReturn(bli1);
-        expect(bliDAO.get(6)).andReturn(bli2);
-        bliBusiness.getResponsibleInitialsString(bli1).equals("US1");
-        bliBusiness.getResponsibleInitialsString(bli2).equals("US1, US2");
-        replay(bliDAO);
-        
-        bli1 = bliDAO.get(5);
-        bli2 = bliDAO.get(6);
-        
-        bliBusiness.getResponsibleInitialsString(bli1);
-        bliBusiness.getResponsibleInitialsString(bli2);
-        
-        verify(bliDAO);
-    }
 }

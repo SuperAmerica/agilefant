@@ -45,7 +45,7 @@
 			<img src="static/img/unassigned.png"
 				title="The user has not been assigned to this project."
 				alt="The user has not been assigned to this project." />
-			The user has not been assigned to this project.
+			<c:out value="${user.fullName}" /> has not been assigned to this project.
 			</p>
 		</c:if>
 		</div>

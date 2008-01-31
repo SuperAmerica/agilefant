@@ -1,5 +1,6 @@
 package fi.hut.soberit.agilefant.business;
 
+import java.util.List;
 import java.util.Map;
 
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
@@ -77,10 +78,4 @@ public interface BacklogItemBusiness {
 
     public void setHistoryBusiness(HistoryBusiness historyBusiness);
 
-    
-    /**
-     * Get the responsibles' initials for the backlog item. 
-     * @return a string representation of all the initials.
-     */
-    public String getResponsibleInitialsString(BacklogItem bli);
 }

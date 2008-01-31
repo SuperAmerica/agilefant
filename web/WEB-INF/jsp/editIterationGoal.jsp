@@ -37,7 +37,8 @@
 		<tr>
 			<td>Name</td>
 			<td>*</td>
-			<td colspan="2"><ww:textfield size="60" name="iterationGoal.name" /></td>
+			<td colspan="2"><ww:textfield size="60"
+				name="iterationGoal.name" /></td>
 		</tr>
 		<tr>
 			<td>Description</td>
@@ -73,14 +74,15 @@
 			<td></td>
 			<c:choose>
 				<c:when test="${iterationGoalId == 0}">
-					<td><ww:submit value="Create" />
-					<ww:submit action="storeCloseIterationGoal" value="Create & Close" /></td>
+					<td><ww:submit value="Create" /> <ww:submit
+						action="storeCloseIterationGoal" value="Create & Close" /></td>
 				</c:when>
 				<c:otherwise>
-					<td><ww:submit value="Save" />
-					<ww:submit action="storeCloseIterationGoal" value="Save & Close" /></td>
-					<td class="deleteButton"> <ww:submit onclick="return confirmDelete()"
-						action="deleteIterationGoal" value="Delete" /> </td>
+					<td><ww:submit value="Save" /> <ww:submit
+						action="storeCloseIterationGoal" value="Save & Close" /></td>
+					<td class="deleteButton"><ww:submit
+						onclick="return confirmDelete()" action="deleteIterationGoal"
+						value="Delete" /></td>
 				</c:otherwise>
 			</c:choose>
 		</tr>
@@ -103,7 +105,8 @@
 				<div id="subItemContent">
 				<p><display:table class="listTable"
 					name="iterationGoal.backlogItems" id="row"
-					requestURI="editIterationGoal.action">
+					requestURI="editIterationGoal.action" defaultsort="3"
+					defaultorder="descending">
 
 					<display:column sortable="true" sortProperty="name" title="Name"
 						class="shortNameColumn">
@@ -115,6 +118,16 @@
 							href="%{editLink}&contextViewName=editIterationGoal&contextObjectId=${iterationGoal.id}">
 						${aef:html(row.name)}
 					</ww:a>
+					</display:column>
+
+					<display:column sortable="true" title="Responsibles"
+						class="responsibleColumn">
+						<div><aef:responsibleColumn backlogItemId="${row.id}" /></div>
+					</display:column>
+
+					<display:column sortable="true" defaultorder="descending"
+						title="Priority">
+						<ww:text name="backlogItem.priority.${row.priority}" />
 					</display:column>
 
 					<display:column title="State" sortable="false" class="taskColumn">
@@ -147,6 +160,37 @@
 							</c:otherwise>
 						</c:choose>
 					</display:column>
+
+					<display:column sortable="true" sortProperty="effortLeft"
+						defaultorder="descending" title="Effort Left<br/>">
+						<span style="white-space: nowrap"> <c:choose>
+							<c:when test="${row.effortLeft == null}">&mdash;</c:when>
+							<c:otherwise>${row.effortLeft}</c:otherwise>
+						</c:choose> </span>
+					</display:column>
+
+					<display:column sortable="true" sortProperty="originalEstimate"
+						defaultorder="descending" title="Original Estimate<br/>">
+						<span style="white-space: nowrap"> <c:choose>
+							<c:when test="${row.originalEstimate == null}">&mdash;</c:when>
+							<c:otherwise>${row.originalEstimate}</c:otherwise>
+						</c:choose> </span>
+					</display:column>
+					
+					
+					<display:footer>
+					<tr>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
+						
+						<%-- Effort left --%>
+						<td><c:out value="${effortLeftSum}" /></td>
+						<%-- Original estimate --%>
+						<td><c:out value="${origEstSum}" /></td>
+					</tr>
+					</display:footer>
 				</display:table></p>
 				</div>
 			</c:if></div>

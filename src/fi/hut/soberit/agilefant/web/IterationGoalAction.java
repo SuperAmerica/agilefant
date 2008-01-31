@@ -8,6 +8,7 @@ import com.opensymphony.xwork.ActionSupport;
 
 import fi.hut.soberit.agilefant.db.IterationDAO;
 import fi.hut.soberit.agilefant.db.IterationGoalDAO;
+import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.IterationGoal;
@@ -29,6 +30,10 @@ public class IterationGoalAction extends ActionSupport implements CRUDAction {
     private Iteration iteration;
 
     private Collection<IterationGoal> iterationGoals = new ArrayList<IterationGoal>();
+    
+    private AFTime effortLeftSum = new AFTime(0);
+    
+    private AFTime origEstSum = new AFTime(0);
 
     public String create() {
         iterationGoalId = 0;
@@ -59,6 +64,19 @@ public class IterationGoalAction extends ActionSupport implements CRUDAction {
         }
         iteration = iterationGoal.getIteration();
         iterationId = iteration.getId();
+        
+        
+        
+        // Calculate effort lefts
+        for (BacklogItem bli : iterationGoal.getBacklogItems()) {
+            if (bli.getEffortLeft() != null) {
+                effortLeftSum.add(bli.getEffortLeft());
+            }
+            if (bli.getOriginalEstimate() != null) {
+                origEstSum.add(bli.getOriginalEstimate());
+            }
+        }
+        
         return Action.SUCCESS;
     }
 
@@ -148,6 +166,22 @@ public class IterationGoalAction extends ActionSupport implements CRUDAction {
 
     public void setIterationGoals(Collection<IterationGoal> iterationGoals) {
         this.iterationGoals = iterationGoals;
+    }
+
+    public AFTime getEffortLeftSum() {
+        return effortLeftSum;
+    }
+
+    public void setEffortLeftSum(AFTime effortLeftSum) {
+        this.effortLeftSum = effortLeftSum;
+    }
+
+    public AFTime getOrigEstSum() {
+        return origEstSum;
+    }
+
+    public void setOrigEstSum(AFTime origEstSum) {
+        this.origEstSum = origEstSum;
     }
 
 }

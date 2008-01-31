@@ -1,7 +1,6 @@
 package fi.hut.soberit.agilefant.model;
 
 import java.util.Collection;
-import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

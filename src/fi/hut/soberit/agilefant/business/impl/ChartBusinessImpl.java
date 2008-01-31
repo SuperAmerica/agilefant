@@ -52,9 +52,9 @@ public class ChartBusinessImpl implements ChartBusiness {
 
     private static final int DEFAULT_HEIGHT = 600;
 
-    private static final int SMALL_WIDTH = 195;
+    private static final int SMALL_WIDTH = 110;
 
-    private static final int SMALL_HEIGHT = 150;
+    private static final int SMALL_HEIGHT = 85;
 
     /**
      * Generates a byte array (a png image file) from a JFreeChart object

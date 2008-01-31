@@ -2,6 +2,8 @@ package fi.hut.soberit.agilefant.business.impl;
 
 import java.util.Map;
 
+import java.util.List;
+
 import fi.hut.soberit.agilefant.business.BacklogItemBusiness;
 import fi.hut.soberit.agilefant.business.HistoryBusiness;
 import fi.hut.soberit.agilefant.business.TaskBusiness;
@@ -11,6 +13,7 @@ import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.State;
+import fi.hut.soberit.agilefant.model.User;
 
 /**
  * 
@@ -49,6 +52,32 @@ public class BacklogItemBusinessImpl implements BacklogItemBusiness {
         historyBusiness.updateBacklogHistory(backlog.getId());
     }
 
+    /** {@inheritDoc} */
+    public String getResponsibleInitialsString(BacklogItem bli) {
+        String retval = "";
+        
+        if (bli == null) {
+            return "";
+        }
+        
+        List<User> userList = (List<User>)bli.getResponsibles();
+            
+        int length = userList.size();
+            
+        for (int i = 0; i < length; i++) {
+            User user = userList.get(i);
+
+            retval += user.getInitials().trim();
+
+            if ((length - i) > 1) {
+                retval += ", ";
+            }
+        }
+        
+        return retval;
+    }
+    
+    
     public HistoryBusiness getHistoryBusiness() {
         return historyBusiness;
     }

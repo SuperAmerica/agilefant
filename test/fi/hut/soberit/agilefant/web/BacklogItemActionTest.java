@@ -221,32 +221,7 @@ public class BacklogItemActionTest extends SpringTestCase {
                 .getName());
     }
 
-    /**
-     * Test store operation with updating assignee.
-     */
-    public void testStore_updateAssignee() {
-        // execute edit operation
-        assertNull(action.getBacklogItem());
-        action.setBacklogItemId(bliId);
-        assertEquals("success", action.edit());
-        assertNotNull(action.getBacklogItem());
-
-        // update bli assignee
-        User user2 = new User();
-        user2.setLoginName("Test User2");
-        int user2Id = (Integer) userDAO.create(user2);
-        user2 = userDAO.get(user2Id);
-        action.setAssigneeId(user2Id);
-
-        // execute store operation
-        assertEquals("success", action.store());
-
-        // check that assignee is updated
-        assertEquals("Test User2", backlogItemDAO.get(bliId).getAssignee()
-                .getLoginName());
-    }
-
-    /**
+	/**
      * Test delete operation.
      */
     public void testDelete() {

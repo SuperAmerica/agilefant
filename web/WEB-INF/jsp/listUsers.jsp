@@ -28,4 +28,30 @@
 		</c:if>
 	</display:column>
 </display:table></p>
+
+<h2>Teams</h2>
+<p><ww:a href="createTeam.action">Create a new team &raquo;</ww:a></p>
+
+<p><display:table name="${teamList}" id="row"
+	requestURI="listUsers.action" defaultsort="1">
+	<display:column sortable="true" title="Name" sortProperty="name">
+		<ww:url id="editLink" action="editTeam" includeParams="none">
+			<ww:param name="teamId" value="${row.id}" />
+		</ww:url>
+		<ww:a href="%{editLink}">
+			<c:out value="${row.name}" />
+		</ww:a>
+	</display:column>
+	
+	<display:column title="# of users" sortable="true">
+		<c:out value="${row.numberOfUsers}" />
+	</display:column>
+	
+	<display:column title="Actions" sortable="false">
+		<ww:url id="deleteLink" action="deleteTeam" includeParams="none">
+			<ww:param name="teamId" value="${row.id}" />
+		</ww:url>
+		<ww:a href="%{deleteLink}">Delete</ww:a>
+	</display:column>
+</display:table></p>
 <%@ include file="./inc/_footer.jsp"%>

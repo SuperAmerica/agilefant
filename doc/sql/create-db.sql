@@ -5,7 +5,7 @@ create table HistoryEntry (id integer not null auto_increment, effortLeft intege
 create table IterationGoal (id integer not null auto_increment, name varchar(255), priority integer, description text, iteration_id integer not null, primary key (id)) ENGINE=InnoDB;
 create table ProjectType (id integer not null auto_increment, targetSpendingPercentage integer not null check (targetSpendingPercentage>=0 and targetSpendingPercentage<=100), name varchar(255) not null unique, description text, primary key (id)) ENGINE=InnoDB;
 create table Task (id integer not null auto_increment, created datetime, name varchar(255), priority integer, state integer, description text, backlogItem_id integer not null, creator_id integer, primary key (id)) ENGINE=InnoDB;
-create table User (id integer not null auto_increment, loginName varchar(255) unique, email varchar(255), fullName varchar(255), password varchar(255), primary key (id)) ENGINE=InnoDB;
+create table User (id integer not null auto_increment, loginName varchar(255) unique, email varchar(255), fullName varchar(255), initials VARCHAR(255), password varchar(255), primary key (id)) ENGINE=InnoDB;
 create table WorkType (id integer not null auto_increment, name varchar(255) not null, description text, projectType_id integer, primary key (id)) ENGINE=InnoDB;
 create table Assignment (id integer not null auto_increment, user_id integer, backlog_id integer, primary key (id)) ENGINE=InnoDB;
 alter table Backlog add index FK4E86B8DDCA187B22 (project_id), add constraint FK4E86B8DDCA187B22 foreign key (project_id) references Backlog (id);

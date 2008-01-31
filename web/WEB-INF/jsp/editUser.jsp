@@ -52,6 +52,28 @@
 			<td colspan="2"><ww:password name="password2" /></td>
 		</tr>
 		<tr>
+			<td><a href="javascript:toggleDiv('teamlist');">Select teams</a></td>
+			<td></td>
+			<td>
+			<p>User is currently in <c:out value="${fn:length(user.teams)}" /> teams</p>
+			<ul id="teamlist" style="display:none;list-style-type:none;">
+			
+			<c:forEach items="${teamList}" var="team">
+				<c:choose>
+					<c:when test="${aef:listContains(user.teams, team)}">
+						<c:set var="selected" value="true" />
+					</c:when>
+					<c:otherwise>
+						<c:set var="selected" value="" />
+					</c:otherwise>
+				</c:choose>
+				<li><ww:checkbox name="teamIds[${team.id}]" value="${selected}"/>
+				<c:out value="${team.name}" /></li>
+			</c:forEach>
+			</ul>
+			</td>
+		</tr>
+		<tr>
 			<td></td>
 			<td></td>
 			<c:choose>

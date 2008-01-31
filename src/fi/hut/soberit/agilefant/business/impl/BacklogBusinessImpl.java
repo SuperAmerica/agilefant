@@ -1,5 +1,6 @@
 package fi.hut.soberit.agilefant.business.impl;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -31,9 +32,9 @@ public class BacklogBusinessImpl implements BacklogBusiness {
     private HistoryBusiness historyBusiness;
 
     private BacklogDAO backlogDAO;
-    
+
     private UserDAO userDAO;
-    
+
     private AssignmentDAO assignmentDAO;
 
     // @Override
@@ -113,13 +114,13 @@ public class BacklogBusinessImpl implements BacklogBusiness {
             Backlog sourceBacklog = bli.getBacklog();
 
             if (sourceBacklog.getId() != targetBacklog.getId()) {
-                
+
                 // Store the source backlog ids into the set
                 sourceBacklogIds.add(bli.getBacklog().getId());
-                
+
                 // Set originalestimate to current effortleft
                 bli.setOriginalEstimate(bli.getEffortLeft());
-                
+
                 // Set backlog item's backlog to target backlog
                 bli.setBacklog(targetBacklog);
                 backlogItemDAO.store(bli);
@@ -130,16 +131,13 @@ public class BacklogBusinessImpl implements BacklogBusiness {
                 // Store source backlog
                 backlogDAO.store(sourceBacklog);
 
-               
-                
-
                 // Add backlog item to new Backlog's backlog item list
                 targetBacklog.getBacklogItems().add(bli);
             }
         }
 
         backlogDAO.store(targetBacklog);
-        
+
         // Update history data for source backlogs
         for (Integer sourceBacklogId : sourceBacklogIds) {
             historyBusiness.updateBacklogHistory(sourceBacklogId);
@@ -160,17 +158,17 @@ public class BacklogBusinessImpl implements BacklogBusiness {
         }
         return effSum;
     }
-    
-    /** {@inheritDoc} **/
+
+    /** {@inheritDoc} * */
     public AFTime getOriginalEstimateSum(Collection<BacklogItem> bliList) {
         AFTime effSum = new AFTime(0);
-        
+
         for (BacklogItem item : bliList) {
             if (item.getOriginalEstimate() != null) {
                 effSum.add(item.getOriginalEstimate());
             }
         }
-        
+
         return effSum;
     }
 
@@ -199,26 +197,72 @@ public class BacklogBusinessImpl implements BacklogBusiness {
     }
 
     public void setAssignments(int[] selectedUserIds, Backlog backlog) {
-        if(selectedUserIds == null) {
-            // New project and no assignees selected or deleting all assignees
-        } else if (backlog.getAssignments().size() == 0) {
-            // New project or project w/o ssigned users.
-            for (int id : selectedUserIds) {
-                User user = userDAO.get(id);
-                if(user == null)
-                    continue;
-                Assignment assignment = new Assignment(user, backlog);
-                user.getAssignments().add(assignment);
-                backlog.getAssignments().add(assignment);
-                assignmentDAO.store(assignment);
+        if (backlog != null) {
+            // Edit project assignments: remove all assignments, then create
+            // some.
+            Collection<Assignment> oldAssignments = backlog.getAssignments();
+            for (Assignment ass : oldAssignments) {
+                assignmentDAO.remove(ass);
+            }
+            Collection<User> users = getUsers(backlog, true);
+            for (User user : users) {
+                user.getAssignments().removeAll(oldAssignments);
                 userDAO.store(user);
-                backlogDAO.store(backlog);
+            }
+            backlog.getAssignments().clear();
+            backlogDAO.store(backlog);
+
+            if (selectedUserIds != null) {
+                for (int id : selectedUserIds) {
+                    
+                    User user = userDAO.get(id);
+                    if (user != null) {
+                        Assignment assignment = new Assignment(user, backlog);
+                        user.getAssignments().add(assignment);
+                        backlog.getAssignments().add(assignment);
+                        assignmentDAO.store(assignment);
+                        userDAO.store(user);
+                        backlogDAO.store(backlog);
+                    }
+                }
             }
         }
-        else {
-            
+    }
+    
+    public void removeAssignments(User user) {
+        if (user != null) {
+            Collection<Assignment> assignments = assignmentDAO.getAll();
+            for (Assignment ass : assignments) {
+                if (ass.getUser().getId() == user.getId()) {
+                    user.getAssignments().remove(ass);
+                    ass.getBacklog().getAssignments().remove(ass);
+                    userDAO.store(user);
+                    backlogDAO.store(ass.getBacklog());
+                    assignmentDAO.remove(ass);
+                }
+            }
         }
-        
+    }
+
+    public Collection<User> getUsers(Backlog backlog, boolean areAssigned) {
+        Collection<User> users;
+        Collection<Assignment> assignments = backlog.getAssignments();
+        users = new HashSet<User>();
+        for (Assignment ass : assignments) {
+            users.add(ass.getUser());
+        }
+        if (areAssigned)
+            return users;
+        else {
+            Collection<User> allUsers = userDAO.getAll();
+            allUsers.removeAll(users);
+            return allUsers;
+        }
+
+    }
+
+    public int getNumberOfAssignedUsers(Backlog backlog) {
+        return getUsers(backlog, true).size();
     }
 
     public void setUserDAO(UserDAO userDAO) {
@@ -229,4 +273,3 @@ public class BacklogBusinessImpl implements BacklogBusiness {
         this.assignmentDAO = assignmentDAO;
     }
 }
-

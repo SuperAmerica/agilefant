@@ -8,6 +8,7 @@ import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.Priority;
+import fi.hut.soberit.agilefant.model.User;
 
 /**
  * This description contains generic information on <code>Business</code>
@@ -99,5 +100,36 @@ public interface BacklogBusiness {
      */
     public AFTime getOriginalEstimateSum(Collection<BacklogItem> bliList);
     
+    /**
+     * Assigns the selected users to the given backlog.
+     * 
+     * @param selectedUserIds Ids of the users to be assigned.
+     * @param backlog The backlog the users are assigned to.
+     */
     public void setAssignments(int[] selectedUserIds, Backlog backlog);
+    
+    /**
+     * Returns users either are or are not assigned to the given backlog.
+     * 
+     * @param backlog Backlog, where users are/are not assigned.
+     * @param areAssigned Whether assign/non-assign status is wanted.
+     * @return Users who fulfill the requirement.
+     */
+    public Collection<User> getUsers(Backlog backlog, boolean areAssigned);
+    
+    
+    /**
+     * Returns the number of users assigned to the backlog.
+     * 
+     * @param backlog Backlog, where users are assigned.
+     * @return Number of users.
+     */
+    public int getNumberOfAssignedUsers(Backlog backlog);
+    
+    /**
+     * Removes all given user's assignments from the system.
+     * @param user The user whose assignments are to be removed.
+     */
+    public void removeAssignments(User user);
+    
 }

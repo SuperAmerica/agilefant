@@ -4,8 +4,9 @@ import java.util.Collection;
 
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.exception.OperationNotPermittedException;
-import fi.hut.soberit.agilefant.model.ProjectType;
 import fi.hut.soberit.agilefant.model.Project;
+import fi.hut.soberit.agilefant.model.ProjectType;
+import fi.hut.soberit.agilefant.util.ProjectPortfolioData;
 
 /**
  * Updates projects' ranks.
@@ -80,15 +81,25 @@ public interface ProjectBusiness {
      * @return collection of project types
      */
     public Collection<ProjectType> getProjectTypes();
-    
+
     /**
      * Delete a project type.
      * 
-     * @param projectTypeId id of the project type to be deleted.
-     * @throws OperationNotPermittedException if ProjectType has WorkTypes
-     * @throws ObjectNotFoundException if no such object exists
+     * @param projectTypeId
+     *                id of the project type to be deleted.
+     * @throws OperationNotPermittedException
+     *                 if ProjectType has WorkTypes
+     * @throws ObjectNotFoundException
+     *                 if no such object exists
      */
     public void deleteProjectType(int projectTypeId)
-        throws OperationNotPermittedException,
-        ObjectNotFoundException;
+            throws OperationNotPermittedException, ObjectNotFoundException;
+
+    /**
+     * Get a Map that contains information for the users column of the project
+     * portfolio page.
+     * 
+     * @return A map that maps ongoing projects to the user data
+     */
+    public ProjectPortfolioData getProjectPortfolioData();
 }

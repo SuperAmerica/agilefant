@@ -110,10 +110,9 @@ function validateDeletion() {
 			</c:choose>
 		</display:column>
 
-		<display:column sortable="true" sortProperty="assignee.fullName"
-			title="Responsible" class="responsibleColumn">
-		<div>${aef:html(item.assignee.fullName)}</div>
-	</display:column>
+		<display:column sortable="true" title="Responsibles" class="responsibleColumn">
+		<div><aef:responsibleColumn backlogItemId="${item.id}"/></div>
+		</display:column>
 
 		<display:column sortable="true" defaultorder="descending"
 			title="Priority">

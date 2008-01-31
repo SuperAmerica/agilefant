@@ -11,6 +11,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
@@ -63,7 +65,10 @@ public class BacklogItem implements PageItem, Assignable, EffortContainer {
 
     private Collection<Task> tasks = new HashSet<Task>();
 
+    @Deprecated
     private User assignee;
+    
+    private Collection<User> responsibles;
 
     private State state = State.NOT_STARTED;
 
@@ -345,5 +350,29 @@ public class BacklogItem implements PageItem, Assignable, EffortContainer {
      */
     public void setOriginalEstimate(AFTime originalEstimate) {
         this.originalEstimate = originalEstimate;
+    }
+    
+    /**
+     * Get the users responsible for this backlog item.
+     * @return collection of the responsible users
+     */
+    @ManyToMany(
+            targetEntity = fi.hut.soberit.agilefant.model.User.class
+    )
+    @JoinTable(
+            name = "BacklogItem_User",
+            joinColumns={@JoinColumn(name = "BacklogItem_id")},
+            inverseJoinColumns={@JoinColumn(name = "User_id")}
+    )
+    public Collection<User> getResponsibles() {
+        return responsibles;
+    }
+
+    /**
+     * Set the users responsible for this backlog item.
+     * @param responsibles list of users
+     */
+    public void setResponsibles(Collection<User> responsibles) {
+        this.responsibles = responsibles;
     }
 }

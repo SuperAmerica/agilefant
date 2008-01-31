@@ -30,6 +30,10 @@
 			${aef:html(item.iterationGoal.name)}
 		</ww:a></div>
 	</display:column>
+	
+	<display:column sortable="true" title="Responsibles" class="responsibleColumn">
+		<div><aef:responsibleColumn backlogItemId="${item.id}"/></div>
+	</display:column>
 
 	<!-- Display the priority -->
 	<display:column sortable="true" defaultorder="descending"
@@ -126,7 +130,16 @@
 					</ww:url>
 				</c:when>
 				<c:when test="${aef:isProject(parent)}">
-					&nbsp;&nbsp;&nbsp;
+					<c:choose>
+						<c:when test="${!aef:isUserAssignedTo(parent, user)}">
+							<img src="static/img/unassigned.png"
+								title="The user has not been assigned to this project."
+								alt="The user has not been assigned to this project." />
+						</c:when>
+						<c:otherwise>
+							&nbsp;&nbsp;&nbsp;							
+						</c:otherwise>
+					</c:choose>
 					<ww:url id="parentActionUrl" action="editProject"
 						includeParams="none">
 						<ww:param name="projectId" value="${parent.id}" />

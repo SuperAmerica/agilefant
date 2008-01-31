@@ -1,5 +1,7 @@
 package fi.hut.soberit.agilefant.business;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
@@ -94,40 +96,34 @@ public class UserBusinessTest extends SpringTestCase {
         testUtility.setCleanup(true);
         User user = userDAO.get(testUtility.createUser("test0", "test"));
         SecurityUtil.setLoggedUser(user);
+        
+        // Create the responsible lists
+        Collection<User> respReal = new ArrayList<User>();
+        Collection<User> respFake = new ArrayList<User>();
+        
+        respReal.add(user);
 
-        /* Create context for backlog items */
+        // Create context for backlog items
         int productId = testUtility.createProduct("Test product");
         Product product = productDAO.get(productId);
 
-        /* Create the backlog items */
+        // Create the backlog items
         int bli1Id = testUtility.createBacklogItem(
                 "Backlog item with not started state", product);
         int bli2Id = testUtility.createBacklogItem(
                 "Backlog item with started state", product);
         int bli3Id = testUtility.createBacklogItem(
-                "Backlog item with blocked state and assignee", product);
+                "Backlog item with blocked state and responsible", product);
         int bli4Id = testUtility.createBacklogItem(
-                "Backlog item with implemented state and assignee", product);
+                "Backlog item with implemented state and responsible", product);
         int bli5Id = testUtility.createBacklogItem(
-                "Backlog item with done state and assignee", product);
+                "Backlog item with done state and responsible", product);
 
         BacklogItem bli1 = backlogItemDAO.get(bli1Id);
         BacklogItem bli2 = backlogItemDAO.get(bli2Id);
         BacklogItem bli3 = backlogItemDAO.get(bli3Id);
         BacklogItem bli4 = backlogItemDAO.get(bli4Id);
         BacklogItem bli5 = backlogItemDAO.get(bli5Id);
-
-        /* Create placeholder tasks */
-        Task ph1 = taskDAO.get(testUtility.createTask(user, "Placeholder 1",
-                bli1));
-        Task ph2 = taskDAO.get(testUtility.createTask(user, "Placeholder 2",
-                bli2));
-        Task ph3 = taskDAO.get(testUtility.createTask(user, "Placeholder 3",
-                bli3));
-        Task ph4 = taskDAO.get(testUtility.createTask(user, "Placeholder 4",
-                bli4));
-        Task ph5 = taskDAO.get(testUtility.createTask(user, "Placeholder 5",
-                bli5));
 
         bli1.setState(State.NOT_STARTED);
         bli2.setState(State.STARTED);
@@ -142,49 +138,62 @@ public class UserBusinessTest extends SpringTestCase {
         bli5.setPriority(Priority.BLOCKER);
 
         
-        /* Set the assignees */
-        bli3.setAssignee(user);
-        bli4.setAssignee(user);
-        bli5.setAssignee(user);
+        // Set the responsibles
+        bli3.setResponsibles(respReal);
+        bli4.setResponsibles(respReal);
+        bli5.setResponsibles(respReal);
+        
+        // Set the user's backlog items
+        Collection<BacklogItem> userBLIs = new ArrayList<BacklogItem>();
+        userBLIs.add(bli3);
+        userBLIs.add(bli4);
+        userBLIs.add(bli5);
+        user.setBacklogItems(userBLIs);
 
         super.endTransaction();
         super.startNewTransaction();
         super.setComplete();
 
-        /* Refetch the test backlog items from the mysql database */
+        // Refetch the test backlog items from the mysql database
         bli1 = backlogItemDAO.get(bli1Id);
         bli2 = backlogItemDAO.get(bli2Id);
         bli3 = backlogItemDAO.get(bli3Id);
         bli4 = backlogItemDAO.get(bli4Id);
         bli5 = backlogItemDAO.get(bli5Id);
+        
+        Collection<BacklogItem> bliList = user.getBacklogItems();
+        assertFalse("Failed: list is empty", bliList.isEmpty());
 
+        for (BacklogItem bli : bliList) {
+            if (bli.getId() != bli3Id &&
+                    bli.getId() != bli4Id &&
+                    bli.getId() != bli5Id) {
+                fail("List contains backlog items with wrong id's");
+            }
+            
+            assertTrue(
+                    "Failed: the list should not contain BLIs with wrong responsibles",
+                    bli.getResponsibles().contains(user));
+        }
+        
         List<BacklogItem> list = userBusiness.getBacklogItemsInProgress(user);
-
         assertFalse("Failed: list is empty", list.isEmpty());
 
-        assertFalse(
-                "Failed: list should not contain backlog item with state not started",
-                list.contains(bli1));
-        assertFalse(
-                "Failed: list should not contain this backlog item with no assigned user",
-                list.contains(bli2));
-        assertTrue(
-                "Failed: list should contain this backlog item with state blocked and an assigned user",
-                list.contains(bli3));
-        assertTrue(
-                "Failed: list should contain this backlog item with state implemented and an assigned user",
-                list.contains(bli4));
-        assertFalse(
-                "Failed: list should not contain backlog item with state done and assigned user",
-                list.contains(bli5));
-
         for (BacklogItem bli : list) {
+            if (bli.getId() != bli3Id &&
+                    bli.getId() != bli4Id) {
+                fail("List contains backlog items with wrong id's");
+            }
+            
             assertFalse(
                     "Failed: the list should not contain backlog items with not started state",
                     bli.getState() == State.NOT_STARTED);
             assertFalse(
                     "Failed: the list should not contain backlog items with done state",
                     bli.getState() == State.DONE);
+            assertTrue(
+                    "Failed: the list should not contain backlog items with wrong responsible",
+                    bli.getResponsibles().contains(user));
         }
     }
 

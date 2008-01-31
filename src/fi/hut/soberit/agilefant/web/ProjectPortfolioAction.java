@@ -1,13 +1,21 @@
 package fi.hut.soberit.agilefant.web;
 
 import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
 
+import fi.hut.soberit.agilefant.business.BacklogBusiness;
 import fi.hut.soberit.agilefant.business.ProjectBusiness;
-import fi.hut.soberit.agilefant.model.ProjectType;
+import fi.hut.soberit.agilefant.business.TeamBusiness;
+import fi.hut.soberit.agilefant.business.UserBusiness;
 import fi.hut.soberit.agilefant.model.Project;
+import fi.hut.soberit.agilefant.model.ProjectType;
+import fi.hut.soberit.agilefant.model.Team;
+import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.util.ProjectPortfolioData;
 
 public class ProjectPortfolioAction extends ActionSupport {
 
@@ -15,16 +23,41 @@ public class ProjectPortfolioAction extends ActionSupport {
 
     private ProjectBusiness projectBusiness;
 
-    private int projectId;
+    private BacklogBusiness backlogBusiness;
     
+    private TeamBusiness teamBusiness;
+    
+    private UserBusiness userBusiness;
+
+    private int projectId;
+
     private Collection<ProjectType> projectTypes;
 
+    private Map<Project, String> summaryUserData;
+    
+    private Map<Project, Integer> summaryUnassignedUserData;
+
+    private Map<Project, String> summaryLoadLeftData;
+
+    private Map<String, String> loadLeftData;
+
+    private Map<Project, List<User>> assignedUsers;
+    
+    private Map<String, Integer> unassignedUsers;
+                                     
     @Override
     public String execute() throws Exception {
         projectTypes = projectBusiness.getProjectTypes();
+        ProjectPortfolioData data = projectBusiness.getProjectPortfolioData();
+        summaryUserData = data.getSummaryUserData();
+        summaryLoadLeftData = data.getSummaryLoadLeftData();
+        loadLeftData = data.getLoadLefts();
+        assignedUsers = data.getAssignedUsers();
+        summaryUnassignedUserData = data.getSummaryUnassignedUserData();
+        unassignedUsers = data.getUnassignedUsers();
         return super.execute();
     }
-    
+
     public Collection<Project> getAll() {
         return projectBusiness.getAll();
     }
@@ -85,5 +118,64 @@ public class ProjectPortfolioAction extends ActionSupport {
     public void setProjectTypes(Collection<ProjectType> projectTypes) {
         this.projectTypes = projectTypes;
     }
+
+    public void setBacklogBusiness(BacklogBusiness backlogBusiness) {
+        this.backlogBusiness = backlogBusiness;
+    }
+
+    public Map<Project, String> getSummaryUserData() {
+        return summaryUserData;
+    }
+
+    public Map<Project, String> getSummaryLoadLeftData() {
+        return summaryLoadLeftData;
+    }
+
+    public Map<String, String> getLoadLefts() {
+        return loadLeftData;
+    }
+
+    public Map<Project, List<User>> getAssignedUsers() {
+        return assignedUsers;
+    }
+
+    public Map<Project, Integer> getSummaryUnassignedUserData() {
+        return summaryUnassignedUserData;
+    }
+
+    public List<User> getUserList() {
+        return this.userBusiness.getAllUsers();
+    }
     
+    public List<Team> getTeamList() {
+        return this.teamBusiness.getAllTeams();
+    }
+
+    public UserBusiness getUserBusiness() {
+        return userBusiness;
+    }
+
+    public void setUserBusiness(UserBusiness userBusiness) {
+        this.userBusiness = userBusiness;
+    }
+
+    public TeamBusiness getTeamBusiness() {
+        return teamBusiness;
+    }
+
+    public void setTeamBusiness(TeamBusiness teamBusiness) {
+        this.teamBusiness = teamBusiness;
+    }
+
+    public Map<String, Integer> getUnassignedUsers() {
+        return unassignedUsers;
+    }
+
+    public void setUnassignedUsers(Map<String, Integer> unassignedUsers) {
+        this.unassignedUsers = unassignedUsers;
+    }
+
+    
+    
+
 }

@@ -3,11 +3,15 @@ package fi.hut.soberit.agilefant.model;
 import java.util.Collection;
 import java.util.HashSet;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 
@@ -35,7 +39,7 @@ public class User implements PageItem {
     private String fullName;
 
     private String email;
-    
+
     private String initials;
 
     private Collection<Assignment> assignments = new HashSet<Assignment>();
@@ -43,6 +47,8 @@ public class User implements PageItem {
     private Collection<Backlog> backlogs = new HashSet<Backlog>();
 
     private Collection<BacklogItem> backlogItems = new HashSet<BacklogItem>();
+
+    private Collection<Team> teams = new HashSet<Team>();
 
     /**
      * Get the id of this object.
@@ -130,8 +136,8 @@ public class User implements PageItem {
         return false;
     }
 
-    /** Get backlog items, where the user is assigned. */
-    @OneToMany(mappedBy = "assignee")
+    /** Get backlog items, of which the user is responsible. */
+    @ManyToMany(mappedBy = "responsibles", targetEntity = fi.hut.soberit.agilefant.model.BacklogItem.class)
     public Collection<BacklogItem> getBacklogItems() {
         return backlogItems;
     }
@@ -193,6 +199,7 @@ public class User implements PageItem {
 
     /**
      * Get the user's initials.
+     * 
      * @return the initials
      */
     public String getInitials() {
@@ -201,10 +208,38 @@ public class User implements PageItem {
 
     /**
      * Set the user's initials.
-     * @param initials the initials to set
+     * 
+     * @param initials
+     *                the initials to set
      */
     public void setInitials(String initials) {
         this.initials = initials;
     }
 
+    /**
+     * Get the user's teams.
+     * 
+     * @return the teams
+     */
+    @ManyToMany(
+            cascade = CascadeType.ALL,
+            targetEntity = fi.hut.soberit.agilefant.model.Team.class
+    )
+    @JoinTable(
+            name = "Team_User",
+            joinColumns = {@JoinColumn( name = "User_id" )},
+            inverseJoinColumns = {@JoinColumn( name = "Team_id")}
+    )
+    public Collection<Team> getTeams() {
+        return teams;
+    }
+
+    /**
+     * Set the user's teams.
+     * 
+     * @param teams
+     */
+    public void setTeams(Collection<Team> teams) {
+        this.teams = teams;
+    }
 }

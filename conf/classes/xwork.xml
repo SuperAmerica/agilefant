@@ -231,6 +231,14 @@
 				<param name="resetContextView">true</param>
 			</result>
 		</action>
+
+		<action name="saveProjectAssignments" method="saveProjectAssignments"
+			class="projectAction">
+			<result type="redirect-action">
+				<param name="actionName">projectPortfolio.action</param>
+			</result>
+		</action>		
+		
 		<action name="storeNewProject" method="store"
 			class="projectAction">
 			<result type="redirect-action">
@@ -399,7 +407,7 @@
 		<!-- /Iteration actions -->
 
 		<!-- User actions -->
-		<action name="listUsers">
+		<action name="listUsers" method="list" class="userAction">
 			<result>/WEB-INF/jsp/listUsers.jsp</result>
 		</action>
 		<action name="editUser" method="edit" class="userAction">
@@ -417,6 +425,22 @@
 		</action>
 
 		<!-- /User actions -->
+		
+		<!-- Team actions -->
+		<action name="editTeam" method="edit" class="teamAction">
+			<result>/WEB-INF/jsp/editTeam.jsp</result>
+		</action>
+		<action name="createTeam" method="create" class="teamAction">
+			<result>/WEB-INF/jsp/editTeam.jsp</result>
+		</action>
+		<action name="deleteTeam" method="delete" class="teamAction">
+			<result type="redirect-action">listUsers</result>
+		</action>
+		<action name="storeTeam" method="store" class="teamAction">
+			<result type="redirect">listUsers.action</result>
+			<result name="error">/WEB-INF/jsp/editTeam.jsp</result>
+		</action>
+		<!-- /Team actions -->
 		
 		<!-- These functions are for Saving and Deleting backlog items on daily work page -->
 		

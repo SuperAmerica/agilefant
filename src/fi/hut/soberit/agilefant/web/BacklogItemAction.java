@@ -1,8 +1,12 @@
 package fi.hut.soberit.agilefant.web;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.logging.Log;
@@ -62,6 +66,8 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
     private TaskDAO taskDAO;
 
     private Log logger = LogFactory.getLog(getClass());
+    
+    private Map<Integer, String> userIds = new HashMap<Integer, String>();
 
     private BacklogBusiness backlogBusiness;
 
@@ -201,16 +207,12 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
     }
 
     protected void fillStorable(BacklogItem storable) {
-        User oldAssignee = storable.getAssignee();
-        User newAssignee = null;
-
-        if ((oldAssignee == null && assigneeId > 0)
-                || (oldAssignee != null && oldAssignee.getId() != assigneeId)) {
-            if (assigneeId > 0) {
-                newAssignee = userDAO.get(assigneeId);
-            }
-            storable.setAssignee(newAssignee);
+        List<User> responsibles = new ArrayList<User>(userIds.size());
+        for(Serializable id : userIds.keySet() ) {
+            User user = userDAO.get(id);
+            responsibles.add(user);
         }
+        storable.setResponsibles(responsibles);
 
         if (this.backlogItem.getIterationGoal() != null) {
             IterationGoal goal = iterationGoalDAO.get(this.backlogItem
@@ -393,6 +395,14 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
     public void setEffortLeft(AFTime effortLeft) {
         this.effortLeft = effortLeft;
     }
+    
+    public Map<Integer, String> getUserIds() {
+        return userIds;
+    }
+
+    public void setUserIds(Map<Integer, String> userIds) {
+        this.userIds = userIds;
+    }
 
     public HistoryBusiness getHistoryBusiness() {
         return historyBusiness;
@@ -401,5 +411,6 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
     public void setHistoryBusiness(HistoryBusiness historyBusiness) {
         this.historyBusiness = historyBusiness;
     }
+
 
 }

@@ -1,8 +1,11 @@
 package fi.hut.soberit.agilefant.web.function;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import fi.hut.soberit.agilefant.model.Assignment;
+import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Iteration;
@@ -89,5 +92,20 @@ public class AEFFunctions {
 
     public static boolean isBeforeThisDay(Date date) {
         return date.before(GregorianCalendar.getInstance().getTime());
+    }
+    
+    public static boolean listContains(Collection<Object> coll, Object object) {
+        return coll.contains(object);
+    }
+    
+    public static boolean isUserAssignedTo(Backlog backlog, User user) {
+        if (backlog instanceof Project) {
+            for (Assignment ass : backlog.getAssignments()) {
+                if (ass.getUser() == user) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

@@ -528,3 +528,51 @@ td.deleteButton {
 .backlogDropdownColumn select {
 	width: 450px;
 }
+
+
+/* Multiuser selection styles */
+#userselect ul {
+	list-style-type: none;
+	margin-top: 3px;
+	margin-bottom: 3px;
+	padding-left: 0px;
+}
+#userselect .users_0 {
+}
+#userselect .groups {
+}
+#userselect .groups li {
+	cursor: pointer;
+	text-decoration: underline;
+	margin-top: 2px;
+}
+#userselect div.left {
+	float: left;
+}
+#userselect div.right {
+	float: left;
+	margin-left: 15px;
+}
+
+.projectUsers {
+	float: left;
+}
+.projectTeams {
+	float: left;
+}
+.projectTeams label,.teamselect label {
+	font-weight: bold;
+	position: relative;
+	top: 3px;
+}
+.projectTeams li,.teamselect ul {
+	display: table;
+	list-style-type: none;
+	padding-left: 0px;
+}
+.projectTeams li,.teamselect li {
+	display: table-row, table-cell;
+	padding: 2px;
+	cursor: pointer;
+	text-decoration: underline;
+}

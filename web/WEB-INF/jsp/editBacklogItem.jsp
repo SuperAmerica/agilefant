@@ -35,6 +35,7 @@
 <ww:form action="store${new}BacklogItem">
 	<ww:hidden name="backlogItemId" value="${backlogItem.id}" />
 	<aef:userList />
+	<aef:teamList />
 	<aef:currentUser />
 	<aef:iterationGoalList id="iterationGoals" backlogId="${backlogId}" />
 	<aef:productList />
@@ -165,21 +166,37 @@
 		--%>
 		</tr>
 		<tr>
-			<td>Responsible</td>
+			<td>Responsibles</td>
 			<td></td>
 			<td colspan="2">
-			<c:choose>
-				<c:when test="${backlogItem.id == 0}">
-					<ww:select headerKey="0" headerValue="(none)"
-						name="assigneeId" list="#attr.userList" listKey="id"
-						listValue="fullName" value="0" />
-				</c:when>
-				<c:otherwise>
-					<ww:select headerKey="0" headerValue="(none)"
-						name="assigneeId" list="#attr.userList" listKey="id"
-						listValue="fullName" value="%{backlogItem.assignee.id}" />
-				</c:otherwise>
-			</c:choose>
+			<a href="javascript:toggleDiv('userselect')">
+				<img src="static/img/users.png"/>
+				Assign
+			</a>
+			<script type="text/javascript" src="static/js/jquery-1.2.2.js"></script>
+			<script type="text/javascript" src="static/js/multiselect.js"></script>
+			<script type="text/javascript">
+			$(document).ready( function() {
+				<ww:set name="userList" value="#attr.userList" />
+				<ww:set name="teamList" value="#attr.teamList" />
+				var users = [<aef:userJson items="${userList}"/>]
+				var teams = [<aef:teamJson items="${teamList}"/>]
+				var selected = [<aef:idJson items="${backlogItem.responsibles}"/>]
+				$('#userselect').multiuserselect({users: [users,[]], groups: teams}).selectusers(selected);
+			});
+			</script>
+			<div id="userselect" style="display: none;">
+				<div class="left">
+					<label>Users assigned to this project</label>
+					<ul class="users_0" />
+					<label>Users not assigned this project</label>
+					<ul class="users_1" />
+				</div>
+				<div class="right">
+					<label>Teams</label>
+					<ul class="groups" />
+				</div>
+			</div>
 			</td>
 		</tr>
 		<tr>

@@ -37,6 +37,16 @@
 			Lists all users to variable userList
 	    </description>
 	</tag>
+
+	<tag>
+		<name>teamList</name>
+		<tag-class>fi.hut.soberit.agilefant.web.tag.TeamListTag</tag-class>
+		<body-content>JSP</body-content>
+		<description>
+			Lists all teams to variable teamList
+	    </description>
+	</tag>
+
 	
 	<tag>
 		<name>unfinishedTaskList</name>
@@ -119,6 +129,19 @@
 	    </attribute>
 	</tag>
 	
+	<tag>
+		<name>responsibleColumn</name>
+		<tag-class>fi.hut.soberit.agilefant.web.tag.ResponsibleColumnTag</tag-class>
+		<body-content>JSP</body-content>
+		<description>
+			Prints out a string of responsibles initials.
+		</description>
+		<attribute>
+			<name>backlogItemId</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
 	
 	<tag>
 		<name>percentDone</name>
@@ -277,6 +300,21 @@
 		<name>backlogDropdown</name>
 		<path>/WEB-INF/tags/backlogDropdown.tag</path>
 	</tag-file>
+	
+	<tag-file>
+		<name>userJson</name>
+		<path>/WEB-INF/tags/userJson.tag</path>
+	</tag-file>
+
+	<tag-file>
+		<name>teamJson</name>
+		<path>/WEB-INF/tags/teamJson.tag</path>
+	</tag-file>
+
+	<tag-file>
+		<name>idJson</name>
+		<path>/WEB-INF/tags/idJson.tag</path>
+	</tag-file>
 
 	 <tag-file>
 	    <name>menu</name>
@@ -367,6 +405,17 @@
 	  <name>isBeforeThisDay</name>
 	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
 	  <function-signature>boolean isBeforeThisDay(java.util.Date)</function-signature>
-	</function>  	  	 
-	 	 
+	</function>
+	
+	<function>
+	  <name>isUserAssignedTo</name>
+	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
+	  <function-signature>boolean isUserAssignedTo(fi.hut.soberit.agilefant.model.Backlog, fi.hut.soberit.agilefant.model.User)</function-signature>
+	</function>
+	
+	<function>
+	  <name>listContains</name>
+	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
+	  <function-signature>boolean listContains(java.util.Collection, java.lang.Object)</function-signature>
+	</function> 
 </taglib>

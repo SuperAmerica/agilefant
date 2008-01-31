@@ -77,4 +77,10 @@ public interface BacklogItemBusiness {
 
     public void setHistoryBusiness(HistoryBusiness historyBusiness);
 
+    
+    /**
+     * Get the responsibles' initials for the backlog item. 
+     * @return a string representation of all the initials.
+     */
+    public String getResponsibleInitialsString(BacklogItem bli);
 }

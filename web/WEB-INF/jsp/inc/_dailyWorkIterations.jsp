@@ -38,7 +38,17 @@
 			<u><c:out value="(${it.project.projectType.name})" /></u>
 		</ww:a>--%>
 		
-		<c:out value="(${it.project.projectType.name})" /></div>
+		<c:out value="(${it.project.projectType.name})" />
+		
+		<c:if test="${!aef:isUserAssignedTo(it.project, user)}">
+			<p style="color:#ff0000;">
+			<img src="static/img/unassigned.png"
+				title="The user has not been assigned to this project."
+				alt="The user has not been assigned to this project." />
+			The user has not been assigned to this project.
+			</p>
+		</c:if>
+		</div>
 
 
 		<div id="subItemContent">
@@ -70,6 +80,15 @@
 						<div><ww:a href="%{editLink}&contextViewName=dailyWork">
 			${aef:html(item1.iterationGoal.name)}
 		</ww:a></div>
+					</display:column>
+
+					<display:column sortable="true" title="Responsibles" class="responsibleColumn">
+					<div><aef:responsibleColumn backlogItemId="${item1.id}"/></div>
+					</display:column>
+					
+					<display:column sortable="true" defaultorder="descending"
+						title="Priority">
+						<ww:text name="backlogItem.priority.${item1.priority}" />
 					</display:column>
 
 					<display:column title="State" sortable="false" class="taskColumn">
@@ -150,11 +169,6 @@
 						</c:choose>
 					</display:column>
 
-					<display:column sortable="true" defaultorder="descending"
-						title="Priority">
-						<ww:text name="backlogItem.priority.${item1.priority}" />
-					</display:column>
-
 					<display:column sortable="true" sortProperty="effortLeft"
 						defaultorder="descending" title="Effort Left">
 						<span style="white-space: nowrap"> <c:choose>
@@ -166,7 +180,7 @@
 					</display:column>
 
 					<display:column sortable="true" sortProperty="originalEstimate"
-						defaultorder="descending" title="Original estimate">
+						defaultorder="descending" title="Orig. est.">
 						<c:choose>
 							<c:when test="${item1.originalEstimate == null}">&mdash;</c:when>
 							<c:otherwise>
@@ -181,21 +195,23 @@
 							<td>&nbsp;</td>
 							<td>&nbsp;</td>
 							<td>&nbsp;</td>
+							<td>&nbsp;</td>
 							<td><c:out value="${effortSums[it]}" /></td>
 							<td><c:out value="${originalEstimates[it]}" /></td>
 						</tr>
 					</display:footer>
 
 				</display:table></td>
-
 				<td class="smallBurndownColumn">
-				<div><img src="drawSmallChart.action?iterationId=${it.id}" />
-				</div>
+					<div class="smallBurndown"><img src="drawSmallChart.action?iterationId=${it.id}" /></div>
 				</td>
 			</tr>
 		</table>
 
+		
+
 		</div>
+		
 
 	</c:forEach></div>
 

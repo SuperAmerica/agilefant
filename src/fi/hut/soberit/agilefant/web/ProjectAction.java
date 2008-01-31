@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 
 import com.opensymphony.xwork.Action;
@@ -57,6 +58,8 @@ public class ProjectAction extends ActionSupport implements CRUDAction {
 
     private List<User> users = new ArrayList<User>();
 
+    private Collection<User> assignedUsers = new HashSet<User>();
+
     private UserBusiness userBusiness;
 
     /**
@@ -84,10 +87,10 @@ public class ProjectAction extends ActionSupport implements CRUDAction {
         projectId = 0;
         project = new Project();
         backlog = project;
-        
+
         // populate all users to drop-down list
         users = userBusiness.getAllUsers();
-        
+
         return Action.SUCCESS;
     }
 
@@ -116,6 +119,9 @@ public class ProjectAction extends ActionSupport implements CRUDAction {
          * BacklogValueInjector.injectMetrics(backlog, startDate, taskEventDAO,
          * backlogItemDAO);
          */
+        // populate all users to drop-down list
+        users = userBusiness.getAllUsers();
+        assignedUsers = backlogBusiness.getUsers(project, true);
 
         return Action.SUCCESS;
     }
@@ -140,13 +146,26 @@ public class ProjectAction extends ActionSupport implements CRUDAction {
         if (super.hasActionErrors()) {
             return Action.ERROR;
         }
-
-        if (projectId == 0)
+        // AT ja MN: aika rumaa koodia... project-olion on oltava kannassa ennen
+        // kuin
+        // Assignmentit tehdään.
+        if (projectId == 0) {
             projectId = (Integer) projectDAO.create(storable);
-        else
+        } else {
             projectDAO.store(storable);
+        }
+        backlogBusiness.setAssignments(selectedUserIds, projectDAO
+                .get(projectId));
+        return Action.SUCCESS;
+    }
 
-        backlogBusiness.setAssignments(selectedUserIds, project);
+    public String saveProjectAssignments() {
+        if (projectId == 0) {
+            super.addActionError(super.getText("project.notFound"));
+            return Action.ERROR;
+        }
+        backlogBusiness.setAssignments(selectedUserIds, projectDAO
+                .get(projectId));
         return Action.SUCCESS;
     }
 
@@ -161,6 +180,7 @@ public class ProjectAction extends ActionSupport implements CRUDAction {
             super.addActionError(super.getText("project.notEmptyWhenDeleting"));
             return Action.ERROR;
         }
+        backlogBusiness.setAssignments(null, project);
         Product product = project.getProduct();
         productId = product.getId();
         product.getProjects().remove(project);
@@ -349,5 +369,9 @@ public class ProjectAction extends ActionSupport implements CRUDAction {
 
     public void setUserBusiness(UserBusiness userBusiness) {
         this.userBusiness = userBusiness;
+    }
+
+    public Collection<User> getAssignedUsers() {
+        return assignedUsers;
     }
 }

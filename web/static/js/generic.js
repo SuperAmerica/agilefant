@@ -36,3 +36,11 @@ function confirmDelete() {
 		return false;
 	}
 }
+
+function confirmDeleteTeam() {
+	if (confirm("Are you sure to delete the team?")) {
+		return true;
+	} else {
+		return false;
+	}
+}

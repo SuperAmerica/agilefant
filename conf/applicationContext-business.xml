@@ -17,6 +17,9 @@
 		class="fi.hut.soberit.agilefant.business.impl.HistoryBusinessImpl" />
 	<bean id="taskBusiness"
 		class="fi.hut.soberit.agilefant.business.impl.TaskBusinessImpl" />
+	<bean id="teamBusiness"
+		class="fi.hut.soberit.agilefant.business.impl.TeamBusinessImpl" />
+
 
 	<bean name="chartBusiness"
 		class="fi.hut.soberit.agilefant.business.impl.ChartBusinessImpl">

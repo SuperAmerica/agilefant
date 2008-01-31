@@ -8,8 +8,13 @@
 <aef:menu navi="portfolio" />
 <ww:actionerror />
 <ww:actionmessage />
-
-<h2>Edit Project Rank</h2>
+<script type="text/javascript" src="static/js/jquery-1.2.2.js"></script>
+<script type="text/javascript" src="static/js/multiselect.js"></script>
+<script type="text/javascript">
+<ww:set name="teamList" value="#attr.teamList" />
+var teams = [<aef:teamJson items="${teamList}"/>]
+</script>
+<h2>Edit Project Rank </h2>
 
 <h4>Ranked Projects</h4>
 <p><display:table name="${ongoingRankedProjects}" id="row">
@@ -48,8 +53,91 @@
 		</ww:url>
 		<ww:a href="%{unrankLink}"><img src="static/img/unrank.png" alt="Unrank" title="Unrank" /></ww:a>
 	</display:column>
-</display:table></p>
+		<display:column title="Users">
+		<c:set var="divId" value="${divId + 1}" scope="page" />
+		<a href="javascript:toggleDiv(${divId});">
+			<img src="static/img/users.png" alt="Users" />
+			<c:out value="${summaryUserData[row]}" />
+			<c:if test="${summaryUnassignedUserData[row] > 0}">
+				<span style="color: rgb(255, 0, 0);"> + 
+				<c:out value="${summaryUnassignedUserData[row]}" /> unassigned
+				</span>
+			</c:if>
+		</a>
+		<!-- User assignment table -->	
+		<div id="${divId}" style="display: none;">
+		<ww:form action="saveProjectAssignments">
+		<ww:hidden name="projectId" value="${row.id}" /> 
+		
+		<table class="row_${row.id}">
+		<tr>
+		<td> 	  	 	  	
+ 	  		<display:table name="${userList}" id="user">
+			<!-- Set id string used as key for maps -->	
+			<c:set var="idstring" value="${row.id}-${user.id}" scope="request"/>
 
+			<display:column title="">
+			
+			<c:set var="flag" value="0" scope="request"/>
+			<c:forEach var="usr" items="${assignedUsers[row]}">
+				<c:if test="${usr.id == user.id}"> 
+					<c:set var="flag" value="1" scope="request"/>
+				</c:if>
+			</c:forEach>			
+			<c:choose>			
+			<c:when test="${flag == 1}">
+				<input class="user_${user.id}" type="checkbox" name="selectedUserIds" value="${user.id}" checked="checked" />
+			</c:when>
+			<c:otherwise>
+				<input class="user_${user.id}" type="checkbox" name="selectedUserIds" value="${user.id}" />			
+			</c:otherwise>
+			</c:choose>				
+
+			</display:column>		
+			
+			<display:column title="Users">
+				<!-- Check whether user is not assigned to project although has bli:s assigned -->
+				<c:if test="${unassignedUsers[idstring] == 1}"> 
+				<span style="color: red"> 
+				</c:if>
+				
+				<c:out value="${user.fullName}" />
+				
+				<c:if test="${unassignedUsers[idstring] == 1}"> 
+				</span>
+				</c:if>
+			</display:column>
+			
+			
+			<display:column title="Load Left">
+				<c:out value="${loadLefts[idstring]}" />
+			</display:column>
+			</display:table>
+		</td>
+		<td class="teamselect">										
+			<script type="text/javascript">
+			$(document).ready( function() {
+				$('.row_${row.id} .teamselect ul').groupselect(teams, ".row_${row.id}");
+			});
+			</script>
+			<label>Teams</label>
+			<ul></ul>
+		</td>
+		</tr>
+		</table>
+		<ww:submit action="saveProjectAssignments" value="Save" />
+		</ww:form>
+		</div>
+		<!-- User assignment table ends -->
+			
+		</display:column>
+		<display:column title="Load Left">
+			<c:out value="${aef: out(summaryLoadLeftData[row])}" escapeXml="false" />
+		</display:column>
+			
+</display:table></p>
+		
+		
 <c:if test="${!empty ongoingUnrankedProjects}">
 	<h4>Unranked Projects</h4>
 	<p><display:table name="${ongoingUnrankedProjects}" id="row">
@@ -69,6 +157,87 @@
 				<ww:param name="projectId" value="${row.id}" />
 			</ww:url>
 			<ww:a href="%{moveBottomLink}"><img src="static/img/unrank.png" alt="Rank to bottom" title="Rank to bottom" /></ww:a>
+		</display:column>
+		<display:column title="Users">
+		<c:set var="divId" value="${divId + 1}" scope="page" />
+		<a href="javascript:toggleDiv(${divId});">
+		<img src="static/img/users.png" alt="Users" />
+		<c:out value="${summaryUserData[row]}" />
+		<c:if test="${summaryUnassignedUserData[row] > 0}">
+			<span style="color: rgb(255, 0, 0);"> + 
+		<c:out value="${summaryUnassignedUserData[row]}" /> unassigned
+		</span>
+		</c:if>
+		</a>
+		<!-- User assignment table -->	
+		<div id="${divId}" style="display: none;">
+		<ww:form action="saveProjectAssignments">
+		<ww:hidden name="projectId" value="${row.id}" /> 
+		
+		<table class="row_${row.id}">
+		<tr>
+		<td> 	  	 	  	
+ 	  		<display:table name="${userList}" id="user">
+			<!-- Set id string used as key for maps -->	
+			<c:set var="idstring" value="${row.id}-${user.id}" scope="request"/>
+
+			<display:column title="">
+			
+			<c:set var="flag" value="0" scope="request"/>
+			<c:forEach var="usr" items="${assignedUsers[row]}">
+				<c:if test="${usr.id == user.id}"> 
+					<c:set var="flag" value="1" scope="request"/>
+				</c:if>
+			</c:forEach>			
+			<c:choose>			
+			<c:when test="${flag == 1}">
+				<input type="checkbox" class="user_${user.id}" name="selectedUserIds" value="${user.id}" checked="checked" />
+			</c:when>
+			<c:otherwise>
+				<input type="checkbox" class="user_${user.id}" name="selectedUserIds" value="${user.id}" />			
+			</c:otherwise>
+			</c:choose>				
+
+			</display:column>		
+			
+			<display:column title="Users">
+				<!-- Check whether user is not assigned to project although has bli:s assigned -->
+				<c:if test="${unassignedUsers[idstring] == 1}"> 
+				<span style="color: red"> 
+				</c:if>
+				
+				<c:out value="${user.fullName}" />
+				
+				<c:if test="${unassignedUsers[idstring] == 1}"> 
+				</span>
+				</c:if>
+			</display:column>
+			
+			
+			<display:column title="Load Left">
+				<c:out value="${loadLefts[idstring]}" />
+			</display:column>
+			</display:table>
+		</td>
+		<td class="teamselect">
+			<script type="text/javascript">
+			$(document).ready( function() {
+				$('.row_${row.id} .teamselect ul').groupselect(teams, ".row_${row.id}");
+			});
+			</script>
+			<label>Teams</label>
+			<ul></ul>
+		</td>
+		</tr>
+		</table>
+		<ww:submit action="saveProjectAssignments" value="Save" />
+		</ww:form>
+		</div>
+		<!-- User assignment table ends -->
+		
+		</display:column>
+		<display:column title="Load Left">
+			<c:out value="${summaryLoadLeftData[row]}" escapeXml="false" />
 		</display:column>
 	</display:table></p>
 </c:if>

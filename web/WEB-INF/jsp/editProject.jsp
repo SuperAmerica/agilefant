@@ -117,10 +117,64 @@
 				<tr>
 					<td>End date</td>
 					<td>*</td>
-					<td colspan="2"><ww:datepicker value="%{#end}" size="15" showstime="true"
-						format="%{getText('webwork.datepicker.format')}" name="endDate" />
+					<td colspan="2"><ww:datepicker value="%{#end}" size="15"
+						showstime="true" format="%{getText('webwork.datepicker.format')}"
+						name="endDate" /></td>
+				</tr>
+
+				<tr>
+					<td>Assign Users</td>
+					<td></td>
+					<td><c:set var="divId" value="1" scope="page" /><a
+						href="javascript:toggleDiv(${divId});"> <img
+						src="static/img/users.png" /> Assign
+					<div id="${divId}" style="display: none;">
+					<display:table name="${users}" id="user" class="projectUsers">
+						<display:column title="">
+								<c:set var="flag" value="0" scope="request" />
+								<c:forEach var="usr" items="${assignedUsers}">
+									<c:if test="${usr.id == user.id}">
+										<c:set var="flag" value="1" scope="request" />
+									</c:if>
+								</c:forEach>
+								<c:choose>
+									<c:when test="${flag == 1}">
+										<input type="checkbox" name="selectedUserIds"
+											value="${user.id}" checked="checked" class="user_${user.id}"/>
+									</c:when>
+									<c:otherwise>
+										<input type="checkbox" name="selectedUserIds"
+											value="${user.id}" class="user_${user.id}" />
+									</c:otherwise>
+								</c:choose>
+						</display:column>
+
+						<display:column title="User">
+							<c:out value="${user.fullName}" />
+						</display:column>
+					</display:table>
+					</a>
+					<div id="userselect" class="projectTeams">
+						<div class="right">
+							<label>Teams</label>
+							<ul class="groups" />
+						</div>
+						<script type="text/javascript" src="static/js/jquery-1.2.2.js"></script>
+						<script type="text/javascript" src="static/js/multiselect.js"></script>
+						<script type="text/javascript">
+						$(document).ready( function() {
+							<aef:teamList />
+							<ww:set name="teamList" value="#attr.teamList" />
+							var teams = [<aef:teamJson items="${teamList}"/>]
+							$('#userselect').multiuserselect({groups: teams});
+						});
+						</script>
+					</div>
+					</div>
 					</td>
 				</tr>
+
+
 				<tr>
 					<td></td>
 					<td></td>
@@ -130,8 +184,9 @@
 						</c:when>
 						<c:otherwise>
 							<td><ww:submit value="Save" /></td>
-							<td class="deleteButton"> <ww:submit onclick="return confirmDelete()"
-								action="deleteProject" value="Delete" /> </td>
+							<td class="deleteButton"><ww:submit
+								onclick="return confirmDelete()" action="deleteProject"
+								value="Delete" /></td>
 						</c:otherwise>
 					</c:choose>
 				</tr>
@@ -194,7 +249,8 @@
 									<ww:param name="projectId" value="${project.id}" />
 									<ww:param name="iterationId" value="${row.id}" />
 								</ww:url>
-								<ww:a href="%{deleteLink}&contextViewName=editProject&contextObjectId=${project.id}"
+								<ww:a
+									href="%{deleteLink}&contextViewName=editProject&contextObjectId=${project.id}"
 									onclick="return confirmDelete()">Delete</ww:a>
 							</display:column>
 
@@ -214,10 +270,10 @@
 							file="./inc/_backlogList.jsp"%></div>
 					</c:if></div>
 					<c:if test="${!empty project.backlogItems}">
-					    <c:if test="${empty project.iterations}">
-				            <p><img src="drawProjectChart.action?projectId=${project.id}" /></p>
-			            </c:if>
-			        </c:if>
+						<c:if test="${empty project.iterations}">
+							<p><img src="drawProjectChart.action?projectId=${project.id}" /></p>
+						</c:if>
+					</c:if>
 				</c:if></td>
 			</tr>
 		</table>

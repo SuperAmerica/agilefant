@@ -37,7 +37,7 @@ public class UserBusinessImpl implements UserBusiness {
         if (user == null) {
             user = SecurityUtil.getLoggedUser();
         }
-        List<BacklogItem> userItems = userDAO.getBacklogItemsInProgress(user);
+        List<BacklogItem> userItems = (List<BacklogItem>)user.getBacklogItems();
         List<BacklogItem> returnItems = new ArrayList<BacklogItem>();
 
         /*
@@ -73,7 +73,7 @@ public class UserBusinessImpl implements UserBusiness {
         Map<Backlog, List<BacklogItem>> bliMap = new HashMap<Backlog, List<BacklogItem>>();
 
         /* Get all backlog items for user in progress */
-        List<BacklogItem> userItems = userDAO.getBacklogItemsInProgress(user);
+        List<BacklogItem> userItems = (List<BacklogItem>)user.getBacklogItems();
 
         Set<Backlog> ongoingBacklogs = new HashSet<Backlog>();
         ongoingBacklogs.addAll(projectDAO.getOngoingProjects());

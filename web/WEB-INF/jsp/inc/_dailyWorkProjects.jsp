@@ -26,6 +26,15 @@
 		
 		<c:out value="(${pro.projectType.name})" /></div>
 		
+		<c:if test="${!aef:isUserAssignedTo(pro, user)}">
+			<p style="color:#ff0000;">
+			<img src="static/img/unassigned.png"
+				title="The user has not been assigned to this project."
+				alt="The user has not been assigned to this project." />
+			The user has not been assigned to this project.
+			</p>
+		</c:if>
+
 
 <div id="subItemContent">
 <p>
@@ -47,7 +56,14 @@
 		</ww:a></div>
 					</display:column>
 
+					<display:column sortable="true" title="Responsibles" class="responsibleColumn">
+					<div><aef:responsibleColumn backlogItemId="${item2.id}"/></div>
+					</display:column>
 
+					<display:column sortable="true" defaultorder="descending"
+						title="Priority">
+						<ww:text name="backlogItem.priority.${item2.priority}" />
+					</display:column>
 
 					<display:column title="State" sortable="false" class="taskColumn">
 						<c:set var="divId" value="${divId + 1}" scope="page" />
@@ -127,11 +143,6 @@
 						</c:choose>
 					</display:column>
 
-					<display:column sortable="true" defaultorder="descending"
-						title="Priority">
-						<ww:text name="backlogItem.priority.${item2.priority}" />
-					</display:column>
-
 					<display:column sortable="true" sortProperty="effortLeft"
 						defaultorder="descending" title="Effort Left<br/>">
 						<span style="white-space: nowrap"> <c:choose>
@@ -157,22 +168,27 @@
 							<td>&nbsp;</td>
 							<td>&nbsp;</td>
 							<td>&nbsp;</td>
+							<td>&nbsp;</td>
 							<td><c:out value="${effortSums[pro]}" /></td>
 							<td><c:out value="${originalEstimates[pro]}" /></td>
 						</tr>
 					</display:footer>
+					
+					
 
 
 				</display:table></td>
-
+				
 				<td class="smallBurndownColumn">
-			<div>
-				<img src="drawSmallProjectChart.action?projectId=${pro.id}"/>
-			</div>
-		</td>
+						<div>
+							<img src="drawSmallProjectChart.action?projectId=${pro.id}"/>
+						</div>
+					</td>
 
 	</tr>
 </table>
+
+
 
 </div>
 

@@ -171,8 +171,9 @@ public class BacklogBusinessTest extends TestCase {
         int[] selectedUserIds = { user1.getId(), user2.getId() };
         assertEquals(0, backlog.getAssignments().size());
         backlogBusiness.setAssignments(selectedUserIds, backlog);
-        assertEquals(2, backlog.getAssignments().size());
-
+        assertEquals(2, backlog.getAssignments().size());     
+       
+        
         // verify behavior
         verify(userDAO);
 

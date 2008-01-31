@@ -427,8 +427,12 @@ div#submenuwrapmyTasks #menu li#subnav1 a,div#submenuwrapiteration #menu li#subn
 	max-height: 4em;
 }
 
-.responsibleColumn div {
+.responsibleColumn {
 	overflow: hidden;
+}
+
+.responsibleColumn div {
+	overflow: visible;
 	width: 90px;
 	max-height: 2.5em;
 }

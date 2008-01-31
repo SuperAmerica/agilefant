@@ -95,7 +95,6 @@ public class Team implements Comparable<Team> {
      * @return the users
      */
     @ManyToMany(
-            cascade = CascadeType.ALL,
             targetEntity=fi.hut.soberit.agilefant.model.User.class
     )
     @JoinTable(

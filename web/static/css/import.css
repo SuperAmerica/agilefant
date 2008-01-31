@@ -430,11 +430,17 @@ div#submenuwrapmyTasks #menu li#subnav1 a,div#submenuwrapiteration #menu li#subn
 .responsibleColumn {
 	overflow: hidden;
 }
-
 .responsibleColumn div {
 	overflow: visible;
 	width: 90px;
 	max-height: 2.5em;
+}
+.responsibleColumn:hover {
+	overflow: visible;
+	height: 1px;
+}
+.responsibleColumn:hover div {
+	max-height: none;
 }
 
 .backlogItemList {

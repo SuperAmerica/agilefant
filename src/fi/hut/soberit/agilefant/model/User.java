@@ -222,7 +222,6 @@ public class User implements PageItem {
      * @return the teams
      */
     @ManyToMany(
-            cascade = CascadeType.ALL,
             targetEntity = fi.hut.soberit.agilefant.model.Team.class
     )
     @JoinTable(

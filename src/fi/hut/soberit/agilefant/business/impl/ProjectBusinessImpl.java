@@ -33,8 +33,8 @@ public class ProjectBusinessImpl implements ProjectBusiness {
     private IterationDAO iterationDAO;
 
     private ProjectTypeDAO projectTypeDAO;
-    
-    //Testing
+
+    // Testing
     private UserDAO userDAO;
 
     /** {@inheritDoc} */
@@ -157,67 +157,126 @@ public class ProjectBusinessImpl implements ProjectBusiness {
         HashMap<Project, String> summaryLoadLeftMap = new HashMap<Project, String>();
         HashMap<String, String> loadLeftData = new HashMap<String, String>();
         HashMap<String, Integer> unassignedUsersMap = new HashMap<String, Integer>();
-        Map<Project, List<User>> assignmentMap  = new HashMap<Project, List<User>>(0);
-        Collection<Project> projects = projectDAO.getOngoingProjects();
+        Map<Project, List<User>> assignmentMap = new HashMap<Project, List<User>>(
+                0);
+        Set<String> keySet = new HashSet<String>();
         
+        Map<String, Integer> unassignedBlisMap = new HashMap<String, Integer>();
+        
+        Collection<Project> projects = projectDAO.getOngoingProjects();
+
         // Go trough all projects and bli:s
         for (Project pro : projects) {
             int assignedUsers = backlogBusiness.getNumberOfAssignedUsers(pro);
             int unestimatedBlis = 0;
             AFTime ongoingBliLoadLeft = new AFTime(0);
-            Set<User> allUsers = new HashSet<User>(this.backlogBusiness.getUsers(pro, true));
-            HashSet<User> projectAssignments = new HashSet<User>(this.backlogBusiness.getUsers(pro, true));
-            
+            Set<User> allUsers = new HashSet<User>(this.backlogBusiness
+                    .getUsers(pro, true));
+            HashSet<User> projectAssignments = new HashSet<User>(
+                    this.backlogBusiness.getUsers(pro, true));
+
             Collection<BacklogItem> blis = getBlisInProjectAndItsIterations(pro);
-            
-            
+
             for (BacklogItem bli : blis) {
-                if (bli.getResponsibles() != null){
-                    allUsers.addAll(bli.getResponsibles());
-                    ArrayList<User> responsibles = new ArrayList<User>(bli.getResponsibles());
-                    
-                    for(User resp : responsibles){
-                        // Calculate and add effort from bli to user(s) assigned  
+                if (bli.getResponsibles() != null) {
+                    ArrayList<User> responsibles = new ArrayList<User>(bli
+                            .getResponsibles());
+
+                    if (bli.getEffortLeft() == null) {
+                        unestimatedBlis++;
+                        allUsers.addAll(bli.getResponsibles());
+                    } else if (bli.getEffortLeft().getTime() != 0) {
+                        ongoingBliLoadLeft.add(bli.getEffortLeft());
+                        allUsers.addAll(bli.getResponsibles());
+                    }
+
+                    for (User resp : responsibles) {
+                        
+                        keySet.add(pro.getId() + "-" + resp.getId());
+                        
+                        // Calculate and add effort from bli to user(s) assigned
                         // Uses projectID-UserId as map key
-                        String effortForUsr = loadLeftData.get(pro.getId()+"-"+resp.getId());
-                        if(effortForUsr != null){
+                        String effortForUsr = loadLeftData.get(pro.getId()
+                                + "-" + resp.getId());
+                        if (effortForUsr != null) {
                             AFTime usrLoadLeft = new AFTime(effortForUsr);
-                            if(bli.getEffortLeft() !=null){
-                                // Add effort to this user:  (bli effort / number of people assigned)
-                                AFTime newEffort = new AFTime(bli.getEffortLeft().getTime()/responsibles.size());
+                            if (bli.getEffortLeft() != null) {
+                                // Add effort to this user: (bli effort / number
+                                // of people assigned)
+                                AFTime newEffort = new AFTime(bli
+                                        .getEffortLeft().getTime()
+                                        / responsibles.size());
                                 usrLoadLeft.add(newEffort);
-                                loadLeftData.put(pro.getId()+"-"+resp.getId(), usrLoadLeft.toString());
+                                loadLeftData.put(pro.getId() + "-"
+                                        + resp.getId(), usrLoadLeft.toString());
                             }
-                        }else{ // no effort for user, create one
-                            if(bli.getEffortLeft() !=null){
-                                loadLeftData.put(pro.getId()+"-"+resp.getId(), bli.getEffortLeft().toString());
+                        } else { // no effort for user, create one
+                            if (bli.getEffortLeft() != null) {
+                                loadLeftData.put(pro.getId() + "-"
+                                        + resp.getId(), bli.getEffortLeft()
+                                        .toString());
                             }
                         }
-                        // Check whether user is responsible for a bli in the project
+                        // Check whether user is responsible for a bli in the
+                        // project
                         // but is currently not assigned to it
-                        if(!projectAssignments.contains(resp)){
-                            unassignedUsersMap.put(pro.getId()+"-"+resp.getId(), 1);
+                        if (!projectAssignments.contains(resp) && bli.getEffortLeft() == null) {
+                            unassignedUsersMap.put(pro.getId() + "-"
+                                    + resp.getId(), 1);
+                        }
+                        else if (!projectAssignments.contains(resp) && bli.getEffortLeft().getTime() != 0) {
+                            unassignedUsersMap.put(pro.getId() + "-"
+                                    + resp.getId(), 1);
+                        }
+                        if (bli.getEffortLeft() == null) {
+                            int numberOfUnestimatedBlis = 1;
+                            if (unassignedBlisMap.get(pro.getId() + "-" + resp.getId()) != null) {
+                                numberOfUnestimatedBlis = unassignedBlisMap.get(pro.getId() + "-"
+                                        + resp.getId()) + 1;
+                            }
+                            unassignedBlisMap.put(pro.getId() + "-" + resp.getId(), numberOfUnestimatedBlis);
                         }
                     }
-                }    
-                if (bli.getEffortLeft() == null) {
-                    unestimatedBlis++;
-                }else {
-                    ongoingBliLoadLeft.add(bli.getEffortLeft());
-                }          
+                }
+
             }
             int unassignedUsers = allUsers.size() - assignedUsers;
-            
+
             String userDataString = "" + assignedUsers;
             String loadLeftString = "" + ongoingBliLoadLeft;
             if (unestimatedBlis > 0)
-                loadLeftString += " + " + unestimatedBlis + " non-estimated BLIs";
+                loadLeftString += " + " + unestimatedBlis
+                        + " non-estimated BLIs";
             summaryLoadLeftMap.put(pro, loadLeftString);
             userDataMap.put(pro, userDataString);
             unassignedUserDataMap.put(pro, unassignedUsers);
-            assignmentMap.put(pro, new ArrayList<User>(this.backlogBusiness.getUsers(pro, true)));
-          
+            assignmentMap.put(pro, new ArrayList<User>(this.backlogBusiness
+                    .getUsers(pro, true)));
+
         }
+        
+        for (String key : keySet) {
+            String value = loadLeftData.get(key);
+            String appendValue = "";
+            
+            int userUnestimatedBlis = 0;
+            if (unassignedBlisMap.get(key) != null)
+                userUnestimatedBlis += unassignedBlisMap.get(key);
+            
+            if (userUnestimatedBlis > 0) {
+                if (value != null)
+                    appendValue += " + ";                   
+                appendValue += userUnestimatedBlis + " non-estimated BLIs";
+            }
+            
+            if (value == null)
+                value = "";
+            value += appendValue;
+            
+            if (value != null)
+                loadLeftData.put(key, value);
+        }
+        
         data.setUnassignedUsers(unassignedUsersMap);
         data.setAssignedUsers(assignmentMap);
         data.setSummaryUserData(userDataMap);
@@ -238,7 +297,7 @@ public class ProjectBusinessImpl implements ProjectBusiness {
         Collection<User> assignees = backlogBusiness.getUsers(project, true);
         Set<User> workers = new HashSet<User>();
         for (BacklogItem bli : blis)
-             workers.addAll(bli.getResponsibles());
+            workers.addAll(bli.getResponsibles());
         for (User worker : workers)
             unassignedHasWork.put(worker, assignees.contains(worker) ? 0 : 1);
         return unassignedHasWork;

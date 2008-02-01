@@ -72,7 +72,7 @@ var teams = [<aef:teamJson items="${teamList}"/>]
 		<table class="row_${row.id}">
 		<tr>
 		<td> 	  	 	  	
- 	  		<display:table name="${userList}" id="user">
+ 	  		<display:table name="${userList}" id="user" defaultsort="2">
 			<!-- Set id string used as key for maps -->	
 			<c:set var="idstring" value="${row.id}-${user.id}" scope="request"/>
 
@@ -95,7 +95,7 @@ var teams = [<aef:teamJson items="${teamList}"/>]
 
 			</display:column>		
 			
-			<display:column title="Users">
+			<display:column title="Users" sortProperty="fullName">
 				<!-- Check whether user is not assigned to project although has bli:s assigned -->
 				<c:choose>	
 				<c:when test="${unassignedUsers[idstring] == 1}"> 

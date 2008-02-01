@@ -129,6 +129,7 @@ var teams = [<aef:teamJson items="${teamList}"/>]
 		</tr>
 		</table>
 		<ww:submit action="saveProjectAssignments" value="Save" />
+		<ww:reset value="Reset" />
 		</ww:form>
 		</div>
 		<!-- User assignment table ends -->

@@ -129,7 +129,8 @@
 						href="javascript:toggleDiv(${divId});"> <img
 						src="static/img/users.png" /> Assign
 					<div id="${divId}" style="display: none;">
-					<display:table name="${users}" id="user" class="projectUsers">
+					<display:table name="${users}" id="user" class="projectUsers"
+						defaultsort="2">
 						<display:column title="">
 							<c:set var="flag" value="0" scope="request" />
 							<c:forEach var="usr" items="${assignedUsers}">
@@ -149,7 +150,7 @@
 							</c:choose>
 						</display:column>
 
-						<display:column title="User">
+						<display:column title="User" sortProperty="fullName">
 							<c:if test="${unassignedHasWork[user] == 1}">
 								<span style="color: red">
 							</c:if>

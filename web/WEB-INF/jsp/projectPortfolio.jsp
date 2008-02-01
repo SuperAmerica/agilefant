@@ -109,19 +109,6 @@ var teams = [<aef:teamJson items="${teamList}"/>]
 				</a>
 				</c:otherwise>
 				</c:choose>
-				<!--  
-				<c:if test="${unassignedUsers[idstring] == 1}"> 
-				<span style="color: red"> 
-				</c:if>
-				
-				<a href="dailyWork.action?userId=${user.id}">
-				<c:out value="${user.fullName}" />
-				</a>
-				<c:if test="${unassignedUsers[idstring] == 1}"> 
-				</span>
-				</c:if>
-				-->
-				
 			</display:column>
 			
 			
@@ -218,16 +205,18 @@ var teams = [<aef:teamJson items="${teamList}"/>]
 			
 			<display:column title="Users">
 				<!-- Check whether user is not assigned to project although has bli:s assigned -->
-				<c:if test="${unassignedUsers[idstring] == 1}"> 
-				<span style="color: red"> 
-				</c:if>
-				
+				<c:choose>	
+				<c:when test="${unassignedUsers[idstring] == 1}"> 
+				<a href="dailyWork.action?userId=${user.id}" class="unassigned">
+				<c:out value="${user.fullName}" />
+				</a> 
+				</c:when>
+				<c:otherwise>
 				<a href="dailyWork.action?userId=${user.id}">
 				<c:out value="${user.fullName}" />
 				</a>
-				<c:if test="${unassignedUsers[idstring] == 1}"> 
-				</span>
-				</c:if>
+				</c:otherwise>
+				</c:choose>
 			</display:column>
 			
 			

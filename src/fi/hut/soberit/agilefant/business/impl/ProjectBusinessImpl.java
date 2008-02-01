@@ -212,10 +212,12 @@ public class ProjectBusinessImpl implements ProjectBusiness {
                             }
                         } else { // no effort for user, create one
                             if (bli.getEffortLeft() != null) {
+                                AFTime t = new AFTime(bli.getEffortLeft().getTime() / responsibles.size());
                                 loadLeftData.put(pro.getId() + "-"
-                                        + resp.getId(), bli.getEffortLeft()
-                                        .toString());
+                                        + resp.getId(), t.toString());
                             }
+                            
+                            
                         }
                         // Check whether user is responsible for a bli in the
                         // project

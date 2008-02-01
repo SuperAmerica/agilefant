@@ -145,7 +145,7 @@ public class UserAction extends ActionSupport implements CRUDAction {
 
         // Set the initials
         if (this.user.getInitials() == null
-                || this.user.getInitials().compareTo("") == 0) {
+                || this.user.getInitials().trim().compareTo("") == 0) {
             super.addActionError("Initials are required.");
         } else {
             storable.setInitials(this.user.getInitials());

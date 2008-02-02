@@ -214,8 +214,8 @@ Project Portfolio
 </li>
 <li id="navc">
 <a href="contextView.action?contextName=users&resetContextView=true">
-<img src="static/img/users.png" alt="Users" />
-Users
+<img src="static/img/users.png" alt="Users &amp; Teams" />
+Users &amp; Teams
 </a>
 </li>
 <!-- 

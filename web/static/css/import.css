@@ -555,7 +555,7 @@ td.deleteButton {
 	cursor: pointer;
 	text-decoration: underline;
 	margin-top: 2px;
-	color: blue;
+	color: 0000FF;
 }
 
 #userselect .groups li:hover {
@@ -594,7 +594,17 @@ td.deleteButton {
 	padding: 2px;
 	cursor: pointer;
 	text-decoration: underline;
+	color: #0000FF;
 }
+
+.projectTeams li:hover,.teamselect li:hover {
+	display: table-row, table-cell;
+	padding: 2px;
+	cursor: pointer;
+	text-decoration: underline;
+	color: #EE5500;
+}
+
 
 a.unassigned {
 	color: #ff0000;

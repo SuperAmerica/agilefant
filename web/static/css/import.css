@@ -555,7 +555,16 @@ td.deleteButton {
 	cursor: pointer;
 	text-decoration: underline;
 	margin-top: 2px;
+	color: blue;
 }
+
+#userselect .groups li:hover {
+	cursor: pointer;
+	text-decoration: underline;
+	margin-top: 2px;
+	color: #EE5500;
+}
+
 #userselect div.left {
 	float: left;
 }

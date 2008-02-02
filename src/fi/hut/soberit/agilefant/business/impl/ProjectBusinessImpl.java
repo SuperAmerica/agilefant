@@ -141,7 +141,8 @@ public class ProjectBusinessImpl implements ProjectBusiness {
 
     private Collection<BacklogItem> getBlisInProjectAndItsIterations(
             Project project) {
-        Collection<BacklogItem> blis = project.getBacklogItems();
+        Collection<BacklogItem> blis = new HashSet<BacklogItem>();
+        blis.addAll(project.getBacklogItems());
         Collection<Iteration> iterations = iterationDAO.getAll();
         for (Iteration it : iterations) {
             if (it.getProject().getId() == project.getId()) {

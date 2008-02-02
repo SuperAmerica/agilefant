@@ -67,6 +67,10 @@
 	<li><ww:url id="createLink" action="createUser"
 		includeParams="none" /> <ww:a href="%{createLink}">Create a new user &raquo;</ww:a>
 	</li>
+	
+	<li><ww:url id="createLink" action="createTeam"
+		includeParams="none" /> <ww:a href="%{createLink}">Create a new team &raquo;</ww:a>
+	</li>
 
 	<li><ww:url id="createLink" action="createProjectType"
 		includeParams="none" /> <ww:a href="%{createLink}">Create a new project type &raquo;</ww:a>

@@ -40,7 +40,7 @@
 			<span><c:out value="${team.numberOfUsers}" /> users in team</span>
 			<ul id="teamlist" style="display:none;list-style-type:none;">
 			
-			<c:forEach items="${userList}" var="user">
+			<c:forEach items="${userList}" var="user" varStatus="status">
 				<c:choose>
 					<c:when test="${aef:listContains(team.users, user)}">
 						<c:set var="selected" value="true" />
@@ -49,7 +49,7 @@
 						<c:set var="selected" value="" />
 					</c:otherwise>
 				</c:choose>
-				<li><ww:checkbox name="userIds[${user.id}]" value="${selected}"/>
+				<li class="${(status.index % 2 == 0) ? 'even' : 'odd'}"><ww:checkbox name="userIds[${user.id}]" value="${selected}"/>
 				<c:out value="${user.fullName}" /></li>
 			</c:forEach>
 			</ul>

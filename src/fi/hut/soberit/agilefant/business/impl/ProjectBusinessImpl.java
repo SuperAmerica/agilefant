@@ -247,7 +247,10 @@ public class ProjectBusinessImpl implements ProjectBusiness {
 
             String userDataString = "" + assignedUsers;
             String loadLeftString = "" + ongoingBliLoadLeft;
-            if (unestimatedBlis > 0)
+            if (unestimatedBlis == 1)
+                loadLeftString += " + " + unestimatedBlis
+                + " non-estimated BLI";
+            else if (unestimatedBlis > 0)
                 loadLeftString += " + " + unestimatedBlis
                         + " non-estimated BLIs";
             summaryLoadLeftMap.put(pro, loadLeftString);
@@ -268,8 +271,11 @@ public class ProjectBusinessImpl implements ProjectBusiness {
             
             if (userUnestimatedBlis > 0) {
                 if (value != null)
-                    appendValue += " + ";                   
-                appendValue += userUnestimatedBlis + " non-estimated BLIs";
+                    appendValue += " + ";
+                if (userUnestimatedBlis == 1)
+                    appendValue += userUnestimatedBlis + " non-estimated BLI";
+                else
+                    appendValue += userUnestimatedBlis + " non-estimated BLIs";
             }
             
             if (value == null)

@@ -361,7 +361,7 @@ public class AFTime extends java.sql.Time {
     public String toHMString() {
 
         if (getTime() == 0)
-            return "0";
+            return "0h";
 
         // get days, hours, minutes
         long[] time = divideToElements();

@@ -208,7 +208,7 @@ public class AFTimeTest extends TestCase {
         // Zero dates
         // TODO what is the best output format for this? Should we print some
         // qualifier?
-        assertEquals("0", new AFTime(0).toString());
+        assertEquals("0h", new AFTime(0).toString());
     }
 
     /**
@@ -216,7 +216,7 @@ public class AFTimeTest extends TestCase {
      */
     public void testAdd() {
         AFTime time1 = new AFTime(0);
-        assertEquals("0", time1.toString());
+        assertEquals("0h", time1.toString());
         AFTime time2 = new AFTime("2h 15min");
         time1.add(time2);
         assertEquals("2h 15min", time1.toString());
@@ -229,7 +229,7 @@ public class AFTimeTest extends TestCase {
         time1 = new AFTime("0");
         time2 = new AFTime("0");
         time1.add(time2);
-        assertEquals("0", time1.toString());
+        assertEquals("0h", time1.toString());
 
     }
 }

@@ -1,19 +1,63 @@
-Agilefant
+Agilefant 1.3.4
 RELEASE NOTES
-11.12.2007
+4.2.2008
 
-Current key functionality includes:
-+ backlog management for product, project and iteration levels
-+ backlog items can easily be moved between backlogs
-+ backlog items can be split into individually tracked tasks when needed
-+ backlog items and tasks can have estimates for effort left; the original effort estimate is also recorded
-+ for each level (product/project/iteration), the total effort left in the backlog is displayed
-+ for iteration level backlogs, a burndown graph displaying the the development velocity is shown
-+ Daily Work lists your current work according to project priorities
-+ Project Portfolio allows prioritisation of projects
-+ mass prioritisation of backlog items
+Agilefant's key functionality now includes
+------------------------------------------
++ Backlog management for product, project and iteration levels
++ Backlog items can easily be moved between backlogs
++ Backlog items can be split into individually tracked tasks when needed
++ Backlog items and tasks may have estimates for effort left; the original
+effort estimate is also recorded
++ For each level (product/project/iteration), the total effort left in the
+backlog is displayed
++ A burndown graph displaying the development velocity is shown for
+for iteration level backlogs
++ Daily Work view lists your current work according to project priorities
++ users can be allocated into (from zero to multiple) teams
++ backlog items can have from (zero to multiple) users and teams
+assigned to them
++ users can be dedicated to (from zero to multiple) projects; users
+who have backlog items in the project(s) they have NOT been dedicated
+to are highlighted
++ projects that have has non-dedicated users working on them (i.e.
+have assigned backlog items) are highlighted
++ Project Portfolio view allows the relative prioritisation of projects
++ Project Portfolio view shows the workloads for projects and users
+
+CURRENT ROADMAP
+---------------
++ Calculation of personal, project and portfolio level velocities (May 2008)
++ Support for taking both projected and non-projected Overhead into
+account in velocities and workloads (May 2008)
++ EPIC: A convenient way to report hours spent for billing and cost
+accounting purposes (September 2008)
++ EPIC: More support for product level management; e.g. Roadmapping,
+Business goals, Visions, Epic backlog items (September 2008)
++ EPIC: More support for product level management; e.g. Roadmapping,
+Business goals, Visions, Epic backlog items (September 2008)
++ EPIC: Integration with KumbangTools (*) (September 2008)
+
+(*) KumbangTools is, among other things, used for modeling product
+families. The catch of the integration is that through modeling the
+product structure (including dependencies), the dependencies can be
+taken into account during product, release and iteration planning.
+
+CHANGES FROM AGILEFANT 1.3.3
+----------------------------
++ users can now be allocated to teams
++ a single backlog item can now have multiple users and teams assigned
+it (e.g. shows in everyone's Daily Work, workloads, etc.)
+ + users can be dedicated to projects
++ users that have not been dedicated to a project in  which they have
+assigned backlog items are displayed in red
++ a red exclamation mark is shown next to the name of a project that
+has non-dedicated users assigned to their backlog items
++ Project Portfolio view shows information of users' workloads and
+displays the number of unestimated backlog items
 
 CHANGES FROM AGILEFANT 1.3.2
+----------------------------
 + Daily Work view refined
 + Development Portfolio renamed to Project Portfolio and view refined
 + Renamed backlog items' and tasks' status to state
@@ -24,6 +68,7 @@ CHANGES FROM AGILEFANT 1.3.2
 + Added missing delete confirmation dialogs
 
 CHANGES FROM AGILEFANT 1.3.1
+----------------------------
 + Tasks can be transformed to backlog items
 + Backlog item and task status colors were changed to more intuitive
 + Added 'forgot my password' functionality 
@@ -41,6 +86,7 @@ for performance testing. More information about performance testing is
 found from the wiki. TestUtility class added for testing purposes.
 
 CHANGES FROM AGILEFANT 1.2.2
+----------------------------
 + Replaced the backlog Delete button with bulk delete option
 + Work estimate now takes ',' and '.' as decimal separator regardless 
 of the locale settings. For example '30,5', and '30.5'.
@@ -59,6 +105,7 @@ of the list.
 + Hided id from task history table
 
 CHANGES FROM AGILEFANT 1.2.1
+----------------------------
 + Past and future projects & iterations are by default hidden in the
 left panel; all are displayed when the respective product is selected
 + Several minor bugs fixed
@@ -66,10 +113,12 @@ left panel; all are displayed when the respective product is selected
 + Agilefant is being developed and tested on Mozilla Firefox only
 
 CHANGES FROM AGILEFANT 1.2.0
+----------------------------
 + Added xlan/xercses libraries (previously distributed with Tomcat)
 to the distribution package to further simplify the installation
 
 CHANGES FROM AGILEFANT 1.0
+--------------------------
 + Hour reporting, daily work and development portfolio views have
 been hidden
 due to immature functionality

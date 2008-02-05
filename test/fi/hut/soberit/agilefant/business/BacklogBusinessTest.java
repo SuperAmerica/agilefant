@@ -8,9 +8,6 @@ import static org.easymock.EasyMock.verify;
 import java.util.ArrayList;
 
 import junit.framework.TestCase;
-
-import org.junit.Ignore;
-
 import fi.hut.soberit.agilefant.business.impl.BacklogBusinessImpl;
 import fi.hut.soberit.agilefant.db.AssignmentDAO;
 import fi.hut.soberit.agilefant.db.BacklogDAO;
@@ -132,7 +129,6 @@ public class BacklogBusinessTest extends TestCase {
         verify(historyBusiness);
     }
 
-    @Ignore
     public void testSetAssignments() {
         backlogDAO = createMock(BacklogDAO.class);
         userDAO = createMock(UserDAO.class);

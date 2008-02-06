@@ -148,6 +148,14 @@
 					<display:column sortable="false" title="# of backlog items">
 				  ${aef:html(fn:length(row.backlogItems))}
 				</display:column>
+				
+				<display:column sortable="true" title="Effort left sum">
+					<c:out value="${iterationGoalEffLeftSums[row.id]}" />
+				</display:column>
+				
+				<display:column sortable="true" title="Original estimate sum">
+					<c:out value="${iterationGoalOrigEstSums[row.id]}" />
+				</display:column>
 
 					<display:column sortable="false" title="Actions">
 						<ww:url id="deleteLink" action="deleteIterationGoal"

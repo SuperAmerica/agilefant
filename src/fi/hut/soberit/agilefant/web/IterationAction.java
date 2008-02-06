@@ -3,6 +3,8 @@ package fi.hut.soberit.agilefant.web;
 import java.text.ParseException;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
@@ -13,7 +15,9 @@ import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.db.IterationDAO;
 import fi.hut.soberit.agilefant.db.IterationGoalDAO;
 import fi.hut.soberit.agilefant.db.ProjectDAO;
+import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.Backlog;
+import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.IterationGoal;
 import fi.hut.soberit.agilefant.model.Project;
@@ -52,6 +56,10 @@ public class IterationAction extends ActionSupport implements CRUDAction {
 
     private HistoryBusiness historyBusiness;
     
+    private Map<Integer, AFTime> iterationGoalEffLeftSums = new HashMap<Integer, AFTime>();
+    
+    private Map<Integer, AFTime> iterationGoalOrigEstSums = new HashMap<Integer, AFTime>();
+    
     public String create() {
         iterationId = 0;
         iteration = new Iteration();
@@ -88,6 +96,26 @@ public class IterationAction extends ActionSupport implements CRUDAction {
             return Action.INPUT;
         }
         projectId = project.getId();
+        
+        /* Get the effort left sums of iteration goals */
+        for (IterationGoal ig : iteration.getIterationGoals()) {
+            AFTime effort = new AFTime(0);
+            AFTime estimate = new AFTime(0);
+            
+            for (BacklogItem bli : ig.getBacklogItems()) {
+                if (bli.getEffortLeft() != null) {
+                    effort.add(bli.getEffortLeft());
+                }
+                if (bli.getOriginalEstimate() != null) {
+                    estimate.add(bli.getOriginalEstimate()); 
+                }
+            }
+            
+            iterationGoalEffLeftSums.put(new Integer(ig.getId()), effort);
+            iterationGoalOrigEstSums.put(new Integer(ig.getId()), estimate);
+        }
+        
+        /* Get the original estimate sums of iteration goals */
 
         return Action.SUCCESS;
     }
@@ -327,5 +355,23 @@ public class IterationAction extends ActionSupport implements CRUDAction {
 
     public void setHistoryBusiness(HistoryBusiness historyBusiness) {
         this.historyBusiness = historyBusiness;
+    }
+
+    public Map<Integer, AFTime> getIterationGoalEffLeftSums() {
+        return iterationGoalEffLeftSums;
+    }
+
+    public void setIterationGoalEffLeftSums(
+            Map<Integer, AFTime> iterationGoalEffLeftSums) {
+        this.iterationGoalEffLeftSums = iterationGoalEffLeftSums;
+    }
+
+    public Map<Integer, AFTime> getIterationGoalOrigEstSums() {
+        return iterationGoalOrigEstSums;
+    }
+
+    public void setIterationGoalOrigEstSums(
+            Map<Integer, AFTime> iterationGoalOrigEstSums) {
+        this.iterationGoalOrigEstSums = iterationGoalOrigEstSums;
     }
 }

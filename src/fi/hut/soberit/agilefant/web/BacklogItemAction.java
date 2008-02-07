@@ -269,6 +269,12 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
             storable.getBacklog().getBacklogItems().remove(storable);
             storable.setOriginalEstimate(storable.getEffortLeft());
             backlog.getBacklogItems().add(storable);
+            
+            // Remove the iteration goal, if the bli is moved
+            if (storable.getIterationGoal() != null) {
+                storable.getIterationGoal().getBacklogItems().remove(storable);
+                storable.setIterationGoal(null);
+            }            
         }
         storable.setBacklog(backlog);
     }

@@ -74,6 +74,10 @@ public class BacklogAction extends ActionSupport {
         backlogItem.getBacklog().getBacklogItems().remove(backlogItem);
         backlog.getBacklogItems().add(backlogItem);
         backlogItem.setBacklog(backlog);
+        if (backlogItem.getIterationGoal() != null) {
+            backlogItem.getIterationGoal().getBacklogItems().remove(backlogItem);
+            backlogItem.setIterationGoal(null);
+        }
         backlogItemDAO.store(backlogItem);
 
         return this.solveResult(backlog);

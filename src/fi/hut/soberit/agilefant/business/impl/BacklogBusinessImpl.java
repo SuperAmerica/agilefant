@@ -121,6 +121,12 @@ public class BacklogBusinessImpl implements BacklogBusiness {
                 // Set originalestimate to current effortleft
                 bli.setOriginalEstimate(bli.getEffortLeft());
 
+                // Remove iteration goal
+                if (bli.getIterationGoal() != null) {
+                    bli.getIterationGoal().getBacklogItems().remove(bli);
+                    bli.setIterationGoal(null);
+                }
+                
                 // Set backlog item's backlog to target backlog
                 bli.setBacklog(targetBacklog);
                 backlogItemDAO.store(bli);

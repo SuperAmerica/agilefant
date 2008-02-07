@@ -1,12 +1,16 @@
 package fi.hut.soberit.agilefant.web;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
+import fi.hut.soberit.agilefant.db.IterationGoalDAO;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.Iteration;
+import fi.hut.soberit.agilefant.model.IterationGoal;
 import fi.hut.soberit.agilefant.model.Priority;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
@@ -23,12 +27,14 @@ public class BacklogActionTest extends SpringTestCase {
 
     private BacklogDAO backlogDAO = null;
     private BacklogItemDAO backlogItemDAO = null;
+    private IterationGoalDAO iterationGoalDAO = null;
 
     private Backlog product;
     private Backlog project;
     private Backlog iteration;
     private BacklogItem bli1;
     private BacklogItem bli2;
+    private IterationGoal itergoal;
     private int[] bliIds = new int[2];
 
     /**
@@ -61,6 +67,13 @@ public class BacklogActionTest extends SpringTestCase {
         backlogDAO.store(iteration);
         backlogDAO.store(project);
         iteration = backlogDAO.get(iteration.getId());
+        
+        // create iteration goal to iteration
+        itergoal = new IterationGoal();
+        itergoal.setIteration((Iteration)iteration);
+        itergoal.setId((Integer) iterationGoalDAO.create(itergoal));
+        iterationGoalDAO.store(itergoal);
+        itergoal = iterationGoalDAO.get(itergoal.getId());
         
         // create test blis to product
         bli1 = new BacklogItem();
@@ -104,7 +117,7 @@ public class BacklogActionTest extends SpringTestCase {
      * Test MoveBacklogItem operation.
      */
     public void testMoveBacklogItem() {
-        // move from product to project
+         // move from product to project
         backlogAction.setBacklogItemId(bli1.getId());
         backlogAction.setBacklogId(project.getId());
         assertEquals("editProject", backlogAction.moveBacklogItem());
@@ -124,6 +137,17 @@ public class BacklogActionTest extends SpringTestCase {
                 bli1));
         assertTrue(backlogDAO.get(iteration.getId()).getBacklogItems()
                 .contains(bli1));
+        
+        // test iteration goal change
+        bli1.setIterationGoal(itergoal);
+        Set<BacklogItem> blis = new HashSet<BacklogItem>();
+        itergoal.setBacklogItems(blis);
+        backlogItemDAO.store(bli1);
+        iterationGoalDAO.store(itergoal);
+        bli1 = backlogItemDAO.get(bli1.getId());
+        itergoal = iterationGoalDAO.get(itergoal.getId());
+        
+        assertEquals(itergoal.getId(), bli1.getIterationGoal().getId());
     }
 
     /**
@@ -319,4 +343,9 @@ public class BacklogActionTest extends SpringTestCase {
     public void setBacklogAction(BacklogAction backlogAction) {
         this.backlogAction = backlogAction;
     }
+
+    public void setIterationGoalDAO(IterationGoalDAO iterationGoalDAO) {
+        this.iterationGoalDAO = iterationGoalDAO;
+    }
+    
 }

@@ -18,6 +18,7 @@ import fi.hut.soberit.agilefant.model.Assignment;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.Iteration;
+import fi.hut.soberit.agilefant.model.IterationGoal;
 import fi.hut.soberit.agilefant.model.Priority;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.User;
@@ -173,5 +174,62 @@ public class BacklogBusinessTest extends TestCase {
         // verify behavior
         verify(userDAO);
 
+    }
+    
+    public void testMoveMultipleBacklogItems() {
+        backlogDAO = createMock(BacklogDAO.class);
+        bliDAO = createMock(BacklogItemDAO.class);
+        historyBusiness = createMock(HistoryBusiness.class);
+        backlogBusiness.setBacklogDAO(backlogDAO);
+        backlogBusiness.setBacklogItemDAO(bliDAO);
+        backlogBusiness.setHistoryBusiness(historyBusiness);
+        
+        Backlog iteration = new Iteration();
+        Backlog project = new Project();
+        IterationGoal iterationGoal = new IterationGoal();
+        iteration.setId(121);
+        project.setId(124);
+        
+        BacklogItem bli1 = new BacklogItem();
+        BacklogItem bli2 = new BacklogItem();
+        BacklogItem bli3 = new BacklogItem();
+        bli1.setId(13);
+        bli2.setId(14);
+        bli3.setId(15);
+        bli1.setIterationGoal(iterationGoal);
+        bli2.setIterationGoal(iterationGoal);
+        bli1.setBacklog(iteration);
+        bli2.setBacklog(iteration);
+        bli3.setBacklog(iteration);
+        
+        expect(backlogDAO.get(124)).andReturn(project);
+        expect(bliDAO.get(13)).andReturn(bli1);
+        bliDAO.store(bli1);
+        backlogDAO.store(iteration);
+        expect(bliDAO.get(15)).andReturn(bli3);
+        bliDAO.store(bli3);
+        backlogDAO.store(iteration);
+        
+        backlogDAO.store(project);
+        historyBusiness.updateBacklogHistory(iteration.getId());
+        historyBusiness.updateBacklogHistory(project.getId());
+        
+        replay(backlogDAO);
+        replay(bliDAO);
+        
+        int[] ids = {13, 15};
+        try {
+            backlogBusiness.moveMultipleBacklogItemsToBacklog(ids, 124);
+        }
+        catch (Exception e) {
+            fail(e.getMessage());
+        }
+        
+        assertNull(bli1.getIterationGoal());
+        assertNull(bli3.getIterationGoal());
+        assertEquals(iterationGoal, bli2.getIterationGoal());
+                
+        verify(backlogDAO);
+        verify(bliDAO);
     }
 }

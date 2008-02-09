@@ -6,12 +6,14 @@ import java.util.Collection;
 import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
 
+import fi.hut.soberit.agilefant.business.BacklogItemBusiness;
 import fi.hut.soberit.agilefant.db.IterationDAO;
 import fi.hut.soberit.agilefant.db.IterationGoalDAO;
 import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.IterationGoal;
+import fi.hut.soberit.agilefant.util.EffortLeftSumData;
 
 public class IterationGoalAction extends ActionSupport implements CRUDAction {
 
@@ -20,6 +22,8 @@ public class IterationGoalAction extends ActionSupport implements CRUDAction {
     private IterationDAO iterationDAO;
 
     private IterationGoalDAO iterationGoalDAO;
+    
+    private BacklogItemBusiness backlogItemBusiness;
 
     private int iterationId;
 
@@ -31,7 +35,9 @@ public class IterationGoalAction extends ActionSupport implements CRUDAction {
 
     private Collection<IterationGoal> iterationGoals = new ArrayList<IterationGoal>();
     
-    private AFTime effortLeftSum = new AFTime(0);
+    private EffortLeftSumData effortLeftSum;
+    
+    //private AFTime effortLeftSum = new AFTime(0);
     
     private AFTime origEstSum = new AFTime(0);
 
@@ -68,15 +74,14 @@ public class IterationGoalAction extends ActionSupport implements CRUDAction {
         
         
         // Calculate effort lefts
+        effortLeftSum = backlogItemBusiness.getEffortLeftSum(iterationGoal.getBacklogItems());
+        // REFACTOR: Calculate orig. estimate
         for (BacklogItem bli : iterationGoal.getBacklogItems()) {
-            if (bli.getEffortLeft() != null) {
-                effortLeftSum.add(bli.getEffortLeft());
-            }
             if (bli.getOriginalEstimate() != null) {
                 origEstSum.add(bli.getOriginalEstimate());
             }
         }
-        
+       
         return Action.SUCCESS;
     }
 
@@ -168,13 +173,10 @@ public class IterationGoalAction extends ActionSupport implements CRUDAction {
         this.iterationGoals = iterationGoals;
     }
 
-    public AFTime getEffortLeftSum() {
+    public EffortLeftSumData getEffortLeftSum() {
         return effortLeftSum;
     }
 
-    public void setEffortLeftSum(AFTime effortLeftSum) {
-        this.effortLeftSum = effortLeftSum;
-    }
 
     public AFTime getOrigEstSum() {
         return origEstSum;
@@ -182,6 +184,10 @@ public class IterationGoalAction extends ActionSupport implements CRUDAction {
 
     public void setOrigEstSum(AFTime origEstSum) {
         this.origEstSum = origEstSum;
+    }
+
+    public void setBacklogItemBusiness(BacklogItemBusiness backlogItemBusiness) {
+        this.backlogItemBusiness = backlogItemBusiness;
     }
 
 }

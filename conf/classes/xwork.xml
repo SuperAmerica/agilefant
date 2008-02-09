@@ -184,6 +184,13 @@
 			</result>
 		</action>
 
+		<action name="resetBliOrigEstAndEffortLeft" method="resetBliOrigEstAndEffortLeft"
+			class="backlogItemAction">
+			<result type="redirect">
+				editBacklogItem.action?backlogItemId=${backlogItemId}
+			</result>
+		</action>
+
 		<action name="storeNewBacklogItem" method="store"
 			class="backlogItemAction">
 			<result type="redirect">

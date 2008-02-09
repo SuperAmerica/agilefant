@@ -68,7 +68,11 @@
 					<td></td>
 					<td><ww:label value="${backlogItem.originalEstimate}" /> <ww:hidden
 						name="backlogItem.originalEstimate"
-						value="${backlogItem.originalEstimate}" /></td>
+						value="${backlogItem.originalEstimate}" />
+						<ww:form action="resetBliOrigEstAndEffortLeft">
+							<ww:hidden name="backlogItemId" value="${backlogItem.id}" />
+							<ww:submit value="Reset" action="resetBliOrigEstAndEffortLeft" onclick="return confirmDelete()" />
+						</ww:form></td>
 				</tr>
 				<tr>
 					<td>Effort left</td>

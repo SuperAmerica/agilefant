@@ -159,4 +159,66 @@ public class BacklogItemBusinessTest extends TestCase {
                         "0h"));
     }
 
+    public void testResetBliOrigEstAndEffortLeft_found() {
+
+        // Declare test values
+        final int bliId = 68;
+        final int backlogId = 99;
+
+        bliDAO = createMock(BacklogItemDAO.class);
+        bliBusiness.setBacklogItemDAO(bliDAO);
+        bliBusiness.setHistoryBusiness(historyBusiness);
+
+        // Create new backlog item and set test values to it
+        BacklogItem bli = new BacklogItem();
+        bli.setId(bliId);
+        bli.setEffortLeft(new AFTime("2h"));
+        bli.setOriginalEstimate(new AFTime("3h"));
+
+        // Create backlog for backlog item
+        Backlog backlog = new Iteration();
+        backlog.setId(backlogId);
+        bli.setBacklog(backlog);
+
+        // Record expected behavior
+        expect(bliDAO.get(68)).andReturn(bli);
+        bliDAO.store(bli);
+        replay(bliDAO);
+        historyBusiness.updateBacklogHistory(99);
+        replay(historyBusiness);
+
+        // run method under test
+        try {
+            bliBusiness.resetBliOrigEstAndEffortLeft(68);
+        } catch (ObjectNotFoundException onfe) {
+            fail();
+        }
+
+        assertEquals(null, bli.getEffortLeft());
+        assertEquals(null, bli.getOriginalEstimate());
+
+        // verify behavior
+        verify(bliDAO);
+        verify(historyBusiness);
+    }
+
+    public void testResetBliOrigEstAndEffortLeft_notfound() {
+        bliDAO = createMock(BacklogItemDAO.class);
+        bliBusiness.setBacklogItemDAO(bliDAO);
+
+        // Record expected behavior
+        expect(bliDAO.get(68)).andReturn(null);
+        replay(bliDAO);
+        // run method under test
+        try {
+            bliBusiness.resetBliOrigEstAndEffortLeft(68);
+            fail();
+        } catch (ObjectNotFoundException onfe) {
+
+        }
+
+        // verify behavior
+        verify(bliDAO);
+    }
+
 }

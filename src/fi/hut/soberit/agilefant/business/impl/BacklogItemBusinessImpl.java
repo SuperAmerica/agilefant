@@ -105,6 +105,21 @@ public class BacklogItemBusinessImpl implements BacklogItemBusiness {
         taskBusiness.updateMultipleTaskStates(newTaskStates);
     }
 
+    public void resetBliOrigEstAndEffortLeft(int backlogItemId) throws ObjectNotFoundException {
+        BacklogItem backlogItem = backlogItemDAO.get(backlogItemId);
+        if (backlogItem == null) {
+            throw new ObjectNotFoundException("Backlog item with id: "
+                    + backlogItemId + " not found.");
+        } else {
+            //Set effort left and original estimate to null
+            backlogItem.setEffortLeft(null);
+            backlogItem.setOriginalEstimate(null);
+            backlogItemDAO.store(backlogItem);
+            historyBusiness.updateBacklogHistory(backlogItem.getBacklog()
+                    .getId());
+        }
+    }
+
     public void setTaskBusiness(TaskBusiness taskBusiness) {
         this.taskBusiness = taskBusiness;
     }

@@ -206,6 +206,16 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
         return Action.SUCCESS;
     }
 
+    public String resetBliOrigEstAndEffortLeft() {
+        try {
+            backlogItemBusiness.resetBliOrigEstAndEffortLeft(backlogItemId);
+        } catch (ObjectNotFoundException e) {
+            addActionError(e.getMessage());
+            return Action.ERROR;
+        }
+        return Action.SUCCESS;
+    }
+
     protected void fillStorable(BacklogItem storable) {
         List<User> responsibles = new ArrayList<User>(userIds.size());
         for(Serializable id : userIds.keySet() ) {

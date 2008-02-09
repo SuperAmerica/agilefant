@@ -76,6 +76,17 @@ public interface BacklogItemBusiness {
             int backlogItemId, State newState, AFTime newEffortLeft,
             Map<Integer, State> newTaskStates) throws ObjectNotFoundException;
 
+    /**
+     * Resets backlog item's original estimate and effort left to null.
+     * ObjectNotFoundException is thrown if backlog item with given id does not
+     * exist.
+     * 
+     * @param backlogItemId
+     *                id of the backlog item to be reset
+     */
+    public void resetBliOrigEstAndEffortLeft(int backlogItemId)
+            throws ObjectNotFoundException;
+
     public HistoryBusiness getHistoryBusiness();
 
     public void setHistoryBusiness(HistoryBusiness historyBusiness);

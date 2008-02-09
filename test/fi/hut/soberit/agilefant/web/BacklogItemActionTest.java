@@ -308,6 +308,32 @@ public class BacklogItemActionTest extends SpringTestCase {
         assertEquals("error", action.quickStoreTaskList());
     }
 
+    /**
+     * Test ResetBliOrigEstAndEffortLeft operation.
+     */
+    public void testResetBliOrigEstAndEffortLeft() {
+        // execute edit operation
+        assertNull(action.getBacklogItem());
+        action.setBacklogItemId(bliId);
+        assertEquals("success", action.edit());
+        assertNotNull(action.getBacklogItem());
+
+        // execute reset operation
+        action.resetBliOrigEstAndEffortLeft();
+
+        // check that original estimate and effort left are null
+        assertEquals(null, backlogItemDAO.get(bliId).getOriginalEstimate());
+        assertEquals(null, backlogItemDAO.get(bliId).getEffortLeft());
+    }
+
+    /**
+     * Test reset operation with invalid bli id.
+     */
+    public void testResetBliOrigEstAndEffortLeft_invalidId() {
+        action.setBacklogItemId(-500);
+        assertEquals("error", action.resetBliOrigEstAndEffortLeft());
+    }
+    
     public void setBacklogDAO(BacklogDAO backlogDAO) {
         this.backlogDAO = backlogDAO;
     }

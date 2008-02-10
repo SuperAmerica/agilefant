@@ -20,6 +20,7 @@ import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.Priority;
 import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.util.EffortSumData;
 
 /**
  * 
@@ -154,30 +155,50 @@ public class BacklogBusinessImpl implements BacklogBusiness {
         historyBusiness.updateBacklogHistory(targetBacklog.getId());
     }
 
-    public AFTime getEffortLeftSum(List<BacklogItem> bliList) {
-        AFTime effSum = new AFTime(0);
-        Iterator<BacklogItem> it = bliList.iterator();
-        while (it.hasNext()) {
-            AFTime effLeft = it.next().getEffortLeft();
-            if (effLeft != null)
-                effSum.add(effLeft);
+    /** {@inheritDoc} * */
+    public EffortSumData getEffortLeftSum(Collection<BacklogItem> bliList) {
+        EffortSumData data = new EffortSumData();
+        AFTime hours = new AFTime(0);
+        int nonEstimatedBLIs = 0;
+        for (BacklogItem bli : bliList) {
+            if (bli.getEffortLeft() == null)
+                nonEstimatedBLIs++;
+            else
+                hours.add(bli.getEffortLeft());            
         }
-        return effSum;
+        data.setEffortHours(hours);
+        data.setNonEstimatedItems(nonEstimatedBLIs);
+        return data;
     }
 
     /** {@inheritDoc} * */
-    public AFTime getOriginalEstimateSum(Collection<BacklogItem> bliList) {
-        AFTime effSum = new AFTime(0);
-
-        for (BacklogItem item : bliList) {
-            if (item.getOriginalEstimate() != null) {
-                effSum.add(item.getOriginalEstimate());
-            }
+    public EffortSumData getOriginalEstimateSum(Collection<BacklogItem> bliList) {
+        EffortSumData data = new EffortSumData();
+        AFTime hours = new AFTime(0);
+        int nonEstimatedBLIs = 0;
+        for (BacklogItem bli : bliList) {
+            if (bli.getOriginalEstimate() == null)
+                nonEstimatedBLIs++;
+            else
+                hours.add(bli.getOriginalEstimate());            
         }
-
-        return effSum;
+        data.setEffortHours(hours);
+        data.setNonEstimatedItems(nonEstimatedBLIs);
+        return data;
     }
 
+    /** {@inheritDoc} * */
+    public EffortSumData getCumulativeEffortLeftSum(Backlog backlog) {
+        // CONTINUE!!
+        return new EffortSumData();
+    }
+    
+    /** {@inheritDoc} * */
+    public EffortSumData getCumulativeOriginalEstimateSum(Backlog backlog) {
+     // CONTINUE!!
+        return new EffortSumData();
+    }
+    
     public BacklogItemDAO getBacklogItemDAO() {
         return backlogItemDAO;
     }

@@ -92,10 +92,10 @@ public class DailyWorkAction extends ActionSupport {
                 iterations.add((Iteration) backlog);
             }
             List<BacklogItem> blis = bliMap.get(backlog);
-            AFTime effLeftSum = backlogBusiness.getEffortLeftSum(blis);
+            AFTime effLeftSum = backlogBusiness.getEffortLeftSum(blis).getEffortHours();
             effortSums.put(backlog, effLeftSum);
             originalEstimates.put(backlog, backlogBusiness
-                    .getOriginalEstimateSum(blis));
+                    .getOriginalEstimateSum(blis).getEffortHours());
         }
 
         Collections.sort(projects, new BacklogComparator());

@@ -16,7 +16,7 @@ import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.State;
 import fi.hut.soberit.agilefant.model.User;
-import fi.hut.soberit.agilefant.util.EffortLeftSumData;
+import fi.hut.soberit.agilefant.util.EffortSumData;
 
 /**
  * 
@@ -124,18 +124,4 @@ public class BacklogItemBusinessImpl implements BacklogItemBusiness {
         this.taskBusiness = taskBusiness;
     }
     
-    public EffortLeftSumData getEffortLeftSum(Collection<BacklogItem> items) {
-        EffortLeftSumData data = new EffortLeftSumData();
-        AFTime hours = new AFTime(0);
-        int nonEstimatedBLIs = 0;
-        for (BacklogItem bli : items) {
-            if (bli.getEffortLeft() == null)
-                nonEstimatedBLIs++;
-            else
-                hours.add(bli.getEffortLeft());            
-        }
-        data.setEffortLeftHours(hours);
-        data.setNonEstimatedItems(nonEstimatedBLIs);
-        return data;
-    }
 }

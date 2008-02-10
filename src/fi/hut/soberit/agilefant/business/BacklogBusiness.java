@@ -9,6 +9,7 @@ import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.Priority;
 import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.util.EffortSumData;
 
 /**
  * This description contains generic information on <code>Business</code>
@@ -84,21 +85,41 @@ public interface BacklogBusiness {
             int targetBacklogId) throws ObjectNotFoundException;
 
     /**
-     * Calculates the sum of effort lefts of the given backlog items
+     * Calculates the sum of effort lefts of the given backlog items.
+     * Includes hours and number of non-estimated items.
      * 
      * @param bliList
      *                List of backlog items
      * @return sum of effort lefts
      */
-    public AFTime getEffortLeftSum(List<BacklogItem> bliList);
+    public EffortSumData getEffortLeftSum(Collection<BacklogItem> bliList);
     
     /**
      * Calculates the sum of original estimates of the given backlog items
+     * Includes hours and number of non-estimated items.
      * 
      * @param bliList List of backlog items
      * @return sum of original estimates
      */
-    public AFTime getOriginalEstimateSum(Collection<BacklogItem> bliList);
+    public EffortSumData getOriginalEstimateSum(Collection<BacklogItem> bliList);
+    
+    /**
+     * Calculates backlog's all items' effort lefts. For product, this includes
+     * its projects and iterations and for projects its iterations.
+     * Includes hours and number of non-estimated items.
+     * @param backlog Backlog whose cumulative effort left is calculated.
+     * @return an EffortSumData -object containing the information.
+     */
+    public EffortSumData getCumulativeEffortLeftSum(Backlog backlog);
+    
+    /**
+     * Calculates backlog's all items' original estimates. For product, this includes
+     * its projects and iterations and for projects its iterations.
+     * Includes hours and number of non-estimated items.
+     * @param backlog Backlog whose cumulative original estimate is calculated.
+     * @return an EffortSumData -object containing the information.
+     */
+    public EffortSumData getCumulativeOriginalEstimateSum(Backlog backlog);
     
     /**
      * Assigns the selected users to the given backlog.

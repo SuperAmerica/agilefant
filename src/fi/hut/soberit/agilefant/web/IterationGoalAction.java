@@ -6,6 +6,7 @@ import java.util.Collection;
 import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
 
+import fi.hut.soberit.agilefant.business.BacklogBusiness;
 import fi.hut.soberit.agilefant.business.BacklogItemBusiness;
 import fi.hut.soberit.agilefant.db.IterationDAO;
 import fi.hut.soberit.agilefant.db.IterationGoalDAO;
@@ -13,7 +14,7 @@ import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.IterationGoal;
-import fi.hut.soberit.agilefant.util.EffortLeftSumData;
+import fi.hut.soberit.agilefant.util.EffortSumData;
 
 public class IterationGoalAction extends ActionSupport implements CRUDAction {
 
@@ -23,7 +24,7 @@ public class IterationGoalAction extends ActionSupport implements CRUDAction {
 
     private IterationGoalDAO iterationGoalDAO;
     
-    private BacklogItemBusiness backlogItemBusiness;
+    private BacklogBusiness backlogBusiness;
 
     private int iterationId;
 
@@ -35,11 +36,13 @@ public class IterationGoalAction extends ActionSupport implements CRUDAction {
 
     private Collection<IterationGoal> iterationGoals = new ArrayList<IterationGoal>();
     
-    private EffortLeftSumData effortLeftSum;
+    private EffortSumData effortLeftSum;
     
     //private AFTime effortLeftSum = new AFTime(0);
     
-    private AFTime origEstSum = new AFTime(0);
+    private EffortSumData origEstSum;
+    
+    //private AFTime origEstSum = new AFTime(0);
 
     public String create() {
         iterationGoalId = 0;
@@ -73,14 +76,10 @@ public class IterationGoalAction extends ActionSupport implements CRUDAction {
         
         
         
-        // Calculate effort lefts
-        effortLeftSum = backlogItemBusiness.getEffortLeftSum(iterationGoal.getBacklogItems());
-        // REFACTOR: Calculate orig. estimate
-        for (BacklogItem bli : iterationGoal.getBacklogItems()) {
-            if (bli.getOriginalEstimate() != null) {
-                origEstSum.add(bli.getOriginalEstimate());
-            }
-        }
+        // Calculate effort lefts and original estimates
+        Collection<BacklogItem> items = iterationGoal.getBacklogItems();
+        effortLeftSum = backlogBusiness.getEffortLeftSum(items);
+        origEstSum = backlogBusiness.getOriginalEstimateSum(items);
        
         return Action.SUCCESS;
     }
@@ -173,21 +172,22 @@ public class IterationGoalAction extends ActionSupport implements CRUDAction {
         this.iterationGoals = iterationGoals;
     }
 
-    public EffortLeftSumData getEffortLeftSum() {
+    public EffortSumData getEffortLeftSum() {
         return effortLeftSum;
     }
 
-
-    public AFTime getOrigEstSum() {
+    public EffortSumData getOriginalEstimateSum() {
         return origEstSum;
     }
 
-    public void setOrigEstSum(AFTime origEstSum) {
-        this.origEstSum = origEstSum;
+    /*
+    public AFTime getOrigEstSum() {
+        return origEstSum;
     }
+    */
 
-    public void setBacklogItemBusiness(BacklogItemBusiness backlogItemBusiness) {
-        this.backlogItemBusiness = backlogItemBusiness;
+    public void setBacklogBusiness(BacklogBusiness backlogBusiness) {
+        this.backlogBusiness = backlogBusiness;
     }
 
 }

@@ -188,7 +188,7 @@
 						<%-- Effort left --%>
 						<td><c:out value="${effortLeftSum}" /></td>
 						<%-- Original estimate --%>
-						<td><c:out value="${origEstSum}" /></td>
+						<td><c:out value="${originalEstimateSum}" /></td>
 					</tr>
 					</display:footer>
 				</display:table></p>

@@ -166,9 +166,12 @@ function validateDeletion() {
 					<td>&nbsp;</td>
 				</c:if>
 				<%-- Effort left --%>
+				<%--
 				<td><c:out value="${backlog.bliEffortLeftSum}" /></td>
+				--%>
+				<td><c:out value="${effortLeftSum}" /></td>
 				<%-- Original estimate --%>
-				<td><c:out value="${backlog.bliOriginalEstimateSum}" /></td>
+				<td><c:out value="${originalEstimateSum}" /></td>
 			<tr>
 		</display:footer>
 	</display:table>

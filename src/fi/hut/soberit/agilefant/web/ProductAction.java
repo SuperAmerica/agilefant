@@ -7,10 +7,13 @@ import java.util.Date;
 import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
 
+import fi.hut.soberit.agilefant.business.BacklogBusiness;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.db.ProductDAO;
 import fi.hut.soberit.agilefant.model.Backlog;
+import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.Product;
+import fi.hut.soberit.agilefant.util.EffortSumData;
 
 public class ProductAction extends ActionSupport implements CRUDAction {
 
@@ -20,6 +23,8 @@ public class ProductAction extends ActionSupport implements CRUDAction {
 
     private BacklogItemDAO backlogItemDAO;
 
+    private BacklogBusiness backlogBusiness;
+
     private int productId;
 
     private Product product;
@@ -27,6 +32,10 @@ public class ProductAction extends ActionSupport implements CRUDAction {
     private Backlog backlog;
 
     private Collection<Product> products = new ArrayList<Product>();
+
+    private EffortSumData effortLeftSum;
+
+    private EffortSumData origEstSum;
 
     public String create() {
         productId = 0;
@@ -61,6 +70,10 @@ public class ProductAction extends ActionSupport implements CRUDAction {
          * BacklogValueInjector.injectMetrics(backlog, startDate, taskEventDAO,
          * backlogItemDAO);
          */
+        // Calculate effort lefts and original estimates
+        Collection<BacklogItem> items = backlog.getBacklogItems();
+        effortLeftSum = backlogBusiness.getEffortLeftSum(items);
+        origEstSum = backlogBusiness.getOriginalEstimateSum(items);
 
         return Action.SUCCESS;
     }
@@ -99,6 +112,14 @@ public class ProductAction extends ActionSupport implements CRUDAction {
         }
         storable.setName(this.product.getName());
         storable.setDescription(this.product.getDescription());
+    }
+
+    public EffortSumData getEffortLeftSum() {
+        return effortLeftSum;
+    }
+
+    public EffortSumData getOriginalEstimateSum() {
+        return origEstSum;
     }
 
     public Product getProduct() {
@@ -151,5 +172,9 @@ public class ProductAction extends ActionSupport implements CRUDAction {
      */
     public void setBacklogItemDAO(BacklogItemDAO backlogItemDAO) {
         this.backlogItemDAO = backlogItemDAO;
+    }
+
+    public void setBacklogBusiness(BacklogBusiness backlogBusiness) {
+        this.backlogBusiness = backlogBusiness;
     }
 }

@@ -20,10 +20,12 @@ import fi.hut.soberit.agilefant.db.ProductDAO;
 import fi.hut.soberit.agilefant.db.ProjectDAO;
 import fi.hut.soberit.agilefant.db.ProjectTypeDAO;
 import fi.hut.soberit.agilefant.model.Backlog;
+import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.ProjectType;
 import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.util.EffortSumData;
 
 public class ProjectAction extends ActionSupport implements CRUDAction {
 
@@ -69,6 +71,10 @@ public class ProjectAction extends ActionSupport implements CRUDAction {
 
     private ProjectBusiness projectBusiness;
 
+    private EffortSumData effortLeftSum;
+
+    private EffortSumData origEstSum;
+    
     /**
      * @return the dateFormat
      */
@@ -131,6 +137,11 @@ public class ProjectAction extends ActionSupport implements CRUDAction {
         assignedUsers = backlogBusiness.getUsers(project, true);
         unassignedHasWork = projectBusiness.getUnassignedWorkersMap(project);
 
+        // Calculate effort lefts and original estimates
+        Collection<BacklogItem> items = backlog.getBacklogItems();
+        effortLeftSum = backlogBusiness.getEffortLeftSum(items);
+        origEstSum = backlogBusiness.getOriginalEstimateSum(items);
+      
         return Action.SUCCESS;
     }
 
@@ -383,10 +394,18 @@ public class ProjectAction extends ActionSupport implements CRUDAction {
         return assignedUsers;
     }
     
+    public EffortSumData getEffortLeftSum() {
+        return effortLeftSum;
+    }
+
+    public EffortSumData getOriginalEstimateSum() {
+        return origEstSum;
+    }   
+    
 	public Map<User, Integer> getUnassignedHasWork() {
       	return unassignedHasWork;
     }
-
+	
     public void setProjectBusiness(ProjectBusiness projectBusiness) {
         this.projectBusiness = projectBusiness;
     }

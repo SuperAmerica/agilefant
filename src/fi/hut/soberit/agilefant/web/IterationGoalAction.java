@@ -180,12 +180,6 @@ public class IterationGoalAction extends ActionSupport implements CRUDAction {
         return origEstSum;
     }
 
-    /*
-    public AFTime getOrigEstSum() {
-        return origEstSum;
-    }
-    */
-
     public void setBacklogBusiness(BacklogBusiness backlogBusiness) {
         this.backlogBusiness = backlogBusiness;
     }

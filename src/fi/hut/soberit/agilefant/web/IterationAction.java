@@ -9,6 +9,7 @@ import java.util.Map;
 import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
 
+import fi.hut.soberit.agilefant.business.BacklogBusiness;
 import fi.hut.soberit.agilefant.business.HistoryBusiness;
 import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
@@ -21,6 +22,7 @@ import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.IterationGoal;
 import fi.hut.soberit.agilefant.model.Project;
+import fi.hut.soberit.agilefant.util.EffortSumData;
 
 public class IterationAction extends ActionSupport implements CRUDAction {
 
@@ -56,9 +58,15 @@ public class IterationAction extends ActionSupport implements CRUDAction {
 
     private HistoryBusiness historyBusiness;
     
+    private BacklogBusiness backlogBusiness;
+    
     private Map<Integer, AFTime> iterationGoalEffLeftSums = new HashMap<Integer, AFTime>();
     
     private Map<Integer, AFTime> iterationGoalOrigEstSums = new HashMap<Integer, AFTime>();
+    
+    private EffortSumData effortLeftSum;
+
+    private EffortSumData origEstSum;
     
     public String create() {
         iterationId = 0;
@@ -117,6 +125,12 @@ public class IterationAction extends ActionSupport implements CRUDAction {
         
         /* Get the original estimate sums of iteration goals */
 
+        // Calculate effort lefts and original estimates
+        Collection<BacklogItem> items = backlog.getBacklogItems();
+        effortLeftSum = backlogBusiness.getEffortLeftSum(items);
+        origEstSum = backlogBusiness.getOriginalEstimateSum(items);
+      
+        
         return Action.SUCCESS;
     }
 
@@ -373,5 +387,17 @@ public class IterationAction extends ActionSupport implements CRUDAction {
     public void setIterationGoalOrigEstSums(
             Map<Integer, AFTime> iterationGoalOrigEstSums) {
         this.iterationGoalOrigEstSums = iterationGoalOrigEstSums;
+    }
+
+    public EffortSumData getEffortLeftSum() {
+        return effortLeftSum;
+    }
+
+    public EffortSumData getOriginalEstimateSum() {
+        return origEstSum;
+    }   
+    
+    public void setBacklogBusiness(BacklogBusiness backlogBusiness) {
+        this.backlogBusiness = backlogBusiness;
     }
 }

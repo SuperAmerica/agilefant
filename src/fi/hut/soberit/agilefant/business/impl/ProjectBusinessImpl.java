@@ -139,7 +139,8 @@ public class ProjectBusinessImpl implements ProjectBusiness {
         projectTypeDAO.remove(projectTypeId);
     }
 
-    private Collection<BacklogItem> getBlisInProjectAndItsIterations(
+    /** {@inheritDoc} * */
+    public Collection<BacklogItem> getBlisInProjectAndItsIterations(
             Project project) {
         Collection<BacklogItem> blis = new HashSet<BacklogItem>();
         blis.addAll(project.getBacklogItems());

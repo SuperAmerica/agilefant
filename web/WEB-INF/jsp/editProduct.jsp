@@ -100,12 +100,12 @@
 
 					<display:column sortable="true" title="Effort left"
 						sortProperty="effortLeft.time">
-						${row.totalEffortLeftSum}
+						${effLeftSums[row]}
 					</display:column>
 
 					<display:column sortable="true" title="Original estimate"
 						sortProperty="originalEstimate.time">
-						${row.totalOriginalEstimateSum}
+						${origEstSums[row]}
 					</display:column>
 
 					<display:column sortable="true" title="Start date">

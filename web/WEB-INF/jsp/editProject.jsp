@@ -233,12 +233,12 @@
 							<%-- REFACTOR THIS --%>
 							<display:column sortable="true" title="Effort left"
 								sortProperty="bliEffortLeftSum.time">
-								${row.totalEffortLeftSum}
+								${effLeftSums[row]}
 							</display:column>
 
 							<display:column sortable="true" title="Original estimate"
 								sortProperty="bliOriginalEstimateSum.time">
-								${row.totalOriginalEstimateSum}
+								${origEstSums[row]}
 							</display:column>
 
 

@@ -3,16 +3,20 @@ package fi.hut.soberit.agilefant.web;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
 
 import fi.hut.soberit.agilefant.business.BacklogBusiness;
+import fi.hut.soberit.agilefant.business.ProjectBusiness;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.db.ProductDAO;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.Product;
+import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.util.EffortSumData;
 
 public class ProductAction extends ActionSupport implements CRUDAction {
@@ -24,6 +28,8 @@ public class ProductAction extends ActionSupport implements CRUDAction {
     private BacklogItemDAO backlogItemDAO;
 
     private BacklogBusiness backlogBusiness;
+    
+    private ProjectBusiness projectBusiness;
 
     private int productId;
 
@@ -36,6 +42,10 @@ public class ProductAction extends ActionSupport implements CRUDAction {
     private EffortSumData effortLeftSum;
 
     private EffortSumData origEstSum;
+    
+    private Map<Project, EffortSumData> effLeftSums;
+    
+    private Map<Project, EffortSumData> origEstSums;
 
     public String create() {
         productId = 0;
@@ -75,6 +85,22 @@ public class ProductAction extends ActionSupport implements CRUDAction {
         effortLeftSum = backlogBusiness.getEffortLeftSum(items);
         origEstSum = backlogBusiness.getOriginalEstimateSum(items);
 
+        // Calculate product's projects' effort lefts and original estimates
+        
+        effLeftSums = new HashMap<Project, EffortSumData>();
+        origEstSums = new HashMap<Project, EffortSumData>();
+        
+        Collection<Project> projects = product.getProjects();
+        
+        for (Project pro : projects) {
+            Collection<BacklogItem> blis = projectBusiness.getBlisInProjectAndItsIterations(pro);
+            EffortSumData projectEffLeftSum = backlogBusiness.getEffortLeftSum(blis);
+            EffortSumData projectOrigEstSum = backlogBusiness.getOriginalEstimateSum(blis);
+            effLeftSums.put(pro, projectEffLeftSum);
+            origEstSums.put(pro, projectOrigEstSum);
+        }
+        
+        
         return Action.SUCCESS;
     }
 
@@ -176,5 +202,21 @@ public class ProductAction extends ActionSupport implements CRUDAction {
 
     public void setBacklogBusiness(BacklogBusiness backlogBusiness) {
         this.backlogBusiness = backlogBusiness;
+    }
+
+    public Map<Project, EffortSumData> getEffLeftSums() {
+        return effLeftSums;
+    }
+
+    public Map<Project, EffortSumData> getOrigEstSums() {
+        return origEstSums;
+    }
+
+    public ProjectBusiness getProjectBusiness() {
+        return projectBusiness;
+    }
+
+    public void setProjectBusiness(ProjectBusiness projectBusiness) {
+        this.projectBusiness = projectBusiness;
     }
 }

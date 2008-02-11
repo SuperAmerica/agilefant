@@ -21,6 +21,7 @@ import fi.hut.soberit.agilefant.db.ProjectDAO;
 import fi.hut.soberit.agilefant.db.ProjectTypeDAO;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
+import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.ProjectType;
@@ -74,6 +75,10 @@ public class ProjectAction extends ActionSupport implements CRUDAction {
     private EffortSumData effortLeftSum;
 
     private EffortSumData origEstSum;
+    
+    private Map<Iteration, EffortSumData> effLeftSums;
+    
+    private Map<Iteration, EffortSumData> origEstSums;
     
     /**
      * @return the dateFormat
@@ -142,6 +147,20 @@ public class ProjectAction extends ActionSupport implements CRUDAction {
         effortLeftSum = backlogBusiness.getEffortLeftSum(items);
         origEstSum = backlogBusiness.getOriginalEstimateSum(items);
       
+        // Calculate project's iterations' effort lefts and original estimates
+        effLeftSums = new HashMap<Iteration, EffortSumData>();
+        origEstSums = new HashMap<Iteration, EffortSumData>(); 
+        
+        Collection<Iteration> iterations = project.getIterations();
+        for (Iteration iter : iterations) {
+            Collection<BacklogItem> blis = iter.getBacklogItems();
+            EffortSumData effLeftSum = backlogBusiness.getEffortLeftSum(blis);
+            EffortSumData origEstSum = backlogBusiness.getOriginalEstimateSum(blis);
+            effLeftSums.put(iter, effLeftSum);
+            origEstSums.put(iter, origEstSum);
+        }
+        
+        
         return Action.SUCCESS;
     }
 
@@ -408,5 +427,13 @@ public class ProjectAction extends ActionSupport implements CRUDAction {
 	
     public void setProjectBusiness(ProjectBusiness projectBusiness) {
         this.projectBusiness = projectBusiness;
+    }
+
+    public Map<Iteration, EffortSumData> getEffLeftSums() {
+        return effLeftSums;
+    }
+
+    public Map<Iteration, EffortSumData> getOrigEstSums() {
+        return origEstSums;
     }
 }

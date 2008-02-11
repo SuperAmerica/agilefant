@@ -5,6 +5,7 @@ import java.util.Map;
 
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.exception.OperationNotPermittedException;
+import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.ProjectType;
 import fi.hut.soberit.agilefant.model.User;
@@ -97,6 +98,14 @@ public interface ProjectBusiness {
     public void deleteProjectType(int projectTypeId)
             throws OperationNotPermittedException, ObjectNotFoundException;
 
+    /**
+     * Returns all items in project.
+     * @param project Project which items are returned.
+     * @return Collection of items.
+     */
+    public Collection<BacklogItem> getBlisInProjectAndItsIterations(
+            Project project);
+    
     /**
      * Get a ProjectPortfolioData object that contains information for the users column of the project
      * portfolio page.

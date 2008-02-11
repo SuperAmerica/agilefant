@@ -186,18 +186,6 @@ public class BacklogBusinessImpl implements BacklogBusiness {
         data.setNonEstimatedItems(nonEstimatedBLIs);
         return data;
     }
-
-    /** {@inheritDoc} * */
-    public EffortSumData getCumulativeEffortLeftSum(Backlog backlog) {
-        // CONTINUE!!
-        return new EffortSumData();
-    }
-    
-    /** {@inheritDoc} * */
-    public EffortSumData getCumulativeOriginalEstimateSum(Backlog backlog) {
-     // CONTINUE!!
-        return new EffortSumData();
-    }
     
     public BacklogItemDAO getBacklogItemDAO() {
         return backlogItemDAO;

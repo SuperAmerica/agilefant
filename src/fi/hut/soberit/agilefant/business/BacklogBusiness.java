@@ -104,24 +104,6 @@ public interface BacklogBusiness {
     public EffortSumData getOriginalEstimateSum(Collection<BacklogItem> bliList);
     
     /**
-     * Calculates backlog's all items' effort lefts. For product, this includes
-     * its projects and iterations and for projects its iterations.
-     * Includes hours and number of non-estimated items.
-     * @param backlog Backlog whose cumulative effort left is calculated.
-     * @return an EffortSumData -object containing the information.
-     */
-    public EffortSumData getCumulativeEffortLeftSum(Backlog backlog);
-    
-    /**
-     * Calculates backlog's all items' original estimates. For product, this includes
-     * its projects and iterations and for projects its iterations.
-     * Includes hours and number of non-estimated items.
-     * @param backlog Backlog whose cumulative original estimate is calculated.
-     * @return an EffortSumData -object containing the information.
-     */
-    public EffortSumData getCumulativeOriginalEstimateSum(Backlog backlog);
-    
-    /**
      * Assigns the selected users to the given backlog.
      * 
      * @param selectedUserIds Ids of the users to be assigned.

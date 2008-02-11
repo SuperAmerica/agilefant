@@ -21,6 +21,7 @@ import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.security.SecurityUtil;
 import fi.hut.soberit.agilefant.util.BacklogComparator;
+import fi.hut.soberit.agilefant.util.EffortSumData;
 import fi.hut.soberit.agilefant.util.UserComparator;
 
 public class DailyWorkAction extends ActionSupport {
@@ -30,9 +31,9 @@ public class DailyWorkAction extends ActionSupport {
 
     private List<Project> projects;
 
-    private Map<Backlog, AFTime> effortSums;
+    private Map<Backlog, EffortSumData> effortSums;
 
-    private Map<Backlog, AFTime> originalEstimates;
+    private Map<Backlog, EffortSumData> originalEstimates;
 
     private Map<Backlog, List<BacklogItem>> bliMap;
 
@@ -74,8 +75,8 @@ public class DailyWorkAction extends ActionSupport {
         }
 
         user = userBusiness.getUser(userId);
-        effortSums = new HashMap<Backlog, AFTime>();
-        originalEstimates = new HashMap<Backlog, AFTime>();
+        effortSums = new HashMap<Backlog, EffortSumData>();
+        originalEstimates = new HashMap<Backlog, EffortSumData>();
 
         bliMap = userBusiness.getBacklogItemsAssignedToUser(user);
         projects = new ArrayList<Project>();
@@ -92,10 +93,10 @@ public class DailyWorkAction extends ActionSupport {
                 iterations.add((Iteration) backlog);
             }
             List<BacklogItem> blis = bliMap.get(backlog);
-            AFTime effLeftSum = backlogBusiness.getEffortLeftSum(blis).getEffortHours();
+            EffortSumData effLeftSum = backlogBusiness.getEffortLeftSum(blis);
             effortSums.put(backlog, effLeftSum);
-            originalEstimates.put(backlog, backlogBusiness
-                    .getOriginalEstimateSum(blis).getEffortHours());
+            EffortSumData origEstSum = backlogBusiness.getOriginalEstimateSum(blis);
+            originalEstimates.put(backlog, origEstSum);
         }
 
         Collections.sort(projects, new BacklogComparator());
@@ -167,11 +168,11 @@ public class DailyWorkAction extends ActionSupport {
         this.backlogItemsForUserInProgress = backlogItemsForUserInProgress;
     }
 
-    public Map<Backlog, AFTime> getEffortSums() {
+    public Map<Backlog, EffortSumData> getEffortSums() {
         return effortSums;
     }
 
-    public void setEffortSums(Map<Backlog, AFTime> effortSums) {
+    public void setEffortSums(Map<Backlog, EffortSumData> effortSums) {
         this.effortSums = effortSums;
     }
 
@@ -183,7 +184,7 @@ public class DailyWorkAction extends ActionSupport {
         this.backlogBusiness = backlogBusiness;
     }
 
-    public Map<Backlog, AFTime> getOriginalEstimates() {
+    public Map<Backlog, EffortSumData> getOriginalEstimates() {
         return originalEstimates;
     }
 }

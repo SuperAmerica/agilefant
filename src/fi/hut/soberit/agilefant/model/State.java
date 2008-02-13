@@ -9,7 +9,7 @@ package fi.hut.soberit.agilefant.model;
  * @see fi.hut.soberit.agilefant.model.Task
  */
 public enum State {
-    NOT_STARTED, STARTED,  PENDING, BLOCKED, IMPLEMENTED, DONE;
+    NOT_STARTED, STARTED, PENDING, BLOCKED, IMPLEMENTED, DONE;
 
     public int getOrdinal() {
         return this.ordinal();

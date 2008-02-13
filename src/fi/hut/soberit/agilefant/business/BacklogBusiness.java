@@ -2,12 +2,14 @@ package fi.hut.soberit.agilefant.business;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.Priority;
+import fi.hut.soberit.agilefant.model.State;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.util.EffortSumData;
 
@@ -69,6 +71,24 @@ public interface BacklogBusiness {
      */
     public void changePriorityOfMultipleItems(int backlogItemIds[],
             Priority priority) throws ObjectNotFoundException;
+    
+    /**
+     * Change the state of multiple <code>BacklogItem</code>s at once.
+     * @param backlogItemIds <code>Array</code> containing the IDs of the items,
+     *                          whose state should be changed
+     * @param state the new state
+     */
+    public void changeStateOfMultipleItems(int backlogItemIds[],
+            State state) throws ObjectNotFoundException;
+    
+    /**
+     * Change the iterationGoals of multiple <code>BacklogItem</code>s at once.
+     * @param backlogItemIds <code>Array</code> containing the IDs of the items,
+     *                          whose iteration goal should be changed
+     * @param state id of the new iteration goal
+     */
+    public void changeIterationGoalOfMultipleItems(int backlogItemIds[],
+            int iterationGoalId) throws ObjectNotFoundException;
 
     /**
      * Moves multiple backlog items to target backlog. Object with one of the
@@ -84,6 +104,14 @@ public interface BacklogBusiness {
     public void moveMultipleBacklogItemsToBacklog(int backlogItemIds[],
             int targetBacklogId) throws ObjectNotFoundException;
 
+    /**
+     * Changes responsibles for multiple backlog items.
+     * @param backlogItemIds
+     * @param responsibleIds
+     */
+    public void setResponsiblesForMultipleBacklogItems(int backlogItemIds[],
+            Set<Integer> responsibleIds) throws ObjectNotFoundException;
+    
     /**
      * Calculates the sum of effort lefts of the given backlog items.
      * Includes hours and number of non-estimated items.

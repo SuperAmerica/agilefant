@@ -12,6 +12,7 @@ import fi.hut.soberit.agilefant.business.HistoryBusiness;
 import fi.hut.soberit.agilefant.db.AssignmentDAO;
 import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
+import fi.hut.soberit.agilefant.db.IterationGoalDAO;
 import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.AFTime;
@@ -19,6 +20,7 @@ import fi.hut.soberit.agilefant.model.Assignment;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.Priority;
+import fi.hut.soberit.agilefant.model.State;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.util.EffortSumData;
 
@@ -37,6 +39,8 @@ public class BacklogBusinessImpl implements BacklogBusiness {
     private UserDAO userDAO;
 
     private AssignmentDAO assignmentDAO;
+    
+    private IterationGoalDAO iterationGoalDAO;
 
     // @Override
     public void deleteMultipleItems(int backlogId, int[] backlogItemIds)
@@ -88,6 +92,69 @@ public class BacklogBusinessImpl implements BacklogBusiness {
             bli.setPriority(priority);
         }
     }
+    
+    /** {@inheritDoc} */
+    public void changeStateOfMultipleItems(int[] backlogItemIds, State state)
+            throws ObjectNotFoundException {
+        
+        for (int id : backlogItemIds) {
+            BacklogItem bli = backlogItemDAO.get(id);
+            
+            if (bli == null) {
+                throw new ObjectNotFoundException(
+                        "Could not change priority. Object with id " + id
+                        + "was not found."
+                );
+            }
+            
+            bli.setState(state);
+        }
+    }
+    
+    /** {@inheritDoc} */
+    public void changeIterationGoalOfMultipleItems(int[] backlogItemIds,
+            int iterationGoalId) throws ObjectNotFoundException {
+        
+        for (int id : backlogItemIds) {
+            BacklogItem bli = backlogItemDAO.get(id);
+            
+            if (bli == null) {
+                throw new ObjectNotFoundException(
+                        "Could not change iteration goal. Object with id " + id
+                        + "was not found."
+                );
+            }
+            bli.setIterationGoal(iterationGoalDAO.get(iterationGoalId));
+        }
+        
+    }
+    
+    /** {@inheritDoc} */
+    public void setResponsiblesForMultipleBacklogItems(int[] backlogItemIds,
+            Set<Integer> responsibleIds) throws ObjectNotFoundException {
+        
+        // Generate the list of responsibles
+        Set<User> users = new HashSet<User>();
+        
+        for (int uid : responsibleIds) {
+            User user = userDAO.get(uid);
+            users.add(user);
+        }
+        
+        for (int id : backlogItemIds) {
+            BacklogItem bli = backlogItemDAO.get(id);
+            
+            if (bli == null) {
+                throw new ObjectNotFoundException(
+                        "Could not change responsibles. Backlog item with id " + id
+                        + "was not found."
+                );
+            }
+            
+            bli.setResponsibles(users);
+        }
+    }
+    
 
     /**
      * {@inheritDoc}
@@ -155,6 +222,9 @@ public class BacklogBusinessImpl implements BacklogBusiness {
         historyBusiness.updateBacklogHistory(targetBacklog.getId());
     }
 
+    
+    
+    
     /** {@inheritDoc} * */
     public EffortSumData getEffortLeftSum(Collection<BacklogItem> bliList) {
         EffortSumData data = new EffortSumData();
@@ -286,5 +356,9 @@ public class BacklogBusinessImpl implements BacklogBusiness {
 
     public void setAssignmentDAO(AssignmentDAO assignmentDAO) {
         this.assignmentDAO = assignmentDAO;
+    }
+
+    public void setIterationGoalDAO(IterationGoalDAO iterationGoalDAO) {
+        this.iterationGoalDAO = iterationGoalDAO;
     }
 }

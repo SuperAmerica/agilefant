@@ -51,6 +51,9 @@ function test($) {
 			$("li:nth-child(even)", this).addClass("even");
 			$("li:nth-child(odd)", this).addClass("odd");
 			return this;
+		},
+		toggle_disabled: function(state) {
+			$(':checkbox[@name^="userIds"]', this).attr('disabled', state);
 		}
 	});
 };

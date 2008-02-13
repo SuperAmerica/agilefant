@@ -275,9 +275,15 @@
 		</action>
 
 		<action name="doActionOnMultipleBacklogItems" method="doActionOnMultipleBacklogItems" class="backlogAction">
-			<result name="move" type="chain">moveSelectedItems</result>
-			<result name="delete" type="chain">deleteSelectedItems</result>
-			<result name="changePriority" type="chain">changePriorityOfSelectedItems</result>
+			<result name="editProduct" type="redirect">
+				editProduct.action?productId=${backlogId}
+			</result>
+			<result name="editProject" type="redirect">
+				editProject.action?projectId=${backlogId}
+			</result>
+			<result name="editIteration" type="redirect">
+				editIteration.action?iterationId=${backlogId}
+			</result>
 		</action>
 
 		<action name="changePriorityOfSelectedItems" method="changePriorityOfSelectedItems"

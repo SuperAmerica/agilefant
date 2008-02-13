@@ -1,5 +1,8 @@
 package fi.hut.soberit.agilefant.web;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -16,6 +19,7 @@ import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Priority;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
+import fi.hut.soberit.agilefant.model.State;
 
 public class BacklogAction extends ActionSupport {
     private static final long serialVersionUID = 8061288993804046816L;
@@ -27,10 +31,18 @@ public class BacklogAction extends ActionSupport {
     private int backlogItemId;
 
     private int[] backlogItemIds;
-
+    
     private int targetBacklogId;
 
-    private Priority targetPriority;
+    private int targetPriority;
+    
+    private int targetState;
+    
+    private int targetIterationGoalId;
+    
+    private int keepResponsibles = 0;
+    
+    private Map<Integer, String> userIds = new HashMap<Integer, String>();
 
     private BacklogItemDAO backlogItemDAO;
 
@@ -90,15 +102,8 @@ public class BacklogAction extends ActionSupport {
      * @return <code>Action.ERROR</code> if there was an error, otherwise a
      *         redirect to display current backlog.
      */
-    public String moveSelectedItems() {
+    public void moveSelectedItems() {
         Log logger = LogFactory.getLog(getClass());
-        // Backlog targetBacklog = this.backlogDAO.get(targetBacklogId);
-        Backlog currentBacklog = this.backlogDAO.get(backlogId);
-
-        if (backlogItemIds == null) {
-            super.addActionError(super.getText("backlogItems.notSelected"));
-            return Action.ERROR;
-        }
 
         logger.info("Moving " + backlogItemIds.length + " items + "
                 + " to backlog: " + targetBacklogId);
@@ -108,10 +113,7 @@ public class BacklogAction extends ActionSupport {
                     targetBacklogId);
         } catch (ObjectNotFoundException e) {
             super.addActionError(e.getMessage());
-            return Action.ERROR;
         }
-
-        return this.solveResult(currentBacklog);
     }
 
     /**
@@ -120,52 +122,66 @@ public class BacklogAction extends ActionSupport {
      * @return <code>Action.ERROR</code> if there was an error, otherwise a
      *         redirect to display current backlog.
      */
-    public String changePriorityOfSelectedItems() {
-        Backlog currentBacklog = this.backlogDAO.get(backlogId);
-
-        if (backlogItemIds == null) {
-            super.addActionError(super.getText("backlogItems.notSelected"));
-            return Action.ERROR;
-        }
-
-        if (targetPriority == null) {
-            super.addActionError(super.getText("Invalid priority!"));
-            return Action.ERROR;
-        }
-
+    public void changePriorityOfSelectedItems() {
         try {
             backlogBusiness.changePriorityOfMultipleItems(backlogItemIds,
-                    targetPriority);
+                    Priority.values()[targetPriority]);
         } catch (ObjectNotFoundException e) {
             super.addActionError(super.getText(e.getMessage()));
-            return Action.ERROR;
         }
-
-        return this.solveResult(currentBacklog);
+    }
+    
+    /**
+     * Changes selected <code>BacklogItems'</code> priority
+     * 
+     * @return <code>Action.ERROR</code> if there was an error, otherwise a
+     *         redirect to display current backlog.
+     */
+    public void changeStateOfSelectedItems() {
+        try {
+            backlogBusiness.changeStateOfMultipleItems(backlogItemIds,
+                    State.values()[targetState]);
+        } catch (ObjectNotFoundException e) {
+            super.addActionError(super.getText(e.getMessage()));
+        }
+    }
+    
+    /**
+     * Changes selected <code>BacklogItems'</code> priority
+     * 
+     * @return <code>Action.ERROR</code> if there was an error, otherwise a
+     *         redirect to display current backlog.
+     */
+    public void changeIterationGoalOfSelectedItems() {
+        try {
+            backlogBusiness.changeIterationGoalOfMultipleItems(backlogItemIds,
+                    targetIterationGoalId);
+        } catch (ObjectNotFoundException e) {
+            super.addActionError(super.getText(e.getMessage()));
+        }
     }
 
+    public void changeResponsiblesOfSelectedItems() {
+        try {
+            backlogBusiness.setResponsiblesForMultipleBacklogItems(backlogItemIds,
+                    userIds.keySet());
+        } catch (ObjectNotFoundException e) {
+            super.addActionError(super.getText(e.getMessage()));
+        }
+    }
+    
     /**
      * Deletes multiple selected <code>BacklogItems</code>.
      * 
      * @return <code>Action.ERROR</code> if there was an error, otherwise a
      *         redirect to display current backlog.
      */
-    public String deleteSelectedItems() {
-        Backlog currentBacklog = this.backlogDAO.get(backlogId);
-
-        if (backlogItemIds == null) {
-            super.addActionError(super.getText("backlogItems.notSelected"));
-            return Action.ERROR;
-        }
-
+    public void deleteSelectedItems() {
         try {
             backlogBusiness.deleteMultipleItems(backlogId, backlogItemIds);
         } catch (ObjectNotFoundException e) {
             super.addActionError(super.getText(e.getMessage()));
-            return Action.ERROR;
         }
-
-        return this.solveResult(currentBacklog);
     }
 
     /**
@@ -178,19 +194,53 @@ public class BacklogAction extends ActionSupport {
      *         determined.
      */
     public String doActionOnMultipleBacklogItems() {
+        Backlog currentBacklog = this.backlogDAO.get(backlogId);
         Log logger = LogFactory.getLog(getClass());
-
-        if (itemAction.equals("MoveSelected")) {
-            return "move";
-        } else if (itemAction.equals("DeleteSelected")) {
-            return "delete";
-        } else if (itemAction.equals("PrioritizeSelected")) {
-            return "changePriority";
+        
+        if (itemAction.equals("ChangeSelected")) {
+            // Check, that some backlog items were selected
+            if (backlogItemIds == null) {
+                super.addActionError(super.getText("backlogItems.notSelected"));
+                return Action.ERROR;
+            }
+            
+            // If a target priority was selected
+            if (targetPriority != -1) {
+                changePriorityOfSelectedItems();
+            }
+            
+            // If a target state was selected
+            if (targetState != -1) {
+                changeStateOfSelectedItems();
+            }
+            
+            if (targetIterationGoalId != -1) {
+                changeIterationGoalOfSelectedItems();
+            }
+            
+            if (keepResponsibles != 1) { 
+                changeResponsiblesOfSelectedItems();
+            }
+                                    
+            // Move selected items
+            moveSelectedItems();
+            
+        }
+        else if (itemAction.equals("DeleteSelected")) {
+            deleteSelectedItems();
+        }
+        else {
+            logger.error("Invalid action on multiple backlog items: " + itemAction);
+            return Action.ERROR;    
         }
 
-        logger.error("Invalid action on multiple backlog items: " + itemAction);
-
-        return Action.ERROR;
+        
+        /* Check for errors */
+        if (super.hasActionErrors()) {
+            return Action.ERROR;
+        }
+        
+        return this.solveResult(currentBacklog);
     }
 
     protected String solveResult(Backlog backlog) {
@@ -252,11 +302,47 @@ public class BacklogAction extends ActionSupport {
         this.backlogBusiness = backlogBusiness;
     }
 
-    public Priority getTargetPriority() {
+    public int getTargetPriority() {
         return targetPriority;
     }
 
-    public void setTargetPriority(Priority targetPriority) {
+    public void setTargetPriority(int targetPriority) {
         this.targetPriority = targetPriority;
+    }
+
+    public int getTargetState() {
+        return targetState;
+    }
+
+    public void setTargetState(int targetState) {
+        this.targetState = targetState;
+    }
+
+    public int getTargetIterationGoalId() {
+        return targetIterationGoalId;
+    }
+
+    public void setTargetIterationGoalId(int targetIterationGoalId) {
+        this.targetIterationGoalId = targetIterationGoalId;
+    }
+
+    public int getKeepResponsibles() {
+        return keepResponsibles;
+    }
+
+    public void setKeepResponsibles(int keepResponsibles) {
+        this.keepResponsibles = keepResponsibles;
+    }
+
+    public Map<Integer, String> getUserIds() {
+        return userIds;
+    }
+
+    public void setUserIds(Map<Integer, String> userIds) {
+        this.userIds = userIds;
+    }
+
+    public void setBacklogItemIds(int[] backlogItemIds) {
+        this.backlogItemIds = backlogItemIds;
     }
 }

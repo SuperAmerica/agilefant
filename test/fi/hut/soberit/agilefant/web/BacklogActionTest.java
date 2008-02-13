@@ -1,12 +1,20 @@
 package fi.hut.soberit.agilefant.web;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.logging.LogFactory;
+
+import com.opensymphony.xwork.Action;
+
+import fi.hut.soberit.agilefant.business.BacklogBusiness;
+import fi.hut.soberit.agilefant.business.HistoryBusiness;
 import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.db.IterationGoalDAO;
+import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.Iteration;
@@ -14,86 +22,52 @@ import fi.hut.soberit.agilefant.model.IterationGoal;
 import fi.hut.soberit.agilefant.model.Priority;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
-import fi.hut.soberit.agilefant.util.SpringTestCase;
+import fi.hut.soberit.agilefant.model.State;
+import junit.framework.TestCase;
+
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
 
 /**
  * JUnit integration test for BacklogAction.
  * 
  * @author
  */
-public class BacklogActionTest extends SpringTestCase {
+public class BacklogActionTest extends TestCase {
     // class under test
-    private BacklogAction backlogAction = null;
+    private BacklogAction backlogAction = new BacklogAction();
 
-    private BacklogDAO backlogDAO = null;
-    private BacklogItemDAO backlogItemDAO = null;
-    private IterationGoalDAO iterationGoalDAO = null;
+    private BacklogDAO backlogDAO;
+    private BacklogItemDAO backlogItemDAO;
+    private IterationGoalDAO iterationGoalDAO;
 
-    private Backlog product;
-    private Backlog project;
-    private Backlog iteration;
-    private BacklogItem bli1;
-    private BacklogItem bli2;
-    private IterationGoal itergoal;
-    private int[] bliIds = new int[2];
-
-    /**
-     * Create test data.
-     */
-    public void onSetUpInTransaction() throws Exception {
-        // create product
-        product = new Product();
-        product.setId((Integer) backlogDAO.create(product));
-        product = backlogDAO.get(product.getId());
-        
-        // create project to product
-        project = new Project();
-        project.setId((Integer) backlogDAO.create(project));
-        ((Project) project).setProduct((Product) product);
-        ArrayList<Project> projects = new ArrayList<Project>();
-        projects.add((Project) project);
-        ((Product) product).setProjects(projects);
-        backlogDAO.store(project);
-        backlogDAO.store(product);
-        project = backlogDAO.get(project.getId());
-        
-        // create iteration to project
-        iteration = new Iteration();
-        iteration.setId((Integer) backlogDAO.create(iteration));
-        ((Iteration) iteration).setProject((Project) project);
-        ArrayList<Iteration> iterations = new ArrayList<Iteration>();
-        iterations.add((Iteration) iteration);
-        ((Project) project).setIterations(iterations);
-        backlogDAO.store(iteration);
-        backlogDAO.store(project);
-        iteration = backlogDAO.get(iteration.getId());
-        
-        // create iteration goal to iteration
-        itergoal = new IterationGoal();
-        itergoal.setIteration((Iteration)iteration);
-        itergoal.setId((Integer) iterationGoalDAO.create(itergoal));
-        iterationGoalDAO.store(itergoal);
-        itergoal = iterationGoalDAO.get(itergoal.getId());
-        
-        // create test blis to product
-        bli1 = new BacklogItem();
-        bli2 = new BacklogItem();
-        bli1.setBacklog(backlogDAO.get(product.getId()));
-        bli2.setBacklog(backlogDAO.get(product.getId()));
-        bli1.setId((Integer) backlogItemDAO.create(bli1));
-        bli2.setId((Integer) backlogItemDAO.create(bli2));
-        bli1 = backlogItemDAO.get(bli1.getId());
-        bli2 = backlogItemDAO.get(bli2.getId());
-        backlogDAO.get(product.getId()).getBacklogItems().add(bli1);
-        backlogDAO.get(product.getId()).getBacklogItems().add(bli2);
-        bliIds[0] = bli1.getId();
-        bliIds[1] = bli2.getId();
-    }
+    private BacklogBusiness backlogBusiness;
+    private HistoryBusiness historyBusiness;
+ 
 
     /**
      * Test edit operation.
      */
+    
     public void testEdit() {
+        backlogDAO = createMock(BacklogDAO.class);
+        backlogAction.setBacklogDAO(backlogDAO);
+        
+        Product product = new Product();
+        product.setId(123);
+        Project project = new Project();
+        project.setId(125);
+        Iteration iteration = new Iteration();
+        iteration.setId(666);
+        
+        expect(backlogDAO.get(123)).andReturn(product);
+        expect(backlogDAO.get(125)).andReturn(project);
+        expect(backlogDAO.get(666)).andReturn(iteration);
+        expect(backlogDAO.get(-100)).andReturn(null);
+        replay(backlogDAO);
+        
         // test product
         backlogAction.setBacklogId(product.getId());
         assertEquals("editProduct", backlogAction.edit());
@@ -103,249 +77,247 @@ public class BacklogActionTest extends SpringTestCase {
         // test iteration
         backlogAction.setBacklogId(iteration.getId());
         assertEquals("editIteration", backlogAction.edit());
-    }
-
-    /**
-     * Test edit operation with invalid id.
-     */
-    public void testEdit_invalidId() {
+        // test invalid
         backlogAction.setBacklogId(-100);
         assertEquals("error", backlogAction.edit());
+        
+        verify(backlogDAO);
     }
 
     /**
-     * Test MoveBacklogItem operation.
+     * Test MoveBacklogItem method.
      */
     public void testMoveBacklogItem() {
-         // move from product to project
-        backlogAction.setBacklogItemId(bli1.getId());
-        backlogAction.setBacklogId(project.getId());
+        backlogDAO = createMock(BacklogDAO.class);
+        backlogItemDAO = createMock(BacklogItemDAO.class);
+        iterationGoalDAO = createMock(IterationGoalDAO.class);
+        backlogAction.setBacklogDAO(backlogDAO);
+        backlogAction.setBacklogItemDAO(backlogItemDAO);
+        
+        // Generate test data
+        Iteration origBacklog = new Iteration();
+        origBacklog.setId(135);
+        origBacklog.setBacklogItems(new HashSet<BacklogItem>());
+        
+        Project targetBacklog = new Project();
+        targetBacklog.setId(128);
+        targetBacklog.setBacklogItems(new HashSet<BacklogItem>());
+        
+        BacklogItem bli = new BacklogItem();
+        bli.setId(66);
+        bli.setBacklog(origBacklog);
+        origBacklog.getBacklogItems().add(bli);
+        
+        IterationGoal ig = new IterationGoal();
+        ig.setId(987);
+        ig.setIteration(origBacklog);
+        ig.setBacklogItems(new HashSet<BacklogItem>());
+        bli.setIterationGoal(ig);
+        
+        backlogAction.setBacklogId(128);
+        backlogAction.setBacklogItemId(66);
+        
+        // Record expected behavior
+        expect(iterationGoalDAO.get(987)).andReturn(ig);
+        expect(backlogDAO.get(128)).andReturn(targetBacklog);
+        expect(backlogItemDAO.get(66)).andReturn(bli);
+        bli.getBacklog().getBacklogItems().remove(bli);
+        targetBacklog.getBacklogItems().add(bli);
+        bli.setBacklog(targetBacklog);
+        bli.getIterationGoal().getBacklogItems().remove(bli);
+        bli.setIterationGoal(null);
+        backlogItemDAO.store(bli);
+        
+        replay(backlogDAO);
+        replay(backlogItemDAO);
+        
+        assertSame(iterationGoalDAO.get(987), bli.getIterationGoal());        
         assertEquals("editProject", backlogAction.moveBacklogItem());
-        assertEquals(project.getId(), backlogItemDAO.get(bli1.getId())
-                .getBacklog().getId());
-        assertFalse(backlogDAO.get(product.getId()).getBacklogItems().contains(
-                bli1));
-        assertTrue(backlogDAO.get(project.getId()).getBacklogItems().contains(
-                bli1));
-
-        // move from project to iteration
-        backlogAction.setBacklogId(iteration.getId());
-        assertEquals("editIteration", backlogAction.moveBacklogItem());
-        assertEquals(iteration.getId(), backlogItemDAO.get(bli1.getId())
-                .getBacklog().getId());
-        assertFalse(backlogDAO.get(project.getId()).getBacklogItems().contains(
-                bli1));
-        assertTrue(backlogDAO.get(iteration.getId()).getBacklogItems()
-                .contains(bli1));
+        assertNull(bli.getIterationGoal());
         
-        // test iteration goal change
-        bli1.setIterationGoal(itergoal);
-        Set<BacklogItem> blis = new HashSet<BacklogItem>();
-        itergoal.setBacklogItems(blis);
-        backlogItemDAO.store(bli1);
-        iterationGoalDAO.store(itergoal);
-        bli1 = backlogItemDAO.get(bli1.getId());
-        itergoal = iterationGoalDAO.get(itergoal.getId());
-        
-        assertEquals(itergoal.getId(), bli1.getIterationGoal().getId());
-    }
-
-    /**
-     * Test MoveBacklogItem operation with invalid bli id.
-     */
-    public void testMoveBacklogItem_invalidBliId() {
-        backlogAction.setBacklogItemId(-100);
-        backlogAction.setBacklogId(project.getId());
-        assertEquals("error", backlogAction.moveBacklogItem());
-    }
-
-    /**
-     * Test MoveBacklogItem operation with invalid backlog id.
-     */
-    public void testMoveBacklogItem_invalidBacklogId() {
-        // execute move operation
-        backlogAction.setBacklogItemId(bli1.getId());
-        backlogAction.setBacklogId(-100);
-        assertEquals("error", backlogAction.moveBacklogItem());
-    }
-
-    /**
-     * Test MoveSelectedItems operation.
-     */
-    public void testMoveSelectedItems() {
-        // move from product to project
-        backlogAction.setBacklogId(product.getId());
-        backlogAction.setTargetBacklog(project.getId());
-        backlogAction.setSelected(bliIds);
-        assertEquals("editProduct", backlogAction.moveSelectedItems());
-        assertEquals(project.getId(), backlogItemDAO.get(bli1.getId())
-                .getBacklog().getId());
-        assertEquals(project.getId(), backlogItemDAO.get(bli2.getId())
-                .getBacklog().getId());
-        assertFalse(backlogDAO.get(product.getId()).getBacklogItems().contains(
-                bli1));
-        assertFalse(backlogDAO.get(product.getId()).getBacklogItems().contains(
-                bli2));
-        assertTrue(backlogDAO.get(project.getId()).getBacklogItems().contains(
-                bli1));
-        assertTrue(backlogDAO.get(project.getId()).getBacklogItems().contains(
-                bli2));
-
-        // move from project to iteration
-        backlogAction.setBacklogId(project.getId());
-        backlogAction.setTargetBacklog(iteration.getId());
-        backlogAction.setSelected(bliIds);
-        assertEquals("editProject", backlogAction.moveSelectedItems());
-        assertEquals(iteration.getId(), backlogItemDAO.get(bli1.getId())
-                .getBacklog().getId());
-        assertEquals(iteration.getId(), backlogItemDAO.get(bli2.getId())
-                .getBacklog().getId());
-        assertFalse(backlogDAO.get(project.getId()).getBacklogItems().contains(
-                bli1));
-        assertFalse(backlogDAO.get(project.getId()).getBacklogItems().contains(
-                bli2));
-        assertTrue(backlogDAO.get(iteration.getId()).getBacklogItems()
-                .contains(bli1));
-        assertTrue(backlogDAO.get(iteration.getId()).getBacklogItems()
-                .contains(bli2));
-
-    }
-
-    /**
-     * Test MoveSelectedItems operation with invalid target backlog id.
-     */
-    public void testMoveSelectedItem_invalidTargetBacklogId() {
-        // move from product to project
-        backlogAction.setBacklogId(product.getId());
-        backlogAction.setTargetBacklog(-100);
-        backlogAction.setSelected(bliIds);
-        assertEquals("error", backlogAction.moveSelectedItems());
-    }
-
-    /**
-     * Test MoveSelectedItems operation with invalid current backlog id.
-     */
-    public void testMoveSelectedItem_invalidCurrentBacklogId() {
-        // move from product to project
-        backlogAction.setBacklogId(-100);
-        backlogAction.setTargetBacklog(project.getId());
-        backlogAction.setSelected(bliIds);
-        assertEquals("error", backlogAction.moveSelectedItems());
-    }
-
-    /**
-     * Test MoveSelectedItems operation with invalid bli ids.
-     */
-    public void testMoveSelectedItem_invalidBliIds() {
-        backlogAction.setBacklogId(product.getId());
-        backlogAction.setTargetBacklog(project.getId());
-        assertEquals("error", backlogAction.moveSelectedItems());
-    }
-
-    /**
-     * Test ChangePriorityOfSelectedItems operation.
-     */
-    public void testChangePriorityOfSelectedItems() {
-        backlogAction.setBacklogId(product.getId());
-        backlogAction.setTargetPriority(Priority.BLOCKER);
-        backlogAction.setSelected(bliIds);
-
-        // execute changepriorityofselecteditems operation
-        assertEquals("editProduct", backlogAction
-                .changePriorityOfSelectedItems());
-        assertEquals(Priority.BLOCKER, backlogItemDAO.get(bli1.getId())
-                .getPriority());
-        assertEquals(Priority.BLOCKER, backlogItemDAO.get(bli2.getId())
-                .getPriority());
-    }
-
-    /**
-     * Test ChangePriorityOfSelectedItems operation with invalid priority.
-     */
-    public void testChangePriorityOfSelectedItems_invalidPriority() {
-        backlogAction.setBacklogId(product.getId());
-        backlogAction.setSelected(bliIds);
-
-        // execute changepriorityofselecteditems operation
-        assertEquals("error", backlogAction.changePriorityOfSelectedItems());
-    }
-
-    /**
-     * Test ChangePriorityOfSelectedItems operation with invalid bli ids.
-     */
-    public void testChangePriorityOfSelectedItems_invalidBliIds() {
-        backlogAction.setBacklogId(product.getId());
-        backlogAction.setTargetPriority(Priority.BLOCKER);
-
-        // execute changepriorityofselecteditems operation
-        assertEquals("error", backlogAction.changePriorityOfSelectedItems());
-        int[] ids = {-100, -200};
-        backlogAction.setSelected(ids);
-        assertEquals("error", backlogAction.changePriorityOfSelectedItems());
-    }
-
-    /**
-     * Test ChangePriorityOfSelectedItems operation with invalid backlog id.
-     */
-    public void testChangePriorityOfSelectedItems_invalidBacklogId() {
-        backlogAction.setTargetPriority(Priority.BLOCKER);
-        backlogAction.setSelected(bliIds);
-
-        // execute operation
-        assertEquals("error", backlogAction.changePriorityOfSelectedItems());
-    }
-
-    /**
-     * Test DeleteSelectedItems operation.
-     */
-    public void testDeleteSelectedItems() {
-        backlogAction.setBacklogId(product.getId());
-        backlogAction.setSelected(bliIds);
-
-        // execute operation
-        assertEquals("editProduct", backlogAction.deleteSelectedItems());
-        assertNull(backlogItemDAO.get(bli1.getId()));
-        assertNull(backlogItemDAO.get(bli2.getId()));
-        assertFalse(backlogDAO.get(product.getId()).getBacklogItems().contains(
-                bli1));
-        assertFalse(backlogDAO.get(product.getId()).getBacklogItems().contains(
-                bli2));
-    }
-
-    /**
-     * Test DeleteSelectedItems operation with invalid bli ids.
-     */
-    public void testDeleteSelectedItems_invalidBliIds() {
-        backlogAction.setBacklogId(product.getId());
-
-        // execute operation
-        assertEquals("error", backlogAction.deleteSelectedItems());
-    }
-
-    /**
-     * Test DeleteSelectedItems operation with invalid backlog id.
-     */
-    public void testDeleteSelectedItems_invalidBacklogId() {
-        backlogAction.setSelected(bliIds);
-
-        // execute operation
-        assertEquals("error", backlogAction.deleteSelectedItems());
-    }
-
-    public void setBacklogDAO(BacklogDAO backlogDAO) {
-        this.backlogDAO = backlogDAO;
-    }
-
-    public void setBacklogItemDAO(BacklogItemDAO backlogItemDAO) {
-        this.backlogItemDAO = backlogItemDAO;
-    }
-
-    public void setBacklogAction(BacklogAction backlogAction) {
-        this.backlogAction = backlogAction;
-    }
-
-    public void setIterationGoalDAO(IterationGoalDAO iterationGoalDAO) {
-        this.iterationGoalDAO = iterationGoalDAO;
+        verify(backlogDAO);
+        verify(backlogItemDAO);
     }
     
+    /**
+     * Test with invalid backlog id.
+     */
+    public void testMoveBacklogItem_invalidBacklogId() {
+        backlogDAO = createMock(BacklogDAO.class);
+        backlogItemDAO = createMock(BacklogItemDAO.class);
+        backlogAction.setBacklogDAO(backlogDAO);
+        backlogAction.setBacklogItemDAO(backlogItemDAO);
+        
+        BacklogItem bli = new BacklogItem();
+        bli.setId(66);
+        
+        backlogAction.setBacklogId(-100);
+        backlogAction.setBacklogItemId(66);
+        
+        expect(backlogDAO.get(-100)).andReturn(null);
+        expect(backlogItemDAO.get(66)).andReturn(bli);
+        
+        replay(backlogDAO);
+        replay(backlogItemDAO);
+        
+        assertEquals(Action.ERROR, backlogAction.moveBacklogItem());
+        
+        verify(backlogDAO);
+        verify(backlogItemDAO);
+    }
+    
+    /**
+     * Test with invalid bli id.backlogItemIds
+     */
+    public void testMoveBacklogItem_invalidBliId() {
+        backlogDAO = createMock(BacklogDAO.class);
+        backlogItemDAO = createMock(BacklogItemDAO.class);
+        backlogAction.setBacklogDAO(backlogDAO);
+        backlogAction.setBacklogItemDAO(backlogItemDAO);
+        
+        Backlog backlog = new Project();
+        backlog.setId(66);
+        
+        backlogAction.setBacklogId(66);
+        backlogAction.setBacklogItemId(-100);
+        
+        expect(backlogDAO.get(66)).andReturn(backlog);
+        expect(backlogItemDAO.get(-100)).andReturn(null);
+        
+        replay(backlogDAO);
+        replay(backlogItemDAO);
+        
+        assertEquals(Action.ERROR, backlogAction.moveBacklogItem());
+        
+        verify(backlogDAO);
+        verify(backlogItemDAO);
+    }
+    
+    /**
+     * Test moving selected items.
+     */
+    public void testDoActionOnMultipleBacklogItems() {
+        backlogDAO = createMock(BacklogDAO.class);
+        backlogItemDAO = createMock(BacklogItemDAO.class);
+        backlogBusiness = createMock(BacklogBusiness.class);
+        
+        // Generate test data
+        Backlog origBacklog = new Iteration();
+        origBacklog.setId(255);
+        Backlog targetBacklog = new Project();
+        targetBacklog.setId(100);
+        
+        BacklogItem bli1 = new BacklogItem();
+        bli1.setId(15);
+        bli1.setState(State.NOT_STARTED);
+        bli1.setPriority(Priority.UNDEFINED);
+        
+        BacklogItem bli2 = new BacklogItem();
+        bli2.setId(16);
+        bli2.setState(State.STARTED);
+        bli2.setPriority(Priority.BLOCKER);
+        
+        BacklogItem bli3 = new BacklogItem();
+        bli3.setId(17);
+        bli3.setState(State.PENDING);
+        bli3.setPriority(Priority.TRIVIAL);
+        
+        BacklogItem bli4 = new BacklogItem();
+        bli4.setId(18);
+        bli4.setState(State.DONE);
+        bli4.setPriority(Priority.MAJOR);
+        
+        int[] selected = {15, 17, 18};
+        Map<Integer, String> responsibleIds = new HashMap<Integer, String>();
+        responsibleIds.put(3, "true");
+        responsibleIds.put(5, "true");
+        responsibleIds.put(6, "true");
+        
+        // Set the attributes for the backlogAction
+        backlogAction.setBacklogDAO(backlogDAO);
+        backlogAction.setBacklogItemDAO(backlogItemDAO);
+        backlogAction.setBacklogBusiness(backlogBusiness);
+        backlogAction.setBacklogItemIds(selected);
+        
+        backlogAction.setTargetPriority(3);
+        backlogAction.setTargetBacklog(100);
+        backlogAction.setTargetIterationGoalId(-1);
+        backlogAction.setTargetState(2);
+        backlogAction.setBacklogId(255);
+        backlogAction.setItemAction("ChangeSelected");
+        backlogAction.setUserIds(responsibleIds);
+        backlogAction.setKeepResponsibles(0);
+        
+        // The test
+        expect(backlogDAO.get(255)).andReturn(origBacklog);
+        try {
+            backlogBusiness.changePriorityOfMultipleItems(selected,
+                Priority.values()[3]);
+            backlogBusiness.changeStateOfMultipleItems(selected,
+                    State.values()[2]);
+            backlogBusiness.setResponsiblesForMultipleBacklogItems(selected,
+                    responsibleIds.keySet());
+            backlogBusiness.moveMultipleBacklogItemsToBacklog(selected, 100);
+        }
+        catch (ObjectNotFoundException e) {
+            fail(e.getMessage());
+        }
+        
+        replay(backlogDAO);
+        replay(backlogItemDAO);
+        replay(backlogBusiness);
+        
+        assertEquals("editIteration", backlogAction.doActionOnMultipleBacklogItems());
+        
+        verify(backlogDAO);
+        verify(backlogItemDAO);
+        verify(backlogBusiness);
+        
+    }
+
+    /**
+     * Test delete multiple backlogItems.
+     */
+    public void testDeleteMultiple() {
+        backlogDAO = createMock(BacklogDAO.class);
+        backlogItemDAO = createMock(BacklogItemDAO.class);
+        backlogBusiness = createMock(BacklogBusiness.class);
+        
+        backlogAction.setBacklogDAO(backlogDAO);
+        backlogAction.setBacklogItemDAO(backlogItemDAO);
+        backlogAction.setBacklogBusiness(backlogBusiness);
+        backlogAction.setItemAction("DeleteSelected");
+        backlogAction.setBacklogId(10);
+        
+        // Create test data
+        Backlog project = new Project();
+        project.setId(10);
+        BacklogItem bli1 = new BacklogItem();
+        BacklogItem bli2 = new BacklogItem();
+        BacklogItem bli3 = new BacklogItem();
+        bli1.setId(15);
+        bli2.setId(16);
+        bli3.setId(17);
+        int[] selected = {15, 17};
+        
+        backlogAction.setBacklogItemIds(selected);
+        
+        expect(backlogDAO.get(10)).andReturn(project);
+        try {
+            backlogBusiness.deleteMultipleItems(10, selected);
+        }
+        catch (ObjectNotFoundException e) {
+            fail(e.getMessage());
+        }
+        
+        replay(backlogDAO);
+        replay(backlogItemDAO);
+        replay(backlogBusiness);
+        
+        backlogAction.doActionOnMultipleBacklogItems();
+        
+        verify(backlogDAO);
+        verify(backlogItemDAO);
+        verify(backlogBusiness);
+    }
 }

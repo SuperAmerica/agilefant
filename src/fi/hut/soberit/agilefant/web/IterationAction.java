@@ -60,9 +60,9 @@ public class IterationAction extends ActionSupport implements CRUDAction {
     
     private BacklogBusiness backlogBusiness;
     
-    private Map<Integer, AFTime> iterationGoalEffLeftSums = new HashMap<Integer, AFTime>();
+    private Map<Integer, EffortSumData> iterationGoalEffLeftSums = new HashMap<Integer, EffortSumData>();
     
-    private Map<Integer, AFTime> iterationGoalOrigEstSums = new HashMap<Integer, AFTime>();
+    private Map<Integer, EffortSumData> iterationGoalOrigEstSums = new HashMap<Integer, EffortSumData>();
     
     private EffortSumData effortLeftSum;
 
@@ -107,20 +107,13 @@ public class IterationAction extends ActionSupport implements CRUDAction {
         
         /* Get the effort left sums of iteration goals */
         for (IterationGoal ig : iteration.getIterationGoals()) {
-            AFTime effort = new AFTime(0);
-            AFTime estimate = new AFTime(0);
+            Collection<BacklogItem> blis = ig.getBacklogItems();
+            EffortSumData igEffSum = backlogBusiness.getEffortLeftSum(blis);
+            EffortSumData igOrigEstSum = backlogBusiness.getOriginalEstimateSum(blis);
             
-            for (BacklogItem bli : ig.getBacklogItems()) {
-                if (bli.getEffortLeft() != null) {
-                    effort.add(bli.getEffortLeft());
-                }
-                if (bli.getOriginalEstimate() != null) {
-                    estimate.add(bli.getOriginalEstimate()); 
-                }
-            }
             
-            iterationGoalEffLeftSums.put(new Integer(ig.getId()), effort);
-            iterationGoalOrigEstSums.put(new Integer(ig.getId()), estimate);
+            iterationGoalEffLeftSums.put(new Integer(ig.getId()), igEffSum);
+            iterationGoalOrigEstSums.put(new Integer(ig.getId()), igOrigEstSum);           
         }
         
         /* Get the original estimate sums of iteration goals */
@@ -371,21 +364,21 @@ public class IterationAction extends ActionSupport implements CRUDAction {
         this.historyBusiness = historyBusiness;
     }
 
-    public Map<Integer, AFTime> getIterationGoalEffLeftSums() {
+    public Map<Integer, EffortSumData> getIterationGoalEffLeftSums() {
         return iterationGoalEffLeftSums;
     }
 
     public void setIterationGoalEffLeftSums(
-            Map<Integer, AFTime> iterationGoalEffLeftSums) {
+            Map<Integer, EffortSumData> iterationGoalEffLeftSums) {
         this.iterationGoalEffLeftSums = iterationGoalEffLeftSums;
     }
 
-    public Map<Integer, AFTime> getIterationGoalOrigEstSums() {
+    public Map<Integer, EffortSumData> getIterationGoalOrigEstSums() {
         return iterationGoalOrigEstSums;
     }
 
     public void setIterationGoalOrigEstSums(
-            Map<Integer, AFTime> iterationGoalOrigEstSums) {
+            Map<Integer, EffortSumData> iterationGoalOrigEstSums) {
         this.iterationGoalOrigEstSums = iterationGoalOrigEstSums;
     }
 

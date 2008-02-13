@@ -22,6 +22,7 @@ import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.ProjectType;
 import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.util.EffortSumData;
 import fi.hut.soberit.agilefant.util.ProjectPortfolioData;
 
 public class ProjectBusinessImpl implements ProjectBusiness {
@@ -246,14 +247,12 @@ public class ProjectBusinessImpl implements ProjectBusiness {
             }
             int unassignedUsers = allUsers.size() - assignedUsers;
 
-            String userDataString = "" + assignedUsers;
-            String loadLeftString = "" + ongoingBliLoadLeft;
-            if (unestimatedBlis == 1)
-                loadLeftString += " + " + unestimatedBlis
-                + " non-estimated BLI";
-            else if (unestimatedBlis > 0)
-                loadLeftString += " + " + unestimatedBlis
-                        + " non-estimated BLIs";
+            String userDataString = "" + assignedUsers;                      
+            EffortSumData loadData = new EffortSumData();
+            loadData.setEffortHours(ongoingBliLoadLeft);
+            loadData.setNonEstimatedItems(unestimatedBlis);
+            String loadLeftString = loadData.toString();
+            
             summaryLoadLeftMap.put(pro, loadLeftString);
             userDataMap.put(pro, userDataString);
             unassignedUserDataMap.put(pro, unassignedUsers);
@@ -264,27 +263,24 @@ public class ProjectBusinessImpl implements ProjectBusiness {
         
         for (String key : keySet) {
             String value = loadLeftData.get(key);
-            String appendValue = "";
-            
+            // Fetch aftime-value and non-estimated items to a
+            // EffortSumData-object to get correct output string.
+            AFTime aftimeValue = new AFTime(value);                                             
             int userUnestimatedBlis = 0;
             if (unassignedBlisMap.get(key) != null)
                 userUnestimatedBlis += unassignedBlisMap.get(key);
             
-            if (userUnestimatedBlis > 0) {
-                if (value != null)
-                    appendValue += " + ";
-                if (userUnestimatedBlis == 1)
-                    appendValue += userUnestimatedBlis + " non-estimated BLI";
-                else
-                    appendValue += userUnestimatedBlis + " non-estimated BLIs";
-            }
-            
+            EffortSumData sumData = new EffortSumData();
+            sumData.setEffortHours(aftimeValue);
+            sumData.setNonEstimatedItems(userUnestimatedBlis);
+                       
             if (value == null)
                 value = "";
-            value += appendValue;
+            else
+                value = sumData.toString();
             
-            if (value != null)
-                loadLeftData.put(key, value);
+            loadLeftData.put(key, value);
+                
         }
         
         data.setUnassignedUsers(unassignedUsersMap);

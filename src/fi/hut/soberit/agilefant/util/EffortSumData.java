@@ -31,10 +31,10 @@ public class EffortSumData {
         }
         if (nonEstimatedItems == 1)
             nonEstimatedString += plusString + nonEstimatedItems
-                    + " non-estimated BLI";
+                    + " non-est. BLI";
         else if (nonEstimatedItems > 1)
             nonEstimatedString += plusString + nonEstimatedItems
-                    + " non-estimated BLIs";
+                    + " non-est. BLIs";
         return effortHoursString + nonEstimatedString;
     }
     

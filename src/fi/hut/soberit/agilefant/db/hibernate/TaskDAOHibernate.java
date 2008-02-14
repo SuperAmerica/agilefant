@@ -1,6 +1,13 @@
 package fi.hut.soberit.agilefant.db.hibernate;
 
+import java.io.Serializable;
 import java.util.Collection;
+import java.util.List;
+
+import org.hibernate.Criteria;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 
 import fi.hut.soberit.agilefant.db.TaskDAO;
 import fi.hut.soberit.agilefant.model.BacklogItem;
@@ -21,9 +28,9 @@ public class TaskDAOHibernate extends GenericDAOHibernate<Task> implements
      * */
 
     /**
-     * Build a HQL "where" - clause, which makes given states pass. Fills
-     * given id- and value-arrays, with corresponding HQL parameter names and
-     * values. Starts filling from given index.
+     * Build a HQL "where" - clause, which makes given states pass. Fills given
+     * id- and value-arrays, with corresponding HQL parameter names and values.
+     * Starts filling from given index.
      * 
      * @param allowedStates
      *                states to allow
@@ -92,5 +99,72 @@ public class TaskDAOHibernate extends GenericDAOHibernate<Task> implements
 
         return (Collection<Task>) super.getHibernateTemplate()
                 .findByNamedParam(query, ids, values);
+    }
+/*
+    @Override
+    public Serializable create(Task object) {
+        // TODO Auto-generated method stub
+        if (object.getRank() == null) {
+            object.setRank(getNewTaskRank(object));
+        }
+
+        return super.create(object);
+    }
+
+    @Override
+    public void store(Task object) {
+        if (object.getRank() == null) {
+            object.setRank(getNewTaskRank(object));
+        }
+
+        super.store(object);
+    }
+    */
+
+    private Integer getNewTaskRank(Task task) {
+        Integer rank = getMaxTaskRank(task.getBacklogItem());
+        if (rank == null) {
+            return new Integer(0);
+        } else {
+            return rank + 1;
+        }
+    }
+
+    public Integer getMaxTaskRank(BacklogItem backlogItem) {
+        DetachedCriteria criteria = DetachedCriteria.forClass(Task.class);
+        criteria.add(Restrictions.eq("backlogItem", backlogItem));
+        criteria.addOrder(Order.desc("rank"));
+        List<Task> results = getHibernateTemplate().findByCriteria(criteria);
+        if (results == null || results.size() == 0) {
+            return null;
+        } else {
+            return results.get(0).getRank();
+        }
+    }
+
+    public Task findLowerRankedTask(Task task) {
+        DetachedCriteria criteria = DetachedCriteria.forClass(Task.class);
+        criteria.add(Restrictions.eq("backlogItem", task.getBacklogItem()));
+        criteria.add(Restrictions.gt("rank", task.getRank()));
+        criteria.addOrder(Order.asc("rank"));
+        List<Task> results = getHibernateTemplate().findByCriteria(criteria);
+        if (results == null || results.size() == 0) {
+            return null;
+        } else {
+            return results.get(0);
+        }
+    }
+
+    public Task findUpperRankedTask(Task task) {
+        DetachedCriteria criteria = DetachedCriteria.forClass(Task.class);
+        criteria.add(Restrictions.eq("backlogItem", task.getBacklogItem()));
+        criteria.add(Restrictions.lt("rank", task.getRank()));
+        criteria.addOrder(Order.desc("rank"));
+        List<Task> results = getHibernateTemplate().findByCriteria(criteria);
+        if (results == null || results.size() == 0) {
+            return null;
+        } else {
+            return results.get(0);
+        }
     }
 }

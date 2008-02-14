@@ -56,6 +56,8 @@ public class Task implements PageItem {
     private BacklogItem backlogItem;
 
     private User creator;
+    
+    private Integer rank;
 
     @Type(type = "escaped_text")
     public String getDescription() {
@@ -158,6 +160,16 @@ public class Task implements PageItem {
 
     public void setState(State state) {
         this.state = state;
+    }
+    
+    // @Column(nullable = false)
+    @Transient
+    public Integer getRank() {
+        return rank;
+    }
+
+    public void setRank(Integer rank) {
+        this.rank = rank;
     }
 
 }

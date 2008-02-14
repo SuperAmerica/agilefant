@@ -34,4 +34,11 @@ public interface TaskDAO extends GenericDAO<Task> {
      * @return all tasks matching the criteria
      */
     public Collection<Task> getTasksByState(State[] states);
+    
+    public Task findUpperRankedTask(Task task); 
+    
+    public Task findLowerRankedTask(Task task);
+    
+    public Integer getMaxTaskRank(BacklogItem backlogItem);
+    
 }

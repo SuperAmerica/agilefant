@@ -44,3 +44,11 @@ function confirmDeleteTeam() {
 		return false;
 	}
 }
+
+function confirmReset() {
+	if (confirm("Are you sure you want to reset the original estimate for this backlog item?")) {
+		return true;
+	} else {
+		return false;
+	}
+}

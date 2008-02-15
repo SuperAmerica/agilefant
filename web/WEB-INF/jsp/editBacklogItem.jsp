@@ -66,13 +66,15 @@
 				<tr>
 					<td>Original estimate</td>
 					<td></td>
-					<td><ww:label value="${backlogItem.originalEstimate}" /> <ww:hidden
+					<td colspan="2"><ww:label value="${backlogItem.originalEstimate}" /> <ww:hidden
 						name="backlogItem.originalEstimate"
 						value="${backlogItem.originalEstimate}" />
-						<ww:form action="resetBliOrigEstAndEffortLeft">
-							<ww:hidden name="backlogItemId" value="${backlogItem.id}" />
-							<ww:submit value="Reset" action="resetBliOrigEstAndEffortLeft" onclick="return confirmDelete()" />
-						</ww:form></td>
+						<ww:url id="resetLink" action="resetBliOrigEstAndEffortLeft" includeParams="none">
+							<ww:param name="backlogItemId" value="${backlogItem.id}" />
+						</ww:url>
+						<ww:a
+							href="%{resetLink}&contextViewName=editBacklogItem&contextObjectId=${backlogItemId}"
+							onclick="return confirmReset()">(reset)</ww:a></td>
 				</tr>
 				<tr>
 					<td>Effort left</td>

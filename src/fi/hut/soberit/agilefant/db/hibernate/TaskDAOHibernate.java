@@ -100,37 +100,59 @@ public class TaskDAOHibernate extends GenericDAOHibernate<Task> implements
         return (Collection<Task>) super.getHibernateTemplate()
                 .findByNamedParam(query, ids, values);
     }
-/*
-    @Override
-    public Serializable create(Task object) {
-        // TODO Auto-generated method stub
-        if (object.getRank() == null) {
-            object.setRank(getNewTaskRank(object));
-        }
 
-        return super.create(object);
+    /*
+     * @Override public Serializable create(Task object) { if (object.getRank() ==
+     * null) { object.setRank(getNewTaskRank(object)); } return
+     * super.create(object); }
+     * 
+     * @Override public void store(Task object) { if (object.getRank() == null) {
+     * object.setRank(getNewTaskRank(object)); } super.store(object); }
+     */
+
+    public void raiseRankBetween(Integer lowLimitRank, Integer upperLimitRank,
+            BacklogItem backlogItem) {
+        List projects = null;
+
+        if (lowLimitRank == null) {
+            super
+                    .getHibernateTemplate()
+                    .bulkUpdate(
+                            "update Task t set t.rank = (t.rank + 1) where (t.rank < ?) and (t.backlogItem=?)",
+                            new Object[] { lowLimitRank, backlogItem });
+        } else if (upperLimitRank == null) {
+            super
+                    .getHibernateTemplate()
+                    .bulkUpdate(
+                            "update Task t set t.rank = (t.rank + 1) where (t.rank >= ?) and (t.backlogItem=?)",
+                            new Object[] { lowLimitRank, backlogItem });
+        } else if (lowLimitRank != null && upperLimitRank != null) {
+            super
+                    .getHibernateTemplate()
+                    .bulkUpdate(
+                            "update Task t set t.rank = (t.rank + 1) where (t.rank >= ?) and (t.rank < ?) and (t.backlogItem=?)",
+                            new Object[] { lowLimitRank, upperLimitRank,
+                                    backlogItem });
+        } else
+            throw new IllegalArgumentException("Both limits cannot be null.");
     }
-
-    @Override
-    public void store(Task object) {
-        if (object.getRank() == null) {
-            object.setRank(getNewTaskRank(object));
-        }
-
-        super.store(object);
-    }
-    */
 
     private Integer getNewTaskRank(Task task) {
-        Integer rank = getMaxTaskRank(task.getBacklogItem());
-        if (rank == null) {
+        Task lowestRankedTask = getLowestRankedTask(task.getBacklogItem());
+        Integer rank;
+        if (lowestRankedTask == null) {
             return new Integer(0);
         } else {
-            return rank + 1;
+            rank = lowestRankedTask.getRank();
+            if (rank == null) {
+                return new Integer(0);
+            } else {
+                return rank + 1;
+            }
         }
     }
 
-    public Integer getMaxTaskRank(BacklogItem backlogItem) {
+    public Task getLowestRankedTask(BacklogItem backlogItem) {
         DetachedCriteria criteria = DetachedCriteria.forClass(Task.class);
         criteria.add(Restrictions.eq("backlogItem", backlogItem));
         criteria.addOrder(Order.desc("rank"));
@@ -138,7 +160,7 @@ public class TaskDAOHibernate extends GenericDAOHibernate<Task> implements
         if (results == null || results.size() == 0) {
             return null;
         } else {
-            return results.get(0).getRank();
+            return results.get(0);
         }
     }
 

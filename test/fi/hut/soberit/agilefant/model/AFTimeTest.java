@@ -196,13 +196,13 @@ public class AFTimeTest extends TestCase {
         // Check that toString rounds values properly
         // ///////////////////////
 
-        assertEquals("6h 39min", new AFTime(getTime(0, 6, 40) - 30001)
+        assertEquals("6h 39min", new AFTime(getTime(0, 6, 40) - 31)
                 .toString());
-        assertEquals("6h 40min", new AFTime(getTime(0, 6, 40) - 30000)
+        assertEquals("6h 40min", new AFTime(getTime(0, 6, 40) - 30)
                 .toString());
-        assertEquals("6h 40min", new AFTime(getTime(0, 6, 40) + 29999)
+        assertEquals("6h 40min", new AFTime(getTime(0, 6, 40) + 29)
                 .toString());
-        assertEquals("6h 41min", new AFTime(getTime(0, 6, 40) + 30000)
+        assertEquals("6h 41min", new AFTime(getTime(0, 6, 40) + 30)
                 .toString());
 
         // Zero dates

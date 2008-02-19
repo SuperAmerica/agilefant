@@ -138,7 +138,7 @@ public class Iteration extends Backlog implements PageItem {
     }
 
     @OneToMany(mappedBy = "iteration")
-    @OrderBy("priority, id")
+    @OrderBy("name")
     public Collection<IterationGoal> getIterationGoals() {
         return iterationGoals;
     }

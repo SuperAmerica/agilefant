@@ -28,7 +28,7 @@ import org.hibernate.validator.Range;
  * @see fi.hut.soberit.agilefant.model.WorkType
  */
 @Entity
-public class ProjectType {
+public class ProjectType implements Comparable<ProjectType> {
 
     private int id;
 
@@ -103,5 +103,12 @@ public class ProjectType {
 
     public void setTargetSpendingPercentage(int targetSpendingPercentage) {
         this.targetSpendingPercentage = targetSpendingPercentage;
+    }
+    
+    public int compareTo(ProjectType o) {
+        if (o == null) {
+            return -1;
+        }
+        return getName().compareTo(o.getName());
     }
 }

@@ -3,6 +3,7 @@ package fi.hut.soberit.agilefant.web;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -46,7 +47,7 @@ public class ProjectAction extends ActionSupport implements CRUDAction {
 
     private ProductDAO productDAO;
 
-    private Collection<ProjectType> projectTypes;
+    private List<ProjectType> projectTypes;
 
     private Backlog backlog;
 
@@ -343,14 +344,15 @@ public class ProjectAction extends ActionSupport implements CRUDAction {
     }
 
     private void prepareProjectTypes() {
-        this.projectTypes = projectTypeDAO.getAll();
+        this.projectTypes = (List<ProjectType>)projectTypeDAO.getAll();
+        Collections.sort(this.projectTypes);
     }
 
     public Collection<ProjectType> getProjectTypes() {
         return this.projectTypes;
     }
 
-    public void setProjectTypes(Collection<ProjectType> projectTypes) {
+    public void setProjectTypes(List<ProjectType> projectTypes) {
         this.projectTypes = projectTypes;
     }
 

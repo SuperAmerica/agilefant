@@ -36,7 +36,7 @@ import java.util.regex.MatchResult;
 public class AFTime extends java.sql.Time {
     private static final long serialVersionUID = 2737253352614021649L;
 
-    public final static long SECOND_IN_MILLIS = 1000;
+    public final static long SECOND_IN_MILLIS = 1;
 
     public final static long MINUTE_IN_MILLIS = 60 * SECOND_IN_MILLIS;
 
@@ -275,7 +275,7 @@ public class AFTime extends java.sql.Time {
         time %= MINUTE_IN_MILLIS;
 
         // rounding minutes properly, as defined by the unit test
-        if (time >= 30000)
+        if (time >= 30)
             elem[Minutes]++;
 
         return elem;

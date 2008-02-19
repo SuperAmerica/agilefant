@@ -131,14 +131,15 @@ Agilefant
 	<c:forEach items="${product.projects}" var="project">
 
 		<c:set var="archive" value="" scope="page" />
+		<c:set var="class2" value="" scope="page" />
 		<c:if test="${aef:isBeforeThisDay(project.endDate)}">
 			<c:set var="archive" value="archive" scope="page" />
 			<c:if test="${class == 'path' || class == 'selected'}">
 				<c:set var="archive" value="archivePath" scope="page" />
+				<c:set var="class2" value="archivePath" scope="page" />
 			</c:if>
 		</c:if>
 
-		<c:set var="class2" value="" scope="page" />
 		<c:if test="${project.id == currentProjectId}">
 			<c:set var="class2" value="selected" scope="page" />
 			<c:if test="${!empty currentIterationId}">
@@ -163,6 +164,15 @@ Agilefant
 		<%-- Resolve if iteration is selected or is in 'path' and set variable 'class' accordingly--%>
 		<c:forEach items="${project.iterations}" var="iteration">
 			<c:set var="class3" value="" scope="page" />
+
+			<%-- Iteration is hidden if it's finished and its parent project is not selected or in 'path'--%>
+			<c:if test="${aef:isBeforeThisDay(iteration.endDate)}">
+				<c:set var="class3" value="archivePath" scope="page" />
+				<c:if test="${class2 != 'selected' && class2 != 'path'}">
+					<c:set var="class3" value="archive" scope="page" />
+				</c:if>
+			</c:if>
+
 			<c:if test="${iteration.id == currentIterationId}">
 				<c:set var="class3" value="selected" scope="page" />
 			</c:if>

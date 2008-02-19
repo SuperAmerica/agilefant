@@ -523,7 +523,7 @@ td.deleteButton {
 	display: none;
 }
 
-#hierarchyList .archivePath span {
+#hierarchyList span.archivePath {
 	color: #444;
 }
 

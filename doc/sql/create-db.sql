@@ -6,7 +6,7 @@ create table History (DTYPE integer not null, id integer not null auto_increment
 create table HistoryEntry (id integer not null auto_increment, effortLeft integer, originalEstimate integer, date date, history_id integer, primary key (id)) ENGINE=InnoDB;
 create table IterationGoal (id integer not null auto_increment, name varchar(255), priority integer, description text, iteration_id integer not null, primary key (id)) ENGINE=InnoDB;
 create table ProjectType (id integer not null auto_increment, targetSpendingPercentage integer not null check (targetSpendingPercentage>=0 and targetSpendingPercentage<=100), name varchar(255) not null unique, description text, primary key (id)) ENGINE=InnoDB;
-create table Task (id integer not null auto_increment, name varchar(255), priority integer, state integer, description text, creator_id integer, backlogItem_id integer not null, primary key (id)) ENGINE=InnoDB;
+create table Task (id integer not null auto_increment, name varchar(255), priority integer, state integer, description text, creator_id integer, backlogItem_id integer not null, rank integer, primary key (id)) ENGINE=InnoDB;
 create table Team (id integer not null auto_increment, name varchar(255), description text, primary key (id)) ENGINE=InnoDB;
 create table Team_User (User_id integer not null, Team_id integer not null) ENGINE=InnoDB;
 create table User (id integer not null auto_increment, loginName varchar(255) unique, email varchar(255), initials varchar(255), fullName varchar(255), password varchar(255), primary key (id)) ENGINE=InnoDB;

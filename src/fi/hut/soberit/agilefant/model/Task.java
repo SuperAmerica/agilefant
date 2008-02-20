@@ -162,8 +162,7 @@ public class Task implements PageItem {
         this.state = state;
     }
     
-    // @Column(nullable = false)
-    @Transient
+    @Column 
     public Integer getRank() {
         return rank;
     }

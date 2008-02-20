@@ -36,10 +36,18 @@ public class TaskAction extends ActionSupport implements CRUDAction {
     private BacklogItemDAO backlogItemDAO;
 
     private UserDAO userDAO;
-    
-    private TaskBusiness taskBusiness;
 
     private Log logger = LogFactory.getLog(getClass());
+
+    private TaskBusiness taskBusiness;
+
+    public TaskBusiness getTaskBusiness() {
+        return taskBusiness;
+    }
+
+    public void setTaskBusiness(TaskBusiness taskBusiness) {
+        this.taskBusiness = taskBusiness;
+    }
 
     /**
      * Creates a new task.
@@ -171,7 +179,7 @@ public class TaskAction extends ActionSupport implements CRUDAction {
     public String transformToBacklogItem() {
         // First store the task if any changes were made
         this.store();
-        
+
         Task storedTask = new Task();
         BacklogItem backlogItem = new BacklogItem();
 
@@ -200,8 +208,9 @@ public class TaskAction extends ActionSupport implements CRUDAction {
         // These are null because they are not defined for task
         backlogItem.setEffortLeft(null);
         backlogItem.setOriginalEstimate(null);
-        
-        // Remove the persistent task because it has been transformed to backlog item
+
+        // Remove the persistent task because it has been transformed to backlog
+        // item
         taskDAO.remove(storedTask);
         backlogItemDAO.store(backlogItem);
 
@@ -293,7 +302,52 @@ public class TaskAction extends ActionSupport implements CRUDAction {
         this.userDAO = userDAO;
     }
 
-    public void setTaskBusiness(TaskBusiness taskBusiness) {
-        this.taskBusiness = taskBusiness;
+    public String moveTaskUp() {
+        try {
+            this.taskBusiness.rankTaskUp(taskId);
+            this.backlogItemId = this.taskBusiness.getTaskById(taskId)
+                    .getBacklogItem().getId();
+            return CRUDAction.AJAX_SUCCESS;
+        } catch (ObjectNotFoundException onfe) {
+            addActionError(onfe.getMessage());
+            return CRUDAction.AJAX_ERROR;
+        }
     }
+
+    public String moveTaskDown() {
+        try {
+            this.taskBusiness.rankTaskDown(taskId);
+            this.backlogItemId = this.taskBusiness.getTaskById(taskId)
+                    .getBacklogItem().getId();
+            return CRUDAction.AJAX_SUCCESS;
+        } catch (ObjectNotFoundException onfe) {
+            addActionError(onfe.getMessage());
+            return CRUDAction.AJAX_ERROR;
+        }
+    }
+
+    public String moveTaskBottom() {
+        try {
+            this.taskBusiness.rankTaskBottom(taskId);
+            this.backlogItemId = this.taskBusiness.getTaskById(taskId)
+                    .getBacklogItem().getId();
+            return CRUDAction.AJAX_SUCCESS;
+        } catch (ObjectNotFoundException onfe) {
+            addActionError(onfe.getMessage());
+            return CRUDAction.AJAX_ERROR;
+        }
+    }
+
+    public String moveTaskTop() {
+        try {
+            this.taskBusiness.rankTaskTop(taskId);
+            this.backlogItemId = this.taskBusiness.getTaskById(taskId)
+                    .getBacklogItem().getId();
+            return CRUDAction.AJAX_SUCCESS;
+        } catch (ObjectNotFoundException onfe) {
+            addActionError(onfe.getMessage());
+            return CRUDAction.AJAX_ERROR;
+        }
+    }
+
 }

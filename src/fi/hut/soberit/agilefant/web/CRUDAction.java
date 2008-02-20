@@ -10,6 +10,9 @@ package fi.hut.soberit.agilefant.web;
  * @author khel
  */
 public interface CRUDAction {
+    public static final String AJAX_SUCCESS = "ajax_success";
+    public static final String AJAX_ERROR  = "ajax_error";
+    
     /**
      * Creates an object that can be manipulated and stored.
      * 

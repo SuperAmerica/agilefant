@@ -66,20 +66,21 @@
 				<tr>
 					<td>Original estimate</td>
 					<td></td>
-					<td colspan="2"><ww:label value="${backlogItem.originalEstimate}" /> <ww:hidden
+					<td colspan="2"><ww:label
+						value="${backlogItem.originalEstimate}" /> <ww:hidden
 						name="backlogItem.originalEstimate"
-						value="${backlogItem.originalEstimate}" />
-						<ww:url id="resetLink" action="resetBliOrigEstAndEffortLeft" includeParams="none">
-							<ww:param name="backlogItemId" value="${backlogItem.id}" />
-						</ww:url>
-						<ww:a
-							href="%{resetLink}&contextViewName=editBacklogItem&contextObjectId=${backlogItemId}"
-							onclick="return confirmReset()">(reset)</ww:a></td>
+						value="${backlogItem.originalEstimate}" /> <ww:url id="resetLink"
+						action="resetBliOrigEstAndEffortLeft" includeParams="none">
+						<ww:param name="backlogItemId" value="${backlogItem.id}" />
+					</ww:url> <ww:a
+						href="%{resetLink}&contextViewName=editBacklogItem&contextObjectId=${backlogItemId}"
+						onclick="return confirmReset()">(reset)</ww:a></td>
 				</tr>
 				<tr>
 					<td>Effort left</td>
 					<td></td>
-					<td colspan="2"><ww:textfield size="10" name="backlogItem.effortLeft" /><ww:label
+					<td colspan="2"><ww:textfield size="10"
+						name="backlogItem.effortLeft" /><ww:label
 						value="%{getText('webwork.estimateExample')}" /></td>
 				</tr>
 			</c:otherwise>
@@ -90,8 +91,8 @@
 			<td></td>
 			<td colspan="2"><ww:select name="backlogItem.state"
 				value="backlogItem.state.name"
-				list="@fi.hut.soberit.agilefant.model.State@values()"
-				listKey="name" listValue="getText('task.state.' + name())" /></td>
+				list="@fi.hut.soberit.agilefant.model.State@values()" listKey="name"
+				listValue="getText('task.state.' + name())" /></td>
 		</tr>
 
 		<tr>
@@ -140,8 +141,7 @@
 			<td>Iteration goal</td>
 			<td></td>
 			<%-- If iteration goals doesn't exist default value is 0--%>
-			<td colspan="2">
-			<c:choose>
+			<td colspan="2"><c:choose>
 				<c:when test="${!empty iterationGoals}">
 					<c:set var="goalId" value="0" scope="page" />
 					<c:if test="${iterationGoalId > 0}">
@@ -158,8 +158,7 @@
 				<c:otherwise>
 					(none)
 				</c:otherwise>
-			</c:choose>
-			</td>
+			</c:choose></td>
 		</tr>
 		<tr>
 			<td>Priority</td>
@@ -174,14 +173,14 @@
 		<tr>
 			<td>Responsibles</td>
 			<td></td>
-			<td colspan="2">
-			<a href="javascript:toggleDiv('userselect')">
-				<img src="static/img/users.png"/>
-				Assign
-			</a>
-			<script type="text/javascript" src="static/js/jquery-1.2.2.js"></script>
-			<script type="text/javascript" src="static/js/multiselect.js"></script>
-			<script type="text/javascript">
+			<td colspan="2"><a href="javascript:toggleDiv('userselect')">
+			<img src="static/img/users.png" /> Assign </a> <script
+				type="text/javascript" src="static/js/jquery-1.2.2.js"></script> <script
+				type="text/javascript" src="static/js/multiselect.js"></script> 
+				<script
+				type="text/javascript" src="static/js/taskrank.js"></script>
+				<script
+				type="text/javascript">
 			$(document).ready( function() {
 				<ww:set name="userList" value="#attr.userList" />
 				<ww:set name="teamList" value="#attr.teamList" />
@@ -199,19 +198,40 @@
 				var teams = [<aef:teamJson items="${teamList}"/>];
 				var selected = [<aef:idJson items="${backlogItem.responsibles}"/>]
 				$('#userselect').multiuserselect({users: [preferred,others], groups: teams}).selectusers(selected);
+				
+				// Task ranking
+				$('.moveUp').click(function() {
+						var me = $(this);
+						$.get(me.attr('href'), null, function() {me.moveup();});
+						return false;
+						});
+				$('.moveDown').click(function() {
+						var me = $(this);
+						$.get(me.attr('href'), null, function() {me.movedown();});
+						return false;
+						});
+				$('.moveTop').click(function() {
+						var me = $(this);
+						$.get(me.attr('href'), null, function() {me.movetop();});
+						return false;
+						});
+				$('.moveBottom').click(function() {
+						var me = $(this);
+						$.get(me.attr('href'), null, function() {me.movebottom();});
+						return false;
+						});
+				
 			});
 			</script>
 			<div id="userselect" style="display: none;">
-				<div class="left">
-					<label>Users assigned to this project</label>
-					<ul class="users_0"></ul>
-					<label>Users not assigned this project</label>
-					<ul class="users_1"></ul>
-				</div>
-				<div class="right">
-					<label>Teams</label>
-					<ul class="groups" />
-				</div>
+			<div class="left"><label>Users assigned to this project</label>
+			<ul class="users_0"></ul>
+			<label>Users not assigned this project</label>
+			<ul class="users_1"></ul>
+			</div>
+			<div class="right"><label>Teams</label>
+			<ul class="groups" />
+			</div>
 			</div>
 			</td>
 		</tr>
@@ -219,14 +239,14 @@
 			<td></td>
 			<td></td>
 			<c:choose>
-			<c:when test="${backlogItemId == 0}">
-					<td><ww:submit value="Create" />
-					<ww:submit action="storeCloseBacklogItem" value="Create & Close" /></td>
-			</c:when>
-			<c:otherwise>
-					<td><ww:submit value="Save" />
-					<ww:submit action="storeCloseBacklogItem" value="Save & Close" /></td>
-					<td class="deleteButton"> <ww:submit action="deleteBacklogItem"
+				<c:when test="${backlogItemId == 0}">
+					<td><ww:submit value="Create" /> <ww:submit
+						action="storeCloseBacklogItem" value="Create & Close" /></td>
+				</c:when>
+				<c:otherwise>
+					<td><ww:submit value="Save" /> <ww:submit
+						action="storeCloseBacklogItem" value="Save & Close" /></td>
+					<td class="deleteButton"><ww:submit action="deleteBacklogItem"
 						value="Delete" onclick="return confirmDeleteBli()" />
 				</c:otherwise>
 			</c:choose>
@@ -248,6 +268,8 @@
 			</div>
 			<c:if test="${!empty backlogItem.tasks}">
 				<div id="subItemContent">
+				
+				
 				<p><display:table class="listTable" name="backlogItem.tasks"
 					id="row" requestURI="editBacklogItem.action">
 					<display:column sortable="true" sortProperty="name" title="Name"
@@ -269,13 +291,51 @@
 					${aef:html(row.creator.fullName)}
 				</display:column>
 					<display:column sortable="false" title="Actions">
+
+						<ww:url id="moveTaskTopLink" action="moveTaskTop" includeParams="none">
+							<ww:param name="taskId" value="${row.id}" />
+						</ww:url>
+						<ww:a cssClass="moveTop" href="%{moveTaskTopLink}">
+							<img src="static/img/arrow_top.png" alt="Send to top"
+								title="Send to top" />
+						</ww:a>
+
+						<ww:url id="moveTaskUpLink" action="moveTaskUp" includeParams="none">
+							<ww:param name="taskId" value="${row.id}" />
+						</ww:url>
+						<ww:a cssClass="moveUp" href="%{moveTaskUpLink}">
+							<img src="static/img/arrow_up.png" alt="Move up" title="Move up" />
+						</ww:a>
+
+						<ww:url id="moveTaskDownLink" action="moveTaskDown" includeParams="none">
+							<ww:param name="taskId" value="${row.id}" />
+						</ww:url>
+						<ww:a cssClass="moveDown" href="%{moveTaskDownLink}">
+							<img src="static/img/arrow_down.png" alt="Move down"
+								title="Move down" />
+						</ww:a>
+
+						<ww:url id="moveTaskBottomLink" action="moveTaskBottom" includeParams="none">
+							<ww:param name="taskId" value="${row.id}" />
+						</ww:url>
+						<ww:a cssClass="moveBottom" href="%{moveTaskBottomLink}">
+							<img src="static/img/arrow_bottom.png" alt="Send to bottom"
+								title="Send to bottom" />
+						</ww:a>
+
 						<ww:url id="deleteLink" action="deleteTask" includeParams="none">
 							<ww:param name="taskId" value="${row.id}" />
 						</ww:url>
-						<ww:a
+						<ww:a 
 							href="%{deleteLink}&contextViewName=editBacklogItem&contextObjectId=${backlogItemId}"
-							onclick="return confirmDeleteTask()">Delete</ww:a>
+							onclick="return confirmDeleteTask()">
+							<img src="static/img/delete.png" alt="Delete" title="Delete" />
+						</ww:a>
+
+
 					</display:column>
+
+
 				</display:table></p>
 
 				</div>

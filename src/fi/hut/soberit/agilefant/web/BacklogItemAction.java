@@ -428,6 +428,4 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
     public void setHistoryBusiness(HistoryBusiness historyBusiness) {
         this.historyBusiness = historyBusiness;
     }
-
-
 }

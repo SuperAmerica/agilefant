@@ -24,9 +24,18 @@
 		<default-interceptor-ref name="authenticationStack" />
 
 		<global-results>
+
 			<result name="input">/WEB-INF/jsp/genericError.jsp</result>
 			<result name="error">/WEB-INF/jsp/genericError.jsp</result>
+			<result name="ajax_error" type="httpheader">
+				<param name="status">400</param>
+			</result>
+			<result name="ajax_success" type="httpheader">
+				<param name="status">200</param>
+			</result>
 		</global-results>
+
+
 
 		<!-- Context view -->
 		<action name="contextView"
@@ -55,13 +64,15 @@
 			<result name="success_users" type="redirect-action">
 				<param name="actionName">listUsers</param>
 			</result>
-			<result name="success_projectTypes" type="redirect-action">
+			<result name="success_projectTypes"
+				type="redirect-action">
 				<param name="actionName">projectPortfolio</param>
 			</result>
 			<result name="success_createNew" type="redirect-action">
 				<param name="actionName">createNew</param>
 			</result>
-			<result name="success_projectPortfolio" type="redirect-action">
+			<result name="success_projectPortfolio"
+				type="redirect-action">
 				<param name="actionName">projectPortfolio</param>
 			</result>
 			<result name="success_" type="redirect-action">
@@ -169,14 +180,14 @@
 				editBacklogItem.action?backlogItemId=${backlogItemId}
 			</result>
 		</action>
-		
-		<action name="quickStoreBacklogItem" method="quickStoreBacklogItem"
-			class="backlogItemAction">
+
+		<action name="quickStoreBacklogItem"
+			method="quickStoreBacklogItem" class="backlogItemAction">
 			<result type="redirect-action">
 				<param name="actionName">popContext</param>
 			</result>
 		</action>
-		
+
 		<action name="quickStoreTaskList" method="quickStoreTaskList"
 			class="backlogItemAction">
 			<result type="redirect-action">
@@ -184,8 +195,8 @@
 			</result>
 		</action>
 
-		<action name="resetBliOrigEstAndEffortLeft" method="resetBliOrigEstAndEffortLeft"
-			class="backlogItemAction">
+		<action name="resetBliOrigEstAndEffortLeft"
+			method="resetBliOrigEstAndEffortLeft" class="backlogItemAction">
 			<result type="redirect">
 				editBacklogItem.action?backlogItemId=${backlogItemId}
 			</result>
@@ -239,13 +250,13 @@
 			</result>
 		</action>
 
-		<action name="saveProjectAssignments" method="saveProjectAssignments"
-			class="projectAction">
+		<action name="saveProjectAssignments"
+			method="saveProjectAssignments" class="projectAction">
 			<result type="redirect-action">
 				<param name="actionName">projectPortfolio.action</param>
 			</result>
-		</action>		
-		
+		</action>
+
 		<action name="storeNewProject" method="store"
 			class="projectAction">
 			<result type="redirect-action">
@@ -274,7 +285,8 @@
 			</result>
 		</action>
 
-		<action name="doActionOnMultipleBacklogItems" method="doActionOnMultipleBacklogItems" class="backlogAction">
+		<action name="doActionOnMultipleBacklogItems"
+			method="doActionOnMultipleBacklogItems" class="backlogAction">
 			<result name="editProduct" type="redirect">
 				editProduct.action?productId=${backlogId}
 			</result>
@@ -286,8 +298,8 @@
 			</result>
 		</action>
 
-		<action name="changePriorityOfSelectedItems" method="changePriorityOfSelectedItems"
-			class="backlogAction">
+		<action name="changePriorityOfSelectedItems"
+			method="changePriorityOfSelectedItems" class="backlogAction">
 			<result name="editProduct" type="redirect">
 				editProduct.action?productId=${backlogId}
 			</result>
@@ -357,14 +369,14 @@
 				<param name="taskId">${taskId}</param>
 			</result>
 		</action>
-		<action name="storeNewTask" method="store"
-			class="taskAction">
+		<action name="storeNewTask" method="store" class="taskAction">
 			<result type="redirect-action">
 				<param name="actionName">editTask</param>
 				<param name="taskId">${taskId}</param>
 			</result>
 		</action>
-		<action name="storeCloseTask" method="store" class="taskAction">
+		<action name="storeCloseTask" method="store"
+			class="taskAction">
 			<result type="redirect-action">
 				<param name="actionName">popContext</param>
 			</result>
@@ -375,12 +387,42 @@
 				<param name="actionName">popContext</param>
 			</result>
 		</action>
-		<action name="transformToBacklogItem" method="transformToBacklogItem"
-			class="taskAction">
+		<action name="transformToBacklogItem"
+			method="transformToBacklogItem" class="taskAction">
 			<result type="redirect">
 				editBacklogItem.action?backlogItemId=${backlogItemId}
 			</result>
 		</action>
+
+		<action name="moveTaskUp" class="taskAction"
+			method="moveTaskUp">
+			<result type="redirect-action">
+				<param name="actionName">editBacklogItem</param>
+				<param name="backlogItemId">${backlogItemId}</param>
+			</result>
+		</action>
+		<action name="moveTaskDown" class="taskAction"
+			method="moveTaskDown">
+			<result type="redirect-action">
+				<param name="actionName">editBacklogItem</param>
+				<param name="backlogItemId">${backlogItemId}</param>
+			</result>
+		</action>
+		<action name="moveTaskTop" class="taskAction"
+			method="moveTaskTop">
+			<result type="redirect-action">
+				<param name="actionName">editBacklogItem</param>
+				<param name="backlogItemId">${backlogItemId}</param>
+			</result>
+		</action>
+		<action name="moveTaskBottom" class="taskAction"
+			method="moveTaskBottom">
+			<result type="redirect-action">
+				<param name="actionName">editBacklogItem</param>
+				<param name="backlogItemId">${backlogItemId}</param>
+			</result>
+		</action>
+
 		<!-- /Task actions -->
 
 		<!-- Iteration actions -->
@@ -405,7 +447,7 @@
 				<param name="contextName">iteration</param>
 				<param name="contextObjectId">${iterationId}</param>
 				<param name="resetContextView">true</param>
-			</result>			
+			</result>
 		</action>
 		<action name="storeNewIteration" method="store"
 			class="iterationAction">
@@ -414,7 +456,7 @@
 				<param name="contextName">iteration</param>
 				<param name="contextObjectId">${iterationId}</param>
 				<param name="resetContextView">true</param>
-			</result>		
+			</result>
 		</action>
 
 		<!-- /Iteration actions -->
@@ -438,7 +480,7 @@
 		</action>
 
 		<!-- /User actions -->
-		
+
 		<!-- Team actions -->
 		<action name="editTeam" method="edit" class="teamAction">
 			<result>/WEB-INF/jsp/editTeam.jsp</result>
@@ -454,63 +496,69 @@
 			<result name="error">/WEB-INF/jsp/editTeam.jsp</result>
 		</action>
 		<!-- /Team actions -->
-		
+
 		<!-- These functions are for Saving and Deleting backlog items on daily work page -->
-		
+
 		<action name="storeBacklogItemInDailyWork" method="store"
 			class="backlogItemAction">
 			<result type="redirect-action">
 				<param name="actionName">dailyWork</param>
 			</result>
 		</action>
-		
+
 		<action name="deleteBacklogItemInDailyWork" method="delete"
 			class="backlogItemAction">
 			<result type="redirect-action">
 				<param name="actionName">dailyWork</param>
 			</result>
 		</action>
-				
+
 		<!-- Daily work -->
 		<action name="dailyWork" class="dailyWorkAction">
 			<result>/WEB-INF/jsp/dailyWork.jsp</result>
 		</action>
 		<!-- /Daily work -->
-		
+
 		<!-- Project portfolio -->
-		<action name="projectPortfolio" class="projectPortfolioAction">
+		<action name="projectPortfolio"
+			class="projectPortfolioAction">
 			<result>/WEB-INF/jsp/projectPortfolio.jsp</result>
 		</action>
-		
+
 		<!-- Actions for moving ranked items in list. -->
-		<action name="moveProjectUp" class="projectPortfolioAction" method="moveProjectUp">
-		<result type="redirect-action">
-			<param name="actionName">projectPortfolio</param>
-		</result>
+		<action name="moveProjectUp" class="projectPortfolioAction"
+			method="moveProjectUp">
+			<result type="redirect-action">
+				<param name="actionName">projectPortfolio</param>
+			</result>
 		</action>
-		<action name="moveProjectDown" class="projectPortfolioAction" method="moveProjectDown">
-		<result type="redirect-action">
-			<param name="actionName">projectPortfolio</param>
-		</result>
+		<action name="moveProjectDown" class="projectPortfolioAction"
+			method="moveProjectDown">
+			<result type="redirect-action">
+				<param name="actionName">projectPortfolio</param>
+			</result>
 		</action>
-		<action name="moveProjectTop" class="projectPortfolioAction" method="moveProjectTop">
-		<result type="redirect-action">
-			<param name="actionName">projectPortfolio</param>
-		</result>
-		</action> 
-		<action name="moveProjectBottom" class="projectPortfolioAction" method="moveProjectBottom">
-		<result type="redirect-action">
-			<param name="actionName">projectPortfolio</param>
-		</result>
-		</action> 
-		<action name="unrankProject" class="projectPortfolioAction" method="unrankProject">
-		<result type="redirect-action">
-			<param name="actionName">projectPortfolio</param>
-		</result>
-		</action> 
-				
+		<action name="moveProjectTop" class="projectPortfolioAction"
+			method="moveProjectTop">
+			<result type="redirect-action">
+				<param name="actionName">projectPortfolio</param>
+			</result>
+		</action>
+		<action name="moveProjectBottom" class="projectPortfolioAction"
+			method="moveProjectBottom">
+			<result type="redirect-action">
+				<param name="actionName">projectPortfolio</param>
+			</result>
+		</action>
+		<action name="unrankProject" class="projectPortfolioAction"
+			method="unrankProject">
+			<result type="redirect-action">
+				<param name="actionName">projectPortfolio</param>
+			</result>
+		</action>
+
 		<!-- /Project portfolio -->
-		
+
 		<!-- IterationGoal actions -->
 		<action name="editIterationGoal" method="edit"
 			class="iterationGoalAction">
@@ -527,7 +575,7 @@
 			</result>
 		</action>
 		<action name="storeIterationGoal" method="store"
-						class="iterationGoalAction">
+			class="iterationGoalAction">
 			<result type="redirect-action">
 				<param name="actionName">editIterationGoal</param>
 				<param name="iterationGoalId">${iterationGoalId}</param>
@@ -544,17 +592,16 @@
 				<param name="contextObjectId">${iterationId}</param>
 			</result>
 		</action>
-		
+
 		<action name="storeCloseIterationGoal" method="store"
 			class="iterationGoalAction">
 			<result type="redirect-action">
 				<param name="actionName">popContext</param>
 			</result>
 		</action>
-		
-		<action name="moveIterationGoal" 
-						method="moveIterationGoal"
-						class="iterationAction">
+
+		<action name="moveIterationGoal" method="moveIterationGoal"
+			class="iterationAction">
 			<result type="redirect">
 				editIterationGoal.action?iterationGoalId=${iterationGoalId}
 			</result>
@@ -567,19 +614,22 @@
 				<param name="inputName">inputStream</param>
 			</result>
 		</action>
-		<action name="drawProjectChart" method="projectChart" class="chartAction">
+		<action name="drawProjectChart" method="projectChart"
+			class="chartAction">
 			<result name="success" type="stream">
 				<param name="contentType">${contentType}</param>
 				<param name="inputName">inputStream</param>
 			</result>
 		</action>
-		<action name="drawSmallChart" method="smallChart" class="chartAction">
+		<action name="drawSmallChart" method="smallChart"
+			class="chartAction">
 			<result name="success" type="stream">
 				<param name="contentType">${contentType}</param>
 				<param name="inputName">inputStream</param>
 			</result>
 		</action>
-		<action name="drawSmallProjectChart" method="smallProjectChart" class="chartAction">
+		<action name="drawSmallProjectChart" method="smallProjectChart"
+			class="chartAction">
 			<result name="success" type="stream">
 				<param name="contentType">${contentType}</param>
 				<param name="inputName">inputStream</param>
@@ -617,12 +667,9 @@
 				<param name="iterationId">${view.contextObject}</param>
 			</result>
 
-			<result name="success_editProject"
-				type="redirect-action">
+			<result name="success_editProject" type="redirect-action">
 				<param name="actionName">editProject</param>
-				<param name="projectId">
-					${view.contextObject}
-				</param>
+				<param name="projectId">${view.contextObject}</param>
 			</result>
 
 			<result name="success_editBacklogItem"
@@ -656,36 +703,38 @@
 			<result name="success_myTasks" type="redirect-action">
 				<param name="actionName">myTasks</param>
 			</result>
-			
+
 			<result name="success_dailyWork" type="redirect-action">
 				<param name="actionName">dailyWork</param>
 			</result>
-			
+
 			<result name="success_createNew" type="redirect-action">
 				<param name="actionName">createNew</param>
 			</result>
 		</action>
-		
+
 		<action name="selectBacklog">
 			<result>/WEB-INF/jsp/selectBacklog.jsp</result>
 		</action>
-		
+
 		<action name="createNew">
 			<result>/WEB-INF/jsp/createNew.jsp</result>
 		</action>
-		
+
 		<!-- Actions for generating a new password and e-mailing it to an <code>User</code> -->
 		<action name="newPassword">
-			<interceptor-ref name="noAuthenticationStack"/>
+			<interceptor-ref name="noAuthenticationStack" />
 			<result>/WEB-INF/jsp/newPassword.jsp</result>
 		</action>
-		<action name="generateNewPassword" class="fi.hut.soberit.agilefant.web.PasswordAction" method="generate">
-			<interceptor-ref name="noAuthenticationStack"/>
+		<action name="generateNewPassword"
+			class="fi.hut.soberit.agilefant.web.PasswordAction"
+			method="generate">
+			<interceptor-ref name="noAuthenticationStack" />
 			<result name="success">success.jsp</result>
 			<result name="error">success.jsp?error=1</result>
 		</action>
-		
-		
-			
+
+
+
 	</package>
 </xwork>

@@ -152,6 +152,7 @@ public class BacklogItem implements PageItem, Assignable, EffortContainer {
      * @return Collection of tasks belonging to this backlog item
      */
     @OneToMany(mappedBy = "backlogItem")
+    @OrderBy(value="rank ASC")
     @Cascade(CascadeType.DELETE_ORPHAN)
     public Collection<Task> getTasks() {
         return tasks;

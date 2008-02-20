@@ -76,18 +76,19 @@ public class TaskBusinessImpl implements TaskBusiness {
         Task task = getTaskById(taskId);
         Task lowestRankedTask = this.taskDAO.getLowestRankedTask(task
                 .getBacklogItem());
-        // If there are no other tasks, this gets first in any case.
+        // If this is the first task, this gets first rank in any case.               
         if (lowestRankedTask == null) {
             task.setRank(0);
-            return;
-        }            
-        else if(lowestRankedTask.getId() == task.getId()) {
-            return;
         }
-        // Set task's rank to be one unit bigger thank the currently lowest
-        // ranked
-        // task.
-        task.setRank(lowestRankedTask.getRank() + 1);
+        else if (lowestRankedTask.getId() == task.getId()) {
+            task.setRank(0);
+        }
+        else {
+            // Set task's rank to be one unit bigger thank the currently lowest
+            // ranked
+            // task.
+            task.setRank(lowestRankedTask.getRank() + 1);
+        }
     }
 
     /* (non-Javadoc)

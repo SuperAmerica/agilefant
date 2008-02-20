@@ -107,6 +107,7 @@ public class TaskAction extends ActionSupport implements CRUDAction {
                 super.addActionError(super.getText("task.notFound"));
                 return Action.ERROR;
             }
+            taskDAO.store(storable);
         }
         else
             taskDAO.store(storable);

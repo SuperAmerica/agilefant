@@ -76,8 +76,12 @@ public class TaskBusinessImpl implements TaskBusiness {
         Task task = getTaskById(taskId);
         Task lowestRankedTask = this.taskDAO.getLowestRankedTask(task
                 .getBacklogItem());
-        if (lowestRankedTask == null
-                || lowestRankedTask.getId() == task.getId()) {
+        // If there are no other tasks, this gets first in any case.
+        if (lowestRankedTask == null) {
+            task.setRank(0);
+            return;
+        }            
+        else if(lowestRankedTask.getId() == task.getId()) {
             return;
         }
         // Set task's rank to be one unit bigger thank the currently lowest

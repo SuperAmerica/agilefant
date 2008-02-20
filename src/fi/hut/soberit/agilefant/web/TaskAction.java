@@ -98,19 +98,19 @@ public class TaskAction extends ActionSupport implements CRUDAction {
             return Action.ERROR;
         }
 
-        if (taskId == 0)
+        if (taskId == 0) {
             taskId = (Integer) taskDAO.create(storable);
+            // Get rank for new task.
+            try {
+                taskBusiness.rankTaskBottom(taskId);
+            } catch(ObjectNotFoundException e) {
+                super.addActionError(super.getText("task.notFound"));
+                return Action.ERROR;
+            }
+        }
         else
             taskDAO.store(storable);
-        
-        // Get rank for new task.
-        try {
-            taskBusiness.rankTaskBottom(taskId);
-        } catch(ObjectNotFoundException e) {
-            super.addActionError(super.getText("task.notFound"));
-            return Action.ERROR;
-        }
-
+                
         /* Update effort history */
         backlog = backlogItemDAO.get(backlogItemId).getBacklog();
 

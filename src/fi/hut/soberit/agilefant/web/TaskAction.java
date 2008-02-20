@@ -6,9 +6,11 @@ import org.apache.commons.logging.LogFactory;
 import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
 
+import fi.hut.soberit.agilefant.business.TaskBusiness;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.db.TaskDAO;
 import fi.hut.soberit.agilefant.db.UserDAO;
+import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.Task;
@@ -34,6 +36,8 @@ public class TaskAction extends ActionSupport implements CRUDAction {
     private BacklogItemDAO backlogItemDAO;
 
     private UserDAO userDAO;
+    
+    private TaskBusiness taskBusiness;
 
     private Log logger = LogFactory.getLog(getClass());
 
@@ -98,6 +102,14 @@ public class TaskAction extends ActionSupport implements CRUDAction {
             taskId = (Integer) taskDAO.create(storable);
         else
             taskDAO.store(storable);
+        
+        // Get rank for new task.
+        try {
+            taskBusiness.rankTaskBottom(taskId);
+        } catch(ObjectNotFoundException e) {
+            super.addActionError(super.getText("task.notFound"));
+            return Action.ERROR;
+        }
 
         /* Update effort history */
         backlog = backlogItemDAO.get(backlogItemId).getBacklog();
@@ -278,5 +290,9 @@ public class TaskAction extends ActionSupport implements CRUDAction {
 
     public void setUserDAO(UserDAO userDAO) {
         this.userDAO = userDAO;
+    }
+
+    public void setTaskBusiness(TaskBusiness taskBusiness) {
+        this.taskBusiness = taskBusiness;
     }
 }

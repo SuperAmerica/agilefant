@@ -54,6 +54,14 @@ public class TestUtility extends SpringTestCase {
     public static enum TestUser {
         USER1, USER2
     }
+    
+    /**
+     * Mock-up method.
+     * Created so, that tests show green, when all tests pass.
+     */
+    public void testVoid() {
+        assertTrue(true);
+    }
 
     private Stack<GenericDAO> cleanupStack = new Stack<GenericDAO>();
 

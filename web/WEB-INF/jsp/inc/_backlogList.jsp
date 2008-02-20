@@ -217,7 +217,7 @@ function validateDeletion() {
 			<aef:userList />
 			<aef:teamList />
 			<td colspan="4">
-			<a href="javascript:toggleDiv('userselect')">
+			<a href="javascript:toggleDiv('multiplebli_userselect');">
 				<img src="static/img/users.png"/>
 				Assign
 			</a>
@@ -244,16 +244,16 @@ function validateDeletion() {
 				
 				var teams = [<aef:teamJson items="${teamList}"/>];
 				var selected = [];
-				$('#userselect').multiuserselect({users: [preferred,others], groups: teams}).selectusers(selected);
+				$('#multiplebli_userselect').multiuserselect({users: [preferred,others], groups: teams}).selectusers(selected);
 				
-				$('#userselect').toggle_disabled(true);
+				$('#multiplebli_userselect').toggle_disabled(true);
 				$('#keepOriginalResponsibles').bind("change", function() {
-					$('#userselect').toggle_disabled($(this).attr('checked') == true);
+					$('#multiplebli_userselect').toggle_disabled($(this).attr('checked') == true);
 				});
 			});
 			</script>
 			
-			<div id="userselect" style="display: none;">
+			<div id="multiplebli_userselect" style="display: none;">
 				<ww:checkbox name="keepResponsibles" value="true" title="Keep original"
 					id="keepOriginalResponsibles" fieldValue="1"/>
 					Keep original

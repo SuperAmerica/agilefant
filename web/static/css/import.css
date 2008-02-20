@@ -541,34 +541,34 @@ td.deleteButton {
 
 
 /* Multiuser selection styles */
-#userselect ul {
+#multiplebli_userselect ul, #userselect ul {
 	list-style-type: none;
 	margin-top: 3px;
 	margin-bottom: 3px;
 	padding-left: 0px;
 }
-#userselect .users_0 {
+#multiplebli_userselect .users_0, #userselect .users_0 {
 }
-#userselect .groups {
+#multiplebli_userselect .groups, #userselect .groups {
 }
-#userselect .groups li {
+#multiplebli_userselect .groups li, #userselect .groups li {
 	cursor: pointer;
 	text-decoration: underline;
 	margin-top: 2px;
 	color: 0000FF;
 }
 
-#userselect .groups li:hover {
+#multiplebli_userselect .groups li:hover, #userselect .groups li:hover {
 	cursor: pointer;
 	text-decoration: underline;
 	margin-top: 2px;
 	color: #EE5500;
 }
 
-#userselect div.left {
+#multiplebli_userselect div.left, #userselect div.left {
 	float: left;
 }
-#userselect div.right {
+#multiplebli_userselect div.right, #userselect div.right {
 	float: left;
 	margin-left: 15px;
 }

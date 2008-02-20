@@ -272,7 +272,7 @@
 				
 				<p><display:table class="listTable" name="backlogItem.tasks"
 					id="row" requestURI="editBacklogItem.action">
-					<display:column sortable="true" sortProperty="name" title="Name"
+					<display:column sortable="false" title="Name"
 						class="shortNameColumn">
 						<ww:url id="editLink" action="editTask" includeParams="none">
 							<ww:param name="taskId" value="${row.id}" />
@@ -282,12 +282,10 @@
 						${aef:html(row.name)}
 					</ww:a>
 					</display:column>
-					<display:column sortable="true" title="State"
-						sortProperty="state.ordinal">
+					<display:column sortable="false" title="State">
 						<ww:text name="task.state.${row.state}" />
 					</display:column>
-					<display:column sortable="true" sortProperty="creator.fullName"
-						title="Creator">
+					<display:column sortable="false" title="Creator">
 					${aef:html(row.creator.fullName)}
 				</display:column>
 					<display:column sortable="false" title="Actions">

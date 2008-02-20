@@ -123,11 +123,36 @@
 				</tr>
 
 				<tr>
-					<td>Assign Users</td>
+					<td>Assigned Users</td>
 					<td></td>
-					<td><c:set var="divId" value="1" scope="page" /><a
-						href="javascript:toggleDiv(${divId});"> <img
-						src="static/img/users.png" /> Assign
+					<td><c:set var="divId" value="1" scope="page" />
+
+					<div id="assigneesLink">
+					<a href="javascript:toggleDiv(${divId});">
+						<img src="static/img/users.png" />
+						<c:set var="listSize" value="${fn:length(project.responsibles)}" scope="page" />
+						<c:choose>
+							<c:when test="${listSize > 0}">
+								<c:set var="count" value="0" scope="page" />
+								<c:forEach items="${project.responsibles}" var="responsible">
+									<c:choose>
+										<c:when test="${count < listSize - 1}">
+											<c:out value="${responsible.initials}" /><c:out value="${','}" />
+										</c:when>
+										<c:otherwise>
+											<c:out value="${responsible.initials}" />
+										</c:otherwise>
+									</c:choose>
+									<c:set var="count" value="${count + 1}" scope="page" />
+								</c:forEach>
+							</c:when>
+							<c:otherwise>
+								<c:out value="none" />
+							</c:otherwise>
+						</c:choose>
+					</a>
+					</div>
+						
 					<div id="${divId}" style="display: none;">
 					<display:table name="${users}" id="user" class="projectUsers"
 						defaultsort="2">

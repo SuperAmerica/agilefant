@@ -173,14 +173,51 @@
 		<tr>
 			<td>Responsibles</td>
 			<td></td>
-			<td colspan="2"><a href="javascript:toggleDiv('userselect')">
-			<img src="static/img/users.png" /> Assign </a> <script
-				type="text/javascript" src="static/js/jquery-1.2.2.js"></script> <script
-				type="text/javascript" src="static/js/multiselect.js"></script> 
-				<script
-				type="text/javascript" src="static/js/taskrank.js"></script>
-				<script
-				type="text/javascript">
+			<td colspan="2">
+
+			<div id="assigneesLink">
+			<a href="javascript:toggleDiv('userselect')" class="assignees">
+			<img src="static/img/users.png"/>
+			<c:set var="listSize" value="${fn:length(backlogItem.responsibles)}" scope="page" />
+			<c:choose>
+			<c:when test="${listSize > 0}">
+				<c:set var="count" value="0" scope="page" />
+				<c:set var="comma" value="," scope="page" />
+				<c:forEach items="${backlogItem.responsibles}" var="responsible">
+					<c:set var="unassigned" value="0" scope="page" />
+					<c:if test="${count == listSize - 1}" >
+						<c:set var="comma" value="" scope="page" />
+					</c:if>
+					<c:if test="${!empty backlogItem.project}" >
+						<c:set var="unassigned" value="1" scope="page" />
+						<c:forEach items="${backlogItem.project.responsibles}" var="projectResponsible">
+							<c:if test="${responsible.id == projectResponsible.id}" >
+								<c:set var="unassigned" value="0" scope="page" />
+							</c:if>
+						</c:forEach>
+					</c:if>
+					<c:choose>
+						<c:when test="${unassigned == 1}">
+							<span><c:out value="${responsible.initials}" /></span><c:out value="${comma}" />
+						</c:when>
+						<c:otherwise>
+							<c:out value="${responsible.initials}" /><c:out value="${comma}" />
+						</c:otherwise>
+					</c:choose>
+					<c:set var="count" value="${count + 1}" scope="page" />
+				</c:forEach>
+			</c:when>
+			<c:otherwise>
+				<c:out value="none" />
+			</c:otherwise>
+			</c:choose>
+			</a>
+			</div>
+
+			<script type="text/javascript" src="static/js/jquery-1.2.2.js"></script>
+			<script type="text/javascript" src="static/js/multiselect.js"></script>
+			<script type="text/javascript" src="static/js/taskrank.js"></script>
+			<script type="text/javascript">
 			$(document).ready( function() {
 				<ww:set name="userList" value="#attr.userList" />
 				<ww:set name="teamList" value="#attr.teamList" />

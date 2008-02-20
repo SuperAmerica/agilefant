@@ -402,6 +402,18 @@ div#submenuwrapmyTasks #menu li#subnav1 a,div#submenuwrapiteration #menu li#subn
 	width: 500px;
 }
 
+.formTable div#assigneesLink {
+	width: 580px;
+}
+
+.formTable a.assignees span {
+   color: #ff0000;
+}
+
+.formTable a.assignees:hover span {
+   color: #e50;
+}
+
 .shortNameColumn div {
 	width: 170px;
 	overflow: visible;

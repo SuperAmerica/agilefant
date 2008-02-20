@@ -237,7 +237,8 @@ public class ProjectAction extends ActionSupport implements CRUDAction {
             return;
         }
 
-        if (this.project.getName() == null || this.project.getName().equals("")) {
+        if (this.project.getName() == null ||
+                this.project.getName().trim().equals("")) {
             super.addActionError(super.getText("project.missingName"));
             return;
         }

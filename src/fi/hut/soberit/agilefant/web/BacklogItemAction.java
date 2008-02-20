@@ -230,7 +230,8 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
             // IterationGoal goal = iterationGoalDAO.get(iterationGoalId);
             storable.setIterationGoal(goal);
         }
-        if (this.backlogItem.getName().equals("")) {
+        if (this.backlogItem.getName() == null || 
+                this.backlogItem.getName().trim().equals("")) {
             super.addActionError(super.getText("backlogitem.missingName"));
             return;
         }

@@ -62,6 +62,10 @@ public class ProjectTypeAction extends ActionSupport implements CRUDAction {
             }
         }
         this.fillObject(fillable);
+        if (super.hasActionErrors()) {
+            return Action.ERROR;
+        }
+        
         projectTypeDAO.store(fillable);
         return Action.SUCCESS;
     }
@@ -95,6 +99,10 @@ public class ProjectTypeAction extends ActionSupport implements CRUDAction {
     }
 
     protected void fillObject(ProjectType fillable) {
+        if (projectType.getName() == null || 
+                projectType.getName().trim().equals("")) {
+            super.addActionError("Project type name cannot be empty.");
+        }
         fillable.setName(projectType.getName());
         fillable.setDescription(projectType.getDescription());
     }

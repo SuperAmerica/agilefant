@@ -132,7 +132,8 @@ public class ProductAction extends ActionSupport implements CRUDAction {
             super.addActionError(super.getText("product.internalError"));
             return;
         }
-        if (this.product.getName().equals("")) {
+        if (this.product.getName() == null || 
+                this.product.getName().trim().equals("")) {
             super.addActionError(super.getText("product.missingName"));
             return;
         }

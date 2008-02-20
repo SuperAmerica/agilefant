@@ -106,7 +106,8 @@ public class IterationGoalAction extends ActionSupport implements CRUDAction {
 
     protected void fillStorable(IterationGoal storable) {
         iteration = iterationDAO.get(iterationId);
-        if (this.iterationGoal.getName().equals("")) {
+        if (this.iterationGoal.getName() == null ||
+                this.iterationGoal.getName().trim().equals("")) {
             super.addActionError(super.getText("iterationGoal.missingName"));
             return;
         }

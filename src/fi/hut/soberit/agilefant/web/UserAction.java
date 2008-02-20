@@ -135,8 +135,13 @@ public class UserAction extends ActionSupport implements CRUDAction {
         }
 
         if (this.user.getFullName() == null
-                || this.user.getFullName().equalsIgnoreCase("")) {
+                || this.user.getFullName().trim().equalsIgnoreCase("")) {
             super.addActionError("Full name is required");
+        }
+        
+        if (this.user.getLoginName() == null ||
+                this.user.getLoginName().trim().equalsIgnoreCase("")) {
+            super.addActionError("Login name cannot be empty");
         }
 
         storable.setFullName(this.user.getFullName());
@@ -169,7 +174,6 @@ public class UserAction extends ActionSupport implements CRUDAction {
 
         storable.getTeams().clear();
         storable.getTeams().addAll(listOfTeams);
-
     }
 
     public String list() {

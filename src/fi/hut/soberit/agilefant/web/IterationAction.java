@@ -188,7 +188,8 @@ public class IterationAction extends ActionSupport implements CRUDAction {
     protected void fillObject(Iteration fillable) throws ParseException {
         fillable.setEndDate(endDate, dateFormat);
         fillable.setStartDate(startDate, dateFormat);
-        if (this.iteration.getName().equals("")) {
+        if (this.iteration.getName() == null ||
+                this.iteration.getName().trim().equals("")) {
             super.addActionError(super.getText("iteration.missingName"));
             return;
         }

@@ -123,10 +123,10 @@ public class ChartBusinessImpl implements ChartBusiness {
         history = backlog.getBacklogHistory();
         estimateSeries.add(new Day(i.getTime()), (float) history 
                 .getDateEntry(startDate).getOriginalEstimate()
-                .getTime() / 3600000.0);
+                .getTime() / 3600.0);
         referenceSeries.add(new Day(i.getTime()), (float) history
                 .getLatestEntry().getOriginalEstimate()
-                .getTime() / 3600000.0);
+                .getTime() / 3600.0);
         GregorianCalendar newEndDate = new GregorianCalendar();
         newEndDate.setTime(endDate);
         newEndDate.add(GregorianCalendar.DATE, 1);
@@ -147,7 +147,7 @@ public class ChartBusinessImpl implements ChartBusiness {
             i.add(Calendar.DATE, 1);
             estimateSeries.add(new Day(i.getTime()),
                     (float) entry.getEffortLeft()
-                            .getTime() / 3600000.0);
+                            .getTime() / 3600.0);
         }
 
         TimeSeriesCollection dataset = new TimeSeriesCollection();
@@ -203,7 +203,7 @@ public class ChartBusinessImpl implements ChartBusiness {
 
         axis.setMaximumDate(newEndDate.getTime());
 
-        if ((endDate.getTime() - startDate.getTime()) < (8 * 24 * 60 * 60 * 1000))
+        if ((endDate.getTime() - startDate.getTime()) < (8 * 24 * 60 * 60))
             axis.setTickUnit(new DateTickUnit(DateTickUnit.DAY, 1));
         else
             axis.setAutoTickUnitSelection(true);

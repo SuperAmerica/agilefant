@@ -5,6 +5,8 @@ update BacklogItem, IterationGoal set iterationGoal_id = null where BacklogItem.
 update BacklogItem set remainingEffortEstimate = remainingEffortEstimate / 1000;
 update BacklogItem set effortLeft = effortLeft / 1000;
 update BacklogItem set originalEstimate = originalEstimate / 1000;
+update HistoryEntry set effortLeft = effortLeft / 1000;
+update HistoryEntry set originalEstimate = originalEstimate / 1000;
 
 -- Add rank-column to Task 
 alter table Task add column rank integer;

@@ -30,17 +30,7 @@ public class TaskBusinessImpl implements TaskBusiness {
     /* (non-Javadoc)
      * @see fi.hut.soberit.agilefant.business.impl.TaskDao#rankTaskUp(int)
      */
-    public void rankTaskUp(int taskId) throws ObjectNotFoundException {
-        Task task = getTaskById(taskId);
-        Task lowerRankedTask = this.taskDAO.findLowerRankedTask(task);
-        if (lowerRankedTask == null) {
-            return;
-        }
-        // Swap ranks with lower ranked task
-        Integer tmpRank = lowerRankedTask.getRank();
-        lowerRankedTask.setRank(task.getRank());
-        task.setRank(tmpRank);
-        /*
+    public void rankTaskUp(int taskId) throws ObjectNotFoundException {        
         Task task = getTaskById(taskId);
         Task upperRankedTask = this.taskDAO.findUpperRankedTask(task);
         if (upperRankedTask == null) {
@@ -50,23 +40,12 @@ public class TaskBusinessImpl implements TaskBusiness {
         Integer tmpRank = upperRankedTask.getRank();
         upperRankedTask.setRank(task.getRank());
         task.setRank(tmpRank);
-        */
     }
 
     /* (non-Javadoc)
      * @see fi.hut.soberit.agilefant.business.impl.TaskDao#rankTaskDown(int)
      */
-    public void rankTaskDown(int taskId) throws ObjectNotFoundException {
-        Task task = getTaskById(taskId);
-        Task upperRankedTask = this.taskDAO.findUpperRankedTask(task);
-        if (upperRankedTask == null) {
-            return;
-        }
-        // Swap ranks with upper ranked task
-        Integer tmpRank = upperRankedTask.getRank();
-        upperRankedTask.setRank(task.getRank());
-        task.setRank(tmpRank);
-        /*
+    public void rankTaskDown(int taskId) throws ObjectNotFoundException {        
         Task task = getTaskById(taskId);
         Task lowerRankedTask = this.taskDAO.findLowerRankedTask(task);
         if (lowerRankedTask == null) {
@@ -76,7 +55,6 @@ public class TaskBusinessImpl implements TaskBusiness {
         Integer tmpRank = lowerRankedTask.getRank();
         lowerRankedTask.setRank(task.getRank());
         task.setRank(tmpRank);
-        */
     }
 
     /* (non-Javadoc)

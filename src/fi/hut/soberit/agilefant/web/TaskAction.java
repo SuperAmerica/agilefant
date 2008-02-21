@@ -107,13 +107,16 @@ public class TaskAction extends ActionSupport implements CRUDAction {
         }
 
         if (taskId == 0) {
+            // Set rank for task temporarily to -1 to indicate new item 
+            storable.setRank(-1);
             taskId = (Integer) taskDAO.create(storable);
             // Get rank for new task.
-            try {
-                taskBusiness.rankTaskBottom(taskId);
-            } catch(ObjectNotFoundException e) {
-                super.addActionError(super.getText("task.notFound"));
-                return Action.ERROR;
+            Task lowestRankedTask = taskDAO.getLowestRankedTask(storable.getBacklogItem());
+            if(lowestRankedTask == null || lowestRankedTask.getRank() < 0) {
+                storable.setRank(0);
+            }
+            else {
+                storable.setRank(lowestRankedTask.getRank() + 1);
             }
             taskDAO.store(storable);
         }

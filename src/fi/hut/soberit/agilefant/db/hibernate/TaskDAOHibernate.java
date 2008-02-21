@@ -101,15 +101,6 @@ public class TaskDAOHibernate extends GenericDAOHibernate<Task> implements
                 .findByNamedParam(query, ids, values);
     }
 
-    /*
-     * @Override public Serializable create(Task object) { if (object.getRank() ==
-     * null) { object.setRank(getNewTaskRank(object)); } return
-     * super.create(object); }
-     * 
-     * @Override public void store(Task object) { if (object.getRank() == null) {
-     * object.setRank(getNewTaskRank(object)); } super.store(object); }
-     */
-
     public void raiseRankBetween(Integer lowLimitRank, Integer upperLimitRank,
             BacklogItem backlogItem) {
         List projects = null;

@@ -197,8 +197,8 @@
 
 		<action name="resetBliOrigEstAndEffortLeft"
 			method="resetBliOrigEstAndEffortLeft" class="backlogItemAction">
-			<result type="redirect">
-				editBacklogItem.action?backlogItemId=${backlogItemId}
+			<result type="redirect-action">
+				<param name="actionName">popContext</param>
 			</result>
 		</action>
 

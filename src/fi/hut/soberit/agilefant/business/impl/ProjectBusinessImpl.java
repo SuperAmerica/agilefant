@@ -265,7 +265,10 @@ public class ProjectBusinessImpl implements ProjectBusiness {
             String value = loadLeftData.get(key);
             // Fetch aftime-value and non-estimated items to a
             // EffortSumData-object to get correct output string.
-            AFTime aftimeValue = new AFTime(value);                                             
+            AFTime aftimeValue = new AFTime(0);
+            if (value != null)
+                aftimeValue = new AFTime(value);
+
             int userUnestimatedBlis = 0;
             if (unassignedBlisMap.get(key) != null)
                 userUnestimatedBlis += unassignedBlisMap.get(key);
@@ -274,10 +277,7 @@ public class ProjectBusinessImpl implements ProjectBusiness {
             sumData.setEffortHours(aftimeValue);
             sumData.setNonEstimatedItems(userUnestimatedBlis);
                        
-            if (value == null)
-                value = "";
-            else
-                value = sumData.toString();
+            value = sumData.toString();
             
             loadLeftData.put(key, value);
                 

@@ -1,13 +1,13 @@
 package fi.hut.soberit.agilefant.util;
 
-import static org.junit.Assert.*;
-
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import junit.framework.TestCase;
+
 import org.junit.Test;
 
-public class CalendarUtilsTest {
+public class CalendarUtilsTest extends TestCase {
 
     @SuppressWarnings("deprecation")
     @Test

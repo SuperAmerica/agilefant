@@ -12,6 +12,7 @@ import com.opensymphony.xwork.ActionContext;
 import com.opensymphony.xwork.ActionSupport;
 
 import fi.hut.soberit.agilefant.business.BacklogBusiness;
+import fi.hut.soberit.agilefant.business.ProjectBusiness;
 import fi.hut.soberit.agilefant.business.UserBusiness;
 import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.Backlog;
@@ -21,6 +22,7 @@ import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.security.SecurityUtil;
 import fi.hut.soberit.agilefant.util.BacklogComparator;
+import fi.hut.soberit.agilefant.util.DailyWorkLoadData;
 import fi.hut.soberit.agilefant.util.EffortSumData;
 import fi.hut.soberit.agilefant.util.UserComparator;
 
@@ -40,6 +42,8 @@ public class DailyWorkAction extends ActionSupport {
     private User user;
 
     private BacklogBusiness backlogBusiness;
+    
+    private ProjectBusiness projectBusiness;
 
     private UserBusiness userBusiness;
 
@@ -48,6 +52,13 @@ public class DailyWorkAction extends ActionSupport {
     private List<BacklogItem> backlogItemsForUserInProgress;
 
     private List<User> userList;
+    
+    private Map<Integer, String> effortsLeftMap = new HashMap<Integer, String>();
+    private Map<Integer, String> overheadsMap = new HashMap<Integer, String>();
+    private Map<Integer, String> totalsMap = new HashMap<Integer, String>();
+    private int weeksAhead = 3;
+    private List<Integer> weekNumbers;
+    private String[] overallTotals;
 
     @Override
     public String execute() throws Exception {
@@ -108,6 +119,13 @@ public class DailyWorkAction extends ActionSupport {
         userList = userBusiness.getAllUsers();
         Collections.sort(userList, new UserComparator());
 
+        DailyWorkLoadData data = this.projectBusiness.getDailyWorkLoadData(this.user, this.weeksAhead);
+        this.effortsLeftMap = data.getEffortsLeftMap();
+        this.overheadsMap = data.getOverheadsMap();
+        this.totalsMap = data.getTotalsMap();
+        this.weekNumbers = data.getWeekNumbers();
+        this.overallTotals = data.getOverallTotals();
+        
         return super.execute();
     }
 
@@ -187,4 +205,63 @@ public class DailyWorkAction extends ActionSupport {
     public Map<Backlog, EffortSumData> getOriginalEstimates() {
         return originalEstimates;
     }
+
+    public Map<Integer, String> getEffortsLeftMap() {
+        return effortsLeftMap;
+    }
+
+    public void setEffortsLeftMap(Map<Integer, String> effortsLeftMap) {
+        this.effortsLeftMap = effortsLeftMap;
+    }
+
+    public Map<Integer, String> getOverheadsMap() {
+        return overheadsMap;
+    }
+
+    public void setOverheadsMap(Map<Integer, String> overheadsMap) {
+        this.overheadsMap = overheadsMap;
+    }
+
+    public Map<Integer, String> getTotalsMap() {
+        return totalsMap;
+    }
+
+    public void setTotalsMap(Map<Integer, String> totalsMap) {
+        this.totalsMap = totalsMap;
+    }
+
+    public int getWeeksAhead() {
+        return weeksAhead;
+    }
+
+    public void setWeeksAhead(int weeksAhead) {
+        this.weeksAhead = weeksAhead;
+    }
+
+
+    public List<Integer> getWeekNumbers() {
+        return weekNumbers;
+    }
+
+    public void setWeekNumbers(List<Integer> weekNumbers) {
+        this.weekNumbers = weekNumbers;
+    }
+
+    public ProjectBusiness getProjectBusiness() {
+        return projectBusiness;
+    }
+
+    public void setProjectBusiness(ProjectBusiness projectBusiness) {
+        this.projectBusiness = projectBusiness;
+    }
+
+    public String[] getOverallTotals() {
+        return overallTotals;
+    }
+
+    public void setOverallTotals(String[] overallTotals) {
+        this.overallTotals = overallTotals;
+    }
+
+
 }

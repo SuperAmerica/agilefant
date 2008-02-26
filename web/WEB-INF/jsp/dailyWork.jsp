@@ -24,6 +24,8 @@ View daily work for user: <ww:select list="userList"
 		(empty iterations) &&
 		(empty projects))}" >
 
+<%@ include file="./inc/_userLoad.jsp" %>
+
 <%@ include file="./inc/_workInProgress.jsp" %>
 
 <%@ include file="./inc/_dailyWorkIterations.jsp" %>

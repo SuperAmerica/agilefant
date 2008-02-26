@@ -108,6 +108,11 @@
 						value="${project.projectType.id}" /></td>
 				</tr>
 				<tr>
+					<td>Default Overhead</td>
+					<td></td>
+					<td colspan="2"><ww:textfield size="10" name="project.defaultOverhead" /></td>
+				</tr>
+				<tr>
 					<td>Start date</td>
 					<td>*</td>
 					<td colspan="2"><ww:datepicker value="%{#start}" size="15"

@@ -44,6 +44,10 @@ public class ProjectPortfolioAction extends ActionSupport {
     private Map<Project, List<User>> assignedUsers;
     
     private Map<String, Integer> unassignedUsers;
+    
+    private Map<String, String> userOverheads;
+    
+    private Map<String, String> totalUserOverheads;
                                      
     @Override
     public String execute() throws Exception {
@@ -55,6 +59,9 @@ public class ProjectPortfolioAction extends ActionSupport {
         assignedUsers = data.getAssignedUsers();
         summaryUnassignedUserData = data.getSummaryUnassignedUserData();
         unassignedUsers = data.getUnassignedUsers();
+        userOverheads = data.getUserOverheads();
+        totalUserOverheads = data.getTotalUserOverheads();
+        
         return super.execute();
     }
 
@@ -173,6 +180,22 @@ public class ProjectPortfolioAction extends ActionSupport {
 
     public void setUnassignedUsers(Map<String, Integer> unassignedUsers) {
         this.unassignedUsers = unassignedUsers;
+    }
+
+    public Map<String, String> getUserOverheads() {
+        return userOverheads;
+    }
+
+    public void setUserOverheads(Map<String, String> userOverheads) {
+        this.userOverheads = userOverheads;
+    }
+
+    public Map<String, String> getTotalUserOverheads() {
+        return totalUserOverheads;
+    }
+
+    public void setTotalUserOverheads(Map<String, String> totalUserOverheads) {
+        this.totalUserOverheads = totalUserOverheads;
     }
 
     

@@ -8,6 +8,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
+import org.hibernate.annotations.Type;
+
 @Entity
 public class Assignment implements Serializable {
     private static final long serialVersionUID = 5391104304173714927L;
@@ -15,6 +17,19 @@ public class Assignment implements Serializable {
     private int id;
     private Backlog backlog;
     private User user;
+    private AFTime deltaOverhead;
+
+    /**
+     * Deviation from project's default overhead.
+     */
+    @Type(type = "af_time")
+    public AFTime getDeltaOverhead() {
+        return deltaOverhead;
+    }
+
+    public void setDeltaOverhead(AFTime deltaOverhead) {
+        this.deltaOverhead = deltaOverhead;
+    }
 
     public Assignment() {
     }

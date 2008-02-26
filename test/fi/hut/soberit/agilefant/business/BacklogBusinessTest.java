@@ -6,6 +6,7 @@ import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import junit.framework.TestCase;
 import fi.hut.soberit.agilefant.business.impl.BacklogBusinessImpl;
@@ -167,7 +168,7 @@ public class BacklogBusinessTest extends TestCase {
         // run method under test
         int[] selectedUserIds = { user1.getId(), user2.getId() };
         assertEquals(0, backlog.getAssignments().size());
-        backlogBusiness.setAssignments(selectedUserIds, backlog);
+        backlogBusiness.setAssignments(selectedUserIds, new HashMap<String, Assignment>(),  backlog);
         assertEquals(2, backlog.getAssignments().size());     
        
         

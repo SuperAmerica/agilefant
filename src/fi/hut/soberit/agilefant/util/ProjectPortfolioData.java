@@ -7,15 +7,22 @@ import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.User;
 
 public class ProjectPortfolioData {
-    private Map<Project, List<User>> assignedUsers;
+    
+    
     /**
      * Key: projectId-userId
      */ 
     private Map<String, String> loadLefts;
-    private Map<Project, String> summaryUserData;
-    private Map<Project, Integer> summaryUnassignedUserData;
-    private Map<Project, String> summaryLoadLeftData;
     
+    /**
+     * Key: projectId-userId
+     */ 
+    private Map<String, String> userOverheads;
+    
+    /**
+     * Key: projectId-userId
+     */ 
+    private Map<String, String> totalUserOverheads;
     /** 
      * Key: projectId-userId, 
      * Value: 1 if unassigned to project but has assigned blis
@@ -23,6 +30,11 @@ public class ProjectPortfolioData {
      */
     private Map<String, Integer> unassignedUsers;
     
+    private Map<Project, List<User>> assignedUsers;
+    private Map<Project, String> summaryUserData;
+    private Map<Project, Integer> summaryUnassignedUserData;
+    private Map<Project, String> summaryLoadLeftData;
+
     public ProjectPortfolioData() {
     }
 
@@ -73,5 +85,21 @@ public class ProjectPortfolioData {
 
     public void setUnassignedUsers(Map<String, Integer> unassignedUsers) {
         this.unassignedUsers = unassignedUsers;
+    }
+
+    public Map<String, String> getUserOverheads() {
+        return userOverheads;
+    }
+
+    public void setUserOverheads(Map<String, String> userOverheads) {
+        this.userOverheads = userOverheads;
+    }
+
+    public Map<String, String> getTotalUserOverheads() {
+        return totalUserOverheads;
+    }
+
+    public void setTotalUserOverheads(Map<String, String> totalUserOverheads) {
+        this.totalUserOverheads = totalUserOverheads;
     }
 }

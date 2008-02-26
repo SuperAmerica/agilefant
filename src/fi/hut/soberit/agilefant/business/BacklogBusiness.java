@@ -3,9 +3,11 @@ package fi.hut.soberit.agilefant.business;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+import java.util.Map;
 
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.AFTime;
+import fi.hut.soberit.agilefant.model.Assignment;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.Priority;
@@ -136,8 +138,9 @@ public interface BacklogBusiness {
      * 
      * @param selectedUserIds Ids of the users to be assigned.
      * @param backlog The backlog the users are assigned to.
+     * @param assignmentData overheads of users
      */
-    public void setAssignments(int[] selectedUserIds, Backlog backlog);
+    public void setAssignments(int[] selectedUserIds, Map<String, Assignment> assignmentData, Backlog backlog);
     
     /**
      * Returns users either are or are not assigned to the given backlog.

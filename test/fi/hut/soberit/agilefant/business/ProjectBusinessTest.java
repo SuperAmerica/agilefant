@@ -1,9 +1,20 @@
 package fi.hut.soberit.agilefant.business;
 
+import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.List;
 
 import fi.hut.soberit.agilefant.db.ProjectDAO;
+import fi.hut.soberit.agilefant.model.AFTime;
+import fi.hut.soberit.agilefant.model.Assignment;
+import fi.hut.soberit.agilefant.model.Backlog;
+import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.Project;
+import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.util.SpringTestCase;
 import fi.hut.soberit.agilefant.util.TestUtility;
 
@@ -15,6 +26,124 @@ public class ProjectBusinessTest extends SpringTestCase {
 
     private ProjectDAO projectDAO;
 
+    @SuppressWarnings("deprecation")
+    public void testGetProjectsAndIterationsInTimeFrame(){
+        List<Backlog> projects = new ArrayList<Backlog>();                
+        Project pro = new Project();
+        pro.setStartDate(new Date(98, 7, 1)); 
+        pro.setEndDate(new Date(98, 10, 1));
+        System.out.println("Setting project start date:"+pro.getStartDate().getDate()+
+                "."+pro.getStartDate().getMonth()+"."+pro.getStartDate().getYear());
+        System.out.println("Setting project start end:"+pro.getEndDate().getDate()+
+                "."+pro.getEndDate().getMonth()+"."+pro.getEndDate().getYear());        
+        
+        projects.add(pro);
+        
+        // 1. Project start,end dates outside time frame 
+        List<Backlog> list = this.projectBusiness.getProjectsAndIterationsInTimeFrame(projects, 
+                new Date(98, 8, 1), new Date(98, 9, 30));
+        assertEquals(1, list.size());
+
+        
+        // 2.Project started, end inside time frame 
+        projects = new ArrayList<Backlog>();                
+        pro.setStartDate(new Date(98, 7, 1)); 
+        pro.setEndDate(new Date(98, 9, 1));
+        projects.add(pro);
+        list = this.projectBusiness.getProjectsAndIterationsInTimeFrame(projects, 
+                new Date(98, 8, 1), new Date(98, 9, 30));
+        assertEquals(1, list.size());
+
+        // 3. Project started, end outside time frame
+        projects = new ArrayList<Backlog>();                
+        pro.setStartDate(new Date(98, 8, 15)); 
+        pro.setEndDate(new Date(98, 10, 1));
+        projects.add(pro);
+        list = this.projectBusiness.getProjectsAndIterationsInTimeFrame(projects, 
+                new Date(98, 8, 1), new Date(98, 9, 30));
+        assertEquals(1, list.size());
+        
+
+        // Project has finished 
+        list = this.projectBusiness.getProjectsAndIterationsInTimeFrame(projects, 
+                new Date(2009, 8, 1), new Date(2009, 9, 30));
+        assertEquals(0, list.size());
+        
+        // Project hasnt started yet
+        list = this.projectBusiness.getProjectsAndIterationsInTimeFrame(projects, 
+                new Date(2006, 11, 1), new Date(2006, 11, 18));
+        assertEquals(0, list.size());
+        
+    }
+    
+    @SuppressWarnings("deprecation")
+    public void testCalculateEffortLefts(){
+        List<Project> projects = new ArrayList<Project>();     
+        Project pro = new Project();
+        pro.setName("Jorma");
+        BacklogItem bli = new BacklogItem();
+        bli.setEffortLeft(new AFTime("6h"));
+        pro.setStartDate(new Date(98, 9, 1));
+        pro.setEndDate(new Date(98, 11, 25));
+        
+        ArrayList<BacklogItem> bliList = new ArrayList<BacklogItem>();
+        bliList.add(bli);
+        pro.setBacklogItems(bliList);
+        projects.add(pro);       
+        
+        HashMap<Backlog, List<BacklogItem>> items = new HashMap<Backlog, List<BacklogItem>>();
+        items.put(pro, bliList);
+        
+        GregorianCalendar cal = new GregorianCalendar();
+        cal.setTime(new Date(98, 9, 2));
+        int week = cal.get(GregorianCalendar.WEEK_OF_YEAR);
+
+        assertEquals(40,week);
+        HashMap<Integer, String> efforts = this.projectBusiness.calculateEffortLefts(cal.getTime(), 2, items);
+        assertEquals(2, efforts.size());
+        assertEquals("6h", efforts.get(new Integer(week+1)));
+        assertEquals("6h", efforts.get(new Integer(week+2)));     
+    }
+
+    
+    @SuppressWarnings("deprecation")
+    public void testOverheads(){
+        BacklogItem bli = new BacklogItem();
+        bli.setEffortLeft(new AFTime("6h"));
+        User user = new User();
+        user.setLoginName("Jorma");
+        
+        List<Backlog> projects = new ArrayList<Backlog>();     
+        Project pro = new Project();
+        pro.setName("Project X");        
+        pro.setStartDate(new Date(98, 9, 1));
+        pro.setEndDate(new Date(98, 11, 25));
+        pro.setDefaultOverhead(new AFTime("5h"));
+
+        Assignment ass = new Assignment();
+        ass.setBacklog(pro);
+        ass.setUser(user);
+        ass.setDeltaOverhead(new AFTime("5h"));
+        List<Assignment> assList = new ArrayList<Assignment>();
+        assList.add(ass);
+        user.setAssignments(assList);
+        pro.setAssignments(assList);
+        
+        ArrayList<BacklogItem> bliList = new ArrayList<BacklogItem>();
+        bliList.add(bli);
+        pro.setBacklogItems(bliList);
+        projects.add(pro);               
+   
+        GregorianCalendar cal = new GregorianCalendar();
+        cal.setTime(new Date(98, 9, 2));
+        int week = cal.get(GregorianCalendar.WEEK_OF_YEAR);
+
+        assertEquals(40,week);
+        HashMap<Integer, String> efforts = this.projectBusiness.calculateOverheads(cal.getTime(), 2, projects, user);
+        assertEquals(2, efforts.size());
+        assertEquals("10h", efforts.get(new Integer(week+1)));
+        assertEquals("10h", efforts.get(new Integer(week+2)));     
+    }
     /**
      * Tests ProjectBusiness class's methods moveUp, moveDown, moveToTop and
      * moveToBottom.

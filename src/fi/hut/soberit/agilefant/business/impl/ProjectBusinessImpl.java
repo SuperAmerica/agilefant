@@ -2,14 +2,19 @@ package fi.hut.soberit.agilefant.business.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
+
 import fi.hut.soberit.agilefant.business.BacklogBusiness;
 import fi.hut.soberit.agilefant.business.ProjectBusiness;
+import fi.hut.soberit.agilefant.business.UserBusiness;
 import fi.hut.soberit.agilefant.db.IterationDAO;
 import fi.hut.soberit.agilefant.db.ProjectDAO;
 import fi.hut.soberit.agilefant.db.ProjectTypeDAO;
@@ -17,17 +22,25 @@ import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.exception.OperationNotPermittedException;
 import fi.hut.soberit.agilefant.model.AFTime;
+import fi.hut.soberit.agilefant.model.Assignment;
+import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.ProjectType;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.util.EffortSumData;
+import fi.hut.soberit.agilefant.util.CalendarUtils;
+import fi.hut.soberit.agilefant.util.DailyWorkLoadData;
 import fi.hut.soberit.agilefant.util.ProjectPortfolioData;
 
 public class ProjectBusinessImpl implements ProjectBusiness {
 
+    Logger log = Logger.getLogger(this.getClass());
+    
     private BacklogBusiness backlogBusiness;
+    
+    private UserBusiness userBusiness;
 
     private ProjectDAO projectDAO;
 
@@ -159,6 +172,8 @@ public class ProjectBusinessImpl implements ProjectBusiness {
         HashMap<Project, Integer> unassignedUserDataMap = new HashMap<Project, Integer>();
         HashMap<Project, String> summaryLoadLeftMap = new HashMap<Project, String>();
         HashMap<String, String> loadLeftData = new HashMap<String, String>();
+        HashMap<String, String> userOverheads = new HashMap<String, String>();
+        HashMap<String, String> totalUserOverheads = new HashMap<String, String>();
         HashMap<String, Integer> unassignedUsersMap = new HashMap<String, Integer>();
         Map<Project, List<User>> assignmentMap = new HashMap<Project, List<User>>(
                 0);
@@ -177,8 +192,28 @@ public class ProjectBusinessImpl implements ProjectBusiness {
                     .getUsers(pro, true));
             HashSet<User> projectAssignments = new HashSet<User>(
                     this.backlogBusiness.getUsers(pro, true));
-
+            ArrayList<User> assignments = new ArrayList<User>(
+                    this.backlogBusiness.getUsers(pro, true));
             Collection<BacklogItem> blis = getBlisInProjectAndItsIterations(pro);
+
+            // Get overheads for users in this project
+            for(Assignment ass : pro.getAssignments()){   
+                if(ass.getDeltaOverhead() != null){
+                    userOverheads.put(pro.getId()+"-"+ass.getUser().getId(), ass.getDeltaOverhead().toString());
+                    AFTime total = new AFTime(0);
+                    if(pro.getDefaultOverhead() != null) {
+                        total.add(pro.getDefaultOverhead());
+                    }
+                    total.add(ass.getDeltaOverhead());
+                    totalUserOverheads.put(pro.getId()+"-"+ass.getUser().getId(), total.toString());
+                }else{
+                    if(pro.getDefaultOverhead() != null){
+                        totalUserOverheads.put(pro.getId()+"-"+ass.getUser().getId(), pro.getDefaultOverhead().toString());
+                    }else{
+                        totalUserOverheads.put(pro.getId()+"-"+ass.getUser().getId(), "");
+                    }
+                }
+            }
 
             for (BacklogItem bli : blis) {
                 if (bli.getResponsibles() != null) {
@@ -219,12 +254,12 @@ public class ProjectBusinessImpl implements ProjectBusiness {
                                 loadLeftData.put(pro.getId() + "-"
                                         + resp.getId(), t.toString());
                             }
-                            
-                            
                         }
+                        
+
+                        
                         // Check whether user is responsible for a bli in the
-                        // project
-                        // but is currently not assigned to it
+                        // project but is currently not assigned to it
                         if (!projectAssignments.contains(resp) && bli.getEffortLeft() == null) {
                             unassignedUsersMap.put(pro.getId() + "-"
                                     + resp.getId(), 1);
@@ -289,6 +324,8 @@ public class ProjectBusinessImpl implements ProjectBusiness {
         data.setSummaryUnassignedUserData(unassignedUserDataMap);
         data.setSummaryLoadLeftData(summaryLoadLeftMap);
         data.setLoadLefts(loadLeftData);
+        data.setUserOverheads(userOverheads);
+        data.setTotalUserOverheads(totalUserOverheads);
     }
 
     public ProjectPortfolioData getProjectPortfolioData() {
@@ -346,6 +383,224 @@ public class ProjectBusinessImpl implements ProjectBusiness {
 
     public void setUserDAO(UserDAO userDAO) {
         this.userDAO = userDAO;
+    }
+
+    public List<Backlog> getProjectsAndIterationsInTimeFrame(List<Backlog> backlogs, 
+                        Date startDate, Date endDate){
+        List<Backlog> list = new ArrayList<Backlog>(0);
+        
+        for(Backlog blog : backlogs){            
+            Project pro = null;
+            Iteration it = null;
+            
+            // Backlog is Project
+            if(blog.getClass().equals(Project.class)){
+                pro = (Project) blog;
+                if((pro.getEndDate().after(startDate) &&
+                        pro.getEndDate().before(endDate) )||(
+                        pro.getStartDate().after(startDate) &&
+                        pro.getStartDate().before(endDate) ) ||
+                        pro.getStartDate().before(startDate) &&
+                        pro.getEndDate().after(endDate)){
+                     list.add(blog);
+                     log.debug("IN timeframe, project");
+                }else{
+                    log.debug("NOT in timeframe");
+                }
+            }
+            
+            // Backlog is Iteration
+            if(blog.getClass().equals(Iteration.class)){
+                it = (Iteration) blog;
+                if((it.getEndDate().after(startDate) &&
+                        it.getEndDate().before(endDate) )||(
+                        it.getStartDate().after(startDate) &&
+                        it.getStartDate().before(endDate) ) ||
+                        it.getStartDate().before(startDate) &&
+                        it.getEndDate().after(endDate)){
+                    list.add(blog);
+                    log.debug("IN timeframe, iteration");
+                }else{
+                    log.debug("NOT in timeframe");
+                }
+            }
+           }        
+        return list;
+    }
+    
+    public HashMap<Integer, String> calculateEffortLefts(Date from, int weeksAhead, Map<Backlog, List<BacklogItem>> items){
+        GregorianCalendar cal = new GregorianCalendar();
+        CalendarUtils cUtils = new CalendarUtils();
+        HashMap<Integer, String> effortLefts = new HashMap<Integer, String>();
+        
+        Date start = cUtils.nextMonday(from);        
+        Date end = cUtils.nextMonday(start);
+        cal.setTime(start);
+        Integer week = cal.get(GregorianCalendar.WEEK_OF_YEAR);
+        for(int i=1;i<=weeksAhead;i++){
+            // 1. Get Backlogs that hit for the week            
+            log.debug("Projects searched from :"+start);
+            log.debug("Projects searched ending :"+end);
+            cal.setTime(start);
+            week = cal.get(GregorianCalendar.WEEK_OF_YEAR);
+            log.debug("Calculating sums for week"+week);
+            
+            // 2. Get projects that hit current week
+            List<Backlog> list = this.getProjectsAndIterationsInTimeFrame(new ArrayList<Backlog>(items.keySet()), start, end);
+            log.debug(list.size()+" projects found for given time frame");
+            
+            // 3. Calculate effort sum from items in those projects
+            AFTime total = new AFTime(0);
+            for(Backlog blog : list){
+                Project pro = null;
+                Iteration it = null;
+                if(blog.getClass().equals(Project.class)){
+                    pro = (Project)blog;     
+                }
+                if(blog.getClass().equals(Iteration.class)){
+                    it = (Iteration)blog;     
+                }
+                
+                List<BacklogItem> blis = items.get((Backlog)pro);
+                if(blis != null){
+                    AFTime sum = this.backlogBusiness.getEffortLeftSum(blis).getEffortHours();
+                    if(sum != null){
+                        total.add(sum);
+                        log.debug("Adding: "+sum);
+                    }
+                }
+            }
+            effortLefts.put(week, total.toString());
+            start = cUtils.nextMonday(start);
+            end = cUtils.nextMonday(start);
+            cal.setTime(start);
+            week = cal.get(GregorianCalendar.WEEK_OF_YEAR);
+        }
+        
+        return effortLefts;
+    }
+
+    /**
+     * Calculates overheads for user from given backlogs( projects)
+     * @param from
+     * @param weeksAhead
+     * @param items
+     * @return
+     */
+    public HashMap<Integer, String> calculateOverheads(Date from, int weeksAhead, List<Backlog> items, User user){
+        GregorianCalendar cal = new GregorianCalendar();
+        CalendarUtils cUtils = new CalendarUtils();
+        HashMap<Integer, String> overheads = new HashMap<Integer, String>();
+        
+        Date start = cUtils.nextMonday(from);        
+        Date end = cUtils.nextMonday(start);
+        cal.setTime(start);
+        Integer week = cal.get(GregorianCalendar.WEEK_OF_YEAR);
+        List<Assignment> assignments = new ArrayList<Assignment>(user.getAssignments());
+        
+        for(int i=1;i<=weeksAhead;i++){
+            // 1. Get Backlogs that hit for the week            
+            log.debug("Projects searched from :"+start);
+            log.debug("Projects searched ending :"+end);
+            cal.setTime(start);
+            week = cal.get(GregorianCalendar.WEEK_OF_YEAR);
+            log.debug("Calculating overhead for week"+week);
+            
+            // 2. Get projects that hit current week
+            List<Backlog> list = this.getProjectsAndIterationsInTimeFrame(items, start, end);
+            log.debug(list.size()+" projects found for given time frame");
+            
+            // 3. Calculate overhead sum from items in those projects
+            AFTime overhead = new AFTime(0);            
+            for(Backlog blog : list){
+                // Only check assignments for Projects (overhead 
+                // only set for projects not iterations)
+                if(blog.getClass().equals(Project.class)){
+                    Project pro = (Project) blog;
+                    for(Assignment ass : assignments){
+                        if(ass.getBacklog().equals((Backlog)pro)){
+                            if(pro.getDefaultOverhead() != null){
+                                overhead.add(pro.getDefaultOverhead());
+                                log.debug("Added overhead from project: "+pro.getDefaultOverhead());
+                            }
+                            if(ass.getDeltaOverhead() != null ){
+                                overhead.add(ass.getDeltaOverhead());
+                                log.debug("Added overhead from user: "+pro.getDefaultOverhead());
+                            }
+                        }
+                    }
+                }else{
+                    log.debug("Class was iteration class, overhead :"+blog.getClass());
+                }
+            }
+            overheads.put(week, overhead.toString());
+            start = cUtils.nextMonday(start);
+            end = cUtils.nextMonday(start);
+            cal.setTime(start);
+            week = cal.get(GregorianCalendar.WEEK_OF_YEAR);
+        }
+        
+        return overheads;
+    }
+    
+    /**
+     * Calculates Efforts and overheads data for users
+     * 
+     * EffortLefts are calculated for every week by summings efforts
+     * from blis assigned to user from projects that start/end date 
+     * hit in particular week. 
+     * 
+     * For example:
+     * Weeks             1   2  3  4 
+     * Eff              20  20 10 10
+     * projects          2   2  1  1
+     * (10h blis each)
+     * 
+     * So efforts are just summed together and NOT divided for length of
+     * the project or weeks.
+     */
+    public DailyWorkLoadData getDailyWorkLoadData(User user, int weeksAhead) {
+        
+        HashMap<Integer, String>effortsLeftMap = new HashMap<Integer, String>();
+        HashMap<Integer, String>overheadsMap = new HashMap<Integer, String>();
+        HashMap<Integer, String>totalsMap = new HashMap<Integer, String>();
+        ArrayList<Integer> weekNumbers = new ArrayList<Integer>();
+        String[] overallTotals = new String[3]; // Not currently used, but could use in the future
+        
+        // 1. Effort Lefts
+        Map<Backlog, List<BacklogItem>> items = this.userBusiness.getBacklogItemsAssignedToUser(user);        
+        effortsLeftMap = this.calculateEffortLefts(new GregorianCalendar().getTime(), weeksAhead, items);
+        
+        // 2. Overheads 
+        List<Backlog> assignedBacklogs = this.userBusiness.getUsersBacklogs(user);
+        overheadsMap = this.calculateOverheads(new GregorianCalendar().getTime(), weeksAhead, assignedBacklogs, user);
+        for(Integer week : effortsLeftMap.keySet()){
+            AFTime weekTotal = new AFTime(0);
+            AFTime tmp = new AFTime(effortsLeftMap.get(week));                        
+            weekTotal.add(tmp);
+            tmp = new AFTime(overheadsMap.get(week));
+            weekTotal.add(tmp);
+            log.debug("Setting weekly total for week"+week+" to :"+weekTotal);
+            totalsMap.put(week, weekTotal.toString());            
+            weekNumbers.add(week);
+        }
+                
+        DailyWorkLoadData data = new DailyWorkLoadData();
+        data.setEffortsLeftMap(effortsLeftMap);
+        data.setTotalsMap(totalsMap);
+        data.setOverheadsMap(overheadsMap);
+        data.setWeekNumbers(weekNumbers);
+        data.setOverallTotals(overallTotals);
+        
+        return data;
+    }
+
+    public UserBusiness getUserBusiness() {
+        return userBusiness;
+    }
+
+    public void setUserBusiness(UserBusiness userBusiness) {
+        this.userBusiness = userBusiness;
     }
 
 }

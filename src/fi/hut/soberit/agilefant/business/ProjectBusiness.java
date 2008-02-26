@@ -1,14 +1,19 @@
 package fi.hut.soberit.agilefant.business;
 
 import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.exception.OperationNotPermittedException;
+import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.ProjectType;
 import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.util.DailyWorkLoadData;
 import fi.hut.soberit.agilefant.util.ProjectPortfolioData;
 
 /**
@@ -114,6 +119,14 @@ public interface ProjectBusiness {
      */
     public ProjectPortfolioData getProjectPortfolioData();
 
+    
+    /**
+     * Get a DailyWorkLoadData object that contains information for the users load
+     * 
+     * @return A ProjectPortfolioData object
+     */
+    public DailyWorkLoadData getDailyWorkLoadData(User user, int weeksAhead);
+    
     /**
 	* Constructs and returns a map containing informaton on whether a user has
 	* been assigned to some backlog item under the given project without been
@@ -126,4 +139,34 @@ public interface ProjectBusiness {
 	* the project but has work under it, otherwise user is mapped to integer 0
 	*/
     public Map<User, Integer> getUnassignedWorkersMap(Project project);
+    
+    
+    /**
+     * 
+     * @param backlogs
+     * @param startDate
+     * @param endDate
+     * @return
+     */
+    public List<Backlog> getProjectsAndIterationsInTimeFrame(List<Backlog> backlogs, 
+            Date startDate, Date endDate);   
+    /**
+     * 
+     * @param weeksAhead
+     * @param items
+     * @return
+     */
+    public HashMap<Integer, String> calculateEffortLefts(Date from, int weeksAhead,
+            Map<Backlog, List<BacklogItem>> items);
+
+    /**
+     * 
+     * @param from
+     * @param weeksAhead
+     * @param items
+     * @param user
+     * @return
+     */
+    public HashMap<Integer, String> calculateOverheads(Date from, int weeksAhead, List<Backlog> backlogs, User user);
+
 }

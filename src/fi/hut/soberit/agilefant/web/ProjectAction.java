@@ -10,6 +10,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+
 import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
 
@@ -20,6 +22,8 @@ import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.db.ProductDAO;
 import fi.hut.soberit.agilefant.db.ProjectDAO;
 import fi.hut.soberit.agilefant.db.ProjectTypeDAO;
+import fi.hut.soberit.agilefant.model.AFTime;
+import fi.hut.soberit.agilefant.model.Assignment;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.Iteration;
@@ -31,6 +35,8 @@ import fi.hut.soberit.agilefant.util.EffortSumData;
 
 public class ProjectAction extends ActionSupport implements CRUDAction {
 
+    Logger log = Logger.getLogger(this.getClass());
+    
     private static final long serialVersionUID = -4636900464606739866L;
 
     private int projectId;
@@ -80,6 +86,10 @@ public class ProjectAction extends ActionSupport implements CRUDAction {
     private Map<Iteration, EffortSumData> effLeftSums;
     
     private Map<Iteration, EffortSumData> origEstSums;
+    
+    private AFTime defaultOverhead;
+    
+    private Map<String,Assignment> assignments = new HashMap<String, Assignment>();
     
     /**
      * @return the dateFormat
@@ -151,6 +161,7 @@ public class ProjectAction extends ActionSupport implements CRUDAction {
         // Calculate project's iterations' effort lefts and original estimates
         effLeftSums = new HashMap<Iteration, EffortSumData>();
         origEstSums = new HashMap<Iteration, EffortSumData>(); 
+        defaultOverhead = project.getDefaultOverhead();
         
         Collection<Iteration> iterations = project.getIterations();
         for (Iteration iter : iterations) {
@@ -193,7 +204,7 @@ public class ProjectAction extends ActionSupport implements CRUDAction {
         } else {
             projectDAO.store(storable);
         }
-        backlogBusiness.setAssignments(selectedUserIds, projectDAO
+        backlogBusiness.setAssignments(selectedUserIds,null, projectDAO
                 .get(projectId));
         return Action.SUCCESS;
     }
@@ -203,7 +214,7 @@ public class ProjectAction extends ActionSupport implements CRUDAction {
             super.addActionError(super.getText("project.notFound"));
             return Action.ERROR;
         }
-        backlogBusiness.setAssignments(selectedUserIds, projectDAO
+        backlogBusiness.setAssignments(selectedUserIds, this.assignments, projectDAO
                 .get(projectId));
         return Action.SUCCESS;
     }
@@ -219,7 +230,7 @@ public class ProjectAction extends ActionSupport implements CRUDAction {
             super.addActionError(super.getText("project.notEmptyWhenDeleting"));
             return Action.ERROR;
         }
-        backlogBusiness.setAssignments(null, project);
+        backlogBusiness.setAssignments(null, null, project);
         Product product = project.getProduct();
         productId = product.getId();
         product.getProjects().remove(project);
@@ -242,7 +253,6 @@ public class ProjectAction extends ActionSupport implements CRUDAction {
             super.addActionError(super.getText("project.missingName"));
             return;
         }
-
         project.setStartDate(startDate, dateFormat);
         if (project.getStartDate() == null) {
             super.addActionError(super.getText("project.missingStartDate"));
@@ -293,6 +303,7 @@ public class ProjectAction extends ActionSupport implements CRUDAction {
         storable.setStartDate(startDate, dateFormat);
         storable.setName(project.getName());
         storable.setDescription(project.getDescription());
+        storable.setDefaultOverhead(project.getDefaultOverhead());
     }
 
     public int getProjectId() {
@@ -439,4 +450,18 @@ public class ProjectAction extends ActionSupport implements CRUDAction {
     public Map<Iteration, EffortSumData> getOrigEstSums() {
         return origEstSums;
     }
+
+    public void setDefaultOverhead(AFTime defaultOverhead) {
+        this.defaultOverhead = defaultOverhead;
+    }
+
+    public Map<String, Assignment> getAssignments() {
+        return assignments;
+    }
+
+    public void setAssignments(Map<String, Assignment> assignments) {
+        this.assignments = assignments;
+    }
+
+   
 }

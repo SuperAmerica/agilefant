@@ -1,6 +1,7 @@
 package fi.hut.soberit.agilefant.business.impl;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -140,5 +141,17 @@ public class UserBusinessImpl implements UserBusiness {
 
     public void setIterationDAO(IterationDAO iterationDAO) {
         this.iterationDAO = iterationDAO;
+    }
+
+    public List<Backlog> getUsersBacklogs(User user) {
+        Collection<Project> list = this.projectDAO.getAll();
+        List<Backlog> assignedProjects = new ArrayList<Backlog>();
+        
+        for(Project pro : list){
+            if(pro.getResponsibles().contains(user)){
+                assignedProjects.add(pro);                
+            }
+        }
+        return assignedProjects;
     }
 }

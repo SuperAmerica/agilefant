@@ -5,7 +5,10 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+
+import org.apache.log4j.Logger;
 
 import fi.hut.soberit.agilefant.business.BacklogBusiness;
 import fi.hut.soberit.agilefant.business.BacklogItemBusiness;
@@ -31,6 +34,9 @@ import fi.hut.soberit.agilefant.util.EffortSumData;
  * 
  */
 public class BacklogBusinessImpl implements BacklogBusiness {
+    
+    Logger log = Logger.getLogger(this.getClass());
+    
     private BacklogItemDAO backlogItemDAO;
 
     private HistoryBusiness historyBusiness;
@@ -287,7 +293,7 @@ public class BacklogBusinessImpl implements BacklogBusiness {
         this.historyBusiness = historyBusiness;
     }
 
-    public void setAssignments(int[] selectedUserIds, Backlog backlog) {
+    public void setAssignments(int[] selectedUserIds, Map<String, Assignment> assignmentData, Backlog backlog) {
         if (backlog != null) {
             // Edit project assignments: remove all assignments, then create
             // some.
@@ -302,13 +308,19 @@ public class BacklogBusinessImpl implements BacklogBusiness {
             }
             backlog.getAssignments().clear();
             backlogDAO.store(backlog);
-
+            
             if (selectedUserIds != null) {
                 for (int id : selectedUserIds) {
                     
                     User user = userDAO.get(id);
                     if (user != null) {
                         Assignment assignment = new Assignment(user, backlog);
+                        if(assignmentData != null){
+                            Assignment ass = assignmentData.get(id+"");
+                            if(ass != null){
+                                assignment.setDeltaOverhead(ass.getDeltaOverhead());
+                            }
+                        }
                         user.getAssignments().add(assignment);
                         backlog.getAssignments().add(assignment);
                         assignmentDAO.store(assignment);

@@ -14,6 +14,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 
 import org.hibernate.annotations.OrderBy;
+import org.hibernate.annotations.Type;
 
 import fi.hut.soberit.agilefant.web.page.PageItem;
 
@@ -59,6 +60,8 @@ public class Project extends Backlog implements PageItem {
     private User owner;
 
     private int rank = 0;
+    
+    private AFTime defaultOverhead;
 
     /** The product, under which this project belongs. */
     @ManyToOne
@@ -193,5 +196,17 @@ public class Project extends Backlog implements PageItem {
             result.add(iter.getBliOriginalEstimateSum());
         }
         return result;
+    }
+
+    /**
+     * Default overhead value for each person assigned to this project
+     */
+    @Type(type = "af_time")
+    public AFTime getDefaultOverhead() {
+        return defaultOverhead;
+    }
+
+    public void setDefaultOverhead(AFTime defaultOverhead) {
+        this.defaultOverhead = defaultOverhead;
     }
 }

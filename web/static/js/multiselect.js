@@ -18,7 +18,10 @@ function test($) {
 					$('<li>' + group.name + '</li>').click(function() {
 						var root = (extra!=undefined ? $(extra) : $('body'));
 						$.each(group.users, function(index, user_id) {
-							$('input.user_' + user_id, root).attr('checked', true);
+							$('input.user_' + user_id, root).each(function() {
+								if( !$(this).attr('checked') )
+									$(this).attr('checked', true).trigger('change')
+							})
 						})
 					})
 				);

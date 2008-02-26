@@ -86,10 +86,10 @@ var teams = [<aef:teamJson items="${teamList}"/>]
 			</c:forEach>			
 			<c:choose>			
 			<c:when test="${flag == 1}">
-				<input class="user_${user.id}" type="checkbox" name="selectedUserIds" value="${user.id}" checked="checked" />
+				<input class="user_${user.id}" type="checkbox" name="selectedUserIds" value="${user.id}" checked="checked" onchange="toggleDiv('${idstring}')"/>
 			</c:when>
 			<c:otherwise>
-				<input class="user_${user.id}" type="checkbox" name="selectedUserIds" value="${user.id}" />			
+				<input class="user_${user.id}" type="checkbox" name="selectedUserIds" value="${user.id}" onchange="toggleDiv('${idstring}')"/>			
 			</c:otherwise>
 			</c:choose>				
 
@@ -115,7 +115,28 @@ var teams = [<aef:teamJson items="${teamList}"/>]
 			<display:column title="Load Left">
 				<c:out value="${loadLefts[idstring]}" />
 			</display:column>
+			
+			<display:column title="Overhead +/-">
+			
+			<!-- Check whether user is assigned. If is assigned -> show overhead -->
+			<c:choose>	
+			<c:when test="${flag == 1}"> 
+				<div id="${idstring}" class="overhead">
+			</c:when>
+			<c:otherwise>
+				<div id="${idstring}" class="overhead" Style="display: none;">
+			</c:otherwise>
+			</c:choose>
+				<ww:label value="${row.defaultOverhead}" />+
+				<ww:hidden name="assignments['${user.id}'].user.id" 
+				value="${user.id}"  />
+			  	<ww:textfield size="3"  name="assignments['${user.id}'].deltaOverhead" 
+				value="${userOverheads[idstring]}" /> =
+				<ww:label value="${totalUserOverheads[idstring]}" />
+				</div>
+			</display:column>
 			</display:table>
+			
 		</td>
 		<td class="teamselect">										
 			<script type="text/javascript">
@@ -223,6 +244,25 @@ var teams = [<aef:teamJson items="${teamList}"/>]
 			
 			<display:column title="Load Left">
 				<c:out value="${loadLefts[idstring]}" />
+			</display:column>
+			
+			<display:column title="Overhead +/-">
+			<!-- Check whether user is assigned. If is assigned -> show overhead -->
+			<c:choose>	
+			<c:when test="${flag == 1}"> 
+				<div id="${idstring}" class="overhead">
+			</c:when>
+			<c:otherwise>
+				<div id="${idstring}" class="overhead" Style="display: none;">
+			</c:otherwise>
+			</c:choose>
+				<ww:label value="${row.defaultOverhead}" />+
+				<ww:hidden name="assignments['${user.id}'].user.id" 
+				value="${user.id}"  />
+			  	<ww:textfield size="3"  name="assignments['${user.id}'].deltaOverhead" 
+				value="${userOverheads[idstring]}" /> =
+				<ww:label value="${totalUserOverheads[idstring]}" />
+				</div>
 			</display:column>
 			</display:table>
 		</td>

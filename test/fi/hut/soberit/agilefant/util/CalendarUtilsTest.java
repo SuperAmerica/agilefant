@@ -2,15 +2,11 @@ package fi.hut.soberit.agilefant.util;
 
 import java.util.Date;
 import java.util.GregorianCalendar;
-
 import junit.framework.TestCase;
-
-import org.junit.Test;
 
 public class CalendarUtilsTest extends TestCase {
 
     @SuppressWarnings("deprecation")
-    @Test
     public void testNextMonday() {
          
             GregorianCalendar cal = new GregorianCalendar();

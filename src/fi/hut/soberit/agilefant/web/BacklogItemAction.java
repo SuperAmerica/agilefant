@@ -240,21 +240,27 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
         storable.setPriority(this.backlogItem.getPriority());
 
         // Set efforts and state for backlog item
+        storable.setState(this.backlogItem.getState());
 
-        storable.setState(backlogItem.getState());
-
-        // set effortleft to 0 if state changed to done
-        if (backlogItem.getState() == State.DONE) {
-            backlogItem.setEffortLeft(new AFTime(0));
+        // set effort left to 0 if state changed to done
+        /*
+        if (this.backlogItem.getState() == State.DONE) {
+            storable.setEffortLeft(new AFTime(0));
             this.effortLeft = new AFTime(0);
         }
+         */
 
         /*
-         * Set effort left. If this is new item set its effort to be the
+         * Set effort left. If state is done, then effort left is 0.
+         * If this is new item set its effort to be the
          * original effort. Otherwise set its effort to be the received effort
          * left from text field.
          */
-        if (storable.getOriginalEstimate() == null) {
+        if (storable.getState() == State.DONE) {
+            storable.setEffortLeft(new AFTime(0));
+            this.effortLeft = new AFTime(0);
+        }
+        else if (storable.getOriginalEstimate() == null) {
             storable.setOriginalEstimate(backlogItem.getOriginalEstimate());
             storable.setEffortLeft(backlogItem.getOriginalEstimate());
         } else if (storable.getEffortLeft() != null

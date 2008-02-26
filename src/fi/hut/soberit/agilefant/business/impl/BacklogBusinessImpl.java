@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Set;
 
 import fi.hut.soberit.agilefant.business.BacklogBusiness;
+import fi.hut.soberit.agilefant.business.BacklogItemBusiness;
 import fi.hut.soberit.agilefant.business.HistoryBusiness;
 import fi.hut.soberit.agilefant.db.AssignmentDAO;
 import fi.hut.soberit.agilefant.db.BacklogDAO;
@@ -41,6 +42,8 @@ public class BacklogBusinessImpl implements BacklogBusiness {
     private AssignmentDAO assignmentDAO;
     
     private IterationGoalDAO iterationGoalDAO;
+    
+    private BacklogItemBusiness backlogitemBusiness;
 
     // @Override
     public void deleteMultipleItems(int backlogId, int[] backlogItemIds)
@@ -106,8 +109,11 @@ public class BacklogBusinessImpl implements BacklogBusiness {
                         + "was not found."
                 );
             }
-            
+                     
             bli.setState(state);
+            // If State is done, effort left is 0h.
+            if (state == State.DONE)
+                bli.setEffortLeft(new AFTime(0));
         }
     }
     
@@ -360,5 +366,9 @@ public class BacklogBusinessImpl implements BacklogBusiness {
 
     public void setIterationGoalDAO(IterationGoalDAO iterationGoalDAO) {
         this.iterationGoalDAO = iterationGoalDAO;
+    }
+
+    public void setBacklogitemBusiness(BacklogItemBusiness backlogitemBusiness) {
+        this.backlogitemBusiness = backlogitemBusiness;
     }
 }

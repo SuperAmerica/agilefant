@@ -93,6 +93,7 @@ public class UserAction extends ActionSupport implements CRUDAction {
     }
 
     public String store() {
+        createTeamList();
         User storable = new User();
         if (userId > 0) {
             storable = userDAO.get(userId);

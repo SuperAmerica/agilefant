@@ -262,15 +262,16 @@
 							</display:column>
 							<%-- REFACTOR THIS --%>
 							<display:column sortable="true" title="Effort left"
-								sortProperty="bliEffortLeftSum.time">
+								sortProperty="totalEffortLeftSum.time"
+								defaultorder="descending">
 								${effLeftSums[row]}
 							</display:column>
 
 							<display:column sortable="true" title="Original estimate"
-								sortProperty="bliOriginalEstimateSum.time">
+								sortProperty="totalOriginalEstimateSum.time"
+								defaultorder="descending">
 								${origEstSums[row]}
 							</display:column>
-
 
 							<display:column sortable="true" title="Start date">
 								<ww:date name="#attr.row.startDate" />

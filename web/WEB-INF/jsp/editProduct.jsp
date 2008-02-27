@@ -99,13 +99,15 @@
 					</display:column>
 
 					<display:column sortable="true" title="Effort left"
-						sortProperty="effortLeft.time">
-						${effLeftSums[row]}
+						sortProperty="totalEffortLeftSum.time"
+						defaultorder="descending">
+						<c:out value="${effLeftSums[row]}" />
 					</display:column>
 
 					<display:column sortable="true" title="Original estimate"
-						sortProperty="originalEstimate.time">
-						${origEstSums[row]}
+						sortProperty="totalOriginalEstimateSum.time"
+						defaultorder="descending">
+						<c:out value="${origEstSums[row]}" />
 					</display:column>
 
 					<display:column sortable="true" title="Start date">

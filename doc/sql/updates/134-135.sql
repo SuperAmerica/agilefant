@@ -13,3 +13,7 @@ alter table Task add column rank integer;
 
 -- Set initial ranks to be task ids for existing tasks
 update Task set rank = id;
+
+-- Overhead-kenttä
+alter table Assignment add column deltaOverhead integer;
+alter table Backlog add column defaultOverhead integer;

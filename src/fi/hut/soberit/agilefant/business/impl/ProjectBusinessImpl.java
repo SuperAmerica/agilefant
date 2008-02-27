@@ -2,6 +2,7 @@ package fi.hut.soberit.agilefant.business.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -455,20 +456,29 @@ public class ProjectBusinessImpl implements ProjectBusiness {
                 Project pro = null;
                 Iteration it = null;
                 if(blog.getClass().equals(Project.class)){
-                    pro = (Project)blog;     
-                }
-                if(blog.getClass().equals(Iteration.class)){
-                    it = (Iteration)blog;     
-                }
-                
-                List<BacklogItem> blis = items.get((Backlog)pro);
-                if(blis != null){
-                    AFTime sum = this.backlogBusiness.getEffortLeftSum(blis).getEffortHours();
-                    if(sum != null){
-                        total.add(sum);
-                        log.debug("Adding: "+sum);
+                    pro = (Project)blog; 
+                    List<BacklogItem> blis = items.get((Backlog)pro);
+                    if(blis != null){
+                        AFTime sum = this.backlogBusiness.getEffortLeftSum(blis).getEffortHours();
+                        if(sum != null){
+                            total.add(sum);
+                            log.debug("Adding: "+sum);
+                        }
                     }
                 }
+                if(blog.getClass().equals(Iteration.class)){
+                    it = (Iteration)blog;
+                    List<BacklogItem> blis = items.get((Backlog)it);
+                    if(blis != null){
+                        AFTime sum = this.backlogBusiness.getEffortLeftSum(blis).getEffortHours();
+                        if(sum != null){
+                            total.add(sum);
+                            log.debug("Adding: "+sum);
+                        }
+                    }
+                }
+                
+
             }
             effortLefts.put(week, total.toString());
             start = cUtils.nextMonday(start);
@@ -574,7 +584,9 @@ public class ProjectBusinessImpl implements ProjectBusiness {
         // 2. Overheads 
         List<Backlog> assignedBacklogs = this.userBusiness.getUsersBacklogs(user);
         overheadsMap = this.calculateOverheads(new GregorianCalendar().getTime(), weeksAhead, assignedBacklogs, user);
-        for(Integer week : effortsLeftMap.keySet()){
+        List<Integer> weeks = new ArrayList<Integer>(effortsLeftMap.keySet());
+        Collections.sort(weeks);
+        for(Integer week : weeks){
             AFTime weekTotal = new AFTime(0);
             AFTime tmp = new AFTime(effortsLeftMap.get(week));                        
             weekTotal.add(tmp);

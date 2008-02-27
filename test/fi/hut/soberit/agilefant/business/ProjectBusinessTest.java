@@ -13,6 +13,7 @@ import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.Assignment;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
+import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.util.SpringTestCase;
@@ -32,27 +33,36 @@ public class ProjectBusinessTest extends SpringTestCase {
         Project pro = new Project();
         pro.setStartDate(new Date(98, 7, 1)); 
         pro.setEndDate(new Date(98, 10, 1));
+        
+        Iteration it = new Iteration();
+        it.setStartDate(new Date(98, 7, 1)); 
+        it.setEndDate(new Date(98, 10, 1));
         System.out.println("Setting project start date:"+pro.getStartDate().getDate()+
                 "."+pro.getStartDate().getMonth()+"."+pro.getStartDate().getYear());
         System.out.println("Setting project start end:"+pro.getEndDate().getDate()+
                 "."+pro.getEndDate().getMonth()+"."+pro.getEndDate().getYear());        
         
         projects.add(pro);
+        projects.add(it);
         
         // 1. Project start,end dates outside time frame 
         List<Backlog> list = this.projectBusiness.getProjectsAndIterationsInTimeFrame(projects, 
                 new Date(98, 8, 1), new Date(98, 9, 30));
-        assertEquals(1, list.size());
+        assertEquals(2, list.size());
 
         
         // 2.Project started, end inside time frame 
         projects = new ArrayList<Backlog>();                
         pro.setStartDate(new Date(98, 7, 1)); 
         pro.setEndDate(new Date(98, 9, 1));
+        it.setStartDate(new Date(98, 7, 1)); 
+        it.setEndDate(new Date(98, 9, 1));
         projects.add(pro);
+        projects.add(it);
+        
         list = this.projectBusiness.getProjectsAndIterationsInTimeFrame(projects, 
                 new Date(98, 8, 1), new Date(98, 9, 30));
-        assertEquals(1, list.size());
+        assertEquals(2, list.size());
 
         // 3. Project started, end outside time frame
         projects = new ArrayList<Backlog>();                
@@ -105,7 +115,34 @@ public class ProjectBusinessTest extends SpringTestCase {
         assertEquals("6h", efforts.get(new Integer(week+2)));     
     }
 
-    
+    @SuppressWarnings("deprecation")
+    public void testCalculateEffortLefts_Iterations(){
+        List<Iteration> projects = new ArrayList<Iteration>();     
+        Iteration pro = new Iteration();
+        pro.setName("Jorma");
+        BacklogItem bli = new BacklogItem();
+        bli.setEffortLeft(new AFTime("6h"));
+        pro.setStartDate(new Date(98, 9, 1));
+        pro.setEndDate(new Date(98, 11, 25));
+        
+        ArrayList<BacklogItem> bliList = new ArrayList<BacklogItem>();
+        bliList.add(bli);
+        pro.setBacklogItems(bliList);
+        projects.add(pro);       
+        
+        HashMap<Backlog, List<BacklogItem>> items = new HashMap<Backlog, List<BacklogItem>>();
+        items.put(pro, bliList);
+        
+        GregorianCalendar cal = new GregorianCalendar();
+        cal.setTime(new Date(98, 9, 2));
+        int week = cal.get(GregorianCalendar.WEEK_OF_YEAR);
+
+        assertEquals(40,week);
+        HashMap<Integer, String> efforts = this.projectBusiness.calculateEffortLefts(cal.getTime(), 2, items);
+        assertEquals(2, efforts.size());
+        assertEquals("6h", efforts.get(new Integer(week+1)));
+        assertEquals("6h", efforts.get(new Integer(week+2)));     
+    }    
     @SuppressWarnings("deprecation")
     public void testOverheads(){
         BacklogItem bli = new BacklogItem();

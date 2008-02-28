@@ -39,7 +39,7 @@ Effort estimate
 							</ww:a>
 		<br />
 
-		<ww:select name="taskStates['${task.id}']" value="#attr.task.state.name"
+		<ww:select name="taskStates[${task.id}]" value="#attr.task.state.name"
 			list="@fi.hut.soberit.agilefant.model.State@values()" listKey="name"
 			listValue="getText('task.state.' + name())" />
 

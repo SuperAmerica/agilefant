@@ -2,6 +2,8 @@ package fi.hut.soberit.agilefant.web;
 
 import java.util.Collection;
 
+import org.springframework.dao.DataIntegrityViolationException;
+
 import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
 
@@ -65,8 +67,12 @@ public class ProjectTypeAction extends ActionSupport implements CRUDAction {
         if (super.hasActionErrors()) {
             return Action.ERROR;
         }
-        
-        projectTypeDAO.store(fillable);
+        try {
+            projectTypeDAO.store(fillable);
+        } catch (DataIntegrityViolationException dve) {
+            super.addActionError(super.getText("projectType.duplicateName"));
+            return Action.ERROR;
+        }
         return Action.SUCCESS;
     }
 

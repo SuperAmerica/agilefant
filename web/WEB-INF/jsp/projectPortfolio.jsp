@@ -216,10 +216,10 @@ var teams = [<aef:teamJson items="${teamList}"/>]
 			</c:forEach>			
 			<c:choose>			
 			<c:when test="${flag == 1}">
-				<input type="checkbox" class="user_${user.id}" name="selectedUserIds" value="${user.id}" checked="checked" />
+				<input class="user_${user.id}" type="checkbox" name="selectedUserIds" value="${user.id}" checked="checked" onchange="toggleDiv('${idstring}')"/>
 			</c:when>
 			<c:otherwise>
-				<input type="checkbox" class="user_${user.id}" name="selectedUserIds" value="${user.id}" />			
+				<input class="user_${user.id}" type="checkbox" name="selectedUserIds" value="${user.id}" onchange="toggleDiv('${idstring}')"/>			
 			</c:otherwise>
 			</c:choose>				
 

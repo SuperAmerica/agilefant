@@ -138,6 +138,15 @@ Agilefant
 				<c:set var="archive" value="archivePath" scope="page" />
 				<c:set var="class2" value="archivePath" scope="page" />
 			</c:if>
+			<%-- Don't hide projects that have unfinished iterations--%>
+			<c:if test="${archive != archivePath}">
+				<c:forEach items="${project.iterations}" var="it">
+					<c:if test="${!aef:isBeforeThisDay(it.endDate)}">
+						<c:set var="archive" value="archivePath" scope="page" />
+						<c:set var="class2" value="archivePath" scope="page" />
+					</c:if>
+				</c:forEach>
+			</c:if>
 		</c:if>
 
 		<c:if test="${project.id == currentProjectId}">

@@ -19,12 +19,13 @@ View daily work for user: <ww:select list="userList"
 <ww:submit value="Change" />
 </ww:form>
 
+<%@ include file="./inc/_userLoad.jsp" %>
 <c:choose>
 <c:when test="${!((empty backlogItemsForUserInProgress) &&
 		(empty iterations) &&
 		(empty projects))}" >
 
-<%@ include file="./inc/_userLoad.jsp" %>
+
 
 <%@ include file="./inc/_workInProgress.jsp" %>
 

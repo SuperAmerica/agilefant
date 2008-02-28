@@ -4,7 +4,6 @@
 <h2>Load for <c:out value="${user.fullName}" /></h2>
 
 
-<c:if test="${!(empty backlogItemsForUserInProgress)}">
 <div id="subItems">
 <div id="subItemHeader">Load</div>
 <div id="subItemContent">
@@ -53,4 +52,3 @@ Show <select name="weeksAhead">
 </table>
 </div>
 </div>
-</c:if>

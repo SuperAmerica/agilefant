@@ -52,6 +52,8 @@
 			<td colspan="2"><ww:password name="password2" /></td>
 		</tr>
 		<tr>
+		<c:choose>
+		<c:when test="${fn:length(teamList) > 0}">
 			<td><a href="javascript:toggleDiv('teamlist');">Select teams</a></td>
 			<td></td>
 			<td>
@@ -72,6 +74,8 @@
 			</c:forEach>
 			</ul>
 			</td>
+			</c:when>
+			</c:choose>
 		</tr>
 		<tr>
 			<td></td>

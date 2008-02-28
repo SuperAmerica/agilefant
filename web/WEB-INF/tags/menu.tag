@@ -228,7 +228,7 @@ Backlogs
 <a
 	href="contextView.action?contextName=projectPortfolio&resetContextView=true">
 <img src="static/img/portfolio.png" alt="Dev Portfolio" />
-Project Portfolio
+Dev Portfolio
 </a>
 </li>
 <li id="navc">

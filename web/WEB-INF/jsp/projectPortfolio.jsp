@@ -16,7 +16,7 @@ var teams = [<aef:teamJson items="${teamList}"/>]
 </script>
 <h2>Edit Project Rank </h2>
 
-<h4>Ranked Projects</h4>
+<h4>Development Portfolio</h4>
 <p><display:table name="${ongoingRankedProjects}" id="row">
 	<display:column title="Rank">
 		<c:out value="${row_rowNum}" />
@@ -150,7 +150,6 @@ var teams = [<aef:teamJson items="${teamList}"/>]
 		</tr>
 		</table>
 		<ww:submit action="saveProjectAssignments" value="Save" />
-		<ww:reset value="Reset" />
 		</ww:form>
 		</div>
 		<!-- User assignment table ends -->
@@ -278,7 +277,7 @@ var teams = [<aef:teamJson items="${teamList}"/>]
 		</tr>
 		</table>
 		<ww:submit action="saveProjectAssignments" value="Save" />
-		<ww:reset value="Reset" />
+		
 		</ww:form>
 		</div>
 		<!-- User assignment table ends -->

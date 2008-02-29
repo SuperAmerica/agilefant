@@ -177,6 +177,7 @@ public class ProjectAction extends ActionSupport implements CRUDAction {
     }
 
     public String store() {
+       
         Project storable = new Project();
         if (projectId > 0) {
             storable = projectDAO.get(projectId);
@@ -240,6 +241,11 @@ public class ProjectAction extends ActionSupport implements CRUDAction {
     }
 
     protected void fillStorable(Project storable) throws ParseException {
+        if(project.getDefaultOverhead() != null && project.getDefaultOverhead().getTime() < 0) {
+            super.addActionError("Default overhead cannot be negative.");
+            return;
+        }
+        
         if (startDate == null) {
             super.addActionError(super.getText("Invalid startdate!"));
             return;

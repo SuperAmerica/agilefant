@@ -67,6 +67,16 @@ public class AFTime extends java.sql.Time {
         super(parse(time));
     }
 
+    public AFTime(String time, boolean allowNegatives) {
+        super(parse(time, allowNegatives));
+    }
+
+    
+    public static long parse(String s) throws IllegalArgumentException {
+        return parse(s, true);
+    }
+
+    
     /**
      * Attempts to interpret the string <tt>s</tt> as a representation of a
      * time. If the attempt is successful, the time indicated is returned
@@ -85,8 +95,11 @@ public class AFTime extends java.sql.Time {
      * @throws IllegalArgumentException
      *                 if illegal input is given
      */
-    public static long parse(String s) throws IllegalArgumentException {
-
+    public static long parse(String s, boolean allowNegatives) throws IllegalArgumentException {
+        
+        
+        boolean negative = false;
+        
         // use scanner
         Scanner scanner = new Scanner(s);
 
@@ -110,7 +123,7 @@ public class AFTime extends java.sql.Time {
 
                 // try reading next int and character - pair
                 try {
-                    scanner.next("(\\d+)(\\p{Alpha}|min)");
+                    scanner.next("(-?)(\\d+)(\\p{Alpha}|min)");
                 } catch (NoSuchElementException e) {
                     // no more elements
                     break;
@@ -119,15 +132,23 @@ public class AFTime extends java.sql.Time {
                 // get the regexp result
                 MatchResult result = scanner.match();
 
-                // get the integer and character from groups 1 and 2
-                long value = Long.parseLong(result.group(1));
+                // set negative to true if one of the time digits is negative
+                if(result.group(1).equals("-") && allowNegatives)
+                    negative = true;
+                
+                // get the integer and character from groups 2 and 3
+                long value = Long.parseLong(result.group(2));
                 char type;
 
+                // set value to negative if one of the time digits has been negative
+                if(negative)
+                    value = -1*value;
+                
                 // allow min instead of just m
-                if (result.group(2).contains("min")) {
+                if (result.group(3).contains("min")) {
                     type = 'm';
                 } else {
-                    type = result.group(2).charAt(0);
+                    type = result.group(3).charAt(0);
                 }
 
                 // interperent the value according to the letter

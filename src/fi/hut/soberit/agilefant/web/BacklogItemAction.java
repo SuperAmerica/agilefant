@@ -188,7 +188,12 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
      */
 
     public String quickStoreTaskList() {
-
+        
+        // check that AFTime is not negative
+        if (this.effortLeft != null && this.effortLeft.getTime() < 0) {
+            super.addActionError("EffortLeft cannot be negative.");
+            return Action.ERROR;
+        }        
         /** Test code begins */
         System.err.println("SIZE OF MAP: " + taskStates.size());
         for (Integer key : taskStates.keySet()) {
@@ -270,6 +275,14 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
             storable.setEffortLeft(backlogItem.getEffortLeft());
         }
 
+        // check that AFTime is not negative
+        if (storable.getEffortLeft() != null && storable.getEffortLeft().getTime() < 0) {
+            super.addActionError("EffortLeft cannot be negative.");
+        }        
+        if (storable.getOriginalEstimate() != null && storable.getOriginalEstimate().getTime() < 0) {
+            super.addActionError("OriginalEstimate cannot be negative.");
+        }        
+        
         // TODO: REFACTOR THIS when moving backlog items from backlog to another
         // change
         // backlog item's original estimate to current effort left.

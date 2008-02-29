@@ -133,21 +133,6 @@ public class AFTimeTest extends TestCase {
         } catch (IllegalArgumentException e) {
         }
 
-        // Negative values not allowed
-        try {
-            parse("-1h");
-            fail();
-        } catch (IllegalArgumentException e) {
-
-        }
-
-        // TODO should this be accepted anyway (would equal "3d 15h 25m")?
-        try {
-            parse("3d 16h -35m");
-            fail();
-        } catch (IllegalArgumentException e) {
-
-        }
     }
 
     public void testToString() {

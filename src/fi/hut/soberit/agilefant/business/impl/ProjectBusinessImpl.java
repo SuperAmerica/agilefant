@@ -400,9 +400,11 @@ public class ProjectBusinessImpl implements ProjectBusiness {
                 if((pro.getEndDate().after(startDate) &&
                         pro.getEndDate().before(endDate) )||(
                         pro.getStartDate().after(startDate) &&
-                        pro.getStartDate().before(endDate) ) ||
+                        pro.getStartDate().before(endDate) ) || (
                         pro.getStartDate().before(startDate) &&
-                        pro.getEndDate().after(endDate)){
+                        pro.getEndDate().after(endDate) ) || (
+                        pro.getStartDate().compareTo(startDate) == 0) || (
+                        pro.getEndDate().compareTo(endDate) == 0)){
                      list.add(blog);
                      log.debug("IN timeframe, project");
                 }else{
@@ -416,9 +418,11 @@ public class ProjectBusinessImpl implements ProjectBusiness {
                 if((it.getEndDate().after(startDate) &&
                         it.getEndDate().before(endDate) )||(
                         it.getStartDate().after(startDate) &&
-                        it.getStartDate().before(endDate) ) ||
+                        it.getStartDate().before(endDate) ) || (
                         it.getStartDate().before(startDate) &&
-                        it.getEndDate().after(endDate)){
+                        it.getEndDate().after(endDate) ) || (
+                        it.getStartDate().compareTo(startDate) == 0) || (
+                        it.getEndDate().compareTo(endDate) == 0)){
                     list.add(blog);
                     log.debug("IN timeframe, iteration");
                 }else{

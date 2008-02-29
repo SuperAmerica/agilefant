@@ -50,6 +50,10 @@ public class CalendarUtils {
                 return null; 
             }
         }
+        cal.set(GregorianCalendar.HOUR_OF_DAY, 0);
+        cal.set(GregorianCalendar.MINUTE, 0);
+        cal.set(GregorianCalendar.SECOND, 0);
+        cal.set(GregorianCalendar.MILLISECOND, 0);
         return cal.getTime();
     }
 }

@@ -16,6 +16,7 @@ import fi.hut.soberit.agilefant.db.ProjectDAO;
 import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
+import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.State;
 import fi.hut.soberit.agilefant.model.User;
@@ -99,6 +100,38 @@ public class UserBusinessImpl implements UserBusiness {
             Backlog backlog = bli.getBacklog();
             if (bli.getState() != State.DONE && backlog != null
                     && okBacklogs.contains(backlog)) {
+                List<BacklogItem> bliList = bliMap.get(backlog);
+                if (bliList == null) {
+                    bliList = new ArrayList<BacklogItem>();
+                }
+                bliList.add(bli);
+                bliMap.put(backlog, bliList);
+            }
+        }
+
+        return bliMap;
+    }
+
+    /** {@inheritDoc} */
+    public Map<Backlog, List<BacklogItem>> getAllBacklogItemsAssignedToUser(
+            User user) {
+        /* If no user is set, get logged user */
+        if (user == null) {
+            user = SecurityUtil.getLoggedUser();
+        }
+        /* Create the returned map */
+        Map<Backlog, List<BacklogItem>> bliMap = new HashMap<Backlog, List<BacklogItem>>();
+
+        /* Get all backlog items for user in progress */
+        List<BacklogItem> userItems = (List<BacklogItem>)user.getBacklogItems();
+
+        Iterator<BacklogItem> iter2 = userItems.iterator();
+
+        while (iter2.hasNext()) {
+            BacklogItem bli = iter2.next();
+            Backlog backlog = bli.getBacklog();
+            if (bli.getState() != State.DONE && backlog != null
+                    && (backlog instanceof Iteration || backlog instanceof Project)) {
                 List<BacklogItem> bliList = bliMap.get(backlog);
                 if (bliList == null) {
                     bliList = new ArrayList<BacklogItem>();

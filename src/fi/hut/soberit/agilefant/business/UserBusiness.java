@@ -29,18 +29,30 @@ public interface UserBusiness {
     /**
      * Get all unfinished backlog items assigned to user that belong to an
      * ongoing iteration or an ongoing project that hasn't been divided into
-     * iterations. The backlog items are returned in a NavigableMap where keys
+     * iterations. The backlog items are returned in a Map where keys
      * are backlogs and values are lists of backlog items. Each list contains
      * the unfinished backlog items that have been assigned to the user in the
-     * key backlog. The keys are sorted so that projects come first, sorted by
-     * their ranks, and iterations come next, sorted by their corresponding
-     * parent projects' ranks.
+     * key backlog.
      * 
      * @param user
      * @return A Map that maps backlogs to backlog item lists.
      * 
      */
     public Map<Backlog, List<BacklogItem>> getBacklogItemsAssignedToUser(
+            User user);
+
+    /**
+     * Get all unfinished backlog items assigned to user that belong to any
+     * iteration or project. The backlog items are returned in a Map where keys
+     * are backlogs and values are lists of backlog items. Each list contains
+     * the unfinished backlog items that have been assigned to the user in the
+     * key backlog.
+     * 
+     * @param user
+     * @return A Map that maps backlogs to backlog item lists.
+     * 
+     */
+    public Map<Backlog, List<BacklogItem>> getAllBacklogItemsAssignedToUser(
             User user);
 
     /**

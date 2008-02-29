@@ -578,7 +578,7 @@ public class ProjectBusinessImpl implements ProjectBusiness {
         String[] overallTotals = new String[3]; // Not currently used, but could use in the future
         
         // 1. Effort Lefts
-        Map<Backlog, List<BacklogItem>> items = this.userBusiness.getBacklogItemsAssignedToUser(user);        
+        Map<Backlog, List<BacklogItem>> items = this.userBusiness.getAllBacklogItemsAssignedToUser(user);        
         effortsLeftMap = this.calculateEffortLefts(new GregorianCalendar().getTime(), weeksAhead, items);
         
         // 2. Overheads 

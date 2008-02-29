@@ -463,6 +463,7 @@ public class ProjectBusinessImpl implements ProjectBusiness {
                     pro = (Project)blog; 
                     List<BacklogItem> blis = items.get((Backlog)pro);
                     if(blis != null){
+                        // TODO: Sum must be divided with length of project to get the load more rational
                         AFTime sum = this.backlogBusiness.getEffortLeftSum(blis).getEffortHours();
                         if(sum != null){
                             total.add(sum);
@@ -474,6 +475,7 @@ public class ProjectBusinessImpl implements ProjectBusiness {
                     it = (Iteration)blog;
                     List<BacklogItem> blis = items.get((Backlog)it);
                     if(blis != null){
+                        // TODO: Sum must be divided with length of project to get the load more rational
                         AFTime sum = this.backlogBusiness.getEffortLeftSum(blis).getEffortHours();
                         if(sum != null){
                             total.add(sum);

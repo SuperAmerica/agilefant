@@ -234,7 +234,8 @@ public class TaskAction extends ActionSupport implements CRUDAction {
             storable.setCreator(SecurityUtil.getLoggedUser());
         }
 
-        if (task.getName().equals("")) {
+        if (task.getName().equals("")|| 
+                this.task.getName().trim().equals("")) {
             super.addActionError(super.getText("task.missingName"));
             return;
         }

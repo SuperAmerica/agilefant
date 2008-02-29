@@ -48,8 +48,11 @@ function test($) {
 				}
 			}
 			
+			// Root for the list of check boxes which are selected by clicking the links
+			var root = (settings.root != undefined ? $(settings.root) : $('body'));
+			
 			if( settings.groups != undefined ) {
-				$(".groups", me).empty().groupselect(settings.groups)
+				$(".groups", me).empty().groupselect(settings.groups,root);
 			}
 			$("li:nth-child(even)", this).addClass("even");
 			$("li:nth-child(odd)", this).addClass("odd");

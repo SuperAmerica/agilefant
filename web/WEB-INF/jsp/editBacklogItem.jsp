@@ -234,7 +234,7 @@
 				
 				var teams = [<aef:teamJson items="${teamList}"/>];
 				var selected = [<aef:idJson items="${backlogItem.responsibles}"/>]
-				$('#userselect').multiuserselect({users: [preferred,others], groups: teams}).selectusers(selected);
+				$('#userselect').multiuserselect({users: [preferred,others], groups: teams, root: $('#userselect')}).selectusers(selected);
 				
 				// Task ranking
 				$('.moveUp').click(function() {

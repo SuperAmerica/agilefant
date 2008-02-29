@@ -244,7 +244,7 @@ function validateDeletion() {
 				
 				var teams = [<aef:teamJson items="${teamList}"/>];
 				var selected = [];
-				$('#multiplebli_userselect').multiuserselect({users: [preferred,others], groups: teams}).selectusers(selected);
+				$('#multiplebli_userselect').multiuserselect({users: [preferred,others], groups: teams, root: $('#multiplebli_userselect')}).selectusers(selected);
 				
 				$('#multiplebli_userselect').toggle_disabled(true);
 				$('#keepOriginalResponsibles').bind("change", function() {

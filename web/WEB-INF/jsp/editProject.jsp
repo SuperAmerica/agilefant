@@ -203,7 +203,7 @@
 							<aef:teamList />
 							<ww:set name="teamList" value="#attr.teamList" />
 							var teams = [<aef:teamJson items="${teamList}"/>]
-							$('#userselect').multiuserselect({groups: teams});
+							$('#userselect').multiuserselect({groups: teams, root: $('#user')});
 						});
 						</script>
 					</div>

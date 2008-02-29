@@ -111,8 +111,8 @@ public class ProjectBusinessTest extends SpringTestCase {
         assertEquals(40,week);
         HashMap<Integer, String> efforts = this.projectBusiness.calculateEffortLefts(cal.getTime(), 2, items);
         assertEquals(2, efforts.size());
-        assertEquals("6h", efforts.get(new Integer(week+1)));
-        assertEquals("6h", efforts.get(new Integer(week+2)));     
+        assertEquals("6h", efforts.get(new Integer(week)));
+        assertEquals("6h", efforts.get(new Integer(week+1)));     
     }
 
     @SuppressWarnings("deprecation")
@@ -140,8 +140,8 @@ public class ProjectBusinessTest extends SpringTestCase {
         assertEquals(40,week);
         HashMap<Integer, String> efforts = this.projectBusiness.calculateEffortLefts(cal.getTime(), 2, items);
         assertEquals(2, efforts.size());
-        assertEquals("6h", efforts.get(new Integer(week+1)));
-        assertEquals("6h", efforts.get(new Integer(week+2)));     
+        assertEquals("6h", efforts.get(new Integer(week)));
+        assertEquals("6h", efforts.get(new Integer(week+1)));     
     }    
     @SuppressWarnings("deprecation")
     public void testOverheads(){
@@ -178,8 +178,8 @@ public class ProjectBusinessTest extends SpringTestCase {
         assertEquals(40,week);
         HashMap<Integer, String> efforts = this.projectBusiness.calculateOverheads(cal.getTime(), 2, projects, user);
         assertEquals(2, efforts.size());
-        assertEquals("10h", efforts.get(new Integer(week+1)));
-        assertEquals("10h", efforts.get(new Integer(week+2)));     
+        assertEquals("10h", efforts.get(new Integer(week)));
+        assertEquals("10h", efforts.get(new Integer(week+1)));     
     }
     /**
      * Tests ProjectBusiness class's methods moveUp, moveDown, moveToTop and

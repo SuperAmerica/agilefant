@@ -438,7 +438,7 @@ public class ProjectBusinessImpl implements ProjectBusiness {
         CalendarUtils cUtils = new CalendarUtils();
         HashMap<Integer, String> effortLefts = new HashMap<Integer, String>();
         
-        Date start = cUtils.nextMonday(from);        
+        Date start = from;
         Date end = cUtils.nextMonday(start);
         cal.setTime(start);
         Integer week = cal.get(GregorianCalendar.WEEK_OF_YEAR);
@@ -506,7 +506,7 @@ public class ProjectBusinessImpl implements ProjectBusiness {
         CalendarUtils cUtils = new CalendarUtils();
         HashMap<Integer, String> overheads = new HashMap<Integer, String>();
         
-        Date start = cUtils.nextMonday(from);        
+        Date start = from;        
         Date end = cUtils.nextMonday(start);
         cal.setTime(start);
         Integer week = cal.get(GregorianCalendar.WEEK_OF_YEAR);

@@ -2,7 +2,6 @@
 update BacklogItem, IterationGoal set iterationGoal_id = null where BacklogItem.iterationGoal_id = IterationGoal.id and BacklogItem.backlog_id != IterationGoal.iteration_id;
 
 -- Update AFTime to be in seconds and not in milliseconds
-update BacklogItem set remainingEffortEstimate = remainingEffortEstimate / 1000;
 update BacklogItem set effortLeft = effortLeft / 1000;
 update BacklogItem set originalEstimate = originalEstimate / 1000;
 update HistoryEntry set effortLeft = effortLeft / 1000;

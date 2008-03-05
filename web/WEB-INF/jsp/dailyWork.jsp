@@ -20,6 +20,7 @@ View daily work for user: <ww:select list="userList"
 </ww:form>
 
 <%@ include file="./inc/_userLoad.jsp" %>
+
 <c:choose>
 <c:when test="${!((empty backlogItemsForUserInProgress) &&
 		(empty iterations) &&

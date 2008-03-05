@@ -93,9 +93,9 @@ public class ProjectBusinessTest extends SpringTestCase {
         Project pro = new Project();
         pro.setName("Jorma");
         BacklogItem bli = new BacklogItem();
-        bli.setEffortLeft(new AFTime("6h"));
-        pro.setStartDate(new Date(98, 9, 1));
-        pro.setEndDate(new Date(98, 11, 25));
+        bli.setEffortLeft(new AFTime("14h"));
+        pro.setStartDate(new Date(98, 9, 5));
+        pro.setEndDate(new Date(98, 9, 18));
 
         ArrayList<BacklogItem> bliList = new ArrayList<BacklogItem>();
         bliList.add(bli);
@@ -106,26 +106,109 @@ public class ProjectBusinessTest extends SpringTestCase {
         items.put(pro, bliList);
 
         GregorianCalendar cal = new GregorianCalendar();
-        cal.setTime(new Date(98, 9, 2));
+        cal.setTime(new Date(98, 9, 5));
         int week = cal.get(GregorianCalendar.WEEK_OF_YEAR);
 
-        assertEquals(40, week);
+        assertEquals(41, week);
         HashMap<Integer, String> efforts = this.projectBusiness
                 .calculateEffortLefts(cal.getTime(), 2, items);
         assertEquals(2, efforts.size());
-        assertEquals("6h", efforts.get(new Integer(week)));
-        assertEquals("6h", efforts.get(new Integer(week + 1)));
+        assertEquals("7h", efforts.get(new Integer(week)));
+        assertEquals("7h", efforts.get(new Integer(week + 1)));
+        
+       
     }
 
+    @SuppressWarnings("deprecation")
+    public void testCalculateEffortLefts_Projects_Responsibles() {
+        List<Project> projects = new ArrayList<Project>();
+        Project pro = new Project();
+        pro.setName("Jorma");
+        BacklogItem bli = new BacklogItem();
+        bli.setEffortLeft(new AFTime("14h"));
+        // Test when assigned responsible -> Should diving by the number
+        // of responsibles
+        User user = new User();
+        user.setLoginName("Esko");
+        
+        User user2 = new User();
+        user2.setLoginName("Teppo");
+        List<User> list = new ArrayList<User>();
+        list.add(user);
+        list.add(user2);
+        bli.setResponsibles(list);
+        pro.setStartDate(new Date(98, 9, 5));
+        pro.setEndDate(new Date(98, 9, 18));
+
+        ArrayList<BacklogItem> bliList = new ArrayList<BacklogItem>();
+        bliList.add(bli);
+        pro.setBacklogItems(bliList);
+        projects.add(pro);
+
+        HashMap<Backlog, List<BacklogItem>> items = new HashMap<Backlog, List<BacklogItem>>();
+        items.put(pro, bliList);
+
+        GregorianCalendar cal = new GregorianCalendar();
+        cal.setTime(new Date(98, 9, 5));
+        int week = cal.get(GregorianCalendar.WEEK_OF_YEAR);
+
+        assertEquals(41, week);
+        HashMap<Integer, String> efforts = this.projectBusiness
+                .calculateEffortLefts(cal.getTime(), 2, items);
+        assertEquals(2, efforts.size());
+        assertEquals("3h 30min", efforts.get(new Integer(week)));
+        assertEquals("3h 30min", efforts.get(new Integer(week + 1)));
+        
+    }
     @SuppressWarnings("deprecation")
     public void testCalculateEffortLefts_Iterations() {
         List<Iteration> projects = new ArrayList<Iteration>();
         Iteration pro = new Iteration();
         pro.setName("Jorma");
         BacklogItem bli = new BacklogItem();
-        bli.setEffortLeft(new AFTime("6h"));
-        pro.setStartDate(new Date(98, 9, 1));
-        pro.setEndDate(new Date(98, 11, 25));
+        bli.setEffortLeft(new AFTime("14h"));
+        pro.setStartDate(new Date(98, 9, 5));
+        pro.setEndDate(new Date(98, 9, 18));
+        ArrayList<BacklogItem> bliList = new ArrayList<BacklogItem>();
+        bliList.add(bli);
+        pro.setBacklogItems(bliList);
+        projects.add(pro);
+
+        HashMap<Backlog, List<BacklogItem>> items = new HashMap<Backlog, List<BacklogItem>>();
+        items.put(pro, bliList);
+
+        GregorianCalendar cal = new GregorianCalendar();
+        cal.setTime(new Date(98, 9, 5));
+        int week = cal.get(GregorianCalendar.WEEK_OF_YEAR);
+
+        assertEquals(41, week);
+        HashMap<Integer, String> efforts = this.projectBusiness
+                .calculateEffortLefts(cal.getTime(), 2, items);
+        assertEquals(2, efforts.size());
+        assertEquals("7h", efforts.get(new Integer(week)));
+        assertEquals("7h", efforts.get(new Integer(week + 1)));
+    }
+
+    @SuppressWarnings("deprecation")
+    public void testCalculateEffortLefts_Iterations_Responsibles() {
+        List<Iteration> projects = new ArrayList<Iteration>();
+        Iteration pro = new Iteration();
+        pro.setName("Jorma");
+        BacklogItem bli = new BacklogItem();
+        bli.setEffortLeft(new AFTime("14h"));
+        // Test when assigned responsible -> Should diving by the number
+        // of responsibles
+        User user = new User();
+        user.setLoginName("Esko");
+        
+        User user2 = new User();
+        user2.setLoginName("Teppo");
+        List<User> list = new ArrayList<User>();
+        list.add(user);
+        list.add(user2);
+        bli.setResponsibles(list);
+        pro.setStartDate(new Date(98, 9, 5));
+        pro.setEndDate(new Date(98, 9, 18));
 
         ArrayList<BacklogItem> bliList = new ArrayList<BacklogItem>();
         bliList.add(bli);
@@ -136,15 +219,16 @@ public class ProjectBusinessTest extends SpringTestCase {
         items.put(pro, bliList);
 
         GregorianCalendar cal = new GregorianCalendar();
-        cal.setTime(new Date(98, 9, 2));
+        cal.setTime(new Date(98, 9, 5));
         int week = cal.get(GregorianCalendar.WEEK_OF_YEAR);
 
-        assertEquals(40, week);
+        assertEquals(41, week);
         HashMap<Integer, String> efforts = this.projectBusiness
                 .calculateEffortLefts(cal.getTime(), 2, items);
         assertEquals(2, efforts.size());
-        assertEquals("6h", efforts.get(new Integer(week)));
-        assertEquals("6h", efforts.get(new Integer(week + 1)));
+        assertEquals("3h 30min", efforts.get(new Integer(week)));
+        assertEquals("3h 30min", efforts.get(new Integer(week + 1)));
+        
     }
 
     @SuppressWarnings("deprecation")

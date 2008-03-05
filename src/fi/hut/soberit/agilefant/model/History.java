@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 /**
  * 
@@ -14,7 +15,8 @@ import javax.persistence.Id;
  *
  */
 @Entity
-@DiscriminatorColumn(name = "DTYPE", discriminatorType = DiscriminatorType.INTEGER) 
+@DiscriminatorColumn(name = "DTYPE", discriminatorType = DiscriminatorType.INTEGER)
+@Table(name = "history")
 abstract public class History<T> {
     private int id;
     

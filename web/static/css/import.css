@@ -624,3 +624,11 @@ a.unassigned {
 a.unassigned:hover {
 	color: #e50;
 }
+
+.portfolioActionColumn {
+	white-space: nowrap;
+}
+
+.overhead {
+	white-space: nowrap;
+}

@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -16,8 +17,10 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
+import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.Parameter;
@@ -52,6 +55,7 @@ import fi.hut.soberit.agilefant.web.page.PageItem;
  * @see fi.hut.soberit.agilefant.model.Task
  */
 @Entity
+@Table(name = "backlogitem")
 public class BacklogItem implements PageItem, Assignable, EffortContainer {
 
     private int id;
@@ -151,9 +155,10 @@ public class BacklogItem implements PageItem, Assignable, EffortContainer {
      * 
      * @return Collection of tasks belonging to this backlog item
      */
-    @OneToMany(mappedBy = "backlogItem")
+    @OneToMany(mappedBy = "backlogItem", fetch = FetchType.LAZY)
     @OrderBy(value="rank ASC")
     @Cascade(CascadeType.DELETE_ORPHAN)
+    @BatchSize(size=20)
     public Collection<Task> getTasks() {
         return tasks;
     }
@@ -378,14 +383,16 @@ public class BacklogItem implements PageItem, Assignable, EffortContainer {
      * @return collection of the responsible users
      */
     @ManyToMany(
-            targetEntity = fi.hut.soberit.agilefant.model.User.class
+            targetEntity = fi.hut.soberit.agilefant.model.User.class,
+            fetch = FetchType.LAZY
     )
     @JoinTable(
-            name = "BacklogItem_User",
+            name = "backlogitem_user",
             joinColumns={@JoinColumn(name = "BacklogItem_id")},
             inverseJoinColumns={@JoinColumn(name = "User_id")}
     )
     @OrderBy("initials")
+    @BatchSize(size=20)
     public Collection<User> getResponsibles() {
         return responsibles;
     }

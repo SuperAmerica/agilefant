@@ -57,9 +57,21 @@
 				<tr>
 					<td>Original estimate</td>
 					<td></td>
-					<td colspan="2"><ww:textfield size="10"
-						name="backlogItem.originalEstimate" /><ww:label
-						value="%{getText('webwork.estimateExample')}" /></td>
+					<td colspan="2">
+					<c:choose>
+						<c:when test="${backlogItem.state.name != 'DONE'}">
+							<ww:textfield size="10"
+							name="backlogItem.originalEstimate"
+							id="originalEstimateField" />
+						</c:when>
+						<c:otherwise>
+							<ww:textfield size="10"
+							name="backlogItem.originalEstimate"
+							disabled="true"
+							id="originalEstimateField" />
+						</c:otherwise>
+					</c:choose>
+					<ww:label value="%{getText('webwork.estimateExample')}" /></td>
 				</tr>
 			</c:when>
 			<c:otherwise>
@@ -72,16 +84,45 @@
 						value="${backlogItem.originalEstimate}" /> <ww:url id="resetLink"
 						action="resetBliOrigEstAndEffortLeft" includeParams="none">
 						<ww:param name="backlogItemId" value="${backlogItem.id}" />
-					</ww:url> <ww:a
-						href="%{resetLink}&contextViewName=editBacklogItem&contextObjectId=${backlogItemId}"
-						onclick="return confirmReset()">(reset)</ww:a></td>
+					</ww:url>
+					<c:choose>
+						<c:when test="${backlogItem.state.name == 'DONE'}">
+							<span id="resetText" style="color: #666;">(reset)</span>
+							<span id="resetLink" style="display: none;">
+						</c:when>
+						<c:otherwise>
+						<span id="resetText" style="color: #666; display: none;">(reset)</span>
+							<span id="resetLink">
+						</c:otherwise>
+					</c:choose>
+					
+					<ww:a
+							href="%{resetLink}&contextViewName=editBacklogItem&contextObjectId=${backlogItemId}"
+							onclick="return confirmReset()">(reset)</ww:a>
+					</span>
+					
+					
+					</td>
 				</tr>
 				<tr>
 					<td>Effort left</td>
 					<td></td>
-					<td colspan="2"><ww:textfield size="10"
-						name="backlogItem.effortLeft" /><ww:label
-						value="%{getText('webwork.estimateExample')}" /></td>
+					<td colspan="2">
+					<c:choose>
+						<c:when test="${backlogItem.state.name != 'DONE'}">
+							<ww:textfield size="10"
+							name="backlogItem.effortLeft"
+							id="effortLeftField" />
+						</c:when>
+						<c:otherwise>
+							<ww:textfield size="10"
+							name="backlogItem.effortLeft"
+							disabled="true"
+							id="effortLeftField" />
+						</c:otherwise>
+					</c:choose>
+					<ww:label value="%{getText('webwork.estimateExample')}" />
+					</td>
 				</tr>
 			</c:otherwise>
 		</c:choose>
@@ -89,10 +130,48 @@
 		<tr>
 			<td>State</td>
 			<td></td>
-			<td colspan="2"><ww:select name="backlogItem.state"
+			<td colspan="2">
+			<script type="text/javascript">
+			function change_estimate_enabled(value) {
+				var effLeftField = document.getElementById('effortLeftField');
+				var origEstField = document.getElementById('originalEstimateField');
+				var resetLink = document.getElementById('resetLink');
+				var resetText = document.getElementById('resetText');
+				if (value == 'DONE') {
+					if (effLeftField != null) {
+						effLeftField.disabled = true;
+					}
+					if (origEstField != null) {
+						origEstField.disabled = true;
+					}
+					if (resetLink != null) {
+						resetLink.style.display = "none";
+					}
+					if (resetText != null) {
+						resetText.style.display = "";
+					}
+				}
+				else {
+					if (effLeftField != null) {
+						effLeftField.disabled = false;
+					}
+					if (origEstField != null) {
+						origEstField.disabled = false;
+					}
+					if (resetLink != null) {
+						resetLink.style.display = "";
+					}
+					if (resetText != null) {
+						resetText.style.display = "none";
+					}
+				}
+			}
+			</script> 
+			<ww:select name="backlogItem.state"
 				value="backlogItem.state.name"
 				list="@fi.hut.soberit.agilefant.model.State@values()" listKey="name"
-				listValue="getText('task.state.' + name())" /></td>
+				listValue="getText('task.state.' + name())" 
+				onchange="change_estimate_enabled(this.value);"/></td>
 		</tr>
 
 		<tr>

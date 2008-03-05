@@ -7,10 +7,14 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
+import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Type;
 
+@BatchSize(size=20)
 @Entity
+@Table(name = "assignment")
 public class Assignment implements Serializable {
     private static final long serialVersionUID = 5391104304173714927L;
     

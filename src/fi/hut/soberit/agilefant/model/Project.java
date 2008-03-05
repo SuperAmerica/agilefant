@@ -9,10 +9,14 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 
+import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import org.hibernate.annotations.OrderBy;
 import org.hibernate.annotations.Type;
 
@@ -45,6 +49,7 @@ import fi.hut.soberit.agilefant.web.page.PageItem;
  * @see fi.hut.soberit.agilefant.model.Iteration
  */
 @Entity
+@BatchSize(size=20)
 public class Project extends Backlog implements PageItem {
 
     private Product product;
@@ -86,6 +91,7 @@ public class Project extends Backlog implements PageItem {
     /** Iterations under this project. */
     @OneToMany(mappedBy = "project")
     @OrderBy(clause = "startDate asc, endDate asc")
+    @BatchSize(size=20)
     public List<Iteration> getIterations() {
         return iterations;
     }

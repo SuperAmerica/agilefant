@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 
+import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.OrderBy;
 
 import fi.hut.soberit.agilefant.web.page.PageItem;
@@ -32,6 +33,7 @@ import fi.hut.soberit.agilefant.web.page.PageItem;
  * @see fi.hut.soberit.agilefant.model.Project
  */
 @Entity
+@BatchSize(size=20)
 public class Product extends Backlog implements PageItem {
 
     private List<Project> projects = new ArrayList<Project>();
@@ -39,6 +41,7 @@ public class Product extends Backlog implements PageItem {
     /** Get the collection of projects belonging to this product. */
     @OneToMany(mappedBy = "product")
     @OrderBy(clause = "startDate asc, endDate asc")
+    @BatchSize(size=20)
     public List<Project> getProjects() {
         return projects;
     }

@@ -199,7 +199,7 @@ public class BacklogBusinessImpl implements BacklogBusiness {
                 sourceBacklogIds.add(bli.getBacklog().getId());
 
                 // Set originalestimate to current effortleft
-                bli.setOriginalEstimate(bli.getEffortLeft());
+                //bli.setOriginalEstimate(bli.getEffortLeft());
 
                 // Remove iteration goal
                 if (bli.getIterationGoal() != null) {
@@ -250,6 +250,27 @@ public class BacklogBusinessImpl implements BacklogBusiness {
         }
         data.setEffortHours(hours);
         data.setNonEstimatedItems(nonEstimatedBLIs);
+        return data;
+    }
+    
+    /** {@inheritDoc} * */
+    public EffortSumData getEffortLeftResponsibleDividedSum(Collection<BacklogItem> bliList) {
+        EffortSumData data = new EffortSumData();
+        AFTime hours = new AFTime(0);
+        for (BacklogItem bli : bliList) {
+            if (bli.getEffortLeft() != null){  
+               if(bli.getResponsibles() != null){ 
+                   if(bli.getResponsibles().size() != 0){
+                       hours.add(new AFTime(bli.getEffortLeft().getTime()/bli.getResponsibles().size()));
+                   }else{
+                       hours.add(bli.getEffortLeft());
+                   }
+               }else{
+                   hours.add(bli.getEffortLeft());
+               }
+            }
+        }
+        data.setEffortHours(hours);
         return data;
     }
 

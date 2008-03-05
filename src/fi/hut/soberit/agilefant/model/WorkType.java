@@ -6,7 +6,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
+import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Type;
 
 /**
@@ -23,6 +25,8 @@ import org.hibernate.annotations.Type;
  * @see fi.hut.soberit.agilefant.model.ProjectType
  */
 @Entity
+@BatchSize(size=20)
+@Table(name = "worktype")
 public class WorkType {
 
     private int id;

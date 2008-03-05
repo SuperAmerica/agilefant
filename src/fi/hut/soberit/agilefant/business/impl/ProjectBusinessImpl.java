@@ -463,11 +463,28 @@ public class ProjectBusinessImpl implements ProjectBusiness {
                     pro = (Project)blog; 
                     List<BacklogItem> blis = items.get((Backlog)pro);
                     if(blis != null){
-                        // TODO: Sum must be divided with length of project to get the load more rational
-                        AFTime sum = this.backlogBusiness.getEffortLeftSum(blis).getEffortHours();
+                        // Dividing for weeks that project hits
+                        AFTime sum = this.backlogBusiness.getEffortLeftResponsibleDividedSum(blis).getEffortHours();
+                        int projectLength = cUtils.getLengthInDays(pro.getStartDate(), pro.getEndDate());
+                        log.debug("Week Project length: "+projectLength+" days");
+                        int weekEndDaysInProject = cUtils.getWeekEndDays(pro.getStartDate(),pro.getEndDate());
+                        log.debug("Excluding "+weekEndDaysInProject + " days from project as week end days");
+                        projectLength = projectLength - weekEndDaysInProject;
+                        if(projectLength == 0){ // TODO Find better way to prevent null divination if project on weekend
+                            projectLength = 1;
+                        }
+                        List<Date> dates = cUtils.getProjectDaysList(pro.getStartDate(), pro.getEndDate(), start, new Date(end.getTime()-86400000L), false);
+                        int projectDaysOnWeek = 0;
+                        if(dates != null) {
+                            projectDaysOnWeek = dates.size();
+                        }
+                        log.debug("Week Project length (modified): "+projectLength+" days");
+                        log.debug("Week Project days:"+projectDaysOnWeek);
+                        log.debug("Week Project effort per day: "+new AFTime(sum.getTime()/(long)projectLength));
+                        sum = new AFTime((sum.getTime()/(long)projectLength)*projectDaysOnWeek);
                         if(sum != null){
                             total.add(sum);
-                            log.debug("Adding: "+sum);
+                            log.debug("Week effort sum: "+sum);
                         }
                     }
                 }
@@ -475,17 +492,35 @@ public class ProjectBusinessImpl implements ProjectBusiness {
                     it = (Iteration)blog;
                     List<BacklogItem> blis = items.get((Backlog)it);
                     if(blis != null){
-                        // TODO: Sum must be divided with length of project to get the load more rational
-                        AFTime sum = this.backlogBusiness.getEffortLeftSum(blis).getEffortHours();
+                        // Dividing for weeks that project hits
+                        AFTime sum = this.backlogBusiness.getEffortLeftResponsibleDividedSum(blis).getEffortHours();
+                        int projectLength = cUtils.getLengthInDays(it.getStartDate(), it.getEndDate());
+                        log.debug("Week Project length: "+projectLength+" days");
+                        int weekEndDaysInProject = cUtils.getWeekEndDays(it.getStartDate(),it.getEndDate());
+                        log.debug("Excluding "+weekEndDaysInProject + " days from project as week end days");
+                        projectLength = projectLength - weekEndDaysInProject;
+                        if(projectLength == 0){ // TODO Find better way to prevent null divination if project on weekend
+                            projectLength = 1;
+                        }
+                        List<Date> dates = cUtils.getProjectDaysList(it.getStartDate(), it.getEndDate(), start, new Date(end.getTime()-86400000L), false);
+                        int projectDaysOnWeek = 0;
+                        if(dates != null) {
+                            projectDaysOnWeek = dates.size();
+                        }
+                        log.debug("Week Project length(modified): "+projectLength+" days");
+                        log.debug("Week Project days:"+projectDaysOnWeek);
+                        log.debug("Week Project effort per day: "+new AFTime(sum.getTime()/(long)projectLength));
+                        sum = new AFTime((sum.getTime()/(long)projectLength)*projectDaysOnWeek);
                         if(sum != null){
                             total.add(sum);
-                            log.debug("Adding: "+sum);
+                            log.debug("Week effort sum: "+sum);
                         }
                     }
                 }
                 
 
             }
+            
             effortLefts.put(week, total.toString());
             start = cUtils.nextMonday(start);
             end = cUtils.nextMonday(start);
@@ -592,16 +627,28 @@ public class ProjectBusinessImpl implements ProjectBusiness {
         overheadsMap = this.calculateOverheads(new GregorianCalendar().getTime(), weeksAhead, assignedBacklogs, user);
         List<Integer> weeks = new ArrayList<Integer>(effortsLeftMap.keySet());
         Collections.sort(weeks);
+        
+        AFTime effTotal = new AFTime(0);
+        AFTime overheadTotal = new AFTime(0);
+        AFTime total = new AFTime(0);
         for(Integer week : weeks){
             AFTime weekTotal = new AFTime(0);
             AFTime tmp = new AFTime(effortsLeftMap.get(week));                        
-            weekTotal.add(tmp);
+            weekTotal.add(tmp);            
+            effTotal.add(tmp);
+            total.add(tmp);
             tmp = new AFTime(overheadsMap.get(week));
+            overheadTotal.add(tmp);
             weekTotal.add(tmp);
+            total.add(tmp);
             log.debug("Setting weekly total for week"+week+" to :"+weekTotal);
             totalsMap.put(week, weekTotal.toString());            
             weekNumbers.add(week);
+            
         }
+        overallTotals[0] = effTotal.toString();
+        overallTotals[1] = overheadTotal.toString();
+        overallTotals[2] = total.toString();
                 
         DailyWorkLoadData data = new DailyWorkLoadData();
         data.setEffortsLeftMap(effortsLeftMap);

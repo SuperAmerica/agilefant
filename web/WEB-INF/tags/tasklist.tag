@@ -17,12 +17,33 @@ Effort estimate
 	<ww:hidden name="backlogItemId" value="${backlogItem.id}" />
 	<ww:hidden name="contextViewName" value="${contextViewName}" />
 	<ww:hidden name="contextObjectId" value="${contextObjectId}" />
-	<ww:textfield size="5" name="effortLeft"
-		value="${backlogItem.effortLeft}" />
+	<c:choose>
+		<c:when test="${backlogItem.state.name != 'DONE'}">
+			<ww:textfield size="5" name="effortLeft"
+				value="${backlogItem.effortLeft}" id="effortBli_${backlogItem.id}" />	
+		</c:when>
+		<c:otherwise>
+			<ww:textfield size="5" name="effortLeft"
+				value="${backlogItem.effortLeft}" id="effortBli_${backlogItem.id}"
+				disabled="true" />
+		</c:otherwise>
+	</c:choose>
 	<ww:select name="state" value="#attr.backlogItem.state.name"
 		list="@fi.hut.soberit.agilefant.model.State@values()" listKey="name"
-		listValue="getText('backlogItem.state.' + name())" />
+		listValue="getText('backlogItem.state.' + name())"
+		onchange="change_effort_enabled(this.value, ${backlogItem.id})"/>
 	<hr />
+	
+	<script type="text/javascript">
+	function change_effort_enabled(value, bliId) {
+		if (value == "DONE") {
+			document.getElementById("effortBli_" + bliId).disabled = true;
+		}
+		else {
+			document.getElementById("effortBli_" + bliId).disabled = false;
+		}
+	}
+	</script>
 
 	</li>
 	<c:forEach items="${backlogItem.tasks}" var="task">
@@ -47,5 +68,6 @@ Effort estimate
 	</c:forEach>
 	<ww:submit value="Store" action="quickStoreTaskList"/>
 </ww:form>
+
 </ul>
 </div>

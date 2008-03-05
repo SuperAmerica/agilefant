@@ -59,7 +59,13 @@ public class AFTimeTest extends TestCase {
         Locale.setDefault(Locale.GERMAN);
         assertEquals(getTime(0, 3, 30), parse("3,5"));
         assertEquals(getTime(0, 3, 30), parse("3.5"));
-
+        
+        // Test with negative values
+        assertEquals(getTime(0, -2, -30), parse("-2.5"));
+        assertEquals(getTime(0, 0, -30), parse("-0.5"));
+        assertEquals(getTime(0, -5, 0), parse("-5."));
+        assertEquals(getTime(0, -555, -6), parse("-555.1"));
+        
         // Parse zero times properly (note: qualifier can be left out here!)
         assertEquals(0, parse("0"));
         assertEquals(0, parse("0d 0h 0m"));

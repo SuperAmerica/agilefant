@@ -13,6 +13,7 @@ import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -22,10 +23,15 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+import org.hibernate.annotations.Proxy;
 import org.hibernate.annotations.Type;
 
 import fi.hut.soberit.agilefant.util.BacklogItemPriorityComparator;
@@ -52,11 +58,13 @@ import fi.hut.soberit.agilefant.util.BacklogItemPriorityComparator;
  * @see fi.hut.soberit.agilefant.model.BacklogItem
  * @see fi.hut.soberit.agilefant.model.Task
  */
+@BatchSize(size=20)
 @Entity
 // inheritance implemented in db using a single table
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 // subclass types discriminated using string column
 @DiscriminatorColumn(name = "backlogtype", discriminatorType = DiscriminatorType.STRING)
+@Table(name = "backlog")
 public abstract class Backlog implements Assignable {
 
     private int id;
@@ -73,7 +81,7 @@ public abstract class Backlog implements Assignable {
 
     private Collection<Assignment> assignments = new HashSet<Assignment>();
 
-    @OneToMany(mappedBy = "backlog")
+    @OneToMany(mappedBy = "backlog", fetch = FetchType.LAZY)
     /** A backlog can contain many backlog items. */
     public Collection<BacklogItem> getBacklogItems() {
         return backlogItems;
@@ -257,7 +265,7 @@ public abstract class Backlog implements Assignable {
         return new Date(0);
     }
 
-    @OneToOne()
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "history_fk")
     @Cascade(CascadeType.ALL)
     public BacklogHistory getBacklogHistory() {

@@ -125,6 +125,16 @@ public interface BacklogBusiness {
     public EffortSumData getEffortLeftSum(Collection<BacklogItem> bliList);
     
     /**
+     * Calculates the sum of effort lefts of the given backlog items.
+     * If assigned to multiple responsible, divides with number of responsibles
+     * Includes hours and number of non-estimated items.
+     * 
+     * @param bliList
+     *                List of backlog items
+     * @return sum of effort lefts
+     */    
+    public EffortSumData getEffortLeftResponsibleDividedSum(Collection<BacklogItem> bliList);
+    /**
      * Calculates the sum of original estimates of the given backlog items
      * Includes hours and number of non-estimated items.
      * 

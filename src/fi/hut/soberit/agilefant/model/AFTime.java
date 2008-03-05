@@ -208,48 +208,30 @@ public class AFTime extends java.sql.Time {
             }
 
             if (allFalse) {
-                // If we got here, we didn't understood any of the input.
-                // We should understand bare integers and reals as hours
-                // however, in addition to dhm - fields.
-                // Let's try parsing those here.
-
-                // get next token, any sequence of non white space characters
-                String token = scanner.findInLine("\\S+");
-
-                // if the scanner succeeded finding the token and there's no
-                // more input
-                if (token != null && !scanner.hasNext()) {
-
-                    // ParsePosition instance to track the NumberFormat parse -
-                    // call
-                    ParsePosition parsePos = new ParsePosition(0);
-
-                    // Accepts "," and "." as decimal separator regardless of
-                    // locale
-                    NumberFormat format = NumberFormat.getInstance(Locale.US);
-                    token = token.replaceAll(",", ".");
-                    Number number = format.parse(token, parsePos);
-
-                    // fail if got null, parsePosition reports an error or not
-                    // all input was consumed
-                    if (number == null || parsePos.getErrorIndex() != -1
-                            || parsePos.getIndex() != token.length())
-                        throw new IllegalArgumentException("invalid input");
-
-                    // get the decimal value
-                    double hours = number.doubleValue();
-
-                    // no negative values
-                    if (hours < 0)
-                        throw new IllegalArgumentException(
-                                "negative input not allowed");
-
-                    // get the decimal hours in milliseconds
+                Scanner sc = new Scanner(s);
+                
+                try {
+                    sc.next("^\\s*(-?)(\\d+)[,|\\.]?(\\d*)\\s*$");
+                }
+                catch (NoSuchElementException e) {
+                    throw new IllegalArgumentException("invalid input");
+                }
+                
+                MatchResult dotResult = sc.match();
+                
+                if (dotResult.group(1).equals("-") && allowNegatives) {
+                    negative = true;
+                }
+                
+                double hours = Double.parseDouble(dotResult.group(2) + "." + dotResult.group(3));
+                
+                if (negative) {
+                    return -((long) (hours * (double) HOUR_IN_MILLIS));
+                }
+                else {
                     return (long) (hours * (double) HOUR_IN_MILLIS);
                 }
 
-                // otherwise fail
-                throw new IllegalArgumentException("invalid input");
             }
 
             // check if there's more input
@@ -316,29 +298,40 @@ public class AFTime extends java.sql.Time {
         // a flag to track when we should
         // put space between elements
         boolean hadPrevious = false;
-
+        boolean negative = false;
+        
         // string to build the result in
         String result = "";
 
+        
         // days
         if (time[Days] != 0) {
-            result += time[Days] + "d";
+            if (time[Days] < 0) {
+                negative = true;
+            }
+            result += Math.abs(time[Days]) + "d";
             hadPrevious = true;
         }
 
         // hours
         if (time[Hours] != 0) {
+            if (time[Hours] < 0) {
+                negative = true;
+            }
             if (hadPrevious)
                 result += " ";
-            result += time[Hours] + "h";
+            result += Math.abs(time[Hours]) + "h";
             hadPrevious = true;
         }
 
         // minutes
         if (time[Minutes] != 0) {
+            if (time[Minutes] < 0) {
+                negative = true;
+            }
             if (hadPrevious)
                 result += " ";
-            result += time[Minutes] + "min";
+            result += Math.abs(time[Minutes]) + "min";
         }
 
         // check the emptyness once more here,
@@ -347,7 +340,12 @@ public class AFTime extends java.sql.Time {
         if (result.length() == 0)
             result = "0";
 
-        return result;
+        if (negative) {
+            return "-" + result;
+        }
+        else {
+            return result;
+        }
     }
 
     /**

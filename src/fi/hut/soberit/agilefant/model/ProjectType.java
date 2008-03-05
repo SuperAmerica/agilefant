@@ -9,7 +9,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
+import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Type;
 import org.hibernate.validator.Range;
 
@@ -28,6 +30,8 @@ import org.hibernate.validator.Range;
  * @see fi.hut.soberit.agilefant.model.WorkType
  */
 @Entity
+@BatchSize(size=20)
+@Table(name = "projecttype")
 public class ProjectType implements Comparable<ProjectType> {
 
     private int id;

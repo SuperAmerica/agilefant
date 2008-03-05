@@ -3,9 +3,9 @@ package fi.hut.soberit.agilefant.model;
 import java.util.Collection;
 import java.util.HashSet;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -13,8 +13,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Type;
 
 import fi.hut.soberit.agilefant.db.hibernate.Email;
@@ -27,7 +29,9 @@ import fi.hut.soberit.agilefant.web.page.PageItem;
  * The user carries information on username, password, full name and email. Also
  * there're different collections of items, where this user is assigned.
  */
+@BatchSize(size=20)
 @Entity
+@Table(name = "user")
 public class User implements PageItem {
 
     private int id;
@@ -137,7 +141,7 @@ public class User implements PageItem {
     }
 
     /** Get backlog items, of which the user is responsible. */
-    @ManyToMany(mappedBy = "responsibles", targetEntity = fi.hut.soberit.agilefant.model.BacklogItem.class)
+    @ManyToMany(mappedBy = "responsibles", targetEntity = fi.hut.soberit.agilefant.model.BacklogItem.class, fetch = FetchType.LAZY)
     public Collection<BacklogItem> getBacklogItems() {
         return backlogItems;
     }
@@ -222,10 +226,11 @@ public class User implements PageItem {
      * @return the teams
      */
     @ManyToMany(
-            targetEntity = fi.hut.soberit.agilefant.model.Team.class
+            targetEntity = fi.hut.soberit.agilefant.model.Team.class,
+            fetch = FetchType.LAZY
     )
     @JoinTable(
-            name = "Team_User",
+            name = "team_user",
             joinColumns = {@JoinColumn( name = "User_id" )},
             inverseJoinColumns = {@JoinColumn( name = "Team_id")}
     )

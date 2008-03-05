@@ -12,8 +12,10 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Type;
 
 /**
@@ -24,8 +26,9 @@ import org.hibernate.annotations.Type;
  * @author rjokelai
  *
  */
-
+@BatchSize(size=20)
 @Entity
+@Table(name = "team")
 public class Team implements Comparable<Team> {
     
     private int id;
@@ -98,10 +101,11 @@ public class Team implements Comparable<Team> {
             targetEntity=fi.hut.soberit.agilefant.model.User.class
     )
     @JoinTable(
-            name = "Team_User",
+            name = "team_user",
             joinColumns = {@JoinColumn( name = "Team_id" )},
             inverseJoinColumns = {@JoinColumn( name = "User_id" )}
     )
+    @BatchSize(size=5)
     public Collection<User> getUsers() {
         return users;
     }

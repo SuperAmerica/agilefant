@@ -14,6 +14,7 @@ import javax.persistence.Transient;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hibernate.annotations.BatchSize;
 
 import fi.hut.soberit.agilefant.web.page.PageItem;
 
@@ -42,6 +43,7 @@ import fi.hut.soberit.agilefant.web.page.PageItem;
  * @see fi.hut.soberit.agilefant.model.IterationGoal
  */
 @Entity
+@BatchSize(size=20)
 public class Iteration extends Backlog implements PageItem {
 
     private Date startDate;

@@ -11,8 +11,10 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.Type;
 
@@ -36,6 +38,8 @@ import fi.hut.soberit.agilefant.web.page.PageItem;
  * @see fi.hut.soberit.agilefant.model.BacklogItem
  */
 @Entity
+@BatchSize(size=20)
+@Table(name = "iterationgoal")
 public class IterationGoal implements PageItem {
 
     private int id;

@@ -14,9 +14,11 @@
 <ww:set name="teamList" value="#attr.teamList" />
 var teams = [<aef:teamJson items="${teamList}"/>]
 </script>
-<h2>Edit Project Rank </h2>
+<h2>Development Portfolio</h2>
 
-<h4>Development Portfolio</h4>
+<h4>Ranked Projects</h4>
+
+
 <p><display:table name="${ongoingRankedProjects}" id="row">
 	<display:column title="Rank">
 		<c:out value="${row_rowNum}" />
@@ -27,7 +29,7 @@ var teams = [<aef:teamJson items="${teamList}"/>]
 			<c:out value="${row.product.name}: ${row.name}" />
 		</ww:a>
 	</display:column>
-	<display:column title="Action">
+	<display:column title="Action" class="portfolioActionColumn">
 		<ww:url id="moveTopLink" action="moveProjectTop">
 			<ww:param name="projectId" value="${row.id}" />
 		</ww:url>
@@ -112,7 +114,7 @@ var teams = [<aef:teamJson items="${teamList}"/>]
 			</display:column>
 			
 			
-			<display:column title="Load Left">
+			<display:column title="Effort Left">
 				<c:out value="${loadLefts[idstring]}" />
 			</display:column>
 			
@@ -241,7 +243,7 @@ var teams = [<aef:teamJson items="${teamList}"/>]
 			</display:column>
 			
 			
-			<display:column title="Load Left">
+			<display:column title="Effort Left">
 				<c:out value="${loadLefts[idstring]}" />
 			</display:column>
 			

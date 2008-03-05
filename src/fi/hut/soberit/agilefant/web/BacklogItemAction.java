@@ -297,7 +297,7 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
                 && storable.getBacklog() != this.backlog
                 && this.backlog != null) {
             storable.getBacklog().getBacklogItems().remove(storable);
-            storable.setOriginalEstimate(storable.getEffortLeft());
+            //storable.setOriginalEstimate(storable.getEffortLeft());
             backlog.getBacklogItems().add(storable);
             
             // Remove the iteration goal, if the bli is moved

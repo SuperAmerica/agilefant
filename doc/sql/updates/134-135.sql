@@ -16,3 +16,19 @@ update Task set rank = id;
 -- Overhead-kenttä
 alter table Assignment add column deltaOverhead integer;
 alter table Backlog add column defaultOverhead integer;
+
+-- Rename all tables to small characters
+rename table Assignment to assignment,
+	Backlog to backlog,
+	BacklogItem to backlogitem,
+	BacklogItem_User to backlogitem_user,
+	History to history,
+	HistoryEntry to historyentry,
+	IterationGoal to iterationgoal,
+	ProjectType to projecttype,
+	Task to task,
+	Team to team,
+	Team_User to team_user,
+	User to `user`,
+	WorkType to worktype;
+	

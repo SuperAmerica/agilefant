@@ -9,8 +9,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.Type;
 
@@ -40,7 +42,9 @@ import fi.hut.soberit.agilefant.web.page.PageItem;
  * useful for a Project manager to see the multitude of the tasks assigned to
  * each worker, to be able to balance the workload within her crew.
  */
+@BatchSize(size=20)
 @Entity
+@Table(name = "task")
 public class Task implements PageItem {
 
     private int id;

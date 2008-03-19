@@ -1,6 +1,7 @@
 package fi.hut.soberit.agilefant.business;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.Map;
@@ -176,4 +177,14 @@ public interface BacklogBusiness {
      */
     public void removeAssignments(User user);
     
+    
+    /**
+     * Get weekdays left for an ongoing backlog. Only works for projects
+     * and iterations.
+     * 
+     * @param backlog backlog to get
+     * @param from
+     * @return number of weekdays left
+     */
+    public int getWeekdaysLeftInBacklog(Backlog backlog, Date from);
 }

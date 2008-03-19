@@ -2,6 +2,8 @@ package fi.hut.soberit.agilefant.business.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -23,7 +25,10 @@ import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.Assignment;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
+import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Priority;
+import fi.hut.soberit.agilefant.model.Product;
+import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.State;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.util.EffortSumData;
@@ -382,6 +387,59 @@ public class BacklogBusinessImpl implements BacklogBusiness {
             allUsers.removeAll(users);
             return allUsers;
         }
+
+    }
+    
+    /** {@inheritDoc} */
+    public int getWeekdaysLeftInBacklog(Backlog backlog, Date from) {
+        Date startDate = new Date(0);
+        Date endDate = new Date(0);
+        GregorianCalendar current = new GregorianCalendar();
+        int numberOfWeekdays = 0;
+        
+        // Backlog shouldn't be a product
+        if (backlog instanceof Product) {
+            return 0;
+        }
+        else if (backlog instanceof Project) {
+            startDate = ((Project)backlog).getStartDate();
+            endDate = ((Project)backlog).getEndDate();
+        }
+        else {
+            startDate = ((Iteration)backlog).getStartDate();
+            endDate = ((Iteration)backlog).getEndDate();
+        }
+        
+                
+        // If project or iteration is past
+        if (from.after(endDate)) {
+            return 0;
+        }
+        
+        // Check, which is later, start date or from 
+        if (from.after(startDate)) {
+            current.setTime(from);
+        }
+        else {
+            current.setTime(startDate);
+        }
+        
+        Date currentTime = current.getTime();
+        
+        // Add 1 to endDate to correct the time offset
+        endDate.setDate(endDate.getDate() + 1);
+        
+        // Loop through the dates
+        while (currentTime.before(endDate)) {
+            if (current.get(GregorianCalendar.DAY_OF_WEEK) != GregorianCalendar.SUNDAY && 
+                    current.get(GregorianCalendar.DAY_OF_WEEK) != GregorianCalendar.SATURDAY) {
+                numberOfWeekdays++;
+            }
+            current.add(GregorianCalendar.DATE, 1);
+            currentTime = current.getTime();
+        }
+        
+        return numberOfWeekdays;
 
     }
 

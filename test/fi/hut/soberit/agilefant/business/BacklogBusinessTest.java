@@ -6,6 +6,8 @@ import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 
 import junit.framework.TestCase;
@@ -157,26 +159,26 @@ public class BacklogBusinessTest extends TestCase {
         assignmentDAO.store(assignment1);
         userDAO.store(user1);
         backlogDAO.store(backlog);
-        
+
         expect(userDAO.get(user2.getId())).andReturn(user2);
         assignmentDAO.store(assignment2);
         userDAO.store(user2);
         backlogDAO.store(backlog);
-        
+
         replay(userDAO);
 
         // run method under test
         int[] selectedUserIds = { user1.getId(), user2.getId() };
         assertEquals(0, backlog.getAssignments().size());
-        backlogBusiness.setAssignments(selectedUserIds, new HashMap<String, Assignment>(),  backlog);
-        assertEquals(2, backlog.getAssignments().size());     
-       
-        
+        backlogBusiness.setAssignments(selectedUserIds,
+                new HashMap<String, Assignment>(), backlog);
+        assertEquals(2, backlog.getAssignments().size());
+
         // verify behavior
         verify(userDAO);
 
     }
-    
+
     public void testMoveMultipleBacklogItems() {
         backlogDAO = createMock(BacklogDAO.class);
         bliDAO = createMock(BacklogItemDAO.class);
@@ -184,13 +186,13 @@ public class BacklogBusinessTest extends TestCase {
         backlogBusiness.setBacklogDAO(backlogDAO);
         backlogBusiness.setBacklogItemDAO(bliDAO);
         backlogBusiness.setHistoryBusiness(historyBusiness);
-        
+
         Backlog iteration = new Iteration();
         Backlog project = new Project();
         IterationGoal iterationGoal = new IterationGoal();
         iteration.setId(121);
         project.setId(124);
-        
+
         BacklogItem bli1 = new BacklogItem();
         BacklogItem bli2 = new BacklogItem();
         BacklogItem bli3 = new BacklogItem();
@@ -202,7 +204,7 @@ public class BacklogBusinessTest extends TestCase {
         bli1.setBacklog(iteration);
         bli2.setBacklog(iteration);
         bli3.setBacklog(iteration);
-        
+
         expect(backlogDAO.get(124)).andReturn(project);
         expect(bliDAO.get(13)).andReturn(bli1);
         bliDAO.store(bli1);
@@ -210,27 +212,57 @@ public class BacklogBusinessTest extends TestCase {
         expect(bliDAO.get(15)).andReturn(bli3);
         bliDAO.store(bli3);
         backlogDAO.store(iteration);
-        
+
         backlogDAO.store(project);
         historyBusiness.updateBacklogHistory(iteration.getId());
         historyBusiness.updateBacklogHistory(project.getId());
-        
+
         replay(backlogDAO);
         replay(bliDAO);
-        
-        int[] ids = {13, 15};
+
+        int[] ids = { 13, 15 };
         try {
             backlogBusiness.moveMultipleBacklogItemsToBacklog(ids, 124);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
-        
+
         assertNull(bli1.getIterationGoal());
         assertNull(bli3.getIterationGoal());
         assertEquals(iterationGoal, bli2.getIterationGoal());
-                
+
         verify(backlogDAO);
         verify(bliDAO);
+    }
+
+    /**
+     * Test the getWeekdaysLeftInBacklog method.
+     */
+    @SuppressWarnings("deprecation")
+    public void testGetWeekdaysLeftInBacklog() {
+        Date from = new Date(103, GregorianCalendar.MARCH, 3);
+
+        // Create an iteration with 9 days left
+        Iteration iter1 = new Iteration();
+        iter1.setStartDate(new Date(103, GregorianCalendar.FEBRUARY, 24));
+        iter1.setEndDate(new Date(103, GregorianCalendar.MARCH, 13));
+
+        // Create a past iteration
+        Iteration iter2 = new Iteration();
+        iter2.setStartDate(new Date(102, GregorianCalendar.FEBRUARY, 24));
+        iter2.setEndDate(new Date(102, GregorianCalendar.MARCH, 13));
+
+        // Create an upcoming iteration
+        Iteration iter3 = new Iteration();
+        iter3.setStartDate(new Date(104, GregorianCalendar.MARCH, 1));
+        iter3.setEndDate(new Date(104, GregorianCalendar.MARCH, 13));
+
+        // Create an ongoing project
+        Project proj = new Project();
+
+        // Assertions
+        assertEquals(9, backlogBusiness.getWeekdaysLeftInBacklog(iter1, from));
+        assertEquals(0, backlogBusiness.getWeekdaysLeftInBacklog(iter2, from));
+        assertEquals(10, backlogBusiness.getWeekdaysLeftInBacklog(iter3, from));
     }
 }

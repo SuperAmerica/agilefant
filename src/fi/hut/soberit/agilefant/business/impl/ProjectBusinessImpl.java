@@ -499,7 +499,7 @@ public class ProjectBusinessImpl implements ProjectBusiness {
                         int weekEndDaysInProject = cUtils.getWeekEndDays(it.getStartDate(),it.getEndDate());
                         log.debug("Excluding "+weekEndDaysInProject + " days from project as week end days");
                         projectLength = projectLength - weekEndDaysInProject;
-                        if(projectLength == 0){ // TODO Find better way to prevent null divination if project on weekend
+                        if(projectLength == 0){ // TODO Find better way to prevent null division if project on weekend
                             projectLength = 1;
                         }
                         List<Date> dates = cUtils.getProjectDaysList(it.getStartDate(), it.getEndDate(), start, new Date(end.getTime()-86400000L), false);
@@ -607,7 +607,7 @@ public class ProjectBusinessImpl implements ProjectBusiness {
      * projects          2   2  1  1
      * (10h blis each)
      * 
-     * So efforts are just summed together and NOT divided for length of
+     * So efforts are just sumassignmentDAO.getAssignment(user, backlog).getDeltaOverhead();med together and NOT divided for length of
      * the project or weeks.
      */
     public DailyWorkLoadData getDailyWorkLoadData(User user, int weeksAhead) {

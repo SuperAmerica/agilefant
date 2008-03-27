@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -31,6 +32,7 @@ import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.State;
 import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.util.BacklogLoadData;
 import fi.hut.soberit.agilefant.util.EffortSumData;
 
 /**
@@ -416,7 +418,7 @@ public class BacklogBusinessImpl implements BacklogBusiness {
             return 0;
         }
         
-        // Check, which is later, start date or from 
+        // Check, which is later, start date or from date
         if (from.after(startDate)) {
             current.setTime(from);
         }
@@ -441,6 +443,179 @@ public class BacklogBusinessImpl implements BacklogBusiness {
         
         return numberOfWeekdays;
 
+    }
+    
+    
+    /** {@inheritDoc} */
+    @SuppressWarnings("deprecation")
+    public int getNumberOfDaysForBacklogOnWeek(Backlog backlog, Date time) {
+        Date startDate = new Date();
+        Date endDate = new Date();
+        
+        // Should not be a product
+        if (backlog instanceof Product) {
+            return 0;
+        }
+        else if (backlog instanceof Project) {
+            startDate = ((Project)backlog).getStartDate();
+            endDate = ((Project)backlog).getEndDate();
+        }
+        else if (backlog instanceof Iteration) {
+            startDate = ((Iteration)backlog).getStartDate();
+            endDate = ((Iteration)backlog).getEndDate();
+        }
+        
+        // Set the time to start from
+        GregorianCalendar cal = new GregorianCalendar();
+        cal.setFirstDayOfWeek(GregorianCalendar.MONDAY);
+        cal.setTime(time);
+        cal.set(GregorianCalendar.HOUR, 0);
+        cal.set(GregorianCalendar.MINUTE, 0);
+        cal.set(GregorianCalendar.SECOND, 2);
+        
+        // Get the number of week
+        int numberOfWeek = cal.get(GregorianCalendar.WEEK_OF_YEAR);
+        int numberOfDays = 0;
+        
+        
+        // Roll back time to monday
+        while (cal.get(GregorianCalendar.DAY_OF_WEEK) != GregorianCalendar.MONDAY) {
+            cal.add(GregorianCalendar.DATE, -1);
+        }
+        
+        // Set the startdate to be at the start of the day
+        startDate.setHours(0);
+        startDate.setMinutes(0);
+        startDate.setSeconds(0);
+        endDate.setHours(23);
+        endDate.setMinutes(59);
+        endDate.setSeconds(59);
+        
+        // Loop through the week
+        while (cal.get(GregorianCalendar.WEEK_OF_YEAR) == numberOfWeek) {
+            // Break the loop on weekend
+            if (cal.get(GregorianCalendar.DAY_OF_WEEK) == GregorianCalendar.SATURDAY ||
+                cal.get(GregorianCalendar.DAY_OF_WEEK) == GregorianCalendar.SUNDAY) {
+                break;
+            }
+            
+            // Check, if the date is in the backlog's timeframe
+            if (startDate.before(cal.getTime()) && endDate.after(cal.getTime())) {
+                numberOfDays++;
+            }
+            
+            cal.add(GregorianCalendar.DATE, 1);
+        }
+        
+        return numberOfDays;
+    }
+        
+    /** {@inheritDoc} */
+    public BacklogLoadData calculateBacklogLoadData(Backlog backlog, User user,
+            Date from, int numberOfWeeks) {
+        
+        // Create the new data storage
+        BacklogLoadData data = new BacklogLoadData();
+        
+        Collection<BacklogItem> bliList = new ArrayList<BacklogItem>();
+        
+        // Loop through the backlog items
+        for (BacklogItem bli : backlog.getBacklogItems()) {
+            if (bli.getResponsibles().contains(user)) {
+                bliList.add(bli);
+            }
+        }
+        
+        System.out.println("Number of backlog items: " + bliList.size());
+        
+        // Get the effort sum
+        EffortSumData effortSum = getEffortLeftResponsibleDividedSum(bliList);
+        data.setTotalEffort(effortSum.getEffortHours());
+        
+        // Check if there are unestimated items
+        if (effortSum.getNonEstimatedItems() > 0) {
+            data.setUnestimatedItems(true);
+        }
+        
+        // Get total number of days left in backlog
+        int numberOfDaysLeft = getWeekdaysLeftInBacklog(backlog, from);
+        
+        // Calculate the effort per day
+        long effortPerDay = (effortSum.getEffortHours().getTime()) / numberOfDaysLeft;
+        
+        
+        // Loop through the weeks
+        GregorianCalendar cal = new GregorianCalendar();
+        cal.setTime(from);
+        for (int i = 0; i < numberOfWeeks; i++) {
+            int daysOnWeek = getNumberOfDaysForBacklogOnWeek(backlog, cal.getTime());
+            AFTime effort = new AFTime(daysOnWeek * effortPerDay);
+            AFTime totals = new AFTime(effort.getTime());
+            
+            System.out.println("Week " + cal.get(GregorianCalendar.WEEK_OF_YEAR) + 
+                    " effort: " + effort);
+            
+            // Insert the week number
+            data.getWeekNumbers().add(cal.get(GregorianCalendar.WEEK_OF_YEAR));
+            
+            // Set the weekly effort
+            data.getEfforts().put(cal.get(GregorianCalendar.WEEK_OF_YEAR), effort);
+            
+            // Set the weekly overhead
+            if (backlog instanceof Project) {
+                AFTime overhead = getOverheadForWeek((Project)backlog, user, daysOnWeek); 
+                data.getOverheads().put(cal.get(GregorianCalendar.WEEK_OF_YEAR), overhead);
+                
+                totals.add(overhead);
+                data.getTotalOverhead().add(overhead);
+            }
+            
+            // Set the weekly total
+            data.getWeeklyTotals().put(cal.get(GregorianCalendar.WEEK_OF_YEAR), totals);
+            
+            // Next week
+            cal.add(GregorianCalendar.WEEK_OF_YEAR, 1);
+        }
+        
+        // Calculate the absolute total
+        data.getAbsoluteTotal().add(data.getTotalEffort());
+        data.getAbsoluteTotal().add(data.getTotalOverhead());
+        
+        System.out.println("Week\tEffort\tOverhead\tTotal");
+        
+        // Print loop for debugging
+        for (Integer weekno : data.getWeekNumbers()) {
+            System.out.println(weekno + "\t" +
+                    data.getEfforts().get(weekno) + "\t" + 
+                    data.getOverheads().get(weekno) + "\t" +
+                    data.getWeeklyTotals().get(weekno));
+        }
+        
+        System.out.println("Total\t" + data.getTotalEffort() + "\t" + data.getTotalOverhead() + 
+                "\t" + data.getAbsoluteTotal());
+        
+                
+        return data;
+    }
+    
+    /** {@inheritDoc} */
+    @SuppressWarnings("deprecation")
+    public AFTime getOverheadForWeek(Project project, User user, int daysOnWeek) {
+        AFTime totalOverhead = new AFTime(0);
+        
+        // Check that the user is assigned
+        for (Assignment ass : project.getAssignments()) {
+            if (ass.getUser().equals(user)) {
+                totalOverhead.add(project.getDefaultOverhead());
+                totalOverhead.add(ass.getDeltaOverhead());
+                break;
+            }
+        }
+        
+        // Calculate overhead per day, 5 days a week
+        long overheadPerDay = (totalOverhead.getTime()) / 5;
+                  
+        return new AFTime(daysOnWeek * overheadPerDay);
     }
 
     public int getNumberOfAssignedUsers(Backlog backlog) {

@@ -12,8 +12,10 @@ import fi.hut.soberit.agilefant.model.Assignment;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.Priority;
+import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.State;
 import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.util.BacklogLoadData;
 import fi.hut.soberit.agilefant.util.EffortSumData;
 
 /**
@@ -187,4 +189,30 @@ public interface BacklogBusiness {
      * @return number of weekdays left
      */
     public int getWeekdaysLeftInBacklog(Backlog backlog, Date from);
+    
+    /**
+     * Get number of days for a backlog on a certain week after a certain date.
+     * @param backlog backlog
+     * @param time a day on the week, after which the rest are calculated.
+     * @return
+     */
+    public int getNumberOfDaysForBacklogOnWeek(Backlog backlog, Date time);
+    
+    /**
+     * Calculate the load for an user for a certain period of time. 
+     * @param backlog the backlog
+     * @param user the user
+     * @param from the date to start from
+     * @return an instance of <code>BacklogLoadData</code>, where the data is stored
+     */
+    public BacklogLoadData calculateBacklogLoadData(Backlog backlog, User user, Date from, int numberOfWeeks);
+    
+    /**
+     * Get a week's overhead for a certain project and an user.
+     * @param project the project
+     * @param user the user
+     * @param daysOnWeek number of days on the week
+     * @return the overhead
+     */
+    public AFTime getOverheadForWeek(Project project, User user, int daysOnWeek);
 }

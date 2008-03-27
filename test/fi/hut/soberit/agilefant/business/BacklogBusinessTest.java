@@ -6,9 +6,12 @@ import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 
 import junit.framework.TestCase;
 import fi.hut.soberit.agilefant.business.impl.BacklogBusinessImpl;
@@ -17,6 +20,7 @@ import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
+import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.Assignment;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
@@ -25,6 +29,7 @@ import fi.hut.soberit.agilefant.model.IterationGoal;
 import fi.hut.soberit.agilefant.model.Priority;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.util.BacklogLoadData;
 
 /**
  * A spring test case for testing the Backlog business layer.
@@ -257,12 +262,160 @@ public class BacklogBusinessTest extends TestCase {
         iter3.setStartDate(new Date(104, GregorianCalendar.MARCH, 1));
         iter3.setEndDate(new Date(104, GregorianCalendar.MARCH, 13));
 
-        // Create an ongoing project
-        Project proj = new Project();
-
         // Assertions
         assertEquals(9, backlogBusiness.getWeekdaysLeftInBacklog(iter1, from));
         assertEquals(0, backlogBusiness.getWeekdaysLeftInBacklog(iter2, from));
         assertEquals(10, backlogBusiness.getWeekdaysLeftInBacklog(iter3, from));
+    }
+
+    /**
+     * Test the getNumberOfDaysForBacklogOnWeek method.
+     */
+    @SuppressWarnings("deprecation")
+    public void testGetNumberOfDaysForBacklogOnWeek() {
+        Date week9 = new Date(103, GregorianCalendar.FEBRUARY, 24);
+        Date week10 = new Date(103, GregorianCalendar.MARCH, 3);
+        Date week11 = new Date(103, GregorianCalendar.MARCH, 10);
+
+        // Create an iteration with 9 days left
+        Iteration iter1 = new Iteration();
+        iter1.setStartDate(new Date(103, GregorianCalendar.FEBRUARY, 27));
+        iter1.setEndDate(new Date(103, GregorianCalendar.MARCH, 13));
+
+        // Assertions
+        assertEquals(2, backlogBusiness.getNumberOfDaysForBacklogOnWeek(iter1,
+                week9));
+        assertEquals(5, backlogBusiness.getNumberOfDaysForBacklogOnWeek(iter1,
+                week10));
+        assertEquals(4, backlogBusiness.getNumberOfDaysForBacklogOnWeek(iter1,
+                week11));
+        
+        // Project
+        Project proj = new Project();
+        proj.setStartDate(new Date(107, GregorianCalendar.DECEMBER, 30));
+        proj.setEndDate(new Date(108, GregorianCalendar.JANUARY, 22));
+        
+        Date week53 = new Date(107, GregorianCalendar.DECEMBER, 31);
+        Date week1 = new Date(108, GregorianCalendar.JANUARY, 5);
+        Date week2 = new Date(108, GregorianCalendar.JANUARY, 9);
+        Date week4 = new Date(108, GregorianCalendar.JANUARY, 21);
+        
+        // Assertions
+        assertEquals(5, backlogBusiness.getNumberOfDaysForBacklogOnWeek(proj,
+                week53));
+        assertEquals(5, backlogBusiness.getNumberOfDaysForBacklogOnWeek(proj,
+                week1));
+        assertEquals(5, backlogBusiness.getNumberOfDaysForBacklogOnWeek(proj,
+                week2));
+        assertEquals(2, backlogBusiness.getNumberOfDaysForBacklogOnWeek(proj,
+                week4));
+      
+    }
+
+    /**
+     * Test the calculation method for BacklogLoadData.
+     */
+    @SuppressWarnings("deprecation")
+    public void testCalculateBacklogLoadData() {
+        backlogDAO = createMock(BacklogDAO.class);
+        userDAO = createMock(UserDAO.class);
+        bliDAO = createMock(BacklogItemDAO.class);
+        assignmentDAO = createMock(AssignmentDAO.class);
+
+        // Create test data
+        GregorianCalendar cal = new GregorianCalendar();
+        cal.set(1998, 0, 1);
+        cal.setFirstDayOfWeek(GregorianCalendar.MONDAY);
+
+        User user = new User();
+        user.setId(3);
+        user.setLoginName("jorma");
+        List<User> responsibles = new ArrayList<User>();
+        responsibles.add(user);
+
+        Project project = new Project();
+        project.setId(4);
+        project.setStartDate(new Date(98, 0, 1));
+        project.setEndDate(new Date(98, 0, 31));
+        project.setDefaultOverhead(new AFTime("1h"));
+
+        BacklogItem bli1 = new BacklogItem();
+        bli1.setId(10);
+        bli1.setBacklog(project);
+        bli1.setOriginalEstimate(new AFTime("100h"));
+        bli1.setEffortLeft(new AFTime("22h")); // 1h effort per day
+        bli1.setResponsibles(responsibles);
+
+        BacklogItem bli2 = new BacklogItem();
+        bli2.setId(11);
+        bli2.setBacklog(project);
+        bli2.setOriginalEstimate(new AFTime("150h"));
+        bli2.setEffortLeft(new AFTime("33h")); // 1,5h effort per day
+        bli2.setResponsibles(responsibles);
+
+        BacklogItem bli3 = new BacklogItem();
+        bli3.setId(12);
+        bli3.setBacklog(project);
+        bli3.setOriginalEstimate(new AFTime("150h"));
+        bli3.setEffortLeft(new AFTime("44h")); // 2h effort per day
+        bli3.setResponsibles(responsibles);
+        
+        project.setBacklogItems(new HashSet<BacklogItem>());
+        project.getBacklogItems().add(bli1);
+        project.getBacklogItems().add(bli2);
+        project.getBacklogItems().add(bli3);
+        
+        Assignment ass = new Assignment();
+        ass.setId(57);
+        ass.setBacklog(project);
+        ass.setUser(user);
+        ass.setDeltaOverhead(new AFTime("1h"));
+        
+        Collection<Assignment> asses = new HashSet<Assignment>();
+        asses.add(ass);
+        project.setAssignments(asses);
+        user.setAssignments(asses);
+
+        // Record expected behavior
+        expect(userDAO.get(3)).andReturn(user);
+        expect(backlogDAO.get(4)).andReturn(project);
+
+        // Test the behavior
+        replay(backlogDAO);
+        replay(userDAO);
+        replay(bliDAO);
+
+        user = userDAO.get(3);
+        project = (Project) backlogDAO.get(4);
+        BacklogLoadData data = backlogBusiness.calculateBacklogLoadData(
+                project, user, cal.getTime(), 6);
+
+        assertEquals(new AFTime("9h"), data.getEfforts().get(
+                cal.get(GregorianCalendar.WEEK_OF_YEAR)));
+        assertEquals(new AFTime("22h 30min"), data.getEfforts().get(
+                cal.get(GregorianCalendar.WEEK_OF_YEAR) + 3));
+        
+        // Check the overheads
+        assertEquals(new AFTime("48min"), data.getOverheads().get(
+                cal.get(GregorianCalendar.WEEK_OF_YEAR)));
+        assertEquals(new AFTime("2h"), data.getOverheads().get(
+                cal.get(GregorianCalendar.WEEK_OF_YEAR) + 2));
+        
+        // Check the totals
+        int week = cal.get(GregorianCalendar.WEEK_OF_YEAR);
+        AFTime expect = new AFTime(data.getEfforts().get(week).getTime());
+        expect.add(data.getOverheads().get(week));
+        assertEquals(expect, data.getWeeklyTotals().get(week));
+                
+        
+        // Check invalid weeks
+        assertNull(data.getEfforts().get(cal.get(GregorianCalendar.WEEK_OF_YEAR) - 1));
+        assertNull(data.getEfforts().get(cal.get(GregorianCalendar.WEEK_OF_YEAR) + 21));
+        assertNull(data.getOverheads().get(cal.get(GregorianCalendar.WEEK_OF_YEAR) - 50));
+        assertNull(data.getOverheads().get(cal.get(GregorianCalendar.WEEK_OF_YEAR) + 12));
+
+        verify(backlogDAO);
+        verify(userDAO);
+        verify(bliDAO);
     }
 }

@@ -1,5 +1,6 @@
 package fi.hut.soberit.agilefant.util;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,6 +11,7 @@ public class DailyWorkLoadData {
     private Map<Integer, String> totalsMap = new HashMap<Integer, String>();
     private String[] overallTotals;
     private List<Integer> weekNumbers;
+    private List<BacklogLoadData> loadDataList = new ArrayList<BacklogLoadData>();
     
     public Map<Integer, String> getEffortsLeftMap() {
         return EffortsLeftMap;
@@ -41,6 +43,10 @@ public class DailyWorkLoadData {
     public void setOverallTotals(String[] overallTotals) {
         this.overallTotals = overallTotals;
     }
-
-    
+    public List<BacklogLoadData> getLoadDataList() {
+        return loadDataList;
+    }
+    public void setLoadDataList(List<BacklogLoadData> loadDataList) {
+        this.loadDataList = loadDataList;
+    }
 }

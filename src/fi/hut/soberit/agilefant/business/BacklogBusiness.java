@@ -191,12 +191,18 @@ public interface BacklogBusiness {
     public int getWeekdaysLeftInBacklog(Backlog backlog, Date from);
     
     /**
-     * Get number of days for a backlog on a certain week after a certain date.
+     * Get number of days for a backlog on a certain week.
+     * Starts from monday.
      * @param backlog backlog
-     * @param time a day on the week, after which the rest are calculated.
+     * @param time a day on the week.
      * @return
      */
     public int getNumberOfDaysForBacklogOnWeek(Backlog backlog, Date time);
+    
+    /**
+     * Get number of days on a week after a certain time.
+     */
+    public int getNumberOfDaysLeftForBacklogOnWeek(Backlog backlog, Date time);
     
     /**
      * Calculate the load for an user for a certain period of time. 
@@ -215,4 +221,11 @@ public interface BacklogBusiness {
      * @return the overhead
      */
     public AFTime getOverheadForWeek(Project project, User user, int daysOnWeek);
+    
+    /**
+     * Get all backlogs, where user has assigned items or is assigned to.
+     * If backlog is not current, don't show it.
+     * @return collection of requested backlogs
+     */
+    public List<Backlog> getUserBacklogs(User user, Date now, int weeksAhead);
 }

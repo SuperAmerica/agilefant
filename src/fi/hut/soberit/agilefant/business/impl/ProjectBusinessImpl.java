@@ -30,6 +30,7 @@ import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.ProjectType;
 import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.util.BacklogLoadData;
 import fi.hut.soberit.agilefant.util.EffortSumData;
 import fi.hut.soberit.agilefant.util.CalendarUtils;
 import fi.hut.soberit.agilefant.util.DailyWorkLoadData;
@@ -38,9 +39,9 @@ import fi.hut.soberit.agilefant.util.ProjectPortfolioData;
 public class ProjectBusinessImpl implements ProjectBusiness {
 
     Logger log = Logger.getLogger(this.getClass());
-    
+
     private BacklogBusiness backlogBusiness;
-    
+
     private UserBusiness userBusiness;
 
     private ProjectDAO projectDAO;
@@ -179,9 +180,9 @@ public class ProjectBusinessImpl implements ProjectBusiness {
         Map<Project, List<User>> assignmentMap = new HashMap<Project, List<User>>(
                 0);
         Set<String> keySet = new HashSet<String>();
-        
+
         Map<String, Integer> unassignedBlisMap = new HashMap<String, Integer>();
-        
+
         Collection<Project> projects = projectDAO.getOngoingProjects();
 
         // Go trough all projects and bli:s
@@ -198,20 +199,26 @@ public class ProjectBusinessImpl implements ProjectBusiness {
             Collection<BacklogItem> blis = getBlisInProjectAndItsIterations(pro);
 
             // Get overheads for users in this project
-            for(Assignment ass : pro.getAssignments()){   
-                if(ass.getDeltaOverhead() != null){
-                    userOverheads.put(pro.getId()+"-"+ass.getUser().getId(), ass.getDeltaOverhead().toString());
+            for (Assignment ass : pro.getAssignments()) {
+                if (ass.getDeltaOverhead() != null) {
+                    userOverheads.put(
+                            pro.getId() + "-" + ass.getUser().getId(), ass
+                                    .getDeltaOverhead().toString());
                     AFTime total = new AFTime(0);
-                    if(pro.getDefaultOverhead() != null) {
+                    if (pro.getDefaultOverhead() != null) {
                         total.add(pro.getDefaultOverhead());
                     }
                     total.add(ass.getDeltaOverhead());
-                    totalUserOverheads.put(pro.getId()+"-"+ass.getUser().getId(), total.toString());
-                }else{
-                    if(pro.getDefaultOverhead() != null){
-                        totalUserOverheads.put(pro.getId()+"-"+ass.getUser().getId(), pro.getDefaultOverhead().toString());
-                    }else{
-                        totalUserOverheads.put(pro.getId()+"-"+ass.getUser().getId(), "");
+                    totalUserOverheads.put(pro.getId() + "-"
+                            + ass.getUser().getId(), total.toString());
+                } else {
+                    if (pro.getDefaultOverhead() != null) {
+                        totalUserOverheads.put(pro.getId() + "-"
+                                + ass.getUser().getId(), pro
+                                .getDefaultOverhead().toString());
+                    } else {
+                        totalUserOverheads.put(pro.getId() + "-"
+                                + ass.getUser().getId(), "");
                     }
                 }
             }
@@ -230,9 +237,9 @@ public class ProjectBusinessImpl implements ProjectBusiness {
                     }
 
                     for (User resp : responsibles) {
-                        
+
                         keySet.add(pro.getId() + "-" + resp.getId());
-                        
+
                         // Calculate and add effort from bli to user(s) assigned
                         // Uses projectID-UserId as map key
                         String effortForUsr = loadLeftData.get(pro.getId()
@@ -251,31 +258,34 @@ public class ProjectBusinessImpl implements ProjectBusiness {
                             }
                         } else { // no effort for user, create one
                             if (bli.getEffortLeft() != null) {
-                                AFTime t = new AFTime(bli.getEffortLeft().getTime() / responsibles.size());
+                                AFTime t = new AFTime(bli.getEffortLeft()
+                                        .getTime()
+                                        / responsibles.size());
                                 loadLeftData.put(pro.getId() + "-"
                                         + resp.getId(), t.toString());
                             }
                         }
-                        
 
-                        
                         // Check whether user is responsible for a bli in the
                         // project but is currently not assigned to it
-                        if (!projectAssignments.contains(resp) && bli.getEffortLeft() == null) {
+                        if (!projectAssignments.contains(resp)
+                                && bli.getEffortLeft() == null) {
                             unassignedUsersMap.put(pro.getId() + "-"
                                     + resp.getId(), 1);
-                        }
-                        else if (!projectAssignments.contains(resp) && bli.getEffortLeft().getTime() != 0) {
+                        } else if (!projectAssignments.contains(resp)
+                                && bli.getEffortLeft().getTime() != 0) {
                             unassignedUsersMap.put(pro.getId() + "-"
                                     + resp.getId(), 1);
                         }
                         if (bli.getEffortLeft() == null) {
                             int numberOfUnestimatedBlis = 1;
-                            if (unassignedBlisMap.get(pro.getId() + "-" + resp.getId()) != null) {
-                                numberOfUnestimatedBlis = unassignedBlisMap.get(pro.getId() + "-"
-                                        + resp.getId()) + 1;
+                            if (unassignedBlisMap.get(pro.getId() + "-"
+                                    + resp.getId()) != null) {
+                                numberOfUnestimatedBlis = unassignedBlisMap
+                                        .get(pro.getId() + "-" + resp.getId()) + 1;
                             }
-                            unassignedBlisMap.put(pro.getId() + "-" + resp.getId(), numberOfUnestimatedBlis);
+                            unassignedBlisMap.put(pro.getId() + "-"
+                                    + resp.getId(), numberOfUnestimatedBlis);
                         }
                     }
                 }
@@ -283,12 +293,12 @@ public class ProjectBusinessImpl implements ProjectBusiness {
             }
             int unassignedUsers = allUsers.size() - assignedUsers;
 
-            String userDataString = "" + assignedUsers;                      
+            String userDataString = "" + assignedUsers;
             EffortSumData loadData = new EffortSumData();
             loadData.setEffortHours(ongoingBliLoadLeft);
             loadData.setNonEstimatedItems(unestimatedBlis);
             String loadLeftString = loadData.toString();
-            
+
             summaryLoadLeftMap.put(pro, loadLeftString);
             userDataMap.put(pro, userDataString);
             unassignedUserDataMap.put(pro, unassignedUsers);
@@ -296,7 +306,7 @@ public class ProjectBusinessImpl implements ProjectBusiness {
                     .getUsers(pro, true)));
 
         }
-        
+
         for (String key : keySet) {
             String value = loadLeftData.get(key);
             // Fetch aftime-value and non-estimated items to a
@@ -308,17 +318,17 @@ public class ProjectBusinessImpl implements ProjectBusiness {
             int userUnestimatedBlis = 0;
             if (unassignedBlisMap.get(key) != null)
                 userUnestimatedBlis += unassignedBlisMap.get(key);
-            
+
             EffortSumData sumData = new EffortSumData();
             sumData.setEffortHours(aftimeValue);
             sumData.setNonEstimatedItems(userUnestimatedBlis);
-                       
+
             value = sumData.toString();
-            
+
             loadLeftData.put(key, value);
-                
+
         }
-        
+
         data.setUnassignedUsers(unassignedUsersMap);
         data.setAssignedUsers(assignmentMap);
         data.setSummaryUserData(userDataMap);
@@ -386,202 +396,238 @@ public class ProjectBusinessImpl implements ProjectBusiness {
         this.userDAO = userDAO;
     }
 
-    public List<Backlog> getProjectsAndIterationsInTimeFrame(List<Backlog> backlogs, 
-                        Date startDate, Date endDate){
+    public List<Backlog> getProjectsAndIterationsInTimeFrame(
+            List<Backlog> backlogs, Date startDate, Date endDate) {
         List<Backlog> list = new ArrayList<Backlog>(0);
-        
-        for(Backlog blog : backlogs){            
+
+        for (Backlog blog : backlogs) {
             Project pro = null;
             Iteration it = null;
-            
+
             // Backlog is Project
-            if(blog.getClass().equals(Project.class)){
+            if (blog.getClass().equals(Project.class)) {
                 pro = (Project) blog;
-                if((pro.getEndDate().after(startDate) &&
-                        pro.getEndDate().before(endDate) )||(
-                        pro.getStartDate().after(startDate) &&
-                        pro.getStartDate().before(endDate) ) || (
-                        pro.getStartDate().before(startDate) &&
-                        pro.getEndDate().after(endDate) ) || (
-                        pro.getStartDate().compareTo(startDate) == 0) || (
-                        pro.getEndDate().compareTo(endDate) == 0)){
-                     list.add(blog);
-                     log.debug("IN timeframe, project");
-                }else{
+                if ((pro.getEndDate().after(startDate) && pro.getEndDate()
+                        .before(endDate))
+                        || (pro.getStartDate().after(startDate) && pro
+                                .getStartDate().before(endDate))
+                        || (pro.getStartDate().before(startDate) && pro
+                                .getEndDate().after(endDate))
+                        || (pro.getStartDate().compareTo(startDate) == 0)
+                        || (pro.getEndDate().compareTo(endDate) == 0)) {
+                    list.add(blog);
+                    log.debug("IN timeframe, project");
+                } else {
                     log.debug("NOT in timeframe");
                 }
             }
-            
+
             // Backlog is Iteration
-            if(blog.getClass().equals(Iteration.class)){
+            if (blog.getClass().equals(Iteration.class)) {
                 it = (Iteration) blog;
-                if((it.getEndDate().after(startDate) &&
-                        it.getEndDate().before(endDate) )||(
-                        it.getStartDate().after(startDate) &&
-                        it.getStartDate().before(endDate) ) || (
-                        it.getStartDate().before(startDate) &&
-                        it.getEndDate().after(endDate) ) || (
-                        it.getStartDate().compareTo(startDate) == 0) || (
-                        it.getEndDate().compareTo(endDate) == 0)){
+                if ((it.getEndDate().after(startDate) && it.getEndDate()
+                        .before(endDate))
+                        || (it.getStartDate().after(startDate) && it
+                                .getStartDate().before(endDate))
+                        || (it.getStartDate().before(startDate) && it
+                                .getEndDate().after(endDate))
+                        || (it.getStartDate().compareTo(startDate) == 0)
+                        || (it.getEndDate().compareTo(endDate) == 0)) {
                     list.add(blog);
                     log.debug("IN timeframe, iteration");
-                }else{
+                } else {
                     log.debug("NOT in timeframe");
                 }
             }
-           }        
+        }
         return list;
     }
-    
-    public HashMap<Integer, String> calculateEffortLefts(Date from, int weeksAhead, Map<Backlog, List<BacklogItem>> items){
+
+    public HashMap<Integer, String> calculateEffortLefts(Date from,
+            int weeksAhead, Map<Backlog, List<BacklogItem>> items) {
         GregorianCalendar cal = new GregorianCalendar();
         CalendarUtils cUtils = new CalendarUtils();
         HashMap<Integer, String> effortLefts = new HashMap<Integer, String>();
-        
+
         Date start = from;
         Date end = cUtils.nextMonday(start);
         cal.setTime(start);
         Integer week = cal.get(GregorianCalendar.WEEK_OF_YEAR);
-        for(int i=1;i<=weeksAhead;i++){
-            // 1. Get Backlogs that hit for the week            
-            log.debug("Projects searched from :"+start);
-            log.debug("Projects searched ending :"+end);
+        for (int i = 1; i <= weeksAhead; i++) {
+            // 1. Get Backlogs that hit for the week
+            log.debug("Projects searched from :" + start);
+            log.debug("Projects searched ending :" + end);
             cal.setTime(start);
             week = cal.get(GregorianCalendar.WEEK_OF_YEAR);
-            log.debug("Calculating sums for week"+week);
-            
+            log.debug("Calculating sums for week" + week);
+
             // 2. Get projects that hit current week
-            List<Backlog> list = this.getProjectsAndIterationsInTimeFrame(new ArrayList<Backlog>(items.keySet()), start, end);
-            log.debug(list.size()+" projects found for given time frame");
-            
+            List<Backlog> list = this.getProjectsAndIterationsInTimeFrame(
+                    new ArrayList<Backlog>(items.keySet()), start, end);
+            log.debug(list.size() + " projects found for given time frame");
+
             // 3. Calculate effort sum from items in those projects
             AFTime total = new AFTime(0);
-            for(Backlog blog : list){
+            for (Backlog blog : list) {
                 Project pro = null;
                 Iteration it = null;
-                if(blog.getClass().equals(Project.class)){
-                    pro = (Project)blog; 
-                    List<BacklogItem> blis = items.get((Backlog)pro);
-                    if(blis != null){
+                if (blog.getClass().equals(Project.class)) {
+                    pro = (Project) blog;
+                    List<BacklogItem> blis = items.get((Backlog) pro);
+                    if (blis != null) {
                         // Dividing for weeks that project hits
-                        AFTime sum = this.backlogBusiness.getEffortLeftResponsibleDividedSum(blis).getEffortHours();
-                        int projectLength = cUtils.getLengthInDays(pro.getStartDate(), pro.getEndDate());
-                        log.debug("Week Project length: "+projectLength+" days");
-                        int weekEndDaysInProject = cUtils.getWeekEndDays(pro.getStartDate(),pro.getEndDate());
-                        log.debug("Excluding "+weekEndDaysInProject + " days from project as week end days");
+                        AFTime sum = this.backlogBusiness
+                                .getEffortLeftResponsibleDividedSum(blis)
+                                .getEffortHours();
+                        int projectLength = cUtils.getLengthInDays(pro
+                                .getStartDate(), pro.getEndDate());
+                        log.debug("Week Project length: " + projectLength
+                                + " days");
+                        int weekEndDaysInProject = cUtils.getWeekEndDays(pro
+                                .getStartDate(), pro.getEndDate());
+                        log.debug("Excluding " + weekEndDaysInProject
+                                + " days from project as week end days");
                         projectLength = projectLength - weekEndDaysInProject;
-                        if(projectLength == 0){ // TODO Find better way to prevent null divination if project on weekend
+                        if (projectLength == 0) { // TODO Find better way to
+                                                    // prevent null divination
+                                                    // if project on weekend
                             projectLength = 1;
                         }
-                        List<Date> dates = cUtils.getProjectDaysList(pro.getStartDate(), pro.getEndDate(), start, new Date(end.getTime()-86400000L), false);
+                        List<Date> dates = cUtils.getProjectDaysList(pro
+                                .getStartDate(), pro.getEndDate(), start,
+                                new Date(end.getTime() - 86400000L), false);
                         int projectDaysOnWeek = 0;
-                        if(dates != null) {
+                        if (dates != null) {
                             projectDaysOnWeek = dates.size();
                         }
-                        log.debug("Week Project length (modified): "+projectLength+" days");
-                        log.debug("Week Project days:"+projectDaysOnWeek);
-                        log.debug("Week Project effort per day: "+new AFTime(sum.getTime()/(long)projectLength));
-                        sum = new AFTime((sum.getTime()/(long)projectLength)*projectDaysOnWeek);
-                        if(sum != null){
+                        log.debug("Week Project length (modified): "
+                                + projectLength + " days");
+                        log.debug("Week Project days:" + projectDaysOnWeek);
+                        log.debug("Week Project effort per day: "
+                                + new AFTime(sum.getTime()
+                                        / (long) projectLength));
+                        sum = new AFTime((sum.getTime() / (long) projectLength)
+                                * projectDaysOnWeek);
+                        if (sum != null) {
                             total.add(sum);
-                            log.debug("Week effort sum: "+sum);
+                            log.debug("Week effort sum: " + sum);
                         }
                     }
                 }
-                if(blog.getClass().equals(Iteration.class)){
-                    it = (Iteration)blog;
-                    List<BacklogItem> blis = items.get((Backlog)it);
-                    if(blis != null){
+                if (blog.getClass().equals(Iteration.class)) {
+                    it = (Iteration) blog;
+                    List<BacklogItem> blis = items.get((Backlog) it);
+                    if (blis != null) {
                         // Dividing for weeks that project hits
-                        AFTime sum = this.backlogBusiness.getEffortLeftResponsibleDividedSum(blis).getEffortHours();
-                        int projectLength = cUtils.getLengthInDays(it.getStartDate(), it.getEndDate());
-                        log.debug("Week Project length: "+projectLength+" days");
-                        int weekEndDaysInProject = cUtils.getWeekEndDays(it.getStartDate(),it.getEndDate());
-                        log.debug("Excluding "+weekEndDaysInProject + " days from project as week end days");
+                        AFTime sum = this.backlogBusiness
+                                .getEffortLeftResponsibleDividedSum(blis)
+                                .getEffortHours();
+                        int projectLength = cUtils.getLengthInDays(it
+                                .getStartDate(), it.getEndDate());
+                        log.debug("Week Project length: " + projectLength
+                                + " days");
+                        int weekEndDaysInProject = cUtils.getWeekEndDays(it
+                                .getStartDate(), it.getEndDate());
+                        log.debug("Excluding " + weekEndDaysInProject
+                                + " days from project as week end days");
                         projectLength = projectLength - weekEndDaysInProject;
-                        if(projectLength == 0){ // TODO Find better way to prevent null division if project on weekend
+                        if (projectLength == 0) { // TODO Find better way to
+                                                    // prevent null division if
+                                                    // project on weekend
                             projectLength = 1;
                         }
-                        List<Date> dates = cUtils.getProjectDaysList(it.getStartDate(), it.getEndDate(), start, new Date(end.getTime()-86400000L), false);
+                        List<Date> dates = cUtils.getProjectDaysList(it
+                                .getStartDate(), it.getEndDate(), start,
+                                new Date(end.getTime() - 86400000L), false);
                         int projectDaysOnWeek = 0;
-                        if(dates != null) {
+                        if (dates != null) {
                             projectDaysOnWeek = dates.size();
                         }
-                        log.debug("Week Project length(modified): "+projectLength+" days");
-                        log.debug("Week Project days:"+projectDaysOnWeek);
-                        log.debug("Week Project effort per day: "+new AFTime(sum.getTime()/(long)projectLength));
-                        sum = new AFTime((sum.getTime()/(long)projectLength)*projectDaysOnWeek);
-                        if(sum != null){
+                        log.debug("Week Project length(modified): "
+                                + projectLength + " days");
+                        log.debug("Week Project days:" + projectDaysOnWeek);
+                        log.debug("Week Project effort per day: "
+                                + new AFTime(sum.getTime()
+                                        / (long) projectLength));
+                        sum = new AFTime((sum.getTime() / (long) projectLength)
+                                * projectDaysOnWeek);
+                        if (sum != null) {
                             total.add(sum);
-                            log.debug("Week effort sum: "+sum);
+                            log.debug("Week effort sum: " + sum);
                         }
                     }
                 }
-                
 
             }
-            
+
             effortLefts.put(week, total.toString());
             start = cUtils.nextMonday(start);
             end = cUtils.nextMonday(start);
             cal.setTime(start);
             week = cal.get(GregorianCalendar.WEEK_OF_YEAR);
         }
-        
+
         return effortLefts;
     }
 
     /**
      * Calculates overheads for user from given backlogs( projects)
+     * 
      * @param from
      * @param weeksAhead
      * @param items
      * @return
      */
-    public HashMap<Integer, String> calculateOverheads(Date from, int weeksAhead, List<Backlog> items, User user){
+    public HashMap<Integer, String> calculateOverheads(Date from,
+            int weeksAhead, List<Backlog> items, User user) {
         GregorianCalendar cal = new GregorianCalendar();
         CalendarUtils cUtils = new CalendarUtils();
         HashMap<Integer, String> overheads = new HashMap<Integer, String>();
-        
-        Date start = from;        
+
+        Date start = from;
         Date end = cUtils.nextMonday(start);
         cal.setTime(start);
         Integer week = cal.get(GregorianCalendar.WEEK_OF_YEAR);
-        List<Assignment> assignments = new ArrayList<Assignment>(user.getAssignments());
-        
-        for(int i=1;i<=weeksAhead;i++){
-            // 1. Get Backlogs that hit for the week            
-            log.debug("Projects searched from :"+start);
-            log.debug("Projects searched ending :"+end);
+        List<Assignment> assignments = new ArrayList<Assignment>(user
+                .getAssignments());
+
+        for (int i = 1; i <= weeksAhead; i++) {
+            // 1. Get Backlogs that hit for the week
+            log.debug("Projects searched from :" + start);
+            log.debug("Projects searched ending :" + end);
             cal.setTime(start);
             week = cal.get(GregorianCalendar.WEEK_OF_YEAR);
-            log.debug("Calculating overhead for week"+week);
-            
+            log.debug("Calculating overhead for week" + week);
+
             // 2. Get projects that hit current week
-            List<Backlog> list = this.getProjectsAndIterationsInTimeFrame(items, start, end);
-            log.debug(list.size()+" projects found for given time frame");
-            
+            List<Backlog> list = this.getProjectsAndIterationsInTimeFrame(
+                    items, start, end);
+            log.debug(list.size() + " projects found for given time frame");
+
             // 3. Calculate overhead sum from items in those projects
-            AFTime overhead = new AFTime(0);            
-            for(Backlog blog : list){
-                // Only check assignments for Projects (overhead 
+            AFTime overhead = new AFTime(0);
+            for (Backlog blog : list) {
+                // Only check assignments for Projects (overhead
                 // only set for projects not iterations)
-                if(blog.getClass().equals(Project.class)){
+                if (blog.getClass().equals(Project.class)) {
                     Project pro = (Project) blog;
-                    for(Assignment ass : assignments){
-                        if(ass.getBacklog().equals((Backlog)pro)){
-                            if(pro.getDefaultOverhead() != null){
+                    for (Assignment ass : assignments) {
+                        if (ass.getBacklog().equals((Backlog) pro)) {
+                            if (pro.getDefaultOverhead() != null) {
                                 overhead.add(pro.getDefaultOverhead());
-                                log.debug("Added overhead from project: "+pro.getDefaultOverhead());
+                                log.debug("Added overhead from project: "
+                                        + pro.getDefaultOverhead());
                             }
-                            if(ass.getDeltaOverhead() != null ){
+                            if (ass.getDeltaOverhead() != null) {
                                 overhead.add(ass.getDeltaOverhead());
-                                log.debug("Added overhead from user: "+pro.getDefaultOverhead());
+                                log.debug("Added overhead from user: "
+                                        + pro.getDefaultOverhead());
                             }
                         }
                     }
-                }else{
-                    log.debug("Class was iteration class, overhead :"+blog.getClass());
+                } else {
+                    log.debug("Class was iteration class, overhead :"
+                            + blog.getClass());
                 }
             }
             overheads.put(week, overhead.toString());
@@ -590,73 +636,84 @@ public class ProjectBusinessImpl implements ProjectBusiness {
             cal.setTime(start);
             week = cal.get(GregorianCalendar.WEEK_OF_YEAR);
         }
-        
+
         return overheads;
     }
-    
+
     /**
      * Calculates Efforts and overheads data for users
      * 
-     * EffortLefts are calculated for every week by summings efforts
-     * from blis assigned to user from projects that start/end date 
-     * hit in particular week. 
+     * EffortLefts are calculated for every week by summings efforts from blis
+     * assigned to user from projects that start/end date hit in particular
+     * week.
      * 
-     * For example:
-     * Weeks             1   2  3  4 
-     * Eff              20  20 10 10
-     * projects          2   2  1  1
-     * (10h blis each)
+     * For example: Weeks 1 2 3 4 Eff 20 20 10 10 projects 2 2 1 1 (10h blis
+     * each)
      * 
-     * So efforts are just sumassignmentDAO.getAssignment(user, backlog).getDeltaOverhead();med together and NOT divided for length of
+     * So efforts are just sumassignmentDAO.getAssignment(user,
+     * backlog).getDeltaOverhead();med together and NOT divided for length of
      * the project or weeks.
      */
     public DailyWorkLoadData getDailyWorkLoadData(User user, int weeksAhead) {
-        
-        HashMap<Integer, String>effortsLeftMap = new HashMap<Integer, String>();
-        HashMap<Integer, String>overheadsMap = new HashMap<Integer, String>();
-        HashMap<Integer, String>totalsMap = new HashMap<Integer, String>();
-        ArrayList<Integer> weekNumbers = new ArrayList<Integer>();
-        String[] overallTotals = new String[3]; // Not currently used, but could use in the future
-        
-        // 1. Effort Lefts
-        Map<Backlog, List<BacklogItem>> items = this.userBusiness.getAllBacklogItemsAssignedToUser(user);        
-        effortsLeftMap = this.calculateEffortLefts(new GregorianCalendar().getTime(), weeksAhead, items);
-        
-        // 2. Overheads 
-        List<Backlog> assignedBacklogs = this.userBusiness.getUsersBacklogs(user);
-        overheadsMap = this.calculateOverheads(new GregorianCalendar().getTime(), weeksAhead, assignedBacklogs, user);
-        List<Integer> weeks = new ArrayList<Integer>(effortsLeftMap.keySet());
-        Collections.sort(weeks);
-        
-        AFTime effTotal = new AFTime(0);
-        AFTime overheadTotal = new AFTime(0);
-        AFTime total = new AFTime(0);
-        for(Integer week : weeks){
-            AFTime weekTotal = new AFTime(0);
-            AFTime tmp = new AFTime(effortsLeftMap.get(week));                        
-            weekTotal.add(tmp);            
-            effTotal.add(tmp);
-            total.add(tmp);
-            tmp = new AFTime(overheadsMap.get(week));
-            overheadTotal.add(tmp);
-            weekTotal.add(tmp);
-            total.add(tmp);
-            log.debug("Setting weekly total for week"+week+" to :"+weekTotal);
-            totalsMap.put(week, weekTotal.toString());            
-            weekNumbers.add(week);
-            
-        }
-        overallTotals[0] = effTotal.toString();
-        overallTotals[1] = overheadTotal.toString();
-        overallTotals[2] = total.toString();
-                
         DailyWorkLoadData data = new DailyWorkLoadData();
-        data.setEffortsLeftMap(effortsLeftMap);
-        data.setTotalsMap(totalsMap);
-        data.setOverheadsMap(overheadsMap);
-        data.setWeekNumbers(weekNumbers);
-        data.setOverallTotals(overallTotals);
+        Map<Backlog, BacklogLoadData> loadDataList = new HashMap<Backlog, BacklogLoadData>();
+        ArrayList<Integer> weekNumbers = new ArrayList<Integer>();
+        String[] overallTotals = new String[3]; // Not currently used, but could
+                                                // use in the future
+
+        GregorianCalendar cal = new GregorianCalendar();
+        cal.setFirstDayOfWeek(GregorianCalendar.MONDAY);
+
+        int currentWeek = cal.get(GregorianCalendar.WEEK_OF_YEAR);
         
+        // 1. Weeks
+        for (int i = 0; i < weeksAhead; i++) {
+            weekNumbers.add(currentWeek + i);
+            if (!data.getWeeklyTotals().containsKey(currentWeek + i)) {
+                data.getWeeklyTotals().put(new Integer(currentWeek + i), new AFTime(0));
+                data.getWeeklyEfforts().put(new Integer(currentWeek + i), new AFTime(0));
+                data.getWeeklyOverheads().put(new Integer(currentWeek + i), new AFTime(0));
+            }
+        }
+
+        // 2. Backlog loads
+        List<Backlog> assignedBacklogs = this.backlogBusiness.getUserBacklogs(
+                user, new Date(), weeksAhead);
+        
+        data.setBacklogs(assignedBacklogs);
+        
+        // Loop through the backlogs
+        for (Backlog blog : assignedBacklogs) {
+            BacklogLoadData bdata = this.backlogBusiness
+                    .calculateBacklogLoadData(blog, user, new Date(),
+                            weeksAhead);
+            loadDataList.put(bdata.getBacklog(), bdata);
+            
+            // Calculate totals
+            for (Integer weekNo : weekNumbers) {
+                AFTime effAdd = bdata.getEfforts().get(weekNo);
+                if (effAdd != null) {
+                    data.getWeeklyEfforts().get(weekNo).add(effAdd);
+                    data.getTotalEffort().add(effAdd);    
+                }
+                
+                
+                AFTime ohAdd = bdata.getOverheads().get(weekNo);
+                if (ohAdd != null) {
+                    data.getWeeklyOverheads().get(weekNo).add(ohAdd);
+                    data.getTotalOverhead().add(ohAdd);    
+                }
+                
+                
+                AFTime toAdd = bdata.getWeeklyTotals().get(weekNo);
+                data.getWeeklyTotals().get(weekNo).add(toAdd);
+                data.getOverallTotal().add(toAdd);
+            }
+        }
+
+        data.setWeekNumbers(weekNumbers);
+        data.setLoadDatas(loadDataList);
+
         return data;
     }
 

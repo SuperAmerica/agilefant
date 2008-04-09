@@ -311,6 +311,53 @@ public class BacklogBusinessTest extends TestCase {
                 week4));
       
     }
+    
+    /**
+     * Test the getNumberOfDaysLeftForBacklogOnWeek method.
+     */
+    @SuppressWarnings("deprecation")
+    public void testGetNumberOfDaysLeftForBacklogOnWeek() {
+        Date week9 = new Date(103, GregorianCalendar.FEBRUARY, 24);
+        Date week10 = new Date(103, GregorianCalendar.MARCH, 3);
+        Date week11 = new Date(103, GregorianCalendar.MARCH, 10);
+
+        // Create an iteration with 9 days left
+        Iteration iter1 = new Iteration();
+        iter1.setStartDate(new Date(103, GregorianCalendar.FEBRUARY, 27));
+        iter1.setEndDate(new Date(103, GregorianCalendar.MARCH, 13));
+
+        // Assertions
+        assertEquals(2, backlogBusiness.getNumberOfDaysLeftForBacklogOnWeek(iter1,
+                week9));
+        assertEquals(5, backlogBusiness.getNumberOfDaysLeftForBacklogOnWeek(iter1,
+                week10));
+        assertEquals(4, backlogBusiness.getNumberOfDaysLeftForBacklogOnWeek(iter1,
+                week11));
+        
+        // Project
+        Project proj = new Project();
+        proj.setStartDate(new Date(107, GregorianCalendar.DECEMBER, 30));
+        proj.setEndDate(new Date(108, GregorianCalendar.JANUARY, 22));
+        
+        Date week53 = new Date(107, GregorianCalendar.DECEMBER, 31);
+        Date week1a = new Date(108, GregorianCalendar.JANUARY, 1);
+        Date week1 = new Date(108, GregorianCalendar.JANUARY, 5);
+        Date week2 = new Date(108, GregorianCalendar.JANUARY, 9);
+        Date week4 = new Date(108, GregorianCalendar.JANUARY, 21);
+        
+        // Assertions
+        assertEquals(5, backlogBusiness.getNumberOfDaysLeftForBacklogOnWeek(proj,
+                week53));
+        assertEquals(0, backlogBusiness.getNumberOfDaysLeftForBacklogOnWeek(proj,
+                week1));
+        assertEquals(4, backlogBusiness.getNumberOfDaysLeftForBacklogOnWeek(proj,
+                week1a));
+        assertEquals(3, backlogBusiness.getNumberOfDaysLeftForBacklogOnWeek(proj,
+                week2));
+        assertEquals(2, backlogBusiness.getNumberOfDaysLeftForBacklogOnWeek(proj,
+                week4));
+      
+    }
 
     /**
      * Test the calculation method for BacklogLoadData.
@@ -417,5 +464,84 @@ public class BacklogBusinessTest extends TestCase {
         verify(backlogDAO);
         verify(userDAO);
         verify(bliDAO);
+    }
+    
+    public void testGetUserBacklogs() {
+        // Create dates
+        Date now = new Date(98, 3, 5);
+        Date currentStart = new Date(98, 3, 3);
+        Date currentEnd = new Date(98, 4, 3);
+        Date pastStart = new Date(98, 0, 1);
+        Date pastEnd = new Date(98, 1, 1);
+        Date comingStart = new Date(98, 4, 4);
+        Date comingEnd = new Date(98, 5, 4);
+        
+        
+        // Create test data
+        User user = new User();
+        user.setId(3);
+        user.setLoginName("jorma");
+        List<User> assignees = new ArrayList<User>();
+        assignees.add(user);
+        user.setAssignments(new ArrayList<Assignment>());
+        user.setBacklogItems(new ArrayList<BacklogItem>());
+        
+        List<Backlog> projects = new ArrayList<Backlog>();
+        List<Iteration> iterations = new ArrayList<Iteration>();
+        List<Assignment> assignments = new ArrayList<Assignment>();
+        
+        int j = 63;
+        int k = 123;
+        
+        for (int i = 0; i < 3; i++) {
+            Project proj = new Project();
+            proj.setId(i);
+            proj.setAssignments(new ArrayList<Assignment>());
+            projects.add(proj);
+            proj.setStartDate(pastStart);
+            proj.setEndDate(comingEnd);
+            
+            /* Half the projects are assigned */
+            if (i < 2) {
+                Assignment ass = new Assignment();
+                ass.setId(j++);
+                ass.setBacklog(proj);
+                ass.setUser(user);
+                proj.getAssignments().add(ass);
+                user.getAssignments().add(ass);
+                assignments.add(ass);
+            }
+            
+            /* Create past, ongoing and upcoming iterations */
+            Iteration iter = new Iteration();
+            iter.setId(k++);
+            iterations.add(iter);
+            iter.setStartDate(currentStart);
+            iter.setEndDate(currentEnd);
+            
+            Iteration iterPast = new Iteration();
+            iterPast.setId(k++);
+            iterations.add(iterPast);
+            iterPast.setStartDate(pastStart);
+            iterPast.setEndDate(pastEnd);
+            
+            Iteration iterNext = new Iteration();
+            iterNext.setId(k++);
+            iterations.add(iterNext);
+            iterNext.setStartDate(comingStart);
+            iterNext.setEndDate(comingEnd);
+        }
+
+        // Test the behavior
+        List<Backlog> list = backlogBusiness.getUserBacklogs(user, now, 10);
+        
+        // Projects
+        assertTrue(list.contains(projects.get(0)));
+        assertTrue(list.contains(projects.get(1)));
+        assertFalse(list.contains(projects.get(2)));
+        
+        // Iterations
+        
+
     }
 }

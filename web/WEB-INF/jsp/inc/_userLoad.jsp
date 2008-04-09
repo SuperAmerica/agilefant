@@ -1,26 +1,139 @@
 <%@ include file="./_taglibs.jsp"%>
 
-
-<h2>Load for <c:out value="${user.fullName}" /></h2>
-
-
 <div id="subItems">
-<div id="subItemHeader">Load</div>
+<div id="subItemHeader">Load
+<a href="" id="loadTableHideLink" style="display: none;" onclick="show_small_loadtable(); return false;">(hide details)</a>
+<a href="" id="loadTableShowLink" onclick="show_detailed_loadtable(); return false;">(show details)</a></div>
 <div id="subItemContent">
-<form>
-Show <select name="weeksAhead"> 
-<option value="1">1</option>
-<option value="2">2</option>
-<option value="3" selected="selected">3</option>
-<option value="4">4</option>
-<option value="5">5</option>
-<option value="6">6</option>
-<option value="7">7</option>
-</option> 
-</select> weeks ahead.
-<ww:submit value="Change" />
-</form>
+
+<script type="text/javascript">
+function show_detailed_loadtable() {
+	document.getElementById('loadTableHideLink').style.display = "";
+	document.getElementById('loadTableShowLink').style.display = "none";
+	document.getElementById('detailedLoadTable').style.display = "";
+	document.getElementById('smallLoadTable').style.display = "none";
+}
+function show_small_loadtable() {
+	document.getElementById('loadTableHideLink').style.display = "none";
+	document.getElementById('loadTableShowLink').style.display = "";
+	document.getElementById('detailedLoadTable').style.display = "none";
+	document.getElementById('smallLoadTable').style.display = "";
+}
+</script>
+
+<div id="detailedLoadTable" style="display: none;">
 <table id="item">
+<tr>
+	<th>Week</th>
+	<c:forEach items="${weekNumbers}" var="weekNumber">
+	<th><c:out value="${weekNumber}" /></th>
+	</c:forEach>
+	<th>Total</th>
+</tr>
+<c:set var="rowClass" value="odd" />
+<c:forEach items="${dailyWorkLoadData.backlogs}" var="backlog">
+<c:set var="loadData" value="${loadDatas[backlog]}"/>
+<tr class="${rowClass}">
+<c:choose>
+	<c:when test="${rowClass == 'odd'}">
+		<c:set var="rowClass" value="even" />
+	</c:when>
+	<c:otherwise>
+		<c:set var="rowClass" value="odd" />
+	</c:otherwise>
+</c:choose>
+	<ww:url id="editLink" action="contextView" includeParams="none">
+		<ww:param name="contextObjectId" value="${loadData.backlog.id}" />
+		<ww:param name="resetContextView" value="true" />
+	</ww:url>
+
+	<td>
+	<c:choose>
+		<c:when test="${aef:isIteration(loadData.backlog)}">
+			&nbsp;&nbsp;<ww:a href="%{editLink}&contextName=iteration">
+			<c:out value="${loadData.backlog.name}" /></ww:a>
+		</c:when>
+		<c:otherwise>
+			<ww:a href="%{editLink}&contextName=project">
+			<c:out value="${loadData.backlog.name}" /></ww:a>
+		</c:otherwise>
+	</c:choose>
+	<c:if test="${loadData.unestimatedItems == true}">
+		<img src="static/img/unassigned.png" alt="There are unestimated items" />
+	</c:if>
+	</td>
+	<c:forEach items="${weekNumbers}" var="week">
+		<td><c:out value="${loadData.efforts[week]}" /></td>
+	</c:forEach>
+	<td><c:out value="${loadData.totalEffort}" /></td>
+	<c:if test="${aef:isProject(loadData.backlog)}">
+</tr>
+<tr class="${rowClass}">
+<c:choose>
+	<c:when test="${rowClass == 'odd'}">
+		<c:set var="rowClass" value="even" />
+	</c:when>
+	<c:otherwise>
+		<c:set var="rowClass" value="odd" />
+	</c:otherwise>
+</c:choose>
+	<td>&nbsp;&nbsp;Overhead</td>
+	<c:forEach items="${weekNumbers}" var="week">
+		<td><c:out value="${loadData.overheads[week]}" /></td>
+	</c:forEach>
+	<td><c:out value="${loadData.totalOverhead}" /></td>
+</tr>
+	</c:if>
+</tr>
+</c:forEach>
+<tr>
+	<th>Total</th>
+	<c:forEach items="${weekNumbers}" var="week">
+		<th><c:out value="${totalsMap[week]}" /></th>	
+	</c:forEach>
+	<th><c:out value="${dailyWorkLoadData.overallTotal}" /></th>
+</tr>
+</table>
+</div>
+
+
+
+<div id="smallLoadTable">
+<table id="item">
+<tr>
+	<th>Week</th>
+	<c:forEach items="${weekNumbers}" var="weekNumber">
+	<th><c:out value="${weekNumber}" /></th>
+	</c:forEach>
+	<th>Total</th>
+</tr>
+<tr class="odd">
+	<td>Effort</td>
+	<c:forEach items="${weekNumbers}" var="weekNumber">
+	<td><c:out value="${dailyWorkLoadData.weeklyEfforts[weekNumber]}" /></td>
+	</c:forEach>
+	<td><c:out value="${dailyWorkLoadData.totalEffort}" /></td>
+</tr>
+<tr class="even">
+	<td>Overhead</td>
+	<c:forEach items="${weekNumbers}" var="weekNumber">
+	<td><c:out value="${dailyWorkLoadData.weeklyOverheads[weekNumber]}" /></td>
+	</c:forEach>
+	<td><c:out value="${dailyWorkLoadData.totalOverhead}" /></td>
+</tr>
+<tr>
+	<th>Total</th>
+	<c:forEach items="${weekNumbers}" var="week">
+		<th><c:out value="${totalsMap[week]}" /></th>	
+	</c:forEach>
+	<th><c:out value="${dailyWorkLoadData.overallTotal}" /></th>
+</tr>
+</table>
+</div>
+
+<%--
+<table id="item">
+
 <tr class="odd">
 	<td class="shortNameColumn"> &nbsp;</td>
 	<c:forEach var="week" items="${weekNumbers}">
@@ -50,5 +163,6 @@ Show <select name="weeksAhead">
   	<td class="shortNameColumn"> ${overallTotals[2]}</td> 
 </tr>				
 </table>
+--%>
 </div>
 </div>

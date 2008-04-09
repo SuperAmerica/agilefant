@@ -14,9 +14,9 @@
 
 
 <ww:form>
-View daily work for user: <ww:select list="userList"
-	listKey="id" listValue="fullName" name="userId" value="${user.id}"/>
-<ww:submit value="Change" />
+<h2>The daily work of <ww:select list="userList"
+	listKey="id" listValue="fullName" name="userId" value="${user.id}"
+	onchange="this.form.submit();" /></h2>
 </ww:form>
 
 <%@ include file="./inc/_userLoad.jsp" %>

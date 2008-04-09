@@ -1,6 +1,7 @@
 package fi.hut.soberit.agilefant.web;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -22,6 +23,7 @@ import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.security.SecurityUtil;
 import fi.hut.soberit.agilefant.util.BacklogComparator;
+import fi.hut.soberit.agilefant.util.BacklogLoadData;
 import fi.hut.soberit.agilefant.util.DailyWorkLoadData;
 import fi.hut.soberit.agilefant.util.EffortSumData;
 import fi.hut.soberit.agilefant.util.UserComparator;
@@ -53,10 +55,14 @@ public class DailyWorkAction extends ActionSupport {
 
     private List<User> userList;
     
-    private Map<Integer, String> effortsLeftMap = new HashMap<Integer, String>();
-    private Map<Integer, String> overheadsMap = new HashMap<Integer, String>();
-    private Map<Integer, String> totalsMap = new HashMap<Integer, String>();
-    private int weeksAhead = 3;
+    private Map<Backlog, BacklogLoadData> loadDatas = new HashMap<Backlog, BacklogLoadData>();
+    
+    private DailyWorkLoadData dailyWorkLoadData = new DailyWorkLoadData();
+    
+    /*private Map<Integer, String> effortsLeftMap = new HashMap<Integer, String>();
+    private Map<Integer, String> overheadsMap = new HashMap<Integer, String>();*/
+    private Map<Integer, AFTime> totalsMap = new HashMap<Integer, AFTime>();
+    private int weeksAhead = 8;
     private List<Integer> weekNumbers;
     private String[] overallTotals;
 
@@ -120,12 +126,14 @@ public class DailyWorkAction extends ActionSupport {
         Collections.sort(userList, new UserComparator());
 
         DailyWorkLoadData data = this.projectBusiness.getDailyWorkLoadData(this.user, this.weeksAhead);
-        this.effortsLeftMap = data.getEffortsLeftMap();
-        this.overheadsMap = data.getOverheadsMap();
-        this.totalsMap = data.getTotalsMap();
-        this.weekNumbers = data.getWeekNumbers();
-        this.overallTotals = data.getOverallTotals();
         
+        setDailyWorkLoadData(data);
+        
+        setWeekNumbers(data.getWeekNumbers());
+        
+        setTotalsMap(data.getWeeklyTotals());
+                
+        this.setLoadDatas(data.getLoadDatas());
         return super.execute();
     }
 
@@ -174,7 +182,7 @@ public class DailyWorkAction extends ActionSupport {
     }
 
     public void setUserBusiness(UserBusiness userBusiness) {
-        this.userBusiness = userBusiness;
+        this.userBusiness = userBusiness; 
     }
 
     public List<BacklogItem> getBacklogItemsForUserInProgress() {
@@ -204,30 +212,6 @@ public class DailyWorkAction extends ActionSupport {
 
     public Map<Backlog, EffortSumData> getOriginalEstimates() {
         return originalEstimates;
-    }
-
-    public Map<Integer, String> getEffortsLeftMap() {
-        return effortsLeftMap;
-    }
-
-    public void setEffortsLeftMap(Map<Integer, String> effortsLeftMap) {
-        this.effortsLeftMap = effortsLeftMap;
-    }
-
-    public Map<Integer, String> getOverheadsMap() {
-        return overheadsMap;
-    }
-
-    public void setOverheadsMap(Map<Integer, String> overheadsMap) {
-        this.overheadsMap = overheadsMap;
-    }
-
-    public Map<Integer, String> getTotalsMap() {
-        return totalsMap;
-    }
-
-    public void setTotalsMap(Map<Integer, String> totalsMap) {
-        this.totalsMap = totalsMap;
     }
 
     public int getWeeksAhead() {
@@ -263,5 +247,27 @@ public class DailyWorkAction extends ActionSupport {
         this.overallTotals = overallTotals;
     }
 
+    public Map<Backlog, BacklogLoadData> getLoadDatas() {
+        return loadDatas;
+    }
 
+    public void setLoadDatas(Map<Backlog, BacklogLoadData> loadDatas) {
+        this.loadDatas = loadDatas;
+    }
+
+    public DailyWorkLoadData getDailyWorkLoadData() {
+        return dailyWorkLoadData;
+    }
+
+    public void setDailyWorkLoadData(DailyWorkLoadData dailyWorkLoadData) {
+        this.dailyWorkLoadData = dailyWorkLoadData;
+    }
+
+    public Map<Integer, AFTime> getTotalsMap() {
+        return totalsMap;
+    }
+
+    public void setTotalsMap(Map<Integer, AFTime> totalsMap) {
+        this.totalsMap = totalsMap;
+    }
 }

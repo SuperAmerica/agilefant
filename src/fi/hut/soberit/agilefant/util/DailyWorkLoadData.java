@@ -5,48 +5,72 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import fi.hut.soberit.agilefant.model.AFTime;
+import fi.hut.soberit.agilefant.model.Backlog;
+
 public class DailyWorkLoadData {
-    private Map<Integer, String> EffortsLeftMap = new HashMap<Integer, String>();
-    private Map<Integer, String> OverheadsMap = new HashMap<Integer, String>();
-    private Map<Integer, String> totalsMap = new HashMap<Integer, String>();
-    private String[] overallTotals;
     private List<Integer> weekNumbers;
-    private List<BacklogLoadData> loadDataList = new ArrayList<BacklogLoadData>();
+    private Map<Backlog, BacklogLoadData> loadDatas = new HashMap<Backlog, BacklogLoadData>();
+    private List<Backlog> backlogs = new ArrayList<Backlog>();
+    private Map<Integer, AFTime> weeklyTotals = new HashMap<Integer, AFTime>();
+    private Map<Integer, AFTime> weeklyEfforts = new HashMap<Integer, AFTime>();
+    private Map<Integer, AFTime> weeklyOverheads = new HashMap<Integer, AFTime>();
+    private AFTime overallTotal = new AFTime(0);
+    private AFTime totalEffort = new AFTime(0);
+    private AFTime totalOverhead = new AFTime(0);
     
-    public Map<Integer, String> getEffortsLeftMap() {
-        return EffortsLeftMap;
-    }
-    public void setEffortsLeftMap(Map<Integer, String> effortsLeftMap) {
-        EffortsLeftMap = effortsLeftMap;
-    }
-    public Map<Integer, String> getOverheadsMap() {
-        return OverheadsMap;
-    }
-    public void setOverheadsMap(Map<Integer, String> overheadsMap) {
-        OverheadsMap = overheadsMap;
-    }
-    public Map<Integer, String> getTotalsMap() {
-        return totalsMap;
-    }
-    public void setTotalsMap(Map<Integer, String> totalsMap) {
-        this.totalsMap = totalsMap;
-    }
     public List<Integer> getWeekNumbers() {
         return weekNumbers;
     }
     public void setWeekNumbers(List<Integer> weekNumbers) {
         this.weekNumbers = weekNumbers;
     }
-    public String[] getOverallTotals() {
-        return overallTotals;
+    public Map<Backlog, BacklogLoadData> getLoadDatas() {
+        return loadDatas;
     }
-    public void setOverallTotals(String[] overallTotals) {
-        this.overallTotals = overallTotals;
+    public void setLoadDatas(Map<Backlog, BacklogLoadData> loadDatas) {
+        this.loadDatas = loadDatas;
     }
-    public List<BacklogLoadData> getLoadDataList() {
-        return loadDataList;
+    public List<Backlog> getBacklogs() {
+        return backlogs;
     }
-    public void setLoadDataList(List<BacklogLoadData> loadDataList) {
-        this.loadDataList = loadDataList;
+    public void setBacklogs(List<Backlog> backlogs) {
+        this.backlogs = backlogs;
+    }
+    public Map<Integer, AFTime> getWeeklyTotals() {
+        return weeklyTotals;
+    }
+    public void setWeeklyTotals(Map<Integer, AFTime> weeklyTotals) {
+        this.weeklyTotals = weeklyTotals;
+    }
+    public AFTime getOverallTotal() {
+        return overallTotal;
+    }
+    public void setOverallTotal(AFTime overallTotal) {
+        this.overallTotal = overallTotal;
+    }
+    public Map<Integer, AFTime> getWeeklyEfforts() {
+        return weeklyEfforts;
+    }
+    public void setWeeklyEfforts(Map<Integer, AFTime> weeklyEfforts) {
+        this.weeklyEfforts = weeklyEfforts;
+    }
+    public Map<Integer, AFTime> getWeeklyOverheads() {
+        return weeklyOverheads;
+    }
+    public void setWeeklyOverheads(Map<Integer, AFTime> weeklyOverheads) {
+        this.weeklyOverheads = weeklyOverheads;
+    }
+    public AFTime getTotalEffort() {
+        return totalEffort;
+    }
+    public void setTotalEffort(AFTime totalEffort) {
+        this.totalEffort = totalEffort;
+    }
+    public AFTime getTotalOverhead() {
+        return totalOverhead;
+    }
+    public void setTotalOverhead(AFTime totalOverhead) {
+        this.totalOverhead = totalOverhead;
     }
 }

@@ -706,8 +706,10 @@ public class ProjectBusinessImpl implements ProjectBusiness {
                 
                 
                 AFTime toAdd = bdata.getWeeklyTotals().get(weekNo);
-                data.getWeeklyTotals().get(weekNo).add(toAdd);
-                data.getOverallTotal().add(toAdd);
+                if (toAdd != null) {
+                    data.getWeeklyTotals().get(weekNo).add(toAdd);
+                    data.getOverallTotal().add(toAdd);                    
+                }
             }
         }
 

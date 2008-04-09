@@ -25,24 +25,6 @@ have assigned backlog items) are highlighted
 + Project Portfolio view allows the relative prioritisation of projects
 + Project Portfolio view shows the workloads for projects and users
 
-CURRENT ROADMAP
----------------
-+ Calculation of personal, project and portfolio level velocities (May 2008)
-+ Support for taking both projected and non-projected Overhead into
-account in velocities and workloads (May 2008)
-+ EPIC: A convenient way to report hours spent for billing and cost
-accounting purposes (September 2008)
-+ EPIC: More support for product level management; e.g. Roadmapping,
-Business goals, Visions, Epic backlog items (September 2008)
-+ EPIC: More support for product level management; e.g. Roadmapping,
-Business goals, Visions, Epic backlog items (September 2008)
-+ EPIC: Integration with KumbangTools (*) (September 2008)
-
-(*) KumbangTools is, among other things, used for modeling product
-families. The catch of the integration is that through modeling the
-product structure (including dependencies), the dependencies can be
-taken into account during product, release and iteration planning.
-
 CHANGES FROM AGILEFANT 1.3.5
 -----------------------------
 + load table now shows iterations and projects separately

@@ -198,6 +198,7 @@ function validateDeletion() {
 		<td class="targetBacklogDropdownColumn">
 			<select name="targetIterationGoalId">
 				<option value="-1">Keep original</option>
+				<option value="-2">(none)</option>
 				<c:forEach items="${backlog.iterationGoals}" var="itergoal">
 					<option value="${itergoal.id}" ><c:out value="${itergoal.name}" /></option>
 				</c:forEach>

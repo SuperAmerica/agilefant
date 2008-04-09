@@ -146,7 +146,12 @@ public class BacklogBusinessImpl implements BacklogBusiness {
                         + "was not found."
                 );
             }
-            bli.setIterationGoal(iterationGoalDAO.get(iterationGoalId));
+            if (iterationGoalId == -2) {
+                bli.setIterationGoal(null);
+            }
+            else {
+                bli.setIterationGoal(iterationGoalDAO.get(iterationGoalId));   
+            }
         }
         
     }

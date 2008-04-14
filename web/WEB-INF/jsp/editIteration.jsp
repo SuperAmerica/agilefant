@@ -22,7 +22,14 @@
 		<h2>Create iteration</h2>
 	</c:when>
 	<c:otherwise>
-		<h2>Edit iteration</h2>
+		<h2><c:out value="${iteration.name}" />
+		<span class="timeframe">
+		[<c:out value="${iteration.startDate.date}.${iteration.startDate.month + 1}.${iteration.startDate.year + 1900}" />
+		- <c:out value="${iteration.endDate.date}.${iteration.endDate.month + 1}.${iteration.endDate.year + 1900}" />]
+		</span>
+		<a href="" onclick="toggleDiv('editIterationForm'); return false;" class="editLink">(edit)</a>
+		</h2>
+		<p class="description">${iteration.description}</p>
 	</c:otherwise>
 </c:choose>
 
@@ -34,6 +41,8 @@
 		<c:set var="new" value="" scope="page" />
 	</c:otherwise>
 </c:choose>
+
+<div id="editIterationForm" style="display: none;">
 
 <ww:form action="store${new}Iteration">
 	<ww:hidden name="iterationId" value="${iteration.id}" />
@@ -111,6 +120,8 @@
 		</tr>
 	</table>
 </ww:form>
+
+</div>
 
 <table>
 	<tr>

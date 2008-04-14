@@ -54,7 +54,14 @@
 				<h2>Create project</h2>
 			</c:when>
 			<c:otherwise>
-				<h2>Edit project</h2>
+				<h2><c:out value="${project.name}" />
+				<span class="timeframe">
+				[<c:out value="${project.startDate.date}.${project.startDate.month + 1}.${project.startDate.year + 1900}" />
+				- <c:out value="${project.endDate.date}.${project.endDate.month + 1}.${project.endDate.year + 1900}" />]
+				</span>
+				<a href="" onclick="toggleDiv('editProjectForm'); return false;" class="editLink">(edit)</a>
+				</h2>
+				<p class="description">${project.description}</p>
 			</c:otherwise>
 		</c:choose>
 
@@ -66,6 +73,8 @@
 				<c:set var="new" value="" scope="page" />
 			</c:otherwise>
 		</c:choose>
+
+		<div id="editProjectForm" style="display: none;">
 
 		<ww:form action="store${new}Project">
 			<ww:hidden name="projectId" value="${project.id}" />
@@ -229,6 +238,9 @@
 				</tr>
 			</table>
 		</ww:form>
+		
+		</div>
+		
 		<table>
 			<tr>
 				<td><c:if test="${project.id > 0}">

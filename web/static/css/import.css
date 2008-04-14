@@ -632,3 +632,21 @@ a.unassigned:hover {
 .overhead {
 	white-space: nowrap;
 }
+
+p.description {
+	width: 785px;
+}
+
+
+h2 .timeframe {
+	font-variant: small-caps;
+	font-size: 80%;
+	color: #444;
+}
+
+h2 .editLink {
+	font-variant: small-caps;
+	font-size: 80%;
+	text-decoration: none;
+	border: none;
+}

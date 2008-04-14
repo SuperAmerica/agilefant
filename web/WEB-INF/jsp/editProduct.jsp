@@ -15,7 +15,10 @@
 		<h2>Create product</h2>
 	</c:when>
 	<c:otherwise>
-		<h2>Edit product</h2>
+		<h2><c:out value="${product.name}" />
+		<a href="" onclick="toggleDiv('editProductForm'); return false;" class="editLink">(edit)</a>
+		</h2>
+		<p class="description">${product.description}</p>
 	</c:otherwise>
 </c:choose>
 
@@ -27,6 +30,8 @@
 		<c:set var="new" value="" scope="page" />
 	</c:otherwise>
 </c:choose>
+
+<div id="editProductForm" style="display: none;">
 
 <ww:form action="store${new}Product">
 	<ww:hidden name="productId" value="${product.id}" />
@@ -59,6 +64,8 @@
 	</table>
 
 </ww:form>
+
+</div>
 
 <table>
 	<tr>

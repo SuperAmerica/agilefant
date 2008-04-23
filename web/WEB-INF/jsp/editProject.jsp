@@ -84,10 +84,10 @@
                             <c:choose>
                                 <c:when test="${product.id == currentProductId}">
                                     <option selected="selected" value="${product.id}"
-                                        title="${product.name}">${aef:out(product.name)}</option>
+                                        title="${product.name}" class="productOption">${aef:out(product.name)}</option>
                                 </c:when>
                                 <c:otherwise>
-                                    <option value="${product.id}" title="${product.name}">${aef:out(product.name)}</option>
+                                    <option value="${product.id}" title="${product.name}" class="productOption">${aef:out(product.name)}</option>
                                 </c:otherwise>
                             </c:choose>
                         </c:forEach>
@@ -287,8 +287,8 @@
 							</tr>
 							<tr>
                                 <th class="info1">Timeframe</th>
-                                <td class="info3"><c:out value="${project.startDate.date}.${project.startDate.month}.${project.startDate.year + 1900}" /> - 
-                                <c:out value="${project.endDate.date}.${project.endDate.month}.${project.endDate.year + 1900}" /></td>
+                                <td class="info3"><c:out value="${project.startDate.date}.${project.startDate.month + 1}.${project.startDate.year + 1900}" /> - 
+                                <c:out value="${project.endDate.date}.${project.endDate.month + 1}.${project.endDate.year + 1900}" /></td>
 							</tr>
 							<tr>
 							    <th class="info1">Assignees</th>

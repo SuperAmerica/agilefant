@@ -746,3 +746,15 @@ td.icons a img {
 	text-decoration: underline;
 	color: #000;
 }
+
+option.productOption {
+	padding-left: 5px;
+}
+
+option.projectOption {
+    padding-left: 15px;
+}
+
+option.iterationOption {
+    padding-left: 25px;
+}

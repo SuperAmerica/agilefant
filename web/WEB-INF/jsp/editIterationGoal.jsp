@@ -52,16 +52,16 @@
 			<td colspan="2"><select name="iterationId">
 				<option value="" class="inactive">(select iteration)</option>
 				<c:forEach items="${productList}" var="product">
-					<option value="" class="inactive">${product.name}</option>
+					<option value="" class="inactive productOption">${product.name}</option>
 					<c:forEach items="${product.projects}" var="project">
-						<option value="" class="inactive">&nbsp;&nbsp;&nbsp;&nbsp;${project.name}</option>
+						<option value="" class="inactive projectOption">${project.name}</option>
 						<c:forEach items="${project.iterations}" var="iter">
 							<c:choose>
 								<c:when test="${iter.id == currentIterationId}">
-									<option selected="selected" value="${iter.id}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${iter.name}</option>
+									<option selected="selected" value="${iter.id}" class="iterationOption">${iter.name}</option>
 								</c:when>
 								<c:otherwise>
-									<option value="${iter.id}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${iter.name}</option>
+									<option value="${iter.id}" class="iterationOption">${iter.name}</option>
 								</c:otherwise>
 							</c:choose>
 						</c:forEach>

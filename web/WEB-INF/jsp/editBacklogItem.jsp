@@ -184,31 +184,31 @@
 				<c:forEach items="${productList}" var="product">
 					<c:choose>
 						<c:when test="${product.id == currentPageId}">
-							<option selected="selected" value="${product.id}"
+							<option selected="selected" value="${product.id}" class="productOption"
 								title="${product.name}">${aef:out(product.name)}</option>
 						</c:when>
 						<c:otherwise>
-							<option value="${product.id}" title="${product.name}">${aef:out(product.name)}</option>
+							<option value="${product.id}" title="${product.name}" class="productOption">${aef:out(product.name)}</option>
 						</c:otherwise>
 					</c:choose>
 					<c:forEach items="${product.projects}" var="project">
 						<c:choose>
 							<c:when test="${project.id == currentPageId}">
-								<option selected="selected" value="${project.id}"
-									title="${project.name}">&nbsp;&nbsp;&nbsp;&nbsp;${aef:out(project.name)}</option>
+								<option selected="selected" value="${project.id}" class="projectOption"
+									title="${project.name}">${aef:out(project.name)}</option>
 							</c:when>
 							<c:otherwise>
-								<option value="${project.id}" title="${project.name}">&nbsp;&nbsp;&nbsp;&nbsp;${aef:out(project.name)}</option>
+								<option value="${project.id}" title="${project.name}"  class="projectOption">${aef:out(project.name)}</option>
 							</c:otherwise>
 						</c:choose>
 						<c:forEach items="${project.iterations}" var="iteration">
 							<c:choose>
 								<c:when test="${iteration.id == currentPageId}">
-									<option selected="selected" value="${iteration.id}"
-										title="${iteration.name}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${aef:out(iteration.name)}</option>
+									<option selected="selected" value="${iteration.id}" class="iterationOption"
+										title="${iteration.name}">${aef:out(iteration.name)}</option>
 								</c:when>
 								<c:otherwise>
-									<option value="${iteration.id}" title="${iteration.name}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${aef:out(iteration.name)}</option>
+									<option value="${iteration.id}" title="${iteration.name}"  class="iterationOption">${aef:out(iteration.name)}</option>
 								</c:otherwise>
 							</c:choose>
 						</c:forEach>

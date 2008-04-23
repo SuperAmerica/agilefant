@@ -63,15 +63,15 @@
                                     <td colspan="2"><select name="projectId">
                                         <option class="inactive" value="">(select project)</option>
                                         <c:forEach items="${productList}" var="product">
-                                            <option value="" class="inactive">${aef:out(product.name)}</option>
+                                            <option value="" class="inactive productOption">${aef:out(product.name)}</option>
                                             <c:forEach items="${product.projects}" var="project">
                                                 <c:choose>
                                                     <c:when test="${project.id == currentProjectId}">
-                                                        <option selected="selected" value="${project.id}"
-                                                            title="${project.name}">&nbsp;&nbsp;&nbsp;&nbsp;${aef:out(project.name)}</option>
+                                                        <option selected="selected" value="${project.id}" class="projectOption"
+                                                            title="${project.name}">${aef:out(project.name)}</option>
                                                     </c:when>
                                                     <c:otherwise>
-                                                        <option value="${project.id}" title="${project.name}">&nbsp;&nbsp;&nbsp;&nbsp;${aef:out(project.name)}</option>
+                                                        <option value="${project.id}" title="${project.name}" class="projectOption">${aef:out(project.name)}</option>
                                                     </c:otherwise>
                                                 </c:choose>
                                             </c:forEach>
@@ -155,9 +155,9 @@
 							<tr>
 								<th class="info1">Timeframe</th>
 								<td class="info3"><c:out
-									value="${iteration.startDate.date}.${iteration.startDate.month}.${iteration.startDate.year + 1900}" />
+									value="${iteration.startDate.date}.${iteration.startDate.month + 1}.${iteration.startDate.year + 1900}" />
 								- <c:out
-									value="${iteration.endDate.date}.${iteration.endDate.month}.${iteration.endDate.year + 1900}" /></td>
+									value="${iteration.endDate.date}.${iteration.endDate.month + 1}.${iteration.endDate.year + 1900}" /></td>
 								<td class="info4" rowspan="3"><img
 									src="drawSmallChart.action?iterationId=${iteration.id}" /></td>
 							</tr>
@@ -196,26 +196,26 @@
 										name="iteration.description" /></td>
 								</tr>
 								<tr>
-									<td>Project</td>
-									<td>*</td>
-									<td colspan="2"><select name="projectId">
-										<option class="inactive" value="">(select project)</option>
-										<c:forEach items="${productList}" var="product">
-											<option value="" class="inactive">${aef:out(product.name)}</option>
-											<c:forEach items="${product.projects}" var="project">
-												<c:choose>
-													<c:when test="${project.id == currentProjectId}">
-														<option selected="selected" value="${project.id}"
-															title="${project.name}">&nbsp;&nbsp;&nbsp;&nbsp;${aef:out(project.name)}</option>
-													</c:when>
-													<c:otherwise>
-														<option value="${project.id}" title="${project.name}">&nbsp;&nbsp;&nbsp;&nbsp;${aef:out(project.name)}</option>
-													</c:otherwise>
-												</c:choose>
-											</c:forEach>
-										</c:forEach>
-									</select></td>
-								</tr>
+                                    <td>Project</td>
+                                    <td>*</td>
+                                    <td colspan="2"><select name="projectId">
+                                        <option class="inactive" value="">(select project)</option>
+                                        <c:forEach items="${productList}" var="product">
+                                            <option value="" class="inactive productOption">${aef:out(product.name)}</option>
+                                            <c:forEach items="${product.projects}" var="project">
+                                                <c:choose>
+                                                    <c:when test="${project.id == currentProjectId}">
+                                                        <option selected="selected" value="${project.id}" class="projectOption"
+                                                            title="${project.name}">${aef:out(project.name)}</option>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <option value="${project.id}" title="${project.name}" class="projectOption">${aef:out(project.name)}</option>
+                                                    </c:otherwise>
+                                                </c:choose>
+                                            </c:forEach>
+                                        </c:forEach>
+                                    </select></td>
+                                </tr>
 								<tr>
 									<td>Start date</td>
 									<td>*</td>

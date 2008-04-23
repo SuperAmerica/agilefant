@@ -545,7 +545,7 @@ td.deleteButton {
 
 .upcomingPath {
     display: inherit;
-    color: #0066ff;
+    color: #3399ff;
 }
 
 #hierarchyList span.archivePath {
@@ -646,10 +646,6 @@ a.unassigned:hover {
 	white-space: nowrap;
 }
 
-p.description {
-	width: 785px;
-}
-
 
 h2 .timeframe {
 	font-variant: small-caps;
@@ -716,7 +712,7 @@ td.icons a img {
 
 .infoTable .info1 {
 	width: 120px;
-	padding: 3px 4px;
+	padding: 3px 8px;
 }
 
 .infoTable .info2 {
@@ -736,7 +732,8 @@ td.icons a img {
 }
 
 .infoTable .description {
-	padding: 3px 4px;
+	padding: 6px 15px;
+	text-align: left;
 }
 
 .infoTable h3 {

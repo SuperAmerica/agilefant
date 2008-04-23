@@ -14,7 +14,7 @@ function toggleDiv(id)
 }
 
 function confirmDeleteTask() {
-	if (confirm("Deleting the task will cause all of its events, including logged work, to be deleted.")) {
+	if (confirm("Really delete task?")) {
 		return true;
 	} else {
 		return false;

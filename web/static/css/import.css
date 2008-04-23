@@ -214,8 +214,6 @@ a:hover,a:active {
 #subItemHeader {
 	padding: 0;
 	background-color: #E8EBF0;
-	background-image: url('../img/gradient.png');
-	background-repeat: repeat-x;
 	border-bottom: 1px solid #ccc;
 }
 
@@ -547,7 +545,7 @@ td.deleteButton {
 
 .upcomingPath {
     display: inherit;
-    color: #00aaff;
+    color: #0066ff;
 }
 
 #hierarchyList span.archivePath {

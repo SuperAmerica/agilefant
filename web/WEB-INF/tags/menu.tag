@@ -323,9 +323,9 @@ Create New
 								&gt;
 								<ww:url id="iterGoalLink" action="editIterationGoal"
 				includeParams="none">
-				<ww:param name="iterationId" value="${page.id}" />
+				<ww:param name="iterationGoalId" value="${page.id}" />
 			</ww:url>
-			<ww:a title="IterationGoal: ${page.name}" href="%{iterGoalLink)">${aef:out(page.name)}</ww:a>
+			<ww:a title="IterationGoal: ${page.name}" href="%{iterGoalLink}">${aef:out(page.name)}</ww:a>
 		</c:when>
 
 		<c:when test="${aef:isBacklogItem(page)}">

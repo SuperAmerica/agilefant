@@ -153,8 +153,8 @@
 									<ww:param name="done" value="${tsl['done']}" />
 								</ww:url> <img src="${imgUrl}" /> </a>
 								<aef:tasklist backlogItem="${row}"
-									contextViewName="${currentAction}"
-									contextObjectId="${backlog.id}" divId="${divId}" />
+									contextViewName="editIterationGoal"
+									contextObjectId="${iterationGoal.id}" divId="${divId}" />
 							</c:when>
 							<c:otherwise>
 								<a href="javascript:toggleDiv(${divId});"

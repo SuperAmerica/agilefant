@@ -6,7 +6,16 @@
 <c:if test="${!(empty backlogItemsForUserInProgress)}">
 <div id="subItems">
 
-<div id="subItemHeader">Backlog items</div>
+<div id="subItemHeader">
+<table cellspacing="0" cellpadding="0">
+<tr>
+<td class="header">
+Backlog items
+</td>
+</tr>
+</table>
+</div>
+
 <div id="subItemContent"><display:table
 	name="backlogItemsForUserInProgress" id="item"
 	requestURI="dailyWork.action">

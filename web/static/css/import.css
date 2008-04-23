@@ -212,14 +212,16 @@ a:hover,a:active {
 }
 
 #subItemHeader {
-	padding: 3px;
-	background: #E8EBF0;
+	padding: 0;
+	background-color: #E8EBF0;
+	background-image: url('../img/gradient.png');
+	background-repeat: repeat-x;
 	border-bottom: 1px solid #ccc;
 }
 
 #subItemContent {
-	padding: 5px;
-	margin-bottom: 20px;
+	padding: 0;
+	margin: 0;
 }
 
 #row,#row1,#row2,#row3,#item,#item1,#item2 {
@@ -235,6 +237,10 @@ a:hover,a:active {
 #row th,#row1 th,#row2 th,#row3 th,#item th,#item1 th,#item2 th {
 	text-align: left;
 	background: #ddd;
+}
+
+table#item, table#row {
+    margin: 5px;
 }
 
 .even {
@@ -649,4 +655,87 @@ h2 .editLink {
 	font-size: 80%;
 	text-decoration: none;
 	border: none;
+}
+
+#subItemHeader table {
+	width: 100%;
+	font-family: "Arial", sans-serif;
+	margin: 0;
+	padding: 0 0 0 3px;
+}
+
+#subItemHeader table td {
+	/*color: #ffffff;*/
+	font-weight: normal;
+}
+
+#subItemHeader table .header {
+	height: 22px;
+}
+
+td.icons {
+    padding: 2px 5px 0 0;
+    text-align: right;
+}
+
+td.icons a img {
+    margin: 0;
+    padding: 0;
+}
+
+.descriptionDiv {
+	max-height: 12em;
+	overflow: hidden;
+}
+
+.infoTable {
+	width: 100%;
+}
+
+.infoTable td {
+	text-align: justify;
+	vertical-align: top;
+}
+
+.infoTable th {
+	text-align: left;
+	vertical-align: top;
+	font-weight: bold;
+	text-decoration: none;
+	font: "Arial", sans-serif;
+	font-size: 10pt;
+	color: #222;
+}
+
+.infoTable .info1 {
+	width: 120px;
+	padding: 3px 4px;
+}
+
+.infoTable .info2 {
+	width: 90px;
+	padding: 2px;	
+}
+
+.infoTable .info3 {
+	width: auto;
+	padding: 3px 4px;
+}
+
+.infoTable .info4 {
+	width: 200px;
+	border-left: 1px solid #ccc;
+	padding: 3px 4px;
+}
+
+.infoTable .description {
+	padding: 3px 4px;
+}
+
+.infoTable h3 {
+	font-family: "Arial", sans-serif;
+	font-size: 10pt;
+	font-weight: bold;
+	text-decoration: underline;
+	color: #000;
 }

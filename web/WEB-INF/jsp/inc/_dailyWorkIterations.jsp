@@ -9,6 +9,9 @@
 
 
 		<div id="subItemHeader">
+		<table cellspacing="0" cellpadding="0">
+        <tr>
+        <td class="header">
 		<ww:url id="parentActionUrl" action="editProduct" includeParams="none">
 			<ww:param name="productId" value="${it.project.product.id}" />
 		</ww:url>
@@ -48,6 +51,9 @@
 			<c:out value="${user.fullName}" /> has not been assigned to this project.
 			</p>
 		</c:if>
+		</td>
+		</tr>
+		</table>
 		</div>
 
 

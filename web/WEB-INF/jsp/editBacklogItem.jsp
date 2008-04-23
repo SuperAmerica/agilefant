@@ -379,11 +379,17 @@
 	<tr>
 		<td><c:if test="${backlogItem.id > 0}">
 			<div id="subItems">
-			<div id="subItemHeader">Tasks <ww:url id="createLink"
+			<div id="subItemHeader">
+			<table cellpadding="0" cellspacing="0">
+                    <tr>
+                       <td class="header">Tasks <ww:url id="createLink"
 				action="createTask" includeParams="none">
 				<ww:param name="backlogItemId" value="${backlogItemId}" />
 			</ww:url> <ww:a
 				href="%{createLink}&contextViewName=editBacklogItem&contextObjectId=${backlogItemId}">Create new &raquo;</ww:a>
+				</td>
+				</tr>
+				</table>
 			</div>
 			<c:if test="${!empty backlogItem.tasks}">
 				<div id="subItemContent">

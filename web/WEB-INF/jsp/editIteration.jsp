@@ -18,121 +18,267 @@
 <ww:actionmessage />
 
 <c:choose>
-	<c:when test="${iterationId == 0}">
-		<h2>Create iteration</h2>
-	</c:when>
-	<c:otherwise>
-		<h2><c:out value="${iteration.name}" />
-		<span class="timeframe">
-		[<c:out value="${iteration.startDate.date}.${iteration.startDate.month + 1}.${iteration.startDate.year + 1900}" />
-		- <c:out value="${iteration.endDate.date}.${iteration.endDate.month + 1}.${iteration.endDate.year + 1900}" />]
-		</span>
-		<a href="" onclick="toggleDiv('editIterationForm'); return false;" class="editLink">(edit)</a>
-		</h2>
-		<p class="description">${iteration.description}</p>
-	</c:otherwise>
+    <c:when test="${IterationId == 0}">
+        <c:set var="new" value="New" scope="page" />
+    </c:when>
+    <c:otherwise>
+        <c:set var="new" value="" scope="page" />
+    </c:otherwise>
 </c:choose>
 
 <c:choose>
-	<c:when test="${IterationId == 0}">
-		<c:set var="new" value="New" scope="page" />
+	<c:when test="${iterationId == 0}">
+		<h2>Create iteration</h2>
+		
+		<div id="editIterationForm"><ww:form
+                            action="store${new}Iteration">
+                            <ww:hidden name="iterationId" value="${iteration.id}" />
+                            <ww:date name="%{iteration.getTimeOfDayDate(6)}" id="start"
+                                format="%{getText('webwork.shortDateTime.format')}" />
+                            <ww:date name="%{iteration.getTimeOfDayDate(18)}" id="end"
+                                format="%{getText('webwork.shortDateTime.format')}" />
+                            <c:if test="${iteration.id > 0}">
+                                <ww:date name="%{iteration.startDate}" id="start"
+                                    format="%{getText('webwork.shortDateTime.format')}" />
+                                <ww:date name="%{iteration.endDate}" id="end"
+                                    format="%{getText('webwork.shortDateTime.format')}" />
+                            </c:if>
+
+                            <table class="formTable">
+                                <tr>
+                                    <td>Name</td>
+                                    <td>*</td>
+                                    <td colspan="2"><ww:textfield size="60"
+                                        name="iteration.name" /></td>
+                                </tr>
+                                <tr>
+                                    <td>Description</td>
+                                    <td></td>
+                                    <td colspan="2"><ww:textarea cols="70" rows="10"
+                                        name="iteration.description" /></td>
+                                </tr>
+                                <tr>
+                                    <td>Project</td>
+                                    <td>*</td>
+                                    <td colspan="2"><select name="projectId">
+                                        <option class="inactive" value="">(select project)</option>
+                                        <c:forEach items="${productList}" var="product">
+                                            <option value="" class="inactive">${aef:out(product.name)}</option>
+                                            <c:forEach items="${product.projects}" var="project">
+                                                <c:choose>
+                                                    <c:when test="${project.id == currentProjectId}">
+                                                        <option selected="selected" value="${project.id}"
+                                                            title="${project.name}">&nbsp;&nbsp;&nbsp;&nbsp;${aef:out(project.name)}</option>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <option value="${project.id}" title="${project.name}">&nbsp;&nbsp;&nbsp;&nbsp;${aef:out(project.name)}</option>
+                                                    </c:otherwise>
+                                                </c:choose>
+                                            </c:forEach>
+                                        </c:forEach>
+                                    </select></td>
+                                </tr>
+                                <tr>
+                                    <td>Start date</td>
+                                    <td>*</td>
+                                    <td colspan="2"><ww:datepicker value="%{#start}" size="15"
+                                        showstime="true"
+                                        format="%{getText('webwork.datepicker.format')}"
+                                        name="startDate" /></td>
+                                </tr>
+                                <tr>
+                                    <td>End date</td>
+                                    <td>*</td>
+                                    <td colspan="2"><ww:datepicker value="%{#end}" size="15"
+                                        showstime="true"
+                                        format="%{getText('webwork.datepicker.format')}"
+                                        name="endDate" /></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <c:choose>
+                                        <c:when test="${iterationId == 0}">
+                                            <td><ww:submit value="Create" /></td>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <td><ww:submit value="Save" /></td>
+                                            <td class="deleteButton"><ww:submit
+                                                onclick="return confirmDelete()" action="deleteIteration"
+                                                value="Delete" /></td>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </tr>
+                            </table>
+                        </ww:form></div>
 	</c:when>
 	<c:otherwise>
-		<c:set var="new" value="" scope="page" />
+		<h2><c:out value="${iteration.name}" /></h2>
+		<table>
+			<table>
+				<tbody>
+					<tr>
+						<td>
+						<div id="subItems" style="margin-top: 0">
+						<div id="subItemHeader"><script type="text/javascript">
+                function expandDescription() {
+                    document.getElementById('descriptionDiv').style.maxHeight = "1000em";
+                    document.getElementById('descriptionDiv').style.overflow = "visible";
+                }
+                function collapseDescription() {
+                    document.getElementById('descriptionDiv').style.maxHeight = "12em";
+                    document.getElementById('descriptionDiv').style.overflow = "hidden";
+                }
+                </script>
+
+
+						<table cellspacing="0" cellpadding="0">
+							<tr>
+								<td class="header">Details <a href=""
+									onclick="toggleDiv('editIterationForm'); toggleDiv('descriptionDiv'); return false;">Edit
+								&raquo;</a></td>
+								<td class="icons">
+								<a href=""
+									onclick="expandDescription(); return false;"> <img
+									src="static/img/plus.png" width="18" height="18" alt="Expand"
+									title="Expand" /> </a> <a href=""
+									onclick="collapseDescription(); return false;"> <img
+									src="static/img/minus.png" width="18" height="18"
+									alt="Collapse" title="Collapse" /> </a></td>
+							</tr>
+						</table>
+						</div>
+						<div id="subItemContent">
+						<div id="descriptionDiv" class="descriptionDiv"
+							style="display: block;">
+						<table class="infoTable" cellpadding="0" cellspacing="0">
+							<tr>
+								<th class="info1">Timeframe</th>
+								<td class="info3"><c:out
+									value="${iteration.startDate.date}.${iteration.startDate.month}.${iteration.startDate.year + 1900}" />
+								- <c:out
+									value="${iteration.endDate.date}.${iteration.endDate.month}.${iteration.endDate.year + 1900}" /></td>
+								<td class="info4" rowspan="3"><img
+									src="drawSmallChart.action?iterationId=${iteration.id}" /></td>
+							</tr>
+
+							<tr>
+								<td colspan="2" class="description">${iteration.description}</td>
+							</tr>
+
+						</table>
+						</div>
+						<div id="editIterationForm" style="display: none;"><ww:form
+							action="store${new}Iteration">
+							<ww:hidden name="iterationId" value="${iteration.id}" />
+							<ww:date name="%{iteration.getTimeOfDayDate(6)}" id="start"
+								format="%{getText('webwork.shortDateTime.format')}" />
+							<ww:date name="%{iteration.getTimeOfDayDate(18)}" id="end"
+								format="%{getText('webwork.shortDateTime.format')}" />
+							<c:if test="${iteration.id > 0}">
+								<ww:date name="%{iteration.startDate}" id="start"
+									format="%{getText('webwork.shortDateTime.format')}" />
+								<ww:date name="%{iteration.endDate}" id="end"
+									format="%{getText('webwork.shortDateTime.format')}" />
+							</c:if>
+
+							<table class="formTable">
+								<tr>
+									<td>Name</td>
+									<td>*</td>
+									<td colspan="2"><ww:textfield size="60"
+										name="iteration.name" /></td>
+								</tr>
+								<tr>
+									<td>Description</td>
+									<td></td>
+									<td colspan="2"><ww:textarea cols="70" rows="10"
+										name="iteration.description" /></td>
+								</tr>
+								<tr>
+									<td>Project</td>
+									<td>*</td>
+									<td colspan="2"><select name="projectId">
+										<option class="inactive" value="">(select project)</option>
+										<c:forEach items="${productList}" var="product">
+											<option value="" class="inactive">${aef:out(product.name)}</option>
+											<c:forEach items="${product.projects}" var="project">
+												<c:choose>
+													<c:when test="${project.id == currentProjectId}">
+														<option selected="selected" value="${project.id}"
+															title="${project.name}">&nbsp;&nbsp;&nbsp;&nbsp;${aef:out(project.name)}</option>
+													</c:when>
+													<c:otherwise>
+														<option value="${project.id}" title="${project.name}">&nbsp;&nbsp;&nbsp;&nbsp;${aef:out(project.name)}</option>
+													</c:otherwise>
+												</c:choose>
+											</c:forEach>
+										</c:forEach>
+									</select></td>
+								</tr>
+								<tr>
+									<td>Start date</td>
+									<td>*</td>
+									<td colspan="2"><ww:datepicker value="%{#start}" size="15"
+										showstime="true"
+										format="%{getText('webwork.datepicker.format')}"
+										name="startDate" /></td>
+								</tr>
+								<tr>
+									<td>End date</td>
+									<td>*</td>
+									<td colspan="2"><ww:datepicker value="%{#end}" size="15"
+										showstime="true"
+										format="%{getText('webwork.datepicker.format')}"
+										name="endDate" /></td>
+								</tr>
+								<tr>
+									<td></td>
+									<td></td>
+									<c:choose>
+										<c:when test="${iterationId == 0}">
+											<td><ww:submit value="Create" /></td>
+										</c:when>
+										<c:otherwise>
+											<td><ww:submit value="Save" /></td>
+											<td class="deleteButton"><ww:submit
+												onclick="return confirmDelete()" action="deleteIteration"
+												value="Delete" /></td>
+										</c:otherwise>
+									</c:choose>
+								</tr>
+							</table>
+						</ww:form></div>
+						</div>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+			</table>
 	</c:otherwise>
 </c:choose>
 
-<div id="editIterationForm" style="display: none;">
 
-<ww:form action="store${new}Iteration">
-	<ww:hidden name="iterationId" value="${iteration.id}" />
-	<ww:date name="%{iteration.getTimeOfDayDate(6)}" id="start"
-		format="%{getText('webwork.shortDateTime.format')}" />
-	<ww:date name="%{iteration.getTimeOfDayDate(18)}" id="end"
-		format="%{getText('webwork.shortDateTime.format')}" />
-	<c:if test="${iteration.id > 0}">
-		<ww:date name="%{iteration.startDate}" id="start"
-			format="%{getText('webwork.shortDateTime.format')}" />
-		<ww:date name="%{iteration.endDate}" id="end"
-			format="%{getText('webwork.shortDateTime.format')}" />
-	</c:if>
 
-	<table class="formTable">
-		<tr>
-			<td>Name</td>
-			<td>*</td>
-			<td colspan="2"><ww:textfield size="60" name="iteration.name" /></td>
-		</tr>
-		<tr>
-			<td>Description</td>
-			<td></td>
-			<td colspan="2"><ww:textarea cols="70" rows="10"
-				name="iteration.description" /></td>
-		</tr>
-		<tr>
-			<td>Project</td>
-			<td>*</td>
-			<td colspan="2"><select name="projectId">
-				<option class="inactive" value="">(select project)</option>
-				<c:forEach items="${productList}" var="product">
-					<option value="" class="inactive">${aef:out(product.name)}</option>
-					<c:forEach items="${product.projects}" var="project">
-						<c:choose>
-							<c:when test="${project.id == currentProjectId}">
-								<option selected="selected" value="${project.id}"
-									title="${project.name}">&nbsp;&nbsp;&nbsp;&nbsp;${aef:out(project.name)}</option>
-							</c:when>
-							<c:otherwise>
-								<option value="${project.id}" title="${project.name}">&nbsp;&nbsp;&nbsp;&nbsp;${aef:out(project.name)}</option>
-							</c:otherwise>
-						</c:choose>
-					</c:forEach>
-				</c:forEach>
-			</select></td>
-		</tr>
-		<tr>
-			<td>Start date</td>
-			<td>*</td>
-			<td colspan="2"><ww:datepicker value="%{#start}" size="15" showstime="true"
-				format="%{getText('webwork.datepicker.format')}" name="startDate" />
-			</td>
-		</tr>
-		<tr>
-			<td>End date</td>
-			<td>*</td>
-			<td colspan="2"><ww:datepicker value="%{#end}" size="15" showstime="true"
-				format="%{getText('webwork.datepicker.format')}" name="endDate" />
-			</td>
-		</tr>
-		<tr>
-			<td></td>
-			<td></td>
-			<c:choose>
-				<c:when test="${iterationId == 0}">
-					<td><ww:submit value="Create" /></td>
-				</c:when>
-				<c:otherwise>
-					<td><ww:submit value="Save" /></td>
-					<td class="deleteButton"><ww:submit onclick="return confirmDelete()"
-						action="deleteIteration" value="Delete" /></td>
-				</c:otherwise>
-			</c:choose>
-		</tr>
-	</table>
-</ww:form>
 
-</div>
 
 <table>
 	<tr>
 		<td><c:if test="${iterationId != 0}">
 			<div id="subItems">
-			<div id="subItemHeader">Iteration goals <ww:url
+			<div id="subItemHeader">
+			    <table cellspacing="0" cellpadding="0">
+                <tr>
+                <td class="header">
+                                Iteration goals <ww:url
 				id="createIterationGoalLink" action="createIterationGoal"
 				includeParams="none">
 				<ww:param name="iterationId" value="${iteration.id}" />
 			</ww:url> <ww:a
 				href="%{createIterationGoalLink}&contextViewName=editIteration&contextObjectId=${iteration.id}">Create new &raquo;</ww:a>
+				</td>
+				</tr>
+				</table>
 			</div>
 			<c:if test="${!empty iteration.iterationGoals}">
 				<div id="subItemContent">
@@ -181,12 +327,18 @@
 				</div>
 			</c:if>
 
-			<div id="subItemHeader">Backlog items <ww:url
+			<div id="subItemHeader">
+			    <table cellspacing="0" cellpadding="0">
+                <tr>
+                <td class="header">Backlog items <ww:url
 				id="createBacklogItemLink" action="createBacklogItem"
 				includeParams="none">
 				<ww:param name="backlogId" value="${iteration.id}" />
 			</ww:url> <ww:a
 				href="%{createBacklogItemLink}&contextViewName=editIteration&contextObjectId=${iteration.id}">Create new &raquo;</ww:a>
+				</td>
+				</tr>
+				</table>
 			</div>
 
 			<c:if test="${!empty iteration.backlogItems}">

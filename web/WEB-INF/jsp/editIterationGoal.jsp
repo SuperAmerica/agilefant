@@ -93,13 +93,19 @@
 	<tr>
 		<td><c:if test="${iterationGoalId != 0}">
 			<div id="subItems">
-			<div id="subItemHeader">Backlog items <ww:url
+			<div id="subItemHeader">
+			<table cellspacing="0" cellpadding="0">
+                <tr>
+                <td class="header">Backlog items <ww:url
 				id="createBacklogItemLink" action="createBacklogItem"
 				includeParams="none">
 				<ww:param name="backlogId" value="${iteration.id}" />
 				<ww:param name="iterationGoalId" value="${iterationGoal.id}" />
 			</ww:url> <ww:a
 				href="%{createBacklogItemLink}&contextViewName=editIterationGoal&contextObjectId=${iterationGoal.id}">Create new &raquo;</ww:a>
+				</td>
+				</tr>
+				</table>
 			</div>
 			<c:if test="${!empty iterationGoal.backlogItems}">
 				<div id="subItemContent">
@@ -155,8 +161,8 @@
 									title="Click to expand"> <ww:text
 									name="task.state.${row.state}" /> </a>
 								<aef:tasklist backlogItem="${row}"
-									contextViewName="${currentAction}"
-									contextObjectId="${backlog.id}" divId="${divId}" />
+									contextViewName="editIterationGoal"
+									contextObjectId="${iterationGoal.id}" divId="${divId}" />
 							</c:otherwise>
 						</c:choose>
 					</display:column>

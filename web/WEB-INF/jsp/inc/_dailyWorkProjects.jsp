@@ -10,6 +10,9 @@
 
 
 	<div id="subItemHeader">
+	<table cellspacing="0" cellpadding="0">
+        <tr>
+        <td class="header">
 		<ww:url id="parentActionUrl" action="editProduct" includeParams="none">
 			<ww:param name="productId" value="${pro.product.id}" />
 		</ww:url>
@@ -24,7 +27,11 @@
 			<c:out value="${pro.name}" />
 		</ww:a>
 		
-		<c:out value="(${pro.projectType.name})" /></div>
+		<c:out value="(${pro.projectType.name})" />
+		</td>
+		</tr>
+		</table>
+		</div>
 		
 		<c:if test="${!aef:isUserAssignedTo(pro, user)}">
 			<p style="color:#ff0000;">

@@ -1,9 +1,17 @@
 <%@ include file="./_taglibs.jsp"%>
 
 <div id="subItems">
-<div id="subItemHeader">Load
+<div id="subItemHeader">
+<table cellspacing="0" cellpadding="0">
+<tr>
+<td class="header">
+Load
 <a href="" id="loadTableHideLink" style="display: none;" onclick="show_small_loadtable(); return false;">(hide details)</a>
-<a href="" id="loadTableShowLink" onclick="show_detailed_loadtable(); return false;">(show details)</a></div>
+<a href="" id="loadTableShowLink" onclick="show_detailed_loadtable(); return false;">(show details)</a>
+</td>
+</tr>
+</table>
+</div>
 <div id="subItemContent">
 
 <script type="text/javascript">

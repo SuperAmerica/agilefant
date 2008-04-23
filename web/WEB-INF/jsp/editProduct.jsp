@@ -11,71 +11,171 @@
 <ww:actionmessage />
 
 <c:choose>
-	<c:when test="${productId == 0}">
-		<h2>Create product</h2>
-	</c:when>
-	<c:otherwise>
-		<h2><c:out value="${product.name}" />
-		<a href="" onclick="toggleDiv('editProductForm'); return false;" class="editLink">(edit)</a>
-		</h2>
-		<p class="description">${product.description}</p>
-	</c:otherwise>
+    <c:when test="${productId == 0}">
+        <c:set var="new" value="New" scope="page" />
+    </c:when>
+    <c:otherwise>
+        <c:set var="new" value="" scope="page" />
+    </c:otherwise>
 </c:choose>
 
 <c:choose>
 	<c:when test="${productId == 0}">
-		<c:set var="new" value="New" scope="page" />
+		<h2>Create product</h2>
+		
+		<div id="editProductForm">
+		  <ww:form
+                            action="store${new}Product">
+                            <ww:hidden name="productId" value="${product.id}" />
+
+                            <table class="formTable">
+                                <tr>
+                                    <td>Name</td>
+                                    <td>*</td>
+                                    <td colspan="2"><ww:textfield size="60"
+                                        name="product.name" /></td>
+                                </tr>
+                                <tr>
+                                    <td>Description</td>
+                                    <td></td>
+                                    <td colspan="2"><ww:textarea name="product.description"
+                                        cols="70" rows="10" /></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <c:choose>
+                                        <c:when test="${productId == 0}">
+                                            <td><ww:submit value="Create" /></td>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <td><ww:submit value="Save" />
+                                            <td class="deleteButton"><ww:submit
+                                                onclick="return confirmDelete()" action="deleteProduct"
+                                                value="Delete" /></td>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </tr>
+                            </table>
+
+                        </ww:form></div>
 	</c:when>
 	<c:otherwise>
-		<c:set var="new" value="" scope="page" />
+	
+		<h2><c:out value="${product.name}" /></h2>
+	
+	<table>
+            <table>
+                <tbody>
+                    <tr>
+                        <td>
+                        <div id="subItems" style="margin-top: 0">
+                        <div id="subItemHeader"><script type="text/javascript">
+                function expandDescription() {
+                    document.getElementById('descriptionDiv').style.maxHeight = "1000em";
+                    document.getElementById('descriptionDiv').style.overflow = "visible";
+                }
+                function collapseDescription() {
+                    document.getElementById('descriptionDiv').style.maxHeight = "12em";
+                    document.getElementById('descriptionDiv').style.overflow = "hidden";
+                }
+                </script>
+
+
+                        <table cellspacing="0" cellpadding="0">
+                            <tr>
+                                <td class="header">Details <a href=""
+                                    onclick="toggleDiv('editProductForm'); toggleDiv('descriptionDiv'); return false;">Edit
+                                &raquo;</a></td>
+                                <td class="icons">
+                                <a href=""
+                                    onclick="expandDescription(); return false;"> <img
+                                    src="static/img/plus.png" width="18" height="18" alt="Expand"
+                                    title="Expand" /> </a> <a href=""
+                                    onclick="collapseDescription(); return false;"> <img
+                                    src="static/img/minus.png" width="18" height="18"
+                                    alt="Collapse" title="Collapse" /> </a></td>
+                            </tr>
+                        </table>
+                        </div>
+                        <div id="subItemContent">
+						<div id="descriptionDiv" class="descriptionDiv"
+							style="display: block;">
+						<table class="infoTable" cellpadding="0" cellspacing="0">
+							
+							<tr>
+								<td colspan="2" class="description">${product.description}</td>
+								<td class="info4">&nbsp;</td>
+							</tr>
+
+						</table>
+						</div>
+						
+						<div id="editProductForm" style="display: none;"><ww:form
+							action="store${new}Product">
+							<ww:hidden name="productId" value="${product.id}" />
+
+							<table class="formTable">
+								<tr>
+									<td>Name</td>
+									<td>*</td>
+									<td colspan="2"><ww:textfield size="60"
+										name="product.name" /></td>
+								</tr>
+								<tr>
+									<td>Description</td>
+									<td></td>
+									<td colspan="2"><ww:textarea name="product.description"
+										cols="70" rows="10" /></td>
+								</tr>
+								<tr>
+									<td></td>
+									<td></td>
+									<c:choose>
+										<c:when test="${productId == 0}">
+											<td><ww:submit value="Create" /></td>
+										</c:when>
+										<c:otherwise>
+											<td><ww:submit value="Save" />
+											<td class="deleteButton"><ww:submit
+												onclick="return confirmDelete()" action="deleteProduct"
+												value="Delete" /></td>
+										</c:otherwise>
+									</c:choose>
+								</tr>
+							</table>
+
+						</ww:form></div></td>
+            </tr>
+            </tbody>
+            </table>
+		
+
+                
+                
 	</c:otherwise>
 </c:choose>
 
-<div id="editProductForm" style="display: none;">
 
-<ww:form action="store${new}Product">
-	<ww:hidden name="productId" value="${product.id}" />
 
-	<table class="formTable">
-		<tr>
-			<td>Name</td>
-			<td>*</td>
-			<td colspan="2"><ww:textfield size="60" name="product.name" /></td>
-		</tr>
-		<tr>
-			<td>Description</td>
-			<td></td>
-			<td colspan="2"><ww:textarea name="product.description" cols="70" rows="10" /></td>
-		</tr>
-		<tr>
-			<td></td>
-			<td></td>
-			<c:choose>
-				<c:when test="${productId == 0}">
-					<td><ww:submit value="Create" /></td>
-				</c:when>
-				<c:otherwise>
-					<td><ww:submit value="Save" />
-					<td class="deleteButton"> <ww:submit onclick="return confirmDelete()"
-						action="deleteProduct" value="Delete" /> </td>
-				</c:otherwise>
-			</c:choose>
-		</tr>
-	</table>
 
-</ww:form>
-
-</div>
 
 <table>
 	<tr>
 		<td><c:if test="${product.id > 0}">
 			<div id="subItems">
-			<div id="subItemHeader">Projects <ww:url id="createLink"
+			<div id="subItemHeader">
+			<table cellspacing="0" cellpadding="0">
+                <tr>
+                    <td class="header">
+                    Projects <ww:url id="createLink"
 				action="createProject" includeParams="none">
 				<ww:param name="productId" value="${product.id}" />
 			</ww:url> <ww:a
 				href="%{createLink}&contextViewName=editProduct&contextObjectId=${product.id}">Create new &raquo;</ww:a>
+				</td>
+				</tr>
+				</table>
 			</div>
 
 			<c:if test="${!empty product.projects}">
@@ -138,12 +238,19 @@
 				</div>
 			</c:if>
 
-			<div id="subItemHeader">Backlog items <ww:url
+			<div id="subItemHeader">
+			<table cellspacing="0" cellpadding="0">
+                <tr>
+                    <td class="header">
+                    Backlog items <ww:url
 				id="createBacklogItemLink" action="createBacklogItem"
 				includeParams="none">
 				<ww:param name="backlogId" value="${product.id}" />
 			</ww:url> <ww:a
 				href="%{createBacklogItemLink}&contextViewName=editProduct&contextObjectId=${product.id}">Create new &raquo;</ww:a>
+				</td>
+				</tr>
+				</table>
 			</div>
 
 			<c:if test="${!empty product.backlogItems}">

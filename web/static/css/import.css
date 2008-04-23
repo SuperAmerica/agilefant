@@ -541,6 +541,15 @@ td.deleteButton {
 	display: none;
 }
 
+.upcoming {
+	display: none;
+}
+
+.upcomingPath {
+    display: inherit;
+    color: #00aaff;
+}
+
 #hierarchyList span.archivePath {
 	color: #444;
 }

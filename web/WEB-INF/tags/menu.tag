@@ -141,12 +141,32 @@ Agilefant
 			<%-- Don't hide projects that have unfinished iterations--%>
 			<c:if test="${archive != archivePath}">
 				<c:forEach items="${project.iterations}" var="it">
-					<c:if test="${!aef:isBeforeThisDay(it.endDate)}">
+					<c:if test="${!aef:isBeforeThisDay(it.endDate) && 
+						aef:isBeforeThisDay(it.startDate)}">
 						<c:set var="archive" value="archivePath" scope="page" />
 						<c:set var="class2" value="archivePath" scope="page" />
 					</c:if>
 				</c:forEach>
 			</c:if>
+		</c:if>
+		
+		<c:if test="${!aef:isBeforeThisDay(project.startDate)}">
+            <c:set var="archive" value="upcoming" scope="page" />
+            <c:if test="${class == 'path' || class == 'selected'}">
+                <c:set var="archive" value="upcomingPath" scope="page" />
+                <c:set var="class2" value="upcomingPath" scope="page" />
+            </c:if>
+            
+            <%-- Don't hide upcoming projects with current iterations --%>
+            <c:if test="${archive != 'upcomingPath'}">
+                <c:forEach items="${project.iterations}" var="it">
+                    <c:if test="${!aef:isBeforeThisDay(it.endDate) && 
+                        aef:isBeforeThisDay(it.startDate)}">
+                        <c:set var="archive" value="upcomingPath" scope="page" />
+                        <c:set var="class2" value="upcomingPath" scope="page" />
+                    </c:if>
+                </c:forEach>
+            </c:if>
 		</c:if>
 
 		<c:if test="${project.id == currentProjectId}">
@@ -181,6 +201,13 @@ Agilefant
 					<c:set var="class3" value="archive" scope="page" />
 				</c:if>
 			</c:if>
+			
+			<c:if test="${!aef:isBeforeThisDay(iteration.startDate)}">
+                <c:set var="class3" value="upcomingPath" scope="page" />
+                <c:if test="${class2 != 'selected' && class2 != 'path'}">
+                    <c:set var="class3" value="upcoming" scope="page" />
+                </c:if>
+            </c:if>
 
 			<c:if test="${iteration.id == currentIterationId}">
 				<c:set var="class3" value="selected" scope="page" />

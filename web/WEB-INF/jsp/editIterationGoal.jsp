@@ -235,4 +235,8 @@
 				</display:table></p>
 				</div>
 			</c:if></div>
-		</c:if> <%@ include file="./inc/_footer.jsp"%>
+		</c:if>
+</td>
+</tr>
+</table>		
+<%@ include file="./inc/_footer.jsp"%>

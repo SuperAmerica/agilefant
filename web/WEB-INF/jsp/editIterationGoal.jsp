@@ -139,7 +139,7 @@
 					<display:column title="State" sortable="false" class="taskColumn">
 						<c:set var="divId" value="${divId + 1}" scope="page" />
 						<c:choose>
-							<c:when test="${!(empty row.tasks || fn:length(row.tasks) == 1)}">
+							<c:when test="${!(empty row.tasks)}">
 								<a href="javascript:toggleDiv(${divId});"
 									title="Click to expand"> <c:out
 									value="${fn:length(row.tasks)}" /> tasks, <aef:percentDone
@@ -148,6 +148,7 @@
 									id="imgUrl" action="drawExtendedBarChart" includeParams="none">
 									<ww:param name="notStarted" value="${tsl['notStarted']}" />
 									<ww:param name="started" value="${tsl['started']}" />
+									<ww:param name="pending" value="${tsl['pending']}" />
 									<ww:param name="blocked" value="${tsl['blocked']}" />
 									<ww:param name="implemented" value="${tsl['implemented']}" />
 									<ww:param name="done" value="${tsl['done']}" />
@@ -157,9 +158,43 @@
 									contextObjectId="${iterationGoal.id}" divId="${divId}" />
 							</c:when>
 							<c:otherwise>
-								<a href="javascript:toggleDiv(${divId});"
-									title="Click to expand"> <ww:text
-									name="task.state.${row.state}" /> </a>
+								<a href="javascript:toggleDiv(${divId});" title="Click to expand">
+                            <ww:text name="backlogItem.state.${row.state}"/><br />
+                            
+                            <c:choose>
+                            <c:when test="${row.state == 'NOT_STARTED'}" >
+                                <ww:url id="imgUrl" action="drawExtendedBarChart" includeParams="none">
+                                <ww:param name="notStarted" value="1" /> </ww:url> 
+                                <img src="${imgUrl}" /> 
+                            </c:when>
+                            <c:when test="${row.state == 'STARTED'}" >
+                                <ww:url id="imgUrl" action="drawExtendedBarChart" includeParams="none">
+                                <ww:param name="started" value="1" /> </ww:url> 
+                                <img src="${imgUrl}" />
+                            </c:when>
+                            <c:when test="${row.state == 'PENDING'}" >
+                                <ww:url id="imgUrl" action="drawExtendedBarChart" includeParams="none">
+                                <ww:param name="pending" value="1" /> </ww:url> 
+                                <img src="${imgUrl}" />
+                            </c:when>
+                            <c:when test="${row.state == 'BLOCKED'}" >
+                                <ww:url id="imgUrl" action="drawExtendedBarChart" includeParams="none">
+                                <ww:param name="blocked" value="1" /> </ww:url> 
+                                <img src="${imgUrl}" />
+                            </c:when>
+                            <c:when test="${row.state == 'IMPLEMENTED'}" >
+                                <ww:url id="imgUrl" action="drawExtendedBarChart" includeParams="none">
+                                <ww:param name="implemented" value="1" /> </ww:url> 
+                                <img src="${imgUrl}" />
+                            </c:when>
+                            <c:when test="${row.state == 'DONE'}" >
+                                <ww:url id="imgUrl" action="drawExtendedBarChart" includeParams="none">
+                                <ww:param name="done" value="1" /> </ww:url> 
+                                <img src="${imgUrl}" />
+                            </c:when>
+                            </c:choose>
+                                
+                        </a>
 								<aef:tasklist backlogItem="${row}"
 									contextViewName="editIterationGoal"
 									contextObjectId="${iterationGoal.id}" divId="${divId}" />

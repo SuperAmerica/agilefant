@@ -67,6 +67,10 @@ Effort estimate
 		</li>
 	</c:forEach>
 	<ww:submit value="Store" action="quickStoreTaskList"/>
+	<ww:url id="createLink" action="createTask" includeParams="none">
+		<ww:param name="backlogItemId" value="${backlogItem.id}" />
+	</ww:url>
+	<ww:a href="%{createLink}&contextViewName=${currentAction}&contextObjectId=${contextObjectId}">New task &raquo;</ww:a>
 </ww:form>
 
 </ul>

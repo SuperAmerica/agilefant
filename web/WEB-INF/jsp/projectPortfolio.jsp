@@ -29,32 +29,7 @@ var teams = [<aef:teamJson items="${teamList}"/>]
 			<c:out value="${row.product.name}: ${row.name}" />
 		</ww:a>
 	</display:column>
-	<display:column title="Action" class="portfolioActionColumn">
-		<ww:url id="moveTopLink" action="moveProjectTop">
-			<ww:param name="projectId" value="${row.id}" />
-		</ww:url>
-		<ww:a href="%{moveTopLink}"><img src="static/img/arrow_top.png" alt="Send to top" title="Send to top" /></ww:a>
-		
-		<ww:url id="moveUpLink" action="moveProjectUp">
-			<ww:param name="projectId" value="${row.id}" />
-		</ww:url>
-		<ww:a href="%{moveUpLink}"><img src="static/img/arrow_up.png" alt="Move up" title="Move up" /></ww:a>
-
-		<ww:url id="moveDownLink" action="moveProjectDown">
-			<ww:param name="projectId" value="${row.id}" />
-		</ww:url>
-		<ww:a href="%{moveDownLink}"><img src="static/img/arrow_down.png" alt="Move down" title="Move down" /></ww:a>
-
-		<ww:url id="moveBottomLink" action="moveProjectBottom">
-			<ww:param name="projectId" value="${row.id}" />
-		</ww:url>
-		<ww:a href="%{moveBottomLink}"><img src="static/img/arrow_bottom.png" alt="Send to bottom" title="Send to bottom" /></ww:a>
-		
-		<ww:url id="unrankLink" action="unrankProject">
-			<ww:param name="projectId" value="${row.id}" />
-		</ww:url>
-		<ww:a href="%{unrankLink}"><img src="static/img/unrank.png" alt="Unrank" title="Unrank" /></ww:a>
-	</display:column>
+	
 		<display:column title="Users">
 		<c:set var="divId" value="${divId + 1}" scope="page" />
 		<a href="javascript:toggleDiv(${divId});">
@@ -160,6 +135,33 @@ var teams = [<aef:teamJson items="${teamList}"/>]
 		<display:column title="Load Left">
 			<c:out value="${aef: out(summaryLoadLeftData[row])}" escapeXml="false" />
 		</display:column>
+		
+		<display:column title="Action" class="portfolioActionColumn">
+		<ww:url id="moveTopLink" action="moveProjectTop">
+			<ww:param name="projectId" value="${row.id}" />
+		</ww:url>
+		<ww:a href="%{moveTopLink}"><img src="static/img/arrow_top.png" alt="Send to top" title="Send to top" /></ww:a>
+		
+		<ww:url id="moveUpLink" action="moveProjectUp">
+			<ww:param name="projectId" value="${row.id}" />
+		</ww:url>
+		<ww:a href="%{moveUpLink}"><img src="static/img/arrow_up.png" alt="Move up" title="Move up" /></ww:a>
+
+		<ww:url id="moveDownLink" action="moveProjectDown">
+			<ww:param name="projectId" value="${row.id}" />
+		</ww:url>
+		<ww:a href="%{moveDownLink}"><img src="static/img/arrow_down.png" alt="Move down" title="Move down" /></ww:a>
+
+		<ww:url id="moveBottomLink" action="moveProjectBottom">
+			<ww:param name="projectId" value="${row.id}" />
+		</ww:url>
+		<ww:a href="%{moveBottomLink}"><img src="static/img/arrow_bottom.png" alt="Send to bottom" title="Send to bottom" /></ww:a>
+		
+		<ww:url id="unrankLink" action="unrankProject">
+			<ww:param name="projectId" value="${row.id}" />
+		</ww:url>
+		<ww:a href="%{unrankLink}"><img src="static/img/unrank.png" alt="Unrank" title="Unrank" /></ww:a>
+	</display:column>
 			
 </display:table></p>
 		
@@ -173,17 +175,7 @@ var teams = [<aef:teamJson items="${teamList}"/>]
 				<c:out value="${row.product.name}: ${row.name}" />
 			</ww:a>
 		</display:column>
-		<display:column title="Action">
-			<ww:url id="moveTopLink" action="moveProjectTop">
-				<ww:param name="projectId" value="${row.id}" />
-			</ww:url>
-			<ww:a href="%{moveTopLink}"><img src="static/img/rank.png" alt="Rank to top" title="Rank to top" /></ww:a>
-	
-			<ww:url id="moveBottomLink" action="moveProjectBottom">
-				<ww:param name="projectId" value="${row.id}" />
-			</ww:url>
-			<ww:a href="%{moveBottomLink}"><img src="static/img/unrank.png" alt="Rank to bottom" title="Rank to bottom" /></ww:a>
-		</display:column>
+		
 		<display:column title="Users">
 		<c:set var="divId" value="${divId + 1}" scope="page" />
 		<a href="javascript:toggleDiv(${divId});">
@@ -288,6 +280,20 @@ var teams = [<aef:teamJson items="${teamList}"/>]
 		<display:column title="Load Left">
 			<c:out value="${summaryLoadLeftData[row]}" escapeXml="false" />
 		</display:column>
+		
+		
+		<display:column title="Action">
+			<ww:url id="moveTopLink" action="moveProjectTop">
+				<ww:param name="projectId" value="${row.id}" />
+			</ww:url>
+			<ww:a href="%{moveTopLink}"><img src="static/img/rank.png" alt="Rank to top" title="Rank to top" /></ww:a>
+	
+			<ww:url id="moveBottomLink" action="moveProjectBottom">
+				<ww:param name="projectId" value="${row.id}" />
+			</ww:url>
+			<ww:a href="%{moveBottomLink}"><img src="static/img/unrank.png" alt="Rank to bottom" title="Rank to bottom" /></ww:a>
+		</display:column>
+		
 	</display:table></p>
 </c:if>
 

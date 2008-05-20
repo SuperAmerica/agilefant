@@ -348,9 +348,7 @@
 				</p>
 				</div>
 			</c:if></div>
-			<c:if test="${!empty iteration.backlogItems}">
-				<p><img src="drawChart.action?iterationId=${iteration.id}" id="bigChart" /></p>
-			</c:if>
+			<p><img src="drawChart.action?iterationId=${iteration.id}" id="bigChart" /></p>
 		</c:if></td>
 	</tr>
 </table>

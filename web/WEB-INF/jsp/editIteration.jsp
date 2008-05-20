@@ -158,8 +158,9 @@
 									value="${iteration.startDate.date}.${iteration.startDate.month + 1}.${iteration.startDate.year + 1900}" />
 								- <c:out
 									value="${iteration.endDate.date}.${iteration.endDate.month + 1}.${iteration.endDate.year + 1900}" /></td>
-								<td class="info4" rowspan="3"><img
-									src="drawSmallChart.action?iterationId=${iteration.id}" /></td>
+								<td class="info4" rowspan="3">
+								<a href="#bigChart"><img
+									src="drawSmallChart.action?iterationId=${iteration.id}" /></a></td>
 							</tr>
 
 							<tr>
@@ -348,7 +349,7 @@
 				</div>
 			</c:if></div>
 			<c:if test="${!empty iteration.backlogItems}">
-				<p><img src="drawChart.action?iterationId=${iteration.id}" /></p>
+				<p><img src="drawChart.action?iterationId=${iteration.id}" id="bigChart" /></p>
 			</c:if>
 		</c:if></td>
 	</tr>

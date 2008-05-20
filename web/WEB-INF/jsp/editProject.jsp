@@ -278,7 +278,9 @@
 								<td class="info3"><c:out value="${project.projectType.name}" /></td>
 								<td class="info4" rowspan="5">
                                 <c:if test="${(!empty project.backlogItems) && (empty project.iterations)}">
+                                    <a href="#bigChart">
                                     <img src="drawSmallProjectChart.action?projectId=${project.id}"/>
+                                    </a>
                                 </c:if>
                                 </td>
 							</tr>
@@ -607,7 +609,7 @@
 					</c:if></div>
 					<c:if test="${!empty project.backlogItems}">
 						<c:if test="${empty project.iterations}">
-							<p><img src="drawProjectChart.action?projectId=${project.id}" /></p>
+							<p><img src="drawProjectChart.action?projectId=${project.id}" id="bigChart"/></p>
 						</c:if>
 					</c:if>
 				</c:if></td>

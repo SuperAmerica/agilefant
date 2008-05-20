@@ -209,7 +209,15 @@
 
 				</display:table></td>
 				<td class="smallBurndownColumn">
-					<div class="smallBurndown"><img src="drawSmallChart.action?iterationId=${it.id}" /></div>
+					<div class="smallBurndown">
+					<ww:url id="parentActionUrl"
+						action="editIteration" includeParams="none">
+						<ww:param name="iterationId" value="${it.id}" />
+					</ww:url>
+					<ww:a href="%{parentActionUrl}&contextViewName=dailyWork#bigChart">
+						<img src="drawSmallChart.action?iterationId=${it.id}" />
+					</ww:a>
+					</div>
 				</td>
 			</tr>
 		</table>

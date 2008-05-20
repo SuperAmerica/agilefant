@@ -1,6 +1,8 @@
 <%@ include file="./inc/_taglibs.jsp"%>
 <%@ include file="./inc/_header.jsp"%>
 
+<script type="text/javascript" src="static/js/generic.js"></script>
+
 <c:choose>
 	<c:when test="${iteration.id == 0}">
 		<aef:bct projectId="${projectId}" />
@@ -60,7 +62,7 @@
                                 <tr>
                                     <td>Project</td>
                                     <td>*</td>
-                                    <td colspan="2"><select name="projectId">
+                                    <td colspan="2"><select name="projectId" onchange="disableIfEmpty(this.value, ['createButton']);" >
                                         <option class="inactive" value="">(select project)</option>
                                         <c:forEach items="${productList}" var="product">
                                             <option value="" class="inactive productOption">${aef:out(product.name)}</option>
@@ -99,9 +101,9 @@
                                     <td></td>
                                     <c:choose>
                                         <c:when test="${iterationId == 0}">
-                                            <td><ww:submit value="Create" /></td>
+                                            <td><ww:submit value="Create" id="createButton" /></td>
                                         </c:when>
-                                        <c:otherwise>
+                                        <c:otherwise> <!-- 20080520 Vesa: This branch is probably never entered, iterationId is always 0 here. -->
                                             <td><ww:submit value="Save" /></td>
                                             <td class="deleteButton"><ww:submit
                                                 onclick="return confirmDelete()" action="deleteIteration"
@@ -199,7 +201,7 @@
 								<tr>
                                     <td>Project</td>
                                     <td>*</td>
-                                    <td colspan="2"><select name="projectId">
+                                    <td colspan="2"><select name="projectId" onchange="disableIfEmpty(this.value, ['saveButton']);">
                                         <option class="inactive" value="">(select project)</option>
                                         <c:forEach items="${productList}" var="product">
                                             <option value="" class="inactive productOption">${aef:out(product.name)}</option>
@@ -241,7 +243,7 @@
 											<td><ww:submit value="Create" /></td>
 										</c:when>
 										<c:otherwise>
-											<td><ww:submit value="Save" /></td>
+											<td><ww:submit value="Save" id="saveButton" /></td>
 											<td class="deleteButton"><ww:submit
 												onclick="return confirmDelete()" action="deleteIteration"
 												value="Delete" /></td>

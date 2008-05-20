@@ -52,3 +52,16 @@ function confirmReset() {
 		return false;
 	}
 }
+
+function disableIfEmpty(value, elements) {
+	if(value == "") {
+		alert("Invalid selection");
+		for(i = 0; i < elements.length; i++){
+			document.getElementById(elements[i]).disabled = true;
+		}
+	} else {
+		for(i = 0; i < elements.length; i++){
+		document.getElementById(elements[i]).disabled = false;
+		}
+	}			
+}

@@ -1,6 +1,8 @@
 <%@ include file="./inc/_taglibs.jsp"%>
 <%@ include file="./inc/_header.jsp"%>
 
+<script type="text/javascript" src="static/js/generic.js"></script>
+
 <c:choose>
 	<c:when test="${backlogItem.id == 0}">
 		<aef:bct backlogId="${backlogId}" />
@@ -177,7 +179,16 @@
 		<tr>
 			<td>Backlog</td>
 			<td></td>
-			<td colspan="2"><select name="backlogId">
+			<td colspan="2">
+			<c:choose>
+				<c:when test="${backlogItemId == 0}">
+					<select name="backlogId" 
+									onchange="disableIfEmpty(this.value, ['createButton', 'createAndCloseButton']);">
+				</c:when>
+				<c:otherwise>
+					<select name="backlogId" onchange="disableIfEmpty(this.value, ['saveButton', 'saveAndCloseButton']);">
+				</c:otherwise>
+			</c:choose>
 
 				<%-- Generate a drop-down list showing all backlogs in a hierarchical manner --%>
 				<option class="inactive" value="">(select backlog)</option>
@@ -359,12 +370,12 @@
 			<td></td>
 			<c:choose>
 				<c:when test="${backlogItemId == 0}">
-					<td><ww:submit value="Create" /> <ww:submit
-						action="storeCloseBacklogItem" value="Create & Close" /></td>
+					<td><ww:submit value="Create" id="createButton" /> <ww:submit
+						action="storeCloseBacklogItem" value="Create & Close" id="createAndCloseButton" /></td>
 				</c:when>
 				<c:otherwise>
-					<td><ww:submit value="Save" /> <ww:submit
-						action="storeCloseBacklogItem" value="Save & Close" /></td>
+					<td><ww:submit value="Save" id="saveButton" /> <ww:submit
+						action="storeCloseBacklogItem" value="Save & Close" id="saveAndCloseButton" /></td>
 					<td class="deleteButton"><ww:submit action="deleteBacklogItem"
 						value="Delete" onclick="return confirmDeleteBli()" />
 				</c:otherwise>

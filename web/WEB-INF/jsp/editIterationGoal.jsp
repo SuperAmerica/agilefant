@@ -1,6 +1,8 @@
 <%@ include file="./inc/_taglibs.jsp"%>
 <%@ include file="./inc/_header.jsp"%>
 
+<script type="text/javascript" src="static/js/generic.js"></script>
+
 <c:if test="${iterationGoal.id > 0}">
 	<aef:bct iterationGoalId="${iterationGoal.id}" />
 </c:if>
@@ -49,7 +51,15 @@
 		<tr>
 			<td>Iteration</td>
 			<td></td>
-			<td colspan="2"><select name="iterationId">
+			<td colspan="2">
+			<c:choose>
+				<c:when test="${iterationGoalId == 0}">
+					<select name="iterationId" onchange="disableIfEmpty(this.value, ['createButton', 'createAndCloseButton']);">
+				</c:when>
+				<c:otherwise>
+					<select name="iterationId" onchange="disableIfEmpty(this.value, ['saveButton', 'saveAndCloseButton']);">
+				</c:otherwise>
+			</c:choose>
 				<option value="" class="inactive">(select iteration)</option>
 				<c:forEach items="${productList}" var="product">
 					<option value="" class="inactive productOption">${product.name}</option>
@@ -74,12 +84,12 @@
 			<td></td>
 			<c:choose>
 				<c:when test="${iterationGoalId == 0}">
-					<td><ww:submit value="Create" /> <ww:submit
-						action="storeCloseIterationGoal" value="Create & Close" /></td>
+					<td><ww:submit value="Create" id="createButton" /> <ww:submit
+						action="storeCloseIterationGoal" value="Create & Close" id="createAndCloseButton"/></td>
 				</c:when>
 				<c:otherwise>
-					<td><ww:submit value="Save" /> <ww:submit
-						action="storeCloseIterationGoal" value="Save & Close" /></td>
+					<td><ww:submit value="Save" id="saveButton"/> <ww:submit
+						action="storeCloseIterationGoal" value="Save & Close" id="saveAndCloseButton"/></td>
 					<td class="deleteButton"><ww:submit
 						onclick="return confirmDelete()" action="deleteIterationGoal"
 						value="Delete" /></td>

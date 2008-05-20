@@ -1,6 +1,8 @@
 <%@ include file="./inc/_taglibs.jsp"%>
 <%@ include file="./inc/_header.jsp"%>
 
+<script type="text/javascript" src="static/js/generic.js"></script>
+
 <c:choose>
 	<c:when test="${!empty project.id}">
 		<c:set var="currentProjectId" value="${project.id}" scope="page" />
@@ -78,7 +80,7 @@
                 <tr>
                     <td>Product</td>
                     <td>*</td>
-                    <td colspan="2"><select name="productId">
+                    <td colspan="2"><select name="productId" onchange="disableIfEmpty(this.value, ['createButton']);">
                         <option class="inactive" value="">(select product)</option>
                         <c:forEach items="${productList}" var="product">
                             <c:choose>
@@ -217,9 +219,9 @@
                     <td></td>
                     <c:choose>
                         <c:when test="${projectId == 0}">
-                            <td><ww:submit value="Create" /></td>
+                            <td><ww:submit value="Create" id="createButton" /></td>
                         </c:when>
-                        <c:otherwise>
+                        <c:otherwise> <!-- 20080520 Vesa: This branch is probably never entered, projectId is always 0 here. -->
                             <td><ww:submit value="Save" /></td>
                             <td class="deleteButton"><ww:submit
                                 onclick="return confirmDelete()" action="deleteProject"
@@ -350,7 +352,7 @@
 				<tr>
 					<td>Product</td>
 					<td>*</td>
-					<td colspan="2"><select name="productId">
+					<td colspan="2"><select name="productId" onchange="disableIfEmpty(this.value, ['saveButton']);">
 						<option class="inactive" value="">(select product)</option>
 						<c:forEach items="${productList}" var="product">
 							<c:choose>
@@ -491,7 +493,7 @@
 							<td><ww:submit value="Create" /></td>
 						</c:when>
 						<c:otherwise>
-							<td><ww:submit value="Save" /></td>
+							<td><ww:submit value="Save" id="saveButton" /></td>
 							<td class="deleteButton"><ww:submit
 								onclick="return confirmDelete()" action="deleteProject"
 								value="Delete" /></td>

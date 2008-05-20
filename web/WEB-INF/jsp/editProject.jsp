@@ -103,7 +103,8 @@
                 <tr>
                     <td>Default Overhead</td>
                     <td></td>
-                    <td colspan="2"><ww:textfield size="10" name="project.defaultOverhead" /></td>
+                    <td colspan="2"><ww:textfield size="10" name="project.defaultOverhead" />/ person / week</td>
+                    
                 </tr>
                 <tr>
                     <td>Start date</td>
@@ -283,7 +284,8 @@
 							</tr>
 							<tr>
 							    <th class="info1">Default overhead</th>
-							    <td class="info3"><c:out value="${project.defaultOverhead}" />
+							    <td class="info3"><c:out value="${project.defaultOverhead}"/> / person / week</td>
+						
 							</tr>
 							<tr>
                                 <th class="info1">Timeframe</th>
@@ -371,7 +373,7 @@
 				<tr>
 					<td>Default Overhead</td>
 					<td></td>
-					<td colspan="2"><ww:textfield size="10" name="project.defaultOverhead" /></td>
+					<td colspan="2"><ww:textfield size="10" name="project.defaultOverhead" /> / person / week</td>
 				</tr>
 				<tr>
 					<td>Start date</td>

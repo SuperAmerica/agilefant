@@ -405,7 +405,12 @@
 			<c:if test="${!empty backlogItem.tasks}">
 				<div id="subItemContent">
 				
-				
+				<ww:form action="quickStoreTaskList">
+				<ww:hidden name="backlogItemId" value="${backlogItemId}" />
+				<ww:hidden name="contextViewName" value="editBacklogItem" />
+				<ww:hidden name="contextObjectId" value="${backlogItemId}" />
+				<ww:hidden name="effortLeft" value="${backlogItem.effortLeft}" />
+				<ww:hidden name="state" value="${backlogItem.state.name}" />
 				<p><display:table class="listTable" name="backlogItem.tasks"
 					id="row" requestURI="editBacklogItem.action">
 					<display:column sortable="false" title="Name"
@@ -419,7 +424,9 @@
 					</ww:a>
 					</display:column>
 					<display:column sortable="false" title="State">
-						<ww:text name="task.state.${row.state}" />
+						<ww:select name="taskStates[${row.id}]" value="#attr.row.state.name"
+							list="@fi.hut.soberit.agilefant.model.State@values()" listKey="name"
+							listValue="getText('task.state.' + name())" />
 					</display:column>
 					<display:column sortable="false" title="Creator">
 					${aef:html(row.creator.fullName)}
@@ -471,7 +478,8 @@
 
 
 				</display:table></p>
-
+				<ww:submit value="Store"/>
+				</ww:form>
 				</div>
 			</c:if> <%-- No tasks --%></div>
 		</c:if> <%-- New item --%></td>

@@ -42,6 +42,9 @@ public class BacklogAction extends ActionSupport {
     
     private int keepResponsibles = 0;
     
+    //Ugly hack, refactor later
+    private int iterationGoalId = 0;
+    
     private Map<Integer, String> userIds = new HashMap<Integer, String>();
 
     private BacklogItemDAO backlogItemDAO;
@@ -67,6 +70,15 @@ public class BacklogAction extends ActionSupport {
         this.backlogId = backlogId;
     }
 
+    public int getIterationGoalId() {
+        return iterationGoalId;
+    }
+    
+    public void setIterationGoalId(int iterationGoalId) {
+        this.iterationGoalId = iterationGoalId;
+    }
+    
+    
     public void setBacklogDAO(BacklogDAO backlogDAO) {
         this.backlogDAO = backlogDAO;
     }
@@ -240,6 +252,7 @@ public class BacklogAction extends ActionSupport {
             return Action.ERROR;
         }
         
+        
         return this.solveResult(currentBacklog);
     }
 
@@ -247,12 +260,16 @@ public class BacklogAction extends ActionSupport {
         if (backlog == null) {
             super.addActionError(super.getText("backlog.notFound"));
             return Action.ERROR;
-        } else if (backlog instanceof Product) {
+        } else  if (backlog instanceof Product) {
             return "editProduct";
         } else if (backlog instanceof Project) {
             return "editProject";
         } else if (backlog instanceof Iteration) {
-            return "editIteration";
+            if (iterationGoalId == 0) {
+                return "editIteration";
+            } else {
+                return "editIterationGoal";
+            }
         }
         super.addActionError(super.getText("backlog.unknownType"));
         return Action.ERROR;

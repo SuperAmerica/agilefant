@@ -296,6 +296,9 @@
 			<result name="editIteration" type="redirect">
 				editIteration.action?iterationId=${backlogId}
 			</result>
+			<result name="editIterationGoal" type="redirect">
+				editIterationGoal.action?iterationGoalId=${iterationGoalId}
+			</result>
 		</action>
 
 		<action name="changePriorityOfSelectedItems"

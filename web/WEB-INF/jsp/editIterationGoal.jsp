@@ -119,10 +119,37 @@
 			</div>
 			<c:if test="${!empty iterationGoal.backlogItems}">
 				<div id="subItemContent">
-				<p><display:table class="listTable"
+				<p>
+				
+				<%--create table of backlogItems--%>
+				<script language="javascript" type="text/javascript">
+					function validateDeletion() {
+						var conf = confirm("The selected backlog items will be gone forever. Are you sure?");
+						if (conf)
+							return true;
+						else
+							return false;
+					}
+				</script>
+				
+				
+				<%--TODO: Refactor this to inc/_backlogList.jsp, this is ugly--%>
+				<ww:form action="doActionOnMultipleBacklogItems">
+				
+				<!-- Return to this backlog after submit -->
+				<ww:hidden name="backlogId" value="${iteration.id}" />
+				<ww:hidden name="iterationGoalId" value="${iterationGoal.id}" />
+							
+				
+				<display:table class="listTable"
 					name="iterationGoal.backlogItems" id="row"
 					requestURI="editIterationGoal.action" defaultsort="3"
 					defaultorder="descending">
+
+					<!-- Checkboxes for bulk-moving backlog items -->	
+					<display:column sortable="false" title="" class="selectColumn">
+						<div><ww:checkbox name="selected" fieldValue="${row.id}" /></div>
+					</display:column>
 
 					<display:column sortable="true" sortProperty="name" title="Name"
 						class="shortNameColumn">
@@ -235,6 +262,7 @@
 						<td>&nbsp;</td>
 						<td>&nbsp;</td>
 						<td>&nbsp;</td>
+						<td>&nbsp;</td>
 						
 						<%-- Effort left --%>
 						<td><c:out value="${effortLeftSum}" /></td>
@@ -242,11 +270,107 @@
 						<td><c:out value="${originalEstimateSum}" /></td>
 					</tr>
 					</display:footer>
-				</display:table></p>
-				</div>
-			</c:if></div>
+				</display:table>
+				<aef:productList />
+
+				<table class="formTable">
+				<tr>
+					<td>State</td>
+					<td><ww:select name="targetState"
+						list="#{'-1':'Keep original', '0':'Not started', '1':'Started', '2':'Pending', '3':'Blocked', '4':'Implemented', '5':'Done' }" />
+					</td>
+				</tr>
+				<tr>
+					<td>Move to</td>
+					<td class="targetBacklogDropdownColumn">
+						<aef:backlogDropdown selectName="targetBacklog"
+							preselectedBacklogId="${iteration.id}" backlogs="${productList}" />
+					</td>
+				</tr>
+				<tr>
+					<td>Iteration goal</td>
+					<td class="targetBacklogDropdownColumn">
+						<select name="targetIterationGoalId">
+						<option value="-1">Keep original</option>
+						<option value="-2">(none)</option>
+						<c:forEach items="${iteration.iterationGoals}" var="itergoal">
+								<option value="${itergoal.id}" ><c:out value="${itergoal.name}" /></option>
+							</c:forEach>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td>Priority</td>
+					<td class="targetPriorityDropdown">
+						<ww:select name="targetPriority"
+							list="#{'-1':'Keep original', '5':'undefined', '4':'+++++', '3':'++++', '2':'+++', '1':'++', '0':'+'}" />
+					</td>
+				</tr>
+				<tr>
+					<td>Responsibles</td>
+					<aef:userList />
+					<aef:teamList />
+					<td colspan="4">
+						<a href="javascript:toggleDiv('multiplebli_userselect');">
+							<img src="static/img/users.png"/>
+							Assign
+						</a>
+						<script type="text/javascript" src="static/js/jquery-1.2.2.js"></script>
+						<script type="text/javascript" src="static/js/multiselect.js"></script>
+						<script type="text/javascript">
+							$(document).ready( function() {
+								<ww:set name="userList" value="#attr.userList" />
+								<ww:set name="teamList" value="#attr.teamList" />
+								var others = [<aef:userJson items="${aef:listSubstract(userList, iteration.project.responsibles)}"/>];
+								var preferred = [<aef:userJson items="${iteration.project.responsibles}"/>];
+								var teams = [<aef:teamJson items="${teamList}"/>];
+								var selected = [];
+								$('#multiplebli_userselect').multiuserselect({users: [preferred,others], groups: teams, root: $('#multiplebli_userselect')}).selectusers(selected);
+				
+								$('#multiplebli_userselect').toggle_disabled(true);
+								$('#keepOriginalResponsibles').bind("change", function() {
+									$('#multiplebli_userselect').toggle_disabled($(this).attr('checked') == true);
+								});
+							});
+						</script>
+			
+						<div id="multiplebli_userselect" style="display: none;">
+							<ww:checkbox name="keepResponsibles" value="true" title="Keep original"
+								id="keepOriginalResponsibles" fieldValue="1"/>
+							Keep original
+					
+							<div class="left">
+							<c:if test="${!aef:isProduct(backlog)}">
+								<label>Users assigned to this project</label>
+								<ul class="users_0"></ul>
+								<label>Users not assigned this project</label>
+							</c:if>
+							<ul class="users_1"></ul>
+						</div>
+						<div class="right">
+							<label>Teams</label>
+							<ul class="groups" />
+						</div>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td><ww:submit type="button" label="Store" name="itemAction" value="%{'ChangeSelected'}" /></td>
+				<td>&nbsp;</td>
+				<td>&nbsp;</td>
+				<td>&nbsp;</td>
+				<td>&nbsp;</td>
+				<td><ww:submit type="button" name="itemAction" value="%{'DeleteSelected'}"
+					onclick="return validateDeletion()" label="Delete selected" /></td>
+			</tr>
+		</table>
+			
+		</ww:form>
+		</p>
+		</div>
+		</c:if></div>
 		</c:if>
-</td>
+	</td>
 </tr>
 </table>		
 <%@ include file="./inc/_footer.jsp"%>

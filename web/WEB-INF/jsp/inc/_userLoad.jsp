@@ -71,9 +71,19 @@ function show_small_loadtable() {
 	</c:if>
 	</td>
 	<c:forEach items="${weekNumbers}" var="week">
-		<td><c:out value="${loadData.efforts[week]}" /></td>
+		<td>
+		<c:choose>
+			<c:when test="${loadData.efforts[week] == '0h'}">&#8212;</c:when>
+			<c:otherwise><c:out value="${loadData.efforts[week]}" /></c:otherwise>
+		</c:choose>
+		</td>
 	</c:forEach>
-	<td><c:out value="${loadData.totalEffort}" /></td>
+	<td>
+		<c:choose>
+			<c:when test="${loadData.totalEffort == '0h'}">&#8212;</c:when>
+			<c:otherwise><c:out value="${loadData.totalEffort}" /></c:otherwise>
+		</c:choose>
+	</td>
 	<c:if test="${aef:isProject(loadData.backlog)}">
 </tr>
 <tr class="${rowClass}">
@@ -87,9 +97,19 @@ function show_small_loadtable() {
 </c:choose>
 	<td>&nbsp;&nbsp;Overhead</td>
 	<c:forEach items="${weekNumbers}" var="week">
-		<td><c:out value="${loadData.overheads[week]}" /></td>
+		<td>
+		<c:choose>
+			<c:when test="${loadData.overheads[week] == '0h'}">&#8212;</c:when>
+			<c:otherwise><c:out value="${loadData.overheads[week]}" /></c:otherwise>
+		</c:choose>
+		</td>
 	</c:forEach>
-	<td><c:out value="${loadData.totalOverhead}" /></td>
+	<td>
+		<c:choose>
+			<c:when test="${loadData.totalOverhead == '0h'}">&#8212;</c:when>
+			<c:otherwise><c:out value="${loadData.totalOverhead}" /></c:otherwise>
+		</c:choose>
+	</td>
 </tr>
 	</c:if>
 </tr>
@@ -97,9 +117,19 @@ function show_small_loadtable() {
 <tr>
 	<th>Total</th>
 	<c:forEach items="${weekNumbers}" var="week">
-		<th><c:out value="${totalsMap[week]}" /></th>	
+		<th>
+		<c:choose>
+			<c:when test="${totalsMap[week] == '0h'}">&#8212;</c:when>
+			<c:otherwise><c:out value="${totalsMap[week]}" /></c:otherwise>
+		</c:choose>
+	</th>	
 	</c:forEach>
-	<th><c:out value="${dailyWorkLoadData.overallTotal}" /></th>
+	<th>
+		<c:choose>
+			<c:when test="${dailyWorkLoadData.overallTotal == '0h'}">&#8212;</c:when>
+			<c:otherwise><c:out value="${dailyWorkLoadData.overallTotal}" /></c:otherwise>
+		</c:choose>
+	</th>
 </tr>
 </table>
 </div>
@@ -118,23 +148,77 @@ function show_small_loadtable() {
 <tr class="odd">
 	<td>Effort</td>
 	<c:forEach items="${weekNumbers}" var="weekNumber">
-	<td><c:out value="${dailyWorkLoadData.weeklyEfforts[weekNumber]}" /></td>
+		<td>
+			<c:choose>
+			<c:when test="${dailyWorkLoadData.weeklyEfforts[weekNumber] == '0h'}">
+				&#8212;
+			</c:when>
+			<c:otherwise>
+				<c:out value="${dailyWorkLoadData.weeklyEfforts[weekNumber]}" />
+			</c:otherwise>
+		</c:choose>
+	</td>
 	</c:forEach>
-	<td><c:out value="${dailyWorkLoadData.totalEffort}" /></td>
+	<td>
+		<c:choose>
+			<c:when test="${dailyWorkLoadData.totalEffort == '0h'}">
+				&#8212;
+			</c:when>
+			<c:otherwise>
+				<c:out value="${dailyWorkLoadData.totalEffort}" />
+			</c:otherwise>
+		</c:choose>
+	</td>
 </tr>
 <tr class="even">
 	<td>Overhead</td>
 	<c:forEach items="${weekNumbers}" var="weekNumber">
-	<td><c:out value="${dailyWorkLoadData.weeklyOverheads[weekNumber]}" /></td>
+	<td>
+		<c:choose>
+			<c:when test="${dailyWorkLoadData.weeklyOverheads[weekNumber] == '0h'}">
+				&#8212;
+			</c:when>
+			<c:otherwise>
+				<c:out value="${dailyWorkLoadData.weeklyOverheads[weekNumber]}" />
+			</c:otherwise>
+		</c:choose>
+	</td>
 	</c:forEach>
-	<td><c:out value="${dailyWorkLoadData.totalOverhead}" /></td>
+	<td>
+		<c:choose>
+		<c:when test="${dailyWorkLoadData.totalOverhead == '0h'}">
+			&#8212;
+		</c:when>
+		<c:otherwise>
+			<c:out value="${dailyWorkLoadData.totalOverhead}" />
+		</c:otherwise>
+	</c:choose>
+	</td>
 </tr>
 <tr>
 	<th>Total</th>
 	<c:forEach items="${weekNumbers}" var="week">
-		<th><c:out value="${totalsMap[week]}" /></th>	
+		<th>
+		<c:choose>
+		<c:when test="${totalsMap[week] == '0h'}">
+			&#8212;
+		</c:when>
+		<c:otherwise>
+			<c:out value="${totalsMap[week]}" />
+		</c:otherwise>
+	</c:choose>
+	</th>	
 	</c:forEach>
-	<th><c:out value="${dailyWorkLoadData.overallTotal}" /></th>
+	<th>
+		<c:choose>
+		<c:when test="${totalsMap[week] == '0h'}">
+			&#8212;
+		</c:when>
+		<c:otherwise>
+			<c:out value="${dailyWorkLoadData.overallTotal}" />
+		</c:otherwise>
+	</c:choose>
+	</th>
 </tr>
 </table>
 </div>

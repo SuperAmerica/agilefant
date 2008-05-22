@@ -15,6 +15,7 @@ public class DailyWorkLoadData {
     private Map<Integer, AFTime> weeklyTotals = new HashMap<Integer, AFTime>();
     private Map<Integer, AFTime> weeklyEfforts = new HashMap<Integer, AFTime>();
     private Map<Integer, AFTime> weeklyOverheads = new HashMap<Integer, AFTime>();
+    private Map<Integer, Integer> weeklyOverload = new HashMap<Integer, Integer>();
     private AFTime overallTotal = new AFTime(0);
     private AFTime totalEffort = new AFTime(0);
     private AFTime totalOverhead = new AFTime(0);
@@ -60,6 +61,12 @@ public class DailyWorkLoadData {
     }
     public void setWeeklyOverheads(Map<Integer, AFTime> weeklyOverheads) {
         this.weeklyOverheads = weeklyOverheads;
+    }
+    public Map<Integer, Integer> getWeeklyOverload() {
+        return weeklyOverload;
+    }
+    public void setWeeklyOverload(Map<Integer, Integer> weeklyOverload) {
+        this.weeklyOverload = weeklyOverload;
     }
     public AFTime getTotalEffort() {
         return totalEffort;

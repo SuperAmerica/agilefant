@@ -60,14 +60,60 @@ function validateDeletion() {
 			<c:set var="divId" value="${divId + 1}" scope="page" />
 			<c:choose>
 				<c:when test="${!(empty item.tasks)}">
+				
 					<a href="javascript:toggleDiv(${divId});" title="Click to expand">
-					
-						
 					${fn:length(item.tasks)} 
-					
-					
-					tasks, <aef:percentDone
+						tasks, <aef:percentDone
 						backlogItemId="${item.id}" />% done<br />
+						
+						
+					<%-- Ugly solution to get both status bars displayed  
+					<!-- This should be refactored at some time! 
+					<!-- This is duplicated in: _backlogList.jsp 
+					<!--						_dailyWorkIterations.jsp
+					<!--						_dailyWorkProjects.jsp  
+					<!--						_workInProgress.jsp
+					<!--						editIterationGoal.jsp
+					<!--  Note: the css div on the images are used to force the bars to be displayed nicely
+					<!--  since it has been an persistent problem in the past,
+					<!--  which was unable to correct from the source. --%>						
+						<c:choose>
+							<c:when test="${item.state == 'NOT_STARTED'}" >
+								<ww:url id="imgUrl" action="drawExtendedBarChart" includeParams="none">
+								<ww:param name="notStarted" value="1" /> </ww:url> 
+								<div style="margin:0px auto;background-image:url(${imgUrl}); background-position: -16px -4px; height:8px; width:82px; background-repeat:no-repeat;border-right:1px solid #BFBFBF; "></div>
+							</c:when>
+							<c:when test="${item.state == 'STARTED'}" >
+								<ww:url id="imgUrl" action="drawExtendedBarChart" includeParams="none">
+								<ww:param name="started" value="1" /> </ww:url> 
+								<div style="margin:0px auto;background-image:url(${imgUrl}); background-position: -16px -4px; height:8px; width:82px; background-repeat:no-repeat;border-right:1px solid #BFBFBF; "></div>
+							</c:when>
+							<c:when test="${item.state == 'PENDING'}" >
+								<ww:url id="imgUrl" action="drawExtendedBarChart" includeParams="none">
+								<ww:param name="pending" value="1" /> </ww:url> 
+								<div style="margin:0px auto;background-image:url(${imgUrl}); background-position: -16px -4px; height:8px; width:82px; background-repeat:no-repeat;border-right:1px solid #BFBFBF; "></div>
+							</c:when>
+							<c:when test="${item.state == 'BLOCKED'}" >
+								<ww:url id="imgUrl" action="drawExtendedBarChart" includeParams="none">
+								<ww:param name="blocked" value="1" /> </ww:url> 
+								<div style="margin:0px auto;background-image:url(${imgUrl}); background-position: -16px -4px; height:8px; width:82px; background-repeat:no-repeat;border-right:1px solid #BFBFBF; "></div>
+							</c:when>
+							<c:when test="${item.state == 'IMPLEMENTED'}" >
+								<ww:url id="imgUrl" action="drawExtendedBarChart" includeParams="none">
+								<ww:param name="implemented" value="1" /> </ww:url> 
+								<div style="margin:0px auto;background-image:url(${imgUrl}); background-position: -16px -4px; height:8px; width:82px; background-repeat:no-repeat;border-right:1px solid #BFBFBF; "></div>
+							</c:when>
+							<c:when test="${item.state == 'DONE'}" >
+								<ww:url id="imgUrl" action="drawExtendedBarChart" includeParams="none">
+								<ww:param name="done" value="1" /> </ww:url> 
+								<div style="margin:0px auto;background-image:url(${imgUrl}); background-position: -16px -4px; height:8px; width:82px; background-repeat:no-repeat;border-right:1px solid #BFBFBF; "></div>
+							</c:when>
+							</c:choose>
+							
+					
+					
+					
+				
 						<aef:stateList backlogItemId="${item.id}" id="tsl" /> 
 						<ww:url
 							id="imgUrl" action="drawExtendedBarChart" includeParams="none">
@@ -78,14 +124,16 @@ function validateDeletion() {
 								<ww:param name="implemented" value="${tsl['implemented']}" />
 								<ww:param name="done" value="${tsl['done']}" />
 						</ww:url> 
-						<img src="${imgUrl}" /> 
+						<div style="margin:0px auto;background-image:url(${imgUrl}); background-position: -16px -4px; height:8px; width:82px; background-repeat:no-repeat;border-right:1px solid #BFBFBF; "></div>
 					</a>
 					
 					<aef:tasklist backlogItem="${item}"
 						contextViewName="${currentAction}" contextObjectId="${backlog.id}"
 						divId="${divId}"/>
+						
 				</c:when>
-				<c:otherwise>
+			
+			 	<c:otherwise>
 					
 						 <a href="javascript:toggleDiv(${divId});" title="Click to expand">
 							<ww:text name="backlogItem.state.${item.state}"/><br />
@@ -94,32 +142,32 @@ function validateDeletion() {
 							<c:when test="${item.state == 'NOT_STARTED'}" >
 								<ww:url id="imgUrl" action="drawExtendedBarChart" includeParams="none">
 								<ww:param name="notStarted" value="1" /> </ww:url> 
-								<img src="${imgUrl}" /> 
+								<div style="margin:0px auto;background-image:url(${imgUrl}); background-position: -16px -4px; height:8px; width:82px; background-repeat:no-repeat;border-right:1px solid #BFBFBF; "></div> 
 							</c:when>
 							<c:when test="${item.state == 'STARTED'}" >
 								<ww:url id="imgUrl" action="drawExtendedBarChart" includeParams="none">
 								<ww:param name="started" value="1" /> </ww:url> 
-								<img src="${imgUrl}" />
+								<div style="margin:0px auto;background-image:url(${imgUrl}); background-position: -16px -4px; height:8px; width:82px; background-repeat:no-repeat;border-right:1px solid #BFBFBF; "></div>
 							</c:when>
 							<c:when test="${item.state == 'PENDING'}" >
 								<ww:url id="imgUrl" action="drawExtendedBarChart" includeParams="none">
 								<ww:param name="pending" value="1" /> </ww:url> 
-								<img src="${imgUrl}" />
+								<div style="margin:0px auto;background-image:url(${imgUrl}); background-position: -16px -4px; height:8px; width:82px; background-repeat:no-repeat;border-right:1px solid #BFBFBF; "></div>
 							</c:when>
 							<c:when test="${item.state == 'BLOCKED'}" >
 								<ww:url id="imgUrl" action="drawExtendedBarChart" includeParams="none">
 								<ww:param name="blocked" value="1" /> </ww:url> 
-								<img src="${imgUrl}" />
+								<div style="margin:0px auto;background-image:url(${imgUrl}); background-position: -16px -4px; height:8px; width:82px; background-repeat:no-repeat;border-right:1px solid #BFBFBF; "></div>
 							</c:when>
 							<c:when test="${item.state == 'IMPLEMENTED'}" >
 								<ww:url id="imgUrl" action="drawExtendedBarChart" includeParams="none">
 								<ww:param name="implemented" value="1" /> </ww:url> 
-								<img src="${imgUrl}" />
+								<div style="margin:0px auto;background-image:url(${imgUrl}); background-position: -16px -4px; height:8px; width:82px; background-repeat:no-repeat;border-right:1px solid #BFBFBF; "></div>
 							</c:when>
 							<c:when test="${item.state == 'DONE'}" >
 								<ww:url id="imgUrl" action="drawExtendedBarChart" includeParams="none">
 								<ww:param name="done" value="1" /> </ww:url> 
-								<img src="${imgUrl}" />
+								<div style="margin:0px auto;background-image:url(${imgUrl}); background-position: -16px -4px; height:8px; width:82px; background-repeat:no-repeat;border-right:1px solid #BFBFBF; "></div>
 							</c:when>
 							</c:choose>
 								
@@ -127,8 +175,10 @@ function validateDeletion() {
 						<aef:tasklist backlogItem="${item}"
 							contextViewName="${currentAction}" contextObjectId="${backlog.id}"
 							divId="${divId}" />
-				</c:otherwise>
+				  </c:otherwise> 
+				
 			</c:choose>
+			
 		</display:column>
 
 		

@@ -58,6 +58,66 @@ Backlog items
 				<a href="javascript:toggleDiv(${divId});" title="Click to expand">
 				<c:out value="${fn:length(item.tasks)}" /> tasks, <aef:percentDone
 					backlogItemId="${item.id}" />% done<br />
+					
+					
+					<%-- Ugly solution to get both status bars displayed  
+					<!-- This should be refactored at some time! 
+					<!-- This is duplicated in: _backlogList.jsp 
+					<!--						_dailyWorkIterations.jsp
+					<!--						_dailyWorkProjects.jsp  
+					<!--						_workInProgress.jsp
+					<!--						editIterationGoal.jsp
+					<!--  Note: the css div on the images are used to force the bars to be displayed nicely
+					<!--  since it has been an persistent problem in the past,
+					<!--  which was unable to correct from the source. --%>
+					<c:choose>
+					<c:when test="${item.state == 'NOT_STARTED'}">
+						<ww:url id="imgUrl" action="drawExtendedBarChart"
+							includeParams="none">
+							<ww:param name="notStarted" value="1" />
+						</ww:url>
+						<div style="margin:0px auto;background-image:url(${imgUrl}); background-position: -16px -4px; height:8px; width:82px; background-repeat:no-repeat;border-right:1px solid #BFBFBF; "></div>
+					</c:when>
+					<c:when test="${item.state == 'STARTED'}">
+						<ww:url id="imgUrl" action="drawExtendedBarChart"
+							includeParams="none">
+							<ww:param name="started" value="1" />
+						</ww:url>
+						<div style="margin:0px auto;background-image:url(${imgUrl}); background-position: -16px -4px; height:8px; width:82px; background-repeat:no-repeat;border-right:1px solid #BFBFBF; "></div>
+					</c:when>
+					<c:when test="${item.state == 'PENDING'}">
+						<ww:url id="imgUrl" action="drawExtendedBarChart"
+							includeParams="none">
+							<ww:param name="pending" value="1" />
+						</ww:url>
+						<div style="margin:0px auto;background-image:url(${imgUrl}); background-position: -16px -4px; height:8px; width:82px; background-repeat:no-repeat;border-right:1px solid #BFBFBF; "></div>
+					</c:when>
+					<c:when test="${item.state == 'BLOCKED'}">
+						<ww:url id="imgUrl" action="drawExtendedBarChart"
+							includeParams="none">
+							<ww:param name="blocked" value="1" />
+						</ww:url>
+						<div style="margin:0px auto;background-image:url(${imgUrl}); background-position: -16px -4px; height:8px; width:82px; background-repeat:no-repeat;border-right:1px solid #BFBFBF; "></div>
+					</c:when>
+					<c:when test="${item.state == 'IMPLEMENTED'}">
+						<ww:url id="imgUrl" action="drawExtendedBarChart"
+							includeParams="none">
+							<ww:param name="implemented" value="1" />
+						</ww:url>
+						<div style="margin:0px auto;background-image:url(${imgUrl}); background-position: -16px -4px; height:8px; width:82px; background-repeat:no-repeat;border-right:1px solid #BFBFBF; "></div>
+					</c:when>
+					<c:when test="${item.state == 'DONE'}">
+						<ww:url id="imgUrl" action="drawExtendedBarChart"
+							includeParams="none">
+							<ww:param name="done" value="1" />
+						</ww:url>
+						<div style="margin:0px auto;background-image:url(${imgUrl}); background-position: -16px -4px; height:8px; width:82px; background-repeat:no-repeat;border-right:1px solid #BFBFBF; "></div>
+					</c:when>
+				</c:choose>
+					
+					
+					
+					
 				<aef:stateList backlogItemId="${item.id}" id="tsl" /> <ww:url
 					id="imgUrl" action="drawExtendedBarChart" includeParams="none">
 					<ww:param name="notStarted" value="${tsl['notStarted']}" />
@@ -66,7 +126,7 @@ Backlog items
 					<ww:param name="blocked" value="${tsl['blocked']}" />
 					<ww:param name="implemented" value="${tsl['implemented']}" />
 					<ww:param name="done" value="${tsl['done']}" />
-				</ww:url> <img src="${imgUrl}" /> </a>
+				</ww:url> <div style="margin:0px auto;background-image:url(${imgUrl}); background-position: -16px -4px; height:8px; width:82px; background-repeat:no-repeat;border-right:1px solid #BFBFBF; "></div> </a>
 
 				<aef:tasklist backlogItem="${item}"
 					contextViewName="${currentAction}" contextObjectId="${backlog.id}"
@@ -82,42 +142,42 @@ Backlog items
 							includeParams="none">
 							<ww:param name="notStarted" value="1" />
 						</ww:url>
-						<img src="${imgUrl}" />
+						<div style="margin:0px auto;background-image:url(${imgUrl}); background-position: -16px -4px; height:8px; width:82px; background-repeat:no-repeat;border-right:1px solid #BFBFBF; "></div>
 					</c:when>
 					<c:when test="${item.state == 'STARTED'}">
 						<ww:url id="imgUrl" action="drawExtendedBarChart"
 							includeParams="none">
 							<ww:param name="started" value="1" />
 						</ww:url>
-						<img src="${imgUrl}" />
+						<div style="margin:0px auto;background-image:url(${imgUrl}); background-position: -16px -4px; height:8px; width:82px; background-repeat:no-repeat;border-right:1px solid #BFBFBF; "></div>
 					</c:when>
 					<c:when test="${item.state == 'PENDING'}">
 						<ww:url id="imgUrl" action="drawExtendedBarChart"
 							includeParams="none">
 							<ww:param name="pending" value="1" />
 						</ww:url>
-						<img src="${imgUrl}" />
+						<div style="margin:0px auto;background-image:url(${imgUrl}); background-position: -16px -4px; height:8px; width:82px; background-repeat:no-repeat;border-right:1px solid #BFBFBF; "></div>
 					</c:when>
 					<c:when test="${item.state == 'BLOCKED'}">
 						<ww:url id="imgUrl" action="drawExtendedBarChart"
 							includeParams="none">
 							<ww:param name="blocked" value="1" />
 						</ww:url>
-						<img src="${imgUrl}" />
+						<div style="margin:0px auto;background-image:url(${imgUrl}); background-position: -16px -4px; height:8px; width:82px; background-repeat:no-repeat;border-right:1px solid #BFBFBF; "></div>
 					</c:when>
 					<c:when test="${item.state == 'IMPLEMENTED'}">
 						<ww:url id="imgUrl" action="drawExtendedBarChart"
 							includeParams="none">
 							<ww:param name="implemented" value="1" />
 						</ww:url>
-						<img src="${imgUrl}" />
+						<div style="margin:0px auto;background-image:url(${imgUrl}); background-position: -16px -4px; height:8px; width:82px; background-repeat:no-repeat;border-right:1px solid #BFBFBF; "></div>
 					</c:when>
 					<c:when test="${item.state == 'DONE'}">
 						<ww:url id="imgUrl" action="drawExtendedBarChart"
 							includeParams="none">
 							<ww:param name="done" value="1" />
 						</ww:url>
-						<img src="${imgUrl}" />
+						<div style="margin:0px auto;background-image:url(${imgUrl}); background-position: -16px -4px; height:8px; width:82px; background-repeat:no-repeat;border-right:1px solid #BFBFBF; "></div>
 					</c:when>
 				</c:choose> </a>
 				<aef:tasklist backlogItem="${item}"

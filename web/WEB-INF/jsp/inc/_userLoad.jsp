@@ -120,6 +120,9 @@ function show_small_loadtable() {
 		<th>
 		<c:choose>
 			<c:when test="${totalsMap[week] == '0h'}">&#8212;</c:when>
+			<c:when test="${dailyWorkLoadData.weeklyOverload[week] == 0}">
+				<span style="color: red;"><c:out value="${totalsMap[week]}" /></span>
+			</c:when>
 			<c:otherwise><c:out value="${totalsMap[week]}" /></c:otherwise>
 		</c:choose>
 	</th>	

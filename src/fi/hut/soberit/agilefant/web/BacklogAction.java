@@ -239,6 +239,11 @@ public class BacklogAction extends ActionSupport {
             
         }
         else if (itemAction.equals("DeleteSelected")) {
+            // Check, that some backlog items were selected
+            if (backlogItemIds == null) {
+                super.addActionError(super.getText("backlogItems.notSelected"));
+                return Action.ERROR;
+            }
             deleteSelectedItems();
         }
         else {

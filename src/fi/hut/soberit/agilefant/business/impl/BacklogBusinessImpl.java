@@ -272,6 +272,8 @@ public class BacklogBusinessImpl implements BacklogBusiness {
     public EffortSumData getEffortLeftResponsibleDividedSum(Collection<BacklogItem> bliList) {
         EffortSumData data = new EffortSumData();
         AFTime hours = new AFTime(0);
+        int nonEstimatedBLIs = 0;
+        
         for (BacklogItem bli : bliList) {
             if (bli.getEffortLeft() != null){  
                if(bli.getResponsibles() != null){ 
@@ -283,9 +285,12 @@ public class BacklogBusinessImpl implements BacklogBusiness {
                }else{
                    hours.add(bli.getEffortLeft());
                }
+            } else {
+                nonEstimatedBLIs++;
             }
         }
         data.setEffortHours(hours);
+        data.setNonEstimatedItems(nonEstimatedBLIs);
         return data;
     }
 

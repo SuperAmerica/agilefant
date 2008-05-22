@@ -755,3 +755,10 @@ option.projectOption {
 option.iterationOption {
     padding-left: 25px;
 }
+
+div.legend {
+	margin-bottom:2px;
+	margin-left:10px;
+	margin-right:0pt;
+	margin-top:0pt;
+}

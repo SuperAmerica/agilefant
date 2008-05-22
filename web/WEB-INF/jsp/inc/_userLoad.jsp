@@ -29,6 +29,7 @@ function show_small_loadtable() {
 }
 </script>
 
+
 <div id="detailedLoadTable" style="display: none;">
 <table id="item">
 <tr>
@@ -39,6 +40,7 @@ function show_small_loadtable() {
 	<th>Total</th>
 </tr>
 <c:set var="rowClass" value="odd" />
+<c:set var="nonEstimatedBLs" value="0"/>
 <c:forEach items="${dailyWorkLoadData.backlogs}" var="backlog">
 <c:set var="loadData" value="${loadDatas[backlog]}"/>
 <tr class="${rowClass}">
@@ -67,20 +69,21 @@ function show_small_loadtable() {
 		</c:otherwise>
 	</c:choose>
 	<c:if test="${loadData.unestimatedItems == true}">
-		<img src="static/img/unassigned.png" alt="There are unestimated items" />
+		<c:set var="nonEstimatedBLs" value="${nonEstimatedBLs + 1}"/>
+		<img src="static/img/nonestimated.png" alt="There are unestimated items" />
 	</c:if>
 	</td>
 	<c:forEach items="${weekNumbers}" var="week">
 		<td>
 		<c:choose>
-			<c:when test="${loadData.efforts[week] == '0h'}">&#8212;</c:when>
+			<c:when test="${loadData.efforts[week] == '0h'}">-</c:when>
 			<c:otherwise><c:out value="${loadData.efforts[week]}" /></c:otherwise>
 		</c:choose>
 		</td>
 	</c:forEach>
 	<td>
 		<c:choose>
-			<c:when test="${loadData.totalEffort == '0h'}">&#8212;</c:when>
+			<c:when test="${loadData.totalEffort == '0h'}">-</c:when>
 			<c:otherwise><c:out value="${loadData.totalEffort}" /></c:otherwise>
 		</c:choose>
 	</td>
@@ -99,14 +102,14 @@ function show_small_loadtable() {
 	<c:forEach items="${weekNumbers}" var="week">
 		<td>
 		<c:choose>
-			<c:when test="${loadData.overheads[week] == '0h'}">&#8212;</c:when>
+			<c:when test="${loadData.overheads[week] == '0h'}">-</c:when>
 			<c:otherwise><c:out value="${loadData.overheads[week]}" /></c:otherwise>
 		</c:choose>
 		</td>
 	</c:forEach>
 	<td>
 		<c:choose>
-			<c:when test="${loadData.totalOverhead == '0h'}">&#8212;</c:when>
+			<c:when test="${loadData.totalOverhead == '0h'}">-</c:when>
 			<c:otherwise><c:out value="${loadData.totalOverhead}" /></c:otherwise>
 		</c:choose>
 	</td>
@@ -119,7 +122,7 @@ function show_small_loadtable() {
 	<c:forEach items="${weekNumbers}" var="week">
 		<th>
 		<c:choose>
-			<c:when test="${totalsMap[week] == '0h'}">&#8212;</c:when>
+			<c:when test="${totalsMap[week] == '0h'}">-</c:when>
 			<c:when test="${dailyWorkLoadData.weeklyOverload[week] == 0}">
 				<span style="color: red;"><c:out value="${totalsMap[week]}" /></span>
 			</c:when>
@@ -129,7 +132,7 @@ function show_small_loadtable() {
 	</c:forEach>
 	<th>
 		<c:choose>
-			<c:when test="${dailyWorkLoadData.overallTotal == '0h'}">&#8212;</c:when>
+			<c:when test="${dailyWorkLoadData.overallTotal == '0h'}">-</c:when>
 			<c:otherwise><c:out value="${dailyWorkLoadData.overallTotal}" /></c:otherwise>
 		</c:choose>
 	</th>
@@ -149,12 +152,16 @@ function show_small_loadtable() {
 	<th>Total</th>
 </tr>
 <tr class="odd">
-	<td>Effort</td>
+	<td>Effort 
+	<c:if test="${nonEstimatedBLs > 0}">
+		<img src="static/img/nonestimated.png" alt="There are unestimated items" />
+	</c:if>
+	</td>
 	<c:forEach items="${weekNumbers}" var="weekNumber">
 		<td>
 			<c:choose>
 			<c:when test="${dailyWorkLoadData.weeklyEfforts[weekNumber] == '0h'}">
-				&#8212;
+				-
 			</c:when>
 			<c:otherwise>
 				<c:out value="${dailyWorkLoadData.weeklyEfforts[weekNumber]}" />
@@ -165,7 +172,7 @@ function show_small_loadtable() {
 	<td>
 		<c:choose>
 			<c:when test="${dailyWorkLoadData.totalEffort == '0h'}">
-				&#8212;
+				-
 			</c:when>
 			<c:otherwise>
 				<c:out value="${dailyWorkLoadData.totalEffort}" />
@@ -179,7 +186,7 @@ function show_small_loadtable() {
 	<td>
 		<c:choose>
 			<c:when test="${dailyWorkLoadData.weeklyOverheads[weekNumber] == '0h'}">
-				&#8212;
+				-
 			</c:when>
 			<c:otherwise>
 				<c:out value="${dailyWorkLoadData.weeklyOverheads[weekNumber]}" />
@@ -190,7 +197,7 @@ function show_small_loadtable() {
 	<td>
 		<c:choose>
 		<c:when test="${dailyWorkLoadData.totalOverhead == '0h'}">
-			&#8212;
+			-
 		</c:when>
 		<c:otherwise>
 			<c:out value="${dailyWorkLoadData.totalOverhead}" />
@@ -204,7 +211,7 @@ function show_small_loadtable() {
 		<th>
 		<c:choose>
 		<c:when test="${totalsMap[week] == '0h'}">
-			&#8212;
+			-
 		</c:when>
 		<c:when test="${dailyWorkLoadData.weeklyOverload[week] == 0}">
 			<span style="color: red;"><c:out value="${totalsMap[week]}" /></span>
@@ -218,7 +225,7 @@ function show_small_loadtable() {
 	<th>
 		<c:choose>
 		<c:when test="${totalsMap[week] == '0h'}">
-			&#8212;
+			-
 		</c:when>
 		<c:otherwise>
 			<c:out value="${dailyWorkLoadData.overallTotal}" />
@@ -228,7 +235,19 @@ function show_small_loadtable() {
 </tr>
 </table>
 </div>
-
+<div class="legend">
+<c:if test="${nonEstimatedBLs > 0}">
+	<img src="static/img/nonestimated.png" alt="There are unestimated items" />
+	<c:choose>
+		<c:when test="${nonEstimatedBLs > 1}">
+			<c:out value="Non-estimated BLI(s) in ${nonEstimatedBLs} backlogs." />
+		</c:when>
+		<c:otherwise>
+			<c:out value="Non-estimated BLI(s) in ${nonEstimatedBLs} backlog." />
+		</c:otherwise>
+	</c:choose>
+</c:if>
+</div>
 <%--
 <table id="item">
 

@@ -11,6 +11,7 @@ import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
 
 import fi.hut.soberit.agilefant.business.BacklogBusiness;
+import fi.hut.soberit.agilefant.business.UserBusiness;
 import fi.hut.soberit.agilefant.db.TeamDAO;
 import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.db.hibernate.EmailValidator;
@@ -36,13 +37,19 @@ public class UserAction extends ActionSupport implements CRUDAction {
     private TeamDAO teamDAO;
 
     private BacklogBusiness backlogBusiness;
+    
+    private UserBusiness userBusiness;
 
     private String password1;
 
     private String password2;
 
     private String email;
-
+    
+    private List<User> enabledUsers = new ArrayList<User>();
+    
+    private List<User> disabledUsers = new ArrayList<User>();
+    
     private List<Team> teamList = new ArrayList<Team>();
 
     private Map<Integer, String> teamIds = new HashMap<Integer, String>();
@@ -51,6 +58,7 @@ public class UserAction extends ActionSupport implements CRUDAction {
         createTeamList();
         userId = 0;
         user = new User();
+        user.setEnabled(true);
         return Action.SUCCESS;
     }
 
@@ -89,6 +97,20 @@ public class UserAction extends ActionSupport implements CRUDAction {
             super.addActionError(super.getText("user.notFound"));
             return Action.ERROR;
         }
+        return Action.SUCCESS;
+    }
+    
+    public String disable() {
+        user = userDAO.get(userId);
+        userBusiness.disableUser(user);
+        
+        return Action.SUCCESS;
+    }
+    
+    public String enable() {
+        user = userDAO.get(userId);
+        userBusiness.enableUser(user);
+        
         return Action.SUCCESS;
     }
 
@@ -147,6 +169,7 @@ public class UserAction extends ActionSupport implements CRUDAction {
 
         storable.setFullName(this.user.getFullName());
         storable.setLoginName(this.user.getLoginName());
+        storable.setEnabled(this.user.isEnabled());
         storable.setPassword(md5Pw);
 
         // Set the initials
@@ -179,6 +202,8 @@ public class UserAction extends ActionSupport implements CRUDAction {
 
     public String list() {
         createTeamList();
+        setEnabledUsers(userBusiness.getEnabledUsers());
+        setDisabledUsers(userBusiness.getDisabledUsers());
         return Action.SUCCESS;
     }
 
@@ -186,6 +211,8 @@ public class UserAction extends ActionSupport implements CRUDAction {
         teamList.addAll(teamDAO.getAll());
         Collections.sort(teamList);
     }
+    
+    
 
     public User getUser() {
         return user;
@@ -270,5 +297,29 @@ public class UserAction extends ActionSupport implements CRUDAction {
 
     public void setBacklogBusiness(BacklogBusiness backlogBusiness) {
         this.backlogBusiness = backlogBusiness;
+    }
+
+    public UserBusiness getUserBusiness() {
+        return userBusiness;
+    }
+
+    public void setUserBusiness(UserBusiness userBusiness) {
+        this.userBusiness = userBusiness;
+    }
+
+    public List<User> getEnabledUsers() {
+        return enabledUsers;
+    }
+
+    public void setEnabledUsers(List<User> enabledUsers) {
+        this.enabledUsers = enabledUsers;
+    }
+
+    public List<User> getDisabledUsers() {
+        return disabledUsers;
+    }
+
+    public void setDisabledUsers(List<User> disabledUsers) {
+        this.disabledUsers = disabledUsers;
     }
 }

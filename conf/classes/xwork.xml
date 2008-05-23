@@ -477,6 +477,12 @@
 		<action name="deleteUser" method="delete" class="userAction">
 			<result type="redirect">listUsers.action</result>
 		</action>
+		<action name="disableUser" method="disable" class="userAction">
+		    <result type="redirect-action">listUsers</result>
+		</action>
+		<action name="enableUser" method="enable" class="userAction">
+            <result type="redirect-action">listUsers</result>
+        </action>
 		<action name="storeUser" method="store" class="userAction">
 			<result type="redirect">listUsers.action</result>
 			<result name="error">/WEB-INF/jsp/editUser.jsp</result>

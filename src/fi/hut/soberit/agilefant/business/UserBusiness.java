@@ -75,4 +75,28 @@ public interface UserBusiness {
      * Get projects and user is assigned to
      */
     public List<Backlog> getUsersBacklogs(User user);
+    
+    /**
+     * Get all enabled users.
+     * @return list of enabled users
+     */
+    public List<User> getEnabledUsers();
+    
+    /**
+     * Get all disabled users
+     * @return list of disabled users
+     */
+    public List<User> getDisabledUsers();
+    
+    /**
+     * Enable a user.
+     * @param user
+     */
+    public void enableUser(User user);
+    
+    /**
+     * Disable a user.
+     * @param user
+     */
+    public void disableUser(User user);
 }

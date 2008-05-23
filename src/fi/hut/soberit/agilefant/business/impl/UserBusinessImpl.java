@@ -143,6 +143,16 @@ public class UserBusinessImpl implements UserBusiness {
 
         return bliMap;
     }
+    
+    /** {@inheritDoc} */
+    public List<User> getEnabledUsers() {
+        return userDAO.getEnabledUsers();
+    }
+    
+    /** {@inheritDoc} */
+    public List<User> getDisabledUsers() {
+        return userDAO.getDisabledUsers();
+    }
 
     public List<User> getAllUsers() {
         return (List<User>) userDAO.getAll();
@@ -186,5 +196,19 @@ public class UserBusinessImpl implements UserBusiness {
             }
         }
         return assignedProjects;
+    }
+    
+    /** {@inheritDoc} */
+    public void enableUser(User user) {
+        if (user != null) {
+            user.setEnabled(true);
+        }
+    }
+    
+    /** {@inheritDoc} */
+    public void disableUser(User user) {
+        if (user != null) {
+            user.setEnabled(false);
+        }
     }
 }

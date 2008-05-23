@@ -70,6 +70,9 @@ public class ProjectAction extends ActionSupport implements CRUDAction {
     private BacklogBusiness backlogBusiness;
 
     private List<User> users = new ArrayList<User>();
+    
+    private List<User> enabledUsers = new ArrayList<User>();
+    private List<User> disabledUsers = new ArrayList<User>();
 
     private Collection<User> assignedUsers = new HashSet<User>();
 
@@ -119,6 +122,8 @@ public class ProjectAction extends ActionSupport implements CRUDAction {
 
         // populate all users to drop-down list
         users = userBusiness.getAllUsers();
+        enabledUsers = userBusiness.getEnabledUsers();
+        disabledUsers = userBusiness.getDisabledUsers();
 
         return Action.SUCCESS;
     }
@@ -150,6 +155,8 @@ public class ProjectAction extends ActionSupport implements CRUDAction {
          */
         // populate all users to drop-down list
         users = userBusiness.getAllUsers();
+        enabledUsers = userBusiness.getEnabledUsers();
+        disabledUsers = userBusiness.getDisabledUsers();
         assignedUsers = backlogBusiness.getUsers(project, true);
         unassignedHasWork = projectBusiness.getUnassignedWorkersMap(project);
 
@@ -469,5 +476,19 @@ public class ProjectAction extends ActionSupport implements CRUDAction {
         this.assignments = assignments;
     }
 
-   
+    public List<User> getEnabledUsers() {
+        return enabledUsers;
+    }
+
+    public void setEnabledUsers(List<User> enabledUsers) {
+        this.enabledUsers = enabledUsers;
+    }
+
+    public List<User> getDisabledUsers() {
+        return disabledUsers;
+    }
+
+    public void setDisabledUsers(List<User> disabledUsers) {
+        this.disabledUsers = disabledUsers;
+    }
 }

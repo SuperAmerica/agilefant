@@ -55,6 +55,8 @@ public class DailyWorkAction extends ActionSupport {
 
     private List<User> userList;
     
+    private List<User> enabledUsers = new ArrayList<User>();
+    
     private Map<Backlog, BacklogLoadData> loadDatas = new HashMap<Backlog, BacklogLoadData>();
     
     private DailyWorkLoadData dailyWorkLoadData = new DailyWorkLoadData();
@@ -123,7 +125,9 @@ public class DailyWorkAction extends ActionSupport {
                 .getBacklogItemsInProgress(user);
 
         userList = userBusiness.getAllUsers();
+        enabledUsers = userBusiness.getEnabledUsers();
         Collections.sort(userList, new UserComparator());
+        Collections.sort(enabledUsers, new UserComparator());
 
         DailyWorkLoadData data = this.projectBusiness.getDailyWorkLoadData(this.user, this.weeksAhead);
         
@@ -270,4 +274,14 @@ public class DailyWorkAction extends ActionSupport {
     public void setTotalsMap(Map<Integer, AFTime> totalsMap) {
         this.totalsMap = totalsMap;
     }
+
+    public List<User> getEnabledUsers() {
+        return enabledUsers;
+    }
+
+    public void setEnabledUsers(List<User> enabledUsers) {
+        this.enabledUsers = enabledUsers;
+    }
+    
+    
 }

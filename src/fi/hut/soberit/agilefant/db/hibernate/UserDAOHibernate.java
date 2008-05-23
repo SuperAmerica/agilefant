@@ -25,6 +25,7 @@ public class UserDAOHibernate extends GenericDAOHibernate<User> implements
     }
 
     /** {@inheritDoc} */
+    @SuppressWarnings("all")
     public User getUser(String loginName) {
         DetachedCriteria criteria = DetachedCriteria.forClass(this
                 .getPersistentClass());
@@ -33,4 +34,23 @@ public class UserDAOHibernate extends GenericDAOHibernate<User> implements
                 criteria));
     }
 
+    /** {@inheritDoc} */
+    @SuppressWarnings("all")
+    public List<User> getEnabledUsers() {
+        DetachedCriteria criteria = DetachedCriteria.forClass(this
+                .getPersistentClass());
+        criteria.add(Expression.eq("enabled", true));
+        return super.getHibernateTemplate().findByCriteria(
+                criteria);
+    }
+
+    /** {@inheritDoc} */
+    @SuppressWarnings("all")
+    public List<User> getDisabledUsers() {
+        DetachedCriteria criteria = DetachedCriteria.forClass(this
+                .getPersistentClass());
+        criteria.add(Expression.eq("enabled", false));
+        return super.getHibernateTemplate().findByCriteria(
+                criteria);
+    }
 }

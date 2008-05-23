@@ -45,6 +45,8 @@ public class User implements PageItem {
     private String email;
 
     private String initials;
+    
+    private boolean enabled;
 
     private Collection<Assignment> assignments = new HashSet<Assignment>();
 
@@ -122,14 +124,12 @@ public class User implements PageItem {
     /** Get login name. */
     @Transient
     public String getName() {
-        // TODO Auto-generated method stub
         return this.loginName;
     }
 
     /** {@inheritDoc} */
     @Transient
     public PageItem getParent() {
-        // TODO Auto-generated method stub
         return null;
     }
 
@@ -245,5 +245,22 @@ public class User implements PageItem {
      */
     public void setTeams(Collection<Team> teams) {
         this.teams = teams;
+    }
+
+    /**
+     * Check, if the user is disabled
+     * @return true, if user is disabled, false otherwise
+     */
+    @Column(columnDefinition = "boolean default 1")
+    public boolean isEnabled() {
+        return enabled;
+    }
+    
+    /**
+     * Set the user's enabled status.
+     * @param enabled
+     */
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 }

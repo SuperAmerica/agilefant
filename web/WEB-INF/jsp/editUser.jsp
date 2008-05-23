@@ -42,6 +42,11 @@
 			<td colspan="2"><ww:textfield name="user.email" value="${user.email}" /></td>
 		</tr>
 		<tr>
+		    <td></td>
+		    <td></td>
+		    <td colspan="2"><ww:checkbox name="user.enabled" value="${user.enabled}" /> Enabled</td>
+		</tr>
+		<tr>
 			<td>Password</td>
 			<td>*</td>
 			<td colspan="2"><ww:password name="password1" /></td>

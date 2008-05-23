@@ -25,6 +25,8 @@ public class AgilefantUserDetails implements UserDetails {
     private String username;
 
     private String password;
+    
+    private boolean enabled;
 
     private int userId;
 
@@ -32,6 +34,7 @@ public class AgilefantUserDetails implements UserDetails {
         username = user.getLoginName();
         password = user.getPassword();
         userId = user.getId();
+        enabled = user.isEnabled();
     }
 
     public GrantedAuthority[] getAuthorities() {
@@ -66,7 +69,7 @@ public class AgilefantUserDetails implements UserDetails {
     }
 
     public boolean isEnabled() {
-        return true;
+        return enabled;
     }
 
     /**

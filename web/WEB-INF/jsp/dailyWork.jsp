@@ -14,7 +14,7 @@
 
 
 <ww:form>
-<h2>The daily work of <ww:select list="userList"
+<h2>The daily work of <ww:select list="enabledUsers"
 	listKey="id" listValue="fullName" name="userId" value="${user.id}"
 	onchange="this.form.submit();" /></h2>
 </ww:form>

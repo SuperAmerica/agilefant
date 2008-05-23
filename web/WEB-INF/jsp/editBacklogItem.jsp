@@ -478,7 +478,7 @@
 
 
 				</display:table></p>
-				<ww:submit value="Store"/>
+				<ww:submit value="Save states"/>
 				</ww:form>
 				</div>
 			</c:if> <%-- No tasks --%></div>

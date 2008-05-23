@@ -143,7 +143,9 @@ public class ChartBusinessImpl implements ChartBusiness {
         
         GregorianCalendar now = new GregorianCalendar();
         now.setTime( new Date() );
+       
         
+        //TODO: Refactor this if possible
         while (!i.after(now)) {
             HistoryEntry<BacklogHistory> entry = history.getDateEntry(i.getTime()); 
             i.add(Calendar.DATE, 1);
@@ -158,13 +160,14 @@ public class ChartBusinessImpl implements ChartBusiness {
         estimateSeries.delete(
                 estimateSeries.getItemCount() -1,
                 estimateSeries.getItemCount() -1);
+        
         // Then create the data "series" for the current date
+        i.set(GregorianCalendar.DATE, i.get(GregorianCalendar.DATE) - 1);
         HistoryEntry<BacklogHistory> entry = history.getDateEntry(i.getTime());
-        i.add(Calendar.DATE, -1);
         currentDaySeries.add(new Day(i.getTime()),
-                (float) entry.getEffortLeft().getTime() / 3600.0);
-        entry = history.getDateEntry(i.getTime());
+                (float) estimateSeries.getValue(new Day(i.getTime())).floatValue());
         i.add(Calendar.DATE, 1);
+        entry = history.getDateEntry(i.getTime());
         currentDaySeries.add(new Day(i.getTime()),
                 (float) entry.getEffortLeft().getTime() / 3600.0);
         

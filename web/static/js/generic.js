@@ -55,7 +55,7 @@ function confirmReset() {
 
 function disableIfEmpty(value, elements) {
 	if(value == "") {
-		alert("Invalid selection. Please select a valid object.");
+		alert("Invalid selection. Select a valid backlog.");
 		for(i = 0; i < elements.length; i++){
 			document.getElementById(elements[i]).disabled = true;
 		}

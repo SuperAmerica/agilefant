@@ -54,7 +54,7 @@ Effort estimate
 		<li class="tasklistItem">
 
 		<ww:a
-			href="%{editLink}&contextViewName=${currentAction}&contextObjectId=${contextObjectId}"
+			href="%{editLink}&contextViewName=${contextViewName}&contextObjectId=${contextObjectId}"
 			title="${task.name}">
 							${aef:subString(task.name, 40)}
 							</ww:a>
@@ -69,7 +69,7 @@ Effort estimate
 	<ww:url id="createLink" action="createTask" includeParams="none">
 		<ww:param name="backlogItemId" value="${backlogItem.id}" />
 	</ww:url>
-	<ww:a href="%{createLink}&contextViewName=${currentAction}&contextObjectId=${contextObjectId}">New task &raquo;</ww:a>
+	<ww:a href="%{createLink}&contextViewName=${contextViewName}&contextObjectId=${contextObjectId}">New task &raquo;</ww:a>
 	<hr />
 	<ww:submit value="Store" action="quickStoreTaskList"/>
 </ww:form>

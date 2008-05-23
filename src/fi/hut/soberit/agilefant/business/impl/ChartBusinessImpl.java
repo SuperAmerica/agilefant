@@ -109,6 +109,8 @@ public class ChartBusinessImpl implements ChartBusiness {
         TimeSeries estimateSeries = new TimeSeries("Actual velocity", Day.class);
         TimeSeries referenceSeries = new TimeSeries("Reference velocity",
                 Day.class);
+        TimeSeries currentDaySeries = new TimeSeries("Current day", Day.class);
+        
         GregorianCalendar i = new GregorianCalendar();
         GregorianCalendar end = new GregorianCalendar();
         end.set(GregorianCalendar.HOUR_OF_DAY, 0);
@@ -149,11 +151,27 @@ public class ChartBusinessImpl implements ChartBusiness {
                     (float) entry.getEffortLeft()
                             .getTime() / 3600.0);
         }
-
+        
+       
+         /* Create the current day "series" */
+        // First remove the current (last) date from the estimated data series
+        estimateSeries.delete(
+                estimateSeries.getItemCount() -1,
+                estimateSeries.getItemCount() -1);
+        // Then create the data "series" for the current date
+        HistoryEntry<BacklogHistory> entry = history.getDateEntry(i.getTime());
+        i.add(Calendar.DATE, -1);
+        currentDaySeries.add(new Day(i.getTime()),
+                (float) entry.getEffortLeft().getTime() / 3600.0);
+        entry = history.getDateEntry(i.getTime());
+        i.add(Calendar.DATE, 1);
+        currentDaySeries.add(new Day(i.getTime()),
+                (float) entry.getEffortLeft().getTime() / 3600.0);
+        
         TimeSeriesCollection dataset = new TimeSeriesCollection();
         dataset.addSeries(estimateSeries);
         dataset.addSeries(referenceSeries);
-
+        dataset.addSeries(currentDaySeries);
         return dataset;
     }
 

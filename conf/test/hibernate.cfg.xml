@@ -24,6 +24,7 @@
 		<mapping class="fi.hut.soberit.agilefant.model.BacklogHistory" />
 		<mapping class="fi.hut.soberit.agilefant.model.HistoryEntry" />
 		<mapping class="fi.hut.soberit.agilefant.model.Assignment"/>
+		<mapping class="fi.hut.soberit.agilefant.model.Setting"/>
 		
 
 		<!-- Activate hibernate validation: these listeners will raise an exception

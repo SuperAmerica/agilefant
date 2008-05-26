@@ -742,6 +742,10 @@
 			<result name="success">success.jsp</result>
 			<result name="error">success.jsp?error=1</result>
 		</action>
+		
+		<action name="settings">
+			<result>/WEB-INF/jsp/settings.jsp</result>
+		</action>
 
 
 

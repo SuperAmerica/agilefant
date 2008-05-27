@@ -272,12 +272,22 @@ Project Types
 </a>
 </li>
 -->
+
 <li id="nava">
 <a href="contextView.action?contextName=createNew&resetContextView=true">
 <img src="static/img/new.png" alt="Create New" />
 Create New
 </a>
 </li>
+
+<%-- .action Settings doesn't exist yet --%>
+<li id="navb">
+<a href="settings.action">
+<img src="static/img/settings.png" alt="Settings" />
+Settings
+</a>
+</li>
+
 </ul>
 </div>
 </div>

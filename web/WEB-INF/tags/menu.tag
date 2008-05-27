@@ -258,6 +258,16 @@ Backlogs
 Dev Portfolio
 </a>
 </li>
+
+
+<%-- .action Settings doesn't exist yet --%>
+<li id="navb">
+<a href="settings.action">
+<img src="static/img/settings.png" alt="Settings" />
+Settings
+</a>
+</li>
+
 <li id="navc">
 <a href="contextView.action?contextName=users&resetContextView=true">
 <img src="static/img/users.png" alt="Users &amp; Teams" />
@@ -280,13 +290,7 @@ Create New
 </a>
 </li>
 
-<%-- .action Settings doesn't exist yet --%>
-<li id="navb">
-<a href="settings.action">
-<img src="static/img/settings.png" alt="Settings" />
-Settings
-</a>
-</li>
+
 
 </ul>
 </div>

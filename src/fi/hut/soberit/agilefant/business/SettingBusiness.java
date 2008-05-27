@@ -20,6 +20,8 @@ public interface SettingBusiness {
      */
     public Setting getSetting(int settingID);
     
+    public Setting getSetting(String name);
+    
     /**
      * Removes the specified setting.
      * @param settingID the id of the setting to be removed
@@ -48,5 +50,10 @@ public interface SettingBusiness {
      * Is hour reporting enabled
      */
     public boolean isHourReportingEnabled();
+    
+    /**
+     * Set hour reporting mode
+     */
+    public void setHourReporting(String mode);
     
 }

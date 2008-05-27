@@ -50,7 +50,12 @@ public class SettingAction extends ActionSupport implements CRUDAction {
      * {@inheritDoc}
      */
     public String edit() {
-        setting = settingBusiness.getSetting(settingID);
+        System.out.println(">>" +  name + "<<");
+        if (settingID > 0) {
+            setting = settingBusiness.getSetting(settingID);
+        } else {
+            setting = settingBusiness.getSetting(name);
+        }
         if (setting == null) {
             super.addActionError(super.getText("setting.notFound"));
             return Action.ERROR;
@@ -65,10 +70,12 @@ public class SettingAction extends ActionSupport implements CRUDAction {
         Setting storable = new Setting();
         if (settingID > 0) {
             storable = settingBusiness.getSetting(settingID);
-            if (storable == null) {
-                super.addActionError(super.getText("setting.notFound"));
-                return Action.ERROR;
-            }
+        }else if( name != null ){
+            storable = settingBusiness.getSetting(name); 
+        }
+        if (storable == null) {
+            super.addActionError(super.getText("setting.notFound"));
+            return Action.ERROR;
         }
         this.fillStorable(storable);
         if (super.hasActionErrors()) {
@@ -78,14 +85,18 @@ public class SettingAction extends ActionSupport implements CRUDAction {
         return Action.SUCCESS;
     }
     
+    public String storeHourReporting() {
+        settingBusiness.setHourReporting(value);
+        return Action.SUCCESS;
+    }
     /**
      * A helper method for setting all required parameters for storing a setting to the database
      * @param storable the setting to be stored
      */
     protected void fillStorable(Setting storable) {
-        storable.setName(this.setting.getName());
-        storable.setDescription(this.setting.getDescription());
-        storable.setValue(this.setting.getValue());
+        storable.setName(name);
+        storable.setDescription(description);
+        storable.setValue(value);
     }
     
     /**
@@ -120,27 +131,35 @@ public class SettingAction extends ActionSupport implements CRUDAction {
         return settingID;
     }
     
-    public void setSettingName(String name){
+    public void setName(String name){
         this.name = name;
     }
     
-    public String getSettingName(){
+    public String getName(){
         return name;
     }
     
-    public void setSettingDescription(String description) {
+    public void setDescription(String description) {
         this.description = description;
     }
 
-    public String getSettingDescription() {
+    public String getDescription() {
         return description;
     }
     
-    public void setSettingValue(String value) {
+    public void setValue(String value) {
         this.value = value;
     }
     
-    public String getSettingValue(){
+    public String getValue(){
         return value;
+    }
+
+    public SettingBusiness getSettingBusiness() {
+        return settingBusiness;
+    }
+
+    public void setSettingBusiness(SettingBusiness settingBusiness) {
+        this.settingBusiness = settingBusiness;
     }
 }

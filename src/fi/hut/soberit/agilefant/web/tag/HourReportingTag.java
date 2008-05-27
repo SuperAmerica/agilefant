@@ -18,7 +18,7 @@ public class HourReportingTag extends SpringTagSupport {
         
         super.getPageContext().setAttribute(super.getId(), 
                 settingBusiness.isHourReportingEnabled());
-        
+       
         return Tag.EVAL_BODY_INCLUDE;
     }
 }

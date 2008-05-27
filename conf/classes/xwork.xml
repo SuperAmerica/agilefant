@@ -754,19 +754,22 @@
 			<result>/WEB-INF/jsp/settings.jsp</result>
 		</action>
 	
-		<action name="editSettings" class="settingAction" method="edit">
+		<action name="editSetting" class="settingAction" method="edit">
 			<result>/WEB-INF/jsp/settings.jsp</result>
 		</action>
 		
-		<action name="storeSettings" class="settingAction" method="store">
+		<action name="storeSetting" class="settingAction" method="store">
 			<result>/WEB-INF/jsp/settings.jsp</result>
 		</action>
 		
-		<action name="createSettings" class="settingAction" method="create">
+		<action name="createSetting" class="settingAction" method="create">
 			<result>/WEB-INF/jsp/settings.jsp</result>
 		</action>
 		
-		<action name="deleteSettings" class="settingAction" method="delete">
+		<action name="deleteSetting" class="settingAction" method="delete">
+			<result>/WEB-INF/jsp/settings.jsp</result>
+		</action>
+				<action name="storeHourReporting" class="settingAction" method="storeHourReporting">
 			<result>/WEB-INF/jsp/settings.jsp</result>
 		</action>
 

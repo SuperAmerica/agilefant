@@ -18,7 +18,7 @@ public class SettingBusinessImpl implements SettingBusiness {
     private SettingDAO settingDAO;
     
     private static final String SETTING_NAME_HOUR_REPORTING = "HourReporting";
-    private static final String SETTING_VALUE_TRUE = "true";
+    public static final String SETTING_VALUE_TRUE = "true";
     
     /**
      * {@inheritDoc}
@@ -63,6 +63,19 @@ public class SettingBusinessImpl implements SettingBusiness {
         settingDAO.store(setting);
     }
     
+    public void setHourReporting(String mode) {
+        Setting setting = settingDAO.getSetting(SETTING_NAME_HOUR_REPORTING);
+        boolean selection = (mode != null && mode.equals(SETTING_VALUE_TRUE));
+        if(setting == null) {
+            setting = new Setting();
+            setting.setName(SETTING_NAME_HOUR_REPORTING);
+            setting.setValue(new Boolean(selection).toString());
+            settingDAO.create(setting);
+        } else {
+            setting.setValue(new Boolean(selection).toString());
+            settingDAO.store(setting);
+        }
+    }
     /**
      * {@inheritDoc}
      */
@@ -74,5 +87,9 @@ public class SettingBusinessImpl implements SettingBusiness {
         }
         
         return setting.getValue().equals(SETTING_VALUE_TRUE);        
+    }
+
+    public Setting getSetting(String name) {
+        return settingDAO.getSetting(name);
     }
 }

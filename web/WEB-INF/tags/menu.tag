@@ -262,7 +262,7 @@ Dev Portfolio
 
 <%-- .action Settings doesn't exist yet --%>
 <li id="navb">
-<a href="settings.action">
+<a href="contextView.action?contextName=settings&resetContextView=true">
 <img src="static/img/settings.png" alt="Settings" />
 Settings
 </a>

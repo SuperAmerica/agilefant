@@ -44,4 +44,9 @@ public interface SettingBusiness {
      */
     public List<Setting> getAllOrderByName();
     
+    /**
+     * Is hour reporting enabled
+     */
+    public boolean isHourReportingEnabled();
+    
 }

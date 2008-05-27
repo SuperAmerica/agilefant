@@ -295,6 +295,20 @@
 			<rtexprvalue>true</rtexprvalue>            
         </attribute>	    
 	</tag>
+	
+	
+	<tag>
+		<name>hourReporting</name>
+		<tag-class>fi.hut.soberit.agilefant.web.tag.HourReportingTag</tag-class>
+		<body-content>JSP</body-content>
+		<description>
+			Get hour reporting setting
+	    </description>
+	    <attribute>
+	    	<name>id</name>
+	    	<required>true</required>	    
+	    </attribute>
+	</tag>
 
 	<tag-file>
 		<name>backlogDropdown</name>
@@ -424,4 +438,5 @@
 	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
 	  <function-signature>java.util.Listsubstract substract(java.util.Collection, java.util.Collection)</function-signature>
 	</function> 
+	
 </taglib>

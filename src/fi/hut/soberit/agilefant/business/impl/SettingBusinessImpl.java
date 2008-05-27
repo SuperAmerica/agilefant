@@ -17,6 +17,9 @@ import fi.hut.soberit.agilefant.model.Setting;
 public class SettingBusinessImpl implements SettingBusiness {
     private SettingDAO settingDAO;
     
+    private static final String SETTING_NAME_HOUR_REPORTING = "HourReporting";
+    private static final String SETTING_VALUE_TRUE = "true";
+    
     /**
      * {@inheritDoc}
      */
@@ -58,5 +61,18 @@ public class SettingBusinessImpl implements SettingBusiness {
      */
     public void store(Setting setting) {
         settingDAO.store(setting);
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public boolean isHourReportingEnabled() {
+        Setting setting = settingDAO.getSetting(SETTING_NAME_HOUR_REPORTING);
+        
+        if (setting == null) {
+            return false;
+        }
+        
+        return setting.getValue().equals(SETTING_VALUE_TRUE);        
     }
 }

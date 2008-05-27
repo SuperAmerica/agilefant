@@ -102,4 +102,11 @@
 	<bean name="teamDAO" parent="abstractDAO">
 		<property name="target" ref="teamDAOTarget" />
 	</bean>
+	
+	<bean name="settingDAOTarget" parent="abstractDAOTarget"
+		class="fi.hut.soberit.agilefant.db.hibernate.SettingDAOHibernate" />
+		
+	<bean name="settingDAO" parent="abstractDAO">
+		<property name="target" ref="settingDAOTarget" />
+	</bean>
 </beans>

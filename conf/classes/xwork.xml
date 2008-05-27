@@ -749,11 +749,27 @@
 			<result name="error">success.jsp?error=1</result>
 		</action>
 		
+		<!-- Actions for changing settings -->
 		<action name="settings">
+			<result>/WEB-INF/jsp/settings.jsp</result>
+		</action>
+	
+		<action name="editSettings" class="settingAction" method="edit">
+			<result>/WEB-INF/jsp/settings.jsp</result>
+		</action>
+		
+		<action name="storeSettings" class="settingAction" method="store">
+			<result>/WEB-INF/jsp/settings.jsp</result>
+		</action>
+		
+		<action name="createSettings" class="settingAction" method="create">
+			<result>/WEB-INF/jsp/settings.jsp</result>
+		</action>
+		
+		<action name="deleteSettings" class="settingAction" method="delete">
 			<result>/WEB-INF/jsp/settings.jsp</result>
 		</action>
 
 
-
-	</package>
+</package>
 </xwork>

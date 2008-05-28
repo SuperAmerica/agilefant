@@ -11,4 +11,8 @@ public interface TimesheetLoggable {
      * Get entity type.
      */
     public String getType();
+    /**
+     * Get identifier
+     */
+    public int getId();
 }

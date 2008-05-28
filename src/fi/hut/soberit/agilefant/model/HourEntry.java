@@ -115,4 +115,8 @@ public class HourEntry {
     public void setUser(User user) {
         this.user = user;
     }
+    public void setTarget(TimesheetLoggable target) {
+        setTargetType(target.getType());
+        setTargetId(target.getId());
+    }
 }

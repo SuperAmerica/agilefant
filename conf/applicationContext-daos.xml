@@ -104,9 +104,14 @@
 	</bean>
 	
 	<bean name="settingDAOTarget" parent="abstractDAOTarget"
-		class="fi.hut.soberit.agilefant.db.hibernate.SettingDAOHibernate" />
-		
+		class="fi.hut.soberit.agilefant.db.hibernate.SettingDAOHibernate" />		
 	<bean name="settingDAO" parent="abstractDAO">
 		<property name="target" ref="settingDAOTarget" />
+	</bean>
+	
+	<bean name="hourEntryDAOTarget" parent="abstractDAOTarget"
+		class="fi.hut.soberit.agilefant.db.hibernate.HourEntryDAOHibernate" />
+	<bean name="hourEntryDAO" parent="abstractDAO">
+		<property name="target" ref="hourEntryDAOTarget" />
 	</bean>
 </beans>

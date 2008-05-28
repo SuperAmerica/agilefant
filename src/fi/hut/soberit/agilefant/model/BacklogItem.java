@@ -56,7 +56,7 @@ import fi.hut.soberit.agilefant.web.page.PageItem;
  */
 @Entity
 @Table(name = "backlogitem")
-public class BacklogItem implements PageItem, Assignable, EffortContainer {
+public class BacklogItem implements PageItem, Assignable, EffortContainer, TimesheetLoggable {
 
     private int id;
 
@@ -404,4 +404,8 @@ public class BacklogItem implements PageItem, Assignable, EffortContainer {
     public void setResponsibles(Collection<User> responsibles) {
         this.responsibles = responsibles;
     }
+    public final String timesheetType() {
+        return "backlogItem";
+    }
+
 }

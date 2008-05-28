@@ -14,6 +14,7 @@ import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.IterationGoal;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Task;
+import fi.hut.soberit.agilefant.model.TimesheetLoggable;
 import fi.hut.soberit.agilefant.model.User;
 
 
@@ -104,6 +105,13 @@ public class AEFFunctions {
         List<?> list = new ArrayList<Object>(first);
         list.removeAll(second);
         return list;
+    }
+    public static String timesheetType(Object obj) {
+        if(obj instanceof TimesheetLoggable) {
+            return ((TimesheetLoggable)obj).timesheetType();
+        } else {
+            return "";
+        }
     }
     
     public static boolean isUserAssignedTo(Backlog backlog, User user) {

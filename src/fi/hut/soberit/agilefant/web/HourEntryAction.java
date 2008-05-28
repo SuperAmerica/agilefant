@@ -8,7 +8,10 @@ import com.opensymphony.xwork.ActionSupport;
 
 import fi.hut.soberit.agilefant.business.HourEntryBusiness;
 import fi.hut.soberit.agilefant.db.HourEntryDAO;
+import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.HourEntry;
+import fi.hut.soberit.agilefant.model.Iteration;
+import fi.hut.soberit.agilefant.model.TimesheetLoggable;
 
 
 public class HourEntryAction extends ActionSupport implements CRUDAction {
@@ -18,6 +21,7 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
     private HourEntryBusiness hourEntryBusiness;
     private HourEntryDAO hourEntryDAO;
     private int[] selectedUserIds;
+    private TimesheetLoggable target;
     
     private Log logger = LogFactory.getLog(getClass());
 
@@ -57,6 +61,7 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
 
     /**
      * {@inheritDoc}
+     * TODO: check that target is valid
      */
     public String store() {
         HourEntry storable = new HourEntry();
@@ -83,9 +88,18 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
             hourEntryBusiness.addHourEntryForMultipleUsers(storable, selectedUserIds);
         }
         hourEntryDAO.store(storable);
-        return Action.SUCCESS;
+        return determinateReturnPage();
     }
     
+    protected String determinateReturnPage() {
+        if(this.target instanceof BacklogItem) {
+            return "backlogItem";
+        } else if(this.target instanceof Iteration) {
+            return "iteration";
+        } else {
+            return Action.SUCCESS;
+        }
+    }
     protected void fillStorable(HourEntry storable) {
         storable.setDate(this.hourEntry.getDate());
         storable.setDescription(this.hourEntry.getDescription());
@@ -133,6 +147,14 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
 
     public void setSelectedUserIds(int[] selectedUserIds) {
         this.selectedUserIds = selectedUserIds;
+    }
+
+    public TimesheetLoggable getTarget() {
+        return target;
+    }
+
+    public void setTarget(TimesheetLoggable parent) {
+        this.target = parent;
     }
 
 }

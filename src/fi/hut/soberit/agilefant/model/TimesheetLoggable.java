@@ -10,7 +10,7 @@ public interface TimesheetLoggable {
     /**
      * Get entity type.
      */
-    public String getType();
+    public String timesheetType();
     /**
      * Get identifier
      */

@@ -486,4 +486,65 @@
 	</tr>
 </table>
 
+
+<%-- Hour reporting here --%>
+<aef:hourReporting id="hourReport"></aef:hourReporting>
+<c:if test="${hourReport == 'true'}">
+<table>
+	<tr>
+		<td>
+			<div id="subItems">
+			<div id="subItemHeader">
+			<table cellpadding="0" cellspacing="0">
+                    <tr>
+                       <td class="header">Hour reporting entries<ww:url id="createLink"
+				action="createTask" includeParams="none">
+				<ww:param name="backlogItemId" value="${backlogItemId}" />
+			</ww:url> <ww:a
+				href="%{createLink}&contextViewName=editBacklogItem&contextObjectId=${backlogItemId}">Create new &raquo;</ww:a>
+				</td>
+				</tr>
+			</table>
+			</div>		
+			
+				<c:if test="${!empty backlogItem.tasks}">
+				<div id="subItemContent">
+				
+				<p><display:table class="listTable" name="backlogItem.tasks"
+					id="row" requestURI="editBacklogItem.action">
+					
+					<display:column sortable="true" title="Date">
+						01.05.2008
+					</display:column>
+					
+					<display:column sortable="true" title="Reporter">
+					David Hasselhoff
+					</display:column>
+					
+					<display:column sortable="false" title="Spent effort">
+					</display:column>
+					
+					<display:column sortable="false" title="Comments">
+					</display:column>
+					
+					<display:column sortable="false" title="Action">
+						<ww:a 
+							href="%{deleteLink}&contextViewName=editBacklogItem&contextObjectId=${backlogItemId}"
+							onclick="return confirmDeleteTask()">
+							<img src="static/img/edit.png" alt="Delete" title="Delete" />
+						</ww:a>
+						<ww:a 
+							href="%{deleteLink}&contextViewName=editBacklogItem&contextObjectId=${backlogItemId}"
+							onclick="return confirmDeleteTask()">
+							<img src="static/img/delete.png" alt="Delete" title="Delete" />
+						</ww:a>
+					</display:column>
+					
+				
+				</display:table></p>
+			</c:if> <%-- No tasks --%></div>
+		</tr>
+</table>
+</c:if> <%-- Hour reporting on --%>
+
 <%@ include file="./inc/_footer.jsp"%>

@@ -525,7 +525,7 @@
 					</display:column>
 					
 					<display:column sortable="false" title="Comments">
-					Want to get a hard ride, baby?!
+					Yeah baby! Want to get a hard ride tonight?
 					</display:column>
 					
 					<display:column sortable="false" title="Action">

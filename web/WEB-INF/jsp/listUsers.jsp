@@ -20,12 +20,6 @@
 	<display:column sortable="true" title="Initials" property="initials" />
 	<display:column sortable="true" title="Email" property="email" />
 	<display:column sortable="false" title="Actions">
-		<ww:url id="editLink" action="editUser" includeParams="none">
-			<ww:param name="userId" value="${row.id}" />
-		</ww:url>
-		<ww:a href="%{editLink}">
-			<img src="static/img/edit.png" alt="Edit" title="Edit" />
-		</ww:a>
 		<c:if test="${row.id != 1}">
 			<ww:url id="disableLink" action="disableUser" includeParams="none">
                 <ww:param name="userId" value="${row.id}" />
@@ -33,6 +27,12 @@
             <ww:a href="%{disableLink}">
                 <img src="static/img/disable_user.png" alt="Disable" title="Disable" />
             </ww:a>
+			<ww:url id="deleteLink" action="deleteUser" includeParams="none">
+				<ww:param name="userId" value="${row.id}" />
+			</ww:url>
+			<ww:a href="%{deleteLink}" onclick="return confirmDelete()">
+				<img src="static/img/delete_18.png" alt="Edit" title="Edit" />
+			</ww:a>
 		</c:if>
 	</display:column>
 </display:table></p>
@@ -53,18 +53,18 @@
     <display:column sortable="true" title="Initials" property="initials" />
     <display:column sortable="true" title="Email" property="email" />
     <display:column sortable="false" title="Actions">
-		<ww:url id="editLink" action="editUser" includeParams="none">
-			<ww:param name="userId" value="${row.id}" />
-		</ww:url>
-		<ww:a href="%{editLink}">
-			<img src="static/img/edit.png" alt="Edit" title="Edit" />
-		</ww:a>
 		<ww:url id="enableLink" action="enableUser" includeParams="none">
 			<ww:param name="userId" value="${row.id}" />
 		</ww:url>
 		<ww:a href="%{enableLink}">
 			<img src="static/img/enable_user.png" alt="Enable" title="Enable" />
 		</ww:a>
+		<ww:url id="deleteLink" action="deleteUser" includeParams="none">
+            <ww:param name="userId" value="${row.id}" />
+        </ww:url>
+        <ww:a href="%{deleteLink}" onclick="return confirmDelete()">
+            <img src="static/img/delete_18.png" alt="Edit" title="Edit" />
+        </ww:a>
 	</display:column>
 </display:table></p>
 
@@ -90,9 +90,6 @@
 			</display:column>
 
 			<display:column title="Actions" sortable="false">
-				<ww:a href="%{editLink}">
-					<img src="static/img/edit.png" alt="Edit" title="Edit" />
-				</ww:a>
 				<ww:url id="deleteLink" action="deleteTeam" includeParams="none">
 					<ww:param name="teamId" value="${row.id}" />
 				</ww:url>

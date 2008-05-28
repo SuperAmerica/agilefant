@@ -77,6 +77,8 @@ public class ProjectAction extends ActionSupport implements CRUDAction {
     private Collection<User> assignedUsers = new HashSet<User>();
 
     private Map<User, Integer> unassignedHasWork = new HashMap<User, Integer>();
+    
+    private List<User> assignableUsers = new ArrayList<User>();
 
     private UserBusiness userBusiness;
 
@@ -124,6 +126,7 @@ public class ProjectAction extends ActionSupport implements CRUDAction {
         users = userBusiness.getAllUsers();
         enabledUsers = userBusiness.getEnabledUsers();
         disabledUsers = userBusiness.getDisabledUsers();
+        assignableUsers = projectBusiness.getAssignableUsers(this.project);
 
         return Action.SUCCESS;
     }
@@ -158,6 +161,7 @@ public class ProjectAction extends ActionSupport implements CRUDAction {
         enabledUsers = userBusiness.getEnabledUsers();
         disabledUsers = userBusiness.getDisabledUsers();
         assignedUsers = backlogBusiness.getUsers(project, true);
+        assignableUsers = projectBusiness.getAssignableUsers(this.project);
         unassignedHasWork = projectBusiness.getUnassignedWorkersMap(project);
 
         // Calculate effort lefts and original estimates
@@ -490,5 +494,13 @@ public class ProjectAction extends ActionSupport implements CRUDAction {
 
     public void setDisabledUsers(List<User> disabledUsers) {
         this.disabledUsers = disabledUsers;
+    }
+
+    public List<User> getAssignableUsers() {
+        return assignableUsers;
+    }
+
+    public void setAssignableUsers(List<User> assignableUsers) {
+        this.assignableUsers = assignableUsers;
     }
 }

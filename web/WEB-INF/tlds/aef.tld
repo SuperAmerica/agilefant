@@ -47,6 +47,16 @@
 			Lists all teams to variable teamList
 	    </description>
 	</tag>
+	
+	<tag>
+        <name>enabledUserList</name>
+        <tag-class>fi.hut.soberit.agilefant.web.tag.EnabledUserListTag</tag-class>
+        <body-content>JSP</body-content>
+        <description>
+            Lists all enabled users to variable enabledUserList
+        </description>
+    </tag>
+	
 
 	
 	<tag>

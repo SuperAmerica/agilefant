@@ -309,15 +309,15 @@
 			<script type="text/javascript" src="static/js/taskrank.js"></script>
 			<script type="text/javascript">
 			$(document).ready( function() {
-				<ww:set name="userList" value="#attr.userList" />
+				<ww:set name="userList" value="${possibleResponsibles}" />
 				<ww:set name="teamList" value="#attr.teamList" />
 				<c:choose>
 				<c:when test="${backlogItem.project != null}">
-				var others = [<aef:userJson items="${aef:listSubstract(userList, backlogItem.project.responsibles)}"/>];
+				var others = [<aef:userJson items="${aef:listSubstract(possibleResponsibles, backlogItem.project.responsibles)}"/>];
 				var preferred = [<aef:userJson items="${backlogItem.project.responsibles}"/>];
 				</c:when>
 				<c:otherwise>
-				var others = [<aef:userJson items="${userList}"/>];
+				var others = [<aef:userJson items="${possibleResponsibles}"/>];
 				var preferred = [];
 				</c:otherwise>
 				</c:choose>

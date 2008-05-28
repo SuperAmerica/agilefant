@@ -4,8 +4,16 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
+
+import fi.hut.soberit.agilefant.business.impl.ProjectBusinessImpl;
 import fi.hut.soberit.agilefant.db.ProjectDAO;
 import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.Assignment;
@@ -453,6 +461,82 @@ public class ProjectBusinessTest extends SpringTestCase {
         assertEquals(4, del2.getRank());
         assertEquals(8, del3.getRank());
         assertEquals(2, del4.getRank());
+    }
+    
+    /**
+     * Test the getAssignableUsers method of project business.
+     * <p>
+     * The tested method should return a list of all enabled users
+     * and users assigned to the project. No duplicates should be
+     * in the list.
+     */
+    public void testGetAssignableUsers() {
+        ProjectBusinessImpl projectBiz = new ProjectBusinessImpl();
+        BacklogBusiness blogBiz = createMock(BacklogBusiness.class);
+        UserBusiness userBiz = createMock(UserBusiness.class);
+        
+        // Set the mock interfaces
+        projectBiz.setBacklogBusiness(blogBiz);
+        projectBiz.setUserBusiness(userBiz);
+        
+        // Create test data
+        List<User> enabledList = new ArrayList<User>();
+        List<User> assignedList = new ArrayList<User>();
+        Project proj = new Project();
+        
+        // Enabled user assigned to project
+        User user1 = new User();
+        user1.setId(1);
+        user1.setEnabled(true);
+        enabledList.add(user1);
+        assignedList.add(user1);
+        
+        // Disabled user assigned to project
+        User user2 = new User();
+        user2.setId(2);
+        user2.setEnabled(false);
+        assignedList.add(user2);
+                
+        // Enabled user not assigned to project
+        User user3 = new User();
+        user3.setId(3);
+        user3.setEnabled(true);
+        enabledList.add(user3);
+        
+        // Disabled user not assigned to project
+        User user4 = new User();
+        user4.setId(4);
+        user4.setEnabled(false);
+        
+        // Record expected behavior
+        expect(blogBiz.getUsers(proj, true)).andReturn(assignedList);
+        expect(userBiz.getEnabledUsers()).andReturn(enabledList);
+        
+        // Test it
+        replay(blogBiz);
+        replay(userBiz);
+        
+        List<User> userList = projectBiz.getAssignableUsers(proj);
+        
+        // Check, that no duplicates exist
+        Set<User> userSet = new HashSet<User>();
+        for (User user : userList) {
+            if (userSet.contains(user)) {
+                fail("Duplicates exist");
+            }
+            else {
+                userSet.add(user);
+            }
+        }
+        
+        // Check, that correct users are in the list
+        assertTrue(userList.contains(user1));
+        assertTrue(userList.contains(user2));
+        assertTrue(userList.contains(user3));
+        assertFalse(userList.contains(user4));
+        
+        verify(blogBiz);
+        verify(userBiz);
     }
 
     /**

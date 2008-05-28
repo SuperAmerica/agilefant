@@ -73,7 +73,7 @@ public class BacklogItem implements PageItem, Assignable, EffortContainer {
     @Deprecated
     private User assignee;
     
-    private Collection<User> responsibles;
+    private Collection<User> responsibles = new ArrayList<User>();
 
     private State state = State.NOT_STARTED;
 

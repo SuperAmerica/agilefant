@@ -169,4 +169,12 @@ public interface ProjectBusiness {
      */
     public HashMap<Integer, String> calculateOverheads(Date from, int weeksAhead, List<Backlog> backlogs, User user);
 
+    /**
+     * Get the list of assignable users.
+     * <p>
+     * Returns all enabled users and users currently assigned to the project.
+     * @param project
+     * @return
+     */
+    public List<User> getAssignableUsers(Project project);
 }

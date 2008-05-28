@@ -8,6 +8,7 @@ import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.State;
+import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.util.EffortSumData;
 
 /**
@@ -90,5 +91,13 @@ public interface BacklogItemBusiness {
     public HistoryBusiness getHistoryBusiness();
 
     public void setHistoryBusiness(HistoryBusiness historyBusiness);
+    
+    /**
+     * Get the list of possible responsibles for a bli.
+     * <p>
+     * Returns the union of all enabled users and the bli's responsibles.
+     * @param bli
+     */
+    public List<User> getPossibleResponsibles(BacklogItem bli);
 
 }

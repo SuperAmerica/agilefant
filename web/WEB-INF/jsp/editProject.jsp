@@ -155,15 +155,23 @@
                     </div>
                         
                     <div id="${divId}" style="display: none;">
-                    <display:table name="${users}" id="user" class="projectUsers"
+                    <display:table name="${assignableUsers}" id="user" class="projectUsers"
                         defaultsort="2">
                         <display:column title="">
-                            <c:set var="flag" value="0" scope="request" />
-                            <c:forEach var="usr" items="${assignedUsers}">
+                            <%--<c:forEach var="usr" items="${assignedUsers}">
                                 <c:if test="${usr.id == user.id}">
                                     <c:set var="flag" value="1" scope="request" />
                                 </c:if>
-                            </c:forEach>
+                            </c:forEach>--%>
+                            
+                            <%-- Test, if the user should be checked --%>
+                            <c:set var="flag" value="0" scope="request" />
+                            <c:if test="${aef:listContains(assignedUsers, user)}">
+                                <c:set var="flag" value="1" scope="request" />
+                            </c:if>
+                            
+                            
+                            
                             <c:choose>
                                 <c:when test="${flag == 1}">
                                     <input type="checkbox" name="selectedUserIds"
@@ -177,13 +185,25 @@
                         </display:column>
 
                         <display:column title="User" sortProperty="fullName">
-                            <c:if test="${unassignedHasWork[user] == 1}">
-                                <span style="color: red">
-                            </c:if>
+    
+                            <c:choose>
+                            <c:when test="${unassignedHasWork[user] == 1}">
+                              <span style="color: red; height: 21px; margin: 0; padding: 0;">                     
+                            </c:when>
+                            <c:otherwise>
+                              <span>
+                            </c:otherwise>
+                            </c:choose>
+                            
                             <c:out value="${user.fullName}" />
-                            <c:if test="${unassignedHasWork[user] == 1}">
-                                </span>
+                            </span>
+                            
+                            <%-- Test, if the user is not enabled --%>                      
+                            <c:if test="${aef:listContains(disabledUsers, user)}">
+                                <img src="static/img/disable_user_gray.png" alt="The user is disabled" title="The user is disabled" />
                             </c:if>
+                            
+                            
                         </display:column>
                     </display:table>
                     </a>
@@ -426,15 +446,23 @@
 					</div>
 						
 					<div id="${divId}" style="display: none;">
-					<display:table name="${users}" id="user" class="projectUsers"
+					<display:table name="${assignableUsers}" id="user" class="projectUsers"
 						defaultsort="2">
 						<display:column title="">
-							<c:set var="flag" value="0" scope="request" />
-							<c:forEach var="usr" items="${assignedUsers}">
+							<%--<c:forEach var="usr" items="${assignedUsers}">
 								<c:if test="${usr.id == user.id}">
 									<c:set var="flag" value="1" scope="request" />
 								</c:if>
-							</c:forEach>
+							</c:forEach>--%>
+							
+							<%-- Test, if the user should be checked --%>
+							<c:set var="flag" value="0" scope="request" />
+							<c:if test="${aef:listContains(assignedUsers, user)}">
+                                <c:set var="flag" value="1" scope="request" />
+							</c:if>
+							
+							
+							
 							<c:choose>
 								<c:when test="${flag == 1}">
 									<input type="checkbox" name="selectedUserIds"
@@ -448,13 +476,23 @@
 						</display:column>
 
 						<display:column title="User" sortProperty="fullName">
-							<c:if test="${unassignedHasWork[user] == 1}">
-								<span style="color: red">
-							</c:if>
-							<c:out value="${user.fullName}" />
-							<c:if test="${unassignedHasWork[user] == 1}">
-								</span>
-							</c:if>
+	
+    					    <c:choose>
+						    <c:when test="${unassignedHasWork[user] == 1}">
+						      <span style="color: red">					    
+						    </c:when>
+						    <c:otherwise>
+						      <span>
+						    </c:otherwise>
+						    </c:choose>
+						    
+						    <c:out value="${user.fullName}" />
+	                        <%-- Test, if the user is not enabled --%>					    
+						    <c:if test="${aef:listContains(disabledUsers, user)}">
+                                <img src="static/img/disable_user_gray.png" alt="The user is disabled" title="The user is disabled" />
+                            </c:if>
+						    
+							</span>
 						</display:column>
 					</display:table>
 					</a>

@@ -74,6 +74,8 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
     private BacklogItemBusiness backlogItemBusiness;
 
     private Map<Integer, State> taskStates = new HashMap<Integer, State>();
+    
+    private List<User> possibleResponsibles = new ArrayList<User>();
 
     public Map<Integer, State> getTaskStates() {
         return taskStates;
@@ -113,6 +115,7 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
             }
             backlog = backlogItem.getBacklog();
             backlogId = backlog.getId();
+            possibleResponsibles = backlogItemBusiness.getPossibleResponsibles(backlogItem);
             return Action.SUCCESS;
         }
     }
@@ -137,6 +140,7 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
         }
         backlog = backlogItem.getBacklog();
         backlogId = backlog.getId();
+        possibleResponsibles = backlogItemBusiness.getPossibleResponsibles(backlogItem);
 
         historyBusiness.updateBacklogHistory(backlog.getId());
 
@@ -447,4 +451,14 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
     public void setHistoryBusiness(HistoryBusiness historyBusiness) {
         this.historyBusiness = historyBusiness;
     }
+
+    public List<User> getPossibleResponsibles() {
+        return possibleResponsibles;
+    }
+
+    public void setPossibleResponsibles(List<User> possibleResponsibles) {
+        this.possibleResponsibles = possibleResponsibles;
+    }
+    
+    
 }

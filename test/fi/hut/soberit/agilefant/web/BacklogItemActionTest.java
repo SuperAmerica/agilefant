@@ -3,8 +3,10 @@ package fi.hut.soberit.agilefant.web;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import fi.hut.soberit.agilefant.business.UserBusiness;
 import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.db.IterationGoalDAO;
@@ -35,6 +37,7 @@ public class BacklogItemActionTest extends SpringTestCase {
     private TaskDAO taskDAO = null;
     private IterationGoalDAO iterationGoalDAO = null;
     private UserDAO userDAO = null;
+    private UserBusiness userBusiness = null;
 
     private int backlogId;
     private int bliId;
@@ -111,7 +114,7 @@ public class BacklogItemActionTest extends SpringTestCase {
         assertEquals(Priority.BLOCKER, action.getBacklogItem().getPriority());
         assertEquals("2h 15min", action.getBacklogItem().getOriginalEstimate()
                 .toString());
-        assertEquals("Test Task", ((Task) ((ArrayList) action.getBacklogItem()
+        assertEquals("Test Task", ((Task) ((List) action.getBacklogItem()
                 .getTasks()).get(0)).getName());
         assertEquals(State.BLOCKED, action.getBacklogItem().getState());
         assertEquals("2h 15min", action.getBacklogItem().getEffortLeft()
@@ -174,7 +177,7 @@ public class BacklogItemActionTest extends SpringTestCase {
         assertNotNull(action.getBacklogItem());
 
         // update bli tasks and execute store
-        ArrayList<Task> tasks = (ArrayList) action.getBacklogItem().getTasks();
+        List<Task> tasks = (List) action.getBacklogItem().getTasks();
         // edit existing task
         Task task = tasks.get(0);
         task.setName("Updated");
@@ -189,9 +192,9 @@ public class BacklogItemActionTest extends SpringTestCase {
         assertEquals("success", action.store());
 
         // check that tasks are updated
-        assertEquals("Updated", ((Task) ((ArrayList) backlogItemDAO.get(bliId)
+        assertEquals("Updated", ((Task) ((List) backlogItemDAO.get(bliId)
                 .getTasks()).get(0)).getName());
-        assertEquals("Test Task2", ((Task) ((ArrayList) backlogItemDAO.get(
+        assertEquals("Test Task2", ((Task) ((List) backlogItemDAO.get(
                 bliId).getTasks()).get(1)).getName());
     }
 
@@ -356,5 +359,33 @@ public class BacklogItemActionTest extends SpringTestCase {
 
     public void setUserDAO(UserDAO userDAO) {
         this.userDAO = userDAO;
+    }
+
+    public void setAction(BacklogItemAction action) {
+        this.action = action;
+    }
+
+    public void setUserBusiness(UserBusiness userBusiness) {
+        this.userBusiness = userBusiness;
+    }
+
+    public void setBacklogId(int backlogId) {
+        this.backlogId = backlogId;
+    }
+
+    public void setBliId(int bliId) {
+        this.bliId = bliId;
+    }
+
+    public void setTaskId(int taskId) {
+        this.taskId = taskId;
+    }
+
+    public void setGoalId(int goalId) {
+        this.goalId = goalId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 }

@@ -2,13 +2,17 @@ package fi.hut.soberit.agilefant.business.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import java.util.List;
 
 import fi.hut.soberit.agilefant.business.BacklogItemBusiness;
 import fi.hut.soberit.agilefant.business.HistoryBusiness;
 import fi.hut.soberit.agilefant.business.TaskBusiness;
+import fi.hut.soberit.agilefant.business.UserBusiness;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.AFTime;
@@ -17,6 +21,7 @@ import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.State;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.util.EffortSumData;
+import fi.hut.soberit.agilefant.util.UserComparator;
 
 /**
  * 
@@ -27,6 +32,7 @@ public class BacklogItemBusinessImpl implements BacklogItemBusiness {
     private BacklogItemDAO backlogItemDAO;
     private TaskBusiness taskBusiness;
     private HistoryBusiness historyBusiness;
+    private UserBusiness userBusiness;
 
     public BacklogItemDAO getBacklogItemDAO() {
         return backlogItemDAO;
@@ -119,9 +125,34 @@ public class BacklogItemBusinessImpl implements BacklogItemBusiness {
                     .getId());
         }
     }
+    
+    /** {@inheritDoc} */
+    public List<User> getPossibleResponsibles(BacklogItem bli) {
+        Set<User> userSet = new HashSet<User>();
+                
+        // Get all enabled users
+        userSet.addAll(userBusiness.getEnabledUsers());
+        
+        // Get all previous responsibles
+        userSet.addAll(bli.getResponsibles());
+        
+        // Create the list and sort it
+        List<User> userList = new ArrayList<User>(userSet);
+        Collections.sort(userList, new UserComparator());
+        
+        return userList;
+    }
 
     public void setTaskBusiness(TaskBusiness taskBusiness) {
         this.taskBusiness = taskBusiness;
+    }
+
+    public UserBusiness getUserBusiness() {
+        return userBusiness;
+    }
+
+    public void setUserBusiness(UserBusiness userBusiness) {
+        this.userBusiness = userBusiness;
     }
     
 }

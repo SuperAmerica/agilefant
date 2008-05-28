@@ -36,6 +36,7 @@ import fi.hut.soberit.agilefant.util.EffortSumData;
 import fi.hut.soberit.agilefant.util.CalendarUtils;
 import fi.hut.soberit.agilefant.util.DailyWorkLoadData;
 import fi.hut.soberit.agilefant.util.ProjectPortfolioData;
+import fi.hut.soberit.agilefant.util.UserComparator;
 
 public class ProjectBusinessImpl implements ProjectBusiness {
 
@@ -749,6 +750,27 @@ public class ProjectBusinessImpl implements ProjectBusiness {
         }
         return 1;
     }
+    
+    /** {@inheritDoc} */
+    public List<User> getAssignableUsers(Project project) {
+        Set<User> userSet = new HashSet<User>(); 
+        
+        // Add all assigned users
+        userSet.addAll(backlogBusiness.getUsers(project, true));
+        
+        // Add all enabled users
+        userSet.addAll(userBusiness.getEnabledUsers());
+        
+        // Add the users to a list
+        List<User> userList = new ArrayList<User>(userSet);
+        
+        // Sort the list
+        Collections.sort(userList, new UserComparator());
+        
+        return userList;
+    }
+    
+    
     public UserBusiness getUserBusiness() {
         return userBusiness;
     }

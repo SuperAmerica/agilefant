@@ -1,43 +1,42 @@
 <%@ include file="./_taglibs.jsp"%>
 
+<script type="text/javascript">
+function show_detailed_loadtable() {
+    document.getElementById('detailedLoadTable').style.display = "";
+    document.getElementById('smallLoadTable').style.display = "none";
+}
+function show_small_loadtable() {
+    document.getElementById('detailedLoadTable').style.display = "none";
+    document.getElementById('smallLoadTable').style.display = "";
+}
+</script>
+
 <div id="subItems">
 <div id="subItemHeader">
 <table cellspacing="0" cellpadding="0">
-<tr>
-<td class="header">
-Load
-<a href="" id="loadTableHideLink" style="display: none;" onclick="show_small_loadtable(); return false;">(hide details)</a>
-<a href="" id="loadTableShowLink" onclick="show_detailed_loadtable(); return false;">(show details)</a>
-</td>
-</tr>
+	<tr>
+		<td class="header">Load</td>
+		<td class="icons">
+		<a href="" onclick="show_detailed_loadtable(); return false;">
+			<img src="static/img/plus.png" width="18" height="18" alt="Show details" title="Show details" />
+		</a>
+		<a href="" onclick="show_small_loadtable(); return false;">
+			<img src="static/img/minus.png" width="18" height="18" alt="Hide details" title="Hide details" />
+		</a>
+		</td>
+	</tr>
 </table>
 </div>
 <div id="subItemContent">
-
-<script type="text/javascript">
-function show_detailed_loadtable() {
-	document.getElementById('loadTableHideLink').style.display = "";
-	document.getElementById('loadTableShowLink').style.display = "none";
-	document.getElementById('detailedLoadTable').style.display = "";
-	document.getElementById('smallLoadTable').style.display = "none";
-}
-function show_small_loadtable() {
-	document.getElementById('loadTableHideLink').style.display = "none";
-	document.getElementById('loadTableShowLink').style.display = "";
-	document.getElementById('detailedLoadTable').style.display = "none";
-	document.getElementById('smallLoadTable').style.display = "";
-}
-</script>
 
 
 <div id="detailedLoadTable" style="display: none;">
 <table id="item">
 <tr>
-	<th>Week</th>
+	<th class="loadTableBacklogColumn">Week</th>
 	<c:forEach items="${weekNumbers}" var="weekNumber">
-	<th><c:out value="${weekNumber}" /></th>
+	<th class="loadTableWeekColumn"><c:out value="${weekNumber}" /></th>
 	</c:forEach>
-	<th>Total</th>
 </tr>
 <c:set var="rowClass" value="odd" />
 <c:set var="nonEstimatedBLs" value="0"/>
@@ -81,14 +80,10 @@ function show_small_loadtable() {
 		</c:choose>
 		</td>
 	</c:forEach>
-	<td>
-		<c:choose>
-			<c:when test="${loadData.totalEffort == '0h'}">-</c:when>
-			<c:otherwise><c:out value="${loadData.totalEffort}" /></c:otherwise>
-		</c:choose>
-	</td>
-	<c:if test="${aef:isProject(loadData.backlog)}">
 </tr>
+<c:if test="${aef:isProject(loadData.backlog)}">
+
+
 <tr class="${rowClass}">
 <c:choose>
 	<c:when test="${rowClass == 'odd'}">
@@ -107,16 +102,11 @@ function show_small_loadtable() {
 		</c:choose>
 		</td>
 	</c:forEach>
-	<td>
-		<c:choose>
-			<c:when test="${loadData.totalOverhead == '0h'}">-</c:when>
-			<c:otherwise><c:out value="${loadData.totalOverhead}" /></c:otherwise>
-		</c:choose>
-	</td>
 </tr>
 	</c:if>
 </tr>
 </c:forEach>
+
 <tr>
 	<th>Total</th>
 	<c:forEach items="${weekNumbers}" var="week">
@@ -130,12 +120,6 @@ function show_small_loadtable() {
 		</c:choose>
 	</th>	
 	</c:forEach>
-	<th>
-		<c:choose>
-			<c:when test="${dailyWorkLoadData.overallTotal == '0h'}">-</c:when>
-			<c:otherwise><c:out value="${dailyWorkLoadData.overallTotal}" /></c:otherwise>
-		</c:choose>
-	</th>
 </tr>
 </table>
 </div>
@@ -149,7 +133,6 @@ function show_small_loadtable() {
 	<c:forEach items="${weekNumbers}" var="weekNumber">
 	<th><c:out value="${weekNumber}" /></th>
 	</c:forEach>
-	<th>Total</th>
 </tr>
 <tr class="odd">
 	<td>Effort 
@@ -169,16 +152,6 @@ function show_small_loadtable() {
 		</c:choose>
 	</td>
 	</c:forEach>
-	<td>
-		<c:choose>
-			<c:when test="${dailyWorkLoadData.totalEffort == '0h'}">
-				-
-			</c:when>
-			<c:otherwise>
-				<c:out value="${dailyWorkLoadData.totalEffort}" />
-			</c:otherwise>
-		</c:choose>
-	</td>
 </tr>
 <tr class="even">
 	<td>Overhead</td>
@@ -194,16 +167,6 @@ function show_small_loadtable() {
 		</c:choose>
 	</td>
 	</c:forEach>
-	<td>
-		<c:choose>
-		<c:when test="${dailyWorkLoadData.totalOverhead == '0h'}">
-			-
-		</c:when>
-		<c:otherwise>
-			<c:out value="${dailyWorkLoadData.totalOverhead}" />
-		</c:otherwise>
-	</c:choose>
-	</td>
 </tr>
 <tr>
 	<th>Total</th>
@@ -222,16 +185,6 @@ function show_small_loadtable() {
 	</c:choose>
 	</th>	
 	</c:forEach>
-	<th>
-		<c:choose>
-		<c:when test="${totalsMap[week] == '0h'}">
-			-
-		</c:when>
-		<c:otherwise>
-			<c:out value="${dailyWorkLoadData.overallTotal}" />
-		</c:otherwise>
-	</c:choose>
-	</th>
 </tr>
 </table>
 </div>

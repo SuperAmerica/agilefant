@@ -267,6 +267,7 @@ function validateDeletion() {
 			<td>Responsibles</td>
 			<aef:userList />
 			<aef:teamList />
+			<aef:enabledUserList />
 			<td colspan="4">
 			<a href="javascript:toggleDiv('multiplebli_userselect');">
 				<img src="static/img/users.png"/>
@@ -277,18 +278,19 @@ function validateDeletion() {
 			<script type="text/javascript">
 			$(document).ready( function() {
 				<ww:set name="userList" value="#attr.userList" />
+				<ww:set name="enabledUserList" value="#attr.enabledUserList" />
 				<ww:set name="teamList" value="#attr.teamList" />
 				<c:choose>
 				<c:when test="${aef:isProduct(backlog)}">
-				var others = [<aef:userJson items="${userList}"/>];
+				var others = [<aef:userJson items="${enabledUserList}"/>];
 				var preferred = [];
 				</c:when>
 				<c:when test="${aef:isProject(backlog)}">
-				var others = [<aef:userJson items="${aef:listSubstract(userList, backlog.responsibles)}"/>];
+				var others = [<aef:userJson items="${aef:listSubstract(enabledUserList, backlog.responsibles)}"/>];
 				var preferred = [<aef:userJson items="${backlog.responsibles}"/>];
 				</c:when>
 				<c:when test="${aef:isIteration(backlog)}">
-				var others = [<aef:userJson items="${aef:listSubstract(userList, backlog.project.responsibles)}"/>];
+				var others = [<aef:userJson items="${aef:listSubstract(enabledUserList, backlog.project.responsibles)}"/>];
 				var preferred = [<aef:userJson items="${backlog.project.responsibles}"/>];
 				</c:when>
 				</c:choose>

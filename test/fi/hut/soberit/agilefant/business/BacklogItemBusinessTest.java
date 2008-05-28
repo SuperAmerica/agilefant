@@ -6,6 +6,9 @@ import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import junit.framework.TestCase;
 import fi.hut.soberit.agilefant.business.impl.BacklogItemBusinessImpl;
@@ -15,6 +18,7 @@ import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.Iteration;
+import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.State;
 import fi.hut.soberit.agilefant.model.User;
 
@@ -23,6 +27,7 @@ public class BacklogItemBusinessTest extends TestCase {
     private BacklogItemBusinessImpl bliBusiness = new BacklogItemBusinessImpl();
     private BacklogItemDAO bliDAO;
     private HistoryBusiness historyBusiness = createMock(HistoryBusiness.class);
+    private UserBusiness userBusiness;
 
     public void testRemoveBacklogItem_found() {
         bliDAO = createMock(BacklogItemDAO.class);
@@ -220,5 +225,122 @@ public class BacklogItemBusinessTest extends TestCase {
         // verify behavior
         verify(bliDAO);
     }
+    
+    /**
+     * Test the getPossibleResponsibles method.
+     * <p>
+     * Should return the union of the bli's responsibles
+     * and all enabled users.
+     */
+    public void testGetPossibleResponsibles() {
+        userBusiness = createMock(UserBusiness.class);
+        bliBusiness.setBacklogItemDAO(bliDAO);
+        bliBusiness.setUserBusiness(userBusiness);
+        
+        // Enabled user
+        User user1 = new User();
+        user1.setId(1);
+        user1.setEnabled(true);
+        
+        // Disabled user
+        User user2 = new User();
+        user2.setId(2);
+        user2.setEnabled(false);
+        
+        // Backlog item with no previous responsibles
+        BacklogItem bli1 = new BacklogItem();
+        bli1.setResponsibles(new ArrayList<User>());
+        
+        // Backlog item with previous, enabled responsible
+        BacklogItem bli2 = new BacklogItem();
+        bli2.setResponsibles(new ArrayList<User>());
+        bli2.getResponsibles().add(user1);
+        
+        // Backlog item with previous, disabled responsible
+        BacklogItem bli3 = new BacklogItem();
+        bli3.setResponsibles(new ArrayList<User>());
+        bli3.getResponsibles().add(user2);
+        
+        // Backlog item with previous, enabled and disabled responsible
+        BacklogItem bli4 = new BacklogItem();
+        bli4.setResponsibles(new ArrayList<User>());
+        bli4.getResponsibles().add(user1);
+        bli4.getResponsibles().add(user2);
 
+        
+        //The lists
+        List<User> enabledList = new ArrayList<User>();
+        enabledList.add(user1);
+       
+        // Record expected behavior
+        expect(userBusiness.getEnabledUsers()).andReturn(enabledList);
+        expect(userBusiness.getEnabledUsers()).andReturn(enabledList);
+        expect(userBusiness.getEnabledUsers()).andReturn(enabledList);
+        expect(userBusiness.getEnabledUsers()).andReturn(enabledList);
+        
+        // Test it
+        replay(userBusiness);
+        
+        // Call the methods
+        List<User> bli1list = bliBusiness.getPossibleResponsibles(bli1);
+        List<User> bli2list = bliBusiness.getPossibleResponsibles(bli2);
+        List<User> bli3list = bliBusiness.getPossibleResponsibles(bli3);
+        List<User> bli4list = bliBusiness.getPossibleResponsibles(bli4);
+        
+        // Check, that correct users are in the list
+        assertTrue(bli1list.contains(user1));
+        assertFalse(bli1list.contains(user2));
+        
+        assertTrue(bli2list.contains(user1));
+        assertFalse(bli2list.contains(user2));
+        
+        assertTrue(bli3list.contains(user1));
+        assertTrue(bli3list.contains(user2));
+        
+        assertTrue(bli4list.contains(user1));
+        assertTrue(bli4list.contains(user2));
+        
+        // Check for duplicates
+        Set<User> previousUsers = new HashSet<User>();
+        for (User user : bli1list) {
+            if (previousUsers.contains(user)) {
+                fail("Duplicate entry");
+            }
+            else {
+                previousUsers.add(user);
+            }
+        }
+        
+        previousUsers.clear();
+        for (User user : bli2list) {
+            if (previousUsers.contains(user)) {
+                fail("Duplicate entry");
+            }
+            else {
+                previousUsers.add(user);
+            }
+        }
+        
+        previousUsers.clear();
+        for (User user : bli3list) {
+            if (previousUsers.contains(user)) {
+                fail("Duplicate entry");
+            }
+            else {
+                previousUsers.add(user);
+            }
+        }
+        
+        previousUsers.clear();
+        for (User user : bli4list) {
+            if (previousUsers.contains(user)) {
+                fail("Duplicate entry");
+            }
+            else {
+                previousUsers.add(user);
+            }
+        }
+
+        verify(userBusiness);
+    }   
 }

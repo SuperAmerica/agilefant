@@ -356,6 +356,7 @@
 					<td>Responsibles</td>
 					<aef:userList />
 					<aef:teamList />
+					<aef:enabledUserList />
 					<td colspan="4">
 						<a href="javascript:toggleDiv('multiplebli_userselect');">
 							<img src="static/img/users.png"/>
@@ -366,8 +367,9 @@
 						<script type="text/javascript">
 							$(document).ready( function() {
 								<ww:set name="userList" value="#attr.userList" />
+								<ww:set name="enabledUserList" value="#attr.enabledUserList" />
 								<ww:set name="teamList" value="#attr.teamList" />
-								var others = [<aef:userJson items="${aef:listSubstract(userList, iteration.project.responsibles)}"/>];
+								var others = [<aef:userJson items="${aef:listSubstract(enabledUserList, iteration.project.responsibles)}"/>];
 								var preferred = [<aef:userJson items="${iteration.project.responsibles}"/>];
 								var teams = [<aef:teamJson items="${teamList}"/>];
 								var selected = [];

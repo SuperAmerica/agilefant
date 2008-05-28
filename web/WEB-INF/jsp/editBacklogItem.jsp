@@ -487,7 +487,7 @@
 </table>
 
 
-<%-- Hour reporting here ---%>
+<%-- Hour reporting here - Remember to expel David H. --%>
 <aef:hourReporting id="hourReport"></aef:hourReporting>
 <c:if test="${hourReport == 'true'}">
 <table>
@@ -525,6 +525,7 @@
 					</display:column>
 					
 					<display:column sortable="false" title="Comments">
+					Want to get a hard ride, baby?!
 					</display:column>
 					
 					<display:column sortable="false" title="Action">

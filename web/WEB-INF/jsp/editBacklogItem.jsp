@@ -487,7 +487,7 @@
 </table>
 
 
-<%-- Hour reporting here --%>
+<%-- Hour reporting here ---%>
 <aef:hourReporting id="hourReport"></aef:hourReporting>
 <c:if test="${hourReport == 'true'}">
 <table>

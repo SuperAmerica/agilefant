@@ -1,9 +1,10 @@
 <%@ include file="./_taglibs.jsp"%>
-
+<aef:currentUser />
+<aef:userList/>
 <div style="width: 690px; height: 20px; padding: 5px; border-bottom: 1px solid black; background: #ccc;">
 	<span style="float: left;">
 	<c:choose>
-		<c:when test="${hourEntry.id == 0}">
+		<c:when test="${hourEntryId == 0}">
 			<b>New Hour Reporting Entry</b>
 		</c:when>
 		<c:otherwise>
@@ -23,7 +24,8 @@
 	<ww:hidden name="contextObjectId" />
 	<ww:hidden name="contextViewName" />
 	<table class="formTable">
-		<tr>
+	
+	<tr>
 			<td>Spent effort</td>
 			<td></td>
 			<td colspan="2">
@@ -34,19 +36,22 @@
 		<tr>
 			<td>Date</td>
 			<td></td>
-			<td><ww:datepicker value="%{#date}" size="15"
+			<td>
+						<ww:datepicker value="${hourEntry.date}" size="15"
                                         showstime="true"
                                         format="%{getText('webwork.datepicker.format')}"
-                                        name="date" /></td>
+                                        name="date" />
+                                      
+        	</td>
 		</tr>
+
 		<tr>
-			<aef:currentUser />
+			
 			<td>Users </td>
 			<td></td>
 			<td colspan="2">
-			<aef:userList/>
 			<c:choose>
-			<c:when test="${hourEntry.id == 0}">
+			<c:when test="${hourEntryId == 0}">
 				<div id="assigneesLink"><a href="javascript:toggleDiv('assigneeSelect2');"><img src="static/img/users.png" /> select </a>
                 </div>
                         
@@ -85,7 +90,19 @@
                     </div>
             </c:when>
 			<c:otherwise>
-				<ww:select name="hourEntry.userId" list="userList" listKey="id" listValue="name"></ww:select>
+				<select name="userId">
+				<c:forEach items="${userList}" var="user">
+					<c:choose>
+						<c:when test="${user.id == hourEntry.user.id}">
+							<option value="${user.id}" selected="selected"><c:out value="${user.fullName}" /></option>
+						</c:when>
+						<c:otherwise>
+							<option value="${user.id}"><c:out value="${user.fullName}" /></option>
+						</c:otherwise>
+					</c:choose>
+				</c:forEach>
+				</select>
+
 			</c:otherwise>
 			</c:choose>
 			</td>

@@ -30,7 +30,7 @@ public class HourEntryBusinessImpl implements HourEntryBusiness {
         return backlogItemHourEntryDAO;
     }
     public HourEntry getId(int id) {
-        return backlogItemHourEntryDAO.get(id);
+        return (HourEntry)backlogItemHourEntryDAO.get(id);
     }
     public void remove(int id) {
         backlogItemHourEntryDAO.remove(id);

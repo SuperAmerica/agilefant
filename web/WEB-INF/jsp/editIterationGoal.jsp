@@ -362,8 +362,6 @@
 							<img src="static/img/users.png"/>
 							Assign
 						</a>
-						<script type="text/javascript" src="static/js/jquery-1.2.2.js"></script>
-						<script type="text/javascript" src="static/js/multiselect.js"></script>
 						<script type="text/javascript">
 							$(document).ready( function() {
 								<ww:set name="userList" value="#attr.userList" />

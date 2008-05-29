@@ -304,9 +304,6 @@
 			</a>
 			</div>
 
-			<script type="text/javascript" src="static/js/jquery-1.2.2.js"></script>
-			<script type="text/javascript" src="static/js/multiselect.js"></script>
-			<script type="text/javascript" src="static/js/taskrank.js"></script>
 			<script type="text/javascript">
 			$(document).ready( function() {
 				<ww:set name="userList" value="${possibleResponsibles}" />
@@ -490,21 +487,15 @@
 <%-- Hour reporting here - Remember to expel David H. --%>
 <aef:hourReporting id="hourReport"></aef:hourReporting>
 <c:if test="${hourReport == 'true'}">
-<table>
-	<tr>
-		<td>
+
 			<div id="subItems">
 			<div id="subItemHeader">
-			<table cellpadding="0" cellspacing="0">
-                    <tr>
-                       <td class="header">Hour reporting entries<ww:url id="createLink"
-				action="createTask" includeParams="none">
-				<ww:param name="backlogItemId" value="${backlogItemId}" />
-			</ww:url> <ww:a
-				href="%{createLink}&contextViewName=editBacklogItem&contextObjectId=${backlogItemId}">Create new &raquo;</ww:a>
-				</td>
-				</tr>
-			</table>
+                    Hour reporting entries
+                       <ww:url id="createLink" action="createHourEntry" includeParams="none">
+				<ww:param name="backlogItemId" value="${backlogItem.id}" />
+			</ww:url>
+			<ww:a cssClass="openModalWindow" href="%{createLink}">Create new &raquo;</ww:a>
+			
 			</div>		
 			
 				<c:if test="${!empty backlogItem.tasks}">
@@ -543,9 +534,10 @@
 					
 				
 				</display:table></p>
-			</c:if> <%-- No tasks --%></div>
-		</tr>
-</table>
+				</div>
+			</c:if> <%-- No tasks --%>
+			</div>
+<aef:modalAjaxWindow/>
 </c:if> <%-- Hour reporting on --%>
 
 <%@ include file="./inc/_footer.jsp"%>

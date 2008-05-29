@@ -8,8 +8,6 @@
 <aef:menu navi="portfolio" />
 <ww:actionerror />
 <ww:actionmessage />
-<script type="text/javascript" src="static/js/jquery-1.2.2.js"></script>
-<script type="text/javascript" src="static/js/multiselect.js"></script>
 <script type="text/javascript">
 <ww:set name="teamList" value="#attr.teamList" />
 var teams = [<aef:teamJson items="${teamList}"/>]

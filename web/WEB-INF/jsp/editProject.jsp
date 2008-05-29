@@ -212,8 +212,6 @@
                             <label>Teams</label>
                             <ul class="groups" />
                     </div>
-                    <script type="text/javascript" src="static/js/jquery-1.2.2.js"></script>
-                    <script type="text/javascript" src="static/js/multiselect.js"></script>
                     <script type="text/javascript">
                         $(document).ready( function() {
                             <aef:teamList />
@@ -501,8 +499,6 @@
 							<label>Teams</label>
 							<ul class="groups" />
 					</div>
-					<script type="text/javascript" src="static/js/jquery-1.2.2.js"></script>
-					<script type="text/javascript" src="static/js/multiselect.js"></script>
 					<script type="text/javascript">
 						$(document).ready( function() {
 							<aef:teamList />

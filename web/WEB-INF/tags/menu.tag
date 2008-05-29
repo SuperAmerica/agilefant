@@ -17,7 +17,10 @@ Agilefant
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
 <script type="text/javascript" src="static/js/generic.js"></script>
-
+<script type="text/javascript" src="static/js/jquery-1.2.2.js"></script>
+<script type="text/javascript" src="static/js/multiselect.js"></script>
+<script type="text/javascript" src="static/js/taskrank.js"></script>
+<script type="text/javascript" src="static/js/jqModal.js"></script>
 </head>
 
 <!-- Icons from http://sweetie.sublink.ca/ -->

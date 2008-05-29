@@ -501,68 +501,54 @@
 </c:forEach>
 
 --%>
-<table>
-	<tr>
-		<td>
-
-			<div id="subItems">
-			<div id="subItemHeader">
-                    Hour reporting entries
-                       <ww:url id="createLink" action="createHourEntry" includeParams="none">
-				<ww:param name="backlogItemId" value="${backlogItem.id}" />
-			</ww:url>
-			<ww:a cssClass="openModalWindow" href="%{createLink}&contextViewName=editBacklogItem&contextObjectId=${backlogItemId}">Create new &raquo;</ww:a>
-			
-			</div>		
-				
-				<c:if test="${!empty hourEntries}">
-				<div id="subItemContent">
-				
-				<p><display:table name="${hourEntries}"
-					id="row" defaultsort="1" requestURI="editBacklogItem.action">
-					
+<div id="subItems">
+	<div id="subItemHeader">
+     	Hour reporting entries
+        <ww:url id="createLink" action="createHourEntry" includeParams="none">
+			<ww:param name="backlogItemId" value="${backlogItem.id}" />
+		</ww:url>
+		<ww:a cssClass="openModalWindow" href="%{createLink}&contextViewName=editBacklogItem&contextObjectId=${backlogItemId}">Create new &raquo;</ww:a>	
+	</div>						
+	<c:if test="${!empty hourEntries}">
+		<div id="subItemContent">		
+			<p>
+				<display:table name="${hourEntries}" id="row" defaultsort="1" requestURI="editBacklogItem.action">
 					<display:column sortable="true" title="Date">
-					${aef:html(row.date.date)}.${aef:html(row.date.month + 1)}.${aef:html(row.date.year + 1900 )} ${aef:html(row.date.hours)}:${aef:html(row.date.minutes)}
+						${aef:html(row.date.date)}.${aef:html(row.date.month + 1)}.${aef:html(row.date.year + 1900 )} ${aef:html(row.date.hours)}:${aef:html(row.date.minutes)}
 					</display:column>
 					
 					<display:column sortable="true" title="User">
-					${aef:html(row.user.fullName)}
+						${aef:html(row.user.fullName)}
 					</display:column>
 					
 					<display:column sortable="false" title="Spent effort">
-					${aef:html(row.timeSpent)}
+						${aef:html(row.timeSpent)}
 					</display:column>
 					
 					<display:column sortable="false" title="Comment" property="description" />
-					
+
 					<%-- Not implemented yet --%>
-					<display:column sortable="false" title="Action">
-					<ww:url id="editLink" action="editHourEntry" includeParams="none">
-						<ww:param name="backlogItemId" value="${backlogItem.id}" />
-						<ww:param name="hourEntryId" value="${row.id}" />
-					</ww:url>	
-					<ww:url id="deleteLink" action="deleteHourEntry" includeParams="none">
-						<ww:param name="backlogItemId" value="${backlogItem.id}" />
-						<ww:param name="hourEntryId" value="${row.id}" />
-					</ww:url>			
-						<ww:a cssClass="openModalWindow"
-							href="%{editLink}&contextViewName=editBacklogItem&contextObjectId=${backlogItemId}">
-							<img src="static/img/edit.png" alt="Edit" title="Edit" />
-						</ww:a>
-						<ww:a 
-							href="%{deleteLink}&contextViewName=editBacklogItem&contextObjectId=${backlogItemId}"
-
-							onclick="return confirmDeleteHour()">
-
-							<img src="static/img/delete.png" alt="Delete" title="Delete" />
-						</ww:a>
-					</display:column>
-					
-				
-				</display:table></p>
-				</div>
-			</c:if> <%-- No tasks --%>
+						<display:column sortable="false" title="Action">
+							<ww:url id="editLink" action="editHourEntry" includeParams="none">
+								<ww:param name="backlogItemId" value="${backlogItem.id}" />
+								<ww:param name="hourEntryId" value="${row.id}" />
+							</ww:url>	
+							<ww:url id="deleteLink" action="deleteHourEntry" includeParams="none">
+								<ww:param name="backlogItemId" value="${backlogItem.id}" />
+								<ww:param name="hourEntryId" value="${row.id}" />
+							</ww:url>			
+							<ww:a cssClass="openModalWindow" href="%{editLink}&contextViewName=editBacklogItem&contextObjectId=${backlogItemId}">
+								<img src="static/img/edit.png" alt="Edit" title="Edit" />
+							</ww:a>
+							<ww:a href="%{deleteLink}&contextViewName=editBacklogItem&contextObjectId=${backlogItemId}" onclick="return confirmDeleteHour()">
+								<img src="static/img/delete.png" alt="Delete" title="Delete" />
+							</ww:a>
+						</display:column>
+					</display:table>
+				</p>
 			</div>
+		</c:if> <%-- No tasks --%>
+	</div>
 <aef:modalAjaxWindow/>
 </c:if> <%-- Hour reporting on --%>
 

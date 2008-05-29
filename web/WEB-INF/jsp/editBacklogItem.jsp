@@ -552,7 +552,7 @@
 						</ww:a>
 						<ww:a 
 							href="%{deleteLink}&contextViewName=editBacklogItem&contextObjectId=${backlogItemId}"
-							onclick="return confirmDeleteTask()">
+							onclick="return confirmDeleteHour()">
 							<img src="static/img/delete.png" alt="Delete" title="Delete" />
 						</ww:a>
 					</display:column>

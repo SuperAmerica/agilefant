@@ -21,6 +21,14 @@ function confirmDeleteTask() {
 	}
 }
 
+function confirmDeleteHour() {
+	if (confirm("Really delete hour entry?")) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
 function confirmDeleteBli() {
 	if (confirm("Deleting the backlog item will cause all of its tasks to be deleted.")) {
 		return true;

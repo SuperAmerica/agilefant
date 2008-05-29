@@ -122,6 +122,8 @@
 	    </description>
 	</tag>
 	
+	
+	
 	<tag>
 		<name>allowedWorkTypes</name>
 		<tag-class>fi.hut.soberit.agilefant.web.tag.AllowedWorkTypesTag</tag-class>
@@ -318,6 +320,24 @@
 	    <attribute>
 	    	<name>id</name>
 	    	<required>true</required>	    
+	    </attribute>
+	</tag>
+	
+	<tag>
+		<name>hourEntries</name>
+		<tag-class>fi.hut.soberit.agilefant.web.tag.HourEntryTag</tag-class>
+		<body-content>JSP</body-content>
+		<description>
+			Get hour entries according to BLI
+	   </description>
+	    <attribute>
+	    	<name>id</name>
+	    	<required>true</required>	  
+	    </attribute>    
+	    <attribute>
+	    	<name>target</name>
+	    	<required>true</required>	    
+	    	<rtexprvalue>true</rtexprvalue> 
 	    </attribute>
 	</tag>
 

@@ -1,5 +1,7 @@
 <%@ include file="./_taglibs.jsp"%>
 
+<aef:hourReporting id="hourReport"></aef:hourReporting>
+
 <c:if test="${!empty projects}">
 
 <h2>All items assigned to <c:out value="${user.fullName}" /> from ongoing projects</h2>
@@ -227,6 +229,23 @@
 							</c:otherwise>
 						</c:choose>
 					</display:column>
+		
+					<c:choose>
+						<c:when test="${hourReport}">
+							<display:column sortable="true" sortProperty="timeSpent" defaultorder="descending" title="Time spent">
+								<span style="white-space: nowrap">
+									<c:choose>
+										<%--Fixme! --%>
+										<c:when test="${1 == 1}">&mdash;</c:when>
+										<c:otherwise></c:otherwise>
+									</c:choose>
+								</span>
+							</display:column>
+						</c:when>
+						<c:otherwise>
+			
+						</c:otherwise>
+					</c:choose>
 
 					<display:footer>
 						<tr>
@@ -236,6 +255,9 @@
 							<td>&nbsp;</td>
 							<td><c:out value="${effortSums[pro]}" /></td>
 							<td><c:out value="${originalEstimates[pro]}" /></td>
+							<c:if test="${hourReport}">
+								<td>&nbsp;</td>
+							</c:if>
 						</tr>
 					</display:footer>
 					

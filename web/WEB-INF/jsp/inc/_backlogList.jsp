@@ -1,5 +1,6 @@
 <%@ include file="./_taglibs.jsp"%>
 
+<aef:hourReporting id="hourReport"></aef:hourReporting>
 <script language="javascript" type="text/javascript">
 function validateDeletion() {
 	var conf = confirm("The selected backlog items will be gone forever. Are you sure?");
@@ -205,6 +206,26 @@ function validateDeletion() {
 			</span>
 		</display:column>
 
+
+		<c:choose>
+			<c:when test="${hourReport}">
+				<display:column sortable="true" sortProperty="timeSpent" defaultorder="descending" title="Time spent">
+					<span style="white-space: nowrap">
+						<c:choose>
+							<c:when test="${1 == 1}">&mdash;</c:when>
+							<c:otherwise></c:otherwise>
+							<%--FIXME
+							<c:when test="${item.hourSum == null}">&mdash;</c:when>
+							<c:otherwise>${item.hourSum}</c:otherwise>
+							--%>
+						</c:choose>
+					</span>
+				</display:column>
+			</c:when>
+			<c:otherwise>
+			
+			</c:otherwise>
+		</c:choose>
 		<display:footer>
 			<tr>
 				<td>&nbsp;</td>
@@ -222,7 +243,10 @@ function validateDeletion() {
 				<td><c:out value="${effortLeftSum}" /></td>
 				<%-- Original estimate --%>
 				<td><c:out value="${originalEstimateSum}" /></td>
-			<tr>
+				<c:if test="${hourReport}">
+					<td>&nbsp;</td>
+				</c:if>
+			</tr>
 		</display:footer>
 	</display:table>
 

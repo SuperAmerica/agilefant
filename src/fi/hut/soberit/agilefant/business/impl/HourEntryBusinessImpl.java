@@ -44,15 +44,25 @@ public class HourEntryBusinessImpl implements HourEntryBusiness {
         this.userDAO = userDAO;
     }
     public void store(TimesheetLoggable parent, HourEntry hourEntry) {
+        boolean create = false;
         if(parent instanceof BacklogItem) {
-            BacklogItemHourEntry store = new BacklogItemHourEntry();
+            BacklogItemHourEntry store;
+            store = backlogItemHourEntryDAO.get(hourEntry.getId());
+            if(store == null) {
+                create = true;
+                store = new BacklogItemHourEntry();
+            }
             store.setDate(hourEntry.getDate());
             store.setUser(hourEntry.getUser());
             store.setDescription(hourEntry.getDescription());
             store.setTimeSpent(hourEntry.getTimeSpent());
             store.setBacklogItem((BacklogItem)parent);
-            store.setDate(new Date());
-            backlogItemHourEntryDAO.create(store);
+            store.setDate(hourEntry.getDate());
+            if(create) {
+                backlogItemHourEntryDAO.create(store);
+            } else {
+                backlogItemHourEntryDAO.store(store); 
+            }
         } else {
             //???
         }

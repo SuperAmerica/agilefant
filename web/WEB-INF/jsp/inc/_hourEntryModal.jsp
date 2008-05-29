@@ -18,7 +18,7 @@
 </div>
 <div style="padding: 12px;">
 <ww:form action="storeHourEntry">
-	<ww:hidden name="hourEntry.id" />
+	<ww:hidden name="hourEntryId" />
 	<ww:hidden name="backlogItemId" />
 	<ww:hidden name="BacklogId" />
 	<ww:hidden name="contextObjectId" />
@@ -37,7 +37,8 @@
 			<td>Date</td>
 			<td></td>
 			<td>
-						<ww:datepicker value="${hourEntry.date}" size="15"
+						<ww:date name="%{hourEntry.date}" id="date" format="%{getText('webwork.shortDateTime.format')}" />
+						<ww:datepicker value="%{#date}" size="15"
                                         showstime="true"
                                         format="%{getText('webwork.datepicker.format')}"
                                         name="date" />
@@ -110,7 +111,7 @@
 		<tr>
 			<td>Comment</td>
 			<td></td>
-			<td colspan="2"><ww:textfield name="hourEntry.description" /></td>
+			<td colspan="2"><ww:textfield size="60" name="hourEntry.description" /></td>
 		</tr>
 		<tr>
 			<td></td>

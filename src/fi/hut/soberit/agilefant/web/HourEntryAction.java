@@ -28,7 +28,8 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
     private int[] selectedUserIds;
     private int userId = 0;
     private TimesheetLoggable target;
-    private Date date;
+    private String date;
+    private Date internalDate;
     private int backlogId = 0;
     private int backlogItemId = 0;
     
@@ -62,15 +63,13 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
      */
     public String edit() {
         
-        hourEntry = hourEntryBusiness.getId(hourEntryId);
-        System.out.println(hourEntryId);
-        
+        hourEntry = hourEntryBusiness.getId(hourEntryId);        
         if (hourEntry == null) {
             super.addActionError(super.getText("hourEntry.notFound"));
             create();
             return Action.ERROR;
         }
-        date = hourEntry.getDate();
+        internalDate = hourEntry.getDate();
         return Action.SUCCESS;
     }
     private TimesheetLoggable getParent() {
@@ -97,22 +96,13 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
         if (super.hasActionErrors()) {
             return Action.ERROR;
         }
-        if (selectedUserIds == null && userId > 0) {
-            selectedUserIds = new int[1];
-            if(hourEntryId > 0) {
-                hourEntry.setUser(userDAO.get(userId));
-            } else {
-                selectedUserIds[0] = userId;
-        
-            } 
-        }
         //Existing entries cannot be "shared"
         TimesheetLoggable parent = getParent();
-        
-        if(hourEntryId == 0) {
-            hourEntryBusiness.addHourEntryForMultipleUsers(parent,storable, selectedUserIds);
-        } else {
+        if(hourEntryId > 0) {
+            storable.setUser(userDAO.get(userId));
             hourEntryBusiness.store(parent,storable);
+        } else if(selectedUserIds != null) {
+            hourEntryBusiness.addHourEntryForMultipleUsers(parent,storable, selectedUserIds);
         }
         return determinateReturnPage();
     }
@@ -125,7 +115,7 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
         }
     }
     protected void fillStorable(HourEntry storable) {
-        storable.setDate(this.date);
+        storable.setDate(this.internalDate);
         storable.setDescription(this.hourEntry.getDescription());
         storable.setTimeSpent(this.hourEntry.getTimeSpent());
         storable.setUser(this.hourEntry.getUser());
@@ -171,15 +161,15 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
         this.target = parent;
     }
 
-    public Date getDate() {
-        return hourEntry.getDate();
+    public String getDate() {
+        return this.date;
     }
 
-    public void setDate(String date) {
+    public void setDate(String sDate) {
         try {
-            this.date = hourEntryBusiness.formatDate(date);
+            this.internalDate = hourEntryBusiness.formatDate(sDate);
         } catch(ParseException e) {
-            //TODO: How to handle?
+            
         }
     }
 

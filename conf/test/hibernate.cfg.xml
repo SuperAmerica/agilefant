@@ -26,6 +26,7 @@
 		<mapping class="fi.hut.soberit.agilefant.model.Assignment"/>
 		<mapping class="fi.hut.soberit.agilefant.model.Setting"/>
 		<mapping class="fi.hut.soberit.agilefant.model.HourEntry"/>
+		<mapping class="fi.hut.soberit.agilefant.model.BacklogItemHourEntry"/>
 
 		<!-- Activate hibernate validation: these listeners will raise an exception
 			if an annotation validation constraint is violated. -->

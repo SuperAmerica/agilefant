@@ -1,6 +1,10 @@
 package fi.hut.soberit.agilefant.business;
 
+import java.text.ParseException;
+import java.util.Date;
+
 import fi.hut.soberit.agilefant.model.HourEntry;
+import fi.hut.soberit.agilefant.model.TimesheetLoggable;
 
 /**
  * Business interface for handling functionality related to Hour Entries
@@ -14,5 +18,16 @@ public interface HourEntryBusiness {
      * @param hourEntry the hour entry that we well "copy"
      * @param userIds the IDs of the users that we are adding entries for
      */
-    public void addHourEntryForMultipleUsers(HourEntry hourEntry, int[] userIds);
+    public void addHourEntryForMultipleUsers(TimesheetLoggable parent,HourEntry hourEntry, int[] userIds);
+    /**
+     * Format date
+     */
+    public Date formatDate(String date) throws ParseException;
+    /**
+     * Store
+     */
+    public void store(TimesheetLoggable parent, HourEntry hourEntry);
+    
+    public HourEntry getId(int id);
+    public void remove(int id);
 }

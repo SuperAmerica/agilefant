@@ -22,10 +22,6 @@ public class HourEntry {
 
     private int id;
     
-    private String targetType;
-    
-    private int targetId;
-    
     private Date date;
     
     private AFTime timeSpent;
@@ -58,20 +54,6 @@ public class HourEntry {
         return this.id;
     }
     
-    // not nullable
-    @Column(nullable = false)
-    @Index(name = "idx_hourentry_target")
-    public int getTargetId() {
-        return this.targetId;
-    }
-    
-    // not nullable
-    @Column(nullable = false)
-    @Index(name = "idx_hourentry_target")
-    public String getTargetType() {
-        return this.targetType;
-    }
-    
     @Type(type = "af_time")
     public AFTime getTimeSpent() {
         return this.timeSpent;
@@ -100,23 +82,11 @@ public class HourEntry {
         this.id = id;
     }
     
-    public void setTargetId(int targetId) {
-        this.targetId = targetId;
-    }
-    
-    public void setTargetType(String targetType) {
-        this.targetType = targetType;
-    }
-    
     public void setTimeSpent(AFTime timeSpent) {
         this.timeSpent = timeSpent;
     }
     
     public void setUser(User user) {
         this.user = user;
-    }
-    public void setTarget(TimesheetLoggable target) {
-        setTargetType(target.timesheetType());
-        setTargetId(target.getId());
     }
 }

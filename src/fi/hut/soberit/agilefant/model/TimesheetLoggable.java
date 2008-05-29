@@ -7,12 +7,4 @@ package fi.hut.soberit.agilefant.model;
  */
 public interface TimesheetLoggable {
     
-    /**
-     * Get entity type.
-     */
-    public String timesheetType();
-    /**
-     * Get identifier
-     */
-    public int getId();
 }

@@ -1,5 +1,7 @@
 package fi.hut.soberit.agilefant.web;
 
+import java.util.Date;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -7,11 +9,12 @@ import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
 
 import fi.hut.soberit.agilefant.business.HourEntryBusiness;
-import fi.hut.soberit.agilefant.db.HourEntryDAO;
+import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.HourEntry;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.TimesheetLoggable;
+import java.text.ParseException;
 
 
 public class HourEntryAction extends ActionSupport implements CRUDAction {
@@ -19,9 +22,12 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
     private int hourEntryId;
     private HourEntry hourEntry;
     private HourEntryBusiness hourEntryBusiness;
-    private HourEntryDAO hourEntryDAO;
+    private BacklogItemDAO backlogItemDAO;
     private int[] selectedUserIds;
     private TimesheetLoggable target;
+    private Date date;
+    private int backlogId;
+    private int backlogItemId;
     
     private Log logger = LogFactory.getLog(getClass());
 
@@ -38,12 +44,12 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
      * {@inheritDoc}
      */
     public String delete() {
-        HourEntry h = hourEntryDAO.get(hourEntryId);
+        HourEntry h = hourEntryBusiness.getId(hourEntryId);
         if (h == null) {
             super.addActionError(super.getText("hourEntry.notFound"));
             return Action.ERROR;
         }
-        hourEntryDAO.remove(hourEntryId);
+        hourEntryBusiness.remove(hourEntryId);
         return Action.SUCCESS;
     }
 
@@ -51,14 +57,20 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
      * {@inheritDoc}
      */
     public String edit() {
-        hourEntry = hourEntryDAO.get(hourEntryId);
+        hourEntry = hourEntryBusiness.getId(hourEntryId);
         if (hourEntry == null) {
             super.addActionError(super.getText("hourEntry.notFound"));
             return Action.ERROR;
         }
         return Action.SUCCESS;
     }
-
+    private TimesheetLoggable getParent() {
+        TimesheetLoggable parent = null;
+        if(backlogItemId > 0) {
+            parent = backlogItemDAO.get(backlogItemId);
+        }
+        return parent;
+    }
     /**
      * {@inheritDoc}
      * TODO: check that target is valid
@@ -66,7 +78,7 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
     public String store() {
         HourEntry storable = new HourEntry();
         if (hourEntryId > 0) {
-            storable = hourEntryDAO.get(hourEntryId);
+            storable = hourEntryBusiness.getId(hourEntryId);
             if (storable == null) {
                 super.addActionError(super.getText("hourEntry.notFound"));
                 return Action.ERROR;
@@ -83,11 +95,12 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
         
         
         //Existing entries cannot be "shared"
-         
+        TimesheetLoggable parent = getParent();
+        
         if(hourEntryId == 0) {
-            hourEntryBusiness.addHourEntryForMultipleUsers(storable, selectedUserIds);
+            hourEntryBusiness.addHourEntryForMultipleUsers(parent,storable, selectedUserIds);
         }
-        hourEntryDAO.store(storable);
+        hourEntryBusiness.store(parent,storable);
         return determinateReturnPage();
     }
     
@@ -101,10 +114,8 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
         }
     }
     protected void fillStorable(HourEntry storable) {
-        storable.setDate(this.hourEntry.getDate());
+        storable.setDate(this.date);
         storable.setDescription(this.hourEntry.getDescription());
-        storable.setTargetId(this.hourEntry.getTargetId());
-        storable.setTargetType(this.hourEntry.getTargetType());
         storable.setTimeSpent(this.hourEntry.getTimeSpent());
         storable.setUser(this.hourEntry.getUser());
     }
@@ -133,14 +144,6 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
         this.hourEntryBusiness = hourEntryBusiness;
     }
 
-    public HourEntryDAO getHourEntryDAO() {
-        return hourEntryDAO;
-    }
-
-    public void setHourEntryDAO(HourEntryDAO hourEntryDAO) {
-        this.hourEntryDAO = hourEntryDAO;
-    }
-
     public int[] getSelectedUserIds() {
         return selectedUserIds;
     }
@@ -155,6 +158,42 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
 
     public void setTarget(TimesheetLoggable parent) {
         this.target = parent;
+    }
+
+    public Date getDate() {
+        return hourEntry.getDate();
+    }
+
+    public void setDate(String date) {
+        try {
+            this.date = hourEntryBusiness.formatDate(date);
+        } catch(ParseException e) {
+            //TODO: How to handle?
+        }
+    }
+
+    public int getBacklogId() {
+        return backlogId;
+    }
+
+    public void setBacklogId(int backlogId) {
+        this.backlogId = backlogId;
+    }
+
+    public int getBacklogItemId() {
+        return backlogItemId;
+    }
+
+    public void setBacklogItemId(int backlogItemId) {
+        this.backlogItemId = backlogItemId;
+    }
+
+    public BacklogItemDAO getBacklogItemDAO() {
+        return backlogItemDAO;
+    }
+
+    public void setBacklogItemDAO(BacklogItemDAO backlogItemDAO) {
+        this.backlogItemDAO = backlogItemDAO;
     }
 
 }

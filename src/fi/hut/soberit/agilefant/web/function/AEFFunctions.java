@@ -106,13 +106,6 @@ public class AEFFunctions {
         list.removeAll(second);
         return list;
     }
-    public static String timesheetType(Object obj) {
-        if(obj instanceof TimesheetLoggable) {
-            return ((TimesheetLoggable)obj).timesheetType();
-        } else {
-            return "";
-        }
-    }
     
     public static boolean isUserAssignedTo(Backlog backlog, User user) {
         if (backlog instanceof Project) {

@@ -404,8 +404,5 @@ public class BacklogItem implements PageItem, Assignable, EffortContainer, Times
     public void setResponsibles(Collection<User> responsibles) {
         this.responsibles = responsibles;
     }
-    public final String timesheetType() {
-        return "backlogItem";
-    }
 
 }

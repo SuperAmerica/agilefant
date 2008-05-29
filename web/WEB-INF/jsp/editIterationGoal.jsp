@@ -2,6 +2,10 @@
 <%@ include file="./inc/_header.jsp"%>
 
 <aef:hourReporting id="hourReport"></aef:hourReporting>
+<c:if test="${hourReport}">
+<aef:backlogHourEntrySums id="bliTotals" target="${iteration}" />
+</c:if>
+
 
 <script type="text/javascript" src="static/js/generic.js"></script>
 
@@ -305,12 +309,13 @@
 					
 					<c:choose>
 						<c:when test="${hourReport}">
-							<display:column sortable="true" sortProperty="timeSpent" defaultorder="descending" title="Time spent">
+							<display:column sortable="false" sortProperty="timeSpent" defaultorder="descending" title="Effort spent">
 								<span style="white-space: nowrap">
 									<c:choose>
-										<%--Fixme! --%>
-										<c:when test="${1 == 1}">&mdash;</c:when>
-										<c:otherwise></c:otherwise>
+										<c:when test="${bliTotals[row.id] == null}">&mdash;</c:when>
+										<c:otherwise>
+											<c:out value="${bliTotals[row.id]}" />
+										</c:otherwise>
 									</c:choose>
 								</span>
 							</display:column>
@@ -332,7 +337,10 @@
 						<%-- Original estimate --%>
 						<td><c:out value="${originalEstimateSum}" /></td>
 						<c:if test="${hourReport}">
-							<td>&nbsp;</td>
+							<td>
+								&nbsp;
+								<%-- <c:out value="${aef:totalBacklogHourEntries(bliTotals)}" /> --%>
+							</td>
 						</c:if>
 					</tr>
 					</display:footer>

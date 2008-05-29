@@ -1,6 +1,10 @@
 <%@ include file="./_taglibs.jsp"%>
 
 <aef:hourReporting id="hourReport"></aef:hourReporting>
+<c:if test="${hourReport}">
+<aef:backlogHourEntrySums id="bliTotals" target="${backlog}" />
+</c:if>
+
 
 <c:if test="${!empty iterations}">
 
@@ -66,6 +70,9 @@
 				<td class="backlogItemList"><display:table class="dailyWorkIteration"
 					name="${bliMap[it]}" id="item1"
 					requestURI="${currentAction}.action">
+					<c:if test="${hourReport}">
+						<aef:backlogHourEntrySums id="bliTotals" target="${it}" />
+					</c:if>
 
 					<display:column sortable="true" sortProperty="name" title="Name"
 						class="shortNameColumn">
@@ -256,12 +263,13 @@
 					</display:column>
 					<c:choose>
 						<c:when test="${hourReport}">
-							<display:column sortable="true" sortProperty="timeSpent" defaultorder="descending" title="Time spent">
+							<display:column sortable="false" sortProperty="timeSpent" defaultorder="descending" title="Effort spent">
 								<span style="white-space: nowrap">
 									<c:choose>
-										<%--Fixme! --%>
-										<c:when test="${1 == 1}">&mdash;</c:when>
-										<c:otherwise></c:otherwise>
+										<c:when test="${bliTotals[item1.id] == null}">&mdash;</c:when>
+										<c:otherwise>
+											<c:out value="${bliTotals[item1.id]}" />
+										</c:otherwise>
 									</c:choose>
 								</span>
 							</display:column>
@@ -281,7 +289,12 @@
 							<td><c:out value="${effortSums[it]}" /></td>
 							<td><c:out value="${originalEstimates[it]}" /></td>
 							<c:if test="${hourReport}">
-								<td>&nbsp;</td>
+								<td>
+									&nbsp;
+									<%--
+									<c:out value="${aef:totalBacklogHourEntries(bliTotals)}" />
+									--%>
+								</td>
 							</c:if>
 						</tr>
 					</display:footer>

@@ -2,6 +2,7 @@
 
 <aef:hourReporting id="hourReport"></aef:hourReporting>
 
+
 <c:if test="${!empty projects}">
 
 <h2>All items assigned to <c:out value="${user.fullName}" /> from ongoing projects</h2>
@@ -9,7 +10,9 @@
 <div id="subItems">
 
 <c:forEach items="${projects}" var="pro">
-
+	<c:if test="${hourReport}">
+	<aef:backlogHourEntrySums id="bliTotals" target="${pro}" />
+	</c:if>
 
 	<div id="subItemHeader">
 	<table cellspacing="0" cellpadding="0">
@@ -232,12 +235,13 @@
 		
 					<c:choose>
 						<c:when test="${hourReport}">
-							<display:column sortable="true" sortProperty="timeSpent" defaultorder="descending" title="Time spent">
+							<display:column sortable="false" sortProperty="timeSpent" defaultorder="descending" title="Effort spent">
 								<span style="white-space: nowrap">
 									<c:choose>
-										<%--Fixme! --%>
-										<c:when test="${1 == 1}">&mdash;</c:when>
-										<c:otherwise></c:otherwise>
+										<c:when test="${bliTotals[item2.id] == null}">&mdash;</c:when>
+										<c:otherwise>
+											<c:out value="${bliTotals[item2.id]}" />
+										</c:otherwise>
 									</c:choose>
 								</span>
 							</display:column>
@@ -256,7 +260,12 @@
 							<td><c:out value="${effortSums[pro]}" /></td>
 							<td><c:out value="${originalEstimates[pro]}" /></td>
 							<c:if test="${hourReport}">
-								<td>&nbsp;</td>
+								<td>
+									&nbsp;
+									<%--
+									<c:out value="${aef:totalBacklogHourEntries(bliTotals)}" />
+									--%>
+								</td>
 							</c:if>
 						</tr>
 					</display:footer>

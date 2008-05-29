@@ -527,14 +527,13 @@
 					
 					<display:column sortable="true" title="User">
 					${aef:html(row.user.fullName)}
-					aka David Hasselhoff
 					</display:column>
 					
 					<display:column sortable="false" title="Spent effort">
 					${aef:html(row.timeSpent)}
 					</display:column>
 					
-					<display:column sortable="false" title="Comments" property="description" />
+					<display:column sortable="false" title="Comment" property="description" />
 					
 					<%-- Not implemented yet --%>
 					<display:column sortable="false" title="Action">
@@ -552,7 +551,9 @@
 						</ww:a>
 						<ww:a 
 							href="%{deleteLink}&contextViewName=editBacklogItem&contextObjectId=${backlogItemId}"
+
 							onclick="return confirmDeleteHour()">
+
 							<img src="static/img/delete.png" alt="Delete" title="Delete" />
 						</ww:a>
 					</display:column>

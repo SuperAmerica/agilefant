@@ -50,10 +50,11 @@ public class HourEntryBusinessImpl implements HourEntryBusiness {
             store.setUser(hourEntry.getUser());
             store.setDescription(hourEntry.getDescription());
             store.setTimeSpent(hourEntry.getTimeSpent());
-            store.setId((Integer)backlogItemHourEntryDAO.create(store));
             store.setBacklogItem((BacklogItem)parent);
-            backlogItemHourEntryDAO.store(store);
-            
+            store.setDate(new Date());
+            backlogItemHourEntryDAO.create(store);
+        } else {
+            //???
         }
     }
     public Date formatDate(String startDate)
@@ -68,8 +69,10 @@ public class HourEntryBusinessImpl implements HourEntryBusiness {
     public void addHourEntryForMultipleUsers(TimesheetLoggable parent, HourEntry hourEntry, int[] userIds) {
         for (int id : userIds) {
             User current = userDAO.get(id);
-            hourEntry.setUser(current);
-            store(parent,hourEntry);
+            if(current != null) {
+                hourEntry.setUser(current);
+                store(parent,hourEntry);
+            }
         }
         hourEntry.setUser(null);
     }

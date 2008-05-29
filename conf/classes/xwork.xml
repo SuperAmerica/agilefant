@@ -775,6 +775,21 @@
 		<action name="createHourEntry" class="hourEntryAction" method="create">
 			<result>/WEB-INF/jsp/inc/_hourEntryModal.jsp</result>
 		</action>
+		<action name="editHourEntry" class="hourEntryAction" method="edit">
+			<result>/WEB-INF/jsp/inc/_hourEntryModal.jsp</result>
+		</action>
+		<action name="storeHourEntry" class="hourEntryAction" method="store">
+			<result name="backlogItem" type="redirect-action">
+				<param name="actionName">editBacklogItem</param>
+				<param name="backlogItemId">${backlogItemId}</param>
+			</result>
+		</action>
+		<action name="deleteHourEntry" class="hourEntryAction" method="delete">
+			<result name="backlogItem" type="redirect-action">
+				<param name="actionName">editBacklogItem</param>
+				<param name="backlogItemId">${backlogItemId}</param>
+			</result>
+		</action>
 
 
 </package>

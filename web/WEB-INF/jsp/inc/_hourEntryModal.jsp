@@ -18,8 +18,10 @@
 <div style="padding: 12px;">
 <ww:form action="storeHourEntry">
 	<ww:hidden name="hourEntry.id" />
-	<ww:hidden name="hourEntry.targetId" />
-	<ww:hidden name="hourEntry.targetType" />
+	<ww:hidden name="backlogItemId" />
+	<ww:hidden name="BacklogId" />
+	<ww:hidden name="contextObjectId" />
+	<ww:hidden name="contextViewName" />
 	<table class="formTable">
 		<tr>
 			<td>Spent effort</td>
@@ -32,10 +34,10 @@
 		<tr>
 			<td>Date</td>
 			<td></td>
-			<td><ww:datepicker value="%{#hourEntry.date}" size="15"
+			<td><ww:datepicker value="%{#date}" size="15"
                                         showstime="true"
                                         format="%{getText('webwork.datepicker.format')}"
-                                        name="hourEntry.date" /></td>
+                                        name="date" /></td>
 		</tr>
 		<tr>
 			<aef:currentUser />

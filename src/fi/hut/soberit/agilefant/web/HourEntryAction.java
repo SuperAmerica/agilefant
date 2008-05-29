@@ -50,7 +50,7 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
             return Action.ERROR;
         }
         hourEntryBusiness.remove(hourEntryId);
-        return Action.SUCCESS;
+        return determinateReturnPage();
     }
 
     /**
@@ -62,7 +62,7 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
             super.addActionError(super.getText("hourEntry.notFound"));
             return Action.ERROR;
         }
-        return Action.SUCCESS;
+        return determinateReturnPage();
     }
     private TimesheetLoggable getParent() {
         TimesheetLoggable parent = null;
@@ -92,23 +92,22 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
             selectedUserIds = new int[1];
             selectedUserIds[0] = storable.getUser().getId();
         }
-        
-        
+        System.out.println(":::: " + selectedUserIds.length);
+        System.out.println(":::+ " + storable.getTimeSpent());
         //Existing entries cannot be "shared"
         TimesheetLoggable parent = getParent();
         
         if(hourEntryId == 0) {
             hourEntryBusiness.addHourEntryForMultipleUsers(parent,storable, selectedUserIds);
+        } else {
+            hourEntryBusiness.store(parent,storable);
         }
-        hourEntryBusiness.store(parent,storable);
         return determinateReturnPage();
     }
     
     protected String determinateReturnPage() {
-        if(this.target instanceof BacklogItem) {
+        if(backlogItemId > 0) {
             return "backlogItem";
-        } else if(this.target instanceof Iteration) {
-            return "iteration";
         } else {
             return Action.SUCCESS;
         }

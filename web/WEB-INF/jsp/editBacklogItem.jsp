@@ -511,7 +511,7 @@
                        <ww:url id="createLink" action="createHourEntry" includeParams="none">
 				<ww:param name="backlogItemId" value="${backlogItem.id}" />
 			</ww:url>
-			<ww:a cssClass="openModalWindow" href="%{createLink}">Create new &raquo;</ww:a>
+			<ww:a cssClass="openModalWindow" href="%{createLink}&contextViewName=editBacklogItem&contextObjectId=${backlogItemId}">Create new &raquo;</ww:a>
 			
 			</div>		
 				
@@ -538,11 +538,17 @@
 					
 					<%-- Not implemented yet --%>
 					<display:column sortable="false" title="Action">
-					
-						<ww:a 
-							href="%{deleteLink}&contextViewName=editBacklogItem&contextObjectId=${backlogItemId}"
-							onclick="return confirmDeleteTask()">
-							<img src="static/img/edit.png" alt="Delete" title="Delete" />
+					<ww:url id="editLink" action="editHourEntry" includeParams="none">
+						<ww:param name="backlogItemId" value="${backlogItem.id}" />
+						<ww:param name="hourEntryId" value="${row.id}" />
+					</ww:url>	
+					<ww:url id="deleteLink" action="deleteHourEntry" includeParams="none">
+						<ww:param name="backlogItemId" value="${backlogItem.id}" />
+						<ww:param name="hourEntryId" value="${row.id}" />
+					</ww:url>			
+						<ww:a cssClass="openModalWindow"
+							href="%{editLink}&contextViewName=editBacklogItem&contextObjectId=${backlogItemId}">
+							<img src="static/img/edit.png" alt="Edit" title="Edit" />
 						</ww:a>
 						<ww:a 
 							href="%{deleteLink}&contextViewName=editBacklogItem&contextObjectId=${backlogItemId}"

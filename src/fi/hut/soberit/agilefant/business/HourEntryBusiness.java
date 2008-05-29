@@ -2,7 +2,12 @@ package fi.hut.soberit.agilefant.business;
 
 import java.text.ParseException;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
+import fi.hut.soberit.agilefant.model.Backlog;
+import fi.hut.soberit.agilefant.model.BacklogItem;
+import fi.hut.soberit.agilefant.model.BacklogItemHourEntry;
 import fi.hut.soberit.agilefant.model.HourEntry;
 import fi.hut.soberit.agilefant.model.TimesheetLoggable;
 
@@ -29,5 +34,17 @@ public interface HourEntryBusiness {
     public void store(TimesheetLoggable parent, HourEntry hourEntry);
     
     public HourEntry getId(int id);
+    /**
+     * 
+     * @param id
+     */
     public void remove(int id);
+    /**
+     * 
+     */
+    public List<BacklogItemHourEntry> getEntriesByBacklogItem(BacklogItem parent);
+    /**
+     * 
+     */
+    public Map<Integer,Integer> getSumsByBacklog(Backlog parent);
 }

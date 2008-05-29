@@ -3,10 +3,13 @@ package fi.hut.soberit.agilefant.business.impl;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 import fi.hut.soberit.agilefant.business.HourEntryBusiness;
 import fi.hut.soberit.agilefant.db.BacklogItemHourEntryDAO;
 import fi.hut.soberit.agilefant.db.UserDAO;
+import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.BacklogItemHourEntry;
 import fi.hut.soberit.agilefant.model.HourEntry;
@@ -69,6 +72,14 @@ public class HourEntryBusinessImpl implements HourEntryBusiness {
             store(parent,hourEntry);
         }
         hourEntry.setUser(null);
+    }
+
+    public List<BacklogItemHourEntry> getEntriesByBacklogItem(BacklogItem parent) {
+        return backlogItemHourEntryDAO.getEntriesByBacklogItem(parent);
+    }
+
+    public Map<Integer, Integer> getSumsByBacklog(Backlog parent) {
+        return null;
     }
 
 }

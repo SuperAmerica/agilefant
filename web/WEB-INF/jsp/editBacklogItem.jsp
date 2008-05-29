@@ -488,6 +488,23 @@
 <aef:hourReporting id="hourReport"></aef:hourReporting>
 <c:if test="${hourReport == 'true'}">
 
+<aef:hourEntries id="hourEntries" target="${backlogItem}"></aef:hourEntries>
+
+<c:if test="${empty hourEntries}">
+ Hour entries list is empty.
+</c:if>
+
+<%-- 
+<c:forEach items="${hourEntries}" var="hentry">
+	humppaa!<br>
+	 <c:out value="${hentry.targetType}" /> 
+</c:forEach>
+
+--%>
+<table>
+	<tr>
+		<td>
+
 			<div id="subItems">
 			<div id="subItemHeader">
                     Hour reporting entries
@@ -497,29 +514,31 @@
 			<ww:a cssClass="openModalWindow" href="%{createLink}">Create new &raquo;</ww:a>
 			
 			</div>		
-			
-				<c:if test="${!empty backlogItem.tasks}">
+				
+				<c:if test="${!empty hourEntries}">
 				<div id="subItemContent">
 				
-				<p><display:table class="listTable" name="backlogItem.tasks"
-					id="row" requestURI="editBacklogItem.action">
+				<p><display:table name="${hourEntries}"
+					id="row" defaultsort="1" requestURI="editBacklogItem.action">
 					
 					<display:column sortable="true" title="Date">
-						01.05.2008
+					${aef:html(row.date.date)}.${aef:html(row.date.month + 1)}.${aef:html(row.date.year + 1900 )}
 					</display:column>
 					
-					<display:column sortable="true" title="Reporter">
-					David Hasselhoff
+					<display:column sortable="true" title="User">
+					${aef:html(row.user.fullName)}
+					aka David Hasselhoff
 					</display:column>
 					
 					<display:column sortable="false" title="Spent effort">
+					${aef:html(row.timeSpent)}
 					</display:column>
 					
-					<display:column sortable="false" title="Comments">
-					Yeah baby! Want to get a hard ride tonight?
-					</display:column>
+					<display:column sortable="false" title="Comments" property="description" />
 					
+					<%-- Not implemented yet --%>
 					<display:column sortable="false" title="Action">
+					
 						<ww:a 
 							href="%{deleteLink}&contextViewName=editBacklogItem&contextObjectId=${backlogItemId}"
 							onclick="return confirmDeleteTask()">

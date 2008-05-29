@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.BacklogItemHourEntry;
@@ -46,5 +47,5 @@ public interface HourEntryBusiness {
     /**
      * 
      */
-    public Map<Integer,Integer> getSumsByBacklog(Backlog parent);
+    public Map<Integer,AFTime> getSumsByBacklog(Backlog parent);
 }

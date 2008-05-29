@@ -1,6 +1,11 @@
 <%@ include file="./_taglibs.jsp"%>
 
 <aef:hourReporting id="hourReport"></aef:hourReporting>
+
+<c:if test="${hourReport}">
+<aef:backlogHourEntrySums id="bliTotals" target="${backlog}" />
+</c:if>
+
 <script language="javascript" type="text/javascript">
 function validateDeletion() {
 	var conf = confirm("The selected backlog items will be gone forever. Are you sure?");
@@ -209,15 +214,13 @@ function validateDeletion() {
 
 		<c:choose>
 			<c:when test="${hourReport}">
-				<display:column sortable="true" sortProperty="timeSpent" defaultorder="descending" title="Time spent">
+				<display:column sortable="false" sortProperty="timeSpent" defaultorder="descending" title="Time spent">
 					<span style="white-space: nowrap">
 						<c:choose>
-							<c:when test="${1 == 1}">&mdash;</c:when>
-							<c:otherwise></c:otherwise>
-							<%--FIXME
-							<c:when test="${item.hourSum == null}">&mdash;</c:when>
-							<c:otherwise>${item.hourSum}</c:otherwise>
-							--%>
+							<c:when test="${bliTotals[item.id] == null}">&mdash;</c:when>
+							<c:otherwise>
+							<c:out value="${bliTotals[item.id]}" />
+							</c:otherwise>
 						</c:choose>
 					</span>
 				</display:column>
@@ -244,7 +247,9 @@ function validateDeletion() {
 				<%-- Original estimate --%>
 				<td><c:out value="${originalEstimateSum}" /></td>
 				<c:if test="${hourReport}">
-					<td>&nbsp;</td>
+					<td>
+					<c:out value="${aef:totalBacklogHourEntries(bliTotals)}" />
+					</td>
 				</c:if>
 			</tr>
 		</display:footer>

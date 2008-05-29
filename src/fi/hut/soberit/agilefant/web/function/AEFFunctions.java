@@ -5,7 +5,9 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Map;
 
+import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.Assignment;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
@@ -116,5 +118,13 @@ public class AEFFunctions {
             }
         }
         return false;
+    }
+    
+    public static AFTime totalBacklogHourEntries(Map<Integer,AFTime> data) {
+        AFTime total = new AFTime(0);
+        for(AFTime cur : data.values()) {
+            total.add(cur);
+        }
+        return total;
     }
 }

@@ -100,12 +100,16 @@ public class HourEntryBusinessImpl implements HourEntryBusiness {
         
         for (BacklogItemHourEntry entry : entries) {
             AFTime currentSum = sums.get(entry.getBacklogItem().getId());
+            AFTime timeSpent = entry.getTimeSpent();
             
             if (currentSum == null) {
                 currentSum = new AFTime(0);
             }
             
-            currentSum.add(entry.getTimeSpent());    
+            if (timeSpent != null) {
+                currentSum.add(timeSpent);
+            }
+            
             sums.put(entry.getBacklogItem().getId(), currentSum);
         }
         

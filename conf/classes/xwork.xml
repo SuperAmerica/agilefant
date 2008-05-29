@@ -772,6 +772,9 @@
 				<action name="storeHourReporting" class="settingAction" method="storeHourReporting">
 			<result>/WEB-INF/jsp/settings.jsp</result>
 		</action>
+		<action name="createHourEntry" class="hourEntryAction" method="create">
+			<result>/WEB-INF/jsp/inc/_hourEntryModal.jsp</result>
+		</action>
 
 
 </package>

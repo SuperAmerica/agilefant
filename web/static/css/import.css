@@ -205,13 +205,13 @@ a:hover,a:active {
 	padding: 10px 15px;
 }
 
-#subItems {
+#subItems, div.subItems {
 	border: 1px solid #ccc;
 	margin-top: 20px;
 	width: 785px;
 }
 
-#subItemHeader {
+#subItemHeader, div.subItemHeader {
 	padding: 0;
 	background-color: #E8EBF0;
 	border-bottom: 1px solid #ccc;

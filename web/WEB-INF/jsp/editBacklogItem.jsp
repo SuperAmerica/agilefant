@@ -501,8 +501,8 @@
 </c:forEach>
 
 --%>
-<div id="subItems">
-	<div id="subItemHeader">
+<div class="subItems" style="margin-left: 3px;">
+	<div class="subItemHeader" style="padding: 3px !important;">
      	Hour reporting entries
         <ww:url id="createLink" action="createHourEntry" includeParams="none">
 			<ww:param name="backlogItemId" value="${backlogItem.id}" />

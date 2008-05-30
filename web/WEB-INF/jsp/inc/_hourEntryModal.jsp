@@ -17,7 +17,7 @@
 	</span>
 </div>
 <div style="padding: 12px;">
-<ww:form action="storeHourEntry">
+<ww:form action="storeHourEntry" onsubmit="javascript: return checkEstimateFormat('hourEntry.timeSpent');">
 	<ww:hidden name="hourEntryId" />
 	<ww:hidden name="backlogItemId" />
 	<ww:hidden name="BacklogId" />

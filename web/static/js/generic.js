@@ -73,3 +73,17 @@ function disableIfEmpty(value, elements) {
 		}
 	}			
 }
+function checkEstimateFormat(field) {
+	var ret = false;
+	var fields = document.getElementsByName(field);
+	var value = fields[0].value;
+	var regex = new RegExp("^[ ]*([0-9]+h?)?([ ]*[0-5]?[0-9]min)?[ ]*$");
+	if(value.length > 0) {
+		ret = regex.test(value);
+	}
+	if(!ret) {
+		alert("Invalid effort format!");
+		return false;
+	}
+	return true;
+}

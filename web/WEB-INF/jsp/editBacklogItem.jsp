@@ -490,17 +490,14 @@
 
 <aef:hourEntries id="hourEntries" target="${backlogItem}"></aef:hourEntries>
 
-<c:if test="${empty hourEntries}">
- Hour entries list is empty.
-</c:if>
 
 <%-- 
 <c:forEach items="${hourEntries}" var="hentry">
 	humppaa!<br>
 	 <c:out value="${hentry.targetType}" /> 
 </c:forEach>
-
 --%>
+
 <div class="subItems" style="margin-left: 3px;">
 	<div class="subItemHeader" style="padding: 3px !important;">
      	Hour reporting entries

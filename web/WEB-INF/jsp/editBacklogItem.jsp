@@ -513,7 +513,7 @@
 		<div id="subItemContent">		
 			<p>
 				<display:table name="${hourEntries}" id="row" defaultsort="1" requestURI="editBacklogItem.action">
-					<display:column sortable="true" title="Date">
+					<display:column sortable="false" title="Date">
 						${aef:html(row.date.date)}.${aef:html(row.date.month + 1)}.${aef:html(row.date.year + 1900 )} ${aef:html(row.date.hours)}:${aef:html(row.date.minutes)}
 					</display:column>
 					

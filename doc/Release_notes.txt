@@ -1,6 +1,6 @@
-Agilefant 1.4.0
+Agilefant 1.4.1
 RELEASE NOTES
-26.5.2008
+30.5.2008
 
 Agilefant's key functionality now includes
 ------------------------------------------
@@ -24,6 +24,13 @@ to are highlighted
 have assigned backlog items) are highlighted
 + Project Portfolio view allows the relative prioritisation of projects
 + Project Portfolio view shows the workloads for projects and users
++ BLI-level timesheet capability
+
+CHANGES FROM AGILEFANT 1.4.0
+-----------------------------
++ added BLI-level timesheet capability
++ timesheet functionality can be disabled / enabled from the settings menu
++ spent effort sums shown in BLI lists
 
 CHANGES FROM AGILEFANT 1.3.7
 -----------------------------

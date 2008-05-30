@@ -9,6 +9,7 @@
 <ww:hidden name="name" value="HourReporting"/>
 <ww:hidden name="description" value="Description"/>
 --%>
+<h2>Settings</h2>
 <table frame="border" rules="all">
 <tr>
 <th>Name</th><th>Value</th><th>Description</th>

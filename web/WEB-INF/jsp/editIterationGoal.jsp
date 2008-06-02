@@ -4,6 +4,7 @@
 <aef:hourReporting id="hourReport"></aef:hourReporting>
 <c:if test="${hourReport}">
 <aef:backlogHourEntrySums id="bliTotals" target="${iteration}" />
+<c:set var="totalSum" value="${null}" />
 </c:if>
 
 
@@ -315,6 +316,7 @@
 										<c:when test="${bliTotals[row.id] == null}">&mdash;</c:when>
 										<c:otherwise>
 											<c:out value="${bliTotals[row.id]}" />
+											<c:set var="totalSum" value="${aef:calculateAFTimeSum(totalSum, bliTotals[row.id])}" />
 										</c:otherwise>
 									</c:choose>
 								</span>
@@ -338,8 +340,14 @@
 						<td><c:out value="${originalEstimateSum}" /></td>
 						<c:if test="${hourReport}">
 							<td>
-								&nbsp;
-								<%-- <c:out value="${aef:totalBacklogHourEntries(bliTotals)}" /> --%>
+								<c:choose>
+									<c:when test="${totalSum != null}">
+										<c:out value="${totalSum}" />
+									</c:when>
+									<c:otherwise>
+										0h
+									</c:otherwise>
+								</c:choose>
 							</td>
 						</c:if>
 					</tr>

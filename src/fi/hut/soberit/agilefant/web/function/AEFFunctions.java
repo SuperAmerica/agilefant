@@ -131,4 +131,20 @@ public class AEFFunctions {
         
         return total;
     }
+    
+    public static AFTime calculateAFTimeSum(AFTime a, AFTime b) {
+        AFTime sum = new AFTime(0);
+        
+        if (a != null) {
+            System.out.println(a.toString());
+            sum.add(a);
+        }
+        
+        if (b != null) {
+            System.out.println(b.toString());
+            sum.add(b);
+        }
+        
+        return sum;
+    }
 }

@@ -498,4 +498,10 @@
 	  <function-signature>fi.hut.soberit.agilefant.model.AFTime totalBacklogHourEntries(java.util.Map)</function-signature>
 	</function>
 	
+	<function>
+	  <name>calculateAFTimeSum</name>
+	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
+	  <function-signature>fi.hut.soberit.agilefant.model.AFTime calculateAFTimeSum(fi.hut.soberit.agilefant.model.AFTime, fi.hut.soberit.agilefant.model.AFTime)</function-signature>
+	</function>
+	
 </taglib>

@@ -48,4 +48,8 @@ public interface HourEntryBusiness {
      * 
      */
     public Map<Integer,AFTime> getSumsByBacklog(Backlog parent);
+    /**
+     * 
+     */
+    public void removeHourEntryByBacklogID( BacklogItem backlog );
 }

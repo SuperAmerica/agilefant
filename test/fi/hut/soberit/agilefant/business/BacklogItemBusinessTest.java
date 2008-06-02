@@ -12,7 +12,9 @@ import java.util.Set;
 
 import junit.framework.TestCase;
 import fi.hut.soberit.agilefant.business.impl.BacklogItemBusinessImpl;
+import fi.hut.soberit.agilefant.business.impl.HourEntryBusinessImpl;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
+import fi.hut.soberit.agilefant.db.BacklogItemHourEntryDAO;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.Backlog;
@@ -26,13 +28,18 @@ public class BacklogItemBusinessTest extends TestCase {
 
     private BacklogItemBusinessImpl bliBusiness = new BacklogItemBusinessImpl();
     private BacklogItemDAO bliDAO;
+    private HourEntryBusinessImpl hourEntryBusiness = new HourEntryBusinessImpl();
     private HistoryBusiness historyBusiness = createMock(HistoryBusiness.class);
     private UserBusiness userBusiness;
+    private BacklogItemHourEntryDAO bliheDAO;
 
     public void testRemoveBacklogItem_found() {
         bliDAO = createMock(BacklogItemDAO.class);
+        bliheDAO = createMock( BacklogItemHourEntryDAO.class );
         bliBusiness.setBacklogItemDAO(bliDAO);
         bliBusiness.setHistoryBusiness(historyBusiness);
+        bliBusiness.setHourEntryBusiness(hourEntryBusiness);
+        hourEntryBusiness.setHourEntryDAO( bliheDAO );
         Backlog backlog = new Iteration();
         backlog.setId(100);
         BacklogItem bli = new BacklogItem();

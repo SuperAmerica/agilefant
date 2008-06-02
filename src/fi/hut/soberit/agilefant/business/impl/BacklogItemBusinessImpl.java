@@ -11,6 +11,7 @@ import java.util.List;
 
 import fi.hut.soberit.agilefant.business.BacklogItemBusiness;
 import fi.hut.soberit.agilefant.business.HistoryBusiness;
+import fi.hut.soberit.agilefant.business.HourEntryBusiness;
 import fi.hut.soberit.agilefant.business.TaskBusiness;
 import fi.hut.soberit.agilefant.business.UserBusiness;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
@@ -33,6 +34,7 @@ public class BacklogItemBusinessImpl implements BacklogItemBusiness {
     private TaskBusiness taskBusiness;
     private HistoryBusiness historyBusiness;
     private UserBusiness userBusiness;
+    private HourEntryBusiness hourEntryBusiness;
 
     public BacklogItemDAO getBacklogItemDAO() {
         return backlogItemDAO;
@@ -45,6 +47,14 @@ public class BacklogItemBusinessImpl implements BacklogItemBusiness {
     public BacklogItem getBacklogItem(int backlogItemId) {
         return backlogItemDAO.get(backlogItemId);
     }
+    
+    public HourEntryBusiness getHourEntryBusiness() {
+        return hourEntryBusiness;
+    }
+
+    public void setHourEntryBusiness(HourEntryBusiness hourEntryBusiness) {
+        this.hourEntryBusiness = hourEntryBusiness;
+    }
 
     public void removeBacklogItem(int backlogItemId)
             throws ObjectNotFoundException {
@@ -54,6 +64,9 @@ public class BacklogItemBusinessImpl implements BacklogItemBusiness {
             throw new ObjectNotFoundException(
                     "Backlog item with given id was not found.");
         }
+        
+        // Remove all hourEntries related to this backlogItem  
+        hourEntryBusiness.removeHourEntryByBacklogID( backlogItem );
         // Store backlog to be able to update its history
         Backlog backlog = backlogItem.getBacklog();
         backlogItemDAO.remove(backlogItem);

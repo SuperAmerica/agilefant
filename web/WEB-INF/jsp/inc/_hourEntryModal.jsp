@@ -1,7 +1,7 @@
 <%@ include file="./_taglibs.jsp"%>
 <aef:currentUser />
 <aef:userList/>
-<div style="width: 690px; height: 20px; padding: 5px; border-bottom: 1px solid black; background: #ccc;">
+<div target="AJAX-MODAL" style="width: 690px; height: 20px; padding: 5px; border-bottom: 1px solid black; background: #ccc;">
 	<span style="float: left;">
 	<c:choose>
 		<c:when test="${hourEntryId == 0}">

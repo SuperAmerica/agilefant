@@ -116,7 +116,7 @@ public class HourEntryBusinessImpl implements HourEntryBusiness {
         return sums;
     }
     
-    public void removeHourEntryByBacklogID( BacklogItem backlog ){
+    public void removeHourEntriesByBacklogItem( BacklogItem backlog ){
         
         List<BacklogItemHourEntry> removeList = 
             backlogItemHourEntryDAO.getEntriesByBacklogItem( backlog );
@@ -128,7 +128,7 @@ public class HourEntryBusinessImpl implements HourEntryBusiness {
             try{
                 remove( i.getId() );
             }catch(Exception e ){
-                System.out.println( "HourEntry poistovirhe:" + e );            
+                          
             }
         }
     } 

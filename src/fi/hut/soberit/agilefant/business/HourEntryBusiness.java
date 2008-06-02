@@ -51,5 +51,5 @@ public interface HourEntryBusiness {
     /**
      * 
      */
-    public void removeHourEntryByBacklogID( BacklogItem backlog );
+    public void removeHourEntriesByBacklogItem( BacklogItem backlog );
 }

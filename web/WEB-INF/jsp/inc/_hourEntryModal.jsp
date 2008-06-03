@@ -5,10 +5,10 @@
 	<span style="float: left;">
 	<c:choose>
 		<c:when test="${hourEntryId == 0}">
-			<b>New Hour Reporting Entry</b>
+			<b>Log effort</b>
 		</c:when>
 		<c:otherwise>
-			<b>Edit Hour Reporting Entry</b>
+			<b>Edit log entry</b>
 		</c:otherwise>
 	</c:choose>
 	</span>
@@ -26,15 +26,15 @@
 	<table class="formTable">
 	
 	<tr>
-			<td>Spent effort</td>
+			<td>Effort spent</td>
 			<td></td>
 			<td colspan="2">
-					<ww:textfield name="hourEntry.timeSpent" />
+					<ww:textfield name="hourEntry.timeSpent" />hours
 			</td>
 		</tr>
 		</tr>
 		<tr>
-			<td>Date</td>
+			<td>When</td>
 			<td></td>
 			<td>
 						<ww:date name="%{hourEntry.date}" id="date" format="%{getText('webwork.shortDateTime.format')}" />
@@ -48,7 +48,7 @@
 
 		<tr>
 			
-			<td>Users </td>
+			<td>By whom</td>
 			<td></td>
 			<td colspan="2">
 			<c:choose>

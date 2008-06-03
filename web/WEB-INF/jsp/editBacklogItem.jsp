@@ -500,7 +500,7 @@
 
 <div class="subItems" style="margin-left: 3px;">
 	<div class="subItemHeader" style="padding: 3px !important;">
-     	Hour reporting entries
+     	Logged effort
         <ww:url id="createLink" action="createHourEntry" includeParams="none">
 			<ww:param name="backlogItemId" value="${backlogItem.id}" />
 		</ww:url>

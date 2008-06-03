@@ -18,13 +18,22 @@ public class BacklogHourEntrySumsTag extends SpringTagSupport {
     
     private Backlog target;
     
+    private String groupBy = "BacklogItem";
+    
+
     @Override
     public int doStartTag() throws JspException {
         
         hourEntryBusiness = (HourEntryBusiness) super.getApplicationContext().getBean(
                 "hourEntryBusiness");
         
-        Map<Integer,AFTime> sums = hourEntryBusiness.getSumsByBacklog( target );
+        Map<Integer,AFTime> sums = null;
+        if(groupBy.equals("BacklogItem")) {
+            sums = hourEntryBusiness.getSumsByBacklog( target ); 
+        } else if(groupBy.equals("IterationGoal")) {
+            sums = hourEntryBusiness.getSumsByIterationGoal( target );
+        }
+        
         super.getPageContext().setAttribute(super.getId(), sums);
         
         return Tag.EVAL_BODY_INCLUDE;
@@ -33,5 +42,7 @@ public class BacklogHourEntrySumsTag extends SpringTagSupport {
     public void setTarget(Backlog target) {
         this.target = target;
     }
-    
+    public void setGroupBy(String groupBy) {
+        this.groupBy = groupBy;
+    }
 }

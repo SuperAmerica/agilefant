@@ -116,6 +116,28 @@ public class HourEntryBusinessImpl implements HourEntryBusiness {
         
         return sums;
     }
+    public Map<Integer, AFTime> getSumsByIterationGoal(Backlog parent) {
+        Map<Integer, AFTime> sums = new HashMap<Integer, AFTime>();
+        List<BacklogItemHourEntry> entries = 
+            backlogItemHourEntryDAO.getSumsByBacklog(parent);
+        
+        for (BacklogItemHourEntry entry : entries) {
+            AFTime currentSum = sums.get(entry.getBacklogItem().getIterationGoal().getId());
+            AFTime timeSpent = entry.getTimeSpent();
+            
+            if (currentSum == null) {
+                currentSum = new AFTime(0);
+            }
+            
+            if (timeSpent != null) {
+                currentSum.add(timeSpent);
+            }
+            
+            sums.put(entry.getBacklogItem().getIterationGoal().getId(), currentSum);
+        }
+        
+        return sums;
+    }
     
     public void removeHourEntriesByBacklogItem( BacklogItem backlog ){
         

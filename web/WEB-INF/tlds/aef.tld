@@ -351,7 +351,11 @@
 	    <attribute>
 	    	<name>id</name>
 	    	<required>true</required>	  
-	    </attribute>    
+	    </attribute>  
+	    <attribute>
+	    	<name>groupBy</name>
+	    	<required>false</required>	  
+	    </attribute>  
 	    <attribute>
 	    	<name>target</name>
 	    	<required>true</required>	    

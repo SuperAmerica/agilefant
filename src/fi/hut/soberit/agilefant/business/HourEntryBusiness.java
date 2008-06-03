@@ -42,13 +42,17 @@ public interface HourEntryBusiness {
      */
     public void remove(int id);
     /**
-     * 
+     * Get all hour entries attached to a backlog item.
      */
     public List<BacklogItemHourEntry> getEntriesByBacklogItem(BacklogItem parent);
     /**
      * 
      */
     public Map<Integer,AFTime> getSumsByBacklog(Backlog parent);
+    /**
+     * 
+     */
+    public Map<Integer, AFTime> getSumsByIterationGoal(Backlog parent);
     /**
      * 
      */

@@ -333,7 +333,7 @@ span.right {
 	border: none;
 }
 
-#menu li#nava a,#menu li#navb a,#menu li#navc a {
+#menu li#nava a,#menu li#navb a,#menu li#navd a,#menu li#navc a {
 	float: right;
 }
 
@@ -347,7 +347,7 @@ span.right {
 	color: #e50;
 }
 
-div#menuwrapmyTasks #menu li#nav1 a,div#menuwrapbacklog #menu li#nav2 a,div#menuwrapiteration #menu li#nav2 a,div#menuwrapproject #menu li#nav2 a,div#menuwrapproduct #menu li#nav2 a,div#menuwrapportfolio #menu li#nav3 a,div#menuwrapusers #menu li#navc a,div#menuwrapcreateNew #menu li#nava a,div#menuwrapsettings #menu li#navb a,div#menuwrap1 #menu li#nav1 a,div#menuwrap2 #menu li#nav2 a,div#menuwrap3 #menu li#nav3 a,div#menuwrap4 #menu li#nav4 a,div#menuwrap5 #menu li#nav5 a,div#menuwrap6 #menu li#nav6 a,div#menuwrap7 #menu li#nav7 a,div#menuwrap8 #menu li#nav8 a,div#menuwrap9 #menu li#nav9 a
+div#menuwrapmyTasks #menu li#nav1 a,div#menuwrapbacklog #menu li#nav2 a,div#menuwrapiteration #menu li#nav2 a,div#menuwrapproject #menu li#nav2 a,div#menuwrapproduct #menu li#nav2 a,div#menuwrapportfolio #menu li#nav3 a,div#menuwrapusers #menu li#navc a,div#menuwrapcreateNew #menu li#nava a,div#menuwraptimesheet #menu li#navd a,div#menuwrapsettings #menu li#navb a,div#menuwrap1 #menu li#nav1 a,div#menuwrap2 #menu li#nav2 a,div#menuwrap3 #menu li#nav3 a,div#menuwrap4 #menu li#nav4 a,div#menuwrap5 #menu li#nav5 a,div#menuwrap6 #menu li#nav6 a,div#menuwrap7 #menu li#nav7 a,div#menuwrap8 #menu li#nav8 a,div#menuwrap9 #menu li#nav9 a
 	{
 	background: #fff;
 	border-bottom: 1px solid #fff;

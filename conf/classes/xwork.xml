@@ -70,6 +70,11 @@
 			<result name="success_settings" type="redirect-action">
 				<param name="actionName">settings</param>
 			</result>
+			
+			<result name="success_timesheet" type="redirect-action">
+				<param name="actionName">timesheet</param>
+			</result>
+			
 			<result name="success_projectTypes"
 				type="redirect-action">
 				<param name="actionName">projectPortfolio</param>
@@ -754,7 +759,7 @@
 		<action name="settings">
 			<result>/WEB-INF/jsp/settings.jsp</result>
 		</action>
-	
+		
 		<action name="editSetting" class="settingAction" method="edit">
 			<result>/WEB-INF/jsp/settings.jsp</result>
 		</action>
@@ -773,6 +778,13 @@
 		<action name="storeHourReporting" class="settingAction" method="storeHourReporting">
 			<result>/WEB-INF/jsp/settings.jsp</result>
 		</action>
+	
+		<!-- timesheet actions -->
+		  
+		<action name="timesheet">
+			<result>/WEB-INF/jsp/timesheet.jsp</result>
+		</action>
+		
 		
 		<!-- Hour Entry actions -->
 		

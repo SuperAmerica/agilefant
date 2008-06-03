@@ -263,13 +263,26 @@ Dev Portfolio
 </li>
 
 
-<%-- .action Settings doesn't exist yet --%>
+
+<%-- Settings --%>
 <li id="navb">
 <a href="contextView.action?contextName=settings&resetContextView=true">
 <img src="static/img/settings.png" alt="Settings" />
 Settings
 </a>
 </li>
+
+<%-- Timesheet --%>
+<aef:hourReporting id="hourReport" />
+<c:if test="${hourReport}">
+<li id="navd">
+<a href="contextView.action?contextName=timesheet&resetContextView=true">
+<img src="static/img/clock-16.png" alt="Timesheet" />
+Timesheet
+</a>
+</li>
+</c:if>
+
 
 <li id="navc">
 <a href="contextView.action?contextName=users&resetContextView=true">

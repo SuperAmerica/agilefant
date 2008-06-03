@@ -372,6 +372,7 @@
 				<param name="actionName">popContext</param>
 			</result>
 		</action>
+		
 		<action name="storeTask" method="store" class="taskAction">
 			<result type="redirect-action">
 				<param name="actionName">editTask</param>
@@ -769,9 +770,12 @@
 		<action name="deleteSetting" class="settingAction" method="delete">
 			<result>/WEB-INF/jsp/settings.jsp</result>
 		</action>
-				<action name="storeHourReporting" class="settingAction" method="storeHourReporting">
+		<action name="storeHourReporting" class="settingAction" method="storeHourReporting">
 			<result>/WEB-INF/jsp/settings.jsp</result>
 		</action>
+		
+		<!-- Hour Entry actions -->
+		
 		<action name="createHourEntry" class="hourEntryAction" method="create">
 			<result>/WEB-INF/jsp/inc/_hourEntryModal.jsp</result>
 		</action>
@@ -779,18 +783,15 @@
 			<result>/WEB-INF/jsp/inc/_hourEntryModal.jsp</result>
 		</action>
 		<action name="storeHourEntry" class="hourEntryAction" method="store">
-			<result name="backlogItem" type="redirect-action">
-				<param name="actionName">editBacklogItem</param>
-				<param name="backlogItemId">${backlogItemId}</param>
+			<result type="redirect-action">
+				<param name="actionName">popContext</param>
 			</result>
 		</action>
-		<action name="deleteHourEntry" class="hourEntryAction" method="delete">
-			<result name="backlogItem" type="redirect-action">
-				<param name="actionName">editBacklogItem</param>
-				<param name="backlogItemId">${backlogItemId}</param>
+		<action name="deleteHourEntry" method="delete" class="hourEntryAction">
+			<result type="redirect-action">
+				<param name="actionName">popContext</param>
 			</result>
 		</action>
-
 
 </package>
 </xwork>

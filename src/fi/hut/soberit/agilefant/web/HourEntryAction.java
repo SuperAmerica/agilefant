@@ -55,7 +55,7 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
             return Action.ERROR;
         }
         hourEntryBusiness.remove(hourEntryId);
-        return determinateReturnPage();
+        return Action.SUCCESS;
     }
 
     /**
@@ -104,16 +104,9 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
         } else if(selectedUserIds != null) {
             hourEntryBusiness.addHourEntryForMultipleUsers(parent,storable, selectedUserIds);
         }
-        return determinateReturnPage();
+        return Action.SUCCESS;
     }
     
-    protected String determinateReturnPage() {
-        if(backlogItemId > 0 && backlogId == 0) {
-            return "backlogItem";
-        } else {
-            return Action.SUCCESS;
-        }
-    }
     protected void fillStorable(HourEntry storable) {
         storable.setDate(this.internalDate);
         storable.setDescription(this.hourEntry.getDescription());

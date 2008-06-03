@@ -21,8 +21,7 @@
 	<ww:hidden name="hourEntryId" />
 	<ww:hidden name="backlogItemId" />
 	<ww:hidden name="BacklogId" />
-	<ww:hidden name="contextObjectId" />
-	<ww:hidden name="contextViewName" />
+	
 	<table class="formTable">
 	
 	<tr>

@@ -502,7 +502,7 @@
 	<div class="subItemHeader" style="padding: 3px !important;">
      	Logged effort
         <ww:url id="createLink" action="createHourEntry" includeParams="none">
-			<ww:param name="backlogItemId" value="${backlogItem.id}" />
+			<ww:param name="backlogItemId" value="${backlogItemId}" />
 		</ww:url>
 		<ww:a cssClass="openModalWindow" href="%{createLink}&contextViewName=editBacklogItem&contextObjectId=${backlogItemId}">Create new &raquo;</ww:a>	
 	</div>						

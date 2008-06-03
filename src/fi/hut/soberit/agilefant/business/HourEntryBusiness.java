@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.Backlog;
@@ -24,7 +25,7 @@ public interface HourEntryBusiness {
      * @param hourEntry the hour entry that we well "copy"
      * @param userIds the IDs of the users that we are adding entries for
      */
-    public void addHourEntryForMultipleUsers(TimesheetLoggable parent,HourEntry hourEntry, int[] userIds);
+    public void addHourEntryForMultipleUsers(TimesheetLoggable parent,HourEntry hourEntry, Set<Integer> userIds);
     /**
      * Format date
      */

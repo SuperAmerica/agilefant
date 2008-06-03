@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import fi.hut.soberit.agilefant.business.HourEntryBusiness;
 import fi.hut.soberit.agilefant.db.BacklogItemHourEntryDAO;
@@ -78,7 +79,7 @@ public class HourEntryBusinessImpl implements HourEntryBusiness {
     /**
      * {@inheritDoc}
      */
-    public void addHourEntryForMultipleUsers(TimesheetLoggable parent, HourEntry hourEntry, int[] userIds) {
+    public void addHourEntryForMultipleUsers(TimesheetLoggable parent, HourEntry hourEntry, Set<Integer> userIds) {
         for (int id : userIds) {
             User current = userDAO.get(id);
             if(current != null) {

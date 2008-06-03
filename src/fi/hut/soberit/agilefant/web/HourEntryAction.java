@@ -1,6 +1,10 @@
 package fi.hut.soberit.agilefant.web;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -15,6 +19,9 @@ import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.HourEntry;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.TimesheetLoggable;
+import fi.hut.soberit.agilefant.model.User;
+
+import java.io.Serializable;
 import java.text.ParseException;
 
 
@@ -25,13 +32,13 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
     private HourEntryBusiness hourEntryBusiness;
     private BacklogItemDAO backlogItemDAO;
     private UserDAO userDAO;
-    private int[] selectedUserIds;
     private int userId = 0;
     private TimesheetLoggable target;
     private String date;
     private Date internalDate;
     private int backlogId = 0;
     private int backlogItemId = 0;
+    private Map<Integer, String> userIds = new HashMap<Integer, String>();
     
     private Log logger = LogFactory.getLog(getClass());
 
@@ -101,8 +108,8 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
         if(hourEntryId > 0) {
             storable.setUser(userDAO.get(userId));
             hourEntryBusiness.store(parent,storable);
-        } else if(selectedUserIds != null) {
-            hourEntryBusiness.addHourEntryForMultipleUsers(parent,storable, selectedUserIds);
+        } else if(userIds != null) {
+            hourEntryBusiness.addHourEntryForMultipleUsers(parent,storable, userIds.keySet());
         }
         return Action.SUCCESS;
     }
@@ -138,15 +145,9 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
         this.hourEntryBusiness = hourEntryBusiness;
     }
 
-    public int[] getSelectedUserIds() {
-        return selectedUserIds;
-    }
-
-    public void setSelectedUserIds(int[] selectedUserIds) {
-        this.selectedUserIds = selectedUserIds;
-    }
-
     public TimesheetLoggable getTarget() {
+        //TODO: Ugly workaround, refactor?
+        this.target = getParent();
         return target;
     }
 
@@ -206,4 +207,11 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
         this.userDAO = userDAO;
     }
 
+    public Map<Integer, String> getUserIds() {
+        return userIds;
+    }
+
+    public void setUserIds(Map<Integer, String> userIds) {
+        this.userIds = userIds;
+    }
 }

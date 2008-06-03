@@ -1,6 +1,6 @@
 <%@ include file="./_taglibs.jsp"%>
 <aef:currentUser />
-<aef:userList/>
+<aef:enabledUserList/>
 <div target="AJAX-MODAL" style="width: 690px; height: 20px; padding: 5px; border-bottom: 1px solid black; background: #ccc;">
 	<span style="float: left;">
 	<c:choose>
@@ -52,46 +52,87 @@
 			<td colspan="2">
 			<c:choose>
 			<c:when test="${hourEntryId == 0}">
-				<div id="assigneesLink"><a href="javascript:toggleDiv('assigneeSelect2');"><img src="static/img/users.png" /> select </a>
+				<div id="assigneesLink"><a href="javascript:toggleDiv('assigneeSelect2');"><img src="static/img/users.png" />
+					<c:choose>
+						<c:when test="${aef:listContains(target.responsibles, currentUser)}">
+							<%-- old code, might be needed
+							<c:set var="count" value="0" scope="page" />
+							<c:set var="comma" value="," scope="page" />
+							<c:forEach items="${target.responsibles}" var="responsible">
+								<c:set var="unassigned" value="0" scope="page" />
+									<c:if test="${count == listSize - 1}" >
+										<c:set var="comma" value="" scope="page" />
+									</c:if>
+									<c:if test="${!empty target.project}" >
+										<c:set var="unassigned" value="1" scope="page" />
+										<c:forEach items="${target.project.responsibles}" var="projectResponsible">
+											<c:if test="${responsible.id == projectResponsible.id}" >
+												<c:set var="unassigned" value="0" scope="page" />
+											</c:if>
+										</c:forEach>
+									</c:if>
+									<c:choose>
+										<c:when test="${unassigned == 1}">
+											<span><c:out value="${responsible.initials}" /></span><c:out value="${comma}" />
+										</c:when>
+										<c:otherwise>
+											<c:out value="${responsible.initials}" /><c:out value="${comma}" />
+										</c:otherwise>
+									</c:choose>
+								<c:set var="count" value="${count + 1}" scope="page" />
+							</c:forEach>
+							--%>
+							<c:out value="${currentUser.initials}" />
+						</c:when>
+						<c:otherwise>
+							<c:out value="none" />
+						</c:otherwise>
+					</c:choose>
+				</a>
                 </div>
-                        
-                    <div id="assigneeSelect2" class="userSelector" style="display: none;">
-                    <display:table name="${userList}" id="user" class="projectUsers"
-                        defaultsort="2">
-                        <display:column title="">
-                            <c:choose>
-                                <c:when test="${user.id == currentUser.id}">
-                                    <input type="checkbox" name="selectedUserIds"
-                                        value="${user.id}" checked="checked" class="user_${user.id}" />
-                                </c:when>
-                                <c:otherwise>
-                                    <input type="checkbox" name="selectedUserIds"
-                                        value="${user.id}" class="user_${user.id}" />
-                                </c:otherwise>
-                            </c:choose>
-                        </display:column>
-                        <display:column><c:out value="${user.fullName}"/></display:column>
-                    </display:table>
-           
-                    <div id="userselect2" class="projectTeams userSelector">
-                        <div class="right">
-                            <label>Teams</label>
-                            <ul class="groups" />
-                    </div>
-                    <script type="text/javascript">
-                        $(document).ready( function() {
-                            <aef:teamList />
-                            <ww:set name="teamList" value="#attr.teamList" />
-                            var teams = [<aef:teamJson items="${teamList}"/>]
-                            $('#userselect2').multiuserselect({groups: teams, root: $('#user')});
-                        });
-                        </script>
-                    </div>
-                    </div>
+  	            <div id="assigneeSelect2" class="userSelector" style="display: none;">           
+                   	<div id="userselect2" class="userSelector">
+                   		<div class="left">
+                   			<label>Preferred users</label>
+                   			<ul class="users_0" />
+                   			<label>Project users</label>
+                   			<ul class="users_1" />
+                   			<label>Other users</label>
+                   			<ul class="users_2" />
+                   		</div>
+                       	<div class="right">
+                           	<label>Teams</label>
+                           	<ul class="groups" />
+                   		</div>
+                   		<script type="text/javascript">
+                       		$(document).ready( function() {
+                           		<aef:teamList />
+                           		<aef:enabledUserList />
+                           		<aef:currentUser />
+                           		<ww:set name="teamList" value="#attr.teamList" />
+                           		<ww:set name="userList" value="#attr.enabledUserList" />
+                           		<ww:set name="currentUser" value="#attr.currentUser" />
+                           		var other = [<aef:userJson items="${aef:listSubstract(userList, target.project.responsibles)}" />];
+                           		var project = [<aef:userJson items="${aef:listSubstract(target.project.responsibles, target.responsibles)}" />];
+                           		var preferred = [<aef:userJson items="${target.responsibles}" />];
+                           		var teams = [<aef:teamJson items="${teamList}"/>];
+                           		<c:choose>
+                           		<c:when test="${aef:listContains(target.responsibles, currentUser)}" >
+                           		var selected = ["${currentUser.id}"];
+                           		</c:when>
+                           		<c:otherwise>
+                           		var selected = [];
+                           		</c:otherwise>
+                           		</c:choose>
+                           		$('#userselect2').multiuserselect({users: [preferred, project, other], groups: teams, root: $('#userselect2')}).selectusers(selected);
+                       		});
+                       	</script>
+                   	</div>
+	            </div>
             </c:when>
 			<c:otherwise>
 				<select name="userId">
-				<c:forEach items="${userList}" var="user">
+				<c:forEach items="${enabledUserList}" var="user">
 					<c:choose>
 						<c:when test="${user.id == hourEntry.user.id}">
 							<option value="${user.id}" selected="selected"><c:out value="${user.fullName}" /></option>

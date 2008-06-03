@@ -542,7 +542,7 @@
 								<img src="static/img/edit.png" alt="Edit" title="Edit" />
 							</ww:a>
 							<ww:a href="%{deleteLink}&contextViewName=editBacklogItem&contextObjectId=${backlogItemId}" onclick="return confirmDeleteHour()">
-								<img src="static/img/delete.png" alt="Delete" title="Delete" />
+								<img src="static/img/delete_18.png" alt="Delete" title="Delete" />
 							</ww:a>
 						</display:column>
 					</display:table>

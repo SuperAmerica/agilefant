@@ -109,6 +109,10 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
             storable.setUser(userDAO.get(userId));
             hourEntryBusiness.store(parent,storable);
         } else if(userIds != null) {
+            if(userIds.size() < 1) {
+                super.addActionError(super.getText("hourEntry.noUsers"));
+                return Action.ERROR;
+            }
             hourEntryBusiness.addHourEntryForMultipleUsers(parent,storable, userIds.keySet());
         }
         return Action.SUCCESS;

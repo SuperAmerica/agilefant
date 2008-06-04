@@ -226,6 +226,32 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
     }
 
     protected void fillStorable(BacklogItem storable) {
+        /**
+         * Hope that this works better now, looks like someone coded this without
+         * understanding hibernate.
+         */
+        if (this.backlogItem.getName() == null || 
+                this.backlogItem.getName().trim().equals("")) {
+            super.addActionError(super.getText("backlogitem.missingName"));
+            return;
+        }
+        // check that AFTime is not negative
+        if (this.backlogItem.getEffortLeft() != null && this.backlogItem.getEffortLeft().getTime() < 0) {
+            super.addActionError("EffortLeft cannot be negative.");
+            return;
+        }        
+        if (this.backlogItem.getOriginalEstimate() != null && this.backlogItem.getOriginalEstimate().getTime() < 0) {
+            super.addActionError("OriginalEstimate cannot be negative.");
+            return;
+        }
+        
+        // check that backlog is valid, see comments near end of method
+        backlog = backlogDAO.get(backlogId);
+        if (backlog == null) {
+            super.addActionError(super.getText("backlog.notFound"));
+            return;
+        }
+
         List<User> responsibles = new ArrayList<User>(userIds.size());
         for(Serializable id : userIds.keySet() ) {
             User user = userDAO.get(id);
@@ -239,11 +265,7 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
             // IterationGoal goal = iterationGoalDAO.get(iterationGoalId);
             storable.setIterationGoal(goal);
         }
-        if (this.backlogItem.getName() == null || 
-                this.backlogItem.getName().trim().equals("")) {
-            super.addActionError(super.getText("backlogitem.missingName"));
-            return;
-        }
+        
         storable.setName(this.backlogItem.getName());
         storable.setDescription(this.backlogItem.getDescription());
         storable.setPriority(this.backlogItem.getPriority());
@@ -279,22 +301,19 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
             storable.setEffortLeft(backlogItem.getEffortLeft());
         }
 
-        // check that AFTime is not negative
-        if (storable.getEffortLeft() != null && storable.getEffortLeft().getTime() < 0) {
-            super.addActionError("EffortLeft cannot be negative.");
-        }        
-        if (storable.getOriginalEstimate() != null && storable.getOriginalEstimate().getTime() < 0) {
-            super.addActionError("OriginalEstimate cannot be negative.");
-        }        
+        
         
         // TODO: REFACTOR THIS when moving backlog items from backlog to another
         // change
         // backlog item's original estimate to current effort left.
-
+        /**
+         * Ei näin, transaktioturvallisuus on ihan kiva asia
         backlog = backlogDAO.get(backlogId);
         if (backlog == null) {
             super.addActionError(super.getText("backlog.notFound"));
+            return;
         }
+        */
         // if we're moving backlogitem, set originalestimate to current
         // effortleft.
         if (storable.getId() > 0 && storable.getBacklog() != null

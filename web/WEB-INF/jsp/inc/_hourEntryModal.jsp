@@ -21,7 +21,7 @@ function updatePastEffort(immediate) {
 		}
 		$("#hourDisplay").load("getHourSum.action",data);
 	} else {
-		if($("#pastEffortInterval").val() == "custom") {
+		if($("#pastEffortInterval").is(":checked")) {
 			$("#pastEffortChoosers").show();
 		} else {
 			$("#pastEffortChoosers").hide();
@@ -55,42 +55,36 @@ function updatePastEffort(immediate) {
 			<td>Past effort</td>
 			<td></td>
 			<td colspan="2">
-				<select style="width: 180px;" name="pastEffortInterval" id="pastEffortInterval" onchange="javascript:updatePastEffort();">
-					<option value="day">Today &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ( ${todayEffortSum} )</option>
-					<option value="yesterday">Yesterday &nbsp; &nbsp; ( ${yesterdayEffortSum} )</option>
-					<option value="week">This week &nbsp; &nbsp;&nbsp;( ${weekEffortSum} )</option>
-					<option value="month">This month &nbsp;&nbsp;( ${monthEffortSum} )</option>
-					<option value="custom">Custom</option>
-				</select>
+				<table>
+					<tr><td>Today:</td><td>${todayEffortSum}</td></tr>
+					<tr><td>Yesterday:</td><td>${yesterdayEffortSum}</td></tr>
+					<tr><td>This week:</td><td>${weekEffortSum}</td></tr>
+					<tr><td>This month:</td><td>${monthEffortSum}</td></tr>
+				</table>
+				<input type="checkbox" name="pastEffortInterval" id="pastEffortInterval" onclick="javascript:updatePastEffort();" /> Custom interval
 				<div id="pastEffortChoosers" style="display: none;">
 					<table>
 					<tr>
-						<td>From</td>
+					<td colspan="4">
+					Specify the time interval:
+					</td>
+					</tr>
+					<tr>
 						<td>
 					<ww:datepicker size="15" showstime="false"
                        format="%{getText('webwork.datepicker.format')}" id="effStartDate" name="startDate" />
 						</td>
-						<td style="width: 200px;"></td>
-						<td></td>
-						</tr>
-						<tr>
-						<td>To</td>
+						<td> - </td>
 						<td>
                		<ww:datepicker size="15" showstime="false"
                        format="%{getText('webwork.datepicker.format')}" id="effEndDate" name="endDate" />
 						</td>
-						<td></td>
-						<td><div id="hourDisplay"></div></td>
-						</tr>
-						<tr>
-						<td></td>
 						<td>
                 	<input type="button" value="Update" onclick="javascript:updatePastEffort(true);"/>     
 						</td>
-						<td></td>
-						<td></td>
 					</tr>
 				</table>
+				<div id="hourDisplay"></div>
 				</div>
 
 

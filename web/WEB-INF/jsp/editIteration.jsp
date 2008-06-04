@@ -317,7 +317,7 @@
 				<display:column sortable="true" title="Original estimate sum">
 					<c:out value="${iterationGoalOrigEstSums[row.id]}" />
 				</display:column>
-				<display:column sortable="false" title="Effort spent">
+				<display:column sortable="false" title="Effort Spent">
 					<c:choose>
 						<c:when test="${iterationGoalEffortSpent[row.id] != null}"><c:out value="${iterationGoalEffortSpent[row.id]}"/></c:when>
 						<c:otherwise>&mdash;</c:otherwise>

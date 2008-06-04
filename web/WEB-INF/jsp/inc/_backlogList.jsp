@@ -214,7 +214,7 @@ function validateDeletion() {
 
 		<c:choose>
 			<c:when test="${hourReport}">
-				<display:column sortable="false" sortProperty="timeSpent" defaultorder="descending" title="Effort spent">
+				<display:column sortable="false" sortProperty="timeSpent" defaultorder="descending" title="Effort Spent">
 					<span style="white-space: nowrap">
 						<c:choose>
 							<c:when test="${bliTotals[item.id] == null}">&mdash;</c:when>

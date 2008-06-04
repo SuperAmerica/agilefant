@@ -15,7 +15,7 @@
 <table id="row">
 <thead>
 <tr>
-<th></th>
+<th>Setting</th>
 <th>Enabled</th>
 </thead>
 <tbody>

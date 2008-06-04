@@ -16,4 +16,6 @@ Nyt on koittanut työreformin aika!<br>
 
 
 
+<img src="http://irestidelcarlino.files.wordpress.com/2006/12/david-hasselhoff-07.jpg" alt="Yeah baby! Want to hard ride tonight?"/>
+
 <%@ include file="./inc/_footer.jsp"%>

@@ -6,7 +6,11 @@
 
 <h2>Kansalaisyhteiskunta</h2>
 
-Arvoisa äänestäjä. Minulla on sinulle <a href="http://www.vayrynen.com/">asiaa.</a><br>
+Arvoisa äänestäjä: Huolestuttaako Teitä kansakuntamme tulevaisuus?<br><br>
+Askarruttaako Teitä kolmikantaneuvotteluiden tulokset sekä viimeaikainen keskustelu NATO-optiosta?<br><br>
+Minulla on juuri sinulle <a href="http://www.vayrynen.com/">asiaa</a>,
+sillä nyt koittanut työreformin aika.<br>
+
 
 
 <%@ include file="./inc/_footer.jsp"%>

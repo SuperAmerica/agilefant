@@ -7,9 +7,10 @@
 <h2>Kansalaisyhteiskunta</h2>
 
 Arvoisa äänestäjä: Huolestuttaako Teitä kansakuntamme tulevaisuus?<br><br>
-Askarruttaako Teitä kolmikantaneuvotteluiden tulokset sekä viimeaikainen keskustelu NATO-optiosta?<br><br>
+Askarruttaako Teitä kolmikantaneuvotteluiden tulokset sekä viimeaikainen keskustelu
+työmarkkinajärjestöjen roolista?<br><br>
 Minulla on juuri sinulle <a href="http://www.vayrynen.com/">asiaa</a>,
-sillä nyt koittanut työreformin aika.<br>
+sillä nyt on koittanut työreformin aika!<br>
 
 
 

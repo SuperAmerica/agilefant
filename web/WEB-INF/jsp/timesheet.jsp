@@ -9,8 +9,8 @@
 Arvoisa äänestäjä: Huolestuttaako Teitä kansakuntamme tulevaisuus?<br><br>
 Askarruttaako Teitä kolmikantaneuvotteluiden tulokset sekä viimeaikainen keskustelu
 työmarkkinajärjestöjen roolista?<br><br>
-Minulla on juuri sinulle <a href="http://www.vayrynen.com/">asiaa</a>,
-sillä nyt on koittanut työreformin aika!<br>
+Minulla on juuri sinulle <a href="http://www.vayrynen.com/">asiaa</a>.
+Nyt on koittanut työreformin aika!<br>
 
 
 

@@ -111,7 +111,7 @@ public class BacklogBusinessTest extends TestCase {
         backlogBusiness.setBacklogItemDAO(bliDAO);
         historyBusiness = createMock(HistoryBusiness.class);
         backlogBusiness.setHistoryBusiness(historyBusiness);
-        hourEntryBusiness.setHourEntryDAO( bliheDAO );
+        hourEntryBusiness.setBacklogItemHourEntryDAO( bliheDAO );
         backlogBusiness.setHourEntryBusiness( hourEntryBusiness );
 
         Backlog backlog = new Iteration();

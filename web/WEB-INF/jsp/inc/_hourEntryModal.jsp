@@ -28,6 +28,16 @@ function updatePastEffort(immediate) {
 		}
 	}
 }
+function saveAndClose() {
+	if(!checkEstimateFormat('hourEntry.timeSpent')) {
+		return false;
+	}
+	var data = $("#hourModalForm").serializeArray();
+	var target = $("#hourModalForm").attr("action");
+	jQuery.post(target,data);
+	jQuery("#closeModal").click();
+	return false;
+}
 </script>
 <div target="AJAX-MODAL" style="width: 690px; height: 20px; padding: 5px; border-bottom: 1px solid black; background: #ccc;">
 	<span style="float: left;">
@@ -41,14 +51,14 @@ function updatePastEffort(immediate) {
 	</c:choose>
 	</span>
 	<span style="float: right;" >
-		<img class="jqmClose" src="static/img/delete.png" alt="">
+		<h href="#"><img id="closeModal" class="jqmClose" src="static/img/delete.png" alt=""></a>
 	</span>
 </div>
 <div style="padding: 12px;">
-<ww:form action="storeHourEntry" onsubmit="javascript: return checkEstimateFormat('hourEntry.timeSpent');">
+<ww:form id="hourModalForm" action="storeHourEntry" onsubmit="javascript: return checkEstimateFormat('hourEntry.timeSpent');">
 	<ww:hidden name="hourEntryId" />
 	<ww:hidden name="backlogItemId" />
-	<ww:hidden name="BacklogId" />
+	<ww:hidden name="backlogId" />
 	
 	<table class="formTable">
 	<tr>
@@ -238,7 +248,9 @@ function updatePastEffort(immediate) {
 		<tr>
 			<td></td>
 			<td></td>				
-			<td><ww:submit value="Store"/> </td>
+			<td>
+			<ww:submit value="Store"/>
+			 </td>
 		</tr>
 	</table>
 </ww:form>

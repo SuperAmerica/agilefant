@@ -1,6 +1,9 @@
 package fi.hut.soberit.agilefant.web.function;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -136,15 +139,18 @@ public class AEFFunctions {
         AFTime sum = new AFTime(0);
         
         if (a != null) {
-            System.out.println(a.toString());
             sum.add(a);
         }
         
         if (b != null) {
-            System.out.println(b.toString());
             sum.add(b);
         }
         
         return sum;
+    }
+    
+    public static String currentTime() {
+        DateFormat fmt  = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        return fmt.format(GregorianCalendar.getInstance().getTime());
     }
 }

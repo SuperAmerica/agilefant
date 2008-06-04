@@ -1,11 +1,11 @@
 <%@ include file="./_taglibs.jsp"%>
 
-<aef:hourReporting id="hourReport"></aef:hourReporting>
+<aef:hourReporting id="hourReport" />
 
 <c:if test="${hourReport}">
-<aef:backlogHourEntrySums id="bliTotals" target="${backlog}" />
+	<aef:backlogHourEntrySums id="bliTotals" target="${backlog}" />
 </c:if>
-
+<aef:currentUser />
 <script language="javascript" type="text/javascript">
 function validateDeletion() {
 	var conf = confirm("The selected backlog items will be gone forever. Are you sure?");
@@ -14,8 +14,24 @@ function validateDeletion() {
 	else
 		return false;
 }
+function newJobEntry(from,bli) {
+	var regex = new RegExp("^[ ]*([0-9]+[.,]?[0-9]*h?)?([ ]*[0-5]?[0-9]min)?[ ]*$");
+	var val =  $("#"+from).val();
+	var data = new Object();
+	data["userId"] = "${currentUser.id}";
+	data["hourEntry.description"] = "";
+	data["date"] = "${aef:currentTime()}";
+	data["backlogItemId"] = bli;
+	data["hourEntry.timeSpent"] = val;	
+	if(regex.test(val)) {
+		jQuery.post("storeHourEntry.action",data);
+	}
+	return true;
+}
 </script>
-
+<c:if test="${hourReport}">
+	<aef:modalAjaxWindow closeOnSubmit="true"/>
+</c:if>
 <ww:form action="doActionOnMultipleBacklogItems">
 
 	<!-- Return to this backlog after submit -->
@@ -135,7 +151,7 @@ function validateDeletion() {
 					
 					<aef:tasklist backlogItem="${item}"
 						contextViewName="${currentAction}" contextObjectId="${backlog.id}"
-						divId="${divId}"/>
+						divId="${divId}" hourReport="${hourReport}"/>
 						
 				</c:when>
 			
@@ -180,7 +196,7 @@ function validateDeletion() {
 						</a>
 						<aef:tasklist backlogItem="${item}"
 							contextViewName="${currentAction}" contextObjectId="${backlog.id}"
-							divId="${divId}" />
+							divId="${divId}" hourReport="${hourReport}" />
 				  </c:otherwise> 
 				
 			</c:choose>

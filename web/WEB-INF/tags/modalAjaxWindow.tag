@@ -1,6 +1,7 @@
 <%@ include file="../jsp/inc/_taglibs.jsp"%>
 
 <%@tag description="Set up ajax listeners and containers for modal window"%>
+<%@attribute name="closeOnSubmit"%>
 
 <div id="modalWindowContainer" class="jqmWindow" style="display: none;"><b>Please wait, content loading...</b></div>
 <script type="text/javascript">
@@ -38,6 +39,14 @@
 					return false;
 				}
 				win.html(data);
+				<c:if test="${closeOnSubmit == 'true'}">
+					win.find("form").submit(function() {
+						var data = $(this).serializeArray();
+						jQuery.post($(this).attr("action"),data);
+						win.find(".jqmClose").click();
+						return false;
+					});
+				</c:if>
 				<%-- register close button to hide the window and remove overlay --%>
 				win.find(".jqmClose").click(function() {
 					win.hide();

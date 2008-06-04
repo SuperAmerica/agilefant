@@ -530,4 +530,11 @@
 	  <function-signature>fi.hut.soberit.agilefant.model.AFTime calculateAFTimeSum(fi.hut.soberit.agilefant.model.AFTime, fi.hut.soberit.agilefant.model.AFTime)</function-signature>
 	</function>
 	
+	<function>
+	  <name>currentTime</name>
+	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
+	  <function-signature>String currentTime()</function-signature>
+	</function>
+	
+	
 </taglib>

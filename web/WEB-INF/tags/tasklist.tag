@@ -7,7 +7,7 @@
 <%@attribute name="divId"%>
 <%@attribute name="contextViewName"%>
 <%@attribute name="contextObjectId"%>
-
+<%@attribute name="hourReport"%>
 <div>
 <ul class="tasklist" id="${divId}" style="display:none;">
 <ww:form action="quickStoreTaskList">
@@ -32,6 +32,17 @@ Effort estimate
 		list="@fi.hut.soberit.agilefant.model.State@values()" listKey="name"
 		listValue="getText('backlogItem.state.' + name())"
 		onchange="change_effort_enabled(this.value, ${backlogItem.id})"/>
+	<c:if test="${hourReport == 'true'}">
+	<br />
+		Effort spent 
+        <ww:url id="hourentryLink" action="createHourEntry" includeParams="none">
+			<ww:param name="backlogItemId" value="${backlogItem.id}" />
+			<ww:param name="autoclose" value="1" />
+		</ww:url>
+		( <ww:a cssClass="openModalWindow" href="%{hourentryLink}">details</ww:a> )		
+		<br />
+		<ww:textfield size="5" name="effortSpent_${backlogItem.id}" id="effortSpent_${backlogItem.id}"/>  
+	</c:if>
 	<hr />
 	
 	<script type="text/javascript">
@@ -71,7 +82,12 @@ Effort estimate
 	</ww:url>
 	<ww:a href="%{createLink}&contextViewName=${contextViewName}&contextObjectId=${contextObjectId}">New task &raquo;</ww:a>
 	<hr />
-	<ww:submit value="Store" action="quickStoreTaskList"/>
+	<c:choose>
+		<c:when test="${hourReport}"><ww:submit value="Store" onclick="javascript:return newJobEntry('effortSpent_${backlogItem.id}',${backlogItem.id});" action="quickStoreTaskList"/></c:when>
+		<c:otherwise>
+			<ww:submit value="Store" action="quickStoreTaskList"/>
+		</c:otherwise>
+	</c:choose>
 </ww:form>
 
 </ul>

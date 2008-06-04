@@ -284,7 +284,10 @@
 				</table>
 			</div>
 			<c:if test="${!empty iteration.iterationGoals}">
-			<aef:backlogHourEntrySums id="iterationGoalEffortSpent" groupBy="IterationGoal" target="${iteration}" />
+			<aef:hourReporting id="hourReport"></aef:hourReporting>
+			<c:if test="${hourReport}">
+				<aef:backlogHourEntrySums id="iterationGoalEffortSpent" groupBy="IterationGoal" target="${iteration}" />
+			</c:if>
 				<div id="subItemContent">
 				<p><display:table class="listTable"
 					name="iteration.iterationGoals" id="row"
@@ -317,12 +320,14 @@
 				<display:column sortable="true" title="Original estimate sum">
 					<c:out value="${iterationGoalOrigEstSums[row.id]}" />
 				</display:column>
-				<display:column sortable="false" title="Effort Spent">
-					<c:choose>
-						<c:when test="${iterationGoalEffortSpent[row.id] != null}"><c:out value="${iterationGoalEffortSpent[row.id]}"/></c:when>
-						<c:otherwise>&mdash;</c:otherwise>
-					</c:choose>
-				</display:column>
+				<c:if test="${hourReport}">
+					<display:column sortable="false" title="Effort Spent">
+						<c:choose>
+							<c:when test="${iterationGoalEffortSpent[row.id] != null}"><c:out value="${iterationGoalEffortSpent[row.id]}"/></c:when>
+							<c:otherwise>&mdash;</c:otherwise>
+						</c:choose>
+					</display:column>
+				</c:if>
 					<display:column sortable="false" title="Actions">
 						<ww:url id="deleteLink" action="deleteIterationGoal"
 							includeParams="none">

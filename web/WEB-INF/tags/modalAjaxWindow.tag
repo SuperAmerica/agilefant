@@ -15,7 +15,13 @@
 			<%-- Create the background overlay --%>
 			var bg = $('<div style="background: #000; opacity: 0.3; z-index: 9; position: absolute; top: 0px; left: 0px; filter:alpha(opacity=30);-moz-opacity:.30;">&nbsp;</div>');
 			win.css("top",pos.top-200).css("z-index","11");
+			<%-- Make sure that the background div covers the whole screen by catching window resize and scroll 
+				 events --%>
 			$(window).resize(function() {
+				bg.css("height",$(document).height()).css("width",$(document).width());
+
+			});
+			$(window).scroll(function() {
 				bg.css("height",$(document).height()).css("width",$(document).width());
 			});
 			$(window).resize();

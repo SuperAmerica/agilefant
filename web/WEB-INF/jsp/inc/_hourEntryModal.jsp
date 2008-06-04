@@ -1,6 +1,10 @@
 <%@ include file="./_taglibs.jsp"%>
 <aef:currentUser />
 <aef:enabledUserList/>
+<aef:userEffortSum user="${currentUser}" timeInterval="Today" id="todayEffortSum" />
+<aef:userEffortSum user="${currentUser}" timeInterval="Yesterday" id="yesterdayEffortSum" />
+<aef:userEffortSum user="${currentUser}" timeInterval="This week" id="weekEffortSum" />
+<aef:userEffortSum user="${currentUser}" timeInterval="This month" id="monthEffortSum" />
 <script type="text/javascript">
 function updatePastEffort(immediate) {
 	var data = new Object();
@@ -18,9 +22,9 @@ function updatePastEffort(immediate) {
 		$("#hourDisplay").load("getHourSum.action",data);
 	} else {
 		if($("#pastEffortInterval").val() == "custom") {
-			$("#pastEfforChoosers").show();
+			$("#pastEffortChoosers").show();
 		} else {
-			$("#pastEfforChoosers").hide();
+			$("#pastEffortChoosers").hide();
 		}
 	}
 }
@@ -52,13 +56,13 @@ function updatePastEffort(immediate) {
 			<td></td>
 			<td colspan="2">
 				<select style="width: 180px;" name="pastEffortInterval" id="pastEffortInterval" onchange="javascript:updatePastEffort();">
-					<option value="day">Today &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ( <%-- IMPLEMENT --%> )</option>
-					<option value="yesterday">Yesterday &nbsp; &nbsp; ( <%-- IMPLEMENT --%> )</option>
-					<option value="week">This week &nbsp; &nbsp;&nbsp;( <%-- IMPLEMENT --%> )</option>
-					<option value="month">This month &nbsp;&nbsp;( <%-- IMPLEMENT --%> )</option>
+					<option value="day">Today &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ( ${todayEffortSum} )</option>
+					<option value="yesterday">Yesterday &nbsp; &nbsp; ( ${yesterdayEffortSum} )</option>
+					<option value="week">This week &nbsp; &nbsp;&nbsp;( ${weekEffortSum} )</option>
+					<option value="month">This month &nbsp;&nbsp;( ${monthEffortSum} )</option>
 					<option value="custom">Custom</option>
 				</select>
-				<div id="pastEfforChoosers" style="display: none;">
+				<div id="pastEffortChoosers" style="display: none;">
 					<table>
 					<tr>
 						<td>From</td>

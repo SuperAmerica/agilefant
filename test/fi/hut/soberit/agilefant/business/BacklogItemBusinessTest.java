@@ -39,7 +39,7 @@ public class BacklogItemBusinessTest extends TestCase {
         bliBusiness.setBacklogItemDAO(bliDAO);
         bliBusiness.setHistoryBusiness(historyBusiness);
         bliBusiness.setHourEntryBusiness(hourEntryBusiness);
-        hourEntryBusiness.setHourEntryDAO( bliheDAO );
+        hourEntryBusiness.setBacklogItemHourEntryDAO( bliheDAO );
         Backlog backlog = new Iteration();
         backlog.setId(100);
         BacklogItem bli = new BacklogItem();

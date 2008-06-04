@@ -29,7 +29,7 @@ public class HourEntryBusinessTest extends TestCase {
     public void testGetEntriesByBacklogItem() {
         bheDAO = createMock(BacklogItemHourEntryDAO.class);
         bhe = new HourEntryBusinessImpl();
-        bhe.setHourEntryDAO(bheDAO);
+        bhe.setBacklogItemHourEntryDAO(bheDAO);
         List<BacklogItemHourEntry> data = new ArrayList<BacklogItemHourEntry>();
         
 

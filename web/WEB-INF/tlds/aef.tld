@@ -363,6 +363,28 @@
 	    </attribute>
 	</tag>
 
+	<tag>
+		<name>userEffortSum</name>
+		<tag-class>fi.hut.soberit.agilefant.web.tag.UserEffortSumTag</tag-class>
+		<body-content>JSP</body-content>
+		<description>
+			Calculate the user's hour entry sums for Today/Yesterday/This week/This month.
+	   </description>
+	    <attribute>
+	    	<name>id</name>
+	    	<required>true</required>	  
+	    </attribute>    
+	    <attribute>
+	    	<name>user</name>
+	    	<required>true</required>	    
+	    	<rtexprvalue>true</rtexprvalue> 
+	    </attribute>
+	    <attribute>
+	    	<name>timeInterval</name>
+	    	<required>true</required>
+	    </attribute>
+	</tag>
+
 	<tag-file>
 		<name>backlogDropdown</name>
 		<path>/WEB-INF/tags/backlogDropdown.tag</path>

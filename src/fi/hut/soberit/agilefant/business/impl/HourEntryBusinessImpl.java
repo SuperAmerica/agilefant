@@ -7,9 +7,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.lang.IllegalArgumentException;
 
 import fi.hut.soberit.agilefant.business.HourEntryBusiness;
 import fi.hut.soberit.agilefant.db.BacklogItemHourEntryDAO;
+import fi.hut.soberit.agilefant.db.HourEntryDAO;
 import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.Backlog;
@@ -22,14 +24,22 @@ import fi.hut.soberit.agilefant.model.User;
 public class HourEntryBusinessImpl implements HourEntryBusiness {
     private BacklogItemHourEntryDAO backlogItemHourEntryDAO;
     private UserDAO userDAO;
-
+    private HourEntryDAO hourEntryDAO;
 
     
-    public void setHourEntryDAO(BacklogItemHourEntryDAO hourEntryDAO) {
+    public HourEntryDAO getHourEntryDAO() {
+        return hourEntryDAO;
+    }
+
+    public void setHourEntryDAO(HourEntryDAO hourEntryDAO) {
+        this.hourEntryDAO = hourEntryDAO;
+    } 
+    
+    public void setBacklogItemHourEntryDAO(BacklogItemHourEntryDAO hourEntryDAO) {
         this.backlogItemHourEntryDAO = hourEntryDAO;
     }
     
-    public BacklogItemHourEntryDAO getHourEntryDAO() {
+    public BacklogItemHourEntryDAO getBacklogItemHourEntryDAO() {
         return backlogItemHourEntryDAO;
     }
     public HourEntry getId(int id) {
@@ -156,5 +166,36 @@ public class HourEntryBusinessImpl implements HourEntryBusiness {
                           
             }
         }
-    } 
+    }
+    
+    public AFTime getEffortSumByUserAndTimeInterval(User user, String startDate, String endDate)
+            throws IllegalArgumentException {
+        AFTime sum;
+        try {
+            Date start = this.formatDate(startDate);
+            Date end = this.formatDate(endDate);   
+            sum = getEffortSumByUserAndTimeInterval(user,start,end);
+        } catch (ParseException pe) {
+            throw new IllegalArgumentException("Invalid format.");
+        }
+        return sum;
+    }
+    
+    public AFTime getEffortSumByUserAndTimeInterval(User user, Date start, Date end)
+            throws IllegalArgumentException {        
+        AFTime sum;
+                
+        if (start.after(end)) {
+            throw new IllegalArgumentException("StartDate after endDate.");
+        } else {
+            sum = this.hourEntryDAO
+                      .getEffortSumByUserAndTimeInterval(user, start, end);
+        }  
+        
+        if (sum == null) {
+            sum = new AFTime(0);
+        }
+        
+        return sum;
+    }
 }

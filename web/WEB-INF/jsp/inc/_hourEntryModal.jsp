@@ -1,6 +1,30 @@
 <%@ include file="./_taglibs.jsp"%>
 <aef:currentUser />
 <aef:enabledUserList/>
+<script type="text/javascript">
+function updatePastEffort(immediate) {
+	var data = new Object();
+	if(immediate) { 
+		data["startDate"] = $("#effStartDate").val();
+		data["endDate"] = $("#effEndDate").val();
+		if(data["startDate"].length < 3) {
+			alert("From date -field is empty!"); 
+			return;
+		}
+		if(data["endDate"].length < 3) {
+			alert("To date -field is empty!");
+			return;
+		}
+		$("#hourDisplay").load("getHourSum.action",data);
+	} else {
+		if($("#pastEffortInterval").val() == "custom") {
+			$("#pastEfforChoosers").show();
+		} else {
+			$("#pastEfforChoosers").hide();
+		}
+	}
+}
+</script>
 <div target="AJAX-MODAL" style="width: 690px; height: 20px; padding: 5px; border-bottom: 1px solid black; background: #ccc;">
 	<span style="float: left;">
 	<c:choose>
@@ -23,7 +47,52 @@
 	<ww:hidden name="BacklogId" />
 	
 	<table class="formTable">
-	
+	<tr>
+			<td>Past effort</td>
+			<td></td>
+			<td colspan="2">
+				<select style="width: 180px;" name="pastEffortInterval" id="pastEffortInterval" onchange="javascript:updatePastEffort();">
+					<option value="day">Today &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ( <%-- IMPLEMENT --%> )</option>
+					<option value="yesterday">Yesterday &nbsp; &nbsp; ( <%-- IMPLEMENT --%> )</option>
+					<option value="week">This week &nbsp; &nbsp;&nbsp;( <%-- IMPLEMENT --%> )</option>
+					<option value="month">This month &nbsp;&nbsp;( <%-- IMPLEMENT --%> )</option>
+					<option value="custom">Custom</option>
+				</select>
+				<div id="pastEfforChoosers" style="display: none;">
+					<table>
+					<tr>
+						<td>From</td>
+						<td>
+					<ww:datepicker size="15" showstime="false"
+                       format="%{getText('webwork.datepicker.format')}" id="effStartDate" name="startDate" />
+						</td>
+						<td style="width: 200px;"></td>
+						<td></td>
+						</tr>
+						<tr>
+						<td>To</td>
+						<td>
+               		<ww:datepicker size="15" showstime="false"
+                       format="%{getText('webwork.datepicker.format')}" id="effEndDate" name="endDate" />
+						</td>
+						<td></td>
+						<td><div id="hourDisplay"></div></td>
+						</tr>
+						<tr>
+						<td></td>
+						<td>
+                	<input type="button" value="Update" onclick="javascript:updatePastEffort(true);"/>     
+						</td>
+						<td></td>
+						<td></td>
+					</tr>
+				</table>
+				</div>
+
+
+
+			</td>
+		</tr>
 	<tr>
 			<td>Effort spent</td>
 			<td></td>

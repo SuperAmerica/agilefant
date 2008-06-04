@@ -122,6 +122,7 @@ public class HourEntryBusinessImpl implements HourEntryBusiness {
             backlogItemHourEntryDAO.getSumsByBacklog(parent);
         
         for (BacklogItemHourEntry entry : entries) {
+            if (entry.getBacklogItem().getIterationGoal() != null) {
             AFTime currentSum = sums.get(entry.getBacklogItem().getIterationGoal().getId());
             AFTime timeSpent = entry.getTimeSpent();
             
@@ -134,6 +135,7 @@ public class HourEntryBusinessImpl implements HourEntryBusiness {
             }
             
             sums.put(entry.getBacklogItem().getIterationGoal().getId(), currentSum);
+            }
         }
         
         return sums;

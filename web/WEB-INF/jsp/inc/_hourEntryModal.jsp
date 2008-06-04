@@ -95,11 +95,11 @@
                    		<div class="left">
                    			<c:set var="listSize" value="${fn:length(target.responsibles)}" scope="page" />
                    			<c:if test="${listSize > 0}">
-                   				<label>Preferred users</label>
+                   				<label>Responsible</label>
                    				<ul class="users_0" />
                    			</c:if>
                    			<c:if test="${!aef:isProduct(target.backlog)}">
-								<label>Project users</label>
+								<label>Assigned to project</label>
                    				<ul class="users_1" />
                    			</c:if>
                    			<c:if test="${listSize > 0 || !aef:isProduct(target.backlog)}">

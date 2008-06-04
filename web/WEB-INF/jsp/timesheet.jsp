@@ -6,6 +6,7 @@
 
 <h2>Kansalaisyhteiskunta</h2>
 
+<img src="http://www.vayrynen.com/pics/navi_picture.jpg" alt="Paavo rulaa!" /><br>
 Arvoisa äänestäjä: Huolestuttaako Teitä kansakuntamme tulevaisuus?<br><br>
 Askarruttaako Teitä kolmikantaneuvotteluiden tulokset sekä viimeaikainen keskustelu
 työmarkkinajärjestöjen roolista?<br><br>

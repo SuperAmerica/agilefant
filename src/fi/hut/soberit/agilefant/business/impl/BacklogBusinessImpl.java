@@ -17,6 +17,7 @@ import org.apache.log4j.Logger;
 import fi.hut.soberit.agilefant.business.BacklogBusiness;
 import fi.hut.soberit.agilefant.business.BacklogItemBusiness;
 import fi.hut.soberit.agilefant.business.HistoryBusiness;
+import fi.hut.soberit.agilefant.business.HourEntryBusiness;
 import fi.hut.soberit.agilefant.db.AssignmentDAO;
 import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
@@ -60,6 +61,8 @@ public class BacklogBusinessImpl implements BacklogBusiness {
     private IterationGoalDAO iterationGoalDAO;
     
     private BacklogItemBusiness backlogitemBusiness;
+    
+    private HourEntryBusiness hourEntryBusiness;
 
     // @Override
     public void deleteMultipleItems(int backlogId, int[] backlogItemIds)
@@ -76,6 +79,8 @@ public class BacklogBusinessImpl implements BacklogBusiness {
             while (iterator.hasNext()) {
                 BacklogItem item = iterator.next();
                 if (item.getId() == id) {
+                    // Remove all hour entries inside the backlogItem in question
+                    hourEntryBusiness.removeHourEntriesByBacklogItem( item );
                     iterator.remove();
                     backlogItemDAO.remove(id);
                 }
@@ -716,5 +721,13 @@ public class BacklogBusinessImpl implements BacklogBusiness {
 
     public void setBacklogitemBusiness(BacklogItemBusiness backlogitemBusiness) {
         this.backlogitemBusiness = backlogitemBusiness;
+    }
+
+    public HourEntryBusiness getHourEntryBusiness() {
+        return hourEntryBusiness;
+    }
+
+    public void setHourEntryBusiness(HourEntryBusiness hourEntryBusiness) {
+        this.hourEntryBusiness = hourEntryBusiness;
     }
 }

@@ -15,9 +15,11 @@ import java.util.List;
 
 import junit.framework.TestCase;
 import fi.hut.soberit.agilefant.business.impl.BacklogBusinessImpl;
+import fi.hut.soberit.agilefant.business.impl.HourEntryBusinessImpl;
 import fi.hut.soberit.agilefant.db.AssignmentDAO;
 import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
+import fi.hut.soberit.agilefant.db.BacklogItemHourEntryDAO;
 import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.AFTime;
@@ -42,11 +44,14 @@ public class BacklogBusinessTest extends TestCase {
 
     private BacklogBusinessImpl backlogBusiness = new BacklogBusinessImpl();
     private HistoryBusiness historyBusiness;
+    private HourEntryBusinessImpl hourEntryBusiness = new HourEntryBusinessImpl();
     private BacklogItemDAO bliDAO;
     private BacklogDAO backlogDAO;
     private AssignmentDAO assignmentDAO;
     private UserDAO userDAO;
+    private BacklogItemHourEntryDAO bliheDAO;
 
+        
     public void testChangePriorityOfMultipleItems() throws Exception {
         bliDAO = createMock(BacklogItemDAO.class);
         backlogBusiness.setBacklogItemDAO(bliDAO);
@@ -102,9 +107,12 @@ public class BacklogBusinessTest extends TestCase {
         backlogDAO = createMock(BacklogDAO.class);
         backlogBusiness.setBacklogDAO(backlogDAO);
         bliDAO = createMock(BacklogItemDAO.class);
+        bliheDAO = createMock( BacklogItemHourEntryDAO.class );
         backlogBusiness.setBacklogItemDAO(bliDAO);
         historyBusiness = createMock(HistoryBusiness.class);
         backlogBusiness.setHistoryBusiness(historyBusiness);
+        hourEntryBusiness.setHourEntryDAO( bliheDAO );
+        backlogBusiness.setHourEntryBusiness( hourEntryBusiness );
 
         Backlog backlog = new Iteration();
         backlog.setId(100);

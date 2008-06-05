@@ -262,7 +262,30 @@
 </c:choose>
 
 
-
+<script type="text/javascript">
+$(document).ready( function() {
+    $('.moveUp').click(function() {
+        var me = $(this);
+        $.get(me.attr('href'), null, function() {me.moveup();});
+        return false;
+        });
+    $('.moveDown').click(function() {
+        var me = $(this);
+        $.get(me.attr('href'), null, function() {me.movedown();});
+        return false;
+        });
+    $('.moveTop').click(function() {
+        var me = $(this);
+        $.get(me.attr('href'), null, function() {me.movetop();});
+        return false;
+        });
+    $('.moveBottom').click(function() {
+        var me = $(this);
+        $.get(me.attr('href'), null, function() {me.movebottom();});
+        return false;
+        });
+});
+</script>
 
 
 <table>
@@ -291,10 +314,10 @@
 				<div id="subItemContent">
 				<p><display:table class="listTable"
 					name="iteration.iterationGoals" id="row"
-					requestURI="editIteration.action" defaultsort="1">
+					requestURI="editIteration.action">
 
 					<display:column sortable="true" title="Name" sortProperty="name"
-						class="longNameColumn">
+						class="iterationGoalNameColumn">
 						<ww:url id="editLink" action="editIterationGoal"
 							includeParams="none">
 							<ww:param name="iterationGoalId" value="${row.id}" />
@@ -320,6 +343,7 @@
 				<display:column sortable="true" title="Original estimate sum">
 					<c:out value="${iterationGoalOrigEstSums[row.id]}" />
 				</display:column>
+				
 				<c:if test="${hourReport}">
 					<display:column sortable="false" title="Effort Spent">
 						<c:choose>
@@ -328,16 +352,53 @@
 						</c:choose>
 					</display:column>
 				</c:if>
-					<display:column sortable="false" title="Actions">
+
+				<display:column sortable="false" title="Actions" class="actionColumn">
+						<ww:url id="moveTopLink" action="prioritizeIterationGoal" includeParams="none">
+							<ww:param name="iterationGoalId" value="${row.id}" />
+							<ww:param name="iterationId" value="${iterationId}" />
+						</ww:url>
+						<ww:a cssClass="moveTop" href="%{moveTopLink}&amp;moveTo=top">
+							<img src="static/img/arrow_top.png" alt="Send to top"
+								title="Send to top" />
+						</ww:a>
+
+						<ww:url id="moveUpLink" action="prioritizeIterationGoal"  includeParams="none">
+							<ww:param name="iterationGoalId" value="${row.id}" />
+                            <ww:param name="iterationId" value="${iterationId}" />
+						</ww:url>
+						<ww:a cssClass="moveUp" href="%{moveUpLink}&amp;moveTo=up">
+							<img src="static/img/arrow_up.png" alt="Move up"
+								title="Move up" />
+						</ww:a>
+						<ww:url id="moveDownLink" action="prioritizeIterationGoal" includeParams="none">
+							<ww:param name="iterationGoalId" value="${row.id}" />
+                            <ww:param name="iterationId" value="${iterationId}" />
+						</ww:url>
+						<ww:a cssClass="moveDown" href="%{moveDownLink}&amp;moveTo=down">
+							<img src="static/img/arrow_down.png" alt="Move down"
+        						title="Move down" />
+						</ww:a>
+
+						<ww:url id="moveBottomLink" action="prioritizeIterationGoal" includeParams="none">
+							<ww:param name="iterationGoalId" value="${row.id}" />
+                            <ww:param name="iterationId" value="${iterationId}" />
+						</ww:url>
+						<ww:a cssClass="moveBottom" href="%{moveBottomLink}&amp;moveTo=bottom">
+							<img src="static/img/arrow_bottom.png" alt="Send to bottom"
+								title="Send to bottom" />
+						</ww:a>
 						<ww:url id="deleteLink" action="deleteIterationGoal"
 							includeParams="none">
 							<ww:param name="iterationGoalId" value="${row.id}" />
 							<ww:param name="iterationId" value="${iteration.id}" />
 						</ww:url>
-						<ww:a href="%{deleteLink}" onclick="return confirmDelete()">Delete</ww:a>
-					</display:column>
+						<ww:a href="%{deleteLink}" onclick="return confirmDelete()">
+							<img src="static/img/delete.png" alt="Delete" title="Delete" />
+							</ww:a>
+		      			</display:column>
 
-				</display:table></p>
+					</display:table></p>
 				</div>
 			</c:if>
 

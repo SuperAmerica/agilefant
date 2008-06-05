@@ -620,6 +620,14 @@
 				<param name="actionName">popContext</param>
 			</result>
 		</action>
+		
+		<action name="prioritizeIterationGoal" method="prioritizeIterationGoal"
+            class="iterationGoalAction">
+            <result type="redirect-action">
+                <param name="actionName">editIteration</param>
+                <param name="iterationId">${iterationId}</param>
+            </result>
+        </action>
 
 		<action name="moveIterationGoal" method="moveIterationGoal"
 			class="iterationAction">

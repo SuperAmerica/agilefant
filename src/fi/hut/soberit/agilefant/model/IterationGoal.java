@@ -38,7 +38,6 @@ import fi.hut.soberit.agilefant.web.page.PageItem;
  * @see fi.hut.soberit.agilefant.model.BacklogItem
  */
 @Entity
-@BatchSize(size=20)
 @Table(name = "iterationgoal")
 public class IterationGoal implements PageItem {
 
@@ -52,7 +51,7 @@ public class IterationGoal implements PageItem {
 
     private Collection<BacklogItem> backlogItems = new HashSet<BacklogItem>();
 
-    private Integer priority;
+    private Integer priority = new Integer(0);
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -120,7 +119,7 @@ public class IterationGoal implements PageItem {
         this.backlogItems = backlogItems;
     }
 
-    @Column(nullable = true)
+    @Column(nullable = false)
     public Integer getPriority() {
         return priority;
     }

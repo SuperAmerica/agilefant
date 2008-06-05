@@ -4,7 +4,7 @@
 	<head>
 		<link rel="stylesheet" href="webwork/jscalendar/calendar-blue.css" type="text/css"/>
 		<title>Agilefant</title>
-		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <style type="text/css" media="screen,projection">
 <!--
 @import url(static/css/v5.css); 

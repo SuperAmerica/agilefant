@@ -15,6 +15,8 @@
 		class="fi.hut.soberit.agilefant.business.impl.BacklogItemBusinessImpl" />
 	<bean id="historyBusiness"
 		class="fi.hut.soberit.agilefant.business.impl.HistoryBusinessImpl" />
+	<bean id="iterationGoalBusiness"
+        class="fi.hut.soberit.agilefant.business.impl.IterationGoalBusinessImpl" />
 	<bean id="taskBusiness"
 		class="fi.hut.soberit.agilefant.business.impl.TaskBusinessImpl" />
 	<bean id="teamBusiness"
@@ -23,7 +25,6 @@
 		class="fi.hut.soberit.agilefant.business.impl.SettingBusinessImpl" />
 	<bean id="hourEntryBusiness"
 		class="fi.hut.soberit.agilefant.business.impl.HourEntryBusinessImpl" />
-
 
 	<bean name="chartBusiness"
 		class="fi.hut.soberit.agilefant.business.impl.ChartBusinessImpl">

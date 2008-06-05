@@ -763,6 +763,14 @@ div.legend {
 	margin-top:0pt;
 }
 
+.actionColumn {
+    white-space: nowrap;
+}
+
+.iterationGoalNameColumn {
+    width: 200px;
+}
+
 /** AJAX MODALS **/
 .jqmWindow {
     display: none;

@@ -8,6 +8,7 @@ import com.opensymphony.xwork.ActionSupport;
 
 import fi.hut.soberit.agilefant.business.BacklogBusiness;
 import fi.hut.soberit.agilefant.business.BacklogItemBusiness;
+import fi.hut.soberit.agilefant.business.IterationGoalBusiness;
 import fi.hut.soberit.agilefant.db.IterationDAO;
 import fi.hut.soberit.agilefant.db.IterationGoalDAO;
 import fi.hut.soberit.agilefant.model.AFTime;
@@ -25,6 +26,8 @@ public class IterationGoalAction extends ActionSupport implements CRUDAction {
     private IterationGoalDAO iterationGoalDAO;
     
     private BacklogBusiness backlogBusiness;
+    
+    private IterationGoalBusiness iterationGoalBusiness;
 
     private int iterationId;
 
@@ -37,6 +40,8 @@ public class IterationGoalAction extends ActionSupport implements CRUDAction {
     private Collection<IterationGoal> iterationGoals = new ArrayList<IterationGoal>();
     
     private EffortSumData effortLeftSum;
+    
+    private String moveTo = "";
     
     //private AFTime effortLeftSum = new AFTime(0);
     
@@ -74,14 +79,43 @@ public class IterationGoalAction extends ActionSupport implements CRUDAction {
         iteration = iterationGoal.getIteration();
         iterationId = iteration.getId();
         
-        
-        
         // Calculate effort lefts and original estimates
         Collection<BacklogItem> items = iterationGoal.getBacklogItems();
         effortLeftSum = backlogBusiness.getEffortLeftSum(items);
         origEstSum = backlogBusiness.getOriginalEstimateSum(items);
        
         return Action.SUCCESS;
+    }
+    
+    public String prioritizeIterationGoal() {
+        
+        iterationGoal = iterationGoalDAO.get(iterationGoalId);
+        
+        if (iterationGoal == null) {
+            return CRUDAction.AJAX_ERROR;
+        }
+        
+        if (moveTo.equalsIgnoreCase("top")) {
+            // Send the iteration goal to top
+            iterationGoalBusiness.moveToTop(iterationGoal);
+        }
+        else if (moveTo.equalsIgnoreCase("up")) {
+            // Move the iteration goal up
+            iterationGoalBusiness.moveUp(iterationGoal);
+        }
+        else if (moveTo.equalsIgnoreCase("down")) {
+            // Move the iteration goal up
+            iterationGoalBusiness.moveDown(iterationGoal);
+        }
+        else if (moveTo.equalsIgnoreCase("bottom")) {
+            // Send the iteration goal to bottom
+            iterationGoalBusiness.moveToBottom(iterationGoal);
+        }
+        else {
+            // Invalid selection
+            return CRUDAction.AJAX_ERROR;
+        }
+        return CRUDAction.AJAX_SUCCESS;
     }
 
     public String store() {
@@ -121,7 +155,12 @@ public class IterationGoalAction extends ActionSupport implements CRUDAction {
             storable.setIteration(iteration);
             storable.setName(this.iterationGoal.getName());
             storable.setDescription(this.iterationGoal.getDescription());
-            // storable.setPriority(this.iterationGoal.getPriority());
+            
+            // Set the priority number
+            if (iterationGoalId == 0) {
+                storable.setPriority(iterationGoalBusiness.getNewPriorityNumber(iteration));
+            }
+            
         }
     }
 
@@ -185,4 +224,13 @@ public class IterationGoalAction extends ActionSupport implements CRUDAction {
         this.backlogBusiness = backlogBusiness;
     }
 
+    public void setMoveTo(String moveTo) {
+        this.moveTo = moveTo;
+    }
+
+    public void setIterationGoalBusiness(IterationGoalBusiness iterationGoalBusiness) {
+        this.iterationGoalBusiness = iterationGoalBusiness;
+    }
+    
+    
 }

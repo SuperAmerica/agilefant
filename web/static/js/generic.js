@@ -77,7 +77,7 @@ function validateEstimateFormat(value) {
 	var hourOnly = new RegExp("^[ ]*[0-9]h?[ ]*$"); //10h
 	var minuteOnly = new RegExp("^[ ]*[0-5]?[0-9]min[ ]*$"); //10min
 	var hourAndMinute = new RegExp("^[ ]*[0-9]+h[ ]+[0-5]?[0-9]min[ ]*$"); //1h 10min
-	var shortFormat = new RegExp("^[ ]*[0-9]+[.,][0-9]+[ ]*$"); //1.5 or 1,5
+	var shortFormat = new RegExp("^[0-9]+[.,][0-9]+$"); //1.5 or 1,5
 	return (hourOnly.test(value) || minuteOnly.test(value) || hourAndMinute.test(value) || shortFormat.test(value));
 }
 function checkEstimateFormat(field) {

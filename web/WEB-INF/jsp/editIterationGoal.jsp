@@ -3,6 +3,7 @@
 
 <aef:hourReporting id="hourReport"></aef:hourReporting>
 <c:if test="${hourReport}">
+<aef:modalAjaxWindow closeOnSubmit="true"/>
 <aef:backlogHourEntrySums id="bliTotals" target="${iteration}" />
 <c:set var="totalSum" value="${null}" />
 </c:if>
@@ -245,7 +246,7 @@
 								</ww:url> <div style="margin:0px auto;background-image:url(${imgUrl}); background-position: -16px -4px; height:8px; width:82px; background-repeat:no-repeat;border-right:1px solid #BFBFBF; "></div> </a>
 								<aef:tasklist backlogItem="${row}"
 									contextViewName="editIterationGoal"
-									contextObjectId="${iterationGoal.id}" divId="${divId}" />
+									contextObjectId="${iterationGoal.id}" divId="${divId}" hourReport="${hourReport}" />
 							</c:when>
 							<c:otherwise>
 								<a href="javascript:toggleDiv(${divId});" title="Click to expand">
@@ -287,7 +288,7 @@
                         </a>
 								<aef:tasklist backlogItem="${row}"
 									contextViewName="editIterationGoal"
-									contextObjectId="${iterationGoal.id}" divId="${divId}" />
+									contextObjectId="${iterationGoal.id}" divId="${divId}" hourReport="${hourReport}" />
 							</c:otherwise>
 						</c:choose>
 					</display:column>

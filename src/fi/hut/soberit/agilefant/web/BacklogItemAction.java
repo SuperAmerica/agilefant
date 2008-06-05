@@ -18,6 +18,7 @@ import com.opensymphony.xwork.ActionSupport;
 import fi.hut.soberit.agilefant.business.BacklogBusiness;
 import fi.hut.soberit.agilefant.business.BacklogItemBusiness;
 import fi.hut.soberit.agilefant.business.HistoryBusiness;
+import fi.hut.soberit.agilefant.business.HourEntryBusiness;
 import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.db.IterationGoalDAO;
@@ -72,10 +73,14 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
     private BacklogBusiness backlogBusiness;
 
     private BacklogItemBusiness backlogItemBusiness;
+    
+    private HourEntryBusiness hourEntryBusiness;
 
     private Map<Integer, State> taskStates = new HashMap<Integer, State>();
     
     private List<User> possibleResponsibles = new ArrayList<User>();
+    
+    private String spentEffort = null;
 
     public Map<Integer, State> getTaskStates() {
         return taskStates;
@@ -211,6 +216,19 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
         } catch (ObjectNotFoundException e) {
             addActionError(e.getMessage());
             return Action.ERROR;
+        }
+        //should be refactored to the business layer
+        if(spentEffort != null) {
+            AFTime eff = null;
+            try {
+               eff = new AFTime(spentEffort,false);
+               BacklogItem parent = backlogItemDAO.get(backlogItemId);
+               if(parent != null) {
+                   hourEntryBusiness.addEntryForCurrentUser(parent, eff);
+               }
+            } catch ( IllegalArgumentException e ) {
+                addActionError("Invalid format in spent effort.");
+            } 
         }
         return Action.SUCCESS;
     }
@@ -477,6 +495,22 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
 
     public void setPossibleResponsibles(List<User> possibleResponsibles) {
         this.possibleResponsibles = possibleResponsibles;
+    }
+
+    public String getSpentEffort() {
+        return spentEffort;
+    }
+
+    public void setSpentEffort(String spentEffort) {
+        this.spentEffort = spentEffort;
+    }
+
+    public HourEntryBusiness getHourEntryBusiness() {
+        return hourEntryBusiness;
+    }
+
+    public void setHourEntryBusiness(HourEntryBusiness hourEntryBusiness) {
+        this.hourEntryBusiness = hourEntryBusiness;
     }
     
     

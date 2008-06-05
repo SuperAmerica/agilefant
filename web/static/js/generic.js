@@ -87,3 +87,19 @@ function checkEstimateFormat(field) {
 	}
 	return true;
 }
+function validateSpentEffortById(id,msg) {
+	var el = $("#"+id);
+	if(el.length == 0) { //allow empty
+		return true;
+	}
+	var val = el.val();
+	var regex = new RegExp("^[ ]*([0-9]+[.,]?[0-9]*h?)?([ ]*[0-5]?[0-9]min)?[ ]*$");
+	if(val.length == 0) {
+		return true;
+	}
+	if(regex.test(val) == false) {
+		alert(msg);
+		return false;
+	}
+	return true;
+}

@@ -3,6 +3,7 @@
 <aef:hourReporting id="hourReport"></aef:hourReporting>
 <c:if test="${hourReport}">
 <aef:backlogHourEntrySums id="bliTotals" target="${backlog}" />
+<aef:modalAjaxWindow closeOnSubmit="true"/>
 </c:if>
 
 
@@ -184,7 +185,7 @@
 
 								<aef:tasklist backlogItem="${item1}"
 									contextViewName="${currentAction}"
-									contextObjectId="${backlog.id}" divId="${divId}" />
+									contextObjectId="${backlog.id}" divId="${divId}" hourReport="${hourReport}" />
 							</c:when>
 							<c:otherwise>
 								<a href="javascript:toggleDiv(${divId});"
@@ -237,7 +238,7 @@
 								</c:choose> </a>
 								<aef:tasklist backlogItem="${item1}"
 									contextViewName="${currentAction}"
-									contextObjectId="${backlog.id}" divId="${divId}" />
+									contextObjectId="${backlog.id}" divId="${divId}" hourReport="${hourReport}" />
 							</c:otherwise>
 						</c:choose>
 					</display:column>

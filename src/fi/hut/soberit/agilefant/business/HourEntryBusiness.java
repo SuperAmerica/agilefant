@@ -35,6 +35,11 @@ public interface HourEntryBusiness {
      * Store
      */
     public void store(TimesheetLoggable parent, HourEntry hourEntry);
+    /**
+     * Add hour entry for current user
+     */
+    public void addEntryForCurrentUser(TimesheetLoggable parent, AFTime effort);
+    
     
     public HourEntry getId(int id);
     /**

@@ -14,20 +14,7 @@ function validateDeletion() {
 	else
 		return false;
 }
-function newJobEntry(from,bli) {
-	var regex = new RegExp("^[ ]*([0-9]+[.,]?[0-9]*h?)?([ ]*[0-5]?[0-9]min)?[ ]*$");
-	var val =  $("#"+from).val();
-	var data = new Object();
-	data["userId"] = "${currentUser.id}";
-	data["hourEntry.description"] = "";
-	data["date"] = "${aef:currentTime()}";
-	data["backlogItemId"] = bli;
-	data["hourEntry.timeSpent"] = val;	
-	if(regex.test(val)) {
-		jQuery.post("storeHourEntry.action",data);
-	}
-	return true;
-}
+
 </script>
 <c:if test="${hourReport}">
 	<aef:modalAjaxWindow closeOnSubmit="true"/>

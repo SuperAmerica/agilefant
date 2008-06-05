@@ -66,13 +66,16 @@ function saveAndClose() {
 			<td></td>
 			<td colspan="2">
 				<table>
-					<tr><td>Today:</td><td>${todayEffortSum}</td></tr>
-					<tr><td>Yesterday:</td><td>${yesterdayEffortSum}</td></tr>
-					<tr><td>This week:</td><td>${weekEffortSum}</td></tr>
-					<tr><td>This month:</td><td>${monthEffortSum}</td></tr>
+					<tr><td>Today:</td><td>${todayEffortSum}</td><td style="width: 50px;"></td>
+					<td>This week:</td><td>${weekEffortSum}</td>
+					
+					</tr><tr>
+					<td>Yesterday:</td><td>${yesterdayEffortSum}</td>
+					<td></td>
+					<td>This month:</td><td>${monthEffortSum}</td></tr>
 				</table>
 				<input type="checkbox" name="pastEffortInterval" id="pastEffortInterval" onclick="javascript:updatePastEffort();" /> Custom interval
-				<div id="pastEffortChoosers" style="display: none;">
+				<div id="pastEffortChoosers" style="display: none; border: 1px solid black;">
 					<table>
 					<tr>
 					<td colspan="4">
@@ -84,7 +87,7 @@ function saveAndClose() {
 					<ww:datepicker size="15" showstime="false"
                        format="%{getText('webwork.datepicker.format')}" id="effStartDate" name="startDate" />
 						</td>
-						<td> - </td>
+						<td style="width: 30px; text-align: center;"> - </td>
 						<td>
                		<ww:datepicker size="15" showstime="false"
                        format="%{getText('webwork.datepicker.format')}" id="effEndDate" name="endDate" />
@@ -93,9 +96,16 @@ function saveAndClose() {
                 	<input type="button" value="Update" onclick="javascript:updatePastEffort(true);"/>     
 						</td>
 					</tr>
+					<tr>
+						<td>Reported hours</td>
+						<td><div id="hourDisplay"></div></td>
+						<td></td>
+						<td></td>
+					</tr>
 				</table>
-				<div id="hourDisplay"></div>
 				</div>
+				<br />
+				<br />
 
 
 

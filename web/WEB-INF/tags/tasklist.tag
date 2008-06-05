@@ -10,7 +10,7 @@
 <%@attribute name="hourReport"%>
 <div>
 <ul class="tasklist" id="${divId}" style="display:none;">
-<ww:form action="quickStoreTaskList">
+	<ww:form action="quickStoreTaskList" onsubmit="javascript:return validateSpentEffortById('effortSpent_${backlogItem.id}','Invalid format for spent effort.');">
 	<li class="tasklistItem">
 Effort estimate
 <br />
@@ -41,7 +41,7 @@ Effort estimate
 		</ww:url>
 		( <ww:a cssClass="openModalWindow" href="%{hourentryLink}">details</ww:a> )		
 		<br />
-		<ww:textfield size="5" name="effortSpent_${backlogItem.id}" id="effortSpent_${backlogItem.id}"/>  
+		<ww:textfield size="5" name="spentEffort" id="effortSpent_${backlogItem.id}"/>  
 	</c:if>
 	<hr />
 	
@@ -82,12 +82,9 @@ Effort estimate
 	</ww:url>
 	<ww:a href="%{createLink}&contextViewName=${contextViewName}&contextObjectId=${contextObjectId}">New task &raquo;</ww:a>
 	<hr />
-	<c:choose>
-		<c:when test="${hourReport}"><ww:submit value="Store" onclick="javascript:return newJobEntry('effortSpent_${backlogItem.id}',${backlogItem.id});" action="quickStoreTaskList"/></c:when>
-		<c:otherwise>
-			<ww:submit value="Store" action="quickStoreTaskList"/>
-		</c:otherwise>
-	</c:choose>
+
+	<ww:submit value="Store" action="quickStoreTaskList"/>
+
 </ww:form>
 
 </ul>

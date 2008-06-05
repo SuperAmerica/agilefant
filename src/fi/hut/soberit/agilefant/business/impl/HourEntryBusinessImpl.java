@@ -20,6 +20,7 @@ import fi.hut.soberit.agilefant.model.BacklogItemHourEntry;
 import fi.hut.soberit.agilefant.model.HourEntry;
 import fi.hut.soberit.agilefant.model.TimesheetLoggable;
 import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.security.SecurityUtil;
 
 public class HourEntryBusinessImpl implements HourEntryBusiness {
     private BacklogItemHourEntryDAO backlogItemHourEntryDAO;
@@ -80,6 +81,16 @@ public class HourEntryBusinessImpl implements HourEntryBusiness {
             //???
         }
     }
+    
+    public void addEntryForCurrentUser(TimesheetLoggable parent, AFTime effort) {
+        User currentUser = SecurityUtil.getLoggedUser();
+        HourEntry store = new HourEntry();
+        store.setDate(new Date());
+        store.setTimeSpent(effort);
+        store.setUser(currentUser);
+        store(parent,store);
+    }
+
     public Date formatDate(String startDate)
         throws ParseException {
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");

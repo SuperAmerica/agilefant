@@ -73,38 +73,36 @@ function disableIfEmpty(value, elements) {
 		}
 	}			
 }
+function validateEstimateFormat(value) {
+	var hourOnly = new RegExp("^[ ]*[0-9]h?[ ]*$"); //10h
+	var minuteOnly = new RegExp("^[ ]*[0-5]?[0-9]min[ ]*$"); //10min
+	var hourAndMinute = new RegExp("^[ ]*[0-9]+h[ ]+[0-5]?[0-9]min[ ]*$"); //1h 10min
+	var shortFormat = new RegExp("^[ ]*[0-9]+[.,][0-9]+[ ]*$"); //1.5 or 1,5
+	return (hourOnly.test(value) || minuteOnly.test(value) || hourAndMinute.test(value) || shortFormat.test(value));
+}
 function checkEstimateFormat(field) {
 	var ret = false;
 	var fields = document.getElementsByName(field);
 	var value = fields[0].value;
-	var regex = new RegExp("^[ ]*([0-9]+[.,]?[0-9]*h?)?([ ]*[0-5]?[0-9]min)?[ ]*$");
-	if(value.length > 0) {
-		ret = regex.test(value);
-	}
+	ret = validateEstimateFormat(value);
 	if(!ret) {
 		alert("Invalid effort format!");
-		return false;
 	}
-	var fractalhour = new RegExp("^[ ]*[0-9]+[.,]?[0-9]+h[ ]*$");
-	if(fractalhour.test(value)) {
-		alert("Invalid effort format!");
-		return false;
-	}
-	return true;
+	return ret;
 }
 function validateSpentEffortById(id,msg) {
 	var el = $("#"+id);
-	if(el.length == 0) { //allow empty
+	if(el.length == 0) { //allow if item not found
 		return true;
 	}
 	var val = el.val();
-	var regex = new RegExp("^[ ]*([0-9]+[.,]?[0-9]*h?)?([ ]*[0-5]?[0-9]min)?[ ]*$");
-	if(val.length == 0) {
+	var regex = new RegExp("^[ ]*$");
+	if(regex.test(val)) { //allow empty
 		return true;
 	}
-	if(regex.test(val) == false) {
+	var ret = validateEstimateFormat(val);
+	if(!ret) {
 		alert(msg);
-		return false;
 	}
-	return true;
+	return ret;
 }

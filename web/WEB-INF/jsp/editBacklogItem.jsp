@@ -502,20 +502,10 @@
 	<c:if test="${!empty hourEntries}">
 		<div id="subItemContent">		
 			<p>
-				<display:table name="${hourEntries}" id="row" defaultsort="1" requestURI="editBacklogItem.action">
+				<display:table name="${hourEntries}" id="row" defaultsort="1" defaultorder="descending" requestURI="editBacklogItem.action">
 					
-					<display:column sortable="false" title="Date">
-						${aef:html(row.date.date)}.${aef:html(row.date.month + 1)}.${aef:html(row.date.year + 1900 )}
-					</display:column>
-					
-					<%--
 					<display:column sortable="true" title="Date">
-						${aef:html(row.date.year + 1900)}-<c:if test="{row.date.month > 0}">0</c:if>${aef:html(row.date.month + 1)}-<c:if test="{row.date.date < 10 }">0</c:if>${aef:html(row.date.date )}
-					</display:column>
-					--%>
-					<%-- <display:column sortable="true" title="Comment" property="date" /> --%>
-					<display:column sortable="true" title="Time">
-						<c:if test="${row.date.hours < 10 }">0</c:if>${aef:html(row.date.hours)}:<c:if test="${row.date.minutes < 10}">0</c:if>${aef:html(row.date.minutes)}
+						<ww:date name="#attr.row.date" format="yyyy-MM-dd HH:mm" />
 					</display:column>
 					
 					<display:column sortable="true" title="User">

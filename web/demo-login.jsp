@@ -101,7 +101,7 @@
             
             <p>Agilefant currently supports only
             Mozilla Firefox web browser. We will not guarantee that our software
-            works with other browsers. If you are using any other browse, please
+            works with other browsers. If you are using any other browser, please
             change to Firefox. Download it from
             <a href="http://www.getfirefox.com/">http://www.getfirefox.com/</a>.
             </p>

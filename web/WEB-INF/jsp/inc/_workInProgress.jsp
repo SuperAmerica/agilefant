@@ -130,7 +130,7 @@ Backlog items
 
 				<aef:tasklist backlogItem="${item}"
 					contextViewName="${currentAction}" contextObjectId="${backlog.id}"
-					divId="${divId}" />
+					divId="${divId}" hourReport="${hourReport}" />
 			</c:when>
 			<c:otherwise>
 				<a href="javascript:toggleDiv(${divId});" title="Click to expand">
@@ -182,7 +182,7 @@ Backlog items
 				</c:choose> </a>
 				<aef:tasklist backlogItem="${item}"
 					contextViewName="${currentAction}" contextObjectId="${backlog.id}"
-					divId="${divId}" />
+					divId="${divId}" hourReport="${hourReport}"/>
 			</c:otherwise>
 		</c:choose>
 	</display:column>

@@ -40,7 +40,7 @@ Effort estimate
 			<ww:param name="iterationId" value="${iterationId}" />
 			<ww:param name="autoclose" value="1" />
 		</ww:url>
-		( <ww:a cssClass="openModalWindow" href="%{hourentryLink}">details</ww:a> )		
+		( <ww:a cssClass="openModalWindow" href="%{hourentryLink}&contextViewName=${contextViewName}&contextObjectId=${contextObjectId}">details</ww:a> )		
 		<br />
 		<ww:textfield size="5" name="spentEffort" id="effortSpent_${backlogItem.id}"/>  
 	</c:if>

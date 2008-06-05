@@ -8,6 +8,10 @@
 <aef:menu navi="1" /> 
 	<ww:actionerror/>
 	<ww:actionmessage/>
+<aef:hourReporting id="hourReport" />
+<c:if test="${hourReport}">
+	<aef:modalAjaxWindow />
+</c:if>
 
 <c:set var="currentAction" value="dailyWork" scope="session" />
 <c:set var="dailyWorkUserId" value="${userId}" scope="session" />

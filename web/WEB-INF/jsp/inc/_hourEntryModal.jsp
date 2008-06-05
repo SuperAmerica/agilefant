@@ -79,9 +79,7 @@ function saveAndClose() {
 				<div id="pastEffortChoosers" style="display: none; border: 1px solid black;">
 					<table>
 					<tr>
-					<td colspan="4">
-					Specify the time interval:
-					</td>
+					<td colspan="4">Specify the time interval:</td>
 					</tr>
 					<tr>
 						<td>
@@ -116,7 +114,7 @@ function saveAndClose() {
 			<td>Effort spent</td>
 			<td></td>
 			<td colspan="2">
-					<ww:textfield name="hourEntry.timeSpent" />hours
+					<ww:textfield name="hourEntry.timeSpent" />(e.g. "2h 30min" or "2.5")
 			</td>
 		</tr>
 		</tr>

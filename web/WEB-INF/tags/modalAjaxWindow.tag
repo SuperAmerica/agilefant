@@ -51,6 +51,7 @@
 				win.find(".jqmClose").click(function() {
 					win.hide();
 					bg.remove();
+					jQuery.post("popContext.action");
 					return false;
 				});
 				return false;

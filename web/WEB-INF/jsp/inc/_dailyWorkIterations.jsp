@@ -1,9 +1,7 @@
 <%@ include file="./_taglibs.jsp"%>
 
-<aef:hourReporting id="hourReport"></aef:hourReporting>
 <c:if test="${hourReport}">
 <aef:backlogHourEntrySums id="bliTotals" target="${backlog}" />
-<aef:modalAjaxWindow />
 </c:if>
 
 

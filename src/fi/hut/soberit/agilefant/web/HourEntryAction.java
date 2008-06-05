@@ -1,9 +1,7 @@
 package fi.hut.soberit.agilefant.web;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.logging.Log;
@@ -15,13 +13,9 @@ import com.opensymphony.xwork.ActionSupport;
 import fi.hut.soberit.agilefant.business.HourEntryBusiness;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.db.UserDAO;
-import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.HourEntry;
-import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.TimesheetLoggable;
-import fi.hut.soberit.agilefant.model.User;
 
-import java.io.Serializable;
 import java.text.ParseException;
 
 
@@ -38,6 +32,9 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
     private Date internalDate;
     private int backlogId = 0;
     private int backlogItemId = 0;
+    private int iterationId;
+    private int projectId;
+    private int productId;
     private Map<Integer, String> userIds = new HashMap<Integer, String>();
     
     private Log logger = LogFactory.getLog(getClass());
@@ -220,5 +217,29 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
 
     public void setUserIds(Map<Integer, String> userIds) {
         this.userIds = userIds;
+    }
+
+    public int getIterationId() {
+        return iterationId;
+    }
+
+    public void setIterationId(int iterationId) {
+        this.iterationId = iterationId;
+    }
+
+    public int getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(int projectId) {
+        this.projectId = projectId;
+    }
+
+    public int getProductId() {
+        return productId;
+    }
+
+    public void setProductId(int productId) {
+        this.productId = productId;
     }
 }

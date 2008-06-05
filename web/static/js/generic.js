@@ -85,6 +85,11 @@ function checkEstimateFormat(field) {
 		alert("Invalid effort format!");
 		return false;
 	}
+	var fractalhour = new RegExp("^[ ]*[0-9]+[.,]?[0-9]+h[ ]*$");
+	if(fractalhour.test(value)) {
+		alert("Invalid effort format!");
+		return false;
+	}
 	return true;
 }
 function validateSpentEffortById(id,msg) {

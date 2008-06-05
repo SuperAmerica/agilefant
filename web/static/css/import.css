@@ -803,3 +803,11 @@ div.legend {
 div.calendar {
 	z-index: 3400;
 }
+
+div.disclaimer {
+    width: 500px;
+    font-size: 80%;
+    padding: 5px;
+    margin: 10px;
+    border: 1px solid #ccc;
+}

@@ -96,6 +96,18 @@
             	<ww:url id="newPassword" action="newPassword" />
             	Forgot your password? <ww:a href="${newPassword}">Get a new one!</ww:a>
             </div>
+            
+            <div class="disclaimer">
+            
+            <p>Agilefant currently supports only
+            Mozilla Firefox web browser. We will not guarantee that our software
+            works with other browsers. If you are using any other browse, please
+            change to Firefox. Download it from
+            <a href="http://www.getfirefox.com/">http://www.getfirefox.com/</a>.
+            </p>
+
+            </div>
+            
         </div>
         <!-- main -->
 

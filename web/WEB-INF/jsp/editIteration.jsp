@@ -1,8 +1,6 @@
 <%@ include file="./inc/_taglibs.jsp"%>
 <%@ include file="./inc/_header.jsp"%>
 
-<script type="text/javascript" src="static/js/generic.js"></script>
-
 <c:choose>
 	<c:when test="${iteration.id == 0}">
 		<aef:bct projectId="${projectId}" />

@@ -59,6 +59,7 @@ function saveAndClose() {
 	<ww:hidden name="hourEntryId" />
 	<ww:hidden name="backlogItemId" />
 	<ww:hidden name="backlogId" />
+	<ww:hidden name="iterationId" />
 	
 	<table class="formTable">
 	<tr>

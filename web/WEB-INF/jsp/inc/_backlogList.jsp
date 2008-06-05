@@ -17,7 +17,7 @@ function validateDeletion() {
 
 </script>
 <c:if test="${hourReport}">
-	<aef:modalAjaxWindow closeOnSubmit="true"/>
+	<aef:modalAjaxWindow />
 </c:if>
 <ww:form action="doActionOnMultipleBacklogItems">
 

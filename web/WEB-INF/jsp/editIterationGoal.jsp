@@ -3,13 +3,10 @@
 
 <aef:hourReporting id="hourReport"></aef:hourReporting>
 <c:if test="${hourReport}">
-<aef:modalAjaxWindow closeOnSubmit="true"/>
-<aef:backlogHourEntrySums id="bliTotals" target="${iteration}" />
-<c:set var="totalSum" value="${null}" />
+	<aef:backlogHourEntrySums id="bliTotals" target="${iteration}" />
+	<c:set var="totalSum" value="${null}" />
 </c:if>
 
-
-<script type="text/javascript" src="static/js/generic.js"></script>
 
 <c:if test="${iterationGoal.id > 0}">
 	<aef:bct iterationGoalId="${iterationGoal.id}" />
@@ -20,6 +17,9 @@
 
 <aef:menu navi="backlog" pageHierarchy="${pageHierarchy}" />
 <aef:productList />
+<c:if test="${hourReport}">
+	<aef:modalAjaxWindow />
+</c:if>
 <ww:actionerror />
 <ww:actionmessage />
 

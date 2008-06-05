@@ -3,7 +3,7 @@
 <aef:hourReporting id="hourReport"></aef:hourReporting>
 <c:if test="${hourReport}">
 <aef:backlogHourEntrySums id="bliTotals" target="${backlog}" />
-<aef:modalAjaxWindow closeOnSubmit="true"/>
+<aef:modalAjaxWindow />
 </c:if>
 
 

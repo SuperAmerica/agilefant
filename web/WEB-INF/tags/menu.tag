@@ -288,6 +288,14 @@ Project Types
 </li>
 -->
 
+<%-- Create New --%>
+<li id="nava">
+<a href="contextView.action?contextName=createNew&resetContextView=true">
+<img src="static/img/new.png" alt="Create New" />
+Create New
+</a>
+</li>
+
 <%-- Timesheet --%>
 <aef:hourReporting id="hourReport" />
 <c:if test="${hourReport}">
@@ -298,14 +306,6 @@ View Timesheets
 </a>
 </li>
 </c:if>
-
-<%-- Create New --%>
-<li id="nava">
-<a href="contextView.action?contextName=createNew&resetContextView=true">
-<img src="static/img/new.png" alt="Create New" />
-Create New
-</a>
-</li>
 
 
 

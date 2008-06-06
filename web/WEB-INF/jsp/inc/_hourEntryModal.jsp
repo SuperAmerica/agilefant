@@ -78,9 +78,11 @@ function saveAndClose() {
 				<input type="checkbox" name="pastEffortInterval" id="pastEffortInterval" onclick="javascript:updatePastEffort();" /> Custom interval
 				<div id="pastEffortChoosers" style="display: none; border: 1px solid black;">
 					<table>
+					<!-- Jarnon requ: Tämä rivi pois
 					<tr>
 					<td colspan="4">Specify the time interval:</td>
 					</tr>
+					-->
 					<tr>
 						<td>
 					<ww:datepicker size="15" showstime="false"
@@ -94,13 +96,17 @@ function saveAndClose() {
 						<td>
                 	<input type="button" value="Update" onclick="javascript:updatePastEffort(true);"/>     
 						</td>
+						<td></td>
+						<td><div id="hourDisplay"></div></td>
 					</tr>
+					<!-- Jarnon requ: Rivi pois
 					<tr>
 						<td>Reported hours</td>
 						<td><div id="hourDisplay"></div></td>
 						<td></td>
 						<td></td>
 					</tr>
+					-->
 				</table>
 				</div>
 				<br />

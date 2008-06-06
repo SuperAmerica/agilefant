@@ -1,6 +1,6 @@
 Agilefant 1.4.2
 RELEASE NOTES
-30.5.2008
+6.6.2008
 
 Agilefant's key functionality now includes
 ------------------------------------------

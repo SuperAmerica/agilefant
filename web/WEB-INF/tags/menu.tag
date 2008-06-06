@@ -302,7 +302,7 @@ Create New
 <li id="navd">
 <a href="contextView.action?contextName=timesheet&resetContextView=true">
 <img src="static/img/clock-16.png" alt="View Timesheets" />
-View Timesheets
+Timesheets
 </a>
 </li>
 </c:if>

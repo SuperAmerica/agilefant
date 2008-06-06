@@ -28,6 +28,16 @@ function updatePastEffort(immediate) {
 		}
 	}
 }
+
+function showOldEffort() {
+	if($("#showPastEffort").is(":checked")) {
+		$("#pastEffortShower").show();
+	} else {
+		$("#pastEffortShower").hide();
+	}
+}
+
+
 function saveAndClose() {
 	if(!checkEstimateFormat('hourEntry.timeSpent')) {
 		return false;
@@ -63,8 +73,13 @@ function saveAndClose() {
 	
 	<table class="formTable">
 	<tr>
-			<td>Past effort</td>
-			<td></td>
+		<td colspan="4">
+		
+			<input type="checkbox" name="showPastEffort" id="showPastEffort" onclick="javascript:showOldEffort();" /> Show Past Effort
+			<div id="pastEffortShower" style="display: none; border: 1px solid #A0A0A0;">
+			
+			<table>	
+			<tr>
 			<td colspan="2">
 				<table>
 					<tr><td>Today:</td><td>${todayEffortSum}</td><td style="width: 50px;"></td>
@@ -75,8 +90,12 @@ function saveAndClose() {
 					<td></td>
 					<td>This month:</td><td>${monthEffortSum}</td></tr>
 				</table>
+			</td>
+			</tr>
+			<tr>
+			<td>
 				<input type="checkbox" name="pastEffortInterval" id="pastEffortInterval" onclick="javascript:updatePastEffort();" /> Custom interval
-				<div id="pastEffortChoosers" style="display: none; border: 1px solid black;">
+				<div id="pastEffortChoosers" style="display: none;">
 					<table>
 					<!-- Jarnon requ: Tämä rivi pois
 					<tr>
@@ -107,15 +126,17 @@ function saveAndClose() {
 						<td></td>
 					</tr>
 					-->
-				</table>
+					</table>
 				</div>
+			</table>
+			</div>
+		
 				<br />
 				<br />
 
-
-
-			</td>
-		</tr>
+		</td>
+			
+	</tr>
 	<tr>
 			<td>Effort spent</td>
 			<td></td>

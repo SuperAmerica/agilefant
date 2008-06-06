@@ -11,7 +11,7 @@
 <div>
 <aef:currentUser />
 <ul class="tasklist" id="${divId}" style="display:none;">
-	<ww:form action="quickStoreTaskList" onsubmit="javascript:return validateSpentEffortById('effortSpent_${backlogItem.id}','Invalid format for spent effort.');">
+	<ww:form action="quickStoreTaskList" validate="false" onsubmit="return validateSpentEffortById('effortSpent_${backlogItem.id}','Invalid format for spent effort.'); return false;">
 	<li class="tasklistItem">
 Effort estimate
 <br />

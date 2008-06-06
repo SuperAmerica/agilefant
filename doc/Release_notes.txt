@@ -24,7 +24,8 @@ to are highlighted
 have assigned backlog items) are highlighted
 + Project Portfolio view allows the relative prioritisation of projects
 + Project Portfolio view shows the workloads for projects and users
-+ BLI-level timesheet capability
++ Spent effort can be logged for backlog items; 
++ Timesheets -related functionality can be enabled/disabled from the settings tab
 
 CHANGES FROM AGILEFANT 1.4.1
 -----------------------------

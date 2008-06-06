@@ -1,2 +1,2 @@
 -- Update priority numbers to match the id
-update iterationGoal set priority = id;
+update iterationgoal set priority = id;

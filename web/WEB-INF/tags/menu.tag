@@ -272,17 +272,6 @@ Settings
 </a>
 </li>
 
-<%-- Timesheet --%>
-<aef:hourReporting id="hourReport" />
-<c:if test="${hourReport}">
-<li id="navd">
-<a href="contextView.action?contextName=timesheet&resetContextView=true">
-<img src="static/img/clock-16.png" alt="Timesheet" />
-Timesheet
-</a>
-</li>
-</c:if>
-
 
 <li id="navc">
 <a href="contextView.action?contextName=users&resetContextView=true">
@@ -299,6 +288,18 @@ Project Types
 </li>
 -->
 
+<%-- Timesheet --%>
+<aef:hourReporting id="hourReport" />
+<c:if test="${hourReport}">
+<li id="navd">
+<a href="contextView.action?contextName=timesheet&resetContextView=true">
+<img src="static/img/clock-16.png" alt="View Timesheets" />
+View Timesheets
+</a>
+</li>
+</c:if>
+
+<%-- Create New --%>
 <li id="nava">
 <a href="contextView.action?contextName=createNew&resetContextView=true">
 <img src="static/img/new.png" alt="Create New" />

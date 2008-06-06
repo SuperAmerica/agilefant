@@ -9,6 +9,7 @@
 <%@attribute name="contextObjectId"%>
 <%@attribute name="hourReport"%>
 <div>
+<aef:currentUser />
 <ul class="tasklist" id="${divId}" style="display:none;">
 	<ww:form action="quickStoreTaskList" onsubmit="javascript:return validateSpentEffortById('effortSpent_${backlogItem.id}','Invalid format for spent effort.');">
 	<li class="tasklistItem">
@@ -34,13 +35,13 @@ Effort estimate
 		onchange="change_effort_enabled(this.value, ${backlogItem.id})"/>
 	<c:if test="${hourReport == 'true'}">
 	<br />
-		Effort spent 
+		Log effort for <c:out value="${currentUser.initials}"/> 
         <ww:url id="hourentryLink" action="createHourEntry" includeParams="none">
 			<ww:param name="backlogItemId" value="${backlogItem.id}" />
 			<ww:param name="iterationId" value="${iterationId}" />
 			<ww:param name="autoclose" value="1" />
 		</ww:url>
-		( <ww:a cssClass="openModalWindow" href="%{hourentryLink}&contextViewName=${contextViewName}&contextObjectId=${contextObjectId}">details</ww:a> )		
+		 (<ww:a cssClass="openModalWindow" href="%{hourentryLink}&contextViewName=${contextViewName}&contextObjectId=${contextObjectId}">change</ww:a>)	
 		<br />
 		<ww:textfield size="5" name="spentEffort" id="effortSpent_${backlogItem.id}"/>  
 	</c:if>

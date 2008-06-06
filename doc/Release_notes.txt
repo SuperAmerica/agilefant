@@ -1,4 +1,4 @@
-Agilefant 1.4.1
+Agilefant 1.4.2
 RELEASE NOTES
 30.5.2008
 
@@ -25,6 +25,14 @@ have assigned backlog items) are highlighted
 + Project Portfolio view allows the relative prioritisation of projects
 + Project Portfolio view shows the workloads for projects and users
 + BLI-level timesheet capability
+
+CHANGES FROM AGILEFANT 1.4.1
+-----------------------------
++ Job effort entry from BLI-lists for current user
++ Effort totals for Iteration Goal -list
++ Iteration Goal ranking
++ Improvements for Log Effort dialog
++ Minor fixes
 
 CHANGES FROM AGILEFANT 1.4.0
 -----------------------------

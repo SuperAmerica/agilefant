@@ -382,7 +382,6 @@
 </ww:form>
 
 <aef:currentUser />
-
 <table>
 	<tr>
 		<td><c:if test="${backlogItem.id > 0}">
@@ -487,60 +486,8 @@
 <%-- Hour reporting here - Remember to expel David H. --%>
 <aef:hourReporting id="hourReport"></aef:hourReporting>
 <c:if test="${hourReport == 'true'}">
-
-<aef:hourEntries id="hourEntries" target="${backlogItem}"></aef:hourEntries>
-
-
-<div class="subItems" style="margin-left: 3px;">
-	<div class="subItemHeader" style="padding: 3px !important;">
-     	Logged effort
-        <ww:url id="createLink" action="createHourEntry" includeParams="none">
-			<ww:param name="backlogItemId" value="${backlogItemId}" />
-		</ww:url>
-		<ww:a cssClass="openModalWindow" href="%{createLink}&contextViewName=editBacklogItem&contextObjectId=${backlogItemId}">Create new &raquo;</ww:a>	
-	</div>						
-	<c:if test="${!empty hourEntries}">
-		<div id="subItemContent">		
-			<p>
-				<display:table name="${hourEntries}" id="row" defaultsort="1" defaultorder="descending" requestURI="editBacklogItem.action">
-					
-					<display:column sortable="true" title="Date">
-						<ww:date name="#attr.row.date" format="yyyy-MM-dd HH:mm" />
-					</display:column>
-					
-					<display:column sortable="true" title="User">
-						${aef:html(row.user.fullName)}
-					</display:column>
-					
-					<display:column sortable="false" title="Spent effort">
-						${aef:html(row.timeSpent)}
-					</display:column>
-					
-					<display:column sortable="false" title="Comment" property="description" />
-
-					<%-- Not implemented yet --%>
-						<display:column sortable="false" title="Action">
-							<ww:url id="editLink" action="editHourEntry" includeParams="none">
-								<ww:param name="backlogItemId" value="${backlogItem.id}" />
-								<ww:param name="hourEntryId" value="${row.id}" />
-							</ww:url>	
-							<ww:url id="deleteLink" action="deleteHourEntry" includeParams="none">
-								<ww:param name="backlogItemId" value="${backlogItem.id}" />
-								<ww:param name="hourEntryId" value="${row.id}" />
-							</ww:url>			
-							<ww:a cssClass="openModalWindow" href="%{editLink}&contextViewName=editBacklogItem&contextObjectId=${backlogItemId}">
-								<img src="static/img/edit.png" alt="Edit" title="Edit" />
-							</ww:a>
-							<ww:a href="%{deleteLink}&contextViewName=editBacklogItem&contextObjectId=${backlogItemId}" onclick="return confirmDeleteHour()">
-								<img src="static/img/delete_18.png" alt="Delete" title="Delete" />
-							</ww:a>
-						</display:column>
-					</display:table>
-				</p>
-			</div>
-		</c:if> <%-- No tasks --%>
-	</div>
-<aef:modalAjaxWindow/>
+<c:set var="myAction" value="editBacklogItem" scope="session" />
+<%@ include file="./inc/_hourEntryList.jsp"%>
 </c:if> <%-- Hour reporting on --%>
 
 <%@ include file="./inc/_footer.jsp"%>

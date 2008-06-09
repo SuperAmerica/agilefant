@@ -11,7 +11,8 @@ import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.User;
 
 /**
- * Calculate the user's hour entry sums for Today/Yesterday/This week/This month.
+ * Calculates the user's hour entry sums for Today/Yesterday/This week/This month.
+ * Days start at 00:00 and end at 23:59 for hour entries.
  * 
  * @author Roni Tammisalo
  */
@@ -68,7 +69,8 @@ public class UserEffortSumTag extends SpringTagSupport {
         calendar.set(Calendar.HOUR_OF_DAY, 0);
         startDate = calendar.getTime();
         
-        calendar.set(Calendar.HOUR_OF_DAY, 24);
+        calendar.set(Calendar.HOUR_OF_DAY, 23);
+        calendar.set(Calendar.MINUTE, 59);
         endDate = calendar.getTime();
         
         return this.getSpentEffort(startDate, endDate);
@@ -86,7 +88,8 @@ public class UserEffortSumTag extends SpringTagSupport {
         calendar.add(Calendar.DAY_OF_YEAR, -1);
         startDate = calendar.getTime();
         
-        calendar.set(Calendar.HOUR_OF_DAY, 24);
+        calendar.set(Calendar.HOUR_OF_DAY, 23);
+        calendar.set(Calendar.MINUTE, 59);
         endDate = calendar.getTime();
         
         return this.getSpentEffort(startDate, endDate);
@@ -98,14 +101,16 @@ public class UserEffortSumTag extends SpringTagSupport {
     private AFTime getSpentEffortForThisWeek() {
         Date startDate;
         Date endDate;
-        Calendar calendar = this.getCorrectedCalendar();
+        Calendar startCalendar = this.getCorrectedCalendar();
+        Calendar endCalendar = this.getCorrectedCalendar();
         
-        calendar.set(Calendar.HOUR_OF_DAY, 24);
-        endDate = calendar.getTime();
+        startCalendar.set(Calendar.HOUR_OF_DAY, 0);
+        startCalendar.set(Calendar.DAY_OF_WEEK, startCalendar.getFirstDayOfWeek());
+        startDate = startCalendar.getTime();
         
-        calendar.set(Calendar.HOUR_OF_DAY, 0);
-        calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-        startDate = calendar.getTime();
+        endCalendar.set(Calendar.HOUR_OF_DAY, 23);
+        endCalendar.set(Calendar.MINUTE, 59);
+        endDate = endCalendar.getTime();
         
         return this.getSpentEffort(startDate, endDate);
     }
@@ -116,14 +121,16 @@ public class UserEffortSumTag extends SpringTagSupport {
     private AFTime getSpentEffortForThisMonth() {
         Date startDate;
         Date endDate;
-        Calendar calendar = this.getCorrectedCalendar();
+        Calendar startCalendar = this.getCorrectedCalendar();
+        Calendar endCalendar = this.getCorrectedCalendar();
         
-        calendar.set(Calendar.HOUR_OF_DAY, 24);
-        endDate = calendar.getTime();
+        startCalendar.set(Calendar.HOUR_OF_DAY, 0);
+        startCalendar.set(Calendar.DAY_OF_MONTH, 1);
+        startDate = startCalendar.getTime();
         
-        calendar.set(Calendar.HOUR_OF_DAY, 0);
-        calendar.set(Calendar.DAY_OF_MONTH, 1);
-        startDate = calendar.getTime();
+        endCalendar.set(Calendar.HOUR_OF_DAY, 23);
+        endCalendar.set(Calendar.MINUTE, 59);
+        endDate = endCalendar.getTime();
         
         return this.getSpentEffort(startDate, endDate);
     }
@@ -136,6 +143,7 @@ public class UserEffortSumTag extends SpringTagSupport {
         
         calendar.set(Calendar.MINUTE,0);
         calendar.set(Calendar.SECOND,0);
+        calendar.setFirstDayOfWeek(Calendar.SUNDAY);
         
         return calendar;
     }

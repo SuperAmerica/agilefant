@@ -266,6 +266,7 @@
 									<c:choose>
 										<c:when test="${totalSum != null}">
 											<c:out value="${totalSum}" />
+											<c:remove var="totalSum"/>
 										</c:when>
 										<c:otherwise>
 											0h

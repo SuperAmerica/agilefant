@@ -23,7 +23,7 @@
 						<div id="subItemHeader">				
 							<table cellpadding="0" cellspacing="0">
 								<tbody><tr>
-									<td class="header">Generate Timesheets Report</td>
+									<td class="header">Query</td>
 								</tr>
 								</tbody>
 							</table>
@@ -33,7 +33,7 @@
 	
 								<tr>
 									<td>
-										Select Backlog
+										Backlogs
 									</td>
 									<td>
 										<select multiple="multiple" name="backlogIds">
@@ -60,84 +60,92 @@
 								</tr>
 								<!-- Interval selection -->			
 								<tr>
-									<td>Select Interval</td>
+									<td>Interval</td>
 					
 									<td colspan="2">
 										<script type="text/javascript">
+											function addZero($string) {
+												if($string < 10) {
+													return '0' + $string;
+												} else {
+													return $string;
+												}
+											}
+			
 											function change_selected_interval(value) {
-	
 												var startDate = document.getElementById('effStartDate');
 												var endDate = document.getElementById('effEndDate');
-												
+												// Current timestamp
 												var now = new Date();
+												
+												// Yesterday's timestamp
+												var yesterday = new Date(now.getTime() - 86400000);
+												
+												// This monday
+												var daysfrommonday = 0;
+												if(now.getDay() == 0) {
+													daysfrommonday = 6;
+												} else {
+													daysfrommonday = now.getDay() - 1;
+												}
+												var thismonday = new Date(now.getTime() - (86400000 * daysfrommonday));
+												
+												// Last week's monday
+												var lastmonday = new Date(thismonday.getTime() - (86400000 * 7));
+												
+												// Last month
+												var lastmonth = new Date();
+												if(now.getMonth() == 0) {
+													lastmonth.setMonth(11)
+													lastmonth.setFullYear(now.getFullYear() - 1);
+												} else {
+													lastmonth.setMonth(now.getMonth() - 1)
+												}
+												
+												
 												if (value == 'TODAY') {
-													var year = now.getFullYear();
-													var month = now.getMonth() + 1;
-													var day = now.getDate();
-													startDate.value = ('' + year + '-' + month + '-' + day +' 00:00');
-													endDate.value   = ('' + year + '-' + month + '-' + day +' 23:59');
+													startDate.value = now.getFullYear() + '-' + addZero(now.getMonth() + 1) + '-' + addZero(now.getDate()) + ' 00:00';
+													endDate.value   = now.getFullYear() + '-' + addZero(now.getMonth() + 1) + '-' + addZero(now.getDate()) + ' ' + addZero(now.getHours()) + ':' + addZero(now.getMinutes());
+												} else if (value == 'YESTERDAY') {
+													startDate.value = yesterday.getFullYear() + '-' + addZero(yesterday.getMonth() + 1) + '-' + addZero(yesterday.getDate()) + ' 00:00';
+													endDate.value   = now.getFullYear() + '-' + addZero(now.getMonth() + 1) + '-' + addZero(now.getDate()) + ' 00:00';
 												} else if (value == 'THIS_WEEK') {
-													var day = now.getDate();
-													var temp = now.getDay();
-													now.setDate((day - temp) + 1);
-													var year = now.getFullYear();
-													var month = now.getMonth() + 1;
-													day = now.getDate();
-													startDate.value = ('' + year + '-' + month + '-' + day +' 00:00');
-													now.setDate(day + 6);
-													day = now.getDate();
-													month = now.getMonth() + 1;
-													year = now.getFullYear();
-													endDate.value   = ('' + year + '-' + month + '-' + day +' 23:59');
+													startDate.value = thismonday.getFullYear() + '-' + addZero(thismonday.getMonth() + 1) + '-' + addZero(thismonday.getDate()) + ' 00:00';
+													endDate.value   = now.getFullYear() + '-' + addZero(now.getMonth() + 1) + '-' + addZero(now.getDate()) + ' ' + addZero(now.getHours()) + ':' + addZero(now.getMinutes());
 												} else if (value == 'LAST_WEEK') {
-													var day = now.getDate();
-													var temp = now.getDay();
-													now.setDate((day - temp) - 6);
-													var year = now.getFullYear();
-													var month = now.getMonth() + 1;
-													day = now.getDate();
-													startDate.value = ('' + year + '-' + month + '-' + day +' 00:00');
-													now.setDate(day + 6);
-													day = now.getDate();
-													month = now.getMonth() + 1;
-													year = now.getFullYear();
-													endDate.value   = ('' + year + '-' + month + '-' + day +' 23:59');
+													startDate.value = lastmonday.getFullYear() + '-' + addZero(lastmonday.getMonth() + 1) + '-' + addZero(lastmonday.getDate()) + ' 00:00';
+													endDate.value   = thismonday.getFullYear() + '-' + addZero(thismonday.getMonth() + 1) + '-' + addZero(thismonday.getDate()) + ' 00:00';
 												} else if (value == 'THIS_MONTH') {
-													var year = now.getFullYear();
-													var month = now.getMonth() + 1;
-													startDate.value = ('' + year + '-' + month + '-' + '1 00:00');
-													now.setMonth(month);
-													now.setDate(0);
-													var day = now.getDate();
-													endDate.value   = ('' + year + '-' + month + '-' + day +' 23:59');
+													startDate.value = now.getFullYear() + '-' + addZero(now.getMonth() + 1) + '-01 00:00';
+													endDate.value   = now.getFullYear() + '-' + addZero(now.getMonth() + 1) + '-' + addZero(now.getDate()) + ' ' + addZero(now.getHours()) + ':' + addZero(now.getMinutes());
 												} else if (value == 'LAST_MONTH') {
-													var year = now.getFullYear();
-													var month = now.getMonth();
-													startDate.value = ('' + year + '-' + month + '-' + '1 00:00');
-													now.setDate(0);
-													var day = now.getDate();
-													endDate.value   = ('' + year + '-' + month + '-' + day +' 23:59');
+													startDate.value = lastmonth.getFullYear() + '-' + addZero(lastmonth.getMonth() + 1) + '-01 00:00';
+													endDate.value   = now.getFullYear() + '-' + addZero(now.getMonth() + 1) + '-01 00:00';
 												} else if (value == 'THIS_YEAR') {
-													var year = now.getFullYear();
-													startDate.value = ('' + year + '-' + '1-1 00:00');
-													endDate.value   = ('' + year + '-' + '12-31 23:59');
+													startDate.value = now.getFullYear() + '-01-01 00:00';
+													endDate.value   = now.getFullYear() + '-' + addZero(now.getMonth() + 1) + '-' + addZero(now.getDate()) + ' ' + addZero(now.getHours()) + ':' + addZero(now.getMinutes());
+												} else if (value == 'LAST_YEAR') {
+													startDate.value = (now.getFullYear() - 1) + '-01-01 00:00';
+													endDate.value   = now.getFullYear() + '-01-01 00:00';
 												} else if (value == 'NO_INTERVAL') {
 													startDate.value = '';
 													endDate.value   = '';
 												}
 											}
+											$(document).ready( function() {
+												change_selected_interval('TODAY');
+											});
 										</script> 
 										<select name="interval" id="interval" onchange="change_selected_interval(this.value);">
-	
-											<option>(Select interval)</option>
-											<option value="NO_INTERVAL">(No interval - display all hours)</option>
-	    									<option value="TODAY">Today</option>
-	    									<option value="THIS_WEEK">This week</option>
-					    					<option value="LAST_WEEK">Last week</option>
-	    									<option value="THIS_MONTH">This month</option>
-	
-	    									<option value="LAST_MONTH">Last month</option>
-	    									<option value="THIS_YEAR">This year</option>
+											<option value="TODAY" selected="selected">Today</option>
+											<option value="YESTERDAY">Yesterday</option>
+										    <option value="THIS_WEEK">This week</option>
+										    <option value="LAST_WEEK">Last week</option>
+										    <option value="THIS_MONTH">This month</option>
+										    <option value="LAST_MONTH">Last month</option>
+										    <option value="THIS_YEAR">This year</option>
+										    <option value="LAST_YEAR">Last year</option>
+											<option value="NO_INTERVAL">(All past entries)</option>
 										</select>
 									</td>
 								</tr>
@@ -159,16 +167,13 @@
 								</tr>
 								<!--  User selection -->				
 								<tr>
-									<td>Select Users</td>
+									<td>Active users</td>
 					
 				
 									<td><c:set var="divId" value="1" scope="page" />
 	
 	                    				<div id="assigneesLink">
-	                    					<%--
 	                    					<a href="javascript:toggleDiv(${divId});">
-											--%>
-												<a>
 	                        					<img src="static/img/users.png" />
 	                        					select
 	                    					</a>
@@ -212,10 +217,7 @@
 								<tr>
 									<td></td>
 									<td>
-										<%--
-										<ww:submit value="Generate Timesheets Report" />
-										--%>
-										<input type="submit" value="Generate Timesheets Report"/>
+										<ww:submit value="Calculate" />
 									</td>
 								</tr>
 							</tbody>
@@ -226,5 +228,234 @@
 		</tr>
 	</tbody>
 </table>
+<%---UGLY!!! Refactor this---%>
+<style>
 
+table.reportTable {
+	width:100%;
+	margin:0px;
+}
+
+table.reportTable tr {
+	
+}
+
+table.reportTable tr th {
+	text-align:left;
+	background-color:#b2b2b2;
+	padding:4px;
+}
+
+table.reportTable tr th.product {
+	text-align:left;
+	background-color:#cccccc;
+	padding:4px;
+	font-weight:normal;
+	border-top:1px solid #000000;
+}
+
+table.reportTable tr th.project {
+	text-align:left;
+	background-color:#dddddd;
+	padding:4px;
+	font-weight:normal;
+}
+
+table.reportTable tr th.iteration {
+	text-align:left;
+	background-color:#e6e6e6;
+	padding:4px;
+	font-weight:normal;
+}
+
+table.reportTable tr th.backlogitem {
+	text-align:left;
+	background-color:#f5f5f5;
+	padding:4px;
+	font-weight:normal;
+}
+
+table.reportTable tr.backlogitem {
+	display:none;
+}
+
+table.reportTable tr.special th {
+	background-color:#e6eee6 !important;
+	background-color:#e4ecff !important;
+}
+
+table.reportTable tr.special th.first {
+	background-image:url(static/img/special-hour-entry-report.gif);
+	background-repeat:no-repeat;
+	background-position:16px 9px;
+	padding-left:31px;
+}
+
+table.reportTable tr.special.backlogitemshead th.first {
+	font-weight:normal;
+}
+
+table.reportTable tr.special.hourentryhead th {
+	border-top:0px solid #000000;
+}
+
+tr.leftborder .first {
+	border-left:4px solid #b2d8b2; /* #dddda8 */
+	border-left:4px solid #b2caff;
+}
+
+tr.leftborder {
+	display:none;
+}
+
+table.reportTable tr th.backlogitem a,
+table.reportTable tr th.iteration a,
+table.reportTable tr th.project a,
+table.reportTable tr th.product a {
+	text-decoration:none;
+	color:blue;
+	cursor:pointer;
+}
+
+table.reportTable tr th.backlogitem a:hover,
+table.reportTable tr th.iteration a:hover,
+table.reportTable tr th.project a:hover,
+table.reportTable tr th.product a:hover {
+	text-decoration:underline;
+	color:blue;
+}
+
+table.reportTable tr th.backlogitem.second {
+	font-weight:bold;
+}
+
+table.reportTable tr th.backlogitem.third {
+	font-weight:bold;
+}
+
+table.reportTable tr.hourentries {
+	display:none;
+}
+
+table.reportTable tr td.hourentry {
+	text-align:left;
+	background-color:#ffffff;
+	padding:4px;
+	font-weight:normal;
+}
+
+table.reportTable tr td.hourentry.first {
+	padding-left:30px;
+}
+
+				</style>
+
+<%--/UGLY!!! --%>
+
+<%--show the tree--%>
+<c:if test="${!empty products}">
+	<table style="margin-top:20px;">
+		<tbody>
+			<tr>
+				<td>
+					<div id="subItems" style="margin-top: 0pt;">
+						<div id="subItemHeader">
+							<table>
+								<tbody>
+									<tr>
+										<td class="header">Entries</td>
+										<td class="icons">
+											<a onclick="javascript:$('.toggleall').show();" style="cursor:pointer;"><img src="static/img/plus.png" alt="Expand" title="Expand" height="18" width="18"></a>
+											<a onclick="javascript:$('.toggleall').hide();" style="cursor:pointer;"><img src="static/img/minus.png" alt="Collapse" title="Collapse" height="18" width="18"></a>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<div id="subItemContent">
+						<div id="listProjectHours" style="">
+						
+						<table class="reportTable" cellpadding="0" cellspacing="0">
+							<tbody>
+								<tr>
+									<th>Name / Comment</th>
+									<th>&nbsp;</th>
+									<th>&nbsp;</th>
+									<th style="width:120px;">Effort spent</th>
+								</tr>
+								
+								<c:forEach items="${products}" var="prod">
+									<c:set var="divId" value="${divId + 1}" scope="page" />
+									<tr>
+										<th class="product first" colspan="3"><a onclick="javascript:if($('.backlogitem.prod${divId}').is(':visible')) { $('.prod${divId}').hide(); } else { $('.backlogitem.${prod.backlog.name}').show(); }"><c:out value="${prod.backlog.name}"/></a></th>
+										<th class="product"><c:out value="${prod.hourTotal}"/></th> 
+									</tr>
+									<c:if test="${!empty prod.childBacklogItems}">
+										<tr style="display: table-row;" class="backlogitem prod${divId} special backlogitemshead leftborder toggleall">
+											<th class="backlogitem first" colspan="3">Backlog items</th>
+											<th class="backlogitem fourth"><c:out value="${prod.spentHours}"/></th>
+										</tr>
+										<c:forEach items="${prod.childBacklogItems}" var="bli">
+											<tr style="display: table-row;" class="backlogitem prod${divId} leftborder toggleall">
+												<th class="backlogitem first" colspan="3">&nbsp; &nbsp; &raquo; <c:out value="${bli.backlogItem.name}"/></th>
+												<th class="backlogitem"><c:out value="${bli.hourTotal}"/></th>
+											</tr>
+										</c:forEach>										
+									</c:if>
+									<c:if test="${!empty prod.childBacklogs}">
+										<c:forEach items="${prod.childBacklogs}" var="proj">
+											<c:set var="divId" value="${divId + 1}" scope="page" />
+											<tr>
+												<th class="project first" colspan="3">&raquo; <a onclick="javascript:if($('.backlogitem.proj${divId}').is(':visible')) { $('.proj${divId}').hide(); } else { $('.backlogitem.proj${divId}').show(); }"><c:out value="${proj.backlog.name}"/></a></th>
+												<th class="project"><c:out value="${proj.hourTotal}"/></th>
+											</tr>
+											<c:if test="${!empty proj.childBacklogItems}">
+												<tr style="display: table-row;" class="backlogitem proj${divId} special backlogitemshead leftborder toggleall">
+													<th class="backlogitem first" colspan="3">Backlog items</th>
+													<th class="backlogitem fourth"><c:out value="${proj.spentHours}"/></th>
+												</tr>
+												<c:forEach items="${proj.childBacklogItems}" var="bli">
+													<tr style="display: table-row;" class="backlogitem proj${divId} leftborder toggleall">
+														<th class="backlogitem first" colspan="3">&nbsp; &nbsp; &raquo; <c:out value="${bli.backlogItem.name}"/></th>
+														<th class="backlogitem"><c:out value="${bli.hourTotal}"/></th>
+													</tr>
+												</c:forEach>										
+											</c:if>
+											<c:if test="${!empty proj.childBacklogs}">
+												<c:forEach items="${proj.childBacklogs}" var="iter">
+													<c:set var="divId" value="${divId + 1}" scope="page" />
+													<tr>
+														<th class="iteration first" colspan="3">&nbsp;&nbsp;&raquo; <a onclick="javascript:if($('.backlogitem.iter${divId}').is(':visible')) { $('.iter${divId}').hide(); } else { $('.backlogitem.iter${divId}').show(); }"><c:out value="${iter.backlog.name}"/></a></th>
+														<th class="iteration"><c:out value="${iter.hourTotal}"/></th>
+													</tr>
+													<c:if test="${!empty iter.childBacklogItems}">
+														<tr style="display: table-row;" class="backlogitem iter${divId} special backlogitemshead leftborder toggleall">
+															<th class="backlogitem first" colspan="3">Backlog items</th>
+															<th class="backlogitem fourth"><c:out value="${iter.spentHours}"/></th>
+														</tr>
+														<c:forEach items="${iter.childBacklogItems}" var="bli">
+															<tr style="display: table-row;" class="backlogitem iter${divId} leftborder toggleall">
+																<th class="backlogitem first" colspan="3">&nbsp; &nbsp; &raquo; <c:out value="${bli.backlogItem.name}"/></th>
+																<th class="backlogitem"><c:out value="${bli.hourTotal}"/></th>
+															</tr>
+														</c:forEach>										
+													</c:if>													
+												</c:forEach>
+											</c:if>
+										</c:forEach>
+									</c:if>
+								</c:forEach>
+							</tbody>
+						</table>
+					</div>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</c:if>
+<script>
+	$(document).ready( function() {
+		$('.toggleall').hide();
+	});
+</script>
 <%@ include file="./inc/_footer.jsp"%>

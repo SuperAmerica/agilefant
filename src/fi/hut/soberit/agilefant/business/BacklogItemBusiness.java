@@ -87,7 +87,7 @@ public interface BacklogItemBusiness {
      */
     public void resetBliOrigEstAndEffortLeft(int backlogItemId)
             throws ObjectNotFoundException;
-
+    
     public HistoryBusiness getHistoryBusiness();
 
     public void setHistoryBusiness(HistoryBusiness historyBusiness);

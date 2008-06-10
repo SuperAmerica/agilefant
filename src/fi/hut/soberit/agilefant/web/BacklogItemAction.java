@@ -18,6 +18,7 @@ import com.opensymphony.xwork.ActionSupport;
 import fi.hut.soberit.agilefant.business.BacklogBusiness;
 import fi.hut.soberit.agilefant.business.BacklogItemBusiness;
 import fi.hut.soberit.agilefant.business.HistoryBusiness;
+import fi.hut.soberit.agilefant.business.TaskBusiness;
 import fi.hut.soberit.agilefant.business.HourEntryBusiness;
 import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
@@ -30,6 +31,7 @@ import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.IterationGoal;
 import fi.hut.soberit.agilefant.model.State;
+import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
 
 public class BacklogItemAction extends ActionSupport implements CRUDAction {
@@ -73,6 +75,8 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
     private BacklogBusiness backlogBusiness;
 
     private BacklogItemBusiness backlogItemBusiness;
+    
+    private TaskBusiness taskBusiness;
     
     private HourEntryBusiness hourEntryBusiness;
 
@@ -172,11 +176,19 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
         newBacklog = backlogDAO.get(backlogId);
 
         this.fillStorable(storable);
-
+        
+        // Store tasks also.
+        try {
+            taskBusiness.updateMultipleTaskStates(taskStates);
+        }
+        catch(ObjectNotFoundException onfe) {
+            return Action.ERROR;
+        }
+        
         if (super.hasActionErrors()) {
             return Action.ERROR;
         }
-
+        
         // Store backlog item
         this.backlogItemId = (Integer) backlogItemDAO.create(storable);
 
@@ -186,8 +198,8 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
         historyBusiness.updateBacklogHistory(newBacklog.getId());
 
         if (oldBacklog != null)
-            historyBusiness.updateBacklogHistory(oldBacklog.getId());
-
+            historyBusiness.updateBacklogHistory(oldBacklog.getId());       
+        
         return Action.SUCCESS;
     }
 
@@ -209,7 +221,7 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
             System.err.println(key + ":" + taskStates.get(key));
         }
         /** Test code ends */
-
+           
         try {
             backlogItemBusiness.updateBacklogItemEffortLeftStateAndTaskStates(
                     backlogItemId, this.state, this.effortLeft, taskStates);
@@ -307,7 +319,7 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
          */
         if (storable.getState() == State.DONE) {
             storable.setEffortLeft(new AFTime(0));
-            this.effortLeft = new AFTime(0);
+            this.effortLeft = new AFTime(0);                                           
         }
         else if (storable.getOriginalEstimate() == null) {
             storable.setOriginalEstimate(backlogItem.getOriginalEstimate());
@@ -495,6 +507,10 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
 
     public void setPossibleResponsibles(List<User> possibleResponsibles) {
         this.possibleResponsibles = possibleResponsibles;
+    }
+
+    public void setTaskBusiness(TaskBusiness taskBusiness) {
+        this.taskBusiness = taskBusiness;
     }
 
     public String getSpentEffort() {

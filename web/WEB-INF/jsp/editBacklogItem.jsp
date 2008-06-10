@@ -35,7 +35,8 @@
 </c:choose>
 
 <ww:form action="store${new}BacklogItem">
-	<ww:hidden name="backlogItemId" value="${backlogItem.id}" />
+	<ww:hidden name="backlogItemId" value="${backlogItem.id}" />	
+	<ww:hidden name="effortLeft" value="${backlogItem.effortLeft}" />	
 	<aef:userList />
 	<aef:teamList />
 	<aef:currentUser />
@@ -168,12 +169,33 @@
 					}
 				}
 			}
-			</script> 
+			</script>
+			<%-- If user changed the item's state to DONE and there are tasks not DONE, ask if they should be set to DONE as well. --%>
+			<script type="text/javascript">
+			$(document).ready(function() {
+				$("#stateSelect").change(function() {
+					change_estimate_enabled($(this).val());				
+					var tasksDone = true;
+					$(".taskStateSelect").each(function() {
+						if ($(this).val() != 'DONE') {
+							tasksDone = false;
+						}
+					});
+					if ($(this).val() == 'DONE' && !tasksDone) {
+						var prompt = window.confirm("Do you wish to set all the tasks' states to Done as well?");
+						if (prompt) {
+							$(".taskStateSelect").val('DONE');
+						}						
+					}
+				});
+			});
+			</script>
+			<%-- Tasks to DONE confirmation script ends. --%>			
 			<ww:select name="backlogItem.state"
+				id="stateSelect"
 				value="backlogItem.state.name"
 				list="@fi.hut.soberit.agilefant.model.State@values()" listKey="name"
-				listValue="getText('task.state.' + name())" 
-				onchange="change_estimate_enabled(this.value);"/></td>
+				listValue="getText('task.state.' + name())"  /></td>
 		</tr>
 
 		<tr>
@@ -379,7 +401,6 @@
 			</c:choose>
 		</tr>
 	</table>
-</ww:form>
 
 <aef:currentUser />
 <table>
@@ -400,13 +421,7 @@
 			</div>
 			<c:if test="${!empty backlogItem.tasks}">
 				<div id="subItemContent">
-				
-				<ww:form action="quickStoreTaskList">
-				<ww:hidden name="backlogItemId" value="${backlogItemId}" />
-				<ww:hidden name="contextViewName" value="editBacklogItem" />
-				<ww:hidden name="contextObjectId" value="${backlogItemId}" />
-				<ww:hidden name="effortLeft" value="${backlogItem.effortLeft}" />
-				<ww:hidden name="state" value="${backlogItem.state.name}" />
+										
 				<p><display:table class="listTable" name="backlogItem.tasks"
 					id="row" requestURI="editBacklogItem.action">
 					<display:column sortable="false" title="Name"
@@ -418,12 +433,15 @@
 							href="%{editLink}&contextViewName=editBacklogItem&contextObjectId=${backlogItemId}">
 						${aef:html(row.name)}
 					</ww:a>
-					</display:column>
+					</display:column>								
 					<display:column sortable="false" title="State">
-						<ww:select name="taskStates[${row.id}]" value="#attr.row.state.name"
+											
+						<ww:select cssClass="taskStateSelect"
+							name="taskStates[${row.id}]" value="#attr.row.state.name"
 							list="@fi.hut.soberit.agilefant.model.State@values()" listKey="name"
-							listValue="getText('task.state.' + name())" />
-					</display:column>
+							listValue="getText('task.state.' + name())" id="taskStateSelect_${row.id}"/>
+														
+					</display:column>									
 					<display:column sortable="false" title="Creator">
 					${aef:html(row.creator.fullName)}
 				</display:column>
@@ -473,15 +491,25 @@
 					</display:column>
 
 
-				</display:table></p>
-				<ww:submit value="Save states"/>
-				</ww:form>
+				</display:table></p>				
 				</div>
 			</c:if> <%-- No tasks --%></div>
 		</c:if> <%-- New item --%></td>
 	</tr>
 </table>
 
+<c:choose>
+	<c:when test="${backlogItemId == 0}">		
+	</c:when>
+<c:otherwise>
+	<td><ww:submit value="Save" id="saveButton" />
+	<ww:submit action="storeCloseBacklogItem" value="Save & Close" id="saveAndCloseButton" /></td>			
+</c:otherwise>
+</c:choose>
+
+
+
+</ww:form>
 
 <%-- Hour reporting here - Remember to expel David H. --%>
 <aef:hourReporting id="hourReport"></aef:hourReporting>

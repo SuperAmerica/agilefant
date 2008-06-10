@@ -28,11 +28,11 @@ Effort estimate
 				value="${backlogItem.effortLeft}" id="effortBli_${backlogItem.id}"
 				disabled="true" />
 		</c:otherwise>
-	</c:choose>
-	<ww:select name="state" value="#attr.backlogItem.state.name"
+	</c:choose>	
+	<ww:select name="state"
+		id="stateSelect_${backlogItem.id}" value="#attr.backlogItem.state.name"
 		list="@fi.hut.soberit.agilefant.model.State@values()" listKey="name"
-		listValue="getText('backlogItem.state.' + name())"
-		onchange="change_effort_enabled(this.value, ${backlogItem.id})"/>
+		listValue="getText('backlogItem.state.' + name())"/>
 	<c:if test="${hourReport == 'true'}">
 	<br />
 		Log effort for <c:out value="${currentUser.initials}"/> 
@@ -52,14 +52,34 @@ Effort estimate
 	<script type="text/javascript">
 	function change_effort_enabled(value, bliId) {
 		if (value == "DONE") {
-			document.getElementById("effortBli_" + bliId).disabled = true;
+			document.getElementById("effortBli_" + bliId).disabled = true;							
 		}
 		else {
 			document.getElementById("effortBli_" + bliId).disabled = false;
 		}
 	}
 	</script>
-
+	<%-- If user changed the item's state to DONE and there are tasks not DONE, ask if they should be set to DONE as well. --%>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$("#stateSelect_${backlogItem.id}").change(function() {
+				change_effort_enabled($(this).val(), ${backlogItem.id});
+				var tasksDone = true;
+				$(".taskStateSelect_${backlogItem.id}").each(function() {
+					if ($(this).val() != 'DONE') {
+						tasksDone = false;
+					}
+				});
+				if ($(this).val() == 'DONE' && !tasksDone) {
+					var prompt = window.confirm("Do you wish to set all the tasks' states to Done as well?");
+					if (prompt) {
+						$(".taskStateSelect_${backlogItem.id}").val('DONE');
+					}					
+				}
+			});
+		});
+	</script>
+	<%-- Tasks to DONE confirmation script ends. --%>
 	</li>
 	<c:forEach items="${backlogItem.tasks}" var="task">
 		<ww:url id="editLink" action="editTask" includeParams="none">
@@ -74,13 +94,17 @@ Effort estimate
 							${aef:subString(task.name, 40)}
 							</ww:a>
 		<br />
-
-		<ww:select name="taskStates[${task.id}]" value="#attr.task.state.name"
+			<ww:select cssClass="taskStateSelect_${backlogItem.id}" name="taskStates[${task.id}]"
+			value="#attr.task.state.name"
 			list="@fi.hut.soberit.agilefant.model.State@values()" listKey="name"
-			listValue="getText('task.state.' + name())" />
-
+			listValue="getText('task.state.' + name())"/>
+		
 		</li>
 	</c:forEach>
+	
+	
+
+	
 	<ww:url id="createLink" action="createTask" includeParams="none">
 		<ww:param name="backlogItemId" value="${backlogItem.id}" />
 	</ww:url>

@@ -1,5 +1,6 @@
 package fi.hut.soberit.agilefant.business;
 
+import java.util.List;
 import java.util.Map;
 
 import fi.hut.soberit.agilefant.util.BacklogTimesheetNode;
@@ -11,7 +12,8 @@ public interface TimesheetBusiness {
      * 
      * @param backlogIds List of the id's of the backlogs that should be included in the tree
      */
-    public void generateTree(int[] backlogIds);
+    public List<BacklogTimesheetNode> generateTree(int[] backlogIds);
+
 
     /** Get the HourEntryBusiness instance. It is used to fetch the hour entries for
      * given backlog items and backlogs. 

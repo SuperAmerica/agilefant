@@ -41,6 +41,14 @@ public abstract class TimesheetNode {
     }
     
     public abstract void print();
+
+    public List<TimesheetNode> getChildren() {
+        return children;
+    }
+
+    public List<? extends HourEntry> getHourEntries() {
+        return hourEntries;
+    }
 }
 
 

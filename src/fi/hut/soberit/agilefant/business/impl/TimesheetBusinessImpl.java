@@ -25,7 +25,7 @@ public class TimesheetBusinessImpl implements TimesheetBusiness {
      */
     private Map<Integer, BacklogTimesheetNode> nodes = new HashMap<Integer, BacklogTimesheetNode>();
     
-    public void generateTree(int[] backlogIds){
+    public List<BacklogTimesheetNode> generateTree(int[] backlogIds){
         Backlog backlog, parent;
         BacklogTimesheetNode backlogNode, parentNode, childNode;
         
@@ -73,6 +73,8 @@ public class TimesheetBusinessImpl implements TimesheetBusiness {
                 root.print();
             }
         }
+        
+        return roots;
     }
 
     public BacklogDAO getBacklogDAO() {

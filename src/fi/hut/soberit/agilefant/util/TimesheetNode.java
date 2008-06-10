@@ -77,6 +77,10 @@ public abstract class TimesheetNode {
         return childBacklogItems;
     }
 
+    public List<? extends HourEntry> getHourEntries(){
+        return this.hourEntries;
+    }
+    
     /**
      * A debug function printing the contents of the node to System.out.
      */

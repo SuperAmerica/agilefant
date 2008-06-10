@@ -78,22 +78,23 @@ function saveAndClose() {
 			<input type="checkbox" name="showPastEffort" id="showPastEffort" onclick="javascript:showOldEffort();" /> Show Past Effort
 			<div id="pastEffortShower" style="display: none; border: 1px solid #A0A0A0;">
 			
-			<table>	
-			<tr>
-			<td colspan="2">
-				<table>
-					<tr><td>Today:</td><td>${todayEffortSum}</td><td style="width: 50px;"></td>
-					<td>This week:</td><td>${weekEffortSum}</td>
-					
-					</tr><tr>
-					<td>Yesterday:</td><td>${yesterdayEffortSum}</td>
-					<td></td>
-					<td>This month:</td><td>${monthEffortSum}</td></tr>
-				</table>
-			</td>
-			</tr>
-			<tr>
-			<td>
+				<table>	
+				<tr>
+				<td colspan="2">
+					<table>
+						<tr><td>Today:</td><td>${todayEffortSum}</td><td style="width: 50px;"></td>
+						<td>This week:</td><td>${weekEffortSum}</td>
+						
+						</tr><tr>
+						<td>Yesterday:</td><td>${yesterdayEffortSum}</td>
+						<td></td>
+						<td>This month:</td><td>${monthEffortSum}</td></tr>
+					</table>
+				</td>
+				</tr>
+				<tr>
+				<td>
+			 
 				<input type="checkbox" name="pastEffortInterval" id="pastEffortInterval" onclick="javascript:updatePastEffort();" /> Custom interval
 				<div id="pastEffortChoosers" style="display: none;">
 					<table>
@@ -104,13 +105,19 @@ function saveAndClose() {
 					-->
 					<tr>
 						<td>
+					<%--
 					<ww:datepicker size="15" showstime="false"
-                       format="%{getText('webwork.datepicker.format')}" id="effStartDate" name="startDate" />
+                       format="%{getText('webwork.datepicker.format')}" id="effStartDate" name="effStartDate" />
+					--%>
+					<aef:datepicker id="effStartDate" name="effStartDate" format="%{getText('webwork.shortDateTime.format')}" value="" />	
 						</td>
 						<td style="width: 30px; text-align: center;"> - </td>
 						<td>
+               		<%--
                		<ww:datepicker size="15" showstime="false"
-                       format="%{getText('webwork.datepicker.format')}" id="effEndDate" name="endDate" />
+                       format="%{getText('webwork.datepicker.format')}" id="effEndDate" name="effEndDate" />
+					--%>
+					<aef:datepicker id="effEndDate" name="effEndDate" format="%{getText('webwork.shortDateTime.format')}" value="" />
 						</td>
 						<td>
                 	<input type="button" value="Update" onclick="javascript:updatePastEffort(true);"/>     
@@ -128,9 +135,14 @@ function saveAndClose() {
 					-->
 					</table>
 				</div>
+				
+			</td>
+			</tr>
+			
 			</table>
-			</div>
 		
+			</div>
+
 				<br />
 				<br />
 
@@ -150,11 +162,13 @@ function saveAndClose() {
 			<td></td>
 			<td>
 						<ww:date name="%{hourEntry.date}" id="date" format="%{getText('webwork.shortDateTime.format')}" />
+						<%--
 						<ww:datepicker value="%{#date}" size="15"
                                         showstime="true"
                                         format="%{getText('webwork.datepicker.format')}"
                                         name="date" />
-                                      
+                       --%>
+                       <aef:datepicker id="he_date" name="date" format="%{getText('webwork.shortDateTime.format')}" value="%{#date}" />                
         	</td>
 		</tr>
 

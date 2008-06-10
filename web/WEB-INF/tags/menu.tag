@@ -11,6 +11,7 @@
 <ww:head />
 <link rel="stylesheet" href="static/css/import.css" type="text/css"/>
 <link rel="stylesheet" href="static/css/v5.css" type="text/css"/>
+<link rel="stylesheet" href="static/css/datepicker.css" type="text/css"/>
 <title>
 Agilefant
 </title>
@@ -20,7 +21,8 @@ Agilefant
 <script type="text/javascript" src="static/js/jquery-1.2.2.js"></script>
 <script type="text/javascript" src="static/js/multiselect.js"></script>
 <script type="text/javascript" src="static/js/taskrank.js"></script>
-<script type="text/javascript" src="static/js/jqModal.js"></script>
+<script type="text/javascript" src="static/js/date.js"></script>
+<script type="text/javascript" src="static/js/datepicker.js"></script>
 </head>
 
 <!-- Icons from http://sweetie.sublink.ca/ -->

@@ -25,6 +25,9 @@ public class TimesheetBusinessImpl implements TimesheetBusiness {
      */
     private Map<Integer, BacklogTimesheetNode> nodes = new HashMap<Integer, BacklogTimesheetNode>();
     
+    /**
+     * {@inheritDoc}
+     */
     public List<BacklogTimesheetNode> generateTree(int[] backlogIds){
         Backlog backlog, parent;
         BacklogTimesheetNode backlogNode, parentNode, childNode;
@@ -85,6 +88,9 @@ public class TimesheetBusinessImpl implements TimesheetBusiness {
         this.backlogDAO = backlogDAO;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public List<BacklogTimesheetNode> getRoots() {
         return roots;
     }
@@ -93,6 +99,9 @@ public class TimesheetBusinessImpl implements TimesheetBusiness {
         // Not available
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public HourEntryBusiness getHourEntryBusiness() {
         return hourEntryBusiness;
     }
@@ -101,6 +110,9 @@ public class TimesheetBusinessImpl implements TimesheetBusiness {
         this.hourEntryBusiness = hourEntryBusiness;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public Map<Integer, BacklogTimesheetNode> getNodes() {
         return nodes;
     }

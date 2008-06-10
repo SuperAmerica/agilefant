@@ -9,8 +9,11 @@ import com.opensymphony.xwork.ActionSupport;
 import fi.hut.soberit.agilefant.business.TimesheetBusiness;
 import fi.hut.soberit.agilefant.util.BacklogTimesheetNode;
 
-/* Note: this is just a mockup for timesheet actions */
-
+/**
+ * 
+ * @author Vesa Pirila / Spider
+ *
+ */
 public class TimesheetAction extends ActionSupport {
 
     private static final long serialVersionUID = -8988740967426943267L;

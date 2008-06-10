@@ -106,7 +106,7 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
         }
         //Existing entries cannot be "shared"
         TimesheetLoggable parent = getParent();
-        if(hourEntryId > 0) {
+        if(hourEntryId > 0 || userId > 0) {
             storable.setUser(userDAO.get(userId));
             hourEntryBusiness.store(parent,storable);
         } else if(userId == 0) {
@@ -115,10 +115,7 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
                 return Action.ERROR;
             }
             hourEntryBusiness.addHourEntryForMultipleUsers(parent,storable, userIds.keySet());
-        } else if(userId > 0) {
-            storable.setUser(userDAO.get(userId));
-            hourEntryBusiness.store(parent,storable);
-        }
+        } 
         return Action.SUCCESS;
     }
     

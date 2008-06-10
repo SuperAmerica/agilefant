@@ -83,7 +83,7 @@ public class HourEntryBusinessImpl implements HourEntryBusiness {
             } else {
                 backlogItemHourEntryDAO.store(store); 
             }
-        } else{
+        } else{ // Otherwise it has to be a backlog
             BacklogHourEntry store;
             store = backlogHourEntryDAO.get(hourEntry.getId());
             if(store == null) {

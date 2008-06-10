@@ -499,7 +499,7 @@
 </table>
 
 <c:choose>
-	<c:when test="${backlogItemId == 0}">		
+	<c:when test="${backlogItemId == 0 || empty backlogItem.tasks}">
 	</c:when>
 <c:otherwise>
 	<td><ww:submit value="Save" id="saveButton" />

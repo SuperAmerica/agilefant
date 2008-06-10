@@ -61,7 +61,7 @@ function saveAndClose() {
 	</c:choose>
 	</span>
 	<span style="float: right;" >
-		<h href="#"><img id="closeModal" class="jqmClose" src="static/img/delete.png" alt=""></a>
+		<img id="closeModal" class="jqmClose" src="static/img/delete.png" alt="Close dialog" style="cursor: pointer;">
 	</span>
 </div>
 <div style="padding: 12px;">

@@ -1,12 +1,14 @@
 package fi.hut.soberit.agilefant.util;
 
+import fi.hut.soberit.agilefant.business.TimesheetBusiness;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 
 public class BacklogItemTimesheetNode extends TimesheetNode {
     private BacklogItem backlogItem;
     
-    public BacklogItemTimesheetNode(BacklogItem backlogItem){
+    public BacklogItemTimesheetNode(BacklogItem backlogItem, TimesheetBusiness tsb){
         this.backlogItem = backlogItem;
+        hourEntries = tsb.getHourEntryBusiness().getEntriesByBacklogItem(backlogItem);
     }
     
     public BacklogItem getBacklogItem(){
@@ -24,6 +26,6 @@ public class BacklogItemTimesheetNode extends TimesheetNode {
     */
     
     public void print(){
-        System.out.println(this.backlogItem.getName());
+        System.out.println("  "+this.backlogItem.getName() + " " + this.getHourTotal());
     }
 }

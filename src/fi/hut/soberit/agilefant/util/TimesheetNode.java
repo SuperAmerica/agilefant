@@ -7,7 +7,7 @@ import fi.hut.soberit.agilefant.model.HourEntry;
 
 public abstract class TimesheetNode {
     protected List<TimesheetNode> children;
-    protected List<HourEntry> hourEntries;
+    protected List<? extends HourEntry> hourEntries;
     private AFTime spentHours = null; 
     private AFTime hourTotal = null;
 
@@ -15,8 +15,10 @@ public abstract class TimesheetNode {
         if(spentHours == null){
             spentHours = new AFTime(0);
             
-            for(HourEntry hourEntry : hourEntries)
-                spentHours.add(hourEntry.getTimeSpent());
+            if(hourEntries != null){
+                for(HourEntry hourEntry : hourEntries)
+                    spentHours.add(hourEntry.getTimeSpent());
+            }
         }
         
         return spentHours;
@@ -26,8 +28,10 @@ public abstract class TimesheetNode {
         if(hourTotal == null){
             hourTotal = new AFTime(0);
             
-            for(TimesheetNode child : children)
-                hourTotal.add(child.getHourTotal());
+            if(children != null) {
+                for(TimesheetNode child : children)
+                    hourTotal.add(child.getHourTotal());
+            }
             
             hourTotal.add(getSpentHours());
 

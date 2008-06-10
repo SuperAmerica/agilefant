@@ -11,7 +11,7 @@
 <div>
 <aef:currentUser />
 <ul class="tasklist" id="${divId}" style="display:none;">
-	<ww:form action="quickStoreTaskList" validate="false" onsubmit="return validateSpentEffortById('effortSpent_${backlogItem.id}','Invalid format for spent effort.'); return false;">
+	<ww:form action="quickStoreTaskList" validate="false">
 	<li class="tasklistItem">
 Effort estimate
 <br />
@@ -111,7 +111,7 @@ Effort estimate
 	<ww:a href="%{createLink}&contextViewName=${contextViewName}&contextObjectId=${contextObjectId}">New task &raquo;</ww:a>
 	<hr />
 
-	<ww:submit value="Store" action="quickStoreTaskList"/>
+	<ww:submit value="Store" action="quickStoreTaskList" onclick="return validateSpentEffortById('effortSpent_${backlogItem.id}','Invalid format for spent effort.'); return false;" />
 
 </ww:form>
 

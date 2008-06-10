@@ -538,11 +538,18 @@
 
                 }).text(hour.substring(hour.length-2)).addClass("dp-hours"),
                 $('<span>&nbsp;:&nbsp;</span>'),
-                $('<a title="Click to advance by 5 minutes" href="#"></a>').click(function() {
+                $('<a title="Click to advance by 5 minutes" href="#"></a>').click(function() {      
                     if(c.getSelected().getMinutes() + 5 > 60) {
                       c.getSelected().setMinutes(0);
                     } else {
-                      c.getSelected().setMinutes(c.getSelected().getMinutes()+5);
+                        diff = 0;
+                        if(c.getSelected().getMinutes()%5 != 0) {
+                          diff = 5 - c.getSelected().getMinutes()%5;
+                        } else {
+                          diff = 5;
+                     	}
+                     	 diff = c.getSelected().getMinutes() + diff;
+                     	 c.getSelected().setMinutes(diff);
                     }
                     var s = '0'+c.getSelected().getMinutes();
                     $(this).text(s.substr(s.length-2));

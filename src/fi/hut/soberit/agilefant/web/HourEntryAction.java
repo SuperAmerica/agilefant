@@ -82,8 +82,8 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
         TimesheetLoggable parent = null;
         if(backlogItemId > 0 ) {
             parent = backlogItemDAO.get(backlogItemId);
-        }else if( projectId > 0 ){
-            parent = projectDAO.get(projectId);
+        }else if( backlogId > 0 ){
+            parent = projectDAO.get(backlogId);
         }
         return parent;
     }
@@ -156,6 +156,7 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
     public TimesheetLoggable getTarget() {
         //TODO: Ugly workaround, refactor?
         this.target = getParent();
+        System.out.println(""+this.target);
         return target;
     }
 

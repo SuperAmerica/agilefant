@@ -6,9 +6,7 @@
 		<aef:hourEntries id="hourEntries" target="${backlogItem}" />
 	</c:when>
 	<c:otherwise>
-		<%-- FIXME!!!
 		<aef:hourEntries target="${backlog}" id="hourEntries" />
-		--%>
 	</c:otherwise>
 </c:choose>
 
@@ -21,7 +19,7 @@
 					<ww:param name="backlogItemId" value="${backlogItemId}" />
 				</c:when>
 				<c:otherwise>
-					<ww:param name="projectId" value="${backlog.id}" />
+					<ww:param name="backlogId" value="${backlog.id}" />
 				</c:otherwise>
 			</c:choose>
 		</ww:url>

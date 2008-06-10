@@ -235,11 +235,11 @@ function saveJobEntry() {
                    				<label>Responsible</label>
                    				<ul class="users_0" />
                    			</c:if>
-                   			<c:if test="${!aef:isProduct(target.backlog)}">
+                   			<c:if test="${aef:isBacklogItem(target) && !aef:isProduct(target.backlog)}">
 								<label>Assigned to project</label>
                    				<ul class="users_1" />
                    			</c:if>
-                   			<c:if test="${listSize > 0 || !aef:isProduct(target.backlog)}">
+                   			<c:if test="${listSize > 0 || (aef:isBacklogItem(target) && !aef:isProduct(target.backlog))}">
  	              				<label>Other users</label>
     	               		</c:if>
                				<ul class="users_2" />
@@ -257,13 +257,21 @@ function saveJobEntry() {
                            		<ww:set name="userList" value="#attr.enabledUserList" />
                            		<ww:set name="currentUser" value="#attr.currentUser" />
                            		<c:choose>
-									<c:when test="${target.project != null}">
-                           				var other = [<aef:userJson items="${aef:listSubstract(aef:listSubstract(userList, target.project.responsibles), target.responsibles)}" />];
-                           				var project = [<aef:userJson items="${aef:listSubstract(target.project.responsibles, target.responsibles)}" />];
+                           			<c:when test="${aef:isBacklogItem(target)}">
+                           				<c:choose>
+											<c:when test="${target.project != null}">
+                           						var other = [<aef:userJson items="${aef:listSubstract(aef:listSubstract(userList, target.project.responsibles), target.responsibles)}" />];
+                           						var project = [<aef:userJson items="${aef:listSubstract(target.project.responsibles, target.responsibles)}" />];
+                           					</c:when>
+                           					<c:otherwise>
+                           						var other = [<aef:userJson items="${aef:listSubstract(userList, target.responsibles)}" />];
+                           						var project = [];
+                           					</c:otherwise>
+                           				</c:choose>
                            			</c:when>
                            			<c:otherwise>
-                           				var other = [<aef:userJson items="${aef:listSubstract(userList, target.responsibles)}" />];
-                           				var project = [];
+                           				var other = [<aef:userJson items="${aef:listSubstract(userList, target.responsibles)}" />]
+                           				var project = []
                            			</c:otherwise>
                            		</c:choose>
                            		var preferred = [<aef:userJson items="${target.responsibles}" />];

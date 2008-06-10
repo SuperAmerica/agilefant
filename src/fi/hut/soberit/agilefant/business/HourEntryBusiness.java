@@ -8,6 +8,7 @@ import java.util.Set;
 
 import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.Backlog;
+import fi.hut.soberit.agilefant.model.BacklogHourEntry;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.BacklogItemHourEntry;
 import fi.hut.soberit.agilefant.model.HourEntry;
@@ -52,6 +53,8 @@ public interface HourEntryBusiness {
      * Get all hour entries attached to a backlog item.
      */
     public List<BacklogItemHourEntry> getEntriesByBacklogItem(BacklogItem parent);
+    
+    public List<BacklogHourEntry> getEntriesByBacklog(Backlog parent);
     /**
      * 
      */

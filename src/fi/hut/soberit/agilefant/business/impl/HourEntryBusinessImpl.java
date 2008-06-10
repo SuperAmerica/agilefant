@@ -48,10 +48,10 @@ public class HourEntryBusinessImpl implements HourEntryBusiness {
         return backlogItemHourEntryDAO;
     }
     public HourEntry getId(int id) {
-        return (HourEntry)backlogItemHourEntryDAO.get(id);
+        return (HourEntry)hourEntryDAO.get(id);
     }
     public void remove(int id) {
-        backlogItemHourEntryDAO.remove(id);
+        hourEntryDAO.remove(id);
     }
 
     public UserDAO getUserDAO() {
@@ -135,6 +135,10 @@ public class HourEntryBusinessImpl implements HourEntryBusiness {
 
     public List<BacklogItemHourEntry> getEntriesByBacklogItem(BacklogItem parent) {
         return backlogItemHourEntryDAO.getEntriesByBacklogItem(parent);
+    }
+    
+    public List<BacklogHourEntry> getEntriesByBacklog(Backlog parent) {
+        return backlogHourEntryDAO.getEntriesByBacklog(parent);
     }
 
     public Map<Integer, AFTime> getSumsByBacklog(Backlog parent) {

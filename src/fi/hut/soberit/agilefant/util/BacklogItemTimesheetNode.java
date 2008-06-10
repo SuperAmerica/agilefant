@@ -19,12 +19,6 @@ public class BacklogItemTimesheetNode extends TimesheetNode {
         return this.backlogItem.getName();
     }
     
-    /*
-    public void setBacklogItem(BacklogItem backlogItem){
-        this.backlogItem = backlogItem;
-    }
-    */
-    
     public void print(){
         System.out.println("  "+this.backlogItem.getName() + " " + this.getHourTotal());
     }

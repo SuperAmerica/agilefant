@@ -13,7 +13,9 @@ public class BacklogTimesheetNode extends TimesheetNode {
     
     public BacklogTimesheetNode(Backlog backlog, boolean expandChildren, TimesheetBusiness tsb){
         BacklogTimesheetNode node;
-        this.children = new ArrayList<TimesheetNode>();
+        this.childBacklogs = new ArrayList<BacklogTimesheetNode>();
+        this.childBacklogItems = new ArrayList<BacklogItemTimesheetNode>();
+        
         this.backlog = backlog;
         
         if(expandChildren){
@@ -22,10 +24,10 @@ public class BacklogTimesheetNode extends TimesheetNode {
             if(childBacklogs != null){
                 for(PageItem childBacklog : childBacklogs){
                     if((node = tsb.getNodes().get(childBacklog.getId())) != null){
-                        this.children.add(node);
+                        this.childBacklogs.add(node);
                     }else{
                         node = new BacklogTimesheetNode((Backlog) childBacklog, true, tsb);
-                        this.children.add(node);
+                        this.childBacklogs.add(node);
                         tsb.getNodes().put(childBacklog.getId(), node);
                     }
                 }
@@ -34,7 +36,7 @@ public class BacklogTimesheetNode extends TimesheetNode {
             Collection<BacklogItem> backlogItems = backlog.getBacklogItems();
             if(backlogItems != null){
                 for(BacklogItem backlogItem : backlogItems){
-                    this.children.add(new BacklogItemTimesheetNode(backlogItem, tsb));
+                    this.childBacklogItems.add(new BacklogItemTimesheetNode(backlogItem, tsb));
                 }
             }
         }
@@ -46,21 +48,24 @@ public class BacklogTimesheetNode extends TimesheetNode {
         return this.backlog;
     }
     
-    public void addChild(TimesheetNode node){
-        this.children.add(node);
+    public void addChildBacklog(BacklogTimesheetNode node){
+        this.childBacklogs.add(node);
+    }
+    
+    public void addChildBacklogItems(BacklogItemTimesheetNode node){
+        this.childBacklogItems.add(node);
     }
     
     public void print(){
         System.out.println(this.backlog.getName() + " " + getHourTotal());
-        if(children != null){
-            for(TimesheetNode child : children)
+        if(childBacklogs != null){
+            for(TimesheetNode child : childBacklogs)
+                child.print();
+        }
+        
+        if(childBacklogItems != null){
+            for(TimesheetNode child : childBacklogItems)
                 child.print();
         }
     }
-    
-    /*
-    public void setBacklog(Backlog backlog){
-        this.backlog = backlog;
-    }
-    */
 }

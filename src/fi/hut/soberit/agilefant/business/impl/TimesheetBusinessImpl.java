@@ -39,20 +39,20 @@ public class TimesheetBusinessImpl implements TimesheetBusiness {
                     backlogNode = new BacklogTimesheetNode(backlog, true, this); 
                     
                     if((parentNode = nodes.get(parent.getId())) != null){
-                        parentNode.addChild(backlogNode);
+                        parentNode.addChildBacklog(backlogNode);
                     }else{
                         parentNode = new BacklogTimesheetNode(parent, false, this);
-                        parentNode.addChild(backlogNode);
+                        parentNode.addChildBacklog(backlogNode);
                         nodes.put(parentNode.getBacklog().getId(), parentNode);
                         childNode = parentNode;
                     
                         while((parent = (Backlog) childNode.getBacklog().getParent()) != null){
                             if((parentNode = nodes.get(parent.getId())) != null){
-                                parentNode.addChild(childNode);
+                                parentNode.addChildBacklog(childNode);
                                 break;
                             }else{
                                 parentNode = new BacklogTimesheetNode(parent, false, this);
-                                parentNode.addChild(childNode);
+                                parentNode.addChildBacklog(childNode);
                                 nodes.put(parentNode.getBacklog().getId(), parentNode);
                                 childNode = parentNode;
                             }

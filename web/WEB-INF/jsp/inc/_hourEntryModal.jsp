@@ -53,8 +53,10 @@ function saveJobEntry() {
  	return false;
  }
  if($("#assigneeSelect2").find("input:checked[name^=userIds]").length == 0) {
- 	alert("Select at least one user.");
- 	return false;
+ 	if($("select[name='userId']").length == 0) {
+	 	alert("Select at least one user.");
+ 		return false;
+ 	}
  }
  return true;
 }

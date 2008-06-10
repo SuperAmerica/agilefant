@@ -99,10 +99,10 @@
             <!-- Show disclaimer only if browser is not Mozilla Firefox -->
             <script type="text/javascript">
             if (!(/Firefox[\/\s](\d+\.\d+)/.test(navigator.userAgent))) {
-                 document.write('<div class="disclaimer">' + '<p>'+ "Agilefant currently supports only " + 
-            		'<a href="http://www.getfirefox.com/">' + "Mozilla Firefox" + '</a>' + "." + '</p>' + '</div>') 	   				
-			}			
-						
+                 document.write('<div class="disclaimer">' + '<p>' +
+                 " Agilefant currently supports only " + 
+            		'<a href="http://www.getfirefox.com/">' + "Mozilla Firefox" + '</a>' + "." + '</p>' + '</div>')
+			}									
             </script>
                        
         </div>

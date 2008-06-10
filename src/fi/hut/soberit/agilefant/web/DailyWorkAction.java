@@ -13,6 +13,7 @@ import com.opensymphony.xwork.ActionContext;
 import com.opensymphony.xwork.ActionSupport;
 
 import fi.hut.soberit.agilefant.business.BacklogBusiness;
+import fi.hut.soberit.agilefant.business.HourEntryBusiness;
 import fi.hut.soberit.agilefant.business.ProjectBusiness;
 import fi.hut.soberit.agilefant.business.UserBusiness;
 import fi.hut.soberit.agilefant.model.AFTime;
@@ -48,6 +49,8 @@ public class DailyWorkAction extends ActionSupport {
     private ProjectBusiness projectBusiness;
 
     private UserBusiness userBusiness;
+    
+    private HourEntryBusiness hourEntryBusiness;
 
     private int userId;
 
@@ -116,6 +119,8 @@ public class DailyWorkAction extends ActionSupport {
             effortSums.put(backlog, effLeftSum);
             EffortSumData origEstSum = backlogBusiness.getOriginalEstimateSum(blis);
             originalEstimates.put(backlog, origEstSum);
+            
+            hourEntryBusiness.loadSumsToBacklogItems(backlog);
         }
 
         Collections.sort(projects, new BacklogComparator());
@@ -281,6 +286,14 @@ public class DailyWorkAction extends ActionSupport {
 
     public void setEnabledUsers(List<User> enabledUsers) {
         this.enabledUsers = enabledUsers;
+    }
+
+    public HourEntryBusiness getHourEntryBusiness() {
+        return hourEntryBusiness;
+    }
+
+    public void setHourEntryBusiness(HourEntryBusiness hourEntryBusiness) {
+        this.hourEntryBusiness = hourEntryBusiness;
     }
     
     

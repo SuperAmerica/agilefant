@@ -16,6 +16,7 @@ import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
 
 import fi.hut.soberit.agilefant.business.BacklogBusiness;
+import fi.hut.soberit.agilefant.business.HourEntryBusiness;
 import fi.hut.soberit.agilefant.business.ProjectBusiness;
 import fi.hut.soberit.agilefant.business.UserBusiness;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
@@ -83,6 +84,8 @@ public class ProjectAction extends ActionSupport implements CRUDAction {
     private UserBusiness userBusiness;
 
     private ProjectBusiness projectBusiness;
+    
+    private HourEntryBusiness hourEntryBusiness;
 
     private EffortSumData effortLeftSum;
 
@@ -168,7 +171,10 @@ public class ProjectAction extends ActionSupport implements CRUDAction {
         Collection<BacklogItem> items = backlog.getBacklogItems();
         effortLeftSum = backlogBusiness.getEffortLeftSum(items);
         origEstSum = backlogBusiness.getOriginalEstimateSum(items);
-      
+        
+        // Load Hour Entry sums to this backlog's BLIs.
+        hourEntryBusiness.loadSumsToBacklogItems(backlog);
+        
         // Calculate project's iterations' effort lefts and original estimates
         effLeftSums = new HashMap<Iteration, EffortSumData>();
         origEstSums = new HashMap<Iteration, EffortSumData>(); 
@@ -505,5 +511,13 @@ public class ProjectAction extends ActionSupport implements CRUDAction {
 
     public void setAssignableUsers(List<User> assignableUsers) {
         this.assignableUsers = assignableUsers;
+    }
+
+    public HourEntryBusiness getHourEntryBusiness() {
+        return hourEntryBusiness;
+    }
+
+    public void setHourEntryBusiness(HourEntryBusiness hourEntryBusiness) {
+        this.hourEntryBusiness = hourEntryBusiness;
     }
 }

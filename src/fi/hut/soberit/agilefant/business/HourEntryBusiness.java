@@ -59,6 +59,12 @@ public interface HourEntryBusiness {
      * 
      */
     public Map<Integer,AFTime> getSumsByBacklog(Backlog parent);
+    
+    /**
+     * Loads hour entry sums to backlog's BLIs.
+     */
+    public void loadSumsToBacklogItems(Backlog parent);
+    
     /**
      * 
      */

@@ -10,6 +10,7 @@ import java.util.Set;
 import java.lang.IllegalArgumentException;
 
 import fi.hut.soberit.agilefant.business.HourEntryBusiness;
+import fi.hut.soberit.agilefant.business.SettingBusiness;
 import fi.hut.soberit.agilefant.db.BacklogItemHourEntryDAO;
 import fi.hut.soberit.agilefant.db.HourEntryDAO;
 import fi.hut.soberit.agilefant.db.BacklogHourEntryDAO;
@@ -30,7 +31,7 @@ public class HourEntryBusinessImpl implements HourEntryBusiness {
     private BacklogHourEntryDAO backlogHourEntryDAO; 
     private UserDAO userDAO;
     private HourEntryDAO hourEntryDAO;
-
+    private SettingBusiness settingBusiness;
     
     public HourEntryDAO getHourEntryDAO() {
         return hourEntryDAO;
@@ -141,6 +142,7 @@ public class HourEntryBusinessImpl implements HourEntryBusiness {
         return backlogHourEntryDAO.getEntriesByBacklog(parent);
     }
 
+    @Deprecated
     public Map<Integer, AFTime> getSumsByBacklog(Backlog parent) {
         Map<Integer, AFTime> sums = new HashMap<Integer, AFTime>();
         List<BacklogItemHourEntry> entries = 
@@ -163,6 +165,32 @@ public class HourEntryBusinessImpl implements HourEntryBusiness {
         
         return sums;
     }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void loadSumsToBacklogItems(Backlog parent) {
+        if (settingBusiness.isHourReportingEnabled()) {
+            List<BacklogItemHourEntry> entries = 
+                backlogItemHourEntryDAO.getSumsByBacklog(parent);
+            
+            for (BacklogItemHourEntry entry : entries) {
+                AFTime currentSum = entry.getBacklogItem().getEffortSpent();
+                AFTime timeSpent = entry.getTimeSpent();
+                
+                if (currentSum == null) {
+                    currentSum = new AFTime(0);
+                }
+                
+                if (timeSpent != null) {
+                    currentSum.add(timeSpent);
+                }
+                
+                entry.getBacklogItem().setEffortSpent(currentSum);
+            }
+       }
+    }
+    
     public Map<Integer, AFTime> getSumsByIterationGoal(Backlog parent) {
         Map<Integer, AFTime> sums = new HashMap<Integer, AFTime>();
         List<BacklogItemHourEntry> entries = 
@@ -264,5 +292,13 @@ public class HourEntryBusinessImpl implements HourEntryBusiness {
 
     public void setBacklogHourEntryDAO(BacklogHourEntryDAO backlogHourEntryDAO) {
         this.backlogHourEntryDAO = backlogHourEntryDAO;
+    }
+
+    public SettingBusiness getSettingBusiness() {
+        return settingBusiness;
+    }
+
+    public void setSettingBusiness(SettingBusiness settingBusiness) {
+        this.settingBusiness = settingBusiness;
     }
 }

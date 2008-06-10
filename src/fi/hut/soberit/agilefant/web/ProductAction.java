@@ -10,6 +10,7 @@ import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
 
 import fi.hut.soberit.agilefant.business.BacklogBusiness;
+import fi.hut.soberit.agilefant.business.HourEntryBusiness;
 import fi.hut.soberit.agilefant.business.ProjectBusiness;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.db.ProductDAO;
@@ -31,6 +32,8 @@ public class ProductAction extends ActionSupport implements CRUDAction {
     
     private ProjectBusiness projectBusiness;
 
+    private HourEntryBusiness hourEntryBusiness;
+    
     private int productId;
 
     private Product product;
@@ -89,6 +92,9 @@ public class ProductAction extends ActionSupport implements CRUDAction {
         
         effLeftSums = new HashMap<Project, EffortSumData>();
         origEstSums = new HashMap<Project, EffortSumData>();
+        
+        // Load Hour Entry sums to this backlog's BLIs.
+        hourEntryBusiness.loadSumsToBacklogItems(backlog);
         
         Collection<Project> projects = product.getProjects();
         
@@ -219,5 +225,13 @@ public class ProductAction extends ActionSupport implements CRUDAction {
 
     public void setProjectBusiness(ProjectBusiness projectBusiness) {
         this.projectBusiness = projectBusiness;
+    }
+
+    public HourEntryBusiness getHourEntryBusiness() {
+        return hourEntryBusiness;
+    }
+
+    public void setHourEntryBusiness(HourEntryBusiness hourEntryBusiness) {
+        this.hourEntryBusiness = hourEntryBusiness;
     }
 }

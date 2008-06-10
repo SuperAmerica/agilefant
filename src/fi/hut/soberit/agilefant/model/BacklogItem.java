@@ -85,6 +85,8 @@ public class BacklogItem implements PageItem, Assignable, EffortContainer, Times
 
     private AFTime effortLeft;
 
+    private AFTime effortSpent;
+    
     /**
      * Returns effort left for this item.
      * 
@@ -405,4 +407,15 @@ public class BacklogItem implements PageItem, Assignable, EffortContainer, Times
         this.responsibles = responsibles;
     }
 
+    /**
+     * Get the total effort spent on this BacklogItem.
+     */
+    @Transient
+    public AFTime getEffortSpent() {
+        return effortSpent;
+    }
+
+    public void setEffortSpent(AFTime effortSpent) {
+        this.effortSpent = effortSpent;
+    }
 }

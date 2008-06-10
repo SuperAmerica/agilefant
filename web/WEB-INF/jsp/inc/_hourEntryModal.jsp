@@ -48,6 +48,16 @@ function saveAndClose() {
 	jQuery("#closeModal").click();
 	return false;
 }
+function saveJobEntry() {
+ if(!checkEstimateFormat('hourEntry.timeSpent')) {
+ 	return false;
+ }
+ if($("#assigneeSelect2").find("input:checked[name^=userIds]").length == 0) {
+ 	alert("Select at least one user.");
+ 	return false;
+ }
+ return true;
+}
 </script>
 <div target="AJAX-MODAL" style="width: 690px; height: 20px; padding: 5px; border-bottom: 1px solid black; background: #ccc;">
 	<span style="float: left;">
@@ -65,7 +75,7 @@ function saveAndClose() {
 	</span>
 </div>
 <div style="padding: 12px;">
-<ww:form id="hourModalForm" action="storeHourEntry" onsubmit="javascript: return checkEstimateFormat('hourEntry.timeSpent');">
+<ww:form id="hourModalForm" action="storeHourEntry" onsubmit="javascript: return saveJobEntry();">
 	<ww:hidden name="hourEntryId" />
 	<ww:hidden name="backlogItemId" />
 	<ww:hidden name="backlogId" />

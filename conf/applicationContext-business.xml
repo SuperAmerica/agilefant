@@ -25,6 +25,8 @@
 		class="fi.hut.soberit.agilefant.business.impl.SettingBusinessImpl" />
 	<bean id="hourEntryBusiness"
 		class="fi.hut.soberit.agilefant.business.impl.HourEntryBusinessImpl" />
+	<bean id="timesheetBusiness"
+		class="fi.hut.soberit.agilefant.business.impl.TimesheetBusinessImpl" />
 
 	<bean name="chartBusiness"
 		class="fi.hut.soberit.agilefant.business.impl.ChartBusinessImpl">

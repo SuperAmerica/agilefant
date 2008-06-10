@@ -18,7 +18,7 @@
 	<tbody>
 		<tr>
 			<td>
-				<ww:form action="timesheet">
+				<ww:form action="generateTree">
 					<div id="subItems" style="margin-top: 0pt;">
 						<div id="subItemHeader">				
 							<table cellpadding="0" cellspacing="0">
@@ -36,21 +36,21 @@
 										Select Backlog
 									</td>
 									<td>
-										<select multiple="multiple" name="${selectName}" disabled>
+										<select multiple="multiple" name="backlogIds">
 										<%-- Resolve if product is selected or is in 'path' and set variable 'class' accordingly--%>
 											<c:forEach items="${productList}" var="product">
 									
 											<%-- Print Product-link--%>
-												<option>${aef:out(product.name)}</option>
+												<option value="${product.id}">${aef:out(product.name)}</option>
 					
 					
 												<%-- Resolve if project is selected or is in 'path' and set variable 'class' accordingly--%>
 												<c:forEach items="${product.projects}" var="project">
 						
-													<option>&nbsp;&nbsp;&nbsp;&nbsp;${aef:out(project.name)}</option>
+													<option value="${project.id}">&nbsp;&nbsp;&nbsp;&nbsp;${aef:out(project.name)}</option>
 						
 									                	<c:forEach items="${project.iterations}" var="it">
-	                    									<option>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${aef:out(it.name)}</option>
+	                    									<option value="${it.id}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${aef:out(it.name)}</option>
 	                									</c:forEach>
 	                							</c:forEach>
 	            							</c:forEach>
@@ -127,7 +127,7 @@
 												}
 											}
 										</script> 
-										<select name="interval" id="interval" onchange="change_selected_interval(this.value);" disabled>
+										<select name="interval" id="interval" onchange="change_selected_interval(this.value);">
 	
 											<option>(Select interval)</option>
 											<option value="NO_INTERVAL">(No interval - display all hours)</option>
@@ -146,7 +146,7 @@
 									<td>Start date</td>
 									<td>
 										<ww:datepicker size="15" showstime="false"
-	                       					format="%{getText('webwork.datepicker.format')}" id="effStartDate" name="startDate" value="" disabled="true"/>
+	                       					format="%{getText('webwork.datepicker.format')}" id="effStartDate" name="startDate" value=""/>
 									</td>
 								</tr>
 								<!--  End date -->
@@ -154,7 +154,7 @@
 									<td>End date</td>
 									<td>
 	               						<ww:datepicker size="15" showstime="false"
-	                       					format="%{getText('webwork.datepicker.format')}" id="effEndDate" name="endDate" value="" disabled="true"/>
+	                       					format="%{getText('webwork.datepicker.format')}" id="effEndDate" name="endDate" value=""/>
 									</td>
 								</tr>
 								<!--  User selection -->				
@@ -215,7 +215,7 @@
 										<%--
 										<ww:submit value="Generate Timesheets Report" />
 										--%>
-										<input type="submit" value="Generate Timesheets Report" disabled />
+										<input type="submit" value="Generate Timesheets Report"/>
 									</td>
 								</tr>
 							</tbody>
@@ -226,21 +226,5 @@
 		</tr>
 	</tbody>
 </table>
-					
-				
-			
-					
-
-<!--
-<img src="http://www.vayrynen.com/pics/navi_picture.jpg" alt="Paavo rulaa!" /><br>
-<h2>Kansalaisyhteiskunta</h2>
-Arvoisa äänestäjä: Huolestuttaako Teitä kansakuntamme tulevaisuus?<br><br>
-Askarruttaako Teitä kolmikantaneuvotteluiden tulokset sekä viimeaikainen keskustelu
-työmarkkinajärjestöjen roolista?<br><br>
-Minulla on juuri sinulle <a href="http://www.vayrynen.com/">asiaa</a>.
-Nyt on koittanut työreformin aika!<br>
-
-<img src="http://irestidelcarlino.files.wordpress.com/2006/12/david-hasselhoff-07.jpg" alt="Yeah baby! Want to hard ride tonight?"/>
---!>
 
 <%@ include file="./inc/_footer.jsp"%>

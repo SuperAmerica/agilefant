@@ -35,6 +35,7 @@ import org.hibernate.annotations.Proxy;
 import org.hibernate.annotations.Type;
 
 import fi.hut.soberit.agilefant.util.BacklogItemPriorityComparator;
+import fi.hut.soberit.agilefant.web.page.PageItem;
 
 /**
  * Abstract entity, a Hibernate entity bean, which represents a backlog.
@@ -65,7 +66,7 @@ import fi.hut.soberit.agilefant.util.BacklogItemPriorityComparator;
 // subclass types discriminated using string column
 @DiscriminatorColumn(name = "backlogtype", discriminatorType = DiscriminatorType.STRING)
 @Table(name = "backlog")
-public abstract class Backlog implements Assignable, TimesheetLoggable {
+public abstract class Backlog implements Assignable, TimesheetLoggable, PageItem {
 
     private int id;
 

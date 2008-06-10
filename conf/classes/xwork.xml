@@ -793,6 +793,9 @@
 			<result>/WEB-INF/jsp/timesheet.jsp</result>
 		</action>
 		
+		<action name="generateTree" method="generateTree" class="timesheetAction">
+			<result>/WEB-INF/jsp/timesheet.jsp</result>
+		</action>
 		
 		<!-- Hour Entry actions -->
 		

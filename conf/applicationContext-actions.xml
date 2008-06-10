@@ -77,7 +77,7 @@
 		autowire="byName" singleton="false" />
 	<bean name="timesheetAction"
 		class="fi.hut.soberit.agilefant.web.TimesheetAction"
-		autowire="byName" singleton="false" />	 
+		autowire="byName" singleton="false" />
 	<bean name="hourEntryAction"
 		class="fi.hut.soberit.agilefant.web.HourEntryAction"
 		autowire="byName" singleton="false" />

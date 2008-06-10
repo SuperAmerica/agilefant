@@ -61,6 +61,8 @@ public class HourEntryBusinessImpl implements HourEntryBusiness {
     public void setUserDAO(UserDAO userDAO) {
         this.userDAO = userDAO;
     }
+    
+    // Should use the same method for newly created and altered hourEntry?
     public void store(TimesheetLoggable parent, HourEntry hourEntry) {
         boolean create = false;
         if(parent instanceof BacklogItem) {
@@ -81,8 +83,24 @@ public class HourEntryBusinessImpl implements HourEntryBusiness {
             } else {
                 backlogItemHourEntryDAO.store(store); 
             }
-        } else {
-            //???
+        } else{
+            BacklogHourEntry store;
+            store = backlogHourEntryDAO.get(hourEntry.getId());
+            if(store == null) {
+                create = true;
+                store = new BacklogHourEntry();
+            }
+            store.setDate(hourEntry.getDate());
+            store.setUser(hourEntry.getUser());
+            store.setDescription(hourEntry.getDescription());
+            store.setTimeSpent(hourEntry.getTimeSpent());
+            store.setBacklog((Backlog)parent);
+            store.setDate(hourEntry.getDate());
+            if(create) {
+                backlogHourEntryDAO.create(store);
+            } else {
+                backlogHourEntryDAO.store(store); 
+            }
         }
     }
     

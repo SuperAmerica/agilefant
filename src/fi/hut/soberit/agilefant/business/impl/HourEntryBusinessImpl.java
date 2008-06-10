@@ -12,18 +12,22 @@ import java.lang.IllegalArgumentException;
 import fi.hut.soberit.agilefant.business.HourEntryBusiness;
 import fi.hut.soberit.agilefant.db.BacklogItemHourEntryDAO;
 import fi.hut.soberit.agilefant.db.HourEntryDAO;
+import fi.hut.soberit.agilefant.db.BacklogHourEntryDAO;
 import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.BacklogItemHourEntry;
 import fi.hut.soberit.agilefant.model.HourEntry;
+import fi.hut.soberit.agilefant.model.Backlog;
+import fi.hut.soberit.agilefant.model.BacklogHourEntry;
 import fi.hut.soberit.agilefant.model.TimesheetLoggable;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.security.SecurityUtil;
 
 public class HourEntryBusinessImpl implements HourEntryBusiness {
     private BacklogItemHourEntryDAO backlogItemHourEntryDAO;
+    private BacklogHourEntryDAO backlogHourEntryDAO; 
     private UserDAO userDAO;
     private HourEntryDAO hourEntryDAO;
 
@@ -179,6 +183,28 @@ public class HourEntryBusinessImpl implements HourEntryBusiness {
         }
     }
     
+    /*
+     * Removes all hour entries logged into the backlog given as the parameter.
+     */
+    public void removeHourEntriesByBacklog( Backlog backlog ){
+        
+        List<BacklogHourEntry> removeList = 
+            backlogHourEntryDAO.getEntriesByBacklog( backlog );
+     
+        if( removeList == null)
+            return;
+        
+        for( BacklogHourEntry i : removeList ){
+            try{
+                remove( i.getId() );
+            }catch(Exception e ){
+                          
+            }
+        }
+    }
+    
+    
+    
     public AFTime getEffortSumByUserAndTimeInterval(User user, String startDate, String endDate)
             throws IllegalArgumentException {
         AFTime sum;
@@ -208,5 +234,13 @@ public class HourEntryBusinessImpl implements HourEntryBusiness {
         }
         
         return sum;
+    }
+
+    public BacklogHourEntryDAO getBacklogHourEntryDAO() {
+        return backlogHourEntryDAO;
+    }
+
+    public void setBacklogHourEntryDAO(BacklogHourEntryDAO backlogHourEntryDAO) {
+        this.backlogHourEntryDAO = backlogHourEntryDAO;
     }
 }

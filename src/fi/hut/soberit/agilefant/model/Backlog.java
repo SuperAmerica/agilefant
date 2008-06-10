@@ -65,7 +65,7 @@ import fi.hut.soberit.agilefant.util.BacklogItemPriorityComparator;
 // subclass types discriminated using string column
 @DiscriminatorColumn(name = "backlogtype", discriminatorType = DiscriminatorType.STRING)
 @Table(name = "backlog")
-public abstract class Backlog implements Assignable {
+public abstract class Backlog implements Assignable, TimesheetLoggable {
 
     private int id;
 

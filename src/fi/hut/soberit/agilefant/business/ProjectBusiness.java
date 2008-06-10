@@ -177,4 +177,7 @@ public interface ProjectBusiness {
      * @return
      */
     public List<User> getAssignableUsers(Project project);
+    
+    
+    public void removeAllHourEntries( Backlog backlog );
 }

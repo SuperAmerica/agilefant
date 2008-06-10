@@ -12,7 +12,7 @@ public class BacklogItemHourEntry extends HourEntry {
     private BacklogItem backlogItem;
 
     @ManyToOne
-    @JoinColumn(nullable = false)
+    @JoinColumn(nullable = true)
     public BacklogItem getBacklogItem() {
         return backlogItem;
     }

@@ -102,5 +102,29 @@
 	<bean name="teamDAO" parent="abstractDAO">
 		<property name="target" ref="teamDAOTarget" />
 	</bean>
+	
+	<bean name="settingDAOTarget" parent="abstractDAOTarget"
+		class="fi.hut.soberit.agilefant.db.hibernate.SettingDAOHibernate" />		
+	<bean name="settingDAO" parent="abstractDAO">
+		<property name="target" ref="settingDAOTarget" />
+	</bean>
+	
+	<bean name="backlogItemHourEntryDAOTarget" parent="abstractDAOTarget"
+		class="fi.hut.soberit.agilefant.db.hibernate.BacklogItemHourEntryDAOHibernate" />
+	<bean name="backlogItemHourEntryDAO" parent="abstractDAO">
+		<property name="target" ref="backlogItemHourEntryDAOTarget" />
+	</bean>
+	
+	<bean name="hourEntryDAOTarget" parent="abstractDAOTarget"
+		class="fi.hut.soberit.agilefant.db.hibernate.HourEntryDAOHibernate" />
+	<bean name="hourEntryDAO" parent="abstractDAO">
+		<property name="target" ref="hourEntryDAOTarget" />
+	</bean>
+	
+	<bean name="backlogHourEntryDAOTarget" parent="abstractDAOTarget"
+		class="fi.hut.soberit.agilefant.db.hibernate.BacklogHourEntryDAOHibernate" />
+	<bean name="backlogHourEntryDAO" parent="abstractDAO">
+		<property name="target" ref="backlogHourEntryDAOTarget" />
+	</bean>
 
 </beans>

@@ -3,6 +3,7 @@ package fi.hut.soberit.agilefant.web;
 import java.util.ArrayList;
 
 import fi.hut.soberit.agilefant.db.BacklogDAO;
+import fi.hut.soberit.agilefant.db.BacklogHourEntryDAO;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.db.ProjectDAO;
 import fi.hut.soberit.agilefant.db.ProjectTypeDAO;
@@ -29,11 +30,15 @@ public class ProjectActionTest extends SpringTestCase {
     private ProjectTypeDAO projectTypeDAO = null;
     private BacklogItemDAO backlogItemDAO = null;
     private UserDAO userDAO = null;
+    
+    //private BacklogHourEntryDAO projectHourEntryDAO = null; 
 
     private Backlog product;
     private Backlog project;
     private ProjectType projectType;
     private User user1, user2;
+    
+    
 
     /**
      * Create test data.
@@ -257,6 +262,8 @@ public class ProjectActionTest extends SpringTestCase {
      * Test delete operation.
      */
     public void testDelete() {
+        
+        
         projectAction.setProjectId(project.getId());
         assertEquals("success", projectAction.delete());
         assertNull(projectDAO.get(project.getId()));

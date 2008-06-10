@@ -27,7 +27,7 @@
  		<mapping class="fi.hut.soberit.agilefant.model.Setting"/>
  		<mapping class="fi.hut.soberit.agilefant.model.HourEntry"/>
  		<mapping class="fi.hut.soberit.agilefant.model.BacklogItemHourEntry"/>
- 		
+ 		<mapping class="fi.hut.soberit.agilefant.model.BacklogHourEntry"/>
  		
  		
 		<!-- Activate hibernate validation: these listeners will raise an exception

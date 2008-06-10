@@ -242,6 +242,9 @@ public class ProjectAction extends ActionSupport implements CRUDAction {
             super.addActionError(super.getText("project.notEmptyWhenDeleting"));
             return Action.ERROR;
         }
+        
+        projectBusiness.removeAllHourEntries( project );
+        
         backlogBusiness.setAssignments(null, null, project);
         Product product = project.getProduct();
         productId = product.getId();

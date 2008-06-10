@@ -12,6 +12,7 @@ import com.opensymphony.xwork.ActionSupport;
 
 import fi.hut.soberit.agilefant.business.HourEntryBusiness;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
+import fi.hut.soberit.agilefant.db.ProjectDAO;
 import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.model.HourEntry;
 import fi.hut.soberit.agilefant.model.TimesheetLoggable;
@@ -25,6 +26,7 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
     private HourEntry hourEntry;
     private HourEntryBusiness hourEntryBusiness;
     private BacklogItemDAO backlogItemDAO;
+    private ProjectDAO projectDAO;
     private UserDAO userDAO;
     private int userId = 0;
     private TimesheetLoggable target;
@@ -78,8 +80,10 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
     }
     private TimesheetLoggable getParent() {
         TimesheetLoggable parent = null;
-        if(backlogItemId > 0) {
+        if(backlogItemId > 0 ) {
             parent = backlogItemDAO.get(backlogItemId);
+        }else if( projectId > 0 ){
+            parent = projectDAO.get(projectId);
         }
         return parent;
     }
@@ -241,5 +245,13 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
 
     public void setProductId(int productId) {
         this.productId = productId;
+    }
+
+    public ProjectDAO getProjectDAO() {
+        return projectDAO;
+    }
+
+    public void setProjectDAO(ProjectDAO projectDAO) {
+        this.projectDAO = projectDAO;
     }
 }

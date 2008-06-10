@@ -15,6 +15,7 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 
 import fi.hut.soberit.agilefant.business.BacklogBusiness;
+import fi.hut.soberit.agilefant.business.HourEntryBusiness;
 import fi.hut.soberit.agilefant.business.ProjectBusiness;
 import fi.hut.soberit.agilefant.business.UserBusiness;
 import fi.hut.soberit.agilefant.db.IterationDAO;
@@ -51,6 +52,8 @@ public class ProjectBusinessImpl implements ProjectBusiness {
     private IterationDAO iterationDAO;
 
     private ProjectTypeDAO projectTypeDAO;
+    
+    private HourEntryBusiness hourEntryBusiness;
 
     // Testing
     private UserDAO userDAO;
@@ -155,6 +158,12 @@ public class ProjectBusinessImpl implements ProjectBusiness {
         }
 
         projectTypeDAO.remove(projectTypeId);
+    }
+    
+    
+    /** {@inheritDoc} * */
+    public void removeAllHourEntries( Backlog backlog ){
+        hourEntryBusiness.removeHourEntriesByBacklog(backlog);
     }
 
     /** {@inheritDoc} * */
@@ -777,6 +786,14 @@ public class ProjectBusinessImpl implements ProjectBusiness {
 
     public void setUserBusiness(UserBusiness userBusiness) {
         this.userBusiness = userBusiness;
+    }
+
+    public HourEntryBusiness getHourEntryBusiness() {
+        return hourEntryBusiness;
+    }
+
+    public void setHourEntryBusiness(HourEntryBusiness hourEntryBusiness) {
+        this.hourEntryBusiness = hourEntryBusiness;
     }
 
 }

@@ -11,6 +11,7 @@ import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.BacklogItemHourEntry;
 import fi.hut.soberit.agilefant.model.HourEntry;
+import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.TimesheetLoggable;
 import fi.hut.soberit.agilefant.model.User;
 
@@ -63,6 +64,8 @@ public interface HourEntryBusiness {
      * 
      */
     public void removeHourEntriesByBacklogItem( BacklogItem backlog );
+    
+    public void removeHourEntriesByBacklog( Backlog backlog );
     
     public AFTime getEffortSumByUserAndTimeInterval(User user, Date start, Date end);
     

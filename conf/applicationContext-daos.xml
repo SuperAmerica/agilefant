@@ -120,4 +120,10 @@
 	<bean name="hourEntryDAO" parent="abstractDAO">
 		<property name="target" ref="hourEntryDAOTarget" />
 	</bean>
+	
+	<bean name="backlogHourEntryDAOTarget" parent="abstractDAOTarget"
+		class="fi.hut.soberit.agilefant.db.hibernate.BacklogHourEntryDAOHibernate" />
+	<bean name="backlogHourEntryDAO" parent="abstractDAO">
+		<property name="target" ref="backlogHourEntryDAOTarget" />
+	</bean>
 </beans>

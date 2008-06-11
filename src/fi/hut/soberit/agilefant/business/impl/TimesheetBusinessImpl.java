@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import fi.hut.soberit.agilefant.business.HourEntryBusiness;
 import fi.hut.soberit.agilefant.business.TimesheetBusiness;
@@ -31,11 +32,16 @@ public class TimesheetBusinessImpl implements TimesheetBusiness {
     
     private Date startDate, endDate;
     
+    private Set<Integer> userIds;
+    
     /**
      * {@inheritDoc}
      */
-    public List<BacklogTimesheetNode> generateTree(int[] backlogIds, String startDateString, String endDateString)
+    public List<BacklogTimesheetNode> generateTree(int[] backlogIds,
+                                                   String startDateString, String endDateString,
+                                                   Set<Integer> userIds)
             throws IllegalArgumentException{
+        
         Backlog backlog, parent;
         BacklogTimesheetNode backlogNode, parentNode, childNode;
             
@@ -56,6 +62,8 @@ public class TimesheetBusinessImpl implements TimesheetBusiness {
             System.err.println("Error in parsing date");
             throw new IllegalArgumentException("Error in parsing date");
         }
+        
+        this.userIds = userIds;
         
         roots.clear();
         nodes.clear();
@@ -95,12 +103,15 @@ public class TimesheetBusinessImpl implements TimesheetBusiness {
                 }
             }
         }
+        
+        /*
         // DEBUG
         if(roots != null){
             for(BacklogTimesheetNode root : roots){
                 root.print();
             }
         }
+        */
         
         return roots;
     }
@@ -147,10 +158,14 @@ public class TimesheetBusinessImpl implements TimesheetBusiness {
      * Check whether the given hourEntry passes the filters that were given in the time sheet query
      */
     private boolean passesFilters(HourEntry hourEntry){
+
         if((this.startDate != null && hourEntry.getDate().before(this.startDate)) | 
            (this.endDate != null && hourEntry.getDate().after(this.endDate)))
             return false;
         
+        if(this.userIds.size() > 0 && !this.userIds.contains(hourEntry.getUser().getId()))
+            return false;
+
         return true;
     }
     

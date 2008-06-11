@@ -2,6 +2,7 @@ package fi.hut.soberit.agilefant.business;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
@@ -27,7 +28,9 @@ public interface TimesheetBusiness {
      * @return The root nodes (Products) of the forest.
      * @throws IllegalArgumentException If date parsing fails 
      */
-    public List<BacklogTimesheetNode> generateTree(int[] backlogIds, String startDateString, String endDateString)
+    public List<BacklogTimesheetNode> generateTree(int[] backlogIds,
+                                                   String startDateString, String endDateString,
+                                                   Set<Integer> userIds)
         throws IllegalArgumentException;
 
 

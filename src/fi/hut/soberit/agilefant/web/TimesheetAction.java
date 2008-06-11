@@ -1,7 +1,9 @@
 package fi.hut.soberit.agilefant.web;
 
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
@@ -27,6 +29,16 @@ public class TimesheetAction extends ActionSupport {
     private String startDate;
 
     private String endDate;
+    
+    private Map<Integer, String> userIds = new HashMap<Integer, String>();
+
+    public Map<Integer, String> getUserIds() {
+        return userIds;
+    }
+
+    public void setUserIds(Map<Integer, String> userIds) {
+        this.userIds = userIds;
+    }
 
     public int[] getBacklogIds() {
         return backlogIds;
@@ -42,7 +54,7 @@ public class TimesheetAction extends ActionSupport {
             return Action.ERROR;
         }
         try{
-            products = timesheetBusiness.generateTree(backlogIds, startDate, endDate);
+            products = timesheetBusiness.generateTree(backlogIds, startDate, endDate, userIds.keySet());
         }catch(IllegalArgumentException e){
             addActionError(e.getMessage());
             return Action.ERROR;

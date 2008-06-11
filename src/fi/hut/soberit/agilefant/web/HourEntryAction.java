@@ -55,7 +55,7 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
      * {@inheritDoc}
      */
     public String delete() {
-        HourEntry h = hourEntryBusiness.getId(hourEntryId);
+        HourEntry h = hourEntryBusiness.getHourEntryById(hourEntryId);
         if (h == null) {
             super.addActionError(super.getText("hourEntry.notFound"));
             return Action.ERROR;
@@ -69,7 +69,7 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
      */
     public String edit() {
         
-        hourEntry = hourEntryBusiness.getId(hourEntryId);        
+        hourEntry = hourEntryBusiness.getHourEntryById(hourEntryId);        
         if (hourEntry == null) {
             super.addActionError(super.getText("hourEntry.notFound"));
             create();
@@ -94,7 +94,7 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
     public String store() {
         HourEntry storable = new HourEntry();
         if (hourEntryId > 0) {
-            storable = hourEntryBusiness.getId(hourEntryId);
+            storable = hourEntryBusiness.getHourEntryById(hourEntryId);
             if (storable == null) {
                 super.addActionError(super.getText("hourEntry.notFound"));
                 return Action.ERROR;

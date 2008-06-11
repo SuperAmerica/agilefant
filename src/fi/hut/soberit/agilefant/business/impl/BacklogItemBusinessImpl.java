@@ -66,7 +66,7 @@ public class BacklogItemBusinessImpl implements BacklogItemBusiness {
         }
         
         // Remove all hourEntries related to this backlogItem  
-        hourEntryBusiness.removeHourEntriesByBacklogItem( backlogItem );
+        hourEntryBusiness.removeHourEntriesByParent( backlogItem );
         // Store backlog to be able to update its history
         Backlog backlog = backlogItem.getBacklog();
         backlogItemDAO.remove(backlogItem);

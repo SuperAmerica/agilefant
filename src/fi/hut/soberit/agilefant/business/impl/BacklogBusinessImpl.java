@@ -80,7 +80,7 @@ public class BacklogBusinessImpl implements BacklogBusiness {
                 BacklogItem item = iterator.next();
                 if (item.getId() == id) {
                     // Remove all hour entries inside the backlogItem in question
-                    hourEntryBusiness.removeHourEntriesByBacklogItem( item );
+                    hourEntryBusiness.removeHourEntriesByParent( item );
                     iterator.remove();
                     backlogItemDAO.remove(id);
                 }

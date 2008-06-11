@@ -29,37 +29,72 @@ public interface HourEntryBusiness {
      * @param userIds the IDs of the users that we are adding entries for
      */
     public void addHourEntryForMultipleUsers(TimesheetLoggable parent,HourEntry hourEntry, Set<Integer> userIds);
+   
     /**
      * Format date
      */
     public Date formatDate(String date) throws ParseException;
+    
     /**
-     * Store
+     * Store new entry to a given parent or alter an existing entry. If give
+     * hour entry is persisted to the database this method will update the
+     * information and set parent to the given parent. If hour entry is not
+     * persisted a new entry will be created.
+     * 
+     * @param parent    Owner of the hour entry.
+     * @param hourEntry  Entry information.
+     * @return Persisted object.
+     * @throws IllegalArgumentException
      */
-    public void store(TimesheetLoggable parent, HourEntry hourEntry);
+    public HourEntry store(TimesheetLoggable parent, HourEntry hourEntry)
+            throws IllegalArgumentException;
+    
     /**
      * Add hour entry for current user
+     * 
+     * @param parent Owner for the entry.
+     * @param effort Effort to be stored in the entry.
      */
     public void addEntryForCurrentUser(TimesheetLoggable parent, AFTime effort);
     
-    
-    public HourEntry getId(int id);
     /**
+     * Get HourEntry or any of the hour entry sub-types by given unique id. 
+     * 
+     * @param id
+     * @return Requested HourEntry or null if there's no entry with given id.
+     */
+    public HourEntry getHourEntryById(int id);
+    
+    /**
+     * Remove entry by id.
      * 
      * @param id
      */
     public void remove(int id);
-    /**
-     * Get all hour entries attached to a backlog item.
-     */
-    public List<BacklogItemHourEntry> getEntriesByBacklogItem(BacklogItem parent);
     
-    public List<BacklogHourEntry> getEntriesByBacklog(Backlog parent);
+    /**
+     * Get all hour entries attached to a given backlog item.
+     *
+     * @param parent
+     * @return A list of BacklogItemHourEntries or an empty list if 
+     *         no items were found. 
+     */
+    public List<BacklogItemHourEntry> getEntriesByParent(BacklogItem parent);
+    
+    /**
+     * Get all hour entries attached to a given backlog.
+     * 
+     * @param parent
+     * @return A list of BacklogHourEntries or an empty list if 
+     *         no items were found. 
+     */
+    public List<BacklogHourEntry> getEntriesByParent(Backlog parent);
+    
     /**
      * 
      */
     public Map<Integer,AFTime> getSumsByBacklog(Backlog parent);
-    
+
     /**
      * Loads hour entry sums to backlog's BLIs.
      */
@@ -69,12 +104,14 @@ public interface HourEntryBusiness {
      * 
      */
     public Map<Integer, AFTime> getSumsByIterationGoal(Backlog parent);
-    /**
-     * 
-     */
-    public void removeHourEntriesByBacklogItem( BacklogItem backlog );
     
-    public void removeHourEntriesByBacklog( Backlog backlog );
+    /**
+     * Remove all hour entries under given parent.
+     * 
+     * @param parent
+     */
+    public void removeHourEntriesByParent(TimesheetLoggable parent);
+
     
     public AFTime getEffortSumByUserAndTimeInterval(User user, Date start, Date end);
     

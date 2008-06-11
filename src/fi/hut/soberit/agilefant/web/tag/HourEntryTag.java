@@ -33,10 +33,10 @@ public class HourEntryTag extends SpringTagSupport {
         
         if(target instanceof BacklogItem) {
             BacklogItem item = (BacklogItem) target;
-            list = (List<BacklogItemHourEntry>) hourEntryBusiness.getEntriesByBacklogItem( item );
+            list = (List<BacklogItemHourEntry>) hourEntryBusiness.getEntriesByParent( item );
         } else if(target instanceof Project) {
             Backlog item = (Backlog) target;
-            list = (List<BacklogHourEntry>) hourEntryBusiness.getEntriesByBacklog( item );
+            list = (List<BacklogHourEntry>) hourEntryBusiness.getEntriesByParent( item );
         }
    
         /*

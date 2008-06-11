@@ -163,7 +163,7 @@ public class ProjectBusinessImpl implements ProjectBusiness {
     
     /** {@inheritDoc} * */
     public void removeAllHourEntries( Backlog backlog ){
-        hourEntryBusiness.removeHourEntriesByBacklog(backlog);
+        hourEntryBusiness.removeHourEntriesByParent(backlog);
     }
 
     /** {@inheritDoc} * */

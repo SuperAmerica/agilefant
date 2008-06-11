@@ -12,6 +12,7 @@ import java.lang.IllegalArgumentException;
 import fi.hut.soberit.agilefant.business.HourEntryBusiness;
 import fi.hut.soberit.agilefant.business.SettingBusiness;
 import fi.hut.soberit.agilefant.db.BacklogItemHourEntryDAO;
+import fi.hut.soberit.agilefant.db.GenericDAO;
 import fi.hut.soberit.agilefant.db.HourEntryDAO;
 import fi.hut.soberit.agilefant.db.BacklogHourEntryDAO;
 import fi.hut.soberit.agilefant.db.UserDAO;
@@ -48,7 +49,7 @@ public class HourEntryBusinessImpl implements HourEntryBusiness {
     public BacklogItemHourEntryDAO getBacklogItemHourEntryDAO() {
         return backlogItemHourEntryDAO;
     }
-    public HourEntry getId(int id) {
+    public HourEntry getHourEntryById(int id) {
         return (HourEntry)hourEntryDAO.get(id);
     }
     public void remove(int id) {
@@ -62,49 +63,43 @@ public class HourEntryBusinessImpl implements HourEntryBusiness {
     public void setUserDAO(UserDAO userDAO) {
         this.userDAO = userDAO;
     }
-    
-    // Should use the same method for newly created and altered hourEntry?
-    public void store(TimesheetLoggable parent, HourEntry hourEntry) {
-        boolean create = false;
-        if(parent instanceof BacklogItem) {
-            BacklogItemHourEntry store;
-            store = backlogItemHourEntryDAO.get(hourEntry.getId());
-            if(store == null) {
-                create = true;
-                store = new BacklogItemHourEntry();
+    /**
+     * {@inheritDoc}
+     */
+    public HourEntry store(TimesheetLoggable parent, HourEntry hourEntry) 
+            throws IllegalArgumentException {
+        HourEntry storable = null;
+
+        if (parent instanceof BacklogItem) {
+            if ((storable = backlogItemHourEntryDAO.get(hourEntry.getId())) == null) {
+                storable = new BacklogItemHourEntry();
             }
-            store.setDate(hourEntry.getDate());
-            store.setUser(hourEntry.getUser());
-            store.setDescription(hourEntry.getDescription());
-            store.setTimeSpent(hourEntry.getTimeSpent());
-            store.setBacklogItem((BacklogItem)parent);
-            store.setDate(hourEntry.getDate());
-            if(create) {
-                backlogItemHourEntryDAO.create(store);
-            } else {
-                backlogItemHourEntryDAO.store(store); 
+            ((BacklogItemHourEntry) storable)
+                    .setBacklogItem((BacklogItem) parent);
+        } else if (parent instanceof Backlog) {
+            if ((storable = backlogHourEntryDAO.get(hourEntry.getId())) == null) {
+                storable = new BacklogHourEntry();
             }
-        } else{ // Otherwise it has to be a backlog
-            BacklogHourEntry store;
-            store = backlogHourEntryDAO.get(hourEntry.getId());
-            if(store == null) {
-                create = true;
-                store = new BacklogHourEntry();
-            }
-            store.setDate(hourEntry.getDate());
-            store.setUser(hourEntry.getUser());
-            store.setDescription(hourEntry.getDescription());
-            store.setTimeSpent(hourEntry.getTimeSpent());
-            store.setBacklog((Backlog)parent);
-            store.setDate(hourEntry.getDate());
-            if(create) {
-                backlogHourEntryDAO.create(store);
-            } else {
-                backlogHourEntryDAO.store(store); 
-            }
+            ((BacklogHourEntry) storable).setBacklog((Backlog) parent);
+        } else {
+            throw new IllegalArgumentException("Unknown parent type.");
         }
+        storable.setDate(hourEntry.getDate());
+        storable.setUser(hourEntry.getUser());
+        storable.setDescription(hourEntry.getDescription());
+        storable.setTimeSpent(hourEntry.getTimeSpent());
+        storable.setDate(hourEntry.getDate());
+        if (parent instanceof BacklogItem) {
+            backlogItemHourEntryDAO.store((BacklogItemHourEntry) storable);
+        } else {
+            backlogHourEntryDAO.store((BacklogHourEntry) storable);
+        }
+        return storable;
     }
     
+    /**
+     * {@inheritDoc}
+     */
     public void addEntryForCurrentUser(TimesheetLoggable parent, AFTime effort) {
         User currentUser = SecurityUtil.getLoggedUser();
         HourEntry store = new HourEntry();
@@ -114,6 +109,9 @@ public class HourEntryBusinessImpl implements HourEntryBusiness {
         store(parent,store);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public Date formatDate(String startDate)
         throws ParseException {
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
@@ -133,12 +131,16 @@ public class HourEntryBusinessImpl implements HourEntryBusiness {
         }
         hourEntry.setUser(null);
     }
-
-    public List<BacklogItemHourEntry> getEntriesByBacklogItem(BacklogItem parent) {
+    /**
+     * {@inheritDoc}
+     */
+    public List<BacklogItemHourEntry> getEntriesByParent(BacklogItem parent) {
         return backlogItemHourEntryDAO.getEntriesByBacklogItem(parent);
     }
-    
-    public List<BacklogHourEntry> getEntriesByBacklog(Backlog parent) {
+    /**
+     * {@inheritDoc}
+     */
+    public List<BacklogHourEntry> getEntriesByParent(Backlog parent) {
         return backlogHourEntryDAO.getEntriesByBacklog(parent);
     }
 
@@ -215,45 +217,27 @@ public class HourEntryBusinessImpl implements HourEntryBusiness {
         
         return sums;
     }
-    
-    public void removeHourEntriesByBacklogItem( BacklogItem backlog ){
-        
-        List<BacklogItemHourEntry> removeList = 
-            backlogItemHourEntryDAO.getEntriesByBacklogItem( backlog );
-        
-        if( removeList == null)
-            return;
-                
-        for( BacklogItemHourEntry i : removeList ){
-            try{
-                remove( i.getId() );
-            }catch(Exception e ){
-                          
-            }
-        }
-    }
-    
-    /*
-     * Removes all hour entries logged into the backlog given as the parameter.
+    /**
+     * {@inheritDoc}
      */
-    public void removeHourEntriesByBacklog( Backlog backlog ){
-        
-        List<BacklogHourEntry> removeList = 
-            backlogHourEntryDAO.getEntriesByBacklog( backlog );
-     
-        if( removeList == null)
-            return;
-        
-        for( BacklogHourEntry i : removeList ){
-            try{
-                remove( i.getId() );
-            }catch(Exception e ){
-                          
-            }
+    public void removeHourEntriesByParent(TimesheetLoggable parent) {
+        List<? extends HourEntry> removeThese = null;
+        if(parent instanceof BacklogItem) {
+          removeThese = backlogItemHourEntryDAO.getEntriesByBacklogItem( (BacklogItem)parent );
+        } else if(parent instanceof Backlog) {
+          removeThese = backlogHourEntryDAO.getEntriesByBacklog( (Backlog)parent );
+        } else {
+          return;
         }
-    }
-    
-    
+        if(removeThese == null) {
+          return;
+        }
+        for(HourEntry removable : removeThese) {
+          try {
+            remove(removable.getId());
+          } catch(Exception e) { }
+        }
+      }   
     
     public AFTime getEffortSumByUserAndTimeInterval(User user, String startDate, String endDate)
             throws IllegalArgumentException {

@@ -69,7 +69,13 @@ public class HourEntryBusinessImpl implements HourEntryBusiness {
     public HourEntry store(TimesheetLoggable parent, HourEntry hourEntry) 
             throws IllegalArgumentException {
         HourEntry storable = null;
-
+        
+        if(parent == null) {
+            throw new IllegalArgumentException("Unknown parent type."); 
+        }
+        if(hourEntry == null) {
+            throw new IllegalArgumentException("No data given.");
+        }
         if (parent instanceof BacklogItem) {
             if ((storable = backlogItemHourEntryDAO.get(hourEntry.getId())) == null) {
                 storable = new BacklogItemHourEntry();
@@ -222,6 +228,9 @@ public class HourEntryBusinessImpl implements HourEntryBusiness {
      */
     public void removeHourEntriesByParent(TimesheetLoggable parent) {
         List<? extends HourEntry> removeThese = null;
+        if(parent == null) {
+            return;
+        }
         if(parent instanceof BacklogItem) {
           removeThese = backlogItemHourEntryDAO.getEntriesByBacklogItem( (BacklogItem)parent );
         } else if(parent instanceof Backlog) {

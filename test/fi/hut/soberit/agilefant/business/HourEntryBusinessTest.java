@@ -9,13 +9,16 @@ import java.util.Map;
 
 
 import fi.hut.soberit.agilefant.business.impl.HourEntryBusinessImpl;
+import fi.hut.soberit.agilefant.db.BacklogHourEntryDAO;
 import fi.hut.soberit.agilefant.db.BacklogItemHourEntryDAO;
 import fi.hut.soberit.agilefant.db.HourEntryDAO;
 import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.Backlog;
+import fi.hut.soberit.agilefant.model.BacklogHourEntry;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.BacklogItemHourEntry;
+import fi.hut.soberit.agilefant.model.HourEntry;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.User;
 import junit.framework.TestCase;
@@ -31,6 +34,7 @@ public class HourEntryBusinessTest extends TestCase {
 
     private HourEntryBusinessImpl hourEntryBusiness;  
     private BacklogItemHourEntryDAO bheDAO;
+    private BacklogHourEntryDAO blheDAO;
     private HourEntryDAO heDAO;
     private UserDAO userDAO;
     
@@ -81,7 +85,135 @@ public class HourEntryBusinessTest extends TestCase {
             fail("HourEntryBusiness getSumpsByBacklogTest failed "+e.getMessage());
         }
     }
+    private void compareHe(HourEntry he1, HourEntry he2) 
+            throws Exception {
+        if(he1.getUser().getId() != he2.getUser().getId()) {
+            throw new Exception("Users not equal.");
+        }
+        if(!he1.getDate().equals(he2.getDate())) {
+            throw new Exception("Dates not equal.");
+        }
+        if(!he1.getDescription().equals(he2.getDescription())) {
+            throw new Exception("Descriptions not equal.");
+        }
+        if(!he1.getTimeSpent().equals(he2.getTimeSpent())) {
+            throw new Exception("Time spent not equal.");
+        }
+    }
+    public void testStore()
+    {
+        hourEntryBusiness = new HourEntryBusinessImpl();
+        bheDAO = createMock(BacklogItemHourEntryDAO.class);
+        blheDAO = createMock(BacklogHourEntryDAO.class);
+        hourEntryBusiness.setBacklogHourEntryDAO(blheDAO);
+        hourEntryBusiness.setBacklogItemHourEntryDAO(bheDAO);
+        
+        Backlog bl = new Iteration();
+        BacklogItem bli = new BacklogItem();
+        HourEntry he = new HourEntry();
+        BacklogItemHourEntry blihe = new BacklogItemHourEntry();
+        BacklogHourEntry blhe = new BacklogHourEntry();
+        User u = new User();
+        u.setId(1);
+        he.setUser(u);
+        he.setDate(new Date());
+        he.setDescription("test");
+        he.setTimeSpent(new AFTime(2));
+        blhe.setId(1);
+        blihe.setId(1);
+        
+        he.setId(1);
+        expect(bheDAO.get(1)).andReturn(blihe).times(1);
+        expect(blheDAO.get(1)).andReturn(blhe).times(1);
+        bheDAO.store(blihe);
+        blheDAO.store(blhe);
+        replay(blheDAO);
+        replay(bheDAO);
+        //store under BLI
+        hourEntryBusiness.store(bli, he);
+        try {
+            compareHe(he,blihe);
+        } catch(Exception e) {
+            fail("Hour entry data update failed!");
+        }
+        //store under BL
+        hourEntryBusiness.store(bl, he);
+        try {
+            compareHe(he,blhe);
+        } catch(Exception e) {
+            fail("Hour entry data update failed!");
+        }
+        //store under null
+        try {
+            hourEntryBusiness.store(null, he);
+            fail("Exception expected when storing under invalid parent.");
+        } catch(IllegalArgumentException iae) { }
+        //store null entry
+        try {
+            hourEntryBusiness.store(bl, null);
+            fail("Exception expected when storing null entry.");
+        } catch(IllegalArgumentException iae) { }
+        
+        verify(bheDAO);
+        verify(blheDAO);
+    }
 
+    public void testRemoveHourEntriesByParent()
+    {
+        hourEntryBusiness = new HourEntryBusinessImpl();
+        heDAO = createMock(HourEntryDAO.class);
+        hourEntryBusiness.setHourEntryDAO(heDAO);
+        bheDAO = createMock(BacklogItemHourEntryDAO.class);
+        blheDAO = createMock(BacklogHourEntryDAO.class);
+        hourEntryBusiness.setBacklogHourEntryDAO(blheDAO);
+        hourEntryBusiness.setBacklogItemHourEntryDAO(bheDAO);
+        
+        BacklogItemHourEntry blihe1 = new BacklogItemHourEntry();
+        BacklogItemHourEntry blihe2 = new BacklogItemHourEntry();
+        BacklogHourEntry blhe1 = new BacklogHourEntry();
+        BacklogHourEntry blhe2 = new BacklogHourEntry();
+        Backlog bl1 = new Iteration();
+        Backlog bl2 = new Iteration();
+        BacklogItem bli = new BacklogItem();
+        List<BacklogHourEntry> blheList = new ArrayList<BacklogHourEntry>();
+        List<BacklogItemHourEntry> bliheList = new ArrayList<BacklogItemHourEntry>();
+  
+        blihe1.setBacklogItem(bli);
+        blihe1.setId(1);
+        blihe2.setBacklogItem(bli);
+        blihe2.setId(2);
+        blhe1.setBacklog(bl1);
+        blhe1.setId(3);
+        blhe2.setBacklog(bl1);
+        blhe2.setId(4);    
+        
+        blheList.add(blhe1);
+        blheList.add(blhe2);
+        bliheList.add(blihe1);
+        bliheList.add(blihe2);
+        
+        expect(bheDAO.getEntriesByBacklogItem(bli)).andReturn(bliheList).times(1);
+        expect(blheDAO.getEntriesByBacklog(bl1)).andReturn(blheList).times(1);
+        expect(blheDAO.getEntriesByBacklog(bl2)).andReturn(null).times(1);
+        heDAO.remove(1);
+        heDAO.remove(2);
+        heDAO.remove(3);
+        heDAO.remove(4);
+        replay(bheDAO);
+        replay(blheDAO);
+        replay(heDAO);
+        //remove under BLI that has HEs
+        hourEntryBusiness.removeHourEntriesByParent(bli);
+        //remove under BL that has HEs
+        hourEntryBusiness.removeHourEntriesByParent(bl1);
+        //remove under BL that has no HEs
+        hourEntryBusiness.removeHourEntriesByParent(bl2);
+        //remove under null
+        hourEntryBusiness.removeHourEntriesByParent(null);
+        verify(bheDAO);
+        verify(blheDAO);
+        verify(heDAO);
+    }
     public void testGetEffortSumByUserAndTimeInterval() {
         heDAO = createMock(HourEntryDAO.class);
         hourEntryBusiness = new HourEntryBusinessImpl();

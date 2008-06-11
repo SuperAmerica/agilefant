@@ -3,15 +3,18 @@ package fi.hut.soberit.agilefant.business;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 
 import fi.hut.soberit.agilefant.business.impl.HourEntryBusinessImpl;
+import fi.hut.soberit.agilefant.business.impl.SettingBusinessImpl;
 import fi.hut.soberit.agilefant.db.BacklogHourEntryDAO;
 import fi.hut.soberit.agilefant.db.BacklogItemHourEntryDAO;
 import fi.hut.soberit.agilefant.db.HourEntryDAO;
+import fi.hut.soberit.agilefant.db.SettingDAO;
 import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.Backlog;
@@ -20,6 +23,7 @@ import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.BacklogItemHourEntry;
 import fi.hut.soberit.agilefant.model.HourEntry;
 import fi.hut.soberit.agilefant.model.Iteration;
+import fi.hut.soberit.agilefant.model.Setting;
 import fi.hut.soberit.agilefant.model.User;
 import junit.framework.TestCase;
 import static org.easymock.EasyMock.createMock;
@@ -32,11 +36,13 @@ import static org.easymock.EasyMock.verify;
 
 public class HourEntryBusinessTest extends TestCase {
 
-    private HourEntryBusinessImpl hourEntryBusiness;  
+    private HourEntryBusinessImpl hourEntryBusiness;
+    private SettingBusinessImpl settingBusiness;
     private BacklogItemHourEntryDAO bheDAO;
     private BacklogHourEntryDAO blheDAO;
     private HourEntryDAO heDAO;
     private UserDAO userDAO;
+    private SettingDAO settingDAO;
     
     public void testGetEntriesByBacklogItem() {
         bheDAO = createMock(BacklogItemHourEntryDAO.class);
@@ -158,6 +164,59 @@ public class HourEntryBusinessTest extends TestCase {
         verify(blheDAO);
     }
 
+
+    public void testLoadSumsToBacklogItems() {
+        bheDAO = createMock(BacklogItemHourEntryDAO.class);
+        settingDAO = createMock(SettingDAO.class);
+        settingBusiness = new SettingBusinessImpl();
+        settingBusiness.setSettingDAO(settingDAO);
+        hourEntryBusiness = new HourEntryBusinessImpl();
+        hourEntryBusiness.setSettingBusiness(settingBusiness);
+        hourEntryBusiness.setBacklogItemHourEntryDAO(bheDAO);
+        Iteration iteration = new Iteration();
+        BacklogItem bli1 = new BacklogItem();
+        BacklogItem bli2 = new BacklogItem();
+        BacklogItemHourEntry blihe1 = new BacklogItemHourEntry();
+        BacklogItemHourEntry blihe2 = new BacklogItemHourEntry();
+        BacklogItemHourEntry blihe3 = new BacklogItemHourEntry();
+        ArrayList<BacklogItemHourEntry> collection = new ArrayList<BacklogItemHourEntry>();
+        Setting setting = new Setting();
+        setting.setValue(SettingBusinessImpl.SETTING_VALUE_TRUE);
+        
+        blihe1.setTimeSpent(new AFTime(10));
+        blihe1.setBacklogItem(bli1);
+        collection.add(blihe1);
+        blihe2.setTimeSpent(new AFTime(1));
+        blihe2.setBacklogItem(bli1);
+        collection.add(blihe2);
+        blihe3.setTimeSpent(new AFTime(2));
+        blihe3.setBacklogItem(bli2);
+        collection.add(blihe3);
+        
+        expect(bheDAO.getSumsByBacklog(iteration)).andReturn(collection).atLeastOnce();
+        replay(bheDAO);
+        expect(settingDAO.getSetting(SettingBusinessImpl.SETTING_NAME_HOUR_REPORTING))
+            .andReturn(setting).atLeastOnce();
+        replay(settingDAO);
+        
+        // Try a normal case with timesheet functionality turned on.
+        hourEntryBusiness.loadSumsToBacklogItems(iteration);
+        assertEquals(bli1.getEffortSpent().getTime(), new AFTime(11).getTime());
+        assertEquals(bli2.getEffortSpent().getTime(), new AFTime(2).getTime());
+        
+        // Try with timesheet functionality turned off.
+        bli1.setEffortSpent(null);
+        bli2.setEffortSpent(null);
+        setting.setValue("false");
+        hourEntryBusiness.loadSumsToBacklogItems(iteration);
+        assertNull(bli1.getEffortSpent());
+        assertNull(bli2.getEffortSpent());
+        
+        verify(bheDAO);
+        verify(settingDAO);
+    }
+    
+
     public void testRemoveHourEntriesByParent()
     {
         hourEntryBusiness = new HourEntryBusinessImpl();
@@ -214,6 +273,7 @@ public class HourEntryBusinessTest extends TestCase {
         verify(blheDAO);
         verify(heDAO);
     }
+    
     public void testGetEffortSumByUserAndTimeInterval() {
         heDAO = createMock(HourEntryDAO.class);
         hourEntryBusiness = new HourEntryBusinessImpl();

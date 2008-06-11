@@ -3,6 +3,9 @@ package fi.hut.soberit.agilefant.business;
 import java.util.List;
 import java.util.Map;
 
+import fi.hut.soberit.agilefant.model.Backlog;
+import fi.hut.soberit.agilefant.model.BacklogItem;
+import fi.hut.soberit.agilefant.model.HourEntry;
 import fi.hut.soberit.agilefant.util.BacklogTimesheetNode;
 
 /**
@@ -19,9 +22,13 @@ public interface TimesheetBusiness {
      * more hour entries in other child backlogs, they are not included.  
      * 
      * @param backlogIds List of the id's of the backlogs that should be included in the tree
-     * @return The root nodes (Products) of the forest. 
+     * @param startDateString The start date of the asked interval for the hour entries
+     * @param endDateString The end date of the asked interval for the hour entries
+     * @return The root nodes (Products) of the forest.
+     * @throws IllegalArgumentException If date parsing fails 
      */
-    public List<BacklogTimesheetNode> generateTree(int[] backlogIds);
+    public List<BacklogTimesheetNode> generateTree(int[] backlogIds, String startDateString, String endDateString)
+        throws IllegalArgumentException;
 
 
     /** Get the HourEntryBusiness instance. It is used to fetch the hour entries for
@@ -36,4 +43,20 @@ public interface TimesheetBusiness {
      *  backlogs properly.
      */
     public Map<Integer, BacklogTimesheetNode> getNodes();
+    
+    /**
+     * Get the hour entries for this backlog item that match the filters entered in the Timesheet query.
+     * The filters are stored in the TimesheetBusinessImpl instance. 
+     * @param backlogItem The backlog item
+     * @return A filtered list of hour entries for the given backlog item 
+     */
+    public List<? extends HourEntry> getFilteredHourEntries(BacklogItem backlogItem);
+    
+    /**
+     * Get the hour entries for this backlog that match the filters entered in the Timesheet query.
+     * The filters are stored in the TimesheetBusinessImpl instance. 
+     * @param backlog The backlog
+     * @return A filtered list of hour entries for the given backlog 
+     */
+    public List<? extends HourEntry> getFilteredHourEntries(Backlog backlog);
 }

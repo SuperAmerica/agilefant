@@ -33,6 +33,8 @@ public class BacklogTimesheetNode extends TimesheetNode {
         
         this.backlog = backlog;
         
+        this.hourEntries = tsb.getFilteredHourEntries(backlog);
+        
         if(expandChildren){
             Collection<PageItem> childBacklogs = backlog.getChildren();
 
@@ -55,8 +57,6 @@ public class BacklogTimesheetNode extends TimesheetNode {
                 }
             }
         }
-
-        this.hourEntries = null; // TODO vesa: Add another iterator when hour entries are created for backlogs
     }
    
     /**

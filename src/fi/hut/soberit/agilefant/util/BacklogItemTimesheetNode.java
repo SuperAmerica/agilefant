@@ -19,7 +19,7 @@ public class BacklogItemTimesheetNode extends TimesheetNode {
      */
     public BacklogItemTimesheetNode(BacklogItem backlogItem, TimesheetBusiness tsb){
         this.backlogItem = backlogItem;
-        hourEntries = tsb.getHourEntryBusiness().getEntriesByParent(backlogItem);
+        hourEntries = tsb.getFilteredHourEntries(backlogItem);
     }
     
     /**

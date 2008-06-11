@@ -1,6 +1,9 @@
 package fi.hut.soberit.agilefant.business.impl;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,9 +12,10 @@ import fi.hut.soberit.agilefant.business.HourEntryBusiness;
 import fi.hut.soberit.agilefant.business.TimesheetBusiness;
 import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.model.Backlog;
-import fi.hut.soberit.agilefant.model.Iteration;
-import fi.hut.soberit.agilefant.model.Product;
-import fi.hut.soberit.agilefant.model.Project;
+import fi.hut.soberit.agilefant.model.BacklogHourEntry;
+import fi.hut.soberit.agilefant.model.BacklogItem;
+import fi.hut.soberit.agilefant.model.BacklogItemHourEntry;
+import fi.hut.soberit.agilefant.model.HourEntry;
 import fi.hut.soberit.agilefant.util.*;
 
 public class TimesheetBusinessImpl implements TimesheetBusiness {
@@ -25,12 +29,33 @@ public class TimesheetBusinessImpl implements TimesheetBusiness {
      */
     private Map<Integer, BacklogTimesheetNode> nodes = new HashMap<Integer, BacklogTimesheetNode>();
     
+    private Date startDate, endDate;
+    
     /**
      * {@inheritDoc}
      */
-    public List<BacklogTimesheetNode> generateTree(int[] backlogIds){
+    public List<BacklogTimesheetNode> generateTree(int[] backlogIds, String startDateString, String endDateString)
+            throws IllegalArgumentException{
         Backlog backlog, parent;
         BacklogTimesheetNode backlogNode, parentNode, childNode;
+            
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        df.setLenient(true);
+        try{
+            if(startDateString.isEmpty())
+                this.startDate = null;
+            else
+                this.startDate = df.parse(startDateString);
+            
+            if(endDateString.isEmpty())
+                this.endDate = null;
+            else
+                this.endDate = df.parse(endDateString);
+            
+        }catch(ParseException e){
+            System.err.println("Error in parsing date");
+            throw new IllegalArgumentException("Error in parsing date");
+        }
         
         roots.clear();
         nodes.clear();
@@ -80,6 +105,55 @@ public class TimesheetBusinessImpl implements TimesheetBusiness {
         return roots;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public List<? extends HourEntry> getFilteredHourEntries(BacklogItem backlogItem){
+        List<BacklogItemHourEntry> hourEntries;
+        List<BacklogItemHourEntry> filteredHourEntries = new ArrayList<BacklogItemHourEntry>();
+        
+        hourEntries = hourEntryBusiness.getEntriesByParent(backlogItem);
+        
+        if(hourEntries != null){
+            for(BacklogItemHourEntry hourEntry : hourEntries){
+                if(passesFilters(hourEntry))
+                    filteredHourEntries.add(hourEntry);
+            }
+        }
+        
+        return filteredHourEntries;
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public List<? extends HourEntry> getFilteredHourEntries(Backlog backlog){
+        List<BacklogHourEntry> hourEntries;
+        List<BacklogHourEntry> filteredHourEntries = new ArrayList<BacklogHourEntry>();
+        
+        hourEntries = hourEntryBusiness.getEntriesByParent(backlog);
+        
+        if(hourEntries != null){
+            for(BacklogHourEntry hourEntry : hourEntries){
+                if(passesFilters(hourEntry))
+                    filteredHourEntries.add(hourEntry);
+            }
+        }
+        
+        return filteredHourEntries;
+    }
+    
+    /**
+     * Check whether the given hourEntry passes the filters that were given in the time sheet query
+     */
+    private boolean passesFilters(HourEntry hourEntry){
+        if((this.startDate != null && hourEntry.getDate().before(this.startDate)) | 
+           (this.endDate != null && hourEntry.getDate().after(this.endDate)))
+            return false;
+        
+        return true;
+    }
+    
     public BacklogDAO getBacklogDAO() {
         return backlogDAO;
     }

@@ -19,8 +19,14 @@ public class TimesheetAction extends ActionSupport {
     private static final long serialVersionUID = -8988740967426943267L;
     
     private TimesheetBusiness timesheetBusiness;
+
     private List<BacklogTimesheetNode> products;
+
     private int[] backlogIds;
+
+    private String startDate;
+
+    private String endDate;
 
     public int[] getBacklogIds() {
         return backlogIds;
@@ -31,7 +37,11 @@ public class TimesheetAction extends ActionSupport {
     }
     
     public String generateTree(){
-        products = timesheetBusiness.generateTree(backlogIds);
+        try{
+            products = timesheetBusiness.generateTree(backlogIds, startDate, endDate);
+        }catch(IllegalArgumentException e){
+            // TODO: Add error message
+        }
         return Action.SUCCESS;
     }
 
@@ -53,5 +63,21 @@ public class TimesheetAction extends ActionSupport {
 
     public void setTimesheetBusiness(TimesheetBusiness timesheetBusiness) {
         this.timesheetBusiness = timesheetBusiness;
+    }
+
+    public String getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(String startDate) {
+        this.startDate = startDate;
+    }
+
+    public String getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(String endDate) {
+        this.endDate = endDate;
     }
 }

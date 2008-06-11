@@ -8,6 +8,11 @@ import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.security.SecurityUtil;
 
+/**
+ * Action for calculating logged spent effort for the current user between two dates.
+ * 
+ * @author rtammisa
+ */
 public class GetHourSumAction extends ActionSupport {
     private static final long serialVersionUID = -8463616232401623518L;
     
@@ -18,7 +23,7 @@ public class GetHourSumAction extends ActionSupport {
     private boolean badArgumentFound;
 
     /**
-     * Sums all the hours for the current user.
+     * Sums all the hours for the current user between startDate and endDate.
      */
     public String sumHours() {
         User user = SecurityUtil.getLoggedUser();

@@ -28,6 +28,9 @@ public class BacklogItemHourEntryDAOHibernate extends GenericDAOHibernate<Backlo
     }
 
 
+    /**
+     * {@inheritDoc}
+     */
     @SuppressWarnings("unchecked")
     public List<BacklogItemHourEntry> getEntriesByBacklogItem(BacklogItem target) {
         DetachedCriteria criteria = DetachedCriteria.forClass(this
@@ -38,6 +41,9 @@ public class BacklogItemHourEntryDAOHibernate extends GenericDAOHibernate<Backlo
                 .findByCriteria(criteria);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @SuppressWarnings("unchecked")
     public List<BacklogItemHourEntry> getSumsByBacklog(Backlog backlog) {
 

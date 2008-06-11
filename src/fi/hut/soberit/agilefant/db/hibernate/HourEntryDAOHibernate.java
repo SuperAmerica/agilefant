@@ -19,6 +19,9 @@ public class HourEntryDAOHibernate extends GenericDAOHibernate<HourEntry> implem
         super(HourEntry.class);
     }
     
+    /**
+     * {@inheritDoc}
+     */
     public AFTime getEffortSumByUserAndTimeInterval(User user, Date start, Date end) {
         DetachedCriteria criteria = DetachedCriteria.forClass(this
                 .getPersistentClass());

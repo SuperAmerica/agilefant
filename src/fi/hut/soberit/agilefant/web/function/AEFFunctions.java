@@ -123,6 +123,10 @@ public class AEFFunctions {
         return false;
     }
     
+    /**
+     * Adds AFTime a and AFTime b together. Either of the arguments
+     * can be null. Returns zero hours if both arguments were null.
+     */
     public static AFTime calculateAFTimeSum(AFTime a, AFTime b) {
         AFTime sum = new AFTime(0);
         

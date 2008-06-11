@@ -49,7 +49,9 @@
 						${aef:html(row.timeSpent)}
 					</display:column>
 					
-					<display:column sortable="false" title="Comment" property="description" />
+					<display:column sortable="false" title="Comment">
+						<c:out value="${row.description}"/>
+					</display:column>
 
 					<%-- Not implemented yet --%>
 						<display:column sortable="false" title="Action">

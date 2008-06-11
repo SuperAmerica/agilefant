@@ -37,10 +37,15 @@ public class TimesheetAction extends ActionSupport {
     }
     
     public String generateTree(){
+        if(backlogIds == null) {
+            addActionError("No backlogs selected.");
+            return Action.ERROR;
+        }
         try{
             products = timesheetBusiness.generateTree(backlogIds, startDate, endDate);
         }catch(IllegalArgumentException e){
-            // TODO: Add error message
+            addActionError(e.getMessage());
+            return Action.ERROR;
         }
         return Action.SUCCESS;
     }

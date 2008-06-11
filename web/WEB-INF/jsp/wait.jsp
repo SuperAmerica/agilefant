@@ -1,0 +1,97 @@
+<%@ taglib prefix="ww" uri="/webwork" %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+  <head>
+    <title>Please wait</title>
+    <meta http-equiv="refresh" content="5;url=<ww:url includeParams="all" />"/>
+    <style type="text/css">	
+
+html {
+
+}
+
+body {
+	background-color:#e6e6e6;
+}
+
+img {
+	border:0px;
+}
+
+.leftfloat {
+	float:left;
+}
+
+.clear {
+	clear:both;
+}
+
+
+div#container {
+	width:580px;
+	margin:130px auto 0px auto;
+}
+
+div#container div#header {
+	clear:both;
+}
+
+div#container div#header img {
+	float:left;
+	padding:10px 10px 10px 10px;
+}
+
+div#container div#header h1 {
+	float:left;
+	padding:10px 10px 10px 10px;
+}
+
+div#container div#content {
+	clear:both;
+	margin:0px auto;
+	height:95px;
+	border:1px solid black;
+	background-color:#fff;
+}
+
+div#container div#content div#icon {
+	float:left;
+	padding:31px 10px 10px 10px;
+}
+
+div#container div#content div#text {
+	float:left;
+	padding:21px 10px 10px 0px;
+	font-size:16px;
+	font-family:Verdana;
+	font-weight:bold;
+}
+    </style>
+  </head>
+  <body>
+  <div id="container">
+	
+	<div id="header">
+		<img src="static/img/fant_small.png" alt="logo" />
+		<h1>
+			Agilefant
+		</h1>
+	</div>
+	
+	<div id="content">
+		
+		<div id="icon">
+			<img src="static/img/pleasewait.gif" alt=""/>
+
+		</div>	
+		<div id="text">
+			Please wait while we process your request.
+			<br/>
+			This may take several minutes.
+			<br/>
+				Click <a href="<ww:url includeParams="all" />">here</a> if this page does not reload automatically.
+		</div>	
+	</div>
+</div>
+  </body>
+</html>

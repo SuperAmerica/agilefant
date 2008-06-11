@@ -794,7 +794,13 @@
 		</action>
 		
 		<action name="generateTree" method="generateTree" class="timesheetAction">
-			<result>/WEB-INF/jsp/timesheet.jsp</result>
+			<interceptor-ref name="completeStack"/>
+		    <interceptor-ref name="execAndWait">
+			    <param name="delay">1000</param>
+		        <param name="delaySleepInterval">50</param>
+        	</interceptor-ref>
+    		<result name="wait">/WEB-INF/jsp/wait.jsp</result>
+			<result name="success">/WEB-INF/jsp/timesheet.jsp</result>
 		</action>
 		
 		<!-- Hour Entry actions -->
@@ -817,7 +823,7 @@
 		</action>
 		
 		<action name="getHourSum" method="sumHours" class="getHourSumAction">
-			<result>/WEB-INF/jsp/inc/_hourSum.jsp</result>
+			<result name="success">/WEB-INF/jsp/inc/_hourSum.jsp</result>
 		</action>
 
 </package>

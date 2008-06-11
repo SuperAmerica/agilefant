@@ -666,6 +666,7 @@
 					this._clearCalendar();
 					$('#dp-popup a').unbind();
 					$('#dp-popup').empty().remove();
+					$(this.ele).trigger('dateSelected', [this.getSelected(), ele, null]);
 					if (!programatic) {
 						$(this.ele).trigger('dpClosed', [this.getSelected()]);
 					}

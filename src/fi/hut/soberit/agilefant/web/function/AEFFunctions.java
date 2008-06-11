@@ -103,6 +103,9 @@ public class AEFFunctions {
     }
     
     public static boolean listContains(Collection<Object> coll, Object object) {
+        if (coll == null) {
+            return false;
+        }
         return coll.contains(object);
     }
     

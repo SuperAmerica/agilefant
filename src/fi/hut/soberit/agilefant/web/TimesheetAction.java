@@ -1,9 +1,12 @@
 package fi.hut.soberit.agilefant.web;
 
 
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
@@ -23,12 +26,18 @@ public class TimesheetAction extends ActionSupport {
     private TimesheetBusiness timesheetBusiness;
 
     private List<BacklogTimesheetNode> products;
+    
+    private List<Integer> selected = new ArrayList<Integer>();
+    
+    private List<Integer> selUId = new ArrayList<Integer>();
 
     private int[] backlogIds;
 
     private String startDate;
 
     private String endDate;
+    
+    private String interval;
     
     private Map<Integer, String> userIds = new HashMap<Integer, String>();
 
@@ -97,4 +106,29 @@ public class TimesheetAction extends ActionSupport {
     public void setEndDate(String endDate) {
         this.endDate = endDate;
     }
+
+    public String getInterval() {
+        return interval;
+    }
+
+    public void setInterval(String interval) {
+        this.interval = interval;
+    }
+
+    public List<Integer> getSelected() {
+        this.selected.clear();
+        for(int sel : backlogIds) {
+            this.selected.add(sel);
+        }
+        return selected;
+    }
+
+    public List<Integer> getSelUId() {
+        for(int sel: userIds.keySet()) {
+            this.selUId.add(sel);
+        }
+        return selUId;
+    }
+    
+    
 }

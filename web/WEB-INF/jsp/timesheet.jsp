@@ -38,19 +38,27 @@
 									<td>
 										<select multiple="multiple" name="backlogIds">
 										<%-- Resolve if product is selected or is in 'path' and set variable 'class' accordingly--%>
-											<c:forEach items="${productList}" var="product">
-									
-											<%-- Print Product-link--%>
-												<option value="${product.id}">${aef:out(product.name)}</option>
-					
-					
-												<%-- Resolve if project is selected or is in 'path' and set variable 'class' accordingly--%>
+												<c:forEach items="${productList}" var="product">
+												<c:if test="${aef:listContains(selected, product.id)}">
+													<option value="${product.id}" selected="selected">${aef:out(product.name)}</option>
+												</c:if>	
+												<c:if test="${!aef:listContains(selected, product.id)}">
+													<option value="${product.id}">${aef:out(product.name)}</option>
+												</c:if>
 												<c:forEach items="${product.projects}" var="project">
-						
-													<option value="${project.id}">&nbsp;&nbsp;&nbsp;&nbsp;${aef:out(project.name)}</option>
-						
+													<c:if test="${aef:listContains(selected, project.id)}">						
+														<option value="${project.id}" selected="selected">&nbsp;&nbsp;&nbsp;&nbsp;${aef:out(project.name)}</option>
+													</c:if>
+													<c:if test="${!aef:listContains(selected, project.id)}">						
+														<option value="${project.id}">&nbsp;&nbsp;&nbsp;&nbsp;${aef:out(project.name)}</option>
+													</c:if>
 									                	<c:forEach items="${project.iterations}" var="it">
-	                    									<option value="${it.id}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${aef:out(it.name)}</option>
+									                		<c:if test="${aef:listContains(selected, it.id)}">
+	                    										<option value="${it.id}" selected="selected">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${aef:out(it.name)}</option>
+	                										</c:if>
+	                										<c:if test="${!aef:listContains(selected, it.id)}">
+	                    										<option value="${it.id}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${aef:out(it.name)}</option>
+	                										</c:if>
 	                									</c:forEach>
 	                							</c:forEach>
 	            							</c:forEach>
@@ -133,19 +141,133 @@
 												}
 											}
 											$(document).ready( function() {
-												change_selected_interval('TODAY');
+												var interval = document.getElementById('interval');
+												<ww:set name="currently" value="#attr.interval" />
+												var current = "${currently}";
+												if (current == 'TODAY') {
+													change_selected_interval('TODAY');
+												} else if (current == 'YESTERDAY') {
+													change_selected_interval('YESTERDAY');
+												} else if (current == 'THIS_WEEK') {
+													change_selected_interval('THIS_WEEK');
+												} else if (current == 'LAST_WEEK') {
+													change_selected_interval('LAST_WEEK');
+												} else if (current == 'THIS_MONTH') {
+													change_selected_interval('THIS_MONTH');
+												} else if (current == 'LAST_MONTH') {
+													change_selected_interval('LAST_MONTH');
+												} else if (current == 'THIS_YEAR') {
+													change_selected_interval('THIS_YEAR');
+												} else if (current == 'LAST_YEAR') {
+													change_selected_interval('LAST_YEAR');
+												} else if (current == 'NO_INTERVAL') {
+													change_selected_interval('NO_INTERVAL');
+												} else {
+													change_selected_interval('TODAY');
+												}
+													
 											});
 										</script> 
+										<%--REFACTOR PLZ--%>
 										<select name="interval" id="interval" onchange="change_selected_interval(this.value);">
-											<option value="TODAY" selected="selected">Today</option>
-											<option value="YESTERDAY">Yesterday</option>
-										    <option value="THIS_WEEK">This week</option>
-										    <option value="LAST_WEEK">Last week</option>
-										    <option value="THIS_MONTH">This month</option>
-										    <option value="LAST_MONTH">Last month</option>
-										    <option value="THIS_YEAR">This year</option>
-										    <option value="LAST_YEAR">Last year</option>
-											<option value="NO_INTERVAL">(All past entries)</option>
+											<c:if test="${empty interval || interval == 'TODAY'}">
+												<option value="TODAY" selected="selected">Today</option>
+												<option value="YESTERDAY">Yesterday</option>
+												<option value="THIS_WEEK">This week</option>
+												<option value="LAST_WEEK">Last week</option>
+												<option value="THIS_MONTH">This month</option>
+												<option value="LAST_MONTH">Last month</option>
+												<option value="THIS_YEAR">This year</option>
+												<option value="LAST_YEAR">Last year</option>
+												<option value="NO_INTERVAL">(All past entries)</option>
+											</c:if>
+											<c:if test="${interval == 'YESTERDAY'}">
+												<option value="TODAY">Today</option>
+												<option value="YESTERDAY" selected="selected">Yesterday</option>
+												<option value="THIS_WEEK">This week</option>
+												<option value="LAST_WEEK">Last week</option>
+												<option value="THIS_MONTH">This month</option>
+												<option value="LAST_MONTH">Last month</option>
+												<option value="THIS_YEAR">This year</option>
+												<option value="LAST_YEAR">Last year</option>
+												<option value="NO_INTERVAL">(All past entries)</option>
+											</c:if>
+											<c:if test="${interval == 'THIS_WEEK'}">
+												<option value="TODAY">Today</option>
+												<option value="YESTERDAY">Yesterday</option>
+												<option value="THIS_WEEK" selected="selected">This week</option>
+												<option value="LAST_WEEK">Last week</option>
+												<option value="THIS_MONTH">This month</option>
+												<option value="LAST_MONTH">Last month</option>
+												<option value="THIS_YEAR">This year</option>
+												<option value="LAST_YEAR">Last year</option>
+												<option value="NO_INTERVAL">(All past entries)</option>
+											</c:if>
+											<c:if test="${interval == 'LAST_WEEK'}">
+												<option value="TODAY">Today</option>
+												<option value="YESTERDAY">Yesterday</option>
+												<option value="THIS_WEEK">This week</option>
+												<option value="LAST_WEEK" selected="selected">Last week</option>
+												<option value="THIS_MONTH">This month</option>
+												<option value="LAST_MONTH">Last month</option>
+												<option value="THIS_YEAR">This year</option>
+												<option value="LAST_YEAR">Last year</option>
+												<option value="NO_INTERVAL">(All past entries)</option>											</c:if>
+											<c:if test="${interval == 'THIS_MONTH'}">
+												<option value="TODAY">Today</option>
+												<option value="YESTERDAY">Yesterday</option>
+												<option value="THIS_WEEK">This week</option>
+												<option value="LAST_WEEK">Last week</option>
+												<option value="THIS_MONTH" selected="selected">This month</option>
+												<option value="LAST_MONTH">Last month</option>
+												<option value="THIS_YEAR">This year</option>
+												<option value="LAST_YEAR">Last year</option>
+												<option value="NO_INTERVAL">(All past entries)</option>
+											</c:if>
+											<c:if test="${interval == 'LAST_MONTH'}">
+												<option value="TODAY">Today</option>
+												<option value="YESTERDAY">Yesterday</option>
+												<option value="THIS_WEEK">This week</option>
+												<option value="LAST_WEEK">Last week</option>
+												<option value="THIS_MONTH">This month</option>
+												<option value="LAST_MONTH" selected="selected">Last month</option>
+												<option value="THIS_YEAR">This year</option>
+												<option value="LAST_YEAR">Last year</option>
+												<option value="NO_INTERVAL">(All past entries)</option>
+											</c:if>
+											<c:if test="${interval == 'THIS_YEAR'}">
+												<option value="TODAY">Today</option>
+												<option value="YESTERDAY">Yesterday</option>
+												<option value="THIS_WEEK">This week</option>
+												<option value="LAST_WEEK">Last week</option>
+												<option value="THIS_MONTH">This month</option>
+												<option value="LAST_MONTH">Last month</option>
+												<option value="THIS_YEAR" selected="selected">This year</option>
+												<option value="LAST_YEAR">Last year</option>
+												<option value="NO_INTERVAL">(All past entries)</option>
+											</c:if>
+											<c:if test="${interval == 'LAST_YEAR'}">
+												<option value="TODAY">Today</option>
+												<option value="YESTERDAY">Yesterday</option>
+												<option value="THIS_WEEK">This week</option>
+												<option value="LAST_WEEK">Last week</option>
+												<option value="THIS_MONTH">This month</option>
+												<option value="LAST_MONTH">Last month</option>
+												<option value="THIS_YEAR">This year</option>
+												<option value="LAST_YEAR" selected="selected">Last year</option>
+												<option value="NO_INTERVAL">(All past entries)</option>
+											</c:if>
+											<c:if test="${interval == 'NO_INTERVAL'}">
+												<option value="TODAY">Today</option>
+												<option value="YESTERDAY">Yesterday</option>
+												<option value="THIS_WEEK">This week</option>
+												<option value="LAST_WEEK">Last week</option>
+												<option value="THIS_MONTH">This month</option>
+												<option value="LAST_MONTH">Last month</option>
+												<option value="THIS_YEAR">This year</option>
+												<option value="LAST_YEAR">Last year</option>
+												<option value="NO_INTERVAL" selected="selected">(All past entries)</option>
+											</c:if>
 										</select>
 									</td>
 								</tr>
@@ -202,11 +324,17 @@
 	                            						<ww:set name="teamList" value="#attr.teamList" />
 	                            						<ww:set name="enabledUserList" value="#attr.enabledUserList" />
 	                            						<ww:set name="userList" value="#attr.userList" />
+	                            						<ww:set name="selectedID" value="#attr.selUId" />
 	                            						var teams = [<aef:teamJson items="${teamList}" />];
 	                            						var preferred = [<aef:userJson items="${enabledUserList}" />];
 	                           						 	var other = [<aef:userJson items="${aef:listSubstract(userList, enabledUserList)}" />];
-	                            
-	                           	 						$('#userselect').multiuserselect({users: [preferred, other], groups: teams, root: $('#userselect')});
+	                           						 	<c:if test="${!empty selectedID}">
+	                            							var selected = ${selectedID};
+	                            						</c:if>
+	                            						<c:if test="${empty selectedID}">
+	                            							var selected = [];
+	                            						</c:if>
+	                           	 						$('#userselect').multiuserselect({users: [preferred, other], groups: teams, root: $('#userselect')}).selectusers(selected);
 	                        						});
 	                        					</script>
 	                    					</div>
@@ -379,7 +507,7 @@ table.reportTable tr.total th.total {
 						</div>
 						<div id="subItemContent">
 						<div id="listProjectHours" style="">
-						
+						<c:set var="totalSum" value="${null}" />
 						<table class="reportTable" cellpadding="0" cellspacing="0">
 							<tbody>
 								<tr>
@@ -392,14 +520,20 @@ table.reportTable tr.total th.total {
 								<c:forEach items="${products}" var="prod">
 									<c:set var="divId" value="${divId + 1}" scope="page" />
 									<tr>
+										<c:if test="${!(empty prod.hourEntries && empty prod.childBacklogItems)}">
 										<th class="product first" colspan="3"><a onclick="javascript:if($('.backlogitem.prod${divId}').is(':visible')) { $('.prod${divId}').hide(); } else { $('.backlogitem.prod${divId}').show(); }"><c:out value="${prod.backlog.name}"/></a></th>
+										</c:if>
+										<c:if test="${empty prod.hourEntries && empty prod.childBacklogItems}">
+										<th class="product first" colspan="3"><c:out value="${prod.backlog.name}"/></th>
+										</c:if>
 										<th class="product"><c:out value="${prod.hourTotal}"/></th> 
+										<c:set var="totalSum" value="${aef:calculateAFTimeSum(totalSum, prod.hourTotal)}" />
 									</tr>
 									<c:if test="${!empty prod.hourEntries}">
 										<c:set var="heDivId" value="${heDivId + 1}" scope="page" />
 										<tr class="backlogitem prod${divId} special hourentryhead leftborder toggleall">
 											<th class="backlogitem first" colspan="3"><a onclick="javascript:$('.hour${heDivId}').toggle();">Logged effort</a></th>
-											<th class="backlogitem fourth">foo</th>
+											<th class="backlogitem fourth">summa</th>
 										</tr>
 										<c:forEach items="${prod.hourEntries}" var="he">
 											<tr class="hourentries hour${heDivId} prod${divId} leftborder toggleall">
@@ -413,12 +547,17 @@ table.reportTable tr.total th.total {
 									<c:if test="${!empty prod.childBacklogItems}">
 										<tr class="backlogitem prod${divId} special backlogitemshead leftborder toggleall">
 											<th class="backlogitem first" colspan="3">Backlog items</th>
-											<th class="backlogitem fourth">Tähän BLI:den ajan summa</th>
+											<th class="backlogitem fourth">summa</th>
 										</tr>
 										<c:forEach items="${prod.childBacklogItems}" var="bli">
 											<c:set var="heDivId" value="${heDivId + 1}" scope="page" />
 											<tr class="backlogitem prod${divId} leftborder toggleall">
-												<th class="backlogitem first" colspan="3">&nbsp; &nbsp; &raquo; <a onclick="javascript:$('.hour${heDivId}').toggle();"><c:out value="${bli.backlogItem.name}"/></a></th>
+												<c:if test="${!empty bli.hourEntries}">
+													<th class="backlogitem first" colspan="3">&nbsp; &nbsp; &raquo; <a onclick="javascript:$('.hour${heDivId}').toggle();"><c:out value="${bli.backlogItem.name}"/></a></th>
+												</c:if>
+												<c:if test="${empty bli.hourEntries}">
+													<th class="backlogitem first" colspan="3">&nbsp; &nbsp; &raquo; <c:out value="${bli.backlogItem.name}"/></th>
+												</c:if>
 												<th class="backlogitem"><c:out value="${bli.hourTotal}"/></th>
 											</tr>
 											<c:forEach items="${bli.hourEntries}" var="he">
@@ -435,14 +574,19 @@ table.reportTable tr.total th.total {
 										<c:forEach items="${prod.childBacklogs}" var="proj">
 											<c:set var="divId" value="${divId + 1}" scope="page" />
 											<tr>
+												<c:if test="${!(empty proj.hourEntries && empty proj.childBacklogItems)}">
 												<th class="project first" colspan="3">&raquo; <a onclick="javascript:if($('.backlogitem.proj${divId}').is(':visible')) { $('.proj${divId}').hide(); } else { $('.backlogitem.proj${divId}').show(); }"><c:out value="${proj.backlog.name}"/></a></th>
+												</c:if>
+												<c:if test="${empty proj.hourEntries && empty proj.childBacklogItems}">
+												<th class="project first" colspan="3">&raquo; <c:out value="${proj.backlog.name}"/></th>
+												</c:if>
 												<th class="project"><c:out value="${proj.hourTotal}"/></th>
 											</tr>
 											<c:if test="${!empty proj.hourEntries}">
 												<c:set var="heDivId" value="${heDivId + 1}" scope="page" />
 												<tr class="backlogitem proj${divId} special hourentryhead leftborder toggleall">
 														<th class="backlogitem first" colspan="3"><a onclick="javascript:$('.hour${heDivId}').toggle();">Logged effort</a></th>
-														<th class="backlogitem fourth">foo</th>
+														<th class="backlogitem fourth">summa</th>
 												</tr>
 												<c:forEach items="${proj.hourEntries}" var="he">
 													<tr class="hourentries hour${heDivId} proj${divId} leftborder toggleall">
@@ -456,12 +600,17 @@ table.reportTable tr.total th.total {
 											<c:if test="${!empty proj.childBacklogItems}">
 												<tr class="backlogitem proj${divId} special backlogitemshead leftborder toggleall">
 													<th class="backlogitem first" colspan="3">Backlog items</th>
-													<th class="backlogitem fourth">Tähän BLI:den ajan summa</th>
+													<th class="backlogitem fourth">summa</th>
 												</tr>
 												<c:forEach items="${proj.childBacklogItems}" var="bli">
 													<c:set var="heDivId" value="${heDivId + 1}" scope="page" />
 													<tr class="backlogitem proj${divId} leftborder toggleall">
-														<th class="backlogitem first" colspan="3">&nbsp; &nbsp; &raquo; <a onclick="javascript:$('.hour${heDivId}').toggle();"><c:out value="${bli.backlogItem.name}"/></a></th>
+														<c:if test="${!empty bli.hourEntries}">
+															<th class="backlogitem first" colspan="3">&nbsp; &nbsp; &raquo; <a onclick="javascript:$('.hour${heDivId}').toggle();"><c:out value="${bli.backlogItem.name}"/></a></th>
+														</c:if>
+														<c:if test="${empty bli.hourEntries}">
+															<th class="backlogitem first" colspan="3">&nbsp; &nbsp; &raquo; <c:out value="${bli.backlogItem.name}"/></th>
+														</c:if>
 														<th class="backlogitem"><c:out value="${bli.hourTotal}"/></th>
 													</tr>
 													<c:forEach items="${bli.hourEntries}" var="he">
@@ -478,16 +627,21 @@ table.reportTable tr.total th.total {
 												<c:forEach items="${proj.childBacklogs}" var="iter">
 													<c:set var="divId" value="${divId + 1}" scope="page" />
 													<tr>
+														<c:if test="${!(empty iter.hourEntries && empty iter.childBacklogItems)}">
 														<th class="iteration first" colspan="3">&nbsp;&nbsp;&raquo; <a onclick="javascript:if($('.backlogitem.iter${divId}').is(':visible')) { $('.iter${divId}').hide(); } else { $('.backlogitem.iter${divId}').show(); }"><c:out value="${iter.backlog.name}"/></a></th>
+														</c:if>
+														<c:if test="${empty iter.hourEntries && empty iter.childBacklogItems}">
+														<th class="iteration first" colspan="3">&nbsp;&nbsp;&raquo; <c:out value="${iter.backlog.name}"/></th>
+														</c:if>
 														<th class="iteration"><c:out value="${iter.hourTotal}"/></th>
 													</tr>
-													<c:if test="${!empty proj.hourEntries}">
+													<c:if test="${!empty iter.hourEntries}">
 														<c:set var="heDivId" value="${heDivId + 1}" scope="page" />
 														<tr class="backlogitem proj${divId} special hourentryhead leftborder toggleall">
 																<th class="backlogitem first" colspan="3"><a onclick="javascript:$('.hour${heDivId}').toggle();">Logged effort</a></th>
-																<th class="backlogitem fourth">foo</th>
+																<th class="backlogitem fourth">summa</th>
 														</tr>
-														<c:forEach items="${proj.hourEntries}" var="he">
+														<c:forEach items="${iter.hourEntries}" var="he">
 															<tr class="hourentries hour${heDivId} proj${divId} leftborder toggleall">
 																<td class="hourentry first"><c:out value="${he.description}"/></td>
 																<td class="hourentry second"><ww:date name="#attr.he.date" format="dd.MM.yyyy HH:mm" /></td>
@@ -500,7 +654,12 @@ table.reportTable tr.total th.total {
 														<c:forEach items="${iter.childBacklogItems}" var="bli">
 															<c:set var="heDivId" value="${heDivId + 1}" scope="page" />
 															<tr class="backlogitem iter${divId} toggleall">
+																<c:if test="${!empty bli.hourEntries}">
 																<th class="backlogitem first" colspan="3">&nbsp; &nbsp; &raquo; <a onclick="javascript:$('.hour${heDivId}').toggle();"><c:out value="${bli.backlogItem.name}"/></a></th>
+																</c:if>
+																<c:if test="${empty bli.hourEntries}">
+																<th class="backlogitem first" colspan="3">&nbsp; &nbsp; &raquo; <c:out value="${bli.backlogItem.name}"/></th>
+																</c:if>
 																<th class="backlogitem"><c:out value="${bli.hourTotal}"/></th>
 															</tr>
 															<c:forEach items="${bli.hourEntries}" var="he">
@@ -522,7 +681,7 @@ table.reportTable tr.total th.total {
 									<th class="total">Query total</th>
 									<th class="total">&nbsp;</th>
 									<th class="total">&nbsp;</th>
-									<th class="total">Tähän kokonaissumma</th>
+									<th class="total"><c:out value="${totalSum}"/></th>
 								</tr>
 							</tbody>
 						</table>

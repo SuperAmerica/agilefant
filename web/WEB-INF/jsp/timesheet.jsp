@@ -233,7 +233,7 @@
 
 table.reportTable {
 	width:100%;
-	margin:0px;
+	padding:3px;
 }
 
 table.reportTable tr {
@@ -348,7 +348,12 @@ table.reportTable tr td.hourentry.first {
 	padding-left:30px;
 }
 
+table.reportTable tr.total th.total {
+	border-top:1px solid #000000;
+}
+
 				</style>
+
 
 <%--/UGLY!!! --%>
 
@@ -387,19 +392,43 @@ table.reportTable tr td.hourentry.first {
 								<c:forEach items="${products}" var="prod">
 									<c:set var="divId" value="${divId + 1}" scope="page" />
 									<tr>
-										<th class="product first" colspan="3"><a onclick="javascript:if($('.backlogitem.prod${divId}').is(':visible')) { $('.prod${divId}').hide(); } else { $('.backlogitem.${prod.backlog.name}').show(); }"><c:out value="${prod.backlog.name}"/></a></th>
+										<th class="product first" colspan="3"><a onclick="javascript:if($('.backlogitem.prod${divId}').is(':visible')) { $('.prod${divId}').hide(); } else { $('.backlogitem.prod${divId}').show(); }"><c:out value="${prod.backlog.name}"/></a></th>
 										<th class="product"><c:out value="${prod.hourTotal}"/></th> 
 									</tr>
+									<c:if test="${!empty prod.hourEntries}">
+										<c:set var="heDivId" value="${heDivId + 1}" scope="page" />
+										<tr class="backlogitem prod${divId} special hourentryhead leftborder toggleall">
+											<th class="backlogitem first" colspan="3"><a onclick="javascript:$('.hour${heDivId}').toggle();">Logged effort</a></th>
+											<th class="backlogitem fourth">foo</th>
+										</tr>
+										<c:forEach items="${prod.hourEntries}" var="he">
+											<tr class="hourentries hour${heDivId} prod${divId} leftborder toggleall">
+												<td class="hourentry first"><c:out value="${he.description}"/></td>
+												<td class="hourentry second"><ww:date name="#attr.he.date" format="dd.MM.yyyy HH:mm" /></td>
+												<td class="hourentry third">${aef:html(he.user.fullName)}</td>
+												<td class="hourentry fourth">${aef:html(he.timeSpent)}</td>
+											</tr>
+										</c:forEach>
+									</c:if>
 									<c:if test="${!empty prod.childBacklogItems}">
-										<tr style="display: table-row;" class="backlogitem prod${divId} special backlogitemshead leftborder toggleall">
+										<tr class="backlogitem prod${divId} special backlogitemshead leftborder toggleall">
 											<th class="backlogitem first" colspan="3">Backlog items</th>
-											<th class="backlogitem fourth"><c:out value="${prod.spentHours}"/></th>
+											<th class="backlogitem fourth">Tähän BLI:den ajan summa</th>
 										</tr>
 										<c:forEach items="${prod.childBacklogItems}" var="bli">
-											<tr style="display: table-row;" class="backlogitem prod${divId} leftborder toggleall">
-												<th class="backlogitem first" colspan="3">&nbsp; &nbsp; &raquo; <c:out value="${bli.backlogItem.name}"/></th>
+											<c:set var="heDivId" value="${heDivId + 1}" scope="page" />
+											<tr class="backlogitem prod${divId} leftborder toggleall">
+												<th class="backlogitem first" colspan="3">&nbsp; &nbsp; &raquo; <a onclick="javascript:$('.hour${heDivId}').toggle();"><c:out value="${bli.backlogItem.name}"/></a></th>
 												<th class="backlogitem"><c:out value="${bli.hourTotal}"/></th>
 											</tr>
+											<c:forEach items="${bli.hourEntries}" var="he">
+												<tr class="hourentries hour${heDivId} prod${divId} leftborder toggleall">
+													<td class="hourentry first"><c:out value="${he.description}"/></td>
+													<td class="hourentry second"><ww:date name="#attr.he.date" format="dd.MM.yyyy HH:mm" /></td>
+													<td class="hourentry third">${aef:html(he.user.fullName)}</td>
+													<td class="hourentry fourth">${aef:html(he.timeSpent)}</td>
+												</tr>
+											</c:forEach>
 										</c:forEach>										
 									</c:if>
 									<c:if test="${!empty prod.childBacklogs}">
@@ -409,16 +438,40 @@ table.reportTable tr td.hourentry.first {
 												<th class="project first" colspan="3">&raquo; <a onclick="javascript:if($('.backlogitem.proj${divId}').is(':visible')) { $('.proj${divId}').hide(); } else { $('.backlogitem.proj${divId}').show(); }"><c:out value="${proj.backlog.name}"/></a></th>
 												<th class="project"><c:out value="${proj.hourTotal}"/></th>
 											</tr>
+											<c:if test="${!empty proj.hourEntries}">
+												<c:set var="heDivId" value="${heDivId + 1}" scope="page" />
+												<tr class="backlogitem proj${divId} special hourentryhead leftborder toggleall">
+														<th class="backlogitem first" colspan="3"><a onclick="javascript:$('.hour${heDivId}').toggle();">Logged effort</a></th>
+														<th class="backlogitem fourth">foo</th>
+												</tr>
+												<c:forEach items="${proj.hourEntries}" var="he">
+													<tr class="hourentries hour${heDivId} proj${divId} leftborder toggleall">
+														<td class="hourentry first"><c:out value="${he.description}"/></td>
+														<td class="hourentry second"><ww:date name="#attr.he.date" format="dd.MM.yyyy HH:mm" /></td>
+														<td class="hourentry third">${aef:html(he.user.fullName)}</td>
+														<td class="hourentry fourth">${aef:html(he.timeSpent)}</td>
+													</tr>
+												</c:forEach>
+											</c:if>
 											<c:if test="${!empty proj.childBacklogItems}">
-												<tr style="display: table-row;" class="backlogitem proj${divId} special backlogitemshead leftborder toggleall">
+												<tr class="backlogitem proj${divId} special backlogitemshead leftborder toggleall">
 													<th class="backlogitem first" colspan="3">Backlog items</th>
-													<th class="backlogitem fourth"><c:out value="${proj.spentHours}"/></th>
+													<th class="backlogitem fourth">Tähän BLI:den ajan summa</th>
 												</tr>
 												<c:forEach items="${proj.childBacklogItems}" var="bli">
-													<tr style="display: table-row;" class="backlogitem proj${divId} leftborder toggleall">
-														<th class="backlogitem first" colspan="3">&nbsp; &nbsp; &raquo; <c:out value="${bli.backlogItem.name}"/></th>
+													<c:set var="heDivId" value="${heDivId + 1}" scope="page" />
+													<tr class="backlogitem proj${divId} leftborder toggleall">
+														<th class="backlogitem first" colspan="3">&nbsp; &nbsp; &raquo; <a onclick="javascript:$('.hour${heDivId}').toggle();"><c:out value="${bli.backlogItem.name}"/></a></th>
 														<th class="backlogitem"><c:out value="${bli.hourTotal}"/></th>
 													</tr>
+													<c:forEach items="${bli.hourEntries}" var="he">
+														<tr class="hourentries hour${heDivId} proj${divId} leftborder toggleall">
+															<td class="hourentry first"><c:out value="${he.description}"/></td>
+															<td class="hourentry second"><ww:date name="#attr.he.date" format="dd.MM.yyyy HH:mm" /></td>
+															<td class="hourentry third">${aef:html(he.user.fullName)}</td>
+															<td class="hourentry fourth">${aef:html(he.timeSpent)}</td>
+														</tr>
+													</c:forEach>
 												</c:forEach>										
 											</c:if>
 											<c:if test="${!empty proj.childBacklogs}">
@@ -428,16 +481,36 @@ table.reportTable tr td.hourentry.first {
 														<th class="iteration first" colspan="3">&nbsp;&nbsp;&raquo; <a onclick="javascript:if($('.backlogitem.iter${divId}').is(':visible')) { $('.iter${divId}').hide(); } else { $('.backlogitem.iter${divId}').show(); }"><c:out value="${iter.backlog.name}"/></a></th>
 														<th class="iteration"><c:out value="${iter.hourTotal}"/></th>
 													</tr>
-													<c:if test="${!empty iter.childBacklogItems}">
-														<tr style="display: table-row;" class="backlogitem iter${divId} special backlogitemshead leftborder toggleall">
-															<th class="backlogitem first" colspan="3">Backlog items</th>
-															<th class="backlogitem fourth"><c:out value="${iter.spentHours}"/></th>
+													<c:if test="${!empty proj.hourEntries}">
+														<c:set var="heDivId" value="${heDivId + 1}" scope="page" />
+														<tr class="backlogitem proj${divId} special hourentryhead leftborder toggleall">
+																<th class="backlogitem first" colspan="3"><a onclick="javascript:$('.hour${heDivId}').toggle();">Logged effort</a></th>
+																<th class="backlogitem fourth">foo</th>
 														</tr>
+														<c:forEach items="${proj.hourEntries}" var="he">
+															<tr class="hourentries hour${heDivId} proj${divId} leftborder toggleall">
+																<td class="hourentry first"><c:out value="${he.description}"/></td>
+																<td class="hourentry second"><ww:date name="#attr.he.date" format="dd.MM.yyyy HH:mm" /></td>
+																<td class="hourentry third">${aef:html(he.user.fullName)}</td>
+																<td class="hourentry fourth">${aef:html(he.timeSpent)}</td>
+															</tr>
+														</c:forEach>
+													</c:if>
+													<c:if test="${!empty iter.childBacklogItems}">
 														<c:forEach items="${iter.childBacklogItems}" var="bli">
-															<tr style="display: table-row;" class="backlogitem iter${divId} leftborder toggleall">
-																<th class="backlogitem first" colspan="3">&nbsp; &nbsp; &raquo; <c:out value="${bli.backlogItem.name}"/></th>
+															<c:set var="heDivId" value="${heDivId + 1}" scope="page" />
+															<tr class="backlogitem iter${divId} toggleall">
+																<th class="backlogitem first" colspan="3">&nbsp; &nbsp; &raquo; <a onclick="javascript:$('.hour${heDivId}').toggle();"><c:out value="${bli.backlogItem.name}"/></a></th>
 																<th class="backlogitem"><c:out value="${bli.hourTotal}"/></th>
 															</tr>
+															<c:forEach items="${bli.hourEntries}" var="he">
+																<tr class="hourentries hour${heDivId} iter${divId} toggleall">
+																	<td class="hourentry first"><c:out value="${he.description}"/></td>
+																	<td class="hourentry second"><ww:date name="#attr.he.date" format="dd.MM.yyyy HH:mm" /></td>
+																	<td class="hourentry third">${aef:html(he.user.fullName)}</td>
+																	<td class="hourentry fourth">${aef:html(he.timeSpent)}</td>
+																</tr>
+															</c:forEach>
 														</c:forEach>										
 													</c:if>													
 												</c:forEach>
@@ -445,6 +518,12 @@ table.reportTable tr td.hourentry.first {
 										</c:forEach>
 									</c:if>
 								</c:forEach>
+								<tr class="total">
+									<th class="total">Query total</th>
+									<th class="total">&nbsp;</th>
+									<th class="total">&nbsp;</th>
+									<th class="total">Tähän kokonaissumma</th>
+								</tr>
 							</tbody>
 						</table>
 					</div>
@@ -453,9 +532,4 @@ table.reportTable tr td.hourentry.first {
 		</tbody>
 	</table>
 </c:if>
-<script>
-	$(document).ready( function() {
-		$('.toggleall').hide();
-	});
-</script>
 <%@ include file="./inc/_footer.jsp"%>

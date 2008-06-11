@@ -267,7 +267,7 @@
 									<c:choose>
 										<c:when test="${item1.effortSpent == null}">&mdash;</c:when>
 										<c:otherwise>
-											<c:out value="${item1.effortSepent}" />
+											<c:out value="${item1.effortSpent}" />
 											<c:set var="totalSum" value="${aef:calculateAFTimeSum(totalSum, item1.effortSpent)}" />
 										</c:otherwise>
 									</c:choose>

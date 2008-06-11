@@ -123,18 +123,6 @@ public class AEFFunctions {
         return false;
     }
     
-    public static AFTime totalBacklogHourEntries(Map<Integer,AFTime> data) {
-        AFTime total = new AFTime(0);
-        
-        for(AFTime cur : data.values()) {
-            if (cur != null) {
-                total.add(cur);
-            }
-        }
-        
-        return total;
-    }
-    
     public static AFTime calculateAFTimeSum(AFTime a, AFTime b) {
         AFTime sum = new AFTime(0);
         

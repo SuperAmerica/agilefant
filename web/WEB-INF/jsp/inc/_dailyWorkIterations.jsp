@@ -1,7 +1,6 @@
 <%@ include file="./_taglibs.jsp"%>
 
 <c:if test="${hourReport}">
-	<aef:backlogHourEntrySums id="bliTotals" target="${backlog}" />
 	<c:set var="totalSum" value="${null}" />
 </c:if>
 
@@ -266,10 +265,10 @@
 							<display:column sortable="true" sortProperty="effortSpent" defaultorder="descending" title="Effort Spent">
 								<span style="white-space: nowrap">
 									<c:choose>
-										<c:when test="${bliTotals[item1.id] == null}">&mdash;</c:when>
+										<c:when test="${item1.effortSpent == null}">&mdash;</c:when>
 										<c:otherwise>
-											<c:out value="${bliTotals[item1.id]}" />
-											<c:set var="totalSum" value="${aef:calculateAFTimeSum(totalSum, bliTotals[item1.id])}" />
+											<c:out value="${item1.effortSepent}" />
+											<c:set var="totalSum" value="${aef:calculateAFTimeSum(totalSum, item1.effortSpent)}" />
 										</c:otherwise>
 									</c:choose>
 								</span>

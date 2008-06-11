@@ -2,11 +2,10 @@
 <%@ include file="./inc/_header.jsp"%>
 
 <aef:hourReporting id="hourReport"></aef:hourReporting>
+
 <c:if test="${hourReport}">
-	<aef:backlogHourEntrySums id="bliTotals" target="${iteration}" />
 	<c:set var="totalSum" value="${null}" />
 </c:if>
-
 
 <c:if test="${iterationGoal.id > 0}">
 	<aef:bct iterationGoalId="${iterationGoal.id}" />
@@ -313,11 +312,12 @@
 						<c:when test="${hourReport}">
 							<display:column sortable="true" sortProperty="effortSpent" defaultorder="descending" title="Effort Spent">
 								<span style="white-space: nowrap">
+									
 									<c:choose>
-										<c:when test="${bliTotals[row.id] == null}">&mdash;</c:when>
+										<c:when test="${row.effortSpent == null}">&mdash;</c:when>
 										<c:otherwise>
-											<c:out value="${bliTotals[row.id]}" />
-											<c:set var="totalSum" value="${aef:calculateAFTimeSum(totalSum, bliTotals[row.id])}" />
+											<c:out value="${row.effortSpent}" />
+											<c:set var="totalSum" value="${aef:calculateAFTimeSum(totalSum, row.effortSpent)}" />
 										</c:otherwise>
 									</c:choose>
 								</span>

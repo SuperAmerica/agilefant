@@ -3,8 +3,9 @@
 <aef:hourReporting id="hourReport" />
 
 <c:if test="${hourReport}">
-	<aef:backlogHourEntrySums id="bliTotals" target="${backlog}" />
+	<c:set var="totalSum" value="${null}" />
 </c:if>
+
 <aef:currentUser />
 <script language="javascript" type="text/javascript">
 function validateDeletion() {
@@ -217,16 +218,19 @@ function validateDeletion() {
 
 		<c:choose>
 			<c:when test="${hourReport}">
+			
 				<display:column sortable="true" sortProperty="effortSpent" defaultorder="descending" title="Effort Spent">
 					<span style="white-space: nowrap">
 						<c:choose>
-							<c:when test="${bliTotals[item.id] == null}">&mdash;</c:when>
+							<c:when test="${item.effortSpent == null}">&mdash;</c:when>
 							<c:otherwise>
-							<c:out value="${bliTotals[item.id]}" />
+								<c:out value="${item.effortSpent}" />
+								<c:set var="totalSum" value="${aef:calculateAFTimeSum(totalSum, item.effortSpent)}" />
 							</c:otherwise>
 						</c:choose>
 					</span>
 				</display:column>
+				
 			</c:when>
 			<c:otherwise>
 			
@@ -251,7 +255,14 @@ function validateDeletion() {
 				<td><c:out value="${originalEstimateSum}" /></td>
 				<c:if test="${hourReport}">
 					<td>
-					<c:out value="${aef:totalBacklogHourEntries(bliTotals)}" />
+						<c:choose>
+							<c:when test="${totalSum != null}">
+								<c:out value="${totalSum}" />
+							</c:when>
+							<c:otherwise>
+								0h
+							</c:otherwise>
+						</c:choose>
 					</td>
 				</c:if>
 			</tr>

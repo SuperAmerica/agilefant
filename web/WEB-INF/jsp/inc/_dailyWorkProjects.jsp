@@ -11,7 +11,6 @@
 
 <c:forEach items="${projects}" var="pro">
 	<c:if test="${hourReport}">
-		<aef:backlogHourEntrySums id="bliTotals" target="${pro}" />
 		<c:set var="totalSum" value="${null}" />
 	</c:if>
 
@@ -239,10 +238,10 @@
 							<display:column sortable="true" sortProperty="effortSpent" defaultorder="descending" title="Effort Spent">
 								<span style="white-space: nowrap">
 									<c:choose>
-										<c:when test="${bliTotals[item2.id] == null}">&mdash;</c:when>
+										<c:when test="${item2.effortSpent == null}">&mdash;</c:when>
 										<c:otherwise>
-											<c:out value="${bliTotals[item2.id]}" />
-											<c:set var="totalSum" value="${aef:calculateAFTimeSum(totalSum, bliTotals[item2.id])}" />
+											<c:out value="${item2.effortSpent}" />
+											<c:set var="totalSum" value="${aef:calculateAFTimeSum(totalSum, item2.effortSpent)}" />
 										</c:otherwise>
 									</c:choose>
 								</span>

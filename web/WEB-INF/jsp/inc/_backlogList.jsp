@@ -225,7 +225,10 @@ function validateDeletion() {
 							<c:when test="${item.effortSpent == null}">&mdash;</c:when>
 							<c:otherwise>
 								<c:out value="${item.effortSpent}" />
-								<c:set var="totalSum" value="${aef:calculateAFTimeSum(totalSum, item.effortSpent)}" />
+								<%-- Interesting feature of jsp, thus circumvent direct assignation --%>
+								<c:set var="es" value="${item.effortSpent}"/>
+								<c:set var="totalSum" value="${aef:calculateAFTimeSum(totalSum, es)}" />
+								
 							</c:otherwise>
 						</c:choose>
 					</span>

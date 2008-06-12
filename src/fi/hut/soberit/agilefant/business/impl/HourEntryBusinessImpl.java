@@ -279,6 +279,19 @@ public class HourEntryBusinessImpl implements HourEntryBusiness {
         return sum;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public boolean isAssociatedWithHourReport(User user) {
+        List<HourEntry> entries = hourEntryDAO.getHourEntriesByUser(user);
+        if(entries == null) {
+            return false;
+        }
+        if(entries.size() > 0) {
+            return true;
+        }
+        return false;
+    }
     public BacklogHourEntryDAO getBacklogHourEntryDAO() {
         return backlogHourEntryDAO;
     }

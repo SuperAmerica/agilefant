@@ -358,5 +358,25 @@ public class HourEntryBusinessTest extends TestCase {
             fail("ParseException.");
         }
     }
-    
+    public void testIsAssociatedWithHourReport()
+    {
+        heDAO = createMock(HourEntryDAO.class);
+        hourEntryBusiness = new HourEntryBusinessImpl();
+        hourEntryBusiness.setHourEntryDAO(heDAO);
+        ArrayList<HourEntry> list1 = new ArrayList<HourEntry>();
+        ArrayList<HourEntry> list2 = new ArrayList<HourEntry>();
+        list1.add(new HourEntry());
+        list1.add(new HourEntry());
+        User user = new User();
+        User user2 = new User();
+        User user3 = new User();
+        expect(heDAO.getHourEntriesByUser(user)).andReturn(list1);
+        expect(heDAO.getHourEntriesByUser(user2)).andReturn(list2);
+        expect(heDAO.getHourEntriesByUser(user3)).andReturn(null);
+        replay(heDAO);
+        assertTrue(hourEntryBusiness.isAssociatedWithHourReport(user));
+        assertFalse(hourEntryBusiness.isAssociatedWithHourReport(user2));
+        assertFalse(hourEntryBusiness.isAssociatedWithHourReport(user3));
+        verify(heDAO);
+    }
 }

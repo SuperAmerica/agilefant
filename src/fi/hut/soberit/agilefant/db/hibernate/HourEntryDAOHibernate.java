@@ -9,6 +9,7 @@ import org.hibernate.criterion.Projections;
 
 import fi.hut.soberit.agilefant.db.HourEntryDAO;
 import fi.hut.soberit.agilefant.model.AFTime;
+import fi.hut.soberit.agilefant.model.BacklogItemHourEntry;
 import fi.hut.soberit.agilefant.model.HourEntry;
 import fi.hut.soberit.agilefant.model.User;
 
@@ -32,5 +33,17 @@ public class HourEntryDAOHibernate extends GenericDAOHibernate<HourEntry> implem
         
         return (AFTime) super.getHibernateTemplate()
                             .findByCriteria(criteria).get(0);
+    }
+    /**
+     * {@inheritDoc}
+     */
+    @SuppressWarnings("unchecked")
+    public List<HourEntry> getHourEntriesByUser(User user) {
+        DetachedCriteria criteria = DetachedCriteria.forClass(this
+                .getPersistentClass());
+        
+        criteria.add(Restrictions.eq("user", user));
+        return (List<HourEntry>)super.getHibernateTemplate()
+                            .findByCriteria(criteria);
     }
 }

@@ -116,4 +116,12 @@ public interface HourEntryBusiness {
     public AFTime getEffortSumByUserAndTimeInterval(User user, Date start, Date end);
     
     public AFTime getEffortSumByUserAndTimeInterval(User user, String startDate, String endDate);
+    
+    /**
+     * Determinate whether given user is associated with any of the hours reports in the system.
+     * 
+     * @param user
+     * @return true if association exists, false otherwise.
+     */
+    public boolean isAssociatedWithHourReport(User user);
 }

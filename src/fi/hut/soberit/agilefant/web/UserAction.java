@@ -11,6 +11,7 @@ import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
 
 import fi.hut.soberit.agilefant.business.BacklogBusiness;
+import fi.hut.soberit.agilefant.business.HourEntryBusiness;
 import fi.hut.soberit.agilefant.business.UserBusiness;
 import fi.hut.soberit.agilefant.db.TeamDAO;
 import fi.hut.soberit.agilefant.db.UserDAO;
@@ -39,6 +40,8 @@ public class UserAction extends ActionSupport implements CRUDAction {
     private BacklogBusiness backlogBusiness;
     
     private UserBusiness userBusiness;
+    
+    private HourEntryBusiness hourEntryBusiness;
 
     private String password1;
 
@@ -75,6 +78,15 @@ public class UserAction extends ActionSupport implements CRUDAction {
         }
         if (u.getAssignables().size() > 0) {
             super.addActionError(super.getText("user.hasLinkedItems"));
+            return Action.ERROR;
+        }
+        /* 
+         * User may have linked job reports. This creates a tricky situation 
+         * if user has hour reports but hour reporting is currently turned off and
+         * thus user can not view associated objects.
+         */
+        if(hourEntryBusiness.isAssociatedWithHourReport(u)) {
+            super.addActionError(super.getText("user.linkedJobEntries"));
             return Action.ERROR;
         }
         /* Prevent the deletion of administrator */
@@ -321,5 +333,13 @@ public class UserAction extends ActionSupport implements CRUDAction {
 
     public void setDisabledUsers(List<User> disabledUsers) {
         this.disabledUsers = disabledUsers;
+    }
+
+    public HourEntryBusiness getHourEntryBusiness() {
+        return hourEntryBusiness;
+    }
+
+    public void setHourEntryBusiness(HourEntryBusiness hourEntryBusiness) {
+        this.hourEntryBusiness = hourEntryBusiness;
     }
 }

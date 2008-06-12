@@ -334,11 +334,11 @@ $(document).ready( function() {
 				  ${aef:html(fn:length(row.backlogItems))}
 				</display:column>
 				
-				<display:column sortable="true" title="Effort left sum">
+				<display:column sortable="false" title="Effort left sum">
 					<c:out value="${iterationGoalEffLeftSums[row.id]}" />
 				</display:column>
 				
-				<display:column sortable="true" title="Original estimate sum">
+				<display:column sortable="false" title="Original estimate sum">
 					<c:out value="${iterationGoalOrigEstSums[row.id]}" />
 				</display:column>
 				

@@ -14,7 +14,23 @@ import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Index;
 import org.hibernate.annotations.Type;
 
-
+/**
+ * Hibernate entity bean which represents an hour entry.
+ * 
+ * Conceptually, hour entry represents logged effort for a given user in given date
+ * with given description. One entry can be associated with only one user. 
+ * Hour entry is the base information container for the timesheet functionality. 
+ * 
+ * This is a base class for all logged efforts and thus has no 
+ * information whatsoever of the parent object. Child classes for HourEntry
+ * add ownership information. Class is not defined abstract as it us used as 
+ * common logged effort information container.
+ * 
+ * @see fi.hut.soberit.agilefant.model.BacklogItemHourEntry
+ * @see fi.hut.soberit.agilefant.model.BacklogHourEntry
+ * @author Pasi Pekkanen, Roni Tammisalo
+ *
+ */
 @BatchSize(size=20)
 @Entity
 @Table(name = "hourentry")

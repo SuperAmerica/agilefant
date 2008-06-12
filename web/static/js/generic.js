@@ -73,6 +73,20 @@ function disableIfEmpty(value, elements) {
 		}
 	}			
 }
+function validateDateFormat(value) {
+	var standardDateFormat = new RegExp("^[ ]*[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])[ ]+([0-1][0-9]|2[0-3]):[0-5][0-9][ ]*$");
+	return (standardDateFormat.test(value) ); 
+}
+function checkDateFormat(field){
+	var ret = false;
+	var fields = document.getElementsByName(field);
+	var value = fields[0].value;
+	ret = validateDateFormat( value );
+	if(!ret) {
+		alert("Invalid date format!");
+	}
+	return ret;
+}
 function validateEstimateFormat(value) {
 	var hourOnly = new RegExp("^[ ]*[0-9]+h?[ ]*$"); //10h
 	var minuteOnly = new RegExp("^[ ]*[0-9]+min[ ]*$"); //10min

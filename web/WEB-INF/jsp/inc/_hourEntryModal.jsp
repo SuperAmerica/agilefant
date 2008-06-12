@@ -42,6 +42,9 @@ function saveAndClose() {
 	if(!checkEstimateFormat('hourEntry.timeSpent')) {
 		return false;
 	}
+	if(!checkDateFormat('hourEntry.date')){
+		return false;
+	}
 	var data = $("#hourModalForm").serializeArray();
 	var target = $("#hourModalForm").attr("action");
 	jQuery.post(target,data);
@@ -51,6 +54,9 @@ function saveAndClose() {
 function saveJobEntry() {
  if(!checkEstimateFormat('hourEntry.timeSpent')) {
  	return false;
+ }
+ if(!checkDateFormat('date')){
+		return false;
  }
  if($("#assigneeSelect2").find("input:checked[name^=userIds]").length == 0) {
  	if($("select[name='userId']").length == 0) {

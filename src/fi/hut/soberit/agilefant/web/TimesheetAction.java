@@ -12,6 +12,7 @@ import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
 
 import fi.hut.soberit.agilefant.business.TimesheetBusiness;
+import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.util.BacklogTimesheetNode;
 
 /**
@@ -40,6 +41,8 @@ public class TimesheetAction extends ActionSupport {
     private String interval;
     
     private Map<Integer, String> userIds = new HashMap<Integer, String>();
+    
+    private AFTime totalSpentTime;
 
     public Map<Integer, String> getUserIds() {
         return userIds;
@@ -64,6 +67,7 @@ public class TimesheetAction extends ActionSupport {
         }
         try{
             products = timesheetBusiness.generateTree(backlogIds, startDate, endDate, userIds.keySet());
+            totalSpentTime = timesheetBusiness.calculateRootSum(products);
         }catch(IllegalArgumentException e){
             addActionError(e.getMessage());
             return Action.ERROR;
@@ -128,6 +132,14 @@ public class TimesheetAction extends ActionSupport {
             this.selUId.add(sel);
         }
         return selUId;
+    }
+
+    public AFTime getTotalSpentTime() {
+        return totalSpentTime;
+    }
+
+    public void setTotalSpentTime(AFTime totalSpentTime) {
+        this.totalSpentTime = totalSpentTime;
     }
     
     

@@ -12,6 +12,7 @@ import java.util.Set;
 import fi.hut.soberit.agilefant.business.HourEntryBusiness;
 import fi.hut.soberit.agilefant.business.TimesheetBusiness;
 import fi.hut.soberit.agilefant.db.BacklogDAO;
+import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogHourEntry;
 import fi.hut.soberit.agilefant.model.BacklogItem;
@@ -169,6 +170,16 @@ public class TimesheetBusinessImpl implements TimesheetBusiness {
         return true;
     }
     
+    public AFTime calculateRootSum(List<BacklogTimesheetNode> roots) {
+        AFTime sum = new AFTime(0);
+        if(roots == null) {
+            return sum;
+        }
+        for(BacklogTimesheetNode node : roots) {
+            sum.add(node.getHourTotal());
+        }
+        return sum;
+    }
     public BacklogDAO getBacklogDAO() {
         return backlogDAO;
     }

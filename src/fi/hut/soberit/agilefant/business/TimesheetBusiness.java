@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.HourEntry;
@@ -62,4 +63,12 @@ public interface TimesheetBusiness {
      * @return A filtered list of hour entries for the given backlog 
      */
     public List<? extends HourEntry> getFilteredHourEntries(Backlog backlog);
+    
+    /**
+     * Calculate total spent time from root nodes.
+     * 
+     * @param roots Top-level nodes.
+     * @return Total spent time
+     */
+    public AFTime calculateRootSum(List<BacklogTimesheetNode> roots);
 }

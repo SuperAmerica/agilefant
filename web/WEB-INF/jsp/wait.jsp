@@ -1,9 +1,13 @@
 <%@ taglib prefix="ww" uri="/webwork" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ww:url id="refresh" includeParams="get" includeContext="false">
+</ww:url>
+
 <html>
   <head>
     <title>Please wait</title>
-    <meta http-equiv="refresh" content="5;url=<ww:url includeParams="get" includeContext="false" />"/>
+    <meta http-equiv="refresh" content="5;url=${refresh}"/>
     <style type="text/css">	
 
 html {
@@ -99,7 +103,7 @@ div#container div#content div#text {
 			<br/>
 			This may take several minutes.
 			<br/>
-				Click <a href="<ww:url includeParams="get" includeContext="false" />">here</a> if this page does not reload automatically.
+				Click <a href="${refresh}">here</a> if this page does not reload automatically.
 		</div>	
 	</div>
 </div>

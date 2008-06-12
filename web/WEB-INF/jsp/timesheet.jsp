@@ -183,15 +183,31 @@
 								</tr>
 								<!--  User selection -->				
 								<tr>
-									<td>Active users</td>
+									<td>Users</td>
 					
 				
 									<td><c:set var="divId" value="1" scope="page" />
 	
 	                    				<div id="assigneesLink">
 	                    					<a href="javascript:toggleDiv(${divId});">
-	                        					<img src="static/img/users.png" />
-	                        					select
+	                    						<img src="static/img/users.png"/>
+	                        					<c:set var="listSize" value="${fn:length(selUser)}" scope="page" />
+												<c:choose>
+													<c:when test="${listSize > 0}">
+														<c:set var="count" value="0" scope="page" />
+														<c:set var="comma" value="," scope="page" />
+														<c:forEach items="${selUser}" var="responsible">
+															<c:if test="${count == listSize - 1}" >
+																<c:set var="comma" value="" scope="page" />
+															</c:if>
+																<span><c:out value="${responsible.initials}" /></span><c:out value="${comma}" />
+															<c:set var="count" value="${count + 1}" scope="page" />
+														</c:forEach>
+													</c:when>
+													<c:otherwise>
+														<c:out value="choose" />
+													</c:otherwise>
+												</c:choose>
 	                    					</a>
 	                    				</div>
 	                        
@@ -199,7 +215,7 @@
 	                 
 	                    					<div id="userselect" class="userSelector">
 	                    						<div class="left">
-	                    							<label>Enabled users</label>
+	                    							<label>Active users</label>
 	                    							<ul class="users_0"></ul>
 	                    		
 	                    							<label>Disabled users</label>
@@ -222,12 +238,7 @@
 	                            						var teams = [<aef:teamJson items="${teamList}" />];
 	                            						var preferred = [<aef:userJson items="${enabledUserList}" />];
 	                           						 	var other = [<aef:userJson items="${aef:listSubstract(userList, enabledUserList)}" />];
-	                           						 	<c:if test="${!empty selectedID}">
-	                            							var selected = ${selectedID};
-	                            						</c:if>
-	                            						<c:if test="${empty selectedID}">
-	                            							var selected = [];
-	                            						</c:if>
+	                           						 	var selected = [<aef:idJson items="${selUser}" />];
 	                           	 						$('#userselect').multiuserselect({users: [preferred, other], groups: teams, root: $('#userselect')}).selectusers(selected);
 	                        						});
 	                        					</script>

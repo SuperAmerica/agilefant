@@ -12,7 +12,9 @@ import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
 
 import fi.hut.soberit.agilefant.business.TimesheetBusiness;
+import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.model.AFTime;
+import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.util.BacklogTimesheetNode;
 
 /**
@@ -30,7 +32,9 @@ public class TimesheetAction extends ActionSupport {
     
     private List<Integer> selected = new ArrayList<Integer>();
     
-    private List<Integer> selUId = new ArrayList<Integer>();
+    private List<User> selUser = new ArrayList<User>();
+    
+    private UserDAO userDAO;
 
     private int[] backlogIds;
 
@@ -127,11 +131,12 @@ public class TimesheetAction extends ActionSupport {
         return selected;
     }
 
-    public List<Integer> getSelUId() {
+    public List<User> getSelUser() {
+        this.selUser.clear();
         for(int sel: userIds.keySet()) {
-            this.selUId.add(sel);
+            this.selUser.add(userDAO.get(sel));
         }
-        return selUId;
+        return selUser;
     }
 
     public AFTime getTotalSpentTime() {
@@ -140,6 +145,14 @@ public class TimesheetAction extends ActionSupport {
 
     public void setTotalSpentTime(AFTime totalSpentTime) {
         this.totalSpentTime = totalSpentTime;
+    }
+
+    public UserDAO getUserDAO() {
+        return userDAO;
+    }
+
+    public void setUserDAO(UserDAO userDAO) {
+        this.userDAO = userDAO;
     }
     
     

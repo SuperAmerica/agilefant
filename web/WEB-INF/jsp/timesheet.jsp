@@ -73,11 +73,9 @@
 									<td colspan="2">
 										<script type="text/javascript">
 											function addZero($string) {
-												if($string < 10) {
-													return '0' + $string;
-												} else {
-													return $string;
-												}
+												var str = '0'+$string;
+												//return last two chars
+												return str.substr(str.length-2);
 											}
 			
 											function change_selected_interval(value) {
@@ -144,34 +142,18 @@
 												var interval = document.getElementById('interval');
 												<ww:set name="currently" value="#attr.interval" />
 												var current = "${currently}";
-												if (current == 'TODAY') {
-													change_selected_interval('TODAY');
-												} else if (current == 'YESTERDAY') {
-													change_selected_interval('YESTERDAY');
-												} else if (current == 'THIS_WEEK') {
-													change_selected_interval('THIS_WEEK');
-												} else if (current == 'LAST_WEEK') {
-													change_selected_interval('LAST_WEEK');
-												} else if (current == 'THIS_MONTH') {
-													change_selected_interval('THIS_MONTH');
-												} else if (current == 'LAST_MONTH') {
-													change_selected_interval('LAST_MONTH');
-												} else if (current == 'THIS_YEAR') {
-													change_selected_interval('THIS_YEAR');
-												} else if (current == 'LAST_YEAR') {
-													change_selected_interval('LAST_YEAR');
-												} else if (current == 'NO_INTERVAL') {
-													change_selected_interval('NO_INTERVAL');
+												if (current) {
+													change_selected_interval(current);
 												} else {
 													change_selected_interval('TODAY');
 												}
-													
+												if(current) {
+													$("#interval").find("[value='"+current+"']").attr("selected","selected");
+												}	
 											});
 										</script> 
-										<%--REFACTOR PLZ--%>
 										<select name="interval" id="interval" onchange="change_selected_interval(this.value);">
-											<c:if test="${empty interval || interval == 'TODAY'}">
-												<option value="TODAY" selected="selected">Today</option>
+												<option value="TODAY">Today</option>
 												<option value="YESTERDAY">Yesterday</option>
 												<option value="THIS_WEEK">This week</option>
 												<option value="LAST_WEEK">Last week</option>
@@ -180,94 +162,6 @@
 												<option value="THIS_YEAR">This year</option>
 												<option value="LAST_YEAR">Last year</option>
 												<option value="NO_INTERVAL">(All past entries)</option>
-											</c:if>
-											<c:if test="${interval == 'YESTERDAY'}">
-												<option value="TODAY">Today</option>
-												<option value="YESTERDAY" selected="selected">Yesterday</option>
-												<option value="THIS_WEEK">This week</option>
-												<option value="LAST_WEEK">Last week</option>
-												<option value="THIS_MONTH">This month</option>
-												<option value="LAST_MONTH">Last month</option>
-												<option value="THIS_YEAR">This year</option>
-												<option value="LAST_YEAR">Last year</option>
-												<option value="NO_INTERVAL">(All past entries)</option>
-											</c:if>
-											<c:if test="${interval == 'THIS_WEEK'}">
-												<option value="TODAY">Today</option>
-												<option value="YESTERDAY">Yesterday</option>
-												<option value="THIS_WEEK" selected="selected">This week</option>
-												<option value="LAST_WEEK">Last week</option>
-												<option value="THIS_MONTH">This month</option>
-												<option value="LAST_MONTH">Last month</option>
-												<option value="THIS_YEAR">This year</option>
-												<option value="LAST_YEAR">Last year</option>
-												<option value="NO_INTERVAL">(All past entries)</option>
-											</c:if>
-											<c:if test="${interval == 'LAST_WEEK'}">
-												<option value="TODAY">Today</option>
-												<option value="YESTERDAY">Yesterday</option>
-												<option value="THIS_WEEK">This week</option>
-												<option value="LAST_WEEK" selected="selected">Last week</option>
-												<option value="THIS_MONTH">This month</option>
-												<option value="LAST_MONTH">Last month</option>
-												<option value="THIS_YEAR">This year</option>
-												<option value="LAST_YEAR">Last year</option>
-												<option value="NO_INTERVAL">(All past entries)</option>											</c:if>
-											<c:if test="${interval == 'THIS_MONTH'}">
-												<option value="TODAY">Today</option>
-												<option value="YESTERDAY">Yesterday</option>
-												<option value="THIS_WEEK">This week</option>
-												<option value="LAST_WEEK">Last week</option>
-												<option value="THIS_MONTH" selected="selected">This month</option>
-												<option value="LAST_MONTH">Last month</option>
-												<option value="THIS_YEAR">This year</option>
-												<option value="LAST_YEAR">Last year</option>
-												<option value="NO_INTERVAL">(All past entries)</option>
-											</c:if>
-											<c:if test="${interval == 'LAST_MONTH'}">
-												<option value="TODAY">Today</option>
-												<option value="YESTERDAY">Yesterday</option>
-												<option value="THIS_WEEK">This week</option>
-												<option value="LAST_WEEK">Last week</option>
-												<option value="THIS_MONTH">This month</option>
-												<option value="LAST_MONTH" selected="selected">Last month</option>
-												<option value="THIS_YEAR">This year</option>
-												<option value="LAST_YEAR">Last year</option>
-												<option value="NO_INTERVAL">(All past entries)</option>
-											</c:if>
-											<c:if test="${interval == 'THIS_YEAR'}">
-												<option value="TODAY">Today</option>
-												<option value="YESTERDAY">Yesterday</option>
-												<option value="THIS_WEEK">This week</option>
-												<option value="LAST_WEEK">Last week</option>
-												<option value="THIS_MONTH">This month</option>
-												<option value="LAST_MONTH">Last month</option>
-												<option value="THIS_YEAR" selected="selected">This year</option>
-												<option value="LAST_YEAR">Last year</option>
-												<option value="NO_INTERVAL">(All past entries)</option>
-											</c:if>
-											<c:if test="${interval == 'LAST_YEAR'}">
-												<option value="TODAY">Today</option>
-												<option value="YESTERDAY">Yesterday</option>
-												<option value="THIS_WEEK">This week</option>
-												<option value="LAST_WEEK">Last week</option>
-												<option value="THIS_MONTH">This month</option>
-												<option value="LAST_MONTH">Last month</option>
-												<option value="THIS_YEAR">This year</option>
-												<option value="LAST_YEAR" selected="selected">Last year</option>
-												<option value="NO_INTERVAL">(All past entries)</option>
-											</c:if>
-											<c:if test="${interval == 'NO_INTERVAL'}">
-												<option value="TODAY">Today</option>
-												<option value="YESTERDAY">Yesterday</option>
-												<option value="THIS_WEEK">This week</option>
-												<option value="LAST_WEEK">Last week</option>
-												<option value="THIS_MONTH">This month</option>
-												<option value="LAST_MONTH">Last month</option>
-												<option value="THIS_YEAR">This year</option>
-												<option value="LAST_YEAR">Last year</option>
-												<option value="NO_INTERVAL" selected="selected">(All past entries)</option>
-											</c:if>
 										</select>
 									</td>
 								</tr>
@@ -507,7 +401,6 @@ table.reportTable tr.total th.total {
 						</div>
 						<div id="subItemContent">
 						<div id="listProjectHours" style="">
-						<c:set var="totalSum" value="${null}" />
 						<table class="reportTable" cellpadding="0" cellspacing="0">
 							<tbody>
 								<tr>
@@ -527,7 +420,6 @@ table.reportTable tr.total th.total {
 										<th class="product first" colspan="3"><c:out value="${prod.backlog.name}"/></th>
 										</c:if>
 										<th class="product"><c:out value="${prod.hourTotal}"/></th> 
-										<c:set var="totalSum" value="${aef:calculateAFTimeSum(totalSum, prod.hourTotal)}" />
 									</tr>
 									<c:if test="${!empty prod.hourEntries}">
 										<c:set var="heDivId" value="${heDivId + 1}" scope="page" />
@@ -681,7 +573,7 @@ table.reportTable tr.total th.total {
 									<th class="total">Query total</th>
 									<th class="total">&nbsp;</th>
 									<th class="total">&nbsp;</th>
-									<th class="total"><c:out value="${totalSum}"/></th>
+									<th class="total"><c:out value="${totalSpentTime}"/></th>
 								</tr>
 							</tbody>
 						</table>

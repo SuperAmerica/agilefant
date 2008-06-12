@@ -250,134 +250,6 @@
 		</tr>
 	</tbody>
 </table>
-<%---UGLY!!! Refactor this---%>
-<style>
-
-table.reportTable {
-	width:100%;
-	padding:3px;
-}
-
-table.reportTable tr {
-	
-}
-
-table.reportTable tr th {
-	text-align:left;
-	background-color:#b2b2b2;
-	padding:4px;
-}
-
-table.reportTable tr th.product {
-	text-align:left;
-	background-color:#cccccc;
-	padding:4px;
-	font-weight:normal;
-	border-top:1px solid #000000;
-}
-
-table.reportTable tr th.project {
-	text-align:left;
-	background-color:#dddddd;
-	padding:4px;
-	font-weight:normal;
-}
-
-table.reportTable tr th.iteration {
-	text-align:left;
-	background-color:#e6e6e6;
-	padding:4px;
-	font-weight:normal;
-}
-
-table.reportTable tr th.backlogitem {
-	text-align:left;
-	background-color:#f5f5f5;
-	padding:4px;
-	font-weight:normal;
-}
-
-table.reportTable tr.backlogitem {
-	display:none;
-}
-
-table.reportTable tr.special th {
-	background-color:#e6eee6 !important;
-	background-color:#e4ecff !important;
-}
-
-table.reportTable tr.special th.first {
-	background-image:url(static/img/special-hour-entry-report.gif);
-	background-repeat:no-repeat;
-	background-position:16px 9px;
-	padding-left:31px;
-}
-
-table.reportTable tr.special.backlogitemshead th.first {
-	font-weight:normal;
-}
-
-table.reportTable tr.special.hourentryhead th {
-	border-top:0px solid #000000;
-}
-
-tr.leftborder .first {
-	border-left:4px solid #b2d8b2; /* #dddda8 */
-	border-left:4px solid #b2caff;
-}
-
-tr.leftborder {
-	display:none;
-}
-
-table.reportTable tr th.backlogitem a,
-table.reportTable tr th.iteration a,
-table.reportTable tr th.project a,
-table.reportTable tr th.product a {
-	text-decoration:none;
-	color:blue;
-	cursor:pointer;
-}
-
-table.reportTable tr th.backlogitem a:hover,
-table.reportTable tr th.iteration a:hover,
-table.reportTable tr th.project a:hover,
-table.reportTable tr th.product a:hover {
-	text-decoration:underline;
-	color:blue;
-}
-
-table.reportTable tr th.backlogitem.second {
-	font-weight:bold;
-}
-
-table.reportTable tr th.backlogitem.third {
-	font-weight:bold;
-}
-
-table.reportTable tr.hourentries {
-	display:none;
-}
-
-table.reportTable tr td.hourentry {
-	text-align:left;
-	background-color:#ffffff;
-	padding:4px;
-	font-weight:normal;
-}
-
-table.reportTable tr td.hourentry.first {
-	padding-left:30px;
-}
-
-table.reportTable tr.total th.total {
-	border-top:1px solid #000000;
-}
-
-				</style>
-
-
-<%--/UGLY!!! --%>
 
 <%--show the tree--%>
 <c:if test="${!empty products}">
@@ -425,7 +297,7 @@ table.reportTable tr.total th.total {
 										<c:set var="heDivId" value="${heDivId + 1}" scope="page" />
 										<tr class="backlogitem prod${divId} special hourentryhead leftborder toggleall">
 											<th class="backlogitem first" colspan="3"><a onclick="javascript:$('.hour${heDivId}').toggle();">Logged effort</a></th>
-											<th class="backlogitem fourth">summa</th>
+											<th class="backlogitem fourth"><c:out value="${prod.spentHours}"/></th>
 										</tr>
 										<c:forEach items="${prod.hourEntries}" var="he">
 											<tr class="hourentries hour${heDivId} prod${divId} leftborder toggleall">
@@ -478,7 +350,7 @@ table.reportTable tr.total th.total {
 												<c:set var="heDivId" value="${heDivId + 1}" scope="page" />
 												<tr class="backlogitem proj${divId} special hourentryhead leftborder toggleall">
 														<th class="backlogitem first" colspan="3"><a onclick="javascript:$('.hour${heDivId}').toggle();">Logged effort</a></th>
-														<th class="backlogitem fourth">summa</th>
+														<th class="backlogitem fourth"><c:out value="${proj.spentHours}"/></th>
 												</tr>
 												<c:forEach items="${proj.hourEntries}" var="he">
 													<tr class="hourentries hour${heDivId} proj${divId} leftborder toggleall">
@@ -531,7 +403,7 @@ table.reportTable tr.total th.total {
 														<c:set var="heDivId" value="${heDivId + 1}" scope="page" />
 														<tr class="backlogitem proj${divId} special hourentryhead leftborder toggleall">
 																<th class="backlogitem first" colspan="3"><a onclick="javascript:$('.hour${heDivId}').toggle();">Logged effort</a></th>
-																<th class="backlogitem fourth">summa</th>
+																<th class="backlogitem fourth"><c:out value="${iter.spentHours}"/></th>
 														</tr>
 														<c:forEach items="${iter.hourEntries}" var="he">
 															<tr class="hourentries hour${heDivId} proj${divId} leftborder toggleall">

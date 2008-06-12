@@ -153,7 +153,6 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
     public TimesheetLoggable getTarget() {
         //TODO: Ugly workaround, refactor?
         this.target = getParent();
-        System.out.println(""+this.target);
         return target;
     }
 

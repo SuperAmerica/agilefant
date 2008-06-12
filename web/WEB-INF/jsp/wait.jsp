@@ -3,7 +3,7 @@
 <html>
   <head>
     <title>Please wait</title>
-    <meta http-equiv="refresh" content="5;url=<ww:url includeParams="all" />"/>
+    <meta http-equiv="refresh" content="5;url=<ww:url includeParams="get" includeContext="false" />"/>
     <style type="text/css">	
 
 html {
@@ -44,6 +44,16 @@ div#container div#header img {
 div#container div#header h1 {
 	float:left;
 	padding:10px 10px 10px 10px;
+	-x-system-font:none;
+	font-family:Lucida,sans-serif;
+	font-size:30pt;
+	font-size-adjust:none;
+	font-stretch:normal;
+	font-style:italic;
+	font-variant:normal;
+	font-weight:bold;
+	line-height:normal;
+	margin:0px 0px 10px;
 }
 
 div#container div#content {
@@ -89,7 +99,7 @@ div#container div#content div#text {
 			<br/>
 			This may take several minutes.
 			<br/>
-				Click <a href="<ww:url includeParams="all" />">here</a> if this page does not reload automatically.
+				Click <a href="<ww:url includeParams="get" includeContext="false" />">here</a> if this page does not reload automatically.
 		</div>	
 	</div>
 </div>

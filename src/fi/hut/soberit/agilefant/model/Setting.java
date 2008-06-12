@@ -18,7 +18,16 @@ import fi.hut.soberit.agilefant.web.page.PageItem;
 /**
  * Hibernate entity bean representing a Setting.
  * <p>
- * @todo Add description here
+ * Settings are global options that can be used for instance to enable or disable
+ * features in Agilefant. For example the whole hour reporting functionality can be
+ * enabled or disabled using the Settings system.
+ * </p>
+ * <p>
+ * Each setting includes a name, a description and a String-type value.
+ * </p>
+ * @warning The settings page is currently hard-coded. If you want to use the name or description
+ *          fields of settings, you need to write the functionality to settings.jsp. 
+ * 
  */
 @BatchSize(size=20)
 @Entity

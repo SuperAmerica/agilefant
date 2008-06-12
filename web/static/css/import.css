@@ -868,7 +868,7 @@ table.reportTable tr.special th {
 }
 
 table.reportTable tr.special th.first {
-	background-image:url(static/img/special-hour-entry-report.gif);
+	background-image:url(../img/special-hour-entry-report.gif);
 	background-repeat:no-repeat;
 	background-position:16px 9px;
 	padding-left:31px;

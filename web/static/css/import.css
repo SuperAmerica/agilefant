@@ -931,6 +931,16 @@ table.reportTable tr td.hourentry.first {
 	padding-left:30px;
 }
 
+table.reportTable tr td.hourentry.second {
+	width:auto;
+	white-space:nowrap;
+}
+
+table.reportTable tr td.hourentry.third {
+	width:auto;
+	white-space:nowrap;
+}
+
 table.reportTable tr.total th.total {
 	border-top:1px solid #000000;
 }

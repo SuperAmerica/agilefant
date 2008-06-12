@@ -311,7 +311,7 @@
 									<c:if test="${!empty prod.childBacklogItems}">
 										<tr class="backlogitem prod${divId} special backlogitemshead leftborder toggleall">
 											<th class="backlogitem first" colspan="3">Backlog items</th>
-											<th class="backlogitem fourth">${aef:html(prod.hoursForChildBacklogItems}</th>
+											<th class="backlogitem fourth">${aef:html(prod.hoursForChildBacklogItems)}</th>
 										</tr>
 										<c:forEach items="${prod.childBacklogItems}" var="bli">
 											<c:set var="heDivId" value="${heDivId + 1}" scope="page" />

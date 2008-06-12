@@ -64,6 +64,9 @@ public class TimesheetBusinessImpl implements TimesheetBusiness {
             throw new IllegalArgumentException("Error in parsing date");
         }
         
+        if(this.startDate != null && this.endDate != null && this.startDate.after(this.endDate))
+            throw new IllegalArgumentException("End date cannot be before start date");
+        
         this.userIds = userIds;
         
         roots.clear();

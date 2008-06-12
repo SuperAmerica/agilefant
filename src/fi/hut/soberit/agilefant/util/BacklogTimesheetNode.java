@@ -41,10 +41,10 @@ public class BacklogTimesheetNode extends TimesheetNode {
             if(childBacklogs != null){
                 for(PageItem childBacklog : childBacklogs){
                     if((node = tsb.getNodes().get(childBacklog.getId())) != null){
-                        this.childBacklogs.add(node);
+                        this.addChildBacklog(node);
                     }else{
                         node = new BacklogTimesheetNode((Backlog) childBacklog, true, tsb);
-                        this.childBacklogs.add(node);
+                        this.addChildBacklog(node);
                         tsb.getNodes().put(childBacklog.getId(), node);
                     }
                 }
@@ -53,7 +53,7 @@ public class BacklogTimesheetNode extends TimesheetNode {
             Collection<BacklogItem> backlogItems = backlog.getBacklogItems();
             if(backlogItems != null){
                 for(BacklogItem backlogItem : backlogItems){
-                    this.childBacklogItems.add(new BacklogItemTimesheetNode(backlogItem, tsb));
+                    this.addChildBacklogItem(new BacklogItemTimesheetNode(backlogItem, tsb));
                 }
             }
         }
@@ -78,7 +78,7 @@ public class BacklogTimesheetNode extends TimesheetNode {
      * Add a backlog item under this backlog
      * @param node The child backlog item node
      */
-    public void addChildBacklogItems(BacklogItemTimesheetNode node){
+    public void addChildBacklogItem(BacklogItemTimesheetNode node){
         this.childBacklogItems.add(node);
     }
     

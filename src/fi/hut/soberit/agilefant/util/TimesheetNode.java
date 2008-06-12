@@ -18,8 +18,7 @@ public abstract class TimesheetNode {
     protected List<BacklogTimesheetNode> childBacklogs;
     protected List<BacklogItemTimesheetNode> childBacklogItems;
     protected List<? extends HourEntry> hourEntries;
-    private AFTime spentHours; 
-    private AFTime hourTotal;
+    private AFTime spentHours, hoursForChildBacklogItems, hoursForChildBacklogs, hourTotal;
 
     /**
      * Get the effort marked directly to this node
@@ -39,23 +38,49 @@ public abstract class TimesheetNode {
     }
     
     /**
+     * Get the total sum of effort spent for this node's child backlog items
+     * @return The total sum of effort spent for this node's child backlog items
+     */
+    public AFTime getHoursForChildBacklogItems(){
+        if(hoursForChildBacklogItems == null){
+            hoursForChildBacklogItems = new AFTime(0);
+            
+            if(childBacklogItems != null){
+                for(TimesheetNode child : childBacklogItems)
+                    hoursForChildBacklogItems.add(child.getHourTotal());
+            }
+        }
+        
+        return hoursForChildBacklogItems;
+    }
+    
+    /**
+     * Get the total sum of effort spent for this node's child backlogs
+     * @return The total sum of effort spent for this node's child backlogs
+     */
+    public AFTime getHoursForChildBacklogs(){
+        if(hoursForChildBacklogs == null){
+            hoursForChildBacklogs = new AFTime(0);
+            
+            if(childBacklogs != null)
+                for(TimesheetNode child : childBacklogs)
+                    hoursForChildBacklogs.add(child.getHourTotal());
+        }
+        
+        return hoursForChildBacklogs;
+    }
+    
+    /**
      * Get the total of effort spent for this node and all its children. 
      * @return The total of effort spent for this node and its children.
      */
     public AFTime getHourTotal(){
         if(hourTotal == null){
             hourTotal = new AFTime(0);
-            
-            if(childBacklogs != null) {
-                for(TimesheetNode child : childBacklogs)
-                    hourTotal.add(child.getHourTotal());
-                
-                for(TimesheetNode child : childBacklogItems)
-                    hourTotal.add(child.getHourTotal());
-            }
-            
-            hourTotal.add(getSpentHours());
 
+            hourTotal.add(getHoursForChildBacklogs());
+            hourTotal.add(getHoursForChildBacklogItems());
+            hourTotal.add(getSpentHours());
         }
         
         return hourTotal;

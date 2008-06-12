@@ -31,7 +31,7 @@
 				<ww:param name="userId" value="${row.id}" />
 			</ww:url>
 			<ww:a href="%{deleteLink}" onclick="return confirmDelete()">
-				<img src="static/img/delete_18.png" alt="Edit" title="Edit" />
+				<img src="static/img/delete_18.png" alt="Delete" title="Delete" />
 			</ww:a>
 		</c:if>
 	</display:column>
@@ -63,7 +63,7 @@
             <ww:param name="userId" value="${row.id}" />
         </ww:url>
         <ww:a href="%{deleteLink}" onclick="return confirmDelete()">
-            <img src="static/img/delete_18.png" alt="Edit" title="Edit" />
+            <img src="static/img/delete_18.png" alt="Delete" title="Delete" />
         </ww:a>
 	</display:column>
 </display:table></p>
@@ -94,7 +94,7 @@
 					<ww:param name="teamId" value="${row.id}" />
 				</ww:url>
 				<ww:a href="%{deleteLink}" onclick="return confirmDelete()">
-				    <img src="static/img/delete_18.png" alt="Edit" title="Edit" />
+				    <img src="static/img/delete_18.png" alt="Delete" title="Delete" />
 				</ww:a>
 			</display:column>
 		</display:table>

@@ -34,7 +34,7 @@ public class TimesheetBusinessTest extends TestCase {
     private Iteration iteration1, iteration2, iteration3;
     private ArrayList<BacklogItem> bliList;
     private ArrayList<HourEntry> heList; 
-    private User user1, user2;
+    private User user1, user2, user3;
     private HourEntryBusiness hourEntryBusiness;
     private BacklogDAO backlogDAO;
     private TimesheetBusinessImpl timesheetBusiness;
@@ -67,7 +67,10 @@ public class TimesheetBusinessTest extends TestCase {
         timesheetBusiness.setHourEntryBusiness(hourEntryBusiness);
     }
 
-    private void treeGeneration(int id1, int id2) {
+    /**
+     * TreeGeneration test for testCompareTrees1.
+     */
+    private void treeGeneration1(int id1, int id2) {
         int[] backlogIds = { id1, id2};
         HashSet<Integer> set = new HashSet<Integer>();
         List<BacklogTimesheetNode> result = timesheetBusiness.generateTree(backlogIds, "", "", set);
@@ -84,6 +87,43 @@ public class TimesheetBusinessTest extends TestCase {
         for (BacklogTimesheetNode node : current.getChildBacklogs()) {
             assertTrue("Invalid children", project1.getChildren().contains(node.getBacklog()));
         }
+    }
+    
+    /**
+     * Checks one generated tree node for treeGeneration2.
+     */
+    private void checkTree2(List<BacklogTimesheetNode> result, int rootId) {
+        BacklogTimesheetNode current = result.get(rootId);
+        if (current.getBacklog() == product1) {
+            assertEquals("Wrong number of child backlogs for project1.", 0, current.getChildBacklogs().size());
+        } else if (current.getBacklog() == product2) { 
+            assertEquals("Wrong number of child backlogs for project2.", 1, current.getChildBacklogs().size());
+            current = current.getChildBacklogs().get(0);
+            assertEquals("Product2's child backlog wasn't project1", project1, current.getBacklog());
+            assertEquals("Project1 should only have 1 child backlog.", 1, current.getChildBacklogs().size());
+            current = current.getChildBacklogs().get(0);
+            assertEquals("Project1's only child backlog wasn't Iteration3.", iteration3, current.getBacklog());
+        } else {
+            fail("Invalid root node " + rootId);
+        }
+    }
+    
+    /**
+     * TreeGeneration test for testCompareTrees2.
+     */
+    private void treeGeneration2(int id1, int id2) {
+        int[] backlogIds = { id1, id2};
+        HashSet<Integer> set = new HashSet<Integer>();
+        List<BacklogTimesheetNode> result = timesheetBusiness.generateTree(backlogIds, "", "", set);
+        
+        assertEquals(2, result.size());
+        
+        if (result.get(0) == result.get(1)) {
+            fail("Duplicate backlogs.");
+        }
+        
+        checkTree2(result, 0);
+        checkTree2(result, 1);
     }
     
     public void testSums_roots(){
@@ -108,16 +148,166 @@ public class TimesheetBusinessTest extends TestCase {
         verify(hourEntryBusiness);
     }
     
+    public void testSums_user1Filter() {
+        replay(backlogDAO);
+        replay(hourEntryBusiness);
+        
+        List<BacklogTimesheetNode> roots;
+        int[] backlogIds = {product1.getId(), product2.getId()};
+        Set<Integer> userIds = new HashSet<Integer>();
+        userIds.add(user1.getId());
+        roots = timesheetBusiness.generateTree(backlogIds, "", "", userIds);
+        
+        BacklogTimesheetNode product1Node = roots.get(0);
+        BacklogTimesheetNode product2Node = roots.get(1);
+        
+        assertEquals(0, product1Node.getHourTotal().getTime());
+        assertEquals(326700, product2Node.getHourTotal().getTime());
+        assertEquals(326700, timesheetBusiness.calculateRootSum(roots).getTime());
+        
+        // verify(backlogDAO); Does not get all backlogs through backlogDAO, verify should fail
+        verify(hourEntryBusiness);
+    }
+    
+    public void testSums_user2Filter() {
+        replay(backlogDAO);
+        replay(hourEntryBusiness);
+        
+        List<BacklogTimesheetNode> roots;
+        int[] backlogIds = {product1.getId(), product2.getId()};
+        Set<Integer> userIds = new HashSet<Integer>();
+        userIds.add(user2.getId());
+        roots = timesheetBusiness.generateTree(backlogIds, "", "", userIds);
+        
+        BacklogTimesheetNode product1Node = roots.get(0);
+        BacklogTimesheetNode product2Node = roots.get(1);
+        
+        assertEquals(0, product1Node.getHourTotal().getTime());
+        assertEquals(164760, product2Node.getHourTotal().getTime());
+        assertEquals(164760, timesheetBusiness.calculateRootSum(roots).getTime());
+        
+        // verify(backlogDAO); Does not get all backlogs through backlogDAO, verify should fail
+        verify(hourEntryBusiness);
+    }
+    
+    public void testSums_timeFilter() {
+        replay(backlogDAO);
+        replay(hourEntryBusiness);
+        
+        List<BacklogTimesheetNode> roots;
+        int[] backlogIds = {product1.getId(), product2.getId()};
+        Set<Integer> userIds = new HashSet<Integer>();
+        userIds.add(user1.getId());
+        userIds.add(user2.getId());
+        roots = timesheetBusiness.generateTree(backlogIds, "1900-01-01 10:00", "2006-12-12 10:00", userIds);
+        
+        BacklogTimesheetNode product1Node = roots.get(0);
+        BacklogTimesheetNode product2Node = roots.get(1);
+        
+        assertEquals(0, product1Node.getHourTotal().getTime());
+        assertEquals(1020, product2Node.getHourTotal().getTime());
+        assertEquals(1020, timesheetBusiness.calculateRootSum(roots).getTime());
+        
+        // verify(backlogDAO); Does not get all backlogs through backlogDAO, verify should fail
+        verify(hourEntryBusiness);
+    }
+    
+    public void testSums_User1TimeFilter() {
+        replay(backlogDAO);
+        replay(hourEntryBusiness);
+        
+        List<BacklogTimesheetNode> roots;
+        int[] backlogIds = {product1.getId(), product2.getId()};
+        Set<Integer> userIds = new HashSet<Integer>();
+        userIds.add(user1.getId());
+        roots = timesheetBusiness.generateTree(backlogIds, "2007-01-01 12:59", "2007-01-01 13:01", userIds);
+        
+        BacklogTimesheetNode product1Node = roots.get(0);
+        BacklogTimesheetNode product2Node = roots.get(1);
+        
+        assertEquals(0, product1Node.getHourTotal().getTime());
+        assertEquals(0, product2Node.getHourTotal().getTime());
+        assertEquals(0, timesheetBusiness.calculateRootSum(roots).getTime());
+        
+        // verify(backlogDAO); Does not get all backlogs through backlogDAO, verify should fail
+        verify(hourEntryBusiness);
+    }
+    
+    public void testSums_NoUserTimeFilter() {
+        replay(backlogDAO);
+        replay(hourEntryBusiness);
+        
+        List<BacklogTimesheetNode> roots;
+        int[] backlogIds = {product1.getId(), product2.getId()};
+        Set<Integer> userIds = new HashSet<Integer>();
+        roots = timesheetBusiness.generateTree(backlogIds, "2008-06-05 12:59", "2008-06-10 13:01", userIds);
+        
+        BacklogTimesheetNode product1Node = roots.get(0);
+        BacklogTimesheetNode product2Node = roots.get(1);
+        
+        assertEquals(0, product1Node.getHourTotal().getTime());
+        assertEquals(11520, product2Node.getHourTotal().getTime());
+        assertEquals(11520, timesheetBusiness.calculateRootSum(roots).getTime());
+        
+        // verify(backlogDAO); Does not get all backlogs through backlogDAO, verify should fail
+        verify(hourEntryBusiness);
+    }
+    
+    public void testSums_UsersTimeFilter() {
+        replay(backlogDAO);
+        replay(hourEntryBusiness);
+        
+        List<BacklogTimesheetNode> roots;
+        int[] backlogIds = {product1.getId(), product2.getId()};
+        Set<Integer> userIds = new HashSet<Integer>();
+        userIds.add(user1.getId());
+        userIds.add(user2.getId());
+        roots = timesheetBusiness.generateTree(backlogIds, "2008-06-12 12:59", "2008-06-13 13:01", userIds);
+        
+        BacklogTimesheetNode product1Node = roots.get(0);
+        BacklogTimesheetNode product2Node = roots.get(1);
+        
+        assertEquals(0, product1Node.getHourTotal().getTime());
+        assertEquals(92160, product2Node.getHourTotal().getTime());
+        assertEquals(92160, timesheetBusiness.calculateRootSum(roots).getTime());
+        
+        // verify(backlogDAO); Does not get all backlogs through backlogDAO, verify should fail
+        verify(hourEntryBusiness);
+    }
+    
+    public void testSums_User3Filter() {
+        replay(backlogDAO);
+        replay(hourEntryBusiness);
+        
+        List<BacklogTimesheetNode> roots;
+        int[] backlogIds = {product1.getId(), product2.getId()};
+        Set<Integer> userIds = new HashSet<Integer>();
+        userIds.add(user3.getId());
+        roots = timesheetBusiness.generateTree(backlogIds, "", "", userIds);
+        
+        BacklogTimesheetNode product1Node = roots.get(0);
+        BacklogTimesheetNode product2Node = roots.get(1);
+        
+        assertEquals(0, product1Node.getHourTotal().getTime());
+        assertEquals(0, product2Node.getHourTotal().getTime());
+        assertEquals(0, timesheetBusiness.calculateRootSum(roots).getTime());
+        
+        // verify(backlogDAO); Does not get all backlogs through backlogDAO, verify should fail
+        verify(hourEntryBusiness);
+    }
+    
     public void testCompareTrees1() {
         replay(backlogDAO);
         replay(hourEntryBusiness);
-        treeGeneration(project1.getId(), iteration1.getId());
+        treeGeneration1(project1.getId(), iteration1.getId());
+        treeGeneration1(iteration1.getId(), project1.getId());
     }
     
     public void testCompareTrees2() {
         replay(backlogDAO);
         replay(hourEntryBusiness);
-        treeGeneration(iteration1.getId(), project1.getId());
+        treeGeneration2(product1.getId(), iteration3.getId());
+        treeGeneration2(iteration3.getId(), product1.getId());
     }
     
     /**
@@ -193,7 +383,7 @@ public class TimesheetBusinessTest extends TestCase {
     private Product setUpProduct(int id) {
         Product prod = new Product();
         prod.setId(id);
-        expect(backlogDAO.get(id)).andReturn(prod);
+        expect(backlogDAO.get(id)).andReturn(prod).atLeastOnce();
         return prod;
     }
     
@@ -228,7 +418,7 @@ public class TimesheetBusinessTest extends TestCase {
         proj.setId(id);
         proj.setProduct(prod);
         prod.getProjects().add(proj);
-        expect(backlogDAO.get(id)).andReturn(proj);
+        expect(backlogDAO.get(id)).andReturn(proj).atLeastOnce();
         return proj;
     }
     
@@ -240,7 +430,7 @@ public class TimesheetBusinessTest extends TestCase {
         iter.setId(id);
         iter.setProject(proj);
         proj.getIterations().add(iter);
-        expect(backlogDAO.get(id)).andReturn(iter);
+        expect(backlogDAO.get(id)).andReturn(iter).atLeastOnce();
         return iter;
     }
     
@@ -306,6 +496,8 @@ public class TimesheetBusinessTest extends TestCase {
         user1.setId(1);
         user2 = new User();
         user2.setId(2);
+        user3 = new User();
+        user3.setId(3);
     }
     
     /**

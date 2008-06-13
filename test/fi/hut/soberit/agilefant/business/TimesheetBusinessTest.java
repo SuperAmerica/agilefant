@@ -8,6 +8,7 @@ import static org.easymock.EasyMock.verify;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.db.UserDAO;
@@ -31,14 +32,10 @@ public class TimesheetBusinessTest extends TestCase {
     private ArrayList<HourEntry> heList; 
     private User user1, user2;
     private HourEntryBusiness hourEntryBusiness;
-    private UserBusiness userBusiness;
-    private UserDAO userDAO;
     private BacklogDAO backlogDAO;
     
     public void setUp() {
         hourEntryBusiness = createMock(HourEntryBusiness.class);
-        userBusiness = createMock(UserBusiness.class);
-        userDAO = createMock(UserDAO.class);
         backlogDAO = createMock(BacklogDAO.class);
         product1 = setUpProduct(1);
         product2 = setUpProduct(2);
@@ -53,16 +50,28 @@ public class TimesheetBusinessTest extends TestCase {
     }
 
     public void testSomething() {
-        
+//        int[] backlogIds = {iteration1.getId(), project1.getId()};
+
     }
     
     /**
      * Inserts all BacklogHourEntries to project2.
      */
     private void insertAllBacklogHourEntries() {
+        ArrayList<BacklogHourEntry> entries = new ArrayList<BacklogHourEntry>();
         insertBacklogHourEntry(heList.get(11), project2);
+        entries.add((BacklogHourEntry) heList.get(11));
         insertBacklogHourEntry(heList.get(12), project2);
+        entries.add((BacklogHourEntry) heList.get(12));
         insertBacklogHourEntry(heList.get(13), project2);
+        entries.add((BacklogHourEntry) heList.get(13));
+        expect(hourEntryBusiness.getEntriesByParent(project2)).andReturn(entries).atLeastOnce();
+        expect(hourEntryBusiness.getEntriesByParent(product1)).andReturn(null).atLeastOnce();
+        expect(hourEntryBusiness.getEntriesByParent(product2)).andReturn(null).atLeastOnce();
+        expect(hourEntryBusiness.getEntriesByParent(project1)).andReturn(null).atLeastOnce();
+        expect(hourEntryBusiness.getEntriesByParent(iteration1)).andReturn(null).atLeastOnce();
+        expect(hourEntryBusiness.getEntriesByParent(iteration2)).andReturn(null).atLeastOnce();
+        expect(hourEntryBusiness.getEntriesByParent(iteration3)).andReturn(null).atLeastOnce();
     }
     
     /**
@@ -80,6 +89,20 @@ public class TimesheetBusinessTest extends TestCase {
         insertBacklogItemHourEntry(heList.get(8), bliList.get(7));
         insertBacklogItemHourEntry(heList.get(9), bliList.get(7));
         insertBacklogItemHourEntry(heList.get(10), bliList.get(8));
+        
+        for (int i = 0; i <= 8; i++) {
+            this.backlogItemHourEntriesToDAO(bliList.get(i));
+        }
+    }
+    
+    private void backlogItemHourEntriesToDAO(BacklogItem bli) {
+        ArrayList<BacklogItemHourEntry> list = new ArrayList<BacklogItemHourEntry>();
+        for (HourEntry he : heList) {
+            if(he instanceof BacklogItemHourEntry && ((BacklogItemHourEntry)he).getBacklogItem() == bli) { 
+                list.add((BacklogItemHourEntry)he);
+            }
+        }
+        expect(hourEntryBusiness.getEntriesByParent(bli)).andReturn(list).atLeastOnce();  
     }
     
     /**
@@ -104,11 +127,12 @@ public class TimesheetBusinessTest extends TestCase {
     private Product setUpProduct(int id) {
         Product prod = new Product();
         prod.setId(id);
+        expect(backlogDAO.get(id)).andReturn(prod);
         return prod;
     }
     
     /**
-     * Inserts all the created BLIs into their specified backlogs.
+     * Inserts all the created BLIs into backlogs.
      */
     private void insertAllBacklogItems() {
         insertBliIntoBacklog(bliList.get(0), iteration1);
@@ -138,6 +162,7 @@ public class TimesheetBusinessTest extends TestCase {
         proj.setId(id);
         proj.setProduct(prod);
         prod.getProjects().add(proj);
+        expect(backlogDAO.get(id)).andReturn(proj);
         return proj;
     }
     
@@ -149,6 +174,7 @@ public class TimesheetBusinessTest extends TestCase {
         iter.setId(id);
         iter.setProject(proj);
         proj.getIterations().add(iter);
+        expect(backlogDAO.get(id)).andReturn(iter);
         return iter;
     }
     
@@ -214,7 +240,6 @@ public class TimesheetBusinessTest extends TestCase {
         user1.setId(1);
         user2 = new User();
         user2.setId(2);
-        
     }
     
     /**

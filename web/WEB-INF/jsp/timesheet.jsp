@@ -288,8 +288,8 @@
 							<tbody>
 								<tr>
 									<th>Name / Comment</th>
-									<th>&nbsp;</th>
-									<th>&nbsp;</th>
+									<th style="width:115px;">&nbsp;</th>
+									<th style="width:125px;">&nbsp;</th>
 									<th style="width:120px;">Effort spent</th>
 								</tr>
 								<aef:timesheetItem nodes="${products}" />

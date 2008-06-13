@@ -934,12 +934,6 @@ table.reportTable tr td.hourentry.first {
 }
 
 table.reportTable tr td.hourentry.second {
-	width:auto;
-	white-space:nowrap;
-}
-
-table.reportTable tr td.hourentry.third {
-	width:auto;
 	white-space:nowrap;
 }
 

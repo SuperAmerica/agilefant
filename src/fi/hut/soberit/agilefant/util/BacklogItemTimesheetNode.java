@@ -1,7 +1,10 @@
 package fi.hut.soberit.agilefant.util;
 
+import java.util.List;
+
 import fi.hut.soberit.agilefant.business.TimesheetBusiness;
 import fi.hut.soberit.agilefant.model.BacklogItem;
+import fi.hut.soberit.agilefant.model.HourEntry;
 
 /**
  * A class representing a backlog item node in the timesheet tree.
@@ -20,6 +23,16 @@ public class BacklogItemTimesheetNode extends TimesheetNode {
     public BacklogItemTimesheetNode(BacklogItem backlogItem, TimesheetBusiness tsb){
         this.backlogItem = backlogItem;
         hourEntries = tsb.getFilteredHourEntries(backlogItem);
+    }
+    
+    /**
+     * This constructor is only used with unit tests
+     * @param backlogItem The backlog item to be stored in this node
+     * @param hourEntries The hour entries for this backlog item
+     */
+    public BacklogItemTimesheetNode(BacklogItem backlogItem, List<? extends HourEntry> hourEntries){
+        this.backlogItem = backlogItem;
+        this.hourEntries = hourEntries;
     }
     
     /**

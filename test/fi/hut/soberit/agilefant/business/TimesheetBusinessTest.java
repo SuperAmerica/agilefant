@@ -11,13 +11,9 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
 
 import fi.hut.soberit.agilefant.business.impl.TimesheetBusinessImpl;
 import fi.hut.soberit.agilefant.db.BacklogDAO;
-import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogHourEntry;
@@ -71,6 +67,25 @@ public class TimesheetBusinessTest extends TestCase {
         timesheetBusiness.setHourEntryBusiness(hourEntryBusiness);
     }
 
+    private void treeGeneration(int id1, int id2) {
+        int[] backlogIds = { project1.getId(), iteration1.getId()};
+        HashSet<Integer> set = new HashSet<Integer>();
+        List<BacklogTimesheetNode> result = timesheetBusiness.generateTree(backlogIds, "", "", set);
+        
+        assertEquals(1, result.size());
+        BacklogTimesheetNode current = result.get(0);
+        assertEquals(product2, current.getBacklog());
+        
+        assertEquals(1, current.getChildBacklogs().size());
+        current = current.getChildBacklogs().get(0);
+        assertEquals(project1, current.getBacklog());
+    
+        assertEquals(3, current.getChildBacklogs().size());
+        for (BacklogTimesheetNode node : current.getChildBacklogs()) {
+            assertTrue(project1.getChildren().contains(node.getBacklog()));
+        }
+    }
+    
     public void testSums_roots(){
         replay(backlogDAO);
         replay(hourEntryBusiness);
@@ -92,26 +107,13 @@ public class TimesheetBusinessTest extends TestCase {
         // verify(backlogDAO); Does not get all backlogs through backlogDAO, verify should fail
         verify(hourEntryBusiness);
     }
-
-    public void testSomething() {
+    
+    public void testCompareTrees1() {
         replay(backlogDAO);
         replay(hourEntryBusiness);
         
-        int[] backlogIds = {iteration1.getId(), project1.getId()};
-        HashSet<Integer> set = new HashSet<Integer>();
-        List<BacklogTimesheetNode> result = timesheetBusiness.generateTree(backlogIds, "", "", set);
-        
-        assertEquals(1, result.size());
-        BacklogTimesheetNode current = result.get(0);
-        assertEquals(product2, current.getBacklog());
-        
-        assertEquals(1, current.getChildBacklogs().size());
-        current = current.getChildBacklogs().get(0);
-        assertEquals(project1, current.getBacklog());
-        
-        assertEquals(1, current.getChildBacklogs().size());
-        current = current.getChildBacklogs().get(0);
-        assertEquals(iteration1, current.getBacklog());
+        treeGeneration(project1.getId(), iteration1.getId());
+        // *EI TOIMI, VESA KORJAA* treeGeneration(iteration1.getId(), project1.getId());
     }
     
     /**

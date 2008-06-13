@@ -163,6 +163,9 @@ public class TimesheetBusinessImpl implements TimesheetBusiness {
      */
     private boolean passesFilters(HourEntry hourEntry){
 
+        if(hourEntry.getDate() == null)
+            return false;
+        
         if((this.startDate != null && hourEntry.getDate().before(this.startDate)) | 
            (this.endDate != null && hourEntry.getDate().after(this.endDate)))
             return false;

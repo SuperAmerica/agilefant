@@ -8,6 +8,9 @@ import static org.easymock.EasyMock.verify;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -25,6 +28,7 @@ import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.util.*;
 import fi.hut.soberit.agilefant.util.BacklogTimesheetNode;
 import junit.framework.TestCase;
 
@@ -43,6 +47,16 @@ public class TimesheetBusinessTest extends TestCase {
         timesheetBusiness = new TimesheetBusinessImpl();
         hourEntryBusiness = createMock(HourEntryBusiness.class);
         backlogDAO = createMock(BacklogDAO.class);
+        timesheetBusiness = new TimesheetBusinessImpl();
+        createData();
+        timesheetBusiness.setHourEntryBusiness(hourEntryBusiness);
+        timesheetBusiness.setBacklogDAO(backlogDAO);
+    }
+    
+    /**
+     * Create a forest of backlogs, backlog items and hour entries. Tests are based on the structure.
+     */
+    public void createData(){
         product1 = setUpProduct(1);
         product2 = setUpProduct(2);
         project1 = setUpProject(product2, 3);
@@ -55,6 +69,28 @@ public class TimesheetBusinessTest extends TestCase {
         createHourEntries();
         timesheetBusiness.setBacklogDAO(backlogDAO);
         timesheetBusiness.setHourEntryBusiness(hourEntryBusiness);
+    }
+
+    public void testSums_roots(){
+        replay(backlogDAO);
+        replay(hourEntryBusiness);
+        
+        List<BacklogTimesheetNode> roots;
+        int[] backlogIds = {product1.getId(), product2.getId()};
+        Set<Integer> userIds = new HashSet<Integer>();
+        userIds.add(user1.getId());
+        userIds.add(user2.getId());
+        roots = timesheetBusiness.generateTree(backlogIds, "", "", userIds);
+                
+        BacklogTimesheetNode product1Node = roots.get(0);
+        BacklogTimesheetNode product2Node = roots.get(1);
+        
+        assertEquals(0, product1Node.getHourTotal().getTime());
+        assertEquals(491460, product2Node.getHourTotal().getTime());
+        assertEquals(491460, timesheetBusiness.calculateRootSum(roots).getTime());
+        
+        // verify(backlogDAO); Does not get all backlogs through backlogDAO, verify should fail
+        verify(hourEntryBusiness);
     }
 
     public void testSomething() {
@@ -76,8 +112,6 @@ public class TimesheetBusinessTest extends TestCase {
         assertEquals(1, current.getChildBacklogs().size());
         current = current.getChildBacklogs().get(0);
         assertEquals(iteration1, current.getBacklog());
-        
-        
     }
     
     /**

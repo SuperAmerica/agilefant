@@ -9,7 +9,10 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
 
+import fi.hut.soberit.agilefant.business.impl.TimesheetBusinessImpl;
 import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.model.AFTime;
@@ -22,6 +25,7 @@ import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.util.BacklogTimesheetNode;
 import junit.framework.TestCase;
 
 public class TimesheetBusinessTest extends TestCase {
@@ -33,8 +37,10 @@ public class TimesheetBusinessTest extends TestCase {
     private User user1, user2;
     private HourEntryBusiness hourEntryBusiness;
     private BacklogDAO backlogDAO;
+    private TimesheetBusinessImpl timesheetBusiness;
     
     public void setUp() {
+        timesheetBusiness = new TimesheetBusinessImpl();
         hourEntryBusiness = createMock(HourEntryBusiness.class);
         backlogDAO = createMock(BacklogDAO.class);
         product1 = setUpProduct(1);
@@ -47,11 +53,31 @@ public class TimesheetBusinessTest extends TestCase {
         createUsers();
         createBacklogItems();
         createHourEntries();
+        timesheetBusiness.setBacklogDAO(backlogDAO);
+        timesheetBusiness.setHourEntryBusiness(hourEntryBusiness);
     }
 
     public void testSomething() {
-//        int[] backlogIds = {iteration1.getId(), project1.getId()};
-
+        replay(backlogDAO);
+        replay(hourEntryBusiness);
+        
+        int[] backlogIds = {iteration1.getId(), project1.getId()};
+        HashSet<Integer> set = new HashSet<Integer>();
+        List<BacklogTimesheetNode> result = timesheetBusiness.generateTree(backlogIds, "", "", set);
+        
+        assertEquals(1, result.size());
+        BacklogTimesheetNode current = result.get(0);
+        assertEquals(product2, current.getBacklog());
+        
+        assertEquals(1, current.getChildBacklogs().size());
+        current = current.getChildBacklogs().get(0);
+        assertEquals(project1, current.getBacklog());
+        
+        assertEquals(1, current.getChildBacklogs().size());
+        current = current.getChildBacklogs().get(0);
+        assertEquals(iteration1, current.getBacklog());
+        
+        
     }
     
     /**
@@ -65,13 +91,13 @@ public class TimesheetBusinessTest extends TestCase {
         entries.add((BacklogHourEntry) heList.get(12));
         insertBacklogHourEntry(heList.get(13), project2);
         entries.add((BacklogHourEntry) heList.get(13));
-        expect(hourEntryBusiness.getEntriesByParent(project2)).andReturn(entries).atLeastOnce();
-        expect(hourEntryBusiness.getEntriesByParent(product1)).andReturn(null).atLeastOnce();
-        expect(hourEntryBusiness.getEntriesByParent(product2)).andReturn(null).atLeastOnce();
-        expect(hourEntryBusiness.getEntriesByParent(project1)).andReturn(null).atLeastOnce();
-        expect(hourEntryBusiness.getEntriesByParent(iteration1)).andReturn(null).atLeastOnce();
-        expect(hourEntryBusiness.getEntriesByParent(iteration2)).andReturn(null).atLeastOnce();
-        expect(hourEntryBusiness.getEntriesByParent(iteration3)).andReturn(null).atLeastOnce();
+        expect(hourEntryBusiness.getEntriesByParent(project2)).andReturn(entries).anyTimes();
+        expect(hourEntryBusiness.getEntriesByParent(product1)).andReturn(null).anyTimes();
+        expect(hourEntryBusiness.getEntriesByParent(product2)).andReturn(null).anyTimes();
+        expect(hourEntryBusiness.getEntriesByParent(project1)).andReturn(null).anyTimes();
+        expect(hourEntryBusiness.getEntriesByParent(iteration1)).andReturn(null).anyTimes();
+        expect(hourEntryBusiness.getEntriesByParent(iteration2)).andReturn(null).anyTimes();
+        expect(hourEntryBusiness.getEntriesByParent(iteration3)).andReturn(null).anyTimes();
     }
     
     /**
@@ -102,7 +128,7 @@ public class TimesheetBusinessTest extends TestCase {
                 list.add((BacklogItemHourEntry)he);
             }
         }
-        expect(hourEntryBusiness.getEntriesByParent(bli)).andReturn(list).atLeastOnce();  
+        expect(hourEntryBusiness.getEntriesByParent(bli)).andReturn(list).anyTimes();  
     }
     
     /**

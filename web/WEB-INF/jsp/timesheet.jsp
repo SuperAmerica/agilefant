@@ -18,7 +18,7 @@
 	<tbody>
 		<tr>
 			<td>
-				<ww:form action="generateTree">
+				<ww:form action="generateTree" method="post">
 					<div id="subItems" style="margin-top: 0pt;">
 						<div id="subItemHeader">				
 							<table cellpadding="0" cellspacing="0">

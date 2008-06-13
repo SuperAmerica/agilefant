@@ -1,8 +1,7 @@
 <%@ taglib prefix="ww" uri="/webwork" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
-<ww:url id="refresh" includeParams="get" includeContext="false">
-</ww:url>
+<ww:url id="refresh" includeParams="none" includeContext="false" />
 
 <html>
   <head>

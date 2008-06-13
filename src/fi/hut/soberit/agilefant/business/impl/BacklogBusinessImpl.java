@@ -599,7 +599,7 @@ public class BacklogBusinessImpl implements BacklogBusiness {
                 
                 totals.add(overhead);
                 data.getTotalOverhead().add(overhead);
-                System.out.println("Overhead: " + overhead + "\nTotal overhead: " + data.getTotalOverhead());
+                //System.out.println("Overhead: " + overhead + "\nTotal overhead: " + data.getTotalOverhead());
             }
             
             // Set the weekly total

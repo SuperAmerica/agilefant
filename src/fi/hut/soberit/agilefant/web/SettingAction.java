@@ -50,7 +50,6 @@ public class SettingAction extends ActionSupport implements CRUDAction {
      * {@inheritDoc}
      */
     public String edit() {
-        System.out.println(">>" +  name + "<<");
         if (settingID > 0) {
             setting = settingBusiness.getSetting(settingID);
         } else {

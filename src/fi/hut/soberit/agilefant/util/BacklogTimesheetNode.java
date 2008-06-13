@@ -20,6 +20,7 @@ import fi.hut.soberit.agilefant.web.page.PageItem;
  */
 public class BacklogTimesheetNode extends TimesheetNode {
     private Backlog backlog;
+    private boolean expanded = false;
     
     /**
      * 
@@ -38,6 +39,7 @@ public class BacklogTimesheetNode extends TimesheetNode {
         
         if(expandChildren){
             expandChildren(tsb, true);
+            expanded = true;
         }
     }
     
@@ -127,5 +129,9 @@ public class BacklogTimesheetNode extends TimesheetNode {
             for(TimesheetNode child : childBacklogItems)
                 child.print();
         }
+    }
+
+    public boolean isExpanded() {
+        return expanded;
     }
 }

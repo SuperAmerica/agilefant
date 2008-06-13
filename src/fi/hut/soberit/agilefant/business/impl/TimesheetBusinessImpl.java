@@ -102,10 +102,15 @@ public class TimesheetBusinessImpl implements TimesheetBusiness {
                             roots.add(parentNode);
                         
                     }
-                }else{
+                }else{ // The node is a root (Product)
                     roots.add(new BacklogTimesheetNode(backlog, true, this));
                 }
+            }else{ // Node is already in the tree
+                BacklogTimesheetNode node = nodes.get(backlog.getId());
+                if(!node.isExpanded())
+                    node.expandChildren(this, true);
             }
+                
         }
         
         /*

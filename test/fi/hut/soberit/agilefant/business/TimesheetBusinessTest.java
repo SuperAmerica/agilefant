@@ -74,15 +74,15 @@ public class TimesheetBusinessTest extends TestCase {
         
         assertEquals(1, result.size());
         BacklogTimesheetNode current = result.get(0);
-        assertEquals(product2, current.getBacklog());
+        assertEquals("Wrong product", product2, current.getBacklog());
         
-        assertEquals(1, current.getChildBacklogs().size());
+        assertEquals("Wrong number of projects", 1, current.getChildBacklogs().size());
         current = current.getChildBacklogs().get(0);
         assertEquals(project1, current.getBacklog());
     
-        assertEquals(3, current.getChildBacklogs().size());
+        assertEquals("Wrong number of iterations", 3, current.getChildBacklogs().size());
         for (BacklogTimesheetNode node : current.getChildBacklogs()) {
-            assertTrue(project1.getChildren().contains(node.getBacklog()));
+            assertTrue("Invalid children", project1.getChildren().contains(node.getBacklog()));
         }
     }
     
@@ -111,9 +111,13 @@ public class TimesheetBusinessTest extends TestCase {
     public void testCompareTrees1() {
         replay(backlogDAO);
         replay(hourEntryBusiness);
-        
         treeGeneration(project1.getId(), iteration1.getId());
-        // *EI TOIMI, VESA KORJAA* treeGeneration(iteration1.getId(), project1.getId());
+    }
+    
+    public void testCompareTrees2() {
+        replay(backlogDAO);
+        replay(hourEntryBusiness);
+        treeGeneration(iteration1.getId(), project1.getId());
     }
     
     /**

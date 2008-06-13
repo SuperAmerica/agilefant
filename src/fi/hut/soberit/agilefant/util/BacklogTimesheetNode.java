@@ -39,7 +39,6 @@ public class BacklogTimesheetNode extends TimesheetNode {
         
         if(expandChildren){
             expandChildren(tsb, true);
-            expanded = true;
         }
     }
     
@@ -74,7 +73,8 @@ public class BacklogTimesheetNode extends TimesheetNode {
         if(childBacklogs != null){
             for(PageItem childBacklog : childBacklogs){
                 if(checkDuplicates && (node = tsb.getNodes().get(childBacklog.getId())) != null){
-                    this.addChildBacklog(node);
+                    if(!this.childBacklogs.contains(node))
+                        this.addChildBacklog(node);
                 }else{
                     node = new BacklogTimesheetNode((Backlog) childBacklog, true, tsb);
                     this.addChildBacklog(node);
@@ -90,6 +90,8 @@ public class BacklogTimesheetNode extends TimesheetNode {
                 this.addChildBacklogItem(new BacklogItemTimesheetNode(backlogItem, tsb));
             }
         }
+        
+        expanded = true;
     }
    
     /**

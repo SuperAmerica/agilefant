@@ -76,7 +76,8 @@ public class TimesheetBusinessImpl implements TimesheetBusiness {
             backlog = backlogDAO.get(id);
             if(!nodes.containsKey(backlog.getId())){
                 if((parent = (Backlog) backlog.getParent()) != null){
-                    backlogNode = new BacklogTimesheetNode(backlog, true, this); 
+                    backlogNode = new BacklogTimesheetNode(backlog, true, this);
+                    nodes.put(id, backlogNode);
                     
                     if((parentNode = nodes.get(parent.getId())) != null){
                         parentNode.addChildBacklog(backlogNode);

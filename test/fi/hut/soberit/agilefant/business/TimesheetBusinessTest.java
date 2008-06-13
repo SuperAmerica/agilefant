@@ -68,19 +68,19 @@ public class TimesheetBusinessTest extends TestCase {
     }
 
     private void treeGeneration(int id1, int id2) {
-        int[] backlogIds = { project1.getId(), iteration1.getId()};
+        int[] backlogIds = { id1, id2};
         HashSet<Integer> set = new HashSet<Integer>();
         List<BacklogTimesheetNode> result = timesheetBusiness.generateTree(backlogIds, "", "", set);
         
         assertEquals(1, result.size());
         BacklogTimesheetNode current = result.get(0);
-        assertEquals("Wrong product", product2, current.getBacklog());
+        assertEquals("Wrong product,", product2, current.getBacklog());
         
-        assertEquals("Wrong number of projects", 1, current.getChildBacklogs().size());
+        assertEquals("Wrong number of projects,", 1, current.getChildBacklogs().size());
         current = current.getChildBacklogs().get(0);
         assertEquals(project1, current.getBacklog());
     
-        assertEquals("Wrong number of iterations", 3, current.getChildBacklogs().size());
+        assertEquals("Wrong number of iterations,", 3, current.getChildBacklogs().size());
         for (BacklogTimesheetNode node : current.getChildBacklogs()) {
             assertTrue("Invalid children", project1.getChildren().contains(node.getBacklog()));
         }

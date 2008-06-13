@@ -9,7 +9,13 @@ import fi.hut.soberit.agilefant.model.BacklogHourEntry;
 import fi.hut.soberit.agilefant.model.BacklogItemHourEntry;
 
 public interface BacklogHourEntryDAO extends GenericDAO<BacklogHourEntry> {
+    /**
+     * Returns a list of all the hour entries for the specified Backlog.
+     */
     public List<BacklogHourEntry> getEntriesByBacklog(Backlog target);
-    public List<BacklogHourEntry> getSumsByBacklog(Backlog backlog); // getSumsByBacklog?
+    /**
+     * Returns a list of all the hour entries in the specified Backlog.
+     */
+    public List<BacklogHourEntry> getSumsByBacklog(Backlog backlog); 
 
 }

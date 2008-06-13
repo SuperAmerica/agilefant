@@ -31,7 +31,12 @@ public interface HourEntryBusiness {
     public void addHourEntryForMultipleUsers(TimesheetLoggable parent,HourEntry hourEntry, Set<Integer> userIds);
    
     /**
-     * Format date
+     * Format date.
+     * 
+     * @todo Move to static system wide util.
+     * @param date String representing a date and time in format yyyy-mm-dd HH:MM
+     * @return Date object set to the given moment.
+     * @throws ParseException
      */
     public Date formatDate(String date) throws ParseException;
     
@@ -91,17 +96,25 @@ public interface HourEntryBusiness {
     public List<BacklogHourEntry> getEntriesByParent(Backlog parent);
     
     /**
+     * Loads hour entry sums to backlog's BLIs.
      * 
+     * @param parent Parent backlog for BLIs
+     * @return Total reported hour by backlog item indexed by backlog item id.
      */
     public Map<Integer,AFTime> getSumsByBacklog(Backlog parent);
 
     /**
-     * Loads hour entry sums to backlog's BLIs.
+     * Load spent effort sums to backlog items under a specific backlog. 
+     * 
+     * @param parent
      */
     public void loadSumsToBacklogItems(Backlog parent);
     
     /**
+     * Get spent effort sums grouped by backlog's iteration goals.
      * 
+     * @param parent Iteration owning the iteration goals.
+     * @return MAp indexed by iteration goal ids
      */
     public Map<Integer, AFTime> getSumsByIterationGoal(Backlog parent);
     
@@ -112,9 +125,22 @@ public interface HourEntryBusiness {
      */
     public void removeHourEntriesByParent(TimesheetLoggable parent);
 
-    
+    /**
+     * Get total spent effort by given filters.
+     * 
+     * @param user
+     * @param start
+     * @param end
+     * @return
+     */
     public AFTime getEffortSumByUserAndTimeInterval(User user, Date start, Date end);
     
+    /**
+     * Get total spent effort by given filters.
+     * 
+     * @see getEffortSumByUserAndTimeInterval(User user, Date start, Date end)
+     * @return Total spent effort
+     */
     public AFTime getEffortSumByUserAndTimeInterval(User user, String startDate, String endDate);
     
     /**

@@ -63,6 +63,7 @@ public class HourEntryBusinessImpl implements HourEntryBusiness {
     public void setUserDAO(UserDAO userDAO) {
         this.userDAO = userDAO;
     }
+    
     /**
      * {@inheritDoc}
      */
@@ -199,6 +200,9 @@ public class HourEntryBusinessImpl implements HourEntryBusiness {
        }
     }
     
+    /**
+     * {@inheritDoc}
+     */
     public Map<Integer, AFTime> getSumsByIterationGoal(Backlog parent) {
         Map<Integer, AFTime> sums = new HashMap<Integer, AFTime>();
         List<BacklogItemHourEntry> entries = 
@@ -223,6 +227,7 @@ public class HourEntryBusinessImpl implements HourEntryBusiness {
         
         return sums;
     }
+    
     /**
      * {@inheritDoc}
      */
@@ -248,6 +253,9 @@ public class HourEntryBusinessImpl implements HourEntryBusiness {
         }
       }   
     
+    /**
+     * {@inheritDoc}
+     */
     public AFTime getEffortSumByUserAndTimeInterval(User user, String startDate, String endDate)
             throws IllegalArgumentException {
         AFTime sum;
@@ -261,6 +269,9 @@ public class HourEntryBusinessImpl implements HourEntryBusiness {
         return sum;
     }
     
+    /**
+     * {@inheritDoc}
+     */
     public AFTime getEffortSumByUserAndTimeInterval(User user, Date start, Date end)
             throws IllegalArgumentException {        
         AFTime sum;

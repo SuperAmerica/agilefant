@@ -6,6 +6,7 @@ import java.util.List;
 
 import fi.hut.soberit.agilefant.business.TimesheetBusiness;
 import fi.hut.soberit.agilefant.model.Backlog;
+import fi.hut.soberit.agilefant.model.BacklogHourEntry;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.HourEntry;
 import fi.hut.soberit.agilefant.web.page.PageItem;
@@ -34,8 +35,6 @@ public class BacklogTimesheetNode extends TimesheetNode {
         this.childBacklogItems = new ArrayList<BacklogItemTimesheetNode>();
         
         this.backlog = backlog;
-        
-        this.hourEntries = tsb.getFilteredHourEntries(backlog);
         
         if(expandChildren){
             expandChildren(tsb, true);
@@ -90,6 +89,8 @@ public class BacklogTimesheetNode extends TimesheetNode {
                 this.addChildBacklogItem(new BacklogItemTimesheetNode(backlogItem, tsb));
             }
         }
+        
+        this.hourEntries = tsb.getFilteredHourEntries(backlog);
         
         expanded = true;
     }

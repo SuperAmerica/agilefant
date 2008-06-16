@@ -37,7 +37,7 @@
 			<p>
 				<display:table name="${hourEntries}" id="row" defaultsort="1" defaultorder="descending" requestURI="${myAction}.action">
 					
-					<display:column sortable="true" title="Date">
+					<display:column sortable="true" title="Date" style="white-space:nowrap;">
 						<ww:date name="#attr.row.date" format="yyyy-MM-dd HH:mm" />
 					</display:column>
 					

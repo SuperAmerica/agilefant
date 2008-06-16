@@ -1,6 +1,6 @@
-Agilefant 1.4.2
+Agilefant 1.4.3
 RELEASE NOTES
-6.6.2008
+16.6.2008
 
 Agilefant's key functionality now includes
 ------------------------------------------
@@ -24,8 +24,16 @@ to are highlighted
 have assigned backlog items) are highlighted
 + Project Portfolio view allows the relative prioritisation of projects
 + Project Portfolio view shows the workloads for projects and users
-+ Spent effort can be logged for backlog items; 
++ Spent effort can be logged for backlog items and projects
 + Timesheets -related functionality can be enabled/disabled from the settings tab
++ Timesheets -reporting can be used for viewing spent effort
+
+CHANGES FROM AGILEFANT 1.4.2
+-----------------------------
++ Spent effort can be logged for projects
++ Timesheets -page for viewing spent effort
++ BLI-lists can be sorted by Spent Effort
++ Minor fixes and streamlining
 
 CHANGES FROM AGILEFANT 1.4.1
 -----------------------------

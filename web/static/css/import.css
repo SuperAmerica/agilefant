@@ -930,7 +930,7 @@ table.reportTable tr td.hourentry {
 table.reportTable tr td.hourentry.first {
 	padding-left:30px;
 	overflow:hidden;
-	max-width:300px;
+	max-width:395px;
 }
 
 table.reportTable tr td.hourentry.second {

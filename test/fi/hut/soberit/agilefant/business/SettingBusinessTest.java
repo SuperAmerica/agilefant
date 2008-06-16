@@ -1,6 +1,7 @@
 package fi.hut.soberit.agilefant.business;
 
 import junit.framework.TestCase;
+import org.easymock.EasyMock;
 import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
@@ -16,6 +17,48 @@ public class SettingBusinessTest extends TestCase {
     private SettingDAO settingDAO;  
     private SettingBusinessImpl testable;
     
+    public static Setting eqSetting(Setting in){
+        EasyMock.reportMatcher(new SettingEquals(in));
+        return null;
+    }
+    
+    public void testSetHourReporting_SettingExists() {
+        final String HourReportingName = "HourReporting";
+        Setting setting = new Setting();
+        Setting parameterSetting = new Setting();
+        settingDAO = createMock(SettingDAO.class);
+        testable = new SettingBusinessImpl();
+        testable.setSettingDAO(settingDAO);
+        
+        setting.setName(HourReportingName);
+        setting.setValue("false");
+        
+        parameterSetting.setName(HourReportingName);
+        parameterSetting.setValue("true");
+        
+        expect(settingDAO.getSetting(HourReportingName)).andReturn(setting);
+        settingDAO.store(eqSetting(parameterSetting));
+        replay(settingDAO);
+        testable.setHourReporting("true");
+        verify();
+    }
+    
+    public void testSetHourReporting_SettingDoesNotExist() {
+        final String HourReportingName = "HourReporting";
+        Setting parameterSetting = new Setting();
+        settingDAO = createMock(SettingDAO.class);
+        testable = new SettingBusinessImpl();
+        testable.setSettingDAO(settingDAO);
+    
+        parameterSetting.setName(HourReportingName);
+        parameterSetting.setValue("true");
+        
+        expect(settingDAO.getSetting(HourReportingName)).andReturn(null);
+        expect(settingDAO.create(eqSetting(parameterSetting))).andReturn(1);
+        replay(settingDAO);
+        testable.setHourReporting("true");
+        verify();
+    }
 
     /**
      * Test for hour reporting configuration entry

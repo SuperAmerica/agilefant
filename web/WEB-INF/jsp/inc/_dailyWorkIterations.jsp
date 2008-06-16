@@ -115,12 +115,12 @@
 
 					<display:column sortable="true" sortProperty="effortLeft"
 						defaultorder="descending" title="Effort Left">
-						<span style="white-space: nowrap"> <c:choose>
+						<c:choose>
 							<c:when test="${row.effortLeft == null}">&mdash;
 					</c:when>
 							<c:otherwise>${row.effortLeft}
 					</c:otherwise>
-						</c:choose> </span>
+						</c:choose> 
 					</display:column>
 
 					<display:column sortable="true" sortProperty="originalEstimate"
@@ -135,15 +135,13 @@
 					<c:choose>
 						<c:when test="${hourReport}">
 							<display:column sortable="true" sortProperty="effortSpent" defaultorder="descending" title="Effort Spent">
-								<span style="white-space: nowrap">
-									<c:choose>
-										<c:when test="${row.effortSpent == null}">&mdash;</c:when>
-										<c:otherwise>
-											<c:out value="${row.effortSpent}" />
-											<c:set var="totalSum" value="${aef:calculateAFTimeSum(totalSum, row.effortSpent)}" />
-										</c:otherwise>
-									</c:choose>
-								</span>
+								<c:choose>
+									<c:when test="${row.effortSpent == null}">&mdash;</c:when>
+									<c:otherwise>
+										<c:out value="${row.effortSpent}" />
+										<c:set var="totalSum" value="${aef:calculateAFTimeSum(totalSum, row.effortSpent)}" />
+									</c:otherwise>
+								</c:choose>
 							</display:column>
 						</c:when>
 						<c:otherwise>

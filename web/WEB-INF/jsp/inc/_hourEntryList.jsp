@@ -45,7 +45,7 @@
 						${aef:html(row.user.fullName)}
 					</display:column>
 					
-					<display:column sortable="true" title="Spent effort">
+					<display:column sortable="true" title="Spent effort" sortProperty="timeSpent">
 						${aef:html(row.timeSpent)}
 					</display:column>
 					

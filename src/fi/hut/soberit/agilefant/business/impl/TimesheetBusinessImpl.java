@@ -23,13 +23,13 @@ import fi.hut.soberit.agilefant.util.*;
 public class TimesheetBusinessImpl implements TimesheetBusiness {
     private BacklogDAO backlogDAO;
     private HourEntryBusiness hourEntryBusiness;
-    private List<BacklogTimesheetNode> roots = new ArrayList<BacklogTimesheetNode>();
+    private List<BacklogTimesheetNode> roots;
     
     /** The map contains all nodes that are already in the tree, mapped by backlog id.
      *  It is used to avoid creating duplicate instances of the same node, and to group
      *  backlogs properly.   
      */
-    private Map<Integer, BacklogTimesheetNode> nodes = new HashMap<Integer, BacklogTimesheetNode>();
+    private Map<Integer, BacklogTimesheetNode> nodes;
     
     private Date startDate, endDate;
     
@@ -38,7 +38,7 @@ public class TimesheetBusinessImpl implements TimesheetBusiness {
     /**
      * {@inheritDoc}
      */
-    public List<BacklogTimesheetNode> generateTree(int[] backlogIds,
+    public synchronized List<BacklogTimesheetNode> generateTree(int[] backlogIds,
                                                    String startDateString, String endDateString,
                                                    Set<Integer> userIds)
             throws IllegalArgumentException{
@@ -69,9 +69,14 @@ public class TimesheetBusinessImpl implements TimesheetBusiness {
         
         this.userIds = userIds;
         
-        roots.clear();
-        nodes.clear();
+        roots = new ArrayList<BacklogTimesheetNode>();
+        nodes = new HashMap<Integer, BacklogTimesheetNode>();
 
+        /* DEBUG
+        System.out.println("DEBUG: backlogIds.length = "+  backlogIds.length + ", backlogIds[0] = " + backlogIds[0] + 
+                           ", userIds.size() = " + userIds.size() + ", userIds = " + userIds.toString());
+        */
+        
         for(int id : backlogIds){
             backlog = backlogDAO.get(id);
             if(backlog != null){
@@ -122,6 +127,11 @@ public class TimesheetBusinessImpl implements TimesheetBusiness {
                 root.print();
             }
         }
+        */
+        
+        /* DEBUG
+        System.out.println("End generateTree: userIds = " + userIds.toString() + ", roots.size() = " + roots.size() +
+                           "Root 0 = " + roots.get(0).getBacklog().getName());
         */
         
         return roots;

@@ -514,8 +514,10 @@
 <%-- Hour reporting here - Remember to expel David H. --%>
 <aef:hourReporting id="hourReport"></aef:hourReporting>
 <c:if test="${hourReport == 'true'}">
-<c:set var="myAction" value="editBacklogItem" scope="session" />
-<%@ include file="./inc/_hourEntryList.jsp"%>
+	<c:if test="${backlogItem.id > 0 }"> 
+		<c:set var="myAction" value="editBacklogItem" scope="session" />
+		<%@ include file="./inc/_hourEntryList.jsp"%>
+	</c:if>
 </c:if> <%-- Hour reporting on --%>
 
 <%@ include file="./inc/_footer.jsp"%>

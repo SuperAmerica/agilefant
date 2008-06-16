@@ -74,44 +74,45 @@ public class TimesheetBusinessImpl implements TimesheetBusiness {
 
         for(int id : backlogIds){
             backlog = backlogDAO.get(id);
-            if(!nodes.containsKey(backlog.getId())){
-                if((parent = (Backlog) backlog.getParent()) != null){
-                    backlogNode = new BacklogTimesheetNode(backlog, true, this);
-                    nodes.put(id, backlogNode);
-                    
-                    if((parentNode = nodes.get(parent.getId())) != null){
-                        parentNode.addChildBacklog(backlogNode);
-                    }else{
-                        parentNode = new BacklogTimesheetNode(parent, false, this);
-                        parentNode.addChildBacklog(backlogNode);
-                        nodes.put(parentNode.getBacklog().getId(), parentNode);
-                        childNode = parentNode;
-                    
-                        while((parent = (Backlog) childNode.getBacklog().getParent()) != null){
-                            if((parentNode = nodes.get(parent.getId())) != null){
-                                parentNode.addChildBacklog(childNode);
-                                break;
-                            }else{
-                                parentNode = new BacklogTimesheetNode(parent, false, this);
-                                parentNode.addChildBacklog(childNode);
-                                nodes.put(parentNode.getBacklog().getId(), parentNode);
-                                childNode = parentNode;
+            if(backlog != null){
+                if(!nodes.containsKey(backlog.getId())){
+                    if((parent = (Backlog) backlog.getParent()) != null){
+                        backlogNode = new BacklogTimesheetNode(backlog, true, this);
+                        nodes.put(id, backlogNode);
+                        
+                        if((parentNode = nodes.get(parent.getId())) != null){
+                            parentNode.addChildBacklog(backlogNode);
+                        }else{
+                            parentNode = new BacklogTimesheetNode(parent, false, this);
+                            parentNode.addChildBacklog(backlogNode);
+                            nodes.put(parentNode.getBacklog().getId(), parentNode);
+                            childNode = parentNode;
+                        
+                            while((parent = (Backlog) childNode.getBacklog().getParent()) != null){
+                                if((parentNode = nodes.get(parent.getId())) != null){
+                                    parentNode.addChildBacklog(childNode);
+                                    break;
+                                }else{
+                                    parentNode = new BacklogTimesheetNode(parent, false, this);
+                                    parentNode.addChildBacklog(childNode);
+                                    nodes.put(parentNode.getBacklog().getId(), parentNode);
+                                    childNode = parentNode;
+                                }
                             }
+                            
+                            if(!roots.contains(parentNode))
+                                roots.add(parentNode);
+                            
                         }
-                        
-                        if(!roots.contains(parentNode))
-                            roots.add(parentNode);
-                        
+                    }else{ // The node is a root (Product)
+                        roots.add(new BacklogTimesheetNode(backlog, true, this));
                     }
-                }else{ // The node is a root (Product)
-                    roots.add(new BacklogTimesheetNode(backlog, true, this));
+                }else{ // Node is already in the tree
+                    BacklogTimesheetNode node = nodes.get(backlog.getId());
+                    if(!node.isExpanded())
+                        node.expandChildren(this, true);
                 }
-            }else{ // Node is already in the tree
-                BacklogTimesheetNode node = nodes.get(backlog.getId());
-                if(!node.isExpanded())
-                    node.expandChildren(this, true);
             }
-                
         }
         
         /*

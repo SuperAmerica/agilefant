@@ -208,20 +208,22 @@ public class HourEntryBusinessImpl implements HourEntryBusiness {
         List<BacklogItemHourEntry> entries = 
             backlogItemHourEntryDAO.getSumsByBacklog(parent);
         
-        for (BacklogItemHourEntry entry : entries) {
-            if (entry.getBacklogItem().getIterationGoal() != null) {
-            AFTime currentSum = sums.get(entry.getBacklogItem().getIterationGoal().getId());
-            AFTime timeSpent = entry.getTimeSpent();
-            
-            if (currentSum == null) {
-                currentSum = new AFTime(0);
-            }
-            
-            if (timeSpent != null) {
-                currentSum.add(timeSpent);
-            }
-            
-            sums.put(entry.getBacklogItem().getIterationGoal().getId(), currentSum);
+        if(entries != null){
+            for (BacklogItemHourEntry entry : entries) {
+                if (entry.getBacklogItem().getIterationGoal() != null) {
+                AFTime currentSum = sums.get(entry.getBacklogItem().getIterationGoal().getId());
+                AFTime timeSpent = entry.getTimeSpent();
+                
+                if (currentSum == null) {
+                    currentSum = new AFTime(0);
+                }
+                
+                if (timeSpent != null) {
+                    currentSum.add(timeSpent);
+                }
+                
+                sums.put(entry.getBacklogItem().getIterationGoal().getId(), currentSum);
+                }
             }
         }
         

@@ -3,8 +3,8 @@ package fi.hut.soberit.agilefant.business;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -15,7 +15,6 @@ import fi.hut.soberit.agilefant.db.BacklogHourEntryDAO;
 import fi.hut.soberit.agilefant.db.BacklogItemHourEntryDAO;
 import fi.hut.soberit.agilefant.db.HourEntryDAO;
 import fi.hut.soberit.agilefant.db.SettingDAO;
-import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogHourEntry;
@@ -23,13 +22,13 @@ import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.BacklogItemHourEntry;
 import fi.hut.soberit.agilefant.model.HourEntry;
 import fi.hut.soberit.agilefant.model.Iteration;
+import fi.hut.soberit.agilefant.model.IterationGoal;
 import fi.hut.soberit.agilefant.model.Setting;
 import fi.hut.soberit.agilefant.model.User;
 import junit.framework.TestCase;
 import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.reset;
 import static org.easymock.EasyMock.verify;
 
 
@@ -41,7 +40,6 @@ public class HourEntryBusinessTest extends TestCase {
     private BacklogItemHourEntryDAO bheDAO;
     private BacklogHourEntryDAO blheDAO;
     private HourEntryDAO heDAO;
-    private UserDAO userDAO;
     private SettingDAO settingDAO;
     
     public void testGetEntriesByBacklogItem() {
@@ -378,5 +376,69 @@ public class HourEntryBusinessTest extends TestCase {
         assertFalse(hourEntryBusiness.isAssociatedWithHourReport(user2));
         assertFalse(hourEntryBusiness.isAssociatedWithHourReport(user3));
         verify(heDAO);
+    }
+    
+    public void testGetSumsByIterationGoal(){
+        Map<Integer, AFTime> result;
+        bheDAO = createMock(BacklogItemHourEntryDAO.class);
+        hourEntryBusiness = new HourEntryBusinessImpl();
+        hourEntryBusiness.setBacklogItemHourEntryDAO(bheDAO);
+        Iteration iteration = new Iteration();
+        BacklogItem bli1 = new BacklogItem();
+        BacklogItem bli2 = new BacklogItem();
+        BacklogItem bli3 = new BacklogItem();
+        BacklogItemHourEntry blihe1 = new BacklogItemHourEntry();
+        BacklogItemHourEntry blihe2 = new BacklogItemHourEntry();
+        BacklogItemHourEntry blihe3 = new BacklogItemHourEntry();
+        BacklogItemHourEntry blihe4 = new BacklogItemHourEntry();
+        IterationGoal goal1 = new IterationGoal();
+        IterationGoal goal2 = new IterationGoal();
+        ArrayList<BacklogItemHourEntry> collection = new ArrayList<BacklogItemHourEntry>();
+        
+        blihe1.setTimeSpent(new AFTime(10));
+        blihe1.setBacklogItem(bli1);
+        bli1.setIterationGoal(goal1);
+        collection.add(blihe1);
+        blihe2.setTimeSpent(new AFTime(1));
+        blihe2.setBacklogItem(bli1);
+        bli2.setIterationGoal(goal2);
+        collection.add(blihe2);
+        blihe3.setTimeSpent(new AFTime(2));
+        blihe3.setBacklogItem(bli2);
+        collection.add(blihe3);
+        blihe4.setTimeSpent(new AFTime(60));
+        blihe4.setBacklogItem(bli3);
+        bli3.setIterationGoal(goal1);
+        collection.add(blihe4);
+        
+        goal1.setId(1);
+        goal2.setId(2);
+        
+        expect(bheDAO.getSumsByBacklog(iteration)).andReturn(collection);
+        replay(bheDAO);
+        
+        result = hourEntryBusiness.getSumsByIterationGoal(iteration);
+        
+        assertEquals("Wrong sum for iteration goal 1, ", 71, result.get(1).getTime());
+        
+        assertEquals("Wrong sum for iteration goal 2, ", 2, result.get(2).getTime());
+    }
+    
+    public void testGetSumsByIterationGoal_NoChildren(){
+        Map<Integer, AFTime> result = new HashMap<Integer, AFTime>();
+        Iteration iteration = new Iteration();
+        bheDAO = createMock(BacklogItemHourEntryDAO.class);
+        hourEntryBusiness = new HourEntryBusinessImpl();
+        hourEntryBusiness.setBacklogItemHourEntryDAO(bheDAO);
+        
+        expect(bheDAO.getSumsByBacklog(iteration)).andReturn(null);
+        
+        try{
+            result = hourEntryBusiness.getSumsByIterationGoal(iteration);
+        }catch(NullPointerException e){
+            fail("NullPointerException with null children");
+        }
+            
+        assertTrue("Invalid data with null children", result.isEmpty());
     }
 }

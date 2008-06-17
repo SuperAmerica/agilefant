@@ -30,7 +30,7 @@ var teams = [<aef:teamJson items="${teamList}"/>]
 	
 		<display:column title="Users">
 		<c:set var="divId" value="${divId + 1}" scope="page" />
-		<a href="javascript:toggleDiv(${divId});">
+		<a href="javascript:toggleDiv('portfolioDiv_${divId}');">
 			<img src="static/img/users.png" alt="Users" />
 			<c:out value="${summaryUserData[row]}" />
 			<c:if test="${summaryUnassignedUserData[row] > 0}">
@@ -40,7 +40,7 @@ var teams = [<aef:teamJson items="${teamList}"/>]
 			</c:if>
 		</a>
 		<!-- User assignment table -->	
-		<div id="${divId}" style="display: none;">
+		<div id="portfolioDiv_${divId}" style="display: none;">
 		<ww:form action="saveProjectAssignments">
 		<ww:hidden name="projectId" value="${row.id}" /> 
 		
@@ -176,7 +176,7 @@ var teams = [<aef:teamJson items="${teamList}"/>]
 		
 		<display:column title="Users">
 		<c:set var="divId" value="${divId + 1}" scope="page" />
-		<a href="javascript:toggleDiv(${divId});">
+		<a href="javascript:toggleDiv('portfolioDiv_${divId}');">
 		<img src="static/img/users.png" alt="Users" />
 		<c:out value="${summaryUserData[row]}" />
 		<c:if test="${summaryUnassignedUserData[row] > 0}">
@@ -186,7 +186,7 @@ var teams = [<aef:teamJson items="${teamList}"/>]
 		</c:if>
 		</a>
 		<!-- User assignment table -->	
-		<div id="${divId}" style="display: none;">
+		<div id="portfolioDiv_${divId}" style="display: none;">
 		<ww:form action="saveProjectAssignments">
 		<ww:hidden name="projectId" value="${row.id}" /> 
 		

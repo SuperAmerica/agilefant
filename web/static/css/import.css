@@ -1,4 +1,6 @@
 /* Main stylesheet file for Agilefant*/
+@import "jquery.treeview.css";
+
 html {
 	margin: 0;
 	padding: 0;
@@ -508,15 +510,15 @@ div#submenuwrapmyTasks #menu li#subnav1 a,div#submenuwrapiteration #menu li#subn
 
 #hierarchyList ul,#hierarchyList ul ul #hierarchyList ul ul ul {
 	padding: 0 0 0 0;
-	margin: 0 0 0 15px;
+	margin: 0 0 0 0;
 	list-style-type: none;
 }
 
-#hierarchyList li {
+/*#hierarchyList li {
 	padding: 0 0 0 0;
 	margin: 0 0 5px 0;
 	list-style-type: none;
-}
+}*/
 
 #hierarchyList .path,#hierarchyList .archivePath .path {
 	color: #e50;
@@ -539,13 +541,12 @@ td.deleteButton {
 	display: none;
 }
 
-.upcoming {
-	display: none;
+#treemenu .upcoming a {
+	color: #3399ff;
 }
 
-.upcomingPath {
-    display: inherit;
-    color: #3399ff;
+#treemenu .past a {
+    color: #444;	
 }
 
 #hierarchyList span.archivePath {

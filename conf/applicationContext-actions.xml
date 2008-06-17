@@ -66,6 +66,9 @@
 	<bean name="dailyWorkAction"
 		class="fi.hut.soberit.agilefant.web.DailyWorkAction"
 		autowire="byName" singleton="false" />
+	<bean name="menuAction"
+        class="fi.hut.soberit.agilefant.web.MenuAction"
+        autowire="byName" singleton="false" />
 	<bean name="projectPortfolioAction"
 		class="fi.hut.soberit.agilefant.web.ProjectPortfolioAction"
 		singleton="false" autowire="byName" />

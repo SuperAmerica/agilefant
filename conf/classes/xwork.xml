@@ -35,8 +35,6 @@
 			</result>
 		</global-results>
 
-
-
 		<!-- Context view -->
 		<action name="contextView"
 			class="fi.hut.soberit.agilefant.web.ContextViewAction">
@@ -364,6 +362,16 @@
 			</result>
 		</action>
 		<!-- /Backlog actions -->
+
+        <!-- Menu actions -->
+        <action name="menuData" method="execute"
+            class="menuAction">
+            <result>/WEB-INF/jsp/inc/_menuData.jsp</result>
+        </action>
+        <action name="ajaxUpdateOpenMenus" method="ajaxUpdateOpenMenus"
+            class="menuAction">
+        </action>
+        <!-- /Menu actions -->
 
 		<!-- Task actions -->
 		<action name="editTask" method="edit" class="taskAction">

@@ -19,6 +19,9 @@ Agilefant
 
 <script type="text/javascript" src="static/js/generic.js"></script>
 <script type="text/javascript" src="static/js/jquery-1.2.2.js"></script>
+<script type="text/javascript" src="static/js/jquery.cookie.js"></script>
+<script type="text/javascript" src="static/js/jquery.treeview.js"></script>
+<script type="text/javascript" src="static/js/jquery.treeview.async.js"></script>
 <script type="text/javascript" src="static/js/multiselect.js"></script>
 <script type="text/javascript" src="static/js/taskrank.js"></script>
 <script type="text/javascript" src="static/js/date.js"></script>
@@ -62,10 +65,13 @@ Agilefant
 </div>
 <!-- /header -->
 
+
+
 <%-- Present products, projects and iterations in a hierarchical manner --%>
 <div id="hierarchyList">
+
 <aef:productList />
-<%-- --%>
+
 <c:choose>
 	<c:when test="${!empty backlogItem.backlog}">
 		<c:set var="currentPageId" value="${backlogItem.backlog.id}"
@@ -78,38 +84,68 @@ Agilefant
 
 <%-- Variable currentContext resolves which context is selected --%>
 
+<%-- Check the pageitem type --%>
 <c:forEach var="page" items="${pageHierarchy}">
-	<c:if test="${aef:isProduct(page)}">
-		<c:set var="currentAction" value="editProduct" scope="session" />
-		<c:set var="currentContext" value="product" scope="session" />
-		<c:set var="currentPageId" value="${page.id}" scope="session" />
-		<c:set var="currentIterationId" value="" scope="session" />
-		<c:set var="currentProjectId" value="" scope="session" />
-		<c:set var="currentProductId" value="${page.id}" scope="session" />
-	</c:if>
-	<c:if test="${aef:isProject(page)}">
-		<c:set var="currentAction" value="editProject" scope="session" />
-		<c:set var="currentContext" value="project" scope="session" />
-		<c:set var="currentPageId" value="${page.id}" scope="session" />
-		<c:set var="currentIterationId" value="" scope="session" />
-		<c:set var="currentProjectId" value="${page.id}" scope="session" />
-		<c:set var="currentProductId" value="${page.parent.id}"
-			scope="session" />
-	</c:if>
-	<c:if test="${aef:isIteration(page)}">
-		<c:set var="currentAction" value="editIteration" scope="session" />
-		<c:set var="currentContext" value="iteration" scope="session" />
-		<c:set var="currentPageId" value="${page.id}" scope="session" />
-		<c:set var="currentIterationId" value="${page.id}" scope="session" />
-		<c:set var="currentProjectId" value="${page.parent.id}"
-			scope="session" />
-		<c:set var="currentProductId" value="${page.parent.parent.id}"
-			scope="session" />
-	</c:if>
+    <c:if test="${aef:isProduct(page)}">
+        <c:set var="currentAction" value="editProduct" scope="session" />
+        <c:set var="currentContext" value="product" scope="session" />
+        <c:set var="currentPageId" value="${page.id}" scope="session" />
+        <c:set var="currentIterationId" value="" scope="session" />
+        <c:set var="currentProjectId" value="" scope="session" />
+        <c:set var="currentProductId" value="${page.id}" scope="session" />
+    </c:if>
+    <c:if test="${aef:isProject(page)}">
+        <c:set var="currentAction" value="editProject" scope="session" />
+        <c:set var="currentContext" value="project" scope="session" />
+        <c:set var="currentPageId" value="${page.id}" scope="session" />
+        <c:set var="currentIterationId" value="" scope="session" />
+        <c:set var="currentProjectId" value="${page.id}" scope="session" />
+        <c:set var="currentProductId" value="${page.parent.id}"
+            scope="session" />
+    </c:if>
+    <c:if test="${aef:isIteration(page)}">
+        <c:set var="currentAction" value="editIteration" scope="session" />
+        <c:set var="currentContext" value="iteration" scope="session" />
+        <c:set var="currentPageId" value="${page.id}" scope="session" />
+        <c:set var="currentIterationId" value="${page.id}" scope="session" />
+        <c:set var="currentProjectId" value="${page.parent.id}"
+            scope="session" />
+        <c:set var="currentProductId" value="${page.parent.parent.id}"
+            scope="session" />
+    </c:if>
 </c:forEach>
 
-<ul>
-<%-- Resolve if product is selected or is in 'path' and set variable 'class' accordingly--%>
+<script type="text/javascript">
+$(document).ready(function() {
+    $("#treemenu").treeview({
+        url: "menuData.action",
+        animated: "fast",
+        collapsed: false,
+        unique: false,
+        
+        toggle: function() {
+            var open = $("#treemenu li.collapsable");
+            var openArray = new Array();
+
+            $.each(open, function(i, n) {
+                openArray[i] = n.id; 
+            });
+            
+            var openString = "" + openArray.join(",");
+            
+            $.get("ajaxUpdateOpenMenus.action",
+                { "openString": openString }
+            );
+        }
+    });
+});
+</script>
+
+<ul id="treemenu">
+</ul>
+
+<%--<ul>
+<%-- Resolve if product is selected or is in 'path' and set variable 'class' accordingly
 <c:forEach items="${productList}" var="product">
 	<c:set var="class" value="" scope="page" />
 	<c:if test="${product.id == currentProductId}">
@@ -119,7 +155,7 @@ Agilefant
 		</c:if>
 	</c:if>
 
-	<%-- Print Product-link--%>
+	<%-- Print Product-link
 	<ww:url id="editLink" action="contextView" includeParams="none">
 		<ww:param name="contextObjectId" value="${product.id}" />
 		<ww:param name="resetContextView" value="true" />
@@ -132,7 +168,7 @@ Agilefant
 	</li>
 
 	<ul>
-	<%-- Resolve if project is selected or is in 'path' and set variable 'class' accordingly--%>
+	<%-- Resolve if project is selected or is in 'path' and set variable 'class' accordingly
 	<c:forEach items="${product.projects}" var="project">
 
 		<c:set var="archive" value="" scope="page" />
@@ -143,7 +179,7 @@ Agilefant
 				<c:set var="archive" value="archivePath" scope="page" />
 				<c:set var="class2" value="archivePath" scope="page" />
 			</c:if>
-			<%-- Don't hide projects that have unfinished iterations--%>
+			<%-- Don't hide projects that have unfinished iterations
 			<c:if test="${archive != archivePath}">
 				<c:forEach items="${project.iterations}" var="it">
 					<c:if test="${!aef:isBeforeThisDay(it.endDate) && 
@@ -162,7 +198,7 @@ Agilefant
                 <c:set var="class2" value="upcomingPath" scope="page" />
             </c:if>
             
-            <%-- Don't hide upcoming projects with current iterations --%>
+            <%-- Don't hide upcoming projects with current iterations
             <c:if test="${archive != 'upcomingPath'}">
                 <c:forEach items="${project.iterations}" var="it">
                     <c:if test="${!aef:isBeforeThisDay(it.endDate) && 
@@ -181,7 +217,7 @@ Agilefant
 			</c:if>
 		</c:if>
 
-		<%-- Print Project-link--%>
+		<%-- Print Project-link
 		<ww:url id="editLink" action="contextView" includeParams="none">
 			<ww:param name="contextObjectId" value="${project.id}" />
 			<ww:param name="resetContextView" value="true" />
@@ -195,11 +231,11 @@ Agilefant
 		</li>
 
 		<ul class="${archive}">
-		<%-- Resolve if iteration is selected or is in 'path' and set variable 'class' accordingly--%>
+		<%-- Resolve if iteration is selected or is in 'path' and set variable 'class' accordingly
 		<c:forEach items="${project.iterations}" var="iteration">
 			<c:set var="class3" value="" scope="page" />
 
-			<%-- Iteration is hidden if it's finished and its parent project is not selected or in 'path'--%>
+			<%-- Iteration is hidden if it's finished and its parent project is not selected or in 'path'
 			<c:if test="${aef:isBeforeThisDay(iteration.endDate)}">
 				<c:set var="class3" value="archivePath" scope="page" />
 				<c:if test="${class2 != 'selected' && class2 != 'path'}">
@@ -218,7 +254,7 @@ Agilefant
 				<c:set var="class3" value="selected" scope="page" />
 			</c:if>
 
-			<%-- Print Iteration-link--%>
+			<%-- Print Iteration-link
 			<ww:url id="editLink" action="contextView" includeParams="none">
 				<ww:param name="contextObjectId" value="${iteration.id}" />
 				<ww:param name="resetContextView" value="true" />
@@ -236,6 +272,7 @@ Agilefant
 	</ul>
 </c:forEach>
 </ul>
+--%>
 
 </div>
 <!-- /#hierarchy -->
@@ -303,7 +340,7 @@ Create New
 <c:if test="${hourReport}">
 <li id="navd">
 <a href="contextView.action?contextName=timesheet&resetContextView=true">
-<img src="static/img/clock-16.png" alt="View Timesheets" />
+<img src="static/img/timesheets.png" alt="Timesheets" />
 Timesheets
 </a>
 </li>

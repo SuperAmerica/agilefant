@@ -17,6 +17,9 @@ public class SettingBusinessTest extends TestCase {
     private SettingDAO settingDAO;  
     private SettingBusinessImpl testable;
     
+    /*
+     * An argument matcher for EasyMock. See SettingEquals.java for more information.
+     */
     public static Setting eqSetting(Setting in){
         EasyMock.reportMatcher(new SettingEquals(in));
         return null;

@@ -256,7 +256,7 @@
 				<tr>
 					<td>State</td>
 					<td><ww:select name="targetState"
-						list="#{'-1':'Keep original', '0':'Not started', '1':'Started', '2':'Pending', '3':'Blocked', '4':'Implemented', '5':'Done' }" />
+						list="#@java.util.LinkedHashMap@{'-1':'Keep original', '0':'Not started', '1':'Started', '2':'Pending', '3':'Blocked', '4':'Implemented', '5':'Done' }" />
 					</td>
 				</tr>
 				<tr>

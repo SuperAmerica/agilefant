@@ -277,7 +277,7 @@
 			<td></td>
 			<td colspan="2"><ww:select name="backlogItem.priority"
 				value="backlogItem.priority.name"
-				list="#{'UNDEFINED':'undefined', 'BLOCKER':'+++++', 'CRITICAL':'++++', 'MAJOR':'+++', 'MINOR':'++', 'TRIVIAL':'+'}" /></td>
+				list="#@java.util.LinkedHashMap@{'UNDEFINED':'undefined', 'BLOCKER':'+++++', 'CRITICAL':'++++', 'MAJOR':'+++', 'MINOR':'++', 'TRIVIAL':'+'}" /></td>
 			<%--
 		If you change something about priorities, remember to update conf/classes/messages.properties as well!
 		--%>

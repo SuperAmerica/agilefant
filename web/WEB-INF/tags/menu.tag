@@ -119,7 +119,6 @@ Agilefant
 $(document).ready(function() {
     $("#treemenu").treeview({
         url: "menuData.action",
-        animated: "fast",
         collapsed: false,
         unique: false,
         

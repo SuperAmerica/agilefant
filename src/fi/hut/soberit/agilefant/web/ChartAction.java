@@ -41,6 +41,8 @@ public class ChartAction extends ActionSupport {
     private int iterationId;
 
     private int projectId;
+    
+    private int userId;
 
     private TaskDAO taskDAO;
 
@@ -115,6 +117,13 @@ public class ChartAction extends ActionSupport {
     public String smallProjectChart() {
         if (projectId > 0) {
             result = chartBusiness.getSmallProjectBurndown(projectId);
+        }
+        return Action.SUCCESS;
+    }
+    
+    public String loadMeter() {
+        if (userId > 0) {
+            result = chartBusiness.getLoadMeter(userId);
         }
         return Action.SUCCESS;
     }
@@ -546,5 +555,13 @@ public class ChartAction extends ActionSupport {
 
     public void setChartBusiness(ChartBusiness chartBusiness) {
         this.chartBusiness = chartBusiness;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 }

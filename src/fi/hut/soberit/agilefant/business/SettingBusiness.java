@@ -56,4 +56,64 @@ public interface SettingBusiness {
      */
     public void setHourReporting(String mode);
     
+    /**
+     * Set value range low limit for load meter
+     * @param value
+     */
+    public void setRangeLow(String value);
+    
+    /**
+     * Get value range low limit for load meter
+     * @return the percentage value
+     */
+    public int getRangeLow();
+    
+    /**
+     * Set value range high limit for load meter
+     * @param value
+     */
+    public void setRangeHigh(String value);
+    
+    /**
+     * Get value range high limit for load meter
+     * @return the percentage value
+     */
+    public int getRangeHigh();
+    
+    /**
+     * Set optimal low value for load meter
+     * @param value the percentage value
+     */
+    public void setOptimalLow(String value);
+    
+    /**
+     * Get optimal low value for load meter
+     * @return the percentage value
+     */
+    public int getOptimalLow();
+    
+    /**
+     * Set optimal high value for load meter
+     * @param value the percentage value
+     */
+    public void setOptimalHigh(String value);
+    
+    /**
+     * Get optimal high value for load meter
+     * @return the percentage value
+     */
+    public int getOptimalHigh();
+    
+    /**
+     * Set critical low value for load meter
+     * @param value the percentage value
+     */
+    public void setCriticalLow(String value);
+    
+    /**
+     * Get critical low value for load meter
+     * @return the percentage value
+     */
+    public int getCriticalLow();
+    
 }

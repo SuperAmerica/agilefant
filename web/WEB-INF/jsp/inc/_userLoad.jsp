@@ -31,6 +31,10 @@ function show_small_loadtable() {
 
 
 <div id="detailedLoadTable" style="display: none;">
+<table class="infoTable" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
 <table id="item">
 <tr>
 	<th class="loadTableBacklogColumn">Week</th>
@@ -122,12 +126,39 @@ function show_small_loadtable() {
 	</c:forEach>
 </tr>
 </table>
+<div class="legend">
+<c:if test="${nonEstimatedBLs > 0}">
+	<img src="static/img/nonestimated.png" alt="There are unestimated items" />
+	<c:choose>
+		<c:when test="${nonEstimatedBLs > 1}">
+			<c:out value="Non-estimated BLI(s) in ${nonEstimatedBLs} backlogs." />
+		</c:when>
+		<c:otherwise>
+			<c:out value="Non-estimated BLI(s) in ${nonEstimatedBLs} backlog." />
+		</c:otherwise>
+	</c:choose>
+</c:if>
+</div>
+</td>
+<td class="info4" rowspan="2"> 
+<img src="drawLoadMeter.action?userId=${user.id}" />
+
+</td>
+</tr>
+</tbody>
+</table>
 </div>
 
 
 
 <div id="smallLoadTable">
+<table class="infoTable" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
 <table id="item">
+
+
 <tr>
 	<th>Week</th>
 	<c:forEach items="${weekNumbers}" var="weekNumber">
@@ -187,7 +218,6 @@ function show_small_loadtable() {
 	</c:forEach>
 </tr>
 </table>
-</div>
 <div class="legend">
 <c:if test="${nonEstimatedBLs > 0}">
 	<img src="static/img/nonestimated.png" alt="There are unestimated items" />
@@ -200,6 +230,15 @@ function show_small_loadtable() {
 		</c:otherwise>
 	</c:choose>
 </c:if>
+</div>
+</td>
+<td class="info4" rowspan="2"> 
+<img src="drawLoadMeter.action?userId=${user.id}" />
+</td>
+
+</tr>
+</tbody>
+</table>
 </div>
 <%--
 <table id="item">

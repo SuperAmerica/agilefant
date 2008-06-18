@@ -504,8 +504,7 @@
             <result type="redirect-action">listUsers</result>
         </action>
 		<action name="storeUser" method="store" class="userAction">
-			<result type="redirect">listUsers.action</result>
-			<result name="error">/WEB-INF/jsp/editUser.jsp</result>
+			<result type="redirect">listUsers.action</result>			
 		</action>
 
 		<!-- /User actions -->
@@ -693,6 +692,13 @@
 				<param name="inputName">inputStream</param>
 			</result>
 		</action>
+		<action name="drawLoadMeter" method="loadMeter"
+			class="chartAction">
+			<result name="success" type="stream">
+				<param name="contentType">${contentType}</param>
+				<param name="inputName">inputStream</param>
+			</result>
+		</action>
 
 		<action name="popContext" class="contextStackAction">
 			<result type="redirect-action">
@@ -772,7 +778,7 @@
 		</action>
 		
 		<!-- Actions for changing settings -->
-		<action name="settings">
+		<action name="settings" class="settingAction">
 			<result>/WEB-INF/jsp/settings.jsp</result>
 		</action>
 		
@@ -791,8 +797,8 @@
 		<action name="deleteSetting" class="settingAction" method="delete">
 			<result>/WEB-INF/jsp/settings.jsp</result>
 		</action>
-		<action name="storeHourReporting" class="settingAction" method="storeHourReporting">
-			<result>/WEB-INF/jsp/settings.jsp</result>
+		<action name="storeSettings" class="settingAction" method="storeSettings">
+			<result name="success">/WEB-INF/jsp/settings.jsp</result>
 		</action>
 	
 		<!-- timesheet actions -->

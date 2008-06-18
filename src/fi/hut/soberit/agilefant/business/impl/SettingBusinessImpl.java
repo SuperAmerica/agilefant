@@ -19,6 +19,16 @@ public class SettingBusinessImpl implements SettingBusiness {
     
     public static final String SETTING_NAME_HOUR_REPORTING = "HourReporting";
     public static final String SETTING_VALUE_TRUE = "true";
+    public static final String SETTING_NAME_RANGE_LOW = "RangeLow";
+    public static final String SETTING_DEFAULT_RANGE_LOW = "0";
+    public static final String SETTING_NAME_RANGE_HIGH = "RangeHigh";
+    public static final String SETTING_DEFAULT_RANGE_HIGH = "120";
+    public static final String SETTING_NAME_OPTIMAL_LOW = "OptimalLow";
+    public static final String SETTING_DEFAULT_OPTIMAL_LOW = "70";
+    public static final String SETTING_NAME_OPTIMAL_HIGH = "OptimalHigh";
+    public static final String SETTING_DEFAULT_OPTIMAL_HIGH = "85";
+    public static final String SETTING_NAME_CRITICAL_LOW = "CriticalLow";
+    public static final String SETTING_DEFAULT_CRITICAL_LOW = "100";
     
     /**
      * {@inheritDoc}
@@ -89,6 +99,229 @@ public class SettingBusinessImpl implements SettingBusiness {
         return setting.getValue().equals(SETTING_VALUE_TRUE);        
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public void setRangeLow(String value) {      
+        Setting setting = settingDAO.getSetting(SETTING_NAME_RANGE_LOW);
+        // if value is null, restore default value.
+        if (value == null) {
+            if (setting != null) {
+                setting.setValue(SETTING_DEFAULT_RANGE_LOW);
+                settingDAO.store(setting);
+            }
+        }
+        else {
+            Integer intValue = null;
+            try {
+                intValue = Integer.parseInt(value);    
+            } catch(NumberFormatException nfe) {
+                return;
+            }
+            if (setting == null) {
+                setting = new Setting();
+                setting.setName(SETTING_NAME_RANGE_LOW);               
+                setting.setValue(intValue.toString());
+                settingDAO.store(setting);                          
+            }
+            else {               
+                setting.setValue(intValue.toString());
+                settingDAO.store(setting);
+            }
+        }
+        
+       
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public int getRangeLow() {
+        Setting setting = settingDAO.getSetting(SETTING_NAME_RANGE_LOW);
+        
+        if (setting == null) {
+            return Integer.parseInt(SETTING_DEFAULT_RANGE_LOW) ;
+        } else {      
+            return Integer.parseInt(setting.getValue());
+        }
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void setRangeHigh(String value) {
+        Setting setting = settingDAO.getSetting(SETTING_NAME_RANGE_HIGH);
+        // if value is null, restore default value.
+        if (value == null) {
+            if (setting != null) {               
+                setting.setValue(SETTING_DEFAULT_RANGE_HIGH);
+                settingDAO.store(setting);
+            }
+        }
+        else {
+            Integer intValue = null;
+            try {
+                intValue = Integer.parseInt(value);    
+            } catch(NumberFormatException nfe) {
+                return;
+            }
+            if (setting == null) {
+                setting = new Setting();
+                setting.setName(SETTING_NAME_RANGE_HIGH);               
+                setting.setValue(intValue.toString());
+                settingDAO.store(setting);                          
+            }
+            else {               
+                setting.setValue(intValue.toString());
+                settingDAO.store(setting);
+            }
+        }
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public int getRangeHigh() {
+        Setting setting = settingDAO.getSetting(SETTING_NAME_RANGE_HIGH);
+        
+        if (setting == null) {
+            return Integer.parseInt(SETTING_DEFAULT_RANGE_HIGH) ;
+        }       
+        return Integer.parseInt(setting.getValue());  
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void setOptimalLow(String value) {
+        Setting setting = settingDAO.getSetting(SETTING_NAME_OPTIMAL_LOW);
+        // if value is null, restore default value.
+        if (value == null) {
+            if (setting != null) {               
+                setting.setValue(SETTING_DEFAULT_OPTIMAL_LOW);
+                settingDAO.store(setting);
+            }
+        }
+        else {
+            Integer intValue = null;
+            try {
+                intValue = Integer.parseInt(value);    
+            } catch(NumberFormatException nfe) {
+                return;
+            }
+            if (setting == null) {
+                setting = new Setting();
+                setting.setName(SETTING_NAME_OPTIMAL_LOW);               
+                setting.setValue(intValue.toString());
+                settingDAO.store(setting);                          
+            }
+            else {               
+                setting.setValue(intValue.toString());
+                settingDAO.store(setting);
+            }
+        }
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public int getOptimalLow() {
+        Setting setting = settingDAO.getSetting(SETTING_NAME_OPTIMAL_LOW);
+        
+        if (setting == null) {
+            return Integer.parseInt(SETTING_DEFAULT_OPTIMAL_LOW) ;
+        }       
+        return Integer.parseInt(setting.getValue());
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void setOptimalHigh(String value) {
+        Setting setting = settingDAO.getSetting(SETTING_NAME_OPTIMAL_HIGH);
+        // if value is null, restore default value.
+        if (value == null) {
+            if (setting != null) {                
+                setting.setValue(SETTING_DEFAULT_OPTIMAL_HIGH);
+                settingDAO.store(setting);
+            }
+        }
+        else {
+            Integer intValue = null;
+            try {
+                intValue = Integer.parseInt(value);    
+            } catch(NumberFormatException nfe) {
+                return;
+            }
+            if (setting == null) {
+                setting = new Setting();
+                setting.setName(SETTING_NAME_OPTIMAL_HIGH);               
+                setting.setValue(intValue.toString());
+                settingDAO.store(setting);                          
+            }
+            else {               
+                setting.setValue(intValue.toString());
+                settingDAO.store(setting);
+            }
+        }
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public int getOptimalHigh() {
+        Setting setting = settingDAO.getSetting(SETTING_NAME_OPTIMAL_HIGH);
+        
+        if (setting == null) {
+            return Integer.parseInt(SETTING_DEFAULT_OPTIMAL_HIGH) ;
+        }       
+        return Integer.parseInt(setting.getValue());
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void setCriticalLow(String value) {
+        Setting setting = settingDAO.getSetting(SETTING_NAME_CRITICAL_LOW);
+        // if value is null, restore default value.
+        if (value == null) {
+            if (setting != null) {              
+                setting.setValue(SETTING_DEFAULT_CRITICAL_LOW);
+                settingDAO.store(setting);
+            }
+        }
+        else {
+            Integer intValue = null;
+            try {
+                intValue = Integer.parseInt(value);    
+            } catch(NumberFormatException nfe) {
+                return;
+            }
+            if (setting == null) {
+                setting = new Setting();
+                setting.setName(SETTING_NAME_CRITICAL_LOW);               
+                setting.setValue(intValue.toString());
+                settingDAO.store(setting);                          
+            }
+            else {               
+                setting.setValue(intValue.toString());
+                settingDAO.store(setting);
+            }
+        }
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public int getCriticalLow() {
+        Setting setting = settingDAO.getSetting(SETTING_NAME_CRITICAL_LOW);
+        
+        if (setting == null) {
+            return Integer.parseInt(SETTING_DEFAULT_CRITICAL_LOW) ;
+        }       
+        return Integer.parseInt(setting.getValue());
+    }
+    
     public Setting getSetting(String name) {
         return settingDAO.getSetting(name);
     }

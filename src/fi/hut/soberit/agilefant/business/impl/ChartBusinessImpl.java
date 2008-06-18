@@ -3,8 +3,12 @@
  */
 package fi.hut.soberit.agilefant.business.impl;
 
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Font;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -17,23 +21,35 @@ import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.DateAxis;
 import org.jfree.chart.axis.DateTickUnit;
+import org.jfree.chart.plot.DialShape;
+import org.jfree.chart.plot.MeterInterval;
+import org.jfree.chart.plot.MeterPlot;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYItemRenderer;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
+import org.jfree.data.Range;
+import org.jfree.data.general.DefaultValueDataset;
+import org.jfree.data.general.ValueDataset;
 import org.jfree.data.time.Day;
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.ui.RectangleInsets;
 
 import fi.hut.soberit.agilefant.business.ChartBusiness;
+import fi.hut.soberit.agilefant.business.ProjectBusiness;
+import fi.hut.soberit.agilefant.business.SettingBusiness;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.db.IterationDAO;
+import fi.hut.soberit.agilefant.db.UserDAO;
+import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogHistory;
 import fi.hut.soberit.agilefant.model.HistoryEntry;
 import fi.hut.soberit.agilefant.model.Iteration;
+import fi.hut.soberit.agilefant.model.User;
 
 import fi.hut.soberit.agilefant.model.Project;
+import fi.hut.soberit.agilefant.util.DailyWorkLoadData;
 import fi.hut.soberit.agilefant.db.ProjectDAO;
 
 /**
@@ -47,6 +63,12 @@ public class ChartBusinessImpl implements ChartBusiness {
     private ProjectDAO projectDAO;
 
     private BacklogItemDAO backlogItemDAO;
+    
+    private UserDAO userDAO;
+    
+    private SettingBusiness settingBusiness;
+    
+    private ProjectBusiness projectBusiness;
 
     private static final int DEFAULT_WIDTH = 780;
 
@@ -350,6 +372,80 @@ public class ChartBusinessImpl implements ChartBusiness {
         return getChartImageByteArray(burndownGraph, SMALL_WIDTH, SMALL_HEIGHT);
     }
     
+    public byte[] getLoadMeter(int userId) {               
+        
+        User user = userDAO.get(userId);               
+        // Scope load by days left in the week.
+        int totalWeekDays = 5;
+        Calendar cal = GregorianCalendar.getInstance();
+        int daysLeft = 1;
+        while(cal.get(Calendar.DAY_OF_WEEK) != Calendar.FRIDAY && daysLeft < 6) {
+            cal.add(Calendar.DAY_OF_YEAR, 1);
+            daysLeft++;
+        }
+        // If user not found in database, set weekhours to 40h and load to 0h.
+        // Now we at least get a 0h-chart drawn.
+        long weekHours = 40*60*60;
+        if (user != null)
+            weekHours = (long) (user.getWeekHours().getTime() * (1.0 * daysLeft / totalWeekDays));
+        
+        DailyWorkLoadData loadData = projectBusiness.getDailyWorkLoadData(user, 1);
+        long loadTime = 0;
+        if (loadData != null)
+            loadTime = (long) loadData.getWeeklyTotals().get(loadData.getWeekNumbers().get(0)).getTime();
+        int load = 0;
+        if (weekHours > 0)
+            load = (int)(loadTime * 100.0 / weekHours);
+        
+        int rangeLow = settingBusiness.getRangeLow();
+        int optimalLow = settingBusiness.getOptimalLow();
+        int optimalHigh = settingBusiness.getOptimalHigh();
+        int criticalLow = settingBusiness.getCriticalLow();
+        int rangeHigh = settingBusiness.getRangeHigh();  
+        String loadWarning = "";        
+        if (load < rangeLow)
+            load = rangeLow;
+        if (load > rangeHigh)
+            load = rangeHigh;
+        if (load < optimalLow)
+            loadWarning = "Optimal Low";
+        else if (load < optimalHigh)
+            loadWarning = "Optimal High";
+        else if (load < criticalLow)
+            loadWarning = "Critical Low";
+        else if (load <= rangeHigh)
+            loadWarning = "Critical High";
+                           
+        DefaultValueDataset data = new DefaultValueDataset(); 
+        data.setValue(Integer.valueOf(load));
+        
+        MeterPlot plot = new MeterPlot(data);        
+        plot.setDialShape(DialShape.CHORD);       
+        plot.setDialBackgroundPaint(new Color(100, 100, 100));
+        plot.setBackgroundAlpha(0.0f);
+        plot.setBackgroundPaint(Color.WHITE);
+        plot.setRange(new Range(rangeLow, rangeHigh));
+        plot.setDialOutlinePaint(Color.BLACK);
+        plot.setNeedlePaint(Color.BLACK);
+        plot.setTickLabelsVisible(false);
+        plot.setTickLabelPaint(Color.darkGray);
+        plot.setTickPaint(new Color(0, 0, 0, 100));
+        plot.setTickLabelFormat(NumberFormat.getNumberInstance());
+        plot.setTickSize(rangeHigh);
+        plot.setValuePaint(new Color(255, 255, 255, 0));
+        plot.addInterval(new MeterInterval("Low", new Range(rangeLow, optimalLow), Color.black, new BasicStroke(2.0f), Color.lightGray));
+        plot.addInterval(new MeterInterval("High", new Range(optimalLow, optimalHigh), Color.black, new BasicStroke(2.0f), new Color(80, 140, 10, 255 ) ));
+        plot.addInterval(new MeterInterval("Critical Low", new Range(optimalHigh, criticalLow), Color.black, new BasicStroke(2.0f), new Color(200, 100, 0, 255)));
+        plot.addInterval(new MeterInterval("Critical High", new Range(criticalLow, rangeHigh), Color.black, new BasicStroke(2.0f), new Color(160, 0, 0, 255)));
+        plot.setValueFont(new Font("Arial", Font.PLAIN, 12));
+        
+        JFreeChart chart = new JFreeChart("Load: " + loadWarning, new Font("Arial", Font.PLAIN, 12), plot, false);
+        chart.setBackgroundPaint(Color.WHITE);
+        
+        return getChartImageByteArray(chart, 150, 150);
+               
+    }
+    
     /**
      * @return the backlogItemDAO
      */
@@ -387,4 +483,29 @@ public class ChartBusinessImpl implements ChartBusiness {
     public void setProjectDAO(ProjectDAO projectDAO) {
         this.projectDAO = projectDAO;
     }
+
+    public UserDAO getUserDAO() {
+        return userDAO;
+    }
+
+    public void setUserDAO(UserDAO userDAO) {
+        this.userDAO = userDAO;
+    }
+
+    public SettingBusiness getSettingBusiness() {
+        return settingBusiness;
+    }
+
+    public void setSettingBusiness(SettingBusiness settingBusiness) {
+        this.settingBusiness = settingBusiness;
+    }
+
+    public ProjectBusiness getProjectBusiness() {
+        return projectBusiness;
+    }
+
+    public void setProjectBusiness(ProjectBusiness projectBusiness) {
+        this.projectBusiness = projectBusiness;
+    }
+   
 }

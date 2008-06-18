@@ -16,6 +16,7 @@ import fi.hut.soberit.agilefant.business.UserBusiness;
 import fi.hut.soberit.agilefant.db.TeamDAO;
 import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.db.hibernate.EmailValidator;
+import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.Team;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.security.SecurityUtil;
@@ -48,6 +49,8 @@ public class UserAction extends ActionSupport implements CRUDAction {
     private String password2;
 
     private String email;
+    
+    private AFTime weekHours;
     
     private List<User> enabledUsers = new ArrayList<User>();
     
@@ -153,6 +156,7 @@ public class UserAction extends ActionSupport implements CRUDAction {
         if (password1.length() == 0 && password2.length() == 0) {
             if (storable.getId() == 0) {
                 super.addActionError(super.getText("user.missingPassword"));
+                return;
             }
             md5Pw = storable.getPassword();
         } else {
@@ -160,6 +164,7 @@ public class UserAction extends ActionSupport implements CRUDAction {
                 password1 = "";
                 password2 = "";
                 super.addActionError(super.getText("user.passwordsNotEqual"));
+                return;
             } else {
                 md5Pw = SecurityUtil.MD5(password1);
             }
@@ -167,27 +172,41 @@ public class UserAction extends ActionSupport implements CRUDAction {
         User existingUser = userDAO.getUser(this.user.getLoginName());
         if (existingUser != null && existingUser.getId() != storable.getId()) {
             super.addActionError(super.getText("user.loginNameInUse"));
+            return;
         }
 
         if (this.user.getFullName() == null
                 || this.user.getFullName().trim().equalsIgnoreCase("")) {
             super.addActionError("Full name is required");
+            return;
         }
         
         if (this.user.getLoginName() == null ||
                 this.user.getLoginName().trim().equalsIgnoreCase("")) {
             super.addActionError("Login name cannot be empty");
+            return;
         }
-
+        
+        if (this.user.getWeekHours() == null) {
+            super.addActionError("Weekly working hours are required");
+            return;
+        }
+        else if (this.user.getWeekHours().getTime() < 0) {
+            super.addActionError("Weekly working hours must be positive");
+            return;
+        }
+                            
         storable.setFullName(this.user.getFullName());
         storable.setLoginName(this.user.getLoginName());
         storable.setEnabled(this.user.isEnabled());
+        storable.setWeekHours(this.user.getWeekHours());
         storable.setPassword(md5Pw);
 
         // Set the initials
         if (this.user.getInitials() == null
                 || this.user.getInitials().trim().compareTo("") == 0) {
             super.addActionError("Initials are required.");
+            return;
         } else {
             storable.setInitials(this.user.getInitials());
         }
@@ -195,10 +214,12 @@ public class UserAction extends ActionSupport implements CRUDAction {
         if (this.user.getEmail() == null
                 || this.user.getEmail().equalsIgnoreCase("")) {
             super.addActionError("Email is required");
+            return;
         } else {
             EmailValidator e = new EmailValidator();
             if (!e.isValid(this.user.getEmail())) {
                 super.addActionError(super.getText("user.invalidEmail"));
+                return;
             }
         }
         storable.setEmail(this.user.getEmail());
@@ -279,6 +300,14 @@ public class UserAction extends ActionSupport implements CRUDAction {
         this.email = email;
     }
 
+    public AFTime getWeekHours() {
+        return weekHours;
+    }
+    
+    public void setWeekHours(AFTime hours) {
+        this.weekHours = hours;
+    }
+    
     public List<Team> getTeamList() {
         return teamList;
     }

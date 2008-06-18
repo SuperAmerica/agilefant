@@ -41,7 +41,7 @@ public class UserBusinessImpl implements UserBusiness {
         }
         List<BacklogItem> userItems = (List<BacklogItem>)user.getBacklogItems();
         List<BacklogItem> returnItems = new ArrayList<BacklogItem>();
-
+        
         /*
          * Sort out the not started and done tasks and tasks from not current
          * iterations
@@ -67,6 +67,7 @@ public class UserBusinessImpl implements UserBusiness {
     /** {@inheritDoc} */
     public Map<Backlog, List<BacklogItem>> getBacklogItemsAssignedToUser(
             User user) {
+        
         /* If no user is set, get logged user */
         if (user == null) {
             user = SecurityUtil.getLoggedUser();
@@ -145,8 +146,9 @@ public class UserBusinessImpl implements UserBusiness {
     }
     
     /** {@inheritDoc} */
-    public List<User> getEnabledUsers() {
+    public List<User> getEnabledUsers() {       
         return userDAO.getEnabledUsers();
+        
     }
     
     /** {@inheritDoc} */

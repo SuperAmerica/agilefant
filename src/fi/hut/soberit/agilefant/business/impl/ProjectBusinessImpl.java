@@ -725,7 +725,7 @@ public class ProjectBusinessImpl implements ProjectBusiness {
         }
         for (int i = 0; i < weeksAhead; i++) {
             boolean accommondate = ProjectBusinessImpl.isAccommodableWorkload(currentWeek, currentWeek + i, 
-                    data.getWeeklyTotals().get(currentWeek + i));
+                    data.getWeeklyTotals().get(currentWeek + i), user);
             data.getWeeklyOverload().put(new Integer(currentWeek + i), new Boolean(accommondate));
         }
         data.setWeekNumbers(weekNumbers);
@@ -742,7 +742,7 @@ public class ProjectBusinessImpl implements ProjectBusiness {
      * @param totalWorkload
      * @return
      */
-    private static boolean isAccommodableWorkload(int currentWeek, int targetWeek, AFTime totalWorkload) {
+    private static boolean isAccommodableWorkload(int currentWeek, int targetWeek, AFTime totalWorkload, User user) {
         long totalInWeek = 5;
         int daysLeft = 5;
         if(currentWeek == targetWeek) {
@@ -752,8 +752,8 @@ public class ProjectBusinessImpl implements ProjectBusiness {
                 cal.add(Calendar.DAY_OF_YEAR, 1);
                 daysLeft++;
             }
-        } 
-        totalInWeek = daysLeft*8*60*60;
+        }
+        totalInWeek = (long) (user.getWeekHours().getTime() * (1.0 * daysLeft / 5));       
         if(totalInWeek < totalWorkload.getTime()) {
             return false;
         }

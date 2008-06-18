@@ -46,6 +46,8 @@ public class User implements PageItem {
 
     private String initials;
     
+    private AFTime weekHours;
+    
     private boolean enabled;
 
     private Collection<Assignment> assignments = new HashSet<Assignment>();
@@ -82,7 +84,7 @@ public class User implements PageItem {
 
     /** Get full name. */
     @Type(type = "escaped_truncated_varchar")
-    public String getFullName() {
+    public String getFullName() {        
         return fullName;
     }
 
@@ -218,8 +220,18 @@ public class User implements PageItem {
      */
     public void setInitials(String initials) {
         this.initials = initials;
+    }  
+       
+    @Type(type = "af_time")
+    @Column(columnDefinition = "integer default 144000")
+    public AFTime getWeekHours() {       
+        return weekHours;        
     }
-
+    
+    public void setWeekHours(AFTime hours) {
+        this.weekHours = hours;
+    } 
+    
     /**
      * Get the user's teams.
      * 

@@ -19,6 +19,7 @@
 	<display:column sortable="true" title="User ID" property="loginName" />
 	<display:column sortable="true" title="Initials" property="initials" />
 	<display:column sortable="true" title="Email" property="email" />
+	<display:column sortable="true" title="Week hours" property="weekHours"/>
 	<display:column sortable="false" title="Actions">
 		<c:if test="${row.id != 1}">
 			<ww:url id="disableLink" action="disableUser" includeParams="none">
@@ -50,8 +51,9 @@
             </ww:a>
     </display:column>
     <display:column sortable="true" title="User ID" property="loginName" />
-    <display:column sortable="true" title="Initials" property="initials" />
+    <display:column sortable="true" title="Initials" property="initials" />        	
     <display:column sortable="true" title="Email" property="email" />
+    <display:column sortable="true" title="Week hours" property="weekHours"/>
     <display:column sortable="false" title="Actions">
 		<ww:url id="enableLink" action="enableUser" includeParams="none">
 			<ww:param name="userId" value="${row.id}" />
@@ -94,7 +96,7 @@
 					<ww:param name="teamId" value="${row.id}" />
 				</ww:url>
 				<ww:a href="%{deleteLink}" onclick="return confirmDelete()">
-				    <img src="static/img/delete_18.png" alt="Delete" title="Delete" />
+				    <img src="static/img/delete_18.png" alt="Edit" title="Edit" />
 				</ww:a>
 			</display:column>
 		</display:table>

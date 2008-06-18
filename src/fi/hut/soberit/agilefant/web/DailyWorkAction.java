@@ -15,6 +15,7 @@ import com.opensymphony.xwork.ActionSupport;
 import fi.hut.soberit.agilefant.business.BacklogBusiness;
 import fi.hut.soberit.agilefant.business.HourEntryBusiness;
 import fi.hut.soberit.agilefant.business.ProjectBusiness;
+import fi.hut.soberit.agilefant.business.SettingBusiness;
 import fi.hut.soberit.agilefant.business.UserBusiness;
 import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.Backlog;
@@ -51,6 +52,8 @@ public class DailyWorkAction extends ActionSupport {
     private UserBusiness userBusiness;
     
     private HourEntryBusiness hourEntryBusiness;
+    
+    private SettingBusiness settingBusiness;
 
     private int userId;
 
@@ -294,6 +297,14 @@ public class DailyWorkAction extends ActionSupport {
 
     public void setHourEntryBusiness(HourEntryBusiness hourEntryBusiness) {
         this.hourEntryBusiness = hourEntryBusiness;
+    }
+
+    public SettingBusiness getSettingBusiness() {
+        return settingBusiness;
+    }
+
+    public void setSettingBusiness(SettingBusiness settingBusiness) {
+        this.settingBusiness = settingBusiness;
     }
     
     

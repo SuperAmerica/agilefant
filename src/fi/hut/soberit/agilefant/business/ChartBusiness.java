@@ -1,5 +1,7 @@
 package fi.hut.soberit.agilefant.business;
 
+import fi.hut.soberit.agilefant.model.AFTime;
+
 public interface ChartBusiness {
 
     /**
@@ -41,5 +43,12 @@ public interface ChartBusiness {
      * @return Byte array representing a png image file
      */
     public abstract byte[] getSmallProjectBurndown(int projectId);
+    
+    /**
+     * Create a load meter as a byte array that is interpreted as a .png file
+     * @param userId
+     * @return
+     */
+    public abstract byte[] getLoadMeter(int userId);
 
 }

@@ -36,6 +36,14 @@
 
   </head>
   <body>
+  
+  <script type="text/javascript" src="static/js/jquery-1.2.2.js"></script>
+  <script type="text/javascript">
+  $(document).ready(function() {
+    $('#username').focus();
+  });
+  </script>
+  
   <div id="outer_wrapper">
      <div id="wrapper">
 
@@ -74,7 +82,7 @@
              <form method="post" action="j_acegi_security_check">
                 <table border="0">
                 <tr>
-                <td>Username</td><td><input name="j_username" size="30" type="text" /></td>
+                <td>Username</td><td><input id="username" name="j_username" size="30" type="text" /></td>
                 </tr>
                 <tr>
                 <td>Password</td><td><input name="j_password" size="30" type="password" /></td>

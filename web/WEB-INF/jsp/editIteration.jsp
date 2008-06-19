@@ -81,18 +81,25 @@
                                 <tr>
                                     <td>Start date</td>
                                     <td>*</td>
-                                    <td colspan="2"><ww:datepicker value="%{#start}" size="15"
+                                    <td colspan="2">
+                                    <!--<ww:datepicker value="%{#start}" size="15"
                                         showstime="true"
                                         format="%{getText('webwork.datepicker.format')}"
-                                        name="startDate" /></td>
+                                        name="startDate" />-->
+                                        <aef:datepicker id="start_date" name="startDate" format="%{getText('webwork.shortDateTime.format')}" value="%{#start}" />
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td>End date</td>
                                     <td>*</td>
-                                    <td colspan="2"><ww:datepicker value="%{#end}" size="15"
-                                        showstime="true"
+                                    <td colspan="2">
+                                    	<!--<ww:datepicker value="%{#end}" size="15" showstime="true"
                                         format="%{getText('webwork.datepicker.format')}"
-                                        name="endDate" /></td>
+                                        name="endDate" />-->
+                                        
+                                        <aef:datepicker id="end_date" name="endDate" format="%{getText('webwork.shortDateTime.format')}" value="%{#end}" />  
+                                        
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td></td>
@@ -220,18 +227,25 @@
 								<tr>
 									<td>Start date</td>
 									<td>*</td>
-									<td colspan="2"><ww:datepicker value="%{#start}" size="15"
+									<td colspan="2">
+										<!--<ww:datepicker value="%{#start}" size="15"
 										showstime="true"
 										format="%{getText('webwork.datepicker.format')}"
-										name="startDate" /></td>
+										name="startDate" />-->
+										<aef:datepicker id="start_date" name="startDate" format="%{getText('webwork.shortDateTime.format')}" value="%{#start}" />
+										
+										</td>
 								</tr>
 								<tr>
 									<td>End date</td>
 									<td>*</td>
-									<td colspan="2"><ww:datepicker value="%{#end}" size="15"
+									<td colspan="2">
+									<!--<ww:datepicker value="%{#end}" size="15"
 										showstime="true"
 										format="%{getText('webwork.datepicker.format')}"
-										name="endDate" /></td>
+										name="endDate" />-->
+									<aef:datepicker id="end_date" name="endDate" format="%{getText('webwork.shortDateTime.format')}" value="%{#end}" />
+									</td>
 								</tr>
 								<tr>
 									<td></td>

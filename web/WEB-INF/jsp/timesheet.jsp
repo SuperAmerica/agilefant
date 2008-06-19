@@ -169,16 +169,18 @@
 								<tr>				
 									<td>Start date</td>
 									<td>
-										<ww:datepicker size="15" showstime="false"
-	                       					format="%{getText('webwork.datepicker.format')}" id="effStartDate" name="startDate" value=""/>
+										<!--<ww:datepicker size="15" showstime="false"
+	                       					format="%{getText('webwork.datepicker.format')}" id="effStartDate" name="startDate" value=""/>-->
+	                       				<aef:datepicker id="effStartDate" name="startDate" format="%{getText('webwork.shortDateTime.format')}" value="" />
 									</td>
 								</tr>
 								<!--  End date -->
 								<tr>				
 									<td>End date</td>
 									<td>
-	               						<ww:datepicker size="15" showstime="false"
-	                       					format="%{getText('webwork.datepicker.format')}" id="effEndDate" name="endDate" value=""/>
+	               						<!--<ww:datepicker size="15" showstime="false"
+	                       					format="%{getText('webwork.datepicker.format')}" id="effEndDate" name="endDate" value=""/>-->
+	                       				<aef:datepicker id="effEndDate" name="endDate" format="%{getText('webwork.shortDateTime.format')}" value="" />
 									</td>
 								</tr>
 								<!--  User selection -->				

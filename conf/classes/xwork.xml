@@ -521,7 +521,7 @@
 		</action>
 		<action name="storeTeam" method="store" class="teamAction">
 			<result type="redirect">listUsers.action</result>
-			<result name="error">/WEB-INF/jsp/editTeam.jsp</result>
+			<!--<result name="error">/WEB-INF/jsp/editTeam.jsp</result>-->
 		</action>
 		<!-- /Team actions -->
 

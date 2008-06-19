@@ -88,6 +88,7 @@ public class TeamAction extends ActionSupport implements CRUDAction {
         if (team.getName() == null || team.getName().length() == 0 ||
                 team.getName().trim().compareTo("") == 0) {
             super.addActionError("The team name can't be empty.");
+            return;
         }
         storable.setName(team.getName());
 

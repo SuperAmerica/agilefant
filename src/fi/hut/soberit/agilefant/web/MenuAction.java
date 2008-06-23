@@ -58,8 +58,6 @@ public class MenuAction extends ActionSupport {
         // Parse the request id
         backlogId = parseRequestId(requestId);
         
-        System.out.println("-------\nRequest: " + backlogId + "\n-------");
-        
         // Generate open backlogs list
         String open = "";
         if (ActionContext.getContext().getSession().get("openBacklogs") == null) {
@@ -132,8 +130,6 @@ public class MenuAction extends ActionSupport {
             savedString += ",";
         }
         
-        System.out.println("Update menus: " + savedString);
-
         // Update the session variable
         ActionContext.getContext().getSession().put("openBacklogs", savedString);
 

@@ -2,6 +2,9 @@
 alter table historyentry add column deltaEffortLeft integer default 0;
 update historyentry set deltaEffortLeft = 0 where deltaEffortLeft = null;
 
+-- Load-mittarin muutokset
+alter table user add column weekHours integer default 144000;
+
 -- Other regression fixes
 alter table assignment add index FK3D2B86CDF63400A2 (backlog_id), add constraint FK3D2B86CDF63400A2 foreign key (backlog_id) references backlog (id);
 alter table assignment add index FK3D2B86CDC1610AD2 (user_id), add constraint FK3D2B86CDC1610AD2 foreign key (user_id) references user (id);

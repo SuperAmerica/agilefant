@@ -21,6 +21,7 @@ public class HistoryEntry<T extends History<?>> {
     private Date date;
     private AFTime effortLeft;
     private AFTime originalEstimate;
+    private AFTime deltaEffortLeft;
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -61,5 +62,13 @@ public class HistoryEntry<T extends History<?>> {
     }
     public void setOriginalEstimate(AFTime originalEstimate) {
         this.originalEstimate = originalEstimate;
+    }
+    
+    @Type(type = "af_time")
+    public AFTime getDeltaEffortLeft() {
+        return deltaEffortLeft;
+    }
+    public void setDeltaEffortLeft(AFTime deltaEffortLeft) {
+        this.deltaEffortLeft = deltaEffortLeft;
     }
 }

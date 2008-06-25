@@ -77,7 +77,7 @@ Date.abbrMonthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', '
  * @cat Plugins/Methods/Date
  * @author Kelvin Luck
  */
-Date.firstDayOfWeek = 0;
+Date.firstDayOfWeek = 1;
 
 /**
  * The format that string dates should be represented as (e.g. 'dd/mm/yyyy' for UK, 'mm/dd/yyyy' for US, 'yyyy-mm-dd' for Unicode etc).

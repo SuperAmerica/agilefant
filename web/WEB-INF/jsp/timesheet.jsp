@@ -144,15 +144,17 @@
 												var current = "${currently}";
 												if (current) {
 													change_selected_interval(current);
-												} else {
+													$("#interval").find("[value='"+current+"']").attr("selected","selected");
+												} 
+												/*
+												else {
 													change_selected_interval('TODAY');
 												}
-												if(current) {
-													$("#interval").find("[value='"+current+"']").attr("selected","selected");
-												}	
+												*/	
 											});
 										</script> 
 										<select name="interval" id="interval" onchange="change_selected_interval(this.value);">
+												<option value="">Custom</option>
 												<option value="TODAY">Today</option>
 												<option value="YESTERDAY">Yesterday</option>
 												<option value="THIS_WEEK">This week</option>
@@ -171,7 +173,7 @@
 									<td>
 										<!--<ww:datepicker size="15" showstime="false"
 	                       					format="%{getText('webwork.datepicker.format')}" id="effStartDate" name="startDate" value=""/>-->
-	                       				<aef:datepicker id="effStartDate" name="startDate" format="%{getText('webwork.shortDateTime.format')}" value="" />
+	                       				<aef:datepicker value="${startDate}" id="effStartDate" name="startDate" format="%{getText('webwork.shortDateTime.format')}" />
 									</td>
 								</tr>
 								<!--  End date -->
@@ -180,7 +182,7 @@
 									<td>
 	               						<!--<ww:datepicker size="15" showstime="false"
 	                       					format="%{getText('webwork.datepicker.format')}" id="effEndDate" name="endDate" value=""/>-->
-	                       				<aef:datepicker id="effEndDate" name="endDate" format="%{getText('webwork.shortDateTime.format')}" value="" />
+	                       				<aef:datepicker value="${endDate}" id="effEndDate" name="endDate" format="%{getText('webwork.shortDateTime.format')}" />
 									</td>
 								</tr>
 								<!--  User selection -->				

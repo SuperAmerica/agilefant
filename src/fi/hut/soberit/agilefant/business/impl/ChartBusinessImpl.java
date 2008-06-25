@@ -322,8 +322,11 @@ public class ChartBusinessImpl implements ChartBusiness {
         XYItemRenderer rend = plot.getRenderer();
         XYLineAndShapeRenderer rr = (XYLineAndShapeRenderer) rend;
         rr.setShapesVisible(false);
-        /*rr.setSeriesPaint(0, java.awt.Color.red);
-        rr.setSeriesPaint(1, java.awt.Color.blue);*/
+        rr.setStroke(new BasicStroke(1.0f));
+        rr.setSeriesPaint(0, java.awt.Color.red);
+        rr.setSeriesPaint(1, java.awt.Color.red);
+        rr.setSeriesPaint(2, java.awt.Color.red);
+        rr.setSeriesPaint(3, java.awt.Color.blue);
         
 
         // Trims the padding around the chart
@@ -453,13 +456,13 @@ public class ChartBusinessImpl implements ChartBusiness {
         if (load > rangeHigh)
             load = rangeHigh;
         if (load < optimalLow)
-            loadWarning = "Optimal Low";
+            loadWarning = "Low";
         else if (load < optimalHigh)
-            loadWarning = "Optimal High";
+            loadWarning = "Optimal";
         else if (load < criticalLow)
-            loadWarning = "Critical Low";
+            loadWarning = "High";
         else if (load <= rangeHigh)
-            loadWarning = "Critical High";
+            loadWarning = "Far too high!";
                            
         DefaultValueDataset data = new DefaultValueDataset(); 
         data.setValue(Integer.valueOf(load));

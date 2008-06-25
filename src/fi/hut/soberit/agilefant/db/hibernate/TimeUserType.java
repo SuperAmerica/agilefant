@@ -19,7 +19,7 @@ import fi.hut.soberit.agilefant.model.AFTime;
  */
 public class TimeUserType implements UserType {
 
-    private static final int[] SQL_TYPES = { Types.INTEGER };
+    private static final int[] SQL_TYPES = { Types.BIGINT };
 
     /**
      * Get the sql types to use to save our "Time" object.

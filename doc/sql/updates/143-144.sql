@@ -2,8 +2,24 @@
 alter table historyentry add column deltaEffortLeft integer default 0;
 update historyentry set deltaEffortLeft = 0 where deltaEffortLeft = null;
 
--- Load-mittarin muutokset
+-- Changes for the load meter
 alter table user add column weekHours integer default 144000;
+
+-- Convert AFTime fields to bigint
+alter table assignment modify deltaOverhead bigint;
+alter table backlogitem modify effortLeft bigint;
+alter table backlogitem modify originalEstimate bigint;
+alter table historyentry modify effortLeft bigint;
+alter table historyentry modify originalEstimate bigint;
+alter table historyentry modify deltaEffortLeft bigint;
+alter table hourentry modify timeSpent bigint;
+alter table backlog modify defaultOverhead bigint;
+alter table user modify weekHours bigint;
+
+-- Clean up old mess
+drop table if exists efforthistory;
+drop table if exists task_user;
+alter table backlogitem drop column remainingEffortEstimate;
 
 -- Other regression fixes
 alter table assignment add index FK3D2B86CDF63400A2 (backlog_id), add constraint FK3D2B86CDF63400A2 foreign key (backlog_id) references backlog (id);

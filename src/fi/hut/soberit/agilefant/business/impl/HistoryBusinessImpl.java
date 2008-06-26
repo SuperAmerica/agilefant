@@ -49,13 +49,20 @@ public class HistoryBusinessImpl implements HistoryBusiness {
             entry = new HistoryEntry<BacklogHistory>();
             entry.setDate(new java.sql.Date( new Date().getTime()));
             entry.setHistory(history);
+            entry.setEffortLeft(new AFTime(0));
+            entry.setOriginalEstimate(new AFTime(0));
             history.getEffortHistoryEntries().add(entry);            
         }
         
         // Calculate deltaEffortLeft only if orig. est. changed.
         if ( originalEstimateChanged ) {                       
+            
+            // If EL changed differently from OE, subtract the difference from delta
+            // OE2 - OE1 - (EL2 - EL1)
+            AFTime newestChange = new AFTime(originalEstimate.getTime() - entry.getOriginalEstimate().getTime()
+                        - effortLeft.getTime() + entry.getEffortLeft().getTime() );
             // Delta EL set to yesterday's entry, to make drawing the chart easier.
-            updateYesterdayEntry(history, new AFTime(delta));
+            updateYesterdayEntry(history, new AFTime(delta), newestChange);
         }     
         
         entry.setEffortLeft( effortLeft );
@@ -66,9 +73,10 @@ public class HistoryBusinessImpl implements HistoryBusiness {
 
     /**
      * Updates yesterday's entry with delta or creates a new one and copies old effort left and
-     * original estimate to it.
+     * original estimate to it. NewestChange cancel out changes made to effort lefts to items
+     * that are then removed/reset/moved.
      */
-    private void updateYesterdayEntry(BacklogHistory history, AFTime deltaEffortLeft) {
+    private void updateYesterdayEntry(BacklogHistory history, AFTime deltaEffortLeft, AFTime newestChange) {
         HistoryEntry<BacklogHistory> lastEntry = history.getLastToCurrentEntry();
         // Yesterday.
         Calendar yesterday = new GregorianCalendar();
@@ -92,7 +100,13 @@ public class HistoryBusinessImpl implements HistoryBusiness {
         // Last entry is yesterday, update its delta.
         if ( yesterday.get(GregorianCalendar.YEAR) == last.get(GregorianCalendar.YEAR)
                 && yesterday.get(GregorianCalendar.MONTH) == last.get(GregorianCalendar.MONTH)
-                && yesterday.get(GregorianCalendar.DAY_OF_MONTH) == last.get(GregorianCalendar.DAY_OF_MONTH) ) {       
+                && yesterday.get(GregorianCalendar.DAY_OF_MONTH) == last.get(GregorianCalendar.DAY_OF_MONTH) ) {
+            /* To cancel out changes made during the day to effort lefts, decrease from delta orig.est. - eff.left,
+             * if old delta is > 0.
+            */
+            if (lastEntry.getDeltaEffortLeft().getTime() > 0) {
+                lastEntry.getDeltaEffortLeft().add(newestChange);
+            }
             lastEntry.getDeltaEffortLeft().add(deltaEffortLeft);       
         }
         // Last entry is older, create a new "yesterday" entry, and copy the older one's EL and OE to it.

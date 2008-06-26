@@ -56,11 +56,35 @@ public class BacklogHistory extends History<Backlog> {
      * Returns the latest <code>HistoryEntry</code> for this history.
      */
     @Transient
-    public HistoryEntry<BacklogHistory> getLatestEntry() {
+    public HistoryEntry<BacklogHistory> getLatestEntry() {        
         if( effortHistoryEntries.size() > 0)
             return effortHistoryEntries.get(0);
         else
             return createTemporaryEntry(new Date());
+    }
+    
+    /**
+     * Returns the latest <code>HistoryEntry</code> for this history, excluding current.
+     * returns null if none exists.
+     */
+    @Transient
+    public HistoryEntry<BacklogHistory> getLastToCurrentEntry() {
+        if ( effortHistoryEntries.size() > 0 ) {
+            HistoryEntry<BacklogHistory> lastEntry = effortHistoryEntries.get(0);
+            GregorianCalendar today = new GregorianCalendar();
+            today.setTime( new Date() );
+            GregorianCalendar entryDate = new GregorianCalendar();
+            entryDate.setTime( lastEntry.getDate() );
+            
+            if( !(today.get(GregorianCalendar.YEAR) == entryDate.get(GregorianCalendar.YEAR)
+                    && today.get(GregorianCalendar.MONTH) == entryDate.get(GregorianCalendar.MONTH)
+                    && today.get(GregorianCalendar.DAY_OF_MONTH) == entryDate.get(GregorianCalendar.DAY_OF_MONTH)) ) {
+                return lastEntry;
+            } else if ( effortHistoryEntries.size() > 1 ) {
+               return effortHistoryEntries.get(1); 
+            }        
+        }
+        return null;
     }
     
     /**
@@ -90,6 +114,7 @@ public class BacklogHistory extends History<Backlog> {
         faux.setDate( new java.sql.Date(date.getTime()) );
         faux.setEffortLeft(new AFTime(0) );
         faux.setOriginalEstimate(new AFTime(0));
+        faux.setDeltaEffortLeft(new AFTime(0));
         return faux;
     }
     

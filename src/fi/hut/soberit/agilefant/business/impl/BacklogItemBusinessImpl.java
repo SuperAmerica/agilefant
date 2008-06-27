@@ -147,7 +147,9 @@ public class BacklogItemBusinessImpl implements BacklogItemBusiness {
         userSet.addAll(userBusiness.getEnabledUsers());
         
         // Get all previous responsibles
-        userSet.addAll(bli.getResponsibles());
+        if (bli != null) {
+            userSet.addAll(bli.getResponsibles());
+        }
         
         // Create the list and sort it
         List<User> userList = new ArrayList<User>(userSet);

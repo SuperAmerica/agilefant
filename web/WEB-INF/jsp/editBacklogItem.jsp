@@ -371,7 +371,8 @@
 			</script>
 			<div id="userselect" style="display: none;">
 			<div class="left">
-			<c:if test="${!aef:isProduct(backlog)}">
+			<c:if test="${!aef:isProduct(backlog) &&
+			             backlog != null}">
 				<label>Users assigned to this project</label>
 					<ul class="users_0"></ul>
 				<label>Users not assigned this project</label>

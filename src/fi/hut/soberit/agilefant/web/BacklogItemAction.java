@@ -114,6 +114,8 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
         // Id of newly created, not yet persisted backlog item is 0
         backlogItemId = 0;
 
+        possibleResponsibles = backlogItemBusiness.getPossibleResponsibles(backlogItem);
+        
         if (backlogId == 0) {
             return Action.SUCCESS;
         } else {
@@ -124,7 +126,6 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
             }
             backlog = backlogItem.getBacklog();
             backlogId = backlog.getId();
-            possibleResponsibles = backlogItemBusiness.getPossibleResponsibles(backlogItem);
             return Action.SUCCESS;
         }
     }

@@ -202,69 +202,69 @@ public class SettingAction extends ActionSupport {
         }
         // Check that rangeLowValue < optimalLowValue
         if (rangeLowInt != null && optimalLowInt != null) {
-            if (rangeLowInt > optimalLowInt) {
-                addActionError("Minimum may not be greater than optimal low threshold.");
+            if (rangeLowInt >= optimalLowInt) {
+                addActionError("Minimum may not be greater than or equal to optimal low threshold.");
                 return Action.ERROR;
             }
         } else if (rangeLowInt == null && optimalLowInt != null) {
-            if (defaultRangeLowInt > optimalLowInt) {
-                addActionError("Minimum may not be greater than optimal low threshold.");
+            if (defaultRangeLowInt >= optimalLowInt) {
+                addActionError("Minimum may not be greater than or equal to optimal low threshold.");
                 return Action.ERROR;
             }
         } else if (rangeLowInt != null && optimalLowInt == null) {
-            if (rangeLowInt > defaultOptimalLowInt) {
-                addActionError("Minimum may not be greater than optimal low threshold.");
+            if (rangeLowInt >= defaultOptimalLowInt) {
+                addActionError("Minimum may not be greater than or equal to optimal low threshold.");
                 return Action.ERROR;
             }
         }
         // Check that optimalLowValue < optimalHighValue
         if (optimalLowInt != null && optimalHighInt != null) {
-            if (optimalLowInt > optimalHighInt) {
-                addActionError("Optimal low may not be greater than optimal high threshold.");
+            if (optimalLowInt >= optimalHighInt) {
+                addActionError("Optimal low may not be greater than or equal to optimal high threshold.");
                 return Action.ERROR;
             }
         } else if (optimalLowInt == null && optimalHighInt != null) {
-            if (defaultOptimalLowInt > optimalHighInt) {
-                addActionError("Optimal low may not be greater than optimal high threshold.");
+            if (defaultOptimalLowInt >= optimalHighInt) {
+                addActionError("Optimal low may not be greater than or equal to optimal high threshold.");
                 return Action.ERROR;
             }
         } else if (optimalLowInt != null && optimalHighInt == null) {
-            if (optimalLowInt > defaultOptimalHighInt) {
-                addActionError("Optimal low may not be greater than optimal high threshold.");
+            if (optimalLowInt >= defaultOptimalHighInt) {
+                addActionError("Optimal low may not be greater than or equal to optimal high threshold.");
                 return Action.ERROR;
             }
         }
         // Check that optimalHighValue < criticalLowValue
         if (optimalHighInt != null && criticalLowInt != null) {
-            if (optimalHighInt > criticalLowInt) {
-                addActionError("Optimal high may not be greater than critical threshold.");
+            if (optimalHighInt >= criticalLowInt) {
+                addActionError("Optimal high may not be greater than or equal to  critical threshold.");
                 return Action.ERROR;
             }
         } else if (optimalHighInt == null && criticalLowInt != null) {
-            if (defaultOptimalHighInt > criticalLowInt) {
-                addActionError("Optimal high may not be greater than critical threshold.");
+            if (defaultOptimalHighInt >= criticalLowInt) {
+                addActionError("Optimal high may not be greater than or equal to critical threshold.");
                 return Action.ERROR;
             }
         } else if (optimalHighInt != null && criticalLowInt == null) {
-            if (optimalHighInt > defaultCriticalLowInt) {
-                addActionError("Optimal high may not be greater than critical threshold.");
+            if (optimalHighInt >= defaultCriticalLowInt) {
+                addActionError("Optimal high may not be greater than or equal to critical threshold.");
                 return Action.ERROR;
             }
         }
         // Check that criticalLowValue < rangeHighValue
         if (criticalLowInt != null && rangeHighInt != null) {
-            if (criticalLowInt > rangeHighInt) {
-                addActionError("Critical threshold may not be greater than maximum.");
+            if (criticalLowInt >= rangeHighInt) {
+                addActionError("Critical threshold may not be greater than or equal to maximum.");
                 return Action.ERROR;
             }
         } else if (criticalLowInt == null && rangeHighInt != null) {
-            if (defaultCriticalLowInt > rangeHighInt) {
-                addActionError("Critical threshold may not be greater than maximum.");
+            if (defaultCriticalLowInt >= rangeHighInt) {
+                addActionError("Critical threshold may not be greater than or equal to maximum.");
                 return Action.ERROR;
             }
         } else if (criticalLowInt != null && rangeHighInt == null) {
-            if (criticalLowInt > defaultRangeHighInt) {
-                addActionError("Critical threshold may not be greater than maximum.");
+            if (criticalLowInt >= defaultRangeHighInt) {
+                addActionError("Critical threshold may not be greater than or equal to maximum.");
                 return Action.ERROR;
             }
         }

@@ -1,6 +1,6 @@
-Agilefant 1.4.3
+Agilefant 1.4.4
 RELEASE NOTES
-16.6.2008
+27.6.2008
 
 Agilefant's key functionality now includes
 ------------------------------------------
@@ -13,34 +13,40 @@ effort estimate is also recorded
 backlog is displayed
 + A burndown graph displaying the development velocity is shown for
 for iteration level backlogs
++ Scoping is shown on the burndown graphs
 + Daily Work view lists your current work according to project priorities
-+ users can be allocated into (from zero to multiple) teams
-+ backlog items can have from (zero to multiple) users and teams
++ Users can be allocated into (from zero to multiple) teams
++ Backlog items can have from (zero to multiple) users and teams
 assigned to them
-+ users can be dedicated to (from zero to multiple) projects; users
++ Users can be dedicated to (from zero to multiple) projects; users
 who have backlog items in the project(s) they have NOT been dedicated
 to are highlighted
-+ projects that have has non-dedicated users working on them (i.e.
++ Projects that have has non-dedicated users working on them (i.e.
 have assigned backlog items) are highlighted
 + Project Portfolio view allows the relative prioritisation of projects
 + Project Portfolio view shows the workloads for projects and users
-+ Spent effort can be logged for backlog items and projects
-+ Timesheets -related functionality can be enabled/disabled from the settings tab
-+ Timesheets -reporting can be used for viewing spent effort
++ Timesheets; i.e. spent effort can be logged for backlog items and projects
++ Timesheets can be enabled/disabled from the settings tab
+
+CHANGES FROM AGILEFANT 1.4.3
+-----------------------------
++ Burndown graphs now show changed scopes
++ Minor fixes
 
 CHANGES FROM AGILEFANT 1.4.2
 -----------------------------
 + Spent effort can be logged for projects
-+ Timesheets -page for viewing spent effort
-+ BLI-lists can be sorted by Spent Effort
++ Timesheets tab for generating reports of spent effort
++ Backlog item lists can be sorted by Spent Effort
++ Effort can be logged directly from backlog lists
++ Left-hand menu (list of backlogs) re-engineered to a tree
 + Minor fixes and streamlining
 
 CHANGES FROM AGILEFANT 1.4.1
 -----------------------------
-+ Job effort entry from BLI-lists for current user
-+ Effort totals for Iteration Goal -list
-+ Iteration Goal ranking
-+ Improvements for Log Effort dialog
++ Effort totals shown in the Iteration Goals -list
++ Iteration Goals can be ranked for importance
++ Effort logging improved
 + Minor fixes
 
 CHANGES FROM AGILEFANT 1.4.0

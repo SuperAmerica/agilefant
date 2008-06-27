@@ -631,7 +631,8 @@
 						<c:if test="${!empty project.backlogItems}">
 							<c:if test="${empty project.iterations}">
 								<p>
-									<img src="drawProjectChart.action?projectId=${project.id}" id="bigChart"/>
+									<img src="drawProjectChart.action?projectId=${project.id}" id="bigChart"
+									   width="780" height="600" />
 								</p>
 							</c:if>
 						</c:if>

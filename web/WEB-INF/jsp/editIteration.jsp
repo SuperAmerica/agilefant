@@ -434,7 +434,8 @@ $(document).ready( function() {
 				</p>
 				</div>
 			</c:if></div>
-			<p><img src="drawChart.action?iterationId=${iteration.id}" id="bigChart" /></p>
+			<p><img src="drawChart.action?iterationId=${iteration.id}" id="bigChart"
+			     width="780" height="600" /></p>
 		</c:if></td>
 	</tr>
 </table>

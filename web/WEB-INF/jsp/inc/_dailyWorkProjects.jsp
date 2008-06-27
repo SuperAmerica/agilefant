@@ -155,7 +155,13 @@
 				
 				<td class="smallBurndownColumn">
 						<div>
+						<ww:url id="parentActionUrl"
+                            action="editProject" includeParams="none">
+                            <ww:param name="projectId" value="${pro.id}" />
+                        </ww:url>
+						<ww:a href="%{parentActionUrl}&contextViewName=dailyWork#bigChart">
 							<img src="drawSmallProjectChart.action?projectId=${pro.id}"/>
+					    </ww:a>
 						</div>
 					</td>
 

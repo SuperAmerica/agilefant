@@ -17,6 +17,7 @@ import org.apache.log4j.Logger;
 import fi.hut.soberit.agilefant.business.BacklogBusiness;
 import fi.hut.soberit.agilefant.business.HourEntryBusiness;
 import fi.hut.soberit.agilefant.business.ProjectBusiness;
+import fi.hut.soberit.agilefant.business.SettingBusiness;
 import fi.hut.soberit.agilefant.business.UserBusiness;
 import fi.hut.soberit.agilefant.db.IterationDAO;
 import fi.hut.soberit.agilefant.db.ProjectDAO;
@@ -54,6 +55,8 @@ public class ProjectBusinessImpl implements ProjectBusiness {
     private ProjectTypeDAO projectTypeDAO;
     
     private HourEntryBusiness hourEntryBusiness;
+    
+    private SettingBusiness settingBusiness;
 
     // Testing
     private UserDAO userDAO;
@@ -724,7 +727,7 @@ public class ProjectBusinessImpl implements ProjectBusiness {
             }
         }
         for (int i = 0; i < weeksAhead; i++) {
-            boolean accommondate = ProjectBusinessImpl.isAccommodableWorkload(currentWeek, currentWeek + i, 
+            boolean accommondate = isAccommodableWorkload(currentWeek, currentWeek + i, 
                     data.getWeeklyTotals().get(currentWeek + i), user);
             data.getWeeklyOverload().put(new Integer(currentWeek + i), new Boolean(accommondate));
         }
@@ -742,7 +745,7 @@ public class ProjectBusinessImpl implements ProjectBusiness {
      * @param totalWorkload
      * @return
      */
-    private static boolean isAccommodableWorkload(int currentWeek, int targetWeek, AFTime totalWorkload, User user) {
+    private boolean isAccommodableWorkload(int currentWeek, int targetWeek, AFTime totalWorkload, User user) {
         long totalInWeek = 5;
         int daysLeft = 5;
         if(currentWeek == targetWeek) {
@@ -753,8 +756,8 @@ public class ProjectBusinessImpl implements ProjectBusiness {
                 daysLeft++;
             }
         }
-        totalInWeek = (long) (user.getWeekHours().getTime() * (1.0 * daysLeft / 5));       
-        if(totalInWeek < totalWorkload.getTime()) {
+        totalInWeek = (long) (user.getWeekHours().getTime() * (1.0 * daysLeft * settingBusiness.getCriticalLow() / (5 * 100)));
+        if (totalInWeek <  totalWorkload.getTime()) {
             return false;
         }
         return true;
@@ -794,6 +797,14 @@ public class ProjectBusinessImpl implements ProjectBusiness {
 
     public void setHourEntryBusiness(HourEntryBusiness hourEntryBusiness) {
         this.hourEntryBusiness = hourEntryBusiness;
+    }
+
+    public void setSettingBusiness(SettingBusiness settingBusiness) {
+        this.settingBusiness = settingBusiness;
+    }
+
+    public SettingBusiness getSettingBusiness() {
+        return settingBusiness;
     }
 
 }

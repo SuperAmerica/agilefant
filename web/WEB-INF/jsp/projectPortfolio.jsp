@@ -325,4 +325,34 @@ var teams = [<aef:teamJson items="${teamList}"/>]
 	</c:otherwise>
 </c:choose></p>
 
+<h2>Themes</h2>
+<p><ww:url id="createBusinessThemeLink" action="createBusinessTheme" />
+<ww:a href="%{createBusinessThemeLink}">Create new &raquo;</ww:a></p>
+
+<p><c:choose>
+	<c:when test="${empty businessThemes}">
+				No themes were found.
+			</c:when>
+	<c:otherwise>
+		<display:table class="listTable" name="${businessThemes}" id="row"
+			requestURI="projectPortfolio.action" defaultsort="1">
+			<display:column sortable="true" title="Name" sortProperty="name">
+				<ww:url id="editLink" action="editBusinessTheme">
+					<ww:param name="businessThemeId" value="${row.id}" />
+				</ww:url>
+				<ww:a href="%{editLink}">
+					${aef:html(row.name)}
+				</ww:a>
+			</display:column>
+			<display:column sortable="false" title="Actions">
+				<ww:url id="deleteLink" action="deleteBusinessTheme">
+					<ww:param name="businessThemeId" value="${row.id}" />
+				</ww:url>
+				<ww:a href="%{deleteLink}" onclick="return confirmDelete()">Delete</ww:a>
+			</display:column>
+		</display:table>
+
+	</c:otherwise>
+</c:choose></p>
+
 <%@ include file="./inc/_footer.jsp"%>

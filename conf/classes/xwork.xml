@@ -77,6 +77,10 @@
 				type="redirect-action">
 				<param name="actionName">projectPortfolio</param>
 			</result>
+			<result name="success_businessThemes"
+				type="redirect-action">
+				<param name="actionName">projectPortfolio</param>
+			</result>
 			<result name="success_createNew" type="redirect-action">
 				<param name="actionName">createNew</param>
 			</result>
@@ -839,6 +843,25 @@
 		<action name="getHourSum" method="sumHours" class="getHourSumAction">
 			<result name="success">/WEB-INF/jsp/inc/_hourSum.jsp</result>
 		</action>
+		
+		<!-- Business theme actions -->
+		<action name="editBusinessTheme" method="edit"
+			class="businessThemeAction">
+			<result>/WEB-INF/jsp/editBusinessTheme.jsp</result>
+		</action>
+		<action name="createBusinessTheme" method="create"
+			class="businessThemeAction">
+			<result>/WEB-INF/jsp/editBusinessTheme.jsp</result>
+		</action>
+		<action name="deleteBusinessTheme" method="delete"
+			class="businessThemeAction">
+			<result type="redirect-action">projectPortfolio</result>
+		</action>
+		<action name="storeBusinessTheme" method="store"
+			class="businessThemeAction">
+			<result type="redirect-action">projectPortfolio</result>
+		</action>
+		<!-- /Business theme actions -->
 
 </package>
 </xwork>

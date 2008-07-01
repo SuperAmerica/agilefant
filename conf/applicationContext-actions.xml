@@ -87,4 +87,7 @@
 	<bean name="getHourSumAction"
 		class="fi.hut.soberit.agilefant.web.GetHourSumAction"
 		autowire="byName" singleton="false" />
+	<bean name="businessThemeAction"
+		class="fi.hut.soberit.agilefant.web.BusinessThemeAction"
+		autowire="byName" singleton="false" />
 </beans>

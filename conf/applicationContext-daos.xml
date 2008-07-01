@@ -126,4 +126,11 @@
 	<bean name="backlogHourEntryDAO" parent="abstractDAO">
 		<property name="target" ref="backlogHourEntryDAOTarget" />
 	</bean>
+	
+	<bean name="businessThemeDAOTarget" parent="abstractDAOTarget"
+		class="fi.hut.soberit.agilefant.db.hibernate.BusinessThemeDAOHibernate" />
+	<bean name="businessThemeDAO" parent="abstractDAO">
+		<property name="target" ref="businessThemeDAOTarget" />
+	</bean>
+	
 </beans>

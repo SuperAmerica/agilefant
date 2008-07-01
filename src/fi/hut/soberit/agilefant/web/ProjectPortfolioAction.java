@@ -10,10 +10,12 @@ import com.opensymphony.xwork.ActionSupport;
 import fi.hut.soberit.agilefant.business.BacklogBusiness;
 import fi.hut.soberit.agilefant.business.ProjectBusiness;
 import fi.hut.soberit.agilefant.business.TeamBusiness;
+import fi.hut.soberit.agilefant.business.BusinessThemeBusiness;
 import fi.hut.soberit.agilefant.business.UserBusiness;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.ProjectType;
 import fi.hut.soberit.agilefant.model.Team;
+import fi.hut.soberit.agilefant.model.BusinessTheme;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.util.ProjectPortfolioData;
 
@@ -28,10 +30,14 @@ public class ProjectPortfolioAction extends ActionSupport {
     private TeamBusiness teamBusiness;
     
     private UserBusiness userBusiness;
+    
+    private BusinessThemeBusiness businessThemeBusiness;
 
     private int projectId;
 
     private Collection<ProjectType> projectTypes;
+    
+    private Collection<BusinessTheme> businessThemes;
 
     private Map<Project, String> summaryUserData;
     
@@ -52,6 +58,7 @@ public class ProjectPortfolioAction extends ActionSupport {
     @Override
     public String execute() throws Exception {
         projectTypes = projectBusiness.getProjectTypes();
+        businessThemes = businessThemeBusiness.getAll();
         ProjectPortfolioData data = projectBusiness.getProjectPortfolioData();
         summaryUserData = data.getSummaryUserData();
         summaryLoadLeftData = data.getSummaryLoadLeftData();
@@ -196,6 +203,22 @@ public class ProjectPortfolioAction extends ActionSupport {
 
     public void setTotalUserOverheads(Map<String, String> totalUserOverheads) {
         this.totalUserOverheads = totalUserOverheads;
+    }
+
+    public Collection<BusinessTheme> getBusinessThemes() {
+        return businessThemes;
+    }
+
+    public void setBusinessThemes(Collection<BusinessTheme> businessThemes) {
+        this.businessThemes = businessThemes;
+    }
+
+    public BusinessThemeBusiness getBusinessThemeBusiness() {
+        return businessThemeBusiness;
+    }
+
+    public void setBusinessThemeBusiness(BusinessThemeBusiness businessThemeBusiness) {
+        this.businessThemeBusiness = businessThemeBusiness;
     }
 
     

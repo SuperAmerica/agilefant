@@ -75,6 +75,9 @@
 	<li><ww:url id="createLink" action="createProjectType"
 		includeParams="none" /> <ww:a href="%{createLink}">Create a new project type &raquo;</ww:a>
 	</li>
+	<li><ww:url id="createLink" action="createBusinessTheme"
+		includeParams="none" /> <ww:a href="%{createLink}">Create a new theme &raquo;</ww:a>
+	</li>
 </ul>
 </p>
 

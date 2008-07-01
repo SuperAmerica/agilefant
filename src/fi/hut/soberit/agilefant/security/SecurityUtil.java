@@ -3,6 +3,8 @@ package fi.hut.soberit.agilefant.security;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+import org.acegisecurity.Authentication;
+import org.acegisecurity.context.SecurityContext;
 import org.acegisecurity.context.SecurityContextHolder;
 
 import fi.hut.soberit.agilefant.model.User;
@@ -111,5 +113,13 @@ public class SecurityUtil {
         } catch (NoSuchAlgorithmException nsae) {
             return null;
         }
+    }
+    
+    public static void logoutCurrentUser() {
+        SecurityContext context = SecurityContextHolder.getContext();
+        if (context == null) return;
+        Authentication authentication = context.getAuthentication();
+        if (authentication == null) return;
+        authentication.setAuthenticated(false);
     }
 }

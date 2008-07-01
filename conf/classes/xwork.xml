@@ -759,6 +759,12 @@
 				<param name="actionName">createNew</param>
 			</result>
 		</action>
+		
+		<action name="undoPushContext" class="contextStackAction">
+			<result type="httpheader">
+				<param name="status">200</param>
+			</result>
+		</action>
 
 		<action name="selectBacklog">
 			<result>/WEB-INF/jsp/selectBacklog.jsp</result>

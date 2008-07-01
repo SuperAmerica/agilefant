@@ -51,8 +51,7 @@
 				win.find(".jqmClose").click(function() {
 					win.hide();
 					bg.remove();
-					jQuery.post("popContext.action");
-					$(".calendar").remove(); //fix this (the stupid dhtml calendar)
+					jQuery.post("undoPushContext.action");
 					return false;
 				});
 				return false;

@@ -46,6 +46,15 @@ public class RefreshUserInterceptor implements Interceptor {
 
         // get the user object corresponding to the id
         User user = userDAO.get(userId);
+        
+        //check that user hasn't been removed during the session
+        if(user == null) {
+            SecurityUtil.logoutCurrentUser();
+        }
+        //check that user hasn't been disabled during the session
+        if(!user.isEnabled()) {
+            SecurityUtil.logoutCurrentUser();
+        }
 
         // before the request:
         // set this user as the logged user

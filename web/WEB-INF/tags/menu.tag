@@ -26,6 +26,18 @@ Agilefant
 <script type="text/javascript" src="static/js/taskrank.js"></script>
 <script type="text/javascript" src="static/js/date.js"></script>
 <script type="text/javascript" src="static/js/datepicker.js"></script>
+<script type="text/javascript">
+function reloadPage()
+{
+	window.location.reload();
+}
+$(document).ready(function() {
+	if(document.cookie.indexOf("ACEGI_SECURITY_HASHED_REMEMBER_ME_COOKIE") == -1) {
+		var sessionLength = <%=session.getMaxInactiveInterval()%>*1000;
+		setTimeout('reloadPage()',sessionLength+5);
+	}
+});
+</script>
 </head>
 
 <!-- Icons from http://sweetie.sublink.ca/ -->

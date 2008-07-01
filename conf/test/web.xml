@@ -46,4 +46,7 @@
 		<welcome-file>index.jsp</welcome-file>
 		<welcome-file>index.html</welcome-file>
 	</welcome-file-list>
+	<session-config>
+    	<session-timeout>240</session-timeout>
+  	</session-config>
 </web-app>

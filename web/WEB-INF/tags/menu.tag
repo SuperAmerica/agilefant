@@ -153,7 +153,7 @@ $(document).ready(function() {
             
             var openString = "" + openArray.join(",");
             
-            $.get("ajaxUpdateOpenMenus.action",
+            $.post("ajaxUpdateOpenMenus.action",
                 { "openString": openString }
             );
         }

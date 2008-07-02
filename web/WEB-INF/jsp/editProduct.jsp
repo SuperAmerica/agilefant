@@ -107,7 +107,7 @@
 						<table class="infoTable" cellpadding="0" cellspacing="0">
 							
 							<tr>
-								<td colspan="2" class="description" onclick="return editProduct();" >${product.description}</td>
+								<td colspan="2" class="description">${product.description}</td>
 								<td class="info4">&nbsp;</td>
 							</tr>
 

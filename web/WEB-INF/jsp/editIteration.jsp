@@ -174,7 +174,7 @@
 							</tr>
 
 							<tr>
-								<td colspan="2" class="description" onclick="return editIteration();">${iteration.description}</td>
+								<td colspan="2" class="description">${iteration.description}</td>
 							</tr>
 
 						</table>

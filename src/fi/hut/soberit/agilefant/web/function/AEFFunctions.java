@@ -98,7 +98,9 @@ public class AEFFunctions {
     }
     
     private static String out(String s, int newLength, boolean asHtml) {
-        return asHtml ? "<span title=\"" + s + "\">" + s + "</span>" : s;
+        String title = s.replaceAll("\\<.*?>","");
+        title = title.replaceAll("/\"/","&quote;");
+        return asHtml ? "<span title=\"" + title + "\">" + s + "</span>" : s;
     }
 
     public void setMaxStrLength(int maxStrLength) {

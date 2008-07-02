@@ -29,10 +29,7 @@ Agilefant
 <script type="text/javascript" src="static/js/datepicker.js"></script>
 <script type="text/javascript" src="static/js/jquery.wysiwyg.js"></script>
 <script type="text/javascript">
-function reloadPage()
-{
-	window.location.reload();
-}
+
 $(document).ready(function() {
 	if(document.cookie.indexOf("ACEGI_SECURITY_HASHED_REMEMBER_ME_COOKIE") == -1) {
 		var sessionLength = <%=session.getMaxInactiveInterval()%>*1000;

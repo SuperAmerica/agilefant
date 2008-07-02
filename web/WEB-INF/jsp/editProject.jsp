@@ -333,7 +333,7 @@
 	                                    			</td>
 												</tr>
 												<tr>
-								    				<td colspan="2" class="description" onclick="return editProject();">${project.description}</td>
+								    				<td colspan="2" class="description">${project.description}</td>
 												</tr>
 											</table>
 										</div>

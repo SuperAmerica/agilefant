@@ -134,3 +134,7 @@ function setUpWysiwyg(id) {
         insertUnorderedList : { visible : true }
     }});
 }
+function reloadPage()
+{
+	window.location.reload();
+}

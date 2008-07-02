@@ -173,7 +173,7 @@
             bold          : { visible : true, tags : ['b', 'strong'], css : { fontWeight : 'bold' } },
             italic        : { visible : true, tags : ['i', 'em'], css : { fontStyle : 'italic' } },
             strikeThrough : { visible : false, tags : ['s', 'strike'], css : { textDecoration : 'line-through' } },
-            underline     : { visible : false, tags : ['u'], css : { textDecoration : 'underline' } },
+            underline     : { visible : true, tags : ['u'], css : { textDecoration : 'underline' } },
 
             separator00 : { visible : false, separator : true },
 
@@ -187,17 +187,17 @@
             indent  : { visible : false },
             outdent : { visible : false },
 
-            separator02 : { visible : false, separator : true },
+            separator02 : { visible : true, separator : true },
 
-            subscript   : { visible : false, tags : ['sub'] },
-            superscript : { visible : false, tags : ['sup'] },
+            subscript   : { visible : true, tags : ['sub'] },
+            superscript : { visible : true, tags : ['sup'] },
 
-            separator03 : { visible : false, separator : true },
+            separator03 : { visible : true, separator : true },
 
-            undo : { visible : false },
-            redo : { visible : false },
+            undo : { visible : true },
+            redo : { visible : true },
 
-            separator04 : { visible : false, separator : true },
+            separator04 : { visible : true, separator : true },
 
             insertOrderedList    : { visible : false, tags : ['ol'] },
             insertUnorderedList  : { visible : false, tags : ['ul'] },
@@ -253,12 +253,12 @@
 
             separator06 : { separator : true },
 
-            h1mozilla : { visible : true && $.browser.mozilla, className : 'h1', command : 'heading', arguments : ['h1'], tags : ['h1'] },
-            h2mozilla : { visible : true && $.browser.mozilla, className : 'h2', command : 'heading', arguments : ['h2'], tags : ['h2'] },
+            h1mozilla : { visible : false && $.browser.mozilla, className : 'h1', command : 'heading', arguments : ['h1'], tags : ['h1'] },
+            h2mozilla : { visible : false && $.browser.mozilla, className : 'h2', command : 'heading', arguments : ['h2'], tags : ['h2'] },
             h3mozilla : { visible : true && $.browser.mozilla, className : 'h3', command : 'heading', arguments : ['h3'], tags : ['h3'] },
 
-            h1 : { visible : true && !( $.browser.mozilla ), className : 'h1', command : 'formatBlock', arguments : ['Heading 1'], tags : ['h1'] },
-            h2 : { visible : true && !( $.browser.mozilla ), className : 'h2', command : 'formatBlock', arguments : ['Heading 2'], tags : ['h2'] },
+            h1 : { visible : false && !( $.browser.mozilla ), className : 'h1', command : 'formatBlock', arguments : ['Heading 1'], tags : ['h1'] },
+            h2 : { visible : false && !( $.browser.mozilla ), className : 'h2', command : 'formatBlock', arguments : ['Heading 2'], tags : ['h2'] },
             h3 : { visible : true && !( $.browser.mozilla ), className : 'h3', command : 'formatBlock', arguments : ['Heading 3'], tags : ['h3'] },
 
             separator07 : { visible : false, separator : true },
@@ -269,13 +269,13 @@
 
             separator08 : { separator : true && !( $.browser.msie ) },
 
-            increaseFontSize : { visible : true && !( $.browser.msie ), tags : ['big'] },
-            decreaseFontSize : { visible : true && !( $.browser.msie ), tags : ['small'] },
+            increaseFontSize : { visible : false && !( $.browser.msie ), tags : ['big'] },
+            decreaseFontSize : { visible : false && !( $.browser.msie ), tags : ['small'] },
 
             separator09 : { separator : true },
 
             html : {
-                visible : false,
+                visible : true,
                 exec    : function()
                 {
                     if ( this.viewHTML )
@@ -294,7 +294,7 @@
             },
 
             removeFormat : {
-                visible : true,
+                visible : false,
                 exec    : function()
                 {
                     this.editorDoc.execCommand('removeFormat', false, []);

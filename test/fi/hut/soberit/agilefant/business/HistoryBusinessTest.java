@@ -448,7 +448,6 @@ public class HistoryBusinessTest extends TestCase {
         Iteration iter = new Iteration();
         
         GregorianCalendar cal = new GregorianCalendar();
-        //Date now = cal.getTime();
         cal.add(Calendar.DATE, -7);
         Date weekAgo = cal.getTime();
         cal.add(Calendar.DATE, 14);

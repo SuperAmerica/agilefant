@@ -3,6 +3,7 @@ package fi.hut.soberit.agilefant.business.impl;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Rectangle;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.text.NumberFormat;
@@ -33,12 +34,14 @@ import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.ui.RectangleInsets;
 
 import fi.hut.soberit.agilefant.business.ChartBusiness;
+import fi.hut.soberit.agilefant.business.HistoryBusiness;
 import fi.hut.soberit.agilefant.business.ProjectBusiness;
 import fi.hut.soberit.agilefant.business.SettingBusiness;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.db.IterationDAO;
 import fi.hut.soberit.agilefant.db.ProjectDAO;
 import fi.hut.soberit.agilefant.db.UserDAO;
+import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogHistory;
 import fi.hut.soberit.agilefant.model.HistoryEntry;
@@ -64,22 +67,28 @@ public class ChartBusinessImpl implements ChartBusiness {
     private SettingBusiness settingBusiness;
     
     private ProjectBusiness projectBusiness;
+    
+    private HistoryBusiness historyBusiness;
+   
+    private Date expectedDate;
 
+    /* Default chart size */
     private static final int DEFAULT_WIDTH = 780;
-
     private static final int DEFAULT_HEIGHT = 600;
-
     private static final int SMALL_WIDTH = 110;
-
     private static final int SMALL_HEIGHT = 85;
     
+    /* Series numbers */
     private static final int BURNDOWN_SERIES = 0;
-    
     private static final int CURRENT_DAY_SERIES = 1;
-    
     private static final int SCOPING_SERIES = 2;
-    
     private static final int REFERENCE_SERIES = 3;
+    private static final int EXPECTED_SERIES = 4;
+    
+    /* Series colors */
+    private static Color BURNDOWN_COLOR = new Color(220, 100, 87);
+    private static Color REFERENCE_COLOR = new Color(90, 145, 210);
+    private static Color EXPECTED_COLOR = new Color(247, 150, 70); //new Color(30, 180, 100);
 
     /**
      * Generates a byte array (a png image file) from a JFreeChart object
@@ -135,7 +144,7 @@ public class ChartBusinessImpl implements ChartBusiness {
                 Day.class);
         TimeSeries currentDaySeries = new TimeSeries("Current day", Day.class);
         TimeSeries deltaEffortLeftSeries = new TimeSeries("Scoping", Second.class);
-        
+        TimeSeries expectedSeries = new TimeSeries("Expected velocity", Day.class);        
         
         GregorianCalendar i = new GregorianCalendar();
         GregorianCalendar end = new GregorianCalendar();
@@ -202,21 +211,41 @@ public class ChartBusinessImpl implements ChartBusiness {
         }
         
         // Create the data "series" for the current date
+        i.setTime(new Date());
+        i.add(Calendar.DATE, -1);
         HistoryEntry<BacklogHistory> entry = history.getDateEntry(i.getTime());
-        currentDaySeries.add(new Day(i.getTime()),
-                estimateSeries.getValue(estimateSeries.getItemCount() - 1));
+        long startPoint = entry.getEffortLeft().getTime() + entry.getDeltaEffortLeft().getTime();
+        i.add(Calendar.DATE, 1);
+        currentDaySeries.add(new Day(i.getTime()), (float)(startPoint / 3600.0));
         i.add(Calendar.DATE, 1);
         entry = history.getDateEntry(i.getTime());
         currentDaySeries.add(new Day(i.getTime()),
                 (float) entry.getEffortLeft().getTime() / 3600.0);
+       
+        // Create the expected series
+        i.setTime(new Date());
+        i.add(Calendar.DATE, -1);
+        entry = history.getDateEntry(i.getTime());
+        AFTime velocity = historyBusiness.calculateDailyVelocity(backlog.getId());
+        i.add(Calendar.DATE, 1);
+        entry = history.getDateEntry(i.getTime());
+        Date expectedDate = historyBusiness.calculateExpectedDate(backlog, entry.getOriginalEstimate(), velocity);
+        if (expectedDate != null) {
+            this.expectedDate = expectedDate;
+            expectedSeries.add(new Day(i.getTime()), (float)(startPoint / 3600.0));
+            expectedSeries.add(new Day(expectedDate), 0);
+        }
         
-      
         // Add the series in correct order
         TimeSeriesCollection dataset = new TimeSeriesCollection();
         dataset.addSeries(estimateSeries);
         dataset.addSeries(currentDaySeries);
         dataset.addSeries(deltaEffortLeftSeries);
         dataset.addSeries(referenceSeries);
+        if (expectedDate != null &&
+                (new Date()).before(backlog.getEndDate())) {
+            dataset.addSeries(expectedSeries);
+        }
         return dataset;
     }
 
@@ -265,7 +294,13 @@ public class ChartBusinessImpl implements ChartBusiness {
 
         newEndDate.add(GregorianCalendar.DATE, 1);
 
-        axis.setMaximumDate(newEndDate.getTime());
+        if (this.expectedDate != null &&
+                this.expectedDate.after(newEndDate.getTime())) {
+            axis.setMaximumDate(expectedDate);
+        }
+        else {
+            axis.setMaximumDate(newEndDate.getTime());
+        }
 
         if ((endDate.getTime() - startDate.getTime()) < (8 * 24 * 60 * 60))
             axis.setTickUnit(new DateTickUnit(DateTickUnit.DAY, 1));
@@ -273,29 +308,36 @@ public class ChartBusinessImpl implements ChartBusiness {
             axis.setAutoTickUnitSelection(true);
         XYItemRenderer rend = plot.getRenderer();
         XYLineAndShapeRenderer rr = (XYLineAndShapeRenderer) rend;
-        
+              
         // Set estimate series properties
-        rr.setSeriesPaint(BURNDOWN_SERIES, java.awt.Color.red);
+        rr.setSeriesPaint(BURNDOWN_SERIES, BURNDOWN_COLOR);
         rr.setSeriesShape(BURNDOWN_SERIES, new java.awt.Rectangle(-2, -2, 4, 4));
         rr.setSeriesShapesVisible(BURNDOWN_SERIES, true);
+        rr.setSeriesStroke(BURNDOWN_SERIES, new BasicStroke(2.0f));
         
         // Set current day series properties
-        rr.setSeriesPaint(CURRENT_DAY_SERIES, java.awt.Color.red);
-        rr.setSeriesShape(CURRENT_DAY_SERIES, new java.awt.Rectangle(-2, -2, 4, 4));
+        rr.setSeriesPaint(CURRENT_DAY_SERIES, BURNDOWN_COLOR);
+        rr.setSeriesShape(CURRENT_DAY_SERIES, new Rectangle(-2, -2, 4, 4));
         rr.setSeriesShapesFilled(CURRENT_DAY_SERIES, false);
         rr.setSeriesShapesVisible(CURRENT_DAY_SERIES, true);
-        rr.setSeriesStroke(CURRENT_DAY_SERIES, new BasicStroke(1.0f, BasicStroke.CAP_BUTT,
+        rr.setSeriesStroke(CURRENT_DAY_SERIES, new BasicStroke(2.0f, BasicStroke.CAP_BUTT,
                 BasicStroke.JOIN_BEVEL, 0.0f, new float[] { 7.0f, 3.0f }, 0.0f));
         
         // Set scoping series properties
-        rr.setSeriesPaint(SCOPING_SERIES, java.awt.Color.red);
+        rr.setSeriesPaint(SCOPING_SERIES, BURNDOWN_COLOR);
         rr.setSeriesShapesVisible(SCOPING_SERIES, false);
-        rr.setSeriesStroke(SCOPING_SERIES, new BasicStroke(1.5f, BasicStroke.CAP_BUTT,
-                BasicStroke.JOIN_BEVEL, 0.0f, new float[] { 1.5f, 2.5f }, 0.0f));
+        rr.setSeriesStroke(SCOPING_SERIES, new BasicStroke(2.0f, BasicStroke.CAP_BUTT,
+                BasicStroke.JOIN_BEVEL, 0.0f, new float[] { 2.0f, 4.0f }, 0.0f));
         
         // Set reference series properties
-        rr.setSeriesPaint(REFERENCE_SERIES, java.awt.Color.blue);
+        rr.setSeriesPaint(REFERENCE_SERIES, REFERENCE_COLOR);
         rr.setSeriesShapesVisible(REFERENCE_SERIES, false);
+        rr.setSeriesStroke(REFERENCE_SERIES, new BasicStroke(2.0f));
+        
+        // Set expected series properties
+        rr.setSeriesPaint(EXPECTED_SERIES, EXPECTED_COLOR);
+        rr.setSeriesStroke(EXPECTED_SERIES, new BasicStroke(2.0f, BasicStroke.CAP_BUTT,
+                BasicStroke.JOIN_BEVEL, 0.0f, new float[] { 7.0f, 3.0f, 2.0f, 3.0f, 2.0f, 3.0f }, 10.0f));
         
         return chart;
     }
@@ -323,11 +365,10 @@ public class ChartBusinessImpl implements ChartBusiness {
         XYLineAndShapeRenderer rr = (XYLineAndShapeRenderer) rend;
         rr.setShapesVisible(false);
         rr.setStroke(new BasicStroke(1.0f));
-        rr.setSeriesPaint(0, java.awt.Color.red);
-        rr.setSeriesPaint(1, java.awt.Color.red);
-        rr.setSeriesPaint(2, java.awt.Color.red);
-        rr.setSeriesPaint(3, java.awt.Color.blue);
-        
+        rr.setSeriesPaint(0, BURNDOWN_COLOR);
+        rr.setSeriesPaint(1, BURNDOWN_COLOR);
+        rr.setSeriesPaint(2, BURNDOWN_COLOR);
+        rr.setSeriesPaint(3, REFERENCE_COLOR);
 
         // Trims the padding around the chart
         RectangleInsets ins = new RectangleInsets(-6, -8, -3, -7);
@@ -393,6 +434,12 @@ public class ChartBusinessImpl implements ChartBusiness {
 
         TimeSeriesCollection effLeftTimeSeries = getDataset(iteration,
                 startDate, endDate);
+        
+        try {
+            effLeftTimeSeries.removeSeries(EXPECTED_SERIES);
+        }
+        catch (Exception e) {}
+        
         JFreeChart burndownGraph = trimChart(getChart(effLeftTimeSeries,
                 startDate, endDate, "Iteration burndown"));
 
@@ -414,6 +461,12 @@ public class ChartBusinessImpl implements ChartBusiness {
 
         TimeSeriesCollection effLeftTimeSeries = getDataset(project,
                 startDate, endDate);
+        
+        try {
+            effLeftTimeSeries.removeSeries(EXPECTED_SERIES);
+        }
+        catch (Exception e) {}
+        
         JFreeChart burndownGraph = trimChart(getChart(effLeftTimeSeries,
                 startDate, endDate, "Project burndown"));
 
@@ -554,6 +607,14 @@ public class ChartBusinessImpl implements ChartBusiness {
 
     public void setProjectBusiness(ProjectBusiness projectBusiness) {
         this.projectBusiness = projectBusiness;
+    }
+
+    public HistoryBusiness getHistoryBusiness() {
+        return historyBusiness;
+    }
+
+    public void setHistoryBusiness(HistoryBusiness historyBusiness) {
+        this.historyBusiness = historyBusiness;
     }
    
 }

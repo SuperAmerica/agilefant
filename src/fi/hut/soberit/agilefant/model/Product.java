@@ -1,6 +1,7 @@
 package fi.hut.soberit.agilefant.model;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -67,6 +68,20 @@ public class Product extends Backlog implements PageItem {
         // return new PortfolioPageItem();
         return null;
     }
+    
+    @Override
+    /**
+     * Since Product has no end date, return null.
+     * @return always null
+     */
+    @Transient
+    public Date getEndDate() {
+        return null;
+    }
+    
+    @Override
+    public void setEndDate(Date endDate) {        
+    }
 
     /** {@inheritDoc} */
     @Transient
@@ -80,9 +95,8 @@ public class Product extends Backlog implements PageItem {
     @Transient
     public AFTime getSubBacklogEffortLeftSum() {
         AFTime result = new AFTime(0);
-        Iterator<Project> it = projects.iterator();
-        while(it.hasNext()) {
-            Project proj = it.next();
+        
+        for (Project proj : projects) {
             result.add(proj.getSubBacklogEffortLeftSum());
             result.add(proj.getBliEffortLeftSum());
         }

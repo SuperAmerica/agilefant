@@ -265,6 +265,16 @@ public abstract class Backlog implements Assignable, TimesheetLoggable, PageItem
     public Date getStartDate() {
         return new Date(0);
     }
+    
+    /**
+     * Return the end date.
+     * @return
+     */
+    @Transient
+    public abstract Date getEndDate();
+    
+    @Transient
+    public abstract void setEndDate(Date endDate);
 
     @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "history_fk")

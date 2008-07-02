@@ -12,13 +12,17 @@ import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogHistory;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.HistoryEntry;
+import fi.hut.soberit.agilefant.model.Product;
+import fi.hut.soberit.agilefant.util.CalendarUtils;
 
 public class HistoryBusinessImpl implements HistoryBusiness {
     private BacklogDAO backlogDAO;
+    private CalendarUtils calUtil = new CalendarUtils();
     
     public void updateBacklogHistory(int backlogId) {
         Backlog backlog = backlogDAO.get(backlogId);
         BacklogHistory history = backlog.getBacklogHistory();
+        
         
         if( history == null ) {
             history = newBacklogHistory(backlog);
@@ -134,6 +138,117 @@ public class HistoryBusinessImpl implements HistoryBusiness {
         return history;
     }
 
+    
+    
+    /** {@inheritDoc} */
+    @SuppressWarnings("deprecation")
+    public AFTime calculateDailyVelocity(int backlogId) {
+        AFTime velocity = new AFTime(0);
+        int numberOfDays = 1;
+        /* Get the backlog and its history */
+        Backlog backlog = backlogDAO.get(backlogId);
+        
+        Date startDate = backlog.getStartDate();
+        Date endDate = new Date();
+        endDate.setDate(endDate.getDate());
+        
+        if (backlog instanceof Product) {
+            return new AFTime(0);
+        }
+        
+        if (backlog.getEndDate().before(endDate)) {
+            endDate = backlog.getEndDate();
+        }
+        
+        /* Get the backlog's history */
+        BacklogHistory history = backlog.getBacklogHistory();        
+        HistoryEntry<BacklogHistory> current = history.getDateEntry(endDate);
+        
+        /* If there is no recorded history, return 0 as velocity */
+        if (current == null) {
+            return new AFTime(0);
+        }
+        
+        /* Get the values */
+        AFTime origEst = current.getOriginalEstimate();
+        AFTime effLeft = current.getEffortLeft();
+        
+        System.out.println("\n---\nDate:" + current.getDate());
+        
+        /* Get the length */
+        numberOfDays = calUtil.getLengthInDays(startDate, endDate) - 1;
+        
+        if (numberOfDays == 0) {
+            numberOfDays = 1;
+        }
+       
+        /* Calculate the velocity */
+        long diff = origEst.getTime() - effLeft.getTime();
+        long vel = diff / numberOfDays;
+        velocity = new AFTime(vel);
+        
+        System.out.println("OE: " + origEst + "\nEL: " + effLeft
+                + "\ndiff: " + diff + "\nvel: " + velocity + "\n---");
+        
+        return velocity;
+    }
+    
+    /** {@inheritDoc} */
+    public Date calculateExpectedDate(Backlog backlog, AFTime originalEstimate, AFTime velocity) {
+        GregorianCalendar expected = new GregorianCalendar();
+        expected.setTime(backlog.getStartDate());
+        expected.set(Calendar.HOUR, 0);
+        expected.set(Calendar.MINUTE, 0);
+        expected.set(Calendar.SECOND, 0);
+        
+        /*
+         * Expected date can't be calculated for a product.
+         * Backlog will never finish if the velocity is negative.
+         */
+        if (backlog instanceof Product ||
+                velocity.getTime() <= 0 ) {
+            return null;
+        }
+        
+        /* Calculate the date difference and round it */
+        int diff = Math.round(((float)originalEstimate.getTime() / (float)velocity.getTime()));
+        
+        /* Add the date difference to the start date and remove the current day */
+        expected.add(Calendar.DATE, (int)diff);
+        expected.add(Calendar.DATE, -1);
+        
+        return expected.getTime();
+    }
+    
+    /** {@inheritDoc} */
+    public AFTime calculateScopingNeeded(Backlog backlog, AFTime effortLeft,
+            AFTime velocity) {
+        
+        /*
+         * Can't be calculated for a product.
+         * If velocity is negative, return null.
+         */
+        if (backlog instanceof Product
+                || velocity.getTime() < 0) {
+            return null;
+        }
+        Date now = new Date();
+        Date end = backlog.getEndDate();
+        
+        /* Calculate the expected amount of work that gets done */
+        int diff = calUtil.getLengthInDays(now, end) - 1;
+        long expectedWorkDone = diff * velocity.getTime();
+        
+        /* Substract expected amount of work from effort left */
+        long scopingAmount = effortLeft.getTime() - expectedWorkDone;
+        
+        /* Never return negative values */
+        if (scopingAmount < 0) {
+            return new AFTime(0);
+        }
+        return new AFTime(scopingAmount);
+    }
+    
     public BacklogDAO getBacklogDAO() {
         return backlogDAO;
     }

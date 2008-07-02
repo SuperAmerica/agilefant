@@ -8,9 +8,11 @@ import static org.easymock.EasyMock.verify;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.LinkedList;
 
+import junit.framework.TestCase;
 import fi.hut.soberit.agilefant.business.impl.HistoryBusinessImpl;
 import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.model.AFTime;
@@ -19,7 +21,8 @@ import fi.hut.soberit.agilefant.model.BacklogHistory;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.HistoryEntry;
 import fi.hut.soberit.agilefant.model.Iteration;
-import junit.framework.TestCase;
+import fi.hut.soberit.agilefant.model.Product;
+import fi.hut.soberit.agilefant.model.Project;
 
 public class HistoryBusinessTest extends TestCase {
 
@@ -252,13 +255,13 @@ public class HistoryBusinessTest extends TestCase {
               
         // Declare test values
         final int bliId1 = 10;
-        final int bliId2 = 11;
+        // final int bliId2 = 11;
         final int backlogId = 100;
         final int effLeft = 12;
         final int origEst = 17;
         final int delta = -7;
         final int hour1 = 15;
-        final int hour2 = 8;
+        // final int hour2 = 8;
      
         // Create new backlog items and set test values to them.
         BacklogItem bli1 = new BacklogItem();
@@ -341,6 +344,129 @@ public class HistoryBusinessTest extends TestCase {
         
     }
     
+    /**
+     * Test the calculation of daily velocity with a simple case.
+     * Only effort left has changed.
+     */
+    @SuppressWarnings("deprecation")
+    public void testCalculateDailyVelocity_simpleCase() {
+        backlogDAO = createMock(BacklogDAO.class);
+        hisBusiness.setBacklogDAO(backlogDAO);
+        
+        /* Generate the time */
+        GregorianCalendar cal = new GregorianCalendar();
+        cal.add(Calendar.DATE, -2);
+        Date firstDate = cal.getTime();
+        cal.add(Calendar.DATE, 1);
+        Date secondDate = cal.getTime();
+        cal.add(Calendar.DATE, 1);
+        Date thirdDate = cal.getTime();
+        cal.add(Calendar.DATE, 5);
+        Date lastDate = cal.getTime();
+        
+        /* Generate the test data */
+        Iteration iter = new Iteration();
+        iter.setId(3);
+        iter.setStartDate((Date)firstDate.clone());
+        iter.setEndDate((Date)lastDate.clone());
+        
+        BacklogHistory hist = new BacklogHistory();
+        hist.setId(123);
+        iter.setBacklogHistory(hist);
+        
+        HistoryEntry<BacklogHistory> ent1 = new HistoryEntry<BacklogHistory>();
+        ent1.setDate(new java.sql.Date(firstDate.getTime()));
+        ent1.setDeltaEffortLeft(new AFTime(0));
+        ent1.setEffortLeft(new AFTime(36000));
+        ent1.setOriginalEstimate(new AFTime(36000));
+        ent1.setHistory(hist);
+        
+        HistoryEntry<BacklogHistory> ent2 = new HistoryEntry<BacklogHistory>();
+        ent2.setDate(new java.sql.Date(secondDate.getTime()));
+        ent2.setDeltaEffortLeft(new AFTime(0));
+        ent2.setEffortLeft(new AFTime(30000));
+        ent2.setOriginalEstimate(new AFTime(36000));
+        ent2.setHistory(hist);
+        
+        HistoryEntry<BacklogHistory> ent3 = new HistoryEntry<BacklogHistory>();
+        ent3.setDate(new java.sql.Date(thirdDate.getTime()));
+        ent3.setDeltaEffortLeft(new AFTime(0));
+        ent3.setEffortLeft(new AFTime(21000));
+        ent3.setOriginalEstimate(new AFTime(36000));
+        ent3.setHistory(hist);
+        
+        hist.getEffortHistoryEntries().add(ent3);
+        hist.getEffortHistoryEntries().add(ent2);
+        hist.getEffortHistoryEntries().add(ent1);
+        
+        expect(backlogDAO.get(3)).andReturn(iter);
+        replay(backlogDAO);
+        
+        long vel = 7500;
+        assertEquals(vel, hisBusiness.calculateDailyVelocity(3).getTime());
+        
+        verify(backlogDAO);
+    }
     
+    /**
+     * Test the calculation of expected finishing date of a backlog.
+     */
+    @SuppressWarnings("deprecation")
+    public void testCalculateExpectedDate() {
+        /* The backlogs */
+        Product prod = new Product();
+        Project proj = new Project();
+        Iteration iter = new Iteration();
+        
+        proj.setStartDate(new Date(98, 2, 1));
+        proj.setEndDate(new Date(98, 2, 28));
+        iter.setStartDate(new Date(98, 1, 1));
+        iter.setEndDate(new Date(98, 1, 8));
+        
+        /* Test the calculation */
+        assertNull(hisBusiness.calculateExpectedDate(prod, new AFTime("150h"), new AFTime("5h")));
+        
+        assertEquals(new Date(98, 2, 5), hisBusiness.calculateExpectedDate(proj, new AFTime("100h"), new AFTime("20h")));
+        assertEquals(new Date(98, 1, 1), hisBusiness.calculateExpectedDate(iter, new AFTime("5h"), new AFTime("5h")));
+        
+        /* 75/4 = 18,75 ~ 19 days */
+        assertEquals(new Date(98, 1, 19), hisBusiness.calculateExpectedDate(iter, new AFTime("75"), new AFTime("4")));
+        
+        /* 106,75 / 7 = 15,25 ~ 15 days*/
+        assertEquals(new Date(98, 1, 15), hisBusiness.calculateExpectedDate(iter, new AFTime("106h 45min"), new AFTime("7h")));
+        
+        Date expected = new Date(98, 2, 1);
+        expected.setDate(expected.getDate() + 122);
+        assertEquals(expected, hisBusiness.calculateExpectedDate(proj, new AFTime("246h"), new AFTime("2h")));
+        
+        assertNull(hisBusiness.calculateExpectedDate(iter, new AFTime("3h"), new AFTime("-3h", true)));
+    }
     
+    @SuppressWarnings("deprecation")
+    public void testCalculateScopingNeeded() {
+        Product prod = new Product();
+        Iteration iter = new Iteration();
+        
+        GregorianCalendar cal = new GregorianCalendar();
+        //Date now = cal.getTime();
+        cal.add(Calendar.DATE, -7);
+        Date weekAgo = cal.getTime();
+        cal.add(Calendar.DATE, 14);
+        Date weekFromNow = cal.getTime();
+        
+        iter.setStartDate(weekAgo);
+        iter.setEndDate(weekFromNow);
+        
+        /* A product backlog always returns null */
+        assertNull(hisBusiness.calculateScopingNeeded(prod, new AFTime("10h"), new AFTime("2h")));
+                
+        /* Negative velocity always returns null */
+        assertNull(hisBusiness.calculateScopingNeeded(iter, new AFTime("10h"), new AFTime("-2h")));
+        
+        /* The real numbers */
+        assertEquals(new AFTime("2h"), hisBusiness.calculateScopingNeeded(iter, new AFTime("16h"), new AFTime("2h")));
+        assertEquals(new AFTime("1h 30min"), hisBusiness.calculateScopingNeeded(iter, new AFTime("71h 30min"), new AFTime("10h")));
+        
+        assertEquals(new AFTime(0), hisBusiness.calculateScopingNeeded(iter, new AFTime("10h"), new AFTime("3h")));
+    }
 }

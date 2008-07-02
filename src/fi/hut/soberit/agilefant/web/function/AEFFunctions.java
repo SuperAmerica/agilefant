@@ -89,7 +89,14 @@ public class AEFFunctions {
     public static String htmlOut(String s, int newLength) {
         return out(s, newLength, true);
     }
-
+    public static String nl2br(String s) {
+        if(s == null) return s;
+        s = s.replaceAll("\r\n", "<br>");
+        s = s.replaceAll("\n", "<br>");
+        s = s.replaceAll("\r", "<br>");
+        return s;
+    }
+    
     private static String out(String s, int newLength, boolean asHtml) {
         return asHtml ? "<span title=\"" + s + "\">" + s + "</span>" : s;
     }

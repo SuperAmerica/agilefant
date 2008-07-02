@@ -54,7 +54,7 @@
                                 <tr>
                                     <td>Description</td>
                                     <td></td>
-                                    <td colspan="2"><ww:textarea cols="70" rows="10"
+                                    <td colspan="2"><ww:textarea cols="70" rows="10" cssClass="useWysiwyg" 
                                         name="iteration.description" /></td>
                                 </tr>
                                 <tr>
@@ -136,13 +136,16 @@
                     document.getElementById('descriptionDiv').style.maxHeight = "12em";
                     document.getElementById('descriptionDiv').style.overflow = "hidden";
                 }
+                function editIteration() {
+                	toggleDiv('editIterationForm'); toggleDiv('descriptionDiv'); showWysiwyg('iterationDescription'); return false;
+                }
                 </script>
 
 
 						<table cellspacing="0" cellpadding="0">
 							<tr>
 								<td class="header">Details <a href=""
-									onclick="toggleDiv('editIterationForm'); toggleDiv('descriptionDiv'); return false;">Edit
+									onclick="return editIteration();">Edit
 								&raquo;</a></td>
 								<td class="icons">
 								<a href=""
@@ -161,7 +164,7 @@
 						<table class="infoTable" cellpadding="0" cellspacing="0">
 							<tr>
 								<th class="info1">Timeframe</th>
-								<td class="info3"><c:out
+								<td class="info3" onclick="return editIteration();"><c:out
 									value="${iteration.startDate.date}.${iteration.startDate.month + 1}.${iteration.startDate.year + 1900}" />
 								- <c:out
 									value="${iteration.endDate.date}.${iteration.endDate.month + 1}.${iteration.endDate.year + 1900}" /></td>
@@ -171,7 +174,7 @@
 							</tr>
 
 							<tr>
-								<td colspan="2" class="description">${iteration.description}</td>
+								<td colspan="2" class="description" onclick="return editIteration();">${iteration.description}</td>
 							</tr>
 
 						</table>
@@ -200,8 +203,8 @@
 								<tr>
 									<td>Description</td>
 									<td></td>
-									<td colspan="2"><ww:textarea cols="70" rows="10"
-										name="iteration.description" /></td>
+									<td colspan="2"><ww:textarea cols="70" rows="10" id="iterationDescription"  
+										name="iteration.description" value="${aef:nl2br(iteration.description)}" /></td>
 								</tr>
 								<tr>
                                     <td>Project</td>

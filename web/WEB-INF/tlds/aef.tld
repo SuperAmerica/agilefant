@@ -486,10 +486,16 @@
 	</function>  	 
 	 	 
 	<function>
+	  <name>nl2br</name>
+	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
+	  <function-signature>String nl2br(java.lang.String)</function-signature>
+	</function>  	 
+	
+	<function>
 	  <name>html</name>
 	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
 	  <function-signature>String htmlOut(java.lang.String)</function-signature>
-	</function>  	 
+	</function> 
 	 	 
 	<function>
 	  <name>htmlSubString</name>

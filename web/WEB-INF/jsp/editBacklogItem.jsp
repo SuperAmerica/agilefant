@@ -52,8 +52,16 @@
 		<tr>
 			<td>Description</td>
 			<td></td>
-			<td colspan="2"><ww:textarea cols="70" rows="10"
-				name="backlogItem.description" /></td>
+			<td colspan="2">
+				<!-- 
+				<div style="border: 1px solid black !important; min-height: 100px; width: 500px" 
+				id="backlogItemDescriptionData" 
+				onclick="$('#backlogItemDescriptionData').hide(); setUpWysiwyg('#backlogItemDescription');">
+					${backlogItem.description}
+				</div>
+				-->
+				<ww:textarea cols="70" rows="10" cssClass="useWysiwyg" id="backlogItemDescription" 
+				name="backlogItem.description" value="${aef:nl2br(backlogItem.description)}" /></td>
 		</tr>
 		<c:choose>
 			<c:when test="${backlogItem.originalEstimate == null}">

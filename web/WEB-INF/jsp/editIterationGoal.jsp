@@ -52,7 +52,7 @@
 		<tr>
 			<td>Description</td>
 			<td></td>
-			<td colspan="2"><ww:textarea cols="70" rows="10"
+			<td colspan="2"><ww:textarea cols="70" rows="10" cssClass="useWysiwyg" 
 				name="iterationGoal.description" /></td>
 		</tr>
 		<tr>

@@ -217,7 +217,7 @@
 			                <tr>
                     			<td>Description</td>
                     			<td></td>
-                    			<td colspan="2"><ww:textarea cols="70" rows="10"
+                    			<td colspan="2"><ww:textarea cols="70" rows="10" cssClass="useWysiwyg" 
                         			name="project.description" /></td>
                 			</tr>
 			                <tr>
@@ -256,10 +256,13 @@
 												document.getElementById('descriptionDiv').style.maxHeight = "12em";
 												document.getElementById('descriptionDiv').style.overflow = "hidden";
 											}
+											function editProject() {
+												toggleDiv('editProjectForm'); toggleDiv('descriptionDiv'); showWysiwyg('projectDescription'); return false;
+											}
 										</script>
 										<table cellspacing="0" cellpadding="0">
 											<tr>
-												<td class="header">Details <a href="" onclick="toggleDiv('editProjectForm'); toggleDiv('descriptionDiv'); return false;">Edit &raquo;</a></td>
+												<td class="header">Details <a href="" onclick="return editProject();">Edit &raquo;</a></td>
 												<td class="icons">
 													<%--<a href="" onclick="toggleDiv('editProjectForm'); toggleDiv('descriptionDiv'); return false;">
 														<img src="static/img/edit.png" width="18" height="18" alt="Edit" title="Edit" />
@@ -279,7 +282,7 @@
 											<table class="infoTable" cellpadding="0" cellspacing="0">
 												<tr>
 													<th class="info1">Project type</th>
-													<td class="info3"><c:out value="${project.projectType.name}" /></td>
+													<td class="info3" onclick="return editProject();"><c:out value="${project.projectType.name}" /></td>
 													<td class="info4" rowspan="5">
 	                                					<c:if test="${(!empty project.backlogItems) && (empty project.iterations)}">
 	                                    					<a href="#bigChart">
@@ -290,12 +293,12 @@
 												</tr>
 												<tr>
 								    				<th class="info1">Default overhead</th>
-								    				<td class="info3"><c:out value="${project.defaultOverhead}"/> / person / week</td>
+								    				<td class="info3" onclick="return editProject();"><c:out value="${project.defaultOverhead}"/> / person / week</td>
 							
 												</tr>
 												<tr>
 	                                				<th class="info1">Timeframe</th>
-	                                				<td class="info3"><c:out value="${project.startDate.date}.${project.startDate.month + 1}.${project.startDate.year + 1900}" /> - 
+	                                				<td class="info3" onclick="return editProject();"><c:out value="${project.startDate.date}.${project.startDate.month + 1}.${project.startDate.year + 1900}" /> - 
 	                                					<c:out value="${project.endDate.date}.${project.endDate.month + 1}.${project.endDate.year + 1900}" /></td>
 												</tr>
 												<tr>
@@ -330,7 +333,7 @@
 	                                    			</td>
 												</tr>
 												<tr>
-								    				<td colspan="2" class="description">${project.description}</td>
+								    				<td colspan="2" class="description" onclick="return editProject();">${project.description}</td>
 												</tr>
 											</table>
 										</div>
@@ -490,8 +493,8 @@
 	                								<tr>
 	                    								<td>Description</td>
 	                    								<td></td>
-	                    								<td colspan="2"><ww:textarea cols="70" rows="10"
-	                        								name="project.description" /></td>
+	                    								<td colspan="2"><ww:textarea cols="70" rows="10" id="projectDescription"
+	                        								name="project.description" value="${aef:nl2br(project.description)}" /></td>
 	                								</tr>
 													<tr>
 														<td></td>

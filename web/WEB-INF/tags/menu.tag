@@ -12,6 +12,7 @@
 <link rel="stylesheet" href="static/css/import.css" type="text/css"/>
 <link rel="stylesheet" href="static/css/v5.css" type="text/css"/>
 <link rel="stylesheet" href="static/css/datepicker.css" type="text/css"/>
+<link rel="stylesheet" href="static/css/jquery.wysiwyg.css" type="text/css"/>
 <title>
 Agilefant
 </title>
@@ -26,6 +27,7 @@ Agilefant
 <script type="text/javascript" src="static/js/taskrank.js"></script>
 <script type="text/javascript" src="static/js/date.js"></script>
 <script type="text/javascript" src="static/js/datepicker.js"></script>
+<script type="text/javascript" src="static/js/jquery.wysiwyg.js"></script>
 <script type="text/javascript">
 function reloadPage()
 {
@@ -36,7 +38,14 @@ $(document).ready(function() {
 		var sessionLength = <%=session.getMaxInactiveInterval()%>*1000;
 		setTimeout('reloadPage()',sessionLength+5);
 	}
+	$('.useWysiwyg').wysiwyg({controls : {
+        separator04 : { visible : true },
+
+        insertOrderedList : { visible : true },
+        insertUnorderedList : { visible : true }
+    }});
 });
+
 </script>
 </head>
 

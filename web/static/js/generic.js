@@ -120,3 +120,17 @@ function validateSpentEffortById(id,msg) {
 	}
 	return ret;
 }
+function showWysiwyg(id) {
+	if($("#"+id).is(":visible")) {
+		setUpWysiwyg(id);
+	}
+}
+function setUpWysiwyg(id) {
+	$("#"+id).wysiwyg({
+		controls : {
+        separator04 : { visible : true },
+
+        insertOrderedList : { visible : true },
+        insertUnorderedList : { visible : true }
+    }});
+}

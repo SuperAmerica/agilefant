@@ -38,7 +38,7 @@
                                 <tr>
                                     <td>Description</td>
                                     <td></td>
-                                    <td colspan="2"><ww:textarea name="product.description"
+                                    <td colspan="2"><ww:textarea name="product.description" cssClass="useWysiwyg" 
                                         cols="70" rows="10" /></td>
                                 </tr>
                                 <tr>
@@ -79,13 +79,16 @@
                     document.getElementById('descriptionDiv').style.maxHeight = "12em";
                     document.getElementById('descriptionDiv').style.overflow = "hidden";
                 }
+                function editProduct() {
+                	toggleDiv('editProductForm'); toggleDiv('descriptionDiv'); showWysiwyg('productDescription'); return false;
+                }
                 </script>
 
 
                         <table cellspacing="0" cellpadding="0">
                             <tr>
                                 <td class="header">Details <a href=""
-                                    onclick="toggleDiv('editProductForm'); toggleDiv('descriptionDiv'); return false;">Edit
+                                    onclick="return editProduct();">Edit
                                 &raquo;</a></td>
                                 <td class="icons">
                                 <a href=""
@@ -104,7 +107,7 @@
 						<table class="infoTable" cellpadding="0" cellspacing="0">
 							
 							<tr>
-								<td colspan="2" class="description">${product.description}</td>
+								<td colspan="2" class="description" onclick="return editProduct();" >${product.description}</td>
 								<td class="info4">&nbsp;</td>
 							</tr>
 
@@ -125,8 +128,8 @@
 								<tr>
 									<td>Description</td>
 									<td></td>
-									<td colspan="2"><ww:textarea name="product.description"
-										cols="70" rows="10" /></td>
+									<td colspan="2"><ww:textarea name="product.description" id="productDescription" 
+										cols="70" rows="10" value="${aef:nl2br(product.description)}" /></td>
 								</tr>
 								<tr>
 									<td></td>

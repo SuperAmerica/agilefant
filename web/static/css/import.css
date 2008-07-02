@@ -942,4 +942,8 @@ table.reportTable tr.total th.total {
 	border-top:1px solid #000000;
 }
 
+.businessThemeTable select {
+	width: 100px;
+}
+
 /* End of timesheet styles */

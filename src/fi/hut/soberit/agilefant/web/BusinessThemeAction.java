@@ -11,6 +11,7 @@ import fi.hut.soberit.agilefant.business.BusinessThemeBusiness;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.db.BusinessThemeDAO;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
+import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.BusinessTheme;
 
 public class BusinessThemeAction extends ActionSupport implements CRUDAction {
@@ -18,6 +19,8 @@ public class BusinessThemeAction extends ActionSupport implements CRUDAction {
     private static final long serialVersionUID = -8978527111144555643L;
 
     private int businessThemeId;
+    
+    private int backlogItemId;
 
     private BusinessTheme businessTheme;
 
@@ -96,6 +99,44 @@ public class BusinessThemeAction extends ActionSupport implements CRUDAction {
         return Action.SUCCESS;
     }
 
+    public String editBacklogItemBusinessThemes() {
+        
+        BacklogItem bli;
+        if (backlogItemId > 0) {
+            bli = backlogItemDAO.get(backlogItemId);
+            if (bli == null) {
+                super.addActionError(super.getText("backlogItem.notFound"));
+                return Action.ERROR;
+            } else {
+                businessThemes = bli.getBusinessThemes();
+            }
+        }                
+                
+        return Action.SUCCESS;
+    }
+    
+    public String storeBacklogItemBusinessThemes() {
+        
+        BacklogItem bli;
+        if (backlogItemId > 0) {
+            bli = backlogItemDAO.get(backlogItemId);
+        
+            if (bli == null) {
+                super.addActionError(super.getText("backlogItem.notFound"));
+                return Action.ERROR;
+            } else {
+                bli.setBusinessThemes(businessThemes);
+                backlogItemDAO.store(bli);
+                
+                // testausta
+                System.out.println("*** tallennettiin itemin " + bli.getName() + " teemat. ***");
+            }
+        }                
+                
+        return Action.SUCCESS;
+             
+    }
+    
     protected void fillObject(BusinessTheme fillable) {
         if (businessTheme.getName() == null || 
                 businessTheme.getName().trim().equals("")) {
@@ -144,6 +185,14 @@ public class BusinessThemeAction extends ActionSupport implements CRUDAction {
 
     public void setBacklogItemDAO(BacklogItemDAO backlogItemDAO) {
         this.backlogItemDAO = backlogItemDAO;
+    }
+
+    public void setBacklogItemId(int backlogItemId) {
+        this.backlogItemId = backlogItemId;
+    }
+
+    public int getBacklogItemId() {
+        return backlogItemId;
     }
     
 }

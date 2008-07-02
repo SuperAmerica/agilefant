@@ -867,6 +867,16 @@
 			class="businessThemeAction">
 			<result type="redirect-action">projectPortfolio</result>
 		</action>
+		<action name="editBacklogItemBusinessThemes" method="editBacklogItemBusinessThemes"
+			class="businessThemeAction">
+			<result>/WEB-INF/jsp/inc/_businessThemeModal.jsp</result>		
+		</action>
+		<action name="storeBacklogItemBusinessThemes" method="storeBacklogItemBusinessThemes"
+			class="businessThemeAction">
+			<result type="redirect-action">
+				<param name="actionName">popContext</param>
+			</result>
+		</action>		
 		<!-- /Business theme actions -->
 
 </package>

@@ -45,7 +45,28 @@
 
 	<table class="formTable">
 		<tr>
-			<td>Name</td>
+			<c:choose>
+			<c:when test="${backlogItemId != 0}">
+			<td>
+			Themes								
+			<ww:url id="businessThemesLink" action="editBacklogItemBusinessThemes" includeParams="none">	
+					<ww:param name="backlogItemId" value="${backlogItemId}" />			
+			</ww:url>
+			<ww:a cssClass="openModalWindow" href="%{businessThemesLink}&contextViewName=editBacklogItem&contextObjectId=${backlogItemId}">Edit &raquo;</ww:a>
+			</td>
+			<td></td>
+			<td>			
+			<c:if test="${!empty backlogItem.businessThemes}">		
+			<c:forEach items="${backlogItem.businessThemes}" var="businessTheme">
+				[<c:out value="${businessTheme.name}"></c:out>]
+			</c:forEach>
+			</c:if>
+			</td>
+			</c:when>
+			</c:choose>		
+		</tr>
+		<tr>			
+			<td>Name</td>												
 			<td>*</td>
 			<td colspan="2"><ww:textfield size="60" name="backlogItem.name" /></td>
 		</tr>

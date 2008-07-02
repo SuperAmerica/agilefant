@@ -50,9 +50,12 @@ import fi.hut.soberit.agilefant.web.page.PageItem;
  * this means the sub-parts of the BacklogItems, namely Tasks, which have been
  * assigned to them. To know better, which BacklogItem should be tackled next,
  * there is a priority attached to a BacklogItem.
+ * <p>
+ * Backlog items may be tagged with themes.
  * 
  * @see fi.hut.soberit.agilefant.model.Backlog
  * @see fi.hut.soberit.agilefant.model.Task
+ * @see fi.hut.soberit.agilefant.model.BusinessTheme
  */
 @Entity
 @Table(name = "backlogitem")
@@ -76,10 +79,10 @@ public class BacklogItem implements PageItem, Assignable, EffortContainer, Times
     private Collection<User> responsibles = new ArrayList<User>();
 
     private State state = State.NOT_STARTED;
+    
+    private Collection<BusinessTheme> businessThemes = new HashSet<BusinessTheme>();
 
     private IterationGoal iterationGoal;
-
-    // private Task placeHolder;
 
     private AFTime originalEstimate;
 
@@ -417,5 +420,27 @@ public class BacklogItem implements PageItem, Assignable, EffortContainer, Times
 
     public void setEffortSpent(AFTime effortSpent) {
         this.effortSpent = effortSpent;
+    }
+
+    /**
+     * Get the business themes tagged to this backlog item.
+     * @return collection of the tagged business themes
+     */
+    @ManyToMany(
+            targetEntity = fi.hut.soberit.agilefant.model.BusinessTheme.class,
+            fetch = FetchType.LAZY
+    )
+    @JoinTable(
+            name = "backlogitem_businesstheme",
+            joinColumns={@JoinColumn(name = "backlogitem_id")},
+            inverseJoinColumns={@JoinColumn(name = "businesstheme_id")}
+    )
+    @BatchSize(size=20)
+    public Collection<BusinessTheme> getBusinessThemes() {
+        return businessThemes;
+    }
+
+    public void setBusinessThemes(Collection<BusinessTheme> businessThemes) {
+        this.businessThemes = businessThemes;
     }
 }

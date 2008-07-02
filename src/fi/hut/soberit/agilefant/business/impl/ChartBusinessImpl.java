@@ -233,7 +233,7 @@ public class ChartBusinessImpl implements ChartBusiness {
         if (expectedDate != null) {
             this.expectedDate = expectedDate;
             expectedSeries.add(new Day(i.getTime()), (float)(startPoint / 3600.0));
-            expectedSeries.add(new Day(expectedDate), 0);
+            expectedSeries.addOrUpdate(new Day(expectedDate).next(), 0);
         }
         
         // Add the series in correct order

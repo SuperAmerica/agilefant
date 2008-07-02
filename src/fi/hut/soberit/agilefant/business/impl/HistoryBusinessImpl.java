@@ -150,7 +150,7 @@ public class HistoryBusinessImpl implements HistoryBusiness {
         
         Date startDate = backlog.getStartDate();
         Date endDate = new Date();
-        endDate.setDate(endDate.getDate());
+        endDate.setDate(endDate.getDate() - 1);
         
         if (backlog instanceof Product) {
             return new AFTime(0);
@@ -176,7 +176,7 @@ public class HistoryBusinessImpl implements HistoryBusiness {
         System.out.println("\n---\nDate:" + current.getDate());
         
         /* Get the length */
-        numberOfDays = calUtil.getLengthInDays(startDate, endDate) - 1;
+        numberOfDays = calUtil.getLengthInDays(startDate, endDate);
         
         if (numberOfDays == 0) {
             numberOfDays = 1;
@@ -220,6 +220,26 @@ public class HistoryBusinessImpl implements HistoryBusiness {
         return expected.getTime();
     }
     
+    public Integer calculateScheduleVariance(Backlog backlog,
+            AFTime originalEstimate, AFTime velocity) {
+        /*
+         * Expected date can't be calculated for a product.
+         * Backlog will never finish if the velocity is negative.
+         */
+        if (backlog instanceof Product ||
+                velocity.getTime() <= 0 ) {
+            return null;
+        }
+        Date expected = calculateExpectedDate(backlog, originalEstimate, velocity);
+        Date end = backlog.getEndDate();
+        
+        /* From milliseconds to days */
+        long diffLong = expected.getTime() - end.getTime();
+        int diff = Math.round((float)((float)diffLong / (3600.0 * 24.0 * 1000.0)));
+       
+        return diff;
+    }
+    
     /** {@inheritDoc} */
     public AFTime calculateScopingNeeded(Backlog backlog, AFTime effortLeft,
             AFTime velocity) {
@@ -229,14 +249,14 @@ public class HistoryBusinessImpl implements HistoryBusiness {
          * If velocity is negative, return null.
          */
         if (backlog instanceof Product
-                || velocity.getTime() < 0) {
+                || velocity.getTime() <= 0) {
             return null;
         }
         Date now = new Date();
         Date end = backlog.getEndDate();
         
         /* Calculate the expected amount of work that gets done */
-        int diff = calUtil.getLengthInDays(now, end) - 1;
+        int diff = calUtil.getLengthInDays(now, end);
         long expectedWorkDone = diff * velocity.getTime();
         
         /* Substract expected amount of work from effort left */

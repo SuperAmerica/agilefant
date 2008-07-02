@@ -16,6 +16,7 @@ import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.State;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.util.BacklogLoadData;
+import fi.hut.soberit.agilefant.util.BacklogMetrics;
 import fi.hut.soberit.agilefant.util.EffortSumData;
 
 /**
@@ -228,4 +229,15 @@ public interface BacklogBusiness {
      * @return collection of requested backlogs
      */
     public List<Backlog> getUserBacklogs(User user, Date now, int weeksAhead);
+    
+    
+    /**
+     * Get metrics information for a backlog.
+     * <p>
+     * Currently only at iteration and project levels. Using a product as parameter
+     * will return null.
+     * @param backlog
+     * @return
+     */
+    public BacklogMetrics getBacklogMetrics(Backlog backlog);
 }

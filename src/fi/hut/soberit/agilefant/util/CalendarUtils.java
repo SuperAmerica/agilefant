@@ -64,7 +64,19 @@ public class CalendarUtils {
     }
     
     public int getLengthInDays(Date start, Date end){
-        return (int)((end.getTime() - start.getTime()) / (86400000L))+1;
+        Calendar calStart = GregorianCalendar.getInstance();
+        Calendar calEnd = GregorianCalendar.getInstance();
+        calStart.setTime(start);
+        calEnd.setTime(end);
+        calStart.set(Calendar.HOUR, 0);
+        calStart.set(Calendar.MINUTE, 0);
+        calStart.set(Calendar.SECOND, 0);
+        calStart.set(Calendar.MILLISECOND, 0);
+        calEnd.set(Calendar.HOUR, 0);
+        calEnd.set(Calendar.MINUTE, 0);
+        calEnd.set(Calendar.SECOND, 0);
+        calEnd.set(Calendar.MILLISECOND, 0);
+        return (int)((calEnd.getTime().getTime() - calStart.getTime().getTime()) / (86400000L))+1;
     }
     
     public int getProjectDaysDaysInTimeFrame(Date projectStart, Date projectEnd, Date start, Date end){

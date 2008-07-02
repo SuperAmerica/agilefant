@@ -355,7 +355,7 @@ public class HistoryBusinessTest extends TestCase {
         
         /* Generate the time */
         GregorianCalendar cal = new GregorianCalendar();
-        cal.add(Calendar.DATE, -2);
+        cal.add(Calendar.DATE, -3);
         Date firstDate = cal.getTime();
         cal.add(Calendar.DATE, 1);
         Date secondDate = cal.getTime();
@@ -402,7 +402,7 @@ public class HistoryBusinessTest extends TestCase {
         expect(backlogDAO.get(3)).andReturn(iter);
         replay(backlogDAO);
         
-        long vel = 7500;
+        long vel = 5000;
         assertEquals(vel, hisBusiness.calculateDailyVelocity(3).getTime());
         
         verify(backlogDAO);
@@ -447,11 +447,12 @@ public class HistoryBusinessTest extends TestCase {
         Product prod = new Product();
         Iteration iter = new Iteration();
         
-        GregorianCalendar cal = new GregorianCalendar();
+        Calendar cal = GregorianCalendar.getInstance();
+        cal.add(Calendar.DATE, 6);
+        Date weekFromNow = cal.getTime();
+        cal.setTime(new Date());
         cal.add(Calendar.DATE, -7);
         Date weekAgo = cal.getTime();
-        cal.add(Calendar.DATE, 14);
-        Date weekFromNow = cal.getTime();
         
         iter.setStartDate(weekAgo);
         iter.setEndDate(weekFromNow);

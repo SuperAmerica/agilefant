@@ -29,6 +29,15 @@ public interface HistoryBusiness {
     public Date calculateExpectedDate(Backlog backlog, AFTime originalEstimate, AFTime velocity);
     
     /**
+     * Calculate the schedule variance in days.
+     * @param backlog
+     * @param originalEstimate
+     * @param velocity
+     * @return
+     */
+    public Integer calculateScheduleVariance(Backlog backlog, AFTime originalEstimate, AFTime velocity);
+    
+    /**
      * Calculate the amount of scoping needed so that the iteration or project
      * is finished on time.
      * 

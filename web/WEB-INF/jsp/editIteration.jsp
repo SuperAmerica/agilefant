@@ -170,11 +170,50 @@
 									value="${iteration.endDate.date}.${iteration.endDate.month + 1}.${iteration.endDate.year + 1900}" /></td>
 								<td class="info4" rowspan="3">
 								<a href="#bigChart"><img
-									src="drawSmallChart.action?iterationId=${iteration.id}" /></a></td>
+									src="drawSmallChart.action?iterationId=${iteration.id}" /></a>
+								    
+								    <table>
+								        <tr>
+								            <td>Velocity</td>
+								            <td><c:out value="${iterationMetrics.dailyVelocity}" /> / day</td>
+								        </tr>
+								        <tr>
+                                            <td>Schedule variance</td>
+                                            <td>
+                                            <c:choose>
+                                            <c:when test="${iterationMetrics.scheduleVariance != null}">
+                                                <c:if test="${iterationMetrics.scheduleVariance > 0}">
+                                                 +
+                                                </c:if>
+                                                <c:out value="${iterationMetrics.scheduleVariance}" /> days
+                                            </c:when>
+                                            <c:otherwise>
+                                                unknown
+                                            </c:otherwise>
+                                            </c:choose>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Scoping needed</td>
+                                            <td>
+                                            <c:choose>
+                                            <c:when test="${iterationMetrics.scopingNeeded != null}">
+                                                <c:out value="${iterationMetrics.scopingNeeded}" />
+                                            </c:when>
+                                            <c:otherwise>
+                                                unknown
+                                            </c:otherwise>
+                                            </c:choose>
+                                            </td>
+                                        </tr>
+								    </table>
+									
+							     </td>
 							</tr>
 
 							<tr>
 								<td colspan="2" class="description">${iteration.description}</td>
+								<td></td>
 							</tr>
 
 						</table>

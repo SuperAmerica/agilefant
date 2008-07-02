@@ -17,12 +17,12 @@ import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.db.IterationDAO;
 import fi.hut.soberit.agilefant.db.IterationGoalDAO;
 import fi.hut.soberit.agilefant.db.ProjectDAO;
-import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.IterationGoal;
 import fi.hut.soberit.agilefant.model.Project;
+import fi.hut.soberit.agilefant.util.BacklogMetrics;
 import fi.hut.soberit.agilefant.util.EffortSumData;
 
 public class IterationAction extends ActionSupport implements CRUDAction {
@@ -70,6 +70,8 @@ public class IterationAction extends ActionSupport implements CRUDAction {
     private EffortSumData effortLeftSum;
 
     private EffortSumData origEstSum;
+    
+    private BacklogMetrics iterationMetrics;
     
     public String create() {
         iterationId = 0;
@@ -128,6 +130,9 @@ public class IterationAction extends ActionSupport implements CRUDAction {
         
         // Load Hour Entry sums to this backlog's BLIs.
         hourEntryBusiness.loadSumsToBacklogItems(iteration);
+        
+        // Load metrics data
+        iterationMetrics = backlogBusiness.getBacklogMetrics(iteration);
         
         return Action.SUCCESS;
     }
@@ -406,5 +411,13 @@ public class IterationAction extends ActionSupport implements CRUDAction {
 
     public void setHourEntryBusiness(HourEntryBusiness hourEntryBusiness) {
         this.hourEntryBusiness = hourEntryBusiness;
+    }
+
+    public BacklogMetrics getIterationMetrics() {
+        return iterationMetrics;
+    }
+
+    public void setIterationMetrics(BacklogMetrics iterationMetrics) {
+        this.iterationMetrics = iterationMetrics;
     }
 }

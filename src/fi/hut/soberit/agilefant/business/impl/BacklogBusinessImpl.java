@@ -5,7 +5,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -15,20 +14,20 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 
 import fi.hut.soberit.agilefant.business.BacklogBusiness;
-import fi.hut.soberit.agilefant.business.BacklogItemBusiness;
 import fi.hut.soberit.agilefant.business.HistoryBusiness;
 import fi.hut.soberit.agilefant.business.HourEntryBusiness;
 import fi.hut.soberit.agilefant.db.AssignmentDAO;
 import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.db.IterationGoalDAO;
-import fi.hut.soberit.agilefant.db.ProductDAO;
 import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.Assignment;
 import fi.hut.soberit.agilefant.model.Backlog;
+import fi.hut.soberit.agilefant.model.BacklogHistory;
 import fi.hut.soberit.agilefant.model.BacklogItem;
+import fi.hut.soberit.agilefant.model.HistoryEntry;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Priority;
 import fi.hut.soberit.agilefant.model.Product;
@@ -37,6 +36,7 @@ import fi.hut.soberit.agilefant.model.State;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.util.BacklogComparator;
 import fi.hut.soberit.agilefant.util.BacklogLoadData;
+import fi.hut.soberit.agilefant.util.BacklogMetrics;
 import fi.hut.soberit.agilefant.util.EffortSumData;
 
 /**
@@ -59,8 +59,6 @@ public class BacklogBusinessImpl implements BacklogBusiness {
     private AssignmentDAO assignmentDAO;
     
     private IterationGoalDAO iterationGoalDAO;
-    
-    private BacklogItemBusiness backlogitemBusiness;
     
     private HourEntryBusiness hourEntryBusiness;
 
@@ -411,6 +409,7 @@ public class BacklogBusinessImpl implements BacklogBusiness {
     }
     
     /** {@inheritDoc} */
+    @SuppressWarnings("deprecation")
     public int getWeekdaysLeftInBacklog(Backlog backlog, Date from) {
         Date startDate = new Date(0);
         Date endDate = new Date(0);
@@ -479,6 +478,7 @@ public class BacklogBusinessImpl implements BacklogBusiness {
     }
     
     /** {@inheritDoc} */
+    @SuppressWarnings("deprecation")
     public int getNumberOfDaysLeftForBacklogOnWeek(Backlog backlog, Date time) {
         Date startDate = new Date();
         Date endDate = new Date();
@@ -702,6 +702,30 @@ public class BacklogBusinessImpl implements BacklogBusiness {
         
         return backlogs;
     }
+    
+    /** {@inheritDoc} */
+    public BacklogMetrics getBacklogMetrics(Backlog backlog) {
+        /* Metrics for products are not calculated */
+        if (backlog instanceof Product) {
+            return null;
+        }
+        
+        BacklogMetrics metrics = new BacklogMetrics();
+        
+        /* Get the history data */
+        BacklogHistory history = backlog.getBacklogHistory();
+        HistoryEntry<BacklogHistory> latestEntry = history.getLatestEntry();
+        
+        /* Calculate the values */
+        metrics.setDailyVelocity(historyBusiness.calculateDailyVelocity(backlog
+                .getId()));
+        metrics.setScheduleVariance(historyBusiness.calculateScheduleVariance(backlog,
+                latestEntry.getOriginalEstimate(), metrics.getDailyVelocity()));
+        metrics.setScopingNeeded(historyBusiness.calculateScopingNeeded(backlog,
+                latestEntry.getEffortLeft(), metrics.getDailyVelocity()));
+        
+        return metrics;
+    }
 
     public int getNumberOfAssignedUsers(Backlog backlog) {
         return getUsers(backlog, true).size();
@@ -717,10 +741,6 @@ public class BacklogBusinessImpl implements BacklogBusiness {
 
     public void setIterationGoalDAO(IterationGoalDAO iterationGoalDAO) {
         this.iterationGoalDAO = iterationGoalDAO;
-    }
-
-    public void setBacklogitemBusiness(BacklogItemBusiness backlogitemBusiness) {
-        this.backlogitemBusiness = backlogitemBusiness;
     }
 
     public HourEntryBusiness getHourEntryBusiness() {

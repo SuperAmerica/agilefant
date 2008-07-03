@@ -4,7 +4,6 @@ import fi.hut.soberit.agilefant.business.IterationGoalBusiness;
 import fi.hut.soberit.agilefant.db.IterationGoalDAO;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.IterationGoal;
-import fi.hut.soberit.agilefant.model.Task;
 
 public class IterationGoalBusinessImpl implements IterationGoalBusiness {
 

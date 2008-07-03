@@ -1,24 +1,16 @@
 package fi.hut.soberit.agilefant.web;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.springframework.web.util.WebUtils;
-
-import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionContext;
 import com.opensymphony.xwork.ActionSupport;
 
 import fi.hut.soberit.agilefant.business.MenuBusiness;
 import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.model.Backlog;
-import fi.hut.soberit.agilefant.model.Iteration;
-import fi.hut.soberit.agilefant.model.Product;
-import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.util.MenuData;
 import fi.hut.soberit.agilefant.web.page.PageItem;
 

@@ -1,16 +1,19 @@
 package fi.hut.soberit.agilefant.web;
 
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
-import org.apache.commons.logging.LogFactory;
+import junit.framework.TestCase;
 
 import com.opensymphony.xwork.Action;
 
 import fi.hut.soberit.agilefant.business.BacklogBusiness;
-import fi.hut.soberit.agilefant.business.HistoryBusiness;
 import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.db.IterationGoalDAO;
@@ -23,12 +26,6 @@ import fi.hut.soberit.agilefant.model.Priority;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.State;
-import junit.framework.TestCase;
-
-import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
 
 /**
  * JUnit integration test for BacklogAction.
@@ -44,8 +41,6 @@ public class BacklogActionTest extends TestCase {
     private IterationGoalDAO iterationGoalDAO;
 
     private BacklogBusiness backlogBusiness;
-    private HistoryBusiness historyBusiness;
- 
 
     /**
      * Test edit operation.

@@ -67,7 +67,7 @@ public class OrdinalEnumUserType<E extends Enum<E>> implements UserType {
         if (null == obj) {
             preparedStatement.setNull(i, Types.VARCHAR);
         } else {
-            preparedStatement.setInt(i, ((Enum) obj).ordinal());
+            preparedStatement.setInt(i, ((Enum<?>) obj).ordinal());
         }
     }
 
@@ -76,7 +76,7 @@ public class OrdinalEnumUserType<E extends Enum<E>> implements UserType {
         return obj;
     }
 
-    public Class returnedClass() {
+    public Class<?> returnedClass() {
         return this.clazz;
     }
 }

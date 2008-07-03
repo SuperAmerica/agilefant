@@ -22,13 +22,13 @@ import fi.hut.soberit.agilefant.db.GenericDAO;
 public abstract class GenericDAOHibernate<T> extends HibernateDaoSupport
         implements GenericDAO<T> {
 
-    private Class clazz;
+    private Class<?> clazz;
 
-    protected GenericDAOHibernate(Class clazz) {
+    protected GenericDAOHibernate(Class<?> clazz) {
         this.clazz = clazz;
     }
 
-    protected Class getPersistentClass() {
+    protected Class<?> getPersistentClass() {
         return clazz;
     }
 
@@ -38,6 +38,7 @@ public abstract class GenericDAOHibernate<T> extends HibernateDaoSupport
     }
 
     /** {@inheritDoc} */
+    @SuppressWarnings("unchecked")
     public Collection<T> getAll() {
         return super.getHibernateTemplate().loadAll(getPersistentClass());
     }
@@ -68,6 +69,7 @@ public abstract class GenericDAOHibernate<T> extends HibernateDaoSupport
     }
 
     /** {@inheritDoc} */
+    @SuppressWarnings("unchecked")
     public T get(Serializable id) {
         return (T) super.getHibernateTemplate().get(this.getPersistentClass(),
                 id);

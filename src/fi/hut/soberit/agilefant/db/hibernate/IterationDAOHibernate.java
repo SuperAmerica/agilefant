@@ -18,6 +18,7 @@ public class IterationDAOHibernate extends GenericDAOHibernate<Iteration>
     }
 
     /** {@inheritDoc} */
+    @SuppressWarnings("unchecked")
     public Collection<Iteration> getOngoingIterations() {
         Date current = Calendar.getInstance().getTime();
         return super

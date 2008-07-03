@@ -1,6 +1,5 @@
 package fi.hut.soberit.agilefant.business;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -9,7 +8,6 @@ import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.State;
 import fi.hut.soberit.agilefant.model.User;
-import fi.hut.soberit.agilefant.util.EffortSumData;
 
 /**
  * Interface for business functionality related to backlog items.

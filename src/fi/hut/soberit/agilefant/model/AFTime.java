@@ -1,8 +1,5 @@
 package fi.hut.soberit.agilefant.model;
 
-import java.text.NumberFormat;
-import java.text.ParsePosition;
-import java.util.Locale;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 import java.util.regex.MatchResult;

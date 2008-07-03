@@ -11,7 +11,6 @@ import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.Priority;
 import fi.hut.soberit.agilefant.model.Product;
-import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.State;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.security.SecurityUtil;
@@ -99,7 +98,6 @@ public class UserBusinessTest extends SpringTestCase {
         
         // Create the responsible lists
         Collection<User> respReal = new ArrayList<User>();
-        Collection<User> respFake = new ArrayList<User>();
         
         respReal.add(user);
 

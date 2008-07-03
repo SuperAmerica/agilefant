@@ -4,8 +4,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Map;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -18,8 +16,8 @@ import com.opensymphony.xwork.ActionSupport;
 import fi.hut.soberit.agilefant.business.BacklogBusiness;
 import fi.hut.soberit.agilefant.business.BacklogItemBusiness;
 import fi.hut.soberit.agilefant.business.HistoryBusiness;
-import fi.hut.soberit.agilefant.business.TaskBusiness;
 import fi.hut.soberit.agilefant.business.HourEntryBusiness;
+import fi.hut.soberit.agilefant.business.TaskBusiness;
 import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.db.IterationGoalDAO;
@@ -31,7 +29,6 @@ import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.IterationGoal;
 import fi.hut.soberit.agilefant.model.State;
-import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
 
 public class BacklogItemAction extends ActionSupport implements CRUDAction {
@@ -64,7 +61,7 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
 
     private int iterationGoalId;
 
-    private int assigneeId;
+    // private int assigneeId;
 
     private TaskDAO taskDAO;
 
@@ -161,7 +158,7 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
      * TODO: refactor this!
      */
     public String store() {
-        Integer storableId;
+        // Integer storableId;
         BacklogItem storable = new BacklogItem();
         Backlog newBacklog;
         Backlog oldBacklog = null;
@@ -422,10 +419,6 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
 
     public void setIterationGoalDAO(IterationGoalDAO iterationGoalDAO) {
         this.iterationGoalDAO = iterationGoalDAO;
-    }
-
-    public void setAssigneeId(int assigneeId) {
-        this.assigneeId = assigneeId;
     }
 
     /**

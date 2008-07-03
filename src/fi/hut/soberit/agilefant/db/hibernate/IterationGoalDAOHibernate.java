@@ -2,15 +2,9 @@ package fi.hut.soberit.agilefant.db.hibernate;
 
 import java.util.List;
 
-import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Restrictions;
-
 import fi.hut.soberit.agilefant.db.IterationGoalDAO;
-import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.IterationGoal;
-import fi.hut.soberit.agilefant.model.Task;
 
 /**
  * Hibernate implementation of IterationGoalDAO interface using
@@ -80,7 +74,7 @@ public class IterationGoalDAOHibernate extends
     /** {@inheritDoc} */
     public void raiseRankBetween(Integer lowLimitRank, Integer upperLimitRank,
             Iteration iteration) {
-        List projects = null;
+        // List projects = null;
 
         if (lowLimitRank == null) {
             super

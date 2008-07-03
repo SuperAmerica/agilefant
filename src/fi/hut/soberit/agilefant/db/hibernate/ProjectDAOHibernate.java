@@ -20,6 +20,7 @@ public class ProjectDAOHibernate extends GenericDAOHibernate<Project>
     }
 
     /** {@inheritDoc} */
+    @SuppressWarnings("unchecked")
     public Collection<Project> getOngoingProjects() {
         Date current = Calendar.getInstance().getTime();
         return super
@@ -30,12 +31,14 @@ public class ProjectDAOHibernate extends GenericDAOHibernate<Project>
     }
 
     /** {@inheritDoc} */
+    @SuppressWarnings("unchecked")
     public Collection<Project> getAllRankedProjects() {
         return super.getHibernateTemplate().find(
                 "from Project d where d.rank != 0 order by d.rank ASC");
     }
 
     /** {@inheritDoc} */
+    @SuppressWarnings("unchecked")
     public Collection<Project> getOngoingRankedProjects() {
         Date current = Calendar.getInstance().getTime();
         return super
@@ -46,6 +49,7 @@ public class ProjectDAOHibernate extends GenericDAOHibernate<Project>
     }
 
     /** {@inheritDoc} */
+    @SuppressWarnings("unchecked")
     public Collection<Project> getOngoingUnrankedProjects() {
         Date current = Calendar.getInstance().getTime();
         return super
@@ -55,10 +59,11 @@ public class ProjectDAOHibernate extends GenericDAOHibernate<Project>
                         new Object[] { current, current });
     }
 
+    @SuppressWarnings("unchecked")
     public Project findFirstLowerRankedOngoingProject(
             Project project) {
         Date current = Calendar.getInstance().getTime();
-        List projects = getHibernateTemplate()
+        List<Project> projects = getHibernateTemplate()
                 .find(
                         "from Project d where (d.rank < ?) and (d.rank != 0) and (d.startDate <= ? and d.endDate >= ?) order by d.rank desc limit 1",
                         new Object[] { project.getRank(), current, current });
@@ -84,7 +89,6 @@ public class ProjectDAOHibernate extends GenericDAOHibernate<Project>
     }
 
     public void raiseRankBetween(Integer lowLimitRank, Integer upperLimitRank) {
-        List projects = null;
         /*
          * if (lowLimitRank == null) projects =
          * super.getHibernateTemplate().find( "from Project d where d.rank <
@@ -122,10 +126,10 @@ public class ProjectDAOHibernate extends GenericDAOHibernate<Project>
         } else
             throw new IllegalArgumentException("Both limits cannot be null.");
     }
-
+    
+    @SuppressWarnings("unchecked")
     public List<Integer> findBiggestRank() {
-        List result = null;
-        return result = super.getHibernateTemplate().find(
+        return super.getHibernateTemplate().find(
                 "select max(d.rank) from Project d");
     }
 

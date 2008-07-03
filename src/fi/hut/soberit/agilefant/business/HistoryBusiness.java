@@ -4,7 +4,6 @@ import java.util.Date;
 
 import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.Backlog;
-import fi.hut.soberit.agilefant.model.BacklogHistory;
 
 public interface HistoryBusiness {
     public void updateBacklogHistory(int backlogId);

@@ -1,12 +1,10 @@
 package fi.hut.soberit.agilefant.web;
 
 import java.util.Collection;
-import java.util.HashSet;
 
 import com.opensymphony.xwork.Action;
 
 import fi.hut.soberit.agilefant.db.ProductDAO;
-import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.util.SpringTestCase;
 
@@ -17,7 +15,7 @@ import fi.hut.soberit.agilefant.util.SpringTestCase;
  */
 public class ProductActionTest extends SpringTestCase {
     private static final String NAME = "Test Product";
-
+/*
     private static final String NAME2 = "Test Product 2";
 
     private static final String NAME_SYMBOLS = "test name 2 - non-ascii-symbols äö╚ïâ‼.ê┴åúü";
@@ -27,9 +25,9 @@ public class ProductActionTest extends SpringTestCase {
     private static final String NAME_EMPTY = "";
 
     private static final String NAME_INJECTION = "<a href=\"http://agilefant.org\">Link fo foo</a>";
-
+*/
     private static final String DESCRIPTION = "test description 1 - a text with nothing special ";
-
+/*
     private static final String DESCRIPTION2 = "test description 2 - a text with nothing special ";
 
     private static final String DESCRIPTION_SYMBOLS = "test description 2 - non-ascii-symbols äö╚ïâ‼.ê┴åúü";
@@ -39,13 +37,13 @@ public class ProductActionTest extends SpringTestCase {
     private static final String DESCRIPTION_EMPTY = "";
 
     private static final String DESCRIPTION_INJECTION = "<a href=\"http://agilefant.org\">Link fo foo</a>";
-
+*/
     // private static final int PRODUCT_ID = 123456789;
     // private static final int PRODUCT_ID2 = 987654321;
-    private static final int INVALID_PRODUCTID = -1;
+/*    private static final int INVALID_PRODUCTID = -1;
 
     private Collection<BacklogItem> backlogItems = new HashSet<BacklogItem>();
-
+*/
     // private static final User ASSIGNEE = TestUser;
 
     private ProductAction productAction; // The field and setter to be used

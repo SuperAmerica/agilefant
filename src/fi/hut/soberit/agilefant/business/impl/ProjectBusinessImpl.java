@@ -1,11 +1,11 @@
 package fi.hut.soberit.agilefant.business.impl;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -34,9 +34,9 @@ import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.ProjectType;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.util.BacklogLoadData;
-import fi.hut.soberit.agilefant.util.EffortSumData;
 import fi.hut.soberit.agilefant.util.CalendarUtils;
 import fi.hut.soberit.agilefant.util.DailyWorkLoadData;
+import fi.hut.soberit.agilefant.util.EffortSumData;
 import fi.hut.soberit.agilefant.util.ProjectPortfolioData;
 import fi.hut.soberit.agilefant.util.UserComparator;
 
@@ -95,7 +95,7 @@ public class ProjectBusinessImpl implements ProjectBusiness {
     public void moveToBottom(int projectId) {
         Project project = projectDAO.get(projectId);
         if (project != null) {
-            List result = projectDAO.findBiggestRank();
+            List<Integer> result = projectDAO.findBiggestRank();
             if (result.size() != 0) {
                 int lowestRank = (Integer) (result.get(0));
                 if (lowestRank != project.getRank() || lowestRank == 0) {
@@ -208,8 +208,8 @@ public class ProjectBusinessImpl implements ProjectBusiness {
                     .getUsers(pro, true));
             HashSet<User> projectAssignments = new HashSet<User>(
                     this.backlogBusiness.getUsers(pro, true));
-            ArrayList<User> assignments = new ArrayList<User>(
-                    this.backlogBusiness.getUsers(pro, true));
+            /*ArrayList<User> assignments = new ArrayList<User>(
+                    this.backlogBusiness.getUsers(pro, true));*/
             Collection<BacklogItem> blis = getBlisInProjectAndItsIterations(pro);
 
             // Get overheads for users in this project
@@ -672,7 +672,7 @@ public class ProjectBusinessImpl implements ProjectBusiness {
         DailyWorkLoadData data = new DailyWorkLoadData();
         Map<Backlog, BacklogLoadData> loadDataList = new HashMap<Backlog, BacklogLoadData>();
         ArrayList<Integer> weekNumbers = new ArrayList<Integer>();
-        String[] overallTotals = new String[3]; // Not currently used, but could
+        // String[] overallTotals = new String[3]; // Not currently used, but could
                                                 // use in the future
 
         GregorianCalendar cal = new GregorianCalendar();

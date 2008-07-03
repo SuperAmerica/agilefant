@@ -35,8 +35,6 @@ public class TaskAction extends ActionSupport implements CRUDAction {
 
     private BacklogItemDAO backlogItemDAO;
 
-    private UserDAO userDAO;
-
     private Log logger = LogFactory.getLog(getClass());
 
     private TaskBusiness taskBusiness;
@@ -300,10 +298,6 @@ public class TaskAction extends ActionSupport implements CRUDAction {
 
     public void setBacklogItemDAO(BacklogItemDAO backlogItemDAO) {
         this.backlogItemDAO = backlogItemDAO;
-    }
-
-    public void setUserDAO(UserDAO userDAO) {
-        this.userDAO = userDAO;
     }
 
     public String moveTaskUp() {

@@ -474,6 +474,7 @@ public class BacklogBusinessTest extends TestCase {
         verify(bliDAO);
     }
     
+    @SuppressWarnings("deprecation")
     public void testGetUserBacklogs() {
         // Create dates
         Date now = new Date(98, 3, 5);

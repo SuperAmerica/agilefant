@@ -946,6 +946,14 @@ table.reportTable tr.total th.total {
 	width: 100px;
 }
 
+/* End of timesheet styles */
+
+span.businessTheme {
+	background-color: #ffd;
+	color: #c96;
+	font-size: 80%;
+	padding: 0 1px 1px 3px;	
+}
 ul.themeList {
 	list-style-type: none;	
 	padding: 0px;
@@ -955,4 +963,3 @@ ul.themeList li {
 	display: inline;
 	padding-right: 4px;
 }
-/* End of timesheet styles */

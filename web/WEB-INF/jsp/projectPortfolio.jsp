@@ -12,6 +12,7 @@
 <ww:set name="teamList" value="#attr.teamList" />
 var teams = [<aef:teamJson items="${teamList}"/>]
 </script>
+
 <h2>Development Portfolio</h2>
 
 <h4>Ranked Projects</h4>
@@ -314,11 +315,13 @@ var teams = [<aef:teamJson items="${teamList}"/>]
 					${aef:html(row.name)}
 				</ww:a>
 			</display:column>
-			<display:column sortable="false" title="Actions">
+			<display:column sortable="false" title="Action">
 				<ww:url id="deleteLink" action="deleteProjectType">
 					<ww:param name="projectTypeId" value="${row.id}" />
 				</ww:url>
-				<ww:a href="%{deleteLink}" onclick="return confirmDelete()">Delete</ww:a>
+				<ww:a href="%{deleteLink}" onclick="return confirmDelete()">
+					<img src="static/img/delete_18.png" alt="Delete" title="Delete" />
+				</ww:a>
 			</display:column>
 		</display:table>
 
@@ -344,11 +347,13 @@ var teams = [<aef:teamJson items="${teamList}"/>]
 					${aef:html(row.name)}
 				</ww:a>
 			</display:column>
-			<display:column sortable="false" title="Actions">
+			<display:column sortable="false" title="Action">
 				<ww:url id="deleteLink" action="deleteBusinessTheme">
 					<ww:param name="businessThemeId" value="${row.id}" />
 				</ww:url>
-				<ww:a href="%{deleteLink}" onclick="return confirmDelete()">Delete</ww:a>
+				<ww:a href="%{deleteLink}" onclick="return confirmDelete()">
+					<img src="static/img/delete_18.png" alt="Delete" title="Delete" />
+				</ww:a>
 			</display:column>
 		</display:table>
 

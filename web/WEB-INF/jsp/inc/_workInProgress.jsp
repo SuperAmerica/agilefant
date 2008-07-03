@@ -24,7 +24,11 @@ Backlog items
 		<ww:url id="editLink" action="editBacklogItem" includeParams="none">
 			<ww:param name="backlogItemId" value="${row.id}" />
 		</ww:url>
-		<div><ww:a href="%{editLink}&contextViewName=dailyWork">
+		<div>
+		<c:forEach items="${row.businessThemes}" var="businessTheme">
+				<span class="businessTheme">${businessTheme.name}</span>
+		</c:forEach>
+		<ww:a href="%{editLink}&contextViewName=dailyWork">
 			${aef:html(row.name)}
 		</ww:a></div>
 	</display:column>
@@ -35,7 +39,8 @@ Backlog items
 		<ww:url id="editLink" action="editIterationGoal" includeParams="none">
 			<ww:param name="iterationGoalId" value="${row.iterationGoal.id}" />
 		</ww:url>
-		<div><ww:a href="%{editLink}&contextViewName=dailyWork">
+		<div>		
+		<ww:a href="%{editLink}&contextViewName=dailyWork">
 			${aef:html(row.iterationGoal.name)}
 		</ww:a></div>
 	</display:column>

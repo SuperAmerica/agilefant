@@ -15,6 +15,7 @@ import com.opensymphony.xwork.ActionSupport;
 
 import fi.hut.soberit.agilefant.business.BacklogBusiness;
 import fi.hut.soberit.agilefant.business.BacklogItemBusiness;
+import fi.hut.soberit.agilefant.business.BusinessThemeBusiness;
 import fi.hut.soberit.agilefant.business.HistoryBusiness;
 import fi.hut.soberit.agilefant.business.HourEntryBusiness;
 import fi.hut.soberit.agilefant.business.TaskBusiness;
@@ -27,6 +28,7 @@ import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
+import fi.hut.soberit.agilefant.model.BusinessTheme;
 import fi.hut.soberit.agilefant.model.IterationGoal;
 import fi.hut.soberit.agilefant.model.State;
 import fi.hut.soberit.agilefant.model.User;
@@ -73,6 +75,8 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
 
     private BacklogItemBusiness backlogItemBusiness;
     
+    private BusinessThemeBusiness businessThemeBusiness;
+    
     private TaskBusiness taskBusiness;
     
     private HourEntryBusiness hourEntryBusiness;
@@ -82,6 +86,8 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
     private List<User> possibleResponsibles = new ArrayList<User>();
     
     private String spentEffort = null;
+    
+    private int businessThemeId;
 
     public Map<Integer, State> getTaskStates() {
         return taskStates;
@@ -201,6 +207,28 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
         return Action.SUCCESS;
     }
 
+    public String addBusinessTheme() {
+        BacklogItem bli;
+        BusinessTheme theme;
+        if (backlogItemId > 0 && businessThemeId > 0) {
+            bli = backlogItemBusiness.getBacklogItem(backlogItemId);
+            theme = businessThemeBusiness.getBusinessTheme(businessThemeId);
+            if (bli == null) {
+                super.addActionError(super.getText("backlogItem.notFound"));
+                return CRUDAction.AJAX_ERROR;
+            } else if (theme == null) {
+                super.addActionError(super.getText("businessTheme.notFound"));
+                return CRUDAction.AJAX_ERROR;
+            } else {
+                bli.getBusinessThemes().add(theme);                
+                return CRUDAction.AJAX_SUCCESS;
+            }
+                                                       
+        }
+        return CRUDAction.AJAX_ERROR;
+        
+    }
+    
     /**
      * Updates backlog item's state and effort left and its tasks' states. Used
      * by tasklist tag.
@@ -521,6 +549,14 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
 
     public void setHourEntryBusiness(HourEntryBusiness hourEntryBusiness) {
         this.hourEntryBusiness = hourEntryBusiness;
+    }
+
+    public BusinessThemeBusiness getBusinessThemeBusiness() {
+        return businessThemeBusiness;
+    }
+
+    public void setBusinessThemeBusiness(BusinessThemeBusiness businessThemeBusiness) {
+        this.businessThemeBusiness = businessThemeBusiness;
     }
     
     

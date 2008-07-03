@@ -43,7 +43,12 @@
 	<aef:iterationGoalList id="iterationGoals" backlogId="${backlogId}" />
 	<aef:productList />
 
-	<table class="formTable">
+	<table class="formTable">		
+		<tr>			
+			<td>Name</td>												
+			<td>*</td>
+			<td colspan="2"><ww:textfield size="60" name="backlogItem.name" /></td>
+		</tr>
 		<tr>
 			<c:choose>
 			<c:when test="${backlogItemId != 0}">
@@ -53,19 +58,14 @@
 			</td>
 			<td></td>
 			<td>			
-			<c:if test="${!empty backlogItem.businessThemes}">		
+			<c:if test="${!empty backlogItem.businessThemes}">	
 			<c:forEach items="${backlogItem.businessThemes}" var="businessTheme">
-				[<c:out value="${businessTheme.name}"></c:out>]
-			</c:forEach>
+				<span class="businessTheme">${businessTheme.name}</span>
+			</c:forEach>			
 			</c:if>
 			</td>
 			</c:when>
 			</c:choose>		
-		</tr>
-		<tr>			
-			<td>Name</td>												
-			<td>*</td>
-			<td colspan="2"><ww:textfield size="60" name="backlogItem.name" /></td>
 		</tr>
 		<tr>
 			<td>Description</td>

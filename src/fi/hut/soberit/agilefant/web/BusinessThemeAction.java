@@ -142,6 +142,9 @@ public class BusinessThemeAction extends ActionSupport implements CRUDAction {
                 businessTheme.getName().trim().equals("")) {
             super.addActionError(super.getText("businessTheme.nameEmpty"));
             return;
+        } else if (businessTheme.getName().length() > 20) {
+            super.addActionError(super.getText("businessTheme.nameTooLong"));
+            return;
         }
         fillable.setName(businessTheme.getName());
         fillable.setDescription(businessTheme.getDescription());

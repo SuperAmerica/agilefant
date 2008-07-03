@@ -876,6 +876,9 @@
 			<result type="redirect-action">
 				<param name="actionName">popContext</param>
 			</result>
+		</action>
+		<action name="addThemeToBacklogItem" method="addBusinessTheme"
+			class="backlogItemAction">					
 		</action>		
 		<!-- /Business theme actions -->
 

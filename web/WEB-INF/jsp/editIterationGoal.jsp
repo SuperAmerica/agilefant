@@ -160,6 +160,9 @@
 
 					<display:column sortable="true" sortProperty="name" title="Name"
 						class="shortNameColumn">
+						<c:forEach items="${row.businessThemes}" var="businessTheme">
+							<span class="businessTheme">${businessTheme.name}</span>
+						</c:forEach>
 						<ww:url id="editLink" action="editBacklogItem"
 							includeParams="none">
 							<ww:param name="backlogItemId" value="${row.id}" />

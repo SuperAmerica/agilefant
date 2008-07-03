@@ -210,20 +210,37 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
     public String addBusinessTheme() {
         BacklogItem bli;
         BusinessTheme theme;
+        System.out.println("DEB ::: BLI " + backlogItemId);
+        System.out.println("DEB ::: theme " + businessThemeId);
         if (backlogItemId > 0 && businessThemeId > 0) {
             bli = backlogItemBusiness.getBacklogItem(backlogItemId);
             theme = businessThemeBusiness.getBusinessTheme(businessThemeId);
-            if (bli == null) {
-                super.addActionError(super.getText("backlogItem.notFound"));
-                return CRUDAction.AJAX_ERROR;
-            } else if (theme == null) {
-                super.addActionError(super.getText("businessTheme.notFound"));
+            if (bli == null || theme == null) {
                 return CRUDAction.AJAX_ERROR;
             } else {
-                bli.getBusinessThemes().add(theme);                
+                bli.getBusinessThemes().add(theme);  
+                backlogItemDAO.store(bli);
                 return CRUDAction.AJAX_SUCCESS;
-            }
-                                                       
+            }                                               
+        }
+        return CRUDAction.AJAX_ERROR;
+        
+    }
+    public String removeBusinessTheme() {
+        BacklogItem bli;
+        BusinessTheme theme;
+        if (backlogItemId > 0 && businessThemeId > 0) {
+            bli = backlogItemBusiness.getBacklogItem(backlogItemId);
+            theme = businessThemeBusiness.getBusinessTheme(businessThemeId);
+            if (bli == null || theme == null) {
+                return CRUDAction.AJAX_ERROR;
+            } else {
+                if(bli.getBusinessThemes().contains(theme)) {
+                    bli.getBusinessThemes().remove(theme);   
+                    backlogItemDAO.store(bli);
+                }
+                return CRUDAction.AJAX_SUCCESS;
+            }                                              
         }
         return CRUDAction.AJAX_ERROR;
         
@@ -557,6 +574,14 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
 
     public void setBusinessThemeBusiness(BusinessThemeBusiness businessThemeBusiness) {
         this.businessThemeBusiness = businessThemeBusiness;
+    }
+
+    public int getBusinessThemeId() {
+        return businessThemeId;
+    }
+
+    public void setBusinessThemeId(int businessThemeId) {
+        this.businessThemeId = businessThemeId;
     }
     
     

@@ -46,7 +46,7 @@ public class BusinessThemeAction extends ActionSupport implements CRUDAction {
         }
         return Action.SUCCESS;
     }
-    
+  //TODO: refactor logic to business
     public String store() {
         if (businessTheme == null) {
             super.addActionError(super.getText("businessTheme.missingForm"));
@@ -71,7 +71,35 @@ public class BusinessThemeAction extends ActionSupport implements CRUDAction {
         }
         return Action.SUCCESS;
     }
-    
+    //TODO: refactor logic to business
+    public String ajaxStoreBusinessTheme() {
+        if (businessTheme == null) {
+            super.addActionError(super.getText("businessTheme.missingForm"));
+        }
+        BusinessTheme fillable = new BusinessTheme();
+        if (businessThemeId > 0) {
+            fillable = businessThemeDAO.get(businessThemeId);
+            if (fillable == null) {
+                super.addActionError(super.getText("businessTheme.notFound"));
+                return CRUDAction.AJAX_ERROR;
+            }
+        }
+        this.fillObject(fillable);
+        if (super.hasActionErrors()) {
+            return CRUDAction.AJAX_ERROR;
+        }
+        try {
+            if(fillable.getId() > 0) {
+                businessThemeDAO.store(fillable);
+            } else {
+                businessThemeId = (Integer)businessThemeDAO.create(fillable);
+            }
+        } catch (DataIntegrityViolationException dve) {
+            super.addActionError(super.getText("businessTheme.duplicateName"));
+            return CRUDAction.AJAX_ERROR;
+        }
+        return CRUDAction.AJAX_SUCCESS;
+    }
     public String delete() {
         businessTheme = businessThemeDAO.get(businessThemeId);
         if (businessTheme == null) {

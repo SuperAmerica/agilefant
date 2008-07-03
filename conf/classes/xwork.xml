@@ -879,7 +879,20 @@
 		</action>
 		<action name="addThemeToBacklogItem" method="addBusinessTheme"
 			class="backlogItemAction">					
-		</action>		
+		</action>
+		<action name="removeThemeFromBacklogItem" method="removeBusinessTheme"
+			class="backlogItemAction">					
+		</action>	
+		<action name="ajaxStoreBusinessTheme" method="ajaxStoreBusinessTheme"
+			class="businessThemeAction">		
+			<result name="ajax_error" type="httpheader">
+				<param name="status">400</param>
+			</result>
+			<result name="ajax_success" type="dispatcher">
+				<param name="status">200</param>
+				<param name="location">/WEB-INF/jsp/inc/ajaxBusinessThemeResult.jsp</param>
+			</result>
+		</action>	
 		<!-- /Business theme actions -->
 
 </package>

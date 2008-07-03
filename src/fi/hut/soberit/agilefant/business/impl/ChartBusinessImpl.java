@@ -72,6 +72,7 @@ public class ChartBusinessImpl implements ChartBusiness {
    
     private Date expectedDate;
 
+    
     /* Default chart size */
     private static final int DEFAULT_WIDTH = 780;
     private static final int DEFAULT_HEIGHT = 600;
@@ -233,7 +234,7 @@ public class ChartBusinessImpl implements ChartBusiness {
         if (expectedDate != null) {
             this.expectedDate = expectedDate;
             expectedSeries.add(new Day(i.getTime()), (float)(startPoint / 3600.0));
-            expectedSeries.addOrUpdate(new Day(expectedDate).next(), 0);
+            expectedSeries.addOrUpdate(new Day(expectedDate), 0);
         }
         
         // Add the series in correct order
@@ -286,21 +287,23 @@ public class ChartBusinessImpl implements ChartBusiness {
         newEndDate = new GregorianCalendar();
 
         // Use java.sql.Date to use only days, months and years
-        newEndDate.setTime(new java.sql.Date(endDate.getTime()));
+        if (this.expectedDate == null ||
+                endDate.after(this.expectedDate)) {
+            newEndDate.setTime(new java.sql.Date(endDate.getTime()));
+        }
+        else {
+            newEndDate.setTime(new java.sql.Date(this.expectedDate.getTime()));
+            newEndDate.add(Calendar.DATE, 1);
+        }
 
+        // Set the burndown to end at midnight
         newEndDate.set(GregorianCalendar.HOUR_OF_DAY, 0);
         newEndDate.set(GregorianCalendar.MINUTE, 0);
         newEndDate.set(GregorianCalendar.SECOND, 0);
 
         newEndDate.add(GregorianCalendar.DATE, 1);
-
-        if (this.expectedDate != null &&
-                this.expectedDate.after(newEndDate.getTime())) {
-            axis.setMaximumDate(expectedDate);
-        }
-        else {
-            axis.setMaximumDate(newEndDate.getTime());
-        }
+        
+        axis.setMaximumDate(newEndDate.getTime());
 
         if ((endDate.getTime() - startDate.getTime()) < (8 * 24 * 60 * 60))
             axis.setTickUnit(new DateTickUnit(DateTickUnit.DAY, 1));

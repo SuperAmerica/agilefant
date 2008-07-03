@@ -946,4 +946,13 @@ table.reportTable tr.total th.total {
 	width: 100px;
 }
 
+ul.themeList {
+	list-style-type: none;	
+	padding: 0px;
+	margin: 0px;
+}
+ul.themeList li {
+	display: inline;
+	padding-right: 4px;
+}
 /* End of timesheet styles */

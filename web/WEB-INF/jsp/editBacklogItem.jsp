@@ -49,10 +49,7 @@
 			<c:when test="${backlogItemId != 0}">
 			<td>
 			Themes								
-			<ww:url id="businessThemesLink" action="editBacklogItemBusinessThemes" includeParams="none">	
-					<ww:param name="backlogItemId" value="${backlogItemId}" />			
-			</ww:url>
-			<ww:a cssClass="openModalWindow" href="%{businessThemesLink}&contextViewName=editBacklogItem&contextObjectId=${backlogItemId}">Edit &raquo;</ww:a>
+			<ww:a href="#" id="addThemeLink" onclick="openThemeBusinessModal('addThemeLink', 'editBacklogItemBusinessThemes.action',${backlogItemId},0); return false;">Edit &raquo;</ww:a>
 			</td>
 			<td></td>
 			<td>			

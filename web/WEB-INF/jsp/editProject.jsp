@@ -108,9 +108,9 @@
             			        <td>Start date</td>
                     			<td>*</td>
                     			<td colspan="2">
-                    			<!--<ww:datepicker value="%{#start}" size="15"
+                    			<%--<ww:datepicker value="%{#start}" size="15"
                         			showstime="true" format="%{getText('webwork.datepicker.format')}"
-                        			name="startDate" />-->
+                        			name="startDate" />--%>
                         		<aef:datepicker id="start_date" name="startDate" format="%{getText('webwork.shortDateTime.format')}" value="%{#start}" />
                         		</td>
                 			</tr>
@@ -118,9 +118,9 @@
                     			<td>End date</td>
                     			<td>*</td>
                     			<td colspan="2">
-                    			<!--<ww:datepicker value="%{#end}" size="15"
+                    			<%--<ww:datepicker value="%{#end}" size="15"
                         			showstime="true" format="%{getText('webwork.datepicker.format')}"
-                        			name="endDate" />-->
+                        			name="endDate" />--%>
                         		<aef:datepicker id="end_date" name="endDate" format="%{getText('webwork.shortDateTime.format')}" value="%{#end}" />
                         		</td>
                 			</tr>
@@ -282,7 +282,7 @@
 											<table class="infoTable" cellpadding="0" cellspacing="0">
 												<tr>
 													<th class="info1">Project type</th>
-													<td class="info3" onclick="return editProject();"><c:out value="${project.projectType.name}" /></td>
+													<td class="info3" ondblclick="return editProject();"><c:out value="${project.projectType.name}" /></td>
 													<td class="info4" rowspan="5">
 	                                					<c:if test="${(!empty project.backlogItems) && (empty project.iterations)}">
 	                                    					<a href="#bigChart">
@@ -293,12 +293,12 @@
 												</tr>
 												<tr>
 								    				<th class="info1">Default overhead</th>
-								    				<td class="info3" onclick="return editProject();"><c:out value="${project.defaultOverhead}"/> / person / week</td>
+								    				<td class="info3" ondblclick="return editProject();"><c:out value="${project.defaultOverhead}"/> / person / week</td>
 							
 												</tr>
 												<tr>
 	                                				<th class="info1">Timeframe</th>
-	                                				<td class="info3" onclick="return editProject();"><c:out value="${project.startDate.date}.${project.startDate.month + 1}.${project.startDate.year + 1900}" /> - 
+	                                				<td class="info3" ondblclick="return editProject();"><c:out value="${project.startDate.date}.${project.startDate.month + 1}.${project.startDate.year + 1900}" /> - 
 	                                					<c:out value="${project.endDate.date}.${project.endDate.month + 1}.${project.endDate.year + 1900}" /></td>
 												</tr>
 												<tr>
@@ -384,9 +384,9 @@
 														<td>Start date</td>
 														<td>*</td>
 														<td colspan="2">
-														<!--<ww:datepicker value="%{#start}" size="15"
+														<%--<ww:datepicker value="%{#start}" size="15"
 															showstime="true" format="%{getText('webwork.datepicker.format')}"
-															name="startDate" />-->
+															name="startDate" />--%>
 														<aef:datepicker id="start_date" name="startDate" format="%{getText('webwork.shortDateTime.format')}" value="%{#start}" />
 														</td>
 													</tr>
@@ -394,9 +394,9 @@
 														<td>End date</td>
 														<td>*</td>
 														<td colspan="2">
-														<!--<ww:datepicker value="%{#end}" size="15"
+														<%--<ww:datepicker value="%{#end}" size="15"
 															showstime="true" format="%{getText('webwork.datepicker.format')}"
-															name="endDate" />-->
+															name="endDate" />--%>
 														<aef:datepicker id="end_date" name="endDate" format="%{getText('webwork.shortDateTime.format')}" value="%{#end}" />
 														</td>
 													</tr>

@@ -9,6 +9,7 @@
 	</span>
 </div>
 <div style="padding: 12px;">
+<div style="color: red;" id="businessThemeError"></div>
 <ww:form id="businessThemeModalForm" action="storeBacklogItemBusinessThemes">
 	<ww:hidden name="backlogItemId" />
 	
@@ -16,9 +17,8 @@
 	<tr>
 		<td>Chosen themes</td>
 		<td></td>
-		<td><c:forEach items="${businessThemes}" var="chosenTheme">
-				[<c:out value = "${chosenTheme.name}"></c:out>]
-			</c:forEach>
+		<td>
+			<ul class="themeList" id="itemThemeList"></ul>
 		</td>
 	</tr>
 	<tr>
@@ -27,8 +27,8 @@
 		<td>
 		<script type="text/javascript">
 		function change_fields(selectValue) {
-			$("#nameField").val(foo[selectValue]['name']);
-			$("#descField").val(foo[selectValue]['desc']);
+			$("#nameField").val(businessThemes[selectValue]['name']);
+			$("#descField").val(businessThemes[selectValue]['desc']);
 		}
 		</script>
 		<script type="text/javascript">
@@ -45,6 +45,7 @@
 				<option value="${businessTheme.id}" title="${businessTheme.name}">${businessTheme.name}</option>
 			</c:forEach>
 		</select>
+		<a href="#" onclick="addThemeToItem();">Add theme to BLI</a>
 		</td>
 	</tr>
 	<tr>
@@ -66,11 +67,71 @@
 </ww:form>
 </div>
 <script type="text/javascript">
-var foo = new Object();
+var backlogItemId = ${backlogItemId};
+var businessThemes = new Object();
 <c:forEach items="${businessThemeBusiness.all}" var="businessTheme">
-	foo['${businessTheme.id}'] = new Object();
-	foo['${businessTheme.id}']['desc'] = "${aef:out(businessTheme.description)}";
-	foo['${businessTheme.id}']['name'] = "${aef:out(businessTheme.name)}";
+	businessThemes['${businessTheme.id}'] = { desc: "${aef:out(businessTheme.description)}", name: "${aef:out(businessTheme.name)}" };
 </c:forEach>
 
+var selectedThemes = new Array();
+<c:forEach items="${businessThemes}" var="chosenTheme">
+	var tmp = { name: "${chosenTheme.name}", id: ${chosenTheme.id}};
+	selectedThemes.push(tmp);
+</c:forEach>
+function removeThemeFromItem(theme_id) {
+	jQuery.ajax({url :"removeThemeFromBacklogItem.action", data: {"backlogItemId": backlogItemId, themeId: theme_id}, cache: false, method: 'post',
+		success: function(data, status) { 	
+			alert(status);
+			var tmp = selectedThemes;
+			selectedThemes = new Array();
+			for(var i = 0 ; i < tmp.length; i++) {
+				if(tmp[i].id != theme_id) {
+					selectedThemes.push(tmp[i]);
+				}
+			}
+			renderThemeList();
+			$("#businessThemeError").text("");
+		}, error: function() {
+				$("#businessThemeError").text("Error: Unable to remove theme from backlog item.");
+	}});
+	
+}
+function addThemeToItem() {
+	var theme_id = $("#businessThemeSelect").val();
+	if(theme_id < 1) {
+		alert("Select theme first.");
+		return;
+	}
+	var theme = { name: businessThemes[theme_id]['name'], id: theme_id };
+	jQuery.ajax({url: "addThemeToBacklogItem.action", data: {"backlogItemId": backlogItemId, themeId: theme_id}, method: 'post', cache: false,
+		success: function(data, status) { 	
+			if(status == 200) {
+				for(var i = 0 ; i < selectedThemes.length; i++) {
+					if(theme_id == selectedThemes[i].id) return;
+				}
+				selectedThemes.push(theme);
+				renderThemeList();
+				$("#businessThemeError").text("");
+			}
+		}, error: function() {
+				$("#businessThemeError").text("Error: Unable to add theme to backlog item.");
+		}});
+}
+function renderThemeList() {
+	var container = $("#itemThemeList");
+	container.empty();
+	for(var i = 0 ; i < selectedThemes.length; i++) {
+		var cur = selectedThemes[i];
+		$('<li>'+cur.name+'<img name="'+cur.id+'" title="Remove" alt="Remove" src="static/img/delete_18.png"/></li>')
+			.appendTo(container).find("img")
+			.click(function() { removeThemeFromItem(this.name); });
+	}
+}
+function saveTheme() {
+
+}
+function updateThemeSelect() {
+
+}
+renderThemeList();
 </script>

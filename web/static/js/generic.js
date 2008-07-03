@@ -138,3 +138,23 @@ function reloadPage()
 {
 	window.location.reload();
 }
+function openThemeBusinessModal(parent, target, backlogItemId, themeId) {
+	var data = new Object();
+	data['backlogItemId'] = backlogItemId;
+	data['businessThemeId'] = themeId;
+	loadModal(target,data,parent);
+}
+function loadModal(target,request, parent) {
+	var container = $('<div class="jqmWindow"><b>Please wait, content loading...</b></div>');
+	var bg = $('<div style="background: #000; opacity: 0.3; z-index: 9; position: absolute; top: 0px; left: 0px; filter:alpha(opacity=30);-moz-opacity:.30;">&nbsp;</div>');
+	var pos = $("#"+parent).offset();
+	container.css("top",pos.top).css("z-index","11");
+	bg.appendTo(document.body).show();
+	container.appendTo(document.body).show();
+	$(window).resize(function() { bg.css("height",$(document).height()).css("width",$(document).width()); });
+	$(window).scroll(function() { bg.css("height",$(document).height()).css("width",$(document).width()); });
+	$(window).resize();
+	var comp = function(data,status) { container.html(data); container.find(".jqmClose").click(function() { container.remove(); bg.remove(); });}
+	var err = function(data,status) { alert("An error occured while processing your request."); container.remove(); bg.remove(); }
+	jQuery.ajax({cache: false, type: "POST", error: err, success: comp, data: request, url: target, dataType: "html"});
+}

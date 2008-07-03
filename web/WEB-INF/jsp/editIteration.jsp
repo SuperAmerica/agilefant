@@ -82,10 +82,10 @@
                                     <td>Start date</td>
                                     <td>*</td>
                                     <td colspan="2">
-                                    <!--<ww:datepicker value="%{#start}" size="15"
+                                    <%--<ww:datepicker value="%{#start}" size="15"
                                         showstime="true"
                                         format="%{getText('webwork.datepicker.format')}"
-                                        name="startDate" />-->
+                                        name="startDate" />--%>
                                         <aef:datepicker id="start_date" name="startDate" format="%{getText('webwork.shortDateTime.format')}" value="%{#start}" />
                                     </td>
                                 </tr>
@@ -93,9 +93,9 @@
                                     <td>End date</td>
                                     <td>*</td>
                                     <td colspan="2">
-                                    	<!--<ww:datepicker value="%{#end}" size="15" showstime="true"
+                                    	<%--<ww:datepicker value="%{#end}" size="15" showstime="true"
                                         format="%{getText('webwork.datepicker.format')}"
-                                        name="endDate" />-->
+                                        name="endDate" />--%>
                                         
                                         <aef:datepicker id="end_date" name="endDate" format="%{getText('webwork.shortDateTime.format')}" value="%{#end}" />  
                                         
@@ -164,7 +164,7 @@
 						<table class="infoTable" cellpadding="0" cellspacing="0">
 							<tr>
 								<th class="info1">Timeframe</th>
-								<td class="info3" onclick="return editIteration();"><c:out
+								<td class="info3" ondblclick="return editIteration();"><c:out
 									value="${iteration.startDate.date}.${iteration.startDate.month + 1}.${iteration.startDate.year + 1900}" />
 								- <c:out
 									value="${iteration.endDate.date}.${iteration.endDate.month + 1}.${iteration.endDate.year + 1900}" /></td>
@@ -270,10 +270,10 @@
 									<td>Start date</td>
 									<td>*</td>
 									<td colspan="2">
-										<!--<ww:datepicker value="%{#start}" size="15"
+										<%--<ww:datepicker value="%{#start}" size="15"
 										showstime="true"
 										format="%{getText('webwork.datepicker.format')}"
-										name="startDate" />-->
+										name="startDate" />--%>
 										<aef:datepicker id="start_date" name="startDate" format="%{getText('webwork.shortDateTime.format')}" value="%{#start}" />
 										
 										</td>
@@ -282,10 +282,10 @@
 									<td>End date</td>
 									<td>*</td>
 									<td colspan="2">
-									<!--<ww:datepicker value="%{#end}" size="15"
+									<%--<ww:datepicker value="%{#end}" size="15"
 										showstime="true"
 										format="%{getText('webwork.datepicker.format')}"
-										name="endDate" />-->
+										name="endDate" />--%>
 									<aef:datepicker id="end_date" name="endDate" format="%{getText('webwork.shortDateTime.format')}" value="%{#end}" />
 									</td>
 								</tr>

@@ -99,11 +99,12 @@ ExplicitSpringSupport.java.
 
 	<bean name="teamDAO" parent="abstractDAO">
 		<property name="target" ref="teamDAOTarget" />
+	</bean>
 		
 	<bean name="businessThemeDAOTarget" parent="abstractDAOTarget"
 		class="fi.hut.soberit.agilefant.db.hibernate.BusinessThemeDAOHibernate" />
-
+	
 	<bean name="businessThemeDAO" parent="abstractDAO">
 		<property name="target" ref="businessThemeDAOTarget" />	
-		
+	</bean>		
 </beans>

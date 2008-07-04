@@ -1,5 +1,75 @@
 <%@ include file="./_taglibs.jsp"%>
 
+<c:choose>
+
+<%-- Administration menu --%>
+<c:when test="${navi == 'administration'}">
+[
+
+    {
+        <ww:url id="editLink" action="settings" includeParams="none"></ww:url>
+        
+        "text": '<a href="${editLink}">General settings</a>',
+        "hasChildren": false,
+        
+        <c:if test="${subnavi == 'settings'}">
+        "classes": "selected path",
+        </c:if>
+    },
+    {
+        <ww:url id="editLink" action="contextView" includeParams="none">
+            <ww:param name="resetContextView" value="true" />
+        </ww:url>
+        
+        "text": '<a href="${editLink}&amp;contextName=projectTypes">Project types</a>',
+        "hasChildren": false,
+        
+        <c:if test="${subnavi == 'projectTypes'}">
+        "classes": "selected path",
+        </c:if>
+    },
+    {
+        <ww:url id="editLink" action="contextView" includeParams="none">
+            <ww:param name="resetContextView" value="true" />
+        </ww:url>
+        
+        "text": '<a href="${editLink}&amp;contextName=teams">Teams</a>',
+        "hasChildren": false,
+        
+        <c:if test="${subnavi == 'teams'}">
+        "classes": "selected path",
+        </c:if>
+    },
+    {
+        <ww:url id="editLink" action="contextView" includeParams="none">
+            <ww:param name="resetContextView" value="true" />
+        </ww:url>
+        
+        "text": '<a href="${editLink}&amp;contextName=themes">Themes</a>',
+        "hasChildren": false,
+        
+        <c:if test="${subnavi == 'themes'}">
+        "classes": "selected path",
+        </c:if>
+    },
+    {
+        <ww:url id="editLink" action="contextView" includeParams="none">
+            <ww:param name="resetContextView" value="true" />
+        </ww:url>
+        
+        "text": '<a href="${editLink}&amp;contextName=users">Users</a>',
+        "hasChildren": false,
+        
+        <c:if test="${subnavi == 'users'}">
+        "classes": "selected path",
+        </c:if>
+    },
+]
+</c:when>
+
+
+<%-- Backlog hierarchy --%>
+<c:otherwise>
 
 <c:set var="count" value="0" />
 [
@@ -119,26 +189,6 @@
                             </c:when>
                             </c:choose>
                         
-                        <%--
-				            <c:choose>  
-					        <c:when test="${aef:isProject(subItem)}">
-                                <c:if test="${subItem.id == currentProjectId}">
-							    <c:choose>
-								    <c:when test="${!empty currentIterationId}">
-                                        "classes": "path",
-                                    </c:when>
-                                    <c:otherwise>
-                                        "classes": "selected path",
-                                    </c:otherwise>
-                                </c:choose>
-                                </c:if>
-                            </c:when>
-                            <c:when test="${aef:isIteration(subItem)}">
-                                <c:if test="${subItem.id == currentIterationId}">
-                                    "classes": "selected path",
-                                </c:if>
-                            </c:when>
-                            </c:choose>--%>
                             
                             "id": "menubacklog_<c:out value="${subItem.id}" />"
                             
@@ -212,3 +262,5 @@
     },
 </c:forEach>
 ]
+</c:otherwise>
+</c:choose>

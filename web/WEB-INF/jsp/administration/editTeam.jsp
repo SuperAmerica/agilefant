@@ -1,8 +1,8 @@
-<%@ include file="./inc/_taglibs.jsp"%>
-<%@ include file="./inc/_header.jsp"%>
+<%@ include file="../inc/_taglibs.jsp"%>
+<%@ include file="../inc/_header.jsp"%>
 
 
-<aef:menu navi="users" pageHierarchy="${pageHierarchy}" />
+<aef:menu navi="administration" subnavi="teams" pageHierarchy="${pageHierarchy}" />
 
 <ww:actionerror />
 <ww:actionmessage />
@@ -31,7 +31,7 @@
 		<tr>
 			<td>Description</td>
 			<td></td>
-			<td colspan="2"><ww:textarea cols="70" rows="10" name="team.description" /></td>
+			<td colspan="2"><ww:textarea cols="70" rows="10" name="team.description" cssClass="useWysiwyg" /></td>
 		</tr>
 		<tr>
 			<td><a href="javascript:toggleDiv('teamlist');">Select users</a></td>
@@ -72,4 +72,4 @@
 	</table>
 </ww:form>
 
-<%@ include file="./inc/_footer.jsp"%>
+<%@ include file="../inc/_footer.jsp"%>

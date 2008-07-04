@@ -1,7 +1,7 @@
-<%@ include file="./inc/_taglibs.jsp"%>
-<%@ include file="./inc/_header.jsp"%>
+<%@ include file="../inc/_taglibs.jsp"%>
+<%@ include file="../inc/_header.jsp"%>
 
-<aef:menu navi="users" pageHierarchy="${pageHierarchy}" />
+<aef:menu navi="administration" subnavi="users" pageHierarchy="${pageHierarchy}" />
 <ww:actionerror />
 <ww:actionmessage />
 
@@ -107,4 +107,4 @@
 	</table>
 
 </ww:form>
-<%@ include file="./inc/_footer.jsp"%>
+<%@ include file="../inc/_footer.jsp"%>

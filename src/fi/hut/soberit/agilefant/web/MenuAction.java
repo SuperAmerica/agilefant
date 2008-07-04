@@ -39,8 +39,11 @@ public class MenuAction extends ActionSupport {
     
     // For ajax requests
     private String openString = "";
-
     
+    private String navi = "";
+    private String subnavi = "";
+
+
     /**
      * Generates the basic backlog hierarchy menu.
      */
@@ -230,13 +233,29 @@ public class MenuAction extends ActionSupport {
         this.openBacklogs = openBacklogs;
     }
 
-
     public Map<PageItem, MenuData> getOpenDatas() {
         return openDatas;
     }
 
-
     public void setOpenDatas(Map<PageItem, MenuData> openDatas) {
         this.openDatas = openDatas;
+    }
+    
+    public String getNavi() {
+        return navi;
+    }
+
+    public void setNavi(String navi) {
+        this.navi = navi;
+    }
+
+
+    public String getSubnavi() {
+        return subnavi;
+    }
+
+
+    public void setSubnavi(String subnavi) {
+        this.subnavi = subnavi;
     }
 }

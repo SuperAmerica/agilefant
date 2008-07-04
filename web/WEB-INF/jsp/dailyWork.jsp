@@ -5,7 +5,7 @@
 	 Version:	1.3.1
 -->
 
-<aef:menu navi="1" /> 
+<aef:menu navi="dailyWork" /> 
 	<ww:actionerror/>
 	<ww:actionmessage/>
 <aef:hourReporting id="hourReport" />

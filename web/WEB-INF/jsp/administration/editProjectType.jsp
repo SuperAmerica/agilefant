@@ -1,6 +1,6 @@
-<%@ include file="./inc/_taglibs.jsp"%>
-<%@ include file="./inc/_header.jsp"%>
-<aef:menu navi="portfolio" pageHierarchy="${pageHierarchy}" />
+<%@ include file="../inc/_taglibs.jsp"%>
+<%@ include file="../inc/_header.jsp"%>
+<aef:menu navi="administration" subnavi="projectTypes" pageHierarchy="${pageHierarchy}" />
 <ww:actionerror />
 <ww:actionmessage />
 <c:choose>
@@ -23,7 +23,7 @@
 			<td>Description</td>
 			<td></td>
 			<td colspan="2"><ww:textarea cols="70" rows="10"
-				name="projectType.description" /></td>
+				name="projectType.description" cssClass="useWysiwyg" /></td>
 		</tr>
 		<tr>
 			<td></td>
@@ -79,4 +79,4 @@
 		</tr>
 	</table>
 </c:if>
-<%@ include file="./inc/_footer.jsp"%>
+<%@ include file="../inc/_footer.jsp"%>

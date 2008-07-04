@@ -133,10 +133,113 @@ Agilefant
     </c:if>
 </c:forEach>
 
+
+<!-- Create new -menu -->
 <script type="text/javascript">
 $(document).ready(function() {
+    $('#createNewMenuLink a').click(function() {
+        var hideFunction = function() {
+            $("#createNewMenu").hide();
+            $(window).unbind("click", hideFunction);
+        }
+        $(window).click(hideFunction);
+        $("#createNewMenu").show();
+        return false;
+    });
+});
+</script>
+
+<span id="createNewMenuLink">
+<a href="#">
+    <img src="static/img/new.png" alt="Create new" />
+    Create new &raquo;
+</a>
+</span>
+
+<aef:existingObjects />
+
+<ul id="createNewMenu" style="display: none">
+    <li><ww:url id="createLink" action="createProduct"
+        includeParams="none" /> <ww:a href="%{createLink}">Product &raquo;</ww:a>
+    </li>
+
+    <c:choose>
+        <c:when test="${hasProducts && hasProjectTypes}">
+            <li><ww:url id="createLink" action="createProject"
+                includeParams="none" /> <ww:a href="%{createLink}">Project &raquo;</ww:a>
+            </li>
+        </c:when>
+        <c:otherwise>
+            <li class="inactive"><span
+                title="Create a product and a project type before creating a project">
+            Project &raquo;</span></li>
+        </c:otherwise>
+    </c:choose>
+
+    <c:choose>
+        <c:when test="${hasProjects}">
+            <li><ww:url id="createLink" action="createIteration"
+                includeParams="none" /> <ww:a href="%{createLink}">Iteration &raquo;</ww:a>
+            </li>
+        </c:when>
+        <c:otherwise>
+            <li class="inactive"><span
+                title="Create a project before creating an iteration"> Iteration &raquo;</span></li>
+        </c:otherwise>
+    </c:choose>
+
+    <c:choose>
+        <c:when test="${hasIterations}">
+            <li><ww:url id="createLink" action="createIterationGoal"
+                includeParams="none" /> <ww:a href="%{createLink}?contextViewName=createNew&resetContextView=true">Iteration goal &raquo;</ww:a>
+            </li>
+        </c:when>
+        <c:otherwise>
+            <li class="inactive"><span
+                title="Create an iteration before creating an iteration goal">
+            Iteration goal &raquo;</span></li>
+        </c:otherwise>
+    </c:choose>
+
+    <c:choose>
+        <c:when test="${hasProducts}">
+            <li><ww:url id="createLink" action="createBacklogItem"
+                includeParams="none" /> <ww:a href="%{createLink}?contextViewName=createNew&resetContextView=true">Backlog item &raquo;</ww:a>
+            </li>
+        </c:when>
+        <c:otherwise>
+            <li class="inactive"><span
+                title="Create a product before creating a backlog item">
+            Backlog item &raquo;</span></li>
+        </c:otherwise>
+    </c:choose>
+
+    <li><ww:url id="createLink" action="createUser"
+        includeParams="none" /> <ww:a href="%{createLink}">User &raquo;</ww:a>
+    </li>
+    
+    <li><ww:url id="createLink" action="createTeam"
+        includeParams="none" /> <ww:a href="%{createLink}">Team &raquo;</ww:a>
+    </li>
+
+    <li><ww:url id="createLink" action="createProjectType"
+        includeParams="none" /> <ww:a href="%{createLink}">Project type &raquo;</ww:a>
+    </li>
+    <li><ww:url id="createLink" action="createBusinessTheme"
+        includeParams="none" /> <ww:a href="%{createLink}">Theme &raquo;</ww:a>
+    </li>
+</ul>
+
+<!-- Tree menu -->
+
+
+<script type="text/javascript">
+$(document).ready(function() {
+    var navi = '<%=navi%>';
+    var subnavi = '<%=subnavi%>';
+    
     $("#treemenu").treeview({
-        url: "menuData.action",
+        url: "menuData.action?navi=" + navi + "&subnavi=" + subnavi,
         collapsed: false,
         unique: false,
         
@@ -164,83 +267,95 @@ $(document).ready(function() {
 </div>
 <!-- /#hierarchy -->
 
-<div id="menuwrap${navi}">
-<div id="submenuwrap${subnavi}">
+
+<!-- Tabs -->
+
 <ul id="menu">
-<li id="nav1">
-<a href="contextView.action?contextName=dailyWork&resetContextView=true">
-<img src="static/img/dailyWork.png" alt="Daily Work" />
-Daily Work
-</a>
-</li>
-<li id="nav2">
-<a
-	href="contextView.action?contextName=${currentContext}&contextObjectId=${currentPageId}&resetContextView=true">
-<img src="static/img/backlog.png" alt="Backlogs" />
-Backlogs
-</a>
-</li>
-<li id="nav3">
-<a
-	href="contextView.action?contextName=projectPortfolio&resetContextView=true">
-<img src="static/img/portfolio.png" alt="Dev Portfolio" />
-Dev Portfolio
-</a>
+
+<!-- Daily Work -->
+<c:choose>
+    <c:when test="${navi == 'dailyWork'}">
+        <li class="selected">
+    </c:when>
+    <c:otherwise>
+        <li>
+    </c:otherwise>
+</c:choose>
+    <a href="contextView.action?contextName=dailyWork&resetContextView=true">
+    <img src="static/img/dailyWork.png" alt="Daily Work" />
+    Daily Work
+    </a>
 </li>
 
-
-
-<%-- Settings --%>
-<li id="navb">
-<a href="contextView.action?contextName=settings&resetContextView=true">
-<img src="static/img/settings.png" alt="Settings" />
-Settings
-</a>
+<!-- Backlogs -->
+<c:choose>
+    <c:when test="${navi == 'backlog'}">
+        <li class="selected">
+    </c:when>
+    <c:otherwise>
+        <li>
+    </c:otherwise>
+</c:choose>
+    <a href="contextView.action?contextName=${currentContext}&contextObjectId=${currentPageId}&resetContextView=true">
+    <img src="static/img/backlog.png" alt="Backlogs" />
+    Backlogs
+    </a>
 </li>
 
-
-<li id="navc">
-<a href="contextView.action?contextName=users&resetContextView=true">
-<img src="static/img/users.png" alt="Users &amp; Teams" />
-Users &amp; Teams
-</a>
-</li>
-<!-- 
-<li id="navb">
-<a
-	href="contextView.action?contextName=projectTypes&resetContextView=true">
-Project Types
-</a>
-</li>
--->
-
-<%-- Create New --%>
-<li id="nava">
-<a href="contextView.action?contextName=createNew&resetContextView=true">
-<img src="static/img/new.png" alt="Create New" />
-Create New
-</a>
+<!-- Development portfolio -->
+<c:choose>
+    <c:when test="${navi == 'portfolio'}">
+        <li class="selected">
+    </c:when>
+    <c:otherwise>
+        <li>
+    </c:otherwise>
+</c:choose>
+    <a href="contextView.action?contextName=projectPortfolio&resetContextView=true">
+    <img src="static/img/portfolio.png" alt="Dev Portfolio" />
+    Portfolio
+    </a>
 </li>
 
 <%-- Timesheet --%>
 <aef:hourReporting id="hourReport" />
 <c:if test="${hourReport}">
-<li id="navd">
-<a href="contextView.action?contextName=timesheet&resetContextView=true">
-<img src="static/img/timesheets.png" alt="Timesheets" />
-Timesheets
-</a>
+<c:choose>
+    <c:when test="${navi == 'timesheet'}">
+        <li class="selected">
+    </c:when>
+    <c:otherwise>
+        <li>
+    </c:otherwise>
+</c:choose>
+    <a href="contextView.action?contextName=timesheet&resetContextView=true">
+    <img src="static/img/timesheets.png" alt="Timesheets" />
+    Timesheets
+    </a>
 </li>
 </c:if>
 
-
-
+<%-- Settings --%>
+<c:choose>
+    <c:when test="${navi == 'administration'}">
+        <li class="selected">
+    </c:when>
+    <c:otherwise>
+        <li>
+    </c:otherwise>
+</c:choose>
+    <a href="contextView.action?contextName=settings&resetContextView=true">
+    <img src="static/img/settings.png" alt="Administration" />
+    Administration
+    </a>
+</li>
 </ul>
-</div>
-</div>
 
+<!-- The main page begins -->
 <div id="main">
 
+<!-- If the page is not a backlog page, hide the breadcrumb trail -->
+<c:if test="${navi == 'backlog'}">
 <div id="bct">
 
 <c:forEach var="page" items="${pageHierarchy}">
@@ -310,3 +425,5 @@ Timesheets
 </c:forEach>
 &nbsp;
 </div>
+
+</c:if>

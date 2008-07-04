@@ -1,5 +1,6 @@
 package fi.hut.soberit.agilefant.web;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import org.springframework.dao.DataIntegrityViolationException;
@@ -28,13 +29,18 @@ public class BusinessThemeAction extends ActionSupport implements CRUDAction {
     
     private BacklogItemDAO backlogItemDAO;
 
-    private Collection<BusinessTheme> businessThemes;
+    private Collection<BusinessTheme> businessThemes = new ArrayList<BusinessTheme>();
     
     private BusinessThemeBusiness businessThemeBusiness;
     
     public String create() {
         businessThemeId = 0;
         businessTheme = new BusinessTheme();
+        return Action.SUCCESS;
+    }
+    
+    public String list() {
+        businessThemes = businessThemeDAO.getAll();
         return Action.SUCCESS;
     }
     

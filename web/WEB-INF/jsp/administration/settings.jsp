@@ -1,7 +1,7 @@
-<%@ include file="./inc/_taglibs.jsp"%>
-<%@ include file="./inc/_header.jsp"%>
+<%@ include file="../inc/_taglibs.jsp"%>
+<%@ include file="../inc/_header.jsp"%>
 
-<aef:menu navi="settings" pageHierarchy="${pageHierarchy}" />
+<aef:menu navi="administration" subnavi="settings" pageHierarchy="${pageHierarchy}" />
 <aef:existingObjects />
 
 <h2>Settings</h2>
@@ -65,4 +65,4 @@
 <ww:submit value="Save"></ww:submit>
 </ww:form>
 
-<%@ include file="./inc/_footer.jsp"%>
+<%@ include file="../inc/_footer.jsp"%>

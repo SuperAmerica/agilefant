@@ -60,14 +60,20 @@
 				<param name="actionName">dailyWork</param>
 			</result>
 			
-
 			<result name="success_users" type="redirect-action">
 				<param name="actionName">listUsers</param>
 			</result>
+			<result name="success_teams" type="redirect-action">
+                <param name="actionName">listTeams</param>
+            </result>
 			
 			<result name="success_settings" type="redirect-action">
 				<param name="actionName">settings</param>
 			</result>
+			
+			<result name="success_themes" type="redirect-action">
+                <param name="actionName">listThemes</param>
+            </result>
 			
 			<result name="success_timesheet" type="redirect-action">
 				<param name="actionName">timesheet</param>
@@ -75,14 +81,11 @@
 			
 			<result name="success_projectTypes"
 				type="redirect-action">
-				<param name="actionName">projectPortfolio</param>
+				<param name="actionName">listProjectTypes</param>
 			</result>
 			<result name="success_businessThemes"
 				type="redirect-action">
-				<param name="actionName">projectPortfolio</param>
-			</result>
-			<result name="success_createNew" type="redirect-action">
-				<param name="actionName">createNew</param>
+				<param name="actionName">listBusinessThemes</param>
 			</result>
 			<result name="success_projectPortfolio"
 				type="redirect-action">
@@ -93,31 +96,35 @@
 			</result>
 		</action>
 		<!-- Activity type actions -->
+		<action name="listProjectTypes" method="getAll"
+            class="projectTypeAction">
+            <result>/WEB-INF/jsp/administration/listProjectTypes.jsp</result>
+        </action>
 		<action name="editProjectType" method="edit"
 			class="projectTypeAction">
-			<result>/WEB-INF/jsp/editProjectType.jsp</result>
+			<result>/WEB-INF/jsp/administration/editProjectType.jsp</result>
 		</action>
 		<action name="createProjectType" method="create"
 			class="projectTypeAction">
-			<result>/WEB-INF/jsp/editProjectType.jsp</result>
+			<result>/WEB-INF/jsp/administration/editProjectType.jsp</result>
 		</action>
 		<action name="deleteProjectType" method="delete"
 			class="projectTypeAction">
-			<result type="redirect-action">projectPortfolio</result>
+			<result type="redirect-action">listProjectTypes</result>
 		</action>
 		<action name="storeProjectType" method="store"
 			class="projectTypeAction">
-			<result type="redirect-action">projectPortfolio</result>
+			<result type="redirect-action">listProjectTypes</result>
 		</action>
 		<!-- /Activity type actions -->
 		<!-- Work type actions -->
 		<action name="editWorkType" method="edit"
 			class="workTypeAction">
-			<result>/WEB-INF/jsp/editWorkType.jsp</result>
+			<result>/WEB-INF/jsp/administration/editWorkType.jsp</result>
 		</action>
 		<action name="createWorkType" method="create"
 			class="workTypeAction">
-			<result>/WEB-INF/jsp/editWorkType.jsp</result>
+			<result>/WEB-INF/jsp/administration/editWorkType.jsp</result>
 		</action>
 		<action name="deleteWorkType" method="delete"
 			class="workTypeAction">
@@ -135,9 +142,6 @@
 		</action>
 		<!-- /Work type actions -->
 		<!-- Product actions -->
-		<action name="listProducts">
-			<result>/WEB-INF/jsp/listProducts.jsp</result>
-		</action>
 		<action name="editProduct" method="edit"
 			class="productAction">
 			<result>/WEB-INF/jsp/editProduct.jsp</result>
@@ -170,9 +174,6 @@
 		</action>
 		<!-- /Product actions -->
 		<!-- BacklogItem actions -->
-		<action name="listBacklogItems">
-			<result>/WEB-INF/jsp/listBacklogItems.jsp</result>
-		</action>
 		<action name="editBacklogItem" method="edit"
 			class="backlogItemAction">
 			<result>/WEB-INF/jsp/editBacklogItem.jsp</result>
@@ -490,16 +491,16 @@
 
 		<!-- User actions -->
 		<action name="listUsers" method="list" class="userAction">
-			<result>/WEB-INF/jsp/listUsers.jsp</result>
+			<result>/WEB-INF/jsp/administration/listUsers.jsp</result>
 		</action>
 		<action name="editUser" method="edit" class="userAction">
-			<result>/WEB-INF/jsp/editUser.jsp</result>
+			<result>/WEB-INF/jsp/administration/editUser.jsp</result>
 		</action>
 		<action name="createUser" method="create" class="userAction">
-			<result>/WEB-INF/jsp/editUser.jsp</result>
+			<result>/WEB-INF/jsp/administration/editUser.jsp</result>
 		</action>
 		<action name="deleteUser" method="delete" class="userAction">
-			<result type="redirect">listUsers.action</result>
+			<result type="redirect-action">listUsers</result>
 		</action>
 		<action name="disableUser" method="disable" class="userAction">
 		    <result type="redirect-action">listUsers</result>
@@ -508,23 +509,26 @@
             <result type="redirect-action">listUsers</result>
         </action>
 		<action name="storeUser" method="store" class="userAction">
-			<result type="redirect">listUsers.action</result>			
+			<result type="redirect-action">listUsers</result>			
 		</action>
 
 		<!-- /User actions -->
 
 		<!-- Team actions -->
+		<action name="listTeams" method="list" class="teamAction">
+            <result>/WEB-INF/jsp/administration/listTeams.jsp</result>
+        </action>
 		<action name="editTeam" method="edit" class="teamAction">
-			<result>/WEB-INF/jsp/editTeam.jsp</result>
+			<result>/WEB-INF/jsp/administration/editTeam.jsp</result>
 		</action>
 		<action name="createTeam" method="create" class="teamAction">
-			<result>/WEB-INF/jsp/editTeam.jsp</result>
+			<result>/WEB-INF/jsp/administration/editTeam.jsp</result>
 		</action>
 		<action name="deleteTeam" method="delete" class="teamAction">
-			<result type="redirect-action">listUsers</result>
+			<result type="redirect-action">listTeams</result>
 		</action>
 		<action name="storeTeam" method="store" class="teamAction">
-			<result type="redirect">listUsers.action</result>
+			<result type="redirect-action">listTeams</result>
 			<!--<result name="error">/WEB-INF/jsp/editTeam.jsp</result>-->
 		</action>
 		<!-- /Team actions -->
@@ -755,9 +759,6 @@
 				<param name="actionName">dailyWork</param>
 			</result>
 
-			<result name="success_createNew" type="redirect-action">
-				<param name="actionName">createNew</param>
-			</result>
 		</action>
 		
 		<action name="undoPushContext" class="contextStackAction">
@@ -768,10 +769,6 @@
 
 		<action name="selectBacklog">
 			<result>/WEB-INF/jsp/selectBacklog.jsp</result>
-		</action>
-
-		<action name="createNew">
-			<result>/WEB-INF/jsp/createNew.jsp</result>
 		</action>
 
 		<!-- Actions for generating a new password and e-mailing it to an <code>User</code> -->
@@ -789,26 +786,26 @@
 		
 		<!-- Actions for changing settings -->
 		<action name="settings" class="settingAction">
-			<result>/WEB-INF/jsp/settings.jsp</result>
+			<result>/WEB-INF/jsp/administration/settings.jsp</result>
 		</action>
 		
 		<action name="editSetting" class="settingAction" method="edit">
-			<result>/WEB-INF/jsp/settings.jsp</result>
+			<result>/WEB-INF/jsp/administration/settings.jsp</result>
 		</action>
 		
-		<action name="storeSetting" class="settingAction" method="store">
-			<result>/WEB-INF/jsp/settings.jsp</result>
-		</action>
+		<!--<action name="storeSetting" class="settingAction" method="store">
+			<result>/WEB-INF/jsp/administration/settings.jsp</result>
+		</action>-->
 		
 		<action name="createSetting" class="settingAction" method="create">
-			<result>/WEB-INF/jsp/settings.jsp</result>
+			<result>/WEB-INF/jsp/administration/settings.jsp</result>
 		</action>
 		
 		<action name="deleteSetting" class="settingAction" method="delete">
-			<result>/WEB-INF/jsp/settings.jsp</result>
+			<result>/WEB-INF/jsp/administration/settings.jsp</result>
 		</action>
 		<action name="storeSettings" class="settingAction" method="storeSettings">
-			<result name="success">/WEB-INF/jsp/settings.jsp</result>
+			<result name="success">/WEB-INF/jsp/administration/settings.jsp</result>
 		</action>
 	
 		<!-- timesheet actions -->
@@ -851,21 +848,25 @@
 		</action>
 		
 		<!-- Business theme actions -->
+		<action name="listThemes" method="list"
+            class="businessThemeAction">
+            <result>/WEB-INF/jsp/administration/listThemes.jsp</result>
+        </action>
 		<action name="editBusinessTheme" method="edit"
 			class="businessThemeAction">
-			<result>/WEB-INF/jsp/editBusinessTheme.jsp</result>
+			<result>/WEB-INF/jsp/administration/editBusinessTheme.jsp</result>
 		</action>
 		<action name="createBusinessTheme" method="create"
 			class="businessThemeAction">
-			<result>/WEB-INF/jsp/editBusinessTheme.jsp</result>
+			<result>/WEB-INF/jsp/administration/editBusinessTheme.jsp</result>
 		</action>
 		<action name="deleteBusinessTheme" method="delete"
 			class="businessThemeAction">
-			<result type="redirect-action">projectPortfolio</result>
+			<result type="redirect-action">listThemes</result>
 		</action>
 		<action name="storeBusinessTheme" method="store"
 			class="businessThemeAction">
-			<result type="redirect-action">projectPortfolio</result>
+			<result type="redirect-action">listThemes</result>
 		</action>
 		<action name="editBacklogItemBusinessThemes" method="editBacklogItemBusinessThemes"
 			class="businessThemeAction">

@@ -3,6 +3,7 @@ package fi.hut.soberit.agilefant.web;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.opensymphony.xwork.Action;
@@ -26,6 +27,8 @@ public class TeamAction extends ActionSupport implements CRUDAction {
     private UserDAO userDAO;
 
     private Map<Integer, String> userIds = new HashMap<Integer, String>();
+    
+    private List<Team> teamList = new ArrayList<Team>();
 
     /**
      * Create a new team.
@@ -34,6 +37,11 @@ public class TeamAction extends ActionSupport implements CRUDAction {
         teamId = 0;
         team = new Team();
         team.setUsers(new ArrayList<User>());
+        return Action.SUCCESS;
+    }
+    
+    public String list() {
+        teamList.addAll(teamDAO.getAll());
         return Action.SUCCESS;
     }
 
@@ -165,6 +173,14 @@ public class TeamAction extends ActionSupport implements CRUDAction {
 
     public void setUserIds(Map<Integer, String> userIds) {
         this.userIds = userIds;
+    }
+
+    public List<Team> getTeamList() {
+        return teamList;
+    }
+
+    public void setTeamList(List<Team> teamList) {
+        this.teamList = teamList;
     }
     
 }

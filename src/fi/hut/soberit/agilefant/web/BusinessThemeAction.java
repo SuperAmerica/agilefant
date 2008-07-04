@@ -3,16 +3,11 @@ package fi.hut.soberit.agilefant.web;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.springframework.dao.DataIntegrityViolationException;
-
 import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
 
 import fi.hut.soberit.agilefant.business.BusinessThemeBusiness;
-import fi.hut.soberit.agilefant.db.BacklogItemDAO;
-import fi.hut.soberit.agilefant.db.BusinessThemeDAO;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
-import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.BusinessTheme;
 
 public class BusinessThemeAction extends ActionSupport implements CRUDAction {
@@ -20,18 +15,14 @@ public class BusinessThemeAction extends ActionSupport implements CRUDAction {
     private static final long serialVersionUID = -8978527111144555643L;
 
     private int businessThemeId;
-    
-    private int backlogItemId;
 
     private BusinessTheme businessTheme;
-
-    private BusinessThemeDAO businessThemeDAO;
-    
-    private BacklogItemDAO backlogItemDAO;
 
     private Collection<BusinessTheme> businessThemes = new ArrayList<BusinessTheme>();
     
     private BusinessThemeBusiness businessThemeBusiness;
+    
+    private int backlogItemId;
     
     public String create() {
         businessThemeId = 0;
@@ -40,135 +31,63 @@ public class BusinessThemeAction extends ActionSupport implements CRUDAction {
     }
     
     public String list() {
-        businessThemes = businessThemeDAO.getAll();
+        businessThemes = businessThemeBusiness.getAll();
         return Action.SUCCESS;
     }
     
     public String edit() {
-        businessTheme = businessThemeDAO.get(businessThemeId);
+        businessTheme = businessThemeBusiness.getBusinessTheme(businessThemeId);
         if (businessTheme == null) {
             super.addActionError(super.getText("businessTheme.notFound"));
             return Action.ERROR;
         }
         return Action.SUCCESS;
     }
-  //TODO: refactor logic to business
+  
     public String store() {
         if (businessTheme == null) {
             super.addActionError(super.getText("businessTheme.missingForm"));
-        }
-        BusinessTheme fillable = new BusinessTheme();
-        if (businessThemeId > 0) {
-            fillable = businessThemeDAO.get(businessThemeId);
-            if (fillable == null) {
-                super.addActionError(super.getText("businessTheme.notFound"));
-                return Action.ERROR;
-            }
-        }
-        this.fillObject(fillable);
-        if (super.hasActionErrors()) {
             return Action.ERROR;
         }
+        BusinessTheme fillable = new BusinessTheme();
+        this.fillObject(fillable);
         try {
-            businessThemeDAO.store(fillable);
-        } catch (DataIntegrityViolationException dve) {
-            super.addActionError(super.getText("businessTheme.duplicateName"));
+            businessThemeBusiness.store(businessThemeId, fillable);
+        } catch(ObjectNotFoundException e) {
+            super.addActionError(super.getText("businessTheme.notFound"));
+            return Action.ERROR;
+        } catch(Exception e) {
+            super.addActionError(super.getText(e.getMessage()));
             return Action.ERROR;
         }
         return Action.SUCCESS;
     }
-    //TODO: refactor logic to business
+    
     public String ajaxStoreBusinessTheme() {
         if (businessTheme == null) {
             super.addActionError(super.getText("businessTheme.missingForm"));
-        }
-        BusinessTheme fillable = new BusinessTheme();
-        if (businessThemeId > 0) {
-            fillable = businessThemeDAO.get(businessThemeId);
-            if (fillable == null) {
-                super.addActionError(super.getText("businessTheme.notFound"));
-                return CRUDAction.AJAX_ERROR;
-            }
-        }
-        this.fillObject(fillable);
-        //TODO: refactor this
-        try {
-            fillable.setName(java.net.URLDecoder.decode(fillable.getName(), "ISO-8859-1"));
-            fillable.setDescription(java.net.URLDecoder.decode(fillable.getDescription(), "ISO-8859-1"));
-        } catch(Exception e) {}
-        if (super.hasActionErrors()) {
             return CRUDAction.AJAX_ERROR;
         }
+        BusinessTheme fillable = new BusinessTheme();
+        this.fillObject(fillable);
         try {
-            if(fillable.getId() > 0) {
-                businessThemeDAO.store(fillable);
-            } else {
-                businessThemeId = (Integer)businessThemeDAO.create(fillable);
-            }
-        } catch (DataIntegrityViolationException dve) {
-            super.addActionError(super.getText("businessTheme.duplicateName"));
+            BusinessTheme theme = businessThemeBusiness.store(businessThemeId, fillable);
+            businessThemeId = theme.getId();
+        } catch(Exception e) {
             return CRUDAction.AJAX_ERROR;
         }
         return CRUDAction.AJAX_SUCCESS;
     }
     public String delete() {
-        businessTheme = businessThemeDAO.get(businessThemeId);
-        if (businessTheme == null) {
-            super.addActionError(super.getText("businessTheme.notFound"));
-            return Action.ERROR;
-        }
-        
-        for (BacklogItem bli : backlogItemDAO.getAll()) {
-            bli.getBusinessThemes().remove(businessTheme);         
-        }
-        
         try {
             businessThemeBusiness.delete(businessThemeId);
         }
-        catch (ObjectNotFoundException e) {
+        catch (Exception e) {
             super.addActionError(e.getMessage());
             return Action.ERROR;
         }
         
         return Action.SUCCESS;
-    }
-
-    public String editBacklogItemBusinessThemes() {
-        
-        BacklogItem bli;
-        if (backlogItemId > 0) {
-            bli = backlogItemDAO.get(backlogItemId);
-            if (bli == null) {
-                super.addActionError(super.getText("backlogItem.notFound"));
-                return Action.ERROR;
-            } else {
-                businessThemes = bli.getBusinessThemes();
-            }
-        }                
-                
-        return Action.SUCCESS;
-    }
-    
-    public String storeBacklogItemBusinessThemes() {
-        
-        BacklogItem bli;
-        if (backlogItemId > 0) {
-            bli = backlogItemDAO.get(backlogItemId);
-        
-            if (bli == null) {
-                super.addActionError(super.getText("backlogItem.notFound"));
-                return Action.ERROR;
-            } else {
-                bli.setBusinessThemes(businessThemes);
-                backlogItemDAO.store(bli);
-                
-                // testausta
-                System.out.println("*** tallennettiin itemin " + bli.getName() + " teemat. ***");
-            }
-        }                
-                
-        return Action.SUCCESS;
-             
     }
     
     protected void fillObject(BusinessTheme fillable) {
@@ -184,6 +103,10 @@ public class BusinessThemeAction extends ActionSupport implements CRUDAction {
         fillable.setDescription(businessTheme.getDescription());
     }
     
+    public String editBacklogItemBusinessThemes() {
+        businessThemes = businessThemeBusiness.getAll();
+        return Action.SUCCESS;
+    }
     public int getBusinessThemeId() {
         return businessThemeId;
     }
@@ -200,36 +123,20 @@ public class BusinessThemeAction extends ActionSupport implements CRUDAction {
         this.businessTheme = businessTheme;
     }
 
-    public Collection<BusinessTheme> getBusinessThemes() {
-        return businessThemes;
-    }
-
-    public void setBusinessThemes(Collection<BusinessTheme> businessThemes) {
-        this.businessThemes = businessThemes;
-    }
-
-    public BusinessThemeBusiness getBusinessThemeBusiness() {
-        return businessThemeBusiness;
-    }
-
     public void setBusinessThemeBusiness(BusinessThemeBusiness businessThemeBusiness) {
         this.businessThemeBusiness = businessThemeBusiness;
     }
 
-    public void setBusinessThemeDAO(BusinessThemeDAO businessThemeDAO) {
-        this.businessThemeDAO = businessThemeDAO;
-    }
-
-    public void setBacklogItemDAO(BacklogItemDAO backlogItemDAO) {
-        this.backlogItemDAO = backlogItemDAO;
-    }
-
-    public void setBacklogItemId(int backlogItemId) {
-        this.backlogItemId = backlogItemId;
+    public Collection<BusinessTheme> getBusinessThemes() {
+        return businessThemes;
     }
 
     public int getBacklogItemId() {
         return backlogItemId;
+    }
+
+    public void setBacklogItemId(int backlogItemId) {
+        this.backlogItemId = backlogItemId;
     }
     
 }

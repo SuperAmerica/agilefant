@@ -15,9 +15,21 @@ public interface BusinessThemeBusiness {
      * @return the theme with id themeId
      */
     public BusinessTheme getBusinessTheme(int businessThemeId);
-    
+
     public Collection<BusinessTheme> getAll();
-    
+
     public void delete(int businessThemeId) throws ObjectNotFoundException;
-    
+
+    /**
+     * Store existing business theme or update existing entry.
+     * 
+     * @param businessThemeId Id for existing business theme entry or 0 if new entry should be created.
+     * @param theme Business theme data.
+     * @return Persisted business theme object.
+     * @throws ObjectNotFoundException 
+     * @throws Exception
+     */
+    public BusinessTheme store(int businessThemeId, BusinessTheme theme)
+            throws ObjectNotFoundException, Exception;
+
 }

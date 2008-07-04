@@ -385,6 +385,24 @@
 	    </attribute>
 	</tag>
 
+	<tag>
+		<name>backlogItem</name>
+		<tag-class>fi.hut.soberit.agilefant.web.tag.BacklogItemById</tag-class>
+		<body-content>JSP</body-content>
+		<description>
+			Get backlog item by id
+	    </description>
+	    <attribute>
+	    	<name>id</name>
+	    	<required>true</required>	  
+	    </attribute>  	    
+	     <attribute>
+	    	<name>backlogItemId</name>
+	    	<required>true</required>
+	    	<rtexprvalue>true</rtexprvalue> 
+	    </attribute>
+	</tag>
+	
 	<tag-file>
 		<name>backlogDropdown</name>
 		<path>/WEB-INF/tags/backlogDropdown.tag</path>

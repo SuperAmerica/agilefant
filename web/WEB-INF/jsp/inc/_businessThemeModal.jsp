@@ -74,12 +74,13 @@
 var backlogItemId = ${backlogItemId};
 var preSelectedTheme = ${businessThemeId};
 var businessThemes = new Object();
-<c:forEach items="${businessThemeBusiness.all}" var="businessTheme">
+<c:forEach items="${businessThemes}" var="businessTheme">
 	businessThemes['${businessTheme.id}'] = { desc: "${aef:escapeHTML(businessTheme.description)}", name: "${aef:escapeHTML(businessTheme.name)}" };
 </c:forEach>
 
 var selectedThemes = new Array();
-<c:forEach items="${businessThemes}" var="chosenTheme">
+<aef:backlogItem id="backlogItem" backlogItemId="${backlogItemId}" />
+<c:forEach items="${backlogItem.businessThemes}" var="chosenTheme">
 	selectedThemes.push(${chosenTheme.id});
 </c:forEach>
 updateThemeSelect();

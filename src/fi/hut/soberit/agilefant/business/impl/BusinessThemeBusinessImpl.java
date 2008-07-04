@@ -8,6 +8,7 @@ import fi.hut.soberit.agilefant.business.BusinessThemeBusiness;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.db.BusinessThemeDAO;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
+import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.BusinessTheme;
 
 public class BusinessThemeBusinessImpl implements BusinessThemeBusiness {
@@ -30,8 +31,13 @@ public class BusinessThemeBusinessImpl implements BusinessThemeBusiness {
         if (businessTheme == null) {
             throw new ObjectNotFoundException();
         }
-        
-        businessThemeDAO.remove(themeId);
+        try {
+            Collection<BacklogItem> associations = businessTheme.getBacklogItems();
+            for(BacklogItem bli : associations) {
+                bli.getBusinessThemes().remove(businessTheme);
+            }
+            businessThemeDAO.remove(themeId);
+        } catch (Exception e) { }
     }
 
     public void setBusinessThemeDAO(BusinessThemeDAO businessThemeDAO) {

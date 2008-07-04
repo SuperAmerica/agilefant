@@ -138,15 +138,18 @@ function reloadPage()
 {
 	window.location.reload();
 }
-function openThemeBusinessModal(parent, target, backlogItemId, themeId, noReload) {
+function openThemeBusinessModal(parent, target, backlogItemId, themeId) {
 	var data = new Object();
 	data['backlogItemId'] = backlogItemId;
 	data['businessThemeId'] = themeId;
-	if(noReload == true) { 
-		loadModal(target,data,parent);
-	} else {
-		loadModal(target,data,parent,reloadPage);
-	}
+	loadModal(target,data,parent,reloadPage);
+}
+function openThemeBusinessBliModal(parent, target, backlogItemId, themeId) {
+	var data = new Object();
+	var cb = function() { }
+	data['backlogItemId'] = backlogItemId;
+	data['businessThemeId'] = themeId;
+	loadModal(target,data,parent,cb);
 }
 function loadModal(target,request, parent, closeFunc) {
 	var container = $('<div class="jqmWindow"><b>Please wait, content loading...</b></div>');

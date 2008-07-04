@@ -303,13 +303,13 @@
 			</td>
 			<td></td>
 			<td>
-			<ww:a href="#" id="addThemeLink" onclick="openThemeBusinessModal('addThemeLink', 'editBacklogItemBusinessThemes.action',${backlogItemId},0,true); return false;">
+			<ww:a href="#" id="addThemeLink" onclick="openThemeBusinessBliModal('addThemeLink', 'editBacklogItemBusinessThemes.action',${backlogItemId},0); return false;">
 				<img src="static/img/add_theme.png" alt="Edit themes" title="Edit themes" />
 			</ww:a>			
 			<c:if test="${!empty backlogItem.businessThemes}">				
 			<c:forEach items="${backlogItem.businessThemes}" var="businessTheme">
 				<span class="businessTheme">
-				<ww:a href="#" id="${backlogItemId}" onclick="openThemeBusinessModal('${backlogItemId}', 'editBacklogItemBusinessThemes.action',${backlogItemId}, ${businessTheme.id},true); return false;">
+				<ww:a href="#" id="${backlogItemId}" onclick="openThemeBusinessBliModal('${backlogItemId}', 'editBacklogItemBusinessThemes.action',${backlogItemId}, ${businessTheme.id}); return false;">
 						${businessTheme.name}
 				</ww:a>
 				</span>

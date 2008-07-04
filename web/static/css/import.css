@@ -1054,5 +1054,10 @@ ul.themeList {
 }
 ul.themeList li {
 	display: inline;
-	padding-right: 4px;
+	padding-right: 8px;
+	color: #c96;
+}
+ul.themeList li a {
+	color: #c96;
+	text-decoration: none;
 }

@@ -204,9 +204,13 @@ function addThemeToItem() {
 function renderThemeList() {
 	var container = $("#itemThemeList").empty();
 	for(var i = 0 ; i < selectedThemes.length; i++) {
-		$('<li>'+businessThemes[selectedThemes[i]].name+'<img name="'+selectedThemes[i]+'" title="Remove" alt="Remove" src="static/img/delete_18.png"/></li>')
-			.appendTo(container).find("img")
-			.click(function() { removeThemeFromItem(this.name); });
+		var li = $('<li></li>').appendTo(container);
+		$('<a name="'+selectedThemes[i]+'" href="#">'+businessThemes[selectedThemes[i]].name+'</a>')
+			.appendTo(li)
+			.click(function() { selectEditTheme(this.name); return false;});
+		$('<img name="'+selectedThemes[i]+'" title="Remove" alt="Remove" src="static/img/delete_18.png"/>')
+			.appendTo(li)
+			.click(function() { removeThemeFromItem(this.name); return false;});
 	}
 }
 function saveTheme() {
@@ -222,8 +226,9 @@ function saveTheme() {
 			var themeId = parseInt(data);
 			if(themeId == NaN) return;
 			businessThemes[themeId] = { "desc": desc, "name": name };
-			updateThemeSelect();
+			updateThemeSelect(themeId);
 			renderThemeList();
+			$("#businessThemeError").text("");
 			if (id > 0) {
 				$("#businessThemeSaveSuccess").text("Theme was successfully saved.");
 			} else {
@@ -236,9 +241,10 @@ function saveTheme() {
 		request.setRequestHeader("Accept-Charset","ISO-8859-1");
 	}, contentType: "application/x-www-form-urlencoded; charset=ISO-8859-1", dataType: "text"});
 }
-function updateThemeSelect() {
+function updateThemeSelect(setSelected) {
 	var select = $("#businessThemeSelect");
-	var old = select.find(":selected").val();
+	var old = (setSelected == 0) ? select.find(":selected").val() : setSelected;
+
 	select.empty();
 	$('<option value="">(create new)</option>').appendTo(select);
 	for(var theme in businessThemes) {
@@ -247,4 +253,18 @@ function updateThemeSelect() {
 	if(old > 0) {
 		select.find("[value="+old+"]").attr("selected","selected");
 	}
+}
+function selectEditTheme(theme_id) {
+	if(theme_id > 0) {
+		$("#nameField").val(businessThemes[theme_id].name);
+		$("#descField").val(businessThemes[theme_id].desc);
+		$("#addThemeText").text("Add theme to BLI");
+		$("#businessThemeSelect").find("[value="+theme_id+"]").attr("selected","selected");													
+	} else {
+		$("#nameField").val("");
+		$("#descField").val("");
+		$("#addThemeText").text("");
+	}
+	$("#businessThemeSaveSuccess").text("");
+	$("#businessThemeError").text("");
 }

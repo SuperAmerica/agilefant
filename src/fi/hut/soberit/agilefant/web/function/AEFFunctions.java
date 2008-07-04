@@ -95,6 +95,9 @@ public class AEFFunctions {
     }
     public static String escapeHTML(String s) {
         s = s.replaceAll("\"","\\\\\"");
+        s = s.replaceAll("\r\n", "\\\\n");
+        s = s.replaceAll("\n", "\\\\n");
+        s = s.replaceAll("\r", "\\\\r");
         return s;
     }
     private static String out(String s, int newLength, boolean asHtml) {

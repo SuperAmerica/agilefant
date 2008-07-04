@@ -31,19 +31,7 @@
 		$(document).ready(function() {
 				$("#businessThemeSelect").change(function() {
 					var theme_id = $(this).val();
-					if(theme_id > 0) {
-						$("#nameField").val(businessThemes[theme_id].name);
-						$("#descField").val(businessThemes[theme_id].desc);
-						$("#addThemeText").text("Add theme to BLI");
-						$("#businessThemeSaveSuccess").text("");
-						$("#businessThemeError").text("");														
-					} else {
-						$("#nameField").val("");
-						$("#descField").val("");
-						$("#addThemeText").text("");
-						$("#businessThemeSaveSuccess").text("");
-						$("#businessThemeError").text("");
-					}
+					selectEditTheme(theme_id);
 				});
 		});
 		</script>
@@ -91,7 +79,7 @@ var selectedThemes = new Array();
 <c:forEach items="${backlogItem.businessThemes}" var="chosenTheme">
 	selectedThemes.push(${chosenTheme.id});
 </c:forEach>
-updateThemeSelect();
+updateThemeSelect(0);
 if(preSelectedTheme) {
 	$("#businessThemeSelect").find("[value="+preSelectedTheme+"]").attr("selected","selected");
 	$("#nameField").val(businessThemes[preSelectedTheme].name);

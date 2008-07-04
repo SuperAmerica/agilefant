@@ -1041,6 +1041,12 @@ span.businessTheme {
 	font-size: 80%;
 	padding: 0 1px 1px 3px;	
 }
+
+span.businessTheme a {
+	color: #c96;
+	text-decoration: none;
+}
+
 ul.themeList {
 	list-style-type: none;	
 	padding: 0px;

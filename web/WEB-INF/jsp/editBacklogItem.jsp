@@ -36,7 +36,8 @@
 
 <ww:form action="store${new}BacklogItem">
 	<ww:hidden name="backlogItemId" value="${backlogItem.id}" />	
-	<ww:hidden name="effortLeft" value="${backlogItem.effortLeft}" />	
+	<ww:hidden name="effortLeft" value="${backlogItem.effortLeft}" />
+	<ww:hidden name="_charset_" value="iso-8859-1" />	
 	<aef:userList />
 	<aef:teamList />
 	<aef:currentUser />
@@ -49,24 +50,7 @@
 			<td>*</td>
 			<td colspan="2"><ww:textfield size="60" name="backlogItem.name" /></td>
 		</tr>
-		<tr>
-			<c:choose>
-			<c:when test="${backlogItemId != 0}">
-			<td>
-			Themes								
-			<ww:a href="#" id="addThemeLink" onclick="openThemeBusinessModal('addThemeLink', 'editBacklogItemBusinessThemes.action',${backlogItemId},0); return false;">Edit &raquo;</ww:a>
-			</td>
-			<td></td>
-			<td>			
-			<c:if test="${!empty backlogItem.businessThemes}">	
-			<c:forEach items="${backlogItem.businessThemes}" var="businessTheme">
-				<span class="businessTheme">${businessTheme.name}</span>
-			</c:forEach>			
-			</c:if>
-			</td>
-			</c:when>
-			</c:choose>		
-		</tr>
+		
 		<tr>
 			<td>Description</td>
 			<td></td>
@@ -307,6 +291,33 @@
 			<%--
 		If you change something about priorities, remember to update conf/classes/messages.properties as well!
 		--%>
+		</tr>
+		<tr>
+			<c:choose>
+			<c:when test="${backlogItemId != 0}">
+			<td>
+			Themes
+			<!-- 								
+			<ww:a href="#" id="addThemeLink" onclick="openThemeBusinessModal('addThemeLink', 'editBacklogItemBusinessThemes.action',${backlogItemId},0); return false;">Edit &raquo;</ww:a>
+			-->
+			</td>
+			<td></td>
+			<td>
+			<ww:a href="#" id="addThemeLink" onclick="openThemeBusinessModal('addThemeLink', 'editBacklogItemBusinessThemes.action',${backlogItemId},0); return false;">
+				<img src="static/img/add_theme.png" alt="Edit themes" title="Edit themes" />
+			</ww:a>			
+			<c:if test="${!empty backlogItem.businessThemes}">				
+			<c:forEach items="${backlogItem.businessThemes}" var="businessTheme">
+				<span class="businessTheme">
+				<ww:a href="#" id="${backlogItemId}" onclick="openThemeBusinessModal('${backlogItemId}', 'editBacklogItemBusinessThemes.action',${backlogItemId}, ${businessTheme.id}); return false;">
+						${businessTheme.name}
+				</ww:a>
+				</span>
+			</c:forEach>			
+			</c:if>
+			</td>
+			</c:when>
+			</c:choose>		
 		</tr>
 		<tr>
 			<td>Responsibles</td>

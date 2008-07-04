@@ -117,16 +117,11 @@ public class BusinessThemeAction extends ActionSupport implements CRUDAction {
             super.addActionError(super.getText("businessTheme.notFound"));
             return Action.ERROR;
         }
-        /*
+        
         for (BacklogItem bli : backlogItemDAO.getAll()) {
-            // käy vielä läpi bli:n kaikki teemat...
-            if (bli.getTheme().getId() == themeId) {
-                super.addActionError(super
-                        .getText("theme.backlogItemsLinked"));
-                return Action.ERROR;
-            }
+            bli.getBusinessThemes().remove(businessTheme);         
         }
-        */
+        
         try {
             businessThemeBusiness.delete(businessThemeId);
         }

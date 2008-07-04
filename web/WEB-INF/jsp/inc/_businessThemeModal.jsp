@@ -1,5 +1,7 @@
 <%@ include file="./_taglibs.jsp"%>
 
+<%@page pageEncoding="iso-8859-1" contentType="text/html; charset=ISO-8859-1" %>
+
 <div target="AJAX-MODAL" style="width: 690px; height: 20px; padding: 5px; border-bottom: 1px solid black; background: #ccc;">
 	<span style="float: left;">
 		<b>Edit Themes</b>
@@ -15,7 +17,7 @@
 	
 	<table class="businessThemeTable">
 	<tr>
-		<td>Chosen themes</td>
+		<td>Tagged themes</td>
 		<td></td>
 		<td>
 			<ul class="themeList" id="itemThemeList"></ul>
@@ -31,17 +33,23 @@
 					var theme_id = $(this).val();
 					if(theme_id > 0) {
 						$("#nameField").val(businessThemes[theme_id].name);
-						$("#descField").val(businessThemes[theme_id].desc);														
+						$("#descField").val(businessThemes[theme_id].desc);
+						$("#addThemeText").text("Add theme to BLI");														
 					} else {
 						$("#nameField").val("");
 						$("#descField").val("");
+						$("#addThemeText").text("");
 					}
 				});
 		});
 		</script>
 		<select name="businessThemeId" id="businessThemeSelect">
 		</select>
-		<a href="#" onclick="addThemeToItem(); return false;">Add theme to BLI</a>
+
+					
+		<a href="#" onclick="addThemeToItem(); return false;" id="addThemeText">Add theme to BLI</a>
+		
+		
 		</td>
 	</tr>
 	<tr>
@@ -57,7 +65,7 @@
 	<tr>
 		<td></td>
 		<td></td>				
-		<td><ww:submit value="Save"/></td>
+		<td><ww:submit value="Save" id="saveButton"/></td>
 	</tr>
 	</table>
 </ww:form>
@@ -78,7 +86,10 @@ updateThemeSelect();
 if(preSelectedTheme) {
 	$("#businessThemeSelect").find("[value="+preSelectedTheme+"]").attr("selected","selected");
 	$("#nameField").val(businessThemes[preSelectedTheme].name);
-	$("#descField").val(businessThemes[preSelectedTheme].desc);	
+	$("#descField").val(businessThemes[preSelectedTheme].desc);
+	$("#addThemeText").text("Add theme to BLI");	
+} else {
+	$("#addThemeText").text("");
 }
 renderThemeList();
 </script>

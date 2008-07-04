@@ -158,3 +158,81 @@ function loadModal(target,request, parent, closeFunc) {
 	var err = function(data,status) { alert("An error occured while processing your request."); container.remove(); bg.remove(); }
 	jQuery.ajax({cache: false, type: "POST", error: err, success: comp, data: request, url: target, dataType: "html"});
 }
+
+function removeThemeFromItem(theme_id) {
+	jQuery.ajax({url :"removeThemeFromBacklogItem.action", 
+		data: {backlogItemId: backlogItemId, businessThemeId: theme_id}, cache: false, type: 'POST',
+		success: function(data, status) { 	
+			var tmp = selectedThemes;
+			selectedThemes = new Array();
+			for(var i = 0 ; i < tmp.length; i++) {
+				if(tmp[i] != theme_id) {
+					selectedThemes.push(tmp[i]);
+				}
+			}
+			renderThemeList();
+			$("#businessThemeError").text("");
+		}, error: function() {
+				$("#businessThemeError").text("Error: Unable to remove theme from backlog item.");
+	}});
+	
+}
+function addThemeToItem() {
+	var theme_id = $("#businessThemeSelect").val();
+	if(theme_id < 1) {
+		alert("Select theme first.");
+		return;
+	}
+	if(jQuery.inArray(theme_id,selectedThemes) > -1) return;
+	jQuery.ajax({url: "addThemeToBacklogItem.action", 
+		data: {backlogItemId: backlogItemId, businessThemeId: theme_id}, type: 'POST', cache: false,
+		success: function(data, status) { 	
+				selectedThemes.push(theme_id);
+				renderThemeList();
+				$("#businessThemeError").text("");
+		}, error: function() {
+				$("#businessThemeError").text("Error: Unable to add theme to backlog item.");
+		}});
+}
+function renderThemeList() {
+	var container = $("#itemThemeList").empty();
+	for(var i = 0 ; i < selectedThemes.length; i++) {
+		$('<li>'+businessThemes[selectedThemes[i]].name+'<img name="'+selectedThemes[i]+'" title="Remove" alt="Remove" src="static/img/delete_18.png"/></li>')
+			.appendTo(container).find("img")
+			.click(function() { removeThemeFromItem(this.name); });
+	}
+}
+function saveTheme() {
+	var name = $("#nameField").val();
+	var desc = $("#descField").val();
+	var id = $("#businessThemeSelect").val();
+	var ename = escape(name);
+	var edesc = escape(desc);
+	//var d = $("#businessThemeModalForm").serializeArray();
+	var d = {businessThemeId: id, "businessTheme.name": ename, "businessTheme.description": edesc};
+	jQuery.ajax({url: "ajaxStoreBusinessTheme.action",data: d, type: "POST", cache: false, 
+		success: function(data,status) {
+			var themeId = parseInt(data);
+			if(themeId == NaN) return;
+			businessThemes[themeId] = { "desc": desc, "name": name };
+			updateThemeSelect();
+			renderThemeList();
+	}, error: function() {
+		$("#businessThemeError").text("Error: unable to save theme.");
+	}, beforeSend: function(request) {
+		request.overrideMimeType("application/x-www-form-urlencoded; charset=ISO-8859-1");
+		request.setRequestHeader("Accept-Charset","ISO-8859-1");
+	}, contentType: "application/x-www-form-urlencoded; charset=ISO-8859-1", dataType: "text"});
+}
+function updateThemeSelect() {
+	var select = $("#businessThemeSelect");
+	var old = select.find(":selected").val();
+	select.empty();
+	$('<option value="">(create new)</option>').appendTo(select);
+	for(var theme in businessThemes) {
+		$('<option value="'+theme+'">'+businessThemes[theme].name+'</option>').appendTo(select);
+	}
+	if(old > 0) {
+		select.find("[value="+old+"]").attr("selected","selected");
+	}
+}

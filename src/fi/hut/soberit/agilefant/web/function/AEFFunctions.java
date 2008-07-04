@@ -93,7 +93,10 @@ public class AEFFunctions {
         s = s.replaceAll("\r", "<br>");
         return s;
     }
-    
+    public static String escapeHTML(String s) {
+        s = s.replaceAll("\"","\\\\\"");
+        return s;
+    }
     private static String out(String s, int newLength, boolean asHtml) {
         String title = s.replaceAll("\\<.*?>","");
         title = title.replaceAll("/\"/","&quote;");

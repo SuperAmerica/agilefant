@@ -16,9 +16,9 @@
 <title>
 Agilefant
 </title>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
 
-<script type="text/javascript" src="static/js/generic.js"></script>
+<script type="text/javascript" src="static/js/generic.js" charset="ISO-8859-1"></script>
 <script type="text/javascript" src="static/js/jquery-1.2.2.js"></script>
 <script type="text/javascript" src="static/js/jquery.cookie.js"></script>
 <script type="text/javascript" src="static/js/jquery.treeview.js"></script>

@@ -492,6 +492,12 @@
 	</function>  	 
 	
 	<function>
+	  <name>escapeHTML</name>
+	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
+	  <function-signature>String escapeHTML(java.lang.String)</function-signature>
+	</function>  
+	
+	<function>
 	  <name>html</name>
 	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
 	  <function-signature>String htmlOut(java.lang.String)</function-signature>

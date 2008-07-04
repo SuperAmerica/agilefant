@@ -67,94 +67,18 @@ var backlogItemId = ${backlogItemId};
 var preSelectedTheme = ${businessThemeId};
 var businessThemes = new Object();
 <c:forEach items="${businessThemeBusiness.all}" var="businessTheme">
-	businessThemes['${businessTheme.id}'] = { desc: "${aef:out(businessTheme.description)}", name: "${aef:out(businessTheme.name)}" };
+	businessThemes['${businessTheme.id}'] = { desc: "${aef:escapeHTML(businessTheme.description)}", name: "${aef:escapeHTML(businessTheme.name)}" };
 </c:forEach>
 
 var selectedThemes = new Array();
 <c:forEach items="${businessThemes}" var="chosenTheme">
 	selectedThemes.push(${chosenTheme.id});
 </c:forEach>
-function removeThemeFromItem(theme_id) {
-	jQuery.ajax({url :"removeThemeFromBacklogItem.action", 
-		data: {backlogItemId: backlogItemId, businessThemeId: theme_id}, 
-		cache: false, 
-		type: 'post',
-		success: function(data, status) { 	
-			var tmp = selectedThemes;
-			selectedThemes = new Array();
-			for(var i = 0 ; i < tmp.length; i++) {
-				if(tmp[i] != theme_id) {
-					selectedThemes.push(tmp[i]);
-				}
-			}
-			renderThemeList();
-			$("#businessThemeError").text("");
-		}, error: function() {
-				$("#businessThemeError").text("Error: Unable to remove theme from backlog item.");
-	}});
-	
-}
-function addThemeToItem() {
-	var theme_id = $("#businessThemeSelect").val();
-	if(theme_id < 1) {
-		alert("Select theme first.");
-		return;
-	}
-	jQuery.ajax({url: "addThemeToBacklogItem.action", 
-		data: {backlogItemId: backlogItemId, businessThemeId: theme_id}, 
-		type: 'post', 
-		cache: false,
-		success: function(data, status) { 	
-				for(var i = 0 ; i < selectedThemes.length; i++) {
-					if(theme_id == selectedThemes[i]) return;
-				}
-				selectedThemes.push(theme_id);
-				renderThemeList();
-				$("#businessThemeError").text("");
-		}, error: function() {
-				$("#businessThemeError").text("Error: Unable to add theme to backlog item.");
-		}});
-}
-function renderThemeList() {
-	var container = $("#itemThemeList");
-	container.empty();
-	for(var i = 0 ; i < selectedThemes.length; i++) {
-		var name = businessThemes[selectedThemes[i]].name;
-		var id = selectedThemes[i];
-		$('<li>'+name+'<img name="'+id+'" title="Remove" alt="Remove" src="static/img/delete_18.png"/></li>')
-			.appendTo(container).find("img")
-			.click(function() { removeThemeFromItem(this.name); });
-	}
-}
-function saveTheme() {
-	var name = $("#nameField").val();
-	var desc = $("#descField").val();
-	var id = $("#businessThemeSelect").val();
-	jQuery.post("ajaxStoreBusinessTheme.action",$("#businessThemeModalForm").serializeArray(),
-	function(data,status) {
-		alert(data);
-		var themeId = parseInt(data);
-		businessThemes[themeId] = { "desc": desc, "name": name };
-		updateThemeSelect();
-		renderThemeList();
-	}, "text");
-}
-function updateThemeSelect() {
-	var select = $("#businessThemeSelect");
-	var old = select.find(":selected").val();
-	select.empty();
-	$('<option value="">(create new)</option>').appendTo(select);
-	for(var theme in businessThemes) {
-		var name = businessThemes[theme].name;
-		$('<option value="'+theme+'">'+name+'</option>').appendTo(select);
-	}
-	if(old > 0) {
-		select.find("[value="+old+"]").attr("selected","selected");
-	}
-}
 updateThemeSelect();
 if(preSelectedTheme) {
 	$("#businessThemeSelect").find("[value="+preSelectedTheme+"]").attr("selected","selected");
+	$("#nameField").val(businessThemes[preSelectedTheme].name);
+	$("#descField").val(businessThemes[preSelectedTheme].desc);	
 }
 renderThemeList();
 </script>

@@ -85,6 +85,11 @@ public class BusinessThemeAction extends ActionSupport implements CRUDAction {
             }
         }
         this.fillObject(fillable);
+        //TODO: refactor this
+        try {
+            fillable.setName(java.net.URLDecoder.decode(fillable.getName(), "ISO-8859-1"));
+            fillable.setDescription(java.net.URLDecoder.decode(fillable.getDescription(), "ISO-8859-1"));
+        } catch(Exception e) {}
         if (super.hasActionErrors()) {
             return CRUDAction.AJAX_ERROR;
         }

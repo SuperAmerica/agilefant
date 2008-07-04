@@ -5,6 +5,7 @@ import java.util.Collection;
 import org.springframework.dao.DataIntegrityViolationException;
 
 import fi.hut.soberit.agilefant.business.BusinessThemeBusiness;
+import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.db.BusinessThemeDAO;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.BusinessTheme;
@@ -12,6 +13,7 @@ import fi.hut.soberit.agilefant.model.BusinessTheme;
 public class BusinessThemeBusinessImpl implements BusinessThemeBusiness {
 
     private BusinessThemeDAO businessThemeDAO;
+    
 
     public BusinessTheme getBusinessTheme(int businessThemeId) {
         return businessThemeDAO.get(businessThemeId);
@@ -28,6 +30,7 @@ public class BusinessThemeBusinessImpl implements BusinessThemeBusiness {
         if (businessTheme == null) {
             throw new ObjectNotFoundException();
         }
+        
         businessThemeDAO.remove(themeId);
     }
 

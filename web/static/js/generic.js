@@ -224,6 +224,11 @@ function saveTheme() {
 			businessThemes[themeId] = { "desc": desc, "name": name };
 			updateThemeSelect();
 			renderThemeList();
+			if (id > 0) {
+				$("#businessThemeSaveSuccess").text("Theme was successfully saved.");
+			} else {
+				$("#businessThemeSaveSuccess").text("Theme was successfully created.");
+			}
 	}, error: function() {
 		$("#businessThemeError").text("Error: unable to save theme.");
 	}, beforeSend: function(request) {

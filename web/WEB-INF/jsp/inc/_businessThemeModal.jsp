@@ -34,11 +34,15 @@
 					if(theme_id > 0) {
 						$("#nameField").val(businessThemes[theme_id].name);
 						$("#descField").val(businessThemes[theme_id].desc);
-						$("#addThemeText").text("Add theme to BLI");														
+						$("#addThemeText").text("Add theme to BLI");
+						$("#businessThemeSaveSuccess").text("");
+						$("#businessThemeError").text("");														
 					} else {
 						$("#nameField").val("");
 						$("#descField").val("");
 						$("#addThemeText").text("");
+						$("#businessThemeSaveSuccess").text("");
+						$("#businessThemeError").text("");
 					}
 				});
 		});
@@ -65,11 +69,15 @@
 	<tr>
 		<td></td>
 		<td></td>				
-		<td><ww:submit value="Save" id="saveButton"/></td>
+		<td><ww:submit value="Save" id="saveButton"/>
+			<label style="color: green;" id="businessThemeSaveSuccess"></label>
+		</td>
+		<td ></td>
 	</tr>
 	</table>
 </ww:form>
 </div>
+
 <script type="text/javascript">
 var backlogItemId = ${backlogItemId};
 var preSelectedTheme = ${businessThemeId};

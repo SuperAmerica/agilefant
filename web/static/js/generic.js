@@ -138,11 +138,15 @@ function reloadPage()
 {
 	window.location.reload();
 }
-function openThemeBusinessModal(parent, target, backlogItemId, themeId) {
+function openThemeBusinessModal(parent, target, backlogItemId, themeId, noReload) {
 	var data = new Object();
 	data['backlogItemId'] = backlogItemId;
 	data['businessThemeId'] = themeId;
-	loadModal(target,data,parent,reloadPage);
+	if(noReload == true) { 
+		loadModal(target,data,parent);
+	} else {
+		loadModal(target,data,parent,reloadPage);
+	}
 }
 function loadModal(target,request, parent, closeFunc) {
 	var container = $('<div class="jqmWindow"><b>Please wait, content loading...</b></div>');

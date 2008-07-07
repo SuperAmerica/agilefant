@@ -60,6 +60,7 @@ public class BusinessThemeAction extends ActionSupport implements CRUDAction {
             super.addActionError(super.getText(e.getMessage()));
             return Action.ERROR;
         }
+        
         return Action.SUCCESS;
     }
     
@@ -103,7 +104,7 @@ public class BusinessThemeAction extends ActionSupport implements CRUDAction {
             super.addActionError(super.getText("businessTheme.nameTooLong"));
             return;
         }
-        fillable.setName(businessTheme.getName());
+        fillable.setName(businessTheme.getName().trim());
         fillable.setDescription(businessTheme.getDescription());
     }
     

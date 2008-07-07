@@ -182,7 +182,8 @@ function removeThemeFromItem(theme_id) {
 		}, error: function() {
 				$("#businessThemeError").text("Error: Unable to remove theme from backlog item.");
 	}});
-	
+	$("#businessThemeSaveSuccess").text("");
+	$("#businessThemeError").text("");
 }
 function addThemeToItem() {
 	var theme_id = $("#businessThemeSelect").val();
@@ -200,6 +201,8 @@ function addThemeToItem() {
 		}, error: function() {
 				$("#businessThemeError").text("Error: Unable to add theme to backlog item.");
 		}});
+	$("#businessThemeSaveSuccess").text("");
+	$("#businessThemeError").text("");
 }
 function renderThemeList() {
 	var container = $("#itemThemeList").empty();
@@ -215,12 +218,21 @@ function renderThemeList() {
 }
 function saveTheme() {
 	var name = $("#nameField").val();
+	var trimmed = name.replace(/^\s+|\s+$/g, '');
 	var desc = $("#descField").val();
 	var id = $("#businessThemeSelect").val();
-	var ename = escape(name);
+	var ename = escape(trimmed);
 	var edesc = escape(desc);
 	//var d = $("#businessThemeModalForm").serializeArray();
 	var d = {businessThemeId: id, "businessTheme.name": ename, "businessTheme.description": edesc};
+	if (name.length > 20) {
+		$("#businessThemeError").text("Error: theme name may not be longer than 20 characters.");
+		return;
+	}
+	if (trimmed.length == 0) {
+		$("#businessThemeError").text("Error: theme name empty.");
+		return;
+	}
 	jQuery.ajax({url: "ajaxStoreBusinessTheme.action",data: d, type: "POST", cache: false, 
 		success: function(data,status) {
 			var themeId = parseInt(data);
@@ -253,6 +265,9 @@ function updateThemeSelect(setSelected) {
 	if(old > 0) {
 		select.find("[value="+old+"]").attr("selected","selected");
 	}
+	$("#addThemeText").text("Add theme to BLI");
+	$("#businessThemeSaveSuccess").text("");
+	$("#businessThemeError").text("");
 }
 function selectEditTheme(theme_id) {
 	if(theme_id > 0) {

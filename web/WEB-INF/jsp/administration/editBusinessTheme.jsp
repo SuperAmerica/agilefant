@@ -24,7 +24,7 @@
 			<td>Description</td>
 			<td></td>
 			<td colspan="2"><ww:textarea cols="70" rows="10"
-				name="businessTheme.description" cssClass="useWysiwyg" /></td>
+				name="businessTheme.description"/></td>
 		</tr>
 		<tr>
 			<td></td>

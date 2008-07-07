@@ -54,7 +54,7 @@ public class BusinessThemeBusinessImpl implements BusinessThemeBusiness {
             persistable = businessThemeDAO.get(businessThemeId);
             if (persistable == null) {
                 throw new ObjectNotFoundException(
-                        "Selected business theme waas not found.");
+                        "Selected theme was not found.");
             }
             persistable.setDescription(theme.getDescription());
             persistable.setName(theme.getName());
@@ -69,8 +69,9 @@ public class BusinessThemeBusinessImpl implements BusinessThemeBusiness {
                 persistable = businessThemeDAO.get(newId);
             }
         } catch (DataIntegrityViolationException dve) {
-            throw new Exception("businessTheme.duplicateName");
+            throw new Exception("businessTheme.duplicateName");            
         }
+        
         return persistable;
     }
 

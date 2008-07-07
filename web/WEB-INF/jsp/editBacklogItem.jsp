@@ -303,12 +303,13 @@
 			</td>
 			<td></td>
 			<td>
-			<ww:a href="#" id="addThemeLink" onclick="openThemeBusinessBliModal('addThemeLink', 'editBacklogItemBusinessThemes.action',${backlogItemId},0); return false;">
+			<!-- Position modal window at original estimate box level.  -->
+			<ww:a href="#" id="addThemeLink" onclick="openThemeBusinessBliModal('resetLink', 'editBacklogItemBusinessThemes.action',${backlogItemId},0); return false;">
 				<img src="static/img/add_theme.png" alt="Edit themes" title="Edit themes" />
 			</ww:a>			
 			<c:if test="${!empty backlogItem.businessThemes}">				
 			<c:forEach items="${backlogItem.businessThemes}" var="businessTheme">
-				<span class="businessTheme">
+				<span class="businessTheme" title="${businessTheme.description}">
 				<ww:a href="#" id="${backlogItemId}" onclick="openThemeBusinessBliModal('${backlogItemId}', 'editBacklogItemBusinessThemes.action',${backlogItemId}, ${businessTheme.id}); return false;">
 						${businessTheme.name}
 				</ww:a>

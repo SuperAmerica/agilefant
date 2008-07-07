@@ -12,7 +12,10 @@
 </div>
 <div style="padding: 12px;">
 <div style="color: red;" id="businessThemeError"></div>
+<%--
 <ww:form id="businessThemeModalForm" action="storeBacklogItemBusinessThemes" onsubmit="saveTheme(); return false;">
+--%>
+<ww:form id="businessThemeModalForm" action="storeBacklogItemBusinessThemes">
 	<ww:hidden name="backlogItemId" />
 	
 	<table class="businessThemeTable">
@@ -57,7 +60,8 @@
 	<tr>
 		<td></td>
 		<td></td>				
-		<td><ww:submit value="Save" id="saveButton"/>
+		<td><ww:submit value="Save" id="saveButton" onclick="saveTheme(); return false;"/>
+		<ww:submit value="Close" id="closeButton" cssClass="jqmClose"/>
 			<label style="color: green;" id="businessThemeSaveSuccess"></label>
 		</td>
 		<td ></td>

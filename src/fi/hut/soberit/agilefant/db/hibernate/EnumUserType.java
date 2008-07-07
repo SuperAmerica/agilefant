@@ -18,6 +18,7 @@ public class EnumUserType implements UserType, ParameterizedType {
 
     public static final String ENUM_CLASS_NAME = "enumClassName";
 
+    @SuppressWarnings("unchecked")
     private Class<Enum> clazz = null;
 
     private boolean useOrdinal;
@@ -26,10 +27,12 @@ public class EnumUserType implements UserType, ParameterizedType {
 
     private static final int[] INT_SQL_TYPES = { Types.INTEGER };
 
+    @SuppressWarnings("unchecked")
     public Class returnedClass() {
         return clazz;
     }
 
+    @SuppressWarnings("unchecked")
     public void setParameterValues(Properties params) {
         String enumClassName = params.getProperty(ENUM_CLASS_NAME);
         try {

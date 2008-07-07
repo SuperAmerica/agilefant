@@ -12,6 +12,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import junit.framework.TestCase;
 import fi.hut.soberit.agilefant.business.impl.TimesheetBusinessImpl;
 import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.model.AFTime;
@@ -24,9 +25,7 @@ import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.User;
-import fi.hut.soberit.agilefant.util.*;
 import fi.hut.soberit.agilefant.util.BacklogTimesheetNode;
-import junit.framework.TestCase;
 
 public class TimesheetBusinessTest extends TestCase {
     private Product product1, product2;

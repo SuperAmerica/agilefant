@@ -1,7 +1,5 @@
 package fi.hut.soberit.agilefant.util;
 
-import java.util.Date;
-
 import fi.hut.soberit.agilefant.model.AFTime;
 
 public class BacklogMetrics {

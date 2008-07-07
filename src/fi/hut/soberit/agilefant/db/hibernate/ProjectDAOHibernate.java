@@ -74,10 +74,11 @@ public class ProjectDAOHibernate extends GenericDAOHibernate<Project>
         }
     }
 
+    @SuppressWarnings("unchecked")
     public Project findFirstUpperRankedOngoingProject(
             Project project) {
         Date current = Calendar.getInstance().getTime();
-        List projects = getHibernateTemplate()
+        List<Project> projects = getHibernateTemplate()
                 .find(
                         "from Project d where (d.rank > ?) and (d.rank != 0) and (d.startDate <= ? and d.endDate >= ?) order by d.rank asc limit 1",
                         new Object[] { project.getRank(), current, current });

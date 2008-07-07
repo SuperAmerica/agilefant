@@ -8,6 +8,8 @@ import fi.hut.soberit.agilefant.web.context.ContextViewManager;
 
 public class ContextStackAction extends ActionSupport {
 
+    private static final long serialVersionUID = -6259307854336100544L;
+
     private ContextViewManager contextViewManager;
 
     private ContextView view;

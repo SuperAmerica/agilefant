@@ -3,7 +3,6 @@ package fi.hut.soberit.agilefant.web;
 import java.util.ArrayList;
 
 import fi.hut.soberit.agilefant.db.BacklogDAO;
-import fi.hut.soberit.agilefant.db.BacklogHourEntryDAO;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.db.ProjectDAO;
 import fi.hut.soberit.agilefant.db.ProjectTypeDAO;

@@ -5,14 +5,13 @@ import java.util.List;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.Tag;
 
+import fi.hut.soberit.agilefant.business.HourEntryBusiness;
 import fi.hut.soberit.agilefant.model.Backlog;
-import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.BacklogHourEntry;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.BacklogItemHourEntry;
-import fi.hut.soberit.agilefant.model.HourEntry;
+import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.TimesheetLoggable;
-import fi.hut.soberit.agilefant.business.HourEntryBusiness;
 
 
 public class HourEntryTag extends SpringTagSupport {

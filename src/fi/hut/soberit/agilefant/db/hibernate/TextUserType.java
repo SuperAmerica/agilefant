@@ -29,6 +29,7 @@ public class TextUserType implements UserType {
         return SQL_TYPES;
     }
 
+    @SuppressWarnings("unchecked")
     public Class returnedClass() {
         return String.class;
     }

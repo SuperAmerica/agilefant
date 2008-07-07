@@ -4,8 +4,8 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Stack;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+//import org.apache.commons.logging.Log;
+//import org.apache.commons.logging.LogFactory;
 
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.db.GenericDAO;
@@ -31,7 +31,7 @@ import fi.hut.soberit.agilefant.web.TaskAction;
  * 
  */
 public class TestUtility extends SpringTestCase {
-    private static Log logger = LogFactory.getLog(TestUtility.class);
+    //private static Log logger = LogFactory.getLog(TestUtility.class);
 
     private UserDAO userDAO;
 
@@ -63,6 +63,7 @@ public class TestUtility extends SpringTestCase {
         assertTrue(true);
     }
 
+    @SuppressWarnings("unchecked")
     private Stack<GenericDAO> cleanupStack = new Stack<GenericDAO>();
 
     /**
@@ -427,6 +428,7 @@ public class TestUtility extends SpringTestCase {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public static void clearDB(GenericDAO genericDAO) {
         for (Object i : genericDAO.getAll()) {
             genericDAO.remove(i);
@@ -538,6 +540,7 @@ public class TestUtility extends SpringTestCase {
      * @param genericDAO
      *                the DAO to push to the stack
      */
+    @SuppressWarnings("unchecked")
     private void pushToCleanupstack(GenericDAO genericDAO) {
         if (cleanup && !cleanupStack.contains(genericDAO)) {
             cleanupStack.push(genericDAO);

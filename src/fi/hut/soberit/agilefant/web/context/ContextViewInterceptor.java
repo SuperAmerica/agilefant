@@ -5,6 +5,8 @@ import com.opensymphony.xwork.interceptor.Interceptor;
 
 public class ContextViewInterceptor implements Interceptor {
 
+    private static final long serialVersionUID = 2542730509473988399L;
+
     public static final String CONTEXT_VIEW_NAME_PARAM = "contextViewName";
 
     public static final String CONTEXT_OBJECT_ID_PARAM = "contextObjectId";

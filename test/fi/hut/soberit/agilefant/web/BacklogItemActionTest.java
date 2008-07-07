@@ -1,12 +1,10 @@
 package fi.hut.soberit.agilefant.web;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import fi.hut.soberit.agilefant.business.UserBusiness;
 import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.db.IterationGoalDAO;
@@ -37,7 +35,7 @@ public class BacklogItemActionTest extends SpringTestCase {
     private TaskDAO taskDAO = null;
     private IterationGoalDAO iterationGoalDAO = null;
     private UserDAO userDAO = null;
-    private UserBusiness userBusiness = null;
+//    private UserBusiness userBusiness = null;
 
     private int backlogId;
     private int bliId;
@@ -101,6 +99,7 @@ public class BacklogItemActionTest extends SpringTestCase {
     /**
      * Test edit operation.
      */
+    @SuppressWarnings("unchecked")
     public void testEdit() {
         // execute edit operation
         assertNull(action.getBacklogItem());
@@ -169,6 +168,7 @@ public class BacklogItemActionTest extends SpringTestCase {
     /**
      * Test store operation with updating tasks.
      */
+    @SuppressWarnings("unchecked")
     public void testStore_updateTasks() {
         // execute edit operation
         assertNull(action.getBacklogItem());
@@ -363,10 +363,6 @@ public class BacklogItemActionTest extends SpringTestCase {
 
     public void setAction(BacklogItemAction action) {
         this.action = action;
-    }
-
-    public void setUserBusiness(UserBusiness userBusiness) {
-        this.userBusiness = userBusiness;
     }
 
     public void setBacklogId(int backlogId) {

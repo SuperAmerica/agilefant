@@ -1,7 +1,7 @@
 package fi.hut.soberit.agilefant.web;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+//import org.apache.commons.logging.Log;
+//import org.apache.commons.logging.LogFactory;
 
 import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
@@ -9,7 +9,6 @@ import com.opensymphony.xwork.ActionSupport;
 import fi.hut.soberit.agilefant.business.TaskBusiness;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.db.TaskDAO;
-import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
@@ -35,7 +34,7 @@ public class TaskAction extends ActionSupport implements CRUDAction {
 
     private BacklogItemDAO backlogItemDAO;
 
-    private Log logger = LogFactory.getLog(getClass());
+//    private Log logger = LogFactory.getLog(getClass());
 
     private TaskBusiness taskBusiness;
 
@@ -83,7 +82,7 @@ public class TaskAction extends ActionSupport implements CRUDAction {
      */
     public String store() {
         Task storable = new Task();
-        Backlog backlog;
+        //Backlog backlog;
 
         if (task.getName().equals("")) {
             super.addActionError(super.getText("task.missingName"));
@@ -122,7 +121,7 @@ public class TaskAction extends ActionSupport implements CRUDAction {
             taskDAO.store(storable);
                 
         /* Update effort history */
-        backlog = backlogItemDAO.get(backlogItemId).getBacklog();
+        backlogItemDAO.get(backlogItemId).getBacklog();
 
         return Action.SUCCESS;
     }

@@ -7,8 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+//import org.apache.commons.logging.Log;
+//import org.apache.commons.logging.LogFactory;
 
 import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
@@ -67,7 +67,7 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
 
     private TaskDAO taskDAO;
 
-    private Log logger = LogFactory.getLog(getClass());
+    //private Log logger = LogFactory.getLog(getClass());
     
     private Map<Integer, String> userIds = new HashMap<Integer, String>();
 

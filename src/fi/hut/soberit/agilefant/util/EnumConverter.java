@@ -9,6 +9,7 @@ import com.opensymphony.webwork.util.WebWorkTypeConverter;
  */
 public class EnumConverter extends WebWorkTypeConverter {
 
+    @SuppressWarnings("unchecked")
     @Override
     public Object convertFromString(Map context, String[] values, Class toClass) {
         return Enum.valueOf(toClass, values[0]);

@@ -4,8 +4,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+//import org.apache.commons.logging.Log;
+//import org.apache.commons.logging.LogFactory;
 
 import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
@@ -39,7 +39,7 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
     private int productId;
     private Map<Integer, String> userIds = new HashMap<Integer, String>();
     
-    private Log logger = LogFactory.getLog(getClass());
+    //private Log logger = LogFactory.getLog(getClass());
 
     /**
      * {@inheritDoc}

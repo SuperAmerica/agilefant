@@ -29,6 +29,7 @@ public class VarcharUserType implements UserType {
         return SQL_TYPES;
     }
 
+    @SuppressWarnings("unchecked")
     public Class returnedClass() {
         return String.class;
     }

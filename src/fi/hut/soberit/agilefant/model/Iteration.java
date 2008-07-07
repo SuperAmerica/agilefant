@@ -12,8 +12,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Transient;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+//import org.apache.commons.logging.Log;
+//import org.apache.commons.logging.LogFactory;
 import org.hibernate.annotations.BatchSize;
 
 import fi.hut.soberit.agilefant.web.page.PageItem;
@@ -56,7 +56,7 @@ public class Iteration extends Backlog implements PageItem {
 
     // private User owner;
 
-    private Log logger = LogFactory.getLog(getClass());
+    //private Log logger = LogFactory.getLog(getClass());
 
     /** The project, under which this iteration is. */
     @ManyToOne

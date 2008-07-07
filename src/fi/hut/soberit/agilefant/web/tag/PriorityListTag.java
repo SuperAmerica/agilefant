@@ -8,6 +8,8 @@ import fi.hut.soberit.agilefant.model.Priority;
 
 public class PriorityListTag extends TagSupport {
 
+    private static final long serialVersionUID = 846806843885344105L;
+
     @Override
     public int doEndTag() throws JspException {
         super.pageContext.removeAttribute(this.getId());

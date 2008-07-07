@@ -28,6 +28,7 @@ public class OnlyDateConverter extends WebWorkTypeConverter implements
         return ActionContext.getContext().getLocale();
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public Object convertFromString(Map context, String[] values, Class toClass) {
         String value = values[0];

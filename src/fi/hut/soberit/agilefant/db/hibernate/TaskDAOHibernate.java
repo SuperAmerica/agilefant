@@ -101,7 +101,7 @@ public class TaskDAOHibernate extends GenericDAOHibernate<Task> implements
 
     public void raiseRankBetween(Integer lowLimitRank, Integer upperLimitRank,
             BacklogItem backlogItem) {
-        List projects = null;
+        //List projects = null;
 
         if (lowLimitRank == null) {
             super
@@ -126,6 +126,7 @@ public class TaskDAOHibernate extends GenericDAOHibernate<Task> implements
             throw new IllegalArgumentException("Both limits cannot be null.");
     }
 
+    /*
     private Integer getNewTaskRank(Task task) {
         Task lowestRankedTask = getLowestRankedTask(task.getBacklogItem());
         Integer rank;
@@ -140,7 +141,9 @@ public class TaskDAOHibernate extends GenericDAOHibernate<Task> implements
             }
         }
     }
-
+    */
+    
+    @SuppressWarnings("unchecked")
     public Task getLowestRankedTask(BacklogItem backlogItem) {
         DetachedCriteria criteria = DetachedCriteria.forClass(Task.class);
         criteria.add(Restrictions.eq("backlogItem", backlogItem));
@@ -153,6 +156,7 @@ public class TaskDAOHibernate extends GenericDAOHibernate<Task> implements
         }
     }
 
+    @SuppressWarnings("unchecked")
     public Task findLowerRankedTask(Task task) {
         DetachedCriteria criteria = DetachedCriteria.forClass(Task.class);
         criteria.add(Restrictions.eq("backlogItem", task.getBacklogItem()));
@@ -166,6 +170,7 @@ public class TaskDAOHibernate extends GenericDAOHibernate<Task> implements
         }
     }
 
+    @SuppressWarnings("unchecked")
     public Task findUpperRankedTask(Task task) {
         DetachedCriteria criteria = DetachedCriteria.forClass(Task.class);
         criteria.add(Restrictions.eq("backlogItem", task.getBacklogItem()));

@@ -57,6 +57,7 @@ public abstract class UserTypeFilter implements UserType, ParameterizedType {
     /**
      * Receives the parameters.
      */
+    @SuppressWarnings("unchecked")
     public void setParameterValues(Properties parameters) {
         String subTypes = parameters.getProperty("subtypes");
 
@@ -160,6 +161,7 @@ public abstract class UserTypeFilter implements UserType, ParameterizedType {
         return subUserType.sqlTypes();
     }
 
+    @SuppressWarnings("unchecked")
     public Class returnedClass() {
         return subUserType.returnedClass();
     }

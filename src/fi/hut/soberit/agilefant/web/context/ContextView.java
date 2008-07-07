@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 public class ContextView implements Serializable {
 
+    private static final long serialVersionUID = -2959959265644075140L;
+
     private String contextName;
 
     private int contextObject;

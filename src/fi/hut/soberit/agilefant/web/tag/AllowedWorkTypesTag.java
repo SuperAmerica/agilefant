@@ -14,6 +14,7 @@ import fi.hut.soberit.agilefant.model.WorkType;
 
 public class AllowedWorkTypesTag extends SpringTagSupport {
 
+    private static final long serialVersionUID = 3055272530897380319L;
     private BacklogItem backlogItem;
 
     @Override

@@ -28,6 +28,8 @@ import com.opensymphony.xwork.ActionSupport;
 
 public class ContextViewAction extends ActionSupport implements SessionAware {
 
+    private static final long serialVersionUID = 1992243588151483793L;
+
     public static final String CONTEXT_NAME = "contextName";
 
     public static final String CONTEXT_OBJECT_ID = "contextObjectId";
@@ -36,8 +38,10 @@ public class ContextViewAction extends ActionSupport implements SessionAware {
 
     private int contextObjectId;
 
+    @SuppressWarnings("unchecked")
     private Map session;
 
+    @SuppressWarnings("unchecked")
     public String execute() {
         String existingContext = (String) session.get(CONTEXT_NAME);
         if (contextName != null && !contextName.equals(existingContext)) {
@@ -60,6 +64,7 @@ public class ContextViewAction extends ActionSupport implements SessionAware {
                 + currentContext;
     }
 
+    @SuppressWarnings("unchecked")
     public void setSession(Map session) {
         this.session = session;
     }

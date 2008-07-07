@@ -13,21 +13,21 @@ public class StringEscapeFilter extends UserTypeFilter {
      * Conversions to apply. Every other element is the conversion character,
      * every other what to convert to.
      */
-    private String[] conversions = { "<", "&lt;", ">", "&gt;"/*
-                                                                 * , "ä",
-                                                                 * "&auml;",
-                                                                 * "ö",
-                                                                 * "&ouml;",
-                                                                 * "å",
-                                                                 * "&aring;",
-                                                                 * "Ä",
-                                                                 * "&Auml;",
-                                                                 * "Ö",
-                                                                 * "&Ouml;",
-                                                                 * "Å",
-                                                                 * "&Aring;"
-                                                                 */
-    };
+    /*private String[] conversions = { "<", "&lt;", ">", "&gt;"
+                                                                  , "ä",
+                                                                  "&auml;",
+                                                                  "ö",
+                                                                  "&ouml;",
+                                                                  "å",
+                                                                  "&aring;",
+                                                                  "Ä",
+                                                                  "&Auml;",
+                                                                  "Ö",
+                                                                  "&Ouml;",
+                                                                  "Å",
+                                                                  "&Aring;"
+                                                                 
+    };*/
 
     /**
      * Handle converting single character in the string.
@@ -39,7 +39,7 @@ public class StringEscapeFilter extends UserTypeFilter {
      * @param to
      *                string to replace the character with
      * @return "str" with "from"-charaters replaced with "to"-strings
-     */
+     *
     private String handleSingleCharacter(String str, char from, String to) {
         String current = str;
         String result = "";
@@ -62,7 +62,7 @@ public class StringEscapeFilter extends UserTypeFilter {
         result += current;
 
         return result;
-    }
+    }*/
 
     /**
      * Filter downgoing data by applying the HTML ampersand codes.

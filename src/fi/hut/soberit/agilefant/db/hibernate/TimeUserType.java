@@ -32,6 +32,7 @@ public class TimeUserType implements UserType {
      * Class of the type handled, the hibernate implementation uses this at
      * least for nullSafeGet and set.
      */
+    @SuppressWarnings("unchecked")
     public Class returnedClass() {
         return AFTime.class;
     }

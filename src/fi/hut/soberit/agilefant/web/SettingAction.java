@@ -3,9 +3,6 @@ package fi.hut.soberit.agilefant.web;
 import java.util.Collection;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
 
@@ -26,7 +23,6 @@ public class SettingAction extends ActionSupport {
     private String optimalHighValue;
     private String criticalLowValue;
     private Setting setting;
-    private Log logger = LogFactory.getLog(getClass());
     private SettingBusiness settingBusiness;
     
     @Override

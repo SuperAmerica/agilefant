@@ -482,6 +482,23 @@
     				return false;
                 }
             });
+            
+            //disable tabulator in editor, act as it was a normal text field
+            var oldContext = this;
+            $(this.editorDoc).keydown(function( event )
+            {
+                if ( event.keyCode == 9 )
+                {
+                	var forms = $(oldContext.original).parents("form");
+                	if(forms.length == 0) return false;
+                	var setFocus = false;
+                	jQuery.each(forms.get(0).elements, function() {
+                		if(setFocus == true && $(this).is(":visible") && $(this).is(":enabled")) { $(this).focus(); return false; }
+                		else if(this == oldContext.original) setFocus = true;
+                	});
+    				return false;
+                }
+            });
         },
 
         designMode : function()

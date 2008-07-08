@@ -63,20 +63,29 @@ public class CalendarUtils {
         return cal.getTime();
     }
     
+    /**
+     * Get the length of a timeframe in days rounded up. 
+     */
     public int getLengthInDays(Date start, Date end){
         Calendar calStart = GregorianCalendar.getInstance();
         Calendar calEnd = GregorianCalendar.getInstance();
-        calStart.setTime(start);
-        calEnd.setTime(end);
-        calStart.set(Calendar.HOUR, 0);
-        calStart.set(Calendar.MINUTE, 0);
-        calStart.set(Calendar.SECOND, 0);
-        calStart.set(Calendar.MILLISECOND, 0);
-        calEnd.set(Calendar.HOUR, 0);
-        calEnd.set(Calendar.MINUTE, 0);
-        calEnd.set(Calendar.SECOND, 0);
-        calEnd.set(Calendar.MILLISECOND, 0);
-        return (int)((calEnd.getTime().getTime() - calStart.getTime().getTime()) / (86400000L))+1;
+        
+        /* Swap dates */
+        if (end.before(start)) {
+            calStart.setTime(end);
+            calEnd.setTime(start);
+        }
+        else {
+            calStart.setTime(start);
+            calEnd.setTime(end);
+        }
+        
+        CalendarUtils.setHoursMinutesAndSeconds(calStart, 0, 0, 0);
+        CalendarUtils.setHoursMinutesAndSeconds(calEnd, 23, 59, 59);
+        
+        float diff = ((float)calEnd.getTime().getTime() - (float)calStart.getTime().getTime()) / (86400000.0f);
+        double diffD = Math.ceil(diff);
+        return (int)diffD;
     }
     
     public int getProjectDaysDaysInTimeFrame(Date projectStart, Date projectEnd, Date start, Date end){
@@ -180,6 +189,12 @@ public class CalendarUtils {
         return days;
     }
     
+    public static void setHoursMinutesAndSeconds(Calendar cal, int hours, int minutes, int seconds) {
+        cal.set(Calendar.HOUR_OF_DAY, hours);
+        cal.set(Calendar.MINUTE, hours);
+        cal.set(Calendar.SECOND, hours);
+        cal.set(Calendar.MILLISECOND, 0);
+    }
     
     public List<Date> getProjectDaysList(Date projectStart, Date projectEnd, Date start, 
             Date end, boolean includeWeekEnds){

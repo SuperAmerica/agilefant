@@ -79,40 +79,26 @@ public class CalendarUtilsTest extends TestCase {
         assertEquals(new Date(2006, 1, 12), cal.getTime());
     }
 
-    @SuppressWarnings("deprecation")
     public void testgetLengthInDays() {
-        Date start = new Date(96, 5, 1); // note months start from 0
-        Date end = new Date(96, 5, 1); // note months start from 0
-        assertEquals(1, this.cUtils.getLengthInDays(start, end));
-
-        start = new Date(96, 5, 1); // note months start from 0
-        end = new Date(96, 5, 2); // note months start from 0
-        assertEquals(2, this.cUtils.getLengthInDays(start, end));
-
-        start = new Date(96, 5, 1); // note months start from 0
-        end = new Date(96, 5, 3); // note months start from 0
-        assertEquals(3, this.cUtils.getLengthInDays(start, end));
-
-        start = new Date(94, 5, 1); // note months start from 0
-        end = new Date(95, 5, 1); // note months start from 0
-        assertEquals(366, this.cUtils.getLengthInDays(start, end));
-
-        start = new Date(93, 5, 1); // note months start from 0
-        end = new Date(95, 5, 1); // note months start from 0
-        assertEquals(731, this.cUtils.getLengthInDays(start, end));
-
-        start = new Date(96, 5, 1); // note months start from 0
-        end = new Date(96, 6, 1); // note months start from 0
-        assertEquals(31, this.cUtils.getLengthInDays(start, end));
-
-        start = new Date(96, 3, 8); // note months start from 0
-        end = new Date(96, 3, 16); // note months start from 0
-        GregorianCalendar cal = new GregorianCalendar();
-        cal.setTime(start);
-        assertEquals(GregorianCalendar.MONDAY, cal
-                .get(GregorianCalendar.DAY_OF_WEEK));
-
-        assertEquals(9, this.cUtils.getLengthInDays(start, end));
+        Calendar start = GregorianCalendar.getInstance();
+        Calendar end = GregorianCalendar.getInstance();
+        CalendarUtils.setHoursMinutesAndSeconds(start, 0, 0, 0);
+        CalendarUtils.setHoursMinutesAndSeconds(end, 0, 0, 1);
+        
+        assertEquals(1, cUtils.getLengthInDays(start.getTime(), end.getTime()));
+        
+        CalendarUtils.setHoursMinutesAndSeconds(end, 23, 59, 59);
+        assertEquals(1, cUtils.getLengthInDays(start.getTime(), end.getTime()));
+        
+        end.add(Calendar.DATE, 1);
+        CalendarUtils.setHoursMinutesAndSeconds(end, 00, 00, 01);
+        assertEquals(2, cUtils.getLengthInDays(start.getTime(), end.getTime()));
+        
+        CalendarUtils.setHoursMinutesAndSeconds(end, 23, 59, 59);
+        assertEquals(2, cUtils.getLengthInDays(start.getTime(), end.getTime()));
+        
+        end.add(Calendar.DATE, -5);
+        assertEquals(5, cUtils.getLengthInDays(start.getTime(), end.getTime()));
     }
 
     /**

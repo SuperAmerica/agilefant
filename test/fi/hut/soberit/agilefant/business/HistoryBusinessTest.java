@@ -23,6 +23,7 @@ import fi.hut.soberit.agilefant.model.HistoryEntry;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
+import fi.hut.soberit.agilefant.util.CalendarUtils;
 
 public class HistoryBusinessTest extends TestCase {
 
@@ -354,7 +355,7 @@ public class HistoryBusinessTest extends TestCase {
         hisBusiness.setBacklogDAO(backlogDAO);
         
         /* Generate the time */
-        GregorianCalendar cal = new GregorianCalendar();
+        Calendar cal = GregorianCalendar.getInstance();
         cal.add(Calendar.DATE, -3);
         Date firstDate = cal.getTime();
         cal.add(Calendar.DATE, 1);
@@ -403,7 +404,8 @@ public class HistoryBusinessTest extends TestCase {
         replay(backlogDAO);
         
         long vel = 5000;
-        assertEquals(vel, hisBusiness.calculateDailyVelocity(3).getTime());
+        long trueVel = hisBusiness.calculateDailyVelocity(3).getTime();
+        assertEquals(vel, trueVel);
         
         verify(backlogDAO);
     }
@@ -427,10 +429,7 @@ public class HistoryBusinessTest extends TestCase {
         proj.setEndDate(weekFromNow);
         
         Calendar expected = GregorianCalendar.getInstance();
-        expected.set(Calendar.HOUR, 0);
-        expected.set(Calendar.MINUTE, 0);
-        expected.set(Calendar.SECOND, 0);
-        expected.set(Calendar.MILLISECOND, 0);
+        CalendarUtils.setHoursMinutesAndSeconds(expected, 0, 0, 0);
         
         /* Test the calculation */
         assertNull(hisBusiness.calculateExpectedDate(prod, new AFTime("150h"), new AFTime("5h")));

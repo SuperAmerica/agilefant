@@ -88,7 +88,7 @@ public class ChartBusinessImpl implements ChartBusiness {
     /* Series colors */
     private static Color BURNDOWN_COLOR = new Color(220, 100, 87);
     private static Color REFERENCE_COLOR = new Color(90, 145, 210);
-    private static Color EXPECTED_COLOR = new Color(0x7a, 0xb1, 0x6c); //7ab16c new Color(247, 150, 70);
+    private static Color EXPECTED_COLOR = new Color(80, 80, 80); //new Color(247, 220, 140);
 
     /**
      * Generates a byte array (a png image file) from a JFreeChart object
@@ -227,7 +227,9 @@ public class ChartBusinessImpl implements ChartBusiness {
         i.add(Calendar.DATE, -1);
         entry = history.getDateEntry(i.getTime());
         AFTime velocity = historyBusiness.calculateDailyVelocity(backlog.getId());
-        Date expectedDate = historyBusiness.calculateExpectedDate(backlog, entry.getEffortLeft(), velocity);
+        AFTime effortLeft = new AFTime(entry.getEffortLeft().getTime());
+        effortLeft.add(entry.getDeltaEffortLeft());
+        Date expectedDate = historyBusiness.calculateExpectedDate(backlog, effortLeft, velocity);
         
         i.add(Calendar.DATE, 1);
         entry = history.getDateEntry(i.getTime());
@@ -289,7 +291,8 @@ public class ChartBusinessImpl implements ChartBusiness {
 
         // Use java.sql.Date to use only days, months and years
         if (this.expectedDate == null ||
-                endDate.after(this.expectedDate)) {
+                endDate.after(this.expectedDate) ||
+                endDate.before(new Date())) {
             newEndDate.setTime(new java.sql.Date(endDate.getTime()));
         }
         else {
@@ -339,8 +342,8 @@ public class ChartBusinessImpl implements ChartBusiness {
         
         // Set expected series properties
         rr.setSeriesPaint(EXPECTED_SERIES, EXPECTED_COLOR);
-        rr.setSeriesStroke(EXPECTED_SERIES, new BasicStroke(2.0f));/*, BasicStroke.CAP_BUTT,
-                BasicStroke.JOIN_BEVEL, 0.0f, new float[] { 7.0f, 3.0f, 2.0f, 3.0f, 2.0f, 3.0f }, 10.0f));*/
+        rr.setSeriesStroke(EXPECTED_SERIES, new BasicStroke(2.0f, BasicStroke.CAP_BUTT,
+                BasicStroke.JOIN_BEVEL, 0.0f, new float[] { 2.0f, 4.0f }, 0.0f));
         
         return chart;
     }

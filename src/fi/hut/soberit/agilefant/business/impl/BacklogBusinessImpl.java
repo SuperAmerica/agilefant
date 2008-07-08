@@ -501,7 +501,7 @@ public class BacklogBusinessImpl implements BacklogBusiness {
         GregorianCalendar cal = new GregorianCalendar();
         cal.setFirstDayOfWeek(GregorianCalendar.MONDAY);
         cal.setTime(time);
-        cal.set(GregorianCalendar.HOUR, 0);
+        cal.set(GregorianCalendar.HOUR_OF_DAY, 0);
         cal.set(GregorianCalendar.MINUTE, 0);
         cal.set(GregorianCalendar.SECOND, 2);
         
@@ -723,12 +723,15 @@ public class BacklogBusinessImpl implements BacklogBusiness {
         HistoryEntry<BacklogHistory> latestEntry = history.getDateEntry(cal.getTime());
         
         /* Calculate the values */
+        AFTime effortLeft = new AFTime(latestEntry.getEffortLeft().getTime());
+        effortLeft.add(latestEntry.getDeltaEffortLeft());
+        
         metrics.setDailyVelocity(historyBusiness.calculateDailyVelocity(backlog
                 .getId()));
         metrics.setScheduleVariance(historyBusiness.calculateScheduleVariance(backlog,
-                latestEntry.getEffortLeft(), metrics.getDailyVelocity()));
+                effortLeft, metrics.getDailyVelocity()));
         metrics.setScopingNeeded(historyBusiness.calculateScopingNeeded(backlog,
-                latestEntry.getEffortLeft(), metrics.getDailyVelocity()));
+                effortLeft, metrics.getDailyVelocity()));
         
         /* Get the done and not done backlog items */
         metrics.setTotalItems(new Integer(backlog.getBacklogItems().size()));

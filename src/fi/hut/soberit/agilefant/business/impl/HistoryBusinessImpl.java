@@ -141,28 +141,29 @@ public class HistoryBusinessImpl implements HistoryBusiness {
     
     
     /** {@inheritDoc} */
-    @SuppressWarnings("deprecation")
     public AFTime calculateDailyVelocity(int backlogId) {
         AFTime velocity = new AFTime(0);
         int numberOfDays = 1;
         /* Get the backlog and its history */
         Backlog backlog = backlogDAO.get(backlogId);
         
-        Date startDate = backlog.getStartDate();
-        Date endDate = new Date();
-        endDate.setDate(endDate.getDate() - 1);
+        Calendar startDate = GregorianCalendar.getInstance();
+        startDate.setTime(backlog.getStartDate());
+        
+        Calendar endDate = GregorianCalendar.getInstance();
+        endDate.add(Calendar.DATE, -1);
         
         if (backlog instanceof Product) {
             return new AFTime(0);
         }
         
-        if (backlog.getEndDate().before(endDate)) {
-            endDate = backlog.getEndDate();
+        if (backlog.getEndDate().before(endDate.getTime())) {
+            endDate.setTime(backlog.getEndDate());
         }
         
         /* Get the backlog's history */
         BacklogHistory history = backlog.getBacklogHistory();        
-        HistoryEntry<BacklogHistory> current = history.getDateEntry(endDate);
+        HistoryEntry<BacklogHistory> current = history.getDateEntry(endDate.getTime());
         
         /* If there is no recorded history, return 0 as velocity */
         if (current == null) {
@@ -176,7 +177,7 @@ public class HistoryBusinessImpl implements HistoryBusiness {
         System.out.println("\n---\nDate:" + current.getDate());
         
         /* Get the length */
-        numberOfDays = calUtil.getLengthInDays(startDate, endDate);
+        numberOfDays = calUtil.getLengthInDays(startDate.getTime(), endDate.getTime());
         
         if (numberOfDays == 0) {
             numberOfDays = 1;
@@ -197,10 +198,7 @@ public class HistoryBusinessImpl implements HistoryBusiness {
     public Date calculateExpectedDate(Backlog backlog, AFTime effortLeft, AFTime velocity) {
         GregorianCalendar expected = new GregorianCalendar();
         expected.setTime(new Date());
-        expected.set(Calendar.HOUR, 0);
-        expected.set(Calendar.MINUTE, 0);
-        expected.set(Calendar.SECOND, 0);
-        expected.set(Calendar.MILLISECOND, 0);
+        CalendarUtils.setHoursMinutesAndSeconds(expected, 0, 0, 0);
         
         /*
          * Expected date can't be calculated for a product.
@@ -234,26 +232,18 @@ public class HistoryBusinessImpl implements HistoryBusiness {
         }
         Calendar expected = GregorianCalendar.getInstance();
         expected.setTime(calculateExpectedDate(backlog, effortLeft, velocity));
-        expected.set(Calendar.HOUR, 0);
-        expected.set(Calendar.MINUTE, 0);
-        expected.set(Calendar.SECOND, 0);
-        expected.set(Calendar.MILLISECOND, 0);
+        CalendarUtils.setHoursMinutesAndSeconds(expected, 0, 0, 0);
         
         Calendar end = GregorianCalendar.getInstance();
         end.setTime(backlog.getEndDate());
-        end.set(Calendar.HOUR, 0);
-        end.set(Calendar.MINUTE, 0);
-        end.set(Calendar.SECOND, 0);
-        end.set(Calendar.MILLISECOND, 0);
+        CalendarUtils.setHoursMinutesAndSeconds(end, 0, 0, 0);
+        
+        int diff = calUtil.getLengthInDays(end.getTime(), expected.getTime()) - 1;
         
         if (end.before(expected)) {
-            expected.add(Calendar.MILLISECOND, 1);
-            int diff = calUtil.getLengthInDays(end.getTime(), expected.getTime()) - 1;
             return diff;
         }
         else if (end.after(expected)) {
-            end.add(Calendar.MILLISECOND, 1);
-            int diff = calUtil.getLengthInDays(expected.getTime(), end.getTime()) - 1;
             return -diff;
         }
         else {

@@ -100,24 +100,7 @@ public class Iteration extends Backlog implements PageItem {
         df.setLenient(true);
         this.startDate = df.parse(startDate);
     }
-
-    /**
-     * Returns current Date with hour of day set in 24-hour clock.
-     * 
-     * @param hour
-     *                The Date's hour of day.
-     * @return Current Date instance with hour of day set.
-     */
-    public static Date getTimeOfDayDate(int hour) {
-
-        java.util.Calendar calendar = java.util.Calendar.getInstance();
-        calendar.set(java.util.Calendar.HOUR_OF_DAY, hour);
-        calendar.set(java.util.Calendar.MINUTE, 0);
-        calendar.set(java.util.Calendar.SECOND, 0);
-        calendar.set(java.util.Calendar.MILLISECOND, 0);
-        return calendar.getTime();
-    }
-
+    
     /** {@inheritDoc} */
     @Transient
     public Collection<PageItem> getChildren() {

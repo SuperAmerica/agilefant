@@ -11,7 +11,6 @@
 	</span>
 </div>
 <div style="padding: 12px;">
-<div style="color: red;" id="businessThemeError"></div>
 <ww:form id="businessThemeModalForm" action="storeBacklogItemBusinessThemes">
 	<ww:hidden name="backlogItemId" />
 	
@@ -59,6 +58,7 @@
 		<td></td>				
 		<td><ww:submit value="Save" id="saveButton" onclick="saveTheme(); return false;"/>
 		<ww:submit value="Close" id="closeButton" cssClass="jqmClose"/>
+			<label style="color: red;" id="businessThemeError"></label>
 			<label style="color: green;" id="businessThemeSaveSuccess"></label>
 		</td>
 		<td ></td>

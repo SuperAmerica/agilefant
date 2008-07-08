@@ -226,10 +226,12 @@ function saveTheme() {
 	//var d = $("#businessThemeModalForm").serializeArray();
 	var d = {businessThemeId: id, "businessTheme.name": ename, "businessTheme.description": edesc};
 	if (name.length > 20) {
+		$("#businessThemeSaveSuccess").text("");
 		$("#businessThemeError").text("Error: theme name may not be longer than 20 characters.");
 		return;
 	}
 	if (trimmed.length == 0) {
+		$("#businessThemeSaveSuccess").text("");
 		$("#businessThemeError").text("Error: theme name empty.");
 		return;
 	}
@@ -247,6 +249,7 @@ function saveTheme() {
 				$("#businessThemeSaveSuccess").text("Theme was successfully created.");
 			}
 	}, error: function() {
+		$("#businessThemeSaveSuccess").text("");
 		$("#businessThemeError").text("Error: unable to save theme.");
 	}, beforeSend: function(request) {
 		request.overrideMimeType("application/x-www-form-urlencoded; charset=ISO-8859-1");

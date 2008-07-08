@@ -3,6 +3,8 @@ package fi.hut.soberit.agilefant.web;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.springframework.dao.DataIntegrityViolationException;
+
 import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
 
@@ -51,13 +53,21 @@ public class BusinessThemeAction extends ActionSupport implements CRUDAction {
         }
         BusinessTheme fillable = new BusinessTheme();
         this.fillObject(fillable);
+        
+        if (super.hasActionErrors()) {
+            return Action.ERROR;
+        }
+        
         try {
             businessThemeBusiness.store(businessThemeId, fillable);
         } catch(ObjectNotFoundException e) {
             super.addActionError(super.getText("businessTheme.notFound"));
             return Action.ERROR;
+        } catch (DataIntegrityViolationException nve) {
+            super.addActionError(super.getText("businessTheme.duplicateName"));
+            return Action.ERROR;
         } catch(Exception e) {
-            super.addActionError(super.getText(e.getMessage()));
+            super.addActionError(super.getText("An error occurred."));
             return Action.ERROR;
         }
         
@@ -70,11 +80,16 @@ public class BusinessThemeAction extends ActionSupport implements CRUDAction {
             return CRUDAction.AJAX_ERROR;
         }
         BusinessTheme fillable = new BusinessTheme();
-        this.fillObject(fillable);
+                       
         try {
-            fillable.setName(java.net.URLDecoder.decode(fillable.getName(), "ISO-8859-1"));
-            fillable.setDescription(java.net.URLDecoder.decode(fillable.getDescription(), "ISO-8859-1"));
+            businessTheme.setName(java.net.URLDecoder.decode(businessTheme.getName(), "ISO-8859-1"));
+            businessTheme.setDescription(java.net.URLDecoder.decode(businessTheme.getDescription(), "ISO-8859-1"));
         } catch(Exception e) {}
+        this.fillObject(fillable);
+        
+        if (super.hasActionErrors()) {
+            return CRUDAction.AJAX_ERROR;
+        } 
         try {
             BusinessTheme theme = businessThemeBusiness.store(businessThemeId, fillable);
             businessThemeId = theme.getId();
@@ -100,7 +115,7 @@ public class BusinessThemeAction extends ActionSupport implements CRUDAction {
                 businessTheme.getName().trim().equals("")) {
             super.addActionError(super.getText("businessTheme.nameEmpty"));
             return;
-        } else if (businessTheme.getName().length() > 20) {
+        } else if (businessTheme.getName().trim().length() > 20) {
             super.addActionError(super.getText("businessTheme.nameTooLong"));
             return;
         }

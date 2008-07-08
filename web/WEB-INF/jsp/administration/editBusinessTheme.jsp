@@ -18,12 +18,12 @@
 		<tr>
 			<td>Name</td>
 			<td>*</td>
-			<td colspan="2"><ww:textfield size="60" name="businessTheme.name" /></td>
+			<td colspan="2"><ww:textfield size="20" name="businessTheme.name" /></td>
 		</tr>
 		<tr>
 			<td>Description</td>
 			<td></td>
-			<td colspan="2"><ww:textarea cols="70" rows="10"
+			<td colspan="2"><ww:textarea cols="50" rows="7"
 				name="businessTheme.description"/></td>
 		</tr>
 		<tr>

@@ -12,9 +12,6 @@
 </div>
 <div style="padding: 12px;">
 <div style="color: red;" id="businessThemeError"></div>
-<%--
-<ww:form id="businessThemeModalForm" action="storeBacklogItemBusinessThemes" onsubmit="saveTheme(); return false;">
---%>
 <ww:form id="businessThemeModalForm" action="storeBacklogItemBusinessThemes">
 	<ww:hidden name="backlogItemId" />
 	
@@ -50,7 +47,7 @@
 	<tr>
 		<td>Name</td>
 		<td></td>
-		<td colspan="2"><ww:textfield name="businessTheme.name" size="10" id="nameField"/></td>
+		<td colspan="2"><ww:textfield name="businessTheme.name" size="20" id="nameField"/></td>
 	</tr>
 	<tr>
 		<td>Description</td>

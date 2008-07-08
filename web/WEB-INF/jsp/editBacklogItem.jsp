@@ -306,6 +306,9 @@
 			<!-- Position modal window at original estimate box level.  -->
 			<ww:a href="#" id="addThemeLink" onclick="openThemeBusinessBliModal('resetLink', 'editBacklogItemBusinessThemes.action',${backlogItemId},0); return false;">
 				<img src="static/img/add_theme.png" alt="Edit themes" title="Edit themes" />
+				<c:if test="${empty backlogItem.businessThemes}">
+					none
+				</c:if>
 			</ww:a>			
 			<c:if test="${!empty backlogItem.businessThemes}">				
 			<c:forEach items="${backlogItem.businessThemes}" var="businessTheme">

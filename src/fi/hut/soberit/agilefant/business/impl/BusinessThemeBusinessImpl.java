@@ -47,7 +47,7 @@ public class BusinessThemeBusinessImpl implements BusinessThemeBusiness {
      * {@inheritDoc}
      */
     public BusinessTheme store(int businessThemeId, BusinessTheme theme)
-            throws ObjectNotFoundException, Exception {
+            throws ObjectNotFoundException, DataIntegrityViolationException, Exception {
         BusinessTheme persistable = null;
 
         if (businessThemeId > 0) {
@@ -69,7 +69,9 @@ public class BusinessThemeBusinessImpl implements BusinessThemeBusiness {
                 persistable = businessThemeDAO.get(newId);
             }
         } catch (DataIntegrityViolationException dve) {
-            throw new Exception("businessTheme.duplicateName");            
+            throw new DataIntegrityViolationException("businessTheme.duplicateName");            
+        } catch (Exception e) {
+            throw new Exception();
         }
         
         return persistable;

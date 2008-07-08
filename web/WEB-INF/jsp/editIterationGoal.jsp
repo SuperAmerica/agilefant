@@ -40,7 +40,7 @@
 	</c:otherwise>
 </c:choose>
 
-<ww:form action="store${new}IterationGoal">
+<ww:form action="store${new}IterationGoal"  method="post">
 	<ww:hidden name="iterationGoalId" value="${iterationGoal.id}" />
 	<table class="formTable">
 		<tr>

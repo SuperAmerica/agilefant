@@ -71,7 +71,6 @@ public class ChartBusinessImpl implements ChartBusiness {
     private HistoryBusiness historyBusiness;
    
     private Date expectedDate;
-
     
     /* Default chart size */
     private static final int DEFAULT_WIDTH = 780;
@@ -89,7 +88,7 @@ public class ChartBusinessImpl implements ChartBusiness {
     /* Series colors */
     private static Color BURNDOWN_COLOR = new Color(220, 100, 87);
     private static Color REFERENCE_COLOR = new Color(90, 145, 210);
-    private static Color EXPECTED_COLOR = new Color(247, 150, 70); //new Color(30, 180, 100);
+    private static Color EXPECTED_COLOR = new Color(0x7a, 0xb1, 0x6c); //7ab16c new Color(247, 150, 70);
 
     /**
      * Generates a byte array (a png image file) from a JFreeChart object
@@ -228,13 +227,14 @@ public class ChartBusinessImpl implements ChartBusiness {
         i.add(Calendar.DATE, -1);
         entry = history.getDateEntry(i.getTime());
         AFTime velocity = historyBusiness.calculateDailyVelocity(backlog.getId());
+        Date expectedDate = historyBusiness.calculateExpectedDate(backlog, entry.getEffortLeft(), velocity);
+        
         i.add(Calendar.DATE, 1);
         entry = history.getDateEntry(i.getTime());
-        Date expectedDate = historyBusiness.calculateExpectedDate(backlog, entry.getOriginalEstimate(), velocity);
         if (expectedDate != null) {
             this.expectedDate = expectedDate;
             expectedSeries.add(new Day(i.getTime()), (float)(startPoint / 3600.0));
-            expectedSeries.addOrUpdate(new Day(expectedDate), 0);
+            expectedSeries.addOrUpdate(new Day(expectedDate).next(), 0);
         }
         
         // Add the series in correct order
@@ -247,6 +247,7 @@ public class ChartBusinessImpl implements ChartBusiness {
                 (new Date()).before(backlog.getEndDate())) {
             dataset.addSeries(expectedSeries);
         }
+        
         return dataset;
     }
 
@@ -293,14 +294,13 @@ public class ChartBusinessImpl implements ChartBusiness {
         }
         else {
             newEndDate.setTime(new java.sql.Date(this.expectedDate.getTime()));
-            newEndDate.add(Calendar.DATE, 1);
         }
 
         // Set the burndown to end at midnight
         newEndDate.set(GregorianCalendar.HOUR_OF_DAY, 0);
         newEndDate.set(GregorianCalendar.MINUTE, 0);
         newEndDate.set(GregorianCalendar.SECOND, 0);
-
+        
         newEndDate.add(GregorianCalendar.DATE, 1);
         
         axis.setMaximumDate(newEndDate.getTime());
@@ -339,8 +339,8 @@ public class ChartBusinessImpl implements ChartBusiness {
         
         // Set expected series properties
         rr.setSeriesPaint(EXPECTED_SERIES, EXPECTED_COLOR);
-        rr.setSeriesStroke(EXPECTED_SERIES, new BasicStroke(2.0f, BasicStroke.CAP_BUTT,
-                BasicStroke.JOIN_BEVEL, 0.0f, new float[] { 7.0f, 3.0f, 2.0f, 3.0f, 2.0f, 3.0f }, 10.0f));
+        rr.setSeriesStroke(EXPECTED_SERIES, new BasicStroke(2.0f));/*, BasicStroke.CAP_BUTT,
+                BasicStroke.JOIN_BEVEL, 0.0f, new float[] { 7.0f, 3.0f, 2.0f, 3.0f, 2.0f, 3.0f }, 10.0f));*/
         
         return chart;
     }

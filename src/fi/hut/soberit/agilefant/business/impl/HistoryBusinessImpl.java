@@ -23,7 +23,6 @@ public class HistoryBusinessImpl implements HistoryBusiness {
         Backlog backlog = backlogDAO.get(backlogId);
         BacklogHistory history = backlog.getBacklogHistory();
         
-        
         if( history == null ) {
             history = newBacklogHistory(backlog);
         }
@@ -71,6 +70,7 @@ public class HistoryBusinessImpl implements HistoryBusiness {
         
         entry.setEffortLeft( effortLeft );
         entry.setOriginalEstimate( originalEstimate );
+        
         // Today's entry always gets delta = 0.
         entry.setDeltaEffortLeft( new AFTime(0) );       
     }
@@ -194,12 +194,13 @@ public class HistoryBusinessImpl implements HistoryBusiness {
     }
     
     /** {@inheritDoc} */
-    public Date calculateExpectedDate(Backlog backlog, AFTime originalEstimate, AFTime velocity) {
+    public Date calculateExpectedDate(Backlog backlog, AFTime effortLeft, AFTime velocity) {
         GregorianCalendar expected = new GregorianCalendar();
-        expected.setTime(backlog.getStartDate());
+        expected.setTime(new Date());
         expected.set(Calendar.HOUR, 0);
         expected.set(Calendar.MINUTE, 0);
         expected.set(Calendar.SECOND, 0);
+        expected.set(Calendar.MILLISECOND, 0);
         
         /*
          * Expected date can't be calculated for a product.
@@ -211,17 +212,18 @@ public class HistoryBusinessImpl implements HistoryBusiness {
         }
         
         /* Calculate the date difference and round it */
-        int diff = Math.round(((float)originalEstimate.getTime() / (float)velocity.getTime()));
+        float diffF = (float)effortLeft.getTime() / (float)velocity.getTime();
+        int diff = (int)Math.round(diffF);
         
         /* Add the date difference to the start date and remove the current day */
-        expected.add(Calendar.DATE, (int)diff);
+        expected.add(Calendar.DATE, diff);
         expected.add(Calendar.DATE, -1);
-        
+                
         return expected.getTime();
     }
     
     public Integer calculateScheduleVariance(Backlog backlog,
-            AFTime originalEstimate, AFTime velocity) {
+            AFTime effortLeft, AFTime velocity) {
         /*
          * Expected date can't be calculated for a product.
          * Backlog will never finish if the velocity is negative.
@@ -230,20 +232,38 @@ public class HistoryBusinessImpl implements HistoryBusiness {
                 velocity.getTime() <= 0 ) {
             return null;
         }
-        Date expected = calculateExpectedDate(backlog, originalEstimate, velocity);
-        Date end = backlog.getEndDate();
+        Calendar expected = GregorianCalendar.getInstance();
+        expected.setTime(calculateExpectedDate(backlog, effortLeft, velocity));
+        expected.set(Calendar.HOUR, 0);
+        expected.set(Calendar.MINUTE, 0);
+        expected.set(Calendar.SECOND, 0);
+        expected.set(Calendar.MILLISECOND, 0);
         
-        /* From milliseconds to days */
-        long diffLong = expected.getTime() - end.getTime();
-        int diff = Math.round((float)((float)diffLong / (3600.0 * 24.0 * 1000.0)));
-       
-        return diff;
+        Calendar end = GregorianCalendar.getInstance();
+        end.setTime(backlog.getEndDate());
+        end.set(Calendar.HOUR, 0);
+        end.set(Calendar.MINUTE, 0);
+        end.set(Calendar.SECOND, 0);
+        end.set(Calendar.MILLISECOND, 0);
+        
+        if (end.before(expected)) {
+            expected.add(Calendar.MILLISECOND, 1);
+            int diff = calUtil.getLengthInDays(end.getTime(), expected.getTime()) - 1;
+            return diff;
+        }
+        else if (end.after(expected)) {
+            end.add(Calendar.MILLISECOND, 1);
+            int diff = calUtil.getLengthInDays(expected.getTime(), end.getTime()) - 1;
+            return -diff;
+        }
+        else {
+            return 0;
+        }
     }
     
     /** {@inheritDoc} */
     public AFTime calculateScopingNeeded(Backlog backlog, AFTime effortLeft,
             AFTime velocity) {
-        
         /*
          * Can't be calculated for a product.
          * If velocity is negative, return null.
@@ -252,11 +272,12 @@ public class HistoryBusinessImpl implements HistoryBusiness {
                 || velocity.getTime() <= 0) {
             return null;
         }
-        Date now = new Date();
+        Calendar now = GregorianCalendar.getInstance();
+        now.add(Calendar.DATE, -1);
         Date end = backlog.getEndDate();
         
         /* Calculate the expected amount of work that gets done */
-        int diff = calUtil.getLengthInDays(now, end);
+        int diff = calUtil.getLengthInDays(now.getTime(), end);
         long expectedWorkDone = diff * velocity.getTime();
         
         /* Substract expected amount of work from effort left */

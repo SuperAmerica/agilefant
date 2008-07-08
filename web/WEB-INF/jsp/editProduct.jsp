@@ -24,7 +24,7 @@
 		<h2>Create product</h2>
 		
 		<div id="editProductForm">
-		  <ww:form
+		  <ww:form method="post"
                             action="store${new}Product">
                             <ww:hidden name="productId" value="${product.id}" />
 
@@ -115,7 +115,7 @@
 						</div>
 						
 						<div id="editProductForm" style="display: none;"><ww:form
-							action="store${new}Product">
+							action="store${new}Product" method="post">
 							<ww:hidden name="productId" value="${product.id}" />
 
 							<table class="formTable">

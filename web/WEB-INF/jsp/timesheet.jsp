@@ -23,7 +23,7 @@
 						<div id="subItemHeader">				
 							<table cellpadding="0" cellspacing="0">
 								<tbody><tr>
-									<td class="header">Query</td>
+									<td class="header">Generate a report</td>
 								</tr>
 								</tbody>
 							</table>

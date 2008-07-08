@@ -350,16 +350,16 @@
 	</target>
 
 	<!-- Execute JMeter test plan -->
-	<target name="test-jmeter" depends="init" description="Execute the JMeter test plan, recording the results to a file.">
+	<!--<target name="test-jmeter" depends="init" description="Execute the JMeter test plan, recording the results to a file.">
 		<mkdir dir="${test.reports.jmeter}" />
 		<taskdef name="jmeter" classpath="${jmeter.install.dir}/extras/ant-jmeter.jar" classname="org.programmerplanet.ant.taskdefs.jmeter.JMeterTask" />
 		<jmeter jmeterhome="${jmeter.install.dir}" testplan="${jmeter.testplan}" resultlog="${jmeter.result.file}">
 			<property name="jmeter.save.saveservice.output_format" value="xml" />
 		</jmeter>
-	</target>
+	</target>-->
 
 	<!-- Produce jChav report from JMeter results -->
-	<target name="test-jchav" depends="init" description="Produce JChav report from the JMeter results">
+	<!--<target name="test-jchav" depends="init" description="Produce JChav report from the JMeter results">
 		<mkdir dir="${test.reports.jchav}" />
 		<taskdef name="jchav" classname="com.googlecode.jchav.ant.JChavTask">
 			<classpath>
@@ -369,7 +369,7 @@
 			</classpath>
 		</taskdef>
 		<jchav srcdir="${jmeter.result.dir}" destdir="${jchav.result.dir}" reporttitle="Agilefant Example walk" />
-	</target>
+	</target>-->
 
 	<target name="tomcat-start" description="Start Tomcat application">
 		<taskdef name="start" classname="org.apache.catalina.ant.StartTask">

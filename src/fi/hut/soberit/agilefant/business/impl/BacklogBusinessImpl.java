@@ -1,6 +1,7 @@
 package fi.hut.soberit.agilefant.business.impl;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -670,6 +671,9 @@ public class BacklogBusinessImpl implements BacklogBusiness {
         cal.add(GregorianCalendar.WEEK_OF_YEAR, weeksAhead);
         Date startDate = cal.getTime();
         
+        if (user == null) {
+            return backlogs;
+        }
         
         // Iterate through users assignments
         for (Assignment ass : user.getAssignments()) {
@@ -713,16 +717,24 @@ public class BacklogBusinessImpl implements BacklogBusiness {
         BacklogMetrics metrics = new BacklogMetrics();
         
         /* Get the history data */
+        Calendar cal = GregorianCalendar.getInstance();
+        cal.add(Calendar.DATE, -1);
         BacklogHistory history = backlog.getBacklogHistory();
-        HistoryEntry<BacklogHistory> latestEntry = history.getLatestEntry();
+        HistoryEntry<BacklogHistory> latestEntry = history.getDateEntry(cal.getTime());
         
         /* Calculate the values */
         metrics.setDailyVelocity(historyBusiness.calculateDailyVelocity(backlog
                 .getId()));
         metrics.setScheduleVariance(historyBusiness.calculateScheduleVariance(backlog,
-                latestEntry.getOriginalEstimate(), metrics.getDailyVelocity()));
+                latestEntry.getEffortLeft(), metrics.getDailyVelocity()));
         metrics.setScopingNeeded(historyBusiness.calculateScopingNeeded(backlog,
                 latestEntry.getEffortLeft(), metrics.getDailyVelocity()));
+        
+        /* Get the done and not done backlog items */
+        metrics.setTotalItems(new Integer(backlog.getBacklogItems().size()));
+        metrics.setCompletedItems(backlogDAO.getNumberOfDoneBacklogItems(backlog));
+        int percentDone = (int)Math.round(((double)metrics.getCompletedItems() / (double)metrics.getTotalItems()) * 100.0);
+        metrics.setPercentDone(percentDone);
         
         return metrics;
     }

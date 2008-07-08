@@ -64,7 +64,7 @@
 			<c:when test="${projectId == 0}">
 				<h2>Create project</h2>
 				<div id="editProjectForm">
-			        <ww:form action="store${new}Project">
+			        <ww:form action="store${new}Project" method="post">
             			<ww:hidden name="projectId" value="${project.id}" />
 			            <table class="formTable">
             			    <tr>
@@ -288,8 +288,54 @@
 	                                    					<a href="#bigChart">
 	                                    						<img src="drawSmallProjectChart.action?projectId=${project.id}"/>
 	                                    					</a>
-	                                					</c:if>
-	                                				</td>
+	                                					
+	                                					
+                    									<table>
+										                  <tr>
+											                 <td>Velocity</td>
+											                 <td><c:out value="${projectMetrics.dailyVelocity}" /> /
+											                 day</td>
+										                  </tr>
+										                  <tr>
+											                 <td>Schedule variance</td>
+											                 <td><c:choose>
+												                    <c:when test="${projectMetrics.scheduleVariance != null}">
+													                   <c:choose>
+                                                                       <c:when test="${projectMetrics.scheduleVariance > 0}">
+                                                                            <span class="red">+
+                                                                       </c:when>
+                                                                        <c:otherwise>
+                                                                            <span>
+                                                                        </c:otherwise>
+                                                                        </c:choose>
+													                   <c:out value="${projectMetrics.scheduleVariance}" /> days
+													                   </span>
+                                                                </c:when>
+												                    <c:otherwise>
+                                                                    unknown
+                                                                </c:otherwise>
+											                 </c:choose></td>
+										                  </tr>
+										                  <tr>
+											                 <td>Scoping needed</td>
+											                 <td><c:choose>
+												                    <c:when test="${projectMetrics.scopingNeeded != null}">
+													                   <c:out value="${projectMetrics.scopingNeeded}" />
+												                    </c:when>
+												                    <c:otherwise>
+                                                                    unknown
+                                                                </c:otherwise>
+											                 </c:choose></td>
+										                  </tr>
+										                  <tr>
+											                 <td>Completed</td>
+											                 <td><c:out value="${projectMetrics.percentDone}" />% (<c:out
+												                    value="${projectMetrics.completedItems}" /> / <c:out
+												                    value="${projectMetrics.totalItems}" />)</td>
+										                  </tr>
+									                   </table>
+									                   </c:if>
+									                </td>
 												</tr>
 												<tr>
 								    				<th class="info1">Default overhead</th>
@@ -338,7 +384,7 @@
 											</table>
 										</div>
 										<div id="editProjectForm" style="display: none;">
-											<ww:form action="store${new}Project">
+											<ww:form action="store${new}Project" method="post">
 												<ww:hidden name="projectId" value="${project.id}" />
 												<table class="formTable">
 													<tr>

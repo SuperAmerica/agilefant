@@ -30,7 +30,7 @@
 	<c:when test="${iterationId == 0}">
 		<h2>Create iteration</h2>
 		
-		<div id="editIterationForm"><ww:form
+		<div id="editIterationForm"><ww:form method="post"
                             action="store${new}Iteration">
                             <ww:hidden name="iterationId" value="${iteration.id}" />
                             <ww:date name="%{iteration.getTimeOfDayDate(6)}" id="start"
@@ -182,9 +182,14 @@
                                             <td>
                                             <c:choose>
                                             <c:when test="${iterationMetrics.scheduleVariance != null}">
-                                                <c:if test="${iterationMetrics.scheduleVariance > 0}">
-                                                 +
-                                                </c:if>
+                                                <c:choose>
+                                                <c:when test="${iterationMetrics.scheduleVariance > 0}">
+                                                 <span class="red">+
+                                                </c:when>
+                                                <c:otherwise>
+                                                <span>
+                                                </c:otherwise>
+                                                </c:choose>
                                                 <c:out value="${iterationMetrics.scheduleVariance}" /> days
                                             </c:when>
                                             <c:otherwise>
@@ -206,6 +211,14 @@
                                             </c:choose>
                                             </td>
                                         </tr>
+                                        <tr>
+                                            <td>Completed</td>
+                                            <td>
+                                            <c:out value="${iterationMetrics.percentDone}" />%
+                                            (<c:out value="${iterationMetrics.completedItems}" /> /
+                                            <c:out value="${iterationMetrics.totalItems}" />)
+                                            </td>
+                                        </tr>
 								    </table>
 									
 							     </td>
@@ -218,7 +231,7 @@
 
 						</table>
 						</div>
-						<div id="editIterationForm" style="display: none;"><ww:form
+						<div id="editIterationForm" style="display: none;"><ww:form  method="post"
 							action="store${new}Iteration">
 							<ww:hidden name="iterationId" value="${iteration.id}" />
 							<ww:date name="%{iteration.getTimeOfDayDate(6)}" id="start"

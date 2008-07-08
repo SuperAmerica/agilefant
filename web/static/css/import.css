@@ -317,7 +317,7 @@ span.right {
 
 #createNewMenu {
 	position: absolute;
-	border: 1px solid #ccc;
+	border: 1px solid #aaa;
 	top: 114px;
 	border-top: 0;
 	width: 160px;
@@ -325,19 +325,28 @@ span.right {
 
 #createNewMenu li {
 	height: 20px;
-	background-color: #fff;
+	background-color: #eee;
 }
 
 #createNewMenu li:hover {
-    background-color: #E8EBF0;
+    background-color: #ccc;
 }
 
-#createNewMenu a {
+#createNewMenu a, #createNewMenu span.inactive {
 	display: block;
     padding-left: 8px;
     width: 100%;
     height: 100%;
 }
+
+#createNewMenu li.separator, #createNewMenu li.separator:hover {
+	display: block;
+	background: #aaa;
+	width: 100%;
+	height: 1px;
+	padding: 0;
+}
+	
 
 /* Tabs menu */
 

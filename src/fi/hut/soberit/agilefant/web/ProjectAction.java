@@ -32,6 +32,7 @@ import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.ProjectType;
 import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.util.BacklogMetrics;
 import fi.hut.soberit.agilefant.util.EffortSumData;
 
 public class ProjectAction extends ActionSupport implements CRUDAction {
@@ -99,6 +100,9 @@ public class ProjectAction extends ActionSupport implements CRUDAction {
     
     private Map<String,Assignment> assignments = new HashMap<String, Assignment>();
     
+    private BacklogMetrics projectMetrics = new BacklogMetrics();
+    
+
     /**
      * @return the dateFormat
      */
@@ -179,6 +183,11 @@ public class ProjectAction extends ActionSupport implements CRUDAction {
         effLeftSums = new HashMap<Iteration, EffortSumData>();
         origEstSums = new HashMap<Iteration, EffortSumData>(); 
         defaultOverhead = project.getDefaultOverhead();
+        
+        // Get backlog metrics
+        if (project.getIterations().size() == 0) {  
+            projectMetrics = backlogBusiness.getBacklogMetrics(project);
+        }
         
         Collection<Iteration> iterations = project.getIterations();
         for (Iteration iter : iterations) {
@@ -461,7 +470,7 @@ public class ProjectAction extends ActionSupport implements CRUDAction {
         return origEstSum;
     }   
     
-	public Map<User, Integer> getUnassignedHasWork() {
+    public Map<User, Integer> getUnassignedHasWork() {
       	return unassignedHasWork;
     }
 	
@@ -519,5 +528,16 @@ public class ProjectAction extends ActionSupport implements CRUDAction {
 
     public void setHourEntryBusiness(HourEntryBusiness hourEntryBusiness) {
         this.hourEntryBusiness = hourEntryBusiness;
+    }
+
+    public BacklogMetrics getProjectMetrics() {
+        return projectMetrics;
+    }
+
+    public void setProjectMetrics(BacklogMetrics projectMetrics) {
+        this.projectMetrics = projectMetrics;
+    }
+    public AFTime getDefaultOverhead() {
+        return defaultOverhead;
     }
 }

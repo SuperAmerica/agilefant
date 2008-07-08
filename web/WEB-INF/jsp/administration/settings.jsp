@@ -4,8 +4,7 @@
 <aef:menu navi="administration" subnavi="settings" pageHierarchy="${pageHierarchy}" />
 <aef:existingObjects />
 
-<h2>Settings</h2>
-
+<h2>Timesheet settings</h2>
 
 <ww:form action="storeSettings.action">
 <%-- 
@@ -28,6 +27,8 @@
 </tr>
 </tbody>
 </table>
+
+<h2>Load meter settings</h2>
 
 <p>To restore default threshold, just leave the field empty.</p>
 

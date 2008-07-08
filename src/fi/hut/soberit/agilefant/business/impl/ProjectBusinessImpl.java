@@ -746,6 +746,9 @@ public class ProjectBusinessImpl implements ProjectBusiness {
      * @return
      */
     private boolean isAccommodableWorkload(int currentWeek, int targetWeek, AFTime totalWorkload, User user) {
+        if (user == null) {
+            return false;
+        }
         long totalInWeek = 5;
         int daysLeft = 5;
         if(currentWeek == targetWeek) {

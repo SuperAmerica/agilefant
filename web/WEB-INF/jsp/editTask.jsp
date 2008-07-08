@@ -31,7 +31,7 @@
 	</c:otherwise>
 </c:choose>
 
-<ww:form action="store${new}Task">
+<ww:form action="store${new}Task" method="post">
 
 	<ww:hidden name="backlogItemId" />
 	<ww:hidden name="taskId" value="${task.id}" />

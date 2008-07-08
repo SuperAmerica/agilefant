@@ -416,30 +416,102 @@ public class HistoryBusinessTest extends TestCase {
         /* The backlogs */
         Product prod = new Product();
         Project proj = new Project();
-        Iteration iter = new Iteration();
         
-        proj.setStartDate(new Date(98, 2, 1));
-        proj.setEndDate(new Date(98, 2, 28));
-        iter.setStartDate(new Date(98, 1, 1));
-        iter.setEndDate(new Date(98, 1, 8));
+        Calendar cal = GregorianCalendar.getInstance();
+        cal.add(Calendar.DATE, -7);
+        Date weekAgo = cal.getTime();
+        cal.add(Calendar.DATE, 14);
+        Date weekFromNow = cal.getTime();
+        
+        proj.setStartDate(weekAgo);
+        proj.setEndDate(weekFromNow);
+        
+        Calendar expected = GregorianCalendar.getInstance();
+        expected.set(Calendar.HOUR, 0);
+        expected.set(Calendar.MINUTE, 0);
+        expected.set(Calendar.SECOND, 0);
+        expected.set(Calendar.MILLISECOND, 0);
         
         /* Test the calculation */
         assertNull(hisBusiness.calculateExpectedDate(prod, new AFTime("150h"), new AFTime("5h")));
         
-        assertEquals(new Date(98, 2, 5), hisBusiness.calculateExpectedDate(proj, new AFTime("100h"), new AFTime("20h")));
-        assertEquals(new Date(98, 1, 1), hisBusiness.calculateExpectedDate(iter, new AFTime("5h"), new AFTime("5h")));
+        /* Should finish 4 days from now */
+        expected.add(Calendar.DATE, 4);
+        assertEquals(expected.getTime(), hisBusiness.calculateExpectedDate(proj, new AFTime("100h"), new AFTime("20h")));
+        assertEquals(expected.getTime(), hisBusiness.calculateExpectedDate(proj, new AFTime("105h"), new AFTime("20h")));
+        expected.add(Calendar.DATE, -4);
         
-        /* 75/4 = 18,75 ~ 19 days */
-        assertEquals(new Date(98, 1, 19), hisBusiness.calculateExpectedDate(iter, new AFTime("75"), new AFTime("4")));
+        /* Should finish today */
+        assertEquals(expected.getTime(), hisBusiness.calculateExpectedDate(proj, new AFTime("5h"), new AFTime("4h")));
+        assertEquals(expected.getTime(), hisBusiness.calculateExpectedDate(proj, new AFTime("5h"), new AFTime("5h")));
+        assertEquals(expected.getTime(), hisBusiness.calculateExpectedDate(proj, new AFTime("5h"), new AFTime("6h")));
         
         /* 106,75 / 7 = 15,25 ~ 15 days*/
-        assertEquals(new Date(98, 1, 15), hisBusiness.calculateExpectedDate(iter, new AFTime("106h 45min"), new AFTime("7h")));
+        expected.add(Calendar.DATE, 14);
+        assertEquals(expected.getTime(), hisBusiness.calculateExpectedDate(proj, new AFTime("106h 45min"), new AFTime("7h")));
+        expected.add(Calendar.DATE, -14);
         
-        Date expected = new Date(98, 2, 1);
-        expected.setDate(expected.getDate() + 122);
-        assertEquals(expected, hisBusiness.calculateExpectedDate(proj, new AFTime("246h"), new AFTime("2h")));
+        /* 75/4 = 18,75 ~ 19 days -> 18 days from now */
+        expected.add(Calendar.DATE, 18);
+        assertEquals(expected.getTime(), hisBusiness.calculateExpectedDate(proj, new AFTime("75"), new AFTime("4")));
+        expected.add(Calendar.DATE, -18);
         
-        assertNull(hisBusiness.calculateExpectedDate(iter, new AFTime("3h"), new AFTime("-3h", true)));
+        /* 122 days */
+        expected.add(Calendar.DATE, 122);
+        assertEquals(expected.getTime(), hisBusiness.calculateExpectedDate(proj, new AFTime("246h"), new AFTime("2h")));
+        expected.add(Calendar.DATE, -122);
+        
+        assertNull(hisBusiness.calculateExpectedDate(proj, new AFTime("3h"), new AFTime("-3h", true)));
+    }
+    
+    
+    public void testCalculateScheduleVariance() {
+        /* The backlogs */
+        Product prod = new Product();
+        Project proj = new Project();
+        Iteration iter = new Iteration();
+        
+        Calendar cal = GregorianCalendar.getInstance();
+        cal.add(Calendar.DATE, -7);
+        Date weekAgo = cal.getTime();
+        cal.add(Calendar.DATE, 9);
+        Date twoDaysFromNow = cal.getTime();
+        cal.add(Calendar.DATE, 5);
+        Date weekFromNow = cal.getTime();
+        
+        proj.setStartDate(weekAgo);
+        proj.setEndDate(weekFromNow);
+        
+        iter.setStartDate(weekAgo);
+        iter.setEndDate(twoDaysFromNow);
+        
+        /* 
+         * The tests
+         */
+        assertNull(hisBusiness.calculateScheduleVariance(prod, new AFTime("20h"), new AFTime("4h")));
+        
+        /* Next day */
+        assertEquals(new Integer(-7), hisBusiness.calculateScheduleVariance(
+                proj, new AFTime("5h"), new AFTime("4h")));
+        assertEquals(new Integer(-2), hisBusiness.calculateScheduleVariance(
+                iter, new AFTime("5h"), new AFTime("4h")));
+        
+        /* Week from now */
+        assertEquals(new Integer(-1), hisBusiness.calculateScheduleVariance(
+                proj, new AFTime("35h"), new AFTime("5h")));
+        
+        /* A day after what should be */
+        assertEquals(new Integer(1), hisBusiness.calculateScheduleVariance(
+                proj, new AFTime("45h"), new AFTime("5h")));
+        assertEquals(new Integer(1), hisBusiness.calculateScheduleVariance(
+                proj, new AFTime("47h"), new AFTime("5h")));
+        
+        /* A day after, complex hours */
+        assertEquals(new Integer(1), hisBusiness.calculateScheduleVariance(
+                iter, new AFTime("18h 30min"), new AFTime("5h 12min")));
+        assertEquals(new Integer(-1), hisBusiness.calculateScheduleVariance(
+                iter, new AFTime("12h"), new AFTime("5h 12min")));
+        
     }
     
     @SuppressWarnings("deprecation")
@@ -464,8 +536,8 @@ public class HistoryBusinessTest extends TestCase {
         assertNull(hisBusiness.calculateScopingNeeded(iter, new AFTime("10h"), new AFTime("-2h")));
         
         /* The real numbers */
-        assertEquals(new AFTime("2h"), hisBusiness.calculateScopingNeeded(iter, new AFTime("16h"), new AFTime("2h")));
-        assertEquals(new AFTime("1h 30min"), hisBusiness.calculateScopingNeeded(iter, new AFTime("71h 30min"), new AFTime("10h")));
+        assertEquals(new AFTime("2h"), hisBusiness.calculateScopingNeeded(iter, new AFTime("18h"), new AFTime("2h")));
+        assertEquals(new AFTime("1h 30min"), hisBusiness.calculateScopingNeeded(iter, new AFTime("81h 30min"), new AFTime("10h")));
         
         assertEquals(new AFTime(0), hisBusiness.calculateScopingNeeded(iter, new AFTime("10h"), new AFTime("3h")));
     }

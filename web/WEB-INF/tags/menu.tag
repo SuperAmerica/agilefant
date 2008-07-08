@@ -163,70 +163,79 @@ $(document).ready(function() {
         includeParams="none" /> <ww:a href="%{createLink}">Product &raquo;</ww:a>
     </li>
 
+    <li>
     <c:choose>
         <c:when test="${hasProducts && hasProjectTypes}">
-            <li><ww:url id="createLink" action="createProject"
+            <ww:url id="createLink" action="createProject"
                 includeParams="none" /> <ww:a href="%{createLink}">Project &raquo;</ww:a>
-            </li>
         </c:when>
         <c:otherwise>
-            <li class="inactive"><span
+            <span class="inactive"
                 title="Create a product and a project type before creating a project">
-            Project &raquo;</span></li>
+            Project &raquo;</span>
         </c:otherwise>
     </c:choose>
-
+    </li>
+    
+    <li>
     <c:choose>
         <c:when test="${hasProjects}">
-            <li><ww:url id="createLink" action="createIteration"
+            <ww:url id="createLink" action="createIteration"
                 includeParams="none" /> <ww:a href="%{createLink}">Iteration &raquo;</ww:a>
-            </li>
         </c:when>
         <c:otherwise>
-            <li class="inactive"><span
-                title="Create a project before creating an iteration"> Iteration &raquo;</span></li>
+            <span class="inactive"
+                title="Create a project before creating an iteration"> Iteration &raquo;</span>
         </c:otherwise>
     </c:choose>
-
+    </li>
+    
+    <li>
     <c:choose>
         <c:when test="${hasIterations}">
-            <li><ww:url id="createLink" action="createIterationGoal"
-                includeParams="none" /> <ww:a href="%{createLink}?contextViewName=createNew&resetContextView=true">Iteration goal &raquo;</ww:a>
-            </li>
-        </c:when>
+		   <ww:url id="createLink" action="createIterationGoal"
+                includeParams="none" />
+		   <ww:a href="%{createLink}">Iteration goal &raquo;</ww:a>
+	    </c:when>
         <c:otherwise>
-            <li class="inactive"><span
+            <span class="inactive"
                 title="Create an iteration before creating an iteration goal">
-            Iteration goal &raquo;</span></li>
+            Iteration goal &raquo;</span>
         </c:otherwise>
     </c:choose>
+    </li>
 
+    <li>
     <c:choose>
         <c:when test="${hasProducts}">
-            <li><ww:url id="createLink" action="createBacklogItem"
-                includeParams="none" /> <ww:a href="%{createLink}?contextViewName=createNew&resetContextView=true">Backlog item &raquo;</ww:a>
-            </li>
+            <ww:url id="createLink" action="createBacklogItem"
+                includeParams="none" />
+            <ww:a href="%{createLink}">Backlog item &raquo;</ww:a>
         </c:when>
         <c:otherwise>
-            <li class="inactive"><span
+            <span class="inactive"
                 title="Create a product before creating a backlog item">
-            Backlog item &raquo;</span></li>
+            Backlog item &raquo;</span>
         </c:otherwise>
     </c:choose>
+    </li>
+    
+    <li class="separator" />
 
-    <li><ww:url id="createLink" action="createUser"
-        includeParams="none" /> <ww:a href="%{createLink}">User &raquo;</ww:a>
+    <li><ww:url id="createLink" action="createProjectType"
+        includeParams="none" /> <ww:a href="%{createLink}">Project type &raquo;</ww:a>
     </li>
     
     <li><ww:url id="createLink" action="createTeam"
         includeParams="none" /> <ww:a href="%{createLink}">Team &raquo;</ww:a>
     </li>
-
-    <li><ww:url id="createLink" action="createProjectType"
-        includeParams="none" /> <ww:a href="%{createLink}">Project type &raquo;</ww:a>
-    </li>
+    
     <li><ww:url id="createLink" action="createBusinessTheme"
         includeParams="none" /> <ww:a href="%{createLink}">Theme &raquo;</ww:a>
+    </li>
+    
+    <li><ww:url id="createLink" action="createUser"
+        includeParams="none" /> <ww:a href="%{createLink}">User &raquo;</ww:a>
     </li>
 </ul>
 

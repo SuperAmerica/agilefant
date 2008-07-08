@@ -34,7 +34,7 @@
 	</c:otherwise>
 </c:choose>
 
-<ww:form action="store${new}BacklogItem">
+<ww:form action="store${new}BacklogItem" method="post">
 	<ww:hidden name="backlogItemId" value="${backlogItem.id}" />	
 	<ww:hidden name="effortLeft" value="${backlogItem.effortLeft}" />
 	<ww:hidden name="_charset_" value="iso-8859-1" />	

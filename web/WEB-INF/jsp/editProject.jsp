@@ -217,7 +217,7 @@
 			                <tr>
                     			<td>Description</td>
                     			<td></td>
-                    			<td colspan="2"><ww:textarea cols="70" rows="10" cssClass="useWysiwyg" 
+                    			<td colspan="2">&nbsp;<ww:textarea cols="70" rows="10" cssClass="useWysiwyg" 
                         			name="project.description" /></td>
                 			</tr>
 			                <tr>

@@ -810,6 +810,7 @@ td.icons a img {
 .infoTable .info1 {
 	width: 120px;
 	padding: 3px 8px;
+	height: 100%;
 }
 
 .infoTable .info2 {

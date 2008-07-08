@@ -535,8 +535,8 @@ public class HistoryBusinessTest extends TestCase {
         assertNull(hisBusiness.calculateScopingNeeded(iter, new AFTime("10h"), new AFTime("-2h")));
         
         /* The real numbers */
-        assertEquals(new AFTime("2h"), hisBusiness.calculateScopingNeeded(iter, new AFTime("18h"), new AFTime("2h")));
-        assertEquals(new AFTime("1h 30min"), hisBusiness.calculateScopingNeeded(iter, new AFTime("81h 30min"), new AFTime("10h")));
+        assertEquals(new AFTime("4h"), hisBusiness.calculateScopingNeeded(iter, new AFTime("18h"), new AFTime("2h")));
+        assertEquals(new AFTime("11h 30min"), hisBusiness.calculateScopingNeeded(iter, new AFTime("81h 30min"), new AFTime("10h")));
         
         assertEquals(new AFTime(0), hisBusiness.calculateScopingNeeded(iter, new AFTime("10h"), new AFTime("3h")));
     }

@@ -263,7 +263,6 @@ public class HistoryBusinessImpl implements HistoryBusiness {
             return null;
         }
         Calendar now = GregorianCalendar.getInstance();
-        now.add(Calendar.DATE, -1);
         Date end = backlog.getEndDate();
         
         /* Calculate the expected amount of work that gets done */

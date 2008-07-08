@@ -803,7 +803,6 @@ td.icons a img {
 	font-weight: bold;
 	text-decoration: none;
 	font: "Arial", sans-serif;
-	font-size: 10pt;
 	color: #222;
 }
 
@@ -827,6 +826,18 @@ td.icons a img {
 	width: 200px;
 	border-left: 1px solid #ccc;
 	padding: 3px 4px;
+	font-size: 80%;
+}
+
+.infoTable .smallBurndown {
+	text-align: center;
+	width: 100%;
+	margin: 0;
+	padding: 0;
+}
+
+.infoTable .smallBurndown img {
+    display: inline;
 }
 
 .infoTable .description {

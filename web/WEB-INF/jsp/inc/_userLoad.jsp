@@ -141,7 +141,7 @@ function show_small_loadtable() {
 </div>
 </td>
 <td class="info4" rowspan="2"> 
-<img src="drawLoadMeter.action?userId=${user.id}" />
+<div class="smallBurndown"><img src="drawLoadMeter.action?userId=${user.id}" /></div>
 
 </td>
 </tr>
@@ -233,7 +233,7 @@ function show_small_loadtable() {
 </div>
 </td>
 <td class="info4" rowspan="2"> 
-<img src="drawLoadMeter.action?userId=${user.id}" />
+<div class="smallBurndown"><img src="drawLoadMeter.action?userId=${user.id}" /></div>
 </td>
 
 </tr>

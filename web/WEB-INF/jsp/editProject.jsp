@@ -285,19 +285,19 @@
 													<td class="info3" ondblclick="return editProject();"><c:out value="${project.projectType.name}" /></td>
 													<td class="info4" rowspan="5">
 	                                					<c:if test="${(!empty project.backlogItems) && (empty project.iterations)}">
-	                                    					<a href="#bigChart">
+	                                    					<div class="smallBurndown"><a href="#bigChart">
 	                                    						<img src="drawSmallProjectChart.action?projectId=${project.id}"/>
-	                                    					</a>
+	                                    					</a></div>
 	                                					
 	                                					
                     									<table>
 										                  <tr>
-											                 <td>Velocity</td>
+											                 <th>Velocity</th>
 											                 <td><c:out value="${projectMetrics.dailyVelocity}" /> /
 											                 day</td>
 										                  </tr>
 										                  <tr>
-											                 <td>Schedule variance</td>
+											                 <th>Schedule variance</th>
 											                 <td><c:choose>
 												                    <c:when test="${projectMetrics.scheduleVariance != null}">
 													                   <c:choose>
@@ -317,7 +317,7 @@
 											                 </c:choose></td>
 										                  </tr>
 										                  <tr>
-											                 <td>Scoping needed</td>
+											                 <th>Scoping needed</th>
 											                 <td><c:choose>
 												                    <c:when test="${projectMetrics.scopingNeeded != null}">
 													                   <c:out value="${projectMetrics.scopingNeeded}" />
@@ -328,7 +328,7 @@
 											                 </c:choose></td>
 										                  </tr>
 										                  <tr>
-											                 <td>Completed</td>
+											                 <th>Completed</th>
 											                 <td><c:out value="${projectMetrics.percentDone}" />% (<c:out
 												                    value="${projectMetrics.completedItems}" /> / <c:out
 												                    value="${projectMetrics.totalItems}" />)</td>

@@ -434,6 +434,9 @@ public class HistoryBusinessTest extends TestCase {
         /* Test the calculation */
         assertNull(hisBusiness.calculateExpectedDate(prod, new AFTime("150h"), new AFTime("5h")));
         
+        /* Should finish today */
+        assertEquals(expected.getTime(), hisBusiness.calculateExpectedDate(proj, new AFTime("1min"), new AFTime("20h")));        
+        
         /* Should finish 4 days from now */
         expected.add(Calendar.DATE, 4);
         assertEquals(expected.getTime(), hisBusiness.calculateExpectedDate(proj, new AFTime("100h"), new AFTime("20h")));
@@ -494,6 +497,8 @@ public class HistoryBusinessTest extends TestCase {
                 proj, new AFTime("5h"), new AFTime("4h")));
         assertEquals(new Integer(-2), hisBusiness.calculateScheduleVariance(
                 iter, new AFTime("5h"), new AFTime("4h")));
+        assertEquals(new Integer(-2), hisBusiness.calculateScheduleVariance(
+                iter, new AFTime("1min"), new AFTime("4h")));
         
         /* Week from now */
         assertEquals(new Integer(-1), hisBusiness.calculateScheduleVariance(

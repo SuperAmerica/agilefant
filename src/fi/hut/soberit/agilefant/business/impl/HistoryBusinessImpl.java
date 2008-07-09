@@ -216,6 +216,11 @@ public class HistoryBusinessImpl implements HistoryBusiness {
         /* Add the date difference to the start date and remove the current day */
         expected.add(Calendar.DATE, diff);
         expected.add(Calendar.DATE, -1);
+        
+        if (expected.getTime().before(new Date())) {
+            expected.setTime(new Date());
+            CalendarUtils.setHoursMinutesAndSeconds(expected, 0, 0, 0);
+        }
                 
         return expected.getTime();
     }
@@ -232,11 +237,11 @@ public class HistoryBusinessImpl implements HistoryBusiness {
         }
         Calendar expected = GregorianCalendar.getInstance();
         expected.setTime(calculateExpectedDate(backlog, effortLeft, velocity));
-        CalendarUtils.setHoursMinutesAndSeconds(expected, 0, 0, 0);
+        // CalendarUtils.setHoursMinutesAndSeconds(expected, 0, 0, 0);
         
         Calendar end = GregorianCalendar.getInstance();
         end.setTime(backlog.getEndDate());
-        CalendarUtils.setHoursMinutesAndSeconds(end, 0, 0, 0);
+        // CalendarUtils.setHoursMinutesAndSeconds(end, 0, 0, 0);
         
         int diff = calUtil.getLengthInDays(end.getTime(), expected.getTime()) - 1;
         

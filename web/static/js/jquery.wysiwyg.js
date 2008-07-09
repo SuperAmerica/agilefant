@@ -590,6 +590,7 @@
             ).mousedown(function() {
                 if ( fn ) fn.apply(self); else self.editorDoc.execCommand(cmd, false, args);
                 if ( self.options.autoSave ) self.saveContent();
+                return false;
             }).appendTo( this.panel );
         },
 

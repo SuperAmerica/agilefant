@@ -212,7 +212,7 @@ function renderThemeList() {
 			.appendTo(li)
 			.click(function() { selectEditTheme(this.name); return false;});
 		$('<img name="'+selectedThemes[i]+'" title="Remove" alt="Remove" src="static/img/delete_18.png"/>')
-			.appendTo(li)
+			.css("cursor","pointer").appendTo(li)
 			.click(function() { removeThemeFromItem(this.name); return false;});
 	}
 }

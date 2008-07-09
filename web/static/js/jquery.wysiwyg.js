@@ -485,6 +485,7 @@
             
             //disable tabulator in editor, act as it was a normal text field
             var oldContext = this;
+            var shiftDown = false;
             $(this.editorDoc).keydown(function( event )
             {
                 if ( event.keyCode == 9 )
@@ -492,12 +493,41 @@
                 	var forms = $(oldContext.original).parents("form");
                 	if(forms.length == 0) return false;
                 	var setFocus = false;
-                	jQuery.each(forms.get(0).elements, function() {
-                		if(setFocus == true && $(this).is(":visible") && $(this).is(":enabled")) { $(this).focus(); return false; }
-                		else if(this == oldContext.original) setFocus = true;
-                	});
+                	var elements =  forms.get(0).elements;
+                	if(oldContext.shiftDown == true) {
+                		for(var i = (elements.length - 1); i >= 0; i--) {
+                			var curEl = elements[i];
+                			var cur = $(curEl);
+                			if(setFocus == true && cur.is(":visible") && cur.is(":enabled") && cur.parents(":hidden").length == 0) { cur.focus(); return false; }
+                			else if(curEl == oldContext.original) setFocus = true;
+                		}
+                	} else {
+                		for(var i = 0; i < elements.length; i++) {
+                			var curEl = elements[i];
+                			var cur = $(curEl);
+                			if(setFocus == true && cur.is(":visible") && cur.is(":enabled") && cur.parents(":hidden").length == 0) { cur.focus(); return false; }
+                			else if(curEl == oldContext.original) setFocus = true;
+                		}
+                	}
     				return false;
+                } else if( event.keyCode == 16) {
+                	oldContext.shiftDown = true;
                 }
+             });
+            $(this.editorDoc).keyup(function( event) {
+            	if(event.keyCode == 16) {
+            		oldContext.shiftDown = false;
+            	}
+            });             
+            $(window).keydown(function ( event ) {
+            	if( event.keyCode == 16) {
+                	oldContext.shiftDown = true;
+                }
+            });
+            $(window).keyup(function( event) {
+            	if(event.keyCode == 16) {
+            		oldContext.shiftDown = false;
+            	}
             });
         },
 

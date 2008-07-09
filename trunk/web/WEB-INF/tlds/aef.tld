@@ -1,0 +1,567 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<taglib xmlns="http://java.sun.com/xml/ns/j2ee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd"
+	version="2.0">
+
+	<tlib-version>1.0</tlib-version>
+	<jsp-version>2.0</jsp-version>
+	<short-name>aef</short-name>
+	<display-name>AEF</display-name>
+	<description>AgilEFant 2007 tag library</description>
+
+	<tag>
+		<name>productList</name>
+		<tag-class>fi.hut.soberit.agilefant.web.tag.ProductListTag</tag-class>
+		<body-content>JSP</body-content>
+		<description>
+			Lists all products to variable productList
+	    </description>
+	</tag>
+	
+	<tag>
+		<name>existingObjects</name>
+		<tag-class>fi.hut.soberit.agilefant.web.tag.ExistingObjectsTag</tag-class>
+		<body-content>JSP</body-content>
+		<description>
+			Variables hasProducts, hasProjects, hasIterations and hasProjectTypes
+			implies weather objects exist
+	   </description>
+	</tag>
+	
+	<tag>
+		<name>userList</name>
+		<tag-class>fi.hut.soberit.agilefant.web.tag.UserListTag</tag-class>
+		<body-content>JSP</body-content>
+		<description>
+			Lists all users to variable userList
+	    </description>
+	</tag>
+	
+
+	<tag>
+		<name>teamList</name>
+		<tag-class>fi.hut.soberit.agilefant.web.tag.TeamListTag</tag-class>
+		<body-content>JSP</body-content>
+		<description>
+			Lists all teams to variable teamList
+	    </description>
+	</tag>
+	
+	<tag>
+        <name>enabledUserList</name>
+        <tag-class>fi.hut.soberit.agilefant.web.tag.EnabledUserListTag</tag-class>
+        <body-content>JSP</body-content>
+        <description>
+            Lists all enabled users to variable enabledUserList
+        </description>
+    </tag>
+	
+
+	
+	<tag>
+		<name>unfinishedTaskList</name>
+		<tag-class>fi.hut.soberit.agilefant.web.tag.UnfinishedTaskListTag</tag-class>
+		<body-content>JSP</body-content>
+		<description>
+			Lists all unfinished tasks for the given user to variable unfinishedTaskList
+	    </description>
+	    <attribute>
+	    	<name>userId</name>
+	    	<required>true</required>	  
+	    	<rtexprvalue>true</rtexprvalue>  
+	    </attribute>	    
+	</tag>
+
+	<tag>
+		<name>heartbeatTimeBoxLists</name>
+		<tag-class>fi.hut.soberit.agilefant.web.tag.HeartbeatTimeBoxListsTag</tag-class>
+		<body-content>JSP</body-content>
+		<description>
+			Lists unfinished tasks for the given user to variable unfinishedTaskList, 
+			as well as user's backlog items to variable backlogItemsList. 
+			All intersecting the given timeframe.
+			
+			Timeframe is specified using timeStart and timeEnd, but is by default the current day.
+	    </description>
+	    <attribute>
+	    	<name>userId</name>
+	    	<required>true</required>	  
+	    	<rtexprvalue>true</rtexprvalue>  
+	    </attribute>    
+	    <attribute>
+	    	<name>timeStart</name>
+	    	<required>false</required>	  
+	    	<rtexprvalue>true</rtexprvalue>  
+	    </attribute> 
+
+	    <attribute>
+	    	<name>timeEnd</name>
+	    	<required>false</required>	  
+	    	<rtexprvalue>true</rtexprvalue>  
+	    </attribute> 
+	</tag>
+	
+	<tag>
+		<name>priorityList</name>
+		<tag-class>fi.hut.soberit.agilefant.web.tag.PriorityListTag</tag-class>
+		<body-content>JSP</body-content>
+		<description>Lists all priorities</description>
+		<attribute>
+			<name>id</name>
+			<required>true</required>		
+		</attribute>
+	</tag>
+	
+	<tag>
+		<name>currentUser</name>
+		<tag-class>fi.hut.soberit.agilefant.web.tag.CurrentUserTag</tag-class>
+		<body-content>JSP</body-content>
+		<description>
+			Stores currently logged in user to variable currentUser
+	    </description>
+	</tag>
+	
+	
+	
+	<tag>
+		<name>allowedWorkTypes</name>
+		<tag-class>fi.hut.soberit.agilefant.web.tag.AllowedWorkTypesTag</tag-class>
+		<body-content>JSP</body-content>
+		<description>
+			Stores allowed work types to given attribute
+	    </description>
+	    <attribute>
+	    	<name>id</name>
+	    	<required>true</required>	    
+	    </attribute>
+	    <attribute>
+	    	<name>backlogItem</name>
+	    	<required>true</required>
+	    	<rtexprvalue>true</rtexprvalue>
+	    </attribute>
+	</tag>
+	
+	<tag>
+		<name>responsibleColumn</name>
+		<tag-class>fi.hut.soberit.agilefant.web.tag.ResponsibleColumnTag</tag-class>
+		<body-content>JSP</body-content>
+		<description>
+			Prints out a string of responsibles initials.
+		</description>
+		<attribute>
+			<name>backlogItemId</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+	
+	<tag>
+		<name>percentDone</name>
+		<tag-class>fi.hut.soberit.agilefant.web.tag.PercentDoneTag</tag-class>
+		<body-content>JSP</body-content>
+		<description>
+			Calculates bli's percent done tasks 
+	    </description>
+	    <attribute>
+	    	<name>backlogItemId</name>
+	    	<required>true</required>
+	    	<rtexprvalue>true</rtexprvalue>
+	    </attribute>
+	</tag>
+	
+	<tag>
+		<name>iterationGoalList</name>
+		<tag-class>fi.hut.soberit.agilefant.web.tag.IterationGoalListTag</tag-class>
+		<body-content>JSP</body-content>
+		<description>
+			Stores available iteration goals
+	    </description>
+	    <attribute>
+	    	<name>id</name>
+	    	<required>true</required>	    
+	    </attribute>
+	    <attribute>
+	    	<name>backlogId</name>
+	    	<required>true</required>
+	    	<rtexprvalue>true</rtexprvalue>
+	    </attribute>
+	</tag>
+	
+	<tag>
+		<name>iterationList</name>
+		<tag-class>fi.hut.soberit.agilefant.web.tag.IterationListTag</tag-class>
+		<body-content>JSP</body-content>
+		<description>
+			Stores available iterations
+	    </description>
+	    <attribute>
+	    	<name>id</name>
+	    	<required>true</required>	    
+	    </attribute>
+	</tag>
+	
+	
+	<tag>
+		<name>iterationList</name>
+		<tag-class>fi.hut.soberit.agilefant.web.tag.IterationListTag</tag-class>
+		<body-content>JSP</body-content>
+		<description>
+			Stores available iterations
+	    </description>
+	    <attribute>
+	    	<name>id</name>
+	    	<required>true</required>	    
+	    </attribute>
+	</tag>
+	
+	
+	<tag>
+		<name>stateList</name>
+		<tag-class>fi.hut.soberit.agilefant.web.tag.StateListTag</tag-class>
+		<body-content>JSP</body-content>
+		<description>
+			Stores tasks by state
+	    </description>
+	    <attribute>
+	    	<name>id</name>
+	    	<required>true</required>	    
+	    </attribute>
+	    <attribute>
+	    	<name>backlogItemId</name>
+	    	<required>true</required>
+	    	<rtexprvalue>true</rtexprvalue>
+	    </attribute>
+	</tag>
+	
+	
+	<tag>
+		<name>projectList</name>
+		<tag-class>fi.hut.soberit.agilefant.web.tag.ProjectListTag</tag-class>
+		<body-content>JSP</body-content>
+		<description>
+			Stores available projects
+	    </description>
+	    <attribute>
+	    	<name>id</name>
+	    	<required>true</required>	    
+	    </attribute>
+	</tag>
+	
+	<tag>
+		<name>bct</name>
+		<tag-class>fi.hut.soberit.agilefant.web.tag.BreadCrumbTrailTag</tag-class>
+		<body-content>JSP</body-content>
+		<description>
+			Builds page hierarchy for bread crumb trail links
+	    </description>
+        <attribute>
+            <name>backlogId</name>
+            <required>false</required>
+			<rtexprvalue>true</rtexprvalue>            
+        </attribute>
+        <attribute>
+            <name>backlogItemId</name>
+            <required>false</required>
+			<rtexprvalue>true</rtexprvalue>            
+        </attribute>	    
+        <attribute>
+            <name>projectId</name>
+            <required>false</required>
+			<rtexprvalue>true</rtexprvalue>            
+        </attribute>	    
+        <attribute>
+            <name>iterationId</name>
+            <required>false</required>
+						<rtexprvalue>true</rtexprvalue>            
+        </attribute>
+        
+        <attribute>
+        	<name>iterationGoalId</name>
+        	<required>false</required>
+        	<rtexprvalue>true</rtexprvalue>   
+        </attribute>
+        
+        <attribute>
+            <name>productId</name>
+            <required>false</required>
+			<rtexprvalue>true</rtexprvalue>            
+        </attribute>
+        <attribute>
+            <name>taskId</name>
+            <required>false</required>
+			<rtexprvalue>true</rtexprvalue>            
+        </attribute>	    
+        <attribute>
+            <name>userId</name>
+            <required>false</required>
+			<rtexprvalue>true</rtexprvalue>            
+        </attribute>	    
+        <attribute>
+            <name>portfolioId</name>
+            <required>false</required>
+			<rtexprvalue>true</rtexprvalue>            
+        </attribute>	    
+        <attribute>
+            <name>managementPageId</name>
+            <required>false</required>
+			<rtexprvalue>true</rtexprvalue>            
+        </attribute>	    
+	</tag>
+	
+	
+	<tag>
+		<name>hourReporting</name>
+		<tag-class>fi.hut.soberit.agilefant.web.tag.HourReportingTag</tag-class>
+		<body-content>JSP</body-content>
+		<description>
+			Get hour reporting setting
+	    </description>
+	    <attribute>
+	    	<name>id</name>
+	    	<required>true</required>	    
+	    </attribute>
+	</tag>
+	
+	<tag>
+		<name>hourEntries</name>
+		<tag-class>fi.hut.soberit.agilefant.web.tag.HourEntryTag</tag-class>
+		<body-content>JSP</body-content>
+		<description>
+			Get hour entries according to BLI
+	   </description>
+	    <attribute>
+	    	<name>id</name>
+	    	<required>true</required>	  
+	    </attribute>    
+	    <attribute>
+	    	<name>target</name>
+	    	<required>true</required>	    
+	    	<rtexprvalue>true</rtexprvalue> 
+	    </attribute>
+	</tag>
+
+	<tag>
+		<name>backlogHourEntrySums</name>
+		<tag-class>fi.hut.soberit.agilefant.web.tag.BacklogHourEntrySumsTag</tag-class>
+		<body-content>JSP</body-content>
+		<description>
+			Get hour entry sums by BLI for BL
+	   </description>
+	    <attribute>
+	    	<name>id</name>
+	    	<required>true</required>	  
+	    </attribute>  
+	    <attribute>
+	    	<name>groupBy</name>
+	    	<required>false</required>	  
+	    </attribute>  
+	    <attribute>
+	    	<name>target</name>
+	    	<required>true</required>	    
+	    	<rtexprvalue>true</rtexprvalue> 
+	    </attribute>
+	</tag>
+
+	<tag>
+		<name>userEffortSum</name>
+		<tag-class>fi.hut.soberit.agilefant.web.tag.UserEffortSumTag</tag-class>
+		<body-content>JSP</body-content>
+		<description>
+			Calculate the user's hour entry sums for Today/Yesterday/This week/This month.
+	   </description>
+	    <attribute>
+	    	<name>id</name>
+	    	<required>true</required>	  
+	    </attribute>    
+	    <attribute>
+	    	<name>user</name>
+	    	<required>true</required>	    
+	    	<rtexprvalue>true</rtexprvalue> 
+	    </attribute>
+	    <attribute>
+	    	<name>timeInterval</name>
+	    	<required>true</required>
+	    </attribute>
+	</tag>
+
+	<tag>
+		<name>backlogItem</name>
+		<tag-class>fi.hut.soberit.agilefant.web.tag.BacklogItemById</tag-class>
+		<body-content>JSP</body-content>
+		<description>
+			Get backlog item by id
+	    </description>
+	    <attribute>
+	    	<name>id</name>
+	    	<required>true</required>	  
+	    </attribute>  	    
+	     <attribute>
+	    	<name>backlogItemId</name>
+	    	<required>true</required>
+	    	<rtexprvalue>true</rtexprvalue> 
+	    </attribute>
+	</tag>
+	
+	<tag-file>
+		<name>backlogDropdown</name>
+		<path>/WEB-INF/tags/backlogDropdown.tag</path>
+	</tag-file>
+	
+	<tag-file>
+		<name>userJson</name>
+		<path>/WEB-INF/tags/userJson.tag</path>
+	</tag-file>
+
+	<tag-file>
+		<name>teamJson</name>
+		<path>/WEB-INF/tags/teamJson.tag</path>
+	</tag-file>
+
+	<tag-file>
+		<name>idJson</name>
+		<path>/WEB-INF/tags/idJson.tag</path>
+	</tag-file>
+
+	 <tag-file>
+	    <name>menu</name>
+	    <path>/WEB-INF/tags/menu.tag</path>
+ 	 </tag-file>
+
+	 <tag-file>
+	    <name>tasklist</name>
+	    <path>/WEB-INF/tags/tasklist.tag</path>
+ 	 </tag-file>
+ 	 
+	 <tag-file>
+	    <name>hiddenProjectList</name>
+	    <path>/WEB-INF/tags/hiddenProjectList.tag</path>
+ 	 </tag-file>
+
+	 <tag-file>
+	    <name>projectMenu</name>
+	    <path>/WEB-INF/tags/projectMenu.tag</path>
+ 	 </tag-file>
+ 	 <tag-file>
+	    <name>modalAjaxWindow</name>
+	    <path>/WEB-INF/tags/modalAjaxWindow.tag</path>
+ 	 </tag-file>
+ 	 <tag-file>
+	    <name>datepicker</name>
+	    <path>/WEB-INF/tags/datepicker.tag</path>
+ 	 </tag-file>
+	<tag-file>
+		<name>timesheetItem</name>
+		<path>/WEB-INF/tags/timesheetItem.tag</path>
+	</tag-file>
+
+	<function>
+	  <name>isProduct</name>
+	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
+	  <function-signature>boolean isProduct( java.lang.Object )</function-signature>
+	</function>  	 
+	<function>
+	  <name>isProject</name>
+	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
+	  <function-signature>boolean isProject( java.lang.Object )</function-signature>
+	</function>  	 
+	<function>
+	  <name>isIteration</name>
+	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
+	  <function-signature>boolean isIteration(java.lang.Object)</function-signature>
+	</function>
+		<function>
+	  <name>isIterationGoal</name>
+	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
+	  <function-signature>boolean isIterationGoal(java.lang.Object)</function-signature>
+	</function>  	 
+	<function>
+	  <name>isBacklogItem</name>
+	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
+	  <function-signature>boolean isBacklogItem(java.lang.Object)</function-signature>
+	</function>  	 
+	<function>
+	  <name>isTask</name>
+	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
+	  <function-signature>boolean isTask(java.lang.Object)</function-signature>
+	</function>  	 
+	<function>
+	  <name>isUser</name>
+	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
+	  <function-signature>boolean isUser(java.lang.Object)</function-signature>
+	</function>  	   	 
+	 	 
+	<function>
+	  <name>out</name>
+	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
+	  <function-signature>String out(java.lang.String)</function-signature>
+	</function>  	 
+	 	 
+	<function>
+	  <name>subString</name>
+	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
+	  <function-signature>String out(java.lang.String, int)</function-signature>
+	</function>  	 
+	 	 
+	<function>
+	  <name>nl2br</name>
+	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
+	  <function-signature>String nl2br(java.lang.String)</function-signature>
+	</function>  	 
+	
+	<function>
+	  <name>escapeHTML</name>
+	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
+	  <function-signature>String escapeHTML(java.lang.String)</function-signature>
+	</function>  
+	
+	<function>
+	  <name>html</name>
+	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
+	  <function-signature>String htmlOut(java.lang.String)</function-signature>
+	</function> 
+	 	 
+	<function>
+	  <name>htmlSubString</name>
+	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
+	  <function-signature>String htmlOut(java.lang.String, int)</function-signature>
+	</function>  	 
+	 
+	<function>
+	  <name>isBeforeThisDay</name>
+	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
+	  <function-signature>boolean isBeforeThisDay(java.util.Date)</function-signature>
+	</function>
+	
+	<function>
+	  <name>isUserAssignedTo</name>
+	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
+	  <function-signature>boolean isUserAssignedTo(fi.hut.soberit.agilefant.model.Backlog, fi.hut.soberit.agilefant.model.User)</function-signature>
+	</function>
+	
+	<function>
+	  <name>listContains</name>
+	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
+	  <function-signature>boolean listContains(java.util.Collection, java.lang.Object)</function-signature>
+	</function>
+	
+	<function>
+	  <name>listSubstract</name>
+	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
+	  <function-signature>java.util.Listsubstract substract(java.util.Collection, java.util.Collection)</function-signature>
+	</function> 	 
+	
+	<function>
+	  <name>calculateAFTimeSum</name>
+	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
+	  <function-signature>fi.hut.soberit.agilefant.model.AFTime calculateAFTimeSum(fi.hut.soberit.agilefant.model.AFTime, fi.hut.soberit.agilefant.model.AFTime)</function-signature>
+	</function>
+	
+	<function>
+	  <name>currentTime</name>
+	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
+	  <function-signature>String currentTime()</function-signature>
+	</function>
+	
+	
+</taglib>

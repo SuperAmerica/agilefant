@@ -1,0 +1,1084 @@
+/* Main stylesheet file for Agilefant*/
+@import "jquery.treeview.css";
+
+html {
+	margin: 0;
+	padding: 0;
+	background: #fff
+}
+
+body {
+	font-family: Arial, Helvetica, Sans-Serif;
+	background-color: #fff
+}
+
+#header h1 {
+	margin: 0px 0px 10px 0px;
+	padding: 20px 0px 0px 0px;
+	color: 333;
+	font: 30pt Lucida, sans-serif;
+	font-weight: bold;
+	font-style: italic;
+	text-align: left;
+}
+
+h2,h3 {
+	font-size: 1.2em;
+}
+
+code {
+	color: #66f;
+}
+
+img {
+	border: 0;
+}
+
+#sidebar img {
+	float: right;
+}
+
+ol {
+	margin: 0 0 0 32px;
+	padding: 0;
+}
+
+.hank {
+	cursor: default;
+	font-weight: bold;
+}
+
+.note {
+	font-size: .75em;
+}
+
+.thanks {
+	border-top: 1px dotted #999;
+	margin-top: 20px;
+}
+
+.notSoImportant {
+	font-style: italic;
+	color: #999;
+}
+
+a:link,a:visited {
+	color: #00f;
+	text-decoration: none;
+}
+
+a:hover,a:active {
+	color: #e50;
+}
+
+/* LAYOUT STUFF */
+#outer_wrapper {
+	min-width: 740px;
+	width: 100%;
+	background: #fff;
+}
+
+#wrapper {
+	background: #fff;
+}
+
+#header {
+	background: #fff;
+	width: 100%;
+	margin: 0 -2px;
+	min-height: 90px;
+}
+
+#layoutEmptyDiv {
+	margin: -1px 0 0 0;
+	height: 1px;
+	clear: both;
+}
+
+/* display:inline is in there to prevent an IE Bug (IE doubles margins on floats). */
+#container {
+	width: 100%;
+	float: left;
+	display: inline;
+	margin-left: -20px;
+}
+
+#left {
+	float: left;
+	width: 15px;
+	display: inline;
+	margin-left: 20px;
+}
+
+#bct {
+	margin: 5px 0 10px 0px;
+	width: auto;
+	color: #000;
+	font-weight: bold;
+}
+
+#bct a {
+	color: #00f;
+	text-decoration: none;
+	font-weight: normal;
+}
+
+#bct a:hover {
+	color: #e50;
+}
+
+#main {
+	padding: 5px;
+	margin: 0 0 0 200px;
+	width: auto;
+	border-left: 1px solid #ccc;
+}
+
+#sidebar {
+	padding-left: 100%;
+	margin-left: -20px;
+}
+
+/* this is to make sure IE6 (v6.0.29?) *shows* this element */
+#sidebar p {
+	position: relative;
+}
+
+/* Because of the 100% width declaration (needed for IE), the lateral margins need to go (or the box would be 2px too wide) */
+#footer {
+	width: 100%;
+	clear: both;
+	border-top: 1px solid #ccc;
+	background: #fff;
+}
+
+#footer a:link,#footer a:visited,#footer a:active {
+	color: #444;
+	text-decoration: none;
+}
+
+#footer a:hover {
+	color: #e50;
+}
+
+#topnavi {
+	background: #b0b0b0;
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	height: 30px;
+	width: 100%;
+}
+
+#subnavi {
+	border: 1px solid #bbb;
+	background: #fafafa;
+	width: 100%;
+	height: 30px;
+	margin: 0 -2px;
+	text-align: center;
+}
+
+#maintitle {
+	margin: 5px;
+	font-size: 1em;
+}
+
+#maintitle img {
+	float: left;
+	margin: 5px 20px;
+}
+
+#logout {
+	text-align: right;
+	font-size: 1em;
+	display: inline;
+	position: absolute;
+	top: 10px;
+	right: 15px;
+}
+
+#logout td {
+	padding-bottom: 10px;
+	vertical-align: middle;
+}
+
+#footerText {
+	padding: 10px 15px;
+}
+
+#subItems, div.subItems {
+	border: 1px solid #ccc;
+	margin-top: 20px;
+	width: 785px;
+}
+
+#subItemHeader, div.subItemHeader {
+	padding: 0;
+	background-color: #E8EBF0;
+	border-bottom: 1px solid #ccc;
+}
+
+#subItemContent {
+	padding: 0;
+	margin: 0;
+}
+
+#row,#row1,#row2,#row3,#item,#item1,#item2 {
+	vertical-align: top;
+	border-bottom: 1px solid #ccc;
+}
+
+#row td,#row1 td,#row2 td,#row3 td,#item td,#item1 td,#item2 td {
+	vertical-align: top;
+	text-align: left;
+}
+
+#row th,#row1 th,#row2 th,#row3 th,#item th,#item1 th,#item2 th {
+	text-align: left;
+	background: #ddd;
+}
+
+table#item, table#row {
+    margin: 5px;
+}
+
+.even {
+	background: #eee;
+}
+
+.odd {
+	background: #fdfdfd;
+}
+
+.formTable td {
+	vertical-align: top;
+}
+
+.chartTable {
+	height: 5px;
+	width: 100px;
+	padding: 0;
+	margin: 0;
+	font-size: 5px;
+}
+
+.notStarted {
+	background: #f00;
+}
+
+.started {
+	background: #f0f;
+}
+
+.implemented {
+	background: #00f;
+}
+
+.done {
+	background: #0a0;
+}
+
+.blocked {
+	background: #fa0;
+}
+
+.tasklist {
+	margin: 0;
+	padding: 0;
+	list-style-type: none;
+}
+
+.tasklistItem {
+	margin: 0 0 5px 0;
+}
+
+#placeholder {
+	display: inline;
+}
+
+span.right {
+	text-align: right;
+}
+
+
+
+/* Create new menu */
+
+#createNewMenuLink {
+	position: absolute;
+	top: 95px;
+	left: 5px;
+}
+
+#createNewMenuLink img {
+    vertical-align: bottom;	
+}
+
+#createNewMenu {
+	position: absolute;
+	border: 1px solid #aaa;
+	top: 114px;
+	border-top: 0;
+	width: 160px;
+}
+
+#createNewMenu li {
+	height: 20px;
+	background-color: #eee;
+}
+
+#createNewMenu li:hover {
+    background-color: #ccc;
+}
+
+#createNewMenu a, #createNewMenu span.inactive {
+	display: block;
+    padding-left: 8px;
+    width: 100%;
+    height: 100%;
+}
+
+#createNewMenu li.separator, #createNewMenu li.separator:hover {
+	display: block;
+	background: #aaa;
+	width: 100%;
+	height: 1px;
+	padding: 0;
+}
+	
+
+/* Tabs menu */
+
+#menu {
+    border-bottom: 1px solid #ccc;
+    margin: 0;
+    padding: 0 0 0 200px;
+    height: 18px;
+}
+
+#menu ul {
+	display: inline;
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+
+#menu li {
+	display: inline;
+	padding: 0;
+	margin: 0 0 0 8px;
+}
+
+#menu li a:link, #menu a:visited {
+    background: #E8EBF0;
+    color: #444;
+    padding: 3px 5px 2px 3px;
+    margin: 0 0 2px 0;
+    border: 1px solid #ccc;
+}
+
+#menu li img {
+    vertical-align: bottom;	
+}
+
+#menu li.selected a {
+    background-color: #fff;
+    border-bottom: 1px solid #fff;
+}
+
+#menu a:hover {
+    color: #e50;	
+}
+
+
+/*
+#menu {
+	border-bottom: 1px solid #ccc;
+	margin: 0;
+	padding-bottom: 19px;
+	padding-left: 210px;
+}
+
+#menu ul,#menu li {
+	display: inline;
+	list-style-type: none;
+	margin: 0 0 0 50px;
+	padding: 0;
+}
+
+#menu a:link,#menu a:visited {
+	background: #E8EBF0;
+	border: 1px solid #ccc;
+	color: #444;
+	float: left;
+	font-size: small;
+	font-weight: normal;
+	line-height: 14px;
+	margin-right: 10px;
+	padding: 1px 10px 1px 2px;
+	text-decoration: none;
+}
+
+#menu img{
+	margin: 0;
+	padding: 0;
+	vertical-align: bottom;
+	border: none;
+}
+
+#menu li#nava a,#menu li#navb a,#menu li#navd a,#menu li#navc a {
+	float: right;
+}
+
+#menu a:link .active,#menu a:visited .active {
+	background: #fff;
+	border-bottom: 1px solid #fff;
+	color: #000;
+}
+
+#menu a:hover {
+	color: #e50;
+}
+
+div#menuwrapmyTasks #menu li#nav1 a,div#menuwrapbacklog #menu li#nav2 a,div#menuwrapiteration #menu li#nav2 a,div#menuwrapproject #menu li#nav2 a,div#menuwrapproduct #menu li#nav2 a,div#menuwrapportfolio #menu li#nav3 a,div#menuwrapusers #menu li#navc a,div#menuwrapcreateNew #menu li#nava a,div#menuwraptimesheet #menu li#navd a,div#menuwrapsettings #menu li#navb a,div#menuwrap1 #menu li#nav1 a,div#menuwrap2 #menu li#nav2 a,div#menuwrap3 #menu li#nav3 a,div#menuwrap4 #menu li#nav4 a,div#menuwrap5 #menu li#nav5 a,div#menuwrap6 #menu li#nav6 a,div#menuwrap7 #menu li#nav7 a,div#menuwrap8 #menu li#nav8 a,div#menuwrap9 #menu li#nav9 a
+	{
+	background: #fff;
+	border-bottom: 1px solid #fff;
+	color: #000;
+}
+
+#menu #submenu1,#menu #submenu2,#menu #submenu3,#menu #submenu4,#menu #submenu5,#menu #submenu6,#menu #submenu7,#menu #submenu8,#menu #submenu8
+	{
+	display: none;
+	width: 90%;
+}
+
+div#menuwrap,div#submenuwrap {
+	
+}
+
+div#menuwrapmyTasks #menu ul#submenu1,div#menuwrapiteration #menu ul#submenu1,div#menuwrapproduct #menu ul#submenu1,div#menuwrapproject #menu ul#submenu1,div#menuwrapportfolio #menu ul#submenu1,div#menuwrap1 #menu ul#submenu1,div#menuwrap2 #menu ul#submenu2,div#menuwrap3 #menu ul#submenu3,div#menuwrap4 #menu ul#submenu4,div#menuwrap5 #menu ul#submenu5,div#menuwrap6 #menu ul#submenu6,div#menuwrap7 #menu ul#submenu7,div#menuwrap8 #menu ul#submenu8,div#menuwrap9 #menu ul#submenu9
+	{
+	display: inline;
+	left: 10px;
+	position: absolute;
+	top: 65px;
+}
+
+div#menuwrapmyTasks #menu ul#submenu1 a,div#menuwrapiteration #menu ul#submenu1 a,div#menuwrapproject #menu ul#submenu1 a,div#menuwrapproduct #menu ul#submenu1 a,div#menuwrapportfolio #menu ul#submenu1 a,div#menuwrap1 #menu ul#submenu1 a,div#menuwrap2 #menu ul#submenu2 a,div#menuwrap3 #menu ul#submenu3 a,div#menuwrap4 #menu ul#submenu4 a,div#menuwrap5 #menu ul#submenu5 a,div#menuwrap6 #menu ul#submenu6 a,div#menuwrap7 #menu ul#submenu7 a,div#menuwrap8 #menu ul#submenu8 a,div#menuwrap4 #menu ul#submenu9 a
+	{
+	background: #fff;
+	border: none;
+	border-left: 1px dotted #ccc;
+	color: #999;
+	font-size: smaller;
+	font-weight: bold;
+	line-height: 10px;
+	margin-right: 4px;
+	padding: 2px 10px 2px 10px;
+	text-decoration: none;
+}
+
+div#submenuwrapmyTasks #menu li#subnav1 a,div#submenuwrapiteration #menu li#subnav1 a,div#submenuwrapproject #menu li#subnav1 a,div#submenuwrapproduct #menu li#subnav1 a,div#submenuwrapportfolio #menu li#subnav1 a,div#submenuwrap1 #menu li#subnav1 a,div#submenuwrap2 #menu li#subnav2 a,div#submenuwrap3 #menu li#subnav3 a,div#submenuwrap4 #menu li#subnav4 a,div#submenuwrap5 #menu li#subnav5 a,div#submenuwrap6 #menu li#subnav6 a,div#submenuwrap7 #menu li#subnav7 a,div#submenuwrap8 #menu li#subnav8 a,div#submenuwrap9 #menu li#subnav9 a
+	{
+	color: #f00;
+}
+
+#menu ul a:hover {
+	color: #e50;
+	!
+	important;
+}
+
+*/
+
+/* Tabs style ends */
+
+.formTable textarea {
+	overflow: auto;
+	overflow-y: scroll;
+}
+
+.formTable select {
+	width: 500px;
+}
+
+.formTable div#assigneesLink {
+	width: 580px;
+}
+
+.formTable a.assignees span {
+   color: #ff0000;
+}
+
+.formTable a.assignees:hover span {
+   color: #e50;
+}
+
+.shortNameColumn div {
+	width: 170px;
+	overflow: visible;
+	/*max-height: 6em;*/
+}
+
+.taskColumn div {
+	width: 115px;
+	white-space: nowrap;
+	overflow: visible;
+}
+
+.iterationGoalColumn div {
+	overflow: hidden;
+	width: 90px;
+	max-height: 2.5em;
+}
+
+.contextColumn div {
+	white-space: nowrap;
+	overflow: hidden;
+	max-width: 400px;
+	max-height: 4em;
+}
+
+.responsibleColumn {
+	overflow: hidden;
+}
+.responsibleColumn div {
+	overflow: visible;
+	width: 90px;
+	max-height: 2.5em;
+}
+.responsibleColumn:hover {
+	overflow: visible;
+	height: 1px;
+}
+.responsibleColumn:hover div {
+	max-height: none;
+}
+
+.backlogItemList {
+	vertical-align: top;
+}
+
+.dailyWorkBacklogItems {
+	width: 100%;
+	margin: 0;
+	padding: 0;
+}
+
+.smallBurndownColumn {
+	vertical-align: top;
+	text-align: right;
+}
+
+
+
+
+/*
+.shortNameColumn{
+	display: block;
+	white-space: nowrap;
+	overflow: hidden;
+	width: 200px;	
+}
+.taskColumn{
+	display: block;
+	white-space: nowrap;
+	overflow: hidden;	
+	width: 150px;
+}
+.iterationGoalColumn{
+	display: block;
+	overflow: hidden;
+	width: 150px;	
+	height: 2.5em;
+}
+*/
+#hierarchyList {
+	padding: 20px 5px 5px 5px;
+	float: left;
+	width: 180px;
+	white-space: nowrap;
+	overflow: hidden;
+	/*	border: 1px solid #000;*/
+}
+
+#hierarchyList ul,#hierarchyList ul ul #hierarchyList ul ul ul {
+	padding: 0 0 0 0;
+	margin: 0 0 0 0;
+	list-style-type: none;
+}
+
+/*#hierarchyList li {
+	padding: 0 0 0 0;
+	margin: 0 0 5px 0;
+	list-style-type: none;
+}*/
+
+#hierarchyList .path,#hierarchyList .archivePath .path {
+	color: #e50;
+}
+
+#hierarchyList .selected,#hierarchyList .archivePath .selected {
+	color: #e50;
+	font-weight: bold;
+}
+
+.inactive {
+	color: #999;
+}
+
+td.deleteButton {
+	text-align: right;
+}
+
+.archive {
+	display: none;
+}
+
+#treemenu .upcoming a {
+	color: #3399ff;
+}
+
+#treemenu .past a {
+    color: #444;	
+}
+
+#hierarchyList span.archivePath {
+	color: #444;
+}
+
+.tasklistItem {
+	position: relative;
+}
+
+#deleteButtonRight {
+	text-align: right;
+}
+
+.backlogDropdownColumn select {
+	width: 700px;
+}
+
+
+/* Multiuser selection styles */
+#multiplebli_userselect ul, #userselect ul, .userSelector ul {
+	list-style-type: none;
+	margin-top: 3px;
+	margin-bottom: 3px;
+	padding-left: 0px;
+}
+#multiplebli_userselect .users_0, #userselect .users_0 {
+}
+#multiplebli_userselect .groups, #userselect .groups {
+}
+#multiplebli_userselect .groups li, #userselect .groups li, .userSelector .groups li {
+	cursor: pointer;
+	text-decoration: underline;
+	margin-top: 2px;
+	color: 0000FF;
+}
+
+#multiplebli_userselect .groups li:hover, #userselect .groups li:hover, .userSelector .groups li:hover {
+	cursor: pointer;
+	text-decoration: underline;
+	margin-top: 2px;
+	color: #EE5500;
+}
+
+#multiplebli_userselect div.left, #userselect div.left, .userSelector div.left{
+	float: left;
+}
+#multiplebli_userselect div.right, #userselect div.right, .userSelector div.right {
+	float: left;
+	margin-left: 15px;
+}
+
+.projectUsers {
+	float: left;
+}
+.projectTeams {
+	float: left;
+}
+.projectTeams label,.teamselect label {
+	font-weight: bold;
+	position: relative;
+	top: 3px;
+}
+.projectTeams li,.teamselect ul {
+	display: table;
+	list-style-type: none;
+	padding-left: 0px;
+}
+.projectTeams li,.teamselect li {
+	display: table-row, table-cell;
+	padding: 2px;
+	cursor: pointer;
+	text-decoration: underline;
+	color: #0000FF;
+}
+
+.projectTeams li:hover,.teamselect li:hover {
+	display: table-row, table-cell;
+	padding: 2px;
+	cursor: pointer;
+	text-decoration: underline;
+	color: #EE5500;
+}
+
+
+a.unassigned {
+	color: #ff0000;
+}
+a.unassigned:hover {
+	color: #e50;
+}
+
+.portfolioActionColumn {
+	white-space: nowrap;
+}
+
+.overhead {
+	white-space: nowrap;
+}
+
+
+h2 .timeframe {
+	font-variant: small-caps;
+	font-size: 80%;
+	color: #444;
+}
+
+h2 .editLink {
+	font-variant: small-caps;
+	font-size: 80%;
+	text-decoration: none;
+	border: none;
+}
+
+#subItemHeader table {
+	width: 100%;
+	font-family: "Arial", sans-serif;
+	margin: 0;
+	padding: 0 0 0 3px;
+}
+
+#subItemHeader table td {
+	/*color: #ffffff;*/
+	font-weight: normal;
+}
+
+#subItemHeader table .header {
+	height: 22px;
+}
+
+td.icons {
+    padding: 2px 5px 0 0;
+    text-align: right;
+}
+
+td.icons a img {
+    margin: 0;
+    padding: 0;
+}
+
+.descriptionDiv {
+	max-height: 12em;
+	overflow: hidden;
+}
+
+.infoTable {
+	width: 100%;
+}
+
+.infoTable td {
+	text-align: justify;
+	vertical-align: top;
+}
+
+.infoTable th {
+	text-align: left;
+	vertical-align: top;
+	font-weight: bold;
+	text-decoration: none;
+	font: "Arial", sans-serif;
+	color: #222;
+}
+
+.infoTable .info1 {
+	width: 120px;
+	padding: 3px 8px;
+	height: 100%;
+}
+
+.infoTable .info2 {
+	width: 90px;
+	padding: 2px;	
+}
+
+.infoTable .info3 {
+	width: auto;
+	padding: 3px 4px;
+}
+
+.infoTable .info4 {
+	width: 200px;
+	border-left: 1px solid #ccc;
+	padding: 3px 4px;
+	font-size: 80%;
+}
+
+.infoTable .smallBurndown {
+	text-align: center;
+	width: 100%;
+	margin: 0;
+	padding: 0;
+}
+
+.infoTable .smallBurndown img {
+    display: inline;
+}
+
+.infoTable .description {
+	padding: 6px 15px;
+	text-align: left;
+}
+
+.infoTable h3 {
+	font-family: "Arial", sans-serif;
+	font-size: 10pt;
+	font-weight: bold;
+	text-decoration: underline;
+	color: #000;
+}
+
+option.productOption {
+	padding-left: 5px;
+}
+
+option.projectOption {
+    padding-left: 15px;
+}
+
+option.iterationOption {
+    padding-left: 25px;
+}
+
+div.legend {
+	margin-bottom:2px;
+	margin-left:10px;
+	margin-right:0pt;
+	margin-top:0pt;
+}
+
+.actionColumn {
+    white-space: nowrap;
+}
+
+.iterationGoalNameColumn {
+    width: 200px;
+}
+
+/** AJAX MODALS **/
+.jqmWindow {
+    display: none;
+    
+    position: absolute;
+    top: 17%;
+    left: 50%;
+    
+    margin-left: -400px;
+    width: 700px;
+    
+    background-color: #FFF;
+    color: #333;
+    border: 1px solid black;
+ /*   padding: 12px;*/
+}
+
+.jqmOverlay { background-color: #ccc; }
+
+* iframe.jqm {position:absolute;top:0;left:0;z-index:-1;
+	width: expression(this.parentNode.offsetWidth+'px');
+	height: expression(this.parentNode.offsetHeight+'px');
+}
+
+* html .jqmWindow {
+     position: absolute;
+     top: expression((document.documentElement.scrollTop || document.body.scrollTop) + Math.round(17 * (document.documentElement.offsetHeight || document.body.clientHeight) / 100) + 'px');
+}
+
+div.calendar {
+	z-index: 3400;
+}
+
+div.disclaimer {
+    width: 300px;
+    font-size: 80%;
+    padding: 5px;
+    margin: 10px;
+    border: 1px solid #ccc;
+    color: #f00;
+}
+
+/* Styles for timesheet */
+table.reportTable {
+	width:100%;
+	padding:3px;
+}
+
+table.reportTable tr {
+	
+}
+
+table.reportTable tr th {
+	text-align:left;
+	background-color:#b2b2b2;
+	padding:4px;
+}
+
+table.reportTable tr th.product {
+	text-align:left;
+	background-color:#cccccc;
+	padding:4px;
+	font-weight:normal;
+	border-top:1px solid #000000;
+}
+
+table.reportTable tr th.project {
+	text-align:left;
+	background-color:#dddddd;
+	padding:4px;
+	font-weight:normal;
+}
+
+table.reportTable tr th.iteration {
+	text-align:left;
+	background-color:#e6e6e6;
+	padding:4px;
+	font-weight:normal;
+}
+
+table.reportTable tr th.backlogitem {
+	text-align:left;
+	background-color:#f5f5f5;
+	padding:4px;
+	font-weight:normal;
+}
+
+table.reportTable tr.backlogitem {
+	display:none;
+}
+
+table.reportTable tr.special th {
+	background-color:#e6eee6 !important;
+	background-color:#e4ecff !important;
+}
+
+table.reportTable tr.special th.first {
+	background-image:url(../img/special-hour-entry-report.gif);
+	background-repeat:no-repeat;
+	background-position:16px 9px;
+	padding-left:31px;
+}
+
+table.reportTable tr.special.backlogitemshead th.first {
+	font-weight:normal;
+}
+
+table.reportTable tr.special.hourentryhead th {
+	border-top:0px solid #000000;
+}
+
+tr.leftborder .first {
+	border-left:4px solid #b2d8b2; /* #dddda8 */
+	border-left:4px solid #b2caff;
+}
+
+tr.leftborder {
+	display:none;
+}
+
+table.reportTable tr th.backlogitem a,
+table.reportTable tr th.iteration a,
+table.reportTable tr th.project a,
+table.reportTable tr th.product a {
+	text-decoration:none;
+	color:blue;
+	cursor:pointer;
+}
+
+table.reportTable tr th.backlogitem a:hover,
+table.reportTable tr th.iteration a:hover,
+table.reportTable tr th.project a:hover,
+table.reportTable tr th.product a:hover {
+	text-decoration:underline;
+	color:blue;
+}
+
+table.reportTable tr th.backlogitem.second {
+	font-weight:bold;
+}
+
+table.reportTable tr th.backlogitem.third {
+	font-weight:bold;
+}
+
+table.reportTable tr.hourentries {
+	display:none;
+}
+
+table.reportTable tr td.hourentry {
+	text-align:left;
+	background-color:#ffffff;
+	padding:4px;
+	font-weight:normal;
+}
+
+table.reportTable tr td.hourentry.first {
+	padding-left:30px;
+	overflow:hidden;
+	max-width:395px;
+}
+
+table.reportTable tr td.hourentry.second {
+	white-space:nowrap;
+}
+
+table.reportTable tr.total th.total {
+	border-top:1px solid #000000;
+}
+
+.businessThemeTable select {
+	width: 100px;
+}
+
+/* End of timesheet styles */
+
+span.businessTheme {
+	background-color: #ffd;
+	color: #c96;
+	font-size: 80%;
+	padding: 0 1px 1px 3px;	
+}
+
+span.businessTheme a {
+	color: #c96;
+	text-decoration: none;
+}
+
+ul.themeList {
+	list-style-type: none;	
+	padding: 0px;
+	margin: 0px;
+}
+ul.themeList li {
+	display: inline;
+	padding-right: 8px;
+	color: #c96;
+}
+ul.themeList li a {
+	color: #c96;
+	text-decoration: none;
+}

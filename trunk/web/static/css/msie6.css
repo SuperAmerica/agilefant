@@ -1,0 +1,11 @@
+a {
+	height: 0
+}
+
+.codewrap {
+	width: 60%
+}
+
+#wrapper {
+	width: expression(documentElement . clientWidth <   780 ?   "780px" :   "auto")
+}

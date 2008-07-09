@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
+                       "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+	<bean name="projectTypeAction" class="fi.hut.soberit.agilefant.web.ProjectTypeAction" singleton="false" autowire="byName"/>
+	<bean name="workTypeAction" class="fi.hut.soberit.agilefant.web.WorkTypeAction" singleton="false" autowire="byName"/>
+	<bean name="projectAction" class="fi.hut.soberit.agilefant.web.ProjectAction" singleton="false" autowire="byName"/>
+	<bean name="taskAction" class="fi.hut.soberit.agilefant.web.TaskAction" singleton="false" autowire="byName"/>
+	<bean name="backlogAction" class="fi.hut.soberit.agilefant.web.BacklogAction" singleton="false" autowire="byName"/>
+	<bean name="iterationAction" class="fi.hut.soberit.agilefant.web.IterationAction" singleton="false" autowire="byName"/>	
+	<bean name="productAction" class="fi.hut.soberit.agilefant.web.ProductAction" singleton="false" autowire="byName"/>
+	<bean name="backlogItemAction" class="fi.hut.soberit.agilefant.web.BacklogItemAction" singleton="false" autowire="byName"/>
+	<bean name="userAction" class="fi.hut.soberit.agilefant.web.UserAction" singleton="false" autowire="byName"/>		
+	<bean name="chartAction" class="fi.hut.soberit.agilefant.web.ChartAction" singleton="false" autowire="byName"/>	
+	<bean name="iterationGoalAction" class="fi.hut.soberit.agilefant.web.IterationGoalAction" singleton="false" autowire="byName"/>
+	<bean name="linkToIterationGoalAction" class="fi.hut.soberit.agilefant.web.LinkToIterationGoalAction" singleton="false" autowire="byName"/>
+	<bean name="refreshUserInterceptor" class="fi.hut.soberit.agilefant.web.RefreshUserInterceptor" autowire="byName"/>
+	<bean name="teamAction" class="fi.hut.soberit.agilefant.web.TeamAction" autowire="byName" singleton="false" />
+	<bean name="businessThemeAction" class="fi.hut.soberit.agilefant.web.BusinessThemeAction" autowire="byName" singleton="false" />
+</beans>

@@ -1,0 +1,894 @@
+<!DOCTYPE xwork PUBLIC "-//OpenSymphony Group//XWork 1.1.1//EN"
+"http://www.opensymphony.com/xwork/xwork-1.1.1.dtd">
+
+<xwork>
+	<!-- Include webwork defaults (from WebWork JAR). -->
+	<include file="webwork-default.xml" />
+
+	<!-- Configuration for the default package. -->
+	<package name="default" extends="webwork-default">
+		<interceptors>
+			<interceptor name="refreshUser"
+				class="refreshUserInterceptor" />
+			<interceptor name="contextView"
+				class="contextViewInterceptor" />
+			<interceptor-stack name="authenticationStack">
+				<interceptor-ref name="completeStack" />
+				<interceptor-ref name="refreshUser" />
+				<interceptor-ref name="contextView" />
+			</interceptor-stack>
+			<interceptor-stack name="noAuthenticationStack">
+				<interceptor-ref name="completeStack" />
+			</interceptor-stack>
+		</interceptors>
+		<default-interceptor-ref name="authenticationStack" />
+
+		<global-results>
+
+			<result name="input">/WEB-INF/jsp/genericError.jsp</result>
+			<result name="error">/WEB-INF/jsp/genericError.jsp</result>
+			<result name="ajax_error" type="httpheader">
+				<param name="status">400</param>
+			</result>
+			<result name="ajax_success" type="httpheader">
+				<param name="status">200</param>
+			</result>
+		</global-results>
+
+		<!-- Context view -->
+		<action name="contextView"
+			class="fi.hut.soberit.agilefant.web.ContextViewAction">
+			<result type="redirect-action">
+				<param name="actionName">selectBacklog</param>
+			</result>
+			<result name="success_iteration" type="redirect-action">
+				<param name="actionName">editIteration</param>
+				<param name="iterationId">${contextObjectId}</param>
+			</result>
+			<result name="success_project" type="redirect-action">
+				<param name="actionName">editProject</param>
+				<param name="projectId">${contextObjectId}</param>
+			</result>
+			<result name="success_product" type="redirect-action">
+				<param name="actionName">editProduct</param>
+				<param name="productId">${contextObjectId}</param>
+			</result>
+			<result name="success_myTasks" type="redirect-action">
+				<param name="actionName">myTasks</param>
+			</result>
+			<result name="success_dailyWork" type="redirect-action">
+				<param name="actionName">dailyWork</param>
+			</result>
+			
+			<result name="success_users" type="redirect-action">
+				<param name="actionName">listUsers</param>
+			</result>
+			<result name="success_teams" type="redirect-action">
+                <param name="actionName">listTeams</param>
+            </result>
+			
+			<result name="success_settings" type="redirect-action">
+				<param name="actionName">settings</param>
+			</result>
+			
+			<result name="success_themes" type="redirect-action">
+                <param name="actionName">listThemes</param>
+            </result>
+			
+			<result name="success_timesheet" type="redirect-action">
+				<param name="actionName">timesheet</param>
+			</result>
+			
+			<result name="success_projectTypes"
+				type="redirect-action">
+				<param name="actionName">listProjectTypes</param>
+			</result>
+			<result name="success_businessThemes"
+				type="redirect-action">
+				<param name="actionName">listBusinessThemes</param>
+			</result>
+			<result name="success_projectPortfolio"
+				type="redirect-action">
+				<param name="actionName">projectPortfolio</param>
+			</result>
+			<result name="success_" type="redirect-action">
+				<param name="actionName">selectBacklog</param>
+			</result>
+		</action>
+		<!-- Activity type actions -->
+		<action name="listProjectTypes" method="getAll"
+            class="projectTypeAction">
+            <result>/WEB-INF/jsp/administration/listProjectTypes.jsp</result>
+        </action>
+		<action name="editProjectType" method="edit"
+			class="projectTypeAction">
+			<result>/WEB-INF/jsp/administration/editProjectType.jsp</result>
+		</action>
+		<action name="createProjectType" method="create"
+			class="projectTypeAction">
+			<result>/WEB-INF/jsp/administration/editProjectType.jsp</result>
+		</action>
+		<action name="deleteProjectType" method="delete"
+			class="projectTypeAction">
+			<result type="redirect-action">listProjectTypes</result>
+		</action>
+		<action name="storeProjectType" method="store"
+			class="projectTypeAction">
+			<result type="redirect-action">listProjectTypes</result>
+		</action>
+		<!-- /Activity type actions -->
+		<!-- Work type actions -->
+		<action name="editWorkType" method="edit"
+			class="workTypeAction">
+			<result>/WEB-INF/jsp/administration/editWorkType.jsp</result>
+		</action>
+		<action name="createWorkType" method="create"
+			class="workTypeAction">
+			<result>/WEB-INF/jsp/administration/editWorkType.jsp</result>
+		</action>
+		<action name="deleteWorkType" method="delete"
+			class="workTypeAction">
+			<result type="redirect-action">
+				<param name="actionName">editProjectType</param>
+				<param name="projectTypeId">${projectTypeId}</param>
+			</result>
+		</action>
+		<action name="storeWorkType" method="store"
+			class="workTypeAction">
+			<result type="redirect-action">
+				<param name="actionName">editProjectType</param>
+				<param name="projectTypeId">${projectTypeId}</param>
+			</result>
+		</action>
+		<!-- /Work type actions -->
+		<!-- Product actions -->
+		<action name="editProduct" method="edit"
+			class="productAction">
+			<result>/WEB-INF/jsp/editProduct.jsp</result>
+		</action>
+		<action name="createProduct" method="create"
+			class="productAction">
+			<result>/WEB-INF/jsp/editProduct.jsp</result>
+		</action>
+		<action name="deleteProduct" method="delete"
+			class="productAction">
+			<result>/WEB-INF/jsp/selectBacklog.jsp</result>
+		</action>
+		<action name="storeProduct" method="store"
+			class="productAction">
+			<result type="redirect-action">
+				<param name="actionName">contextView</param>
+				<param name="contextName">product</param>
+				<param name="contextObjectId">${productId}</param>
+				<param name="resetContextView">true</param>
+			</result>
+		</action>
+		<action name="storeNewProduct" method="store"
+			class="productAction">
+			<result type="redirect-action">
+				<param name="actionName">contextView</param>
+				<param name="contextName">product</param>
+				<param name="contextObjectId">${productId}</param>
+				<param name="resetContextView">true</param>
+			</result>
+		</action>
+		<!-- /Product actions -->
+		<!-- BacklogItem actions -->
+		<action name="editBacklogItem" method="edit"
+			class="backlogItemAction">
+			<result>/WEB-INF/jsp/editBacklogItem.jsp</result>
+		</action>
+		<action name="createBacklogItem" method="create"
+			class="backlogItemAction">
+			<result>/WEB-INF/jsp/editBacklogItem.jsp</result>
+		</action>
+		<action name="deleteBacklogItem" method="delete"
+			class="backlogItemAction">
+			<result type="redirect-action">
+				<param name="actionName">popContext</param>
+			</result>
+		</action>
+		<action name="storeBacklogItem" method="store"
+			class="backlogItemAction">
+			<result type="redirect">
+				editBacklogItem.action?backlogItemId=${backlogItemId}
+			</result>
+		</action>
+
+		<action name="quickStoreBacklogItem"
+			method="quickStoreBacklogItem" class="backlogItemAction">
+			<result type="redirect-action">
+				<param name="actionName">popContext</param>
+			</result>
+		</action>
+
+		<action name="quickStoreTaskList" method="quickStoreTaskList"
+			class="backlogItemAction">
+			<result type="redirect-action">
+				<param name="actionName">popContext</param>
+			</result>
+		</action>
+
+		<action name="resetBliOrigEstAndEffortLeft"
+			method="resetBliOrigEstAndEffortLeft" class="backlogItemAction">
+			<result type="redirect-action">
+				<param name="actionName">popContext</param>
+			</result>
+		</action>
+
+		<action name="storeNewBacklogItem" method="store"
+			class="backlogItemAction">
+			<result type="redirect">
+				editBacklogItem.action?backlogItemId=${backlogItemId}
+			</result>
+		</action>
+		<action name="storeCloseBacklogItem" method="store"
+			class="backlogItemAction">
+			<result type="redirect-action">
+				<param name="actionName">popContext</param>
+			</result>
+		</action>
+		<action name="linkToIterationGoal"
+			class="linkToIterationGoalAction">
+			<result type="redirect">
+				editBacklogItem.action?backlogItemId=${backlogItemId}
+			</result>
+		</action>
+		<!-- /BacklogItem actions -->
+
+		<!-- Project actions -->
+		<action name="listProjects">
+			<result>/WEB-INF/jsp/listProjects.jsp</result>
+		</action>
+		<action name="editProject" method="edit"
+			class="projectAction">
+			<result>/WEB-INF/jsp/editProject.jsp</result>
+		</action>
+		<action name="createProject" method="create"
+			class="projectAction">
+			<result>/WEB-INF/jsp/editProject.jsp</result>
+		</action>
+		<action name="deleteProject" method="delete"
+			class="projectAction">
+			<result type="redirect">
+				editProduct.action?productId=${productId}
+			</result>
+		</action>
+		<action name="storeProject" method="store"
+			class="projectAction">
+			<result type="redirect-action">
+				<param name="actionName">contextView</param>
+				<param name="contextName">project</param>
+				<param name="contextObjectId">${projectId}</param>
+				<param name="resetContextView">true</param>
+			</result>
+		</action>
+
+		<action name="saveProjectAssignments"
+			method="saveProjectAssignments" class="projectAction">
+			<result type="redirect-action">
+				<param name="actionName">projectPortfolio.action</param>
+			</result>
+		</action>
+
+		<action name="storeNewProject" method="store"
+			class="projectAction">
+			<result type="redirect-action">
+				<param name="actionName">contextView</param>
+				<param name="contextName">project</param>
+				<param name="contextObjectId">${projectId}</param>
+				<param name="resetContextView">true</param>
+			</result>
+		</action>
+		<!-- /Project actions -->
+
+		<!-- Work type actions -->
+		<!-- TODO -->
+
+		<!-- Backlog actions -->
+		<action name="editBacklog" method="edit"
+			class="backlogAction">
+			<result name="editProduct" type="redirect">
+				editProduct.action?productId=${backlogId}
+			</result>
+			<result name="editProject" type="redirect">
+				editProject.action?projectId=${backlogId}
+			</result>
+			<result name="editIteration" type="redirect">
+				editIteration.action?iterationId=${backlogId}
+			</result>
+		</action>
+
+		<action name="doActionOnMultipleBacklogItems"
+			method="doActionOnMultipleBacklogItems" class="backlogAction">
+			<result name="editProduct" type="redirect">
+				editProduct.action?productId=${backlogId}
+			</result>
+			<result name="editProject" type="redirect">
+				editProject.action?projectId=${backlogId}
+			</result>
+			<result name="editIteration" type="redirect">
+				editIteration.action?iterationId=${backlogId}
+			</result>
+			<result name="editIterationGoal" type="redirect">
+				editIterationGoal.action?iterationGoalId=${iterationGoalId}
+			</result>
+		</action>
+
+		<action name="changePriorityOfSelectedItems"
+			method="changePriorityOfSelectedItems" class="backlogAction">
+			<result name="editProduct" type="redirect">
+				editProduct.action?productId=${backlogId}
+			</result>
+			<result name="editProject" type="redirect">
+				editProject.action?projectId=${backlogId}
+			</result>
+			<result name="editIteration" type="redirect">
+				editIteration.action?iterationId=${backlogId}
+			</result>
+		</action>
+
+		<action name="moveSelectedItems" method="moveSelectedItems"
+			class="backlogAction">
+			<result name="editProduct" type="redirect">
+				editProduct.action?productId=${backlogId}
+			</result>
+			<result name="editProject" type="redirect">
+				editProject.action?projectId=${backlogId}
+			</result>
+			<result name="editIteration" type="redirect">
+				editIteration.action?iterationId=${backlogId}
+			</result>
+		</action>
+
+		<action name="deleteSelectedItems" method="deleteSelectedItems"
+			class="backlogAction">
+			<result name="editProduct" type="redirect">
+				editProduct.action?productId=${backlogId}
+			</result>
+			<result name="editProject" type="redirect">
+				editProject.action?projectId=${backlogId}
+			</result>
+			<result name="editIteration" type="redirect">
+				editIteration.action?iterationId=${backlogId}
+			</result>
+		</action>
+
+		<action name="moveBacklogItem" method="moveBacklogItem"
+			class="backlogAction">
+			<result name="editProduct" type="redirect">
+				editProduct.action?productId=${backlogId}
+			</result>
+			<result name="editProject" type="redirect">
+				editProject.action?projectId=${backlogId}
+			</result>
+			<result name="editIteration" type="redirect">
+				editIteration.action?iterationId=${backlogId}
+			</result>
+		</action>
+		<!-- /Backlog actions -->
+
+        <!-- Menu actions -->
+        <action name="menuData" method="execute"
+            class="menuAction">
+            <result>/WEB-INF/jsp/inc/_menuData.jsp</result>
+        </action>
+        <action name="ajaxUpdateOpenMenus" method="ajaxUpdateOpenMenus"
+            class="menuAction">
+        </action>
+        <!-- /Menu actions -->
+
+		<!-- Task actions -->
+		<action name="editTask" method="edit" class="taskAction">
+			<result>/WEB-INF/jsp/editTask.jsp</result>
+		</action>
+		<action name="createTask" method="create" class="taskAction">
+			<result>/WEB-INF/jsp/editTask.jsp</result>
+		</action>
+		<action name="deleteTask" method="delete" class="taskAction">
+			<result type="redirect-action">
+				<param name="actionName">popContext</param>
+			</result>
+		</action>
+		
+		<action name="storeTask" method="store" class="taskAction">
+			<result type="redirect-action">
+				<param name="actionName">editTask</param>
+				<param name="taskId">${taskId}</param>
+			</result>
+		</action>
+		<action name="storeNewTask" method="store" class="taskAction">
+			<result type="redirect-action">
+				<param name="actionName">editTask</param>
+				<param name="taskId">${taskId}</param>
+			</result>
+		</action>
+		<action name="storeCloseTask" method="store"
+			class="taskAction">
+			<result type="redirect-action">
+				<param name="actionName">popContext</param>
+			</result>
+		</action>
+		<action name="quickStoreTask" method="store"
+			class="taskAction">
+			<result type="redirect-action">
+				<param name="actionName">popContext</param>
+			</result>
+		</action>
+		<action name="transformToBacklogItem"
+			method="transformToBacklogItem" class="taskAction">
+			<result type="redirect">
+				editBacklogItem.action?backlogItemId=${backlogItemId}
+			</result>
+		</action>
+
+		<action name="moveTaskUp" class="taskAction"
+			method="moveTaskUp">
+			<result type="redirect-action">
+				<param name="actionName">editBacklogItem</param>
+				<param name="backlogItemId">${backlogItemId}</param>
+			</result>
+		</action>
+		<action name="moveTaskDown" class="taskAction"
+			method="moveTaskDown">
+			<result type="redirect-action">
+				<param name="actionName">editBacklogItem</param>
+				<param name="backlogItemId">${backlogItemId}</param>
+			</result>
+		</action>
+		<action name="moveTaskTop" class="taskAction"
+			method="moveTaskTop">
+			<result type="redirect-action">
+				<param name="actionName">editBacklogItem</param>
+				<param name="backlogItemId">${backlogItemId}</param>
+			</result>
+		</action>
+		<action name="moveTaskBottom" class="taskAction"
+			method="moveTaskBottom">
+			<result type="redirect-action">
+				<param name="actionName">editBacklogItem</param>
+				<param name="backlogItemId">${backlogItemId}</param>
+			</result>
+		</action>
+
+		<!-- /Task actions -->
+
+		<!-- Iteration actions -->
+		<action name="editIteration" method="edit"
+			class="iterationAction">
+			<result>/WEB-INF/jsp/editIteration.jsp</result>
+		</action>
+		<action name="createIteration" method="create"
+			class="iterationAction">
+			<result>/WEB-INF/jsp/editIteration.jsp</result>
+		</action>
+		<action name="deleteIteration" method="delete"
+			class="iterationAction">
+			<result type="redirect">
+				editProject.action?projectId=${projectId}
+			</result>
+		</action>
+		<action name="storeIteration" method="store"
+			class="iterationAction">
+			<result type="redirect-action">
+				<param name="actionName">contextView</param>
+				<param name="contextName">iteration</param>
+				<param name="contextObjectId">${iterationId}</param>
+				<param name="resetContextView">true</param>
+			</result>
+		</action>
+		<action name="storeNewIteration" method="store"
+			class="iterationAction">
+			<result type="redirect-action">
+				<param name="actionName">contextView</param>
+				<param name="contextName">iteration</param>
+				<param name="contextObjectId">${iterationId}</param>
+				<param name="resetContextView">true</param>
+			</result>
+		</action>
+
+		<!-- /Iteration actions -->
+
+		<!-- User actions -->
+		<action name="listUsers" method="list" class="userAction">
+			<result>/WEB-INF/jsp/administration/listUsers.jsp</result>
+		</action>
+		<action name="editUser" method="edit" class="userAction">
+			<result>/WEB-INF/jsp/administration/editUser.jsp</result>
+		</action>
+		<action name="createUser" method="create" class="userAction">
+			<result>/WEB-INF/jsp/administration/editUser.jsp</result>
+		</action>
+		<action name="deleteUser" method="delete" class="userAction">
+			<result type="redirect-action">listUsers</result>
+		</action>
+		<action name="disableUser" method="disable" class="userAction">
+		    <result type="redirect-action">listUsers</result>
+		</action>
+		<action name="enableUser" method="enable" class="userAction">
+            <result type="redirect-action">listUsers</result>
+        </action>
+		<action name="storeUser" method="store" class="userAction">
+			<result type="redirect-action">listUsers</result>			
+		</action>
+
+		<!-- /User actions -->
+
+		<!-- Team actions -->
+		<action name="listTeams" method="list" class="teamAction">
+            <result>/WEB-INF/jsp/administration/listTeams.jsp</result>
+        </action>
+		<action name="editTeam" method="edit" class="teamAction">
+			<result>/WEB-INF/jsp/administration/editTeam.jsp</result>
+		</action>
+		<action name="createTeam" method="create" class="teamAction">
+			<result>/WEB-INF/jsp/administration/editTeam.jsp</result>
+		</action>
+		<action name="deleteTeam" method="delete" class="teamAction">
+			<result type="redirect-action">listTeams</result>
+		</action>
+		<action name="storeTeam" method="store" class="teamAction">
+			<result type="redirect-action">listTeams</result>
+			<!--<result name="error">/WEB-INF/jsp/editTeam.jsp</result>-->
+		</action>
+		<!-- /Team actions -->
+
+		<!-- These functions are for Saving and Deleting backlog items on daily work page -->
+
+		<action name="storeBacklogItemInDailyWork" method="store"
+			class="backlogItemAction">
+			<result type="redirect-action">
+				<param name="actionName">dailyWork</param>
+			</result>
+		</action>
+
+		<action name="deleteBacklogItemInDailyWork" method="delete"
+			class="backlogItemAction">
+			<result type="redirect-action">
+				<param name="actionName">dailyWork</param>
+			</result>
+		</action>
+
+		<!-- Daily work -->
+		<action name="dailyWork" class="dailyWorkAction">
+			<result>/WEB-INF/jsp/dailyWork.jsp</result>
+		</action>
+		<!-- /Daily work -->
+
+		<!-- Project portfolio -->
+		<action name="projectPortfolio"
+			class="projectPortfolioAction">
+			<result>/WEB-INF/jsp/projectPortfolio.jsp</result>
+		</action>
+
+		<!-- Actions for moving ranked items in list. -->
+		<action name="moveProjectUp" class="projectPortfolioAction"
+			method="moveProjectUp">
+			<result type="redirect-action">
+				<param name="actionName">projectPortfolio</param>
+			</result>
+		</action>
+		<action name="moveProjectDown" class="projectPortfolioAction"
+			method="moveProjectDown">
+			<result type="redirect-action">
+				<param name="actionName">projectPortfolio</param>
+			</result>
+		</action>
+		<action name="moveProjectTop" class="projectPortfolioAction"
+			method="moveProjectTop">
+			<result type="redirect-action">
+				<param name="actionName">projectPortfolio</param>
+			</result>
+		</action>
+		<action name="moveProjectBottom" class="projectPortfolioAction"
+			method="moveProjectBottom">
+			<result type="redirect-action">
+				<param name="actionName">projectPortfolio</param>
+			</result>
+		</action>
+		<action name="unrankProject" class="projectPortfolioAction"
+			method="unrankProject">
+			<result type="redirect-action">
+				<param name="actionName">projectPortfolio</param>
+			</result>
+		</action>
+
+		<!-- /Project portfolio -->
+
+		<!-- IterationGoal actions -->
+		<action name="editIterationGoal" method="edit"
+			class="iterationGoalAction">
+			<result>/WEB-INF/jsp/editIterationGoal.jsp</result>
+		</action>
+		<action name="createIterationGoal" method="create"
+			class="iterationGoalAction">
+			<result>/WEB-INF/jsp/editIterationGoal.jsp</result>
+		</action>
+		<action name="deleteIterationGoal" method="delete"
+			class="iterationGoalAction">
+			<result type="redirect">
+				editIteration.action?iterationId=${iterationId}
+			</result>
+		</action>
+		<action name="storeIterationGoal" method="store"
+			class="iterationGoalAction">
+			<result type="redirect-action">
+				<param name="actionName">editIterationGoal</param>
+				<param name="iterationGoalId">${iterationGoalId}</param>
+				<param name="contextViewName">editIteration</param>
+				<param name="contextObjectId">${iterationId}</param>
+			</result>
+		</action>
+		<action name="storeNewIterationGoal" method="store"
+			class="iterationGoalAction">
+			<result type="redirect-action">
+				<param name="actionName">editIterationGoal</param>
+				<param name="iterationGoalId">${iterationGoalId}</param>
+				<param name="contextViewName">editIteration</param>
+				<param name="contextObjectId">${iterationId}</param>
+			</result>
+		</action>
+
+		<action name="storeCloseIterationGoal" method="store"
+			class="iterationGoalAction">
+			<result type="redirect-action">
+				<param name="actionName">popContext</param>
+			</result>
+		</action>
+		
+		<action name="prioritizeIterationGoal" method="prioritizeIterationGoal"
+            class="iterationGoalAction">
+            <result type="redirect-action">
+                <param name="actionName">editIteration</param>
+                <param name="iterationId">${iterationId}</param>
+            </result>
+        </action>
+
+		<action name="moveIterationGoal" method="moveIterationGoal"
+			class="iterationAction">
+			<result type="redirect">
+				editIterationGoal.action?iterationGoalId=${iterationGoalId}
+			</result>
+		</action>
+		<!-- /IterationGoal actions -->
+
+		<action name="drawChart" method="execute" class="chartAction">
+			<result name="success" type="stream">
+				<param name="contentType">${contentType}</param>
+				<param name="inputName">inputStream</param>
+			</result>
+		</action>
+		<action name="drawProjectChart" method="projectChart"
+			class="chartAction">
+			<result name="success" type="stream">
+				<param name="contentType">${contentType}</param>
+				<param name="inputName">inputStream</param>
+			</result>
+		</action>
+		<action name="drawSmallChart" method="smallChart"
+			class="chartAction">
+			<result name="success" type="stream">
+				<param name="contentType">${contentType}</param>
+				<param name="inputName">inputStream</param>
+			</result>
+		</action>
+		<action name="drawSmallProjectChart" method="smallProjectChart"
+			class="chartAction">
+			<result name="success" type="stream">
+				<param name="contentType">${contentType}</param>
+				<param name="inputName">inputStream</param>
+			</result>
+		</action>
+		<action name="drawExtendedBarChart" method="extendedBarChart"
+			class="chartAction">
+			<result name="success" type="stream">
+				<param name="contentType">${contentType}</param>
+				<param name="inputName">inputStream</param>
+			</result>
+		</action>
+		<action name="drawDemoChart" method="demoChart"
+			class="chartAction">
+			<result name="success" type="stream">
+				<param name="contentType">${contentType}</param>
+				<param name="inputName">inputStream</param>
+			</result>
+		</action>
+		<action name="drawGantChart" method="ganttChart"
+			class="chartAction">
+			<result name="success" type="stream">
+				<param name="contentType">${contentType}</param>
+				<param name="inputName">inputStream</param>
+			</result>
+		</action>
+		<action name="drawLoadMeter" method="loadMeter"
+			class="chartAction">
+			<result name="success" type="stream">
+				<param name="contentType">${contentType}</param>
+				<param name="inputName">inputStream</param>
+			</result>
+		</action>
+
+		<action name="popContext" class="contextStackAction">
+			<result type="redirect-action">
+				<param name="actionName">selectBacklog</param>
+			</result>
+			<result name="success_editIteration"
+				type="redirect-action">
+				<param name="actionName">editIteration</param>
+				<param name="iterationId">${view.contextObject}</param>
+			</result>
+
+			<result name="success_editProject" type="redirect-action">
+				<param name="actionName">editProject</param>
+				<param name="projectId">${view.contextObject}</param>
+			</result>
+
+			<result name="success_editBacklogItem"
+				type="redirect-action">
+				<param name="actionName">editBacklogItem</param>
+				<param name="backlogItemId">
+					${view.contextObject}
+				</param>
+			</result>
+
+			<result name="success_listProducts"
+				type="redirect-action">
+				<param name="actionName">listProducts</param>
+			</result>
+			<result name="success_editProduct" type="redirect-action">
+				<param name="actionName">editProduct</param>
+				<param name="productId">${view.contextObject}</param>
+			</result>
+
+			<result name="success_editIterationGoal"
+				type="redirect-action">
+				<param name="actionName">editIterationGoal</param>
+				<param name="iterationGoalId">
+					${view.contextObject}
+				</param>
+			</result>
+
+			<result name="success_editMyTasks" type="redirect-action">
+				<param name="actionName">editMyTasks</param>
+			</result>
+			<result name="success_myTasks" type="redirect-action">
+				<param name="actionName">myTasks</param>
+			</result>
+
+			<result name="success_dailyWork" type="redirect-action">
+				<param name="actionName">dailyWork</param>
+			</result>
+
+		</action>
+		
+		<action name="undoPushContext" class="contextStackAction">
+			<result type="httpheader">
+				<param name="status">200</param>
+			</result>
+		</action>
+
+		<action name="selectBacklog">
+			<result>/WEB-INF/jsp/selectBacklog.jsp</result>
+		</action>
+
+		<!-- Actions for generating a new password and e-mailing it to an <code>User</code> -->
+		<action name="newPassword">
+			<interceptor-ref name="noAuthenticationStack" />
+			<result>/WEB-INF/jsp/newPassword.jsp</result>
+		</action>
+		<action name="generateNewPassword"
+			class="fi.hut.soberit.agilefant.web.PasswordAction"
+			method="generate">
+			<interceptor-ref name="noAuthenticationStack" />
+			<result name="success">success.jsp</result>
+			<result name="error">success.jsp?error=1</result>
+		</action>
+		
+		<!-- Actions for changing settings -->
+		<action name="settings" class="settingAction">
+			<result>/WEB-INF/jsp/administration/settings.jsp</result>
+		</action>
+		
+		<action name="editSetting" class="settingAction" method="edit">
+			<result>/WEB-INF/jsp/administration/settings.jsp</result>
+		</action>
+		
+		<!--<action name="storeSetting" class="settingAction" method="store">
+			<result>/WEB-INF/jsp/administration/settings.jsp</result>
+		</action>-->
+		
+		<action name="createSetting" class="settingAction" method="create">
+			<result>/WEB-INF/jsp/administration/settings.jsp</result>
+		</action>
+		
+		<action name="deleteSetting" class="settingAction" method="delete">
+			<result>/WEB-INF/jsp/administration/settings.jsp</result>
+		</action>
+		<action name="storeSettings" class="settingAction" method="storeSettings">
+			<result name="success">/WEB-INF/jsp/administration/settings.jsp</result>
+		</action>
+	
+		<!-- timesheet actions -->
+		  
+		<action name="timesheet">
+			<result>/WEB-INF/jsp/timesheet.jsp</result>
+		</action>
+		
+		<action name="generateTree" method="generateTree" class="timesheetAction">
+			<interceptor-ref name="completeStack"/>
+		    <interceptor-ref name="execAndWait">
+			    <param name="delay">1000</param>
+		        <param name="delaySleepInterval">50</param>
+        	</interceptor-ref>
+    		<result name="wait">/WEB-INF/jsp/wait.jsp</result>
+			<result name="success">/WEB-INF/jsp/timesheet.jsp</result>
+		</action>
+		
+		<!-- Hour Entry actions -->
+		
+		<action name="createHourEntry" class="hourEntryAction" method="create">
+			<result>/WEB-INF/jsp/inc/_hourEntryModal.jsp</result>
+		</action>
+		<action name="editHourEntry" class="hourEntryAction" method="edit">
+			<result>/WEB-INF/jsp/inc/_hourEntryModal.jsp</result>
+		</action>
+		<action name="storeHourEntry" class="hourEntryAction" method="store">
+			<result type="redirect-action">
+				<param name="actionName">popContext</param>
+			</result>
+		</action>
+		<action name="deleteHourEntry" method="delete" class="hourEntryAction">
+			<result type="redirect-action">
+				<param name="actionName">popContext</param>
+			</result>
+		</action>
+		
+		<action name="getHourSum" method="sumHours" class="getHourSumAction">
+			<result name="success">/WEB-INF/jsp/inc/_hourSum.jsp</result>
+		</action>
+		
+		<!-- Business theme actions -->
+		<action name="listThemes" method="list"
+            class="businessThemeAction">
+            <result>/WEB-INF/jsp/administration/listThemes.jsp</result>
+        </action>
+		<action name="editBusinessTheme" method="edit"
+			class="businessThemeAction">
+			<result>/WEB-INF/jsp/administration/editBusinessTheme.jsp</result>
+		</action>
+		<action name="createBusinessTheme" method="create"
+			class="businessThemeAction">
+			<result>/WEB-INF/jsp/administration/editBusinessTheme.jsp</result>
+		</action>
+		<action name="deleteBusinessTheme" method="delete"
+			class="businessThemeAction">
+			<result type="redirect-action">listThemes</result>
+		</action>
+		<action name="storeBusinessTheme" method="store"
+			class="businessThemeAction">
+			<result type="redirect-action">listThemes</result>
+		</action>
+		<action name="editBacklogItemBusinessThemes" method="editBacklogItemBusinessThemes"
+			class="businessThemeAction">
+			<result>/WEB-INF/jsp/inc/_businessThemeModal.jsp</result>		
+		</action>
+		<action name="addThemeToBacklogItem" method="addBusinessTheme"
+			class="backlogItemAction">					
+		</action>
+		<action name="removeThemeFromBacklogItem" method="removeBusinessTheme"
+			class="backlogItemAction">					
+		</action>	
+		<action name="ajaxStoreBusinessTheme" method="ajaxStoreBusinessTheme"
+			class="businessThemeAction">		
+			<result name="ajax_error" type="httpheader">
+				<param name="status">400</param>
+			</result>
+			<result name="ajax_success" type="dispatcher">
+				<param name="status">200</param>
+				<param name="location">/WEB-INF/jsp/inc/ajaxBusinessThemeResult.jsp</param>
+			</result>
+		</action>	
+		<!-- /Business theme actions -->
+
+</package>
+</xwork>

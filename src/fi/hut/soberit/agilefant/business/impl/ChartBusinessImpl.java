@@ -319,30 +319,30 @@ public class ChartBusinessImpl implements ChartBusiness {
         rr.setSeriesPaint(BURNDOWN_SERIES, BURNDOWN_COLOR);
         rr.setSeriesShape(BURNDOWN_SERIES, new java.awt.Rectangle(-2, -2, 4, 4));
         rr.setSeriesShapesVisible(BURNDOWN_SERIES, true);
-        rr.setSeriesStroke(BURNDOWN_SERIES, new BasicStroke(2.0f));
+        rr.setSeriesStroke(BURNDOWN_SERIES, new BasicStroke(1.0f));
         
         // Set current day series properties
         rr.setSeriesPaint(CURRENT_DAY_SERIES, BURNDOWN_COLOR);
         rr.setSeriesShape(CURRENT_DAY_SERIES, new Rectangle(-2, -2, 4, 4));
         rr.setSeriesShapesFilled(CURRENT_DAY_SERIES, false);
         rr.setSeriesShapesVisible(CURRENT_DAY_SERIES, true);
-        rr.setSeriesStroke(CURRENT_DAY_SERIES, new BasicStroke(2.0f, BasicStroke.CAP_BUTT,
+        rr.setSeriesStroke(CURRENT_DAY_SERIES, new BasicStroke(1.0f, BasicStroke.CAP_BUTT,
                 BasicStroke.JOIN_BEVEL, 0.0f, new float[] { 7.0f, 3.0f }, 0.0f));
         
         // Set scoping series properties
         rr.setSeriesPaint(SCOPING_SERIES, BURNDOWN_COLOR);
         rr.setSeriesShapesVisible(SCOPING_SERIES, false);
-        rr.setSeriesStroke(SCOPING_SERIES, new BasicStroke(2.0f, BasicStroke.CAP_BUTT,
+        rr.setSeriesStroke(SCOPING_SERIES, new BasicStroke(1.0f, BasicStroke.CAP_BUTT,
                 BasicStroke.JOIN_BEVEL, 0.0f, new float[] { 2.0f, 4.0f }, 0.0f));
         
         // Set reference series properties
         rr.setSeriesPaint(REFERENCE_SERIES, REFERENCE_COLOR);
         rr.setSeriesShapesVisible(REFERENCE_SERIES, false);
-        rr.setSeriesStroke(REFERENCE_SERIES, new BasicStroke(2.0f));
+        rr.setSeriesStroke(REFERENCE_SERIES, new BasicStroke(1.0f));
         
         // Set expected series properties
         rr.setSeriesPaint(EXPECTED_SERIES, EXPECTED_COLOR);
-        rr.setSeriesStroke(EXPECTED_SERIES, new BasicStroke(2.0f, BasicStroke.CAP_BUTT,
+        rr.setSeriesStroke(EXPECTED_SERIES, new BasicStroke(1.0f, BasicStroke.CAP_BUTT,
                 BasicStroke.JOIN_BEVEL, 0.0f, new float[] { 2.0f, 4.0f }, 0.0f));
         
         return chart;

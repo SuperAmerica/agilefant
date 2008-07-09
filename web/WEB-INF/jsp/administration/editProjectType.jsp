@@ -11,7 +11,7 @@
 		<h2>Edit project type</h2>
 	</c:otherwise>
 </c:choose>
-<ww:form action="storeProjectType">
+<ww:form action="storeProjectType" method="post">
 	<ww:hidden name="projectTypeId" value="${projectType.id}" />
 	<table class="formTable">
 		<tr>

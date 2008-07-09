@@ -54,9 +54,9 @@
 
 <c:choose>
 	<c:when test="${empty projectTypes}">
-		<ww:url id="workTypeLink" action="projectPortfolio"
+		<ww:url id="workTypeLink" action="createProjectType"
 			includeParams="none" />	
-				No project types available. <ww:a href="%{workTypeLink}">Add project types</ww:a>
+				No project types available. <ww:a href="%{workTypeLink}">Create a new project type &raquo;</ww:a>
 	</c:when>
 	<c:otherwise>
 		<aef:productList />

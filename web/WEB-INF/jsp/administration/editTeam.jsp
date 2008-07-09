@@ -18,7 +18,7 @@
 	</c:otherwise>
 </c:choose>
 
-<ww:form action="storeTeam">
+<ww:form action="storeTeam" method="post">
 
 <ww:hidden name="teamId" value="${teamId}" />
 

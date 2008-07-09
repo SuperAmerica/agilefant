@@ -46,7 +46,7 @@
 	<tr>
 		<td>Name</td>
 		<td></td>
-		<td colspan="2"><ww:textfield name="businessTheme.name" size="20" id="nameField"/></td>
+		<td colspan="2"><ww:textfield name="businessTheme.name" size="20" id="nameField" maxlength="20"/></td>
 	</tr>
 	<tr>
 		<td>Description</td>

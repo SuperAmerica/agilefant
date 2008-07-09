@@ -12,13 +12,13 @@
 		<h2>Edit theme</h2>
 	</c:otherwise>
 </c:choose>
-<ww:form action="storeBusinessTheme">
+<ww:form action="storeBusinessTheme" method="post">
 	<ww:hidden name="businessThemeId" value="${businessTheme.id}" />
 	<table class="formTable">
 		<tr>
 			<td>Name</td>
 			<td>*</td>
-			<td colspan="2"><ww:textfield size="20" name="businessTheme.name" /></td>
+			<td colspan="2"><ww:textfield size="20" name="businessTheme.name" maxlength="20" /></td>
 		</tr>
 		<tr>
 			<td>Description</td>

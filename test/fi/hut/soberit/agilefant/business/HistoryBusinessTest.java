@@ -403,7 +403,7 @@ public class HistoryBusinessTest extends TestCase {
         expect(backlogDAO.get(3)).andReturn(iter);
         replay(backlogDAO);
         
-        long vel = 5000;
+        long vel = 3750;
         long trueVel = hisBusiness.calculateDailyVelocity(3).getTime();
         assertEquals(vel, trueVel);
         

@@ -296,6 +296,7 @@
 											                 <td><c:out value="${projectMetrics.dailyVelocity}" /> /
 											                 day</td>
 										                  </tr>
+										                  <c:if test="${projectMetrics.backlogOngoing}">
 										                  <tr>
 											                 <th>Schedule variance</th>
 											                 <td><c:choose>
@@ -327,6 +328,7 @@
                                                                 </c:otherwise>
 											                 </c:choose></td>
 										                  </tr>
+										                  </c:if>
 										                  <tr>
 											                 <th>Completed</th>
 											                 <td><c:out value="${projectMetrics.percentDone}" />% (<c:out

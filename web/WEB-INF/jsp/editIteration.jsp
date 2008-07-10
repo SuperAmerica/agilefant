@@ -177,6 +177,7 @@
 								            <th>Velocity</th>
 								            <td><c:out value="${iterationMetrics.dailyVelocity}" /> / day</td>
 								        </tr>
+								        <c:if test="${iterationMetrics.backlogOngoing}">
 								        <tr>
                                             <th>Schedule variance</th>
                                             <td>
@@ -211,6 +212,7 @@
                                             </c:choose>
                                             </td>
                                         </tr>
+                                        </c:if>
                                         <tr>
                                             <th>Completed</th>
                                             <td>

@@ -739,6 +739,14 @@ public class BacklogBusinessImpl implements BacklogBusiness {
         int percentDone = (int)Math.round(((double)metrics.getCompletedItems() / (double)metrics.getTotalItems()) * 100.0);
         metrics.setPercentDone(percentDone);
         
+        if (backlog.getEndDate().before(new Date()) ||
+            backlog.getStartDate().after(new Date())) {
+            metrics.setBacklogOngoing(false);
+        }
+        else {
+            metrics.setBacklogOngoing(true);
+        }
+        
         return metrics;
     }
 

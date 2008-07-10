@@ -144,14 +144,19 @@ public class HistoryBusinessImpl implements HistoryBusiness {
     public AFTime calculateDailyVelocity(int backlogId) {
         AFTime velocity = new AFTime(0);
         int numberOfDays = 1;
-        /* Get the backlog and its history */
         Backlog backlog = backlogDAO.get(backlogId);
+        
+        if (backlog instanceof Product) {
+            return new AFTime(0);
+        }
         
         Calendar startDate = GregorianCalendar.getInstance();
         startDate.setTime(backlog.getStartDate());
         
         Calendar endDate = GregorianCalendar.getInstance();
-        endDate.add(Calendar.DATE, -1);
+        if (backlog.getEndDate().before(new Date())) {
+            endDate.setTime(backlog.getEndDate());
+        }
         
         if (backlog instanceof Product) {
             return new AFTime(0);
@@ -196,8 +201,15 @@ public class HistoryBusinessImpl implements HistoryBusiness {
     
     /** {@inheritDoc} */
     public Date calculateExpectedDate(Backlog backlog, AFTime effortLeft, AFTime velocity) {
+        if (backlog instanceof Product) {
+            return null;
+        }
+        
         GregorianCalendar expected = new GregorianCalendar();
         expected.setTime(new Date());
+        if (backlog.getEndDate().before(new Date())) {
+            expected.setTime(backlog.getEndDate());
+        }
         CalendarUtils.setHoursMinutesAndSeconds(expected, 0, 0, 0);
         
         /*
@@ -217,7 +229,8 @@ public class HistoryBusinessImpl implements HistoryBusiness {
         expected.add(Calendar.DATE, diff);
         expected.add(Calendar.DATE, -1);
         
-        if (expected.getTime().before(new Date())) {
+        if (expected.getTime().before(new Date()) && 
+                backlog.getEndDate().after(new Date())) {
             expected.setTime(new Date());
             CalendarUtils.setHoursMinutesAndSeconds(expected, 0, 0, 0);
         }

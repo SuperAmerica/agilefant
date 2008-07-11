@@ -1,6 +1,6 @@
 <%@ include file="./_taglibs.jsp"%>
 
-<%@page pageEncoding="iso-8859-1" contentType="text/html; charset=ISO-8859-1" %>
+<%@page pageEncoding="utf-8" contentType="text/html; charset=utf-8" %>
 
 <div target="AJAX-MODAL" style="width: 690px; height: 20px; padding: 5px; border-bottom: 1px solid black; background: #ccc;">
 	<span style="float: left;">

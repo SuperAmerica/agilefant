@@ -1,0 +1,20 @@
+-- update database to use utf8 as default encoding
+ALTER TABLE `backlog` CHARACTER SET utf8 COLLATE utf8_general_ci;
+ALTER TABLE `backlogitem` CHARACTER SET utf8 COLLATE utf8_general_ci;
+ALTER TABLE `backlogitem_businesstheme` CHARACTER SET utf8 COLLATE utf8_general_ci;
+ALTER TABLE `backlogitem_user` CHARACTER SET utf8 COLLATE utf8_general_ci;
+ALTER TABLE `businesstheme` CHARACTER SET utf8 COLLATE utf8_general_ci;
+ALTER TABLE `history` CHARACTER SET utf8 COLLATE utf8_general_ci;
+ALTER TABLE `historyentry` CHARACTER SET utf8 COLLATE utf8_general_ci;
+ALTER TABLE `hourentry` CHARACTER SET utf8 COLLATE utf8_general_ci;
+ALTER TABLE `iterationgoal` CHARACTER SET utf8 COLLATE utf8_general_ci;
+ALTER TABLE `projecttype` CHARACTER SET utf8 COLLATE utf8_general_ci;
+ALTER TABLE `setting` CHARACTER SET utf8 COLLATE utf8_general_ci;
+ALTER TABLE `task` CHARACTER SET utf8 COLLATE utf8_general_ci;
+ALTER TABLE `taskevent` CHARACTER SET utf8 COLLATE utf8_general_ci;
+ALTER TABLE `team` CHARACTER SET utf8 COLLATE utf8_general_ci;
+ALTER TABLE `team_user` CHARACTER SET utf8 COLLATE utf8_general_ci;
+ALTER TABLE `user` CHARACTER SET utf8 COLLATE utf8_general_ci;
+ALTER TABLE `worktype` CHARACTER SET utf8 COLLATE utf8_general_ci;
+ALTER TABLE `assignment` CHARACTER SET utf8 COLLATE utf8_general_ci;
+ALTER DATABASE CHARACTER SET utf8 COLLATE utf8_general_ci;

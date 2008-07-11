@@ -221,8 +221,8 @@ function saveTheme() {
 	var trimmed = name.replace(/^\s+|\s+$/g, '');
 	var desc = $("#descField").val();
 	var id = $("#businessThemeSelect").val();
-	var ename = escape(trimmed);
-	var edesc = escape(desc);
+	var ename = trimmed; //escape(trimmed);
+	var edesc = desc; //escape(desc);
 	//var d = $("#businessThemeModalForm").serializeArray();
 	var d = {businessThemeId: id, "businessTheme.name": ename, "businessTheme.description": edesc};
 	if (name.length > 20) {
@@ -251,10 +251,7 @@ function saveTheme() {
 	}, error: function() {
 		$("#businessThemeSaveSuccess").text("");
 		$("#businessThemeError").text("Error: unable to save theme.");
-	}, beforeSend: function(request) {
-		request.overrideMimeType("application/x-www-form-urlencoded; charset=ISO-8859-1");
-		request.setRequestHeader("Accept-Charset","ISO-8859-1");
-	}, contentType: "application/x-www-form-urlencoded; charset=ISO-8859-1", dataType: "text"});
+	}, dataType: "text"});
 }
 function updateThemeSelect(setSelected) {
 	var select = $("#businessThemeSelect");

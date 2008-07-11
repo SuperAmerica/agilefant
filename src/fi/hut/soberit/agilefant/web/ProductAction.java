@@ -79,10 +79,7 @@ public class ProductAction extends ActionSupport implements CRUDAction {
             return Action.ERROR;
         }
         backlog = product;
-        /*
-         * BacklogValueInjector.injectMetrics(backlog, startDate, taskEventDAO,
-         * backlogItemDAO);
-         */
+
         // Calculate effort lefts and original estimates
         Collection<BacklogItem> items = backlog.getBacklogItems();
         effortLeftSum = backlogBusiness.getEffortLeftSum(items);
@@ -233,5 +230,33 @@ public class ProductAction extends ActionSupport implements CRUDAction {
 
     public void setHourEntryBusiness(HourEntryBusiness hourEntryBusiness) {
         this.hourEntryBusiness = hourEntryBusiness;
+    }
+
+    public EffortSumData getOrigEstSum() {
+        return origEstSum;
+    }
+
+    public void setOrigEstSum(EffortSumData origEstSum) {
+        this.origEstSum = origEstSum;
+    }
+
+    public BacklogBusiness getBacklogBusiness() {
+        return backlogBusiness;
+    }
+
+    public void setBacklog(Backlog backlog) {
+        this.backlog = backlog;
+    }
+
+    public void setEffortLeftSum(EffortSumData effortLeftSum) {
+        this.effortLeftSum = effortLeftSum;
+    }
+
+    public void setEffLeftSums(Map<Project, EffortSumData> effLeftSums) {
+        this.effLeftSums = effLeftSums;
+    }
+
+    public void setOrigEstSums(Map<Project, EffortSumData> origEstSums) {
+        this.origEstSums = origEstSums;
     }
 }

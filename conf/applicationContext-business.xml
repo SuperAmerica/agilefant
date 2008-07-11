@@ -30,7 +30,9 @@
 	<bean id="menuBusiness" singleton="false"
         class="fi.hut.soberit.agilefant.business.impl.MenuBusinessImpl" />
      <bean id="businessThemeBusiness" singleton="false"
-        class="fi.hut.soberit.agilefant.business.impl.BusinessThemeBusinessImpl" />   
+        class="fi.hut.soberit.agilefant.business.impl.BusinessThemeBusinessImpl" />
+     <bean id="timelineBusiness" singleton="false"
+        class="fi.hut.soberit.agilefant.business.impl.TimelineBusinessImpl" />   
 
 	<bean name="chartBusiness" singleton="false"
 		class="fi.hut.soberit.agilefant.business.impl.ChartBusinessImpl">

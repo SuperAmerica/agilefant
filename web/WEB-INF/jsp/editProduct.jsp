@@ -1,6 +1,8 @@
 <%@ include file="./inc/_taglibs.jsp"%>
 <%@ include file="./inc/_header.jsp"%>
 
+<%@page import="fi.hut.soberit.agilefant.model.Product"%>
+
 <c:if test="${product.id > 0}">
 	<aef:bct productId="${productId}" />
 </c:if>
@@ -9,6 +11,15 @@
 <aef:menu navi="backlog" pageHierarchy="${pageHierarchy}" />
 <ww:actionerror />
 <ww:actionmessage />
+
+<ww:set name="prodId" scope="page" value="${product.id}"/>
+
+<!-- Include timeline -->
+<script type="text/javascript">
+var productId = ${product.id};
+</script>
+<script type="text/javascript" src="static/js/timeline/timeline-load.js"></script>
+<script type="text/javascript" src="static/js/timeline/timeline-bundle.js"></script>
 
 <c:choose>
     <c:when test="${productId == 0}">
@@ -155,7 +166,38 @@
 </c:choose>
 
 <c:if test="${product.id > 0}">
-<table>	
+<table>
+    <!-- The timeline -->
+    <tr>
+    <td>
+    <div id="subItems">
+    <div id="subItemHeader">
+    <table cellspacing="0" cellpadding="0">
+                            <tr>
+                                <td class="header">Product roadmap</td>
+                            </tr>
+                        </table>
+    </div>
+    
+       
+    <div id="productTimeline"></div>
+    
+    <div id="timelineLegend" style="width:100%; text-align:center; margin-bottom: 10px;">
+    <table style="margin: auto; border: 1px solid #ccc;" cellpadding="2" cellspacing="2">
+        <tr>
+            <td><div class="timeline-band-project" style="display:block;width:50px;height:5px;">&nbsp;</div></td>
+            <td>Project</td>
+            <td><div class="timeline-band-iteration" style="display:block;width:50px;height:5px;">&nbsp;</div></td>
+            <td>Iteration</td>
+            
+        </tr>
+    </table>
+    </div>
+    
+    </div>
+    </td>
+    </tr>
+
 	<tr>
 		<td>
 			<div id="subItems">
@@ -255,7 +297,7 @@
 				<c:if test="${!empty product.businessThemes}">
 				<div id="subItemContent">
 					<p>
-					tänne lista teemoja!!!
+					t?nne lista teemoja!!!
 					</p>
 				</div>
 				</c:if>

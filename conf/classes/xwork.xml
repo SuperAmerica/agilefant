@@ -889,6 +889,13 @@
 			</result>
 		</action>	
 		<!-- /Business theme actions -->
+		
+		<!-- Product timeline actions -->
+		<action name="timelineData" method="productData"
+            class="timelineAction">
+            <result>/WEB-INF/jsp/inc/timelineData.jsp</result>
+        </action>
+		<!-- /Product timeline actions -->
 
 </package>
 </xwork>

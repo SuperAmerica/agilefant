@@ -6,7 +6,7 @@
 
 <h2>Timesheet settings</h2>
 
-<ww:form action="storeSettings.action">
+<ww:form action="storeSettings.action" method="post">
 <%-- 
 <ww:hidden name="name" value="HourReporting"/>
 <ww:hidden name="description" value="Description"/>

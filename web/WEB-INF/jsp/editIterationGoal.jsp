@@ -150,7 +150,7 @@
 				
 				<display:table class="listTable"
 					name="iterationGoal.backlogItems" id="row"
-					requestURI="editIterationGoal.action" defaultsort="3"
+					requestURI="editIterationGoal.action" defaultsort="4"
 					defaultorder="descending">
 
 					<!-- Checkboxes for bulk-moving backlog items -->	

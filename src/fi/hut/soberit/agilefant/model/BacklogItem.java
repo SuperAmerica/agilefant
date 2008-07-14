@@ -436,6 +436,7 @@ public class BacklogItem implements PageItem, Assignable, EffortContainer, Times
             inverseJoinColumns={@JoinColumn(name = "businesstheme_id")}
     )
     @BatchSize(size=5)
+    @OrderBy("name")
     public Collection<BusinessTheme> getBusinessThemes() {
         return businessThemes;
     }

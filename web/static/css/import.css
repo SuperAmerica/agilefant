@@ -1078,6 +1078,7 @@ ul.themeList li {
 	display: inline;
 	padding-right: 8px;
 	color: #c96;
+	white-space: nowrap;
 }
 ul.themeList li a {
 	color: #c96;

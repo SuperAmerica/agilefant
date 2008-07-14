@@ -72,6 +72,7 @@ var productId = ${product.id};
 </script>
 <script type="text/javascript" src="static/js/timeline/timeline-load.js"></script>
 <script type="text/javascript" src="static/js/timeline/timeline-bundle.js"></script>
+<script type="text/javascript" src="static/js/timeline/timeline-custom.js"></script>
 
 <c:choose>
     <c:when test="${productId == 0}">

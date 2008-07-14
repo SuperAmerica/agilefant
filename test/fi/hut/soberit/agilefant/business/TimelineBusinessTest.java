@@ -90,8 +90,9 @@ public class TimelineBusinessTest extends TestCase {
         
         String verifiedJSON = "{name:'Testituote',id:1,type:'product',\n" +
         		"contents:[\n" +
-        		"{name:'Testiprojekti',id:2,type:'project',startDate:'2008-06-01',endDate:'2008-07-31'},\n" +
-        		"{name:'Testi-iteraatio',id:3,type:'iteration',startDate:'2008-07-10',endDate:'2008-07-19'}\n" +
+        		"{name:'Testiprojekti',id:2,type:'project',startDate:'2008-06-01',endDate:'2008-07-31',contents:[\n" +
+        		"{name:'Testi-iteraatio',id:3,type:'iteration',startDate:'2008-07-10',endDate:'2008-07-19'}]\n" +
+        		"}\n" +
         		"]\n" +
             		"}";
         
@@ -141,7 +142,8 @@ public class TimelineBusinessTest extends TestCase {
         
         String verifiedJSON = "{name:'Testituote',id:1,type:'product',\n" +
                         "contents:[\n" +
-                        "{name:'Testiprojekti',id:2,type:'project',startDate:'2008-06-01',endDate:'2008-07-31'}\n" +
+                        "{name:'Testiprojekti',id:2,type:'project',startDate:'2008-06-01',endDate:'2008-07-31',contents:[\n" +
+                        "]\n}\n" +
                         "]\n" +
                         "}";
         
@@ -187,7 +189,7 @@ public class TimelineBusinessTest extends TestCase {
         
         String verifiedJSON = "{name:'T\\ne\\\'s\\rtituo\\\'\\\'te',id:1,type:'product',\n" +
                         "contents:[\n" +
-                        "{name:'Testiprojekti',id:2,type:'project',startDate:'2008-06-01',endDate:'2008-07-31'}\n" +
+                        "{name:'Testiprojekti',id:2,type:'project',startDate:'2008-06-01',endDate:'2008-07-31',contents:[\n]\n}\n" +
                         "]\n" +
                         "}";
               

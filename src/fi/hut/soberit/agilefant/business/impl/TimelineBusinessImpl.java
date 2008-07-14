@@ -42,7 +42,7 @@ public class TimelineBusinessImpl implements TimelineBusiness {
             		"type:'project'," +
             		"startDate:'" + sdf.format(project.getStartDate()) + "'," +
             		"endDate:'" + sdf.format(project.getEndDate()) + "'" +
-                        "},\n";
+                        ",contents:[\n";
             
             /* Get the project's iterations */
             for (Iteration iter : project.getIterations()) {
@@ -53,6 +53,10 @@ public class TimelineBusinessImpl implements TimelineBusiness {
                     "endDate:'" + sdf.format(iter.getEndDate()) + "'" +
                     "},\n";    
             }
+            if(project.getIterations().size() > 0) {
+                json = json.substring(0, json.length() - 2);
+            }
+            json += "]\n},\n";
         }
         
         /* Remove the trailing comma */

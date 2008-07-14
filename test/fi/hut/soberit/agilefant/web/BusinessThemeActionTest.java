@@ -2,7 +2,9 @@ package fi.hut.soberit.agilefant.web;
 
 import com.opensymphony.xwork.Action;
 
+import fi.hut.soberit.agilefant.db.ProductDAO;
 import fi.hut.soberit.agilefant.model.BusinessTheme;
+import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.util.SpringTestCase;
 
 public class BusinessThemeActionTest extends SpringTestCase {
@@ -18,19 +20,34 @@ public class BusinessThemeActionTest extends SpringTestCase {
 
     private static final String TEST_DESC3 = "Testi3";
     
+    private Product product;
+    
+    private ProductDAO productDAO;
+    
     private BusinessThemeAction businessThemeAction;
 
     public void setBusinessThemeAction(BusinessThemeAction businessThemeAction) {
         this.businessThemeAction = businessThemeAction;
     }
     
-    private void setContents(String name, String description) {
+    private void setProduct() {
+        if (businessThemeAction.getProductId() < 1) {
+            product = new Product();
+            int prodId = (Integer) productDAO.create(product);              
+            businessThemeAction.setProductId(prodId);            
+        }
+    }
+    
+    private void setContents(String name, String description, boolean active) {
         BusinessTheme theme = businessThemeAction.getBusinessTheme();
         theme.setName(name);
         theme.setDescription(description);
+        theme.setActive(active);
+        
     }
     
     private void create() {
+        setProduct();
         String result = businessThemeAction.create();
         assertEquals("create() was unsuccessful", result, Action.SUCCESS);
     }
@@ -53,13 +70,13 @@ public class BusinessThemeActionTest extends SpringTestCase {
     public void testCreate() {
         String result = businessThemeAction.create();
         assertEquals("create() was unsuccessful", result, Action.SUCCESS);
-        super.assertEquals("New activity type had an invalid id", 0,
+        super.assertEquals("New theme had an invalid id", 0,
                 businessThemeAction.getBusinessThemeId());
     }
     
     public void testStore() {
         this.create();
-        this.setContents(TEST_NAME1, TEST_DESC1);
+        this.setContents(TEST_NAME1, TEST_DESC1, true);
         businessThemeAction.list();
         int n = businessThemeAction.getBusinessThemes().size();
         String result = businessThemeAction.store();
@@ -70,17 +87,17 @@ public class BusinessThemeActionTest extends SpringTestCase {
                         "The total number of stored activity types didn't grow up with store().",
                         n + 1, businessThemeAction.getBusinessThemes().size());
         BusinessTheme storedAT = this.getBusinessTheme(TEST_NAME1, TEST_DESC1);
-        super.assertNotNull("Activity wasn't stored properly (wasn't found)",
+        super.assertNotNull("Theme wasn't stored properly (wasn't found)",
                 storedAT);
-        super.assertEquals("Stored activity type had invalid name", TEST_NAME1,
+        super.assertEquals("Stored theme had invalid name", TEST_NAME1,
                 storedAT.getName());
-        super.assertEquals("Stored activity type had invalid description",
+        super.assertEquals("Stored theme had invalid description",
                 TEST_DESC1, storedAT.getDescription());       
     }
     
     public void testEdit() {
         this.create();
-        this.setContents(TEST_NAME1, TEST_DESC1);
+        this.setContents(TEST_NAME1, TEST_DESC1, true);
         this.store();
 
         businessThemeAction.setBusinessTheme(null);
@@ -100,7 +117,7 @@ public class BusinessThemeActionTest extends SpringTestCase {
     
     public void testStore_withUpdate() {
         this.create();
-        this.setContents(TEST_NAME1, TEST_DESC1);
+        this.setContents(TEST_NAME1, TEST_DESC1, true);
         this.store();
 
         BusinessTheme at = this.getBusinessTheme(TEST_NAME1, TEST_DESC1);
@@ -123,8 +140,8 @@ public class BusinessThemeActionTest extends SpringTestCase {
     
     public void testDelete() {        
         this.create();
-        this.setContents(TEST_NAME3, TEST_DESC3);
-        this.store();        
+        this.setContents(TEST_NAME3, TEST_DESC3, true);
+        this.store();
         BusinessTheme at = this.getBusinessTheme(TEST_NAME3, TEST_DESC3);
         super.assertNotNull(
                 "Business theme wasn't stored properly (wasn't found)", at);
@@ -133,6 +150,14 @@ public class BusinessThemeActionTest extends SpringTestCase {
         businessThemeAction.setBusinessTheme(at);
         String result = businessThemeAction.delete();
         assertEquals("delete() was unsuccessful", result, Action.SUCCESS);        
+    }
+
+    public ProductDAO getProductDAO() {
+        return productDAO;
+    }
+
+    public void setProductDAO(ProductDAO productDAO) {
+        this.productDAO = productDAO;
     }
     
 }

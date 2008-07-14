@@ -13,6 +13,7 @@ import fi.hut.soberit.agilefant.db.BusinessThemeDAO;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.BusinessTheme;
+import fi.hut.soberit.agilefant.model.Product;
 import junit.framework.TestCase;
 
 public class BusinessThemeBusinessTest extends TestCase {
@@ -26,12 +27,17 @@ public class BusinessThemeBusinessTest extends TestCase {
         
         int bliId1 = 100;
         BacklogItem bli1 = new BacklogItem();
-        bli1.setId(bliId1);       
+        bli1.setId(bliId1);
+        int prodId = 20;
+        Product prod = new Product();
+        prod.setId(prodId);
         int themeId1 = 101;
         BusinessTheme theme1 = new BusinessTheme();
         theme1.setId(themeId1);
+        theme1.setProduct(prod);
         theme1.setName("foo");
         theme1.setDescription("");
+        theme1.setActive(true);
         Set<BacklogItem> items = new HashSet<BacklogItem>();
         items.add(bli1);
         theme1.setBacklogItems(items);

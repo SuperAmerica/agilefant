@@ -1,6 +1,8 @@
 <%@ include file="./inc/_taglibs.jsp"%>
 <%@ include file="./inc/_header.jsp"%>
 
+<%@page import="fi.hut.soberit.agilefant.model.Product"%>
+
 <c:if test="${product.id > 0}">
 	<aef:bct productId="${productId}" />
 </c:if>
@@ -339,19 +341,39 @@ var productId = ${product.id};
 					<table cellspacing="0" cellpadding="0">
 						<tr>
 							 <td class="header">
-							 Themes <ww:url id="createBusinessThemeLink" action="createBusinessTheme" includeParams="none">					
+							 Active themes <ww:url id="createBusinessThemeLink" action="createBusinessTheme" includeParams="none">								 			
 							</ww:url>
-							<ww:a href="%{createBusinessThemeLink}&contextViewName=editProduct&contextObjectId=${product.id}">Create new &raquo;</ww:a>
+							<ww:a href="%{createBusinessThemeLink}">Create new &raquo;</ww:a>
 							 </td>
 						</tr>
 					</table>
 				</div>
 				
-				<c:if test="${!empty product.businessThemes}">
+				<c:if test="${!empty product.activeBusinessThemes}">
 				<div id="subItemContent">
-					<p>
-					t?nne lista teemoja!!!
-					</p>
+				<display:table class="listTable" name="product.activeBusinessThemes"
+					id="row">
+				<display:column title="Name" class="editColumn">
+					<c:out value="${row.name}" />
+					<div style="overflow:visible; white-space: nowrap; width: 115px;">
+					<table style="width: 550px">
+						<tr>
+						<td>
+						<aef:businessTheme product="${product}" contextViewName="${currentAction}" contextObjectId="${product.id}" navi="basic"/>
+						</td>
+						</tr>
+					</table>
+					
+					</div>
+				</display:column>
+				<display:column title="# of BLIs">
+					<c:out value="${fn:length(row.backlogItems)}" />
+				</display:column>
+				<display:column title="Actions">
+				</display:column>
+				</display:table>					
+					
+					
 				</div>
 				</c:if>
 				

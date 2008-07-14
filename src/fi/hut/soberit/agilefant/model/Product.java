@@ -2,8 +2,10 @@ package fi.hut.soberit.agilefant.model;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
@@ -38,6 +40,8 @@ import fi.hut.soberit.agilefant.web.page.PageItem;
 public class Product extends Backlog implements PageItem {
 
     private List<Project> projects = new ArrayList<Project>();
+    
+    private Set<BusinessTheme> businessThemes = new HashSet<BusinessTheme>();
 
     /** Get the collection of projects belonging to this product. */
     @OneToMany(mappedBy = "product")
@@ -116,5 +120,38 @@ public class Product extends Backlog implements PageItem {
             result.add(proj.getBliOriginalEstimateSum());
         }
         return result;
+    }
+
+    @OneToMany(mappedBy = "product")
+    @OrderBy(clause = "name asc")
+    @BatchSize(size=20)
+    public Set<BusinessTheme> getBusinessThemes() {
+        return businessThemes;
+    }
+
+    public void setBusinessThemes(Set<BusinessTheme> businessThemes) {
+        this.businessThemes = businessThemes;
+    }
+    
+    @Transient    
+    public Set<BusinessTheme> getActiveBusinessThemes() {
+        Set<BusinessTheme> activeThemes = new HashSet<BusinessTheme>();
+        for (BusinessTheme t: getBusinessThemes()) {
+            if (t.isActive()) {
+                activeThemes.add(t);
+            }
+        }
+        return activeThemes;
+    }
+    
+    @Transient    
+    public Set<BusinessTheme> getNonActiveBusinessThemes() {
+        Set<BusinessTheme> nonActiveThemes = new HashSet<BusinessTheme>();
+        for (BusinessTheme t: getBusinessThemes()) {
+            if (!t.isActive()) {
+                nonActiveThemes.add(t);
+            }
+        }
+        return nonActiveThemes;
     }
 }

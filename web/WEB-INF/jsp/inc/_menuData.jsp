@@ -39,19 +39,7 @@
         <c:if test="${subnavi == 'teams'}">
         "classes": "selected path",
         </c:if>
-    },
-    {
-        <ww:url id="editLink" action="contextView" includeParams="none">
-            <ww:param name="resetContextView" value="true" />
-        </ww:url>
-        
-        "text": '<a href="${editLink}&amp;contextName=themes">Themes</a>',
-        "hasChildren": false,
-        
-        <c:if test="${subnavi == 'themes'}">
-        "classes": "selected path",
-        </c:if>
-    },
+    },    
     {
         <ww:url id="editLink" action="contextView" includeParams="none">
             <ww:param name="resetContextView" value="true" />

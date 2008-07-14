@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.BatchSize;
@@ -39,6 +40,10 @@ public class BusinessTheme implements Comparable<BusinessTheme> {
     private String name;
 
     private String description;
+    
+    private Product product;
+    
+    private boolean active;
     
     private Collection<BacklogItem> backlogItems;
         
@@ -95,5 +100,23 @@ public class BusinessTheme implements Comparable<BusinessTheme> {
             return -1;
         }
         return getName().compareTo(o.getName());
+    }
+
+    @ManyToOne
+    public Product getProduct() {
+        return product;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
+    }
+
+    @Column(columnDefinition = "boolean default 1")
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 }

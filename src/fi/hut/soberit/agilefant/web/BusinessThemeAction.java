@@ -16,8 +16,10 @@ public class BusinessThemeAction extends ActionSupport implements CRUDAction {
     
     private static final long serialVersionUID = -8978527111144555643L;
 
-    private int businessThemeId;
-
+    private int businessThemeId;  
+    
+    private int productId;
+    
     private BusinessTheme businessTheme;
 
     private Collection<BusinessTheme> businessThemes = new ArrayList<BusinessTheme>();
@@ -29,11 +31,12 @@ public class BusinessThemeAction extends ActionSupport implements CRUDAction {
     public String create() {
         businessThemeId = 0;
         businessTheme = new BusinessTheme();
+        businessTheme.setActive(true);
         return Action.SUCCESS;
     }
     
     public String list() {
-        businessThemes = businessThemeBusiness.getAll();
+        businessThemes = businessThemeBusiness.getActiveBusinessThemes(productId);
         return Action.SUCCESS;
     }
     
@@ -59,7 +62,7 @@ public class BusinessThemeAction extends ActionSupport implements CRUDAction {
         }
         
         try {
-            businessThemeBusiness.store(businessThemeId, fillable);
+            businessThemeBusiness.store(businessThemeId, productId, fillable);
         } catch(ObjectNotFoundException e) {
             super.addActionError(super.getText("businessTheme.notFound"));
             return Action.ERROR;
@@ -83,7 +86,7 @@ public class BusinessThemeAction extends ActionSupport implements CRUDAction {
                        
        /* try {
             businessTheme.setName(java.net.URLDecoder.decode(businessTheme.getName(), "ISO-8859-1"));
-            businessTheme.setDescription(java.net.URLDecoder.decode(businessTheme.getDescription(), "ISO-8859-1"));
+            businessTheme.setDescription(java.net.URLDecoder.decode(businessTheme.getDescription(), "ISO-8859-1"));            
         } catch(Exception e) {}
         */
         this.fillObject(fillable);
@@ -92,7 +95,7 @@ public class BusinessThemeAction extends ActionSupport implements CRUDAction {
             return CRUDAction.AJAX_ERROR;
         } 
         try {
-            BusinessTheme theme = businessThemeBusiness.store(businessThemeId, fillable);
+            BusinessTheme theme = businessThemeBusiness.store(businessThemeId, productId, fillable);
             businessThemeId = theme.getId();
         } catch(Exception e) {
             return CRUDAction.AJAX_ERROR;
@@ -122,11 +125,11 @@ public class BusinessThemeAction extends ActionSupport implements CRUDAction {
         }
         fillable.setName(businessTheme.getName().trim());
         fillable.setDescription(businessTheme.getDescription());
+        fillable.setActive(businessTheme.isActive());
     }
     
     public String editBacklogItemBusinessThemes() {
-        businessThemes = businessThemeBusiness.getAll();
-        return Action.SUCCESS;
+        return list();       
     }
     public int getBusinessThemeId() {
         return businessThemeId;
@@ -158,6 +161,14 @@ public class BusinessThemeAction extends ActionSupport implements CRUDAction {
 
     public void setBacklogItemId(int backlogItemId) {
         this.backlogItemId = backlogItemId;
+    }
+
+    public int getProductId() {
+        return productId;
+    }
+
+    public void setProductId(int productId) {
+        this.productId = productId;
     }
     
 }

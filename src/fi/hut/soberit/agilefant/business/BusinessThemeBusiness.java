@@ -17,6 +17,13 @@ public interface BusinessThemeBusiness {
     public BusinessTheme getBusinessTheme(int businessThemeId);
 
     public Collection<BusinessTheme> getAll();
+    
+    /**
+     * Gets the product's active themes.
+     * @param productId
+     * @return
+     */
+    public Collection<BusinessTheme> getActiveBusinessThemes(int productId);
 
     public void delete(int businessThemeId) throws ObjectNotFoundException;
 
@@ -29,7 +36,7 @@ public interface BusinessThemeBusiness {
      * @throws ObjectNotFoundException 
      * @throws Exception
      */
-    public BusinessTheme store(int businessThemeId, BusinessTheme theme)
+    public BusinessTheme store(int businessThemeId, int productId, BusinessTheme theme)
             throws ObjectNotFoundException, Exception;
 
 }

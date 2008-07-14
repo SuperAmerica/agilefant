@@ -1,10 +1,25 @@
-<%@ include file="../inc/_taglibs.jsp"%>
-<%@ include file="../inc/_header.jsp"%>
+<%@ include file="../jsp/inc/_taglibs.jsp"%>
 
-<aef:menu navi="administration" subnavi="themes" pageHierarchy="${pageHierarchy}" />
+<%@tag description="Business theme"%>
+
+<%@attribute type="fi.hut.soberit.agilefant.model.Product" name="product"%>
+<%@attribute name="contextViewName"%>
+<%@attribute name="contextObjectId"%>
+<%@attribute name="navi"%>
+
+<aef:businessThemeMenu navi="${navi}"/>
+
+<div>
+We are in this tab: 
+${navi}
+</div>
 
 <ww:actionerror />
 <ww:actionmessage />
+
+<c:choose>
+<c:when test="${navi == 'basic'}">
+
 <c:choose>
 	<c:when test="${businessTheme.id == 0}">
 		<h2>Create theme</h2>
@@ -28,6 +43,11 @@
 				name="businessTheme.description"/></td>
 		</tr>
 		<tr>
+		    <td></td>
+		    <td></td>
+		    <td colspan="2"><ww:checkbox name="businessTheme.active" value="${businessTheme.active}" /> Active</td>
+		</tr>
+		<tr>
 			<td></td>
 			<td></td>
 			<c:choose>
@@ -43,5 +63,15 @@
 		</tr>
 	</table>
 </ww:form>
+</c:when>
+<c:otherwise>
 
-<%@ include file="../inc/_footer.jsp"%>
+hähää, tää on bli-täbi!!
+
+</c:otherwise>
+
+
+</c:choose>
+
+<!-- Close the main div from menu -->
+</div>

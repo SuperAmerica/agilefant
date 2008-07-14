@@ -138,17 +138,19 @@ function reloadPage()
 {
 	window.location.reload();
 }
-function openThemeBusinessModal(parent, target, backlogItemId, themeId) {
+function openThemeBusinessModal(parent, target, backlogItemId, themeId, productId) {
 	var data = new Object();
 	data['backlogItemId'] = backlogItemId;
 	data['businessThemeId'] = themeId;
+	data['productId'] = productId;
 	loadModal(target,data,parent,reloadPage);
 }
-function openThemeBusinessBliModal(parent, target, backlogItemId, themeId) {
+function openThemeBusinessBliModal(parent, target, backlogItemId, themeId, productId) {
 	var data = new Object();
 	var cb = function() { }
 	data['backlogItemId'] = backlogItemId;
 	data['businessThemeId'] = themeId;
+	data['productId'] = productId;
 	loadModal(target,data,parent,cb);
 }
 function loadModal(target,request, parent, closeFunc) {
@@ -191,7 +193,7 @@ function addThemeToItem() {
 		alert("Select theme first.");
 		return;
 	}
-	if(jQuery.inArray(theme_id,selectedThemes) > -1) return;
+	if(jQuery.inArray(theme_id, selectedThemes) > -1) return;
 	jQuery.ajax({url: "addThemeToBacklogItem.action", 
 		data: {backlogItemId: backlogItemId, businessThemeId: theme_id}, type: 'POST', cache: false,
 		success: function(data, status) { 	
@@ -221,10 +223,12 @@ function saveTheme() {
 	var trimmed = name.replace(/^\s+|\s+$/g, '');
 	var desc = $("#descField").val();
 	var id = $("#businessThemeSelect").val();
+	var pid = productId;
 	var ename = trimmed; //escape(trimmed);
 	var edesc = desc; //escape(desc);
+	var active = true;
 	//var d = $("#businessThemeModalForm").serializeArray();
-	var d = {businessThemeId: id, "businessTheme.name": ename, "businessTheme.description": edesc};
+	var d = {businessThemeId: id, productId: pid, "businessTheme.name": ename, "businessTheme.description": edesc, "businessTheme.active": active};
 	if (name.length > 20) {
 		$("#businessThemeSaveSuccess").text("");
 		$("#businessThemeError").text("Error: theme name may not be longer than 20 characters.");
@@ -235,7 +239,7 @@ function saveTheme() {
 		$("#businessThemeError").text("Error: theme name empty.");
 		return;
 	}
-	jQuery.ajax({url: "ajaxStoreBusinessTheme.action",data: d, type: "POST", cache: false, 
+	jQuery.ajax({url: "ajaxStoreBusinessTheme.action", data: d, type: "POST", cache: false, 
 		success: function(data,status) {
 			var themeId = parseInt(data);
 			if(themeId == NaN) return;

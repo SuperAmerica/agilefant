@@ -529,6 +529,12 @@ div#submenuwrapmyTasks #menu li#subnav1 a,div#submenuwrapiteration #menu li#subn
 	overflow: visible;
 }
 
+.editColumn div {
+	width: 115px;
+	white-space: nowrap;
+	overflow: visible;
+}
+
 .iterationGoalColumn div {
 	overflow: hidden;
 	width: 90px;
@@ -1083,4 +1089,54 @@ ul.themeList li {
 ul.themeList li a {
 	color: #c96;
 	text-decoration: none;
+}
+
+/* Edit window main */
+
+#editMenu {
+	padding: 5px;
+	margin: 0 0 0 0px;
+	width: auto;
+	border-bottom: 1px solid #ccc;
+}
+
+#editMenu ul {
+	display: inline;
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+
+#editMenu li {
+	display: inline;
+	padding: 0;
+	margin: 0 0 0 8px;
+}
+
+#editMenu li a:link, #editMenu a:visited {
+    background: #E8EBF0;
+    color: #444;
+    padding: 3px 5px 2px 3px;
+    margin: 0 0 2px 0;
+    border: 1px solid #ccc;
+}
+
+#editMenu li img {
+    vertical-align: bottom;	
+}
+
+#editMenu li.selected a {
+    background-color: #fff;
+    border-bottom: 1px solid #fff;
+}
+
+#editMenu a:hover {
+    color: #e50;	
+}
+
+#editMain {
+	padding: 5px;
+	margin: 0 0 0 0px;
+	width: auto;
+	border: 1px solid #ccc;
 }

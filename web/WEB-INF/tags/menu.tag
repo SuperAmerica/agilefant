@@ -23,6 +23,7 @@ Agilefant
 <script type="text/javascript" src="static/js/jquery.cookie.js"></script>
 <script type="text/javascript" src="static/js/jquery.treeview.js"></script>
 <script type="text/javascript" src="static/js/jquery.treeview.async.js"></script>
+<script type="text/javascript" src="static/js/jquery-ui.min.js"></script>
 <script type="text/javascript" src="static/js/multiselect.js"></script>
 <script type="text/javascript" src="static/js/taskrank.js"></script>
 <script type="text/javascript" src="static/js/date.js"></script>

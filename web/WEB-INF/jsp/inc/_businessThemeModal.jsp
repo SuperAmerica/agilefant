@@ -13,6 +13,8 @@
 <div style="padding: 12px;">
 <ww:form id="businessThemeModalForm" action="storeBacklogItemBusinessThemes">
 	<ww:hidden name="backlogItemId" />
+	<ww:hidden name="productId" />
+	<ww:hidden name="active" value="${true}" />
 	
 	<table class="businessThemeTable">
 	<tr>
@@ -69,6 +71,7 @@
 
 <script type="text/javascript">
 var backlogItemId = ${backlogItemId};
+var productId = ${productId};
 var preSelectedTheme = ${businessThemeId};
 var businessThemes = new Object();
 <c:forEach items="${businessThemes}" var="businessTheme">

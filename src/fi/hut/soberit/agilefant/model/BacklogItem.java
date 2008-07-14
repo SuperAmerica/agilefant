@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -364,6 +365,22 @@ public class BacklogItem implements PageItem, Assignable, EffortContainer, Times
     }
     
     /**
+     * Returns the product under which this item is.
+     * @return
+     */
+    @Transient
+    public Product getProduct() {
+        Backlog parent = getBacklog();
+        if( parent instanceof Iteration ) {
+            return ((Iteration)parent).getProject().getProduct();
+        } else if( parent instanceof Project ) {
+            return ((Project) parent).getProduct();
+        } else {
+            return (Product) parent;
+        }
+    }
+    
+    /**
      * Returns the original effort estimate for this backlog item.
      * 
      * @return the original effort estimate for this backlog item
@@ -443,5 +460,17 @@ public class BacklogItem implements PageItem, Assignable, EffortContainer, Times
 
     public void setBusinessThemes(Collection<BusinessTheme> businessThemes) {
         this.businessThemes = businessThemes;
+    }
+    
+    @Transient
+    @OrderBy("name")
+    public Collection<BusinessTheme> getActiveBusinessThemes() {
+        Set<BusinessTheme> activeThemes = new HashSet<BusinessTheme>();
+        for (BusinessTheme t: this.getBusinessThemes()) {
+            if (t.isActive()) {
+                activeThemes.add(t);
+            }
+        }
+        return activeThemes;
     }
 }

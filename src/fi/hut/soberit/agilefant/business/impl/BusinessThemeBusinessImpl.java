@@ -30,15 +30,10 @@ public class BusinessThemeBusinessImpl implements BusinessThemeBusiness {
     
     public Collection<BusinessTheme> getActiveBusinessThemes(int productId) {
         Product product = productDAO.get(productId);
-        Collection<BusinessTheme> themes = new HashSet<BusinessTheme>();
-        if (product != null) {
-            for (BusinessTheme t : getAll()) {
-                if ( t.getProduct().equals(product) && t.isActive() ) {
-                    themes.add(t);
-                }
-            }
+        if(product == null) {
+            return new HashSet<BusinessTheme>();
         }
-        return themes;
+        return businessThemeDAO.getSortedBusinessThemesByProductAndActivity(product, true);
     }
 
     public void delete(int themeId) throws ObjectNotFoundException {

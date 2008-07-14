@@ -263,8 +263,14 @@ function updateThemeSelect(setSelected) {
 
 	select.empty();
 	$('<option value="">(create new)</option>').appendTo(select);
+	var themeArr = [];
 	for(var theme in businessThemes) {
-		$('<option value="'+theme+'">'+businessThemes[theme].name+'</option>').appendTo(select);
+		themeArr.push({id : theme, name: businessThemes[theme].name});
+	}
+	var sorter = function(a,b) { if(a.name > b.name) { return 1; } else {return -1}};
+	themeArr.sort(sorter);
+	for(var i = 0; i < themeArr.length; i++) {
+		$('<option value="'+themeArr[i].id+'">'+themeArr[i].name+'</option>').appendTo(select);
 	}
 	if(old > 0) {
 		select.find("[value="+old+"]").attr("selected","selected");

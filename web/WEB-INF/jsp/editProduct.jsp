@@ -369,7 +369,7 @@ var productId = ${product.id};
 				
 				<c:if test="${!empty activeBusinessThemes}">
 				<div id="subItemContent">
-				<display:table class="listTable" name="${activeBusinessThemes}"
+				<display:table class="listTable" name="activeBusinessThemes"
 					id="row">
 				<display:column title="Name" class="editColumn">
 					<c:out value="${row.name}" />					
@@ -378,10 +378,13 @@ var productId = ${product.id};
 				<display:column title="# of BLIs">
 					<c:out value="${fn:length(row.backlogItems)}" />
 				</display:column>
+				<display:column title="# of Done BLIs">
+					<c:out value="${doneBlis[row]}" />
+				</display:column>
 				<display:column title="Actions">
 				<img src="static/img/edit.png" alt="Edit" title="Edit" style="cursor: pointer;" onclick="openEditThemeTabs('businessThemeTabContainer-${row.id}',${row.id});" />
 				</display:column>
-				</display:table>				
+				</display:table>					
 					
 					
 				</div>

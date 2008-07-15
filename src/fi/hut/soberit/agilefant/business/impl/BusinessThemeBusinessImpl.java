@@ -11,22 +11,20 @@ import java.util.Map;
 import org.springframework.dao.DataIntegrityViolationException;
 
 import fi.hut.soberit.agilefant.business.BusinessThemeBusiness;
-import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.db.BusinessThemeDAO;
 import fi.hut.soberit.agilefant.db.ProductDAO;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
-import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.BusinessTheme;
 import fi.hut.soberit.agilefant.model.Product;
+import fi.hut.soberit.agilefant.model.State;
 
 public class BusinessThemeBusinessImpl implements BusinessThemeBusiness {
 
     private BusinessThemeDAO businessThemeDAO;
     private ProductDAO productDAO;
     private BacklogItemDAO backlogItemDAO;
-    private BacklogDAO backlogDAO;
 
     public BusinessTheme getBusinessTheme(int businessThemeId) {
         return businessThemeDAO.get(businessThemeId);
@@ -52,20 +50,6 @@ public class BusinessThemeBusinessImpl implements BusinessThemeBusiness {
         return businessThemeDAO.getSortedBusinessThemesByProductAndActivity(product, false);
     }
     
-    public Map<BacklogItem, List<BusinessTheme>> getBusinessThemeListByBacklogItems(int backlogId) {
-        Backlog backlog = backlogDAO.get(backlogId);
-        if (backlog == null) {
-            return new HashMap<BacklogItem, List<BusinessTheme>>();
-        }
-        Map<BacklogItem, List<BusinessTheme>> map = new HashMap<BacklogItem, List<BusinessTheme>>();
-        for (BacklogItem bli: backlog.getBacklogItems()) {
-            if (bli.getBusinessThemes() != null) {
-                map.put(bli, getBacklogItemActiveBusinessThemes(bli.getId()));
-            }           
-        }
-        return map;
-    }
-    
     public List<BusinessTheme> getBacklogItemActiveBusinessThemes(int backlogItemId) {
         BacklogItem bli = backlogItemDAO.get(backlogItemId);
         if (bli == null) {
@@ -79,6 +63,25 @@ public class BusinessThemeBusinessImpl implements BusinessThemeBusiness {
         }
                         
         return activeThemes;
+    }
+    
+    public Map<BusinessTheme, String> getThemesDoneBacklogItems(int productId) {
+        Product product = productDAO.get(productId);
+        
+        if (product == null) {
+            return new HashMap<BusinessTheme, String>();
+        }
+        Map<BusinessTheme, String> themeDoneBlis = new HashMap<BusinessTheme, String>();
+        for (BusinessTheme theme: product.getBusinessThemes()) {
+            int doneBlis = 0;
+            for (BacklogItem bli: theme.getBacklogItems()) {
+                if (bli.getState() == State.DONE) {
+                    doneBlis++;
+                }
+            }
+            themeDoneBlis.put(theme, "" + doneBlis);
+        }
+        return themeDoneBlis;
     }
 
     public void delete(int themeId) throws ObjectNotFoundException {
@@ -161,10 +164,6 @@ public class BusinessThemeBusinessImpl implements BusinessThemeBusiness {
 
     public void setBacklogItemDAO(BacklogItemDAO backlogItemDAO) {
         this.backlogItemDAO = backlogItemDAO;
-    }
-
-    public void setBacklogDAO(BacklogDAO backlogDAO) {
-        this.backlogDAO = backlogDAO;
     }
 
 }

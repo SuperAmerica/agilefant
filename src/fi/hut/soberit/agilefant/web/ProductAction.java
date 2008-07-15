@@ -52,6 +52,8 @@ public class ProductAction extends ActionSupport implements CRUDAction {
     
     private Map<Project, EffortSumData> origEstSums;
     
+    private Map<BusinessTheme, String> doneBlis;
+    
     private BusinessThemeBusiness businessThemeBusiness; 
 
     public String create() {
@@ -93,6 +95,9 @@ public class ProductAction extends ActionSupport implements CRUDAction {
         
         effLeftSums = new HashMap<Project, EffortSumData>();
         origEstSums = new HashMap<Project, EffortSumData>();
+        
+        // Calculate themes' done blis
+        doneBlis = businessThemeBusiness.getThemesDoneBacklogItems(productId);
         
         // Load Hour Entry sums to this backlog's BLIs.
         hourEntryBusiness.loadSumsToBacklogItems(backlog);
@@ -271,12 +276,16 @@ public class ProductAction extends ActionSupport implements CRUDAction {
     public Collection<BusinessTheme> getNonActiveBusinessThemes() {
         return businessThemeBusiness.getNonActiveBusinessThemes(productId);
     }
-
+    
     public BusinessThemeBusiness getBusinessThemeBusiness() {
         return businessThemeBusiness;
     }
 
     public void setBusinessThemeBusiness(BusinessThemeBusiness businessThemeBusiness) {
         this.businessThemeBusiness = businessThemeBusiness;
+    }
+
+    public Map<BusinessTheme, String> getDoneBlis() {
+        return doneBlis;
     }
 }

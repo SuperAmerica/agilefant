@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
-import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.BusinessTheme;
 
 public interface BusinessThemeBusiness {
@@ -35,14 +34,20 @@ public interface BusinessThemeBusiness {
      */
     public Collection<BusinessTheme> getNonActiveBusinessThemes(int productId);
     
+    
     /**
      * Gets a backlog's items' themes.
      * @param backlogId
      * @return
      */
-    public Map<BacklogItem, List<BusinessTheme>> getBusinessThemeListByBacklogItems(int backlogId);
-    
     public List<BusinessTheme> getBacklogItemActiveBusinessThemes(int backlogItemId);
+    
+    /**
+     * Gets a product's themes' number of done blis.
+     * @param productId
+     * @return
+     */
+    public Map<BusinessTheme, String> getThemesDoneBacklogItems(int productId);
     
     public void delete(int businessThemeId) throws ObjectNotFoundException;
 

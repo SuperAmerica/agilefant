@@ -22,7 +22,7 @@ function openEditThemeTabs(target,id) {
 	} else {
 		target.load("businessThemeTabs.action",{businessThemeId: id},function(data, status) {
 			var t = target.find(".tabs-nav").length;
-			target.find(".tabs-nav").tabs({fx: null});
+			target.find(".businessThemeTabs").tabs();
 		});
 		target.attr("tab-data-loaded","1");
 	}

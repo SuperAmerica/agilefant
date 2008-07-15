@@ -1,6 +1,7 @@
 /* Main stylesheet file for Agilefant*/
 @import "jquery.treeview.css";
 @import "timeline-bundle.css";
+@import "jquery.tabs.css";
 
 html {
 	margin: 0;
@@ -527,6 +528,12 @@ div#submenuwrapmyTasks #menu li#subnav1 a,div#submenuwrapiteration #menu li#subn
 	width: 115px;
 	white-space: nowrap;
 	overflow: visible;
+}
+
+.editColumn {
+    width: 200px;
+    white-space: nowrap;
+    overflow: visible;	
 }
 
 .editColumn div {
@@ -1139,4 +1146,8 @@ ul.themeList li a {
 	margin: 0 0 0 0px;
 	width: auto;
 	border: 1px solid #ccc;
+}
+
+.listTable {
+    width: 100%;
 }

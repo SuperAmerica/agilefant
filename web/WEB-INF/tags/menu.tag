@@ -19,7 +19,7 @@ Agilefant
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
 <script type="text/javascript" src="static/js/generic.js"></script>
-<script type="text/javascript" src="static/js/jquery-1.2.2.js"></script>
+<script type="text/javascript" src="static/js/jquery-1.2.6.js"></script>
 <script type="text/javascript" src="static/js/jquery.cookie.js"></script>
 <script type="text/javascript" src="static/js/jquery.treeview.js"></script>
 <script type="text/javascript" src="static/js/jquery.treeview.async.js"></script>

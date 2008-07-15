@@ -2,6 +2,9 @@
 drop table if exists backlogitem_businesstheme;
 drop table if exists businesstheme;
 
+-- Drop unused table
+drop table if exists taskevent;
+
 -- Themes moved under products, name not unique anymore
 create table businesstheme (id integer not null auto_increment, name varchar(255) not null, description text, product_id integer, active boolean default 1, primary key (id)) ENGINE=InnoDB;
 alter table businesstheme add index FK26B08E09A7FE2362 (product_id), add constraint FK26B08E09A7FE2362 foreign key (product_id) references backlog (id);
@@ -22,7 +25,6 @@ ALTER TABLE `iterationgoal` CHARACTER SET utf8 COLLATE utf8_general_ci;
 ALTER TABLE `projecttype` CHARACTER SET utf8 COLLATE utf8_general_ci;
 ALTER TABLE `setting` CHARACTER SET utf8 COLLATE utf8_general_ci;
 ALTER TABLE `task` CHARACTER SET utf8 COLLATE utf8_general_ci;
-ALTER TABLE `taskevent` CHARACTER SET utf8 COLLATE utf8_general_ci;
 ALTER TABLE `team` CHARACTER SET utf8 COLLATE utf8_general_ci;
 ALTER TABLE `team_user` CHARACTER SET utf8 COLLATE utf8_general_ci;
 ALTER TABLE `user` CHARACTER SET utf8 COLLATE utf8_general_ci;

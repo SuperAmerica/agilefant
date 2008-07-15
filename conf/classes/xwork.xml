@@ -888,6 +888,10 @@
 				<param name="location">/WEB-INF/jsp/inc/ajaxBusinessThemeResult.jsp</param>
 			</result>
 		</action>	
+		<action name="businessThemeTabs" method="edit"
+			class="businessThemeAction">
+			<result>/WEB-INF/jsp/inc/businessThemeAjax.jsp</result>
+		</action>
 		<!-- /Business theme actions -->
 		
 		<!-- Product timeline actions -->

@@ -245,8 +245,8 @@
 					<tbody>
 						<tr>
 							<td>
-								<div id="subItems" style="margin-top: 0">
-									<div id="subItemHeader">
+								<div class="subItems" style="margin-top: 0">
+									<div class="subItemHeader">
 										<script type="text/javascript">
 											function expandDescription() {
 												document.getElementById('descriptionDiv').style.maxHeight = "1000em";
@@ -277,7 +277,7 @@
 											</tr>
 										</table>
 									</div>
-									<div id="subItemContent">
+									<div class="subItemContent">
 										<div id="descriptionDiv" class="descriptionDiv" style="display: block;">
 											<table class="infoTable" cellpadding="0" cellspacing="0">
 												<tr>
@@ -594,8 +594,8 @@
 			<tr>
 				<td>
 					<c:if test="${project.id > 0}">
-						<div id="subItems">
-							<div id="subItemHeader">
+						<div class="subItems">
+							<div class="subItemHeader">
 								<table cellpadding="0" cellspacing="0">
 									<tr>
 					   					<td class="header">Iterations
@@ -609,7 +609,7 @@
 								</table>
 							</div>
 							<c:if test="${!empty project.iterations}">
-								<div id="subItemContent">
+								<div class="subItemContent">
 									<p>
 										<display:table class="listTable" name="project.iterations"
 											id="row" requestURI="editProject.action">
@@ -659,7 +659,7 @@
 									</p>
 								</div>
 							</c:if>
-							<div id="subItemHeader">
+							<div class="subItemHeader">
 								<table cellpadding="0" cellspacing="0">
                     				<tr>
                        					<td class="header">Backlog items <ww:url
@@ -674,7 +674,7 @@
 								</table>
 							</div>
 							<c:if test="${!empty project.backlogItems}">
-								<div id="subItemContent">
+								<div class="subItemContent">
 									<%@ include	file="./inc/_backlogList.jsp"%>
 								</div>
 							</c:if>

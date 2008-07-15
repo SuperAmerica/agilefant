@@ -11,8 +11,8 @@ function show_small_loadtable() {
 }
 </script>
 
-<div id="subItems">
-<div id="subItemHeader">
+<div class="subItems">
+<div class="subItemHeader">
 <table cellspacing="0" cellpadding="0">
 	<tr>
 		<td class="header">Load</td>
@@ -27,7 +27,7 @@ function show_small_loadtable() {
 	</tr>
 </table>
 </div>
-<div id="subItemContent">
+<div class="subItemContent">
 
 
 <div id="detailedLoadTable" style="display: none;">

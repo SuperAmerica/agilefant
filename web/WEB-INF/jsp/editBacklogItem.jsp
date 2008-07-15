@@ -443,8 +443,8 @@
 <table>
 	<tr>
 		<td><c:if test="${backlogItem.id > 0}">
-			<div id="subItems">
-			<div id="subItemHeader">
+			<div class="subItems">
+			<div class="subItemHeader">
 			<table cellpadding="0" cellspacing="0">
                     <tr>
                        <td class="header">Tasks <ww:url id="createLink"
@@ -457,7 +457,7 @@
 				</table>
 			</div>
 			<c:if test="${!empty backlogItem.tasks}">
-				<div id="subItemContent">
+				<div class="subItemContent">
 										
 				<p><display:table class="listTable" name="backlogItem.tasks"
 					id="row" requestURI="editBacklogItem.action">

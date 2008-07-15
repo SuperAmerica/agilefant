@@ -10,10 +10,10 @@
 	<h2>All items assigned to <c:out value="${user.fullName}" /> from
 	ongoing iterations</h2>
 
-	<div id="subItems"><c:forEach items="${iterations}" var="it">
+	<div class="subItems"><c:forEach items="${iterations}" var="it">
 
 
-		<div id="subItemHeader">
+		<div class="subItemHeader">
 		<table cellspacing="0" cellpadding="0">
         <tr>
         <td class="header">
@@ -62,7 +62,7 @@
 		</div>
 
 
-		<div id="subItemContent">
+		<div class="subItemContent">
 		<p>
 		<table class="dailyWorkBacklogItems">
 			<tr>

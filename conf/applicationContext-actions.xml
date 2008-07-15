@@ -93,4 +93,7 @@
 	<bean name="timelineAction"
         class="fi.hut.soberit.agilefant.web.TimelineAction"
         autowire="byName" singleton="false" />
+    <bean name="sessionAction"
+        class="fi.hut.soberit.agilefant.web.SessionAction"
+        autowire="byName" singleton="false" />
 </beans>

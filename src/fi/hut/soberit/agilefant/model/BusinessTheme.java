@@ -85,7 +85,7 @@ public class BusinessTheme implements Comparable<BusinessTheme> {
         this.description = description;
     }
     
-    @ManyToMany(mappedBy = "businessThemes", targetEntity = fi.hut.soberit.agilefant.model.BacklogItem.class, fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "businessThemes", targetEntity = fi.hut.soberit.agilefant.model.BacklogItem.class)
     public Collection<BacklogItem> getBacklogItems() {
         return backlogItems;
     }

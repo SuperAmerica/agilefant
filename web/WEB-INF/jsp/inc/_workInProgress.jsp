@@ -4,9 +4,9 @@
 
 
 <c:if test="${!(empty backlogItemsForUserInProgress)}">
-<div id="subItems">
+<div class="subItems">
 
-<div id="subItemHeader">
+<div class="subItemHeader">
 <table cellspacing="0" cellpadding="0">
 <tr>
 <td class="header">
@@ -16,7 +16,7 @@ Backlog items
 </table>
 </div>
 
-<div id="subItemContent"><display:table
+<div class="subItemContent"><display:table
 	name="backlogItemsForUserInProgress" id="row"
 	requestURI="dailyWork.action">
 	<!-- Display the backlog row name -->

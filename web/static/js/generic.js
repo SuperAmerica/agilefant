@@ -293,3 +293,16 @@ function selectEditTheme(theme_id) {
 	$("#businessThemeSaveSuccess").text("");
 	$("#businessThemeError").text("");
 }
+
+function ajaxOpenDialog(context, dialogId) {
+    jQuery.post("ajaxOpenDialog.action", {
+        "contextType": context,
+        "objectId": dialogId
+        });
+}
+function ajaxCloseDialog(context, dialogId) {
+    jQuery.post("ajaxCloseDialog.action", {
+        "contextType": context,
+        "objectId": dialogId
+        });
+}

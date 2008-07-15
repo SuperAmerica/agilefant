@@ -7,7 +7,7 @@
 
 <h2>All items assigned to <c:out value="${user.fullName}" /> from ongoing projects</h2>
 
-<div id="subItems">
+<div class="subItems">
 
 <c:forEach items="${projects}" var="pro">
 	<c:if test="${hourReport}">
@@ -48,7 +48,7 @@
 		</c:if>
 
 
-<div id="subItemContent">
+<div class="subItemContent">
 <p>
 
 <table class="dailyWorkBacklogItems">

@@ -221,7 +221,7 @@ a:hover,a:active {
 	border-bottom: 1px solid #ccc;
 }
 
-#subItemContent {
+#subItemContent, .subItemContent {
 	padding: 0;
 	margin: 0;
 }
@@ -771,19 +771,19 @@ h2 .editLink {
 	border: none;
 }
 
-#subItemHeader table {
+#subItemHeader table, .subItemHeader table {
 	width: 100%;
 	font-family: "Arial", sans-serif;
 	margin: 0;
 	padding: 0 0 0 3px;
 }
 
-#subItemHeader table td {
+#subItemHeader table td, .subItemHeader table td  {
 	/*color: #ffffff;*/
 	font-weight: normal;
 }
 
-#subItemHeader table .header {
+#subItemHeader table .header, .subItemHeader table .header {
 	height: 22px;
 }
 

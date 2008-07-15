@@ -427,6 +427,24 @@
 	    </attribute>
 	</tag>
 	
+	<tag>
+        <name>openDialogs</name>
+        <tag-class>fi.hut.soberit.agilefant.web.tag.OpenDialogsTag</tag-class>
+        <body-content>JSP</body-content>
+        <description>
+            Get the id's of open dialogs of the context type.
+        </description>
+        <attribute>
+            <name>id</name>
+            <required>true</required>     
+        </attribute>        
+         <attribute>
+            <name>context</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue> 
+        </attribute>
+    </tag>
+	
 	<tag-file>
 		<name>backlogDropdown</name>
 		<path>/WEB-INF/tags/backlogDropdown.tag</path>
@@ -596,6 +614,5 @@
 	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
 	  <function-signature>String currentTime()</function-signature>
 	</function>
-	
 	
 </taglib>

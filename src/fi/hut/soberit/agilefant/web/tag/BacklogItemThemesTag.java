@@ -34,7 +34,7 @@ public class BacklogItemThemesTag extends SpringTagSupport {
         } else {
             actualPositionId = "" + bli.getId();
         }
-        System.out.println("postion: " + actualPositionId);
+        // System.out.println("postion: " + actualPositionId);
        
         String printString = "<a href=\"#\" id=\"" + actualPositionId + "\" " +
         		"onclick=\"openThemeBusinessModal('" + actualPositionId + "', 'editBacklogItemBusinessThemes.action'," + bli.getId() + ", 0," + bli.getProduct().getId() + "); return false;\">" +

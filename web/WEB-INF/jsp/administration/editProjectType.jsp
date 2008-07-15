@@ -45,13 +45,13 @@
 	<table>
 		<tr>
 			<td>
-			<div id="subItems">
-			<div id="subItemHeader">Work types <ww:url id="createLink"
+			<div class="subItems">
+			<div class="subItemHeader">Work types <ww:url id="createLink"
 				action="createWorkType" includeParams="none">
 				<ww:param name="projectTypeId" value="${projectType.id}" />
 			</ww:url> <ww:a href="%{createLink}">Create new &raquo;</ww:a></div>
 			<c:if test="${!empty projectType.workTypes}">
-				<div id="subItemContent">
+				<div class="subItemContent">
 					<display:table class="listTable" defaultsort="1"
 					name="${projectType.workTypes}" id="row"
 					requestURI="editProjectType.action?projectTypeId=${projectType.id}">

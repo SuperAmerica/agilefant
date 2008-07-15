@@ -124,7 +124,8 @@ public class BusinessThemeBusinessImpl implements BusinessThemeBusiness {
             }
             persistable.setDescription(theme.getDescription());
             persistable.setName(theme.getName());
-            persistable.setProduct(product);            
+            persistable.setProduct(product);
+            persistable.setActive(theme.isActive());
         } else if (productId > 0) {
             product = productDAO.get(productId);
             if (product == null) {

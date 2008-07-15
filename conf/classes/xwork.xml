@@ -900,6 +900,11 @@
             <result>/WEB-INF/jsp/inc/timelineData.jsp</result>
         </action>
 		<!-- /Product timeline actions -->
+		
+		<!-- Session actions -->
+		<action name="ajaxOpenDialog" method="ajaxOpenDialog" class="sessionAction" />
+        <action name="ajaxCloseDialog" method="ajaxCloseDialog" class="sessionAction" />
+		<!-- /Session actions -->
 
 </package>
 </xwork>

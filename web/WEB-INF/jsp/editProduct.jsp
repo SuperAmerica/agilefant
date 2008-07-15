@@ -12,22 +12,68 @@
 <ww:actionerror />
 <ww:actionmessage />
 
-<!-- Initialize the simileajax -->
+<aef:openDialogs context="themes" id="openThemes" />
+
+<c:forEach items="${openThemes}" var="openTheme">
+
+</c:forEach>
 
 <script type="text/javascript">
+var themeFormSettings = {
+	rules: {
+	    "businessTheme.name": {
+	       required: true,
+	       minlength: 1
+	    }
+	},
+	messages: {
+        "businessTheme.name": {
+            required: "Please enter a name",
+            minlength: "Please enter a name"
+        }
+	}
+};
+
+function submitThemeForm() {
+    if($(this).valid()) {
+        $.post($(this).attr("action"), $(this).serializeArray(),
+            function(data, status) {
+                reloadPage();                
+            });
+    }
+    
+    return false;
+}
+
 function openEditThemeTabs(target,id) {
 	var target = $("#"+target);
 	if(target.attr("tab-data-loaded")) {
+		if (target.is(":visible")) {
+            ajaxCloseDialog("themes", id);
+		}
+		else {
+		  ajaxOpenDialog("themes", id);
+		}
 		target.toggle();
 	} else {
+        ajaxOpenDialog("themes", id);
 		target.load("businessThemeTabs.action",{businessThemeId: id},function(data, status) {
 			var t = target.find(".tabs-nav").length;
 			target.find(".businessThemeTabs").tabs();
+			var form = target.find("form");
+			form.validate(themeFormSettings);
+			form.submit(submitThemeForm);
 		});
 		target.attr("tab-data-loaded","1");
 	}
 	return false;
 }
+
+$(document).ready(function() {
+    <c:forEach items="${openThemes}" var="openTheme">
+        openEditThemeTabs("businessThemeTabContainer-${openTheme}", ${openTheme});
+    </c:forEach>
+});
 
 /* Initialize the SimileAjax object */
 var SimileAjax = {
@@ -103,8 +149,8 @@ var productId = ${product.id};
   		<tbody>
  	    	<tr>
     	 		<td>
-            		<div id="subItems" style="margin-top: 0">
-                		<div id="subItemHeader">
+            		<div class="subItems" style="margin-top: 0">
+                		<div class="subItemHeader">
 	                		<script type="text/javascript">
 			                function expandDescription() {
 			                    document.getElementById('descriptionDiv').style.maxHeight = "1000em";
@@ -137,7 +183,7 @@ var productId = ${product.id};
 	                            </tr>
 	                        </table>
                       	</div>
-                     	<div id="subItemContent">
+                     	<div class="subItemContent">
 							<div id="descriptionDiv" class="descriptionDiv"
 								style="display: block;">
 								<table class="infoTable" cellpadding="0" cellspacing="0">
@@ -227,8 +273,8 @@ var productId = ${product.id};
 
 	<tr>
 		<td>
-			<div id="subItems">
-				<div id="subItemHeader">
+			<div class="subItems">
+				<div class="subItemHeader">
 				<table cellspacing="0" cellpadding="0">
 	                <tr>
 	                    <td class="header">
@@ -242,7 +288,7 @@ var productId = ${product.id};
 				</div>
 
 				<c:if test="${!empty product.projects}">
-				<div id="subItemContent">
+				<div class="subItemContent">
 				<p><display:table class="listTable" name="product.projects"
 					id="row" requestURI="editProduct.action">
 					<display:column sortable="true" sortProperty="name" title="Name">
@@ -308,8 +354,8 @@ var productId = ${product.id};
 <table>	
 	<tr>
 		<td>
-			<div id="subItems">
-				<div id="subItemHeader">
+			<div class="subItems">
+				<div class="subItemHeader">
 					<table cellspacing="0" cellpadding="0">
 						<tr>
 							 <td class="header">
@@ -335,7 +381,7 @@ var productId = ${product.id};
 				<display:column title="Actions">
 				<img src="static/img/edit.png" alt="Edit" title="Edit" style="cursor: pointer;" onclick="openEditThemeTabs('businessThemeTabContainer-${row.id}',${row.id});" />
 				</display:column>
-				</display:table>					
+				</display:table>				
 					
 					
 				</div>
@@ -382,8 +428,8 @@ var productId = ${product.id};
 <table>	
 	<tr>
 		<td>
-			<div id="subItems">
-			<div id="subItemHeader">
+			<div class="subItems">
+			<div class="subItemHeader">
 				<table cellspacing="0" cellpadding="0">
 	                <tr>
 	                    <td class="header">
@@ -399,7 +445,7 @@ var productId = ${product.id};
 			</div>			
 
 			<c:if test="${!empty product.backlogItems}">
-			<div id="subItemContent">
+			<div class="subItemContent">
 				<p><%@ include file="./inc/_backlogList.jsp"%>
 				</p>
 			</div>

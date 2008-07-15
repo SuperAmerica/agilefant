@@ -272,8 +272,8 @@
 		<tbody>
 			<tr>
 				<td>
-					<div id="subItems" style="margin-top: 0pt;">
-						<div id="subItemHeader">
+					<div class="subItems" style="margin-top: 0pt;">
+						<div class="subItemHeader">
 							<table>
 								<tbody>
 									<tr>
@@ -286,7 +286,7 @@
 								</tbody>
 							</table>
 						</div>
-						<div id="subItemContent">
+						<div class="subItemContent">
 						<div id="listProjectHours" style="">
 						<table class="reportTable" cellpadding="0" cellspacing="0">
 							<tbody>

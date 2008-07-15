@@ -126,8 +126,8 @@
 				<tbody>
 					<tr>
 						<td>
-						<div id="subItems" style="margin-top: 0">
-						<div id="subItemHeader"><script type="text/javascript">
+						<div class="subItems" style="margin-top: 0">
+						<div class="subItemHeader"><script type="text/javascript">
                 function expandDescription() {
                     document.getElementById('descriptionDiv').style.maxHeight = "1000em";
                     document.getElementById('descriptionDiv').style.overflow = "visible";
@@ -158,7 +158,7 @@
 							</tr>
 						</table>
 						</div>
-						<div id="subItemContent">
+						<div class="subItemContent">
 						<div id="descriptionDiv" class="descriptionDiv"
 							style="display: block;">
 						<table class="infoTable" cellpadding="0" cellspacing="0">
@@ -360,8 +360,8 @@ $(document).ready( function() {
 <table>
 	<tr>
 		<td><c:if test="${iterationId != 0}">
-			<div id="subItems">
-			<div id="subItemHeader">
+			<div class="subItems">
+			<div class="subItemHeader">
 			    <table cellspacing="0" cellpadding="0">
                 <tr>
                 <td class="header">
@@ -380,7 +380,7 @@ $(document).ready( function() {
 			<c:if test="${hourReport}">
 				<aef:backlogHourEntrySums id="iterationGoalEffortSpent" groupBy="IterationGoal" target="${iteration}" />
 			</c:if>
-				<div id="subItemContent">
+				<div class="subItemContent">
 				<p><display:table class="listTable"
 					name="iteration.iterationGoals" id="row"
 					requestURI="editIteration.action">
@@ -486,7 +486,7 @@ $(document).ready( function() {
 			</div>
 
 			<c:if test="${!empty iteration.backlogItems}">
-				<div id="subItemContent">
+				<div class="subItemContent">
 				<p><%@ include file="./inc/_backlogList.jsp"%>
 				</p>
 				</div>

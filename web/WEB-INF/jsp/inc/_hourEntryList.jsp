@@ -33,7 +33,7 @@
 		</c:choose>
 	</div>						
 	<c:if test="${!empty hourEntries}">
-		<div id="subItemContent">		
+		<div class="subItemContent">		
 			<p>
 				<display:table name="${hourEntries}" id="row" defaultsort="1" defaultorder="descending" requestURI="${myAction}.action">
 					

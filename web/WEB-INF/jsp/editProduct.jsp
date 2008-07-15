@@ -73,6 +73,11 @@ $(document).ready(function() {
     <c:forEach items="${openThemes}" var="openTheme">
         openEditThemeTabs("businessThemeTabContainer-${openTheme}", ${openTheme});
     </c:forEach>
+    
+    var createThemeForm = $("#createThemeDiv").find("form");
+    createThemeForm.validate(themeFormSettings);
+    createThemeForm.submit(submitThemeForm);
+    
 });
 
 /* Initialize the SimileAjax object */
@@ -359,32 +364,58 @@ var productId = ${product.id};
 					<table cellspacing="0" cellpadding="0">
 						<tr>
 							 <td class="header">
-							 Active themes <ww:url id="createBusinessThemeLink" action="createBusinessTheme" includeParams="none">								 			
-							</ww:url>
-							<ww:a href="%{createBusinessThemeLink}">Create new &raquo;</ww:a>
+							 Active themes
+							<ww:a href="#" onclick="toggleDiv('createThemeDiv'); return false;">Create new &raquo;</ww:a>
 							 </td>
 						</tr>
 					</table>
 				</div>
 				
+				<div style="display: none;" id="createThemeDiv">
+				<ww:form action="ajaxStoreBusinessTheme" method="post">
+				    <ww:hidden name="productId" value="${product.id}" />
+				    <ww:hidden name="businessTheme.active" value="true" />
+				    <table class="formTable">
+				        <tr>
+				            <td>Name</td>
+				            <td>*</td>
+				            <td colspan="2"><ww:textfield size="20" name="businessTheme.name" maxlength="20" /></td>
+				        </tr>       
+				        <tr>
+				            <td>Description</td>
+				            <td></td>
+				            <td colspan="2"><ww:textarea cols="50" rows="7"
+				                name="businessTheme.description"/></td>
+				        </tr>
+				        <tr>
+				            <td></td>
+				            <td></td>
+		                    <td><ww:submit value="Create" /></td>
+				            <td class="deleteButton"><ww:reset value="Cancel" onclick="toggleDiv('createThemeDiv');"/></td>
+				        </tr>
+				    </table>
+				</ww:form>
+				</div>
+				
+				
 				<c:if test="${!empty activeBusinessThemes}">
 				<div id="subItemContent">
 				<display:table class="listTable" name="activeBusinessThemes"
 					id="row">
-				<display:column title="Name" class="editColumn">
-					<c:out value="${row.name}" />					
-					<div id="businessThemeTabContainer-${row.id}" style="overflow:visible; white-space: nowrap; width: 115px;"></div>
-				</display:column>
-				<display:column title="# of BLIs">
-					<c:out value="${fn:length(row.backlogItems)}" />
-				</display:column>
-				<display:column title="# of Done BLIs">
-					<c:out value="${doneBlis[row]}" />
-				</display:column>
-				<display:column title="Actions">
-				<img src="static/img/edit.png" alt="Edit" title="Edit" style="cursor: pointer;" onclick="openEditThemeTabs('businessThemeTabContainer-${row.id}',${row.id});" />
-				</display:column>
-				</display:table>					
+					<display:column title="Name" class="editColumn">
+						<c:out value="${row.name}" />					
+						<div id="businessThemeTabContainer-${row.id}" style="overflow:visible; white-space: nowrap; width: 115px;"></div>
+					</display:column>
+					<display:column title="# of BLIs">
+                        <c:out value="${fn:length(row.backlogItems)}" />
+                    </display:column>
+                    <display:column title="# of Done BLIs">
+                        <c:out value="${doneBlis[row]}" />
+                    </display:column>
+					<display:column title="Actions">
+					   <img src="static/img/edit.png" alt="Edit" title="Edit" style="cursor: pointer;" onclick="openEditThemeTabs('businessThemeTabContainer-${row.id}',${row.id});" />
+					</display:column>
+				</display:table>				
 					
 					
 				</div>

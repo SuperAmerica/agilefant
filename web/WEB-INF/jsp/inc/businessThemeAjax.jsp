@@ -29,19 +29,13 @@
 		<tr>
 			<td></td>
 			<td></td>
-			<c:choose>
-				<c:when test="${businessTheme.id == 0}">
-					<td><ww:submit value="Create" /></td>
-				</c:when>
-				<c:otherwise>
-					<td><ww:submit value="Save" /></td>
-				</c:otherwise>
-			</c:choose>
-			<td class="deleteButton"><ww:reset value="Cancel" /></td>
+			<td><ww:submit value="Save" /></td>
+			<td class="deleteButton"><ww:reset value="Cancel" onclick="openEditThemeTabs('businessThemeTabContainer-${businessThemeId}', ${businessThemeId});"/></td>
 		</tr>
 	</table>
 </ww:form>
 </div>
+
 <div id="businessThemeBLITab-${businessThemeId}" class="businessThemeNaviTab">
 <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Etiam egestas, arcu ut sodales egestas, lacus diam molestie massa, quis dictum urna quam sed erat. Maecenas venenatis. Etiam in nunc eu est placerat interdum. Nullam facilisis hendrerit risus. Nunc vulputate, urna vitae auctor convallis, ante nisl fermentum dui, vel vestibulum leo metus quis orci. Quisque viverra ullamcorper arcu. Quisque cursus rhoncus nisi. Sed pellentesque orci nec purus. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec massa lorem, euismod vel, commodo ac, sollicitudin non, leo. Ut vehicula, leo sed pulvinar molestie, felis felis fringilla enim, non laoreet tellus enim et leo.
 

@@ -78,11 +78,7 @@ start by creating a new object.</p>
     
     <li><ww:url id="createLink" action="createTeam"
         includeParams="none" /> <ww:a href="%{createLink}">Create a new team &raquo;</ww:a>
-    </li>
-    
-    <li><ww:url id="createLink" action="createBusinessTheme"
-        includeParams="none" /> <ww:a href="%{createLink}">Create a new theme &raquo;</ww:a>
-    </li>
+    </li>       
     
     <li><ww:url id="createLink" action="createUser"
         includeParams="none" /> <ww:a href="%{createLink}">Create a new user &raquo;</ww:a>

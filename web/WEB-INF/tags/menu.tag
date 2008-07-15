@@ -231,10 +231,6 @@ $(document).ready(function() {
         includeParams="none" /> <ww:a href="%{createLink}">Team &raquo;</ww:a>
     </li>
     
-    <li><ww:url id="createLink" action="createBusinessTheme"
-        includeParams="none" /> <ww:a href="%{createLink}">Theme &raquo;</ww:a>
-    </li>
-    
     <li><ww:url id="createLink" action="createUser"
         includeParams="none" /> <ww:a href="%{createLink}">User &raquo;</ww:a>
     </li>

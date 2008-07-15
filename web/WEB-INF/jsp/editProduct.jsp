@@ -364,7 +364,7 @@ var productId = ${product.id};
 					<table cellspacing="0" cellpadding="0">
 						<tr>
 							 <td class="header">
-							 Active themes
+							 Themes
 							<ww:a href="#" onclick="toggleDiv('createThemeDiv'); return false;">Create new &raquo;</ww:a>
 							 </td>
 						</tr>
@@ -397,25 +397,23 @@ var productId = ${product.id};
 				</ww:form>
 				</div>
 				
-				
 				<c:if test="${!empty activeBusinessThemes}">
 				<div id="subItemContent">
 				<display:table class="listTable" name="activeBusinessThemes"
 					id="row">
-					<display:column title="Name" class="editColumn">
-						<c:out value="${row.name}" />					
-						<div id="businessThemeTabContainer-${row.id}" style="overflow:visible; white-space: nowrap; width: 115px;"></div>
-					</display:column>
-					<display:column title="# of BLIs">
-                        <c:out value="${fn:length(row.backlogItems)}" />
-                    </display:column>
-                    <display:column title="# of Done BLIs">
-                        <c:out value="${doneBlis[row]}" />
-                    </display:column>
-					<display:column title="Actions">
-					   <img src="static/img/edit.png" alt="Edit" title="Edit" style="cursor: pointer;" onclick="openEditThemeTabs('businessThemeTabContainer-${row.id}',${row.id});" />
-					</display:column>
-				</display:table>				
+				<display:column title="Name" class="editColumn">
+					<c:out value="${row.name}" />					
+					<div id="businessThemeTabContainer-${row.id}" style="overflow:visible; white-space: nowrap; width: 115px;"></div>
+				</display:column>
+				<display:column title="Completed BLIs">
+					<c:out value="${businessThemeMetrics[row].donePercentage}" />% 
+					(<c:out value="${businessThemeMetrics[row].numberOfDoneBlis}" /> /
+					<c:out value="${businessThemeMetrics[row].numberOfBlis}" />)					
+				</display:column>				
+				<display:column title="Actions">
+				<img src="static/img/edit.png" alt="Edit" title="Edit" style="cursor: pointer;" onclick="openEditThemeTabs('businessThemeTabContainer-${row.id}',${row.id});" />
+				</display:column>
+				</display:table>					
 					
 					
 				</div>
@@ -436,7 +434,7 @@ var productId = ${product.id};
 					<table cellspacing="0" cellpadding="0">
 						<tr>
 							 <td class="header">
-							 Non-active themes
+							 Deactivated themes
 							 </td>
 						</tr>
 					</table>
@@ -446,10 +444,11 @@ var productId = ${product.id};
 				<display:table class="listTable" name="nonActiveBusinessThemes"
 					id="row">
 				<display:column title="Name" class="editColumn">
-					<c:out value="${row.name}" />
-					
-				</display:column>				
+					<c:out value="${row.name}" />					
+					<div id="businessThemeTabContainer-${row.id}" style="overflow:visible; white-space: nowrap; width: 115px;"></div>
+				</display:column>								
 				<display:column title="Actions">
+				<img src="static/img/edit.png" alt="Edit" title="Edit" style="cursor: pointer;" onclick="openEditThemeTabs('businessThemeTabContainer-${row.id}',${row.id});" />
 				</display:column>
 				</display:table>															
 				</div>								

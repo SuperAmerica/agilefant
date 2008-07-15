@@ -19,6 +19,7 @@ import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.BusinessTheme;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.State;
+import fi.hut.soberit.agilefant.util.BusinessThemeMetrics;
 
 public class BusinessThemeBusinessImpl implements BusinessThemeBusiness {
 
@@ -65,23 +66,31 @@ public class BusinessThemeBusinessImpl implements BusinessThemeBusiness {
         return activeThemes;
     }
     
-    public Map<BusinessTheme, String> getThemesDoneBacklogItems(int productId) {
+    public Map<BusinessTheme, BusinessThemeMetrics> getThemeMetrics(int productId) {
         Product product = productDAO.get(productId);
         
         if (product == null) {
-            return new HashMap<BusinessTheme, String>();
+            return new HashMap<BusinessTheme, BusinessThemeMetrics>();
         }
-        Map<BusinessTheme, String> themeDoneBlis = new HashMap<BusinessTheme, String>();
+        Map<BusinessTheme, BusinessThemeMetrics> metricsMap = new HashMap<BusinessTheme, BusinessThemeMetrics>();
         for (BusinessTheme theme: product.getBusinessThemes()) {
+            BusinessThemeMetrics metrics = new BusinessThemeMetrics();
+            metrics.setNumberOfBlis(theme.getBacklogItems().size());            
             int doneBlis = 0;
+            int donePercentage = 0;
             for (BacklogItem bli: theme.getBacklogItems()) {
                 if (bli.getState() == State.DONE) {
                     doneBlis++;
                 }
             }
-            themeDoneBlis.put(theme, "" + doneBlis);
+            metrics.setNumberOfDoneBlis(doneBlis);
+            if (metrics.getNumberOfBlis() > 0) {
+                donePercentage = (int) ((float) doneBlis / (float) metrics.getNumberOfBlis() * 100.0);
+            }
+            metrics.setDonePercentage(donePercentage);
+            metricsMap.put(theme, metrics);
         }
-        return themeDoneBlis;
+        return metricsMap;
     }
 
     public void delete(int themeId) throws ObjectNotFoundException {

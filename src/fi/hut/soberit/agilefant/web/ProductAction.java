@@ -20,6 +20,7 @@ import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.BusinessTheme;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
+import fi.hut.soberit.agilefant.util.BusinessThemeMetrics;
 import fi.hut.soberit.agilefant.util.EffortSumData;
 
 public class ProductAction extends ActionSupport implements CRUDAction {
@@ -52,7 +53,7 @@ public class ProductAction extends ActionSupport implements CRUDAction {
     
     private Map<Project, EffortSumData> origEstSums;
     
-    private Map<BusinessTheme, String> doneBlis;
+    private Map<BusinessTheme, BusinessThemeMetrics> themeMetrics;
     
     private BusinessThemeBusiness businessThemeBusiness; 
 
@@ -97,7 +98,7 @@ public class ProductAction extends ActionSupport implements CRUDAction {
         origEstSums = new HashMap<Project, EffortSumData>();
         
         // Calculate themes' done blis
-        doneBlis = businessThemeBusiness.getThemesDoneBacklogItems(productId);
+        themeMetrics = businessThemeBusiness.getThemeMetrics(productId);
         
         // Load Hour Entry sums to this backlog's BLIs.
         hourEntryBusiness.loadSumsToBacklogItems(backlog);
@@ -285,7 +286,7 @@ public class ProductAction extends ActionSupport implements CRUDAction {
         this.businessThemeBusiness = businessThemeBusiness;
     }
 
-    public Map<BusinessTheme, String> getDoneBlis() {
-        return doneBlis;
+    public Map<BusinessTheme, BusinessThemeMetrics> getBusinessThemeMetrics() {
+        return themeMetrics;
     }
 }

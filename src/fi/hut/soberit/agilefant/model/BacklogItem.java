@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -461,16 +460,5 @@ public class BacklogItem implements PageItem, Assignable, EffortContainer, Times
     public void setBusinessThemes(Collection<BusinessTheme> businessThemes) {
         this.businessThemes = businessThemes;
     }
-    
-    @Transient
-    @OrderBy("name")
-    public Collection<BusinessTheme> getActiveBusinessThemes() {
-        Set<BusinessTheme> activeThemes = new HashSet<BusinessTheme>();
-        for (BusinessTheme t: this.getBusinessThemes()) {
-            if (t.isActive()) {
-                activeThemes.add(t);
-            }
-        }
-        return activeThemes;
-    }
+        
 }

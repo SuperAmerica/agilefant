@@ -321,12 +321,12 @@ var productId = ${product.id};
 					</table>
 				</div>
 				
-				<c:if test="${!empty product.activeBusinessThemes}">
+				<c:if test="${!empty activeBusinessThemes}">
 				<div id="subItemContent">
-				<display:table class="listTable" name="product.activeBusinessThemes"
+				<display:table class="listTable" name="${activeBusinessThemes}"
 					id="row">
 				<display:column title="Name" class="editColumn">
-					<c:out value="${row.name}" />
+					<c:out value="${row.name}" />					
 					<div id="businessThemeTabContainer-${row.id}" style="overflow:visible; white-space: nowrap; width: 115px;"></div>
 				</display:column>
 				<display:column title="# of BLIs">
@@ -345,6 +345,39 @@ var productId = ${product.id};
 		</td>
 	</tr>
 </table>
+
+<!-- Show non-active themes table only if there are any. -->
+<c:if test="${!empty nonActiveBusinessThemes}">
+<table>	
+	<tr>
+		<td>
+			<div id="subItems">
+				<div id="subItemHeader">
+					<table cellspacing="0" cellpadding="0">
+						<tr>
+							 <td class="header">
+							 Non-active themes
+							 </td>
+						</tr>
+					</table>
+				</div>
+								
+				<div id="subItemContent">
+				<display:table class="listTable" name="nonActiveBusinessThemes"
+					id="row">
+				<display:column title="Name" class="editColumn">
+					<c:out value="${row.name}" />
+					
+				</display:column>				
+				<display:column title="Actions">
+				</display:column>
+				</display:table>															
+				</div>								
+			</div>
+		</td>
+	</tr>
+</table>
+</c:if>
 
 <table>	
 	<tr>

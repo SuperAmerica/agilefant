@@ -90,7 +90,7 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
     
     private String spentEffort = null;
     
-    private int businessThemeId;
+    private int businessThemeId;        
 
     public Map<Integer, State> getTaskStates() {
         return taskStates;

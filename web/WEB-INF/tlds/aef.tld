@@ -157,6 +157,30 @@
 	</tag>
 	
 	<tag>
+		<name>backlogItemThemes</name>
+		<tag-class>fi.hut.soberit.agilefant.web.tag.BacklogItemThemesTag</tag-class>
+		<body-content>JSP</body-content>
+		<description>
+			Prints out a list of active themes.
+		</description>
+		<attribute>
+			<name>backlogItemId</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+	    	<name>positionId</name>
+	    	<required>false</required>	  
+	    	<rtexprvalue>true</rtexprvalue>  
+	    </attribute>
+	    <attribute>
+	    	<name>editBacklogItemPage</name>
+	    	<required>false</required>	  
+	    	<rtexprvalue>true</rtexprvalue>  
+	    </attribute> 
+	</tag>
+	
+	<tag>
 		<name>percentDone</name>
 		<tag-class>fi.hut.soberit.agilefant.web.tag.PercentDoneTag</tag-class>
 		<body-content>JSP</body-content>

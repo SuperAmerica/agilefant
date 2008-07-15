@@ -160,17 +160,9 @@
 
 					<display:column sortable="true" sortProperty="name" title="Name"
 						class="shortNameColumn">
-						<ww:a href="#" id="${row.id}" onclick="openThemeBusinessModal('${row.id}', 'editBacklogItemBusinessThemes.action',${row.id},0,${row.product.id}); return false;">
-							<img src="static/img/add_theme.png" alt="Edit themes" title="Edit themes" />
-						</ww:a>
-			
-						<c:forEach items="${row.businessThemes}" var="businessTheme">
-							<span class="businessTheme" title="${businessTheme.description}">
-								<ww:a href="#" id="${row.id}" onclick="openThemeBusinessModal('${row.id}', 'editBacklogItemBusinessThemes.action',${row.id}, ${businessTheme.id}, ${row.product.id}); return false;">
-									${businessTheme.name}
-								</ww:a>
-							</span>
-						</c:forEach>
+												
+						<aef:backlogItemThemes backlogItemId="${row.id}" positionId="${row.id}"/>
+												
 						<ww:url id="editLink" action="editBacklogItem"
 							includeParams="none">
 							<ww:param name="backlogItemId" value="${row.id}" />
@@ -178,7 +170,8 @@
 						<ww:a
 							href="%{editLink}&contextViewName=editIterationGoal&contextObjectId=${iterationGoal.id}">
 						${aef:html(row.name)}
-					</ww:a>
+						</ww:a>
+						
 					</display:column>
 
 					<display:column sortable="true" title="Responsibles"

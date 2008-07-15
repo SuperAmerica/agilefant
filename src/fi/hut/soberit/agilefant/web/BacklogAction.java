@@ -56,7 +56,7 @@ public class BacklogAction extends ActionSupport {
      * <code>BacklogItems</code> are manipulated at once.
      */
     private String itemAction;
-
+    
     public String edit() {
         Backlog backlog = backlogDAO.get(backlogId);
         return solveResult(backlog);
@@ -367,4 +367,5 @@ public class BacklogAction extends ActionSupport {
     public void setBacklogItemIds(int[] backlogItemIds) {
         this.backlogItemIds = backlogItemIds;
     }
+   
 }

@@ -40,21 +40,27 @@ function validateDeletion() {
 				<ww:param name="backlogItemId" value="${row.id}" />
 			</ww:url>
 			<div>
+			<aef:backlogItemThemes backlogItemId="${row.id}"/>
+			<!--
 			<ww:a href="#" id="${row.id}" onclick="openThemeBusinessModal('${row.id}', 'editBacklogItemBusinessThemes.action',${row.id},0,${row.product.id}); return false;">
 				<img src="static/img/add_theme.png" alt="Edit themes" title="Edit themes" />
 			</ww:a>
 			
-			<c:forEach items="${row.activeBusinessThemes}" var="businessTheme">
+			
+			<c:forEach items="${backlogItemActiveThemes[row]}" var="businessTheme">
 				<span class="businessTheme" title="${businessTheme.description}">
 					<ww:a href="#" id="${row.id}" onclick="openThemeBusinessModal('${row.id}', 'editBacklogItemBusinessThemes.action', ${row.id}, ${businessTheme.id}, ${row.product.id}); return false;">
 						${businessTheme.name}
 					</ww:a>
 				</span>
-			</c:forEach>		
+			</c:forEach>
+			-->		
 			<ww:a
 				href="%{editLink}&contextObjectId=${backlog.id}&contextViewName=${currentAction}">
 			${aef:html(row.name)}
-		</ww:a></div>
+		</ww:a>
+		
+		</div>
 		</display:column>
 
 		<c:choose>

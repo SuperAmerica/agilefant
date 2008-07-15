@@ -79,8 +79,7 @@ var businessThemes = new Object();
 </c:forEach>
 
 var selectedThemes = new Array();
-<aef:backlogItem id="backlogItem" backlogItemId="${backlogItemId}" />
-<c:forEach items="${backlogItem.businessThemes}" var="chosenTheme">
+<c:forEach items="${bliBusinessThemes}" var="chosenTheme">
 	selectedThemes.push(${chosenTheme.id});
 </c:forEach>
 updateThemeSelect(0);

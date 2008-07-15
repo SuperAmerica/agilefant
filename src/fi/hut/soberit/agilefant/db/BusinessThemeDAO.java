@@ -23,4 +23,5 @@ public interface BusinessThemeDAO extends GenericDAO<BusinessTheme> {
      * @return
      */
     public List<BusinessTheme> getSortedBusinessThemesByProductAndActivity(Product product, boolean active);
+    
 }

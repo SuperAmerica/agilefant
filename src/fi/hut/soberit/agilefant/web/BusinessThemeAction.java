@@ -24,7 +24,9 @@ public class BusinessThemeAction extends ActionSupport implements CRUDAction {
 
     private Collection<BusinessTheme> businessThemes = new ArrayList<BusinessTheme>();
     
-    private BusinessThemeBusiness businessThemeBusiness;
+    private Collection<BusinessTheme> bliBusinessThemes = new ArrayList<BusinessTheme>();
+    
+    private BusinessThemeBusiness businessThemeBusiness;        
     
     private int backlogItemId;
     
@@ -129,6 +131,9 @@ public class BusinessThemeAction extends ActionSupport implements CRUDAction {
     }
     
     public String editBacklogItemBusinessThemes() {
+        if (backlogItemId > 0) {
+            bliBusinessThemes = businessThemeBusiness.getBacklogItemActiveBusinessThemes(backlogItemId);
+        }
         return list();       
     }
     public int getBusinessThemeId() {
@@ -170,5 +175,9 @@ public class BusinessThemeAction extends ActionSupport implements CRUDAction {
     public void setProductId(int productId) {
         this.productId = productId;
     }
+
+    public Collection<BusinessTheme> getBliBusinessThemes() {
+        return bliBusinessThemes;
+    }    
     
 }

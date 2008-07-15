@@ -290,13 +290,13 @@
 			<c:when test="${backlogItemId != 0}">
 			<td>
 			Themes
-			<!-- 								
-			<ww:a href="#" id="addThemeLink" onclick="openThemeBusinessModal('addThemeLink', 'editBacklogItemBusinessThemes.action',${backlogItemId},0); return false;">Edit &raquo;</ww:a>
-			-->
+			
 			</td>
 			<td></td>
 			<td>
-			<!-- Position modal window at original estimate box level.  -->
+			<!-- Position modal window at state select level.  -->
+			<aef:backlogItemThemes backlogItemId="${backlogItemId}" positionId="stateSelect" editBacklogItemPage="true"/>
+			<!--
 			<ww:a href="#" id="addThemeLink" onclick="openThemeBusinessBliModal('stateSelect', 'editBacklogItemBusinessThemes.action',${backlogItemId},0); return false;">
 				<img src="static/img/add_theme.png" alt="Edit themes" title="Edit themes" />
 				<c:if test="${empty backlogItem.businessThemes}">
@@ -310,8 +310,10 @@
 						${businessTheme.name}
 				</ww:a>
 				</span>
-			</c:forEach>			
+			</c:forEach>
+						
 			</c:if>
+			-->
 			</td>
 			</c:when>
 			</c:choose>		

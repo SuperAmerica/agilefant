@@ -25,17 +25,8 @@ Backlog items
 			<ww:param name="backlogItemId" value="${row.id}" />
 		</ww:url>
 		<div>
-		<ww:a href="#" id="${row.id}" onclick="openThemeBusinessModal('${row.id}', 'editBacklogItemBusinessThemes.action',${row.id},0,${row.product.id}); return false;">
-			<img src="static/img/add_theme.png" alt="Edit themes" title="Edit themes" />
-		</ww:a>
-			
-		<c:forEach items="${row.activeBusinessThemes}" var="businessTheme">
-			<span class="businessTheme" title="${businessTheme.description}">
-				<ww:a href="#" id="${row.id}" onclick="openThemeBusinessModal('${row.id}', 'editBacklogItemBusinessThemes.action',${row.id}, ${businessTheme.id}, ${row.product.id}); return false;">
-					${businessTheme.name}
-				</ww:a>
-			</span>
-		</c:forEach>
+		<aef:backlogItemThemes backlogItemId="${row.id}"/>
+		
 		<ww:a href="%{editLink}&contextViewName=dailyWork">
 			${aef:html(row.name)}
 		</ww:a></div>

@@ -226,6 +226,13 @@ public class BacklogBusinessImpl implements BacklogBusiness {
                     bli.setIterationGoal(null);
                 }
                 
+                // if item is moved under another product, remove themes
+                if ( !isUnderSameProduct(bli.getBacklog(), targetBacklog) ) {
+                    if (bli.getBusinessThemes() != null) {
+                        bli.getBusinessThemes().clear();
+                    }
+                }
+                
                 // Set backlog item's backlog to target backlog
                 bli.setBacklog(targetBacklog);
                 backlogItemDAO.store(bli);
@@ -750,6 +757,46 @@ public class BacklogBusinessImpl implements BacklogBusiness {
         return metrics;
     }
 
+    /**
+     * Checks, if two backlogs are under the same product. We already know that
+     * the backlogs are not null. Tests may lead to backlogs without products,
+     * therefore check that.
+     * @param backlog1
+     * @param backlog2
+     * @return
+     */
+    private boolean isUnderSameProduct(Backlog backlog1, Backlog backlog2) {
+        Product product1 = null;
+        Product product2 = null;
+        if (backlog1 instanceof Product) {
+            product1 = (Product) backlog1;
+        } else if (backlog1 instanceof Project) {
+            product1 = ((Project) backlog1).getProduct();
+        } else {
+            Project proj1 = ((Iteration) backlog1).getProject();
+            if (proj1 != null) {
+                product1 = proj1.getProduct();
+            }
+        }
+        
+        if (backlog2 instanceof Product) {
+            product2 = (Product) backlog2;
+        } else if (backlog2 instanceof Project) {
+            product2 = ((Project) backlog2).getProduct();
+        } else {
+            Project proj2 = ((Iteration) backlog2).getProject();
+            if (proj2 != null) {
+                product2 = proj2.getProduct();
+            }
+        }
+        
+        if (product1 != null && product2 != null) {
+            return product1.equals(product2);
+        } else {
+            return false;
+        }
+    }
+    
     public int getNumberOfAssignedUsers(Backlog backlog) {
         return getUsers(backlog, true).size();
     }

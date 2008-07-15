@@ -26,7 +26,7 @@ public class BusinessThemeDAOHibernate extends GenericDAOHibernate<BusinessTheme
 
         return (List<BusinessTheme>)super.getHibernateTemplate()
                             .findByCriteria(criteria);
-        
-    }
+       
+    }        
     
 }

@@ -10,12 +10,14 @@ import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
 
 import fi.hut.soberit.agilefant.business.BacklogBusiness;
+import fi.hut.soberit.agilefant.business.BusinessThemeBusiness;
 import fi.hut.soberit.agilefant.business.HourEntryBusiness;
 import fi.hut.soberit.agilefant.business.ProjectBusiness;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.db.ProductDAO;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
+import fi.hut.soberit.agilefant.model.BusinessTheme;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.util.EffortSumData;
@@ -49,6 +51,8 @@ public class ProductAction extends ActionSupport implements CRUDAction {
     private Map<Project, EffortSumData> effLeftSums;
     
     private Map<Project, EffortSumData> origEstSums;
+    
+    private BusinessThemeBusiness businessThemeBusiness; 
 
     public String create() {
         productId = 0;
@@ -258,5 +262,21 @@ public class ProductAction extends ActionSupport implements CRUDAction {
 
     public void setOrigEstSums(Map<Project, EffortSumData> origEstSums) {
         this.origEstSums = origEstSums;
+    }
+    
+    public Collection<BusinessTheme> getActiveBusinessThemes() {
+        return businessThemeBusiness.getActiveBusinessThemes(productId);
+    }
+
+    public Collection<BusinessTheme> getNonActiveBusinessThemes() {
+        return businessThemeBusiness.getNonActiveBusinessThemes(productId);
+    }
+
+    public BusinessThemeBusiness getBusinessThemeBusiness() {
+        return businessThemeBusiness;
+    }
+
+    public void setBusinessThemeBusiness(BusinessThemeBusiness businessThemeBusiness) {
+        this.businessThemeBusiness = businessThemeBusiness;
     }
 }

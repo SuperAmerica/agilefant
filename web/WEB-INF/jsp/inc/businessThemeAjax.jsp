@@ -34,6 +34,8 @@
 
 <div id="businessThemeBLITab-${businessThemeId}" class="businessThemeNaviTab">
 
+<c:choose>
+<c:when test="${!(empty businessTheme.backlogItems)}" >
 <display:table class="listTable" name="businessTheme.backlogItems" id="row" style="width:710px">
 
 	<!-- Display name -->
@@ -147,6 +149,11 @@
 	</display:column>
 	
 </display:table>
+</c:when>
+<c:otherwise>
+No backlog items have been tagged with this theme.
+</c:otherwise>
+</c:choose>
 
 </div>
 </div>

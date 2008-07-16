@@ -862,7 +862,9 @@
 		</action>
 		<action name="deleteBusinessTheme" method="delete"
 			class="businessThemeAction">
-			<result type="redirect-action">listThemes</result>
+			<result type="redirect">
+				editProduct.action?productId=${productId}
+			</result>
 		</action>
 		<action name="storeBusinessTheme" method="store"
 			class="businessThemeAction">
@@ -896,6 +898,9 @@
 			class="businessThemeAction">	
 		</action>
 		<action name="ajaxDeactivateBusinessTheme" method="ajaxDeactivateBusinessTheme"
+			class="businessThemeAction">	
+		</action>
+		<action name="ajaxDeleteBusinessTheme" method="ajaxDeleteBusinessTheme"
 			class="businessThemeAction">	
 		</action>
 		<!-- /Business theme actions -->

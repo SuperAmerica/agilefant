@@ -121,6 +121,18 @@ public class BusinessThemeAction extends ActionSupport implements CRUDAction {
         }
         return CRUDAction.AJAX_SUCCESS; 
     }
+    
+    public String ajaxDeleteBusinessTheme() {
+        try {
+            businessThemeBusiness.delete(businessThemeId);
+        }
+        catch (Exception e) {            
+            return CRUDAction.AJAX_ERROR;
+        }
+        
+        return CRUDAction.AJAX_SUCCESS;
+    }
+    
     public String delete() {
         try {
             businessThemeBusiness.delete(businessThemeId);

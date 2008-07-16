@@ -81,6 +81,17 @@ function setThemeActivityStatus(themeId,status) {
 	});
 }
 
+function deleteTheme(themeId) {
+	var confirm = confirmDelete();
+	var url = "ajaxDeleteBusinessTheme.action";			
+	
+	if (confirm) {
+		$.post(url,{businessThemeId: themeId},function(data) {
+			reloadPage();
+		});
+	}
+}
+
 $(document).ready(function() {
     <c:forEach items="${openThemes}" var="openTheme">
         openEditThemeTabs("businessThemeTabContainer-${openTheme}", ${openTheme});
@@ -423,8 +434,11 @@ var productId = ${product.id};
 					<c:out value="${businessThemeMetrics[row].numberOfBlis}" />)					
 				</display:column>				
 				<display:column title="Actions">
-				<img src="static/img/edit.png" alt="Edit" title="Edit" style="cursor: pointer;" onclick="openEditThemeTabs('businessThemeTabContainer-${row.id}',${row.id});" />
+				<img src="static/img/edit.png" alt="Edit" title="Edit theme" style="cursor: pointer;" onclick="openEditThemeTabs('businessThemeTabContainer-${row.id}',${row.id});" />
 				<img src="static/img/disable.png" alt="Disable" title="Disable theme" style="cursor: pointer;" onclick="setThemeActivityStatus(${row.id},false); return false;" />
+				<img src="static/img/delete_18.png" alt="Delete" title="Delete theme" style="cursor: pointer;" onclick="deleteTheme(${row.id}); return false;" />
+					
+				
 				</display:column>
 				</display:table>					
 					
@@ -463,6 +477,7 @@ var productId = ${product.id};
 				<display:column title="Actions">
 				<img src="static/img/edit.png" alt="Edit" title="Edit" style="cursor: pointer;" onclick="openEditThemeTabs('businessThemeTabContainer-${row.id}',${row.id});" />
 				<img src="static/img/enable.png" alt="Enable" title="Enable theme" style="cursor: pointer;" onclick="setThemeActivityStatus(${row.id},true); return false;return false;" />
+				<img src="static/img/delete_18.png" alt="Delete" title="Delete theme" style="cursor: pointer;" onclick="deleteTheme(${row.id}); return false;" />
 				</display:column>
 				</display:table>															
 				</div>								

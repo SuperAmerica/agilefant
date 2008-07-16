@@ -33,15 +33,55 @@
 </div>
 
 <div id="businessThemeBLITab-${businessThemeId}" class="businessThemeNaviTab">
-<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Etiam egestas, arcu ut sodales egestas, lacus diam molestie massa, quis dictum urna quam sed erat. Maecenas venenatis. Etiam in nunc eu est placerat interdum. Nullam facilisis hendrerit risus. Nunc vulputate, urna vitae auctor convallis, ante nisl fermentum dui, vel vestibulum leo metus quis orci. Quisque viverra ullamcorper arcu. Quisque cursus rhoncus nisi. Sed pellentesque orci nec purus. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec massa lorem, euismod vel, commodo ac, sollicitudin non, leo. Ut vehicula, leo sed pulvinar molestie, felis felis fringilla enim, non laoreet tellus enim et leo.
 
-</p><p>Vivamus varius justo ut tellus. Praesent imperdiet eros semper lorem. Pellentesque luctus placerat leo. Vestibulum venenatis. Mauris ut nulla. Nullam ornare libero sed quam. Sed aliquet. Ut convallis elementum nunc. Praesent ac lorem. Nullam orci sapien, placerat gravida, fringilla eu, blandit sed, nisl. Donec consectetuer volutpat felis. Suspendisse potenti.
+<display:table class="listTable" name="businessTheme.backlogItems" id="row" style="width:710px">
 
-</p><p>Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Sed vitae risus quis quam lacinia sodales. Etiam enim. Etiam semper fringilla nunc. Ut vulputate. Pellentesque id nisl quis metus vehicula dictum. Pellentesque suscipit dictum nisi. Aliquam non purus. Pellentesque auctor sodales enim. Suspendisse rhoncus elit eu nisi. Aliquam erat volutpat. Praesent nulla nulla, molestie quis, mollis dignissim, hendrerit quis, urna. Nam quis felis ac ligula pharetra vehicula. Nam in libero ac justo pharetra rutrum. Ut risus.
+	<!-- Display name -->
+	<display:column title="Name">
+		<c:out value="${row.name}" />										
+	</display:column>
+	
+	<!-- Display state -->
+	<display:column title="State" sortable="false" class="taskColumn">
+		<%@ include file="./_backlogItemStatusBar.jsp"%>					
+	</display:column>
+	
+	<!-- Display context -->
+	<display:column sortable="false" title="Context" class="contextColumn">
+		<div><c:forEach items="${row.parentBacklogs}" var="parent">
+			<c:choose>
+				<c:when test="${aef:isIteration(parent)}">
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					<ww:url id="parentActionUrl" action="editIteration"
+						includeParams="none">
+						<ww:param name="iterationId" value="${parent.id}" />
+					</ww:url>
+				</c:when>
+				<c:when test="${aef:isProject(parent)}">					
+					<ww:url id="parentActionUrl" action="editProject"
+						includeParams="none">
+						<ww:param name="projectId" value="${parent.id}" />
+					</ww:url>
+				</c:when>
+				<c:otherwise>
+					<ww:url id="parentActionUrl" action="editProduct"
+						includeParams="none">
+						<ww:param name="productId" value="${parent.id}" />
+					</ww:url>
+				</c:otherwise>
+			</c:choose>
+			<ww:a href="%{parentActionUrl}&contextViewName=dailyWork">
+				<c:out value="${parent.name}" />
+			</ww:a>
+			<c:if test="${aef:isProject(parent)}">
 
-</p><p>Donec malesuada leo eu mi. Nam pellentesque odio a mauris. Nam malesuada, tellus nec sagittis imperdiet, mi odio tristique sapien, nec vulputate augue ligula non dolor. Aliquam non pede sit amet arcu aliquam gravida. Vivamus iaculis mollis nisl. Vestibulum pretium. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. In in neque. Nunc egestas, felis nec tempus euismod, purus sapien pharetra tellus, et venenatis magna lectus at est. Proin vitae sapien id ligula tincidunt viverra. Vivamus condimentum, urna ut posuere venenatis, diam neque pharetra dui, vitae semper odio sapien non lorem. In non quam. Cras id odio.
+			(<c:out value="${parent.projectType.name}" />)
+			</c:if>
+			<br />
+		</c:forEach></div>
+	</display:column>
+	
+</display:table>
 
-</p><p>Suspendisse vel mauris. Pellentesque tempus sollicitudin quam. Sed sagittis erat et massa. Integer eu sem. Sed pretium quam eu metus. Nunc facilisis massa in lectus cursus malesuada. Etiam et nisi at libero gravida aliquam. Suspendisse ac ipsum non sapien tincidunt tincidunt. Morbi nec est vel dolor ullamcorper dapibus. Etiam sagittis.
-</p> 
 </div>
 </div>

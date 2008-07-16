@@ -1,19 +1,10 @@
 package fi.hut.soberit.agilefant.web;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 
 import com.opensymphony.xwork.ActionContext;
 import com.opensymphony.xwork.ActionSupport;
-
-import fi.hut.soberit.agilefant.business.MenuBusiness;
-import fi.hut.soberit.agilefant.db.BacklogDAO;
-import fi.hut.soberit.agilefant.model.Backlog;
-import fi.hut.soberit.agilefant.util.MenuData;
-import fi.hut.soberit.agilefant.web.page.PageItem;
 
 /**
  * The action class for populating the lefthand menu.

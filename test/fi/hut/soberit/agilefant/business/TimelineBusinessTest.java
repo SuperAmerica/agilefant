@@ -7,12 +7,10 @@ import static org.easymock.EasyMock.verify;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 
 import junit.framework.TestCase;
 import fi.hut.soberit.agilefant.business.impl.TimelineBusinessImpl;
-import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.db.ProductDAO;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.BacklogItem;

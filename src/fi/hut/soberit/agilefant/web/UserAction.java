@@ -12,9 +12,7 @@ import com.opensymphony.xwork.ActionSupport;
 
 import fi.hut.soberit.agilefant.business.BacklogBusiness;
 import fi.hut.soberit.agilefant.business.HourEntryBusiness;
-import fi.hut.soberit.agilefant.business.SettingBusiness;
 import fi.hut.soberit.agilefant.business.UserBusiness;
-import fi.hut.soberit.agilefant.business.impl.SettingBusinessImpl;
 import fi.hut.soberit.agilefant.db.TeamDAO;
 import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.db.hibernate.EmailValidator;

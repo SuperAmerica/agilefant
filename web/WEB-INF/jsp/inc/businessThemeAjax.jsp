@@ -9,6 +9,7 @@
 <ww:form action="ajaxStoreBusinessTheme" method="post">
 	<ww:hidden name="businessThemeId" value="${businessTheme.id}" />
 	<ww:hidden name="productId" value="${businessTheme.product.id}" />
+	<ww:hidden name="businessTheme.active" value="${businessTheme.active}" />
 	<table class="formTable">
 		<tr>
 			<td>Name</td>
@@ -20,11 +21,6 @@
 			<td></td>
 			<td colspan="2"><ww:textarea cols="50" rows="7"
 				name="businessTheme.description"/></td>
-		</tr>
-		<tr>
-		    <td></td>
-		    <td></td>
-		    <td colspan="2"><ww:checkbox name="businessTheme.active" value="${businessTheme.active}" /> Active</td>
 		</tr>
 		<tr>
 			<td></td>

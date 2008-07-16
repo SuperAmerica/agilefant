@@ -424,6 +424,7 @@ var productId = ${product.id};
 				</display:column>				
 				<display:column title="Actions">
 				<img src="static/img/edit.png" alt="Edit" title="Edit" style="cursor: pointer;" onclick="openEditThemeTabs('businessThemeTabContainer-${row.id}',${row.id});" />
+				<img src="static/img/disable.png" alt="Disable" title="Disable theme" style="cursor: pointer;" onclick="setThemeActivityStatus(${row.id},false); return false;" />
 				</display:column>
 				</display:table>					
 					
@@ -461,6 +462,7 @@ var productId = ${product.id};
 				</display:column>								
 				<display:column title="Actions">
 				<img src="static/img/edit.png" alt="Edit" title="Edit" style="cursor: pointer;" onclick="openEditThemeTabs('businessThemeTabContainer-${row.id}',${row.id});" />
+				<img src="static/img/enable.png" alt="Enable" title="Enable theme" style="cursor: pointer;" onclick="setThemeActivityStatus(${row.id},true); return false;return false;" />
 				</display:column>
 				</display:table>															
 				</div>								

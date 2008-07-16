@@ -780,7 +780,7 @@ h2 .editLink {
 
 #subItemHeader table td, .subItemHeader table td  {
 	/*color: #ffffff;*/
-	font-weight: normal;
+	font-weight: bold;
 }
 
 #subItemHeader table .header, .subItemHeader table .header {

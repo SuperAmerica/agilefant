@@ -162,6 +162,40 @@ public class BusinessThemeBusinessImpl implements BusinessThemeBusiness {
         
         return persistable;
     }
+    
+    public void activateBusinessTheme(int businessThemeId)
+            throws ObjectNotFoundException {
+        BusinessTheme theme = getBusinessTheme(businessThemeId);
+        if (theme == null) {
+            throw new ObjectNotFoundException();
+        }
+        activateBusinessTheme(theme);
+    }
+
+    public void activateBusinessTheme(BusinessTheme businessTheme) {
+        if (businessTheme == null) {
+            return;
+        }
+        businessTheme.setActive(true);
+        businessThemeDAO.store(businessTheme);
+    }
+
+    public void deactivateBusinessTheme(int businessThemeId)
+            throws ObjectNotFoundException {
+        BusinessTheme theme = getBusinessTheme(businessThemeId);
+        if (theme == null) {
+            throw new ObjectNotFoundException();
+        }
+        deactivateBusinessTheme(theme);
+    }
+
+    public void deactivateBusinessTheme(BusinessTheme businessTheme) {
+        if (businessTheme == null) {
+            return;
+        }
+        businessTheme.setActive(false);
+        businessThemeDAO.store(businessTheme);
+    }
 
     public ProductDAO getProductDAO() {
         return productDAO;

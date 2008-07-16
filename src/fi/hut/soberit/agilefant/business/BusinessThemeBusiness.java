@@ -63,5 +63,39 @@ public interface BusinessThemeBusiness {
      */
     public BusinessTheme store(int businessThemeId, int productId, BusinessTheme theme)
             throws ObjectNotFoundException, Exception;
+    
+    /**
+     * Set business theme active.
+     * 
+     * @see BusinessThemeBusiness.deactivateBusinessTheme(BusinessTheme
+     *      businessTheme)
+     * @param businessThemeId
+     */
+    public void deactivateBusinessTheme(int businessThemeId)
+            throws ObjectNotFoundException;;
+
+    /**
+     * Set business theme active.
+     * 
+     * @param businessTheme
+     */
+    public void deactivateBusinessTheme(BusinessTheme businessTheme);
+
+    /**
+     * Set business theme active.
+     * 
+     * @see BusinessThemeBusiness.activateBusinessTheme(BusinessTheme
+     *      businessTheme)
+     * @param businessThemeId
+     */
+    public void activateBusinessTheme(int businessThemeId)
+            throws ObjectNotFoundException;;
+
+    /**
+     * Set business theme active.
+     * 
+     * @param businessTheme
+     */
+    public void activateBusinessTheme(BusinessTheme businessTheme);
 
 }

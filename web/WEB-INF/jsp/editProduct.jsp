@@ -69,6 +69,18 @@ function openEditThemeTabs(target,id) {
 	return false;
 }
 
+function setThemeActivityStatus(themeId,status) {
+	var url = "";
+	if(status == true) {
+		url = "ajaxActivateBusinessTheme.action";
+	} else {
+		url = "ajaxDeactivateBusinessTheme.action";
+	}
+	$.post(url,{businessThemeId: themeId},function(data,status) {
+		reloadPage();
+	});
+}
+
 $(document).ready(function() {
     <c:forEach items="${openThemes}" var="openTheme">
         openEditThemeTabs("businessThemeTabContainer-${openTheme}", ${openTheme});

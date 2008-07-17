@@ -15,6 +15,7 @@ import fi.hut.soberit.agilefant.business.HourEntryBusiness;
 import fi.hut.soberit.agilefant.business.ProjectBusiness;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.db.ProductDAO;
+import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.BusinessTheme;
@@ -72,6 +73,10 @@ public class ProductAction extends ActionSupport implements CRUDAction {
         }
         if (p.getBacklogItems().size() > 0 || p.getProjects().size() > 0) {
             super.addActionError(super.getText("product.notEmptyWhenDeleting"));
+            return Action.ERROR;
+        }
+        if (p.getBusinessThemes().size() > 0) {
+            super.addActionError(super.getText("product.notEmptyOfThemesWhenDeleting"));
             return Action.ERROR;
         }
         productDAO.remove(productId);

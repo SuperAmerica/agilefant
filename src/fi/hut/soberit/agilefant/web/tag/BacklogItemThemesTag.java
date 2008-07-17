@@ -38,7 +38,7 @@ public class BacklogItemThemesTag extends SpringTagSupport {
        
         String printString = "<a href=\"#\" id=\"" + actualPositionId + "\" " +
         		"onclick=\"openThemeBusinessModal('" + actualPositionId + "', 'editBacklogItemBusinessThemes.action'," + bli.getId() + ", 0," + bli.getProduct().getId() + "); return false;\">" +
-                                "<img src=\"static/img/add_theme.png\" alt=\"Edit themes\" title=\"Edit themes\" />";
+                                "<img class=\"themeImg\" src=\"static/img/add_theme.png\" alt=\"Edit themes\" title=\"Edit themes\" />";
         
         List<BusinessTheme> themes = businessThemeBusiness.getBacklogItemActiveBusinessThemes(backlogItemId);
         // add the "none" text only in edit bli page
@@ -47,10 +47,10 @@ public class BacklogItemThemesTag extends SpringTagSupport {
         }
         printString += "</a>";
         for (BusinessTheme theme : themes) {
-            printString += "<span class=\"businessTheme\" title=\"" + theme.getDescription() + "\">" +
-                            "<a href=\"#\" id=\"" + bli.getId() + "\" onclick=\"openThemeBusinessModal('" + actualPositionId + "', 'editBacklogItemBusinessThemes.action', " + bli.getId() + "," +  theme.getId() + ", " + bli.getProduct().getId() + "); return false;\">" +
+            printString +=  "<a href=\"#\" id=\"" + bli.getId() + "\" onclick=\"openThemeBusinessModal('" + actualPositionId + "', 'editBacklogItemBusinessThemes.action', " + bli.getId() + "," +  theme.getId() + ", " + bli.getProduct().getId() + "); return false;\">" +
+                            "<span class=\"businessTheme\" title=\"" + theme.getDescription() + "\">" +
                             theme.getName() +
-                            "</a></span>";
+                            "</span></a>";
         }                
         
         try {

@@ -36,6 +36,11 @@ img {
 	border: 0;
 }
 
+.themeImg {
+	border: 0;
+	float: left;
+}
+
 #sidebar img {
 	float: right;
 }
@@ -787,6 +792,10 @@ h2 .editLink {
 	height: 22px;
 }
 
+.header a {
+	font-weight: normal;	
+}
+
 td.icons {
     padding: 2px 5px 0 0;
     text-align: right;
@@ -1074,7 +1083,8 @@ span.businessTheme {
 	background-color: #ffd;
 	color: #c96;
 	font-size: 80%;
-	padding: 0 1px 1px 3px;	
+	float: left;
+	padding: 1px 1px 1px 3px;	
 }
 
 span.businessTheme a {

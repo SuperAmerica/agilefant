@@ -422,9 +422,9 @@ var productId = ${product.id};
 				
 				<c:if test="${!empty activeBusinessThemes}">
 				<div id="subItemContent">
-				<display:table class="listTable" name="activeBusinessThemes"
+				<display:table class="themeEditTable" name="activeBusinessThemes"
 					id="row">
-				<display:column title="Name" class="editColumn">
+				<display:column title="Name" class="themeEditNameColumn">
 					<c:out value="${row.name}" />					
 					<div id="businessThemeTabContainer-${row.id}" style="overflow:visible; white-space: nowrap; width: 115px;"></div>
 				</display:column>
@@ -436,9 +436,7 @@ var productId = ${product.id};
 				<display:column title="Actions">
 				<img src="static/img/edit.png" alt="Edit" title="Edit theme" style="cursor: pointer;" onclick="openEditThemeTabs('businessThemeTabContainer-${row.id}',${row.id});" />
 				<img src="static/img/disable.png" alt="Disable" title="Disable theme" style="cursor: pointer;" onclick="setThemeActivityStatus(${row.id},false); return false;" />
-				<img src="static/img/delete_18.png" alt="Delete" title="Delete theme" style="cursor: pointer;" onclick="deleteTheme(${row.id}); return false;" />
-					
-				
+				<img src="static/img/delete_18.png" alt="Delete" title="Delete theme" style="cursor: pointer;" onclick="deleteTheme(${row.id}); return false;" />									
 				</display:column>
 				</display:table>					
 					
@@ -468,11 +466,16 @@ var productId = ${product.id};
 				</div>
 								
 				<div id="subItemContent">
-				<display:table class="listTable" name="nonActiveBusinessThemes"
+				<display:table class="themeEditTable" name="nonActiveBusinessThemes"
 					id="row">
-				<display:column title="Name" class="editColumn">
+				<display:column title="Name" class="themeEditNameColumn">
 					<c:out value="${row.name}" />					
 					<div id="businessThemeTabContainer-${row.id}" style="overflow:visible; white-space: nowrap; width: 115px;"></div>
+				</display:column>
+				<display:column title="Completed BLIs">
+					<c:out value="${businessThemeMetrics[row].donePercentage}" />% 
+					(<c:out value="${businessThemeMetrics[row].numberOfDoneBlis}" /> /
+					<c:out value="${businessThemeMetrics[row].numberOfBlis}" />)					
 				</display:column>								
 				<display:column title="Actions">
 				<img src="static/img/edit.png" alt="Edit" title="Edit" style="cursor: pointer;" onclick="openEditThemeTabs('businessThemeTabContainer-${row.id}',${row.id});" />

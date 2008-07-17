@@ -1161,3 +1161,13 @@ ul.themeList li a {
 .listTable {
     width: 100%;
 }
+
+.themeEditTable {
+	width: 99%;
+}
+
+.themeEditNameColumn {
+	width: 520px;
+    white-space: nowrap;
+    overflow: visible;	
+}

@@ -40,7 +40,7 @@
 		</select>
 
 					
-		<a href="#" onclick="addThemeToItem(); return false;" id="addThemeText">Add theme to BLI</a>
+		<!-- <a href="#" onclick="addThemeToItem(); return false;" id="addThemeText">Add theme to BLI</a> -->
 		
 		
 		</td>

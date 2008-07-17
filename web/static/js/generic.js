@@ -246,6 +246,7 @@ function saveTheme() {
 			businessThemes[themeId] = { "desc": desc, "name": name };
 			updateThemeSelect(themeId);
 			renderThemeList();
+			addThemeToItem();
 			$("#businessThemeError").text("");
 			if (id > 0) {
 				$("#businessThemeSaveSuccess").text("Theme was successfully saved.");
@@ -283,12 +284,12 @@ function selectEditTheme(theme_id) {
 	if(theme_id > 0) {
 		$("#nameField").val(businessThemes[theme_id].name);
 		$("#descField").val(businessThemes[theme_id].desc);
-		$("#addThemeText").text("Add theme to BLI");
+		//$("#addThemeText").text("Add theme to BLI");
 		$("#businessThemeSelect").find("[value="+theme_id+"]").attr("selected","selected");													
 	} else {
 		$("#nameField").val("");
 		$("#descField").val("");
-		$("#addThemeText").text("");
+		//$("#addThemeText").text("");
 	}
 	$("#businessThemeSaveSuccess").text("");
 	$("#businessThemeError").text("");

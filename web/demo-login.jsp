@@ -37,7 +37,7 @@
   </head>
   <body>
   
-  <script type="text/javascript" src="static/js/jquery-1.2.2.js"></script>
+  <script type="text/javascript" src="static/js/jquery-1.2.6.js"></script>
   <script type="text/javascript">
   $(document).ready(function() {
     $('#username').focus();

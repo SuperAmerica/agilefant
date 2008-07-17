@@ -1,6 +1,6 @@
-Agilefant 1.4.5
+Agilefant 1.4.6
 RELEASE NOTES
-9.7.2008
+17.7.2008
 
 Agilefant's key functionality now includes
 ------------------------------------------
@@ -29,6 +29,17 @@ have assigned backlog items) are highlighted
 + Themes can be added to backlog items (still alpha)
 + Timesheets; i.e. spent effort can be logged for backlog items and projects
 + Timesheets can be enabled/disabled from the settings tab
++ Timeline shows roadmapped projects and iterations under a specific product (still alpha)
+
+CHANGES FROM AGILEFANT 1.4.5
+-----------------------------
++ Themes can be managed in the product page
++ Theme metrics are shown in the product page
++ Themes are product-specific
++ Theme editing has a new user interface
++ Roadmapping timeline has been added to the product page
++ UTF-8 is now the default encoding, note the changes to server and database configuration
+
 
 CHANGES FROM AGILEFANT 1.4.4
 -----------------------------

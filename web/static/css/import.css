@@ -525,7 +525,7 @@ div#submenuwrapmyTasks #menu li#subnav1 a,div#submenuwrapiteration #menu li#subn
 
 .shortNameColumn div {
 	width: 170px;
-	overflow: visible;
+	overflow: hidden;
 	/*max-height: 6em;*/
 }
 

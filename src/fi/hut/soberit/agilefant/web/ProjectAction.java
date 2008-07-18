@@ -31,6 +31,7 @@ import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.ProjectType;
+import fi.hut.soberit.agilefant.model.Status;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.util.BacklogMetrics;
 import fi.hut.soberit.agilefant.util.EffortSumData;
@@ -46,6 +47,8 @@ public class ProjectAction extends ActionSupport implements CRUDAction {
     private int productId;
 
     private int projectTypeId;
+    
+    private Status status;
 
     private Project project;
 
@@ -334,6 +337,7 @@ public class ProjectAction extends ActionSupport implements CRUDAction {
                 return;
             }
         }
+        storable.setStatus(project.getStatus());
         storable.setEndDate(endDate, dateFormat);
         storable.setStartDate(startDate, dateFormat);
         storable.setName(project.getName());
@@ -539,5 +543,13 @@ public class ProjectAction extends ActionSupport implements CRUDAction {
     }
     public AFTime getDefaultOverhead() {
         return defaultOverhead;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
     }
 }

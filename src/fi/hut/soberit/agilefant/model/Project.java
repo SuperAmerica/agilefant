@@ -15,8 +15,10 @@ import javax.persistence.Transient;
 
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.OrderBy;
+import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.Type;
 
+import fi.hut.soberit.agilefant.util.ProjectMetrics;
 import fi.hut.soberit.agilefant.web.page.PageItem;
 
 /**
@@ -64,6 +66,10 @@ public class Project extends Backlog implements PageItem {
     private int rank = 0;
     
     private AFTime defaultOverhead;
+    
+    private Status status = Status.OK;
+    
+    private ProjectMetrics metrics;
 
     /** The product, under which this project belongs. */
     @ManyToOne
@@ -211,5 +217,30 @@ public class Project extends Backlog implements PageItem {
 
     public void setDefaultOverhead(AFTime defaultOverhead) {
         this.defaultOverhead = defaultOverhead;
+    }
+
+    /**
+     * Returns the status of the project.
+     * 
+     * @return the status of the project.
+     */
+    @Type(type = "fi.hut.soberit.agilefant.db.hibernate.EnumUserType", parameters = {
+            @Parameter(name = "useOrdinal", value = "true"),
+            @Parameter(name = "enumClassName", value = "fi.hut.soberit.agilefant.model.Status") })
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    @Transient
+    public ProjectMetrics getMetrics() {
+        return metrics;
+    }
+
+    public void setMetrics(ProjectMetrics metrics) {
+        this.metrics = metrics;
     }
 }

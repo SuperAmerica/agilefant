@@ -100,6 +100,17 @@
                         			value="${project.projectType.id}" /></td>
                 			</tr>
                 			<tr>
+								<td>Status</td>
+								<td></td>
+								<td colspan="2">															
+								<ww:select name="project.status"
+									id="statusSelect"
+									value="project.status.name"
+									list="@fi.hut.soberit.agilefant.model.Status@values()" listKey="name"
+									listValue="getText('project.status.' + name())"  />
+								</td>
+							</tr>
+                			<tr>
                     			<td>Default Overhead</td>
                     			<td></td>
                     			<td colspan="2"><ww:textfield size="10" name="project.defaultOverhead" />/ person / week</td>
@@ -281,9 +292,9 @@
 										<div id="descriptionDiv" class="descriptionDiv" style="display: block;">
 											<table class="infoTable" cellpadding="0" cellspacing="0">
 												<tr>
-													<th class="info1">Project type</th>
-													<td class="info3" ondblclick="return editProject();"><c:out value="${project.projectType.name}" /></td>
-													<td class="info4" rowspan="5">
+								    				<th class="info1">Status</th>
+								    				<td class="info3" ondblclick="return editProject();"><ww:text name="project.status.${project.status}" /></td>
+								    				<td class="info4" rowspan="6">
 	                                					<c:if test="${(!empty project.backlogItems) && (empty project.iterations)}">
 	                                    					<div class="smallBurndown"><a href="#bigChart">
 	                                    						<img src="drawSmallProjectChart.action?projectId=${project.id}"/>
@@ -337,12 +348,15 @@
 										                  </tr>
 									                   </table>
 									                   </c:if>
-									                </td>
+									                </td>							
+												</tr>
+												<tr>
+													<th class="info1">Project type</th>
+													<td class="info3" ondblclick="return editProject();"><c:out value="${project.projectType.name}" /></td>													
 												</tr>
 												<tr>
 								    				<th class="info1">Default overhead</th>
-								    				<td class="info3" ondblclick="return editProject();"><c:out value="${project.defaultOverhead}"/> / person / week</td>
-							
+								    				<td class="info3" ondblclick="return editProject();"><c:out value="${project.defaultOverhead}"/> / person / week</td>							
 												</tr>
 												<tr>
 	                                				<th class="info1">Timeframe</th>
@@ -421,6 +435,17 @@
 															<ww:select name="projectTypeId"
 																list="#attr.projectTypes" listKey="id" listValue="name"
 																value="${project.projectType.id}" />
+														</td>
+													</tr>
+													<tr>
+														<td>Status</td>
+														<td></td>
+														<td colspan="2">															
+															<ww:select name="project.status"
+																id="statusSelect"
+																value="project.status.name"
+																list="@fi.hut.soberit.agilefant.model.Status@values()" listKey="name"
+																listValue="getText('project.status.' + name())"  />
 														</td>
 													</tr>
 													<tr>

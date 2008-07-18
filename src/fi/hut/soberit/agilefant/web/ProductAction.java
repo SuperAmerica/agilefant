@@ -105,6 +105,9 @@ public class ProductAction extends ActionSupport implements CRUDAction {
         // Calculate themes' done blis
         themeMetrics = businessThemeBusiness.getThemeMetrics(productId);
         
+        // Calculate projects' metrics.
+        projectBusiness.calculateProjectMetrics(product);
+        
         // Load Hour Entry sums to this backlog's BLIs.
         hourEntryBusiness.loadSumsToBacklogItems(backlog);
         

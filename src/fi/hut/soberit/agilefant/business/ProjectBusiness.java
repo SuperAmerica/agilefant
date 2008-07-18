@@ -10,6 +10,7 @@ import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.exception.OperationNotPermittedException;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
+import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.ProjectType;
 import fi.hut.soberit.agilefant.model.User;
@@ -180,4 +181,9 @@ public interface ProjectBusiness {
     
     
     public void removeAllHourEntries( Backlog backlog );
+    /**
+     * Calculates a product's projects' metrics and sets them to the projects.
+     * @param product
+     */
+    public void calculateProjectMetrics(Product product);
 }

@@ -319,41 +319,34 @@ var productId = ${product.id};
 				<div class="subItemContent">
 				<p><display:table class="listTable" name="product.projects"
 					id="row" requestURI="editProduct.action">
+							
+					<display:column sortable="false" title="Status">
+						<%@ include file="./inc/_projectStatusIcon.jsp"%>
+					</display:column>		
+														
 					<display:column sortable="true" sortProperty="name" title="Name">
 						<ww:url id="editLink" action="editProject" includeParams="none">
 							<ww:param name="productId" value="${product.id}" />
 							<ww:param name="projectId" value="${row.id}" />
 						</ww:url>
-
 						<ww:a
 							href="%{editLink}&contextViewName=editProduct&contextObjectId=${product.id}">
 							${aef:html(row.name)}
 						</ww:a>
-					</display:column>
+					</display:column>					
 
 					<display:column sortable="true" sortProperty="projectType.name"
 						title="Project type" property="projectType.name" />
 
-					<display:column sortable="true" title="Iterations">
-						${fn:length(row.iterations)}
+					<display:column sortable="false" title="Iteration info">
+						<c:out value="${row.metrics.numberOfOkIterations}" /> / 
+						<c:out value="${row.metrics.numberOfLateIterations}" />
 					</display:column>
-
-					<display:column sortable="true" title="Items">
-						${fn:length(row.backlogItems)}
-					</display:column>
-
-					<display:column sortable="true" title="Effort left"
-						sortProperty="totalEffortLeftSum.time"
-						defaultorder="descending">
-						<c:out value="${effLeftSums[row]}" />
-					</display:column>
-
-					<display:column sortable="true" title="Original estimate"
-						sortProperty="totalOriginalEstimateSum.time"
-						defaultorder="descending">
-						<c:out value="${origEstSums[row]}" />
-					</display:column>
-
+					
+					<display:column sortable="false" title="# of assignees">
+						<c:out value="${row.metrics.assignees}" />
+					</display:column>					
+															
 					<display:column sortable="true" title="Start date">
 						<ww:date name="#attr.row.startDate" />
 					</display:column>
@@ -369,7 +362,9 @@ var productId = ${product.id};
 							<ww:param name="projectId" value="${row.id}" />
 						</ww:url>
 						<ww:a href="%{deleteLink}&contextViewName=editProduct&contextObjectId=${product.id}"
-							onclick="return confirmDelete()">Delete</ww:a>
+							onclick="return confirmDelete()">
+							<img src="static/img/delete_18.png" alt="Delete" title="Delete theme" style="cursor: pointer;"/>
+						</ww:a>
 					</display:column>
 				</display:table></p>
 				</div>

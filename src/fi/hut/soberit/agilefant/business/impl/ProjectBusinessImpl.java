@@ -30,6 +30,7 @@ import fi.hut.soberit.agilefant.model.Assignment;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.Iteration;
+import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.ProjectType;
 import fi.hut.soberit.agilefant.model.User;
@@ -37,6 +38,7 @@ import fi.hut.soberit.agilefant.util.BacklogLoadData;
 import fi.hut.soberit.agilefant.util.CalendarUtils;
 import fi.hut.soberit.agilefant.util.DailyWorkLoadData;
 import fi.hut.soberit.agilefant.util.EffortSumData;
+import fi.hut.soberit.agilefant.util.ProjectMetrics;
 import fi.hut.soberit.agilefant.util.ProjectPortfolioData;
 import fi.hut.soberit.agilefant.util.UserComparator;
 
@@ -353,6 +355,8 @@ public class ProjectBusinessImpl implements ProjectBusiness {
         data.setTotalUserOverheads(totalUserOverheads);
     }
 
+   
+    
     public ProjectPortfolioData getProjectPortfolioData() {
         ProjectPortfolioData data = new ProjectPortfolioData();
         fillProjectPortfolioData(data);
@@ -785,6 +789,18 @@ public class ProjectBusinessImpl implements ProjectBusiness {
         return userList;
     }
     
+    public void calculateProjectMetrics(Product product) {
+        if (product != null && product.getProjects() != null && product.getProjects().size() > 0) {
+            //ProjectData projectDataMap
+            for (Project p : product.getProjects()) {
+                ProjectMetrics metrics = new ProjectMetrics();
+                metrics.setAssignees(backlogBusiness.getNumberOfAssignedUsers(p));
+                metrics.setNumberOfOkIterations(0);
+                metrics.setNumberOfLateIterations(0);
+                p.setMetrics(metrics);
+            }
+        }
+    }
     
     public UserBusiness getUserBusiness() {
         return userBusiness;

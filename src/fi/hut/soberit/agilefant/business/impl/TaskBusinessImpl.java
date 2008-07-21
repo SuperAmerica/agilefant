@@ -1,15 +1,19 @@
 package fi.hut.soberit.agilefant.business.impl;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import fi.hut.soberit.agilefant.business.TaskBusiness;
+import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.db.TaskDAO;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
+import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.State;
 import fi.hut.soberit.agilefant.model.Task;
 
 public class TaskBusinessImpl implements TaskBusiness {
     private TaskDAO taskDAO;
+    private BacklogItemDAO backlogItemDAO;
 
     public void updateMultipleTaskStates(Map<Integer, State> newStatesMap)
             throws ObjectNotFoundException {
@@ -98,6 +102,26 @@ public class TaskBusinessImpl implements TaskBusiness {
                     + taskId);
         }
         return task;
+    }
+
+    //TODO: refactor!
+    public Map<Integer, Integer> getTaskCountByState(int backlogItemId) {
+        Map<Integer, Integer> res = new HashMap<Integer,Integer>();
+        
+        BacklogItem bli = backlogItemDAO.get(backlogItemId);
+        if(bli != null) {
+            for(Task t : bli.getTasks()) {
+                if(res.get(t.getState().getOrdinal()) == null) {
+                    res.put(t.getState().getOrdinal(), 0);
+                }
+                res.put(t.getState().getOrdinal(), res.get(t.getState().getOrdinal()) + 1);
+            }
+        }
+        return res;
+    }
+
+    public void setBacklogItemDAO(BacklogItemDAO backlogItemDAO) {
+        this.backlogItemDAO = backlogItemDAO;
     }
 
 }

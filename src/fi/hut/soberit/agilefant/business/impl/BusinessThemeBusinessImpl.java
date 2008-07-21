@@ -11,6 +11,7 @@ import java.util.Map;
 import org.springframework.dao.DataIntegrityViolationException;
 
 import fi.hut.soberit.agilefant.business.BusinessThemeBusiness;
+import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.db.BusinessThemeDAO;
 import fi.hut.soberit.agilefant.db.ProductDAO;
@@ -25,6 +26,7 @@ public class BusinessThemeBusinessImpl implements BusinessThemeBusiness {
 
     private BusinessThemeDAO businessThemeDAO;
     private ProductDAO productDAO;
+    private BacklogDAO backlogDAO;
     private BacklogItemDAO backlogItemDAO;
 
     public BusinessTheme getBusinessTheme(int businessThemeId) {
@@ -66,15 +68,44 @@ public class BusinessThemeBusinessImpl implements BusinessThemeBusiness {
         return activeThemes;
     }
     
+    public Map<Integer, List<BusinessTheme>> loadThemesByBacklog(int backlogId) {
+        List rawThemeData = businessThemeDAO.getThemesByBacklog(backlogDAO
+                .get(backlogId));
+        Map<Integer, List<BusinessTheme>> res = new HashMap<Integer, List<BusinessTheme>>();
+        for (Object row : rawThemeData) {
+            try {
+                Object tmpData[] = (Object[]) row;
+                int bliId = (Integer) tmpData[0];
+                BusinessTheme tmpTheme = new BusinessTheme();
+                tmpTheme.setId((Integer) tmpData[1]);
+                tmpTheme.setName((String) tmpData[2]);
+                tmpTheme.setDescription((String) tmpData[3]);
+                if (res.get(bliId) == null) {
+                    res.put(bliId, new ArrayList<BusinessTheme>());
+                }
+                res.get(bliId).add(tmpTheme);
+            } catch (Exception e) {
+            }
+        }
+        return res;
+    }
     public Map<BusinessTheme, BusinessThemeMetrics> getThemeMetrics(int productId) {
         Product product = productDAO.get(productId);
         
         if (product == null) {
             return new HashMap<BusinessTheme, BusinessThemeMetrics>();
         }
+        Map<Integer, Integer> allItems = businessThemeDAO.numberOfBacklogItemsByProduct(product, null);
+        Map<Integer, Integer> doneItems = businessThemeDAO.numberOfBacklogItemsByProduct(product, State.DONE);
+        
         Map<BusinessTheme, BusinessThemeMetrics> metricsMap = new HashMap<BusinessTheme, BusinessThemeMetrics>();
+
         for (BusinessTheme theme: product.getBusinessThemes()) {
+            
             BusinessThemeMetrics metrics = new BusinessThemeMetrics();
+            int donePercentage = 0;
+            
+            /*
             metrics.setNumberOfBlis(theme.getBacklogItems().size());            
             int doneBlis = 0;
             int donePercentage = 0;
@@ -84,8 +115,12 @@ public class BusinessThemeBusinessImpl implements BusinessThemeBusiness {
                 }
             }
             metrics.setNumberOfDoneBlis(doneBlis);
+            */
+            metrics.setNumberOfBlis(((allItems.get(theme.getId()) != null ) ? allItems.get(theme.getId()) : 0));
+            metrics.setNumberOfDoneBlis(((doneItems.get(theme.getId()) != null ) ? doneItems.get(theme.getId()) : 0));
+
             if (metrics.getNumberOfBlis() > 0) {
-                donePercentage = (int) ((float) doneBlis / (float) metrics.getNumberOfBlis() * 100.0);
+                donePercentage = (int) ((float) metrics.getNumberOfDoneBlis() / (float) metrics.getNumberOfBlis() * 100.0);
             }
             metrics.setDonePercentage(donePercentage);
             metricsMap.put(theme, metrics);
@@ -207,6 +242,14 @@ public class BusinessThemeBusinessImpl implements BusinessThemeBusiness {
 
     public void setBacklogItemDAO(BacklogItemDAO backlogItemDAO) {
         this.backlogItemDAO = backlogItemDAO;
+    }
+
+    public BacklogDAO getBacklogDAO() {
+        return backlogDAO;
+    }
+
+    public void setBacklogDAO(BacklogDAO backlogDAO) {
+        this.backlogDAO = backlogDAO;
     }
 
 }

@@ -40,6 +40,7 @@ public class TimelineBusinessImpl implements TimelineBusiness {
             json += "{name:'" + stringToJSON(project.getName())  + "'," +
             		"id:" + project.getId() + "," + 
             		"type:'project'," +
+            		"state:" + project.getStatus().getOrdinal() + "," +
             		"startDate:'" + sdf.format(project.getStartDate()) + "'," +
             		"endDate:'" + sdf.format(project.getEndDate()) + "'" +
                         ",contents:[\n";

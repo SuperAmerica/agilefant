@@ -40,7 +40,14 @@ function validateDeletion() {
 				<ww:param name="backlogItemId" value="${row.id}" />
 			</ww:url>
 			<div>
-			<aef:backlogItemThemes backlogItemId="${row.id}"/>			
+			<a href="#" id="themeEdit_${backlog.id}_${row.id}" onclick="openThemeBusinessModal('themeEdit_${backlog.id}_${row.id}', 'editBacklogItemBusinessThemes.action',${row.id}, 0,${backlog.id}); return false;">
+               <img class="themeImg" src="static/img/add_theme.png" alt="Edit themes" title="Edit themes" /></a>
+            <c:forEach items="${bliThemeCache[row.id]}" var="businessTheme">
+            	<a href="#" onclick="openThemeBusinessModal('themeEdit_${backlog.id}_${row.id}', 'editBacklogItemBusinessThemes.action',${row.id},${businessTheme.id},${backlog.id}); return false;">
+            		<span class="businessTheme" title="${businessTheme.description}"><c:out value="${businessTheme.name}"/></span>
+            	</a>
+            </c:forEach>
+			<%--<aef:backlogItemThemes backlogItemId="${row.id}" businessThemes="${bliThemeCache[row.id]}"/>--%>			
 			<ww:a
 				href="%{editLink}&contextObjectId=${backlog.id}&contextViewName=${currentAction}">
 			${aef:html(row.name)}

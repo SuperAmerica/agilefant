@@ -13,6 +13,15 @@
 .timeline-band-project {
     background-color: #009944 !important;
 }
+.timeline-band-project-ok {
+    background-color: #009944 !important;
+}
+.timeline-band-project-challenged {
+    background-color: #FF9955 !important;
+}
+.timeline-band-project-critical {
+    background-color: #CC0000 !important;
+}
 
 /*------------------- Horizontal / Vertical lines ----------------*/
 

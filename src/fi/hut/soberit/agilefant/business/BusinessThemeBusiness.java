@@ -98,4 +98,5 @@ public interface BusinessThemeBusiness {
      */
     public void activateBusinessTheme(BusinessTheme businessTheme);
 
+    public Map<Integer, List<BusinessTheme>> loadThemesByBacklog(int backlogId);
 }

@@ -3,20 +3,12 @@ window.Timeline = new Object();
 window.Timeline.DateTime = window.SimileAjax.DateTime;
 window.Timeline.clientLocale = "en";
 window.Timeline.serverLocale = "en";
+window.Timeline.urlPrefix = "static/";
+window.SimileAjax.urlPrefix = "static/";
 
 $(document).ready(function() {
     /* Set the month names */
     Timeline.GregorianDateLabeller.monthNames["en"] = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" ];
-    
-    
-    Timeline.loadJSON = function(url, cb) {
-        var icb = function(data, status) { 
-        cb(data); 
-        }
-        
-        var json = jQuery.getJSON(url,{},icb);
-    
-    }
     /* Create the datasource */
     var eventSource = new Timeline.AgilefantEventSource();
     /* Set the band properties */
@@ -45,7 +37,12 @@ $(document).ready(function() {
   tl = Timeline.create(document.getElementById("productTimeline"), bandInfos);
   /* Get the JSON data */
   var timelineActionURL = "timelineData.action?productId=" + productId;
-  Timeline.loadJSON(timelineActionURL, function(json) { eventSource.loadJSON(json); });
+  //Timeline.loadJSON(timelineActionURL, function(json) {  });
+  jQuery.getJSON(timelineActionURL,{},function(data,status) {
+  	eventSource.loadJSON(data);
+  	tl.hideLoadingMessage();
+  });
+    tl.showLoadingMessage();
 });
 
 

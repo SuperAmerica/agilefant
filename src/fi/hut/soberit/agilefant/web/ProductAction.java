@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.opensymphony.xwork.Action;
@@ -57,6 +58,11 @@ public class ProductAction extends ActionSupport implements CRUDAction {
     private Map<BusinessTheme, BusinessThemeMetrics> themeMetrics;
     
     private BusinessThemeBusiness businessThemeBusiness; 
+    private Map<Integer, List<BusinessTheme>> bliThemeCache;
+
+    public Map<Integer, List<BusinessTheme>> getBliThemeCache() {
+        return bliThemeCache;
+    }
 
     public String create() {
         productId = 0;
@@ -121,7 +127,8 @@ public class ProductAction extends ActionSupport implements CRUDAction {
             origEstSums.put(pro, projectOrigEstSum);
         }
         
-        
+        bliThemeCache = businessThemeBusiness.loadThemesByBacklog(productId);
+        System.out.println("LISTING:::");
         return Action.SUCCESS;
     }
 

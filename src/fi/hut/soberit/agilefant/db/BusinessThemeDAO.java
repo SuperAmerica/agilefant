@@ -1,9 +1,12 @@
 package fi.hut.soberit.agilefant.db;
 
 import java.util.List;
+import java.util.Map;
 
+import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BusinessTheme;
 import fi.hut.soberit.agilefant.model.Product;
+import fi.hut.soberit.agilefant.model.State;
 
 /**
  * Interface for a DAO of a Theme.
@@ -23,5 +26,9 @@ public interface BusinessThemeDAO extends GenericDAO<BusinessTheme> {
      * @return
      */
     public List<BusinessTheme> getSortedBusinessThemesByProductAndActivity(Product product, boolean active);
+    
+    public Map<Integer, Integer> numberOfBacklogItemsByProduct(Product product, State backlogItemState);
+    
+    public List getThemesByBacklog(Backlog backlog); 
     
 }

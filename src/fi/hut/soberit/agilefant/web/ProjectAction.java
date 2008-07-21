@@ -16,6 +16,7 @@ import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
 
 import fi.hut.soberit.agilefant.business.BacklogBusiness;
+import fi.hut.soberit.agilefant.business.BusinessThemeBusiness;
 import fi.hut.soberit.agilefant.business.HourEntryBusiness;
 import fi.hut.soberit.agilefant.business.ProjectBusiness;
 import fi.hut.soberit.agilefant.business.UserBusiness;
@@ -27,6 +28,7 @@ import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.Assignment;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
+import fi.hut.soberit.agilefant.model.BusinessTheme;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
@@ -105,6 +107,14 @@ public class ProjectAction extends ActionSupport implements CRUDAction {
     
     private BacklogMetrics projectMetrics = new BacklogMetrics();
     
+    private Map<Integer, List<BusinessTheme>> bliThemeCache;
+
+    private BusinessThemeBusiness businessThemeBusiness;
+    
+
+    public Map<Integer, List<BusinessTheme>> getBliThemeCache() {
+        return bliThemeCache;
+    }
 
     /**
      * @return the dateFormat
@@ -201,7 +211,7 @@ public class ProjectAction extends ActionSupport implements CRUDAction {
             origEstSums.put(iter, origEstSum);
         }
         
-        
+        bliThemeCache = businessThemeBusiness.loadThemesByBacklog(projectId);
         return Action.SUCCESS;
     }
 
@@ -551,5 +561,9 @@ public class ProjectAction extends ActionSupport implements CRUDAction {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public void setBusinessThemeBusiness(BusinessThemeBusiness businessThemeBusiness) {
+        this.businessThemeBusiness = businessThemeBusiness;
     }
 }

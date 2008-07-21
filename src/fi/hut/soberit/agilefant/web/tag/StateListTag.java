@@ -1,7 +1,9 @@
 package fi.hut.soberit.agilefant.web.tag;
 
 import java.util.HashMap;
+import java.util.Map;
 
+import fi.hut.soberit.agilefant.business.TaskBusiness;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.db.TaskDAO;
 import fi.hut.soberit.agilefant.model.BacklogItem;
@@ -28,7 +30,9 @@ public class StateListTag extends SpringTagSupport {
     @Override
     public int doEndTag() throws javax.servlet.jsp.JspTagException {
 
-        HashMap<String, Integer> map = new HashMap<String, Integer>();
+        
+        Map<String, Integer> map = new HashMap<String, Integer>();
+        /*
         TaskDAO dao = (TaskDAO) super.getApplicationContext()
                 .getBean("taskDAO");
         BacklogItemDAO bliDao = (BacklogItemDAO) super.getApplicationContext()
@@ -48,13 +52,16 @@ public class StateListTag extends SpringTagSupport {
         int done = dao.getTasksByStateAndBacklogItem(bli,
                 new State[] { State.DONE }).size();
         
-        map.put(NOT_STARTED, notStarted);
-        map.put(STARTED, started);
-        map.put(PENDING, pending);
-        map.put(BLOCKED, blocked);
-        map.put(IMPLEMENTED, implemented);
-        map.put(DONE, done);
-        
+        */
+        Map<Integer,Integer> tmp = ((TaskBusiness)super.getApplicationContext().getBean("taskBusiness")).getTaskCountByState(backlogItemId);
+
+        map.put(NOT_STARTED, tmp.get(State.NOT_STARTED.getOrdinal()));
+        map.put(STARTED, tmp.get(State.STARTED.getOrdinal()));
+        map.put(PENDING, tmp.get(State.PENDING.getOrdinal()));
+        map.put(BLOCKED, tmp.get(State.BLOCKED.getOrdinal()));
+        map.put(IMPLEMENTED, tmp.get(State.IMPLEMENTED.getOrdinal()));
+        map.put(DONE, tmp.get(State.DONE.getOrdinal()));
+
         super.getPageContext().setAttribute(super.getId(), map);
         return EVAL_PAGE;
     }

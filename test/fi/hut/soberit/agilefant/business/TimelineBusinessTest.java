@@ -17,6 +17,7 @@ import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
+import fi.hut.soberit.agilefant.model.Status;
 import fi.hut.soberit.agilefant.util.CalendarUtils;
 
 public class TimelineBusinessTest extends TestCase {
@@ -65,6 +66,7 @@ public class TimelineBusinessTest extends TestCase {
         proj.setId(2);
         proj.setName("Testiprojekti");
         proj.setStartDate(cal.getTime());
+        proj.setStatus(Status.OK);
         cal.set(Calendar.MONTH, Calendar.JULY);
         cal.set(Calendar.DATE, 31);
         proj.setEndDate(cal.getTime());
@@ -88,7 +90,7 @@ public class TimelineBusinessTest extends TestCase {
         
         String verifiedJSON = "{name:'Testituote',id:1,type:'product',\n" +
         		"contents:[\n" +
-        		"{name:'Testiprojekti',id:2,type:'project',startDate:'2008-06-01',endDate:'2008-07-31',contents:[\n" +
+        		"{name:'Testiprojekti',id:2,type:'project',state:0,startDate:'2008-06-01',endDate:'2008-07-31',contents:[\n" +
         		"{name:'Testi-iteraatio',id:3,type:'iteration',startDate:'2008-07-10',endDate:'2008-07-19'}]\n" +
         		"}\n" +
         		"]\n" +
@@ -129,6 +131,7 @@ public class TimelineBusinessTest extends TestCase {
         proj.setId(2);
         proj.setName("Testiprojekti");
         proj.setStartDate(cal.getTime());
+        proj.setStatus(Status.CHALLENGED);
         cal.set(Calendar.MONTH, Calendar.JULY);
         cal.set(Calendar.DATE, 31);
         proj.setEndDate(cal.getTime());
@@ -140,7 +143,7 @@ public class TimelineBusinessTest extends TestCase {
         
         String verifiedJSON = "{name:'Testituote',id:1,type:'product',\n" +
                         "contents:[\n" +
-                        "{name:'Testiprojekti',id:2,type:'project',startDate:'2008-06-01',endDate:'2008-07-31',contents:[\n" +
+                        "{name:'Testiprojekti',id:2,type:'project',state:1,startDate:'2008-06-01',endDate:'2008-07-31',contents:[\n" +
                         "]\n}\n" +
                         "]\n" +
                         "}";
@@ -175,6 +178,7 @@ public class TimelineBusinessTest extends TestCase {
         Project proj = new Project();
         proj.setId(2);
         proj.setName("Testiprojekti");
+        proj.setStatus(Status.CRITICAL);
         proj.setStartDate(cal.getTime());
         cal.set(Calendar.MONTH, Calendar.JULY);
         cal.set(Calendar.DATE, 31);
@@ -187,7 +191,7 @@ public class TimelineBusinessTest extends TestCase {
         
         String verifiedJSON = "{name:'T\\ne\\\'s\\rtituo\\\'\\\'te',id:1,type:'product',\n" +
                         "contents:[\n" +
-                        "{name:'Testiprojekti',id:2,type:'project',startDate:'2008-06-01',endDate:'2008-07-31',contents:[\n]\n}\n" +
+                        "{name:'Testiprojekti',id:2,type:'project',state:2,startDate:'2008-06-01',endDate:'2008-07-31',contents:[\n]\n}\n" +
                         "]\n" +
                         "}";
               

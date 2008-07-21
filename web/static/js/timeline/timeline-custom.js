@@ -14,7 +14,7 @@ Timeline.AgilefantEventSource.prototype.loadJSON = function(data, url) {
             		for (var j = 0; j < event.contents.length; j++) {
             			var evt = event.contents[j];
             			var ev = new Timeline.AgilefantEventSource.Event(
-                    		evt.id,evt.name,evt.type,null,parseDateTimeFunction(evt.startDate),parseDateTimeFunction(evt.endDate)
+                    		evt.id,evt.name,evt.type,evt.state,null,parseDateTimeFunction(evt.startDate),parseDateTimeFunction(evt.endDate)
    			             );
 		                ev._obj = ev;
         		        ev.getProperty = function(name) { return this._obj[name]; };
@@ -23,7 +23,7 @@ Timeline.AgilefantEventSource.prototype.loadJSON = function(data, url) {
             		subItems.sort(startSort);
             	}
                 var evt = new Timeline.AgilefantEventSource.Event(
-                    event.id,event.name,event.type,subItems,parseDateTimeFunction(event.startDate),parseDateTimeFunction(event.endDate)
+                    event.id,event.name,event.type,event.state,subItems,parseDateTimeFunction(event.startDate),parseDateTimeFunction(event.endDate)
                 );
             
                 evt._obj = event;
@@ -43,7 +43,7 @@ Timeline.AgilefantEventSource.prototype.loadJSON = function(data, url) {
 
 
 Timeline.AgilefantEventSource.Event = function(
-        id, name, type, subItems, start, end) {       
+        id, name, type, state, subItems, start, end) {       
         this._id = id;       
         this._instant = false;    
         this._start = start;
@@ -59,6 +59,7 @@ Timeline.AgilefantEventSource.Event = function(
         } else {
         	this._text = name;
         }
+        this._state = state;
         this._link = null;
         this._title = name;
         this._subItems = subItems;
@@ -66,8 +67,12 @@ Timeline.AgilefantEventSource.Event = function(
         this._color = null;
         this._textColor = '#666666';
         this._classname = 'timeline-' + type;
-        this._bandClass = 'timeline-band-' + type;
-    
+        var stateToCss = ["ok","challenged","critical"];
+        if(type == "project" && stateToCss[state] != undefined) {
+        	this._bandClass = 'timeline-band-' + type + "-" + stateToCss[this._state];
+    	} else {
+    		this._bandClass = 'timeline-band-' + type;
+    	}
         this._wikiURL = null;
         this._wikiSection = null;
 };
@@ -92,6 +97,7 @@ Timeline.AgilefantEventSource.Event.prototype = {
   getColor:       function() { return this._color; },  
   getTextColor:   function() { return this._textColor; },
   getClassName:   function() {return this._classname;  },
+  getState:   	  function() {return this._state;  },
   getProperty:    function(name) { return null; },
 
   fillDescription: function(elmt) {
@@ -646,11 +652,14 @@ Timeline.AgilefantEventPainter.prototype._paintEventTape = function(
 
   var tapeDiv = this._timeline.getDocument().createElement("div");
   tapeDiv.className = "timeline-event-tape";
+  /*
   if(evt.isProject()) {
     tapeDiv.className += " timeline-band-project";
   } else {
     tapeDiv.className += " timeline-band-iteration";
   }
+  */
+  tapeDiv.className += " " + evt._bandClass;
   tapeDiv.style.left = startPixel + "px";
   tapeDiv.style.width = tapeWidth + "px";
   tapeDiv.style.top = top + "px";
@@ -769,4 +778,5 @@ Timeline.AgilefantTheme = function() {
     };   
     this.zoom = true; // true or false
 };
+
 

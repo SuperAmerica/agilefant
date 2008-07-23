@@ -8,6 +8,7 @@ import java.util.Map;
 
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.exception.OperationNotPermittedException;
+import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.Product;
@@ -186,4 +187,10 @@ public interface ProjectBusiness {
      * @param product
      */
     public void calculateProjectMetrics(Product product);
+    
+    /**
+     * Calculates a project's assignments' total overheads metrics.
+     * @param project
+     */
+    public Map<Integer, AFTime> calculateTotalOverheads(Project project);
 }

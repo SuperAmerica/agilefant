@@ -802,6 +802,23 @@ public class ProjectBusinessImpl implements ProjectBusiness {
         }
     }
     
+    public Map<Integer, AFTime> calculateTotalOverheads(Project project) {
+        Map<Integer, AFTime> totalOverheads = new HashMap<Integer, AFTime>();
+        if (project != null) {                   
+            for (Assignment ass : project.getAssignments()) {
+                AFTime totalOverhead = new AFTime(0);
+                if (project.getDefaultOverhead() != null) {
+                    totalOverhead.add(project.getDefaultOverhead());
+                }
+                if (ass.getDeltaOverhead() != null) {
+                    totalOverhead.add(ass.getDeltaOverhead());
+                }
+                totalOverheads.put(ass.getUser().getId(), totalOverhead);
+            }            
+        }
+        return totalOverheads;
+    }
+    
     public UserBusiness getUserBusiness() {
         return userBusiness;
     }

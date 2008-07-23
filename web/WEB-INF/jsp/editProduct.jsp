@@ -45,26 +45,37 @@ function submitThemeForm() {
     return false;
 }
 
-function openEditThemeTabs(target,id) {
+function openEditThemeTabs(target,id,tabId) {
 	var target = $("#"+target);
 	if(target.attr("tab-data-loaded")) {
 		if (target.is(":visible")) {
-            ajaxCloseDialog("themes", id);
+			var $tabs = target.tabs();
+			var selected = $tabs.data('selected.tabs');
+			if (selected == tabId) {
+            	ajaxCloseDialog("themes", id);
+            	target.toggle();
+            } else {
+            	target.find(".businessThemeTabs").tabs('select', tabId);
+            }          
 		}
 		else {
 		  ajaxOpenDialog("themes", id);
+		  target.toggle();
+		  target.find(".businessThemeTabs").tabs('select', tabId);
+		  
 		}
-		target.toggle();
+		// target.toggle();
 	} else {
         ajaxOpenDialog("themes", id);
 		target.load("businessThemeTabs.action",{businessThemeId: id},function(data, status) {
 			var t = target.find(".tabs-nav").length;
-			target.find(".businessThemeTabs").tabs();
+			// target.find(".businessThemeTabs").tabs();
+			target.find(".businessThemeTabs").tabs({ selected: tabId });
 			var form = target.find("form");
 			form.validate(themeFormSettings);
 			form.submit(submitThemeForm);
 		});
-		target.attr("tab-data-loaded","1");
+		target.attr("tab-data-loaded","1");		
 	}
 	return false;
 }
@@ -319,10 +330,10 @@ var productId = ${product.id};
 
 				<c:if test="${!empty product.projects}">
 				<div class="subItemContent">
-				<p><display:table class="listTable" name="product.projects"
+				<display:table class="listTable" name="product.projects"
 					id="row" requestURI="editProduct.action">
 							
-					<display:column sortable="false" title="Status">
+					<display:column sortable="false" title="St.">
 						<%@ include file="./inc/_projectStatusIcon.jsp"%>
 					</display:column>		
 														
@@ -340,12 +351,12 @@ var productId = ${product.id};
 					<display:column sortable="true" sortProperty="projectType.name"
 						title="Project type" property="projectType.name" />
 
-					<display:column sortable="false" title="Iteration info">
+					<display:column sortable="false" title="Iter. info">
 						<c:out value="${row.metrics.numberOfOkIterations}" /> / 
 						<c:out value="${row.metrics.numberOfLateIterations}" />
 					</display:column>
 					
-					<display:column sortable="false" title="# of assignees">
+					<display:column sortable="false" title="Assignees">
 						<c:out value="${row.metrics.assignees}" />
 					</display:column>					
 															
@@ -368,7 +379,7 @@ var productId = ${product.id};
 							<img src="static/img/delete_18.png" alt="Delete" title="Delete theme" style="cursor: pointer;"/>
 						</ww:a>
 					</display:column>
-				</display:table></p>
+				</display:table>
 				</div>
 				</c:if>
 			</div>
@@ -431,7 +442,8 @@ var productId = ${product.id};
 					<c:out value="${businessThemeMetrics[row].numberOfBlis}" />)					
 				</display:column>				
 				<display:column title="Actions">
-				<img src="static/img/edit.png" alt="Edit" title="Edit theme" style="cursor: pointer;" onclick="openEditThemeTabs('businessThemeTabContainer-${row.id}',${row.id});" />
+				<img src="static/img/edit.png" alt="Edit" title="Edit theme" style="cursor: pointer;" onclick="openEditThemeTabs('businessThemeTabContainer-${row.id}',${row.id},0);" />
+				<img src="static/img/backlog.png" alt="BLIs" title="Backlog items" style="cursor: pointer;" onclick="openEditThemeTabs('businessThemeTabContainer-${row.id}',${row.id},1);" />
 				<img src="static/img/disable.png" alt="Disable" title="Disable theme" style="cursor: pointer;" onclick="setThemeActivityStatus(${row.id},false); return false;" />
 				<img src="static/img/delete_18.png" alt="Delete" title="Delete theme" style="cursor: pointer;" onclick="deleteTheme(${row.id}); return false;" />									
 				</display:column>
@@ -475,7 +487,8 @@ var productId = ${product.id};
 					<c:out value="${businessThemeMetrics[row].numberOfBlis}" />)					
 				</display:column>								
 				<display:column title="Actions">
-				<img src="static/img/edit.png" alt="Edit" title="Edit theme" style="cursor: pointer;" onclick="openEditThemeTabs('businessThemeTabContainer-${row.id}',${row.id});" />
+				<img src="static/img/edit.png" alt="Edit" title="Edit theme" style="cursor: pointer;" onclick="openEditThemeTabs('businessThemeTabContainer-${row.id}',${row.id},0);" />
+				<img src="static/img/backlog.png" alt="BLIs" title="Backlog items" style="cursor: pointer;" onclick="openEditThemeTabs('businessThemeTabContainer-${row.id}',${row.id},1);" />
 				<img src="static/img/enable.png" alt="Enable" title="Enable theme" style="cursor: pointer;" onclick="setThemeActivityStatus(${row.id},true); return false;return false;" />
 				<img src="static/img/delete_18.png" alt="Delete" title="Delete theme" style="cursor: pointer;" onclick="deleteTheme(${row.id}); return false;" />
 				</display:column>

@@ -183,11 +183,11 @@
 				                        	<c:choose>
                 			                	<c:when test="${flag == 1}">
                            				        	<input type="checkbox" name="selectedUserIds"
-                                        				value="${user.id}" checked="checked" class="user_${user.id}" />
+                                        				value="${user.id}" checked="checked" class="user_${user.id}" onchange="toggleDiv('${user.id}')"/>
                                 				</c:when>
                                 				<c:otherwise>
                                     				<input type="checkbox" name="selectedUserIds"
-                                        				value="${user.id}" class="user_${user.id}" />
+                                        				value="${user.id}" class="user_${user.id}" onchange="toggleDiv('${user.id}')"/>
                                	 				</c:otherwise>
                             				</c:choose>
                         				</display:column>
@@ -207,7 +207,21 @@
                             				<c:if test="${aef:listContains(disabledUsers, user)}">
                                 				<img src="static/img/disable_user_gray.png" alt="The user is disabled" title="The user is disabled" />
                             				</c:if>
-                        				</display:column>
+                        				</display:column>                        				
+                        				<display:column title="Overhead +/-">
+										<!-- Check whether user is assigned. If is assigned -> show overhead -->
+											<c:choose>	
+											<c:when test="${flag == 1}"> 
+												<div id="${user.id}" class="overhead">
+											</c:when>
+											<c:otherwise>
+												<div id="${user.id}" class="overhead" Style="display: none;">
+											</c:otherwise>
+											</c:choose>																		
+											<ww:hidden name="assignments['${user.id}'].user.id" value="${user.id}"  />
+											<ww:textfield size="3"  name="assignments['${user.id}'].deltaOverhead" />
+											</div>																		
+										</display:column>																	
                     				</display:table>
 				                    <div id="userselect" class="projectTeams">
                 				        <div class="right">
@@ -521,11 +535,11 @@
 																		<c:choose>
 																			<c:when test="${flag == 1}">
 																				<input type="checkbox" name="selectedUserIds"
-																					value="${user.id}" checked="checked" class="user_${user.id}" />
+																					value="${user.id}" checked="checked" class="user_${user.id}" onchange="toggleDiv('${user.id}')"/>
 																			</c:when>
 																			<c:otherwise>
 																				<input type="checkbox" name="selectedUserIds"
-																					value="${user.id}" class="user_${user.id}" />
+																					value="${user.id}" class="user_${user.id}" onchange="toggleDiv('${user.id}')"/>
 																			</c:otherwise>
 																		</c:choose>
 																	</display:column>
@@ -544,6 +558,47 @@
 	                                										<img src="static/img/disable_user_gray.png" alt="The user is disabled" title="The user is disabled" />
 	                            										</c:if>
 																		</span>
+																	</display:column>
+																	<display:column title="Overhead +/-">
+																	<!-- Check whether user is assigned. If is assigned -> show overhead -->
+																		<c:choose>	
+																		<c:when test="${flag == 1}"> 
+																			<div id="${user.id}" class="overhead">
+																		</c:when>
+																		<c:otherwise>
+																			<div id="${user.id}" class="overhead" Style="display: none;">
+																		</c:otherwise>
+																		</c:choose>
+																		<c:choose>
+																		<c:when test="${empty project.defaultOverhead}">
+																			<ww:label value="0h" />
+																		</c:when>
+																		<c:otherwise>
+																			<ww:label value="${project.defaultOverhead}" />
+																		</c:otherwise>
+																		</c:choose>																		
+																		+
+																		<ww:hidden name="assignments['${user.id}'].user.id" 
+																			value="${user.id}"  />																			
+																		<ww:textfield size="3"  name="assignments['${user.id}'].deltaOverhead" /> =
+																		
+																		<c:choose>
+																		<c:when test="${!empty totalOverheads[user.id]}">	
+																			<ww:label value="${totalOverheads[user.id]}" />
+																		</c:when>
+																		<c:otherwise>																			
+																			<c:choose>
+																				<c:when test="${empty project.defaultOverhead}">
+																					<ww:label value="0h" />
+																				</c:when>
+																				<c:otherwise>
+																					<ww:label value="${project.defaultOverhead}" />
+																				</c:otherwise>
+																			</c:choose>	
+																		</c:otherwise>
+																		</c:choose>																																																
+																		
+																		</div>																		
 																	</display:column>
 																</display:table>
 																<div id="userselect" class="projectTeams">

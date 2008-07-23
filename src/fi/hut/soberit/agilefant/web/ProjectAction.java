@@ -105,6 +105,8 @@ public class ProjectAction extends ActionSupport implements CRUDAction {
     
     private Map<String,Assignment> assignments = new HashMap<String, Assignment>();
     
+    private Map<Integer, AFTime> totalOverheads = new HashMap<Integer, AFTime>();
+    
     private BacklogMetrics projectMetrics = new BacklogMetrics();
     
     private Map<Integer, List<BusinessTheme>> bliThemeCache;
@@ -195,7 +197,11 @@ public class ProjectAction extends ActionSupport implements CRUDAction {
         // Calculate project's iterations' effort lefts and original estimates
         effLeftSums = new HashMap<Iteration, EffortSumData>();
         origEstSums = new HashMap<Iteration, EffortSumData>(); 
-        defaultOverhead = project.getDefaultOverhead();
+        defaultOverhead = project.getDefaultOverhead();        
+        for (Assignment ass: project.getAssignments()) {
+            assignments.put("" + ass.getUser().getId(), ass);
+        }
+        totalOverheads = projectBusiness.calculateTotalOverheads(project);
         
         // Get backlog metrics
         if (project.getIterations().size() == 0) {  
@@ -244,7 +250,7 @@ public class ProjectAction extends ActionSupport implements CRUDAction {
         } else {
             projectDAO.store(storable);
         }
-        backlogBusiness.setAssignments(selectedUserIds,null, projectDAO
+        backlogBusiness.setAssignments(selectedUserIds, this.assignments, projectDAO
                 .get(projectId));
         return Action.SUCCESS;
     }
@@ -565,5 +571,9 @@ public class ProjectAction extends ActionSupport implements CRUDAction {
 
     public void setBusinessThemeBusiness(BusinessThemeBusiness businessThemeBusiness) {
         this.businessThemeBusiness = businessThemeBusiness;
+    }
+
+    public Map<Integer, AFTime> getTotalOverheads() {
+        return totalOverheads;
     }
 }

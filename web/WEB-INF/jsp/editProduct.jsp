@@ -15,7 +15,11 @@
 <aef:openDialogs context="themes" id="openThemes" />
 
 <c:forEach items="${openThemes}" var="openTheme">
+</c:forEach>
 
+<aef:openDialogs context="projects" id="openProjects" />
+
+<c:forEach items="${openProjects}" var="openProject">
 </c:forEach>
 
 <script type="text/javascript">
@@ -34,6 +38,21 @@ var themeFormSettings = {
 	}
 };
 
+var projectFormSettings = {
+	rules: {
+	    "project.name": {
+	       required: true,
+	       minlength: 1
+	    }
+	},
+	messages: {
+        "project.name": {
+            required: "Please enter a name",
+            minlength: "Please enter a name"
+        }
+	}
+};
+
 function submitThemeForm() {
     if($(this).valid()) {
         $.post($(this).attr("action"), $(this).serializeArray(),
@@ -45,8 +64,24 @@ function submitThemeForm() {
     return false;
 }
 
+function submitProjectForm() {
+    if($(this).valid()) {
+        $.post($(this).attr("action"), $(this).serializeArray(),
+            function(data, status) {
+                reloadPage();                
+            });
+    }
+    
+    return false;
+}
+
+function closeTabs(context, target, id) {
+	ajaxCloseDialog(context, id);
+    $("#"+target).toggle();
+}
+
 function openEditThemeTabs(target,id,tabId) {
-	var target = $("#"+target);
+	var target = $("#"+target);	
 	if(target.attr("tab-data-loaded")) {
 		var tabs = target.find("ul.businessThemeTabs");
 		if (target.is(":visible")) {
@@ -55,19 +90,20 @@ function openEditThemeTabs(target,id,tabId) {
             	ajaxCloseDialog("themes", id);
             	target.toggle();
             } else {
-            	tabs.tabs('select',tabId);
+            	tabs.tabs('select', tabId);
             }          
 		}
 		else {
 		  ajaxOpenDialog("themes", id);
 		  target.toggle();
-		  tabs.tabs('select',tabId);		  
+		  tabs.tabs('select', tabId);
+		  
 		}
-	} else {
+	} else {		
         ajaxOpenDialog("themes", id);
 		target.load("businessThemeTabs.action",{businessThemeId: id},function(data, status) {
 			var t = target.find(".tabs-nav").length;
-			target.find("ul.businessThemeTabs").tabs({ selected: tabId });
+			target.find(".businessThemeTabs").tabs({ selected: tabId });
 			var form = target.find("form");
 			form.validate(themeFormSettings);
 			form.submit(submitThemeForm);
@@ -102,14 +138,55 @@ function deleteTheme(themeId) {
 
 $(document).ready(function() {
     <c:forEach items="${openThemes}" var="openTheme">
-        openEditThemeTabs("businessThemeTabContainer-${openTheme}", ${openTheme},0);
+        openEditThemeTabs("businessThemeTabContainer-${openTheme}", ${openTheme});
     </c:forEach>
     
     var createThemeForm = $("#createThemeDiv").find("form");
     createThemeForm.validate(themeFormSettings);
     createThemeForm.submit(submitThemeForm);
     
+    <c:forEach items="${openProjects}" var="openProject">
+        openEditProjectTabs("projectTabContainer-${openProject}", ${openProject});
+    </c:forEach>
+    
+    var createProjectForm = $("#createProjectDiv").find("form");
+    createProjectForm.validate(projectFormSettings);
+    createProjectForm.submit(submitProjectForm);
+    
 });
+
+function openEditProjectTabs(target,id,tabId) {
+	var target = $("#"+target);	
+	if(target.attr("tab-data-loaded")) {
+		var tabs = target.find("ul.projectTabs");
+		if (target.is(":visible")) {
+			var selected = tabs.data('selected.tabs');
+			if (selected == tabId) {
+            	ajaxCloseDialog("projects", id);
+            	target.toggle();
+            } else {
+            	tabs.tabs('select', tabId);
+            }          
+		}
+		else {
+		  ajaxOpenDialog("projects", id);
+		  target.toggle();
+		  tabs.tabs('select', tabId);
+		  
+		}
+	} else {		
+        ajaxOpenDialog("projects", id);
+		target.load("projectTabs.action",{projectId: id},function(data, status) {
+			var t = target.find(".tabs-nav").length;
+			target.find(".projectTabs").tabs({ selected: tabId });
+			var form = target.find("form");
+			form.validate(projectFormSettings);
+			form.submit(submitProjectForm);
+		});
+		target.attr("tab-data-loaded","1");		
+	}
+	return false;
+}
 
 /* Initialize the SimileAjax object */
 var SimileAjax = {
@@ -332,6 +409,7 @@ var productId = ${product.id};
 							
 					<display:column sortable="false" title="St.">
 						<%@ include file="./inc/_projectStatusIcon.jsp"%>
+						<div id="projectTabContainer-${row.id}" style="overflow:visible; white-space: nowrap; width: 115px;"></div>
 					</display:column>		
 														
 					<display:column sortable="true" sortProperty="name" title="Name">
@@ -342,7 +420,7 @@ var productId = ${product.id};
 						<ww:a
 							href="%{editLink}&contextViewName=editProduct&contextObjectId=${product.id}">
 							${aef:html(row.name)}
-						</ww:a>
+						</ww:a>						
 					</display:column>					
 
 					<display:column sortable="true" sortProperty="projectType.name"
@@ -366,6 +444,7 @@ var productId = ${product.id};
 					</display:column>
 												
 					<display:column sortable="false" title="Actions">
+						<img src="static/img/edit.png" alt="Edit" title="Edit project" style="cursor: pointer;" onclick="openEditProjectTabs('projectTabContainer-${row.id}',${row.id},0);" />
 						<ww:url id="deleteLink" action="deleteProject"
 							includeParams="none">
 							<ww:param name="productId" value="${product.id}" />

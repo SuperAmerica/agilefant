@@ -284,6 +284,21 @@
 				<param name="resetContextView">true</param>
 			</result>
 		</action>
+		<action name="projectTabs" method="edit"
+			class="projectAction">
+			<result>/WEB-INF/jsp/inc/projectAjax.jsp</result>
+		</action>
+		
+		<action name="ajaxStoreProject" method="ajaxStoreProject"
+			class="projectAction">		
+			<result name="ajax_error" type="httpheader">
+				<param name="status">400</param>
+			</result>
+			<result name="ajax_success" type="dispatcher">
+				<param name="status">200</param>
+				<param name="location">/WEB-INF/jsp/inc/ajaxProjectResult.jsp</param>
+			</result>
+		</action>
 		<!-- /Project actions -->
 
 		<!-- Work type actions -->

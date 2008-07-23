@@ -255,6 +255,39 @@ public class ProjectAction extends ActionSupport implements CRUDAction {
         return Action.SUCCESS;
     }
 
+    public String ajaxStoreProject() {
+        Project storable = new Project();
+        if (projectId > 0) {
+            storable = projectDAO.get(projectId);
+            if (storable == null) {
+                super.addActionError(super.getText("project.notFound"));
+                return CRUDAction.AJAX_ERROR;
+            }
+        }
+
+        try {
+            this.fillStorable(storable);
+        } catch (ParseException e) {
+            super.addActionError(e.toString());
+            return CRUDAction.AJAX_ERROR;
+        }
+
+        if (super.hasActionErrors()) {
+            return CRUDAction.AJAX_ERROR;
+        }
+        // AT ja MN: aika rumaa koodia... project-olion on oltava kannassa ennen
+        // kuin
+        // Assignmentit tehdään.
+        if (projectId == 0) {
+            projectId = (Integer) projectDAO.create(storable);
+        } else {
+            projectDAO.store(storable);
+        }
+        backlogBusiness.setAssignments(selectedUserIds, this.assignments, projectDAO
+                .get(projectId));
+        return CRUDAction.AJAX_SUCCESS;
+    }
+    
     public String saveProjectAssignments() {
         if (projectId == 0) {
             super.addActionError(super.getText("project.notFound"));

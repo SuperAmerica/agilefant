@@ -1,7 +1,6 @@
 <%@ include file="./inc/_taglibs.jsp"%>
 <%@ include file="./inc/_header.jsp"%>
 
-
 <c:choose>
 	<c:when test="${!empty project.id}">
 		<c:set var="currentProjectId" value="${project.id}" scope="page" />
@@ -307,7 +306,21 @@
 											<table class="infoTable" cellpadding="0" cellspacing="0">
 												<tr>
 								    				<th class="info1">Status</th>
-								    				<td class="info3" ondblclick="return editProject();"><ww:text name="project.status.${project.status}" /></td>
+								    				<td class="info3" ondblclick="return editProject();">
+								    				<c:choose>
+														<c:when test="${project.status == 'OK'}">
+															<img src="static/img/status-green.png" alt="OK" title="OK"/>
+														</c:when>
+														<c:when test="${project.status == 'CHALLENGED'}">
+															<img src="static/img/status-yellow.png" alt="Challenged" title="Challenged"/>
+														</c:when>
+														<c:when test="${project.status == 'CRITICAL'}">
+															<img src="static/img/status-red.png" alt="Critical" title="Critical"/>
+														</c:when>
+													</c:choose>
+								    				</td>
+								    				<!--  <td class="info3" ondblclick="return editProject();"><ww:text name="project.status.${project.status}" /></td> -->
+								    				
 								    				<td class="info4" rowspan="6">
 	                                					<c:if test="${(!empty project.backlogItems) && (empty project.iterations)}">
 	                                    					<div class="smallBurndown"><a href="#bigChart">
@@ -459,7 +472,7 @@
 																id="statusSelect"
 																value="project.status.name"
 																list="@fi.hut.soberit.agilefant.model.Status@values()" listKey="name"
-																listValue="getText('project.status.' + name())"  />
+																listValue="getText('project.status.' + name())"	/>
 														</td>
 													</tr>
 													<tr>

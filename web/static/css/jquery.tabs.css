@@ -28,6 +28,22 @@
 	overflow: auto !important;
 }
 
+.projectTabsDiv {
+	width: 600px !important;
+	margin: 4px 4px 4px 20px;
+	background-color: inherit;
+}
+
+.projectNaviTab {
+	width: 730px !important;
+	border: 1px solid #666;
+	height: 460px;
+	background-color: #f0f0f0;
+	padding: 8px 3px;
+	white-space: normal !important;
+	overflow: auto !important;
+}
+
 /* Skin */
 .ui-tabs-nav {
     list-style: none;

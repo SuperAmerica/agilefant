@@ -13,6 +13,7 @@
 <link rel="stylesheet" href="static/css/v5.css" type="text/css"/>
 <link rel="stylesheet" href="static/css/datepicker.css" type="text/css"/>
 <link rel="stylesheet" href="static/css/jquery.wysiwyg.css" type="text/css"/>
+<link rel="stylesheet" href="static/css/jquery.dialog.css" type="text/css"/>
 <title>
 Agilefant
 </title>
@@ -43,6 +44,15 @@ $(document).ready(function() {
         insertOrderedList : { visible : true },
         insertUnorderedList : { visible : true }
     }});
+    $('.openCreateDialog').click(function() {
+    	var window = $('<div class="flora"></div>').appendTo(document.body);
+		window.resize(function() {
+			alert("Foo");
+		});
+    	window.load($(this).attr("href"));
+    	window.dialog({close: function() { window.remove(); }, width: 700, height: 600 });
+    	return false;
+    });
 });
 
 </script>
@@ -168,8 +178,8 @@ $(document).ready(function() {
     <li>
     <c:choose>
         <c:when test="${hasProducts && hasProjectTypes}">
-            <ww:url id="createLink" action="createProject"
-                includeParams="none" /> <ww:a href="%{createLink}">Project &raquo;</ww:a>
+            <ww:url id="createLink" action="ajaxCreateProject"
+                includeParams="none" /> <ww:a href="%{createLink}" cssClass="openCreateDialog">Project &raquo;</ww:a>
         </c:when>
         <c:otherwise>
             <span class="inactive"

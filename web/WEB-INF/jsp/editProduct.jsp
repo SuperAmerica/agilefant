@@ -48,29 +48,26 @@ function submitThemeForm() {
 function openEditThemeTabs(target,id,tabId) {
 	var target = $("#"+target);
 	if(target.attr("tab-data-loaded")) {
+		var tabs = target.find("ul.businessThemeTabs");
 		if (target.is(":visible")) {
-			var $tabs = target.tabs();
-			var selected = $tabs.data('selected.tabs');
+			var selected = tabs.data('selected.tabs');
 			if (selected == tabId) {
             	ajaxCloseDialog("themes", id);
             	target.toggle();
             } else {
-            	target.find(".businessThemeTabs").tabs('select', tabId);
+            	tabs.tabs('select',tabId);
             }          
 		}
 		else {
 		  ajaxOpenDialog("themes", id);
 		  target.toggle();
-		  target.find(".businessThemeTabs").tabs('select', tabId);
-		  
+		  tabs.tabs('select',tabId);		  
 		}
-		// target.toggle();
 	} else {
         ajaxOpenDialog("themes", id);
 		target.load("businessThemeTabs.action",{businessThemeId: id},function(data, status) {
 			var t = target.find(".tabs-nav").length;
-			// target.find(".businessThemeTabs").tabs();
-			target.find(".businessThemeTabs").tabs({ selected: tabId });
+			target.find("ul.businessThemeTabs").tabs({ selected: tabId });
 			var form = target.find("form");
 			form.validate(themeFormSettings);
 			form.submit(submitThemeForm);
@@ -105,7 +102,7 @@ function deleteTheme(themeId) {
 
 $(document).ready(function() {
     <c:forEach items="${openThemes}" var="openTheme">
-        openEditThemeTabs("businessThemeTabContainer-${openTheme}", ${openTheme});
+        openEditThemeTabs("businessThemeTabContainer-${openTheme}", ${openTheme},0);
     </c:forEach>
     
     var createThemeForm = $("#createThemeDiv").find("form");

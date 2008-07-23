@@ -69,7 +69,7 @@ public class BusinessThemeBusinessImpl implements BusinessThemeBusiness {
     }
     
     public Map<Integer, List<BusinessTheme>> loadThemesByBacklog(int backlogId) {
-        List rawThemeData = businessThemeDAO.getThemesByBacklog(backlogDAO
+        List<?> rawThemeData = businessThemeDAO.getThemesByBacklog(backlogDAO
                 .get(backlogId));
         Map<Integer, List<BusinessTheme>> res = new HashMap<Integer, List<BusinessTheme>>();
         for (Object row : rawThemeData) {

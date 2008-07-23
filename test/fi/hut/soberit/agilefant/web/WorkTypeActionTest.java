@@ -44,6 +44,7 @@ public class WorkTypeActionTest extends SpringTestCase {
     /*
      * Checks, if there are any given error countered.
      */
+    @SuppressWarnings("unchecked")
     private boolean errorFound(String e) {
         Collection<String> errors = workTypeAction.getActionErrors();
         boolean found = false;
@@ -207,6 +208,7 @@ public class WorkTypeActionTest extends SpringTestCase {
     public void testStore_withoutCreate() {
         reset();
 
+        @SuppressWarnings("unused")
         String result = workTypeAction.store();
 
         assertTrue("Store without create didn't fail",
@@ -227,7 +229,7 @@ public class WorkTypeActionTest extends SpringTestCase {
         configWorkType(TEST_NAME, TEST_DESCRIPTION, test);
         store();
 
-        WorkType temp = workTypeAction.getWorkType();
+        workTypeAction.getWorkType();
         workTypeAction.setWorkType(null);
 
         workTypeAction.setProjectTypeId(test.getId());

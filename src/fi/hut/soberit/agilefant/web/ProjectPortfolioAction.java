@@ -7,15 +7,14 @@ import java.util.Map;
 import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
 
-import fi.hut.soberit.agilefant.business.BacklogBusiness;
+import fi.hut.soberit.agilefant.business.BusinessThemeBusiness;
 import fi.hut.soberit.agilefant.business.ProjectBusiness;
 import fi.hut.soberit.agilefant.business.TeamBusiness;
-import fi.hut.soberit.agilefant.business.BusinessThemeBusiness;
 import fi.hut.soberit.agilefant.business.UserBusiness;
+import fi.hut.soberit.agilefant.model.BusinessTheme;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.ProjectType;
 import fi.hut.soberit.agilefant.model.Team;
-import fi.hut.soberit.agilefant.model.BusinessTheme;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.util.ProjectPortfolioData;
 
@@ -24,8 +23,6 @@ public class ProjectPortfolioAction extends ActionSupport {
     private static final long serialVersionUID = -4749839976470627112L;
 
     private ProjectBusiness projectBusiness;
-
-    private BacklogBusiness backlogBusiness;
     
     private TeamBusiness teamBusiness;
     
@@ -133,10 +130,6 @@ public class ProjectPortfolioAction extends ActionSupport {
         this.projectTypes = projectTypes;
     }
 
-    public void setBacklogBusiness(BacklogBusiness backlogBusiness) {
-        this.backlogBusiness = backlogBusiness;
-    }
-
     public Map<Project, String> getSummaryUserData() {
         return summaryUserData;
     }
@@ -220,8 +213,5 @@ public class ProjectPortfolioAction extends ActionSupport {
     public void setBusinessThemeBusiness(BusinessThemeBusiness businessThemeBusiness) {
         this.businessThemeBusiness = businessThemeBusiness;
     }
-
-    
-    
 
 }

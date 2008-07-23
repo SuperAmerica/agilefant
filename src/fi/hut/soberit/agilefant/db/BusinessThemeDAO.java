@@ -29,6 +29,6 @@ public interface BusinessThemeDAO extends GenericDAO<BusinessTheme> {
     
     public Map<Integer, Integer> numberOfBacklogItemsByProduct(Product product, State backlogItemState);
     
-    public List getThemesByBacklog(Backlog backlog); 
+    public List<?> getThemesByBacklog(Backlog backlog); 
     
 }

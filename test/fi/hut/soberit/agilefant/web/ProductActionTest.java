@@ -61,7 +61,7 @@ public class ProductActionTest extends SpringTestCase {
     }
 
     /* Checks, if there are any given error countered. */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "unused" })
     // added for "Collection<string> errors = ..." line
     private boolean errorFound(String e) {
         Collection<String> errors = this.productAction.getActionErrors();
@@ -74,6 +74,7 @@ public class ProductActionTest extends SpringTestCase {
     }
 
     /* Methods for setting Product fields. */
+    @SuppressWarnings("unused")
     private Product setProductId(int id) {
         Product p = this.productAction.getProduct();
         p.setId(id);
@@ -101,6 +102,7 @@ public class ProductActionTest extends SpringTestCase {
      * not a target for testing) Actual testing for method store is done in
      * testStore_XXX -methods
      */
+    @SuppressWarnings("unused")
     private void store() {
         String result = this.productAction.store();
         assertEquals("store() was unsuccessful", result, Action.SUCCESS);

@@ -10,7 +10,6 @@ import fi.hut.soberit.agilefant.business.TaskBusiness;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.db.TaskDAO;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
-import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.security.SecurityUtil;
@@ -156,12 +155,12 @@ public class TaskAction extends ActionSupport implements CRUDAction {
      */
     public String delete() {
         task = taskDAO.get(taskId);
-        Backlog backlog;
+        
         if (task == null) {
             super.addActionError(super.getText("task.notFound"));
             return Action.ERROR;
         }
-        backlog = task.getBacklogItem().getBacklog();
+        
         BacklogItem backlogItem = task.getBacklogItem();
         backlogItemId = backlogItem.getId();
         backlogItem.getTasks().remove(task);

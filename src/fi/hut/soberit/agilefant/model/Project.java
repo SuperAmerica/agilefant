@@ -179,6 +179,7 @@ public class Project extends Backlog implements PageItem {
      * Returns the sum of Project's Iteration's items' effort left.
      */
     @Transient
+    @Deprecated
     public AFTime getSubBacklogEffortLeftSum() {
         AFTime result = new AFTime(0);
         Iterator<Iteration> it = iterations.iterator();
@@ -195,6 +196,7 @@ public class Project extends Backlog implements PageItem {
      * Returns the sum of Project's Iteration's items' original estimate.
      */
     @Transient
+    @Deprecated
     public AFTime getSubBacklogOriginalEstimateSum() {
         AFTime result = new AFTime(0);
         Iterator<Iteration> it = iterations.iterator();

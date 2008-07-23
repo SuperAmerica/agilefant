@@ -49,6 +49,7 @@ public class EnumUserType implements UserType, ParameterizedType {
         return useOrdinal ? INT_SQL_TYPES : VARCHAR_SQL_TYPES;
     }
 
+    @SuppressWarnings("unchecked")
     public Object nullSafeGet(ResultSet rs, String[] names, Object obj)
             throws HibernateException, SQLException {
         if (useOrdinal) {
@@ -73,9 +74,9 @@ public class EnumUserType implements UserType, ParameterizedType {
         if (obj == null) {
             stmt.setNull(index, this.sqlTypes()[0]);
         } else if (useOrdinal) {
-            stmt.setInt(index, ((Enum) obj).ordinal());
+            stmt.setInt(index, ((Enum<?>) obj).ordinal());
         } else {
-            stmt.setString(index, ((Enum) obj).name());
+            stmt.setString(index, ((Enum<?>) obj).name());
         }
     }
 

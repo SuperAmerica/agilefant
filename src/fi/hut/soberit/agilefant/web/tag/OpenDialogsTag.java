@@ -6,8 +6,6 @@ import java.util.Collection;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.Tag;
 
-import com.opensymphony.xwork.ActionContext;
-
 public class OpenDialogsTag extends SpringTagSupport {
 
     private static final long serialVersionUID = -8291423940208835187L;

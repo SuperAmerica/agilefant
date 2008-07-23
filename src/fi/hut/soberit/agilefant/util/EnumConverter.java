@@ -15,6 +15,7 @@ public class EnumConverter extends WebWorkTypeConverter {
         return Enum.valueOf(toClass, values[0]);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public String convertToString(Map context, Object o) {
         return (o == null) ? null : o.toString();

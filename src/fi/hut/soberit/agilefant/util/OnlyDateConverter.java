@@ -42,6 +42,7 @@ public class OnlyDateConverter extends WebWorkTypeConverter implements
         }
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public String convertToString(Map context, Object o) {
         if (o == null) {

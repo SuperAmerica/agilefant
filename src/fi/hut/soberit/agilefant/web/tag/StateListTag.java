@@ -4,9 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import fi.hut.soberit.agilefant.business.TaskBusiness;
-import fi.hut.soberit.agilefant.db.BacklogItemDAO;
-import fi.hut.soberit.agilefant.db.TaskDAO;
-import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.State;
 
 public class StateListTag extends SpringTagSupport {

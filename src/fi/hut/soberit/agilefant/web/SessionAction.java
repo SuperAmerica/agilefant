@@ -12,6 +12,7 @@ import com.opensymphony.xwork.ActionSupport;
  * @author rjokelai
  */
 public class SessionAction extends ActionSupport {
+    private static final long serialVersionUID = -137364974320138538L;
     
     private String contextType = "";
     private Integer objectId;

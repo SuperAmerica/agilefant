@@ -2,12 +2,12 @@
 <c:set var="divId" value="${divId + 1}" scope="page" />
 <c:choose>
 	<c:when test="${!(empty row.tasks)}">
-		<a href="javascript:toggleDiv(${divId});" title="Click to expand">
+		<a href="javascript:toggleDiv('bli_${divId}');" title="Click to expand">
 			${fn:length(row.tasks)} tasks,
 			<aef:percentDone backlogItemId="${row.id}" />% done<br />
 	</c:when>
 	<c:otherwise>
-		<a href="javascript:toggleDiv(${divId});" title="Click to expand">
+		<a href="javascript:toggleDiv('bli_${divId}');" title="Click to expand">
 			<ww:text name="backlogItem.state.${row.state}"/><br />
 	</c:otherwise>
 	</c:choose>		

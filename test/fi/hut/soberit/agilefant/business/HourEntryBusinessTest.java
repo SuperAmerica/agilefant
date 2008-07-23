@@ -42,6 +42,7 @@ public class HourEntryBusinessTest extends TestCase {
     private HourEntryDAO heDAO;
     private SettingDAO settingDAO;
     
+    @SuppressWarnings("deprecation")
     public void testGetEntriesByBacklogItem() {
         bheDAO = createMock(BacklogItemHourEntryDAO.class);
         hourEntryBusiness = new HourEntryBusinessImpl();

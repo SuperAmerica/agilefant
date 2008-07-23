@@ -51,6 +51,7 @@ public class DefaultContextViewManager implements ContextViewManager {
         this.getStack().clear();
     }
 
+    @SuppressWarnings("unchecked")
     private Stack<ContextView> getStack() {
         Stack<ContextView> stack = (Stack<ContextView>) ActionContext
                 .getContext().getSession().get(contextStackParam);

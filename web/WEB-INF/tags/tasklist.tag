@@ -10,7 +10,7 @@
 <%@attribute name="hourReport"%>
 <div>
 <aef:currentUser />
-<ul class="tasklist" id="${divId}" style="display:none;">
+<ul class="tasklist" id="bli_${divId}" style="display:none;">
 	<ww:form action="quickStoreTaskList" validate="false">
 	<li class="tasklistItem">
 Effort estimate

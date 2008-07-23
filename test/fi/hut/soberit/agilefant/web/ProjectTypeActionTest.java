@@ -38,6 +38,7 @@ public class ProjectTypeActionTest extends SpringTestCase {
     /*
      * Checks, if there are any given error countered.
      */
+    @SuppressWarnings("unchecked")
     private boolean errorFound(String e) {
         Collection<String> errors = projectTypeAction.getActionErrors();
         boolean found = false;

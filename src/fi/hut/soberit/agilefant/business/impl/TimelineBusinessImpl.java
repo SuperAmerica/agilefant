@@ -29,7 +29,7 @@ public class TimelineBusinessImpl implements TimelineBusiness {
         json += "name:'" + stringToJSON(product.getName())
                         + "',id:" + product.getId()
                         + ",type:'product',\n"
-        	        + "contents:[\n";
+        	        + "contents:[ \n";
         
         /* Time formatter */
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");

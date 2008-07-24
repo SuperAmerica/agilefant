@@ -43,6 +43,40 @@ public class TimelineBusinessTest extends TestCase {
     }
     
     /**
+     * Test product with no projects.
+     */
+    public void testProductToJSON_noProjects() {
+        productDAO = createMock(ProductDAO.class);
+        timelineBusiness.setProductDAO(productDAO);
+        
+        /* Create the test data */
+        Product prod = new Product();
+        prod.setId(1);
+        prod.setName("Testituote");
+        prod.setProjects(new ArrayList<Project>());
+        prod.setBacklogItems(new ArrayList<BacklogItem>());
+        
+        expect(productDAO.get(1)).andReturn(prod);
+        replay(productDAO);
+        
+        String verifiedJSON = "{name:'Testituote',id:1,type:'product',\n" +
+                        "contents:[\n]\n}";
+        
+        System.out.println(verifiedJSON);
+        
+        try {
+            String json = timelineBusiness.productContentsToJSON(1);
+            System.out.println("--\n" + json);
+            assertEquals(verifiedJSON, json);
+        }
+        catch (ObjectNotFoundException onfe) {
+            fail(onfe.getMessage());
+        }
+        
+        verify(productDAO);
+    }
+    
+    /**
      * Test converting a product to JSON.
      */
     public void testProductToJSON_simpleCase() {
@@ -89,7 +123,7 @@ public class TimelineBusinessTest extends TestCase {
         replay(productDAO);
         
         String verifiedJSON = "{name:'Testituote',id:1,type:'product',\n" +
-        		"contents:[\n" +
+        		"contents:[ \n" +
         		"{name:'Testiprojekti',id:2,type:'project',state:0,startDate:'2008-06-01',endDate:'2008-07-31',contents:[\n" +
         		"{name:'Testi-iteraatio',id:3,type:'iteration',startDate:'2008-07-10',endDate:'2008-07-19'}]\n" +
         		"}\n" +
@@ -142,7 +176,7 @@ public class TimelineBusinessTest extends TestCase {
         replay(productDAO);
         
         String verifiedJSON = "{name:'Testituote',id:1,type:'product',\n" +
-                        "contents:[\n" +
+                        "contents:[ \n" +
                         "{name:'Testiprojekti',id:2,type:'project',state:1,startDate:'2008-06-01',endDate:'2008-07-31',contents:[\n" +
                         "]\n}\n" +
                         "]\n" +
@@ -190,7 +224,7 @@ public class TimelineBusinessTest extends TestCase {
         replay(productDAO);
         
         String verifiedJSON = "{name:'T\\ne\\\'s\\rtituo\\\'\\\'te',id:1,type:'product',\n" +
-                        "contents:[\n" +
+                        "contents:[ \n" +
                         "{name:'Testiprojekti',id:2,type:'project',state:2,startDate:'2008-06-01',endDate:'2008-07-31',contents:[\n]\n}\n" +
                         "]\n" +
                         "}";

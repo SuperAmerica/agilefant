@@ -3,7 +3,8 @@
 <ul class="projectTabs">
 
 	<li><a href="#projectEditTab-${projectId}"><span>
-		<img src="static/img/edit.png" alt="Edit" /> Edit project</span></a>
+		<img src="static/img/edit.png" alt="Edit" /> Edit project</span>
+		</a>
 	</li>
 
 </ul>
@@ -29,8 +30,8 @@
 		<tr>
 			<td>
 			<div class="subItems" style="margin-top: 0px; width: 725px;">
-			<div id="editProjectForm"><ww:form action="ajaxStoreProject"
-				method="post">
+			<div id="editProjectForm">
+			<ww:form action="ajaxStoreProject" method="post">
 				<ww:hidden name="projectId" value="${project.id}" />
 				<table class="formTable">
 					<tr>
@@ -41,8 +42,8 @@
 					<tr>
 						<td>Product</td>
 						<td>*</td>
-						<td colspan="2"><select name="productId"
-							onchange="disableIfEmpty(this.value, ['saveButton']);">
+						<td colspan="2">
+						<select name="productId" onchange="disableIfEmpty(this.value, ['saveButton']);">
 							<option class="inactive" value="">(select product)</option>
 							<c:forEach items="${productList}" var="product">
 								<c:choose>
@@ -55,22 +56,25 @@
 									</c:otherwise>
 								</c:choose>
 							</c:forEach>
-						</select></td>
+						</select>
+						</td>
 					</tr>
 					<tr>
 						<td>Project type</td>
 						<td></td>
-						<td colspan="2"><ww:select name="projectTypeId"
-							list="#attr.projectTypes" listKey="id" listValue="name"
-							value="${project.projectType.id}" /></td>
+						<td colspan="2">
+							<ww:select name="projectTypeId"
+								list="#attr.projectTypes" listKey="id" listValue="name"
+								value="${project.projectType.id}" /></td>
 					</tr>
 					<tr>
 						<td>Status</td>
 						<td></td>
-						<td colspan="2"><ww:select name="project.status"
-							id="statusSelect" value="project.status.name"
-							list="@fi.hut.soberit.agilefant.model.Status@values()"
-							listKey="name" listValue="getText('project.status.' + name())" />
+						<td colspan="2">
+							<ww:select name="project.status"
+								id="statusSelect" value="project.status.name"
+								list="@fi.hut.soberit.agilefant.model.Status@values()"
+								listKey="name" listValue="getText('project.status.' + name())" />
 						</td>
 					</tr>
 					<tr>
@@ -161,7 +165,7 @@
 								<c:if test="${aef:listContains(disabledUsers, user)}">
 									<img src="static/img/disable_user_gray.png"
 										alt="The user is disabled" title="The user is disabled" />
-								</c:if>
+								</c:if>								
 								</span>
 							</display:column>
 							<display:column title="Overhead +/-">
@@ -237,8 +241,7 @@
 				</table>
 			</ww:form>
 			</div>
-			</div>			
-			
+			</div>						
 			</td>
 		</tr>
 	</tbody>

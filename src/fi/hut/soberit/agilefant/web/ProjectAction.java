@@ -215,6 +215,7 @@ public class ProjectAction extends ActionSupport implements CRUDAction {
             EffortSumData origEstSum = backlogBusiness.getOriginalEstimateSum(blis);
             effLeftSums.put(iter, effLeftSum);
             origEstSums.put(iter, origEstSum);
+            iter.setMetrics(backlogBusiness.getBacklogMetrics(iter));
         }
         
         bliThemeCache = businessThemeBusiness.loadThemesByBacklog(projectId);

@@ -5,6 +5,8 @@ import fi.hut.soberit.agilefant.model.AFTime;
 public class BacklogMetrics {
     private AFTime dailyVelocity = new AFTime(0);
     private AFTime scopingNeeded = new AFTime(0);
+    private AFTime effortLeft = new AFTime(0);
+    private AFTime originalEstimate = new AFTime(0);
     private Integer scheduleVariance = new Integer(0);
     private Integer completedItems = new Integer(0);
     private Integer totalItems = new Integer(0);
@@ -56,5 +58,17 @@ public class BacklogMetrics {
     }
     public void setBacklogOngoing(boolean backlogOngoing) {
         this.backlogOngoing = backlogOngoing;
+    }
+    public AFTime getEffortLeft() {
+        return effortLeft;
+    }
+    public void setEffortLeft(AFTime effortLeft) {
+        this.effortLeft = effortLeft;
+    }
+    public AFTime getOriginalEstimate() {
+        return originalEstimate;
+    }
+    public void setOriginalEstimate(AFTime originalEstimate) {
+        this.originalEstimate = originalEstimate;
     }
 }

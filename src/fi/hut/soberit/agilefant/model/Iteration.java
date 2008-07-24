@@ -16,6 +16,7 @@ import javax.persistence.Transient;
 //import org.apache.commons.logging.LogFactory;
 import org.hibernate.annotations.BatchSize;
 
+import fi.hut.soberit.agilefant.util.BacklogMetrics;
 import fi.hut.soberit.agilefant.web.page.PageItem;
 
 /**
@@ -53,6 +54,8 @@ public class Iteration extends Backlog implements PageItem {
     private Project project;
 
     private Collection<IterationGoal> iterationGoals = new HashSet<IterationGoal>();
+    
+    private BacklogMetrics metrics;
 
     // private User owner;
 
@@ -148,6 +151,15 @@ public class Iteration extends Backlog implements PageItem {
     @Transient
     public AFTime getSubBacklogOriginalEstimateSum() {
         return new AFTime(0);
+    }
+
+    @Transient
+    public BacklogMetrics getMetrics() {
+        return metrics;
+    }
+
+    public void setMetrics(BacklogMetrics metrics) {
+        this.metrics = metrics;
     }
 
 }

@@ -385,6 +385,7 @@ var productId = ${product.id};
 												
 					<display:column sortable="false" title="Actions">
 						<img src="static/img/edit.png" alt="Edit" title="Edit project" style="cursor: pointer;" onclick="openEditProjectTabs('projectTabContainer-${row.id}',${row.id},0);" />
+						<img src="static/img/backlog.png" alt="Iterations" title="Iterations" style="cursor: pointer;" onclick="openEditProjectTabs('projectTabContainer-${row.id}',${row.id},1);" />
 						<ww:url id="deleteLink" action="deleteProject"
 							includeParams="none">
 							<ww:param name="productId" value="${product.id}" />

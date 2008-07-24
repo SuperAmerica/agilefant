@@ -2,11 +2,8 @@
 <div class="projectTabsDiv">
 <ul class="projectTabs">
 
-	<li><a href="#projectEditTab-${projectId}"><span>
-		<img src="static/img/edit.png" alt="Edit" /> Edit project</span>
-		</a>
-	</li>
-
+	<li><a href="#projectEditTab-${projectId}"><span><img src="static/img/edit.png" alt="Edit" /> Edit project</span></a></li>
+	<li><a href="#projectIterationsTab-${projectId}"><span><img src="static/img/backlog.png" alt="Iterations" /> Iterations</span></a></li>
 </ul>
 <div id="projectEditTab-${projectId}" class="projectNaviTab">
 
@@ -248,7 +245,53 @@
 		</tr>
 	</tbody>
 </table>
+</div>
 
+<div id="projectIterationsTab-${projectId}" class="projectNaviTab">
+
+<c:choose>
+<c:when test="${!empty project.iterations}">
+	<div class="subItemContent">
+	<p>
+	<display:table class="listTable" name="project.iterations" id="row" requestURI="editProject.action">
+		<display:column title="Name" class="shortNameColumn">
+			<ww:url id="editLink" action="editIteration" includeParams="none">
+			<ww:param name="iterationId" value="${row.id}" />
+			</ww:url>
+				<ww:a href="%{editLink}&contextViewName=editProject&contextObjectId=${project.id}">
+					${aef:html(row.name)}
+				</ww:a>
+		</display:column>
+		
+		<display:column title="Completed BLIs" style="width: 90px;">
+			<c:out value="${row.metrics.percentDone}" />%
+			(<c:out value="${row.metrics.completedItems}" /> /
+			<c:out value="${row.metrics.totalItems}" />)	
+		</display:column>
+		
+		<display:column title="Effort left">
+			<c:out value="${row.metrics.effortLeft}" />
+		</display:column>
+		
+		<display:column title="Original estimate">
+			<c:out value="${row.metrics.originalEstimate}" />							
+		</display:column>
+
+		<display:column title="Start date">
+			<ww:date name="#attr.row.startDate" />
+		</display:column>
+		
+		<display:column title="End date">
+			<ww:date name="#attr.row.endDate" />
+		</display:column>		
+	</display:table>
+	</p>
+	</div>
+</c:when>
+<c:otherwise>
+ The project has no iterations.
+</c:otherwise>
+</c:choose>
 </div>
 
 </div>

@@ -739,7 +739,8 @@ public class BacklogBusinessImpl implements BacklogBusiness {
                 effortLeft, metrics.getDailyVelocity()));
         metrics.setScopingNeeded(historyBusiness.calculateScopingNeeded(backlog,
                 effortLeft, metrics.getDailyVelocity()));
-        
+        metrics.setEffortLeft(getEffortLeftSum(backlog.getBacklogItems()).getEffortHours());
+        metrics.setOriginalEstimate(getOriginalEstimateSum(backlog.getBacklogItems()).getEffortHours());
         /* Get the done and not done backlog items */
         metrics.setTotalItems(new Integer(backlog.getBacklogItems().size()));
         metrics.setCompletedItems(backlogDAO.getNumberOfDoneBacklogItems(backlog));

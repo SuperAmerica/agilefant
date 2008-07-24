@@ -1,9 +1,12 @@
 <%@ include file="../inc/_taglibs.jsp"%>
 
+<aef:productList />
+
 <ww:date name="%{new java.util.Date()}" id="start"
 	format="%{getText('webwork.shortDateTime.format')}" />
 <ww:date name="%{new java.util.Date()}" id="end"
 	format="%{getText('webwork.shortDateTime.format')}" />
+
 <ww:form action="storeNewProject" method="post">
 <c:choose>
 	<c:when test="${empty projectTypes}">
@@ -12,7 +15,6 @@
 				No project types available. <ww:a href="%{workTypeLink}">Create a new project type &raquo;</ww:a>
 	</c:when>
 	<c:otherwise>
-		<h2>Create project</h2>
 		<div id="editProjectForm">
 			<ww:hidden name="projectId" value="${project.id}" />
 			<table class="formTable">
@@ -24,8 +26,7 @@
 				<tr>
 					<td>Product</td>
 					<td>*</td>
-					<td colspan="2"><select name="productId"
-						onchange="disableIfEmpty(this.value, ['createButton']);">
+					<td colspan="2"><select name="productId">
 						<option class="inactive" value="">(select product)</option>
 						<c:forEach items="${productList}" var="product">
 							<c:choose>
@@ -60,35 +61,33 @@
 				<tr>
 					<td>Default Overhead</td>
 					<td></td>
-					<td colspan="2"><ww:textfield size="10"
-						name="project.defaultOverhead" />/ person / week</td>
+					<td colspan="2"><ww:textfield size="10" id="default_overhead"
+						name="project.defaultOverhead" />/ person / week
+						<span class="errorMessage"></span>	
+						</td>
 				</tr>
 				<tr>
 					<td>Start date</td>
 					<td>*</td>
-					<td colspan="2"><%--<ww:datepicker value="%{#start}" size="15"
-                        			showstime="true" format="%{getText('webwork.datepicker.format')}"
-                        			name="startDate" />--%> <aef:datepicker
+					<td colspan="2"><aef:datepicker
 						id="start_date" name="startDate"
 						format="%{getText('webwork.shortDateTime.format')}"
-						value="%{#start}" /></td>
+						value="%{#start}" /><label for="start_date">&nbsp;</label></td>
 				</tr>
 				<tr>
 					<td>End date</td>
 					<td>*</td>
-					<td colspan="2"><%--<ww:datepicker value="%{#end}" size="15"
-                        			showstime="true" format="%{getText('webwork.datepicker.format')}"
-                        			name="endDate" />--%> <aef:datepicker
+					<td colspan="2"><aef:datepicker
 						id="end_date" name="endDate"
 						format="%{getText('webwork.shortDateTime.format')}"
-						value="%{#end}" /></td>
+						value="%{#end}" /><label for="end_date">&nbsp;</label></td>
 				</tr>
 				<tr>
 					<td>Assigned Users</td>
 					<td></td>
-					<td><c:set var="divId" value="1" scope="page" />
+					<td colspan="2">
 					<div id="assigneesLink"><a
-						href="javascript:toggleDiv(${divId});"> <img
+						href="javascript:toggleDiv('createNewProject_assignees');"> <img
 						src="static/img/users.png" /> <c:set var="listSize"
 						value="${fn:length(project.responsibles)}" scope="page" /> <c:choose>
 						<c:when test="${listSize > 0}">
@@ -110,7 +109,7 @@
 							<c:out value="none" />
 						</c:otherwise>
 					</c:choose> </a></div>
-					<div id="${divId}" style="display: none;"><display:table
+					<div id="createNewProject_assignees" style="display: none;"><display:table
 						name="${assignableUsers}" id="user" class="projectUsers"
 						defaultsort="2">
 						<display:column title="">
@@ -174,6 +173,8 @@
 					<td></td>
 					<td></td>
 					<td><ww:submit value="Create" id="createButton" /></td>
+					<td class="deleteButton">
+					<ww:reset value="Cancel" cssClass="closeDialogButton"/></td>
 				</tr>
 			</table>
 		</div>

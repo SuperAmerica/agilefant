@@ -43,7 +43,7 @@
 						<td>Product</td>
 						<td>*</td>
 						<td colspan="2">
-						<select name="productId" onchange="disableIfEmpty(this.value, ['saveButton']);">
+						<select name="productId">
 							<option class="inactive" value="">(select product)</option>
 							<c:forEach items="${productList}" var="product">
 								<c:choose>
@@ -80,7 +80,8 @@
 						<td>Default Overhead</td>
 						<td></td>
 						<td colspan="2"><ww:textfield size="10"
-							name="project.defaultOverhead" /> / person / week</td>
+							name="project.defaultOverhead" /> / person / week
+							<span class="errorMessage"></span></td>
 					</tr>
 					<tr>
 						<td>Start date</td>

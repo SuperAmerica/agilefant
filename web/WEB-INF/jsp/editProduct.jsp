@@ -23,58 +23,6 @@
 </c:forEach>
 
 <script type="text/javascript">
-var themeFormSettings = {
-	rules: {
-	    "businessTheme.name": {
-	       required: true,
-	       minlength: 1
-	    }
-	},
-	messages: {
-        "businessTheme.name": {
-            required: "Please enter a name",
-            minlength: "Please enter a name"
-        }
-	}
-};
-
-var projectFormSettings = {
-	rules: {
-	    "project.name": {
-	       required: true,
-	       minlength: 1
-	    }
-	},
-	messages: {
-        "project.name": {
-            required: "Please enter a name",
-            minlength: "Please enter a name"
-        }
-	}
-};
-
-function submitThemeForm() {
-    if($(this).valid()) {
-        $.post($(this).attr("action"), $(this).serializeArray(),
-            function(data, status) {
-                reloadPage();                
-            });
-    }
-    
-    return false;
-}
-
-function submitProjectForm() {
-    if($(this).valid()) {
-        $.post($(this).attr("action"), $(this).serializeArray(),
-            function(data, status) {
-                reloadPage();                
-            });
-    }
-    
-    return false;
-}
-
 function closeTabs(context, target, id) {
 	ajaxCloseDialog(context, id);
     $("#"+target).toggle();
@@ -94,10 +42,9 @@ function openEditThemeTabs(target,id,tabId) {
             }          
 		}
 		else {
-		  ajaxOpenDialog("themes", id);
-		  target.toggle();
-		  tabs.tabs('select', tabId);
-		  
+            ajaxOpenDialog("themes", id);
+            target.toggle();
+            tabs.tabs('select', tabId);
 		}
 	} else {		
         ajaxOpenDialog("themes", id);
@@ -105,8 +52,8 @@ function openEditThemeTabs(target,id,tabId) {
 			var t = target.find(".tabs-nav").length;
 			target.find(".businessThemeTabs").tabs({ selected: tabId });
 			var form = target.find("form");
-			form.validate(themeFormSettings);
-			form.submit(submitThemeForm);
+			form.validate(agilefantValidationRules.theme);
+			form.submit(submitDialogForm);
 		});
 		target.attr("tab-data-loaded","1");		
 	}
@@ -141,18 +88,9 @@ $(document).ready(function() {
         openEditThemeTabs("businessThemeTabContainer-${openTheme}", ${openTheme});
     </c:forEach>
     
-    var createThemeForm = $("#createThemeDiv").find("form");
-    createThemeForm.validate(themeFormSettings);
-    createThemeForm.submit(submitThemeForm);
-    
     <c:forEach items="${openProjects}" var="openProject">
         openEditProjectTabs("projectTabContainer-${openProject}", ${openProject});
-    </c:forEach>
-    
-    var createProjectForm = $("#createProjectDiv").find("form");
-    createProjectForm.validate(projectFormSettings);
-    createProjectForm.submit(submitProjectForm);
-    
+    </c:forEach>    
 });
 
 function openEditProjectTabs(target,id,tabId) {
@@ -180,8 +118,8 @@ function openEditProjectTabs(target,id,tabId) {
 			var t = target.find(".tabs-nav").length;
 			target.find(".projectTabs").tabs({ selected: tabId });
 			var form = target.find("form");
-			form.validate(projectFormSettings);
-			form.submit(submitProjectForm);
+			form.validate(agilefantValidationRules.project);
+			form.submit(submitDialogForm);
 		});
 		target.attr("tab-data-loaded","1");		
 	}
@@ -371,11 +309,11 @@ var productId = ${product.id};
     <div id="timelineLegend" style="width:100%; text-align:center; margin-bottom: 10px;">
     <table style="margin: auto; border: 1px solid #ccc;" cellpadding="2" cellspacing="2">
         <tr>
-            <td><div class="timeline-band-project-ok" style="display:block;width:50px;height:5px;">&nbsp;</div>
-            <div class="timeline-band-project-challenged" style="display:block;width:50px;height:5px;">&nbsp;</div>
-            <div class="timeline-band-project-critical" style="display:block;width:50px;height:5px;">&nbsp;</div></td>
+            <td><div class="timeline-band-project-ok" style="display:block;width:50px;height:5px;margin:2px;">&nbsp;</div>
+            <div class="timeline-band-project-challenged" style="display:block;width:50px;height:5px;margin:2px;">&nbsp;</div>
+            <div class="timeline-band-project-critical" style="display:block;width:50px;height:5px;margin:2px;">&nbsp;</div></td>
             <td>Project</td>
-            <td><div class="timeline-band-iteration" style="display:block;width:50px;height:5px;">&nbsp;</div></td>
+            <td><div class="timeline-band-iteration" style="display:block;width:50px;height:5px;margin:2px;">&nbsp;</div></td>
             <td>Iteration</td>
             
         </tr>
@@ -393,10 +331,12 @@ var productId = ${product.id};
 				<table cellspacing="0" cellpadding="0">
 	                <tr>
 	                    <td class="header">
-	                    Projects <ww:url id="createLink" action="createProject" includeParams="none">
-						<ww:param name="productId" value="${product.id}" /></ww:url>
-						<ww:a
-					href="%{createLink}&contextViewName=editProduct&contextObjectId=${product.id}">Create new &raquo;</ww:a>
+	                    Projects
+	                    <ww:url id="createLink" action="ajaxCreateProject" includeParams="none">
+						  <ww:param name="productId" value="${product.id}" />
+						</ww:url>
+						<ww:a href="%{createLink}" title="Create a new project" cssClass="openCreateDialog openProjectDialog">
+						Create new &raquo;</ww:a>
 					</td>
 					</tr>
 				</table>
@@ -420,7 +360,7 @@ var productId = ${product.id};
 						<ww:a
 							href="%{editLink}&contextViewName=editProduct&contextObjectId=${product.id}">
 							${aef:html(row.name)}
-						</ww:a>						
+						</ww:a>
 					</display:column>					
 
 					<display:column sortable="true" sortProperty="projectType.name"
@@ -472,37 +412,17 @@ var productId = ${product.id};
 						<tr>
 							 <td class="header">
 							 Themes
-							<ww:a href="#" onclick="toggleDiv('createThemeDiv'); return false;">Create new &raquo;</ww:a>
+							 <ww:url id="createThemeLink" action="ajaxCreateBusinessTheme" includeParams="none">
+							     <ww:param name="productId" value="${productId}"></ww:param>
+							 </ww:url>
+							 <ww:a href="%{createThemeLink}" cssClass="openCreateDialog openThemeDialog"
+							     title="Create a new theme">Create new &raquo;</ww:a>
 							 </td>
 						</tr>
 					</table>
 				</div>
 				
-				<div style="display: none;" id="createThemeDiv">
-				<ww:form action="ajaxStoreBusinessTheme" method="post">
-				    <ww:hidden name="productId" value="${product.id}" />
-				    <ww:hidden name="businessTheme.active" value="true" />
-				    <table class="formTable">
-				        <tr>
-				            <td>Name</td>
-				            <td>*</td>
-				            <td colspan="2"><ww:textfield size="20" name="businessTheme.name" maxlength="20" /></td>
-				        </tr>       
-				        <tr>
-				            <td>Description</td>
-				            <td></td>
-				            <td colspan="2"><ww:textarea cols="50" rows="7"
-				                name="businessTheme.description"/></td>
-				        </tr>
-				        <tr>
-				            <td></td>
-				            <td></td>
-		                    <td><ww:submit value="Create" /></td>
-				            <td class="deleteButton"><ww:reset value="Cancel" onclick="toggleDiv('createThemeDiv');"/></td>
-				        </tr>
-				    </table>
-				</ww:form>
-				</div>
+				
 				
 				<c:if test="${!empty activeBusinessThemes}">
 				<div id="subItemContent">
@@ -511,6 +431,9 @@ var productId = ${product.id};
 					<display:column title="Name" class="themeEditNameColumn">
 						<c:out value="${row.name}" />					
 						<div id="businessThemeTabContainer-${row.id}" style="overflow:visible; white-space: nowrap; width: 115px;"></div>
+					</display:column>
+					<display:column title="Description" class="themeDescriptionColumn">
+					   <c:out value="${fn:substring(row.description, 0, 50)}" />
 					</display:column>
 					<display:column title="Completed BLIs">
 						<c:out value="${businessThemeMetrics[row].donePercentage}" />% 
@@ -557,6 +480,9 @@ var productId = ${product.id};
 						<c:out value="${row.name}" />					
 						<div id="businessThemeTabContainer-${row.id}" style="overflow:visible; white-space: nowrap; width: 115px;"></div>
 					</display:column>
+					<display:column title="Description" class="themeDescriptionColumn">
+                       <c:out value="${fn:substring(row.description, 0, 50)}" />
+                    </display:column>
 					<display:column title="Completed BLIs">
 						<c:out value="${businessThemeMetrics[row].donePercentage}" />% 
 						(<c:out value="${businessThemeMetrics[row].numberOfDoneBlis}" /> /

@@ -12,8 +12,6 @@
 <link rel="stylesheet" href="static/css/import.css" type="text/css"/>
 <link rel="stylesheet" href="static/css/v5.css" type="text/css"/>
 <link rel="stylesheet" href="static/css/datepicker.css" type="text/css"/>
-<link rel="stylesheet" href="static/css/jquery.wysiwyg.css" type="text/css"/>
-<link rel="stylesheet" href="static/css/jquery.dialog.css" type="text/css"/>
 <title>
 Agilefant
 </title>
@@ -31,31 +29,18 @@ Agilefant
 <script type="text/javascript" src="static/js/date.js"></script>
 <script type="text/javascript" src="static/js/datepicker.js"></script>
 <script type="text/javascript" src="static/js/jquery.wysiwyg.js"></script>
+<script type="text/javascript" src="static/js/validationRules.js"></script>
+
 <script type="text/javascript">
-
 $(document).ready(function() {
-	if(document.cookie.indexOf("ACEGI_SECURITY_HASHED_REMEMBER_ME_COOKIE") == -1) {
-		var sessionLength = <%=session.getMaxInactiveInterval()%>*1000;
-		setTimeout('reloadPage()',sessionLength+5);
-	}
-	$('.useWysiwyg').wysiwyg({controls : {
-        separator04 : { visible : true },
-
-        insertOrderedList : { visible : true },
-        insertUnorderedList : { visible : true }
-    }});
-    $('.openCreateDialog').click(function() {
-    	var window = $('<div class="flora"></div>').appendTo(document.body);
-		window.resize(function() {
-			alert("Foo");
-		});
-    	window.load($(this).attr("href"));
-    	window.dialog({close: function() { window.remove(); }, width: 700, height: 600 });
-    	return false;
-    });
+    if(document.cookie.indexOf("ACEGI_SECURITY_HASHED_REMEMBER_ME_COOKIE") == -1) {
+        var sessionLength = <%=session.getMaxInactiveInterval()%>*1000;
+        setTimeout('reloadPage()',sessionLength+5);
+    }
 });
-
 </script>
+
+<script type="text/javascript" src="static/js/onLoad.js"></script>
 </head>
 
 <!-- Icons from http://sweetie.sublink.ca/ -->
@@ -147,20 +132,6 @@ Agilefant
 
 
 <!-- Create new -menu -->
-<script type="text/javascript">
-$(document).ready(function() {
-    $('#createNewMenuLink a').click(function() {
-        var hideFunction = function() {
-            $("#createNewMenu").hide();
-            $(window).unbind("click", hideFunction);
-        }
-        $(window).click(hideFunction);
-        $("#createNewMenu").show();
-        return false;
-    });
-});
-</script>
-
 <span id="createNewMenuLink">
 <a href="#">
     <img src="static/img/new.png" alt="Create new" />
@@ -172,14 +143,15 @@ $(document).ready(function() {
 
 <ul id="createNewMenu" style="display: none">
     <li><ww:url id="createLink" action="createProduct"
-        includeParams="none" /> <ww:a href="%{createLink}">Product &raquo;</ww:a>
+        includeParams="none" /> <ww:a href="%{createLink}" title="Create a new product">Product &raquo;</ww:a>
     </li>
 
     <li>
     <c:choose>
         <c:when test="${hasProducts && hasProjectTypes}">
             <ww:url id="createLink" action="ajaxCreateProject"
-                includeParams="none" /> <ww:a href="%{createLink}" cssClass="openCreateDialog">Project &raquo;</ww:a>
+                includeParams="none" />
+            <ww:a href="%{createLink}" title="Create a new project" cssClass="openCreateDialog openProjectDialog">Project &raquo;</ww:a>
         </c:when>
         <c:otherwise>
             <span class="inactive"
@@ -193,7 +165,8 @@ $(document).ready(function() {
     <c:choose>
         <c:when test="${hasProjects}">
             <ww:url id="createLink" action="createIteration"
-                includeParams="none" /> <ww:a href="%{createLink}">Iteration &raquo;</ww:a>
+                includeParams="none" />
+            <ww:a href="%{createLink}"  title="Create a new iteration">Iteration &raquo;</ww:a>
         </c:when>
         <c:otherwise>
             <span class="inactive"
@@ -207,7 +180,7 @@ $(document).ready(function() {
         <c:when test="${hasIterations}">
 		   <ww:url id="createLink" action="createIterationGoal"
                 includeParams="none" />
-		   <ww:a href="%{createLink}">Iteration goal &raquo;</ww:a>
+		   <ww:a href="%{createLink}"  title="Create a new iteration goal">Iteration goal &raquo;</ww:a>
 	    </c:when>
         <c:otherwise>
             <span class="inactive"
@@ -222,7 +195,7 @@ $(document).ready(function() {
         <c:when test="${hasProducts}">
             <ww:url id="createLink" action="createBacklogItem"
                 includeParams="none" />
-            <ww:a href="%{createLink}">Backlog item &raquo;</ww:a>
+            <ww:a href="%{createLink}" title="Create a new backlog item">Backlog item &raquo;</ww:a>
         </c:when>
         <c:otherwise>
             <span class="inactive"
@@ -235,15 +208,17 @@ $(document).ready(function() {
     <li class="separator" />
 
     <li><ww:url id="createLink" action="createProjectType"
-        includeParams="none" /> <ww:a href="%{createLink}">Project type &raquo;</ww:a>
+        includeParams="none" />
+        <ww:a href="%{createLink}" title="Create a new project type">Project type &raquo;</ww:a>
     </li>
     
     <li><ww:url id="createLink" action="createTeam"
-        includeParams="none" /> <ww:a href="%{createLink}">Team &raquo;</ww:a>
+        includeParams="none" />
+        <ww:a href="%{createLink}" title="Create a new team">Team &raquo;</ww:a>
     </li>
     
     <li><ww:url id="createLink" action="createUser"
-        includeParams="none" /> <ww:a href="%{createLink}">User &raquo;</ww:a>
+        includeParams="none" /> <ww:a href="%{createLink}" title="Create a new user">User &raquo;</ww:a>
     </li>
 </ul>
 

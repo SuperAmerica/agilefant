@@ -53,6 +53,8 @@
 .flora .ui-dialog .ui-dialog-content,
 .flora.ui-dialog .ui-dialog-content {
 	margin: 1.2em;
+	overflow-y: auto;
+	overflow-x: hidden;
 }
 
 .flora .ui-dialog .ui-dialog-buttonpane,

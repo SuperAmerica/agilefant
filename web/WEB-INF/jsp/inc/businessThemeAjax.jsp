@@ -36,7 +36,7 @@
 
 <c:choose>
 <c:when test="${!(empty businessTheme.backlogItems)}" >
-<display:table class="listTable" name="businessTheme.backlogItems" id="row" style="width:710px">
+<display:table class="listTable" name="businessTheme.backlogItems" id="row" style="width:700px">
 
 	<!-- Display name -->
 	<display:column title="Name" style="width:355px">

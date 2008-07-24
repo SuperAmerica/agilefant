@@ -922,6 +922,10 @@
 		<action name="ajaxDeleteBusinessTheme" method="ajaxDeleteBusinessTheme"
 			class="businessThemeAction">	
 		</action>
+		<action name="ajaxCreateBusinessTheme" method="create"
+            class="businessThemeAction">
+            <result>/WEB-INF/jsp/forms/createTheme.jsp</result>
+        </action>
 		<!-- /Business theme actions -->
 		
 		<!-- Product timeline actions -->

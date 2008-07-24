@@ -180,6 +180,7 @@ Timeline.AgilefantEventPainter = function(params) {
 
   this._eventIdToElmt = {};
   this._projectTracks = {};
+  this._paintMode = 1;
 };
 
 //inherit timeline
@@ -196,10 +197,20 @@ Timeline.AgilefantEventPainter.prototype.initialize = function(band, timeline) {
 
   this._eventIdToElmt = null;
   this._projectTracks = {};
+  this._paintMode = 1;
+  
 };
 
 Timeline.AgilefantEventPainter.prototype.getFilterMatcher = function() {
   return null;
+};
+
+Timeline.AgilefantEventPainter.prototype.setProjectPaintMode = function() {
+	this._paintMode = 2;
+};
+
+Timeline.AgilefantEventPainter.prototype.setFullPaintMode = function() {
+	this._paintMode = 1;
 };
 
 Timeline.AgilefantEventPainter.prototype.setFilterMatcher = function(filterMatcher) {
@@ -240,7 +251,7 @@ Timeline.AgilefantEventPainter.prototype.paint = function() {
     var evt = iterator.next();
     if(evt.isProject()) {
       this.paintEvent(evt, metrics, this._params.theme, highlightMatcher(evt), null);
-      if(evt.getContents()) {
+      if(evt.getContents() && this._paintMode != 2) {
         var iterations = evt.getContents();
         for(var j = 0; j < iterations.length; j++) {
           this.paintEvent(iterations[j],metrics, this._params.theme, highlightMatcher(iterations[j]), evt);
@@ -545,6 +556,10 @@ Timeline.AgilefantEventPainter.prototype._findProjectTrack = function(rightEdge,
   var iterationTracksNeeded = (iterations) ? iterations.length  : 0;
   var tracksReserved = 0;
   var requiredLengths = [rightEdge];
+  //project paint mode
+  if(this._paintMode == 2) {
+  	iterationTracksNeeded = 0;
+  }
   //todo: what if iteration is longer than the project? try to accomondate under project or give up?
   for(var j = 0; j < iterationTracksNeeded; j++) {
   	var pos = Math.min(this._calculateEventRightEdge(iterations[j]), rightEdge); 

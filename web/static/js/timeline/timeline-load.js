@@ -5,7 +5,7 @@ window.Timeline.clientLocale = "en";
 window.Timeline.serverLocale = "en";
 window.Timeline.urlPrefix = "static/";
 window.SimileAjax.urlPrefix = "static/";
-
+var productTimeLine;
 $(document).ready(function() {
     /* Set the month names */
     Timeline.GregorianDateLabeller.monthNames["en"] = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" ];
@@ -18,31 +18,42 @@ $(document).ready(function() {
         eventSource:    eventSource, 
         width:          "100%", 
         intervalUnit:   Timeline.DateTime.MONTH, 
-        intervalPixels: 170
+        intervalPixels: 200
     })];
     var them = new Timeline.AgilefantTheme();
     bandInfos[0]["eventPainter"] = new Timeline.AgilefantEventPainter({showText: true, theme: them});
-    /*
-    Timeline.createBandInfo({
-        showEventText:  false,
-        eventSource:    eventSource2,
-        width:          "50%", 
-        intervalUnit:   Timeline.DateTime.MONTH, 
-        intervalPixels: 100
-    })
-  ];
-  bandInfos[1].syncWith = 0;
-  bandInfos[1].highlight = false;*/
   
-  tl = Timeline.create(document.getElementById("productTimeline"), bandInfos);
+  productTimeLine = Timeline.create(document.getElementById("productTimeline"), bandInfos, Timeline.HORIZONTAL);
   /* Get the JSON data */
   var timelineActionURL = "timelineData.action?productId=" + productId;
-  //Timeline.loadJSON(timelineActionURL, function(json) {  });
   jQuery.getJSON(timelineActionURL,{},function(data,status) {
   	eventSource.loadJSON(data);
-  	tl.hideLoadingMessage();
+  	productTimeLine.hideLoadingMessage();
   });
-    tl.showLoadingMessage();
+    productTimeLine.showLoadingMessage();
 });
+function updateTimelinePeriod(sender) {
+	var mode = $(sender).val();
+	var band = productTimeLine.getBand(0);
+	var ether = band.getEther();
+	var painter = band.getEventPainter();
+	var modeToPix = {"1":200,"2":110,"3":50,"4":230};
+	if(mode == 3) {
+		painter.setProjectPaintMode();
+		ether._interval = SimileAjax.DateTime.gregorianUnitLengths[Timeline.DateTime.MONTH];
+		painter._unit = Timeline.DateTime.MONTH;
+	} else if(mode == 4) {
+		painter.setProjectPaintMode();
+		ether._interval = SimileAjax.DateTime.gregorianUnitLengths[Timeline.DateTime.YEAR];
+		painter._unit = Timeline.DateTime.YEAR;
+	} else {
+		painter.setFullPaintMode();
+		ether._interval = SimileAjax.DateTime.gregorianUnitLengths[Timeline.DateTime.MONTH];
+		painter._unit = Timeline.DateTime.MONTH;
 
+	}
+	ether._pixelsPerInterval = modeToPix[mode];
+	productTimeLine.paint();
+
+}
 

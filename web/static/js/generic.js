@@ -357,6 +357,8 @@ function handleTabEvent(target, context, id, tabId) {
         };
         
         target.load(targetAction[context], targetParams[context], function(data, status) {
+         
+            target.find('.useWysiwyg').wysiwyg({controls : {separator04 : { visible : true },insertOrderedList : { visible : true },insertUnorderedList : { visible : true }}});
             target.find('ul.ajaxWindowTabs').tabs({ selected: tabId });
             var form = target.find("form");
             form.validate(agilefantValidationRules[context]);

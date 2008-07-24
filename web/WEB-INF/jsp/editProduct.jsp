@@ -407,9 +407,9 @@ var productId = ${product.id};
 				<display:table class="listTable" name="product.projects"
 					id="row" requestURI="editProduct.action">
 							
-					<display:column sortable="false" title="St.">
+					<display:column sortable="false" title="St." class="statusColumn">
 						<%@ include file="./inc/_projectStatusIcon.jsp"%>
-						<div id="projectTabContainer-${row.id}" style="overflow:visible; white-space: nowrap; width: 115px;"></div>
+						<div id="projectTabContainer-${row.id}" style="overflow:visible; white-space: nowrap; width: 15px;"></div>
 					</display:column>		
 														
 					<display:column sortable="true" sortProperty="name" title="Name">

@@ -153,7 +153,7 @@ public class ProjectAction extends ActionSupport implements CRUDAction {
         return Action.SUCCESS;
     }
 
-    public String edit() {
+    public String edit() {       
         Date startDate;
         this.prepareProjectTypes();
         if (this.projectTypes.isEmpty()) {

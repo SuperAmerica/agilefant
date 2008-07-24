@@ -1,6 +1,6 @@
 <%@ include file="_taglibs.jsp"%>
-<div class="projectTabsDiv">
-<ul class="projectTabs">
+<div class="ajaxWindowTabsDiv">
+<ul class="ajaxWindowTabs">
 
 	<li><a href="#projectEditTab-${projectId}"><span><img src="static/img/edit.png" alt="Edit" /> Edit project</span></a></li>
 	<li><a href="#projectIterationsTab-${projectId}"><span><img src="static/img/backlog.png" alt="Iterations" /> Iterations</span></a></li>

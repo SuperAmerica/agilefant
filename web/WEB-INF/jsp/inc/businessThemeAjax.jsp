@@ -1,6 +1,6 @@
 <%@ include file="_taglibs.jsp"%>
-<div class="businessThemeTabsDiv">
-<ul class="businessThemeTabs">
+<div class="ajaxWindowTabsDiv">
+<ul class="ajaxWindowTabs">
 
 	<li><a href="#businessThemeEditTab-${businessThemeId}"><span><img src="static/img/edit.png" alt="Edit" /> Edit theme</span></a></li>
 	<li><a href="#businessThemeBLITab-${businessThemeId}"><span><img src="static/img/backlog.png" alt="Backlog items" /> Backlog items</span></a></li>

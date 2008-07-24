@@ -108,5 +108,5 @@ var agilefantValidationRules = {
             }
         }
 	}
-	
 };
+agilefantValidationRules.businessTheme = agilefantValidationRules.theme;

@@ -318,3 +318,50 @@ function trim (str) {
     }
     return str;
 }
+
+function handleTabEvent(target, context, id, tabId) {
+    var target = $("#" + target);
+    if (target.attr("tab-data-loaded")) {
+        var tabs = target.find("ul.ajaxWindowTabs");
+        var selected = tabs.data('selected.tabs');
+        if (target.is(":visible")) {
+            if (selected == tabId) {
+                ajaxCloseDialog(context, id);
+                target.toggle();
+            }
+            else {
+                tabs.tabs('select', tabId);
+            }
+        }
+        else {
+            ajaxOpenDialog(context, id);
+            target.toggle();
+            tabs.tabs('select', tabId);
+        }
+    }
+    else {
+        ajaxOpenDialog(context, id);
+        
+        var targetAction = {
+            "project": "projectTabs.action",
+            "businessTheme": "businessThemeTabs.action"
+        };
+        
+        var targetParams = {
+            "project": {
+                projectId: id
+            },
+            "businessTheme": {
+                businessThemeId: id
+            }
+        };
+        
+        target.load(targetAction[context], targetParams[context], function(data, status) {
+            target.find('ul.ajaxWindowTabs').tabs({ selected: tabId });
+            var form = target.find("form");
+            form.validate(agilefantValidationRules[context]);
+            form.submit(submitDialogForm);
+        });
+        target.attr("tab-data-loaded","1");
+    }
+}

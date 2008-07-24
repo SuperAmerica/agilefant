@@ -217,6 +217,21 @@ Agilefant
         <ww:a href="%{createLink}" title="Create a new team">Team &raquo;</ww:a>
     </li>
     
+    <li>
+    <c:choose>
+        <c:when test="${hasProducts}">
+            <ww:url id="createLink" action="ajaxCreateBusinessTheme"
+                includeParams="none" />
+            <ww:a href="%{createLink}" title="Create a new theme" cssClass="openCreateDialog openThemeDialog">Theme &raquo;</ww:a>
+        </c:when>
+        <c:otherwise>
+            <span class="inactive"
+                title="Create a product before creating a theme">
+            Theme &raquo;</span>
+        </c:otherwise>
+    </c:choose>
+    </li>
+    
     <li><ww:url id="createLink" action="createUser"
         includeParams="none" /> <ww:a href="%{createLink}" title="Create a new user">User &raquo;</ww:a>
     </li>

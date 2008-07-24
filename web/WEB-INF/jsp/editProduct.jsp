@@ -1,10 +1,8 @@
 <%@ include file="./inc/_taglibs.jsp"%>
 <%@ include file="./inc/_header.jsp"%>
 
-<%@page import="fi.hut.soberit.agilefant.model.Product"%>
-
 <c:if test="${product.id > 0}">
-	<aef:bct productId="${productId}" />
+	<aef:bct productId="${product.id}" />
 </c:if>
 
 <c:set var="divId" value="1336" scope="page" />
@@ -12,12 +10,12 @@
 <ww:actionerror />
 <ww:actionmessage />
 
-<aef:openDialogs context="themes" id="openThemes" />
+<aef:openDialogs context="businessTheme" id="openThemes" />
 
 <c:forEach items="${openThemes}" var="openTheme">
 </c:forEach>
 
-<aef:openDialogs context="projects" id="openProjects" />
+<aef:openDialogs context="project" id="openProjects" />
 
 <c:forEach items="${openProjects}" var="openProject">
 </c:forEach>
@@ -25,40 +23,10 @@
 <script type="text/javascript">
 function closeTabs(context, target, id) {
 	ajaxCloseDialog(context, id);
+	$('#'+target).find('label.error').hide();
     $("#"+target).toggle();
 }
 
-function openEditThemeTabs(target,id,tabId) {
-	var target = $("#"+target);	
-	if(target.attr("tab-data-loaded")) {
-		var tabs = target.find("ul.businessThemeTabs");
-		if (target.is(":visible")) {
-			var selected = tabs.data('selected.tabs');
-			if (selected == tabId) {
-            	ajaxCloseDialog("themes", id);
-            	target.toggle();
-            } else {
-            	tabs.tabs('select', tabId);
-            }          
-		}
-		else {
-            ajaxOpenDialog("themes", id);
-            target.toggle();
-            tabs.tabs('select', tabId);
-		}
-	} else {		
-        ajaxOpenDialog("themes", id);
-		target.load("businessThemeTabs.action",{businessThemeId: id},function(data, status) {
-			var t = target.find(".tabs-nav").length;
-			target.find(".businessThemeTabs").tabs({ selected: tabId });
-			var form = target.find("form");
-			form.validate(agilefantValidationRules.theme);
-			form.submit(submitDialogForm);
-		});
-		target.attr("tab-data-loaded","1");		
-	}
-	return false;
-}
 
 function setThemeActivityStatus(themeId,status) {
 	var url = "";
@@ -85,46 +53,15 @@ function deleteTheme(themeId) {
 
 $(document).ready(function() {
     <c:forEach items="${openThemes}" var="openTheme">
-        openEditThemeTabs("businessThemeTabContainer-${openTheme}", ${openTheme});
+        handleTabEvent("businessThemeTabContainer-${openTheme}", "businessTheme", ${openTheme}, 0);
     </c:forEach>
     
     <c:forEach items="${openProjects}" var="openProject">
-        openEditProjectTabs("projectTabContainer-${openProject}", ${openProject});
+        handleTabEvent("projectTabContainer-${openProject}", "project", ${openProject}, 0);
     </c:forEach>    
 });
 
-function openEditProjectTabs(target,id,tabId) {
-	var target = $("#"+target);	
-	if(target.attr("tab-data-loaded")) {
-		var tabs = target.find("ul.projectTabs");
-		if (target.is(":visible")) {
-			var selected = tabs.data('selected.tabs');
-			if (selected == tabId) {
-            	ajaxCloseDialog("projects", id);
-            	target.toggle();
-            } else {
-            	tabs.tabs('select', tabId);
-            }          
-		}
-		else {
-		  ajaxOpenDialog("projects", id);
-		  target.toggle();
-		  tabs.tabs('select', tabId);
-		  
-		}
-	} else {		
-        ajaxOpenDialog("projects", id);
-		target.load("projectTabs.action",{projectId: id},function(data, status) {
-			var t = target.find(".tabs-nav").length;
-			target.find(".projectTabs").tabs({ selected: tabId });
-			var form = target.find("form");
-			form.validate(agilefantValidationRules.project);
-			form.submit(submitDialogForm);
-		});
-		target.attr("tab-data-loaded","1");		
-	}
-	return false;
-}
+
 
 /* Initialize the SimileAjax object */
 var SimileAjax = {
@@ -384,8 +321,8 @@ var productId = ${product.id};
 					</display:column>
 												
 					<display:column sortable="false" title="Actions">
-						<img src="static/img/edit.png" alt="Edit" title="Edit project" style="cursor: pointer;" onclick="openEditProjectTabs('projectTabContainer-${row.id}',${row.id},0);" />
-						<img src="static/img/backlog.png" alt="Iterations" title="Iterations" style="cursor: pointer;" onclick="openEditProjectTabs('projectTabContainer-${row.id}',${row.id},1);" />
+						<img src="static/img/edit.png" alt="Edit" title="Edit project" style="cursor: pointer;" onclick="handleTabEvent('projectTabContainer-${row.id}','project',${row.id},0);" />
+						<img src="static/img/backlog.png" alt="Iterations" title="Iterations" style="cursor: pointer;" onclick="handleTabEvent('projectTabContainer-${row.id}','project',${row.id},1);" />
 						<ww:url id="deleteLink" action="deleteProject"
 							includeParams="none">
 							<ww:param name="productId" value="${product.id}" />
@@ -442,8 +379,8 @@ var productId = ${product.id};
 						<c:out value="${businessThemeMetrics[row].numberOfBlis}" />)					
 					</display:column>				
 					<display:column title="Actions">
-						<img src="static/img/edit.png" alt="Edit" title="Edit theme" style="cursor: pointer;" onclick="openEditThemeTabs('businessThemeTabContainer-${row.id}',${row.id},0);" />
-						<img src="static/img/backlog.png" alt="BLIs" title="Backlog items" style="cursor: pointer;" onclick="openEditThemeTabs('businessThemeTabContainer-${row.id}',${row.id},1);" />
+						<img src="static/img/edit.png" alt="Edit" title="Edit theme" style="cursor: pointer;" onclick="handleTabEvent('businessThemeTabContainer-${row.id}','businessTheme',${row.id},0);" />
+						<img src="static/img/backlog.png" alt="BLIs" title="Backlog items" style="cursor: pointer;" onclick="handleTabEvent('businessThemeTabContainer-${row.id}','businessTheme',${row.id},1);" />
 						<img src="static/img/disable.png" alt="Disable" title="Disable theme" style="cursor: pointer;" onclick="setThemeActivityStatus(${row.id},false); return false;" />
 						<img src="static/img/delete_18.png" alt="Delete" title="Delete theme" style="cursor: pointer;" onclick="deleteTheme(${row.id}); return false;" />
 					</display:column>
@@ -490,8 +427,8 @@ var productId = ${product.id};
 						<c:out value="${businessThemeMetrics[row].numberOfBlis}" />)					
 					</display:column>								
 					<display:column title="Actions">
-						<img src="static/img/edit.png" alt="Edit" title="Edit theme" style="cursor: pointer;" onclick="openEditThemeTabs('businessThemeTabContainer-${row.id}',${row.id},0);" />
-						<img src="static/img/backlog.png" alt="BLIs" title="Backlog items" style="cursor: pointer;" onclick="openEditThemeTabs('businessThemeTabContainer-${row.id}',${row.id},1);" />
+						<img src="static/img/edit.png" alt="Edit" title="Edit theme" style="cursor: pointer;" onclick="handleTabEvent('businessThemeTabContainer-${row.id}','businessTheme',${row.id},0);" />
+						<img src="static/img/backlog.png" alt="BLIs" title="Backlog items" style="cursor: pointer;" onclick="handleTabEvent('businessThemeTabContainer-${row.id}','businessTheme',${row.id},1);" />
 						<img src="static/img/enable.png" alt="Enable" title="Enable theme" style="cursor: pointer;" onclick="setThemeActivityStatus(${row.id},true); return false;return false;" />
 						<img src="static/img/delete_18.png" alt="Delete" title="Delete theme" style="cursor: pointer;" onclick="deleteTheme(${row.id}); return false;" />
 					</display:column>

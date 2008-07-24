@@ -12,7 +12,7 @@
     }
 }
 
-.businessThemeTabsDiv {
+.ajaxWindowTabsDiv {
 	width: 600px !important;
 	margin: 4px 4px 4px 20px;
 	background-color: inherit;
@@ -26,12 +26,6 @@
 	padding: 8px 3px;
 	white-space: normal !important;
 	overflow: auto !important;
-}
-
-.projectTabsDiv {
-	width: 600px !important;
-	margin: 4px 4px 4px 20px;
-	background-color: inherit;
 }
 
 .projectNaviTab {

@@ -71,10 +71,9 @@
 						<td>Status</td>
 						<td></td>
 						<td colspan="2">
-							<ww:select name="project.status"
-								id="statusSelect" value="project.status.name"
-								list="@fi.hut.soberit.agilefant.model.Status@values()"
-								listKey="name" listValue="getText('project.status.' + name())" />
+							<ww:select name="project.status" id="statusSelect"
+								value="project.status.name" list="@fi.hut.soberit.agilefant.model.Status@values()"
+								listKey="name" listValue="getText('project.status.' + name())" />							
 						</td>
 					</tr>
 					<tr>
@@ -103,7 +102,7 @@
 					<tr>
 						<td>Assigned Users</td>
 						<td></td>
-						<td><c:set var="divId" value="${project.id}" scope="page" />
+						<td colspan="2"><c:set var="divId" value="${project.id}" scope="page" />
 						<div id="assigneesLink"><a href="javascript:toggleDiv(${divId});">
 							<img src="static/img/users.png" /> <c:set var="listSize"
 								value="${fn:length(project.responsibles)}" scope="page" />
@@ -234,6 +233,8 @@
 						<td></td>
 						<td></td>
 						<td><ww:submit value="Save" id="saveButton" />
+						</td>
+						<td class="deleteButton">
 						<ww:reset value="Cancel"
 							onclick="closeTabs('projects', 'projectTabContainer-${projectId}', ${projectId});" />
 						</td>						

@@ -427,8 +427,8 @@ var productId = ${product.id};
 						title="Project type" property="projectType.name" />
 
 					<display:column sortable="false" title="Iter. info">
-						<c:out value="${row.metrics.numberOfOkIterations}" /> / 
-						<c:out value="${row.metrics.numberOfLateIterations}" />
+						<c:out value="${row.metrics.numberOfOngoingIterations}" /> / 
+						<c:out value="${row.metrics.numberOfAllIterations}" />
 					</display:column>
 					
 					<display:column sortable="false" title="Assignees">

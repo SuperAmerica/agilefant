@@ -673,7 +673,8 @@ td.deleteButton {
 }
 
 #deleteButtonRight {
-	text-align: right;
+	text-align: right; !important;
+	
 }
 
 .backlogDropdownColumn select {
@@ -1176,4 +1177,10 @@ ul.themeList li a {
 	width: 15px;
 	white-space: nowrap;
     overflow: visible;
+}
+
+select.statusSelect option {
+	background-repeat:no-repeat;
+	background-position:bottom left;
+	padding-left:30px;	
 }

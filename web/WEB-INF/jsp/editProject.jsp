@@ -137,7 +137,7 @@
                 			<tr>
                     			<td>Assigned Users</td>
                     			<td></td>
-                    			<td>
+                    			<td colspan="2">
                     				<c:set var="divId" value="1" scope="page" />
 				                    <div id="assigneesLink">
                							<a href="javascript:toggleDiv(${divId});">
@@ -318,6 +318,7 @@
 															<img src="static/img/status-red.png" alt="Critical" title="Critical"/>
 														</c:when>
 													</c:choose>
+													<ww:text name="project.status.${project.status}" />
 								    				</td>
 								    				<!--  <td class="info3" ondblclick="return editProject();"><ww:text name="project.status.${project.status}" /></td> -->
 								    				
@@ -503,7 +504,7 @@
 													<tr>
 														<td>Assigned Users</td>
 														<td></td>
-														<td>
+														<td colspan="2">
 															<c:set var="divId" value="1" scope="page" />
 															<div id="assigneesLink">
 																<a href="javascript:toggleDiv(${divId});">

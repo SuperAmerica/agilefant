@@ -795,8 +795,20 @@ public class ProjectBusinessImpl implements ProjectBusiness {
             for (Project p : product.getProjects()) {
                 ProjectMetrics metrics = new ProjectMetrics();
                 metrics.setAssignees(backlogBusiness.getNumberOfAssignedUsers(p));
-                metrics.setNumberOfOkIterations(0);
-                metrics.setNumberOfLateIterations(0);
+                if (p.getIterations() != null) {
+                    metrics.setNumberOfAllIterations(p.getIterations().size());
+                    int ongoingIters = 0;
+                    Date current = Calendar.getInstance().getTime();
+                    for (Iteration iter: p.getIterations()) {
+                        if (iter.getStartDate().getTime() < current.getTime() && iter.getEndDate().getTime() > current.getTime()) {
+                            ongoingIters++;
+                        }
+                    }
+                    metrics.setNumberOfOngoingIterations(ongoingIters);
+                } else {
+                    metrics.setNumberOfAllIterations(0);
+                    metrics.setNumberOfOngoingIterations(0);
+                }                
                 p.setMetrics(metrics);
             }
         }

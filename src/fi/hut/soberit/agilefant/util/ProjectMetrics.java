@@ -3,8 +3,8 @@ package fi.hut.soberit.agilefant.util;
 public class ProjectMetrics {
     
     private int assignees;
-    private int numberOfOkIterations;
-    private int numberOfLateIterations;
+    private int numberOfOngoingIterations;
+    private int numberOfAllIterations;
     
     public int getAssignees() {
         return assignees;
@@ -12,19 +12,17 @@ public class ProjectMetrics {
     public void setAssignees(int assignees) {
         this.assignees = assignees;
     }
-    public int getNumberOfOkIterations() {
-        return numberOfOkIterations;
+    public int getNumberOfOngoingIterations() {
+        return numberOfOngoingIterations;
     }
-    public void setNumberOfOkIterations(int numberOfOkIterations) {
-        this.numberOfOkIterations = numberOfOkIterations;
+    public void setNumberOfOngoingIterations(int numberOfOngoingIterations) {
+        this.numberOfOngoingIterations = numberOfOngoingIterations;
     }
-    public int getNumberOfLateIterations() {
-        return numberOfLateIterations;
+    public int getNumberOfAllIterations() {
+        return numberOfAllIterations;
     }
-    public void setNumberOfLateIterations(int numberOfLateIterations) {
-        this.numberOfLateIterations = numberOfLateIterations;
+    public void setNumberOfAllIterations(int numberOfAllIterations) {
+        this.numberOfAllIterations = numberOfAllIterations;
     }
-    
-    
-
+            
 }

@@ -133,4 +133,10 @@
 		<property name="target" ref="businessThemeDAOTarget" />
 	</bean>
 	
+	<bean name="historyDAOTarget" parent="abstractDAOTarget"
+        class="fi.hut.soberit.agilefant.db.hibernate.HistoryDAOHibernate" />
+    <bean name="historyDAO" parent="abstractDAO">
+        <property name="target" ref="historyDAOTarget" />
+    </bean>
+	
 </beans>

@@ -85,20 +85,20 @@ public class CalendarUtilsTest extends TestCase {
         CalendarUtils.setHoursMinutesAndSeconds(start, 0, 0, 0);
         CalendarUtils.setHoursMinutesAndSeconds(end, 0, 0, 1);
         
-        assertEquals(1, cUtils.getLengthInDays(start.getTime(), end.getTime()));
+        assertEquals(1, CalendarUtils.getLengthInDays(start.getTime(), end.getTime()));
         
         CalendarUtils.setHoursMinutesAndSeconds(end, 23, 59, 59);
-        assertEquals(1, cUtils.getLengthInDays(start.getTime(), end.getTime()));
+        assertEquals(1, CalendarUtils.getLengthInDays(start.getTime(), end.getTime()));
         
         end.add(Calendar.DATE, 1);
         CalendarUtils.setHoursMinutesAndSeconds(end, 00, 00, 01);
-        assertEquals(2, cUtils.getLengthInDays(start.getTime(), end.getTime()));
+        assertEquals(2, CalendarUtils.getLengthInDays(start.getTime(), end.getTime()));
         
         CalendarUtils.setHoursMinutesAndSeconds(end, 23, 59, 59);
-        assertEquals(2, cUtils.getLengthInDays(start.getTime(), end.getTime()));
+        assertEquals(2, CalendarUtils.getLengthInDays(start.getTime(), end.getTime()));
         
         end.add(Calendar.DATE, -5);
-        assertEquals(5, cUtils.getLengthInDays(start.getTime(), end.getTime()));
+        assertEquals(5, CalendarUtils.getLengthInDays(start.getTime(), end.getTime()));
     }
 
     /**

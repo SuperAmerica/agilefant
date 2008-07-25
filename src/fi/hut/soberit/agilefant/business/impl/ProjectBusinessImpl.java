@@ -497,7 +497,7 @@ public class ProjectBusinessImpl implements ProjectBusiness {
                         AFTime sum = this.backlogBusiness
                                 .getEffortLeftResponsibleDividedSum(blis)
                                 .getEffortHours();
-                        int projectLength = cUtils.getLengthInDays(pro
+                        int projectLength = CalendarUtils.getLengthInDays(pro
                                 .getStartDate(), pro.getEndDate());
                         log.debug("Week Project length: " + projectLength
                                 + " days");
@@ -540,7 +540,7 @@ public class ProjectBusinessImpl implements ProjectBusiness {
                         AFTime sum = this.backlogBusiness
                                 .getEffortLeftResponsibleDividedSum(blis)
                                 .getEffortHours();
-                        int projectLength = cUtils.getLengthInDays(it
+                        int projectLength = CalendarUtils.getLengthInDays(it
                                 .getStartDate(), it.getEndDate());
                         log.debug("Week Project length: " + projectLength
                                 + " days");

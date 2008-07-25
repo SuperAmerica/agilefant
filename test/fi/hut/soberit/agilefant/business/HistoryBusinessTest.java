@@ -15,6 +15,7 @@ import java.util.LinkedList;
 import junit.framework.TestCase;
 import fi.hut.soberit.agilefant.business.impl.HistoryBusinessImpl;
 import fi.hut.soberit.agilefant.db.BacklogDAO;
+import fi.hut.soberit.agilefant.db.HistoryDAO;
 import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogHistory;
@@ -28,10 +29,10 @@ import fi.hut.soberit.agilefant.util.CalendarUtils;
 public class HistoryBusinessTest extends TestCase {
 
     private BacklogDAO backlogDAO;
+    private HistoryDAO historyDAO;
     private HistoryBusinessImpl hisBusiness = new HistoryBusinessImpl();
     
-    
-    public void testAddFirstBacklogItemWithoutEstimate() {
+    public void testScoping_addFirstBacklogItemWithoutEstimate() {
         backlogDAO = createMock(BacklogDAO.class);
         hisBusiness.setBacklogDAO(backlogDAO);
         
@@ -75,7 +76,7 @@ public class HistoryBusinessTest extends TestCase {
         verify(backlogDAO);
     }
     
-    public void testAddFirstBacklogItemWithEstimate() {
+    public void testScoping_addFirstBacklogItemWithEstimate() {
         backlogDAO = createMock(BacklogDAO.class);
         hisBusiness.setBacklogDAO(backlogDAO);
         
@@ -141,7 +142,7 @@ public class HistoryBusinessTest extends TestCase {
                                           
     }
     
-    public void testMultipleBacklogItems() {
+    public void testScoping_multipleBacklogItems() {
         backlogDAO = createMock(BacklogDAO.class);
         hisBusiness.setBacklogDAO(backlogDAO);
         
@@ -345,69 +346,103 @@ public class HistoryBusinessTest extends TestCase {
         
     }
     
-    /**
-     * Test the calculation of daily velocity with a simple case.
-     * Only effort left has changed.
-     */
-    @SuppressWarnings("deprecation")
-    public void testCalculateDailyVelocity_simpleCase() {
+    
+    public void testCalculateDailyVelocity() {
         backlogDAO = createMock(BacklogDAO.class);
+        historyDAO = createMock(HistoryDAO.class);
         hisBusiness.setBacklogDAO(backlogDAO);
+        hisBusiness.setHistoryDAO(historyDAO);
         
         /* Generate the time */
         Calendar cal = GregorianCalendar.getInstance();
-        cal.add(Calendar.DATE, -3);
-        Date firstDate = cal.getTime();
-        cal.add(Calendar.DATE, 1);
-        Date secondDate = cal.getTime();
-        cal.add(Calendar.DATE, 1);
-        Date thirdDate = cal.getTime();
-        cal.add(Calendar.DATE, 5);
-        Date lastDate = cal.getTime();
+        CalendarUtils.setHoursMinutesAndSeconds(cal, 8, 0, 0);
         
         /* Generate the test data */
         Iteration iter = new Iteration();
         iter.setId(3);
-        iter.setStartDate((Date)firstDate.clone());
-        iter.setEndDate((Date)lastDate.clone());
+        cal.add(Calendar.DATE, -3);
+        iter.setStartDate(cal.getTime());
+        cal.add(Calendar.DATE, 8);
+        CalendarUtils.setHoursMinutesAndSeconds(cal, 16, 0, 0);
+        iter.setEndDate(cal.getTime());
         
+        /* Revert calendar to current date */
+        cal.setTime(new Date());
+        CalendarUtils.setHoursMinutesAndSeconds(cal, 12, 0, 0);
+        
+        /* Create the history for the iteration */
         BacklogHistory hist = new BacklogHistory();
         hist.setId(123);
         iter.setBacklogHistory(hist);
+        hist.setEffortHistoryEntries(new ArrayList<HistoryEntry<BacklogHistory>>());
         
+        /* Set the start date entry */
+        cal.add(Calendar.DATE, -4);
         HistoryEntry<BacklogHistory> ent1 = new HistoryEntry<BacklogHistory>();
-        ent1.setDate(new java.sql.Date(firstDate.getTime()));
-        ent1.setDeltaEffortLeft(new AFTime(0));
-        ent1.setEffortLeft(new AFTime(36000));
-        ent1.setOriginalEstimate(new AFTime(36000));
+        ent1.setDate(new java.sql.Date(cal.getTimeInMillis()));
         ent1.setHistory(hist);
+        ent1.setOriginalEstimate(new AFTime(0));
+        ent1.setEffortLeft(new AFTime(0));
+        ent1.setDeltaEffortLeft(new AFTime("15h"));
         
+        /* D - 3 */
+        cal.add(Calendar.DATE, 1);
         HistoryEntry<BacklogHistory> ent2 = new HistoryEntry<BacklogHistory>();
-        ent2.setDate(new java.sql.Date(secondDate.getTime()));
-        ent2.setDeltaEffortLeft(new AFTime(0));
-        ent2.setEffortLeft(new AFTime(30000));
-        ent2.setOriginalEstimate(new AFTime(36000));
+        ent2.setDate(new java.sql.Date(cal.getTimeInMillis()));
         ent2.setHistory(hist);
+        ent2.setOriginalEstimate(new AFTime("15h"));
+        ent2.setEffortLeft(new AFTime("14h"));
+        ent2.setDeltaEffortLeft(new AFTime(0));
         
+        /* D - 2 */
+        cal.add(Calendar.DATE, 1);
         HistoryEntry<BacklogHistory> ent3 = new HistoryEntry<BacklogHistory>();
-        ent3.setDate(new java.sql.Date(thirdDate.getTime()));
-        ent3.setDeltaEffortLeft(new AFTime(0));
-        ent3.setEffortLeft(new AFTime(21000));
-        ent3.setOriginalEstimate(new AFTime(36000));
+        ent3.setDate(new java.sql.Date(cal.getTimeInMillis()));
         ent3.setHistory(hist);
+        ent3.setOriginalEstimate(new AFTime("15h"));
+        ent3.setEffortLeft(new AFTime("11h"));
+        ent3.setDeltaEffortLeft(new AFTime(0));
         
+        /* D - 1 */
+        cal.add(Calendar.DATE, 1);
+        HistoryEntry<BacklogHistory> ent4 = new HistoryEntry<BacklogHistory>();
+        ent4.setDate(new java.sql.Date(cal.getTimeInMillis()));
+        ent4.setHistory(hist);
+        ent4.setOriginalEstimate(new AFTime("15h"));
+        ent4.setEffortLeft(new AFTime("6h"));
+        ent4.setDeltaEffortLeft(new AFTime("4h"));
+        
+        /* D */
+        cal.add(Calendar.DATE, 1);
+        HistoryEntry<BacklogHistory> ent5 = new HistoryEntry<BacklogHistory>();
+        ent5.setDate(new java.sql.Date(cal.getTimeInMillis()));
+        ent5.setHistory(hist);
+        ent5.setOriginalEstimate(new AFTime("19h"));
+        ent5.setEffortLeft(new AFTime("10h"));
+        ent5.setDeltaEffortLeft(new AFTime(0));
+        
+        /* Add the entries to the history element in correct order */
+        hist.getEffortHistoryEntries().add(ent5);
+        hist.getEffortHistoryEntries().add(ent4);
         hist.getEffortHistoryEntries().add(ent3);
         hist.getEffortHistoryEntries().add(ent2);
         hist.getEffortHistoryEntries().add(ent1);
         
-        expect(backlogDAO.get(3)).andReturn(iter);
-        replay(backlogDAO);
+        cal.setTime(new Date());
+        CalendarUtils.setHoursMinutesAndSeconds(cal, 23, 59, 59);
+        cal.add(Calendar.DATE, -1);
         
-        long vel = 3750;
-        long trueVel = hisBusiness.calculateDailyVelocity(3).getTime();
-        assertEquals(vel, trueVel);
+        expect(backlogDAO.get(3)).andReturn(iter);
+        expect(historyDAO.getEntryByDate(3, cal.getTime())).andReturn(ent4);
+        replay(backlogDAO);
+        replay(historyDAO);
+        
+        AFTime velocity = new AFTime("3h");
+        AFTime trueVel = hisBusiness.calculateDailyVelocity(3);
+        assertEquals(velocity.getTime(), trueVel.getTime());
         
         verify(backlogDAO);
+        verify(historyDAO);
     }
     
     /**
@@ -546,3 +581,4 @@ public class HistoryBusinessTest extends TestCase {
         assertEquals(new AFTime(0), hisBusiness.calculateScopingNeeded(iter, new AFTime("10h"), new AFTime("3h")));
     }
 }
+

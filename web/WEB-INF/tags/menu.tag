@@ -320,7 +320,7 @@ $(document).ready(function() {
 </c:choose>
     <a href="contextView.action?contextName=projectPortfolio&resetContextView=true">
     <img src="static/img/portfolio.png" alt="Dev Portfolio" />
-    Portfolio
+    Dev Portfolio
     </a>
 </li>
 

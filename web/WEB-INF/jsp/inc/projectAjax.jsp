@@ -280,6 +280,14 @@
 		<display:column title="Original estimate">
 			<c:out value="${row.metrics.originalEstimate}" />							
 		</display:column>
+		
+		<display:column title="Velocity">
+            <c:out value="${row.metrics.dailyVelocity}" />                           
+        </display:column>
+        
+        <display:column title="Schedule">
+            <c:out value="${row.metrics.scheduleVariance}" />                           
+        </display:column>
 
 		<display:column title="Start date">
 			<ww:date name="#attr.row.startDate" />

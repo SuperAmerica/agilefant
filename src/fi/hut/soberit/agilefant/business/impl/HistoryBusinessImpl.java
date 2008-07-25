@@ -7,6 +7,7 @@ import java.util.LinkedList;
 
 import fi.hut.soberit.agilefant.business.HistoryBusiness;
 import fi.hut.soberit.agilefant.db.BacklogDAO;
+import fi.hut.soberit.agilefant.db.HistoryDAO;
 import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogHistory;
@@ -17,7 +18,7 @@ import fi.hut.soberit.agilefant.util.CalendarUtils;
 
 public class HistoryBusinessImpl implements HistoryBusiness {
     private BacklogDAO backlogDAO;
-    private CalendarUtils calUtil = new CalendarUtils();
+    private HistoryDAO historyDAO;
     
     public void updateBacklogHistory(int backlogId) {
         Backlog backlog = backlogDAO.get(backlogId);
@@ -142,62 +143,48 @@ public class HistoryBusinessImpl implements HistoryBusiness {
     
     /** {@inheritDoc} */
     public AFTime calculateDailyVelocity(int backlogId) {
-        AFTime velocity = new AFTime(0);
-        int numberOfDays = 1;
         Backlog backlog = backlogDAO.get(backlogId);
         
+        /* Velocity can't be calculated for a product */
         if (backlog instanceof Product) {
             return new AFTime(0);
         }
+        /* Create the calendars */
+        Calendar start = GregorianCalendar.getInstance();
+        Calendar end = GregorianCalendar.getInstance();
         
-        Calendar startDate = GregorianCalendar.getInstance();
-        startDate.setTime(backlog.getStartDate());
-        
-        Calendar endDate = GregorianCalendar.getInstance();
+        /* Set the dates */
+        start.setTime(backlog.getStartDate());
+        CalendarUtils.setHoursMinutesAndSeconds(start, 0, 0, 1);
         if (backlog.getEndDate().before(new Date())) {
-            endDate.setTime(backlog.getEndDate());
+            end.setTime(backlog.getEndDate());
+            end.add(Calendar.DATE, 1);
         }
+        CalendarUtils.setHoursMinutesAndSeconds(end, 23, 59, 59);
         
-        if (backlog instanceof Product) {
+        /* 
+         * Calculate the date difference of start and end dates.
+         * Substract 1 from the date difference to get the correct amount of days.
+         */
+        float length = CalendarUtils.getLengthInDays(start.getTime(), end.getTime()) - 1;
+        
+        /* Get the history entry for yesterday */
+        end.add(Calendar.DATE, -1);
+        HistoryEntry<BacklogHistory> endEntry = historyDAO.getEntryByDate(backlogId, end.getTime());
+        
+        if (endEntry == null || endEntry.getOriginalEstimate() == null || 
+                endEntry.getEffortLeft() == null) {
             return new AFTime(0);
         }
         
-        if (backlog.getEndDate().before(endDate.getTime())) {
-            endDate.setTime(backlog.getEndDate());
-        }
-        
-        /* Get the backlog's history */
-        BacklogHistory history = backlog.getBacklogHistory();        
-        HistoryEntry<BacklogHistory> current = history.getDateEntry(endDate.getTime());
-        
-        /* If there is no recorded history, return 0 as velocity */
-        if (current == null) {
-            return new AFTime(0);
-        }
-        
-        /* Get the values */
-        AFTime origEst = current.getOriginalEstimate();
-        AFTime effLeft = current.getEffortLeft();
-        
-        System.out.println("\n---\nDate:" + current.getDate());
-        
-        /* Get the length */
-        numberOfDays = calUtil.getLengthInDays(startDate.getTime(), endDate.getTime());
-        
-        if (numberOfDays == 0) {
-            numberOfDays = 1;
-        }
-       
         /* Calculate the velocity */
-        long diff = origEst.getTime() - effLeft.getTime();
-        long vel = diff / numberOfDays;
-        velocity = new AFTime(vel);
+        float origEst = endEntry.getOriginalEstimate().getTime();
+        float effLeft = endEntry.getEffortLeft().getTime();
+        float velo = (origEst - effLeft) / length;
         
-        System.out.println("OE: " + origEst + "\nEL: " + effLeft
-                + "\ndiff: " + diff + "\nvel: " + velocity + "\n---");
-        
-        return velocity;
+        return new AFTime((long)velo);
     }
+
     
     /** {@inheritDoc} */
     public Date calculateExpectedDate(Backlog backlog, AFTime effortLeft, AFTime velocity) {
@@ -256,7 +243,7 @@ public class HistoryBusinessImpl implements HistoryBusiness {
         end.setTime(backlog.getEndDate());
         // CalendarUtils.setHoursMinutesAndSeconds(end, 0, 0, 0);
         
-        int diff = calUtil.getLengthInDays(end.getTime(), expected.getTime()) - 1;
+        int diff = CalendarUtils.getLengthInDays(end.getTime(), expected.getTime()) - 1;
         
         if (end.before(expected)) {
             return diff;
@@ -284,7 +271,7 @@ public class HistoryBusinessImpl implements HistoryBusiness {
         Date end = backlog.getEndDate();
         
         /* Calculate the expected amount of work that gets done */
-        int diff = calUtil.getLengthInDays(now.getTime(), end);
+        int diff = CalendarUtils.getLengthInDays(now.getTime(), end);
         long expectedWorkDone = diff * velocity.getTime();
         
         /* Substract expected amount of work from effort left */
@@ -303,5 +290,13 @@ public class HistoryBusinessImpl implements HistoryBusiness {
 
     public void setBacklogDAO(BacklogDAO backlogDAO) {
         this.backlogDAO = backlogDAO;
+    }
+
+    public HistoryDAO getHistoryDAO() {
+        return historyDAO;
+    }
+
+    public void setHistoryDAO(HistoryDAO historyDAO) {
+        this.historyDAO = historyDAO;
     }
 }

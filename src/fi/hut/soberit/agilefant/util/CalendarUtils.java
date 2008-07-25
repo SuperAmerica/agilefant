@@ -66,7 +66,7 @@ public class CalendarUtils {
     /**
      * Get the length of a timeframe in days rounded up. 
      */
-    public int getLengthInDays(Date start, Date end){
+    public static int getLengthInDays(Date start, Date end){
         Calendar calStart = GregorianCalendar.getInstance();
         Calendar calEnd = GregorianCalendar.getInstance();
         

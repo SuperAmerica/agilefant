@@ -89,9 +89,9 @@
 					<div id="assigneesLink"><a
 						href="javascript:toggleDiv('createNewProject_assignees');"> <img
 						src="static/img/users.png" /> <c:set var="listSize"
-						value="${fn:length(project.responsibles)}" scope="page" /> <c:choose>
+						value="${fn:length(project.responsibles)}" scope="request" /> <c:choose>
 						<c:when test="${listSize > 0}">
-							<c:set var="count" value="0" scope="page" />
+							<c:set var="count" value="0" scope="request" />
 							<c:forEach items="${project.responsibles}" var="responsible">
 								<c:choose>
 									<c:when test="${count < listSize - 1}">
@@ -102,7 +102,7 @@
 										<c:out value="${responsible.initials}" />
 									</c:otherwise>
 								</c:choose>
-								<c:set var="count" value="${count + 1}" scope="page" />
+								<c:set var="count" value="${count + 1}" scope="request" />
 							</c:forEach>
 						</c:when>
 						<c:otherwise>
@@ -122,11 +122,13 @@
 							<c:choose>
 								<c:when test="${flag == 1}">
 									<input type="checkbox" name="selectedUserIds"
-										value="${user.id}" checked="checked" class="user_${user.id}" />
+										value="${user.id}" checked="checked" class="user_${user.id}"
+										onchange="toggleDiv('createProject_${user.id}')" />
 								</c:when>
 								<c:otherwise>
 									<input type="checkbox" name="selectedUserIds"
-										value="${user.id}" class="user_${user.id}" />
+										value="${user.id}" class="user_${user.id}"
+										onchange="toggleDiv('createProject_${user.id}')" />
 								</c:otherwise>
 							</c:choose>
 						</display:column>
@@ -148,19 +150,60 @@
 									alt="The user is disabled" title="The user is disabled" />
 							</c:if>
 						</display:column>
+						<display:column title="Overhead +/-">
+								<!-- Check whether user is assigned. If is assigned -> show overhead -->
+								<c:choose>
+									<c:when test="${flag == 1}">
+										<div id="createProject_${user.id}" class="overhead">
+									</c:when>
+									<c:otherwise>
+										<div id="createProject_${user.id}" class="overhead" Style="display: none;">
+									</c:otherwise>
+								</c:choose>
+								<c:choose>
+									<c:when test="${empty project.defaultOverhead}">
+										<ww:label value="0h" />
+									</c:when>
+									<c:otherwise>
+										<ww:label value="${project.defaultOverhead}" />
+									</c:otherwise>
+								</c:choose>																		
+								+
+								<ww:hidden name="assignments['${user.id}'].user.id" value="${user.id}" />
+								<ww:textfield size="3"
+									name="assignments['${user.id}'].deltaOverhead" /> =																		
+								<c:choose>
+									<c:when test="${!empty totalOverheads[user.id]}">
+										<ww:label value="${totalOverheads[user.id]}" />
+									</c:when>
+									<c:otherwise>
+										<c:choose>
+											<c:when test="${empty project.defaultOverhead}">
+												<ww:label value="0h" />
+											</c:when>
+											<c:otherwise>
+												<ww:label value="${project.defaultOverhead}" />
+											</c:otherwise>
+										</c:choose>
+									</c:otherwise>
+								</c:choose>
+						</div>
+						</display:column>
 					</display:table>
-					<div id="userselect" class="projectTeams">
+					<div id="userselect_createNew" class="projectTeams userSelector">
 					<div class="right"><label>Teams</label>
 					<ul class="groups" />
 					</div>
 					<script type="text/javascript">
-                        					$(document).ready( function() {
-                            					<aef:teamList />
-                            					<ww:set name="teamList" value="#attr.teamList" />
-                           	 					var teams = [<aef:teamJson items="${teamList}"/>]
-                            					$('#userselect').multiuserselect({groups: teams, root: $('#user')});
-                        					});
-                        				</script></div>
+                       var tmp = function() {
+                        	<aef:teamList />
+                        	<ww:set name="teamList" value="#attr.teamList" />
+                        	var teams = [<aef:teamJson items="${teamList}"/>]
+                        	//$('#userselect_createNew').multiuserselect({groups: teams, root: $('#user')});
+                        	$('#userselect_createNew').groupselect(teams,'#createNewProject_assignees');
+                        };
+                        tmp();
+                       	</script></div>
 					</td>
 				</tr>
 				<tr>

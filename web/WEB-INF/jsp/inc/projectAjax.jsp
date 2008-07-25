@@ -100,13 +100,15 @@
 					<tr>
 						<td>Assigned Users</td>
 						<td></td>
-						<td colspan="2"><c:set var="divId" value="${project.id}" scope="page" />
-						<div id="assigneesLink"><a href="javascript:toggleDiv(${divId});">
-							<img src="static/img/users.png" /> <c:set var="listSize"
-								value="${fn:length(project.responsibles)}" scope="page" />
+						<td colspan="2">
+						<div id="assigneesLink">
+						<a href="javascript:toggleDiv('users_${project.id}');">
+							<img src="static/img/users.png" />
+							<c:set var="listSize"
+								value="${fn:length(project.responsibles)}" scope="request" />
 							<c:choose>
 							<c:when test="${listSize > 0}">
-								<c:set var="count" value="0" scope="page" />
+								<c:set var="count" value="0" scope="request" />
 								<c:forEach items="${project.responsibles}" var="responsible">
 									<c:choose>
 										<c:when test="${count < listSize - 1}">
@@ -117,7 +119,7 @@
 											<c:out value="${responsible.initials}" />
 										</c:otherwise>
 									</c:choose>
-									<c:set var="count" value="${count + 1}" scope="page" />
+									<c:set var="count" value="${count + 1}" scope="request" />
 								</c:forEach>
 							</c:when>
 							<c:otherwise>
@@ -126,7 +128,7 @@
 						</c:choose>
 						</a>
 						</div>
-						<div id="${divId}" style="display: none;">
+						<div id="users_${project.id}" style="display: none;">
 							<display:table name="${assignableUsers}" id="user" class="projectUsers"
 								defaultsort="2">
 							<display:column title="">								
@@ -139,12 +141,12 @@
 									<c:when test="${flag == 1}">
 										<input type="checkbox" name="selectedUserIds"
 											value="${user.id}" checked="checked" class="user_${user.id}"
-											onchange="toggleDiv('${user.id}')" />
+											onchange="toggleDiv('${user.id}-${project.id}')" />
 									</c:when>
 									<c:otherwise>
 										<input type="checkbox" name="selectedUserIds"
 											value="${user.id}" class="user_${user.id}"
-											onchange="toggleDiv('${user.id}')" />
+											onchange="toggleDiv('${user.id}-${project.id}')" />
 									</c:otherwise>
 								</c:choose>
 							</display:column>
@@ -169,10 +171,10 @@
 								<!-- Check whether user is assigned. If is assigned -> show overhead -->
 								<c:choose>
 									<c:when test="${flag == 1}">
-										<div id="${user.id}" class="overhead">
+										<div id="${user.id}-${project.id}" class="overhead">
 									</c:when>
 									<c:otherwise>
-										<div id="${user.id}" class="overhead" Style="display: none;">
+										<div id="${user.id}-${project.id}" class="overhead" Style="display: none;">
 									</c:otherwise>
 								</c:choose>
 								<c:choose>
@@ -205,17 +207,19 @@
 						</div>
 						</display:column>
 						</display:table>
-						<div id="userselect" class="projectTeams">
+						<div id="userselect_${project.id}" class="projectTeams userSelector">
 							<div class="right"><label>Teams</label>
 								<ul class="groups" />
 							</div>
 							<script type="text/javascript">
-							$(document).ready( function() {
+							var tmp = function () {
 								<aef:teamList />
 								<ww:set name="teamList" value="#attr.teamList" />
 								var teams = [<aef:teamJson items="${teamList}"/>]
-								$('#userselect').multiuserselect({groups: teams, root: $('#user')});
-							});
+								//$('#userselect_${project.id}').multiuserselect({groups: teams, root: $('#userselect_${project.id}')});
+								$('#userselect_${project.id}').groupselect(teams,'#users_${project.id}');
+							}
+							tmp();
 							</script>
 						</div>
 						

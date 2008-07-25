@@ -83,7 +83,7 @@
 					<tr>
 						<td>Start date</td>
 						<td>*</td>
-						<td colspan="2"><aef:datepicker id="start_date"
+						<td colspan="2"><aef:datepicker id="start_date_${project.id}"
 							name="startDate"
 							format="%{getText('webwork.shortDateTime.format')}"
 							value="%{#start}" /></td>
@@ -92,7 +92,7 @@
 						<td>End date</td>
 						<td>*</td>
 						<td colspan="2">
-							<aef:datepicker id="end_date"
+							<aef:datepicker id="end_date_${project.id}"
 							name="endDate"
 							format="%{getText('webwork.shortDateTime.format')}"
 							value="%{#end}" /></td>

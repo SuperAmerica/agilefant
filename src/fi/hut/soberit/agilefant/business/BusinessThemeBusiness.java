@@ -23,17 +23,17 @@ public interface BusinessThemeBusiness {
     
     /**
      * Gets the product's active themes.
-     * @param productId
+     * @param backlogId
      * @return
      */
-    public Collection<BusinessTheme> getActiveBusinessThemes(int productId);
+    public Collection<BusinessTheme> getActiveBusinessThemes(int backlogId);
 
     /**
      * Gets the product's non-active themes.
-     * @param productId
+     * @param backlogId
      * @return
      */
-    public Collection<BusinessTheme> getNonActiveBusinessThemes(int productId);
+    public Collection<BusinessTheme> getNonActiveBusinessThemes(int backlogId);
     
     
     /**

@@ -457,6 +457,7 @@ Timeline.AgilefantEventPainter.prototype.paintPreciseDurationEvent = function(ev
   var endPixel = Math.round(this._band.dateToPixelOffset(endDate));
 
   var labelSize = this._frc.computeSize(text);
+  labelSize.width += 5; //OSX fix
   var labelLeft = startPixel;
   var labelRight = labelLeft + labelSize.width;
 

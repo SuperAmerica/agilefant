@@ -43,7 +43,7 @@ function validateDeletion() {
 			<a href="#" id="themeEdit_${backlog.id}_${row.id}" onclick="openThemeBusinessModal('themeEdit_${backlog.id}_${row.id}', 'editBacklogItemBusinessThemes.action',${row.id}, 0,${backlog.id}); return false;">
                <img class="themeImg" src="static/img/add_theme.png" alt="Edit themes" title="Edit themes" /></a>
             <c:forEach items="${bliThemeCache[row.id]}" var="businessTheme">
-            	<a href="#" onclick="openThemeBusinessModal('themeEdit_${backlog.id}_${row.id}', 'editBacklogItemBusinessThemes.action',${row.id},${businessTheme.id},${backlog.id}); return false;">
+            	<a href="#" onclick="openThemeBusinessModal('themeEdit_${backlog.id}_${row.id}', 'editBacklogItemBusinessThemes.action',${row.id},${businessTheme.id},${businessTheme.product.id}); return false;">
             		<span class="businessTheme" title="${businessTheme.description}"><c:out value="${businessTheme.name}"/></span>
             	</a>
             </c:forEach>

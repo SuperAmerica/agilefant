@@ -85,9 +85,9 @@
 	<classpathentry exported="true" kind="lib" path="lib/xalan.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/xercesImpl.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/xml-apis.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/acegi-security-1.0.5.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/acegi-security-tiger-1.0.5.jar"/>
 	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry exported="true" kind="lib" path="lib/easymock.jar"/>
+	<classpathentry kind="lib" path="lib/spring-security-core-2.0.3.jar"/>
+	<classpathentry kind="lib" path="lib/spring-security-core-tiger-2.0.3.jar"/>
 	<classpathentry kind="output" path="eclipse-classes"/>
 </classpath>

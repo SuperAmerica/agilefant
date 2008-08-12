@@ -33,7 +33,7 @@ Agilefant
 
 <script type="text/javascript">
 $(document).ready(function() {
-    if(document.cookie.indexOf("ACEGI_SECURITY_HASHED_REMEMBER_ME_COOKIE") == -1) {
+    if(document.cookie.indexOf("SPRING_SECURITY_HASHED_REMEMBER_ME_COOKIE") == -1) {
         var sessionLength = <%=session.getMaxInactiveInterval()%>*1000;
         setTimeout('reloadPage()',sessionLength+5);
     }
@@ -69,7 +69,7 @@ Agilefant
 <ww:a href="%{editLink}">${currentUser.fullName}</ww:a>
 </td>
 <td>
-<form action="j_acegi_logout" method="post">
+<form action="j_spring_security_logout" method="post">
 <input name="exit" type="submit" value="logout" />
 </form>
 </td>

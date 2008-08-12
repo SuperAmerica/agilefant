@@ -3,8 +3,8 @@ Please note, that Agilefant itself doesn't directly use all these libraries,
 but their existence is required by some library (e.g. Spring).
 
 --------------------------
-acegi-security:			http://www.acegisecurity.org/
-acegi-security-tiger:
+spring-security:		http://static.springframework.org/spring-security/site/
+spring-security-tiger:
 antlr:					http://www.antlr.org/
 asm:					http://asm.objectweb.org/
 asm-attrs:				http://asm.objectweb.org/jdiff153to223/changes/pkg_org.objectweb.asm.attrs.html

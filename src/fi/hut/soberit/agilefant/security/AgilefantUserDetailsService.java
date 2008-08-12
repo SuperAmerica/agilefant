@@ -1,17 +1,17 @@
 package fi.hut.soberit.agilefant.security;
 
-import org.acegisecurity.userdetails.UserDetails;
-import org.acegisecurity.userdetails.UserDetailsService;
-import org.acegisecurity.userdetails.UsernameNotFoundException;
 import org.springframework.dao.DataAccessException;
+import org.springframework.security.userdetails.UserDetails;
+import org.springframework.security.userdetails.UserDetailsService;
+import org.springframework.security.userdetails.UsernameNotFoundException;
 
 import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.model.User;
 
 /**
- * Acegi UserDetailsService-implementation.
+ * Spring Security UserDetailsService-implementation.
  * <p>
- * This is the "glue" between our system and Acegi authentication. Basically, we
+ * This is the "glue" between our system and authentication. Basically, we
  * provide AgilefantUserDetails-objects on request.
  * 
  * @see AgilefantUserDetails

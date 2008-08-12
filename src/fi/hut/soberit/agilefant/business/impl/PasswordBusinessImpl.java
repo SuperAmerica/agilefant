@@ -3,14 +3,15 @@ package fi.hut.soberit.agilefant.business.impl;
 import java.util.Date;
 import java.util.Random;
 
-import org.acegisecurity.providers.encoding.PasswordEncoder;
 import org.antlr.stringtemplate.StringTemplate;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.providers.encoding.PasswordEncoder;
 
 import fi.hut.soberit.agilefant.business.PasswordBusiness;
 import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.model.User;
+
 
 public class PasswordBusinessImpl implements PasswordBusiness {
     private JavaMailSender mailSender;

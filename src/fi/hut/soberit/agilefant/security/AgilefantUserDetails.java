@@ -1,15 +1,15 @@
 package fi.hut.soberit.agilefant.security;
 
-import org.acegisecurity.GrantedAuthority;
-import org.acegisecurity.GrantedAuthorityImpl;
-import org.acegisecurity.userdetails.UserDetails;
+import org.springframework.security.GrantedAuthority;
+import org.springframework.security.GrantedAuthorityImpl;
+import org.springframework.security.userdetails.UserDetails;
 
 import fi.hut.soberit.agilefant.model.User;
 
 /**
- * Acegi UserDetails-implementation.
+ * Spring Security UserDetails-implementation.
  * <p>
- * This is the "glue" between our system and Acegi authentication. Basically, we
+ * This is the "glue" between our system and spring security authentication. Basically, we
  * provide these on request trough AgilefantUserDetailsService.
  * <p>
  * TODO: Should the user object be re-requested every time when "getUser" is
@@ -43,14 +43,14 @@ public class AgilefantUserDetails implements UserDetails {
     }
 
     /**
-     * Provide password for acegi.
+     * Provide password.
      */
     public String getPassword() {
         return password;
     }
 
     /**
-     * Provide username for acegi.
+     * Provide username.
      */
     public String getUsername() {
         return username;

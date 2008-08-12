@@ -3,9 +3,9 @@ package fi.hut.soberit.agilefant.security;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-import org.acegisecurity.Authentication;
-import org.acegisecurity.context.SecurityContext;
-import org.acegisecurity.context.SecurityContextHolder;
+import org.springframework.security.Authentication;
+import org.springframework.security.context.SecurityContext;
+import org.springframework.security.context.SecurityContextHolder;
 
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.web.RefreshUserInterceptor;

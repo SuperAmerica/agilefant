@@ -79,7 +79,7 @@
           </c:if>
           
           <div id="login">
-             <form method="post" action="j_acegi_security_check">
+             <form method="post" action="j_spring_security_check">
                 <table border="0">
                 <tr>
                 <td>Username</td><td><input id="username" name="j_username" size="30" type="text" /></td>
@@ -88,7 +88,7 @@
                 <td>Password</td><td><input name="j_password" size="30" type="password" /></td>
                 </tr>
                 <tr>
-                <td>&nbsp;</td><td>Remember me <input type="checkbox" name="_acegi_security_remember_me" /></td>
+                <td>&nbsp;</td><td>Remember me <input type="checkbox" name="_spring_security_remember_me" /></td>
                 </tr>
                 <tr>
                 <td>&nbsp;</td><td><input value="Log in" type="submit" /></td>

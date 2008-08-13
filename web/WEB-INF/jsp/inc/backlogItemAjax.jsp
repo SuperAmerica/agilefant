@@ -10,7 +10,7 @@
 <div class="ajaxWindowTabsDiv">
 <ul class="ajaxWindowTabs">
 	<li><a href="#backlogItemEditTab-${backlogItemId}"><span><img src="static/img/edit.png" alt="Edit" /> Edit</span></a></li>
-	<li><a href="#backlogItemProgressTab-${backlogItemId}"><span><img src="static/img/edit.png" alt="Progress" /> Progress</span></a></li>
+	<li><a href="#backlogItemProgressTab-${backlogItemId}"><span><img src="static/img/progress.png" alt="Progress" /> Progress</span></a></li>
 	<li><a href="#backlogItemSpentEffTab-${backlogItemId}"><span><img src="static/img/timesheets.png" alt="Spent Effort" /> Spent Effort</span></a></li>
 	<li><a href="#backlogItemThemesTab-${backlogItemId}"><span><img src="static/img/add_theme.png" alt="Themes" /> Themes</span></a></li>
 </ul>
@@ -57,13 +57,13 @@
 							<c:when test="${backlogItem.state.name != 'DONE'}">
 								<ww:textfield size="10"
 								name="backlogItem.originalEstimate"
-								id="originalEstimateField" />
+								id="originalEstimateField_${backlogItem.id}" />
 							</c:when>
 							<c:otherwise>
 								<ww:textfield size="10"
 								name="backlogItem.originalEstimate"
 								disabled="true"
-								id="originalEstimateField" />
+								id="originalEstimateField_${backlogItem.id}" />
 							</c:otherwise>
 						</c:choose>
 						<ww:label value="%{getText('webwork.estimateExample')}" /></td>
@@ -76,23 +76,23 @@
 						<td colspan="2"><ww:label
 							value="${backlogItem.originalEstimate}" /> <ww:hidden
 							name="backlogItem.originalEstimate"
-							value="${backlogItem.originalEstimate}" /> <ww:url id="resetLink"
+							value="${backlogItem.originalEstimate}" /> <ww:url id="resetLink_${backlogItem.id}"
 							action="resetBliOrigEstAndEffortLeft" includeParams="none">
 							<ww:param name="backlogItemId" value="${backlogItem.id}" />
 						</ww:url>
 						<c:choose>
 							<c:when test="${backlogItem.state.name == 'DONE'}">
-								<span id="resetText" style="color: #666;">(reset)</span>
-								<span id="resetLink" style="display: none;">
+								<span id="resetText_${backlogItem.id}" style="color: #666;">(reset)</span>
+								<span id="resetLink_${backlogItem.id}" style="display: none;">
 							</c:when>
 							<c:otherwise>
-							<span id="resetText" style="color: #666; display: none;">(reset)</span>
-								<span id="resetLink">
+							<span id="resetText_${backlogItem.id}" style="color: #666; display: none;">(reset)</span>
+								<span id="resetLink_${backlogItem.id}">
 							</c:otherwise>
 						</c:choose>
 						
 						<ww:a
-								href="%{resetLink}&contextViewName=editBacklogItem&contextObjectId=${backlogItemId}"
+								href="%{resetLink_${backlogItem.id}}&contextViewName=editBacklogItem&contextObjectId=${backlogItemId}"
 								onclick="return confirmReset()">(reset)</ww:a>
 						</span>
 						
@@ -107,13 +107,13 @@
 							<c:when test="${backlogItem.state.name != 'DONE'}">
 								<ww:textfield size="10"
 								name="backlogItem.effortLeft"
-								id="effortLeftField" />
+								id="effortLeftField_${backlogItem.id}" />
 							</c:when>
 							<c:otherwise>
 								<ww:textfield size="10"
 								name="backlogItem.effortLeft"
 								disabled="true"
-								id="effortLeftField" />
+								id="effortLeftField_${backlogItem.id}" />
 							</c:otherwise>
 						</c:choose>
 						<ww:label value="%{getText('webwork.estimateExample')}" />
@@ -127,11 +127,11 @@
 				<td></td>
 				<td colspan="2">
 				<script type="text/javascript">
-				function change_estimate_enabled(value) {
-					var effLeftField = document.getElementById('effortLeftField');
-					var origEstField = document.getElementById('originalEstimateField');
-					var resetLink = document.getElementById('resetLink');
-					var resetText = document.getElementById('resetText');
+				function change_estimate_enabled(value, itemId) {
+					var effLeftField = document.getElementById("effortLeftField_" + itemId);
+					var origEstField = document.getElementById("originalEstimateField_" + itemId);
+					var resetLink = document.getElementById("resetLink_" + itemId);
+					var resetText = document.getElementById("resetText_" + itemId);
 					if (value == 'DONE') {
 						if (effLeftField != null) {
 							effLeftField.disabled = true;
@@ -165,8 +165,8 @@
 				<%-- If user changed the item's state to DONE and there are tasks not DONE, ask if they should be set to DONE as well. --%>
 				<script type="text/javascript">
 				$(document).ready(function() {
-					$("#stateSelect").change(function() {
-						change_estimate_enabled($(this).val());				
+					$("#stateSelect_${backlogItem.id}").change(function() {
+						change_estimate_enabled($(this).val(), ${backlogItem.id});				
 						var tasksDone = true;
 						$(".taskStateSelect").each(function() {
 							if ($(this).val() != 'DONE') {
@@ -184,7 +184,7 @@
 				</script>
 				<%-- Tasks to DONE confirmation script ends. --%>			
 				<ww:select name="backlogItem.state"
-					id="stateSelect"
+					id="stateSelect_${backlogItem.id}"
 					value="backlogItem.state.name"
 					list="@fi.hut.soberit.agilefant.model.State@values()" listKey="name"
 					listValue="getText('task.state.' + name())"  /></td>
@@ -281,23 +281,23 @@
 				<td colspan="2">
 	
 				<div id="assigneesLink">
-				<a href="javascript:toggleDiv('userselect')" class="assignees">
+				<a href="javascript:toggleDiv('responsibleSelect_${backlogItem.id}')" class="assignees">
 				<img src="static/img/users.png"/>
-				<c:set var="listSize" value="${fn:length(backlogItem.responsibles)}" scope="page" />
+				<c:set var="listSize" value="${fn:length(backlogItem.responsibles)}" scope="request" />
 				<c:choose>
 				<c:when test="${listSize > 0}">
-					<c:set var="count" value="0" scope="page" />
-					<c:set var="comma" value="," scope="page" />
+					<c:set var="count" value="0" scope="request" />
+					<c:set var="comma" value="," scope="request" />
 					<c:forEach items="${backlogItem.responsibles}" var="responsible">
-						<c:set var="unassigned" value="0" scope="page" />
+						<c:set var="unassigned" value="0" scope="request" />
 						<c:if test="${count == listSize - 1}" >
-							<c:set var="comma" value="" scope="page" />
+							<c:set var="comma" value="" scope="request" />
 						</c:if>
 						<c:if test="${!empty backlogItem.project}" >
-							<c:set var="unassigned" value="1" scope="page" />
+							<c:set var="unassigned" value="1" scope="request" />
 							<c:forEach items="${backlogItem.project.responsibles}" var="projectResponsible">
 								<c:if test="${responsible.id == projectResponsible.id}" >
-									<c:set var="unassigned" value="0" scope="page" />
+									<c:set var="unassigned" value="0" scope="request" />
 								</c:if>
 							</c:forEach>
 						</c:if>
@@ -309,7 +309,7 @@
 								<c:out value="${responsible.initials}" /><c:out value="${comma}" />
 							</c:otherwise>
 						</c:choose>
-						<c:set var="count" value="${count + 1}" scope="page" />
+						<c:set var="count" value="${count + 1}" scope="request" />
 					</c:forEach>
 				</c:when>
 				<c:otherwise>
@@ -336,11 +336,11 @@
 					
 					var teams = [<aef:teamJson items="${teamList}"/>];
 					var selected = [<aef:idJson items="${backlogItem.responsibles}"/>]
-					$('#userselect').multiuserselect({users: [preferred,others], groups: teams, root: $('#userselect')}).selectusers(selected);								
+					$('#responsibleSelect_${backlogItem.id}').multiuserselect({users: [preferred,others], groups: teams, root: $('#responsibleSelect_${backlogItem.id}')}).selectusers(selected);								
 					
 				});
 				</script>
-				<div id="userselect" style="display: none;">
+				<div id="responsibleSelect_${backlogItem.id}" style="display: none;" class="projectTeams userSelector">
 				<div class="left">
 				<c:if test="${!aef:isProduct(backlog) &&
 				             backlog != null}">
@@ -410,6 +410,35 @@
 			return false;
 		});				
 	});
+
+	function change_effort_enabled(value, bliId) {
+		if (value == "DONE") {
+			document.getElementById("effortBli_" + bliId).disabled = true;							
+		}
+		else {
+			document.getElementById("effortBli_" + bliId).disabled = false;
+		}
+	}
+	
+	<%-- If user changed the item's state to DONE and there are tasks not DONE, ask if they should be set to DONE as well. --%>
+		$(document).ready(function() {
+			$("#stateSelectProgress_${backlogItem.id}").change(function() {
+				change_effort_enabled($(this).val(), ${backlogItem.id});
+				var tasksDone = true;
+				$(".taskStateSelect_${backlogItem.id}").each(function() {
+					if ($(this).val() != 'DONE') {
+						tasksDone = false;
+					}
+				});
+				if ($(this).val() == 'DONE' && !tasksDone) {
+					var prompt = window.confirm("Do you wish to set all the tasks' states to Done as well?");
+					if (prompt) {
+						$(".taskStateSelect_${backlogItem.id}").val('DONE');
+					}					
+				}
+			});
+		});
+	<%-- Tasks to DONE confirmation script ends. --%>
 </script>
 
 <ww:form action="quickStoreTaskList" validate="false">
@@ -429,7 +458,7 @@
 			<td>
 				Backlog item state
 				<ww:select name="state"
-					id="stateSelect_${backlogItem.id}" value="#attr.backlogItem.state.name"
+					id="stateSelectProgress_${backlogItem.id}" value="#attr.backlogItem.state.name"
 					list="@fi.hut.soberit.agilefant.model.State@values()" listKey="name"
 					listValue="getText('backlogItem.state.' + name())"/>
 			</td>
@@ -464,37 +493,6 @@
 				</c:if>
 			</td>
 	
-	<script type="text/javascript">
-	function change_effort_enabled(value, bliId) {
-		if (value == "DONE") {
-			document.getElementById("effortBli_" + bliId).disabled = true;							
-		}
-		else {
-			document.getElementById("effortBli_" + bliId).disabled = false;
-		}
-	}
-	</script>
-	<%-- If user changed the item's state to DONE and there are tasks not DONE, ask if they should be set to DONE as well. --%>
-	<script type="text/javascript">
-		$(document).ready(function() {
-			$("#stateSelect_${backlogItem.id}").change(function() {
-				change_effort_enabled($(this).val(), ${backlogItem.id});
-				var tasksDone = true;
-				$(".taskStateSelect_${backlogItem.id}").each(function() {
-					if ($(this).val() != 'DONE') {
-						tasksDone = false;
-					}
-				});
-				if ($(this).val() == 'DONE' && !tasksDone) {
-					var prompt = window.confirm("Do you wish to set all the tasks' states to Done as well?");
-					if (prompt) {
-						$(".taskStateSelect_${backlogItem.id}").val('DONE');
-					}					
-				}
-			});
-		});
-	</script>
-	<%-- Tasks to DONE confirmation script ends. --%>
 	</td>
 	</tr>
 	</tbody>
@@ -574,7 +572,7 @@
 							<ww:a 
 								href="%{deleteLink}&contextViewName=editBacklogItem&contextObjectId=${backlogItemId}"
 								onclick="return confirmDeleteTask()">
-								<img src="static/img/delete.png" alt="Delete" title="Delete" />
+								<img src="static/img/delete_18.png" alt="Delete" title="Delete" />
 							</ww:a>
 						</display:column>
 	

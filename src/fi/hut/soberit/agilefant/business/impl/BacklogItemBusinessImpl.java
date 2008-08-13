@@ -115,10 +115,10 @@ public class BacklogItemBusinessImpl implements BacklogItemBusiness {
 
     public void updateBacklogItemEffortLeftStateAndTaskStates(
             int backlogItemId, State newState, AFTime newEffortLeft,
-            Map<Integer, State> newTaskStates) throws ObjectNotFoundException {
+            Map<Integer, State> newTaskStates, Map<Integer, String> newTaskNames) throws ObjectNotFoundException {
         updateBacklogItemStateAndEffortLeft(backlogItemId, newState,
                 newEffortLeft);
-        taskBusiness.updateMultipleTaskStates(newTaskStates);
+        taskBusiness.updateMultipleTasks(newTaskStates, newTaskNames);
     }
 
     public void resetBliOrigEstAndEffortLeft(int backlogItemId) throws ObjectNotFoundException {

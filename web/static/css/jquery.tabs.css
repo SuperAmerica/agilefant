@@ -39,6 +39,17 @@
 	overflow: auto !important;
 }
 
+.backlogItemNaviTab {
+	width: 730px !important;
+	border: 1px solid #666;
+	max-height: 480px;
+	min-height: 100px;
+	background-color: #f0f0f0;
+	padding: 8px 3px;
+	white-space: normal !important;
+	overflow: auto !important;
+}
+
 /* Skin */
 .ui-tabs-nav {
     list-style: none;

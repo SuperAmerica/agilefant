@@ -61,6 +61,17 @@ function confirmReset() {
 	}
 }
 
+function deleteBacklogItem(backlogItemId) {
+	var confirm = confirmDeleteBli();
+	var url = "ajaxDeleteBacklogItem.action";			
+	
+	if (confirm) {
+		$.post(url,{backlogItemId: backlogItemId},function(data) {
+			reloadPage();
+		});
+	}
+}
+
 function disableIfEmpty(value, elements) {
 	if(value == "") {
 		alert("Invalid selection. Select a valid backlog.");
@@ -308,6 +319,12 @@ function ajaxCloseDialog(context, dialogId) {
         });
 }
 
+function closeTabs(context, target, id) {
+	ajaxCloseDialog(context, id);
+	$('#'+target).find('label.error').hide();
+    $("#"+target).toggle();
+}
+
 function trim (str) {
     str = str.replace(/^\s+/, '');
     for (var i = str.length - 1; i >= 0; i--) {
@@ -320,6 +337,7 @@ function trim (str) {
 }
 
 function handleTabEvent(target, context, id, tabId) {
+	
     var target = $("#" + target);
     if (target.attr("tab-data-loaded")) {
         var tabs = target.find("ul.ajaxWindowTabs");
@@ -343,14 +361,18 @@ function handleTabEvent(target, context, id, tabId) {
         ajaxOpenDialog(context, id);
         
         var targetAction = {
+        	"bli": "backlogItemTabs.action",
             "project": "projectTabs.action",
             "businessTheme": "businessThemeTabs.action"
         };
         
         var targetParams = {
+        	"bli": {
+                backlogItemId: id
+            },
             "project": {
                 projectId: id
-            },
+            },            
             "businessTheme": {
                 businessThemeId: id
             }

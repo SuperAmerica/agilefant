@@ -12,21 +12,9 @@
 
 <aef:openDialogs context="businessTheme" id="openThemes" />
 
-<c:forEach items="${openThemes}" var="openTheme">
-</c:forEach>
-
 <aef:openDialogs context="project" id="openProjects" />
 
-<c:forEach items="${openProjects}" var="openProject">
-</c:forEach>
-
 <script type="text/javascript">
-function closeTabs(context, target, id) {
-	ajaxCloseDialog(context, id);
-	$('#'+target).find('label.error').hide();
-    $("#"+target).toggle();
-}
-
 
 function setThemeActivityStatus(themeId,status) {
 	var url = "";
@@ -58,7 +46,8 @@ $(document).ready(function() {
     
     <c:forEach items="${openProjects}" var="openProject">
         handleTabEvent("projectTabContainer-${openProject}", "project", ${openProject}, 0);
-    </c:forEach>    
+    </c:forEach>
+        
 });
 
 

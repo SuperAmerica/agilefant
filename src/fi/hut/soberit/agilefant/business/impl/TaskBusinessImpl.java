@@ -15,7 +15,7 @@ public class TaskBusinessImpl implements TaskBusiness {
     private TaskDAO taskDAO;
     private BacklogItemDAO backlogItemDAO;
 
-    public void updateMultipleTaskStates(Map<Integer, State> newStatesMap)
+    public void updateMultipleTasks(Map<Integer, State> newStatesMap, Map<Integer, String> newNamesMap)
             throws ObjectNotFoundException {
         for (Integer taskId : newStatesMap.keySet()) {
             Task task = taskDAO.get(taskId.intValue());
@@ -24,6 +24,14 @@ public class TaskBusinessImpl implements TaskBusiness {
                         + " not found.");
             }
             task.setState(newStatesMap.get(taskId));
+        }
+        for (Integer taskId : newNamesMap.keySet()) {
+            Task task = taskDAO.get(taskId.intValue());
+            if (task == null) {
+                throw new ObjectNotFoundException("Task with id: " + taskId
+                        + " not found.");
+            }
+            task.setName(newNamesMap.get(taskId));
         }
     }
 

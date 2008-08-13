@@ -26,7 +26,7 @@ public interface TaskBusiness {
      * 
      */
 
-    public void updateMultipleTaskStates(Map<Integer, State> newStatesMap)
+    public void updateMultipleTasks(Map<Integer, State> newStatesMap, Map<Integer, String> newNamesMap)
             throws ObjectNotFoundException;
 
     /**

@@ -52,7 +52,7 @@ public class TaskBusinessTest extends TestCase {
 
         // Run the test case
         try {
-            taskBusiness.updateMultipleTaskStates(newTaskStates);
+            taskBusiness.updateMultipleTasks(newTaskStates, new HashMap<Integer, String>());
         } catch (ObjectNotFoundException e) {
             fail("Unexpected ObjectNotFoundException.");
         }

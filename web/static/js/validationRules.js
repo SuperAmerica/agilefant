@@ -33,6 +33,12 @@ jQuery.validator.addMethod("before", function(value, element, param) {
 
 
 var agilefantValidationRules = {
+	backlogItem: {
+        rules: {
+	    },
+	    messages: { 
+	    }
+	},
     theme: {
         rules: {
 	        "businessTheme.name": {

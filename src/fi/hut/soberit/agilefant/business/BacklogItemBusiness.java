@@ -57,7 +57,7 @@ public interface BacklogItemBusiness {
     /**
      * Transaction wrapper method to call
      * <code>BacklogItemBusiness.updateBacklogItemStateAndEffortLeft</code>
-     * and <code>TaskBusiness.updateMultipleTaskStates</code> in one
+     * and <code>TaskBusiness.updateMultipleTasks</code> in one
      * transaction.
      * 
      * @param backlogItemId
@@ -73,7 +73,7 @@ public interface BacklogItemBusiness {
 
     public void updateBacklogItemEffortLeftStateAndTaskStates(
             int backlogItemId, State newState, AFTime newEffortLeft,
-            Map<Integer, State> newTaskStates) throws ObjectNotFoundException;
+            Map<Integer, State> newTaskStates, Map<Integer, String> newTaskNames) throws ObjectNotFoundException;
 
     /**
      * Resets backlog item's original estimate and effort left to null.

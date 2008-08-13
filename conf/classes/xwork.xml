@@ -234,6 +234,23 @@
 				editBacklogItem.action?backlogItemId=${backlogItemId}
 			</result>
 		</action>
+		<action name="backlogItemTabs" method="edit"
+			class="backlogItemAction">
+			<result>/WEB-INF/jsp/inc/backlogItemAjax.jsp</result>
+		</action>
+		<action name="ajaxStoreBacklogItem" method="ajaxStoreBacklogItem"
+			class="backlogItemAction">		
+			<result name="ajax_error" type="httpheader">
+				<param name="status">400</param>
+			</result>
+			<result name="ajax_success" type="dispatcher">
+				<param name="status">200</param>
+				<param name="location">/WEB-INF/jsp/inc/ajaxBacklogItemResult.jsp</param>
+			</result>
+		</action>
+		<action name="ajaxDeleteBacklogItem" method="ajaxDeleteBacklogItem"
+			class="backlogItemAction">	
+		</action>
 		<!-- /BacklogItem actions -->
 
 		<!-- Project actions -->

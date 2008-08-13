@@ -6,8 +6,11 @@
 	<c:set var="totalSum" value="${null}" />
 </c:if>
 
+<aef:openDialogs context="bli" id="openBacklogItemTabs" />
+
 <aef:currentUser />
 <script language="javascript" type="text/javascript">
+
 function validateDeletion() {
 	var conf = confirm("The selected backlog items will be gone forever. Are you sure?");
 	if (conf)
@@ -16,7 +19,15 @@ function validateDeletion() {
 		return false;
 }
 
+
+$(document).ready(function() {        
+    <c:forEach items="${openBacklogItemTabs}" var="openBacklogItem">
+        handleTabEvent("backlogItemTabContainer-${openBacklogItem}", "bli", ${openBacklogItem}, 0);
+    </c:forEach>
+});
+
 </script>
+
 <c:if test="${hourReport}">
 	<aef:modalAjaxWindow />
 </c:if>
@@ -31,11 +42,12 @@ function validateDeletion() {
 		<!-- Checkboxes for bulk-moving backlog items -->
 		<display:column sortable="false" title="" class="selectColumn">
 			<div><ww:checkbox name="selected" fieldValue="${row.id}" /></div>
+			<div id="backlogItemTabContainer-${row.id}" style="overflow:visible; white-space: nowrap; width: 15px;"></div>
 		</display:column>
 
 		<display:column sortable="true" sortProperty="name" title="Name"
 			class="shortNameColumn">
-			
+									
 			<ww:url id="editLink" action="editBacklogItem" includeParams="none">
 				<ww:param name="backlogItemId" value="${row.id}" />
 			</ww:url>
@@ -54,6 +66,8 @@ function validateDeletion() {
 		</ww:a>
 		
 		</div>
+		
+				
 		</display:column>
 
 		<c:choose>
@@ -84,11 +98,7 @@ function validateDeletion() {
 				contextObjectId="${backlog.id}"
 				divId="${divId}" hourReport="${hourReport}" />		
 		</display:column>
-
-		
-
-		
-
+			
 		<display:column sortable="true" sortProperty="effortLeft" defaultorder="descending"
 			title="Effort Left<br/>">
 			<span style="white-space: nowrap">
@@ -133,6 +143,12 @@ function validateDeletion() {
 			
 			</c:otherwise>
 		</c:choose>
+		
+		<display:column title="Actions" sortable="false">
+			<img src="static/img/edit.png" alt="Edit" title="Edit" style="cursor: pointer;" onclick="handleTabEvent('backlogItemTabContainer-${row.id}','bli',${row.id},0);" />
+			<img src="static/img/delete_18.png" alt="Delete" title="Delete" style="cursor: pointer;" onclick="deleteBacklogItem(${row.id}); return false;" />
+		</display:column>
+		
 		<display:footer>
 			<tr>
 				<td>&nbsp;</td>

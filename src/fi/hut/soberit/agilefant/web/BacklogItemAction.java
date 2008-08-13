@@ -86,6 +86,8 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
 
     private Map<Integer, State> taskStates = new HashMap<Integer, State>();
     
+    private Map<Integer, String> taskNames = new HashMap<Integer, String>();
+    
     private List<User> possibleResponsibles = new ArrayList<User>();
     
     private String spentEffort = null;
@@ -147,6 +149,18 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
         // If exception was not thrown from business method, return success.
         return Action.SUCCESS;
     }
+    
+    public String ajaxDeleteBacklogItem() {
+        try {
+            backlogItemBusiness.removeBacklogItem(backlogItemId);
+        } catch (ObjectNotFoundException e) {
+            super.addActionError(super.getText("backlogItem.notFound"));
+            return CRUDAction.AJAX_ERROR;
+        }
+
+        // If exception was not thrown from business method, return success.
+        return CRUDAction.AJAX_SUCCESS;
+    }
 
     public String edit() {
         backlogItem = backlogItemBusiness.getBacklogItem(backlogItemId);
@@ -186,7 +200,7 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
         
         // Store tasks also.
         try {
-            taskBusiness.updateMultipleTaskStates(taskStates);
+            taskBusiness.updateMultipleTasks(taskStates, taskNames);
         }
         catch(ObjectNotFoundException onfe) {
             return Action.ERROR;
@@ -208,6 +222,50 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
             historyBusiness.updateBacklogHistory(oldBacklog.getId());       
         
         return Action.SUCCESS;
+    }
+    
+    public String ajaxStoreBacklogItem() {
+        
+        BacklogItem storable = new BacklogItem();
+        Backlog newBacklog;
+        Backlog oldBacklog = null;
+
+        if (backlogItemId > 0) {
+            storable = backlogItemBusiness.getBacklogItem(backlogItemId);
+            if (storable == null) {
+                super.addActionError(super.getText("backlogItem.notFound"));
+                return CRUDAction.AJAX_ERROR;
+            }
+            oldBacklog = storable.getBacklog();
+        }
+        newBacklog = backlogDAO.get(backlogId);
+
+        this.fillStorable(storable);
+        
+        // Store tasks also.
+        try {
+            taskBusiness.updateMultipleTasks(taskStates, taskNames);
+        }
+        catch(ObjectNotFoundException onfe) {
+            return CRUDAction.AJAX_ERROR;
+        }
+        
+        if (super.hasActionErrors()) {
+            return CRUDAction.AJAX_ERROR;
+        }
+        
+        // Store backlog item
+        this.backlogItemId = (Integer) backlogItemDAO.create(storable);
+
+        /*
+         * This should be handled inside business...
+         */
+        historyBusiness.updateBacklogHistory(newBacklog.getId());
+
+        if (oldBacklog != null)
+            historyBusiness.updateBacklogHistory(oldBacklog.getId());       
+        
+        return CRUDAction.AJAX_SUCCESS;        
     }
 
     public String addBusinessTheme() {
@@ -270,7 +328,7 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
            
         try {
             backlogItemBusiness.updateBacklogItemEffortLeftStateAndTaskStates(
-                    backlogItemId, this.state, this.effortLeft, taskStates);
+                    backlogItemId, this.state, this.effortLeft, taskStates, taskNames);
         } catch (ObjectNotFoundException e) {
             addActionError(e.getMessage());
             return Action.ERROR;
@@ -619,6 +677,14 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
 
     public void setBusinessThemeId(int businessThemeId) {
         this.businessThemeId = businessThemeId;
+    }
+
+    public Map<Integer, String> getTaskNames() {
+        return taskNames;
+    }
+
+    public void setTaskNames(Map<Integer, String> taskNames) {
+        this.taskNames = taskNames;
     }
     
     

@@ -389,3 +389,31 @@ function handleTabEvent(target, context, id, tabId) {
         target.attr("tab-data-loaded","1");
     }
 }
+
+function disableElementIfValue(me, handle, ref) {
+    if (ref == $(me).val()) {
+        $(handle).attr("disabled","disabled");
+    }
+    else {
+        $(handle).removeAttr("disabled");
+    }
+    return false;
+}
+
+function getIterationGoals(backlogId, element) {
+    jQuery.getJSON("ajaxGetIterationGoals.action",
+        { 'iterationId': backlogId }, function(data, status) {
+        var select = $(element);
+        
+        if (data.length > 0) {
+            select.show().empty().val('').next().hide();
+            $('<option/>').attr('value','').attr('class','inactive').text('(none)').appendTo(select);
+            for (var i = 0; i < data.length; i++) {
+                $('<option/>').attr('value',data[i].id).text(data[i].name).appendTo(select);
+            }
+        }
+        else {
+            select.hide().empty().val('').next().show();
+        }
+    });
+}

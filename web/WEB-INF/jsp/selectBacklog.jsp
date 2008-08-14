@@ -11,8 +11,9 @@ start by creating a new object.</p>
 <aef:existingObjects />
 
 <ul>
-    <li><ww:url id="createLink" action="createProduct"
-        includeParams="none" /> <ww:a href="%{createLink}" title="Create a new product">Product &raquo;</ww:a>
+    <li><ww:url id="createLink" action="ajaxCreateProduct"
+        includeParams="none" />
+        <ww:a href="%{createLink}" title="Create a new product" cssClass="openCreateDialog openProductDialog">Product &raquo;</ww:a>
     </li>
 
     <li>
@@ -33,9 +34,9 @@ start by creating a new object.</p>
     <li>
     <c:choose>
         <c:when test="${hasProjects}">
-            <ww:url id="createLink" action="createIteration"
+            <ww:url id="createLink" action="ajaxCreateIteration"
                 includeParams="none" />
-            <ww:a href="%{createLink}"  title="Create a new iteration">Iteration &raquo;</ww:a>
+            <ww:a href="%{createLink}"  title="Create a new iteration" cssClass="openCreateDialog openIterationDialog">Iteration &raquo;</ww:a>
         </c:when>
         <c:otherwise>
             <span class="inactive"
@@ -47,9 +48,9 @@ start by creating a new object.</p>
     <li>
     <c:choose>
         <c:when test="${hasIterations}">
-           <ww:url id="createLink" action="createIterationGoal"
+           <ww:url id="createLink" action="ajaxCreateIterationGoal"
                 includeParams="none" />
-           <ww:a href="%{createLink}"  title="Create a new iteration goal">Iteration goal &raquo;</ww:a>
+           <ww:a href="%{createLink}"  title="Create a new iteration goal" cssClass="openCreateDialog openIterationGoalDialog">Iteration goal &raquo;</ww:a>
         </c:when>
         <c:otherwise>
             <span class="inactive"

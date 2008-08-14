@@ -37,12 +37,12 @@ Effort estimate
 	<br />
 		Log effort for <c:out value="${currentUser.initials}"/> 
 		
-        <ww:url id="hourentryLink" action="createHourEntry" includeParams="none">
+        <ww:url id="hourentryLink" action="ajaxCreateHourEntry" includeParams="none">
 			<ww:param name="backlogItemId" value="${backlogItem.id}" />
 			<ww:param name="iterationId" value="${iterationId}" />
 			<ww:param name="autoclose" value="1" />
 		</ww:url>
-		 (<ww:a cssClass="openModalWindow" href="%{hourentryLink}&contextViewName=${contextViewName}&contextObjectId=${contextObjectId}">change</ww:a>)	
+		 (<ww:a cssClass="openCreateDialog openHourEntryDialog" href="%{hourentryLink}&contextViewName=${contextViewName}&contextObjectId=${contextObjectId}">change</ww:a>)	
 		
 		<br />
 		<ww:textfield size="5" name="spentEffort" id="effortSpent_${backlogItem.id}"/>  

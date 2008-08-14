@@ -7,12 +7,12 @@ import static org.easymock.EasyMock.verify;
 
 import java.util.ArrayList;
 
+import junit.framework.TestCase;
 import fi.hut.soberit.agilefant.business.impl.IterationGoalBusinessImpl;
 import fi.hut.soberit.agilefant.db.IterationGoalDAO;
+import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.IterationGoal;
-
-import junit.framework.TestCase;
 
 
 /**
@@ -79,6 +79,22 @@ public class IterationGoalBusinessTest extends TestCase {
         int newNumber = iterationGoalBusiness.getNewPriorityNumber(iteration);
         
         assertEquals((ig2.getPriority() + 1), newNumber);
+        
+        verify(iterationGoalDAO);
+    }
+    
+    public void testIterationGoalToJSON_noSuchGoal() {
+        iterationGoalDAO = createMock(IterationGoalDAO.class);
+        iterationGoalBusiness.setIterationGoalDAO(iterationGoalDAO);
+        
+        expect(iterationGoalDAO.get(123)).andReturn(null);
+        replay(iterationGoalDAO);
+        try {
+            iterationGoalBusiness.iterationGoalToJSON(123);
+            fail();
+        }
+        catch (ObjectNotFoundException onfe) {
+        }
         
         verify(iterationGoalDAO);
     }

@@ -1,13 +1,22 @@
 function test($) {
 	$.fn.extend({	
-		userselect: function(users) {
+		userselect: function(users, formfix) {
 			var me = this;
 			$.each(users, function(key, user) {
-				$(me).append(
-					$('<li></li>').html(
-						'<input type="checkbox" name="userIds[' + user.id + ']" class="user_' + user.id + '" />' + user.name
-					)
-				);
+			    if (formfix) {
+				    $(me).append(
+					   $('<li></li>').html(
+						  '<input type="checkbox" name="userIds[' + user.id + ']" class="user_' + user.id + '" />' + user.name
+					   )
+				    );
+				}
+				else {
+				    $(me).append(
+                       $('<li></li>').html(
+                          '<input type="checkbox" name="userIds" class="user_' + user.id + '" value="' + user.id + '"/>' + user.name
+                       )
+                    );
+				}
 			});
 			return this;
 		},
@@ -41,10 +50,10 @@ function test($) {
 			if( settings.users != undefined ) {
 				if( settings.users[0].prototype = Array ) {
 					$.each(settings.users, function(index, users) {
-						$(".users_" + index, me).empty().userselect(users); 
+						$(".users_" + index, me).empty().userselect(users, settings.formFix); 
 					});
 				} else {
-					$(".users", me).empty().userselect(settings.users);
+					$(".users", me).empty().userselect(settings.users, settings.formFix);
 				}
 			}
 			

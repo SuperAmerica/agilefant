@@ -17,6 +17,7 @@ import javax.persistence.Transient;
 import org.hibernate.annotations.Type;
 
 import fi.hut.soberit.agilefant.web.page.PageItem;
+import flexjson.JSON;
 
 /**
  * A Hibernate entity bean which represents an iteration goal.
@@ -40,7 +41,7 @@ import fi.hut.soberit.agilefant.web.page.PageItem;
 public class IterationGoal implements PageItem {
 
     private int id;
-
+    
     private Iteration iteration;
 
     private String name;
@@ -54,6 +55,7 @@ public class IterationGoal implements PageItem {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(nullable = false)
+    @JSON
     public int getId() {
         return id;
     }
@@ -63,6 +65,7 @@ public class IterationGoal implements PageItem {
     }
 
     @Type(type = "escaped_truncated_varchar")
+    @JSON
     public String getName() {
         return name;
     }
@@ -72,6 +75,7 @@ public class IterationGoal implements PageItem {
     }
 
     @Type(type = "escaped_text")
+    @JSON
     public String getDescription() {
         return description;
     }
@@ -88,18 +92,21 @@ public class IterationGoal implements PageItem {
 
     /** {@inheritDoc} */
     @Transient
+    @JSON(include = false)
     public Collection<PageItem> getChildren() {
         return null;
     }
 
     /** {@inheritDoc} */
     @Transient
+    @JSON(include = false)
     public PageItem getParent() {
         return getIteration();
     }
 
     @ManyToOne
     @JoinColumn(nullable = false)
+    @JSON(include = false)
     public Iteration getIteration() {
         return iteration;
     }
@@ -109,6 +116,7 @@ public class IterationGoal implements PageItem {
     }
 
     @OneToMany(mappedBy = "iterationGoal")
+    @JSON(include = false)
     public Collection<BacklogItem> getBacklogItems() {
         return backlogItems;
     }
@@ -118,6 +126,7 @@ public class IterationGoal implements PageItem {
     }
 
     @Column(nullable = false)
+    @JSON(include = false)
     public Integer getPriority() {
         return priority;
     }

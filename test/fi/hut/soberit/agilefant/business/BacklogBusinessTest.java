@@ -29,6 +29,7 @@ import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.IterationGoal;
 import fi.hut.soberit.agilefant.model.Priority;
+import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.util.BacklogLoadData;
@@ -50,6 +51,7 @@ public class BacklogBusinessTest extends TestCase {
     private AssignmentDAO assignmentDAO;
     private UserDAO userDAO;
     private BacklogItemHourEntryDAO bliheDAO;
+    private IterationGoalBusiness iterGoalBusiness;
 
         
     public void testChangePriorityOfMultipleItems() throws Exception {
@@ -548,9 +550,25 @@ public class BacklogBusinessTest extends TestCase {
         assertTrue(list.contains(projects.get(0)));
         assertTrue(list.contains(projects.get(1)));
         assertFalse(list.contains(projects.get(2)));
+    }
+    
+    public void testIterationGoalsAsJSON_noGoals() {
+        iterGoalBusiness = createMock(IterationGoalBusiness.class);
+        backlogBusiness.setIterationGoalBusiness(iterGoalBusiness);
         
-        // Iterations
-        
+        /* Create the test data */
+        Product prod = new Product();
+        prod.setId(6);
 
+        
+        /* The verified string */
+        String verifiedJson = "[]";
+
+        replay(iterGoalBusiness);
+        
+        String json = backlogBusiness.getIterationGoalsAsJSON(prod);
+        assertEquals(verifiedJson, json);
+        
+        verify(iterGoalBusiness);
     }
 }

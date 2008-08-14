@@ -12,11 +12,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
-
 import fi.hut.soberit.agilefant.business.BacklogBusiness;
 import fi.hut.soberit.agilefant.business.HistoryBusiness;
 import fi.hut.soberit.agilefant.business.HourEntryBusiness;
+import fi.hut.soberit.agilefant.business.IterationGoalBusiness;
 import fi.hut.soberit.agilefant.db.AssignmentDAO;
 import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
@@ -30,6 +29,7 @@ import fi.hut.soberit.agilefant.model.BacklogHistory;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.HistoryEntry;
 import fi.hut.soberit.agilefant.model.Iteration;
+import fi.hut.soberit.agilefant.model.IterationGoal;
 import fi.hut.soberit.agilefant.model.Priority;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
@@ -39,6 +39,7 @@ import fi.hut.soberit.agilefant.util.BacklogComparator;
 import fi.hut.soberit.agilefant.util.BacklogLoadData;
 import fi.hut.soberit.agilefant.util.BacklogMetrics;
 import fi.hut.soberit.agilefant.util.EffortSumData;
+import flexjson.JSONSerializer;
 
 /**
  * 
@@ -46,8 +47,6 @@ import fi.hut.soberit.agilefant.util.EffortSumData;
  * 
  */
 public class BacklogBusinessImpl implements BacklogBusiness {
-    
-    Logger log = Logger.getLogger(this.getClass());
     
     private BacklogItemDAO backlogItemDAO;
 
@@ -62,6 +61,8 @@ public class BacklogBusinessImpl implements BacklogBusiness {
     private IterationGoalDAO iterationGoalDAO;
     
     private HourEntryBusiness hourEntryBusiness;
+    
+    private IterationGoalBusiness iterationGoalBusiness;
 
     // @Override
     public void deleteMultipleItems(int backlogId, int[] backlogItemIds)
@@ -798,6 +799,19 @@ public class BacklogBusinessImpl implements BacklogBusiness {
         }
     }
     
+    /** {@inheritDoc} */
+    public String getIterationGoalsAsJSON(int backlogId) {
+        return getIterationGoalsAsJSON(backlogDAO.get(backlogId));
+    }
+    /** {@inheritDoc} */
+    public String getIterationGoalsAsJSON(Backlog backlog) {
+        if (backlog == null || !(backlog instanceof Iteration)) {
+            return "[]";
+        }      
+        Collection<IterationGoal> list = ((Iteration)backlog).getIterationGoals();
+        return new JSONSerializer().serialize(list);
+    }
+    
     public int getNumberOfAssignedUsers(Backlog backlog) {
         return getUsers(backlog, true).size();
     }
@@ -820,5 +834,13 @@ public class BacklogBusinessImpl implements BacklogBusiness {
 
     public void setHourEntryBusiness(HourEntryBusiness hourEntryBusiness) {
         this.hourEntryBusiness = hourEntryBusiness;
+    }
+
+    public IterationGoalBusiness getIterationGoalBusiness() {
+        return iterationGoalBusiness;
+    }
+
+    public void setIterationGoalBusiness(IterationGoalBusiness iterationGoalBusiness) {
+        this.iterationGoalBusiness = iterationGoalBusiness;
     }
 }

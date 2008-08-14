@@ -1,5 +1,6 @@
 package fi.hut.soberit.agilefant.business;
 
+import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.IterationGoal;
 
@@ -38,4 +39,20 @@ public interface IterationGoalBusiness {
      * @param iteration iteration where the iteration goal is created
      */
     public int getNewPriorityNumber(Iteration iteration);
+    
+    /**
+     * Convert iteration goal to JSON notation.
+     * @param iterGoal the iteration goal
+     * @return the JSON as a string
+     */
+    public String iterationGoalToJSON(IterationGoal iterGoal)
+        throws ObjectNotFoundException;
+    
+    /**
+     * Convert iteration goal to JSON notation.
+     * @param iterationGoalId the iteration goal
+     * @return the JSON as a string
+     */
+    public String iterationGoalToJSON(int iterationGoalId)
+        throws ObjectNotFoundException;
 }

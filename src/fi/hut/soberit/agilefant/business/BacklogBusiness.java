@@ -240,4 +240,18 @@ public interface BacklogBusiness {
      * @return
      */
     public BacklogMetrics getBacklogMetrics(Backlog backlog);
+    
+    /**
+     * Get the backlog's iteration goals as JSON.
+     * @param backlogId
+     * @return
+     */
+    public String getIterationGoalsAsJSON(int backlogId);
+    
+    /**
+     * Get the backlog's iteration goals as JSON.
+     * @param backlogId
+     * @return
+     */
+    public String getIterationGoalsAsJSON(Backlog backlog);
 }

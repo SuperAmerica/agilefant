@@ -25,14 +25,6 @@
 	</c:otherwise>
 </c:choose>
 
-<c:choose>
-	<c:when test="${backlogItemId == 0}">
-		<c:set var="new" value="New" scope="page" />
-	</c:when>
-	<c:otherwise>
-		<c:set var="new" value="" scope="page" />
-	</c:otherwise>
-</c:choose>
 
 <ww:form action="store${new}BacklogItem" method="post">
 	<ww:hidden name="backlogItemId" value="${backlogItem.id}" />	

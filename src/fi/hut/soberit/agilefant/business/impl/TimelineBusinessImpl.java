@@ -8,6 +8,7 @@ import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
+import fi.hut.soberit.agilefant.util.JSONUtils;
 
 public class TimelineBusinessImpl implements TimelineBusiness {
     
@@ -26,7 +27,7 @@ public class TimelineBusinessImpl implements TimelineBusiness {
         String json = "{";
         
         /* Add the product details */
-        json += "name:'" + stringToJSON(product.getName())
+        json += "name:'" + JSONUtils.stringToJSON(product.getName())
                         + "',id:" + product.getId()
                         + ",type:'product',\n"
         	        + "contents:[ \n";
@@ -37,7 +38,7 @@ public class TimelineBusinessImpl implements TimelineBusiness {
         /* Get the product's children */
         // TODO: remove the last comma
         for (Project project : product.getProjects()) {
-            json += "{name:'" + stringToJSON(project.getName())  + "'," +
+            json += "{name:'" + JSONUtils.stringToJSON(project.getName())  + "'," +
             		"id:" + project.getId() + "," + 
             		"type:'project'," +
             		"state:" + project.getStatus().getOrdinal() + "," +
@@ -47,7 +48,7 @@ public class TimelineBusinessImpl implements TimelineBusiness {
             
             /* Get the project's iterations */
             for (Iteration iter : project.getIterations()) {
-                json += "{name:'" + stringToJSON(iter.getName())  + "'," +
+                json += "{name:'" + JSONUtils.stringToJSON(iter.getName())  + "'," +
                     "id:" + iter.getId() + "," + 
                     "type:'iteration'," +
                     "startDate:'" + sdf.format(iter.getStartDate()) + "'," +
@@ -67,18 +68,6 @@ public class TimelineBusinessImpl implements TimelineBusiness {
         json += "\n]\n}";
         
         return json;
-    }
-    
-    /**
-     * Replace all carriage returns, newlines and quote-marks.
-     * @param str
-     * @return
-     */
-    private static String stringToJSON(String str) {
-       str = str.replaceAll("'", "\\\\'");
-       str = str.replaceAll("\n", "\\\\n");
-       str = str.replaceAll("\r", "\\\\r");
-       return str;
     }
 
     public ProductDAO getProductDAO() {

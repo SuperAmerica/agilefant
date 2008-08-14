@@ -49,6 +49,8 @@ public class IterationGoalAction extends ActionSupport implements CRUDAction {
     private EffortSumData origEstSum;
     
     //private AFTime origEstSum = new AFTime(0);
+    
+    private String iterationGoalsJSON = "";
 
     public String create() {
         iterationGoalId = 0;
@@ -167,6 +169,11 @@ public class IterationGoalAction extends ActionSupport implements CRUDAction {
             
         }
     }
+    
+    public String ajaxGetIterationGoals() {
+        iterationGoalsJSON = backlogBusiness.getIterationGoalsAsJSON(iterationId);        
+        return Action.SUCCESS;
+    }
 
     public Iteration getIteration() {
         return iteration;
@@ -242,6 +249,18 @@ public class IterationGoalAction extends ActionSupport implements CRUDAction {
 
     public void setHourEntryBusiness(HourEntryBusiness hourEntryBusiness) {
         this.hourEntryBusiness = hourEntryBusiness;
+    }
+
+    public String getIterationGoalsJSON() {
+        return iterationGoalsJSON;
+    }
+
+    public void setIterationGoalsJSON(String iterationGoalsJSON) {
+        this.iterationGoalsJSON = iterationGoalsJSON;
+    }
+
+    public BacklogBusiness getBacklogBusiness() {
+        return backlogBusiness;
     }
     
     

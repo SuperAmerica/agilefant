@@ -18,6 +18,7 @@ import org.hibernate.annotations.BatchSize;
 
 import fi.hut.soberit.agilefant.util.BacklogMetrics;
 import fi.hut.soberit.agilefant.web.page.PageItem;
+import flexjson.JSON;
 
 /**
  * A Hibernate entity bean which represents an iteration.
@@ -64,6 +65,7 @@ public class Iteration extends Backlog implements PageItem {
     /** The project, under which this iteration is. */
     @ManyToOne
     // @JoinColumn (nullable = false)
+    @JSON(include = false)
     public Project getProject() {
         return project;
     }
@@ -73,6 +75,7 @@ public class Iteration extends Backlog implements PageItem {
     }
 
     // @Column(nullable = false)
+    @JSON
     public Date getEndDate() {
         return endDate;
     }
@@ -89,6 +92,7 @@ public class Iteration extends Backlog implements PageItem {
     }
 
     // @Column(nullable = false)
+    @JSON
     public Date getStartDate() {
         return startDate;
     }
@@ -106,6 +110,7 @@ public class Iteration extends Backlog implements PageItem {
     
     /** {@inheritDoc} */
     @Transient
+    @JSON(include = false)
     public Collection<PageItem> getChildren() {
         // TODO Auto-generated method stub
         return null;
@@ -113,6 +118,7 @@ public class Iteration extends Backlog implements PageItem {
 
     /** {@inheritDoc} */
     @Transient
+    @JSON(include = false)
     public PageItem getParent() {
         // TODO Auto-generated method stub
         return getProject();
@@ -120,6 +126,7 @@ public class Iteration extends Backlog implements PageItem {
 
     /** {@inheritDoc} */
     @Transient
+    @JSON(include = false)
     public boolean hasChildren() {
         // TODO Auto-generated method stub
         return false;
@@ -127,6 +134,7 @@ public class Iteration extends Backlog implements PageItem {
 
     @OneToMany(mappedBy = "iteration")
     @OrderBy("priority asc")
+    @JSON(include = false)
     public Collection<IterationGoal> getIterationGoals() {
         return iterationGoals;
     }

@@ -1,6 +1,7 @@
 
 function submitDialogForm() {
     if($(this).valid()) {
+        $(this).find("#createButton").attr("disabled", "disabled");
         $.post($(this).attr("action"), $(this).serializeArray(),
             function(data, status) {
                 reloadPage();                
@@ -9,8 +10,172 @@ function submitDialogForm() {
     return false;
 }
 
-$(document).ready(function() {
+/**
+ * Not currently used anywhere, because the dialog windows are modals. 
+ */
+function confirmOpenCreateDialog(element) {
+    var e = $("<div class=\"flora confirmDialog\">"
+        +"<p>Previously opened dialogs will be destroyed! Really continue?</p>"
+        +"<form><input type=\"submit\" value=\"Yes\" class=\"yesButton\"/>&nbsp;"
+        +"<input type=\"submit\" value=\"No\" class=\"noButton\"/></form></div>");
+    e.appendTo(document.body);
     
+    /* Bind the buttons */
+    e.find(".yesButton").click(function() {
+        $(".createDialogWindow").dialog("destroy");
+        $(".createDialogWindow").remove();
+        openCreateDialog(element);
+        $('.ui-dialog-overlay').remove();
+        e.parent().parent().remove();
+        return false;
+    });
+    e.find(".noButton").click(function() {
+		$('.ui-dialog-overlay').remove();
+        e.parent().parent().remove();
+		return false;
+    });
+    
+    
+    var windowOptions = {
+        modal: true,
+        resizable: false,
+        draggable: false,
+        close: function() { e.dialog("destroy"); e.remove(); },
+        title: "Close open dialogs?",
+        height: 150,
+        width: 300,
+        overlay: {
+            "background-color": "#666666",
+            "filter": "alpha(opacity=50)",
+            "opacity": 0.5,
+            "-moz-opacity": 0.5,
+            "height": "100%",
+            "width": "100%"
+        }
+    }
+    
+    e.dialog(windowOptions);
+    return false;
+}
+
+function openCreateDialog(element) {
+    var dialog = $('<div class="flora createDialogWindow"></div>').appendTo(document.body).hide();
+	
+	var overlayUpdate = function() {
+       $('.ui-dialog-overlay').css("height",$(document).height()).css("width",$(document).width());
+    };
+	
+	/* Set the dialog window properties */
+	var windowOptions = {
+	    close: function() { 
+	       $(window).unbind('scroll',overlayUpdate);
+	       dialog.dialog("destroy"); dialog.remove();
+	    },
+	    width: 750, height: '',
+	    title: element.attr("title"),
+	    resizable: false,
+	    modal: true,
+	    overlay: {
+            "background-color": "#000000",
+            "filter": "alpha(opacity=20)",
+            "opacity": 0.20,
+            "-moz-opacity": 0.20,
+            "height": "100%",
+            "width": "100%"
+        }
+	};
+
+	
+	var dialogSetup = function(ruleset) {
+	    
+	    dialog.find('.closeDialogButton').click(function() {
+	        dialog.dialog("destroy");
+	        dialog.remove();
+	    });
+	    dialog.find('form').submit(submitDialogForm);
+	    dialog.show();
+	    /* Show it as a dialog */
+        dialog.dialog(windowOptions);
+        
+        dialog.find('.useWysiwyg').wysiwyg({controls : {
+            separator04 : { visible : true },
+            insertOrderedList : { visible : true },
+            insertUnorderedList : { visible : true }
+        }});
+        
+        var form = dialog.find('form');
+        form.validate(ruleset);
+        
+        dialog.css('height','100%');
+        
+        $(window).scroll(overlayUpdate);
+        overlayUpdate();
+	};
+	
+	var callback = function(data, status) {
+	    dialogSetup();
+	    return false;
+	};
+	
+	/* Check what kind of dialog window to open */
+	if (element.hasClass('openProjectDialog')) {
+	    callback = function(data, status) {
+	        dialogSetup(agilefantValidationRules.project);
+	    };
+	}
+	else if (element.hasClass('openThemeDialog')) {
+	    callback = function(data, status) {
+	        dialogSetup(agilefantValidationRules.theme);
+	    };
+	}
+	else if (element.hasClass('openProductDialog')) {
+	    callback = function(data, status) {
+	        dialogSetup(agilefantValidationRules.product);
+	    };
+	}
+	else if (element.hasClass('openIterationDialog')) {
+	    callback = function(data, status) {
+	        dialogSetup(agilefantValidationRules.iteration);
+	    };
+	}
+	else if (element.hasClass('openIterationGoalDialog')) {
+	    callback = function(data, status) {
+	        dialogSetup(agilefantValidationRules.iterationGoal);
+	    };
+	}
+	else if (element.hasClass('openBacklogItemDialog')) {
+        callback = function(data, status) {
+            dialogSetup(agilefantValidationRules.backlogItem);
+            getIterationGoals(dialog.find('#createBLIBacklogId').val(), '#createBLIIterGoalSelect');
+        };
+    }
+    else if (element.hasClass('openHourEntryDialog')) {
+        callback = function(data, status) {
+            windowOptions.title = "Log effort";
+            dialogSetup(agilefantValidationRules.hourEntry);
+        };
+    }
+	dialog.load(element.attr("href"), {}, callback);
+	return false;
+}
+
+/**
+ * Overwrite the size method of the dialog to prevent
+ * the library to set absolute height.
+ */
+jQuery.fn.dialog.prototype.size = function() {
+    return;
+}
+
+$(document).ready(function() {
+
+    /* Working on a request div */
+    $("#loadingDiv").ajaxStart(function() {
+        $(this).show();
+    });
+    $("#loadingDiv").ajaxStop(function() {
+        $(this).hide();
+    });
 
     /*
      *Initialize the wysiwyg editors
@@ -44,63 +209,13 @@ $(document).ready(function() {
 	 * Initialize the dialog windows for creating
 	 */
 	$('.openCreateDialog').click(function() {
-	    var dialog = $('<div class="flora"></div>').appendTo(document.body);
+        if ($("div.createDialogWindow").length == 0) {
+            openCreateDialog($(this));
+        }
+        else {
+            confirmOpenCreateDialog($(this));
+        }
+        return false;
+    });
 	    
-	    /* Set the dialog window properties */
-	    var windowOptions = {
-	        close: function() { dialog.remove(); },
-	        width: 500, height: 500,
-	        title: $(this).attr("title")
-	    };
-	    
-	    var dialogSetup = function() {
-	        dialog.find('.useWysiwyg').wysiwyg({controls : {
-	            separator04 : { visible : true },
-	            insertOrderedList : { visible : true },
-	            insertUnorderedList : { visible : true }
-	        }});
-	        dialog.find('.closeDialogButton').click(function() {
-	            dialog.dialog("destroy");
-	            dialog.remove();
-	        });
-	        dialog.find('form').submit(submitDialogForm);
-	    };
-	    
-	    var callback = function(data, status) {
-	        dialogSetup();
-	        return false;
-	    };
-	    
-	    /* Check what kind of dialog window to open */
-	    if ($(this).hasClass('openProjectDialog')) {
-	        windowOptions.width = 750;
-	        windowOptions.height = 540;
-	       
-	        /* Form validation */
-	        callback = function(data, status) {
-	            dialogSetup();
-	            var form = dialog.find('form');
-                form.validate(agilefantValidationRules.project);
-	        };
-	    }
-	    else if ($(this).hasClass('openThemeDialog')) {
-            windowOptions.width = 670;
-            windowOptions.height = 300;
-           
-            /* Form validation */
-            callback = function(data, status) {
-                dialogSetup();
-                var form = dialog.find('form');
-                form.validate(agilefantValidationRules.theme);
-            };
-	    }
-	    
-	    /* Load it */
-	    dialog.load($(this).attr("href"), {}, callback);
-	    
-	    
-	    /* Show it as a dialog */
-	    dialog.dialog(windowOptions);
-	    return false;
-	});
 });

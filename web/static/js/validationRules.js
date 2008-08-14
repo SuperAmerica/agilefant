@@ -32,6 +32,13 @@ jQuery.validator.addMethod("before", function(value, element, param) {
 }, "Date 1 must be before date 2");
 
 
+/*if($("#assigneeSelect2").find("input:checked[name^=userIds]").length == 0) {
+    if($("select[name='userId']").length == 0) {
+        alert("Select at least one user.");
+        return false;
+    }
+ }*/
+
 var agilefantValidationRules = {
 	backlogItem: {
         rules: {
@@ -101,18 +108,149 @@ var agilefantValidationRules = {
             "project.defaultOverhead": {
                 aftime: "Invalid format"
             }
-        },
-        errorPlacement: function(error, element) {
-            if (element.hasClass('datePickerField')) {
-                element.next().after(error);
-            }
-            else if ( element.parent().find('span.errorMessage').length > 0) {
-                error.appendTo( element.parent().find('span.errorMessage') );
-            }
-            else {
-                element.after( error );
-            }
         }
-	}
+	},
+	product: {
+	   rules: {
+	       "product.name": {
+	           required: true
+	       }
+	   },
+	   messages: {
+	       "product.name": {
+	           required: "Please enter a name"
+	       }
+	   }
+	},
+	iteration: {
+	   rules: {
+	       "iteration.name": {
+	           required: true
+	       },
+	       "projectId": {
+	           required: true
+	       },
+	       "startDate": {
+                required: true,
+                time: true,
+                before: [ "endDate" ]
+            },
+            "endDate": {
+                required: true,
+                time: true
+            },
+	   },
+	   messages: {
+	       "iteration.name": {
+               required: "Please enter a name"
+           },
+           "projectId": {
+               required: "Please select a project"
+           },
+           "startDate": {
+               required: "Please specify a start date",
+               time: "Invalid date format",
+               before: "Start date must be before end date"
+           },
+           "endDate": {
+               required: "Please specify a end date",
+               time: "Invalid date format"
+           },
+	   }
+	},
+	iterationGoal: {
+	   rules: {
+	       "iterationGoal.name": {
+	           required: true
+	       },
+	       "iterationId": {
+	           required: true
+	       }
+	   },
+	   messages: {
+	       "iterationGoal.name": {
+               required: "Please enter a name"
+           },
+           "iterationId": {
+               required: "Please select an iteration"
+           }
+	   }
+	},
+	backlogItem: {
+	   rules: {
+	       "backlogItem.name": {
+	           required: true
+	       },
+	       "backlogId": {
+	           required: true
+	       },
+	       "backlogItem.originalEstimate": {
+	           aftime: [ false ]
+	       }
+	   },
+	   messages: {
+	       "backlogItem.name": {
+               required: "Please enter a name"
+           },
+           "backlogId": {
+               required: "Please select a backlog"
+           },
+           "backlogItem.originalEstimate": {
+               aftime: "Invalid format"
+           }
+	   }
+	},
+    hourEntry: {
+       rules: {
+           "hourEntry.timeSpent": {
+               required: true,
+               aftime: [ true ]
+           },
+           "date": {
+               required: true,
+               time: true
+           },
+           "userIds": {
+               required: true, 
+               minlength: 1
+           }
+       },
+       messages: {
+           "hourEntry.timeSpent": {
+               required: "Please enter the time spent",
+               aftime: "Invalid format"
+           },
+           "date": {
+               required: "Please enter a date",
+               time: "Invalid format"
+           },
+           "userIds": {
+                required: "Select at least 1 user",
+                minlength: "Select at least 1 user"
+           }
+       }
+    }
 };
 agilefantValidationRules.businessTheme = agilefantValidationRules.theme;
+
+/*
+ * Add the error placement rules to each ruleset.
+ */
+jQuery.each(agilefantValidationRules, function() {
+    this.errorPlacement = function(error, element) {
+        var errorLabel;
+        if (element.hasClass('datePickerField')) {
+            element.next().after(error);
+        }
+        else if ( (errorLabel = element.parents("form:eq(0)").find('label.errorMessage[for="' + element.attr('name') + '"]')).length > 0) {
+            error.appendTo( errorLabel );
+            errorLabel.show();
+        }
+        else if ( element.parent().find('span.errorMessage').length > 0) {
+            error.appendTo( element.parent().find('span.errorMessage') );
+        }
+        else {
+            element.after( error );
+        }
+    };
+});

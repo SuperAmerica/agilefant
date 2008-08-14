@@ -22,25 +22,10 @@
 <ww:actionerror />
 <ww:actionmessage />
 
-<c:choose>
-	<c:when test="${iterationGoalId == 0}">
-		<h2>Create iteration goal</h2>
-	</c:when>
-	<c:otherwise>
-		<h2>Edit iteration goal</h2>
-	</c:otherwise>
-</c:choose>
+<h2>${iterationGoal.name}</h2>
 
-<c:choose>
-	<c:when test="${iterationGoalId == 0}">
-		<c:set var="new" value="New" scope="page" />
-	</c:when>
-	<c:otherwise>
-		<c:set var="new" value="" scope="page" />
-	</c:otherwise>
-</c:choose>
 
-<ww:form action="store${new}IterationGoal"  method="post">
+<ww:form action="storeIterationGoal"  method="post">
 	<ww:hidden name="iterationGoalId" value="${iterationGoal.id}" />
 	<table class="formTable">
 		<tr>
@@ -114,11 +99,11 @@
 			<table cellspacing="0" cellpadding="0">
                 <tr>
                 <td class="header">Backlog items <ww:url
-				id="createBacklogItemLink" action="createBacklogItem"
+				id="createBacklogItemLink" action="ajaxCreateBacklogItem"
 				includeParams="none">
 				<ww:param name="backlogId" value="${iteration.id}" />
 				<ww:param name="iterationGoalId" value="${iterationGoal.id}" />
-			</ww:url> <ww:a
+			</ww:url> <ww:a cssClass="openCreateDialog openBacklogItemDialog"
 				href="%{createBacklogItemLink}&contextViewName=editIterationGoal&contextObjectId=${iterationGoal.id}">Create new &raquo;</ww:a>
 				</td>
 				</tr>

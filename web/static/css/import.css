@@ -1070,7 +1070,7 @@ ul.themeList li a {
 .themeEditNameColumn {
 	width: 200px;
     white-space: nowrap;
-    overflow: visible;	
+    overflow: visible;
 }
 
 .themeDescriptionColumn {
@@ -1095,4 +1095,15 @@ select.statusSelect option {
 	background-repeat:no-repeat;
 	background-position:bottom left;
 	padding-left:30px;	
+}
+
+#loadingDiv {
+	background-color: #E8EBF0;
+	border: 1px solid #ccc;
+	font-weight: bold;
+	padding: 3px 5px;
+	position: fixed;
+	right: 20px;
+	top: 50px;
+	z-index: 3699;
 }

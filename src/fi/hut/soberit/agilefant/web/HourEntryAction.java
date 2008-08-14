@@ -1,11 +1,9 @@
 package fi.hut.soberit.agilefant.web;
 
+import java.text.ParseException;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-
-//import org.apache.commons.logging.Log;
-//import org.apache.commons.logging.LogFactory;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
@@ -16,8 +14,6 @@ import fi.hut.soberit.agilefant.db.ProjectDAO;
 import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.model.HourEntry;
 import fi.hut.soberit.agilefant.model.TimesheetLoggable;
-
-import java.text.ParseException;
 
 
 public class HourEntryAction extends ActionSupport implements CRUDAction {
@@ -37,7 +33,8 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
     private int iterationId;
     private int projectId;
     private int productId;
-    private Map<Integer, String> userIds = new HashMap<Integer, String>();
+    //private Map<Integer, String> userIds = new HashMap<Integer, String>();
+    private Set<Integer> userIds = new HashSet<Integer>();
     
     //private Log logger = LogFactory.getLog(getClass());
 
@@ -114,7 +111,7 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
                 super.addActionError(super.getText("hourEntry.noUsers"));
                 return Action.ERROR;
             }
-            hourEntryBusiness.addHourEntryForMultipleUsers(parent,storable, userIds.keySet());
+            hourEntryBusiness.addHourEntryForMultipleUsers(parent,storable, userIds);
         } 
         return Action.SUCCESS;
     }
@@ -212,14 +209,6 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
         this.userDAO = userDAO;
     }
 
-    public Map<Integer, String> getUserIds() {
-        return userIds;
-    }
-
-    public void setUserIds(Map<Integer, String> userIds) {
-        this.userIds = userIds;
-    }
-
     public int getIterationId() {
         return iterationId;
     }
@@ -251,4 +240,13 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
     public void setProjectDAO(ProjectDAO projectDAO) {
         this.projectDAO = projectDAO;
     }
+
+    public Set<Integer> getUserIds() {
+        return userIds;
+    }
+
+    public void setUserIds(Set<Integer> userIds) {
+        this.userIds = userIds;
+    }
+    
 }

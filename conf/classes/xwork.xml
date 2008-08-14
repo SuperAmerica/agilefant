@@ -146,6 +146,10 @@
 			class="productAction">
 			<result>/WEB-INF/jsp/editProduct.jsp</result>
 		</action>
+		<action name="ajaxCreateProduct" method="create"
+            class="productAction">
+            <result>/WEB-INF/jsp/forms/createProduct.jsp</result>
+        </action>
 		<action name="createProduct" method="create"
 			class="productAction">
 			<result>/WEB-INF/jsp/editProduct.jsp</result>
@@ -182,6 +186,10 @@
 			class="backlogItemAction">
 			<result>/WEB-INF/jsp/editBacklogItem.jsp</result>
 		</action>
+		<action name="ajaxCreateBacklogItem" method="create"
+            class="backlogItemAction">
+            <result>/WEB-INF/jsp/forms/createBacklogItem.jsp</result>
+        </action>
 		<action name="deleteBacklogItem" method="delete"
 			class="backlogItemAction">
 			<result type="redirect-action">
@@ -498,6 +506,10 @@
 			class="iterationAction">
 			<result>/WEB-INF/jsp/editIteration.jsp</result>
 		</action>
+		<action name="ajaxCreateIteration" method="create"
+            class="iterationAction">
+            <result>/WEB-INF/jsp/forms/createIteration.jsp</result>
+        </action>
 		<action name="deleteIteration" method="delete"
 			class="iterationAction">
 			<result type="redirect">
@@ -640,11 +652,19 @@
 			class="iterationGoalAction">
 			<result>/WEB-INF/jsp/editIterationGoal.jsp</result>
 		</action>
+		<action name="ajaxCreateIterationGoal" method="create"
+            class="iterationGoalAction">
+            <result>/WEB-INF/jsp/forms/createIterationGoal.jsp</result>
+        </action>
 		<action name="deleteIterationGoal" method="delete"
 			class="iterationGoalAction">
 			<result type="redirect">
 				editIteration.action?iterationId=${iterationId}
 			</result>
+		</action>
+		<action name="ajaxGetIterationGoals" method="ajaxGetIterationGoals"
+            class="iterationGoalAction">
+            <result>/WEB-INF/jsp/json/backlogsIterationGoalsJSON.jsp</result>
 		</action>
 		<action name="storeIterationGoal" method="store"
 			class="iterationGoalAction">
@@ -861,7 +881,9 @@
 		</action>
 		
 		<!-- Hour Entry actions -->
-		
+		<action name="ajaxCreateHourEntry" class="hourEntryAction" method="create">
+            <result>/WEB-INF/jsp/forms/createHourEntry.jsp</result>
+        </action>
 		<action name="createHourEntry" class="hourEntryAction" method="create">
 			<result>/WEB-INF/jsp/inc/_hourEntryModal.jsp</result>
 		</action>

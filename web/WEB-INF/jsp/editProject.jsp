@@ -41,16 +41,6 @@
 </c:if>
 
 <%--  TODO: fiksumpi virheenkäsittely --%>
-
-<c:choose>
-	<c:when test="${projectId == 0}">
-    	<c:set var="new" value="New" scope="page" />
-    </c:when>
-    <c:otherwise>
-    	<c:set var="new" value="" scope="page" />
-    </c:otherwise>
-</c:choose>
-
 <c:choose>
 	<c:when test="${empty projectTypes}">
 		<ww:url id="workTypeLink" action="createProjectType"
@@ -59,212 +49,7 @@
 	</c:when>
 	<c:otherwise>
 		<aef:productList />
-		<c:choose>
-			<c:when test="${projectId == 0}">
-				<h2>Create project</h2>
-				<div id="editProjectForm">
-			        <ww:form action="store${new}Project" method="post">
-            			<ww:hidden name="projectId" value="${project.id}" />
-			            <table class="formTable">
-            			    <tr>
-                    			<td>Name</td>
-                    			<td>*</td>
-                    			<td colspan="2"><ww:textfield size="60" name="project.name" /></td>
-                			</tr>
-                			<tr>
-                    			<td>Product</td>
-                    			<td>*</td>
-                    			<td colspan="2">
-                    				<select name="productId" onchange="disableIfEmpty(this.value, ['createButton']);">
-                        				<option class="inactive" value="">(select product)</option>
-                        				<c:forEach items="${productList}" var="product">
-                            				<c:choose>
-                               	 				<c:when test="${product.id == currentProductId}">
-                                    				<option selected="selected" value="${product.id}"
-                                        				title="${product.name}" class="productOption">${aef:out(product.name)}</option>
-                                				</c:when>
-                                				<c:otherwise>
-                                    				<option value="${product.id}" title="${product.name}" class="productOption">${aef:out(product.name)}</option>
-                                				</c:otherwise>
-                            				</c:choose>
-                        				</c:forEach>
-                    				</select>
-                    			</td>
-                			</tr>
-                			<tr>
-                    			<td>Project type</td>
-                    			<td></td>
-                    			<td colspan="2"><ww:select name="projectTypeId"
-                        			list="#attr.projectTypes" listKey="id" listValue="name"
-                        			value="${project.projectType.id}" /></td>
-                			</tr>
-                			<tr>
-								<td>Status</td>
-								<td></td>
-								<td colspan="2">															
-								<ww:select name="project.status"
-									id="statusSelect"
-									value="project.status.name"
-									list="@fi.hut.soberit.agilefant.model.Status@values()" listKey="name"
-									listValue="getText('project.status.' + name())"  />
-								</td>
-							</tr>
-                			<tr>
-                    			<td>Default Overhead</td>
-                    			<td></td>
-                    			<td colspan="2"><ww:textfield size="10" name="project.defaultOverhead" />/ person / week</td>
-                			</tr>
-			                <tr>
-            			        <td>Start date</td>
-                    			<td>*</td>
-                    			<td colspan="2">
-                    			<%--<ww:datepicker value="%{#start}" size="15"
-                        			showstime="true" format="%{getText('webwork.datepicker.format')}"
-                        			name="startDate" />--%>
-                        		<aef:datepicker id="start_date" name="startDate" format="%{getText('webwork.shortDateTime.format')}" value="%{#start}" />
-                        		</td>
-                			</tr>
-                			<tr>
-                    			<td>End date</td>
-                    			<td>*</td>
-                    			<td colspan="2">
-                    			<%--<ww:datepicker value="%{#end}" size="15"
-                        			showstime="true" format="%{getText('webwork.datepicker.format')}"
-                        			name="endDate" />--%>
-                        		<aef:datepicker id="end_date" name="endDate" format="%{getText('webwork.shortDateTime.format')}" value="%{#end}" />
-                        		</td>
-                			</tr>
-                			<tr>
-                    			<td>Assigned Users</td>
-                    			<td></td>
-                    			<td colspan="2">
-                    				<c:set var="divId" value="1" scope="page" />
-				                    <div id="assigneesLink">
-               							<a href="javascript:toggleDiv(${divId});">
-                        					<img src="static/img/users.png" />
-                        					<c:set var="listSize" value="${fn:length(project.responsibles)}" scope="page" />
-                        					<c:choose>
-                            					<c:when test="${listSize > 0}">
-                                					<c:set var="count" value="0" scope="page" />
-                                					<c:forEach items="${project.responsibles}" var="responsible">
-                                    					<c:choose>
-                                        					<c:when test="${count < listSize - 1}">
-                                            					<c:out value="${responsible.initials}" /><c:out value="${','}" />
-                                        					</c:when>
-                                        					<c:otherwise>
-                                            					<c:out value="${responsible.initials}" />
-                                        					</c:otherwise>
-                                    					</c:choose>
-                                    					<c:set var="count" value="${count + 1}" scope="page" />
-                                					</c:forEach>
-                            					</c:when>
-                            					<c:otherwise>
-                                					<c:out value="none" />
-                            					</c:otherwise>
-                        					</c:choose>
-                    					</a>
-                    				</div>
-                    				<div id="${divId}" style="display: none;">
-					                    <display:table name="${assignableUsers}" id="user" class="projectUsers"
-                   						    defaultsort="2">
-                        				<display:column title="">
-                          					<%--<c:forEach var="usr" items="${assignedUsers}">
-                                				<c:if test="${usr.id == user.id}">
-                                    				<c:set var="flag" value="1" scope="request" />
-                                				</c:if>
-                            				</c:forEach>--%>
-                            
-                            				<%-- Test, if the user should be checked --%>
-                            				<c:set var="flag" value="0" scope="request" />
-                            				<c:if test="${aef:listContains(assignedUsers, user)}">
-                                				<c:set var="flag" value="1" scope="request" />
-                            				</c:if>
-				                        	<c:choose>
-                			                	<c:when test="${flag == 1}">
-                           				        	<input type="checkbox" name="selectedUserIds"
-                                        				value="${user.id}" checked="checked" class="user_${user.id}" onchange="toggleDiv('${user.id}')"/>
-                                				</c:when>
-                                				<c:otherwise>
-                                    				<input type="checkbox" name="selectedUserIds"
-                                        				value="${user.id}" class="user_${user.id}" onchange="toggleDiv('${user.id}')"/>
-                               	 				</c:otherwise>
-                            				</c:choose>
-                        				</display:column>
-				                        <display:column title="User" sortProperty="fullName">
-				                            <c:choose>
-                					            <c:when test="${unassignedHasWork[user] == 1}">
-                              						<span style="color: red; height: 21px; margin: 0; padding: 0;">                     
-                            					</c:when>
-                            					<c:otherwise>
-                              						<span>
-                            					</c:otherwise>
-                            				</c:choose>
-                            				<c:out value="${user.fullName}" />
-                            				</span>
-                            
-                            				<%-- Test, if the user is not enabled --%>                      
-                            				<c:if test="${aef:listContains(disabledUsers, user)}">
-                                				<img src="static/img/disable_user_gray.png" alt="The user is disabled" title="The user is disabled" />
-                            				</c:if>
-                        				</display:column>                        				
-                        				<display:column title="Overhead +/-">
-										<!-- Check whether user is assigned. If is assigned -> show overhead -->
-											<c:choose>	
-											<c:when test="${flag == 1}"> 
-												<div id="${user.id}" class="overhead">
-											</c:when>
-											<c:otherwise>
-												<div id="${user.id}" class="overhead" Style="display: none;">
-											</c:otherwise>
-											</c:choose>																		
-											<ww:hidden name="assignments['${user.id}'].user.id" value="${user.id}"  />
-											<ww:textfield size="3"  name="assignments['${user.id}'].deltaOverhead" />
-											</div>																		
-										</display:column>																	
-                    				</display:table>
-				                    <div id="userselect" class="projectTeams">
-                				        <div class="right">
-                            				<label>Teams</label>
-                            				<ul class="groups" />
-                    					</div>
-                    					<script type="text/javascript">
-                        					$(document).ready( function() {
-                            					<aef:teamList />
-                            					<ww:set name="teamList" value="#attr.teamList" />
-                           	 					var teams = [<aef:teamJson items="${teamList}"/>]
-                            					$('#userselect').multiuserselect({groups: teams, root: $('#user')});
-                        					});
-                        				</script>
-                    				</div>
-			                    </td>
-                			</tr>
-			                <tr>
-                    			<td>Description</td>
-                    			<td></td>
-                    			<td colspan="2">&nbsp;<ww:textarea cols="70" rows="10" cssClass="useWysiwyg" 
-                        			name="project.description" /></td>
-                			</tr>
-			                <tr>
-                    			<td></td>
-                    			<td></td>
-                    			<c:choose>
-                        			<c:when test="${projectId == 0}">
-                            			<td><ww:submit value="Create" id="createButton" /></td>
-                        			</c:when>
-                        			<c:otherwise> <!-- 20080520 Vesa: This branch is probably never entered, projectId is always 0 here. -->
-                            			<td><ww:submit value="Save" /></td>
-                            			<td class="deleteButton"><ww:submit
-                                			onclick="return confirmDelete()" action="deleteProject"
-                                			value="Delete" /></td>
-                        			</c:otherwise>
-                    			</c:choose>
-                			</tr>
-            			</table>
-        			</ww:form>
-		        </div>
-			</c:when>
-			<c:otherwise>
-				<h2><c:out value="${project.name}" /></h2>
+			<h2><c:out value="${project.name}" /></h2>
 				<table>
 					<tbody>
 						<tr>
@@ -682,8 +467,6 @@
 						</tr>
 					</tbody>
 				</table>
-			</c:otherwise>
-		</c:choose>
 		<table>
 			<tr>
 				<td>
@@ -693,11 +476,11 @@
 								<table cellpadding="0" cellspacing="0">
 									<tr>
 					   					<td class="header">Iterations
-					   						<ww:url id="createLink" action="createIteration" includeParams="none" >
+					   						<ww:url id="createLink" action="ajaxCreateIteration" includeParams="none" >
 						  						<ww:param name="projectId" value="${project.id}" />
 					   						</ww:url>
 					   						<ww:a
-												href="%{createLink}&contextViewName=editProject&contextObjectId=${project.id}">Create new &raquo;</ww:a>
+												href="%{createLink}&contextViewName=editProject&contextObjectId=${project.id}" cssClass="openCreateDialog openIterationDialog">Create new &raquo;</ww:a>
 					   					</td>
 									</tr>
 								</table>
@@ -753,15 +536,17 @@
 									</p>
 								</div>
 							</c:if>
+							</div>
+							<div class="subItems">
 							<div class="subItemHeader">
 								<table cellpadding="0" cellspacing="0">
                     				<tr>
                        					<td class="header">Backlog items <ww:url
-												id="createBacklogItemLink" action="createBacklogItem"
+												id="createBacklogItemLink" action="ajaxCreateBacklogItem"
 												includeParams="none">
 												<ww:param name="backlogId" value="${project.id}" />
 											</ww:url>
-											<ww:a
+											<ww:a cssClass="openCreateDialog openBacklogItemDialog"
 												href="%{createBacklogItemLink}&contextViewName=editProject&contextObjectId=${project.id}">Create new &raquo;</ww:a>
 										</td>
 									</tr>

@@ -77,6 +77,11 @@ Agilefant
 </table>
 </div>
 
+<!-- Working on a request div -->
+<div id="loadingDiv">
+    Loading <img src="static/img/working.gif" alt="Working"/>
+</div>
+
 </div>
 <!-- /header -->
 
@@ -130,7 +135,6 @@ Agilefant
     </c:if>
 </c:forEach>
 
-
 <!-- Create new -menu -->
 <span id="createNewMenuLink">
 <a href="#">
@@ -142,8 +146,9 @@ Agilefant
 <aef:existingObjects />
 
 <ul id="createNewMenu" style="display: none">
-    <li><ww:url id="createLink" action="createProduct"
-        includeParams="none" /> <ww:a href="%{createLink}" title="Create a new product">Product &raquo;</ww:a>
+    <li><ww:url id="createLink" action="ajaxCreateProduct"
+        includeParams="none" />
+        <ww:a href="%{createLink}" title="Create a new product" cssClass="openCreateDialog openProductDialog">Product &raquo;</ww:a>
     </li>
 
     <li>
@@ -164,9 +169,9 @@ Agilefant
     <li>
     <c:choose>
         <c:when test="${hasProjects}">
-            <ww:url id="createLink" action="createIteration"
+            <ww:url id="createLink" action="ajaxCreateIteration"
                 includeParams="none" />
-            <ww:a href="%{createLink}"  title="Create a new iteration">Iteration &raquo;</ww:a>
+            <ww:a href="%{createLink}"  title="Create a new iteration" cssClass="openCreateDialog openIterationDialog">Iteration &raquo;</ww:a>
         </c:when>
         <c:otherwise>
             <span class="inactive"
@@ -178,9 +183,9 @@ Agilefant
     <li>
     <c:choose>
         <c:when test="${hasIterations}">
-		   <ww:url id="createLink" action="createIterationGoal"
+		   <ww:url id="createLink" action="ajaxCreateIterationGoal"
                 includeParams="none" />
-		   <ww:a href="%{createLink}"  title="Create a new iteration goal">Iteration goal &raquo;</ww:a>
+		   <ww:a href="%{createLink}"  title="Create a new iteration goal" cssClass="openCreateDialog openIterationGoalDialog">Iteration goal &raquo;</ww:a>
 	    </c:when>
         <c:otherwise>
             <span class="inactive"
@@ -193,9 +198,9 @@ Agilefant
     <li>
     <c:choose>
         <c:when test="${hasProducts}">
-            <ww:url id="createLink" action="createBacklogItem"
+            <ww:url id="createLink" action="ajaxCreateBacklogItem"
                 includeParams="none" />
-            <ww:a href="%{createLink}" title="Create a new backlog item">Backlog item &raquo;</ww:a>
+            <ww:a href="%{createLink}" title="Create a new backlog item" cssClass="openCreateDialog openBacklogItemDialog">Backlog item &raquo;</ww:a>
         </c:when>
         <c:otherwise>
             <span class="inactive"

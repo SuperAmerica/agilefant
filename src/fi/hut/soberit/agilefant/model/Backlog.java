@@ -303,4 +303,6 @@ public abstract class Backlog implements Assignable, TimesheetLoggable, PageItem
         }
         return users;
     }
+    @Transient
+    public abstract Integer getBacklogSize();
 }

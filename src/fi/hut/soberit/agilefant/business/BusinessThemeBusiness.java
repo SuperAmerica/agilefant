@@ -5,7 +5,10 @@ import java.util.List;
 import java.util.Map;
 
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
+import fi.hut.soberit.agilefant.model.Backlog;
+import fi.hut.soberit.agilefant.model.BacklogThemeBinding;
 import fi.hut.soberit.agilefant.model.BusinessTheme;
+import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.util.BusinessThemeMetrics;
 
 public interface BusinessThemeBusiness {
@@ -98,5 +101,34 @@ public interface BusinessThemeBusiness {
      */
     public void activateBusinessTheme(BusinessTheme businessTheme);
 
-    public Map<Integer, List<BusinessTheme>> loadThemesByBacklog(int backlogId);
+    public Map<Integer, List<BusinessTheme>> loadThemeCacheByBacklogId(int backlogId);
+    
+    /**
+     * Add or update binding between a backlog and business theme.
+     * 
+     * @param binding
+     */
+    public void addOrUpdateThemeToBacklog(BacklogThemeBinding binding);
+    
+    /**
+     * Add or update binding between a backlog and business theme.
+     * 
+     * @param themeId
+     * @param backlogId
+     * @param allocation Either percentage ("x.y%", "x%" or "x,y") or AFTime format.
+     */
+    public void addOrUpdateThemeToBacklog(int themeId, int backlogId, String allocation);
+    
+    public void multipleAddOrUpdateThemeToBacklog(int[] themeIds, int backlogId, String[] allocations);
+    
+    public void removeThemeFromBacklog(Backlog backlog, BusinessTheme businessTheme);
+    
+    public void removeThemeFromBacklog(int backlogId, int businessThemeId);
+    
+    public void removeThemeBinding(int bindingId);
+    
+    public void removeThemeBinding(BacklogThemeBinding binding);
+    
+    public List<BacklogThemeBinding> getIterationThemesByProject(Project project);
+    public List<BacklogThemeBinding> getIterationThemesByProject(int projectId);
 }

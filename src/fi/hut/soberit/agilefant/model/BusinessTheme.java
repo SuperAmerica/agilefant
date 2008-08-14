@@ -9,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.BatchSize;
@@ -45,6 +46,8 @@ public class BusinessTheme implements Comparable<BusinessTheme> {
     private boolean active;
     
     private Collection<BacklogItem> backlogItems;
+    
+    private Collection<BacklogThemeBinding> backlogBindings;
         
     /**
      * Get the id of this object.
@@ -117,5 +120,13 @@ public class BusinessTheme implements Comparable<BusinessTheme> {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+   @OneToMany(mappedBy="businessTheme")
+    public Collection<BacklogThemeBinding> getBacklogBindings() {
+        return backlogBindings;
+    }
+
+    public void setBacklogBindings(Collection<BacklogThemeBinding> backlogBindings) {
+        this.backlogBindings = backlogBindings;
     }
 }

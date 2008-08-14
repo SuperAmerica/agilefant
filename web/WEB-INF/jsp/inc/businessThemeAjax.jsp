@@ -4,6 +4,7 @@
 
 	<li><a href="#businessThemeEditTab-${businessThemeId}"><span><img src="static/img/edit.png" alt="Edit" /> Edit theme</span></a></li>
 	<li><a href="#businessThemeBLITab-${businessThemeId}"><span><img src="static/img/backlog.png" alt="Backlog items" /> Backlog items</span></a></li>
+	<li><a href="#businessThemeBLTab-${businessThemeId}"><span><img src="static/img/backlog.png" alt="Backlogs" /> Backlogs</span></a></li>
 </ul>
 <div id="businessThemeEditTab-${businessThemeId}" class="businessThemeNaviTab">
 <ww:form action="ajaxStoreBusinessTheme" method="post">
@@ -154,6 +155,25 @@
 No backlog items have been tagged with this theme.
 </c:otherwise>
 </c:choose>
+
+</div>
+<div id="businessThemeBLTab-${businessThemeId}" class="businessThemeNaviTab">
+<display:table class="listTable" name="businessTheme.backlogBindings" id="row" style="width:700px">
+	<!-- Display name -->
+	<display:column title="Name" style="width:355px">
+		<c:out value="${row.backlog.name}" />											
+	</display:column>
+	<display:column title="Allocation" style="width:100px">
+		<c:choose>
+			<c:when test="${row.relativeBinding} == 'true'">
+				<c:out value="${row.percentage}" />%
+			</c:when>
+			<c:otherwise>
+				<c:out value="${row.fixedSize}" />
+			</c:otherwise>
+		</c:choose>
+	</display:column>
+</display:table>
 
 </div>
 </div>

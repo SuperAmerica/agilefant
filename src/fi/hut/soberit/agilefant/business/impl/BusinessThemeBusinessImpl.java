@@ -16,8 +16,10 @@ import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.db.BusinessThemeDAO;
 import fi.hut.soberit.agilefant.db.ProductDAO;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
+import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
+import fi.hut.soberit.agilefant.model.BacklogThemeBinding;
 import fi.hut.soberit.agilefant.model.BusinessTheme;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Product;
@@ -87,7 +89,7 @@ public class BusinessThemeBusinessImpl implements BusinessThemeBusiness {
         return activeThemes;
     }
     
-    public Map<Integer, List<BusinessTheme>> loadThemesByBacklog(int backlogId) {
+    public Map<Integer, List<BusinessTheme>> loadThemeCacheByBacklogId(int backlogId) {
         Backlog bl = backlogDAO.get(backlogId);
         if(bl == null) {
             return new HashMap<Integer, List<BusinessTheme>>();
@@ -136,17 +138,6 @@ public class BusinessThemeBusinessImpl implements BusinessThemeBusiness {
             BusinessThemeMetrics metrics = new BusinessThemeMetrics();
             int donePercentage = 0;
             
-            /*
-            metrics.setNumberOfBlis(theme.getBacklogItems().size());            
-            int doneBlis = 0;
-            int donePercentage = 0;
-            for (BacklogItem bli: theme.getBacklogItems()) {
-                if (bli.getState() == State.DONE) {
-                    doneBlis++;
-                }
-            }
-            metrics.setNumberOfDoneBlis(doneBlis);
-            */
             metrics.setNumberOfBlis(((allItems.get(theme.getId()) != null ) ? allItems.get(theme.getId()) : 0));
             metrics.setNumberOfDoneBlis(((doneItems.get(theme.getId()) != null ) ? doneItems.get(theme.getId()) : 0));
 
@@ -270,7 +261,135 @@ public class BusinessThemeBusinessImpl implements BusinessThemeBusiness {
         businessTheme.setActive(false);
         businessThemeDAO.store(businessTheme);
     }
+    
+    public void addOrUpdateThemeToBacklog(BacklogThemeBinding binding) {
+        if (binding == null) {
+            return;
+        }
 
+        /*
+         * check if the binding is moved from product to iteration and remove
+         * product binding if one is found
+         */
+        if (binding.getBacklog() instanceof Iteration) {
+            Project proj = ((Iteration) binding.getBacklog()).getProject();
+            BacklogThemeBinding projectBinding = lookupBacklogThemeBinding(
+                    proj, binding.getBusinessTheme());
+            if (projectBinding != null) {
+                businessThemeDAO.removeBacklogThemeBinding(projectBinding);
+            }
+        }
+        /*
+         * return if target backlog is a product and one of product's child
+         * iterations already has the theme
+         */
+        if (binding.getBacklog() instanceof Project) {
+            Project proj = (Project) binding.getBacklog();
+            if (proj.getIterations() != null) {
+                for (Iteration iter : proj.getIterations()) {
+                    if (iter.getBusinessThemeBindings() != null) {
+                        for (BacklogThemeBinding bind : iter
+                                .getBusinessThemeBindings()) {
+                            if (bind.getBusinessTheme() == binding
+                                    .getBusinessTheme()) {
+                                return;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        businessThemeDAO.saveOrUpdateBacklogThemeBinding(binding);
+    }
+    
+    public void multipleAddOrUpdateThemeToBacklog(int[] themeIds, int backlogId, String[] allocations) {
+        for(int i = 0 ; i < themeIds.length; i++) {
+            addOrUpdateThemeToBacklog(themeIds[i], backlogId, allocations[i]);
+        }
+    }
+    
+    private BacklogThemeBinding lookupBacklogThemeBinding(Backlog bl, BusinessTheme theme) {
+        if(theme.getBacklogBindings() == null) {
+            return null;
+        }
+        for(BacklogThemeBinding bind : theme.getBacklogBindings()) {
+            if(bind.getBacklog() == bl) {
+                return bind;
+            }
+        }
+        return null;
+    }
+    public void addOrUpdateThemeToBacklog(int themeId, int backlogId, String allocation) { 
+        String trimmed = allocation.trim();
+        Backlog bl = backlogDAO.get(backlogId);
+        BusinessTheme theme = businessThemeDAO.get(themeId);
+        //check for existing binding
+        BacklogThemeBinding binding = lookupBacklogThemeBinding(bl, theme);
+        
+        if(binding == null) {
+            binding = new BacklogThemeBinding();
+            binding.setBusinessTheme(theme);
+            binding.setBacklog(bl);
+        }
+        
+        /* parse allocation format and find out whether it is a relative or
+         * fixed binding. Relative binding should have format "12%", "12.3%" or "12,3%".
+         * As fixed format should be standard AFTime format.
+         */
+        if(trimmed.charAt(trimmed.length() - 1) == '%') { //relative
+            try {
+                trimmed  = trimmed.substring(0,trimmed.length()-1);
+                binding.setPercentage(new Float(Float.parseFloat(trimmed)));
+            } catch(Exception e) {
+                binding.setPercentage(null);
+            }
+            binding.setRelativeBinding(true);
+        } else { //fixed
+            binding.setRelativeBinding(false);
+            try {
+                binding.setFixedSize(new AFTime(trimmed, false));
+            } catch(Exception e) {
+                binding.setFixedSize(null);
+            }
+        }
+        addOrUpdateThemeToBacklog(binding);
+        
+    }
+
+    public void removeThemeFromBacklog(Backlog backlog,
+            BusinessTheme businessTheme) {
+        if(backlog == null || businessTheme == null) {
+            return;
+        }
+        BacklogThemeBinding binding = lookupBacklogThemeBinding(backlog, businessTheme);
+        if(binding != null) {
+            businessThemeDAO.removeBacklogThemeBinding(binding);
+        }
+        
+    }
+    
+    public void removeThemeBinding(BacklogThemeBinding binding) {
+        if(binding != null) {
+            businessThemeDAO.removeBacklogThemeBinding(binding);
+        }
+    }
+    
+    public void removeThemeBinding(int bindingId) {
+        removeThemeBinding(businessThemeDAO.getBindingById(bindingId));
+    }
+    public void removeThemeFromBacklog(int backlogId, int businessThemeId) {
+        removeThemeFromBacklog(backlogDAO.get(backlogId), businessThemeDAO.get(businessThemeId));
+    }
+    
+    public List<BacklogThemeBinding> getIterationThemesByProject(Project project) {
+        return businessThemeDAO.getIterationThemesByProject(project);
+    }
+
+    public List<BacklogThemeBinding> getIterationThemesByProject(int projectId) {
+        return getIterationThemesByProject((Project)backlogDAO.get(projectId));
+    }
+    /* getters and setters */
+    
     public ProductDAO getProductDAO() {
         return productDAO;
     }
@@ -290,5 +409,9 @@ public class BusinessThemeBusinessImpl implements BusinessThemeBusiness {
     public void setBacklogDAO(BacklogDAO backlogDAO) {
         this.backlogDAO = backlogDAO;
     }
+
+
+
+
 
 }

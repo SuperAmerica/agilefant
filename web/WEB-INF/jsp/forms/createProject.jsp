@@ -67,6 +67,13 @@
 						</td>
 				</tr>
 				<tr>
+					<td>Planned project size</td>
+					<td></td>
+					<td colspan="2"><ww:textfield size="10" id="project.backlogSize"
+						name="project.backlogSize" /> (total man hours)
+						</td>
+				</tr>
+				<tr>
 					<td>Start date</td>
 					<td>*</td>
 					<td colspan="2"><aef:datepicker

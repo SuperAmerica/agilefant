@@ -174,6 +174,13 @@
 								</c:forEach>
 							</select></td>
 						</tr>
+
+                        <tr>
+							<td>Planned iteration size</td>
+							<td></td>
+							<td colspan="2"><ww:textfield size="10" id="iteration.backlogSize" name="iteration.backlogSize" /> (total man hours)
+							</td>
+						</tr>
 						<tr>
 							<td>Start date</td>
 							<td>*</td>
@@ -243,8 +250,94 @@ $(document).ready( function() {
         $.get(me.attr('href'), null, function() {me.movebottom();});
         return false;
         });
+   $('#addIterationBusinessTheme').click(function() {
+   		var table = $('#businessThemeTable > tbody');
+		var html = $(backlogThemeHtml);
+		table.append(html);
+		html.attr("auto-generated","1");
+		html.find(":reset").click(function() {
+			html.remove();
+			if(table.find(":reset").length == 0) {
+				$("#backlogThemeSave").hide();
+			}
+			return false;
+		});
+		$("#backlogThemeSave").show();
+   		return false;
+   });
 });
+function editBacklogThemeBinding(element,binding,theme,relative,fixed,percentage) {
+	var table = $('#businessThemeTable > tbody');
+	var row = $(element).parents('tr:eq(0)');
+	var newRow = $(backlogThemeHtml);
+   	var oldData = row.replaceWith(newRow);
+   	row = newRow;
+   	row.find(':reset').click(function() {  		
+   		row.replaceWith(oldData);
+   		if(table.find(":reset").length == 0) {
+	   		$("#backlogThemeSave").hide();
+   		}
+   	});
+   	$("#backlogThemeSave").show();
+   	var bindVal = (relative) ? percentage + '%' : fixed;
+   	row.find("select[name='businessThemeIds']").val(theme);
+   	row.find(":text[name='plannedSpendings']").val(bindVal);
+   	row.find("td:eq(0)").append($('<input type="hidden" name="bindingIds" value="'+binding+'"/>'));
+   	
+}
+function deleteBacklogThemeBinding(element,id) {
+	var row = $(element).parents('tr:eq(0)');
+	jQuery.post("removeThemeFromBacklog.action",{bindingId: id},function() {
+		row.remove();
+	});
+}
 </script>
+<table>
+	<tr>
+		<td>
+			<c:if test="${iterationId != 0}">
+				<div class="subItems">
+					<div class="subItemHeader">
+					    <table cellspacing="0" cellpadding="0">
+            			    <tr>
+            			    	<td class="header">Themes <a id="addIterationBusinessTheme" href="#">Attach theme &raquo;</a></td>
+							</tr>
+						</table>
+					</div>
+					<c:if test="${!empty iteration.businessThemeBindings}">
+						<div class="subItemContent">
+						<ww:form action="storeBacklogThemebinding" method="post">
+						<ww:hidden name="backlogId" value="${iteration.id}"/>
+						<input type="hidden" name="contextViewName" value="iteration" />
+						<p><display:table htmlId="businessThemeTable" class="listTable" name="iteration.businessThemeBindings" id="row" requestURI="editIteration.action">
+
+							<display:column sortable="true" title="Name" sortProperty="businessTheme.name">
+								<c:out value="${row.businessTheme.name}"/>
+							</display:column>
+							
+							<display:column sortable="true" sortProperty="boundEffort" title="Planned spending">
+								<c:choose>
+									<c:when test="${row.relativeBinding == true}">
+										<c:out value="${row.boundEffort}"/>
+										(<c:out value="${row.percentage}"/>%)
+									</c:when>
+									<c:otherwise><c:out value="${row.fixedSize}"/></c:otherwise>
+								</c:choose>
+							</display:column>
+							<display:column sortable="false" title="Actions">
+								<img style="cursor: pointer;" class="edit_backlog_theme" onclick="editBacklogThemeBinding(this,${row.id}, ${row.businessTheme.id},${row.relativeBinding},'${row.fixedSize}','${row.percentage}');" src="static/img/edit.png" title="Edit" />
+								<img style="cursor: pointer;" class="delete_backlog_theme" onclick="deleteBacklogThemeBinding(this,${row.id});" src="static/img/delete_18.png" title="Delete" />
+							</display:column>
+						</display:table></p>
+						<input id="backlogThemeSave" style="display: none"; type="submit" value="Save" />
+						</ww:form>				
+						</div>
+					</c:if>
+				</div>
+			</c:if>
+		</td>
+	</tr>
+</table>
 
 
 	<table>

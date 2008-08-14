@@ -3,6 +3,7 @@ package fi.hut.soberit.agilefant.model;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -12,6 +13,7 @@ import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
+
 
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.OrderBy;
@@ -70,6 +72,10 @@ public class Project extends Backlog implements PageItem {
     private Status status = Status.OK;
     
     private ProjectMetrics metrics;
+    
+    private Integer backlogSize;
+    
+    private Collection<BacklogThemeBinding> businessThemeBindings;
 
     /** The product, under which this project belongs. */
     @ManyToOne
@@ -244,5 +250,29 @@ public class Project extends Backlog implements PageItem {
 
     public void setMetrics(ProjectMetrics metrics) {
         this.metrics = metrics;
+    }
+
+    /**
+     * Estimation of required resources (total man hours) for project.
+     * 
+     * @return
+     */
+    public Integer getBacklogSize() {
+        return backlogSize;
+    }
+
+    public void setBacklogSize(Integer backlogSize) {
+        this.backlogSize = backlogSize;
+    }
+
+    @OneToMany(mappedBy="backlog")
+    //@OrderBy(clause="businessTheme.name asc")
+    public Collection<BacklogThemeBinding> getBusinessThemeBindings() {
+        return businessThemeBindings;
+    }
+
+    public void setBusinessThemeBindings(
+            Collection<BacklogThemeBinding> businessThemeBindings) {
+        this.businessThemeBindings = businessThemeBindings;
     }
 }

@@ -51,6 +51,12 @@
 			</select></td>
 		</tr>
 		<tr>
+			<td>Planned iteration size</td>
+			<td></td>
+			<td colspan="2"><ww:textfield size="10" id="iteration.backlogSize"
+				name="iteration.backlogSize" /> (total man hours)</td>
+		</tr>
+		<tr>
 			<td>Start date</td>
 			<td>*</td>
 			<td colspan="2"><aef:datepicker

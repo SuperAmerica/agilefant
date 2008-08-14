@@ -140,7 +140,7 @@ public class IterationAction extends ActionSupport implements CRUDAction {
         
         // Load metrics data
         iterationMetrics = backlogBusiness.getBacklogMetrics(iteration);
-        bliThemeCache = businessThemeBusiness.loadThemesByBacklog(iterationId);
+        bliThemeCache = businessThemeBusiness.loadThemeCacheByBacklogId(iterationId);
         
         return Action.SUCCESS;
     }
@@ -220,6 +220,7 @@ public class IterationAction extends ActionSupport implements CRUDAction {
         fillable.setProject(this.project);
         fillable.setName(this.iteration.getName());
         fillable.setDescription(this.iteration.getDescription());
+        fillable.setBacklogSize(this.iteration.getBacklogSize());
         if (fillable.getStartDate().after(fillable.getEndDate())) {
             super
                     .addActionError(super

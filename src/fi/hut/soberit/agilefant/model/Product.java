@@ -136,5 +136,10 @@ public class Product extends Backlog implements PageItem {
     public void setBusinessThemes(Set<BusinessTheme> businessThemes) {
         this.businessThemes = businessThemes;
     }
-        
+    
+    @Transient
+    public Integer getBacklogSize() {
+        return null;
+    }
 }
+        

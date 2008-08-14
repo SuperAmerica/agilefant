@@ -39,7 +39,7 @@ import flexjson.JSON;
  * items can be bound to. Iteration goals are higher level concepts. Multiple
  * backlog items can work towards a single iteration goal.
  * 
- * @see fi.hut.soberit.agilefant.model.Backlog
+ * @see fi.hut.soberit.agilefant.model.Backlog 
  * @see fi.hut.soberit.agilefant.model.BacklogItem
  * @see fi.hut.soberit.agilefant.model.Iteration
  * @see fi.hut.soberit.agilefant.model.IterationGoal
@@ -57,10 +57,11 @@ public class Iteration extends Backlog implements PageItem {
     private Collection<IterationGoal> iterationGoals = new HashSet<IterationGoal>();
     
     private BacklogMetrics metrics;
+    
+    private Integer backlogSize;
+    
+    private Collection<BacklogThemeBinding> businessThemeBindings;
 
-    // private User owner;
-
-    //private Log logger = LogFactory.getLog(getClass());
 
     /** The project, under which this iteration is. */
     @ManyToOne
@@ -169,5 +170,30 @@ public class Iteration extends Backlog implements PageItem {
     public void setMetrics(BacklogMetrics metrics) {
         this.metrics = metrics;
     }
+    
+    /**
+     * Estimation of required resources (total man hours) for iteration.
+     * 
+     * @return
+     */
+    public Integer getBacklogSize() {
+        return backlogSize;
+    }
 
+    public void setBacklogSize(Integer backlogSize) {
+        this.backlogSize = backlogSize;
+    }
+    
+    @OneToMany(mappedBy="backlog")
+    //@OrderBy(value="businessThem.name asc")
+    public Collection<BacklogThemeBinding> getBusinessThemeBindings() {
+        return businessThemeBindings;
+    }
+
+    public void setBusinessThemeBindings(
+            Collection<BacklogThemeBinding> businessThemeBindings) {
+        this.businessThemeBindings = businessThemeBindings;
+    }
+
+    
 }

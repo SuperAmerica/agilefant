@@ -125,7 +125,7 @@ public class ProductAction extends ActionSupport implements CRUDAction {
             origEstSums.put(pro, projectOrigEstSum);
         }
         
-        bliThemeCache = businessThemeBusiness.loadThemesByBacklog(productId);
+        bliThemeCache = businessThemeBusiness.loadThemeCacheByBacklogId(productId);
         System.out.println("LISTING:::");
         return Action.SUCCESS;
     }

@@ -28,6 +28,7 @@ import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.Assignment;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
+import fi.hut.soberit.agilefant.model.BacklogThemeBinding;
 import fi.hut.soberit.agilefant.model.BusinessTheme;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Product;
@@ -112,6 +113,8 @@ public class ProjectAction extends ActionSupport implements CRUDAction {
     private Map<Integer, List<BusinessTheme>> bliThemeCache;
 
     private BusinessThemeBusiness businessThemeBusiness;
+    
+    private List<BacklogThemeBinding> iterationThemes;
     
 
     public Map<Integer, List<BusinessTheme>> getBliThemeCache() {
@@ -218,7 +221,9 @@ public class ProjectAction extends ActionSupport implements CRUDAction {
             iter.setMetrics(backlogBusiness.getBacklogMetrics(iter));
         }
         
-        bliThemeCache = businessThemeBusiness.loadThemesByBacklog(projectId);
+        bliThemeCache = businessThemeBusiness.loadThemeCacheByBacklogId(projectId);
+        iterationThemes = businessThemeBusiness.getIterationThemesByProject(project);
+        
         return Action.SUCCESS;
     }
 
@@ -393,6 +398,7 @@ public class ProjectAction extends ActionSupport implements CRUDAction {
         storable.setName(project.getName());
         storable.setDescription(project.getDescription());
         storable.setDefaultOverhead(project.getDefaultOverhead());
+        storable.setBacklogSize(this.project.getBacklogSize());
     }
 
     public int getProjectId() {
@@ -609,5 +615,9 @@ public class ProjectAction extends ActionSupport implements CRUDAction {
 
     public Map<Integer, AFTime> getTotalOverheads() {
         return totalOverheads;
+    }
+
+    public List<BacklogThemeBinding> getIterationThemes() {
+        return iterationThemes;
     }
 }

@@ -30,6 +30,17 @@ public class BusinessThemeAction extends ActionSupport implements CRUDAction {
     
     private int backlogItemId;
     
+    private int bindingId;
+    
+    private int backlogId;
+    
+    private int[] businessThemeIds;
+    
+    private String[] plannedSpendings;
+    
+    private String ContextViewName;
+    
+
     public String create() {
         businessThemeId = 0;
         businessTheme = new BusinessTheme();
@@ -165,6 +176,27 @@ public class BusinessThemeAction extends ActionSupport implements CRUDAction {
         }
         return list();       
     }
+    
+    public String storeThemeBinding() {
+        System.out.println(businessThemeIds);
+        System.out.println(backlogId);
+        System.out.println(plannedSpendings);
+        System.out.println("\n\n\n\n\n-------------");
+        if(businessThemeIds != null && backlogId > 0 && plannedSpendings != null) {
+            businessThemeBusiness.multipleAddOrUpdateThemeToBacklog(businessThemeIds, backlogId, plannedSpendings);
+        }
+        return Action.SUCCESS;
+    }
+    
+    public String removeThemeBinding() {
+        if(bindingId > 0) {
+            businessThemeBusiness.removeThemeBinding(bindingId);
+            return CRUDAction.AJAX_SUCCESS;
+        } else {
+            return CRUDAction.AJAX_ERROR;
+        }
+    }
+    
     public int getBusinessThemeId() {
         return businessThemeId;
     }
@@ -208,5 +240,31 @@ public class BusinessThemeAction extends ActionSupport implements CRUDAction {
     public Collection<BusinessTheme> getBliBusinessThemes() {
         return bliBusinessThemes;
     }    
+    public void setBindingId(int bindingId) {
+        this.bindingId = bindingId;
+    }
+
+    public void setBacklogId(int backlogId) {
+        this.backlogId = backlogId;
+    }
     
+    public int getBacklogId() {
+        return this.backlogId;
+    }
+
+    public void setPlannedSpendings(String[] plannedSpendings) {
+        this.plannedSpendings = plannedSpendings;
+    }
+    
+    public void setBusinessThemeIds(int[] businessThemeIds) {
+        this.businessThemeIds = businessThemeIds;
+    }
+
+    public String getContextViewName() {
+        return ContextViewName;
+    }
+
+    public void setContextViewName(String contextViewName) {
+        ContextViewName = contextViewName;
+    }
 }

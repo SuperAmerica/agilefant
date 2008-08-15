@@ -223,7 +223,7 @@ function showOldEffort() {
                                 var selected = [];
                                 </c:otherwise>
                                 </c:choose>
-                                $('#userselect2').multiuserselect({users: [preferred, project, other], groups: teams, root: $('#userselect2'), formfix: true}).selectusers(selected);
+                                $('#userselect2').multiuserselect({users: [preferred, project, other], groups: teams, root: $('#userselect2'), formFix: true}).selectusers(selected);
                             });
                         </script>
                     </div>
@@ -254,10 +254,10 @@ function showOldEffort() {
         </tr>
         <tr>
             <td></td>
-            <td></td>               
-            <td>
-            <ww:submit value="Store"/>
-             </td>
+            <td></td>
+            <td><ww:submit value="Store" id="createButton" /></td>
+            <td class="deleteButton"><ww:reset value="Cancel"
+                cssClass="closeDialogButton" /></td>
         </tr>
     </table>
 </ww:form>

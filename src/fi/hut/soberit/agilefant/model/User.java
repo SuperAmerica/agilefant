@@ -21,6 +21,7 @@ import org.hibernate.annotations.Type;
 
 import fi.hut.soberit.agilefant.db.hibernate.Email;
 import fi.hut.soberit.agilefant.web.page.PageItem;
+import flexjson.JSON;
 
 /**
  * Hibernate entity bean representing a user. User represents a person using the
@@ -69,6 +70,7 @@ public class User implements PageItem {
     @GeneratedValue(strategy = GenerationType.AUTO)
     // not nullable
     @Column(nullable = false)
+    @JSON
     public int getId() {
         return id;
     }
@@ -84,6 +86,7 @@ public class User implements PageItem {
 
     /** Get full name. */
     @Type(type = "escaped_truncated_varchar")
+    @JSON
     public String getFullName() {        
         return fullName;
     }
@@ -96,6 +99,7 @@ public class User implements PageItem {
     /** Get login name. */
     @Column(unique = true)
     @Type(type = "escaped_truncated_varchar")
+    @JSON
     public String getLoginName() {
         return loginName;
     }
@@ -107,6 +111,7 @@ public class User implements PageItem {
 
     /** Get password. */
     @Type(type = "truncated_varchar")
+    @JSON(include = false)
     public String getPassword() {
         return password;
     }
@@ -118,6 +123,7 @@ public class User implements PageItem {
 
     /** {@inheritDoc} */
     @Transient
+    @JSON(include = false)
     public Collection<PageItem> getChildren() {
         // TODO Auto-generated method stub
         return null;
@@ -125,12 +131,14 @@ public class User implements PageItem {
 
     /** Get login name. */
     @Transient
+    @JSON
     public String getName() {
         return this.loginName;
     }
 
     /** {@inheritDoc} */
     @Transient
+    @JSON(include = false)
     public PageItem getParent() {
         return null;
     }
@@ -144,6 +152,7 @@ public class User implements PageItem {
 
     /** Get backlog items, of which the user is responsible. */
     @ManyToMany(mappedBy = "responsibles", targetEntity = fi.hut.soberit.agilefant.model.BacklogItem.class, fetch = FetchType.LAZY)
+    @JSON(include = false)
     public Collection<BacklogItem> getBacklogItems() {
         return backlogItems;
     }
@@ -155,6 +164,7 @@ public class User implements PageItem {
 
     /** Get backlogs, where the user is assigned. */
     @OneToMany(mappedBy = "assignee")
+    @JSON(include = false)
     public Collection<Backlog> getBacklogs() {
         return backlogs;
     }
@@ -166,6 +176,7 @@ public class User implements PageItem {
 
     /** Set all Assignables, where this user is assigned. */
     @Transient
+    @JSON(include = false)
     public Collection<Assignable> getAssignables() {
         Collection<Assignable> collection = new HashSet<Assignable>();
 
@@ -182,6 +193,7 @@ public class User implements PageItem {
     @Column(nullable = true)
     @Email
     @Type(type = "truncated_varchar")
+    @JSON
     public String getEmail() {
         return email;
     }
@@ -195,6 +207,7 @@ public class User implements PageItem {
     }
 
     @OneToMany(mappedBy = "user")
+    @JSON(include = false)
     public Collection<Assignment> getAssignments() {
         return assignments;
     }
@@ -208,6 +221,7 @@ public class User implements PageItem {
      * 
      * @return the initials
      */
+    @JSON
     public String getInitials() {
         return initials;
     }
@@ -224,6 +238,7 @@ public class User implements PageItem {
        
     @Type(type = "af_time")
     @Column(columnDefinition = "integer default 144000")
+    @JSON
     public AFTime getWeekHours() {       
         return weekHours;        
     }
@@ -246,6 +261,7 @@ public class User implements PageItem {
             joinColumns = {@JoinColumn( name = "User_id" )},
             inverseJoinColumns = {@JoinColumn( name = "Team_id")}
     )
+    @JSON(include = false)
     public Collection<Team> getTeams() {
         return teams;
     }
@@ -264,6 +280,7 @@ public class User implements PageItem {
      * @return true, if user is disabled, false otherwise
      */
     @Column(columnDefinition = "boolean default 1")
+    @JSON
     public boolean isEnabled() {
         return enabled;
     }

@@ -86,8 +86,8 @@ function openCreateDialog(element) {
 	};
 
 	
-	var dialogSetup = function(ruleset) {
-	    
+	var dialogSetup = function(ruleset, emptyTitle) {
+	    ((windowOptions.title == "") && (windowOptions.title = emptyTitle));
 	    dialog.find('.closeDialogButton').click(function() {
 	        dialog.dialog("destroy");
 	        dialog.remove();
@@ -120,39 +120,43 @@ function openCreateDialog(element) {
 	/* Check what kind of dialog window to open */
 	if (element.hasClass('openProjectDialog')) {
 	    callback = function(data, status) {
-	        dialogSetup(agilefantValidationRules.project);
+	        dialogSetup(agilefantValidationRules.project, "Create a new project");
 	    };
 	}
 	else if (element.hasClass('openThemeDialog')) {
 	    callback = function(data, status) {
-	        dialogSetup(agilefantValidationRules.theme);
+	        dialogSetup(agilefantValidationRules.theme, "Create a new theme");
 	    };
 	}
 	else if (element.hasClass('openProductDialog')) {
 	    callback = function(data, status) {
-	        dialogSetup(agilefantValidationRules.product);
+	        dialogSetup(agilefantValidationRules.product, "Create a new product");
 	    };
 	}
 	else if (element.hasClass('openIterationDialog')) {
 	    callback = function(data, status) {
-	        dialogSetup(agilefantValidationRules.iteration);
+	        dialogSetup(agilefantValidationRules.iteration, "Create a new iteration");
 	    };
 	}
 	else if (element.hasClass('openIterationGoalDialog')) {
 	    callback = function(data, status) {
-	        dialogSetup(agilefantValidationRules.iterationGoal);
+	        dialogSetup(agilefantValidationRules.iterationGoal, "Create a new iteration goal");
 	    };
 	}
 	else if (element.hasClass('openBacklogItemDialog')) {
         callback = function(data, status) {
-            dialogSetup(agilefantValidationRules.backlogItem);
+            dialogSetup(agilefantValidationRules.backlogItem, "Create a new backlog item");
             getIterationGoals(dialog.find('#createBLIBacklogId').val(), '#createBLIIterGoalSelect');
         };
     }
     else if (element.hasClass('openHourEntryDialog')) {
         callback = function(data, status) {
-            windowOptions.title = "Log effort";
-            dialogSetup(agilefantValidationRules.hourEntry);
+            dialogSetup(agilefantValidationRules.hourEntry, "Log effort");
+        };
+    }
+    else if (element.hasClass('openUserDialog')) {
+        callback = function(data, status) {
+            dialogSetup(agilefantValidationRules.user, "Create a new user");
         };
     }
 	dialog.load(element.attr("href"), {}, callback);

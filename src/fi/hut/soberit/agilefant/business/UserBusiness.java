@@ -97,4 +97,24 @@ public interface UserBusiness {
      * @param user
      */
     public void disableUser(User user);
+    
+    /**
+     * Get all users as a JSON array.
+     * @return JSON string
+     */
+    public String getAllUsersAsJSON();
+    
+    /**
+     * Get user as JSON string.
+     * @param user
+     * @return
+     */
+    public String getUserJSON(User user);
+    
+    /**
+     * Get user as JSON string.
+     * @param user
+     * @return
+     */
+    public String getUserJSON(int userId);
 }

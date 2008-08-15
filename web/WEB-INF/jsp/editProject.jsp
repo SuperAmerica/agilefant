@@ -462,10 +462,10 @@
 												<tbody>
 													<tr>
 				   										<td class="header">
-				   											<ww:url id="createLink" action="createHourEntry" includeParams="none">
+				   											<ww:url id="createLink" action="ajaxCreateHourEntry" includeParams="none">
 				   												<ww:param name="backlogId" value="${projectId}" />
 				   											</ww:url>
-					   										<ww:a cssClass="openModalWindow" href="%{createLink}&contextViewName=editProject&contextObjectId=${projectId}">Log effort &raquo;</ww:a>
+					   										<ww:a cssClass="openCreateDialog openUserDialog" href="%{createLink}&contextViewName=editProject&contextObjectId=${projectId}">Log effort &raquo;</ww:a>
 					   									</td>
 													</tr>
 												</tbody>

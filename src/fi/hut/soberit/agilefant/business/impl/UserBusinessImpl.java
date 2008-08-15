@@ -23,6 +23,7 @@ import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.security.SecurityUtil;
 import fi.hut.soberit.agilefant.util.BacklogItemPriorityComparator;
 import fi.hut.soberit.agilefant.util.StartedItemsComparator;
+import flexjson.JSONSerializer;
 
 /**
  * 
@@ -143,6 +144,21 @@ public class UserBusinessImpl implements UserBusiness {
         }
 
         return bliMap;
+    }
+    
+    /** {@inheritDoc} */
+    public String getAllUsersAsJSON() {
+        return new JSONSerializer().serialize(userDAO.getAll());
+    }
+    
+    /** {@inheritDoc} */
+    public String getUserJSON(int userId) {
+        return getUserJSON(userDAO.get(userId));
+    }
+    
+    /** {@inheritDoc} */
+    public String getUserJSON(User user) {
+        return new JSONSerializer().serialize(user);
     }
     
     /** {@inheritDoc} */

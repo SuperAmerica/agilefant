@@ -3,7 +3,7 @@
 <aef:menu navi="administration" subnavi="users" pageHierarchy="${pageHierarchy}" />
 
 <h2>Users</h2>
-<p><a href="createUser.action">Create new &raquo;</a></p>
+<p><a href="ajaxCreateUser.action" class="openCreateDialog openUserDialog" title="Create a new user">Create new &raquo;</a></p>
 
 <aef:userList />
 <p><display:table name="${enabledUsers}" id="row"
@@ -26,7 +26,7 @@
                 <ww:param name="userId" value="${row.id}" />
             </ww:url>
             <ww:a href="%{disableLink}">
-                <img src="static/img/disable_user.png" alt="Disable" title="Disable" />
+                <img src="static/img/disable.png" alt="Disable" title="Disable" />
             </ww:a>
 			<ww:url id="deleteLink" action="deleteUser" includeParams="none">
 				<ww:param name="userId" value="${row.id}" />
@@ -59,7 +59,7 @@
 			<ww:param name="userId" value="${row.id}" />
 		</ww:url>
 		<ww:a href="%{enableLink}">
-			<img src="static/img/enable_user.png" alt="Enable" title="Enable" />
+			<img src="static/img/enable.png" alt="Enable" title="Enable" />
 		</ww:a>
 		<ww:url id="deleteLink" action="deleteUser" includeParams="none">
             <ww:param name="userId" value="${row.id}" />

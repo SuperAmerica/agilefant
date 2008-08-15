@@ -149,6 +149,7 @@ public class Iteration extends Backlog implements PageItem {
      * 0, since Iteration has no sub-backlogs.
      */
     @Transient
+    @JSON(include = false)
     public AFTime getSubBacklogEffortLeftSum() {
         return new AFTime(0);
     }
@@ -158,6 +159,7 @@ public class Iteration extends Backlog implements PageItem {
      * Returns 0, since Iteration has no subBacklogs.
      */
     @Transient
+    @JSON(include = false)
     public AFTime getSubBacklogOriginalEstimateSum() {
         return new AFTime(0);
     }

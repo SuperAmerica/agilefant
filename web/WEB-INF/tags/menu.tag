@@ -18,12 +18,13 @@ Agilefant
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
 <script type="text/javascript" src="static/js/generic.js"></script>
+<script type="text/javascript" src="static/js/datacache.js"></script>
 <script type="text/javascript" src="static/js/jquery-1.2.6.js"></script>
 <script type="text/javascript" src="static/js/jquery.cookie.js"></script>
 <script type="text/javascript" src="static/js/jquery.treeview.js"></script>
 <script type="text/javascript" src="static/js/jquery.treeview.async.js"></script>
 <script type="text/javascript" src="static/js/jquery-ui.min.js"></script>
-<script type="text/javascript" src="static/js/jquery.validate.min.js"></script>
+<script type="text/javascript" src="static/js/jquery.validate.js"></script>
 <script type="text/javascript" src="static/js/multiselect.js"></script>
 <script type="text/javascript" src="static/js/taskrank.js"></script>
 <script type="text/javascript" src="static/js/date.js"></script>
@@ -237,8 +238,8 @@ Agilefant
     </c:choose>
     </li>
     
-    <li><ww:url id="createLink" action="createUser"
-        includeParams="none" /> <ww:a href="%{createLink}" title="Create a new user">User &raquo;</ww:a>
+    <li><ww:url id="createLink" action="ajaxCreateUser"
+        includeParams="none" /> <ww:a href="%{createLink}" title="Create a new user" cssClass="openCreateDialog openUserDialog">User &raquo;</ww:a>
     </li>
 </ul>
 

@@ -1,4 +1,5 @@
 
+
 function toggleDiv(id)
 {
 	var div = document.getElementById(id);

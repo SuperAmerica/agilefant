@@ -31,13 +31,26 @@ jQuery.validator.addMethod("before", function(value, element, param) {
     return (date1.getTime() <= date2.getTime());
 }, "Date 1 must be before date 2");
 
-
-/*if($("#assigneeSelect2").find("input:checked[name^=userIds]").length == 0) {
-    if($("select[name='userId']").length == 0) {
-        alert("Select at least one user.");
-        return false;
+/**
+ * Unique field validator.
+ * param[0] should be the field name
+ * param[1] should be the array of json objects
+ */
+jQuery.validator.addMethod("unique", function(value, element, param) {
+    var elem = $(element);
+    var valid = true;
+    if (param[0] == null || param[0] == "") {
+        return true;
     }
- }*/
+    $.each(param[1], function() {
+        if (this[param[0]] == elem.val()) {
+            valid = false;
+        }
+    });
+    return valid;
+});
+
+
 
 var agilefantValidationRules = {
 	backlogItem: {
@@ -86,7 +99,10 @@ var agilefantValidationRules = {
             },
             "project.defaultOverhead": {
                 aftime: [ false ]
-            } 
+            },
+            "project.backlogSize": {
+                digits: true
+            }
         },
         messages: {
             "project.name": {
@@ -107,6 +123,9 @@ var agilefantValidationRules = {
             },
             "project.defaultOverhead": {
                 aftime: "Invalid format"
+            },
+            "project.backlogSize": {
+                digits: "Please enter only numbers"
             }
         }
 	},
@@ -229,9 +248,62 @@ var agilefantValidationRules = {
                 minlength: "Select at least 1 user"
            }
        }
+    },
+    user: {
+       rules: {
+           "user.fullName": {
+               required: true
+           },
+           "user.loginName": {
+               required: true,
+               unique: [ "loginName", jsonDataCache.getAllUsers() ]
+           },
+           "user.initials": {
+               required: true
+           },
+           "user.email": {
+               required: true,
+               email: true
+           },
+           "user.weekHours": {
+               aftime: [ true ]
+           },
+           "password1": {
+               required: true
+           },
+           "password2": {
+               equalTo: '#password1'
+           }
+       },
+       messages: {
+           "user.fullName": {
+               required: "Please enter a name"
+           },
+           "user.loginName": {
+               unique: "Login name already in use",
+               required: "Please enter a login name"
+           },
+           "user.initials": {
+               required: "Please enter a name"
+           },
+           "user.email": {
+               required: "Please enter an email",
+               email: "Invalid email address"
+           },
+           "user.weekHours": {
+               aftime: "Invalid format"
+           },
+           "password1": {
+               required: "Please enter a password"
+           },
+           "password2": {
+               equalTo: "Passwords don't match"
+           }
+       }
     }
 };
 agilefantValidationRules.businessTheme = agilefantValidationRules.theme;
+agilefantValidationRules.bli = agilefantValidationRules.backlogItem;
 
 /*
  * Add the error placement rules to each ruleset.

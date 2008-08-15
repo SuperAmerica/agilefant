@@ -610,34 +610,34 @@ td.deleteButton {
 
 
 /* Multiuser selection styles */
-#multiplebli_userselect ul, #userselect ul, .userSelector ul {
+.userselect ul, #multiplebli_userselect ul, #userselect ul, .userSelector ul {
 	list-style-type: none;
 	margin-top: 3px;
 	margin-bottom: 3px;
 	padding-left: 0px;
 }
-#multiplebli_userselect .users_0, #userselect .users_0 {
+.userselect .users_0, #multiplebli_userselect .users_0, #userselect .users_0 {
 }
-#multiplebli_userselect .groups, #userselect .groups {
+.userselect .groups, #multiplebli_userselect .groups, #userselect .groups {
 }
-#multiplebli_userselect .groups li, #userselect .groups li, .userSelector .groups li {
+.userselect .groups li, #multiplebli_userselect .groups li, #userselect .groups li, .userSelector .groups li {
 	cursor: pointer;
 	text-decoration: underline;
 	margin-top: 2px;
 	color: 0000FF;
 }
 
-#multiplebli_userselect .groups li:hover, #userselect .groups li:hover, .userSelector .groups li:hover {
+.userselect .groups li:hover, #multiplebli_userselect .groups li:hover, #userselect .groups li:hover, .userSelector .groups li:hover {
 	cursor: pointer;
 	text-decoration: underline;
 	margin-top: 2px;
 	color: #EE5500;
 }
 
-#multiplebli_userselect div.left, #userselect div.left, .userSelector div.left{
+.userselect div.left, #multiplebli_userselect div.left, #userselect div.left, .userSelector div.left{
 	float: left;
 }
-#multiplebli_userselect div.right, #userselect div.right, .userSelector div.right {
+.userselect div.right, #multiplebli_userselect div.right, #userselect div.right, .userSelector div.right {
 	float: left;
 	margin-left: 15px;
 }

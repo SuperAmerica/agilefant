@@ -6,7 +6,6 @@
 <aef:iterationGoalList id="iterationGoals" backlogId="${backlogId}" />
 <aef:productList />
 
-
 <ww:form action="storeNewBacklogItem" method="post">
 	<table class="formTable">
 		<tr>
@@ -116,7 +115,7 @@
 			<td colspan="2">
 
 			<div id="assigneesLink"><a
-				href="javascript:toggleDiv('userselect')" class="assignees"> <img
+				href="javascript:toggleDiv('createBLIuserselect')" class="assignees"> <img
 				src="static/img/users.png" /> <c:set var="listSize"
 				value="${fn:length(backlogItem.responsibles)}" scope="page" /> <c:choose>
 				<c:when test="${listSize > 0}">
@@ -171,11 +170,11 @@
                 
                 var teams = [<aef:teamJson items="${teamList}"/>];
                 var selected = [<aef:idJson items="${backlogItem.responsibles}"/>]
-                $('#userselect').multiuserselect({users: [preferred,others], groups: teams, root: $('#userselect')}).selectusers(selected);
+                $('#createBLIuserselect').multiuserselect({users: [preferred,others], groups: teams, root: $('#createBLIuserselect')}).selectusers(selected);
                 
             });
             </script>
-			<div id="userselect" style="display: none;">
+			<div id="createBLIuserselect" class="userselect" style="display: none;">
 			<div class="left"><c:if
 				test="${!aef:isProduct(backlog) &&
                          backlog != null}">

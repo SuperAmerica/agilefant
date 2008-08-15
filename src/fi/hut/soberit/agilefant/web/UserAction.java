@@ -59,6 +59,8 @@ public class UserAction extends ActionSupport implements CRUDAction {
     private List<Team> teamList = new ArrayList<Team>();
 
     private Map<Integer, String> teamIds = new HashMap<Integer, String>();
+    
+    private String jsonData = "";
 
     public String create() {
         createTeamList();
@@ -66,6 +68,7 @@ public class UserAction extends ActionSupport implements CRUDAction {
         user = new User();
         user.setEnabled(true);
         user.setWeekHours(new AFTime("40h"));
+        jsonData = userBusiness.getAllUsersAsJSON();
         return Action.SUCCESS;
     }
 
@@ -246,7 +249,18 @@ public class UserAction extends ActionSupport implements CRUDAction {
         Collections.sort(teamList);
     }
     
-    
+    public String getUserJSON() {
+        if (userId > 0) {
+            jsonData = userBusiness.getUserJSON(userId);
+        }
+        else {
+            jsonData = userBusiness.getAllUsersAsJSON();
+        }
+        if (super.hasActionErrors()) {
+            return Action.ERROR;
+        }
+        return Action.SUCCESS;
+    }
 
     public User getUser() {
         return user;
@@ -371,5 +385,13 @@ public class UserAction extends ActionSupport implements CRUDAction {
 
     public void setHourEntryBusiness(HourEntryBusiness hourEntryBusiness) {
         this.hourEntryBusiness = hourEntryBusiness;
+    }
+
+    public String getJsonData() {
+        return jsonData;
+    }
+
+    public void setJsonData(String jsonData) {
+        this.jsonData = jsonData;
     }
 }

@@ -5,15 +5,15 @@ function test($) {
 			$.each(users, function(key, user) {
 			    if (formfix) {
 				    $(me).append(
-					   $('<li></li>').html(
-						  '<input type="checkbox" name="userIds[' + user.id + ']" class="user_' + user.id + '" />' + user.name
-					   )
-				    );
+                       $('<li></li>').html(
+                          '<input type="checkbox" name="userIds" class="user_' + user.id + '" value="' + user.id + '"/>' + user.name
+                       )
+                    );
 				}
 				else {
 				    $(me).append(
                        $('<li></li>').html(
-                          '<input type="checkbox" name="userIds" class="user_' + user.id + '" value="' + user.id + '"/>' + user.name
+                          '<input type="checkbox" name="userIds[' + user.id + ']" class="user_' + user.id + '" />' + user.name
                        )
                     );
 				}
@@ -47,6 +47,7 @@ function test($) {
 		},
 		multiuserselect: function(settings) {
 			var me = $(this);
+			((settings.formFix == null) && (settings.formFix = false));
 			if( settings.users != undefined ) {
 				if( settings.users[0].prototype = Array ) {
 					$.each(settings.users, function(index, users) {

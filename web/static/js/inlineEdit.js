@@ -13,7 +13,7 @@
 			 });
 			me.html = $('<tr></tr>');
 			$('<td></td>').append(selectTheme).appendTo(me.html);
-			$('<td></td>').append('<input type="text" name="plannedSpendings" value=""/>').appendTo(me.html);
+			$('<td></td>').append('<input type="text" name="plannedSpendings" value=""/> (e.g. 1h 30min or 10%)').appendTo(me.html);
 			$('<td></td>').append('<input type="Reset" value="Cancel"/>').appendTo(me.html);
 		};
 		if(jsonDataCache.peek("themesByProduct") == null) {

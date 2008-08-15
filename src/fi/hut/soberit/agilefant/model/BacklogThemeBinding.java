@@ -87,6 +87,9 @@ public class BacklogThemeBinding {
     public AFTime getBoundEffort()
     {
         if(isRelativeBinding()) {
+            if(getBacklog().getBacklogSize() == null || getPercentage() == null) {
+                return new AFTime(0);
+            }
             return new AFTime(java.lang.Math.round(getPercentage() * (float)(getBacklog().getBacklogSize()*36)));
         } else {
             return getFixedSize();

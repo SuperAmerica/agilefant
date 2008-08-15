@@ -307,10 +307,11 @@ function selectEditTheme(theme_id) {
 	$("#businessThemeError").text("");
 }
 
-function ajaxOpenDialog(context, dialogId) {
+function ajaxOpenDialog(context, dialogId, tabId) {
     jQuery.post("ajaxOpenDialog.action", {
         "contextType": context,
-        "objectId": dialogId
+        "objectId": dialogId,
+        "tabId": tabId
         });
 }
 function ajaxCloseDialog(context, dialogId) {
@@ -350,16 +351,17 @@ function handleTabEvent(target, context, id, tabId) {
             }
             else {
                 tabs.tabs('select', tabId);
+                ajaxOpenDialog(context, id, tabId);
             }
         }
         else {
-            ajaxOpenDialog(context, id);
+            ajaxOpenDialog(context, id, tabId);
             target.toggle();
             tabs.tabs('select', tabId);
         }
     }
     else {
-        ajaxOpenDialog(context, id);
+        ajaxOpenDialog(context, id, tabId);
         
         var targetAction = {
         	"bli": "backlogItemTabs.action",
@@ -383,6 +385,10 @@ function handleTabEvent(target, context, id, tabId) {
          
             target.find('.useWysiwyg').wysiwyg({controls : {separator04 : { visible : true },insertOrderedList : { visible : true },insertUnorderedList : { visible : true }}});
             target.find('ul.ajaxWindowTabs').tabs({ selected: tabId });
+            target.find('ul.ajaxWindowTabs li a').click(function() {
+            	var tab = target.find('ul.ajaxWindowTabs').data('selected.tabs');
+            	ajaxOpenDialog(context, id, tab);
+            });
             var form = target.find("form");
             form.validate(agilefantValidationRules[context]);
             form.submit(submitDialogForm);

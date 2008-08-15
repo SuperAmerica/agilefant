@@ -1,7 +1,9 @@
 package fi.hut.soberit.agilefant.web;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 
 import com.opensymphony.xwork.ActionContext;
 import com.opensymphony.xwork.ActionSupport;
@@ -16,6 +18,9 @@ public class SessionAction extends ActionSupport {
     
     private String contextType = "";
     private Integer objectId;
+    private Integer tabId = 0;
+    //Pasi: use special session context to avoid overwrites
+    public final static String CONTEXT_KEY = "ajaxContext";
     
     /**
      * Open a dialog by ajax request.
@@ -23,25 +28,31 @@ public class SessionAction extends ActionSupport {
      */
     @SuppressWarnings("unchecked")
     public String ajaxOpenDialog() {
-        Collection<Integer> openDialogs = null;
+        //Collection<Integer[]> openDialogs = null;
+        Map<Integer,Integer> openDialogs = null;
+        Map<String,Map> ajaxContext;
         
         /* Get the data from session */
         try {
-            openDialogs = (Collection<Integer>)ActionContext.getContext().getSession().get(contextType);
+            ajaxContext = (Map<String,Map>)ActionContext.getContext().getSession().get(CONTEXT_KEY);
+            if(ajaxContext == null) {
+                ajaxContext = new HashMap<String,Map>();
+            } else {
+                openDialogs = ajaxContext.get(contextType);
+            }
         }
         catch (Exception e) {
+            System.out.println("PROBBBBBB!!!");
             return CRUDAction.AJAX_ERROR;
         }
         
         /* Create, if doesn't exist */
         if (openDialogs == null) {
-            openDialogs = new HashSet<Integer>();
+            openDialogs = new HashMap<Integer, Integer>();
         }
-        
-        openDialogs.add(objectId);
-        
-        /* Save to session */
-        ActionContext.getContext().getSession().put(contextType, openDialogs);
+        openDialogs.put(objectId, tabId);
+        ajaxContext.put(contextType, openDialogs);
+        ActionContext.getContext().getSession().put(CONTEXT_KEY,ajaxContext);
         
         return CRUDAction.AJAX_SUCCESS;
     }
@@ -52,16 +63,22 @@ public class SessionAction extends ActionSupport {
      */
     @SuppressWarnings("unchecked")
     public String ajaxCloseDialog() {
-        Collection<Integer> openDialogs = null;
+        Map<Integer, Integer> openDialogs = null;
+        Map<String,Map> ajaxContext;
         
         /* Get the data from session */
         try {
-            openDialogs = (Collection<Integer>)ActionContext.getContext().getSession().get(contextType);
+            ajaxContext = (Map<String,Map>)ActionContext.getContext().getSession().get(CONTEXT_KEY);
+            if(ajaxContext == null) {
+                ajaxContext = new HashMap<String,Map>();
+            } else {
+                openDialogs = ajaxContext.get(contextType);
+            }
         }
         catch (Exception e) {
             return CRUDAction.AJAX_ERROR;
         }
-        
+   
         /* Create, if doesn't exist */
         if (openDialogs == null) {
             return CRUDAction.AJAX_SUCCESS;
@@ -69,8 +86,9 @@ public class SessionAction extends ActionSupport {
         
         openDialogs.remove(objectId);
         
-        /* Save to session */
-        ActionContext.getContext().getSession().put(contextType, openDialogs);
+        ajaxContext.put(contextType, openDialogs);
+        ActionContext.getContext().getSession().put(CONTEXT_KEY,ajaxContext);
+
         
         return CRUDAction.AJAX_SUCCESS;
     }
@@ -93,6 +111,10 @@ public class SessionAction extends ActionSupport {
 
     public void setObjectId(Integer objectId) {
         this.objectId = objectId;
+    }
+
+    public void setTabId(Integer tabId) {
+        this.tabId = tabId;
     }
     
 }

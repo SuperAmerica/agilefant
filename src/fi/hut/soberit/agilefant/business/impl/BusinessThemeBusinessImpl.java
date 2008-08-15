@@ -342,7 +342,7 @@ public class BusinessThemeBusinessImpl implements BusinessThemeBusiness {
                 trimmed  = trimmed.substring(0,trimmed.length()-1);
                 binding.setPercentage(new Float(Float.parseFloat(trimmed)));
             } catch(Exception e) {
-                binding.setPercentage(null);
+                binding.setPercentage(0f);
             }
             binding.setRelativeBinding(true);
         } else { //fixed
@@ -350,7 +350,7 @@ public class BusinessThemeBusinessImpl implements BusinessThemeBusiness {
             try {
                 binding.setFixedSize(new AFTime(trimmed, false));
             } catch(Exception e) {
-                binding.setFixedSize(null);
+                binding.setFixedSize(new AFTime(0));
             }
         }
         addOrUpdateThemeToBacklog(binding);
@@ -422,9 +422,5 @@ public class BusinessThemeBusinessImpl implements BusinessThemeBusiness {
     public void setBacklogDAO(BacklogDAO backlogDAO) {
         this.backlogDAO = backlogDAO;
     }
-
-
-
-
 
 }

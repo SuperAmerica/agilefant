@@ -981,7 +981,12 @@
        	</action>
         <action name="removeThemeFromBacklog" method="removeThemeBinding"
         	class="businessThemeAction" />
-        		
+       	
+       	<action name="themesByProduct" method="themesByProduct"
+       		class="businessThemeAction">
+       		<result>/WEB-INF/jsp/jsonData.jsp</result>
+       	</action>
+       		
 		<!-- /Business theme actions -->
 		
 		<!-- Product timeline actions -->

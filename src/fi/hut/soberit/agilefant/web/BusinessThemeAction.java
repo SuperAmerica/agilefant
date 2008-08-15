@@ -40,6 +40,8 @@ public class BusinessThemeAction extends ActionSupport implements CRUDAction {
     
     private String ContextViewName;
     
+    private String jsonData = "";
+    
 
     public String create() {
         businessThemeId = 0;
@@ -178,10 +180,6 @@ public class BusinessThemeAction extends ActionSupport implements CRUDAction {
     }
     
     public String storeThemeBinding() {
-        System.out.println(businessThemeIds);
-        System.out.println(backlogId);
-        System.out.println(plannedSpendings);
-        System.out.println("\n\n\n\n\n-------------");
         if(businessThemeIds != null && backlogId > 0 && plannedSpendings != null) {
             businessThemeBusiness.multipleAddOrUpdateThemeToBacklog(businessThemeIds, backlogId, plannedSpendings);
         }
@@ -195,6 +193,11 @@ public class BusinessThemeAction extends ActionSupport implements CRUDAction {
         } else {
             return CRUDAction.AJAX_ERROR;
         }
+    }
+    
+    public String themesByProduct() {
+        jsonData = businessThemeBusiness.getThemesForProductAsJSON(productId);
+        return Action.SUCCESS;
     }
     
     public int getBusinessThemeId() {
@@ -266,5 +269,9 @@ public class BusinessThemeAction extends ActionSupport implements CRUDAction {
 
     public void setContextViewName(String contextViewName) {
         ContextViewName = contextViewName;
+    }
+
+    public String getJsonData() {
+        return jsonData;
     }
 }

@@ -250,47 +250,9 @@ $(document).ready( function() {
         $.get(me.attr('href'), null, function() {me.movebottom();});
         return false;
         });
-   $('#addIterationBusinessTheme').click(function() {
-   		var table = $('#businessThemeTable > tbody');
-		var html = $(backlogThemeHtml);
-		table.append(html);
-		html.attr("auto-generated","1");
-		html.find(":reset").click(function() {
-			html.remove();
-			if(table.find(":reset").length == 0) {
-				$("#backlogThemeSave").hide();
-			}
-			return false;
-		});
-		$("#backlogThemeSave").show();
-   		return false;
-   });
+   $('#businessThemeTable').themeBinding('#addIterationBusinessTheme',${iteration.project.product.id},'#backlogThemeSave');
 });
-function editBacklogThemeBinding(element,binding,theme,relative,fixed,percentage) {
-	var table = $('#businessThemeTable > tbody');
-	var row = $(element).parents('tr:eq(0)');
-	var newRow = $(backlogThemeHtml);
-   	var oldData = row.replaceWith(newRow);
-   	row = newRow;
-   	row.find(':reset').click(function() {  		
-   		row.replaceWith(oldData);
-   		if(table.find(":reset").length == 0) {
-	   		$("#backlogThemeSave").hide();
-   		}
-   	});
-   	$("#backlogThemeSave").show();
-   	var bindVal = (relative) ? percentage + '%' : fixed;
-   	row.find("select[name='businessThemeIds']").val(theme);
-   	row.find(":text[name='plannedSpendings']").val(bindVal);
-   	row.find("td:eq(0)").append($('<input type="hidden" name="bindingIds" value="'+binding+'"/>'));
-   	
-}
-function deleteBacklogThemeBinding(element,id) {
-	var row = $(element).parents('tr:eq(0)');
-	jQuery.post("removeThemeFromBacklog.action",{bindingId: id},function() {
-		row.remove();
-	});
-}
+
 </script>
 <table>
 	<tr>
@@ -304,12 +266,14 @@ function deleteBacklogThemeBinding(element,id) {
 							</tr>
 						</table>
 					</div>
-					<c:if test="${!empty iteration.businessThemeBindings}">
-						<div class="subItemContent">
-						<ww:form action="storeBacklogThemebinding" method="post">
-						<ww:hidden name="backlogId" value="${iteration.id}"/>
-						<input type="hidden" name="contextViewName" value="iteration" />
-						<p><display:table htmlId="businessThemeTable" class="listTable" name="iteration.businessThemeBindings" id="row" requestURI="editIteration.action">
+					<div class="subItemContent">
+					<ww:form action="storeBacklogThemebinding" method="post">
+					<ww:hidden name="backlogId" value="${iteration.id}"/>
+					<input type="hidden" name="contextViewName" value="iteration" />
+					<p>
+					<c:choose>
+					<c:when test="${!empty iteration.businessThemeBindings}">
+						<display:table htmlId="businessThemeTable" class="listTable" name="iteration.businessThemeBindings" id="row" requestURI="editIteration.action">
 
 							<display:column sortable="true" title="Name" sortProperty="businessTheme.name">
 								<c:out value="${row.businessTheme.name}"/>
@@ -325,14 +289,21 @@ function deleteBacklogThemeBinding(element,id) {
 								</c:choose>
 							</display:column>
 							<display:column sortable="false" title="Actions">
-								<img style="cursor: pointer;" class="edit_backlog_theme" onclick="editBacklogThemeBinding(this,${row.id}, ${row.businessTheme.id},${row.relativeBinding},'${row.fixedSize}','${row.percentage}');" src="static/img/edit.png" title="Edit" />
-								<img style="cursor: pointer;" class="delete_backlog_theme" onclick="deleteBacklogThemeBinding(this,${row.id});" src="static/img/delete_18.png" title="Delete" />
+								<img style="cursor: pointer;" class="edit_backlog_theme" onclick="$('#businessThemeTable').themeBinding().edit(this,${row.id}, ${row.businessTheme.id},${row.relativeBinding},'${row.fixedSize}','${row.percentage}');" src="static/img/edit.png" title="Edit" />
+								<img style="cursor: pointer;" class="delete_backlog_theme" onclick="$('#businessThemeTable').themeBinding().delete(this,${row.id});" src="static/img/delete_18.png" title="Delete" />
 							</display:column>
-						</display:table></p>
+						</display:table>
+						</c:when>
+						<c:otherwise>
+							<table id="businessThemeTable" style="display:none;" class="listTable">
+								<tr><th class="sortable">Name</th><th class="sortable">Planned spending</th><th>Actions</th></tr>
+							</table>
+						</c:otherwise>
+						</c:choose>
+						</p>
 						<input id="backlogThemeSave" style="display: none"; type="submit" value="Save" />
 						</ww:form>				
 						</div>
-					</c:if>
 				</div>
 			</c:if>
 		</td>

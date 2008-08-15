@@ -27,5 +27,25 @@ public interface TeamBusiness {
      * @return the user with id userId
      */
     public Team getTeam(int teamId);
+    
+    /**
+     * Get all teams as a JSON array.
+     * @return JSON string
+     */
+    public String getAllTeamsAsJSON();
+    
+    /**
+     * Get team as JSON string.
+     * @param team
+     * @return
+     */
+    public String getTeamJSON(Team team);
+    
+    /**
+     * Get team as JSON string.
+     * @param user
+     * @return
+     */
+    public String getTeamJSON(int teamId);
 
 }

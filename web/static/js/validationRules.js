@@ -34,15 +34,19 @@ jQuery.validator.addMethod("before", function(value, element, param) {
 /**
  * Unique field validator.
  * param[0] should be the field name
- * param[1] should be the array of json objects
+ * param[1] should be the name of the cached json object
  */
 jQuery.validator.addMethod("unique", function(value, element, param) {
     var elem = $(element);
     var valid = true;
+    var e = jsonDataCache;
+    var f = param[1];
+    var g;
+    var list = jsonDataCache.get(param[1]);
     if (param[0] == null || param[0] == "") {
         return true;
     }
-    $.each(param[1], function() {
+    $.each(list, function() {
         if (this[param[0]] == elem.val()) {
             valid = false;
         }
@@ -53,12 +57,6 @@ jQuery.validator.addMethod("unique", function(value, element, param) {
 
 
 var agilefantValidationRules = {
-	backlogItem: {
-        rules: {
-	    },
-	    messages: { 
-	    }
-	},
     theme: {
         rules: {
 	        "businessTheme.name": {
@@ -256,7 +254,7 @@ var agilefantValidationRules = {
            },
            "user.loginName": {
                required: true,
-               unique: [ "loginName", jsonDataCache.getAllUsers() ]
+               unique: [ "loginName", "allUsers" ]
            },
            "user.initials": {
                required: true
@@ -300,6 +298,34 @@ var agilefantValidationRules = {
                equalTo: "Passwords don't match"
            }
        }
+    },
+    team: {
+        rules: {
+            "team.name": {
+                required: true,
+                unique: [ "name", "allTeams" ]
+            }
+        },
+        messages: {
+            "team.name": {
+                required: "Please enter a name",
+                unique: "Team name already in use"
+            }
+        }
+    },
+    projectType: {
+        rules: {
+            "projectType.name": {
+                required: true,
+                unique: [ "name", "allProjectTypes" ]
+            }
+        },
+        messages: {
+            "projectType.name": {
+                required: "Please enter a name",
+                unique: "Project type name already in use"
+            }
+        }
     }
 };
 agilefantValidationRules.businessTheme = agilefantValidationRules.theme;

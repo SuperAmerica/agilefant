@@ -15,6 +15,8 @@ import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Type;
 import org.hibernate.validator.Range;
 
+import flexjson.JSON;
+
 /**
  * Hibernate entity bean representing an activity type.
  * <p>
@@ -55,6 +57,7 @@ public class ProjectType implements Comparable<ProjectType> {
     @GeneratedValue(strategy = GenerationType.AUTO)
     // not nullable
     @Column(nullable = false)
+    @JSON
     public int getId() {
         return id;
     }
@@ -69,6 +72,7 @@ public class ProjectType implements Comparable<ProjectType> {
     }
 
     @Type(type = "escaped_text")
+    @JSON
     public String getDescription() {
         return description;
     }
@@ -79,6 +83,7 @@ public class ProjectType implements Comparable<ProjectType> {
 
     @Column(nullable = false, unique = true)
     @Type(type = "escaped_truncated_varchar")
+    @JSON
     public String getName() {
         return name;
     }
@@ -92,6 +97,7 @@ public class ProjectType implements Comparable<ProjectType> {
      * of a single activity type.
      */
     @OneToMany(mappedBy = "projectType")
+    @JSON(include = false)
     public Collection<WorkType> getWorkTypes() {
         return workTypes;
     }
@@ -101,6 +107,7 @@ public class ProjectType implements Comparable<ProjectType> {
     }
 
     @Range(min = 0, max = 100)
+    @JSON(include = false)
     public int getTargetSpendingPercentage() {
         return targetSpendingPercentage;
     }

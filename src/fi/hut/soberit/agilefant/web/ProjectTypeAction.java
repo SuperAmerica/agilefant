@@ -30,6 +30,8 @@ public class ProjectTypeAction extends ActionSupport implements CRUDAction {
     private Collection<ProjectType> projectTypes;
     
     private ProjectBusiness projectBusiness;
+    
+    private String jsonData = "";
 
     public String getAll() {
         projectTypes = projectTypeDAO.getAll();
@@ -113,6 +115,16 @@ public class ProjectTypeAction extends ActionSupport implements CRUDAction {
         fillable.setDescription(projectType.getDescription());
     }
 
+    public String getProjectTypeJSON() {
+        if (projectTypeId > 0) {
+            jsonData = projectBusiness.getProjectTypeJSON(projectTypeId);
+        }
+        else {
+            jsonData = projectBusiness.getAllProjectTypesAsJSON();
+        }
+        return Action.SUCCESS;
+    }
+    
     public int getProjectTypeId() {
         return projectTypeId;
     }
@@ -147,6 +159,14 @@ public class ProjectTypeAction extends ActionSupport implements CRUDAction {
 
     public void setProjectBusiness(ProjectBusiness projectBusiness) {
         this.projectBusiness = projectBusiness;
+    }
+
+    public String getJsonData() {
+        return jsonData;
+    }
+
+    public void setJsonData(String jsonData) {
+        this.jsonData = jsonData;
     }
 
 }

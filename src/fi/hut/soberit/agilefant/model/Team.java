@@ -17,6 +17,8 @@ import javax.persistence.Transient;
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Type;
 
+import flexjson.JSON;
+
 /**
  * Hibernate entity bean representing a team consisting of multiple
  * <code>User</code>s.
@@ -46,6 +48,7 @@ public class Team implements Comparable<Team> {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(nullable = false)
+    @JSON
     public int getId() {
         return id;
     }
@@ -63,6 +66,7 @@ public class Team implements Comparable<Team> {
      * @return the name
      */
     @Type(type = "escaped_truncated_varchar")
+    @JSON
     public String getName() {
         return name;
     }
@@ -80,6 +84,7 @@ public class Team implements Comparable<Team> {
      * @return the description
      */
     @Type(type = "escaped_text")
+    @JSON
     public String getDescription() {
         return description;
     }
@@ -105,6 +110,7 @@ public class Team implements Comparable<Team> {
             inverseJoinColumns = {@JoinColumn( name = "User_id" )}
     )
     @BatchSize(size=5)
+    @JSON(include = false)
     public Collection<User> getUsers() {
         return users;
     }
@@ -122,6 +128,7 @@ public class Team implements Comparable<Team> {
      * @return number of users
      */
     @Transient
+    @JSON(include = false)
     public int getNumberOfUsers() {
         return getUsers().size();
     }

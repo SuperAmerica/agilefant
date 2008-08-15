@@ -71,7 +71,7 @@ public class BusinessTheme implements Comparable<BusinessTheme> {
         this.id = id;
     }
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     @Type(type = "escaped_truncated_varchar")
     @JSON
     public String getName() {

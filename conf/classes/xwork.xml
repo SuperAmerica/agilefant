@@ -104,6 +104,10 @@
 			class="projectTypeAction">
 			<result>/WEB-INF/jsp/administration/editProjectType.jsp</result>
 		</action>
+		<action name="ajaxCreateProjectType" method="create"
+            class="projectTypeAction">
+            <result>/WEB-INF/jsp/forms/createProjectType.jsp</result>
+        </action>
 		<action name="createProjectType" method="create"
 			class="projectTypeAction">
 			<result>/WEB-INF/jsp/administration/editProjectType.jsp</result>
@@ -547,9 +551,6 @@
 		<action name="ajaxCreateUser" method="create" class="userAction">
             <result>/WEB-INF/jsp/forms/createUser.jsp</result>
         </action>
-        <action name="getUserJSON" method="getUserJSON" class="userAction">
-            <result>/WEB-INF/jsp/jsonData.jsp</result>
-        </action>
 		<action name="createUser" method="create" class="userAction">
 			<result>/WEB-INF/jsp/administration/editUser.jsp</result>
 		</action>
@@ -575,6 +576,9 @@
 		<action name="editTeam" method="edit" class="teamAction">
 			<result>/WEB-INF/jsp/administration/editTeam.jsp</result>
 		</action>
+		<action name="ajaxCreateTeam" method="create" class="teamAction">
+            <result>/WEB-INF/jsp/forms/createTeam.jsp</result>
+        </action>
 		<action name="createTeam" method="create" class="teamAction">
 			<result>/WEB-INF/jsp/administration/editTeam.jsp</result>
 		</action>
@@ -667,10 +671,6 @@
 			<result type="redirect">
 				editIteration.action?iterationId=${iterationId}
 			</result>
-		</action>
-		<action name="ajaxGetIterationGoals" method="ajaxGetIterationGoals"
-            class="iterationGoalAction">
-            <result>/WEB-INF/jsp/jsonData.jsp</result>
 		</action>
 		<action name="storeIterationGoal" method="store"
 			class="iterationGoalAction">
@@ -996,5 +996,20 @@
         <action name="ajaxCloseDialog" method="ajaxCloseDialog" class="sessionAction" />
 		<!-- /Session actions -->
 
+        <!-- JSON actions -->
+        <action name="ajaxGetIterationGoals" method="ajaxGetIterationGoals"
+            class="iterationGoalAction">
+            <result>/WEB-INF/jsp/jsonData.jsp</result>
+        </action>
+        <action name="getUserJSON" method="getUserJSON" class="userAction">
+            <result>/WEB-INF/jsp/jsonData.jsp</result>
+        </action>
+        <action name="getTeamJSON" method="getTeamJSON" class="teamAction">
+            <result>/WEB-INF/jsp/jsonData.jsp</result>
+        </action>
+        <action name="getProjectTypeJSON" method="getProjectTypeJSON" class="projectTypeAction">
+            <result>/WEB-INF/jsp/jsonData.jsp</result>
+        </action>
+        <!-- /JSON actions -->
 </package>
 </xwork>

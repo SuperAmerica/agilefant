@@ -159,6 +159,16 @@ function openCreateDialog(element) {
             dialogSetup(agilefantValidationRules.user, "Create a new user");
         };
     }
+    else if (element.hasClass('openTeamDialog')) {
+        callback = function(data, status) {
+            dialogSetup(agilefantValidationRules.team, "Create a new team");
+        };
+    }
+    else if (element.hasClass('openProjectTypeDialog')) {
+        callback = function(data, status) {
+            dialogSetup(agilefantValidationRules.projectType, "Create a new project type");
+        };
+    }
 	dialog.load(element.attr("href"), {}, callback);
 	return false;
 }

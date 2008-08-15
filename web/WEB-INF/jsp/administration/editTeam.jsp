@@ -9,14 +9,7 @@
 
 <aef:userList />
 
-<c:choose>
-	<c:when test="${teamId == 0}">
-		<h2>Create team</h2>
-	</c:when>
-	<c:otherwise>
-		<h2>Edit team</h2>
-	</c:otherwise>
-</c:choose>
+<h2>Edit team</h2>
 
 <ww:form action="storeTeam" method="post">
 

@@ -68,7 +68,6 @@ public class UserAction extends ActionSupport implements CRUDAction {
         user = new User();
         user.setEnabled(true);
         user.setWeekHours(new AFTime("40h"));
-        jsonData = userBusiness.getAllUsersAsJSON();
         return Action.SUCCESS;
     }
 

@@ -5,7 +5,7 @@
 <aef:userList />
 
 <h2>Teams</h2>
-<p><ww:a href="createTeam.action">Create a new team &raquo;</ww:a></p>
+<p><ww:a href="ajaxCreateTeam.action" cssClass="openCreateDialog openTeamDialog">Create a new team &raquo;</ww:a></p>
 
 <p><c:choose>
 	<c:when test="${!empty teamList}">

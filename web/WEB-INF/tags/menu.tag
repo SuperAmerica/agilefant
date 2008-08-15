@@ -17,8 +17,8 @@ Agilefant
 </title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
-<script type="text/javascript" src="static/js/generic.js"></script>
 <script type="text/javascript" src="static/js/datacache.js"></script>
+<script type="text/javascript" src="static/js/generic.js"></script>
 <script type="text/javascript" src="static/js/jquery-1.2.6.js"></script>
 <script type="text/javascript" src="static/js/jquery.cookie.js"></script>
 <script type="text/javascript" src="static/js/jquery.treeview.js"></script>
@@ -213,14 +213,14 @@ Agilefant
     
     <li class="separator" />
 
-    <li><ww:url id="createLink" action="createProjectType"
+    <li><ww:url id="createLink" action="ajaxCreateProjectType"
         includeParams="none" />
-        <ww:a href="%{createLink}" title="Create a new project type">Project type &raquo;</ww:a>
+        <ww:a href="%{createLink}" title="Create a new project type" cssClass="openCreateDialog openProjectTypeDialog">Project type &raquo;</ww:a>
     </li>
     
-    <li><ww:url id="createLink" action="createTeam"
+    <li><ww:url id="createLink" action="ajaxCreateTeam"
         includeParams="none" />
-        <ww:a href="%{createLink}" title="Create a new team">Team &raquo;</ww:a>
+        <ww:a href="%{createLink}" title="Create a new team" cssClass="openCreateDialog openTeamDialog">Team &raquo;</ww:a>
     </li>
     
     <li>

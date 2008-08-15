@@ -193,4 +193,24 @@ public interface ProjectBusiness {
      * @param project
      */
     public Map<Integer, AFTime> calculateTotalOverheads(Project project);
+    
+    /**
+     * Get all project types as json string.
+     * @return
+     */
+    public String getAllProjectTypesAsJSON();
+    
+    /**
+     * Get target project type as json.
+     * @param projectType
+     * @return
+     */
+    public String getProjectTypeJSON(ProjectType projectType);
+    
+    /**
+     * Get target project type as json.
+     * @param projectTypeId
+     * @return
+     */
+    public String getProjectTypeJSON(int projectTypeId);
 }

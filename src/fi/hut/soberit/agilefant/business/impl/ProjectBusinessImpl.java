@@ -41,6 +41,7 @@ import fi.hut.soberit.agilefant.util.EffortSumData;
 import fi.hut.soberit.agilefant.util.ProjectMetrics;
 import fi.hut.soberit.agilefant.util.ProjectPortfolioData;
 import fi.hut.soberit.agilefant.util.UserComparator;
+import flexjson.JSONSerializer;
 
 public class ProjectBusinessImpl implements ProjectBusiness {
 
@@ -829,6 +830,21 @@ public class ProjectBusinessImpl implements ProjectBusiness {
             }            
         }
         return totalOverheads;
+    }
+    
+    public String getAllProjectTypesAsJSON() {
+        return new JSONSerializer().serialize(projectTypeDAO.getAll());
+    }
+    
+    public String getProjectTypeJSON(int projectTypeId) {
+        return getProjectTypeJSON(projectTypeDAO.get(projectTypeId));
+    }
+    
+    public String getProjectTypeJSON(ProjectType projectType) {
+        if (projectType == null) {
+            return "{}";
+        }
+        return new JSONSerializer().serialize(projectType);
     }
     
     public UserBusiness getUserBusiness() {

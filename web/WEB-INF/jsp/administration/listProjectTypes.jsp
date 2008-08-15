@@ -11,8 +11,8 @@
 
 
 <h2>Project types</h2>
-<p><ww:url id="createProjectTypeLink" action="createProjectType" />
-<ww:a href="%{createProjectTypeLink}">Create new &raquo;</ww:a></p>
+<p><ww:url id="createProjectTypeLink" action="ajaxCreateProjectType" />
+<ww:a cssClass="openCreateDialog openProjectTypeDialog" href="%{createProjectTypeLink}">Create new &raquo;</ww:a></p>
 
 <p><c:choose>
 	<c:when test="${empty projectTypes}">

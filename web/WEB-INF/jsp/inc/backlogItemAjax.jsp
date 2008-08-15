@@ -12,7 +12,7 @@
 	<li><a href="#backlogItemEditTab-${backlogItemId}"><span><img src="static/img/edit.png" alt="Edit" /> Edit</span></a></li>
 	<li><a href="#backlogItemProgressTab-${backlogItemId}"><span><img src="static/img/progress.png" alt="Progress" /> Progress</span></a></li>
 	<li><a href="#backlogItemSpentEffTab-${backlogItemId}"><span><img src="static/img/timesheets.png" alt="Spent Effort" /> Spent Effort</span></a></li>
-	<li><a href="#backlogItemThemesTab-${backlogItemId}"><span><img src="static/img/add_theme.png" alt="Themes" /> Themes</span></a></li>
+	<li><a href="#backlogItemThemesTab-${backlogItemId}"><span><img src="static/img/theme.png" alt="Themes" /> Themes</span></a></li>
 </ul>
 
 <div id="backlogItemEditTab-${backlogItemId}" class="backlogItemNaviTab">
@@ -31,10 +31,10 @@
 
 	<ww:form action="ajaxStoreBacklogItem" method="post">
 		<ww:hidden name="backlogItemId" value="${backlogItem.id}" />	
-		<ww:hidden name="effortLeft" value="${backlogItem.effortLeft}" />
+		<ww:hidden name="effortLeft" value="${backlogItem.effortLeft}" />				
 	
 		<table class="formTable">		
-			<tr>			
+			<tr>						
 				<td>Name</td>												
 				<td>*</td>
 				<td colspan="2"><ww:textfield size="60" name="backlogItem.name" /></td>
@@ -78,7 +78,7 @@
 							name="backlogItem.originalEstimate"
 							value="${backlogItem.originalEstimate}" /> <ww:url id="resetLink_${backlogItem.id}"
 							action="resetBliOrigEstAndEffortLeft" includeParams="none">
-							<ww:param name="backlogItemId" value="${backlogItem.id}" />
+							<!-- <ww:param name="backlogItemId" value="${backlogItem.id}" /> -->
 						</ww:url>
 						<c:choose>
 							<c:when test="${backlogItem.state.name == 'DONE'}">
@@ -92,7 +92,7 @@
 						</c:choose>
 						
 						<ww:a
-								href="%{resetLink_${backlogItem.id}}&contextViewName=editBacklogItem&contextObjectId=${backlogItemId}"
+								href="%{resetLink_${backlogItem.id}}&contextViewName=${currentAction}&contextObjectId=${backlog.id}"
 								onclick="return confirmReset()">(reset)</ww:a>
 						</span>
 						
@@ -126,6 +126,7 @@
 				<td>State</td>
 				<td></td>
 				<td colspan="2">
+				<c:set var="hasUndoneTasks" value="${undoneTasks}" scope="request" />				
 				<script type="text/javascript">
 				function change_estimate_enabled(value, itemId) {
 					var effLeftField = document.getElementById("effortLeftField_" + itemId);
@@ -161,28 +162,22 @@
 						}
 					}
 				}
-				</script>
-				<%-- If user changed the item's state to DONE and there are tasks not DONE, ask if they should be set to DONE as well. --%>
-				<script type="text/javascript">
-				$(document).ready(function() {
+				
+				<%-- If user changed the item's state to DONE and there are tasks not DONE, ask if they should be set to DONE as well. --%>				
+				$(document).ready(function() {					
 					$("#stateSelect_${backlogItem.id}").change(function() {
-						change_estimate_enabled($(this).val(), ${backlogItem.id});				
-						var tasksDone = true;
-						$(".taskStateSelect").each(function() {
-							if ($(this).val() != 'DONE') {
-								tasksDone = false;
-							}
-						});
-						if ($(this).val() == 'DONE' && !tasksDone) {
-							var prompt = window.confirm("Do you wish to set all the tasks' states to Done as well?");
+						change_estimate_enabled($(this).val(), ${backlogItem.id});						
+						if ($(this).val() == 'DONE' && ${hasUndoneTasks}) {
+							var prompt = window.confirm("Do you wish to set all the TODOs' states to Done as well?");
 							if (prompt) {
-								$(".taskStateSelect").val('DONE');
+								$("#tasksToDone_${backlogItem.id}").val('true');
 							}						
 						}
 					});
 				});
 				</script>
-				<%-- Tasks to DONE confirmation script ends. --%>			
+				<%-- Tasks to DONE confirmation script ends. --%>
+				<ww:hidden name="tasksToDone" value="${tasksToDone}" id="tasksToDone_${backlogItem.id}" />			
 				<ww:select name="backlogItem.state"
 					id="stateSelect_${backlogItem.id}"
 					value="backlogItem.state.name"
@@ -208,7 +203,7 @@
 					<option class="inactive" value="">(select backlog)</option>
 					<c:forEach items="${productList}" var="product">
 						<c:choose>
-							<c:when test="${product.id == currentPageId}">
+							<c:when test="${product.id == backlogItem.backlog.id}">
 								<option selected="selected" value="${product.id}" class="productOption"
 									title="${product.name}">${aef:out(product.name)}</option>
 							</c:when>
@@ -218,7 +213,7 @@
 						</c:choose>
 						<c:forEach items="${product.projects}" var="project">
 							<c:choose>
-								<c:when test="${project.id == currentPageId}">
+								<c:when test="${project.id == backlogItem.backlog.id}">
 									<option selected="selected" value="${project.id}" class="projectOption"
 										title="${project.name}">${aef:out(project.name)}</option>
 								</c:when>
@@ -228,7 +223,7 @@
 							</c:choose>
 							<c:forEach items="${project.iterations}" var="iteration">
 								<c:choose>
-									<c:when test="${iteration.id == currentPageId}">
+									<c:when test="${iteration.id == backlogItem.backlog.id}">
 										<option selected="selected" value="${iteration.id}" class="iterationOption"
 											title="${iteration.name}">${aef:out(iteration.name)}</option>
 									</c:when>
@@ -363,7 +358,7 @@
 				<td class="deleteButton">
 				<ww:submit value="Delete" onclick="return deleteBacklogItem(${backlogItemId})" />
 				<ww:reset value="Cancel"
-					onclick="closeTabs('backlogItems', 'backlogItemTabContainer-${backlogItemId}', ${backlogItemId});" />				
+					onclick="closeTabs('bli', 'backlogItemTabContainer-${backlogItemId}', ${backlogItemId});" />				
 				</td>
 			</tr>
 		</table>
@@ -388,7 +383,7 @@
 
 <script type="text/javascript">
 	$(document).ready( function() {
-	// Task ranking
+		// Task ranking
 		$('.moveUp').click(function() {
 			var me = $(this);
 			$.get(me.attr('href'), null, function() {me.moveup();});
@@ -460,7 +455,7 @@
 				<ww:select name="state"
 					id="stateSelectProgress_${backlogItem.id}" value="#attr.backlogItem.state.name"
 					list="@fi.hut.soberit.agilefant.model.State@values()" listKey="name"
-					listValue="getText('backlogItem.state.' + name())"/>
+					listValue="getText('backlogItem.state.' + name())" />
 			</td>
 			
 			<td>
@@ -593,7 +588,7 @@
 	</td>
 	<td class="deleteButton">
 		<ww:reset value="Cancel"
-			onclick="closeTabs('backlogItems', 'backlogItemTabContainer-${backlogItemId}', ${backlogItemId});" />				
+			onclick="closeTabs('bli', 'backlogItemTabContainer-${backlogItemId}', ${backlogItemId});" />				
 	</td>
 	</tr>
 	

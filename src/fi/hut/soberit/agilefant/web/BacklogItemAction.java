@@ -34,6 +34,7 @@ import fi.hut.soberit.agilefant.model.IterationGoal;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.State;
+import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
 
 public class BacklogItemAction extends ActionSupport implements CRUDAction {
@@ -87,6 +88,8 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
     private Map<Integer, State> taskStates = new HashMap<Integer, State>();
     
     private Map<Integer, String> taskNames = new HashMap<Integer, String>();
+    
+    private boolean tasksToDone = false; 
     
     private List<User> possibleResponsibles = new ArrayList<User>();
     
@@ -242,12 +245,14 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
 
         this.fillStorable(storable);
         
-        // Store tasks also.
-        try {
-            taskBusiness.updateMultipleTasks(taskStates, taskNames);
-        }
-        catch(ObjectNotFoundException onfe) {
-            return CRUDAction.AJAX_ERROR;
+        // Set tasks to DONE if item was set to done and user confirmed this.        
+        if (tasksToDone) {
+            try {
+                backlogItemBusiness.setTasksToDone(backlogItemId);
+            }
+            catch(ObjectNotFoundException onfe) {
+                return CRUDAction.AJAX_ERROR;
+            }
         }
         
         if (super.hasActionErrors()) {
@@ -685,6 +690,30 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
 
     public void setTaskNames(Map<Integer, String> taskNames) {
         this.taskNames = taskNames;
+    }
+    
+    public boolean getUndoneTasks() {
+        backlogItem = backlogItemBusiness.getBacklogItem(backlogItemId);
+        if (backlogItem == null) {
+            return false;
+        }
+        if (backlogItem.getTasks() == null || backlogItem.getTasks().size() == 0) {
+            return false;
+        }
+        for (Task t: backlogItem.getTasks()) {
+            if (t.getState() != State.DONE) {
+                return true;
+            }
+        }
+        return false;    
+    }
+
+    public boolean isTasksToDone() {
+        return tasksToDone;
+    }
+
+    public void setTasksToDone(boolean tasksToDone) {
+        this.tasksToDone = tasksToDone;
     }
     
     

@@ -1,5 +1,17 @@
 <%@ include file="./_taglibs.jsp"%>
 
+<aef:openDialogs context="bli" id="openBacklogItemTabs" />
+
+<script language="javascript" type="text/javascript">
+
+$(document).ready(function() {        
+    <c:forEach items="${openBacklogItemTabs}" var="openBacklogItem">
+        handleTabEvent("backlogItemTabContainer-${openBacklogItem}", "bli", ${openBacklogItem}, 0);
+    </c:forEach>
+});
+
+</script>
+
 <h2>Started items assigned to <c:out value="${user.fullName}" /></h2>
 
 
@@ -19,17 +31,21 @@ Backlog items
 <div class="subItemContent"><display:table
 	name="backlogItemsForUserInProgress" id="row"
 	requestURI="dailyWork.action">
+	
+	<!-- Holder column for backlog item tabs -->
+	<display:column class="selectColumn">
+	<div style="height: 15px;"></div>
+	<div id="backlogItemTabContainer-${row.id}" style="overflow:visible; white-space: nowrap; width: 0px;"></div>
+	</display:column>
+	
 	<!-- Display the backlog row name -->
-	<display:column sortable="true" sortProperty="name" title="Name" class="shortNameColumn">
-		<ww:url id="editLink" action="editBacklogItem" includeParams="none">
-			<ww:param name="backlogItemId" value="${row.id}" />
-		</ww:url>
+	<display:column sortable="true" sortProperty="name" title="Name" class="shortNameColumn">				
 		<div>
-		<aef:backlogItemThemes backlogItemId="${row.id}"/>
-		
-		<ww:a href="%{editLink}&contextViewName=dailyWork">
+		<aef:backlogItemThemes backlogItemId="${row.id}"/>		
+		<a class="bliNameLink" onclick="handleTabEvent('backlogItemTabContainer-${row.id}','bli',${row.id},0);">
 			${aef:html(row.name)}
-		</ww:a></div>
+		</a>
+		</div>		
 	</display:column>
 
 	<!-- Display the iteration goal -->
@@ -105,6 +121,10 @@ Backlog items
 			</c:if>
 			<br />
 		</c:forEach></div>
+	</display:column>
+
+	<display:column title="Actions">
+		<img src="static/img/edit.png" alt="Edit" title="Edit" style="cursor: pointer;" onclick="handleTabEvent('backlogItemTabContainer-${row.id}','bli',${row.id},0);" />
 	</display:column>
 
 </display:table></div>

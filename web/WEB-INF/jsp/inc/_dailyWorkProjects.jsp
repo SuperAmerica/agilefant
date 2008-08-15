@@ -57,18 +57,19 @@
 					name="${bliMap[pro]}" id="row"
 					requestURI="${currentAction}.action">
 
+					<!-- Holder column for backlog item tabs -->
+					<display:column class="selectColumn">
+						<div style="height: 15px;"></div>
+						<div id="backlogItemTabContainer-${row.id}" style="overflow:visible; white-space: nowrap; width: 0px;"></div>
+					</display:column>
+
 					<display:column sortable="true" sortProperty="name" title="Name"
-						class="shortNameColumn">
-						<ww:url id="editLink" action="editBacklogItem"
-							includeParams="none">
-							<ww:param name="backlogItemId" value="${row.id}" />
-						</ww:url>
+						class="shortNameColumn">						
 						<div>
-						<aef:backlogItemThemes backlogItemId="${row.id}" positionId="dailyWorkProjectsList_${row.id}"/>
-												
-						<ww:a href="%{editLink}&contextViewName=dailyWork">
-			${aef:html(row.name)}
-		</ww:a></div>
+						<aef:backlogItemThemes backlogItemId="${row.id}" positionId="dailyWorkProjectsList_${row.id}"/>												
+						<a class="bliNameLink" onclick="handleTabEvent('backlogItemTabContainer-${row.id}','bli',${row.id},0);">
+							${aef:html(row.name)}
+						</a></div>
 					</display:column>
 
 					<display:column sortable="true" title="Responsibles" class="responsibleColumn">

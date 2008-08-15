@@ -2,6 +2,7 @@ package fi.hut.soberit.agilefant.business.impl;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -18,6 +19,7 @@ import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.State;
+import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.util.UserComparator;
 
@@ -119,6 +121,20 @@ public class BacklogItemBusinessImpl implements BacklogItemBusiness {
         updateBacklogItemStateAndEffortLeft(backlogItemId, newState,
                 newEffortLeft);
         taskBusiness.updateMultipleTasks(newTaskStates, newTaskNames);
+    }
+    
+    public void setTasksToDone(int backlogItemId) throws ObjectNotFoundException {
+        BacklogItem backlogItem = backlogItemDAO.get(backlogItemId);
+        if (backlogItem == null) {
+            throw new ObjectNotFoundException("Backlog item with id: "
+                    + backlogItemId + " not found.");
+        } else {
+            Map<Integer, State> doneStates = new HashMap<Integer, State>();
+            for (Task t: backlogItem.getTasks()) {
+                doneStates.put(t.getId(), State.DONE);
+            }
+            taskBusiness.updateMultipleTasks(doneStates, new HashMap<Integer, String>());
+        }
     }
 
     public void resetBliOrigEstAndEffortLeft(int backlogItemId) throws ObjectNotFoundException {

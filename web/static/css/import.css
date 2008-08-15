@@ -429,10 +429,37 @@ span.right {
 	/*max-height: 6em;*/
 }
 
+.nameColumn div {
+	width: 270px;
+	overflow: hidden;
+	max-height: 2.5em;
+}
+
+.bliNameLink {
+	cursor: pointer;
+	color: #0000FF;
+}
+
+.bliNameLink:hover {
+	color: #EE5500;
+}
+
 .taskColumn div {
 	width: 115px;
 	white-space: nowrap;
 	overflow: visible;
+}
+
+.effortLeftColumn {
+	width: 50px;
+}
+
+.originalEstimateColumn {
+	width: 50px;
+}
+
+.effortSpentColumn {
+	width: 50px;
 }
 
 .editColumn {
@@ -456,7 +483,7 @@ span.right {
 .contextColumn div {
 	white-space: nowrap;
 	overflow: hidden;
-	max-width: 400px;
+	max-width: 180px;
 	max-height: 4em;
 }
 
@@ -646,7 +673,6 @@ td.deleteButton {
 	text-decoration: underline;
 	color: #EE5500;
 }
-
 
 a.unassigned {
 	color: #ff0000;

@@ -19,7 +19,6 @@ function validateDeletion() {
 		return false;
 }
 
-
 $(document).ready(function() {        
     <c:forEach items="${openBacklogItemTabs}" var="openBacklogItem">
         handleTabEvent("backlogItemTabContainer-${openBacklogItem}", "bli", ${openBacklogItem}, 0);
@@ -42,30 +41,29 @@ $(document).ready(function() {
 		<!-- Checkboxes for bulk-moving backlog items -->
 		<display:column sortable="false" title="" class="selectColumn">
 			<div><ww:checkbox name="selected" fieldValue="${row.id}" /></div>
+			<div style="height: 15px;"></div>
 			<div id="backlogItemTabContainer-${row.id}" style="overflow:visible; white-space: nowrap; width: 15px;"></div>
 		</display:column>
 
 		<display:column sortable="true" sortProperty="name" title="Name"
-			class="shortNameColumn">
+			class="nameColumn">
 									
 			<ww:url id="editLink" action="editBacklogItem" includeParams="none">
-				<ww:param name="backlogItemId" value="${row.id}" />
+				<!-- <ww:param name="backlogItemId" value="${row.id}" /> -->
 			</ww:url>
 			<div>
 			<a href="#" id="themeEdit_${backlog.id}_${row.id}" onclick="openThemeBusinessModal('themeEdit_${backlog.id}_${row.id}', 'editBacklogItemBusinessThemes.action',${row.id}, 0,${backlog.id}); return false;">
-               <img class="themeImg" src="static/img/add_theme.png" alt="Edit themes" title="Edit themes" /></a>
+               <img class="themeImg" src="static/img/theme.png" alt="Edit themes" title="Edit themes" /></a>
             <c:forEach items="${bliThemeCache[row.id]}" var="businessTheme">
             	<a href="#" onclick="openThemeBusinessModal('themeEdit_${backlog.id}_${row.id}', 'editBacklogItemBusinessThemes.action',${row.id},${businessTheme.id},${businessTheme.product.id}); return false;">
             		<span class="businessTheme" title="${businessTheme.description}"><c:out value="${businessTheme.name}"/></span>
             	</a>
             </c:forEach>
-			<%--<aef:backlogItemThemes backlogItemId="${row.id}" businessThemes="${bliThemeCache[row.id]}"/>--%>			
-			<ww:a
-				href="%{editLink}&contextObjectId=${backlog.id}&contextViewName=${currentAction}">
-			${aef:html(row.name)}
-		</ww:a>
-		
-		</div>
+			<a class="bliNameLink" onclick="handleTabEvent('backlogItemTabContainer-${row.id}','bli',${row.id},0);">
+				${aef:html(row.name)}
+			</a>
+			
+			</div>
 		
 				
 		</display:column>
@@ -100,7 +98,7 @@ $(document).ready(function() {
 		</display:column>
 			
 		<display:column sortable="true" sortProperty="effortLeft" defaultorder="descending"
-			title="Effort Left<br/>">
+			title="Effort Left<br/>" class="effortLeftColumn">
 			<span style="white-space: nowrap">
 				<c:choose>
 					<c:when test="${row.effortLeft == null}">&mdash;</c:when>
@@ -110,7 +108,7 @@ $(document).ready(function() {
 		</display:column>
 
 		<display:column sortable="true" sortProperty="originalEstimate" defaultorder="descending"
-				title="Original Estimate<br/>">
+				title="Original Estimate<br/>" class="originalEstimateColumn">
 			<span style="white-space: nowrap">
 				<c:choose>
 					<c:when test="${row.originalEstimate == null}">&mdash;</c:when>
@@ -123,7 +121,7 @@ $(document).ready(function() {
 		<c:choose>
 			<c:when test="${hourReport}">
 			
-				<display:column sortable="true" sortProperty="effortSpent" defaultorder="descending" title="Effort Spent">
+				<display:column sortable="true" sortProperty="effortSpent" defaultorder="descending" title="Effort Spent" class="effortSpentColumn">
 					<span style="white-space: nowrap">
 						<c:choose>
 							<c:when test="${row.effortSpent == null}">&mdash;</c:when>

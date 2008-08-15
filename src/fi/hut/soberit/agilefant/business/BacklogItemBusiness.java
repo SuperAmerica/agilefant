@@ -86,6 +86,13 @@ public interface BacklogItemBusiness {
     public void resetBliOrigEstAndEffortLeft(int backlogItemId)
             throws ObjectNotFoundException;
     
+    /**
+     * Sets backlog item's tasks to done.
+     * @param backlogItemId
+     * @throws ObjectNotFoundException
+     */
+    public void setTasksToDone(int backlogItemId) throws ObjectNotFoundException;
+    
     public HistoryBusiness getHistoryBusiness();
 
     public void setHistoryBusiness(HistoryBusiness historyBusiness);

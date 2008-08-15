@@ -32,6 +32,7 @@ import org.hibernate.annotations.Type;
 
 import fi.hut.soberit.agilefant.util.BacklogItemPriorityComparator;
 import fi.hut.soberit.agilefant.web.page.PageItem;
+import flexjson.JSON;
 
 /**
  * Abstract entity, a Hibernate entity bean, which represents a backlog.
@@ -80,6 +81,7 @@ public abstract class Backlog implements Assignable, TimesheetLoggable, PageItem
 
     @OneToMany(mappedBy = "backlog", fetch = FetchType.LAZY)
     /** A backlog can contain many backlog items. */
+    @JSON(include = false)
     public Collection<BacklogItem> getBacklogItems() {
         return backlogItems;
     }
@@ -89,6 +91,7 @@ public abstract class Backlog implements Assignable, TimesheetLoggable, PageItem
      * Return a sorted list of backlog items. Items are sorted first by priority
      * and then by state.
      */
+    @JSON(include = false)
     public Collection<BacklogItem> getSortedBacklogItems() {
         /* Create two arraylists for temporarily storing the elements */
         ArrayList<BacklogItem> sortedList = new ArrayList<BacklogItem>();
@@ -126,6 +129,7 @@ public abstract class Backlog implements Assignable, TimesheetLoggable, PageItem
     }
 
     @Type(type = "escaped_text")
+    @JSON
     public String getDescription() {
         return description;
     }
@@ -145,6 +149,7 @@ public abstract class Backlog implements Assignable, TimesheetLoggable, PageItem
     @GeneratedValue(strategy = GenerationType.AUTO)
     // not nullable
     @Column(nullable = false)
+    @JSON
     public int getId() {
         return id;
     }
@@ -159,6 +164,7 @@ public abstract class Backlog implements Assignable, TimesheetLoggable, PageItem
     }
 
     @Type(type = "escaped_truncated_varchar")
+    @JSON
     public String getName() {
         return name;
     }
@@ -169,6 +175,7 @@ public abstract class Backlog implements Assignable, TimesheetLoggable, PageItem
 
     /** {@inheritDoc} */
     @ManyToOne
+    @JSON(include = false)
     public User getAssignee() {
         return assignee;
     }
@@ -189,6 +196,7 @@ public abstract class Backlog implements Assignable, TimesheetLoggable, PageItem
      */
     @Transient
     @Deprecated
+    @JSON(include = false)
     public AFTime getBliEffortLeftSum() {
         return backlogHistory.getCurrentEffortLeft();
     }
@@ -201,6 +209,7 @@ public abstract class Backlog implements Assignable, TimesheetLoggable, PageItem
      * @return the bliOrigEstSum the original estimate sum of the bli
      */
     @Transient
+    @JSON(include = false)
     public AFTime getBliOriginalEstimateSum() {
         return backlogHistory.getCurrentOriginalEstimate();
     }
@@ -213,6 +222,7 @@ public abstract class Backlog implements Assignable, TimesheetLoggable, PageItem
      *         including those in sub-backlogs.
      */
     @Transient
+    @JSON(include = false)
     abstract public AFTime getSubBacklogEffortLeftSum();
 
     /**
@@ -223,6 +233,7 @@ public abstract class Backlog implements Assignable, TimesheetLoggable, PageItem
      *         including those in sub-backlogs.
      */
     @Transient
+    @JSON(include = false)
     abstract public AFTime getSubBacklogOriginalEstimateSum();
 
     /**
@@ -231,6 +242,7 @@ public abstract class Backlog implements Assignable, TimesheetLoggable, PageItem
      */
     @Transient
     @Deprecated
+    @JSON(include = false)
     public AFTime getTotalEffortLeftSum() {
         AFTime result = new AFTime(0);
         result.add(this.getSubBacklogEffortLeftSum());
@@ -245,6 +257,7 @@ public abstract class Backlog implements Assignable, TimesheetLoggable, PageItem
      */
     @Transient
     @Deprecated
+    @JSON(include = false)
     public AFTime getTotalOriginalEstimateSum() {
         AFTime result = new AFTime(0);
         result.add(this.getSubBacklogOriginalEstimateSum());
@@ -258,6 +271,7 @@ public abstract class Backlog implements Assignable, TimesheetLoggable, PageItem
      * @return default start date (epoc)
      */
     @Transient
+    @JSON
     public Date getStartDate() {
         return new Date(0);
     }
@@ -267,6 +281,7 @@ public abstract class Backlog implements Assignable, TimesheetLoggable, PageItem
      * @return
      */
     @Transient
+    @JSON(include = false)
     public abstract Date getEndDate();
     
     @Transient
@@ -275,6 +290,7 @@ public abstract class Backlog implements Assignable, TimesheetLoggable, PageItem
     @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "history_fk")
     @Cascade(CascadeType.ALL)
+    @JSON(include = false)
     public BacklogHistory getBacklogHistory() {
         return backlogHistory;
     }
@@ -284,6 +300,7 @@ public abstract class Backlog implements Assignable, TimesheetLoggable, PageItem
     }
 
     @OneToMany(mappedBy = "backlog")
+    @JSON(include = false)
     public Collection<Assignment> getAssignments() {
         return assignments;
     }
@@ -296,6 +313,7 @@ public abstract class Backlog implements Assignable, TimesheetLoggable, PageItem
      * @return
      */
     @Transient
+    @JSON(include = false)
     public List<User> getResponsibles() {
         List<User> users = new ArrayList<User>(assignments.size());
         for( Assignment assignment : assignments ) {
@@ -304,5 +322,6 @@ public abstract class Backlog implements Assignable, TimesheetLoggable, PageItem
         return users;
     }
     @Transient
+    @JSON
     public abstract Integer getBacklogSize();
 }

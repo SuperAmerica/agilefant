@@ -56,8 +56,12 @@ public class ProductAction extends ActionSupport implements CRUDAction {
     private Map<BusinessTheme, BusinessThemeMetrics> themeMetrics;
     
     private BusinessThemeBusiness businessThemeBusiness; 
+    
     private Map<Integer, List<BusinessTheme>> bliThemeCache;
 
+    private String jsonData = "";
+    
+    
     public Map<Integer, List<BusinessTheme>> getBliThemeCache() {
         return bliThemeCache;
     }
@@ -165,6 +169,16 @@ public class ProductAction extends ActionSupport implements CRUDAction {
         }
         storable.setName(this.product.getName());
         storable.setDescription(this.product.getDescription());
+    }
+    
+    public String getProductJSON() {
+        if (productId > 0) {
+            jsonData = backlogBusiness.getBacklogAsJSON(productId);
+        }
+        else {
+            jsonData = backlogBusiness.getAllProductsAsJSON();
+        }
+        return Action.SUCCESS;
     }
 
     public EffortSumData getEffortLeftSum() {
@@ -301,5 +315,13 @@ public class ProductAction extends ActionSupport implements CRUDAction {
 
     public Map<BusinessTheme, BusinessThemeMetrics> getBusinessThemeMetrics() {
         return themeMetrics;
+    }
+
+    public String getJsonData() {
+        return jsonData;
+    }
+
+    public void setJsonData(String jsonData) {
+        this.jsonData = jsonData;
     }
 }

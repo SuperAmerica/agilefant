@@ -22,6 +22,7 @@ import org.hibernate.annotations.Type;
 
 import fi.hut.soberit.agilefant.util.ProjectMetrics;
 import fi.hut.soberit.agilefant.web.page.PageItem;
+import flexjson.JSON;
 
 /**
  * A Hibernate entity bean which represents a project.
@@ -80,6 +81,7 @@ public class Project extends Backlog implements PageItem {
     /** The product, under which this project belongs. */
     @ManyToOne
     // @JoinColumn (nullable = true)
+    @JSON(include = false)
     public Product getProduct() {
         return product;
     }
@@ -89,6 +91,7 @@ public class Project extends Backlog implements PageItem {
     }
 
     @ManyToOne
+    @JSON(include = false)
     public User getOwner() {
         return owner;
     }
@@ -101,6 +104,7 @@ public class Project extends Backlog implements PageItem {
     @OneToMany(mappedBy = "project")
     @OrderBy(clause = "startDate asc, endDate asc")
     @BatchSize(size=20)
+    @JSON(include = false)
     public List<Iteration> getIterations() {
         return iterations;
     }
@@ -110,6 +114,7 @@ public class Project extends Backlog implements PageItem {
     }
 
     // @Column(nullable = false)
+    @JSON
     public Date getStartDate() {
         return startDate;
     }
@@ -127,6 +132,7 @@ public class Project extends Backlog implements PageItem {
     }
 
     // @Column(nullable = false)
+    @JSON
     public Date getEndDate() {
         return endDate;
     }
@@ -144,6 +150,7 @@ public class Project extends Backlog implements PageItem {
     }
 
     @ManyToOne
+    @JSON(include = false)
     public ProjectType getProjectType() {
         return projectType;
     }
@@ -154,6 +161,7 @@ public class Project extends Backlog implements PageItem {
 
     /** {@inheritDoc} */
     @Transient
+    @JSON(include = false)
     public List<PageItem> getChildren() {
         List<PageItem> c = new ArrayList<PageItem>(this.iterations.size());
         c.addAll(this.iterations);
@@ -162,17 +170,20 @@ public class Project extends Backlog implements PageItem {
 
     /** {@inheritDoc} */
     @Transient
+    @JSON(include = false)
     public PageItem getParent() {
         return getProduct();
     }
 
     /** {@inheritDoc} */
     @Transient
+    @JSON(include = false)
     public boolean hasChildren() {
         return this.iterations.size() > 0 ? true : false;
     }
 
     @Column(nullable = false, columnDefinition = "integer not null default 0")
+    @JSON
     public int getRank() {
         return rank;
     }
@@ -186,6 +197,7 @@ public class Project extends Backlog implements PageItem {
      */
     @Transient
     @Deprecated
+    @JSON(include = false)
     public AFTime getSubBacklogEffortLeftSum() {
         AFTime result = new AFTime(0);
         Iterator<Iteration> it = iterations.iterator();
@@ -203,6 +215,7 @@ public class Project extends Backlog implements PageItem {
      */
     @Transient
     @Deprecated
+    @JSON(include = false)
     public AFTime getSubBacklogOriginalEstimateSum() {
         AFTime result = new AFTime(0);
         Iterator<Iteration> it = iterations.iterator();
@@ -219,6 +232,7 @@ public class Project extends Backlog implements PageItem {
      * Default overhead value for each person assigned to this project
      */
     @Type(type = "af_time")
+    @JSON
     public AFTime getDefaultOverhead() {
         return defaultOverhead;
     }
@@ -235,6 +249,7 @@ public class Project extends Backlog implements PageItem {
     @Type(type = "fi.hut.soberit.agilefant.db.hibernate.EnumUserType", parameters = {
             @Parameter(name = "useOrdinal", value = "true"),
             @Parameter(name = "enumClassName", value = "fi.hut.soberit.agilefant.model.Status") })
+    @JSON
     public Status getStatus() {
         return status;
     }
@@ -244,6 +259,7 @@ public class Project extends Backlog implements PageItem {
     }
 
     @Transient
+    @JSON(include = false)
     public ProjectMetrics getMetrics() {
         return metrics;
     }
@@ -257,6 +273,7 @@ public class Project extends Backlog implements PageItem {
      * 
      * @return
      */
+    @JSON
     public Integer getBacklogSize() {
         return backlogSize;
     }
@@ -267,6 +284,7 @@ public class Project extends Backlog implements PageItem {
 
     @OneToMany(mappedBy="backlog")
     //@OrderBy(clause="businessTheme.name asc")
+    @JSON(include = false)
     public Collection<BacklogThemeBinding> getBusinessThemeBindings() {
         return businessThemeBindings;
     }

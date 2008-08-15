@@ -254,4 +254,26 @@ public interface BacklogBusiness {
      * @return
      */
     public String getIterationGoalsAsJSON(Backlog backlog);
+    
+    /**
+     * Get all backlogs as a json string. 
+     * @return
+     */
+    public String getAllBacklogsAsJSON();
+    
+    /**
+     * Get all products as a json string. 
+     * @return
+     */
+    public String getAllProductsAsJSON();
+    
+    /**
+     * Get the backlog as a json string.
+     */
+    public String getBacklogAsJSON(Backlog backlog);
+    
+    /**
+     * Get the backlog as a json string.
+     */
+    public String getBacklogAsJSON(int backlogId);
 }

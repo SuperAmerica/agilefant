@@ -15,6 +15,7 @@ import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.OrderBy;
 
 import fi.hut.soberit.agilefant.web.page.PageItem;
+import flexjson.JSON;
 
 /**
  * Hibernate entity bean representing a product.
@@ -47,6 +48,7 @@ public class Product extends Backlog implements PageItem {
     @OneToMany(mappedBy = "product")
     @OrderBy(clause = "startDate asc, endDate asc")
     @BatchSize(size=20)
+    @JSON(include = false)
     public List<Project> getProjects() {
         return projects;
     }
@@ -58,6 +60,7 @@ public class Product extends Backlog implements PageItem {
 
     /** {@inheritDoc} */
     @Transient
+    @JSON(include = false)
     public List<PageItem> getChildren() {
         List<PageItem> c = new ArrayList<PageItem>(this.projects.size());
         c.addAll(this.projects);
@@ -66,6 +69,7 @@ public class Product extends Backlog implements PageItem {
 
     /** {@inheritDoc} */
     @Transient
+    @JSON(include = false)
     public PageItem getParent() {
 
         // We don't really want to show portfolio as root
@@ -79,6 +83,7 @@ public class Product extends Backlog implements PageItem {
      * @return always null
      */
     @Transient
+    @JSON
     public Date getEndDate() {
         return null;
     }
@@ -89,6 +94,7 @@ public class Product extends Backlog implements PageItem {
 
     /** {@inheritDoc} */
     @Transient
+    @JSON(include = false)
     public boolean hasChildren() {
         return this.projects.size() > 0 ? true : false;
     }
@@ -99,6 +105,7 @@ public class Product extends Backlog implements PageItem {
     @Transient
     @Deprecated
     @SuppressWarnings("deprecation")
+    @JSON(include = false)
     public AFTime getSubBacklogEffortLeftSum() {
         AFTime result = new AFTime(0);
         
@@ -115,6 +122,7 @@ public class Product extends Backlog implements PageItem {
     @Transient
     @Deprecated
     @SuppressWarnings("deprecation")
+    @JSON(include = false)
     public AFTime getSubBacklogOriginalEstimateSum() {
         AFTime result = new AFTime(0);
         Iterator<Project> it = projects.iterator();
@@ -129,6 +137,7 @@ public class Product extends Backlog implements PageItem {
     @OneToMany(mappedBy = "product")
     @OrderBy(clause = "name asc")
     @BatchSize(size=20)
+    @JSON(include = false)
     public Set<BusinessTheme> getBusinessThemes() {
         return businessThemes;
     }
@@ -138,6 +147,7 @@ public class Product extends Backlog implements PageItem {
     }
     
     @Transient
+    @JSON
     public Integer getBacklogSize() {
         return null;
     }

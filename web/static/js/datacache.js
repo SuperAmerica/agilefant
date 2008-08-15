@@ -3,7 +3,8 @@ var dataCacheClass = function() {
     this.fetchURLs = {
         "allUsers": "getUserJSON.action",
         "allTeams": "getTeamJSON.action",
-        "allProjectTypes": "getProjectTypeJSON.action"
+        "allProjectTypes": "getProjectTypeJSON.action",
+        "allProducts": "getProductJSON.action"
     };
     this.data = {};
 }

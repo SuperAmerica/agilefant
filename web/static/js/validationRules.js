@@ -130,12 +130,14 @@ var agilefantValidationRules = {
 	product: {
 	   rules: {
 	       "product.name": {
-	           required: true
+	           required: true,
+	           unique: [ "name", "allProducts" ]
 	       }
 	   },
 	   messages: {
 	       "product.name": {
-	           required: "Please enter a name"
+	           required: "Please enter a name",
+	           unique: "Product name already in use"
 	       }
 	   }
 	},

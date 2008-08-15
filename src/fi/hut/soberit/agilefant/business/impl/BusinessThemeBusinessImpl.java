@@ -26,6 +26,7 @@ import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.State;
 import fi.hut.soberit.agilefant.util.BusinessThemeMetrics;
+import flexjson.JSONSerializer;
 
 public class BusinessThemeBusinessImpl implements BusinessThemeBusiness {
 
@@ -372,6 +373,18 @@ public class BusinessThemeBusinessImpl implements BusinessThemeBusiness {
         if(binding != null) {
             businessThemeDAO.removeBacklogThemeBinding(binding);
         }
+    }
+    
+    public String getThemesForProductAsJSON(int productId) {
+        return getThemesForProductAsJSON(productDAO.get(productId));
+    }
+    
+    public String getThemesForProductAsJSON(Product product) {
+        if (product == null) {
+            return "[]";
+        }
+        Collection<BusinessTheme> themes = product.getBusinessThemes();
+        return new JSONSerializer().serialize(themes);
     }
     
     public void removeThemeBinding(int bindingId) {

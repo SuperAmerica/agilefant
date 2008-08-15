@@ -15,6 +15,8 @@ import javax.persistence.Table;
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Type;
 
+import flexjson.JSON;
+
 
 /**
  * 
@@ -60,6 +62,7 @@ public class BusinessTheme implements Comparable<BusinessTheme> {
     @GeneratedValue(strategy = GenerationType.AUTO)
     // not nullable
     @Column(nullable = false)
+    @JSON
     public int getId() {
         return id;
     }
@@ -70,6 +73,7 @@ public class BusinessTheme implements Comparable<BusinessTheme> {
 
     @Column(nullable = false, unique = true)
     @Type(type = "escaped_truncated_varchar")
+    @JSON
     public String getName() {
         return name;
     }
@@ -79,6 +83,7 @@ public class BusinessTheme implements Comparable<BusinessTheme> {
     }
 
     @Type(type = "escaped_text")
+    @JSON
     public String getDescription() {
         return description;
     }
@@ -88,6 +93,7 @@ public class BusinessTheme implements Comparable<BusinessTheme> {
     }
     
     @ManyToMany(mappedBy = "businessThemes", targetEntity = fi.hut.soberit.agilefant.model.BacklogItem.class)
+    @JSON(include = false)
     public Collection<BacklogItem> getBacklogItems() {
         return backlogItems;
     }
@@ -105,6 +111,7 @@ public class BusinessTheme implements Comparable<BusinessTheme> {
     }
 
     @ManyToOne
+    @JSON(include = false)
     public Product getProduct() {
         return product;
     }
@@ -114,6 +121,7 @@ public class BusinessTheme implements Comparable<BusinessTheme> {
     }
 
     @Column(columnDefinition = "boolean default 1")
+    @JSON
     public boolean isActive() {
         return active;
     }
@@ -122,6 +130,7 @@ public class BusinessTheme implements Comparable<BusinessTheme> {
         this.active = active;
     }
    @OneToMany(mappedBy="businessTheme")
+   @JSON(include = false)
     public Collection<BacklogThemeBinding> getBacklogBindings() {
         return backlogBindings;
     }

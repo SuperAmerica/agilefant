@@ -8,6 +8,9 @@
 
 <aef:openDialogs context="bli" id="openBacklogItemTabs" />
 
+<!-- context variable for backlog item ajax to know its context -->
+<c:set var="bliListContext" value="backlogList" scope="session" />
+
 <aef:currentUser />
 <script language="javascript" type="text/javascript">
 
@@ -21,7 +24,7 @@ function validateDeletion() {
 
 $(document).ready(function() {        
     <c:forEach items="${openBacklogItemTabs}" var="openBacklogItem">
-        handleTabEvent("backlogItemTabContainer-${openBacklogItem}", "bli", ${openBacklogItem}, 0);
+        handleTabEvent("backlogItemTabContainer-${openBacklogItem}-${bliListContext}", "bli", ${openBacklogItem}, 0);
     </c:forEach>
 });
 
@@ -42,15 +45,20 @@ $(document).ready(function() {
 		<display:column sortable="false" title="" class="selectColumn">
 			<div><ww:checkbox name="selected" fieldValue="${row.id}" /></div>
 			<div style="height: 15px;"></div>
-			<div id="backlogItemTabContainer-${row.id}" style="overflow:visible; white-space: nowrap; width: 15px;"></div>
+			<div id="backlogItemTabContainer-${row.id}-${bliListContext}" style="overflow:visible; white-space: nowrap; width: 15px;"></div>
 		</display:column>
-
-		<display:column sortable="true" sortProperty="name" title="Name"
-			class="nameColumn">
-									
-			<ww:url id="editLink" action="editBacklogItem" includeParams="none">
-				<!-- <ww:param name="backlogItemId" value="${row.id}" /> -->
-			</ww:url>
+		
+		<!-- Make the columns fit in the iteration-page. -->
+		<c:choose>
+			<c:when test="${currentContext == 'iteration'}">
+				<c:set var="nameClass" value="shortNameColumn" />
+			</c:when>
+			<c:otherwise>
+				<c:set var="nameClass" value="nameColumn" />
+			</c:otherwise>
+		</c:choose>
+				
+		<display:column sortable="true" sortProperty="name" title="Name" class="${nameClass}">												
 			<div>
 			<a href="#" id="themeEdit_${backlog.id}_${row.id}" onclick="openThemeBusinessModal('themeEdit_${backlog.id}_${row.id}', 'editBacklogItemBusinessThemes.action',${row.id}, 0,${backlog.id}); return false;">
                <img class="themeImg" src="static/img/theme.png" alt="Edit themes" title="Edit themes" /></a>
@@ -59,13 +67,10 @@ $(document).ready(function() {
             		<span class="businessTheme" title="${businessTheme.description}"><c:out value="${businessTheme.name}"/></span>
             	</a>
             </c:forEach>
-			<a class="bliNameLink" onclick="handleTabEvent('backlogItemTabContainer-${row.id}','bli',${row.id},0);">
+			<a class="bliNameLink" onclick="handleTabEvent('backlogItemTabContainer-${row.id}-${bliListContext}','bli',${row.id},0);">
 				${aef:html(row.name)}
-			</a>
-			
-			</div>
-		
-				
+			</a>			
+			</div>						
 		</display:column>
 
 		<c:choose>
@@ -89,12 +94,9 @@ $(document).ready(function() {
 			<ww:text name="backlogItem.priority.${row.priority}" />
 		</display:column>
 
-		<display:column title="State" sortable="false" class="taskColumn">
+		<display:column title="Progress" sortable="false" class="taskColumn">
 			<%@ include file="./_backlogItemStatusBar.jsp"%>
-			<aef:tasklist backlogItem="${row}"
-				contextViewName="${currentAction}"
-				contextObjectId="${backlog.id}"
-				divId="${divId}" hourReport="${hourReport}" />		
+			<!-- <aef:tasklist backlogItem="${row}" contextViewName="${currentAction}" contextObjectId="${backlog.id}" divId="${divId}" hourReport="${hourReport}" /> -->		
 		</display:column>
 			
 		<display:column sortable="true" sortProperty="effortLeft" defaultorder="descending"
@@ -143,7 +145,7 @@ $(document).ready(function() {
 		</c:choose>
 		
 		<display:column title="Actions" sortable="false">
-			<img src="static/img/edit.png" alt="Edit" title="Edit" style="cursor: pointer;" onclick="handleTabEvent('backlogItemTabContainer-${row.id}','bli',${row.id},0);" />
+			<img src="static/img/edit.png" alt="Edit" title="Edit" style="cursor: pointer;" onclick="handleTabEvent('backlogItemTabContainer-${row.id}-${bliListContext}','bli',${row.id},0);" />
 			<img src="static/img/delete_18.png" alt="Delete" title="Delete" style="cursor: pointer;" onclick="deleteBacklogItem(${row.id}); return false;" />
 		</display:column>
 		

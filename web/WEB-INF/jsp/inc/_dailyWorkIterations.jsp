@@ -1,9 +1,23 @@
 <%@ include file="./_taglibs.jsp"%>
 
+<!-- context variable for backlog item ajax to know its context -->
+<c:set var="bliListContext" value="dailyWorkIterations" scope="session" />
+
+<aef:openDialogs context="bli" id="openBacklogItemTabs" />
+
 <c:if test="${hourReport}">
 	<c:set var="totalSum" value="${null}" />
 </c:if>
 
+<script language="javascript" type="text/javascript">
+
+$(document).ready(function() {        
+    <c:forEach items="${openBacklogItemTabs}" var="openBacklogItem">
+        handleTabEvent("backlogItemTabContainer-${openBacklogItem}-${bliListContext}", "bli", ${openBacklogItem}, 0);
+    </c:forEach>
+});
+
+</script>
 
 <c:if test="${!empty iterations}">
 
@@ -76,14 +90,14 @@
 					<!-- Holder column for backlog item tabs -->
 					<display:column class="selectColumn">
 						<div style="height: 15px;"></div>
-						<div id="backlogItemTabContainer-${row.id}" style="overflow:visible; white-space: nowrap; width: 0px;"></div>
+						<div id="backlogItemTabContainer-${row.id}-${bliListContext}" style="overflow:visible; white-space: nowrap; width: 0px;"></div>
 					</display:column>
 
 					<display:column sortable="true" sortProperty="name" title="Name"
 						class="shortNameColumn">						
 						<div>						
 						<aef:backlogItemThemes backlogItemId="${row.id}" positionId="dailyWorkIterationList_${row.id}"/>						
-						<a class="bliNameLink" onclick="handleTabEvent('backlogItemTabContainer-${row.id}','bli',${row.id},0);">
+						<a class="bliNameLink" onclick="handleTabEvent('backlogItemTabContainer-${row.id}-${bliListContext}','bli',${row.id},0);">
 							${aef:html(row.name)}
 						</a>
 						</div>
@@ -112,12 +126,12 @@
 						<ww:text name="backlogItem.priority.${row.priority}" />
 					</display:column>
 
-					<display:column title="State" sortable="false" class="taskColumn">
+					<display:column title="Progress" sortable="false" class="taskColumn">
 						<%@ include file="./_backlogItemStatusBar.jsp"%>
-						<aef:tasklist backlogItem="${row}"
+						<!-- <aef:tasklist backlogItem="${row}"
 							contextViewName="${currentAction}"
 							contextObjectId="${backlog.id}"
-							divId="${divId}" hourReport="${hourReport}" />
+							divId="${divId}" hourReport="${hourReport}" /> -->
 					</display:column>
 
 					<display:column sortable="true" sortProperty="effortLeft"

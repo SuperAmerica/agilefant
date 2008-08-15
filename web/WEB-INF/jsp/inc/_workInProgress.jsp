@@ -2,11 +2,14 @@
 
 <aef:openDialogs context="bli" id="openBacklogItemTabs" />
 
+<!-- context variable for backlog item ajax to know its context -->
+<c:set var="bliListContext" value="workInProgress" scope="session" />
+
 <script language="javascript" type="text/javascript">
 
 $(document).ready(function() {        
     <c:forEach items="${openBacklogItemTabs}" var="openBacklogItem">
-        handleTabEvent("backlogItemTabContainer-${openBacklogItem}", "bli", ${openBacklogItem}, 0);
+        handleTabEvent("backlogItemTabContainer-${openBacklogItem}-${bliListContext}", "bli", ${openBacklogItem}, 0);
     </c:forEach>
 });
 
@@ -35,14 +38,14 @@ Backlog items
 	<!-- Holder column for backlog item tabs -->
 	<display:column class="selectColumn">
 	<div style="height: 15px;"></div>
-	<div id="backlogItemTabContainer-${row.id}" style="overflow:visible; white-space: nowrap; width: 0px;"></div>
+	<div id="backlogItemTabContainer-${row.id}-${bliListContext}" style="overflow:visible; white-space: nowrap; width: 0px;"></div>
 	</display:column>
 	
 	<!-- Display the backlog row name -->
 	<display:column sortable="true" sortProperty="name" title="Name" class="shortNameColumn">				
 		<div>
 		<aef:backlogItemThemes backlogItemId="${row.id}"/>		
-		<a class="bliNameLink" onclick="handleTabEvent('backlogItemTabContainer-${row.id}','bli',${row.id},0);">
+		<a class="bliNameLink" onclick="handleTabEvent('backlogItemTabContainer-${row.id}-${bliListContext}','bli',${row.id},0);">
 			${aef:html(row.name)}
 		</a>
 		</div>		
@@ -70,12 +73,12 @@ Backlog items
 		<ww:text name="backlogItem.priority.${row.priority}" />
 	</display:column>
 
-	<!-- Display state -->
-	<display:column title="State" sortable="false" class="taskColumn">
+	<!-- Display progress -->
+	<display:column title="Progress" sortable="false" class="taskColumn">
 		<%@ include file="./_backlogItemStatusBar.jsp"%>
-		<aef:tasklist backlogItem="${row}"
+		<!-- <aef:tasklist backlogItem="${row}"
 			contextViewName="${currentAction}" contextObjectId="${backlog.id}"
-			divId="${divId}" hourReport="${hourReport}"/>
+			divId="${divId}" hourReport="${hourReport}"/> -->
 	</display:column>
 
 	<!-- Display context -->
@@ -124,7 +127,7 @@ Backlog items
 	</display:column>
 
 	<display:column title="Actions">
-		<img src="static/img/edit.png" alt="Edit" title="Edit" style="cursor: pointer;" onclick="handleTabEvent('backlogItemTabContainer-${row.id}','bli',${row.id},0);" />
+		<img src="static/img/edit.png" alt="Edit" title="Edit" style="cursor: pointer;" onclick="handleTabEvent('backlogItemTabContainer-${row.id}-${bliListContext}','bli',${row.id},0);" />
 	</display:column>
 
 </display:table></div>

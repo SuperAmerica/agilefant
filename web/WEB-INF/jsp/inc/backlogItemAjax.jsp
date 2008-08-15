@@ -9,13 +9,13 @@
 
 <div class="ajaxWindowTabsDiv">
 <ul class="ajaxWindowTabs">
-	<li><a href="#backlogItemEditTab-${backlogItemId}"><span><img src="static/img/edit.png" alt="Edit" /> Edit</span></a></li>
-	<li><a href="#backlogItemProgressTab-${backlogItemId}"><span><img src="static/img/progress.png" alt="Progress" /> Progress</span></a></li>
-	<li><a href="#backlogItemSpentEffTab-${backlogItemId}"><span><img src="static/img/timesheets.png" alt="Spent Effort" /> Spent Effort</span></a></li>
-	<li><a href="#backlogItemThemesTab-${backlogItemId}"><span><img src="static/img/theme.png" alt="Themes" /> Themes</span></a></li>
+	<li><a href="#backlogItemEditTab-${backlogItemId}-${bliListContext}"><span><img src="static/img/edit.png" alt="Edit" /> Edit</span></a></li>
+	<li><a href="#backlogItemProgressTab-${backlogItemId}-${bliListContext}"><span><img src="static/img/progress.png" alt="Progress" /> Progress</span></a></li>
+	<li><a href="#backlogItemSpentEffTab-${backlogItemId}-${bliListContext}"><span><img src="static/img/timesheets.png" alt="Spent Effort" /> Spent Effort</span></a></li>
+	<li><a href="#backlogItemThemesTab-${backlogItemId}-${bliListContext}"><span><img src="static/img/theme.png" alt="Themes" /> Themes</span></a></li>
 </ul>
 
-<div id="backlogItemEditTab-${backlogItemId}" class="backlogItemNaviTab">
+<div id="backlogItemEditTab-${backlogItemId}-${bliListContext}" class="backlogItemNaviTab">
 
 <ww:actionerror />
 <ww:actionmessage />
@@ -358,7 +358,7 @@
 				<td class="deleteButton">
 				<ww:submit value="Delete" onclick="return deleteBacklogItem(${backlogItemId})" />
 				<ww:reset value="Cancel"
-					onclick="closeTabs('bli', 'backlogItemTabContainer-${backlogItemId}', ${backlogItemId});" />				
+					onclick="closeTabs('bli', 'backlogItemTabContainer-${backlogItemId}-${bliListContext}', ${backlogItemId});" />				
 				</td>
 			</tr>
 		</table>
@@ -377,7 +377,7 @@
 <!-- edit tab ends -->
 
 <!-- tasks tab begins -->
-<div id="backlogItemProgressTab-${backlogItemId}" class="backlogItemNaviTab">
+<div id="backlogItemProgressTab-${backlogItemId}-${bliListContext}" class="backlogItemNaviTab">
 
 <h2>Progress</h2>
 
@@ -444,7 +444,7 @@
 	<td>
 	<div class="subItems" style="margin-top: 0px; width: 725px;">
 
-	<table class="formTable">
+	<table class="progressTable">
 	<tr>
 	<td colspan="2">
 	<table>
@@ -506,7 +506,7 @@
 				<div class="subItemHeader">			
 				<table cellpadding="0" cellspacing="0">
 	            	<tr>
-	                <td class="header">Todos</td>
+	                <td class="header">TODOs <a id="addTodo" href="#">Add new &raquo;</a></td>
 					</tr>
 				</table>
 				</div>
@@ -518,8 +518,7 @@
 						
 						<display:column sortable="false" title="Name"
 							class="shortNameColumn">
-							<ww:textfield size="20" name="taskNames[${row.id}]" value="${row.name}" />												
-							<!-- ${aef:html(row.name)} -->					
+							<ww:textfield size="70" name="taskNames[${row.id}]" value="${row.name}" />												
 						</display:column>
 														
 						<display:column sortable="false" title="State">											
@@ -588,7 +587,7 @@
 	</td>
 	<td class="deleteButton">
 		<ww:reset value="Cancel"
-			onclick="closeTabs('bli', 'backlogItemTabContainer-${backlogItemId}', ${backlogItemId});" />				
+			onclick="closeTabs('bli', 'backlogItemTabContainer-${backlogItemId}-${bliListContext}', ${backlogItemId});" />				
 	</td>
 	</tr>
 	
@@ -605,11 +604,95 @@
 </div>
 <!-- Tasks tab ends -->
 
-<div id="backlogItemSpentEffTab-${backlogItemId}" class="backlogItemNaviTab">
-	This is bli spent effort.
+<div id="backlogItemSpentEffTab-${backlogItemId}-${bliListContext}" class="backlogItemNaviTab">
+
+<h2>Spent effort</h2>
+
+<aef:hourEntries id="hourEntries" target="${backlogItem}" />
+
+<div class="subItems" style="margin-left: 3px; width: 710px;">
+	<div class="subItemHeader" style="padding: 3px !important;">
+     	Spent effort
+     	<ww:url id="createLink" action="ajaxCreateHourEntry" includeParams="none">
+			<ww:param name="backlogId" value="${backlog.id}" />
+		</ww:url>
+		<ww:a cssClass="openCreateDialog openUserDialog" title="Log effort" href="%{createLink}&contextViewName=${currentAction}&contextObjectId=${backlog.id}">Log effort &raquo;</ww:a>		
+	</div>						
+	<c:if test="${!empty hourEntries}">
+		<div class="subItemContent">		
+			<p>
+				<display:table name="${hourEntries}" id="row" defaultsort="1" defaultorder="descending" requestURI="editBacklogItem.action">
+					
+					<display:column sortable="true" title="Date" style="white-space:nowrap;">
+						<ww:date name="#attr.row.date" format="yyyy-MM-dd HH:mm" />
+					</display:column>
+					
+					<display:column sortable="true" title="User">
+						${aef:html(row.user.fullName)}
+					</display:column>
+					
+					<display:column sortable="true" title="Spent effort" sortProperty="timeSpent">
+						${aef:html(row.timeSpent)}
+					</display:column>
+					
+					<display:column sortable="false" title="Comment">
+						<c:out value="${row.description}"/>
+					</display:column>
+
+					<%-- Not implemented yet --%>
+						<display:column sortable="false" title="Action">
+							<ww:url id="editLink" action="editHourEntry" includeParams="none">
+								<c:choose>
+									<c:when test="${myAction == 'editBacklogItem'}">
+										<ww:param name="backlogItemId" value="${backlogItem.id}" />
+									</c:when>
+									<c:otherwise>
+										<ww:param name="backlogId" value="${backlog.id}" />
+									</c:otherwise>
+								</c:choose>
+								<ww:param name="hourEntryId" value="${row.id}" />
+							</ww:url>	
+							<ww:url id="deleteLink" action="deleteHourEntry" includeParams="none">
+								<c:choose>
+									<c:when test="${myAction == 'editBacklogItem'}">
+										<ww:param name="backlogItemId" value="${backlogItem.id}" />
+									</c:when>
+									<c:otherwise>
+										<ww:param name="backlogId" value="${backlog.id}" />
+									</c:otherwise>
+								</c:choose>
+								<ww:param name="hourEntryId" value="${row.id}" />
+							</ww:url>
+							<c:choose>	
+								<c:when test="${myAction == 'editBacklogItem'}">		
+									<ww:a cssClass="openModalWindow" href="%{editLink}&contextViewName=editBacklogItem&contextObjectId=${backlogItemId}">
+										<img src="static/img/edit.png" alt="Edit" title="Edit" />
+									</ww:a>
+									<ww:a href="%{deleteLink}&contextViewName=editBacklogItem&contextObjectId=${backlogItemId}" onclick="return confirmDeleteHour()">
+										<img src="static/img/delete_18.png" alt="Delete" title="Delete" />
+									</ww:a>
+								</c:when>
+								<c:otherwise>
+									<ww:a cssClass="openModalWindow" href="%{editLink}&contextViewName=${myAction}&contextObjectId=${backlog.id}">
+										<img src="static/img/edit.png" alt="Edit" title="Edit" />
+									</ww:a>
+									<ww:a href="%{deleteLink}&contextViewName=${myAction}&contextObjectId=${backlog.id}" onclick="return confirmDeleteHour()">
+										<img src="static/img/delete_18.png" alt="Delete" title="Delete" />
+									</ww:a>
+								</c:otherwise>
+							</c:choose>
+						</display:column>
+					</display:table>
+				</p>
+			</div>
+		</c:if> <%-- No tasks --%>
+	</div>
+<aef:modalAjaxWindow/>
+
+	
 </div>
 
-<div id="backlogItemThemesTab-${backlogItemId}" class="backlogItemNaviTab">
+<div id="backlogItemThemesTab-${backlogItemId}-${bliListContext}" class="backlogItemNaviTab">
 	This is bli themes.
 </div>
 

@@ -1,20 +1,32 @@
 
-var dataCacheClass = function() { this.allUsers = null; }
-dataCacheClass.prototype.getAllUsers = function() {
-    if (this.allUsers == null) {
-        var json;
-        $.ajax({
-            url: "getUserJSON.action",
-            async: false,
-            dataType: 'json',
-            type: 'POST',
-            success: function(data, status) {
-                json = data;
-            }
-        });
-        this.allUsers = json;
+var dataCacheClass = function() {
+    this.fetchURLs = {
+        "allUsers": "getUserJSON.action",
+        "allTeams": "getTeamJSON.action"
     }
-    return this.allUsers;
+}
+
+dataCacheClass.prototype.get = function(element, options) {
+    var me = this;
+    var settings = {
+		url: me.fetchURLs[element],
+		async: false,
+		dataType: 'json',
+		type: 'POST',
+		success: function(data, status) {
+		    me.put(element, data);
+        }
+    };
+    jQuery.extend(settings, options);
+    if (this[element] == null) {
+        this[element] = [];
+        $.ajax(settings);
+    }
+    return this[element];
+}
+
+dataCacheClass.prototype.put = function(element, value) {
+    this[element] = value;
 }
 
 var jsonDataCache = new dataCacheClass();

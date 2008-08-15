@@ -90,19 +90,20 @@ public class BusinessThemeDAOHibernate extends GenericDAOHibernate<BusinessTheme
     @SuppressWarnings("unchecked")
     public List<BacklogThemeBinding> getIterationThemesByProject(Project project) {
         DetachedCriteria iterationCriteria = DetachedCriteria.forClass(Iteration.class);
-        DetachedCriteria bindings = iterationCriteria.createAlias("businessThemeBindings", "themeBindings");      
-        iterationCriteria.setFetchMode("businessThemeBindings", FetchMode.JOIN);
+        //DetachedCriteria bindings = iterationCriteria.createAlias("businessThemeBindings", "themeBindings");      
+        //iterationCriteria.setFetchMode("businessThemeBindings", FetchMode.JOIN);
         iterationCriteria.setFetchMode("assignments", FetchMode.SELECT);
         iterationCriteria.setFetchMode("backlogItems", FetchMode.SELECT);
         iterationCriteria.setFetchMode("owner", FetchMode.SELECT);
         iterationCriteria.setFetchMode("backlogHistory", FetchMode.SELECT);
         iterationCriteria.setFetchMode("project", FetchMode.SELECT);
-        bindings.setFetchMode("businessTheme", FetchMode.JOIN);
+        //bindings.setFetchMode("businessTheme", FetchMode.JOIN);
         
         iterationCriteria.add(Restrictions.eq("project", project));
         List<Object> res = super.getHibernateTemplate().findByCriteria(iterationCriteria);
         List<BacklogThemeBinding> ret = new ArrayList<BacklogThemeBinding>();
         for(Object ob : res) {
+            System.out.println(ob);
             Iteration iter = (Iteration)ob;
             if(iter.getBusinessThemeBindings() != null) {
                 ret.addAll(iter.getBusinessThemeBindings());

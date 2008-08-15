@@ -337,7 +337,7 @@ public class BusinessThemeBusinessImpl implements BusinessThemeBusiness {
          * fixed binding. Relative binding should have format "12%", "12.3%" or "12,3%".
          * As fixed format should be standard AFTime format.
          */
-        if(trimmed.charAt(trimmed.length() - 1) == '%') { //relative
+        if(trimmed.length() > 0 && trimmed.charAt(trimmed.length() - 1) == '%') { //relative
             try {
                 trimmed  = trimmed.substring(0,trimmed.length()-1);
                 binding.setPercentage(new Float(Float.parseFloat(trimmed)));

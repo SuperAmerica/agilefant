@@ -27,7 +27,13 @@
 <aef:menu navi="backlog" pageHierarchy="${pageHierarchy}" />
 <ww:actionerror />
 <ww:actionmessage />
-
+<script type="text/javascript">
+<!--
+$(document).ready(function() {
+	$('#businessThemeTable').themeBinding('#addProjectBusinessTheme',${project.product.id},'#backlogThemeSave');
+});
+//-->
+</script>
 <ww:date name="%{new java.util.Date()}" id="start"
 	format="%{getText('webwork.shortDateTime.format')}" />
 <ww:date name="%{new java.util.Date()}" id="end"
@@ -480,6 +486,93 @@
 				</table>
 		<table>
 			<tr>
+				<td>
+					<table>
+						<tr>
+							<td>
+								<c:if test="${projectId != 0}">
+									<div class="subItems">
+										<div class="subItemHeader">
+										    <table cellspacing="0" cellpadding="0">
+					            			    <tr>
+					            			    	<td class="header">Themes <a id="addProjectBusinessTheme" href="#">Attach theme &raquo;</a></td>
+												</tr>
+											</table>
+										</div>
+										<div class="subItemContent">
+										<ww:form action="storeBacklogThemebinding" method="post">
+										<ww:hidden name="backlogId" value="${project.id}"/>
+										<input type="hidden" name="contextViewName" value="project" />
+										<p>
+										<c:choose>
+										<c:when test="${!empty project.businessThemeBindings}">
+											<display:table htmlId="businessThemeTable" class="listTable" name="project.businessThemeBindings" id="row" requestURI="editProject.action">
+					
+												<display:column sortable="true" title="Name" sortProperty="businessTheme.name">
+													<c:out value="${row.businessTheme.name}"/>
+												</display:column>
+												
+												<display:column sortable="true" sortProperty="boundEffort" title="Planned spending">
+													<c:choose>
+														<c:when test="${row.relativeBinding == true}">
+															<c:out value="${row.boundEffort}"/>
+															(<c:out value="${row.percentage}"/>%)
+														</c:when>
+														<c:otherwise><c:out value="${row.fixedSize}"/></c:otherwise>
+													</c:choose>
+												</display:column>
+												<display:column sortable="false" title="Actions">
+													<img style="cursor: pointer;" class="edit_backlog_theme" onclick="$('#businessThemeTable').themeBinding().edit(this,${row.id}, ${row.businessTheme.id},${row.relativeBinding},'${row.fixedSize}','${row.percentage}');" src="static/img/edit.png" title="Edit" />
+													<img style="cursor: pointer;" class="delete_backlog_theme" onclick="$('#businessThemeTable').themeBinding().delete(this,${row.id});" src="static/img/delete_18.png" title="Delete" />
+												</display:column>
+											</display:table>
+											</c:when>
+											<c:otherwise>
+												<table id="businessThemeTable" style="display:none;" class="listTable">
+													<tr><th class="sortable">Name</th><th class="sortable">Planned spending</th><th>Actions</th></tr>
+												</table>
+											</c:otherwise>
+											</c:choose>
+											</p>
+											<input id="backlogThemeSave" style="display: none"; type="submit" value="Save" />
+											</ww:form>				
+											</div>
+											<div class="subItemHeader">
+										    <table cellspacing="0" cellpadding="0">
+					            			    <tr>
+					            			    	<td class="header">Iteration themes</td>
+												</tr>
+											</table>
+											</div>
+											<c:if test="${!empty iterationThemes}">
+												<display:table htmlId="businessThemeTable" class="listTable" name="iterationThemes" id="row" requestURI="editProject.action">
+						
+													<display:column sortable="true" title="Name" sortProperty="businessTheme.name">
+														<c:out value="${row.businessTheme.name}"/>
+													</display:column>
+													
+													<display:column sortable="true" sortProperty="boundEffort" title="Planned spending">
+														<c:choose>
+															<c:when test="${row.relativeBinding == true}">
+																<c:out value="${row.boundEffort}"/>
+																(<c:out value="${row.percentage}"/>%)
+															</c:when>
+															<c:otherwise><c:out value="${row.fixedSize}"/></c:otherwise>
+														</c:choose>
+													</display:column>
+													<display:column sortable="true" title="Iteration" sortProperty="backlog.name">
+														<c:out value="${row.backlog.name}"/>
+													</display:column>
+												</display:table>
+											</c:if>
+									</div>
+								</c:if>
+							</td>
+						</tr>
+					</table>
+				</td>
+				</tr>
+				<tr>
 				<td>
 					<c:if test="${project.id > 0}">
 						<div class="subItems">

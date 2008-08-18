@@ -57,12 +57,14 @@
         } else {
           oldCells = false;
         }
+        if(me.options.useId) { 
+        	me.counter--;
+	    }
 	    jQuery.each(this.fields,function(i,v) {
-          if(id && me.useId) {
+          if(id && me.options.useId) {
               i = i + "["+id+"]";
-          } else if(me.useId) { //generate negative id for new row field
+          } else if(me.options.useId) { //generate negative id for new row field
               i = i + "["+me.counter+"]";
-              me.counter--;
           }
           var oldCell;
           var oldCellVal;
@@ -86,7 +88,8 @@
           }
           if(v.type == "text" || v.type == "hidden") {
             if(val == null) { val = ""; }
-            $('<input type="'+v.type+'" name="'+i+'" value="'+val+'" />').appendTo(tmp);
+            var inp = $('<input type="'+v.type+'" name="'+i+'" value="'+val+'" />').appendTo(tmp);
+          	if(v.size) { inp.attr("size",v.size) }
           } else if(v.type == "reset") {
           	$('<input type="reset" value="Cancel" />').appendTo(tmp);
           } else if(v.type == "select") {

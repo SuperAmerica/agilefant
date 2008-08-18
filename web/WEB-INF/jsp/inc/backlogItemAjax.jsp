@@ -452,6 +452,15 @@
 					}					
 				}
 			});
+			$('#todoTable-${backlogItemId}-${bliListContext}').inlineTableEdit({
+						  add: '#addTodo-${backlogItemId}-${bliListContext}', 
+						  useId: true,
+						  fields: {
+						  	taskNames: {cell: 0, type: 'text', size: 70},
+						  	taskStates: {cell: 1,type: 'select', data: {'NOT_STARTED': 'Not started', 'STARTED': 'Started', 'PENDING': 'Pending', 'BLOCKED': 'Blocked', 'IMPLEMENTED': 'Implemented', 'DONE': 'Done'}},											  	
+						  	reset: {cell: 2, type: 'reset'}
+						  }
+			});
 		});
 	<%-- Tasks to DONE confirmation script ends. --%>
 </script>
@@ -521,14 +530,15 @@
 				<div class="subItemHeader">			
 				<table cellpadding="0" cellspacing="0">
 	            	<tr>
-	                <td class="header">TODOs <a id="addTodo" href="#">Add new &raquo;</a></td>
+	                <td class="header">TODOs <a id="addTodo-${backlogItemId}-${bliListContext}" href="#">Add new &raquo;</a></td>
 					</tr>
 				</table>
 				</div>
-				<c:if test="${!empty backlogItem.tasks}">
+				<c:choose>
+				<c:when test="${!empty backlogItem.tasks}">
 					<div class="subItemContent">										
 					<p>
-					<display:table class="listTable" name="backlogItem.tasks"
+					<display:table htmlId="todoTable-${backlogItemId}-${bliListContext}" class="listTable" name="backlogItem.tasks"
 						id="row" requestURI="editBacklogItem.action">
 						
 						<display:column sortable="false" title="Name"
@@ -587,7 +597,12 @@
 	
 					</display:table></p>				
 					</div>
-				</c:if> <%-- No tasks --%>
+				</c:when> 
+				<c:otherwise>
+				<%-- No tasks: container --%>
+					<table id="todoTable-${backlogItemId}-${bliListContext}" style="display: none;" class="listTable"><tr><th>Name</th><th>State</th><th>Actions</th></tr></table>
+				</c:otherwise>
+				</c:choose>
 				</div>
 			</td>
 		</tr>

@@ -1,3 +1,29 @@
+function initOnLoad(elem) {
+    var me = $(elem);
+    /*
+     * Initialize the dialog windows for creating
+     */
+    me.find('a.openCreateDialog').click(function() {
+        if ($("div.createDialogWindow").length == 0) {
+            openCreateDialog($(this));
+        }
+        else {
+            confirmOpenCreateDialog($(this));
+        }
+        return false;
+    });
+    
+    /*
+     *Initialize the wysiwyg editors
+     */
+    me.find('.useWysiwyg').wysiwyg({controls : {
+        separator04 : { visible : true },
+        insertOrderedList : { visible : true },
+        insertUnorderedList : { visible : true }
+    }});
+        
+    return false;
+}
 
 function submitDialogForm() {
     if($(this).valid()) {
@@ -191,17 +217,6 @@ $(document).ready(function() {
         $(this).hide();
     });
 
-    /*
-     *Initialize the wysiwyg editors
-     */
-    $('.useWysiwyg').wysiwyg({controls : {
-        separator04 : { visible : true },
-
-        insertOrderedList : { visible : true },
-        insertUnorderedList : { visible : true }
-    }});
-    
-    
     /* 
      * Initialize the create new menu
      */
@@ -219,17 +234,5 @@ $(document).ready(function() {
     });
     
 
-	/*
-	 * Initialize the dialog windows for creating
-	 */
-	$('.openCreateDialog').click(function() {
-        if ($("div.createDialogWindow").length == 0) {
-            openCreateDialog($(this));
-        }
-        else {
-            confirmOpenCreateDialog($(this));
-        }
-        return false;
-    });
-	    
+	initOnLoad(document);
 });

@@ -187,6 +187,7 @@ function showOldEffort() {
                             <label>Teams</label>
                             <ul class="groups" />
                         </div>
+                        
                         <script type="text/javascript">
                             $(document).ready( function() {
                                 <aef:teamList />

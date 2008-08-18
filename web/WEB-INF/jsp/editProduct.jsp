@@ -47,7 +47,17 @@ $(document).ready(function() {
     <c:forEach items="${openProjects}" var="openProject">
         handleTabEvent("projectTabContainer-${openProject[0]}", "project", ${openProject[0]}, ${openProject[1]});
     </c:forEach>
-        
+    
+    var editForm = $('#productEditForm');
+    var ruleset = agilefantValidationRules.product;
+    jQuery.extend(ruleset.rules, {
+        "product.name": {
+            required: true,
+            unique: [ "name", "allProducts", { excludeIds: [${product.id}] } ]
+        }
+    });
+    editForm.validate(ruleset);
+    editForm.submit(function() { return $(this).valid(); });
 });
 
 
@@ -118,7 +128,8 @@ var productId = ${product.id};
 			</table>
 			</div>
 
-			<div id="editProductForm" style="display: none;"><ww:form
+			<div id="editProductForm" style="display: none;">
+			<ww:form id="productEditForm"
 				action="storeProduct" method="post">
 				<ww:hidden name="productId" value="${product.id}" />
 

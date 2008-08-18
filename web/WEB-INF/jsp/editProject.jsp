@@ -30,6 +30,11 @@
 <script type="text/javascript">
 <!--
 $(document).ready(function() {
+    var editForm = $('#projectEditForm');
+    editForm.validate(agilefantValidationRules.project);
+    editForm.submit(function() { return $(this).valid(); });
+
+
 	var getThemeData = function() {
 		var ret = {};
 		var data = jsonDataCache.get('themesByProduct',{data: {productId: ${project.product.id}}});
@@ -243,7 +248,7 @@ $(document).ready(function() {
 											</table>
 										</div>
 										<div id="editProjectForm" style="display: none;">
-											<ww:form action="store${new}Project" method="post">
+											<ww:form id="projectEditForm" action="store${new}Project" method="post">
 												<ww:hidden name="projectId" value="${project.id}" />
 												<table class="formTable">
 													<tr>
@@ -255,7 +260,7 @@ $(document).ready(function() {
 														<td>Product</td>
 														<td>*</td>
 														<td colspan="2">
-															<select name="productId" onchange="disableIfEmpty(this.value, ['saveButton']);">
+															<select name="productId">
 																<option class="inactive" value="">(select product)</option>
 																	<c:forEach items="${productList}" var="product">
 																		<c:choose>
@@ -490,7 +495,7 @@ $(document).ready(function() {
 				   											<ww:url id="createLink" action="ajaxCreateHourEntry" includeParams="none">
 				   												<ww:param name="backlogId" value="${projectId}" />
 				   											</ww:url>
-					   										<ww:a cssClass="openCreateDialog openUserDialog" title="Log effort" href="%{createLink}&contextViewName=editProject&contextObjectId=${projectId}">Log effort &raquo;</ww:a>
+					   										<ww:a cssClass="openCreateDialog openUserDialog" title="Log effort" href="%{createLink}">Log effort &raquo;</ww:a>
 					   									</td>
 													</tr>
 												</tbody>
@@ -700,6 +705,7 @@ $(document).ready(function() {
 </c:choose>
 
 <%-- Hour reporting here - Remember to expel David H. --%>
+
 <aef:hourReporting id="hourReport"></aef:hourReporting>
 <c:if test="${hourReport == 'true' && projectId != 0}">
 	<c:set var="myAction" value="editProject" scope="session" />

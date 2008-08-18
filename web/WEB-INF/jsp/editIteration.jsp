@@ -17,6 +17,14 @@
 <ww:actionerror />
 <ww:actionmessage />
 
+<script type="text/javascript">
+$(document).ready(function() {
+    var editForm = $('#iterationEditForm');
+    editForm.validate(agilefantValidationRules.iteration);
+    editForm.submit(function() { return $(this).valid(); });
+});
+</script>
+
 <h2><c:out value="${iteration.name}" /></h2>
 <table>
 	<table>
@@ -124,7 +132,7 @@
 				</table>
 				</div>
 				<div id="editIterationForm" style="display: none;"><ww:form
-					method="post" action="storeIteration">
+					method="post" id="iterationEditForm" action="storeIteration">
 					<ww:hidden name="iterationId" value="${iteration.id}" />
 					<ww:date name="%{iteration.getTimeOfDayDate(6)}" id="start"
 						format="%{getText('webwork.shortDateTime.format')}" />
@@ -154,8 +162,7 @@
 						<tr>
 							<td>Project</td>
 							<td>*</td>
-							<td colspan="2"><select name="projectId"
-								onchange="disableIfEmpty(this.value, ['saveButton']);">
+							<td colspan="2"><select name="projectId">
 								<option class="inactive" value="">(select project)</option>
 								<c:forEach items="${productList}" var="product">
 									<option value="" class="inactive productOption">${aef:out(product.name)}</option>

@@ -22,10 +22,19 @@
 <ww:actionerror />
 <ww:actionmessage />
 
-<h2>${iterationGoal.name}</h2>
+<script type="text/javascript">
+$(document).ready(function() {
+    var editForm = $('#iterationGoalEditForm');
+    editForm.validate(agilefantValidationRules.iterationGoal);
+    editForm.submit(function() { return $(this).valid(); });
+});
+</script>
 
 
-<ww:form action="storeIterationGoal"  method="post">
+<h2>Edit iteration goal</h2>
+
+
+<ww:form id="iterationGoalEditForm" action="storeIterationGoal"  method="post">
 	<ww:hidden name="iterationGoalId" value="${iterationGoal.id}" />
 	<table class="formTable">
 		<tr>
@@ -46,10 +55,10 @@
 			<td colspan="2">
 			<c:choose>
 				<c:when test="${iterationGoalId == 0}">
-					<select name="iterationId" onchange="disableIfEmpty(this.value, ['createButton', 'createAndCloseButton']);">
+					<select name="iterationId">
 				</c:when>
 				<c:otherwise>
-					<select name="iterationId" onchange="disableIfEmpty(this.value, ['saveButton', 'saveAndCloseButton']);">
+					<select name="iterationId">
 				</c:otherwise>
 			</c:choose>
 				<option value="" class="inactive">(select iteration)</option>

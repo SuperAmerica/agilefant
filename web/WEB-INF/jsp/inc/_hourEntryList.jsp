@@ -13,7 +13,7 @@
 <div class="subItems" style="margin-left: 3px;">
 	<div class="subItemHeader" style="padding: 3px !important;">
      	Logged effort
-        <ww:url id="createLink" action="createHourEntry" includeParams="none">
+        <ww:url id="createLink" action="ajaxCreateHourEntry" includeParams="none">
         	<c:choose>
     	    	<c:when test="${myAction == 'editBacklogItem'}">
 					<ww:param name="backlogItemId" value="${backlogItemId}" />
@@ -25,10 +25,10 @@
 		</ww:url>
 		<c:choose>
 			<c:when test="${myAction == 'editBacklogItem'}">
-				<ww:a cssClass="openModalWindow" href="%{createLink}&contextViewName=${myAction}&contextObjectId=${backlogItemId}">Create new &raquo;</ww:a>	
+				<ww:a cssClass="openCreateDialog openHourEntryDialog" href="%{createLink}&contextViewName=${myAction}&contextObjectId=${backlogItemId}">Create new &raquo;</ww:a>	
 			</c:when>
 			<c:otherwise>
-				<ww:a cssClass="openModalWindow" href="%{createLink}&contextViewName=${myAction}&contextObjectId=${backlog.id}">Create new &raquo;</ww:a>
+				<ww:a cssClass="openCreateDialog openHourEntryDialog" href="%{createLink}&contextViewName=${myAction}&contextObjectId=${backlog.id}">Create new &raquo;</ww:a>
 			</c:otherwise>
 		</c:choose>
 	</div>						
@@ -101,4 +101,3 @@
 			</div>
 		</c:if> <%-- No tasks --%>
 	</div>
-<aef:modalAjaxWindow/>

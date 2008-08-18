@@ -35,19 +35,23 @@ jQuery.validator.addMethod("before", function(value, element, param) {
  * Unique field validator.
  * param[0] should be the field name
  * param[1] should be the name of the cached json object
+ * param[2] should be json element of additional parameters
  */
 jQuery.validator.addMethod("unique", function(value, element, param) {
+    var options = {
+        excludeIds: []
+    }
+    jQuery.extend(options, param[2]);
     var elem = $(element);
     var valid = true;
-    var e = jsonDataCache;
-    var f = param[1];
-    var g;
     var list = jsonDataCache.get(param[1]);
     if (param[0] == null || param[0] == "") {
         return true;
     }
     $.each(list, function() {
-        if (this[param[0]] == elem.val()) {
+        var foo = jQuery.inArray(this.id, options.excludeIds);
+        if ((jQuery.inArray(this.id, options.excludeIds) == -1) &&
+            this[param[0]] == elem.val()) {
             valid = false;
         }
     });
@@ -158,6 +162,9 @@ var agilefantValidationRules = {
                 required: true,
                 time: true
             },
+            "iteration.backlogSize": {
+                digits: true
+            }
 	   },
 	   messages: {
 	       "iteration.name": {
@@ -175,6 +182,9 @@ var agilefantValidationRules = {
                required: "Please specify a end date",
                time: "Invalid date format"
            },
+           "iteration.backlogSize": {
+               digits: "Please enter only numbers"
+           }
 	   }
 	},
 	iterationGoal: {

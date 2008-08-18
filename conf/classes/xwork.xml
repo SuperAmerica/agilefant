@@ -934,10 +934,6 @@
 			class="businessThemeAction">
 			<result type="redirect-action">listThemes</result>
 		</action>
-		<action name="editBacklogItemBusinessThemes" method="editBacklogItemBusinessThemes"
-			class="businessThemeAction">
-			<result>/WEB-INF/jsp/inc/_businessThemeModal.jsp</result>		
-		</action>
 		<action name="addThemeToBacklogItem" method="addBusinessTheme"
 			class="backlogItemAction">					
 		</action>

@@ -191,11 +191,10 @@
 				<td colspan="2">
 				<c:choose>
 					<c:when test="${backlogItemId == 0}">
-						<select name="backlogId" 
-										onchange="disableIfEmpty(this.value, ['createButton', 'createAndCloseButton']);">
+						<select name="backlogId">
 					</c:when>
 					<c:otherwise>
-						<select name="backlogId" onchange="disableIfEmpty(this.value, ['saveButton', 'saveAndCloseButton']);">
+						<select name="backlogId">
 					</c:otherwise>
 				</c:choose>
 	
@@ -478,12 +477,7 @@
 			
 			<td>
 				<c:if test="${hourReport}">			
-				Log effort for <c:out value="${currentUser.initials}"/> 		
-		        <ww:url id="hourentryLink" action="createHourEntry" includeParams="none">
-					<ww:param name="backlogItemId" value="${backlogItem.id}" />
-					<ww:param name="iterationId" value="${iterationId}" />
-					<ww:param name="autoclose" value="1" />
-				</ww:url>			
+				Log effort for <c:out value="${currentUser.initials}"/> 					
 				<ww:textfield size="5" name="spentEffort" id="effortSpent_${backlogItem.id}"/>  
 				</c:if>
 			</td>
@@ -583,7 +577,7 @@
 	
 	<tr>
 	<td>
-		<ww:submit value="Save" action="quickStoreTaskList" onclick="return validateSpentEffortById('effortSpent_${backlogItem.id}','Invalid format for spent effort.'); return false;" />
+		<ww:submit value="Save" action="quickStoreTaskList" />
 	</td>
 	<td class="deleteButton">
 		<ww:reset value="Cancel"
@@ -614,9 +608,9 @@
 	<div class="subItemHeader" style="padding: 3px !important;">
      	Spent effort
      	<ww:url id="createLink" action="ajaxCreateHourEntry" includeParams="none">
-			<ww:param name="backlogId" value="${backlog.id}" />
+			<ww:param name="backlogItemId" value="${backlogItemId}" />
 		</ww:url>
-		<ww:a cssClass="openCreateDialog openUserDialog" title="Log effort" href="%{createLink}&contextViewName=${currentAction}&contextObjectId=${backlog.id}">Log effort &raquo;</ww:a>		
+		<ww:a cssClass="openCreateDialog openHourEntryDialog" title="Log effort" href="%{createLink}">Log effort &raquo;</ww:a>		
 	</div>						
 	<c:if test="${!empty hourEntries}">
 		<div class="subItemContent">		
@@ -665,17 +659,17 @@
 							</ww:url>
 							<c:choose>	
 								<c:when test="${myAction == 'editBacklogItem'}">		
-									<ww:a cssClass="openModalWindow" href="%{editLink}&contextViewName=editBacklogItem&contextObjectId=${backlogItemId}">
+									<%--<ww:a cssClass="openModalWindow" href="%{editLink}&contextViewName=editBacklogItem&contextObjectId=${backlogItemId}">
 										<img src="static/img/edit.png" alt="Edit" title="Edit" />
-									</ww:a>
+									</ww:a>--%>
 									<ww:a href="%{deleteLink}&contextViewName=editBacklogItem&contextObjectId=${backlogItemId}" onclick="return confirmDeleteHour()">
 										<img src="static/img/delete_18.png" alt="Delete" title="Delete" />
 									</ww:a>
 								</c:when>
 								<c:otherwise>
-									<ww:a cssClass="openModalWindow" href="%{editLink}&contextViewName=${myAction}&contextObjectId=${backlog.id}">
+									<%--<ww:a cssClass="openModalWindow" href="%{editLink}&contextViewName=${myAction}&contextObjectId=${backlog.id}">
 										<img src="static/img/edit.png" alt="Edit" title="Edit" />
-									</ww:a>
+									</ww:a>--%>
 									<ww:a href="%{deleteLink}&contextViewName=${myAction}&contextObjectId=${backlog.id}" onclick="return confirmDeleteHour()">
 										<img src="static/img/delete_18.png" alt="Delete" title="Delete" />
 									</ww:a>
@@ -687,7 +681,6 @@
 			</div>
 		</c:if> <%-- No tasks --%>
 	</div>
-<aef:modalAjaxWindow/>
 
 	
 </div>

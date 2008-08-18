@@ -199,11 +199,10 @@
 			<td colspan="2">
 			<c:choose>
 				<c:when test="${backlogItemId == 0}">
-					<select name="backlogId" 
-									onchange="disableIfEmpty(this.value, ['createButton', 'createAndCloseButton']);">
+					<select name="backlogId">
 				</c:when>
 				<c:otherwise>
-					<select name="backlogId" onchange="disableIfEmpty(this.value, ['saveButton', 'saveAndCloseButton']);">
+					<select name="backlogId">
 				</c:otherwise>
 			</c:choose>
 

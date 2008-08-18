@@ -220,6 +220,7 @@ a:hover,a:active {
 	border: 1px solid #ccc;
 	margin-top: 20px;
 	width: 785px;
+	overflow: hidden;
 }
 
 #subItemHeader, div.subItemHeader {

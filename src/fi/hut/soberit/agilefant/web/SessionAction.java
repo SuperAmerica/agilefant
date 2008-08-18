@@ -1,8 +1,6 @@
 package fi.hut.soberit.agilefant.web;
 
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 
 import com.opensymphony.xwork.ActionContext;

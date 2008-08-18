@@ -236,8 +236,12 @@ public class ProjectAction extends ActionSupport implements CRUDAction {
                 super.addActionError(super.getText("project.notFound"));
                 return Action.ERROR;
             }
+            if(storable.getProduct() != null && productId > 0 &&
+                    storable.getProduct().getId() != productId) {
+                backlogBusiness.removeThemeBindings(project);
+            }
         }
-
+        
         try {
             this.fillStorable(storable);
         } catch (ParseException e) {

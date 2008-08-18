@@ -160,6 +160,10 @@ public class IterationAction extends ActionSupport implements CRUDAction {
         Iteration fillable = new Iteration();
         if (iterationId > 0) {
             fillable = iterationDAO.get(iterationId);
+            if(projectId > 0 && fillable.getProject() != null 
+                    && fillable.getProject().getId() != projectId) {
+                backlogBusiness.removeThemeBindings(fillable);
+            }
             if (iteration == null) {
                 super.addActionError(super.getText("iteration.notFound"));
                 return Action.INPUT;

@@ -53,7 +53,7 @@
   
         if(oldRow) { //break down display row to cells
           oldCells = oldRow.find('td');
-          id = null; //oldRow.find(this.uniqueId).css('uniqueId');
+          id = oldRow.find(this.uniqueId).text();
         } else {
           oldCells = false;
         }
@@ -136,19 +136,23 @@
        * Delete an existing row and call user callback if one is provided.
        */ 
       del: function(element,id) {
-        if(this.deleteaction) {
-          var row = $(element).parents('tr:eq(0)');
-          var id = row.find(this.uniqueId).css('uniqueId');
+	      var row = $(element).parents('tr:eq(0)');
+          var id = row.find(this.uniqueId).text();
           var me = this;
-          var param = {};
-          param[this.options.submitParam] = id;
-          jQuery.post(this.deleteaction,param,function() {
-            row.remove();
-            if(me.options.deleteCb) {
-              me.options.deleteCb(id,me.options);
-            }
-          });
-        }
+          if(this.deleteaction) {
+          	var param = {};
+          	param[this.options.submitParam] = id;
+          	jQuery.post(this.deleteaction,param,function() {
+            	row.remove();
+            	if(me.options.deleteCb) {
+              		me.options.deleteCb(id,me.options);
+            	}
+          	});
+          } else if(this.options.deleteCb) {
+          	if(me.options.deleteCb(id,me.options)) {
+          		row.remove();
+          	}
+          }
 		}, 
       /**
        * Add a new editable row to the end of the table.

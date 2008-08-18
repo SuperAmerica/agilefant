@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Set;
 
 import fi.hut.soberit.agilefant.business.BacklogBusiness;
+import fi.hut.soberit.agilefant.business.BusinessThemeBusiness;
 import fi.hut.soberit.agilefant.business.HistoryBusiness;
 import fi.hut.soberit.agilefant.business.HourEntryBusiness;
 import fi.hut.soberit.agilefant.business.IterationGoalBusiness;
@@ -28,6 +29,7 @@ import fi.hut.soberit.agilefant.model.Assignment;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogHistory;
 import fi.hut.soberit.agilefant.model.BacklogItem;
+import fi.hut.soberit.agilefant.model.BacklogThemeBinding;
 import fi.hut.soberit.agilefant.model.HistoryEntry;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.IterationGoal;
@@ -64,6 +66,8 @@ public class BacklogBusinessImpl implements BacklogBusiness {
     private HourEntryBusiness hourEntryBusiness;
     
     private IterationGoalBusiness iterationGoalBusiness;
+    
+    private BusinessThemeBusiness businessThemeBusiness;
     
     private ProductDAO productDAO;
 
@@ -834,6 +838,16 @@ public class BacklogBusinessImpl implements BacklogBusiness {
         return new JSONSerializer().serialize(list);
     }
     
+    /** {@inheritDoc} */
+    public void removeThemeBindings(Backlog backlog) {
+        if(backlog != null && backlog.getBusinessThemeBindings() != null) {
+            for(BacklogThemeBinding bind : backlog.getBusinessThemeBindings()) {
+                businessThemeBusiness.removeThemeBinding(bind);
+            }
+        }
+        
+    }
+    
     public int getNumberOfAssignedUsers(Backlog backlog) {
         return getUsers(backlog, true).size();
     }
@@ -877,4 +891,10 @@ public class BacklogBusinessImpl implements BacklogBusiness {
     public void setProductDAO(ProductDAO productDAO) {
         this.productDAO = productDAO;
     }
+
+    public void setBusinessThemeBusiness(BusinessThemeBusiness businessThemeBusiness) {
+        this.businessThemeBusiness = businessThemeBusiness;
+    }
+
+
 }

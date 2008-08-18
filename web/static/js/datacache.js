@@ -11,10 +11,14 @@ var dataCacheClass = function() {
 }
 
 dataCacheClass.prototype = {
-	get: function(element, options) {
+	get: function(element, options, uniqueId) {
 	    var me = this;
+	    var el = element;
+	    if(uniqueId) {
+	    	element += '-'+uniqueId;
+	    }
 	    var settings = {
-			url: me.fetchURLs[element],
+			url: me.fetchURLs[el],
 			async: false,
 			dataType: 'json',
 			type: 'POST',

@@ -37,7 +37,7 @@ $(document).ready(function() {
 
 	var getThemeData = function() {
 		var ret = {};
-		var data = jsonDataCache.get('themesByProduct',{data: {productId: ${project.product.id}}});
+		var data = jsonDataCache.get('themesByProduct',{data: {productId: ${project.product.id}}},${project.product.id});
 		jQuery.each(data,function() {
 			if(this.active === true) {
 				ret[this.id] = this.name;

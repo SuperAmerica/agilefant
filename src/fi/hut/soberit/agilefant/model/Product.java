@@ -1,6 +1,7 @@
 package fi.hut.soberit.agilefant.model;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -149,6 +150,11 @@ public class Product extends Backlog implements PageItem {
     @Transient
     @JSON
     public Integer getBacklogSize() {
+        return null;
+    }
+    
+    @Transient
+    public Collection<BacklogThemeBinding> getBusinessThemeBindings() {
         return null;
     }
 }

@@ -256,6 +256,13 @@ public interface BacklogBusiness {
     public String getIterationGoalsAsJSON(Backlog backlog);
     
     /**
+     * Remove all business theme bindings.
+     * 
+     * @param backlog
+     */
+    public void removeThemeBindings(Backlog backlog);
+    
+    /**
      * Get all backlogs as a json string. 
      * @return
      */

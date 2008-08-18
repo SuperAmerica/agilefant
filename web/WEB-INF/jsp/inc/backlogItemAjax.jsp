@@ -173,19 +173,24 @@
 						}
 					});
 					var getThemeData = function() {
-					var ret = {};
-					var data = jsonDataCache.get('themesByProduct',{data: {productId: ${backlogItem.product.id}}});
-					jQuery.each(data,function() {
-						if(this.active === true) {
-							ret[this.id] = this.name;
-						}
-					});
-					return ret;
+						var ret = {};
+						var data = jsonDataCache.get('themesByProduct',{data: {productId: ${backlogItem.product.id}}},${backlogItem.product.id});
+						jQuery.each(data,function() {
+							if(this.active === true) {
+								ret[this.id] = this.name;
+							}
+						});
+						return ret;
 					};
-					$('#businessThemeTable-${backlogItemId}-${bliListContext}').inlineTableEdit({add: '#addBacklogItemBusinessTheme-${backlogItemId}-${bliListContext}', 
+					var deleteTheme = function(id,options) {
+						jQuery.post("removeThemeFromBacklogItem.action",{businessThemeId: id, backlogItemId: ${backlogItemId}});
+						//TODO: remove theme from name-column
+						return true;
+					};
+					$('#businessThemeTable-${backlogItemId}-${bliListContext}').inlineTableEdit({
+											  add: '#addBacklogItemBusinessTheme-${backlogItemId}-${bliListContext}', 
 											  submit: '#backlogItemThemeSave-${backlogItemId}-${bliListContext}',
-											  submitParam: 'bindingId',
-											  deleteaction: 'removeThemeFromBacklog.action',
+											  deleteCb: deleteTheme,
 											  fields: {
 											  	businessThemeIds: {cell: 0,type: 'select', data: getThemeData},											  	
 											  	reset: {cell: 1, type: 'reset'}
@@ -714,7 +719,8 @@
 						</display:column>
 																		
 						<display:column sortable="false" title="Actions">
-							<img style="cursor: pointer;" class="delete_backlog_theme" src="static/img/delete_18.png" title="Remove theme" />
+							<span class="uniqueId" style="display:none;">${row.id}</span>
+							<img style="cursor: pointer;" class="table_edit_delete" src="static/img/delete_18.png" title="Remove theme" />
 						</display:column>
 						
 					</display:table>

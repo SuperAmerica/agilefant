@@ -324,4 +324,7 @@ public abstract class Backlog implements Assignable, TimesheetLoggable, PageItem
     @Transient
     @JSON
     public abstract Integer getBacklogSize();
+    
+    @Transient
+    public abstract Collection<BacklogThemeBinding> getBusinessThemeBindings();
 }

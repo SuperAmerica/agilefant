@@ -260,7 +260,7 @@ $(document).ready( function() {
    //$('#businessThemeTable').themeBinding('#addIterationBusinessTheme',${iteration.project.product.id},'#backlogThemeSave');
 	var getThemeData = function() {
 		var ret = {};
-		var data = jsonDataCache.get('themesByProduct',{data: {productId: ${iteration.project.product.id}}});
+		var data = jsonDataCache.get('themesByProduct',{data: {productId: ${iteration.project.product.id}}},${iteration.project.product.id});
 		jQuery.each(data,function() {
 			if(this.active === true) {
 				ret[this.id] = this.name;

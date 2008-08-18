@@ -20,8 +20,6 @@
 <ww:actionerror />
 <ww:actionmessage />
 
-<h2>Edit backlog item</h2>
-
 <table>
 <tbody>
 	<tr>
@@ -174,6 +172,26 @@
 							}						
 						}
 					});
+					var getThemeData = function() {
+					var ret = {};
+					var data = jsonDataCache.get('themesByProduct',{data: {productId: ${backlogItem.product.id}}});
+					jQuery.each(data,function() {
+						if(this.active === true) {
+							ret[this.id] = this.name;
+						}
+					});
+					return ret;
+					};
+					$('#businessThemeTable-${backlogItemId}-${bliListContext}').inlineTableEdit({add: '#addBacklogItemBusinessTheme-${backlogItemId}-${bliListContext}', 
+											  submit: '#backlogItemThemeSave-${backlogItemId}-${bliListContext}',
+											  submitParam: 'bindingId',
+											  deleteaction: 'removeThemeFromBacklog.action',
+											  fields: {
+											  	businessThemeIds: {cell: 0,type: 'select', data: getThemeData},											  	
+											  	reset: {cell: 1, type: 'reset'}
+											  }
+					});
+					
 				});
 				</script>
 				<%-- Tasks to DONE confirmation script ends. --%>
@@ -377,8 +395,6 @@
 
 <!-- tasks tab begins -->
 <div id="backlogItemProgressTab-${backlogItemId}-${bliListContext}" class="backlogItemNaviTab">
-
-<h2>Progress</h2>
 
 <script type="text/javascript">
 	$(document).ready( function() {
@@ -600,93 +616,126 @@
 
 <div id="backlogItemSpentEffTab-${backlogItemId}-${bliListContext}" class="backlogItemNaviTab">
 
-<h2>Spent effort</h2>
-
 <aef:hourEntries id="hourEntries" target="${backlogItem}" />
 
-<div class="subItems" style="margin-left: 3px; width: 710px;">
-	<div class="subItemHeader" style="padding: 3px !important;">
-     	Spent effort
-     	<ww:url id="createLink" action="ajaxCreateHourEntry" includeParams="none">
-			<ww:param name="backlogItemId" value="${backlogItemId}" />
-		</ww:url>
-		<ww:a cssClass="openCreateDialog openHourEntryDialog" title="Log effort" href="%{createLink}">Log effort &raquo;</ww:a>		
-	</div>						
-	<c:if test="${!empty hourEntries}">
-		<div class="subItemContent">		
-			<p>
-				<display:table name="${hourEntries}" id="row" defaultsort="1" defaultorder="descending" requestURI="editBacklogItem.action">
-					
-					<display:column sortable="true" title="Date" style="white-space:nowrap;">
-						<ww:date name="#attr.row.date" format="yyyy-MM-dd HH:mm" />
-					</display:column>
-					
-					<display:column sortable="true" title="User">
-						${aef:html(row.user.fullName)}
-					</display:column>
-					
-					<display:column sortable="true" title="Spent effort" sortProperty="timeSpent">
-						${aef:html(row.timeSpent)}
-					</display:column>
-					
-					<display:column sortable="false" title="Comment">
-						<c:out value="${row.description}"/>
-					</display:column>
-
-					<%-- Not implemented yet --%>
+<div class="subItems" style="margin-top: 0px; width: 725px;">
+<table>
+<tbody>
+	<tr>
+	<td>
+	
+	<div class="subItems" style="margin-left: 3px; width: 710px;">
+		<div class="subItemHeader" style="padding: 3px !important;">
+	     	Spent effort
+	     	<ww:url id="createLink" action="ajaxCreateHourEntry" includeParams="none">
+				<ww:param name="backlogItemId" value="${backlogItemId}" />
+			</ww:url>
+			<ww:a cssClass="openCreateDialog openHourEntryDialog" title="Log effort" href="%{createLink}&contextViewName=${currentAction}&contextObjectId=${backlog.id}">Log effort &raquo;</ww:a>		
+		</div>						
+		<c:if test="${!empty hourEntries}">
+			<div class="subItemContent">		
+				<p>
+					<display:table name="${hourEntries}" id="row" defaultsort="1" defaultorder="descending" requestURI="${currentAction}.action">
+						
+						<display:column sortable="true" title="Date" style="white-space:nowrap;">
+							<ww:date name="#attr.row.date" format="yyyy-MM-dd HH:mm" />
+						</display:column>
+						
+						<display:column sortable="true" title="User">
+							${aef:html(row.user.fullName)}
+						</display:column>
+						
+						<display:column sortable="true" title="Spent effort" sortProperty="timeSpent">
+							${aef:html(row.timeSpent)}
+						</display:column>
+						
+						<display:column sortable="false" title="Comment">
+							<c:out value="${row.description}"/>
+						</display:column>
+						
 						<display:column sortable="false" title="Action">
 							<ww:url id="editLink" action="editHourEntry" includeParams="none">
-								<c:choose>
-									<c:when test="${myAction == 'editBacklogItem'}">
-										<ww:param name="backlogItemId" value="${backlogItem.id}" />
-									</c:when>
-									<c:otherwise>
-										<ww:param name="backlogId" value="${backlog.id}" />
-									</c:otherwise>
-								</c:choose>
+								<ww:param name="backlogItemId" value="${backlogItem.id}" />								
 								<ww:param name="hourEntryId" value="${row.id}" />
 							</ww:url>	
-							<ww:url id="deleteLink" action="deleteHourEntry" includeParams="none">
-								<c:choose>
-									<c:when test="${myAction == 'editBacklogItem'}">
-										<ww:param name="backlogItemId" value="${backlogItem.id}" />
-									</c:when>
-									<c:otherwise>
-										<ww:param name="backlogId" value="${backlog.id}" />
-									</c:otherwise>
-								</c:choose>
+							<ww:url id="deleteLink" action="deleteHourEntry" includeParams="none">								
+								<ww:param name="backlogItemId" value="${backlogItem.id}" />
 								<ww:param name="hourEntryId" value="${row.id}" />
-							</ww:url>
-							<c:choose>	
-								<c:when test="${myAction == 'editBacklogItem'}">		
-									<%--<ww:a cssClass="openModalWindow" href="%{editLink}&contextViewName=editBacklogItem&contextObjectId=${backlogItemId}">
-										<img src="static/img/edit.png" alt="Edit" title="Edit" />
-									</ww:a>--%>
-									<ww:a href="%{deleteLink}&contextViewName=editBacklogItem&contextObjectId=${backlogItemId}" onclick="return confirmDeleteHour()">
-										<img src="static/img/delete_18.png" alt="Delete" title="Delete" />
-									</ww:a>
-								</c:when>
-								<c:otherwise>
-									<%--<ww:a cssClass="openModalWindow" href="%{editLink}&contextViewName=${myAction}&contextObjectId=${backlog.id}">
-										<img src="static/img/edit.png" alt="Edit" title="Edit" />
-									</ww:a>--%>
-									<ww:a href="%{deleteLink}&contextViewName=${myAction}&contextObjectId=${backlog.id}" onclick="return confirmDeleteHour()">
-										<img src="static/img/delete_18.png" alt="Delete" title="Delete" />
-									</ww:a>
-								</c:otherwise>
-							</c:choose>
+							</ww:url>																
+							<ww:a href="%{deleteLink}&contextViewName=${currentAction}&contextObjectId=${backlog.id}" onclick="return confirmDeleteHour()">
+								<img src="static/img/delete_18.png" alt="Delete" title="Delete" />
+							</ww:a>								
 						</display:column>
-					</display:table>
-				</p>
-			</div>
-		</c:if> <%-- No tasks --%>
-	</div>
+						</display:table>
+					</p>
+				</div>
+			</c:if> <%-- No entries --%>
+		</div>
 
+	</td>
+	</tr>
+	<tr>
+	<td class="deleteButton">
+	<ww:reset value="Cancel"
+		onclick="closeTabs('bli', 'backlogItemTabContainer-${backlogItemId}-${bliListContext}', ${backlogItemId});" />				
+	</td>
+	</tr>
+</tbody>
+</table>
+</div>
 	
 </div>
 
-<div id="backlogItemThemesTab-${backlogItemId}-${bliListContext}" class="backlogItemNaviTab">
-	This is bli themes.
+<div id="backlogItemThemesTab-${backlogItemId}-${bliListContext}" class="backlogItemNaviTab">		
+	
+	<table>
+		<tr>
+		<td>
+			<div class="subItems" style="margin-left: 3px; width: 710px;">
+			<div class="subItemHeader" style="padding: 3px !important;">
+			<table cellspacing="0" cellpadding="0">
+				<tr>
+					<td class="header">Themes <a id="addBacklogItemBusinessTheme-${backlogItemId}-${bliListContext}" href="#">Attach theme &raquo;</a></td>
+				</tr>
+			</table>
+			</div>
+			<div class="subItemContent">
+			<ww:form action="storeBacklogItemThemes" method="post">
+				<ww:hidden name="backlogItemId" value="${backlogItem.id}"/>
+				<%-- <input type="hidden" name="contextViewName" value="${currentContext}" /> --%>
+				<p>
+				<c:choose>							
+				<c:when test="${!empty backlogItem.businessThemes}">
+					<display:table htmlId="businessThemeTable-${backlogItemId}-${bliListContext}" class="listTable" 
+						name="backlogItem.businessThemes" id="row" >
+						
+						<display:column sortable="false" title="Name" sortProperty="name">
+							<c:out value="${row.name}"/>
+						</display:column>
+																		
+						<display:column sortable="false" title="Actions">
+							<img style="cursor: pointer;" class="delete_backlog_theme" src="static/img/delete_18.png" title="Remove theme" />
+						</display:column>
+						
+					</display:table>
+				</c:when>
+				<c:otherwise>
+					<table id="businessThemeTable-${backlogItemId}-${bliListContext}" style="display:none;" class="listTable">
+						<tr><th class="sortable">Name</th><th>Actions</th></tr>
+					</table>
+				</c:otherwise>
+				</c:choose>
+				</p>
+				<input id="backlogItemThemeSave-${backlogItemId}-${bliListContext}" style="display: none"; type="submit" value="Save" />
+			</ww:form>				
+			</div>
+														
+			</div>
+								
+		</td>
+		</tr>
+	</table>
+		
 </div>
 
 </div>

@@ -1,3 +1,4 @@
+<a class="bliNameLink" onclick="handleTabEvent('backlogItemTabContainer-${row.id}-${bliListContext}','bli',${row.id},1);">
 <c:choose>
 	<c:when test="${!(empty row.tasks)}">		
 		${fn:length(row.tasks)} TODOs,
@@ -7,6 +8,7 @@
 		<ww:text name="backlogItem.state.${row.state}"/><br />
 	</c:otherwise>
 </c:choose>		
+</a>
 											
 <c:choose>
 	<c:when test="${row.state == 'NOT_STARTED'}" >

@@ -30,7 +30,26 @@
 <script type="text/javascript">
 <!--
 $(document).ready(function() {
-	$('#businessThemeTable').themeBinding('#addProjectBusinessTheme',${project.product.id},'#backlogThemeSave');
+	var getThemeData = function() {
+		var ret = {};
+		var data = jsonDataCache.get('themesByProduct',{data: {productId: ${project.product.id}}});
+		jQuery.each(data,function() {
+			if(this.active === true) {
+				ret[this.id] = this.name;
+			}
+		});
+		return ret;
+	};
+	$('#businessThemeTable').inlineTableEdit({add: '#addProjectBusinessTheme', 
+											  submit: '#backlogThemeSave',
+											  submitParam: 'bindingId',
+											  deleteaction: 'removeThemeFromBacklog.action',
+											  fields: {
+											  	businessThemeIds: {cell: 0,type: 'select', data: getThemeData},
+											  	plannedSpendings: {cell: 1, type: 'text' },
+											  	reset: {cell: 2, type: 'reset'}
+											  }
+											 });
 });
 //-->
 </script>
@@ -506,26 +525,29 @@ $(document).ready(function() {
 										<p>
 										<c:choose>
 										<c:when test="${!empty project.businessThemeBindings}">
-											<display:table htmlId="businessThemeTable" class="listTable" name="project.businessThemeBindings" id="row" requestURI="editProject.action">
-					
-												<display:column sortable="true" title="Name" sortProperty="businessTheme.name">
-													<c:out value="${row.businessTheme.name}"/>
-												</display:column>
-												
-												<display:column sortable="true" sortProperty="boundEffort" title="Planned spending">
-													<c:choose>
-														<c:when test="${row.relativeBinding == true}">
-															<c:out value="${row.boundEffort}"/>
-															(<c:out value="${row.percentage}"/>%)
-														</c:when>
-														<c:otherwise><c:out value="${row.fixedSize}"/></c:otherwise>
-													</c:choose>
-												</display:column>
-												<display:column sortable="false" title="Actions">
-													<img style="cursor: pointer;" class="edit_backlog_theme" onclick="$('#businessThemeTable').themeBinding().edit(this,${row.id}, ${row.businessTheme.id},${row.relativeBinding},'${row.fixedSize}','${row.percentage}');" src="static/img/edit.png" title="Edit" />
-													<img style="cursor: pointer;" class="delete_backlog_theme" onclick="$('#businessThemeTable').themeBinding().delete(this,${row.id});" src="static/img/delete_18.png" title="Delete" />
-												</display:column>
-											</display:table>
+										<display:table htmlId="businessThemeTable" class="listTable" name="project.businessThemeBindings" id="row" requestURI="editIteration.action">
+
+											<display:column sortable="true" title="Name" sortProperty="businessTheme.name">
+												<span style="display: none;">${row.businessTheme.id}</span>
+												<c:out value="${row.businessTheme.name}"/>
+											</display:column>
+											
+											<display:column sortable="true" sortProperty="boundEffort" title="Planned spending">
+												<c:choose>
+													<c:when test="${row.relativeBinding == true}">
+														<span style="display:none;">${row.percentage}</span>
+														<c:out value="${row.boundEffort}"/>
+														(<c:out value="${row.percentage}"/>%)
+													</c:when>
+													<c:otherwise><c:out value="${row.fixedSize}"/></c:otherwise>
+												</c:choose>
+											</display:column>
+											<display:column sortable="false" title="Actions">
+												<span class="uniqueId" style="display: none; uniqueId: ${row.id}"></span>
+												<img style="cursor: pointer;" class="table_edit_edit" src="static/img/edit.png" title="Edit" />
+												<img style="cursor: pointer;" class="table_edit_delete" src="static/img/delete_18.png" title="Delete" />
+											</display:column>
+										</display:table>
 											</c:when>
 											<c:otherwise>
 												<table id="businessThemeTable" style="display:none;" class="listTable">

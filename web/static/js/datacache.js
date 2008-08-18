@@ -4,7 +4,8 @@ var dataCacheClass = function() {
         "allUsers": "getUserJSON.action",
         "allTeams": "getTeamJSON.action",
         "allProjectTypes": "getProjectTypeJSON.action",
-        "allProducts": "getProductJSON.action"
+        "allProducts": "getProductJSON.action",
+        "themesByProduct": "themesByProduct.action"
     };
     this.data = {};
 }

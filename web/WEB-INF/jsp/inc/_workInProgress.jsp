@@ -33,22 +33,17 @@ Backlog items
 
 <div class="subItemContent"><display:table
 	name="backlogItemsForUserInProgress" id="row"
-	requestURI="dailyWork.action">
-	
-	<!-- Holder column for backlog item tabs -->
-	<display:column class="selectColumn">
-	<div style="height: 15px;"></div>
-	<div id="backlogItemTabContainer-${row.id}-${bliListContext}" style="overflow:visible; white-space: nowrap; width: 0px;"></div>
-	</display:column>
+	requestURI="dailyWork.action">	
 	
 	<!-- Display the backlog row name -->
-	<display:column sortable="true" sortProperty="name" title="Name" class="shortNameColumn">				
-		<div>
+	<display:column sortable="true" sortProperty="name" title="Name" >				
+		<div style="overflow:hidden; width: 170px;">
 		<aef:backlogItemThemes backlogItemId="${row.id}"/>		
 		<a class="bliNameLink" onclick="handleTabEvent('backlogItemTabContainer-${row.id}-${bliListContext}','bli',${row.id},0);">
 			${aef:html(row.name)}
 		</a>
-		</div>		
+		</div>
+		<div id="backlogItemTabContainer-${row.id}-${bliListContext}" style="overflow:visible; white-space: nowrap; width: 0px;"></div>		
 	</display:column>
 
 	<!-- Display the iteration goal -->

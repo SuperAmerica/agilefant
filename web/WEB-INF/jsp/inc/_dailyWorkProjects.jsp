@@ -69,21 +69,16 @@ $(document).ready(function() {
 <tr>
 				<td class="backlogItemList"><display:table class="dailyWorkProject"
 					name="${bliMap[pro]}" id="row"
-					requestURI="${currentAction}.action">
+					requestURI="${currentAction}.action">					
 
-					<!-- Holder column for backlog item tabs -->
-					<display:column class="selectColumn">
-						<div style="height: 15px;"></div>
-						<div id="backlogItemTabContainer-${row.id}-${bliListContext}" style="overflow:visible; white-space: nowrap; width: 0px;"></div>
-					</display:column>
-
-					<display:column sortable="true" sortProperty="name" title="Name"
-						class="shortNameColumn">						
-						<div>
+					<display:column sortable="true" sortProperty="name" title="Name" >						
+						<div style="overflow:hidden; width: 170px;">
 						<aef:backlogItemThemes backlogItemId="${row.id}" positionId="dailyWorkProjectsList_${row.id}"/>												
 						<a class="bliNameLink" onclick="handleTabEvent('backlogItemTabContainer-${row.id}-${bliListContext}','bli',${row.id},0);">
 							${aef:html(row.name)}
-						</a></div>
+						</a>
+						</div>
+						<div id="backlogItemTabContainer-${row.id}-${bliListContext}" style="overflow:visible; white-space: nowrap; width: 0px;"></div>
 					</display:column>
 
 					<display:column sortable="true" title="Responsibles" class="responsibleColumn">

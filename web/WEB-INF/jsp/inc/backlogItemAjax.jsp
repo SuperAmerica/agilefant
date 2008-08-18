@@ -657,15 +657,15 @@
 				<p>
 					<display:table name="${hourEntries}" id="row" defaultsort="1" defaultorder="descending" requestURI="${currentAction}.action">
 						
-						<display:column sortable="true" title="Date" style="white-space:nowrap;">
+						<display:column sortable="false" title="Date" style="white-space:nowrap;">
 							<ww:date name="#attr.row.date" format="yyyy-MM-dd HH:mm" />
 						</display:column>
 						
-						<display:column sortable="true" title="User">
+						<display:column sortable="false" title="User">
 							${aef:html(row.user.fullName)}
 						</display:column>
 						
-						<display:column sortable="true" title="Spent effort" sortProperty="timeSpent">
+						<display:column sortable="false" title="Spent effort" sortProperty="timeSpent">
 							${aef:html(row.timeSpent)}
 						</display:column>
 						

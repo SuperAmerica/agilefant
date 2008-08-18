@@ -122,6 +122,8 @@ public interface BusinessThemeBusiness {
     
     public void multipleAddOrUpdateThemeToBacklog(int[] themeIds, int backlogId, String[] allocations);
     
+    public void addMultipleThemesToBacklogItem(int[] themeIds, int backlogItemId);
+    
     public void removeThemeFromBacklog(Backlog backlog, BusinessTheme businessTheme);
     
     public void removeThemeFromBacklog(int backlogId, int businessThemeId);

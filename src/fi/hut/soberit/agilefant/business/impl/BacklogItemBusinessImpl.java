@@ -169,7 +169,7 @@ public class BacklogItemBusinessImpl implements BacklogItemBusiness {
         Collections.sort(userList, new UserComparator());
         
         return userList;
-    }
+    }       
 
     public void setTaskBusiness(TaskBusiness taskBusiness) {
         this.taskBusiness = taskBusiness;

@@ -10,6 +10,7 @@ import java.util.Map;
 
 import org.springframework.dao.DataIntegrityViolationException;
 
+import fi.hut.soberit.agilefant.business.BacklogItemBusiness;
 import fi.hut.soberit.agilefant.business.BusinessThemeBusiness;
 import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
@@ -34,6 +35,7 @@ public class BusinessThemeBusinessImpl implements BusinessThemeBusiness {
     private ProductDAO productDAO;
     private BacklogDAO backlogDAO;
     private BacklogItemDAO backlogItemDAO;
+    private BacklogItemBusiness backlogItemBusiness;
 
     public BusinessTheme getBusinessTheme(int businessThemeId) {
         return businessThemeDAO.get(businessThemeId);
@@ -357,6 +359,23 @@ public class BusinessThemeBusinessImpl implements BusinessThemeBusiness {
         
     }
 
+    public void addMultipleThemesToBacklogItem(int[] themeIds, int backlogItemId) {        
+        for(int i = 0 ; i < themeIds.length; i++) {
+            BacklogItem bli;
+            BusinessTheme theme;
+            if (backlogItemId > 0 && themeIds[i] > 0) {
+                bli = backlogItemBusiness.getBacklogItem(backlogItemId);
+                theme = getBusinessTheme(themeIds[i]);
+                if (!(bli == null || theme == null)) {
+                    bli.getBusinessThemes().add(theme);  
+                    backlogItemDAO.store(bli); 
+                }                                            
+            }
+        }
+             
+        
+    }
+    
     public void removeThemeFromBacklog(Backlog backlog,
             BusinessTheme businessTheme) {
         if(backlog == null || businessTheme == null) {
@@ -421,6 +440,14 @@ public class BusinessThemeBusinessImpl implements BusinessThemeBusiness {
 
     public void setBacklogDAO(BacklogDAO backlogDAO) {
         this.backlogDAO = backlogDAO;
+    }
+
+    public BacklogItemBusiness getBacklogItemBusiness() {
+        return backlogItemBusiness;
+    }
+
+    public void setBacklogItemBusiness(BacklogItemBusiness backlogItemBusiness) {
+        this.backlogItemBusiness = backlogItemBusiness;
     }
 
 }

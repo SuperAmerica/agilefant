@@ -186,6 +186,13 @@ public class BusinessThemeAction extends ActionSupport implements CRUDAction {
         return Action.SUCCESS;
     }
     
+    public String storeBacklogItemThemes() {
+        if(businessThemeIds != null && backlogItemId > 0) {
+            businessThemeBusiness.addMultipleThemesToBacklogItem(businessThemeIds, backlogItemId);
+        }
+        return Action.SUCCESS;
+    }
+    
     public String removeThemeBinding() {
         if(bindingId > 0) {
             businessThemeBusiness.removeThemeBinding(bindingId);

@@ -69,7 +69,7 @@ public class DailyWorkAction extends ActionSupport {
     /*private Map<Integer, String> effortsLeftMap = new HashMap<Integer, String>();
     private Map<Integer, String> overheadsMap = new HashMap<Integer, String>();*/
     private Map<Integer, AFTime> totalsMap = new HashMap<Integer, AFTime>();
-    private int weeksAhead = 8;
+    private int weeksAhead = 5;
     private List<Integer> weekNumbers;
     private String[] overallTotals;
 

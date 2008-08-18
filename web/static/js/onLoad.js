@@ -14,7 +14,7 @@ function submitDialogForm() {
  * Not currently used anywhere, because the dialog windows are modals. 
  */
 function confirmOpenCreateDialog(element) {
-    var e = $("<div class=\"flora confirmDialog\">"
+    var e = $("<div class=\"confirmDialog\">"
         +"<p>Previously opened dialogs will be destroyed! Really continue?</p>"
         +"<form><input type=\"submit\" value=\"Yes\" class=\"yesButton\"/>&nbsp;"
         +"<input type=\"submit\" value=\"No\" class=\"noButton\"/></form></div>");
@@ -59,7 +59,7 @@ function confirmOpenCreateDialog(element) {
 }
 
 function openCreateDialog(element) {
-    var dialog = $('<div class="flora createDialogWindow"></div>').appendTo(document.body).hide();
+    var dialog = $('<div class="createDialogWindow"></div>').appendTo(document.body).hide();
 	
 	var overlayUpdate = function() {
        $('.ui-dialog-overlay').css("height",$(document).height()).css("width",$(document).width());

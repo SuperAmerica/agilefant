@@ -141,7 +141,7 @@ function show_small_loadtable() {
 </div>
 </td>
 <td class="info4" rowspan="2"> 
-<div class="smallBurndown"><img src="drawLoadMeter.action?userId=${user.id}" /></div>
+<div class="loadMeterDiv"><img src="drawLoadMeter.action?userId=${user.id}" /></div>
 
 </td>
 </tr>
@@ -160,9 +160,9 @@ function show_small_loadtable() {
 
 
 <tr>
-	<th>Week</th>
+	<th class="loadTableBacklogColumn">Week</th>
 	<c:forEach items="${weekNumbers}" var="weekNumber">
-	<th><c:out value="${weekNumber}" /></th>
+	<th class="loadTableWeekColumn"><c:out value="${weekNumber}" /></th>
 	</c:forEach>
 </tr>
 <tr class="odd">
@@ -233,45 +233,13 @@ function show_small_loadtable() {
 </div>
 </td>
 <td class="info4" rowspan="2"> 
-<div class="smallBurndown"><img src="drawLoadMeter.action?userId=${user.id}" /></div>
+<div class="loadMeterDiv"><img src="drawLoadMeter.action?userId=${user.id}" /></div>
 </td>
 
 </tr>
 </tbody>
 </table>
 </div>
-<%--
-<table id="item">
 
-<tr class="odd">
-	<td class="shortNameColumn"> &nbsp;</td>
-	<c:forEach var="week" items="${weekNumbers}">
-	<td class="shortNameColumn">Week ${week}</td>	
-	</c:forEach>
- 	<td class="shortNameColumn"> Total</td> 
-</tr>
-<tr class="odd">	
-	<td class="shortNameColumn"> Effort Left</td>
-	<c:forEach var="week" items="${weekNumbers}">
-	<td class="shortNameColumn"> ${effortsLeftMap[week]}</td>	
-	</c:forEach>
- 	<td class="shortNameColumn"> ${overallTotals[0]}</td> 
-</tr>
-<tr class="odd">	
-	<td class="shortNameColumn"> Overhead</td>
-	<c:forEach var="week" items="${weekNumbers}">
-	<td class="shortNameColumn">${overheadsMap[week]}</td>	
-	</c:forEach>
- 	<td class="shortNameColumn"> ${overallTotals[1]}</td>  
-</tr>
-<tr class="even">	
-	<td class="shortNameColumn"> Total</td>
-	<c:forEach var="week" items="${weekNumbers}">
-	<td class="shortNameColumn">${totalsMap[week]}</td>	
-	</c:forEach>
-  	<td class="shortNameColumn"> ${overallTotals[2]}</td> 
-</tr>				
-</table>
---%>
 </div>
 </div>

@@ -63,9 +63,9 @@ start by creating a new object.</p>
     <li>
     <c:choose>
         <c:when test="${hasProducts}">
-            <ww:url id="createLink" action="createBacklogItem"
+            <ww:url id="createLink" action="ajaxCreateBacklogItem"
                 includeParams="none" />
-            <ww:a href="%{createLink}" title="Create a new backlog item">Backlog item &raquo;</ww:a>
+            <ww:a href="%{createLink}" title="Create a new backlog item" cssClass="openCreateDialog openBacklogItemDialog" >Backlog item &raquo;</ww:a>
         </c:when>
         <c:otherwise>
             <span class="inactive"
@@ -77,9 +77,9 @@ start by creating a new object.</p>
     
     <li class="separator" />
 
-    <li><ww:url id="createLink" action="createProjectType"
+    <li><ww:url id="createLink" action="ajaxCreateProjectType"
         includeParams="none" />
-        <ww:a href="%{createLink}" title="Create a new project type">Project type &raquo;</ww:a>
+        <ww:a href="%{createLink}" title="Create a new project type" cssClass="openCreateDialog openProjectTypeDialog" >Project type &raquo;</ww:a>
     </li>
     
     <li><ww:url id="createLink" action="createTeam"
@@ -102,8 +102,8 @@ start by creating a new object.</p>
     </c:choose>
     </li>
     
-    <li><ww:url id="createLink" action="createUser"
-        includeParams="none" /> <ww:a href="%{createLink}" title="Create a new user">User &raquo;</ww:a>
+    <li><ww:url id="createLink" action="ajaxCreateUser"
+        includeParams="none" /> <ww:a href="%{createLink}" cssClass="openCreateDialog openUserDialog" title="Create a new user">User &raquo;</ww:a>
     </li>
 </ul>
 

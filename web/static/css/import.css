@@ -224,7 +224,7 @@ a:hover,a:active {
 
 #subItemHeader, div.subItemHeader {
 	padding: 0;
-	background-color: #E8EBF0;
+	background: transparent url(../img/gradient.png) repeat-x scroll 80% 60%;
 	border-bottom: 1px solid #ccc;
 }
 
@@ -799,6 +799,20 @@ td.icons a img {
     display: inline;
 }
 
+.infoTable .loadMeterDiv {
+    text-align: center;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    height: 130px;
+    overflow: hidden;
+}
+
+.infoTable .loadMeterDiv img {
+    display: inline;
+}
+
+
 .infoTable .description {
 	padding: 6px 15px;
 	text-align: left;
@@ -1145,4 +1159,12 @@ select.statusSelect option {
 	right: 20px;
 	top: 50px;
 	z-index: 3699;
+}
+
+.loadTableWeekColumn {
+    min-width: 70px;	
+}
+
+.loadTableBacklogColumn {
+	width: 200px;
 }

@@ -287,7 +287,7 @@ public class BacklogItemActionTest extends SpringTestCase {
         action.setTaskStates(newTaskStates);
 
         // execute quickStoreBacklogItem operation
-        assertEquals("success", action.quickStoreTaskList());
+        assertEquals("ajax_success", action.quickStoreTaskList());
         // check that bli was updated both to action and database
         assertEquals(State.PENDING, action.getBacklogItem().getState());
         assertEquals("3h 15min", action.getBacklogItem().getEffortLeft()
@@ -308,7 +308,7 @@ public class BacklogItemActionTest extends SpringTestCase {
      */
     public void testQuickStoreTaskList_invalidId() {
         action.setBacklogItemId(-500);
-        assertEquals("error", action.quickStoreTaskList());
+        assertEquals("ajax_error", action.quickStoreTaskList());
     }
 
     /**

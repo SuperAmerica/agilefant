@@ -164,7 +164,7 @@
 				<%-- If user changed the item's state to DONE and there are tasks not DONE, ask if they should be set to DONE as well. --%>				
 				$(document).ready(function() {					
 					$("#stateSelect_${backlogItem.id}-${bliListContext}").change(function() {
-						change_estimate_enabled($(this).val(), ${backlogItem.id}, ${bliListContext});						
+						change_estimate_enabled($(this).val(), ${backlogItem.id}, '${bliListContext}');						
 						if ($(this).val() == 'DONE' && ${hasUndoneTasks}) {
 							var prompt = window.confirm("Do you wish to set all the TODOs' states to Done as well?");
 							if (prompt) {
@@ -438,7 +438,7 @@
 	<%-- If user changed the item's state to DONE and there are tasks not DONE, ask if they should be set to DONE as well. --%>
 		$(document).ready(function() {
 			$("#stateSelectProgress_${backlogItem.id}-${bliListContext}").change(function() {
-				change_effort_enabled($(this).val(), ${backlogItem.id}, ${bliListContext});
+				change_effort_enabled($(this).val(), ${backlogItem.id}, '${bliListContext}');
 				var tasksDone = true;
 				$(".taskStateSelect_${backlogItem.id}-${bliListContext}").each(function() {
 					if ($(this).val() != 'DONE') {

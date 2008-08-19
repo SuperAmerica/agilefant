@@ -31,6 +31,9 @@ dataCacheClass.prototype = {
 	        this.data[element] = [];
 	        $.ajax(settings);
 	    }
+	    while (this.data[element] == null) {
+	       sleep(10);
+	    }
 	    return this.data[element];
 	},
 	

@@ -379,8 +379,10 @@
 				<td><ww:submit value="Save" id="saveButton" /></td>
 				<td class="deleteButton">
 				<ww:submit value="Delete" onclick="return deleteBacklogItem(${backlogItemId})" />
+				<%--
 				<ww:reset value="Cancel"
-					onclick="closeTabs('bli', 'backlogItemTabContainer-${backlogItemId}-${bliListContext}', ${backlogItemId});" />				
+					onclick="closeTabs('bli', 'backlogItemTabContainer-${backlogItemId}-${bliListContext}', ${backlogItemId});" />
+				--%>				
 				</td>
 			</tr>
 		</table>
@@ -615,10 +617,12 @@
 	<td>
 		<ww:submit value="Save" action="quickStoreTaskList" />
 	</td>
+	<%--
 	<td class="deleteButton">
 		<ww:reset value="Cancel"
 			onclick="closeTabs('bli', 'backlogItemTabContainer-${backlogItemId}-${bliListContext}', ${backlogItemId});" />				
 	</td>
+	--%>
 	</tr>
 	
 	</table>
@@ -696,8 +700,10 @@
 	</tr>
 	<tr>
 	<td class="deleteButton">
+	<%--
 	<ww:reset value="Cancel"
-		onclick="closeTabs('bli', 'backlogItemTabContainer-${backlogItemId}-${bliListContext}', ${backlogItemId});" />				
+		onclick="closeTabs('bli', 'backlogItemTabContainer-${backlogItemId}-${bliListContext}', ${backlogItemId});" />
+	--%>				
 	</td>
 	</tr>
 </tbody>

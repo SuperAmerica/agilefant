@@ -144,12 +144,27 @@ function handleTabEvent(target, context, id, tabId, bliContext) {
         
         var targetAction = {
         	"bli": "backlogItemTabs.action",
+        	"bliWorkInProgress": "backlogItemTabs.action",
+        	"bliDWInterations": "backlogItemTabs.action",
+        	"bliDWProjects": "backlogItemTabs.action",
             "project": "projectTabs.action",
             "businessTheme": "businessThemeTabs.action"
         };
         
         var targetParams = {
         	"bli": {
+                backlogItemId: id,
+                bliListContext: bliContext
+            },
+            "bliWorkInProgress": {
+                backlogItemId: id,
+                bliListContext: bliContext
+            },
+            "bliDWInterations": {
+                backlogItemId: id,
+                bliListContext: bliContext
+            },
+            "bliDWProjects": {
                 backlogItemId: id,
                 bliListContext: bliContext
             },

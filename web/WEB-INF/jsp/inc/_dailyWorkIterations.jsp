@@ -3,7 +3,7 @@
 <!-- context variable for backlog item ajax to know its context -->
 <c:set var="bliListContext" value="dailyWorkIterations" scope="session" />
 
-<aef:openDialogs context="bli" id="openBacklogItemTabs" />
+<aef:openDialogs context="bliDWInterations" id="openBacklogItemTabs" />
 
 <c:if test="${hourReport}">
 	<c:set var="totalSum" value="${null}" />
@@ -13,7 +13,7 @@
 
 $(document).ready(function() {        
     <c:forEach items="${openBacklogItemTabs}" var="openBacklogItem">
-        handleTabEvent("backlogItemTabContainer-${openBacklogItem[0]}-${bliListContext}", "bli", ${openBacklogItem[0]}, ${openBacklogItem[1]} ,'${bliListContext}');
+        handleTabEvent("backlogItemTabContainer-${openBacklogItem[0]}-${bliListContext}", "bliDWInterations", ${openBacklogItem[0]}, ${openBacklogItem[1]} ,'${bliListContext}');
     </c:forEach>
 });
 
@@ -150,6 +150,11 @@ $(document).ready(function() {
 			
 						</c:otherwise>
 					</c:choose>
+
+					<display:column title="Actions">
+						<img src="static/img/edit.png" alt="Edit" title="Edit" style="cursor: pointer;" onclick="handleTabEvent('backlogItemTabContainer-${row.id}-${bliListContext}','bliDWInterations',${row.id},0, '${bliListContext}');" />
+						<img src="static/img/delete_18.png" alt="Delete" title="Delete" style="cursor: pointer;" onclick="deleteBacklogItem(${row.id}); return false;" />
+					</display:column>
 
 					<display:footer>
 						<tr>

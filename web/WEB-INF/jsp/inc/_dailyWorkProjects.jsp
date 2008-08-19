@@ -11,7 +11,7 @@
 
 $(document).ready(function() {        
     <c:forEach items="${openBacklogItemTabs}" var="openBacklogItem">
-        handleTabEvent("backlogItemTabContainer-${openBacklogItem[0]}-${bliListContext}", "bli", ${openBacklogItem[0]}, ${openBacklogItem[1]});
+        handleTabEvent("backlogItemTabContainer-${openBacklogItem[0]}-${bliListContext}", "bli", ${openBacklogItem[0]}, ${openBacklogItem[1]}, '${bliListContext}');
     </c:forEach>
 });
 
@@ -74,7 +74,7 @@ $(document).ready(function() {
 					<display:column sortable="true" sortProperty="name" title="Name" >						
 						<div style="overflow:hidden; width: 170px;">
 						<aef:backlogItemThemes backlogItemId="${row.id}" positionId="dailyWorkProjectsList_${row.id}"/>												
-						<a class="bliNameLink" onclick="handleTabEvent('backlogItemTabContainer-${row.id}-${bliListContext}','bli',${row.id},0);">
+						<a class="bliNameLink" onclick="handleTabEvent('backlogItemTabContainer-${row.id}-${bliListContext}','bli',${row.id},0, '${bliListContext}');">
 							${aef:html(row.name)}
 						</a>
 						</div>
@@ -82,7 +82,7 @@ $(document).ready(function() {
 					</display:column>
 
 					<display:column sortable="true" title="Responsibles" class="responsibleColumn">
-					<div><aef:responsibleColumn backlogItemId="${row.id}"/></div>
+						<div><aef:responsibleColumn backlogItemId="${row.id}"/></div>
 					</display:column>
 
 					<display:column sortable="true" defaultorder="descending"
@@ -91,11 +91,7 @@ $(document).ready(function() {
 					</display:column>
 
 					<display:column title="Progress" sortable="false" class="taskColumn">
-						<%@ include file="./_backlogItemStatusBar.jsp"%>
-						<!-- <aef:tasklist backlogItem="${row}"
-							contextViewName="${currentAction}"
-							contextObjectId="${backlog.id}"
-							divId="${divId}" /> -->
+						<%@ include file="./_backlogItemStatusBar.jsp"%>						
 					</display:column>
 
 					<display:column sortable="true" sortProperty="effortLeft"
@@ -160,10 +156,7 @@ $(document).ready(function() {
 							</c:if>
 						</tr>
 					</display:footer>
-					
-					
-
-
+										
 				</display:table></td>
 				
 				<td class="smallBurndownColumn">
@@ -180,8 +173,6 @@ $(document).ready(function() {
 
 	</tr>
 </table>
-
-
 
 </div>
 

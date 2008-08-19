@@ -9,7 +9,7 @@
 
 $(document).ready(function() {        
     <c:forEach items="${openBacklogItemTabs}" var="openBacklogItem">
-        handleTabEvent("backlogItemTabContainer-${openBacklogItem[0]}-${bliListContext}", "bli", ${openBacklogItem[0]}, ${openBacklogItem[1]});
+        handleTabEvent("backlogItemTabContainer-${openBacklogItem[0]}-${bliListContext}", "bli", ${openBacklogItem[0]}, ${openBacklogItem[1]}, '${bliListContext}');
     </c:forEach>
 });
 
@@ -39,7 +39,7 @@ Backlog items
 	<display:column sortable="true" sortProperty="name" title="Name" >				
 		<div style="overflow:hidden; width: 170px;">
 		<aef:backlogItemThemes backlogItemId="${row.id}"/>		
-		<a class="bliNameLink" onclick="handleTabEvent('backlogItemTabContainer-${row.id}-${bliListContext}','bli',${row.id},0);">
+		<a class="bliNameLink" onclick="handleTabEvent('backlogItemTabContainer-${row.id}-${bliListContext}','bli',${row.id},0,'${bliListContext}');">
 			${aef:html(row.name)}
 		</a>
 		</div>
@@ -122,7 +122,7 @@ Backlog items
 	</display:column>
 
 	<display:column title="Actions">
-		<img src="static/img/edit.png" alt="Edit" title="Edit" style="cursor: pointer;" onclick="handleTabEvent('backlogItemTabContainer-${row.id}-${bliListContext}','bli',${row.id},0);" />
+		<img src="static/img/edit.png" alt="Edit" title="Edit" style="cursor: pointer;" onclick="handleTabEvent('backlogItemTabContainer-${row.id}-${bliListContext}','bli',${row.id},0, '${bliListContext}');" />
 	</display:column>
 
 </display:table></div>

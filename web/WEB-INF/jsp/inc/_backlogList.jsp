@@ -24,7 +24,7 @@ function validateDeletion() {
 
 $(document).ready(function() {        
     <c:forEach items="${openBacklogItemTabs}" var="openBacklogItem">
-        handleTabEvent("backlogItemTabContainer-${openBacklogItem[0]}-${bliListContext}", "bli", ${openBacklogItem[0]}, ${openBacklogItem[1]});
+        handleTabEvent("backlogItemTabContainer-${openBacklogItem[0]}-${bliListContext}", "bli", ${openBacklogItem[0]}, ${openBacklogItem[1]}, '${bliListContext}');
     </c:forEach>
 });
 
@@ -67,7 +67,7 @@ $(document).ready(function() {
             		<span class="businessTheme" title="${businessTheme.description}"><c:out value="${businessTheme.name}"/></span>
             	</a>
             </c:forEach>
-			<a class="bliNameLink" onclick="handleTabEvent('backlogItemTabContainer-${row.id}-${bliListContext}','bli',${row.id},0);">
+			<a class="bliNameLink" onclick="handleTabEvent('backlogItemTabContainer-${row.id}-${bliListContext}','bli',${row.id},0, '${bliListContext}');">
 				${aef:html(row.name)}
 			</a>			
 			</div>						
@@ -145,7 +145,7 @@ $(document).ready(function() {
 		</c:choose>
 		
 		<display:column title="Actions" sortable="false">
-			<img src="static/img/edit.png" alt="Edit" title="Edit" style="cursor: pointer;" onclick="handleTabEvent('backlogItemTabContainer-${row.id}-${bliListContext}','bli',${row.id},0);" />
+			<img src="static/img/edit.png" alt="Edit" title="Edit" style="cursor: pointer;" onclick="handleTabEvent('backlogItemTabContainer-${row.id}-${bliListContext}','bli',${row.id},0, '${bliListContext}');" />
 			<img src="static/img/delete_18.png" alt="Delete" title="Delete" style="cursor: pointer;" onclick="deleteBacklogItem(${row.id}); return false;" />
 		</display:column>
 		

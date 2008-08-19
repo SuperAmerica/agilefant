@@ -100,7 +100,7 @@ function ajaxCloseDialog(context, dialogId) {
         });
 }
 
-function closeTabs(context, target, id) {
+function closeTabs(context, target, id) {	
 	ajaxCloseDialog(context, id);
 	$('#'+target).find('label.error').hide();
     $("#"+target).toggle();
@@ -117,7 +117,7 @@ function trim (str) {
     return str;
 }
 
-function handleTabEvent(target, context, id, tabId) {
+function handleTabEvent(target, context, id, tabId, bliContext) {
 	
     var target = $("#" + target);
     if (target.attr("tab-data-loaded")) {
@@ -150,7 +150,8 @@ function handleTabEvent(target, context, id, tabId) {
         
         var targetParams = {
         	"bli": {
-                backlogItemId: id
+                backlogItemId: id,
+                bliListContext: bliContext
             },
             "project": {
                 projectId: id

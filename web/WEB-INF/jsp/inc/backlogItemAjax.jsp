@@ -55,13 +55,13 @@
 							<c:when test="${backlogItem.state.name != 'DONE'}">
 								<ww:textfield size="10"
 								name="backlogItem.originalEstimate"
-								id="originalEstimateField_${backlogItem.id}" />
+								id="originalEstimateField_${backlogItem.id}-${bliListContext}" />
 							</c:when>
 							<c:otherwise>
 								<ww:textfield size="10"
 								name="backlogItem.originalEstimate"
 								disabled="true"
-								id="originalEstimateField_${backlogItem.id}" />
+								id="originalEstimateField_${backlogItem.id}-${bliListContext}" />
 							</c:otherwise>
 						</c:choose>
 						<ww:label value="%{getText('webwork.estimateExample')}" /></td>
@@ -74,18 +74,18 @@
 						<td colspan="2"><ww:label
 							value="${backlogItem.originalEstimate}" /> <ww:hidden
 							name="backlogItem.originalEstimate"
-							value="${backlogItem.originalEstimate}" /> <ww:url id="resetLink_${backlogItem.id}"
+							value="${backlogItem.originalEstimate}" /> <ww:url id="resetLink_${backlogItem.id}-${bliListContext}"
 							action="resetBliOrigEstAndEffortLeft" includeParams="none">
 							<!-- <ww:param name="backlogItemId" value="${backlogItem.id}" /> -->
 						</ww:url>
 						<c:choose>
 							<c:when test="${backlogItem.state.name == 'DONE'}">
-								<span id="resetText_${backlogItem.id}" style="color: #666;">(reset)</span>
-								<span id="resetLink_${backlogItem.id}" style="display: none;">
+								<span id="resetText_${backlogItem.id}-${bliListContext}" style="color: #666;">(reset)</span>
+								<span id="resetLink_${backlogItem.id}-${bliListContext}" style="display: none;">
 							</c:when>
 							<c:otherwise>
-							<span id="resetText_${backlogItem.id}" style="color: #666; display: none;">(reset)</span>
-								<span id="resetLink_${backlogItem.id}">
+							<span id="resetText_${backlogItem.id}-${bliListContext}" style="color: #666; display: none;">(reset)</span>
+								<span id="resetLink_${backlogItem.id}-${bliListContext}">
 							</c:otherwise>
 						</c:choose>
 						
@@ -105,13 +105,13 @@
 							<c:when test="${backlogItem.state.name != 'DONE'}">
 								<ww:textfield size="10"
 								name="backlogItem.effortLeft"
-								id="effortLeftField_${backlogItem.id}" />
+								id="effortLeftField_${backlogItem.id}-${bliListContext}" />
 							</c:when>
 							<c:otherwise>
 								<ww:textfield size="10"
 								name="backlogItem.effortLeft"
 								disabled="true"
-								id="effortLeftField_${backlogItem.id}" />
+								id="effortLeftField_${backlogItem.id}-${bliListContext}" />
 							</c:otherwise>
 						</c:choose>
 						<ww:label value="%{getText('webwork.estimateExample')}" />
@@ -126,11 +126,11 @@
 				<td colspan="2">
 				<c:set var="hasUndoneTasks" value="${undoneTasks}" scope="request" />				
 				<script type="text/javascript">
-				function change_estimate_enabled(value, itemId) {
-					var effLeftField = document.getElementById("effortLeftField_" + itemId);
-					var origEstField = document.getElementById("originalEstimateField_" + itemId);
-					var resetLink = document.getElementById("resetLink_" + itemId);
-					var resetText = document.getElementById("resetText_" + itemId);
+				function change_estimate_enabled(value, itemId, context) {
+					var effLeftField = document.getElementById("effortLeftField_" + itemId + "-" + context);
+					var origEstField = document.getElementById("originalEstimateField_" + itemId + "-" + context);
+					var resetLink = document.getElementById("resetLink_" + itemId + "-" + context);
+					var resetText = document.getElementById("resetText_" + itemId + "-" + context);
 					if (value == 'DONE') {
 						if (effLeftField != null) {
 							effLeftField.disabled = true;
@@ -163,12 +163,12 @@
 				
 				<%-- If user changed the item's state to DONE and there are tasks not DONE, ask if they should be set to DONE as well. --%>				
 				$(document).ready(function() {					
-					$("#stateSelect_${backlogItem.id}").change(function() {
-						change_estimate_enabled($(this).val(), ${backlogItem.id});						
+					$("#stateSelect_${backlogItem.id}-${bliListContext}").change(function() {
+						change_estimate_enabled($(this).val(), ${backlogItem.id}, ${bliListContext});						
 						if ($(this).val() == 'DONE' && ${hasUndoneTasks}) {
 							var prompt = window.confirm("Do you wish to set all the TODOs' states to Done as well?");
 							if (prompt) {
-								$("#tasksToDone_${backlogItem.id}").val('true');
+								$("#tasksToDone_${backlogItem.id}-${bliListContext}").val('true');
 							}						
 						}
 					});
@@ -200,9 +200,9 @@
 				});
 				</script>
 				<%-- Tasks to DONE confirmation script ends. --%>
-				<ww:hidden name="tasksToDone" value="${tasksToDone}" id="tasksToDone_${backlogItem.id}" />			
+				<ww:hidden name="tasksToDone" value="${tasksToDone}" id="tasksToDone_${backlogItem.id}-${bliListContext}" />			
 				<ww:select name="backlogItem.state"
-					id="stateSelect_${backlogItem.id}"
+					id="stateSelect_${backlogItem.id}-${bliListContext}"
 					value="backlogItem.state.name"
 					list="@fi.hut.soberit.agilefant.model.State@values()" listKey="name"
 					listValue="getText('task.state.' + name())"  /></td>
@@ -298,7 +298,7 @@
 				<td colspan="2">
 	
 				<div id="assigneesLink">
-				<a href="javascript:toggleDiv('responsibleSelect_${backlogItem.id}')" class="assignees">
+				<a href="javascript:toggleDiv('responsibleSelect_${backlogItem.id}-${bliListContext}')" class="assignees">
 				<img src="static/img/users.png"/>
 				<c:set var="listSize" value="${fn:length(backlogItem.responsibles)}" scope="request" />
 				<c:choose>
@@ -353,11 +353,11 @@
 					
 					var teams = [<aef:teamJson items="${teamList}"/>];
 					var selected = [<aef:idJson items="${backlogItem.responsibles}"/>]
-					$('#responsibleSelect_${backlogItem.id}').multiuserselect({users: [preferred,others], groups: teams, root: $('#responsibleSelect_${backlogItem.id}')}).selectusers(selected);								
+					$('#responsibleSelect_${backlogItem.id}-${bliListContext}').multiuserselect({users: [preferred,others], groups: teams, root: $('#responsibleSelect_${backlogItem.id}-${bliListContext}')}).selectusers(selected);								
 					
 				});
 				</script>
-				<div id="responsibleSelect_${backlogItem.id}" style="display: none;" class="projectTeams userSelector">
+				<div id="responsibleSelect_${backlogItem.id}-${bliListContext}" style="display: none;" class="projectTeams userSelector">
 				<div class="left">
 				<c:if test="${!aef:isProduct(backlog) &&
 				             backlog != null}">
@@ -426,21 +426,21 @@
 		});				
 	});
 
-	function change_effort_enabled(value, bliId) {
+	function change_effort_enabled(value, bliId, context) {
 		if (value == "DONE") {
-			document.getElementById("effortBli_" + bliId).disabled = true;							
+			document.getElementById("effortBli_" + bliId + "-" + context).disabled = true;							
 		}
 		else {
-			document.getElementById("effortBli_" + bliId).disabled = false;
+			document.getElementById("effortBli_" + bliId + "-" + context).disabled = false;
 		}
 	}
 	
 	<%-- If user changed the item's state to DONE and there are tasks not DONE, ask if they should be set to DONE as well. --%>
 		$(document).ready(function() {
-			$("#stateSelectProgress_${backlogItem.id}").change(function() {
-				change_effort_enabled($(this).val(), ${backlogItem.id});
+			$("#stateSelectProgress_${backlogItem.id}-${bliListContext}").change(function() {
+				change_effort_enabled($(this).val(), ${backlogItem.id}, ${bliListContext});
 				var tasksDone = true;
-				$(".taskStateSelect_${backlogItem.id}").each(function() {
+				$(".taskStateSelect_${backlogItem.id}-${bliListContext}").each(function() {
 					if ($(this).val() != 'DONE') {
 						tasksDone = false;
 					}
@@ -448,7 +448,7 @@
 				if ($(this).val() == 'DONE' && !tasksDone) {
 					var prompt = window.confirm("Do you wish to set all the tasks' states to Done as well?");
 					if (prompt) {
-						$(".taskStateSelect_${backlogItem.id}").val('DONE');
+						$(".taskStateSelect_${backlogItem.id}-${bliListContext}").val('DONE');
 					}					
 				}
 			});
@@ -482,7 +482,7 @@
 			<td>
 				Backlog item state
 				<ww:select name="state"
-					id="stateSelectProgress_${backlogItem.id}" value="#attr.backlogItem.state.name"
+					id="stateSelectProgress_${backlogItem.id}-${bliListContext}" value="#attr.backlogItem.state.name"
 					list="@fi.hut.soberit.agilefant.model.State@values()" listKey="name"
 					listValue="getText('backlogItem.state.' + name())" />
 			</td>
@@ -495,11 +495,11 @@
 				<c:choose>
 					<c:when test="${backlogItem.state.name != 'DONE'}">
 						<ww:textfield size="5" name="effortLeft"
-							value="${backlogItem.effortLeft}" id="effortBli_${backlogItem.id}" />	
+							value="${backlogItem.effortLeft}" id="effortBli_${backlogItem.id}-${bliListContext}" />	
 					</c:when>
 					<c:otherwise>
 						<ww:textfield size="5" name="effortLeft"
-							value="${backlogItem.effortLeft}" id="effortBli_${backlogItem.id}"
+							value="${backlogItem.effortLeft}" id="effortBli_${backlogItem.id}-${bliListContext}"
 							disabled="true" />
 					</c:otherwise>
 				</c:choose>	
@@ -508,7 +508,7 @@
 			<td>
 				<c:if test="${hourReport}">			
 				Log effort for <c:out value="${currentUser.initials}"/> 					
-				<ww:textfield size="5" name="spentEffort" id="effortSpent_${backlogItem.id}"/>  
+				<ww:textfield size="5" name="spentEffort" id="effortSpent_${backlogItem.id}-${bliListContext}"/>  
 				</c:if>
 			</td>
 	
@@ -547,10 +547,10 @@
 						</display:column>
 														
 						<display:column sortable="false" title="State">											
-							<ww:select cssClass="taskStateSelect_${backlogItem.id}"
+							<ww:select cssClass="taskStateSelect_${backlogItem.id}-${bliListContext}"
 								name="taskStates[${row.id}]" value="#attr.row.state.name"
 								list="@fi.hut.soberit.agilefant.model.State@values()" listKey="name"
-								listValue="getText('task.state.' + name())" id="taskStateSelect_${row.id}"/>														
+								listValue="getText('task.state.' + name())" id="taskStateSelect_${row.id}-${bliListContext}"/>														
 						</display:column>
 											
 						<display:column sortable="false" title="Actions">

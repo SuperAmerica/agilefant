@@ -95,7 +95,17 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
     
     private String spentEffort = null;
     
-    private int businessThemeId;        
+    private int businessThemeId;
+    
+    private String bliListContext;
+
+    public String getBliListContext() {
+        return bliListContext;
+    }
+
+    public void setBliListContext(String bliListContext) {
+        this.bliListContext = bliListContext;
+    }
 
     public Map<Integer, State> getTaskStates() {
         return taskStates;

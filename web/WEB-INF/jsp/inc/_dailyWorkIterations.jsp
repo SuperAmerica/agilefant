@@ -13,7 +13,7 @@
 
 $(document).ready(function() {        
     <c:forEach items="${openBacklogItemTabs}" var="openBacklogItem">
-        handleTabEvent("backlogItemTabContainer-${openBacklogItem[0]}-${bliListContext}", "bli", ${openBacklogItem[0]}, ${openBacklogItem[1]});
+        handleTabEvent("backlogItemTabContainer-${openBacklogItem[0]}-${bliListContext}", "bli", ${openBacklogItem[0]}, ${openBacklogItem[1]} ,'${bliListContext}');
     </c:forEach>
 });
 
@@ -25,7 +25,6 @@ $(document).ready(function() {
 	ongoing iterations</h2>
 
 	<div class="subItems"><c:forEach items="${iterations}" var="it">
-
 
 		<div class="subItemHeader">
 		<table cellspacing="0" cellpadding="0">
@@ -51,14 +50,7 @@ $(document).ready(function() {
 		</ww:url>
 		<ww:a href="%{parentActionUrl}&contextViewName=dailyWork">
 			<c:out value="${it.name}" />
-		</ww:a>
-		
-		<%--<ww:url id="projectTypeActionUrl" action="editProjectType"
-			includeParams="none">
-			<ww:param name="projectTypeId" value="${it.project.projectType.id}" />
-		</ww:url> <ww:a href="%{projectTypeActionUrl}&contextViewName=dailyWork">
-			<u><c:out value="(${it.project.projectType.name})" /></u>
-		</ww:a>--%>
+		</ww:a>				
 		
 		<c:out value="(${it.project.projectType.name})" />
 		
@@ -75,7 +67,6 @@ $(document).ready(function() {
 		</table>
 		</div>
 
-
 		<div class="subItemContent">
 		<p>
 		<table class="dailyWorkBacklogItems">
@@ -90,7 +81,7 @@ $(document).ready(function() {
 					<display:column sortable="true" sortProperty="name" title="Name">						
 						<div style="overflow:hidden; width: 170px;">						
 						<aef:backlogItemThemes backlogItemId="${row.id}" positionId="dailyWorkIterationList_${row.id}"/>						
-						<a class="bliNameLink" onclick="handleTabEvent('backlogItemTabContainer-${row.id}-${bliListContext}','bli',${row.id},0);">
+						<a class="bliNameLink" onclick="handleTabEvent('backlogItemTabContainer-${row.id}-${bliListContext}','bli',${row.id},0,'${bliListContext}');">
 							${aef:html(row.name)}
 						</a>
 						</div>
@@ -121,11 +112,7 @@ $(document).ready(function() {
 					</display:column>
 
 					<display:column title="Progress" sortable="false" class="taskColumn">
-						<%@ include file="./_backlogItemStatusBar.jsp"%>
-						<!-- <aef:tasklist backlogItem="${row}"
-							contextViewName="${currentAction}"
-							contextObjectId="${backlog.id}"
-							divId="${divId}" hourReport="${hourReport}" /> -->
+						<%@ include file="./_backlogItemStatusBar.jsp"%>						
 					</display:column>
 
 					<display:column sortable="true" sortProperty="effortLeft"
@@ -202,13 +189,10 @@ $(document).ready(function() {
 					</div>
 				</td>
 			</tr>
-		</table>
-
-		
+		</table>		
 
 		</div>
 		
-
 	</c:forEach></div>
 
 </c:if>

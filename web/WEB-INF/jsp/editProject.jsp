@@ -132,7 +132,7 @@ $(document).ready(function() {
 								    				</td>
 								    				<!--  <td class="info3" ondblclick="return editProject();"><ww:text name="project.status.${project.status}" /></td> -->
 								    				
-								    				<td class="info4" rowspan="6">
+								    				<td class="info4" rowspan="7">
 	                                					<c:if test="${(!empty project.backlogItems) && (empty project.iterations)}">
 	                                    					<div class="smallBurndown"><a href="#bigChart">
 	                                    						<img src="drawSmallProjectChart.action?projectId=${project.id}"/>

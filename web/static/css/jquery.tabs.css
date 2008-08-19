@@ -159,12 +159,15 @@
     right: -7px;
 }
 
-.closeTabsLink a:link, .closeTabsLink a:visited, .closeTabsLink a:active {
+.closeTabsLink a:link, .closeTabsLink a:visited  {
     padding: 0;
     background: url('../img/ui/888888_11x11_icon_close.gif') no-repeat center;
     display: block;
     width: 100%;
     height: 100%;
+}
+.closeTabsLink a:active {
+	background: url('../img/ui/ffffff_11x11_icon_close.gif') no-repeat center;
 }
 .closeTabsLink a:hover {
     background: url('../img/ui/222222_11x11_icon_close.gif') no-repeat center;

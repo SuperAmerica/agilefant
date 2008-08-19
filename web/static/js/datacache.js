@@ -27,11 +27,11 @@ dataCacheClass.prototype = {
 	        }
 	    };
 	    jQuery.extend(settings, options);
-	    if (this.data[element] == null) {
-	        this.data[element] = [];
+	    if (this.data[element] == undefined) {
+	        this.data[element] = null
 	        $.ajax(settings);
 	    }
-	    while (this.data[element] == null) {
+	    while (this.data[element] === null) {
 	       sleep(10);
 	    }
 	    return this.data[element];

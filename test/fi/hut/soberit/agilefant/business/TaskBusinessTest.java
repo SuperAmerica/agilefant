@@ -33,6 +33,8 @@ public class TaskBusinessTest extends TestCase {
         taskDao = createMock(TaskDAO.class);
         taskBusiness.setTaskDAO(taskDao);
 
+        BacklogItem bli = new BacklogItem();
+        
         // Create test tasks
         Task task1 = new Task();
         task1.setId(1);
@@ -52,7 +54,7 @@ public class TaskBusinessTest extends TestCase {
 
         // Run the test case
         try {
-            taskBusiness.updateMultipleTasks(newTaskStates, new HashMap<Integer, String>());
+            taskBusiness.updateMultipleTasks(bli, newTaskStates, new HashMap<Integer, String>());
         } catch (ObjectNotFoundException e) {
             fail("Unexpected ObjectNotFoundException.");
         }

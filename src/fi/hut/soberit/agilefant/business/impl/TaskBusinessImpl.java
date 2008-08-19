@@ -15,23 +15,60 @@ public class TaskBusinessImpl implements TaskBusiness {
     private TaskDAO taskDAO;
     private BacklogItemDAO backlogItemDAO;
 
-    public void updateMultipleTasks(Map<Integer, State> newStatesMap, Map<Integer, String> newNamesMap)
+    public void updateMultipleTasks(BacklogItem bli, Map<Integer, State> newStatesMap, Map<Integer, String> newNamesMap)
             throws ObjectNotFoundException {
-        for (Integer taskId : newStatesMap.keySet()) {
-            Task task = taskDAO.get(taskId.intValue());
-            if (task == null) {
-                throw new ObjectNotFoundException("Task with id: " + taskId
+        // Map of new tasks.
+        Map<Integer, Task> newTasks = new HashMap<Integer, Task>();
+        
+        for (Integer taskId : newStatesMap.keySet()) {            
+            if (taskId < 0) {
+                Task task = new Task();
+                task.setState(newStatesMap.get(taskId));
+                newTasks.put(taskId, task);
+            } else {
+                Task task = taskDAO.get(taskId.intValue());
+                if (task == null) {
+                    throw new ObjectNotFoundException("Task with id: " + taskId
                         + " not found.");
+                }
+                task.setState(newStatesMap.get(taskId));
             }
-            task.setState(newStatesMap.get(taskId));
+            
         }
         for (Integer taskId : newNamesMap.keySet()) {
-            Task task = taskDAO.get(taskId.intValue());
-            if (task == null) {
-                throw new ObjectNotFoundException("Task with id: " + taskId
+            // new task should already be in the map.
+            if (taskId < 0) {
+                Task task = newTasks.get(taskId);
+                if (task != null) {
+                    task.setName(newNamesMap.get(taskId));                    
+                }
+            } else {
+                Task task = taskDAO.get(taskId.intValue());
+                if (task == null) {
+                    throw new ObjectNotFoundException("Task with id: " + taskId
                         + " not found.");
+                }
+                task.setName(newNamesMap.get(taskId));
             }
-            task.setName(newNamesMap.get(taskId));
+            
+        }
+        // Save new tasks.
+        for (Integer i: newTasks.keySet()) {
+            System.out.println(" *** uusi taski: " + i);
+            Task task = newTasks.get(i);
+            task.setBacklogItem(bli);
+            bli.getTasks().add(task);
+            // Set rank for task temporarily to -1 to indicate new item 
+            task.setRank(-1);
+            taskDAO.create(task);
+            Task lowestRankedTask = taskDAO.getLowestRankedTask(task.getBacklogItem());
+            if(lowestRankedTask == null || lowestRankedTask.getRank() < 0) {
+                task.setRank(0);
+            }
+            else {
+                task.setRank(lowestRankedTask.getRank() + 1);
+            }
+            taskDAO.store(task);
         }
     }
 

@@ -3,6 +3,7 @@ package fi.hut.soberit.agilefant.business;
 import java.util.Map;
 
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
+import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.State;
 import fi.hut.soberit.agilefant.model.Task;
 
@@ -26,7 +27,7 @@ public interface TaskBusiness {
      * 
      */
 
-    public void updateMultipleTasks(Map<Integer, State> newStatesMap, Map<Integer, String> newNamesMap)
+    public void updateMultipleTasks(BacklogItem bli, Map<Integer, State> newStatesMap, Map<Integer, String> newNamesMap)
             throws ObjectNotFoundException;
 
     /**

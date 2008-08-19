@@ -118,9 +118,15 @@ public class BacklogItemBusinessImpl implements BacklogItemBusiness {
     public void updateBacklogItemEffortLeftStateAndTaskStates(
             int backlogItemId, State newState, AFTime newEffortLeft,
             Map<Integer, State> newTaskStates, Map<Integer, String> newTaskNames) throws ObjectNotFoundException {
-        updateBacklogItemStateAndEffortLeft(backlogItemId, newState,
+        BacklogItem backlogItem = backlogItemDAO.get(backlogItemId);
+        if (backlogItem == null) {
+            throw new ObjectNotFoundException("Backlog item with id: "
+                    + backlogItemId + " not found.");
+        } else {
+            updateBacklogItemStateAndEffortLeft(backlogItemId, newState,
                 newEffortLeft);
-        taskBusiness.updateMultipleTasks(newTaskStates, newTaskNames);
+            taskBusiness.updateMultipleTasks(backlogItem, newTaskStates, newTaskNames);
+        }
     }
     
     public void setTasksToDone(int backlogItemId) throws ObjectNotFoundException {
@@ -133,7 +139,7 @@ public class BacklogItemBusinessImpl implements BacklogItemBusiness {
             for (Task t: backlogItem.getTasks()) {
                 doneStates.put(t.getId(), State.DONE);
             }
-            taskBusiness.updateMultipleTasks(doneStates, new HashMap<Integer, String>());
+            taskBusiness.updateMultipleTasks(backlogItem, doneStates, new HashMap<Integer, String>());
         }
     }
 

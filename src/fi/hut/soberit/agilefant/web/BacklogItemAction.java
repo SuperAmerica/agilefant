@@ -213,7 +213,7 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
         
         // Store tasks also.
         try {
-            taskBusiness.updateMultipleTasks(taskStates, taskNames);
+            taskBusiness.updateMultipleTasks(backlogItem, taskStates, taskNames);
         }
         catch(ObjectNotFoundException onfe) {
             return Action.ERROR;
@@ -327,7 +327,7 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
      * by tasklist tag.
      */
 
-    public String quickStoreTaskList() {
+    public String quickStoreTaskList() {               
         
         // check that AFTime is not negative
         if (this.effortLeft != null && this.effortLeft.getTime() < 0) {

@@ -332,7 +332,7 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
         // check that AFTime is not negative
         if (this.effortLeft != null && this.effortLeft.getTime() < 0) {
             super.addActionError("EffortLeft cannot be negative.");
-            return Action.ERROR;
+            return CRUDAction.AJAX_ERROR;
         }        
         /** Test code begins */
         System.err.println("SIZE OF MAP: " + taskStates.size());
@@ -346,7 +346,7 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
                     backlogItemId, this.state, this.effortLeft, taskStates, taskNames);
         } catch (ObjectNotFoundException e) {
             addActionError(e.getMessage());
-            return Action.ERROR;
+            return CRUDAction.AJAX_ERROR;
         }
         //should be refactored to the business layer
         if(spentEffort != null) {
@@ -361,7 +361,7 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
                 addActionError("Invalid format in spent effort.");
             } 
         }
-        return Action.SUCCESS;
+        return CRUDAction.AJAX_SUCCESS;
     }
 
     public String resetBliOrigEstAndEffortLeft() {

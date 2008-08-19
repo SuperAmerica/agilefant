@@ -87,14 +87,12 @@
 							<span id="resetText_${backlogItem.id}-${bliListContext}" style="color: #666; display: none;">(reset)</span>
 								<span id="resetLink_${backlogItem.id}-${bliListContext}">
 							</c:otherwise>
-						</c:choose>
-						
+						</c:choose>						
 						<ww:a
 								href="%{resetLink_${backlogItem.id}}&contextViewName=${currentAction}&contextObjectId=${backlog.id}"
 								onclick="return confirmReset()">(reset)</ww:a>
 						</span>
-						
-						
+												
 						</td>
 					</tr>
 					<tr>
@@ -444,7 +442,7 @@
 	<%-- Tasks to DONE confirmation script ends. --%>
 </script>
 
-<ww:form action="quickStoreTaskList" validate="false">
+<ww:form action="quickStoreTaskList" method="post" validate="false">
 
 <table>
 <tbody>

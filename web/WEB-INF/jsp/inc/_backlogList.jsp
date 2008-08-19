@@ -11,6 +11,8 @@
 <!-- context variable for backlog item ajax to know its context -->
 <c:set var="bliListContext" value="backlogList" scope="session" />
 
+<c:set var="dialogContext" value="bli" scope="session" />
+
 <aef:currentUser />
 <script language="javascript" type="text/javascript">
 

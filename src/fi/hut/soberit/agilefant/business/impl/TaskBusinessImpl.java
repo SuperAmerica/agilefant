@@ -53,8 +53,7 @@ public class TaskBusinessImpl implements TaskBusiness {
             
         }
         // Save new tasks.
-        for (Integer i: newTasks.keySet()) {
-            System.out.println(" *** uusi taski: " + i);
+        for (Integer i: newTasks.keySet()) {            
             Task task = newTasks.get(i);
             task.setBacklogItem(bli);
             bli.getTasks().add(task);

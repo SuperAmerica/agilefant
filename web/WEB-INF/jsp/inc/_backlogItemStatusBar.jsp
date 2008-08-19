@@ -1,4 +1,4 @@
-<a class="bliNameLink" onclick="handleTabEvent('backlogItemTabContainer-${row.id}-${bliListContext}','bli',${row.id},1,'${bliListContext}');">
+<a class="bliNameLink" onclick="handleTabEvent('backlogItemTabContainer-${row.id}-${bliListContext}','${dialogContext}',${row.id},1,'${bliListContext}');">
 <c:choose>
 	<c:when test="${!(empty row.tasks)}">		
 		${fn:length(row.tasks)} TODOs,

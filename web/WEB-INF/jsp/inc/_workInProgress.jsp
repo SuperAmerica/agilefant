@@ -5,6 +5,8 @@
 <!-- context variable for backlog item ajax to know its context -->
 <c:set var="bliListContext" value="workInProgress" scope="session" />
 
+<c:set var="dialogContext" value="bliWorkInProgress" scope="session" />
+
 <script language="javascript" type="text/javascript">
 
 $(document).ready(function() {        

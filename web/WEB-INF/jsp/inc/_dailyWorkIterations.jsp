@@ -3,6 +3,8 @@
 <!-- context variable for backlog item ajax to know its context -->
 <c:set var="bliListContext" value="dailyWorkIterations" scope="session" />
 
+<c:set var="dialogContext" value="bliDWInterations" scope="session" />
+
 <aef:openDialogs context="bliDWInterations" id="openBacklogItemTabs" />
 
 <c:if test="${hourReport}">

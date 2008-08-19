@@ -127,7 +127,7 @@
         var oldData = row.replaceWith(newRow);
         row = newRow;
         var me = this;
-        row.find(':reset').click(function() {  		
+        row.find(':reset').unbind('click').click(function() {  		
           row.replaceWith(oldData);
           if(me.container.find(":reset").length == 0) {
             me.submit.hide();
@@ -180,11 +180,11 @@
      },
      register: function(target) {
      	var me = this;
-		target.find(this.options.edit).click(function() {
+		target.find(this.options.edit).unbind('click',me.register).click(function() {
 			me.edit(this);  
 			return false;
 		});
-		target.find(this.options.del).click(function() {
+		target.find(this.options.del).unbind('click',me.register).click(function() {
 			me.del(this);
 			return false;
 		});

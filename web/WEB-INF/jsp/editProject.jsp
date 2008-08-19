@@ -559,13 +559,7 @@ $(document).ready(function() {
 											<input id="backlogThemeSave" style="display: none"; type="submit" value="Save" />
 											</ww:form>				
 											</div>
-											<div class="subItemHeader">
-										    <table cellspacing="0" cellpadding="0">
-					            			    <tr>
-					            			    	<td class="header">Iteration themes</td>
-												</tr>
-											</table>
-											</div>
+											<p>Iterations</p>
 											<c:if test="${!empty iterationThemes}">
 												<display:table htmlId="businessThemeTable" class="listTable" name="iterationThemes" id="row" requestURI="editProject.action">
 						

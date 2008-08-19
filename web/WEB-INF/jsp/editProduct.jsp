@@ -320,8 +320,6 @@ var productId = ${product.id};
 					</display:column>				
 					<display:column title="Actions">
 						<img src="static/img/edit.png" alt="Edit" title="Edit theme" style="cursor: pointer;" onclick="handleTabEvent('businessThemeTabContainer-${row.id}','businessTheme',${row.id},0);" />
-						<img src="static/img/backlog.png" alt="BLIs" title="Backlog items" style="cursor: pointer;" onclick="handleTabEvent('businessThemeTabContainer-${row.id}','businessTheme',${row.id},1);" />
-						<img src="static/img/bli.png" alt="BLIs" title="Backlog items" style="cursor: pointer;" onclick="handleTabEvent('businessThemeTabContainer-${row.id}','businessTheme',${row.id},2);" />
 						<img src="static/img/disable.png" alt="Disable" title="Disable theme" style="cursor: pointer;" onclick="setThemeActivityStatus(${row.id},false); return false;" />
 						<img src="static/img/delete_18.png" alt="Delete" title="Delete theme" style="cursor: pointer;" onclick="deleteTheme(${row.id}); return false;" />
 					</display:column>
@@ -369,8 +367,6 @@ var productId = ${product.id};
 					</display:column>								
 					<display:column title="Actions">
 						<img src="static/img/edit.png" alt="Edit" title="Edit theme" style="cursor: pointer;" onclick="handleTabEvent('businessThemeTabContainer-${row.id}','businessTheme',${row.id},0);" />
-						<img src="static/img/backlog.png" alt="BLIs" title="Backlog items" style="cursor: pointer;" onclick="handleTabEvent('businessThemeTabContainer-${row.id}','businessTheme',${row.id},1);" />
-						<img src="static/img/bli.png" alt="BLIs" title="Backlog items" style="cursor: pointer;" onclick="handleTabEvent('businessThemeTabContainer-${row.id}','businessTheme',${row.id},2);" />
 						<img src="static/img/enable.png" alt="Enable" title="Enable theme" style="cursor: pointer;" onclick="setThemeActivityStatus(${row.id},true); return false;return false;" />
 						<img src="static/img/delete_18.png" alt="Delete" title="Delete theme" style="cursor: pointer;" onclick="deleteTheme(${row.id}); return false;" />
 					</display:column>

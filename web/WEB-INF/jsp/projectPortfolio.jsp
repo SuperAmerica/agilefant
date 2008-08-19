@@ -22,6 +22,19 @@ var teams = [<aef:teamJson items="${teamList}"/>]
 	<display:column title="Rank">
 		<c:out value="${row_rowNum}" />
 	</display:column>
+	<display:column title="St.">
+	 	<c:choose>
+			<c:when test="${row.status == 'OK'}">
+				<img src="static/img/status-green.png" alt="OK" title="OK"/>
+			</c:when>
+			<c:when test="${row.status == 'CHALLENGED'}">
+				<img src="static/img/status-yellow.png" alt="Challenged" title="Challenged"/>
+			</c:when>
+			<c:when test="${row.status == 'CRITICAL'}">
+				<img src="static/img/status-red.png" alt="Critical" title="Critical"/>
+			</c:when>
+		</c:choose>
+	</display:column>
 	<display:column title="Project Name">
 		<ww:a
 			href="contextView.action?contextObjectId=${row.id}&resetContextView=true&contextName=project">
@@ -168,6 +181,19 @@ var teams = [<aef:teamJson items="${teamList}"/>]
 <c:if test="${!empty ongoingUnrankedProjects}">
 	<h4>Unranked Projects</h4>
 	<p><display:table name="${ongoingUnrankedProjects}" id="row">
+		<display:column title="St.">
+		 	<c:choose>
+				<c:when test="${row.status == 'OK'}">
+					<img src="static/img/status-green.png" alt="OK" title="OK"/>
+				</c:when>
+				<c:when test="${row.status == 'CHALLENGED'}">
+					<img src="static/img/status-yellow.png" alt="Challenged" title="Challenged"/>
+				</c:when>
+				<c:when test="${row.status == 'CRITICAL'}">
+					<img src="static/img/status-red.png" alt="Critical" title="Critical"/>
+				</c:when>
+			</c:choose>
+		</display:column>
 		<display:column title="Project Name">
 			<ww:a
 				href="contextView.action?contextObjectId=${row.id}&resetContextView=true&contextName=project">

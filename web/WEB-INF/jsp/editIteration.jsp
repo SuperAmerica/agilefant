@@ -250,7 +250,11 @@ $(document).ready( function() {
         $.get(me.attr('href'), null, function() {me.movebottom();});
         return false;
         });
-   //$('#businessThemeTable').themeBinding('#addIterationBusinessTheme',${iteration.project.product.id},'#backlogThemeSave');
+
+	var projectThemes = [];
+    <c:if test="${!empty iteration.project.businessThemeBindings}">
+	    projectThemes = [<c:forEach items="${iteration.project.businessThemeBindings}" var="them">${them.businessTheme.id},</c:forEach>-1];
+	</c:if>
 	var getThemeData = function() {
 		var ret = {};
 		var data = jsonDataCache.get('themesByProduct',{data: {productId: ${iteration.project.product.id}}},${iteration.project.product.id});
@@ -261,6 +265,21 @@ $(document).ready( function() {
 		});
 		return ret;
 	};
+   $("#iterationBusinessThemesForm").submit(function() {
+   		var themes = getThemeData();
+   		var moved = [];
+   		$("#iterationBusinessThemesForm").find("select[name=businessThemeIds]").each(function() {
+   			if(jQuery.inArray($(this).val(),projectThemes)) {
+   				 moved.push(themes[$(this).val()]);
+   			}
+   		});
+   		if(moved.length > 0) {
+   			var message = "Theme(s) " + (moved.join(", ")) + " will be moved from project to this iteration.";
+   			message += "\nDo your wish to continue?\n";
+   			return confirm(message);
+   		
+   		}
+   });
 	$('#businessThemeTable').inlineTableEdit({add: '#addIterationBusinessTheme', 
 											  submit: '#backlogThemeSave',
 											  submitParam: 'bindingId',
@@ -289,7 +308,7 @@ $(document).ready( function() {
 						</table>
 					</div>
 					<div class="subItemContent">
-					<ww:form action="storeBacklogThemebinding" method="post">
+					<ww:form action="storeBacklogThemebinding" id="iterationBusinessThemesForm" method="post">
 					<ww:hidden name="backlogId" value="${iteration.id}"/>
 					<input type="hidden" name="contextViewName" value="iteration" />
 					<p>

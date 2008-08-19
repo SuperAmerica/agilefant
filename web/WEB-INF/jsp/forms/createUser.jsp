@@ -1,6 +1,6 @@
 <%@ include file="../inc/_taglibs.jsp"%>
 
-
+<div class="validateWrapper validateNewUser">
 <ww:form method="POST" action="storeUser">
     <ww:hidden name="userId" value="${user.id}" />
 
@@ -81,3 +81,4 @@
     </table>
 
 </ww:form>
+</div>

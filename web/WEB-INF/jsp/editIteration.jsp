@@ -17,14 +17,6 @@
 <ww:actionerror />
 <ww:actionmessage />
 
-<script type="text/javascript">
-$(document).ready(function() {
-    var editForm = $('#iterationEditForm');
-    editForm.validate(agilefantValidationRules.iteration);
-    editForm.submit(function() { return $(this).valid(); });
-});
-</script>
-
 <h2><c:out value="${iteration.name}" /></h2>
 <table>
 	<table>
@@ -131,7 +123,8 @@ $(document).ready(function() {
 
 				</table>
 				</div>
-				<div id="editIterationForm" style="display: none;"><ww:form
+				<div id="editIterationForm" class="validateWrapper validateIteration" style="display: none;">
+				<ww:form
 					method="post" id="iterationEditForm" action="storeIteration">
 					<ww:hidden name="iterationId" value="${iteration.id}" />
 					<ww:date name="%{iteration.getTimeOfDayDate(6)}" id="start"

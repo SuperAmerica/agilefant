@@ -17,16 +17,13 @@
 
 <div id="backlogItemEditTab-${backlogItemId}-${bliListContext}" class="backlogItemNaviTab">
 
-<ww:actionerror />
-<ww:actionmessage />
 
 <table>
 <tbody>
 	<tr>
 	<td>
-	<div class="subItems" style="margin-top: 0px; width: 725px;">
-	<div id="editBacklogItemForm">
-
+	<div class="subItems" style="margin-top: 0px; width: 725px;"> 
+	<div class="validateWrapper validateBacklogItem">
 	<ww:form action="ajaxStoreBacklogItem" method="post">
 		<ww:hidden name="backlogItemId" value="${backlogItem.id}" />	
 		<ww:hidden name="effortLeft" value="${backlogItem.effortLeft}" />				
@@ -363,7 +360,8 @@
 		</table>
 	
 	</ww:form>
-
+</div>
+</div>
 </div>
 </div>
 
@@ -442,7 +440,8 @@
 	<%-- Tasks to DONE confirmation script ends. --%>
 </script>
 
-<ww:form action="quickStoreTaskList" method="post" validate="false">
+<div class="validateWrapper validateBLIProgressTab">
+<ww:form action="quickStoreTaskList" validate="false" method="post">
 
 <table>
 <tbody>
@@ -609,7 +608,7 @@
 </table>
 
 </ww:form>
-
+</div>
 </div>
 <!-- Tasks tab ends -->
 

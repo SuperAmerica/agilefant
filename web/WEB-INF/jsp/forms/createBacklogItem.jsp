@@ -6,6 +6,7 @@
 <aef:iterationGoalList id="iterationGoals" backlogId="${backlogId}" />
 <aef:productList />
 
+<div class="validateWrapper validateNewBacklogItem">
 <ww:form action="storeNewBacklogItem" method="post">
 	<table class="formTable">
 		<tr>
@@ -200,3 +201,4 @@
 	</table>
 
 </ww:form>
+</div>

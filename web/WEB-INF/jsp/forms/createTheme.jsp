@@ -2,6 +2,7 @@
 
 <aef:productList />
 
+<div class="validateWrapper validateNewTheme">
 <ww:form action="ajaxStoreBusinessTheme" method="post">
 	<ww:hidden name="businessTheme.active" value="true" />
 	<table class="formTable">
@@ -46,3 +47,4 @@
 		</tr>
 	</table>
 </ww:form>
+</div>

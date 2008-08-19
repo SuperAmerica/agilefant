@@ -1,16 +1,12 @@
 
 function toggleDiv(id) { $('#' + id).toggle(); }
 
-function confirmGeneric(message) {
-    (((message == null) || (message == "")) && (message = "Are you sure?"));
-    return confirm(message);
-}
-function confirmDeleteTask() { confirmGeneric("Really delete task?");}
-function confirmDeleteHour() { confirmGeneric("Really delete hour entry?"); }
-function confirmDeleteBli() { confirmGeneric("Deleting the backlog item will cause all of its tasks and logged effort to be deleted.");}
-function confirmDelete() { confirmGeneric(); }
-function confirmDeleteTeam() { confirmGeneric("Really delete the team?"); }
-function confirmReset() { confirm("Really reset the original estimate?"); }
+function confirmDeleteTask() { return confirm("Really delete task?");}
+function confirmDeleteHour() { return confirm("Really delete hour entry?"); }
+function confirmDeleteBli() { return confirm("Deleting the backlog item will cause all of its tasks and logged effort to be deleted.");}
+function confirmDelete() { return confirm("Are you sure?"); }
+function confirmDeleteTeam() { return confirm("Really delete the team?"); }
+function confirmReset() { return confirm("Really reset the original estimate?"); }
 
 function deleteBacklogItem(backlogItemId) {
 	var confirm = confirmDeleteBli();
@@ -184,12 +180,15 @@ function handleTabEvent(target, context, id, tabId, bliContext) {
                 ajaxOpenDialog(context, id, tab);
             });
             
+            var closeLinkLi = $('<li/>').addClass('closeTabsLink');
+            var closeLink = $('<a/>').attr('href','#').html('&nbsp;').appendTo(closeLinkLi).click(function() {
+                ajaxCloseDialog(context, id);
+                target.hide();
+                return false;
+            });
+            closeLinkLi.appendTo(ajaxTabs);
+            
             initOnLoad(target);
-            
-            var form = target.find("form");
-            form.validate(agilefantValidationRules[context]);
-            form.submit(submitDialogForm);
-            
         });
         target.attr("tab-data-loaded","1");
     }

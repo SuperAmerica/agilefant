@@ -31,7 +31,6 @@ function setThemeActivityStatus(themeId,status) {
 function deleteTheme(themeId) {
 	var confirm = confirmDelete();
 	var url = "ajaxDeleteBusinessTheme.action";			
-	
 	if (confirm) {
 		$.post(url,{businessThemeId: themeId},function(data) {
 			reloadPage();
@@ -47,17 +46,6 @@ $(document).ready(function() {
     <c:forEach items="${openProjects}" var="openProject">
         handleTabEvent("projectTabContainer-${openProject[0]}", "project", ${openProject[0]}, ${openProject[1]});
     </c:forEach>
-    
-    var editForm = $('#productEditForm');
-    var ruleset = agilefantValidationRules.product;
-    jQuery.extend(ruleset.rules, {
-        "product.name": {
-            required: true,
-            unique: [ "name", "allProducts", { excludeIds: [${product.id}] } ]
-        }
-    });
-    editForm.validate(ruleset);
-    editForm.submit(function() { return $(this).valid(); });
 });
 
 
@@ -129,6 +117,7 @@ var productId = ${product.id};
 			</div>
 
 			<div id="editProductForm" style="display: none;">
+			<div class="validateWrapper validateExistingProduct">
 			<ww:form id="productEditForm"
 				action="storeProduct" method="post">
 				<ww:hidden name="productId" value="${product.id}" />
@@ -162,7 +151,7 @@ var productId = ${product.id};
 						</c:choose>
 					</tr>
 				</table>
-			</ww:form></div>
+			</ww:form></div></div>
 			</div>
 			</td>
 		</tr>

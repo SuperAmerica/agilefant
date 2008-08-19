@@ -1,7 +1,6 @@
 <%@ include file="_taglibs.jsp"%>
 <div class="ajaxWindowTabsDiv">
 <ul class="ajaxWindowTabs">
-
 	<li><a href="#projectEditTab-${projectId}"><span><img src="static/img/edit.png" alt="Edit" /> Edit project</span></a></li>
 	<li><a href="#projectIterationsTab-${projectId}"><span><img src="static/img/backlog.png" alt="Iterations" /> Iterations</span></a></li>
 </ul>
@@ -27,7 +26,7 @@
 		<tr>
 			<td>
 			<div class="subItems" style="margin-top: 0px; width: 725px;">
-			<div id="editProjectForm">
+			<div id="editProjectForm" class="validateWrapper validateProject">
 			<ww:form action="ajaxStoreProject" method="post">
 				<ww:hidden name="projectId" value="${project.id}" />
 				<table class="formTable">

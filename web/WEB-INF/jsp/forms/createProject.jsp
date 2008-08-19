@@ -7,6 +7,7 @@
 <ww:date name="%{new java.util.Date()}" id="end"
 	format="%{getText('webwork.shortDateTime.format')}" />
 
+<div class="validateWrapper validateNewProject">
 <ww:form action="storeNewProject" method="post">
 <c:choose>
 	<c:when test="${empty projectTypes}">
@@ -231,3 +232,4 @@
 	</c:otherwise>
 </c:choose>
 </ww:form>
+</div>

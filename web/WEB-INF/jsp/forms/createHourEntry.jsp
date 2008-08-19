@@ -39,6 +39,7 @@ function showOldEffort() {
 }
 </script>
 
+<div class="validateWrapper validateNewHourEntry">
 <ww:form action="storeHourEntry">
     <ww:hidden name="hourEntryId" />
     <ww:hidden name="backlogItemId" />
@@ -262,3 +263,4 @@ function showOldEffort() {
         </tr>
     </table>
 </ww:form>
+</div>

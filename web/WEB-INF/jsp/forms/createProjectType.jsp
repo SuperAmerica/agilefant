@@ -1,5 +1,6 @@
 <%@ include file="../inc/_taglibs.jsp"%>
 
+<div class="validateWrapper validateNewProjectType">
 <ww:form action="storeProjectType" method="post">
     <ww:hidden name="projectTypeId" value="${projectType.id}" />
     <table class="formTable">
@@ -23,3 +24,4 @@
         </tr>
     </table>
 </ww:form>
+</div>

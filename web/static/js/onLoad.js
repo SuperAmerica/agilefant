@@ -1,3 +1,5 @@
+
+
 function initOnLoad(elem) {
     var me = $(elem);
     /*
@@ -21,18 +23,40 @@ function initOnLoad(elem) {
         insertOrderedList : { visible : true },
         insertUnorderedList : { visible : true }
     }});
-        
+    
+    addFormValidators(elem);
+    
     return false;
 }
 
 function submitDialogForm() {
     if($(this).valid()) {
-        $(this).find("#createButton").attr("disabled", "disabled");
+        $(this).find("input[type=submit]").attr("disabled", "disabled");
         $.post($(this).attr("action"), $(this).serializeArray(),
             function(data, status) {
                 reloadPage();                
         });
     }
+    return false;
+}
+
+/**
+ * Call this function to add validators to your form according to css classes.
+ */
+function addFormValidators(target) {
+    var wrappers = $(target).find('div.validateWrapper');
+    $.each(wrappers, function() {
+        var form = $(this).find('form');
+        var classes = $.makeArray($(this).attr('class').split(' '));
+        $.each(classes, function(i) {
+            if (validationRulesByHTMLClass[this] != null) {
+                var rules = validationRulesByHTMLClass[this];
+                form.validate(rules);
+                form.submit(submitDialogForm);
+                return false;
+            }
+        });
+    });
     return false;
 }
 
@@ -129,8 +153,9 @@ function openCreateDialog(element) {
             insertUnorderedList : { visible : true }
         }});
         
-        var form = dialog.find('form');
-        form.validate(ruleset);
+        /*var form = dialog.find('form');
+        form.validate(ruleset);*/
+        addFormValidators(dialog);
         
         dialog.css('height','100%');
         

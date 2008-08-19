@@ -19,6 +19,7 @@ dataCacheClass.prototype = {
 	    }
 	    var settings = {
 			url: me.fetchURLs[el],
+			data: {},
 			async: false,
 			dataType: 'json',
 			type: 'POST',
@@ -30,9 +31,6 @@ dataCacheClass.prototype = {
 	    if (this.data[element] == undefined) {
 	        this.data[element] = null
 	        $.ajax(settings);
-	    }
-	    while (this.data[element] === null) {
-	       sleep(10);
 	    }
 	    return this.data[element];
 	},

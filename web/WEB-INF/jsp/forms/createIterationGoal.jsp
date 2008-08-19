@@ -2,6 +2,7 @@
 
 <aef:productList />
 
+<div class="validateWrapper validateNewIterationGoal">
 <ww:form action="storeNewIterationGoal"  method="post">
     <ww:hidden name="iterationGoalId" value="${iterationGoal.id}" />
     <table class="formTable">
@@ -50,3 +51,4 @@
         </tr>
     </table>
 </ww:form>
+</div>

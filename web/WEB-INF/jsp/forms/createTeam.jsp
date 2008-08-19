@@ -2,6 +2,7 @@
 
 <aef:userList />
 
+<div class="validateWrapper validateNewTeam">
 <ww:form action="storeTeam" method="post">
 
     <ww:hidden name="teamId" value="0" />
@@ -47,3 +48,4 @@
         </tr>
     </table>
 </ww:form>
+</div>

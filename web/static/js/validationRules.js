@@ -39,18 +39,28 @@ jQuery.validator.addMethod("before", function(value, element, param) {
  */
 jQuery.validator.addMethod("unique", function(value, element, param) {
     var options = {
-        excludeIds: []
+        exclude: false,
+        excludeField: ""
     }
     jQuery.extend(options, param[2]);
     var elem = $(element);
     var valid = true;
-    var list = jsonDataCache.get(param[1]);
+    var list;
+    if (typeof(param[1]) == 'function') {
+        list = param[1](this);
+    }
+    else {
+        list = jsonDataCache.get(param[1]);
+    }
+    var excludeThis = null;
     if (param[0] == null || param[0] == "") {
         return true;
     }
+    if (options.exclude) {
+        excludeThis = $(this.currentForm).find(options.excludeField).val();
+    }
     $.each(list, function() {
-        var foo = jQuery.inArray(this.id, options.excludeIds);
-        if ((jQuery.inArray(this.id, options.excludeIds) == -1) &&
+        if ((this.id != excludeThis) &&
             this[param[0]] == elem.val()) {
             valid = false;
         }
@@ -59,13 +69,17 @@ jQuery.validator.addMethod("unique", function(value, element, param) {
 });
 
 
-
 var agilefantValidationRules = {
+    empty: { },
     theme: {
         rules: {
 	        "businessTheme.name": {
 	           required: true,
-	           minlength: 1
+	           minlength: 1,
+	           unique: [ "name", function(me) {
+	               var prodId = $(me.currentForm).find('[name=productId]').val();
+	               return jsonDataCache.get("themesByProduct", {data: {productId: prodId}}, prodId);
+	           }, { exclude: true, excludeField: 'input[name=businessThemeId]'}]
 	        },
 	        "productId": {
 	           required: true
@@ -74,7 +88,8 @@ var agilefantValidationRules = {
 	    messages: {
 	        "businessTheme.name": {
 	            required: "Please enter a name",
-	            minlength: "Please enter a name"
+	            minlength: "Please enter a name",
+	            unique: "Theme name already used in this product"
 	        },
 	        "productId": {
 	           required: "Please select a product"
@@ -135,7 +150,7 @@ var agilefantValidationRules = {
 	   rules: {
 	       "product.name": {
 	           required: true,
-	           unique: [ "name", "allProducts" ]
+	           unique: [ "name", "allProducts", { exclude: true, excludeField: 'input[name=productId]' } ]
 	       }
 	   },
 	   messages: {
@@ -338,6 +353,24 @@ var agilefantValidationRules = {
                 unique: "Project type name already in use"
             }
         }
+    },
+    bliProgress: {
+        rules: {
+            "effortLeft": {
+                aftime: [ false ]
+            },
+            "spentEffort": {
+                aftime: [ false ]
+            }
+        },
+        messages: {
+            "effortLeft": {
+                aftime: "Invalid format"
+            },
+            "spentEffort": {
+                aftime: "Invalid format"
+            }
+        }
     }
 };
 agilefantValidationRules.businessTheme = agilefantValidationRules.theme;
@@ -364,3 +397,24 @@ jQuery.each(agilefantValidationRules, function() {
         }
     };
 });
+
+
+var validationRulesByHTMLClass = {
+    'validateNewBacklogItem': agilefantValidationRules.backlogItem,
+    'validateBacklogItem': agilefantValidationRules.backlogItem,
+    'validateNewHourEntry': agilefantValidationRules.hourEntry,
+    'validateNewIteration': agilefantValidationRules.iteration,
+    'validateIteration': agilefantValidationRules.iteration,
+    'validateNewIterationGoal': agilefantValidationRules.iterationGoal,
+    'validateNewProduct': agilefantValidationRules.product,
+    'validateNewProject': agilefantValidationRules.project,
+    'validateProject': agilefantValidationRules.project,
+    'validateNewProjecType': agilefantValidationRules.projectType,
+    'validateNewTeam': agilefantValidationRules.team,
+    'validateNewTheme': agilefantValidationRules.theme,
+    'validateTheme': agilefantValidationRules.theme,
+    'validateNewUser': agilefantValidationRules.user,
+    'validateBLIProgressTab': agilefantValidationRules.bliProgress,
+    'validateExistingProduct': agilefantValidationRules.product,
+    'validateEmpty': agilefantValidationRules.empty
+};

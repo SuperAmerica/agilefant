@@ -30,11 +30,6 @@
 <script type="text/javascript">
 <!--
 $(document).ready(function() {
-    var editForm = $('#projectEditForm');
-    editForm.validate(agilefantValidationRules.project);
-    editForm.submit(function() { return $(this).valid(); });
-
-
 	var getThemeData = function() {
 		var ret = {};
 		var data = jsonDataCache.get('themesByProduct',{data: {productId: ${project.product.id}}},${project.product.id});
@@ -247,8 +242,8 @@ $(document).ready(function() {
 												</tr>
 											</table>
 										</div>
-										<div id="editProjectForm" style="display: none;">
-											<ww:form id="projectEditForm" action="store${new}Project" method="post">
+										<div id="editProjectForm" style="display: none;" class="validateWrapper validateProject">
+											<ww:form id="projectEditForm" action="storeProject" method="post">
 												<ww:hidden name="projectId" value="${project.id}" />
 												<table class="formTable">
 													<tr>
@@ -618,7 +613,6 @@ $(document).ready(function() {
 							</div>
 							<c:if test="${!empty project.iterations}">
 								<div class="subItemContent">
-									<p>
 										<display:table class="listTable" name="project.iterations"
 											id="row" requestURI="editProject.action">
 											<display:column sortable="true" sortProperty="name" title="Name"
@@ -664,7 +658,6 @@ $(document).ready(function() {
 													onclick="return confirmDelete()">Delete</ww:a>
 											</display:column>
 										</display:table>
-									</p>
 								</div>
 							</c:if>
 							</div>

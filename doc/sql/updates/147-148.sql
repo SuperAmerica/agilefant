@@ -1,5 +1,7 @@
 alter table backlog add column backlogSize integer;
 
+ALTER TABLE businesstheme DROP INDEX `name`;
+
 create table backlogthemebinding (id integer not null auto_increment, relativeBinding boolean not null default false, percentage float, fixedSize bigint, businessTheme_id integer, backlog_id integer, primary key (id)) ENGINE=InnoDB;
 
 alter table backlogthemebinding add index FKEF836219E01C3F02 (businessTheme_id), add constraint FKEF836219E01C3F02 foreign key (businessTheme_id) references businesstheme (id);

@@ -6,7 +6,8 @@
 	<li><a href="#businessThemeBLITab-${businessThemeId}"><span><img src="static/img/backlog.png" alt="Backlog items" /> Backlog items</span></a></li>
 	<li><a href="#businessThemeBLTab-${businessThemeId}"><span><img src="static/img/backlog.png" alt="Backlogs" /> Backlogs</span></a></li>
 </ul>
-<div id="businessThemeEditTab-${businessThemeId}" class="businessThemeNaviTab">
+<div id="businessThemeEditTab-${businessThemeId}" class="businessThemeNaviTab validateWrapper validateTheme">
+
 <ww:form action="ajaxStoreBusinessTheme" method="post">
 	<ww:hidden name="businessThemeId" value="${businessTheme.id}" />
 	<ww:hidden name="productId" value="${businessTheme.product.id}" />

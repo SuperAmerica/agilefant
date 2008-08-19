@@ -2,7 +2,9 @@ package fi.hut.soberit.agilefant.web;
 
 import java.text.ParseException;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import com.opensymphony.xwork.Action;
@@ -12,6 +14,7 @@ import fi.hut.soberit.agilefant.business.HourEntryBusiness;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.db.ProjectDAO;
 import fi.hut.soberit.agilefant.db.UserDAO;
+import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.HourEntry;
 import fi.hut.soberit.agilefant.model.TimesheetLoggable;
 
@@ -33,6 +36,13 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
     private int iterationId;
     private int projectId;
     private int productId;
+    
+    //multi edit
+    private Map<Integer, Integer> userIdss = new HashMap<Integer,Integer>();
+    private Map<Integer, String> dates = new HashMap<Integer, String>();
+    private Map<Integer, String> descriptions = new HashMap<Integer, String>();
+    private Map<Integer, AFTime> efforts = new HashMap<Integer, AFTime>();
+    
     //private Map<Integer, String> userIds = new HashMap<Integer, String>();
     private Set<Integer> userIds = new HashSet<Integer>();
     
@@ -116,6 +126,10 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
         return Action.SUCCESS;
     }
     
+    public String multiEdit() {
+        hourEntryBusiness.updateMultiple(userIdss, dates, efforts, descriptions); 
+        return CRUDAction.AJAX_SUCCESS;
+    }
     protected void fillStorable(HourEntry storable) {
         storable.setDate(this.internalDate);
         storable.setDescription(this.hourEntry.getDescription());
@@ -247,6 +261,22 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
 
     public void setUserIds(Set<Integer> userIds) {
         this.userIds = userIds;
+    }
+
+    public void setUserIdss(Map<Integer, Integer> userIdss) {
+        this.userIdss = userIdss;
+    }
+
+    public void setDates(Map<Integer, String> dates) {
+        this.dates = dates;
+    }
+
+    public void setDescriptions(Map<Integer, String> descriptions) {
+        this.descriptions = descriptions;
+    }
+
+    public void setEfforts(Map<Integer, AFTime> efforts) {
+        this.efforts = efforts;
     }
     
 }

@@ -172,30 +172,7 @@
 							}						
 						}
 					});
-					var getThemeData = function() {
-						var ret = {};
-						var data = jsonDataCache.get('themesByProduct',{data: {productId: ${backlogItem.product.id}}},${backlogItem.product.id});
-						jQuery.each(data,function() {
-							if(this.active === true) {
-								ret[this.id] = this.name;
-							}
-						});
-						return ret;
-					};
-					var deleteTheme = function(id,options) {
-						jQuery.post("removeThemeFromBacklogItem.action",{businessThemeId: id, backlogItemId: ${backlogItemId}});
-						//TODO: remove theme from name-column
-						return true;
-					};
-					$('#businessThemeTable-${backlogItemId}-${bliListContext}').inlineTableEdit({
-											  add: '#addBacklogItemBusinessTheme-${backlogItemId}-${bliListContext}', 
-											  submit: '#backlogItemThemeSave-${backlogItemId}-${bliListContext}',
-											  deleteCb: deleteTheme,
-											  fields: {
-											  	businessThemeIds: {cell: 0,type: 'select', data: getThemeData},											  	
-											  	reset: {cell: 1, type: 'reset'}
-											  }
-					});
+
 					
 				});
 				</script>
@@ -643,6 +620,27 @@
 <aef:hourEntries id="hourEntries" target="${backlogItem}" />
 
 <div class="subItems" style="margin-top: 0px; width: 725px;">
+<script type="text/javascript">
+$(document).ready(function() {
+	var allUsers = function() {
+		var users = jsonDataCache.get("allUsers");
+		var ret = {};
+		jQuery.each(users,function() {if(this.enabled) {ret[this.id] = this.fullName; } });
+		return ret;
+	};
+	$('#spentEffort-${backlogItemId}-${bliListContext}').inlineTableEdit({
+				  submit: '#saveSpentEffort-${backlogItemId}-${bliListContext}',
+				  fields: {
+				  	spentTimes: {cell: 2, type: 'text'},
+				  	dates: {cell: 0, type: 'date'},
+				  	userIds: {cell: 1, type: 'select', data: allUsers},
+				  	descriptions: {cell: 3, type: 'text'},
+				  	reset: {cell: 4, type: 'reset'}
+				  	}
+	});
+
+});
+</script>
 <table>
 <tbody>
 	<tr>
@@ -657,15 +655,17 @@
 			<ww:a cssClass="openCreateDialog openHourEntryDialog" title="Log effort" href="%{createLink}&contextViewName=${currentAction}&contextObjectId=${backlog.id}">Log effort &raquo;</ww:a>		
 		</div>						
 		<c:if test="${!empty hourEntries}">
-			<div class="subItemContent">		
+			<div class="subItemContent">
+			<ww:form action="updateMultipleHourEntries" method="post">		
 				<p>
-					<display:table name="${hourEntries}" id="row" defaultsort="1" defaultorder="descending" requestURI="${currentAction}.action">
+					<display:table name="${hourEntries}" htmlId="spentEffort-${backlogItemId}-${bliListContext}" id="row" defaultsort="1" defaultorder="descending" requestURI="${currentAction}.action">
 						
 						<display:column sortable="false" title="Date" style="white-space:nowrap;">
 							<ww:date name="#attr.row.date" format="yyyy-MM-dd HH:mm" />
 						</display:column>
 						
 						<display:column sortable="false" title="User">
+							<span style="diplay: none;">${row.user.id}</span>
 							${aef:html(row.user.fullName)}
 						</display:column>
 						
@@ -677,21 +677,20 @@
 							<c:out value="${row.description}"/>
 						</display:column>
 						
-						<display:column sortable="false" title="Action">
-							<ww:url id="editLink" action="editHourEntry" includeParams="none">
-								<ww:param name="backlogItemId" value="${backlogItem.id}" />								
-								<ww:param name="hourEntryId" value="${row.id}" />
-							</ww:url>	
+						<display:column sortable="false" title="Action">	
 							<ww:url id="deleteLink" action="deleteHourEntry" includeParams="none">								
 								<ww:param name="backlogItemId" value="${backlogItem.id}" />
 								<ww:param name="hourEntryId" value="${row.id}" />
-							</ww:url>																
+							</ww:url>	
+							<img src="static/img/edit.png" class="table_edit_edit" alt="Edit" title="Edit" />															
 							<ww:a href="%{deleteLink}&contextViewName=${currentAction}&contextObjectId=${backlog.id}" onclick="return confirmDeleteHour()">
 								<img src="static/img/delete_18.png" alt="Delete" title="Delete" />
 							</ww:a>								
 						</display:column>
 						</display:table>
 					</p>
+					<input type="submit" style="display: none;" id="saveSpentEffort-${backlogItemId}-${bliListContext}" />
+					</ww:form>
 				</div>
 			</c:if> <%-- No entries --%>
 		</div>
@@ -713,47 +712,32 @@
 </div>
 
 <div id="backlogItemThemesTab-${backlogItemId}-${bliListContext}" class="backlogItemNaviTab">		
-	
+
 	<table>
 		<tr>
 		<td>
 			<div class="subItems" style="margin-left: 3px; width: 710px;">
-			<div class="subItemHeader" style="padding: 3px !important;">
-			<table cellspacing="0" cellpadding="0">
-				<tr>
-					<td class="header">Themes <a id="addBacklogItemBusinessTheme-${backlogItemId}-${bliListContext}" href="#">Attach theme &raquo;</a></td>
-				</tr>
-			</table>
-			</div>
-			<div class="subItemContent">
 			<ww:form action="storeBacklogItemThemes" method="post">
-				<ww:hidden name="backlogItemId" value="${backlogItem.id}"/>
-				<%-- <input type="hidden" name="contextViewName" value="${currentContext}" /> --%>
-				<p>
-				<c:choose>							
-				<c:when test="${!empty backlogItem.businessThemes}">
-					<display:table htmlId="businessThemeTable-${backlogItemId}-${bliListContext}" class="listTable" 
-						name="backlogItem.businessThemes" id="row" >
-						
-						<display:column sortable="false" title="Name" sortProperty="name">
-							<c:out value="${row.name}"/>
-						</display:column>
-																		
-						<display:column sortable="false" title="Actions">
-							<span class="uniqueId" style="display:none;">${row.id}</span>
-							<img style="cursor: pointer;" class="table_edit_delete" src="static/img/delete_18.png" title="Remove theme" />
-						</display:column>
-						
-					</display:table>
-				</c:when>
-				<c:otherwise>
-					<table id="businessThemeTable-${backlogItemId}-${bliListContext}" style="display:none;" class="listTable">
-						<tr><th class="sortable">Name</th><th>Actions</th></tr>
-					</table>
-				</c:otherwise>
-				</c:choose>
+			<ww:hidden name="backlogItemId" value="${backlogItem.id}"/>
+
+				<display:table class="listTable" name="backlogItem.product.businessThemes" id="row">
+					<display:column title="Name">
+						<c:choose>
+							<c:when test="${aef:listContains(backlogItem.businessThemes,row)}">
+								<input type="checkbox" name="businessThemeIds" value="${row.id}" checked="checked" id="bliTheme-${row.id}-${backlogItemId}-${bliListContext}" />
+							</c:when>
+							<c:otherwise>
+								<input type="checkbox" name="businessThemeIds" value="${row.id}" id="bliTheme-${row.id}-${backlogItemId}-${bliListContext}" />
+							</c:otherwise>
+						</c:choose>
+						<label for="bliTheme-${row.id}${backlogItemId}-${bliListContext}">${row.name}</label>
+					</display:column>
+					<display:column title="Description">
+						<c:out value="${row.description}" />
+					</display:column>
+				</display:table>
 				</p>
-				<input id="backlogItemThemeSave-${backlogItemId}-${bliListContext}" style="display: none"; type="submit" value="Save" />
+				<ww:submit name="Save" />
 			</ww:form>				
 			</div>
 														

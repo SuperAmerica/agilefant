@@ -164,14 +164,14 @@ No backlog items have been tagged with this theme.
 		<c:out value="${row.backlog.name}" />											
 	</display:column>
 	<display:column title="Allocation" style="width:100px">
-		<c:choose>
-			<c:when test="${row.relativeBinding} == 'true'">
-				<c:out value="${row.percentage}" />%
-			</c:when>
-			<c:otherwise>
-				<c:out value="${row.fixedSize}" />
-			</c:otherwise>
-		</c:choose>
+	<c:choose>
+		<c:when test="${row.relativeBinding == true}">
+			<span style="display:none;">${row.percentage}</span>
+			<c:out value="${row.boundEffort}"/>
+			(<c:out value="${row.percentage}"/>%)
+		</c:when>
+		<c:otherwise><c:out value="${row.fixedSize}"/></c:otherwise>
+	</c:choose>
 	</display:column>
 </display:table>
 

@@ -137,4 +137,6 @@ public interface BusinessThemeBusiness {
     
     public String getThemesForProductAsJSON(Product product);
     public String getThemesForProductAsJSON(int productId);
+    
+    public void loadBacklogThemeMetrics(Backlog backlog);
 }

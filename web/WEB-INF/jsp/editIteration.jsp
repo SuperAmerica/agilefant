@@ -275,7 +275,7 @@ $(document).ready( function() {
 											  fields: {
 											  	businessThemeIds: {cell: 0,type: 'select', data: getThemeData},
 											  	plannedSpendings: {cell: 1, type: 'text' },
-											  	reset: {cell: 2, type: 'reset'}
+											  	reset: {cell: 4, type: 'reset'}
 											  }
 											 });
 											  
@@ -290,7 +290,8 @@ $(document).ready( function() {
 					<div class="subItemHeader">
 					    <table cellspacing="0" cellpadding="0">
             			    <tr>
-            			    	<td class="header">Themes <a id="addIterationBusinessTheme" href="#">Attach theme &raquo;</a></td>
+            			    	<td class="header">Themes <a id="addIterationBusinessTheme" href="#">Attach theme &raquo;</a>
+            			    	</td>
 							</tr>
 						</table>
 					</div>
@@ -318,6 +319,9 @@ $(document).ready( function() {
 									<c:otherwise><c:out value="${row.fixedSize}"/></c:otherwise>
 								</c:choose>
 							</display:column>
+							<display:column sortable="true" sortProperty="businessTheme.metrics.donePercentage" title="Progress">
+								${row.businessTheme.metrics.donePercentage} (${row.businessTheme.metrics.numberOfDoneBlis} / ${row.businessTheme.metrics.numberOfBlis})
+							</display:column>
 							<display:column sortable="false" title="Actions">
 								<span class="uniqueId" style="display: none; uniqueId: ${row.id}"></span>
 								<img style="cursor: pointer;" class="table_edit_edit" src="static/img/edit.png" title="Edit" />
@@ -327,7 +331,7 @@ $(document).ready( function() {
 						</c:when>
 						<c:otherwise>
 							<table id="businessThemeTable" style="display:none;" class="listTable">
-								<tr><th class="sortable">Name</th><th class="sortable">Planned spending</th><th>Actions</th></tr>
+								<tr><th class="sortable">Name</th><th class="sortable">Planned spending</th><th>Progress</th><th>Actions</th></tr>
 							</table>
 						</c:otherwise>
 						</c:choose>

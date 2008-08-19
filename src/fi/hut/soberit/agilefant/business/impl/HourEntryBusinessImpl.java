@@ -302,6 +302,27 @@ public class HourEntryBusinessImpl implements HourEntryBusiness {
         }
         return false;
     }
+    
+    public void updateMultiple(Map<Integer, Integer> userIds,
+            Map<Integer, String> dates, Map<Integer, AFTime> efforts,
+            Map<Integer, String> descriptions) {
+        Set<Integer> ids = userIds.keySet();
+        for(Integer entryId : ids) {      
+            try { 
+                HourEntry entry = hourEntryDAO.get(entryId);
+                Date date = formatDate(dates.get(entryId));
+                entry.setDate(date);
+                User user = userDAO.get(userIds.get(entryId));
+                if(user == null) throw new Exception();
+                entry.setUser(user);
+                entry.setTimeSpent(efforts.get(entryId));
+                entry.setDescription(descriptions.get(entryId));
+                hourEntryDAO.store(entry);
+            } catch(Exception e) { }
+        }
+        
+    }
+    
     public BacklogHourEntryDAO getBacklogHourEntryDAO() {
         return backlogHourEntryDAO;
     }
@@ -317,4 +338,6 @@ public class HourEntryBusinessImpl implements HourEntryBusiness {
     public void setSettingBusiness(SettingBusiness settingBusiness) {
         this.settingBusiness = settingBusiness;
     }
+
+
 }

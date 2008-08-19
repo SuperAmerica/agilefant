@@ -1,11 +1,27 @@
 package fi.hut.soberit.agilefant.util;
 
+import fi.hut.soberit.agilefant.model.AFTime;
+
 public class BusinessThemeMetrics {
     
     private int numberOfBlis;
     private int numberOfDoneBlis;
     private int donePercentage;
+    private AFTime effortLeft = new AFTime(0);
+    private AFTime originalEstimate = new AFTime(0);
     
+    public AFTime getEffortLeft() {
+        return effortLeft;
+    }
+    public void setEffortLeft(AFTime effortLeft) {
+        this.effortLeft = effortLeft;
+    }
+    public AFTime getOriginalEstimate() {
+        return originalEstimate;
+    }
+    public void setOriginalEstimate(AFTime originalEstimate) {
+        this.originalEstimate = originalEstimate;
+    }
     public int getNumberOfBlis() {
         return numberOfBlis;
     }

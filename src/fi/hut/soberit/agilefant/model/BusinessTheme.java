@@ -11,10 +11,12 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Type;
 
+import fi.hut.soberit.agilefant.util.BusinessThemeMetrics;
 import flexjson.JSON;
 
 
@@ -50,6 +52,8 @@ public class BusinessTheme implements Comparable<BusinessTheme> {
     private Collection<BacklogItem> backlogItems;
     
     private Collection<BacklogThemeBinding> backlogBindings;
+    
+    private BusinessThemeMetrics metrics;
         
     /**
      * Get the id of this object.
@@ -137,5 +141,15 @@ public class BusinessTheme implements Comparable<BusinessTheme> {
 
     public void setBacklogBindings(Collection<BacklogThemeBinding> backlogBindings) {
         this.backlogBindings = backlogBindings;
+    }
+
+    @Transient
+    public BusinessThemeMetrics getMetrics() {
+        return metrics;
+    }
+
+    @Transient
+    public void setMetrics(BusinessThemeMetrics metrics) {
+        this.metrics = metrics;
     }
 }

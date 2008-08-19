@@ -141,6 +141,7 @@ public class IterationAction extends ActionSupport implements CRUDAction {
         // Load metrics data
         iterationMetrics = backlogBusiness.getBacklogMetrics(iteration);
         bliThemeCache = businessThemeBusiness.loadThemeCacheByBacklogId(iterationId);
+        businessThemeBusiness.loadBacklogThemeMetrics(iteration);
         
         return Action.SUCCESS;
     }
@@ -198,7 +199,9 @@ public class IterationAction extends ActionSupport implements CRUDAction {
             return Action.ERROR;
         }
         if (iteration.getBacklogItems().size() > 0
-                || iteration.getIterationGoals().size() > 0) {
+                || iteration.getIterationGoals().size() > 0
+                || (iteration.getBusinessThemeBindings() != null
+                        && iteration.getBusinessThemeBindings().size() > 0)) {
             super.addActionError(super
                     .getText("iteration.notEmptyWhenDeleting"));
             return Action.ERROR;

@@ -79,9 +79,9 @@
           if(v.data == null && oldCells != false) {
             var oc;
             if((oc = oldCell.find('span:hidden:eq(0)')).length == 1) { //inline form value container found
-              val = oc.text();
+              val = jQuery.trim(oc.text());
             } else {
-              val = oldCell.text();
+              val = jQuery.trim(oldCell.text());
             }
           } else {
             val = (typeof(v.data) == 'function') ? val = v.data(oldCellVal,me.options) : v.data;
@@ -100,11 +100,12 @@
               });
             }
             if(oldCell != null && (oc = oldCell.find('span:hidden:eq(0)')).length == 1) {
-            	sel.val(oc.text());
+            	sel.val(jQuery.trim(oc.text()));
             }
           } else if(v.type == "date") {
+          	if(val == null) { val = ""; }
             $('<input type="text" />').attr('size',14).css('float','left').addClass('datePickerField')
-                          .datePicker({displayClose: true, createButton: true, clickInput: false}).appendTo(tmp);
+                          .appendTo(tmp).val(val).datePicker({displayClose: true, createButton: true, clickInput: false});
           }
         });
        

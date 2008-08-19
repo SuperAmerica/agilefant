@@ -315,7 +315,9 @@ public class ProjectAction extends ActionSupport implements CRUDAction {
             return Action.ERROR;
         }
         if (project.getBacklogItems().size() > 0
-                || project.getIterations().size() > 0) {
+                || project.getIterations().size() > 0
+                || (project.getBusinessThemeBindings() != null
+                        && project.getBusinessThemeBindings().size() > 0)) {
             super.addActionError(super.getText("project.notEmptyWhenDeleting"));
             return Action.ERROR;
         }

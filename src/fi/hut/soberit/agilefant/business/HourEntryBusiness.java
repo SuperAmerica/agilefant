@@ -149,4 +149,15 @@ public interface HourEntryBusiness {
      * @return true if association exists, false otherwise.
      */
     public boolean isAssociatedWithHourReport(User user);
+    
+   /**
+    * Update multiple hour entries
+    * 
+    * @param userIds
+    * @param dates
+    * @param efforts
+    * @param descriptions
+    */
+    public void updateMultiple(Map<Integer,Integer> userIds, Map<Integer, String> dates, Map<Integer, AFTime> efforts, Map<Integer, String> descriptions);
+   
 }

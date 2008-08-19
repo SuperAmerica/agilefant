@@ -165,6 +165,12 @@ public class BusinessThemeBusinessImpl implements BusinessThemeBusiness {
             for(BacklogItem bli : associations) {
                 bli.getBusinessThemes().remove(businessTheme);
             }
+            Collection<BacklogThemeBinding> bindings = businessTheme.getBacklogBindings();
+            if(bindings != null) {
+                for(BacklogThemeBinding bind : bindings) {
+                    businessThemeDAO.removeBacklogThemeBinding(bind);
+                }
+            }
             businessTheme.getProduct().getBusinessThemes().remove(businessTheme);
             businessThemeDAO.remove(themeId);
         } catch (Exception e) { }
@@ -360,20 +366,24 @@ public class BusinessThemeBusinessImpl implements BusinessThemeBusiness {
     }
 
     public void addMultipleThemesToBacklogItem(int[] themeIds, int backlogItemId) {        
+        if(backlogItemId < 1) {
+            return;
+        }
+        BacklogItem bli = backlogItemBusiness.getBacklogItem(backlogItemId);
+        if(bli == null) {
+            return;
+        }
         for(int i = 0 ; i < themeIds.length; i++) {
-            BacklogItem bli;
             BusinessTheme theme;
-            if (backlogItemId > 0 && themeIds[i] > 0) {
-                bli = backlogItemBusiness.getBacklogItem(backlogItemId);
+            if (themeIds[i] > 0) {         
                 theme = getBusinessTheme(themeIds[i]);
-                if (!(bli == null || theme == null)) {
+                if (theme != null && !bli.getBusinessThemes().contains(theme)) {
                     bli.getBusinessThemes().add(theme);  
-                    backlogItemDAO.store(bli); 
+                    
                 }                                            
             }
         }
-             
-        
+        backlogItemDAO.store(bli);
     }
     
     public void removeThemeFromBacklog(Backlog backlog,
@@ -405,6 +415,42 @@ public class BusinessThemeBusinessImpl implements BusinessThemeBusiness {
         Collection<BusinessTheme> themes = product.getBusinessThemes();
         return new JSONSerializer().serialize(themes);
     }
+    
+    public void loadBacklogThemeMetrics(Backlog backlog) {
+        Collection<BacklogItem> blis = backlog.getBacklogItems();
+        Collection<BacklogThemeBinding> bindings = backlog
+                .getBusinessThemeBindings();
+        Map<Integer, BusinessTheme> themes = new HashMap<Integer, BusinessTheme>();
+        for (BacklogThemeBinding bind : bindings) {
+            themes
+                    .put(bind.getBusinessTheme().getId(), bind
+                            .getBusinessTheme());
+            bind.getBusinessTheme().setMetrics(new BusinessThemeMetrics());
+        }
+        for (BacklogItem bli : blis) {
+            for (BusinessTheme bt : bli.getBusinessThemes()) {
+                if (themes.get(bt.getId()) != null) {
+                    if (bli.getState() == State.DONE) {
+                        themes.get(bt.getId()).getMetrics()
+                                .setNumberOfDoneBlis(
+                                        themes.get(bt.getId()).getMetrics()
+                                                .getNumberOfDoneBlis() + 1);
+                    }
+                    themes.get(bt.getId()).getMetrics().setNumberOfBlis(
+                            themes.get(bt.getId()).getMetrics()
+                                    .getNumberOfBlis() + 1);
+                    if (themes.get(bt.getId()).getMetrics().getNumberOfBlis() > 0) {
+                        themes.get(bt.getId()).getMetrics().setDonePercentage(
+                                themes.get(bt.getId()).getMetrics()
+                                        .getNumberOfDoneBlis()
+                                        / themes.get(bt.getId()).getMetrics()
+                                                .getNumberOfBlis());
+                    }
+                }
+            }
+        }
+    }
+
     
     public void removeThemeBinding(int bindingId) {
         removeThemeBinding(businessThemeDAO.getBindingById(bindingId));

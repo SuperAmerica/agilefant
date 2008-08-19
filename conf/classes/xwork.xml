@@ -911,6 +911,7 @@
 			<result name="success">/WEB-INF/jsp/inc/_hourSum.jsp</result>
 		</action>
 		
+		<action name="updateMultiplehourEntries" class="hourEntryAction" method="multiEdit" />
 		<!-- Business theme actions -->
 		<action name="listThemes" method="list"
             class="businessThemeAction">

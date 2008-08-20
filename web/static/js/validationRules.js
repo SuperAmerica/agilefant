@@ -4,7 +4,7 @@
  * param[0] should be false if empty values are accepted, true otherwise. 
  */
 jQuery.validator.addMethod("aftime",function(value, element, param) {
-    if (param[0] == false && trim(value) == "") {
+    if (param[0] == false && jQuery.trim(value) == "") {
         return true;
     }
     var hourOnly = new RegExp("^[ ]*[0-9]+h?[ ]*$"); //10h

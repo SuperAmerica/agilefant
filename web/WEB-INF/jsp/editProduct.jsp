@@ -399,8 +399,7 @@ var productId = ${product.id};
 
 			<c:if test="${!empty product.backlogItems}">
 			<div class="subItemContent">
-				<p><%@ include file="./inc/_backlogList.jsp"%>
-				</p>
+				<%@ include file="./inc/_backlogList.jsp"%>
 			</div>
 			</c:if>
 			</div>

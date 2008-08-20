@@ -17,7 +17,6 @@
 
 <div id="backlogItemEditTab-${backlogItemId}-${bliListContext}" class="backlogItemNaviTab">
 
-
 <table>
 <tbody>
 	<tr>
@@ -65,16 +64,16 @@
 					</tr>
 				</c:when>
 				<c:otherwise>
+				    <script type="text/javascript">
+				    
+                    </script>
 					<tr>
 						<td>Original estimate</td>
 						<td></td>
-						<td colspan="2"><ww:label
-							value="${backlogItem.originalEstimate}" /> <ww:hidden
-							name="backlogItem.originalEstimate"
-							value="${backlogItem.originalEstimate}" /> <ww:url id="resetLink_${backlogItem.id}-${bliListContext}"
-							action="resetBliOrigEstAndEffortLeft" includeParams="none">
-							<!-- <ww:param name="backlogItemId" value="${backlogItem.id}" /> -->
-						</ww:url>
+						<td colspan="2"><%--<ww:label value="${backlogItem.originalEstimate}" />--%>
+						    <ww:textfield name="backlogItem.originalEstimate"
+						                  value="${backlogItem.originalEstimate}"
+						                  disabled="true" size="10"/>
 						<c:choose>
 							<c:when test="${backlogItem.state.name == 'DONE'}">
 								<span id="resetText_${backlogItem.id}-${bliListContext}" style="color: #666;">(reset)</span>
@@ -85,9 +84,7 @@
 								<span id="resetLink_${backlogItem.id}-${bliListContext}">
 							</c:otherwise>
 						</c:choose>						
-						<ww:a
-								href="%{resetLink_${backlogItem.id}}&contextViewName=${currentAction}&contextObjectId=${backlog.id}"
-								onclick="return confirmReset()">(reset)</ww:a>
+						<ww:a href="#" onclick="resetBLIOriginalEstimate(${backlogItem.id}, this); return false;">(reset)</ww:a>
 						</span>
 												
 						</td>

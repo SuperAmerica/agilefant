@@ -66,21 +66,6 @@ function reloadPage()
 {
 	window.location.reload();
 }
-/*function loadModal(target,request, parent, closeFunc) {
-	var container = $('<div class="jqmWindow"><b>Please wait, content loading...</b></div>');
-	var bg = $('<div style="background: #000; opacity: 0.3; z-index: 9; position: absolute; top: 0px; left: 0px; filter:alpha(opacity=30);-moz-opacity:.30;">&nbsp;</div>');
-	var pos = $("#"+parent).offset();
-	container.css("top",pos.top).css("z-index","11");
-	bg.appendTo(document.body).show();
-	container.appendTo(document.body).show();
-	$(window).resize(function() { bg.css("height",$(document).height()).css("width",$(document).width()); });
-	$(window).scroll(function() { bg.css("height",$(document).height()).css("width",$(document).width()); });
-	$(window).resize();
-	var comp = function(data,status) { container.html(data); container.find(".jqmClose").click(function() { container.remove(); bg.remove(); if(closeFunc) { closeFunc()}});}
-	var err = function(data,status) { alert("An error occured while processing your request."); container.remove(); bg.remove(); }
-	jQuery.ajax({cache: false, type: "POST", error: err, success: comp, data: request, url: target, dataType: "html"});
-}*/
-
 function ajaxOpenDialog(context, dialogId, tabId) {
     jQuery.post("ajaxOpenDialog.action", {
         "contextType": context,
@@ -101,16 +86,7 @@ function closeTabs(context, target, id) {
     $("#"+target).toggle();
 }
 
-function trim (str) {
-    str = str.replace(/^\s+/, '');
-    for (var i = str.length - 1; i >= 0; i--) {
-        if (/\S/.test(str.charAt(i))) {
-            str = str.substring(0, i + 1);
-            break;
-        }
-    }
-    return str;
-}
+function trim (str) { return jQuery.trim(str); }
 
 function handleTabEvent(target, context, id, tabId, bliContext) {
 	
@@ -119,27 +95,16 @@ function handleTabEvent(target, context, id, tabId, bliContext) {
         var tabs = target.find("ul.ajaxWindowTabs");
         var selected = tabs.data('selected.tabs');
         if (target.is(":visible")) {
-            ajaxCloseDialog(context, id);
             target.toggle();
-            /*
-            if (selected == tabId) {
-                ajaxCloseDialog(context, id);
-                target.toggle();
-            }
-            else {
-                tabs.tabs('select', tabId);
-                ajaxOpenDialog(context, id, tabId);
-            }*/
+            ajaxCloseDialog(context, id);
         }
         else {
-            ajaxOpenDialog(context, id, tabId);
             target.toggle();
+            ajaxOpenDialog(context, id, tabId);
             tabs.tabs('select', tabId);
         }
     }
     else {
-        ajaxOpenDialog(context, id, tabId);
-        
         var targetAction = {
         	"bli": "backlogItemTabs.action",
         	"bliWorkInProgress": "backlogItemTabs.action",
@@ -193,6 +158,8 @@ function handleTabEvent(target, context, id, tabId, bliContext) {
             initOnLoad(target);
         });
         target.attr("tab-data-loaded","1");
+        
+        ajaxOpenDialog(context, id, tabId);
     }
 }
 
@@ -224,5 +191,21 @@ function getIterationGoals(backlogId, element) {
     });
 }
 
-
+function resetBLIOriginalEstimate(bliId, me) {
+    if (!confirmReset()) {
+        return false;
+    }
+    // Send the request to the server
+    jQuery.post('resetBliOrigEstAndEffortLeft.action', {backlogItemId: bliId});
+    
+    var form = $(me).parents('form:eq(0)');
+    var origEstField = form.find('input[name=backlogItem.originalEstimate]').removeAttr('disabled').val('');
+    var effLeftField = form.find('input[name=backlogItem.effortLeft]');
+    
+    effLeftField.parents('tr:eq(0)').remove();
+    
+    $(me).hide();
+    
+    return false;
+}
 

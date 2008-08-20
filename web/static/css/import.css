@@ -29,6 +29,11 @@ body {
 h2,h3 {
 	font-size: 1.2em;
 }
+h4 {
+    color: #444;
+    margin: 0 0 0 5px;
+    font-weight: bold;	
+}
 
 code {
 	color: #66f;
@@ -436,7 +441,7 @@ span.right {
 .shortNameColumn div {
 	width: 170px;
 	overflow: hidden;
-	/*max-height: 6em;*/
+	max-height: 3.7em;
 }
 
 .nameColumn div {
@@ -1170,4 +1175,7 @@ select.statusSelect option {
 	width: 200px;
 }
 
+.businessThemeTableWrapper {
+	margin: 7px 0 0 5px;
+}
 

@@ -33,7 +33,10 @@ $(document).ready(function() {
 </c:choose>
 
 <div class="subItems" style="margin-left: 3px;">
-	<div class="subItemHeader" style="padding: 3px !important;">
+	<div class="subItemHeader">
+     	<table cellpadding="0" cellspacing="0">
+     	<tr>
+     	<td class="header">
      	Logged effort
         <ww:url id="createLink" action="ajaxCreateHourEntry" includeParams="none">
         	<c:choose>
@@ -53,13 +56,14 @@ $(document).ready(function() {
 				<ww:a cssClass="openCreateDialog openHourEntryDialog" href="%{createLink}&contextViewName=${myAction}&contextObjectId=${backlog.id}">Create new &raquo;</ww:a>
 			</c:otherwise>
 		</c:choose>
+		</td>
+		</tr>
+		</table>
 	</div>						
 	<c:if test="${!empty hourEntries}">
 		<div class="subItemContent validateWrapper validateEmpty">		
-			<p>
 				<ww:form action="updateMultipleHourEntries.action" method="post">		
-				<p>
-					<display:table htmlId="spentEffort-${myAction}" name="${hourEntries}" id="row" defaultsort="1" defaultorder="descending" requestURI="${myAction}.action">						
+					<display:table class="listTable" htmlId="spentEffort-${myAction}" name="${hourEntries}" id="row" defaultsort="1" defaultorder="descending" requestURI="${myAction}.action">						
 						<display:column sortable="false" title="Date" style="white-space:nowrap;">
 							<ww:date name="#attr.row.date" format="yyyy-MM-dd HH:mm" />
 						</display:column>
@@ -96,7 +100,6 @@ $(document).ready(function() {
 							</ww:a>								
 						</display:column>
 						</display:table>
-					</p>
 					<input type="submit" value="Save" style="display: none;" id="saveSpentEffort-${myAction}" />
 					</ww:form>
 			</div>

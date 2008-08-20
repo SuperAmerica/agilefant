@@ -12,12 +12,12 @@ body {
 	font: 10pt Arial, sans-serif;
 }
 
-h1,h2,h3,h4,#toplinks {
+h1,h2,h3,#toplinks {
 	font-weight: 500;
 	color: #000;
 }
 
-ul,ol,p,h2,h3,h4,dd,blockquote {
+ul,ol,p,h2,h3,dd,blockquote {
 	margin-right: 10px;
 }
 
@@ -25,7 +25,7 @@ p,dd { /*text-align:justify*/
 	
 }
 
-h2,h3,h4 {
+h2,h3 {
 	padding: 0;
 }
 

@@ -644,7 +644,7 @@ $(document).ready(function() {
 	<tr>
 	<td>
 	
-	<div class="subItems validateWrapper validateEmpty" style="margin-left: 3px; width: 710px;">
+	<div class="subItems validateWrapper validateEmpty" style="margin-top: 0; margin-left: 3px; width: 710px;">
 		<div class="subItemHeader" style="padding: 3px !important;">
 	     	Spent effort
 	     	<ww:url id="createLink" action="ajaxCreateHourEntry" includeParams="none">
@@ -715,7 +715,7 @@ $(document).ready(function() {
 	<table>
 		<tr>
 		<td>
-			<div class="subItems validateWrapper validateEmpty" style="margin-left: 3px; width: 710px;">
+			<div class="subItems validateWrapper validateEmpty" style="margin-top: 0; margin-left: 3px; width: 710px;">
 			<ww:form action="storeBacklogItemThemes" method="post">
 			<ww:hidden name="backlogItemId" value="${backlogItem.id}"/>
 

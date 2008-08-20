@@ -65,7 +65,6 @@ $(document).ready(function() {
 
 
 <div class="subItemContent">
-<p>
 
 <table class="dailyWorkBacklogItems">
 <tr>

@@ -483,7 +483,7 @@ $(document).ready(function() {
 									<%---Link for entering a new hour entry---%>
 									<aef:hourReporting id="hourReport"/>
 									<c:if test="${hourReport == 'true'}">
-										<div id="subItemHeader" style="border:none; border-top:1px solid #ccc;">
+										<div id="subItemHeader" style="border:none; border-top:1px solid #ccc; background: none;">
 											<table cellpadding="0" cellspacing="0">
 												<tbody>
 													<tr>
@@ -507,9 +507,7 @@ $(document).ready(function() {
 		<table>
 			<tr>
 				<td>
-					<table>
-						<tr>
-							<td>
+
 								<c:if test="${projectId != 0}">
 									<div class="subItems">
 										<div class="subItemHeader">
@@ -523,7 +521,7 @@ $(document).ready(function() {
 										<ww:form action="storeBacklogThemebinding" method="post">
 										<ww:hidden name="backlogId" value="${project.id}"/>
 										<input type="hidden" name="contextViewName" value="project" />
-										<p>
+										<div class="businessThemeTableWrapper">
 										<c:choose>
 										<c:when test="${!empty project.businessThemeBindings}">
 										<display:table htmlId="businessThemeTable" class="listTable" name="project.businessThemeBindings" id="row" requestURI="editIteration.action">
@@ -556,12 +554,13 @@ $(document).ready(function() {
 												</table>
 											</c:otherwise>
 											</c:choose>
-											</p>
-											<input id="backlogThemeSave" style="display: none"; type="submit" value="Save" />
+											<input id="backlogThemeSave" style="display: none; margin-left: 2px;" type="submit" value="Save" />
+											</div>
 											</ww:form>				
 											</div>
-											<p>Iterations</p>
 											<c:if test="${!empty iterationThemes}">
+											<div class="businessThemeTableWrapper">
+											<h4>Iteration themes</h4>
 												<display:table htmlId="businessThemeTable" class="listTable" name="iterationThemes" id="row" requestURI="editProject.action">
 						
 													<display:column sortable="true" title="Name" sortProperty="businessTheme.name">
@@ -581,12 +580,11 @@ $(document).ready(function() {
 														<c:out value="${row.backlog.name}"/>
 													</display:column>
 												</display:table>
+										    </div>
 											</c:if>
-									</div>
+											</div>
 								</c:if>
-							</td>
-						</tr>
-					</table>
+								
 				</td>
 				</tr>
 				<tr>

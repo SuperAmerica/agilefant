@@ -70,7 +70,6 @@ $(document).ready(function() {
 		</div>
 
 		<div class="subItemContent">
-		<p>
 		<table class="dailyWorkBacklogItems">
 			<tr>
 				<td class="backlogItemList"><display:table class="dailyWorkIteration"

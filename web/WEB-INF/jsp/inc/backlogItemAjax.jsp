@@ -420,7 +420,7 @@
 				if ($(this).val() == 'DONE' && !tasksDone) {
 					var prompt = window.confirm("Do you wish to set all the tasks' states to Done as well?");
 					if (prompt) {
-						$(".taskStateSelect_${backlogItem.id}-${bliListContext}").val('DONE');
+						$("#todoTable-${backlogItemId}-${bliListContext}").find('select[name^=taskStates]').val('DONE');
 					}					
 				}
 			});

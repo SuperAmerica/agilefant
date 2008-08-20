@@ -1,6 +1,6 @@
-Agilefant 1.4.7
+Agilefant 1.5 Alpha
 RELEASE NOTES
-25.7.2008
+20.8.2008
 
 INSTALLATION INSTRUCTIONS
 -------------------------
@@ -34,6 +34,14 @@ Development portfolio
 
 Timesheets
   + quickly generate reports of the effort spent on different work tasks
+
+
+
+CHANGES FROM AGILEFANT 1.4.7
+----------------------------
++ The UI is now consistent
++ Themes can be bound to iterations and projects
++ Projects and iterations have planned sizes
 
 CHANGES FROM AGILEFANT 1.4.6
 ----------------------------

@@ -4,6 +4,9 @@
  * param[0] should be false if empty values are accepted, true otherwise. 
  */
 jQuery.validator.addMethod("aftime",function(value, element, param) {
+    if (param == null) {
+        param = [ true ];
+    }
     if (param[0] == false && jQuery.trim(value) == "") {
         return true;
     }

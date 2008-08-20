@@ -542,7 +542,7 @@ $(document).ready(function() {
 												</c:choose>
 											</display:column>
 											<display:column sortable="false" title="Actions">
-												<span class="uniqueId" style="display: none; uniqueId: ${row.id}"></span>
+												<span class="uniqueId" style="display: none;">${row.id}</span>
 												<img style="cursor: pointer;" class="table_edit_edit" src="static/img/edit.png" title="Edit" />
 												<img style="cursor: pointer;" class="table_edit_delete" src="static/img/delete_18.png" title="Delete" />
 											</display:column>

@@ -260,7 +260,11 @@ $(document).ready( function() {
 		var data = jsonDataCache.get('themesByProduct',{data: {productId: ${iteration.project.product.id}}},${iteration.project.product.id});
 		jQuery.each(data,function() {
 			if(this.active === true) {
-				ret[this.id] = this.name;
+				if(jQuery.inArray(this.id,projectThemes) > -1) {
+					ret[this.id] = this.name+" *";
+				} else {
+					ret[this.id] = this.name;
+				}
 			}
 		});
 		return ret;
@@ -269,8 +273,10 @@ $(document).ready( function() {
    		var themes = getThemeData();
    		var moved = [];
    		$("#iterationBusinessThemesForm").find("select[name=businessThemeIds]").each(function() {
-   			if(jQuery.inArray($(this).val(),projectThemes) != -1) {
-   				 moved.push(themes[$(this).val()]);
+   			var cTheme = parseInt($(this).val());
+   			var t = jQuery.inArray(cTheme,projectThemes);
+   			if(t > -1) {
+   				 moved.push(themes[cTheme].substring(0,themes[cTheme].length-1));
    			}
    		});
    		if(moved.length > 0) {
@@ -279,6 +285,7 @@ $(document).ready( function() {
    			return confirm(message);
    		
    		}
+   		return true;
    });
 	$('#businessThemeTable').inlineTableEdit({add: '#addIterationBusinessTheme', 
 											  submit: '#backlogThemeSave',
@@ -335,7 +342,7 @@ $(document).ready( function() {
 								${row.businessTheme.metrics.donePercentage} (${row.businessTheme.metrics.numberOfDoneBlis} / ${row.businessTheme.metrics.numberOfBlis})
 							</display:column>
 							<display:column sortable="false" title="Actions">
-								<span class="uniqueId" style="display: none; uniqueId: ${row.id}"></span>
+								<span class="uniqueId" style="display: none;">${row.id}</span>
 								<img style="cursor: pointer;" class="table_edit_edit" src="static/img/edit.png" title="Edit" />
 								<img style="cursor: pointer;" class="table_edit_delete" src="static/img/delete_18.png" title="Delete" />
 							</display:column>

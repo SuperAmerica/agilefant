@@ -135,7 +135,7 @@ var agilefantValidationRules = {
                 before: "Start date must be before end date"
             },
             "endDate": {
-                required: "Please specify a end date",
+                required: "Please specify an end date",
                 time: "Invalid date format"
             },
             "project.defaultOverhead": {
@@ -194,7 +194,7 @@ var agilefantValidationRules = {
                before: "Start date must be before end date"
            },
            "endDate": {
-               required: "Please specify a end date",
+               required: "Please specify an end date",
                time: "Invalid date format"
            },
            "iteration.backlogSize": {
@@ -309,10 +309,10 @@ var agilefantValidationRules = {
                required: "Please enter a login name"
            },
            "user.initials": {
-               required: "Please enter a name"
+               required: "Please enter the initials"
            },
            "user.email": {
-               required: "Please enter an email",
+               required: "Please enter an email address",
                email: "Invalid email address"
            },
            "user.weekHours": {
@@ -409,7 +409,7 @@ var validationRulesByHTMLClass = {
     'validateNewProduct': agilefantValidationRules.product,
     'validateNewProject': agilefantValidationRules.project,
     'validateProject': agilefantValidationRules.project,
-    'validateNewProjecType': agilefantValidationRules.projectType,
+    'validateNewProjectType': agilefantValidationRules.projectType,
     'validateNewTeam': agilefantValidationRules.team,
     'validateNewTheme': agilefantValidationRules.theme,
     'validateTheme': agilefantValidationRules.theme,

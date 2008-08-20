@@ -2,8 +2,7 @@
 
 <aef:productList/>
 
-<div id="editIterationForm">
-<div class="validateWrapper">
+<div id="editIterationForm" class="validateWrapper validateNewIteration">
 <ww:form method="post" action="storeNewIteration">
 	<ww:hidden name="iterationId" value="${iteration.id}" />
 	<ww:date name="%{iteration.getTimeOfDayDate(6)}" id="start"
@@ -82,4 +81,4 @@
                 cssClass="closeDialogButton" /></td>
         </tr>
 	</table>
-</ww:form></div></div>
+</ww:form></div>

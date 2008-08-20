@@ -11,9 +11,7 @@
 <ww:form action="storeNewProject" method="post">
 <c:choose>
 	<c:when test="${empty projectTypes}">
-		<ww:url id="workTypeLink" action="ajaxCreateProjectType"
-			includeParams="none" />	
-				No project types available. <ww:a href="%{workTypeLink}" cssClass="openCreateDialog openProjectTypeDialog">Create a new project type &raquo;</ww:a>
+				<p>No project types available. First create a new project type.</p>
 	</c:when>
 	<c:otherwise>
 		<div id="editProjectForm">

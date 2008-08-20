@@ -982,11 +982,6 @@
        	</action>
        	<action name="storeBacklogItemThemes" method="storeBacklogItemThemes"
         	class="businessThemeAction">
-       		<result type="redirect-action">
-				<param name="actionName">contextView</param>
-				<param name="contextObjectId">${backlogId}</param>
-				<param name="contextName">${contextViewName}</param>
-			</result>	
        	</action>
         <action name="removeThemeFromBacklog" method="removeThemeBinding"
         	class="businessThemeAction" />

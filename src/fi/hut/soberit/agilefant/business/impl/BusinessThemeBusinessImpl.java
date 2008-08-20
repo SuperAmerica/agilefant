@@ -373,16 +373,14 @@ public class BusinessThemeBusinessImpl implements BusinessThemeBusiness {
         if(bli == null) {
             return;
         }
+        Collection<BusinessTheme> set = new HashSet<BusinessTheme>();
         for(int i = 0 ; i < themeIds.length; i++) {
-            BusinessTheme theme;
-            if (themeIds[i] > 0) {         
-                theme = getBusinessTheme(themeIds[i]);
-                if (theme != null && !bli.getBusinessThemes().contains(theme)) {
-                    bli.getBusinessThemes().add(theme);  
-                    
-                }                                            
+            BusinessTheme theme = getBusinessTheme(themeIds[i]);
+            if (theme != null) {         
+                set.add(theme);
             }
         }
+        bli.setBusinessThemes(set);
         backlogItemDAO.store(bli);
     }
     

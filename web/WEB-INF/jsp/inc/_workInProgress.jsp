@@ -40,7 +40,11 @@ Backlog items
 	<!-- Display the backlog row name -->
 	<display:column sortable="true" sortProperty="name" title="Name" >				
 		<div style="overflow:hidden; width: 170px;">
-		<aef:backlogItemThemes backlogItemId="${row.id}"/>		
+		<c:forEach items="${row.businessThemes}" var="businessTheme">
+            <a href="#" onclick="handleTabEvent('backlogItemTabContainer-${row.id}-${bliListContext}','bli',${row.id},3, '${bliListContext}');">
+                <span class="businessTheme" title="${businessTheme.description}"><c:out value="${businessTheme.name}"/></span>
+            </a>
+        </c:forEach>
 		<a class="bliNameLink" onclick="handleTabEvent('backlogItemTabContainer-${row.id}-${bliListContext}','bliWorkInProgress',${row.id},0,'${bliListContext}');">
 			${aef:html(row.name)}
 		</a>

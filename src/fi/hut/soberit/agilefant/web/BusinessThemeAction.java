@@ -190,7 +190,7 @@ public class BusinessThemeAction extends ActionSupport implements CRUDAction {
         if(businessThemeIds != null && backlogItemId > 0) {
             businessThemeBusiness.addMultipleThemesToBacklogItem(businessThemeIds, backlogItemId);
         }
-        return Action.SUCCESS;
+        return CRUDAction.AJAX_SUCCESS;
     }
     
     public String removeThemeBinding() {

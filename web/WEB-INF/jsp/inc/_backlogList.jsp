@@ -17,11 +17,7 @@
 <script language="javascript" type="text/javascript">
 
 function validateDeletion() {
-	var conf = confirm("The selected backlog items will be gone forever. Are you sure?");
-	if (conf)
-		return true;
-	else
-		return false;
+    return confirm("The selected backlog items will be gone forever. Are you sure?");
 }
 
 $(document).ready(function() {        
@@ -31,10 +27,11 @@ $(document).ready(function() {
 });
 
 </script>
-
+<%--
 <c:if test="${hourReport}">
 	<aef:modalAjaxWindow />
 </c:if>
+--%>
 <ww:form action="doActionOnMultipleBacklogItems">
 
 	<!-- Return to this backlog after submit -->
@@ -62,10 +59,10 @@ $(document).ready(function() {
 				
 		<display:column sortable="true" sortProperty="name" title="Name" class="${nameClass}">												
 			<div>
-			<a href="#" id="themeEdit_${backlog.id}_${row.id}" onclick="openThemeBusinessModal('themeEdit_${backlog.id}_${row.id}', 'editBacklogItemBusinessThemes.action',${row.id}, 0,${backlog.id}); return false;">
-               <img class="themeImg" src="static/img/theme.png" alt="Edit themes" title="Edit themes" /></a>
+			<%--<a href="#" id="themeEdit_${backlog.id}_${row.id}" onclick="openThemeBusinessModal('themeEdit_${backlog.id}_${row.id}', 'editBacklogItemBusinessThemes.action',${row.id}, 0,${backlog.id}); return false;">
+               <img class="themeImg" src="static/img/theme.png" alt="Edit themes" title="Edit themes" /></a>--%>
             <c:forEach items="${bliThemeCache[row.id]}" var="businessTheme">
-            	<a href="#" onclick="openThemeBusinessModal('themeEdit_${backlog.id}_${row.id}', 'editBacklogItemBusinessThemes.action',${row.id},${businessTheme.id},${businessTheme.product.id}); return false;">
+            	<a href="#" onclick="handleTabEvent('backlogItemTabContainer-${row.id}-${bliListContext}','bli',${row.id},3, '${bliListContext}');">
             		<span class="businessTheme" title="${businessTheme.description}"><c:out value="${businessTheme.name}"/></span>
             	</a>
             </c:forEach>

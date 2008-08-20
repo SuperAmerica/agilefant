@@ -662,7 +662,7 @@ $(document).ready(function() {
 						</display:column>
 						
 						<display:column sortable="false" title="User">
-							<span style="diplay: none;">${row.user.id}</span>
+							<span style="display: none;">${row.user.id}</span>
 							${aef:html(row.user.fullName)}
 						</display:column>
 						
@@ -713,7 +713,7 @@ $(document).ready(function() {
 	<table>
 		<tr>
 		<td>
-			<div class="subItems" style="margin-left: 3px; width: 710px;">
+			<div class="subItems validateWrapper validateEmpty" style="margin-left: 3px; width: 710px;">
 			<ww:form action="storeBacklogItemThemes" method="post">
 			<ww:hidden name="backlogItemId" value="${backlogItem.id}"/>
 

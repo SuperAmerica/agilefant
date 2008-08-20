@@ -269,7 +269,7 @@ $(document).ready( function() {
    		var themes = getThemeData();
    		var moved = [];
    		$("#iterationBusinessThemesForm").find("select[name=businessThemeIds]").each(function() {
-   			if(jQuery.inArray($(this).val(),projectThemes)) {
+   			if(jQuery.inArray($(this).val(),projectThemes) != -1) {
    				 moved.push(themes[$(this).val()]);
    			}
    		});

@@ -627,10 +627,11 @@ $(document).ready(function() {
 	};
 	$('#spentEffort-${backlogItemId}-${bliListContext}').inlineTableEdit({
 				  submit: '#saveSpentEffort-${backlogItemId}-${bliListContext}',
+				  useId: true,
 				  fields: {
-				  	spentTimes: {cell: 2, type: 'text'},
+				  	efforts: {cell: 2, type: 'text'},
 				  	dates: {cell: 0, type: 'date'},
-				  	userIds: {cell: 1, type: 'select', data: allUsers},
+				  	userIdss: {cell: 1, type: 'select', data: allUsers},
 				  	descriptions: {cell: 3, type: 'text'},
 				  	reset: {cell: 4, type: 'reset'}
 				  	}
@@ -643,7 +644,7 @@ $(document).ready(function() {
 	<tr>
 	<td>
 	
-	<div class="subItems" style="margin-left: 3px; width: 710px;">
+	<div class="subItems validateWrapper validateEmpty" style="margin-left: 3px; width: 710px;">
 		<div class="subItemHeader" style="padding: 3px !important;">
 	     	Spent effort
 	     	<ww:url id="createLink" action="ajaxCreateHourEntry" includeParams="none">
@@ -653,7 +654,7 @@ $(document).ready(function() {
 		</div>						
 		<c:if test="${!empty hourEntries}">
 			<div class="subItemContent">
-			<ww:form action="updateMultipleHourEntries" method="post">		
+			<ww:form action="updateMultipleHourEntries.action" method="post">		
 				<p>
 					<display:table name="${hourEntries}" htmlId="spentEffort-${backlogItemId}-${bliListContext}" id="row" defaultsort="1" defaultorder="descending" requestURI="${currentAction}.action">
 						
@@ -675,6 +676,7 @@ $(document).ready(function() {
 						</display:column>
 						
 						<display:column sortable="false" title="Action">	
+							<span class="uniqueId" style="display: none;">${row.id}</span>
 							<ww:url id="deleteLink" action="deleteHourEntry" includeParams="none">								
 								<ww:param name="backlogItemId" value="${backlogItem.id}" />
 								<ww:param name="hourEntryId" value="${row.id}" />
@@ -686,7 +688,7 @@ $(document).ready(function() {
 						</display:column>
 						</display:table>
 					</p>
-					<input type="submit" style="display: none;" id="saveSpentEffort-${backlogItemId}-${bliListContext}" />
+					<input type="submit" value="Save" style="display: none;" id="saveSpentEffort-${backlogItemId}-${bliListContext}" />
 					</ww:form>
 				</div>
 			</c:if> <%-- No entries --%>

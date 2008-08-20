@@ -1,6 +1,28 @@
 <%@ include file="./_taglibs.jsp"%>
 <%-- Usage information: Remember to set the myAction variable before including this. --%>
 <%-- Hour reporting, here be dragons --%>
+<script type="text/javascript">
+$(document).ready(function() {
+	var allUsers = function() {
+		var users = jsonDataCache.get("allUsers");
+		var ret = {};
+		jQuery.each(users,function() {if(this.enabled) {ret[this.id] = this.fullName; } });
+		return ret;
+	};
+	$('#spentEffort-${myAction}').inlineTableEdit({
+				  submit: '#saveSpentEffort-${myAction}',
+				  useId: true,
+				  fields: {
+				  	efforts: {cell: 2, type: 'text'},
+				  	dates: {cell: 0, type: 'date'},
+				  	userIdss: {cell: 1, type: 'select', data: allUsers},
+				  	descriptions: {cell: 3, type: 'text'},
+				  	reset: {cell: 4, type: 'reset'}
+				  	}
+	});
+
+});
+</script>
 <c:choose>
 	<c:when test="${myAction == 'editBacklogItem'}">
 		<aef:hourEntries id="hourEntries" target="${backlogItem}" />
@@ -33,39 +55,30 @@
 		</c:choose>
 	</div>						
 	<c:if test="${!empty hourEntries}">
-		<div class="subItemContent">		
+		<div class="subItemContent validateWrapper validateEmpty">		
 			<p>
-				<display:table name="${hourEntries}" id="row" defaultsort="1" defaultorder="descending" requestURI="${myAction}.action">
-					
-					<display:column sortable="true" title="Date" style="white-space:nowrap;">
-						<ww:date name="#attr.row.date" format="yyyy-MM-dd HH:mm" />
-					</display:column>
-					
-					<display:column sortable="true" title="User">
-						${aef:html(row.user.fullName)}
-					</display:column>
-					
-					<display:column sortable="true" title="Spent effort" sortProperty="timeSpent">
-						${aef:html(row.timeSpent)}
-					</display:column>
-					
-					<display:column sortable="false" title="Comment">
-						<c:out value="${row.description}"/>
-					</display:column>
-
-					<%-- Not implemented yet --%>
-						<display:column sortable="false" title="Action">
-							<ww:url id="editLink" action="editHourEntry" includeParams="none">
-								<c:choose>
-									<c:when test="${myAction == 'editBacklogItem'}">
-										<ww:param name="backlogItemId" value="${backlogItem.id}" />
-									</c:when>
-									<c:otherwise>
-										<ww:param name="backlogId" value="${backlog.id}" />
-									</c:otherwise>
-								</c:choose>
-								<ww:param name="hourEntryId" value="${row.id}" />
-							</ww:url>	
+				<ww:form action="updateMultipleHourEntries.action" method="post">		
+				<p>
+					<display:table htmlId="spentEffort-${myAction}" name="${hourEntries}" id="row" defaultsort="1" defaultorder="descending" requestURI="${myAction}.action">						
+						<display:column sortable="false" title="Date" style="white-space:nowrap;">
+							<ww:date name="#attr.row.date" format="yyyy-MM-dd HH:mm" />
+						</display:column>
+						
+						<display:column sortable="false" title="User">
+							<span style="display: none;">${row.user.id}</span>
+							${aef:html(row.user.fullName)}
+						</display:column>
+						
+						<display:column sortable="false" title="Spent effort" sortProperty="timeSpent">
+							${aef:html(row.timeSpent)}
+						</display:column>
+						
+						<display:column sortable="false" title="Comment">
+							<c:out value="${row.description}"/>
+						</display:column>
+						
+						<display:column sortable="false" title="Action">	
+							<span class="uniqueId" style="display: none;">${row.id}</span>
 							<ww:url id="deleteLink" action="deleteHourEntry" includeParams="none">
 								<c:choose>
 									<c:when test="${myAction == 'editBacklogItem'}">
@@ -76,28 +89,19 @@
 									</c:otherwise>
 								</c:choose>
 								<ww:param name="hourEntryId" value="${row.id}" />
-							</ww:url>
-							<c:choose>	
-								<c:when test="${myAction == 'editBacklogItem'}">		
-									<ww:a cssClass="openModalWindow" href="%{editLink}&contextViewName=editBacklogItem&contextObjectId=${backlogItemId}">
-										<img src="static/img/edit.png" alt="Edit" title="Edit" />
-									</ww:a>
-									<ww:a href="%{deleteLink}&contextViewName=editBacklogItem&contextObjectId=${backlogItemId}" onclick="return confirmDeleteHour()">
-										<img src="static/img/delete_18.png" alt="Delete" title="Delete" />
-									</ww:a>
-								</c:when>
-								<c:otherwise>
-									<ww:a cssClass="openModalWindow" href="%{editLink}&contextViewName=${myAction}&contextObjectId=${backlog.id}">
-										<img src="static/img/edit.png" alt="Edit" title="Edit" />
-									</ww:a>
-									<ww:a href="%{deleteLink}&contextViewName=${myAction}&contextObjectId=${backlog.id}" onclick="return confirmDeleteHour()">
-										<img src="static/img/delete_18.png" alt="Delete" title="Delete" />
-									</ww:a>
-								</c:otherwise>
-							</c:choose>
+							</ww:url>								
+							<img src="static/img/edit.png" class="table_edit_edit" alt="Edit" title="Edit" />															
+							<ww:a href="%{deleteLink}&contextViewName=${currentAction}&contextObjectId=${backlog.id}" onclick="return confirmDeleteHour()">
+								<img src="static/img/delete_18.png" alt="Delete" title="Delete" />
+							</ww:a>								
 						</display:column>
-					</display:table>
-				</p>
+						</display:table>
+					</p>
+					<input type="submit" value="Save" style="display: none;" id="saveSpentEffort-${myAction}" />
+					</ww:form>
 			</div>
 		</c:if> <%-- No tasks --%>
 	</div>
+
+	
+				

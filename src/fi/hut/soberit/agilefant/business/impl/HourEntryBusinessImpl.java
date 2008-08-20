@@ -303,22 +303,27 @@ public class HourEntryBusinessImpl implements HourEntryBusiness {
         return false;
     }
     
-    public void updateMultiple(Map<Integer, Integer> userIds,
-            Map<Integer, String> dates, Map<Integer, AFTime> efforts,
-            Map<Integer, String> descriptions) {
+    public void updateMultiple(Map<Integer, String[]> userIds,
+            Map<Integer, String[]> dates, Map<Integer, String[]> efforts,
+            Map<Integer, String[]> descriptions) {
         Set<Integer> ids = userIds.keySet();
         for(Integer entryId : ids) {      
             try { 
                 HourEntry entry = hourEntryDAO.get(entryId);
-                Date date = formatDate(dates.get(entryId));
+                if(entry == null) throw new Exception();
+                Integer userId = Integer.parseInt(userIds.get(entryId)[0]);
+                String dateStr = dates.get(entryId)[0];
+                AFTime effort = new AFTime(efforts.get(entryId)[0]);      
+                Date date = formatDate(dateStr);
                 entry.setDate(date);
-                User user = userDAO.get(userIds.get(entryId));
+                User user = userDAO.get(userId);
                 if(user == null) throw new Exception();
                 entry.setUser(user);
-                entry.setTimeSpent(efforts.get(entryId));
-                entry.setDescription(descriptions.get(entryId));
+                entry.setTimeSpent(effort);
+                entry.setDescription(descriptions.get(entryId)[0]);
                 hourEntryDAO.store(entry);
-            } catch(Exception e) { }
+            } catch(Exception e) { 
+            }
         }
         
     }

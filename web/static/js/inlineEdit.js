@@ -104,7 +104,7 @@
             }
           } else if(v.type == "date") {
           	if(val == null) { val = ""; }
-            $('<input type="text" />').attr('size',14).css('float','left').addClass('datePickerField')
+            $('<input type="text" />').attr('name',i).attr('size',14).css('float','left').addClass('datePickerField')
                           .appendTo(tmp).val(val).datePicker({displayClose: true, createButton: true, clickInput: false});
           }
         });

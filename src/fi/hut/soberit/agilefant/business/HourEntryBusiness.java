@@ -158,6 +158,8 @@ public interface HourEntryBusiness {
     * @param efforts
     * @param descriptions
     */
-    public void updateMultiple(Map<Integer,Integer> userIds, Map<Integer, String> dates, Map<Integer, AFTime> efforts, Map<Integer, String> descriptions);
+    public void updateMultiple(Map<Integer, String[]> userIds,
+            Map<Integer, String[]> dates, Map<Integer, String[]> efforts,
+            Map<Integer, String[]> descriptions);
    
 }

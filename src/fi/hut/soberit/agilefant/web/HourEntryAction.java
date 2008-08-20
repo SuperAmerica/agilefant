@@ -38,10 +38,10 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
     private int productId;
     
     //multi edit
-    private Map<Integer, Integer> userIdss = new HashMap<Integer,Integer>();
-    private Map<Integer, String> dates = new HashMap<Integer, String>();
-    private Map<Integer, String> descriptions = new HashMap<Integer, String>();
-    private Map<Integer, AFTime> efforts = new HashMap<Integer, AFTime>();
+    private Map<Integer, String[]> userIdss = new HashMap<Integer,String[]>();
+    private Map<Integer, String[]> dates = new HashMap<Integer, String[]>();
+    private Map<Integer, String[]> descriptions = new HashMap<Integer, String[]>();
+    private Map<Integer, String[]> efforts = new HashMap<Integer, String[]>();
     
     //private Map<Integer, String> userIds = new HashMap<Integer, String>();
     private Set<Integer> userIds = new HashSet<Integer>();
@@ -263,20 +263,36 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
         this.userIds = userIds;
     }
 
-    public void setUserIdss(Map<Integer, Integer> userIdss) {
+    public void setUserIdss(Map<Integer, String[]> userIdss) {
         this.userIdss = userIdss;
     }
 
-    public void setDates(Map<Integer, String> dates) {
+    public void setDates(Map<Integer, String[]> dates) {
         this.dates = dates;
     }
 
-    public void setDescriptions(Map<Integer, String> descriptions) {
+    public void setDescriptions(Map<Integer, String[]> descriptions) {
         this.descriptions = descriptions;
     }
 
-    public void setEfforts(Map<Integer, AFTime> efforts) {
+    public void setEfforts(Map<Integer, String[]> efforts) {
         this.efforts = efforts;
+    }
+
+    public Map<Integer, String[]> getUserIdss() {
+        return userIdss;
+    }
+
+    public Map<Integer, String[]> getDates() {
+        return dates;
+    }
+
+    public Map<Integer, String[]> getDescriptions() {
+        return descriptions;
+    }
+
+    public Map<Integer, String[]> getEfforts() {
+        return efforts;
     }
     
 }

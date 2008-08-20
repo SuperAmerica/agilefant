@@ -30,11 +30,12 @@
 <script type="text/javascript">
 <!--
 $(document).ready(function() {
+	var iterationThemes = [<c:forEach items="${iterationThemes}" var="bind">${bind.businessTheme.id},</c:forEach>-1];
 	var getThemeData = function() {
 		var ret = {};
 		var data = jsonDataCache.get('themesByProduct',{data: {productId: ${project.product.id}}},${project.product.id});
 		jQuery.each(data,function() {
-			if(this.active === true) {
+			if(this.active === true && jQuery.inArray(this.id,iterationThemes) == -1) {
 				ret[this.id] = this.name;
 			}
 		});

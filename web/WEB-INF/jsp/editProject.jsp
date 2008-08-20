@@ -649,7 +649,7 @@ $(document).ready(function() {
 												</ww:url>
 												<ww:a
 													href="%{deleteLink}&contextViewName=editProject&contextObjectId=${project.id}"
-													onclick="return confirmDelete()">Delete</ww:a>
+													onclick="return confirmDelete()"><img src="static/img/delete_18.png" alt="Delete" title="Delete" /></ww:a>
 											</display:column>
 										</display:table>
 								</div>

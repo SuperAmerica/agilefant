@@ -160,7 +160,7 @@
 		</action>
 		<action name="deleteProduct" method="delete"
 			class="productAction">
-			<result>/WEB-INF/jsp/selectBacklog.jsp</result>
+			<result type="redirect-action">selectBacklog</result>
 		</action>
 		<action name="storeProduct" method="store"
 			class="productAction">

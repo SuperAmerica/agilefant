@@ -9,15 +9,14 @@ function confirmDeleteTeam() { return confirm("Really delete the team?"); }
 function confirmReset() { return confirm("Really reset the original estimate?"); }
 
 function deleteBacklogItem(backlogItemId) {
-	var confirm = confirmDeleteBli();
 	var url = "ajaxDeleteBacklogItem.action";			
-	
-	if (confirm) {
+	if (confirmDeleteBli()) {
 		$.post(url,{backlogItemId: backlogItemId},function(data) {
 			reloadPage();
 		});
 	}
 }
+
 function validateDateFormat(value) {
 	var standardDateFormat = new RegExp("^[ ]*[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])[ ]+([0-1][0-9]|2[0-3]):[0-5][0-9][ ]*$");
 	return (standardDateFormat.test(value) ); 
@@ -67,7 +66,7 @@ function reloadPage()
 {
 	window.location.reload();
 }
-function loadModal(target,request, parent, closeFunc) {
+/*function loadModal(target,request, parent, closeFunc) {
 	var container = $('<div class="jqmWindow"><b>Please wait, content loading...</b></div>');
 	var bg = $('<div style="background: #000; opacity: 0.3; z-index: 9; position: absolute; top: 0px; left: 0px; filter:alpha(opacity=30);-moz-opacity:.30;">&nbsp;</div>');
 	var pos = $("#"+parent).offset();
@@ -80,7 +79,7 @@ function loadModal(target,request, parent, closeFunc) {
 	var comp = function(data,status) { container.html(data); container.find(".jqmClose").click(function() { container.remove(); bg.remove(); if(closeFunc) { closeFunc()}});}
 	var err = function(data,status) { alert("An error occured while processing your request."); container.remove(); bg.remove(); }
 	jQuery.ajax({cache: false, type: "POST", error: err, success: comp, data: request, url: target, dataType: "html"});
-}
+}*/
 
 function ajaxOpenDialog(context, dialogId, tabId) {
     jQuery.post("ajaxOpenDialog.action", {

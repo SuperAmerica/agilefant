@@ -60,7 +60,7 @@
 			<td>Start date</td>
 			<td>*</td>
 			<td colspan="2"><aef:datepicker
-				id="start_date" name="startDate"
+				id="create_iteration_start_date" name="startDate"
 				format="%{getText('webwork.shortDateTime.format')}"
 				value="%{#start}" /></td>
 		</tr>
@@ -68,7 +68,7 @@
 			<td>End date</td>
 			<td>*</td>
 			<td colspan="2"><aef:datepicker
-				id="end_date" name="endDate"
+				id="create_iteration_end_date" name="endDate"
 				format="%{getText('webwork.shortDateTime.format')}" value="%{#end}" />
 
 			</td>

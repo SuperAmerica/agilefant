@@ -24,12 +24,23 @@ function initOnLoad(elem) {
         insertUnorderedList : { visible : true }
     }});
     
+    me.find(':submit[value=Delete]').click(function() {
+        var form = $(this).parents('form:eq(0)');
+        form.data("delete","1");
+        var e = form.data('delete');
+        var foo = 1;
+    });
+    
     addFormValidators(elem);
     
     return false;
 }
 
 function submitDialogForm() {
+    var e = $(this).data('delete');
+    if ($(this).data('delete') == '1') {
+        return true;
+    }
     if($(this).valid()) {
         $(this).find("input[type=submit]").attr("disabled", "disabled");
         $.post($(this).attr("action"), $(this).serializeArray(),

@@ -16,7 +16,7 @@
 ;(function($) {
 
 function load(settings, root, child, container) {
-	$.getJSON(settings.url, {requestId: root}, function(response) {
+    $.ajax({url: settings.url, type: 'post', data: { requestId: root }, cache: false, dataType:'json', success: function(response) {
 		function createNode(parent) {
 			var current = $("<li/>").attr("id", this.id || "").html("<span>" + this.text + "</span>").appendTo(parent);
 			if (this.classes) {
@@ -42,7 +42,7 @@ function load(settings, root, child, container) {
 		}
 		$.each(response, createNode, [child]);
         $(container).treeview({add: child});
-    });
+    }});
 }
 
 var proxied = $.fn.treeview;

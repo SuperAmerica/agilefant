@@ -270,7 +270,7 @@ var productId = ${product.id};
 						</ww:url>
 						<ww:a href="%{deleteLink}&contextViewName=editProduct&contextObjectId=${product.id}"
 							onclick="return confirmDelete()">
-							<img src="static/img/delete_18.png" alt="Delete" title="Delete theme" style="cursor: pointer;"/>
+							<img src="static/img/delete_18.png" alt="Delete project" title="Delete project" style="cursor: pointer;"/>
 						</ww:a>
 					</display:column>
 				</display:table>

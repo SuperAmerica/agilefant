@@ -1,6 +1,8 @@
 <%@ include file="./inc/_taglibs.jsp"%>
 <%@ include file="./inc/_header.jsp"%>
 
+<aef:openDialogs context="iteration" id="openIterations" />
+
 <c:choose>
 	<c:when test="${!empty project.id}">
 		<c:set var="currentProjectId" value="${project.id}" scope="page" />
@@ -30,6 +32,10 @@
 <script type="text/javascript">
 <!--
 $(document).ready(function() {
+	<c:forEach items="${openIterations}" var="openIteration">
+        handleTabEvent("iterationTabContainer-${openIteration[0]}", "iteration", ${openIteration[0]}, ${openIteration[1]});
+    </c:forEach>
+
 	var iterationThemes = [<c:forEach items="${iterationThemes}" var="bind">${bind.businessTheme.id},</c:forEach>-1];
 	var getThemeData = function() {
 		var ret = {};
@@ -608,17 +614,20 @@ $(document).ready(function() {
 								<div class="subItemContent">
 										<display:table class="listTable" name="project.iterations"
 											id="row" requestURI="editProject.action">
-											<display:column sortable="true" sortProperty="name" title="Name"
-												class="shortNameColumn">
-												<ww:url id="editLink" action="editIteration"
+											
+											<display:column sortable="true" sortProperty="name" title="Name">
+												<div style="overflow:hidden; width: 170px;">												
+													<ww:url id="editLink" action="editIteration"
 													includeParams="none">
 													<ww:param name="iterationId" value="${row.id}" />
 												</ww:url>
-												<ww:a
-													href="%{editLink}&contextViewName=editProject&contextObjectId=${project.id}">
+												<ww:a href="%{editLink}&contextViewName=editProject&contextObjectId=${project.id}">
 													${aef:html(row.name)}
-												</ww:a>
+												</ww:a>												
+												</div>
+												<div id="iterationTabContainer-${row.id}" style="overflow:visible; white-space: nowrap; width: 0px;"></div>
 											</display:column>
+											
 											<display:column sortable="true" title="Items">
 												${fn:length(row.backlogItems)}
 											</display:column>
@@ -641,6 +650,7 @@ $(document).ready(function() {
 												<ww:date name="#attr.row.endDate" />
 											</display:column>
 											<display:column sortable="false" title="Actions">
+												<img src="static/img/edit.png" alt="Edit" title="Edit" style="cursor: pointer;" onclick="handleTabEvent('iterationTabContainer-${row.id}','iteration',${row.id},0);" />
 												<ww:url id="deleteLink" action="deleteIteration"
 													includeParams="none">
 													<ww:param name="projectId" value="${project.id}" />

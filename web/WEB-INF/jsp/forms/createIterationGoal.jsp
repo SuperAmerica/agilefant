@@ -30,7 +30,7 @@
                         <option value="" class="inactive projectOption">${project.name}</option>
                         <c:forEach items="${project.iterations}" var="iter">
                             <c:choose>
-                                <c:when test="${iter.id == currentIterationId}">
+                                <c:when test="${iter.id == iterationId}">
                                     <option selected="selected" value="${iter.id}" class="iterationOption">${iter.name}</option>
                                 </c:when>
                                 <c:otherwise>

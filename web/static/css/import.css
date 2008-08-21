@@ -450,12 +450,12 @@ span.right {
 	max-height: 2.5em;
 }
 
-.bliNameLink {
+.nameLink {
 	cursor: pointer;
 	color: #0000FF;
 }
 
-.bliNameLink:hover {
+.nameLink:hover {
 	color: #EE5500;
 }
 

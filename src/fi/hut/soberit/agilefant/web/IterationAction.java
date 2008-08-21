@@ -236,6 +236,52 @@ public class IterationAction extends ActionSupport implements CRUDAction {
         }
     }
 
+    public String ajaxStoreIteration() {
+        if (iteration == null) {
+            super.addActionError(super.getText("iteration.missingForm"));
+            return CRUDAction.AJAX_ERROR;
+        }
+        project = projectDAO.get(projectId);
+        if (project == null) {
+            super
+                    .addActionError(super
+                            .getText("iteration.projectNotFound"));
+            return CRUDAction.AJAX_ERROR;
+        }
+        Iteration fillable = new Iteration();
+        if (iterationId > 0) {
+            fillable = iterationDAO.get(iterationId);
+            if(projectId > 0 && fillable.getProject() != null 
+                    && fillable.getProject().getId() != projectId) {
+                backlogBusiness.removeThemeBindings(fillable);
+            }
+            if (iteration == null) {
+                super.addActionError(super.getText("iteration.notFound"));
+                return CRUDAction.AJAX_ERROR;
+            }
+        }
+
+        try {
+            this.fillObject(fillable);
+        } catch (ParseException e) {
+            super.addActionError(super.getText("backlog.unparseableDate")
+                    + super.getText("webwork.shortDateTime.format"));
+            return CRUDAction.AJAX_ERROR;
+        }
+
+        if (super.hasActionErrors()) {
+            return CRUDAction.AJAX_ERROR;
+        }
+
+        if (iterationId == 0)
+            iterationId = (Integer) iterationDAO.create(fillable);
+        else
+            iterationDAO.store(fillable);
+        
+        historyBusiness.updateBacklogHistory(fillable.getId());
+        return CRUDAction.AJAX_SUCCESS;  
+    }
+    
     public String moveIterationGoal() {
         Iteration iteration = iterationDAO.get(iterationId);
         IterationGoal iterationGoal = iterationGoalDAO.get(iterationGoalId);

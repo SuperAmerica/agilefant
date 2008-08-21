@@ -542,6 +542,22 @@
 				<param name="resetContextView">true</param>
 			</result>
 		</action>
+		
+		<action name="iterationTabs" method="edit"
+			class="iterationAction">
+			<result>/WEB-INF/jsp/inc/iterationAjax.jsp</result>
+		</action>
+
+		<action name="ajaxStoreIteration" method="ajaxStoreIteration"
+			class="iterationAction">		
+			<result name="ajax_error" type="httpheader">
+				<param name="status">400</param>
+			</result>
+			<result name="ajax_success" type="dispatcher">
+				<param name="status">200</param>
+				<param name="location">/WEB-INF/jsp/inc/ajaxIterationResult.jsp</param>
+			</result>
+		</action>
 
 		<!-- /Iteration actions -->
 
@@ -672,8 +688,8 @@
         </action>
 		<action name="deleteIterationGoal" method="delete"
 			class="iterationGoalAction">
-			<result type="redirect">
-				editIteration.action?iterationId=${iterationId}
+			<result type="redirect-action">
+				<param name="actionName">popContext</param>
 			</result>
 		</action>
 		<action name="storeIterationGoal" method="store"

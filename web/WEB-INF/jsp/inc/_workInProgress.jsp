@@ -45,7 +45,7 @@ Backlog items
                 <span class="businessTheme" title="${businessTheme.description}"><c:out value="${businessTheme.name}"/></span>
             </a>
         </c:forEach>
-		<a class="bliNameLink" onclick="handleTabEvent('backlogItemTabContainer-${row.id}-${bliListContext}','bliWorkInProgress',${row.id},0,'${bliListContext}'); return false;">
+		<a class="nameLink" onclick="handleTabEvent('backlogItemTabContainer-${row.id}-${bliListContext}','bliWorkInProgress',${row.id},0,'${bliListContext}'); return false;">
 			${aef:html(row.name)}
 		</a>
 		</div>

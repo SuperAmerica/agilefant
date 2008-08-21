@@ -7,10 +7,98 @@
 
 <div class="ajaxWindowTabsDiv">
 <ul class="ajaxWindowTabs">
+	<li><a href="#iterationInfoTab-${iterationId}"><span><img src="static/img/info.png" alt="Info" /> Info</span></a></li>
 	<li><a href="#iterationEditTab-${iterationId}"><span><img src="static/img/edit.png" alt="Edit" /> Edit iteration</span></a></li>
 	<li><a href="#iterationThemesTab-${iterationId}"><span><img src="static/img/theme.png" alt="Iterations" /> Themes</span></a></li>
 	<li><a href="#iterationGoalsTab-${iterationId}"><span><img src="static/img/backlog.png" alt="Iterations" /> Iteration goals</span></a></li>
 </ul>
+
+<div id="iterationInfoTab-${iterationId}" class="iterationNaviTab">
+
+<table>
+<tbody>
+	<tr>
+	<td>
+	<div class="subItems" style="margin-top: 0px; width: 725px;">
+
+		<div id="descriptionDiv" class="descriptionDiv"
+			style="display: block; max-height: 1000em; overflow: visible;">
+			<table class="infoTable" cellpadding="0" cellspacing="0">
+				<tr>
+					<th class="info1" style="background: transparent;">Timeframe</th>
+					<td class="info3">
+						<c:out
+							value="${iteration.startDate.date}.${iteration.startDate.month + 1}.${iteration.startDate.year + 1900}" />
+						- <c:out
+						value="${iteration.endDate.date}.${iteration.endDate.month + 1}.${iteration.endDate.year + 1900}" /></td>
+					<td class="info4" rowspan="3">
+					<div class="smallBurndown"><a href="#bigChart"><img
+						src="drawSmallChart.action?iterationId=${iteration.id}" /></a>
+					</div>
+
+					<table>
+						<tr>
+							<th style="background: transparent;">Velocity</th>
+							<td><c:out value="${iterationMetrics.dailyVelocity}" /> /
+							day</td>
+						</tr>
+						<c:if test="${iterationMetrics.backlogOngoing}">
+							<tr>
+								<th style="background: transparent;">Schedule variance</th>
+								<td><c:choose>
+									<c:when test="${iterationMetrics.scheduleVariance != null}">
+										<c:choose>
+											<c:when test="${iterationMetrics.scheduleVariance > 0}">
+												<span class="red">+ 
+											</c:when>
+											<c:otherwise>
+												<span>
+											</c:otherwise>
+										</c:choose>
+										<c:out value="${iterationMetrics.scheduleVariance}" /> days
+                                            </c:when>
+									<c:otherwise>
+                                                unknown
+                                            </c:otherwise>
+								</c:choose></td>
+							</tr>
+							<tr>
+								<th style="background: transparent;">Scoping needed</th>
+								<td><c:choose>
+									<c:when test="${iterationMetrics.scopingNeeded != null}">
+										<c:out value="${iterationMetrics.scopingNeeded}" />
+									</c:when>
+									<c:otherwise>
+                                                unknown
+                                            </c:otherwise>
+								</c:choose></td>
+							</tr>
+						</c:if>
+						<tr>
+							<th style="background: transparent;">Completed</th>
+							<td><c:out value="${iterationMetrics.percentDone}" />% (<c:out
+								value="${iterationMetrics.completedItems}" /> / <c:out
+								value="${iterationMetrics.totalItems}" />)</td>
+						</tr>
+					</table>
+
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2" class="description">${iteration.description}</td>
+					<td></td>
+				</tr>
+
+			</table>
+		</div>
+
+	</div>
+	</td>
+	</tr>
+</tbody>
+</table>
+
+</div>
 
 <div id="iterationEditTab-${iterationId}" class="iterationNaviTab">
 

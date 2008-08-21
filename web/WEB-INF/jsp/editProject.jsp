@@ -650,7 +650,7 @@ $(document).ready(function() {
 												<ww:date name="#attr.row.endDate" />
 											</display:column>
 											<display:column sortable="false" title="Actions">
-												<img src="static/img/edit.png" alt="Edit" title="Edit" style="cursor: pointer;" onclick="handleTabEvent('iterationTabContainer-${row.id}','iteration',${row.id},0);" />
+												<img src="static/img/edit.png" alt="Edit" title="Edit" style="cursor: pointer;" onclick="handleTabEvent('iterationTabContainer-${row.id}', 'iteration', ${row.id}, 1);" />
 												<ww:url id="deleteLink" action="deleteIteration"
 													includeParams="none">
 													<ww:param name="projectId" value="${project.id}" />

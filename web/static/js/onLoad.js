@@ -63,7 +63,14 @@ function addFormValidators(target) {
             if (validationRulesByHTMLClass[this] != null) {
                 var rules = validationRulesByHTMLClass[this];
                 form.validate(rules);
+                if(target.data && target.data("aef-tabs") == "1") {
+                	var mySubm = function() {
+                		ajaxCloseDialog(target.data("aef-context"),target.data("aef-id"));
+                	}; 	
+                	form.submit(mySubm);
+                } 
                 form.submit(submitDialogForm);
+
                 return false;
             }
         });

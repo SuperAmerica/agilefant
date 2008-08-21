@@ -144,6 +144,9 @@ function handleTabEvent(target, context, id, tabId, bliContext) {
             }
         };
         
+        target.data("aef-tabs","1");
+        target.data("aef-context",context);
+        target.data("aef-id",id);
         target.load(targetAction[context], targetParams[context], function(data, status) {
             var ajaxTabs = target.find('ul.ajaxWindowTabs');
             ajaxTabs.tabs({ selected: tabId });
@@ -162,6 +165,7 @@ function handleTabEvent(target, context, id, tabId, bliContext) {
             
             initOnLoad(target);
         });
+
         target.attr("tab-data-loaded","1");
         
         ajaxOpenDialog(context, id, tabId);

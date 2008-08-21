@@ -113,6 +113,7 @@ function handleTabEvent(target, context, id, tabId, bliContext) {
         	"bliDWProjects": "backlogItemTabs.action",
             "project": "projectTabs.action",
             "iteration": "iterationTabs.action",
+            "iterationGoal": "iterationGoalTabs.action",
             "businessTheme": "businessThemeTabs.action"
         };
         
@@ -138,7 +139,10 @@ function handleTabEvent(target, context, id, tabId, bliContext) {
             },
             "iteration": {
                 iterationId: id
-            },         
+            },
+            "iterationGoal": {
+                iterationGoalId: id
+            },      
             "businessTheme": {
                 businessThemeId: id
             }

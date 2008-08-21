@@ -170,6 +170,26 @@ public class IterationGoalAction extends ActionSupport implements CRUDAction {
         }
     }
     
+    public String ajaxStoreIterationGoal() {        
+        IterationGoal storable = new IterationGoal();
+        if (iterationGoalId > 0) {
+            storable = iterationGoalDAO.get(iterationGoalId);
+            if (storable == null) {
+                super.addActionError(super.getText("iterationgGoal.notFound"));
+                return CRUDAction.AJAX_ERROR;
+            }
+        }
+        this.fillStorable(storable);
+        if (super.hasActionErrors()) {
+            return CRUDAction.AJAX_ERROR;
+        }
+        if (iterationGoalId == 0)
+            iterationGoalId = (Integer) iterationGoalDAO.create(storable);
+        else
+            iterationGoalDAO.store(storable);
+        return CRUDAction.AJAX_SUCCESS;
+    }
+    
     public String ajaxGetIterationGoals() {
         jsonData = backlogBusiness.getIterationGoalsAsJSON(iterationId);        
         return Action.SUCCESS;

@@ -10,12 +10,22 @@
 	</c:otherwise>
 </c:choose>
 
+<aef:openDialogs context="iterationGoal" id="openIterationGoalTabs" />
+
 <c:set var="divId" value="1336" scope="page" />
 <aef:menu navi="backlog" pageHierarchy="${pageHierarchy}" />
 <aef:productList />
 
 <ww:actionerror />
 <ww:actionmessage />
+
+<script type="text/javascript">
+$(document).ready(function() {        
+    <c:forEach items="${openIterationGoalTabs}" var="openIterationGoal">
+        handleTabEvent("IterationGoalTabContainer-${openIterationGoal[0]}", "iterationGoal", ${openIterationGoal[0]}, ${openIterationGoal[1]});
+    </c:forEach>
+});
+</script>
 
 <h2><c:out value="${iteration.name}" /></h2>
 <table>
@@ -393,16 +403,11 @@ $(document).ready( function() {
 						name="iteration.iterationGoals" id="row"
 						requestURI="editIteration.action">
 
-						<display:column sortable="true" title="Name" sortProperty="name"
-							class="iterationGoalNameColumn">
-							<ww:url id="editLink" action="editIterationGoal"
-								includeParams="none">
-								<ww:param name="iterationGoalId" value="${row.id}" />
-							</ww:url>
-							<ww:a
-								href="%{editLink}&contextViewName=editIteration&contextObjectId=${iteration.id}">
-						${aef:html(row.name)}
-					</ww:a>
+						<display:column sortable="true" title="Name" sortProperty="name" class="iterationGoalNameColumn">							
+							<a class="nameLink" onclick="handleTabEvent('iterationGoalTabContainer-${row.id}', 'iterationGoal', ${row.id}, 0); return false;">
+								${aef:html(row.name)}
+							</a>							
+							<div id="iterationGoalTabContainer-${row.id}" style="overflow:visible; white-space: nowrap; width: 0px;"></div>
 						</display:column>
 
 						<display:column sortable="true" sortProperty="description"
@@ -472,6 +477,7 @@ $(document).ready( function() {
 								<img src="static/img/arrow_bottom.png" alt="Send to bottom"
 									title="Send to bottom" />
 							</ww:a>
+							<img src="static/img/edit.png" alt="Edit" title="Edit" style="cursor: pointer;" onclick="handleTabEvent('iterationGoalTabContainer-${row.id}', 'iterationGoal', ${row.id}, 0); return false;" />
 							<ww:url id="deleteLink" action="deleteIterationGoal"
 								includeParams="none">
 								<ww:param name="iterationGoalId" value="${row.id}" />

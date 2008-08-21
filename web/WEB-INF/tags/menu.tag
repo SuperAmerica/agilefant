@@ -32,6 +32,7 @@ Agilefant
 <script type="text/javascript" src="static/js/jquery.wysiwyg.js"></script>
 <script type="text/javascript" src="static/js/validationRules.js"></script>
 <script type="text/javascript" src="static/js/inlineEdit.js"></script>
+<script type="text/javascript" src="static/js/userChooser.js"></script>
 
 <script type="text/javascript">
 $(document).ready(function() {

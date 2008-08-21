@@ -47,6 +47,14 @@ import fi.hut.soberit.agilefant.util.EffortSumData;
 public interface BacklogBusiness {
 
     /**
+     * Get a backlog by its id.
+     * @param backlogId
+     * @return
+     * @throws ObjectNotFoundException
+     */
+    public Backlog getBacklog(int backlogId) throws ObjectNotFoundException;
+    
+    /**
      * Delete multiple <code>BacklogItems</code> at once.
      * 
      * @param backlogItemIds

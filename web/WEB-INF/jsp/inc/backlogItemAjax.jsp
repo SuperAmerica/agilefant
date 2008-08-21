@@ -17,6 +17,16 @@
 
 <div id="backlogItemEditTab-${backlogItemId}-${bliListContext}" class="backlogItemNaviTab">
 
+<script type="text/javascript">
+$(document).ready(function() {
+    $('#userChooserLink-${backlogItemId}-${bliListContext}').userChooser({
+        backlogItemId: ${backlogItemId},
+        backlogIdField: '#backlogSelect-${backlogItemId}-${bliListContext}',
+        userListContainer: '#userListContainer-${backlogItemId}-${bliListContext}'
+    });
+});
+</script>
+
 <table>
 <tbody>
 	<tr>
@@ -181,14 +191,7 @@
 				<td>Backlog</td>
 				<td></td>
 				<td colspan="2">
-				<c:choose>
-					<c:when test="${backlogItemId == 0}">
-						<select name="backlogId">
-					</c:when>
-					<c:otherwise>
-						<select name="backlogId">
-					</c:otherwise>
-				</c:choose>
+					<select name="backlogId" id="backlogSelect-${backlogItemId}-${bliListContext}">
 	
 					<%-- Generate a drop-down list showing all backlogs in a hierarchical manner --%>
 					<option class="inactive" value="">(select backlog)</option>
@@ -266,79 +269,19 @@
 				<td></td>
 				<td colspan="2">
 	
-				<div id="assigneesLink">
-				<a href="javascript:toggleDiv('responsibleSelect_${backlogItem.id}-${bliListContext}')" class="assignees">
-				<img src="static/img/users.png"/>
-				<c:set var="listSize" value="${fn:length(backlogItem.responsibles)}" scope="request" />
-				<c:choose>
-				<c:when test="${listSize > 0}">
-					<c:set var="count" value="0" scope="request" />
-					<c:set var="comma" value="," scope="request" />
-					<c:forEach items="${backlogItem.responsibles}" var="responsible">
-						<c:set var="unassigned" value="0" scope="request" />
-						<c:if test="${count == listSize - 1}" >
-							<c:set var="comma" value="" scope="request" />
-						</c:if>
-						<c:if test="${!empty backlogItem.project}" >
-							<c:set var="unassigned" value="1" scope="request" />
-							<c:forEach items="${backlogItem.project.responsibles}" var="projectResponsible">
-								<c:if test="${responsible.id == projectResponsible.id}" >
-									<c:set var="unassigned" value="0" scope="request" />
-								</c:if>
-							</c:forEach>
-						</c:if>
-						<c:choose>
-							<c:when test="${unassigned == 1}">
-								<span><c:out value="${responsible.initials}" /></span><c:out value="${comma}" />
-							</c:when>
-							<c:otherwise>
-								<c:out value="${responsible.initials}" /><c:out value="${comma}" />
-							</c:otherwise>
-						</c:choose>
-						<c:set var="count" value="${count + 1}" scope="request" />
-					</c:forEach>
-				</c:when>
-				<c:otherwise>
-					<c:out value="none" />
-				</c:otherwise>
-				</c:choose>
+				<div>
+				<a id="userChooserLink-${backlogItemId}-${bliListContext}" href="#" class="assigneeLink">
+				    <img src="static/img/users.png"/>
+                    <span id="userListContainer-${backlogItemId}-${bliListContext}">
+                    <c:set var="count" value="0" />
+                    <c:set var="listLength" value="${fn:length(backlogItem.responsibles)}"/>
+                    <c:forEach items="${backlogItem.responsibles}" var="resp">
+                        <input type="hidden" name="userIds[${resp.id}]" value="${resp.id}"/>
+                        <c:set var="count" value="${count + 1}" />
+                        <c:out value="${resp.initials}" /><c:if test="${count != listLength}">, </c:if>
+                    </c:forEach>
+                    </span>
 				</a>
-				</div>
-	
-				<script type="text/javascript">
-				$(document).ready( function() {
-					<ww:set name="userList" value="${possibleResponsibles}" />
-					<ww:set name="teamList" value="#attr.teamList" />
-					<c:choose>
-					<c:when test="${backlogItem.project != null}">
-					var others = [<aef:userJson items="${aef:listSubstract(possibleResponsibles, backlogItem.project.responsibles)}"/>];
-					var preferred = [<aef:userJson items="${backlogItem.project.responsibles}"/>];
-					</c:when>
-					<c:otherwise>
-					var others = [<aef:userJson items="${possibleResponsibles}"/>];
-					var preferred = [];
-					</c:otherwise>
-					</c:choose>
-					
-					var teams = [<aef:teamJson items="${teamList}"/>];
-					var selected = [<aef:idJson items="${backlogItem.responsibles}"/>]
-					$('#responsibleSelect_${backlogItem.id}-${bliListContext}').multiuserselect({users: [preferred,others], groups: teams, root: $('#responsibleSelect_${backlogItem.id}-${bliListContext}')}).selectusers(selected);								
-					
-				});
-				</script>
-				<div id="responsibleSelect_${backlogItem.id}-${bliListContext}" style="display: none;" class="projectTeams userSelector">
-				<div class="left">
-				<c:if test="${!aef:isProduct(backlog) &&
-				             backlog != null}">
-					<label>Users assigned to this project</label>
-						<ul class="users_0"></ul>
-					<label>Users not assigned this project</label>
-				</c:if>
-					<ul class="users_1"></ul>
-				</div>
-				<div class="right"><label>Teams</label>
-				<ul class="groups" />
-				</div>
 				</div>
 				</td>
 			</tr>
@@ -427,6 +370,8 @@
 			$('#todoTable-${backlogItemId}-${bliListContext}').inlineTableEdit({
 						  add: '#addTodo-${backlogItemId}-${bliListContext}', 
 						  useId: true,
+						  deleteaction: 'deleteTask.action',
+						  submitParam: 'taskId',
 						  fields: {
 						  	taskNames: {cell: 0, type: 'text', size: 70},
 						  	taskStates: {cell: 1,type: 'select', data: {'NOT_STARTED': 'Not started', 'STARTED': 'Started', 'PENDING': 'Pending', 'BLOCKED': 'Blocked', 'IMPLEMENTED': 'Implemented', 'DONE': 'Done'}},											  	
@@ -557,15 +502,8 @@
 								<img src="static/img/arrow_bottom.png" alt="Send to bottom"
 									title="Send to bottom" />
 							</ww:a>
-	
-							<ww:url id="deleteLink" action="deleteTask" includeParams="none">
-								<ww:param name="taskId" value="${row.id}" />
-							</ww:url>
-							<ww:a 
-								href="%{deleteLink}&contextViewName=editBacklogItem&contextObjectId=${backlogItemId}"
-								onclick="return confirmDeleteTask()">
-								<img src="static/img/delete_18.png" alt="Delete" title="Delete" />
-							</ww:a>
+	                        <span style="display:none;" class="uniqueId">${row.id}</span>
+						    <img src="static/img/delete_18.png" alt="Delete" title="Delete" class="table_edit_delete" style="cursor: pointer;"/>
 						</display:column>
 	
 					</display:table></p>				

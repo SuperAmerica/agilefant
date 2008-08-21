@@ -17,6 +17,8 @@
 		class="fi.hut.soberit.agilefant.business.impl.HistoryBusinessImpl" />
 	<bean id="iterationGoalBusiness" singleton="false"
         class="fi.hut.soberit.agilefant.business.impl.IterationGoalBusinessImpl" />
+    <bean id="jsonBusiness" singleton="false"
+        class="fi.hut.soberit.agilefant.business.impl.JSONBusinessImpl" />
 	<bean id="taskBusiness" singleton="false"
 		class="fi.hut.soberit.agilefant.business.impl.TaskBusinessImpl" />
 	<bean id="teamBusiness" singleton="false"

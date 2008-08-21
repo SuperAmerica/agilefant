@@ -71,6 +71,15 @@ public class BacklogBusinessImpl implements BacklogBusiness {
     
     private ProductDAO productDAO;
 
+    /** {@inheritDoc} */
+    public Backlog getBacklog(int backlogId) throws ObjectNotFoundException {
+        Backlog backlog;
+        if ((backlog = backlogDAO.get(backlogId)) == null) {
+            throw new ObjectNotFoundException();
+        }
+        return backlog;
+    }
+    
     // @Override
     public void deleteMultipleItems(int backlogId, int[] backlogItemIds)
             throws ObjectNotFoundException {

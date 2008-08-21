@@ -1,0 +1,25 @@
+/**
+ * Stylesheet for the user selector 
+ *
+ */
+
+.userChooserDialog table td {
+    vertical-align: top;    
+}
+.userChooserDialog table th {
+    text-align: left;    
+}
+
+.userChooserDialog table ul {
+    margin: 0;
+    padding: 0;
+}
+
+.userChooserDialog table ul li {
+    list-style-type: none;
+}
+
+.userChooserDialog table img.clickable {
+    cursor: pointer;
+    margin-right: 2px;
+}

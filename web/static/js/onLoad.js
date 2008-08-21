@@ -126,12 +126,12 @@ function confirmOpenCreateDialog(element) {
     return false;
 }
 
+var overlayUpdate = function() {
+   $('.ui-dialog-overlay').css("height",$(document).height()).css("width",$(document).width());
+};
+
 function openCreateDialog(element) {
     var dialog = $('<div class="createDialogWindow"></div>').appendTo(document.body).hide();
-	
-	var overlayUpdate = function() {
-       $('.ui-dialog-overlay').css("height",$(document).height()).css("width",$(document).width());
-    };
 	
 	/* Set the dialog window properties */
 	var windowOptions = {
@@ -236,6 +236,11 @@ function openCreateDialog(element) {
     else if (element.hasClass('openProjectTypeDialog')) {
         callback = function(data, status) {
             dialogSetup(agilefantValidationRules.projectType, "Create a new project type");
+        };
+    }
+    else {
+        callback = function(data, status) {
+            dialogSetup(agilefantValidationRules.empty, "Dialog");
         };
     }
 	dialog.load(element.attr("href"), {}, callback);

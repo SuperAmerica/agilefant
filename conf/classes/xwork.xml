@@ -1038,6 +1038,9 @@
         <action name="getProductJSON" method="getProductJSON" class="productAction">
             <result>/WEB-INF/jsp/jsonData.jsp</result>
         </action>
+        <action name="getUserChooserJSON" method="ajaxGetUserChooserJSON" class="jsonAction">
+            <result>/WEB-INF/jsp/jsonData.jsp</result>
+        </action>
         <!-- /JSON actions -->
 </package>
 </xwork>

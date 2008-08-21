@@ -96,4 +96,7 @@
     <bean name="sessionAction"
         class="fi.hut.soberit.agilefant.web.SessionAction"
         autowire="byName" singleton="false" />
+    <bean name="jsonAction"
+        class="fi.hut.soberit.agilefant.web.JSONAction"
+        autowire="byName" singleton="false" />
 </beans>

@@ -4,6 +4,7 @@
 @import "jquery.tabs.css";
 @import "jquery.dialog.css";
 @import "jquery.wysiwyg.css";
+@import "userChooser.css";
 
 html {
 	margin: 0;

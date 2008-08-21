@@ -103,6 +103,7 @@ function handleTabEvent(target, context, id, tabId, bliContext) {
             ajaxOpenDialog(context, id, tabId);
             tabs.tabs('select', tabId);
         }
+        return false;
     }
     else {
         var targetAction = {
@@ -160,6 +161,7 @@ function handleTabEvent(target, context, id, tabId, bliContext) {
         target.attr("tab-data-loaded","1");
         
         ajaxOpenDialog(context, id, tabId);
+        return false;
     }
 }
 

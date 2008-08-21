@@ -82,11 +82,11 @@ $(document).ready(function() {
 					<display:column sortable="true" sortProperty="name" title="Name">						
 						<div style="overflow:hidden; width: 170px;">						
 						<c:forEach items="${row.businessThemes}" var="businessTheme">
-                            <a href="#" onclick="handleTabEvent('backlogItemTabContainer-${row.id}-${bliListContext}','bli',${row.id},3, '${bliListContext}');">
+                            <a href="#" onclick="handleTabEvent('backlogItemTabContainer-${row.id}-${bliListContext}','bli',${row.id},3, '${bliListContext}'); return false;">
                                 <span class="businessTheme" title="${businessTheme.description}"><c:out value="${businessTheme.name}"/></span>
                             </a>
                         </c:forEach>						
-						<a class="bliNameLink" onclick="handleTabEvent('backlogItemTabContainer-${row.id}-${bliListContext}','bli',${row.id},0,'${bliListContext}');">
+						<a class="bliNameLink" onclick="handleTabEvent('backlogItemTabContainer-${row.id}-${bliListContext}','bli',${row.id},0,'${bliListContext}'); return false;">
 							${aef:html(row.name)}
 						</a>
 						</div>
@@ -157,7 +157,7 @@ $(document).ready(function() {
 					</c:choose>
 
 					<display:column title="Actions">
-						<img src="static/img/edit.png" alt="Edit" title="Edit" style="cursor: pointer;" onclick="handleTabEvent('backlogItemTabContainer-${row.id}-${bliListContext}','bliDWInterations',${row.id},0, '${bliListContext}');" />
+						<img src="static/img/edit.png" alt="Edit" title="Edit" style="cursor: pointer;" onclick="handleTabEvent('backlogItemTabContainer-${row.id}-${bliListContext}','bliDWInterations',${row.id},0, '${bliListContext}'); return false;" />
 						<img src="static/img/delete_18.png" alt="Delete" title="Delete" style="cursor: pointer;" onclick="deleteBacklogItem(${row.id}); return false;" />
 					</display:column>
 

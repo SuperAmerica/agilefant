@@ -2,16 +2,20 @@ package fi.hut.soberit.agilefant.web;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
 
 import fi.hut.soberit.agilefant.business.BacklogBusiness;
+import fi.hut.soberit.agilefant.business.BusinessThemeBusiness;
 import fi.hut.soberit.agilefant.business.HourEntryBusiness;
 import fi.hut.soberit.agilefant.business.IterationGoalBusiness;
 import fi.hut.soberit.agilefant.db.IterationDAO;
 import fi.hut.soberit.agilefant.db.IterationGoalDAO;
 import fi.hut.soberit.agilefant.model.BacklogItem;
+import fi.hut.soberit.agilefant.model.BusinessTheme;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.IterationGoal;
 import fi.hut.soberit.agilefant.util.EffortSumData;
@@ -29,6 +33,8 @@ public class IterationGoalAction extends ActionSupport implements CRUDAction {
     private IterationGoalBusiness iterationGoalBusiness;
     
     private HourEntryBusiness hourEntryBusiness;
+    
+    private BusinessThemeBusiness businessThemeBusiness;
 
     private int iterationId;
 
@@ -49,6 +55,8 @@ public class IterationGoalAction extends ActionSupport implements CRUDAction {
     private EffortSumData origEstSum;
     
     //private AFTime origEstSum = new AFTime(0);
+    
+    private Map<Integer, List<BusinessTheme>> bliThemeCache;
     
     private String jsonData = "";
 
@@ -89,6 +97,8 @@ public class IterationGoalAction extends ActionSupport implements CRUDAction {
         
         // Load Hour Entry sums to iteration's BLIs.
         hourEntryBusiness.loadSumsToBacklogItems(iteration);
+        
+        bliThemeCache = businessThemeBusiness.loadThemeCacheByBacklogId(iterationGoal.getIteration().getId());
         
         return Action.SUCCESS;
     }
@@ -281,6 +291,22 @@ public class IterationGoalAction extends ActionSupport implements CRUDAction {
 
     public BacklogBusiness getBacklogBusiness() {
         return backlogBusiness;
+    }
+
+    public Map<Integer, List<BusinessTheme>> getBliThemeCache() {
+        return bliThemeCache;
+    }
+
+    public void setBliThemeCache(Map<Integer, List<BusinessTheme>> bliThemeCache) {
+        this.bliThemeCache = bliThemeCache;
+    }
+
+    public BusinessThemeBusiness getBusinessThemeBusiness() {
+        return businessThemeBusiness;
+    }
+
+    public void setBusinessThemeBusiness(BusinessThemeBusiness businessThemeBusiness) {
+        this.businessThemeBusiness = businessThemeBusiness;
     }
     
     

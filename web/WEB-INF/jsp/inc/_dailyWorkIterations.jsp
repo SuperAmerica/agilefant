@@ -117,7 +117,7 @@ $(document).ready(function() {
 					</display:column>
 
 					<display:column title="Progress" sortable="false" class="taskColumn">
-						<%@ include file="./_backlogItemStatusBar.jsp"%>						
+						<aef:backlogItemProgressBar backlogItem="${row}" bliListContext="${bliListContext}" dialogContext="${dialogContext}" hasLink="${true}"/>												
 					</display:column>
 
 					<display:column sortable="true" sortProperty="effortLeft"

@@ -446,6 +446,11 @@
     </tag>
 	
 	<tag-file>
+		<name>backlogItemProgressBar</name>
+		<path>/WEB-INF/tags/backlogItemProgressBar.tag</path>		
+	</tag-file>
+	
+	<tag-file>
 		<name>backlogDropdown</name>
 		<path>/WEB-INF/tags/backlogDropdown.tag</path>
 	</tag-file>

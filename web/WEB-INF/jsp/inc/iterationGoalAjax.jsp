@@ -15,7 +15,7 @@
 <div class="ajaxWindowTabsDiv">
 <ul class="ajaxWindowTabs">
 	<li><a href="#iterationGoalEditTab-${iterationGoalId}"><span><img src="static/img/edit.png" alt="Edit" /> Edit iteration</span></a></li>
-	<li><a href="#iterationGoalBliTab-${iterationGoalId}"><span><img src="static/img/backlog.png" alt="Backlog items" /> Backlog items</span></a></li>
+	<li><a href="#iterationGoalBliTab-${iterationGoalId}"><span><img src="static/img/bli.png" alt="Backlog items" /> Backlog items</span></a></li>
 </ul>
 
 <div id="iterationGoalEditTab-${iterationGoalId}" class="iterationNaviTab">
@@ -100,6 +100,108 @@ $(document).ready(function() {
 </div>
 
 <div id="iterationGoalBliTab-${iterationGoalId}" class="iterationNaviTab">
+
+<c:choose>
+<c:when test="${!(empty iterationGoal.backlogItems)}" >
+<display:table class="listTable"
+	name="iterationGoal.backlogItems" id="row" requestURI="editIterationGoal.action" defaultsort="4"
+	defaultorder="descending">					
+
+	<display:column title="Name" sortable="false" sortProperty="name" class="shortNameColumn">												
+		<c:forEach items="${bliThemeCache[row.id]}" var="businessTheme">
+            		<span class="businessTheme" title="${businessTheme.description}"><c:out value="${businessTheme.name}"/></span>            	
+            </c:forEach>
+		<%-- Link to go to the bli in the iteration page. --%>												
+		<ww:url id="editLink" action="editIteration" includeParams="none">
+			<ww:param name="iterationId" value="${iterationGoal.iteration.id}" />
+		</ww:url>
+		<ww:a href="%{editLink}#bli_${row.id}">
+			${aef:html(row.name)}
+		</ww:a>						
+	</display:column>
+
+	<display:column title="Responsibles" sortable="false" class="responsibleColumn">
+		<div><aef:responsibleColumn backlogItemId="${row.id}" /></div>
+	</display:column>
+
+	<display:column title="Priority" sortable="false" defaultorder="descending">
+		<ww:text name="backlogItem.priority.${row.priority}" />
+	</display:column>
+
+	<display:column title="Progress" sortable="false" class="taskColumn">
+		<aef:backlogItemProgressBar backlogItem="${row}" bliListContext="${bliListContext}" dialogContext="${dialogContext}" hasLink="${false}"/>		
+	</display:column>
+
+	<display:column title="Effort Left<br/>" sortable="false" sortProperty="effortLeft"
+		defaultorder="descending" >
+		<span style="white-space: nowrap">
+		<c:choose>
+			<c:when test="${row.effortLeft == null}">&mdash;</c:when>
+		<c:otherwise>${row.effortLeft}</c:otherwise>
+		</c:choose>
+		</span>
+	</display:column>
+
+	<display:column title="Original Estimate<br/>" sortable="false" sortProperty="originalEstimate"
+		defaultorder="descending">
+		<span style="white-space: nowrap">
+		<c:choose>
+		<c:when test="${row.originalEstimate == null}">&mdash;</c:when>
+		<c:otherwise>${row.originalEstimate}</c:otherwise>
+		</c:choose> </span>
+	</display:column>
+					
+	<c:choose>
+		<c:when test="${hourReport}">
+			<display:column title="Effort Spent" sortable="false" sortProperty="effortSpent" defaultorder="descending">
+				<span style="white-space: nowrap">									
+				<c:choose>
+					<c:when test="${row.effortSpent == null}">&mdash;</c:when>
+					<c:otherwise>
+						<c:out value="${row.effortSpent}" />
+						<c:set var="totalSum" value="${aef:calculateAFTimeSum(totalSum, row.effortSpent)}" />
+					</c:otherwise>
+				</c:choose>
+				</span>
+			</display:column>
+		</c:when>
+		<c:otherwise>			
+		</c:otherwise>
+	</c:choose>
+	
+	<display:footer>
+	<tr>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>						
+						
+		<%-- Effort left --%>
+		<td><c:out value="${effortLeftSum}" /></td>
+		<%-- Original estimate --%>
+		<td><c:out value="${originalEstimateSum}" /></td>
+		<c:if test="${hourReport}">
+			<td>
+				<c:choose>
+					<c:when test="${totalSum != null}">
+						<c:out value="${totalSum}" />
+					</c:when>
+					<c:otherwise>
+						0h
+					</c:otherwise>
+				</c:choose>
+			</td>
+		</c:if>
+	</tr>
+	</display:footer>
+</display:table>
+
+</c:when>
+<c:otherwise>
+No backlog items.
+</c:otherwise>
+</c:choose>
+
 </div>
 
 </div>

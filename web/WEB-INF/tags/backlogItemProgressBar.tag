@@ -1,42 +1,55 @@
-<a class="nameLink" onclick="handleTabEvent('backlogItemTabContainer-${row.id}-${bliListContext}','${dialogContext}',${row.id},1,'${bliListContext}'); return false;">
+<%@ include file="../jsp/inc/_taglibs.jsp"%>
+
+<%@tag description="Backlog item progress bar"%>
+
+<%@attribute name="backlogItem" type="fi.hut.soberit.agilefant.model.BacklogItem"%>
+<%@attribute name="bliListContext"%>
+<%@attribute name="dialogContext"%>
+<%@attribute name="hasLink"%>
+
+<c:if test="${hasLink}">
+<a class="nameLink" onclick="handleTabEvent('backlogItemTabContainer-${backlogItem.id}-${bliListContext}','${dialogContext}',${backlogItem.id},1,'${bliListContext}'); return false;">
+</c:if>
 <c:choose>
-	<c:when test="${!(empty row.tasks)}">		
-		${fn:length(row.tasks)} TODOs,
-		<aef:percentDone backlogItemId="${row.id}" />% done<br />
+	<c:when test="${!(empty backlogItem.tasks)}">		
+		${fn:length(backlogItem.tasks)} TODOs,
+		<aef:percentDone backlogItemId="${backlogItem.id}" />% done<br />
 	</c:when>
 	<c:otherwise>		
-		<ww:text name="backlogItem.state.${row.state}"/><br />
+		<ww:text name="backlogItem.state.${backlogItem.state}"/><br />
 	</c:otherwise>
-</c:choose>		
+</c:choose>
+<c:if test="${hasLink}">
 </a>
+</c:if>
 											
 <c:choose>
-	<c:when test="${row.state == 'NOT_STARTED'}" >
+	<c:when test="${backlogItem.state == 'NOT_STARTED'}" >
 		<ww:url id="imgUrl" action="drawExtendedBarChart" includeParams="none">
 		<ww:param name="notStarted" value="1" /> </ww:url> 
 		<div style="margin:0px auto;background-image:url(${imgUrl}); background-position: -16px -4px; height:8px; width:82px; background-repeat:no-repeat;border-right:1px solid #BFBFBF; "></div>
 	</c:when>
-	<c:when test="${row.state == 'STARTED'}" >
+	<c:when test="${backlogItem.state == 'STARTED'}" >
 		<ww:url id="imgUrl" action="drawExtendedBarChart" includeParams="none">
 		<ww:param name="started" value="1" /> </ww:url> 
 		<div style="margin:0px auto;background-image:url(${imgUrl}); background-position: -16px -4px; height:8px; width:82px; background-repeat:no-repeat;border-right:1px solid #BFBFBF; "></div>
 	</c:when>
-	<c:when test="${row.state == 'PENDING'}" >
+	<c:when test="${backlogItem.state == 'PENDING'}" >
 		<ww:url id="imgUrl" action="drawExtendedBarChart" includeParams="none">
 		<ww:param name="pending" value="1" /> </ww:url> 
 		<div style="margin:0px auto;background-image:url(${imgUrl}); background-position: -16px -4px; height:8px; width:82px; background-repeat:no-repeat;border-right:1px solid #BFBFBF; "></div>
 	</c:when>
-	<c:when test="${row.state == 'BLOCKED'}" >
+	<c:when test="${backlogItem.state == 'BLOCKED'}" >
 		<ww:url id="imgUrl" action="drawExtendedBarChart" includeParams="none">
 		<ww:param name="blocked" value="1" /> </ww:url> 
 		<div style="margin:0px auto;background-image:url(${imgUrl}); background-position: -16px -4px; height:8px; width:82px; background-repeat:no-repeat;border-right:1px solid #BFBFBF; "></div>
 	</c:when>
-	<c:when test="${row.state == 'IMPLEMENTED'}" >
+	<c:when test="${backlogItem.state == 'IMPLEMENTED'}" >
 		<ww:url id="imgUrl" action="drawExtendedBarChart" includeParams="none">
 		<ww:param name="implemented" value="1" /> </ww:url> 
 		<div style="margin:0px auto;background-image:url(${imgUrl}); background-position: -16px -4px; height:8px; width:82px; background-repeat:no-repeat;border-right:1px solid #BFBFBF; "></div>
 	</c:when>
-	<c:when test="${row.state == 'DONE'}" >
+	<c:when test="${backlogItem.state == 'DONE'}" >
 		<ww:url id="imgUrl" action="drawExtendedBarChart" includeParams="none">
 		<ww:param name="done" value="1" /> </ww:url> 
 		<div style="margin:0px auto;background-image:url(${imgUrl}); background-position: -16px -4px; height:8px; width:82px; background-repeat:no-repeat;border-right:1px solid #BFBFBF; "></div>
@@ -44,8 +57,8 @@
 </c:choose>
 							
 <c:choose>
-	<c:when test="${!(empty row.tasks)}">					
-		<aef:stateList backlogItemId="${row.id}" id="tsl" /> 
+	<c:when test="${!(empty backlogItem.tasks)}">					
+		<aef:stateList backlogItemId="${backlogItem.id}" id="tsl" /> 
 		<ww:url id="imgUrl" action="drawExtendedBarChart" includeParams="none">
 			<ww:param name="notStarted" value="${tsl['notStarted']}" />
 			<ww:param name="started" value="${tsl['started']}" />

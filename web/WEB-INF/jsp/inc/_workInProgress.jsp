@@ -76,10 +76,7 @@ Backlog items
 
 	<!-- Display progress -->
 	<display:column title="Progress" sortable="false" class="taskColumn">
-		<%@ include file="./_backlogItemStatusBar.jsp"%>
-		<!-- <aef:tasklist backlogItem="${row}"
-			contextViewName="${currentAction}" contextObjectId="${backlog.id}"
-			divId="${divId}" hourReport="${hourReport}"/> -->
+		<aef:backlogItemProgressBar backlogItem="${row}" bliListContext="${bliListContext}" dialogContext="${dialogContext}" hasLink="${true}"/>		
 	</display:column>
 
 	<!-- Display context -->

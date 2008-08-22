@@ -58,7 +58,7 @@ $(document).ready(function() {
 		</c:choose>
 				
 		<display:column sortable="true" sortProperty="name" title="Name" class="${nameClass}">												
-			<div>
+			<div id="bli_${row.id}">
 			<%--<a href="#" id="themeEdit_${backlog.id}_${row.id}" onclick="openThemeBusinessModal('themeEdit_${backlog.id}_${row.id}', 'editBacklogItemBusinessThemes.action',${row.id}, 0,${backlog.id}); return false;">
                <img class="themeImg" src="static/img/theme.png" alt="Edit themes" title="Edit themes" /></a>--%>
             <c:forEach items="${bliThemeCache[row.id]}" var="businessTheme">
@@ -94,8 +94,7 @@ $(document).ready(function() {
 		</display:column>
 
 		<display:column title="Progress" sortable="false" class="taskColumn">
-			<%@ include file="./_backlogItemStatusBar.jsp"%>
-			<!-- <aef:tasklist backlogItem="${row}" contextViewName="${currentAction}" contextObjectId="${backlog.id}" divId="${divId}" hourReport="${hourReport}" /> -->		
+			<aef:backlogItemProgressBar backlogItem="${row}" bliListContext="${bliListContext}" dialogContext="${dialogContext}" hasLink="${true}"/>			
 		</display:column>
 			
 		<display:column sortable="true" sortProperty="effortLeft" defaultorder="descending"

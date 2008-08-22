@@ -10,7 +10,7 @@
 	<li><a href="#iterationInfoTab-${iterationId}"><span><img src="static/img/info.png" alt="Info" /> Info</span></a></li>
 	<li><a href="#iterationEditTab-${iterationId}"><span><img src="static/img/edit.png" alt="Edit" /> Edit iteration</span></a></li>
 	<li><a href="#iterationThemesTab-${iterationId}"><span><img src="static/img/theme.png" alt="Iterations" /> Themes</span></a></li>
-	<li><a href="#iterationGoalsTab-${iterationId}"><span><img src="static/img/backlog.png" alt="Iterations" /> Iteration goals</span></a></li>
+	<li><a href="#iterationGoalsTab-${iterationId}"><span><img src="static/img/goal.png" alt="Iterations" /> Iteration goals</span></a></li>
 </ul>
 
 <div id="iterationInfoTab-${iterationId}" class="iterationNaviTab">
@@ -251,7 +251,7 @@ $(document).ready( function() {
 		fields: {
 			businessThemeIds: {cell: 0,type: 'select', data: getThemeData},
 			plannedSpendings: {cell: 1, type: 'text' },
-			reset: {cell: 4, type: 'reset'}
+			reset: {cell: 3, type: 'reset'}
 		}
 	});
 											  
@@ -274,7 +274,7 @@ $(document).ready( function() {
 					</div>
 					<div class="subItemContent">
 					<ww:form action="storeBacklogThemebinding" id="iterationBusinessThemesForm_${iteration.id}" method="post">
-					<ww:hidden name="backlogId" value="${iteration.project.id}"/>
+					<ww:hidden name="backlogId" value="${iteration.id}"/>
 					<input type="hidden" name="contextViewName" value="project" />
 					<p>
 					<c:choose>

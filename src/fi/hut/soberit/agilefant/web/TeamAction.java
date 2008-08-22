@@ -93,6 +93,27 @@ public class TeamAction extends ActionSupport implements CRUDAction {
         teamDAO.store(storable);
         return Action.SUCCESS;
     }
+    
+    public String ajaxStoreTeam() {
+        Team storable = new Team();
+        if (teamId > 0) {
+            storable = teamDAO.get(teamId);
+            if (storable == null) {
+                super.addActionError("Team not found!");
+                return CRUDAction.AJAX_ERROR;
+            }
+        }
+
+        // Fill the storable element
+        fillStorable(storable);
+
+        // Check, if action has errors.
+        if (super.hasActionErrors()) {
+            return CRUDAction.AJAX_ERROR;
+        }
+        teamDAO.store(storable);
+        return CRUDAction.AJAX_SUCCESS;
+    }
 
     protected void fillStorable(Team storable) {
         storable.setDescription(team.getDescription());

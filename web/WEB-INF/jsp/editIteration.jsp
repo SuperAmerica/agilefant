@@ -22,7 +22,7 @@
 <script type="text/javascript">
 $(document).ready(function() {        
     <c:forEach items="${openIterationGoalTabs}" var="openIterationGoal">
-        handleTabEvent("IterationGoalTabContainer-${openIterationGoal[0]}", "iterationGoal", ${openIterationGoal[0]}, ${openIterationGoal[1]});
+        handleTabEvent("iterationGoalTabContainer-${openIterationGoal[0]}", "iterationGoal", ${openIterationGoal[0]}, ${openIterationGoal[1]});
     </c:forEach>
 });
 </script>

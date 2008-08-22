@@ -152,6 +152,26 @@ public class UserAction extends ActionSupport implements CRUDAction {
         return Action.SUCCESS;
     }
 
+    public String ajaxStoreUser() {
+        createTeamList();
+        User storable = new User();
+        if (userId > 0) {
+            storable = userDAO.get(userId);
+            if (storable == null) {
+                super.addActionError(super.getText("user.notFound"));
+                return CRUDAction.AJAX_ERROR;
+            }
+        }
+        this.fillStorable(storable);
+        if (super.hasActionErrors()) {
+            return CRUDAction.AJAX_ERROR;
+        }
+
+        userDAO.store(storable);
+
+        return CRUDAction.AJAX_SUCCESS;
+    }
+    
     protected void fillStorable(User storable) {
         String md5Pw = null;
 

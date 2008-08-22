@@ -15,7 +15,7 @@
 <div class="ajaxWindowTabsDiv">
 <ul class="ajaxWindowTabs">
 	<li><a href="#iterationGoalEditTab-${iterationGoalId}"><span><img src="static/img/edit.png" alt="Edit" /> Edit iteration</span></a></li>
-	<li><a href="#iterationGoalBliTab-${iterationGoalId}"><span><img src="static/img/bli.png" alt="Backlog items" /> Backlog items</span></a></li>
+	<li><a href="#iterationGoalBliTab-${iterationGoalId}"><span><img src="static/img/bli2.png" alt="Backlog items" /> Backlog items</span></a></li>
 </ul>
 
 <div id="iterationGoalEditTab-${iterationGoalId}" class="iterationNaviTab">
@@ -33,7 +33,7 @@ $(document).ready(function() {
 	<tr>
 	<td>
 	<div class="subItems" style="margin-top: 0px; width: 725px;">
-	<div id="editIterationForm" class="validateWrapper validateIteration">
+	<div id="editIterationForm" class="validateWrapper validateIterationGoal">
 <ww:form id="iterationGoalEditForm_${iterationGoal.id}" action="ajaxStoreIterationGoal"  method="post">
 	<ww:hidden name="iterationGoalId" value="${iterationGoal.id}" />
 	<table class="formTable">

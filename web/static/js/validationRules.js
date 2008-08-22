@@ -409,6 +409,7 @@ var validationRulesByHTMLClass = {
     'validateNewIteration': agilefantValidationRules.iteration,
     'validateIteration': agilefantValidationRules.iteration,
     'validateNewIterationGoal': agilefantValidationRules.iterationGoal,
+    'validateIterationGoal': agilefantValidationRules.iterationGoal,
     'validateNewProduct': agilefantValidationRules.product,
     'validateNewProject': agilefantValidationRules.project,
     'validateProject': agilefantValidationRules.project,

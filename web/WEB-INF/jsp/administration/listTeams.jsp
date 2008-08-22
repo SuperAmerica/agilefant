@@ -2,6 +2,16 @@
 <%@ include file="../inc/_header.jsp"%>
 <aef:menu navi="administration" subnavi="teams" pageHierarchy="${pageHierarchy}" />
 
+<aef:openDialogs context="team" id="openTeamTabs" />
+
+<script type="text/javascript">
+$(document).ready(function() {        
+    <c:forEach items="${openTeamTabs}" var="openTeam">
+        handleTabEvent("teamTabContainer-${openTeam[0]}", "team", ${openTeam[0]}, ${openTeam[1]});
+    </c:forEach>
+});
+</script>
+
 <aef:userList />
 
 <h2>Teams</h2>
@@ -12,12 +22,11 @@
 	<display:table name="${teamList}" id="row"
 			requestURI="listTeams.action" defaultsort="1">
 			<display:column sortable="true" title="Name" sortProperty="name">
-				<ww:url id="editLink" action="editTeam" includeParams="none">
-					<ww:param name="teamId" value="${row.id}" />
-				</ww:url>
-				<ww:a href="%{editLink}">
-					<c:out value="${row.name}" />
-				</ww:a>
+				<a class="nameLink"
+					onclick="handleTabEvent('teamTabContainer-${row.id}', 'team', ${row.id}, 0); return false;">
+				${aef:html(row.name)} </a>
+				<div id="teamTabContainer-${row.id}"
+					style="overflow: visible; white-space: nowrap; width: 0px;"></div>
 			</display:column>
 
 			<display:column title="# of users" sortable="true">

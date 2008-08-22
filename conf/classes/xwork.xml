@@ -586,6 +586,20 @@
 		<action name="storeUser" method="store" class="userAction">
 			<result type="redirect-action">listUsers</result>			
 		</action>
+		<action name="ajaxStoreUser" method="ajaxStoreUser"
+			class="userAction">		
+			<result name="ajax_error" type="httpheader">
+				<param name="status">400</param>
+			</result>
+			<result name="ajax_success" type="dispatcher">
+				<param name="status">200</param>
+				<param name="location">/WEB-INF/jsp/inc/ajaxUserResult.jsp</param>
+			</result>
+		</action>
+		<action name="userTabs" method="edit"
+			class="userAction">
+			<result>/WEB-INF/jsp/inc/userAjax.jsp</result>
+		</action>
 
 		<!-- /User actions -->
 
@@ -608,6 +622,20 @@
 		<action name="storeTeam" method="store" class="teamAction">
 			<result type="redirect-action">listTeams</result>
 			<!--<result name="error">/WEB-INF/jsp/editTeam.jsp</result>-->
+		</action>
+		<action name="ajaxStoreTeam" method="ajaxStoreTeam"
+			class="teamAction">		
+			<result name="ajax_error" type="httpheader">
+				<param name="status">400</param>
+			</result>
+			<result name="ajax_success" type="dispatcher">
+				<param name="status">200</param>
+				<param name="location">/WEB-INF/jsp/inc/ajaxTeamResult.jsp</param>
+			</result>
+		</action>
+		<action name="teamTabs" method="edit"
+			class="teamAction">
+			<result>/WEB-INF/jsp/inc/teamAjax.jsp</result>
 		</action>
 		<!-- /Team actions -->
 

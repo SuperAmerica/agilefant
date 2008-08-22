@@ -38,8 +38,6 @@ public class BusinessThemeAction extends ActionSupport implements CRUDAction {
     
     private String[] plannedSpendings;
     
-    private String ContextViewName;
-    
     private String jsonData = "";
     
 
@@ -183,7 +181,7 @@ public class BusinessThemeAction extends ActionSupport implements CRUDAction {
         if(businessThemeIds != null && backlogId > 0 && plannedSpendings != null) {
             businessThemeBusiness.multipleAddOrUpdateThemeToBacklog(businessThemeIds, backlogId, plannedSpendings);
         }
-        return Action.SUCCESS;
+        return CRUDAction.AJAX_SUCCESS;
     }
     
     public String storeBacklogItemThemes() {
@@ -268,14 +266,6 @@ public class BusinessThemeAction extends ActionSupport implements CRUDAction {
     
     public void setBusinessThemeIds(int[] businessThemeIds) {
         this.businessThemeIds = businessThemeIds;
-    }
-
-    public String getContextViewName() {
-        return ContextViewName;
-    }
-
-    public void setContextViewName(String contextViewName) {
-        ContextViewName = contextViewName;
     }
 
     public String getJsonData() {

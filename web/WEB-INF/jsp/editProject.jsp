@@ -524,6 +524,7 @@ $(document).ready(function() {
 											</table>
 										</div>
 										<div class="subItemContent">
+										<div class="validateWrapper validateEmpty">
 										<ww:form action="storeBacklogThemebinding" method="post">
 										<ww:hidden name="backlogId" value="${project.id}"/>
 										<input type="hidden" name="contextViewName" value="project" />
@@ -540,7 +541,7 @@ $(document).ready(function() {
 											<display:column sortable="true" sortProperty="boundEffort" title="Planned spending">
 												<c:choose>
 													<c:when test="${row.relativeBinding == true}">
-														<span style="display:none;">${row.percentage}</span>
+														<span style="display:none;">${row.percentage}%</span>
 														<c:out value="${row.boundEffort}"/>
 														(<c:out value="${row.percentage}"/>%)
 													</c:when>
@@ -562,7 +563,8 @@ $(document).ready(function() {
 											</c:choose>
 											<input id="backlogThemeSave" style="display: none; margin-left: 2px;" type="submit" value="Save" />
 											</div>
-											</ww:form>				
+											</ww:form>	
+											</div>			
 											</div>
 											<c:if test="${!empty iterationThemes}">
 											<div class="businessThemeTableWrapper">

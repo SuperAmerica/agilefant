@@ -1006,11 +1006,6 @@
         </action>
         <action name="storeBacklogThemebinding" method="storeThemeBinding"
         	class="businessThemeAction">
-       		<result type="redirect-action">
-				<param name="actionName">contextView</param>
-				<param name="contextObjectId">${backlogId}</param>
-				<param name="contextName">${contextViewName}</param>
-			</result>	
        	</action>
        	<action name="storeBacklogItemThemes" method="storeBacklogItemThemes"
         	class="businessThemeAction">
@@ -1027,6 +1022,11 @@
 		
 		<!-- Product timeline actions -->
 		<action name="timelineData" method="productData"
+            class="timelineAction">
+            <result>/WEB-INF/jsp/inc/timelineData.jsp</result>
+        </action>
+        
+        <action name="timelineThemeData" method="themeData"
             class="timelineAction">
             <result>/WEB-INF/jsp/inc/timelineData.jsp</result>
         </action>

@@ -304,7 +304,7 @@ $(document).ready( function() {
 											  fields: {
 											  	businessThemeIds: {cell: 0,type: 'select', data: getThemeData},
 											  	plannedSpendings: {cell: 1, type: 'text' },
-											  	reset: {cell: 4, type: 'reset'}
+											  	reset: {cell: 3, type: 'reset'}
 											  }
 											 });
 											  
@@ -325,6 +325,7 @@ $(document).ready( function() {
 						</table>
 					</div>
 					<div class="subItemContent">
+					<div class="validateWrapper validateEmpty">
 					<ww:form action="storeBacklogThemebinding" id="iterationBusinessThemesForm" method="post">
 					<ww:hidden name="backlogId" value="${iteration.id}"/>
 					<input type="hidden" name="contextViewName" value="iteration" />
@@ -341,7 +342,7 @@ $(document).ready( function() {
 							<display:column sortable="true" sortProperty="boundEffort" title="Planned spending">
 								<c:choose>
 									<c:when test="${row.relativeBinding == true}">
-										<span style="display:none;">${row.percentage}</span>
+										<span style="display:none;">${row.percentage}%</span>
 										<c:out value="${row.boundEffort}"/>
 										(<c:out value="${row.percentage}"/>%)
 									</c:when>
@@ -349,7 +350,7 @@ $(document).ready( function() {
 								</c:choose>
 							</display:column>
 							<display:column sortable="true" sortProperty="businessTheme.metrics.donePercentage" title="Progress">
-								${row.businessTheme.metrics.donePercentage} (${row.businessTheme.metrics.numberOfDoneBlis} / ${row.businessTheme.metrics.numberOfBlis})
+								${row.businessTheme.metrics.donePercentage}% (${row.businessTheme.metrics.numberOfDoneBlis} / ${row.businessTheme.metrics.numberOfBlis})
 							</display:column>
 							<display:column sortable="false" title="Actions">
 								<span class="uniqueId" style="display: none;">${row.id}</span>
@@ -367,6 +368,7 @@ $(document).ready( function() {
 						</p>
 						<input id="backlogThemeSave" style="display: none"; type="submit" value="Save" />
 						</ww:form>				
+						</div>
 						</div>
 				</div>
 			</c:if>

@@ -585,7 +585,12 @@ $(document).ready(function() {
 														</c:choose>
 													</display:column>
 													<display:column sortable="true" title="Iteration" sortProperty="backlog.name">
-														<c:out value="${row.backlog.name}"/>
+														<ww:url id="editLink" action="editIteration" includeParams="none">
+															<ww:param name="iterationId" value="${row.backlog.id}" />
+														</ww:url>
+														<ww:a href="%{editLink}&contextViewName=editProduct&contextObjectId=${project.id}">						
+															<c:out value="${row.backlog.name}"/>
+														</ww:a>
 													</display:column>
 												</display:table>
 										    </div>

@@ -162,7 +162,20 @@ No backlog items have been tagged with this theme.
 <display:table class="listTable" name="businessTheme.backlogBindings" id="row" style="width:700px">
 	<!-- Display name -->
 	<display:column title="Name" style="width:355px">
-		<c:out value="${row.backlog.name}" />											
+		<c:if test="${aef:isIteration(row.backlog)}">
+			<ww:url id="editProjLink" action="editProject" includeParams="none">
+				<ww:param name="projectId" value="${row.backlog.parent.id}" />
+			</ww:url>
+			<ww:a href="%{editProjLink}">						
+				<c:out value="${row.backlog.parent.name}"/>
+			</ww:a>&nbsp;-&nbsp;
+		</c:if>
+		<ww:url id="editLink" action="editIteration" includeParams="none">
+			<ww:param name="iterationId" value="${row.backlog.id}" />
+		</ww:url>
+		<ww:a href="%{editLink}">						
+			<c:out value="${row.backlog.name}"/>
+		</ww:a>										
 	</display:column>
 	<display:column title="Allocation" style="width:100px">
 	<c:choose>

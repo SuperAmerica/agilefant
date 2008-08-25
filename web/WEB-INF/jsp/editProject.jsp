@@ -1,6 +1,7 @@
 <%@ include file="./inc/_taglibs.jsp"%>
 <%@ include file="./inc/_header.jsp"%>
 
+<aef:projectTypeList id="projectTypes"/>
 <aef:openDialogs context="iteration" id="openIterations" />
 
 <c:choose>
@@ -73,13 +74,6 @@ $(document).ready(function() {
 </c:if>
 
 <%--  TODO: fiksumpi virheenkäsittely --%>
-<c:choose>
-	<c:when test="${empty projectTypes}">
-		<ww:url id="workTypeLink" action="createProjectType"
-			includeParams="none" />	
-				No project types available. <ww:a href="%{workTypeLink}">Create a new project type &raquo;</ww:a>
-	</c:when>
-	<c:otherwise>
 		<aef:productList />
 			<h2><c:out value="${project.name}" /></h2>
 				<table>
@@ -197,7 +191,16 @@ $(document).ready(function() {
 												</tr>
 												<tr>
 													<th class="info1">Project type</th>
-													<td class="info3" ondblclick="return editProject();"><c:out value="${project.projectType.name}" /></td>													
+													<td class="info3" ondblclick="return editProject();">
+													<c:choose>
+													<c:when test="${(!empty project.projectType)}">
+														<c:out value="${project.projectType.name}" />
+													</c:when>
+													<c:otherwise>
+														undefined
+													</c:otherwise>
+													</c:choose>
+													</td>													
 												</tr>
 												<tr>
 								    				<th class="info1">Default overhead</th>
@@ -280,12 +283,28 @@ $(document).ready(function() {
 													</tr>
 													<tr>
 														<td>Project type</td>
-														<td></td>
+														<td></td>														
+														<%-- If project types don't exist default value is 0--%>
 														<td colspan="2">
-															<ww:select name="projectTypeId"
-																list="#attr.projectTypes" listKey="id" listValue="name"
-																value="${project.projectType.id}" />
-														</td>
+														<c:choose>
+															<c:when test="${!empty projectTypes}">
+																<c:set var="typeId" value="0" scope="page" />
+																<c:if test="${projectTypeId > 0}">
+																	<c:set var="typeId" value="${projectTypeId}" />
+																</c:if>
+																<c:if test="${!empty project.projectType}">
+																	<c:set var="typeId" value="${project.projectType.id}"
+																		scope="page" />
+																</c:if>
+																<ww:select headerKey="0" headerValue="(undefined)"
+																	name="project.projectType.id" list="#attr.projectTypes"
+																	listKey="id" listValue="name" value="${typeId}" />
+															</c:when>
+															<c:otherwise>
+																(undefined)
+															</c:otherwise>
+														</c:choose>
+														</td>																																																																																										
 													</tr>
 													<tr>
 														<td>Status</td>
@@ -704,8 +723,6 @@ $(document).ready(function() {
 				</td>
 			</tr>
 		</table>
-	</c:otherwise>
-</c:choose>
 
 <%-- Hour reporting here - Remember to expel David H. --%>
 

@@ -96,7 +96,7 @@ public class ProjectActionTest extends SpringTestCase {
         projectAction.setProductId(product.getId());
         projectAction.setProjectTypeId(projectType.getId());
         assertEquals(0, project.getAssignments().size());
-        assertEquals("success", projectAction.store());
+        assertEquals("ajax_success", projectAction.store());
         assertEquals(2, project.getAssignments().size());
     }
     
@@ -110,7 +110,7 @@ public class ProjectActionTest extends SpringTestCase {
         projectAction.setProductId(product.getId());
         projectAction.setProjectTypeId(projectType.getId());
         assertEquals(0, project.getAssignments().size());
-        assertEquals("success", projectAction.store());
+        assertEquals("ajax_success", projectAction.store());
         assertEquals(1, project.getAssignments().size());
     }
 
@@ -124,17 +124,7 @@ public class ProjectActionTest extends SpringTestCase {
         assertEquals("Test Name", projectAction.getProject().getName());
         assertEquals("Test Description", projectAction.getProject()
                 .getDescription());
-    }
-
-    /**
-     * Test edit operation with invalid project type.
-     */
-    public void testEdit_invalidProjectType() {
-        ((Project) project).setProjectType(null);
-        projectTypeDAO.remove(projectType.getId());
-        projectAction.setProjectId(project.getId());
-        assertEquals("error", projectAction.edit());
-    }
+    }    
 
     /**
      * Test edit operation with invalid project id.
@@ -165,7 +155,7 @@ public class ProjectActionTest extends SpringTestCase {
         projectTypeDAO.store(projectType2);
 
         // execute store operation
-        assertEquals("success", projectAction.store());
+        assertEquals("ajax_success", projectAction.store());
     }
 
     /**
@@ -180,11 +170,11 @@ public class ProjectActionTest extends SpringTestCase {
 
         // check for null startdate
         projectAction.setStartDate(null);
-        assertEquals("error", projectAction.store());
+        assertEquals("ajax_error", projectAction.store());
 
         // check for invalid startdate
         projectAction.setStartDate("ABC");
-        assertEquals("error", projectAction.store());
+        assertEquals("ajax_error", projectAction.store());
     }
 
     /**
@@ -199,11 +189,11 @@ public class ProjectActionTest extends SpringTestCase {
 
         // check for null enddate
         projectAction.setEndDate(null);
-        assertEquals("error", projectAction.store());
+        assertEquals("ajax_error", projectAction.store());
 
         // check for invalid enddate
         projectAction.setEndDate("2007-11-13 06:00 ABC");
-        assertEquals("error", projectAction.store());
+        assertEquals("ajax_error", projectAction.store());
 
     }
 
@@ -219,7 +209,7 @@ public class ProjectActionTest extends SpringTestCase {
         projectAction.getProject().setName("Updated Name");
 
         // execute store operation
-        assertEquals("error", projectAction.store());
+        assertEquals("ajax_error", projectAction.store());
     }
 
     /**
@@ -236,7 +226,7 @@ public class ProjectActionTest extends SpringTestCase {
         projectAction.getProject().setName(null);
 
         // execute store operation
-        assertEquals("error", projectAction.store());
+        assertEquals("ajax_error", projectAction.store());
     }
 
     /**
@@ -254,7 +244,7 @@ public class ProjectActionTest extends SpringTestCase {
         projectAction.setProjectTypeId(-100);
 
         // execute store operation
-        assertEquals("error", projectAction.store());
+        assertEquals("ajax_success", projectAction.store());
     }
 
     /**

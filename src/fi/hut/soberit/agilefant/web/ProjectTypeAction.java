@@ -85,7 +85,7 @@ public class ProjectTypeAction extends ActionSupport implements CRUDAction {
             return Action.ERROR;
         }
         for (Project d : projectDAO.getAll()) {
-            if (d.getProjectType().getId() == projectTypeId) {
+            if (d.getProjectType() != null &&  d.getProjectType().getId() == projectTypeId) {
                 super.addActionError(super
                         .getText("projectType.projectsLinked"));
                 return Action.ERROR;

@@ -141,12 +141,12 @@ public class ProductAction extends ActionSupport implements CRUDAction {
             storable = productDAO.get(productId);
             if (storable == null) {
                 super.addActionError(super.getText("product.notFound"));
-                return Action.ERROR;
+                return CRUDAction.AJAX_ERROR;
             }
         }
         this.fillStorable(storable);
         if (super.hasActionErrors()) {
-            return Action.ERROR;
+            return CRUDAction.AJAX_ERROR;
         }
 
         if (productId == 0) {
@@ -154,7 +154,7 @@ public class ProductAction extends ActionSupport implements CRUDAction {
         } else {
             productDAO.store(storable);
         }
-        return Action.SUCCESS;
+        return CRUDAction.AJAX_SUCCESS;
     }
 
     protected void fillStorable(Product storable) {

@@ -143,6 +143,19 @@
 	</tag>
 	
 	<tag>
+		<name>projectTypeList</name>
+		<tag-class>fi.hut.soberit.agilefant.web.tag.ProjectTypeListTag</tag-class>
+		<body-content>JSP</body-content>
+		<description>
+			Lists all project types
+	    </description>
+	    <attribute>
+	    	<name>id</name>
+	    	<required>true</required>	    
+	    </attribute>
+	</tag>
+	
+	<tag>
 		<name>responsibleColumn</name>
 		<tag-class>fi.hut.soberit.agilefant.web.tag.ResponsibleColumnTag</tag-class>
 		<body-content>JSP</body-content>

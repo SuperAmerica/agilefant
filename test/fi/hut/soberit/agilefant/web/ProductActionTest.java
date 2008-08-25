@@ -160,7 +160,7 @@ public class ProductActionTest extends SpringTestCase {
         String result = this.productAction.store();
         super
                 .assertEquals("2 store() was unsuccessful", result,
-                        Action.SUCCESS);
+                        CRUDAction.AJAX_SUCCESS);
         super
                 .assertEquals(
                         "3 The total number of stored products didn't grow up with store().",
@@ -204,7 +204,7 @@ public class ProductActionTest extends SpringTestCase {
     public void testStore_withoutCreate() {
         String result = this.productAction.store();
         super.assertEquals("22 store() without create() was successful",
-                Action.ERROR, result);
+                CRUDAction.AJAX_ERROR, result);
     }
 
     /*

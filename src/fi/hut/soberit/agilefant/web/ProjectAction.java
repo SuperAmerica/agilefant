@@ -159,10 +159,6 @@ public class ProjectAction extends ActionSupport implements CRUDAction {
     public String edit() {       
         Date startDate;
         this.prepareProjectTypes();
-        if (this.projectTypes.isEmpty()) {
-            super.addActionError("project.projectTypesNotFound");
-            return Action.ERROR;
-        }
         project = projectDAO.get(projectId);
 
         if (project == null) {
@@ -234,7 +230,7 @@ public class ProjectAction extends ActionSupport implements CRUDAction {
             storable = projectDAO.get(projectId);
             if (storable == null) {
                 super.addActionError(super.getText("project.notFound"));
-                return Action.ERROR;
+                return CRUDAction.AJAX_ERROR;
             }
             if(storable.getProduct() != null && productId > 0 &&
                     storable.getProduct().getId() != productId) {
@@ -246,15 +242,12 @@ public class ProjectAction extends ActionSupport implements CRUDAction {
             this.fillStorable(storable);
         } catch (ParseException e) {
             super.addActionError(e.toString());
-            return Action.ERROR;
         }
 
         if (super.hasActionErrors()) {
-            return Action.ERROR;
+            return CRUDAction.AJAX_ERROR;
         }
-        // AT ja MN: aika rumaa koodia... project-olion on oltava kannassa ennen
-        // kuin
-        // Assignmentit tehdään.
+        // project-olion on oltava kannassa ennen kuin Assignmentit tehdään.
         if (projectId == 0) {
             projectId = (Integer) projectDAO.create(storable);
         } else {
@@ -262,7 +255,7 @@ public class ProjectAction extends ActionSupport implements CRUDAction {
         }
         backlogBusiness.setAssignments(selectedUserIds, this.assignments, projectDAO
                 .get(projectId));
-        return Action.SUCCESS;
+        return CRUDAction.AJAX_SUCCESS;
     }
 
     public String ajaxStoreProject() {
@@ -284,10 +277,7 @@ public class ProjectAction extends ActionSupport implements CRUDAction {
 
         if (super.hasActionErrors()) {
             return CRUDAction.AJAX_ERROR;
-        }
-        // AT ja MN: aika rumaa koodia... project-olion on oltava kannassa ennen
-        // kuin
-        // Assignmentit tehdään.
+        }        
         if (projectId == 0) {
             projectId = (Integer) projectDAO.create(storable);
         } else {
@@ -384,20 +374,29 @@ public class ProjectAction extends ActionSupport implements CRUDAction {
             // product.getProjects().add(storable);
         }
 
+        if (this.project.getProjectType() != null) {
+            ProjectType type = projectTypeDAO.get(this.project
+                    .getProjectType().getId());
+            storable.setProjectType(type);
+        }
+        /*
         if (storable.getProjectType() == null
                 || storable.getProjectType().getId() != projectTypeId) {
             ProjectType projectType = null;
             if (projectTypeId > 0) {
                 projectType = projectTypeDAO.get(projectTypeId);
             }
-            if (projectType != null) {
-                storable.setProjectType(projectType);
-            } else {
+            storable.setProjectType(projectType);
+            
+            
+            else {
                 super.addActionError(super
                         .getText("project.missingProjectType"));
                 return;
             }
+            
         }
+        */
         storable.setStatus(project.getStatus());
         storable.setEndDate(endDate, dateFormat);
         storable.setStartDate(startDate, dateFormat);

@@ -156,14 +156,14 @@ Agilefant
 
     <li>
     <c:choose>
-        <c:when test="${hasProducts && hasProjectTypes}">
+        <c:when test="${hasProducts}">
             <ww:url id="createLink" action="ajaxCreateProject"
                 includeParams="none" />
             <ww:a href="%{createLink}" title="Create a new project" cssClass="openCreateDialog openProjectDialog">Project &raquo;</ww:a>
         </c:when>
         <c:otherwise>
             <span class="inactive"
-                title="Create a product and a project type before creating a project">
+                title="Create a product before creating a project">
             Project &raquo;</span>
         </c:otherwise>
     </c:choose>

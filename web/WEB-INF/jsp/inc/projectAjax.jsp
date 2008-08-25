@@ -20,6 +20,7 @@
 <ww:hidden name="productId" value="${project.product.id}" />
 
 <aef:productList />
+<aef:projectTypeList id="projectTypes"/>
 
 <table>
 	<tbody>
@@ -59,9 +60,25 @@
 						<td>Project type</td>
 						<td></td>
 						<td colspan="2">
-							<ww:select name="projectTypeId"
-								list="#attr.projectTypes" listKey="id" listValue="name"
-								value="${project.projectType.id}" /></td>
+						<c:choose>
+							<c:when test="${!empty projectTypes}">
+								<c:set var="typeId" value="0" scope="page" />
+								<c:if test="${projectTypeId > 0}">
+									<c:set var="typeId" value="${projectTypeId}" />
+								</c:if>
+								<c:if test="${!empty project.projectType}">
+									<c:set var="typeId" value="${project.projectType.id}"
+										scope="page" />
+								</c:if>
+								<ww:select headerKey="0" headerValue="(undefined)"
+									name="project.projectType.id" list="#attr.projectTypes"
+									listKey="id" listValue="name" value="${typeId}" />
+							</c:when>
+							<c:otherwise>
+								(undefined)
+							</c:otherwise>
+						</c:choose>							
+						</td>
 					</tr>
 					<tr>
 						<td>Status</td>

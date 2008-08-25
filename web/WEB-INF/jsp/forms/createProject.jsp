@@ -1,6 +1,7 @@
 <%@ include file="../inc/_taglibs.jsp"%>
 
 <aef:productList />
+<aef:projectTypeList id="projectTypes"/>
 
 <ww:date name="%{new java.util.Date()}" id="start"
 	format="%{getText('webwork.shortDateTime.format')}" />
@@ -9,12 +10,7 @@
 
 <div class="validateWrapper validateNewProject">
 <ww:form action="storeNewProject" method="post">
-<c:choose>
-	<c:when test="${empty projectTypes}">
-				<p>No project types available. First create a new project type.</p>
-	</c:when>
-	<c:otherwise>
-		<div id="editProjectForm">
+	<div id="editProjectForm">
 			<ww:hidden name="projectId" value="${project.id}" />
 			<table class="formTable">
 				<tr>
@@ -44,9 +40,18 @@
 				<tr>
 					<td>Project type</td>
 					<td></td>
-					<td colspan="2"><ww:select name="projectTypeId"
+					<td colspan="2">
+						<ww:select headerKey="0" headerValue="(undefined)"
+							name="project.projectType.id"
+							list="#attr.projectTypes" listKey="id" listValue="name"
+							value="${project.projectType.id}" />						
+					<%--
+						<select name="project.projectType.id"
 						list="#attr.projectTypes" listKey="id" listValue="name"
-						value="${project.projectType.id}" /></td>
+						value="${project.projectType.id}" />
+						<span>(undefined)</span>
+					--%>
+					</td>
 				</tr>
 				<tr>
 					<td>Status</td>
@@ -227,7 +232,5 @@
 				</tr>
 			</table>
 		</div>
-	</c:otherwise>
-</c:choose>
 </ww:form>
 </div>

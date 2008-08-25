@@ -239,10 +239,25 @@ var productId = ${product.id};
 							${aef:html(row.name)}
 						</ww:a>
 					</display:column>					
-
+					
+					<display:column sortable="true" sortProperty="projectType.name"
+						title="Project type">
+						<div>
+						<c:choose>
+						<c:when test="${(!empty row.projectType)}">
+							${aef:html(row.projectType.name)}
+						</c:when>
+						<c:otherwise>
+							undefined
+						</c:otherwise>
+						</c:choose>
+						</div>
+					</display:column>
+					
+					<%--
 					<display:column sortable="true" sortProperty="projectType.name"
 						title="Project type" property="projectType.name" />
-
+					--%>
 					<display:column sortable="false" title="Iter. info">
 						<c:out value="${row.metrics.numberOfOngoingIterations}" /> / 
 						<c:out value="${row.metrics.numberOfAllIterations}" />

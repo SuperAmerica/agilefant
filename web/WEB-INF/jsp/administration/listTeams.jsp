@@ -15,13 +15,27 @@ $(document).ready(function() {
 <aef:userList />
 
 <h2>Teams</h2>
-<p><ww:a href="ajaxCreateTeam.action" cssClass="openCreateDialog openTeamDialog">Create a new team &raquo;</ww:a></p>
 
-<p><c:choose>
-	<c:when test="${!empty teamList}">
+<%--<p><ww:a href="ajaxCreateTeam.action" cssClass="openCreateDialog openTeamDialog">Create a new team &raquo;</ww:a></p>--%>
+
+<table>
+	<tr>
+	<td>
+	<div class="subItems" style="width: 525px;">
+	<div class="subItemHeader">
+		<table cellspacing="0" cellpadding="0">
+			<tr>
+				<td class="header">Teams					
+					<ww:a href="ajaxCreateTeam.action" cssClass="openCreateDialog openTeamDialog">Create new &raquo;</ww:a>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="subItemContent">
+	<aef:userList />
 	<display:table name="${teamList}" id="row"
 			requestURI="listTeams.action" defaultsort="1">
-			<display:column sortable="true" title="Name" sortProperty="name">
+			<display:column sortable="true" title="Name" sortProperty="name" style="width: 395px;">
 				<a class="nameLink"
 					onclick="handleTabEvent('teamTabContainer-${row.id}', 'team', ${row.id}, 0); return false;">
 				${aef:html(row.name)} </a>
@@ -34,6 +48,7 @@ $(document).ready(function() {
 			</display:column>
 
 			<display:column title="Actions" sortable="false">
+				<img src="static/img/edit.png" alt="Edit" title="Edit" style="cursor: pointer;" onclick="handleTabEvent('teamTabContainer-${row.id}', 'team', ${row.id}, 0); return false;" />
 				<ww:url id="deleteLink" action="deleteTeam" includeParams="none">
 					<ww:param name="teamId" value="${row.id}" />
 				</ww:url>
@@ -42,9 +57,11 @@ $(document).ready(function() {
 				</ww:a>
 			</display:column>
 		</display:table>
-	</c:when>
-	<c:otherwise>
-No teams.
-</c:otherwise>
-</c:choose></p>
+	</div>
+
+	</div>
+</td>
+</tr>
+</table>
+
 <%@ include file="../inc/_footer.jsp"%>

@@ -144,7 +144,7 @@ public class ChartBusinessImpl implements ChartBusiness {
                 Day.class);
         TimeSeries currentDaySeries = new TimeSeries("Current day", Day.class);
         TimeSeries deltaEffortLeftSeries = new TimeSeries("Scoping", Second.class);
-        TimeSeries expectedSeries = new TimeSeries("Expected velocity", Day.class);        
+        TimeSeries expectedSeries = new TimeSeries("Predicted velocity", Day.class);        
         
         GregorianCalendar i = new GregorianCalendar();
         GregorianCalendar end = new GregorianCalendar();

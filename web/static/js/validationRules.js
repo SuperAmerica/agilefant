@@ -390,11 +390,25 @@ var agilefantValidationRules = {
            }
        }
     },
-    team: {
+    newTeam: {
         rules: {
             "team.name": {
                 required: true,
                 unique: [ "name", "allTeams" ]
+            }
+        },
+        messages: {
+            "team.name": {
+                required: "Please enter a name",
+                unique: "Team name already in use"
+            }
+        }
+    },
+    team: {
+        rules: {
+            "team.name": {
+                required: true,
+                unique: [ "name", "allTeams", { exclude: true, excludeField: 'input[name=teamId]' } ]
             }
         },
         messages: {
@@ -475,7 +489,8 @@ var validationRulesByHTMLClass = {
     'validateNewProject': agilefantValidationRules.project,
     'validateProject': agilefantValidationRules.project,
     'validateNewProjectType': agilefantValidationRules.projectType,
-    'validateNewTeam': agilefantValidationRules.team,
+    'validateNewTeam': agilefantValidationRules.newTeam,
+    'validateTeam': agilefantValidationRules.team,
     'validateNewTheme': agilefantValidationRules.theme,
     'validateTheme': agilefantValidationRules.theme,
     'validateNewUser': agilefantValidationRules.newUser,

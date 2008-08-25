@@ -35,6 +35,18 @@ jQuery.validator.addMethod("before", function(value, element, param) {
 }, "Date 1 must be before date 2");
 
 /**
+ * param should be the selector of the other field.
+ */
+jQuery.validator.addMethod("equalField",function(value, element, param) {
+	var elem1 = $(element);
+    var elem2 = elem1.parents('form:eq(0)').find(param);
+    if (elem2 == null || elem1.val() == elem2.val()) {
+    	return true;
+    }
+    return false;
+}, "Field values don't match");
+
+/**
  * Unique field validator.
  * param[0] should be the field name
  * param[1] should be the name of the cached json object
@@ -277,14 +289,14 @@ var agilefantValidationRules = {
            }
        }
     },
-    user: {
+    newUser: {
        rules: {
            "user.fullName": {
                required: true
            },
            "user.loginName": {
                required: true,
-               unique: [ "loginName", "allUsers" ]
+               unique: [ "loginName", "allUsers", { exclude: true, excludeField: 'input[name=userId]' } ]
            },
            "user.initials": {
                required: true
@@ -323,6 +335,55 @@ var agilefantValidationRules = {
            },
            "password1": {
                required: "Please enter a password"
+           },
+           "password2": {
+               equalTo: "Passwords don't match"
+           }
+       }
+    },
+    user: {
+       rules: {
+           "user.fullName": {
+               required: true
+           },
+           "user.loginName": {
+               required: true,
+               unique: [ "loginName", "allUsers", { exclude: true, excludeField: 'input[name=userId]' } ]
+           },
+           "user.initials": {
+               required: true
+           },
+           "user.email": {
+               required: true,
+               email: true
+           },
+           "user.weekHours": {
+               aftime: [ true ]
+           },
+           "password1": {
+               required: false
+           },
+           "password2": {
+               equalField: 'input[name=password1]'
+           }
+       },
+       messages: {
+           "user.fullName": {
+               required: "Please enter a name"
+           },
+           "user.loginName": {
+               unique: "Login name already in use",
+               required: "Please enter a login name"
+           },
+           "user.initials": {
+               required: "Please enter the initials"
+           },
+           "user.email": {
+               required: "Please enter an email address",
+               email: "Invalid email address"
+           },
+           "user.weekHours": {
+               aftime: "Invalid format"
            },
            "password2": {
                equalTo: "Passwords don't match"
@@ -417,7 +478,8 @@ var validationRulesByHTMLClass = {
     'validateNewTeam': agilefantValidationRules.team,
     'validateNewTheme': agilefantValidationRules.theme,
     'validateTheme': agilefantValidationRules.theme,
-    'validateNewUser': agilefantValidationRules.user,
+    'validateNewUser': agilefantValidationRules.newUser,
+    'validateUser': agilefantValidationRules.user,
     'validateBLIProgressTab': agilefantValidationRules.bliProgress,
     'validateExistingProduct': agilefantValidationRules.product,
     'validateEmpty': agilefantValidationRules.empty

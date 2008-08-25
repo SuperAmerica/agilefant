@@ -14,7 +14,7 @@
 		<tr>
 			<td>
 			<div class="subItems" style="margin-top: 0px; width: 475px;">
-			<div id="editUserForm" class="validateWrapper validateEmpty">
+			<div id="editUserForm" class="validateWrapper validateUser">
 			<ww:form action="ajaxStoreUser" method="post">
 				<c:if test="${user.id > 0}">
 					<p>To keep the old password, just leave password fields empty.</p>

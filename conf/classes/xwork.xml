@@ -418,6 +418,10 @@
 				editIteration.action?iterationId=${backlogId}
 			</result>
 		</action>
+		<action name="timelineBubble" method="editWithMetrics"
+			class="backlogAction">
+			<result>/WEB-INF/jsp/timelineBubble.jsp</result>
+		</action>
 		<!-- /Backlog actions -->
 
         <!-- Menu actions -->

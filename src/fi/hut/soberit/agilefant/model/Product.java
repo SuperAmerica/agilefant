@@ -15,6 +15,7 @@ import javax.persistence.Transient;
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.OrderBy;
 
+import fi.hut.soberit.agilefant.util.BacklogMetrics;
 import fi.hut.soberit.agilefant.web.page.PageItem;
 import flexjson.JSON;
 
@@ -155,6 +156,12 @@ public class Product extends Backlog implements PageItem {
     
     @Transient
     public Collection<BacklogThemeBinding> getBusinessThemeBindings() {
+        return null;
+    }
+
+    @Override
+    @Transient
+    public BacklogMetrics getMetrics() {
         return null;
     }
 }

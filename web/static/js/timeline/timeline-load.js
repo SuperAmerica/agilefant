@@ -11,6 +11,7 @@ $(document).ready(function() {
     Timeline.GregorianDateLabeller.monthNames["en"] = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" ];
     /* Create the datasource */
     var eventSource = new Timeline.AgilefantEventSource();
+    var eventSourceThemes = new Timeline.AgilefantEventSource();
     /* Set the band properties */
     var bandInfos = [
     Timeline.createBandInfo({
@@ -19,9 +20,17 @@ $(document).ready(function() {
         width:          "100%", 
         intervalUnit:   Timeline.DateTime.WEEK, 
         intervalPixels: 42
+    }),
+	Timeline.createBandInfo({
+        showEventText:  true,
+        eventSource:    eventSourceThemes, 
+        width:          "100%", 
+        intervalUnit:   Timeline.DateTime.WEEK, 
+        intervalPixels: 42
     })];
     var them = new Timeline.AgilefantTheme();
     bandInfos[0]["eventPainter"] = new Timeline.AgilefantEventPainter({showText: true, theme: them});
+    bandInfos[1]["eventPainter"] = new Timeline.AgilefantEventPainter({showText: true, theme: them});
   
   productTimeLine = Timeline.create(document.getElementById("productTimeline"), bandInfos, Timeline.HORIZONTAL);
   /* Get the JSON data */
@@ -33,6 +42,7 @@ $(document).ready(function() {
   		updateTimelinePeriod("#productTimelinePeriod");
   	}
   });
+  
     productTimeLine.showLoadingMessage();
 });
 function updateTimelinePeriod(sender) {

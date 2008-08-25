@@ -31,6 +31,7 @@ import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.Type;
 
 import fi.hut.soberit.agilefant.util.BacklogItemPriorityComparator;
+import fi.hut.soberit.agilefant.util.BacklogMetrics;
 import fi.hut.soberit.agilefant.web.page.PageItem;
 import flexjson.JSON;
 
@@ -327,4 +328,7 @@ public abstract class Backlog implements Assignable, TimesheetLoggable, PageItem
     
     @Transient
     public abstract Collection<BacklogThemeBinding> getBusinessThemeBindings();
+    
+    @Transient
+    public abstract BacklogMetrics getMetrics();
 }

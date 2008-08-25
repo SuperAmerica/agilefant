@@ -14,6 +14,8 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.Type;
 
+import flexjson.JSON;
+
 @BatchSize(size=20)
 @Table(name = "backlogthemebinding")
 @Entity
@@ -28,6 +30,7 @@ public class BacklogThemeBinding {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(nullable = false)
+    @JSON
     public int getId() {
         return id;
     }
@@ -84,6 +87,7 @@ public class BacklogThemeBinding {
     }
     
     @Transient
+    @JSON
     public AFTime getBoundEffort()
     {
         if(isRelativeBinding()) {

@@ -5,8 +5,20 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.ProjectionList;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
+
 import fi.hut.soberit.agilefant.db.ProjectDAO;
+import fi.hut.soberit.agilefant.model.AFTime;
+import fi.hut.soberit.agilefant.model.BacklogItem;
+import fi.hut.soberit.agilefant.model.BacklogThemeBinding;
+import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Project;
+import fi.hut.soberit.agilefant.model.State;
+import fi.hut.soberit.agilefant.util.ProjectMetrics;
 
 /**
  * Hibernate implementation of ProjectDAO interface using
@@ -132,6 +144,59 @@ public class ProjectDAOHibernate extends GenericDAOHibernate<Project>
     public List<Integer> findBiggestRank() {
         return super.getHibernateTemplate().find(
                 "select max(d.rank) from Project d");
+    }
+
+    @SuppressWarnings("unchecked")
+    public Integer getDoneBLIs(Project proj) {
+        DetachedCriteria crit = DetachedCriteria.forClass(Iteration.class);
+        ProjectionList sums = Projections.projectionList();
+        sums.add(Projections.groupProperty("project"));
+        sums.add(Projections.count("backlogItems"));
+        DetachedCriteria bli = crit.createAlias("backlogItems", "bli");
+        crit.add(Restrictions.eq("project", proj));
+        crit.add(Restrictions.eq("bli.state", State.DONE));
+        crit.setProjection(sums);
+        List res = super.getHibernateTemplate().findByCriteria(crit);
+        try {
+            Object[] data = (Object[])res.get(0);
+            return (Integer)data[1];
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public ProjectMetrics getProjectBLIMetrics(Project proj) {
+        DetachedCriteria crit = DetachedCriteria.forClass(Iteration.class);
+        ProjectionList sums = Projections.projectionList();
+        sums.add(Projections.groupProperty("project"));
+        sums.add(Projections.sum("bli.effortLeft"));
+        sums.add(Projections.sum("bli.originalEstimate"));
+        sums.add(Projections.count("bli.id"));
+        sums.add(Projections.count("id"));
+        crit.createAlias("backlogItems", "bli");
+        crit.add(Restrictions.eq("project", proj));
+        crit.setProjection(sums);
+        List res = super.getHibernateTemplate().findByCriteria(crit);
+        try {
+            Object[] data = (Object[])res.get(0);
+            ProjectMetrics metr = new ProjectMetrics();
+            metr.setOriginalEstimate((AFTime)data[2]);
+            metr.setEffortLeft((AFTime)data[1]);
+            metr.setNumberOfAllIterations((Integer)data[4]);
+            metr.setTotalItems((Integer)data[3]);
+            return metr;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+    
+    @SuppressWarnings("unchecked")
+    public List<BacklogThemeBinding> getProjectThemeData(Project proj) {
+        DetachedCriteria crit = DetachedCriteria.forClass(BacklogThemeBinding.class);
+        crit.add(Restrictions.in("backlog", proj.getIterations()));
+        //crit.addOrder(Order.asc("businessTheme.name"));
+        return super.getHibernateTemplate().findByCriteria(crit);
     }
 
 }

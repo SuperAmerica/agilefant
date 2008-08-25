@@ -29,12 +29,15 @@ import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.Assignment;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
+import fi.hut.soberit.agilefant.model.BacklogThemeBinding;
+import fi.hut.soberit.agilefant.model.BusinessTheme;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.ProjectType;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.util.BacklogLoadData;
+import fi.hut.soberit.agilefant.util.BacklogMetrics;
 import fi.hut.soberit.agilefant.util.CalendarUtils;
 import fi.hut.soberit.agilefant.util.DailyWorkLoadData;
 import fi.hut.soberit.agilefant.util.EffortSumData;
@@ -832,6 +835,44 @@ public class ProjectBusinessImpl implements ProjectBusiness {
         return totalOverheads;
     }
     
+    public ProjectMetrics getProjectMetrics(Project proj) {
+        ProjectMetrics metrics = projectDAO.getProjectBLIMetrics(proj);
+        if(metrics != null && metrics.getTotalItems() > 0) {
+            metrics.setCompletedItems(projectDAO.getDoneBLIs(proj));
+            metrics.setPercentDone(Math.round(100.0f*(float)metrics.getCompletedItems()/(float)metrics.getTotalItems()));
+            
+        }
+        return metrics;
+    }
+    
+    public Map<BusinessTheme,AFTime> formatThemeBindings(Project proj) {
+        List<BacklogThemeBinding> bindings = projectDAO.getProjectThemeData(proj);
+        Map<BusinessTheme,Collection<BacklogThemeBinding>> tmp = new HashMap<BusinessTheme, Collection<BacklogThemeBinding>>();
+        //iteration themes
+        for(BacklogThemeBinding bind : bindings) {
+            if(tmp.get(bind.getBusinessTheme()) == null) {
+                tmp.put(bind.getBusinessTheme(), new ArrayList<BacklogThemeBinding>());
+            }
+            tmp.get(bind.getBusinessTheme()).add(bind);
+        }
+        //project themes
+        for(BacklogThemeBinding bind : proj.getBusinessThemeBindings()) {
+            if(tmp.get(bind.getBusinessTheme()) == null) {
+                tmp.put(bind.getBusinessTheme(), new ArrayList<BacklogThemeBinding>());
+            }
+            tmp.get(bind.getBusinessTheme()).add(bind);
+        }
+        Map<BusinessTheme,AFTime> ret = new HashMap<BusinessTheme, AFTime>();
+        //format
+        for(BusinessTheme theme : tmp.keySet()) {
+            AFTime sum = new AFTime(0);
+            for(BacklogThemeBinding bin : tmp.get(theme)) {
+                sum.add(bin.getBoundEffort());
+            }
+            ret.put(theme, sum);
+        }
+        return ret;
+    }
     public String getAllProjectTypesAsJSON() {
         return new JSONSerializer().serialize(projectTypeDAO.getAll());
     }

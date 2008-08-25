@@ -11,11 +11,13 @@ import fi.hut.soberit.agilefant.exception.OperationNotPermittedException;
 import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
+import fi.hut.soberit.agilefant.model.BusinessTheme;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.ProjectType;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.util.DailyWorkLoadData;
+import fi.hut.soberit.agilefant.util.ProjectMetrics;
 import fi.hut.soberit.agilefant.util.ProjectPortfolioData;
 
 /**
@@ -213,4 +215,8 @@ public interface ProjectBusiness {
      * @return
      */
     public String getProjectTypeJSON(int projectTypeId);
+
+    public ProjectMetrics getProjectMetrics(Project proj);
+    
+    public Map<BusinessTheme,AFTime> formatThemeBindings(Project proj);
 }

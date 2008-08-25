@@ -3,7 +3,9 @@ package fi.hut.soberit.agilefant.db;
 import java.util.Collection;
 import java.util.List;
 
+import fi.hut.soberit.agilefant.model.BacklogThemeBinding;
 import fi.hut.soberit.agilefant.model.Project;
+import fi.hut.soberit.agilefant.util.ProjectMetrics;
 
 /**
  * Interface for a DAO of a Project.
@@ -71,4 +73,10 @@ public interface ProjectDAO extends GenericDAO<Project> {
      * @return
      */
     public List<Integer> findBiggestRank();
+    
+    public ProjectMetrics getProjectBLIMetrics(Project proj);
+    
+    public Integer getDoneBLIs(Project proj);
+    
+    public List<BacklogThemeBinding> getProjectThemeData(Project proj);
 }

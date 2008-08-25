@@ -22,4 +22,6 @@ public interface TimelineBusiness {
      * @return JSON as string
      */
     public String productContentsToJSON(int productId) throws ObjectNotFoundException;
+    
+    public String getThemeJSON(int productId);
 }

@@ -26,6 +26,10 @@ public class TimelineAction extends ActionSupport {
         return Action.SUCCESS;
     }
 
+    public String themeData() {
+        json = timelineBusiness.getThemeJSON(productId);
+        return Action.SUCCESS;
+    }
     
     public int getProductId() {
         return productId;

@@ -257,3 +257,22 @@
     display: none !important;
 }
 
+.timelineBubble {
+	text-align: left;
+	
+}
+.timelineBubble table {
+	margin-top: 10px;	
+}
+.timelineBubble div.bubbleTitle {
+	font-size: 120%;
+	font-weight: bold;
+	border-bottom: 1px solid black;
+	margin-bottom: 8px;
+	white-space: nowrap;
+	margin: 0px 5px 2px 3px; 	
+}
+.timelineBubble table th {
+	font-size: 80%;
+	font-weight: bold;
+}

@@ -1,6 +1,6 @@
 package fi.hut.soberit.agilefant.util;
 
-public class ProjectMetrics {
+public class ProjectMetrics extends BacklogMetrics {
     
     private int assignees;
     private int numberOfOngoingIterations;

@@ -9,6 +9,7 @@ import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.util.JSONUtils;
+import flexjson.JSONSerializer;
 
 public class TimelineBusinessImpl implements TimelineBusiness {
     
@@ -70,6 +71,23 @@ public class TimelineBusinessImpl implements TimelineBusiness {
         return json;
     }
 
+    public String getThemeJSON(Product prod) {
+        if(prod == null) {
+            return "";
+        }
+        JSONSerializer ser = new JSONSerializer();
+        ser.include("backlogBindings.boundEffort");
+        ser.include("name");
+        ser.include("backlogBindings.backlog.id");
+        ser.include("backlogBindings.backlog.startDate");
+        ser.include("backlogBindings.backlog.endDate");
+        ser.exclude("*");
+       
+        return ser.serialize(prod.getBusinessThemes());
+    }
+    public String getThemeJSON(int productId) {
+        return getThemeJSON(productDAO.get(productId));
+    }
     public ProductDAO getProductDAO() {
         return productDAO;
     }

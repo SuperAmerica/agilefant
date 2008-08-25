@@ -41,6 +41,33 @@ Timeline.AgilefantEventSource.prototype.loadJSON = function(data, url) {
         }
 };
 
+Timeline.AgilefantEventSource.prototype.loadThemes = function(data) {
+	var added = false;
+	for(var i = 0; i < data.length; i++) {
+		if(data[i].backlogBindings.length > 0) {
+			var times = this.getThemeStartAndEnd(data[i].backlogThemeBindings);
+			var evt = new Timeline.AgilefantEventSource.Event(
+				0,data[i].name,"theme",0,null,parseDateTimeFunction(times.start),parseDateTimeFunction(times.end));
+			this._events.add(evt);
+		}
+	}
+	
+	if(added) {
+		this._fire("onAddMany",[]);
+	}
+};
+Timeline.AgilefantEventSource.prototype.getThemeStartAndEnd = function(bindings) {
+	var ret = {start: 0, end: 0};
+	for(var i = 0; i < bindings.length; i++) {
+		if(ret.start > bindings[i].backlog.startDate) {
+			ret.start = bindings[i].backlog.startDate;
+		}
+		if(ret.endDate < bindings[i].backlog.endDate) {
+			ret.end = bindings[i].backlog.endDate;
+		}
+	}
+
+};
 
 Timeline.AgilefantEventSource.Event = function(
         id, name, type, state, subItems, start, end) {       
@@ -127,43 +154,8 @@ Timeline.AgilefantEventSource.Event.prototype = {
     }
   },
   fillInfoBubble: function(elmt, theme, labeller) {
-    var doc = elmt.ownerDocument;
-
-    var title = this._title;
-    var link = this.getLink();
-    var image = this.getImage();
-
-    if (image != null) {
-      var img = doc.createElement("img");
-      img.src = image;
-
-      theme.event.bubble.imageStyler(img);
-      elmt.appendChild(img);
-    }
-
-    var divTitle = doc.createElement("div");
-    var textTitle = doc.createTextNode(title);
-    if (link != null) {
-      var a = doc.createElement("a");
-      a.href = link;
-      a.appendChild(textTitle);
-      divTitle.appendChild(a);
-    } else {
-      divTitle.appendChild(textTitle);
-    }
-    theme.event.bubble.titleStyler(divTitle);
-    elmt.appendChild(divTitle);
-
-    var divBody = doc.createElement("div");
-    this.fillDescription(divBody);
-    theme.event.bubble.bodyStyler(divBody);
-    elmt.appendChild(divBody);
-
-    var divTime = doc.createElement("div");
-    this.fillTime(divTime, labeller);
-    theme.event.bubble.timeStyler(divTime);
-    elmt.appendChild(divTime);
-
+  	//var el = jQuery("<div />").css("height","400px").css("width","350px").appendTo(elmt);
+  	jQuery(elmt).load("timelineBubble.action", {backlogId: this._id}).height("280px");
   }
 };
 
@@ -773,8 +765,8 @@ Timeline.AgilefantTheme = function() {
         highlightColors: [
         ],
         bubble: {
-            width:          250, // px
-            height:         125, // px
+            width:          350, // px
+            height:         290, // px
             titleStyler: function(elmt) {
                 elmt.className = "timeline-event-bubble-title";
             },

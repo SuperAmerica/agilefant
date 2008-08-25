@@ -1,7 +1,9 @@
 package fi.hut.soberit.agilefant.web;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -10,16 +12,21 @@ import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
 
 import fi.hut.soberit.agilefant.business.BacklogBusiness;
+import fi.hut.soberit.agilefant.business.ProjectBusiness;
 import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
+import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
+import fi.hut.soberit.agilefant.model.BusinessTheme;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Priority;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.State;
+import fi.hut.soberit.agilefant.util.BacklogMetrics;
+import fi.hut.soberit.agilefant.util.ProjectMetrics;
 
 public class BacklogAction extends ActionSupport {
     private static final long serialVersionUID = 8061288993804046816L;
@@ -50,6 +57,15 @@ public class BacklogAction extends ActionSupport {
     private BacklogItemDAO backlogItemDAO;
 
     private BacklogBusiness backlogBusiness;
+    
+    private ProjectBusiness projectBusiness;
+    
+    private Map<BusinessTheme, AFTime> themeEffort;
+    
+    private Set<BusinessTheme> themeCache;
+    
+    private Backlog backlog;
+    
 
     /**
      * Used to determine what action is taken when multiple
@@ -60,6 +76,35 @@ public class BacklogAction extends ActionSupport {
     public String edit() {
         Backlog backlog = backlogDAO.get(backlogId);
         return solveResult(backlog);
+    }
+    
+    public String editWithMetrics() {
+        backlog = backlogDAO.get(backlogId);
+        if(backlog instanceof Project) {
+            Project project = (Project)backlog;
+            if (project.getIterations().size() == 0) {  
+                ProjectMetrics metr = new ProjectMetrics();
+                BacklogMetrics actual = backlogBusiness.getBacklogMetrics(backlog);
+                metr.setCompletedItems(actual.getCompletedItems());
+                metr.setDailyVelocity(actual.getDailyVelocity());
+                metr.setEffortLeft(actual.getEffortLeft());
+                metr.setOriginalEstimate(actual.getOriginalEstimate());
+                metr.setPercentDone(actual.getPercentDone());
+                metr.setScheduleVariance(actual.getScheduleVariance());
+                metr.setScopingNeeded(actual.getScopingNeeded());
+                metr.setTotalItems(actual.getTotalItems());
+                metr.setBacklogOngoing(actual.isBacklogOngoing());
+                project.setMetrics(metr);
+            } else {
+                project.setMetrics(projectBusiness.getProjectMetrics(project));
+            }
+            themeEffort = projectBusiness.formatThemeBindings(project);
+            themeCache = themeEffort.keySet();
+        } else if(backlog instanceof Iteration) {
+            Iteration iter = (Iteration)backlog;
+            iter.setMetrics(backlogBusiness.getBacklogMetrics(backlog));
+        }
+        return Action.SUCCESS;
     }
 
     public int getBacklogId() {
@@ -366,6 +411,26 @@ public class BacklogAction extends ActionSupport {
 
     public void setBacklogItemIds(int[] backlogItemIds) {
         this.backlogItemIds = backlogItemIds;
+    }
+
+    public ProjectBusiness getProjectBusiness() {
+        return projectBusiness;
+    }
+
+    public void setProjectBusiness(ProjectBusiness projectBusiness) {
+        this.projectBusiness = projectBusiness;
+    }
+
+    public Backlog getBacklog() {
+        return backlog;
+    }
+
+    public Map<BusinessTheme, AFTime> getThemeEffort() {
+        return themeEffort;
+    }
+
+    public Set<BusinessTheme> getThemeCache() {
+        return themeCache;
     }
    
 }

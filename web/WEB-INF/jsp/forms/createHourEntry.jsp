@@ -257,7 +257,7 @@ function showOldEffort() {
         <tr>
             <td></td>
             <td></td>
-            <td><ww:submit value="Store" id="createButton" /></td>
+            <td><ww:submit value="Save" id="createButton" /></td>
             <td class="deleteButton"><ww:reset value="Cancel"
                 cssClass="closeDialogButton" /></td>
         </tr>

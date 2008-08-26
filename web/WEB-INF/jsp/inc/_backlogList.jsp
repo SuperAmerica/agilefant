@@ -279,7 +279,7 @@ $(document).ready(function() {
 			</td>
 		</tr>
 	<tr>
-		<td><ww:submit type="button" label="Store" name="itemAction" value="%{'ChangeSelected'}" /></td>
+		<td><ww:submit type="button" label="Save" name="itemAction" value="%{'ChangeSelected'}" /></td>
 		<td>&nbsp;</td>
 		<td>&nbsp;</td>
 		<td>&nbsp;</td>

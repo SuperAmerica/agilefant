@@ -111,7 +111,7 @@ Effort estimate
 	<ww:a href="%{createLink}&contextViewName=${contextViewName}&contextObjectId=${contextObjectId}">New task &raquo;</ww:a>
 	<hr />
 
-	<ww:submit value="Store" action="quickStoreTaskList" onclick="return validateSpentEffortById('effortSpent_${backlogItem.id}','Invalid format for spent effort.'); return false;" />
+	<ww:submit value="Save" action="quickStoreTaskList" onclick="return validateSpentEffortById('effortSpent_${backlogItem.id}','Invalid format for spent effort.'); return false;" />
 
 </ww:form>
 

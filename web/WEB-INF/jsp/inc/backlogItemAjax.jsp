@@ -445,13 +445,7 @@ $(document).ready(function() {
 		<tr>
 			<td>
 				<div class="subItems" style="margin-top: 0px; width: 710px;">
-				<div class="subItemHeader">			
-				<table cellpadding="0" cellspacing="0">
-	            	<tr>
-	                <td class="header">TODOs <a id="addTodo-${backlogItemId}-${bliListContext}" href="#">Add new &raquo;</a></td>
-					</tr>
-				</table>
-				</div>
+				<a id="addTodo-${backlogItemId}-${bliListContext}" href="#">Add new TODO &raquo;</a>				
 				<c:choose>
 				<c:when test="${!empty backlogItem.tasks}">
 					<div class="subItemContent">										
@@ -551,7 +545,6 @@ $(document).ready(function() {
 
 <aef:hourEntries id="hourEntries" target="${backlogItem}" />
 
-<div class="subItems" style="margin-top: 0px; width: 725px;">
 <script type="text/javascript">
 $(document).ready(function() {
 	var allUsers = function() {
@@ -573,62 +566,58 @@ $(document).ready(function() {
 	});
 
 });
-</script>
-<table>
-<tbody>
-	<tr>
-	<td>
-	
-	<div class="subItems validateWrapper validateEmpty" style="margin-top: 0; margin-left: 3px; width: 710px;">
-		<div class="subItemHeader" style="padding: 3px !important;">
-	     	Spent effort
-	     	<ww:url id="createLink" action="ajaxCreateHourEntry" includeParams="none">
-				<ww:param name="backlogItemId" value="${backlogItemId}" />
-			</ww:url>
-			<ww:a cssClass="openCreateDialog openHourEntryDialog" title="Log effort" href="%{createLink}&contextViewName=${currentAction}&contextObjectId=${backlog.id}">Log effort &raquo;</ww:a>		
-		</div>						
-		<c:if test="${!empty hourEntries}">
-			<div class="subItemContent">
-			<ww:form action="updateMultipleHourEntries.action" method="post">		
-				<p>
-					<display:table name="${hourEntries}" htmlId="spentEffort-${backlogItemId}-${bliListContext}" id="row" defaultsort="1" defaultorder="descending" requestURI="${currentAction}.action">
+</script>								
+				
+<div class="subItemContent">
+<div class="subItems validateWrapper validateEmpty" style="margin-top: 0; margin-left: 3px; width: 710px;">
+	<ww:url id="createLink" action="ajaxCreateHourEntry" includeParams="none">
+		<ww:param name="backlogItemId" value="${backlogItemId}" />
+	</ww:url>
+	<ww:a cssClass="openCreateDialog openHourEntryDialog" title="Log effort"
+		href="%{createLink}&contextViewName=${currentAction}&contextObjectId=${backlog.id}">
+		Log effort &raquo;
+	</ww:a>
+	<c:if test="${!empty hourEntries}">		
+	<ww:form action="updateMultipleHourEntries.action" method="post">		
+	<p>
+	<display:table name="${hourEntries}" htmlId="spentEffort-${backlogItemId}-${bliListContext}" id="row" defaultsort="1" defaultorder="descending" requestURI="${currentAction}.action">
 						
-						<display:column sortable="false" title="Date" style="white-space:nowrap;">
-							<ww:date name="#attr.row.date" format="yyyy-MM-dd HH:mm" />
-						</display:column>
+		<display:column sortable="false" title="Date" style="white-space:nowrap;">
+			<ww:date name="#attr.row.date" format="yyyy-MM-dd HH:mm" />
+		</display:column>
 						
-						<display:column sortable="false" title="User">
-							<span style="display: none;">${row.user.id}</span>
-							${aef:html(row.user.fullName)}
-						</display:column>
+		<display:column sortable="false" title="User">
+			<span style="display: none;">${row.user.id}</span>
+			${aef:html(row.user.fullName)}
+		</display:column>
 						
-						<display:column sortable="false" title="Spent effort" sortProperty="timeSpent">
-							${aef:html(row.timeSpent)}
-						</display:column>
+		<display:column sortable="false" title="Spent effort" sortProperty="timeSpent">
+			${aef:html(row.timeSpent)}
+		</display:column>
 						
-						<display:column sortable="false" title="Comment">
-							<c:out value="${row.description}"/>
-						</display:column>
+		<display:column sortable="false" title="Comment">
+			<c:out value="${row.description}"/>
+		</display:column>
 						
-						<display:column sortable="false" title="Action">	
-							<span class="uniqueId" style="display: none;">${row.id}</span>
-							<ww:url id="deleteLink" action="deleteHourEntry" includeParams="none">								
-								<ww:param name="backlogItemId" value="${backlogItem.id}" />
-								<ww:param name="hourEntryId" value="${row.id}" />
-							</ww:url>	
-							<img src="static/img/edit.png" class="table_edit_edit" alt="Edit" title="Edit" />															
-							<ww:a href="%{deleteLink}&contextViewName=${currentAction}&contextObjectId=${backlog.id}" onclick="return confirmDeleteHour()">
-								<img src="static/img/delete_18.png" alt="Delete" title="Delete" />
-							</ww:a>								
-						</display:column>
-						</display:table>
-					</p>
-					<input type="submit" value="Save" style="display: none;" id="saveSpentEffort-${backlogItemId}-${bliListContext}" />
-					</ww:form>
-				</div>
-			</c:if> <%-- No entries --%>
-		</div>
-
+		<display:column sortable="false" title="Action">	
+			<span class="uniqueId" style="display: none;">${row.id}</span>
+			<ww:url id="deleteLink" action="deleteHourEntry" includeParams="none">								
+				<ww:param name="backlogItemId" value="${backlogItem.id}" />
+				<ww:param name="hourEntryId" value="${row.id}" />
+			</ww:url>	
+			<img src="static/img/edit.png" class="table_edit_edit" alt="Edit" title="Edit" />															
+			<ww:a href="%{deleteLink}&contextViewName=${currentAction}&contextObjectId=${backlog.id}" onclick="return confirmDeleteHour()">
+				<img src="static/img/delete_18.png" alt="Delete" title="Delete" />
+			</ww:a>								
+		</display:column>
+	</display:table>
+	</p>
+	<input type="submit" value="Save" style="display: none;" id="saveSpentEffort-${backlogItemId}-${bliListContext}" />
+	</ww:form>
+	</c:if> <%-- No entries --%>				
+	</div>
+	</div>					
+					
 	</td>
 	</tr>
 	<tr>
@@ -636,23 +625,22 @@ $(document).ready(function() {
 	<%--
 	<ww:reset value="Cancel"
 		onclick="closeTabs('bli', 'backlogItemTabContainer-${backlogItemId}-${bliListContext}', ${backlogItemId});" />
-	--%>				
-	</td>
-	</tr>
-</tbody>
-</table>
-</div>
+	--%>
 	
 </div>
 
 <div id="backlogItemThemesTab-${backlogItemId}-${bliListContext}" class="backlogItemNaviTab">		
 
-	<c:choose>
-	<c:when test="${(!empty backlogItem.product.businessThemes)}">
 	<table>
 		<tr>
 		<td>
 			<div class="subItems validateWrapper validateEmpty" style="margin-top: 0; margin-left: 3px; width: 710px;">
+			<ww:url id="createThemeLink" action="ajaxCreateBusinessTheme" includeParams="none">
+				<ww:param name="productId" value="${backlogItem.product.id}"></ww:param>
+			</ww:url>
+			<ww:a href="%{createThemeLink}" cssClass="openCreateDialog openThemeDialog"
+				title="Create a new theme"> Create new theme &raquo;</ww:a>
+			<c:if test="${(!empty backlogItem.product.businessThemes)}">
 			<ww:form action="storeBacklogItemThemes" method="post">
 			<ww:hidden name="backlogItemId" value="${backlogItem.id}"/>
 
@@ -674,7 +662,8 @@ $(document).ready(function() {
 				</display:table>
 				</p>
 				<input type="submit" value="Save" name="Save" />
-			</ww:form>				
+			</ww:form>
+			</c:if>				
 			</div>
 														
 			</div>
@@ -682,17 +671,7 @@ $(document).ready(function() {
 		</td>
 		</tr>
 	</table>
-	</c:when>
-	<c:otherwise>
-	
-	<ww:url id="editLink" action="editProduct" includeParams="none">
-		<ww:param name="productId" value="${backlogItem.product.id}" />
-	</ww:url>			
-	The product, ${backlogItem.product.name}, has no themes. Create new themes first in the 
-		<ww:a href="%{editLink}&contextViewName=editProduct&contextObjectId=${backlogItem.product.id}">product page</ww:a>.
-	</c:otherwise>
-	</c:choose>
-		
+			
 </div>
 
 </div>

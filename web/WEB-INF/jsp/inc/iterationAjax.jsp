@@ -259,20 +259,15 @@ $(document).ready( function() {
 
 </script>
 
+
+
 <table>
 	<tr>
 		<td>
 			<c:if test="${iterationId != 0}">
 				<div class="subItems validateWrapper validateEmpty" style="margin-top: 0; margin-left: 3px; width: 710px;">
-					<div class="subItemHeader">
-					    <table cellspacing="0" cellpadding="0">
-            			    <tr>
-            			    	<td class="header">Themes <a id="addIterationBusinessTheme_${iteration.id}" href="#">Attach theme &raquo;</a>
-            			    	</td>
-							</tr>
-						</table>
-					</div>
-					<div class="subItemContent">
+					<a id="addIterationBusinessTheme_${iteration.id}" href="#">Attach theme &raquo;</a>
+					
 					<ww:form action="storeBacklogThemebinding" id="iterationBusinessThemesForm_${iteration.id}" method="post">
 					<ww:hidden name="backlogId" value="${iteration.id}"/>
 					<input type="hidden" name="contextViewName" value="project" />
@@ -350,26 +345,24 @@ $(document).ready( function() {
         return false;
         });
 });
-
 </script>
+
+
+
+
 <table>
 	<tr>
 		<td>
 		<div class="subItems" validateWrapper
 			validateEmpty" style="margin-top: 0; margin-left: 3px; width: 710px;">
-		<div class="subItemHeader">
-		<table cellspacing="0" cellpadding="0">
-			<tr>
-				<td class="header">Iteration goals <ww:url
-					id="createIterationGoalLink" action="ajaxCreateIterationGoal"
-					includeParams="none">
-					<ww:param name="iterationId" value="${iteration.id}" />
-				</ww:url> <ww:a cssClass="openCreateDialog openIterationGoalDialog"
-					href="%{createIterationGoalLink}&contextViewName=editIteration&contextObjectId=${iteration.id}">Create new &raquo;</ww:a>
-				</td>
-			</tr>
-		</table>
-		</div>
+		<ww:url id="createIterationGoalLink" action="ajaxCreateIterationGoal"
+			includeParams="none">
+			<ww:param name="iterationId" value="${iteration.id}" />
+		</ww:url>
+		<ww:a cssClass="openCreateDialog openIterationGoalDialog"
+			href="%{createIterationGoalLink}&contextViewName=editIteration&contextObjectId=${iteration.id}">
+			Create new iteration goal &raquo;
+		</ww:a>
 		<c:if test="${!empty iteration.iterationGoals}">
 			<aef:hourReporting id="hourReport"></aef:hourReporting>
 			<c:if test="${hourReport}">

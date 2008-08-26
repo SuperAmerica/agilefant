@@ -230,13 +230,18 @@ var productId = ${product.id};
 					</display:column>		
 														
 					<display:column sortable="true" sortProperty="name" title="Name">
+					
+						<a class="nameLink" onclick="handleTabEvent('projectTabContainer-${row.id}','project',${row.id},0); return false;">
+							${aef:html(row.name)}
+						</a>
+					
 						<ww:url id="editLink" action="editProject" includeParams="none">
 							<ww:param name="productId" value="${product.id}" />
 							<ww:param name="projectId" value="${row.id}" />
 						</ww:url>
 						<ww:a
 							href="%{editLink}&contextViewName=editProduct&contextObjectId=${product.id}">
-							${aef:html(row.name)}
+							<img src="static/img/link.png" />
 						</ww:a>
 					</display:column>					
 					

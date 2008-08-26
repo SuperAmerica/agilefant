@@ -643,12 +643,15 @@ $(document).ready(function() {
 											
 											<display:column sortable="true" sortProperty="name" title="Name">
 												<div style="overflow:hidden; width: 170px;">												
+												<a class="nameLink" onclick="handleTabEvent('iterationTabContainer-${row.id}', 'iteration', ${row.id}, 1);">
+													${aef:html(row.name)}
+												</a>												
 													<ww:url id="editLink" action="editIteration"
 													includeParams="none">
 													<ww:param name="iterationId" value="${row.id}" />
 												</ww:url>
 												<ww:a href="%{editLink}&contextViewName=editProject&contextObjectId=${project.id}">
-													${aef:html(row.name)}
+													<img src="static/img/link.png" />
 												</ww:a>												
 												</div>
 												<div id="iterationTabContainer-${row.id}" style="overflow:visible; white-space: nowrap; width: 0px;"></div>

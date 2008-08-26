@@ -321,7 +321,9 @@ var productId = ${product.id};
 				<display:table class="themeEditTable" name="activeBusinessThemes"
 					id="row" defaultsort="1">
 					<display:column title="Name" class="themeEditNameColumn">
-						<c:out value="${row.name}" />					
+						<a class="nameLink" onclick="handleTabEvent('businessThemeTabContainer-${row.id}','businessTheme',${row.id},0); return false;">
+							${row.name}
+						</a>															
 						<div id="businessThemeTabContainer-${row.id}" style="overflow:visible; white-space: nowrap; width: 115px;"></div>
 					</display:column>
 					<display:column title="Description" class="themeDescriptionColumn">

@@ -77,6 +77,31 @@ public class ProjectTypeAction extends ActionSupport implements CRUDAction {
         }
         return Action.SUCCESS;
     }
+    
+    public String ajaxStoreProjectType() {
+        if (projectType == null) {
+            super.addActionError(super.getText("projectType.missingForm"));
+        }
+        ProjectType fillable = new ProjectType();
+        if (projectTypeId > 0) {
+            fillable = projectTypeDAO.get(projectTypeId);
+            if (fillable == null) {
+                super.addActionError(super.getText("projectType.notFound"));
+                return CRUDAction.AJAX_ERROR;
+            }
+        }
+        this.fillObject(fillable);
+        if (super.hasActionErrors()) {
+            return CRUDAction.AJAX_ERROR;
+        }
+        try {
+            projectTypeDAO.store(fillable);
+        } catch (DataIntegrityViolationException dve) {
+            super.addActionError(super.getText("projectType.duplicateName"));
+            return CRUDAction.AJAX_ERROR;
+        }
+        return CRUDAction.AJAX_SUCCESS;
+    }
 
     public String delete() {
         projectType = projectTypeDAO.get(projectTypeId);

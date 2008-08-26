@@ -68,12 +68,18 @@ $(document).ready(function() {
 					style="display: block;">
 				<table class="infoTable" cellpadding="0" cellspacing="0">
 					<tr>
-						<th class="info1">Timeframe</th>
-						<td class="info3" ondblclick="return editIteration();"><c:out
-							value="${iteration.startDate.date}.${iteration.startDate.month + 1}.${iteration.startDate.year + 1900}" />
-						- <c:out
-							value="${iteration.endDate.date}.${iteration.endDate.month + 1}.${iteration.endDate.year + 1900}" /></td>
-						<td class="info4" rowspan="3">
+						<th class="info1">Planned iteration size</th>
+						<td class="info3" ondblclick="return editIteration();">
+							<c:choose>
+							<c:when test="${(!empty iteration.backlogSize)}">
+								<c:out value="${iteration.backlogSize}"/>h
+							</c:when>
+							<c:otherwise>
+								-
+							</c:otherwise>
+							</c:choose>
+						</td>
+						<td class="info4" rowspan="4">
 						<div class="smallBurndown"><a href="#bigChart"><img
 							src="drawSmallChart.action?iterationId=${iteration.id}" /></a></div>
 
@@ -123,7 +129,15 @@ $(document).ready(function() {
 							</tr>
 						</table>
 
-						</td>
+						</td>												
+					</tr>
+					<tr>
+						<th class="info1">Timeframe</th>
+						<td class="info3" ondblclick="return editIteration();"><c:out
+							value="${iteration.startDate.date}.${iteration.startDate.month + 1}.${iteration.startDate.year + 1900}" />
+						- <c:out
+							value="${iteration.endDate.date}.${iteration.endDate.month + 1}.${iteration.endDate.year + 1900}" /></td>
+						
 					</tr>
 
 					<tr>

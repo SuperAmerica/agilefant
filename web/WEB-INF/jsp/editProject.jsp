@@ -204,12 +204,30 @@ $(document).ready(function() {
 												</tr>
 												<tr>
 								    				<th class="info1">Default overhead</th>
-								    				<td class="info3" ondblclick="return editProject();"><c:out value="${project.defaultOverhead}"/> / person / week</td>							
+								    				<td class="info3" ondblclick="return editProject();">
+								    					<c:choose>
+								    					<c:when test="${(!empty project.defaultOverhead)}">
+								    						<c:out value="${project.defaultOverhead}"/> / person / week
+								    					</c:when>
+								    					<c:otherwise>
+								    						-
+								    					</c:otherwise>
+								    					</c:choose>
+								    				</td>							
 												</tr>
 																				
 										         <tr>
 													<th class="info1">Planned project size</th>
-													<td><c:out value="${project.backlogSize}"/></td>
+													<td class="info3" ondblclick="return editProject();">
+														<c:choose>
+														<c:when test="${(!empty project.backlogSize)}">
+															<c:out value="${project.backlogSize}"/>h
+														</c:when>
+														<c:otherwise>
+															-
+														</c:otherwise>
+														</c:choose>
+													</td>
 												</tr>	
 												<tr>
 	                                				<th class="info1">Timeframe</th>

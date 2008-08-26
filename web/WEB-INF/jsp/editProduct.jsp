@@ -229,8 +229,7 @@ var productId = ${product.id};
 						<div id="projectTabContainer-${row.id}" style="overflow:visible; white-space: nowrap; width: 15px;"></div>
 					</display:column>		
 														
-					<display:column sortable="true" sortProperty="name" title="Name">
-					
+					<display:column sortable="true" sortProperty="name" title="Name">					
 						<a class="nameLink" onclick="handleTabEvent('projectTabContainer-${row.id}','project',${row.id},0); return false;">
 							${aef:html(row.name)}
 						</a>
@@ -241,7 +240,7 @@ var productId = ${product.id};
 						</ww:url>
 						<ww:a
 							href="%{editLink}&contextViewName=editProduct&contextObjectId=${product.id}">
-							<img src="static/img/link.png" />
+							<img src="static/img/link.png" alt="Project page" title="Project page"/>
 						</ww:a>
 					</display:column>					
 					
@@ -258,11 +257,7 @@ var productId = ${product.id};
 						</c:choose>
 						</div>
 					</display:column>
-					
-					<%--
-					<display:column sortable="true" sortProperty="projectType.name"
-						title="Project type" property="projectType.name" />
-					--%>
+										
 					<display:column sortable="false" title="Iter. info">
 						<c:out value="${row.metrics.numberOfOngoingIterations}" /> / 
 						<c:out value="${row.metrics.numberOfAllIterations}" />
@@ -281,8 +276,7 @@ var productId = ${product.id};
 					</display:column>
 												
 					<display:column sortable="false" title="Actions">
-						<img src="static/img/edit.png" alt="Edit" title="Edit project" style="cursor: pointer;" onclick="handleTabEvent('projectTabContainer-${row.id}','project',${row.id},0); return false;" />
-						<%--<img src="static/img/backlog.png" alt="Iterations" title="Iterations" style="cursor: pointer;" onclick="handleTabEvent('projectTabContainer-${row.id}','project',${row.id},1);" />--%>
+						<img src="static/img/edit.png" alt="Edit" title="Edit project" style="cursor: pointer;" onclick="handleTabEvent('projectTabContainer-${row.id}','project',${row.id},0); return false;" />						
 						<ww:url id="deleteLink" action="deleteProject"
 							includeParams="none">
 							<ww:param name="productId" value="${product.id}" />

@@ -651,7 +651,7 @@ $(document).ready(function() {
 													<ww:param name="iterationId" value="${row.id}" />
 												</ww:url>
 												<ww:a href="%{editLink}&contextViewName=editProject&contextObjectId=${project.id}">
-													<img src="static/img/link.png" />
+													<img src="static/img/link.png" alt="Iteration page" title="Iteration page"/>
 												</ww:a>												
 												</div>
 												<div id="iterationTabContainer-${row.id}" style="overflow:visible; white-space: nowrap; width: 0px;"></div>

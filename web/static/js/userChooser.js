@@ -14,7 +14,7 @@
             validation: {
                 rules: {
                     "delta": {
-                        aftime: [ true, true ]
+                        aftime: [ false, true ]
                     }
                 },
                 messages: {
@@ -317,6 +317,7 @@
             });
         },
         projectSelectAction: function() {
+            var b = this.form.valid();
             if (!this.form.valid()) {
                 return false;
             }

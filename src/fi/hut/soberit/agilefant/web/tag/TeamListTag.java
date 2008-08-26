@@ -18,7 +18,7 @@ public class TeamListTag extends SpringTagSupport {
     @Override
     public int doStartTag() throws JspException {
         teamDAO = (TeamDAO) super.getApplicationContext().getBean("teamDAO");
-
+        
         List<Team> list = (List<Team>) teamDAO.getAll();
 
         //Collections.sort(list, new UserComparator());

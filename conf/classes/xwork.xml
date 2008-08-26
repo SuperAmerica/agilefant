@@ -95,7 +95,7 @@
 				<param name="actionName">selectBacklog</param>
 			</result>
 		</action>
-		<!-- Activity type actions -->
+		<!-- Project type actions -->
 		<action name="listProjectTypes" method="getAll"
             class="projectTypeAction">
             <result>/WEB-INF/jsp/administration/listProjectTypes.jsp</result>
@@ -120,7 +120,21 @@
 			class="projectTypeAction">
 			<result type="redirect-action">listProjectTypes</result>
 		</action>
-		<!-- /Activity type actions -->
+		<action name="projectTypeTabs" method="edit"
+			class="projectTypeAction">
+			<result>/WEB-INF/jsp/inc/projectTypeAjax.jsp</result>
+		</action>
+		<action name="ajaxStoreProjectType" method="ajaxStoreProjectType"
+			class="projectTypeAction">		
+			<result name="ajax_error" type="httpheader">
+				<param name="status">400</param>
+			</result>
+			<result name="ajax_success" type="dispatcher">
+				<param name="status">200</param>
+				<param name="location">/WEB-INF/jsp/inc/ajaxProjectTypeResult.jsp</param>
+			</result>
+		</action>
+		<!-- /Project type actions -->
 		<!-- Work type actions -->
 		<action name="editWorkType" method="edit"
 			class="workTypeAction">

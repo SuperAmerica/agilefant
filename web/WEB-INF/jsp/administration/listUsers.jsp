@@ -14,9 +14,6 @@ $(document).ready(function() {
 
 <h2>Users</h2>
 
-<table>
-	<tr>
-	<td>
 	<div class="subItems" style="width: 545px;">
 	<div class="subItemHeader">
 		<table cellspacing="0" cellpadding="0">
@@ -63,13 +60,8 @@ $(document).ready(function() {
 		</div>
 
 		</div>
-</td>
-</tr>
-</table>
 
-<table>
-	<tr>
-	<td>
+	<c:if test="${(!empty disabledUsers)}">
 	<div class="subItems" style="width: 545px;">
 	<div class="subItemHeader">
 		<table cellspacing="0" cellpadding="0">
@@ -79,8 +71,7 @@ $(document).ready(function() {
 			</tr>
 		</table>
 	</div>
-
-	<div class="subItemContent">
+	<div class="subItemContent">	
 	<display:table name="${disabledUsers}" id="row"
     requestURI="listUsers.action" defaultsort="1">
     <display:column sortable="true" title="Name" sortProperty="fullName" style="width: 150px;">
@@ -108,12 +99,9 @@ $(document).ready(function() {
             <img src="static/img/delete_18.png" alt="Delete" title="Delete" />
         </ww:a>
 	</display:column>
-	</display:table>
+	</display:table>	
+	</div>	
 	</div>
-	
-	</div>
-	</td>
-	</tr>
-</table>
+	</c:if>
 
 <%@ include file="../inc/_footer.jsp"%>

@@ -16,11 +16,6 @@ $(document).ready(function() {
 
 <h2>Teams</h2>
 
-<%--<p><ww:a href="ajaxCreateTeam.action" cssClass="openCreateDialog openTeamDialog">Create a new team &raquo;</ww:a></p>--%>
-
-<table>
-	<tr>
-	<td>
 	<div class="subItems" style="width: 525px;">
 	<div class="subItemHeader">
 		<table cellspacing="0" cellpadding="0">
@@ -32,9 +27,9 @@ $(document).ready(function() {
 		</table>
 	</div>
 	<div class="subItemContent">
-	<aef:userList />
-	<display:table name="${teamList}" id="row"
-			requestURI="listTeams.action" defaultsort="1">
+	<c:if test="${(!empty teamList)}">
+	<display:table name="${teamList}" id="row" requestURI="listTeams.action" >
+			
 			<display:column sortable="true" title="Name" sortProperty="name" style="width: 395px;">
 				<a class="nameLink"
 					onclick="handleTabEvent('teamTabContainer-${row.id}', 'team', ${row.id}, 0); return false;">
@@ -56,12 +51,11 @@ $(document).ready(function() {
 				    <img src="static/img/delete_18.png" alt="Edit" title="Edit" />
 				</ww:a>
 			</display:column>
+			
 		</display:table>
+		</c:if>
 	</div>
 
 	</div>
-</td>
-</tr>
-</table>
 
 <%@ include file="../inc/_footer.jsp"%>

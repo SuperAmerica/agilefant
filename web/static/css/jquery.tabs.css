@@ -30,6 +30,12 @@
 	background-color: inherit;
 }
 
+.ajaxProjectTypeWindowTabsDiv {
+	width: 480px !important;
+	margin: 20px 4px 10px 20px;
+	background-color: inherit;
+}
+
 .businessThemeNaviTab {
 	width: 730px !important;
 	border: 1px solid #666;
@@ -85,6 +91,17 @@
 }
 
 .teamNaviTab {
+	width: 480px !important;
+	border: 1px solid #666;
+	max-height: 480px;
+	min-height: 100px;
+	background-color: #f0f0f0;
+	padding: 8px 3px;
+	white-space: normal !important;
+	overflow: auto !important;
+}
+
+.projectTypeNaviTab {
 	width: 480px !important;
 	border: 1px solid #666;
 	max-height: 480px;

@@ -418,11 +418,25 @@ var agilefantValidationRules = {
             }
         }
     },
-    projectType: {
+    newProjectType: {
         rules: {
             "projectType.name": {
                 required: true,
                 unique: [ "name", "allProjectTypes" ]
+            }
+        },
+        messages: {
+            "projectType.name": {
+                required: "Please enter a name",
+                unique: "Project type name already in use"
+            }
+        }
+    },
+    projectType: {
+        rules: {
+            "projectType.name": {
+                required: true,
+                unique: [ "name", "allProjectTypes", { exclude: true, excludeField: 'input[name=projectTypeId]' } ]
             }
         },
         messages: {
@@ -488,7 +502,8 @@ var validationRulesByHTMLClass = {
     'validateNewProduct': agilefantValidationRules.product,
     'validateNewProject': agilefantValidationRules.project,
     'validateProject': agilefantValidationRules.project,
-    'validateNewProjectType': agilefantValidationRules.projectType,
+    'validateNewProjectType': agilefantValidationRules.newProjectType,
+    'validateProjectType': agilefantValidationRules.projectType,
     'validateNewTeam': agilefantValidationRules.newTeam,
     'validateTeam': agilefantValidationRules.team,
     'validateNewTheme': agilefantValidationRules.theme,

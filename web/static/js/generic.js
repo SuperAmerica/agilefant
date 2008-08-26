@@ -116,7 +116,8 @@ function handleTabEvent(target, context, id, tabId, bliContext) {
             "iterationGoal": "iterationGoalTabs.action",
             "businessTheme": "businessThemeTabs.action",
             "user": "userTabs.action",
-            "team": "teamTabs.action"
+            "team": "teamTabs.action",
+            "projectType": "projectTypeTabs.action"
         };
         
         var targetParams = {
@@ -153,6 +154,9 @@ function handleTabEvent(target, context, id, tabId, bliContext) {
             },
             "team": {
             	teamId: id
+            },
+            "projectType": {
+            	projectTypeId: id
             }
         };
         

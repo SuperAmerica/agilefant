@@ -647,6 +647,8 @@ $(document).ready(function() {
 
 <div id="backlogItemThemesTab-${backlogItemId}-${bliListContext}" class="backlogItemNaviTab">		
 
+	<c:choose>
+	<c:when test="${(!empty backlogItem.product.businessThemes)}">
 	<table>
 		<tr>
 		<td>
@@ -671,7 +673,7 @@ $(document).ready(function() {
 					</display:column>
 				</display:table>
 				</p>
-				<ww:submit name="Save" />
+				<input type="submit" value="Save" name="Save" />
 			</ww:form>				
 			</div>
 														
@@ -680,6 +682,11 @@ $(document).ready(function() {
 		</td>
 		</tr>
 	</table>
+	</c:when>
+	<c:otherwise>
+	The product, ${backlogItem.product.name}, has no themes. Create new themes first in the product page.
+	</c:otherwise>
+	</c:choose>
 		
 </div>
 

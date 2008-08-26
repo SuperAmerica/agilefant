@@ -27,7 +27,7 @@ $(document).ready(function() {
 	<div class="subItemContent"><aef:userList /> <display:table
 			name="${enabledUsers}" id="row" requestURI="listUsers.action"
 			defaultsort="1">
-			<display:column sortable="true" title="Name" sortProperty="fullName">
+			<display:column sortable="true" title="Name" sortProperty="fullName" style="width: 150px;">
 				<a class="nameLink"
 					onclick="handleTabEvent('userTabContainer-${row.id}', 'user', ${row.id}, 0); return false;">
 				${aef:html(row.fullName)} </a>
@@ -36,7 +36,7 @@ $(document).ready(function() {
 			</display:column>
 			<display:column sortable="true" title="User ID" property="loginName" />
 			<display:column sortable="true" title="Initials" property="initials" />
-			<display:column sortable="true" title="Email" property="email" />
+			<display:column sortable="true" title="Email" property="email" style="width: 125px;"/>
 			<display:column sortable="true" title="Week hours"
 				property="weekHours" />
 			<display:column sortable="false" title="Actions" style="width: 70px;">

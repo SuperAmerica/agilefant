@@ -322,15 +322,10 @@
 			</result>
 		</action>
 
-		<action name="storeNewProject" method="store"
+		<action name="storeNewProject" method="ajaxStoreProject"
 			class="projectAction">
-			<result type="redirect-action">
-				<param name="actionName">contextView</param>
-				<param name="contextName">project</param>
-				<param name="contextObjectId">${projectId}</param>
-				<param name="resetContextView">true</param>
-			</result>
 		</action>
+		
 		<action name="projectTabs" method="edit"
 			class="projectAction">
 			<result>/WEB-INF/jsp/inc/projectAjax.jsp</result>

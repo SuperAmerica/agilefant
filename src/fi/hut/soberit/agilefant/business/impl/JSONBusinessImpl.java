@@ -3,7 +3,9 @@ package fi.hut.soberit.agilefant.business.impl;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.support.PropertyComparator;
 
@@ -13,6 +15,7 @@ import fi.hut.soberit.agilefant.business.JSONBusiness;
 import fi.hut.soberit.agilefant.business.TeamBusiness;
 import fi.hut.soberit.agilefant.business.UserBusiness;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
+import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.Assignment;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
@@ -36,11 +39,14 @@ public class JSONBusinessImpl implements JSONBusiness {
         Backlog backlog = null;
         Collection<Integer> assignments = new ArrayList<Integer>();
         Collection<Integer> responsibles = new ArrayList<Integer>();
+        Map<Integer, AFTime> deltaOverheads = new HashMap<Integer, AFTime>();
 
+        String backlogJson = "";
         String userJson = "";
         String teamJson = "";
         String assignmentJson = "";
         String responsibleJson = "";
+        String overheadJson = "";
 
         try {
             bli = backlogItemBusiness.getBacklogItem(backlogItemId);
@@ -61,6 +67,7 @@ public class JSONBusinessImpl implements JSONBusiness {
             if (proj != null) {
                 for (Assignment ass : proj.getAssignments()) {
                     assignments.add(ass.getUser().getId());
+                    deltaOverheads.put(ass.getUser().getId(), ass.getDeltaOverhead());
                 }
             }
         }
@@ -75,26 +82,29 @@ public class JSONBusinessImpl implements JSONBusiness {
         /*
          * Get all teams and users as json
          */
-        List<User> users = userBusiness.getEnabledUsers();
+        List<User> users = userBusiness.getAllUsers();
         Collections.sort(users, new PropertyComparator("fullName", false, true));
         List<Team> teams = teamBusiness.getAllTeams();
         Collections.sort(teams, new PropertyComparator("name", false, true));
         
         userJson = new JSONSerializer().include("id").include("fullName")
-                .include("initials").exclude("*").serialize(users);
+                .include("initials").include("enabled").exclude("*").serialize(users);
         teamJson = new JSONSerializer().include("users.id").exclude("users.*")
                 .serialize(teams);
 
         /* Get the other jsons */
-        assignmentJson = new JSONSerializer().include("user.id").exclude("*")
-                .serialize(assignments);
+        assignmentJson = new JSONSerializer().serialize(assignments);
         responsibleJson = new JSONSerializer().include("id").exclude("*")
                 .serialize(responsibles);
+        overheadJson = new JSONSerializer().serialize(deltaOverheads);
+        backlogJson = new JSONSerializer().include("id").include("defaultOverhead").exclude("*").serialize(backlog);
 
         return "{users:" + userJson + ",teams:" + teamJson + ",assignments:"
-                + assignmentJson + ",responsibles:" + responsibleJson + "}";
+                + assignmentJson + ",responsibles:" + responsibleJson + "," +
+                "overheads:" + overheadJson + "," +
+                "backlog:" + backlogJson + "}";
     }
-
+    
     /** {@inheritDoc}} */
     public String objectToJSON(Object object) {
         return new JSONSerializer().serialize(object);

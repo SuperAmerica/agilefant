@@ -287,24 +287,6 @@
 			<td>
 			<!-- Position modal window at state select level.  -->
 			<aef:backlogItemThemes backlogItemId="${backlogItemId}" positionId="stateSelect" editBacklogItemPage="true"/>
-			<!--
-			<ww:a href="#" id="addThemeLink" onclick="openThemeBusinessBliModal('stateSelect', 'editBacklogItemBusinessThemes.action',${backlogItemId},0); return false;">
-				<img src="static/img/add_theme.png" alt="Edit themes" title="Edit themes" />
-				<c:if test="${empty backlogItem.businessThemes}">
-					none
-				</c:if>
-			</ww:a>			
-			<c:if test="${!empty backlogItem.businessThemes}">				
-			<c:forEach items="${backlogItem.businessThemes}" var="businessTheme">
-				<span class="businessTheme" title="${businessTheme.description}">
-				<ww:a href="#" id="${backlogItemId}" onclick="openThemeBusinessBliModal('${backlogItemId}', 'editBacklogItemBusinessThemes.action',${backlogItemId}, ${businessTheme.id}); return false;">
-						${businessTheme.name}
-				</ww:a>
-				</span>
-			</c:forEach>
-						
-			</c:if>
-			-->
 			</td>
 			</c:when>
 			</c:choose>		

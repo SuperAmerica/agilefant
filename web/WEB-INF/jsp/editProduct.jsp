@@ -226,7 +226,7 @@ var productId = ${product.id};
 							
 					<display:column sortable="false" title="St." class="statusColumn">
 						<%@ include file="./inc/_projectStatusIcon.jsp"%>
-						<div id="projectTabContainer-${row.id}" style="overflow:visible; white-space: nowrap; width: 15px;"></div>
+						<div id="projectTabContainer-${row.id}" class="tabContainer" style="overflow:visible; white-space: nowrap; width: 15px;"></div>
 					</display:column>		
 														
 					<display:column sortable="true" sortProperty="name" title="Name">					
@@ -324,7 +324,7 @@ var productId = ${product.id};
 						<a class="nameLink" onclick="handleTabEvent('businessThemeTabContainer-${row.id}','businessTheme',${row.id},0); return false;">
 							${row.name}
 						</a>															
-						<div id="businessThemeTabContainer-${row.id}" style="overflow:visible; white-space: nowrap; width: 115px;"></div>
+						<div id="businessThemeTabContainer-${row.id}" class="tabContainer" style="overflow:visible; white-space: nowrap; width: 115px;"></div>
 					</display:column>
 					<display:column title="Description" class="themeDescriptionColumn">
 					   <c:out value="${fn:substring(row.description, 0, 50)}" />
@@ -371,7 +371,7 @@ var productId = ${product.id};
 					id="row" defaultsort="1">
 					<display:column title="Name" class="themeEditNameColumn">
 						<c:out value="${row.name}" />					
-						<div id="businessThemeTabContainer-${row.id}" style="overflow:visible; white-space: nowrap; width: 115px;"></div>
+						<div id="businessThemeTabContainer-${row.id}" class="tabContainer" style="overflow:visible; white-space: nowrap; width: 115px;"></div>
 					</display:column>
 					<display:column title="Description" class="themeDescriptionColumn">
                        <c:out value="${fn:substring(row.description, 0, 50)}" />

@@ -90,7 +90,7 @@ $(document).ready(function() {
 							${aef:html(row.name)}
 						</a>
 						</div>
-						<div id="backlogItemTabContainer-${row.id}-${bliListContext}" style="overflow:visible; white-space: nowrap; width: 0px;"></div>
+						<div id="backlogItemTabContainer-${row.id}-${bliListContext}" class="tabContainer" style="overflow:visible; white-space: nowrap; width: 0px;"></div>
 					</display:column>
 
 					<display:column sortable="true" title="Iteration goal"

@@ -338,29 +338,7 @@ public class BacklogBusinessImpl implements BacklogBusiness {
         return data;
     }
     
-    public BacklogItemDAO getBacklogItemDAO() {
-        return backlogItemDAO;
-    }
 
-    public void setBacklogItemDAO(BacklogItemDAO backlogItemDAO) {
-        this.backlogItemDAO = backlogItemDAO;
-    }
-
-    public BacklogDAO getBacklogDAO() {
-        return backlogDAO;
-    }
-
-    public void setBacklogDAO(BacklogDAO backlogDAO) {
-        this.backlogDAO = backlogDAO;
-    }
-
-    public HistoryBusiness getHistoryBusiness() {
-        return historyBusiness;
-    }
-
-    public void setHistoryBusiness(HistoryBusiness historyBusiness) {
-        this.historyBusiness = historyBusiness;
-    }
 
     public void setAssignments(int[] selectedUserIds, Map<String, Assignment> assignmentData, Backlog backlog) {
         if (backlog != null) {
@@ -904,6 +882,28 @@ public class BacklogBusinessImpl implements BacklogBusiness {
     public void setBusinessThemeBusiness(BusinessThemeBusiness businessThemeBusiness) {
         this.businessThemeBusiness = businessThemeBusiness;
     }
+    public BacklogItemDAO getBacklogItemDAO() {
+        return backlogItemDAO;
+    }
 
+    public void setBacklogItemDAO(BacklogItemDAO backlogItemDAO) {
+        this.backlogItemDAO = backlogItemDAO;
+    }
+
+    public BacklogDAO getBacklogDAO() {
+        return backlogDAO;
+    }
+
+    public void setBacklogDAO(BacklogDAO backlogDAO) {
+        this.backlogDAO = backlogDAO;
+    }
+
+    public HistoryBusiness getHistoryBusiness() {
+        return historyBusiness;
+    }
+
+    public void setHistoryBusiness(HistoryBusiness historyBusiness) {
+        this.historyBusiness = historyBusiness;
+    }
 
 }

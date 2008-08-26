@@ -37,7 +37,6 @@ import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.ProjectType;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.util.BacklogLoadData;
-import fi.hut.soberit.agilefant.util.BacklogMetrics;
 import fi.hut.soberit.agilefant.util.CalendarUtils;
 import fi.hut.soberit.agilefant.util.DailyWorkLoadData;
 import fi.hut.soberit.agilefant.util.EffortSumData;

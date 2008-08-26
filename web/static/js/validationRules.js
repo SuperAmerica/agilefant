@@ -1,7 +1,8 @@
 
 /*
  * Add the validator for AFTime.
- * param[0] should be false if empty values are accepted, true otherwise. 
+ * param[0] should be false if empty values are accepted, true otherwise.
+ * param[1] allow negatives 
  */
 jQuery.validator.addMethod("aftime",function(value, element, param) {
     if (param == null) {
@@ -10,10 +11,19 @@ jQuery.validator.addMethod("aftime",function(value, element, param) {
     if (param[0] == false && jQuery.trim(value) == "") {
         return true;
     }
+    if (param[1] == null) {
+        param[1] = false;
+    }
     var hourOnly = new RegExp("^[ ]*[0-9]+h?[ ]*$"); //10h
     var minuteOnly = new RegExp("^[ ]*[0-9]+min[ ]*$"); //10min
     var hourAndMinute = new RegExp("^[ ]*[0-9]+h[ ]+[0-9]+min[ ]*$"); //1h 10min
     var shortFormat = new RegExp("^[0-9]+[.,][0-9]+$"); //1.5 or 1,5
+    if (param[1]) {
+	    hourOnly = new RegExp("^[ ]*-?[0-9]+h?[ ]*$"); //10h
+	    minuteOnly = new RegExp("^[ ]*-?[0-9]+min[ ]*$"); //10min
+	    hourAndMinute = new RegExp("^[ ]*-?[0-9]+h[ ]+[0-9]+min[ ]*$"); //1h 10min
+        shortFormat = new RegExp("^-?[0-9]+[.,][0-9]+$"); //1.5 or 1,5
+    }
     return (hourOnly.test(value) || minuteOnly.test(value) || hourAndMinute.test(value) || shortFormat.test(value));
 }, "Invalid format");
 

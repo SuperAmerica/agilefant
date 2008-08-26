@@ -1,6 +1,7 @@
 <%@ include file="./inc/_taglibs.jsp"%>
 <%@ include file="./inc/_header.jsp"%>
 
+
 <aef:projectTypeList id="projectTypes"/>
 <aef:openDialogs context="iteration" id="openIterations" />
 
@@ -58,6 +59,12 @@ $(document).ready(function() {
 											  	reset: {cell: 2, type: 'reset'}
 											  }
 											 });
+    $('#userChooserLink-editProject').userChooser({
+        backlogIdField: '#editProject-projectId',
+        userListContainer: '#userListContainer-editProject',
+        renderFor: 'project',
+        backlogItemId: 0
+    });
 });
 //-->
 </script>
@@ -272,7 +279,7 @@ $(document).ready(function() {
 										</div>
 										<div id="editProjectForm" style="display: none;" class="validateWrapper validateProject">
 											<ww:form id="projectEditForm" action="storeProject" method="post">
-												<ww:hidden name="projectId" value="${project.id}" />
+												<ww:hidden id="editProject-projectId" name="projectId" value="${project.id}" />
 												<table class="formTable">
 													<tr>
 														<td>Name</td>
@@ -370,131 +377,29 @@ $(document).ready(function() {
 														<td>Assigned Users</td>
 														<td></td>
 														<td colspan="2">
-															<c:set var="divId" value="1" scope="page" />
-															<div id="assigneesLink">
-																<a href="javascript:toggleDiv(${divId});">
-																	<img src="static/img/users.png" />
-																	<c:set var="listSize" value="${fn:length(project.responsibles)}" scope="page" />
-																	<c:choose>
-																		<c:when test="${listSize > 0}">
-																			<c:set var="count" value="0" scope="page" />
-																			<c:forEach items="${project.responsibles}" var="responsible">
-																				<c:choose>
-																					<c:when test="${count < listSize - 1}">
-																						<c:out value="${responsible.initials}" /><c:out value="${','}" />
-																					</c:when>
-																					<c:otherwise>
-																						<c:out value="${responsible.initials}" />
-																					</c:otherwise>
-																				</c:choose>
-																				<c:set var="count" value="${count + 1}" scope="page" />
-																			</c:forEach>
-																		</c:when>
-																		<c:otherwise>
-																			<c:out value="none" />
-																		</c:otherwise>
-																	</c:choose>
-																</a>
-															</div>
-															<div id="${divId}" style="display: none;">
-																<display:table name="${assignableUsers}" id="user" class="projectUsers"
-																	defaultsort="2">
-																	<display:column title="">
-																		<%--<c:forEach var="usr" items="${assignedUsers}">
-																			<c:if test="${usr.id == user.id}">
-																				<c:set var="flag" value="1" scope="request" />
-																			</c:if>
-																		</c:forEach>--%>
-								
-																		<%-- Test, if the user should be checked --%>
-																		<c:set var="flag" value="0" scope="request" />
-																		<c:if test="${aef:listContains(assignedUsers, user)}">
-	                                										<c:set var="flag" value="1" scope="request" />
-																		</c:if>
-																		<c:choose>
-																			<c:when test="${flag == 1}">
-																				<input type="checkbox" name="selectedUserIds"
-																					value="${user.id}" checked="checked" class="user_${user.id}" onchange="toggleDiv('${user.id}')"/>
-																			</c:when>
-																			<c:otherwise>
-																				<input type="checkbox" name="selectedUserIds"
-																					value="${user.id}" class="user_${user.id}" onchange="toggleDiv('${user.id}')"/>
-																			</c:otherwise>
-																		</c:choose>
-																	</display:column>
-																	<display:column title="User" sortProperty="fullName">
-	    					    										<c:choose>
-							    											<c:when test="${unassignedHasWork[user] == 1}">
-							      												<span style="color: red">					    
-							    											</c:when>
-							    											<c:otherwise>
-							      												<span>
-							    											</c:otherwise>
-							    										</c:choose>
-							    										<c:out value="${user.fullName}" />
-		                        										<%-- Test, if the user is not enabled --%>					    
-							    										<c:if test="${aef:listContains(disabledUsers, user)}">
-	                                										<img src="static/img/disable_user_gray.png" alt="The user is disabled" title="The user is disabled" />
-	                            										</c:if>
-																		</span>
-																	</display:column>
-																	<display:column title="Overhead +/-">
-																	<!-- Check whether user is assigned. If is assigned -> show overhead -->
-																		<c:choose>	
-																		<c:when test="${flag == 1}"> 
-																			<div id="${user.id}" class="overhead">
-																		</c:when>
-																		<c:otherwise>
-																			<div id="${user.id}" class="overhead" Style="display: none;">
-																		</c:otherwise>
-																		</c:choose>
-																		<c:choose>
-																		<c:when test="${empty project.defaultOverhead}">
-																			<ww:label value="0h" />
-																		</c:when>
-																		<c:otherwise>
-																			<ww:label value="${project.defaultOverhead}" />
-																		</c:otherwise>
-																		</c:choose>																		
-																		+
-																		<ww:hidden name="assignments['${user.id}'].user.id" 
-																			value="${user.id}"  />																			
-																		<ww:textfield size="3"  name="assignments['${user.id}'].deltaOverhead" /> =
-																		
-																		<c:choose>
-																		<c:when test="${!empty totalOverheads[user.id]}">	
-																			<ww:label value="${totalOverheads[user.id]}" />
-																		</c:when>
-																		<c:otherwise>																			
-																			<c:choose>
-																				<c:when test="${empty project.defaultOverhead}">
-																					<ww:label value="0h" />
-																				</c:when>
-																				<c:otherwise>
-																					<ww:label value="${project.defaultOverhead}" />
-																				</c:otherwise>
-																			</c:choose>	
-																		</c:otherwise>
-																		</c:choose>																																																
-																		
-																		</div>																		
-																	</display:column>
-																</display:table>
-																<div id="userselect" class="projectTeams">
-																	<div class="right">
-																		<label>Teams</label>
-																		<ul class="groups" />
-																	</div>
-																	<script type="text/javascript">
-																		$(document).ready( function() {
-																			<aef:teamList />
-																			<ww:set name="teamList" value="#attr.teamList" />
-																			var teams = [<aef:teamJson items="${teamList}"/>]
-																			$('#userselect').multiuserselect({groups: teams, root: $('#user')});
-																		});
-																	</script>
-																</div>
-															</div>
+														<div>
+									                        <a id="userChooserLink-editProject" href="#" class="assigneeLink">
+									                            <img src="static/img/users.png"/>
+									                            <span id="userListContainer-editProject">
+									                            <c:set var="count" value="0" />
+											                    <c:set var="listLength" value="${fn:length(project.assignments)}"/>
+											                    <c:choose>
+											                        <c:when test="${listLength > 0}">
+											                            <c:forEach items="${project.assignments}" var="ass">
+											                                <input type="hidden" name="selectedUserIds" value="${ass.user.id}"/>
+											                                <input type="hidden" name="assignments['${ass.user.id}'].user.id" value="${ass.user.id}"/>
+											                                <input type="hidden" name="assignments['${ass.user.id}'].deltaOverhead" value="${ass.deltaOverhead}"/>
+											                                <c:set var="count" value="${count + 1}" />
+											                                <c:out value="${ass.user.initials}" /><c:if test="${count != listLength}">, </c:if>
+											                            </c:forEach>    
+											                        </c:when>
+											                        <c:otherwise>
+											                            (none)
+											                        </c:otherwise>
+											                    </c:choose>
+									                            </span>
+									                        </a>
+									                    </div>
 														</td>
 													</tr>
 	                								<tr>
@@ -672,7 +577,7 @@ $(document).ready(function() {
 													<img src="static/img/link.png" alt="Iteration page" title="Iteration page"/>
 												</ww:a>												
 												</div>
-												<div id="iterationTabContainer-${row.id}" style="overflow:visible; white-space: nowrap; width: 0px;"></div>
+												<div id="iterationTabContainer-${row.id}" class="tabContainer" style="overflow:visible; white-space: nowrap; width: 0px;"></div>
 											</display:column>
 											
 											<display:column sortable="true" title="Items">

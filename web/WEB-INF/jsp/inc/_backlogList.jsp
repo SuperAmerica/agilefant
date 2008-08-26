@@ -44,7 +44,7 @@ $(document).ready(function() {
 		<display:column sortable="false" title="" class="selectColumn">
 			<div><ww:checkbox name="selected" fieldValue="${row.id}" /></div>
 			<div style="height: 15px;"></div>
-			<div id="backlogItemTabContainer-${row.id}-${bliListContext}" style="overflow:visible; white-space: nowrap; width: 15px;"></div>
+			<div id="backlogItemTabContainer-${row.id}-${bliListContext}" class="tabContainer" style="overflow:visible; white-space: nowrap; width: 15px;"></div>
 		</display:column>
 		
 		<!-- Make the columns fit in the iteration-page. -->

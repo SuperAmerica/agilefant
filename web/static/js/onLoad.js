@@ -37,16 +37,29 @@ function initOnLoad(elem) {
 }
 
 function submitDialogForm() {
-    var e = $(this).data('delete');
-    if ($(this).data('delete') == '1') {
+    var me = $(this);
+    var e = me.data('delete');
+    if (me.data('delete') == '1') {
         return true;
     }
-    if($(this).valid()) {
-        $(this).find("input[type=submit]").attr("disabled", "disabled");
-        $.post($(this).attr("action"), $(this).serializeArray(),
+    if(me.valid()) {
+        me.find("input[type=submit]").attr("disabled", "disabled");
+        $.post(me.attr("action"), me.serializeArray(),
             function(data, status) {
-                reloadPage();                
-        });
+                var prev = window.location.href;
+                if (prev.indexOf('#') > -1) {
+                    prev = prev.substr(0, prev.indexOf('#'));
+                }
+                prev = addRandomToURL(prev);
+                var parentId = me.parents('div.tabContainer:eq(0)').attr('id');
+                if (parentId == null || parentId == "") {
+                    window.location.href = prev;
+                }
+                else {
+                    window.location.href = prev + "#" + parentId;
+                }
+            }
+        );
     }
     return false;
 }

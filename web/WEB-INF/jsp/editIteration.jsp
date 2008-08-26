@@ -423,7 +423,7 @@ $(document).ready( function() {
 							<a class="nameLink" onclick="handleTabEvent('iterationGoalTabContainer-${row.id}', 'iterationGoal', ${row.id}, 0); return false;">
 								${aef:html(row.name)}
 							</a>							
-							<div id="iterationGoalTabContainer-${row.id}" style="overflow:visible; white-space: nowrap; width: 0px;"></div>
+							<div id="iterationGoalTabContainer-${row.id}" class="tabContainer" style="overflow:visible; white-space: nowrap; width: 0px;"></div>
 						</display:column>
 
 						<display:column sortable="true" sortProperty="description"

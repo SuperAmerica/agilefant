@@ -31,7 +31,7 @@ $(document).ready(function() {
 				<a class="nameLink"
 					onclick="handleTabEvent('userTabContainer-${row.id}', 'user', ${row.id}, 0); return false;">
 				${aef:html(row.fullName)} </a>
-				<div id="userTabContainer-${row.id}"
+				<div id="userTabContainer-${row.id}" class="tabContainer"
 					style="overflow: visible; white-space: nowrap; width: 0px;"></div>
 			</display:column>
 			<display:column sortable="true" title="User ID" property="loginName" />
@@ -78,7 +78,7 @@ $(document).ready(function() {
         <a class="nameLink" onclick="handleTabEvent('userTabContainer-${row.id}', 'user', ${row.id}, 0); return false;">
 			${aef:html(row.fullName)}
 		</a>							
-		<div id="userTabContainer-${row.id}" style="overflow:visible; white-space: nowrap; width: 0px;"></div>
+		<div id="userTabContainer-${row.id}" class="tabContainer" style="overflow:visible; white-space: nowrap; width: 0px;"></div>
     </display:column>
     <display:column sortable="true" title="User ID" property="loginName" />
     <display:column sortable="true" title="Initials" property="initials" />        	

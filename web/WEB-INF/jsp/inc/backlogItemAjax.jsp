@@ -275,11 +275,18 @@ $(document).ready(function() {
                     <span id="userListContainer-${backlogItemId}-${bliListContext}">
                     <c:set var="count" value="0" />
                     <c:set var="listLength" value="${fn:length(backlogItem.responsibles)}"/>
-                    <c:forEach items="${backlogItem.responsibles}" var="resp">
-                        <input type="hidden" name="userIds[${resp.id}]" value="${resp.id}"/>
-                        <c:set var="count" value="${count + 1}" />
-                        <c:out value="${resp.initials}" /><c:if test="${count != listLength}">, </c:if>
-                    </c:forEach>
+                    <c:choose>
+                        <c:when test="${listLength > 0}">
+                            <c:forEach items="${backlogItem.responsibles}" var="resp">
+                                <input type="hidden" name="userIds[${resp.id}]" value="${resp.id}"/>
+                                <c:set var="count" value="${count + 1}" />
+                                <c:out value="${resp.initials}" /><c:if test="${count != listLength}">, </c:if>
+                            </c:forEach>    
+                        </c:when>
+                        <c:otherwise>
+                            (none)
+                        </c:otherwise>
+                    </c:choose>
                     </span>
 				</a>
 				</div>

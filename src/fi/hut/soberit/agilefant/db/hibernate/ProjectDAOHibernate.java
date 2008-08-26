@@ -6,14 +6,12 @@ import java.util.Date;
 import java.util.List;
 
 import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Order;
 import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 
 import fi.hut.soberit.agilefant.db.ProjectDAO;
 import fi.hut.soberit.agilefant.model.AFTime;
-import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.BacklogThemeBinding;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Project;
@@ -152,6 +150,7 @@ public class ProjectDAOHibernate extends GenericDAOHibernate<Project>
         ProjectionList sums = Projections.projectionList();
         sums.add(Projections.groupProperty("project"));
         sums.add(Projections.count("backlogItems"));
+        @SuppressWarnings("unused")
         DetachedCriteria bli = crit.createAlias("backlogItems", "bli");
         crit.add(Restrictions.eq("project", proj));
         crit.add(Restrictions.eq("bli.state", State.DONE));

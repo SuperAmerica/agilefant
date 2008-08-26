@@ -17,6 +17,25 @@ function deleteBacklogItem(backlogItemId) {
 	}
 }
 
+function addRandomToURL(url) {
+    var rand = Math.round(Math.random()*1000000000);
+    
+    if(url.match(/aef_rand=\d+/)) {
+        url = url.replace(/aef_rand=(\d+)/,'aef_rand=' + rand);
+    } else {
+        if (url.match(/\?\w/)) {
+            url = url.concat("&aef_rand=",rand);
+        }
+        else if (url.match(/\?^\w/)) {
+            url = url.concat("aef_rand=",rand);
+        }
+        else {
+            url = url.concat("?aef_rand=",rand);
+        }
+    }   
+    return url;
+}
+
 function validateDateFormat(value) {
 	var standardDateFormat = new RegExp("^[ ]*[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])[ ]+([0-1][0-9]|2[0-3]):[0-5][0-9][ ]*$");
 	return (standardDateFormat.test(value) ); 

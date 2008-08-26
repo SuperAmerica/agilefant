@@ -423,6 +423,20 @@ Date.fullYearStart = '20';
 	});
 	
 	/**
+	 * Convert a date to AFTime notation.
+	 */
+	add("toAFTime", function() {
+	   var returnString = "";
+	   if (this.getHours() > 0) {
+	       returnString += this.getUTCHours() + "h ";
+	   }
+	   if (this.getMinutes() > 0) {
+	       returnString += this.getUTCMinutes() + "min";
+	   }
+	   return returnString;
+	});
+	
+	/**
 	 * Returns a new date object created from the passed String according to Date.format or false if the attempt to do this results in an invalid date object
 	 * (We can't simple use Date.parse as it's not aware of locale and I chose not to overwrite it incase it's functionality is being relied on elsewhere)
 	 *
@@ -469,6 +483,22 @@ Date.fullYearStart = '20';
         d.setMinutes(Number(s.substr(pM,2)));
       }
 		return d;
+	};
+	
+	/**
+	 * Convert millis to AFTime.
+	 */
+	Date.millisToAFTime = function(arg) {
+	   var sign = "";
+	   if (arg < 0) {
+	       sign = "-";
+	       arg = -arg;
+	   }
+	   var d = new Date();
+	   d.setTime(arg);
+	   var ret = d.toAFTime();
+	   
+	   return sign + ret;
 	};
 	
 	// utility method

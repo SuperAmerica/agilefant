@@ -12,6 +12,8 @@ import javax.persistence.Table;
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Type;
 
+import flexjson.JSON;
+
 @BatchSize(size=20)
 @Entity
 @Table(name = "assignment")
@@ -27,6 +29,7 @@ public class Assignment implements Serializable {
      * Deviation from project's default overhead.
      */
     @Type(type = "af_time")
+    @JSON
     public AFTime getDeltaOverhead() {
         return deltaOverhead;
     }
@@ -44,6 +47,7 @@ public class Assignment implements Serializable {
     }
 
     @ManyToOne
+    @JSON(include = false)
     public Backlog getBacklog() {
         return backlog;
     }
@@ -53,6 +57,7 @@ public class Assignment implements Serializable {
     }
 
     @ManyToOne
+    @JSON(include = false)
     public User getUser() {
         return user;
     }
@@ -63,6 +68,7 @@ public class Assignment implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @JSON(include = false)
     public int getId() {
         return id;
     }

@@ -34,7 +34,7 @@ $(document).ready(function() {
 				<a class="nameLink"
 					onclick="handleTabEvent('teamTabContainer-${row.id}', 'team', ${row.id}, 0); return false;">
 				${aef:html(row.name)} </a>
-				<div id="teamTabContainer-${row.id}"
+				<div id="teamTabContainer-${row.id}" class="tabContainer"
 					style="overflow: visible; white-space: nowrap; width: 0px;"></div>
 			</display:column>
 

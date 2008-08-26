@@ -6,6 +6,16 @@
 <aef:iterationGoalList id="iterationGoals" backlogId="${backlogId}" />
 <aef:productList />
 
+<script type="text/javascript">
+$(document).ready(function() {
+    $('#userChooserLink-createBLI').userChooser({
+        backlogItemId: ${backlogItemId},
+        backlogIdField: '#createBLIBacklogId',
+        userListContainer: '#userListContainer-createBLI'
+    });
+});
+</script>
+
 <div class="validateWrapper validateNewBacklogItem">
 <ww:form action="storeNewBacklogItem" method="post">
 	<table class="formTable">
@@ -115,80 +125,14 @@
 			<td></td>
 			<td colspan="2">
 
-			<div id="assigneesLink"><a
-				href="javascript:toggleDiv('createBLIuserselect')" class="assignees"> <img
-				src="static/img/users.png" /> <c:set var="listSize"
-				value="${fn:length(backlogItem.responsibles)}" scope="page" /> <c:choose>
-				<c:when test="${listSize > 0}">
-					<c:set var="count" value="0" scope="page" />
-					<c:set var="comma" value="," scope="page" />
-					<c:forEach items="${backlogItem.responsibles}" var="responsible">
-						<c:set var="unassigned" value="0" scope="page" />
-						<c:if test="${count == listSize - 1}">
-							<c:set var="comma" value="" scope="page" />
-						</c:if>
-						<c:if test="${!empty backlogItem.project}">
-							<c:set var="unassigned" value="1" scope="page" />
-							<c:forEach items="${backlogItem.project.responsibles}"
-								var="projectResponsible">
-								<c:if test="${responsible.id == projectResponsible.id}">
-									<c:set var="unassigned" value="0" scope="page" />
-								</c:if>
-							</c:forEach>
-						</c:if>
-						<c:choose>
-							<c:when test="${unassigned == 1}">
-								<span><c:out value="${responsible.initials}" /></span>
-								<c:out value="${comma}" />
-							</c:when>
-							<c:otherwise>
-								<c:out value="${responsible.initials}" />
-								<c:out value="${comma}" />
-							</c:otherwise>
-						</c:choose>
-						<c:set var="count" value="${count + 1}" scope="page" />
-					</c:forEach>
-				</c:when>
-				<c:otherwise>
-					<c:out value="none" />
-				</c:otherwise>
-			</c:choose> </a></div>
-
-			<script type="text/javascript">
-            $(document).ready( function() {
-                <ww:set name="userList" value="${possibleResponsibles}" />
-                <ww:set name="teamList" value="#attr.teamList" />
-                <c:choose>
-                <c:when test="${backlogItem.project != null}">
-                var others = [<aef:userJson items="${aef:listSubstract(possibleResponsibles, backlogItem.project.responsibles)}"/>];
-                var preferred = [<aef:userJson items="${backlogItem.project.responsibles}"/>];
-                </c:when>
-                <c:otherwise>
-                var others = [<aef:userJson items="${possibleResponsibles}"/>];
-                var preferred = [];
-                </c:otherwise>
-                </c:choose>
-                
-                var teams = [<aef:teamJson items="${teamList}"/>];
-                var selected = [<aef:idJson items="${backlogItem.responsibles}"/>]
-                $('#createBLIuserselect').multiuserselect({users: [preferred,others], groups: teams, root: $('#createBLIuserselect')}).selectusers(selected);
-                
-            });
-            </script>
-			<div id="createBLIuserselect" class="userselect" style="display: none;">
-			<div class="left"><c:if
-				test="${!aef:isProduct(backlog) &&
-                         backlog != null}">
-				<label>Users assigned to this project</label>
-				<ul class="users_0"></ul>
-				<label>Users not assigned this project</label>
-			</c:if>
-			<ul class="users_1"></ul>
-			</div>
-			<div class="right"><label>Teams</label>
-			<ul class="groups" />
-			</div>
-			</div>
+			<div>
+                <a id="userChooserLink-createBLI" href="#" class="assigneeLink">
+                    <img src="static/img/users.png"/>
+                    <span id="userListContainer-createBLI">
+                    (none)
+                    </span>
+                </a>
+            </div>
 			</td>
 		</tr>
 		<tr>

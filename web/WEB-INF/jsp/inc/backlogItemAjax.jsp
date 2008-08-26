@@ -684,7 +684,12 @@ $(document).ready(function() {
 	</table>
 	</c:when>
 	<c:otherwise>
-	The product, ${backlogItem.product.name}, has no themes. Create new themes first in the product page.
+	
+	<ww:url id="editLink" action="editProduct" includeParams="none">
+		<ww:param name="productId" value="${backlogItem.product.id}" />
+	</ww:url>			
+	The product, ${backlogItem.product.name}, has no themes. Create new themes first in the 
+		<ww:a href="%{editLink}&contextViewName=editProduct&contextObjectId=${backlogItem.product.id}">product page</ww:a>.
 	</c:otherwise>
 	</c:choose>
 		

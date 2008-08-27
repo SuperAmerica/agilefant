@@ -18,7 +18,7 @@
 	  			</td>
 	  			<c:choose>
 	  				<c:when test="${aef:isIteration(backlog) || ((!empty backlog.backlogItems) && (empty backlog.iterations))}">
-		   			<td rowspan="5">
+		   			<td rowspan="6">
 						<div class="smallBurndown">
 						  <c:choose>
 						  	<c:when test="${aef:isIteration(backlog)}"><a href="editIteration.action?iterationId=${backlog.id}#bigChart"><img src="drawSmallChart.action?iterationId=${backlog.id}"/></c:when>
@@ -26,7 +26,7 @@
 						  </c:choose>      
 	                   </a></div>
 	                      					
-	                 	<table>
+	                 	<table class="bubbleMetrics">
 		            	<tr>
 			            	 <th>Velocity</th>
 			                 <td><c:out value="${backlog.metrics.dailyVelocity}" /> / day</td>
@@ -98,7 +98,7 @@
 	  		<c:if test="${aef:isProject(backlog)}">
 	  		<tr>
 	  			<th>Assignees</th>
-	  			<td colspan="2">
+	  			<td colspan="2" style="white-space: normal !important;">
 	  				<c:forEach items="${backlog.responsibles}" var="responsible"><c:out value="${responsible.initials}" />&nbsp;</c:forEach>
 	  			</td>
 	  			<td></td>
@@ -106,15 +106,22 @@
 	  		</c:if>
 	  		<tr>
 	  			<th>Themes</th>
-	  			<td colspan="2">
+	  			<td style="white-space: normal !important;">
 	  			<c:choose>
 	  				<c:when test="${aef:isProject(backlog)}">
-	  					<c:forEach items="${themeCache}" var="bt"><c:out value="${bt.name}" /> (${themeEffort[bt]})&nbsp;</c:forEach>
+	  					<c:forEach items="${themeCache}" var="bt">
+		  					<span>
+		  					<c:out value="${bt.name}" />
+		  					(${themeEffort[bt]})
+		  					</span>
+	  					</c:forEach>
 	  				</c:when>
 	  				<c:otherwise>
-			  			<c:forEach items="${backlog.businessThemeBindings}" var="bindings">	
-			  				<c:out value="${bindings.businessTheme.name}" />
-			  				${bindings.boundEffort} <c:if test="${bindings.relativeBinding}"> ${bindings.percentage} </c:if>
+			  			<c:forEach items="${backlog.businessThemeBindings}" var="bindings">
+			  			    <span>
+			  			    <c:out value="${bindings.businessTheme.name}" />
+			  			    (${bindings.boundEffort})
+			  				</span>
 			  			</c:forEach>	  				
 	  				</c:otherwise>
 	  			</c:choose>

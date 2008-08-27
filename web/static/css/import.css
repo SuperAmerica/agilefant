@@ -387,11 +387,10 @@ span.right {
 }
 
 #menu li a:link, #menu a:visited {
-    background: #E8EBF0;
     color: #444;
-    padding: 3px 5px 2px 3px;
-    margin: 0 0 2px 0;
-    border: 1px solid #ccc;
+    background: transparent url('../img/main_tabs.png') no-repeat;
+    background-position: 100% -100px;
+    padding: 4px 7px 2px 0;
 }
 
 #menu li img {
@@ -399,12 +398,24 @@ span.right {
 }
 
 #menu li.selected a {
-    background-color: #fff;
-    border-bottom: 1px solid #fff;
+    background-position: 100% -150px;
+    padding-bottom: 3px;
 }
 
 #menu a:hover {
     color: #e50;	
+}
+
+#menu a span {
+    margin: 0;
+    padding: 4px 0 2px 7px;
+    background: transparent url('../img/main_tabs.png') no-repeat;
+    background-position: 0 0;	
+}
+
+#menu li.selected a span {
+	padding-bottom: 3px;
+    background-position: 0 -50px;	
 }
 
 /* Tabs style ends */

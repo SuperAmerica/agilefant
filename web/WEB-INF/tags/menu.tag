@@ -297,8 +297,10 @@ $(document).ready(function() {
     </c:otherwise>
 </c:choose>
     <a href="contextView.action?contextName=dailyWork&resetContextView=true">
+    <span>
     <img src="static/img/dailyWork.png" alt="Daily Work" />
     Daily Work
+    </span>
     </a>
 </li>
 
@@ -312,8 +314,10 @@ $(document).ready(function() {
     </c:otherwise>
 </c:choose>
     <a href="contextView.action?contextName=${currentContext}&contextObjectId=${currentPageId}&resetContextView=true">
+    <span>
     <img src="static/img/backlog.png" alt="Backlogs" />
     Backlogs
+    </span>
     </a>
 </li>
 
@@ -327,8 +331,10 @@ $(document).ready(function() {
     </c:otherwise>
 </c:choose>
     <a href="contextView.action?contextName=projectPortfolio&resetContextView=true">
+    <span>
     <img src="static/img/portfolio.png" alt="Dev Portfolio" />
     Dev Portfolio
+    </span>
     </a>
 </li>
 
@@ -344,9 +350,11 @@ $(document).ready(function() {
     </c:otherwise>
 </c:choose>
     <a href="contextView.action?contextName=timesheet&resetContextView=true">
+    <span>
     <img src="static/img/timesheets.png" alt="Timesheets" />
     Timesheets
     </a>
+    </span>
 </li>
 </c:if>
 
@@ -360,9 +368,11 @@ $(document).ready(function() {
     </c:otherwise>
 </c:choose>
     <a href="contextView.action?contextName=settings&resetContextView=true">
+    <span>
     <img src="static/img/settings.png" alt="Administration" />
     Administration
     </a>
+    </span>
 </li>
 </ul>
 

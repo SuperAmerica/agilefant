@@ -170,8 +170,7 @@ $(document).ready(function() {
 						<td><ww:submit value="Save" id="saveButton" />
 						</td>
 						<td class="deleteButton">
-						<ww:reset value="Cancel"
-							onclick="closeTabs('projects', 'projectTabContainer-${projectId}', ${projectId});" />
+						<ww:reset value="Cancel"/>
 						</td>						
 					</tr>
 				</table>

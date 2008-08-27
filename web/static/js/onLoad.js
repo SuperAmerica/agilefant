@@ -31,6 +31,15 @@ function initOnLoad(elem) {
         var foo = 1;
     });
     
+    if (elem != document && me.data('aef-tabs') == "1") {
+        me.find(':reset[value=Cancel]').click(function() {
+            ajaxCloseDialog(me.data('aef-context'), me.data('aef-id'));
+            me.toggle();
+            me.find('.assigneeLink').restoreUserChooser();
+            return true;
+        });
+    }
+    
     addFormValidators(elem);
     
     return false;

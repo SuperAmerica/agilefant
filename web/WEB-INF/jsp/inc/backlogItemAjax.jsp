@@ -23,8 +23,9 @@ $(document).ready(function() {
         backlogItemId: ${backlogItemId},
         backlogIdField: '#backlogSelect-${backlogItemId}-${bliListContext}',
         userListContainer: '#userListContainer-${backlogItemId}-${bliListContext}'
-    });
+    }); 
 });
+
 </script>
 
 <table>
@@ -298,10 +299,7 @@ $(document).ready(function() {
 				<td><ww:submit value="Save" id="saveButton" /></td>
 				<td class="deleteButton">
 				<ww:submit value="Delete" onclick="return deleteBacklogItem(${backlogItemId})" />
-				<%--
-				<ww:reset value="Cancel"
-					onclick="closeTabs('bli', 'backlogItemTabContainer-${backlogItemId}-${bliListContext}', ${backlogItemId});" />
-				--%>				
+				<ww:reset value="Cancel"/>				
 				</td>
 			</tr>
 		</table>
@@ -527,12 +525,9 @@ $(document).ready(function() {
 	<td>
 		<ww:submit value="Save" action="quickStoreTaskList" />
 	</td>
-	<%--
 	<td class="deleteButton">
-		<ww:reset value="Cancel"
-			onclick="closeTabs('bli', 'backlogItemTabContainer-${backlogItemId}-${bliListContext}', ${backlogItemId});" />				
+		<ww:reset value="Cancel" />				
 	</td>
-	--%>
 	</tr>
 	
 	</table>
@@ -586,7 +581,6 @@ $(document).ready(function() {
 	</ww:a>
 	<c:if test="${!empty hourEntries}">		
 	<ww:form action="updateMultipleHourEntries.action" method="post">		
-	<p>
 	<display:table name="${hourEntries}" htmlId="spentEffort-${backlogItemId}-${bliListContext}" id="row" defaultsort="1" defaultorder="descending" requestURI="${currentAction}.action">
 						
 		<display:column sortable="false" title="Date" style="white-space:nowrap;">
@@ -618,29 +612,14 @@ $(document).ready(function() {
 			</ww:a>								
 		</display:column>
 	</display:table>
-	</p>
 	<input type="submit" value="Save" style="display: none;" id="saveSpentEffort-${backlogItemId}-${bliListContext}" />
 	</ww:form>
 	</c:if> <%-- No entries --%>				
 	</div>
 	</div>					
-					
-	</td>
-	</tr>
-	<tr>
-	<td class="deleteButton">
-	<%--
-	<ww:reset value="Cancel"
-		onclick="closeTabs('bli', 'backlogItemTabContainer-${backlogItemId}-${bliListContext}', ${backlogItemId});" />
-	--%>
-	
 </div>
 
 <div id="backlogItemThemesTab-${backlogItemId}-${bliListContext}" class="backlogItemNaviTab">		
-
-	<table>
-		<tr>
-		<td>
 			<div class="subItems validateWrapper validateEmpty" style="margin-top: 0; margin-left: 3px; width: 710px;">
 			<ww:url id="createThemeLink" action="ajaxCreateBusinessTheme" includeParams="none">
 				<ww:param name="productId" value="${backlogItem.product.id}"></ww:param>
@@ -667,18 +646,13 @@ $(document).ready(function() {
 						<c:out value="${row.description}" />
 					</display:column>
 				</display:table>
-				</p>
 				<input type="submit" value="Save" name="Save" />
 			</ww:form>
 			</c:if>				
 			</div>
 														
 			</div>
-								
-		</td>
-		</tr>
-	</table>
-			
+		
 </div>
 
 </div>

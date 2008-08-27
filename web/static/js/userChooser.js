@@ -480,8 +480,17 @@
     jQuery.fn.extend({
         userChooser: function(opt) {
             var uc = new UserChooser(opt);
+            uc.originalData = $(this).html();
+            $(this).data('uc',uc);
             $(this).click(function() { uc.init(); return false; })
             return this;
+        },
+        restoreUserChooser: function() {
+            var uc = $(this).data('uc');
+            if (uc) {
+                $(this).html(uc.originalData);
+                uc.cache = null;
+            }
         }
     });
 })(jQuery);

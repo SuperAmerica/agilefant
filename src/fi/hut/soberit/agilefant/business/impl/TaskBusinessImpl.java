@@ -51,24 +51,27 @@ public class TaskBusinessImpl implements TaskBusiness {
                 task.setName(newNamesMap.get(taskId));
             }
             
+        }        
+        int lowestRank = -1;
+        if (taskDAO.getLowestRankedTask(bli) != null) {
+            lowestRank = taskDAO.getLowestRankedTask(bli).getRank();
         }
-        // Save new tasks.
-        for (Integer i: newTasks.keySet()) {            
+        int size = newTasks.size();
+        int rankOrder = 1;
+        // Save new tasks, ranks in reverse order.
+        for (Integer i: newTasks.keySet()) {           
             Task task = newTasks.get(i);
             task.setBacklogItem(bli);
             bli.getTasks().add(task);
-            // Set rank for task temporarily to -1 to indicate new item 
-            task.setRank(-1);
-            taskDAO.create(task);
-            Task lowestRankedTask = taskDAO.getLowestRankedTask(task.getBacklogItem());
-            if(lowestRankedTask == null || lowestRankedTask.getRank() < 0) {
-                task.setRank(0);
+            if(lowestRank  < 0) {
+                task.setRank(size - rankOrder);
             }
             else {
-                task.setRank(lowestRankedTask.getRank() + 1);
+                task.setRank(lowestRank + 1 + size - rankOrder);
             }
-            taskDAO.store(task);
-        }
+            taskDAO.create(task);           
+            rankOrder++;            
+        }        
     }
 
     public void setTaskDAO(TaskDAO taskDAO) {

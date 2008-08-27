@@ -211,12 +211,14 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
 
         this.fillStorable(storable);
         
-        // Store tasks also.
-        try {
-            taskBusiness.updateMultipleTasks(backlogItem, taskStates, taskNames);
-        }
-        catch(ObjectNotFoundException onfe) {
-            return Action.ERROR;
+        // Store tasks also, for an old item.
+        if (backlogItemId > 0) {
+            try {
+                taskBusiness.updateMultipleTasks(backlogItem, taskStates, taskNames);
+            }
+            catch(ObjectNotFoundException onfe) {
+                return Action.ERROR;
+            }
         }
         
         if (super.hasActionErrors()) {

@@ -46,6 +46,8 @@ public class ProjectPortfolioAction extends ActionSupport {
 
     private Map<Project, List<User>> assignedUsers;
     
+    private Map<Project, List<User>> nonAssignedUsers;
+    
     private Map<String, Integer> unassignedUsers;
     
     private Map<String, String> userOverheads;
@@ -61,10 +63,11 @@ public class ProjectPortfolioAction extends ActionSupport {
         summaryLoadLeftData = data.getSummaryLoadLeftData();
         loadLeftData = data.getLoadLefts();
         assignedUsers = data.getAssignedUsers();
+        nonAssignedUsers = data.getNonAssignedUsers();
         summaryUnassignedUserData = data.getSummaryUnassignedUserData();
         unassignedUsers = data.getUnassignedUsers();
         userOverheads = data.getUserOverheads();
-        totalUserOverheads = data.getTotalUserOverheads();
+        totalUserOverheads = data.getTotalUserOverheads();        
         
         return super.execute();
     }
@@ -212,6 +215,10 @@ public class ProjectPortfolioAction extends ActionSupport {
 
     public void setBusinessThemeBusiness(BusinessThemeBusiness businessThemeBusiness) {
         this.businessThemeBusiness = businessThemeBusiness;
+    }
+
+    public Map<Project, List<User>> getNonAssignedUsers() {
+        return nonAssignedUsers;
     }
 
 }

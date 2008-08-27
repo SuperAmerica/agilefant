@@ -533,6 +533,14 @@ span.right {
 	max-height: none;
 }
 
+.portfolioNameColumn {
+	width: 180px;
+}
+
+.portfolioUsersColumn {
+	width: 190px;
+}
+
 .backlogItemList {
 	vertical-align: top;
 }

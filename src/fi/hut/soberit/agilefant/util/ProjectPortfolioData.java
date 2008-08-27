@@ -31,6 +31,7 @@ public class ProjectPortfolioData {
     private Map<String, Integer> unassignedUsers;
     
     private Map<Project, List<User>> assignedUsers;
+    private Map<Project, List<User>> nonAssignedUsers;
     private Map<Project, String> summaryUserData;
     private Map<Project, Integer> summaryUnassignedUserData;
     private Map<Project, String> summaryLoadLeftData;
@@ -101,5 +102,13 @@ public class ProjectPortfolioData {
 
     public void setTotalUserOverheads(Map<String, String> totalUserOverheads) {
         this.totalUserOverheads = totalUserOverheads;
+    }
+
+    public Map<Project, List<User>> getNonAssignedUsers() {
+        return nonAssignedUsers;
+    }
+
+    public void setNonAssignedUsers(Map<Project, List<User>> nonAssignedUsers) {
+        this.nonAssignedUsers = nonAssignedUsers;
     }
 }

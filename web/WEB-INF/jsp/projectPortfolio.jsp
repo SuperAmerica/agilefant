@@ -1,10 +1,6 @@
 <%@ include file="./inc/_taglibs.jsp"%>
 <%@ include file="./inc/_header.jsp"%>
 
-<!-- Author:	aptoivon
-	 Version:	1.3.1
--->
-
 <aef:menu navi="portfolio" />
 <ww:actionerror />
 <ww:actionmessage />
@@ -15,10 +11,20 @@ var teams = [<aef:teamJson items="${teamList}"/>]
 
 <h2>Development Portfolio</h2>
 
-<h4>Ranked Projects</h4>
 
 
-<p><display:table name="${ongoingRankedProjects}" id="row">
+<div class="subItems" style="width: 545px;">
+	<div class="subItemHeader">
+		<table cellspacing="0" cellpadding="0">
+			<tr>
+				<td class="header">Ranked Projects					
+				</td>
+			</tr>
+		</table>
+	</div>
+
+	<div class="subItemContent">
+	<display:table name="${ongoingRankedProjects}" id="row">
 	<display:column title="Rank">
 		<c:out value="${row_rowNum}" />
 	</display:column>
@@ -35,23 +41,26 @@ var teams = [<aef:teamJson items="${teamList}"/>]
 			</c:when>
 		</c:choose>
 	</display:column>
-	<display:column title="Project Name">
+	<display:column title="Project Name" class="portfolioNameColumn">
 		<ww:a
 			href="contextView.action?contextObjectId=${row.id}&resetContextView=true&contextName=project">
 			<c:out value="${row.product.name}: ${row.name}" />
 		</ww:a>
 	</display:column>
 	
-		<display:column title="Users">
+		<display:column title="Assignees" class="portfolioUsersColumn">
 		<c:set var="divId" value="${divId + 1}" scope="page" />
 		<a href="javascript:toggleDiv('portfolioDiv_${divId}');">
 			<img src="static/img/users.png" alt="Users" />
-			<c:out value="${summaryUserData[row]}" />
-			<c:if test="${summaryUnassignedUserData[row] > 0}">
-				<span style="color: rgb(255, 0, 0);"> + 
-				<c:out value="${summaryUnassignedUserData[row]}" /> unassigned
-				</span>
-			</c:if>
+						
+			<c:forEach items="${assignedUsers[row]}" var="usr">				
+				<c:out value="${usr.initials}" />,
+			</c:forEach>
+			<span style="color: rgb(255, 0, 0);">
+			<c:forEach items="${nonAssignedUsers[row]}" var="usr">				
+				<c:out value="${usr.initials}" />,
+			</c:forEach>
+			</span>						
 		</a>
 		<!-- User assignment table -->	
 		<div id="portfolioDiv_${divId}" style="display: none;">
@@ -84,7 +93,8 @@ var teams = [<aef:teamJson items="${teamList}"/>]
 
 			</display:column>		
 			
-			<display:column title="Users" sortProperty="fullName">
+			<display:column title="Users" sortProperty="fullName">						
+			
 				<!-- Check whether user is not assigned to project although has bli:s assigned -->
 				<c:choose>	
 				<c:when test="${unassignedUsers[idstring] == 1}"> 
@@ -143,10 +153,7 @@ var teams = [<aef:teamJson items="${teamList}"/>]
 		</div>
 		<!-- User assignment table ends -->
 			
-		</display:column>
-		<display:column title="Load Left">
-			<c:out value="${aef: out(summaryLoadLeftData[row])}" escapeXml="false" />
-		</display:column>
+		</display:column>		
 		
 		<display:column title="Action" class="portfolioActionColumn">
 		<ww:url id="moveTopLink" action="moveProjectTop">
@@ -175,12 +182,24 @@ var teams = [<aef:teamJson items="${teamList}"/>]
 		<ww:a href="%{unrankLink}"><img src="static/img/unrank.png" alt="Unrank" title="Unrank" /></ww:a>
 	</display:column>
 			
-</display:table></p>
+</display:table>
+</div>
+</div>
 		
 		
 <c:if test="${!empty ongoingUnrankedProjects}">
-	<h4>Unranked Projects</h4>
-	<p><display:table name="${ongoingUnrankedProjects}" id="row">		
+<div class="subItems" style="width: 545px;">
+	<div class="subItemHeader">
+		<table cellspacing="0" cellpadding="0">
+			<tr>
+				<td class="header">Unranked Projects
+				</td>
+			</tr>
+		</table>
+	</div>
+
+	<div class="subItemContent">
+	<display:table name="${ongoingUnrankedProjects}" id="row" style="width: 535px;">		
 		<display:column title="Project Name">
 			<ww:a
 				href="contextView.action?contextObjectId=${row.id}&resetContextView=true&contextName=project">
@@ -188,16 +207,18 @@ var teams = [<aef:teamJson items="${teamList}"/>]
 			</ww:a>
 		</display:column>
 		
-		<display:column title="Users">
+		<display:column title="Assignees">
 		<c:set var="divId" value="${divId + 1}" scope="page" />
 		<a href="javascript:toggleDiv('portfolioDiv_${divId}');">
 		<img src="static/img/users.png" alt="Users" />
-		<c:out value="${summaryUserData[row]}" />
-		<c:if test="${summaryUnassignedUserData[row] > 0}">
-			<span style="color: rgb(255, 0, 0);"> + 
-		<c:out value="${summaryUnassignedUserData[row]}" /> unassigned
-		</span>
-		</c:if>
+		<c:forEach items="${assignedUsers[row]}" var="usr">				
+				<c:out value="${usr.initials}" />,
+			</c:forEach>
+			<span style="color: rgb(255, 0, 0);">
+			<c:forEach items="${nonAssignedUsers[row]}" var="usr">				
+				<c:out value="${usr.initials}" />,
+			</c:forEach>
+			</span>
 		</a>
 		<!-- User assignment table -->	
 		<div id="portfolioDiv_${divId}" style="display: none;">
@@ -288,11 +309,7 @@ var teams = [<aef:teamJson items="${teamList}"/>]
 		</div>
 		<!-- User assignment table ends -->
 		
-		</display:column>
-		<display:column title="Load Left">
-			<c:out value="${summaryLoadLeftData[row]}" escapeXml="false" />
-		</display:column>
-		
+		</display:column>		
 		
 		<display:column title="Action">
 			<ww:url id="moveTopLink" action="moveProjectTop">
@@ -306,7 +323,9 @@ var teams = [<aef:teamJson items="${teamList}"/>]
 			<ww:a href="%{moveBottomLink}"><img src="static/img/unrank.png" alt="Rank to bottom" title="Rank to bottom" /></ww:a>
 		</display:column>
 		
-	</display:table></p>
+	</display:table>
+	</div>
+	</div>
 </c:if>
 
 

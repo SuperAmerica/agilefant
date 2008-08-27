@@ -198,6 +198,8 @@ public class ProjectBusinessImpl implements ProjectBusiness {
         HashMap<String, Integer> unassignedUsersMap = new HashMap<String, Integer>();
         Map<Project, List<User>> assignmentMap = new HashMap<Project, List<User>>(
                 0);
+        Map<Project, List<User>> nonAssignmentMap = new HashMap<Project, List<User>>(
+                0);
         Set<String> keySet = new HashSet<String>();
 
         Map<String, Integer> unassignedBlisMap = new HashMap<String, Integer>();
@@ -206,13 +208,14 @@ public class ProjectBusinessImpl implements ProjectBusiness {
 
         // Go trough all projects and bli:s
         for (Project pro : projects) {
-            int assignedUsers = backlogBusiness.getNumberOfAssignedUsers(pro);
+            int assignedUsers = backlogBusiness.getNumberOfAssignedUsers(pro);            
             int unestimatedBlis = 0;
             AFTime ongoingBliLoadLeft = new AFTime(0);
             Set<User> allUsers = new HashSet<User>(this.backlogBusiness
                     .getUsers(pro, true));
             HashSet<User> projectAssignments = new HashSet<User>(
                     this.backlogBusiness.getUsers(pro, true));
+            List<User> nonAssignedUsers = new ArrayList<User>();
             /*ArrayList<User> assignments = new ArrayList<User>(
                     this.backlogBusiness.getUsers(pro, true));*/
             Collection<BacklogItem> blis = getBlisInProjectAndItsIterations(pro);
@@ -287,14 +290,21 @@ public class ProjectBusinessImpl implements ProjectBusiness {
 
                         // Check whether user is responsible for a bli in the
                         // project but is currently not assigned to it
+                       
                         if (!projectAssignments.contains(resp)
                                 && bli.getEffortLeft() == null) {
                             unassignedUsersMap.put(pro.getId() + "-"
                                     + resp.getId(), 1);
+                            if (!nonAssignedUsers.contains(resp)) {
+                                nonAssignedUsers.add(resp);
+                            }
                         } else if (!projectAssignments.contains(resp)
                                 && bli.getEffortLeft().getTime() != 0) {
                             unassignedUsersMap.put(pro.getId() + "-"
                                     + resp.getId(), 1);
+                            if (!nonAssignedUsers.contains(resp)) {
+                                nonAssignedUsers.add(resp);
+                            }
                         }
                         if (bli.getEffortLeft() == null) {
                             int numberOfUnestimatedBlis = 1;
@@ -323,6 +333,7 @@ public class ProjectBusinessImpl implements ProjectBusiness {
             unassignedUserDataMap.put(pro, unassignedUsers);
             assignmentMap.put(pro, new ArrayList<User>(this.backlogBusiness
                     .getUsers(pro, true)));
+            nonAssignmentMap.put(pro, nonAssignedUsers);
 
         }
 
@@ -356,6 +367,7 @@ public class ProjectBusinessImpl implements ProjectBusiness {
         data.setLoadLefts(loadLeftData);
         data.setUserOverheads(userOverheads);
         data.setTotalUserOverheads(totalUserOverheads);
+        data.setNonAssignedUsers(nonAssignmentMap);
     }
 
    

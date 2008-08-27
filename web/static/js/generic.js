@@ -1,7 +1,7 @@
 
 function toggleDiv(id) { $('#' + id).toggle(); }
 
-function confirmDeleteTask() { return confirm("Really delete task?");}
+function confirmDeleteTask() { return confirm("Really delete TODO?");}
 function confirmDeleteHour() { return confirm("Really delete hour entry?"); }
 function confirmDeleteBli() { return confirm("Deleting the backlog item will cause all of its tasks and logged effort to be deleted.");}
 function confirmDelete() { return confirm("Are you sure?"); }

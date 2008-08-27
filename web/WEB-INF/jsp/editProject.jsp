@@ -55,7 +55,7 @@ $(document).ready(function() {
 											  deleteaction: 'removeThemeFromBacklog.action',
 											  fields: {
 											  	businessThemeIds: {cell: 0,type: 'select', data: getThemeData},
-											  	plannedSpendings: {cell: 1, type: 'text' },
+											  	plannedSpendings: {cell: 1, type: 'text'},											  											  	
 											  	reset: {cell: 2, type: 'reset'}
 											  }
 											 });
@@ -509,7 +509,10 @@ $(document).ready(function() {
 												</table>
 											</c:otherwise>
 											</c:choose>
-											<input id="backlogThemeSave" style="display: none; margin-left: 2px;" type="submit" value="Save" />
+											<div id="backlogThemeSave" style="display: none;">
+											<input id="backlogThemeSave" style="margin-left: 2px;" type="submit" value="Save" />
+											<ww:label id="themeLabel" value="Planned spending may be entered as time (e.g. 2h 30min) or a percentage
+												(e.g. 40%)." />
 											</div>
 											</ww:form>	
 											</div>			

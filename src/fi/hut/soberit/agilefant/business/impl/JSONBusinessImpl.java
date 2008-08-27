@@ -50,7 +50,12 @@ public class JSONBusinessImpl implements JSONBusiness {
 
         try {
             bli = backlogItemBusiness.getBacklogItem(backlogItemId);
-            backlog = backlogBusiness.getBacklog(backlogId);
+            if (backlogId > 0) {
+                backlog = backlogBusiness.getBacklog(backlogId);
+            }
+            else if (bli != null) {
+                backlog = bli.getBacklog();
+            }
         } catch (ObjectNotFoundException onfe) {
         }
 

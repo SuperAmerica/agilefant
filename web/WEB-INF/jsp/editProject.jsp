@@ -63,6 +63,10 @@ $(document).ready(function() {
         backlogIdField: '#editProject-projectId',
         userListContainer: '#userListContainer-editProject',
         renderFor: 'project',
+        validation: {
+            selectAtLeast: 0,
+            aftime: true
+        },
         backlogItemId: 0
     });
 });
@@ -628,7 +632,7 @@ $(document).ready(function() {
 												<ww:param name="backlogId" value="${project.id}" />
 											</ww:url>
 											<ww:a cssClass="openCreateDialog openBacklogItemDialog"
-												href="%{createBacklogItemLink}&contextViewName=editProject&contextObjectId=${project.id}">Create new &raquo;</ww:a>
+												href="%{createBacklogItemLink}">Create new &raquo;</ww:a>
 										</td>
 									</tr>
 								</table>

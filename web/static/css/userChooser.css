@@ -39,3 +39,7 @@
 .userChooserDialog table ul.projectAssigneeList li {
     height: 22px;
 }
+
+.userChooserDialog span.errorMessage {
+    color: red;
+}

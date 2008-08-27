@@ -48,14 +48,7 @@ $(document).ready(function() {
 				</c:otherwise>
 			</c:choose>
 		</ww:url>
-		<c:choose>
-			<c:when test="${myAction == 'editBacklogItem'}">
-				<ww:a cssClass="openCreateDialog openHourEntryDialog" href="%{createLink}&contextViewName=${myAction}&contextObjectId=${backlogItemId}">Create new &raquo;</ww:a>	
-			</c:when>
-			<c:otherwise>
-				<ww:a cssClass="openCreateDialog openHourEntryDialog" href="%{createLink}&contextViewName=${myAction}&contextObjectId=${backlog.id}">Create new &raquo;</ww:a>
-			</c:otherwise>
-		</c:choose>
+		<ww:a cssClass="openCreateDialog openHourEntryDialog" href="%{createLink}">Create new &raquo;</ww:a>
 		</td>
 		</tr>
 		</table>

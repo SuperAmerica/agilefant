@@ -1,34 +1,31 @@
 
 (function($) {
     var UserChooser = function(opt) {
+        var me = this;
         var options = {
             url: "getUserChooserJSON.action",
             legacyMode: true,
             backlogItemId: null,
+            backlogId: null,
             backlogIdField: null,
             userListContainer: null,
+            selectThese: null,
+            validation: {
+                selectAtLeast: 0,
+                AFTime: false
+            },
             renderFor: 'backlogItem',
             overlayUpdate: function() {
                 $('.ui-dialog-overlay').css("height",$(document).height()).css("width",$(document).width());
             },
-            validation: {
-                rules: {
-                    "delta": {
-                        aftime: [ false, true ]
-                    }
-                },
-                messages: {
-                    "delta": {
-                        aftime: "Invalid format"
-                    }
-                }
-            }
+            
         };
         jQuery.extend(options, opt);
         
         this.options = options;
         this.data = null;
         this.cache = null;
+        this.valid = true;
     };
     
     UserChooser.prototype = {
@@ -85,7 +82,6 @@
                 this.renderForBLI();
             }
             
-            this.form.validate(this.options.validation);
         },
         renderForProject: function() {
             var me = this;
@@ -123,15 +119,19 @@
                 } else {
                     deltaValue = me.data.overheads[this.id];
                 }
-                $('<input type="text" size="5"/>').attr('name','delta').attr('id','delta_user_' + e.id).val(deltaValue).appendTo(overheadText);
+                var input = $('<input type="text" size="5"/>').attr('name','delta')
+                    .attr('id','delta_user_' + e.id).val(deltaValue)
+                    .addClass('aftimeField').appendTo(overheadText);
                 
                 /* Bind the hide/show event */
                 checkbox.change(function() {
                     if (checkbox.is(":checked")) {
                         overheadText.show();
+                        input.removeAttr('disabled');
                     }
                     else {
                         overheadText.hide();
+                        input.attr('disabled','disabled');
                     }
                 });
             });
@@ -140,7 +140,7 @@
             this.selectCheckboxes(this.data.selectedList);
             this.renderTeamList();
             this.renderButtons();
-            
+            this.validation();
         },
         renderForBLI: function() {
             var me = this;
@@ -172,12 +172,71 @@
             else {
                 this.assignedCell.append(this.renderCheckboxList(this.data.assignments));
                 this.notAssignedCell.append(this.renderCheckboxList(this.data.notAssignedIds));
-                headerRow.append('<th class="userColumn">Assigned</th><th class="userColumn">Not assigned</th><th class="teamColumn">Teams</th>');
+                headerRow.append('<th class="userColumn">In project</th><th class="userColumn">Not in project</th><th class="teamColumn">Teams</th>');
             }
             
             this.selectCheckboxes(this.data.selectedList);
             this.renderTeamList();
             this.renderButtons();
+            this.validation();
+        },
+        validation: function() {
+            var me = this;
+            this.valid = true;
+            
+            var submit = this.form.find(':submit');
+            this.options.validation.errorCont = $('<span/>').addClass('errorMessage').hide()
+                   .text('Please select at least ' + me.options.validation.selectAtLeast)
+                   .appendTo($(submit).parent());  
+            
+            if (me.options.validation.selectAtLeast > 0) {
+	            this.form.find(':checkbox').change(function() {
+	                if (me.form.find(':checked').length >= me.options.validation.selectAtLeast) {
+	                    me.options.validation.errorCont.hide();
+	                }                    
+	            });
+	        }
+            
+            /* AFTime */
+            if (this.options.validation.aftime) {
+                this.form.find('.aftimeField').each(function() {
+                    var field = $(this);
+                    var error = $('<span/>').addClass('errorMessage')
+                        .text('Invalid format').appendTo($(this).parent()).hide();
+                    var met = jQuery.validator.methods.aftime;
+                    var validateAF = function() {
+                        if (met(field.val(), field, [ false, true ])) {
+                            error.hide();
+                            field.data('valid',"true");
+                        }
+                        else {
+                            error.show();
+                            field.data('valid',"false");
+                        }
+                    };
+                    field.change(validateAF);
+                    validateAF();
+                });
+
+            }
+            this.valid = this.checkValid();
+            return this.valid;
+        },
+        checkValid: function() {
+            var me = this;
+            var aftimeValid = true;
+            var checkedValid = true;
+            this.form.find('.aftimeField:enabled').each(function() {
+                var e = $(this).data('valid');
+                aftimeValid &= ($(this).data('valid') != "false");
+            });
+            var e = this.form.find(':checked').length;
+            var f = this.options.validation.selectAtLeast;
+            if (this.form.find(':checked').length < this.options.validation.selectAtLeast) {
+                this.options.validation.errorCont.show();
+                checkedValid = false;
+            }
+            return checkedValid && aftimeValid;
         },
         renderButtons: function() {
             var me = this;
@@ -188,7 +247,17 @@
             var okButton = $('<input type="submit" />').val('Select').appendTo(okButtonCol);
             var cancelButton = $('<input type="reset" />').val('Cancel').appendTo(cancelButtonCol);
             
-            okButton.click(function() { me.selectAction(); });
+            if (this.options.renderFor == 'hourEntry') {
+                $('<span/>').addClass('errorMessage').css('margin-left','5px').appendTo(okButtonCol);
+            }
+            this.form.submit(function() {
+                if (!me.checkValid()) {
+                    return false;
+                }
+                else {
+                    me.selectAction();
+                }
+            });
             cancelButton.click(function() { me.cancelAction(); });
         },
         renderTeamList: function() {
@@ -236,11 +305,16 @@
                 this.renderTableContents();
                 return false;
             }
-        
-            var backlogId = (this.options.backlogIdField != null)? $(this.options.backlogIdField).val() : 0;
             var me = this;
-			if (!(backlogId > 0)) {
-			    backlogId = 0;
+            var backlogId;
+            if (this.options.backlogId > 0) {
+                backlogId = this.options.backlogId;
+            }
+            else {
+	            backlogId = (this.options.backlogIdField != null)? $(this.options.backlogIdField).val() : 0;
+				if (!(backlogId > 0)) {
+				    backlogId = 0;
+				}
 			}
             $.ajax({
                 type: 'post',
@@ -277,13 +351,17 @@
                     me.data.notAssignedIds = [];
                     me.data.showUsers = me.data.enabledUsers;
                     
-                    if (me.options.renderFor == 'project') {
-                        me.data.selectedList = data.assignments;
+                    if (me.options.selectThese != null) {
+                        me.data.selectedList = me.options.selectThese;
                     }
                     else {
-                        me.data.selectedList = data.responsibles;
-                    }
-		            
+	                    if (me.options.renderFor == 'project') {
+	                        me.data.selectedList = data.assignments;
+	                    }
+	                    else {
+	                        me.data.selectedList = data.responsibles;
+	                    }
+		            }
 		            $.each(me.data.showUsers, function(key, val) {
 		                if (jQuery.inArray(parseInt(key), me.data.assignments) == -1) {
 		                    me.data.notAssignedIds.push(key);
@@ -317,10 +395,6 @@
             });
         },
         projectSelectAction: function() {
-            var b = this.form.valid();
-            if (!this.form.valid()) {
-                return false;
-            }
             var me = this;
             var selectedList = this.getSelected();
             var userListContainer = $(this.options.userListContainer);

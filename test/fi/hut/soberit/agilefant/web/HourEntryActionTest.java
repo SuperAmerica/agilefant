@@ -81,7 +81,7 @@ public class HourEntryActionTest extends TestCase {
         replay(backlogItemDAO);
         replay(userDAO);
         
-        assertEquals(Action.SUCCESS, hourEntryAction.store());
+        assertEquals(CRUDAction.AJAX_SUCCESS, hourEntryAction.store());
         
         verify(hourEntryBusiness);
         verify(backlogItemDAO);
@@ -94,7 +94,7 @@ public class HourEntryActionTest extends TestCase {
         // Start the test
         replay(hourEntryBusiness);
         
-        assertEquals(Action.ERROR, hourEntryAction.store());
+        assertEquals(CRUDAction.AJAX_ERROR, hourEntryAction.store());
         
         verify(hourEntryBusiness);
     }
@@ -104,7 +104,7 @@ public class HourEntryActionTest extends TestCase {
         hourEntryAction.setUserId(0);
         
         // Start the test
-        assertEquals(Action.ERROR, hourEntryAction.store());
+        assertEquals(CRUDAction.AJAX_ERROR, hourEntryAction.store());
     }
     
     public HourEntryAction getHourEntryAction() {

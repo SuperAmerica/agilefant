@@ -103,12 +103,12 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
             storable = hourEntryBusiness.getHourEntryById(hourEntryId);
             if (storable == null) {
                 super.addActionError(super.getText("hourEntry.notFound"));
-                return Action.ERROR;
+                return CRUDAction.AJAX_ERROR;
             }
         }
         this.fillStorable(storable);
         if (super.hasActionErrors()) {
-            return Action.ERROR;
+            return CRUDAction.AJAX_ERROR;
         }
         //Existing entries cannot be "shared"
         TimesheetLoggable parent = getParent();
@@ -118,11 +118,11 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
         } else if(userId == 0) {
             if(userIds.size() < 1) {
                 super.addActionError(super.getText("hourEntry.noUsers"));
-                return Action.ERROR;
+                return CRUDAction.AJAX_ERROR;
             }
             hourEntryBusiness.addHourEntryForMultipleUsers(parent,storable, userIds);
         } 
-        return Action.SUCCESS;
+        return CRUDAction.AJAX_SUCCESS;
     }
     
     public String multiEdit() {

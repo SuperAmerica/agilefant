@@ -581,7 +581,7 @@ $(document).ready(function() {
 		<ww:param name="backlogItemId" value="${backlogItemId}" />
 	</ww:url>
 	<ww:a cssClass="openCreateDialog openHourEntryDialog" title="Log effort"
-		href="%{createLink}&contextViewName=${currentAction}&contextObjectId=${backlog.id}">
+		href="%{createLink}">
 		Log effort &raquo;
 	</ww:a>
 	<c:if test="${!empty hourEntries}">		

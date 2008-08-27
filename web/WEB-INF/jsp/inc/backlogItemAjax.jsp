@@ -525,9 +525,9 @@ $(document).ready(function() {
 	<td>
 		<ww:submit value="Save" action="quickStoreTaskList" />
 	</td>
-	<td class="deleteButton">
+	<%--<td class="deleteButton">
 		<ww:reset value="Cancel" />				
-	</td>
+	</td>--%>
 	</tr>
 	
 	</table>

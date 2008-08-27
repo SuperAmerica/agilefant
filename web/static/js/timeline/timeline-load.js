@@ -17,75 +17,83 @@ $(document).ready(function() {
     Timeline.createBandInfo({
         showEventText:  true,
         eventSource:    eventSource, 
-        width:          "100%", 
+        width:          "70%", 
         intervalUnit:   Timeline.DateTime.WEEK, 
         intervalPixels: 42
     }),
 	Timeline.createBandInfo({
         showEventText:  true,
         eventSource:    eventSourceThemes, 
-        width:          "100%", 
+        width:          "30%", 
         intervalUnit:   Timeline.DateTime.WEEK, 
         intervalPixels: 42
     })];
     var them = new Timeline.AgilefantTheme();
-    bandInfos[0]["eventPainter"] = new Timeline.AgilefantEventPainter({showText: true, theme: them});
-    bandInfos[1]["eventPainter"] = new Timeline.AgilefantEventPainter({showText: true, theme: them});
+    var themeBtheme = new Timeline.AgilefantThemeT();
+    bandInfos[0].eventPainter = new Timeline.AgilefantEventPainter({showText: true, theme: them});
+    bandInfos[1].eventPainter = new Timeline.AgilefantEventPainter({showText: true, theme: themeBtheme});
+  	bandInfos[1].syncWith = 0;
   
   productTimeLine = Timeline.create(document.getElementById("productTimeline"), bandInfos, Timeline.HORIZONTAL);
-  /* Get the JSON data */
-  var timelineActionURL = "timelineData.action?productId=" + productId;
-  jQuery.getJSON(timelineActionURL,{},function(data,status) {
+  jQuery.getJSON("timelineData.action",{productId: productId},function(data,status) {
   	eventSource.loadJSON(data);
-  	productTimeLine.hideLoadingMessage();
   	if($("#productTimelinePeriod").val() > 1) {
   		updateTimelinePeriod("#productTimelinePeriod");
+  		productTimeLine.reDistributeWidths();
+  		productTimeLine.hideLoadingMessage();
   	}
+  });
+  
+  jQuery.getJSON("timelineThemeData.action",{productId: productId},function(data,status) {
+  	eventSourceThemes.loadThemes(data);
+  	productTimeLine.hideLoadingMessage();
+  	productTimeLine.reDistributeWidths();
   });
   
     productTimeLine.showLoadingMessage();
 });
 function updateTimelinePeriod(sender) {
-	var mode = $(sender).val();
 	var band = productTimeLine.getBand(0);
-	var ether = band.getEther();
-	var painter = band.getEventPainter();
-	var modeToPix = {"1":200,"2":110,"3":50,"4":230};
-	//calculate band center point
+	var mode = $(sender).val();
 	var maxDate = band.getMinVisibleDate();
 	var minDate = band.getMaxVisibleDate();
 	var centerSec = minDate.getTime() + ((maxDate.getTime() - minDate.getTime())/2);
-	var length;
-	
-	//adjust units and sizes
-	if(mode == 3) {
-		painter.setProjectPaintMode();
-		ether._interval = SimileAjax.DateTime.gregorianUnitLengths[Timeline.DateTime.MONTH];
-		band.getEtherPainter()._unit = painter._unit = Timeline.DateTime.MONTH;
-		length = 3600*24*30*15.2*1000;
-	} else if(mode == 4) {
-		painter.setProjectPaintMode();
-		ether._interval = SimileAjax.DateTime.gregorianUnitLengths[Timeline.DateTime.YEAR];
-		band.getEtherPainter()._unit = painter._unit = Timeline.DateTime.YEAR;
-		length = 3600*24*30*38*1000;
-	} else if(mode == 2) {
-		painter.setFullPaintMode();
-		ether._interval = SimileAjax.DateTime.gregorianUnitLengths[Timeline.DateTime.MONTH];
-		band.getEtherPainter()._unit = painter._unit = Timeline.DateTime.MONTH;	
-		length = 3600*24*30*6*1000;
-	} else if(mode == 1) {
-		painter.setFullPaintMode();
-		ether._interval = SimileAjax.DateTime.gregorianUnitLengths[Timeline.DateTime.MONTH];
-		band.getEtherPainter()._unit = painter._unit = Timeline.DateTime.WEEK;
-		length = 3600*24*120*1000;
+	var center = new Date();
+	center.setTime(centerSec);
+	for(var i = 0; i < 2; i++) { //2 bands
+		band = productTimeLine.getBand(i);
+		var ether = band.getEther();
+		var painter = band.getEventPainter();
+		var modeToPix = {"1":200,"2":110,"3":50,"4":230};
+
+		//adjust units and sizes
+		if(mode == 3) {
+			painter.setProjectPaintMode();
+			ether._interval = SimileAjax.DateTime.gregorianUnitLengths[Timeline.DateTime.MONTH];
+			band.getEtherPainter()._unit = painter._unit = Timeline.DateTime.MONTH;
+		} else if(mode == 4) {
+			painter.setProjectPaintMode();
+			ether._interval = SimileAjax.DateTime.gregorianUnitLengths[Timeline.DateTime.YEAR];
+			band.getEtherPainter()._unit = painter._unit = Timeline.DateTime.YEAR;
+		} else if(mode == 2) {
+			painter.setFullPaintMode();
+			ether._interval = SimileAjax.DateTime.gregorianUnitLengths[Timeline.DateTime.MONTH];
+			band.getEtherPainter()._unit = painter._unit = Timeline.DateTime.MONTH;	
+		} else if(mode == 1) {
+			painter.setFullPaintMode();
+			ether._interval = SimileAjax.DateTime.gregorianUnitLengths[Timeline.DateTime.MONTH];
+			band.getEtherPainter()._unit = painter._unit = Timeline.DateTime.WEEK;
+		}
+		//alert(center);
+		band.setCenterVisibleDate(center);
+		ether._tracks = [];
+		ether._pixelsPerInterval = modeToPix[mode];
+		band.paint();
 	}
-	//new start point for the band
-	var startSec = Math.round(centerSec - length/2);
-	var nStart = new Date();
-	nStart.setTime(startSec);
-	band.setMinVisibleDate(nStart);
-	ether._pixelsPerInterval = modeToPix[mode];
-	productTimeLine.paint();
+	productTimeLine.getBand(0)._onChanging();
+	var distributeLimit = false;
+	if(mode == 3 || mode == 4) { distributeLimit = 1; }
+	productTimeLine.reDistributeWidths(distributeLimit);
 
 }
 

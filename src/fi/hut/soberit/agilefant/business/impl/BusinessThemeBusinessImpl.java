@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.springframework.dao.DataIntegrityViolationException;
 
@@ -369,15 +370,19 @@ public class BusinessThemeBusinessImpl implements BusinessThemeBusiness {
         if(backlogItemId < 1) {
             return;
         }
+        Set<Integer> added = new HashSet<Integer>();
         BacklogItem bli = backlogItemBusiness.getBacklogItem(backlogItemId);
         if(bli == null) {
             return;
         }
         Collection<BusinessTheme> set = new HashSet<BusinessTheme>();
         for(int i = 0 ; i < themeIds.length; i++) {
-            BusinessTheme theme = getBusinessTheme(themeIds[i]);
-            if (theme != null) {         
-                set.add(theme);
+            if(added.contains(themeIds[i])) {
+                BusinessTheme theme = getBusinessTheme(themeIds[i]);
+                added.add(themeIds[i]);
+                if (theme != null) {         
+                    set.add(theme);
+                }
             }
         }
         bli.setBusinessThemes(set);

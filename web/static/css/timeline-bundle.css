@@ -10,6 +10,15 @@
 .timeline-band-iteration {
     background-color: #77cc66 !important;
 }
+.timeline-band-theme {
+    height: 1.1em !important;
+    background-color: #99CCFF !important;
+}
+.timeline-theme {
+	display: block !important;	
+	overflow: hidden !important;
+	margin-left: 2px;	
+}
 .timeline-band-project {
     background-color: #009944 !important;
 }
@@ -254,7 +263,7 @@
 }
 
 .timeline-band-1 .timeline-event-label {
-    display: none !important;
+   /* display: none !important; */
 }
 
 .timelineBubble {
@@ -268,11 +277,12 @@
 	font-size: 120%;
 	font-weight: bold;
 	border-bottom: 1px solid black;
-	margin-bottom: 8px;
-	white-space: nowrap;
-	margin: 0px 5px 2px 3px; 	
+	margin-bottom: 10px;
+ 	
 }
 .timelineBubble table th {
 	font-size: 80%;
 	font-weight: bold;
+	white-space: nowrap;
+	margin: 0px 5px 2px 3px;
 }

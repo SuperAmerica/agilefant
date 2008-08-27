@@ -25,50 +25,14 @@ public class TimelineBusinessImpl implements TimelineBusiness {
         if (product == null) {
             throw new ObjectNotFoundException();
         }
-        String json = "{";
+ 
+        JSONSerializer ser = new JSONSerializer();
+        ser.exclude("*.description");
+        ser.exclude("description");
+        ser.include("projects");
+        ser.include("projects.iterations");
         
-        /* Add the product details */
-        json += "name:'" + JSONUtils.stringToJSON(product.getName())
-                        + "',id:" + product.getId()
-                        + ",type:'product',\n"
-        	        + "contents:[ \n";
-        
-        /* Time formatter */
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        
-        /* Get the product's children */
-        // TODO: remove the last comma
-        for (Project project : product.getProjects()) {
-            json += "{name:'" + JSONUtils.stringToJSON(project.getName())  + "'," +
-            		"id:" + project.getId() + "," + 
-            		"type:'project'," +
-            		"state:" + project.getStatus().getOrdinal() + "," +
-            		"startDate:'" + sdf.format(project.getStartDate()) + "'," +
-            		"endDate:'" + sdf.format(project.getEndDate()) + "'" +
-                        ",contents:[\n";
-            
-            /* Get the project's iterations */
-            for (Iteration iter : project.getIterations()) {
-                json += "{name:'" + JSONUtils.stringToJSON(iter.getName())  + "'," +
-                    "id:" + iter.getId() + "," + 
-                    "type:'iteration'," +
-                    "startDate:'" + sdf.format(iter.getStartDate()) + "'," +
-                    "endDate:'" + sdf.format(iter.getEndDate()) + "'" +
-                    "},\n";    
-            }
-            if(project.getIterations().size() > 0) {
-                json = json.substring(0, json.length() - 2);
-            }
-            json += "]\n},\n";
-        }
-        
-        /* Remove the trailing comma */
-        json = json.substring(0, json.length() - 2);
-        
-        /* Add the end */
-        json += "\n]\n}";
-        
-        return json;
+        return ser.serialize(product);
     }
 
     public String getThemeJSON(Product prod) {
@@ -78,6 +42,8 @@ public class TimelineBusinessImpl implements TimelineBusiness {
         JSONSerializer ser = new JSONSerializer();
         ser.include("backlogBindings.boundEffort");
         ser.include("name");
+        ser.include("class");
+        ser.include("id");
         ser.include("backlogBindings.backlog.id");
         ser.include("backlogBindings.backlog.startDate");
         ser.include("backlogBindings.backlog.endDate");

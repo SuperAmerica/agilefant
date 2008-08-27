@@ -4,33 +4,14 @@ Timeline.AgilefantEventSource.prototype = Timeline.DefaultEventSource.prototype;
 
 Timeline.AgilefantEventSource.prototype.loadJSON = function(data, url) {
         var added = false;
-        var parseDateTimeFunction = this._events.getUnit().getParser("iso8601");
-        var startSort = function(a,b) { if(a._start.getTime() < b._start.getTime()) { return 1; } else { return -1 } };
-        if (data && data.contents){
-            for (var i=0; i < data.contents.length; i++){
-                var event = data.contents[i];
-            	var subItems = new Array();
-            	if(event.type == "project" && event.contents && event.contents.length > 0) {
-            		for (var j = 0; j < event.contents.length; j++) {
-            			var evt = event.contents[j];
-            			var ev = new Timeline.AgilefantEventSource.Event(
-                    		evt.id,evt.name,evt.type,evt.state,null,parseDateTimeFunction(evt.startDate),parseDateTimeFunction(evt.endDate)
-   			             );
-		                ev._obj = ev;
-        		        ev.getProperty = function(name) { return this._obj[name]; };
-                		subItems.push(ev);
-            		}
-            		subItems.sort(startSort);
-            	}
-                var evt = new Timeline.AgilefantEventSource.Event(
-                    event.id,event.name,event.type,event.state,subItems,parseDateTimeFunction(event.startDate),parseDateTimeFunction(event.endDate)
-                );
-            
-                evt._obj = event;
+        if (data && data.projects) {
+        	var projects = data.projects;
+            for (var i=0; i < projects.length; i++){
+                var evt = new Timeline.AgilefantEventSource.Event(projects[i]);
+                evt._obj = evt;
                 evt.getProperty = function(name) {
                     return this._obj[name];
                 };
-    
                 this._events.add(evt);
                 added = true;
             }
@@ -45,71 +26,115 @@ Timeline.AgilefantEventSource.prototype.loadThemes = function(data) {
 	var added = false;
 	for(var i = 0; i < data.length; i++) {
 		if(data[i].backlogBindings.length > 0) {
-			var times = this.getThemeStartAndEnd(data[i].backlogThemeBindings);
-			var evt = new Timeline.AgilefantEventSource.Event(
-				0,data[i].name,"theme",0,null,parseDateTimeFunction(times.start),parseDateTimeFunction(times.end));
-			this._events.add(evt);
+			var evt = new Timeline.AgilefantEventSource.Event(data[i]);
+            evt._obj = evt;
+            evt.getProperty = function(name) {
+                return this._obj[name];
+            };
+            this._events.add(evt);
+            added = true;
 		}
 	}
 	
 	if(added) {
-		this._fire("onAddMany",[]);
+		this._fire("onAddMany", []);
 	}
 };
-Timeline.AgilefantEventSource.prototype.getThemeStartAndEnd = function(bindings) {
-	var ret = {start: 0, end: 0};
+Timeline.AgilefantEventSource.getThemeStartAndEnd = function(bindings) {
+	var ret = {start: Number.MAX_VALUE, end: Number.MIN_VALUE};
 	for(var i = 0; i < bindings.length; i++) {
-		if(ret.start > bindings[i].backlog.startDate) {
-			ret.start = bindings[i].backlog.startDate;
+		var bl = bindings[i].backlog;
+		if(ret.start > bl.startDate) {
+			ret.start = bl.startDate;
 		}
-		if(ret.endDate < bindings[i].backlog.endDate) {
-			ret.end = bindings[i].backlog.endDate;
+		if(ret.end < bl.endDate) {
+			ret.end = bl.endDate;
 		}
 	}
-
+	return ret;
 };
 
-Timeline.AgilefantEventSource.Event = function(
-        id, name, type, state, subItems, start, end) {       
-        this._id = id;       
+Timeline.AgilefantEventSource.Event = function(event) {  
+		this._raw = event;     
+        this._id = event.id;
+        this._type = event.class;
+        var start = new Date();
+        var end = new Date();
+        var sorter = function(a,b) { return (a.getStart().getTime() < b.getStart().getTime()); };
+        if(this.isTheme()) {
+        	var interval = Timeline.AgilefantEventSource.getThemeStartAndEnd(event.backlogBindings);
+        	start.setTime(interval.start);
+        	end.setTime(interval.end);
+        	var contents = [];
+        	var tmp = event;
+        	tmp.class = "fi.hut.soberit.agilefant.model.BacklogThemeBinding";
+        	for(var i = 0 ; i < event.backlogBindings.length; i++) {
+        		var cur = event.backlogBindings[i];
+        		tmp.startDate = cur.backlog.startDate;
+        		tmp.endDate = cur.backlog.endDate;
+        		contents.push(new Timeline.AgilefantEventSource.Event(tmp));
+        	}
+        	contents.sort(sorter);
+        	this._subItems = contents;
+        } else {
+	        start.setTime(event.startDate);
+	        if(event.endDate != null) {
+	        	end.setTime(event.endDate);
+	        } else {
+	        	end = start;
+	        }
+        }
         this._instant = false;    
-        this._start = start;
-        this._end = (end != null) ? end : start;    
+        this._start = start; 
+        this._end = end;
         this._latestStart = start;
         this._earliestEnd = end;   
-    	this._type = type;
+
         this._text = "";
-        this._description = name;
-        this._image = null;
-        if(type == "iteration" && name.length > 20) {
-        	this._text = name.substr(0,20)+"...";
-        } else {
-        	this._text = name;
+        this._description = event.name;
+        this._title = event.name;
+        
+        if(this.isIteration() && this._title.length > 20) {
+        	this._text = this._title.substr(0,20)+"...";
+        } else  {
+        	this._text = this._title;
         }
-        this._state = state;
-        this._link = null;
-        this._title = name;
-        this._subItems = subItems;
-        this._icon = null;
-        this._color = null;
+        if (event.backlogSize != null) {
+        	this._text += " ("+event.backlogSize+"h)";
+        }
+        this._state = event.state;
+
+		if(this.isProject() && event.iterations != null) {
+			var items = [];
+			for(var i = 0 ; i < event.iterations.length; i++) {
+				items.push(new Timeline.AgilefantEventSource.Event(event.iterations[i]));
+			}
+			items.sort(sorter);
+			this._subItems = items;
+		}
+		
         this._textColor = '#666666';
-        this._classname = 'timeline-' + type;
-        var stateToCss = ["ok","challenged","critical"];
-        if(type == "project" && stateToCss[state] != undefined) {
-        	this._bandClass = 'timeline-band-' + type + "-" + stateToCss[this._state];
-    	} else {
-    		this._bandClass = 'timeline-band-' + type;
+        
+        var stateToCss = {"OK":"ok","CHALLENGED":"challenged","CRITICAL":"critical"};
+        if(this.isProject() && stateToCss[event.status] != undefined) {
+        	this._bandClass = 'timeline-band-project-' + stateToCss[event.status];
+        	this._classname = 'timeline-project';
+    	} else if(this.isIteration()) {
+    		this._bandClass = 'timeline-band-iteration';
+    		this._classname = 'timeline-iteration';
+    	} else if(this.isTheme() || this.isThemePart()) {
+    		this._bandClass = 'timeline-band-theme';
+    		this._classname = 'timeline-theme';
     	}
-        this._wikiURL = null;
-        this._wikiSection = null;
 };
 
 Timeline.AgilefantEventSource.Event.prototype = {
   getID:          function() { return this._id; },
   getContents:	  function() { return this._subItems; },
-  isProject:      function() { return (this._type == "project"); },
-  isIteration:    function() { return (this._type == "iteration"); },
-  isTheme:        function() { return (this._type == "theme"); },
+  isProject:      function() { return (this._type == "fi.hut.soberit.agilefant.model.Project"); },
+  isIteration:    function() { return (this._type == "fi.hut.soberit.agilefant.model.Iteration"); },
+  isTheme:        function() { return (this._type == "fi.hut.soberit.agilefant.model.BusinessTheme"); },
+  isThemePart:    function() { return (this._type == "fi.hut.soberit.agilefant.model.BacklogThemeBinding"); },
   isInstant:      function() { return this._instant; },
   isImprecise:    function() { return this._start != this._latestStart || this._end != this._earliestEnd; },
   getStart:       function() { return this._start; },
@@ -124,7 +149,6 @@ Timeline.AgilefantEventSource.Event.prototype = {
   getColor:       function() { return this._color; },  
   getTextColor:   function() { return this._textColor; },
   getClassName:   function() {return this._classname;  },
-  getState:   	  function() {return this._state;  },
   getProperty:    function(name) { return null; },
 
   fillDescription: function(elmt) {
@@ -154,9 +178,48 @@ Timeline.AgilefantEventSource.Event.prototype = {
     }
   },
   fillInfoBubble: function(elmt, theme, labeller) {
-  	//var el = jQuery("<div />").css("height","400px").css("width","350px").appendTo(elmt);
-  	jQuery(elmt).load("timelineBubble.action", {backlogId: this._id}).height("280px");
+	if(this.isProject() || this.isIteration()) {
+	  	jQuery(elmt).load("timelineBubble.action", {backlogId: this._id}).height("280px");
+	} else if(this.isTheme()) {
+		jQuery(elmt).text("I'M A THEME!");
+	}
   }
+};
+
+
+Timeline._Impl.prototype.reDistributeWidths = function(tracs) {
+  var length = this.getPixelLength();
+  var width = this.getPixelWidth();
+  var cumulativeWidth = 0;
+  if(!tracs) {
+  	tracs = this._bands.length;
+  }
+  for (var i = 0; i < tracs; i++) {
+    var band = this._bands[i];
+    var bandInfos = this._bandInfos[i];
+    var widthString = bandInfos.width;
+    var reqWidth = band.getEventPainter().getRequiredWidth() + 30;
+/*
+   var x = widthString.indexOf("%");
+  
+    if (x > 0) {
+      var percent = parseInt(widthString.substr(0, x));
+      var bandWidth = percent * width / 100;
+    } else {
+      var bandWidth = parseInt(widthString);
+    }
+    if(reqWidth > bandWidth) {
+*/
+      bandWidth = reqWidth;
+//    }
+    band.setBandShiftAndWidth(cumulativeWidth, bandWidth);
+    //band.setViewLength(length);
+
+    cumulativeWidth += bandWidth;
+  }
+  //if(cumulativeWidth > width) {
+    jQuery(this._containerDiv).height(cumulativeWidth);
+  //}
 };
 
 /*==================================================
@@ -178,6 +241,14 @@ Timeline.AgilefantEventPainter = function(params) {
 //inherit timeline
 Timeline.AgilefantEventPainter.prototype = Timeline.OriginalEventPainter.prototype;
 
+Timeline.AgilefantEventPainter.prototype.getRequiredWidth = function() {
+  var trackOffset = this._params.theme.event.track.gap;
+  var track = this._tracks.length-1;                                 
+  var trackHeight = Math.max(this._params.theme.event.track.height, this._params.theme.event.tape.height + this._frc.getLineHeight());
+  var trackIncrement = trackOffset + trackHeight;
+  var tapeHeight = this._params.theme.event.tape.height;
+  return Math.round( trackOffset + track * trackIncrement + tapeHeight); 
+};
 Timeline.AgilefantEventPainter.prototype.initialize = function(band, timeline) {
   this._band = band;
   this._timeline = timeline;
@@ -249,6 +320,12 @@ Timeline.AgilefantEventPainter.prototype.paint = function() {
           this.paintEvent(iterations[j],metrics, this._params.theme, highlightMatcher(iterations[j]), evt);
         }
       }
+    } else if(evt.isTheme()) {
+    	var track = this.getThemeEventTrack(evt,metrics,this._params.theme,false);
+    	var themes = evt.getContents();
+    	for(var i = 0; i < themes.length; i++) {
+    		this.paintPreciseThemeEvent(themes[i],metrics,this._params.theme,false, track);
+    	}
     }
   }
 
@@ -304,7 +381,7 @@ Timeline.AgilefantEventPainter.prototype.paintEvent = function(evt, metrics, the
 
 Timeline.AgilefantEventPainter.prototype.paintInstantEvent = function(evt, metrics, theme, highlightIndex, parentEvent) {
   if (evt.isImprecise()) {
-    this.paintImpreciseInstantEvent(evt, metrics, theme, highlightIndex, parentEvent);
+    //this.paintImpreciseInstantEvent(evt, metrics, theme, highlightIndex, parentEvent);
   } else {
     this.paintPreciseInstantEvent(evt, metrics, theme, highlightIndex, parentEvent);
   }
@@ -312,7 +389,7 @@ Timeline.AgilefantEventPainter.prototype.paintInstantEvent = function(evt, metri
 
 Timeline.AgilefantEventPainter.prototype.paintDurationEvent = function(evt, metrics, theme, highlightIndex, parentEvent) {
   if (evt.isImprecise()) {
-    this.paintImpreciseDurationEvent(evt, metrics, theme, highlightIndex, parentEvent);
+    //this.paintImpreciseDurationEvent(evt, metrics, theme, highlightIndex, parentEvent);
   } else {
     this.paintPreciseDurationEvent(evt, metrics, theme, highlightIndex, parentEvent);
   }
@@ -395,49 +472,6 @@ Timeline.AgilefantEventPainter.prototype.paintPreciseInstantEvent = function(evt
   }
 };
 
-Timeline.AgilefantEventPainter.prototype.paintImpreciseInstantEvent = function(evt, metrics, theme, highlightIndex, parentEvent) {
-  var doc = this._timeline.getDocument();
-  var text = evt.getText();
-
-  var startDate = evt.getStart();
-  var endDate = evt.getEnd();
-  var startPixel = Math.round(this._band.dateToPixelOffset(startDate));
-  var endPixel = Math.round(this._band.dateToPixelOffset(endDate));
-
-  var iconRightEdge = Math.round(startPixel + metrics.iconWidth / 2);
-  var iconLeftEdge = Math.round(startPixel - metrics.iconWidth / 2);
-
-  var labelSize = this._frc.computeSize(text);
-  var labelLeft = iconRightEdge + theme.event.label.offsetFromLine;
-  var labelRight = labelLeft + labelSize.width;
-
-  var rightEdge = Math.max(labelRight, endPixel);
-  var track = evt.isProject() ? this._findProjectTrack(rightEdge,evt) : this._findIterationTrack(rightEdge,parentEvent);
-  var labelTop = Math.round(
-      metrics.trackOffset + track * metrics.trackIncrement + 
-      metrics.trackHeight / 2 - labelSize.height / 2);
-
-  var iconElmtData = this._paintEventIcon(evt, track, iconLeftEdge, metrics, theme);
-  var labelElmtData = this._paintEventLabel(evt, text, labelLeft, labelTop, labelSize.width, labelSize.height, theme);
-  var tapeElmtData = this._paintEventTape(evt, track, startPixel, endPixel, 
-      theme.event.instant.impreciseColor, theme.event.instant.impreciseOpacity, metrics, theme);
-
-  var self = this;
-  var clickHandler = function(elmt, domEvt, target) {
-    return self._onClickInstantEvent(iconElmtData.elmt, domEvt, evt);
-  };
-  SimileAjax.DOM.registerEvent(iconElmtData.elmt, "mousedown", clickHandler);
-  SimileAjax.DOM.registerEvent(tapeElmtData.elmt, "mousedown", clickHandler);
-  SimileAjax.DOM.registerEvent(labelElmtData.elmt, "mousedown", clickHandler);
-
-  this._createHighlightDiv(highlightIndex, iconElmtData, theme);
-
-  this._eventIdToElmt[evt.getID()] = iconElmtData.elmt;
-  this._tracks[track] = iconLeftEdge;
-  if(evt.isProject()) {
-    this._projectTracks[evt.getID()] = track;
-  }
-};
 
 Timeline.AgilefantEventPainter.prototype.paintPreciseDurationEvent = function(evt, metrics, theme, highlightIndex, parentEvent) {
   var doc = this._timeline.getDocument();
@@ -480,38 +514,43 @@ Timeline.AgilefantEventPainter.prototype.paintPreciseDurationEvent = function(ev
   }
 };
 
-Timeline.AgilefantEventPainter.prototype.paintImpreciseDurationEvent = function(evt, metrics, theme, highlightIndex, parentEvent) {
+Timeline.AgilefantEventPainter.prototype.getThemeEventTrack = function(evt, metrics, theme, highlightIndex) {
   var doc = this._timeline.getDocument();
   var text = evt.getText();
-
   var startDate = evt.getStart();
-  var latestStartDate = evt.getLatestStart();
   var endDate = evt.getEnd();
-  var earliestEndDate = evt.getEarliestEnd();
-
   var startPixel = Math.round(this._band.dateToPixelOffset(startDate));
-  var latestStartPixel = Math.round(this._band.dateToPixelOffset(latestStartDate));
   var endPixel = Math.round(this._band.dateToPixelOffset(endDate));
-  var earliestEndPixel = Math.round(this._band.dateToPixelOffset(earliestEndDate));
 
   var labelSize = this._frc.computeSize(text);
-  var labelLeft = latestStartPixel;
+  labelSize.width += 5; //OSX fix
+  var labelLeft = startPixel;
   var labelRight = labelLeft + labelSize.width;
 
   var rightEdge = Math.max(labelRight, endPixel);
-  var track = evt.isProject() ? this._findProjectTrack(rightEdge,evt) : this._findIterationTrack(rightEdge,parentEvent);
-  var labelTop = Math.round(
-      metrics.trackOffset + track * metrics.trackIncrement + theme.event.tape.height);
+  var track = this._findFreeTrack(rightEdge);
+  this._tracks[track] = startPixel;
+  return track;
+};
 
+Timeline.AgilefantEventPainter.prototype.paintPreciseThemeEvent = function(evt, metrics, theme, highlightIndex, track) {
+  var doc = this._timeline.getDocument();
+  var text = evt.getText();
+  var startDate = evt.getStart();
+  var endDate = evt.getEnd();
+  var startPixel = Math.round(this._band.dateToPixelOffset(startDate));
+  var endPixel = Math.round(this._band.dateToPixelOffset(endDate));
+  var labelSize = this._frc.computeSize(text);
+
+  var labelLeft = startPixel;
+  var rightEdge = endPixel; //Math.max(labelRight, endPixel);
+  var labelTop = Math.round(track * metrics.trackIncrement);
+  var labelWidth = Math.min(labelSize.width + 5, endPixel - startPixel);
   var color = evt.getColor();
   color = color ? color : theme.event.duration.color;
 
-  var impreciseTapeElmtData = this._paintEventTape(evt, track, startPixel, endPixel, 
-      theme.event.duration.impreciseColor, theme.event.duration.impreciseOpacity, metrics, theme);
-  var tapeElmtData = this._paintEventTape(evt, track, latestStartPixel, earliestEndPixel, color, 100, metrics, theme);
-
-  var labelElmtData = this._paintEventLabel(evt, text, labelLeft, labelTop, labelSize.width, labelSize.height, theme);
-
+  var tapeElmtData = this._paintEventTape(evt, track, startPixel, endPixel, color, 100, metrics, theme);
+  var labelElmtData = this._paintEventLabel(evt, text, labelLeft, labelTop, labelWidth, labelSize.height, theme);
   var self = this;
   var clickHandler = function(elmt, domEvt, target) {
     return self._onClickDurationEvent(tapeElmtData.elmt, domEvt, evt);
@@ -523,10 +562,9 @@ Timeline.AgilefantEventPainter.prototype.paintImpreciseDurationEvent = function(
 
   this._eventIdToElmt[evt.getID()] = tapeElmtData.elmt;
   this._tracks[track] = startPixel;
-  if(evt.isProject()) {
-    this._projectTracks[evt.getID()] = track;
-  }
 };
+
+
 
 Timeline.AgilefantEventPainter.prototype._findFreeTrack = function(rightEdge) {
   for (var i = 0; i < this._tracks.length; i++) {
@@ -660,13 +698,6 @@ Timeline.AgilefantEventPainter.prototype._paintEventTape = function(
 
   var tapeDiv = this._timeline.getDocument().createElement("div");
   tapeDiv.className = "timeline-event-tape";
-  /*
-  if(evt.isProject()) {
-    tapeDiv.className += " timeline-band-project";
-  } else {
-    tapeDiv.className += " timeline-band-iteration";
-  }
-  */
   tapeDiv.className += " " + evt._bandClass;
   tapeDiv.style.left = startPixel + "px";
   tapeDiv.style.width = tapeWidth + "px";
@@ -713,75 +744,75 @@ Timeline.AgilefantTheme = function() {
     this.firstDayOfWeek = 0; // Sunday
 	
     this.ether = {
-        backgroundColors: [
-        ],
+        backgroundColors: [],
         highlightOpacity:   50,
         interval: {
-            line: {
-                show:       true,
-                opacity:    25
-            },
-            weekend: {
-                opacity:    30
-            },
-            marker: {
-                hAlign:     "Bottom",                  
-                vAlign:     "Right"
-            }
+            line: { show: true, opacity: 25 },
+            weekend: { opacity: 30 },
+            marker: { hAlign:     "Bottom",  vAlign:     "Right" }
         }
     };
-    
     this.event = {
         track: {
-            height:         10, // px
-            gap:            0.5   // px
+            height:1.5, offset:0.5, gap: 0.5  
         },
-        overviewTrack: {
-            offset:     20,     // px
-            tickHeight: 6,      // px
-            height:     2,      // px
-            gap:        0.5       // px
-        },
-        tape: {
-            height:         3 // px
-        },
+		duration: {color: '',},
+        tape: {height: 3 },
         instant: {
             icon:              Timeline.urlPrefix + "images/dull-blue-circle.png",
             iconWidth:         10,
             iconHeight:        10,
-    //        color:             "#58A0DC",
-    //        impreciseColor:    "#58A0DC",
             impreciseOpacity:  20
         },
-        duration: {
-      //      color:            "#58A0DC",
-      //      impreciseColor:   "#58A0DC",
-            impreciseOpacity: 20
-        },
+
         label: {
             backgroundOpacity: 50,
             offsetFromLine:    1 // px
         },
-        highlightColors: [
-        ],
+        highlightColors: [],
         bubble: {
             width:          350, // px
             height:         290, // px
-            titleStyler: function(elmt) {
-                elmt.className = "timeline-event-bubble-title";
-            },
-            bodyStyler: function(elmt) {
-                elmt.className = "timeline-event-bubble-body";
-            },
-            imageStyler: function(elmt) {
-                elmt.className = "timeline-event-bubble-image";
-            },
-            wikiStyler: function(elmt) {
-                elmt.className = "timeline-event-bubble-wiki";
-            },
-            timeStyler: function(elmt) {
-                elmt.className = "timeline-event-bubble-time";
-            }
+            titleStyler: function(elmt) { elmt.className = "timeline-event-bubble-title";},
+            bodyStyler: function(elmt) { elmt.className = "timeline-event-bubble-body";},
+        }
+    };   
+    this.zoom = true; // true or false
+};
+
+Timeline.AgilefantThemeT = function() {
+    this.firstDayOfWeek = 0; // Sunday
+	
+    this.ether = {
+        backgroundColors: [],
+        highlightOpacity:   50,
+        interval: {
+            line: { show: true, opacity: 25 },
+            weekend: { opacity: 30 },
+            marker: { hAlign:     "Bottom",  vAlign:     "Right" }
+        }
+    };
+    this.event = {
+        track: {
+            height:10, offset:0.5, gap: 1  
+        },
+		duration: {color: '',},
+        tape: {height: 2 },
+        instant: {
+            icon:              Timeline.urlPrefix + "images/dull-blue-circle.png",
+            iconWidth:         10,
+            iconHeight:        10,
+            impreciseOpacity:  20
+        },
+
+        label: {
+            backgroundOpacity: 50,
+            offsetFromLine:    1 // px
+        },
+        highlightColors: [],
+        bubble: {
+            width:          350, // px
+            height:         290, // px
         }
     };   
     this.zoom = true; // true or false

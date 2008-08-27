@@ -451,6 +451,20 @@ span.right {
 	max-height: 2.5em;
 }
 
+.iterationGoalDescColumn div {
+	width: 270px;
+	overflow: hidden;
+	max-height: 7em;
+}
+
+.iterationGoalDescColumn:hover {
+	overflow: visible;
+	height: 1px;
+}
+.iterationGoalDescColumn:hover div {
+	max-height: none;
+}
+
 .nameLink {
 	cursor: pointer;
 	color: #0055AA;

@@ -429,9 +429,11 @@ $(document).ready( function() {
 						</display:column>
 
 						<display:column sortable="true" sortProperty="description"
-							title="Description">
-					${aef:html(row.description)}
-				</display:column>
+							title="Description" class="iterationGoalDescColumn">
+							<div>
+							${aef:html(row.description)}
+							</div>
+						</display:column>
 						<display:column sortable="false" title="# of backlog items">
 				  ${aef:html(fn:length(row.backlogItems))}
 				</display:column>

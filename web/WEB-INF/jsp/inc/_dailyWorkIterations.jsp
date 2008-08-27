@@ -61,7 +61,12 @@ $(document).ready(function() {
 			(undefined)
 		</c:otherwise>
 		</c:choose>
-		
+				
+		</td>
+		</tr>
+		</table>
+		</div>
+
 		<c:if test="${!aef:isUserAssignedTo(it.project, user)}">
 			<p style="color:#ff0000;">
 			<img src="static/img/unassigned.png"
@@ -70,10 +75,6 @@ $(document).ready(function() {
 			<c:out value="${user.fullName}" /> has not been assigned to this project.
 			</p>
 		</c:if>
-		</td>
-		</tr>
-		</table>
-		</div>
 
 		<div class="subItemContent">
 		<table class="dailyWorkBacklogItems">
@@ -98,21 +99,7 @@ $(document).ready(function() {
 						</div>
 						<div id="backlogItemTabContainer-${row.id}-${bliListContext}" class="tabContainer" style="overflow:visible; white-space: nowrap; width: 0px;"></div>
 					</display:column>
-
-					<display:column sortable="true" title="Iteration goal"
-						class="iterationGoalColumn" sortProperty="iterationGoal.name">
-						<ww:url id="editLink" action="editIterationGoal"
-							includeParams="none">
-							<ww:param name="iterationGoalId"
-								value="${row.iterationGoal.id}" />
-						</ww:url>
-						<div>
-						<ww:a href="%{editLink}&contextViewName=dailyWork">
-							${aef:html(row.iterationGoal.name)}
-						</ww:a>
-						</div>
-					</display:column>
-
+					
 					<display:column sortable="true" title="Responsibles" class="responsibleColumn">
 					<div><aef:responsibleColumn backlogItemId="${row.id}"/></div>
 					</display:column>
@@ -172,8 +159,7 @@ $(document).ready(function() {
 							<td>&nbsp;</td>
 							<td>&nbsp;</td>
 							<td>&nbsp;</td>
-							<td>&nbsp;</td>
-							<td>&nbsp;</td>
+							<td>&nbsp;</td>							
 							<td><c:out value="${effortSums[it]}" /></td>
 							<td><c:out value="${originalEstimates[it]}" /></td>
 							<c:if test="${hourReport}">

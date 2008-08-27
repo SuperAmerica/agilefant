@@ -317,7 +317,7 @@ $(document).ready( function() {
 											  deleteaction: 'removeThemeFromBacklog.action',
 											  fields: {
 											  	businessThemeIds: {cell: 0,type: 'select', data: getThemeData},
-											  	plannedSpendings: {cell: 1, type: 'text' },
+											  	plannedSpendings: {cell: 1, type: 'text' },											  											  	
 											  	reset: {cell: 3, type: 'reset'}
 											  }
 											 });
@@ -350,7 +350,9 @@ $(document).ready( function() {
 
 							<display:column sortable="true" title="Name" sortProperty="businessTheme.name">
 								<span style="display: none;">${row.businessTheme.id}</span>
-								<c:out value="${row.businessTheme.name}"/>
+								<a style="cursor: pointer; color: #0055AA;" class="table_edit_edit">
+									<c:out value="${row.businessTheme.name}"/>
+								</a>
 							</display:column>
 							
 							<display:column sortable="true" sortProperty="boundEffort" title="Planned spending">

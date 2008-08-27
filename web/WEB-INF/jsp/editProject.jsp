@@ -477,7 +477,9 @@ $(document).ready(function() {
 
 											<display:column sortable="true" title="Name" sortProperty="businessTheme.name">
 												<span style="display: none;">${row.businessTheme.id}</span>
-												<c:out value="${row.businessTheme.name}"/>
+												<a style="cursor: pointer; color: #0055AA;" class="table_edit_edit">
+													<c:out value="${row.businessTheme.name}"/>
+												</a>												
 											</display:column>
 											
 											<display:column sortable="true" sortProperty="boundEffort" title="Planned spending">
@@ -513,8 +515,8 @@ $(document).ready(function() {
 											<h4>Iteration themes</h4>
 												<display:table htmlId="businessThemeTable" class="listTable" name="iterationThemes" id="row" requestURI="editProject.action">
 						
-													<display:column sortable="true" title="Name" sortProperty="businessTheme.name">
-														<c:out value="${row.businessTheme.name}"/>
+													<display:column sortable="true" title="Name" sortProperty="businessTheme.name">														
+														<c:out value="${row.businessTheme.name}"/>														
 													</display:column>
 													
 													<display:column sortable="true" sortProperty="boundEffort" title="Planned spending">

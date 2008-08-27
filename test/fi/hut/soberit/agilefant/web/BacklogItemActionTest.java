@@ -152,7 +152,7 @@ public class BacklogItemActionTest extends SpringTestCase {
         action.getBacklogItem().setOriginalEstimate(new AFTime("1h 15min"));
         action.getBacklogItem().setState(State.IMPLEMENTED);
         action.getBacklogItem().setEffortLeft(new AFTime("1h 15min"));
-        assertEquals("success", action.store());
+        assertEquals("ajax_success", action.ajaxStoreBacklogItem());
 
         // check that fields are updated
         assertEquals("Updated", backlogItemDAO.get(bliId).getName());
@@ -189,7 +189,7 @@ public class BacklogItemActionTest extends SpringTestCase {
         task2 = taskDAO.get(task2Id);
         tasks.add(task2);
         // execute store operation
-        assertEquals("success", action.store());
+        assertEquals("ajax_success", action.ajaxStoreBacklogItem());
 
         // check that tasks are updated
         assertEquals("Updated", ((Task) ((List) backlogItemDAO.get(bliId)
@@ -217,7 +217,7 @@ public class BacklogItemActionTest extends SpringTestCase {
         action.getBacklogItem().setIterationGoal(goal2);
 
         // execute store operation
-        assertEquals("success", action.store());
+        assertEquals("ajax_success", action.ajaxStoreBacklogItem());
 
         // check that goal is updated
         assertEquals("Test Goal2", backlogItemDAO.get(bliId).getIterationGoal()

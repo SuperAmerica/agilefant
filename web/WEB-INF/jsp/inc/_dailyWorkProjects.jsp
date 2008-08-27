@@ -47,8 +47,14 @@ $(document).ready(function() {
 		<ww:a href="%{parentActionUrl}&contextViewName=dailyWork">
 			<c:out value="${pro.name}" />
 		</ww:a>
-		
-		<c:out value="(${pro.projectType.name})" />
+		<c:choose>
+		<c:when test="${(!empty pro.projectType)}">
+			<c:out value="(${pro.projectType.name})" />
+		</c:when>
+		<c:otherwise>
+			(undefined)
+		</c:otherwise>
+		</c:choose>
 		</td>
 		</tr>
 		</table>

@@ -117,8 +117,14 @@ Backlog items
 				<c:out value="${parent.name}" />
 			</ww:a>
 			<c:if test="${aef:isProject(parent)}">
-
+			<c:choose>
+			<c:when test="${(!empty parent.projectType)}">
 			(<c:out value="${parent.projectType.name}" />)
+			</c:when>
+			<c:otherwise>
+			(undefined)
+			</c:otherwise>
+			</c:choose>
 			</c:if>
 			<br />
 		</c:forEach></div>

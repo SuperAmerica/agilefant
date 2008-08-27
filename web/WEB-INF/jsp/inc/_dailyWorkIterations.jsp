@@ -52,9 +52,15 @@ $(document).ready(function() {
 		</ww:url>
 		<ww:a href="%{parentActionUrl}&contextViewName=dailyWork">
 			<c:out value="${it.name}" />
-		</ww:a>				
-		
-		<c:out value="(${it.project.projectType.name})" />
+		</ww:a>								
+		<c:choose>
+		<c:when test="${(!empty it.project.projectType)}">
+			<c:out value="(${it.project.projectType.name})" />
+		</c:when>
+		<c:otherwise>
+			(undefined)
+		</c:otherwise>
+		</c:choose>
 		
 		<c:if test="${!aef:isUserAssignedTo(it.project, user)}">
 			<p style="color:#ff0000;">

@@ -282,7 +282,7 @@ $(document).ready(function() {
 											</table>
 										</div>
 										<div id="editProjectForm" style="display: none;" class="validateWrapper validateProject">
-											<ww:form id="projectEditForm" action="storeProject" method="post" onsubmit="return false;">
+											<ww:form id="projectEditForm" action="storeProject" method="post">
 												<ww:hidden id="editProject-projectId" name="projectId" value="${project.id}" />
 												<table class="formTable">
 													<tr>
@@ -417,12 +417,14 @@ $(document).ready(function() {
 														<td></td>
 														<c:choose>
 															<c:when test="${projectId == 0}">
-																<td><ww:submit value="Create" /></td>
+																<td><ww:submit value="Create"
+															    disabled="disabled" cssClass="undisableMe"/></td>
 															</c:when>
 															<c:otherwise>
 																<td><ww:submit value="Save" id="saveButton" /></td>
 																<td class="deleteButton"><ww:submit
-																	onclick="return confirmDelete()" action="deleteProject"
+																	action="deleteProject"
+																	disabled="disabled" cssClass="undisableMe"
 																	value="Delete" /></td>
 															</c:otherwise>
 														</c:choose>

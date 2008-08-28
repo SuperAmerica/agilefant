@@ -140,18 +140,18 @@ public class IterationGoalAction extends ActionSupport implements CRUDAction {
             storable = iterationGoalDAO.get(iterationGoalId);
             if (storable == null) {
                 super.addActionError(super.getText("iterationgGoal.notFound"));
-                return Action.ERROR;
+                return CRUDAction.AJAX_ERROR;
             }
         }
         this.fillStorable(storable);
         if (super.hasActionErrors()) {
-            return Action.ERROR;
+            return CRUDAction.AJAX_ERROR;
         }
         if (iterationGoalId == 0)
             iterationGoalId = (Integer) iterationGoalDAO.create(storable);
         else
             iterationGoalDAO.store(storable);
-        return Action.SUCCESS;
+        return CRUDAction.AJAX_SUCCESS;
     }
 
     protected void fillStorable(IterationGoal storable) {

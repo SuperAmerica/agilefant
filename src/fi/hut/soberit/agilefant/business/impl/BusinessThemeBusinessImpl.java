@@ -313,8 +313,12 @@ public class BusinessThemeBusinessImpl implements BusinessThemeBusiness {
     }
     
     public void multipleAddOrUpdateThemeToBacklog(int[] themeIds, int backlogId, String[] allocations) {
+        Set<Integer> added = new HashSet<Integer>();
         for(int i = 0 ; i < themeIds.length; i++) {
-            addOrUpdateThemeToBacklog(themeIds[i], backlogId, allocations[i]);
+            if (!added.contains(themeIds[i])) {
+                added.add(themeIds[i]);
+                addOrUpdateThemeToBacklog(themeIds[i], backlogId, allocations[i]);
+            }
         }
     }
     
@@ -370,19 +374,15 @@ public class BusinessThemeBusinessImpl implements BusinessThemeBusiness {
         if(backlogItemId < 1) {
             return;
         }
-        Set<Integer> added = new HashSet<Integer>();
         BacklogItem bli = backlogItemBusiness.getBacklogItem(backlogItemId);
         if(bli == null) {
             return;
         }
         Collection<BusinessTheme> set = new HashSet<BusinessTheme>();
         for(int i = 0 ; i < themeIds.length; i++) {
-            if(added.contains(themeIds[i])) {
-                BusinessTheme theme = getBusinessTheme(themeIds[i]);
-                added.add(themeIds[i]);
-                if (theme != null) {         
-                    set.add(theme);
-                }
+            BusinessTheme theme = getBusinessTheme(themeIds[i]);
+            if (theme != null) {         
+                set.add(theme);
             }
         }
         bli.setBusinessThemes(set);

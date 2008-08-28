@@ -84,8 +84,7 @@ $(document).ready(function() {
 			<td></td>
 			<td><ww:submit value="Save" id="saveButton"/></td>
 			<td class="deleteButton">
-				<ww:submit onclick="return confirmDelete()" action="deleteIterationGoal"
-					value="Delete" /></td>
+				<ww:submit action="deleteIterationGoal" value="Delete" /></td>
 		</tr>
 	</table>
 </ww:form>

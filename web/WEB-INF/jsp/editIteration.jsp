@@ -148,7 +148,7 @@ $(document).ready(function() {
 				</table>
 				</div>
 				<div id="editIterationForm" class="validateWrapper validateIteration" style="display: none;">
-				<ww:form onsubmit="return false;"
+				<ww:form
 					method="post" id="iterationEditForm" action="storeIteration">
 					<ww:hidden name="iterationId" value="${iteration.id}" />
 					<ww:date name="%{iteration.getTimeOfDayDate(6)}" id="start"
@@ -232,13 +232,12 @@ $(document).ready(function() {
 							<td></td>
 							<c:choose>
 								<c:when test="${iterationId == 0}">
-									<td><ww:submit value="Create" /></td>
+									<td><ww:submit value="Create" disabled="disabled" cssClass="undisableMe"/></td>
 								</c:when>
 								<c:otherwise>
 									<td><ww:submit value="Save" id="saveButton" /></td>
-									<td class="deleteButton"><ww:submit
-										onclick="return confirmDelete()" action="deleteIteration"
-										value="Delete" /></td>
+									<td class="deleteButton"><ww:submit disabled="disabled" cssClass="undisableMe"
+										action="deleteIteration" value="Delete" /></td>
 								</c:otherwise>
 							</c:choose>
 						</tr>

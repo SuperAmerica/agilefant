@@ -487,16 +487,6 @@
 	    <name>menu</name>
 	    <path>/WEB-INF/tags/menu.tag</path>
  	 </tag-file>
- 	 
- 	 <tag-file>
-	    <name>businessThemeMenu</name>
-	    <path>/WEB-INF/tags/businessThemeMenu.tag</path>
- 	 </tag-file>
-
-	<tag-file>
-	    <name>businessTheme</name>
-	    <path>/WEB-INF/tags/businessTheme.tag</path>
- 	 </tag-file>
 	 
 	 <tag-file>
 	    <name>hiddenProjectList</name>

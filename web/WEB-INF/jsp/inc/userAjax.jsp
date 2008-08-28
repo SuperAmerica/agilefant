@@ -103,8 +103,7 @@
 						<td><ww:submit value="Save" id="saveButton"/></td>
 						<%-- All users cannot be deleted --%>
 						<c:if test="${user.id != 1}">
-							<td class="deleteButton"> <ww:submit action="deleteUser"
-								onclick="return confirmDelete()" value="Delete" /> </td>
+							<td class="deleteButton"> <ww:submit action="deleteUser" value="Delete" /> </td>
 						</c:if>
 					</tr>
 				</table>

@@ -16,10 +16,15 @@ function initOnLoad(elem) {
     });
     
     me.find(':submit[value=Delete]').click(function() {
-        var form = $(this).parents('form:eq(0)');
-        form.data("delete","1");
-        var e = form.data('delete');
-        var foo = 1;
+        if (confirm('Are you sure?')) {
+            var form = $(this).parents('form:eq(0)');
+            form.data("delete","1");
+            form.unbind('submit');
+            return true;
+        }
+        else {
+            return false;
+        }
     });
     
     if (elem != document && me.data('aef-tabs') == "1") {
@@ -47,10 +52,8 @@ function initOnLoad(elem) {
 
 function submitDialogForm() {
     var me = $(this);
-    var e = me.data('delete');
-    if (me.data('delete') == '1') {
-        return true;
-    }
+    var a = me.valid();
+    var foo = 0;
     if(me.valid()) {
         me.find("input[type=submit]").attr("disabled", "disabled");
         $.post(me.attr("action"), me.serializeArray(),
@@ -302,7 +305,8 @@ $(document).ready(function() {
     $('#createNewMenu li a').click(function() {
         hideCreateNewMenuFunction();
     });
-    
 
 	initOnLoad(document);
+	
+	$('.undisableMe').removeAttr('disabled');
 });

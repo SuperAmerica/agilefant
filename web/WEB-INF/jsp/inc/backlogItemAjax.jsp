@@ -298,7 +298,7 @@ $(document).ready(function() {
 				<td></td>
 				<td><ww:submit value="Save" id="saveButton" /></td>
 				<td class="deleteButton">
-				<ww:submit value="Delete" onclick="return deleteBacklogItem(${backlogItemId})" />
+				<ww:submit value="Delete" action="deleteBacklogItem" />
 				<ww:reset value="Cancel"/>				
 				</td>
 			</tr>
@@ -456,7 +456,7 @@ $(document).ready(function() {
 					<div class="subItemContent">										
 					<p>
 					<display:table htmlId="todoTable-${backlogItemId}-${bliListContext}" class="listTable" name="backlogItem.tasks"
-						id="row" requestURI="editBacklogItem.action">
+						id="row">
 						
 						<display:column sortable="false" title="Name"
 							class="shortNameColumn">

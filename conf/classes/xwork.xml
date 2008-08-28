@@ -70,11 +70,7 @@
 			<result name="success_settings" type="redirect-action">
 				<param name="actionName">settings</param>
 			</result>
-			
-			<result name="success_themes" type="redirect-action">
-                <param name="actionName">listThemes</param>
-            </result>
-			
+				
 			<result name="success_timesheet" type="redirect-action">
 				<param name="actionName">timesheet</param>
 			</result>
@@ -100,17 +96,12 @@
             class="projectTypeAction">
             <result>/WEB-INF/jsp/administration/listProjectTypes.jsp</result>
         </action>
-		<action name="editProjectType" method="edit"
-			class="projectTypeAction">
-			<result>/WEB-INF/jsp/administration/editProjectType.jsp</result>
-		</action>
 		<action name="ajaxCreateProjectType" method="create"
             class="projectTypeAction">
             <result>/WEB-INF/jsp/forms/createProjectType.jsp</result>
         </action>
 		<action name="createProjectType" method="create"
 			class="projectTypeAction">
-			<result>/WEB-INF/jsp/administration/editProjectType.jsp</result>
 		</action>
 		<action name="deleteProjectType" method="delete"
 			class="projectTypeAction">
@@ -135,30 +126,6 @@
 			</result>
 		</action>
 		<!-- /Project type actions -->
-		<!-- Work type actions -->
-		<action name="editWorkType" method="edit"
-			class="workTypeAction">
-			<result>/WEB-INF/jsp/administration/editWorkType.jsp</result>
-		</action>
-		<action name="createWorkType" method="create"
-			class="workTypeAction">
-			<result>/WEB-INF/jsp/administration/editWorkType.jsp</result>
-		</action>
-		<action name="deleteWorkType" method="delete"
-			class="workTypeAction">
-			<result type="redirect-action">
-				<param name="actionName">editProjectType</param>
-				<param name="projectTypeId">${projectTypeId}</param>
-			</result>
-		</action>
-		<action name="storeWorkType" method="store"
-			class="workTypeAction">
-			<result type="redirect-action">
-				<param name="actionName">editProjectType</param>
-				<param name="projectTypeId">${projectTypeId}</param>
-			</result>
-		</action>
-		<!-- /Work type actions -->
 		<!-- Product actions -->
 		<action name="editProduct" method="edit"
 			class="productAction">
@@ -196,10 +163,6 @@
 		</action>
 		<!-- /Product actions -->
 		<!-- BacklogItem actions -->
-		<action name="createBacklogItem" method="create"
-			class="backlogItemAction">
-			<result>/WEB-INF/jsp/editBacklogItem.jsp</result>
-		</action>
 		<action name="ajaxCreateBacklogItem" method="create"
             class="backlogItemAction">
             <result>/WEB-INF/jsp/forms/createBacklogItem.jsp</result>
@@ -207,13 +170,8 @@
 		<action name="deleteBacklogItem" method="delete"
 			class="backlogItemAction">
 			<result type="redirect-action">
-				<param name="actionName">popContext</param>
-			</result>
-		</action>
-		<action name="storeBacklogItem" method="store"
-			class="backlogItemAction">
-			<result type="redirect">
-				editBacklogItem.action?backlogItemId=${backlogItemId}
+                <param name="actionName">editBacklog</param>
+                <param name="backlogId">${backlogId}</param>
 			</result>
 		</action>
 
@@ -244,9 +202,6 @@
 
 		<action name="storeNewBacklogItem" method="store"
 			class="backlogItemAction">
-			<result type="redirect">
-				editBacklogItem.action?backlogItemId=${backlogItemId}
-			</result>
 		</action>
 		<action name="storeCloseBacklogItem" method="store"
 			class="backlogItemAction">
@@ -256,9 +211,6 @@
 		</action>
 		<action name="linkToIterationGoal"
 			class="linkToIterationGoalAction">
-			<result type="redirect">
-				editBacklogItem.action?backlogItemId=${backlogItemId}
-			</result>
 		</action>
 		<action name="backlogItemTabs" method="edit"
 			class="backlogItemAction">
@@ -440,12 +392,6 @@
         <!-- /Menu actions -->
 
 		<!-- Task actions -->
-		<action name="editTask" method="edit" class="taskAction">
-			<result>/WEB-INF/jsp/editTask.jsp</result>
-		</action>
-		<action name="createTask" method="create" class="taskAction">
-			<result>/WEB-INF/jsp/editTask.jsp</result>
-		</action>
 		<action name="deleteTask" method="delete" class="taskAction">
 			<result type="redirect-action">
 				<param name="actionName">popContext</param>
@@ -476,40 +422,18 @@
 				<param name="actionName">popContext</param>
 			</result>
 		</action>
-		<action name="transformToBacklogItem"
-			method="transformToBacklogItem" class="taskAction">
-			<result type="redirect">
-				editBacklogItem.action?backlogItemId=${backlogItemId}
-			</result>
-		</action>
 
 		<action name="moveTaskUp" class="taskAction"
 			method="moveTaskUp">
-			<result type="redirect-action">
-				<param name="actionName">editBacklogItem</param>
-				<param name="backlogItemId">${backlogItemId}</param>
-			</result>
 		</action>
 		<action name="moveTaskDown" class="taskAction"
 			method="moveTaskDown">
-			<result type="redirect-action">
-				<param name="actionName">editBacklogItem</param>
-				<param name="backlogItemId">${backlogItemId}</param>
-			</result>
 		</action>
 		<action name="moveTaskTop" class="taskAction"
 			method="moveTaskTop">
-			<result type="redirect-action">
-				<param name="actionName">editBacklogItem</param>
-				<param name="backlogItemId">${backlogItemId}</param>
-			</result>
 		</action>
 		<action name="moveTaskBottom" class="taskAction"
 			method="moveTaskBottom">
-			<result type="redirect-action">
-				<param name="actionName">editBacklogItem</param>
-				<param name="backlogItemId">${backlogItemId}</param>
-			</result>
 		</action>
 
 		<!-- /Task actions -->
@@ -574,15 +498,9 @@
 		<action name="listUsers" method="list" class="userAction">
 			<result>/WEB-INF/jsp/administration/listUsers.jsp</result>
 		</action>
-		<action name="editUser" method="edit" class="userAction">
-			<result>/WEB-INF/jsp/administration/editUser.jsp</result>
-		</action>
 		<action name="ajaxCreateUser" method="create" class="userAction">
             <result>/WEB-INF/jsp/forms/createUser.jsp</result>
         </action>
-		<action name="createUser" method="create" class="userAction">
-			<result>/WEB-INF/jsp/administration/editUser.jsp</result>
-		</action>
 		<action name="deleteUser" method="delete" class="userAction">
 			<result type="redirect-action">listUsers</result>
 		</action>
@@ -616,21 +534,14 @@
 		<action name="listTeams" method="list" class="teamAction">
             <result>/WEB-INF/jsp/administration/listTeams.jsp</result>
         </action>
-		<action name="editTeam" method="edit" class="teamAction">
-			<result>/WEB-INF/jsp/administration/editTeam.jsp</result>
-		</action>
 		<action name="ajaxCreateTeam" method="create" class="teamAction">
             <result>/WEB-INF/jsp/forms/createTeam.jsp</result>
         </action>
-		<action name="createTeam" method="create" class="teamAction">
-			<result>/WEB-INF/jsp/administration/editTeam.jsp</result>
-		</action>
 		<action name="deleteTeam" method="delete" class="teamAction">
 			<result type="redirect-action">listTeams</result>
 		</action>
 		<action name="storeTeam" method="store" class="teamAction">
 			<result type="redirect-action">listTeams</result>
-			<!--<result name="error">/WEB-INF/jsp/editTeam.jsp</result>-->
 		</action>
 		<action name="ajaxStoreTeam" method="ajaxStoreTeam"
 			class="teamAction">		
@@ -726,7 +637,8 @@
 		<action name="deleteIterationGoal" method="delete"
 			class="iterationGoalAction">
 			<result type="redirect-action">
-				<param name="actionName">popContext</param>
+				<param name="actionName">editIteration</param>
+				<param name="iterationId">${iterationId}</param>
 			</result>
 		</action>
 		<action name="storeIterationGoal" method="store"
@@ -740,12 +652,6 @@
 		</action>
 		<action name="storeNewIterationGoal" method="store"
 			class="iterationGoalAction">
-			<result type="redirect-action">
-				<param name="actionName">editIterationGoal</param>
-				<param name="iterationGoalId">${iterationGoalId}</param>
-				<param name="contextViewName">editIteration</param>
-				<param name="contextObjectId">${iterationId}</param>
-			</result>
 		</action>
 
 		<action name="storeCloseIterationGoal" method="store"
@@ -980,18 +886,6 @@
 		
 		<action name="updateMultipleHourEntries" class="hourEntryAction" method="multiEdit" />
 		<!-- Business theme actions -->
-		<action name="listThemes" method="list"
-            class="businessThemeAction">
-            <result>/WEB-INF/jsp/administration/listThemes.jsp</result>
-        </action>
-		<action name="editBusinessTheme" method="edit"
-			class="businessThemeAction">
-			<result>/WEB-INF/jsp/administration/editBusinessTheme.jsp</result>
-		</action>
-		<action name="createBusinessTheme" method="create"
-			class="businessThemeAction">
-			<result>/WEB-INF/jsp/administration/editBusinessTheme.jsp</result>
-		</action>
 		<action name="deleteBusinessTheme" method="delete"
 			class="businessThemeAction">
 			<result type="redirect">
@@ -1000,7 +894,6 @@
 		</action>
 		<action name="storeBusinessTheme" method="store"
 			class="businessThemeAction">
-			<result type="redirect-action">listThemes</result>
 		</action>
 		<action name="addThemeToBacklogItem" method="addBusinessTheme"
 			class="backlogItemAction">					

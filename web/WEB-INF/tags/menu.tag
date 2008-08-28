@@ -66,7 +66,7 @@ Agilefant
 <table border="0">
 <tr>
 <td>
-<ww:url id="editLink" action="editUser" includeParams="none">
+<ww:url id="editLink" action="dailyWork" includeParams="none">
 	<ww:param name="userId" value="${currentUser.id}" />
 </ww:url>
 <ww:a href="%{editLink}">${currentUser.fullName}</ww:a>

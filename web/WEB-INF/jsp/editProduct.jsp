@@ -118,7 +118,7 @@ var productId = ${product.id};
 
 			<div id="editProductForm" style="display: none;">
 			<div class="validateWrapper validateExistingProduct">
-			<ww:form id="productEditForm" onsubmit="return false;"
+			<ww:form id="productEditForm" 
 				action="storeProduct" method="post">
 				<ww:hidden name="productId" value="${product.id}" />
 
@@ -140,12 +140,14 @@ var productId = ${product.id};
 						<td></td>
 						<c:choose>
 							<c:when test="${productId == 0}">
-								<td><ww:submit value="Create" /></td>
+								<td><ww:submit value="Create"
+								 disabled="disabled" cssClass="undisableMe" /></td>
 							</c:when>
 							<c:otherwise>
 								<td><ww:submit value="Save" />
 								<td class="deleteButton"><ww:submit
-									onclick="return confirmDelete()" action="deleteProduct"
+									action="deleteProduct"
+									disabled="disabled" cssClass="undisableMe"
 									value="Delete" /></td>
 							</c:otherwise>
 						</c:choose>

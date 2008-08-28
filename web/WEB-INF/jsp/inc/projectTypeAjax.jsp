@@ -34,8 +34,7 @@
 						<td></td>
 						<td></td>
 						<td><ww:submit value="Save" /></td>
-						<td class="deleteButton"> <ww:submit onclick="return confirmDelete()"
-							action="deleteProjectType" value="Delete" />
+						<td class="deleteButton"> <ww:submit action="deleteProjectType" value="Delete" />
 						</td>
 					</tr>
 				</table>

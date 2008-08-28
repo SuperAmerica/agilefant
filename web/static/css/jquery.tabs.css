@@ -48,8 +48,7 @@
 
 .projectNaviTab {
 	width: 730px !important;
-	border: 1px solid #666;
-	max-height: 480px;
+	border: 1px solid #666;	
 	min-height: 100px;
 	background-color: #f0f0f0;
 	padding: 8px 3px;
@@ -59,8 +58,7 @@
 
 .backlogItemNaviTab {
 	width: 730px !important;
-	border: 1px solid #666;
-	max-height: 480px;
+	border: 1px solid #666;	
 	min-height: 100px;
 	background-color: #f0f0f0;
 	padding: 8px 3px;
@@ -70,8 +68,7 @@
 
 .iterationNaviTab {
 	width: 730px !important;
-	border: 1px solid #666;
-	max-height: 480px;
+	border: 1px solid #666;	
 	min-height: 100px;
 	background-color: #f0f0f0;
 	padding: 8px 3px;
@@ -81,8 +78,7 @@
 
 .userNaviTab {
 	width: 480px !important;
-	border: 1px solid #666;
-	max-height: 480px;
+	border: 1px solid #666;	
 	min-height: 100px;
 	background-color: #f0f0f0;
 	padding: 8px 3px;
@@ -92,8 +88,7 @@
 
 .teamNaviTab {
 	width: 480px !important;
-	border: 1px solid #666;
-	max-height: 480px;
+	border: 1px solid #666;	
 	min-height: 100px;
 	background-color: #f0f0f0;
 	padding: 8px 3px;
@@ -103,8 +98,7 @@
 
 .projectTypeNaviTab {
 	width: 480px !important;
-	border: 1px solid #666;
-	max-height: 480px;
+	border: 1px solid #666;	
 	min-height: 100px;
 	background-color: #f0f0f0;
 	padding: 8px 3px;

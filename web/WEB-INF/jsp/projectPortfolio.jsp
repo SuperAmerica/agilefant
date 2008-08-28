@@ -13,7 +13,7 @@ var teams = [<aef:teamJson items="${teamList}"/>]
 
 
 
-<div class="subItems" style="width: 545px;">
+<div class="subItems" style="width: 645px;">
 	<div class="subItemHeader">
 		<table cellspacing="0" cellpadding="0">
 			<tr>
@@ -52,13 +52,17 @@ var teams = [<aef:teamJson items="${teamList}"/>]
 		<c:set var="divId" value="${divId + 1}" scope="page" />
 		<a href="javascript:toggleDiv('portfolioDiv_${divId}');">
 			<img src="static/img/users.png" alt="Users" />
-						
-			<c:forEach items="${assignedUsers[row]}" var="usr">				
-				<c:out value="${usr.initials}" />,
+			<c:set var="assUserListLength" value="${fn:length(assignedUsers[row])}"/>
+			<c:set var="nonAssUserListLength" value="${fn:length(nonAssignedUsers[row])}"/>		
+			<c:set var="assUserCount" value="0" />						
+			<c:forEach items="${assignedUsers[row]}" var="usr">
+				<c:set var="assUserCount" value="${assUserCount + 1}" />			
+				<c:out value="${usr.initials}" /><c:if test="${(assUserCount != assUserListLength || (assUserCount == assUserListLength && nonAssUserListLength > 0))}">, </c:if>
 			</c:forEach>
 			<span style="color: rgb(255, 0, 0);">
-			<c:forEach items="${nonAssignedUsers[row]}" var="usr">				
-				<c:out value="${usr.initials}" />,
+			<c:forEach items="${nonAssignedUsers[row]}" var="usr">
+				<c:set var="nonAssUserCount" value="${nonAssUserCount + 1}" />			
+				<c:out value="${usr.initials}" /><c:if test="${nonAssUserCount != nonAssUserListLength}">, </c:if>
 			</c:forEach>
 			</span>						
 		</a>
@@ -211,14 +215,20 @@ var teams = [<aef:teamJson items="${teamList}"/>]
 		<c:set var="divId" value="${divId + 1}" scope="page" />
 		<a href="javascript:toggleDiv('portfolioDiv_${divId}');">
 		<img src="static/img/users.png" alt="Users" />
-		<c:forEach items="${assignedUsers[row]}" var="usr">				
-				<c:out value="${usr.initials}" />,
-			</c:forEach>
-			<span style="color: rgb(255, 0, 0);">
-			<c:forEach items="${nonAssignedUsers[row]}" var="usr">				
-				<c:out value="${usr.initials}" />,
-			</c:forEach>
-			</span>
+		<c:set var="assUserListLength" value="${fn:length(assignedUsers[row])}"/>
+		<c:set var="nonAssUserListLength" value="${fn:length(nonAssignedUsers[row])}"/>		
+		<c:set var="assUserCount" value="0" />
+		<c:forEach items="${assignedUsers[row]}" var="usr">	
+			<c:set var="assUserCount" value="${assUserCount + 1}" />
+			<c:out value="${usr.initials}" /><c:if test="${(assUserCount != assUserListLength || (assUserCount == assUserListLength && nonAssUserListLength > 0))}">, </c:if>
+		</c:forEach>
+		<span style="color: rgb(255, 0, 0);">
+		<c:set var="nonAssUserCount" value="0" />
+		<c:forEach items="${nonAssignedUsers[row]}" var="usr">
+			<c:set var="nonAssUserCount" value="${nonAssUserCount + 1}" />
+			<c:out value="${usr.initials}" /><c:if test="${nonAssUserCount != nonAssUserListLength}">, </c:if>
+		</c:forEach>
+		</span>
 		</a>
 		<!-- User assignment table -->	
 		<div id="portfolioDiv_${divId}" style="display: none;">

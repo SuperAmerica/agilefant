@@ -291,4 +291,16 @@ public interface BacklogBusiness {
      * Get the backlog as a json string.
      */
     public String getBacklogAsJSON(int backlogId);
+    
+    /**
+     * Calculate total effort left, original estimate and number of items for
+     * items directly under given backlog. E.g. calling this method for project
+     * return only data for backlog items under the project, not for backlog
+     * items under project's iterations.
+     * 
+     * @param backlog
+     * @return Metrics object with original estimate, effort left, total number
+     *         of items and number of completed items.
+     */
+    public BacklogMetrics calculateLimitedBacklogMetrics(Backlog backlog);
 }

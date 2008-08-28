@@ -1,6 +1,7 @@
 package fi.hut.soberit.agilefant.db;
 
 import fi.hut.soberit.agilefant.model.Backlog;
+import fi.hut.soberit.agilefant.util.BacklogMetrics;
 
 /**
  * Interface for a DAO of a Backlog.
@@ -20,4 +21,14 @@ public interface BacklogDAO extends GenericDAO<Backlog> {
      * @return
      */
     public int getNumberOfDoneBacklogItems(Backlog backlog);
+    
+    /**
+     * Get project metrics by backlog.
+     * 
+     * @param backlog
+     *                parent backlog for backlog items
+     * @return BacklogMetrics metrics object filled with original estimate,
+     *         effort left and total number of items.
+     */
+    public BacklogMetrics getBacklogMetrics(Backlog backlog);
 }

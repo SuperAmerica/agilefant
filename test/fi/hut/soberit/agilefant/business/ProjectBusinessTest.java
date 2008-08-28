@@ -6,7 +6,10 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+
+import org.easymock.EasyMock;
 
 import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
@@ -19,9 +22,13 @@ import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.Assignment;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
+import fi.hut.soberit.agilefant.model.BacklogThemeBinding;
+import fi.hut.soberit.agilefant.model.BusinessTheme;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.util.BacklogMetrics;
+import fi.hut.soberit.agilefant.util.ProjectMetrics;
 import fi.hut.soberit.agilefant.util.SpringTestCase;
 import fi.hut.soberit.agilefant.util.TestUtility;
 
@@ -539,6 +546,185 @@ public class ProjectBusinessTest extends SpringTestCase {
         verify(userBiz);
     }
 
+    public void testGetProjectMetrics() {
+        BacklogBusiness blBus = EasyMock.createMock(BacklogBusiness.class);
+        ProjectDAO pDAO = EasyMock.createMock(ProjectDAO.class);
+        ProjectBusinessImpl pBus = new ProjectBusinessImpl();
+        pBus.setBacklogBusiness(blBus);
+        pBus.setProjectDAO(pDAO);
+        
+        Project emptyProject = new Project();
+        ProjectMetrics emptyProjectMetrics = new ProjectMetrics(); //empty
+        BacklogMetrics emptyProjectContentMetrics = new BacklogMetrics(); //empty
+        
+        Project noIterationProject = new Project();
+        ProjectMetrics noIterationProjectMetrics = new ProjectMetrics();
+        
+        noIterationProjectMetrics.setOriginalEstimate(new AFTime(1000));
+        noIterationProjectMetrics.setEffortLeft(new AFTime(500));
+        noIterationProjectMetrics.setTotalItems(10);
+        noIterationProjectMetrics.setCompletedItems(4);
+        
+        BacklogMetrics noIterationProjectContentMetrics = new BacklogMetrics(); //empty
+        
+        
+        Project allInProject = new Project();
+        ProjectMetrics allInProjectMetrics = new ProjectMetrics();
+        
+        allInProjectMetrics.setOriginalEstimate(new AFTime(12000));
+        allInProjectMetrics.setEffortLeft(new AFTime(6000));
+        allInProjectMetrics.setTotalItems(10);
+        allInProjectMetrics.setCompletedItems(4);
+        
+        BacklogMetrics allInProjectContentMetrics = new BacklogMetrics();
+        
+        allInProjectContentMetrics.setOriginalEstimate(new AFTime(60000));
+        allInProjectContentMetrics.setEffortLeft(new AFTime(40000));
+        allInProjectContentMetrics.setTotalItems(50);
+        allInProjectContentMetrics.setCompletedItems(10);
+        
+        expect(blBus.calculateLimitedBacklogMetrics(emptyProject)).andReturn(emptyProjectContentMetrics);
+        expect(blBus.calculateLimitedBacklogMetrics(noIterationProject)).andReturn(noIterationProjectContentMetrics);
+        expect(blBus.calculateLimitedBacklogMetrics(allInProject)).andReturn(allInProjectContentMetrics);
+        
+        expect(pDAO.getProjectBLIMetrics(emptyProject)).andReturn(emptyProjectMetrics);
+        //expect(pDAO.getDoneBLIs(emptyProject)).andReturn(0);
+        expect(pDAO.getProjectBLIMetrics(noIterationProject)).andReturn(noIterationProjectMetrics);
+        expect(pDAO.getDoneBLIs(noIterationProject)).andReturn(4);
+        expect(pDAO.getProjectBLIMetrics(allInProject)).andReturn(allInProjectMetrics);
+        expect(pDAO.getDoneBLIs(allInProject)).andReturn(4);
+        
+        replay(pDAO);
+        replay(blBus);
+        
+        ProjectMetrics m1 = pBus.getProjectMetrics(emptyProject);
+        assertEquals(0, m1.getEffortLeft().getTime());
+        assertEquals(0, m1.getOriginalEstimate().getTime());
+        assertEquals(new Integer(0), m1.getTotalItems());
+        assertEquals(new Integer(0), m1.getCompletedItems());
+        assertEquals(new Integer(0), m1.getPercentDone());
+        
+        ProjectMetrics m2 = pBus.getProjectMetrics(noIterationProject);
+        assertEquals(500, m2.getEffortLeft().getTime());
+        assertEquals(1000, m2.getOriginalEstimate().getTime());
+        assertEquals(new Integer(10), m2.getTotalItems());
+        assertEquals(new Integer(4), m2.getCompletedItems());
+        assertEquals(new Integer(40), m2.getPercentDone());
+        
+        ProjectMetrics m3 = pBus.getProjectMetrics(allInProject);
+        assertEquals(46000, m3.getEffortLeft().getTime());
+        assertEquals(72000, m3.getOriginalEstimate().getTime());
+        assertEquals(new Integer(60), m3.getTotalItems());
+        assertEquals(new Integer(14), m3.getCompletedItems());
+        assertEquals(new Integer(23), m3.getPercentDone());
+        
+        verify(pDAO);
+        verify(blBus);        
+    }
+    
+    public void testFormatThemeBindings() {
+        //setup
+        ProjectDAO pDAO = EasyMock.createMock(ProjectDAO.class);
+        ProjectBusinessImpl pBus = new ProjectBusinessImpl();
+        pBus.setProjectDAO(pDAO);
+        
+        BusinessTheme theme1 = new BusinessTheme();
+        BusinessTheme theme2 = new BusinessTheme();
+        BusinessTheme theme3 = new BusinessTheme();
+        BacklogThemeBinding binding1 = new BacklogThemeBinding();
+        binding1.setBusinessTheme(theme1);
+        binding1.setFixedSize(new AFTime(10));
+        binding1.setRelativeBinding(false);
+        BacklogThemeBinding binding2 = new BacklogThemeBinding();
+        binding2.setBusinessTheme(theme2);
+        binding2.setFixedSize(new AFTime(562));
+        binding2.setRelativeBinding(false);
+        BacklogThemeBinding binding3 = new BacklogThemeBinding();
+        binding3.setBusinessTheme(theme3);
+        binding3.setFixedSize(new AFTime(2));
+        binding3.setRelativeBinding(false);
+        BacklogThemeBinding binding4 = new BacklogThemeBinding();
+        binding4.setBusinessTheme(theme1);
+        binding4.setFixedSize(new AFTime(150));
+        binding4.setRelativeBinding(false);
+        BacklogThemeBinding binding5 = new BacklogThemeBinding();
+        binding5.setBusinessTheme(theme2);
+        binding5.setFixedSize(new AFTime(4000));
+        binding5.setRelativeBinding(false);
+        
+        Iteration mockIter = new Iteration();
+        ArrayList<Iteration> emptyIter = new ArrayList<Iteration>();
+        ArrayList<Iteration> iterList = new ArrayList<Iteration>();
+        iterList.add(mockIter);
+        ArrayList<BacklogThemeBinding> emptyBind = new ArrayList<BacklogThemeBinding>();
+
+        
+        // case 1 no theme bindings
+        Project project1 = new Project();
+        project1.setIterations(emptyIter);
+        
+        // case 2 only iteration bindings
+        Project project2 = new Project();
+        List<BacklogThemeBinding> iterationThemes2 = new ArrayList<BacklogThemeBinding>();
+        iterationThemes2.add(binding1);
+        iterationThemes2.add(binding2);
+        iterationThemes2.add(binding2);
+        project2.setIterations(iterList);
+        
+        // case 3 only project bindings
+        Project project3 = new Project();
+        List<BacklogThemeBinding> projectThemes3 = new ArrayList<BacklogThemeBinding>();
+        project3.setBusinessThemeBindings(projectThemes3);
+        projectThemes3.add(binding1);
+        projectThemes3.add(binding1);
+        projectThemes3.add(binding5);
+        project3.setIterations(emptyIter);
+
+        
+        
+        // case 4 iteration and project bindings
+        Project project4 = new Project();
+        List<BacklogThemeBinding> iterationThemes4 = new ArrayList<BacklogThemeBinding>();
+        List<BacklogThemeBinding> projectThemes4 = new ArrayList<BacklogThemeBinding>();
+        project4.setBusinessThemeBindings(projectThemes4);
+        iterationThemes4.add(binding3);
+        iterationThemes4.add(binding4);
+        iterationThemes4.add(binding4);
+        iterationThemes4.add(binding1);
+        iterationThemes4.add(binding1);
+        iterationThemes4.add(binding1);
+        projectThemes4.add(binding3);
+        projectThemes4.add(binding1);
+        project4.setIterations(iterList);
+
+        expect(pDAO.getProjectThemeData(project2)).andReturn(iterationThemes2);
+        expect(pDAO.getProjectThemeData(project4)).andReturn(iterationThemes4);
+        
+        replay(pDAO);
+        Map<BusinessTheme,AFTime> ret;
+        ret = pBus.formatThemeBindings(project1);
+        assertEquals(0, ret.size());
+        
+        ret = pBus.formatThemeBindings(project2);
+        assertEquals(2, ret.size());
+        assertEquals(10, ret.get(theme1).getTime());
+        assertEquals(1124, ret.get(theme2).getTime());
+        
+        ret = pBus.formatThemeBindings(project3);
+        assertEquals(2, ret.size());
+        assertEquals(20, ret.get(theme1).getTime());
+        assertEquals(4000, ret.get(theme2).getTime());
+        
+        ret = pBus.formatThemeBindings(project4);
+        assertEquals(2, ret.size());
+        assertEquals(340, ret.get(theme1).getTime());
+        assertEquals(4, ret.get(theme3).getTime());
+      
+        
+        verify(pDAO);
+        
+        
+    }
     /**
      * Clears the database from test data. We must clear database manually if we
      * need to transactions to complete.

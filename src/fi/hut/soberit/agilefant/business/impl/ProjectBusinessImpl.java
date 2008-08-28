@@ -37,6 +37,7 @@ import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.ProjectType;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.util.BacklogLoadData;
+import fi.hut.soberit.agilefant.util.BacklogMetrics;
 import fi.hut.soberit.agilefant.util.CalendarUtils;
 import fi.hut.soberit.agilefant.util.DailyWorkLoadData;
 import fi.hut.soberit.agilefant.util.EffortSumData;
@@ -58,9 +59,9 @@ public class ProjectBusinessImpl implements ProjectBusiness {
     private IterationDAO iterationDAO;
 
     private ProjectTypeDAO projectTypeDAO;
-    
+
     private HourEntryBusiness hourEntryBusiness;
-    
+
     private SettingBusiness settingBusiness;
 
     // Testing
@@ -167,10 +168,9 @@ public class ProjectBusinessImpl implements ProjectBusiness {
 
         projectTypeDAO.remove(projectTypeId);
     }
-    
-    
+
     /** {@inheritDoc} * */
-    public void removeAllHourEntries( Backlog backlog ){
+    public void removeAllHourEntries(Backlog backlog) {
         hourEntryBusiness.removeHourEntriesByParent(backlog);
     }
 
@@ -208,7 +208,7 @@ public class ProjectBusinessImpl implements ProjectBusiness {
 
         // Go trough all projects and bli:s
         for (Project pro : projects) {
-            int assignedUsers = backlogBusiness.getNumberOfAssignedUsers(pro);            
+            int assignedUsers = backlogBusiness.getNumberOfAssignedUsers(pro);
             int unestimatedBlis = 0;
             AFTime ongoingBliLoadLeft = new AFTime(0);
             Set<User> allUsers = new HashSet<User>(this.backlogBusiness
@@ -216,8 +216,10 @@ public class ProjectBusinessImpl implements ProjectBusiness {
             HashSet<User> projectAssignments = new HashSet<User>(
                     this.backlogBusiness.getUsers(pro, true));
             List<User> nonAssignedUsers = new ArrayList<User>();
-            /*ArrayList<User> assignments = new ArrayList<User>(
-                    this.backlogBusiness.getUsers(pro, true));*/
+            /*
+             * ArrayList<User> assignments = new ArrayList<User>(
+             * this.backlogBusiness.getUsers(pro, true));
+             */
             Collection<BacklogItem> blis = getBlisInProjectAndItsIterations(pro);
 
             // Get overheads for users in this project
@@ -290,7 +292,7 @@ public class ProjectBusinessImpl implements ProjectBusiness {
 
                         // Check whether user is responsible for a bli in the
                         // project but is currently not assigned to it
-                       
+
                         if (!projectAssignments.contains(resp)
                                 && bli.getEffortLeft() == null) {
                             unassignedUsersMap.put(pro.getId() + "-"
@@ -370,8 +372,6 @@ public class ProjectBusinessImpl implements ProjectBusiness {
         data.setNonAssignedUsers(nonAssignmentMap);
     }
 
-   
-    
     public ProjectPortfolioData getProjectPortfolioData() {
         ProjectPortfolioData data = new ProjectPortfolioData();
         fillProjectPortfolioData(data);
@@ -522,8 +522,8 @@ public class ProjectBusinessImpl implements ProjectBusiness {
                                 + " days from project as week end days");
                         projectLength = projectLength - weekEndDaysInProject;
                         if (projectLength == 0) { // TODO Find better way to
-                                                    // prevent null divination
-                                                    // if project on weekend
+                            // prevent null divination
+                            // if project on weekend
                             projectLength = 1;
                         }
                         List<Date> dates = cUtils.getProjectDaysList(pro
@@ -565,8 +565,8 @@ public class ProjectBusinessImpl implements ProjectBusiness {
                                 + " days from project as week end days");
                         projectLength = projectLength - weekEndDaysInProject;
                         if (projectLength == 0) { // TODO Find better way to
-                                                    // prevent null division if
-                                                    // project on weekend
+                            // prevent null division if
+                            // project on weekend
                             projectLength = 1;
                         }
                         List<Date> dates = cUtils.getProjectDaysList(it
@@ -691,64 +691,68 @@ public class ProjectBusinessImpl implements ProjectBusiness {
         DailyWorkLoadData data = new DailyWorkLoadData();
         Map<Backlog, BacklogLoadData> loadDataList = new HashMap<Backlog, BacklogLoadData>();
         ArrayList<Integer> weekNumbers = new ArrayList<Integer>();
-        // String[] overallTotals = new String[3]; // Not currently used, but could
-                                                // use in the future
+        // String[] overallTotals = new String[3]; // Not currently used, but
+        // could
+        // use in the future
 
         GregorianCalendar cal = new GregorianCalendar();
         cal.setFirstDayOfWeek(GregorianCalendar.MONDAY);
 
         int currentWeek = cal.get(GregorianCalendar.WEEK_OF_YEAR);
-        
+
         // 1. Weeks
         for (int i = 0; i < weeksAhead; i++) {
             weekNumbers.add(currentWeek + i);
             if (!data.getWeeklyTotals().containsKey(currentWeek + i)) {
-                data.getWeeklyTotals().put(new Integer(currentWeek + i), new AFTime(0));
-                data.getWeeklyEfforts().put(new Integer(currentWeek + i), new AFTime(0));
-                data.getWeeklyOverheads().put(new Integer(currentWeek + i), new AFTime(0));
+                data.getWeeklyTotals().put(new Integer(currentWeek + i),
+                        new AFTime(0));
+                data.getWeeklyEfforts().put(new Integer(currentWeek + i),
+                        new AFTime(0));
+                data.getWeeklyOverheads().put(new Integer(currentWeek + i),
+                        new AFTime(0));
             }
         }
 
         // 2. Backlog loads
         List<Backlog> assignedBacklogs = this.backlogBusiness.getUserBacklogs(
                 user, new Date(), weeksAhead);
-        
+
         data.setBacklogs(assignedBacklogs);
-        
+
         // Loop through the backlogs
         for (Backlog blog : assignedBacklogs) {
             BacklogLoadData bdata = this.backlogBusiness
                     .calculateBacklogLoadData(blog, user, new Date(),
                             weeksAhead);
             loadDataList.put(bdata.getBacklog(), bdata);
-            
+
             // Calculate totals
             for (Integer weekNo : weekNumbers) {
                 AFTime effAdd = bdata.getEfforts().get(weekNo);
                 if (effAdd != null) {
                     data.getWeeklyEfforts().get(weekNo).add(effAdd);
-                    data.getTotalEffort().add(effAdd);    
+                    data.getTotalEffort().add(effAdd);
                 }
-                
-                
+
                 AFTime ohAdd = bdata.getOverheads().get(weekNo);
                 if (ohAdd != null) {
                     data.getWeeklyOverheads().get(weekNo).add(ohAdd);
-                    data.getTotalOverhead().add(ohAdd);    
+                    data.getTotalOverhead().add(ohAdd);
                 }
-                
-                
+
                 AFTime toAdd = bdata.getWeeklyTotals().get(weekNo);
                 if (toAdd != null) {
                     data.getWeeklyTotals().get(weekNo).add(toAdd);
-                    data.getOverallTotal().add(toAdd);                    
+                    data.getOverallTotal().add(toAdd);
                 }
             }
         }
         for (int i = 0; i < weeksAhead; i++) {
-            boolean accommondate = isAccommodableWorkload(currentWeek, currentWeek + i, 
-                    data.getWeeklyTotals().get(currentWeek + i), user);
-            data.getWeeklyOverload().put(new Integer(currentWeek + i), new Boolean(accommondate));
+            boolean accommondate = isAccommodableWorkload(currentWeek,
+                    currentWeek + i, data.getWeeklyTotals()
+                            .get(currentWeek + i), user);
+            data.getWeeklyOverload().put(new Integer(currentWeek + i),
+                    new Boolean(accommondate));
         }
         data.setWeekNumbers(weekNumbers);
         data.setLoadDatas(loadDataList);
@@ -757,65 +761,73 @@ public class ProjectBusinessImpl implements ProjectBusiness {
     }
 
     /**
-     * Calculate whether given hours can be fitted to the given week.
-     * Each day is assumed 8 hours long.
+     * Calculate whether given hours can be fitted to the given week. Each day
+     * is assumed 8 hours long.
+     * 
      * @param currentWeek
      * @param targetWeek
      * @param totalWorkload
      * @return
      */
-    private boolean isAccommodableWorkload(int currentWeek, int targetWeek, AFTime totalWorkload, User user) {
+    private boolean isAccommodableWorkload(int currentWeek, int targetWeek,
+            AFTime totalWorkload, User user) {
         if (user == null) {
             return false;
         }
         long totalInWeek = 5;
         int daysLeft = 5;
-        if(currentWeek == targetWeek) {
+        if (currentWeek == targetWeek) {
             Calendar cal = GregorianCalendar.getInstance();
             daysLeft = 1;
-            while(cal.get(Calendar.DAY_OF_WEEK) != Calendar.FRIDAY && daysLeft < 6) {
+            while (cal.get(Calendar.DAY_OF_WEEK) != Calendar.FRIDAY
+                    && daysLeft < 6) {
                 cal.add(Calendar.DAY_OF_YEAR, 1);
                 daysLeft++;
             }
         }
-        totalInWeek = (long) (user.getWeekHours().getTime() * (1.0 * daysLeft * settingBusiness.getCriticalLow() / (5 * 100)));
-        if (totalInWeek <  totalWorkload.getTime()) {
+        totalInWeek = (long) (user.getWeekHours().getTime() * (1.0 * daysLeft
+                * settingBusiness.getCriticalLow() / (5 * 100)));
+        if (totalInWeek < totalWorkload.getTime()) {
             return false;
         }
         return true;
     }
-    
+
     /** {@inheritDoc} */
     public List<User> getAssignableUsers(Project project) {
-        Set<User> userSet = new HashSet<User>(); 
-        
+        Set<User> userSet = new HashSet<User>();
+
         // Add all assigned users
         userSet.addAll(backlogBusiness.getUsers(project, true));
-        
+
         // Add all enabled users
         userSet.addAll(userBusiness.getEnabledUsers());
-        
+
         // Add the users to a list
         List<User> userList = new ArrayList<User>(userSet);
-        
+
         // Sort the list
         Collections.sort(userList, new UserComparator());
-        
+
         return userList;
     }
-    
+
     public void calculateProjectMetrics(Product product) {
-        if (product != null && product.getProjects() != null && product.getProjects().size() > 0) {
-            //ProjectData projectDataMap
+        if (product != null && product.getProjects() != null
+                && product.getProjects().size() > 0) {
+            // ProjectData projectDataMap
             for (Project p : product.getProjects()) {
                 ProjectMetrics metrics = new ProjectMetrics();
-                metrics.setAssignees(backlogBusiness.getNumberOfAssignedUsers(p));
+                metrics.setAssignees(backlogBusiness
+                        .getNumberOfAssignedUsers(p));
                 if (p.getIterations() != null) {
                     metrics.setNumberOfAllIterations(p.getIterations().size());
                     int ongoingIters = 0;
                     Date current = Calendar.getInstance().getTime();
-                    for (Iteration iter: p.getIterations()) {
-                        if (iter.getStartDate().getTime() < current.getTime() && iter.getEndDate().getTime() > current.getTime()) {
+                    for (Iteration iter : p.getIterations()) {
+                        if (iter.getStartDate().getTime() < current.getTime()
+                                && iter.getEndDate().getTime() > current
+                                        .getTime()) {
                             ongoingIters++;
                         }
                     }
@@ -823,15 +835,15 @@ public class ProjectBusinessImpl implements ProjectBusiness {
                 } else {
                     metrics.setNumberOfAllIterations(0);
                     metrics.setNumberOfOngoingIterations(0);
-                }                
+                }
                 p.setMetrics(metrics);
             }
         }
     }
-    
+
     public Map<Integer, AFTime> calculateTotalOverheads(Project project) {
         Map<Integer, AFTime> totalOverheads = new HashMap<Integer, AFTime>();
-        if (project != null) {                   
+        if (project != null) {
             for (Assignment ass : project.getAssignments()) {
                 AFTime totalOverhead = new AFTime(0);
                 if (project.getDefaultOverhead() != null) {
@@ -841,64 +853,92 @@ public class ProjectBusinessImpl implements ProjectBusiness {
                     totalOverhead.add(ass.getDeltaOverhead());
                 }
                 totalOverheads.put(ass.getUser().getId(), totalOverhead);
-            }            
+            }
         }
         return totalOverheads;
     }
-    
+
+    /** {@inheritDoc} */
     public ProjectMetrics getProjectMetrics(Project proj) {
-        ProjectMetrics metrics = projectDAO.getProjectBLIMetrics(proj);
-        if(metrics != null && metrics.getTotalItems() > 0) {
+
+        ProjectMetrics metrics = new ProjectMetrics();
+        metrics = projectDAO.getProjectBLIMetrics(proj);
+        if (metrics == null) {
+            metrics = new ProjectMetrics();
+        }
+        if (metrics.getTotalItems() > 0) {
             metrics.setCompletedItems(projectDAO.getDoneBLIs(proj));
-            metrics.setPercentDone(Math.round(100.0f*(float)metrics.getCompletedItems()/(float)metrics.getTotalItems()));
-            
+        }
+        BacklogMetrics projMetrics = backlogBusiness
+                .calculateLimitedBacklogMetrics(proj);
+        metrics.getEffortLeft().add(projMetrics.getEffortLeft());
+        metrics.getOriginalEstimate().add(projMetrics.getOriginalEstimate());
+        metrics.setTotalItems(metrics.getTotalItems()
+                + projMetrics.getTotalItems());
+        metrics.setCompletedItems(metrics.getCompletedItems()
+                + projMetrics.getCompletedItems());
+
+        if (metrics.getTotalItems() > 0) {
+            metrics.setPercentDone(Math.round(100.0f
+                    * (float) metrics.getCompletedItems()
+                    / (float) metrics.getTotalItems()));
+
         }
         return metrics;
     }
-    
-    public Map<BusinessTheme,AFTime> formatThemeBindings(Project proj) {
-        List<BacklogThemeBinding> bindings = projectDAO.getProjectThemeData(proj);
-        Map<BusinessTheme,Collection<BacklogThemeBinding>> tmp = new HashMap<BusinessTheme, Collection<BacklogThemeBinding>>();
-        //iteration themes
-        for(BacklogThemeBinding bind : bindings) {
-            if(tmp.get(bind.getBusinessTheme()) == null) {
-                tmp.put(bind.getBusinessTheme(), new ArrayList<BacklogThemeBinding>());
+
+    /** {@inheritDoc} */
+    public Map<BusinessTheme, AFTime> formatThemeBindings(Project proj) {
+        Map<BusinessTheme, Collection<BacklogThemeBinding>> tmp = new HashMap<BusinessTheme, Collection<BacklogThemeBinding>>();
+        if (proj.getIterations().size() > 0) {
+            List<BacklogThemeBinding> bindings = projectDAO
+                    .getProjectThemeData(proj);
+            // iteration themes
+            for (BacklogThemeBinding bind : bindings) {
+                if (tmp.get(bind.getBusinessTheme()) == null) {
+                    tmp.put(bind.getBusinessTheme(),
+                            new ArrayList<BacklogThemeBinding>());
+                }
+                tmp.get(bind.getBusinessTheme()).add(bind);
             }
-            tmp.get(bind.getBusinessTheme()).add(bind);
         }
-        //project themes
-        for(BacklogThemeBinding bind : proj.getBusinessThemeBindings()) {
-            if(tmp.get(bind.getBusinessTheme()) == null) {
-                tmp.put(bind.getBusinessTheme(), new ArrayList<BacklogThemeBinding>());
+        // project themes
+        if (proj.getBusinessThemeBindings() != null) {
+            for (BacklogThemeBinding bind : proj.getBusinessThemeBindings()) {
+                if (tmp.get(bind.getBusinessTheme()) == null) {
+                    tmp.put(bind.getBusinessTheme(),
+                            new ArrayList<BacklogThemeBinding>());
+                }
+                tmp.get(bind.getBusinessTheme()).add(bind);
             }
-            tmp.get(bind.getBusinessTheme()).add(bind);
         }
-        Map<BusinessTheme,AFTime> ret = new HashMap<BusinessTheme, AFTime>();
-        //format
-        for(BusinessTheme theme : tmp.keySet()) {
+        Map<BusinessTheme, AFTime> ret = new HashMap<BusinessTheme, AFTime>();
+        // format
+        for (BusinessTheme theme : tmp.keySet()) {
             AFTime sum = new AFTime(0);
-            for(BacklogThemeBinding bin : tmp.get(theme)) {
+            for (BacklogThemeBinding bin : tmp.get(theme)) {
                 sum.add(bin.getBoundEffort());
             }
             ret.put(theme, sum);
         }
         return ret;
     }
+
     public String getAllProjectTypesAsJSON() {
         return new JSONSerializer().serialize(projectTypeDAO.getAll());
     }
-    
+
     public String getProjectTypeJSON(int projectTypeId) {
         return getProjectTypeJSON(projectTypeDAO.get(projectTypeId));
     }
-    
+
     public String getProjectTypeJSON(ProjectType projectType) {
         if (projectType == null) {
             return "{}";
         }
         return new JSONSerializer().serialize(projectType);
     }
-    
+
     public UserBusiness getUserBusiness() {
         return userBusiness;
     }

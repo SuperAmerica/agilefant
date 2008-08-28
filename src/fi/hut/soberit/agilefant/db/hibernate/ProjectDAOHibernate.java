@@ -1,5 +1,6 @@
 package fi.hut.soberit.agilefant.db.hibernate;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
@@ -157,8 +158,8 @@ public class ProjectDAOHibernate extends GenericDAOHibernate<Project>
         crit.setProjection(sums);
         List res = super.getHibernateTemplate().findByCriteria(crit);
         try {
-            Object[] data = (Object[])res.get(0);
-            return (Integer)data[1];
+            Object[] data = (Object[]) res.get(0);
+            return (Integer) data[1];
         } catch (Exception e) {
             return null;
         }
@@ -172,29 +173,31 @@ public class ProjectDAOHibernate extends GenericDAOHibernate<Project>
         sums.add(Projections.sum("bli.effortLeft"));
         sums.add(Projections.sum("bli.originalEstimate"));
         sums.add(Projections.count("bli.id"));
-        sums.add(Projections.count("id"));
         crit.createAlias("backlogItems", "bli");
         crit.add(Restrictions.eq("project", proj));
         crit.setProjection(sums);
         List res = super.getHibernateTemplate().findByCriteria(crit);
         try {
-            Object[] data = (Object[])res.get(0);
+            Object[] data = (Object[]) res.get(0);
             ProjectMetrics metr = new ProjectMetrics();
-            metr.setOriginalEstimate((AFTime)data[2]);
-            metr.setEffortLeft((AFTime)data[1]);
-            metr.setNumberOfAllIterations((Integer)data[4]);
-            metr.setTotalItems((Integer)data[3]);
+            metr.setOriginalEstimate((AFTime) data[2]);
+            metr.setEffortLeft((AFTime) data[1]);
+            metr.setNumberOfAllIterations((Integer) data[4]);
+            metr.setTotalItems((Integer) data[3]);
             return metr;
         } catch (Exception e) {
             return null;
         }
     }
-    
+
     @SuppressWarnings("unchecked")
     public List<BacklogThemeBinding> getProjectThemeData(Project proj) {
-        DetachedCriteria crit = DetachedCriteria.forClass(BacklogThemeBinding.class);
+        DetachedCriteria crit = DetachedCriteria
+                .forClass(BacklogThemeBinding.class);
+        if (proj.getIterations().size() == 0) {
+            return new ArrayList<BacklogThemeBinding>();
+        }
         crit.add(Restrictions.in("backlog", proj.getIterations()));
-        //crit.addOrder(Order.asc("businessTheme.name"));
         return super.getHibernateTemplate().findByCriteria(crit);
     }
 

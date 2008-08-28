@@ -216,7 +216,22 @@ public interface ProjectBusiness {
      */
     public String getProjectTypeJSON(int projectTypeId);
 
+    /**
+     * Get total effort left, original estimate, done items, all items
+     * and done percentage for all items contained in a project, including 
+     * backlog items in project's iteration.
+     * 
+     * @param proj
+     * @return
+     */
     public ProjectMetrics getProjectMetrics(Project proj);
     
+    /**
+     * Get planned size totals for themes attached to a project, including
+     * themes attached to project's iterations.
+     * 
+     * @param proj
+     * @return
+     */
     public Map<BusinessTheme,AFTime> formatThemeBindings(Project proj);
 }

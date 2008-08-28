@@ -1,8 +1,18 @@
 package fi.hut.soberit.agilefant.db.hibernate;
 
+import java.util.List;
+
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.ProjectionList;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
+
 import fi.hut.soberit.agilefant.db.BacklogDAO;
+import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.Backlog;
+import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.State;
+import fi.hut.soberit.agilefant.util.BacklogMetrics;
 
 /**
  * Hibernate implementation of BacklogDAO interface using GenericDAOHibernate.
@@ -23,5 +33,28 @@ public class BacklogDAOHibernate extends GenericDAOHibernate<Backlog> implements
     
     public int getNumberOfDoneBacklogItems(Backlog backlog) {
         return this.getNumberOfDoneBacklogItems(backlog.getId());
+    }
+
+    @SuppressWarnings("unchecked")
+    public BacklogMetrics getBacklogMetrics(Backlog backlog) {
+        BacklogMetrics metrics = new BacklogMetrics();
+        DetachedCriteria bliCrit = DetachedCriteria.forClass(BacklogItem.class);
+        bliCrit.add(Restrictions.eq("backlog", backlog));
+        ProjectionList sums = Projections.projectionList();
+        sums.add(Projections.sum("effortLeft"));
+        sums.add(Projections.sum("originalEstimate"));
+        sums.add(Projections.count("id"));
+        sums.add(Projections.groupProperty("backlog"));
+        bliCrit.setProjection(sums);
+        List res = super.getHibernateTemplate().findByCriteria(bliCrit);
+        try {
+            Object[] sumData = (Object[])res.get(0);
+            metrics.setEffortLeft((AFTime)sumData[1]);
+            metrics.setOriginalEstimate((AFTime)sumData[2]);
+            metrics.setTotalItems(metrics.getTotalItems() + (Integer)sumData[3]);
+        } catch(Exception e) {
+            return null;
+        }
+        return metrics;
     }
 }

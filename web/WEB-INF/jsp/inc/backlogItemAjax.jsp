@@ -32,7 +32,7 @@ $(document).ready(function() {
 <tbody>
 	<tr>
 	<td>
-	<div class="subItems" style="margin-top: 0px; width: 725px;"> 
+	<div class="subItems" style="margin-top: 0px; width: 715px;"> 
 	<div class="validateWrapper validateBacklogItem">
 	<ww:form action="ajaxStoreBacklogItem" method="post">
 		<ww:hidden name="backlogItemId" value="${backlogItem.id}" />	

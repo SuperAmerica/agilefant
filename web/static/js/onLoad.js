@@ -9,9 +9,6 @@ function initOnLoad(elem) {
         if ($("div.createDialogWindow").length == 0) {
             openCreateDialog($(this));
         }
-        else {
-            confirmOpenCreateDialog($(this));
-        }
         return false;
     });
     
@@ -52,8 +49,6 @@ function initOnLoad(elem) {
 
 function submitDialogForm() {
     var me = $(this);
-    var a = me.valid();
-    var foo = 0;
     if(me.valid()) {
         me.find("input[type=submit]").attr("disabled", "disabled");
         $.post(me.attr("action"), me.serializeArray(),
@@ -104,8 +99,15 @@ function addFormValidators(target) {
 }
 
 /**
- * Not currently used anywhere, because the dialog windows are modals. 
+ * Not currently used anywhere because the dialog windows are modals. 
  */
+function confirmOpenCreateDialog(element) {
+    return false;
+}
+ /*
+  *  COMMENTED OUT BECAUSE COULD BE USED AS A CONFIRM DIALOG
+  *  IN THE FUTURE TO REPLACE THE JAVASCRIPT ALERT BOXES.
+ 
 function confirmOpenCreateDialog(element) {
     var e = $("<div class=\"confirmDialog\">"
         +"<p>Previously opened dialogs will be destroyed! Really continue?</p>"
@@ -113,7 +115,6 @@ function confirmOpenCreateDialog(element) {
         +"<input type=\"submit\" value=\"No\" class=\"noButton\"/></form></div>");
     e.appendTo(document.body);
     
-    /* Bind the buttons */
     e.find(".yesButton").click(function() {
         $(".createDialogWindow").dialog("destroy");
         $(".createDialogWindow").remove();
@@ -149,7 +150,7 @@ function confirmOpenCreateDialog(element) {
     
     e.dialog(windowOptions);
     return false;
-}
+}*/
 
 var overlayUpdate = function() {
    $('.ui-dialog-overlay').css("height",$(document).height()).css("width",$(document).width());

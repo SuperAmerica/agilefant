@@ -656,7 +656,7 @@ public class ProjectBusinessTest extends SpringTestCase {
         ArrayList<Iteration> emptyIter = new ArrayList<Iteration>();
         ArrayList<Iteration> iterList = new ArrayList<Iteration>();
         iterList.add(mockIter);
-        ArrayList<BacklogThemeBinding> emptyBind = new ArrayList<BacklogThemeBinding>();
+        // ArrayList<BacklogThemeBinding> emptyBind = new ArrayList<BacklogThemeBinding>();
 
         
         // case 1 no theme bindings

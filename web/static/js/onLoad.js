@@ -35,15 +35,6 @@ function initOnLoad(elem) {
     
     addFormValidators(elem);
     
-    /*
-     *Initialize the wysiwyg editors
-     */
-    me.find('.useWysiwyg').wysiwyg({controls : {
-        separator04 : { visible : true },
-        insertOrderedList : { visible : true },
-        insertUnorderedList : { visible : true }
-    }});
-    
     return false;
 }
 

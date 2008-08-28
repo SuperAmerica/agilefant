@@ -184,7 +184,18 @@ function handleTabEvent(target, context, id, tabId, bliContext) {
         target.data("aef-id",id);
         target.load(targetAction[context], targetParams[context], function(data, status) {
             var ajaxTabs = target.find('ul.ajaxWindowTabs');
-            ajaxTabs.tabs({ selected: tabId });
+            ajaxTabs.tabs({ selected: tabId,
+                    show: function(event, ui) {
+                        var panel = $(ui.panel);
+                        if (panel.data('wysiwyg') != 'registered') { 
+                            panel.find('.useWysiwyg').wysiwyg({controls : {
+						        separator04 : { visible : true },
+						        insertOrderedList : { visible : true },
+						        insertUnorderedList : { visible : true }
+						    }});
+                        }
+                        panel.data('wysiwyg','registered');
+                    }});
             ajaxTabs.find('li a').click(function() {
                 var tab = ajaxTabs.data('selected.tabs');
                 ajaxOpenDialog(context, id, tab);

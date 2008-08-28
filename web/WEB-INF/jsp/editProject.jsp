@@ -511,6 +511,7 @@ $(document).ready(function() {
 											</c:choose>
 											<div id="backlogThemeSave" style="display: none;">
 											<input id="backlogThemeSave" style="margin-left: 2px;" type="submit" value="Save" />
+											<br>
 											<ww:label id="themeLabel" value="Planned spending may be entered as time (e.g. 2h 30min) or a percentage
 												(e.g. 40%)." />
 											</div>

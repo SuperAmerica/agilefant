@@ -383,7 +383,8 @@ $(document).ready( function() {
 						</c:choose>
 						</p>
 						<div id="backlogThemeSave" style="display: none;">
-						<input id="backlogThemeSave" type="submit" value="Save"/>						
+						<input id="backlogThemeSave" type="submit" value="Save"/>
+						<br>						
 						<ww:label id="themeLabel" value="* = the theme has been attached to a project." />
 						<br>
 						<ww:label id="themeLabel2" value="Planned spending may be entered as time (e.g. 2h 30min) or a percentage

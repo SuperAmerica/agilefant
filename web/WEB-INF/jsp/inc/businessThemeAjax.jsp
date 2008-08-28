@@ -42,12 +42,7 @@
 
 	<!-- Display name -->
 	<display:column title="Name" style="width:355px">
-		<ww:url id="editLink" action="editBacklogItem" includeParams="none">
-			<ww:param name="backlogItemId" value="${row.id}" />
-		</ww:url>						
-		<ww:a href="%{editLink}&contextObjectId=${businessTheme.product.id}&contextViewName=${currentAction}">
 			${aef:html(row.name)}
-		</ww:a>												
 	</display:column>
 	
 	<!-- Display progress -->
@@ -104,15 +99,15 @@ No backlog items have been tagged with this theme.
 	<!-- Display name -->
 	<display:column title="Name" style="width:355px">
 		<c:if test="${aef:isIteration(row.backlog)}">
-			<ww:url id="editProjLink" action="editProject" includeParams="none">
-				<ww:param name="projectId" value="${row.backlog.parent.id}" />
+			<ww:url id="editProjLink" action="editBacklog" includeParams="none">
+				<ww:param name="backlogId" value="${row.backlog.project.id}" />
 			</ww:url>
 			<ww:a href="%{editProjLink}">						
-				<c:out value="${row.backlog.parent.name}"/>
+				<c:out value="${row.backlog.project.name}"/>
 			</ww:a>&nbsp;-&nbsp;
 		</c:if>
-		<ww:url id="editLink" action="editIteration" includeParams="none">
-			<ww:param name="iterationId" value="${row.backlog.id}" />
+		<ww:url id="editLink" action="editBacklog" includeParams="none">
+			<ww:param name="backlogId" value="${row.backlog.id}" />
 		</ww:url>
 		<ww:a href="%{editLink}">						
 			<c:out value="${row.backlog.name}"/>

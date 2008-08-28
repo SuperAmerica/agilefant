@@ -764,13 +764,13 @@
 				<param name="projectId">${view.contextObject}</param>
 			</result>
 
-			<result name="success_editBacklogItem"
+			<!-- <result name="success_editBacklogItem"
 				type="redirect-action">
 				<param name="actionName">editBacklogItem</param>
 				<param name="backlogItemId">
 					${view.contextObject}
 				</param>
-			</result>
+			</result>-->
 
 			<result name="success_listProducts"
 				type="redirect-action">

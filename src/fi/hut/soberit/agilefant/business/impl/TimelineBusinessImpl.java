@@ -1,14 +1,9 @@
 package fi.hut.soberit.agilefant.business.impl;
 
-import java.text.SimpleDateFormat;
-
 import fi.hut.soberit.agilefant.business.TimelineBusiness;
 import fi.hut.soberit.agilefant.db.ProductDAO;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
-import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Product;
-import fi.hut.soberit.agilefant.model.Project;
-import fi.hut.soberit.agilefant.util.JSONUtils;
 import flexjson.JSONSerializer;
 
 public class TimelineBusinessImpl implements TimelineBusiness {

@@ -180,8 +180,8 @@ Timeline.AgilefantEventSource.Event.prototype = {
   fillInfoBubble: function(elmt, theme, labeller) {
 	if(this.isProject() || this.isIteration()) {
 	  	jQuery(elmt).load("timelineBubble.action", {backlogId: this._id}).height("280px");
-	} else if(this.isTheme()) {
-		jQuery(elmt).text("I'M A THEME!");
+	} else if(this.isTheme() || this.isThemePart()) {
+		jQuery(elmt).load("businessThemeBubble.action", {businessThemeId: this._id}).height("200px");
 	}
   }
 };
@@ -210,6 +210,9 @@ Timeline._Impl.prototype.reDistributeWidths = function(tracs) {
     }
     if(reqWidth > bandWidth) {
 */
+	  if(reqWidth < 50 && i == 0) {
+	  	reqWidth = 150;
+	  }
       bandWidth = reqWidth;
 //    }
     band.setBandShiftAndWidth(cumulativeWidth, bandWidth);

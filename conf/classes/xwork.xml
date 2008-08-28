@@ -1022,6 +1022,10 @@
 			class="businessThemeAction">
 			<result>/WEB-INF/jsp/inc/businessThemeAjax.jsp</result>
 		</action>
+		<action name="businessThemeBubble" method="edit"
+			class="businessThemeAction">
+			<result>/WEB-INF/jsp/timelineThemeBubble.jsp</result>
+		</action>
 		<action name="ajaxActivateBusinessTheme" method="ajaxActivateBusinessTheme"
 			class="businessThemeAction">	
 		</action>

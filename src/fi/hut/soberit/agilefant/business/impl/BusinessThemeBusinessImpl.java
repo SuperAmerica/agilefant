@@ -146,7 +146,7 @@ public class BusinessThemeBusinessImpl implements BusinessThemeBusiness {
             metrics.setNumberOfDoneBlis(((doneItems.get(theme.getId()) != null ) ? doneItems.get(theme.getId()) : 0));
 
             if (metrics.getNumberOfBlis() > 0) {
-                donePercentage = (int) ((float) metrics.getNumberOfDoneBlis() / (float) metrics.getNumberOfBlis() * 100.0);
+                donePercentage = (int) ((float) metrics.getNumberOfDoneBlis() / (float) metrics.getNumberOfBlis() * 100f);
             }
             metrics.setDonePercentage(donePercentage);
             metricsMap.put(theme, metrics);
@@ -443,11 +443,11 @@ public class BusinessThemeBusinessImpl implements BusinessThemeBusiness {
                             themes.get(bt.getId()).getMetrics()
                                     .getNumberOfBlis() + 1);
                     if (themes.get(bt.getId()).getMetrics().getNumberOfBlis() > 0) {
-                        themes.get(bt.getId()).getMetrics().setDonePercentage(
-                                themes.get(bt.getId()).getMetrics()
+                        themes.get(bt.getId()).getMetrics().setDonePercentage((int)(100f*
+                                (float)themes.get(bt.getId()).getMetrics()
                                         .getNumberOfDoneBlis()
-                                        / themes.get(bt.getId()).getMetrics()
-                                                .getNumberOfBlis());
+                                        / (float)themes.get(bt.getId()).getMetrics()
+                                                .getNumberOfBlis()));
                     }
                 }
             }

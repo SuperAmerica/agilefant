@@ -263,7 +263,7 @@
 }
 
 .timeline-band-1 .timeline-event-label {
-   display: none !important; 
+  /* display: none !important; */
 }
 
 .timelineBubble {

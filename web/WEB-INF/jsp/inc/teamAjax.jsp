@@ -12,7 +12,7 @@
 	<tbody>
 		<tr>
 			<td>
-			<div class="subItems" style="margin-top: 0px; width: 475px;">
+			<div class="subItems" style="margin-top: 0px; width: 470px;">
 			<div id="editUserForm" class="validateWrapper validateTeam">
 
 				<ww:form action="ajaxStoreTeam" method="post">

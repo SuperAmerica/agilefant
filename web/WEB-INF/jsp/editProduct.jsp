@@ -194,7 +194,8 @@ var productId = ${product.id};
             <td>Project</td>
             <td><div class="timeline-band-iteration" style="display:block;width:50px;height:5px;margin:2px;">&nbsp;</div></td>
             <td>Iteration</td>
-            
+            <td><div class="timeline-band-theme" style="display:block;width:50px;height:5px;margin:2px;">&nbsp;</div></td>
+            <td>Theme</td>  
         </tr>
     </table>
     </div>

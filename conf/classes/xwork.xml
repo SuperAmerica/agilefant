@@ -967,9 +967,6 @@
 		<action name="ajaxCreateHourEntry" class="hourEntryAction" method="create">
             <result>/WEB-INF/jsp/forms/createHourEntry.jsp</result>
         </action>
-		<action name="createHourEntry" class="hourEntryAction" method="create">
-			<result>/WEB-INF/jsp/inc/_hourEntryModal.jsp</result>
-		</action>
 		<action name="editHourEntry" class="hourEntryAction" method="edit">
 			<result>/WEB-INF/jsp/inc/_hourEntryModal.jsp</result>
 		</action>

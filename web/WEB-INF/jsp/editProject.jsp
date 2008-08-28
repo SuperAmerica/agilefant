@@ -443,7 +443,7 @@ $(document).ready(function() {
 				   											<ww:url id="createLink" action="ajaxCreateHourEntry" includeParams="none">
 				   												<ww:param name="backlogId" value="${projectId}" />
 				   											</ww:url>
-					   										<ww:a cssClass="openCreateDialog openUserDialog" title="Log effort" href="%{createLink}">Log effort &raquo;</ww:a>
+					   										<ww:a cssClass="openCreateDialog openUserDialog" onclick="return false;" title="Log effort" href="%{createLink}">Log effort &raquo;</ww:a>
 					   									</td>
 													</tr>
 												</tbody>
@@ -563,7 +563,7 @@ $(document).ready(function() {
 						  						<ww:param name="projectId" value="${project.id}" />
 					   						</ww:url>
 					   						<ww:a
-												href="%{createLink}&contextViewName=editProject&contextObjectId=${project.id}" cssClass="openCreateDialog openIterationDialog">Create new &raquo;</ww:a>
+												href="%{createLink}" cssClass="openCreateDialog openIterationDialog" onclick="return false;">Create new &raquo;</ww:a>
 					   					</td>
 									</tr>
 								</table>
@@ -635,7 +635,7 @@ $(document).ready(function() {
 												<ww:param name="backlogId" value="${project.id}" />
 											</ww:url>
 											<ww:a cssClass="openCreateDialog openBacklogItemDialog"
-												href="%{createBacklogItemLink}">Create new &raquo;</ww:a>
+												href="%{createBacklogItemLink}" onclick="return false;">Create new &raquo;</ww:a>
 										</td>
 									</tr>
 								</table>

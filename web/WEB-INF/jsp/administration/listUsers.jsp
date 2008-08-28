@@ -19,7 +19,7 @@ $(document).ready(function() {
 		<table cellspacing="0" cellpadding="0">
 			<tr>
 				<td class="header">Enabled users					
-					<a href="ajaxCreateUser.action" class="openCreateDialog openUserDialog" title="Create a new user">Create new &raquo;</a>
+					<a href="ajaxCreateUser.action" class="openCreateDialog openUserDialog" title="Create a new user" onclick="return false;">Create new &raquo;</a>
 				</td>
 			</tr>
 		</table>

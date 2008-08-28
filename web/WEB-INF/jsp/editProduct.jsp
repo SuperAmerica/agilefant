@@ -212,7 +212,7 @@ var productId = ${product.id};
 	                    <ww:url id="createLink" action="ajaxCreateProject" includeParams="none">
 						  <ww:param name="productId" value="${product.id}" />
 						</ww:url>
-						<ww:a href="%{createLink}" title="Create a new project" cssClass="openCreateDialog openProjectDialog">
+						<ww:a href="%{createLink}" title="Create a new project" cssClass="openCreateDialog openProjectDialog" onclick="return false;">
 						Create new &raquo;</ww:a>
 					</td>
 					</tr>
@@ -307,7 +307,7 @@ var productId = ${product.id};
 							 <ww:url id="createThemeLink" action="ajaxCreateBusinessTheme" includeParams="none">
 							     <ww:param name="productId" value="${productId}"></ww:param>
 							 </ww:url>
-							 <ww:a href="%{createThemeLink}" cssClass="openCreateDialog openThemeDialog"
+							 <ww:a href="%{createThemeLink}" cssClass="openCreateDialog openThemeDialog" onclick="return false;"
 							     title="Create a new theme">Create new &raquo;</ww:a>
 							 </td>
 						</tr>
@@ -407,7 +407,7 @@ var productId = ${product.id};
 					includeParams="none">
 					<ww:param name="backlogId" value="${product.id}" />
 				</ww:url> <ww:a cssClass="openCreateDialog openBacklogItemDialog"
-					href="%{createBacklogItemLink}&contextViewName=editProduct&contextObjectId=${product.id}">Create new &raquo;</ww:a>
+					href="%{createBacklogItemLink}" onclick="return false;">Create new &raquo;</ww:a>
 					</td>
 					</tr>
 				</table>

@@ -27,11 +27,6 @@ $(document).ready(function() {
 });
 
 </script>
-<%--
-<c:if test="${hourReport}">
-	<aef:modalAjaxWindow />
-</c:if>
---%>
 <ww:form action="doActionOnMultipleBacklogItems">
 
 	<!-- Return to this backlog after submit -->

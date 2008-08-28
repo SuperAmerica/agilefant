@@ -112,8 +112,8 @@ $(document).ready(function() {
 				includeParams="none">
 				<ww:param name="backlogId" value="${iteration.id}" />
 				<ww:param name="iterationGoalId" value="${iterationGoal.id}" />
-			</ww:url> <ww:a cssClass="openCreateDialog openBacklogItemDialog"
-				href="%{createBacklogItemLink}&contextViewName=editIterationGoal&contextObjectId=${iterationGoal.id}">Create new &raquo;</ww:a>
+			</ww:url> <ww:a cssClass="openCreateDialog openBacklogItemDialog" onclick="return false;"
+				href="%{createBacklogItemLink}">Create new &raquo;</ww:a>
 				</td>
 				</tr>
 				</table>

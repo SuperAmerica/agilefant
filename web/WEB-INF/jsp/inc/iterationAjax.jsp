@@ -359,8 +359,8 @@ $(document).ready( function() {
 			includeParams="none">
 			<ww:param name="iterationId" value="${iteration.id}" />
 		</ww:url>
-		<ww:a cssClass="openCreateDialog openIterationGoalDialog"
-			href="%{createIterationGoalLink}&contextViewName=editIteration&contextObjectId=${iteration.id}">
+		<ww:a cssClass="openCreateDialog openIterationGoalDialog" onclick="return false;"
+			href="%{createIterationGoalLink}">
 			Create new iteration goal &raquo;
 		</ww:a>
 		<c:if test="${!empty iteration.iterationGoals}">

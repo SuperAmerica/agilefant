@@ -4,7 +4,6 @@
 
 <c:if test="${hourReport}">
 	<c:set var="totalSum" value="${null}" />
-	<aef:modalAjaxWindow />
 </c:if>
 
 <aef:productList />

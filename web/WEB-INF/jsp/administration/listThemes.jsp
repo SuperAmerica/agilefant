@@ -11,7 +11,7 @@
 
 <h2>Themes</h2>
 <p><ww:url id="createBusinessThemeLink" action="createBusinessTheme" />
-<ww:a href="%{createBusinessThemeLink}">Create new &raquo;</ww:a></p>
+<ww:a href="%{createBusinessThemeLink}" onclick="return false;">Create new &raquo;</ww:a></p>
 
 <p><c:choose>
 	<c:when test="${empty businessThemes}">

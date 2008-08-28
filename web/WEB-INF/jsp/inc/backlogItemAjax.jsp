@@ -576,7 +576,7 @@ $(document).ready(function() {
 		<ww:param name="backlogItemId" value="${backlogItemId}" />
 	</ww:url>
 	<ww:a cssClass="openCreateDialog openHourEntryDialog" title="Log effort"
-		href="%{createLink}">
+		href="%{createLink}" onclick="return false;">
 		Log effort &raquo;
 	</ww:a>
 	<c:if test="${!empty hourEntries}">		
@@ -625,7 +625,7 @@ $(document).ready(function() {
 				<ww:param name="productId" value="${backlogItem.product.id}"></ww:param>
 			</ww:url>
 			<ww:a href="%{createThemeLink}" cssClass="openCreateDialog openThemeDialog"
-				title="Create a new theme"> Create new theme &raquo;</ww:a>
+				title="Create a new theme" onclick="return false;"> Create new theme &raquo;</ww:a>
 			<c:if test="${(!empty backlogItem.product.businessThemes)}">
 			<ww:form action="storeBacklogItemThemes" method="post">
 			<ww:hidden name="backlogItemId" value="${backlogItem.id}"/>

@@ -48,7 +48,7 @@ $(document).ready(function() {
 				</c:otherwise>
 			</c:choose>
 		</ww:url>
-		<ww:a cssClass="openCreateDialog openHourEntryDialog" href="%{createLink}">Create new &raquo;</ww:a>
+		<ww:a cssClass="openCreateDialog openHourEntryDialog" href="%{createLink}" onclick="return false;">Create new &raquo;</ww:a>
 		</td>
 		</tr>
 		</table>

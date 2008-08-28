@@ -497,12 +497,7 @@
 	    <name>businessTheme</name>
 	    <path>/WEB-INF/tags/businessTheme.tag</path>
  	 </tag-file>
-
-	 <tag-file>
-	    <name>tasklist</name>
-	    <path>/WEB-INF/tags/tasklist.tag</path>
- 	 </tag-file>
- 	 
+	 
 	 <tag-file>
 	    <name>hiddenProjectList</name>
 	    <path>/WEB-INF/tags/hiddenProjectList.tag</path>

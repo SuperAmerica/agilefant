@@ -423,8 +423,8 @@
                        <td class="header">Tasks <ww:url id="createLink"
 				action="createTask" includeParams="none">
 				<ww:param name="backlogItemId" value="${backlogItemId}" />
-			</ww:url> <ww:a
-				href="%{createLink}&contextViewName=editBacklogItem&contextObjectId=${backlogItemId}">Create new &raquo;</ww:a>
+			</ww:url> <ww:a onclick="return false;"
+				href="%{createLink}">Create new &raquo;</ww:a>
 				</td>
 				</tr>
 				</table>

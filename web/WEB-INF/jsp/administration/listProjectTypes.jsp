@@ -21,7 +21,7 @@ $(document).ready(function() {
 <table cellspacing="0" cellpadding="0">
 	<tr>
 		<td class="header">Project types					
-			<a href="ajaxCreateProjectType.action" class="openCreateDialog openProjectTypeDialog" title="Create a project type">Create new &raquo;</a>
+			<a href="ajaxCreateProjectType.action" class="openCreateDialog openProjectTypeDialog" title="Create a project type" onclick="return false;">Create new &raquo;</a>
 		</td>
 	</tr>
 </table>

@@ -410,8 +410,8 @@ $(document).ready( function() {
 							id="createIterationGoalLink" action="ajaxCreateIterationGoal"
 							includeParams="none">
 							<ww:param name="iterationId" value="${iteration.id}" />
-						</ww:url> <ww:a cssClass="openCreateDialog openIterationGoalDialog"
-							href="%{createIterationGoalLink}&contextViewName=editIteration&contextObjectId=${iteration.id}">Create new &raquo;</ww:a>
+						</ww:url> <ww:a cssClass="openCreateDialog openIterationGoalDialog" onclick="return false;"
+							href="%{createIterationGoalLink}">Create new &raquo;</ww:a>
 						</td>
 					</tr>
 				</table>
@@ -526,8 +526,8 @@ $(document).ready( function() {
 							id="createBacklogItemLink" action="ajaxCreateBacklogItem"
 							includeParams="none">
 							<ww:param name="backlogId" value="${iteration.id}" />
-						</ww:url> <ww:a cssClass="openCreateDialog openBacklogItemDialog"
-							href="%{createBacklogItemLink}&contextViewName=editIteration&contextObjectId=${iteration.id}">Create new &raquo;</ww:a>
+						</ww:url> <ww:a cssClass="openCreateDialog openBacklogItemDialog" onclick="return false;"
+							href="%{createBacklogItemLink}">Create new &raquo;</ww:a>
 						</td>
 					</tr>
 				</table>

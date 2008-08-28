@@ -148,6 +148,8 @@
           	param[this.options.submitParam] = id;
           	jQuery.post(this.deleteaction,param,function() {
             	row.remove();
+            	me.tbody.children(':odd').attr('class', 'even');
+                me.tbody.children(':even').attr('class', 'odd');
             	if(me.options.deleteCb) {
               		me.options.deleteCb(id,me.options);
             	}
@@ -169,7 +171,7 @@
        var me = this;
        html.find(":reset").click(function() {
         html.remove();
-        if(!visible) { me.container.hide(); } 
+        if(me.tbody.children().length == 0) { me.container.hide(); } 
         if(me.container.find(":reset").length == 0) {
           me.submit.hide();
         }

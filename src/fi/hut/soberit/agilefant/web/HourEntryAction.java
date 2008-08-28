@@ -64,10 +64,10 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
         HourEntry h = hourEntryBusiness.getHourEntryById(hourEntryId);
         if (h == null) {
             super.addActionError(super.getText("hourEntry.notFound"));
-            return Action.ERROR;
+            return CRUDAction.AJAX_ERROR;
         }
         hourEntryBusiness.remove(hourEntryId);
-        return Action.SUCCESS;
+        return CRUDAction.AJAX_SUCCESS;
     }
 
     /**

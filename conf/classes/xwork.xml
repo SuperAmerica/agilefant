@@ -196,10 +196,6 @@
 		</action>
 		<!-- /Product actions -->
 		<!-- BacklogItem actions -->
-		<action name="editBacklogItem" method="edit"
-			class="backlogItemAction">
-			<result>/WEB-INF/jsp/editBacklogItem.jsp</result>
-		</action>
 		<action name="createBacklogItem" method="create"
 			class="backlogItemAction">
 			<result>/WEB-INF/jsp/editBacklogItem.jsp</result>
@@ -967,9 +963,6 @@
 		<action name="ajaxCreateHourEntry" class="hourEntryAction" method="create">
             <result>/WEB-INF/jsp/forms/createHourEntry.jsp</result>
         </action>
-		<action name="editHourEntry" class="hourEntryAction" method="edit">
-			<result>/WEB-INF/jsp/inc/_hourEntryModal.jsp</result>
-		</action>
 		<action name="storeHourEntry" class="hourEntryAction" method="store">
 			<result type="redirect-action">
 				<param name="actionName">popContext</param>

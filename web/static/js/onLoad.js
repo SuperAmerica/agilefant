@@ -15,15 +15,6 @@ function initOnLoad(elem) {
         return false;
     });
     
-    /*
-     *Initialize the wysiwyg editors
-     */
-    me.find('.useWysiwyg').wysiwyg({controls : {
-        separator04 : { visible : true },
-        insertOrderedList : { visible : true },
-        insertUnorderedList : { visible : true }
-    }});
-    
     me.find(':submit[value=Delete]').click(function() {
         var form = $(this).parents('form:eq(0)');
         form.data("delete","1");
@@ -41,6 +32,15 @@ function initOnLoad(elem) {
     }
     
     addFormValidators(elem);
+    
+    /*
+     *Initialize the wysiwyg editors
+     */
+    me.find('.useWysiwyg').wysiwyg({controls : {
+        separator04 : { visible : true },
+        insertOrderedList : { visible : true },
+        insertUnorderedList : { visible : true }
+    }});
     
     return false;
 }

@@ -54,8 +54,6 @@ $(document).ready(function() {
 				
 		<display:column sortable="true" sortProperty="name" title="Name" class="${nameClass}">												
 			<div id="bli_${row.id}">
-			<%--<a href="#" id="themeEdit_${backlog.id}_${row.id}" onclick="openThemeBusinessModal('themeEdit_${backlog.id}_${row.id}', 'editBacklogItemBusinessThemes.action',${row.id}, 0,${backlog.id}); return false;">
-               <img class="themeImg" src="static/img/theme.png" alt="Edit themes" title="Edit themes" /></a>--%>
             <c:forEach items="${bliThemeCache[row.id]}" var="businessTheme">
             	<a href="#" onclick="handleTabEvent('backlogItemTabContainer-${row.id}-${bliListContext}','bli',${row.id},3, '${bliListContext}'); return false;">
             		<span class="businessTheme" title="${businessTheme.description}"><c:out value="${businessTheme.name}"/></span>

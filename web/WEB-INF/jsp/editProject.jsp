@@ -282,7 +282,7 @@ $(document).ready(function() {
 											</table>
 										</div>
 										<div id="editProjectForm" style="display: none;" class="validateWrapper validateProject">
-											<ww:form id="projectEditForm" action="storeProject" method="post">
+											<ww:form id="projectEditForm" action="storeProject" method="post" onsubmit="return false;">
 												<ww:hidden id="editProject-projectId" name="projectId" value="${project.id}" />
 												<table class="formTable">
 													<tr>

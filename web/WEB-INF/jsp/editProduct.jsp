@@ -118,7 +118,7 @@ var productId = ${product.id};
 
 			<div id="editProductForm" style="display: none;">
 			<div class="validateWrapper validateExistingProduct">
-			<ww:form id="productEditForm"
+			<ww:form id="productEditForm" onsubmit="return false;"
 				action="storeProduct" method="post">
 				<ww:hidden name="productId" value="${product.id}" />
 

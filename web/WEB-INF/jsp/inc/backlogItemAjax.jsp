@@ -558,6 +558,8 @@ $(document).ready(function() {
 	$('#spentEffort-${backlogItemId}-${bliListContext}').inlineTableEdit({
 				  submit: '#saveSpentEffort-${backlogItemId}-${bliListContext}',
 				  useId: true,
+				  deleteaction: 'deleteHourEntry.action',
+                  submitParam: 'hourEntryId',
 				  fields: {
 				  	efforts: {cell: 2, type: 'text'},
 				  	dates: {cell: 0, type: 'date'},
@@ -602,14 +604,8 @@ $(document).ready(function() {
 						
 		<display:column sortable="false" title="Action">	
 			<span class="uniqueId" style="display: none;">${row.id}</span>
-			<ww:url id="deleteLink" action="deleteHourEntry" includeParams="none">								
-				<ww:param name="backlogItemId" value="${backlogItem.id}" />
-				<ww:param name="hourEntryId" value="${row.id}" />
-			</ww:url>	
-			<img src="static/img/edit.png" class="table_edit_edit" alt="Edit" title="Edit" />															
-			<ww:a href="%{deleteLink}&contextViewName=${currentAction}&contextObjectId=${backlog.id}" onclick="return confirmDeleteHour()">
-				<img src="static/img/delete_18.png" alt="Delete" title="Delete" />
-			</ww:a>								
+			<img src="static/img/edit.png" class="table_edit_edit" alt="Edit" title="Edit" />
+            <img src="static/img/delete_18.png" onclick="return confirmDeleteHour();" alt="Delete" title="Delete" class="table_edit_delete" style="cursor: pointer;"/>								
 		</display:column>
 	</display:table>
 	<input type="submit" value="Save" style="display: none;" id="saveSpentEffort-${backlogItemId}-${bliListContext}" />

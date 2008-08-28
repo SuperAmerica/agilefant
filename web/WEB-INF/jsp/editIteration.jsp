@@ -148,7 +148,7 @@ $(document).ready(function() {
 				</table>
 				</div>
 				<div id="editIterationForm" class="validateWrapper validateIteration" style="display: none;">
-				<ww:form
+				<ww:form onsubmit="return false;"
 					method="post" id="iterationEditForm" action="storeIteration">
 					<ww:hidden name="iterationId" value="${iteration.id}" />
 					<ww:date name="%{iteration.getTimeOfDayDate(6)}" id="start"

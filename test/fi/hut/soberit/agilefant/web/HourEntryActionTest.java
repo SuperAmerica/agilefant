@@ -53,7 +53,7 @@ public class HourEntryActionTest extends TestCase {
         // Start the test
         replay(hourEntryBusiness);
         
-        assertEquals(Action.ERROR, hourEntryAction.delete());
+        assertEquals(CRUDAction.AJAX_ERROR, hourEntryAction.delete());
         
         verify(hourEntryBusiness);
     }

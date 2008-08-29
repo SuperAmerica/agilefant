@@ -465,7 +465,7 @@ span.right {
 .iterationGoalDescColumn div {
 	width: 270px;
 	overflow: hidden;
-	max-height: 7em;
+	max-height: 2.5em;
 }
 
 .iterationGoalDescColumn:hover {
@@ -473,7 +473,7 @@ span.right {
 	height: 1px;
 }
 .iterationGoalDescColumn:hover div {
-	max-height: none;
+	max-height: 2.5em;
 }
 
 .nameLink {

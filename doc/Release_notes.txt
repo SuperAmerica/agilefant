@@ -1,4 +1,4 @@
-Agilefant 1.5 RC1
+Agilefant 1.5 rc1
 RELEASE NOTES
 29.8.2008
 
@@ -7,70 +7,86 @@ INSTALLATION INSTRUCTIONS
 http://www.agilefant.org/wiki/display/AEF/Installation+guide
 
 
-The key functionality of Agilefant now includes
------------------------------------------------
+Agilefant's key functionality includes
+--------------------------------------
 Backlog management
   + manage your development work with backlogs
-  + backlog items with effort estimates, priorities and responsibles
+  + backlog items may have effort estimates, priorities and responsibles
   
 Product management
-  + get a quick view of your product advancement
-  + group your backlog items with the help of themes
+  + group your backlog items using themes
+  + set planned sizes for future projects and iterations in terms of effort
+  + assign themes for future projects and iterations and set relative spending
+  + get a quick view of your product's roadmap
   
 Project management
-  + assign users to your projects
-  + set weekly overhead for project assignees
-  + communicate the status of your project
+  + assign users to projects
+  + set weekly overhead for projects
+  + communicate the status of your project (red/yellow/green)
+  + get an overview of progress through burndown graph and metrics
   
 Iteration management
-  + coordinate team efforts with iteration backlogs and goals
-  + take control over your iterations with advanced burndown and metrics
+  + focus team efforts with iteration goals
+  + get an overview of progress through burndown graph and metrics
+
+Resource management
+  + assign users to one or more teams
+  + set users' available weekly working hours
+  + set thresholds for evaluating users' workloads' feasibility
+  + enable/disable users
+
+Development portfolio management
+  + track the status and relative priorities of all ongoing projects
+  + see who are assigned to which projects
+  + see who are involved in projects despite that they have NOT been assigned to them
+  + adjust weekly overhead from projects on an individual basis
+  + define project types
   
-Daily Work view
-  + easily visualize your total workload and track all your tasks
-  
-Development portfolio
-  + observe and track all your ongoing projects and user involvement
+Daily work view
+  + see all the items assigned to someone across different iterations and projects
+  + get an overview of someone's total workload for the weeks ahead
+  + compare the total workload against set thresholds
 
 Timesheets
-  + quickly generate reports of the effort spent on different work tasks
-
+  + log spent effort to projects and/or individual backlog items
+  + generate reports of spent effort
 
 
 CHANGES FROM AGILEFANT 1.4.7
 ----------------------------
-+ The UI is now consistent
-+ Themes can be bound to iterations and projects
-+ Projects and iterations have planned sizes
-+ Themes are shown in product roadmap
++ The new layout is now implemented across the system
++ Themes can be assigned to iterations and projects
++ Future projects and iterations have planned sizes
++ Projects' status is now shown in the Development portfolio view
++ Themes are shown in the product roadmap
 
 CHANGES FROM AGILEFANT 1.4.6
 ----------------------------
-+ Project status can be set and it is visualized in the product roadmap
++ Project status can be set and visualized in the product roadmap
 + New edit tab for themes and projects in the product view
 + Themes and projects are now created with a handy dialog window
-+ Refined the project information in product view
-+ Personal overheads can be set also from the project view
++ Refined the project information box in the product view
++ Personal overheads can be adjusted also from the project view
 
 CHANGES FROM AGILEFANT 1.4.5
 -----------------------------
-+ Themes can be managed in the product page
-+ Theme metrics are shown in the product page
++ Themes can be edited, added and removed in the product page
++ Product view shows theme metrics
 + Themes are product-specific
-+ Theme editing has a new user interface
-+ Roadmapping timeline has been added to the product page
++ Improved interface for theme editing 
++ Product roadmap added to the product page
 + UTF-8 is now the default encoding, note the changes to server and database configuration
 
 CHANGES FROM AGILEFANT 1.4.4
 -----------------------------
 + Themes can be added and removed and tagged to backlog items
-+ Burndown now shows expected velocity
-+ Metrics added to iteration level and project with no iterations 
++ Burndown shows the predicted project/iteration velocity based on past progress
++ Metrics added to iteration and project levels
 + Renewing of tabs and menus
 
 CHANGES FROM AGILEFANT 1.4.3
 -----------------------------
-+ Burndown graphs now show changed scopes
++ Burndown graphs now show scope changes
 + Minor fixes
 
 CHANGES FROM AGILEFANT 1.4.2
@@ -210,5 +226,3 @@ list (the left panel)
 + Terminology has been unified and simplified
 + Simple installation process using a WAR-file
 + Initial adoption of the system is guided
-
-

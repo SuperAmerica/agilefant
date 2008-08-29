@@ -3,6 +3,7 @@
 <ul class="ajaxWindowTabs">
 	<li><a href="#projectEditTab-${projectId}"><span><img src="static/img/edit.png" alt="Edit" /> Edit project</span></a></li>
 	<li><a href="#projectIterationsTab-${projectId}"><span><img src="static/img/backlog.png" alt="Iterations" /> Iterations</span></a></li>
+	<li><a href="#projectThemesTab-${projectId}"><span><img src="static/img/theme.png" alt="Themes" /> Themes</span></a></li>
 </ul>
 <div id="projectEditTab-${projectId}" class="projectNaviTab">
 
@@ -232,6 +233,126 @@ $(document).ready(function() {
  The project has no iterations.
 </c:otherwise>
 </c:choose>
+</div>
+
+<div id="projectThemesTab-${projectId}" class="projectNaviTab">
+<script type="text/javascript">
+$(document).ready( function() {
+    var iterationThemes = [<c:forEach items="${iterationThemes}" var="bind">${bind.businessTheme.id},</c:forEach>-1];
+	var getThemeData = function() {
+		var ret = {};
+		var data = jsonDataCache.get('themesByProduct',{data: {productId: ${project.product.id}}},${project.product.id});
+		jQuery.each(data,function() {
+			if(this.active === true && jQuery.inArray(this.id,iterationThemes) == -1) {
+				ret[this.id] = this.name;
+			}
+		});
+		return ret;
+	};
+	$('#businessThemeTable_${project.id}').inlineTableEdit({add: '#addProjectBusinessTheme_${project.id}', 
+											  submit: '#backlogThemeSave_${project.id}',
+											  submitParam: 'bindingId',
+											  deleteaction: 'removeThemeFromBacklog.action',
+											  fields: {
+											  	businessThemeIds: {cell: 0,type: 'select', data: getThemeData},
+											  	plannedSpendings: {cell: 1, type: 'text'},											  											  	
+											  	reset: {cell: 2, type: 'reset'}
+											  }
+											 });
+								  
+});
+
+</script>
+
+
+<table>
+<tr>
+<td>
+
+<div class="subItems validateWrapper validateEmpty" style="margin-top: 0; margin-left: 3px; width: 710px;">
+	<a id="addProjectBusinessTheme_${project.id}" href="#">Attach theme &raquo;</a>
+
+	<ww:form action="storeBacklogThemebinding" method="post" id="projectBusinessThemesForm_${project.id}">
+	<ww:hidden name="backlogId" value="${project.id}"/>
+	<input type="hidden" name="contextViewName" value="project" />
+	<div class="businessThemeTableWrapper">
+	<c:choose>
+	<c:when test="${!empty project.businessThemeBindings}">
+	<display:table htmlId="businessThemeTable_${project.id}" class="listTable" name="project.businessThemeBindings" id="row" requestURI="editIteration.action">
+
+		<display:column sortable="false" title="Name" sortProperty="businessTheme.name">
+			<span style="display: none;">${row.businessTheme.id}</span>
+			<a style="cursor: pointer; color: #0055AA;" class="table_edit_edit">
+				<c:out value="${row.businessTheme.name}"/>
+			</a>												
+		</display:column>
+		
+		<display:column sortable="false" sortProperty="boundEffort" title="Planned spending">
+			<c:choose>
+				<c:when test="${row.relativeBinding == true}">
+					<span style="display:none;">${row.percentage}%</span>
+					<c:out value="${row.boundEffort}"/>
+					(<c:out value="${row.percentage}"/>%)
+				</c:when>
+				<c:otherwise><c:out value="${row.fixedSize}"/></c:otherwise>
+			</c:choose>
+		</display:column>
+		<display:column sortable="false" title="Actions">
+			<span class="uniqueId" style="display: none;">${row.id}</span>
+			<img style="cursor: pointer;" class="table_edit_edit" src="static/img/edit.png" title="Edit" />
+			<img style="cursor: pointer;" class="table_edit_delete" src="static/img/delete_18.png" title="Delete" />
+		</display:column>
+	</display:table>
+		</c:when>
+		<c:otherwise>
+			<table id="businessThemeTable_${project.id}" style="display:none;" class="listTable">
+				<tr><th class="sortable">Name</th><th class="sortable">Planned spending</th><th>Actions</th></tr>
+			</table>
+		</c:otherwise>
+		</c:choose>
+		<div id="backlogThemeSave_${project.id}" style="display: none;">
+		<input id="backlogThemeSave_${project.id}" style="margin-left: 2px;" type="submit" value="Save" />
+		<br>
+		<ww:label id="themeLabel" value="Planned spending may be entered as time (e.g. 2h 30min) or a percentage
+			(e.g. 40%)." />
+		</div>
+		</ww:form>	
+</div>
+
+<c:if test="${!empty iterationThemes}">
+	<div class="businessThemeTableWrapper">
+	<h4>Iteration themes</h4>
+		<display:table htmlId="businessThemeTable" class="listTable" name="iterationThemes" id="row" requestURI="editProject.action">
+
+			<display:column sortable="false" title="Name" sortProperty="businessTheme.name">														
+				<c:out value="${row.businessTheme.name}"/>														
+			</display:column>
+			
+			<display:column sortable="false" sortProperty="boundEffort" title="Planned spending">
+				<c:choose>
+					<c:when test="${row.relativeBinding == true}">
+						<c:out value="${row.boundEffort}"/>
+						(<c:out value="${row.percentage}"/>%)
+					</c:when>
+					<c:otherwise><c:out value="${row.fixedSize}"/></c:otherwise>
+				</c:choose>
+			</display:column>
+			<display:column sortable="false" title="Iteration" sortProperty="backlog.name">
+				<ww:url id="editLink" action="editIteration" includeParams="none">
+					<ww:param name="iterationId" value="${row.backlog.id}" />
+				</ww:url>
+				<ww:a href="%{editLink}&contextViewName=editProduct&contextObjectId=${project.id}">						
+					<c:out value="${row.backlog.name}"/>
+				</ww:a>
+			</display:column>
+		</display:table>
+    </div>
+</c:if>
+
+</td>
+</tr>
+</table>
+			
 </div>
 
 </div>

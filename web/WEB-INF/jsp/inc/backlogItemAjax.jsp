@@ -11,7 +11,9 @@
 <ul class="ajaxWindowTabs">
 	<li><a href="#backlogItemEditTab-${backlogItemId}-${bliListContext}"><span><img src="static/img/edit.png" alt="Edit" /> Edit</span></a></li>
 	<li><a href="#backlogItemProgressTab-${backlogItemId}-${bliListContext}"><span><img src="static/img/progress.png" alt="Progress" /> Progress</span></a></li>
+<c:if test="${hourReport == true}">
 	<li><a href="#backlogItemSpentEffTab-${backlogItemId}-${bliListContext}"><span><img src="static/img/timesheets.png" alt="Spent Effort" /> Spent Effort</span></a></li>
+</c:if>
 	<li><a href="#backlogItemThemesTab-${backlogItemId}-${bliListContext}"><span><img src="static/img/theme.png" alt="Themes" /> Themes</span></a></li>
 </ul>
 
@@ -542,7 +544,7 @@ $(document).ready(function() {
 </div>
 </div>
 <!-- Tasks tab ends -->
-
+<c:if test="${hourReport == true}">
 <div id="backlogItemSpentEffTab-${backlogItemId}-${bliListContext}" class="backlogItemNaviTab">
 
 <aef:hourEntries id="hourEntries" target="${backlogItem}" />
@@ -615,7 +617,7 @@ $(document).ready(function() {
 	</div>
 	</div>					
 </div>
-
+</c:if>
 <div id="backlogItemThemesTab-${backlogItemId}-${bliListContext}" class="backlogItemNaviTab">
 <div class="subItems validateWrapper validateEmpty" style="margin-top: 0; margin-left: 3px; width: 710px;">
 <ww:form action="storeBacklogItemThemes" method="post">	

@@ -1,10 +1,7 @@
 <%@ include file="./inc/_taglibs.jsp"%>
 <div class="timelineBubble">
 <div class="bubbleTitle">
-<c:choose>
-	<c:when test="${aef:isProject(backlog)}"><a href="editProject.action?projectId=${backlog.id}"></c:when>
-	<c:when test="${aef:isIteration(backlog)}"><a href="editIteration.action?iterationId=${backlog.id}"></c:when>
-</c:choose>
+<a href="editBacklog.action?backlogId=${backlog.id}">
 <c:out value="${backlog.name}" /></a></div>
 	<table cellpadding="0" cellspacing="0">
 	  			<th class="titleCol">Planned size</th>

@@ -252,6 +252,7 @@ $(document).ready(function() {
 
 
 	<script type="text/javascript">
+	
 $(document).ready( function() {
     $('.moveUp').click(function() {
         var me = $(this);
@@ -292,24 +293,7 @@ $(document).ready( function() {
 		});
 		return ret;
 	};
-   $("#iterationBusinessThemesForm").submit(function() {
-   		var themes = getThemeData();
-   		var moved = [];
-   		$("#iterationBusinessThemesForm").find("select[name=businessThemeIds]").each(function() {
-   			var cTheme = parseInt($(this).val());
-   			var t = jQuery.inArray(cTheme,projectThemes);
-   			if(t > -1) {
-   				 moved.push(themes[cTheme].substring(0,themes[cTheme].length-1));
-   			}
-   		});
-   		if(moved.length > 0) {
-   			var message = "Theme(s) " + (moved.join(", ")) + " will be moved from project to this iteration.";
-   			message += "\nDo your wish to continue?\n";
-   			return confirm(message);
-   		
-   		}
-   		return true;
-   });
+	
 	$('#businessThemeTable').inlineTableEdit({add: '#addIterationBusinessTheme', 
 											  submit: '#backlogThemeSave',
 											  submitParam: 'bindingId',
@@ -382,12 +366,11 @@ $(document).ready( function() {
 						</c:choose>
 						</p>
 						<div id="backlogThemeSave" style="display: none;">
+						<label id="themeLabel" style="padding: 3px; margin: 3px; display:block; border: 1px solid #ccc;">
+						    * = the theme has been attached to this project.<br/>
+						    Planned spending may be entered as time (e.g. 2h 30min) or a percentage
+                            (e.g. 40%).</label>
 						<input id="backlogThemeSave" type="submit" value="Save"/>
-						<br>						
-						<ww:label id="themeLabel" value="* = the theme has been attached to a project." />
-						<br>
-						<ww:label id="themeLabel2" value="Planned spending may be entered as time (e.g. 2h 30min) or a percentage
-							(e.g. 40%)." />
 						</div>
 						</ww:form>				
 						</div>

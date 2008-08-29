@@ -479,9 +479,10 @@ $(document).ready(function() {
 										<div class="businessThemeTableWrapper">
 										<c:choose>
 										<c:when test="${!empty project.businessThemeBindings}">
-										<display:table htmlId="businessThemeTable" class="listTable" name="project.businessThemeBindings" id="row" requestURI="editIteration.action">
+										<display:table htmlId="businessThemeTable" class="businessThemeTable listTable" name="project.businessThemeBindings" id="row" requestURI="editIteration.action">
 
-											<display:column sortable="true" title="Name" sortProperty="businessTheme.name">
+											<display:column sortable="true" title="Name" sortProperty="businessTheme.name"
+											     class="businessThemeNameColumn">
 												<span style="display: none;">${row.businessTheme.id}</span>
 												<a style="cursor: pointer; color: #0055AA;" class="table_edit_edit">
 													<c:out value="${row.businessTheme.name}"/>
@@ -501,21 +502,21 @@ $(document).ready(function() {
 											<display:column sortable="false" title="Actions">
 												<span class="uniqueId" style="display: none;">${row.id}</span>
 												<img style="cursor: pointer;" class="table_edit_edit" src="static/img/edit.png" title="Edit" />
-												<img style="cursor: pointer;" class="table_edit_delete" src="static/img/delete_18.png" title="Delete" />
+												<img style="cursor: pointer;" class="table_edit_delete" src="static/img/delete_18.png" title="Remove from project" />
 											</display:column>
 										</display:table>
 											</c:when>
 											<c:otherwise>
 												<table id="businessThemeTable" style="display:none;" class="listTable">
-													<tr><th class="sortable">Name</th><th class="sortable">Planned spending</th><th>Actions</th></tr>
+													<tr><th class="sortable" class="businessThemeNameColumn">Name</th><th class="sortable">Planned spending</th><th>Actions</th></tr>
 												</table>
 											</c:otherwise>
 											</c:choose>
 											<div id="backlogThemeSave" style="display: none;">
-											<input id="backlogThemeSave" style="margin-left: 2px;" type="submit" value="Save" />
-											<br>
 											<ww:label id="themeLabel" value="Planned spending may be entered as time (e.g. 2h 30min) or a percentage
-												(e.g. 40%)." />
+                                                (e.g. 40%)." cssStyle="margin: 3px; padding: 3px; display: block; border: 1px solid #ccc;"/>
+											<input id="backlogThemeSave" style="margin-left: 2px;" type="submit" value="Save" />
+											
 											</div>
 											</ww:form>	
 											</div>			
@@ -523,9 +524,10 @@ $(document).ready(function() {
 											<c:if test="${!empty iterationThemes}">
 											<div class="businessThemeTableWrapper">
 											<h4>Iteration themes</h4>
-												<display:table htmlId="businessThemeTable" class="listTable" name="iterationThemes" id="row" requestURI="editProject.action">
+												<display:table htmlId="businessThemeTableIterations" class="businessThemeTable listTable" name="iterationThemes" id="row" requestURI="editProject.action">
 						
-													<display:column sortable="true" title="Name" sortProperty="businessTheme.name">														
+													<display:column sortable="true" title="Name" sortProperty="businessTheme.name"
+													       class="businessThemeNameColumn">														
 														<c:out value="${row.businessTheme.name}"/>														
 													</display:column>
 													

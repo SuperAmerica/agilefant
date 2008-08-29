@@ -31,7 +31,7 @@ $(document).ready(function() {
 <tbody>
 	<tr>
 	<td>
-	<div class="subItems" style="margin-top: 0px; width: 725px;">
+	<div class="subItems" style="margin-top: 0px; width: 720px;">
 	<div id="editIterationForm" class="validateWrapper validateIterationGoal">
 <ww:form id="iterationGoalEditForm_${iterationGoal.id}" action="ajaxStoreIterationGoal"  method="post">
 	<ww:hidden name="iterationGoalId" value="${iterationGoal.id}" />

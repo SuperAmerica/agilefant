@@ -190,8 +190,13 @@
 			me.del(this);
 			return false;
 		});
+	 },
+	 cancel: function() {
+	    this.tbody.find('.' + this.options.rowClass).remove();
+	    if (this.submit) {
+	       this.submit.hide();
+	    }
 	 }
-     
 	};
 	jQuery.fn.extend({
 		inlineTableEdit: function(opt) {
@@ -218,6 +223,12 @@
 			 }
          });
 		  return this;
+      },
+      resetTableEdit: function() {
+         var obj = $(this).data('inplaceTableEdit');
+         if (obj) {
+            obj.cancel();
+         }
       }
 	});
 })(jQuery);

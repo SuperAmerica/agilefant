@@ -42,7 +42,7 @@ $(document).ready(function() {
 	<tbody>
 		<tr>
 			<td>
-			<div class="subItems" style="margin-top: 0px; width: 725px;">
+			<div class="subItems" style="margin-top: 0px; width: 720px;">
 			<div id="editProjectForm" class="validateWrapper validateProject">
 			<ww:form action="ajaxStoreProject" method="post">
 				<ww:hidden id="editProject-projectId-${project.id}" name="projectId" value="${project.id}" />

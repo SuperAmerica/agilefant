@@ -195,11 +195,8 @@ function handleTabEvent(target, context, id, tabId, bliContext) {
 						    }});
                         }
                         panel.data('wysiwyg','registered');
+                        ajaxOpenDialog(context, id, ui.options.selected);
                     }});
-            ajaxTabs.find('li a').click(function() {
-                var tab = ajaxTabs.data('selected.tabs');
-                ajaxOpenDialog(context, id, tab);
-            });
             
             var closeLinkLi = $('<li/>').addClass('closeTabsLink');
             var closeLink = $('<a/>').attr('href','#').html('&nbsp;').appendTo(closeLinkLi).click(function() {

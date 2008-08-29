@@ -1038,6 +1038,10 @@ table.reportTable tr.total th.total {
 	width: 100px;
 }
 
+.businessThemeTable .businessThemeNameColumn {
+    width: 200px;	
+}
+
 /* End of timesheet styles */
 
 span.businessTheme {

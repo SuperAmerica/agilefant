@@ -525,9 +525,9 @@ $(document).ready(function() {
 	<td>
 		<ww:submit value="Save" action="quickStoreTaskList" />
 	</td>
-	<%--<td class="deleteButton">
-		<ww:reset value="Cancel" />				
-	</td>--%>
+	<td class="deleteButton">
+		<ww:reset value="Cancel" onclick="$('#todoTable-${backlogItemId}-${bliListContext}').resetTableEdit();"/>				
+	</td>
 	</tr>
 	
 	</table>
@@ -583,9 +583,10 @@ $(document).ready(function() {
 	</ww:a>
 	<c:if test="${!empty hourEntries}">		
 	<ww:form action="updateMultipleHourEntries.action" method="post">		
-	<display:table name="${hourEntries}" htmlId="spentEffort-${backlogItemId}-${bliListContext}" id="row" defaultsort="1" defaultorder="descending" requestURI="${currentAction}.action">
+	<display:table name="${hourEntries}" htmlId="spentEffort-${backlogItemId}-${bliListContext}" id="row" defaultsort="1" defaultorder="descending" requestURI="${currentAction}.action"
+	   style="width: 700px;">
 						
-		<display:column sortable="false" title="Date" style="white-space:nowrap;">
+		<display:column sortable="false" title="Date" style="white-space:nowrap; width: 140px;">
 			<ww:date name="#attr.row.date" format="yyyy-MM-dd HH:mm" />
 		</display:column>
 						

@@ -194,7 +194,7 @@ var productId = ${product.id};
             <td>Project</td>
             <td><div class="timeline-band-iteration" style="display:block;width:50px;height:5px;margin:2px;">&nbsp;</div></td>
             <td>Iteration</td>
-            <td><div class="timeline-band-theme" style="display:block;width:50px;height:5px;margin:2px;">&nbsp;</div></td>
+            <td><div class="timeline-band-theme" style="display:block;width:50px;height:5px !important;margin:2px;">&nbsp;</div></td>
             <td>Theme</td>  
         </tr>
     </table>
@@ -238,11 +238,10 @@ var productId = ${product.id};
 						</a>
 					
 						<ww:url id="editLink" action="editProject" includeParams="none">
-							<ww:param name="productId" value="${product.id}" />
 							<ww:param name="projectId" value="${row.id}" />
 						</ww:url>
 						<ww:a
-							href="%{editLink}&contextViewName=editProduct&contextObjectId=${product.id}">
+							href="%{editLink}">
 							<img src="static/img/link.png" alt="Project page" title="Project page"/>
 						</ww:a>
 					</display:column>					

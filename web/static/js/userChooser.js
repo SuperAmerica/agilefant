@@ -1,5 +1,22 @@
 
 (function($) {
+    /**
+     * The user chooser. Uses jQuery ui dialog to show the user chooser
+     * window.
+     * options {
+     *  - url: where to get the json data from
+     *  - legacyMode: true: the hidden fields' names will be 'userIds[XX]'
+     *               false: the hidden fields' names will be 'userIds'
+     *  - backlogItemId: when rendering for backlog item, the item's id.
+     *  - backlogId/backlogIdField: the backlog id can be given directly or
+     *                              by a jQuery selector if the backlog can change.
+     *  - userListContainer: the element where the list of assigned users' initials are shown
+     *                       and hidden inputs are stored.
+     *  - validation: rules for validating the user chooser form
+     *     - selectAtLeast: how many checkboxes should be checked.
+     *     - aftime: does the form contain AFTime fields.
+     *  -  
+     */ 
     var UserChooser = function(opt) {
         var me = this;
         var options = {
@@ -478,6 +495,9 @@
     };
     
     jQuery.fn.extend({
+        /**
+         * Call this for the link that should open a new user chooser.
+         */
         userChooser: function(opt) {
             var uc = new UserChooser(opt);
             uc.originalData = $(this).html();
@@ -485,6 +505,10 @@
             $(this).click(function() { uc.init(); return false; })
             return this;
         },
+        /**
+         * Restores original data of the user list container. Can be used
+         * e.g. with cancel buttons.
+         */
         restoreUserChooser: function() {
             var uc = $(this).data('uc');
             if (uc) {

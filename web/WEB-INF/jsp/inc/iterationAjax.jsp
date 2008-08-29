@@ -19,7 +19,7 @@
 <tbody>
 	<tr>
 	<td>
-	<div class="subItems" style="margin-top: 0px; width: 725px;">
+	<div class="subItems" style="margin-top: 0px; width: 720px;">
 
 		<div id="descriptionDiv" class="descriptionDiv"
 			style="display: block; max-height: 1000em; overflow: visible;">

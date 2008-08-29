@@ -36,7 +36,7 @@ $(document).ready(function() {
         <ww:url id="createLink" action="ajaxCreateHourEntry" includeParams="none">
 		<ww:param name="backlogId" value="${backlog.id}" />
 		</ww:url>
-		<ww:a cssClass="openCreateDialog openHourEntryDialog" href="%{createLink}" onclick="return false;">Create new &raquo;</ww:a>
+		<ww:a cssClass="openCreateDialog openHourEntryDialog" href="%{createLink}" onclick="return false;">Log effort &raquo;</ww:a>
 		</td>
 		</tr>
 		</table>

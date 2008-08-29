@@ -326,7 +326,6 @@ $(document).ready( function() {
 					<ww:form action="storeBacklogThemebinding" id="iterationBusinessThemesForm" method="post">
 					<ww:hidden name="backlogId" value="${iteration.id}"/>
 					<input type="hidden" name="contextViewName" value="iteration" />
-					<p>
 					<c:choose>
 					<c:when test="${!empty iteration.businessThemeBindings}">
 						<display:table htmlId="businessThemeTable" class="listTable" name="iteration.businessThemeBindings" id="row" requestURI="editIteration.action">
@@ -364,7 +363,6 @@ $(document).ready( function() {
 							</table>
 						</c:otherwise>
 						</c:choose>
-						</p>
 						<div id="backlogThemeSave" style="display: none;">
 						<label id="themeLabel" style="padding: 3px; margin: 3px; display:block; border: 1px solid #ccc;">
 						    * = the theme has been attached to this project.<br/>

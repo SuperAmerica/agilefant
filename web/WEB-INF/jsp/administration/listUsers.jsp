@@ -28,7 +28,7 @@ $(document).ready(function() {
 			name="${enabledUsers}" id="row" requestURI="listUsers.action"
 			defaultsort="1">
 			<display:column sortable="true" title="Name" sortProperty="fullName" style="width: 150px;">
-			 <div style="width: 140px; overflow: hidden;">
+			 <div style="width: 140px;">
 				<a class="nameLink"
 					onclick="handleTabEvent('userTabContainer-${row.id}', 'user', ${row.id}, 0); return false;">
 				${aef:html(row.fullName)} </a>

@@ -31,7 +31,7 @@ $(document).ready(function() {
 	<display:table name="${teamList}" id="row" requestURI="listTeams.action" >
 			
 			<display:column sortable="true" title="Name" sortProperty="name" style="width: 395px;">
-			 <div style="width: 350px; overflow: hidden;">
+			 <div style="width: 350px;">
 				<a class="nameLink"
 					onclick="handleTabEvent('teamTabContainer-${row.id}', 'team', ${row.id}, 0); return false;">
 				${aef:html(row.name)} </a>

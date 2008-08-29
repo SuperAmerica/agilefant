@@ -31,7 +31,7 @@ $(document).ready(function() {
 <display:table class="listTable" name="${projectTypes}" id="row"
 	requestURI="listProjectTypes.action" defaultsort="1">
 	<display:column sortable="true" title="Name" sortProperty="name" class="projectTypeNameColumn">
-	   <div style="width: 400px; overflow: hidden;">
+	   <div style="width: 400px;">
 		<a class="nameLink"
 			onclick="handleTabEvent('projectTypeTabContainer-${row.id}', 'projectType', ${row.id}, 0); return false;">
 			${aef:html(row.name)}

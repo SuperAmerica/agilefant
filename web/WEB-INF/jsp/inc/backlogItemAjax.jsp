@@ -627,7 +627,7 @@ $(document).ready(function() {
 				<ww:param name="productId" value="${backlogItem.product.id}"></ww:param>
 			</ww:url>
 			<ww:a href="%{createThemeLink}" cssClass="openCreateDialog openThemeDialog"
-				title="Create a new theme" onclick="return false;"> Create new theme &raquo;</ww:a>
+				title="Create a new theme" onclick="return false;"> Create new &raquo;</ww:a>
 			<c:if test="${(!empty backlogItem.product.businessThemes)}">
 			
 			<ww:hidden name="backlogItemId" value="${backlogItem.id}"/>

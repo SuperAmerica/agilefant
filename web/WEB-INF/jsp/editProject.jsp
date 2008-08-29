@@ -476,9 +476,10 @@ $(document).ready(function() {
 										<ww:form action="storeBacklogThemebinding" method="post">
 										<ww:hidden name="backlogId" value="${project.id}"/>
 										<input type="hidden" name="contextViewName" value="project" />
-										<div class="businessThemeTableWrapper">
+										
 										<c:choose>
 										<c:when test="${!empty project.businessThemeBindings}">
+										<div class="businessThemeTableWrapper">
 										<display:table htmlId="businessThemeTable" class="businessThemeTable listTable" name="project.businessThemeBindings" id="row" requestURI="editIteration.action">
 
 											<display:column sortable="true" title="Name" sortProperty="businessTheme.name"
@@ -505,6 +506,7 @@ $(document).ready(function() {
 												<img style="cursor: pointer;" class="table_edit_delete" src="static/img/delete_18.png" title="Remove from project" />
 											</display:column>
 										</display:table>
+										</div>
 											</c:when>
 											<c:otherwise>
 												<table id="businessThemeTable" style="display:none;" class="listTable">

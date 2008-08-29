@@ -1,6 +1,6 @@
-Agilefant 1.5 Alpha
+Agilefant 1.5 RC1
 RELEASE NOTES
-20.8.2008
+29.8.2008
 
 INSTALLATION INSTRUCTIONS
 -------------------------
@@ -42,6 +42,7 @@ CHANGES FROM AGILEFANT 1.4.7
 + The UI is now consistent
 + Themes can be bound to iterations and projects
 + Projects and iterations have planned sizes
++ Themes are shown in product roadmap
 
 CHANGES FROM AGILEFANT 1.4.6
 ----------------------------

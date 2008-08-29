@@ -143,22 +143,24 @@
 	      var row = $(element).parents('tr:eq(0)');
           var id = row.find(this.uniqueId).text();
           var me = this;
-          if(this.deleteaction) {
-          	var param = {};
-          	param[this.options.submitParam] = id;
-          	jQuery.post(this.deleteaction,param,function() {
-            	row.remove();
-            	me.tbody.children(':odd').attr('class', 'even');
-                me.tbody.children(':even').attr('class', 'odd');
-            	if(me.options.deleteCb) {
-              		me.options.deleteCb(id,me.options);
-            	}
-          	});
-          } else if(this.options.deleteCb) {
-          	if(me.options.deleteCb(id,me.options)) {
-          		row.remove();
-          	}
-          }
+          if (confirm('Are you sure?')) {
+	          if(this.deleteaction) {
+	          	var param = {};
+	          	param[this.options.submitParam] = id;
+	          	jQuery.post(this.deleteaction,param,function() {
+	            	row.remove();
+	            	me.tbody.children(':odd').attr('class', 'even');
+	                me.tbody.children(':even').attr('class', 'odd');
+	            	if(me.options.deleteCb) {
+	              		me.options.deleteCb(id,me.options);
+	            	}
+	          	});
+	          } else if(this.options.deleteCb) {
+	          	if(me.options.deleteCb(id,me.options)) {
+	          		row.remove();
+	          	}
+	          }
+	      }
 		}, 
       /**
        * Add a new editable row to the end of the table.

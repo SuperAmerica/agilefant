@@ -65,7 +65,7 @@ $(document).ready(function() {
 						<display:column sortable="false" title="Action">	
 							<span class="uniqueId" style="display: none;">${row.id}</span>					
 							<img src="static/img/edit.png" class="table_edit_edit" alt="Edit" title="Edit" />															
-							<img src="static/img/delete_18.png" onclick="return confirmDeleteHour();" alt="Delete" title="Delete" class="table_edit_delete" style="cursor: pointer;"/>								
+							<img src="static/img/delete_18.png" alt="Delete" title="Delete" class="table_edit_delete" style="cursor: pointer;"/>								
 						</display:column>
 						</display:table>
 					<input type="submit" value="Save" style="display: none;" id="saveSpentEffort-${myAction}" />

@@ -14,6 +14,7 @@ import org.easymock.EasyMock;
 
 import fi.hut.soberit.agilefant.business.impl.BusinessThemeBusinessImpl;
 import fi.hut.soberit.agilefant.db.BacklogDAO;
+import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.db.BusinessThemeDAO;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.BacklogItem;
@@ -289,7 +290,66 @@ public class BusinessThemeBusinessTest extends TestCase {
         verify(themeDAO);
         verify(backlogDAO);
     }
+    
+    public void testAddThemeToBacklog_duplicates() {
+        Project proj = new Project();
+        proj.setBusinessThemeBindings(new ArrayList<BacklogThemeBinding>());
+        proj.setId(1);
+        //setup theme
+        BusinessTheme theme1 = new BusinessTheme();
+        theme1.setId(1);
+        //setup services
+        BusinessThemeBusinessImpl themeBusiness = new BusinessThemeBusinessImpl();
+        BusinessThemeDAO themeDAO = EasyMock.createMock(BusinessThemeDAO.class);
+        BacklogDAO backlogDAO = EasyMock.createMock(BacklogDAO.class);
+        themeBusiness.setBacklogDAO(backlogDAO);
+        themeBusiness.setBusinessThemeDAO(themeDAO);
+        expect(backlogDAO.get(1)).andReturn(proj);
+        expect(themeDAO.get(1)).andReturn(theme1);
+        themeDAO.saveOrUpdateBacklogThemeBinding(EasyMock.isA(BacklogThemeBinding.class));
+  
+        replay(backlogDAO);
+        replay(themeDAO);
+        
+        int[] themeIds = {1,1,1,1};
+        String[] alloc = {"0","0","0","0"};
+        themeBusiness.multipleAddOrUpdateThemeToBacklog(themeIds, 1, alloc);
+        verify(backlogDAO);
+        verify(themeDAO);
+        
+    }   
 
+    public void testAddMultipleThemesToBacklogItem() {
+        BacklogItem bli = new BacklogItem();
+        BacklogItemBusiness bliBus = EasyMock.createMock(BacklogItemBusiness.class);
+        BusinessThemeDAO themeDAO = EasyMock.createMock(BusinessThemeDAO.class);
+        BacklogItemDAO bliDAO = EasyMock.createMock(BacklogItemDAO.class);
+        BusinessThemeBusinessImpl themeBusiness = new BusinessThemeBusinessImpl();
+        themeBusiness.setBacklogItemBusiness(bliBus);
+        themeBusiness.setBusinessThemeDAO(themeDAO);
+        themeBusiness.setBacklogItemDAO(bliDAO);
+        BusinessTheme theme1 = new BusinessTheme();
+        BusinessTheme theme2 = new BusinessTheme();
+        BusinessTheme theme3 = new BusinessTheme();
+        List<BusinessTheme> themes = new ArrayList<BusinessTheme>();
+        themes.add(theme1);
+        bli.setBusinessThemes(themes);
+        expect(bliBus.getBacklogItem(1)).andReturn(bli);
+        bliDAO.store(bli);
+        expect(themeDAO.get(2)).andReturn(theme2);
+        expect(themeDAO.get(3)).andReturn(theme3);
+        
+        replay(bliBus);
+        replay(themeDAO);
+        replay(bliDAO);
+        int[] ids = {2,3};
+        themeBusiness.addMultipleThemesToBacklogItem(ids, 1);
+        assertEquals(2, bli.getBusinessThemes().size());
+        verify(themeDAO);
+        verify(bliBus);
+        verify(bliDAO);
+        
+    }
     /*
     public void testStoreBusinessTheme() {
         themeDAO = createMock(BusinessThemeDAO.class);

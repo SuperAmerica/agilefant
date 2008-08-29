@@ -2,6 +2,7 @@ package fi.hut.soberit.agilefant.model;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
@@ -60,7 +61,7 @@ public class Iteration extends Backlog implements PageItem {
     
     private Integer backlogSize;
     
-    private Collection<BacklogThemeBinding> businessThemeBindings;
+    private Collection<BacklogThemeBinding> businessThemeBindings = new ArrayList<BacklogThemeBinding>();
 
 
     /** The project, under which this iteration is. */
@@ -176,8 +177,8 @@ public class Iteration extends Backlog implements PageItem {
     /**
      * Estimation of required resources (total man hours) for iteration.
      * 
-     * @return
      */
+    @Override
     public Integer getBacklogSize() {
         return backlogSize;
     }
@@ -186,8 +187,9 @@ public class Iteration extends Backlog implements PageItem {
         this.backlogSize = backlogSize;
     }
     
+    @JSON(include = false)
     @OneToMany(mappedBy="backlog")
-    //@OrderBy(value="businessThem.name asc")
+    @Override
     public Collection<BacklogThemeBinding> getBusinessThemeBindings() {
         return businessThemeBindings;
     }

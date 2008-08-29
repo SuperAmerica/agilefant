@@ -76,7 +76,7 @@ public class Project extends Backlog implements PageItem {
     
     private Integer backlogSize;
     
-    private Collection<BacklogThemeBinding> businessThemeBindings;
+    private Collection<BacklogThemeBinding> businessThemeBindings = new ArrayList<BacklogThemeBinding>();
 
     /** The product, under which this project belongs. */
     @ManyToOne
@@ -273,6 +273,7 @@ public class Project extends Backlog implements PageItem {
      * 
      * @return
      */
+    @Override
     @JSON
     public Integer getBacklogSize() {
         return backlogSize;
@@ -282,9 +283,9 @@ public class Project extends Backlog implements PageItem {
         this.backlogSize = backlogSize;
     }
 
-    @OneToMany(mappedBy="backlog")
-    //@OrderBy(clause="businessTheme.name asc")
     @JSON(include = false)
+    @Override
+    @OneToMany(mappedBy="backlog")
     public Collection<BacklogThemeBinding> getBusinessThemeBindings() {
         return businessThemeBindings;
     }

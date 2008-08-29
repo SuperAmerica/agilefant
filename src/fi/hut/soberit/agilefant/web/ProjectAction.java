@@ -234,7 +234,7 @@ public class ProjectAction extends ActionSupport implements CRUDAction {
             }
             if(storable.getProduct() != null && productId > 0 &&
                     storable.getProduct().getId() != productId) {
-                backlogBusiness.removeThemeBindings(project);
+                backlogBusiness.removeThemeBindings(storable);
             }
         }
         
@@ -265,6 +265,10 @@ public class ProjectAction extends ActionSupport implements CRUDAction {
             if (storable == null) {
                 super.addActionError(super.getText("project.notFound"));
                 return CRUDAction.AJAX_ERROR;
+            }
+            if(storable.getProduct() != null && productId > 0 &&
+                    storable.getProduct().getId() != productId) {
+                backlogBusiness.removeThemeBindings(storable);
             }
         }
 

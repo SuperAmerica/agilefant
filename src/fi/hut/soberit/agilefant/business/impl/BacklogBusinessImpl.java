@@ -844,12 +844,11 @@ public class BacklogBusinessImpl implements BacklogBusiness {
 
     /** {@inheritDoc} */
     public void removeThemeBindings(Backlog backlog) {
-        if (backlog != null && backlog.getBusinessThemeBindings() != null) {
+        if (backlog != null) {
             for (BacklogThemeBinding bind : backlog.getBusinessThemeBindings()) {
                 businessThemeBusiness.removeThemeBinding(bind);
             }
         }
-
     }
 
     public int getNumberOfAssignedUsers(Backlog backlog) {

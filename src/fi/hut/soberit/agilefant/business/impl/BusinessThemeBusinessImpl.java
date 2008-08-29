@@ -314,6 +314,9 @@ public class BusinessThemeBusinessImpl implements BusinessThemeBusiness {
     
     public void multipleAddOrUpdateThemeToBacklog(int[] themeIds, int backlogId, String[] allocations) {
         Set<Integer> added = new HashSet<Integer>();
+        if(themeIds.length != allocations.length) {
+            return;
+        }
         for(int i = 0 ; i < themeIds.length; i++) {
             if (!added.contains(themeIds[i])) {
                 added.add(themeIds[i]);

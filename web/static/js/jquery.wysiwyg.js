@@ -103,13 +103,14 @@
             Wysiwyg(this, options);
         });
     };
-
+    
     function Wysiwyg( element, options )
     {
         return this instanceof Wysiwyg
             ? this.init(element, options)
             : new Wysiwyg(element, options);
     }
+    
 
     $.extend(Wysiwyg, {
         insertImage : function( szURL, attributes )
@@ -315,6 +316,13 @@
         init : function( element, options )
         {
             var self = this;
+            
+            var parent = $(element).parents('form:eq(0)');
+            if (parent.length == 1) {
+                parent.bind('reset',function() {
+                    self.cancel();
+                });
+            }
 
             this.editor = element;
             this.options = options || {};
@@ -383,7 +391,9 @@
             if ( this.options.autoSave )
                 $('form').submit(function() { self.saveContent(); });
         },
-
+        cancel: function() {
+            this.setContent( this.initialContent );
+        },
         initFrame : function()
         {
             var self = this;

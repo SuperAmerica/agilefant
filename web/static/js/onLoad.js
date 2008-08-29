@@ -26,6 +26,7 @@ function initOnLoad(elem) {
     
     if (elem != document && me.data('aef-tabs') == "1") {
         me.find(':reset[value=Cancel]').click(function() {
+            $(this).trigger('reset');
             ajaxCloseDialog(me.data('aef-context'), me.data('aef-id'));
             me.toggle();
             me.find('.assigneeLink').restoreUserChooser();

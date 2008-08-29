@@ -188,6 +188,7 @@
 				<td></td>
 				<td><ww:submit value="Save" id="saveButton" /></td>
 				<td class="deleteButton"><ww:submit action="deleteIteration" value="Delete" />
+				<ww:reset value="Cancel" />
 				</td>								
 			</tr>
 		</table>

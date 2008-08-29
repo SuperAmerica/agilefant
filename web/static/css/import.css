@@ -532,7 +532,7 @@ span.right {
 	overflow: hidden;
 }
 .responsibleColumn div {
-	overflow: visible;
+	overflow: hidden;
 	width: 90px;
 	max-height: 2.5em;
 }

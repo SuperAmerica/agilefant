@@ -79,7 +79,7 @@ $(document).ready(function() {
 					requestURI="${currentAction}.action">					
 
 					<display:column sortable="true" sortProperty="name" title="Name" >						
-						<div style="overflow:hidden; width: 170px;">
+						<div style="overflow:hidden; width: 170px; max-height: 3.7em;">
 						<c:forEach items="${row.businessThemes}" var="businessTheme">
                             <a href="#" onclick="handleTabEvent('backlogItemTabContainer-${row.id}-${bliListContext}','bliDWProjects',${row.id},3, '${bliListContext}'); return false;">
                                 <span class="businessTheme" title="${businessTheme.description}"><c:out value="${businessTheme.name}"/></span>

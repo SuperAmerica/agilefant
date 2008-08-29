@@ -2,19 +2,15 @@
 
 <aef:productList/>
 
+<ww:date name="%{new java.util.Date()}" id="start"
+        format="%{getText('webwork.shortDateTime.format')}" />
+    <ww:date name="%{new java.util.Date()}" id="end"
+        format="%{getText('webwork.shortDateTime.format')}" />
+
 <div id="editIterationForm" class="validateWrapper validateNewIteration">
 <ww:form method="post" action="storeNewIteration">
 	<ww:hidden name="iterationId" value="${iteration.id}" />
-	<ww:date name="%{iteration.getTimeOfDayDate(6)}" id="start"
-		format="%{getText('webwork.shortDateTime.format')}" />
-	<ww:date name="%{iteration.getTimeOfDayDate(18)}" id="end"
-		format="%{getText('webwork.shortDateTime.format')}" />
-	<c:if test="${iteration.id > 0}">
-		<ww:date name="%{iteration.startDate}" id="start"
-			format="%{getText('webwork.shortDateTime.format')}" />
-		<ww:date name="%{iteration.endDate}" id="end"
-			format="%{getText('webwork.shortDateTime.format')}" />
-	</c:if>
+	
 
 	<table class="formTable">
 		<tr>

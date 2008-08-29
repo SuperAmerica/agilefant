@@ -31,11 +31,13 @@ $(document).ready(function() {
 	<display:table name="${teamList}" id="row" requestURI="listTeams.action" >
 			
 			<display:column sortable="true" title="Name" sortProperty="name" style="width: 395px;">
+			 <div style="width: 350px; overflow: hidden;">
 				<a class="nameLink"
 					onclick="handleTabEvent('teamTabContainer-${row.id}', 'team', ${row.id}, 0); return false;">
 				${aef:html(row.name)} </a>
 				<div id="teamTabContainer-${row.id}" class="tabContainer"
 					style="overflow: visible; white-space: nowrap; width: 0px;"></div>
+			 </div>
 			</display:column>
 
 			<display:column title="# of users" sortable="true">

@@ -30,12 +30,14 @@ $(document).ready(function() {
 <c:if test="${(!empty projectTypes)}">
 <display:table class="listTable" name="${projectTypes}" id="row"
 	requestURI="listProjectTypes.action" defaultsort="1">
-	<display:column sortable="true" title="Name" sortProperty="name">
+	<display:column sortable="true" title="Name" sortProperty="name" class="projectTypeNameColumn">
+	   <div style="width: 400px; overflow: hidden;">
 		<a class="nameLink"
 			onclick="handleTabEvent('projectTypeTabContainer-${row.id}', 'projectType', ${row.id}, 0); return false;">
 			${aef:html(row.name)}
 		</a>
-		<div id="projectTypeTabContainer-${row.id}" style="overflow: visible; white-space: nowrap; width: 0px;"></div>						
+		<div id="projectTypeTabContainer-${row.id}" style="overflow: visible; white-space: nowrap; width: 0px;"></div>
+	   </div>						
 	</display:column>
 	
 	<display:column sortable="false" title="Action" style="width: 50px;">

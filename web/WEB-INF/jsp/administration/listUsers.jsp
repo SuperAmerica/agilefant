@@ -28,11 +28,13 @@ $(document).ready(function() {
 			name="${enabledUsers}" id="row" requestURI="listUsers.action"
 			defaultsort="1">
 			<display:column sortable="true" title="Name" sortProperty="fullName" style="width: 150px;">
+			 <div style="width: 140px; overflow: hidden;">
 				<a class="nameLink"
 					onclick="handleTabEvent('userTabContainer-${row.id}', 'user', ${row.id}, 0); return false;">
 				${aef:html(row.fullName)} </a>
 				<div id="userTabContainer-${row.id}" class="tabContainer"
 					style="overflow: visible; white-space: nowrap; width: 0px;"></div>
+			 </div>
 			</display:column>
 			<display:column sortable="true" title="User ID" property="loginName" />
 			<display:column sortable="true" title="Initials" property="initials" />

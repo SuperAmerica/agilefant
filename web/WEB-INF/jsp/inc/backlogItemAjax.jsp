@@ -615,15 +615,20 @@ $(document).ready(function() {
 	</div>					
 </div>
 
-<div id="backlogItemThemesTab-${backlogItemId}-${bliListContext}" class="backlogItemNaviTab">		
-			<div class="subItems validateWrapper validateEmpty" style="margin-top: 0; margin-left: 3px; width: 710px;">
+<div id="backlogItemThemesTab-${backlogItemId}-${bliListContext}" class="backlogItemNaviTab">
+<div class="subItems validateWrapper validateEmpty" style="margin-top: 0; margin-left: 3px; width: 710px;">
+<ww:form action="storeBacklogItemThemes" method="post">	
+<table style="width: 98%;">
+    <tr>
+        <td colspan="2">
+			
 			<ww:url id="createThemeLink" action="ajaxCreateBusinessTheme" includeParams="none">
 				<ww:param name="productId" value="${backlogItem.product.id}"></ww:param>
 			</ww:url>
 			<ww:a href="%{createThemeLink}" cssClass="openCreateDialog openThemeDialog"
 				title="Create a new theme" onclick="return false;"> Create new theme &raquo;</ww:a>
 			<c:if test="${(!empty backlogItem.product.businessThemes)}">
-			<ww:form action="storeBacklogItemThemes" method="post">
+			
 			<ww:hidden name="backlogItemId" value="${backlogItem.id}"/>
 
 				<display:table class="listTable" name="backlogItem.product.businessThemes" id="row">
@@ -642,12 +647,21 @@ $(document).ready(function() {
 						<c:out value="${row.description}" />
 					</display:column>
 				</display:table>
-				<input type="submit" value="Save" name="Save" />
-			</ww:form>
-			</c:if>				
-			</div>
-														
-			</div>
+				
+			
+			</c:if>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <input type="submit" value="Save" name="Save" />
+        </td>   
+        <td class="deleteButton">
+            <ww:reset value="Cancel"/>			
+        </td>
+    </tr>
+</table>				
+</ww:form>
 		
 </div>
 

@@ -171,6 +171,7 @@ $(document).ready(function() {
 						<td><ww:submit value="Save" id="saveButton" />
 						</td>
 						<td class="deleteButton">
+						<ww:submit value="Delete" action="deleteProject"/>
 						<ww:reset value="Cancel"/>
 						</td>						
 					</tr>

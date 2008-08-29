@@ -84,7 +84,7 @@ Timeline.AgilefantEventSource.Event = function(event) {
 	        	end = start;
 	        }
         }
-        this._instant = false;    
+        this._instant = ((end.getTime() - start.getTime()) < 3600*48*1000);
         this._start = start; 
         this._end = end;
         this._latestStart = start;
@@ -115,16 +115,24 @@ Timeline.AgilefantEventSource.Event = function(event) {
 		
         this._textColor = '#666666';
         
+        var icons = {"OK":"green","CHALLENGED":"yellow","CRITICAL":"red"};
         var stateToCss = {"OK":"ok","CHALLENGED":"challenged","CRITICAL":"critical"};
         if(this.isProject() && stateToCss[event.status] != undefined) {
         	this._bandClass = 'timeline-band-project-' + stateToCss[event.status];
         	this._classname = 'timeline-project';
+        	if(icons[event.status]) {
+	        	this._icon = "static/img/timeline/status-"+icons[event.status]+"-small.png";
+			} else { 
+				this._icon = "static/img/timeline/dark-blue-circle.png"; //for WTF status...
+			}
     	} else if(this.isIteration()) {
     		this._bandClass = 'timeline-band-iteration';
     		this._classname = 'timeline-iteration';
+			this._icon = "static/img/timeline/iteration-circle-small.png";
     	} else if(this.isTheme() || this.isThemePart()) {
     		this._bandClass = 'timeline-band-theme';
     		this._classname = 'timeline-theme';
+    		this._icon = "static/img/timeline/dark-blue-circle.png";
     	}
 };
 
@@ -397,7 +405,7 @@ Timeline.AgilefantEventPainter.prototype.paintDurationEvent = function(evt, metr
     this.paintPreciseDurationEvent(evt, metrics, theme, highlightIndex, parentEvent);
   }
 };
-Timeline.AgilefantEventPainter.prototype._calculateEventRightEdge = function(evt) {
+Timeline.AgilefantEventPainter.prototype._calculateEventRightEdge = function(evt, metrics) {
 
   var text = evt.getText();
   var startDate = evt.getStart();
@@ -409,6 +417,7 @@ Timeline.AgilefantEventPainter.prototype._calculateEventRightEdge = function(evt
   var endPixel;
   var labelLeft;
   var labelRight; 
+  var theme = this._params.theme;
 
   if(!evt.isInstant() && !evt.isImprecise()) {
     endPixel = Math.round(this._band.dateToPixelOffset(endDate));
@@ -450,7 +459,7 @@ Timeline.AgilefantEventPainter.prototype.paintPreciseInstantEvent = function(evt
   var labelRight = labelLeft + labelSize.width;
 
   var rightEdge = labelRight;
-  var track = evt.isProject() ? this._findProjectTrack(rightEdge,evt) : this._findIterationTrack(rightEdge,parentEvent);
+  var track = evt.isProject() ? this._findProjectTrack(rightEdge,evt, metrics) : this._findIterationTrack(rightEdge,parentEvent);
 
   var labelTop = Math.round(
       metrics.trackOffset + track * metrics.trackIncrement + 
@@ -491,7 +500,7 @@ Timeline.AgilefantEventPainter.prototype.paintPreciseDurationEvent = function(ev
   var labelRight = labelLeft + labelSize.width;
 
   var rightEdge = Math.max(labelRight, endPixel);
-  var track = evt.isProject() ? this._findProjectTrack(rightEdge,evt) : this._findIterationTrack(rightEdge,parentEvent);
+  var track = evt.isProject() ? this._findProjectTrack(rightEdge,evt, metrics) : this._findIterationTrack(rightEdge,parentEvent);
   var labelTop = Math.round(
       metrics.trackOffset + track * metrics.trackIncrement + theme.event.tape.height);
 
@@ -585,7 +594,7 @@ Timeline.AgilefantEventPainter.prototype._findFreeTrack = function(rightEdge) {
  * by calculating the space required for each iteration.
  * TODO: What to do when group of free tracks can't be allocated? 
  */
-Timeline.AgilefantEventPainter.prototype._findProjectTrack = function(rightEdge, project) {
+Timeline.AgilefantEventPainter.prototype._findProjectTrack = function(rightEdge, project, metrics) {
   var iterations = project.getContents();
   var iterationTracksNeeded = (iterations) ? iterations.length  : 0;
   var tracksReserved = 0;
@@ -596,7 +605,7 @@ Timeline.AgilefantEventPainter.prototype._findProjectTrack = function(rightEdge,
   }
   //todo: what if iteration is longer than the project? try to accomondate under project or give up?
   for(var j = 0; j < iterationTracksNeeded; j++) {
-  	var pos = Math.min(this._calculateEventRightEdge(iterations[j]), rightEdge); 
+  	var pos = Math.min(this._calculateEventRightEdge(iterations[j], metrics), rightEdge); 
     requiredLengths.push(pos);
   }
   for (var i = 0; i < this._tracks.length; i++) {
@@ -762,7 +771,7 @@ Timeline.AgilefantTheme = function() {
 		duration: {color: '',},
         tape: {height: 3 },
         instant: {
-            icon:              Timeline.urlPrefix + "images/dull-blue-circle.png",
+            icon:              Timeline.urlPrefix + "img/timeline/dark-blue-circle.png",
             iconWidth:         10,
             iconHeight:        10,
             impreciseOpacity:  20

@@ -168,6 +168,10 @@ public class HistoryBusinessImpl implements HistoryBusiness {
          */
         float length = CalendarUtils.getLengthInDays(start.getTime(), end.getTime()) - 1;
         
+        if (length < 1) {
+            length = 1;
+        }
+        
         /* Get the history entry for yesterday */
         end.add(Calendar.DATE, -1);
         HistoryEntry<BacklogHistory> endEntry = historyDAO.getEntryByDate(backlogId, end.getTime());

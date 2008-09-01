@@ -82,8 +82,11 @@ public class CalendarUtils {
         
         CalendarUtils.setHoursMinutesAndSeconds(calStart, 0, 0, 0);
         CalendarUtils.setHoursMinutesAndSeconds(calEnd, 23, 59, 59);
+                
+        double endf = (long)calEnd.getTime().getTime();
+        double startf = (long)calStart.getTime().getTime();
         
-        float diff = ((float)calEnd.getTime().getTime() - (float)calStart.getTime().getTime()) / (86400000.0f);
+        double diff = (endf - startf) / (24.0 * 3600.0 * 1000.0);
         double diffD = Math.ceil(diff);
         return (int)diffD;
     }
@@ -191,8 +194,8 @@ public class CalendarUtils {
     
     public static void setHoursMinutesAndSeconds(Calendar cal, int hours, int minutes, int seconds) {
         cal.set(Calendar.HOUR_OF_DAY, hours);
-        cal.set(Calendar.MINUTE, hours);
-        cal.set(Calendar.SECOND, hours);
+        cal.set(Calendar.MINUTE, minutes);
+        cal.set(Calendar.SECOND, seconds);
         cal.set(Calendar.MILLISECOND, 0);
     }
     

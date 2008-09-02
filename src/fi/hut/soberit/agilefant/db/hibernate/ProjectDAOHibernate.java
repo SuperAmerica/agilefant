@@ -182,7 +182,7 @@ public class ProjectDAOHibernate extends GenericDAOHibernate<Project>
             ProjectMetrics metr = new ProjectMetrics();
             metr.setOriginalEstimate((AFTime) data[2]);
             metr.setEffortLeft((AFTime) data[1]);
-            metr.setNumberOfAllIterations((Integer) data[4]);
+            //metr.setNumberOfAllIterations((Integer) data[4]);
             metr.setTotalItems((Integer) data[3]);
             return metr;
         } catch (Exception e) {

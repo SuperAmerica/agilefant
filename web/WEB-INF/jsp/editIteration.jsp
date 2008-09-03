@@ -33,7 +33,7 @@ $(document).ready(function() {
 		<tbody>
 			<tr>
 				<td>
-				<div class="subItems" style="margin-top: 0">
+				<div class="subItems" style="margin-top: 0" id="iterationDetailsDiv_editIteration">
 				<div class="subItemHeader"><script type="text/javascript">
                 function expandDescription() {
                     document.getElementById('descriptionDiv').style.maxHeight = "1000em";
@@ -312,7 +312,7 @@ $(document).ready( function() {
 	<tr>
 		<td>
 			<c:if test="${iterationId != 0}">
-				<div class="subItems">
+				<div class="subItems" id="subItems_editIterationThemesList">
 					<div class="subItemHeader">
 					    <table cellspacing="0" cellpadding="0">
             			    <tr>
@@ -383,7 +383,7 @@ $(document).ready( function() {
 	<table>
 		<tr>
 			<td><c:if test="${iterationId != 0}">
-				<div class="subItems">
+				<div class="subItems" id="subItems_editIterationIterationGoalsList">
 				<div class="subItemHeader">
 				<table cellspacing="0" cellpadding="0">
 					<tr>
@@ -499,7 +499,7 @@ $(document).ready( function() {
 					</div>
 				</c:if>
                 </div>
-                <div class="subItems">
+                <div class="subItems" id="subItems_editIterationBacklogItemsList">
 				<div id="subItemHeader">
 				<table cellspacing="0" cellpadding="0">
 					<tr>

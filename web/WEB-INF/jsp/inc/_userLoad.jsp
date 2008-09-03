@@ -11,7 +11,7 @@ function show_small_loadtable() {
 }
 </script>
 
-<div class="subItems">
+<div class="subItems" id="subItems_dailyWorkUserLoad">
 <div class="subItemHeader">
 <table cellspacing="0" cellpadding="0">
 	<tr>

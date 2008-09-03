@@ -16,7 +16,7 @@ $(document).ready(function() {
 
 <h2>Project types</h2>
 
-<div class="subItems" style="width: 545px;">
+<div class="subItems" style="width: 545px;" id="subItems_projectType">
 <div class="subItemHeader">
 <table cellspacing="0" cellpadding="0">
 	<tr>

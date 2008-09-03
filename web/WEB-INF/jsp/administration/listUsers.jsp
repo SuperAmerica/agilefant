@@ -14,7 +14,7 @@ $(document).ready(function() {
 
 <h2>Users</h2>
 
-	<div class="subItems" style="width: 545px;">
+	<div class="subItems" style="width: 545px;" id="subItems_userList">
 	<div class="subItemHeader">
 		<table cellspacing="0" cellpadding="0">
 			<tr>
@@ -64,7 +64,7 @@ $(document).ready(function() {
 		</div>
 
 	<c:if test="${(!empty disabledUsers)}">
-	<div class="subItems" style="width: 545px;">
+	<div class="subItems" style="width: 545px;" id="subItems_disabledUserList">
 	<div class="subItemHeader">
 		<table cellspacing="0" cellpadding="0">
 			<tr>

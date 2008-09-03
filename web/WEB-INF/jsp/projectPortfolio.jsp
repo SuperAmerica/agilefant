@@ -13,7 +13,7 @@ var teams = [<aef:teamJson items="${teamList}"/>]
 
 
 
-<div class="subItems" style="width: 645px;">
+<div class="subItems" style="width: 645px;" id="subItems_portfolioRankedProjectsList">
 	<div class="subItemHeader">
 		<table cellspacing="0" cellpadding="0">
 			<tr>
@@ -192,7 +192,7 @@ var teams = [<aef:teamJson items="${teamList}"/>]
 		
 		
 <c:if test="${!empty ongoingUnrankedProjects}">
-<div class="subItems" style="width: 545px;">
+<div class="subItems" style="width: 545px;" id="subItems_portfolioUnrankedProjects">
 	<div class="subItemHeader">
 		<table cellspacing="0" cellpadding="0">
 			<tr>

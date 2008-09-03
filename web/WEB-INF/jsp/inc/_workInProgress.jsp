@@ -21,7 +21,7 @@ $(document).ready(function() {
 
 
 <c:if test="${!(empty backlogItemsForUserInProgress)}">
-<div class="subItems">
+<div class="subItems" id="subItems_backlogItemsForUserInProgress">
 
 <div class="subItemHeader">
 <table cellspacing="0" cellpadding="0">

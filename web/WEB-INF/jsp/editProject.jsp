@@ -91,7 +91,7 @@ $(document).ready(function() {
 					<tbody>
 						<tr>
 							<td>
-								<div class="subItems" style="margin-top: 0">
+								<div class="subItems" style="margin-top: 0" id="subItems_editProjectDetails">
 									<div class="subItemHeader">
 										<script type="text/javascript">
 											function expandDescription() {
@@ -463,7 +463,7 @@ $(document).ready(function() {
 				<td>
 
 								<c:if test="${projectId != 0}">
-									<div class="subItems">
+									<div class="subItems" id="subItems_editProjectThemesList">
 										<div class="subItemHeader">
 										    <table cellspacing="0" cellpadding="0">
 					            			    <tr>
@@ -561,7 +561,7 @@ $(document).ready(function() {
 				<tr>
 				<td>
 					<c:if test="${project.id > 0}">
-						<div class="subItems">
+						<div class="subItems" id="subItems_editProjectIterations">
 							<div class="subItemHeader">
 								<table cellpadding="0" cellspacing="0">
 									<tr>
@@ -632,7 +632,7 @@ $(document).ready(function() {
 								</div>
 							</c:if>
 							</div>
-							<div class="subItems">
+							<div class="subItems" id="subItems_editProjectBacklogItems">
 							<div class="subItemHeader">
 								<table cellpadding="0" cellspacing="0">
                     				<tr>

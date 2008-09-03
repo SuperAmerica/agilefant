@@ -50,7 +50,7 @@ function submitDialogForm() {
                     prev = prev.substr(0, prev.indexOf('#'));
                 }
                 prev = addRandomToURL(prev);
-                var parentId = me.parents('div.tabContainer:eq(0)').attr('id');
+                var parentId = me.parents('.subItems[id^=subItems_]').attr('id');
                 if (parentId == null || parentId == "") {
                     window.location.href = prev;
                 }

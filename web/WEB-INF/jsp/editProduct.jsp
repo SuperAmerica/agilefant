@@ -74,7 +74,7 @@ var productId = ${product.id};
 	<tbody>
 		<tr>
 			<td>
-			<div class="subItems" style="margin-top: 0">
+			<div class="subItems" style="margin-top: 0" id="subItems_editProductDetails">
 			<div class="subItemHeader"><script type="text/javascript">
 			                function expandDescription() {
 			                    document.getElementById('descriptionDiv').style.maxHeight = "1000em";
@@ -165,7 +165,7 @@ var productId = ${product.id};
     <!-- The timeline -->
     <tr>
     <td>
-    <div id="subItems">
+    <div id="subItems" id="subItems_editProductRoadmap">
     <div id="subItemHeader">
     <table cellspacing="0" cellpadding="0">
                             <tr>
@@ -206,7 +206,7 @@ var productId = ${product.id};
 
 	<tr>
 		<td>
-			<div class="subItems">
+			<div class="subItems" id="subItems_editProductProjectList">
 				<div class="subItemHeader">
 				<table cellspacing="0" cellpadding="0">
 	                <tr>
@@ -300,7 +300,7 @@ var productId = ${product.id};
 <table>	
 	<tr>
 		<td>
-			<div class="subItems">
+			<div class="subItems" id="subItems_editProductThemesList">
 				<div class="subItemHeader">
 					<table cellspacing="0" cellpadding="0">
 						<tr>
@@ -357,7 +357,7 @@ var productId = ${product.id};
 <table>	
 	<tr>
 		<td>
-			<div id="subItems">
+			<div id="subItems" id="subItems_editProductNonActiveThemesList">
 				<div id="subItemHeader">
 					<table cellspacing="0" cellpadding="0">
 						<tr>
@@ -399,7 +399,7 @@ var productId = ${product.id};
 <table>	
 	<tr>
 		<td>
-			<div class="subItems">
+			<div class="subItems" id="subItems_editProductBacklogItemsList">
 			<div class="subItemHeader">
 				<table cellspacing="0" cellpadding="0">
 	                <tr>

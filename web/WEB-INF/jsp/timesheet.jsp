@@ -19,7 +19,7 @@
 		<tr>
 			<td>
 				<ww:form action="generateTree" method="post">
-					<div id="subItems" style="margin-top: 0pt;">
+					<div id="subItems" style="margin-top: 0pt;" id="subItems_timesheetGenerateReport">
 						<div id="subItemHeader">				
 							<table cellpadding="0" cellspacing="0">
 								<tbody><tr>
@@ -272,7 +272,7 @@
 		<tbody>
 			<tr>
 				<td>
-					<div class="subItems" style="margin-top: 0pt;">
+					<div class="subItems" style="margin-top: 0pt;" id="subItems_timesheetEntries">
 						<div class="subItemHeader">
 							<table>
 								<tbody>

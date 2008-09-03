@@ -23,7 +23,7 @@ $(document).ready(function() {
 
 <h2>All items assigned to <c:out value="${user.fullName}" /> from ongoing projects</h2>
 
-<div class="subItems">
+<div class="subItems" id="subItems_dailyWorkProjectItems">
 
 <c:forEach items="${projects}" var="pro">
 	<c:if test="${hourReport}">

@@ -26,7 +26,7 @@ $(document).ready(function() {
 	<h2>All items assigned to <c:out value="${user.fullName}" /> from
 	ongoing iterations</h2>
 
-	<div class="subItems"><c:forEach items="${iterations}" var="it">
+	<div class="subItems" id="subItems_dailyWorkIterationItems"><c:forEach items="${iterations}" var="it">
 
 		<div class="subItemHeader">
 		<table cellspacing="0" cellpadding="0">

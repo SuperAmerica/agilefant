@@ -27,7 +27,7 @@ $(document).ready(function() {
 </script>
 <aef:hourEntries target="${backlog}" id="hourEntries" />
 
-<div class="subItems" style="margin-left: 3px;">
+<div class="subItems" style="margin-left: 3px;" id="subItems_hourEntryListItems">
 	<div class="subItemHeader">
      	<table cellpadding="0" cellspacing="0">
      	<tr>

@@ -16,7 +16,7 @@ $(document).ready(function() {
 
 <h2>Teams</h2>
 
-	<div class="subItems" style="width: 525px;">
+	<div class="subItems" style="width: 525px;"id="subItems_teamList">
 	<div class="subItemHeader">
 		<table cellspacing="0" cellpadding="0">
 			<tr>

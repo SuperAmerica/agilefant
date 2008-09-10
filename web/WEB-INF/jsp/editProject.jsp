@@ -213,6 +213,7 @@ $(document).ready(function() {
 													</c:choose>
 													</td>													
 												</tr>
+												<c:if test="${(project.defaultOverhead != null) && (project.defaultOverhead.time > 0)}">
 												<tr>
 								    				<th class="info1">Default overhead</th>
 								    				<td class="info3" ondblclick="return editProject();">
@@ -226,7 +227,7 @@ $(document).ready(function() {
 								    					</c:choose>
 								    				</td>							
 												</tr>
-																				
+											     </c:if>				
 										         <tr>
 													<th class="info1">Planned project size</th>
 													<td class="info3" ondblclick="return editProject();">

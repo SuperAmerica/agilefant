@@ -8,7 +8,7 @@
 	<jsp-version>2.0</jsp-version>
 	<short-name>aef</short-name>
 	<display-name>AEF</display-name>
-	<description>AgilEFant 2007 tag library</description>
+	<description>Agilefant tag library</description>
 
 	<tag>
 		<name>productList</name>

@@ -8,6 +8,7 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
+<link rel="shortcut icon" href="static/img/favicon.png" type="image/png" />
 <link rel="stylesheet" href="static/css/import.css" type="text/css"/>
 <link rel="stylesheet" href="static/css/v5.css" type="text/css"/>
 <link rel="stylesheet" href="static/css/datepicker.css" type="text/css"/>

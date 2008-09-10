@@ -20,7 +20,7 @@ body {
 #header h1 {
 	margin: 0px 0px 10px 0px;
 	padding: 20px 0px 0px 0px;
-	color: 333;
+	color: #333;
 	font: 30pt Lucida, sans-serif;
 	font-weight: bold;
 	font-style: italic;
@@ -649,7 +649,7 @@ td.deleteButton {
 }
 
 #deleteButtonRight {
-	text-align: right; !important;
+	text-align: right !important;
 	
 }
 
@@ -673,7 +673,7 @@ td.deleteButton {
 	cursor: pointer;
 	text-decoration: underline;
 	margin-top: 2px;
-	color: 0000FF;
+	color: #0000FF;
 }
 
 .userselect .groups li:hover, #multiplebli_userselect .groups li:hover, #userselect .groups li:hover, .userSelector .groups li:hover {
@@ -708,7 +708,7 @@ td.deleteButton {
 	padding-left: 0px;
 }
 .projectTeams li,.teamselect li {
-	display: table-row, table-cell;
+	/*display: table-row, table-cell;*/
 	padding: 2px;
 	cursor: pointer;
 	text-decoration: underline;
@@ -716,7 +716,7 @@ td.deleteButton {
 }
 
 .projectTeams li:hover,.teamselect li:hover {
-	display: table-row, table-cell;
+	/* display: table-row, table-cell;*/
 	padding: 2px;
 	cursor: pointer;
 	text-decoration: underline;
@@ -801,7 +801,7 @@ td.icons a img {
 	vertical-align: top;
 	font-weight: bold;
 	text-decoration: none;
-	font: "Arial", sans-serif;
+	font-family: "Arial", sans-serif;
 	color: #222;
 }
 

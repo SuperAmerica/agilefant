@@ -321,14 +321,14 @@ var productId = ${product.id};
 				<c:if test="${!empty activeBusinessThemes}">
 				<div id="subItemContent">
 				<display:table class="themeEditTable" name="activeBusinessThemes"
-					id="row" defaultsort="1">
-					<display:column title="Name" class="themeEditNameColumn">
+					id="row" defaultsort="1" requestURI="editProduct.action">
+					<display:column title="Name" class="themeEditNameColumn" sortable="true" sortProperty="name">
 						<a class="nameLink" onclick="handleTabEvent('businessThemeTabContainer-${row.id}','businessTheme',${row.id},0); return false;">
-							${row.name}
+							<c:out value="${row.name}"/>
 						</a>															
 						<div id="businessThemeTabContainer-${row.id}" class="tabContainer" style="overflow:visible; white-space: nowrap; width: 115px;"></div>
 					</display:column>
-					<display:column title="Description" class="themeDescriptionColumn">
+					<display:column title="Description" class="themeDescriptionColumn" sortable="true">
 					   <c:out value="${fn:substring(row.description, 0, 50)}" />
 					</display:column>
 					<display:column title="Completed BLIs">
@@ -370,12 +370,14 @@ var productId = ${product.id};
 								
 				<div id="subItemContent">
 				<display:table class="themeEditTable" name="nonActiveBusinessThemes"
-					id="row" defaultsort="1">
-					<display:column title="Name" class="themeEditNameColumn">
-						<c:out value="${row.name}" />					
+					id="row" defaultsort="1" requestURI="editProduct.action">
+					<display:column title="Name" class="themeEditNameColumn" sortable="true" sortProperty="name">
+						<a class="nameLink" onclick="handleTabEvent('businessThemeTabContainer-${row.id}','businessTheme',${row.id},0); return false;">
+                            <c:out value="${row.name}"/>
+                        </a>					
 						<div id="businessThemeTabContainer-${row.id}" class="tabContainer" style="overflow:visible; white-space: nowrap; width: 115px;"></div>
 					</display:column>
-					<display:column title="Description" class="themeDescriptionColumn">
+					<display:column title="Description" class="themeDescriptionColumn" sortable="true">
                        <c:out value="${fn:substring(row.description, 0, 50)}" />
                     </display:column>
 					<display:column title="Completed BLIs">

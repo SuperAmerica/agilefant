@@ -141,7 +141,9 @@ function show_small_loadtable() {
 </div>
 </td>
 <td class="info4" rowspan="2"> 
+<c:if test="${(user.weekHours != null) && (user.weekHours.time > 0)}">
 <div class="loadMeterDiv"><img src="drawLoadMeter.action?userId=${user.id}" /></div>
+</c:if>
 
 </td>
 </tr>
@@ -232,8 +234,10 @@ function show_small_loadtable() {
 </c:if>
 </div>
 </td>
-<td class="info4" rowspan="2"> 
+<td class="info4" rowspan="2">
+<c:if test="${(user.weekHours != null) && (user.weekHours.time > 0)}">
 <div class="loadMeterDiv"><img src="drawLoadMeter.action?userId=${user.id}" /></div>
+</c:if>
 </td>
 
 </tr>

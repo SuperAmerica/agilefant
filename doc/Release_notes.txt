@@ -1,6 +1,6 @@
-Agilefant 1.5 rc1
+Agilefant 1.5
 RELEASE NOTES
-29.8.2008
+10.9.2008
 
 INSTALLATION INSTRUCTIONS
 -------------------------

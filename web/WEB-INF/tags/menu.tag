@@ -8,7 +8,6 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-<ww:head />
 <link rel="stylesheet" href="static/css/import.css" type="text/css"/>
 <link rel="stylesheet" href="static/css/v5.css" type="text/css"/>
 <link rel="stylesheet" href="static/css/datepicker.css" type="text/css"/>

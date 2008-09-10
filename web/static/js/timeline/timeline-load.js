@@ -92,7 +92,7 @@ function updateTimelinePeriod(sender) {
 	}
 	productTimeLine.getBand(0)._onChanging();
 	var distributeLimit = false;
-	if(mode == 3 || mode == 4) { distributeLimit = 1; }
+	//if(mode == 3 || mode == 4) { distributeLimit = 1; }
 	productTimeLine.reDistributeWidths(distributeLimit);
 
 }

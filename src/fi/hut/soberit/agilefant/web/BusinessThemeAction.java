@@ -34,7 +34,7 @@ public class BusinessThemeAction extends ActionSupport implements CRUDAction {
     
     private int backlogId;
     
-    private int[] businessThemeIds;
+    private int[] businessThemeIds = new int[1];
     
     private String[] plannedSpendings;
     

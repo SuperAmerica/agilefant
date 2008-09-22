@@ -4,6 +4,7 @@
 	<head>
 		<title>Agilefant</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<link rel="shortcut icon" href="static/img/favicon.png" type="image/png" />
 <style type="text/css" media="screen,projection">
 <!--
 @import url(static/css/v5.css); 
@@ -48,7 +49,7 @@
 
        <div id="header">
           <div id="maintitle">
-						<img src="http://www.agilefant.org/homepage/pics/fant_small.png" alt="logo"/>
+						<img src="static/img/fant_small.png" alt="logo"/>
 						<h1>Agilefant</h1>
 						<h2><b><i>WARNING: THE CONTENTS OF THIS DEMO ARE CLEARED EVERY NIGHT AT 00:00! (GMT + 2:00)</i></b></h2>
 					</div>

@@ -6,34 +6,36 @@
 <%@attribute name="subnavi"%>
 <%@attribute type="java.util.Collection" name="pageHierarchy"%>
 
+<c:set var="fileTimestamp" value="build_1561" />
+
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
 <link rel="shortcut icon" href="static/img/favicon.png" type="image/png" />
-<link rel="stylesheet" href="static/css/import.css" type="text/css"/>
-<link rel="stylesheet" href="static/css/v5.css" type="text/css"/>
-<link rel="stylesheet" href="static/css/datepicker.css" type="text/css"/>
+<link rel="stylesheet" href="static/css/import.css?${fileTimestamp}" type="text/css"/>
+<link rel="stylesheet" href="static/css/v5.css?${fileTimestamp}" type="text/css"/>
+<link rel="stylesheet" href="static/css/datepicker.css?${fileTimestamp}" type="text/css"/>
 <title>
 Agilefant
 </title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
-<script type="text/javascript" src="static/js/datacache.js"></script>
-<script type="text/javascript" src="static/js/generic.js"></script>
-<script type="text/javascript" src="static/js/jquery-1.2.6.js"></script>
-<script type="text/javascript" src="static/js/jquery.cookie.js"></script>
-<script type="text/javascript" src="static/js/jquery.treeview.js"></script>
-<script type="text/javascript" src="static/js/jquery.treeview.async.js"></script>
-<script type="text/javascript" src="static/js/jquery-ui.min.js"></script>
-<script type="text/javascript" src="static/js/jquery-ui.tabs.js"></script>
-<script type="text/javascript" src="static/js/jquery.validate.js"></script>
-<script type="text/javascript" src="static/js/multiselect.js"></script>
-<script type="text/javascript" src="static/js/taskrank.js"></script>
-<script type="text/javascript" src="static/js/date.js"></script>
-<script type="text/javascript" src="static/js/datepicker.js"></script>
-<script type="text/javascript" src="static/js/jquery.wysiwyg.js"></script>
-<script type="text/javascript" src="static/js/validationRules.js"></script>
-<script type="text/javascript" src="static/js/inlineEdit.js"></script>
-<script type="text/javascript" src="static/js/userChooser.js"></script>
+<script type="text/javascript" src="static/js/datacache.js?${fileTimestamp}"></script>
+<script type="text/javascript" src="static/js/generic.js?${fileTimestamp}"></script>
+<script type="text/javascript" src="static/js/jquery-1.2.6.js?${fileTimestamp}"></script>
+<script type="text/javascript" src="static/js/jquery.cookie.js?${fileTimestamp}"></script>
+<script type="text/javascript" src="static/js/jquery.treeview.js?${fileTimestamp}"></script>
+<script type="text/javascript" src="static/js/jquery.treeview.async.js?${fileTimestamp}"></script>
+<script type="text/javascript" src="static/js/jquery-ui.min.js?${fileTimestamp}"></script>
+<script type="text/javascript" src="static/js/jquery-ui.tabs.js?${fileTimestamp}"></script>
+<script type="text/javascript" src="static/js/jquery.validate.js?${fileTimestamp}"></script>
+<script type="text/javascript" src="static/js/multiselect.js?${fileTimestamp}"></script>
+<script type="text/javascript" src="static/js/taskrank.js?${fileTimestamp}"></script>
+<script type="text/javascript" src="static/js/date.js?${fileTimestamp}"></script>
+<script type="text/javascript" src="static/js/datepicker.js${fileTimestamp}"></script>
+<script type="text/javascript" src="static/js/jquery.wysiwyg.js${fileTimestamp}"></script>
+<script type="text/javascript" src="static/js/validationRules.js${fileTimestamp}"></script>
+<script type="text/javascript" src="static/js/inlineEdit.js${fileTimestamp}"></script>
+<script type="text/javascript" src="static/js/userChooser.js${fileTimestamp}"></script>
 
 <script type="text/javascript">
 $(document).ready(function() {
@@ -44,7 +46,7 @@ $(document).ready(function() {
 });
 </script>
 
-<script type="text/javascript" src="static/js/onLoad.js"></script>
+<script type="text/javascript" src="static/js/onLoad.js${fileTimestamp}"></script>
 </head>
 
 <!-- Icons from http://sweetie.sublink.ca/ -->

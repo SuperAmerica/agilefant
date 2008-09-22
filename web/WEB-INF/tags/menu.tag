@@ -31,11 +31,11 @@ Agilefant
 <script type="text/javascript" src="static/js/multiselect.js?${fileTimestamp}"></script>
 <script type="text/javascript" src="static/js/taskrank.js?${fileTimestamp}"></script>
 <script type="text/javascript" src="static/js/date.js?${fileTimestamp}"></script>
-<script type="text/javascript" src="static/js/datepicker.js${fileTimestamp}"></script>
-<script type="text/javascript" src="static/js/jquery.wysiwyg.js${fileTimestamp}"></script>
-<script type="text/javascript" src="static/js/validationRules.js${fileTimestamp}"></script>
-<script type="text/javascript" src="static/js/inlineEdit.js${fileTimestamp}"></script>
-<script type="text/javascript" src="static/js/userChooser.js${fileTimestamp}"></script>
+<script type="text/javascript" src="static/js/datepicker.js?${fileTimestamp}"></script>
+<script type="text/javascript" src="static/js/jquery.wysiwyg.js?${fileTimestamp}"></script>
+<script type="text/javascript" src="static/js/validationRules.js?${fileTimestamp}"></script>
+<script type="text/javascript" src="static/js/inlineEdit.js?${fileTimestamp}"></script>
+<script type="text/javascript" src="static/js/userChooser.js?${fileTimestamp}"></script>
 
 <script type="text/javascript">
 $(document).ready(function() {
@@ -46,7 +46,7 @@ $(document).ready(function() {
 });
 </script>
 
-<script type="text/javascript" src="static/js/onLoad.js${fileTimestamp}"></script>
+<script type="text/javascript" src="static/js/onLoad.js?${fileTimestamp}"></script>
 </head>
 
 <!-- Icons from http://sweetie.sublink.ca/ -->

@@ -1,6 +1,8 @@
 The MIT License
 
-Copyright © 2007 Helsinki University of Technology
+Copyright © 2008 Agilefant.org / ATMAN research project / Software Process 
+Research Group / SoberIT / Helsinki University of Technology. See also the 
+full list of contributors at http://spreadsheets.google.com/pub?key=pqI5Z83a0g_nZJ1i9pdWodw
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of 
 this software and associated documentation files (the "Software"), to deal in 
@@ -19,8 +21,3 @@ IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
 DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, 
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE 
 OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-Contributors
-
-Contributors spreadsheet: 
-http://spreadsheets.google.com/ccc?key=pqI5Z83a0g_nZJ1i9pdWodw&hl=en

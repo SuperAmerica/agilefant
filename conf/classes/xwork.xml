@@ -580,6 +580,12 @@
 			<result>/WEB-INF/jsp/dailyWork.jsp</result>
 		</action>
 		<!-- /Daily work -->
+		
+		<!-- Tiny Daily work -->
+		<action name="tinyDailyWork" class="dailyWorkAction">
+			<result>/WEB-INF/jsp/tinyDailyWork.jsp</result>
+		</action>
+		<!-- /Tiny Daily work -->
 
 		<!-- Project portfolio -->
 		<action name="projectPortfolio"

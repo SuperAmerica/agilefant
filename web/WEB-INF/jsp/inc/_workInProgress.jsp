@@ -59,9 +59,10 @@ Backlog items
 			<ww:param name="iterationGoalId" value="${row.iterationGoal.id}" />
 		</ww:url>
 		<div>		
-		<ww:a href="%{editLink}&contextViewName=dailyWork">
+		<!-- <ww:a href="%{editLink}&contextViewName=dailyWork"> -->
 			${aef:html(row.iterationGoal.name)}
-		</ww:a></div>
+		<!-- </ww:a> -->
+		</div>
 	</display:column>
 	
 	<display:column sortable="true" title="Responsibles" class="responsibleColumn">

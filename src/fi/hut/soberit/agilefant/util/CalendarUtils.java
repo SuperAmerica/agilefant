@@ -81,12 +81,13 @@ public class CalendarUtils {
         }
         
         CalendarUtils.setHoursMinutesAndSeconds(calStart, 0, 0, 0);
-        CalendarUtils.setHoursMinutesAndSeconds(calEnd, 23, 59, 59);
+        CalendarUtils.setHoursMinutesAndSeconds(calEnd, 1, 0, 0);
                 
-        double endf = (long)calEnd.getTime().getTime();
-        double startf = (long)calStart.getTime().getTime();
+        long endf = (long)calEnd.getTime().getTime();
+        long startf = (long)calStart.getTime().getTime();
         
-        double diff = (endf - startf) / (24.0 * 3600.0 * 1000.0);
+        long diffL = endf - startf;
+        double diff = (diffL) / (24.0 * 3600.0 * 1000.0);
         double diffD = Math.ceil(diff);
         return (int)diffD;
     }

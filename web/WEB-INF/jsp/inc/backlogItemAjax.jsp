@@ -253,22 +253,6 @@ $(document).ready(function() {
                         listKey="id" listValue="name" value="${goalId}" />
                     <span style="display: none;">(none)</span>
                 </td>
-                    <%--
-				<td colspan="2"><c:choose>
-					<c:when test="${!empty iterationGoals}">
-						<c:set var="goalId" value="0" scope="page" />
-						<c:if test="${iterationGoalId > 0}">
-							<c:set var="goalId" value="${iterationGoalId}" />
-						</c:if>
-						<c:if test="${!empty backlogItem.iterationGoal}">
-							<c:set var="goalId" value="${backlogItem.iterationGoal.id}"
-								scope="page" />
-						</c:if>
-						<ww:select headerKey="0" headerValue="(none)"
-							name="backlogItem.iterationGoal.id" list="#attr.iterationGoals"
-							listKey="id" listValue="name" value="${goalId}" />
-
-				</c:choose></td>--%>
 			</tr>
 			<tr>
 				<td>Priority</td>

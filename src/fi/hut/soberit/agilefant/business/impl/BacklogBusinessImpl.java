@@ -20,6 +20,7 @@ import fi.hut.soberit.agilefant.business.IterationGoalBusiness;
 import fi.hut.soberit.agilefant.db.AssignmentDAO;
 import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
+import fi.hut.soberit.agilefant.db.BusinessThemeDAO;
 import fi.hut.soberit.agilefant.db.IterationGoalDAO;
 import fi.hut.soberit.agilefant.db.ProductDAO;
 import fi.hut.soberit.agilefant.db.UserDAO;
@@ -30,6 +31,7 @@ import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogHistory;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.BacklogThemeBinding;
+import fi.hut.soberit.agilefant.model.BusinessTheme;
 import fi.hut.soberit.agilefant.model.HistoryEntry;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.IterationGoal;
@@ -70,6 +72,8 @@ public class BacklogBusinessImpl implements BacklogBusiness {
     private BusinessThemeBusiness businessThemeBusiness;
 
     private ProductDAO productDAO;
+    
+    private BusinessThemeDAO businessThemeDAO;
 
     /** {@inheritDoc} */
     public Backlog getBacklog(int backlogId) throws ObjectNotFoundException {
@@ -198,6 +202,40 @@ public class BacklogBusinessImpl implements BacklogBusiness {
 
             bli.setResponsibles(users);
         }
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void changeBusinessThemesOfMultipleBacklogItems(
+            int[] backlogItemIds, Set<Integer> businessThemeIds)
+            throws ObjectNotFoundException {
+        
+        // Generate the list of business themes
+        Set<BusinessTheme> themes = new HashSet<BusinessTheme>();
+
+        for (int bid : businessThemeIds) {
+            BusinessTheme theme = businessThemeDAO.get(bid);
+            if (theme == null) {
+                throw new ObjectNotFoundException("Business theme with id: "
+                        + bid + " was not found.");
+            }
+            themes.add(theme);
+        }
+
+
+        // go through all selected BLI's
+        for (int currentBacklogId : backlogItemIds) {
+            BacklogItem currentBacklog = backlogItemDAO.get(currentBacklogId);
+            
+            if (currentBacklog == null) {
+                throw new ObjectNotFoundException("Backlog item with id: "
+                        + currentBacklogId + " was not found.");
+            }
+            
+            currentBacklog.setBusinessThemes(themes);
+        }
+
     }
 
     /**
@@ -861,6 +899,10 @@ public class BacklogBusinessImpl implements BacklogBusiness {
 
     public void setUserDAO(UserDAO userDAO) {
         this.userDAO = userDAO;
+    }
+    
+    public void setBusinessThemeDAO(BusinessThemeDAO businessThemeDAO) {
+        this.businessThemeDAO = businessThemeDAO;
     }
 
     public void setAssignmentDAO(AssignmentDAO assignmentDAO) {

@@ -277,6 +277,33 @@ $(document).ready(function() {
 			</div>
 			</td>
 		</tr>
+		
+				<tr>
+			<td>Themes</td>
+			<td colspan="4">
+			<a href="javascript:toggleDiv('multiplebli_themeselect');">
+				<img src="static/img/theme.png"/>
+				Add
+			</a>
+
+			
+
+			<div id="multiplebli_themeselect" style="display: none;">
+				<display:table class="listTable" name="backlog.businessThemes" id="row">
+					<display:column title="Name">
+						<input type="checkbox" name="businessThemeIds[${row.id}]" />
+						<c:out value="${row.name}" />
+					</display:column>
+					<display:column title="Description">
+						<c:out value="${row.description}" />
+					</display:column>
+				</display:table>
+			</div>
+			</td>
+			
+		</tr>	
+		
+		
 	<tr>
 		<td><ww:submit type="button" label="Save" name="itemAction" value="%{'ChangeSelected'}" /></td>
 		<td>&nbsp;</td>

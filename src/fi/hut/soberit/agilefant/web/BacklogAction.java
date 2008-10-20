@@ -11,6 +11,7 @@ import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
 
 import fi.hut.soberit.agilefant.business.BacklogBusiness;
+import fi.hut.soberit.agilefant.business.BusinessThemeBusiness;
 import fi.hut.soberit.agilefant.business.ProjectBusiness;
 import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
@@ -64,6 +65,9 @@ public class BacklogAction extends ActionSupport {
     private Set<BusinessTheme> themeCache;
     
     private Backlog backlog;
+    
+    private Map<Integer, String> businessThemeIds = new HashMap<Integer, String>();
+
     
 
     /**
@@ -226,6 +230,15 @@ public class BacklogAction extends ActionSupport {
         }
     }
     
+    public void changeThemesOfSelectedItems() {
+        try {
+            backlogBusiness.changeBusinessThemesOfMultipleBacklogItems(backlogItemIds,
+                    businessThemeIds.keySet());
+        } catch (ObjectNotFoundException e) {
+            super.addActionError(super.getText(e.getMessage()));
+        }      
+    }
+    
     /**
      * Deletes multiple selected <code>BacklogItems</code>.
      * 
@@ -277,6 +290,12 @@ public class BacklogAction extends ActionSupport {
             if (keepResponsibles != 1) { 
                 changeResponsiblesOfSelectedItems();
             }
+            
+            if(!(businessThemeIds.isEmpty())) {
+                changeThemesOfSelectedItems();
+            }
+            
+
                                     
             // Move selected items
             moveSelectedItems();
@@ -406,6 +425,14 @@ public class BacklogAction extends ActionSupport {
 
     public void setUserIds(Map<Integer, String> userIds) {
         this.userIds = userIds;
+    }
+    
+    public Map<Integer, String> getBusinessThemeIds() {
+        return businessThemeIds;
+    }
+
+    public void setBusinessThemeIds(Map<Integer, String> businessThemeIds) {
+        this.businessThemeIds = businessThemeIds;
     }
 
     public void setBacklogItemIds(int[] backlogItemIds) {

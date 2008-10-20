@@ -11,6 +11,7 @@ import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.Assignment;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
+import fi.hut.soberit.agilefant.model.BusinessTheme;
 import fi.hut.soberit.agilefant.model.Priority;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.State;
@@ -118,6 +119,15 @@ public interface BacklogBusiness {
     public void moveMultipleBacklogItemsToBacklog(int backlogItemIds[],
             int targetBacklogId) throws ObjectNotFoundException;
 
+ 
+    // TODO: arguments?
+    /** Changes themes for multiple backlog items.
+     * 
+     * @param backlogItemIds selected BLI's
+     * @param businessThemeIds selected themes
+     */
+    public void changeBusinessThemesOfMultipleBacklogItems(int backlogItemIds[], 
+            Set<Integer> businessThemeIds) throws ObjectNotFoundException;
     /**
      * Changes responsibles for multiple backlog items.
      * @param backlogItemIds

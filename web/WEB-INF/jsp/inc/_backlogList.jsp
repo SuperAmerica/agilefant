@@ -20,6 +20,12 @@ function validateDeletion() {
     return confirm("The selected backlog items will be gone forever. Are you sure?");
 }
 
+function selectAllBLIs(val) {
+	var elems = document.getElementsByName("selected");
+	for(var x in elems)
+		elems[x].checked = val;
+}
+
 $(document).ready(function() {        
     <c:forEach items="${openBacklogItemTabs}" var="openBacklogItem">
         handleTabEvent("backlogItemTabContainer-${openBacklogItem[0]}-${bliListContext}", "bli", ${openBacklogItem[0]}, ${openBacklogItem[1]}, '${bliListContext}');
@@ -36,7 +42,7 @@ $(document).ready(function() {
 		requestURI="${currentAction}.action" >
 
 		<!-- Checkboxes for bulk-moving backlog items -->
-		<display:column sortable="false" title="" class="selectColumn">
+		<display:column sortable="false" title="<input type='checkbox' name='selectall' onclick='selectAllBLIs(this.checked)'/>" class="selectColumn">
 			<div><ww:checkbox name="selected" fieldValue="${row.id}" /></div>
 			<div style="height: 15px;"></div>
 			<div id="backlogItemTabContainer-${row.id}-${bliListContext}" class="tabContainer" style="overflow:visible; white-space: nowrap; width: 15px;"></div>

@@ -297,12 +297,30 @@ $(document).ready(function() {
 					Keep original
 				<div id="themeSelectDiv">
 				<ul>
-					<c:forEach items="${backlog.businessThemes}" var="row">
-						<li>
-							<input type="checkbox" name="businessThemeIds[${row.id}]" disabled="true"/>
-							<c:out value="${row.name}" />
-						</li>
-					</c:forEach>
+					<c:if test="${aef:isProduct(backlog)}">
+						<c:forEach items="${backlog.businessThemes}" var="row">
+							<li>
+								<input type="checkbox" name="businessThemeIds[${row.id}]" disabled="true"/>
+								<c:out value="${row.name}" />
+							</li>
+						</c:forEach>
+					</c:if>
+					<c:if test="${aef:isProject(backlog)}">
+						<c:forEach items="${backlog.product.businessThemes}" var="row">
+							<li>
+								<input type="checkbox" name="businessThemeIds[${row.id}]" disabled="true"/>
+								<c:out value="${row.name}" />
+							</li>
+						</c:forEach>
+					</c:if>
+					<c:if test="${aef:isIteration(backlog)}">
+						<c:forEach items="${backlog.project.product.businessThemes}" var="row">
+							<li>
+								<input type="checkbox" name="businessThemeIds[${row.id}]" disabled="true"/>
+								<c:out value="${row.name}" />
+							</li>
+						</c:forEach>
+					</c:if>
 				</ul>
 				</div>
 			</div>

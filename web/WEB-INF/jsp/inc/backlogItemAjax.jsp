@@ -247,10 +247,17 @@ $(document).ready(function() {
                         <c:set var="goalId" value="${backlogItem.iterationGoal.id}"
                             scope="page" />
                     </c:if>
+                    <c:choose>
+                    	<c:when test="${!empty iterationGoals}">
                     <ww:select headerKey="0" headerValue="(none)"
                         id="iterationGoalSelectBLI-${backlogItemId}-${bliListContext}"
-                        name="backlogItem.iterationGoal.id" list="#attr.iterationGoals"
+                        name="backlogItem.iterationGoal.id" list="iterationGoals"
                         listKey="id" listValue="name" value="${goalId}" />
+                     </c:when>
+                     <c:otherwise>
+                     	<select id="iterationGoalSelectBLI-${backlogItemId}-${bliListContext}" name="backlogItem.iterationGoal.id"></select>
+                     </c:otherwise>
+                    </c:choose>
                     <span style="display: none;">(none)</span>
                 </td>
 			</tr>

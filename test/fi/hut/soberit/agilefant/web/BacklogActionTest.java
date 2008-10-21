@@ -244,6 +244,7 @@ public class BacklogActionTest extends TestCase {
         backlogAction.setItemAction("ChangeSelected");
         backlogAction.setUserIds(responsibleIds);
         backlogAction.setKeepResponsibles(0);
+        backlogAction.setKeepThemes(1);
         
         // The test
         expect(backlogDAO.get(255)).andReturn(origBacklog);
@@ -350,6 +351,7 @@ public class BacklogActionTest extends TestCase {
         backlogAction.setTargetIterationGoalId(-1);
         backlogAction.setTargetState(-1);
         backlogAction.setKeepResponsibles(1);
+        backlogAction.setKeepThemes(1);
         
         // The test
         expect(backlogDAO.get(255)).andReturn(origIteration);

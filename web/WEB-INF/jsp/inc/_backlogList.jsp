@@ -26,6 +26,12 @@ function selectAllBLIs(val) {
 		elems[x].checked = val;
 }
 
+function disableThemeSelect(value) {
+	var boxes = document.getElementById('themeSelectDiv').getElementsByTagName('input');
+	for(var x in boxes)
+		boxes[x].disabled = value;
+}
+
 $(document).ready(function() {        
     <c:forEach items="${openBacklogItemTabs}" var="openBacklogItem">
         handleTabEvent("backlogItemTabContainer-${openBacklogItem[0]}-${bliListContext}", "bli", ${openBacklogItem[0]}, ${openBacklogItem[1]}, '${bliListContext}');
@@ -285,19 +291,20 @@ $(document).ready(function() {
 				<img src="static/img/theme.png"/>
 				Add
 			</a>
-
-			
-
 			<div id="multiplebli_themeselect" style="display: none;">
-				<display:table class="listTable" name="backlog.businessThemes" id="row">
-					<display:column title="Name">
-						<input type="checkbox" name="businessThemeIds[${row.id}]" />
-						<c:out value="${row.name}" />
-					</display:column>
-					<display:column title="Description">
-						<c:out value="${row.description}" />
-					</display:column>
-				</display:table>
+				<ww:checkbox name="keepThemes" value="true" title="Keep original"
+					id="keepOriginalThemes" fieldValue="1" onclick="disableThemeSelect(this.checked)"/>
+					Keep original
+				<div id="themeSelectDiv">
+				<ul>
+					<c:forEach items="${backlog.businessThemes}" var="row">
+						<li>
+							<input type="checkbox" name="businessThemeIds[${row.id}]" disabled="true"/>
+							<c:out value="${row.name}" />
+						</li>
+					</c:forEach>
+				</ul>
+				</div>
 			</div>
 			</td>
 			

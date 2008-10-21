@@ -49,6 +49,8 @@ public class BacklogAction extends ActionSupport {
     
     private int keepResponsibles = 0;
     
+    private int keepThemes = 0;
+    
     //Ugly hack, refactor later
     private int iterationGoalId = 0;
     
@@ -291,7 +293,7 @@ public class BacklogAction extends ActionSupport {
                 changeResponsiblesOfSelectedItems();
             }
             
-            if(!(businessThemeIds.isEmpty())) {
+            if(keepThemes != 1) {
                 changeThemesOfSelectedItems();
             }
             
@@ -457,6 +459,20 @@ public class BacklogAction extends ActionSupport {
 
     public Set<BusinessTheme> getThemeCache() {
         return themeCache;
+    }
+
+    /**
+     * @return the keepThemes
+     */
+    public int getKeepThemes() {
+        return keepThemes;
+    }
+
+    /**
+     * @param keepThemes the keepThemes to set
+     */
+    public void setKeepThemes(int keepThemes) {
+        this.keepThemes = keepThemes;
     }
    
 }

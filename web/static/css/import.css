@@ -659,7 +659,7 @@ td.deleteButton {
 
 
 /* Multiuser selection styles */
-.userselect ul, #multiplebli_userselect ul, #userselect ul, .userSelector ul {
+.userselect ul, #multiplebli_userselect ul, #userselect ul, .userSelector ul, #multiplebli_themeselect ul {
 	list-style-type: none;
 	margin-top: 3px;
 	margin-bottom: 3px;

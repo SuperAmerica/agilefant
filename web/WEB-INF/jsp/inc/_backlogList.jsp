@@ -289,7 +289,7 @@ $(document).ready(function() {
 			<td colspan="4">
 			<a href="javascript:toggleDiv('multiplebli_themeselect');">
 				<img src="static/img/theme.png"/>
-				Add
+				Set
 			</a>
 			<div id="multiplebli_themeselect" style="display: none;">
 				<ww:checkbox name="keepThemes" value="true" title="Keep original"
@@ -301,7 +301,7 @@ $(document).ready(function() {
 						<c:forEach items="${backlog.businessThemes}" var="row">
 							<li>
 								<input type="checkbox" name="businessThemeIds[${row.id}]" disabled="true"/>
-								<c:out value="${row.name}" />
+								<c:out value="${row.name} - ${row.description}"/>
 							</li>
 						</c:forEach>
 					</c:if>
@@ -309,7 +309,7 @@ $(document).ready(function() {
 						<c:forEach items="${backlog.product.businessThemes}" var="row">
 							<li>
 								<input type="checkbox" name="businessThemeIds[${row.id}]" disabled="true"/>
-								<c:out value="${row.name}" />
+								<c:out value="${row.name} - ${row.description}"/>
 							</li>
 						</c:forEach>
 					</c:if>
@@ -317,7 +317,7 @@ $(document).ready(function() {
 						<c:forEach items="${backlog.project.product.businessThemes}" var="row">
 							<li>
 								<input type="checkbox" name="businessThemeIds[${row.id}]" disabled="true"/>
-								<c:out value="${row.name}" />
+								<c:out value="${row.name}- ${row.description}" />
 							</li>
 						</c:forEach>
 					</c:if>

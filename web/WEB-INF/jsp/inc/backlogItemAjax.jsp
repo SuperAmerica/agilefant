@@ -640,7 +640,7 @@ $(document).ready(function() {
 			<ww:hidden name="backlogItemId" value="${backlogItem.id}"/>
 
 				<display:table class="listTable" name="backlogItem.product.businessThemes" id="row">
-					<c:if test="${row.active || aef:listContains(backlogItem.businessThemes,row)}">
+					
 						<display:column title="Name">
 							<c:choose>
 								<c:when test="${aef:listContains(backlogItem.businessThemes,row)}">
@@ -655,11 +655,11 @@ $(document).ready(function() {
 									<label for="bliTheme-${row.id}${backlogItemId}-${bliListContext}">${row.name}</label>
 								</c:when>
 								<c:otherwise>
-									<font color="#999999"><label for="bliTheme-${row.id}${backlogItemId}-${bliListContext}">${row.name}</label></font>
+									<label for="bliTheme-${row.id}${backlogItemId}-${bliListContext}">${row.name}</label>
 								</c:otherwise>
 							</c:choose>
 						</display:column>
-					</c:if>
+					
 					<display:column title="Description">
 						<c:out value="${row.description}" />
 					</display:column>

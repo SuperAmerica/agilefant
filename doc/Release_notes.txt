@@ -55,8 +55,9 @@ Timesheets
 CHANGES FROM AGILEFANT 1.5
 ----------------------------
 + Themes can now be attached or removed for multiple BLIs at once.
-+ Bugfix: 404 page after clicking iteration goal name for backlog item in DW page
 + Select all backlog items button added
++ Bugfix: 404 page after clicking iteration goal name for backlog item in DW page
++ Tiny Daily work view added for iFrame usage. See http://your.domain/agilefant/tinyDailyWork.action
 
 CHANGES FROM AGILEFANT 1.4.7
 ----------------------------

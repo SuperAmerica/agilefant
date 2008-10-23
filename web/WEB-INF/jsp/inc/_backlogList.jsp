@@ -66,7 +66,7 @@ $(document).ready(function() {
 				
 		<display:column sortable="true" sortProperty="name" title="Name" class="${nameClass}">												
 			<div id="bli_${row.id}">
-            <c:forEach items="${row.businessThemes}" var="businessTheme">
+            <c:forEach items="${bliThemeCache[row.id]}" var="businessTheme">
             	<a href="#" onclick="handleTabEvent('backlogItemTabContainer-${row.id}-${bliListContext}','bli',${row.id},2, '${bliListContext}'); return false;">
             		<span class="businessTheme" title="${businessTheme.description}"><c:out value="${businessTheme.name}"/></span>
             	</a>

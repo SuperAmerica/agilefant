@@ -76,7 +76,6 @@ public class BusinessThemeDAOHibernate extends GenericDAOHibernate<BusinessTheme
         crit.setFetchMode("responsibles", FetchMode.SELECT);
         crit.setFetchMode("tasks", FetchMode.SELECT);
         crit.add(Restrictions.eq("backlog", backlog));
-        crit.add(Restrictions.eq("themes.active", true));
         crit.addOrder(Order.asc("themes.name"));
         return super.getHibernateTemplate().findByCriteria(crit);
     }

@@ -636,11 +636,11 @@ $(document).ready(function() {
 			</ww:url>
 			<ww:a href="%{createThemeLink}" cssClass="openCreateDialog openThemeDialog"
 				title="Create a new theme" onclick="return false;"> Create new &raquo;</ww:a>
-			<c:if test="${(!empty bliActiveOrSelectedThemes)}">
+			<c:if test="${(!empty backlogItem.product.businessThemes)}">
 
 			<ww:hidden name="backlogItemId" value="${backlogItem.id}"/>
 
-				<display:table class="listTable" name="bliActiveOrSelectedThemes" id="row">
+				<display:table class="listTable" name="backlogItem.product.businessThemes" id="row">
 					
 						<display:column title="Name">
 							<c:choose>

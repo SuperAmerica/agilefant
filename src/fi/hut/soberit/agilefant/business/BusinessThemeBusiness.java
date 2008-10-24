@@ -227,5 +227,4 @@ public interface BusinessThemeBusiness {
      */
     public void loadBacklogThemeMetrics(Backlog backlog);
     
-    public List<BusinessTheme> getBacklogItemActiveOrSelectedThemes(int backlogItemId);
 }

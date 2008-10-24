@@ -99,6 +99,8 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
     
     private String bliListContext;
 
+    private List<BusinessTheme> bliActiveOrSelectedThemes;
+
     public String getBliListContext() {
         return bliListContext;
     }
@@ -186,6 +188,8 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
         possibleResponsibles = backlogItemBusiness.getPossibleResponsibles(backlogItem);
 
         historyBusiness.updateBacklogHistory(backlog.getId());
+
+        bliActiveOrSelectedThemes = businessThemeBusiness.getBacklogItemActiveOrSelectedThemes(backlogItemId);
 
         return Action.SUCCESS;
     }
@@ -728,5 +732,11 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
         this.tasksToDone = tasksToDone;
     }
     
-    
+    public List<BusinessTheme> getBliActiveOrSelectedThemes() {
+        return this.bliActiveOrSelectedThemes;
+    }
+
+    public void setBliActiveOrSelectedThemes(List<BusinessTheme> activeOrSelectedThemes) {
+        this.bliActiveOrSelectedThemes = activeOrSelectedThemes;
+    }
 }

@@ -184,7 +184,7 @@ public class BacklogAction extends ActionSupport {
      * @return <code>Action.ERROR</code> if there was an error, otherwise a
      *         redirect to display current backlog.
      */
-    public void changePriorityOfSelectedItems() {
+    private void changePriorityOfSelectedItems() {
         try {
             backlogBusiness.changePriorityOfMultipleItems(backlogItemIds,
                     Priority.values()[targetPriority]);
@@ -199,7 +199,7 @@ public class BacklogAction extends ActionSupport {
      * @return <code>Action.ERROR</code> if there was an error, otherwise a
      *         redirect to display current backlog.
      */
-    public void changeStateOfSelectedItems() {
+    private void changeStateOfSelectedItems() {
         try {
             backlogBusiness.changeStateOfMultipleItems(backlogItemIds,
                     State.values()[targetState]);
@@ -214,7 +214,7 @@ public class BacklogAction extends ActionSupport {
      * @return <code>Action.ERROR</code> if there was an error, otherwise a
      *         redirect to display current backlog.
      */
-    public void changeIterationGoalOfSelectedItems() {
+    private void changeIterationGoalOfSelectedItems() {
         try {
             backlogBusiness.changeIterationGoalOfMultipleItems(backlogItemIds,
                     targetIterationGoalId);
@@ -223,7 +223,7 @@ public class BacklogAction extends ActionSupport {
         }
     }
 
-    public void changeResponsiblesOfSelectedItems() {
+    private void changeResponsiblesOfSelectedItems() {
         try {
             backlogBusiness.setResponsiblesForMultipleBacklogItems(backlogItemIds,
                     userIds.keySet());
@@ -232,7 +232,7 @@ public class BacklogAction extends ActionSupport {
         }
     }
     
-    public void changeThemesOfSelectedItems() {
+    private void changeThemesOfSelectedItems() {
         try {
             backlogBusiness.changeBusinessThemesOfMultipleBacklogItems(backlogItemIds,
                     businessThemeIds.keySet());
@@ -247,7 +247,7 @@ public class BacklogAction extends ActionSupport {
      * @return <code>Action.ERROR</code> if there was an error, otherwise a
      *         redirect to display current backlog.
      */
-    public void deleteSelectedItems() {
+    private void deleteSelectedItems() {
         try {
             backlogBusiness.deleteMultipleItems(backlogId, backlogItemIds);
         } catch (ObjectNotFoundException e) {

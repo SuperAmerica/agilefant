@@ -12,6 +12,7 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import junit.framework.TestCase;
 import fi.hut.soberit.agilefant.business.impl.BacklogBusinessImpl;
@@ -20,12 +21,14 @@ import fi.hut.soberit.agilefant.db.AssignmentDAO;
 import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.db.BacklogItemHourEntryDAO;
+import fi.hut.soberit.agilefant.db.BusinessThemeDAO;
 import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.Assignment;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
+import fi.hut.soberit.agilefant.model.BusinessTheme;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.IterationGoal;
 import fi.hut.soberit.agilefant.model.Priority;
@@ -52,8 +55,8 @@ public class BacklogBusinessTest extends TestCase {
     private UserDAO userDAO;
     private BacklogItemHourEntryDAO bliheDAO;
     private IterationGoalBusiness iterGoalBusiness;
+    private BusinessThemeDAO businessThemeDAO;
 
-        
     public void testChangePriorityOfMultipleItems() throws Exception {
         bliDAO = createMock(BacklogItemDAO.class);
         backlogBusiness.setBacklogItemDAO(bliDAO);
@@ -69,6 +72,92 @@ public class BacklogBusinessTest extends TestCase {
 
         // verify behavior
         verify(bliDAO);
+    }
+
+    /*
+     * public void changeBusinessThemesOfMultipleBacklogItems(
+            int[] backlogItemIds, Set<Integer> businessThemeIds)
+     */
+    
+    public void testChangeBusinessThemesOfMultipleItems() {
+        bliDAO = createMock(BacklogItemDAO.class);
+        backlogBusiness.setBacklogItemDAO(bliDAO);
+        
+        businessThemeDAO = createMock(BusinessThemeDAO.class);
+        backlogBusiness.setBusinessThemeDAO(businessThemeDAO);
+        
+        BacklogItem bli1 = new BacklogItem(); // id 11
+        BacklogItem bli2 = new BacklogItem(); // id 12
+        BacklogItem bli3 = new BacklogItem(); // id 13
+        ArrayList<BacklogItem> blitems = new ArrayList<BacklogItem>(3);
+        blitems.add(bli1);
+        blitems.add(bli2);
+        blitems.add(bli3);
+        
+        BusinessTheme theme1 = new BusinessTheme(); // id 21
+        BusinessTheme theme2 = new BusinessTheme(); // id 22
+        BusinessTheme theme3 = new BusinessTheme(); // id 23
+        
+        
+        
+     // Record expected behavior
+        expect(bliDAO.get(11)).andReturn(bli1);
+        expect(bliDAO.get(12)).andReturn(bli2);
+        expect(bliDAO.get(13)).andReturn(bli3);
+        expect(bliDAO.get(14)).andReturn(null);
+        replay(bliDAO);
+        
+        expect(businessThemeDAO.get(21)).andReturn(theme1);
+        expect(businessThemeDAO.get(22)).andReturn(theme2);
+        expect(businessThemeDAO.get(23)).andReturn(theme3);
+        expect(businessThemeDAO.get(24)).andReturn(null);
+        replay(businessThemeDAO);
+        
+        
+        // BLI1 original themes
+        ArrayList<BusinessTheme> bli1Themes = new ArrayList<BusinessTheme>();
+        bli1Themes.add(theme1);
+        bli1Themes.add(theme2);
+        bli1Themes.add(theme3);
+        bli1.setBusinessThemes(bli1Themes);
+        
+        //BLI2 original themes
+        ArrayList<BusinessTheme> bli2Themes = new ArrayList<BusinessTheme>();
+        bli2Themes.add(theme2);
+        bli2.setBusinessThemes(bli2Themes);
+
+        // BLI3 original themes
+        ArrayList<BusinessTheme> bli3Themes = new ArrayList<BusinessTheme>();
+        bli3.setBusinessThemes(bli3Themes);
+
+        
+        
+        
+        // backlogItems to change, 14 is non-existing
+        int[] backlogItemIds = {11,14,12,13};
+        // themes to add to BLIs
+        Set<Integer> businessThemeIds = new HashSet<Integer>();
+        businessThemeIds.add(21);
+        businessThemeIds.add(22);
+        businessThemeIds.add(24);
+        // testList
+        ArrayList<BusinessTheme> themes = new ArrayList<BusinessTheme>(3);
+        themes.add(theme1);
+        themes.add(theme2);
+        
+        
+        try {
+            backlogBusiness.changeBusinessThemesOfMultipleBacklogItems(backlogItemIds, businessThemeIds);
+        } catch (ObjectNotFoundException e) {
+            assertEquals("Items with ids: 14 24 were not found.", e.getMessage() );
+        }
+        
+        // test all BLIs contain all themes set
+        for(BacklogItem currentBLI : blitems)
+            for(BusinessTheme currentTheme : themes) {
+                assertTrue(currentBLI.getBusinessThemes().contains(currentTheme));
+            }
+        
     }
 
     public void testCreateBacklogItemToBacklog() {
@@ -109,12 +198,12 @@ public class BacklogBusinessTest extends TestCase {
         backlogDAO = createMock(BacklogDAO.class);
         backlogBusiness.setBacklogDAO(backlogDAO);
         bliDAO = createMock(BacklogItemDAO.class);
-        bliheDAO = createMock( BacklogItemHourEntryDAO.class );
+        bliheDAO = createMock(BacklogItemHourEntryDAO.class);
         backlogBusiness.setBacklogItemDAO(bliDAO);
         historyBusiness = createMock(HistoryBusiness.class);
         backlogBusiness.setHistoryBusiness(historyBusiness);
-        hourEntryBusiness.setBacklogItemHourEntryDAO( bliheDAO );
-        backlogBusiness.setHourEntryBusiness( hourEntryBusiness );
+        hourEntryBusiness.setBacklogItemHourEntryDAO(bliheDAO);
+        backlogBusiness.setHourEntryBusiness(hourEntryBusiness);
 
         Backlog backlog = new Iteration();
         backlog.setId(100);
@@ -299,17 +388,17 @@ public class BacklogBusinessTest extends TestCase {
                 week10));
         assertEquals(4, backlogBusiness.getNumberOfDaysForBacklogOnWeek(iter1,
                 week11));
-        
+
         // Project
         Project proj = new Project();
         proj.setStartDate(new Date(107, GregorianCalendar.DECEMBER, 30));
         proj.setEndDate(new Date(108, GregorianCalendar.JANUARY, 22));
-        
+
         Date week53 = new Date(107, GregorianCalendar.DECEMBER, 31);
         Date week1 = new Date(108, GregorianCalendar.JANUARY, 5);
         Date week2 = new Date(108, GregorianCalendar.JANUARY, 9);
         Date week4 = new Date(108, GregorianCalendar.JANUARY, 21);
-        
+
         // Assertions
         assertEquals(5, backlogBusiness.getNumberOfDaysForBacklogOnWeek(proj,
                 week53));
@@ -319,9 +408,9 @@ public class BacklogBusinessTest extends TestCase {
                 week2));
         assertEquals(2, backlogBusiness.getNumberOfDaysForBacklogOnWeek(proj,
                 week4));
-      
+
     }
-    
+
     /**
      * Test the getNumberOfDaysLeftForBacklogOnWeek method.
      */
@@ -337,36 +426,36 @@ public class BacklogBusinessTest extends TestCase {
         iter1.setEndDate(new Date(103, GregorianCalendar.MARCH, 13));
 
         // Assertions
-        assertEquals(2, backlogBusiness.getNumberOfDaysLeftForBacklogOnWeek(iter1,
-                week9));
-        assertEquals(5, backlogBusiness.getNumberOfDaysLeftForBacklogOnWeek(iter1,
-                week10));
-        assertEquals(4, backlogBusiness.getNumberOfDaysLeftForBacklogOnWeek(iter1,
-                week11));
-        
+        assertEquals(2, backlogBusiness.getNumberOfDaysLeftForBacklogOnWeek(
+                iter1, week9));
+        assertEquals(5, backlogBusiness.getNumberOfDaysLeftForBacklogOnWeek(
+                iter1, week10));
+        assertEquals(4, backlogBusiness.getNumberOfDaysLeftForBacklogOnWeek(
+                iter1, week11));
+
         // Project
         Project proj = new Project();
         proj.setStartDate(new Date(107, GregorianCalendar.DECEMBER, 30));
         proj.setEndDate(new Date(108, GregorianCalendar.JANUARY, 22));
-        
+
         Date week53 = new Date(107, GregorianCalendar.DECEMBER, 31);
         Date week1a = new Date(108, GregorianCalendar.JANUARY, 1);
         Date week1 = new Date(108, GregorianCalendar.JANUARY, 5);
         Date week2 = new Date(108, GregorianCalendar.JANUARY, 9);
         Date week4 = new Date(108, GregorianCalendar.JANUARY, 21);
-        
+
         // Assertions
-        assertEquals(5, backlogBusiness.getNumberOfDaysLeftForBacklogOnWeek(proj,
-                week53));
-        assertEquals(0, backlogBusiness.getNumberOfDaysLeftForBacklogOnWeek(proj,
-                week1));
-        assertEquals(4, backlogBusiness.getNumberOfDaysLeftForBacklogOnWeek(proj,
-                week1a));
-        assertEquals(3, backlogBusiness.getNumberOfDaysLeftForBacklogOnWeek(proj,
-                week2));
-        assertEquals(2, backlogBusiness.getNumberOfDaysLeftForBacklogOnWeek(proj,
-                week4));
-      
+        assertEquals(5, backlogBusiness.getNumberOfDaysLeftForBacklogOnWeek(
+                proj, week53));
+        assertEquals(0, backlogBusiness.getNumberOfDaysLeftForBacklogOnWeek(
+                proj, week1));
+        assertEquals(4, backlogBusiness.getNumberOfDaysLeftForBacklogOnWeek(
+                proj, week1a));
+        assertEquals(3, backlogBusiness.getNumberOfDaysLeftForBacklogOnWeek(
+                proj, week2));
+        assertEquals(2, backlogBusiness.getNumberOfDaysLeftForBacklogOnWeek(
+                proj, week4));
+
     }
 
     /**
@@ -416,18 +505,18 @@ public class BacklogBusinessTest extends TestCase {
         bli3.setOriginalEstimate(new AFTime("150h"));
         bli3.setEffortLeft(new AFTime("44h")); // 2h effort per day
         bli3.setResponsibles(responsibles);
-        
+
         project.setBacklogItems(new HashSet<BacklogItem>());
         project.getBacklogItems().add(bli1);
         project.getBacklogItems().add(bli2);
         project.getBacklogItems().add(bli3);
-        
+
         Assignment ass = new Assignment();
         ass.setId(57);
         ass.setBacklog(project);
         ass.setUser(user);
         ass.setDeltaOverhead(new AFTime("1h"));
-        
+
         Collection<Assignment> asses = new HashSet<Assignment>();
         asses.add(ass);
         project.setAssignments(asses);
@@ -451,31 +540,34 @@ public class BacklogBusinessTest extends TestCase {
                 cal.get(GregorianCalendar.WEEK_OF_YEAR)));
         assertEquals(new AFTime("22h 30min"), data.getEfforts().get(
                 cal.get(GregorianCalendar.WEEK_OF_YEAR) + 3));
-        
+
         // Check the overheads
         assertEquals(new AFTime("48min"), data.getOverheads().get(
                 cal.get(GregorianCalendar.WEEK_OF_YEAR)));
         assertEquals(new AFTime("2h"), data.getOverheads().get(
                 cal.get(GregorianCalendar.WEEK_OF_YEAR) + 2));
-        
+
         // Check the totals
         int week = cal.get(GregorianCalendar.WEEK_OF_YEAR);
         AFTime expect = new AFTime(data.getEfforts().get(week).getTime());
         expect.add(data.getOverheads().get(week));
         assertEquals(expect, data.getWeeklyTotals().get(week));
-                
-        
+
         // Check invalid weeks
-        assertNull(data.getEfforts().get(cal.get(GregorianCalendar.WEEK_OF_YEAR) - 1));
-        assertNull(data.getEfforts().get(cal.get(GregorianCalendar.WEEK_OF_YEAR) + 21));
-        assertNull(data.getOverheads().get(cal.get(GregorianCalendar.WEEK_OF_YEAR) - 50));
-        assertNull(data.getOverheads().get(cal.get(GregorianCalendar.WEEK_OF_YEAR) + 12));
+        assertNull(data.getEfforts().get(
+                cal.get(GregorianCalendar.WEEK_OF_YEAR) - 1));
+        assertNull(data.getEfforts().get(
+                cal.get(GregorianCalendar.WEEK_OF_YEAR) + 21));
+        assertNull(data.getOverheads().get(
+                cal.get(GregorianCalendar.WEEK_OF_YEAR) - 50));
+        assertNull(data.getOverheads().get(
+                cal.get(GregorianCalendar.WEEK_OF_YEAR) + 12));
 
         verify(backlogDAO);
         verify(userDAO);
         verify(bliDAO);
     }
-    
+
     @SuppressWarnings("deprecation")
     public void testGetUserBacklogs() {
         // Create dates
@@ -486,8 +578,7 @@ public class BacklogBusinessTest extends TestCase {
         Date pastEnd = new Date(98, 1, 1);
         Date comingStart = new Date(98, 4, 4);
         Date comingEnd = new Date(98, 5, 4);
-        
-        
+
         // Create test data
         User user = new User();
         user.setId(3);
@@ -496,14 +587,14 @@ public class BacklogBusinessTest extends TestCase {
         assignees.add(user);
         user.setAssignments(new ArrayList<Assignment>());
         user.setBacklogItems(new ArrayList<BacklogItem>());
-        
+
         List<Backlog> projects = new ArrayList<Backlog>();
         List<Iteration> iterations = new ArrayList<Iteration>();
         List<Assignment> assignments = new ArrayList<Assignment>();
-        
+
         int j = 63;
         int k = 123;
-        
+
         for (int i = 0; i < 3; i++) {
             Project proj = new Project();
             proj.setId(i);
@@ -511,7 +602,7 @@ public class BacklogBusinessTest extends TestCase {
             projects.add(proj);
             proj.setStartDate(pastStart);
             proj.setEndDate(comingEnd);
-            
+
             /* Half the projects are assigned */
             if (i < 2) {
                 Assignment ass = new Assignment();
@@ -522,20 +613,20 @@ public class BacklogBusinessTest extends TestCase {
                 user.getAssignments().add(ass);
                 assignments.add(ass);
             }
-            
+
             /* Create past, ongoing and upcoming iterations */
             Iteration iter = new Iteration();
             iter.setId(k++);
             iterations.add(iter);
             iter.setStartDate(currentStart);
             iter.setEndDate(currentEnd);
-            
+
             Iteration iterPast = new Iteration();
             iterPast.setId(k++);
             iterations.add(iterPast);
             iterPast.setStartDate(pastStart);
             iterPast.setEndDate(pastEnd);
-            
+
             Iteration iterNext = new Iteration();
             iterNext.setId(k++);
             iterations.add(iterNext);
@@ -545,30 +636,29 @@ public class BacklogBusinessTest extends TestCase {
 
         // Test the behavior
         List<Backlog> list = backlogBusiness.getUserBacklogs(user, now, 10);
-        
+
         // Projects
         assertTrue(list.contains(projects.get(0)));
         assertTrue(list.contains(projects.get(1)));
         assertFalse(list.contains(projects.get(2)));
     }
-    
+
     public void testIterationGoalsAsJSON_noGoals() {
         iterGoalBusiness = createMock(IterationGoalBusiness.class);
         backlogBusiness.setIterationGoalBusiness(iterGoalBusiness);
-        
+
         /* Create the test data */
         Product prod = new Product();
         prod.setId(6);
 
-        
         /* The verified string */
         String verifiedJson = "[]";
 
         replay(iterGoalBusiness);
-        
+
         String json = backlogBusiness.getIterationGoalsAsJSON(prod);
         assertEquals(verifiedJson, json);
-        
+
         verify(iterGoalBusiness);
     }
 }

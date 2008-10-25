@@ -158,6 +158,11 @@ public class BacklogBusinessTest extends TestCase {
                 assertTrue(currentBLI.getBusinessThemes().contains(currentTheme));
             }
         
+        
+        // test no extra themes are added
+        for(BacklogItem currentBLI : blitems) {
+            assertEquals(currentBLI.getBusinessThemes().size(), 2);
+        }
     }
 
     public void testCreateBacklogItemToBacklog() {

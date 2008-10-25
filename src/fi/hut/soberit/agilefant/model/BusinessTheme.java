@@ -152,4 +152,8 @@ public class BusinessTheme implements Comparable<BusinessTheme> {
     public void setMetrics(BusinessThemeMetrics metrics) {
         this.metrics = metrics;
     }
+    
+    public String toString() {
+        return "" +this.id;
+    }
 }

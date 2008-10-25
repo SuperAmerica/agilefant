@@ -72,7 +72,7 @@ public class BacklogBusinessImpl implements BacklogBusiness {
     private BusinessThemeBusiness businessThemeBusiness;
 
     private ProductDAO productDAO;
-    
+
     private BusinessThemeDAO businessThemeDAO;
 
     /** {@inheritDoc} */
@@ -203,37 +203,50 @@ public class BacklogBusinessImpl implements BacklogBusiness {
             bli.setResponsibles(users);
         }
     }
-    
+
     /**
      * {@inheritDoc}
      */
     public void changeBusinessThemesOfMultipleBacklogItems(
             int[] backlogItemIds, Set<Integer> businessThemeIds)
             throws ObjectNotFoundException {
+
+        ArrayList<Integer> notFoundItems = new ArrayList<Integer>();
         
         // Generate the list of business themes
         Set<BusinessTheme> themes = new HashSet<BusinessTheme>();
 
         for (int bid : businessThemeIds) {
             BusinessTheme theme = businessThemeDAO.get(bid);
-            if (theme == null) {
-                throw new ObjectNotFoundException("Business theme with id: "
-                        + bid + " was not found.");
+            if (theme != null) {
+                themes.add(theme);
+            } else {
+                notFoundItems.add(bid);
             }
-            themes.add(theme);
+            
         }
-
 
         // go through all selected BLI's
         for (int currentBacklogId : backlogItemIds) {
             BacklogItem currentBacklog = backlogItemDAO.get(currentBacklogId);
-            
-            if (currentBacklog == null) {
-                throw new ObjectNotFoundException("Backlog item with id: "
-                        + currentBacklogId + " was not found.");
+
+            if (currentBacklog != null) {
+                currentBacklog.setBusinessThemes(themes);
+            } else {
+                notFoundItems.add(currentBacklogId);
             }
-            
-            currentBacklog.setBusinessThemes(themes);
+        }
+        
+        
+        
+        if (!notFoundItems.isEmpty()) {
+            Collections.sort(notFoundItems);
+            String exceptionMessage = "Items with ids: ";
+                for (Integer notFoundItemId : notFoundItems) {
+                    exceptionMessage += "" + notFoundItemId +" ";
+                }
+            exceptionMessage += "were not found.";
+            throw new ObjectNotFoundException(exceptionMessage);
         }
 
     }
@@ -311,7 +324,7 @@ public class BacklogBusinessImpl implements BacklogBusiness {
         historyBusiness.updateBacklogHistory(targetBacklog.getId());
     }
 
-    /** {@inheritDoc} * */
+    /** {@inheritDoc} */
     public EffortSumData getEffortLeftSum(Collection<BacklogItem> bliList) {
         EffortSumData data = new EffortSumData();
         AFTime hours = new AFTime(0);
@@ -327,7 +340,7 @@ public class BacklogBusinessImpl implements BacklogBusiness {
         return data;
     }
 
-    /** {@inheritDoc} * */
+    /** {@inheritDoc} */
     public EffortSumData getEffortLeftResponsibleDividedSum(
             Collection<BacklogItem> bliList) {
         EffortSumData data = new EffortSumData();
@@ -355,7 +368,7 @@ public class BacklogBusinessImpl implements BacklogBusiness {
         return data;
     }
 
-    /** {@inheritDoc} * */
+    /** {@inheritDoc} */
     public EffortSumData getOriginalEstimateSum(Collection<BacklogItem> bliList) {
         EffortSumData data = new EffortSumData();
         AFTime hours = new AFTime(0);
@@ -900,7 +913,7 @@ public class BacklogBusinessImpl implements BacklogBusiness {
     public void setUserDAO(UserDAO userDAO) {
         this.userDAO = userDAO;
     }
-    
+
     public void setBusinessThemeDAO(BusinessThemeDAO businessThemeDAO) {
         this.businessThemeDAO = businessThemeDAO;
     }

@@ -120,8 +120,9 @@ public interface BacklogBusiness {
             int targetBacklogId) throws ObjectNotFoundException;
 
  
-    // TODO: arguments?
-    /** Changes themes for multiple backlog items.
+
+    /** 
+     * Changes themes for multiple backlog items. OverWrites BLIs current themes. 
      * 
      * @param backlogItemIds selected BLI's
      * @param businessThemeIds selected themes

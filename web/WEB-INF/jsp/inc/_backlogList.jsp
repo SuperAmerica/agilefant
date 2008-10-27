@@ -299,26 +299,32 @@ $(document).ready(function() {
 				<ul>
 					<c:if test="${aef:isProduct(backlog)}">
 						<c:forEach items="${backlog.businessThemes}" var="row">
+							<c:if test="${row.active}" >
 							<li>
 								<input type="checkbox" name="businessThemeIds[${row.id}]" disabled="true"/>
 								<c:out value="${row.name} - ${row.description}"/>
 							</li>
+							</c:if>
 						</c:forEach>
 					</c:if>
 					<c:if test="${aef:isProject(backlog)}">
 						<c:forEach items="${backlog.product.businessThemes}" var="row">
+							<c:if test="${row.active}" >
 							<li>
 								<input type="checkbox" name="businessThemeIds[${row.id}]" disabled="true"/>
 								<c:out value="${row.name} - ${row.description}"/>
 							</li>
+							</c:if>
 						</c:forEach>
 					</c:if>
 					<c:if test="${aef:isIteration(backlog)}">
 						<c:forEach items="${backlog.project.product.businessThemes}" var="row">
+							<c:if test="${row.active}" >
 							<li>
 								<input type="checkbox" name="businessThemeIds[${row.id}]" disabled="true"/>
 								<c:out value="${row.name}- ${row.description}" />
 							</li>
+							</c:if>
 						</c:forEach>
 					</c:if>
 				</ul>

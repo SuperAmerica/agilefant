@@ -636,42 +636,38 @@ $(document).ready(function() {
 			</ww:url>
 			<ww:a href="%{createThemeLink}" cssClass="openCreateDialog openThemeDialog"
 				title="Create a new theme" onclick="return false;"> Create new &raquo;</ww:a>
-			<c:if test="${(!empty backlogItem.product.businessThemes)}">
+			<c:if test="${(!empty bliActiveOrSelectedThemes)}">
 
 			<ww:hidden name="backlogItemId" value="${backlogItem.id}"/>
-				<display:table class="listTable" name="backlogItem.product.businessThemes" id="row">
-					<c:choose>
-						<c:when test="${aef:listContains(backlogItem.businessThemes,row)}">
-							<display:column title="Name">
-								<input type="checkbox" name="businessThemeIds" value="${row.id}" checked="checked" id="bliTheme-${row.id}-${backlogItemId}-${bliListContext}" />
-								<c:choose>
-									<c:when test="${row.active}">
-										<label for="bliTheme-${row.id}${backlogItemId}-${bliListContext}">${row.name}</label>
-									</c:when>
-									<c:otherwise>
-										<span style="color: #999999">
-											<label for="bliTheme-${row.id}${backlogItemId}-${bliListContext}">${row.name}</label>
-										</span>
-									</c:otherwise>
-								</c:choose>
-							</display:column>
-							<display:column title="Description">
-								<c:out value="${row.description}" />
-							</display:column>
-						</c:when>
-						<c:otherwise>
-							<c:if test="${row.active}">
-								<display:column title="Name">
+
+				<display:table class="listTable" name="bliActiveOrSelectedThemes" id="row">
+					
+						<display:column title="Name">
+							<c:choose>
+								<c:when test="${aef:listContains(backlogItem.businessThemes,row)}">
+									<input type="checkbox" name="businessThemeIds" value="${row.id}" checked="checked" id="bliTheme-${row.id}-${backlogItemId}-${bliListContext}" />
+								</c:when>
+								<c:otherwise>
 									<input type="checkbox" name="businessThemeIds" value="${row.id}" id="bliTheme-${row.id}-${backlogItemId}-${bliListContext}" />
+								</c:otherwise>
+							</c:choose>
+							<c:choose>
+								<c:when test="${row.active}">
 									<label for="bliTheme-${row.id}${backlogItemId}-${bliListContext}">${row.name}</label>
-								</display:column>
-								<display:column title="Description">
-									<c:out value="${row.description}" />
-								</display:column>
-							</c:if>
-						</c:otherwise>
-					</c:choose>
-				</display:table>			
+								</c:when>
+								<c:otherwise>
+									<span style="color: #999999">
+										<label for="bliTheme-${row.id}${backlogItemId}-${bliListContext}">${row.name}</label>
+									</span>
+								</c:otherwise>
+							</c:choose>
+						</display:column>					
+					<display:column title="Description">
+						<c:out value="${row.description}" />
+					</display:column>
+				</display:table>
+				
+			
 			</c:if>
         </td>
     </tr>

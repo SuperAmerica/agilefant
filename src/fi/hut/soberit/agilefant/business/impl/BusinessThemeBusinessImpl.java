@@ -93,6 +93,21 @@ public class BusinessThemeBusinessImpl implements BusinessThemeBusiness {
         return activeThemes;
     }
     
+    public List<BusinessTheme> getBacklogItemActiveOrSelectedThemes(int backlogItemId) {
+        BacklogItem bli = backlogItemDAO.get(backlogItemId);
+        if (bli == null) {
+            return new ArrayList<BusinessTheme>();
+        }
+        List<BusinessTheme> activeThemes = new ArrayList<BusinessTheme>();
+        Collection<BusinessTheme> bliThemes = bli.getBusinessThemes();
+        for (BusinessTheme t: bli.getProduct().getBusinessThemes()) {
+            if (t.isActive() || bliThemes.contains(t)) {
+                activeThemes.add(t);
+            }
+        }                        
+        return activeThemes;
+    }
+    
     public Map<Integer, List<BusinessTheme>> loadThemeCacheByBacklogId(int backlogId) {
         Backlog bl = backlogDAO.get(backlogId);
         if(bl == null) {

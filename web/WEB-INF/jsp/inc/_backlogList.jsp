@@ -297,33 +297,52 @@ $(document).ready(function() {
 					Keep original
 				<div id="themeSelectDiv">
 				<ul>
+					<c:set var="isRowOdd" value="true" />
 					<c:if test="${aef:isProduct(backlog)}">
 						<c:forEach items="${backlog.businessThemes}" var="row">
-							<c:if test="${row.active}" >
-							<li>
-								<input type="checkbox" name="businessThemeIds[${row.id}]" disabled="true"/>
-								<c:out value="${row.name} - ${row.description}"/>
-							</li>
+							<c:if test="${row.active}">
+								<c:if test="${isRowOdd}">
+								<li class="odd">
+								</c:if>
+								<c:if test="${!isRowOdd}">
+								<li class="even">
+								</c:if>
+									<input type="checkbox" name="businessThemeIds[${row.id}]" disabled="true"/>
+									<c:out value="${row.name} - ${row.description}"/>
+								</li>
+								<c:set var="isRowOdd" value="${!isRowOdd}" />
 							</c:if>
 						</c:forEach>
 					</c:if>
 					<c:if test="${aef:isProject(backlog)}">
 						<c:forEach items="${backlog.product.businessThemes}" var="row">
-							<c:if test="${row.active}" >
-							<li>
-								<input type="checkbox" name="businessThemeIds[${row.id}]" disabled="true"/>
-								<c:out value="${row.name} - ${row.description}"/>
-							</li>
+							<c:if test="${row.active}">
+								<c:if test="${isRowOdd}">
+								<li class="odd">
+								</c:if>
+								<c:if test="${!isRowOdd}">
+								<li class="even">
+								</c:if>
+									<input type="checkbox" name="businessThemeIds[${row.id}]" disabled="true"/>
+									<c:out value="${row.name} - ${row.description}"/>
+								</li>
+								<c:set var="isRowOdd" value="${!isRowOdd}" />
 							</c:if>
 						</c:forEach>
 					</c:if>
 					<c:if test="${aef:isIteration(backlog)}">
 						<c:forEach items="${backlog.project.product.businessThemes}" var="row">
-							<c:if test="${row.active}" >
-							<li>
-								<input type="checkbox" name="businessThemeIds[${row.id}]" disabled="true"/>
-								<c:out value="${row.name}- ${row.description}" />
-							</li>
+							<c:if test="${row.active}">
+								<c:if test="${isRowOdd}">
+								<li class="odd">
+								</c:if>
+								<c:if test="${!isRowOdd}">
+								<li class="even">
+								</c:if>
+									<input type="checkbox" name="businessThemeIds[${row.id}]" disabled="true"/>
+									<c:out value="${row.name}- ${row.description}" />
+								</li>
+								<c:set var="isRowOdd" value="${!isRowOdd}" />
 							</c:if>
 						</c:forEach>
 					</c:if>

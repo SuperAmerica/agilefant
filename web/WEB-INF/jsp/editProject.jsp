@@ -191,7 +191,7 @@ $(document).ready(function() {
 										                  </tr>
 										                  </c:if>
 										                  <tr>
-											                 <th>Completed</th>
+											                 <th>Done</th>
 											                 <td><c:out value="${projectMetrics.percentDone}" />% (<c:out
 												                    value="${projectMetrics.completedItems}" /> / <c:out
 												                    value="${projectMetrics.totalItems}" />)</td>

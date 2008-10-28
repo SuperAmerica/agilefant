@@ -8,14 +8,19 @@ import java.util.Map;
 import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.db.IterationGoalDAO;
+import fi.hut.soberit.agilefant.db.ProductDAO;
+import fi.hut.soberit.agilefant.db.ProjectDAO;
 import fi.hut.soberit.agilefant.db.TaskDAO;
 import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
+import fi.hut.soberit.agilefant.model.BusinessTheme;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.IterationGoal;
 import fi.hut.soberit.agilefant.model.Priority;
+import fi.hut.soberit.agilefant.model.Product;
+import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.State;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
@@ -35,6 +40,8 @@ public class BacklogItemActionTest extends SpringTestCase {
     private TaskDAO taskDAO = null;
     private IterationGoalDAO iterationGoalDAO = null;
     private UserDAO userDAO = null;
+    private ProjectDAO projectDAO = null;
+    private ProductDAO productDAO = null;
 //    private UserBusiness userBusiness = null;
 
     private int backlogId;
@@ -42,13 +49,31 @@ public class BacklogItemActionTest extends SpringTestCase {
     private int taskId;
     private int goalId;
     private int userId;
+    private int projectId;
+    private int productId;
 
     /**
      * Create test data.
      */
     public void onSetUpInTransaction() throws Exception {
+        //create product and project
+        Product product = new Product();
+        product.setName("Test Product");
+        productId = (Integer) productDAO.create(product);
+        product = productDAO.get(productId);
+        
+        Project project = new Project();
+        project.setName("Test Project");
+        projectId = (Integer) projectDAO.create(project);
+        project = projectDAO.get(projectId);
+        project.setProduct(product);
+        
+        Iteration iteration = new Iteration();
+        iteration.setProject(project);
+        
         // create iteration and bli
-        Backlog backlog = new Iteration();
+        //Backlog backlog = new Iteration();
+        Backlog backlog = iteration;
         backlogId = (Integer) backlogDAO.create(backlog);
         backlog = backlogDAO.get(backlogId);
         BacklogItem bli = new BacklogItem();
@@ -383,5 +408,37 @@ public class BacklogItemActionTest extends SpringTestCase {
 
     public void setUserId(int userId) {
         this.userId = userId;
+    }
+
+    public ProjectDAO getProjectDAO() {
+        return projectDAO;
+    }
+
+    public void setProjectDAO(ProjectDAO projectDAO) {
+        this.projectDAO = projectDAO;
+    }
+
+    public ProductDAO getProductDAO() {
+        return productDAO;
+    }
+
+    public void setProductDAO(ProductDAO productDAO) {
+        this.productDAO = productDAO;
+    }
+
+    public int getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(int projectId) {
+        this.projectId = projectId;
+    }
+
+    public int getProductId() {
+        return productId;
+    }
+
+    public void setProductId(int productId) {
+        this.productId = productId;
     }
 }

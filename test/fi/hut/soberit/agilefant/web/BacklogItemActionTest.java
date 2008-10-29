@@ -2,6 +2,7 @@ package fi.hut.soberit.agilefant.web;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -56,11 +57,16 @@ public class BacklogItemActionTest extends SpringTestCase {
      * Create test data.
      */
     public void onSetUpInTransaction() throws Exception {
+        BusinessTheme theme = new BusinessTheme();
+        theme.setActive(false);
         //create product and project
         Product product = new Product();
         product.setName("Test Product");
         productId = (Integer) productDAO.create(product);
         product = productDAO.get(productId);
+        HashSet<BusinessTheme> themes = new HashSet<BusinessTheme>();
+        themes.add(theme);
+        product.setBusinessThemes(themes);
         
         Project project = new Project();
         project.setName("Test Project");
@@ -89,7 +95,9 @@ public class BacklogItemActionTest extends SpringTestCase {
         bli.setOriginalEstimate(new AFTime("2h 15min"));
         bli.setState(State.BLOCKED);
         bli.setEffortLeft(new AFTime("2h 15min"));
+        bli.setBusinessThemes(themes);
         backlogItemDAO.store(bli);
+        
 
         // set bli tasks
         ArrayList<Task> tasks = new ArrayList<Task>();
@@ -147,6 +155,7 @@ public class BacklogItemActionTest extends SpringTestCase {
                 .getName());
         assertEquals("Test User", action.getBacklogItem().getAssignee()
                 .getLoginName());
+        assertEquals(1, action.getBliActiveOrSelectedThemes().size());
     }
 
     /**

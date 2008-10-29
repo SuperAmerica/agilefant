@@ -51,6 +51,10 @@ Timesheets
   + log spent effort to projects and/or individual backlog items
   + generate reports of spent effort
 
+CHANGES FROM AGILEFANT 1.5.1
+----------------------------
++ Non-active themes no more shown in multiattaching list
++ Unactivated and not-selected themes not shown in BLI's Themes-tab
 
 CHANGES FROM AGILEFANT 1.5
 ----------------------------

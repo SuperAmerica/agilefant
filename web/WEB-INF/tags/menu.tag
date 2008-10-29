@@ -6,8 +6,9 @@
 <%@attribute name="subnavi"%>
 <%@attribute type="java.util.Collection" name="pageHierarchy"%>
 
-<c:set var="fileTimestamp" value="build_1561" />
+<c:set var="fileTimestamp" value="build_1599" />
 
+<%@page import="com.opensymphony.xwork.ActionSupport"%>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
 <link rel="shortcut icon" href="static/img/favicon.png" type="image/png" />

@@ -10,17 +10,15 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import junit.framework.TestCase;
+
 import org.easymock.EasyMock;
 
 import fi.hut.soberit.agilefant.business.impl.BusinessThemeBusinessImpl;
 import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.db.BusinessThemeDAO;
-import fi.hut.soberit.agilefant.db.IterationGoalDAO;
 import fi.hut.soberit.agilefant.db.ProductDAO;
-import fi.hut.soberit.agilefant.db.ProjectDAO;
-import fi.hut.soberit.agilefant.db.TaskDAO;
-import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.Backlog;
@@ -28,15 +26,10 @@ import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.BacklogThemeBinding;
 import fi.hut.soberit.agilefant.model.BusinessTheme;
 import fi.hut.soberit.agilefant.model.Iteration;
-import fi.hut.soberit.agilefant.model.IterationGoal;
 import fi.hut.soberit.agilefant.model.Priority;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.State;
-import fi.hut.soberit.agilefant.model.Task;
-import fi.hut.soberit.agilefant.model.User;
-import fi.hut.soberit.agilefant.util.SpringTestCase;
-import junit.framework.TestCase;
 
 public class BusinessThemeBusinessTest extends TestCase {
 
@@ -404,7 +397,7 @@ public class BusinessThemeBusinessTest extends TestCase {
         bli.setEffortLeft(new AFTime("2h 15min"));
 
 
-        int bliId1 = 100;
+        // int bliId1 = 100;
         
         int prodId = 20;
         Product prod = new Product();

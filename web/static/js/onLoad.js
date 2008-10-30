@@ -24,6 +24,11 @@ function initOnLoad(elem) {
         }
     });
     
+    me.find(':submit[name=SaveClose]').click(function() {
+    	me.data("close","1");
+    	return true;
+    });
+    
     if (elem != document && me.data('aef-tabs') == "1") {
         me.find(':reset[value=Cancel]').click(function() {
             $(this).trigger('reset');
@@ -77,7 +82,8 @@ function addFormValidators(target) {
                 form.validate(rules);
                 if(target.data && target.data("aef-tabs") == "1") {
                 	var mySubm = function() {
-                		ajaxCloseDialog(target.data("aef-context"),target.data("aef-id"));
+                		if(target.data("close") == "1")
+                			ajaxCloseDialog(target.data("aef-context"),target.data("aef-id"));
                 	}; 	
                 	form.submit(mySubm);
                 } 

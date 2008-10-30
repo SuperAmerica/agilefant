@@ -304,7 +304,8 @@ $(document).ready(function() {
 			<tr>
 				<td></td>
 				<td></td>
-				<td><ww:submit value="Save" id="saveButton" /></td>
+				<td><ww:submit value="Save" id="saveButton" />
+				<ww:submit name="SaveClose" value="Save & Close" id="saveClose"  /></td>
 				<td class="deleteButton">
 				<ww:submit value="Delete" action="deleteBacklogItem" />
 				<ww:reset value="Cancel"/>				
@@ -532,6 +533,7 @@ $(document).ready(function() {
 	<tr>
 	<td>
 		<ww:submit value="Save" action="quickStoreTaskList" />
+		<ww:submit value="Save & Close" id="saveCloseTaskList" name="SaveClose" />
 	</td>
 	<td class="deleteButton">
 		<ww:reset value="Cancel" onclick="$('#todoTable-${backlogItemId}-${bliListContext}').resetTableEdit();"/>				
@@ -674,6 +676,7 @@ $(document).ready(function() {
     <tr>
         <td>
             <input type="submit" value="Save" name="Save" />
+            <input type="submit" value="Save & Close" id="SaveCloseThemes" name="SaveClose"/>
         </td>   
         <td class="deleteButton">
             <ww:reset value="Cancel"/>			

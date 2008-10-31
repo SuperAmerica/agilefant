@@ -23,12 +23,7 @@ function initOnLoad(elem) {
             return false;
         }
     });
-    
-    me.find(':submit[name=SaveClose]').click(function() {
-    	me.data("close","1");
-    	return true;
-    });
-    
+
     if (elem != document && me.data('aef-tabs') == "1") {
         me.find(':reset[value=Cancel]').click(function() {
             $(this).trigger('reset');
@@ -44,7 +39,7 @@ function initOnLoad(elem) {
     return false;
 }
 
-function submitDialogForm() {
+function submitDialogForm(evt) {
     var me = $(this);
     if(me.valid()) {
         me.find("input[type=submit]").attr("disabled", "disabled");
@@ -55,7 +50,13 @@ function submitDialogForm() {
                     prev = prev.substr(0, prev.indexOf('#'));
                 }
                 prev = addRandomToURL(prev);
-                var parentId = me.parents('.subItems[id^=subItems_]').attr('id');
+                var parentId = "";
+                if(evt.originalEvent.explicitOriginalTarget.name == "SaveClose") {
+                    parentId = me.parents('.subItems[id^=subItems_]').attr('id');
+                }
+                else {
+                	parentId = me.parents('div.tabContainer:eq(0)').attr('id');
+                }
                 if (parentId == null || parentId == "") {
                     window.location.href = prev;
                 }
@@ -79,16 +80,15 @@ function addFormValidators(target) {
         $.each(classes, function(i) {
             if (validationRulesByHTMLClass[this] != null) {
                 var rules = validationRulesByHTMLClass[this];
-                form.validate(rules);
+                form.validate(rules); 
+                form.submit(submitDialogForm);
                 if(target.data && target.data("aef-tabs") == "1") {
-                	var mySubm = function() {
-                		if(target.data("close") == "1")
+                	var mySubm = function(evt) {
+                		if(evt.originalEvent.explicitOriginalTarget.name == "SaveClose")
                 			ajaxCloseDialog(target.data("aef-context"),target.data("aef-id"));
                 	}; 	
                 	form.submit(mySubm);
-                } 
-                form.submit(submitDialogForm);
-
+                }
                 return false;
             }
         });

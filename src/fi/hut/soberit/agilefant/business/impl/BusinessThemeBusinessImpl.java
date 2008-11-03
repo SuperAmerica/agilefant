@@ -36,6 +36,7 @@ public class BusinessThemeBusinessImpl implements BusinessThemeBusiness {
     private ProductDAO productDAO;
     private BacklogDAO backlogDAO;
     private BacklogItemDAO backlogItemDAO;
+
     private BacklogItemBusiness backlogItemBusiness;
 
     public BusinessTheme getBusinessTheme(int businessThemeId) {
@@ -435,6 +436,37 @@ public class BusinessThemeBusinessImpl implements BusinessThemeBusiness {
         }
         Collection<BusinessTheme> themes = product.getBusinessThemes();
         return new JSONSerializer().serialize(themes);
+    }
+    
+    public String getActiveThemesForBacklogAsJSON(Backlog backlog) {
+        if (backlog == null) {
+            return "[]";
+        }
+        Collection<BusinessTheme> themes;
+        
+        if (backlog instanceof Product) {
+            Product product;
+            product = (Product)backlog;
+            themes = product.getBusinessThemes();
+        }
+        else if (backlog instanceof Project) {
+            Project project = (Project)backlog;
+            themes = project.getProduct().getBusinessThemes(); 
+        }
+        else {
+            Iteration iteration =(Iteration)backlog;
+            themes = iteration.getProject().getProduct().getBusinessThemes();
+        }
+        for (BusinessTheme theme : themes) {
+            if(!(theme.isActive())) {
+                themes.remove(theme);
+            }
+        }
+        return new JSONSerializer().serialize(themes);
+    }
+
+    public String getActiveThemesForBacklogAsJSON(int backlogId) {
+        return getActiveThemesForBacklogAsJSON(backlogDAO.get(backlogId));
     }
     
     public void loadBacklogThemeMetrics(Backlog backlog) {

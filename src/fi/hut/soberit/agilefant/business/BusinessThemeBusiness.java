@@ -217,6 +217,22 @@ public interface BusinessThemeBusiness {
      * @return
      */
     public String getThemesForProductAsJSON(int productId);
+    
+    /**
+     * Product themes to JSON
+     * 
+     * @param backlog
+     * @return
+     */
+    public String getActiveThemesForBacklogAsJSON(Backlog backlog);
+
+    /**
+     * Product themes to JSON
+     * 
+     * @param backlogId
+     * @return
+     */
+    public String getActiveThemesForBacklogAsJSON(int backlogId);
 
     /**
      * Load theme metrics for given backlog. Loads all theme bound to given

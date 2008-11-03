@@ -10,6 +10,7 @@ import com.opensymphony.xwork.ActionSupport;
 
 import fi.hut.soberit.agilefant.business.BusinessThemeBusiness;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
+import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BusinessTheme;
 
 public class BusinessThemeAction extends ActionSupport implements CRUDAction {
@@ -202,6 +203,11 @@ public class BusinessThemeAction extends ActionSupport implements CRUDAction {
     
     public String themesByProduct() {
         jsonData = businessThemeBusiness.getThemesForProductAsJSON(productId);
+        return Action.SUCCESS;
+    }
+    
+    public String activeThemesByBacklog() {
+        jsonData = businessThemeBusiness.getActiveThemesForBacklogAsJSON(backlogId);
         return Action.SUCCESS;
     }
     

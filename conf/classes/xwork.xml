@@ -951,6 +951,11 @@
        		class="businessThemeAction">
        		<result>/WEB-INF/jsp/jsonData.jsp</result>
        	</action>
+       	
+       	<action name="activeThemesByBacklog" method="activeThemesByBacklog"
+       		class="businessThemeAction">
+       		<result>/WEB-INF/jsp/jsonData.jsp</result>
+       	</action>
        		
 		<!-- /Business theme actions -->
 		

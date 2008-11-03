@@ -244,6 +244,37 @@ function getIterationGoals(backlogId, element) {
     });
 }
 
+function getProductActiveThemes(backlogId, element) {
+	var data = jsonDataCache.get("activeThemesByBacklog",{data: { backlogId: backlogId }});
+	var select = $(element);
+	if (data.length > 0) {
+        select.show().empty().val('').next().hide();
+        $('<option/>').attr('value','').attr('class','inactive').text('(none)').appendTo(select);
+        for (var i = 0; i < data.length; i++) {
+            $('<option/>').attr('value',data[i].id).text(data[i].name).appendTo(select);
+        }
+    }
+    else {
+        select.hide().empty().val('').next().show();
+    }
+	
+//    jQuery.getJSON("activeThemesByBacklog.action",
+//        { 'backlogId': backlogId }, function(data, status) {
+//        
+//        
+//        if (data.length > 0) {
+//            select.show().empty().val('').next().hide();
+//            $('<option/>').attr('value','').attr('class','inactive').text('(none)').appendTo(select);
+//            for (var i = 0; i < data.length; i++) {
+//                $('<option/>').attr('value',data[i].id).text(data[i].name).appendTo(select);
+//            }
+//        }
+//        else {
+//            select.hide().empty().val('').next().show();
+//        }
+//    });
+}
+
 function resetBLIOriginalEstimate(bliId, me) {
     if (!confirmReset()) {
         return false;

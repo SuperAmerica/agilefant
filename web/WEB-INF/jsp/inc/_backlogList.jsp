@@ -308,7 +308,10 @@ $(document).ready(function() {
 								<li class="even">
 								</c:if>
 									<input type="checkbox" name="businessThemeIds[${row.id}]" disabled="true"/>
-									<c:out value="${row.name} - ${row.description}"/>
+									<c:out value="${row.name} "/>
+									<c:if test="${fn:length(fn:trim(row.description)) > 0}"> 
+										<c:out value=" - ${row.description}"/>
+									</c:if>
 								</li>
 								<c:set var="isRowOdd" value="${!isRowOdd}" />
 							</c:if>
@@ -324,7 +327,10 @@ $(document).ready(function() {
 								<li class="even">
 								</c:if>
 									<input type="checkbox" name="businessThemeIds[${row.id}]" disabled="true"/>
-									<c:out value="${row.name} - ${row.description}"/>
+									<c:out value="${row.name} "/>
+									<c:if test="${fn:length(fn:trim(row.description)) > 0}"> 
+										<c:out value=" - ${row.description}"/>
+									</c:if>
 								</li>
 								<c:set var="isRowOdd" value="${!isRowOdd}" />
 							</c:if>
@@ -340,7 +346,10 @@ $(document).ready(function() {
 								<li class="even">
 								</c:if>
 									<input type="checkbox" name="businessThemeIds[${row.id}]" disabled="true"/>
-									<c:out value="${row.name}- ${row.description}" />
+									<c:out value="${row.name} "/>
+									<c:if test="${fn:length(fn:trim(row.description)) > 0}"> 
+										<c:out value=" - ${row.description}"/>
+									</c:if>
 								</li>
 								<c:set var="isRowOdd" value="${!isRowOdd}" />
 							</c:if>

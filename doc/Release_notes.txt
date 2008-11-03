@@ -1,6 +1,6 @@
-Agilefant 1.5.2
+Agilefant 1.5.1
 RELEASE NOTES
-29.10.2008
+3.11.2008
 
 INSTALLATION INSTRUCTIONS
 -------------------------

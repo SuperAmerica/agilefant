@@ -84,7 +84,7 @@ function addFormValidators(target) {
                 form.submit(submitDialogForm);
                 if(target.data && target.data("aef-tabs") == "1") {
                 	var mySubm = function(evt) {
-                		if(evt.originalEvent.explicitOriginalTarget.name == "SaveClose")
+                		if(form.valid() && evt.originalEvent.explicitOriginalTarget.name == "SaveClose")
                 			ajaxCloseDialog(target.data("aef-context"),target.data("aef-id"));
                 	}; 	
                 	form.submit(mySubm);

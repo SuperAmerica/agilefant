@@ -109,74 +109,32 @@
             return false;
         },
       
-        
-        getSelected: function() {
-            var list = [];
-            $(this.form).find(':checked').each(function() {
-                list.push(parseInt($(this).val()));
-            });
-            return list;
-        },
-        
-        
-       
+
         selectAction: function() {
             var me = this;
-            var selectedList = this.getSelected();
             var themeListContainer = $(this.options.themeListContainer);
-         
-        
             var selectedThemes = "";
-            
             themeListContainer.empty();
-        
-            alert("selected ids: "+ selectedList);
-            alert("nimi:"+selectedList[0].id);
-            /* Add the hidden inputs to the form */ 
-            //selectedList selected themes id:s
-           
-            $.each(selectedList, function() {
-            alert("jQ:");
-            /* if (jQuery.inArray(parseInt(this), me.data.assignments) == -1) {
-             * 
-           
-                 	alert("1.5");  */
-                 selectedInitials += '<span class="notAssignee">' + me.data.themes[this].initials + '</span>, ';
-                /* }
-                 else {
-                 	alert("1.6");
-                     selectedInitials += '<span class="assigneeTHEMES">' + me.data.users[this].initials + '</span>, ';
-                 }
-            	   alert("2:");*/
+            var selectedThemesNames="";
             
+            $(this.form).find(':checked').each(function() {
+            	var themeId= parseInt($(this).val());
+                var themeName=$(this).attr("name").toString();
+            	selectedThemesNames += '<span class="tassJokuToinenMaaritelma">' + themeName + '</span>, ';
                 var hidden = $('<input type="hidden"/>').appendTo(themeListContainer);
-                if (me.options.legacyMode) {
-                    hidden.attr('name','themeIds[' + this + ']').val(this);
-                    alert("if (me.options.legacyMode)");
-                }
-                else {
-                	 alert("!me.options.legacyMode");
-                    hidden.attr('name','themeIds').val(this);
-                }
+                hidden.attr('name','themeIds[' + this + ']').val(this);
+          
             });
-            
-            alert("list length:"+selectedInitials.length);
-            if (selectedInitials.length > 0) {
-                themeListContainer.append(selectedInitials.substring(0, selectedInitials.length - 2));
+            if (selectedThemesNames != "") {
+                themeListContainer.append(selectedThemesNames.substring(0, selectedThemesNames.length - 2));
             }
             else {
                 themeListContainer.append("(none)");
             }
-            alert("end");
-            this.destroy();
-            return false;
-            
-            this.data.selectedList = this.getSelected();
-            this.cache = this.data;
-            
             this.destroy();
             return false;
         },
+        
         cancelAction: function() {
             this.destroy();
             return false;

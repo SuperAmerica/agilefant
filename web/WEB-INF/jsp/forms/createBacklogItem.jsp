@@ -14,6 +14,16 @@ $(document).ready(function() {
         userListContainer: '#userListContainer-createBLI'
     });
 });
+
+$(document).ready(function() {
+    $('#userChooserLink-createBLI2').themeChooser({
+        backlogItemId: ${backlogItemId},
+        backlogId: ${backlogId},
+        themeListContainer: '#userListContainer-createBLI2'
+    });
+});
+
+
 </script>
 
 <div class="validateWrapper validateNewBacklogItem">
@@ -129,6 +139,21 @@ $(document).ready(function() {
                 <a id="userChooserLink-createBLI" href="#" class="assigneeLink">
                     <img src="static/img/users.png"/>
                     <span id="userListContainer-createBLI">
+                    (none)
+                    </span>
+                </a>
+            </div>
+			</td>
+		</tr>
+		<tr>
+			<td>Themes</td>
+			<td></td>
+			<td colspan="2">
+
+			<div>
+                <a id="userChooserLink-createBLI2" href="#" class="assigneeLink">
+                    <img src="static/img/theme.png"/>
+                    <span id="userListContainer-createBLI2">
                     (none)
                     </span>
                 </a>

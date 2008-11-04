@@ -36,7 +36,7 @@ Agilefant
 <script type="text/javascript" src="static/js/validationRules.js?${fileTimestamp}"></script>
 <script type="text/javascript" src="static/js/inlineEdit.js?${fileTimestamp}"></script>
 <script type="text/javascript" src="static/js/userChooser.js?${fileTimestamp}"></script>
-
+<script type="text/javascript" src="static/js/themeChooser.js?${fileTimestamp}"></script>
 <script type="text/javascript">
 $(document).ready(function() {
     if(document.cookie.indexOf("SPRING_SECURITY_HASHED_REMEMBER_ME_COOKIE") == -1) {

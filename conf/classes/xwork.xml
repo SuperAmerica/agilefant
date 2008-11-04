@@ -165,7 +165,7 @@
 		<!-- BacklogItem actions -->
 		<action name="ajaxCreateBacklogItem" method="create"
             class="backlogItemAction">
-            <result>/WEB-INF/jsp/forms/createBacklogItem.jsp</result>
+            <result name="success" type="dispatcher">/WEB-INF/jsp/forms/createBacklogItem.jsp</result>
         </action>
 		<action name="deleteBacklogItem" method="delete"
 			class="backlogItemAction">

@@ -49,12 +49,12 @@ public class TimesheetBusinessImpl implements TimesheetBusiness {
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         df.setLenient(true);
         try{
-            if(startDateString.isEmpty())
+            if(startDateString == null || startDateString.trim().length() == 0)
                 this.startDate = null;
             else
                 this.startDate = df.parse(startDateString);
             
-            if(endDateString.isEmpty())
+            if(endDateString == null || endDateString.trim().length() == 0)
                 this.endDate = null;
             else
                 this.endDate = df.parse(endDateString);

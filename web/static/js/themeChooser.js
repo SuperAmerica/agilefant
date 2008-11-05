@@ -84,8 +84,9 @@
             
             $(window).scroll(this.options.overlayUpdate);
             this.options.overlayUpdate();
-            
             this.renderButtons();
+            this.selectChoosedThemes();
+            
         },
         renderButtons: function() {
             var me = this;
@@ -108,6 +109,30 @@
             this.dialog.remove();
             return false;
         },
+        
+        
+        selectChoosedThemes: function(){
+        	 var themeListContainer = $(this.options.themeListContainer);
+     
+        	 // getting all hidden field with selected ids
+        	var hiddenInputsWithSelectedThemeIds = themeListContainer.find('input');
+        	var themeIdList=[];
+        	// creating array with theme ids
+        	hiddenInputsWithSelectedThemeIds.each(function() {
+        		themeIdList.push(parseInt($(this).val()));
+            });
+        	// selecting checkboxes in dialog
+        	this.selectCheckboxes(themeIdList);
+        	
+        },
+        
+        selectCheckboxes: function(ids) {
+            $(this.form).find(':checkbox').each(function() {
+                if (jQuery.inArray(parseInt($(this).val()), ids) > -1) {
+                    $(this).attr('checked','checked').change();
+                }
+            });
+        },
       
 
         selectAction: function() {
@@ -120,17 +145,18 @@
             $(this.form).find(':checked').each(function() {
             	var themeId= parseInt($(this).val());
                 var themeName=$(this).attr("name").toString();
-            	selectedThemesNames += '<span class="tassJokuToinenMaaritelma">' + themeName + '</span>, ';
+            	selectedThemesNames += '<span>' + themeName + '</span>, ';
                 var hidden = $('<input type="hidden"/>').appendTo(themeListContainer);
-                hidden.attr('name','themeIds[' + this + ']').val(this);
-          
+                hidden.attr('id','themeIds').val(themeId);
             });
+            
             if (selectedThemesNames != "") {
                 themeListContainer.append(selectedThemesNames.substring(0, selectedThemesNames.length - 2));
             }
             else {
                 themeListContainer.append("(none)");
             }
+            
             this.destroy();
             return false;
         },

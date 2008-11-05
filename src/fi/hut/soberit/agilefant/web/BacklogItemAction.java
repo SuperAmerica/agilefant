@@ -74,7 +74,9 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
     //private Log logger = LogFactory.getLog(getClass());
     
     private Map<Integer, String> userIds = new HashMap<Integer, String>();
-
+    
+    private Map<Integer, String> themeIds = new HashMap<Integer, String>();
+    
     private BacklogBusiness backlogBusiness;
 
     private BacklogItemBusiness backlogItemBusiness;
@@ -737,5 +739,13 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
 
     public void setBliActiveOrSelectedThemes(List<BusinessTheme> activeOrSelectedThemes) {
         this.bliActiveOrSelectedThemes = activeOrSelectedThemes;
+    }
+
+    public void setThemeIds(Map<Integer, String> themeIds) {
+        this.themeIds = themeIds;
+    }
+
+    public Map<Integer, String> getThemeIds() {
+        return themeIds;
     }
 }

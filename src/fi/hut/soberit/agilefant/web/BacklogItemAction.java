@@ -2,6 +2,7 @@ package fi.hut.soberit.agilefant.web;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -36,6 +37,7 @@ import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.State;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.security.SecurityUtil;
 
 public class BacklogItemAction extends ActionSupport implements CRUDAction {
 
@@ -100,6 +102,10 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
     private int businessThemeId;
     
     private String bliListContext;
+    
+    private String createdDate = null;
+    
+    private User creator;
 
     private List<BusinessTheme> bliActiveOrSelectedThemes;
 
@@ -408,6 +414,19 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
             return;
         }
 
+        if(this.backlogItemId == 0) {
+            Calendar date = Calendar.getInstance();            
+            String dateString = "";            
+            dateString += date.get(Calendar.YEAR) + "-";
+            if(date.get(Calendar.MONTH) < 10)
+                dateString += 0;
+            dateString += date.get(Calendar.MONTH) + "-";
+            if(date.get(Calendar.DAY_OF_MONTH) < 10)
+                dateString += 0;
+            dateString += date.get(Calendar.DAY_OF_MONTH);            
+            storable.setCreatedDate(dateString);
+            storable.setCreator(SecurityUtil.getLoggedUser());
+        }
         List<User> responsibles = new ArrayList<User>(userIds.size());
         for(Serializable id : userIds.keySet() ) {
             User user = userDAO.get(id);
@@ -741,6 +760,22 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
         this.bliActiveOrSelectedThemes = activeOrSelectedThemes;
     }
 
+    public String getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(String createdDate) {
+        this.createdDate = createdDate;
+    }
+    
+    public User getCreator() {
+        return creator;
+    }
+
+    public void setCreatorId(User creator) {
+        this.creator = creator;
+    }
+    
     public void setThemeIds(Map<Integer, String> themeIds) {
         this.themeIds = themeIds;
     }

@@ -73,6 +73,8 @@ public class BacklogItem implements PageItem, Assignable, EffortContainer, Times
 
     private Collection<Task> tasks = new HashSet<Task>();
 
+
+
     @Deprecated
     private User assignee;
     
@@ -90,6 +92,25 @@ public class BacklogItem implements PageItem, Assignable, EffortContainer, Times
 
     private AFTime effortSpent;
     
+    private String createdDate;
+    
+    private User creator;
+    
+    public String getCreatedDate() {
+        return this.createdDate;
+    }
+
+    public void setCreatedDate(String createdDate) {
+        this.createdDate = createdDate;
+    }
+    @ManyToOne
+    public User getCreator() {
+        return this.creator;
+    }
+
+    public void setCreator(User creator) {
+        this.creator = creator;
+    }
     /**
      * Returns effort left for this item.
      * 
@@ -460,5 +481,4 @@ public class BacklogItem implements PageItem, Assignable, EffortContainer, Times
     public void setBusinessThemes(Collection<BusinessTheme> businessThemes) {
         this.businessThemes = businessThemes;
     }
-        
 }

@@ -14,7 +14,7 @@
 <c:if test="${hourReport == true}">
 	<li><a href="#backlogItemSpentEffTab-${backlogItemId}-${bliListContext}"><span><img src="static/img/timesheets.png" alt="Spent Effort" /> Spent Effort</span></a></li>
 </c:if>
-	<li><a href="#backlogItemThemesTab-${backlogItemId}-${bliListContext}"><span><img src="static/img/theme.png" alt="Themes" /> Themes</span></a></li>
+	<li><a href="#backlogItemThemesTab-${backlogItemId}-${bliListContext}"><span><img src="static/img/theme.png" alt="Themes" /> ThemesAAAAAAA</span></a></li>
 </ul>
 
 <div id="backlogItemEditTab-${backlogItemId}-${bliListContext}" class="backlogItemNaviTab">
@@ -42,7 +42,7 @@ $(document).ready(function() {
 	
 		<table class="formTable">		
 			<tr>						
-				<td>Name</td>												
+				<td>Name</td>											
 				<td>*</td>
 				<td colspan="2"><ww:textfield size="60" name="backlogItem.name" /></td>
 			</tr>
@@ -301,6 +301,20 @@ $(document).ready(function() {
 				</div>
 				</td>
 			</tr>
+			<c:choose>
+			<c:when test="${backlogItem.creator != null}">
+			<tr>
+				<td>Created by</td>
+				<td></td>
+				<td colspan="2">
+	
+				<div>
+				<c:out value="${backlogItem.creator.initials}" /> at <c:out value="${backlogItem.createdDate}" />
+				</div>
+				</td>
+			</tr>
+			</c:when>
+			</c:choose>
 			<tr>
 				<td></td>
 				<td></td>

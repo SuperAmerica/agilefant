@@ -172,9 +172,9 @@ var productId = ${product.id};
                                 <td class="header">Product roadmap</td>
                                 <td style="width: 100px;">
                                 	<select id="productTimelinePeriod" onchange="updateTimelinePeriod(this);">
-                                		<option value="1" selected="selected">display quartal</option>
+                                		<option value="1">display quartal</option>
                                 		<option value="2">display 6 months</option>
-                                		<option value="3">display one year</option>
+                                		<option value="3" selected="selected">display one year</option>
                                 		<option value="4">display three years</option>
                                 	</select>
                                 </td>

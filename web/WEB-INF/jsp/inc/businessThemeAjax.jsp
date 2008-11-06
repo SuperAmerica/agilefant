@@ -28,7 +28,7 @@
 			<td></td>
 			<td></td>
 			<td><ww:submit value="Save" /></td>
-			<td class="deleteButton"><ww:reset value="Cancel"/></td>
+			<td class="deleteButton"><ww:submit value="Delete" action="deleteBusinessTheme" /><ww:reset value="Cancel"/></td>
 		</tr>
 	</table>
 </ww:form>

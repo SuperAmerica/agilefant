@@ -14,7 +14,7 @@
 <c:if test="${hourReport == true}">
 	<li><a href="#backlogItemSpentEffTab-${backlogItemId}-${bliListContext}"><span><img src="static/img/timesheets.png" alt="Spent Effort" /> Spent Effort</span></a></li>
 </c:if>
-	<li><a href="#backlogItemThemesTab-${backlogItemId}-${bliListContext}"><span><img src="static/img/theme.png" alt="Themes" /> ThemesAAAAAAA</span></a></li>
+	<li><a href="#backlogItemThemesTab-${backlogItemId}-${bliListContext}"><span><img src="static/img/theme.png" alt="Themes" /> Themes</span></a></li>
 </ul>
 
 <div id="backlogItemEditTab-${backlogItemId}-${bliListContext}" class="backlogItemNaviTab">

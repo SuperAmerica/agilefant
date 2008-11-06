@@ -1,6 +1,7 @@
 package fi.hut.soberit.agilefant.web;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -197,6 +198,7 @@ public class BacklogItemActionTest extends SpringTestCase {
         assertEquals(State.IMPLEMENTED, backlogItemDAO.get(bliId).getState());
         assertEquals("1h 15min", backlogItemDAO.get(bliId).getEffortLeft()
                 .toString());
+        assertNull(backlogItemDAO.get(bliId).getCreatedDate());
     }
 
     /**
@@ -300,6 +302,32 @@ public class BacklogItemActionTest extends SpringTestCase {
         assertEquals("error", action.create());
     }
 
+    /**
+     * Test createdDate store
+     */
+    public void testCreatedDate() {
+        assertNull(action.getBacklogItem());
+        action.setBacklogId(backlogId);
+        action.create();
+        assertNotNull(action.getBacklogItem());
+        action.getBacklogItem().setName("Updated");
+        action.getBacklogItem().setDescription("Updated");
+        action.getBacklogItem().setPriority(Priority.CRITICAL);
+        action.getBacklogItem().setOriginalEstimate(new AFTime("1h 15min"));
+        action.getBacklogItem().setState(State.IMPLEMENTED);
+        action.getBacklogItem().setEffortLeft(new AFTime("1h 15min"));
+        assertEquals("ajax_success", action.ajaxStoreBacklogItem());
+        Calendar date = Calendar.getInstance();            
+        String dateString = "";            
+        dateString += date.get(Calendar.YEAR) + "-";
+        if(date.get(Calendar.MONTH) < 10)
+            dateString += 0;
+        dateString += date.get(Calendar.MONTH) + "-";
+        if(date.get(Calendar.DAY_OF_MONTH) < 10)
+            dateString += 0;
+        dateString += date.get(Calendar.DAY_OF_MONTH);
+        assertEquals(dateString,backlogItemDAO.get(action.getBacklogItemId()).getCreatedDate());
+    }
     /**
      * Test quickStoreBacklogItem used by tasklist.tag
      */

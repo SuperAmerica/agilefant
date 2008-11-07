@@ -147,7 +147,7 @@
                 var themeName=$(this).attr("name").toString();
             	selectedThemesNames += '<span>' + themeName + '</span>, ';
                 var hidden = $('<input type="hidden"/>').appendTo(themeListContainer);
-                hidden.attr('id','themeIds').val(themeId);
+                hidden.attr('name','themeIds['+themeId+']').val(themeId);
             });
             
             if (selectedThemesNames != "") {

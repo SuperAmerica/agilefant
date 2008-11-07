@@ -422,6 +422,13 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
             responsibles.add(user);
         }
         storable.setResponsibles(responsibles);
+        int[] themes = new int[themeIds.size()];
+        int index = 0;
+        for(int id : themeIds.keySet() ) {
+           themes[index] = id;
+           index++;
+        }
+        businessThemeBusiness.addMultipleThemesToBacklogItem(themes, storable.getId());
 
         if (this.backlogItem.getIterationGoal() != null) {
             IterationGoal goal = iterationGoalDAO.get(this.backlogItem

@@ -246,16 +246,19 @@ function getIterationGoals(backlogId, element) {
 
 function getProductActiveThemes(backlogId, element) {
 	var data = jsonDataCache.get("activeThemesByBacklog",{data: { backlogId: backlogId }});
-	var select = $(element);
+	var table = $(element);
+	
 	if (data.length > 0) {
-        select.show().empty().val('').next().hide();
-        $('<option/>').attr('value','').attr('class','inactive').text('(none)').appendTo(select);
         for (var i = 0; i < data.length; i++) {
-            $('<option/>').attr('value',data[i].id).text(data[i].name).appendTo(select);
+        	var row = $('<tr/>').appendTo(table);	
+        	var column1 = $('<td/>').appendTo(row);
+        	var column2 = $('<td/>').text(data[i].name).appendTo(row);
+        	var checkbox = $('<input type="checkbox"/>').attr('value',data[i].id).attr('name',data[i].name).appendTo(column1);
         }
     }
     else {
-        select.hide().empty().val('').next().show();
+    	var row = $('<tr/>').appendTo(table);	
+    	var column1 = $('<td/>').text('No themes').appendTo(row);
     }
 	
 //    jQuery.getJSON("activeThemesByBacklog.action",

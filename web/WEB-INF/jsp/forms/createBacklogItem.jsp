@@ -7,6 +7,15 @@
 <aef:productList />
 
 <script type="text/javascript">
+
+$(document).ready(function() {
+    $('#userChooserLink-createBLI2').themeChooser({
+        backlogItemId: ${backlogItemId},
+        backlogId: '#createBLIBacklogId',
+        themeListContainer: '#userListContainer-createBLI2'
+    });
+});
+
 $(document).ready(function() {
     $('#userChooserLink-createBLI').userChooser({
         backlogItemId: ${backlogItemId},
@@ -14,15 +23,6 @@ $(document).ready(function() {
         userListContainer: '#userListContainer-createBLI'
     });
 });
-
-$(document).ready(function() {
-    $('#userChooserLink-createBLI2').themeChooser({
-        backlogItemId: ${backlogItemId},
-        backlogId: ${backlogId},
-        themeListContainer: '#userListContainer-createBLI2'
-    });
-});
-
 
 </script>
 
@@ -70,7 +70,7 @@ $(document).ready(function() {
 			<td></td>
 			<td colspan="2">
 			
-			<select name="backlogId" id="createBLIBacklogId" onchange="getIterationGoals(this.value, '#createBLIIterGoalSelect')">
+			<select name="backlogId" id="createBLIBacklogId" onchange="getIterationGoals(this.value, 'createBLIIterGoalSelect')">
 				<%-- Generate a drop-down list showing all backlogs in a hierarchical manner --%>
 				<option class="inactive" value="">(select backlog)</option>
 				<c:forEach items="${productList}" var="product">

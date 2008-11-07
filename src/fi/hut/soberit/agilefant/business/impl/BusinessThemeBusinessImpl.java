@@ -400,7 +400,7 @@ public class BusinessThemeBusinessImpl implements BusinessThemeBusiness {
         Collection<BusinessTheme> set = new HashSet<BusinessTheme>();
         for(int i = 0 ; i < themeIds.length; i++) {
             BusinessTheme theme = getBusinessTheme(themeIds[i]);
-            if (theme != null) {         
+            if (theme != null) {
                 set.add(theme);
             }
         }

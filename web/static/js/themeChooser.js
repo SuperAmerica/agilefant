@@ -57,7 +57,7 @@
             this.table = $('<table/>').appendTo(this.form);
             
             var dialog = $('<div/>').addClass('themeChooserDialog').append(this.form).appendTo(document.body);
-            getProductActiveThemes(this.options.backlogId, this.table);
+            getProductActiveThemes($(this.options.backlogId).val(), this.table);
            
             
             var windowOptions = {
@@ -84,11 +84,12 @@
             
             $(window).scroll(this.options.overlayUpdate);
             this.options.overlayUpdate();
+        	this.selectChoosedThemes();
             this.renderButtons();
-            this.selectChoosedThemes();
             
         },
         renderButtons: function() {
+        	
             var me = this;
             var lastRow = $('<tr/>').appendTo(this.table);
             var okButtonCol = $('<td colspan="2"/>').appendTo(lastRow);
@@ -123,7 +124,6 @@
             });
         	// selecting checkboxes in dialog
         	this.selectCheckboxes(themeIdList);
-        	
         },
         
         selectCheckboxes: function(ids) {
@@ -147,7 +147,7 @@
                 var themeName=$(this).attr("name").toString();
             	selectedThemesNames += '<span>' + themeName + '</span>, ';
                 var hidden = $('<input type="hidden"/>').appendTo(themeListContainer);
-                hidden.attr('name','themeIds['+themeId+']').val(themeId);
+                hidden.attr('name','themeIds').val(themeId);
             });
             
             if (selectedThemesNames != "") {
@@ -159,6 +159,11 @@
             
             this.destroy();
             return false;
+        },
+        
+        getData: function() {
+        	getProductActiveThemes($(this.options.backlogId).val(), this.table);
+        	this.selectChoosedThemes();
         },
         
         cancelAction: function() {

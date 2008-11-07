@@ -5,8 +5,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 //import org.apache.commons.logging.Log;
 //import org.apache.commons.logging.LogFactory;
@@ -77,7 +79,7 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
     
     private Map<Integer, String> userIds = new HashMap<Integer, String>();
     
-    private Map<Integer, String> themeIds = new HashMap<Integer, String>();
+    private Set<Integer> themeIds = new HashSet<Integer>();
     
     private BacklogBusiness backlogBusiness;
 
@@ -236,6 +238,14 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
         
         // Store backlog item
         this.backlogItemId = (Integer) backlogItemDAO.create(storable);
+        int[] themes = new int[themeIds.size()];
+        int index = 0;
+        for (int i : themeIds) {
+            themes[index] = i;
+            index++;
+        }
+
+        businessThemeBusiness.addMultipleThemesToBacklogItem(themes, this.backlogItemId);
 
         /*
          * This should be handled inside business...
@@ -422,14 +432,8 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
             responsibles.add(user);
         }
         storable.setResponsibles(responsibles);
-        int[] themes = new int[themeIds.size()];
-        int index = 0;
-        for(int id : themeIds.keySet() ) {
-           themes[index] = id;
-           index++;
-        }
-        businessThemeBusiness.addMultipleThemesToBacklogItem(themes, storable.getId());
-
+        
+       
         if (this.backlogItem.getIterationGoal() != null) {
             IterationGoal goal = iterationGoalDAO.get(this.backlogItem
                     .getIterationGoal().getId());
@@ -764,11 +768,11 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
         this.creator = creator;
     }
     
-    public void setThemeIds(Map<Integer, String> themeIds) {
+    public void setThemeIds(Set<Integer> themeIds) {
         this.themeIds = themeIds;
     }
 
-    public Map<Integer, String> getThemeIds() {
+    public Set<Integer> getThemeIds() {
         return themeIds;
     }
 }

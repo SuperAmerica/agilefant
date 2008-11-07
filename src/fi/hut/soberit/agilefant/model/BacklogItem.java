@@ -1,6 +1,7 @@
 package fi.hut.soberit.agilefant.model;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -92,15 +93,15 @@ public class BacklogItem implements PageItem, Assignable, EffortContainer, Times
 
     private AFTime effortSpent;
     
-    private String createdDate;
+    private Calendar createdDate;
     
     private User creator;
     
-    public String getCreatedDate() {
+    public Calendar getCreatedDate() {
         return this.createdDate;
     }
 
-    public void setCreatedDate(String createdDate) {
+    public void setCreatedDate(Calendar createdDate) {
         this.createdDate = createdDate;
     }
     @ManyToOne

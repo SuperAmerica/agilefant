@@ -26,6 +26,7 @@ import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.State;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.security.SecurityUtil;
 import fi.hut.soberit.agilefant.util.SpringTestCase;
 
 /**
@@ -316,18 +317,12 @@ public class BacklogItemActionTest extends SpringTestCase {
         action.getBacklogItem().setOriginalEstimate(new AFTime("1h 15min"));
         action.getBacklogItem().setState(State.IMPLEMENTED);
         action.getBacklogItem().setEffortLeft(new AFTime("1h 15min"));
+        SecurityUtil.setLoggedUser(userDAO.get(this.userId));
         assertEquals("ajax_success", action.ajaxStoreBacklogItem());
-        Calendar date = Calendar.getInstance();            
-        String dateString = "";            
-        dateString += date.get(Calendar.YEAR) + "-";
-        if(date.get(Calendar.MONTH) < 10)
-            dateString += 0;
-        dateString += date.get(Calendar.MONTH) + "-";
-        if(date.get(Calendar.DAY_OF_MONTH) < 10)
-            dateString += 0;
-        dateString += date.get(Calendar.DAY_OF_MONTH);
-        assertEquals(dateString,backlogItemDAO.get(action.getBacklogItemId()).getCreatedDate());
-    }
+        assertEquals(Calendar.getInstance().get(Calendar.YEAR),backlogItemDAO.get(action.getBacklogItemId()).getCreatedDate().get(Calendar.YEAR));
+        assertEquals(Calendar.getInstance().get(Calendar.MONTH),backlogItemDAO.get(action.getBacklogItemId()).getCreatedDate().get(Calendar.MONTH));
+        assertEquals(Calendar.getInstance().get(Calendar.DAY_OF_MONTH),backlogItemDAO.get(action.getBacklogItemId()).getCreatedDate().get(Calendar.DAY_OF_MONTH));
+        }
     /**
      * Test quickStoreBacklogItem used by tasklist.tag
      */

@@ -103,8 +103,6 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
     
     private String bliListContext;
     
-    private String createdDate = null;
-    
     private User creator;
 
     private List<BusinessTheme> bliActiveOrSelectedThemes;
@@ -414,17 +412,8 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
             return;
         }
 
-        if(this.backlogItemId == 0) {
-            Calendar date = Calendar.getInstance();            
-            String dateString = "";            
-            dateString += date.get(Calendar.YEAR) + "-";
-            if(date.get(Calendar.MONTH) < 10)
-                dateString += 0;
-            dateString += date.get(Calendar.MONTH) + "-";
-            if(date.get(Calendar.DAY_OF_MONTH) < 10)
-                dateString += 0;
-            dateString += date.get(Calendar.DAY_OF_MONTH);            
-            storable.setCreatedDate(dateString);
+        if(this.backlogItemId == 0) {            
+            storable.setCreatedDate(Calendar.getInstance());
             storable.setCreator(SecurityUtil.getLoggedUser());
         }
         List<User> responsibles = new ArrayList<User>(userIds.size());
@@ -758,14 +747,6 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
 
     public void setBliActiveOrSelectedThemes(List<BusinessTheme> activeOrSelectedThemes) {
         this.bliActiveOrSelectedThemes = activeOrSelectedThemes;
-    }
-
-    public String getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(String createdDate) {
-        this.createdDate = createdDate;
     }
     
     public User getCreator() {

@@ -3,6 +3,7 @@ package fi.hut.soberit.agilefant.web.function;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -159,5 +160,9 @@ public class AEFFunctions {
     public static String currentTime() {
         DateFormat fmt  = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         return fmt.format(GregorianCalendar.getInstance().getTime());
+    }
+    
+    public static String calendarAsString(Calendar cal) {
+        return String.format("%1$tY-%1$tm-%1$td",cal);
     }
 }

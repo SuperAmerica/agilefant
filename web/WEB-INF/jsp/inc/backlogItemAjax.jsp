@@ -309,7 +309,12 @@ $(document).ready(function() {
 				<td colspan="2">
 	
 				<div>
-				<c:out value="${backlogItem.creator.initials}" /> at <c:out value="${backlogItem.createdDate}" />
+				<c:out value="${backlogItem.creator.initials}" />
+				<c:choose>
+				<c:when test="${backlogItem.createdDate != null}">
+				 at <c:out value="${aef:calendarAsString(backlogItem.createdDate)}"/>
+				</c:when>
+				</c:choose>
 				</div>
 				</td>
 			</tr>

@@ -590,4 +590,10 @@
 	  <function-signature>String currentTime()</function-signature>
 	</function>
 	
+    <function>
+	  <name>calendarAsString</name>
+	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
+	  <function-signature>String calendarAsString(java.util.Calendar)</function-signature>
+	</function>
+	
 </taglib>

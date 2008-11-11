@@ -20,18 +20,10 @@
     var ThemeChooser = function(opt) {
         var me = this;
         var options = {
-            url: "getUserChooserJSON.action",
             legacyMode: true,
             backlogItemId: null,
             backlogId: null,
-            backlogIdField: null,
             themeListContainer: null,
-            selectThese: null,
-            validation: {
-                selectAtLeast: 0,
-                AFTime: false
-            },
-            renderFor: 'backlogItem',
             overlayUpdate: function() {
                 $('.ui-dialog-overlay').css("height",$(document).height()).css("width",$(document).width());
             },
@@ -41,9 +33,6 @@
         
         this.options = options;
         this.data = null;
-        this.cache = null;
-        this.valid = true;
-
     };
     
     ThemeChooser.prototype = {
@@ -58,8 +47,7 @@
             
             var dialog = $('<div/>').addClass('themeChooserDialog').append(this.form).appendTo(document.body);
             getProductActiveThemes($(this.options.backlogId).val(), this.table);
-           
-            
+                    
             var windowOptions = {
                 close: function() {
                     me.destroy();
@@ -80,12 +68,11 @@
             jQuery.extend(windowOptions, opt);
                              
             this.dialog = dialog.dialog(windowOptions);
-            this.dialog.css('height','100%');
-            
+            this.dialog.css('height','100%');  
             $(window).scroll(this.options.overlayUpdate);
             this.options.overlayUpdate();
-        	this.selectChoosedThemes();
             this.renderButtons();
+        	this.selectChoosedThemes();           
             
         },
         renderButtons: function() {
@@ -145,12 +132,14 @@
             $(this.form).find(':checked').each(function() {
             	var themeId= parseInt($(this).val());
                 var themeName=$(this).attr("name").toString();
-            	selectedThemesNames += '<span>' + themeName + '</span>, ';
+            	selectedThemesNames += '<span name="themeNames">' + themeName + '</span>, ';
                 var hidden = $('<input type="hidden"/>').appendTo(themeListContainer);
                 hidden.attr('name','themeIds').val(themeId);
             });
             
             if (selectedThemesNames != "") {
+            	var hidden = $('<input type="hidden"/>').appendTo(themeListContainer);
+                hidden.attr('id','currentBacklog').val($(this.options.backlogId).val());
                 themeListContainer.append(selectedThemesNames.substring(0, selectedThemesNames.length - 2));
             }
             else {
@@ -159,11 +148,6 @@
             
             this.destroy();
             return false;
-        },
-        
-        getData: function() {
-        	getProductActiveThemes($(this.options.backlogId).val(), this.table);
-        	this.selectChoosedThemes();
         },
         
         cancelAction: function() {

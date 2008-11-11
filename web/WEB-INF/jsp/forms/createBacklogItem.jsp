@@ -8,11 +8,15 @@
 
 <script type="text/javascript">
 
+function disableThemes(value) {
+		document.getElementById('themeListContainer-createBLI').innerHTML="(none)";
+}
+
 $(document).ready(function() {
-    $('#userChooserLink-createBLI2').themeChooser({
+    $('#themeChooserLink-createBLI').themeChooser({
         backlogItemId: ${backlogItemId},
         backlogId: '#createBLIBacklogId',
-        themeListContainer: '#userListContainer-createBLI2'
+        themeListContainer: '#themeListContainer-createBLI'
     });
 });
 
@@ -70,7 +74,7 @@ $(document).ready(function() {
 			<td></td>
 			<td colspan="2">
 			
-			<select name="backlogId" id="createBLIBacklogId" onchange="getIterationGoals(this.value, 'createBLIIterGoalSelect')">
+			<select name="backlogId" id="createBLIBacklogId" onchange="getIterationGoals(this.value, 'createBLIIterGoalSelect'); disableThemes(this.value);">
 				<%-- Generate a drop-down list showing all backlogs in a hierarchical manner --%>
 				<option class="inactive" value="">(select backlog)</option>
 				<c:forEach items="${productList}" var="product">
@@ -151,9 +155,9 @@ $(document).ready(function() {
 			<td colspan="2">
 
 			<div>
-                <a id="userChooserLink-createBLI2" href="#" class="assigneeLink">
+                <a id="themeChooserLink-createBLI" href="#" class="assigneeLink">
                     <img src="static/img/theme.png"/>
-                    <span id="userListContainer-createBLI2">
+                    <span id="themeListContainer-createBLI">
                     (none)
                     </span>
                 </a>

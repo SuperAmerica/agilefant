@@ -18,6 +18,7 @@ import fi.hut.soberit.agilefant.business.impl.BusinessThemeBusinessImpl;
 import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.db.BusinessThemeDAO;
+import fi.hut.soberit.agilefant.db.IterationGoalDAO;
 import fi.hut.soberit.agilefant.db.ProductDAO;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.AFTime;
@@ -473,4 +474,20 @@ public class BusinessThemeBusinessTest extends TestCase {
 
     }
      */
+    
+//    public void getActiveThemesForBacklogAsJSON_noThemes() {
+//        productDAO = createMock(IterationGoalDAO.class);
+//        iterationGoalBusiness.setIterationGoalDAO(iterationGoalDAO);
+//        
+//        expect(iterationGoalDAO.get(123)).andReturn(null);
+//        replay(iterationGoalDAO);
+//        try {
+//            iterationGoalBusiness.iterationGoalToJSON(123);
+//            fail();
+//        }
+//        catch (ObjectNotFoundException onfe) {
+//        }
+//        
+//        verify(iterationGoalDAO);
+//    }
 }

@@ -244,10 +244,6 @@ function getIterationGoals(backlogId, element) {
     });
 }
 
-function resetThemeList(oldBacklogId, newBacklogId, element) {
-	
-}
-
 function getProductActiveThemes(backlogId, element) {
 	// Cannot use dataCache because backlog can be changed
 	//var data = jsonDataCache.get("activeThemesByBacklog",{data: { backlogId: backlogId }});
@@ -256,8 +252,10 @@ function getProductActiveThemes(backlogId, element) {
 		var table = $(element);
 		
 		if (data.length > 0) {
+			var headerRow = $('<tr/>').appendTo(table);
+            headerRow.append('<th class="userColumn" colspan="2">Active themes</th>');
 	        for (var i = 0; i < data.length; i++) {
-	        	var row = $('<tr/>').appendTo(table);	
+	        	var row = $('<tr/>').appendTo(table);
 	        	var column1 = $('<td/>').appendTo(row);
 	        	if( data[i].description.length > 0 ) {
 	        		var column2 = $('<td/>').text(data[i].name + ' - ' + data[i].description).appendTo(row);

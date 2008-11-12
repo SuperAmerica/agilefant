@@ -44,10 +44,13 @@
             var me = this;
             this.form = $('<form/>');
             this.table = $('<table/>').appendTo(this.form);
+//            var headerRow = $('<tr/>').appendTo(this.table);
+//            headerRow.append('<th class="userColumn" colspan="2">Active themes</th>');
+            this.buttonsTable = $('<table class="buttonsTable"/>').appendTo(this.form);
             
             var dialog = $('<div/>').addClass('themeChooserDialog').append(this.form).appendTo(document.body);
             getProductActiveThemes($(this.options.backlogId).val(), this.table);
-                    
+            this.lastRow = $('<tr/>').appendTo(this.buttonsTable);
             var windowOptions = {
                 close: function() {
                     me.destroy();
@@ -78,9 +81,8 @@
         renderButtons: function() {
         	
             var me = this;
-            var lastRow = $('<tr/>').appendTo(this.table);
-            var okButtonCol = $('<td colspan="2"/>').appendTo(lastRow);
-            var cancelButtonCol = $('<td class="deleteButton"/>').appendTo(lastRow);
+            var okButtonCol = $('<td colspan="2"/>').appendTo(this.lastRow);
+            var cancelButtonCol = $('<td class="deleteButton"/>').appendTo(this.lastRow);
             
             var okButton = $('<input type="submit" />').val('Select').appendTo(okButtonCol);
             var cancelButton = $('<input type="reset" />').val('Cancel').appendTo(cancelButtonCol);
@@ -97,7 +99,6 @@
             this.dialog.remove();
             return false;
         },
-        
         
         selectChoosedThemes: function(){
         	 var themeListContainer = $(this.options.themeListContainer);

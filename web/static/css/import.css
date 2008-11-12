@@ -1188,3 +1188,7 @@ select.statusSelect option {
 	margin: 7px 0 0 5px;
 }
 
+.buttonsTable {
+	width: 95%;
+}
+

@@ -322,6 +322,7 @@ public class BacklogItemActionTest extends SpringTestCase {
         assertEquals(Calendar.getInstance().get(Calendar.YEAR),backlogItemDAO.get(action.getBacklogItemId()).getCreatedDate().get(Calendar.YEAR));
         assertEquals(Calendar.getInstance().get(Calendar.MONTH),backlogItemDAO.get(action.getBacklogItemId()).getCreatedDate().get(Calendar.MONTH));
         assertEquals(Calendar.getInstance().get(Calendar.DAY_OF_MONTH),backlogItemDAO.get(action.getBacklogItemId()).getCreatedDate().get(Calendar.DAY_OF_MONTH));
+        assertEquals(this.userId, backlogItemDAO.get(action.getBacklogItemId()).getCreator().getId());
         }
     /**
      * Test quickStoreBacklogItem used by tasklist.tag

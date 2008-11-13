@@ -55,6 +55,25 @@ $(document).ready(function() {
 					name="backlogItem.description" value="${aef:nl2br(backlogItem.description)}" /></td>
 			</tr>
 			<c:choose>
+			<c:when test="${backlogItem.creator != null}">
+			<tr>
+				<td>Created by</td>
+				<td></td>
+				<td colspan="2">
+	
+				<div>
+				<c:out value="${backlogItem.creator.initials}" />
+				<c:choose>
+				<c:when test="${backlogItem.createdDate != null}">
+				 at <c:out value="${aef:calendarAsString(backlogItem.createdDate)}"/>
+				</c:when>
+				</c:choose>
+				</div>
+				</td>
+			</tr>
+			</c:when>
+			</c:choose>
+			<c:choose>
 				<c:when test="${backlogItem.originalEstimate == null}">
 					<tr>
 						<td>Original estimate</td>
@@ -301,25 +320,6 @@ $(document).ready(function() {
 				</div>
 				</td>
 			</tr>
-			<c:choose>
-			<c:when test="${backlogItem.creator != null}">
-			<tr>
-				<td>Created by</td>
-				<td></td>
-				<td colspan="2">
-	
-				<div>
-				<c:out value="${backlogItem.creator.initials}" />
-				<c:choose>
-				<c:when test="${backlogItem.createdDate != null}">
-				 at <c:out value="${aef:calendarAsString(backlogItem.createdDate)}"/>
-				</c:when>
-				</c:choose>
-				</div>
-				</td>
-			</tr>
-			</c:when>
-			</c:choose>
 			<tr>
 				<td></td>
 				<td></td>

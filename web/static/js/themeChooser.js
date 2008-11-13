@@ -1,4 +1,3 @@
-
 (function($) {
     /**
      * The user chooser. Uses jQuery ui dialog to show the user chooser
@@ -43,14 +42,17 @@
         
             var me = this;
             this.form = $('<form/>');
+           
             this.table = $('<table/>').appendTo(this.form);
-//            var headerRow = $('<tr/>').appendTo(this.table);
-//            headerRow.append('<th class="userColumn" colspan="2">Active themes</th>');
+
             this.buttonsTable = $('<table class="buttonsTable"/>').appendTo(this.form);
-            
+     
             var dialog = $('<div/>').addClass('themeChooserDialog').append(this.form).appendTo(document.body);
-            getProductActiveThemes($(this.options.backlogId).val(), this.table);
+            getProductActiveThemes($(this.options.backlogId).val(), this.table,this.choosedThemes());
             this.lastRow = $('<tr/>').appendTo(this.buttonsTable);
+  
+        	
+            this.renderButtons();      	
             var windowOptions = {
                 close: function() {
                     me.destroy();
@@ -69,15 +71,18 @@
                 }
             }
             jQuery.extend(windowOptions, opt);
-                             
+                     
             this.dialog = dialog.dialog(windowOptions);
             this.dialog.css('height','100%');  
             $(window).scroll(this.options.overlayUpdate);
             this.options.overlayUpdate();
-            this.renderButtons();
-        	this.selectChoosedThemes();           
+            
+           
             
         },
+        
+        
+        
         renderButtons: function() {
         	
             var me = this;
@@ -100,27 +105,26 @@
             return false;
         },
         
-        selectChoosedThemes: function(){
-        	 var themeListContainer = $(this.options.themeListContainer);
-     
-        	 // getting all hidden field with selected ids
-        	var hiddenInputsWithSelectedThemeIds = themeListContainer.find('input');
-        	var themeIdList=[];
-        	// creating array with theme ids
-        	hiddenInputsWithSelectedThemeIds.each(function() {
-        		themeIdList.push(parseInt($(this).val()));
-            });
-        	// selecting checkboxes in dialog
-        	this.selectCheckboxes(themeIdList);
-        },
         
-        selectCheckboxes: function(ids) {
-            $(this.form).find(':checkbox').each(function() {
-                if (jQuery.inArray(parseInt($(this).val()), ids) > -1) {
-                    $(this).attr('checked','checked').change();
-                }
-            });
-        },
+        choosedThemes: function(){
+       	 var themeListContainer = $(this.options.themeListContainer);
+    
+       	 // getting all hidden field with selected ids
+       	var hiddenInputsWithSelectedThemeIds = themeListContainer.find('input');
+       
+       	var themeIdList=[];
+       	// creating array with theme ids
+       	hiddenInputsWithSelectedThemeIds.each(function() {
+       		if($(this).attr('id')=="themeIds")
+       		themeIdList.push(parseInt($(this).val()));
+           });
+       	// selecting checkboxes in dialog
+       	return themeIdList;
+       },
+        
+       
+        
+       
       
 
         selectAction: function() {
@@ -135,7 +139,7 @@
                 var themeName=$(this).attr("name").toString();
             	selectedThemesNames += '<span name="themeNames">' + themeName + '</span>, ';
                 var hidden = $('<input type="hidden"/>').appendTo(themeListContainer);
-                hidden.attr('name','themeIds').val(themeId);
+                hidden.attr('name','themeIds').attr('id','themeIds').val(themeId);
             });
             
             if (selectedThemesNames != "") {
@@ -163,7 +167,6 @@
          */
         themeChooser: function(opt) {
             var uc = new ThemeChooser(opt);
-            //uc.originalData = $(this).html();
             $(this).data('tc',uc);
             $(this).click(function() { uc.init(); return false; })
             return this;

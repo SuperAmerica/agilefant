@@ -227,6 +227,9 @@ function disableElementIfValue(me, handle, ref) {
 }
 
 function getIterationGoals(backlogId, element) {
+	
+	
+        
     jQuery.getJSON("ajaxGetIterationGoals.action",
         { 'iterationId': backlogId }, function(data, status) {
         var select = $(element);
@@ -244,9 +247,8 @@ function getIterationGoals(backlogId, element) {
     });
 }
 
-function getProductActiveThemes(backlogId, element) {
-	// Cannot use dataCache because backlog can be changed
-	//var data = jsonDataCache.get("activeThemesByBacklog",{data: { backlogId: backlogId }});
+function getProductActiveThemes(backlogId, element,ids) {
+	
 	jQuery.getJSON("activeThemesByBacklog.action",
 	    { 'backlogId': backlogId }, function(data, status) {
 		var table = $(element);
@@ -263,6 +265,9 @@ function getProductActiveThemes(backlogId, element) {
 	        		var column2 = $('<td/>').text(data[i].name).appendTo(row);
 	        	}
 	        	var checkbox = $('<input type="checkbox"/>').attr('value',data[i].id).attr('name',data[i].name).appendTo(column1);
+	        	 if (jQuery.inArray(parseInt(data[i].id), ids) > -1) {
+	        		 checkbox.attr('checked','checked');
+	               }
 	        }
 	    }
 	    else {

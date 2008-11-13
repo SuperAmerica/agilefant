@@ -86,6 +86,10 @@ public class UserAction extends ActionSupport implements CRUDAction {
             super.addActionError(super.getText("user.hasLinkedItems"));
             return Action.ERROR;
         }
+        if(userBusiness.hasUserCreatedItems(u)) {
+            super.addActionError(super.getText("user.hasCreatedItems"));
+            return Action.ERROR;
+        }
         /* 
          * User may have linked job reports. This creates a tricky situation 
          * if user has hour reports but hour reporting is currently turned off and

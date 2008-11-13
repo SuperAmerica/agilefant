@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Set;
 
 import fi.hut.soberit.agilefant.business.UserBusiness;
+import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.db.IterationDAO;
 import fi.hut.soberit.agilefant.db.ProjectDAO;
 import fi.hut.soberit.agilefant.db.UserDAO;
@@ -34,7 +35,19 @@ public class UserBusinessImpl implements UserBusiness {
     private UserDAO userDAO;
     private ProjectDAO projectDAO;
     private IterationDAO iterationDAO;
+    private BacklogItemDAO backlogItemDAO;
 
+    /** {@inheritDoc} */
+    public boolean hasUserCreatedItems(User user) {
+        //this might be slow
+        for(BacklogItem bli : backlogItemDAO.getAll()) {
+            if(bli.getCreator() != null && bli.getCreator().getId() == user.getId()) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
     /** {@inheritDoc} * */
     public List<BacklogItem> getBacklogItemsInProgress(User user) {
         if (user == null) {
@@ -228,5 +241,13 @@ public class UserBusinessImpl implements UserBusiness {
         if (user != null) {
             user.setEnabled(false);
         }
+    }
+
+    public BacklogItemDAO getBacklogItemDAO() {
+        return backlogItemDAO;
+    }
+
+    public void setBacklogItemDAO(BacklogItemDAO backlogItemDAO) {
+        this.backlogItemDAO = backlogItemDAO;
     }
 }

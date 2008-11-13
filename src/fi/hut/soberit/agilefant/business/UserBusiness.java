@@ -16,6 +16,14 @@ import fi.hut.soberit.agilefant.model.User;
 public interface UserBusiness {
 
     /**
+     * Check if user is creator of any backlog item.
+     * 
+     * @param user 
+     * @return true is user has created backlog items, false otherwise.
+     */
+    public boolean hasUserCreatedItems(User user);
+    
+    /**
      * Get backlog items for the user in progress.
      * 
      * @param user

@@ -1,6 +1,6 @@
 Agilefant 1.5.2
 RELEASE NOTES
-29.10.2008
+14.11.2008
 
 INSTALLATION INSTRUCTIONS
 -------------------------
@@ -51,6 +51,14 @@ Timesheets
   + log spent effort to projects and/or individual backlog items
   + generate reports of spent effort
 
+CHANGES FROM AGILEFANT 1.5.1
+----------------------------
++Tag themes while creating a backlog item
++Save & Close -buttons to BLIs
++Created date to BLI
++Creator info to BLI
++Roadmap default timescale to 1 year
++Delete button to edit theme tab
 
 CHANGES FROM AGILEFANT 1.5
 ----------------------------

@@ -6,7 +6,7 @@
 <%@attribute name="subnavi"%>
 <%@attribute type="java.util.Collection" name="pageHierarchy"%>
 
-<c:set var="fileTimestamp" value="build_1599" />
+<c:set var="fileTimestamp" value="build_1640" />
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>

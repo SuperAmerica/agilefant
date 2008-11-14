@@ -457,12 +457,13 @@ public class BusinessThemeBusinessImpl implements BusinessThemeBusiness {
             Iteration iteration =(Iteration)backlog;
             themes = iteration.getProject().getProduct().getBusinessThemes();
         }
+        Collection<BusinessTheme> returnThemes = new ArrayList<BusinessTheme>();
         for (BusinessTheme theme : themes) {
-            if(!(theme.isActive())) {
-                themes.remove(theme);
+            if(theme.isActive()) {
+                returnThemes.add(theme);
             }
         }
-        return new JSONSerializer().serialize(themes);
+        return new JSONSerializer().serialize(returnThemes);
     }
 
     public String getActiveThemesForBacklogAsJSON(int backlogId) {

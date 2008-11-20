@@ -110,7 +110,7 @@
 		<!-- Project type actions -->
 		<action name="listProjectTypes" method="getAll"
             class="projectTypeAction">
-            <result>/WEB-INF/jsp/administration/listProjectTypes.jsp</result>
+            <result>/WEB-INF/jsp/listProjectTypes.jsp</result>
         </action>
 		<action name="ajaxCreateProjectType" method="create"
             class="projectTypeAction">

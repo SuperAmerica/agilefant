@@ -21,18 +21,6 @@
             <ww:param name="resetContextView" value="true" />
         </ww:url>
         
-        "text": '<a href="${editLink}&amp;contextName=projectTypes">Project types</a>',
-        "hasChildren": false,
-        
-        <c:if test="${subnavi == 'projectTypes'}">
-        "classes": "selected path",
-        </c:if>
-    },
-    {
-        <ww:url id="editLink" action="contextView" includeParams="none">
-            <ww:param name="resetContextView" value="true" />
-        </ww:url>
-        
         "text": '<a href="${editLink}&amp;contextName=teams">Teams</a>',
         "hasChildren": false,
         
@@ -76,6 +64,16 @@
         "hasChildren": false,
         
         <c:if test="${subnavi == 'globalThemes'}">
+        "classes": "selected path",
+        </c:if>
+    },
+    {
+        <ww:url id="editLink" action="listProjectTypes" includeParams="none"></ww:url>
+        
+        "text": '<a href="${editLink}">Project types</a>',
+        "hasChildren": false,
+        
+        <c:if test="${subnavi == 'projectTypes'}">
         "classes": "selected path",
         </c:if>
     }

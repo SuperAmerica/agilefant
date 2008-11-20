@@ -1,6 +1,6 @@
-<%@ include file="../inc/_taglibs.jsp"%>
-<%@ include file="../inc/_header.jsp"%>
-<aef:menu navi="administration" subnavi="projectTypes" title="Project Types"/>
+<%@ include file="inc/_taglibs.jsp"%>
+<%@ include file="inc/_header.jsp"%>
+<aef:menu navi="portfolio" subnavi="projectTypes" title="Project Types"/>
 <aef:openDialogs context="projectType" id="openProjectTypeTabs" />
 
 <script type="text/javascript">
@@ -54,4 +54,4 @@ $(document).ready(function() {
 </div>
 </div>
 
-<%@ include file="../inc/_footer.jsp"%>
+<%@ include file="inc/_footer.jsp"%>

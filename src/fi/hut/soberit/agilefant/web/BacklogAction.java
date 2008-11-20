@@ -1,6 +1,7 @@
 package fi.hut.soberit.agilefant.web;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -67,7 +68,7 @@ public class BacklogAction extends ActionSupport {
     
     private Backlog backlog;
     
-    private Map<Integer, String> businessThemeIds = new HashMap<Integer, String>();
+    private Set<Integer> themeIds = new HashSet<Integer>();
 
     
 
@@ -234,7 +235,7 @@ public class BacklogAction extends ActionSupport {
     private void changeThemesOfSelectedItems() {
         try {
             backlogBusiness.changeBusinessThemesOfMultipleBacklogItems(backlogItemIds,
-                    businessThemeIds.keySet());
+                    themeIds);
         } catch (ObjectNotFoundException e) {
             super.addActionError(super.getText(e.getMessage()));
         }      
@@ -428,14 +429,6 @@ public class BacklogAction extends ActionSupport {
         this.userIds = userIds;
     }
     
-    public Map<Integer, String> getBusinessThemeIds() {
-        return businessThemeIds;
-    }
-
-    public void setBusinessThemeIds(Map<Integer, String> businessThemeIds) {
-        this.businessThemeIds = businessThemeIds;
-    }
-
     public void setBacklogItemIds(int[] backlogItemIds) {
         this.backlogItemIds = backlogItemIds;
     }
@@ -473,5 +466,15 @@ public class BacklogAction extends ActionSupport {
     public void setKeepThemes(int keepThemes) {
         this.keepThemes = keepThemes;
     }
+
+    public Set<Integer> getThemeIds() {
+        return themeIds;
+    }
+
+    public void setThemeIds(Set<Integer> themeIds) {
+        this.themeIds = themeIds;
+    }
+    
+    
    
 }

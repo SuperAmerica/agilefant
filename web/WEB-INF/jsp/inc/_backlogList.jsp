@@ -38,6 +38,21 @@ $(document).ready(function() {
     </c:forEach>
 });
 
+$(document).ready(function() {
+    $('#themeChooserLink-multipleSelect').themeChooser({
+        backlogId: 'select[name=targetBacklog]',
+        themeListContainer: '#themeListContainer-multipleSelect'
+    });
+});
+
+$(document).ready(function() {
+    $('#userChooserLink-multipleSelect').userChooser({
+        backlogIdField: 'select[name=targetBacklog]',
+        userListContainer: '#userListContainer-multipleSelect',
+        backlogItemId: 0
+    });
+});
+
 </script>
 <ww:form action="doActionOnMultipleBacklogItems">
 
@@ -197,13 +212,13 @@ $(document).ready(function() {
 	<table class="formTable">
 	<tr>
 		<td>State</td>
-		<td><ww:select name="targetState"
+		<td colspan="2"><ww:select name="targetState"
 			list="#@java.util.LinkedHashMap@{'-1':'Keep original', '0':'Not started', '1':'Started', '2':'Pending', '3':'Blocked', '4':'Implemented', '5':'Done' }" />
 		</td>
 	</tr>
 	<tr>
 		<td>Move to</td>
-		<td class="targetBacklogDropdownColumn">
+		<td class="targetBacklogDropdownColumn" colspan="2">
 			<aef:backlogDropdown selectName="targetBacklog"
 				preselectedBacklogId="${backlog.id}" backlogs="${productList}" />
 		</td>
@@ -211,7 +226,7 @@ $(document).ready(function() {
 	<tr>
 		<c:if test="${aef:isIteration(backlog)}">
 		<td>Iteration goal</td>
-		<td class="targetBacklogDropdownColumn">
+		<td class="targetBacklogDropdownColumn" colspan="2">
 			<select name="targetIterationGoalId">
 				<option value="-1">Keep original</option>
 				<option value="-2">(none)</option>
@@ -224,150 +239,61 @@ $(document).ready(function() {
 	</tr>
 	<tr>
 		<td>Priority</td>
-		<td class="targetPriorityDropdown">
+		<td class="targetPriorityDropdown" colspan="2">
 			<ww:select name="targetPriority"
 				list="#@java.util.LinkedHashMap@{'-1':'Keep original', '5':'undefined', '4':'+++++', '3':'++++', '2':'+++', '1':'++', '0':'+'}" />
 		</td>
 	</tr>
 	<tr>
-			<td>Responsibles</td>
-			<aef:userList />
-			<aef:teamList />
-			<aef:enabledUserList />
-			<td colspan="4">
-			<a href="javascript:toggleDiv('multiplebli_userselect');">
-				<img src="static/img/users.png"/>
-				Assign
-			</a>
-			<script type="text/javascript">
-			$(document).ready( function() {
-				<ww:set name="userList" value="#attr.userList" />
-				<ww:set name="enabledUserList" value="#attr.enabledUserList" />
-				<ww:set name="teamList" value="#attr.teamList" />
-				<c:choose>
-				<c:when test="${aef:isProduct(backlog)}">
-				var others = [<aef:userJson items="${enabledUserList}"/>];
-				var preferred = [];
-				</c:when>
-				<c:when test="${aef:isProject(backlog)}">
-				var others = [<aef:userJson items="${aef:listSubstract(enabledUserList, backlog.responsibles)}"/>];
-				var preferred = [<aef:userJson items="${backlog.responsibles}"/>];
-				</c:when>
-				<c:when test="${aef:isIteration(backlog)}">
-				var others = [<aef:userJson items="${aef:listSubstract(enabledUserList, backlog.project.responsibles)}"/>];
-				var preferred = [<aef:userJson items="${backlog.project.responsibles}"/>];
-				</c:when>
-				</c:choose>
-				
-				var teams = [<aef:teamJson items="${teamList}"/>];
-				var selected = [];
-				$('#multiplebli_userselect').multiuserselect({users: [preferred,others], groups: teams, root: $('#multiplebli_userselect')}).selectusers(selected);
-				
-				$('#multiplebli_userselect').toggle_disabled(true);
-				$('#keepOriginalResponsibles').bind("change", function() {
-					$('#multiplebli_userselect').toggle_disabled($(this).attr('checked') == true);
-				});
-			});
-			</script>
-			
-			<div id="multiplebli_userselect" style="display: none;">
-				<ww:checkbox name="keepResponsibles" value="true" title="Keep original"
-					id="keepOriginalResponsibles" fieldValue="1"/>
-					Keep original
-					
-				<div class="left">
-				<c:if test="${!aef:isProduct(backlog)}">
-					<label>Users assigned to this project</label>
-						<ul class="users_0"></ul>
-					<label>Users not assigned this project</label>
-				</c:if>
-						<ul class="users_1"></ul>
-				</div>
-				<div class="right">
-					<label>Teams</label>
-					<ul class="groups" />
-				</div>
-			</div>
-			</td>
-		</tr>
-		
-				<tr>
-			<td>Themes</td>
-			<td colspan="4">
-			<a href="javascript:toggleDiv('multiplebli_themeselect');">
-				<img src="static/img/theme.png"/>
-				Set
-			</a>
-			<div id="multiplebli_themeselect" style="display: none;">
-				<ww:checkbox name="keepThemes" value="true" title="Keep original"
-					id="keepOriginalThemes" fieldValue="1" onclick="disableThemeSelect(this.checked)"/>
-					Keep original
-				<div id="themeSelectDiv">
-				<ul>
-					<c:set var="isRowOdd" value="true" />
-					<c:if test="${aef:isProduct(backlog)}">
-						<c:forEach items="${backlog.businessThemes}" var="row">
-							<c:if test="${row.active}">
-								<c:if test="${isRowOdd}">
-								<li class="odd">
-								</c:if>
-								<c:if test="${!isRowOdd}">
-								<li class="even">
-								</c:if>
-									<input type="checkbox" name="businessThemeIds[${row.id}]" disabled="true"/>
-									<c:out value="${row.name} "/>
-									<c:if test="${fn:length(fn:trim(row.description)) > 0}"> 
-										<c:out value=" - ${row.description}"/>
-									</c:if>
-								</li>
-								<c:set var="isRowOdd" value="${!isRowOdd}" />
-							</c:if>
-						</c:forEach>
-					</c:if>
-					<c:if test="${aef:isProject(backlog)}">
-						<c:forEach items="${backlog.product.businessThemes}" var="row">
-							<c:if test="${row.active}">
-								<c:if test="${isRowOdd}">
-								<li class="odd">
-								</c:if>
-								<c:if test="${!isRowOdd}">
-								<li class="even">
-								</c:if>
-									<input type="checkbox" name="businessThemeIds[${row.id}]" disabled="true"/>
-									<c:out value="${row.name} "/>
-									<c:if test="${fn:length(fn:trim(row.description)) > 0}"> 
-										<c:out value=" - ${row.description}"/>
-									</c:if>
-								</li>
-								<c:set var="isRowOdd" value="${!isRowOdd}" />
-							</c:if>
-						</c:forEach>
-					</c:if>
-					<c:if test="${aef:isIteration(backlog)}">
-						<c:forEach items="${backlog.project.product.businessThemes}" var="row">
-							<c:if test="${row.active}">
-								<c:if test="${isRowOdd}">
-								<li class="odd">
-								</c:if>
-								<c:if test="${!isRowOdd}">
-								<li class="even">
-								</c:if>
-									<input type="checkbox" name="businessThemeIds[${row.id}]" disabled="true"/>
-									<c:out value="${row.name} "/>
-									<c:if test="${fn:length(fn:trim(row.description)) > 0}"> 
-										<c:out value=" - ${row.description}"/>
-									</c:if>
-								</li>
-								<c:set var="isRowOdd" value="${!isRowOdd}" />
-							</c:if>
-						</c:forEach>
-					</c:if>
-				</ul>
-				</div>
-			</div>
-			</td>
-			
-		</tr>	
+	       <td></td>
+	       <td colspan="2">Keep original</td>
+	</tr>
+	<tr>
+            <td>Responsibles</td>
+            <td style="width: 30px;">
+            <input type="checkbox" value="1" checked="checked" name="keepResponsibles"
+                onchange="$('.toggleUserChooserLink').toggle();" />
+            </td>
+            <td>
+            <div class="toggleUserChooserLink">
+                <img src="static/img/users.png"/>
+                <span>
+                Keep original
+                </span>
+            </div>
+            <div class="toggleUserChooserLink" style="display: none;">
+                <a id="userChooserLink-multipleSelect" href="#" class="assigneeLink">
+                    <img src="static/img/users.png"/>
+                    <span id="userListContainer-multipleSelect">
+                    (none)
+                    </span>
+                </a>
+            </div>
+            </td>
+        </tr>
+        <tr>
+            <td>Themes</td>
+            <td>
+            <input type="checkbox" value="1" checked="checked" name="keepThemes"
+                onchange="$('.toggleThemeChooserLink').toggle()" />
+            </td>
+            <td>
+            <div class="toggleThemeChooserLink">
+                    <img src="static/img/theme.png"/>
+                    <span>
+                    Keep original
+                    </span>
+            </div>
+            <div class="toggleThemeChooserLink" style="display: none;">
+                <a id="themeChooserLink-multipleSelect" href="#" class="assigneeLink">
+                    <img src="static/img/theme.png"/>
+                    <span id="themeListContainer-multipleSelect">
+                    (none)
+                    </span>
+                </a>
+            </div>
+            </td>
+        </tr>	
 		
 		
 	<tr>

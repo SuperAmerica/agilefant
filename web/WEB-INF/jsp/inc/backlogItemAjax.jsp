@@ -67,10 +67,10 @@ $(document).ready(function() {
 				<td colspan="2">
 	
 				<div>
-				<c:out value="${backlogItem.creator.initials}" />
+				<c:out value="${backlogItem.creator.fullName}" />
 				<c:choose>
 				<c:when test="${backlogItem.createdDate != null}">
-				 at <c:out value="${aef:calendarAsString(backlogItem.createdDate)}"/>
+				 on <c:out value="${aef:calendarAsString(backlogItem.createdDate)}"/>
 				</c:when>
 				</c:choose>
 				</div>

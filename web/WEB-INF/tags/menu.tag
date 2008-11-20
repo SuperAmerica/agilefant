@@ -7,14 +7,12 @@
 <%@attribute type="java.util.Collection" name="pageHierarchy"%>
 <%@attribute name="title"%>
 
-<c:set var="fileTimestamp" value="build_1640" />
-
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
 <link rel="shortcut icon" href="static/img/favicon.png" type="image/png" />
-<link rel="stylesheet" href="static/css/import.css?${fileTimestamp}" type="text/css"/>
-<link rel="stylesheet" href="static/css/v5.css?${fileTimestamp}" type="text/css"/>
-<link rel="stylesheet" href="static/css/datepicker.css?${fileTimestamp}" type="text/css"/>
+<link rel="stylesheet" href="static/css/import.css?<ww:text name="webwork.agilefantReleaseId" />" type="text/css"/>
+<link rel="stylesheet" href="static/css/v5.css?<ww:text name="webwork.agilefantReleaseId" />" type="text/css"/>
+<link rel="stylesheet" href="static/css/datepicker.css?<ww:text name="webwork.agilefantReleaseId" />" type="text/css"/>
 <title>
 <c:choose>
 	<c:when test="${title != null}">Agilefant - <c:out value="${title}"/></c:when>
@@ -23,24 +21,24 @@
 </title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
-<script type="text/javascript" src="static/js/datacache.js?${fileTimestamp}"></script>
-<script type="text/javascript" src="static/js/generic.js?${fileTimestamp}"></script>
-<script type="text/javascript" src="static/js/jquery-1.2.6.js?${fileTimestamp}"></script>
-<script type="text/javascript" src="static/js/jquery.cookie.js?${fileTimestamp}"></script>
-<script type="text/javascript" src="static/js/jquery.treeview.js?${fileTimestamp}"></script>
-<script type="text/javascript" src="static/js/jquery.treeview.async.js?${fileTimestamp}"></script>
-<script type="text/javascript" src="static/js/jquery-ui.min.js?${fileTimestamp}"></script>
-<script type="text/javascript" src="static/js/jquery-ui.tabs.js?${fileTimestamp}"></script>
-<script type="text/javascript" src="static/js/jquery.validate.js?${fileTimestamp}"></script>
-<script type="text/javascript" src="static/js/multiselect.js?${fileTimestamp}"></script>
-<script type="text/javascript" src="static/js/taskrank.js?${fileTimestamp}"></script>
-<script type="text/javascript" src="static/js/date.js?${fileTimestamp}"></script>
-<script type="text/javascript" src="static/js/datepicker.js?${fileTimestamp}"></script>
-<script type="text/javascript" src="static/js/jquery.wysiwyg.js?${fileTimestamp}"></script>
-<script type="text/javascript" src="static/js/validationRules.js?${fileTimestamp}"></script>
-<script type="text/javascript" src="static/js/inlineEdit.js?${fileTimestamp}"></script>
-<script type="text/javascript" src="static/js/userChooser.js?${fileTimestamp}"></script>
-<script type="text/javascript" src="static/js/themeChooser.js?${fileTimestamp}"></script>
+<script type="text/javascript" src="static/js/datacache.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/generic.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/jquery-1.2.6.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/jquery.cookie.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/jquery.treeview.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/jquery.treeview.async.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/jquery-ui.min.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/jquery-ui.tabs.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/jquery.validate.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/multiselect.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/taskrank.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/date.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/datepicker.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/jquery.wysiwyg.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/validationRules.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/inlineEdit.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/userChooser.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/themeChooser.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
 <script type="text/javascript">
 $(document).ready(function() {
     if(document.cookie.indexOf("SPRING_SECURITY_HASHED_REMEMBER_ME_COOKIE") == -1) {
@@ -54,7 +52,7 @@ $(document).ready(function() {
 });
 </script>
 
-<script type="text/javascript" src="static/js/onLoad.js?${fileTimestamp}"></script>
+<script type="text/javascript" src="static/js/onLoad.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
 </head>
 
 <!-- Icons from http://sweetie.sublink.ca/ -->

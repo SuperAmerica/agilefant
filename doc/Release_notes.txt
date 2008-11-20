@@ -1,6 +1,6 @@
-Agilefant 1.5.2
+Agilefant 1.5.3
 RELEASE NOTES
-14.11.2008
+20.11.2008
 
 INSTALLATION INSTRUCTIONS
 -------------------------
@@ -51,14 +51,22 @@ Timesheets
   + log spent effort to projects and/or individual backlog items
   + generate reports of spent effort
 
+CHANGES FROM AGILEFANT 1.5.2
+----------------------------
++ Global themes added to dev portfolio
++ Project types moved to dev portfolio
++ Quick finding Agilefant objects by a reference id
++ Lots of bugfixes
++ Page titles made more descriptive 
+
 CHANGES FROM AGILEFANT 1.5.1
 ----------------------------
-+Tag themes while creating a backlog item
-+Save & Close -buttons to BLIs
-+Created date to BLI
-+Creator info to BLI
-+Roadmap default timescale to 1 year
-+Delete button to edit theme tab
++ Tag themes while creating a backlog item
++ Save & Close -buttons to BLIs
++ Created date to BLI
++ Creator info to BLI
++ Roadmap default timescale to 1 year
++ Delete button to edit theme tab
 
 CHANGES FROM AGILEFANT 1.5
 ----------------------------

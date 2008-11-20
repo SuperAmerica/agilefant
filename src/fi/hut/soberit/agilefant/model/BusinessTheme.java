@@ -49,6 +49,8 @@ public class BusinessTheme implements Comparable<BusinessTheme> {
     
     private boolean active;
     
+    private boolean global;
+    
     private Collection<BacklogItem> backlogItems;
     
     private Collection<BacklogThemeBinding> backlogBindings;
@@ -133,6 +135,17 @@ public class BusinessTheme implements Comparable<BusinessTheme> {
     public void setActive(boolean active) {
         this.active = active;
     }
+    
+    @Column(columnDefinition = "boolean default 0")
+    @JSON
+    public boolean isGlobal() {
+        return global;
+    }
+
+    public void setGlobal(boolean global) {
+        this.global = global;
+    }
+    
    @OneToMany(mappedBy="businessTheme")
    @JSON(include = false)
     public Collection<BacklogThemeBinding> getBacklogBindings() {

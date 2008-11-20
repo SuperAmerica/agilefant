@@ -8,32 +8,6 @@
 
 <script type="text/javascript">
 
-function disableThemes(value) {
-		var newB = 0;
-		var oldB = 0;
-		var current = document.getElementById('currentBacklog').value;
-		<c:forEach items="${productList}" var="product">
-			if (${product.id} == current)
-				oldB = ${product.id};
-			if(${product.id} == value)
-				newB = ${product.id};
-			<c:forEach items="${product.projects}" var="project">
-				if (${project.id} == current)
-					oldB = ${project.product.id};
-				if(${project.id} == value)
-					newB = ${project.product.id};
-				<c:forEach items="${project.iterations}" var="iteration">
-					if (${iteration.id} == current)
-						oldB = ${iteration.project.product.id};
-					if(${iteration.id} == value)
-						newB = ${iteration.project.product.id};
-				</c:forEach>
-			</c:forEach>
-		</c:forEach>
-		if(!(newB == oldB))
-			document.getElementById('themeListContainer-createBLI').innerHTML="(none)";
-}
-
 $(document).ready(function() {
     $('#themeChooserLink-createBLI').themeChooser({
         backlogItemId: ${backlogItemId},
@@ -96,7 +70,7 @@ $(document).ready(function() {
 			<td></td>
 			<td colspan="2">
 			
-			<select name="backlogId" id="createBLIBacklogId" onchange="getIterationGoals(this.value, 'createBLIIterGoalSelect'); disableThemes(this.value);">
+			<select name="backlogId" id="createBLIBacklogId" onchange="getIterationGoals(this.value, 'createBLIIterGoalSelect'); removeThemes('#themeListContainer-createBLI');">
 				<%-- Generate a drop-down list showing all backlogs in a hierarchical manner --%>
 				<option class="inactive" value="">(select backlog)</option>
 				<c:forEach items="${productList}" var="product">

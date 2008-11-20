@@ -268,35 +268,6 @@ function handleQuickRef(form) {
 	return true;
 }
 
-function getProductActiveThemes(backlogId, element,ids) {
-	
-	jQuery.getJSON("activeThemesByBacklog.action",
-	    { 'backlogId': backlogId }, function(data, status) {
-		var table = $(element);
-		
-		if (data.length > 0) {
-			var headerRow = $('<tr/>').appendTo(table);
-            headerRow.append('<th class="userColumn" colspan="2">Active themes</th>');
-	        for (var i = 0; i < data.length; i++) {
-	        	var row = $('<tr/>').appendTo(table);
-	        	var column1 = $('<td/>').appendTo(row);
-	        	if( data[i].description.length > 0 ) {
-	        		var column2 = $('<td/>').text(data[i].name + ' - ' + data[i].description).appendTo(row);
-	        	} else {
-	        		var column2 = $('<td/>').text(data[i].name).appendTo(row);
-	        	}
-	        	var checkbox = $('<input type="checkbox"/>').attr('value',data[i].id).attr('name',data[i].name).appendTo(column1);
-	        	 if (jQuery.inArray(parseInt(data[i].id), ids) > -1) {
-	        		 checkbox.attr('checked','checked');
-	               }
-	        }
-	    }
-	    else {
-	    	var row = $('<tr/>').appendTo(table);	
-	    	var column1 = $('<td/>').text('No active themes found in this backlog.').appendTo(row);
-	    }
-	});
-}
 
 function resetBLIOriginalEstimate(bliId, me) {
     if (!confirmReset()) {
@@ -326,4 +297,8 @@ function setThemeActivityStatus(themeId,status) {
     $.post(url,{businessThemeId: themeId},function(data,status) {
         reloadPage();
     });
+}
+
+function removeThemes(container) {
+    $(container).empty().text('(none)');
 }

@@ -69,7 +69,7 @@ $(document).ready(function() {
             <c:forEach items="${bliThemeCache[row.id]}" var="businessTheme">
             	<a href="#" onclick="handleTabEvent('backlogItemTabContainer-${row.id}-${bliListContext}','bli',${row.id},2, '${bliListContext}'); return false;">
             	   <c:choose>
-            	       <c:when test="${businessTheme.product == null}">
+            	       <c:when test="${businessTheme.global}">
             	           <span class="businessTheme globalThemeColors" title="${businessTheme.description}"><c:out value="${businessTheme.name}"/></span>
             	       </c:when>
             	       <c:otherwise>

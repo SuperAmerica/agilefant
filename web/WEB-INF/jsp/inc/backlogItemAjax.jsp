@@ -678,10 +678,10 @@ $(document).ready(function() {
 								</c:otherwise>
 							</c:choose>
 							<c:choose>
-								<c:when test="${row.active && row.product != null}">
+								<c:when test="${row.active && !row.global}">
 									<label for="bliTheme-${row.id}${backlogItemId}-${bliListContext}">${row.name}</label>
 								</c:when>
-								<c:when test="${row.product == null && row.active}">
+								<c:when test="${row.global && row.active}">
 									<label class="globalTheme" for="bliTheme-${row.id}${backlogItemId}-${bliListContext}">${row.name}</label>
 								</c:when>
 								<c:otherwise>

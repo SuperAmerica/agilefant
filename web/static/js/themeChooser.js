@@ -1,21 +1,4 @@
 (function($) {
-    /**
-     * The user chooser. Uses jQuery ui dialog to show the user chooser
-     * window.
-     * options {
-     *  - url: where to get the json data from
-     *  - legacyMode: true: the hidden fields' names will be 'userIds[XX]'
-     *               false: the hidden fields' names will be 'userIds'
-     *  - backlogItemId: when rendering for backlog item, the item's id.
-     *  - backlogId/backlogIdField: the backlog id can be given directly or
-     *                              by a jQuery selector if the backlog can change.
-     *  - themeListContainer: the element where the list of assigned users' initials are shown
-     *                       and hidden inputs are stored.
-     *  - validation: rules for validating the user chooser form
-     *     - selectAtLeast: how many checkboxes should be checked.
-     *     - aftime: does the form contain AFTime fields.
-     *  -  
-     */ 
     var ThemeChooser = function(opt) {
         var me = this;
         var options = {
@@ -48,11 +31,10 @@
             this.buttonsTable = $('<table class="buttonsTable"/>').appendTo(this.form);
      
             var dialog = $('<div/>').addClass('themeChooserDialog').append(this.form).appendTo(document.body);
-            getProductActiveThemes($(this.options.backlogId).val(), this.table,this.choosedThemes());
             this.lastRow = $('<tr/>').appendTo(this.buttonsTable);
   
         	
-            this.renderButtons();      	
+                  	
             var windowOptions = {
                 close: function() {
                     me.destroy();
@@ -77,11 +59,8 @@
             $(window).scroll(this.options.overlayUpdate);
             this.options.overlayUpdate();
             
-           
-            
+            this.getData();
         },
-        
-        
         
         renderButtons: function() {
         	
@@ -105,27 +84,21 @@
             return false;
         },
         
-        
-        choosedThemes: function(){
-       	 var themeListContainer = $(this.options.themeListContainer);
+        selectedThemes: function(){
+            var themeListContainer = $(this.options.themeListContainer);
     
-       	 // getting all hidden field with selected ids
-       	var hiddenInputsWithSelectedThemeIds = themeListContainer.find('input');
-       
-       	var themeIdList=[];
-       	// creating array with theme ids
-       	hiddenInputsWithSelectedThemeIds.each(function() {
-       		if($(this).attr('id')=="themeIds")
-       		themeIdList.push(parseInt($(this).val()));
-           });
-       	// selecting checkboxes in dialog
-       	return themeIdList;
-       },
-        
-       
-        
-       
-      
+			// getting all hidden field with selected ids
+			var hiddenInputsWithSelectedThemeIds = themeListContainer.find('input');
+			       
+			var themeIdList=[];
+			// creating array with theme ids
+			hiddenInputsWithSelectedThemeIds.each(function() {
+			if($(this).attr('id')=="themeIds")
+	       		themeIdList.push(parseInt($(this).val()));
+			});
+			// selecting checkboxes in dialog
+			return themeIdList;
+        },
 
         selectAction: function() {
             var me = this;
@@ -143,8 +116,6 @@
             });
             
             if (selectedThemesNames != "") {
-            	var hidden = $('<input type="hidden"/>').appendTo(themeListContainer);
-                hidden.attr('id','currentBacklog').val($(this.options.backlogId).val());
                 themeListContainer.append(selectedThemesNames.substring(0, selectedThemesNames.length - 2));
             }
             else {
@@ -158,6 +129,44 @@
         cancelAction: function() {
             this.destroy();
             return false;
+        },
+        getData: function() {
+            var me = this;
+            jQuery.getJSON("activeThemesByBacklog.action",
+                { 'backlogId': $(me.options.backlogId).val() },
+                function(data, status) {
+                    me.data = data;
+                    me.renderThemeList();
+                });
+        },
+        renderThemeList: function() {        
+	        if (this.data.length > 0) {
+	            var headerRow = $('<tr/>').appendTo(this.table);
+	            headerRow.append('<th class="userColumn" colspan="2">Active themes</th>');
+	            var ids = this.selectedThemes();
+	            for (var i = 0; i < this.data.length; i++) {
+	                var row = $('<tr/>').appendTo(this.table);
+	                var column1 = $('<td/>').appendTo(row);
+	                var column2 = $('<td/>').appendTo(row);
+	                var themeName = $('<span/>').appendTo(column2).text(this.data[i].name);
+	                if (this.data[i]['global']) {
+	                   themeName.addClass('globalTheme');
+	                }
+	                if( this.data[i].description.length > 0 ) {
+	                    $('<span/>').appendTo(column2).text(' - ' + this.data[i].description);
+	                }
+	                var checkbox = $('<input type="checkbox"/>').attr('value',this.data[i].id).attr('name',this.data[i].name).appendTo(column1);
+	                 if (jQuery.inArray(parseInt(this.data[i].id), ids) > -1) {
+	                     checkbox.attr('checked','checked');
+	                   }
+	            }
+	        }
+	        else {
+	            var row = $('<tr/>').appendTo(this.table);   
+	            var column1 = $('<td/>').text('No active themes found in this backlog.').appendTo(row);
+	        }
+	        
+	        this.renderButtons();
         }
     };
     
@@ -171,8 +180,5 @@
             $(this).click(function() { uc.init(); return false; })
             return this;
         }
-     
-
-        
     });
 })(jQuery);

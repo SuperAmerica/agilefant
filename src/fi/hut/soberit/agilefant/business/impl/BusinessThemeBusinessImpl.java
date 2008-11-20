@@ -130,7 +130,7 @@ public class BusinessThemeBusinessImpl implements BusinessThemeBusiness {
                 tmpTheme.setId((Integer) tmpData[1]);
                 tmpTheme.setName((String) tmpData[2]);
                 tmpTheme.setDescription((String) tmpData[3]);
-                tmpTheme.setProduct((Product) tmpData[4]);
+                tmpTheme.setGlobal((Boolean) tmpData[4]);
                 if (res.get(bliId) == null) {
                     res.put(bliId, new ArrayList<BusinessTheme>());
                 }
@@ -220,26 +220,23 @@ public class BusinessThemeBusinessImpl implements BusinessThemeBusiness {
                 throw new ObjectNotFoundException(
                         "Selected theme was not found.");
             }
-            /*
-            if (product == null) {
-                throw new ObjectNotFoundException(
-                    "Product was not found.");
-            }
-            */
+         
             persistable.setDescription(theme.getDescription());
             persistable.setName(theme.getName());
             persistable.setProduct(product);
             persistable.setActive(theme.isActive());
         } else {
-            /*
-            if (product == null) {
-                throw new ObjectNotFoundException(
-                    "Product was not found.");
-            }
-            */
             theme.setProduct(product);
             persistable = theme;
         }
+        
+        if (product == null) {
+            persistable.setGlobal(true);
+        }
+        else {
+            persistable.setGlobal(false);
+        }
+        
         try {
             if (persistable.getId() > 0) {
                 businessThemeDAO.store(persistable);
@@ -450,27 +447,19 @@ public class BusinessThemeBusinessImpl implements BusinessThemeBusiness {
             return "[]";
         }
         Collection<BusinessTheme> themes;
+        Product prod;
         
         if (backlog instanceof Product) {
-            Product product;
-            product = (Product)backlog;
-            themes = product.getBusinessThemes();
+            prod = (Product)backlog;
         }
         else if (backlog instanceof Project) {
-            Project project = (Project)backlog;
-            themes = project.getProduct().getBusinessThemes(); 
+            prod = ((Project)backlog).getProduct(); 
         }
         else {
-            Iteration iteration =(Iteration)backlog;
-            themes = iteration.getProject().getProduct().getBusinessThemes();
+            prod = ((Iteration)backlog).getProject().getProduct();
         }
-        Collection<BusinessTheme> returnThemes = new ArrayList<BusinessTheme>();
-        for (BusinessTheme theme : themes) {
-            if(theme.isActive()) {
-                returnThemes.add(theme);
-            }
-        }
-        return new JSONSerializer().serialize(returnThemes);
+        themes = businessThemeDAO.getSortedBusinessThemesByProductAndActivity(prod, true, true);
+        return new JSONSerializer().serialize(themes);
     }
 
     public String getActiveThemesForBacklogAsJSON(int backlogId) {

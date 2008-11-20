@@ -110,6 +110,8 @@ function trim (str) { return jQuery.trim(str); }
 function handleTabEvent(target, context, id, tabId, bliContext) {
 	
     var target = $("#" + target);
+    
+    if (target.length == 0) { return false; }
     if (target.attr("tab-data-loaded")) {
         var tabs = target.find("ul.ajaxWindowTabs");
         var selected = tabs.data('selected.tabs');
@@ -210,8 +212,6 @@ function handleTabEvent(target, context, id, tabId, bliContext) {
         });
 
         target.attr("tab-data-loaded","1");
-        
-        ajaxOpenDialog(context, id, tabId);
         return false;
     }
 }
@@ -245,6 +245,27 @@ function getIterationGoals(backlogId, element) {
             select.hide().empty().val('').next().show();
         }
     });
+}
+function handleQuickRef(form) {
+	form = $(form);
+	var field = form.find(":text");
+	var error = form.find("div");
+	error.hide();
+	var val = field.val();
+	var fail = false;
+	if(typeof(val) == "string") {
+		var parts = val.split(":"); 
+		if(parts.length != 2 || parts[0].length < 2 || parseInt(parts[1]) == NaN) {
+			fail = true;
+		}
+	} else {
+		fail = true;
+	}
+	if(fail) {
+		error.show();
+		return false;
+	}
+	return true;
 }
 
 function getProductActiveThemes(backlogId, element,ids) {
@@ -295,3 +316,14 @@ function resetBLIOriginalEstimate(bliId, me) {
     return false;
 }
 
+function setThemeActivityStatus(themeId,status) {
+    var url = "";
+    if(status == true) {
+        url = "ajaxActivateBusinessTheme.action";
+    } else {
+        url = "ajaxDeactivateBusinessTheme.action";
+    }
+    $.post(url,{businessThemeId: themeId},function(data,status) {
+        reloadPage();
+    });
+}

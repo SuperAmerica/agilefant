@@ -397,6 +397,22 @@
 	    	<required>true</required>
 	    </attribute>
 	</tag>
+	
+	<tag>
+		<name>resolveObjectNamespace</name>
+		<description>Resolve object name-space and include tag body if name-space can be resolved.</description>
+		<body-content>JSP</body-content>
+		<tag-class>fi.hut.soberit.agilefant.web.tag.ResolveObjectNamespaceTag</tag-class>
+		<attribute>
+			<name>var</name>
+			<required>true</required>
+		</attribute>
+		<attribute>
+			<name>item</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
 
 	<tag>
 		<name>backlogItem</name>
@@ -481,7 +497,10 @@
 		<name>timesheetItem</name>
 		<path>/WEB-INF/tags/timesheetItem.tag</path>
 	</tag-file>
-
+	<tag-file>
+		<name>quickReference</name>
+		<path>/WEB-INF/tags/quickReference.tag</path>
+	</tag-file>
 	<function>
 	  <name>isProduct</name>
 	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>

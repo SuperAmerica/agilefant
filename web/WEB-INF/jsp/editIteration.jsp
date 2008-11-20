@@ -13,7 +13,7 @@
 <aef:openDialogs context="iterationGoal" id="openIterationGoalTabs" />
 
 <c:set var="divId" value="1336" scope="page" />
-<aef:menu navi="backlog" pageHierarchy="${pageHierarchy}" />
+<aef:menu navi="backlog" pageHierarchy="${pageHierarchy}" title="${iteration.name}"/>
 <aef:productList />
 
 <ww:actionerror />
@@ -68,6 +68,62 @@ $(document).ready(function() {
 					style="display: block;">
 				<table class="infoTable" cellpadding="0" cellspacing="0">
 					<tr>
+						<th class="info1"><ww:text name="general.uniqueId"/></th>
+						<td class="info3"><aef:quickReference item="${iteration}" /></td>
+						
+						<td class="info4" rowspan="5">
+                        <div class="smallBurndown"><a href="#bigChart"><img
+                            src="drawSmallChart.action?iterationId=${iteration.id}" /></a></div>
+
+                        <table>
+                            <tr>
+                                <th>Velocity</th>
+                                <td><c:out value="${iterationMetrics.dailyVelocity}" /> /
+                                day</td>
+                            </tr>
+                            <c:if test="${iterationMetrics.backlogOngoing}">
+                                <tr>
+                                    <th>Schedule variance</th>
+                                    <td><c:choose>
+                                        <c:when test="${iterationMetrics.scheduleVariance != null}">
+                                            <c:choose>
+                                                <c:when test="${iterationMetrics.scheduleVariance > 0}">
+                                                    <span class="red">+ 
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <span>
+                                                </c:otherwise>
+                                            </c:choose>
+                                            <c:out value="${iterationMetrics.scheduleVariance}" /> days
+                                            </c:when>
+                                        <c:otherwise>
+                                                unknown
+                                            </c:otherwise>
+                                    </c:choose></td>
+                                </tr>
+                                <tr>
+                                    <th>Scoping needed</th>
+                                    <td><c:choose>
+                                        <c:when test="${iterationMetrics.scopingNeeded != null}">
+                                            <c:out value="${iterationMetrics.scopingNeeded}" />
+                                        </c:when>
+                                        <c:otherwise>
+                                                unknown
+                                            </c:otherwise>
+                                    </c:choose></td>
+                                </tr>
+                            </c:if>
+                            <tr>
+                                <th>Done</th>
+                                <td><c:out value="${iterationMetrics.percentDone}" />% (<c:out
+                                    value="${iterationMetrics.completedItems}" /> / <c:out
+                                    value="${iterationMetrics.totalItems}" />)</td>
+                            </tr>
+                        </table>
+
+                        </td>					
+					</tr>
+					<tr>	
 						<th class="info1">Planned iteration size</th>
 						<td class="info3" ondblclick="return editIteration();">
 							<c:choose>
@@ -79,57 +135,7 @@ $(document).ready(function() {
 							</c:otherwise>
 							</c:choose>
 						</td>
-						<td class="info4" rowspan="4">
-						<div class="smallBurndown"><a href="#bigChart"><img
-							src="drawSmallChart.action?iterationId=${iteration.id}" /></a></div>
-
-						<table>
-							<tr>
-								<th>Velocity</th>
-								<td><c:out value="${iterationMetrics.dailyVelocity}" /> /
-								day</td>
-							</tr>
-							<c:if test="${iterationMetrics.backlogOngoing}">
-								<tr>
-									<th>Schedule variance</th>
-									<td><c:choose>
-										<c:when test="${iterationMetrics.scheduleVariance != null}">
-											<c:choose>
-												<c:when test="${iterationMetrics.scheduleVariance > 0}">
-													<span class="red">+ 
-												</c:when>
-												<c:otherwise>
-													<span>
-												</c:otherwise>
-											</c:choose>
-											<c:out value="${iterationMetrics.scheduleVariance}" /> days
-                                            </c:when>
-										<c:otherwise>
-                                                unknown
-                                            </c:otherwise>
-									</c:choose></td>
-								</tr>
-								<tr>
-									<th>Scoping needed</th>
-									<td><c:choose>
-										<c:when test="${iterationMetrics.scopingNeeded != null}">
-											<c:out value="${iterationMetrics.scopingNeeded}" />
-										</c:when>
-										<c:otherwise>
-                                                unknown
-                                            </c:otherwise>
-									</c:choose></td>
-								</tr>
-							</c:if>
-							<tr>
-								<th>Done</th>
-								<td><c:out value="${iterationMetrics.percentDone}" />% (<c:out
-									value="${iterationMetrics.completedItems}" /> / <c:out
-									value="${iterationMetrics.totalItems}" />)</td>
-							</tr>
-						</table>
-
-						</td>												
+					    <td></td>			
 					</tr>
 					<tr>
 						<th class="info1">Timeframe</th>
@@ -281,7 +287,7 @@ $(document).ready( function() {
 	</c:if>
 	var getThemeData = function() {
 		var ret = {};
-		var data = jsonDataCache.get('themesByProduct',{data: {productId: ${iteration.project.product.id}}},${iteration.project.product.id});
+		var data = jsonDataCache.get('themesByProduct',{data: {productId: ${iteration.project.product.id}, includeGlobalThemes: true}},${iteration.project.product.id});
 		jQuery.each(data,function() {
 			if(this.active === true) {
 				if(jQuery.inArray(this.id,projectThemes) > -1) {

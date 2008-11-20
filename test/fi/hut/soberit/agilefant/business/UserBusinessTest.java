@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import com.opensymphony.xwork.Action;
-
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.db.ProductDAO;
 import fi.hut.soberit.agilefant.db.TaskDAO;
@@ -218,8 +216,8 @@ public class UserBusinessTest extends SpringTestCase {
 
         int bli1Id = testUtility.createBacklogItem(
                 "Backlog item with not started state", product);
-        int bli2Id = testUtility.createBacklogItem(
-                "Backlog item with started state", product);
+        // int bli2Id = testUtility.createBacklogItem(
+        //        "Backlog item with started state", product);
         BacklogItem bli1 = backlogItemDAO.get(bli1Id);
         bli1.setCreator(user);
         

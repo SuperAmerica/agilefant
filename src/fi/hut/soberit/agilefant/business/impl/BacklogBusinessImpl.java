@@ -508,7 +508,6 @@ public class BacklogBusinessImpl implements BacklogBusiness {
     }
 
     /** {@inheritDoc} */
-    @SuppressWarnings("deprecation")
     public int getNumberOfDaysForBacklogOnWeek(Backlog backlog, Date time) {
         GregorianCalendar cal = new GregorianCalendar();
         cal.setFirstDayOfWeek(GregorianCalendar.MONDAY);
@@ -684,7 +683,6 @@ public class BacklogBusinessImpl implements BacklogBusiness {
     }
 
     /** {@inheritDoc} */
-    @SuppressWarnings("deprecation")
     public AFTime getOverheadForWeek(Project project, User user, int daysOnWeek) {
         AFTime totalOverhead = new AFTime(0);
 

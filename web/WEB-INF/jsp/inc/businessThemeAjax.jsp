@@ -10,9 +10,21 @@
 
 <ww:form action="ajaxStoreBusinessTheme" method="post">
 	<ww:hidden name="businessThemeId" value="${businessTheme.id}" />
-	<ww:hidden name="productId" value="${businessTheme.product.id}" />
+	<c:choose>
+	   <c:when test="${businessTheme.product == null}">
+	       <ww:hidden name="productId" value="-1" />
+	   </c:when>
+	   <c:otherwise>
+	       <ww:hidden name="productId" value="${businessTheme.product.id}" />
+	   </c:otherwise>
+	</c:choose>
 	<ww:hidden name="businessTheme.active" value="${businessTheme.active}" />
 	<table class="formTable">
+		<tr>
+			<td><ww:text name="general.uniqueId"/></td>
+			<td></td>
+			<td><aef:quickReference item="${businessTheme}" /></td>
+		</tr>
 		<tr>
 			<td>Name</td>
 			<td>*</td>

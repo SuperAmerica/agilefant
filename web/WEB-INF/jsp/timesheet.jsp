@@ -1,7 +1,7 @@
 <%@ include file="./inc/_taglibs.jsp"%>
 <%@ include file="./inc/_header.jsp"%>
 
-<aef:menu navi="timesheet" pageHierarchy="${pageHierarchy}" />
+<aef:menu navi="timesheet" pageHierarchy="${pageHierarchy}" title="Timesheets"/>
 <aef:existingObjects />
 
 <aef:productList />

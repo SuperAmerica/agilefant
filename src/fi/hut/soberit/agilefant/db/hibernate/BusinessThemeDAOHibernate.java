@@ -22,24 +22,54 @@ import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.State;
 
-public class BusinessThemeDAOHibernate extends GenericDAOHibernate<BusinessTheme> implements BusinessThemeDAO {
+public class BusinessThemeDAOHibernate extends
+        GenericDAOHibernate<BusinessTheme> implements BusinessThemeDAO {
 
     public BusinessThemeDAOHibernate() {
         super(BusinessTheme.class);
     }
-    
+
+    public List<BusinessTheme> getSortedBusinessThemesByProductAndActivity(
+            Product product, boolean active) {
+        return getSortedBusinessThemesByProductAndActivity(product, active,
+                false);
+    }
+
     @SuppressWarnings("unchecked")
-    public List<BusinessTheme> getSortedBusinessThemesByProductAndActivity(Product product, boolean active) {
+    public List<BusinessTheme> getSortedBusinessThemesByProductAndActivity(
+            Product product, Boolean active, boolean includeGlobal) {
         DetachedCriteria criteria = DetachedCriteria.forClass(this
                 .getPersistentClass());
-        criteria.add(Restrictions.eq("product", product));
-        criteria.add(Restrictions.eq("active", active));
+        if (includeGlobal) {
+            criteria.add(Restrictions.or(Restrictions.eq("product", product),
+                    Restrictions.isNull("product")));
+        } else {
+            criteria.add(Restrictions.eq("product", product));
+        }
+        if (active != null) {
+            criteria.add(Restrictions.eq("active", active));
+        }
+        // do not join the product data
+        criteria.setFetchMode("product", FetchMode.SELECT);
         criteria.addOrder(Order.asc("name"));
 
-        return (List<BusinessTheme>)super.getHibernateTemplate()
-                            .findByCriteria(criteria);
-       
+        return (List<BusinessTheme>) super.getHibernateTemplate()
+                .findByCriteria(criteria);
+
     }
+
+    @SuppressWarnings("unchecked")
+    public List<BusinessTheme> getSortedGlobalThemes(Boolean active) {
+        DetachedCriteria criteria = DetachedCriteria.forClass(this
+                .getPersistentClass());
+
+        criteria.add(Restrictions.isNull("product"));
+        criteria.add(Restrictions.eq("active", active));
+
+        return (List<BusinessTheme>) super.getHibernateTemplate()
+                .findByCriteria(criteria);
+    }
+
     public Map<Integer, Integer> numberOfBacklogItemsByProduct(Product product,
             State backlogItemState) {
         DetachedCriteria crit = DetachedCriteria.forClass(BacklogItem.class);
@@ -64,12 +94,12 @@ public class BusinessThemeDAOHibernate extends GenericDAOHibernate<BusinessTheme
     @SuppressWarnings("unchecked")
     public List getThemesByBacklog(Backlog backlog) {
         DetachedCriteria crit = DetachedCriteria.forClass(BacklogItem.class);
-        crit.createAlias("businessThemes","themes");
+        crit.createAlias("businessThemes", "themes");
         ProjectionList p = Projections.projectionList();
-        p.add(Projections.property("id"),"backlogItemId");
-        p.add(Projections.property("themes.id"),"themeId");
-        p.add(Projections.property("themes.name"),"themeName");
-        p.add(Projections.property("themes.description"),"themeDescription");
+        p.add(Projections.property("id"), "backlogItemId");
+        p.add(Projections.property("themes.id"), "themeId");
+        p.add(Projections.property("themes.name"), "themeName");
+        p.add(Projections.property("themes.description"), "themeDescription");
         crit.setProjection(p);
         crit.setFetchMode("themes", FetchMode.JOIN);
         crit.setFetchMode("iterationGoal", FetchMode.SELECT);
@@ -79,39 +109,47 @@ public class BusinessThemeDAOHibernate extends GenericDAOHibernate<BusinessTheme
         crit.addOrder(Order.asc("themes.name"));
         return super.getHibernateTemplate().findByCriteria(crit);
     }
-    
+
     public void saveOrUpdateBacklogThemeBinding(BacklogThemeBinding binding) {
         super.getHibernateTemplate().saveOrUpdate(binding);
     }
+
     public void removeBacklogThemeBinding(BacklogThemeBinding binding) {
         super.getHibernateTemplate().delete(binding);
     }
+
     @SuppressWarnings("unchecked")
     public List<BacklogThemeBinding> getIterationThemesByProject(Project project) {
-        DetachedCriteria iterationCriteria = DetachedCriteria.forClass(Iteration.class);
-        //DetachedCriteria bindings = iterationCriteria.createAlias("businessThemeBindings", "themeBindings");      
-        //iterationCriteria.setFetchMode("businessThemeBindings", FetchMode.JOIN);
+        DetachedCriteria iterationCriteria = DetachedCriteria
+                .forClass(Iteration.class);
+        // DetachedCriteria bindings =
+        // iterationCriteria.createAlias("businessThemeBindings",
+        // "themeBindings");
+        // iterationCriteria.setFetchMode("businessThemeBindings",
+        // FetchMode.JOIN);
         iterationCriteria.setFetchMode("assignments", FetchMode.SELECT);
         iterationCriteria.setFetchMode("backlogItems", FetchMode.SELECT);
         iterationCriteria.setFetchMode("owner", FetchMode.SELECT);
         iterationCriteria.setFetchMode("backlogHistory", FetchMode.SELECT);
         iterationCriteria.setFetchMode("project", FetchMode.SELECT);
-        //bindings.setFetchMode("businessTheme", FetchMode.JOIN);
-        
+        // bindings.setFetchMode("businessTheme", FetchMode.JOIN);
+
         iterationCriteria.add(Restrictions.eq("project", project));
-        List<Object> res = super.getHibernateTemplate().findByCriteria(iterationCriteria);
+        List<Object> res = super.getHibernateTemplate().findByCriteria(
+                iterationCriteria);
         List<BacklogThemeBinding> ret = new ArrayList<BacklogThemeBinding>();
-        for(Object ob : res) {
+        for (Object ob : res) {
             System.out.println(ob);
-            Iteration iter = (Iteration)ob;
-            if(iter.getBusinessThemeBindings() != null) {
+            Iteration iter = (Iteration) ob;
+            if (iter.getBusinessThemeBindings() != null) {
                 ret.addAll(iter.getBusinessThemeBindings());
             }
         }
         return ret;
     }
-    
+
     public BacklogThemeBinding getBindingById(int bindingId) {
-        return (BacklogThemeBinding)super.getHibernateTemplate().get(BacklogThemeBinding.class, bindingId);
+        return (BacklogThemeBinding) super.getHibernateTemplate().get(
+                BacklogThemeBinding.class, bindingId);
     }
 }

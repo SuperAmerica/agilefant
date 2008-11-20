@@ -10,7 +10,6 @@ import com.opensymphony.xwork.ActionSupport;
 
 import fi.hut.soberit.agilefant.business.BusinessThemeBusiness;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
-import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BusinessTheme;
 
 public class BusinessThemeAction extends ActionSupport implements CRUDAction {
@@ -24,6 +23,9 @@ public class BusinessThemeAction extends ActionSupport implements CRUDAction {
     private BusinessTheme businessTheme;
 
     private Collection<BusinessTheme> businessThemes = new ArrayList<BusinessTheme>();
+    
+    private Collection<BusinessTheme> activeBusinessThemes = new ArrayList<BusinessTheme>();
+    private Collection<BusinessTheme> nonActiveBusinessThemes = new ArrayList<BusinessTheme>();
     
     private Collection<BusinessTheme> bliBusinessThemes = new ArrayList<BusinessTheme>();
     
@@ -41,7 +43,15 @@ public class BusinessThemeAction extends ActionSupport implements CRUDAction {
     
     private String jsonData = "";
     
+    private boolean includeGlobalThemes = false;
+    
 
+    public String listGlobalThemes() {
+        activeBusinessThemes = businessThemeBusiness.getSortedGlobalThemes(true);
+        nonActiveBusinessThemes = businessThemeBusiness.getSortedGlobalThemes(false);
+        return Action.SUCCESS;
+    }
+    
     public String create() {
         businessThemeId = 0;
         businessTheme = new BusinessTheme();
@@ -202,7 +212,7 @@ public class BusinessThemeAction extends ActionSupport implements CRUDAction {
     }
     
     public String themesByProduct() {
-        jsonData = businessThemeBusiness.getThemesForProductAsJSON(productId);
+        jsonData = businessThemeBusiness.getThemesForProductAsJSON(productId, includeGlobalThemes);
         return Action.SUCCESS;
     }
     
@@ -276,5 +286,27 @@ public class BusinessThemeAction extends ActionSupport implements CRUDAction {
 
     public String getJsonData() {
         return jsonData;
+    }
+
+    public void setIncludeGlobalThemes(boolean includeGlobalThemes) {
+        this.includeGlobalThemes = includeGlobalThemes;
+    }
+
+    public Collection<BusinessTheme> getActiveBusinessThemes() {
+        return activeBusinessThemes;
+    }
+
+    public void setActiveBusinessThemes(
+            Collection<BusinessTheme> activeBusinessThemes) {
+        this.activeBusinessThemes = activeBusinessThemes;
+    }
+
+    public Collection<BusinessTheme> getNonActiveBusinessThemes() {
+        return nonActiveBusinessThemes;
+    }
+
+    public void setNonActiveBusinessThemes(
+            Collection<BusinessTheme> nonActiveBusinessThemes) {
+        this.nonActiveBusinessThemes = nonActiveBusinessThemes;
     }
 }

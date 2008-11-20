@@ -106,7 +106,6 @@ public class Product extends Backlog implements PageItem {
      */
     @Transient
     @Deprecated
-    @SuppressWarnings("deprecation")
     @JSON(include = false)
     public AFTime getSubBacklogEffortLeftSum() {
         AFTime result = new AFTime(0);
@@ -123,7 +122,6 @@ public class Product extends Backlog implements PageItem {
      */
     @Transient
     @Deprecated
-    @SuppressWarnings("deprecation")
     @JSON(include = false)
     public AFTime getSubBacklogOriginalEstimateSum() {
         AFTime result = new AFTime(0);

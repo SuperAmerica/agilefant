@@ -214,7 +214,7 @@ $(document).ready( function() {
 	</c:if>
 	var getThemeData = function() {
 		var ret = {};
-		var data = jsonDataCache.get('themesByProduct',{data: {productId: ${iteration.project.product.id}}},${iteration.project.product.id});
+		var data = jsonDataCache.get('themesByProduct',{data: {productId: ${iteration.project.product.id}, includeGlobalThemes: true}},${iteration.project.product.id});
 		jQuery.each(data,function() {
 			if(this.active === true) {
 				if(jQuery.inArray(this.id,projectThemes) > -1) {

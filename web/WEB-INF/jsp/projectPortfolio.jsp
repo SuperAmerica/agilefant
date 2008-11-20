@@ -1,7 +1,7 @@
 <%@ include file="./inc/_taglibs.jsp"%>
 <%@ include file="./inc/_header.jsp"%>
 
-<aef:menu navi="portfolio" />
+<aef:menu navi="portfolio" subnavi="portfolioProjects" title="Active Projects"/>
 <ww:actionerror />
 <ww:actionmessage />
 <script type="text/javascript">

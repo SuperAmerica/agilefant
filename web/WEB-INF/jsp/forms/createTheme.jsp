@@ -17,6 +17,15 @@
 			<td>*</td>
 			<td colspan="2"><select name="productId">
 				<option class="inactive" value="">(select product)</option>
+				<c:choose>
+				    <c:when test="${productId == -1}">
+				        <option value="-1" selected="selected">Global theme</option>
+				    </c:when>
+				    <c:otherwise>
+				        <option value="-1">Global theme</option>    
+				    </c:otherwise>
+				</c:choose>
+				<option class="inactive" value="">---------------------------</option>
 				<c:forEach items="${productList}" var="product">
 					<c:choose>
 						<c:when test="${product.id == productId}">

@@ -143,7 +143,7 @@ public class UserEffortSumTag extends SpringTagSupport {
         
         calendar.set(Calendar.MINUTE,0);
         calendar.set(Calendar.SECOND,0);
-        calendar.setFirstDayOfWeek(Calendar.SUNDAY);
+        calendar.setFirstDayOfWeek(Calendar.MONDAY);
         
         return calendar;
     }

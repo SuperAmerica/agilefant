@@ -57,7 +57,7 @@ Timeline.AgilefantEventSource.getThemeStartAndEnd = function(bindings) {
 Timeline.AgilefantEventSource.Event = function(event) {  
 		this._raw = event;     
         this._id = event.id;
-        this._type = event.class;
+        this._type = event["class"];
         var start = new Date();
         var end = new Date();
         var sorter = function(a,b) { return (a.getStart().getTime() < b.getStart().getTime()); };
@@ -67,7 +67,7 @@ Timeline.AgilefantEventSource.Event = function(event) {
         	end.setTime(interval.end);
         	var contents = [];
         	var tmp = event;
-        	tmp.class = "fi.hut.soberit.agilefant.model.BacklogThemeBinding";
+        	tmp["class"] = "fi.hut.soberit.agilefant.model.BacklogThemeBinding";
         	for(var i = 0 ; i < event.backlogBindings.length; i++) {
         		var cur = event.backlogBindings[i];
         		tmp.startDate = cur.backlog.startDate;

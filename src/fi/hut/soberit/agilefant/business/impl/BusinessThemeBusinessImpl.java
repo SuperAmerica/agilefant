@@ -47,6 +47,10 @@ public class BusinessThemeBusinessImpl implements BusinessThemeBusiness {
         return businessThemeDAO.getAll();
     }
     
+    public Collection<BusinessTheme> getSortedGlobalThemes(Boolean active) {
+        return businessThemeDAO.getSortedGlobalThemes(active);
+    }
+       
     public Collection<BusinessTheme> getActiveBusinessThemes(int backlogId) {
         Backlog bl = backlogDAO.get(backlogId);
         Product prod = null;
@@ -101,7 +105,9 @@ public class BusinessThemeBusinessImpl implements BusinessThemeBusiness {
         }
         List<BusinessTheme> activeThemes = new ArrayList<BusinessTheme>();
         Collection<BusinessTheme> bliThemes = bli.getBusinessThemes();
-        for (BusinessTheme t: bli.getProduct().getBusinessThemes()) {
+        Product prod = bli.getProduct();
+        List<BusinessTheme> possibleThemes = businessThemeDAO.getSortedBusinessThemesByProductAndActivity(prod, null, true);
+        for (BusinessTheme t: possibleThemes) {
             if (t.isActive() || bliThemes.contains(t)) {
                 activeThemes.add(t);
             }
@@ -215,26 +221,30 @@ public class BusinessThemeBusinessImpl implements BusinessThemeBusiness {
                 product = ((Iteration)bl).getProject().getProduct();
             }
         }
-        if (businessThemeId > 0 && productId > 0) {
+        if (businessThemeId > 0 && (productId > 0 || productId == -1)) {
             persistable = businessThemeDAO.get(businessThemeId);
        
             if (persistable == null) {
                 throw new ObjectNotFoundException(
                         "Selected theme was not found.");
             }
+            /*
             if (product == null) {
                 throw new ObjectNotFoundException(
                     "Product was not found.");
             }
+            */
             persistable.setDescription(theme.getDescription());
             persistable.setName(theme.getName());
             persistable.setProduct(product);
             persistable.setActive(theme.isActive());
         } else {
+            /*
             if (product == null) {
                 throw new ObjectNotFoundException(
                     "Product was not found.");
             }
+            */
             theme.setProduct(product);
             persistable = theme;
         }
@@ -426,15 +436,20 @@ public class BusinessThemeBusinessImpl implements BusinessThemeBusiness {
         }
     }
     
-    public String getThemesForProductAsJSON(int productId) {
-        return getThemesForProductAsJSON(productDAO.get(productId));
+    public String getThemesForProductAsJSON(int productId, boolean includeGlobal) {
+        return getThemesForProductAsJSON(productDAO.get(productId), includeGlobal);
     }
     
-    public String getThemesForProductAsJSON(Product product) {
+    public String getThemesForProductAsJSON(Product product, boolean includeGlobal) {
         if (product == null) {
             return "[]";
         }
-        Collection<BusinessTheme> themes = product.getBusinessThemes();
+        Collection<BusinessTheme> themes;
+        if(includeGlobal) {
+            themes = businessThemeDAO.getSortedBusinessThemesByProductAndActivity(product, true, true);
+        } else {
+            themes = product.getBusinessThemes();
+        }
         return new JSONSerializer().serialize(themes);
     }
     

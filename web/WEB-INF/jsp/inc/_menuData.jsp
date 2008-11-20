@@ -51,15 +51,42 @@
         <c:if test="${subnavi == 'users'}">
         "classes": "selected path",
         </c:if>
-    },
+    }
 ]
 </c:when>
 
+
+<%-- Portfolio menu --%>
+<c:when test="${navi == 'portfolio'}">
+[
+    {
+        <ww:url id="editLink" action="projectPortfolio" includeParams="none"></ww:url>
+        
+        "text": '<a href="${editLink}">Current projects</a>',
+        "hasChildren": false,
+        
+        <c:if test="${subnavi == 'portfolioProjects'}">
+        "classes": "selected path",
+        </c:if>
+    },
+    {
+        <ww:url id="editLink" action="globalThemes" includeParams="none"></ww:url>
+        
+        "text": '<a href="${editLink}">Global themes</a>',
+        "hasChildren": false,
+        
+        <c:if test="${subnavi == 'globalThemes'}">
+        "classes": "selected path",
+        </c:if>
+    }
+]
+</c:when>
 
 <%-- Backlog hierarchy --%>
 <c:otherwise>
 
 <c:set var="count" value="0" />
+<c:set var="amount" value="${fn:length(menuData.menuItems)}" />
 [
 <c:forEach items="${menuData.menuItems}" var="item">
 <c:set var="count" value="${count + 1}" />
@@ -83,6 +110,7 @@
                 "children": 
                 [
                     <c:set var="subCount" value="0" />
+                    <c:set var="subAmount" value="${fn:length(subMenuData.menuItems)}" />
 	                <c:forEach items="${subMenuData.menuItems}" var="subItem">
 	                   <c:set var="subCount" value="${subCount + 1}" />
 	                   { 
@@ -101,6 +129,7 @@
                             [
                                 <%-- And once again, iterate the children  --%>
                                 <c:set var="subsubCount" value="0" />
+                                <c:set var="subsubAmount" value="${fn:length(subsubMenuData.menuItems)}" />
                                 <c:forEach items="${subsubMenuData.menuItems}" var="subsubItem">
                                     <c:set var="subsubCount" value="${subsubCount + 1}"/>
                                     {
@@ -124,7 +153,7 @@
                                             </c:if>
                                         </c:otherwise>
                                         </c:choose>
-                                    },
+                                    }<c:if test="${subsubAmount != subsubCount}">,</c:if>
                                 </c:forEach>
                             ],
                             </c:when>
@@ -180,7 +209,7 @@
                             
                             "id": "menubacklog_<c:out value="${subItem.id}" />"
                             
-	                   },
+	                   }<c:if test="${subAmount != subCount}">,</c:if>
 	                 </c:forEach>
                 ],
             </c:when>
@@ -247,7 +276,7 @@
 
         <%-- The id --%>
         "id": "menubacklog_<c:out value="${item.id}" />"
-    },
+    }<c:if test="${amount != count}">,</c:if>
 </c:forEach>
 ]
 </c:otherwise>

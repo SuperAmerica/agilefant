@@ -46,22 +46,23 @@ function submitDialogForm(evt) {
         $.post(me.attr("action"), me.serializeArray(),
             function(data, status) {
                 var prev = window.location.href;
+                var tmpE = evt;
                 if (prev.indexOf('#') > -1) {
                     prev = prev.substr(0, prev.indexOf('#'));
                 }
                 prev = addRandomToURL(prev);
+                
                 var parentId = "";
-                if(evt.originalEvent.explicitOriginalTarget.name == "SaveClose") {
+                if(me.data("lastSubmitEvent").name == "SaveClose") {
                     parentId = me.parents('.subItems[id^=subItems_]').attr('id');
                 }
                 else {
                 	parentId = me.parents('div.tabContainer:eq(0)').attr('id');
                 }
                 if (parentId == null || parentId == "") {
-                    window.location.href = prev;
-                }
-                else {
-                    window.location.href = prev + "#" + parentId;
+                	window.location.href = prev;
+                } else {
+                	window.location.href = prev + "#" + parentId;
                 }
             }
         );
@@ -76,6 +77,8 @@ function addFormValidators(target) {
     var wrappers = $(target).find('div.validateWrapper');
     $.each(wrappers, function() {
         var form = $(this).find('form');
+        //workaround for explicitOriginalTarget which only exists in mozilla based browsers.
+        form.find(":submit").click(function() {form.data("lastSubmitEvent",this); });
         var classes = $.makeArray($(this).attr('class').split(' '));
         $.each(classes, function(i) {
             if (validationRulesByHTMLClass[this] != null) {
@@ -84,7 +87,7 @@ function addFormValidators(target) {
                 form.submit(submitDialogForm);
                 if(target.data && target.data("aef-tabs") == "1") {
                 	var mySubm = function(evt) {
-                		if(form.valid() && evt.originalEvent.explicitOriginalTarget.name == "SaveClose")
+                		if(form.valid() && form.data("lastSubmitEvent").name == "SaveClose")
                 			ajaxCloseDialog(target.data("aef-context"),target.data("aef-id"));
                 	}; 	
                 	form.submit(mySubm);

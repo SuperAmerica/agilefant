@@ -28,7 +28,7 @@
 </c:choose>
 
 <c:set var="divId" value="1336" scope="page" />
-<aef:menu navi="backlog" pageHierarchy="${pageHierarchy}" />
+<aef:menu navi="backlog" pageHierarchy="${pageHierarchy}" title="${project.name}"/>
 <ww:actionerror />
 <ww:actionmessage />
 <script type="text/javascript">
@@ -41,7 +41,7 @@ $(document).ready(function() {
 	var iterationThemes = [<c:forEach items="${iterationThemes}" var="bind">${bind.businessTheme.id},</c:forEach>-1];
 	var getThemeData = function() {
 		var ret = {};
-		var data = jsonDataCache.get('themesByProduct',{data: {productId: ${project.product.id}}},${project.product.id});
+		var data = jsonDataCache.get('themesByProduct',{data: {productId: ${project.product.id}, includeGlobalThemes: true}},${project.product.id});
 		jQuery.each(data,function() {
 			if(this.active === true && jQuery.inArray(this.id,iterationThemes) == -1) {
 				ret[this.id] = this.name;
@@ -84,7 +84,7 @@ $(document).ready(function() {
 		format="%{getText('webwork.shortDateTime.format')}" />
 </c:if>
 
-<%--  TODO: fiksumpi virheenkäsittely --%>
+<%--  TODO: fiksumpi virheenkï¿½sittely --%>
 		<aef:productList />
 			<h2><c:out value="${project.name}" /></h2>
 				<table>
@@ -127,6 +127,65 @@ $(document).ready(function() {
 										<div id="descriptionDiv" class="descriptionDiv" style="display: block;">
 											<table class="infoTable" cellpadding="0" cellspacing="0">
 												<tr>
+													<th class="info1"><ww:text name="general.uniqueId"/></th>
+													<td class="info3"><aef:quickReference item="${project}" /></td>
+													<td class="info4" rowspan="8">
+                                                        <c:if test="${(!empty project.backlogItems) && (empty project.iterations)}">
+                                                            <div class="smallBurndown"><a href="#bigChart">
+                                                                <img src="drawSmallProjectChart.action?projectId=${project.id}"/>
+                                                            </a></div>
+                                                        
+                                                        
+                                                        <table>
+                                                          <tr>
+                                                             <th>Velocity</th>
+                                                             <td><c:out value="${projectMetrics.dailyVelocity}" /> /
+                                                             day</td>
+                                                          </tr>
+                                                          <c:if test="${projectMetrics.backlogOngoing}">
+                                                          <tr>
+                                                             <th>Schedule variance</th>
+                                                             <td><c:choose>
+                                                                    <c:when test="${projectMetrics.scheduleVariance != null}">
+                                                                       <c:choose>
+                                                                       <c:when test="${projectMetrics.scheduleVariance > 0}">
+                                                                            <span class="red">+
+                                                                       </c:when>
+                                                                        <c:otherwise>
+                                                                            <span>
+                                                                        </c:otherwise>
+                                                                        </c:choose>
+                                                                       <c:out value="${projectMetrics.scheduleVariance}" /> days
+                                                                       </span>
+                                                                </c:when>
+                                                                    <c:otherwise>
+                                                                    unknown
+                                                                </c:otherwise>
+                                                             </c:choose></td>
+                                                          </tr>
+                                                          <tr>
+                                                             <th>Scoping needed</th>
+                                                             <td><c:choose>
+                                                                    <c:when test="${projectMetrics.scopingNeeded != null}">
+                                                                       <c:out value="${projectMetrics.scopingNeeded}" />
+                                                                    </c:when>
+                                                                    <c:otherwise>
+                                                                    unknown
+                                                                </c:otherwise>
+                                                             </c:choose></td>
+                                                          </tr>
+                                                          </c:if>
+                                                          <tr>
+                                                             <th>Done</th>
+                                                             <td><c:out value="${projectMetrics.percentDone}" />% (<c:out
+                                                                    value="${projectMetrics.completedItems}" /> / <c:out
+                                                                    value="${projectMetrics.totalItems}" />)</td>
+                                                          </tr>
+                                                       </table>
+                                                       </c:if>
+                                                    </td>
+												</tr>
+												<tr>
 								    				<th class="info1">Status</th>
 								    				<td class="info3" ondblclick="return editProject();">
 								    				<c:choose>
@@ -142,63 +201,7 @@ $(document).ready(function() {
 													</c:choose>
 													<ww:text name="project.status.${project.status}" />
 								    				</td>
-								    				<!--  <td class="info3" ondblclick="return editProject();"><ww:text name="project.status.${project.status}" /></td> -->
-								    				
-								    				<td class="info4" rowspan="7">
-	                                					<c:if test="${(!empty project.backlogItems) && (empty project.iterations)}">
-	                                    					<div class="smallBurndown"><a href="#bigChart">
-	                                    						<img src="drawSmallProjectChart.action?projectId=${project.id}"/>
-	                                    					</a></div>
-	                                					
-	                                					
-                    									<table>
-										                  <tr>
-											                 <th>Velocity</th>
-											                 <td><c:out value="${projectMetrics.dailyVelocity}" /> /
-											                 day</td>
-										                  </tr>
-										                  <c:if test="${projectMetrics.backlogOngoing}">
-										                  <tr>
-											                 <th>Schedule variance</th>
-											                 <td><c:choose>
-												                    <c:when test="${projectMetrics.scheduleVariance != null}">
-													                   <c:choose>
-                                                                       <c:when test="${projectMetrics.scheduleVariance > 0}">
-                                                                            <span class="red">+
-                                                                       </c:when>
-                                                                        <c:otherwise>
-                                                                            <span>
-                                                                        </c:otherwise>
-                                                                        </c:choose>
-													                   <c:out value="${projectMetrics.scheduleVariance}" /> days
-													                   </span>
-                                                                </c:when>
-												                    <c:otherwise>
-                                                                    unknown
-                                                                </c:otherwise>
-											                 </c:choose></td>
-										                  </tr>
-										                  <tr>
-											                 <th>Scoping needed</th>
-											                 <td><c:choose>
-												                    <c:when test="${projectMetrics.scopingNeeded != null}">
-													                   <c:out value="${projectMetrics.scopingNeeded}" />
-												                    </c:when>
-												                    <c:otherwise>
-                                                                    unknown
-                                                                </c:otherwise>
-											                 </c:choose></td>
-										                  </tr>
-										                  </c:if>
-										                  <tr>
-											                 <th>Done</th>
-											                 <td><c:out value="${projectMetrics.percentDone}" />% (<c:out
-												                    value="${projectMetrics.completedItems}" /> / <c:out
-												                    value="${projectMetrics.totalItems}" />)</td>
-										                  </tr>
-									                   </table>
-									                   </c:if>
-									                </td>							
+								    				<td></td>						
 												</tr>
 												<tr>
 													<th class="info1">Project type</th>

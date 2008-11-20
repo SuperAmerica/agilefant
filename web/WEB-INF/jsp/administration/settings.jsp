@@ -1,7 +1,7 @@
 <%@ include file="../inc/_taglibs.jsp"%>
 <%@ include file="../inc/_header.jsp"%>
 
-<aef:menu navi="administration" subnavi="settings" pageHierarchy="${pageHierarchy}" />
+<aef:menu navi="administration" subnavi="settings" pageHierarchy="${pageHierarchy}" title="Settings"/>
 <aef:existingObjects />
 
 <h2>Timesheet settings</h2>

@@ -1,7 +1,7 @@
 <%@ include file="./inc/_taglibs.jsp"%>
 <%@ include file="./inc/_header.jsp"%>
 
-<aef:menu navi="backlog" />
+<aef:menu navi="backlog" title="Select Backlog"/>
 
 <h2>No backlog selected</h2>
 

@@ -1,6 +1,6 @@
 <%@ include file="../inc/_taglibs.jsp"%>
 <%@ include file="../inc/_header.jsp"%>
-<aef:menu navi="administration" subnavi="projectTypes" />
+<aef:menu navi="administration" subnavi="projectTypes" title="Project Types"/>
 <aef:openDialogs context="projectType" id="openProjectTypeTabs" />
 
 <script type="text/javascript">

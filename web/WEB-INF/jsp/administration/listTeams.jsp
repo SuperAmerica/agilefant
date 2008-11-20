@@ -1,6 +1,6 @@
 <%@ include file="../inc/_taglibs.jsp"%>
 <%@ include file="../inc/_header.jsp"%>
-<aef:menu navi="administration" subnavi="teams" pageHierarchy="${pageHierarchy}" />
+<aef:menu navi="administration" subnavi="teams" pageHierarchy="${pageHierarchy}" title="Teams"/>
 
 <aef:openDialogs context="team" id="openTeamTabs" />
 

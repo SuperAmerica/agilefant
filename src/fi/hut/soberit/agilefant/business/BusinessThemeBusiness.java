@@ -40,6 +40,13 @@ public interface BusinessThemeBusiness {
      * @return
      */
     public Collection<BusinessTheme> getNonActiveBusinessThemes(int backlogId);
+    
+    /**
+     * Get global themes by activity. 
+     * @param active
+     * @return
+     */
+    public Collection<BusinessTheme> getSortedGlobalThemes(Boolean active);
 
     /**
      * Gets a backlog's items' themes.
@@ -206,17 +213,19 @@ public interface BusinessThemeBusiness {
      * Product themes to JSON
      * 
      * @param product
+     * @param includeGlobal Include global themes in the result
      * @return
      */
-    public String getThemesForProductAsJSON(Product product);
+    public String getThemesForProductAsJSON(Product product, boolean includeGlobal);
 
     /**
      * Product themes to JSON
      * 
      * @param productId
+     * @param includeGlobal Include global themes in the result
      * @return
      */
-    public String getThemesForProductAsJSON(int productId);
+    public String getThemesForProductAsJSON(int productId, boolean includeGlobal);
     
     /**
      * Product themes to JSON

@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
+import fi.hut.soberit.agilefant.business.BusinessThemeBusiness;
 import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.db.IterationGoalDAO;
@@ -45,6 +46,7 @@ public class BacklogItemActionTest extends SpringTestCase {
     private UserDAO userDAO = null;
     private ProjectDAO projectDAO = null;
     private ProductDAO productDAO = null;
+    private BusinessThemeBusiness businessThemeBusiness = null;
 //    private UserBusiness userBusiness = null;
 
     private int backlogId;
@@ -59,13 +61,17 @@ public class BacklogItemActionTest extends SpringTestCase {
      * Create test data.
      */
     public void onSetUpInTransaction() throws Exception {
-        BusinessTheme theme = new BusinessTheme();
-        theme.setActive(false);
+
         //create product and project
         Product product = new Product();
         product.setName("Test Product");
         productId = (Integer) productDAO.create(product);
         product = productDAO.get(productId);
+
+        BusinessTheme theme = new BusinessTheme();
+        theme.setActive(false);
+        theme.setName("ttest");
+        theme = businessThemeBusiness.store(0, productId, theme);
         HashSet<BusinessTheme> themes = new HashSet<BusinessTheme>();
         themes.add(theme);
         product.setBusinessThemes(themes);
@@ -473,5 +479,13 @@ public class BacklogItemActionTest extends SpringTestCase {
 
     public void setProductId(int productId) {
         this.productId = productId;
+    }
+
+    public BusinessThemeBusiness getBusinessThemeBusiness() {
+        return businessThemeBusiness;
+    }
+
+    public void setBusinessThemeBusiness(BusinessThemeBusiness businessThemeBusiness) {
+        this.businessThemeBusiness = businessThemeBusiness;
     }
 }

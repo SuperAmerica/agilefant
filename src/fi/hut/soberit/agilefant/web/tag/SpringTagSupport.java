@@ -8,6 +8,8 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 
 public abstract class SpringTagSupport extends TagSupport {
 
+    private static final long serialVersionUID = -2277915266490971933L;
+
     private PageContext pageContext;
 
     private ApplicationContext applicationContext;

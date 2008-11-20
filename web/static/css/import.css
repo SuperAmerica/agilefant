@@ -1172,7 +1172,7 @@ select.statusSelect option {
 	padding: 3px 5px;
 	position: fixed;
 	right: 20px;
-	top: 50px;
+	top: 82px;
 	z-index: 3699;
 }
 
@@ -1192,3 +1192,6 @@ select.statusSelect option {
 	width: 95%;
 }
 
+.globalTheme {
+	color: #6600aa;
+}

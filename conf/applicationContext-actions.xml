@@ -99,4 +99,7 @@
     <bean name="jsonAction"
         class="fi.hut.soberit.agilefant.web.JSONAction"
         autowire="byName" singleton="false" />
+    <bean name="quickReferenceAction"
+        class="fi.hut.soberit.agilefant.web.QuickReferenceAction"
+        autowire="byName" singleton="false" />
 </beans>

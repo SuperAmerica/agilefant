@@ -5,6 +5,7 @@
 <%@attribute name="navi"%>
 <%@attribute name="subnavi"%>
 <%@attribute type="java.util.Collection" name="pageHierarchy"%>
+<%@attribute name="title"%>
 
 <c:set var="fileTimestamp" value="build_1640" />
 
@@ -15,7 +16,10 @@
 <link rel="stylesheet" href="static/css/v5.css?${fileTimestamp}" type="text/css"/>
 <link rel="stylesheet" href="static/css/datepicker.css?${fileTimestamp}" type="text/css"/>
 <title>
-Agilefant
+<c:choose>
+	<c:when test="${title != null}">Agilefant - <c:out value="${title}"/></c:when>
+	<c:otherwise>Agilefant</c:otherwise>
+</c:choose>
 </title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
@@ -43,6 +47,10 @@ $(document).ready(function() {
         var sessionLength = <%=session.getMaxInactiveInterval()%>*1000;
         setTimeout('reloadPage()',sessionLength+5);
     }
+    $("#quickRefInput").focus(function () { 
+        $(this).val("").unbind("focus").css("color","#000");
+    });
+    
 });
 </script>
 
@@ -63,24 +71,30 @@ $(document).ready(function() {
 Agilefant
 </h1>
 </div>
-
 <div id="logout">
-<aef:currentUser />
-<table border="0">
-<tr>
-<td>
-<ww:url id="editLink" action="dailyWork" includeParams="none">
-	<ww:param name="userId" value="${currentUser.id}" />
-</ww:url>
-<ww:a href="%{editLink}">${currentUser.fullName}</ww:a>
-</td>
-<td>
-<form action="j_spring_security_logout" method="post">
-<input name="exit" type="submit" value="logout" />
-</form>
-</td>
-</tr>
-</table>
+	<aef:currentUser />
+	<table border="0">
+		<tr>
+			<td>
+				<ww:url id="editLink" action="dailyWork" includeParams="none">
+					<ww:param name="userId" value="${currentUser.id}" />
+				</ww:url>
+				<ww:a href="%{editLink}">${currentUser.fullName}</ww:a>
+			</td>
+			<td>
+				<form action="j_spring_security_logout" method="post">
+					<input name="exit" type="submit" value="logout" />
+				</form>
+			</td>
+			</tr>
+	</table>
+	<div style="margin-top: 5px; margin-right: 4px;">
+		<form action="qr.action" method="post" onsubmit="return handleQuickRef(this);">
+			<ww:textfield name="id" id="quickRefInput" cssStyle="color: #999;" size="10" value="reference id"/>
+			<ww:submit value="Go to" />
+			<div style="display: none; color: #f00;">Invalid reference ID format</div>
+		</form>
+	</div>
 </div>
 
 <!-- Working on a request div -->
@@ -216,7 +230,7 @@ Agilefant
     </c:choose>
     </li>
     
-    <li class="separator" />
+    <li class="separator"></li>
 
     <li><ww:url id="createLink" action="ajaxCreateProjectType"
         includeParams="none" />
@@ -356,8 +370,8 @@ $(document).ready(function() {
     <span>
     <img src="static/img/timesheets.png" alt="Timesheets" />
     Timesheets
-    </a>
     </span>
+    </a>
 </li>
 </c:if>
 
@@ -374,8 +388,8 @@ $(document).ready(function() {
     <span>
     <img src="static/img/settings.png" alt="Administration" />
     Administration
-    </a>
     </span>
+    </a>
 </li>
 </ul>
 

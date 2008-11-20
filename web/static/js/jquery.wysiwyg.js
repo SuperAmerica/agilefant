@@ -456,8 +456,8 @@
                 /**
                  * @link http://code.google.com/p/jwysiwyg/issues/detail?id=11
                  */
-                $(this.editorDoc).keydown(function() { self.saveContent(); })
-                                 .mousedown(function() { self.saveContent(); });
+                $(this.editorDoc).keyup(function() { self.saveContent(); })
+                                 .mouseup(function() { self.saveContent(); });
             }
 
             if ( this.options.css )

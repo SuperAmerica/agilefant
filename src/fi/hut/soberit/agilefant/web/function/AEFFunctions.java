@@ -89,9 +89,11 @@ public class AEFFunctions {
     }
     public static String nl2br(String s) {
         if(s == null) return s;
-        s = s.replaceAll("\r\n", "<br>");
-        s = s.replaceAll("\n", "<br>");
-        s = s.replaceAll("\r", "<br>");
+        if (!s.contains("<br")) { // hack to avoid doubling new lines
+            s = s.replaceAll("\r\n", "<br>");
+            s = s.replaceAll("\n", "<br>");
+            s = s.replaceAll("\r", "<br>");
+        }
         return s;
     }
     public static String escapeHTML(String s) {
@@ -114,49 +116,47 @@ public class AEFFunctions {
     public static boolean isBeforeThisDay(Date date) {
         return date.before(GregorianCalendar.getInstance().getTime());
     }
-    
+
     public static boolean listContains(Collection<Object> coll, Object object) {
-        if (coll == null) {
+        if (coll == null)
             return false;
-        }
         return coll.contains(object);
     }
-    
+
     public static List<?> substract(Collection<?> first, Collection<?> second) {
         List<?> list = new ArrayList<Object>(first);
         list.removeAll(second);
         return list;
     }
-    
+
     public static boolean isUserAssignedTo(Backlog backlog, User user) {
         if (backlog instanceof Project) {
             for (Assignment ass : backlog.getAssignments()) {
-                if (ass.getUser() == user) {
+                if (ass.getUser() == user)
                     return true;
-                }
             }
         }
         return false;
     }
-    
+
     /**
      * Adds AFTime a and AFTime b together. Either of the arguments
      * can be null. Returns zero hours if both arguments were null.
      */
     public static AFTime calculateAFTimeSum(AFTime a, AFTime b) {
         AFTime sum = new AFTime(0);
-        
+
         if (a != null) {
             sum.add(a);
         }
-        
+
         if (b != null) {
             sum.add(b);
         }
-        
+
         return sum;
     }
-    
+
     public static String currentTime() {
         DateFormat fmt  = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         return fmt.format(GregorianCalendar.getInstance().getTime());

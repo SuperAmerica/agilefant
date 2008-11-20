@@ -448,7 +448,6 @@ public class HistoryBusinessTest extends TestCase {
     /**
      * Test the calculation of expected finishing date of a backlog.
      */
-    @SuppressWarnings("deprecation")
     public void testCalculateExpectedDate() {
         /* The backlogs */
         Product prod = new Product();
@@ -553,7 +552,6 @@ public class HistoryBusinessTest extends TestCase {
         
     }
     
-    @SuppressWarnings("deprecation")
     public void testCalculateScopingNeeded() {
         Product prod = new Product();
         Iteration iter = new Iteration();

@@ -202,9 +202,9 @@
             this.valid = true;
             
             var submit = this.form.find(':submit');
-            this.options.validation.errorCont = $('<span/>').addClass('errorMessage').hide()
+            this.options.validation.errorCont = $('<span/>').addClass('errorMessage')
                    .text('Please select at least ' + me.options.validation.selectAtLeast)
-                   .appendTo($(submit).parent());  
+                   .appendTo($(submit).parent()).hide();  
             
             if (me.options.validation.selectAtLeast > 0) {
 	            this.form.find(':checkbox').change(function() {
@@ -273,6 +273,7 @@
                 }
                 else {
                     me.selectAction();
+                    return false;
                 }
             });
             cancelButton.click(function() { me.cancelAction(); });

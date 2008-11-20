@@ -40,7 +40,12 @@ $(document).ready(function() {
 		<ww:hidden name="backlogItemId" value="${backlogItem.id}" />	
 		<ww:hidden name="effortLeft" value="${backlogItem.effortLeft}" />				
 	
-		<table class="formTable">		
+		<table class="formTable">	
+			<tr>
+				<td><ww:text name="general.uniqueId"/></td>
+				<td></td>
+				<td><aef:quickReference item="${backlogItem}" /></td>
+			</tr>	
 			<tr>						
 				<td>Name</td>											
 				<td>*</td>
@@ -673,8 +678,11 @@ $(document).ready(function() {
 								</c:otherwise>
 							</c:choose>
 							<c:choose>
-								<c:when test="${row.active}">
+								<c:when test="${row.active && row.product != null}">
 									<label for="bliTheme-${row.id}${backlogItemId}-${bliListContext}">${row.name}</label>
+								</c:when>
+								<c:when test="${row.product == null && row.active}">
+									<label class="globalTheme" for="bliTheme-${row.id}${backlogItemId}-${bliListContext}">${row.name}</label>
 								</c:when>
 								<c:otherwise>
 									<span style="color: #999999">

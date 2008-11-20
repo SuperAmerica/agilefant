@@ -28,6 +28,17 @@ public interface BusinessThemeDAO extends GenericDAO<BusinessTheme> {
      * @return
      */
     public List<BusinessTheme> getSortedBusinessThemesByProductAndActivity(Product product, boolean active);
+
+    /**
+     * 
+     * @param product
+     * @param active
+     * @param includeGlobal
+     * @return
+     */
+    public List<BusinessTheme> getSortedBusinessThemesByProductAndActivity(Product product, Boolean active, boolean includeGlobal);
+    
+    public List<BusinessTheme> getSortedGlobalThemes(Boolean active);
     
     public Map<Integer, Integer> numberOfBacklogItemsByProduct(Product product, State backlogItemState);
     

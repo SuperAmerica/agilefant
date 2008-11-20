@@ -90,13 +90,15 @@ public class IterationAction extends ActionSupport implements CRUDAction {
 
     public String edit() {
         iteration = iterationDAO.get(iterationId);
-        Date startDate = iteration.getStartDate();
+        
 
         if (iteration == null) {
-            // super.addActionError(super.getText("iteration.notFound"));
-            // return Action.INPUT;
-            return Action.SUCCESS;
+            super.addActionError(super.getText("iteration.notFound"));
+            return Action.INPUT;
         }
+        
+        Date startDate = iteration.getStartDate();
+        
         if (startDate == null) {
             startDate = new Date(0);
         }

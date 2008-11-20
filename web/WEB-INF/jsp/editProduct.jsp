@@ -6,7 +6,7 @@
 </c:if>
 
 <c:set var="divId" value="1336" scope="page" />
-<aef:menu navi="backlog" pageHierarchy="${pageHierarchy}" />
+<aef:menu navi="backlog" pageHierarchy="${pageHierarchy}" title="${product.name}"/>
 <ww:actionerror />
 <ww:actionmessage />
 
@@ -16,17 +16,7 @@
 
 <script type="text/javascript">
 
-function setThemeActivityStatus(themeId,status) {
-	var url = "";
-	if(status == true) {
-		url = "ajaxActivateBusinessTheme.action";
-	} else {
-		url = "ajaxDeactivateBusinessTheme.action";
-	}
-	$.post(url,{businessThemeId: themeId},function(data,status) {
-		reloadPage();
-	});
-}
+
 
 function deleteTheme(themeId) {
 	var confirm = confirmDelete();
@@ -108,10 +98,14 @@ var productId = ${product.id};
 			<div id="descriptionDiv" class="descriptionDiv"
 				style="display: block;">
 			<table class="infoTable" cellpadding="0" cellspacing="0">
-
+				<tr>
+					<td class="info1"><ww:text name="general.uniqueId"/></td>
+					<td class="info3"><aef:quickReference item="${product}" /></td>
+					<td class="info4" rowspan="2">&nbsp;</td>
+				</tr>
 				<tr>
 					<td colspan="2" class="description">${product.description}</td>
-					<td class="info4">&nbsp;</td>
+					<td></td>
 				</tr>
 			</table>
 			</div>

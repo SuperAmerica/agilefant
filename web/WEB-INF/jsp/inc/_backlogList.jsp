@@ -68,7 +68,14 @@ $(document).ready(function() {
 			<div id="bli_${row.id}">
             <c:forEach items="${bliThemeCache[row.id]}" var="businessTheme">
             	<a href="#" onclick="handleTabEvent('backlogItemTabContainer-${row.id}-${bliListContext}','bli',${row.id},2, '${bliListContext}'); return false;">
-            		<span class="businessTheme" title="${businessTheme.description}"><c:out value="${businessTheme.name}"/></span>
+            	   <c:choose>
+            	       <c:when test="${businessTheme.product == null}">
+            	           <span class="businessTheme globalThemeColors" title="${businessTheme.description}"><c:out value="${businessTheme.name}"/></span>
+            	       </c:when>
+            	       <c:otherwise>
+            	           <span class="businessTheme" title="${businessTheme.description}"><c:out value="${businessTheme.name}"/></span>   
+            	       </c:otherwise>
+            	   </c:choose>
             	</a>
             </c:forEach>
 			<a class="nameLink" onclick="handleTabEvent('backlogItemTabContainer-${row.id}-${bliListContext}','bli',${row.id},0, '${bliListContext}'); return false;">

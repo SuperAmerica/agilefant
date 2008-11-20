@@ -1046,10 +1046,15 @@ table.reportTable tr.total th.total {
 
 span.businessTheme {
 	background-color: #ffd;
-	color: #c96;
+	color: #a74;
 	font-size: 80%;
 	float: left;
 	padding: 1px 1px 1px 3px;	
+}
+
+.globalThemeColors {
+    background-color: #cff !important;
+    color: #06c !important;	
 }
 
 span.businessTheme a {
@@ -1193,5 +1198,5 @@ select.statusSelect option {
 }
 
 .globalTheme {
-	color: #6600aa;
+	color: #c42;
 }

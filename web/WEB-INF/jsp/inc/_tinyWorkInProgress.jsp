@@ -29,7 +29,14 @@ $(document).ready(function() {
 		<div style="overflow:hidden; width: 150px; max-height: 3.7em;">
 		<c:forEach items="${row.businessThemes}" var="businessTheme">
             <a href="#" onclick="handleTabEvent('backlogItemTabContainer-${row.id}-${bliListContext}','bli',${row.id},3, '${bliListContext}'); return false;">
-                <span class="businessTheme" title="${businessTheme.description}"><c:out value="${businessTheme.name}"/></span>
+                <c:choose>
+                   <c:when test="${businessTheme.product == null}">
+                      <span class="businessTheme globalThemeColors" title="${businessTheme.description}"><c:out value="${businessTheme.name}"/></span>
+                   </c:when>
+                   <c:otherwise>
+                      <span class="businessTheme" title="${businessTheme.description}"><c:out value="${businessTheme.name}"/></span>   
+                   </c:otherwise>
+                </c:choose>
             </a>
         </c:forEach>
 		<a class="nameLink" onclick="handleTabEvent('backlogItemTabContainer-${row.id}-${bliListContext}','bliWorkInProgress',${row.id},0,'${bliListContext}'); return false;">

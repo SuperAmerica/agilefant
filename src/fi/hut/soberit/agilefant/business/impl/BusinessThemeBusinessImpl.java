@@ -121,14 +121,6 @@ public class BusinessThemeBusinessImpl implements BusinessThemeBusiness {
             return new HashMap<Integer, List<BusinessTheme>>();
         }
         List<?> rawThemeData = businessThemeDAO.getThemesByBacklog(bl);
-        Product prod = null;
-        if(bl instanceof Product) {
-            prod = (Product)bl;
-        } else if(bl instanceof Project) {
-            prod = ((Project)bl).getProduct();
-        } else if(bl instanceof Iteration) {
-            prod = ((Iteration)bl).getProject().getProduct();
-        }
         Map<Integer, List<BusinessTheme>> res = new HashMap<Integer, List<BusinessTheme>>();
         for (Object row : rawThemeData) {
             try {
@@ -138,7 +130,7 @@ public class BusinessThemeBusinessImpl implements BusinessThemeBusiness {
                 tmpTheme.setId((Integer) tmpData[1]);
                 tmpTheme.setName((String) tmpData[2]);
                 tmpTheme.setDescription((String) tmpData[3]);
-                tmpTheme.setProduct(prod);
+                tmpTheme.setProduct((Product) tmpData[4]);
                 if (res.get(bliId) == null) {
                     res.put(bliId, new ArrayList<BusinessTheme>());
                 }

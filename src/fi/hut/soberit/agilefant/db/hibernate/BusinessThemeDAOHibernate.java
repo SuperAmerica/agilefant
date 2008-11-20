@@ -100,6 +100,7 @@ public class BusinessThemeDAOHibernate extends
         p.add(Projections.property("themes.id"), "themeId");
         p.add(Projections.property("themes.name"), "themeName");
         p.add(Projections.property("themes.description"), "themeDescription");
+        p.add(Projections.property("themes.product"), "themeProduct");
         crit.setProjection(p);
         crit.setFetchMode("themes", FetchMode.JOIN);
         crit.setFetchMode("iterationGoal", FetchMode.SELECT);

@@ -66,7 +66,13 @@ public interface BusinessThemeBusiness {
     public Map<BusinessTheme, BusinessThemeMetrics> getThemeMetrics(
             int productId);
 
-    public void delete(int businessThemeId) throws ObjectNotFoundException;
+    /**
+     * Delete a business theme.
+     * @param businessThemeId
+     * @return true, if theme was global, false otherwise
+     * @throws ObjectNotFoundException
+     */
+    public boolean delete(int businessThemeId) throws ObjectNotFoundException;
 
     /**
      * Store existing business theme or update existing entry.

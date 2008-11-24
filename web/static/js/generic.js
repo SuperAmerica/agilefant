@@ -302,3 +302,14 @@ function setThemeActivityStatus(themeId,status) {
 function removeThemes(container) {
     $(container).empty().text('(none)');
 }
+
+function deleteTheme(themeId) {
+    var confirm = confirmDelete();
+    var url = "ajaxDeleteBusinessTheme.action";         
+    if (confirm) {
+        $.post(url,{businessThemeId: themeId},function(data) {
+            var a = "foo";
+            reloadPage();
+        });
+    }
+}

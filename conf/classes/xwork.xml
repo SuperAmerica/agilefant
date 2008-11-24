@@ -99,6 +99,10 @@
 				type="redirect-action">
 				<param name="actionName">listBusinessThemes</param>
 			</result>
+			<result name="success_globalThemes"
+                type="redirect-action">
+                <param name="actionName">globalThemes</param>
+            </result>
 			<result name="success_projectPortfolio"
 				type="redirect-action">
 				<param name="actionName">projectPortfolio</param>
@@ -914,9 +918,14 @@
 		<!-- Business theme actions -->
 		<action name="deleteBusinessTheme" method="delete"
 			class="businessThemeAction">
-			<result type="redirect">
-				editProduct.action?productId=${productId}
+			
+			<result name="success_product" type="redirect">
+                editProduct.action?productId=${productId}
 			</result>
+			<result name="success_globalThemes" type="redirect-action">
+                <param name="actionName">globalThemes</param>
+			</result>
+
 		</action>
 		<action name="storeBusinessTheme" method="store"
 			class="businessThemeAction">

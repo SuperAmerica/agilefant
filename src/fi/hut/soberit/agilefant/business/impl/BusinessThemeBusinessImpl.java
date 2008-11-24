@@ -168,14 +168,16 @@ public class BusinessThemeBusinessImpl implements BusinessThemeBusiness {
         return metricsMap;
     }
 
-    public void delete(int themeId) throws ObjectNotFoundException {
-
+    public boolean delete(int themeId) throws ObjectNotFoundException {
+        boolean global = false;
         BusinessTheme businessTheme = businessThemeDAO.get(themeId);
 
         if (businessTheme == null) {
             throw new ObjectNotFoundException();
         }
         try {
+            global = businessTheme.isGlobal();
+            
             Collection<BacklogItem> associations = businessTheme.getBacklogItems();
             for(BacklogItem bli : associations) {
                 bli.getBusinessThemes().remove(businessTheme);
@@ -186,9 +188,13 @@ public class BusinessThemeBusinessImpl implements BusinessThemeBusiness {
                     businessThemeDAO.removeBacklogThemeBinding(bind);
                 }
             }
-            businessTheme.getProduct().getBusinessThemes().remove(businessTheme);
+            if (!businessTheme.isGlobal()) {
+                businessTheme.getProduct().getBusinessThemes().remove(businessTheme);
+            }
             businessThemeDAO.remove(themeId);
         } catch (Exception e) { }
+        
+        return global;
     }
 
     public void setBusinessThemeDAO(BusinessThemeDAO businessThemeDAO) {

@@ -149,7 +149,7 @@ public class BusinessThemeActionTest extends SpringTestCase {
         businessThemeAction.setBusinessThemeId(at.getId());
         businessThemeAction.setBusinessTheme(at);
         String result = businessThemeAction.delete();
-        assertEquals("delete() was unsuccessful", result, Action.SUCCESS);        
+        assertEquals("delete() was unsuccessful", result, Action.SUCCESS + "_product");        
     }
 
     public ProductDAO getProductDAO() {

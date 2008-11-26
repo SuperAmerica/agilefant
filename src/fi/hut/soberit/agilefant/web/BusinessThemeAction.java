@@ -156,15 +156,19 @@ public class BusinessThemeAction extends ActionSupport implements CRUDAction {
     }
     
     public String delete() {
+        boolean global = false;
         try {
-            businessThemeBusiness.delete(businessThemeId);
+            global = businessThemeBusiness.delete(businessThemeId);
         }
         catch (Exception e) {
             super.addActionError(e.getMessage());
             return Action.ERROR;
         }
         
-        return Action.SUCCESS;
+        if (global) {
+            return Action.SUCCESS + "_" + "globalThemes";
+        }
+        return Action.SUCCESS + "_" + "product";
     }
     
     protected void fillObject(BusinessTheme fillable) {

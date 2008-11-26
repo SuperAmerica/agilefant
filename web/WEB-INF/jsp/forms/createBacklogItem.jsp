@@ -70,7 +70,7 @@ $(document).ready(function() {
 			<td></td>
 			<td colspan="2">
 			
-			<select name="backlogId" id="createBLIBacklogId" onchange="getIterationGoals(this.value, 'createBLIIterGoalSelect'); removeThemes('#themeListContainer-createBLI');">
+			<select name="backlogId" id="createBLIBacklogId" onchange="getIterationGoals(this.value, '#createBLIIterGoalSelect'); removeThemes('#themeListContainer-createBLI');">
 				<%-- Generate a drop-down list showing all backlogs in a hierarchical manner --%>
 				<option class="inactive" value="">(select backlog)</option>
 				<c:forEach items="${productList}" var="product">

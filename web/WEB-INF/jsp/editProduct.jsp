@@ -16,18 +16,6 @@
 
 <script type="text/javascript">
 
-
-
-function deleteTheme(themeId) {
-	var confirm = confirmDelete();
-	var url = "ajaxDeleteBusinessTheme.action";			
-	if (confirm) {
-		$.post(url,{businessThemeId: themeId},function(data) {
-			reloadPage();
-		});
-	}
-}
-
 $(document).ready(function() {
     <c:forEach items="${openThemes}" var="openTheme">
         handleTabEvent("businessThemeTabContainer-${openTheme[0]}", "businessTheme", ${openTheme[0]}, ${openTheme[1]});
@@ -49,15 +37,15 @@ var SimileAjax = {
 };
 SimileAjax.Platform = new Object();
 </script>
-<script type="text/javascript" src="static/js/timeline/simile-ajax-bundle.js"></script>
+<script type="text/javascript" src="static/js/timeline/simile-ajax-bundle.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
 
 <!-- Include timeline -->
 <script type="text/javascript">
 var productId = ${product.id};
 </script>
-<script type="text/javascript" src="static/js/timeline/timeline-load.js"></script>
-<script type="text/javascript" src="static/js/timeline/timeline-bundle.js"></script>
-<script type="text/javascript" src="static/js/timeline/timeline-custom.js"></script>
+<script type="text/javascript" src="static/js/timeline/timeline-load.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/timeline/timeline-bundle.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/timeline/timeline-custom.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
 
 <h2><c:out value="${product.name}" /></h2>
 <table>

@@ -34,6 +34,8 @@ public class QuickReferenceAction extends ActionSupport {
         if (id == null || id.trim().length() < 4 || id.indexOf(":") < 0) {
             return Action.ERROR;
         }
+        
+        id = id.trim(); 
         context = id.substring(0, id.indexOf(":")).toUpperCase();
         try {
             objectId = Integer.parseInt(id.substring(id.indexOf(":") + 1));

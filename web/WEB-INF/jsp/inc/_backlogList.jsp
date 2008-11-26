@@ -258,7 +258,7 @@ $(document).ready(function() {
             <div class="toggleUserChooserLink">
                 <img src="static/img/users.png"/>
                 <span>
-                Keep original
+                (unchanged)
                 </span>
             </div>
             <div class="toggleUserChooserLink" style="display: none;">
@@ -281,7 +281,7 @@ $(document).ready(function() {
             <div class="toggleThemeChooserLink">
                     <img src="static/img/theme.png"/>
                     <span>
-                    Keep original
+                    (unchanged)
                     </span>
             </div>
             <div class="toggleThemeChooserLink" style="display: none;">

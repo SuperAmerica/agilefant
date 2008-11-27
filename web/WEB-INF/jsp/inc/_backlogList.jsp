@@ -36,16 +36,10 @@ $(document).ready(function() {
     <c:forEach items="${openBacklogItemTabs}" var="openBacklogItem">
         handleTabEvent("backlogItemTabContainer-${openBacklogItem[0]}-${bliListContext}", "bli", ${openBacklogItem[0]}, ${openBacklogItem[1]}, '${bliListContext}');
     </c:forEach>
-});
-
-$(document).ready(function() {
     $('#themeChooserLink-multipleSelect').themeChooser({
         backlogId: 'select[name=targetBacklog]',
         themeListContainer: '#themeListContainer-multipleSelect'
     });
-});
-
-$(document).ready(function() {
     $('#userChooserLink-multipleSelect').userChooser({
         backlogIdField: 'select[name=targetBacklog]',
         userListContainer: '#userListContainer-multipleSelect',
@@ -82,7 +76,7 @@ $(document).ready(function() {
 		<display:column sortable="true" sortProperty="name" title="Name" class="${nameClass}">												
 			<div id="bli_${row.id}">
             <c:forEach items="${bliThemeCache[row.id]}" var="businessTheme">
-            	<a href="#" onclick="handleTabEvent('backlogItemTabContainer-${row.id}-${bliListContext}','bli',${row.id},2, '${bliListContext}'); return false;">
+            	<a href="#" onclick="handleTabEvent('backlogItemTabContainer-${row.id}-${bliListContext}','bli',${row.id},0, '${bliListContext}'); return false;">
             	   <c:choose>
             	       <c:when test="${businessTheme.global}">
             	           <span class="businessTheme globalThemeColors" title="${businessTheme.description}"><c:out value="${businessTheme.name}"/></span>

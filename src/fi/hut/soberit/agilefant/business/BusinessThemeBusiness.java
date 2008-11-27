@@ -3,9 +3,11 @@ package fi.hut.soberit.agilefant.business;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.Backlog;
+import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.BacklogThemeBinding;
 import fi.hut.soberit.agilefant.model.BusinessTheme;
 import fi.hut.soberit.agilefant.model.Product;
@@ -162,10 +164,11 @@ public interface BusinessThemeBusiness {
      * themes from the backlog item.
      * 
      * @param themeIds
-     * @param backlogItemId
+     * @param bli
      */
-    public void addMultipleThemesToBacklogItem(int[] themeIds, int backlogItemId);
-
+    public void setBacklogItemThemes(Set<Integer> themeIds, BacklogItem bli);
+    
+    public void setBacklogItemThemes(Set<Integer> themeIds, int backlogItemId);
     /**
      * Remove given theme from the given backlog item.
      * 

@@ -238,14 +238,7 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
         
         // Store backlog item
         this.backlogItemId = (Integer) backlogItemDAO.create(storable);
-        int[] themes = new int[themeIds.size()];
-        int index = 0;
-        for (int i : themeIds) {
-            themes[index] = i;
-            index++;
-        }
-
-        businessThemeBusiness.addMultipleThemesToBacklogItem(themes, this.backlogItemId);
+        businessThemeBusiness.setBacklogItemThemes(themeIds, this.backlogItemId);
 
         /*
          * This should be handled inside business...
@@ -292,6 +285,7 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
         
         // Store backlog item
         this.backlogItemId = (Integer) backlogItemDAO.create(storable);
+        businessThemeBusiness.setBacklogItemThemes(themeIds, this.backlogItemId);
 
         /*
          * This should be handled inside business...
@@ -304,44 +298,6 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
         return CRUDAction.AJAX_SUCCESS;        
     }
 
-    public String addBusinessTheme() {
-        BacklogItem bli;
-        BusinessTheme theme;
-        System.out.println("DEB ::: BLI " + backlogItemId);
-        System.out.println("DEB ::: theme " + businessThemeId);
-        if (backlogItemId > 0 && businessThemeId > 0) {
-            bli = backlogItemBusiness.getBacklogItem(backlogItemId);
-            theme = businessThemeBusiness.getBusinessTheme(businessThemeId);
-            if (bli == null || theme == null) {
-                return CRUDAction.AJAX_ERROR;
-            } else {
-                bli.getBusinessThemes().add(theme);  
-                backlogItemDAO.store(bli);
-                return CRUDAction.AJAX_SUCCESS;
-            }                                               
-        }
-        return CRUDAction.AJAX_ERROR;
-        
-    }
-    public String removeBusinessTheme() {
-        BacklogItem bli;
-        BusinessTheme theme;
-        if (backlogItemId > 0 && businessThemeId > 0) {
-            bli = backlogItemBusiness.getBacklogItem(backlogItemId);
-            theme = businessThemeBusiness.getBusinessTheme(businessThemeId);
-            if (bli == null || theme == null) {
-                return CRUDAction.AJAX_ERROR;
-            } else {
-                if(bli.getBusinessThemes().contains(theme)) {
-                    bli.getBusinessThemes().remove(theme);   
-                    backlogItemDAO.store(bli);
-                }
-                return CRUDAction.AJAX_SUCCESS;
-            }                                              
-        }
-        return CRUDAction.AJAX_ERROR;
-        
-    }
     
     /**
      * Updates backlog item's state and effort left and its tasks' states. Used

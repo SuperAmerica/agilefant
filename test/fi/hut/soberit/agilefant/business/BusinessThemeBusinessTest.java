@@ -323,32 +323,32 @@ public class BusinessThemeBusinessTest extends TestCase {
 
     public void testAddMultipleThemesToBacklogItem() {
         BacklogItem bli = new BacklogItem();
-        BacklogItemBusiness bliBus = EasyMock.createMock(BacklogItemBusiness.class);
         BusinessThemeDAO themeDAO = EasyMock.createMock(BusinessThemeDAO.class);
         BacklogItemDAO bliDAO = EasyMock.createMock(BacklogItemDAO.class);
+        
         BusinessThemeBusinessImpl themeBusiness = new BusinessThemeBusinessImpl();
-        themeBusiness.setBacklogItemBusiness(bliBus);
         themeBusiness.setBusinessThemeDAO(themeDAO);
         themeBusiness.setBacklogItemDAO(bliDAO);
         BusinessTheme theme1 = new BusinessTheme();
         BusinessTheme theme2 = new BusinessTheme();
         BusinessTheme theme3 = new BusinessTheme();
         List<BusinessTheme> themes = new ArrayList<BusinessTheme>();
+        Set<Integer> addThemes = new HashSet<Integer>();
+        addThemes.add(2);
+        addThemes.add(3);
+        addThemes.add(5);
         themes.add(theme1);
         bli.setBusinessThemes(themes);
-        expect(bliBus.getBacklogItem(1)).andReturn(bli);
-        bliDAO.store(bli);
         expect(themeDAO.get(2)).andReturn(theme2);
         expect(themeDAO.get(3)).andReturn(theme3);
+        expect(themeDAO.get(5)).andReturn(null);
+        bliDAO.store(bli);
 
-        replay(bliBus);
         replay(themeDAO);
         replay(bliDAO);
-        int[] ids = {2,3};
-        themeBusiness.addMultipleThemesToBacklogItem(ids, 1);
+        themeBusiness.setBacklogItemThemes(addThemes, bli);
         assertEquals(2, bli.getBusinessThemes().size());
         verify(themeDAO);
-        verify(bliBus);
         verify(bliDAO);
 
     }

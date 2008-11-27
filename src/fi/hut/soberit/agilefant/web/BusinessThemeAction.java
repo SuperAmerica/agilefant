@@ -185,12 +185,6 @@ public class BusinessThemeAction extends ActionSupport implements CRUDAction {
         fillable.setActive(businessTheme.isActive());
     }
     
-    public String editBacklogItemBusinessThemes() {
-        if (backlogItemId > 0) {
-            bliBusinessThemes = businessThemeBusiness.getBacklogItemActiveBusinessThemes(backlogItemId);
-        }
-        return list();       
-    }
     
     public String storeThemeBinding() {
         if(businessThemeIds != null && backlogId > 0 && plannedSpendings != null) {
@@ -199,12 +193,6 @@ public class BusinessThemeAction extends ActionSupport implements CRUDAction {
         return CRUDAction.AJAX_SUCCESS;
     }
     
-    public String storeBacklogItemThemes() {
-        if(businessThemeIds != null && backlogItemId > 0) {
-            businessThemeBusiness.addMultipleThemesToBacklogItem(businessThemeIds, backlogItemId);
-        }
-        return CRUDAction.AJAX_SUCCESS;
-    }
     
     public String removeThemeBinding() {
         if(bindingId > 0) {

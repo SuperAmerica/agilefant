@@ -81,7 +81,7 @@ $(document).ready(function() {
 					<display:column sortable="true" sortProperty="name" title="Name" >						
 						<div style="overflow:hidden; width: 170px; max-height: 3.7em;">
 						<c:forEach items="${row.businessThemes}" var="businessTheme">
-                            <a href="#" onclick="handleTabEvent('backlogItemTabContainer-${row.id}-${bliListContext}','bliDWProjects',${row.id},3, '${bliListContext}'); return false;">
+                            <a href="#" onclick="handleTabEvent('backlogItemTabContainer-${row.id}-${bliListContext}','bliDWProjects',${row.id},0, '${bliListContext}'); return false;">
                                 <c:choose>
 	                                <c:when test="${businessTheme.global}">
 	                                   <span class="businessTheme globalThemeColors" title="${businessTheme.description}"><c:out value="${businessTheme.name}"/></span>

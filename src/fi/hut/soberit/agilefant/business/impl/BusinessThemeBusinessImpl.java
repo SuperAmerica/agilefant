@@ -394,23 +394,27 @@ public class BusinessThemeBusinessImpl implements BusinessThemeBusiness {
         
     }
 
-    public void addMultipleThemesToBacklogItem(int[] themeIds, int backlogItemId) {        
-        if(backlogItemId < 1) {
-            return;
-        }
-        BacklogItem bli = backlogItemBusiness.getBacklogItem(backlogItemId);
+    public void setBacklogItemThemes(Set<Integer> themeIds, int backlogItemId) {
+        BacklogItem bli = backlogItemDAO.get(backlogItemId);
+        setBacklogItemThemes(themeIds, bli);
+    }
+
+    
+    public void setBacklogItemThemes(Set<Integer> themeIds, BacklogItem bli) {
         if(bli == null) {
             return;
         }
+        
         Collection<BusinessTheme> set = new HashSet<BusinessTheme>();
-        for(int i = 0 ; i < themeIds.length; i++) {
-            BusinessTheme theme = getBusinessTheme(themeIds[i]);
+        for(Integer themeId : themeIds) {
+            BusinessTheme theme = getBusinessTheme(themeId);
             if (theme != null) {
                 set.add(theme);
             }
         }
         bli.setBusinessThemes(set);
         backlogItemDAO.store(bli);
+        
     }
     
     public void removeThemeFromBacklog(Backlog backlog,

@@ -14,7 +14,6 @@
 <c:if test="${hourReport == true}">
 	<li><a href="#backlogItemSpentEffTab-${backlogItemId}-${bliListContext}"><span><img src="static/img/timesheets.png" alt="Spent Effort" /> Spent Effort</span></a></li>
 </c:if>
-	<li><a href="#backlogItemThemesTab-${backlogItemId}-${bliListContext}"><span><img src="static/img/theme.png" alt="Themes" /> Themes</span></a></li>
 </ul>
 
 <div id="backlogItemEditTab-${backlogItemId}-${bliListContext}" class="backlogItemNaviTab">
@@ -26,6 +25,10 @@ $(document).ready(function() {
         backlogIdField: '#backlogSelect-${backlogItemId}-${bliListContext}',
         userListContainer: '#userListContainer-${backlogItemId}-${bliListContext}'
     }); 
+    $('#themeChooserLink-${backlogItemId}-${bliListContext}').themeChooser({
+        backlogId: '#backlogSelect-${backlogItemId}-${bliListContext}',
+        themeListContainer: '#themeListContainer-${backlogItemId}-${bliListContext}'
+    });
 });
 
 </script>
@@ -314,6 +317,40 @@ $(document).ready(function() {
                                 <input type="hidden" name="userIds[${resp.id}]" value="${resp.id}"/>
                                 <c:set var="count" value="${count + 1}" />
                                 <c:out value="${resp.initials}" /><c:if test="${count != listLength}">, </c:if>
+                            </c:forEach>    
+                        </c:when>
+                        <c:otherwise>
+                            (none)
+                        </c:otherwise>
+                    </c:choose>
+                    </span>
+				</a>
+				</div>
+				</td>
+			</tr>
+			<tr>
+				<td>Themes</td>
+				<td></td>
+				<td colspan="2">
+	
+				<div>
+				<a id="themeChooserLink-${backlogItemId}-${bliListContext}" href="#" class="assigneeLink">
+				    <img src="static/img/theme.png"/>
+                    <span id="themeListContainer-${backlogItemId}-${bliListContext}">
+                    <c:set var="count" value="0" />
+                    <c:set var="listLength" value="${fn:length(backlogItem.businessThemes)}"/>
+                    <c:choose>
+                        <c:when test="${listLength > 0}">
+                            <c:forEach items="${backlogItem.businessThemes}" var="bt">
+                                <input type="hidden" name="themeIds" value="${bt.id}" />
+			            	   <c:choose>
+			            	       <c:when test="${bt.global}">
+			            	           <span class="businessTheme globalThemeColors" style="float: none;"><c:out value="${bt.name}"/></span>
+			            	       </c:when>
+			            	       <c:otherwise>
+			            	           <span class="businessTheme" style="float: none;"><c:out value="${bt.name}"/></span>   
+			            	       </c:otherwise>
+			            	   </c:choose>                                
                             </c:forEach>    
                         </c:when>
                         <c:otherwise>
@@ -650,68 +687,5 @@ $(document).ready(function() {
 	</div>					
 </div>
 </c:if>
-<div id="backlogItemThemesTab-${backlogItemId}-${bliListContext}" class="backlogItemNaviTab">
-<div class="subItems validateWrapper validateEmpty" style="margin-top: 0; margin-left: 3px; width: 710px;">
-<ww:form action="storeBacklogItemThemes" method="post">	
-<table style="width: 98%;">
-    <tr>
-        <td colspan="2">
-			
-			<ww:url id="createThemeLink" action="ajaxCreateBusinessTheme" includeParams="none">
-				<ww:param name="productId" value="${backlogItem.product.id}"></ww:param>
-			</ww:url>
-			<ww:a href="%{createThemeLink}" cssClass="openCreateDialog openThemeDialog"
-				title="Create a new theme" onclick="return false;"> Create new &raquo;</ww:a>
-			<c:if test="${(!empty bliActiveOrSelectedThemes)}">
-
-			<ww:hidden name="backlogItemId" value="${backlogItem.id}"/>
-
-				<display:table class="listTable" name="bliActiveOrSelectedThemes" id="row">
-					
-						<display:column title="Name">
-							<c:choose>
-								<c:when test="${aef:listContains(backlogItem.businessThemes,row)}">
-									<input type="checkbox" name="businessThemeIds" value="${row.id}" checked="checked" id="bliTheme-${row.id}-${backlogItemId}-${bliListContext}" />
-								</c:when>
-								<c:otherwise>
-									<input type="checkbox" name="businessThemeIds" value="${row.id}" id="bliTheme-${row.id}-${backlogItemId}-${bliListContext}" />
-								</c:otherwise>
-							</c:choose>
-							<c:choose>
-								<c:when test="${row.active && !row.global}">
-									<label for="bliTheme-${row.id}${backlogItemId}-${bliListContext}">${row.name}</label>
-								</c:when>
-								<c:when test="${row.global && row.active}">
-									<label class="globalTheme" for="bliTheme-${row.id}${backlogItemId}-${bliListContext}">${row.name}</label>
-								</c:when>
-								<c:otherwise>
-									<span style="color: #999999">
-										<label for="bliTheme-${row.id}${backlogItemId}-${bliListContext}">${row.name}</label>
-									</span>
-								</c:otherwise>
-							</c:choose>
-						</display:column>					
-					<display:column title="Description">
-						<c:out value="${row.description}" />
-					</display:column>
-				</display:table>
-				
-			
-			</c:if>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <input type="submit" value="Save" name="Save" />
-            <input type="submit" value="Save & Close" id="SaveCloseThemes" name="SaveClose"/>
-        </td>   
-        <td class="deleteButton">
-            <ww:reset value="Cancel"/>			
-        </td>
-    </tr>
-</table>				
-</ww:form>
-		
-</div>
 
 </div>

@@ -72,10 +72,9 @@
             var cancelButton = $('<input type="reset" />').val('Cancel').appendTo(cancelButtonCol);
             
             this.form.submit(function() {
-    
-                me.selectAction();
+                return me.selectAction();
             });
-            cancelButton.click(function() { me.cancelAction(); });
+            cancelButton.click(function() { return me.cancelAction(); });
         },
         destroy: function() {
             $(window).unbind('scroll', this.options.overlayUpdate);
@@ -93,7 +92,7 @@
 			var themeIdList=[];
 			// creating array with theme ids
 			hiddenInputsWithSelectedThemeIds.each(function() {
-			if($(this).attr('id')=="themeIds")
+			if($(this).attr('name')=="themeIds")
 	       		themeIdList.push(parseInt($(this).val()));
 			});
 			// selecting checkboxes in dialog
@@ -112,7 +111,7 @@
                 var themeName=$(this).attr("name").toString();
             	selectedThemesNames += '<span name="themeNames">' + themeName + '</span>, ';
                 var hidden = $('<input type="hidden"/>').appendTo(themeListContainer);
-                hidden.attr('name','themeIds').attr('id','themeIds').val(themeId);
+                hidden.attr('name','themeIds').val(themeId);
             });
             
             if (selectedThemesNames != "") {

@@ -825,7 +825,7 @@ public class BacklogBusinessImpl implements BacklogBusiness {
      * @param backlog2
      * @return
      */
-    private boolean isUnderSameProduct(Backlog backlog1, Backlog backlog2) {
+    public boolean isUnderSameProduct(Backlog backlog1, Backlog backlog2) {
         Product product1 = null;
         Product product2 = null;
         if (backlog1 instanceof Product) {
@@ -855,6 +855,15 @@ public class BacklogBusinessImpl implements BacklogBusiness {
         } else {
             return false;
         }
+    }
+    
+    public boolean isUnderSameProduct(int backlogId1, int backlogId2) {
+        Backlog backlog1  = backlogDAO.get(backlogId1);
+        Backlog backlog2 = backlogDAO.get(backlogId2);
+        if(backlog1 == null || backlog2 == null) {
+            return false;
+        }
+        return isUnderSameProduct(backlog1, backlog2);
     }
 
     public String getAllBacklogsAsJSON() {

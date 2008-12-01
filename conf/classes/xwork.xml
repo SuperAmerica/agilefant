@@ -330,18 +330,10 @@
 
 		<action name="doActionOnMultipleBacklogItems"
 			method="doActionOnMultipleBacklogItems" class="backlogAction">
-			<result name="editProduct" type="redirect">
-				editProduct.action?productId=${backlogId}
-			</result>
-			<result name="editProject" type="redirect">
-				editProject.action?projectId=${backlogId}
-			</result>
-			<result name="editIteration" type="redirect">
-				editIteration.action?iterationId=${backlogId}
-			</result>
-			<result name="editIterationGoal" type="redirect">
-				editIterationGoal.action?iterationGoalId=${iterationGoalId}
-			</result>
+			<result name="editProduct" type="redirect">editProduct.action?productId=${backlogId}</result>
+			<result name="editProject" type="redirect">editProject.action?projectId=${backlogId}</result>
+			<result name="editIteration" type="redirect">editIteration.action?iterationId=${backlogId}</result>
+			<result name="editIterationGoal" type="redirect">editIterationGoal.action?iterationGoalId=${iterationGoalId}</result>
 		</action>
 
 		<action name="changePriorityOfSelectedItems"
@@ -372,15 +364,9 @@
 
 		<action name="deleteSelectedItems" method="deleteSelectedItems"
 			class="backlogAction">
-			<result name="editProduct" type="redirect">
-				editProduct.action?productId=${backlogId}
-			</result>
-			<result name="editProject" type="redirect">
-				editProject.action?projectId=${backlogId}
-			</result>
-			<result name="editIteration" type="redirect">
-				editIteration.action?iterationId=${backlogId}
-			</result>
+			<result name="editProduct" type="redirect">editProduct.action?productId=${backlogId}</result>
+			<result name="editProject" type="redirect">editProject.action?projectId=${backlogId}</result>
+			<result name="editIteration" type="redirect">editIteration.action?iterationId=${backlogId}</result>
 		</action>
 
 		<action name="moveBacklogItem" method="moveBacklogItem"
@@ -398,6 +384,11 @@
 		<action name="timelineBubble" method="editWithMetrics"
 			class="backlogAction">
 			<result>/WEB-INF/jsp/timelineBubble.jsp</result>
+		</action>
+		
+		<action name="underSameProduct" method="hasSameProduct"
+			class="backlogAction">
+			<result>/WEB-INF/jsp/inc/underSameProduct.jsp</result>	
 		</action>
 		<!-- /Backlog actions -->
 

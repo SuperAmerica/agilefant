@@ -69,6 +69,8 @@ public class BacklogAction extends ActionSupport {
     private Backlog backlog;
     
     private Set<Integer> themeIds = new HashSet<Integer>();
+    
+    private boolean underSameProduct = false;
 
     
 
@@ -345,6 +347,10 @@ public class BacklogAction extends ActionSupport {
         return Action.ERROR;
     }
 
+    public String hasSameProduct() {
+        underSameProduct = backlogBusiness.isUnderSameProduct(backlogId, targetBacklogId);
+        return Action.SUCCESS;
+    }
     public int getBacklogItemId() {
         return backlogItemId;
     }
@@ -474,6 +480,11 @@ public class BacklogAction extends ActionSupport {
     public void setThemeIds(Set<Integer> themeIds) {
         this.themeIds = themeIds;
     }
+
+    public boolean isUnderSameProduct() {
+        return underSameProduct;
+    }
+    
     
     
    

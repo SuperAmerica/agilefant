@@ -460,7 +460,7 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
                 storable.setIterationGoal(null);
             }
             // Remove themes if the item is moved to a backlog under a different product.
-            if ( !isUnderSameProduct(this.backlog, storable.getBacklog()) ) {
+            if ( !backlogBusiness.isUnderSameProduct(this.backlog, storable.getBacklog()) ) {
                 storable.getBusinessThemes().clear();
             }
             
@@ -468,34 +468,6 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
         storable.setBacklog(backlog);
     }
     
-    /**
-     * Checks, if two backlogs are under the same product. We already know that
-     * the backlogs are not null.
-     * @param backlog1
-     * @param backlog2
-     * @return
-     */
-    private boolean isUnderSameProduct(Backlog backlog1, Backlog backlog2) {
-        Product product1;
-        Product product2;
-        if (backlog1 instanceof Product) {
-            product1 = (Product) backlog1;
-        } else if (backlog1 instanceof Project) {
-            product1 = ((Project) backlog1).getProduct();
-        } else {
-            product1 = ((Iteration) backlog1).getProject().getProduct();
-        }
-        
-        if (backlog2 instanceof Product) {
-            product2 = (Product) backlog2;
-        } else if (backlog2 instanceof Project) {
-            product2 = ((Project) backlog2).getProduct();
-        } else {
-            product2 = ((Iteration) backlog2).getProject().getProduct();
-        }
-        
-        return product1.equals(product2);
-    }
 
     public Backlog getBacklog() {
         return backlog;

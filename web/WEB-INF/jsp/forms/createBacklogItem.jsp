@@ -14,9 +14,6 @@ $(document).ready(function() {
         backlogId: '#createBLIBacklogId',
         themeListContainer: '#themeListContainer-createBLI'
     });
-});
-
-$(document).ready(function() {
     $('#userChooserLink-createBLI').userChooser({
         backlogItemId: ${backlogItemId},
         backlogIdField: '#createBLIBacklogId',
@@ -70,7 +67,7 @@ $(document).ready(function() {
 			<td></td>
 			<td colspan="2">
 			
-			<select name="backlogId" id="createBLIBacklogId" onchange="getIterationGoals(this.value, '#createBLIIterGoalSelect'); removeThemes('#themeListContainer-createBLI');">
+			<select name="backlogId" id="createBLIBacklogId" onchange="getIterationGoals(this.value, '#createBLIIterGoalSelect');">
 				<%-- Generate a drop-down list showing all backlogs in a hierarchical manner --%>
 				<option class="inactive" value="">(select backlog)</option>
 				<c:forEach items="${productList}" var="product">

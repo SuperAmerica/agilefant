@@ -313,4 +313,24 @@ public interface BacklogBusiness {
      *         of items and number of completed items.
      */
     public BacklogMetrics calculateLimitedBacklogMetrics(Backlog backlog);
+    
+    /**
+     * Checks, if two backlogs are under the same product. We already know that
+     * the backlogs are not null.
+     * @param backlog1
+     * @param backlog2
+     * @return
+     */
+    public boolean isUnderSameProduct(Backlog backlog1, Backlog backlog2);
+
+    /**
+     * Checks, if two backlogs are under the same product
+     * 
+     * @see isUnderSameProduct(Backlog backlog1, Backlog backlog2)
+     * @param backlog1Id
+     * @param backlog2Id
+     * @return false if either one of the backlog ids is invalid or backlogs are
+     *         under different products. Else true.
+     */
+    public boolean isUnderSameProduct(int backlogId1, int backlogId2);
 }

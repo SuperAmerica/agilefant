@@ -15,6 +15,26 @@
         
         this.options = options;
         this.data = null;
+        
+        //reset theme container if product changes
+        var blSelect = $(options.backlogId);
+        var themeContainer = $(options.themeListContainer);
+        if(blSelect.length == 1 && themeContainer.length == 1) {
+        	blSelect.data("oldBl",blSelect.val());
+        	blSelect.change(function() {
+				if(blSelect.val() == blSelect.data("oldBl")) {
+					return;
+				} 
+				var oldBacklog = blSelect.data("oldBl");
+				var newBacklog = blSelect.val();
+				blSelect.data("oldBl", newBacklog);
+				$.post('underSameProduct.action', {backlogId: oldBacklog, targetBacklog: newBacklog}, function(data,status) {
+					if(data == "false") {
+						themeContainer.empty().text('(none)');
+					}
+				});
+        	});
+        }
     };
     
     ThemeChooser.prototype = {
@@ -102,22 +122,19 @@
         selectAction: function() {
             var me = this;
             var themeListContainer = $(this.options.themeListContainer);
-            var selectedThemes = "";
             themeListContainer.empty();
-            var selectedThemesNames="";
-            
+        
             $(this.form).find(':checked').each(function() {
             	var themeId= parseInt($(this).val());
-                var themeName=$(this).attr("name").toString();
-            	selectedThemesNames += '<span name="themeNames">' + themeName + '</span>, ';
+                var span = $('<span/>').appendTo(themeListContainer).addClass('businessTheme').css('float','none').text(me.data[themeId].name);
+                if(me.data[themeId]['global']) {
+                	span.addClass('globalThemeColors');
+                }
                 var hidden = $('<input type="hidden"/>').appendTo(themeListContainer);
                 hidden.attr('name','themeIds').val(themeId);
             });
             
-            if (selectedThemesNames != "") {
-                themeListContainer.append(selectedThemesNames.substring(0, selectedThemesNames.length - 2));
-            }
-            else {
+            if(themeListContainer.html().length == 0) {
                 themeListContainer.append("(none)");
             }
             
@@ -134,38 +151,51 @@
             jQuery.getJSON("activeThemesByBacklog.action",
                 { 'backlogId': $(me.options.backlogId).val() },
                 function(data, status) {
-                    me.data = data;
-                    me.renderThemeList();
+                	me.productThemes = [];
+                	me.globalThemes = [];
+                	me.data = {};
+                	if(data.length > 0) {
+                		for(var i = 0; i < data.length; i++) {
+                			(data[i]['global'] ? me.globalThemes : me.productThemes).push(data[i]);
+                			me.data[data[i].id] = data[i];
+                		}
+                	}
+                	me.renderThemeList();
                 });
         },
         renderThemeList: function() {        
-	        if (this.data.length > 0) {
-	            var headerRow = $('<tr/>').appendTo(this.table);
-	            headerRow.append('<th class="userColumn" colspan="2">Active themes</th>');
-	            var ids = this.selectedThemes();
-	            for (var i = 0; i < this.data.length; i++) {
-	                var row = $('<tr/>').appendTo(this.table);
-	                var column1 = $('<td/>').appendTo(row);
-	                var column2 = $('<td/>').appendTo(row);
-	                var themeName = $('<span/>').appendTo(column2).text(this.data[i].name);
-	                if (this.data[i]['global']) {
-	                   themeName.addClass('globalTheme');
-	                }
-	                if( this.data[i].description.length > 0 ) {
-	                    $('<span/>').appendTo(column2).text(' - ' + this.data[i].description);
-	                }
-	                var checkbox = $('<input type="checkbox"/>').attr('value',this.data[i].id).attr('name',this.data[i].name).appendTo(column1);
-	                 if (jQuery.inArray(parseInt(this.data[i].id), ids) > -1) {
-	                     checkbox.attr('checked','checked');
-	                   }
-	            }
-	        }
-	        else {
-	            var row = $('<tr/>').appendTo(this.table);   
-	            var column1 = $('<td/>').text('No active themes found in this backlog.').appendTo(row);
-	        }
-	        
-	        this.renderButtons();
+        	if (this.productThemes.length + this.globalThemes.length > 0) {
+        		var headerRow = $('<tr/>').appendTo(this.table);
+        		headerRow.append('<th class="userColumn" colspan="3">Active themes</th>');
+        		this.preSelectedThemes = this.selectedThemes();
+        		for (var i = 0; i < this.globalThemes.length; i++) {
+        			this.renderThemeRow(this.globalThemes[i]);
+        		}
+        		for (var i = 0; i < this.productThemes.length; i++) {
+        			this.renderThemeRow(this.productThemes[i]);
+        		}
+        	}
+        	else {
+        		var row = $('<tr/>').appendTo(this.table);   
+        		var column1 = $('<td/>').text('No active themes found in this backlog.').appendTo(row);
+        	}
+
+        	this.renderButtons();
+        },
+        renderThemeRow: function(data) {
+			var row = $('<tr/>').appendTo(this.table);
+			var column1 = $('<td/>').appendTo(row);
+			var column2 = $('<td/>').appendTo(row);
+			var column3 = $('<td/>').appendTo(row);
+			column2.text(data.name);
+			if (data['global']) {
+				column2.addClass('globalTheme');
+			}
+			column3.text(data.description.substr(0,90));
+			var checkbox = $('<input type="checkbox"/>').attr('value',data.id).attr('name',data.name).appendTo(column1);
+			if (jQuery.inArray(parseInt(data.id), this.preSelectedThemes) > -1) {
+				checkbox.attr('checked','checked');
+			}
         }
     };
     

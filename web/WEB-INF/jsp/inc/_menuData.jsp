@@ -60,7 +60,7 @@
     {
         <ww:url id="editLink" action="globalThemes" includeParams="none"></ww:url>
         
-        "text": '<a href="${editLink}">Global themes</a>',
+        "text": '<a href="${editLink}">Business themes</a>',
         "hasChildren": false,
         
         <c:if test="${subnavi == 'globalThemes'}">

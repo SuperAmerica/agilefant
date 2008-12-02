@@ -287,7 +287,7 @@ var productId = ${product.id};
 					<table cellspacing="0" cellpadding="0">
 						<tr>
 							 <td class="header">
-							 Themes
+							 Product themes
 							 <ww:url id="createThemeLink" action="ajaxCreateBusinessTheme" includeParams="none">
 							     <ww:param name="productId" value="${productId}"></ww:param>
 							 </ww:url>
@@ -344,7 +344,7 @@ var productId = ${product.id};
 					<table cellspacing="0" cellpadding="0">
 						<tr>
 							 <td class="header">
-							 Deactivated themes
+							 Deactivated product themes
 							 </td>
 						</tr>
 					</table>

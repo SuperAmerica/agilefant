@@ -81,7 +81,7 @@ Agilefant
 			</td>
 			<td>
 				<form action="j_spring_security_logout" method="post">
-					<input name="exit" type="submit" value="logout" />
+					<input name="exit" type="submit" value="Logout" />
 				</form>
 			</td>
 			</tr>

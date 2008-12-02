@@ -6,6 +6,7 @@ import com.opensymphony.xwork.ActionSupport;
 import fi.hut.soberit.agilefant.business.BacklogBusiness;
 import fi.hut.soberit.agilefant.business.BacklogItemBusiness;
 import fi.hut.soberit.agilefant.business.BusinessThemeBusiness;
+import fi.hut.soberit.agilefant.db.IterationGoalDAO;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.BusinessTheme;
@@ -26,6 +27,8 @@ public class QuickReferenceAction extends ActionSupport {
     private BacklogItemBusiness backlogItemBusiness;
 
     private BusinessThemeBusiness businessThemeBusiness;
+    
+    private IterationGoalDAO iterationGoalDAO;
 
     public String resolveLinkTarget() {
         String context = "";
@@ -53,8 +56,8 @@ public class QuickReferenceAction extends ActionSupport {
             } else if (bl != null && bl instanceof Iteration) {
                 uri = "editIteration.action?iterationId=" + bl.getId();
             }
+            SessionAction ses = new SessionAction();
             if (context.equals("BLI")) {
-                SessionAction ses = new SessionAction();
                 ses.setContextType("bli");
                 ses.setObjectId(objectId);
                 ses.ajaxOpenDialog();
@@ -63,8 +66,6 @@ public class QuickReferenceAction extends ActionSupport {
             } else if (context.equals("TH")) {
                 BusinessTheme theme = businessThemeBusiness.getBusinessTheme(objectId);
                 Product prod = theme.getProduct();
-                
-                SessionAction ses = new SessionAction();
                 ses.setContextType("businessTheme");
                 ses.setObjectId(objectId);
                 ses.ajaxOpenDialog();
@@ -74,6 +75,12 @@ public class QuickReferenceAction extends ActionSupport {
                 } else {
                     uri = "editProduct.action?productId="+prod.getId()+"#businessThemeTabContainer-"+objectId;
                }
+            } else if(context.equals("IG")) {
+                ses.setContextType("iterationGoal");
+                ses.setObjectId(objectId);
+                ses.ajaxOpenDialog();
+                bl = iterationGoalDAO.get(objectId).getIteration();
+                uri = "editIteration.action?iterationId=" + bl.getId() + "#iterationGoalTabContainer-" + objectId;
             }
             if(uri.length() == 0) {
                 return Action.ERROR;
@@ -122,5 +129,13 @@ public class QuickReferenceAction extends ActionSupport {
 
     public void setBusinessThemeBusiness(BusinessThemeBusiness themeBusiness) {
         this.businessThemeBusiness = themeBusiness;
+    }
+
+    public IterationGoalDAO getIterationGoalDAO() {
+        return iterationGoalDAO;
+    }
+
+    public void setIterationGoalDAO(IterationGoalDAO iterationGoalDAO) {
+        this.iterationGoalDAO = iterationGoalDAO;
     }
 }

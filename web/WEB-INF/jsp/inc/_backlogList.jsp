@@ -238,10 +238,12 @@ $(document).ready(function() {
 				list="#@java.util.LinkedHashMap@{'-1':'Keep original', '5':'undefined', '4':'+++++', '3':'++++', '2':'+++', '1':'++', '0':'+'}" />
 		</td>
 	</tr>
+<!--
 	<tr>
 	       <td></td>
 	       <td colspan="2">Keep original</td>
 	</tr>
+-->
 	<tr>
             <td>Responsibles</td>
             <td style="width: 30px;">
@@ -252,7 +254,7 @@ $(document).ready(function() {
             <div class="toggleUserChooserLink">
                 <img src="static/img/users.png"/>
                 <span>
-                (unchanged)
+                (Keep original)
                 </span>
             </div>
             <div class="toggleUserChooserLink" style="display: none;">
@@ -275,7 +277,7 @@ $(document).ready(function() {
             <div class="toggleThemeChooserLink">
                     <img src="static/img/theme.png"/>
                     <span>
-                    (unchanged)
+                    (Keep original)
                     </span>
             </div>
             <div class="toggleThemeChooserLink" style="display: none;">

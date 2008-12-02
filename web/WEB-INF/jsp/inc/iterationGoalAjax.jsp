@@ -37,6 +37,11 @@ $(document).ready(function() {
 	<ww:hidden name="iterationGoalId" value="${iterationGoal.id}" />
 	<table class="formTable">
 		<tr>
+			<td><ww:text name="general.uniqueId"/></td>
+			<td></td>
+			<td colspan="2"><aef:quickReference item="${iterationGoal}" /></td>
+		</tr>
+		<tr>
 			<td>Name</td>
 			<td>*</td>
 			<td colspan="2"><ww:textfield size="60"
@@ -107,7 +112,14 @@ $(document).ready(function() {
 
 	<display:column title="Name" sortable="false" sortProperty="name" class="shortNameColumn">												
 		<c:forEach items="${bliThemeCache[row.id]}" var="businessTheme">
-            		<span class="businessTheme" title="${businessTheme.description}"><c:out value="${businessTheme.name}"/></span>            	
+            		<c:choose>
+            			<c:when test="${businessTheme.global}">
+		            		<span class="businessTheme globalThemeColors" title="${businessTheme.description}"><c:out value="${businessTheme.name}"/></span>            			
+            			</c:when>
+            			<c:otherwise>
+		            		<span class="businessTheme" title="${businessTheme.description}"><c:out value="${businessTheme.name}"/></span>    				
+            			</c:otherwise>
+            		</c:choose>
             </c:forEach>
 		<%-- Link to go to the bli in the iteration page. --%>												
 		<ww:url id="editLink" action="editIteration" includeParams="none">

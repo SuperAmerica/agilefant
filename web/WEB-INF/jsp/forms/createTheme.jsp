@@ -19,10 +19,10 @@
 				<option class="inactive" value="">(select product)</option>
 				<c:choose>
 				    <c:when test="${productId == -1}">
-				        <option value="-1" selected="selected">Global theme</option>
+				        <option value="-1" selected="selected">Business theme</option>
 				    </c:when>
 				    <c:otherwise>
-				        <option value="-1">Global theme</option>    
+				        <option value="-1">Business theme</option>    
 				    </c:otherwise>
 				</c:choose>
 				<option class="inactive" value="">---------------------------</option>

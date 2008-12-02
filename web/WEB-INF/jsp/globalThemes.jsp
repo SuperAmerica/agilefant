@@ -1,7 +1,7 @@
 <%@ include file="./inc/_taglibs.jsp"%>
 <%@ include file="./inc/_header.jsp"%>
 
-<aef:menu navi="portfolio" subnavi="businessThemes" title="Global Themes"/>
+<aef:menu navi="portfolio" subnavi="businessThemes" title="Business Themes"/>
 <ww:actionerror />
 <ww:actionmessage />
 
@@ -17,7 +17,7 @@ $(document).ready(function() {
 
 <c:set var="productId" value="-1" />
 
-<h2>Global Themes</h2>
+<h2>Business Themes</h2>
 
 <table> 
     <tr>
@@ -27,7 +27,7 @@ $(document).ready(function() {
                     <table cellspacing="0" cellpadding="0">
                         <tr>
                              <td class="header">
-                             Global themes
+                             Business themes
                              <ww:url id="createThemeLink" action="ajaxCreateBusinessTheme" includeParams="none">
                                  <ww:param name="productId" value="${productId}"></ww:param>
                              </ww:url>
@@ -78,7 +78,7 @@ $(document).ready(function() {
                     <table cellspacing="0" cellpadding="0">
                         <tr>
                              <td class="header">
-                             Deactivated global themes
+                             Deactivated business themes
                              </td>
                         </tr>
                     </table>

@@ -177,7 +177,7 @@
         	}
         	else {
         		var row = $('<tr/>').appendTo(this.table);   
-        		var column1 = $('<td/>').text('No active themes found in this backlog.').appendTo(row);
+        		var column1 = $('<td/>').text('No active product or business themes found.').appendTo(row);
         	}
 
         	this.renderButtons();
@@ -186,10 +186,12 @@
 			var row = $('<tr/>').appendTo(this.table);
 			var column1 = $('<td/>').appendTo(row);
 			var column2 = $('<td/>').appendTo(row);
+			var nameSpan = $('<span/>').appendTo(column2);
 			var column3 = $('<td/>').appendTo(row);
-			column2.text(data.name);
+			nameSpan.text(data.name);
+			nameSpan.addClass('businessTheme');
 			if (data['global']) {
-				column2.addClass('globalTheme');
+				nameSpan.addClass('globalThemeColors');
 			}
 			column3.text(data.description.substr(0,90));
 			var checkbox = $('<input type="checkbox"/>').attr('value',data.id).attr('name',data.name).appendTo(column1);

@@ -1,6 +1,6 @@
 Agilefant 1.5.3
 RELEASE NOTES
-20.11.2008
+3.12.2008
 
 INSTALLATION INSTRUCTIONS
 -------------------------
@@ -53,11 +53,13 @@ Timesheets
 
 CHANGES FROM AGILEFANT 1.5.2
 ----------------------------
-+ Global themes added to dev portfolio
-+ Project types moved to dev portfolio
-+ Quick finding Agilefant objects by a reference id
-+ Lots of bugfixes
++ Added business themes
 + Page titles made more descriptive 
++ Quick finding Agilefant objects by a reference id
++ Project types moved to dev portfolio
++ Multiple user interface improvements to theme handling 
++ Bugfixes: 0000018, 0000012, 0000017, 0000005, 0000010
+
 
 CHANGES FROM AGILEFANT 1.5.1
 ----------------------------

@@ -2,26 +2,29 @@ Agilefant 1.5.3
 RELEASE NOTES
 3.12.2008
 
-INSTALLATION INSTRUCTIONS
--------------------------
+INSTALLATION INSTRUCTIONS AND SYSTEM REQUIREMENTS
+-------------------------------------------------
 http://www.agilefant.org/wiki/display/AEF/Installation+guide
+http://www.agilefant.org/wiki/display/AEF/System+requirements
 
 
 Agilefant's key functionality includes
 --------------------------------------
 Backlog management
-  + manage your development work with backlogs
-  + backlog items may have effort estimates, priorities and responsibles
-  
-Product management
+  + manage your development work using backlogs
+  + backlog items may have effort estimates, priorities, responsibles
+    and a list of to-dos
+
+Product and business management
   + group your backlog items using themes
+  + use product and business themes to link daily work to your long-term goals and strategy
   + set planned sizes for future projects and iterations in terms of effort
   + assign themes for future projects and iterations and set relative spending
   + get a quick view of your product's roadmap
   
 Project management
   + assign users to projects
-  + set weekly overhead for projects
+  + set weekly overhead for being involved in a project
   + communicate the status of your project (red/yellow/green)
   + get an overview of progress through burndown graph and metrics
   
@@ -38,7 +41,7 @@ Resource management
 Development portfolio management
   + track the status and relative priorities of all ongoing projects
   + see who are assigned to which projects
-  + see who are involved in projects despite that they have NOT been assigned to them
+  + see who are involved in projects they have NOT been assigned to
   + adjust weekly overhead from projects on an individual basis
   + define project types
   
@@ -53,12 +56,13 @@ Timesheets
 
 CHANGES FROM AGILEFANT 1.5.2
 ----------------------------
-+ Added business themes
++ Added business themes; these are created in the dev portfolio tab
 + Page titles made more descriptive 
-+ Quick finding Agilefant objects by a reference id
-+ Project types moved to dev portfolio
-+ Multiple user interface improvements to theme handling 
-+ Bugfixes: 0000018, 0000012, 0000017, 0000005, 0000010
++ Added reference id's for hyperlinking to objects in Agilefant
++ Adding/editing project types is now done in the dev portfolio tab
++ User interface improvements to theme handling 
++ Bugfixes: 0000018, 0000012, 0000017, 0000005, 0000010 
+  (see Mantis at http://www.agilefant.org/mantis/
 
 
 CHANGES FROM AGILEFANT 1.5.1
@@ -75,7 +79,7 @@ CHANGES FROM AGILEFANT 1.5
 + Themes can now be attached or removed for multiple BLIs at once.
 + Nonactivated and not-selected themes not shown in BLI's Themes-tab
 + Select all backlog items button added
-+ Bugfix: 404 page after clicking iteration goal name for backlog item in DW page
++ Bugfix: 404 page after clicking iteration goals in Daily Work
 + Tiny Daily work view added for iFrame usage. See http://your.domain/agilefant/tinyDailyWork.action
 
 CHANGES FROM AGILEFANT 1.4.7

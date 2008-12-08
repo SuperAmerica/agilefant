@@ -43,7 +43,7 @@
 		<tr>
 			<td>Description</td>
 			<td></td>
-			<td colspan="2"><ww:textarea cols="50" rows="7"
+			<td colspan="2"><ww:textarea cols="70" rows="7" cssClass="useWysiwyg" 
 				name="businessTheme.description" /></td>
 		</tr>
 		<tr>

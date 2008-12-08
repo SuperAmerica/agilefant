@@ -39,7 +39,7 @@
 .businessThemeNaviTab {
 	width: 730px !important;
 	border: 1px solid #666;
-	height: 220px;
+/*	height: 220px; */
 	background-color: #f0f0f0;
 	padding: 8px 3px;
 	white-space: normal !important;

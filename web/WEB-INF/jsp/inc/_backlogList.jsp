@@ -79,10 +79,10 @@ $(document).ready(function() {
             	<a href="#" onclick="handleTabEvent('backlogItemTabContainer-${row.id}-${bliListContext}','bli',${row.id},0, '${bliListContext}'); return false;">
             	   <c:choose>
             	       <c:when test="${businessTheme.global}">
-            	           <span class="businessTheme globalThemeColors" title="${businessTheme.description}"><c:out value="${businessTheme.name}"/></span>
+            	           <span class="businessTheme globalThemeColors" title="${aef:stripHTML(businessTheme.description)}"><c:out value="${businessTheme.name}"/></span>
             	       </c:when>
             	       <c:otherwise>
-            	           <span class="businessTheme" title="${businessTheme.description}"><c:out value="${businessTheme.name}"/></span>   
+            	           <span class="businessTheme" title="${aef:stripHTML(businessTheme.description)}"><c:out value="${businessTheme.name}"/></span>   
             	       </c:otherwise>
             	   </c:choose>
             	</a>

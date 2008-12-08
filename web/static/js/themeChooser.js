@@ -193,7 +193,7 @@
 			if (data['global']) {
 				nameSpan.addClass('globalThemeColors');
 			}
-			column3.text(data.description.substr(0,90));
+			column3.text(stripHTML(data.description).substr(0,90));
 			var checkbox = $('<input type="checkbox"/>').attr('value',data.id).attr('name',data.name).appendTo(column1);
 			if (jQuery.inArray(parseInt(data.id), this.preSelectedThemes) > -1) {
 				checkbox.attr('checked','checked');

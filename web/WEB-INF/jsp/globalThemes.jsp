@@ -51,7 +51,7 @@ $(document).ready(function() {
                         <div id="businessThemeTabContainer-${row.id}" class="tabContainer" style="overflow:visible; white-space: nowrap; width: 115px;"></div>
                     </display:column>
                     <display:column title="Description" class="themeDescriptionColumn" sortable="true">
-                       <c:out value="${fn:substring(row.description, 0, 50)}" />
+                       ${fn:substring(aef:stripHTML(row.description), 0, 50)}
                     </display:column>           
                     <display:column title="Actions">
                         <img src="static/img/edit.png" alt="Edit" title="Edit theme" style="cursor: pointer;" onclick="handleTabEvent('businessThemeTabContainer-${row.id}','businessTheme',${row.id},0); return false;" />
@@ -94,7 +94,7 @@ $(document).ready(function() {
                         <div id="businessThemeTabContainer-${row.id}" class="tabContainer" style="overflow:visible; white-space: nowrap; width: 115px;"></div>
                     </display:column>
                     <display:column title="Description" class="themeDescriptionColumn" sortable="true">
-                       <c:out value="${fn:substring(row.description, 0, 50)}" />
+                       ${fn:substring(aef:stripHTML(row.description), 0, 50)}
                     </display:column>                           
                     <display:column title="Actions">
                         <img src="static/img/edit.png" alt="Edit" title="Edit theme" style="cursor: pointer;" onclick="handleTabEvent('businessThemeTabContainer-${row.id}','businessTheme',${row.id},0); return false;" />

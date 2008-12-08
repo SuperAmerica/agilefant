@@ -165,4 +165,11 @@ public class AEFFunctions {
     public static String calendarAsString(Calendar cal) {
         return String.format("%1$tY-%1$tm-%1$td",cal);
     }
+    
+    public static String stripHTML(String htmlString) {
+        if(htmlString == null) {
+            return null;
+        }
+        return htmlString.replaceAll("\\<.*?>","");
+    }
 }

@@ -313,3 +313,7 @@ function deleteTheme(themeId) {
         });
     }
 }
+
+function stripHTML(htmlString) {
+	return htmlString.replace(/(<([^>]+)>)/ig,""); 
+}

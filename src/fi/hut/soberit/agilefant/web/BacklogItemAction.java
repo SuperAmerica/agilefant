@@ -10,9 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-//import org.apache.commons.logging.Log;
-//import org.apache.commons.logging.LogFactory;
-
 import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
 
@@ -32,10 +29,7 @@ import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.BusinessTheme;
-import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.IterationGoal;
-import fi.hut.soberit.agilefant.model.Product;
-import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.State;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;

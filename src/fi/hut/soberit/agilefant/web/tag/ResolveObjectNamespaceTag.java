@@ -74,12 +74,14 @@ public class ResolveObjectNamespaceTag extends SpringTagSupport {
             refUrl.append("http://");
         }
         refUrl.append(req.getServerName());
-        if(req.getServerPort() != 80 || (req.getServerPort() != 443 && req.getProtocol().indexOf("HTTPS") != -1)) {
+        if((req.getServerPort() != 80 && req.getProtocol().indexOf("HTTPS") == -1) || (req.getServerPort() != 443 && req.getProtocol().indexOf("HTTPS") != -1)) {
             refUrl.append(":");
             refUrl.append(req.getServerPort());
         }
         HttpServletRequest httpReq = (HttpServletRequest)req;
-        refUrl.append(httpReq.getContextPath());
+        if(httpReq.getContextPath() != null && !httpReq.getContextPath().equals("/")) {
+            refUrl.append(httpReq.getContextPath());
+        }
         refUrl.append("/qr.action?id=");
         refUrl.append(unique);
         return refUrl.toString();

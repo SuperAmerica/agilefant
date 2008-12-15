@@ -530,7 +530,7 @@ $(document).ready(function() {
 						
 						<display:column sortable="false" title="Name"
 							class="shortNameColumn">
-							<ww:textfield size="70" name="taskNames[${row.id}]" value="${row.name}" />												
+							<ww:textfield size="50" name="taskNames[${row.id}]" value="${row.name}" />												
 						</display:column>
 														
 						<display:column sortable="false" title="State">											

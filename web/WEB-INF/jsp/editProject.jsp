@@ -99,7 +99,7 @@ $(document).ready(function() {
 												document.getElementById('descriptionDiv').style.overflow = "visible";
 											}
 											function collapseDescription() {
-												document.getElementById('descriptionDiv').style.maxHeight = "12em";
+												document.getElementById('descriptionDiv').style.maxHeight = "14em";
 												document.getElementById('descriptionDiv').style.overflow = "hidden";
 											}
 											function editProject() {

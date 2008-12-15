@@ -1,6 +1,6 @@
 Agilefant 1.5.3
 RELEASE NOTES
-3.12.2008
+15.12.2008
 
 INSTALLATION INSTRUCTIONS AND SYSTEM REQUIREMENTS
 -------------------------------------------------
@@ -61,8 +61,8 @@ CHANGES FROM AGILEFANT 1.5.2
 + Added reference id's for hyperlinking to objects in Agilefant
 + Adding/editing project types is now done in the dev portfolio tab
 + User interface improvements to theme handling 
-+ Bugfixes: 0000018, 0000012, 0000017, 0000005, 0000010 
-  (see Mantis at http://www.agilefant.org/mantis/
++ Bugfixes: 0000018, 0000012, 0000017, 0000005, 0000010, 0000016, 0000015 
+  ( see our bug tracker at http://www.agilefant.org/mantis/ )
 
 
 CHANGES FROM AGILEFANT 1.5.1

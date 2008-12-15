@@ -530,7 +530,7 @@ $(document).ready(function() {
 						
 						<display:column sortable="false" title="Name"
 							class="shortNameColumn">
-							<ww:textfield size="50" name="taskNames[${row.id}]" value="${row.name}" />												
+							<ww:textfield size="74" name="taskNames[${row.id}]" value="${row.name}" />												
 						</display:column>
 														
 						<display:column sortable="false" title="State">											
@@ -540,7 +540,7 @@ $(document).ready(function() {
 								listValue="getText('task.state.' + name())" id="taskStateSelect_${row.id}-${bliListContext}"/>														
 						</display:column>
 											
-						<display:column sortable="false" title="Actions">
+						<display:column sortable="false" title="Actions" style="width:102px;">
 							<ww:url id="moveTaskTopLink" action="moveTaskTop" includeParams="none">
 								<ww:param name="taskId" value="${row.id}" />
 							</ww:url>

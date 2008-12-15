@@ -96,10 +96,10 @@
 	</target>
 
 	<target name="sync-dbs" depends="create-ddl" description="Synchronise agilefant and aeftest databases">
-		<sql classpath="lib/mysql-connector-java-3.1.13-bin.jar" driver="com.mysql.jdbc.Driver" src="doc/sql/drop-create-databases.sql" url="jdbc:mysql://localhost:3306/agilefant?autoReconnect=true" userid="agilefant" password="agilefant" />
-		<sql classpath="lib/mysql-connector-java-3.1.13-bin.jar" driver="com.mysql.jdbc.Driver" src="build/create-db.ddl" url="jdbc:mysql://localhost:3306/agilefant?autoReconnect=true" userid="agilefant" password="agilefant" />
-		<sql classpath="lib/mysql-connector-java-3.1.7-bin.jar" driver="com.mysql.jdbc.Driver" src="build/create-db.ddl" url="jdbc:mysql://localhost:3306/aeftest?autoReconnect=true" userid="agilefant" password="agilefant" />
-		<sql classpath="lib/mysql-connector-java-3.1.7-bin.jar" driver="com.mysql.jdbc.Driver" src="doc/sql/insert-users.sql" url="jdbc:mysql://localhost:3306/agilefant?autoReconnect=true" userid="agilefant" password="agilefant" />
+		<sql classpath="lib/mysql-connector-java-5.0.8-bin.jar" driver="com.mysql.jdbc.Driver" src="doc/sql/drop-create-databases.sql" url="jdbc:mysql://localhost:3306/agilefant?autoReconnect=true" userid="agilefant" password="agilefant" />
+		<sql classpath="lib/mysql-connector-java-5.0.8-bin.jar" driver="com.mysql.jdbc.Driver" src="build/create-db.ddl" url="jdbc:mysql://localhost:3306/agilefant?autoReconnect=true" userid="agilefant" password="agilefant" />
+		<sql classpath="lib/mysql-connector-java-5.0.8-bin.jar" driver="com.mysql.jdbc.Driver" src="build/create-db.ddl" url="jdbc:mysql://localhost:3306/aeftest?autoReconnect=true" userid="agilefant" password="agilefant" />
+		<sql classpath="lib/mysql-connector-java-5.0.8-bin.jar" driver="com.mysql.jdbc.Driver" src="doc/sql/insert-users.sql" url="jdbc:mysql://localhost:3306/agilefant?autoReconnect=true" userid="agilefant" password="agilefant" />
 	</target>
 
 	<target name="copy-spring-files" description="Internal target">

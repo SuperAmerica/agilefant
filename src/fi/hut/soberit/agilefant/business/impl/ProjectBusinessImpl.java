@@ -702,13 +702,15 @@ public class ProjectBusinessImpl implements ProjectBusiness {
 
         // 1. Weeks
         for (int i = 0; i < weeksAhead; i++) {
-            weekNumbers.add(currentWeek + i);
-            if (!data.getWeeklyTotals().containsKey(currentWeek + i)) {
-                data.getWeeklyTotals().put(new Integer(currentWeek + i),
+            int weekNum = currentWeek + i;
+            if(weekNum > 52) weekNum -= 52;
+            weekNumbers.add(weekNum);
+            if (!data.getWeeklyTotals().containsKey(weekNum)) {
+                data.getWeeklyTotals().put(new Integer(weekNum),
                         new AFTime(0));
-                data.getWeeklyEfforts().put(new Integer(currentWeek + i),
+                data.getWeeklyEfforts().put(new Integer(weekNum),
                         new AFTime(0));
-                data.getWeeklyOverheads().put(new Integer(currentWeek + i),
+                data.getWeeklyOverheads().put(new Integer(weekNum),
                         new AFTime(0));
             }
         }
@@ -747,11 +749,13 @@ public class ProjectBusinessImpl implements ProjectBusiness {
                 }
             }
         }
-        for (int i = 0; i < weeksAhead; i++) {
+        for (Integer weekNo : weekNumbers) {
+            int lastWeek = weekNo - 1;
+            if(lastWeek < 1) lastWeek += 52;
             boolean accommondate = isAccommodableWorkload(currentWeek,
-                    currentWeek + i, data.getWeeklyTotals()
-                            .get(currentWeek + i), user);
-            data.getWeeklyOverload().put(new Integer(currentWeek + i),
+                    weekNo, data.getWeeklyTotals()
+                            .get(weekNo), user);
+            data.getWeeklyOverload().put(weekNo,
                     new Boolean(accommondate));
         }
         data.setWeekNumbers(weekNumbers);

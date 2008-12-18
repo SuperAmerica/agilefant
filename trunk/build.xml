@@ -1,0 +1,415 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." default="webapp" name="Agilefant">
+
+	<property file="build-user.properties" />
+	<property file="build.properties" />
+	<property file="conf/database-mysql5.properties" />
+
+	<!-- Clover parameters -->
+	<property name="clover.jar" location="${basedir}/lib/clover.jar" />
+	<taskdef resource="cloverlib.xml" classpath="${clover.jar}" />
+
+
+
+	<target name="init" description="Initializes build script">
+		<mkdir dir="${build.dir}" />
+		<mkdir dir="${build.classes}" />
+		<mkdir dir="${build.webapp}" />
+		<mkdir dir="${build.test.dir}" />
+		<mkdir dir="${build.test.classes.dir}" />
+
+		<path id="compile.classpath">
+			<fileset dir="${lib}">
+				<include name="*.jar" />
+				<include name="build/*.jar" />
+			</fileset>
+		</path>
+
+		<path id="compile.test.classpath">
+			<path refid="compile.classpath" />
+			<pathelement location="${build.classes}" />
+			<pathelement location="${build.test.classes.dir}" />
+			<pathelement location="${test.conf.dir}" />
+			<pathelement path="${clover.jar}" />
+		</path>
+
+		<path id="hibernatetoolslib">
+			<path refid="compile.classpath" />
+			<fileset dir="${hibernatetools.dir}">
+				<include name="*.jar" />
+			</fileset>
+			<path location="${build.classes}" />
+		</path>
+
+		<taskdef name="hibernatetool" classname="org.hibernate.tool.ant.HibernateToolTask" classpathref="hibernatetoolslib" />
+
+		<taskdef name="dbunit" classname="org.dbunit.ant.DbUnitTask" classpathref="compile.classpath" />
+
+		<path id="instr.classpath">
+			<pathelement location="${build.classes}" />
+		</path>
+
+		<!-- Initialization of JMeter and jChav stress testing framework -->
+		<property file="conf/classes/messages.properties" />
+		<tstamp>
+			<format property="build.id" pattern="dMMyyyy-hhmmss" locale="en" />
+		</tstamp>
+		<property description="The location of the install of JMeter" name="jmeter.install.dir" value="/opt/jakarta-jmeter-2.3" />
+		<property description="The directory containing the jchav jars" name="jchav.libs.dir" value="/opt/jchav-1.1.0" />
+		<property description="The JMeter test plan script we want to run" name="jmeter.testplan" value="/opt/jakarta-jmeter-2.3/plans/Agilefant_single_user.jmx" />
+		<property description="The location to store the per run files" name="jmeter.result.dir" value="${test.reports.jmeter}" />
+		<property description="The resulting file location, make sure this is unique for each build" name="jmeter.result.file" value="${jmeter.result.dir}/result_${webwork.agilefantVersionNumber}_${build.id}.xml" />
+		<property description="The location to generate the html and charts to. " name="jchav.result.dir" value="${test.reports.jchav}" />
+
+	</target>
+
+	<target name="compile" depends="init" description="Compiles source files">
+		<javac debug="${javac.debug}" destdir="${build.classes}" srcdir="${src}">
+			<classpath refid="compile.classpath" />
+			<!-- <compilerarg value="-Xlint:deprecation"/> -->
+		</javac>
+	</target>
+
+	<target name="make-jar" depends="compile" description="Makes the jar file">
+		<jar basedir="${build.classes}" includes="**" destfile="${jarFile}" />
+	</target>
+
+	<target name="create-db" depends="compile" description="Creates db using hibernate tools">
+		<hibernatetool destdir="${build.dir}">
+			<annotationconfiguration propertyfile="${conf.dir}/database-${database.type}.properties" configurationfile="${conf.dir}/hibernate.cfg.xml" />
+			<hbm2ddl export="${hbm2ddl.export}" outputfilename="create-db.ddl" />
+		</hibernatetool>
+	</target>
+
+	<target name="create-ddl" depends="compile" description="Creates db using hibernate tools">
+		<hibernatetool destdir="${build.dir}">
+			<annotationconfiguration propertyfile="${conf.dir}/database-${database.type}.properties" configurationfile="${conf.dir}/hibernate.cfg.xml" />
+			<hbm2ddl export="false" outputfilename="create-db.ddl" />
+		</hibernatetool>
+	</target>
+
+	<target name="create-test-db" depends="compile" description="Creates db using hibernate tools">
+		<hibernatetool destdir="${build.dir}">
+			<annotationconfiguration propertyfile="${conf.dir}/database-fortests-${database.type}.properties" configurationfile="${conf.dir}/hibernate.cfg.xml" />
+			<hbm2ddl export="${hbm2ddl.export}" outputfilename="create-db.ddl" />
+		</hibernatetool>
+	</target>
+
+	<target name="sync-dbs" depends="create-ddl" description="Synchronise agilefant and aeftest databases">
+		<sql classpath="lib/mysql-connector-java-5.1.7-bin.jar" driver="com.mysql.jdbc.Driver" src="doc/sql/drop-create-databases.sql" url="jdbc:mysql://localhost:3306/agilefant?autoReconnect=true" userid="agilefant" password="agilefant" />
+		<sql classpath="lib/mysql-connector-java-5.1.7-bin.jar" driver="com.mysql.jdbc.Driver" src="build/create-db.ddl" url="jdbc:mysql://localhost:3306/agilefant?autoReconnect=true" userid="agilefant" password="agilefant" />
+		<sql classpath="lib/mysql-connector-java-5.1.7-bin.jar" driver="com.mysql.jdbc.Driver" src="build/create-db.ddl" url="jdbc:mysql://localhost:3306/aeftest?autoReconnect=true" userid="agilefant" password="agilefant" />
+		<sql classpath="lib/mysql-connector-java-5.1.7-bin.jar" driver="com.mysql.jdbc.Driver" src="doc/sql/insert-users.sql" url="jdbc:mysql://localhost:3306/agilefant?autoReconnect=true" userid="agilefant" password="agilefant" />
+	</target>
+
+	<target name="copy-spring-files" description="Internal target">
+		<mkdir dir="${destination}/WEB-INF" />
+		<copy file="${conf.dir}/configuration.properties" tofile="${destination}/WEB-INF/configuration.properties" />
+		<copy file="${conf.dir}/database-fortests-${database.type}.properties" tofile="${destination}/WEB-INF/database.properties" />
+		<copy file="${conf.dir}/hibernate.cfg.xml" tofile="${destination}/WEB-INF/hibernate.cfg.xml" />
+		<copy todir="${destination}">
+			<fileset dir="${conf.dir}" includes="*.xml" />
+		</copy>
+	</target>
+
+	<target name="test" depends="compile-tests">
+		<mkdir dir="${test.conf.dir}/WEB-INF" />
+		<mkdir dir="${test.reports.junit}" />
+		<junit fork="true" dir="${basedir}" printsummary="true">
+			<classpath refid="compile.test.classpath" />
+			<formatter type="xml" />
+			<batchtest todir="${test.reports.junit}">
+				<fileset dir="${test.dir}">
+					<exclude name="**/TestUtility.java" />
+					<exclude name="**/SpringEnabledTestCase.java" />
+					<exclude name="**/SpringTestCase.java" />
+					<include name="**/*Test*.java" />
+				</fileset>
+			</batchtest>
+		</junit>
+	</target>
+
+	<target name="test-clover-enable" description="Enables clover">
+		<clover-setup />
+	</target>
+
+	<target name="test-clover-clean" description="Cleans clover databases">
+		<clover-clean />
+	</target>
+
+	<target name="test-clover-xmlreport" description="Generate xml clover reports">
+		<mkdir dir="${test.reports.clover}" />
+		<clover-report>
+			<current outfile="${test.reports.clover}/coverage.xml">
+				<format type="xml" />
+			</current>
+		</clover-report>
+	</target>
+
+	<target name="test-clover-htmlreport" depends="clean,test-clover-enable,compile-tests,test" description="Generate html clover reports">
+		<mkdir dir="${test.reports.clover}" />
+		<clover-html-report outdir="${test.reports.clover}" title="Agilefant" />
+		<clover-clean />
+	</target>
+
+	<target name="test-checkstyle-xmlreport" description="Generates a report of code convention violations.">
+		<mkdir dir="${test.reports.checkstyle}" />
+		<taskdef resource="checkstyletask.properties" classpath="${basedir}/lib/checkstyle-all-4.3.jar" />
+		<checkstyle config="${test.conf.dir}/checkstyle/sun_checks.xml" failureProperty="checkstyle.failure" failOnViolation="false">
+			<formatter type="xml" tofile="${test.reports.checkstyle}/checkstyle_report.xml" />
+			<fileset dir="src" includes="**/*.java" />
+			<fileset dir="test" includes="**/*.java" />
+		</checkstyle>
+	</target>
+
+	<target name="test-checkstyle-htmlreport" depends="test-checkstyle-xmlreport" description="Generates html report of code convention violations.">
+		<xslt in="${test.reports.checkstyle}/checkstyle_report.xml" out="${test.reports.checkstyle}/checkstyle_report.html" style="${test.conf.dir}/checkstyle/checkstyle-noframes-sorted.xsl" />
+	</target>
+
+
+	<target name="test-bamboo" depends="clean,test-clover-enable,compile-tests,sync-dbs,test,test-clover-xmlreport,test-clover-clean,test-checkstyle-xmlreport" description="Bamboo uses this target" />
+
+
+	<target name="compile-tests" depends="compile">
+		<mkdir dir="${build.test.classes.dir}" />
+		<javac debug="${javac.debug}" destdir="${build.test.classes.dir}" srcdir="${test.dir}">
+			<classpath refid="compile.test.classpath" />
+		</javac>
+	</target>
+
+	<target name="drop-create-db" depends="compile" description="Creates db using hibernate tools">
+		<hibernatetool destdir="${build.dir}">
+			<annotationconfiguration propertyfile="${conf.dir}/database-${database.type}.properties" configurationfile="${conf.dir}/hibernate.cfg.xml" />
+			<hbm2ddl drop="true" export="${hbm2ddl.export}" outputfilename="create-db.ddl" />
+		</hibernatetool>
+	</target>
+
+	<target name="drop-create-test-db" depends="compile" description="Creates db using hibernate tools">
+		<hibernatetool destdir="${build.dir}">
+			<annotationconfiguration propertyfile="${conf.dir}/database-fortests-${database.type}.properties" configurationfile="${conf.dir}/hibernate.cfg.xml" />
+			<hbm2ddl drop="true" export="${hbm2ddl.export}" outputfilename="create-db.ddl" />
+		</hibernatetool>
+	</target>
+
+	<target name="update-db" depends="compile" description="Creates db using hibernate tools">
+		<hibernatetool destdir="${build.dir}">
+			<annotationconfiguration propertyfile="${conf.dir}/database-${database.type}.properties" configurationfile="${conf.dir}/hibernate.cfg.xml" />
+			<hbm2ddl export="${hbm2ddl.export}" outputfilename="create-db.ddl" update="true" />
+		</hibernatetool>
+	</target>
+
+	<target name="update-test-db" depends="compile" description="Creates db using hibernate tools">
+		<hibernatetool destdir="${build.dir}">
+			<annotationconfiguration propertyfile="${conf.dir}/database-fortests-${database.type}.properties" configurationfile="${conf.dir}/hibernate.cfg.xml" />
+			<hbm2ddl export="${hbm2ddl.export}" outputfilename="create-db.ddl" update="true" />
+		</hibernatetool>
+	</target>
+
+
+	<target name="webapp" depends="make-jar" description="Builds webapp">
+		<copy includeEmptyDirs="true" todir="${build.webapp}">
+			<fileset dir="${webapp.root}" />
+		</copy>
+		<copy todir="${build.webapp}/WEB-INF/">
+			<fileset dir="${conf.dir}" excludes="database-*.properties" />
+		</copy>
+		<copy tofile="${build.webapp}/WEB-INF/database.properties">
+			<fileset file="${conf.dir}/database-${database.type}.properties" />
+		</copy>
+		<copy todir="${build.webapp}/WEB-INF/lib/">
+			<fileset dir="${lib}">
+				<include name="*.jar" />
+				<include name="*.zip" />
+				<include name="*.txt" />
+			</fileset>
+		</copy>
+		<copy todir="${build.webapp}/WEB-INF/lib/licenses/">
+			<fileset dir="${lib}/licenses" />
+		</copy>
+		<copy todir="${build.webapp}/WEB-INF/lib/">
+			<fileset file="${jarFile}" />
+		</copy>
+	</target>
+
+	<target name="quick-ui-deploy" depends="init" description="Quickly deploys all jsp to server">
+		<copy todir="${deploy.dir.local}/WEB-INF/jsp/">
+			<fileset dir="${webapp.root}/WEB-INF/jsp/" />
+		</copy>
+	</target>
+
+	<target name="deploy-local-web" depends="webapp" description="Deploys web app to local server without reloading webapp">
+		<mkdir dir="${deploy.dir.local}" />
+		<copy todir="${deploy.dir.local}">
+			<fileset dir="${build.webapp}" />
+		</copy>
+	</target>
+
+	<target name="deploy-local" depends="deploy-local-web" description="Deploys web app to local server">
+		<touch file="${deploy.dir.local}/WEB-INF/web.xml" />
+	</target>
+
+	<!-- Deploys the project on local system but does not touch web.xml, therefore Tomcat should not redeploy entire project. -->
+	<target name="deploy-local-notouch" depends="deploy-local-web" description="Deploys web app to local server">
+	</target>
+
+
+	<target name="undeploy-local" description="Undeploys web app on local server">
+		<delete dir="${deploy.dir.local}" />
+		<delete dir="${catalina.home}/work/Catalina/localhost/${webapp.name}" />
+	</target>
+
+	<target name="clean" description="Removes build directory">
+		<delete dir="${build.dir}" />
+		<delete dir="${test.reports.dir}" />
+	</target>
+
+	<target name="set-original-db" depends="init" description="Updates the database, with default values from the XML file">
+		<dbunit driver="${hibernate.connection.driver_class}" url="${hibernate.connection.url}" userid="${hibernate.connection.username}" password="${hibernate.connection.password}">
+			<classpath refid="compile.classpath" />
+			<operation type="CLEAN_INSERT" src="${testdata.dir}/testData.xml" format="xml" />
+		</dbunit>
+	</target>
+
+	<target name="export-db" depends="init" description="Exports the database into an XML file">
+		<dbunit driver="${hibernate.connection.driver_class}" url="${hibernate.connection.url}" userid="${hibernate.connection.username}" password="${hibernate.connection.password}">
+			<export dest="${build.test}/exportedData.xml" format="xml" />
+		</dbunit>
+	</target>
+
+	<target name="count-loc">
+		<exec executable="/bin/sh">
+			<arg value="${basedir}/tools/count-loc.sh" />
+		</exec>
+	</target>
+
+	<target name="generate-javadocs" depends="init" description="Generates Javadocs from source code">
+		<!-- TODO: Generate docs for taglibs -->
+		<mkdir dir="${javadoc.dir}" />
+		<javadoc classpathref="compile.classpath" destdir="${javadoc.dir}" access="private">
+			<fileset dir="${src}" defaultexcludes="yes">
+				<include name="**" />
+			</fileset>
+			<doctitle>AgilEFant 2007 Javadoc</doctitle>
+		</javadoc>
+	</target>
+
+	<target name="run-jdepend" depends="compile" description="Runs JDepend">
+		<!-- 
+		<mkdir dir="${jdepend.dir}" />
+
+		<jdepend format="xml"
+			outputfile="${jdepend.dir}/jdepend-report.xml">
+			<classespath>
+				<pathelement location="${build.classes}" />
+			</classespath>
+		</jdepend>
+		<style basedir="${jdepend.dir}" destdir="${jdepend.dir}"
+			includes="jdepend-report.xml" style="${ant.home}/etc/jdepend.xsl" />
+		 -->
+	</target>
+
+	<target name="war" depends="webapp">
+		<jar basedir="${build.webapp}" includes="**" destfile="${warFile}" />
+	</target>
+
+	<!-- 
+	<target name="release"
+		depends="clean, war, generate-javadocs, doccheck, run-jdepend, drop-create-test-db, emma, test-reports">
+		<mkdir dir="${release.dir}" />
+		<mkdir dir="${release.dir}/doc" />
+		<copy file="${warFile}" todir="${release.dir}" />
+		<copy todir="${release.dir}/doc">
+			<fileset dir="${doc.dir}" />
+		</copy>
+	</target>  -->
+
+	<target name="release" depends="clean, war, create-ddl" description="Generates release directory">
+		<mkdir dir="${release.dir}" />
+		<mkdir dir="${release.dir}/sql-updates" />
+		<copy file="${warFile}" todir="${release.dir}" />
+		<copy file="${basedir}/doc/License.txt" todir="${release.dir}" />
+		<copy file="${basedir}/doc/sql/insert-users.sql" todir="${release.dir}" />
+		<copy file="${build.dir}/create-db.ddl" todir="${release.dir}" />
+		<copy file="${basedir}/doc/Release_notes.txt" todir="${release.dir}" />
+		<copy file="${basedir}/doc/Summary_about_used_libraries.txt" todir="${release.dir}" />
+		<copy file="${basedir}/doc/Install.txt" todir="${release.dir}" />
+		<copy todir="${release.dir}/sql-updates">
+			<fileset dir="${basedir}/doc/sql/updates" />
+		</copy>
+	</target>
+
+	<target name="release-zip" depends="release" description="Packs all files in release directory to a zip file">
+		<zip destfile="${release.zip.dir}/agilefant.zip" basedir="${release.dir}" update="true" />
+	</target>
+
+	<target name="doccheck">
+		<mkdir dir="${doccheck.dir}" />
+		<javadoc classpathref="compile.classpath" doclet="com.sun.tools.doclets.doccheck.DocCheck" docletpathref="compile.classpath" destdir="${doccheck.dir}" sourcepath="${src}">
+			<package name="fi.hut.soberit.agilefant.*" />
+		</javadoc>
+	</target>
+
+	<!-- Execute JMeter test plan -->
+	<!--<target name="test-jmeter" depends="init" description="Execute the JMeter test plan, recording the results to a file.">
+		<mkdir dir="${test.reports.jmeter}" />
+		<taskdef name="jmeter" classpath="${jmeter.install.dir}/extras/ant-jmeter.jar" classname="org.programmerplanet.ant.taskdefs.jmeter.JMeterTask" />
+		<jmeter jmeterhome="${jmeter.install.dir}" testplan="${jmeter.testplan}" resultlog="${jmeter.result.file}">
+			<property name="jmeter.save.saveservice.output_format" value="xml" />
+		</jmeter>
+	</target>-->
+
+	<!-- Produce jChav report from JMeter results -->
+	<!--<target name="test-jchav" depends="init" description="Produce JChav report from the JMeter results">
+		<mkdir dir="${test.reports.jchav}" />
+		<taskdef name="jchav" classname="com.googlecode.jchav.ant.JChavTask">
+			<classpath>
+				<fileset dir="${jchav.libs.dir}/">
+					<include name="**/*.jar" />
+				</fileset>
+			</classpath>
+		</taskdef>
+		<jchav srcdir="${jmeter.result.dir}" destdir="${jchav.result.dir}" reporttitle="Agilefant Example walk" />
+	</target>-->
+
+	<target name="tomcat-start" description="Start Tomcat application">
+		<taskdef name="start" classname="org.apache.catalina.ant.StartTask">
+			<classpath>
+				<fileset dir="lib/">
+					<include name="**/*.jar" />
+				</fileset>
+			</classpath>
+		</taskdef>
+		<start url="http://localhost:8080/manager" username="tomcat" password="m0t0rh0me" path="/agilefant" />
+	</target>
+
+	<target name="tomcat-stop" description="Stop Tomcat application">
+		<taskdef name="stop" classname="org.apache.catalina.ant.StopTask">
+			<classpath>
+				<fileset dir="lib/">
+					<include name="**/*.jar" />
+				</fileset>
+			</classpath>
+		</taskdef>
+		<stop failonerror="no" url="http://localhost:8080/manager" username="tomcat" password="m0t0rh0me" path="/agilefant" />
+	</target>
+	<target name="tomcat-undeploy" description="Deploy Tomcat application">
+		<taskdef name="undeploy" classname="org.apache.catalina.ant.UndeployTask">
+			<classpath>
+				<fileset dir="lib/">
+					<include name="**/*.jar" />
+				</fileset>
+			</classpath>
+		</taskdef>
+		<undeploy url="http://localhost:8080/manager" username="tomcat" password="m0t0rh0me" path="/agilefant" />
+	</target>	
+	<target name="tomcat-deploy" depends="war" description="Deploy Tomcat application">
+		<taskdef name="deploy" classname="org.apache.catalina.ant.DeployTask">
+			<classpath>
+				<fileset dir="lib/">
+					<include name="**/*.jar" />
+				</fileset>
+			</classpath>
+		</taskdef>
+		<deploy url="http://localhost:8080/manager" username="tomcat" password="m0t0rh0me" path="/agilefant" war="file:${warFile}" />
+	</target>	
+</project>

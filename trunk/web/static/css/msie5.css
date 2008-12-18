@@ -1,0 +1,79 @@
+input {
+	background-color: #fff
+}
+
+a {
+	height: 0
+}
+
+a.noBor {
+	height: auto !important
+}
+
+#topicons a {
+	height: auto !important
+}
+
+a:hover {
+	cursor: hand
+}
+
+a.forie5 {
+	display: none
+}  /* the anchor creates a GAP above the menu */
+.codewrap {
+	width: 60%
+}
+
+#wrapper {
+	width: expression(document . body . clientWidth <   780 ?   "780px" :   "auto")
+}
+
+#toplinks a:hover {
+	cursor: hand
+}
+
+#header {
+	margin-right: -600px
+}  /* Don't ask ;) */
+#innerwrapper {
+	padding: 0;;
+	margin-top: -22px !important;;
+	margin-bottom: -9px
+}
+
+div.lBox {
+	width: 171px
+}
+
+div.rBox {
+	width: 194px
+}
+
+#article {
+	width: 180px
+}
+
+#login input.zbutton {
+	width: 110px !important
+}
+
+#poll div {
+	margin: 45px 2px 19px 2px
+}
+
+#report {
+	width: 178px
+}
+
+h1 a,h2 a,h3 a,#content a,#footer a {
+	margin-bottom: -5px
+}
+
+#footer {
+	padding-top: 12px
+}
+
+#validator a {
+	padding-left: 42px
+}

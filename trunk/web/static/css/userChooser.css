@@ -1,0 +1,45 @@
+/**
+ * Stylesheet for the user selector 
+ *
+ */
+
+.userChooserDialog table {
+	width: 90%;
+}
+
+.userChooserDialog table td {
+    vertical-align: top;    
+}
+.userChooserDialog table th {
+    text-align: left;    
+}
+
+.userChooserDialog table ul {
+    margin: 0;
+    padding: 0;
+}
+
+.userChooserDialog table ul li {
+    list-style-type: none;
+}
+
+.userChooserDialog table ul li label.disabledUser {
+    color: #7a7a7a;
+}
+
+.userChooserDialog table img.clickable {
+    cursor: pointer;
+    margin-right: 2px;
+}
+
+.userChooserDialog table .userColumn {
+    width: 30%;
+}
+
+.userChooserDialog table ul.projectAssigneeList li {
+    height: 22px;
+}
+
+.userChooserDialog span.errorMessage {
+    color: red;
+}

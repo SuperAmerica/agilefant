@@ -18,6 +18,13 @@ import fi.hut.soberit.agilefant.model.User;
 public interface BacklogItemBusiness {
 
     /**
+     * Returns product's and products sub-backlog's top level backlog items. Meaning those that don't have a parent BLI.
+     * @return a list of top level BLIs.
+     */
+    public List<BacklogItem> getProductTopLevelBacklogItems(int productId);
+
+    
+    /**
      * Returns backlog item by its id.
      * 
      * @param backlogItemId

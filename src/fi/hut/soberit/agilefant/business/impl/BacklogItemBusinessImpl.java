@@ -35,6 +35,12 @@ public class BacklogItemBusinessImpl implements BacklogItemBusiness {
     private UserBusiness userBusiness;
     private HourEntryBusiness hourEntryBusiness;
 
+    public List<BacklogItem> getProductTopLevelBacklogItems(int productId) {
+        return (List<BacklogItem>) backlogItemDAO
+                .productNonDoneTopLevelBacklogItems(productId);
+
+    }
+    
     public BacklogItemDAO getBacklogItemDAO() {
         return backlogItemDAO;
     }

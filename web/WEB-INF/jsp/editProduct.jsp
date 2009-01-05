@@ -420,7 +420,7 @@ var productId = ${product.id};
 				<%@ include file="./inc/_backlogList.jsp"%>
 			</div>
 			<div class="subItemContent" id="structureDiv" style="display:none">
-				<p>Nothing here yet</p>
+				<%@ include file="./inc/structureView.jsp"%>
 			</div>
 			</c:if>
 			</div>

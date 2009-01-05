@@ -462,7 +462,12 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
         storable.setBacklog(backlog);
     }
     
-
+    public String getProductTopLevelBacklogItems() {
+        return CRUDAction.AJAX_SUCCESS;
+        //TODO implement
+    }
+    
+    
     public Backlog getBacklog() {
         return backlog;
     }

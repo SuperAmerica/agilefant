@@ -97,6 +97,17 @@ public class BacklogItem implements PageItem, Assignable, EffortContainer, Times
     
     private User creator;
     
+    private BacklogItem parentBli;
+    
+    @ManyToOne
+    public BacklogItem getParentBli() {
+        return parentBli;
+    }
+
+    public void setParentBli(BacklogItem parentBli) {
+        this.parentBli = parentBli;
+    }
+
     public Calendar getCreatedDate() {
         return this.createdDate;
     }

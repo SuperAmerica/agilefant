@@ -16,6 +16,20 @@
 
 <script type="text/javascript">
 
+function setView(value) {
+	if (value == 'structure') {
+		document.getElementById('progressDiv').style.display = 'none';
+		document.getElementById('structureDiv').style.display = 'block';
+		document.getElementById('structureLink').style.display = 'none';
+		document.getElementById('progressLink').style.display = 'block';
+	}else{
+		document.getElementById('structureLink').style.display = 'block';
+		document.getElementById('structureDiv').style.display = 'none';
+		document.getElementById('progressLink').style.display = 'none';
+		document.getElementById('progressDiv').style.display = 'block';
+	}
+}
+
 $(document).ready(function() {
     <c:forEach items="${openThemes}" var="openTheme">
         handleTabEvent("businessThemeTabContainer-${openTheme[0]}", "businessTheme", ${openTheme[0]}, ${openTheme[1]});
@@ -394,14 +408,19 @@ var productId = ${product.id};
 					<ww:param name="backlogId" value="${product.id}" />
 				</ww:url> <ww:a cssClass="openCreateDialog openBacklogItemDialog"
 					href="%{createBacklogItemLink}" onclick="return false;">Create new &raquo;</ww:a>
+					<a onclick="setView('structure'); return false;" id="structureLink" style="display:block;">Show Structure View</a>
+					<a onclick="setView('progress'); return false;" id="progressLink" style="display:none">Show Progress View</a>
 					</td>
 					</tr>
 				</table>
 			</div>			
 
 			<c:if test="${!empty product.backlogItems}">
-			<div class="subItemContent">
+			<div class="subItemContent" id="progressDiv">
 				<%@ include file="./inc/_backlogList.jsp"%>
+			</div>
+			<div class="subItemContent" id="structureDiv" style="display:none">
+				<p>Nothing here yet</p>
 			</div>
 			</c:if>
 			</div>

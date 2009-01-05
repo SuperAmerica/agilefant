@@ -35,6 +35,11 @@ public class BacklogItemBusinessImpl implements BacklogItemBusiness {
     private UserBusiness userBusiness;
     private HourEntryBusiness hourEntryBusiness;
 
+
+    public List<BacklogItem> getBacklogItemChildren(int fatherId) {
+        return backlogItemDAO.backlogItemChildren(fatherId);
+    }
+    
     public List<BacklogItem> getProductTopLevelBacklogItems(int productId) {
         return (List<BacklogItem>) backlogItemDAO
                 .productNonDoneTopLevelBacklogItems(productId);
@@ -195,5 +200,7 @@ public class BacklogItemBusinessImpl implements BacklogItemBusiness {
     public void setUserBusiness(UserBusiness userBusiness) {
         this.userBusiness = userBusiness;
     }
+
+
     
 }

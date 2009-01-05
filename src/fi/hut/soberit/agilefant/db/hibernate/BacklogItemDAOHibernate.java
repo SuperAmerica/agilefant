@@ -1,5 +1,6 @@
 package fi.hut.soberit.agilefant.db.hibernate;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
@@ -18,6 +19,11 @@ public class BacklogItemDAOHibernate extends GenericDAOHibernate<BacklogItem>
     
     public List<BacklogItem> productNonDoneTopLevelBacklogItems(int productId) {
         // TODO Auto-generated method stub
-        return null;
+        return new ArrayList<BacklogItem>();
+    }
+
+    public List<BacklogItem> backlogItemChildren(int fatherId) {
+        // TODO Auto-generated method stub
+        return new ArrayList<BacklogItem>();
     }
 }

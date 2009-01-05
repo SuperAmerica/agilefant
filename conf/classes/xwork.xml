@@ -181,6 +181,9 @@
 				<param name="resetContextView">true</param>
 			</result>
 		</action>
+		<action name="getProductTopLevelBacklogItemsAsJson" method="getProductTopLevelBacklogItemsAsJson" class="backlogAction">
+            <result>/WEB-INF/jsp/inc/structureView.jsp</result>
+        </action>
 		<!-- /Product actions -->
 		<!-- BacklogItem actions -->
 		<action name="ajaxCreateBacklogItem" method="create"

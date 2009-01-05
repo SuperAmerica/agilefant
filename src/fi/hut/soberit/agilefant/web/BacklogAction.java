@@ -485,6 +485,10 @@ public class BacklogAction extends ActionSupport {
         return underSameProduct;
     }
     
+    public String getProductTopLevelBacklogItems() {
+        return backlogBusiness.getProductTopLevelBacklogItemsAsJson(backlogId);
+    }
+    
     
     
    

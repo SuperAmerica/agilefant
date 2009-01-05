@@ -986,5 +986,16 @@ public class BacklogBusinessImpl implements BacklogBusiness {
     public void setHistoryBusiness(HistoryBusiness historyBusiness) {
         this.historyBusiness = historyBusiness;
     }
+    
+    public List<BacklogItem> getProductTopLevelBacklogItems(int productId) {
+        return (List<BacklogItem>) backlogItemDAO
+                .productNonDoneTopLevelBacklogItems(productId);
+
+    }
+    
+    public String getProductTopLevelBacklogItemsAsJson(int productId) {
+        List<BacklogItem> list = this.getProductTopLevelBacklogItems(productId);
+        return new JSONSerializer().serialize(list);
+    }
 
 }

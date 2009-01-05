@@ -23,12 +23,6 @@ public interface BacklogItemBusiness {
      * @return children of given BLI
      */
     public List<BacklogItem> getBacklogItemChildren(int fatherId);
-    
-    /**
-     * Returns product's and products sub-backlog's top level backlog items. Meaning those that don't have a parent BLI.
-     * @return a list of top level BLIs.
-     */
-    public List<BacklogItem> getProductTopLevelBacklogItems(int productId);
 
     
     /**

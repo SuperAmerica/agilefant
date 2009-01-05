@@ -333,4 +333,16 @@ public interface BacklogBusiness {
      *         under different products. Else true.
      */
     public boolean isUnderSameProduct(int backlogId1, int backlogId2);
+    
+    /**
+     * Returns product's and products sub-backlog's top level backlog items. Meaning those that don't have a parent BLI.
+     * @return a list of top level BLIs.
+     */
+    public List<BacklogItem> getProductTopLevelBacklogItems(int productId);
+    
+    /**
+     * Returns product's and products sub-backlog's top level backlog items as JSONs. Meaning those that don't have a parent BLI.
+     * @return a list of top level BLIs.
+     */
+    public String getProductTopLevelBacklogItemsAsJson(int productId);
 }

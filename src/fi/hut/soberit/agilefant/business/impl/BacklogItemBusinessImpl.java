@@ -40,12 +40,6 @@ public class BacklogItemBusinessImpl implements BacklogItemBusiness {
         return backlogItemDAO.backlogItemChildren(fatherId);
     }
     
-    public List<BacklogItem> getProductTopLevelBacklogItems(int productId) {
-        return (List<BacklogItem>) backlogItemDAO
-                .productNonDoneTopLevelBacklogItems(productId);
-
-    }
-    
     public BacklogItemDAO getBacklogItemDAO() {
         return backlogItemDAO;
     }

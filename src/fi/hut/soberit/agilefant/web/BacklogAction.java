@@ -72,7 +72,7 @@ public class BacklogAction extends ActionSupport {
     
     private boolean underSameProduct = false;
 
-    
+    private String jsonData = "";
 
     /**
      * Used to determine what action is taken when multiple
@@ -485,8 +485,17 @@ public class BacklogAction extends ActionSupport {
         return underSameProduct;
     }
     
-    public String getProductTopLevelBacklogItems() {
-        return backlogBusiness.getProductTopLevelBacklogItemsAsJson(backlogId);
+    public String getProductTopLevelBacklogItemsAsJson() {
+        setJsonData(backlogBusiness.getProductTopLevelBacklogItemsAsJson(backlogId));
+        return Action.SUCCESS;
+    }
+
+    public String getJsonData() {
+        return jsonData;
+    }
+
+    public void setJsonData(String jsonData) {
+        this.jsonData = jsonData;
     }
     
     

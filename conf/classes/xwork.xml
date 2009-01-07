@@ -182,7 +182,7 @@
 			</result>
 		</action>
 		<action name="getProductTopLevelBacklogItemsAsJson" method="getProductTopLevelBacklogItemsAsJson" class="backlogAction">
-            <result>/WEB-INF/jsp/inc/structureView.jsp</result>
+            <result>/WEB-INF/jsp/jsonData.jsp</result>
         </action>
 		<!-- /Product actions -->
 		<!-- BacklogItem actions -->

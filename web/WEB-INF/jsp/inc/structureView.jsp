@@ -106,7 +106,13 @@ $(document).ready(
 			);
 		}
 	);
-
+jQuery.getJSON("getProductTopLevelBacklogItemsAsJson.action",
+                { 'backlogId': <c:out value="${backlog.id}" /> },
+                function(data, status) {
+						//for(var x in data) {
+						//	alert(data[x].id);
+						//}
+                });
 </script>
 
 <ul class="myTree">

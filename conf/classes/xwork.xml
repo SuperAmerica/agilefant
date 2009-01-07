@@ -1018,6 +1018,9 @@
         </action>
         <action name="getUserChooserJSON" method="ajaxGetUserChooserJSON" class="jsonAction">
             <result>/WEB-INF/jsp/jsonData.jsp</result>
+        </action>        
+		<action name="getBacklogItemChildrenAsJSON" method="getBacklogItemChildrenAsJSON" class="backlogItemAction">
+            <result>/WEB-INF/jsp/jsonData.jsp</result>
         </action>
         <!-- /JSON actions -->
         <action name="qr" method="resolveLinkTarget" class="quickReferenceAction">

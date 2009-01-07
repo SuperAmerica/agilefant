@@ -109,9 +109,15 @@ $(document).ready(
 jQuery.getJSON("getProductTopLevelBacklogItemsAsJson.action",
                 { 'backlogId': <c:out value="${backlog.id}" /> },
                 function(data, status) {
-						//for(var x in data) {
-						//	alert(data[x].id);
-						//}
+						for(var x in data) {
+							jQuery.getJSON("getBacklogItemChildrenAsJSON.action",
+                				{ 'backlogItemId': data[x].id },
+                				function(data, status) {
+									for(var y in data) {
+										//alert(data[y].id);
+									}
+                				});
+						}
                 });
 </script>
 

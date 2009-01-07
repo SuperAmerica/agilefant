@@ -24,6 +24,7 @@ public interface BacklogItemBusiness {
      */
     public List<BacklogItem> getBacklogItemChildren(int fatherId);
 
+    public String getBacklogItemChildrenAsJson(int fatherId);
     
     /**
      * Returns backlog item by its id.

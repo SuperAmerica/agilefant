@@ -102,6 +102,8 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
     private User creator;
 
     private List<BusinessTheme> bliActiveOrSelectedThemes;
+    
+    private String jsonData = "";
 
     public String getBliListContext() {
         return bliListContext;
@@ -701,5 +703,18 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
 
     public Set<Integer> getThemeIds() {
         return themeIds;
+    }
+
+    public String getJsonData() {
+        return jsonData;
+    }
+
+    public void setJsonData(String jsonData) {
+        this.jsonData = jsonData;
+    }
+    
+    public String getBacklogItemChildrenAsJSON() {
+        setJsonData(backlogItemBusiness.getBacklogItemChildrenAsJson(backlogItemId));
+        return Action.SUCCESS;
     }
 }

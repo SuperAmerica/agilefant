@@ -2,6 +2,7 @@
 <script type="text/javascript" src="static/js/interface.js"></script>
 
 <script type="text/javascript">
+
 $(document).ready(
 		function() {
 jQuery.getJSON("getProductTopLevelBacklogItemsAsJson.action",
@@ -15,24 +16,24 @@ jQuery.getJSON("getProductTopLevelBacklogItemsAsJson.action",
 					var hidden = $('<input type="hidden" class="hiddenId"/>').appendTo(item);						
 					span.text(data[x].name);
 					hidden.text(data[x].id);
-							
-					//jQuery.getJSON("getBacklogItemChildrenAsJSON.action",
-        				//{ 'backlogItemId': data[x].id },
-        				//function(data, status) {
-							//for(var y = 0; y < data.length; y++) {
-								//var subList = $('<ul style="display: none;" />').appendTo(item);
-								//var subItem = 	$('<li class="treeItem" />').appendTo(subList);
-								//var subImg = $('<img src="static/img/backlog.png" class="folderImage" />').appendTo(subItem);
-								//var subSpan = $('<span class="textHolder" />').appendTo(subItem);						
-								//subSpan.text(data[y].name);		
-							//}
-        				//});
+<!--							-->
+<!--					jQuery.getJSON("getBacklogItemChildrenAsJSON.action",-->
+<!--        				{ 'backlogItemId': data[x].id },-->
+<!--        				function(data, status) {-->
+<!--							for(var y = 0; y < data.length; y++) {-->
+<!--								var subList = $('<ul style="display: none;" />').appendTo(item);-->
+<!--								var subItem = 	$('<li class="treeItem" />').appendTo(subList);-->
+<!--								var subImg = $('<img src="static/img/backlog.png" class="folderImage" />').appendTo(subItem);-->
+<!--								var subSpan = $('<span class="textHolder" />').appendTo(subItem);						-->
+<!--								subSpan.text(data[y].name);		-->
+<!--							}-->
+<!--        				});-->
 				}
-				//Not working for some reason
+
 				$('li', list.get(0)).each(
 						function()
 						{
-							var parentId = $('input.hiddenId', this).text();
+							var parentId = $('input.hiddenId:last', this).text();
 							var t = $(this);
 							$.post('hasChildren.action', {"backlogItemId": parentId}, function(data,status) {
 									
@@ -61,6 +62,51 @@ jQuery.getJSON("getProductTopLevelBacklogItemsAsJson.action",
 				$('img.expandImage', list.get(0)).click(
 						function()
 						{
+							var img = $(this);
+							jQuery.getJSON("getBacklogItemChildrenAsJSON.action",{ 'backlogItemId': $('input', img.get(0).parentNode).text() }, function(data) {
+								var ul = $('ul', img.get(0).parentNode);
+								if(!ul.get(0).hasChildNodes()) {
+									for(var x = 0; x < data.length; x++) {						
+										var item = 	$('<li class="treeItem" style="list-style-type:none;"/>').appendTo(ul);
+										var img2 = $('<img src="static/img/backlog.png" class="folderImage" />').appendTo(item);
+										var span = $('<span class="textHolder" />').appendTo(item);
+										var hidden = $('<input type="hidden" class="hiddenId"/>').appendTo(item);						
+										span.text(data[x].name);
+										hidden.text(data[x].id);
+
+										var parentId = $('input.hiddenId:last', img.get(0).parentNode).text();
+										var t = img2;
+										$.post('hasChildren.action', {"backlogItemId": parentId}, function(data,status) {
+											var img3 = $('<img src="static/img/plus.png" width="16" height="16" class="expandImage" />').prependTo(t.get(0).parentNode);
+											var subList = $('<ul style="display: none;" />').appendTo(t);
+											img3.click(function() {
+												if (this.src.indexOf('corner') == -1) {
+													subbranch = $('ul', this.parentNode).eq(0);
+													if (subbranch.css('display') == 'none') {
+														subbranch.show();
+														this.src = 'static/img/minus.png';
+													} else {
+														subbranch.hide();
+														this.src = 'static/img/plus.png';
+													}
+												}
+											}
+											);
+								
+											
+										});
+																				
+									}
+								} else {
+									while(ul.get(0).hasChildNodes()) {
+										ul.get(0).removeChild(ul.get(0).firstChild);
+									}
+								}
+								
+
+							});
+				
+							
 							if (this.src.indexOf('corner') == -1) {
 								subbranch = $('ul', this.parentNode).eq(0);
 								if (subbranch.css('display') == 'none') {

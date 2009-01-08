@@ -29,17 +29,20 @@ jQuery.getJSON("getProductTopLevelBacklogItemsAsJson.action",
         				//});
 				}
 				//Not working for some reason
-				//$('li', list.get(0)).each(
-					//	function()
-						//{
-							//var parentId = $('input.hiddenId', this).text();
-							//$.post('hasChildren.action', {"parentId": parentId}, function(data,status) {
-								//if(data == "true") {
-									//var subList = $('<ul style="display: none;" />').appendTo(this);
-								//}
-							//});
-						//}
-					//);
+				$('li', list.get(0)).each(
+						function()
+						{
+							var parentId = $('input.hiddenId', this).text();
+							var t = $(this);
+							$.post('hasChildren.action', {"backlogItemId": parentId}, function(data,status) {
+									
+								t.get(0).firstChild.src="static/img/plus.png";
+									var subList = $('<ul style="display: none;" />').appendTo(t);
+									
+								
+							});
+						}
+					);
 				$('li', list.get(0)).each(
 						function()
 						{

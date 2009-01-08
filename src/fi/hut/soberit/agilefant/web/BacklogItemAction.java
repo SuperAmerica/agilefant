@@ -221,8 +221,8 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
    }
    
    // Always true for testing purposes
-   public boolean hasChildren() {
-       return true;
+   public String hasChildren() {
+       return backlogItemBusiness.getBacklogItemChildren(backlogItemId).isEmpty() ? CRUDAction.AJAX_ERROR : CRUDAction.AJAX_SUCCESS;
    }
 
     public String edit() {

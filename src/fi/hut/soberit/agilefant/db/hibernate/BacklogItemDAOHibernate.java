@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Example;
 import org.hibernate.criterion.Restrictions;
 
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
@@ -37,6 +38,8 @@ public class BacklogItemDAOHibernate extends GenericDAOHibernate<BacklogItem>
         }
         return ret;
     }
+    
+
     @SuppressWarnings("unchecked")
     public List<BacklogItem> backlogItemChildren(int fatherId) {
         DetachedCriteria criteria = DetachedCriteria.forClass(this

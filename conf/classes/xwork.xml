@@ -184,6 +184,15 @@
 		<action name="getProductTopLevelBacklogItemsAsJson" method="getProductTopLevelBacklogItemsAsJson" class="backlogAction">
             <result>/WEB-INF/jsp/jsonData.jsp</result>
         </action>
+        <action name="getBacklogItemChildrenAsJSON" method="getBacklogItemChildrenAsJSON" 
+        	class="backlogItemAction">
+        </action>
+        <action name="ajaxChangeBacklogItemParent" method="ajaxChangeBacklogItemParent" 
+        	class="backlogItemAction">
+        </action>
+        <action name="hasChildren" method="hasChildren" 
+        	class="backlogItemAction">
+        </action>
 		<!-- /Product actions -->
 		<!-- BacklogItem actions -->
 		<action name="ajaxCreateBacklogItem" method="create"
@@ -1019,9 +1028,6 @@
         <action name="getUserChooserJSON" method="ajaxGetUserChooserJSON" class="jsonAction">
             <result>/WEB-INF/jsp/jsonData.jsp</result>
         </action>        
-		<action name="getBacklogItemChildrenAsJSON" method="getBacklogItemChildrenAsJSON" class="backlogItemAction">
-            <result>/WEB-INF/jsp/jsonData.jsp</result>
-        </action>
         <!-- /JSON actions -->
         <action name="qr" method="resolveLinkTarget" class="quickReferenceAction">
         	<result name="success" type="redirect">${uri}</result>

@@ -26,6 +26,8 @@ public interface BacklogItemBusiness {
 
     public String getBacklogItemChildrenAsJson(int fatherId);
     
+    
+    
     /**
      * Returns backlog item by its id.
      * 
@@ -48,6 +50,8 @@ public interface BacklogItemBusiness {
 
     public void removeBacklogItem(int backlogItemId)
             throws ObjectNotFoundException;
+    
+    public void changeBacklogItemParent(int childId, int parentId) throws ObjectNotFoundException;
 
     /**
      * Updates backlog item's effort left and status.

@@ -104,6 +104,26 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
     private List<BusinessTheme> bliActiveOrSelectedThemes;
     
     private String jsonData = "";
+    
+    private int parentId;
+    
+    private int childId;
+
+    public int getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(int parentId) {
+        this.parentId = parentId;
+    }
+
+    public int getChildId() {
+        return childId;
+    }
+
+    public void setChildId(int childId) {
+        this.childId = childId;
+    }
 
     public String getBliListContext() {
         return bliListContext;
@@ -180,6 +200,23 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
         // If exception was not thrown from business method, return success.
         return CRUDAction.AJAX_SUCCESS;
     }
+    
+   public String ajaxChangeBacklogItemParent() {
+       try {
+           backlogItemBusiness.changeBacklogItemParent(childId, parentId);
+       } catch (ObjectNotFoundException e) {
+           super.addActionError(super.getText("backlogItem.notFound"));
+           return CRUDAction.AJAX_ERROR;
+       }
+       
+       // If exception was not thrown from business method, return success.
+       return CRUDAction.AJAX_SUCCESS;
+   }
+   
+   // Always true for testing purposes
+   public boolean hasChildren() {
+       return true;
+   }
 
     public String edit() {
         backlogItem = backlogItemBusiness.getBacklogItem(backlogItemId);

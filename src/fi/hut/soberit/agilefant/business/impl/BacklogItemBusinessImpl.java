@@ -199,6 +199,30 @@ public class BacklogItemBusinessImpl implements BacklogItemBusiness {
         this.userBusiness = userBusiness;
     }
 
+    public void changeBacklogItemParent(int childId, int parentId)
+            throws ObjectNotFoundException {
+        BacklogItem child = backlogItemDAO.get(childId);
+        System.out.println("jeppis! ChildId: " + childId + " - parentId: " + parentId);
+
+        if (child == null) {
+            throw new ObjectNotFoundException(
+                    "Child backlog item with given id was not found.");
+        }
+        if (parentId != -1) {
+            BacklogItem parent = backlogItemDAO.get(parentId);
+            if (parent == null) {
+                throw new ObjectNotFoundException(
+                        "Parent backlog item with given id was not found.");
+            }
+            child.setParentBli(parent);
+            backlogItemDAO.store(child);
+        }
+        else {
+            child.setParentBli(null);
+            backlogItemDAO.store(child);
+        }
+    }
+
 
     
 }

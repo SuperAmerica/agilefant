@@ -52,7 +52,7 @@ public interface BacklogItemBusiness {
     public void removeBacklogItem(int backlogItemId)
             throws ObjectNotFoundException, OperationNotPermittedException;
     
-    public void changeBacklogItemParent(int childId, int parentId) throws ObjectNotFoundException;
+    public void changeBacklogItemParent(int childId, int parentId) throws ObjectNotFoundException, OperationNotPermittedException;
 
     /**
      * Updates backlog item's effort left and status.

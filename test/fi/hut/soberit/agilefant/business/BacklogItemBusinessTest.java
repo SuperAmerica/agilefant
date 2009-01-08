@@ -402,4 +402,122 @@ public class BacklogItemBusinessTest extends TestCase {
         
         verify(bliDAO);           
     }
+    
+    public void testChangeParentBli() {
+        bliDAO = createMock(BacklogItemDAO.class);
+        bliBusiness.setBacklogItemDAO(bliDAO);
+        BacklogItem child = new BacklogItem();
+        child.setId(1);
+        BacklogItem parent = new BacklogItem();
+        parent.setId(2);
+        
+        expect(bliDAO.get(child.getId())).andReturn(child);
+        expect(bliDAO.get(parent.getId())).andReturn(parent);
+        bliDAO.store(child);
+        
+        replay(bliDAO);
+        
+        try {
+            bliBusiness.changeBacklogItemParent(child.getId(), parent.getId());
+        } catch (ObjectNotFoundException e) {
+            fail();
+        }catch (OperationNotPermittedException e) {
+            fail();
+        }
+        
+        verify(bliDAO);
+    }
+
+    public void testChangeParentBli_invalidParent() {
+        bliDAO = createMock(BacklogItemDAO.class);
+        bliBusiness.setBacklogItemDAO(bliDAO);
+        BacklogItem child = new BacklogItem();
+        boolean failed = false;
+        
+        expect(bliDAO.get(child.getId())).andReturn(child);
+        expect(bliDAO.get(-500)).andReturn(null);
+        
+        replay(bliDAO);
+        
+        try {
+            bliBusiness.changeBacklogItemParent(child.getId(), -500);
+        } catch (ObjectNotFoundException e) {
+            failed = true;
+        }catch (OperationNotPermittedException e) {
+            fail();
+        }
+        assertTrue(failed);
+        verify(bliDAO);
+    }
+    
+    public void testChangeParentBli_invalidChild() {
+        bliDAO = createMock(BacklogItemDAO.class);
+        bliBusiness.setBacklogItemDAO(bliDAO);
+        BacklogItem parent = new BacklogItem();
+        boolean failed = false;
+        
+        expect(bliDAO.get(-500)).andReturn(null);
+        
+        replay(bliDAO);
+        
+        try {
+            bliBusiness.changeBacklogItemParent(-500, parent.getId());
+        } catch (ObjectNotFoundException e) {
+            failed = true;
+        } catch (OperationNotPermittedException e) {
+            fail();
+        }
+        assertTrue(failed);
+        verify(bliDAO);
+    }
+    
+    public void testChangeParentBli_parentIsChild() {
+        bliDAO = createMock(BacklogItemDAO.class);
+        bliBusiness.setBacklogItemDAO(bliDAO);
+        BacklogItem child = new BacklogItem();
+        BacklogItem parent = child;
+        boolean failed = false;
+        
+        expect(bliDAO.get(child.getId())).andReturn(child);
+        
+        replay(bliDAO);
+        
+        try {
+            bliBusiness.changeBacklogItemParent(child.getId(), parent.getId());
+        } catch (ObjectNotFoundException e) {
+            fail();
+        }catch (OperationNotPermittedException e) {
+            failed = true;
+        }
+        assertTrue(failed);
+        verify(bliDAO);
+    }
+    
+    public void testChangeParentBli_ChildIsGrandParent() {
+        bliDAO = createMock(BacklogItemDAO.class);
+        bliBusiness.setBacklogItemDAO(bliDAO);
+        BacklogItem child = new BacklogItem();
+        child.setId(1);
+        BacklogItem parent = new BacklogItem();
+        parent.setId(2);        
+        BacklogItem grandParent = new BacklogItem();
+        grandParent.setId(3);
+        grandParent.setParentBli(child);
+        parent.setParentBli(grandParent);
+        boolean failed = false;
+        
+        expect(bliDAO.get(child.getId())).andReturn(child);
+        expect(bliDAO.get(parent.getId())).andReturn(parent);
+        replay(bliDAO);
+        
+        try {
+            bliBusiness.changeBacklogItemParent(child.getId(), parent.getId());
+        } catch (ObjectNotFoundException e) {
+            fail();
+        }catch (OperationNotPermittedException e) {
+            failed = true;
+        }
+        assertTrue(failed);
+        verify(bliDAO);
+    }
 }

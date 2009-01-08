@@ -214,6 +214,9 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
        } catch (ObjectNotFoundException e) {
            super.addActionError(super.getText("backlogItem.notFound"));
            return CRUDAction.AJAX_ERROR;
+       } catch (OperationNotPermittedException e) {
+           super.addActionError(e.getMessage());
+           return CRUDAction.AJAX_ERROR;
        }
        
        // If exception was not thrown from business method, return success.

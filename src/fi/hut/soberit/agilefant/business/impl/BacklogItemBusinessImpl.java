@@ -206,13 +206,16 @@ public class BacklogItemBusinessImpl implements BacklogItemBusiness {
     }
 
     public void changeBacklogItemParent(int childId, int parentId)
-            throws ObjectNotFoundException {
+            throws ObjectNotFoundException, OperationNotPermittedException {
         BacklogItem child = backlogItemDAO.get(childId);
-        System.out.println("jeppis! ChildId: " + childId + " - parentId: " + parentId);
-
+        
         if (child == null) {
             throw new ObjectNotFoundException(
                     "Child backlog item with given id was not found.");
+        }
+        if(childId == parentId) {
+            throw new OperationNotPermittedException(
+                    "Child and parent are same item");
         }
         if (parentId != -1) {
             BacklogItem parent = backlogItemDAO.get(parentId);
@@ -220,6 +223,14 @@ public class BacklogItemBusinessImpl implements BacklogItemBusiness {
                 throw new ObjectNotFoundException(
                         "Parent backlog item with given id was not found.");
             }
+            BacklogItem grandParent = parent.getParentBli();
+            while(grandParent != null) {
+                if(grandParent.getId() == child.getId()) {
+                    throw new OperationNotPermittedException(
+                    "Child and grand parent are same item");
+                }
+                grandParent = grandParent.getParentBli();
+            }            
             child.setParentBli(parent);
             backlogItemDAO.store(child);
         }

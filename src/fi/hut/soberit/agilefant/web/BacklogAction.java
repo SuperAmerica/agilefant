@@ -16,6 +16,7 @@ import fi.hut.soberit.agilefant.business.ProjectBusiness;
 import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
+import fi.hut.soberit.agilefant.exception.OperationNotPermittedException;
 import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
@@ -253,6 +254,8 @@ public class BacklogAction extends ActionSupport {
         try {
             backlogBusiness.deleteMultipleItems(backlogId, backlogItemIds);
         } catch (ObjectNotFoundException e) {
+            super.addActionError(super.getText(e.getMessage()));
+        } catch (OperationNotPermittedException e) {
             super.addActionError(super.getText(e.getMessage()));
         }
     }

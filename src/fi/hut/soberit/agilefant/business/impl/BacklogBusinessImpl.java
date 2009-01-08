@@ -25,6 +25,7 @@ import fi.hut.soberit.agilefant.db.IterationGoalDAO;
 import fi.hut.soberit.agilefant.db.ProductDAO;
 import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
+import fi.hut.soberit.agilefant.exception.OperationNotPermittedException;
 import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.Assignment;
 import fi.hut.soberit.agilefant.model.Backlog;
@@ -86,13 +87,17 @@ public class BacklogBusinessImpl implements BacklogBusiness {
 
     // @Override
     public void deleteMultipleItems(int backlogId, int[] backlogItemIds)
-            throws ObjectNotFoundException {
+            throws ObjectNotFoundException, OperationNotPermittedException {
         Backlog backlog = backlogDAO.get(backlogId);
         if (backlog == null) {
             throw new ObjectNotFoundException("Backlog id " + backlogId
                     + " was invalid.");
         }
-
+        for (int id : backlogItemIds) {
+            if(backlogItemDAO.backlogItemChildren(id).size() > 0)
+                throw new OperationNotPermittedException("Backlog item " +
+                        backlogItemDAO.get(id).getName() + " has children, cannot delete.");
+        }
         for (int id : backlogItemIds) {
             Collection<BacklogItem> items = backlog.getBacklogItems();
             Iterator<BacklogItem> iterator = items.iterator();

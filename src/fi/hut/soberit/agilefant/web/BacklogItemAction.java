@@ -25,6 +25,7 @@ import fi.hut.soberit.agilefant.db.IterationGoalDAO;
 import fi.hut.soberit.agilefant.db.TaskDAO;
 import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
+import fi.hut.soberit.agilefant.exception.OperationNotPermittedException;
 import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
@@ -183,6 +184,9 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
         } catch (ObjectNotFoundException e) {
             super.addActionError(super.getText("backlogItem.notFound"));
             return Action.ERROR;
+        } catch (OperationNotPermittedException e) {
+            super.addActionError(super.getText("backlogItem.hasChildren"));
+            return Action.ERROR;
         }
 
         // If exception was not thrown from business method, return success.
@@ -194,6 +198,9 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
             backlogItemBusiness.removeBacklogItem(backlogItemId);
         } catch (ObjectNotFoundException e) {
             super.addActionError(super.getText("backlogItem.notFound"));
+            return CRUDAction.AJAX_ERROR;
+        } catch (OperationNotPermittedException e) {
+            super.addActionError(super.getText("backlogItem.hasChildren"));
             return CRUDAction.AJAX_ERROR;
         }
 

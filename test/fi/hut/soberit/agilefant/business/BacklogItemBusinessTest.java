@@ -16,6 +16,7 @@ import fi.hut.soberit.agilefant.business.impl.HourEntryBusinessImpl;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.db.BacklogItemHourEntryDAO;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
+import fi.hut.soberit.agilefant.exception.OperationNotPermittedException;
 import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
@@ -46,6 +47,7 @@ public class BacklogItemBusinessTest extends TestCase {
 
         // Record expected behavior
         expect(bliDAO.get(68)).andReturn(bli);
+        expect(bliDAO.backlogItemChildren(68)).andReturn(new ArrayList<BacklogItem>());
         bliDAO.remove(bli);
         replay(bliDAO);
         historyBusiness.updateBacklogHistory(100);
@@ -55,6 +57,8 @@ public class BacklogItemBusinessTest extends TestCase {
         try {
             bliBusiness.removeBacklogItem(68);
         } catch (ObjectNotFoundException onfe) {
+            fail();
+        } catch (OperationNotPermittedException e) {
             fail();
         }
         // verify behavior
@@ -75,12 +79,39 @@ public class BacklogItemBusinessTest extends TestCase {
             fail();
         } catch (ObjectNotFoundException onfe) {
 
+        } catch (OperationNotPermittedException e) {
+            fail();
         }
 
         // verify behavior
         verify(bliDAO);
     }
 
+    public void testRemoveBacklogItem_hasChild() {
+        bliDAO = createMock(BacklogItemDAO.class);
+        bliBusiness.setBacklogItemDAO(bliDAO);
+        BacklogItem bli = new BacklogItem();
+        List<BacklogItem> childList = new ArrayList<BacklogItem>();
+        childList.add(bli);
+        
+        // Record expected behavior
+        expect(bliDAO.get(68)).andReturn(bli);
+        expect(bliDAO.backlogItemChildren(68)).andReturn(childList);
+        replay(bliDAO);
+        // run method under test
+
+        try {
+            bliBusiness.removeBacklogItem(68);
+            fail();
+        } catch (ObjectNotFoundException onfe) {
+            fail();
+        } catch (OperationNotPermittedException e) {
+            
+        }
+        // verify behavior
+        verify(bliDAO);
+    }
+    
     private void testUpdateBacklogItemStateAndEffortLeft_parameterized(
             State oldState, AFTime oldOriginalEstimate, AFTime oldEffortLeft,
             State newState, AFTime expectedOriginalEstimate,

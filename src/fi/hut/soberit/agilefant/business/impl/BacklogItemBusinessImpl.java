@@ -15,6 +15,7 @@ import fi.hut.soberit.agilefant.business.TaskBusiness;
 import fi.hut.soberit.agilefant.business.UserBusiness;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
+import fi.hut.soberit.agilefant.exception.OperationNotPermittedException;
 import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
@@ -65,12 +66,17 @@ public class BacklogItemBusinessImpl implements BacklogItemBusiness {
     }
 
     public void removeBacklogItem(int backlogItemId)
-            throws ObjectNotFoundException {
+            throws ObjectNotFoundException, OperationNotPermittedException {
         BacklogItem backlogItem = backlogItemDAO.get(backlogItemId);
 
         if (backlogItem == null) {
             throw new ObjectNotFoundException(
                     "Backlog item with given id was not found.");
+        }
+        
+        if(backlogItemDAO.backlogItemChildren(backlogItemId).size() > 0) {
+            throw new OperationNotPermittedException(
+                    "Backlog item has children.");
         }
         
         // Remove all hourEntries related to this backlogItem  

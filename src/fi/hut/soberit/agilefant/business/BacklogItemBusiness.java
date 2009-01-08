@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
+import fi.hut.soberit.agilefant.exception.OperationNotPermittedException;
 import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.State;
@@ -49,7 +50,7 @@ public interface BacklogItemBusiness {
      */
 
     public void removeBacklogItem(int backlogItemId)
-            throws ObjectNotFoundException;
+            throws ObjectNotFoundException, OperationNotPermittedException;
     
     public void changeBacklogItemParent(int childId, int parentId) throws ObjectNotFoundException;
 

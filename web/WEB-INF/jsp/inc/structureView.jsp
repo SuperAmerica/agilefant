@@ -2,6 +2,18 @@
 <script type="text/javascript" src="static/js/interface.js"></script>
 
 <script type="text/javascript">
+function aa(bb)
+{
+	var parentId = $('input.hiddenId:last', bb).text();
+	var t = $(bb);
+	$.post('hasChildren.action', {"backlogItemId": parentId}, function(data,status) {
+			
+		t.get(0).firstChild.src="static/img/plus.png";
+			var subList = $('<ul style="display: none;" />').appendTo(t);
+			
+		
+	});
+}
 
 $(document).ready(
 		function() {
@@ -31,17 +43,8 @@ jQuery.getJSON("getProductTopLevelBacklogItemsAsJson.action",
 				}
 
 				$('li', list.get(0)).each(
-						function()
-						{
-							var parentId = $('input.hiddenId:last', this).text();
-							var t = $(this);
-							$.post('hasChildren.action', {"backlogItemId": parentId}, function(data,status) {
-									
-								t.get(0).firstChild.src="static/img/plus.png";
-									var subList = $('<ul style="display: none;" />').appendTo(t);
-									
-								
-							});
+						function() {
+							aa(this);
 						}
 					);
 				$('li', list.get(0)).each(

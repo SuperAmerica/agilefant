@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Example;
 import org.hibernate.criterion.Restrictions;
 
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;

@@ -41,7 +41,9 @@ function clicked(img)
 {
 	jQuery.getJSON("getBacklogItemChildrenAsJSON.action",{ 'backlogItemId': $('input', $(img).get(0).parentNode).text() }, function(data) {
 		var ul = $('ul', $(img).get(0).parentNode);
+	
 		if(!ul.get(0).hasChildNodes()) {
+	
 			for(var x = 0; x < data.length; x++) {						
 				var item = 	$('<li class="treeItem" style="list-style-type:none;"/>').appendTo(ul);
 				var img2 = $('<img src="static/img/backlog.png" class="folderImage" />').appendTo(item);
@@ -51,8 +53,9 @@ function clicked(img)
 				hidden.text(data[x].id);
 
 				var parentId = $('input.hiddenId:last', $(img).get(0).parentNode).text();
+				
 				addExpandImg(parentId, img2);
-
+				
 														
 			}
 		} else {
@@ -132,13 +135,16 @@ jQuery.getJSON("getProductTopLevelBacklogItemsAsJson.action",
 						}
 					);
 					$('span.textHolder').Droppable(
-						{
+						{ 
 							accept			: 'treeItem',
 							hoverclass		: 'dropOver',
 							activeclass		: 'fakeClass',
 							tollerance		: 'pointer',
 							onhover			: function(dragged)
 							{
+
+							this.setAttribute("style", "background-color:#747170");
+
 								if (!this.expanded) {
 									subbranches = $('ul', this.parentNode);
 									if (subbranches.size() > 0) {
@@ -161,6 +167,7 @@ jQuery.getJSON("getProductTopLevelBacklogItemsAsJson.action",
 							},
 							onout			: function()
 							{
+								this.setAttribute("style", "background-color:transparent");
 								if (this.expanderTime){
 									window.clearTimeout(this.expanderTime);
 									this.expanded = false;
@@ -168,6 +175,7 @@ jQuery.getJSON("getProductTopLevelBacklogItemsAsJson.action",
 							},
 							ondrop			: function(dropped)
 							{
+								this.setAttribute("style", "background-color:transparent");
 								if(this.parentNode == dropped)
 									return;
 								if (this.expanderTime){
@@ -191,7 +199,9 @@ jQuery.getJSON("getProductTopLevelBacklogItemsAsJson.action",
 									expander.get(0).src = 'static/img/minus.png';
 								}
 								var childId = $('input.hiddenId:last', dropped).text();
+								
 								var parentId = $('input.hiddenId:last', this.parentNode).text();
+								//alert("child: " +childId+ " parent: " + parentId);
 								$.post("ajaxChangeBacklogItemParent.action",
 						                { "childId": childId, "parentId": parentId }
 						            );

@@ -2,10 +2,10 @@
 <script type="text/javascript" src="static/js/interface.js"></script>
 
 <script type="text/javascript">
-function aa(bb)
+function addChildList(liItem)
 {
-	var parentId = $('input.hiddenId:last', bb).text();
-	var t = $(bb);
+	var parentId = $('input.hiddenId:last', liItem).text();
+	var t = $(liItem);
 	$.post('hasChildren.action', {"backlogItemId": parentId}, function(data,status) {
 			
 		t.get(0).firstChild.src="static/img/plus.png";
@@ -13,6 +13,69 @@ function aa(bb)
 			
 		
 	});
+}
+
+function addExpandImg(parentId, img)
+{
+	var img3 = $('<img src="static/img/corner.png" width="16" height="16" class="expandImage" />').prependTo(img.get(0).parentNode);
+	$.post('hasChildren.action', {"backlogItemId": parentId}, function(data,status) {
+		var subList = $('<ul style="display: none;" />').appendTo(img.get(0).parentNode);
+		img3.get(0).src = "static/img/plus.png";
+		$('li.treeItem').Draggable(
+				{
+					revert		: true,
+					autoSize		: true,
+					ghosting			: true
+				}
+			);
+		img3.click(function() {
+			clicked(this);
+		}
+		);
+
+		
+	});
+}
+
+function clicked(img)
+{
+	jQuery.getJSON("getBacklogItemChildrenAsJSON.action",{ 'backlogItemId': $('input', $(img).get(0).parentNode).text() }, function(data) {
+		var ul = $('ul', $(img).get(0).parentNode);
+		if(!ul.get(0).hasChildNodes()) {
+			for(var x = 0; x < data.length; x++) {						
+				var item = 	$('<li class="treeItem" style="list-style-type:none;"/>').appendTo(ul);
+				var img2 = $('<img src="static/img/backlog.png" class="folderImage" />').appendTo(item);
+				var span = $('<span class="textHolder" />').appendTo(item);
+				var hidden = $('<input type="hidden" class="hiddenId"/>').appendTo(item);						
+				span.text(data[x].name);
+				hidden.text(data[x].id);
+
+				var parentId = $('input.hiddenId:last', $(img).get(0).parentNode).text();
+				addExpandImg(parentId, img2);
+
+														
+			}
+		} else {
+			while(ul.get(0).hasChildNodes()) {
+				ul.get(0).removeChild(ul.get(0).firstChild);
+			}
+		}
+		
+
+	});
+
+	
+	if (img.src.indexOf('corner') == -1) {
+		subbranch = $('ul', img.parentNode).eq(0);
+		if (subbranch.css('display') == 'none') {
+			subbranch.show();
+			img.src = 'static/img/minus.png';
+		} else {
+			subbranch.hide();
+			img.src = 'static/img/plus.png';
+		}
+	}
+
 }
 
 $(document).ready(
@@ -44,7 +107,7 @@ jQuery.getJSON("getProductTopLevelBacklogItemsAsJson.action",
 
 				$('li', list.get(0)).each(
 						function() {
-							aa(this);
+							addChildList(this);
 						}
 					);
 				$('li', list.get(0)).each(
@@ -65,61 +128,7 @@ jQuery.getJSON("getProductTopLevelBacklogItemsAsJson.action",
 				$('img.expandImage', list.get(0)).click(
 						function()
 						{
-							var img = $(this);
-							jQuery.getJSON("getBacklogItemChildrenAsJSON.action",{ 'backlogItemId': $('input', img.get(0).parentNode).text() }, function(data) {
-								var ul = $('ul', img.get(0).parentNode);
-								if(!ul.get(0).hasChildNodes()) {
-									for(var x = 0; x < data.length; x++) {						
-										var item = 	$('<li class="treeItem" style="list-style-type:none;"/>').appendTo(ul);
-										var img2 = $('<img src="static/img/backlog.png" class="folderImage" />').appendTo(item);
-										var span = $('<span class="textHolder" />').appendTo(item);
-										var hidden = $('<input type="hidden" class="hiddenId"/>').appendTo(item);						
-										span.text(data[x].name);
-										hidden.text(data[x].id);
-
-										var parentId = $('input.hiddenId:last', img.get(0).parentNode).text();
-										var t = img2;
-										$.post('hasChildren.action', {"backlogItemId": parentId}, function(data,status) {
-											var img3 = $('<img src="static/img/plus.png" width="16" height="16" class="expandImage" />').prependTo(t.get(0).parentNode);
-											var subList = $('<ul style="display: none;" />').appendTo(t);
-											img3.click(function() {
-												if (this.src.indexOf('corner') == -1) {
-													subbranch = $('ul', this.parentNode).eq(0);
-													if (subbranch.css('display') == 'none') {
-														subbranch.show();
-														this.src = 'static/img/minus.png';
-													} else {
-														subbranch.hide();
-														this.src = 'static/img/plus.png';
-													}
-												}
-											}
-											);
-								
-											
-										});
-																				
-									}
-								} else {
-									while(ul.get(0).hasChildNodes()) {
-										ul.get(0).removeChild(ul.get(0).firstChild);
-									}
-								}
-								
-
-							});
-				
-							
-							if (this.src.indexOf('corner') == -1) {
-								subbranch = $('ul', this.parentNode).eq(0);
-								if (subbranch.css('display') == 'none') {
-									subbranch.show();
-									this.src = 'static/img/minus.png';
-								} else {
-									subbranch.hide();
-									this.src = 'static/img/plus.png';
-								}
-							}
+							clicked(this);
 						}
 					);
 					$('span.textHolder').Droppable(
@@ -174,7 +183,7 @@ jQuery.getJSON("getProductTopLevelBacklogItemsAsJson.action",
 								subbranch.eq(0).append(dropped);
 								oldBranches = $('li', oldParent);
 								if (oldBranches.size() == 0) {
-									$('img.expandImage', oldParent.parentNode).src('static/img/corner.png');
+									$('img.expandImage', oldParent.parentNode).src ='static/img/corner.png';
 									$(oldParent).remove();
 								}
 								expander = $('img.expandImage', this.parentNode);

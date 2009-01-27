@@ -9,7 +9,7 @@ function addChildList(liItem)
 	var listItem = $(liItem);
 	$.post('hasChildrenBlis.action', {"backlogItemId": parentId}, function(data,status) {
 		if(data == "true") {
-			$('img.expandImage', listItem.get(0)).attr('src', 'static/img/plus.png');
+			$('img.expandImage', listItem.get(0)).attr('src', 'static/img/arrow_right.png');
 			$('img.deleteImage', listItem.get(0)).remove();
 		} else {
 			
@@ -24,17 +24,17 @@ function clicked(img)
 		if (!(subbranch.get(0).hasChildNodes())) {				
 			jQuery.getJSON("getBacklogItemChildrenAsJSON.action",{ 'backlogItemId': $('input', img.parentNode).eq(0).attr('value') }, function(data) {
 				subbranch.show();
-				img.src = 'static/img/minus.png';
+				img.src = 'static/img/arrow_down.png';
 				var list = $('ul', img.parentNode).eq(0);
 				for(var x = 0; x < data.length; x++) {						
 					var item = 	$('<li class="treeItem" style="list-style-type:none;"/>').appendTo(list);
 					var span = $('<span class="textHolder" />').appendTo(item);
-					var icon = $('<img src="static/img/delete_18.png" alt="Delete" title="Delete" style="cursor: pointer;" class="deleteImage" />').appendTo(item);
+					var icon = $('<img src="static/img/Remove.png" alt="Delete" title="Delete" style="cursor: pointer;" class="deleteImage" />').appendTo(item);
+					var create = $('<a href="/agilefant/ajaxCreateBacklogItem.action?backlogId='+<c:out value="${backlog.id}" />+'&parentId='+data[x].id+'" class="openCreateDialog openBacklogItemDialog addImage" onclick="return false;"><img src="static/img/Add.png" /></a>').appendTo(item);
 					var hidden = $('<input type="hidden" class="hiddenId"/>').appendTo(item);
 					var subList = $('<ul style="display: none;" />').appendTo(item);
 					$(item).prepend('<img src="static/img/empty.png" width="16" height="16" class="expandImage" />');						
 					span.text(data[x].name);
-					var create = $('<a href="ajaxCreateBacklogItem.action?backlogId='+<c:out value="${backlog.id}" />+'&parentId='+data[x].id+'" class="openCreateDialog openBacklogItemDialog" onclick="return false;"><img src="static/img/new.png" /></a>').appendTo(span);
 					create.click(function() {
 				        if ($("div.createDialogWindow").length == 0) {
 				            openCreateDialog($(this));
@@ -100,7 +100,7 @@ function clicked(img)
 								oldBranches = $('li', oldParent);
 								if (oldBranches.size() == 0) {
 									$('img.expandImage', oldParent).attr('src', 'static/img/empty.png');
-									textHolder.after('<img src="static/img/delete_18.png" alt="Delete" title="Delete" style="cursor: pointer;" class="deleteImage" />');
+									textHolder.after('<img src="static/img/Remove.png" alt="Delete" title="Delete" style="cursor: pointer;" class="deleteImage" />');
 									$('img.deleteImage', oldParent).eq(0).click(
 											function()
 											{
@@ -116,7 +116,7 @@ function clicked(img)
 										);
 								}
 								if (expander.get(0).src.indexOf('empty') > -1) {
-									expander.get(0).src = 'static/img/plus.png';
+									expander.get(0).src = 'static/img/arrow_right.png';
 									$('img.deleteImage', this.parentNode).eq(0).remove();
 								}
 								$.post("ajaxChangeBacklogItemParent.action",
@@ -137,7 +137,7 @@ function clicked(img)
 			
 		} else {
 			subbranch.hide();
-			img.src = 'static/img/plus.png';
+			img.src = 'static/img/arrow_right.png';
 			$('li', subbranch).remove();
 		} 
 	}
@@ -153,12 +153,12 @@ jQuery.getJSON("getProductTopLevelBacklogItemsAsJson.action",
 				for(var x = 0; x < data.length; x++) {						
 					var item = 	$('<li class="treeItem" style="list-style-type:none;"/>').appendTo(list);
 					var span = $('<span class="textHolder" />').appendTo(item);
-					var icon = $('<img src="static/img/delete_18.png" alt="Delete" title="Delete" style="cursor: pointer;" class="deleteImage" />').appendTo(item);
+					var icon = $('<img src="static/img/Remove.png" alt="Delete" title="Delete" style="cursor: pointer;" class="deleteImage" />').appendTo(item);
+					var create = $('<a href="/agilefant/ajaxCreateBacklogItem.action?backlogId='+<c:out value="${backlog.id}" />+'&parentId='+data[x].id+'" class="openCreateDialog openBacklogItemDialog addImage" onclick="return false;"><img src="static/img/Add.png" /></a>').appendTo(item);
 					var hidden = $('<input type="hidden" class="hiddenId"/>').appendTo(item);						
 					var subList = $('<ul style="display: none;" />').appendTo(item);
 					$(item).prepend('<img src="static/img/empty.png" width="16" height="16" class="expandImage" />');
 					span.text(data[x].name);
-					var create = $('<a href="ajaxCreateBacklogItem.action?backlogId='+<c:out value="${backlog.id}" />+'&parentId='+data[x].id+'" class="openCreateDialog openBacklogItemDialog" onclick="return false;"><img src="static/img/new.png" /></a>').appendTo(span);
 					create.click(function() {
 				        if ($("div.createDialogWindow").length == 0) {
 				            openCreateDialog($(this));
@@ -223,7 +223,7 @@ jQuery.getJSON("getProductTopLevelBacklogItemsAsJson.action",
 								oldBranches = $('li', oldParent);
 								if (oldBranches.size() == 0) {
 									$('img.expandImage', oldParent).eq(0).attr('src', 'static/img/empty.png');
-									textHolder.after('<img src="static/img/delete_18.png" alt="Delete" title="Delete" style="cursor: pointer;" class="deleteImage" />');
+									textHolder.after('<img src="static/img/Remove.png" alt="Delete" title="Delete" style="cursor: pointer;" class="deleteImage" />');
 									$('img.deleteImage', oldParent).eq(0).click(
 											function()
 											{
@@ -239,7 +239,7 @@ jQuery.getJSON("getProductTopLevelBacklogItemsAsJson.action",
 										);
 								}								
 								if (expander.get(0).src.indexOf('empty') > -1) {
-									expander.get(0).src = 'static/img/plus.png';
+									expander.get(0).src = 'static/img/arrow_right.png';
 									$('img.deleteImage', this.parentNode).eq(0).remove();
 								}
 								$.post("ajaxChangeBacklogItemParent.action",

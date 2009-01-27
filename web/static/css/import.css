@@ -1200,3 +1200,28 @@ select.statusSelect option {
 .globalTheme {
 	color: #c42;
 }
+
+#myTree .treeItem {
+	min-height: 25px;
+}
+
+#myTree .treeItem ul {
+	border-left: 1px dotted #000000;
+	margin-left: 7px;
+}
+
+#myTree .treeItem ul li {
+	margin-left: -20px;
+}
+
+.textHolder {
+	margin-left: 3px;
+	margin-right: 3px;
+	position:relative;
+	top: -2px;
+}
+
+.addImage, .deleteImage {
+	position:relative;
+	top: 2px;
+}

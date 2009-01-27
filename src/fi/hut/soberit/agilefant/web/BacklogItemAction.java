@@ -297,6 +297,16 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
         // Store backlog item
         this.backlogItemId = (Integer) backlogItemDAO.create(storable);
         businessThemeBusiness.setBacklogItemThemes(themeIds, this.backlogItemId);
+        
+        if(parentId != 0) {
+            try {
+                backlogItemBusiness.changeBacklogItemParent(this.backlogItemId, parentId);
+            } catch (ObjectNotFoundException e) {
+                return Action.ERROR;
+            } catch (OperationNotPermittedException e) {
+                return Action.ERROR;
+            }
+        }
 
         /*
          * This should be handled inside business...

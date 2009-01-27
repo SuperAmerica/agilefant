@@ -19,7 +19,7 @@ function addChildList(liItem)
 
 function clicked(img)
 {
-	if (img.src.indexOf('corner') == -1) {
+	if (img.src.indexOf('empty') == -1) {
 		subbranch = $('ul', img.parentNode).eq(0);
 		if (!(subbranch.get(0).hasChildNodes())) {				
 			jQuery.getJSON("getBacklogItemChildrenAsJSON.action",{ 'backlogItemId': $('input', img.parentNode).eq(0).attr('value') }, function(data) {
@@ -32,8 +32,15 @@ function clicked(img)
 					var icon = $('<img src="static/img/delete_18.png" alt="Delete" title="Delete" style="cursor: pointer;" class="deleteImage" />').appendTo(item);
 					var hidden = $('<input type="hidden" class="hiddenId"/>').appendTo(item);
 					var subList = $('<ul style="display: none;" />').appendTo(item);
-					$(item).prepend('<img src="static/img/corner.png" width="16" height="16" class="expandImage" />');						
+					$(item).prepend('<img src="static/img/empty.png" width="16" height="16" class="expandImage" />');						
 					span.text(data[x].name);
+					var create = $('<a href="/agilefant/ajaxCreateBacklogItem.action?backlogId=51&parentId='+data[x].id+'" class="openCreateDialog openBacklogItemDialog" onclick="return false;"><img src="static/img/new.png" /></a>').appendTo(span);
+					create.click(function() {
+				        if ($("div.createDialogWindow").length == 0) {
+				            openCreateDialog($(this));
+				        }
+				        return false;
+				    });
 					hidden.attr('value', data[x].id);
 					
 															
@@ -92,7 +99,7 @@ function clicked(img)
 								subbranch.append(dropped);
 								oldBranches = $('li', oldParent);
 								if (oldBranches.size() == 0) {
-									$('img.expandImage', oldParent).attr('src', 'static/img/corner.png');
+									$('img.expandImage', oldParent).attr('src', 'static/img/empty.png');
 									textHolder.after('<img src="static/img/delete_18.png" alt="Delete" title="Delete" style="cursor: pointer;" class="deleteImage" />');
 									$('img.deleteImage', oldParent).eq(0).click(
 											function()
@@ -108,7 +115,7 @@ function clicked(img)
 											}
 										);
 								}
-								if (expander.get(0).src.indexOf('corner') > -1) {
+								if (expander.get(0).src.indexOf('empty') > -1) {
 									expander.get(0).src = 'static/img/plus.png';
 									$('img.deleteImage', this.parentNode).eq(0).remove();
 								}
@@ -149,8 +156,15 @@ jQuery.getJSON("getProductTopLevelBacklogItemsAsJson.action",
 					var icon = $('<img src="static/img/delete_18.png" alt="Delete" title="Delete" style="cursor: pointer;" class="deleteImage" />').appendTo(item);
 					var hidden = $('<input type="hidden" class="hiddenId"/>').appendTo(item);						
 					var subList = $('<ul style="display: none;" />').appendTo(item);
-					$(item).prepend('<img src="static/img/corner.png" width="16" height="16" class="expandImage" />');
+					$(item).prepend('<img src="static/img/empty.png" width="16" height="16" class="expandImage" />');
 					span.text(data[x].name);
+					var create = $('<a href="/agilefant/ajaxCreateBacklogItem.action?backlogId=51&parentId='+data[x].id+'" class="openCreateDialog openBacklogItemDialog" onclick="return false;"><img src="static/img/new.png" /></a>').appendTo(span);
+					create.click(function() {
+				        if ($("div.createDialogWindow").length == 0) {
+				            openCreateDialog($(this));
+				        }
+				        return false;
+				    });
 					hidden.attr('value', data[x].id);
 				}
 
@@ -208,7 +222,7 @@ jQuery.getJSON("getProductTopLevelBacklogItemsAsJson.action",
 								subbranch.append(dropped);
 								oldBranches = $('li', oldParent);
 								if (oldBranches.size() == 0) {
-									$('img.expandImage', oldParent).eq(0).attr('src', 'static/img/corner.png');
+									$('img.expandImage', oldParent).eq(0).attr('src', 'static/img/empty.png');
 									textHolder.after('<img src="static/img/delete_18.png" alt="Delete" title="Delete" style="cursor: pointer;" class="deleteImage" />');
 									$('img.deleteImage', oldParent).eq(0).click(
 											function()
@@ -224,7 +238,7 @@ jQuery.getJSON("getProductTopLevelBacklogItemsAsJson.action",
 											}
 										);
 								}								
-								if (expander.get(0).src.indexOf('corner') > -1) {
+								if (expander.get(0).src.indexOf('empty') > -1) {
 									expander.get(0).src = 'static/img/plus.png';
 									$('img.deleteImage', this.parentNode).eq(0).remove();
 								}

@@ -34,7 +34,7 @@ function clicked(img)
 					var subList = $('<ul style="display: none;" />').appendTo(item);
 					$(item).prepend('<img src="static/img/empty.png" width="16" height="16" class="expandImage" />');						
 					span.text(data[x].name);
-					var create = $('<a href="/agilefant/ajaxCreateBacklogItem.action?backlogId=51&parentId='+data[x].id+'" class="openCreateDialog openBacklogItemDialog" onclick="return false;"><img src="static/img/new.png" /></a>').appendTo(span);
+					var create = $('<a href="/agilefant/ajaxCreateBacklogItem.action?backlogId='+<c:out value="${backlog.id}" />+'&parentId='+data[x].id+'" class="openCreateDialog openBacklogItemDialog" onclick="return false;"><img src="static/img/new.png" /></a>').appendTo(span);
 					create.click(function() {
 				        if ($("div.createDialogWindow").length == 0) {
 				            openCreateDialog($(this));
@@ -158,7 +158,7 @@ jQuery.getJSON("getProductTopLevelBacklogItemsAsJson.action",
 					var subList = $('<ul style="display: none;" />').appendTo(item);
 					$(item).prepend('<img src="static/img/empty.png" width="16" height="16" class="expandImage" />');
 					span.text(data[x].name);
-					var create = $('<a href="/agilefant/ajaxCreateBacklogItem.action?backlogId=51&parentId='+data[x].id+'" class="openCreateDialog openBacklogItemDialog" onclick="return false;"><img src="static/img/new.png" /></a>').appendTo(span);
+					var create = $('<a href="/agilefant/ajaxCreateBacklogItem.action?backlogId='+<c:out value="${backlog.id}" />+'&parentId='+data[x].id+'" class="openCreateDialog openBacklogItemDialog" onclick="return false;"><img src="static/img/new.png" /></a>').appendTo(span);
 					create.click(function() {
 				        if ($("div.createDialogWindow").length == 0) {
 				            openCreateDialog($(this));

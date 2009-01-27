@@ -109,6 +109,16 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
     private int parentId;
     
     private int childId;
+    
+    private boolean hasChildrenBlis = false;
+
+    public boolean isHasChildrenBlis() {
+        return hasChildrenBlis;
+    }
+
+    public void setHasChildrenBlis(boolean hasChildrenBlis) {
+        this.hasChildrenBlis = hasChildrenBlis;
+    }
 
     public int getParentId() {
         return parentId;
@@ -226,6 +236,11 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
    // Always true for testing purposes
    public String hasChildren() {
        return backlogItemBusiness.getBacklogItemChildren(backlogItemId).isEmpty() ? CRUDAction.AJAX_ERROR : CRUDAction.AJAX_SUCCESS;
+   }
+   
+   public String hasChildrenBlis() {
+       hasChildrenBlis = !(backlogItemBusiness.getBacklogItemChildren(backlogItemId).isEmpty());
+       return Action.SUCCESS;
    }
 
     public String edit() {

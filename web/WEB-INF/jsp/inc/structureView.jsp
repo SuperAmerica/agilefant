@@ -4,79 +4,101 @@
 <script type="text/javascript">
 function addChildList(liItem)
 {
-	var parentId = $('input.hiddenId:last', liItem).text();
-	var t = $(liItem);
-	$.post('hasChildren.action', {"backlogItemId": parentId}, function(data,status) {
-			
-		t.get(0).firstChild.src="static/img/plus.png";
-			var subList = $('<ul style="display: none;" />').appendTo(t);
-			
-		
-	});
-}
-
-function addExpandImg(parentId, img)
-{
-	var img3 = $('<img src="static/img/corner.png" width="16" height="16" class="expandImage" />').prependTo(img.get(0).parentNode);
-	$.post('hasChildren.action', {"backlogItemId": parentId}, function(data,status) {
-		var subList = $('<ul style="display: none;" />').appendTo(img.get(0).parentNode);
-		img3.get(0).src = "static/img/plus.png";
-		$('li.treeItem').Draggable(
-				{
-					revert		: true,
-					autoSize		: true,
-					ghosting			: true
-				}
-			);
-		img3.click(function() {
-			clicked(this);
-		}
-		);
-
-		
+	var parentId = $('input.hiddenId', $(liItem).get(0)).attr('value');
+	var listItem = $(liItem);
+	$.post('hasChildrenBlis.action', {"backlogItemId": parentId}, function(data,status) {
+		if(data == "true") {
+			$('img.expandImage', listItem.get(0)).attr('src', 'static/img/plus.png');
+		}				
 	});
 }
 
 function clicked(img)
 {
-	jQuery.getJSON("getBacklogItemChildrenAsJSON.action",{ 'backlogItemId': $('input', $(img).get(0).parentNode).text() }, function(data) {
-		var ul = $('ul', $(img).get(0).parentNode);
-	
-		if(!ul.get(0).hasChildNodes()) {
-	
-			for(var x = 0; x < data.length; x++) {						
-				var item = 	$('<li class="treeItem" style="list-style-type:none;"/>').appendTo(ul);
-				var img2 = $('<img src="static/img/backlog.png" class="folderImage" />').appendTo(item);
-				var span = $('<span class="textHolder" />').appendTo(item);
-				var hidden = $('<input type="hidden" class="hiddenId"/>').appendTo(item);						
-				span.text(data[x].name);
-				hidden.text(data[x].id);
-
-				var parentId = $('input.hiddenId:last', $(img).get(0).parentNode).text();
-				
-				addExpandImg(parentId, img2);
-				
-														
-			}
-		} else {
-			while(ul.get(0).hasChildNodes()) {
-				ul.get(0).removeChild(ul.get(0).firstChild);
-			}
-		}
-		
-
-	});
-
-	
 	if (img.src.indexOf('corner') == -1) {
 		subbranch = $('ul', img.parentNode).eq(0);
-		if (subbranch.css('display') == 'none') {
-			subbranch.show();
-			img.src = 'static/img/minus.png';
+		if (!(subbranch.get(0).hasChildNodes())) {				
+			jQuery.getJSON("getBacklogItemChildrenAsJSON.action",{ 'backlogItemId': $('input', img.parentNode).eq(0).attr('value') }, function(data) {
+				subbranch.show();
+				img.src = 'static/img/minus.png';
+				var list = $('ul', img.parentNode).eq(0);
+				for(var x = 0; x < data.length; x++) {						
+					var item = 	$('<li class="treeItem" style="list-style-type:none;"/>').appendTo(list);
+					var span = $('<span class="textHolder" />').appendTo(item);
+					var hidden = $('<input type="hidden" class="hiddenId"/>').appendTo(item);
+					var subList = $('<ul style="display: none;" />').appendTo(item);
+					$(item).prepend('<img src="static/img/corner.png" width="16" height="16" class="expandImage" />');						
+					span.text(data[x].name);
+					hidden.attr('value', data[x].id);
+					
+															
+				}
+				$('li', list.get(0)).each(
+						function() {
+							addChildList(this);
+						}
+					);
+				$('img.expandImage', list).click(
+						function()
+						{
+							clicked(this);
+						}
+					);
+				$('span.textHolder', list).Droppable(
+						{ 
+							accept			: 'treeItem',
+							hoverclass		: 'dropOver',
+							activeclass		: 'fakeClass',
+							tollerance		: 'pointer',
+							onhover			: function(dragged)
+							{
+	
+							this.setAttribute("style", "background-color:#747170");
+							},
+							onout			: function()
+							{
+								this.setAttribute("style", "background-color:transparent");
+							},
+							ondrop			: function(dropped)
+							{
+								this.setAttribute("style", "background-color:transparent");
+								var childId = $('input.hiddenId', dropped).eq(0).attr('value');								
+								var parentId = $('input.hiddenId', this.parentNode).eq(0).attr('value');
+								if(this.parentNode == dropped) {
+									return;
+								}
+								subbranch = $('ul', this.parentNode).eq(0);
+								oldParent = dropped.parentNode.parentNode;
+								expander = $('img.expandImage', this.parentNode);
+								subbranch.append(dropped);
+								oldBranches = $('li', oldParent);
+								if (oldBranches.size() == 0) {
+									$('img.expandImage', oldParent).attr('src', 'static/img/corner.png');
+								}
+								if (expander.get(0).src.indexOf('corner') > -1) {
+									expander.get(0).src = 'static/img/plus.png';
+								}
+								$.post("ajaxChangeBacklogItemParent.action",
+						                { "childId": childId, "parentId": parentId }
+						            );
+							}
+						}
+					);
+					$('li.treeItem', list.get(0)).Draggable(
+						{
+							revert		: true,
+							autoSize		: true,
+							ghosting			: true
+						}
+					);
+		
+			});		
+			
 		} else {
 			subbranch.hide();
 			img.src = 'static/img/plus.png';
-		}
+			$('li', subbranch).remove();
+		} 
 	}
 
 }
@@ -89,23 +111,12 @@ jQuery.getJSON("getProductTopLevelBacklogItemsAsJson.action",
         	var list = 	$('#myTree');
 				for(var x = 0; x < data.length; x++) {						
 					var item = 	$('<li class="treeItem" style="list-style-type:none;"/>').appendTo(list);
-					var img = $('<img src="static/img/backlog.png" class="folderImage" />').appendTo(item);
 					var span = $('<span class="textHolder" />').appendTo(item);
 					var hidden = $('<input type="hidden" class="hiddenId"/>').appendTo(item);						
+					var subList = $('<ul style="display: none;" />').appendTo(item);
+					$(item).prepend('<img src="static/img/corner.png" width="16" height="16" class="expandImage" />');
 					span.text(data[x].name);
-					hidden.text(data[x].id);
-<!--							-->
-<!--					jQuery.getJSON("getBacklogItemChildrenAsJSON.action",-->
-<!--        				{ 'backlogItemId': data[x].id },-->
-<!--        				function(data, status) {-->
-<!--							for(var y = 0; y < data.length; y++) {-->
-<!--								var subList = $('<ul style="display: none;" />').appendTo(item);-->
-<!--								var subItem = 	$('<li class="treeItem" />').appendTo(subList);-->
-<!--								var subImg = $('<img src="static/img/backlog.png" class="folderImage" />').appendTo(subItem);-->
-<!--								var subSpan = $('<span class="textHolder" />').appendTo(subItem);						-->
-<!--								subSpan.text(data[y].name);		-->
-<!--							}-->
-<!--        				});-->
+					hidden.attr('value', data[x].id);
 				}
 
 				$('li', list.get(0)).each(
@@ -113,28 +124,13 @@ jQuery.getJSON("getProductTopLevelBacklogItemsAsJson.action",
 							addChildList(this);
 						}
 					);
-				$('li', list.get(0)).each(
-						function()
-						{
-							subbranch = $('ul', this);
-							if (subbranch.size() > 0) {
-								if (subbranch.eq(0).css('display') == 'none') {
-									$(this).prepend('<img src="static/img/plus.png" width="16" height="16" class="expandImage" />');
-								} else {
-									$(this).prepend('<img src="static/img/minus.png" width="16" height="16" class="expandImage" />');
-								}
-							} else {
-								$(this).prepend('<img src="static/img/corner.png" width="16" height="16" class="expandImage" />');
-							}
-						}
-					);
-				$('img.expandImage', list.get(0)).click(
+				$('img.expandImage', list).click(
 						function()
 						{
 							clicked(this);
 						}
 					);
-					$('span.textHolder').Droppable(
+				$('span.textHolder', list).Droppable(
 						{ 
 							accept			: 'treeItem',
 							hoverclass		: 'dropOver',
@@ -144,71 +140,37 @@ jQuery.getJSON("getProductTopLevelBacklogItemsAsJson.action",
 							{
 
 							this.setAttribute("style", "background-color:#747170");
-
-								if (!this.expanded) {
-									subbranches = $('ul', this.parentNode);
-									if (subbranches.size() > 0) {
-										subbranch = subbranches.eq(0);
-										this.expanded = true;
-										if (subbranch.css('display') == 'none') {
-											var targetBranch = subbranch.get(0);
-											this.expanderTime = window.setTimeout(
-												function()
-												{
-													$(targetBranch).show();
-													$('img.expandImage', targetBranch.parentNode).eq(0).attr('src', 'static/img/minus.png');
-													$.recallDroppables();
-												},
-												500
-											);
-										}
-									}
-								}
 							},
 							onout			: function()
 							{
 								this.setAttribute("style", "background-color:transparent");
-								if (this.expanderTime){
-									window.clearTimeout(this.expanderTime);
-									this.expanded = false;
-								}
 							},
 							ondrop			: function(dropped)
 							{
 								this.setAttribute("style", "background-color:transparent");
-								if(this.parentNode == dropped)
+								var childId = $('input.hiddenId', dropped).eq(0).attr('value');								
+								var parentId = $('input.hiddenId', this.parentNode).eq(0).attr('value');
+								if(this.parentNode == dropped) {
 									return;
-								if (this.expanderTime){
-									window.clearTimeout(this.expanderTime);
-									this.expanded = false;
-								}								
-								subbranch = $('ul', this.parentNode);
-								if (subbranch.size() == 0) {
-									$(this).after('<ul></ul>');
-									subbranch = $('ul', this.parentNode);
 								}
-								oldParent = dropped.parentNode;
-								subbranch.eq(0).append(dropped);
+								subbranch = $('ul', this.parentNode).eq(0);
+								oldParent = dropped.parentNode.parentNode;
+								expander = $('img.expandImage', this.parentNode);
+								subbranch.append(dropped);
 								oldBranches = $('li', oldParent);
 								if (oldBranches.size() == 0) {
-									$('img.expandImage', oldParent.parentNode).src ='static/img/corner.png';
-									$(oldParent).remove();
-								}
-								expander = $('img.expandImage', this.parentNode);
+									$('img.expandImage', oldParent).eq(0).attr('src', 'static/img/corner.png');
+								}								
 								if (expander.get(0).src.indexOf('corner') > -1) {
-									expander.get(0).src = 'static/img/minus.png';
+									expander.get(0).src = 'static/img/plus.png';
 								}
-								var childId = $('input.hiddenId:last', dropped).text();
-								
-								var parentId = $('input.hiddenId:last', this.parentNode).text();
-								//alert("child: " +childId+ " parent: " + parentId);
 								$.post("ajaxChangeBacklogItemParent.action",
 						                { "childId": childId, "parentId": parentId }
 						            );
 							}
 						}
 					);
-					$('li.treeItem').Draggable(
+					$('li.treeItem', list.get(0)).Draggable(
 						{
 							revert		: true,
 							autoSize		: true,
@@ -221,27 +183,6 @@ jQuery.getJSON("getProductTopLevelBacklogItemsAsJson.action",
 </script>
 
 <ul id="myTree">
-	<!--
-	<li class="treeItem"><img src="static/img/backlog.png" class="folderImage" /><span class="textHolder">Folder 1</span>
-		<ul>
-			<li class="treeItem"><img src="static/img/backlog.png" class="folderImage" /><span class="textHolder">Subfolder 1 1</span></li>
-			<li class="treeItem"><img src="static/img/backlog.png" class="folderImage" /><span class="textHolder">Subfolder 1 2</span>
-				<ul style="display: none;">
-					<li class="treeItem"><img src="static/img/backlog.png" class="folderImage" /><span class="textHolder">Subfolder 1 2 1</span></li>
-
-					<li class="treeItem"><img src="static/img/backlog.png" class="folderImage" /><span class="textHolder">Subfolder 1 2 2</span></li>
-					<li class="treeItem"><img src="static/img/backlog.png" class="folderImage" /><span class="textHolder">Subfolder 1 2 3</span></li>
-				</ul>
-			</li>
-		</ul>
-	</li>
-	<li class="treeItem"><img src="static/img/backlog.png" class="folderImage" /><span class="textHolder">Folder 2</span>
-		<ul>
-			<li class="treeItem"><img src="static/img/backlog.png" class="folderImage" /><span class="textHolder">Subfolder 2 1</span></li>
-			<li class="treeItem"><img src="static/img/backlog.png" class="folderImage" /><span class="textHolder">Subfolder 2 2</span></li>
-		</ul>
-	</li>
-	-->
 </ul>
 
 

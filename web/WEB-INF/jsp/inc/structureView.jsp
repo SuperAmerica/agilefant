@@ -30,7 +30,7 @@ function clicked(img)
 					var item = 	$('<li class="treeItem" style="list-style-type:none;"/>').appendTo(list);
 					var span = $('<span class="textHolder" />').appendTo(item);
 					var icon = $('<img src="static/img/Remove.png" alt="Delete" title="Delete" style="cursor: pointer;" class="deleteImage" />').appendTo(item);
-					var create = $('<a href="/agilefant/ajaxCreateBacklogItem.action?backlogId='+<c:out value="${backlog.id}" />+'&parentId='+data[x].id+'" class="openCreateDialog openBacklogItemDialog addImage" onclick="return false;"><img src="static/img/Add.png" /></a>').appendTo(item);
+					var create = $('<a href="ajaxCreateBacklogItem.action?backlogId='+<c:out value="${backlog.id}" />+'&parentId='+data[x].id+'" class="openCreateDialog openBacklogItemDialog addImage" onclick="return false;"><img src="static/img/Add.png" /></a>').appendTo(item);
 					var hidden = $('<input type="hidden" class="hiddenId"/>').appendTo(item);
 					var subList = $('<ul style="display: none;" />').appendTo(item);
 					$(item).prepend('<img src="static/img/empty.png" width="16" height="16" class="expandImage" />');						
@@ -154,7 +154,7 @@ jQuery.getJSON("getProductTopLevelBacklogItemsAsJson.action",
 					var item = 	$('<li class="treeItem" style="list-style-type:none;"/>').appendTo(list);
 					var span = $('<span class="textHolder" />').appendTo(item);
 					var icon = $('<img src="static/img/Remove.png" alt="Delete" title="Delete" style="cursor: pointer;" class="deleteImage" />').appendTo(item);
-					var create = $('<a href="/agilefant/ajaxCreateBacklogItem.action?backlogId='+<c:out value="${backlog.id}" />+'&parentId='+data[x].id+'" class="openCreateDialog openBacklogItemDialog addImage" onclick="return false;"><img src="static/img/Add.png" /></a>').appendTo(item);
+					var create = $('<a href="ajaxCreateBacklogItem.action?backlogId='+<c:out value="${backlog.id}" />+'&parentId='+data[x].id+'" class="openCreateDialog openBacklogItemDialog addImage" onclick="return false;"><img src="static/img/Add.png" /></a>').appendTo(item);
 					var hidden = $('<input type="hidden" class="hiddenId"/>').appendTo(item);						
 					var subList = $('<ul style="display: none;" />').appendTo(item);
 					$(item).prepend('<img src="static/img/empty.png" width="16" height="16" class="expandImage" />');

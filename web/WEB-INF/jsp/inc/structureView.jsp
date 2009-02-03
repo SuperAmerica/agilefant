@@ -10,9 +10,9 @@ function addChildList(liItem)
 	$.post('hasChildrenBlis.action', {"backlogItemId": parentId}, function(data,status) {
 		if(data == "true") {
 			$('img.expandImage', listItem.get(0)).attr('src', 'static/img/arrow_right.png');
-			$('img.deleteImage', listItem.get(0)).remove();
-		} else {
 			
+		} else {
+			$('img.deleteImage', listItem.get(0)).css('display', 'inline');
 		}				
 	});
 }
@@ -29,8 +29,8 @@ function clicked(img)
 				for(var x = 0; x < data.length; x++) {						
 					var item = 	$('<li class="treeItem" style="list-style-type:none;"/>').appendTo(list);
 					var span = $('<span class="textHolder" />').appendTo(item);
-					var icon = $('<img src="static/img/Remove.png" alt="Delete" title="Delete" style="cursor: pointer;" class="deleteImage" />').appendTo(item);
 					var create = $('<a href="ajaxCreateBacklogItem.action?backlogId='+<c:out value="${backlog.id}" />+'&parentId='+data[x].id+'" class="openCreateDialog openBacklogItemDialog addImage" onclick="return false;"><img src="static/img/Add.png" /></a>').appendTo(item);
+					var icon = $('<img src="static/img/Remove.png" alt="Delete" title="Delete" style="cursor: pointer; display: none;" class="deleteImage" />').appendTo(item);
 					var hidden = $('<input type="hidden" class="hiddenId"/>').appendTo(item);
 					var subList = $('<ul style="display: none;" />').appendTo(item);
 					$(item).prepend('<img src="static/img/empty.png" width="16" height="16" class="expandImage" />');						
@@ -65,6 +65,11 @@ function clicked(img)
 								$.post("deleteBacklogItem.action",
 					                { "backlogItemId": id }
 					            );
+					            subbranches = $('li', this.parentNode.parentNode.parentNode);
+								if (subbranches.size() == 1) {
+									$('img.expandImage', this.parentNode.parentNode.parentNode).attr('src', 'static/img/empty.png');
+									$('img.deleteImage', this.parentNode.parentNode.parentNode).css('display', 'inline');
+								}
 					            $(this.parentNode).remove();
 							}
 						}
@@ -100,24 +105,11 @@ function clicked(img)
 								oldBranches = $('li', oldParent);
 								if (oldBranches.size() == 0) {
 									$('img.expandImage', oldParent).attr('src', 'static/img/empty.png');
-									textHolder.after('<img src="static/img/Remove.png" alt="Delete" title="Delete" style="cursor: pointer;" class="deleteImage" />');
-									$('img.deleteImage', oldParent).eq(0).click(
-											function()
-											{
-												var confirmDelete = confirm("Sure you want to delete this backlog item?");
-												if (confirmDelete) {
-													id = $('input.hiddenId', oldParent).eq(0).attr('value');
-													$.post("deleteBacklogItem.action",
-										                { "backlogItemId": id }
-										            );
-													$(oldParent).remove();
-												}
-											}
-										);
+									$('img.deleteImage', oldParent).css('display', 'inline');
 								}
 								if (expander.get(0).src.indexOf('empty') > -1) {
 									expander.get(0).src = 'static/img/arrow_right.png';
-									$('img.deleteImage', this.parentNode).eq(0).remove();
+									$('img.deleteImage', this.parentNode).eq(0).css('display', 'none');
 								}
 								$.post("ajaxChangeBacklogItemParent.action",
 						                { "childId": childId, "parentId": parentId }
@@ -153,8 +145,8 @@ jQuery.getJSON("getProductTopLevelBacklogItemsAsJson.action",
 				for(var x = 0; x < data.length; x++) {						
 					var item = 	$('<li class="treeItem" style="list-style-type:none;"/>').appendTo(list);
 					var span = $('<span class="textHolder" />').appendTo(item);
-					var icon = $('<img src="static/img/Remove.png" alt="Delete" title="Delete" style="cursor: pointer;" class="deleteImage" />').appendTo(item);
 					var create = $('<a href="ajaxCreateBacklogItem.action?backlogId='+<c:out value="${backlog.id}" />+'&parentId='+data[x].id+'" class="openCreateDialog openBacklogItemDialog addImage" onclick="return false;"><img src="static/img/Add.png" /></a>').appendTo(item);
+					var icon = $('<img src="static/img/Remove.png" alt="Delete" title="Delete" style="cursor: pointer; display: none;" class="deleteImage" />').appendTo(item);
 					var hidden = $('<input type="hidden" class="hiddenId"/>').appendTo(item);						
 					var subList = $('<ul style="display: none;" />').appendTo(item);
 					$(item).prepend('<img src="static/img/empty.png" width="16" height="16" class="expandImage" />');
@@ -188,6 +180,11 @@ jQuery.getJSON("getProductTopLevelBacklogItemsAsJson.action",
 								$.post("deleteBacklogItem.action",
 					                { "backlogItemId": id }
 					            );
+								subbranches = $('li', this.parentNode.parentNode.parentNode);
+								if (subbranches.size() == 1) {
+									$('img.expandImage', this.parentNode.parentNode.parentNode).attr('src', 'static/img/empty.png');
+									$('img.deleteImage', this.parentNode.parentNode.parentNode).css('display', 'inline');
+								}
 								$(this.parentNode).remove();
 							}
 						}
@@ -223,24 +220,11 @@ jQuery.getJSON("getProductTopLevelBacklogItemsAsJson.action",
 								oldBranches = $('li', oldParent);
 								if (oldBranches.size() == 0) {
 									$('img.expandImage', oldParent).eq(0).attr('src', 'static/img/empty.png');
-									textHolder.after('<img src="static/img/Remove.png" alt="Delete" title="Delete" style="cursor: pointer;" class="deleteImage" />');
-									$('img.deleteImage', oldParent).eq(0).click(
-											function()
-											{
-												var confirmDelete = confirm("Sure you want to delete this backlog item?");
-												if (confirmDelete) {
-													id = $('input.hiddenId', oldParent).eq(0).attr('value');
-													$.post("deleteBacklogItem.action",
-										                { "backlogItemId": id }
-										            );
-													$(oldParent).remove();
-												}
-											}
-										);
+									$('img.deleteImage', oldParent).eq(0).css('display', 'inline');
 								}								
 								if (expander.get(0).src.indexOf('empty') > -1) {
 									expander.get(0).src = 'static/img/arrow_right.png';
-									$('img.deleteImage', this.parentNode).eq(0).remove();
+									$('img.deleteImage', this.parentNode).eq(0).css('display', 'none');
 								}
 								$.post("ajaxChangeBacklogItemParent.action",
 						                { "childId": childId, "parentId": parentId }

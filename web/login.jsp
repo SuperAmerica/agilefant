@@ -12,7 +12,8 @@
 </style>
 <!--[if IE 5]><link href="static/css/msie5.css" type="text/css" rel="stylesheet" media="screen,projection" /><![endif]--><!--[if IE 6]><link href="static/css/msie6.css" type="text/css" rel="stylesheet" media="screen,projection" /><![endif]-->
 
-<script type="text/javascript" src="static/js/generic.js"></script>
+<script type="text/javascript" src="static/js/generic.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/jquery-1.2.6.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
 
 <style type="text/css" media="screen">
 <!--
@@ -106,11 +107,13 @@
             
             <!-- Show disclaimer only if browser is not Mozilla Firefox -->
             <script type="text/javascript">
-            if (!(/Firefox[\/\s](\d+\.\d+)/.test(navigator.userAgent))) {
-                 document.write('<div class="disclaimer">' + '<p>' +
-                 " Agilefant currently supports only " + 
-            		'<a href="http://www.getfirefox.com/">' + "Mozilla Firefox" + '</a>' + "." + '</p>' + '</div>')
-			}									
+            if (!jQuery.browser.mozilla) {
+                var disc = $("<div/>").addClass("disclaimer")
+                    .html("Agilefant currently supports only " + 
+                    '<a href="http://www.getfirefox.com/">'
+                    + "Mozilla Firefox</a>.</p>");
+                $('#forgot').after(disc);
+            }
             </script>
                        
         </div>

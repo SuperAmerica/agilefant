@@ -28,7 +28,7 @@ function addActionsToElements(list)
 		            subbranches = $('li', this.parentNode.parentNode.parentNode);
 					if (subbranches.size() == 1) {
 						$('img.expandImage', this.parentNode.parentNode.parentNode).attr('src', 'static/img/treeempty.png');
-						$('img.deleteImage', this.parentNode.parentNode.parentNode).css('display', 'inline');
+						$('img.deleteImage', this.parentNode.parentNode.parentNode).show();
 					}
 		            $(this.parentNode).remove();
 				}
@@ -42,7 +42,17 @@ function addActionsToElements(list)
 				tollerance		: 'pointer',
 				onhover			: function(dragged)
 				{
-
+				expImg = $('img.expandImage', this.parentNode);
+				if (expImg.get(0).src.indexOf('plus') > -1) {
+					$('img.expandImage', this.parentNode).eq(0).click();
+					this.expanderTime = window.setTimeout(
+							function()
+							{
+								$.recallDroppables();
+							},
+							500
+						)
+				}
 				this.setAttribute("style", "background-color:#747170");
 				},
 				onout			: function()
@@ -65,11 +75,13 @@ function addActionsToElements(list)
 					oldBranches = $('li', oldParent);
 					if (oldBranches.size() == 0) {
 						$('img.expandImage', oldParent).attr('src', 'static/img/treeempty.png');
-						$('img.deleteImage', oldParent).css('display', 'inline');
+						$('img.deleteImage', oldParent).show();
+						$('ul', oldParent).eq(0).hide();
 					}
 					if (expander.get(0).src.indexOf('empty') > -1) {
-						expander.get(0).src = 'static/img/treeplus.png';
-						$('img.deleteImage', this.parentNode).eq(0).css('display', 'none');
+						$('ul', this.parentNode).eq(0).show();
+						expander.get(0).src = 'static/img/treeminus.png';
+						$('img.deleteImage', this.parentNode).eq(0).hide();
 					}
 					$.post("ajaxChangeBacklogItemParent.action",
 			                { "childId": childId, "parentId": parentId }
@@ -95,7 +107,7 @@ function addChildList(liItem)
 			$('img.expandImage', listItem.get(0)).attr('src', 'static/img/treeplus.png');
 			
 		} else {
-			$('img.deleteImage', listItem.get(0)).css('display', 'inline');
+			$('img.deleteImage', listItem.get(0)).show();
 		}				
 	});
 }
@@ -104,35 +116,35 @@ function clicked(img)
 {
 	if (img.src.indexOf('empty') == -1) {
 		subbranch = $('ul', img.parentNode).eq(0);
-		if (!(subbranch.get(0).hasChildNodes())) {				
-			jQuery.getJSON("getBacklogItemChildrenAsJSON.action",{ 'backlogItemId': $('input', img.parentNode).eq(0).attr('value') }, function(data) {
-				subbranch.show();
-				img.src = 'static/img/treeminus.png';
-				var list = $('ul', img.parentNode).eq(0);
-				for(var x = 0; x < data.length; x++) {						
-					var item = 	$('<li class="treeItem" style="list-style-type:none;"/>').appendTo(list);
-					var span = $('<span class="textHolder" style="cursor: move;" />').appendTo(item);
-					var create = $('<a href="ajaxCreateBacklogItem.action?backlogId='+<c:out value="${backlog.id}" />+'&parentId='+data[x].id+'" class="openCreateDialog openBacklogItemDialog addImage" onclick="return false;"><img src="static/img/Add.png" /></a>').appendTo(item);
-					var icon = $('<img src="static/img/Remove.png" alt="Delete" title="Delete" style="cursor: pointer; display: none;" class="deleteImage" />').appendTo(item);
-					var hidden = $('<input type="hidden" class="hiddenId"/>').appendTo(item);
-					var subList = $('<ul style="display: none;" />').appendTo(item);
-					$(item).prepend('<img src="static/img/treeempty.png" class="expandImage" />');						
-					span.text(data[x].name);
-					create.click(function() {
-				        if ($("div.createDialogWindow").length == 0) {
-				            openCreateDialog($(this));
-				        }
-				        return false;
-				    });
-					hidden.attr('value', data[x].id);																				
-				}
-				addActionsToElements(list);
-			});		
-			
+		if (img.src.indexOf('minus') == -1) {
+			subbranch.show();
+			img.src = 'static/img/treeminus.png';
+			if (!(subbranch.get(0).hasChildNodes())) {				
+				jQuery.getJSON("getBacklogItemChildrenAsJSON.action",{ 'backlogItemId': $('input', img.parentNode).eq(0).attr('value') }, function(data) {
+					var list = $('ul', img.parentNode).eq(0);
+					for(var x = 0; x < data.length; x++) {						
+						var item = 	$('<li class="treeItem" />').appendTo(list);
+						var span = $('<span class="textHolder" />').appendTo(item);
+						var create = $('<a href="ajaxCreateBacklogItem.action?backlogId='+<c:out value="${backlog.id}" />+'&parentId='+data[x].id+'" class="openCreateDialog openBacklogItemDialog addImage" onclick="return false;"><img src="static/img/Add.png" title="Add child" /></a>').appendTo(item);
+						var icon = $('<img src="static/img/Remove.png" alt="Delete" title="Delete" class="deleteImage" />').appendTo(item);
+						var hidden = $('<input type="hidden" class="hiddenId"/>').appendTo(item);
+						var subList = $('<ul />').appendTo(item);
+						$(item).prepend('<img src="static/img/treeempty.png" class="expandImage" />');						
+						span.text(data[x].name);
+						create.click(function() {
+					        if ($("div.createDialogWindow").length == 0) {
+					            openCreateDialog($(this));
+					        }
+					        return false;
+					    });
+						hidden.attr('value', data[x].id);																				
+					}
+					addActionsToElements(list);
+				});
+			}			
 		} else {
 			subbranch.hide();
 			img.src = 'static/img/treeplus.png';
-			$('li', subbranch).remove();
 		} 
 	}
 
@@ -144,12 +156,12 @@ function initTree() {
         function(data, status) {
         	var list = 	$('#myTree');
 				for(var x = 0; x < data.length; x++) {						
-					var item = 	$('<li class="treeItem" style="list-style-type:none;"/>').appendTo(list);
-					var span = $('<span class="textHolder" style="cursor: move;"/>').appendTo(item);
-					var create = $('<a href="ajaxCreateBacklogItem.action?backlogId='+<c:out value="${backlog.id}" />+'&parentId='+data[x].id+'" class="openCreateDialog openBacklogItemDialog addImage" onclick="return false;"><img src="static/img/Add.png" /></a>').appendTo(item);
-					var icon = $('<img src="static/img/Remove.png" alt="Delete" title="Delete" style="cursor: pointer; display: none;" class="deleteImage" />').appendTo(item);
+					var item = 	$('<li class="treeItem" />').appendTo(list);
+					var span = $('<span class="textHolder" />').appendTo(item);
+					var create = $('<a href="ajaxCreateBacklogItem.action?backlogId='+<c:out value="${backlog.id}" />+'&parentId='+data[x].id+'" class="openCreateDialog openBacklogItemDialog addImage" onclick="return false;"><img src="static/img/Add.png" title="Add child" /></a>').appendTo(item);
+					var icon = $('<img src="static/img/Remove.png" alt="Delete" title="Delete" class="deleteImage" />').appendTo(item);
 					var hidden = $('<input type="hidden" class="hiddenId"/>').appendTo(item);						
-					var subList = $('<ul style="display: none;" />').appendTo(item);
+					var subList = $('<ul />').appendTo(item);
 					$(item).prepend('<img src="static/img/treeempty.png" class="expandImage" />');
 					span.text(data[x].name);
 					create.click(function() {

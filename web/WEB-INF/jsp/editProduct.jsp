@@ -19,14 +19,17 @@
 function setView(value) {
 	if (value == 'structure') {
 		document.getElementById('progressDiv').style.display = 'none';
-		document.getElementById('structureDiv').style.display = 'block';
+		document.getElementById('structureDiv').style.display = 'inline';
 		document.getElementById('structureLink').style.display = 'none';
-		document.getElementById('progressLink').style.display = 'block';
+		document.getElementById('progressLink').style.display = 'inline';
+		if (document.getElementById('myTree').getElementsByTagName('li').length == 0) {
+			initTree();
+		}
 	}else{
-		document.getElementById('structureLink').style.display = 'block';
+		document.getElementById('structureLink').style.display = 'inline';
 		document.getElementById('structureDiv').style.display = 'none';
 		document.getElementById('progressLink').style.display = 'none';
-		document.getElementById('progressDiv').style.display = 'block';
+		document.getElementById('progressDiv').style.display = 'inline';
 	}
 }
 
@@ -408,8 +411,8 @@ var productId = ${product.id};
 					<ww:param name="backlogId" value="${product.id}" />
 				</ww:url> <ww:a cssClass="openCreateDialog openBacklogItemDialog"
 					href="%{createBacklogItemLink}" onclick="return false;">Create new &raquo;</ww:a>
-					<a onclick="setView('structure'); return false;" id="structureLink" style="display:block;">Show Structure View</a>
-					<a onclick="setView('progress'); return false;" id="progressLink" style="display:none">Show Progress View</a>
+					<a onclick="setView('structure'); return false;" id="structureLink" class="viewLink" style="display:inline; cursor: pointer; position: relative; left: 476px; color:#0000FF;">Show Structure View</a>
+					<a onclick="setView('progress'); return false;" id="progressLink" class="viewLink" style="display:none; cursor: pointer; position: relative; left: 476px; color:#0000FF;">Show Progress View</a>
 					</td>
 					</tr>
 				</table>

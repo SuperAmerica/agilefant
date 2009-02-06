@@ -1201,27 +1201,40 @@ select.statusSelect option {
 	color: #c42;
 }
 
+#mytree {
+	margin-top: 0px;
+	padding: 0px 0px 0px 0px;
+	margin-bottom: 0px;
+}
+
 #myTree .treeItem {
 	min-height: 25px;
+	margin-bottom: -2px;
+	padding: 0px 0px 0px 0px;
 }
 
 #myTree .treeItem ul {
 	border-left: 1px dotted #000000;
-	margin-left: 7px;
+	margin-left: 12px;
+	min-height: 35px;
+	margin-bottom: 3px;
+	margin-top: -2px;
 }
 
-#myTree .treeItem ul li {
+#myTree .treeItem ul .treeItem {
 	margin-left: -20px;
+	margin-bottom: 0px;
+	margin-top: -2px;
 }
 
 .textHolder {
 	margin-left: 3px;
 	margin-right: 3px;
-	position:relative;
-	top: -2px;
+	padding: 0px 0px 0px 0px;
+	vertical-align: 50%;
 }
 
 .addImage, .deleteImage {
-	position:relative;
-	top: 2px;
+	vertical-align: 25%;
+	padding: 0px 0px 0px 0px;
 }

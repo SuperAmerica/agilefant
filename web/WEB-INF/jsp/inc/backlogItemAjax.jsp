@@ -448,7 +448,7 @@ $(document).ready(function() {
 						  deleteaction: 'deleteTask.action',
 						  submitParam: 'taskId',
 						  fields: {
-						  	taskNames: {cell: 0, type: 'text', size: 70},
+						  	taskNames: {cell: 0, type: 'text', size: 50},
 						  	taskStates: {cell: 1,type: 'select', data: {'NOT_STARTED': 'Not started', 'STARTED': 'Started', 'PENDING': 'Pending', 'BLOCKED': 'Blocked', 'IMPLEMENTED': 'Implemented', 'DONE': 'Done'}},											  	
 						  	reset: {cell: 2, type: 'reset'}
 						  }
@@ -530,7 +530,7 @@ $(document).ready(function() {
 						
 						<display:column sortable="false" title="Name"
 							class="shortNameColumn">
-							<ww:textfield size="74" name="taskNames[${row.id}]" value="${row.name}" />												
+							<ww:textfield size="50" name="taskNames[${row.id}]" value="${row.name}" />												
 						</display:column>
 														
 						<display:column sortable="false" title="State">											

@@ -262,9 +262,12 @@ Agilefant
 
 <!-- Tree menu -->
 
+<ul id="treemenu">
+</ul>
+
+</div>
 
 <script type="text/javascript">
-$(document).ready(function() {
     var navi = '<%=navi%>';
     var subnavi = '<%=subnavi%>';
     
@@ -288,13 +291,7 @@ $(document).ready(function() {
             );
         }
     });
-});
 </script>
-
-<ul id="treemenu">
-</ul>
-
-</div>
 <!-- /#hierarchy -->
 
 

@@ -206,6 +206,7 @@ function openCreateDialog(element) {
         
         $(window).scroll(overlayUpdate);
         overlayUpdate();
+        dialog.find(':text:visible:first').focus();
 	};
 	
 	var callback = function(data, status) {

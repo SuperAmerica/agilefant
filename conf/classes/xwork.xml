@@ -390,6 +390,11 @@
 			class="backlogAction">
 			<result>/WEB-INF/jsp/inc/underSameProduct.jsp</result>	
 		</action>
+		
+		<action name="getSubBacklogsAsJSON" method="getSubBacklogsAsJSON"
+			class="backlogAction">
+			<result>/WEB-INF/jsp/jsonData.jsp</result>
+		</action>
 		<!-- /Backlog actions -->
 
         <!-- Menu actions -->
@@ -872,7 +877,7 @@
 	
 		<!-- timesheet actions -->
 		  
-		<action name="timesheet">
+		<action name="timesheet" method="initialize" class="timesheetAction">
 			<result>/WEB-INF/jsp/timesheet.jsp</result>
 		</action>
 		

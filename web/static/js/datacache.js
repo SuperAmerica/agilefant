@@ -6,7 +6,8 @@ var dataCacheClass = function() {
         "allProjectTypes": "getProjectTypeJSON.action",
         "allProducts": "getProductJSON.action",
         "themesByProduct": "themesByProduct.action",
-        "activeThemesByBacklog": "activeThemesByBacklog.action"
+        "activeThemesByBacklog": "activeThemesByBacklog.action",
+        "subBacklogs" : "getSubBacklogsAsJSON.action"
     };
     this.data = {};
 }

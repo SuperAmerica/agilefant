@@ -4,8 +4,10 @@ package fi.hut.soberit.agilefant.web;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
@@ -15,10 +17,12 @@ import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.util.BacklogTimesheetNode;
+import flexjson.JSONSerializer;
 
 /**
  * 
  * @author Vesa Pirila / Spider
+ * @author Pasi Pekkanen
  *
  */
 public class TimesheetAction extends ActionSupport {
@@ -27,6 +31,12 @@ public class TimesheetAction extends ActionSupport {
     
     private TimesheetBusiness timesheetBusiness;
 
+    private Set<Integer> productIds = new HashSet<Integer>();
+    
+    private Set<Integer> projectIds = new HashSet<Integer>();
+    
+    private Set<Integer> iterationIds = new HashSet<Integer>();
+    
     private List<BacklogTimesheetNode> products;
     
     private List<Integer> selected = new ArrayList<Integer>();
@@ -63,13 +73,34 @@ public class TimesheetAction extends ActionSupport {
         this.backlogIds = backlogIds;
     }
     
+    private Set<Integer> selectedBacklogs() {
+        HashSet<Integer> ret = new HashSet<Integer>();
+        if(this.projectIds.contains(-1)) {
+            ret.addAll(this.productIds);
+        } else if(this.iterationIds.contains(-1)) {
+            ret.addAll(this.projectIds);
+        } else {
+            if(this.projectIds.size() == 0) {
+                ret.addAll(this.productIds);
+            } else if(this.iterationIds.size() == 0) {
+                ret.addAll(this.projectIds);
+            } else {
+                ret.addAll(this.iterationIds);
+            }
+        }
+        return ret;
+    }
+    public String initialize() {
+        return Action.SUCCESS;
+    }
     public String generateTree(){
-        if(backlogIds == null) {
+        Set<Integer> ids = this.selectedBacklogs();
+        if(ids == null) {
             addActionError("No backlogs selected.");
             return Action.ERROR;
         }
         try{
-            products = timesheetBusiness.generateTree(backlogIds, startDate, endDate, userIds.keySet());
+            products = timesheetBusiness.generateTree(ids, startDate, endDate, userIds.keySet());
             totalSpentTime = timesheetBusiness.calculateRootSum(products);
         }catch(IllegalArgumentException e){
             addActionError(e.getMessage());
@@ -152,6 +183,40 @@ public class TimesheetAction extends ActionSupport {
 
     public void setUserDAO(UserDAO userDAO) {
         this.userDAO = userDAO;
+    }
+
+    public Set<Integer> getProductIds() {
+        return productIds;
+    }
+
+    public void setProductIds(Set<Integer> productIds) {
+        this.productIds = productIds;
+    }
+
+    public Set<Integer> getProjectIds() {
+        return projectIds;
+    }
+
+    public void setProjectIds(Set<Integer> projectIds) {
+        this.projectIds = projectIds;
+    }
+
+    public Set<Integer> getIterationIds() {
+        return iterationIds;
+    }
+
+    public void setIterationIds(Set<Integer> iterationIds) {
+        this.iterationIds = iterationIds;
+    }
+    
+    public String getJSONProducts() {
+        return new JSONSerializer().serialize(this.productIds);
+    }
+    public String getJSONProjects() {
+        return new JSONSerializer().serialize(this.projectIds);
+    }
+    public String getJSONIterations() {
+        return new JSONSerializer().serialize(this.iterationIds);
     }
     
     

@@ -908,6 +908,26 @@ public class BacklogBusinessImpl implements BacklogBusiness {
             }
         }
     }
+    
+    public String getSubBacklogsAsJSON(Backlog backlog) {
+        String json = "";
+        JSONSerializer ser = new JSONSerializer();
+        ser.exclude("*.description");
+        if(backlog instanceof Product) {            
+            json = ser.serialize(((Product)backlog).getProjects());
+        } else if(backlog instanceof Project) {
+            json = ser.serialize(((Project)backlog).getIterations());
+        } 
+        return json;
+    }
+
+    public String getSubBacklogsAsJSON(int backlogId) {
+        Backlog bl = this.backlogDAO.get(backlogId);
+        if(bl == null) {
+            return "";
+        }
+        return getSubBacklogsAsJSON(bl);
+    }
 
     public int getNumberOfAssignedUsers(Backlog backlog) {
         return getUsers(backlog, true).size();
@@ -986,5 +1006,4 @@ public class BacklogBusinessImpl implements BacklogBusiness {
     public void setHistoryBusiness(HistoryBusiness historyBusiness) {
         this.historyBusiness = historyBusiness;
     }
-
 }

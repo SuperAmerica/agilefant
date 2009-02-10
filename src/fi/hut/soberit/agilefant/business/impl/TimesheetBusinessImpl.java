@@ -38,7 +38,7 @@ public class TimesheetBusinessImpl implements TimesheetBusiness {
     /**
      * {@inheritDoc}
      */
-    public List<BacklogTimesheetNode> generateTree(int[] backlogIds,
+    public List<BacklogTimesheetNode> generateTree(Set<Integer> backlogIds,
                                                    String startDateString, String endDateString,
                                                    Set<Integer> userIds)
             throws IllegalArgumentException{

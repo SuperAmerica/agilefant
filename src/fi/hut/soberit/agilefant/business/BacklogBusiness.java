@@ -303,6 +303,14 @@ public interface BacklogBusiness {
     public String getBacklogAsJSON(int backlogId);
     
     /**
+     * Get child backlogs as json string. 
+     * Will return an empty string if backlog is an iteration.
+     */
+    public String getSubBacklogsAsJSON(Backlog backlog);
+    public String getSubBacklogsAsJSON(int backlogId);
+   
+    
+    /**
      * Calculate total effort left, original estimate and number of items for
      * items directly under given backlog. E.g. calling this method for project
      * return only data for backlog items under the project, not for backlog

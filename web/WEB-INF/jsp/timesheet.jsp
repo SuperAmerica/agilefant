@@ -10,8 +10,6 @@
 <aef:currentUser />
 
 
-
-
 <h2>Timesheets</h2>
 
 <table>
@@ -36,34 +34,16 @@
 										Backlogs
 									</td>
 									<td>
-										<select multiple="multiple" name="backlogIds">
-										<%-- Resolve if product is selected or is in 'path' and set variable 'class' accordingly--%>
-												<c:forEach items="${productList}" var="product">
-												<c:if test="${aef:listContains(selected, product.id)}">
-													<option value="${product.id}" selected="selected">${aef:out(product.name)}</option>
-												</c:if>	
-												<c:if test="${!aef:listContains(selected, product.id)}">
-													<option value="${product.id}">${aef:out(product.name)}</option>
-												</c:if>
-												<c:forEach items="${product.projects}" var="project">
-													<c:if test="${aef:listContains(selected, project.id)}">						
-														<option value="${project.id}" selected="selected">&nbsp;&nbsp;&nbsp;&nbsp;${aef:out(project.name)}</option>
-													</c:if>
-													<c:if test="${!aef:listContains(selected, project.id)}">						
-														<option value="${project.id}">&nbsp;&nbsp;&nbsp;&nbsp;${aef:out(project.name)}</option>
-													</c:if>
-									                	<c:forEach items="${project.iterations}" var="it">
-									                		<c:if test="${aef:listContains(selected, it.id)}">
-	                    										<option value="${it.id}" selected="selected">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${aef:out(it.name)}</option>
-	                										</c:if>
-	                										<c:if test="${!aef:listContains(selected, it.id)}">
-	                    										<option value="${it.id}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${aef:out(it.name)}</option>
-	                										</c:if>
-	                									</c:forEach>
-	                							</c:forEach>
-	            							</c:forEach>
-			
-										</select>
+									<div id="selectBacklogs"></div>
+									<script type="text/javascript">
+										$(document).ready(function() {
+											$("#selectBacklogs").backlogChooser({
+												selectedProducts: ${JSONProducts},
+												selectedProjects: ${JSONProjects},
+												selectedIterations: ${JSONIterations}
+											});
+										});
+									</script>
 									</td>
 								</tr>
 								<!-- Interval selection -->			

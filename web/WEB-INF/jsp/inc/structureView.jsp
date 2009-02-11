@@ -5,11 +5,6 @@
 
 function addActionsToElements(list)
 {
-	$('li', list.get(0)).each(
-			function() {
-				addChildList(this);
-			}
-		);
 	$('img.expandImage', list).click(
 			function()
 			{
@@ -98,18 +93,16 @@ function addActionsToElements(list)
 		);
 }
 
-function addChildList(liItem)
+function addChildList(liItem, hasChildren)
 {
 	var parentId = $('input.hiddenId', $(liItem).get(0)).attr('value');
 	var listItem = $(liItem);
-	$.post('hasChildrenBlis.action', {"backlogItemId": parentId}, function(data,status) {
-		if(data == "true") {
+	if(hasChildren == true) {
 			$('img.expandImage', listItem.get(0)).attr('src', 'static/img/treeplus.png');
 			
 		} else {
 			$('img.deleteImage', listItem.get(0)).show();
-		}				
-	});
+		}
 }
 
 function clicked(img)
@@ -137,7 +130,8 @@ function clicked(img)
 					        }
 					        return false;
 					    });
-						hidden.attr('value', data[x].id);																				
+						hidden.attr('value', data[x].id);
+						addChildList(item, data[x].hasChilds);																				
 					}
 					addActionsToElements(list);
 				});
@@ -171,6 +165,7 @@ function initTree() {
 				        return false;
 				    });
 					hidden.attr('value', data[x].id);
+					addChildList(item, data[x].hasChilds);
 				}
 				addActionsToElements(list);
         }

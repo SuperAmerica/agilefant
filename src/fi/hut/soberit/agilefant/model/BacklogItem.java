@@ -28,6 +28,7 @@ import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.Type;
 
 import fi.hut.soberit.agilefant.web.page.PageItem;
+import flexjson.JSON;
 
 /**
  * Hibernate entity bean representing a back log. A Backlog is a work log that
@@ -98,6 +99,23 @@ public class BacklogItem implements PageItem, Assignable, EffortContainer, Times
     private User creator;
     
     private BacklogItem parentBli;
+    
+    private List<BacklogItem> childItems;
+    
+    @OneToMany(mappedBy = "parentBli")
+    public List<BacklogItem> getChildItems() {
+        return childItems;
+    }
+    
+    public void setChildItems(List<BacklogItem> children) {
+        this.childItems = children;
+    }
+    
+    @Transient
+    @JSON
+    public boolean getHasChilds() {        
+        return !getChildItems().isEmpty();
+    }
     
     @ManyToOne
     public BacklogItem getParentBli() {

@@ -110,16 +110,6 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
     
     private int childId;
     
-    private boolean hasChildrenBlis = false;
-
-    public boolean isHasChildrenBlis() {
-        return hasChildrenBlis;
-    }
-
-    public void setHasChildrenBlis(boolean hasChildrenBlis) {
-        this.hasChildrenBlis = hasChildrenBlis;
-    }
-
     public int getParentId() {
         return parentId;
     }
@@ -232,17 +222,8 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
        // If exception was not thrown from business method, return success.
        return CRUDAction.AJAX_SUCCESS;
    }
-   
-   public String hasChildren() {
-       return backlogItemBusiness.getBacklogItemChildren(backlogItemId).isEmpty() ? CRUDAction.AJAX_ERROR : CRUDAction.AJAX_SUCCESS;
-   }
-   
-   public String hasChildrenBlis() {
-       hasChildrenBlis = backlogItemDAO.hasChildren(backlogItemId);       
-       return Action.SUCCESS;
-   }
 
-    public String edit() {
+   public String edit() {
         backlogItem = backlogItemBusiness.getBacklogItem(backlogItemId);
         if (backlogItem == null) {
             super.addActionError(super.getText("backlogItem.notFound"));

@@ -194,9 +194,6 @@
 		</action>
 		<action name="hasChildren" method="hasChildren" class="backlogItemAction">
 		</action>
-		<action name="hasChildrenBlis" method="hasChildrenBlis" class="backlogItemAction">
-			<result>/WEB-INF/jsp/inc/hasChildrenBlis.jsp</result>
-		</action>
 		<!-- /Product actions -->
 		<!-- BacklogItem actions -->
 		<action name="ajaxCreateBacklogItem" method="create"

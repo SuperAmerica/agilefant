@@ -21,6 +21,4 @@ public interface BacklogItemDAO extends GenericDAO<BacklogItem> {
     public List<BacklogItem> productNonDoneTopLevelBacklogItems(int productId);
     
     public List<BacklogItem> backlogItemChildren(int fatherId);
-    
-    public boolean hasChildren(int backlogItemId);
 }

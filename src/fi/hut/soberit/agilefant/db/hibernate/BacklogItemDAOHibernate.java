@@ -47,14 +47,4 @@ public class BacklogItemDAOHibernate extends GenericDAOHibernate<BacklogItem>
         return (List<BacklogItem>)super.getHibernateTemplate()
         .findByCriteria(criteria);
     }
-
-    @SuppressWarnings("unchecked")
-    public boolean hasChildren(int fatherId) {
-        DetachedCriteria criteria = DetachedCriteria.forClass(this
-                .getPersistentClass());
-        criteria.add(Restrictions.eq("parentBli.id", fatherId));
- 
-        return !((List<BacklogItem>)super.getHibernateTemplate()
-        .findByCriteria(criteria)).isEmpty();
-    }
 }

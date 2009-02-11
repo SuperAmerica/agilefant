@@ -382,19 +382,19 @@ public class BacklogItemBusinessTest extends TestCase {
     }   
     
     public void testGetProductTopLevelBacklogItems() {
-        int productId = 1;
         bliDAO = createMock(BacklogItemDAO.class);
         List<BacklogItem> backlogItems = new ArrayList<BacklogItem>();
+        List<Backlog> backlogs = new ArrayList<Backlog>();
         BacklogItem testItem1 = new BacklogItem();
         BacklogItem testItem2 = new BacklogItem();
         backlogItems.add(testItem1);
         backlogItems.add(testItem2);
         
-        expect(bliDAO.productNonDoneTopLevelBacklogItems(productId)).andReturn(backlogItems);
+        expect(bliDAO.nonDoneTopLevelBacklogItems(backlogs)).andReturn(backlogItems);
         
         replay(bliDAO);
         
-        List<BacklogItem> result = bliDAO.productNonDoneTopLevelBacklogItems(productId);
+        List<BacklogItem> result = bliDAO.nonDoneTopLevelBacklogItems(backlogs);
         
         assertTrue(result.contains(testItem1));
         assertTrue(result.contains(testItem2));

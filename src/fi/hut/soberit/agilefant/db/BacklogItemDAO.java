@@ -2,6 +2,7 @@ package fi.hut.soberit.agilefant.db;
 
 import java.util.List;
 
+import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 
 /**
@@ -18,7 +19,7 @@ public interface BacklogItemDAO extends GenericDAO<BacklogItem> {
      * @param productId
      * @return
      */
-    public List<BacklogItem> productNonDoneTopLevelBacklogItems(int productId);
+    public List<BacklogItem> nonDoneTopLevelBacklogItems(List<Backlog> backlogs);
     
     public List<BacklogItem> backlogItemChildren(int fatherId);
 }

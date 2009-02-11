@@ -994,9 +994,17 @@ public class BacklogBusinessImpl implements BacklogBusiness {
     }
     
     public List<BacklogItem> getProductTopLevelBacklogItems(int productId) {
+        Product product = productDAO.get(productId);
+        List<Backlog> backlogs = new ArrayList<Backlog>();
+        backlogs.add(product);
+        List<Project> projects = new ArrayList<Project>();
+        backlogs.addAll(product.getProjects());
+        backlogs.addAll(projects);
+        for(Project project : projects) {
+            backlogs.addAll(project.getIterations());
+        }
         return (List<BacklogItem>) backlogItemDAO
-                .productNonDoneTopLevelBacklogItems(productId);
-
+                .nonDoneTopLevelBacklogItems(backlogs);
     }
     
     public String getProductTopLevelBacklogItemsAsJson(int productId) {

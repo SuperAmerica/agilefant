@@ -1,12 +1,12 @@
 package fi.hut.soberit.agilefant.db.hibernate;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
+import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.State;
 
@@ -22,20 +22,15 @@ public class BacklogItemDAOHibernate extends GenericDAOHibernate<BacklogItem>
     }
     
     @SuppressWarnings("unchecked")
-    public List<BacklogItem> productNonDoneTopLevelBacklogItems(int productId) {
+    public List<BacklogItem> nonDoneTopLevelBacklogItems(List<Backlog> backlogs) {
         DetachedCriteria criteria = DetachedCriteria.forClass(this
                 .getPersistentClass());
         criteria.add(Restrictions.ne("state", State.DONE));
         criteria.add(Restrictions.isNull("parentBli"));
+        criteria.add(Restrictions.in("backlog", backlogs));
         List<BacklogItem> items = (List<BacklogItem>)super.getHibernateTemplate()
         .findByCriteria(criteria);
-        List<BacklogItem> ret = new ArrayList<BacklogItem>();
-        for(BacklogItem bli : items) {
-            if(bli.getProduct().getId() == productId) {
-                ret.add(bli);
-            }
-        }
-        return ret;
+        return items;
     }
     
 

@@ -1001,6 +1001,7 @@ public class BacklogBusinessImpl implements BacklogBusiness {
     
     public String getProductTopLevelBacklogItemsAsJson(int productId) {
         List<BacklogItem> list = this.getProductTopLevelBacklogItems(productId);
+        // sort list alphabetically
         Collections.sort(list, new BacklogItemNameComparator());
         return new JSONSerializer().serialize(list);
     }

@@ -22,6 +22,7 @@ import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.State;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.util.BacklogItemNameComparator;
 import fi.hut.soberit.agilefant.util.UserComparator;
 import flexjson.JSONSerializer;
 
@@ -38,11 +39,15 @@ public class BacklogItemBusinessImpl implements BacklogItemBusiness {
     private HourEntryBusiness hourEntryBusiness;
 
     public String getBacklogItemChildrenAsJson(int fatherId) {
+        
         return new JSONSerializer().serialize(getBacklogItemChildren(fatherId));
     }
     
     public List<BacklogItem> getBacklogItemChildren(int fatherId) {
-        return backlogItemDAO.backlogItemChildren(fatherId);
+        List<BacklogItem> list = backlogItemDAO.backlogItemChildren(fatherId);
+        // sort alphabetically
+        Collections.sort(list, new BacklogItemNameComparator());
+        return list;
     }
     
     public BacklogItemDAO getBacklogItemDAO() {

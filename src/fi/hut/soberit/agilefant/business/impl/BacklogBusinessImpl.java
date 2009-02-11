@@ -42,6 +42,7 @@ import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.State;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.util.BacklogComparator;
+import fi.hut.soberit.agilefant.util.BacklogItemNameComparator;
 import fi.hut.soberit.agilefant.util.BacklogLoadData;
 import fi.hut.soberit.agilefant.util.BacklogMetrics;
 import fi.hut.soberit.agilefant.util.EffortSumData;
@@ -1000,6 +1001,7 @@ public class BacklogBusinessImpl implements BacklogBusiness {
     
     public String getProductTopLevelBacklogItemsAsJson(int productId) {
         List<BacklogItem> list = this.getProductTopLevelBacklogItems(productId);
+        Collections.sort(list, new BacklogItemNameComparator());
         return new JSONSerializer().serialize(list);
     }
 

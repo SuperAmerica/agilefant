@@ -1,5 +1,6 @@
 package fi.hut.soberit.agilefant.util;
 
+import java.util.Collection;
 import java.util.List;
 
 import fi.hut.soberit.agilefant.model.AFTime;
@@ -17,7 +18,7 @@ public abstract class TimesheetNode {
     
     protected List<BacklogTimesheetNode> childBacklogs;
     protected List<BacklogItemTimesheetNode> childBacklogItems;
-    protected List<? extends HourEntry> hourEntries;
+    protected Collection<? extends HourEntry> hourEntries;
     private AFTime spentHours, hoursForChildBacklogItems, hoursForChildBacklogs, hourTotal;
 
     /**
@@ -102,7 +103,7 @@ public abstract class TimesheetNode {
         return childBacklogItems;
     }
 
-    public List<? extends HourEntry> getHourEntries(){
+    public Collection<? extends HourEntry> getHourEntries(){
         return this.hourEntries;
     }
     

@@ -75,20 +75,21 @@ public class BacklogTimesheetNode extends TimesheetNode {
                         this.addChildBacklog(node);
                 }else{
                     node = new BacklogTimesheetNode((Backlog) childBacklog, true, tsb);
-                    this.addChildBacklog(node);
+                    if(node.getHourTotal().getTime() > 0) {
+                        this.addChildBacklog(node);
+                    }
                     if(checkDuplicates)
                         tsb.getNodes().put(childBacklog.getId(), node);
                 }
             }
         }
         
-        Collection<BacklogItem> backlogItems = backlog.getBacklogItems();
+        Collection<BacklogItem> backlogItems = tsb.getBacklogItems(backlog);
         if(backlogItems != null){
             for(BacklogItem backlogItem : backlogItems){
                 this.addChildBacklogItem(new BacklogItemTimesheetNode(backlogItem, tsb));
             }
-        }
-        
+        }        
         this.hourEntries = tsb.getFilteredHourEntries(backlog);
         
         expanded = true;

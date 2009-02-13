@@ -1,8 +1,13 @@
 package fi.hut.soberit.agilefant.db.hibernate;
 
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Projection;
 import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
@@ -56,5 +61,39 @@ public class BacklogDAOHibernate extends GenericDAOHibernate<Backlog> implements
             return null;
         }
         return metrics;
+    }
+    
+    public Collection<BacklogItem> getBlisWithSpentEffortByBacklog(Backlog bl, Date start, Date end, Set<Integer> users) {
+        DetachedCriteria bliCrit = DetachedCriteria.forClass(BacklogItem.class);
+        
+        bliCrit.add(Restrictions.eq("backlog", bl));
+        bliCrit.createAlias("hourEntries", "spentEffort");
+        bliCrit.createAlias("hourEntries.user", "effUser");
+        
+        if(start != null) {
+            bliCrit.add(Restrictions.ge("spentEffort.date", start));
+        }
+        if(end != null) {
+            bliCrit.add(Restrictions.le("spentEffort.date", end));
+        }
+        if(users != null && users.size() > 0) {
+            bliCrit.add(Restrictions.in("effUser.id", users));
+        }
+        
+        //bliCrit.setProjection(Projections.projectionList()
+        //        .add(Projections.sum("spentEffort.timeSpent")));
+        
+        List<BacklogItem> data = super.getHibernateTemplate().findByCriteria(bliCrit);
+        try {
+          Collection<BacklogItem> res = new HashSet<BacklogItem>();
+          for(BacklogItem item : data) {
+              if(!res.contains(item)) {
+                  res.add(item);
+              }
+          }
+          return res;  
+        } catch(Exception e) { 
+          return null;  
+        } 
     }
 }

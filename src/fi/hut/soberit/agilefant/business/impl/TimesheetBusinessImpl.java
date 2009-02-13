@@ -3,6 +3,7 @@ package fi.hut.soberit.agilefant.business.impl;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -141,10 +142,10 @@ public class TimesheetBusinessImpl implements TimesheetBusiness {
      * {@inheritDoc}
      */
     public List<? extends HourEntry> getFilteredHourEntries(BacklogItem backlogItem){
-        List<BacklogItemHourEntry> hourEntries;
+        Collection<BacklogItemHourEntry> hourEntries;
         List<BacklogItemHourEntry> filteredHourEntries = new ArrayList<BacklogItemHourEntry>();
         
-        hourEntries = hourEntryBusiness.getEntriesByParent(backlogItem);
+        hourEntries = backlogItem.getHourEntries();
         
         if(hourEntries != null){
             for(BacklogItemHourEntry hourEntry : hourEntries){
@@ -173,6 +174,10 @@ public class TimesheetBusinessImpl implements TimesheetBusiness {
         }
         
         return filteredHourEntries;
+    }
+    
+    public Collection<BacklogItem> getBacklogItems(Backlog bl) {
+        return this.backlogDAO.getBlisWithSpentEffortByBacklog(bl,startDate,endDate,userIds);
     }
     
     /**

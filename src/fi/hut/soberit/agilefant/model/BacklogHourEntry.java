@@ -22,7 +22,9 @@ public class BacklogHourEntry extends HourEntry {
 
         private Backlog backlog;
 
-        @ManyToOne
+        @ManyToOne(
+                targetEntity = fi.hut.soberit.agilefant.model.Backlog.class
+        )
         @JoinColumn(nullable = true)
         public Backlog getBacklog() {
             return backlog;

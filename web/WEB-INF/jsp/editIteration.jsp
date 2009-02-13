@@ -35,14 +35,6 @@ $(document).ready(function() {
 				<td>
 				<div class="subItems" style="margin-top: 0" id="iterationDetailsDiv_editIteration">
 				<div class="subItemHeader"><script type="text/javascript">
-                function expandDescription() {
-                    document.getElementById('descriptionDiv').style.maxHeight = "1000em";
-                    document.getElementById('descriptionDiv').style.overflow = "visible";
-                }
-                function collapseDescription() {
-                    document.getElementById('descriptionDiv').style.maxHeight = "12em";
-                    document.getElementById('descriptionDiv').style.overflow = "hidden";
-                }
                 function editIteration() {
                 	toggleDiv('editIterationForm'); toggleDiv('descriptionDiv'); showWysiwyg('iterationDescription'); return false;
                 }
@@ -51,15 +43,14 @@ $(document).ready(function() {
 
 				<table cellspacing="0" cellpadding="0">
 					<tr>
-						<td class="header">Details <a href=""
-							onclick="return editIteration();">Edit &raquo;</a></td>
-						<td class="icons"><a href=""
-							onclick="expandDescription(); return false;"> <img
-							src="static/img/plus.png" width="18" height="18" alt="Expand"
-							title="Expand" /> </a> <a href=""
-							onclick="collapseDescription(); return false;"> <img
-							src="static/img/minus.png" width="18" height="18" alt="Collapse"
-							title="Collapse" /> </a></td>
+                        <td class="iconsbefore">
+                            <div class="expand" onclick="toggleExpand(this, '#descriptionDiv');">&nbsp;</div>
+                        </td>
+						<td class="header">Details</td>
+						<td class="icons">
+						  <img src="static/img/edit.png"
+						      height="18" width="18" alt="Edit" onclick="editIteration();" />
+						</td>
 					</tr>
 				</table>
 				</div>

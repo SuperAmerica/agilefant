@@ -773,8 +773,15 @@ h2 .editLink {
 }
 
 td.icons {
-    padding: 2px 5px 0 0;
+	width: 2px;
+	white-space: nowrap;
+    padding: 2px 5px 0 5px;
     text-align: right;
+    border-left: 1px solid #666;
+}
+
+td.icons img {
+    cursor: pointer;	
 }
 
 td.icons a img {
@@ -1199,4 +1206,24 @@ select.statusSelect option {
 
 .globalTheme {
 	color: #c42;
+}
+
+.iconsbefore {
+    width: 2px;	
+}
+
+.iconsbefore .expand {
+    background-image: url('../img/expand.png');
+    background-position: 0% 0%;
+    background-repeat: no-repeat;
+    width: 18px;
+    height: 18px;
+}
+
+.iconsbefore .collapse {
+    background-image: url('../img/expand.png');
+    background-position: 100% 0%;
+    background-repeat: no-repeat;
+    width: 18px;
+    height: 18px;
 }

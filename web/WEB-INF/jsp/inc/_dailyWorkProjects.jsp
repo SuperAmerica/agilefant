@@ -56,6 +56,17 @@ $(document).ready(function() {
 		</c:otherwise>
 		</c:choose>
 		</td>
+		<c:if test="${hourReport}">
+		  <td class="icons">
+          <ww:url id="createLink" action="ajaxCreateHourEntry" includeParams="none">
+              <ww:param name="backlogId" value="${pro.id}" />
+          </ww:url>
+          <ww:a cssClass="openCreateDialog openUserDialog" onclick="return false;" title="Log effort" href="%{createLink}">
+          <img src="static/img/timesheets.png"
+              height="18" width="18" alt="Log effort" />
+          </ww:a>
+          </td>
+        </c:if>
 		</tr>
 		</table>
 		</div>

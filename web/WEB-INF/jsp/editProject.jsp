@@ -31,6 +31,7 @@
 <aef:menu navi="backlog" pageHierarchy="${pageHierarchy}" title="${project.name}"/>
 <ww:actionerror />
 <ww:actionmessage />
+<aef:hourReporting id="hourReport" />
 <script type="text/javascript">
 <!--
 $(document).ready(function() {
@@ -94,32 +95,30 @@ $(document).ready(function() {
 								<div class="subItems" style="margin-top: 0" id="subItems_editProjectDetails">
 									<div class="subItemHeader">
 										<script type="text/javascript">
-											function expandDescription() {
-												document.getElementById('descriptionDiv').style.maxHeight = "1000em";
-												document.getElementById('descriptionDiv').style.overflow = "visible";
-											}
-											function collapseDescription() {
-												document.getElementById('descriptionDiv').style.maxHeight = "14em";
-												document.getElementById('descriptionDiv').style.overflow = "hidden";
-											}
 											function editProject() {
 												toggleDiv('editProjectForm'); toggleDiv('descriptionDiv'); showWysiwyg('projectDescription'); return false;
 											}
 										</script>
 										<table cellspacing="0" cellpadding="0">
 											<tr>
+											    <td class="iconsbefore">
+						                            <div class="expand" onclick="toggleExpand(this, '#descriptionDiv');">&nbsp;</div>
+						                        </td>
 												<td class="header">Details <a href="" onclick="return editProject();">Edit &raquo;</a></td>
 												<td class="icons">
-													<%--<a href="" onclick="toggleDiv('editProjectForm'); toggleDiv('descriptionDiv'); return false;">
-														<img src="static/img/edit.png" width="18" height="18" alt="Edit" title="Edit" />
-													</a>--%>
-													<a href="" onclick="expandDescription(); return false;">
-														<img src="static/img/plus.png" width="18" height="18" alt="Expand" title="Expand" />
-													</a>
-													<a href="" onclick="collapseDescription(); return false;">
-														<img src="static/img/minus.png" width="18" height="18" alt="Collapse" title="Collapse" />
-													</a>
-												</td>
+                                                    <c:if test="${hourReport}">
+                                                        <ww:url id="createLink" action="ajaxCreateHourEntry" includeParams="none">
+                                                            <ww:param name="backlogId" value="${projectId}" />
+                                                        </ww:url>
+                                                    <ww:a cssClass="openCreateDialog openUserDialog" onclick="return false;" title="Log effort" href="%{createLink}">
+												    <img src="static/img/timesheets.png"
+												        height="18" width="18" alt="Log effort" />
+												    </ww:a>
+                                                  </c:if>
+						                          <img src="static/img/edit.png"
+						                              height="18" width="18" alt="Edit"
+						                              onclick="editProject();" />
+						                        </td>
 											</tr>
 										</table>
 									</div>
@@ -437,25 +436,6 @@ $(document).ready(function() {
 											</ww:form>
 										</div>
 									</div>
-									
-									<%---Link for entering a new hour entry---%>
-									<aef:hourReporting id="hourReport"/>
-									<c:if test="${hourReport == 'true'}">
-										<div id="subItemHeader" style="border:none; border-top:1px solid #ccc; background: none;">
-											<table cellpadding="0" cellspacing="0">
-												<tbody>
-													<tr>
-				   										<td class="header">
-				   											<ww:url id="createLink" action="ajaxCreateHourEntry" includeParams="none">
-				   												<ww:param name="backlogId" value="${projectId}" />
-				   											</ww:url>
-					   										<ww:a cssClass="openCreateDialog openUserDialog" onclick="return false;" title="Log effort" href="%{createLink}">Log effort &raquo;</ww:a>
-					   									</td>
-													</tr>
-												</tbody>
-											</table>
-										</div>
-									</c:if>
 									
 								</div>
 							</td>

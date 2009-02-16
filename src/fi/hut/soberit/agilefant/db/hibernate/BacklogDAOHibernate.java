@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Projection;
 import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
@@ -63,6 +62,7 @@ public class BacklogDAOHibernate extends GenericDAOHibernate<Backlog> implements
         return metrics;
     }
     
+    @SuppressWarnings("unchecked")
     public Collection<BacklogItem> getBlisWithSpentEffortByBacklog(Backlog bl, Date start, Date end, Set<Integer> users) {
         DetachedCriteria bliCrit = DetachedCriteria.forClass(BacklogItem.class);
         

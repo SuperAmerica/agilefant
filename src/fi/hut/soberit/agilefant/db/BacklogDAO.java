@@ -4,7 +4,6 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Set;
 
-import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.util.BacklogMetrics;

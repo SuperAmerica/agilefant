@@ -104,7 +104,7 @@ $(document).ready(function() {
 											    <td class="iconsbefore">
 						                            <div class="expand" onclick="toggleExpand(this, '#descriptionDiv');">&nbsp;</div>
 						                        </td>
-												<td class="header">Details <a href="" onclick="return editProject();">Edit &raquo;</a></td>
+												<td class="header">Details</td>
 												<td class="icons">
                                                     <c:if test="${hourReport}">
                                                         <ww:url id="createLink" action="ajaxCreateHourEntry" includeParams="none">

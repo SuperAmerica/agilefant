@@ -766,6 +766,7 @@ h2 .editLink {
 
 #subItemHeader table .header, .subItemHeader table .header {
 	height: 22px;
+	padding-left: 3px;
 }
 
 .header a {
@@ -1216,6 +1217,7 @@ select.statusSelect option {
     background-image: url('../img/expand.png');
     background-position: 0% 0%;
     background-repeat: no-repeat;
+    cursor: pointer;
     width: 18px;
     height: 18px;
 }
@@ -1224,6 +1226,7 @@ select.statusSelect option {
     background-image: url('../img/expand.png');
     background-position: 100% 0%;
     background-repeat: no-repeat;
+    cursor: pointer;
     width: 18px;
     height: 18px;
 }

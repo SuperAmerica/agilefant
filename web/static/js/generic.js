@@ -334,3 +334,11 @@ function toggleExpand(clickedElement, elementId, settings) {
     me.toggleClass('expand').toggleClass('collapse');
     return false;
 }
+
+function toggleHide(clickedElement, elements) {
+    var elems = $(elements);
+    $.each(elems, function(key, elem) {
+        $(elem).toggle();
+    });
+    $(clickedElement).toggleClass('expand').toggleClass('collapse');
+}

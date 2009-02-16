@@ -64,7 +64,6 @@ var productId = ${product.id};
 				<tr>
 				    <td class="iconsbefore">
                         <div class="expand" onclick="toggleExpand(this, '#descriptionDiv');">
-                            <img src="static/img/empty.png" alt="" width="1" height="1" />
                         </div>
                     </td>
 					<td class="header">Details</td>

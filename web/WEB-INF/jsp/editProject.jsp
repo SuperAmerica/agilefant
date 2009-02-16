@@ -101,9 +101,10 @@ $(document).ready(function() {
 										</script>
 										<table cellspacing="0" cellpadding="0">
 											<tr>
-											    <div class="expand" onclick="toggleExpand(this, '#descriptionDiv');">
-						                            <img src="static/img/empty.png" alt="" width="1" height="1" />
-						                        </div>
+                                                <td class="iconsbefore">
+                                                    <div class="expand" onclick="toggleExpand(this, '#descriptionDiv');">
+                                                    </div>
+						                        </td>
 												<td class="header">Details</td>
 												<td class="icons">
                                                     <c:if test="${hourReport}">

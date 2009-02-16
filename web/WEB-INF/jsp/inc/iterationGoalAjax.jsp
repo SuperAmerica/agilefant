@@ -87,9 +87,14 @@ $(document).ready(function() {
 		<tr>
 			<td></td>
 			<td></td>
-			<td><ww:submit value="Save" id="saveButton"/></td>
-			<td class="deleteButton">
-				<ww:submit action="deleteIterationGoal" value="Delete" /></td>
+			<td>
+                <ww:submit value="Save" id="saveButton"/>
+                <ww:submit name="SaveClose" value="Save & Close" id="saveClose"  />
+			</td>
+            <td class="deleteButton">
+                <ww:submit action="deleteIterationGoal" value="Delete" />
+                <ww:reset value="Cancel"/>
+			</td>
 		</tr>
 	</table>
 </ww:form>

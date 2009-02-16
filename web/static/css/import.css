@@ -1218,8 +1218,8 @@ select.statusSelect option {
     background-position: 0% 0%;
     background-repeat: no-repeat;
     cursor: pointer;
-    width: 18px;
-    height: 18px;
+    width: 16px;
+    height: 16px;
 }
 
 .iconsbefore .collapse {
@@ -1227,6 +1227,6 @@ select.statusSelect option {
     background-position: 100% 0%;
     background-repeat: no-repeat;
     cursor: pointer;
-    width: 18px;
-    height: 18px;
+    width: 16px;
+    height: 16px;
 }

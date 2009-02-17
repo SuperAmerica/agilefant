@@ -14,22 +14,21 @@
 
 <aef:openDialogs context="project" id="openProjects" />
 
+<script type="text/javascript" src="static/js/interface.js"></script>
+
 <script type="text/javascript">
 
 function setView(value) {
 	if (value == 'structure') {
-		document.getElementById('progressDiv').style.display = 'none';
-		document.getElementById('structureDiv').style.display = 'inline';
-		document.getElementById('structureLink').style.display = 'none';
-		document.getElementById('progressLink').style.display = 'inline';
-		if (document.getElementById('myTree').getElementsByTagName('li').length == 0) {
-			initTree();
-		}
+		$('#progressDiv').hide();
+		$('#structureLink').hide();
+		$('#structureDiv').show();
+		$('#progressLink').show();
 	}else{
-		document.getElementById('structureLink').style.display = 'inline';
-		document.getElementById('structureDiv').style.display = 'none';
-		document.getElementById('progressLink').style.display = 'none';
-		document.getElementById('progressDiv').style.display = 'inline';
+		$('#progressDiv').show();
+		$('#structureLink').show();
+		$('#structureDiv').hide();
+		$('#progressLink').hide();
 	}
 }
 
@@ -41,6 +40,10 @@ $(document).ready(function() {
     <c:forEach items="${openProjects}" var="openProject">
         handleTabEvent("projectTabContainer-${openProject[0]}", "project", ${openProject[0]}, ${openProject[1]});
     </c:forEach>
+
+    $('#structureLink').structureView({
+        backlogId: ${product.id}
+    });
 });
 
 
@@ -411,8 +414,8 @@ var productId = ${product.id};
 					<ww:param name="backlogId" value="${product.id}" />
 				</ww:url> <ww:a cssClass="openCreateDialog openBacklogItemDialog"
 					href="%{createBacklogItemLink}" onclick="return false;">Create new &raquo;</ww:a>
-					<a onclick="setView('structure'); return false;" id="structureLink" class="viewLink" style="display:inline; cursor: pointer; position: relative; left: 476px; color:#0000FF;">Show Structure View</a>
-					<a onclick="setView('progress'); return false;" id="progressLink" class="viewLink" style="display:none; cursor: pointer; position: relative; left: 476px; color:#0000FF;">Show Progress View</a>
+					<a onclick="setView('structure'); return false;" id="structureLink" class="viewLink">Show Structure View</a>
+					<a onclick="setView('progress'); return false;" id="progressLink" class="viewLink">Show Progress View</a>
 					</td>
 					</tr>
 				</table>
@@ -423,7 +426,7 @@ var productId = ${product.id};
 				<%@ include file="./inc/_backlogList.jsp"%>
 			</div>
 			<div class="subItemContent" id="structureDiv" style="display:none">
-				<%@ include file="./inc/structureView.jsp"%>
+				<ul id="myTree" />
 			</div>
 			</c:if>
 			</div>

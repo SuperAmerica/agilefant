@@ -428,7 +428,10 @@ var productId = ${product.id};
 				<%@ include file="./inc/_backlogList.jsp"%>
 			</div>
 			<div class="subItemContent" id="structureDiv" style="display:none">
-				<ul id="myTree" />
+				<span id="undone">Undone items</span>
+				<ul id="myTree" class="tree"> </ul>
+				<span id="done">Done items</span>
+				<ul id="doneTree" class="tree"> </ul>
 			</div>
 			</c:if>
 			</div>

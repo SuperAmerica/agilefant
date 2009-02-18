@@ -1051,4 +1051,25 @@ public class BacklogBusinessImpl implements BacklogBusiness {
         Collections.sort(list, new BacklogItemNameComparator());
         return new JSONSerializer().serialize(list);
     }
+    
+    public List<BacklogItem> getProductDoneTopLevelBacklogItems(int productId) {
+        Product product = productDAO.get(productId);
+        List<Backlog> backlogs = new ArrayList<Backlog>();
+        backlogs.add(product);
+        List<Project> projects = new ArrayList<Project>();
+        backlogs.addAll(product.getProjects());
+        backlogs.addAll(projects);
+        for(Project project : projects) {
+            backlogs.addAll(project.getIterations());
+        }
+        return (List<BacklogItem>) backlogItemDAO
+                .doneTopLevelBacklogItems(backlogs);
+    }
+    
+    public String getProductDoneTopLevelBacklogItemsAsJson(int productId) {
+        List<BacklogItem> list = this.getProductDoneTopLevelBacklogItems(productId);
+        // sort list alphabetically
+        Collections.sort(list, new BacklogItemNameComparator());
+        return new JSONSerializer().serialize(list);
+    }
 }

@@ -17,7 +17,9 @@
 			var list = 	$('#myTree');
 			var listItemsInMyTree = $('li', list);
 			if (listItemsInMyTree.size() == 0) {
+				me.addActionsToContainers();
 				me.initTree();
+				me.initDoneTree();				
 			}
 		},
 		initTree: function(opt) {
@@ -26,6 +28,34 @@
 		       	{ 'backlogId': this.options.backlogId },
 		        function(data, status) {
 		        	var list = 	$('#myTree');
+						for(var x = 0; x < data.length; x++) {						
+							var item = 	$('<li class="treeItem" />').appendTo(list);
+							var span = $('<span class="textHolder" />').appendTo(item);
+							var create = $('<a href="ajaxCreateBacklogItem.action?backlogId='+me.options.backlogId+'&parentId='+data[x].id+'" class="openCreateDialog openBacklogItemDialog addImage" onclick="return false;"><img src="static/img/Add.png" title="Add child" /></a>').appendTo(item);
+							var icon = $('<img src="static/img/Remove.png" alt="Delete" title="Delete" class="deleteImage" />').appendTo(item);
+							var hidden = $('<input type="hidden" class="hiddenId"/>').appendTo(item);						
+							var subList = $('<ul />').appendTo(item);
+							$(item).prepend('<img src="static/img/treeempty.png" class="expandImage" />');
+							span.text(data[x].name);
+							create.click(function() {
+						        if ($("div.createDialogWindow").length == 0) {
+						            openCreateDialog($(this));
+						        }
+						        return false;
+						    });
+							hidden.attr('value', data[x].id);
+							me.addChildList(item, data[x].hasChilds);
+						}
+						me.addActionsToElements(list);
+		        }
+			);
+		},
+		initDoneTree: function(opt) {
+			var me = this;
+			jQuery.getJSON("getProductDoneTopLevelBacklogItemsAsJson.action",
+		       	{ 'backlogId': this.options.backlogId },
+		        function(data, status) {
+		        	var list = 	$('#doneTree');
 						for(var x = 0; x < data.length; x++) {						
 							var item = 	$('<li class="treeItem" />').appendTo(list);
 							var span = $('<span class="textHolder" />').appendTo(item);
@@ -270,6 +300,92 @@
 						revert		: true,
 						autoSize		: true,
 						ghosting			: true
+					}
+				);
+		},
+		addActionsToContainers: function(opt) {
+			var me = this;
+						
+			$('#undone').Droppable(
+					{ 
+						accept			: 'treeItem',
+						hoverclass		: 'dropOver',
+						activeclass		: 'fakeClass',
+						tollerance		: 'pointer',
+						onhover			: function(dragged)
+						{
+						
+						this.setAttribute("style", "background-color:#747170");
+						},
+						onout			: function()
+						{
+							this.setAttribute("style", "background-color:transparent");
+						},
+						ondrop			: function(dropped)
+						{
+							var me = this;
+							me.setAttribute("style", "background-color:transparent");
+							var childId = $('input.hiddenId', dropped).eq(0).attr('value');								
+							var parentId = -1;
+							if(me.parentNode == dropped) {
+								return;
+							}
+							var subbranch = $('#myTree').eq(0);
+							var oldParent = $(dropped.parentNode.parentNode);						
+							var current = $(dropped);
+				            var newLastItem = $(current).prev();
+				            var droppedList = $('ul', dropped).eq(0);
+							$(subbranch).append(dropped);
+							var oldBranches = $('li', oldParent);
+							var temp = $('span.textHolder', newLastItem).eq(0).text();
+							if (droppedList.hasClass('lastItem')) { 
+								if (oldBranches.size() > 0) {
+									$('ul', newLastItem).eq(0).addClass('lastItem');
+									var newLastExpander = $('img.expandImage', newLastItem).eq(0);
+									if (newLastExpander.attr('src') == 'static/img/treeminus.png') {
+										$(newLastExpander).attr('src', 'static/img/treeminuslast.png');
+									} 
+									if (newLastExpander.attr('src') == 'static/img/treeplus.png') {
+										$(newLastExpander).attr('src', 'static/img/treepluslast.png');
+									}
+									if (newLastExpander.attr('src') == 'static/img/treeempty.png') {
+										$(newLastExpander).attr('src', 'static/img/treeemptylast.png');
+									}
+								}
+							} else {
+								droppedList.addClass('lastItem');
+								var droppedExpander = $('img.expandImage', dropped).eq(0);
+								if (droppedExpander.attr('src') == 'static/img/treeminus.png') {
+									$(droppedExpander).attr('src', 'static/img/treeminuslast.png');
+								}
+								if (droppedExpander.attr('src') == 'static/img/treeplus.png') {
+									$(droppedExpander).attr('src', 'static/img/treepluslast.png');
+								} 
+								if (droppedExpander.attr('src') == 'static/img/treeempty.png') {
+									$(droppedExpander).attr('src', 'static/img/treeemptylast.png');
+								}
+								
+							}
+							var oldLastItem = $(dropped).prev();							
+							
+							if (oldBranches.size() == 0) {
+								var subList = $('ul', oldParent).eq(0);
+								if (subList.hasClass('lastItem')){
+									$('img.expandImage', oldParent).attr('src', 'static/img/treeemptylast.png');
+								} else {
+									$('img.expandImage', oldParent).attr('src', 'static/img/treeempty.png');
+								}
+								$('img.deleteImage', oldParent).show();
+								$(subList).hide();
+							}
+							
+							$.post("ajaxChangeBacklogItemParent.action",
+					                { "childId": childId, "parentId": parentId }
+					            );
+							
+							
+						
+						}
 					}
 				);
 		},

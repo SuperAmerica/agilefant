@@ -185,6 +185,10 @@
 			class="backlogAction">
 			<result>/WEB-INF/jsp/jsonData.jsp</result>
 		</action>
+		<action name="getProductDoneTopLevelBacklogItemsAsJson" method="getProductDoneTopLevelBacklogItemsAsJson"
+			class="backlogAction">
+			<result>/WEB-INF/jsp/jsonData.jsp</result>
+		</action>
 		<action name="getBacklogItemChildrenAsJSON" method="getBacklogItemChildrenAsJSON"
 			class="backlogItemAction">
 			<result>/WEB-INF/jsp/jsonData.jsp</result>

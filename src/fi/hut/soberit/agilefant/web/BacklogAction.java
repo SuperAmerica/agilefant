@@ -492,6 +492,11 @@ public class BacklogAction extends ActionSupport {
         setJsonData(backlogBusiness.getProductTopLevelBacklogItemsAsJson(backlogId));
         return Action.SUCCESS;
     }
+    
+    public String getProductDoneTopLevelBacklogItemsAsJson() {
+        setJsonData(backlogBusiness.getProductDoneTopLevelBacklogItemsAsJson(backlogId));
+        return Action.SUCCESS;
+    }
 
     public String getJsonData() {
         return jsonData;

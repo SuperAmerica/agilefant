@@ -533,6 +533,10 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
         //TODO implement
     }
     
+    public String getProductDoneTopLevelBacklogItems() {
+        return CRUDAction.AJAX_SUCCESS;
+        //TODO implement
+    }
     
     public Backlog getBacklog() {
         return backlog;

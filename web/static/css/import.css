@@ -1224,14 +1224,14 @@ select.statusSelect option {
 	margin-bottom: 0px;
 }
 
-#myTree .treeItem {
+.tree .treeItem {
 	min-height: 25px;
 	margin-bottom: -2px;
 	padding: 0px 0px 0px 0px;
 	list-style-type: none;
 }
 
-#myTree .treeItem ul {
+.tree .treeItem ul {
 	border-left: 1px dotted #000000;
 	margin-left: 12px;
 	min-height: 35px;
@@ -1241,13 +1241,13 @@ select.statusSelect option {
 	margin-right: 0px;
 }
 
-#myTree .treeItem ul .treeItem {
+.tree .treeItem ul .treeItem {
 	margin-left: -20px;
 	margin-bottom: 0px;
 	margin-top: -2px;
 }
 
-#myTree .treeItem ul.lastItem {
+.tree .treeItem ul.lastItem {
 	border-left: 0px dotted #000000;
 }
 

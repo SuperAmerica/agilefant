@@ -354,4 +354,16 @@ public interface BacklogBusiness {
      * @return a list of top level BLIs.
      */
     public String getProductTopLevelBacklogItemsAsJson(int productId);
+    
+    /**
+     * Returns product's and products sub-backlog's top level done backlog items. Meaning those that don't have a parent BLI.
+     * @return a list of top level BLIs.
+     */
+    public List<BacklogItem> getProductDoneTopLevelBacklogItems(int productId);
+    
+    /**
+     * Returns product's and products sub-backlog's top level done backlog items as JSONs. Meaning those that don't have a parent BLI.
+     * @return a list of top level BLIs.
+     */
+    public String getProductDoneTopLevelBacklogItemsAsJson(int productId);
 }

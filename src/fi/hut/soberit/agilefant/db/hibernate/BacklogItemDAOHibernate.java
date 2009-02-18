@@ -33,6 +33,18 @@ public class BacklogItemDAOHibernate extends GenericDAOHibernate<BacklogItem>
         return items;
     }
     
+    @SuppressWarnings("unchecked")
+    public List<BacklogItem> doneTopLevelBacklogItems(List<Backlog> backlogs) {
+        DetachedCriteria criteria = DetachedCriteria.forClass(this
+                .getPersistentClass());
+        criteria.add(Restrictions.eq("state", State.DONE));
+        criteria.add(Restrictions.isNull("parentBli"));
+        criteria.add(Restrictions.in("backlog", backlogs));
+        List<BacklogItem> items = (List<BacklogItem>)super.getHibernateTemplate()
+        .findByCriteria(criteria);
+        return items;
+    }
+    
 
     @SuppressWarnings("unchecked")
     public List<BacklogItem> backlogItemChildren(int fatherId) {

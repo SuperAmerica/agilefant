@@ -287,7 +287,13 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
                 return Action.ERROR;
             }
         }
-
+        
+        if(oldBacklog != null && !backlogBusiness.isUnderSameProduct(newBacklog, oldBacklog)) {
+            storable.setParentBli(null);
+            if(storable.getChildItems() != null && !storable.getChildItems().isEmpty())
+                backlogBusiness.changeBacklogForHierarchy(storable, newBacklog);
+        }
+        
         /*
          * This should be handled inside business...
          */
@@ -334,6 +340,12 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
         // Store backlog item
         this.backlogItemId = (Integer) backlogItemDAO.create(storable);
         businessThemeBusiness.setBacklogItemThemes(themeIds, this.backlogItemId);
+        
+        if(oldBacklog != null && !backlogBusiness.isUnderSameProduct(newBacklog, oldBacklog)) {
+            storable.setParentBli(null);
+            if(storable.getChildItems() != null && !storable.getChildItems().isEmpty())
+                backlogBusiness.changeBacklogForHierarchy(storable, newBacklog);
+        }
 
         /*
          * This should be handled inside business...

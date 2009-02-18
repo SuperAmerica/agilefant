@@ -16,6 +16,8 @@
 
 <script type="text/javascript" src="static/js/interface.js"></script>
 
+<script type="text/javascript" src="static/js/structureView.js"></script>
+
 <script type="text/javascript">
 
 function setView(value) {

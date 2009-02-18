@@ -76,6 +76,39 @@ public class BacklogBusinessImpl implements BacklogBusiness {
     private ProductDAO productDAO;
 
     private BusinessThemeDAO businessThemeDAO;
+    
+    /**  {@inheritDoc} */
+    public void changeBacklogForHierarchy(BacklogItem bli, Backlog newBacklog) {
+        Backlog old = bli.getBacklog();
+        bli.setBacklog(newBacklog);
+        
+        // Remove iteration goal
+        if (bli.getIterationGoal() != null) {
+            bli.getIterationGoal().getBacklogItems().remove(bli);
+            bli.setIterationGoal(null);
+        }
+
+        // if item is moved under another product, remove themes
+        if (!isUnderSameProduct(old, newBacklog)) {
+            if (bli.getBusinessThemes() != null) {
+                bli.getBusinessThemes().clear();
+            }
+        }
+        backlogItemDAO.store(bli);
+        old.getBacklogItems().remove(bli);
+
+        // Store source backlog
+        backlogDAO.store(old);
+
+        // Add backlog item to new Backlog's backlog item list
+        newBacklog.getBacklogItems().add(bli);
+        backlogDAO.store(newBacklog);
+        historyBusiness.updateBacklogHistory(old.getId());
+        historyBusiness.updateBacklogHistory(newBacklog.getId());
+        for(BacklogItem b : bli.getChildItems()) {
+            changeBacklogForHierarchy(b, newBacklog);
+        }
+    }
 
     /** {@inheritDoc} */
     public Backlog getBacklog(int backlogId) throws ObjectNotFoundException {
@@ -305,6 +338,11 @@ public class BacklogBusinessImpl implements BacklogBusiness {
 
                 // Set backlog item's backlog to target backlog
                 bli.setBacklog(targetBacklog);
+                if(sourceBacklog != null && !this.isUnderSameProduct(targetBacklog, sourceBacklog)) {
+                    bli.setParentBli(null);
+                    if(bli.getChildItems() != null && !bli.getChildItems().isEmpty())
+                        changeBacklogForHierarchy(bli, targetBacklog);
+                }
                 backlogItemDAO.store(bli);
 
                 // Remove BLI from source backlog
@@ -1013,5 +1051,4 @@ public class BacklogBusinessImpl implements BacklogBusiness {
         Collections.sort(list, new BacklogItemNameComparator());
         return new JSONSerializer().serialize(list);
     }
-
 }

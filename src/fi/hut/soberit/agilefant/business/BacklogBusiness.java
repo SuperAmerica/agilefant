@@ -56,6 +56,14 @@ public interface BacklogBusiness {
     public Backlog getBacklog(int backlogId) throws ObjectNotFoundException;
     
     /**
+     * 
+     * @param bli parent of hierarchy
+     * @param newBacklog backlog where items in hierarchy are moved.
+     */
+
+    public void changeBacklogForHierarchy(BacklogItem bli, Backlog newBacklog);
+    
+    /**
      * Delete multiple <code>BacklogItems</code> at once.
      * 
      * @param backlogItemIds

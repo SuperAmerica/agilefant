@@ -4,11 +4,9 @@ import java.text.ParseException;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import com.opensymphony.xwork.Action;
-import com.opensymphony.xwork.ActionSupport;
 
 import fi.hut.soberit.agilefant.business.BacklogBusiness;
 import fi.hut.soberit.agilefant.business.BusinessThemeBusiness;
@@ -21,7 +19,6 @@ import fi.hut.soberit.agilefant.db.IterationGoalDAO;
 import fi.hut.soberit.agilefant.db.ProjectDAO;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
-import fi.hut.soberit.agilefant.model.BusinessTheme;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.IterationGoal;
 import fi.hut.soberit.agilefant.model.Project;
@@ -76,8 +73,6 @@ public class IterationAction extends BacklogContentsAction implements CRUDAction
     
     private BacklogMetrics iterationMetrics;
     
-    private Map<Integer, List<BusinessTheme>> bliThemeCache;
-
     private BusinessThemeBusiness businessThemeBusiness;
     
     public String create() {
@@ -142,7 +137,6 @@ public class IterationAction extends BacklogContentsAction implements CRUDAction
         
         // Load metrics data
         iterationMetrics = backlogBusiness.getBacklogMetrics(iteration);
-        bliThemeCache = businessThemeBusiness.loadThemeCacheByBacklogId(iterationId);
         businessThemeBusiness.loadBacklogThemeMetrics(iteration);
         
         return Action.SUCCESS;
@@ -489,7 +483,4 @@ public class IterationAction extends BacklogContentsAction implements CRUDAction
         this.businessThemeBusiness = businessThemeBusiness;
     }
 
-    public Map<Integer, List<BusinessTheme>> getBliThemeCache() {
-        return bliThemeCache;
-    }
 }

@@ -3,11 +3,9 @@ package fi.hut.soberit.agilefant.web;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import com.opensymphony.xwork.Action;
-import com.opensymphony.xwork.ActionSupport;
 
 import fi.hut.soberit.agilefant.business.BacklogBusiness;
 import fi.hut.soberit.agilefant.business.BusinessThemeBusiness;
@@ -57,14 +55,9 @@ public class ProductAction extends BacklogContentsAction implements CRUDAction {
     
     private BusinessThemeBusiness businessThemeBusiness; 
     
-    private Map<Integer, List<BusinessTheme>> bliThemeCache;
-
     private String jsonData = "";
     
     
-    public Map<Integer, List<BusinessTheme>> getBliThemeCache() {
-        return bliThemeCache;
-    }
 
     public String create() {
         productId = 0;
@@ -129,8 +122,6 @@ public class ProductAction extends BacklogContentsAction implements CRUDAction {
             origEstSums.put(pro, projectOrigEstSum);
         }
         
-        bliThemeCache = businessThemeBusiness.loadThemeCacheByBacklogId(productId);
-        System.out.println("LISTING:::");
         return Action.SUCCESS;
     }
 

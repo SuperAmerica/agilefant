@@ -1,5 +1,6 @@
 package fi.hut.soberit.agilefant.web;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -7,6 +8,7 @@ import java.util.Map;
 import com.opensymphony.xwork.ActionSupport;
 
 import fi.hut.soberit.agilefant.business.BacklogBusiness;
+import fi.hut.soberit.agilefant.business.BusinessThemeBusiness;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
@@ -33,6 +35,8 @@ public class BacklogContentsAction extends ActionSupport {
 
     private Backlog backlog;
 
+    private List<BacklogItem> backlogItems = new ArrayList<BacklogItem>();
+    
     private Map<BacklogItem, List<User>> backlogResponsibles = new HashMap<BacklogItem, List<User>>();
 
     private Map<BacklogItem, List<BusinessTheme>> backlogThemes = new HashMap<BacklogItem, List<BusinessTheme>>();
@@ -42,6 +46,8 @@ public class BacklogContentsAction extends ActionSupport {
     private Map<BacklogItem, List<BacklogItemHourEntry>> backlogSpentEffort = new HashMap<BacklogItem, List<BacklogItemHourEntry>>();
 
     private BacklogBusiness backlogBusiness;
+    
+    private BusinessThemeBusiness businessThemeBusiness;
 
     protected void initializeContents(int backlogId) {
         Backlog bl;
@@ -57,7 +63,7 @@ public class BacklogContentsAction extends ActionSupport {
         if (backlog == null) {
             return;
         }
-        // TODO: implement
+        // TODO: fetch blis, todos, spent effort (if timesheets enabled), themes and responsibles
 
     }
 
@@ -120,6 +126,18 @@ public class BacklogContentsAction extends ActionSupport {
     public void setBacklogSpentEffort(
             Map<BacklogItem, List<BacklogItemHourEntry>> backlogSpentEffort) {
         this.backlogSpentEffort = backlogSpentEffort;
+    }
+
+    public List<BacklogItem> getBacklogItems() {
+        return backlogItems;
+    }
+
+    public void setBacklogItems(List<BacklogItem> backlogItems) {
+        this.backlogItems = backlogItems;
+    }
+
+    public void setBusinessThemeBusiness(BusinessThemeBusiness businessThemeBusiness) {
+        this.businessThemeBusiness = businessThemeBusiness;
     }
 
 }

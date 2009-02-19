@@ -13,7 +13,6 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 
 import com.opensymphony.xwork.Action;
-import com.opensymphony.xwork.ActionSupport;
 
 import fi.hut.soberit.agilefant.business.BacklogBusiness;
 import fi.hut.soberit.agilefant.business.BusinessThemeBusiness;
@@ -29,7 +28,6 @@ import fi.hut.soberit.agilefant.model.Assignment;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.BacklogThemeBinding;
-import fi.hut.soberit.agilefant.model.BusinessTheme;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
@@ -110,16 +108,10 @@ public class ProjectAction extends BacklogContentsAction implements CRUDAction {
     
     private BacklogMetrics projectMetrics = new BacklogMetrics();
     
-    private Map<Integer, List<BusinessTheme>> bliThemeCache;
-
     private BusinessThemeBusiness businessThemeBusiness;
     
     private List<BacklogThemeBinding> iterationThemes;
     
-
-    public Map<Integer, List<BusinessTheme>> getBliThemeCache() {
-        return bliThemeCache;
-    }
 
     /**
      * @return the dateFormat
@@ -217,7 +209,6 @@ public class ProjectAction extends BacklogContentsAction implements CRUDAction {
             iter.setMetrics(backlogBusiness.getBacklogMetrics(iter));
         }
         
-        bliThemeCache = businessThemeBusiness.loadThemeCacheByBacklogId(projectId);
         iterationThemes = businessThemeBusiness.getIterationThemesByProject(project);
         
         return Action.SUCCESS;

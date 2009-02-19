@@ -1218,20 +1218,28 @@ select.statusSelect option {
 	display: inline;
 }
 
-#mytree {
+#containerTree {
 	margin-top: 0px;
 	padding: 0px 0px 0px 0px;
 	margin-bottom: 0px;
 }
 
-.tree .treeItem {
+#containerTree .treeItem, #containerTree .doneTreeItem {
+	min-height: 25px;
+	margin-bottom: -2px;
+	padding: 0px 0px 0px 0px;
+	list-style-type: none;
+	margin-left: -28px;
+}
+
+#containerTree #containerItem {
 	min-height: 25px;
 	margin-bottom: -2px;
 	padding: 0px 0px 0px 0px;
 	list-style-type: none;
 }
 
-.tree .treeItem ul {
+#containerTree .treeItem ul, #containerTree .doneTreeItem ul {
 	border-left: 1px dotted #000000;
 	margin-left: 12px;
 	min-height: 35px;
@@ -1241,13 +1249,32 @@ select.statusSelect option {
 	margin-right: 0px;
 }
 
-.tree .treeItem ul .treeItem {
-	margin-left: -20px;
+#containerTree li #myTree {
+	border-left: 1px dotted #000000;
+	margin-left: 12px;
+	min-height: 35px;
+	margin-bottom: 3px;
+	margin-top: -2px;
+	margin-right: 0px;
+}
+
+#containerTree li #doneTree {
+	border-left: 0px dotted #000000;
+	margin-left: 12px;
+	min-height: 35px;
+	margin-bottom: 3px;
+	margin-top: -2px;
+	margin-right: 0px;
+	display: none;
+}
+
+#containerTree .treeItem ul .treeItem, #containerTree .doneTreeItem ul .doneTreeItem {
+	margin-left: -28px;
 	margin-bottom: 0px;
 	margin-top: -2px;
 }
 
-.tree .treeItem ul.lastItem {
+#containerTree .treeItem ul.lastItem, #containerTree .doneTreeItem ul.lastItem {
 	border-left: 0px dotted #000000;
 }
 
@@ -1259,10 +1286,22 @@ select.statusSelect option {
 	cursor: move;
 }
 
+#undone, #done {
+	margin-left: 0px;
+	margin-right: 3px;
+	padding: 0px 0px 0px 0px;
+	vertical-align: 45%;
+}
+
 .addImage, .deleteImage {
 	vertical-align: 25%;
 	padding: 0px 0px 0px 0px;
 	cursor: pointer;
+}
+
+.containerImage {
+	vertical-align: 25%;
+	padding: 0px 0px 0px 0px;
 }
 
 .deleteImage {

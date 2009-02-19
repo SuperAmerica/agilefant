@@ -16,7 +16,6 @@
 
 <script type="text/javascript" src="static/js/interface.js"></script>
 
-<script type="text/javascript" src="static/js/structureView.js"></script>
 
 <script type="text/javascript">
 
@@ -428,10 +427,18 @@ var productId = ${product.id};
 				<%@ include file="./inc/_backlogList.jsp"%>
 			</div>
 			<div class="subItemContent" id="structureDiv" style="display:none">
-				<span id="undone">Undone items</span>
-				<ul id="myTree" class="tree"> </ul>
-				<span id="done">Done items</span>
-				<ul id="doneTree" class="tree"> </ul>
+				<ul id="containerTree">
+					<li id="containerItem">
+						<img src="static/img/backlog.png" class="containerImage" />
+						<span id="undone">Undone backlog items</span>
+						<ul id="myTree"></ul>
+					</li>
+					<li id="doneContainerItem">
+						<img src="static/img/backlog.png" class="containerImage" />
+						<span id="done">Done backlog items</span>
+						<ul id="doneTree"></ul>
+					</li>
+				</ul>
 			</div>
 			</c:if>
 			</div>

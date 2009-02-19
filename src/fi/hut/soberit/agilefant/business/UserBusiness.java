@@ -83,6 +83,16 @@ public interface UserBusiness {
     public List<Backlog> getUsersBacklogs(User user);
     
     /**
+     * Get ongoing projects where given user has been added responsible.
+     *
+     * @param user Responsible user.
+     */
+    public List<Backlog> getOngoingBacklogsByUser(User user);
+
+    public List<Backlog> getOngoingBacklogsByUser(int userId);
+
+    
+    /**
      * Get all enabled users.
      * @return list of enabled users
      */

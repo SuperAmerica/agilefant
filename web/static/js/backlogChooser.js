@@ -1,6 +1,7 @@
 (function($) {
 	var backlogChooser = function(container, options) {
 		var settings = {
+				useDateLimit: false,
 				selectedProducts: [],
 				selectedIterations: [],
 				selectedProjects: []
@@ -11,7 +12,9 @@
 		this.selectedProducts = settings.selectedProducts;
 		this.selectedProjects = settings.selectedProjects;
 		this.selectedIterations = settings.selectedIterations;
-				
+		
+		this.useDateLimit = settings.useDateLimit;
+		
 		//parent DOM element
 		this.container = container;
 		
@@ -20,6 +23,7 @@
 		this.projectContainer = null;
 		this.iterationContainer = null;
 		this.initialize();
+		this.currentDate = (new Date()).getTime();
 	}
 	backlogChooser.prototype = {
 			initialize: function() {
@@ -42,10 +46,32 @@
 						if(me.selectedProducts.length != 0) {
 							me.clickProduct();
 							me.clickProject();
-							//TODO: handle iteration selection
 						}
 					}
 				},"json");
+			},
+			reRender: function() {
+				this.clickProduct();
+				this.clickProject();
+			},
+			filter: function(backlog) {
+				if(this.useDateLimit) {
+					if(this.currentDate < backlog.startDate) {
+						return false;
+					}
+					if(this.currentDate > backlog.endDate) {
+						return false;
+					}
+				}
+				return true;
+			},
+			setDateLimit: function() {
+				this.useDateLimit = true;
+				this.reRender();
+			}, 
+			unsetDateLimit: function() {
+				this.useDateLimit = false;
+				this.reRender();
 			},
 			getSelected: function(container) {
 				var ret = [];
@@ -96,10 +122,12 @@
 				$.each(selectedItems, function() { 
 					var data = jsonDataCache.get("subBacklogs", {data: {backlogId: this}}, this);
 					$.each(data, function() {
-						var opt = $('<option/>').appendTo(container).text(this.name).attr("value",this.id);
-						if($.inArray(this.id,selectedInContainer) != -1) {
-							opt.attr("selected","selected");
-							numSelected++;
+						if(me.filter(this)) {
+							var opt = $('<option/>').appendTo(container).text(this.name).attr("value",this.id);
+							if($.inArray(this.id,selectedInContainer) != -1) {
+								opt.attr("selected","selected");
+								numSelected++;
+							}
 						}
 					});
 					cnt++;
@@ -116,7 +144,20 @@
 	}
 	jQuery.fn.extend({
 		backlogChooser: function(options) {
-			new backlogChooser(this, options);
+			var target = $(this);
+			if(!target.data("backlogChooser")) {
+				var chooser = new backlogChooser(this, options);
+				target.data("backlogChooser", chooser);
+			} else {
+				var chooser = target.data("backlogChooser"); 
+				if(options == "render") {
+					chooser.reRender();
+				} else if(options == "setDateLimit") {
+					chooser.setDateLimit();
+				} else if(options == "unsetDateLimit") {
+					chooser.unsetDateLimit();
+				}
+			}
 		}
 	});
 })(jQuery);

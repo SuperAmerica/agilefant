@@ -31,13 +31,63 @@
 	
 								<tr>
 									<td>
-										Backlogs
+										Backlogs 
 									</td>
 									<td>
-									<div id="selectBacklogs"></div>
+										<c:choose>
+											<c:when test="${backlogSelectionType == 1}">
+												<input type="radio" name="backlogSelectionType" value="0" />Advanced
+												<input type="radio" name="backlogSelectionType" value="1" checked="checked"/>Ongoing projects assigned to me.										
+											</c:when>
+											<c:otherwise>
+												<input type="radio" name="backlogSelectionType" value="0" checked="checked"/>Advanced
+												<input type="radio" name="backlogSelectionType" value="1" />Ongoing projects assigned to me.
+											</c:otherwise>
+										</c:choose>
+									</td>
+								</tr>
+								<tr>
+									<td></td>
+									<td>
+										<c:choose>
+											<c:when test="${backlogSelectionType == 1}">
+												<div id="advancedBacklogs" style="display: none;">
+											</c:when>
+											<c:otherwise>
+												<div id="advancedBacklogs">
+											</c:otherwise>
+										</c:choose>
+										<c:choose>
+											<c:when test="${onlyOngoing == true}">
+												<input id="showOnlyOngoingBacklogs" name="onlyOngoing" type="checkbox" checked="checked"/>Show only currently ongoing projects and iterations.<br />								
+											</c:when>
+											<c:otherwise>
+												<input id="showOnlyOngoingBacklogs" name="onlyOngoing" type="checkbox" />Show only currently ongoing projects and iterations.<br />						
+											</c:otherwise>
+										</c:choose>
+										<div id="selectBacklogs"></div>
+									</div>
 									<script type="text/javascript">
 										$(document).ready(function() {
-											$("#selectBacklogs").backlogChooser({
+											var typeRadio = $("input[name=backlogSelectionType]");
+											var chooserDiv = $("#selectBacklogs");
+											var blDiv = $("#advancedBacklogs");
+											typeRadio.click(function() {
+												if($(typeRadio.get(0)).is(":checked")) {
+													blDiv.show();
+												} else {
+													blDiv.hide();
+												}
+											});
+											$("#showOnlyOngoingBacklogs").change(function() {
+												if($(this).is(":checked")) {
+													chooserDiv.backlogChooser("setDateLimit");
+												} else {
+													chooserDiv.backlogChooser("unsetDateLimit");
+												}
+											});
+											chooserDiv.backlogChooser({
+												useDateLimit: $("#showOnlyOngoingBacklogs").is(":checked"),
 												selectedProducts: ${JSONProducts},
 												selectedProjects: ${JSONProjects},
 												selectedIterations: ${JSONIterations}

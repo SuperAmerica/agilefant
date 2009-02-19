@@ -3,6 +3,8 @@ package fi.hut.soberit.agilefant.business.impl;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -15,6 +17,7 @@ import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.db.IterationDAO;
 import fi.hut.soberit.agilefant.db.ProjectDAO;
 import fi.hut.soberit.agilefant.db.UserDAO;
+import fi.hut.soberit.agilefant.model.Assignment;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.Iteration;
@@ -227,6 +230,31 @@ public class UserBusinessImpl implements UserBusiness {
             }
         }
         return assignedProjects;
+    }
+    
+    public List<Backlog> getOngoingBacklogsByUser(int userId) {
+        User user = userDAO.get(userId);
+        if(user == null) {
+            return null;
+        }
+        return getOngoingBacklogsByUser(user);
+    }
+
+    
+    public List<Backlog> getOngoingBacklogsByUser(User user) {
+        Collection<Assignment> allAssignments = user.getAssignments();        
+        Date currentDate = GregorianCalendar.getInstance().getTime();
+        List<Backlog> ongoingBacklogs = new ArrayList<Backlog>();
+        for (Assignment ass : allAssignments) {
+            Backlog bl = ass.getBacklog();
+            if (bl instanceof Project && bl.getStartDate() != null
+                    && bl.getStartDate().before(currentDate)
+                    && bl.getEndDate() != null
+                    && bl.getEndDate().after(currentDate)) {
+                ongoingBacklogs.add(bl);
+            }
+        }
+        return ongoingBacklogs;
     }
     
     /** {@inheritDoc} */

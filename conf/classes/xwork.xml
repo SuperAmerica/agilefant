@@ -882,7 +882,7 @@
 		</action>
 		
 		<action name="generateTree" method="generateTree" class="timesheetAction">
-			<interceptor-ref name="completeStack"/>
+			<interceptor-ref name="authenticationStack"/>
 		    <interceptor-ref name="execAndWait">
 			    <param name="delay">1000</param>
 		        <param name="delaySleepInterval">50</param>

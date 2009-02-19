@@ -2,20 +2,31 @@ package fi.hut.soberit.agilefant.web;
 
 
 
+import java.security.Principal;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.springframework.security.context.SecurityContextHolder;
+import org.springframework.security.providers.UsernamePasswordAuthenticationToken;
+
+import com.opensymphony.webwork.interceptor.PrincipalAware;
+import com.opensymphony.webwork.interceptor.PrincipalProxy;
 import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
 
 import fi.hut.soberit.agilefant.business.TimesheetBusiness;
+import fi.hut.soberit.agilefant.business.UserBusiness;
 import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.model.AFTime;
+import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.security.AgilefantUserDetails;
+import fi.hut.soberit.agilefant.security.SecurityUtil;
 import fi.hut.soberit.agilefant.util.BacklogTimesheetNode;
 import flexjson.JSONSerializer;
 
@@ -25,11 +36,13 @@ import flexjson.JSONSerializer;
  * @author Pasi Pekkanen
  *
  */
-public class TimesheetAction extends ActionSupport {
+public class TimesheetAction extends ActionSupport implements PrincipalAware {
 
     private static final long serialVersionUID = -8988740967426943267L;
     
     private TimesheetBusiness timesheetBusiness;
+    
+    private UserBusiness userBusiness;
 
     private Set<Integer> productIds = new HashSet<Integer>();
     
@@ -55,8 +68,14 @@ public class TimesheetAction extends ActionSupport {
     
     private Map<Integer, String> userIds = new HashMap<Integer, String>();
     
+    private int backlogSelectionType = 0;
+    
+    private boolean onlyOngoing = false;
+    
     private AFTime totalSpentTime;
 
+    private int currentUserId = 0;
+    
     public Map<Integer, String> getUserIds() {
         return userIds;
     }
@@ -71,6 +90,19 @@ public class TimesheetAction extends ActionSupport {
 
     public void setBacklogIds(int[] backlogIds) {
         this.backlogIds = backlogIds;
+    }
+    
+    /**
+     * Needed for xwork's execAndWait as action is executed in a different
+     * thread than the wait page. Thus no static threadLocal based principals
+     * (such as those in SecurityUtil) can be used.
+     */
+    public void setPrincipalProxy(PrincipalProxy principalProxy) {
+        Principal principal = principalProxy.getUserPrincipal();
+        AgilefantUserDetails ud = (AgilefantUserDetails) ((UsernamePasswordAuthenticationToken) principal)
+                .getPrincipal();
+        currentUserId = ud.getUserId();
+        
     }
     
     private Set<Integer> selectedBacklogs() {
@@ -94,8 +126,17 @@ public class TimesheetAction extends ActionSupport {
         return Action.SUCCESS;
     }
     public String generateTree(){
-        Set<Integer> ids = this.selectedBacklogs();
-        if(ids == null) {
+        Set<Integer> ids = null;
+        if(backlogSelectionType == 0) {
+            ids = this.selectedBacklogs();
+        } else {
+            Collection<Backlog> tmp = userBusiness.getOngoingBacklogsByUser(currentUserId);
+            ids = new HashSet<Integer>();
+            for(Backlog bl : tmp) {
+                ids.add(bl.getId());
+            }
+        }
+        if(ids == null || ids.size() == 0) {
             addActionError("No backlogs selected.");
             return Action.ERROR;
         }
@@ -217,6 +258,26 @@ public class TimesheetAction extends ActionSupport {
     }
     public String getJSONIterations() {
         return new JSONSerializer().serialize(this.iterationIds);
+    }
+
+    public void setUserBusiness(UserBusiness userBusiness) {
+        this.userBusiness = userBusiness;
+    }
+
+    public int getBacklogSelectionType() {
+        return backlogSelectionType;
+    }
+
+    public void setBacklogSelectionType(int backlogSelectionType) {
+        this.backlogSelectionType = backlogSelectionType;
+    }
+
+    public boolean isOnlyOngoing() {
+        return onlyOngoing;
+    }
+
+    public void setOnlyOngoing(boolean onlyOngoing) {
+        this.onlyOngoing = onlyOngoing;
     }
     
     

@@ -30,7 +30,7 @@ public interface TimesheetBusiness {
      * @return The root nodes (Products) of the forest.
      * @throws IllegalArgumentException If date parsing fails 
      */
-    public List<BacklogTimesheetNode> generateTree(Set<Integer> backlogIds,
+    public List<BacklogTimesheetNode> generateTree(List<Integer> backlogIds,
                                                    String startDateString, String endDateString,
                                                    Set<Integer> userIds)
         throws IllegalArgumentException;

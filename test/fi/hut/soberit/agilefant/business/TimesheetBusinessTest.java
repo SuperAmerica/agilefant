@@ -83,7 +83,7 @@ public class TimesheetBusinessTest extends TestCase {
      * TreeGeneration test for testCompareTrees1.
      */
     private void treeGeneration1(int id1, int id2) {
-        Set<Integer> backlogIds = new HashSet<Integer>();
+        List<Integer> backlogIds = new ArrayList<Integer>();
         backlogIds.add(id1);
         backlogIds.add(id2);
         HashSet<Integer> set = new HashSet<Integer>();
@@ -131,7 +131,7 @@ public class TimesheetBusinessTest extends TestCase {
      * TreeGeneration test for testCompareTrees2.
      */
     private void treeGeneration2(int id1, int id2) {
-        Set<Integer> backlogIds = new HashSet<Integer>();
+        List<Integer> backlogIds = new ArrayList<Integer>();
         backlogIds.add(id1);
         backlogIds.add(id2);
         HashSet<Integer> set = new HashSet<Integer>();
@@ -157,7 +157,7 @@ public class TimesheetBusinessTest extends TestCase {
         replay(hourEntryBusiness);
         
         List<BacklogTimesheetNode> roots;
-        Set<Integer> backlogIds = new HashSet<Integer>();
+        List<Integer> backlogIds = new ArrayList<Integer>();
         backlogIds.add(product1.getId());
         backlogIds.add(product2.getId());
         Set<Integer> userIds = new HashSet<Integer>();
@@ -186,7 +186,7 @@ public class TimesheetBusinessTest extends TestCase {
     public void testSums_user1Filter() {
 
         List<BacklogTimesheetNode> roots;
-        Set<Integer> backlogIds = new HashSet<Integer>();
+        List<Integer> backlogIds = new ArrayList<Integer>();
         backlogIds.add(product1.getId());
         backlogIds.add(product2.getId());
         Set<Integer> userIds = new HashSet<Integer>();
@@ -212,7 +212,7 @@ public class TimesheetBusinessTest extends TestCase {
     public void testSums_user2Filter() {
         
         List<BacklogTimesheetNode> roots;
-        Set<Integer> backlogIds = new HashSet<Integer>();
+        List<Integer> backlogIds = new ArrayList<Integer>();
         backlogIds.add(product1.getId());
         backlogIds.add(product2.getId());
         Set<Integer> userIds = new HashSet<Integer>();
@@ -241,7 +241,7 @@ public class TimesheetBusinessTest extends TestCase {
 
         
         List<BacklogTimesheetNode> roots;
-        Set<Integer> backlogIds = new HashSet<Integer>();
+        List<Integer> backlogIds = new ArrayList<Integer>();
         backlogIds.add(product1.getId());
         backlogIds.add(product2.getId());
         Set<Integer> userIds = new HashSet<Integer>();
@@ -271,7 +271,7 @@ public class TimesheetBusinessTest extends TestCase {
         replay(hourEntryBusiness);
         
         List<BacklogTimesheetNode> roots;
-        Set<Integer> backlogIds = new HashSet<Integer>();
+        List<Integer> backlogIds = new ArrayList<Integer>();
         backlogIds.add(product1.getId());
         backlogIds.add(product2.getId());
         Set<Integer> userIds = new HashSet<Integer>();
@@ -299,7 +299,7 @@ public class TimesheetBusinessTest extends TestCase {
         replay(hourEntryBusiness);
         
         List<BacklogTimesheetNode> roots;
-        Set<Integer> backlogIds = new HashSet<Integer>();
+        List<Integer> backlogIds = new ArrayList<Integer>();
         backlogIds.add(product1.getId());
         backlogIds.add(product2.getId());
         Set<Integer> userIds = new HashSet<Integer>();
@@ -326,7 +326,7 @@ public class TimesheetBusinessTest extends TestCase {
         replay(hourEntryBusiness);
         
         List<BacklogTimesheetNode> roots;
-        Set<Integer> backlogIds = new HashSet<Integer>();
+        List<Integer> backlogIds = new ArrayList<Integer>();
         backlogIds.add(product1.getId());
         backlogIds.add(product2.getId());
         Set<Integer> userIds = new HashSet<Integer>();
@@ -355,7 +355,7 @@ public class TimesheetBusinessTest extends TestCase {
         replay(hourEntryBusiness);
         
         List<BacklogTimesheetNode> roots;
-        Set<Integer> backlogIds = new HashSet<Integer>();
+        List<Integer> backlogIds = new ArrayList<Integer>();
         backlogIds.add(product1.getId());
         backlogIds.add(product2.getId());
         Set<Integer> userIds = new HashSet<Integer>();
@@ -402,7 +402,7 @@ public class TimesheetBusinessTest extends TestCase {
         replay(hourEntryBusiness);
         
         List<BacklogTimesheetNode> roots;
-        Set<Integer> backlogIds = new HashSet<Integer>();
+        List<Integer> backlogIds = new ArrayList<Integer>();
         backlogIds.add(project1.getId());
         Set<Integer> userIds = new HashSet<Integer>();
 
@@ -422,7 +422,7 @@ public class TimesheetBusinessTest extends TestCase {
         replay(hourEntryBusiness);
         
         List<BacklogTimesheetNode> roots;
-        Set<Integer> backlogIds = new HashSet<Integer>();
+        List<Integer> backlogIds = new ArrayList<Integer>();
         backlogIds.add(project1.getId());
         Set<Integer> userIds = new HashSet<Integer>();
         
@@ -441,7 +441,7 @@ public class TimesheetBusinessTest extends TestCase {
         replay(hourEntryBusiness);
         
         List<BacklogTimesheetNode> roots;
-        Set<Integer> backlogIds = new HashSet<Integer>();
+        List<Integer> backlogIds = new ArrayList<Integer>();
         backlogIds.add(project1.getId());
         Set<Integer> userIds = new HashSet<Integer>();
         initializeWithFilters(project1, null, null, userIds);
@@ -459,7 +459,7 @@ public class TimesheetBusinessTest extends TestCase {
         replay(hourEntryBusiness);
         
         List<BacklogTimesheetNode> roots;
-        Set<Integer> backlogIds = new HashSet<Integer>();
+        List<Integer> backlogIds = new ArrayList<Integer>();
         backlogIds.add(project2.getId());
         Set<Integer> userIds = new HashSet<Integer>();
         

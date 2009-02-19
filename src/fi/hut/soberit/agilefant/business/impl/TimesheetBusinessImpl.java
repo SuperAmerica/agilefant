@@ -39,7 +39,7 @@ public class TimesheetBusinessImpl implements TimesheetBusiness {
     /**
      * {@inheritDoc}
      */
-    public List<BacklogTimesheetNode> generateTree(Set<Integer> backlogIds,
+    public List<BacklogTimesheetNode> generateTree(List<Integer> backlogIds,
                                                    String startDateString, String endDateString,
                                                    Set<Integer> userIds)
             throws IllegalArgumentException{

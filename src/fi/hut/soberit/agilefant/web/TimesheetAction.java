@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.springframework.security.context.SecurityContextHolder;
 import org.springframework.security.providers.UsernamePasswordAuthenticationToken;
 
 import com.opensymphony.webwork.interceptor.PrincipalAware;
@@ -26,7 +25,6 @@ import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.security.AgilefantUserDetails;
-import fi.hut.soberit.agilefant.security.SecurityUtil;
 import fi.hut.soberit.agilefant.util.BacklogTimesheetNode;
 import flexjson.JSONSerializer;
 
@@ -105,8 +103,8 @@ public class TimesheetAction extends ActionSupport implements PrincipalAware {
         
     }
     
-    private Set<Integer> selectedBacklogs() {
-        HashSet<Integer> ret = new HashSet<Integer>();
+    private List<Integer> selectedBacklogs() {
+        List<Integer> ret = new ArrayList<Integer>();
         if(this.projectIds.contains(-1)) {
             ret.addAll(this.productIds);
         } else if(this.iterationIds.contains(-1)) {
@@ -126,12 +124,12 @@ public class TimesheetAction extends ActionSupport implements PrincipalAware {
         return Action.SUCCESS;
     }
     public String generateTree(){
-        Set<Integer> ids = null;
+        List<Integer> ids = null;
         if(backlogSelectionType == 0) {
             ids = this.selectedBacklogs();
         } else {
             Collection<Backlog> tmp = userBusiness.getOngoingBacklogsByUser(currentUserId);
-            ids = new HashSet<Integer>();
+            ids = new ArrayList<Integer>();
             for(Backlog bl : tmp) {
                 ids.add(bl.getId());
             }

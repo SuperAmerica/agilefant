@@ -23,7 +23,7 @@ import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.util.BusinessThemeMetrics;
 import fi.hut.soberit.agilefant.util.EffortSumData;
 
-public class ProductAction extends ActionSupport implements CRUDAction {
+public class ProductAction extends BacklogContentsAction implements CRUDAction {
 
     private static final long serialVersionUID = 1834399750050895118L;
 

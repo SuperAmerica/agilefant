@@ -39,7 +39,7 @@ import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.util.BacklogMetrics;
 import fi.hut.soberit.agilefant.util.EffortSumData;
 
-public class ProjectAction extends ActionSupport implements CRUDAction {
+public class ProjectAction extends BacklogContentsAction implements CRUDAction {
 
     Logger log = Logger.getLogger(this.getClass());
     

@@ -28,7 +28,7 @@ import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.util.BacklogMetrics;
 import fi.hut.soberit.agilefant.util.EffortSumData;
 
-public class IterationAction extends ActionSupport implements CRUDAction {
+public class IterationAction extends BacklogContentsAction implements CRUDAction {
 
     private static final long serialVersionUID = -448825368336871703L;
 

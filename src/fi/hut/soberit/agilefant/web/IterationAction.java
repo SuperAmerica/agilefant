@@ -8,10 +8,7 @@ import java.util.Map;
 
 import com.opensymphony.xwork.Action;
 
-import fi.hut.soberit.agilefant.business.BacklogBusiness;
-import fi.hut.soberit.agilefant.business.BusinessThemeBusiness;
 import fi.hut.soberit.agilefant.business.HistoryBusiness;
-import fi.hut.soberit.agilefant.business.HourEntryBusiness;
 import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.db.IterationDAO;
@@ -33,7 +30,7 @@ public class IterationAction extends BacklogContentsAction implements CRUDAction
 
     private Iteration iteration;
 
-    private Backlog backlog;
+    //private Backlog backlog;
 
     private IterationDAO iterationDAO;
 
@@ -58,11 +55,7 @@ public class IterationAction extends BacklogContentsAction implements CRUDAction
     private String dateFormat;
 
     private HistoryBusiness historyBusiness;
-    
-    private BacklogBusiness backlogBusiness;
-    
-    private HourEntryBusiness hourEntryBusiness;
-    
+            
     private Map<Integer, EffortSumData> iterationGoalEffLeftSums = new HashMap<Integer, EffortSumData>();
     
     private Map<Integer, EffortSumData> iterationGoalOrigEstSums = new HashMap<Integer, EffortSumData>();
@@ -73,7 +66,6 @@ public class IterationAction extends BacklogContentsAction implements CRUDAction
     
     private BacklogMetrics iterationMetrics;
     
-    private BusinessThemeBusiness businessThemeBusiness;
     
     public String create() {
         iterationId = 0;
@@ -113,6 +105,8 @@ public class IterationAction extends BacklogContentsAction implements CRUDAction
             return Action.INPUT;
         }
         projectId = project.getId();
+        
+        super.initializeContents();
         
         /* Get the effort left sums of iteration goals */
         for (IterationGoal ig : iteration.getIterationGoals()) {
@@ -458,18 +452,6 @@ public class IterationAction extends BacklogContentsAction implements CRUDAction
     public EffortSumData getOriginalEstimateSum() {
         return origEstSum;
     }   
-    
-    public void setBacklogBusiness(BacklogBusiness backlogBusiness) {
-        this.backlogBusiness = backlogBusiness;
-    }
-
-    public HourEntryBusiness getHourEntryBusiness() {
-        return hourEntryBusiness;
-    }
-
-    public void setHourEntryBusiness(HourEntryBusiness hourEntryBusiness) {
-        this.hourEntryBusiness = hourEntryBusiness;
-    }
 
     public BacklogMetrics getIterationMetrics() {
         return iterationMetrics;
@@ -477,10 +459,6 @@ public class IterationAction extends BacklogContentsAction implements CRUDAction
 
     public void setIterationMetrics(BacklogMetrics iterationMetrics) {
         this.iterationMetrics = iterationMetrics;
-    }
-
-    public void setBusinessThemeBusiness(BusinessThemeBusiness businessThemeBusiness) {
-        this.businessThemeBusiness = businessThemeBusiness;
     }
 
 }

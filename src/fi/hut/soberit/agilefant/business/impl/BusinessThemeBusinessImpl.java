@@ -115,6 +115,7 @@ public class BusinessThemeBusinessImpl implements BusinessThemeBusiness {
         return activeThemes;
     }
     
+    @Deprecated
     public Map<Integer, List<BusinessTheme>> loadThemeCacheByBacklogId(int backlogId) {
         Backlog bl = backlogDAO.get(backlogId);
         if(bl == null) {
@@ -140,6 +141,7 @@ public class BusinessThemeBusinessImpl implements BusinessThemeBusiness {
         }
         return res;
     }
+    
     public Map<BusinessTheme, BusinessThemeMetrics> getThemeMetrics(int productId) {
         Product product = productDAO.get(productId);
         

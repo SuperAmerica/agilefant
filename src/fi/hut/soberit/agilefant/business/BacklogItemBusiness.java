@@ -5,9 +5,12 @@ import java.util.Map;
 
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.AFTime;
+import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.State;
 import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.util.BacklogItemResponsibleContainer;
+import fi.hut.soberit.agilefant.util.TodoMetrics;
 
 /**
  * Interface for business functionality related to backlog items.
@@ -104,5 +107,11 @@ public interface BacklogItemBusiness {
      * @param bli
      */
     public List<User> getPossibleResponsibles(BacklogItem bli);
+    
+    public Map<BacklogItem, TodoMetrics> getTasksByBacklog(Backlog backlog);
+    
+    public Map<BacklogItem, List<BacklogItemResponsibleContainer>> getResponsiblesByBacklog(Backlog backlog);
+    
+    public List<BacklogItem> getBacklogItemsByBacklog(Backlog backlog);
 
 }

@@ -1,6 +1,7 @@
 package fi.hut.soberit.agilefant.business.impl;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -18,9 +19,15 @@ import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
+import fi.hut.soberit.agilefant.model.Iteration;
+import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.State;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.util.BacklogItemComparator;
+import fi.hut.soberit.agilefant.util.BacklogItemResponsibleContainer;
+import fi.hut.soberit.agilefant.util.BacklogItemUserComparator;
+import fi.hut.soberit.agilefant.util.TodoMetrics;
 import fi.hut.soberit.agilefant.util.UserComparator;
 
 /**
@@ -178,6 +185,54 @@ public class BacklogItemBusinessImpl implements BacklogItemBusiness {
         return userList;
     }       
 
+    public List<BacklogItem> getBacklogItemsByBacklog(Backlog backlog) {
+        if(backlog != null) {
+            List<BacklogItem> items = backlogItemDAO.getBacklogItemsByBacklog(backlog);
+            Collections.sort(items, new BacklogItemComparator());
+            return items;
+        }
+        return null;
+    }
+
+    public Map<BacklogItem, List<BacklogItemResponsibleContainer>> getResponsiblesByBacklog(Backlog backlog) {
+        if(backlog != null) {
+           Collection<User> assignees = null;
+           Map<BacklogItem, List<BacklogItemResponsibleContainer>> result = new HashMap<BacklogItem, List<BacklogItemResponsibleContainer>>();
+           
+           if(backlog instanceof Iteration) {
+               assignees = ((Iteration)backlog).getResponsibles();
+           } else if(backlog instanceof Project) {
+               assignees = ((Project)backlog).getResponsibles();
+           } 
+           List<Object[]> data = backlogItemDAO.getResponsiblesByBacklog(backlog);
+           for(Object[] row : data) {
+               BacklogItem item = (BacklogItem)row[0];
+               User user = (User)row[1];
+               boolean inProject = false;
+               if(result.get(item) == null) {
+                   result.put(item, new ArrayList<BacklogItemResponsibleContainer>());
+               }
+               if(assignees == null || assignees.contains(user)) {
+                   inProject = true;
+               }
+               result.get(item).add(new BacklogItemResponsibleContainer(user,inProject));
+           }
+           //order users
+           for(BacklogItem item : result.keySet()) {
+              Collections.sort(result.get(item), new BacklogItemUserComparator());
+           }
+           return result;
+        }
+        return null;
+    }
+
+    public Map<BacklogItem, TodoMetrics> getTasksByBacklog(Backlog backlog) {
+        if(backlog != null) {
+            return backlogItemDAO.getTasksByBacklog(backlog);
+        }
+        return null;
+    }
+    
     public void setTaskBusiness(TaskBusiness taskBusiness) {
         this.taskBusiness = taskBusiness;
     }
@@ -189,5 +244,7 @@ public class BacklogItemBusinessImpl implements BacklogItemBusiness {
     public void setUserBusiness(UserBusiness userBusiness) {
         this.userBusiness = userBusiness;
     }
+
+
     
 }

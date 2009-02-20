@@ -15,8 +15,6 @@ import org.apache.log4j.Logger;
 import com.opensymphony.xwork.Action;
 
 import fi.hut.soberit.agilefant.business.BacklogBusiness;
-import fi.hut.soberit.agilefant.business.BusinessThemeBusiness;
-import fi.hut.soberit.agilefant.business.HourEntryBusiness;
 import fi.hut.soberit.agilefant.business.ProjectBusiness;
 import fi.hut.soberit.agilefant.business.UserBusiness;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
@@ -61,8 +59,6 @@ public class ProjectAction extends BacklogContentsAction implements CRUDAction {
 
     private List<ProjectType> projectTypes;
 
-    private Backlog backlog;
-
     private BacklogItemDAO backlogItemDAO;
 
     private String startDate;
@@ -90,8 +86,6 @@ public class ProjectAction extends BacklogContentsAction implements CRUDAction {
 
     private ProjectBusiness projectBusiness;
     
-    private HourEntryBusiness hourEntryBusiness;
-
     private EffortSumData effortLeftSum;
 
     private EffortSumData origEstSum;
@@ -107,9 +101,7 @@ public class ProjectAction extends BacklogContentsAction implements CRUDAction {
     private Map<Integer, AFTime> totalOverheads = new HashMap<Integer, AFTime>();
     
     private BacklogMetrics projectMetrics = new BacklogMetrics();
-    
-    private BusinessThemeBusiness businessThemeBusiness;
-    
+        
     private List<BacklogThemeBinding> iterationThemes;
     
 
@@ -165,6 +157,7 @@ public class ProjectAction extends BacklogContentsAction implements CRUDAction {
 
         productId = project.getProduct().getId();
         backlog = project;
+        super.initializeContents();
         /*
          * BacklogValueInjector.injectMetrics(backlog, startDate, taskEventDAO,
          * backlogItemDAO);
@@ -463,10 +456,6 @@ public class ProjectAction extends BacklogContentsAction implements CRUDAction {
         this.projectTypes = projectTypes;
     }
 
-    public Backlog getBacklog() {
-        return this.backlog;
-    }
-
     /**
      * @return the backlogItemDAO
      */
@@ -582,14 +571,6 @@ public class ProjectAction extends BacklogContentsAction implements CRUDAction {
         this.assignableUsers = assignableUsers;
     }
 
-    public HourEntryBusiness getHourEntryBusiness() {
-        return hourEntryBusiness;
-    }
-
-    public void setHourEntryBusiness(HourEntryBusiness hourEntryBusiness) {
-        this.hourEntryBusiness = hourEntryBusiness;
-    }
-
     public BacklogMetrics getProjectMetrics() {
         return projectMetrics;
     }
@@ -607,10 +588,6 @@ public class ProjectAction extends BacklogContentsAction implements CRUDAction {
 
     public void setStatus(Status status) {
         this.status = status;
-    }
-
-    public void setBusinessThemeBusiness(BusinessThemeBusiness businessThemeBusiness) {
-        this.businessThemeBusiness = businessThemeBusiness;
     }
 
     public Map<Integer, AFTime> getTotalOverheads() {

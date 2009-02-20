@@ -7,13 +7,10 @@ import java.util.Map;
 
 import com.opensymphony.xwork.Action;
 
-import fi.hut.soberit.agilefant.business.BacklogBusiness;
 import fi.hut.soberit.agilefant.business.BusinessThemeBusiness;
-import fi.hut.soberit.agilefant.business.HourEntryBusiness;
 import fi.hut.soberit.agilefant.business.ProjectBusiness;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.db.ProductDAO;
-import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.BusinessTheme;
 import fi.hut.soberit.agilefant.model.Product;
@@ -29,17 +26,11 @@ public class ProductAction extends BacklogContentsAction implements CRUDAction {
 
     private BacklogItemDAO backlogItemDAO;
 
-    private BacklogBusiness backlogBusiness;
-    
     private ProjectBusiness projectBusiness;
-
-    private HourEntryBusiness hourEntryBusiness;
     
     private int productId;
 
     private Product product;
-
-    private Backlog backlog;
 
     private Collection<Product> products = new ArrayList<Product>();
 
@@ -189,10 +180,6 @@ public class ProductAction extends BacklogContentsAction implements CRUDAction {
         this.backlog = product;
     }
 
-    public Backlog getBacklog() {
-        return this.backlog;
-    }
-
     public void setProductDAO(ProductDAO productDAO) {
         this.productDAO = productDAO;
     }
@@ -232,10 +219,6 @@ public class ProductAction extends BacklogContentsAction implements CRUDAction {
         this.backlogItemDAO = backlogItemDAO;
     }
 
-    public void setBacklogBusiness(BacklogBusiness backlogBusiness) {
-        this.backlogBusiness = backlogBusiness;
-    }
-
     public Map<Project, EffortSumData> getEffLeftSums() {
         return effLeftSums;
     }
@@ -252,28 +235,12 @@ public class ProductAction extends BacklogContentsAction implements CRUDAction {
         this.projectBusiness = projectBusiness;
     }
 
-    public HourEntryBusiness getHourEntryBusiness() {
-        return hourEntryBusiness;
-    }
-
-    public void setHourEntryBusiness(HourEntryBusiness hourEntryBusiness) {
-        this.hourEntryBusiness = hourEntryBusiness;
-    }
-
     public EffortSumData getOrigEstSum() {
         return origEstSum;
     }
 
     public void setOrigEstSum(EffortSumData origEstSum) {
         this.origEstSum = origEstSum;
-    }
-
-    public BacklogBusiness getBacklogBusiness() {
-        return backlogBusiness;
-    }
-
-    public void setBacklog(Backlog backlog) {
-        this.backlog = backlog;
     }
 
     public void setEffortLeftSum(EffortSumData effortLeftSum) {
@@ -294,14 +261,6 @@ public class ProductAction extends BacklogContentsAction implements CRUDAction {
 
     public Collection<BusinessTheme> getNonActiveBusinessThemes() {
         return businessThemeBusiness.getNonActiveBusinessThemes(productId);
-    }
-    
-    public BusinessThemeBusiness getBusinessThemeBusiness() {
-        return businessThemeBusiness;
-    }
-
-    public void setBusinessThemeBusiness(BusinessThemeBusiness businessThemeBusiness) {
-        this.businessThemeBusiness = businessThemeBusiness;
     }
 
     public Map<BusinessTheme, BusinessThemeMetrics> getBusinessThemeMetrics() {

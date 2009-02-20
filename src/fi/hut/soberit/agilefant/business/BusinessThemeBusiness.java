@@ -125,6 +125,7 @@ public interface BusinessThemeBusiness {
      */
     public void activateBusinessTheme(BusinessTheme businessTheme);
 
+    @Deprecated
     public Map<Integer, List<BusinessTheme>> loadThemeCacheByBacklogId(
             int backlogId);
 

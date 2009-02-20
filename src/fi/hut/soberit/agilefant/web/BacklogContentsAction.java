@@ -8,7 +8,9 @@ import java.util.Map;
 import com.opensymphony.xwork.ActionSupport;
 
 import fi.hut.soberit.agilefant.business.BacklogBusiness;
+import fi.hut.soberit.agilefant.business.BacklogItemBusiness;
 import fi.hut.soberit.agilefant.business.BusinessThemeBusiness;
+import fi.hut.soberit.agilefant.business.HourEntryBusiness;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
@@ -16,6 +18,8 @@ import fi.hut.soberit.agilefant.model.BacklogItemHourEntry;
 import fi.hut.soberit.agilefant.model.BusinessTheme;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.util.BacklogItemResponsibleContainer;
+import fi.hut.soberit.agilefant.util.TodoMetrics;
 
 /**
  * Action for listing backlogs contents.
@@ -31,23 +35,27 @@ import fi.hut.soberit.agilefant.model.User;
  */
 public class BacklogContentsAction extends ActionSupport {
 
-    private int backlogId;
+    protected int backlogId;
 
-    private Backlog backlog;
+    protected Backlog backlog;
 
     private List<BacklogItem> backlogItems = new ArrayList<BacklogItem>();
     
-    private Map<BacklogItem, List<User>> backlogResponsibles = new HashMap<BacklogItem, List<User>>();
+    private Map<BacklogItem, List<BacklogItemResponsibleContainer>> backlogResponsibles = new HashMap<BacklogItem, List<BacklogItemResponsibleContainer>>();
 
     private Map<BacklogItem, List<BusinessTheme>> backlogThemes = new HashMap<BacklogItem, List<BusinessTheme>>();
 
-    private Map<BacklogItem, Task> backlogTodos = new HashMap<BacklogItem, Task>();
+    private Map<BacklogItem, TodoMetrics> backlogTodos = new HashMap<BacklogItem, TodoMetrics>();
     
     private Map<BacklogItem, List<BacklogItemHourEntry>> backlogSpentEffort = new HashMap<BacklogItem, List<BacklogItemHourEntry>>();
 
-    private BacklogBusiness backlogBusiness;
+    protected BacklogBusiness backlogBusiness;
     
-    private BusinessThemeBusiness businessThemeBusiness;
+    protected BacklogItemBusiness backlogItemBusiness;
+    
+    protected BusinessThemeBusiness businessThemeBusiness;
+    
+    protected HourEntryBusiness hourEntryBusiness;
 
     protected void initializeContents(int backlogId) {
         Backlog bl;
@@ -63,8 +71,17 @@ public class BacklogContentsAction extends ActionSupport {
         if (backlog == null) {
             return;
         }
+        
+        backlogItems = backlogItemBusiness.getBacklogItemsByBacklog(backlog);
+        backlogResponsibles = backlogItemBusiness.getResponsiblesByBacklog(backlog);
+        backlogTodos = backlogItemBusiness.getTasksByBacklog(backlog);
+        
         // TODO: fetch blis, todos, spent effort (if timesheets enabled), themes and responsibles
 
+    }
+    
+    protected void initializeContents() {
+        initializeContents(backlog);
     }
 
     public void loadContents() {
@@ -89,12 +106,12 @@ public class BacklogContentsAction extends ActionSupport {
         this.backlog = backlog;
     }
 
-    public Map<BacklogItem, List<User>> getBacklogResponsibles() {
+    public Map<BacklogItem, List<BacklogItemResponsibleContainer>> getBacklogResponsibles() {
         return backlogResponsibles;
     }
 
     public void setBacklogResponsibles(
-            Map<BacklogItem, List<User>> backlogResponsibles) {
+            Map<BacklogItem, List<BacklogItemResponsibleContainer>> backlogResponsibles) {
         this.backlogResponsibles = backlogResponsibles;
     }
 
@@ -107,11 +124,11 @@ public class BacklogContentsAction extends ActionSupport {
         this.backlogThemes = backlogThemes;
     }
 
-    public Map<BacklogItem, Task> getBacklogTodos() {
+    public Map<BacklogItem, TodoMetrics> getBacklogTodos() {
         return backlogTodos;
     }
 
-    public void setBacklogTodos(Map<BacklogItem, Task> backlogTodos) {
+    public void setBacklogTodos(Map<BacklogItem, TodoMetrics> backlogTodos) {
         this.backlogTodos = backlogTodos;
     }
 
@@ -138,6 +155,14 @@ public class BacklogContentsAction extends ActionSupport {
 
     public void setBusinessThemeBusiness(BusinessThemeBusiness businessThemeBusiness) {
         this.businessThemeBusiness = businessThemeBusiness;
+    }
+
+    public void setBacklogItemBusiness(BacklogItemBusiness backlogItemBusiness) {
+        this.backlogItemBusiness = backlogItemBusiness;
+    }
+
+    public void setHourEntryBusiness(HourEntryBusiness hourEntryBusiness) {
+        this.hourEntryBusiness = hourEntryBusiness;
     }
 
 }

@@ -53,7 +53,7 @@ $(document).ready(function() {
 	<!-- Return to this backlog after submit -->
 	<ww:hidden name="backlogId" value="${backlog.id}" />
 
-	<display:table class="listTable" name="backlog.sortedBacklogItems" id="row"
+	<display:table class="listTable" name="backlogItems" id="row"
 		requestURI="${currentAction}.action" >
 
 		<!-- Checkboxes for bulk-moving backlog items -->
@@ -75,6 +75,8 @@ $(document).ready(function() {
 				
 		<display:column sortable="true" sortProperty="name" title="Name" class="${nameClass}">												
 			<div id="bli_${row.id}">
+            <%--
+            TODO: IMPLEMENT
             <c:forEach items="${bliThemeCache[row.id]}" var="businessTheme">
             	<a href="#" onclick="handleTabEvent('backlogItemTabContainer-${row.id}-${bliListContext}','bli',${row.id},0, '${bliListContext}'); return false;">
             	   <c:choose>
@@ -87,6 +89,7 @@ $(document).ready(function() {
             	   </c:choose>
             	</a>
             </c:forEach>
+            --%>
 			<a class="nameLink" onclick="handleTabEvent('backlogItemTabContainer-${row.id}-${bliListContext}','bli',${row.id},0, '${bliListContext}'); return false;">
 				${aef:html(row.name)}
 			</a>			
@@ -105,8 +108,22 @@ $(document).ready(function() {
 			</c:otherwise>
 		</c:choose>
 
-		<display:column sortable="true" title="Responsibles" class="responsibleColumn">
-		<div><aef:responsibleColumn backlogItemId="${row.id}"/></div>
+		<display:column sortable="false" title="Responsibles" class="responsibleColumn">
+			<c:set var="responsibleCount" value="${fn:length(backlogResponsibles[row])}" />
+			<c:set var="currentResponsibleCount" value="0" />
+			<c:forEach items="${backlogResponsibles[row]}" var="itemResponsible">
+				<c:set var="currentResponsibleCount" value="${currentResponsibleCount + 1}" />
+				<c:choose>
+					<c:when test="${itemResponsible.inProject == false}">
+						<a href="dailyWork.action?userId=${itemResponsible.user.id}" class="unassigned"> 
+							${itemResponsible.user.initials}</a><c:if test="${currentResponsibleCount !=  responsibleCount}">,</c:if>
+					</c:when>
+					<c:otherwise>
+						<a href="dailyWork.action?userId=${itemResponsible.user.id}">
+							${itemResponsible.user.initials}</a><c:if test="${currentResponsibleCount !=  responsibleCount}">,</c:if>
+					</c:otherwise>
+				</c:choose>
+			</c:forEach>
 		</display:column>
 
 		<display:column sortable="true" defaultorder="descending"
@@ -114,8 +131,59 @@ $(document).ready(function() {
 			<ww:text name="backlogItem.priority.${row.priority}" />
 		</display:column>
 
-		<display:column title="Progress" sortable="false" class="taskColumn">
-			<aef:backlogItemProgressBar backlogItem="${row}" bliListContext="${bliListContext}" dialogContext="${dialogContext}" hasLink="${true}"/>			
+		<display:column title="Progress" sortable="false" class="taskColumn">			
+			<c:set var="itemTodos" value="${backlogTodos[row]}"/>
+			<a class="nameLink" onclick="handleTabEvent('backlogItemTabContainer-${row.id}-${bliListContext}','${dialogContext}',${row.id},1,'${bliListContext}'); return false;">
+			<c:choose>
+				<c:when test="${itemTodos != null && itemTodos.total != 0}">		
+					${itemTodos.doneTodos} / ${itemTodos.total} TODOs done <br />
+				</c:when>
+				<c:otherwise>		
+					<ww:text name="backlogItem.state.${row.state}"/><br />
+				</c:otherwise>
+			</c:choose>
+			</a>										
+			<c:choose>
+				<c:when test="${row.state == 'NOT_STARTED'}" >
+					<ww:url id="imgUrl" action="drawExtendedBarChart" includeParams="none">
+					<ww:param name="notStarted" value="1" /> </ww:url> 
+				</c:when>
+				<c:when test="${row.state == 'STARTED'}" >
+					<ww:url id="imgUrl" action="drawExtendedBarChart" includeParams="none">
+					<ww:param name="started" value="1" /> </ww:url> 
+				</c:when>
+				<c:when test="${row.state == 'PENDING'}" >
+					<ww:url id="imgUrl" action="drawExtendedBarChart" includeParams="none">
+					<ww:param name="pending" value="1" /> </ww:url> 
+				</c:when>
+				<c:when test="${row.state == 'BLOCKED'}" >
+					<ww:url id="imgUrl" action="drawExtendedBarChart" includeParams="none">
+					<ww:param name="blocked" value="1" /> </ww:url> 
+				</c:when>
+				<c:when test="${row.state == 'IMPLEMENTED'}" >
+					<ww:url id="imgUrl" action="drawExtendedBarChart" includeParams="none">
+					<ww:param name="implemented" value="1" /> </ww:url> 
+				</c:when>
+				<c:when test="${row.state == 'DONE'}" >
+					<ww:url id="imgUrl" action="drawExtendedBarChart" includeParams="none">
+					<ww:param name="done" value="1" /> </ww:url> 
+				</c:when>
+			</c:choose>
+			<div style="margin:0px auto;background-image:url(${imgUrl}); background-position: -16px -4px; height:8px; width:82px; background-repeat:no-repeat;border-right:1px solid #BFBFBF; "></div>
+							
+			<c:choose>
+				<c:when test="${itemTodos != null && itemTodos.total != 0}">					
+					<ww:url id="imgUrl" action="drawExtendedBarChart" includeParams="none">
+						<ww:param name="notStarted" value="${itemTodos.notStartedTodos}" />
+						<ww:param name="started" value="${itemTodos.startedTodos}" />
+						<ww:param name="pending" value="${itemTodos.pendingTodos}" />
+						<ww:param name="blocked" value="${itemTodos.blockedTodos}" />
+						<ww:param name="implemented" value="${itemTodos.implementedTodos}" />
+						<ww:param name="done" value="${itemTodos.doneTodos}" />
+					</ww:url> 
+					<div style="margin:0px auto;background-image:url(${imgUrl}); background-position: -16px -4px; height:8px; width:82px; background-repeat:no-repeat;border-right:1px solid #BFBFBF; "></div>															
+				</c:when>
+			</c:choose>			
 		</display:column>
 			
 		<display:column sortable="true" sortProperty="effortLeft" defaultorder="descending"

@@ -95,12 +95,12 @@ public interface HourEntryBusiness {
     public List<BacklogHourEntry> getEntriesByParent(Backlog parent);
     
     /**
-     * Loads hour entry sums to backlog's BLIs.
+     * Gets hour entry sums by backlog.
      * 
      * @param parent Parent backlog for BLIs
-     * @return Total reported hour by backlog item indexed by backlog item id.
+     * @return Total reported hour by backlog item indexed by backlog item.
      */
-    public Map<Integer,AFTime> getSumsByBacklog(Backlog parent);
+    public Map<BacklogItem,AFTime> getSumsByBacklog(Backlog parent);
 
     /**
      * Load spent effort sums to backlog items under a specific backlog. 

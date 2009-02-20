@@ -2,10 +2,6 @@
 
 <aef:hourReporting id="hourReport" />
 
-<c:if test="${hourReport}">
-	<c:set var="totalSum" value="${null}" />
-</c:if>
-
 <aef:openDialogs context="bli" id="openBacklogItemTabs" />
 
 <!-- context variable for backlog item ajax to know its context -->
@@ -75,9 +71,8 @@ $(document).ready(function() {
 				
 		<display:column sortable="true" sortProperty="name" title="Name" class="${nameClass}">												
 			<div id="bli_${row.id}">
-            <%--
-            TODO: IMPLEMENT
-            <c:forEach items="${bliThemeCache[row.id]}" var="businessTheme">
+
+            <c:forEach items="${backlogThemes[row]}" var="businessTheme">
             	<a href="#" onclick="handleTabEvent('backlogItemTabContainer-${row.id}-${bliListContext}','bli',${row.id},0, '${bliListContext}'); return false;">
             	   <c:choose>
             	       <c:when test="${businessTheme.global}">
@@ -89,7 +84,7 @@ $(document).ready(function() {
             	   </c:choose>
             	</a>
             </c:forEach>
-            --%>
+            
 			<a class="nameLink" onclick="handleTabEvent('backlogItemTabContainer-${row.id}-${bliListContext}','bli',${row.id},0, '${bliListContext}'); return false;">
 				${aef:html(row.name)}
 			</a>			
@@ -252,12 +247,12 @@ $(document).ready(function() {
 				--%>
 				<td><c:out value="${effortLeftSum}" /></td>
 				<%-- Original estimate --%>
-				<td><c:out value="${originalEstimateSum}" /></td>
+				<td><c:out value="${origEstSum}" /></td>
 				<c:if test="${hourReport}">
 					<td>
 						<c:choose>
-							<c:when test="${totalSum != null}">
-								<c:out value="${totalSum}" />
+							<c:when test="${spentEffortSum != null}">
+								<c:out value="${spentEffortSum}" />
 							</c:when>
 							<c:otherwise>
 								0h

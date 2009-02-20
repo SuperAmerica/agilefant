@@ -12,6 +12,7 @@ import java.util.Set;
 import fi.hut.soberit.agilefant.business.BacklogItemBusiness;
 import fi.hut.soberit.agilefant.business.HistoryBusiness;
 import fi.hut.soberit.agilefant.business.HourEntryBusiness;
+import fi.hut.soberit.agilefant.business.SettingBusiness;
 import fi.hut.soberit.agilefant.business.TaskBusiness;
 import fi.hut.soberit.agilefant.business.UserBusiness;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
@@ -41,6 +42,7 @@ public class BacklogItemBusinessImpl implements BacklogItemBusiness {
     private HistoryBusiness historyBusiness;
     private UserBusiness userBusiness;
     private HourEntryBusiness hourEntryBusiness;
+    private SettingBusiness settingBusiness;
 
     public BacklogItemDAO getBacklogItemDAO() {
         return backlogItemDAO;
@@ -185,22 +187,34 @@ public class BacklogItemBusinessImpl implements BacklogItemBusiness {
         return userList;
     }       
 
+    
+    //TODO: write test
     public List<BacklogItem> getBacklogItemsByBacklog(Backlog backlog) {
         if(backlog != null) {
             List<BacklogItem> items = backlogItemDAO.getBacklogItemsByBacklog(backlog);
             Collections.sort(items, new BacklogItemComparator());
+            //do we need to load spent effort sums
+            if(settingBusiness.isHourReportingEnabled()) {
+                Map<BacklogItem, AFTime> spentEffort = hourEntryBusiness.getSumsByBacklog(backlog);
+                for(BacklogItem item : items) {
+                    if(spentEffort.containsKey(item)) {
+                        item.setEffortSpent(spentEffort.get(item));
+                    }
+                }
+            }
             return items;
         }
         return null;
     }
 
+    //TODO: write test
     public Map<BacklogItem, List<BacklogItemResponsibleContainer>> getResponsiblesByBacklog(Backlog backlog) {
         if(backlog != null) {
            Collection<User> assignees = null;
            Map<BacklogItem, List<BacklogItemResponsibleContainer>> result = new HashMap<BacklogItem, List<BacklogItemResponsibleContainer>>();
            
            if(backlog instanceof Iteration) {
-               assignees = ((Iteration)backlog).getResponsibles();
+               assignees = ((Iteration)backlog).getProject().getResponsibles();
            } else if(backlog instanceof Project) {
                assignees = ((Project)backlog).getResponsibles();
            } 
@@ -243,6 +257,10 @@ public class BacklogItemBusinessImpl implements BacklogItemBusiness {
 
     public void setUserBusiness(UserBusiness userBusiness) {
         this.userBusiness = userBusiness;
+    }
+
+    public void setSettingBusiness(SettingBusiness settingBusiness) {
+        this.settingBusiness = settingBusiness;
     }
 
 

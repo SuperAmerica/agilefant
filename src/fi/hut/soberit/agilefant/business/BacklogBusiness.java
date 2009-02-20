@@ -147,6 +147,15 @@ public interface BacklogBusiness {
     public EffortSumData getEffortLeftSum(Collection<BacklogItem> bliList);
     
     /**
+     * Calculate total spent effort within backlog's backlog items.
+     * NOTE: effort logged directly to the backlog will not be included.
+     * 
+     * @param bliList
+     * @return total spent effort
+     */
+    public AFTime getSpentEffortSum(Collection<BacklogItem> bliList);
+    
+    /**
      * Calculates the sum of effort lefts of the given backlog items.
      * If assigned to multiple responsible, divides with number of responsibles
      * Includes hours and number of non-estimated items.

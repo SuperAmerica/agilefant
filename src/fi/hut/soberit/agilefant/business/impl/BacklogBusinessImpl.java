@@ -341,6 +341,17 @@ public class BacklogBusinessImpl implements BacklogBusiness {
     }
 
     /** {@inheritDoc} */
+    public AFTime getSpentEffortSum(Collection<BacklogItem> bliList) {
+        AFTime sum = new AFTime(0);
+        for (BacklogItem bli : bliList) {
+            if(bli.getEffortSpent() != null) {
+                sum.add(bli.getEffortSpent());
+            }
+        }
+        return sum;
+    }
+    
+    /** {@inheritDoc} */
     public EffortSumData getEffortLeftResponsibleDividedSum(
             Collection<BacklogItem> bliList) {
         EffortSumData data = new EffortSumData();
@@ -1006,4 +1017,5 @@ public class BacklogBusinessImpl implements BacklogBusiness {
     public void setHistoryBusiness(HistoryBusiness historyBusiness) {
         this.historyBusiness = historyBusiness;
     }
+
 }

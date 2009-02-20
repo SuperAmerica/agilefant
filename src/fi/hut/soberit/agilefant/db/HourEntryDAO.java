@@ -2,8 +2,11 @@ package fi.hut.soberit.agilefant.db;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import fi.hut.soberit.agilefant.model.AFTime;
+import fi.hut.soberit.agilefant.model.Backlog;
+import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.HourEntry;
 import fi.hut.soberit.agilefant.model.User;
 
@@ -21,4 +24,6 @@ public interface HourEntryDAO extends GenericDAO<HourEntry> {
      * @return List of hour entries associated with given user.
      */
     public List<HourEntry> getHourEntriesByUser(User user);
+    
+    public Map<BacklogItem, AFTime> getSpentEffortSumsByBacklog(Backlog backlog);
 }

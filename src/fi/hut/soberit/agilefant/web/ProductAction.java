@@ -33,10 +33,6 @@ public class ProductAction extends BacklogContentsAction implements CRUDAction {
     private Product product;
 
     private Collection<Product> products = new ArrayList<Product>();
-
-    private EffortSumData effortLeftSum;
-
-    private EffortSumData origEstSum;
     
     private Map<Project, EffortSumData> effLeftSums;
     
@@ -84,11 +80,6 @@ public class ProductAction extends BacklogContentsAction implements CRUDAction {
         }
         backlog = product;
 
-        // Calculate effort lefts and original estimates
-        Collection<BacklogItem> items = backlog.getBacklogItems();
-        effortLeftSum = backlogBusiness.getEffortLeftSum(items);
-        origEstSum = backlogBusiness.getOriginalEstimateSum(items);
-
         // Calculate product's projects' effort lefts and original estimates
         
         effLeftSums = new HashMap<Project, EffortSumData>();
@@ -99,9 +90,6 @@ public class ProductAction extends BacklogContentsAction implements CRUDAction {
         
         // Calculate projects' metrics.
         projectBusiness.calculateProjectMetrics(product);
-        
-        // Load Hour Entry sums to this backlog's BLIs.
-        hourEntryBusiness.loadSumsToBacklogItems(backlog);
         
         Collection<Project> projects = product.getProjects();
         
@@ -161,14 +149,6 @@ public class ProductAction extends BacklogContentsAction implements CRUDAction {
             jsonData = backlogBusiness.getAllProductsAsJSON();
         }
         return Action.SUCCESS;
-    }
-
-    public EffortSumData getEffortLeftSum() {
-        return effortLeftSum;
-    }
-
-    public EffortSumData getOriginalEstimateSum() {
-        return origEstSum;
     }
 
     public Product getProduct() {
@@ -233,18 +213,6 @@ public class ProductAction extends BacklogContentsAction implements CRUDAction {
 
     public void setProjectBusiness(ProjectBusiness projectBusiness) {
         this.projectBusiness = projectBusiness;
-    }
-
-    public EffortSumData getOrigEstSum() {
-        return origEstSum;
-    }
-
-    public void setOrigEstSum(EffortSumData origEstSum) {
-        this.origEstSum = origEstSum;
-    }
-
-    public void setEffortLeftSum(EffortSumData effortLeftSum) {
-        this.effortLeftSum = effortLeftSum;
     }
 
     public void setEffLeftSums(Map<Project, EffortSumData> effLeftSums) {

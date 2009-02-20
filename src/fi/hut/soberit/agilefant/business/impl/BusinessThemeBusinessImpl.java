@@ -528,6 +528,12 @@ public class BusinessThemeBusinessImpl implements BusinessThemeBusiness {
     public List<BacklogThemeBinding> getIterationThemesByProject(int projectId) {
         return getIterationThemesByProject((Project)backlogDAO.get(projectId));
     }
+    
+    public Map<BacklogItem, List<BusinessTheme>> getBacklogItemBusinessThemesByBacklog(
+            Backlog backlog) {
+        return businessThemeDAO.getBacklogItemBusinessThemesByBacklog(backlog);
+    }
+    
     /* getters and setters */
     
     public ProductDAO getProductDAO() {

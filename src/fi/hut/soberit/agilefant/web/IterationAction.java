@@ -60,10 +60,6 @@ public class IterationAction extends BacklogContentsAction implements CRUDAction
     
     private Map<Integer, EffortSumData> iterationGoalOrigEstSums = new HashMap<Integer, EffortSumData>();
     
-    private EffortSumData effortLeftSum;
-
-    private EffortSumData origEstSum;
-    
     private BacklogMetrics iterationMetrics;
     
     
@@ -120,14 +116,6 @@ public class IterationAction extends BacklogContentsAction implements CRUDAction
         }
         
         /* Get the original estimate sums of iteration goals */
-
-        // Calculate effort lefts and original estimates
-        Collection<BacklogItem> items = backlog.getBacklogItems();
-        effortLeftSum = backlogBusiness.getEffortLeftSum(items);
-        origEstSum = backlogBusiness.getOriginalEstimateSum(items);
-        
-        // Load Hour Entry sums to this backlog's BLIs.
-        hourEntryBusiness.loadSumsToBacklogItems(iteration);
         
         // Load metrics data
         iterationMetrics = backlogBusiness.getBacklogMetrics(iteration);
@@ -443,15 +431,7 @@ public class IterationAction extends BacklogContentsAction implements CRUDAction
     public void setIterationGoalOrigEstSums(
             Map<Integer, EffortSumData> iterationGoalOrigEstSums) {
         this.iterationGoalOrigEstSums = iterationGoalOrigEstSums;
-    }
-
-    public EffortSumData getEffortLeftSum() {
-        return effortLeftSum;
-    }
-
-    public EffortSumData getOriginalEstimateSum() {
-        return origEstSum;
-    }   
+    }  
 
     public BacklogMetrics getIterationMetrics() {
         return iterationMetrics;

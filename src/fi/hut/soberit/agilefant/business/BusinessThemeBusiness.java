@@ -262,4 +262,6 @@ public interface BusinessThemeBusiness {
      */
     public void loadBacklogThemeMetrics(Backlog backlog);    
     public List<BusinessTheme> getBacklogItemActiveOrSelectedThemes(int backlogItemId);
+    
+    public Map<BacklogItem, List<BusinessTheme>> getBacklogItemBusinessThemesByBacklog(Backlog backlog);
 }

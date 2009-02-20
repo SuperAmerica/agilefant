@@ -1,6 +1,7 @@
 package fi.hut.soberit.agilefant.web;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,7 +12,9 @@ import fi.hut.soberit.agilefant.business.BacklogBusiness;
 import fi.hut.soberit.agilefant.business.BacklogItemBusiness;
 import fi.hut.soberit.agilefant.business.BusinessThemeBusiness;
 import fi.hut.soberit.agilefant.business.HourEntryBusiness;
+import fi.hut.soberit.agilefant.business.SettingBusiness;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
+import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.BacklogItemHourEntry;
@@ -19,6 +22,7 @@ import fi.hut.soberit.agilefant.model.BusinessTheme;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.util.BacklogItemResponsibleContainer;
+import fi.hut.soberit.agilefant.util.EffortSumData;
 import fi.hut.soberit.agilefant.util.TodoMetrics;
 
 /**
@@ -47,8 +51,12 @@ public class BacklogContentsAction extends ActionSupport {
 
     private Map<BacklogItem, TodoMetrics> backlogTodos = new HashMap<BacklogItem, TodoMetrics>();
     
-    private Map<BacklogItem, List<BacklogItemHourEntry>> backlogSpentEffort = new HashMap<BacklogItem, List<BacklogItemHourEntry>>();
-
+    private EffortSumData origEstSum = new EffortSumData();
+    
+    private EffortSumData effortLeftSum = new EffortSumData();
+    
+    private AFTime spentEffortSum = new AFTime(0);
+    
     protected BacklogBusiness backlogBusiness;
     
     protected BacklogItemBusiness backlogItemBusiness;
@@ -56,6 +64,8 @@ public class BacklogContentsAction extends ActionSupport {
     protected BusinessThemeBusiness businessThemeBusiness;
     
     protected HourEntryBusiness hourEntryBusiness;
+    
+    private SettingBusiness settingBusiness;
 
     protected void initializeContents(int backlogId) {
         Backlog bl;
@@ -75,8 +85,18 @@ public class BacklogContentsAction extends ActionSupport {
         backlogItems = backlogItemBusiness.getBacklogItemsByBacklog(backlog);
         backlogResponsibles = backlogItemBusiness.getResponsiblesByBacklog(backlog);
         backlogTodos = backlogItemBusiness.getTasksByBacklog(backlog);
+        backlogThemes = businessThemeBusiness.getBacklogItemBusinessThemesByBacklog(backlog);
         
-        // TODO: fetch blis, todos, spent effort (if timesheets enabled), themes and responsibles
+        //calculate sum data
+        if(backlogItems != null) {
+            effortLeftSum = backlogBusiness.getEffortLeftSum(backlogItems);
+            origEstSum = backlogBusiness.getOriginalEstimateSum(backlogItems);
+            if(settingBusiness.isHourReportingEnabled()) {
+                spentEffortSum = backlogBusiness.getSpentEffortSum(backlogItems);
+            }
+        }
+        
+        // TODO: themes
 
     }
     
@@ -136,15 +156,6 @@ public class BacklogContentsAction extends ActionSupport {
         this.backlogBusiness = backlogBusiness;
     }
 
-    public Map<BacklogItem, List<BacklogItemHourEntry>> getBacklogSpentEffort() {
-        return backlogSpentEffort;
-    }
-
-    public void setBacklogSpentEffort(
-            Map<BacklogItem, List<BacklogItemHourEntry>> backlogSpentEffort) {
-        this.backlogSpentEffort = backlogSpentEffort;
-    }
-
     public List<BacklogItem> getBacklogItems() {
         return backlogItems;
     }
@@ -163,6 +174,22 @@ public class BacklogContentsAction extends ActionSupport {
 
     public void setHourEntryBusiness(HourEntryBusiness hourEntryBusiness) {
         this.hourEntryBusiness = hourEntryBusiness;
+    }
+
+    public EffortSumData getOrigEstSum() {
+        return origEstSum;
+    }
+
+    public EffortSumData getEffortLeftSum() {
+        return effortLeftSum;
+    }
+
+    public AFTime getSpentEffortSum() {
+        return spentEffortSum;
+    }
+
+    public void setSettingBusiness(SettingBusiness settingBusiness) {
+        this.settingBusiness = settingBusiness;
     }
 
 }

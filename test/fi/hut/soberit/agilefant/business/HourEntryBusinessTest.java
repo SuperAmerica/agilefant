@@ -42,54 +42,6 @@ public class HourEntryBusinessTest extends TestCase {
     private HourEntryDAO heDAO;
     private SettingDAO settingDAO;
     
-    @SuppressWarnings("deprecation")
-    public void testGetEntriesByBacklogItem() {
-        bheDAO = createMock(BacklogItemHourEntryDAO.class);
-        hourEntryBusiness = new HourEntryBusinessImpl();
-        hourEntryBusiness.setBacklogItemHourEntryDAO(bheDAO);
-        List<BacklogItemHourEntry> data = new ArrayList<BacklogItemHourEntry>();
-        
-
-        
-        //set up backlog
-        Backlog bl = new Iteration();
-        
-        //set up backlog items
-        BacklogItem bli1 = new BacklogItem();
-        bli1.setId(1);
-        BacklogItem bli2 = new BacklogItem();
-        bli2.setId(2);
-        
-        //set up hour report data
-        BacklogItemHourEntry bhe1 = new BacklogItemHourEntry();
-        bhe1.setTimeSpent(new AFTime(40));
-        bhe1.setBacklogItem(bli1);
-        BacklogItemHourEntry bhe2 = new BacklogItemHourEntry();
-        bhe2.setTimeSpent(new AFTime(30));
-        bhe2.setBacklogItem(bli1);
-        BacklogItemHourEntry bhe3 = new BacklogItemHourEntry();
-        bhe3.setTimeSpent(null);
-        bhe3.setBacklogItem(bli2);
-        
-        data.add(bhe1);
-        data.add(bhe2);
-        data.add(bhe3);
-        
-        expect(bheDAO.getSumsByBacklog(bl)).andReturn(data);
-        
-        replay(bheDAO);
-        
-        try {
-            Map<Integer, AFTime> sums = hourEntryBusiness.getSumsByBacklog(bl);
-            //check correct sum
-            assertEquals(sums.get(new Integer(1)).getTime(),70); 
-            //check that null in effort spent is handled correctly
-            assertEquals(sums.get(new Integer(2)).getTime(),0);
-            verify(bheDAO);
-        } catch(Exception e) {
-            fail("HourEntryBusiness getSumpsByBacklogTest failed "+e.getMessage());
-        }
-    }
     private void compareHe(HourEntry he1, HourEntry he2) 
             throws Exception {
         if(he1.getUser().getId() != he2.getUser().getId()) {

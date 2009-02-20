@@ -23,7 +23,6 @@ import fi.hut.soberit.agilefant.db.ProjectDAO;
 import fi.hut.soberit.agilefant.db.ProjectTypeDAO;
 import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.Assignment;
-import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.BacklogThemeBinding;
 import fi.hut.soberit.agilefant.model.Iteration;
@@ -69,8 +68,6 @@ public class ProjectAction extends BacklogContentsAction implements CRUDAction {
 
     private int[] selectedUserIds;
 
-    private BacklogBusiness backlogBusiness;
-
     private List<User> users = new ArrayList<User>();
     
     private List<User> enabledUsers = new ArrayList<User>();
@@ -85,10 +82,6 @@ public class ProjectAction extends BacklogContentsAction implements CRUDAction {
     private UserBusiness userBusiness;
 
     private ProjectBusiness projectBusiness;
-    
-    private EffortSumData effortLeftSum;
-
-    private EffortSumData origEstSum;
     
     private Map<Iteration, EffortSumData> effLeftSums;
     
@@ -163,20 +156,16 @@ public class ProjectAction extends BacklogContentsAction implements CRUDAction {
          * backlogItemDAO);
          */
         // populate all users to drop-down list
-        users = userBusiness.getAllUsers();
-        enabledUsers = userBusiness.getEnabledUsers();
-        disabledUsers = userBusiness.getDisabledUsers();
-        assignedUsers = backlogBusiness.getUsers(project, true);
-        assignableUsers = projectBusiness.getAssignableUsers(this.project);
-        unassignedHasWork = projectBusiness.getUnassignedWorkersMap(project);
+        //TODO: sort this out!
+        //users = userBusiness.getAllUsers();
+        //enabledUsers = userBusiness.getEnabledUsers();
+        //disabledUsers = userBusiness.getDisabledUsers();
+        //assignedUsers = backlogBusiness.getUsers(project, true);
+        //assignableUsers = projectBusiness.getAssignableUsers(this.project);
+        //unassignedHasWork = projectBusiness.getUnassignedWorkersMap(project);
 
         // Calculate effort lefts and original estimates
-        Collection<BacklogItem> items = backlog.getBacklogItems();
-        effortLeftSum = backlogBusiness.getEffortLeftSum(items);
-        origEstSum = backlogBusiness.getOriginalEstimateSum(items);
-        
-        // Load Hour Entry sums to this backlog's BLIs.
-        hourEntryBusiness.loadSumsToBacklogItems(backlog);
+        //Collection<BacklogItem> items = backlog.getBacklogItems();
         
         // Calculate project's iterations' effort lefts and original estimates
         effLeftSums = new HashMap<Iteration, EffortSumData>();
@@ -185,7 +174,7 @@ public class ProjectAction extends BacklogContentsAction implements CRUDAction {
         for (Assignment ass: project.getAssignments()) {
             assignments.put("" + ass.getUser().getId(), ass);
         }
-        totalOverheads = projectBusiness.calculateTotalOverheads(project);
+        //totalOverheads = projectBusiness.calculateTotalOverheads(project);
         
         // Get backlog metrics
         if (project.getIterations().size() == 0) {  
@@ -495,10 +484,6 @@ public class ProjectAction extends BacklogContentsAction implements CRUDAction {
         this.selectedUserIds = selectedUserIds;
     }
 
-    public void setBacklogBusiness(BacklogBusiness backlogBusiness) {
-        this.backlogBusiness = backlogBusiness;
-    }
-
     public List<User> getUsers() {
         return users;
     }
@@ -510,14 +495,6 @@ public class ProjectAction extends BacklogContentsAction implements CRUDAction {
     public Collection<User> getAssignedUsers() {
         return assignedUsers;
     }
-    
-    public EffortSumData getEffortLeftSum() {
-        return effortLeftSum;
-    }
-
-    public EffortSumData getOriginalEstimateSum() {
-        return origEstSum;
-    }   
     
     public Map<User, Integer> getUnassignedHasWork() {
       	return unassignedHasWork;

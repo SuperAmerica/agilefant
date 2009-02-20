@@ -1036,7 +1036,7 @@ public class BacklogBusinessImpl implements BacklogBusiness {
         List<Backlog> backlogs = new ArrayList<Backlog>();
         backlogs.add(product);
         List<Project> projects = new ArrayList<Project>();
-        backlogs.addAll(product.getProjects());
+        projects.addAll(product.getProjects());
         backlogs.addAll(projects);
         for(Project project : projects) {
             backlogs.addAll(project.getIterations());
@@ -1057,7 +1057,7 @@ public class BacklogBusinessImpl implements BacklogBusiness {
         List<Backlog> backlogs = new ArrayList<Backlog>();
         backlogs.add(product);
         List<Project> projects = new ArrayList<Project>();
-        backlogs.addAll(product.getProjects());
+        projects.addAll(product.getProjects());
         backlogs.addAll(projects);
         for(Project project : projects) {
             backlogs.addAll(project.getIterations());

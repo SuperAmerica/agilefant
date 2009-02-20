@@ -422,7 +422,7 @@ var productId = ${product.id};
 				</table>
 			</div>			
 
-			<c:if test="${!empty product.backlogItems}">
+			
 			<div class="subItemContent" id="progressDiv">
 				<%@ include file="./inc/_backlogList.jsp"%>
 			</div>
@@ -440,7 +440,7 @@ var productId = ${product.id};
 					</li>
 				</ul>
 			</div>
-			</c:if>
+			
 			</div>
 		</td>
 	</tr>

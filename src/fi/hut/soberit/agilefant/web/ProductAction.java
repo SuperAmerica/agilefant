@@ -7,7 +7,6 @@ import java.util.Map;
 
 import com.opensymphony.xwork.Action;
 
-import fi.hut.soberit.agilefant.business.BusinessThemeBusiness;
 import fi.hut.soberit.agilefant.business.ProjectBusiness;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.db.ProductDAO;
@@ -40,7 +39,7 @@ public class ProductAction extends BacklogContentsAction implements CRUDAction {
     
     private Map<BusinessTheme, BusinessThemeMetrics> themeMetrics;
     
-    private BusinessThemeBusiness businessThemeBusiness; 
+    //private BusinessThemeBusiness businessThemeBusiness; 
     
     private String jsonData = "";
     

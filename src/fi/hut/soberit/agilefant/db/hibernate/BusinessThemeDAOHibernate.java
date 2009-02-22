@@ -93,26 +93,6 @@ public class BusinessThemeDAOHibernate extends
         return res;
     }
 
-    @SuppressWarnings("unchecked")
-    public List getThemesByBacklog(Backlog backlog) {
-        DetachedCriteria crit = DetachedCriteria.forClass(BacklogItem.class);
-        crit.createAlias("businessThemes", "themes");
-        ProjectionList p = Projections.projectionList();
-        p.add(Projections.property("id"), "backlogItemId");
-        p.add(Projections.property("themes.id"), "themeId");
-        p.add(Projections.property("themes.name"), "themeName");
-        p.add(Projections.property("themes.description"), "themeDescription");
-        p.add(Projections.property("themes.global"), "themeGlobal");
-        crit.setProjection(p);
-        crit.setFetchMode("themes", FetchMode.JOIN);
-        crit.setFetchMode("iterationGoal", FetchMode.SELECT);
-        crit.setFetchMode("responsibles", FetchMode.SELECT);
-        crit.setFetchMode("tasks", FetchMode.SELECT);
-        crit.add(Restrictions.eq("backlog", backlog));
-        crit.addOrder(Order.asc("themes.name"));
-        return super.getHibernateTemplate().findByCriteria(crit);
-    }
-
     public void saveOrUpdateBacklogThemeBinding(BacklogThemeBinding binding) {
         super.getHibernateTemplate().saveOrUpdate(binding);
     }

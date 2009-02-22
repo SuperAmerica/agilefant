@@ -211,10 +211,6 @@ $(document).ready(function() {
 							<c:when test="${row.effortSpent == null}">&mdash;</c:when>
 							<c:otherwise>
 								<c:out value="${row.effortSpent}" />
-								<%-- Interesting feature of jsp, thus circumvent direct assignation --%>
-								<c:set var="es" value="${row.effortSpent}"/>
-								<c:set var="totalSum" value="${aef:calculateAFTimeSum(totalSum, es)}" />
-								
 							</c:otherwise>
 						</c:choose>
 					</span>

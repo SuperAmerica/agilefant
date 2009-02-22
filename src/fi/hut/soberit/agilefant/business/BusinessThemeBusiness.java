@@ -51,15 +51,6 @@ public interface BusinessThemeBusiness {
     public Collection<BusinessTheme> getSortedGlobalThemes(Boolean active);
 
     /**
-     * Gets a backlog's items' themes.
-     * 
-     * @param backlogId
-     * @return
-     */
-    public List<BusinessTheme> getBacklogItemActiveBusinessThemes(
-            int backlogItemId);
-
-    /**
      * Gets a product's themes' number of done blis.
      * 
      * @param productId
@@ -124,10 +115,6 @@ public interface BusinessThemeBusiness {
      * @param businessTheme
      */
     public void activateBusinessTheme(BusinessTheme businessTheme);
-
-    @Deprecated
-    public Map<Integer, List<BusinessTheme>> loadThemeCacheByBacklogId(
-            int backlogId);
 
     /**
      * Add or update binding between a backlog and business theme.

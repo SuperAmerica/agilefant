@@ -116,7 +116,7 @@ $(document).ready(function() {
 	defaultorder="descending">					
 
 	<display:column title="Name" sortable="false" sortProperty="name" class="shortNameColumn">												
-		<c:forEach items="${bliThemeCache[row.id]}" var="businessTheme">
+		<c:forEach items="${bliThemeCache[row]}" var="businessTheme">
             		<c:choose>
             			<c:when test="${businessTheme.global}">
 		            		<span class="businessTheme globalThemeColors" title="${businessTheme.description}"><c:out value="${businessTheme.name}"/></span>            			

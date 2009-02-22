@@ -43,9 +43,6 @@ public interface BusinessThemeDAO extends GenericDAO<BusinessTheme> {
     
     public Map<Integer, Integer> numberOfBacklogItemsByProduct(Product product, State backlogItemState);
     
-    @Deprecated
-    public List<?> getThemesByBacklog(Backlog backlog); 
-    
     public void saveOrUpdateBacklogThemeBinding(BacklogThemeBinding binding);
     
     public void removeBacklogThemeBinding(BacklogThemeBinding binding);

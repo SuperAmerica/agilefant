@@ -26,6 +26,7 @@ import fi.hut.soberit.agilefant.model.State;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.util.BacklogItemComparator;
+import fi.hut.soberit.agilefant.util.BacklogItemPriorityComparator;
 import fi.hut.soberit.agilefant.util.BacklogItemResponsibleContainer;
 import fi.hut.soberit.agilefant.util.BacklogItemUserComparator;
 import fi.hut.soberit.agilefant.util.TodoMetrics;
@@ -192,7 +193,7 @@ public class BacklogItemBusinessImpl implements BacklogItemBusiness {
     public List<BacklogItem> getBacklogItemsByBacklog(Backlog backlog) {
         if(backlog != null) {
             List<BacklogItem> items = backlogItemDAO.getBacklogItemsByBacklog(backlog);
-            Collections.sort(items, new BacklogItemComparator());
+            Collections.sort(items, new BacklogItemComparator(new BacklogItemPriorityComparator()));
             //do we need to load spent effort sums
             if(settingBusiness.isHourReportingEnabled()) {
                 Map<BacklogItem, AFTime> spentEffort = hourEntryBusiness.getSumsByBacklog(backlog);

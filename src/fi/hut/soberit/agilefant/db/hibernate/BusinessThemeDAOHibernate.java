@@ -155,7 +155,7 @@ public class BusinessThemeDAOHibernate extends
     @SuppressWarnings("unchecked")
     public Map<BacklogItem, List<BusinessTheme>> getBacklogItemBusinessThemesByBacklog(
             Backlog backlog) {
-        String hql = "from BacklogItem as bli left outer join bli.businessThemes as theme WHERE bli.backlog = ?";
+        String hql = "from BacklogItem as bli left outer join bli.businessThemes as theme WHERE bli.backlog = ? order by theme.name asc";
         List<Object[]> respBli = this.getHibernateTemplate().find(hql, new Object[] {backlog});
         Map<BacklogItem, List<BusinessTheme>> res = new HashMap<BacklogItem, List<BusinessTheme>>();
         for(Object[] row : respBli) {

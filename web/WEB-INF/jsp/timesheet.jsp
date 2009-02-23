@@ -59,10 +59,10 @@
 										</c:choose>
 										<c:choose>
 											<c:when test="${onlyOngoing == true}">
-												<input id="showOnlyOngoingBacklogs" name="onlyOngoing" type="checkbox" checked="checked"/>Show only currently ongoing projects and iterations.<br />								
+												<input id="showOnlyOngoingBacklogs" name="onlyOngoing" type="checkbox" value="true" checked="checked"/>Show only currently ongoing projects and iterations.<br />								
 											</c:when>
 											<c:otherwise>
-												<input id="showOnlyOngoingBacklogs" name="onlyOngoing" type="checkbox" />Show only currently ongoing projects and iterations.<br />						
+												<input id="showOnlyOngoingBacklogs" name="onlyOngoing" type="checkbox" value="true" />Show only currently ongoing projects and iterations.<br />						
 											</c:otherwise>
 										</c:choose>
 										<div id="selectBacklogs"></div>
@@ -72,13 +72,18 @@
 											var typeRadio = $("input[name=backlogSelectionType]");
 											var chooserDiv = $("#selectBacklogs");
 											var blDiv = $("#advancedBacklogs");
+											var userSel = $("#userSelect");
+											
 											typeRadio.click(function() {
 												if($(typeRadio.get(0)).is(":checked")) {
 													blDiv.show();
+													userSel.show();
 												} else {
 													blDiv.hide();
+													userSel.hide();
 												}
 											});
+											
 											$("#showOnlyOngoingBacklogs").change(function() {
 												if($(this).is(":checked")) {
 													chooserDiv.backlogChooser("setDateLimit");
@@ -201,8 +206,6 @@
 								<tr>				
 									<td>Start date</td>
 									<td>
-										<!--<ww:datepicker size="15" showstime="false"
-	                       					format="%{getText('webwork.datepicker.format')}" id="effStartDate" name="startDate" value=""/>-->
 	                       				<aef:datepicker value="${startDate}" id="effStartDate" name="startDate" format="%{getText('webwork.shortDateTime.format')}" />
 									</td>
 								</tr>
@@ -210,13 +213,11 @@
 								<tr>				
 									<td>End date</td>
 									<td>
-	               						<!--<ww:datepicker size="15" showstime="false"
-	                       					format="%{getText('webwork.datepicker.format')}" id="effEndDate" name="endDate" value=""/>-->
 	                       				<aef:datepicker value="${endDate}" id="effEndDate" name="endDate" format="%{getText('webwork.shortDateTime.format')}" />
 									</td>
 								</tr>
 								<!--  User selection -->				
-								<tr>
+								<tr id="userSelect">
 									<td>Users</td>
 					
 				

@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.springframework.security.providers.UsernamePasswordAuthenticationToken;
+import org.springframework.security.providers.rememberme.RememberMeAuthenticationToken;
 
 import com.opensymphony.webwork.interceptor.PrincipalAware;
 import com.opensymphony.webwork.interceptor.PrincipalProxy;
@@ -97,8 +98,14 @@ public class TimesheetAction extends ActionSupport implements PrincipalAware {
      */
     public void setPrincipalProxy(PrincipalProxy principalProxy) {
         Principal principal = principalProxy.getUserPrincipal();
-        AgilefantUserDetails ud = (AgilefantUserDetails) ((UsernamePasswordAuthenticationToken) principal)
-                .getPrincipal();
+        AgilefantUserDetails ud;
+        if (principal instanceof RememberMeAuthenticationToken) {
+            ud = (AgilefantUserDetails) ((RememberMeAuthenticationToken) principal)
+                    .getPrincipal();
+        } else {
+            ud = (AgilefantUserDetails) ((UsernamePasswordAuthenticationToken) principal)
+                    .getPrincipal();
+        }
         currentUserId = ud.getUserId();
         
     }
@@ -125,21 +132,25 @@ public class TimesheetAction extends ActionSupport implements PrincipalAware {
     }
     public String generateTree(){
         List<Integer> ids = null;
+        Set<Integer> users = new HashSet<Integer>();
         if(backlogSelectionType == 0) {
             ids = this.selectedBacklogs();
+            users.addAll(userIds.keySet());
         } else {
             Collection<Backlog> tmp = userBusiness.getOngoingBacklogsByUser(currentUserId);
             ids = new ArrayList<Integer>();
             for(Backlog bl : tmp) {
                 ids.add(bl.getId());
             }
+            //only for current user:
+            users.add(currentUserId);
         }
         if(ids == null || ids.size() == 0) {
             addActionError("No backlogs selected.");
             return Action.ERROR;
         }
         try{
-            products = timesheetBusiness.generateTree(ids, startDate, endDate, userIds.keySet());
+            products = timesheetBusiness.generateTree(ids, startDate, endDate, users);
             totalSpentTime = timesheetBusiness.calculateRootSum(products);
         }catch(IllegalArgumentException e){
             addActionError(e.getMessage());

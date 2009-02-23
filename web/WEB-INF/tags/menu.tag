@@ -269,6 +269,14 @@ Agilefant
 </div>
 
 <script type="text/javascript">
+	/* Working on a request div */
+	$("#loadingDiv").ajaxStop(function() {
+	    $(this).hide();
+	});
+	
+	$("#loadingDiv").ajaxStart(function() {
+	    $(this).show();
+	});
     var navi = '<%=navi%>';
     var subnavi = '<%=subnavi%>';
     

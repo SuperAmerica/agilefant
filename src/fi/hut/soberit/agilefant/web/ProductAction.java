@@ -79,6 +79,8 @@ public class ProductAction extends BacklogContentsAction implements CRUDAction {
         }
         backlog = product;
 
+        super.initializeContents();
+        
         // Calculate product's projects' effort lefts and original estimates
         
         effLeftSums = new HashMap<Project, EffortSumData>();

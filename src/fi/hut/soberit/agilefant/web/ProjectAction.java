@@ -150,21 +150,6 @@ public class ProjectAction extends BacklogContentsAction implements CRUDAction {
         productId = project.getProduct().getId();
         backlog = project;
         super.initializeContents();
-        /*
-         * BacklogValueInjector.injectMetrics(backlog, startDate, taskEventDAO,
-         * backlogItemDAO);
-         */
-        // populate all users to drop-down list
-        //TODO: sort this out!
-        //users = userBusiness.getAllUsers();
-        //enabledUsers = userBusiness.getEnabledUsers();
-        //disabledUsers = userBusiness.getDisabledUsers();
-        //assignedUsers = backlogBusiness.getUsers(project, true);
-        //assignableUsers = projectBusiness.getAssignableUsers(this.project);
-        //unassignedHasWork = projectBusiness.getUnassignedWorkersMap(project);
-
-        // Calculate effort lefts and original estimates
-        //Collection<BacklogItem> items = backlog.getBacklogItems();
         
         // Calculate project's iterations' effort lefts and original estimates
         effLeftSums = new HashMap<Iteration, EffortSumData>();

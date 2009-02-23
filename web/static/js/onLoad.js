@@ -243,7 +243,6 @@ function openCreateDialog(element) {
 	else if (element.hasClass('openBacklogItemDialog')) {
         callback = function(data, status) {
             dialogSetup(agilefantValidationRules.backlogItem, "Create a new backlog item");
-            getIterationGoals(dialog.find('#createBLIBacklogId').val(), '#createBLIIterGoalSelect');
         };
     }
     else if (element.hasClass('openHourEntryDialog')) {

@@ -226,10 +226,7 @@ function disableElementIfValue(me, handle, ref) {
     return false;
 }
 
-function getIterationGoals(backlogId, element) {
-	
-	
-        
+function getIterationGoals(backlogId, element, preselectedId) {
     jQuery.getJSON("ajaxGetIterationGoals.action",
         { 'iterationId': backlogId }, function(data, status) {
         var select = $(element);
@@ -238,7 +235,10 @@ function getIterationGoals(backlogId, element) {
             select.show().empty().val('').next().hide();
             $('<option/>').attr('value','').attr('class','inactive').text('(none)').appendTo(select);
             for (var i = 0; i < data.length; i++) {
-                $('<option/>').attr('value',data[i].id).text(data[i].name).appendTo(select);
+                var opt = $('<option/>').attr('value',data[i].id).text(data[i].name).appendTo(select);
+                if (preselectedId == data[i].id) {
+                    opt.attr('selected','selected');
+                }
             }
         }
         else {

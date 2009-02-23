@@ -19,6 +19,8 @@ $(document).ready(function() {
         backlogIdField: '#createBLIBacklogId',
         userListContainer: '#userListContainer-createBLI'
     });
+    getIterationGoals($('#createBLIBacklogId').val(),
+        '#createBLIIterGoalSelect', '${iterationGoalId}');
 });
 
 </script>

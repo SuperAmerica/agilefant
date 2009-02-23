@@ -305,7 +305,7 @@
 				<td>
 					<div class="subItems" style="margin-top: 0pt;" id="subItems_timesheetEntries">
 						<div class="subItemHeader">
-							<table>
+							<table cellpadding="0" cellspacing="0">
 								<tbody>
 									<tr>
 										<td class="header">Entries</td>

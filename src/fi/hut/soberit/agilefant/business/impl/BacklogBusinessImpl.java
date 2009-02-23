@@ -469,7 +469,6 @@ public class BacklogBusinessImpl implements BacklogBusiness {
     }
 
     /** {@inheritDoc} */
-    @SuppressWarnings("deprecation")
     public int getWeekdaysLeftInBacklog(Backlog backlog, Date from) {
         Date startDate = new Date(0);
         Date endDate = new Date(0);
@@ -532,7 +531,6 @@ public class BacklogBusinessImpl implements BacklogBusiness {
     }
 
     /** {@inheritDoc} */
-    @SuppressWarnings("deprecation")
     public int getNumberOfDaysLeftForBacklogOnWeek(Backlog backlog, Date time) {
         Date startDate = new Date();
         Date endDate = new Date();

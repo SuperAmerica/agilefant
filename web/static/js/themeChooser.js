@@ -59,7 +59,7 @@
                 close: function() {
                     me.destroy();
                 },
-                width: 600, height: '',
+                width: 800, height: '',
                 title: "Select themes",
                 resizable: false,
                 modal: true,

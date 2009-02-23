@@ -65,7 +65,7 @@ public class TimesheetAction extends ActionSupport implements PrincipalAware {
     
     private String interval;
     
-    private Map<Integer, String> userIds = new HashMap<Integer, String>();
+    private Set<Integer> userIds = new HashSet<Integer>();
     
     private int backlogSelectionType = 0;
     
@@ -75,14 +75,6 @@ public class TimesheetAction extends ActionSupport implements PrincipalAware {
 
     private int currentUserId = 0;
     
-    public Map<Integer, String> getUserIds() {
-        return userIds;
-    }
-
-    public void setUserIds(Map<Integer, String> userIds) {
-        this.userIds = userIds;
-    }
-
     public int[] getBacklogIds() {
         return backlogIds;
     }
@@ -135,7 +127,7 @@ public class TimesheetAction extends ActionSupport implements PrincipalAware {
         Set<Integer> users = new HashSet<Integer>();
         if(backlogSelectionType == 0) {
             ids = this.selectedBacklogs();
-            users.addAll(userIds.keySet());
+            users.addAll(userIds);
         } else {
             Collection<Backlog> tmp = userBusiness.getOngoingBacklogsByUser(currentUserId);
             ids = new ArrayList<Integer>();
@@ -213,7 +205,7 @@ public class TimesheetAction extends ActionSupport implements PrincipalAware {
 
     public List<User> getSelUser() {
         this.selUser.clear();
-        for(int sel: userIds.keySet()) {
+        for(int sel: userIds) {
             this.selUser.add(userDAO.get(sel));
         }
         return selUser;
@@ -287,6 +279,14 @@ public class TimesheetAction extends ActionSupport implements PrincipalAware {
 
     public void setOnlyOngoing(boolean onlyOngoing) {
         this.onlyOngoing = onlyOngoing;
+    }
+
+    public Set<Integer> getUserIds() {
+        return userIds;
+    }
+
+    public void setUserIds(Set<Integer> userIds) {
+        this.userIds = userIds;
     }
     
     

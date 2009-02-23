@@ -4,11 +4,124 @@
 <aef:menu navi="timesheet" pageHierarchy="${pageHierarchy}" title="Timesheets"/>
 <aef:existingObjects />
 
-<aef:productList />
-<aef:userList />
-<aef:teamList />
-<aef:currentUser />
+<script type="text/javascript">
+$(document).ready(function() {
+    var typeRadio = $("input[name=backlogSelectionType]");
+    var chooserDiv = $("#selectBacklogs");
+    var blDiv = $("#advancedBacklogs");
+    var userSel = $("#userSelect");
+    
+    typeRadio.click(function() {
+        if($(typeRadio.get(0)).is(":checked")) {
+            blDiv.show();
+            userSel.show();
+        } else {
+            blDiv.hide();
+            userSel.hide();
+        }
+    });
+    
+    if ($(typeRadio.get(1)).is(":checked")) {
+        userSel.hide();
+    }
+    
+    $("#showOnlyOngoingBacklogs").change(function() {
+        if($(this).is(":checked")) {
+            chooserDiv.backlogChooser("setDateLimit");
+        } else {
+            chooserDiv.backlogChooser("unsetDateLimit");
+        }
+    });
+    chooserDiv.backlogChooser({
+        useDateLimit: $("#showOnlyOngoingBacklogs").is(":checked"),
+        selectedProducts: ${JSONProducts},
+        selectedProjects: ${JSONProjects},
+        selectedIterations: ${JSONIterations}
+    });
+    $('#userChooserLink-createBLI').userChooser({
+        legacyMode: false,
+        renderFor: 'allUsers',
+        backlogItemId: 0,
+        userListContainer: '#userListContainer-createBLI'
+    });
+});
 
+function addZero($string) {
+    var str = '0'+$string;
+    //return last two chars
+    return str.substr(str.length-2);
+}
+
+function change_selected_interval(value) {
+    var startDate = document.getElementById('effStartDate');
+    var endDate = document.getElementById('effEndDate');
+    // Current timestamp
+    var now = new Date();
+    
+    // Yesterday's timestamp
+    var yesterday = new Date(now.getTime() - 86400000);
+    
+    // This monday
+    var daysfrommonday = 0;
+    if(now.getDay() == 0) {
+        daysfrommonday = 6;
+    } else {
+        daysfrommonday = now.getDay() - 1;
+    }
+    var thismonday = new Date(now.getTime() - (86400000 * daysfrommonday));
+    
+    // Last week's monday
+    var lastmonday = new Date(thismonday.getTime() - (86400000 * 7));
+    
+    // Last month
+    var lastmonth = new Date();
+    if(now.getMonth() == 0) {
+        lastmonth.setMonth(11)
+        lastmonth.setFullYear(now.getFullYear() - 1);
+    } else {
+        lastmonth.setMonth(now.getMonth() - 1)
+    }
+    
+    
+    if (value == 'TODAY') {
+        startDate.value = now.getFullYear() + '-' + addZero(now.getMonth() + 1) + '-' + addZero(now.getDate()) + ' 00:00';
+        endDate.value   = now.getFullYear() + '-' + addZero(now.getMonth() + 1) + '-' + addZero(now.getDate()) + ' ' + addZero(now.getHours()) + ':' + addZero(now.getMinutes());
+    } else if (value == 'YESTERDAY') {
+        startDate.value = yesterday.getFullYear() + '-' + addZero(yesterday.getMonth() + 1) + '-' + addZero(yesterday.getDate()) + ' 00:00';
+        endDate.value   = now.getFullYear() + '-' + addZero(now.getMonth() + 1) + '-' + addZero(now.getDate()) + ' 00:00';
+    } else if (value == 'THIS_WEEK') {
+        startDate.value = thismonday.getFullYear() + '-' + addZero(thismonday.getMonth() + 1) + '-' + addZero(thismonday.getDate()) + ' 00:00';
+        endDate.value   = now.getFullYear() + '-' + addZero(now.getMonth() + 1) + '-' + addZero(now.getDate()) + ' ' + addZero(now.getHours()) + ':' + addZero(now.getMinutes());
+    } else if (value == 'LAST_WEEK') {
+        startDate.value = lastmonday.getFullYear() + '-' + addZero(lastmonday.getMonth() + 1) + '-' + addZero(lastmonday.getDate()) + ' 00:00';
+        endDate.value   = thismonday.getFullYear() + '-' + addZero(thismonday.getMonth() + 1) + '-' + addZero(thismonday.getDate()) + ' 00:00';
+    } else if (value == 'THIS_MONTH') {
+        startDate.value = now.getFullYear() + '-' + addZero(now.getMonth() + 1) + '-01 00:00';
+        endDate.value   = now.getFullYear() + '-' + addZero(now.getMonth() + 1) + '-' + addZero(now.getDate()) + ' ' + addZero(now.getHours()) + ':' + addZero(now.getMinutes());
+    } else if (value == 'LAST_MONTH') {
+        startDate.value = lastmonth.getFullYear() + '-' + addZero(lastmonth.getMonth() + 1) + '-01 00:00';
+        endDate.value   = now.getFullYear() + '-' + addZero(now.getMonth() + 1) + '-01 00:00';
+    } else if (value == 'THIS_YEAR') {
+        startDate.value = now.getFullYear() + '-01-01 00:00';
+        endDate.value   = now.getFullYear() + '-' + addZero(now.getMonth() + 1) + '-' + addZero(now.getDate()) + ' ' + addZero(now.getHours()) + ':' + addZero(now.getMinutes());
+    } else if (value == 'LAST_YEAR') {
+        startDate.value = (now.getFullYear() - 1) + '-01-01 00:00';
+        endDate.value   = now.getFullYear() + '-01-01 00:00';
+    } else if (value == 'NO_INTERVAL') {
+        startDate.value = '';
+        endDate.value   = '';
+    }
+}
+$(document).ready( function() {
+    var interval = document.getElementById('interval');
+    <ww:set name="currently" value="#attr.interval" />
+    var current = "${currently}";
+    if (current) {
+        change_selected_interval(current);
+        $("#interval").find("[value='"+current+"']").attr("selected","selected");
+    } 
+});
+</script>
 
 <h2>Timesheets</h2>
 
@@ -67,38 +180,6 @@
 										</c:choose>
 										<div id="selectBacklogs"></div>
 									</div>
-									<script type="text/javascript">
-										$(document).ready(function() {
-											var typeRadio = $("input[name=backlogSelectionType]");
-											var chooserDiv = $("#selectBacklogs");
-											var blDiv = $("#advancedBacklogs");
-											var userSel = $("#userSelect");
-											
-											typeRadio.click(function() {
-												if($(typeRadio.get(0)).is(":checked")) {
-													blDiv.show();
-													userSel.show();
-												} else {
-													blDiv.hide();
-													userSel.hide();
-												}
-											});
-											
-											$("#showOnlyOngoingBacklogs").change(function() {
-												if($(this).is(":checked")) {
-													chooserDiv.backlogChooser("setDateLimit");
-												} else {
-													chooserDiv.backlogChooser("unsetDateLimit");
-												}
-											});
-											chooserDiv.backlogChooser({
-												useDateLimit: $("#showOnlyOngoingBacklogs").is(":checked"),
-												selectedProducts: ${JSONProducts},
-												selectedProjects: ${JSONProjects},
-												selectedIterations: ${JSONIterations}
-											});
-										});
-									</script>
 									</td>
 								</tr>
 								<!-- Interval selection -->			
@@ -106,88 +187,7 @@
 									<td>Interval</td>
 					
 									<td colspan="2">
-										<script type="text/javascript">
-											function addZero($string) {
-												var str = '0'+$string;
-												//return last two chars
-												return str.substr(str.length-2);
-											}
-			
-											function change_selected_interval(value) {
-												var startDate = document.getElementById('effStartDate');
-												var endDate = document.getElementById('effEndDate');
-												// Current timestamp
-												var now = new Date();
-												
-												// Yesterday's timestamp
-												var yesterday = new Date(now.getTime() - 86400000);
-												
-												// This monday
-												var daysfrommonday = 0;
-												if(now.getDay() == 0) {
-													daysfrommonday = 6;
-												} else {
-													daysfrommonday = now.getDay() - 1;
-												}
-												var thismonday = new Date(now.getTime() - (86400000 * daysfrommonday));
-												
-												// Last week's monday
-												var lastmonday = new Date(thismonday.getTime() - (86400000 * 7));
-												
-												// Last month
-												var lastmonth = new Date();
-												if(now.getMonth() == 0) {
-													lastmonth.setMonth(11)
-													lastmonth.setFullYear(now.getFullYear() - 1);
-												} else {
-													lastmonth.setMonth(now.getMonth() - 1)
-												}
-												
-												
-												if (value == 'TODAY') {
-													startDate.value = now.getFullYear() + '-' + addZero(now.getMonth() + 1) + '-' + addZero(now.getDate()) + ' 00:00';
-													endDate.value   = now.getFullYear() + '-' + addZero(now.getMonth() + 1) + '-' + addZero(now.getDate()) + ' ' + addZero(now.getHours()) + ':' + addZero(now.getMinutes());
-												} else if (value == 'YESTERDAY') {
-													startDate.value = yesterday.getFullYear() + '-' + addZero(yesterday.getMonth() + 1) + '-' + addZero(yesterday.getDate()) + ' 00:00';
-													endDate.value   = now.getFullYear() + '-' + addZero(now.getMonth() + 1) + '-' + addZero(now.getDate()) + ' 00:00';
-												} else if (value == 'THIS_WEEK') {
-													startDate.value = thismonday.getFullYear() + '-' + addZero(thismonday.getMonth() + 1) + '-' + addZero(thismonday.getDate()) + ' 00:00';
-													endDate.value   = now.getFullYear() + '-' + addZero(now.getMonth() + 1) + '-' + addZero(now.getDate()) + ' ' + addZero(now.getHours()) + ':' + addZero(now.getMinutes());
-												} else if (value == 'LAST_WEEK') {
-													startDate.value = lastmonday.getFullYear() + '-' + addZero(lastmonday.getMonth() + 1) + '-' + addZero(lastmonday.getDate()) + ' 00:00';
-													endDate.value   = thismonday.getFullYear() + '-' + addZero(thismonday.getMonth() + 1) + '-' + addZero(thismonday.getDate()) + ' 00:00';
-												} else if (value == 'THIS_MONTH') {
-													startDate.value = now.getFullYear() + '-' + addZero(now.getMonth() + 1) + '-01 00:00';
-													endDate.value   = now.getFullYear() + '-' + addZero(now.getMonth() + 1) + '-' + addZero(now.getDate()) + ' ' + addZero(now.getHours()) + ':' + addZero(now.getMinutes());
-												} else if (value == 'LAST_MONTH') {
-													startDate.value = lastmonth.getFullYear() + '-' + addZero(lastmonth.getMonth() + 1) + '-01 00:00';
-													endDate.value   = now.getFullYear() + '-' + addZero(now.getMonth() + 1) + '-01 00:00';
-												} else if (value == 'THIS_YEAR') {
-													startDate.value = now.getFullYear() + '-01-01 00:00';
-													endDate.value   = now.getFullYear() + '-' + addZero(now.getMonth() + 1) + '-' + addZero(now.getDate()) + ' ' + addZero(now.getHours()) + ':' + addZero(now.getMinutes());
-												} else if (value == 'LAST_YEAR') {
-													startDate.value = (now.getFullYear() - 1) + '-01-01 00:00';
-													endDate.value   = now.getFullYear() + '-01-01 00:00';
-												} else if (value == 'NO_INTERVAL') {
-													startDate.value = '';
-													endDate.value   = '';
-												}
-											}
-											$(document).ready( function() {
-												var interval = document.getElementById('interval');
-												<ww:set name="currently" value="#attr.interval" />
-												var current = "${currently}";
-												if (current) {
-													change_selected_interval(current);
-													$("#interval").find("[value='"+current+"']").attr("selected","selected");
-												} 
-												/*
-												else {
-													change_selected_interval('TODAY');
-												}
-												*/	
-											});
-										</script> 
+										 
 										<select name="interval" id="interval" onchange="change_selected_interval(this.value);">
 												<option value="">Custom</option>
 												<option value="TODAY">Today</option>
@@ -219,66 +219,24 @@
 								<!--  User selection -->				
 								<tr id="userSelect">
 									<td>Users</td>
-					
-				
-									<td><c:set var="divId" value="1" scope="request" />
-	
-	                    				<div id="assigneesLink">
-	                    					<a href="javascript:toggleDiv(${divId});">
-	                    						<img src="static/img/users.png"/>
-	                        					<c:set var="listSize" value="${fn:length(selUser)}" scope="page" />
-												<c:choose>
-													<c:when test="${listSize > 0}">
-														<c:set var="count" value="0" scope="page" />
-														<c:set var="comma" value="," scope="page" />
-														<c:forEach items="${selUser}" var="responsible">
-															<c:if test="${count == listSize - 1}" >
-																<c:set var="comma" value="" scope="page" />
-															</c:if>
-																<span><c:out value="${responsible.initials}" /></span><c:out value="${comma}" />
-															<c:set var="count" value="${count + 1}" scope="page" />
-														</c:forEach>
-													</c:when>
-													<c:otherwise>
-														<c:out value="choose" />
-													</c:otherwise>
-												</c:choose>
-	                    					</a>
-	                    				</div>
-	                        
-	                    				<div id="${divId}" class="userSelector" style="display: none;">
-	                 
-	                    					<div id="userselect" class="userSelector">
-	                    						<div class="left">
-	                    							<label>Active users</label>
-	                    							<ul class="users_0"></ul>
-	                    		
-	                    							<label>Disabled users</label>
-	                    							<ul class="users_1"></ul>
-	                    							
-	                    						</div>
-	                        					<div class="right">
-	                            					<label>Teams</label>
-	                            					<ul class="groups" />
-	                    						</div>
-	                    						<script type="text/javascript">
-	                        						$(document).ready( function() {
-	                            						<aef:teamList />
-	                            						<aef:enabledUserList />
-	                            						<aef:userList />
-	                            						<ww:set name="teamList" value="#attr.teamList" />
-	                            						<ww:set name="enabledUserList" value="#attr.enabledUserList" />
-	                            						<ww:set name="userList" value="#attr.userList" />
-	                            						<ww:set name="selectedID" value="#attr.selUId" />
-	                            						var teams = [<aef:teamJson items="${teamList}" />];
-	                            						var preferred = [<aef:userJson items="${enabledUserList}" />];
-	                           						 	var other = [<aef:userJson items="${aef:listSubstract(userList, enabledUserList)}" />];
-	                           						 	var selected = [<aef:idJson items="${selUser}" />];
-	                           	 						$('#userselect').multiuserselect({users: [preferred, other], groups: teams, root: $('#userselect')}).selectusers(selected);
-	                        						});
-	                        					</script>
-	                    					</div>
-	                    				</div>
+									<td>                        
+	                    				<div>
+							                <a id="userChooserLink-createBLI" href="#" class="assigneeLink">
+							                    <img src="static/img/users.png"/>
+							                    <span id="userListContainer-createBLI">
+							                    <c:set var="userCount" value="${fn:length(selUser)}" />
+							                    <c:set var="curUserNo" value="0" />
+                                                <c:if test="${userCount == 0}">
+                                                (none)
+                                                </c:if>
+							                    <c:forEach items="${selUser}" var="selu">
+                                                    <input type="hidden" name="userIds" value="${selu.id}" />
+                                                    <c:set var="curUserNo" value="${curUserNo + 1}" />
+                                                    ${selu.initials}<c:if test="${curUserNo !=  userCount}">,</c:if>									                
+                                                </c:forEach>
+							                    </span>
+							                </a>
+							            </div>
 	                    			</td>
 								</tr>
 								<!-- Submit button -->

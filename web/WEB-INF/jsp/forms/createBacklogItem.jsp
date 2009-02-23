@@ -72,7 +72,7 @@ $(document).ready(function() {
 				<option class="inactive" value="">(select backlog)</option>
 				<c:forEach items="${productList}" var="product">
 					<c:choose>
-						<c:when test="${product.id == currentPageId}">
+						<c:when test="${product.id == backlogId}">
 							<option selected="selected" value="${product.id}"
 								class="productOption"><c:out value="${product.name}" /></option>
 						</c:when>
@@ -83,7 +83,7 @@ $(document).ready(function() {
 					</c:choose>
 					<c:forEach items="${product.projects}" var="project">
 						<c:choose>
-							<c:when test="${project.id == currentPageId}">
+							<c:when test="${project.id == backlogId}">
 								<option selected="selected" value="${project.id}"
 									class="projectOption"><c:out value="${project.name}" /></option>
 							</c:when>
@@ -94,7 +94,7 @@ $(document).ready(function() {
 						</c:choose>
 						<c:forEach items="${project.iterations}" var="iteration">
 							<c:choose>
-								<c:when test="${iteration.id == currentPageId}">
+								<c:when test="${iteration.id == backlogId}">
 									<option selected="selected" value="${iteration.id}"
 										class="iterationOption"><c:out value="${iteration.name}" /></option>
 								</c:when>

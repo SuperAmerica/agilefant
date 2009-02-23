@@ -14,7 +14,6 @@ import org.apache.log4j.Logger;
 
 import com.opensymphony.xwork.Action;
 
-import fi.hut.soberit.agilefant.business.BacklogBusiness;
 import fi.hut.soberit.agilefant.business.ProjectBusiness;
 import fi.hut.soberit.agilefant.business.UserBusiness;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;

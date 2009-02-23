@@ -56,17 +56,26 @@ $(document).ready(function() {
 		</c:otherwise>
 		</c:choose>
 		</td>
-		<c:if test="${hourReport}">
-		  <td class="icons">
-          <ww:url id="createLink" action="ajaxCreateHourEntry" includeParams="none">
-              <ww:param name="backlogId" value="${pro.id}" />
+        <td class="icons">
+          <ww:url id="createBLILink" action="ajaxCreateBacklogItem" includeParams="none">
+            <ww:param name="backlogId" value="${pro.id}" />
           </ww:url>
-          <ww:a cssClass="openCreateDialog openUserDialog" onclick="return false;" title="Log effort to ${pro.name}" href="%{createLink}">
-          <img src="static/img/timesheets.png"
-              height="18" width="18" alt="Log effort" />
+          <ww:a cssClass="openCreateDialog openBacklogItemDialog"
+                onclick="return false;" title="Create backlog item"
+                href="%{createBLILink}">
+            <img src="static/img/new.png"
+                height="18" width="18" alt="Create backlog item" />
           </ww:a>
+          <c:if test="${hourReport}">
+            <ww:url id="createLink" action="ajaxCreateHourEntry" includeParams="none">
+                <ww:param name="backlogId" value="${pro.id}" />
+            </ww:url>
+            <ww:a cssClass="openCreateDialog openUserDialog" onclick="return false;" title="Log effort to ${pro.name}" href="%{createLink}">
+            <img src="static/img/timesheets.png"
+                  height="18" width="18" alt="Log effort" />
+            </ww:a>
+          </c:if>
           </td>
-        </c:if>
 		</tr>
 		</table>
 		</div>

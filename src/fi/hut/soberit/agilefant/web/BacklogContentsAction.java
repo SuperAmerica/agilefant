@@ -1,7 +1,6 @@
 package fi.hut.soberit.agilefant.web;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,10 +16,7 @@ import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
-import fi.hut.soberit.agilefant.model.BacklogItemHourEntry;
 import fi.hut.soberit.agilefant.model.BusinessTheme;
-import fi.hut.soberit.agilefant.model.Task;
-import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.util.BacklogItemResponsibleContainer;
 import fi.hut.soberit.agilefant.util.EffortSumData;
 import fi.hut.soberit.agilefant.util.TodoMetrics;
@@ -38,6 +34,8 @@ import fi.hut.soberit.agilefant.util.TodoMetrics;
  * 
  */
 public class BacklogContentsAction extends ActionSupport {
+
+    private static final long serialVersionUID = 3858289138593071787L;
 
     protected int backlogId;
 

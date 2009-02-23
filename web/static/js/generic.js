@@ -321,15 +321,15 @@ function stripHTML(htmlString) {
 function toggleExpand(clickedElement, elementId, settings) {
     var me = $(clickedElement); var elem = $(elementId);
     var options = {
-        height_min: '12em',
+        height_min: '14em',
         height_max: '1000em'
     };
     jQuery.extend(options, settings);
     if (me.hasClass('expand')) {
-        elem.css('height',options.height_max);
+        elem.css('max-height',options.height_max);
     }
     else {
-        elem.css('height',options.height_min);
+        elem.css('max-height',options.height_min);
     }
     me.toggleClass('expand').toggleClass('collapse');
     return false;

@@ -21,8 +21,6 @@ import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.State;
-import fi.hut.soberit.agilefant.model.Task;
-import fi.hut.soberit.agilefant.util.TodoMetrics;
 
 public class BusinessThemeDAOHibernate extends
         GenericDAOHibernate<BusinessTheme> implements BusinessThemeDAO {

@@ -32,6 +32,7 @@
 				this.projectContainer = $('<select name="projectIds"/>').appendTo(this.container).hide().attr("multiple","multiple").change(function() {me.clickProject(me)}).width("200px").height("200px");
 				this.iterationContainer = $('<select name="iterationIds"/>').appendTo(this.container).hide().attr("multiple","multiple").change(function() {me.clickIteration(me)}).width("200px").height("200px");
 				
+				this.auxFields = $('<span />').appendTo(this.container).hide();
 
 				$.post("getProductJSON.action", {}, function(data,retType) {
 					if(data.length == 0) {
@@ -87,8 +88,22 @@
 				return container.find("option[value=-1]").is(":selected");
 			},
 			selectAll: function(container) {
-				container.find("option").not("option[value=-1]").removeAttr("selected");
+				var options = container.find("option").not("option[value=-1]").removeAttr("selected");
 				if(container == this.projectContainer) this.iterationContainer.hide();
+				this.auxFields.empty();
+				var me = this;
+				if(this.useDateFilter) {
+					$.each(options,function() {
+						var backlogId = $(this).attr("value");
+						var field = $('<input type="hidden" />').attr("value",backlogId);
+						if(container == me.projectContainer) {
+							field.attr("name","projectIds");
+						} else {
+							field.attr("name","iterationIds");
+						}
+						field.appendTo(me.auxFields);
+					});
+				}
 			},
 			clickProduct: function() {
 				this.projectContainer.empty();

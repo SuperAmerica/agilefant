@@ -130,7 +130,7 @@ $(document).ready(function() {
 													<th class="info1"><ww:text name="general.uniqueId"/></th>
 													<td class="info3"><aef:quickReference item="${project}" /></td>
 													<td class="info4" rowspan="8">
-                                                        <c:if test="${(!empty project.backlogItems) && (empty project.iterations)}">
+                                                        <c:if test="${(!empty project.backlogItems)}">
                                                             <div class="smallBurndown"><a href="#bigChart">
                                                                 <img src="drawSmallProjectChart.action?projectId=${project.id}"/>
                                                             </a></div>
@@ -365,9 +365,6 @@ $(document).ready(function() {
 														<td>Start date</td>
 														<td>*</td>
 														<td colspan="2">
-														<%--<ww:datepicker value="%{#start}" size="15"
-															showstime="true" format="%{getText('webwork.datepicker.format')}"
-															name="startDate" />--%>
 														<aef:datepicker id="start_date" name="startDate" format="%{getText('webwork.shortDateTime.format')}" value="%{#start}" />
 														</td>
 													</tr>
@@ -375,9 +372,6 @@ $(document).ready(function() {
 														<td>End date</td>
 														<td>*</td>
 														<td colspan="2">
-														<%--<ww:datepicker value="%{#end}" size="15"
-															showstime="true" format="%{getText('webwork.datepicker.format')}"
-															name="endDate" />--%>
 														<aef:datepicker id="end_date" name="endDate" format="%{getText('webwork.shortDateTime.format')}" value="%{#end}" />
 														</td>
 													</tr>
@@ -566,17 +560,14 @@ $(document).ready(function() {
 											id="row" requestURI="editProject.action">
 											
 											<display:column sortable="true" sortProperty="name" title="Name">
-												<div style="overflow:hidden; width: 170px;">												
-												<a class="nameLink" onclick="handleTabEvent('iterationTabContainer-${row.id}', 'iteration', ${row.id}, 1);">
-													${aef:html(row.name)}
-												</a>												
+												<div style="overflow:hidden; width: 170px;">																								
 													<ww:url id="editLink" action="editIteration"
 													includeParams="none">
-													<ww:param name="iterationId" value="${row.id}" />
-												</ww:url>
-												<ww:a href="%{editLink}&contextViewName=editProject&contextObjectId=${project.id}">
-													<img src="static/img/link.png" alt="Iteration page" title="Iteration page"/>
-												</ww:a>												
+														<ww:param name="iterationId" value="${row.id}" />
+													</ww:url>
+													<ww:a href="%{editLink}&contextViewName=editProject&contextObjectId=${project.id}">
+														${aef:html(row.name)}
+													</ww:a>												
 												</div>
 												<div id="iterationTabContainer-${row.id}" class="tabContainer" style="overflow:visible; white-space: nowrap; width: 0px;"></div>
 											</display:column>
@@ -639,12 +630,10 @@ $(document).ready(function() {
 							</c:if>
 						</div>
 						<c:if test="${!empty project.backlogItems}">
-							<c:if test="${empty project.iterations}">
-								<p>
-									<img src="drawProjectChart.action?projectId=${project.id}" id="bigChart"
-									   width="780" height="600" />
-								</p>
-							</c:if>
+							<p>
+								<img src="drawProjectChart.action?projectId=${project.id}" id="bigChart"
+								   width="780" height="600" />
+							</p>
 						</c:if>
 					</c:if>
 				</td>

@@ -1224,7 +1224,7 @@ select.statusSelect option {
 	margin-bottom: 0px;
 }
 
-#containerTree .treeItem, #containerTree .doneTreeItem {
+#containerTree .treeItem, #containerTree .doneTreeItem, .treeItem, .doneTreeItem {
 	min-height: 25px;
 	margin-bottom: -2px;
 	padding: 0px 0px 0px 0px;
@@ -1305,5 +1305,7 @@ select.statusSelect option {
 }
 
 .deleteImage {
+	width: 16px;
+	height: 16px;
 	display: none;
 }

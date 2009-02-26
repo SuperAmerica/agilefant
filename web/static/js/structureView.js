@@ -52,7 +52,7 @@
 							var item = 	$('<li class="treeItem" />').appendTo(list);
 							var span = $('<span class="textHolder" />').appendTo(item);
 							var create = $('<a href="ajaxCreateBacklogItem.action?backlogId='+me.options.backlogId+'&parentId='+data[x].id+'" class="openCreateDialog openBacklogItemDialog addImage" onclick="return false;"><img src="static/img/Add.png" title="Add child" /></a>').appendTo(item);
-							var icon = $('<img src="static/img/Remove.png" alt="Delete" title="Delete" class="deleteImage" />').appendTo(item);
+							var icon = $('<img src="static/img/delete.png" alt="Delete" title="Delete" class="deleteImage" />').appendTo(item);
 							var hidden = $('<input type="hidden" class="hiddenId"/>').appendTo(item);						
 							var subList = $('<ul />').appendTo(item);
 							$(item).prepend('<img src="static/img/treeempty.png" class="expandImage" />');
@@ -81,7 +81,7 @@
 							var item = 	$('<li class="doneTreeItem" />').appendTo(list);
 							var span = $('<span class="textHolder" />').appendTo(item);
 							var create = $('<a href="ajaxCreateBacklogItem.action?backlogId='+me.options.backlogId+'&parentId='+data[x].id+'" class="openCreateDialog openBacklogItemDialog addImage" onclick="return false;"><img src="static/img/Add.png" title="Add child" /></a>').appendTo(item);
-							var icon = $('<img src="static/img/Remove.png" alt="Delete" title="Delete" class="deleteImage" />').appendTo(item);
+							var icon = $('<img src="static/img/delete.png" alt="Delete" title="Delete" class="deleteImage" />').appendTo(item);
 							var hidden = $('<input type="hidden" class="hiddenId"/>').appendTo(item);						
 							var subList = $('<ul />').appendTo(item);
 							$(item).prepend('<img src="static/img/treeempty.png" class="expandImage" />');
@@ -119,7 +119,7 @@
 								$(item).addClass(itemClass);
 								var span = $('<span class="textHolder" />').appendTo(item);
 								var create = $('<a href="ajaxCreateBacklogItem.action?backlogId='+me.options.backlogId+'&parentId='+data[x].id+'" class="openCreateDialog openBacklogItemDialog addImage" onclick="return false;"><img src="static/img/Add.png" title="Add child" /></a>').appendTo(item);
-								var icon = $('<img src="static/img/Remove.png" alt="Delete" title="Delete" class="deleteImage" />').appendTo(item);
+								var icon = $('<img src="static/img/delete.png" alt="Delete" title="Delete" class="deleteImage" />').appendTo(item);
 								var hidden = $('<input type="hidden" class="hiddenId"/>').appendTo(item);
 								var subList = $('<ul />').appendTo(item);
 								$(item).prepend('<img src="static/img/treeempty.png" class="expandImage" />');						
@@ -215,15 +215,17 @@
 						onhover			: function(dragged)
 						{
 						expImg = $('img.expandImage', this.parentNode);
-						if (expImg.get(0).src.indexOf('plus') > -1) {
-							$('img.expandImage', this.parentNode).eq(0).click();
-							this.expanderTime = window.setTimeout(
-									function()
-									{
-										$.recallDroppables();
-									},
-									500
-								)
+						if(this.parentNode != dragged) {
+							if (expImg.get(0).src.indexOf('plus') > -1) {
+								$('img.expandImage', this.parentNode).eq(0).click();
+								this.expanderTime = window.setTimeout(
+										function()
+										{
+											$.recallDroppables();
+										},
+										500
+									)
+							}
 						}
 						this.setAttribute("style", "background-color:#747170");
 						},
@@ -237,7 +239,20 @@
 							me.setAttribute("style", "background-color:transparent");
 							var childId = $('input.hiddenId', dropped).eq(0).attr('value');								
 							var parentId = $('input.hiddenId', me.parentNode).eq(0).attr('value');
+							var conflict = 'false';
 							if(me.parentNode == dropped) {
+								return;
+							}
+							$('input', dropped).each(
+									function()
+									{
+										var hiddenValue = $(this).attr('value');
+										if (hiddenValue == parentId) {
+											conflict = 'true';
+										}
+									}
+								);
+							if(conflict == 'true') {
 								return;
 							}
 							var subbranch = $('ul', me.parentNode).eq(0);

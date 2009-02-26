@@ -38,7 +38,7 @@
 					if(data.length == 0) {
 						$('<option/>').appendTo(me.productContainer).text("There are no Products in the system.");
 					} else {
-						$.each(data,function(key,element) {
+						$.each(me.sortBacklogs(data),function(key,element) {
 							var opt = $('<option/>').appendTo(me.productContainer).text(element.name).attr("value",element.id);
 							if($.inArray(element.id,me.selectedProducts) != -1) {
 								opt.attr("selected","selected");
@@ -50,6 +50,20 @@
 						}
 					}
 				},"json");
+			},
+			sortBacklogs: function(backlogs) {
+				var sorter = function(a,b) {
+					var aname = a.name.toLowerCase();
+					var bname = b.name.toLowerCase();
+					if(aname == bname) {
+						return 0;
+					} else if(aname > bname) {
+						return 1;
+					} else {
+						return -1;
+					}
+				};
+				return backlogs.sort(sorter);
 			},
 			reRender: function() {
 				this.clickProduct();
@@ -92,7 +106,7 @@
 				if(container == this.projectContainer) this.iterationContainer.hide();
 				this.auxFields.empty();
 				var me = this;
-				if(this.useDateFilter) {
+				if(this.useDateLimit) {
 					$.each(options,function() {
 						var backlogId = $(this).attr("value");
 						var field = $('<input type="hidden" />').attr("value",backlogId);
@@ -109,6 +123,10 @@
 				this.projectContainer.empty();
 				this.selectedProducts = this.getSelected(this.productContainer);
 				this.renderBacklogSelector(this.projectContainer, this.selectedProducts, this.selectedProjects);
+				if(this.isSelectAll(this.projectContainer)) {
+					this.selectAll(this.projectContainer);
+					this.iterationContainer.hide();
+				}
 			},
 			clickProject: function() {
 				this.iterationContainer.empty();
@@ -128,18 +146,21 @@
 			},
 			renderBacklogSelector: function(container, selectedItems, selectedInContainer) {
 				container.empty();
+				var selectAllOpt = false;
 				if(selectedItems.length > 0) {
 					var selectAll = $('<option/>').appendTo(container).html("<b>Select all</b>").attr("value",-1);
+					selectAllOpt = ($.inArray(-1,selectedInContainer) != -1);
 				}
+				 
 				var cnt = 0;
 				var numSelected = 0;
 				var me = this;
 				$.each(selectedItems, function() { 
 					var data = jsonDataCache.get("subBacklogs", {data: {backlogId: this}}, this);
-					$.each(data, function() {
+					$.each(me.sortBacklogs(data), function() {
 						if(me.filter(this)) {
 							var opt = $('<option/>').appendTo(container).text(this.name).attr("value",this.id);
-							if($.inArray(this.id,selectedInContainer) != -1) {
+							if($.inArray(this.id,selectedInContainer) != -1 && !selectAllOpt) {
 								opt.attr("selected","selected");
 								numSelected++;
 							}
@@ -147,7 +168,7 @@
 					});
 					cnt++;
 				});
-				if(numSelected == 0) {
+				if((numSelected == 0 || selectAllOpt) && selectAll) {
 					selectAll.attr("selected","selected");
 				}
 				if(cnt == 0) {

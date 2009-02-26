@@ -6,7 +6,7 @@
 <table cellspacing="0" cellpadding="0">
 	<tr>
         <td class="iconsbefore">
-            <div class="expand" onclick="toggleHide(this,['#detailedLoadTable','#smallLoadTable']);"></div>
+            <div class="expand" title="Expand" onclick="toggleHide(this,['#detailedLoadTable','#smallLoadTable']);"></div>
         </td>
 		<td class="header">Load</td>
 	</tr>

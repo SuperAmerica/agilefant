@@ -327,9 +327,11 @@ function toggleExpand(clickedElement, elementId, settings) {
     jQuery.extend(options, settings);
     if (me.hasClass('expand')) {
         elem.css('max-height',options.height_max);
+        me.attr("title","Collapse");
     }
     else {
         elem.css('max-height',options.height_min);
+        me.attr("title","Expand");
     }
     me.toggleClass('expand').toggleClass('collapse');
     return false;
@@ -337,8 +339,14 @@ function toggleExpand(clickedElement, elementId, settings) {
 
 function toggleHide(clickedElement, elements) {
     var elems = $(elements);
+    var me = $(clickedElement);
     $.each(elems, function(key, elem) {
         $(elem).toggle();
     });
-    $(clickedElement).toggleClass('expand').toggleClass('collapse');
+    if(me.hasClass('expand')) {
+    	me.attr("title","Collapse");
+    } else {
+    	me.attr("title","Expand");
+    }
+    me.toggleClass('expand').toggleClass('collapse');
 }

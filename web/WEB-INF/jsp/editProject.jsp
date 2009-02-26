@@ -102,7 +102,7 @@ $(document).ready(function() {
 										<table cellspacing="0" cellpadding="0">
 											<tr>
                                                 <td class="iconsbefore">
-                                                    <div class="expand" onclick="toggleExpand(this, '#descriptionDiv');">
+                                                    <div class="expand" title="Expand" onclick="toggleExpand(this, '#descriptionDiv');">
                                                     </div>
 						                        </td>
 												<td class="header">Details</td>

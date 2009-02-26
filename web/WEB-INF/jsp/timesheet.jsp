@@ -150,11 +150,11 @@ $(document).ready( function() {
 										<c:choose>
 											<c:when test="${backlogSelectionType == 1}">
 												<input type="radio" name="backlogSelectionType" value="0" />Advanced
-												<input type="radio" name="backlogSelectionType" value="1" checked="checked"/>Ongoing projects assigned to me.										
+												<input type="radio" name="backlogSelectionType" value="1" checked="checked"/>My effort from ongoing projects I've been assigned to.										
 											</c:when>
 											<c:otherwise>
 												<input type="radio" name="backlogSelectionType" value="0" checked="checked"/>Advanced
-												<input type="radio" name="backlogSelectionType" value="1" />Ongoing projects assigned to me.
+												<input type="radio" name="backlogSelectionType" value="1" />My effort from ongoing projects I've been assigned to.
 											</c:otherwise>
 										</c:choose>
 									</td>
@@ -172,10 +172,10 @@ $(document).ready( function() {
 										</c:choose>
 										<c:choose>
 											<c:when test="${onlyOngoing == true}">
-												<input id="showOnlyOngoingBacklogs" name="onlyOngoing" type="checkbox" value="true" checked="checked"/>Show only currently ongoing projects and iterations.<br />								
+												<input id="showOnlyOngoingBacklogs" name="onlyOngoing" type="checkbox" value="true" checked="checked"/>Hide past projects and iterations.<br />								
 											</c:when>
 											<c:otherwise>
-												<input id="showOnlyOngoingBacklogs" name="onlyOngoing" type="checkbox" value="true" />Show only currently ongoing projects and iterations.<br />						
+												<input id="showOnlyOngoingBacklogs" name="onlyOngoing" type="checkbox" value="true" />Hide past projects and iterations.<br />						
 											</c:otherwise>
 										</c:choose>
 										<div id="selectBacklogs"></div>

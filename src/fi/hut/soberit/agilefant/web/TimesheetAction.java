@@ -67,7 +67,7 @@ public class TimesheetAction extends ActionSupport implements PrincipalAware {
     
     private int backlogSelectionType = 0;
     
-    private boolean onlyOngoing = false;
+    private boolean onlyOngoing = true;
     
     private AFTime totalSpentTime;
 
@@ -103,9 +103,17 @@ public class TimesheetAction extends ActionSupport implements PrincipalAware {
     private List<Integer> selectedBacklogs() {
         List<Integer> ret = new ArrayList<Integer>();
         if(this.projectIds.contains(-1)) {
-            ret.addAll(this.productIds);
+            if(this.onlyOngoing) {
+                ret.addAll(this.projectIds);
+            } else {
+                ret.addAll(this.productIds);
+            }
         } else if(this.iterationIds.contains(-1)) {
-            ret.addAll(this.projectIds);
+             if(this.onlyOngoing) {
+                ret.addAll(this.iterationIds);
+            } else {
+                ret.addAll(this.projectIds);
+            }
         } else {
             if(this.projectIds.size() == 0) {
                 ret.addAll(this.productIds);

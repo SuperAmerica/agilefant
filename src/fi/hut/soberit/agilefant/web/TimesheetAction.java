@@ -126,6 +126,7 @@ public class TimesheetAction extends ActionSupport implements PrincipalAware {
         return ret;
     }
     public String initialize() {
+        this.interval = "TODAY";
         return Action.SUCCESS;
     }
     public String generateTree(){

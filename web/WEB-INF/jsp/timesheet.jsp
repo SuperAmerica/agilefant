@@ -115,7 +115,7 @@ function change_selected_interval(value) {
 $(document).ready( function() {
     var interval = document.getElementById('interval');
     <ww:set name="currently" value="#attr.interval" />
-    var current = "${currently}";
+    var current = "${interval}";
     if (current) {
         change_selected_interval(current);
         $("#interval").find("[value='"+current+"']").attr("selected","selected");

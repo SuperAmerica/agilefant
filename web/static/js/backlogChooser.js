@@ -136,6 +136,9 @@
 					this.iterationContainer.hide();
 				} else {
 					this.renderBacklogSelector(this.iterationContainer, this.selectedProjects, this.selectedIterations);
+					if(this.isSelectAll(this.iterationContainer)) {
+						this.selectAll(this.iterationContainer);
+					}
 				}
 			},
 			clickIteration: function() {

@@ -19,7 +19,10 @@ import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
+import fi.hut.soberit.agilefant.model.BusinessTheme;
 import fi.hut.soberit.agilefant.model.Iteration;
+import fi.hut.soberit.agilefant.model.IterationGoal;
+import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.State;
 import fi.hut.soberit.agilefant.model.User;
 
@@ -349,4 +352,209 @@ public class BacklogItemBusinessTest extends TestCase {
 
         verify(userBusiness);
     }   
+    
+    /**
+     * Move backlog item to another backlog within the same product
+     */
+    public void testMoveItemToBacklog_sameProductWithThemes() {
+        BacklogBusiness blBusiness = createMock(BacklogBusiness.class);
+        HistoryBusiness hBuss = createMock(HistoryBusiness.class);
+        BacklogItemBusinessImpl testable = new BacklogItemBusinessImpl();
+        testable.setBacklogBusiness(blBusiness);
+        testable.setHistoryBusiness(hBuss);
+        
+        Project proj1 = new Project();
+        proj1.setId(1);
+        Project proj2 = new Project();
+        proj2.setId(2);
+        BacklogItem bli = new BacklogItem();
+        bli.setBacklog(proj1);
+        proj1.getBacklogItems().add(bli);
+        BusinessTheme prodTheme = new BusinessTheme();
+        prodTheme.setGlobal(false);
+        BusinessTheme globalTheme = new BusinessTheme();
+        globalTheme.setGlobal(true);
+        bli.getBusinessThemes().add(globalTheme);
+        bli.getBusinessThemes().add(prodTheme);
+        
+        //fake under same backlog
+        expect(blBusiness.isUnderSameProduct(proj1, proj2)).andReturn(true);
+        //expect history updates
+        hBuss.updateBacklogHistory(1);
+        hBuss.updateBacklogHistory(2);
+        
+        replay(hBuss);
+        replay(blBusiness);
+        
+        testable.moveItemToBacklog(bli, proj2);
+        
+        assertEquals(2, bli.getBusinessThemes().size());
+        assertEquals(0, proj1.getBacklogItems().size());
+        assertEquals(1, proj2.getBacklogItems().size());
+        assertEquals(proj2, bli.getBacklog());
+        
+        verify(hBuss);
+        verify(blBusiness);
+    }
+    
+    /**
+     * Move backlog item to a backlog in a different product.
+     */
+    public void testMoveItemToBacklog_DifferentProduct() {
+        BacklogBusiness blBusiness = createMock(BacklogBusiness.class);
+        HistoryBusiness hBuss = createMock(HistoryBusiness.class);
+        BacklogItemBusinessImpl testable = new BacklogItemBusinessImpl();
+        testable.setBacklogBusiness(blBusiness);
+        testable.setHistoryBusiness(hBuss);
+        
+        Project proj1 = new Project();
+        proj1.setId(1);
+        Project proj2 = new Project();
+        proj2.setId(2);
+        BacklogItem bli = new BacklogItem();
+        bli.setBacklog(proj1);
+        proj1.getBacklogItems().add(bli);
+        BusinessTheme prodTheme = new BusinessTheme();
+        prodTheme.setGlobal(false);
+        BusinessTheme globalTheme = new BusinessTheme();
+        globalTheme.setGlobal(true);
+        bli.getBusinessThemes().add(globalTheme);
+        bli.getBusinessThemes().add(prodTheme);
+
+        //fake under same backlog
+        expect(blBusiness.isUnderSameProduct(proj1, proj2)).andReturn(false);
+        //expect history updates
+        hBuss.updateBacklogHistory(1);
+        hBuss.updateBacklogHistory(2);
+        
+        replay(hBuss);
+        replay(blBusiness);
+        
+        testable.moveItemToBacklog(bli, proj2);
+        
+        assertEquals(1, bli.getBusinessThemes().size());
+        assertTrue(bli.getBusinessThemes().contains(globalTheme));
+        assertEquals(0, proj1.getBacklogItems().size());
+        assertEquals(1, proj2.getBacklogItems().size());
+        assertEquals(proj2, bli.getBacklog());
+        
+        verify(hBuss);
+        verify(blBusiness);
+        
+    }
+    
+    public void testSetBacklogItemIterationGoal_RightIteration() {
+        BacklogItemBusinessImpl testable = new BacklogItemBusinessImpl();
+        
+        Iteration iter = new Iteration();
+        IterationGoal goal = new IterationGoal();
+        BacklogItem bli = new BacklogItem();
+        goal.setIteration(iter);
+        bli.setBacklog(iter);
+        
+        testable.setBacklogItemIterationGoal(bli, goal);
+        assertEquals(goal, bli.getIterationGoal());
+        assertTrue(goal.getBacklogItems().contains(bli));
+        
+    }
+    
+    public void testSetBacklogItemIterationGoal_ChangeGoal() {
+        BacklogItemBusinessImpl testable = new BacklogItemBusinessImpl();
+        
+        Iteration iter = new Iteration();
+        IterationGoal goal = new IterationGoal();
+        IterationGoal oldGoal = new IterationGoal();
+        BacklogItem bli = new BacklogItem();
+        goal.setIteration(iter);
+        bli.setBacklog(iter);
+        bli.setIterationGoal(oldGoal);
+        oldGoal.getBacklogItems().add(bli);
+        
+        testable.setBacklogItemIterationGoal(bli, goal);
+        assertEquals(goal, bli.getIterationGoal());
+        assertTrue(goal.getBacklogItems().contains(bli));
+        assertFalse(oldGoal.getBacklogItems().contains(bli));
+        
+    }
+    
+    public void testSetBacklogItemIterationGoal_WrongIteration() {
+        BacklogItemBusinessImpl testable = new BacklogItemBusinessImpl();
+        
+        Iteration iter = new Iteration();
+        IterationGoal goal = new IterationGoal();
+        BacklogItem bli = new BacklogItem();
+        goal.setIteration(iter);
+        
+        Iteration target = new Iteration();
+        bli.setBacklog(target);
+        
+        testable.setBacklogItemIterationGoal(bli, goal);
+        assertEquals(null, bli.getIterationGoal());
+        assertFalse(goal.getBacklogItems().contains(bli));
+    }
+    
+    public void testSetBacklogItemIterationGoal_InProject() {
+        BacklogItemBusinessImpl testable = new BacklogItemBusinessImpl();
+        
+        Iteration iter = new Iteration();
+        IterationGoal goal = new IterationGoal();
+        BacklogItem bli = new BacklogItem();
+        goal.setIteration(iter);
+
+        Project target = new Project();
+        bli.setBacklog(target);
+        
+        testable.setBacklogItemIterationGoal(bli, goal);
+        assertEquals(null, bli.getIterationGoal());
+        assertFalse(goal.getBacklogItems().contains(bli));
+    }
+    
+    public void testStoreBacklogItem_NoEffortLeft() {
+        BacklogItemBusinessImpl testable = new BacklogItemBusinessImpl();
+        BacklogItemDAO dao = createMock(BacklogItemDAO.class);
+        testable.setBacklogItemDAO(dao);
+        
+        BacklogItem persisted = new BacklogItem();
+        BacklogItem dataItem = new BacklogItem();
+        Backlog backlog = new Project();
+        dataItem.setOriginalEstimate(new AFTime(100));
+        dataItem.setEffortLeft(null);
+        persisted.setBacklog(backlog);
+        backlog.setId(1);
+        persisted.setId(1);
+        
+        dao.store(persisted);
+        
+        replay(dao);
+        
+        testable.storeBacklogItem(persisted, backlog, dataItem, null, null);
+        assertEquals(persisted.getEffortLeft(), persisted.getOriginalEstimate());
+        
+        verify(dao);
+
+    }
+    
+    public void testStoreBacklogItem_DoneItem() {
+        BacklogItemBusinessImpl testable = new BacklogItemBusinessImpl();
+        BacklogItemDAO dao = createMock(BacklogItemDAO.class);
+        testable.setBacklogItemDAO(dao);
+
+        BacklogItem persisted = new BacklogItem();
+        BacklogItem dataItem = new BacklogItem();
+        Backlog backlog = new Project();
+        dataItem.setState(State.DONE);
+        persisted.setEffortLeft(new AFTime(100));
+        persisted.setBacklog(backlog);
+        backlog.setId(1);
+        
+        expect(dao.create(persisted)).andReturn(new Integer(1));
+        expect(dao.get(1)).andReturn(persisted);
+
+        replay(dao);
+        
+        testable.storeBacklogItem(persisted, backlog, dataItem, null, null);
+        assertEquals(persisted.getEffortLeft().getTime(), 0);
+        
+        verify(dao);
+    }
 }

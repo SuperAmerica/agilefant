@@ -2,11 +2,13 @@ package fi.hut.soberit.agilefant.business;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
+import fi.hut.soberit.agilefant.model.IterationGoal;
 import fi.hut.soberit.agilefant.model.State;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.util.BacklogItemResponsibleContainer;
@@ -113,5 +115,69 @@ public interface BacklogItemBusiness {
     public Map<BacklogItem, List<BacklogItemResponsibleContainer>> getResponsiblesByBacklog(Backlog backlog);
     
     public List<BacklogItem> getBacklogItemsByBacklog(Backlog backlog);
+    
+    /**
+     * Update or create new backlog item and persist the object to database.
+     * 
+     * @param backlogItemId
+     *            Object ID when updating existing entry or 0 when creating a
+     *            new one.
+     * @param backlogId
+     *            Parent backlog ID.
+     * @param dataItem
+     *            Transfer object containing simple property values.
+     * @param responsibles
+     * @param iterationGoalId
+     *            Zero if not iteration goal is to be set.
+     * @return Persisted database object.
+     * @throws ObjectNotFoundException
+     *             Thrown if given iteration goal, backlog or existing backlog
+     *             item is not found.
+     */
+    public BacklogItem storeBacklogItem(int backlogItemId, int backlogId,
+            BacklogItem dataItem, Set<Integer> responsibles, int iterationGoalId)
+            throws ObjectNotFoundException;
+
+    /**
+     * Update or create new backlog item and persist the object to database.
+     * 
+     * @param backlogItemId
+     *            Persisted backlog item when updating existing entry or null
+     *            when creating a new one.
+     * @param backlogId
+     *            Parent backlog.
+     * @param dataItem
+     *            Transfer object containing simple property values.
+     * @param responsibles
+     * @param iterationGoalId
+     *            null if not iteration goal is to be set.
+     * @return Persisted database object.
+     * @throws ObjectNotFoundException
+     *             Thrown if given iteration goal, backlog or existing backlog
+     *             item is not found.
+     */
+    public BacklogItem storeBacklogItem(BacklogItem storable, Backlog backlog,
+            BacklogItem dataItem, Set<User> responsibles,
+            IterationGoal iterationGoal);
+
+    /**
+     * Move backlog item from one backlog to another. Updates backlog histories.
+     * Removes product themes if the backlog item is moved to an other product.
+     * 
+     * @param item
+     * @param backlog
+     */
+    public void moveItemToBacklog(BacklogItem item, Backlog backlog);
+
+    /**
+     * Sets backlog item's iteration goal if backlog item is in an iteration.
+     * Checks that the iteration goal belongs to the same iteration as the
+     * backlog item.
+     * 
+     * @param item
+     * @param iterationGoal
+     */
+    public void setBacklogItemIterationGoal(BacklogItem item,
+            IterationGoal iterationGoal);
 
 }

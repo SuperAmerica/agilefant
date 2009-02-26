@@ -1,6 +1,7 @@
 package fi.hut.soberit.agilefant.business.impl;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -9,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import fi.hut.soberit.agilefant.business.BacklogBusiness;
 import fi.hut.soberit.agilefant.business.BacklogItemBusiness;
 import fi.hut.soberit.agilefant.business.HistoryBusiness;
 import fi.hut.soberit.agilefant.business.HourEntryBusiness;
@@ -16,15 +18,20 @@ import fi.hut.soberit.agilefant.business.SettingBusiness;
 import fi.hut.soberit.agilefant.business.TaskBusiness;
 import fi.hut.soberit.agilefant.business.UserBusiness;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
+import fi.hut.soberit.agilefant.db.IterationGoalDAO;
+import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
+import fi.hut.soberit.agilefant.model.BusinessTheme;
 import fi.hut.soberit.agilefant.model.Iteration;
+import fi.hut.soberit.agilefant.model.IterationGoal;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.State;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.security.SecurityUtil;
 import fi.hut.soberit.agilefant.util.BacklogItemComparator;
 import fi.hut.soberit.agilefant.util.BacklogItemPriorityComparator;
 import fi.hut.soberit.agilefant.util.BacklogItemResponsibleContainer;
@@ -44,6 +51,8 @@ public class BacklogItemBusinessImpl implements BacklogItemBusiness {
     private UserBusiness userBusiness;
     private HourEntryBusiness hourEntryBusiness;
     private SettingBusiness settingBusiness;
+    private BacklogBusiness backlogBusiness;
+    private IterationGoalDAO iterationGoalDAO;
 
     public BacklogItemDAO getBacklogItemDAO() {
         return backlogItemDAO;
@@ -64,7 +73,137 @@ public class BacklogItemBusinessImpl implements BacklogItemBusiness {
     public void setHourEntryBusiness(HourEntryBusiness hourEntryBusiness) {
         this.hourEntryBusiness = hourEntryBusiness;
     }
+    
+    public BacklogItem storeBacklogItem(int backlogItemId, int backlogId, BacklogItem dataItem, Set<Integer> responsibles, int iterationGoalId) throws ObjectNotFoundException {
+        BacklogItem item = null; 
+        if(backlogItemId > 0) {
+            item = backlogItemDAO.get(backlogId);
+            if(item == null) {
+                throw new ObjectNotFoundException("BacklogItem Not Found.");
+            }
+        }
+        Backlog backlog = backlogBusiness.getBacklog(backlogId);
+        if(backlog == null) {
+            throw new ObjectNotFoundException("Backlog Not Found.");
+        }
+        
+        IterationGoal iterationGoal = null;
+        if(iterationGoalId > 0 && backlog instanceof Iteration) {
+            iterationGoal = iterationGoalDAO.get(iterationGoalId);
+            if(iterationGoal == null) {
+                throw new ObjectNotFoundException("IterationGoal Not Found.");
+            }
+        }
+        
+        Set<User> responsibleUsers = new HashSet<User>();
+        
+        for(int userId : responsibles) {
+            User responsible = userBusiness.getUser(userId);
+            if(responsible != null) {
+                responsibleUsers.add(responsible);
+            }
+        }
+        
+        return this.storeBacklogItem(item, backlog, dataItem, responsibleUsers, iterationGoal);
+    }
 
+    public BacklogItem storeBacklogItem(BacklogItem storable, Backlog backlog, BacklogItem dataItem, Set<User> responsibles, IterationGoal iterationGoal) {
+
+        boolean historyUpdated = false;
+        
+        if(backlog == null) {
+            throw new IllegalArgumentException("Backlog must not be null.");
+        }
+        if(dataItem == null) {
+            throw new IllegalArgumentException("No data given.");
+        }
+        if(storable == null) {
+            storable = new BacklogItem();
+            storable.setCreatedDate(Calendar.getInstance());
+            try {
+                storable.setCreator(SecurityUtil.getLoggedUser()); //may fail if request is multithreaded
+            } catch(Exception e) { } //however, saving item should not fail.
+        }
+        storable.setDescription(dataItem.getDescription());
+        storable.setEffortLeft(dataItem.getEffortLeft());
+        storable.setName(dataItem.getName());
+        if(storable.getId() == 0) {
+            storable.setOriginalEstimate(dataItem.getOriginalEstimate());
+        }
+        storable.setPriority(dataItem.getPriority());
+        storable.setState(dataItem.getState());
+        
+        if(dataItem.getState() == State.DONE) {
+            storable.setEffortLeft(new AFTime(0));
+        } else if(dataItem.getEffortLeft() == null && storable.getId() != 0) {
+            storable.setEffortLeft(storable.getOriginalEstimate());
+        }
+        
+        if(storable.getBacklog() != null && storable.getBacklog() != backlog) {
+            this.moveItemToBacklog(storable, backlog);
+            historyUpdated = true;
+        }
+        
+        storable.setResponsibles(responsibles);
+        
+        this.setBacklogItemIterationGoal(storable, iterationGoal);
+        
+        BacklogItem persisted;
+        
+        if(storable.getId() == 0) {
+            int persistedId = (Integer)backlogItemDAO.create(storable);
+            persisted = backlogItemDAO.get(persistedId);
+        } else {
+            backlogItemDAO.store(storable);
+            persisted = storable;
+        }
+        if(historyUpdated) {
+            historyBusiness.updateBacklogHistory(backlog.getId());
+        }
+        return persisted;
+    }
+    
+    public void moveItemToBacklog(BacklogItem item, Backlog backlog) {
+
+        Backlog oldBacklog = item.getBacklog();
+        oldBacklog.getBacklogItems().remove(item);
+        item.setBacklog(backlog);
+        backlog.getBacklogItems().add(item);
+        historyBusiness.updateBacklogHistory(oldBacklog.getId());
+        historyBusiness.updateBacklogHistory(backlog.getId());
+        
+        if(item.getIterationGoal() != null) {
+            item.getIterationGoal().getBacklogItems().remove(item);
+            item.setIterationGoal(null);
+        }        
+        if(!backlogBusiness.isUnderSameProduct(oldBacklog, backlog)) {
+            //remove only product themes
+            Collection<BusinessTheme> removeThese = new ArrayList<BusinessTheme>();;
+            for(BusinessTheme theme : item.getBusinessThemes()) {
+                if(!theme.isGlobal()) {
+                    removeThese.add(theme);
+                }
+            }
+            for(BusinessTheme theme : removeThese) {
+                item.getBusinessThemes().remove(theme);
+            }
+        }
+    }
+    public void setBacklogItemIterationGoal(BacklogItem item, IterationGoal iterationGoal) {
+        if(iterationGoal != null && item.getBacklog() == iterationGoal.getIteration()) {
+            if(item.getIterationGoal() != null) {
+                item.getIterationGoal().getBacklogItems().remove(item);
+            }
+            item.setIterationGoal(iterationGoal);
+            iterationGoal.getBacklogItems().add(item);
+        } else {
+            if(item.getIterationGoal() != null) {
+                item.getIterationGoal().getBacklogItems().remove(item);
+            }
+            item.setIterationGoal(null);
+        }
+    }
+    
     public void removeBacklogItem(int backlogItemId)
             throws ObjectNotFoundException {
         BacklogItem backlogItem = backlogItemDAO.get(backlogItemId);
@@ -262,6 +401,14 @@ public class BacklogItemBusinessImpl implements BacklogItemBusiness {
 
     public void setSettingBusiness(SettingBusiness settingBusiness) {
         this.settingBusiness = settingBusiness;
+    }
+
+    public void setBacklogBusiness(BacklogBusiness backlogBusiness) {
+        this.backlogBusiness = backlogBusiness;
+    }
+
+    public void setIterationGoalDAO(IterationGoalDAO iterationGoalDAO) {
+        this.iterationGoalDAO = iterationGoalDAO;
     }
 
 

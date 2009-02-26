@@ -37,8 +37,6 @@ public class BusinessThemeBusinessImpl implements BusinessThemeBusiness {
     private BacklogDAO backlogDAO;
     private BacklogItemDAO backlogItemDAO;
 
-    private BacklogItemBusiness backlogItemBusiness;
-
     public BusinessTheme getBusinessTheme(int businessThemeId) {
         return businessThemeDAO.get(businessThemeId);
     }
@@ -504,14 +502,6 @@ public class BusinessThemeBusinessImpl implements BusinessThemeBusiness {
 
     public void setBacklogDAO(BacklogDAO backlogDAO) {
         this.backlogDAO = backlogDAO;
-    }
-
-    public BacklogItemBusiness getBacklogItemBusiness() {
-        return backlogItemBusiness;
-    }
-
-    public void setBacklogItemBusiness(BacklogItemBusiness backlogItemBusiness) {
-        this.backlogItemBusiness = backlogItemBusiness;
     }
 
 }

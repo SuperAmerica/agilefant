@@ -136,10 +136,7 @@ $(document).ready(function() {
             		</c:choose>
             </c:forEach>
 		<%-- Link to go to the bli in the iteration page. --%>												
-		<ww:url id="editLink" action="editIteration" includeParams="none">
-			<ww:param name="iterationId" value="${iterationGoal.iteration.id}" />
-		</ww:url>
-		<ww:a href="%{editLink}#bli_${row.id}">
+		<ww:a href="qr.action?id=BLI:${row.id}">
 			${aef:html(row.name)}
 		</ww:a>						
 	</display:column>

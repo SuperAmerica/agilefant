@@ -779,6 +779,7 @@ td.icons {
     padding: 2px 5px 0 5px;
     text-align: right;
     border-left: 1px solid #666;
+    background-color: #eef;
 }
 
 td.icons img {

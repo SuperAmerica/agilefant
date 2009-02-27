@@ -49,7 +49,7 @@ $(document).ready(function() {
                         </td>
 						<td class="header">Details</td>
 						<td class="icons">
-						  <img src="static/img/edit.png"
+						  <img src="static/img/edit.png" title="Edit iteration details"
 						      height="18" width="18" alt="Edit" onclick="editIteration();" />
 						</td>
 					</tr>

@@ -16,6 +16,10 @@
 
 <script type="text/javascript">
 
+function editProduct() {
+    toggleDiv('editProductForm'); toggleDiv('descriptionDiv'); showWysiwyg('productDescription'); return false;
+}
+
 $(document).ready(function() {
     <c:forEach items="${openThemes}" var="openTheme">
         handleTabEvent("businessThemeTabContainer-${openTheme[0]}", "businessTheme", ${openTheme[0]}, ${openTheme[1]});
@@ -53,13 +57,7 @@ var productId = ${product.id};
 		<tr>
 			<td>
 			<div class="subItems" style="margin-top: 0" id="subItems_editProductDetails">
-			<div class="subItemHeader"><script type="text/javascript">
-			                function editProduct() {
-			                	toggleDiv('editProductForm'); toggleDiv('descriptionDiv'); showWysiwyg('productDescription'); return false;
-			                }
-			                </script>
-
-
+			<div class="subItemHeader">
 			<table cellspacing="0" cellpadding="0">
 				<tr>
 				    <td class="iconsbefore">
@@ -68,8 +66,8 @@ var productId = ${product.id};
                     </td>
 					<td class="header">Details</td>
 					<td class="icons">
-                      <img src="static/img/edit.png"
-                          height="18" width="18" alt="Edit" onclick="editProduct();" />
+                        <img src="static/img/edit.png" onclick="editProduct();"
+                          height="18" width="18" alt="Edit" title="Edit product details"/>
                     </td>
 				</tr>
 			</table>

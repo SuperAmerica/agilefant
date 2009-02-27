@@ -116,7 +116,7 @@ $(document).ready(function() {
 												        height="18" width="18" alt="Log effort" />
 												    </ww:a>
                                                   </c:if>
-						                          <img src="static/img/edit.png"
+						                          <img src="static/img/edit.png" title="Edit project details"
 						                              height="18" width="18" alt="Edit"
 						                              onclick="editProject();" />
 						                        </td>

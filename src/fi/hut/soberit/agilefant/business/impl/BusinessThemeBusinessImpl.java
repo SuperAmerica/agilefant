@@ -11,7 +11,6 @@ import java.util.Set;
 
 import org.springframework.dao.DataIntegrityViolationException;
 
-import fi.hut.soberit.agilefant.business.BacklogItemBusiness;
 import fi.hut.soberit.agilefant.business.BusinessThemeBusiness;
 import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;

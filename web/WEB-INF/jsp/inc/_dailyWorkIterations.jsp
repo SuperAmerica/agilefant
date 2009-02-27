@@ -68,10 +68,10 @@ $(document).ready(function() {
             <ww:param name="backlogId" value="${it.id}" />
           </ww:url>
           <ww:a cssClass="openCreateDialog openBacklogItemDialog"
-                onclick="return false;" title="Create backlog item"
+                onclick="return false;" title="Create a new backlog item"
                 href="%{createBLILink}">
             <img src="static/img/new.png"
-                height="18" width="18" alt="Create backlog item" />
+                height="16" width="16" alt="Create a new backlog item" />
           </ww:a>  
 		</td>
 		</tr>

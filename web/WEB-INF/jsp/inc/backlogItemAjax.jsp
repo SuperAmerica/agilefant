@@ -368,8 +368,10 @@ $(document).ready(function() {
 				<td><ww:submit value="Save" id="saveButton" />
 				<ww:submit name="SaveClose" value="Save & Close" id="saveClose"  /></td>
 				<td class="deleteButton">
-				<ww:submit value="Delete" action="deleteBacklogItem" />
-				<ww:reset value="Cancel"/>				
+				<c:if test="${!backlogItem.hasChilds}">
+        	        <ww:submit value="Delete" action="deleteBacklogItem" />
+        	   	</c:if> 
+        	   	<ww:reset value="Cancel"/>				
 				</td>
 			</tr>
 		</table>

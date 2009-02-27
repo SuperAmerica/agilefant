@@ -63,7 +63,7 @@ public class BacklogContentsAction extends ActionSupport {
     
     protected HourEntryBusiness hourEntryBusiness;
     
-    private SettingBusiness settingBusiness;
+    protected SettingBusiness settingBusiness;
 
     protected void initializeContents(int backlogId) {
         Backlog bl;

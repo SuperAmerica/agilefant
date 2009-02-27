@@ -63,6 +63,27 @@
 </tbody>
 </table>
 
+<h2>Experimental Features</h2>
+
+<p>The use of these features in production environment is strongly discouraged.</p>
+
+<table id="row">
+<thead>
+<tr>
+<th>Setting</th>
+<th>Enabled</th>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Project Burndown</td>
+<td>
+    <ww:checkbox name="projectBurndown" fieldValue="true" value="${projectBurndown}"></ww:checkbox>        
+</td>
+</tr>
+</tbody>
+</table>
+
+
 <ww:submit value="Save"></ww:submit>
 </ww:form>
 

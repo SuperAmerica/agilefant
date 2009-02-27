@@ -21,7 +21,10 @@ $(document).ready(function() {
 <table cellspacing="0" cellpadding="0">
 	<tr>
 		<td class="header">Project types					
-			<a href="ajaxCreateProjectType.action" class="openCreateDialog openProjectTypeDialog" title="Create a project type" onclick="return false;">Create new &raquo;</a>
+			<a href="ajaxCreateProjectType.action" class="openCreateDialog openProjectTypeDialog"
+			title="Create a project type" onclick="return false;">
+			 <img src="static/img/new.png" width="16" height="16" alt="Create new"/>
+			</a>
 		</td>
 	</tr>
 </table>

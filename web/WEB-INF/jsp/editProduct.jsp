@@ -184,11 +184,13 @@ var productId = ${product.id};
 	                <tr>
 	                    <td class="header">
 	                    Projects
+	                    </td>
+	                    <td class="icons">
 	                    <ww:url id="createLink" action="ajaxCreateProject" includeParams="none">
 						  <ww:param name="productId" value="${product.id}" />
 						</ww:url>
 						<ww:a href="%{createLink}" title="Create a new project" cssClass="openCreateDialog openProjectDialog" onclick="return false;">
-						Create new &raquo;</ww:a>
+						<img src="static/img/new.png" width="16" height="16" alt="Create new"/></ww:a>
 					</td>
 					</tr>
 				</table>
@@ -274,11 +276,13 @@ var productId = ${product.id};
 						<tr>
 							 <td class="header">
 							 Product themes
+                            </td>
+                            <td class="icons">
 							 <ww:url id="createThemeLink" action="ajaxCreateBusinessTheme" includeParams="none">
 							     <ww:param name="productId" value="${productId}"></ww:param>
 							 </ww:url>
 							 <ww:a href="%{createThemeLink}" cssClass="openCreateDialog openThemeDialog" onclick="return false;"
-							     title="Create a new theme">Create new &raquo;</ww:a>
+							     title="Create a new theme"><img src="static/img/new.png" width="16" height="16" alt="Create new"/></ww:a>
 							 </td>
 						</tr>
 					</table>
@@ -374,12 +378,18 @@ var productId = ${product.id};
 				<table cellspacing="0" cellpadding="0">
 	                <tr>
 	                    <td class="header">
-	                    Backlog items <ww:url
+	                    Backlog items
+	                    </td>
+	                    <td class="icons">
+	                    <ww:url
 					id="createBacklogItemLink" action="ajaxCreateBacklogItem"
 					includeParams="none">
 					<ww:param name="backlogId" value="${product.id}" />
 				</ww:url> <ww:a cssClass="openCreateDialog openBacklogItemDialog"
-					href="%{createBacklogItemLink}" onclick="return false;">Create new &raquo;</ww:a>
+					href="%{createBacklogItemLink}" onclick="return false;"
+					title="Create a new backlog item">
+					<img src="static/img/new.png" width="16" height="16" alt="Create new"/>
+					</ww:a>
 					</td>
 					</tr>
 				</table>

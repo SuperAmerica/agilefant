@@ -385,12 +385,17 @@ $(document).ready( function() {
 				<div class="subItemHeader">
 				<table cellspacing="0" cellpadding="0">
 					<tr>
-						<td class="header">Iteration goals <ww:url
-							id="createIterationGoalLink" action="ajaxCreateIterationGoal"
-							includeParams="none">
-							<ww:param name="iterationId" value="${iteration.id}" />
-						</ww:url> <ww:a cssClass="openCreateDialog openIterationGoalDialog" onclick="return false;"
-							href="%{createIterationGoalLink}">Create new &raquo;</ww:a>
+						<td class="header">Iteration goals</td>
+						<td class="icons">
+						<ww:url
+                            id="createIterationGoalLink" action="ajaxCreateIterationGoal"
+                            includeParams="none">
+                            <ww:param name="iterationId" value="${iteration.id}" />
+                        </ww:url>
+                        <ww:a cssClass="openCreateDialog openIterationGoalDialog" onclick="return false;"
+                            href="%{createIterationGoalLink}" title="Create a new iteration goal">
+                                <img src="static/img/new.png" width="16" height="16" alt="Create new"/>
+                            </ww:a>
 						</td>
 					</tr>
 				</table>
@@ -501,12 +506,16 @@ $(document).ready( function() {
 				<div id="subItemHeader">
 				<table cellspacing="0" cellpadding="0">
 					<tr>
-						<td class="header">Backlog items <ww:url
+						<td class="header">Backlog items</td>
+						<td class="icons">
+						<ww:url
 							id="createBacklogItemLink" action="ajaxCreateBacklogItem"
 							includeParams="none">
 							<ww:param name="backlogId" value="${iteration.id}" />
 						</ww:url> <ww:a cssClass="openCreateDialog openBacklogItemDialog" onclick="return false;"
-							href="%{createBacklogItemLink}">Create new &raquo;</ww:a>
+							href="%{createBacklogItemLink}" title="Create a new backlog item">
+                        <img src="static/img/new.png" width="16" height="16" alt="Create new"/>
+                        </ww:a>
 						</td>
 					</tr>
 				</table>

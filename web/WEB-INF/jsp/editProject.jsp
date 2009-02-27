@@ -130,7 +130,7 @@ $(document).ready(function() {
 													<th class="info1"><ww:text name="general.uniqueId"/></th>
 													<td class="info3"><aef:quickReference item="${project}" /></td>
 													<td class="info4" rowspan="8">
-                                                        <c:if test="${(!empty project.backlogItems)}">
+                                                        <c:if test="${(!empty project.backlogItems) && projectBurndown}">
                                                             <div class="smallBurndown"><a href="#bigChart">
                                                                 <img src="drawSmallProjectChart.action?projectId=${project.id}"/>
                                                             </a></div>
@@ -544,12 +544,15 @@ $(document).ready(function() {
 							<div class="subItemHeader">
 								<table cellpadding="0" cellspacing="0">
 									<tr>
-					   					<td class="header">Iterations
+					   					<td class="header">Iterations</td>
+					   					<td class="icons">
 					   						<ww:url id="createLink" action="ajaxCreateIteration" includeParams="none" >
 						  						<ww:param name="projectId" value="${project.id}" />
 					   						</ww:url>
 					   						<ww:a
-												href="%{createLink}" cssClass="openCreateDialog openIterationDialog" onclick="return false;">Create new &raquo;</ww:a>
+												href="%{createLink}" cssClass="openCreateDialog openIterationDialog" onclick="return false;">
+												<img src="static/img/new.png" width="16" height="16" alt="Create new"/>
+                                            </ww:a>
 					   					</td>
 									</tr>
 								</table>
@@ -612,13 +615,18 @@ $(document).ready(function() {
 							<div class="subItemHeader">
 								<table cellpadding="0" cellspacing="0">
                     				<tr>
-                       					<td class="header">Backlog items <ww:url
+                       					<td class="header">Backlog items</td>
+                       					<td class="icons">
+                       					<ww:url
 												id="createBacklogItemLink" action="ajaxCreateBacklogItem"
 												includeParams="none">
 												<ww:param name="backlogId" value="${project.id}" />
 											</ww:url>
 											<ww:a cssClass="openCreateDialog openBacklogItemDialog"
-												href="%{createBacklogItemLink}" onclick="return false;">Create new &raquo;</ww:a>
+												href="%{createBacklogItemLink}" onclick="return false;"
+												title="Create a new backlog item">
+                                                <img src="static/img/new.png" width="16" height="16" alt="Create new"/>
+											</ww:a>
 										</td>
 									</tr>
 								</table>
@@ -629,7 +637,7 @@ $(document).ready(function() {
 								</div>
 							</c:if>
 						</div>
-						<c:if test="${!empty project.backlogItems}">
+						<c:if test="${(!empty project.backlogItems) && projectBurndown}">
 							<p>
 								<img src="drawProjectChart.action?projectId=${project.id}" id="bigChart"
 								   width="780" height="600" />

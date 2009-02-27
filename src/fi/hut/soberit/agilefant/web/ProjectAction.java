@@ -70,6 +70,7 @@ public class ProjectAction extends BacklogContentsAction implements CRUDAction {
     private List<User> users = new ArrayList<User>();
     
     private List<User> enabledUsers = new ArrayList<User>();
+    
     private List<User> disabledUsers = new ArrayList<User>();
 
     private Collection<User> assignedUsers = new HashSet<User>();
@@ -95,6 +96,8 @@ public class ProjectAction extends BacklogContentsAction implements CRUDAction {
     private BacklogMetrics projectMetrics = new BacklogMetrics();
         
     private List<BacklogThemeBinding> iterationThemes;
+      
+    private boolean projectBurndown; 
     
 
     /**
@@ -128,7 +131,6 @@ public class ProjectAction extends BacklogContentsAction implements CRUDAction {
         enabledUsers = userBusiness.getEnabledUsers();
         disabledUsers = userBusiness.getDisabledUsers();
         assignableUsers = projectBusiness.getAssignableUsers(this.project);
-
         return Action.SUCCESS;
     }
 
@@ -176,6 +178,8 @@ public class ProjectAction extends BacklogContentsAction implements CRUDAction {
         }
         
         iterationThemes = businessThemeBusiness.getIterationThemesByProject(project);
+        
+        projectBurndown = settingBusiness.isProjectBurndownEnabled();
         
         return Action.SUCCESS;
     }
@@ -557,5 +561,9 @@ public class ProjectAction extends BacklogContentsAction implements CRUDAction {
 
     public List<BacklogThemeBinding> getIterationThemes() {
         return iterationThemes;
+    }
+
+    public boolean isProjectBurndown() {
+        return projectBurndown;
     }
 }

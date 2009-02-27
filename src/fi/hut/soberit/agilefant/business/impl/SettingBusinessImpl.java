@@ -29,6 +29,7 @@ public class SettingBusinessImpl implements SettingBusiness {
     public static final String SETTING_DEFAULT_OPTIMAL_HIGH = "85";
     public static final String SETTING_NAME_CRITICAL_LOW = "CriticalLow";
     public static final String SETTING_DEFAULT_CRITICAL_LOW = "100";
+    public static final String SETTING_NAME_PROJECT_BURNDOWN = "ProjectBurndown";
     
     /**
      * {@inheritDoc}
@@ -99,6 +100,32 @@ public class SettingBusinessImpl implements SettingBusiness {
         return setting.getValue().equals(SETTING_VALUE_TRUE);        
     }
 
+    public void setProjectBurndown(String mode) {
+        Setting setting = settingDAO.getSetting(SETTING_NAME_PROJECT_BURNDOWN);
+        boolean selection = (mode != null && mode.equals(SETTING_VALUE_TRUE));
+        if(setting == null) {
+            setting = new Setting();
+            setting.setName(SETTING_NAME_PROJECT_BURNDOWN);
+            setting.setValue(new Boolean(selection).toString());
+            settingDAO.create(setting);
+        } else {
+            setting.setValue(new Boolean(selection).toString());
+            settingDAO.store(setting);
+        }
+    }
+    /**
+     * {@inheritDoc}
+     */
+    public boolean isProjectBurndownEnabled() {
+        Setting setting = settingDAO.getSetting(SETTING_NAME_PROJECT_BURNDOWN);
+        
+        if (setting == null) {
+            return false;
+        }
+        
+        return setting.getValue().equals(SETTING_VALUE_TRUE);        
+    }
+    
     /**
      * {@inheritDoc}
      */

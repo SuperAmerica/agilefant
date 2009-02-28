@@ -153,7 +153,9 @@ $(document).ready(function() {
 
 					<display:column title="Actions">
 						<img src="static/img/edit.png" alt="Edit" title="Edit" style="cursor: pointer;" onclick="handleTabEvent('backlogItemTabContainer-${row.id}-${bliListContext}','bliDWProjects',${row.id},0, '${bliListContext}'); return false;" />
-						<img src="static/img/delete_18.png" alt="Delete" title="Delete" style="cursor: pointer;" onclick="deleteBacklogItem(${row.id}); return false;" />
+						<c:if test="${!row.hasChilds}">
+							<img src="static/img/delete_18.png" alt="Delete" title="Delete" style="cursor: pointer;" onclick="deleteBacklogItem(${row.id}); return false;" />
+						</c:if>
 					</display:column>
 
 					<display:footer>

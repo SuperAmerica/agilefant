@@ -257,7 +257,7 @@ public class BacklogItemActionTest extends SpringTestCase {
         goal2.setIteration((Iteration) backlogDAO.get(backlogId));
         int goal2Id = (Integer) iterationGoalDAO.create(goal2);
         goal2 = iterationGoalDAO.get(goal2Id);
-        action.getBacklogItem().setIterationGoal(goal2);
+        action.setIterationGoalId(goal2Id);
 
         // execute store operation
         assertEquals("ajax_success", action.ajaxStoreBacklogItem());
@@ -265,6 +265,37 @@ public class BacklogItemActionTest extends SpringTestCase {
         // check that goal is updated
         assertEquals("Test Goal2", backlogItemDAO.get(bliId).getIterationGoal()
                 .getName());
+    }
+    /**
+     * Test store operation with changing backlog and setting an iteration goal
+     * from the new backlog. BUG: 0000025
+     */
+    public void testStore_updateGoalAndChangeBacklog() {
+        // execute edit operation
+        assertNull(action.getBacklogItem());
+        action.setBacklogItemId(bliId);
+        assertEquals("success", action.edit());
+        assertNotNull(action.getBacklogItem());
+
+        // update bli goal
+        Iteration iter2 = new Iteration();
+        int iter2Id = (Integer)backlogDAO.create(iter2);
+        IterationGoal goal2 = new IterationGoal();
+        goal2.setName("Test Goal2");
+        goal2.setIteration((Iteration) backlogDAO.get(iter2Id));
+        int goal2Id = (Integer) iterationGoalDAO.create(goal2);
+        goal2 = iterationGoalDAO.get(goal2Id);
+        action.setIterationGoalId(goal2Id);
+        action.setBacklogId(iter2Id);
+
+        // execute store operation
+        assertEquals("ajax_success", action.ajaxStoreBacklogItem());
+
+        // check that goal is updated
+        assertEquals(goal2Id, action.getBacklogItem().getIterationGoal().getId());
+        assertEquals(iter2Id, action.getBacklogItem().getBacklog().getId());
+        assertEquals(goal2Id, backlogItemDAO.get(bliId).getIterationGoal().getId());
+        assertEquals(iter2Id, backlogItemDAO.get(bliId).getBacklog().getId());
     }
 
 	/**

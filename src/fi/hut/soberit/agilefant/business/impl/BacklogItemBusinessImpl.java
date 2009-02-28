@@ -41,6 +41,7 @@ import fi.hut.soberit.agilefant.util.UserComparator;
 /**
  * 
  * @author Teemu Ilmonen
+ * @author Pasi Pekkanen
  * 
  */
 public class BacklogItemBusinessImpl implements BacklogItemBusiness {
@@ -76,21 +77,21 @@ public class BacklogItemBusinessImpl implements BacklogItemBusiness {
     public BacklogItem storeBacklogItem(int backlogItemId, int backlogId, BacklogItem dataItem, Set<Integer> responsibles, int iterationGoalId) throws ObjectNotFoundException {
         BacklogItem item = null; 
         if(backlogItemId > 0) {
-            item = backlogItemDAO.get(backlogId);
+            item = backlogItemDAO.get(backlogItemId);
             if(item == null) {
-                throw new ObjectNotFoundException("BacklogItem Not Found.");
+                throw new ObjectNotFoundException("backlogItem.notFound");
             }
         }
         Backlog backlog = backlogBusiness.getBacklog(backlogId);
         if(backlog == null) {
-            throw new ObjectNotFoundException("Backlog Not Found.");
+            throw new ObjectNotFoundException("backlog.notFound");
         }
         
         IterationGoal iterationGoal = null;
         if(iterationGoalId > 0 && backlog instanceof Iteration) {
             iterationGoal = iterationGoalDAO.get(iterationGoalId);
             if(iterationGoal == null) {
-                throw new ObjectNotFoundException("IterationGoal Not Found.");
+                throw new ObjectNotFoundException("iterationGoal.notFound");
             }
         }
         
@@ -126,7 +127,7 @@ public class BacklogItemBusinessImpl implements BacklogItemBusiness {
         storable.setDescription(dataItem.getDescription());
         storable.setEffortLeft(dataItem.getEffortLeft());
         storable.setName(dataItem.getName());
-        if(storable.getId() == 0) {
+        if(storable.getOriginalEstimate() == null) {
             storable.setOriginalEstimate(dataItem.getOriginalEstimate());
         }
         storable.setPriority(dataItem.getPriority());
@@ -134,13 +135,15 @@ public class BacklogItemBusinessImpl implements BacklogItemBusiness {
         
         if(dataItem.getState() == State.DONE) {
             storable.setEffortLeft(new AFTime(0));
-        } else if(dataItem.getEffortLeft() == null && storable.getId() != 0) {
+        } else if(dataItem.getEffortLeft() == null) {
             storable.setEffortLeft(storable.getOriginalEstimate());
         }
         
         if(storable.getBacklog() != null && storable.getBacklog() != backlog) {
             this.moveItemToBacklog(storable, backlog);
             historyUpdated = true;
+        } else if(storable.getBacklog() == null) {
+            storable.setBacklog(backlog);
         }
         
         storable.setResponsibles(responsibles);
@@ -156,7 +159,7 @@ public class BacklogItemBusinessImpl implements BacklogItemBusiness {
             backlogItemDAO.store(storable);
             persisted = storable;
         }
-        if(historyUpdated) {
+        if(!historyUpdated) {
             historyBusiness.updateBacklogHistory(backlog.getId());
         }
         return persisted;
@@ -235,33 +238,31 @@ public class BacklogItemBusinessImpl implements BacklogItemBusiness {
             throws ObjectNotFoundException {
         BacklogItem backlogItem = backlogItemDAO.get(backlogItemId);
         if (backlogItem == null) {
-            throw new ObjectNotFoundException("Backlog item with id: "
-                    + backlogItemId + " not found.");
-        } else {
-
-            /*
-             * Set the effort left as original estimate if backlog item's
-             * original estimate is null in database
-             */
-            if (backlogItem.getOriginalEstimate() == null) {
-                backlogItem.setEffortLeft(newEffortLeft);
-                backlogItem.setOriginalEstimate(newEffortLeft);
-            } else if (backlogItem.getEffortLeft() != null
-                    && newEffortLeft == null) {
-                backlogItem.setEffortLeft(new AFTime(0));
-            } else {
-                backlogItem.setEffortLeft(newEffortLeft);
-            }
-
-            backlogItem.setState(newState);
-            // set effortleft to 0 if state changed to done
-            if (newState == State.DONE)
-                backlogItem.setEffortLeft(new AFTime(0));
-
-            backlogItemDAO.store(backlogItem);
-            historyBusiness.updateBacklogHistory(backlogItem.getBacklog()
-                    .getId());
+            throw new ObjectNotFoundException("backlogItem.notFound");
         }
+
+        /*
+         * Set the effort left as original estimate if backlog item's
+         * original estimate is null in database
+         */
+        if (backlogItem.getOriginalEstimate() == null) {
+            backlogItem.setEffortLeft(newEffortLeft);
+            backlogItem.setOriginalEstimate(newEffortLeft);
+        } else if (backlogItem.getEffortLeft() != null
+                && newEffortLeft == null) {
+            backlogItem.setEffortLeft(new AFTime(0));
+        } else {
+            backlogItem.setEffortLeft(newEffortLeft);
+        }
+
+        backlogItem.setState(newState);
+        // set effortleft to 0 if state changed to done
+        if (newState == State.DONE)
+            backlogItem.setEffortLeft(new AFTime(0));
+
+        backlogItemDAO.store(backlogItem);
+        historyBusiness.updateBacklogHistory(backlogItem.getBacklog()
+                .getId());
     }
 
     public void updateBacklogItemEffortLeftStateAndTaskStates(
@@ -269,8 +270,7 @@ public class BacklogItemBusinessImpl implements BacklogItemBusiness {
             Map<Integer, State> newTaskStates, Map<Integer, String> newTaskNames) throws ObjectNotFoundException {
         BacklogItem backlogItem = backlogItemDAO.get(backlogItemId);
         if (backlogItem == null) {
-            throw new ObjectNotFoundException("Backlog item with id: "
-                    + backlogItemId + " not found.");
+            throw new ObjectNotFoundException("backlogItem.notFound");
         } else {
             updateBacklogItemStateAndEffortLeft(backlogItemId, newState,
                 newEffortLeft);
@@ -281,8 +281,7 @@ public class BacklogItemBusinessImpl implements BacklogItemBusiness {
     public void setTasksToDone(int backlogItemId) throws ObjectNotFoundException {
         BacklogItem backlogItem = backlogItemDAO.get(backlogItemId);
         if (backlogItem == null) {
-            throw new ObjectNotFoundException("Backlog item with id: "
-                    + backlogItemId + " not found.");
+            throw new ObjectNotFoundException("backlogItem.notFound");
         } else {
             Map<Integer, State> doneStates = new HashMap<Integer, State>();
             for (Task t: backlogItem.getTasks()) {
@@ -295,8 +294,7 @@ public class BacklogItemBusinessImpl implements BacklogItemBusiness {
     public void resetBliOrigEstAndEffortLeft(int backlogItemId) throws ObjectNotFoundException {
         BacklogItem backlogItem = backlogItemDAO.get(backlogItemId);
         if (backlogItem == null) {
-            throw new ObjectNotFoundException("Backlog item with id: "
-                    + backlogItemId + " not found.");
+            throw new ObjectNotFoundException("backlogItem.notFound");
         } else {
             //Set effort left and original estimate to null
             backlogItem.setEffortLeft(null);

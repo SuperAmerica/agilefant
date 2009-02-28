@@ -1,5 +1,6 @@
 package fi.hut.soberit.agilefant.business;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -83,13 +84,19 @@ public interface UserBusiness {
     public List<Backlog> getUsersBacklogs(User user);
     
     /**
-     * Get ongoing projects where given user has been added responsible.
-     *
-     * @param user Responsible user.
+     * Get ongoing projects where given user has been added responsible and fit
+     * in the given start and end interval. If start and end parameters are null
+     * all projects assigned to given user will be returned. Null values in
+     * start and end will be interpreted as no filter required.
+     * 
+     * @param user
+     * @param start
+     * @param end
+     * @return
      */
-    public List<Backlog> getOngoingBacklogsByUser(User user);
+    public List<Backlog> getOngoingBacklogsByUserAndInterval(User user, Date start, Date end);
 
-    public List<Backlog> getOngoingBacklogsByUser(int userId);
+    public List<Backlog> getOngoingBacklogsByUserAndInterval(int userId, Date start, Date end);
 
     
     /**

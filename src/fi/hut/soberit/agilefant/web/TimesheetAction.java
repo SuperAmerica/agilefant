@@ -3,8 +3,11 @@ package fi.hut.soberit.agilefant.web;
 
 
 import java.security.Principal;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -136,7 +139,17 @@ public class TimesheetAction extends ActionSupport implements PrincipalAware {
             ids = this.selectedBacklogs();
             users.addAll(userIds);
         } else {
-            Collection<Backlog> tmp = userBusiness.getOngoingBacklogsByUser(currentUserId);
+            Date start = null;
+            Date end = null;
+            try {
+                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+                start = df.parse(this.startDate);
+                end = df.parse(this.endDate);
+            } catch(Exception e) {
+                start = null;
+                end = null;
+            }
+            Collection<Backlog> tmp = userBusiness.getOngoingBacklogsByUserAndInterval(currentUserId, start, end);
             ids = new ArrayList<Integer>();
             for(Backlog bl : tmp) {
                 ids.add(bl.getId());

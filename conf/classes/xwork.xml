@@ -187,21 +187,6 @@
             class="backlogItemAction">
             <result name="success" type="dispatcher">/WEB-INF/jsp/forms/createBacklogItem.jsp</result>
         </action>
-		<action name="deleteBacklogItem" method="delete"
-			class="backlogItemAction">
-			<result type="redirect-action">
-                <param name="actionName">editBacklog</param>
-                <param name="backlogId">${backlogId}</param>
-			</result>
-		</action>
-
-		<action name="quickStoreBacklogItem"
-			method="quickStoreBacklogItem" class="backlogItemAction">
-			<result type="redirect-action">
-				<param name="actionName">popContext</param>
-			</result>
-		</action>
-
 		<action name="quickStoreTaskList" method="quickStoreTaskList"
 			class="backlogItemAction">			
 			<result name="ajax_error" type="httpheader">
@@ -220,18 +205,10 @@
 			</result>
 		</action>
 
-		<action name="storeNewBacklogItem" method="store"
+		<action name="storeNewBacklogItem" method="ajaxStoreBacklogItem"
 			class="backlogItemAction">
 		</action>
-		<action name="storeCloseBacklogItem" method="store"
-			class="backlogItemAction">
-			<result type="redirect-action">
-				<param name="actionName">popContext</param>
-			</result>
-		</action>
-		<action name="linkToIterationGoal"
-			class="linkToIterationGoalAction">
-		</action>
+
 		<action name="backlogItemTabs" method="edit"
 			class="backlogItemAction">
 			<result>/WEB-INF/jsp/inc/backlogItemAjax.jsp</result>
@@ -244,6 +221,13 @@
 			<result name="ajax_success" type="dispatcher">
 				<param name="status">200</param>
 				<param name="location">/WEB-INF/jsp/inc/ajaxBacklogItemResult.jsp</param>
+			</result>
+		</action>
+		<action name="deleteBacklogItem" method="delete"
+			class="backlogItemAction">
+			<result type="redirect-action">
+                <param name="actionName">editBacklog</param>
+                <param name="backlogId">${backlogId}</param>
 			</result>
 		</action>
 		<action name="ajaxDeleteBacklogItem" method="ajaxDeleteBacklogItem"

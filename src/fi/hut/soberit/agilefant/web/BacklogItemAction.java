@@ -1,9 +1,5 @@
 package fi.hut.soberit.agilefant.web;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -18,32 +14,19 @@ import fi.hut.soberit.agilefant.business.BacklogItemBusiness;
 import fi.hut.soberit.agilefant.business.BusinessThemeBusiness;
 import fi.hut.soberit.agilefant.business.HistoryBusiness;
 import fi.hut.soberit.agilefant.business.HourEntryBusiness;
-import fi.hut.soberit.agilefant.business.TaskBusiness;
-import fi.hut.soberit.agilefant.db.BacklogDAO;
-import fi.hut.soberit.agilefant.db.BacklogItemDAO;
-import fi.hut.soberit.agilefant.db.IterationGoalDAO;
-import fi.hut.soberit.agilefant.db.TaskDAO;
-import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.BusinessTheme;
-import fi.hut.soberit.agilefant.model.IterationGoal;
 import fi.hut.soberit.agilefant.model.State;
 import fi.hut.soberit.agilefant.model.Task;
-import fi.hut.soberit.agilefant.model.User;
-import fi.hut.soberit.agilefant.security.SecurityUtil;
 
 public class BacklogItemAction extends ActionSupport implements CRUDAction {
 
     private static final long serialVersionUID = -4289013472775815522L;
 
     private HistoryBusiness historyBusiness;
-
-    private BacklogDAO backlogDAO;
-
-    private BacklogItemDAO backlogItemDAO;
 
     private int backlogId = 0;
 
@@ -57,19 +40,7 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
 
     private Backlog backlog;
 
-    private Collection<BacklogItem> backlogItems = new ArrayList<BacklogItem>();
-
-    private UserDAO userDAO;
-
-    private IterationGoalDAO iterationGoalDAO;
-
     private int iterationGoalId;
-
-    // private int assigneeId;
-
-    private TaskDAO taskDAO;
-
-    //private Log logger = LogFactory.getLog(getClass());
     
     private Map<Integer, String> userIds = new HashMap<Integer, String>();
     
@@ -80,9 +51,7 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
     private BacklogItemBusiness backlogItemBusiness;
     
     private BusinessThemeBusiness businessThemeBusiness;
-    
-    private TaskBusiness taskBusiness;
-    
+        
     private HourEntryBusiness hourEntryBusiness;
 
     private Map<Integer, State> taskStates = new HashMap<Integer, State>();
@@ -91,16 +60,10 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
     
     private boolean tasksToDone = false; 
     
-    private List<User> possibleResponsibles = new ArrayList<User>();
-    
     private String spentEffort = null;
-    
-    private int businessThemeId;
-    
+        
     private String bliListContext;
     
-    private User creator;
-
     private List<BusinessTheme> bliActiveOrSelectedThemes;
 
     public String getBliListContext() {
@@ -138,10 +101,9 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
     public String create() {
         // Id of newly created, not yet persisted backlog item is 0
         backlogItemId = 0;
-
-        possibleResponsibles = backlogItemBusiness.getPossibleResponsibles(backlogItem);
         
         if (backlogId == 0) {
+            backlogItem = new BacklogItem();
             return Action.SUCCESS;
         } else {
             backlogItem = backlogBusiness.createBacklogItemToBacklog(backlogId);
@@ -154,19 +116,22 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
             return Action.SUCCESS;
         }
     }
-
+    
     public String delete() {
         try {
+            BacklogItem bli;
+            if((bli = this.backlogItemBusiness.getBacklogItem(backlogItemId)) != null) {
+                backlogId = bli.getBacklog().getId();
+            }
             backlogItemBusiness.removeBacklogItem(backlogItemId);
         } catch (ObjectNotFoundException e) {
             super.addActionError(super.getText("backlogItem.notFound"));
-            return Action.ERROR;
+            return ERROR;
         }
 
         // If exception was not thrown from business method, return success.
-        return Action.SUCCESS;
+        return SUCCESS;
     }
-    
     public String ajaxDeleteBacklogItem() {
         try {
             backlogItemBusiness.removeBacklogItem(backlogItemId);
@@ -187,109 +152,57 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
         }
         backlog = backlogItem.getBacklog();
         backlogId = backlog.getId();
-        possibleResponsibles = backlogItemBusiness.getPossibleResponsibles(backlogItem);
-
+        
         historyBusiness.updateBacklogHistory(backlog.getId());
         bliActiveOrSelectedThemes = businessThemeBusiness.getBacklogItemActiveOrSelectedThemes(backlogItemId);
 
         return Action.SUCCESS;
     }
-
-    /**
-     * TODO: refactor this!
-     */
-    public String store() {
-        // Integer storableId;
-        BacklogItem storable = new BacklogItem();
-        Backlog newBacklog;
-        Backlog oldBacklog = null;
-
-        if (backlogItemId > 0) {
-            storable = backlogItemBusiness.getBacklogItem(backlogItemId);
-            if (storable == null) {
-                super.addActionError(super.getText("backlogItem.notFound"));
-                return Action.ERROR;
-            }
-            oldBacklog = storable.getBacklog();
-        }
-        newBacklog = backlogDAO.get(backlogId);
-
-        this.fillStorable(storable);
-        
-        // Store tasks also, for an old item.
-        if (backlogItemId > 0) {
-            try {
-                taskBusiness.updateMultipleTasks(backlogItem, taskStates, taskNames);
-            }
-            catch(ObjectNotFoundException onfe) {
-                return Action.ERROR;
-            }
-        }
-        
-        if (super.hasActionErrors()) {
-            return Action.ERROR;
-        }
-        
-        // Store backlog item
-        this.backlogItemId = (Integer) backlogItemDAO.create(storable);
-        businessThemeBusiness.setBacklogItemThemes(themeIds, this.backlogItemId);
-
-        /*
-         * This should be handled inside business...
-         */
-        historyBusiness.updateBacklogHistory(newBacklog.getId());
-
-        if (oldBacklog != null)
-            historyBusiness.updateBacklogHistory(oldBacklog.getId());       
-        
-        return Action.SUCCESS;
-    }
     
+    public String store() {
+        if(this.bliStore() == false) {
+            return ERROR;
+        }
+        return SUCCESS;
+    }
     public String ajaxStoreBacklogItem() {
-        
-        BacklogItem storable = new BacklogItem();
-        Backlog newBacklog;
-        Backlog oldBacklog = null;
-
-        if (backlogItemId > 0) {
-            storable = backlogItemBusiness.getBacklogItem(backlogItemId);
-            if (storable == null) {
-                super.addActionError(super.getText("backlogItem.notFound"));
-                return CRUDAction.AJAX_ERROR;
-            }
-            oldBacklog = storable.getBacklog();
-        }
-        newBacklog = backlogDAO.get(backlogId);
-
-        this.fillStorable(storable);
-        
-        // Set tasks to DONE if item was set to done and user confirmed this.        
-        if (tasksToDone) {
-            try {
-                backlogItemBusiness.setTasksToDone(backlogItemId);
-            }
-            catch(ObjectNotFoundException onfe) {
-                return CRUDAction.AJAX_ERROR;
-            }
-        }
-        
-        if (super.hasActionErrors()) {
+        if(this.bliStore() == false) {
             return CRUDAction.AJAX_ERROR;
         }
+        return CRUDAction.AJAX_SUCCESS;
+    }
+    
+    private boolean bliStore() {
+        //validate original estimate, name and effort left
+        if (this.backlogItem.getName() == null || 
+                this.backlogItem.getName().trim().equals("")) {
+            return false;
+        }
+        if (this.backlogItem.getEffortLeft() != null && this.backlogItem.getEffortLeft().getTime() < 0) {
+            return false;
+        }        
+        if (this.backlogItem.getOriginalEstimate() != null && this.backlogItem.getOriginalEstimate().getTime() < 0) {
+            return false;
+        }
         
-        // Store backlog item
-        this.backlogItemId = (Integer) backlogItemDAO.create(storable);
-        businessThemeBusiness.setBacklogItemThemes(themeIds, this.backlogItemId);
-
-        /*
-         * This should be handled inside business...
-         */
-        historyBusiness.updateBacklogHistory(newBacklog.getId());
-
-        if (oldBacklog != null)
-            historyBusiness.updateBacklogHistory(oldBacklog.getId());       
+        //save backlog item, update todos and store backlog item themes
+        try {
+            BacklogItem bli = backlogItemBusiness.storeBacklogItem(backlogItemId, backlogId, backlogItem, userIds.keySet(), iterationGoalId);
+            if (tasksToDone) {
+                backlogItemBusiness.setTasksToDone(backlogItemId);
+            }
+            businessThemeBusiness.setBacklogItemThemes(themeIds, bli);
+            backlogItem = bli;
+            backlogItemId = bli.getId();
+          }
+        catch(ObjectNotFoundException onfe) {
+            return false;
+        }
+        catch(IllegalArgumentException e) {
+            return false;
+        }
         
-        return CRUDAction.AJAX_SUCCESS;        
+        return true; 
     }
 
     
@@ -302,21 +215,13 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
         
         // check that AFTime is not negative
         if (this.effortLeft != null && this.effortLeft.getTime() < 0) {
-            super.addActionError("EffortLeft cannot be negative.");
             return CRUDAction.AJAX_ERROR;
         }        
-        /** Test code begins */
-        System.err.println("SIZE OF MAP: " + taskStates.size());
-        for (Integer key : taskStates.keySet()) {
-            System.err.println(key + ":" + taskStates.get(key));
-        }
-        /** Test code ends */
            
         try {
             backlogItemBusiness.updateBacklogItemEffortLeftStateAndTaskStates(
                     backlogItemId, this.state, this.effortLeft, taskStates, taskNames);
         } catch (ObjectNotFoundException e) {
-            addActionError(e.getMessage());
             return CRUDAction.AJAX_ERROR;
         }
         //should be refactored to the business layer
@@ -324,7 +229,7 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
             AFTime eff = null;
             try {
                eff = new AFTime(spentEffort,false);
-               BacklogItem parent = backlogItemDAO.get(backlogItemId);
+               BacklogItem parent = backlogItemBusiness.getBacklogItem(backlogItemId);
                if(parent != null) {
                    hourEntryBusiness.addEntryForCurrentUser(parent, eff);
                }
@@ -343,125 +248,7 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
             return Action.ERROR;
         }
         return Action.SUCCESS;
-    }
-
-    protected void fillStorable(BacklogItem storable) {
-        /**
-         * Hope that this works better now, looks like someone coded this without
-         * understanding hibernate.
-         */
-        if (this.backlogItem.getName() == null || 
-                this.backlogItem.getName().trim().equals("")) {
-            super.addActionError(super.getText("backlogitem.missingName"));
-            return;
-        }
-        // check that AFTime is not negative
-        if (this.backlogItem.getEffortLeft() != null && this.backlogItem.getEffortLeft().getTime() < 0) {
-            super.addActionError("EffortLeft cannot be negative.");
-            return;
-        }        
-        if (this.backlogItem.getOriginalEstimate() != null && this.backlogItem.getOriginalEstimate().getTime() < 0) {
-            super.addActionError("OriginalEstimate cannot be negative.");
-            return;
-        }
-        
-        // check that backlog is valid, see comments near end of method
-        backlog = backlogDAO.get(backlogId);
-        if (backlog == null) {
-            super.addActionError(super.getText("backlog.notFound"));
-            return;
-        }
-
-        if(this.backlogItemId == 0) {            
-            storable.setCreatedDate(Calendar.getInstance());
-            storable.setCreator(SecurityUtil.getLoggedUser());
-        }
-        List<User> responsibles = new ArrayList<User>(userIds.size());
-        for(Serializable id : userIds.keySet() ) {
-            User user = userDAO.get(id);
-            responsibles.add(user);
-        }
-        storable.setResponsibles(responsibles);
-        
-       
-        if (this.backlogItem.getIterationGoal() != null) {
-            IterationGoal goal = iterationGoalDAO.get(this.backlogItem
-                    .getIterationGoal().getId());
-            // IterationGoal goal = iterationGoalDAO.get(iterationGoalId);
-            storable.setIterationGoal(goal);
-        }
-        
-        storable.setName(this.backlogItem.getName());
-        storable.setDescription(this.backlogItem.getDescription());
-        storable.setPriority(this.backlogItem.getPriority());
-
-        // Set efforts and state for backlog item
-        storable.setState(this.backlogItem.getState());
-
-        // set effort left to 0 if state changed to done
-        /*
-        if (this.backlogItem.getState() == State.DONE) {
-            storable.setEffortLeft(new AFTime(0));
-            this.effortLeft = new AFTime(0);
-        }
-         */
-
-        /*
-         * Set effort left. If state is done, then effort left is 0.
-         * If this is new item set its effort to be the
-         * original effort. Otherwise set its effort to be the received effort
-         * left from text field.
-         */
-        if (storable.getState() == State.DONE) {
-            storable.setEffortLeft(new AFTime(0));
-            this.effortLeft = new AFTime(0);                                           
-        }
-        else if (storable.getOriginalEstimate() == null) {
-            storable.setOriginalEstimate(backlogItem.getOriginalEstimate());
-            storable.setEffortLeft(backlogItem.getOriginalEstimate());
-        } else if (storable.getEffortLeft() != null
-                && backlogItem.getEffortLeft() == null) {
-            storable.setEffortLeft(new AFTime(0));
-        } else {
-            storable.setEffortLeft(backlogItem.getEffortLeft());
-        }
-
-        
-        
-        // TODO: REFACTOR THIS when moving backlog items from backlog to another
-        // change
-        // backlog item's original estimate to current effort left.
-        /**
-         * Ei näin, transaktioturvallisuus on ihan kiva asia
-        backlog = backlogDAO.get(backlogId);
-        if (backlog == null) {
-            super.addActionError(super.getText("backlog.notFound"));
-            return;
-        }
-        */
-        // if we're moving backlogitem, set originalestimate to current
-        // effortleft.
-        if (storable.getId() > 0 && storable.getBacklog() != null
-                && storable.getBacklog() != this.backlog
-                && this.backlog != null) {
-            storable.getBacklog().getBacklogItems().remove(storable);
-            //storable.setOriginalEstimate(storable.getEffortLeft());
-            backlog.getBacklogItems().add(storable);
-            
-            // Remove the iteration goal, if the bli is moved
-            if (storable.getIterationGoal() != null) {
-                storable.getIterationGoal().getBacklogItems().remove(storable);
-                storable.setIterationGoal(null);
-            }
-            // Remove themes if the item is moved to a backlog under a different product.
-            if ( !backlogBusiness.isUnderSameProduct(this.backlog, storable.getBacklog()) ) {
-                storable.getBusinessThemes().clear();
-            }
-            
-        }
-        storable.setBacklog(backlog);
-    }
-    
+    }    
 
     public Backlog getBacklog() {
         return backlog;
@@ -495,67 +282,12 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
         this.backlogItemId = backlogItemId;
     }
 
-    public Collection<BacklogItem> getBacklogItems() {
-        return backlogItems;
-    }
-
-    public void setBacklogItems(Collection<BacklogItem> backlogItems) {
-        this.backlogItems = backlogItems;
-    }
-
-    public void setBacklogDAO(BacklogDAO backlogDAO) {
-        this.backlogDAO = backlogDAO;
-    }
-
-    public void setBacklogItemDAO(BacklogItemDAO backlogItemDAO) {
-        this.backlogItemDAO = backlogItemDAO;
-    }
-
-    /*
-     * protected BacklogItemDAO getBacklogItemDAO() { return
-     * this.backlogItemDAO; }
-     */
-
-    public void setUserDAO(UserDAO userDAO) {
-        this.userDAO = userDAO;
-    }
-
-    public void setIterationGoalDAO(IterationGoalDAO iterationGoalDAO) {
-        this.iterationGoalDAO = iterationGoalDAO;
-    }
-
-    /**
-     * Setter for Spring IoC
-     * 
-     * @param iterationGoalId
-     *                iteration goal id to be set
-     */
     public void setIterationGoalId(int iterationGoalId) {
         this.iterationGoalId = iterationGoalId;
     }
 
-    /**
-     * Getter for Spring IoC
-     * 
-     * @return iteration goal id
-     */
     public int getIterationGoalId() {
         return iterationGoalId;
-    }
-
-    /**
-     * @return the task data access object
-     */
-    public TaskDAO getTaskDAO() {
-        return taskDAO;
-    }
-
-    /**
-     * @param taskDAO
-     *                the task data access object to set
-     */
-    public void setTaskDAO(TaskDAO taskDAO) {
-        this.taskDAO = taskDAO;
     }
 
     public String getBacklogItemName() {
@@ -590,24 +322,8 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
         this.userIds = userIds;
     }
 
-    public HistoryBusiness getHistoryBusiness() {
-        return historyBusiness;
-    }
-
     public void setHistoryBusiness(HistoryBusiness historyBusiness) {
         this.historyBusiness = historyBusiness;
-    }
-
-    public List<User> getPossibleResponsibles() {
-        return possibleResponsibles;
-    }
-
-    public void setPossibleResponsibles(List<User> possibleResponsibles) {
-        this.possibleResponsibles = possibleResponsibles;
-    }
-
-    public void setTaskBusiness(TaskBusiness taskBusiness) {
-        this.taskBusiness = taskBusiness;
     }
 
     public String getSpentEffort() {
@@ -618,28 +334,12 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
         this.spentEffort = spentEffort;
     }
 
-    public HourEntryBusiness getHourEntryBusiness() {
-        return hourEntryBusiness;
-    }
-
     public void setHourEntryBusiness(HourEntryBusiness hourEntryBusiness) {
         this.hourEntryBusiness = hourEntryBusiness;
     }
 
-    public BusinessThemeBusiness getBusinessThemeBusiness() {
-        return businessThemeBusiness;
-    }
-
     public void setBusinessThemeBusiness(BusinessThemeBusiness businessThemeBusiness) {
         this.businessThemeBusiness = businessThemeBusiness;
-    }
-
-    public int getBusinessThemeId() {
-        return businessThemeId;
-    }
-
-    public void setBusinessThemeId(int businessThemeId) {
-        this.businessThemeId = businessThemeId;
     }
 
     public Map<Integer, String> getTaskNames() {
@@ -649,7 +349,7 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
     public void setTaskNames(Map<Integer, String> taskNames) {
         this.taskNames = taskNames;
     }
-    
+   
     public boolean getUndoneTasks() {
         backlogItem = backlogItemBusiness.getBacklogItem(backlogItemId);
         if (backlogItem == null) {
@@ -665,7 +365,7 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
         }
         return false;    
     }
-
+    
     public boolean isTasksToDone() {
         return tasksToDone;
     }
@@ -680,14 +380,6 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
 
     public void setBliActiveOrSelectedThemes(List<BusinessTheme> activeOrSelectedThemes) {
         this.bliActiveOrSelectedThemes = activeOrSelectedThemes;
-    }
-    
-    public User getCreator() {
-        return creator;
-    }
-
-    public void setCreatorId(User creator) {
-        this.creator = creator;
     }
     
     public void setThemeIds(Set<Integer> themeIds) {

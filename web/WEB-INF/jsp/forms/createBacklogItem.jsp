@@ -115,7 +115,7 @@ $(document).ready(function() {
 			<td></td>
 			<%-- If iteration goals doesn't exist default value is 0--%>
 			<td colspan="2">
-			<select name="backlogItem.iterationGoal.id" id="createBLIIterGoalSelect">
+			<select name="iterationGoalId" id="createBLIIterGoalSelect">
 			</select>
 			<span>(none)</span></td>
 		</tr>

@@ -51,9 +51,6 @@
 	<bean name="iterationGoalAction"
 		class="fi.hut.soberit.agilefant.web.IterationGoalAction"
 		singleton="false" autowire="byName" />
-	<bean name="linkToIterationGoalAction"
-		class="fi.hut.soberit.agilefant.web.LinkToIterationGoalAction"
-		singleton="false" autowire="byName" />
 	<bean name="contextStackAction"
 		class="fi.hut.soberit.agilefant.web.ContextStackAction"
 		singleton="false" autowire="byName" />

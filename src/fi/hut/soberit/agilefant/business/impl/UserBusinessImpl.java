@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -232,26 +231,77 @@ public class UserBusinessImpl implements UserBusiness {
         return assignedProjects;
     }
     
-    public List<Backlog> getOngoingBacklogsByUser(int userId) {
+    public List<Backlog> getOngoingBacklogsByUserAndInterval(int userId, Date start, Date end) {
         User user = userDAO.get(userId);
         if(user == null) {
             return null;
         }
-        return getOngoingBacklogsByUser(user);
+        return getOngoingBacklogsByUserAndInterval(user,start,end);
     }
 
-    
-    public List<Backlog> getOngoingBacklogsByUser(User user) {
-        Collection<Assignment> allAssignments = user.getAssignments();        
-        Date currentDate = GregorianCalendar.getInstance().getTime();
+    /**
+     * helper method for backlog date filtering.
+     * 
+     * @return true if start or end is null and the one which is not null is
+     *         within the backlog time-frame.
+     */
+    private boolean singleDateBacklogFilter(Backlog bl, Date start, Date end) {
+        if (bl.getStartDate() == null || bl.getEndDate() == null) {
+            return false;
+        }
+        if (start == null && end != null && end.after(bl.getEndDate())) {
+            return true;
+        } else if (end == null && start != null
+                && start.before(bl.getStartDate())) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Helper method for backlog interval filtering.
+     * 
+     * @return true if either start or end stamp fits within the backlog
+     *         time-frame or if backlog time-frame is within the given
+     *         filter-frame.
+     */
+    private boolean dualDateBacklogFilter(Backlog bl, Date start, Date end) {
+        if (bl.getStartDate() == null || bl.getEndDate() == null) {
+            return false;
+        }
+        if (end.before(start)) {
+            return false;
+        }
+        if (start.after(bl.getStartDate()) && start.before(bl.getEndDate())) {
+            return true;
+        }
+        if (end.after(bl.getStartDate()) && end.before(bl.getEndDate())) {
+            return true;
+        }
+        if (bl.getStartDate().after(start) && bl.getEndDate().before(end)) {
+            return true;
+        }
+        return false;
+    }
+
+    public List<Backlog> getOngoingBacklogsByUserAndInterval(User user,
+            Date start, Date end) {
+        Collection<Assignment> allAssignments = user.getAssignments();
         List<Backlog> ongoingBacklogs = new ArrayList<Backlog>();
         for (Assignment ass : allAssignments) {
             Backlog bl = ass.getBacklog();
-            if (bl instanceof Project && bl.getStartDate() != null
-                    && bl.getStartDate().before(currentDate)
-                    && bl.getEndDate() != null
-                    && bl.getEndDate().after(currentDate)) {
-                ongoingBacklogs.add(bl);
+            if (bl instanceof Project) {
+                if (start == null && end == null) {
+                    ongoingBacklogs.add(bl);
+                } else if ((start == null ^ end == null)
+                        && singleDateBacklogFilter(bl, start, end)) {
+                    ongoingBacklogs.add(bl);
+                } else if (start != null && end != null
+                        && dualDateBacklogFilter(bl, start, end)) {
+                    ongoingBacklogs.add(bl);
+
+                }
             }
         }
         return ongoingBacklogs;

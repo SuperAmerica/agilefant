@@ -54,6 +54,15 @@ Timesheets
   + log spent effort to projects and/or individual backlog items
   + generate reports of spent effort
 
+CHANGES FROM AGILEFANT 1.5.3
+----------------------------
++ multiple layout and user interface improvements
++ improvements to timesheets, including easier backlog selection and 
+  unnecessary report rows are now hidden
++ numerous internal enhancements
++ Bugfixes for following issues: 0000025, 0000029 and 0000028
+
+
 CHANGES FROM AGILEFANT 1.5.2
 ----------------------------
 + Added business themes; these are created in the dev portfolio tab

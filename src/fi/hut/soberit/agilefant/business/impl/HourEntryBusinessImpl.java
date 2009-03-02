@@ -2,6 +2,7 @@ package fi.hut.soberit.agilefant.business.impl;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -107,7 +108,8 @@ public class HourEntryBusinessImpl implements HourEntryBusiness {
     public void addEntryForCurrentUser(TimesheetLoggable parent, AFTime effort) {
         User currentUser = SecurityUtil.getLoggedUser();
         HourEntry store = new HourEntry();
-        store.setDate(new Date());
+        Calendar cal = Calendar.getInstance();
+        store.setDate(cal.getTime());
         store.setTimeSpent(effort);
         store.setUser(currentUser);
         store(parent,store);

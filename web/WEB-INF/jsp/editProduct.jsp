@@ -19,13 +19,17 @@
 
 <script type="text/javascript">
 
+var cookieId = 'progress_structure_' + ${product.id};
+
 function setView(value) {
 	if (value == 'structure') {
+		$.cookie(cookieId, 'structure');
 		$('#progressDiv').hide();
 		$('#structureLink').hide();
 		$('#structureDiv').show();
 		$('#progressLink').show();
 	}else{
+		$.cookie(cookieId, 'progress');
 		$('#progressDiv').show();
 		$('#structureLink').show();
 		$('#structureDiv').hide();
@@ -45,6 +49,9 @@ $(document).ready(function() {
     $('#structureLink').structureView({
         backlogId: ${product.id}
     });
+    
+    if($.cookie(cookieId) == 'structure') 
+    	$('#structureLink').click();
 });
 
 

@@ -8,15 +8,12 @@
 $(document).ready(function() {
     var chooserDiv = $("#selectBacklogs");
     var userSel = $("#userSelect");
-    var ongoingVal = $("#showOnlyOngoingBacklogsValue");
     
     $("#showOnlyOngoingBacklogs").change(function() {
         if($(this).is(":checked")) {
             chooserDiv.backlogChooser("setDateLimit");
-            ongoingVal.attr("value","true");
         } else {
             chooserDiv.backlogChooser("unsetDateLimit");
-            ongoingVal.attr("value","false");
         }
     });
     chooserDiv.backlogChooser({
@@ -164,13 +161,12 @@ $(document).ready( function() {
 							 			<div id="advancedBacklogs">
 										<c:choose>
 											<c:when test="${onlyOngoing}">
-												<input id="showOnlyOngoingBacklogs" name="onlyOngoingSelector" type="checkbox" value="true" checked="checked"/>Hide past projects and iterations.<br />								
+												<input id="showOnlyOngoingBacklogs" name="onlyOngoing" type="checkbox" value="true" checked="checked"/>Hide past projects and iterations.<br />								
 											</c:when>
 											<c:otherwise>
-												<input id="showOnlyOngoingBacklogs" name="onlyOngoingSelector" type="checkbox" value="true" />Hide past projects and iterations.<br />						
+												<input id="showOnlyOngoingBacklogs" name="onlyOngoing" type="checkbox" value="true" />Hide past projects and iterations.<br />						
 											</c:otherwise>
 										</c:choose>
-										<input id="showOnlyOngoingBacklogsValue" type="hidden" name="onlyOngoing" value="${onlyOngoing}" />
 										<div id="selectBacklogs"></div>
 									</div>
 									</td>

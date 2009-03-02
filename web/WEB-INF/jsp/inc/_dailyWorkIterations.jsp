@@ -73,6 +73,15 @@ $(document).ready(function() {
             <img src="static/img/new.png"
                 height="16" width="16" alt="Create a new backlog item" />
           </ww:a>  
+          <c:if test="${hourReport}">
+            <ww:url id="createLink" action="ajaxCreateHourEntry" includeParams="none">
+                <ww:param name="backlogId" value="${it.project.id}" />
+            </ww:url>
+            <ww:a cssClass="openCreateDialog openUserDialog" onclick="return false;" title="Log effort to ${pro.name}" href="%{createLink}">
+            <img src="static/img/timesheets.png"
+                  height="16" width="16" alt="Log effort" />
+            </ww:a>
+          </c:if>
 		</td>
 		</tr>
 		</table>

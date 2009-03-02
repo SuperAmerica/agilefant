@@ -69,7 +69,7 @@ public class TimesheetAction extends ActionSupport implements PrincipalAware {
     
     private int backlogSelectionType = 0;
     
-    private boolean onlyOngoing = true;
+    private boolean onlyOngoing = false;
     
     private AFTime totalSpentTime;
 
@@ -129,6 +129,8 @@ public class TimesheetAction extends ActionSupport implements PrincipalAware {
     }
     public String initialize() {
         this.interval = "TODAY";
+        this.onlyOngoing = true;
+        this.userIds.add(this.currentUserId);
         return Action.SUCCESS;
     }
     public String generateTree(){

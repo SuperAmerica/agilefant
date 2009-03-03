@@ -18,7 +18,7 @@ public class SettingDAOHibernate extends GenericDAOHibernate<Setting> implements
     /**
      * {@inheritDoc}
      */
-    @SuppressWarnings("all")
+    @SuppressWarnings("unchecked")
     public Setting getSetting(String settingName) {
         DetachedCriteria criteria = DetachedCriteria.forClass(this
                 .getPersistentClass());

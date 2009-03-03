@@ -1,6 +1,6 @@
-Agilefant 1.5.3
+Agilefant 1.5.4
 RELEASE NOTES
-15.12.2008
+3.3.2008
 
 INSTALLATION INSTRUCTIONS AND SYSTEM REQUIREMENTS
 -------------------------------------------------

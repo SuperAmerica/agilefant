@@ -78,7 +78,7 @@ $(document).ready(function() {
                 <ww:param name="backlogId" value="${it.project.id}" />
             </ww:url>
             <ww:a cssClass="openCreateDialog openUserDialog" onclick="return false;"
-                title="Log effort to ${it.project.name}" href="%{createLink}">
+                title="Log effort to project: ${it.project.name}" href="%{createLink}">
             <img src="static/img/timesheets.png"
                   height="16" width="16" alt="Log effort" />
             </ww:a>

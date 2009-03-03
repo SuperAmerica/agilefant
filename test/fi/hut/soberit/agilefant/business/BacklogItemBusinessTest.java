@@ -4,14 +4,6 @@ import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import org.easymock.EasyMock;
-
 import junit.framework.TestCase;
 import fi.hut.soberit.agilefant.business.impl.BacklogItemBusinessImpl;
 import fi.hut.soberit.agilefant.business.impl.HourEntryBusinessImpl;
@@ -26,7 +18,6 @@ import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.IterationGoal;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.State;
-import fi.hut.soberit.agilefant.model.User;
 
 public class BacklogItemBusinessTest extends TestCase {
 
@@ -34,7 +25,6 @@ public class BacklogItemBusinessTest extends TestCase {
     private BacklogItemDAO bliDAO;
     private HourEntryBusinessImpl hourEntryBusiness = new HourEntryBusinessImpl();
     private HistoryBusiness historyBusiness = createMock(HistoryBusiness.class);
-    private UserBusiness userBusiness;
     private BacklogItemHourEntryDAO bliheDAO;
 
     public void testRemoveBacklogItem_found() {

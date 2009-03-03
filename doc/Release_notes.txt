@@ -56,12 +56,12 @@ Timesheets
 
 CHANGES FROM AGILEFANT 1.5.3
 ----------------------------
-+ multiple layout and user interface improvements
-+ improvements to timesheets, including easier backlog selection and 
-  unnecessary report rows are now hidden
-+ numerous internal enhancements
-+ Bugfixes for following issues: 0000025, 0000029 and 0000028
-
++ backlog items can be created and effort logged from the daily work -page   
++ UI improvements to timesheets, including easier backlog selection and 
+  hiding unnecessary report rows
++ product, project and iteration backlog listings are faster
++ bugfixes for following issues: 0000025, 0000029 and 0000028
++ other internal enhancements
 
 CHANGES FROM AGILEFANT 1.5.2
 ----------------------------

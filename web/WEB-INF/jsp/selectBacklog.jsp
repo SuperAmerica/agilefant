@@ -82,9 +82,11 @@ start by creating a new object.</p>
         <ww:a href="%{createLink}" title="Create a new project type" cssClass="openCreateDialog openProjectTypeDialog" onclick="return false;">Project type &raquo;</ww:a>
     </li>
     
-    <li><ww:url id="createLink" action="createTeam"
+    <li><ww:url id="createLink" action="ajaxCreateTeam"
         includeParams="none" />
-        <ww:a href="%{createLink}" title="Create a new team">Team &raquo;</ww:a>
+        <ww:a href="%{createLink}" onclick="return false;"
+        cssClass="openCreateDialog openTeamDialog"
+        title="Create a new team">Team &raquo;</ww:a>
     </li>
     
     <li>
@@ -92,7 +94,9 @@ start by creating a new object.</p>
         <c:when test="${hasProducts}">
             <ww:url id="createLink" action="ajaxCreateBusinessTheme"
                 includeParams="none" />
-            <ww:a href="%{createLink}" title="Create a new theme" cssClass="openCreateDialog openThemeDialog" onclick="return false;">Theme &raquo;</ww:a>
+            <ww:a href="%{createLink}" title="Create a new theme"
+            cssClass="openCreateDialog openThemeDialog" onclick="return false;">
+            Theme &raquo;</ww:a>
         </c:when>
         <c:otherwise>
             <span class="inactive"
@@ -103,7 +107,9 @@ start by creating a new object.</p>
     </li>
     
     <li><ww:url id="createLink" action="ajaxCreateUser"
-        includeParams="none" /> <ww:a href="%{createLink}" cssClass="openCreateDialog openUserDialog" title="Create a new user" onclick="return false;">User &raquo;</ww:a>
+        includeParams="none" />
+        <ww:a href="%{createLink}" cssClass="openCreateDialog openUserDialog"
+        title="Create a new user" onclick="return false;">User &raquo;</ww:a>
     </li>
 </ul>
 

@@ -16,6 +16,10 @@
 
 <script type="text/javascript">
 
+function editProduct() {
+    toggleDiv('editProductForm'); toggleDiv('descriptionDiv'); showWysiwyg('productDescription'); return false;
+}
+
 $(document).ready(function() {
     <c:forEach items="${openThemes}" var="openTheme">
         handleTabEvent("businessThemeTabContainer-${openTheme[0]}", "businessTheme", ${openTheme[0]}, ${openTheme[1]});
@@ -53,32 +57,18 @@ var productId = ${product.id};
 		<tr>
 			<td>
 			<div class="subItems" style="margin-top: 0" id="subItems_editProductDetails">
-			<div class="subItemHeader"><script type="text/javascript">
-			                function expandDescription() {
-			                    document.getElementById('descriptionDiv').style.maxHeight = "1000em";
-			                    document.getElementById('descriptionDiv').style.overflow = "visible";
-			                }
-			                function collapseDescription() {
-			                    document.getElementById('descriptionDiv').style.maxHeight = "12em";
-			                    document.getElementById('descriptionDiv').style.overflow = "hidden";
-			                }
-			                function editProduct() {
-			                	toggleDiv('editProductForm'); toggleDiv('descriptionDiv'); showWysiwyg('productDescription'); return false;
-			                }
-			                </script>
-
-
+			<div class="subItemHeader">
 			<table cellspacing="0" cellpadding="0">
 				<tr>
-					<td class="header">Details <a href=""
-						onclick="return editProduct();">Edit &raquo;</a></td>
-					<td class="icons"><a href=""
-						onclick="expandDescription(); return false;"> <img
-						src="static/img/plus.png" width="18" height="18" alt="Expand"
-						title="Expand" /> </a> <a href=""
-						onclick="collapseDescription(); return false;"> <img
-						src="static/img/minus.png" width="18" height="18" alt="Collapse"
-						title="Collapse" /> </a></td>
+				    <td class="iconsbefore">
+                        <div class="expand" title="Expand" onclick="toggleExpand(this, '#descriptionDiv');">
+                        </div>
+                    </td>
+					<td class="header">Details</td>
+					<td class="icons">
+                        <img src="static/img/edit.png" onclick="editProduct();"
+                          height="18" width="18" alt="Edit" title="Edit product details"/>
+                    </td>
 				</tr>
 			</table>
 			</div>
@@ -194,11 +184,13 @@ var productId = ${product.id};
 	                <tr>
 	                    <td class="header">
 	                    Projects
+	                    </td>
+	                    <td class="icons">
 	                    <ww:url id="createLink" action="ajaxCreateProject" includeParams="none">
 						  <ww:param name="productId" value="${product.id}" />
 						</ww:url>
 						<ww:a href="%{createLink}" title="Create a new project" cssClass="openCreateDialog openProjectDialog" onclick="return false;">
-						Create new &raquo;</ww:a>
+						<img src="static/img/new.png" width="16" height="16" alt="Create new"/></ww:a>
 					</td>
 					</tr>
 				</table>
@@ -215,16 +207,12 @@ var productId = ${product.id};
 					</display:column>		
 														
 					<display:column sortable="true" sortProperty="name" title="Name">					
-						<a class="nameLink" onclick="handleTabEvent('projectTabContainer-${row.id}','project',${row.id},0); return false;">
-							${aef:html(row.name)}
-						</a>
-					
 						<ww:url id="editLink" action="editProject" includeParams="none">
 							<ww:param name="projectId" value="${row.id}" />
 						</ww:url>
 						<ww:a
 							href="%{editLink}">
-							<img src="static/img/link.png" alt="Project page" title="Project page"/>
+							${aef:html(row.name)}
 						</ww:a>
 					</display:column>					
 					
@@ -288,11 +276,13 @@ var productId = ${product.id};
 						<tr>
 							 <td class="header">
 							 Product themes
+                            </td>
+                            <td class="icons">
 							 <ww:url id="createThemeLink" action="ajaxCreateBusinessTheme" includeParams="none">
 							     <ww:param name="productId" value="${productId}"></ww:param>
 							 </ww:url>
 							 <ww:a href="%{createThemeLink}" cssClass="openCreateDialog openThemeDialog" onclick="return false;"
-							     title="Create a new theme">Create new &raquo;</ww:a>
+							     title="Create a new theme"><img src="static/img/new.png" width="16" height="16" alt="Create new"/></ww:a>
 							 </td>
 						</tr>
 					</table>
@@ -388,12 +378,18 @@ var productId = ${product.id};
 				<table cellspacing="0" cellpadding="0">
 	                <tr>
 	                    <td class="header">
-	                    Backlog items <ww:url
+	                    Backlog items
+	                    </td>
+	                    <td class="icons">
+	                    <ww:url
 					id="createBacklogItemLink" action="ajaxCreateBacklogItem"
 					includeParams="none">
 					<ww:param name="backlogId" value="${product.id}" />
 				</ww:url> <ww:a cssClass="openCreateDialog openBacklogItemDialog"
-					href="%{createBacklogItemLink}" onclick="return false;">Create new &raquo;</ww:a>
+					href="%{createBacklogItemLink}" onclick="return false;"
+					title="Create a new backlog item">
+					<img src="static/img/new.png" width="16" height="16" alt="Create new"/>
+					</ww:a>
 					</td>
 					</tr>
 				</table>

@@ -2,31 +2,53 @@ package fi.hut.soberit.agilefant.web;
 
 
 
+import java.security.Principal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
+import org.springframework.security.providers.UsernamePasswordAuthenticationToken;
+import org.springframework.security.providers.rememberme.RememberMeAuthenticationToken;
+
+import com.opensymphony.webwork.interceptor.PrincipalAware;
+import com.opensymphony.webwork.interceptor.PrincipalProxy;
 import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
 
 import fi.hut.soberit.agilefant.business.TimesheetBusiness;
+import fi.hut.soberit.agilefant.business.UserBusiness;
 import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.model.AFTime;
+import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.security.AgilefantUserDetails;
 import fi.hut.soberit.agilefant.util.BacklogTimesheetNode;
+import flexjson.JSONSerializer;
 
 /**
  * 
  * @author Vesa Pirila / Spider
+ * @author Pasi Pekkanen
  *
  */
-public class TimesheetAction extends ActionSupport {
+public class TimesheetAction extends ActionSupport implements PrincipalAware {
 
     private static final long serialVersionUID = -8988740967426943267L;
     
     private TimesheetBusiness timesheetBusiness;
+    
+    private UserBusiness userBusiness;
 
+    private Set<Integer> productIds = new HashSet<Integer>();
+    
+    private Set<Integer> projectIds = new HashSet<Integer>();
+    
+    private Set<Integer> iterationIds = new HashSet<Integer>();
+    
     private List<BacklogTimesheetNode> products;
     
     private List<Integer> selected = new ArrayList<Integer>();
@@ -43,18 +65,16 @@ public class TimesheetAction extends ActionSupport {
     
     private String interval;
     
-    private Map<Integer, String> userIds = new HashMap<Integer, String>();
+    private Set<Integer> userIds = new HashSet<Integer>();
+    
+    private int backlogSelectionType = 0;
+    
+    private boolean onlyOngoing = false;
     
     private AFTime totalSpentTime;
 
-    public Map<Integer, String> getUserIds() {
-        return userIds;
-    }
-
-    public void setUserIds(Map<Integer, String> userIds) {
-        this.userIds = userIds;
-    }
-
+    private int currentUserId = 0;
+    
     public int[] getBacklogIds() {
         return backlogIds;
     }
@@ -63,13 +83,87 @@ public class TimesheetAction extends ActionSupport {
         this.backlogIds = backlogIds;
     }
     
+    /**
+     * Needed for xwork's execAndWait as action is executed in a different
+     * thread than the wait page. Thus no static threadLocal based principals
+     * (such as those in SecurityUtil) can be used.
+     */
+    public void setPrincipalProxy(PrincipalProxy principalProxy) {
+        Principal principal = principalProxy.getUserPrincipal();
+        AgilefantUserDetails ud;
+        if (principal instanceof RememberMeAuthenticationToken) {
+            ud = (AgilefantUserDetails) ((RememberMeAuthenticationToken) principal)
+                    .getPrincipal();
+        } else {
+            ud = (AgilefantUserDetails) ((UsernamePasswordAuthenticationToken) principal)
+                    .getPrincipal();
+        }
+        currentUserId = ud.getUserId();
+        
+    }
+    
+    private List<Integer> selectedBacklogs() {
+        List<Integer> ret = new ArrayList<Integer>();
+        if(this.projectIds.contains(-1)) {
+            if(this.onlyOngoing) {
+                ret.addAll(this.projectIds);
+            } else {
+                ret.addAll(this.productIds);
+            }
+        } else if(this.iterationIds.contains(-1)) {
+             if(this.onlyOngoing) {
+                ret.addAll(this.iterationIds);
+            } else {
+                ret.addAll(this.projectIds);
+            }
+        } else {
+            if(this.projectIds.size() == 0) {
+                ret.addAll(this.productIds);
+            } else if(this.iterationIds.size() == 0) {
+                ret.addAll(this.projectIds);
+            } else {
+                ret.addAll(this.iterationIds);
+            }
+        }
+        return ret;
+    }
+    public String initialize() {
+        this.interval = "TODAY";
+        this.onlyOngoing = true;
+        this.userIds.add(this.currentUserId);
+        return Action.SUCCESS;
+    }
     public String generateTree(){
-        if(backlogIds == null) {
+        List<Integer> ids = null;
+        Set<Integer> users = new HashSet<Integer>();
+        if(backlogSelectionType == 0) {
+            ids = this.selectedBacklogs();
+            users.addAll(userIds);
+        } else {
+            Date start = null;
+            Date end = null;
+            try {
+                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+                start = df.parse(this.startDate);
+                end = df.parse(this.endDate);
+            } catch(Exception e) {
+                start = null;
+                end = null;
+            }
+            Collection<Backlog> tmp = userBusiness.getOngoingBacklogsByUserAndInterval(currentUserId, start, end);
+            ids = new ArrayList<Integer>();
+            for(Backlog bl : tmp) {
+                ids.add(bl.getId());
+            }
+            //only for current user:
+            users.add(currentUserId);
+        }
+        if(ids == null || ids.size() == 0) {
             addActionError("No backlogs selected.");
             return Action.ERROR;
         }
         try{
-            products = timesheetBusiness.generateTree(backlogIds, startDate, endDate, userIds.keySet());
+            products = timesheetBusiness.generateTree(ids, startDate, endDate, users);
             totalSpentTime = timesheetBusiness.calculateRootSum(products);
         }catch(IllegalArgumentException e){
             addActionError(e.getMessage());
@@ -132,7 +226,7 @@ public class TimesheetAction extends ActionSupport {
 
     public List<User> getSelUser() {
         this.selUser.clear();
-        for(int sel: userIds.keySet()) {
+        for(int sel: userIds) {
             this.selUser.add(userDAO.get(sel));
         }
         return selUser;
@@ -152,6 +246,68 @@ public class TimesheetAction extends ActionSupport {
 
     public void setUserDAO(UserDAO userDAO) {
         this.userDAO = userDAO;
+    }
+
+    public Set<Integer> getProductIds() {
+        return productIds;
+    }
+
+    public void setProductIds(Set<Integer> productIds) {
+        this.productIds = productIds;
+    }
+
+    public Set<Integer> getProjectIds() {
+        return projectIds;
+    }
+
+    public void setProjectIds(Set<Integer> projectIds) {
+        this.projectIds = projectIds;
+    }
+
+    public Set<Integer> getIterationIds() {
+        return iterationIds;
+    }
+
+    public void setIterationIds(Set<Integer> iterationIds) {
+        this.iterationIds = iterationIds;
+    }
+    
+    public String getJSONProducts() {
+        return new JSONSerializer().serialize(this.productIds);
+    }
+    public String getJSONProjects() {
+        return new JSONSerializer().serialize(this.projectIds);
+    }
+    public String getJSONIterations() {
+        return new JSONSerializer().serialize(this.iterationIds);
+    }
+
+    public void setUserBusiness(UserBusiness userBusiness) {
+        this.userBusiness = userBusiness;
+    }
+
+    public int getBacklogSelectionType() {
+        return backlogSelectionType;
+    }
+
+    public void setBacklogSelectionType(int backlogSelectionType) {
+        this.backlogSelectionType = backlogSelectionType;
+    }
+
+    public boolean isOnlyOngoing() {
+        return onlyOngoing;
+    }
+
+    public void setOnlyOngoing(boolean onlyOngoing) {
+        this.onlyOngoing = onlyOngoing;
+    }
+
+    public Set<Integer> getUserIds() {
+        return userIds;
+    }
+
+    public void setUserIds(Set<Integer> userIds) {
+        this.userIds = userIds;
     }
     
     

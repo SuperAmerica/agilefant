@@ -1,29 +1,14 @@
 <%@ include file="./_taglibs.jsp"%>
 
-<script type="text/javascript">
-function show_detailed_loadtable() {
-    document.getElementById('detailedLoadTable').style.display = "";
-    document.getElementById('smallLoadTable').style.display = "none";
-}
-function show_small_loadtable() {
-    document.getElementById('detailedLoadTable').style.display = "none";
-    document.getElementById('smallLoadTable').style.display = "";
-}
-</script>
 
 <div class="subItems" id="subItems_dailyWorkUserLoad">
 <div class="subItemHeader">
 <table cellspacing="0" cellpadding="0">
 	<tr>
+        <td class="iconsbefore">
+            <div class="expand" title="Expand" onclick="toggleHide(this,['#detailedLoadTable','#smallLoadTable']);"></div>
+        </td>
 		<td class="header">Load</td>
-		<td class="icons">
-		<a href="" onclick="show_detailed_loadtable(); return false;">
-			<img src="static/img/plus.png" width="18" height="18" alt="Show details" title="Show details" />
-		</a>
-		<a href="" onclick="show_small_loadtable(); return false;">
-			<img src="static/img/minus.png" width="18" height="18" alt="Hide details" title="Hide details" />
-		</a>
-		</td>
 	</tr>
 </table>
 </div>

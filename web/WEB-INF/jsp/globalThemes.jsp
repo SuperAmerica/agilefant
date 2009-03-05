@@ -28,11 +28,15 @@ $(document).ready(function() {
                         <tr>
                              <td class="header">
                              Business themes
+                             </td>
+                             <td class="icons">
                              <ww:url id="createThemeLink" action="ajaxCreateBusinessTheme" includeParams="none">
                                  <ww:param name="productId" value="${productId}"></ww:param>
                              </ww:url>
                              <ww:a href="%{createThemeLink}" cssClass="openCreateDialog openThemeDialog" onclick="return false;"
-                                 title="Create a new theme">Create new &raquo;</ww:a>
+                                 title="Create a new theme">
+                                 <img src="static/img/new.png" width="16" height="16" alt="Create new"/>
+                                 </ww:a>
                              </td>
                         </tr>
                     </table>

@@ -35,14 +35,6 @@ $(document).ready(function() {
 				<td>
 				<div class="subItems" style="margin-top: 0" id="iterationDetailsDiv_editIteration">
 				<div class="subItemHeader"><script type="text/javascript">
-                function expandDescription() {
-                    document.getElementById('descriptionDiv').style.maxHeight = "1000em";
-                    document.getElementById('descriptionDiv').style.overflow = "visible";
-                }
-                function collapseDescription() {
-                    document.getElementById('descriptionDiv').style.maxHeight = "12em";
-                    document.getElementById('descriptionDiv').style.overflow = "hidden";
-                }
                 function editIteration() {
                 	toggleDiv('editIterationForm'); toggleDiv('descriptionDiv'); showWysiwyg('iterationDescription'); return false;
                 }
@@ -51,15 +43,15 @@ $(document).ready(function() {
 
 				<table cellspacing="0" cellpadding="0">
 					<tr>
-						<td class="header">Details <a href=""
-							onclick="return editIteration();">Edit &raquo;</a></td>
-						<td class="icons"><a href=""
-							onclick="expandDescription(); return false;"> <img
-							src="static/img/plus.png" width="18" height="18" alt="Expand"
-							title="Expand" /> </a> <a href=""
-							onclick="collapseDescription(); return false;"> <img
-							src="static/img/minus.png" width="18" height="18" alt="Collapse"
-							title="Collapse" /> </a></td>
+					    <td class="iconsbefore">
+                            <div class="expand" title="Expand" onclick="toggleExpand(this, '#descriptionDiv');">
+                            </div>
+                        </td>
+						<td class="header">Details</td>
+						<td class="icons">
+						  <img src="static/img/edit.png" title="Edit iteration details"
+						      height="18" width="18" alt="Edit" onclick="editIteration();" />
+						</td>
 					</tr>
 				</table>
 				</div>
@@ -393,12 +385,17 @@ $(document).ready( function() {
 				<div class="subItemHeader">
 				<table cellspacing="0" cellpadding="0">
 					<tr>
-						<td class="header">Iteration goals <ww:url
-							id="createIterationGoalLink" action="ajaxCreateIterationGoal"
-							includeParams="none">
-							<ww:param name="iterationId" value="${iteration.id}" />
-						</ww:url> <ww:a cssClass="openCreateDialog openIterationGoalDialog" onclick="return false;"
-							href="%{createIterationGoalLink}">Create new &raquo;</ww:a>
+						<td class="header">Iteration goals</td>
+						<td class="icons">
+						<ww:url
+                            id="createIterationGoalLink" action="ajaxCreateIterationGoal"
+                            includeParams="none">
+                            <ww:param name="iterationId" value="${iteration.id}" />
+                        </ww:url>
+                        <ww:a cssClass="openCreateDialog openIterationGoalDialog" onclick="return false;"
+                            href="%{createIterationGoalLink}" title="Create a new iteration goal">
+                                <img src="static/img/new.png" width="16" height="16" alt="Create new"/>
+                            </ww:a>
 						</td>
 					</tr>
 				</table>
@@ -509,12 +506,16 @@ $(document).ready( function() {
 				<div id="subItemHeader">
 				<table cellspacing="0" cellpadding="0">
 					<tr>
-						<td class="header">Backlog items <ww:url
+						<td class="header">Backlog items</td>
+						<td class="icons">
+						<ww:url
 							id="createBacklogItemLink" action="ajaxCreateBacklogItem"
 							includeParams="none">
 							<ww:param name="backlogId" value="${iteration.id}" />
 						</ww:url> <ww:a cssClass="openCreateDialog openBacklogItemDialog" onclick="return false;"
-							href="%{createBacklogItemLink}">Create new &raquo;</ww:a>
+							href="%{createBacklogItemLink}" title="Create a new backlog item">
+                        <img src="static/img/new.png" width="16" height="16" alt="Create new"/>
+                        </ww:a>
 						</td>
 					</tr>
 				</table>

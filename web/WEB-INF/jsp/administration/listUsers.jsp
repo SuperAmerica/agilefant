@@ -18,8 +18,12 @@ $(document).ready(function() {
 	<div class="subItemHeader">
 		<table cellspacing="0" cellpadding="0">
 			<tr>
-				<td class="header">Enabled users					
-					<a href="ajaxCreateUser.action" class="openCreateDialog openUserDialog" title="Create a new user" onclick="return false;">Create new &raquo;</a>
+				<td class="header">Enabled users</td>
+				<td class="icons">
+					<a href="ajaxCreateUser.action" class="openCreateDialog openUserDialog"
+					title="Create a new user" onclick="return false;">
+					   <img src="static/img/new.png" width="16" height="16" alt="Create new"/>
+					</a>
 				</td>
 			</tr>
 		</table>

@@ -3,19 +3,13 @@ package fi.hut.soberit.agilefant.web;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import com.opensymphony.xwork.Action;
-import com.opensymphony.xwork.ActionSupport;
 
-import fi.hut.soberit.agilefant.business.BacklogBusiness;
-import fi.hut.soberit.agilefant.business.BusinessThemeBusiness;
-import fi.hut.soberit.agilefant.business.HourEntryBusiness;
 import fi.hut.soberit.agilefant.business.ProjectBusiness;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.db.ProductDAO;
-import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.BusinessTheme;
 import fi.hut.soberit.agilefant.model.Product;
@@ -23,7 +17,7 @@ import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.util.BusinessThemeMetrics;
 import fi.hut.soberit.agilefant.util.EffortSumData;
 
-public class ProductAction extends ActionSupport implements CRUDAction {
+public class ProductAction extends BacklogContentsAction implements CRUDAction {
 
     private static final long serialVersionUID = 1834399750050895118L;
 
@@ -31,23 +25,13 @@ public class ProductAction extends ActionSupport implements CRUDAction {
 
     private BacklogItemDAO backlogItemDAO;
 
-    private BacklogBusiness backlogBusiness;
-    
     private ProjectBusiness projectBusiness;
-
-    private HourEntryBusiness hourEntryBusiness;
     
     private int productId;
 
     private Product product;
 
-    private Backlog backlog;
-
     private Collection<Product> products = new ArrayList<Product>();
-
-    private EffortSumData effortLeftSum;
-
-    private EffortSumData origEstSum;
     
     private Map<Project, EffortSumData> effLeftSums;
     
@@ -55,16 +39,11 @@ public class ProductAction extends ActionSupport implements CRUDAction {
     
     private Map<BusinessTheme, BusinessThemeMetrics> themeMetrics;
     
-    private BusinessThemeBusiness businessThemeBusiness; 
+    //private BusinessThemeBusiness businessThemeBusiness; 
     
-    private Map<Integer, List<BusinessTheme>> bliThemeCache;
-
     private String jsonData = "";
     
     
-    public Map<Integer, List<BusinessTheme>> getBliThemeCache() {
-        return bliThemeCache;
-    }
 
     public String create() {
         productId = 0;
@@ -100,11 +79,8 @@ public class ProductAction extends ActionSupport implements CRUDAction {
         }
         backlog = product;
 
-        // Calculate effort lefts and original estimates
-        Collection<BacklogItem> items = backlog.getBacklogItems();
-        effortLeftSum = backlogBusiness.getEffortLeftSum(items);
-        origEstSum = backlogBusiness.getOriginalEstimateSum(items);
-
+        super.initializeContents();
+        
         // Calculate product's projects' effort lefts and original estimates
         
         effLeftSums = new HashMap<Project, EffortSumData>();
@@ -116,9 +92,6 @@ public class ProductAction extends ActionSupport implements CRUDAction {
         // Calculate projects' metrics.
         projectBusiness.calculateProjectMetrics(product);
         
-        // Load Hour Entry sums to this backlog's BLIs.
-        hourEntryBusiness.loadSumsToBacklogItems(backlog);
-        
         Collection<Project> projects = product.getProjects();
         
         for (Project pro : projects) {
@@ -129,8 +102,6 @@ public class ProductAction extends ActionSupport implements CRUDAction {
             origEstSums.put(pro, projectOrigEstSum);
         }
         
-        bliThemeCache = businessThemeBusiness.loadThemeCacheByBacklogId(productId);
-        System.out.println("LISTING:::");
         return Action.SUCCESS;
     }
 
@@ -181,14 +152,6 @@ public class ProductAction extends ActionSupport implements CRUDAction {
         return Action.SUCCESS;
     }
 
-    public EffortSumData getEffortLeftSum() {
-        return effortLeftSum;
-    }
-
-    public EffortSumData getOriginalEstimateSum() {
-        return origEstSum;
-    }
-
     public Product getProduct() {
         return product;
     }
@@ -196,10 +159,6 @@ public class ProductAction extends ActionSupport implements CRUDAction {
     public void setProduct(Product product) {
         this.product = product;
         this.backlog = product;
-    }
-
-    public Backlog getBacklog() {
-        return this.backlog;
     }
 
     public void setProductDAO(ProductDAO productDAO) {
@@ -241,10 +200,6 @@ public class ProductAction extends ActionSupport implements CRUDAction {
         this.backlogItemDAO = backlogItemDAO;
     }
 
-    public void setBacklogBusiness(BacklogBusiness backlogBusiness) {
-        this.backlogBusiness = backlogBusiness;
-    }
-
     public Map<Project, EffortSumData> getEffLeftSums() {
         return effLeftSums;
     }
@@ -261,34 +216,6 @@ public class ProductAction extends ActionSupport implements CRUDAction {
         this.projectBusiness = projectBusiness;
     }
 
-    public HourEntryBusiness getHourEntryBusiness() {
-        return hourEntryBusiness;
-    }
-
-    public void setHourEntryBusiness(HourEntryBusiness hourEntryBusiness) {
-        this.hourEntryBusiness = hourEntryBusiness;
-    }
-
-    public EffortSumData getOrigEstSum() {
-        return origEstSum;
-    }
-
-    public void setOrigEstSum(EffortSumData origEstSum) {
-        this.origEstSum = origEstSum;
-    }
-
-    public BacklogBusiness getBacklogBusiness() {
-        return backlogBusiness;
-    }
-
-    public void setBacklog(Backlog backlog) {
-        this.backlog = backlog;
-    }
-
-    public void setEffortLeftSum(EffortSumData effortLeftSum) {
-        this.effortLeftSum = effortLeftSum;
-    }
-
     public void setEffLeftSums(Map<Project, EffortSumData> effLeftSums) {
         this.effLeftSums = effLeftSums;
     }
@@ -303,14 +230,6 @@ public class ProductAction extends ActionSupport implements CRUDAction {
 
     public Collection<BusinessTheme> getNonActiveBusinessThemes() {
         return businessThemeBusiness.getNonActiveBusinessThemes(productId);
-    }
-    
-    public BusinessThemeBusiness getBusinessThemeBusiness() {
-        return businessThemeBusiness;
-    }
-
-    public void setBusinessThemeBusiness(BusinessThemeBusiness businessThemeBusiness) {
-        this.businessThemeBusiness = businessThemeBusiness;
     }
 
     public Map<BusinessTheme, BusinessThemeMetrics> getBusinessThemeMetrics() {

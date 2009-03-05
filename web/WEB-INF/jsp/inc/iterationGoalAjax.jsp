@@ -87,9 +87,14 @@ $(document).ready(function() {
 		<tr>
 			<td></td>
 			<td></td>
-			<td><ww:submit value="Save" id="saveButton"/></td>
-			<td class="deleteButton">
-				<ww:submit action="deleteIterationGoal" value="Delete" /></td>
+			<td>
+                <ww:submit value="Save" id="saveButton"/>
+                <ww:submit name="SaveClose" value="Save & Close" id="saveClose"  />
+			</td>
+            <td class="deleteButton">
+                <ww:submit action="deleteIterationGoal" value="Delete" />
+                <ww:reset value="Cancel"/>
+			</td>
 		</tr>
 	</table>
 </ww:form>
@@ -104,6 +109,15 @@ $(document).ready(function() {
 
 <div id="iterationGoalBliTab-${iterationGoalId}" class="iterationNaviTab">
 
+<ww:url id="createBLILink" action="ajaxCreateBacklogItem" includeParams="none">
+    <ww:param name="backlogId">${iterationGoal.iteration.id}</ww:param>
+    <ww:param name="iterationGoalId">${iterationGoalId}</ww:param>
+</ww:url>
+
+<ww:a href="%{createBLILink}" cssClass="openCreateDialog openBacklogItemDialog" onclick="return false">
+    Create new &raquo;
+</ww:a>
+
 <c:choose>
 <c:when test="${!(empty iterationGoal.backlogItems)}" >
 <display:table class="listTable"
@@ -111,7 +125,7 @@ $(document).ready(function() {
 	defaultorder="descending">					
 
 	<display:column title="Name" sortable="false" sortProperty="name" class="shortNameColumn">												
-		<c:forEach items="${bliThemeCache[row.id]}" var="businessTheme">
+		<c:forEach items="${bliThemeCache[row]}" var="businessTheme">
             		<c:choose>
             			<c:when test="${businessTheme.global}">
 		            		<span class="businessTheme globalThemeColors" title="${businessTheme.description}"><c:out value="${businessTheme.name}"/></span>            			
@@ -122,10 +136,7 @@ $(document).ready(function() {
             		</c:choose>
             </c:forEach>
 		<%-- Link to go to the bli in the iteration page. --%>												
-		<ww:url id="editLink" action="editIteration" includeParams="none">
-			<ww:param name="iterationId" value="${iterationGoal.iteration.id}" />
-		</ww:url>
-		<ww:a href="%{editLink}#bli_${row.id}">
+		<ww:a href="qr.action?id=BLI:${row.id}">
 			${aef:html(row.name)}
 		</ww:a>						
 	</display:column>

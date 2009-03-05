@@ -11,7 +11,6 @@ import java.util.Set;
 
 import org.springframework.dao.DataIntegrityViolationException;
 
-import fi.hut.soberit.agilefant.business.BacklogItemBusiness;
 import fi.hut.soberit.agilefant.business.BusinessThemeBusiness;
 import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
@@ -37,8 +36,6 @@ public class BusinessThemeBusinessImpl implements BusinessThemeBusiness {
     private BacklogDAO backlogDAO;
     private BacklogItemDAO backlogItemDAO;
 
-    private BacklogItemBusiness backlogItemBusiness;
-
     public BusinessTheme getBusinessTheme(int businessThemeId) {
         return businessThemeDAO.get(businessThemeId);
     }
@@ -52,22 +49,14 @@ public class BusinessThemeBusinessImpl implements BusinessThemeBusiness {
     }
        
     public Collection<BusinessTheme> getActiveBusinessThemes(int backlogId) {
-        Backlog bl = backlogDAO.get(backlogId);
-        Product prod = null;
-        if(bl instanceof Product) {
-            prod = (Product)bl;
-        } else if(bl instanceof Project) {
-            prod = ((Project)bl).getProduct();
-        } else if(bl instanceof Iteration) {
-            prod = ((Iteration)bl).getProject().getProduct();
-        }
-        if(prod == null) {
-            return new HashSet<BusinessTheme>();
-        }
-        return businessThemeDAO.getSortedBusinessThemesByProductAndActivity(prod, true);
+        return this.getBusinessThemesByBacklogAndActivity(backlogId, true);
     }
     
     public Collection<BusinessTheme> getNonActiveBusinessThemes(int backlogId) {
+        return this.getBusinessThemesByBacklogAndActivity(backlogId, false);
+    }
+    
+    private Collection<BusinessTheme> getBusinessThemesByBacklogAndActivity(int backlogId, boolean activity) {
         Backlog bl = backlogDAO.get(backlogId);
         Product prod = null;
         if(bl instanceof Product) {
@@ -80,22 +69,7 @@ public class BusinessThemeBusinessImpl implements BusinessThemeBusiness {
         if(prod == null) {
             return new HashSet<BusinessTheme>();
         }
-        return businessThemeDAO.getSortedBusinessThemesByProductAndActivity(prod, false);
-    }
-    
-    public List<BusinessTheme> getBacklogItemActiveBusinessThemes(int backlogItemId) {
-        BacklogItem bli = backlogItemDAO.get(backlogItemId);
-        if (bli == null) {
-            return new ArrayList<BusinessTheme>();
-        }
-        List<BusinessTheme> activeThemes = new ArrayList<BusinessTheme>();
-        for (BusinessTheme t: bli.getBusinessThemes()) {
-            if (t.isActive()) {
-                activeThemes.add(t);
-            }
-        }
-                        
-        return activeThemes;
+        return businessThemeDAO.getSortedBusinessThemesByProductAndActivity(prod, activity);
     }
     
     public List<BusinessTheme> getBacklogItemActiveOrSelectedThemes(int backlogItemId) {
@@ -115,31 +89,6 @@ public class BusinessThemeBusinessImpl implements BusinessThemeBusiness {
         return activeThemes;
     }
     
-    public Map<Integer, List<BusinessTheme>> loadThemeCacheByBacklogId(int backlogId) {
-        Backlog bl = backlogDAO.get(backlogId);
-        if(bl == null) {
-            return new HashMap<Integer, List<BusinessTheme>>();
-        }
-        List<?> rawThemeData = businessThemeDAO.getThemesByBacklog(bl);
-        Map<Integer, List<BusinessTheme>> res = new HashMap<Integer, List<BusinessTheme>>();
-        for (Object row : rawThemeData) {
-            try {
-                Object tmpData[] = (Object[]) row;
-                int bliId = (Integer) tmpData[0];
-                BusinessTheme tmpTheme = new BusinessTheme();
-                tmpTheme.setId((Integer) tmpData[1]);
-                tmpTheme.setName((String) tmpData[2]);
-                tmpTheme.setDescription((String) tmpData[3]);
-                tmpTheme.setGlobal((Boolean) tmpData[4]);
-                if (res.get(bliId) == null) {
-                    res.put(bliId, new ArrayList<BusinessTheme>());
-                }
-                res.get(bliId).add(tmpTheme);
-            } catch (Exception e) {
-            }
-        }
-        return res;
-    }
     public Map<BusinessTheme, BusinessThemeMetrics> getThemeMetrics(int productId) {
         Product product = productDAO.get(productId);
         
@@ -526,6 +475,12 @@ public class BusinessThemeBusinessImpl implements BusinessThemeBusiness {
     public List<BacklogThemeBinding> getIterationThemesByProject(int projectId) {
         return getIterationThemesByProject((Project)backlogDAO.get(projectId));
     }
+    
+    public Map<BacklogItem, List<BusinessTheme>> getBacklogItemBusinessThemesByBacklog(
+            Backlog backlog) {
+        return businessThemeDAO.getBacklogItemBusinessThemesByBacklog(backlog);
+    }
+    
     /* getters and setters */
     
     public ProductDAO getProductDAO() {
@@ -546,14 +501,6 @@ public class BusinessThemeBusinessImpl implements BusinessThemeBusiness {
 
     public void setBacklogDAO(BacklogDAO backlogDAO) {
         this.backlogDAO = backlogDAO;
-    }
-
-    public BacklogItemBusiness getBacklogItemBusiness() {
-        return backlogItemBusiness;
-    }
-
-    public void setBacklogItemBusiness(BacklogItemBusiness backlogItemBusiness) {
-        this.backlogItemBusiness = backlogItemBusiness;
     }
 
 }

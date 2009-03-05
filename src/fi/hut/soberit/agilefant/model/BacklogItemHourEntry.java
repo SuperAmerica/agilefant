@@ -19,7 +19,9 @@ import org.hibernate.annotations.BatchSize;
 public class BacklogItemHourEntry extends HourEntry {
     private BacklogItem backlogItem;
 
-    @ManyToOne
+    @ManyToOne(
+            targetEntity = fi.hut.soberit.agilefant.model.BacklogItem.class
+    )
     @JoinColumn(nullable = true)
     public BacklogItem getBacklogItem() {
         return backlogItem;

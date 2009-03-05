@@ -1,5 +1,6 @@
 package fi.hut.soberit.agilefant.business;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -29,7 +30,7 @@ public interface TimesheetBusiness {
      * @return The root nodes (Products) of the forest.
      * @throws IllegalArgumentException If date parsing fails 
      */
-    public List<BacklogTimesheetNode> generateTree(int[] backlogIds,
+    public List<BacklogTimesheetNode> generateTree(List<Integer> backlogIds,
                                                    String startDateString, String endDateString,
                                                    Set<Integer> userIds)
         throws IllegalArgumentException;
@@ -71,4 +72,6 @@ public interface TimesheetBusiness {
      * @return Total spent time
      */
     public AFTime calculateRootSum(List<BacklogTimesheetNode> roots);
+    
+    public Collection<BacklogItem> getBacklogItems(Backlog bl);
 }

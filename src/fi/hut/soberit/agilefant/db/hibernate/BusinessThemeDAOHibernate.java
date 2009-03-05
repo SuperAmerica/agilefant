@@ -91,26 +91,6 @@ public class BusinessThemeDAOHibernate extends
         return res;
     }
 
-    @SuppressWarnings("unchecked")
-    public List getThemesByBacklog(Backlog backlog) {
-        DetachedCriteria crit = DetachedCriteria.forClass(BacklogItem.class);
-        crit.createAlias("businessThemes", "themes");
-        ProjectionList p = Projections.projectionList();
-        p.add(Projections.property("id"), "backlogItemId");
-        p.add(Projections.property("themes.id"), "themeId");
-        p.add(Projections.property("themes.name"), "themeName");
-        p.add(Projections.property("themes.description"), "themeDescription");
-        p.add(Projections.property("themes.global"), "themeGlobal");
-        crit.setProjection(p);
-        crit.setFetchMode("themes", FetchMode.JOIN);
-        crit.setFetchMode("iterationGoal", FetchMode.SELECT);
-        crit.setFetchMode("responsibles", FetchMode.SELECT);
-        crit.setFetchMode("tasks", FetchMode.SELECT);
-        crit.add(Restrictions.eq("backlog", backlog));
-        crit.addOrder(Order.asc("themes.name"));
-        return super.getHibernateTemplate().findByCriteria(crit);
-    }
-
     public void saveOrUpdateBacklogThemeBinding(BacklogThemeBinding binding) {
         super.getHibernateTemplate().saveOrUpdate(binding);
     }
@@ -123,11 +103,7 @@ public class BusinessThemeDAOHibernate extends
     public List<BacklogThemeBinding> getIterationThemesByProject(Project project) {
         DetachedCriteria iterationCriteria = DetachedCriteria
                 .forClass(Iteration.class);
-        // DetachedCriteria bindings =
-        // iterationCriteria.createAlias("businessThemeBindings",
-        // "themeBindings");
-        // iterationCriteria.setFetchMode("businessThemeBindings",
-        // FetchMode.JOIN);
+
         iterationCriteria.setFetchMode("assignments", FetchMode.SELECT);
         iterationCriteria.setFetchMode("backlogItems", FetchMode.SELECT);
         iterationCriteria.setFetchMode("owner", FetchMode.SELECT);
@@ -152,5 +128,22 @@ public class BusinessThemeDAOHibernate extends
     public BacklogThemeBinding getBindingById(int bindingId) {
         return (BacklogThemeBinding) super.getHibernateTemplate().get(
                 BacklogThemeBinding.class, bindingId);
+    }
+
+    @SuppressWarnings("unchecked")
+    public Map<BacklogItem, List<BusinessTheme>> getBacklogItemBusinessThemesByBacklog(
+            Backlog backlog) {
+        String hql = "from BacklogItem as bli left outer join bli.businessThemes as theme WHERE bli.backlog = ? order by theme.name asc";
+        List<Object[]> respBli = this.getHibernateTemplate().find(hql, new Object[] {backlog});
+        Map<BacklogItem, List<BusinessTheme>> res = new HashMap<BacklogItem, List<BusinessTheme>>();
+        for(Object[] row : respBli) {
+           BacklogItem item = (BacklogItem)row[0];
+           BusinessTheme theme  = (BusinessTheme)row[1];
+           if(res.get(item) == null) {
+               res.put(item, new ArrayList<BusinessTheme>());
+           }
+           res.get(item).add(theme);
+        }
+        return res;
     }
 }

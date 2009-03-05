@@ -341,6 +341,17 @@ public class BacklogBusinessImpl implements BacklogBusiness {
     }
 
     /** {@inheritDoc} */
+    public AFTime getSpentEffortSum(Collection<BacklogItem> bliList) {
+        AFTime sum = new AFTime(0);
+        for (BacklogItem bli : bliList) {
+            if(bli.getEffortSpent() != null) {
+                sum.add(bli.getEffortSpent());
+            }
+        }
+        return sum;
+    }
+    
+    /** {@inheritDoc} */
     public EffortSumData getEffortLeftResponsibleDividedSum(
             Collection<BacklogItem> bliList) {
         EffortSumData data = new EffortSumData();
@@ -458,7 +469,6 @@ public class BacklogBusinessImpl implements BacklogBusiness {
     }
 
     /** {@inheritDoc} */
-    @SuppressWarnings("deprecation")
     public int getWeekdaysLeftInBacklog(Backlog backlog, Date from) {
         Date startDate = new Date(0);
         Date endDate = new Date(0);
@@ -521,7 +531,6 @@ public class BacklogBusinessImpl implements BacklogBusiness {
     }
 
     /** {@inheritDoc} */
-    @SuppressWarnings("deprecation")
     public int getNumberOfDaysLeftForBacklogOnWeek(Backlog backlog, Date time) {
         Date startDate = new Date();
         Date endDate = new Date();
@@ -907,6 +916,26 @@ public class BacklogBusinessImpl implements BacklogBusiness {
                 businessThemeBusiness.removeThemeBinding(bind);
             }
         }
+    }
+    
+    public String getSubBacklogsAsJSON(Backlog backlog) {
+        String json = "";
+        JSONSerializer ser = new JSONSerializer();
+        ser.exclude("*.description");
+        if(backlog instanceof Product) {            
+            json = ser.serialize(((Product)backlog).getProjects());
+        } else if(backlog instanceof Project) {
+            json = ser.serialize(((Project)backlog).getIterations());
+        } 
+        return json;
+    }
+
+    public String getSubBacklogsAsJSON(int backlogId) {
+        Backlog bl = this.backlogDAO.get(backlogId);
+        if(bl == null) {
+            return "";
+        }
+        return getSubBacklogsAsJSON(bl);
     }
 
     public int getNumberOfAssignedUsers(Backlog backlog) {

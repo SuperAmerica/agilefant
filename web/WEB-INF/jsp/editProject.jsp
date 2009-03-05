@@ -31,6 +31,7 @@
 <aef:menu navi="backlog" pageHierarchy="${pageHierarchy}" title="${project.name}"/>
 <ww:actionerror />
 <ww:actionmessage />
+<aef:hourReporting id="hourReport" />
 <script type="text/javascript">
 <!--
 $(document).ready(function() {
@@ -94,32 +95,31 @@ $(document).ready(function() {
 								<div class="subItems" style="margin-top: 0" id="subItems_editProjectDetails">
 									<div class="subItemHeader">
 										<script type="text/javascript">
-											function expandDescription() {
-												document.getElementById('descriptionDiv').style.maxHeight = "1000em";
-												document.getElementById('descriptionDiv').style.overflow = "visible";
-											}
-											function collapseDescription() {
-												document.getElementById('descriptionDiv').style.maxHeight = "14em";
-												document.getElementById('descriptionDiv').style.overflow = "hidden";
-											}
 											function editProject() {
 												toggleDiv('editProjectForm'); toggleDiv('descriptionDiv'); showWysiwyg('projectDescription'); return false;
 											}
 										</script>
 										<table cellspacing="0" cellpadding="0">
 											<tr>
-												<td class="header">Details <a href="" onclick="return editProject();">Edit &raquo;</a></td>
+                                                <td class="iconsbefore">
+                                                    <div class="expand" title="Expand" onclick="toggleExpand(this, '#descriptionDiv');">
+                                                    </div>
+						                        </td>
+												<td class="header">Details</td>
 												<td class="icons">
-													<%--<a href="" onclick="toggleDiv('editProjectForm'); toggleDiv('descriptionDiv'); return false;">
-														<img src="static/img/edit.png" width="18" height="18" alt="Edit" title="Edit" />
-													</a>--%>
-													<a href="" onclick="expandDescription(); return false;">
-														<img src="static/img/plus.png" width="18" height="18" alt="Expand" title="Expand" />
-													</a>
-													<a href="" onclick="collapseDescription(); return false;">
-														<img src="static/img/minus.png" width="18" height="18" alt="Collapse" title="Collapse" />
-													</a>
-												</td>
+                                                    <c:if test="${hourReport}">
+                                                        <ww:url id="createLink" action="ajaxCreateHourEntry" includeParams="none">
+                                                            <ww:param name="backlogId" value="${projectId}" />
+                                                        </ww:url>
+                                                    <ww:a cssClass="openCreateDialog openUserDialog" onclick="return false;" title="Log effort" href="%{createLink}">
+												    <img src="static/img/timesheets.png"
+												        height="18" width="18" alt="Log effort" />
+												    </ww:a>
+                                                  </c:if>
+						                          <img src="static/img/edit.png" title="Edit project details"
+						                              height="18" width="18" alt="Edit"
+						                              onclick="editProject();" />
+						                        </td>
 											</tr>
 										</table>
 									</div>
@@ -130,7 +130,7 @@ $(document).ready(function() {
 													<th class="info1"><ww:text name="general.uniqueId"/></th>
 													<td class="info3"><aef:quickReference item="${project}" /></td>
 													<td class="info4" rowspan="8">
-                                                        <c:if test="${(!empty project.backlogItems) && (empty project.iterations)}">
+                                                        <c:if test="${(!empty project.backlogItems) && projectBurndown}">
                                                             <div class="smallBurndown"><a href="#bigChart">
                                                                 <img src="drawSmallProjectChart.action?projectId=${project.id}"/>
                                                             </a></div>
@@ -365,9 +365,6 @@ $(document).ready(function() {
 														<td>Start date</td>
 														<td>*</td>
 														<td colspan="2">
-														<%--<ww:datepicker value="%{#start}" size="15"
-															showstime="true" format="%{getText('webwork.datepicker.format')}"
-															name="startDate" />--%>
 														<aef:datepicker id="start_date" name="startDate" format="%{getText('webwork.shortDateTime.format')}" value="%{#start}" />
 														</td>
 													</tr>
@@ -375,9 +372,6 @@ $(document).ready(function() {
 														<td>End date</td>
 														<td>*</td>
 														<td colspan="2">
-														<%--<ww:datepicker value="%{#end}" size="15"
-															showstime="true" format="%{getText('webwork.datepicker.format')}"
-															name="endDate" />--%>
 														<aef:datepicker id="end_date" name="endDate" format="%{getText('webwork.shortDateTime.format')}" value="%{#end}" />
 														</td>
 													</tr>
@@ -437,25 +431,6 @@ $(document).ready(function() {
 											</ww:form>
 										</div>
 									</div>
-									
-									<%---Link for entering a new hour entry---%>
-									<aef:hourReporting id="hourReport"/>
-									<c:if test="${hourReport == 'true'}">
-										<div id="subItemHeader" style="border:none; border-top:1px solid #ccc; background: none;">
-											<table cellpadding="0" cellspacing="0">
-												<tbody>
-													<tr>
-				   										<td class="header">
-				   											<ww:url id="createLink" action="ajaxCreateHourEntry" includeParams="none">
-				   												<ww:param name="backlogId" value="${projectId}" />
-				   											</ww:url>
-					   										<ww:a cssClass="openCreateDialog openUserDialog" onclick="return false;" title="Log effort" href="%{createLink}">Log effort &raquo;</ww:a>
-					   									</td>
-													</tr>
-												</tbody>
-											</table>
-										</div>
-									</c:if>
 									
 								</div>
 							</td>
@@ -569,12 +544,15 @@ $(document).ready(function() {
 							<div class="subItemHeader">
 								<table cellpadding="0" cellspacing="0">
 									<tr>
-					   					<td class="header">Iterations
+					   					<td class="header">Iterations</td>
+					   					<td class="icons">
 					   						<ww:url id="createLink" action="ajaxCreateIteration" includeParams="none" >
 						  						<ww:param name="projectId" value="${project.id}" />
 					   						</ww:url>
 					   						<ww:a
-												href="%{createLink}" cssClass="openCreateDialog openIterationDialog" onclick="return false;">Create new &raquo;</ww:a>
+												href="%{createLink}" cssClass="openCreateDialog openIterationDialog" onclick="return false;">
+												<img src="static/img/new.png" width="16" height="16" alt="Create new"/>
+                                            </ww:a>
 					   					</td>
 									</tr>
 								</table>
@@ -585,17 +563,14 @@ $(document).ready(function() {
 											id="row" requestURI="editProject.action">
 											
 											<display:column sortable="true" sortProperty="name" title="Name">
-												<div style="overflow:hidden; width: 170px;">												
-												<a class="nameLink" onclick="handleTabEvent('iterationTabContainer-${row.id}', 'iteration', ${row.id}, 1);">
-													${aef:html(row.name)}
-												</a>												
+												<div style="overflow:hidden; width: 170px;">																								
 													<ww:url id="editLink" action="editIteration"
 													includeParams="none">
-													<ww:param name="iterationId" value="${row.id}" />
-												</ww:url>
-												<ww:a href="%{editLink}&contextViewName=editProject&contextObjectId=${project.id}">
-													<img src="static/img/link.png" alt="Iteration page" title="Iteration page"/>
-												</ww:a>												
+														<ww:param name="iterationId" value="${row.id}" />
+													</ww:url>
+													<ww:a href="%{editLink}&contextViewName=editProject&contextObjectId=${project.id}">
+														${aef:html(row.name)}
+													</ww:a>												
 												</div>
 												<div id="iterationTabContainer-${row.id}" class="tabContainer" style="overflow:visible; white-space: nowrap; width: 0px;"></div>
 											</display:column>
@@ -640,13 +615,18 @@ $(document).ready(function() {
 							<div class="subItemHeader">
 								<table cellpadding="0" cellspacing="0">
                     				<tr>
-                       					<td class="header">Backlog items <ww:url
+                       					<td class="header">Backlog items</td>
+                       					<td class="icons">
+                       					<ww:url
 												id="createBacklogItemLink" action="ajaxCreateBacklogItem"
 												includeParams="none">
 												<ww:param name="backlogId" value="${project.id}" />
 											</ww:url>
 											<ww:a cssClass="openCreateDialog openBacklogItemDialog"
-												href="%{createBacklogItemLink}" onclick="return false;">Create new &raquo;</ww:a>
+												href="%{createBacklogItemLink}" onclick="return false;"
+												title="Create a new backlog item">
+                                                <img src="static/img/new.png" width="16" height="16" alt="Create new"/>
+											</ww:a>
 										</td>
 									</tr>
 								</table>
@@ -657,13 +637,11 @@ $(document).ready(function() {
 								</div>
 							</c:if>
 						</div>
-						<c:if test="${!empty project.backlogItems}">
-							<c:if test="${empty project.iterations}">
-								<p>
-									<img src="drawProjectChart.action?projectId=${project.id}" id="bigChart"
-									   width="780" height="600" />
-								</p>
-							</c:if>
+						<c:if test="${(!empty project.backlogItems) && projectBurndown}">
+							<p>
+								<img src="drawProjectChart.action?projectId=${project.id}" id="bigChart"
+								   width="780" height="600" />
+							</p>
 						</c:if>
 					</c:if>
 				</td>

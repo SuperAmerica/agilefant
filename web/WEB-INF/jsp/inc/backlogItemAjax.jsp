@@ -278,12 +278,12 @@ $(document).ready(function() {
                     	<c:when test="${!empty iterationGoals}">
                     <ww:select headerKey="0" headerValue="(none)"
                         id="iterationGoalSelectBLI-${backlogItemId}-${bliListContext}"
-                        name="backlogItem.iterationGoal.id" list="#attr.iterationGoals"
+                        name="iterationGoalId" list="#attr.iterationGoals"
                         listKey="id" listValue="name" value="${goalId}" />
                         <span style="display: none;">(none)</span>
                      </c:when>
                      <c:otherwise>
-                     	<select id="iterationGoalSelectBLI-${backlogItemId}-${bliListContext}" name="backlogItem.iterationGoal.id" style="display: none;"></select>
+                     	<select id="iterationGoalSelectBLI-${backlogItemId}-${bliListContext}" name="iterationGoalId" style="display: none;"></select>
                      	<span>(none)</span>
                      </c:otherwise>
                     </c:choose>
@@ -369,7 +369,7 @@ $(document).ready(function() {
 				<ww:submit name="SaveClose" value="Save & Close" id="saveClose"  /></td>
 				<td class="deleteButton">
 				<ww:submit value="Delete" action="deleteBacklogItem" />
-				<ww:reset value="Cancel"/>				
+				<ww:reset value="Cancel"/>	
 				</td>
 			</tr>
 		</table>
@@ -448,7 +448,7 @@ $(document).ready(function() {
 						  deleteaction: 'deleteTask.action',
 						  submitParam: 'taskId',
 						  fields: {
-						  	taskNames: {cell: 0, type: 'text', size: 70},
+						  	taskNames: {cell: 0, type: 'text', size: 50},
 						  	taskStates: {cell: 1,type: 'select', data: {'NOT_STARTED': 'Not started', 'STARTED': 'Started', 'PENDING': 'Pending', 'BLOCKED': 'Blocked', 'IMPLEMENTED': 'Implemented', 'DONE': 'Done'}},											  	
 						  	reset: {cell: 2, type: 'reset'}
 						  }
@@ -530,7 +530,7 @@ $(document).ready(function() {
 						
 						<display:column sortable="false" title="Name"
 							class="shortNameColumn">
-							<ww:textfield size="74" name="taskNames[${row.id}]" value="${row.name}" />												
+							<ww:textfield size="50" name="taskNames[${row.id}]" value="${row.name}" />												
 						</display:column>
 														
 						<display:column sortable="false" title="State">											

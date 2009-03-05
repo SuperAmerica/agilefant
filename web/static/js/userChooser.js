@@ -94,9 +94,13 @@
                 this.selectAction = this.projectSelectAction;
                 this.renderForProject();
             }
-            else {
+            else if (this.options.renderFor == 'backlogItem') {
                 this.selectAction = this.bliSelectAction;
                 this.renderForBLI();
+            }
+            else {
+                this.selectAction = this.bliSelectAction;
+                this.renderForAllUsers();
             }
             
         },
@@ -154,6 +158,31 @@
             });
             
             /* Render the team list */
+            this.selectCheckboxes(this.data.selectedList);
+            this.renderTeamList();
+            this.renderButtons();
+            this.validation();
+        },
+        renderForAllUsers: function() {
+            var me = this;
+            var headerRow = $('<tr/>').appendTo(this.table);
+            
+            headerRow.append('<th>Enabled users</th><th>Disabled users</th><th>Teams</th>');
+            
+            var row = $('<tr/>').appendTo(this.table);
+            this.assignedCell = $('<td/>').appendTo(row);
+            this.notAssignedCell = $('<td/>').appendTo(row);
+            this.teamCell = $('<td/>').appendTo(row); 
+            
+            var firstList = [];
+            var secondList = [];
+            
+            $.each(this.data.enabledUsers, function() { firstList.push(this.id); });
+            $.each(this.data.disabledUsers, function() { secondList.push(this.id); });
+            
+            this.assignedCell.append(this.renderCheckboxList(firstList));
+            this.notAssignedCell.append(this.renderCheckboxList(secondList));
+            
             this.selectCheckboxes(this.data.selectedList);
             this.renderTeamList();
             this.renderButtons();
@@ -376,6 +405,9 @@
 	                    if (me.options.renderFor == 'project') {
 	                        me.data.selectedList = data.assignments;
 	                    }
+	                    else if (me.options.renderFor == 'allUsers') {
+	                       me.data.selectedList = me.getFromUserListContainer();
+	                    }
 	                    else {
 	                        me.data.selectedList = data.responsibles;
 	                    }
@@ -450,6 +482,16 @@
             
             this.destroy();
             return false;
+        },
+        getFromUserListContainer: function() {
+            var ulc = $(this.userListContainer);
+            var list = [];
+            
+            ulc.find('input[name=userIds]').each(function() {
+                list.push(parseInt($(this).val()));
+            });
+            
+            return list;
         },
         bliSelectAction: function() {
             var me = this;

@@ -39,6 +39,7 @@
 <script type="text/javascript" src="static/js/inlineEdit.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
 <script type="text/javascript" src="static/js/userChooser.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
 <script type="text/javascript" src="static/js/themeChooser.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/backlogChooser.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
 <script type="text/javascript">
 $(document).ready(function() {
     if(document.cookie.indexOf("SPRING_SECURITY_HASHED_REMEMBER_ME_COOKIE") == -1) {
@@ -262,9 +263,20 @@ Agilefant
 
 <!-- Tree menu -->
 
+<ul id="treemenu">
+</ul>
+
+</div>
 
 <script type="text/javascript">
-$(document).ready(function() {
+	/* Working on a request div */
+	$("#loadingDiv").ajaxStop(function() {
+	    $(this).hide();
+	});
+	
+	$("#loadingDiv").ajaxStart(function() {
+	    $(this).show();
+	});
     var navi = '<%=navi%>';
     var subnavi = '<%=subnavi%>';
     
@@ -288,13 +300,7 @@ $(document).ready(function() {
             );
         }
     });
-});
 </script>
-
-<ul id="treemenu">
-</ul>
-
-</div>
 <!-- /#hierarchy -->
 
 

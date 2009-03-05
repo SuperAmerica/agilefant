@@ -57,6 +57,16 @@ public interface SettingBusiness {
     public void setHourReporting(String mode);
     
     /**
+     * Is project burndown enabled
+     */
+    public boolean isProjectBurndownEnabled();
+    
+    /**
+     * Set project burndown mode
+     */
+    public void setProjectBurndown(String mode);
+    
+    /**
      * Set value range low limit for load meter
      * @param value
      */

@@ -74,7 +74,7 @@ public class BacklogItem implements PageItem, Assignable, EffortContainer, Times
 
     private Collection<Task> tasks = new HashSet<Task>();
 
-
+    private Collection<BacklogItemHourEntry> hourEntries = new ArrayList<BacklogItemHourEntry>();
 
     @Deprecated
     private User assignee;
@@ -482,4 +482,18 @@ public class BacklogItem implements PageItem, Assignable, EffortContainer, Times
     public void setBusinessThemes(Collection<BusinessTheme> businessThemes) {
         this.businessThemes = businessThemes;
     }
+
+    
+    @OneToMany(
+            targetEntity = fi.hut.soberit.agilefant.model.BacklogItemHourEntry.class,
+            mappedBy = "backlogItem"
+    )
+    public Collection<BacklogItemHourEntry> getHourEntries() {
+        return hourEntries;
+    }
+
+    public void setHourEntries(Collection<BacklogItemHourEntry> hourEntries) {
+        this.hourEntries = hourEntries;
+    }
+    
 }

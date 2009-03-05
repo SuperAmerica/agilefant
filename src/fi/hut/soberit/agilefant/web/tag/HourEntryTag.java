@@ -23,7 +23,7 @@ public class HourEntryTag extends SpringTagSupport {
     private TimesheetLoggable target;
     
     @Override
-    @SuppressWarnings("all")
+    @SuppressWarnings("unchecked")
     public int doStartTag() throws JspException {
         List list = null;
         hourEntryBusiness = (HourEntryBusiness) super.getApplicationContext().getBean(

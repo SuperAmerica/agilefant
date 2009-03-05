@@ -2,6 +2,7 @@ package fi.hut.soberit.agilefant.business.impl;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -107,7 +108,8 @@ public class HourEntryBusinessImpl implements HourEntryBusiness {
     public void addEntryForCurrentUser(TimesheetLoggable parent, AFTime effort) {
         User currentUser = SecurityUtil.getLoggedUser();
         HourEntry store = new HourEntry();
-        store.setDate(new Date());
+        Calendar cal = Calendar.getInstance();
+        store.setDate(cal.getTime());
         store.setTimeSpent(effort);
         store.setUser(currentUser);
         store(parent,store);
@@ -148,33 +150,14 @@ public class HourEntryBusinessImpl implements HourEntryBusiness {
         return backlogHourEntryDAO.getEntriesByBacklog(parent);
     }
 
-    @Deprecated
-    public Map<Integer, AFTime> getSumsByBacklog(Backlog parent) {
-        Map<Integer, AFTime> sums = new HashMap<Integer, AFTime>();
-        List<BacklogItemHourEntry> entries = 
-            backlogItemHourEntryDAO.getSumsByBacklog(parent);
-        
-        for (BacklogItemHourEntry entry : entries) {
-            AFTime currentSum = sums.get(entry.getBacklogItem().getId());
-            AFTime timeSpent = entry.getTimeSpent();
-            
-            if (currentSum == null) {
-                currentSum = new AFTime(0);
-            }
-            
-            if (timeSpent != null) {
-                currentSum.add(timeSpent);
-            }
-            
-            sums.put(entry.getBacklogItem().getId(), currentSum);
-        }
-        
-        return sums;
+    public Map<BacklogItem, AFTime> getSumsByBacklog(Backlog parent) {
+        return hourEntryDAO.getSpentEffortSumsByBacklog(parent);
     }
     
     /**
      * {@inheritDoc}
      */
+    @Deprecated
     public void loadSumsToBacklogItems(Backlog parent) {
         if (settingBusiness.isHourReportingEnabled()) {
             List<BacklogItemHourEntry> entries = 

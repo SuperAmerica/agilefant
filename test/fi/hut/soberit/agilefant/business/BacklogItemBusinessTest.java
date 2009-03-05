@@ -4,12 +4,6 @@ import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import junit.framework.TestCase;
 import fi.hut.soberit.agilefant.business.impl.BacklogItemBusinessImpl;
 import fi.hut.soberit.agilefant.business.impl.HourEntryBusinessImpl;
@@ -19,9 +13,11 @@ import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
+import fi.hut.soberit.agilefant.model.BusinessTheme;
 import fi.hut.soberit.agilefant.model.Iteration;
+import fi.hut.soberit.agilefant.model.IterationGoal;
+import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.State;
-import fi.hut.soberit.agilefant.model.User;
 
 public class BacklogItemBusinessTest extends TestCase {
 
@@ -29,7 +25,6 @@ public class BacklogItemBusinessTest extends TestCase {
     private BacklogItemDAO bliDAO;
     private HourEntryBusinessImpl hourEntryBusiness = new HourEntryBusinessImpl();
     private HistoryBusiness historyBusiness = createMock(HistoryBusiness.class);
-    private UserBusiness userBusiness;
     private BacklogItemHourEntryDAO bliheDAO;
 
     public void testRemoveBacklogItem_found() {
@@ -232,121 +227,290 @@ public class BacklogItemBusinessTest extends TestCase {
         verify(bliDAO);
     }
     
+    
     /**
-     * Test the getPossibleResponsibles method.
-     * <p>
-     * Should return the union of the bli's responsibles
-     * and all enabled users.
+     * Move backlog item to another backlog within the same product
      */
-    public void testGetPossibleResponsibles() {
-        userBusiness = createMock(UserBusiness.class);
-        bliBusiness.setBacklogItemDAO(bliDAO);
-        bliBusiness.setUserBusiness(userBusiness);
+    public void testMoveItemToBacklog_sameProductWithThemes() {
+        BacklogBusiness blBusiness = createMock(BacklogBusiness.class);
+        HistoryBusiness hBuss = createMock(HistoryBusiness.class);
+        BacklogItemBusinessImpl testable = new BacklogItemBusinessImpl();
+        testable.setBacklogBusiness(blBusiness);
+        testable.setHistoryBusiness(hBuss);
         
-        // Enabled user
-        User user1 = new User();
-        user1.setId(1);
-        user1.setEnabled(true);
+        Project proj1 = new Project();
+        proj1.setId(1);
+        Project proj2 = new Project();
+        proj2.setId(2);
+        BacklogItem bli = new BacklogItem();
+        bli.setBacklog(proj1);
+        proj1.getBacklogItems().add(bli);
+        BusinessTheme prodTheme = new BusinessTheme();
+        prodTheme.setGlobal(false);
+        BusinessTheme globalTheme = new BusinessTheme();
+        globalTheme.setGlobal(true);
+        bli.getBusinessThemes().add(globalTheme);
+        bli.getBusinessThemes().add(prodTheme);
         
-        // Disabled user
-        User user2 = new User();
-        user2.setId(2);
-        user2.setEnabled(false);
+        //fake under same backlog
+        expect(blBusiness.isUnderSameProduct(proj1, proj2)).andReturn(true);
+        //expect history updates
+        hBuss.updateBacklogHistory(1);
+        hBuss.updateBacklogHistory(2);
         
-        // Backlog item with no previous responsibles
-        BacklogItem bli1 = new BacklogItem();
-        bli1.setResponsibles(new ArrayList<User>());
+        replay(hBuss);
+        replay(blBusiness);
         
-        // Backlog item with previous, enabled responsible
-        BacklogItem bli2 = new BacklogItem();
-        bli2.setResponsibles(new ArrayList<User>());
-        bli2.getResponsibles().add(user1);
+        testable.moveItemToBacklog(bli, proj2);
         
-        // Backlog item with previous, disabled responsible
-        BacklogItem bli3 = new BacklogItem();
-        bli3.setResponsibles(new ArrayList<User>());
-        bli3.getResponsibles().add(user2);
+        assertEquals(2, bli.getBusinessThemes().size());
+        assertEquals(0, proj1.getBacklogItems().size());
+        assertEquals(1, proj2.getBacklogItems().size());
+        assertEquals(proj2, bli.getBacklog());
         
-        // Backlog item with previous, enabled and disabled responsible
-        BacklogItem bli4 = new BacklogItem();
-        bli4.setResponsibles(new ArrayList<User>());
-        bli4.getResponsibles().add(user1);
-        bli4.getResponsibles().add(user2);
+        verify(hBuss);
+        verify(blBusiness);
+    }
+    
+    /**
+     * Move backlog item to a backlog in a different product.
+     */
+    public void testMoveItemToBacklog_DifferentProduct() {
+        BacklogBusiness blBusiness = createMock(BacklogBusiness.class);
+        HistoryBusiness hBuss = createMock(HistoryBusiness.class);
+        BacklogItemBusinessImpl testable = new BacklogItemBusinessImpl();
+        testable.setBacklogBusiness(blBusiness);
+        testable.setHistoryBusiness(hBuss);
+        
+        Project proj1 = new Project();
+        proj1.setId(1);
+        Project proj2 = new Project();
+        proj2.setId(2);
+        BacklogItem bli = new BacklogItem();
+        bli.setBacklog(proj1);
+        proj1.getBacklogItems().add(bli);
+        BusinessTheme prodTheme = new BusinessTheme();
+        prodTheme.setGlobal(false);
+        BusinessTheme globalTheme = new BusinessTheme();
+        globalTheme.setGlobal(true);
+        bli.getBusinessThemes().add(globalTheme);
+        bli.getBusinessThemes().add(prodTheme);
 
+        //fake under same backlog
+        expect(blBusiness.isUnderSameProduct(proj1, proj2)).andReturn(false);
+        //expect history updates
+        hBuss.updateBacklogHistory(1);
+        hBuss.updateBacklogHistory(2);
         
-        //The lists
-        List<User> enabledList = new ArrayList<User>();
-        enabledList.add(user1);
-       
-        // Record expected behavior
-        expect(userBusiness.getEnabledUsers()).andReturn(enabledList);
-        expect(userBusiness.getEnabledUsers()).andReturn(enabledList);
-        expect(userBusiness.getEnabledUsers()).andReturn(enabledList);
-        expect(userBusiness.getEnabledUsers()).andReturn(enabledList);
+        replay(hBuss);
+        replay(blBusiness);
         
-        // Test it
-        replay(userBusiness);
+        testable.moveItemToBacklog(bli, proj2);
         
-        // Call the methods
-        List<User> bli1list = bliBusiness.getPossibleResponsibles(bli1);
-        List<User> bli2list = bliBusiness.getPossibleResponsibles(bli2);
-        List<User> bli3list = bliBusiness.getPossibleResponsibles(bli3);
-        List<User> bli4list = bliBusiness.getPossibleResponsibles(bli4);
+        assertEquals(1, bli.getBusinessThemes().size());
+        assertTrue(bli.getBusinessThemes().contains(globalTheme));
+        assertEquals(0, proj1.getBacklogItems().size());
+        assertEquals(1, proj2.getBacklogItems().size());
+        assertEquals(proj2, bli.getBacklog());
         
-        // Check, that correct users are in the list
-        assertTrue(bli1list.contains(user1));
-        assertFalse(bli1list.contains(user2));
+        verify(hBuss);
+        verify(blBusiness);
         
-        assertTrue(bli2list.contains(user1));
-        assertFalse(bli2list.contains(user2));
+    }
+    
+    public void testSetBacklogItemIterationGoal_RightIteration() {
+        BacklogItemBusinessImpl testable = new BacklogItemBusinessImpl();
         
-        assertTrue(bli3list.contains(user1));
-        assertTrue(bli3list.contains(user2));
+        Iteration iter = new Iteration();
+        IterationGoal goal = new IterationGoal();
+        BacklogItem bli = new BacklogItem();
+        goal.setIteration(iter);
+        bli.setBacklog(iter);
         
-        assertTrue(bli4list.contains(user1));
-        assertTrue(bli4list.contains(user2));
+        testable.setBacklogItemIterationGoal(bli, goal);
+        assertEquals(goal, bli.getIterationGoal());
+        assertTrue(goal.getBacklogItems().contains(bli));
         
-        // Check for duplicates
-        Set<User> previousUsers = new HashSet<User>();
-        for (User user : bli1list) {
-            if (previousUsers.contains(user)) {
-                fail("Duplicate entry");
-            }
-            else {
-                previousUsers.add(user);
-            }
-        }
+    }
+    
+    public void testSetBacklogItemIterationGoal_ChangeGoal() {
+        BacklogItemBusinessImpl testable = new BacklogItemBusinessImpl();
         
-        previousUsers.clear();
-        for (User user : bli2list) {
-            if (previousUsers.contains(user)) {
-                fail("Duplicate entry");
-            }
-            else {
-                previousUsers.add(user);
-            }
-        }
+        Iteration iter = new Iteration();
+        IterationGoal goal = new IterationGoal();
+        IterationGoal oldGoal = new IterationGoal();
+        BacklogItem bli = new BacklogItem();
+        goal.setIteration(iter);
+        bli.setBacklog(iter);
+        bli.setIterationGoal(oldGoal);
+        oldGoal.getBacklogItems().add(bli);
         
-        previousUsers.clear();
-        for (User user : bli3list) {
-            if (previousUsers.contains(user)) {
-                fail("Duplicate entry");
-            }
-            else {
-                previousUsers.add(user);
-            }
-        }
+        testable.setBacklogItemIterationGoal(bli, goal);
+        assertEquals(goal, bli.getIterationGoal());
+        assertTrue(goal.getBacklogItems().contains(bli));
+        assertFalse(oldGoal.getBacklogItems().contains(bli));
         
-        previousUsers.clear();
-        for (User user : bli4list) {
-            if (previousUsers.contains(user)) {
-                fail("Duplicate entry");
-            }
-            else {
-                previousUsers.add(user);
-            }
-        }
+    }
+    
+    public void testSetBacklogItemIterationGoal_WrongIteration() {
+        BacklogItemBusinessImpl testable = new BacklogItemBusinessImpl();
+        
+        Iteration iter = new Iteration();
+        IterationGoal goal = new IterationGoal();
+        BacklogItem bli = new BacklogItem();
+        goal.setIteration(iter);
+        
+        Iteration target = new Iteration();
+        bli.setBacklog(target);
+        
+        testable.setBacklogItemIterationGoal(bli, goal);
+        assertEquals(null, bli.getIterationGoal());
+        assertFalse(goal.getBacklogItems().contains(bli));
+    }
+    
+    public void testSetBacklogItemIterationGoal_InProject() {
+        BacklogItemBusinessImpl testable = new BacklogItemBusinessImpl();
+        
+        Iteration iter = new Iteration();
+        IterationGoal goal = new IterationGoal();
+        BacklogItem bli = new BacklogItem();
+        goal.setIteration(iter);
 
-        verify(userBusiness);
-    }   
+        Project target = new Project();
+        bli.setBacklog(target);
+        
+        testable.setBacklogItemIterationGoal(bli, goal);
+        assertEquals(null, bli.getIterationGoal());
+        assertFalse(goal.getBacklogItems().contains(bli));
+    }
+    
+    public void testStoreBacklogItem_NoEffortLeft() {
+        BacklogItemBusinessImpl testable = new BacklogItemBusinessImpl();
+        BacklogItemDAO dao = createMock(BacklogItemDAO.class);
+        HistoryBusiness hBuss = createMock(HistoryBusiness.class);
+        testable.setBacklogItemDAO(dao);
+        testable.setHistoryBusiness(hBuss);
+        
+        BacklogItem persisted = new BacklogItem();
+        BacklogItem dataItem = new BacklogItem();
+        Backlog backlog = new Project();
+        dataItem.setOriginalEstimate(new AFTime(100));
+        dataItem.setEffortLeft(null);
+        persisted.setBacklog(backlog);
+        backlog.setId(1);
+        persisted.setId(1);
+        
+        dao.store(persisted);
+        hBuss.updateBacklogHistory(1); 
+        
+        replay(dao);
+        replay(hBuss);
+        
+        testable.storeBacklogItem(persisted, backlog, dataItem, null, null);
+        assertEquals(persisted.getEffortLeft(), dataItem.getOriginalEstimate());
+        
+        verify(dao);
+        verify(hBuss);
+
+    }
+    
+    public void testStoreBacklogItem_createNew() {
+        BacklogItemBusinessImpl testable = new BacklogItemBusinessImpl();
+        BacklogItemDAO dao = createMock(BacklogItemDAO.class);
+        HistoryBusiness hBuss = createMock(HistoryBusiness.class);
+        testable.setBacklogItemDAO(dao);
+        testable.setHistoryBusiness(hBuss);
+
+        BacklogItem persisted = new BacklogItem();
+        BacklogItem dataItem = new BacklogItem();
+        Backlog backlog = new Project();
+        dataItem.setState(State.NOT_STARTED);
+        dataItem.setOriginalEstimate(new AFTime(100));
+        dataItem.setName("TEST");
+        dataItem.setDescription("");
+        backlog.setId(1);
+        
+        expect(dao.create(persisted)).andReturn(new Integer(1));
+        expect(dao.get(1)).andReturn(persisted);
+        hBuss.updateBacklogHistory(1);
+
+        replay(dao);
+        replay(hBuss);
+
+        BacklogItem item = testable.storeBacklogItem(persisted, backlog, dataItem, null, null);
+        assertEquals(dataItem.getState(), item.getState());
+        assertEquals(dataItem.getDescription(), item.getDescription());
+        assertEquals(dataItem.getName(), item.getName());
+        assertEquals(dataItem.getOriginalEstimate(), item.getOriginalEstimate());
+        assertEquals(dataItem.getOriginalEstimate(), item.getEffortLeft());
+        assertEquals(backlog, item.getBacklog());
+        
+        
+        verify(dao);
+        verify(hBuss);
+    }
+    
+    
+    public void testStoreBacklogItem_DoneItem() {
+        BacklogItemBusinessImpl testable = new BacklogItemBusinessImpl();
+        BacklogItemDAO dao = createMock(BacklogItemDAO.class);
+        HistoryBusiness hBuss = createMock(HistoryBusiness.class);
+        testable.setBacklogItemDAO(dao);
+        testable.setHistoryBusiness(hBuss);
+
+        BacklogItem persisted = new BacklogItem();
+        persisted.setId(1);
+        BacklogItem dataItem = new BacklogItem();
+        Backlog backlog = new Project();
+        dataItem.setState(State.DONE);
+        dataItem.setEffortLeft(new AFTime(100));
+        dataItem.setBacklog(backlog);
+        backlog.setId(1);
+        
+        dao.store(persisted);
+        hBuss.updateBacklogHistory(1);
+
+        replay(dao);
+        replay(hBuss);
+
+        testable.storeBacklogItem(persisted, backlog, dataItem, null, null);
+        assertEquals(persisted.getEffortLeft().getTime(), 0);
+        
+        verify(dao);
+        verify(hBuss);
+    }
+    public void testStoreBacklogItem_ChangeBacklog() {
+        BacklogItemBusinessImpl testable = new BacklogItemBusinessImpl();
+        BacklogItemDAO dao = createMock(BacklogItemDAO.class);
+        HistoryBusiness hBuss = createMock(HistoryBusiness.class);
+        BacklogBusiness blBuss = createMock(BacklogBusiness.class);
+        testable.setBacklogItemDAO(dao);
+        testable.setHistoryBusiness(hBuss);
+        testable.setBacklogBusiness(blBuss);
+
+        BacklogItem persisted = new BacklogItem();
+        persisted.setId(1);
+        BacklogItem dataItem = new BacklogItem();
+        Backlog backlog = new Project();
+        Backlog iter = new Iteration();
+        iter.setId(2);
+        persisted.setBacklog(backlog);
+        backlog.setId(1);
+        
+        dao.store(persisted);
+        hBuss.updateBacklogHistory(1);
+        hBuss.updateBacklogHistory(2);
+        expect(blBuss.isUnderSameProduct(backlog, iter)).andReturn(true);
+
+        replay(dao);
+        replay(hBuss);
+        replay(blBuss);
+
+        testable.storeBacklogItem(persisted, iter, dataItem, null, null);
+        assertEquals(iter, persisted.getBacklog());
+        
+        verify(dao);
+        verify(hBuss);
+        verify(blBuss);
+    }
 }

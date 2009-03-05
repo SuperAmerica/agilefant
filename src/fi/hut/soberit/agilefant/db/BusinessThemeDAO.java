@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import fi.hut.soberit.agilefant.model.Backlog;
+import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.BacklogThemeBinding;
 import fi.hut.soberit.agilefant.model.BusinessTheme;
 import fi.hut.soberit.agilefant.model.Product;
@@ -42,8 +43,6 @@ public interface BusinessThemeDAO extends GenericDAO<BusinessTheme> {
     
     public Map<Integer, Integer> numberOfBacklogItemsByProduct(Product product, State backlogItemState);
     
-    public List<?> getThemesByBacklog(Backlog backlog); 
-    
     public void saveOrUpdateBacklogThemeBinding(BacklogThemeBinding binding);
     
     public void removeBacklogThemeBinding(BacklogThemeBinding binding);
@@ -51,5 +50,8 @@ public interface BusinessThemeDAO extends GenericDAO<BusinessTheme> {
     public List<BacklogThemeBinding> getIterationThemesByProject(Project project);
     
     public BacklogThemeBinding getBindingById(int bindingId);
+    
+    public Map<BacklogItem, List<BusinessTheme>> getBacklogItemBusinessThemesByBacklog(
+            Backlog backlog);
     
 }

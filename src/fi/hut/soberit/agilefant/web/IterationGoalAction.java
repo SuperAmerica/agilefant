@@ -56,7 +56,7 @@ public class IterationGoalAction extends ActionSupport implements CRUDAction {
     
     //private AFTime origEstSum = new AFTime(0);
     
-    private Map<Integer, List<BusinessTheme>> bliThemeCache;
+    private Map<BacklogItem, List<BusinessTheme>> bliThemeCache;
     
     private String jsonData = "";
 
@@ -98,7 +98,7 @@ public class IterationGoalAction extends ActionSupport implements CRUDAction {
         // Load Hour Entry sums to iteration's BLIs.
         hourEntryBusiness.loadSumsToBacklogItems(iteration);
         
-        bliThemeCache = businessThemeBusiness.loadThemeCacheByBacklogId(iterationGoal.getIteration().getId());
+        bliThemeCache = businessThemeBusiness.getBacklogItemBusinessThemesByBacklog(iterationGoal.getIteration());
         
         return Action.SUCCESS;
     }
@@ -293,11 +293,11 @@ public class IterationGoalAction extends ActionSupport implements CRUDAction {
         return backlogBusiness;
     }
 
-    public Map<Integer, List<BusinessTheme>> getBliThemeCache() {
+    public Map<BacklogItem, List<BusinessTheme>> getBliThemeCache() {
         return bliThemeCache;
     }
 
-    public void setBliThemeCache(Map<Integer, List<BusinessTheme>> bliThemeCache) {
+    public void setBliThemeCache(Map<BacklogItem, List<BusinessTheme>> bliThemeCache) {
         this.bliThemeCache = bliThemeCache;
     }
 

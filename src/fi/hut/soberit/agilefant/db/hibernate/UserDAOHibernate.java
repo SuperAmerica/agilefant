@@ -19,7 +19,7 @@ public class UserDAOHibernate extends GenericDAOHibernate<User> implements
     }
 
     /** {@inheritDoc} */
-    @SuppressWarnings("all")
+    @SuppressWarnings("unchecked")
     public User getUser(String loginName) {
         DetachedCriteria criteria = DetachedCriteria.forClass(this
                 .getPersistentClass());
@@ -29,7 +29,7 @@ public class UserDAOHibernate extends GenericDAOHibernate<User> implements
     }
 
     /** {@inheritDoc} */
-    @SuppressWarnings("all")
+    @SuppressWarnings("unchecked")
     public List<User> getEnabledUsers() {
         DetachedCriteria criteria = DetachedCriteria.forClass(this
                 .getPersistentClass());
@@ -39,7 +39,7 @@ public class UserDAOHibernate extends GenericDAOHibernate<User> implements
     }
 
     /** {@inheritDoc} */
-    @SuppressWarnings("all")
+    @SuppressWarnings("unchecked")
     public List<User> getDisabledUsers() {
         DetachedCriteria criteria = DetachedCriteria.forClass(this
                 .getPersistentClass());

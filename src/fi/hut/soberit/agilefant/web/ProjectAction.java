@@ -13,11 +13,7 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 
 import com.opensymphony.xwork.Action;
-import com.opensymphony.xwork.ActionSupport;
 
-import fi.hut.soberit.agilefant.business.BacklogBusiness;
-import fi.hut.soberit.agilefant.business.BusinessThemeBusiness;
-import fi.hut.soberit.agilefant.business.HourEntryBusiness;
 import fi.hut.soberit.agilefant.business.ProjectBusiness;
 import fi.hut.soberit.agilefant.business.UserBusiness;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
@@ -26,10 +22,8 @@ import fi.hut.soberit.agilefant.db.ProjectDAO;
 import fi.hut.soberit.agilefant.db.ProjectTypeDAO;
 import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.Assignment;
-import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.BacklogThemeBinding;
-import fi.hut.soberit.agilefant.model.BusinessTheme;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
@@ -39,7 +33,7 @@ import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.util.BacklogMetrics;
 import fi.hut.soberit.agilefant.util.EffortSumData;
 
-public class ProjectAction extends ActionSupport implements CRUDAction {
+public class ProjectAction extends BacklogContentsAction implements CRUDAction {
 
     Logger log = Logger.getLogger(this.getClass());
     
@@ -63,8 +57,6 @@ public class ProjectAction extends ActionSupport implements CRUDAction {
 
     private List<ProjectType> projectTypes;
 
-    private Backlog backlog;
-
     private BacklogItemDAO backlogItemDAO;
 
     private String startDate;
@@ -75,11 +67,10 @@ public class ProjectAction extends ActionSupport implements CRUDAction {
 
     private int[] selectedUserIds;
 
-    private BacklogBusiness backlogBusiness;
-
     private List<User> users = new ArrayList<User>();
     
     private List<User> enabledUsers = new ArrayList<User>();
+    
     private List<User> disabledUsers = new ArrayList<User>();
 
     private Collection<User> assignedUsers = new HashSet<User>();
@@ -92,12 +83,6 @@ public class ProjectAction extends ActionSupport implements CRUDAction {
 
     private ProjectBusiness projectBusiness;
     
-    private HourEntryBusiness hourEntryBusiness;
-
-    private EffortSumData effortLeftSum;
-
-    private EffortSumData origEstSum;
-    
     private Map<Iteration, EffortSumData> effLeftSums;
     
     private Map<Iteration, EffortSumData> origEstSums;
@@ -109,17 +94,11 @@ public class ProjectAction extends ActionSupport implements CRUDAction {
     private Map<Integer, AFTime> totalOverheads = new HashMap<Integer, AFTime>();
     
     private BacklogMetrics projectMetrics = new BacklogMetrics();
-    
-    private Map<Integer, List<BusinessTheme>> bliThemeCache;
-
-    private BusinessThemeBusiness businessThemeBusiness;
-    
+        
     private List<BacklogThemeBinding> iterationThemes;
+      
+    private boolean projectBurndown; 
     
-
-    public Map<Integer, List<BusinessTheme>> getBliThemeCache() {
-        return bliThemeCache;
-    }
 
     /**
      * @return the dateFormat
@@ -152,7 +131,6 @@ public class ProjectAction extends ActionSupport implements CRUDAction {
         enabledUsers = userBusiness.getEnabledUsers();
         disabledUsers = userBusiness.getDisabledUsers();
         assignableUsers = projectBusiness.getAssignableUsers(this.project);
-
         return Action.SUCCESS;
     }
 
@@ -173,25 +151,7 @@ public class ProjectAction extends ActionSupport implements CRUDAction {
 
         productId = project.getProduct().getId();
         backlog = project;
-        /*
-         * BacklogValueInjector.injectMetrics(backlog, startDate, taskEventDAO,
-         * backlogItemDAO);
-         */
-        // populate all users to drop-down list
-        users = userBusiness.getAllUsers();
-        enabledUsers = userBusiness.getEnabledUsers();
-        disabledUsers = userBusiness.getDisabledUsers();
-        assignedUsers = backlogBusiness.getUsers(project, true);
-        assignableUsers = projectBusiness.getAssignableUsers(this.project);
-        unassignedHasWork = projectBusiness.getUnassignedWorkersMap(project);
-
-        // Calculate effort lefts and original estimates
-        Collection<BacklogItem> items = backlog.getBacklogItems();
-        effortLeftSum = backlogBusiness.getEffortLeftSum(items);
-        origEstSum = backlogBusiness.getOriginalEstimateSum(items);
-        
-        // Load Hour Entry sums to this backlog's BLIs.
-        hourEntryBusiness.loadSumsToBacklogItems(backlog);
+        super.initializeContents();
         
         // Calculate project's iterations' effort lefts and original estimates
         effLeftSums = new HashMap<Iteration, EffortSumData>();
@@ -200,7 +160,7 @@ public class ProjectAction extends ActionSupport implements CRUDAction {
         for (Assignment ass: project.getAssignments()) {
             assignments.put("" + ass.getUser().getId(), ass);
         }
-        totalOverheads = projectBusiness.calculateTotalOverheads(project);
+        //totalOverheads = projectBusiness.calculateTotalOverheads(project);
         
         // Get backlog metrics
         if (project.getIterations().size() == 0) {  
@@ -217,8 +177,9 @@ public class ProjectAction extends ActionSupport implements CRUDAction {
             iter.setMetrics(backlogBusiness.getBacklogMetrics(iter));
         }
         
-        bliThemeCache = businessThemeBusiness.loadThemeCacheByBacklogId(projectId);
         iterationThemes = businessThemeBusiness.getIterationThemesByProject(project);
+        
+        projectBurndown = settingBusiness.isProjectBurndownEnabled();
         
         return Action.SUCCESS;
     }
@@ -472,10 +433,6 @@ public class ProjectAction extends ActionSupport implements CRUDAction {
         this.projectTypes = projectTypes;
     }
 
-    public Backlog getBacklog() {
-        return this.backlog;
-    }
-
     /**
      * @return the backlogItemDAO
      */
@@ -515,10 +472,6 @@ public class ProjectAction extends ActionSupport implements CRUDAction {
         this.selectedUserIds = selectedUserIds;
     }
 
-    public void setBacklogBusiness(BacklogBusiness backlogBusiness) {
-        this.backlogBusiness = backlogBusiness;
-    }
-
     public List<User> getUsers() {
         return users;
     }
@@ -530,14 +483,6 @@ public class ProjectAction extends ActionSupport implements CRUDAction {
     public Collection<User> getAssignedUsers() {
         return assignedUsers;
     }
-    
-    public EffortSumData getEffortLeftSum() {
-        return effortLeftSum;
-    }
-
-    public EffortSumData getOriginalEstimateSum() {
-        return origEstSum;
-    }   
     
     public Map<User, Integer> getUnassignedHasWork() {
       	return unassignedHasWork;
@@ -591,14 +536,6 @@ public class ProjectAction extends ActionSupport implements CRUDAction {
         this.assignableUsers = assignableUsers;
     }
 
-    public HourEntryBusiness getHourEntryBusiness() {
-        return hourEntryBusiness;
-    }
-
-    public void setHourEntryBusiness(HourEntryBusiness hourEntryBusiness) {
-        this.hourEntryBusiness = hourEntryBusiness;
-    }
-
     public BacklogMetrics getProjectMetrics() {
         return projectMetrics;
     }
@@ -618,15 +555,15 @@ public class ProjectAction extends ActionSupport implements CRUDAction {
         this.status = status;
     }
 
-    public void setBusinessThemeBusiness(BusinessThemeBusiness businessThemeBusiness) {
-        this.businessThemeBusiness = businessThemeBusiness;
-    }
-
     public Map<Integer, AFTime> getTotalOverheads() {
         return totalOverheads;
     }
 
     public List<BacklogThemeBinding> getIterationThemes() {
         return iterationThemes;
+    }
+
+    public boolean isProjectBurndown() {
+        return projectBurndown;
     }
 }

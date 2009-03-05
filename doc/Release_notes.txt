@@ -1,6 +1,6 @@
-Agilefant 1.5.3
+Agilefant 1.5.4
 RELEASE NOTES
-15.12.2008
+3.3.2008
 
 INSTALLATION INSTRUCTIONS AND SYSTEM REQUIREMENTS
 -------------------------------------------------
@@ -53,6 +53,15 @@ Daily work view
 Timesheets
   + log spent effort to projects and/or individual backlog items
   + generate reports of spent effort
+
+CHANGES FROM AGILEFANT 1.5.3
+----------------------------
++ backlog items can be created and effort logged from the daily work -page   
++ UI improvements to timesheets, including easier backlog selection and 
+  hiding unnecessary report rows
++ product, project and iteration backlog listings are faster
++ bugfixes for following issues: 0000025, 0000029 and 0000028
++ other internal enhancements
 
 CHANGES FROM AGILEFANT 1.5.2
 ----------------------------

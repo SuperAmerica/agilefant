@@ -71,6 +71,8 @@ public class BacklogAction extends ActionSupport {
     private Set<Integer> themeIds = new HashSet<Integer>();
     
     private boolean underSameProduct = false;
+    
+    private String jsonData = "";
 
     
 
@@ -135,6 +137,10 @@ public class BacklogAction extends ActionSupport {
         this.backlogDAO = backlogDAO;
     }
 
+    public String getSubBacklogsAsJSON() {
+         jsonData = this.backlogBusiness.getSubBacklogsAsJSON(backlogId);
+         return Action.SUCCESS;
+    }
     public String moveBacklogItem() {
         Backlog backlog = backlogDAO.get(backlogId);
         BacklogItem backlogItem = backlogItemDAO.get(backlogItemId);
@@ -483,6 +489,10 @@ public class BacklogAction extends ActionSupport {
 
     public boolean isUnderSameProduct() {
         return underSameProduct;
+    }
+
+    public String getJsonData() {
+        return jsonData;
     }
     
     

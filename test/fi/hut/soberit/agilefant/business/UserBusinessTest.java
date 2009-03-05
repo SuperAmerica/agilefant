@@ -2,15 +2,21 @@ package fi.hut.soberit.agilefant.business;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
+import fi.hut.soberit.agilefant.business.impl.UserBusinessImpl;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.db.ProductDAO;
 import fi.hut.soberit.agilefant.db.TaskDAO;
 import fi.hut.soberit.agilefant.db.UserDAO;
+import fi.hut.soberit.agilefant.model.Assignment;
+import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
+import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Priority;
 import fi.hut.soberit.agilefant.model.Product;
+import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.State;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.security.SecurityUtil;
@@ -223,4 +229,41 @@ public class UserBusinessTest extends SpringTestCase {
         
         assertTrue(userBusiness.hasUserCreatedItems(user));    
     }   
+    
+    private Assignment createAssUtil(Date start, Date end, Backlog bl) {
+        Assignment ass = new Assignment();
+        ass.setBacklog(bl);
+        ass.getBacklog().setEndDate(end);
+        if(ass.getBacklog() instanceof Iteration) {
+            ((Iteration)bl).setStartDate(start);
+        }
+        if(ass.getBacklog() instanceof Project) {
+            ((Project)bl).setStartDate(start);
+        }
+        return ass;
+    }
+    
+    public void testgetOngoingBacklogsByUserAndInterval() {
+        User user = new User();
+        List<Assignment> asses = new ArrayList<Assignment>();
+        user.setAssignments(asses);
+        asses.add(createAssUtil(new Date(100), new Date(200), new Project()));
+        asses.add(createAssUtil(new Date(100), new Date(300), new Project()));
+        asses.add(createAssUtil(new Date(100), new Date(400), new Project()));
+        asses.add(createAssUtil(new Date(300), new Date(500), new Project()));
+        asses.add(createAssUtil(new Date(900), new Date(1000), new Project()));
+        asses.add(createAssUtil(null, null, new Project()));
+        asses.add(createAssUtil(new Date(1), null, new Project()));
+        asses.add(createAssUtil(null, new Date(1), new Project()));
+        
+        UserBusiness testable = new UserBusinessImpl();
+        
+        assertEquals(8,testable.getOngoingBacklogsByUserAndInterval(user, null, null).size());
+        assertEquals(5,testable.getOngoingBacklogsByUserAndInterval(user, new Date(0), null).size());
+        assertEquals(5,testable.getOngoingBacklogsByUserAndInterval(user, null, new Date(1001)).size());
+        assertEquals(4,testable.getOngoingBacklogsByUserAndInterval(user, new Date(10), new Date(410)).size());
+        assertEquals(4,testable.getOngoingBacklogsByUserAndInterval(user, new Date(99), new Date(501)).size());
+        assertEquals(1,testable.getOngoingBacklogsByUserAndInterval(user, new Date(300), new Date(300)).size());
+        assertEquals(0,testable.getOngoingBacklogsByUserAndInterval(user, new Date(400), new Date(300)).size());
+    }
 }

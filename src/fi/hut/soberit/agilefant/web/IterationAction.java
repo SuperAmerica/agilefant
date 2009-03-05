@@ -4,16 +4,11 @@ import java.text.ParseException;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import com.opensymphony.xwork.Action;
-import com.opensymphony.xwork.ActionSupport;
 
-import fi.hut.soberit.agilefant.business.BacklogBusiness;
-import fi.hut.soberit.agilefant.business.BusinessThemeBusiness;
 import fi.hut.soberit.agilefant.business.HistoryBusiness;
-import fi.hut.soberit.agilefant.business.HourEntryBusiness;
 import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.db.IterationDAO;
@@ -21,14 +16,13 @@ import fi.hut.soberit.agilefant.db.IterationGoalDAO;
 import fi.hut.soberit.agilefant.db.ProjectDAO;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
-import fi.hut.soberit.agilefant.model.BusinessTheme;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.IterationGoal;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.util.BacklogMetrics;
 import fi.hut.soberit.agilefant.util.EffortSumData;
 
-public class IterationAction extends ActionSupport implements CRUDAction {
+public class IterationAction extends BacklogContentsAction implements CRUDAction {
 
     private static final long serialVersionUID = -448825368336871703L;
 
@@ -36,7 +30,7 @@ public class IterationAction extends ActionSupport implements CRUDAction {
 
     private Iteration iteration;
 
-    private Backlog backlog;
+    //private Backlog backlog;
 
     private IterationDAO iterationDAO;
 
@@ -61,24 +55,13 @@ public class IterationAction extends ActionSupport implements CRUDAction {
     private String dateFormat;
 
     private HistoryBusiness historyBusiness;
-    
-    private BacklogBusiness backlogBusiness;
-    
-    private HourEntryBusiness hourEntryBusiness;
-    
+            
     private Map<Integer, EffortSumData> iterationGoalEffLeftSums = new HashMap<Integer, EffortSumData>();
     
     private Map<Integer, EffortSumData> iterationGoalOrigEstSums = new HashMap<Integer, EffortSumData>();
     
-    private EffortSumData effortLeftSum;
-
-    private EffortSumData origEstSum;
-    
     private BacklogMetrics iterationMetrics;
     
-    private Map<Integer, List<BusinessTheme>> bliThemeCache;
-
-    private BusinessThemeBusiness businessThemeBusiness;
     
     public String create() {
         iterationId = 0;
@@ -119,6 +102,8 @@ public class IterationAction extends ActionSupport implements CRUDAction {
         }
         projectId = project.getId();
         
+        super.initializeContents();
+        
         /* Get the effort left sums of iteration goals */
         for (IterationGoal ig : iteration.getIterationGoals()) {
             Collection<BacklogItem> blis = ig.getBacklogItems();
@@ -131,18 +116,9 @@ public class IterationAction extends ActionSupport implements CRUDAction {
         }
         
         /* Get the original estimate sums of iteration goals */
-
-        // Calculate effort lefts and original estimates
-        Collection<BacklogItem> items = backlog.getBacklogItems();
-        effortLeftSum = backlogBusiness.getEffortLeftSum(items);
-        origEstSum = backlogBusiness.getOriginalEstimateSum(items);
-        
-        // Load Hour Entry sums to this backlog's BLIs.
-        hourEntryBusiness.loadSumsToBacklogItems(iteration);
         
         // Load metrics data
         iterationMetrics = backlogBusiness.getBacklogMetrics(iteration);
-        bliThemeCache = businessThemeBusiness.loadThemeCacheByBacklogId(iterationId);
         businessThemeBusiness.loadBacklogThemeMetrics(iteration);
         
         return Action.SUCCESS;
@@ -455,27 +431,7 @@ public class IterationAction extends ActionSupport implements CRUDAction {
     public void setIterationGoalOrigEstSums(
             Map<Integer, EffortSumData> iterationGoalOrigEstSums) {
         this.iterationGoalOrigEstSums = iterationGoalOrigEstSums;
-    }
-
-    public EffortSumData getEffortLeftSum() {
-        return effortLeftSum;
-    }
-
-    public EffortSumData getOriginalEstimateSum() {
-        return origEstSum;
-    }   
-    
-    public void setBacklogBusiness(BacklogBusiness backlogBusiness) {
-        this.backlogBusiness = backlogBusiness;
-    }
-
-    public HourEntryBusiness getHourEntryBusiness() {
-        return hourEntryBusiness;
-    }
-
-    public void setHourEntryBusiness(HourEntryBusiness hourEntryBusiness) {
-        this.hourEntryBusiness = hourEntryBusiness;
-    }
+    }  
 
     public BacklogMetrics getIterationMetrics() {
         return iterationMetrics;
@@ -485,11 +441,4 @@ public class IterationAction extends ActionSupport implements CRUDAction {
         this.iterationMetrics = iterationMetrics;
     }
 
-    public void setBusinessThemeBusiness(BusinessThemeBusiness businessThemeBusiness) {
-        this.businessThemeBusiness = businessThemeBusiness;
-    }
-
-    public Map<Integer, List<BusinessTheme>> getBliThemeCache() {
-        return bliThemeCache;
-    }
 }

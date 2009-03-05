@@ -48,40 +48,42 @@ public class JSONBusinessImpl implements JSONBusiness {
         String responsibleJson = "";
         String overheadJson = "";
 
-        try {
-            bli = backlogItemBusiness.getBacklogItem(backlogItemId);
-            if (backlogId > 0) {
-                backlog = backlogBusiness.getBacklog(backlogId);
+        if (!(backlogItemId == 0 && backlogId == 0)) {
+            try {
+                bli = backlogItemBusiness.getBacklogItem(backlogItemId);
+                if (backlogId > 0) {
+                    backlog = backlogBusiness.getBacklog(backlogId);
+                }
+                else if (bli != null) {
+                    backlog = bli.getBacklog();
+                }
+            } catch (ObjectNotFoundException onfe) {
             }
-            else if (bli != null) {
-                backlog = bli.getBacklog();
-            }
-        } catch (ObjectNotFoundException onfe) {
-        }
-
-        /*
-         * Get the assignments.
-         */
-        if (backlog != null) {
-            Project proj = null;
-            if (backlog instanceof Iteration) {
-                proj = ((Iteration) backlog).getProject();
-            } else if (backlog instanceof Project) {
-                proj = (Project) backlog;
-            }
-            if (proj != null) {
-                for (Assignment ass : proj.getAssignments()) {
-                    assignments.add(ass.getUser().getId());
-                    deltaOverheads.put(ass.getUser().getId(), ass.getDeltaOverhead());
+    
+            /*
+             * Get the assignments.
+             */
+            if (backlog != null) {
+                Project proj = null;
+                if (backlog instanceof Iteration) {
+                    proj = ((Iteration) backlog).getProject();
+                } else if (backlog instanceof Project) {
+                    proj = (Project) backlog;
+                }
+                if (proj != null) {
+                    for (Assignment ass : proj.getAssignments()) {
+                        assignments.add(ass.getUser().getId());
+                        deltaOverheads.put(ass.getUser().getId(), ass.getDeltaOverhead());
+                    }
                 }
             }
-        }
-        /*
-         * Get the bli's responsibles.
-         */
-        if (bli != null) {
-            for (User user : bli.getResponsibles()) {
-                responsibles.add(user.getId());
+            /*
+             * Get the bli's responsibles.
+             */
+            if (bli != null) {
+                for (User user : bli.getResponsibles()) {
+                    responsibles.add(user.getId());
+                }
             }
         }
         /*

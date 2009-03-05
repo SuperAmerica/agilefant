@@ -59,7 +59,7 @@
                 close: function() {
                     me.destroy();
                 },
-                width: 600, height: '',
+                width: 800, height: '',
                 title: "Select themes",
                 resizable: false,
                 modal: true,
@@ -193,7 +193,14 @@
 			if (data['global']) {
 				nameSpan.addClass('globalThemeColors');
 			}
-			column3.text(stripHTML(data.description).substr(0,90));
+			var cText = "";
+			var rText = stripHTML(data.description);
+			if(rText.length > 90) {
+				cText = rText.substring(0,90) + "...";
+			} else {
+				cText = rText;
+			}
+			column3.text(cText);
 			var checkbox = $('<input type="checkbox"/>').attr('value',data.id).attr('name',data.name).appendTo(column1);
 			if (jQuery.inArray(parseInt(data.id), this.preSelectedThemes) > -1) {
 				checkbox.attr('checked','checked');

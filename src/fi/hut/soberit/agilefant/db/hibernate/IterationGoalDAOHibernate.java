@@ -18,7 +18,7 @@ public class IterationGoalDAOHibernate extends
     }
 
     /** {@inheritDoc} */
-    @SuppressWarnings("all")
+    @SuppressWarnings("unchecked")
     public IterationGoal findFirstHigherRankedIterationGoal(
             IterationGoal iterGoal) {
 
@@ -37,7 +37,7 @@ public class IterationGoalDAOHibernate extends
     }
 
     /** {@inheritDoc} */
-    @SuppressWarnings("all")
+    @SuppressWarnings("unchecked")
     public IterationGoal findFirstLowerRankedIterationGoal(
             IterationGoal iterGoal) {
 
@@ -56,7 +56,7 @@ public class IterationGoalDAOHibernate extends
     }
 
     /** {@inheritDoc} */
-    @SuppressWarnings("all")
+    @SuppressWarnings("unchecked")
     public IterationGoal getLowestRankedIterationGoalInIteration(
             Iteration iteration) {
 

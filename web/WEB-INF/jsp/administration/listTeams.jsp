@@ -20,8 +20,12 @@ $(document).ready(function() {
 	<div class="subItemHeader">
 		<table cellspacing="0" cellpadding="0">
 			<tr>
-				<td class="header">Teams					
-					<ww:a href="ajaxCreateTeam.action" cssClass="openCreateDialog openTeamDialog" onclick="return false;">Create new &raquo;</ww:a>
+				<td class="header">Teams</td>
+				<td class="icons">					
+					<ww:a href="ajaxCreateTeam.action" cssClass="openCreateDialog openTeamDialog" onclick="return false;"
+					title="Create a new team">
+					   <img src="static/img/new.png" width="16" height="16" alt="Create new"/>
+					</ww:a>
 				</td>
 			</tr>
 		</table>

@@ -879,9 +879,12 @@ public class ProjectBusinessImpl implements ProjectBusiness {
         metrics.getOriginalEstimate().add(projMetrics.getOriginalEstimate());
         metrics.setTotalItems(metrics.getTotalItems()
                 + projMetrics.getTotalItems());
-        metrics.setCompletedItems(metrics.getCompletedItems()
-                + projMetrics.getCompletedItems());
-
+        if(metrics.getCompletedItems() != null) {
+            metrics.setCompletedItems(metrics.getCompletedItems()
+                    + projMetrics.getCompletedItems());
+        } else {
+            metrics.setCompletedItems(projMetrics.getCompletedItems());
+        }
         if (metrics.getTotalItems() > 0) {
             metrics.setPercentDone(Math.round(100.0f
                     * (float) metrics.getCompletedItems()

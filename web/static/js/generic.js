@@ -226,10 +226,7 @@ function disableElementIfValue(me, handle, ref) {
     return false;
 }
 
-function getIterationGoals(backlogId, element) {
-	
-	
-        
+function getIterationGoals(backlogId, element, preselectedId) {
     jQuery.getJSON("ajaxGetIterationGoals.action",
         { 'iterationId': backlogId }, function(data, status) {
         var select = $(element);
@@ -238,7 +235,10 @@ function getIterationGoals(backlogId, element) {
             select.show().empty().val('').next().hide();
             $('<option/>').attr('value','').attr('class','inactive').text('(none)').appendTo(select);
             for (var i = 0; i < data.length; i++) {
-                $('<option/>').attr('value',data[i].id).text(data[i].name).appendTo(select);
+                var opt = $('<option/>').attr('value',data[i].id).text(data[i].name).appendTo(select);
+                if (preselectedId == data[i].id) {
+                    opt.attr('selected','selected');
+                }
             }
         }
         else {
@@ -316,4 +316,37 @@ function deleteTheme(themeId) {
 
 function stripHTML(htmlString) {
 	return htmlString.replace(/(<([^>]+)>)/ig,""); 
+}
+
+function toggleExpand(clickedElement, elementId, settings) {
+    var me = $(clickedElement); var elem = $(elementId);
+    var options = {
+        height_min: '14em',
+        height_max: '1000em'
+    };
+    jQuery.extend(options, settings);
+    if (me.hasClass('expand')) {
+        elem.css('max-height',options.height_max);
+        me.attr("title","Collapse");
+    }
+    else {
+        elem.css('max-height',options.height_min);
+        me.attr("title","Expand");
+    }
+    me.toggleClass('expand').toggleClass('collapse');
+    return false;
+}
+
+function toggleHide(clickedElement, elements) {
+    var elems = $(elements);
+    var me = $(clickedElement);
+    $.each(elems, function(key, elem) {
+        $(elem).toggle();
+    });
+    if(me.hasClass('expand')) {
+    	me.attr("title","Collapse");
+    } else {
+    	me.attr("title","Expand");
+    }
+    me.toggleClass('expand').toggleClass('collapse');
 }

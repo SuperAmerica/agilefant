@@ -24,6 +24,7 @@ public class SettingAction extends ActionSupport {
     private String criticalLowValue;
     private Setting setting;
     private SettingBusiness settingBusiness;
+    private String projectBurndown;
     
     @Override
     public String execute() throws Exception {        
@@ -33,6 +34,7 @@ public class SettingAction extends ActionSupport {
         optimalLowValue = new Integer(settingBusiness.getOptimalLow()).toString();
         optimalHighValue = new Integer(settingBusiness.getOptimalHigh()).toString();
         criticalLowValue = new Integer(settingBusiness.getCriticalLow()).toString();
+        projectBurndown = new Boolean(settingBusiness.isProjectBurndownEnabled()).toString();
         return super.execute();
     }
     
@@ -106,7 +108,8 @@ public class SettingAction extends ActionSupport {
         settingBusiness.setRangeHigh(rangeHighValue);
         settingBusiness.setOptimalLow(optimalLowValue);
         settingBusiness.setOptimalHigh(optimalHighValue);
-        settingBusiness.setCriticalLow(criticalLowValue);            
+        settingBusiness.setCriticalLow(criticalLowValue);
+        settingBusiness.setProjectBurndown(projectBurndown);
         return Action.SUCCESS;
     }
     
@@ -379,5 +382,13 @@ public class SettingAction extends ActionSupport {
 
     public void setCriticalLowValue(String criticalLowValue) {
         this.criticalLowValue = criticalLowValue;
+    }
+
+    public String getProjectBurndown() {
+        return projectBurndown;
+    }
+
+    public void setProjectBurndown(String projectBurndown) {
+        this.projectBurndown = projectBurndown;
     }
 }

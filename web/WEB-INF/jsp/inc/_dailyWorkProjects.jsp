@@ -56,6 +56,26 @@ $(document).ready(function() {
 		</c:otherwise>
 		</c:choose>
 		</td>
+        <td class="icons">
+          <ww:url id="createBLILink" action="ajaxCreateBacklogItem" includeParams="none">
+            <ww:param name="backlogId" value="${pro.id}" />
+          </ww:url>
+          <ww:a cssClass="openCreateDialog openBacklogItemDialog"
+                onclick="return false;" title="Create a new backlog item"
+                href="%{createBLILink}">
+            <img src="static/img/new.png"
+                height="16" width="16" alt="Create a new backlog item" />
+          </ww:a>
+          <c:if test="${hourReport}">
+            <ww:url id="createLink" action="ajaxCreateHourEntry" includeParams="none">
+                <ww:param name="backlogId" value="${pro.id}" />
+            </ww:url>
+            <ww:a cssClass="openCreateDialog openUserDialog" onclick="return false;" title="Log effort to ${pro.name}" href="%{createLink}">
+            <img src="static/img/timesheets.png"
+                  height="16" width="16" alt="Log effort" />
+            </ww:a>
+          </c:if>
+          </td>
 		</tr>
 		</table>
 		</div>

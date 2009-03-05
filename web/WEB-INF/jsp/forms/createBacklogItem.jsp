@@ -25,7 +25,6 @@ $(document).ready(function() {
 
 <div class="validateWrapper validateNewBacklogItem">
 <ww:form action="storeNewBacklogItem" method="post">
-<ww:hidden name="parentId" value="${parentId}" />
 	<table class="formTable">
 		<tr>
 			<td>Name</td>

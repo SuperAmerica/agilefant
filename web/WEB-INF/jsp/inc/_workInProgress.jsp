@@ -140,9 +140,7 @@ Backlog items
 
 	<display:column title="Actions">
 		<img src="static/img/edit.png" alt="Edit" title="Edit" style="cursor: pointer;" onclick="handleTabEvent('backlogItemTabContainer-${row.id}-${bliListContext}','bliWorkInProgress',${row.id},0, '${bliListContext}'); return false;" />
-		<c:if test="${!row.hasChilds}">
-			<img src="static/img/delete_18.png" alt="Delete" title="Delete" style="cursor: pointer;" onclick="deleteBacklogItem(${row.id}); return false;" />
-		</c:if>
+		<img src="static/img/delete_18.png" alt="Delete" title="Delete" style="cursor: pointer;" onclick="deleteBacklogItem(${row.id}); return false;" />
 	</display:column>
 
 </display:table></div>

@@ -19,7 +19,6 @@ import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.db.IterationGoalDAO;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
-import fi.hut.soberit.agilefant.exception.OperationNotPermittedException;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.BusinessTheme;
@@ -550,8 +549,6 @@ public class BacklogActionTest extends TestCase {
         }
         catch (ObjectNotFoundException e) {
             fail(e.getMessage());
-        } catch (OperationNotPermittedException e) {
-            fail();
         }
         
         replay(backlogDAO);

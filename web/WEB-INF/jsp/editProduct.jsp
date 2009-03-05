@@ -14,28 +14,7 @@
 
 <aef:openDialogs context="project" id="openProjects" />
 
-<script type="text/javascript" src="static/js/interface.js"></script>
-
-
 <script type="text/javascript">
-
-var cookieId = 'progress_structure_' + ${product.id};
-
-function setView(value) {
-	if (value == 'structure') {
-		$.cookie(cookieId, 'structure');
-		$('#progressDiv').hide();
-		$('#structureLink').hide();
-		$('#structureDiv').show();
-		$('#progressLink').show();
-	}else{
-		$.cookie(cookieId, 'progress');
-		$('#progressDiv').show();
-		$('#structureLink').show();
-		$('#structureDiv').hide();
-		$('#progressLink').hide();
-	}
-}
 
 $(document).ready(function() {
     <c:forEach items="${openThemes}" var="openTheme">
@@ -45,13 +24,6 @@ $(document).ready(function() {
     <c:forEach items="${openProjects}" var="openProject">
         handleTabEvent("projectTabContainer-${openProject[0]}", "project", ${openProject[0]}, ${openProject[1]});
     </c:forEach>
-
-    $('#structureLink').structureView({
-        backlogId: ${product.id}
-    });
-    
-    if($.cookie(cookieId) == 'structure') 
-    	$('#structureLink').click();
 });
 
 
@@ -422,32 +394,16 @@ var productId = ${product.id};
 					<ww:param name="backlogId" value="${product.id}" />
 				</ww:url> <ww:a cssClass="openCreateDialog openBacklogItemDialog"
 					href="%{createBacklogItemLink}" onclick="return false;">Create new &raquo;</ww:a>
-					<a onclick="setView('structure'); return false;" id="structureLink" class="viewLink">Show Structure View</a>
-					<a onclick="setView('progress'); return false;" id="progressLink" class="viewLink">Show Progress View</a>
 					</td>
 					</tr>
 				</table>
 			</div>			
 
-			
-			<div class="subItemContent" id="progressDiv">
+			<c:if test="${!empty product.backlogItems}">
+			<div class="subItemContent">
 				<%@ include file="./inc/_backlogList.jsp"%>
 			</div>
-			<div class="subItemContent" id="structureDiv" style="display:none">
-				<ul id="containerTree">
-					<li id="containerItem">
-						<img src="static/img/backlog.png" class="containerImage" />
-						<span id="undone">Undone backlog items</span>
-						<ul id="myTree"></ul>
-					</li>
-					<li id="doneContainerItem">
-						<img src="static/img/backlog.png" class="containerImage" />
-						<span id="done">Done backlog items</span>
-						<ul id="doneTree"></ul>
-					</li>
-				</ul>
-			</div>
-			
+			</c:if>
 			</div>
 		</td>
 	</tr>

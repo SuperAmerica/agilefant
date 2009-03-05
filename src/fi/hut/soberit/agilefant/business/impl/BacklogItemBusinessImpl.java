@@ -15,16 +15,13 @@ import fi.hut.soberit.agilefant.business.TaskBusiness;
 import fi.hut.soberit.agilefant.business.UserBusiness;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
-import fi.hut.soberit.agilefant.exception.OperationNotPermittedException;
 import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.State;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
-import fi.hut.soberit.agilefant.util.BacklogItemNameComparator;
 import fi.hut.soberit.agilefant.util.UserComparator;
-import flexjson.JSONSerializer;
 
 /**
  * 
@@ -38,18 +35,6 @@ public class BacklogItemBusinessImpl implements BacklogItemBusiness {
     private UserBusiness userBusiness;
     private HourEntryBusiness hourEntryBusiness;
 
-    public String getBacklogItemChildrenAsJson(int fatherId) {
-        
-        return new JSONSerializer().serialize(getBacklogItemChildren(fatherId));
-    }
-    
-    public List<BacklogItem> getBacklogItemChildren(int fatherId) {
-        List<BacklogItem> list = backlogItemDAO.backlogItemChildren(fatherId);
-        // sort alphabetically
-        Collections.sort(list, new BacklogItemNameComparator());
-        return list;
-    }
-    
     public BacklogItemDAO getBacklogItemDAO() {
         return backlogItemDAO;
     }
@@ -71,17 +56,12 @@ public class BacklogItemBusinessImpl implements BacklogItemBusiness {
     }
 
     public void removeBacklogItem(int backlogItemId)
-            throws ObjectNotFoundException, OperationNotPermittedException {
+            throws ObjectNotFoundException {
         BacklogItem backlogItem = backlogItemDAO.get(backlogItemId);
 
         if (backlogItem == null) {
             throw new ObjectNotFoundException(
                     "Backlog item with given id was not found.");
-        }
-        
-        if(backlogItemDAO.backlogItemChildren(backlogItemId).size() > 0) {
-            throw new OperationNotPermittedException(
-                    "Backlog item has children.");
         }
         
         // Remove all hourEntries related to this backlogItem  
@@ -209,42 +189,5 @@ public class BacklogItemBusinessImpl implements BacklogItemBusiness {
     public void setUserBusiness(UserBusiness userBusiness) {
         this.userBusiness = userBusiness;
     }
-
-    public void changeBacklogItemParent(int childId, int parentId)
-            throws ObjectNotFoundException, OperationNotPermittedException {
-        BacklogItem child = backlogItemDAO.get(childId);
-        
-        if (child == null) {
-            throw new ObjectNotFoundException(
-                    "Child backlog item with given id was not found.");
-        }
-        if(childId == parentId) {
-            throw new OperationNotPermittedException(
-                    "Child and parent are same item");
-        }
-        if (parentId != -1) {
-            BacklogItem parent = backlogItemDAO.get(parentId);
-            if (parent == null) {
-                throw new ObjectNotFoundException(
-                        "Parent backlog item with given id was not found.");
-            }
-            BacklogItem grandParent = parent.getParentBli();
-            while(grandParent != null) {
-                if(grandParent.getId() == child.getId()) {
-                    throw new OperationNotPermittedException(
-                    "Child and grand parent are same item");
-                }
-                grandParent = grandParent.getParentBli();
-            }            
-            child.setParentBli(parent);
-            backlogItemDAO.store(child);
-        }
-        else {
-            child.setParentBli(null);
-            backlogItemDAO.store(child);
-        }
-    }
-
-
     
 }

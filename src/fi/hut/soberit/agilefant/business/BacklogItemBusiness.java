@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
-import fi.hut.soberit.agilefant.exception.OperationNotPermittedException;
 import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.State;
@@ -18,17 +17,6 @@ import fi.hut.soberit.agilefant.model.User;
  */
 public interface BacklogItemBusiness {
 
-    /**
-     * Returns a list of backlogItems whose father is the given backlogItem.
-     * @param fatherId
-     * @return children of given BLI
-     */
-    public List<BacklogItem> getBacklogItemChildren(int fatherId);
-
-    public String getBacklogItemChildrenAsJson(int fatherId);
-    
-    
-    
     /**
      * Returns backlog item by its id.
      * 
@@ -50,9 +38,7 @@ public interface BacklogItemBusiness {
      */
 
     public void removeBacklogItem(int backlogItemId)
-            throws ObjectNotFoundException, OperationNotPermittedException;
-    
-    public void changeBacklogItemParent(int childId, int parentId) throws ObjectNotFoundException, OperationNotPermittedException;
+            throws ObjectNotFoundException;
 
     /**
      * Updates backlog item's effort left and status.

@@ -25,7 +25,6 @@ import fi.hut.soberit.agilefant.db.IterationGoalDAO;
 import fi.hut.soberit.agilefant.db.TaskDAO;
 import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
-import fi.hut.soberit.agilefant.exception.OperationNotPermittedException;
 import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
@@ -103,28 +102,6 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
     private User creator;
 
     private List<BusinessTheme> bliActiveOrSelectedThemes;
-    
-    private String jsonData = "";
-    
-    private int parentId;
-    
-    private int childId;
-    
-    public int getParentId() {
-        return parentId;
-    }
-
-    public void setParentId(int parentId) {
-        this.parentId = parentId;
-    }
-
-    public int getChildId() {
-        return childId;
-    }
-
-    public void setChildId(int childId) {
-        this.childId = childId;
-    }
 
     public String getBliListContext() {
         return bliListContext;
@@ -184,9 +161,6 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
         } catch (ObjectNotFoundException e) {
             super.addActionError(super.getText("backlogItem.notFound"));
             return Action.ERROR;
-        } catch (OperationNotPermittedException e) {
-            super.addActionError(super.getText("backlogItem.hasChildren"));
-            return Action.ERROR;
         }
 
         // If exception was not thrown from business method, return success.
@@ -199,31 +173,13 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
         } catch (ObjectNotFoundException e) {
             super.addActionError(super.getText("backlogItem.notFound"));
             return CRUDAction.AJAX_ERROR;
-        } catch (OperationNotPermittedException e) {
-            super.addActionError(super.getText("backlogItem.hasChildren"));
-            return CRUDAction.AJAX_ERROR;
         }
 
         // If exception was not thrown from business method, return success.
         return CRUDAction.AJAX_SUCCESS;
     }
-    
-   public String ajaxChangeBacklogItemParent() {
-       try {
-           backlogItemBusiness.changeBacklogItemParent(childId, parentId);
-       } catch (ObjectNotFoundException e) {
-           super.addActionError(super.getText("backlogItem.notFound"));
-           return CRUDAction.AJAX_ERROR;
-       } catch (OperationNotPermittedException e) {
-           super.addActionError(e.getMessage());
-           return CRUDAction.AJAX_ERROR;
-       }
-       
-       // If exception was not thrown from business method, return success.
-       return CRUDAction.AJAX_SUCCESS;
-   }
 
-   public String edit() {
+    public String edit() {
         backlogItem = backlogItemBusiness.getBacklogItem(backlogItemId);
         if (backlogItem == null) {
             super.addActionError(super.getText("backlogItem.notFound"));
@@ -277,23 +233,7 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
         // Store backlog item
         this.backlogItemId = (Integer) backlogItemDAO.create(storable);
         businessThemeBusiness.setBacklogItemThemes(themeIds, this.backlogItemId);
-        
-        if(parentId != 0) {
-            try {
-                backlogItemBusiness.changeBacklogItemParent(this.backlogItemId, parentId);
-            } catch (ObjectNotFoundException e) {
-                return Action.ERROR;
-            } catch (OperationNotPermittedException e) {
-                return Action.ERROR;
-            }
-        }
-        
-        if(oldBacklog != null && !backlogBusiness.isUnderSameProduct(newBacklog, oldBacklog)) {
-            storable.setParentBli(null);
-            if(storable.getChildItems() != null && !storable.getChildItems().isEmpty())
-                backlogBusiness.changeBacklogForHierarchy(storable, newBacklog);
-        }
-        
+
         /*
          * This should be handled inside business...
          */
@@ -340,12 +280,6 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
         // Store backlog item
         this.backlogItemId = (Integer) backlogItemDAO.create(storable);
         businessThemeBusiness.setBacklogItemThemes(themeIds, this.backlogItemId);
-        
-        if(oldBacklog != null && !backlogBusiness.isUnderSameProduct(newBacklog, oldBacklog)) {
-            storable.setParentBli(null);
-            if(storable.getChildItems() != null && !storable.getChildItems().isEmpty())
-                backlogBusiness.changeBacklogForHierarchy(storable, newBacklog);
-        }
 
         /*
          * This should be handled inside business...
@@ -528,16 +462,7 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
         storable.setBacklog(backlog);
     }
     
-    public String getProductTopLevelBacklogItems() {
-        return CRUDAction.AJAX_SUCCESS;
-        //TODO implement
-    }
-    
-    public String getProductDoneTopLevelBacklogItems() {
-        return CRUDAction.AJAX_SUCCESS;
-        //TODO implement
-    }
-    
+
     public Backlog getBacklog() {
         return backlog;
     }
@@ -771,18 +696,5 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
 
     public Set<Integer> getThemeIds() {
         return themeIds;
-    }
-
-    public String getJsonData() {
-        return jsonData;
-    }
-
-    public void setJsonData(String jsonData) {
-        this.jsonData = jsonData;
-    }
-    
-    public String getBacklogItemChildrenAsJSON() {
-        setJsonData(backlogItemBusiness.getBacklogItemChildrenAsJson(backlogItemId));
-        return Action.SUCCESS;
     }
 }

@@ -24,7 +24,6 @@ import fi.hut.soberit.agilefant.db.BacklogItemHourEntryDAO;
 import fi.hut.soberit.agilefant.db.BusinessThemeDAO;
 import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
-import fi.hut.soberit.agilefant.exception.OperationNotPermittedException;
 import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.Assignment;
 import fi.hut.soberit.agilefant.model.Backlog;
@@ -222,7 +221,6 @@ public class BacklogBusinessTest extends TestCase {
 
         // Record expected behavior
         expect(backlogDAO.get(backlog.getId())).andReturn(backlog);
-        expect(bliDAO.backlogItemChildren(bli.getId())).andReturn(new ArrayList<BacklogItem>());
         bliDAO.remove(bli.getId());
         historyBusiness.updateBacklogHistory(backlog.getId());
         replay(backlogDAO);
@@ -234,8 +232,6 @@ public class BacklogBusinessTest extends TestCase {
         try {
             backlogBusiness.deleteMultipleItems(backlog.getId(), bliIds);
         } catch (ObjectNotFoundException e) {
-            fail();
-        } catch (OperationNotPermittedException e) {
             fail();
         }
         assertFalse(backlog.getBacklogItems().contains(bli));

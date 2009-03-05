@@ -20,22 +20,10 @@ function validateDeletion() {
     return confirm("The selected backlog items will be gone forever. Are you sure?");
 }
 
-amountOfItemsWithChildrenSelected = 0;
-
-function clickedItemWithChilds(val) {
-	if(val)
-		++amountOfItemsWithChildrenSelected;
-	else
-		--amountOfItemsWithChildrenSelected;
-		
-	document.getElementById("deleteSelected").disabled = amountOfItemsWithChildrenSelected > 0;
-}
-
 function selectAllBLIs(val) {
 	var elems = document.getElementsByName("selected");
-	for(var x = 0; x < elems.length; ++x)
-		if(elems[x].checked != val)
-			elems[x].click();
+	for(var x in elems)
+		elems[x].checked = val;
 }
 
 function disableThemeSelect(value) {
@@ -70,16 +58,7 @@ $(document).ready(function() {
 
 		<!-- Checkboxes for bulk-moving backlog items -->
 		<display:column sortable="false" title="<input type='checkbox' name='selectall' onclick='selectAllBLIs(this.checked)'/>" class="selectColumn">
-			<div>
-			<c:choose>
-				<c:when test="${row.hasChilds}">
-					<ww:checkbox onchange="javascript: clickedItemWithChilds(this.checked);" name="selected" fieldValue="${row.id}" />
-				</c:when>
-				<c:otherwise>
-					<ww:checkbox name="selected" fieldValue="${row.id}" />
-				</c:otherwise>
-			</c:choose>
-			</div>
+			<div><ww:checkbox name="selected" fieldValue="${row.id}" /></div>
 			<div style="height: 15px;"></div>
 			<div id="backlogItemTabContainer-${row.id}-${bliListContext}" class="tabContainer" style="overflow:visible; white-space: nowrap; width: 15px;"></div>
 		</display:column>
@@ -186,9 +165,7 @@ $(document).ready(function() {
 		
 		<display:column title="Actions" sortable="false">
 			<img src="static/img/edit.png" alt="Edit" title="Edit" style="cursor: pointer;" onclick="handleTabEvent('backlogItemTabContainer-${row.id}-${bliListContext}','bli',${row.id},0, '${bliListContext}'); return false;" />
-			<c:if test="${!row.hasChilds}">
-				<img src="static/img/delete_18.png" alt="Delete" title="Delete" style="cursor: pointer;" onclick="deleteBacklogItem(${row.id}); return false;" />
-			</c:if>
+			<img src="static/img/delete_18.png" alt="Delete" title="Delete" style="cursor: pointer;" onclick="deleteBacklogItem(${row.id}); return false;" />
 		</display:column>
 		
 		<display:footer>
@@ -321,7 +298,7 @@ $(document).ready(function() {
 		<td>&nbsp;</td>
 		<td>&nbsp;</td>
 		<td>&nbsp;</td>
-		<td><ww:submit type="button" name="itemAction" value="%{'DeleteSelected'}" id="deleteSelected"
+		<td><ww:submit type="button" name="itemAction" value="%{'DeleteSelected'}"
 				onclick="return validateDeletion()" label="Delete selected" /></td>
 	</tr>
 	</table>

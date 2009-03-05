@@ -16,7 +16,6 @@ import fi.hut.soberit.agilefant.business.impl.HourEntryBusinessImpl;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.db.BacklogItemHourEntryDAO;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
-import fi.hut.soberit.agilefant.exception.OperationNotPermittedException;
 import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
@@ -47,7 +46,6 @@ public class BacklogItemBusinessTest extends TestCase {
 
         // Record expected behavior
         expect(bliDAO.get(68)).andReturn(bli);
-        expect(bliDAO.backlogItemChildren(68)).andReturn(new ArrayList<BacklogItem>());
         bliDAO.remove(bli);
         replay(bliDAO);
         historyBusiness.updateBacklogHistory(100);
@@ -57,8 +55,6 @@ public class BacklogItemBusinessTest extends TestCase {
         try {
             bliBusiness.removeBacklogItem(68);
         } catch (ObjectNotFoundException onfe) {
-            fail();
-        } catch (OperationNotPermittedException e) {
             fail();
         }
         // verify behavior
@@ -79,39 +75,12 @@ public class BacklogItemBusinessTest extends TestCase {
             fail();
         } catch (ObjectNotFoundException onfe) {
 
-        } catch (OperationNotPermittedException e) {
-            fail();
         }
 
         // verify behavior
         verify(bliDAO);
     }
 
-    public void testRemoveBacklogItem_hasChild() {
-        bliDAO = createMock(BacklogItemDAO.class);
-        bliBusiness.setBacklogItemDAO(bliDAO);
-        BacklogItem bli = new BacklogItem();
-        List<BacklogItem> childList = new ArrayList<BacklogItem>();
-        childList.add(bli);
-        
-        // Record expected behavior
-        expect(bliDAO.get(68)).andReturn(bli);
-        expect(bliDAO.backlogItemChildren(68)).andReturn(childList);
-        replay(bliDAO);
-        // run method under test
-
-        try {
-            bliBusiness.removeBacklogItem(68);
-            fail();
-        } catch (ObjectNotFoundException onfe) {
-            fail();
-        } catch (OperationNotPermittedException e) {
-            
-        }
-        // verify behavior
-        verify(bliDAO);
-    }
-    
     private void testUpdateBacklogItemStateAndEffortLeft_parameterized(
             State oldState, AFTime oldOriginalEstimate, AFTime oldEffortLeft,
             State newState, AFTime expectedOriginalEstimate,
@@ -380,144 +349,4 @@ public class BacklogItemBusinessTest extends TestCase {
 
         verify(userBusiness);
     }   
-    
-    public void testGetProductTopLevelBacklogItems() {
-        bliDAO = createMock(BacklogItemDAO.class);
-        List<BacklogItem> backlogItems = new ArrayList<BacklogItem>();
-        List<Backlog> backlogs = new ArrayList<Backlog>();
-        BacklogItem testItem1 = new BacklogItem();
-        BacklogItem testItem2 = new BacklogItem();
-        backlogItems.add(testItem1);
-        backlogItems.add(testItem2);
-        
-        expect(bliDAO.nonDoneTopLevelBacklogItems(backlogs)).andReturn(backlogItems);
-        
-        replay(bliDAO);
-        
-        List<BacklogItem> result = bliDAO.nonDoneTopLevelBacklogItems(backlogs);
-        
-        assertTrue(result.contains(testItem1));
-        assertTrue(result.contains(testItem2));
-        assertEquals(result.size(), 2);
-        
-        verify(bliDAO);           
-    }
-    
-    public void testChangeParentBli() {
-        bliDAO = createMock(BacklogItemDAO.class);
-        bliBusiness.setBacklogItemDAO(bliDAO);
-        BacklogItem child = new BacklogItem();
-        child.setId(1);
-        BacklogItem parent = new BacklogItem();
-        parent.setId(2);
-        
-        expect(bliDAO.get(child.getId())).andReturn(child);
-        expect(bliDAO.get(parent.getId())).andReturn(parent);
-        bliDAO.store(child);
-        
-        replay(bliDAO);
-        
-        try {
-            bliBusiness.changeBacklogItemParent(child.getId(), parent.getId());
-        } catch (ObjectNotFoundException e) {
-            fail();
-        }catch (OperationNotPermittedException e) {
-            fail();
-        }
-        
-        verify(bliDAO);
-    }
-
-    public void testChangeParentBli_invalidParent() {
-        bliDAO = createMock(BacklogItemDAO.class);
-        bliBusiness.setBacklogItemDAO(bliDAO);
-        BacklogItem child = new BacklogItem();
-        boolean failed = false;
-        
-        expect(bliDAO.get(child.getId())).andReturn(child);
-        expect(bliDAO.get(-500)).andReturn(null);
-        
-        replay(bliDAO);
-        
-        try {
-            bliBusiness.changeBacklogItemParent(child.getId(), -500);
-        } catch (ObjectNotFoundException e) {
-            failed = true;
-        }catch (OperationNotPermittedException e) {
-            fail();
-        }
-        assertTrue(failed);
-        verify(bliDAO);
-    }
-    
-    public void testChangeParentBli_invalidChild() {
-        bliDAO = createMock(BacklogItemDAO.class);
-        bliBusiness.setBacklogItemDAO(bliDAO);
-        BacklogItem parent = new BacklogItem();
-        boolean failed = false;
-        
-        expect(bliDAO.get(-500)).andReturn(null);
-        
-        replay(bliDAO);
-        
-        try {
-            bliBusiness.changeBacklogItemParent(-500, parent.getId());
-        } catch (ObjectNotFoundException e) {
-            failed = true;
-        } catch (OperationNotPermittedException e) {
-            fail();
-        }
-        assertTrue(failed);
-        verify(bliDAO);
-    }
-    
-    public void testChangeParentBli_parentIsChild() {
-        bliDAO = createMock(BacklogItemDAO.class);
-        bliBusiness.setBacklogItemDAO(bliDAO);
-        BacklogItem child = new BacklogItem();
-        BacklogItem parent = child;
-        boolean failed = false;
-        
-        expect(bliDAO.get(child.getId())).andReturn(child);
-        
-        replay(bliDAO);
-        
-        try {
-            bliBusiness.changeBacklogItemParent(child.getId(), parent.getId());
-        } catch (ObjectNotFoundException e) {
-            fail();
-        }catch (OperationNotPermittedException e) {
-            failed = true;
-        }
-        assertTrue(failed);
-        verify(bliDAO);
-    }
-    
-    public void testChangeParentBli_ChildIsGrandParent() {
-        bliDAO = createMock(BacklogItemDAO.class);
-        bliBusiness.setBacklogItemDAO(bliDAO);
-        BacklogItem child = new BacklogItem();
-        child.setId(1);
-        BacklogItem parent = new BacklogItem();
-        parent.setId(2);        
-        BacklogItem grandParent = new BacklogItem();
-        grandParent.setId(3);
-        grandParent.setParentBli(child);
-        parent.setParentBli(grandParent);
-        boolean failed = false;
-        
-        expect(bliDAO.get(child.getId())).andReturn(child);
-        expect(bliDAO.get(parent.getId())).andReturn(parent);
-        replay(bliDAO);
-        
-        try {
-            bliBusiness.changeBacklogItemParent(child.getId(), parent.getId());
-        } catch (ObjectNotFoundException e) {
-            fail();
-        }catch (OperationNotPermittedException e) {
-            failed = true;
-        }
-        assertTrue(failed);
-        verify(bliDAO);
-    }
 }

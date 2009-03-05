@@ -25,7 +25,6 @@ import fi.hut.soberit.agilefant.db.IterationGoalDAO;
 import fi.hut.soberit.agilefant.db.ProductDAO;
 import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
-import fi.hut.soberit.agilefant.exception.OperationNotPermittedException;
 import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.Assignment;
 import fi.hut.soberit.agilefant.model.Backlog;
@@ -42,7 +41,6 @@ import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.State;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.util.BacklogComparator;
-import fi.hut.soberit.agilefant.util.BacklogItemNameComparator;
 import fi.hut.soberit.agilefant.util.BacklogLoadData;
 import fi.hut.soberit.agilefant.util.BacklogMetrics;
 import fi.hut.soberit.agilefant.util.EffortSumData;
@@ -76,39 +74,6 @@ public class BacklogBusinessImpl implements BacklogBusiness {
     private ProductDAO productDAO;
 
     private BusinessThemeDAO businessThemeDAO;
-    
-    /**  {@inheritDoc} */
-    public void changeBacklogForHierarchy(BacklogItem bli, Backlog newBacklog) {
-        Backlog old = bli.getBacklog();
-        bli.setBacklog(newBacklog);
-        
-        // Remove iteration goal
-        if (bli.getIterationGoal() != null) {
-            bli.getIterationGoal().getBacklogItems().remove(bli);
-            bli.setIterationGoal(null);
-        }
-
-        // if item is moved under another product, remove themes
-        if (!isUnderSameProduct(old, newBacklog)) {
-            if (bli.getBusinessThemes() != null) {
-                bli.getBusinessThemes().clear();
-            }
-        }
-        backlogItemDAO.store(bli);
-        old.getBacklogItems().remove(bli);
-
-        // Store source backlog
-        backlogDAO.store(old);
-
-        // Add backlog item to new Backlog's backlog item list
-        newBacklog.getBacklogItems().add(bli);
-        backlogDAO.store(newBacklog);
-        historyBusiness.updateBacklogHistory(old.getId());
-        historyBusiness.updateBacklogHistory(newBacklog.getId());
-        for(BacklogItem b : bli.getChildItems()) {
-            changeBacklogForHierarchy(b, newBacklog);
-        }
-    }
 
     /** {@inheritDoc} */
     public Backlog getBacklog(int backlogId) throws ObjectNotFoundException {
@@ -121,17 +86,13 @@ public class BacklogBusinessImpl implements BacklogBusiness {
 
     // @Override
     public void deleteMultipleItems(int backlogId, int[] backlogItemIds)
-            throws ObjectNotFoundException, OperationNotPermittedException {
+            throws ObjectNotFoundException {
         Backlog backlog = backlogDAO.get(backlogId);
         if (backlog == null) {
             throw new ObjectNotFoundException("Backlog id " + backlogId
                     + " was invalid.");
         }
-        for (int id : backlogItemIds) {
-            if(backlogItemDAO.backlogItemChildren(id).size() > 0)
-                throw new OperationNotPermittedException("Backlog item " +
-                        backlogItemDAO.get(id).getName() + " has children, cannot delete.");
-        }
+
         for (int id : backlogItemIds) {
             Collection<BacklogItem> items = backlog.getBacklogItems();
             Iterator<BacklogItem> iterator = items.iterator();
@@ -338,11 +299,6 @@ public class BacklogBusinessImpl implements BacklogBusiness {
 
                 // Set backlog item's backlog to target backlog
                 bli.setBacklog(targetBacklog);
-                if(sourceBacklog != null && !this.isUnderSameProduct(targetBacklog, sourceBacklog)) {
-                    bli.setParentBli(null);
-                    if(bli.getChildItems() != null && !bli.getChildItems().isEmpty())
-                        changeBacklogForHierarchy(bli, targetBacklog);
-                }
                 backlogItemDAO.store(bli);
 
                 // Remove BLI from source backlog
@@ -1030,46 +986,5 @@ public class BacklogBusinessImpl implements BacklogBusiness {
     public void setHistoryBusiness(HistoryBusiness historyBusiness) {
         this.historyBusiness = historyBusiness;
     }
-    
-    public List<BacklogItem> getProductTopLevelBacklogItems(int productId) {
-        Product product = productDAO.get(productId);
-        List<Backlog> backlogs = new ArrayList<Backlog>();
-        backlogs.add(product);
-        List<Project> projects = new ArrayList<Project>();
-        projects.addAll(product.getProjects());
-        backlogs.addAll(projects);
-        for(Project project : projects) {
-            backlogs.addAll(project.getIterations());
-        }
-        return (List<BacklogItem>) backlogItemDAO
-                .nonDoneTopLevelBacklogItems(backlogs);
-    }
-    
-    public String getProductTopLevelBacklogItemsAsJson(int productId) {
-        List<BacklogItem> list = this.getProductTopLevelBacklogItems(productId);
-        // sort list alphabetically
-        Collections.sort(list, new BacklogItemNameComparator());
-        return new JSONSerializer().serialize(list);
-    }
-    
-    public List<BacklogItem> getProductDoneTopLevelBacklogItems(int productId) {
-        Product product = productDAO.get(productId);
-        List<Backlog> backlogs = new ArrayList<Backlog>();
-        backlogs.add(product);
-        List<Project> projects = new ArrayList<Project>();
-        projects.addAll(product.getProjects());
-        backlogs.addAll(projects);
-        for(Project project : projects) {
-            backlogs.addAll(project.getIterations());
-        }
-        return (List<BacklogItem>) backlogItemDAO
-                .doneTopLevelBacklogItems(backlogs);
-    }
-    
-    public String getProductDoneTopLevelBacklogItemsAsJson(int productId) {
-        List<BacklogItem> list = this.getProductDoneTopLevelBacklogItems(productId);
-        // sort list alphabetically
-        Collections.sort(list, new BacklogItemNameComparator());
-        return new JSONSerializer().serialize(list);
-    }
+
 }

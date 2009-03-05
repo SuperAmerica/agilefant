@@ -7,7 +7,6 @@ import java.util.Map;
 import java.util.Set;
 
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
-import fi.hut.soberit.agilefant.exception.OperationNotPermittedException;
 import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.Assignment;
 import fi.hut.soberit.agilefant.model.Backlog;
@@ -56,14 +55,6 @@ public interface BacklogBusiness {
     public Backlog getBacklog(int backlogId) throws ObjectNotFoundException;
     
     /**
-     * 
-     * @param bli parent of hierarchy
-     * @param newBacklog backlog where items in hierarchy are moved.
-     */
-
-    public void changeBacklogForHierarchy(BacklogItem bli, Backlog newBacklog);
-    
-    /**
      * Delete multiple <code>BacklogItems</code> at once.
      * 
      * @param backlogItemIds
@@ -71,7 +62,7 @@ public interface BacklogBusiness {
      *                delete.
      */
     public void deleteMultipleItems(int backlogId, int backlogItemIds[])
-            throws ObjectNotFoundException, OperationNotPermittedException;
+            throws ObjectNotFoundException;
 
     /**
      * Creates new backlogItem to given backlog.
@@ -342,28 +333,4 @@ public interface BacklogBusiness {
      *         under different products. Else true.
      */
     public boolean isUnderSameProduct(int backlogId1, int backlogId2);
-    
-    /**
-     * Returns product's and products sub-backlog's top level backlog items. Meaning those that don't have a parent BLI.
-     * @return a list of top level BLIs.
-     */
-    public List<BacklogItem> getProductTopLevelBacklogItems(int productId);
-    
-    /**
-     * Returns product's and products sub-backlog's top level backlog items as JSONs. Meaning those that don't have a parent BLI.
-     * @return a list of top level BLIs.
-     */
-    public String getProductTopLevelBacklogItemsAsJson(int productId);
-    
-    /**
-     * Returns product's and products sub-backlog's top level done backlog items. Meaning those that don't have a parent BLI.
-     * @return a list of top level BLIs.
-     */
-    public List<BacklogItem> getProductDoneTopLevelBacklogItems(int productId);
-    
-    /**
-     * Returns product's and products sub-backlog's top level done backlog items as JSONs. Meaning those that don't have a parent BLI.
-     * @return a list of top level BLIs.
-     */
-    public String getProductDoneTopLevelBacklogItemsAsJson(int productId);
 }

@@ -16,7 +16,6 @@ import fi.hut.soberit.agilefant.business.ProjectBusiness;
 import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
-import fi.hut.soberit.agilefant.exception.OperationNotPermittedException;
 import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
@@ -73,7 +72,7 @@ public class BacklogAction extends ActionSupport {
     
     private boolean underSameProduct = false;
 
-    private String jsonData = "";
+    
 
     /**
      * Used to determine what action is taken when multiple
@@ -254,8 +253,6 @@ public class BacklogAction extends ActionSupport {
         try {
             backlogBusiness.deleteMultipleItems(backlogId, backlogItemIds);
         } catch (ObjectNotFoundException e) {
-            super.addActionError(super.getText(e.getMessage()));
-        } catch (OperationNotPermittedException e) {
             super.addActionError(super.getText(e.getMessage()));
         }
     }
@@ -486,24 +483,6 @@ public class BacklogAction extends ActionSupport {
 
     public boolean isUnderSameProduct() {
         return underSameProduct;
-    }
-    
-    public String getProductTopLevelBacklogItemsAsJson() {
-        setJsonData(backlogBusiness.getProductTopLevelBacklogItemsAsJson(backlogId));
-        return Action.SUCCESS;
-    }
-    
-    public String getProductDoneTopLevelBacklogItemsAsJson() {
-        setJsonData(backlogBusiness.getProductDoneTopLevelBacklogItemsAsJson(backlogId));
-        return Action.SUCCESS;
-    }
-
-    public String getJsonData() {
-        return jsonData;
-    }
-
-    public void setJsonData(String jsonData) {
-        this.jsonData = jsonData;
     }
     
     

@@ -90,5 +90,6 @@
 	<classpathentry exported="true" kind="lib" path="lib/spring-security-core-tiger-2.0.3.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/flexjson.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/mysql-connector-java-5.1.7-bin.jar"/>
+	<classpathentry kind="lib" path="lib/poi-3.5-beta5-20090219.jar"/>
 	<classpathentry kind="output" path="eclipse-classes"/>
 </classpath>

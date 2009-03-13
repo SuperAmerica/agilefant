@@ -93,7 +93,7 @@ $(document).ready(function() {
 
 		<c:choose>
 			<c:when test="${currentContext == 'iteration'}">
-				<display:column sortable="true" sortProperty="iterationGoal.name"
+				<display:column sortable="true" sortProperty="iterationGoal.priority"
 				title="Iteration Goal" class="iterationGoalColumn">
 				<div>${aef:html(row.iterationGoal.name)}</div>
 				</display:column>

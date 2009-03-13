@@ -1,9 +1,14 @@
 /* Main stylesheet file for Agilefant*/
 @import "jquery.treeview.css";
+
 @import "timeline-bundle.css";
+
 @import "jquery.tabs.css";
+
 @import "jquery.dialog.css";
+
 @import "jquery.wysiwyg.css";
+
 @import "userChooser.css";
 
 html {
@@ -30,10 +35,11 @@ body {
 h2,h3 {
 	font-size: 1.2em;
 }
+
 h4 {
-    color: #444;
-    margin: 0 0 0 5px;
-    font-weight: bold;	
+	color: #444;
+	margin: 0 0 0 5px;
+	font-weight: bold;
 }
 
 code {
@@ -222,20 +228,21 @@ a:hover,a:active {
 	padding: 10px 15px;
 }
 
-#subItems, div.subItems {
+#subItems,div.subItems {
 	border: 1px solid #ccc;
 	margin-top: 20px;
 	width: 785px;
 	overflow: hidden;
 }
 
-#subItemHeader, div.subItemHeader {
+#subItemHeader,div.subItemHeader {
 	padding: 0;
-	background: transparent url(../img/gradient.png) repeat-x scroll 80% 60%;
+	background: transparent url(../img/gradient.png) repeat-x scroll 80% 60%
+		;
 	border-bottom: 1px solid #ccc;
 }
 
-#subItemContent, .subItemContent {
+#subItemContent,.subItemContent {
 	padding: 0;
 	margin: 0;
 }
@@ -245,18 +252,20 @@ a:hover,a:active {
 	border-bottom: 1px solid #ccc;
 }
 
-.listTable td, #row td,#row1 td,#row2 td,#row3 td,#item td,#item1 td,#item2 td {
+.listTable td,#row td,#row1 td,#row2 td,#row3 td,#item td,#item1 td,#item2 td
+	{
 	vertical-align: top;
 	text-align: left;
 }
 
-.listTable th, #row th,#row1 th,#row2 th,#row3 th,#item th,#item1 th,#item2 th {
+.listTable th,#row th,#row1 th,#row2 th,#row3 th,#item th,#item1 th,#item2 th
+	{
 	text-align: left;
 	background: #ddd;
 }
 
-table#item, table#row {
-    margin: 5px;
+table#item,table#row {
+	margin: 5px;
 }
 
 .even {
@@ -317,10 +326,7 @@ span.right {
 	text-align: right;
 }
 
-
-
 /* Create new menu */
-
 #createNewMenuLink {
 	position: absolute;
 	top: 95px;
@@ -328,7 +334,7 @@ span.right {
 }
 
 #createNewMenuLink img {
-    vertical-align: bottom;	
+	vertical-align: bottom;
 }
 
 #createNewMenu {
@@ -345,32 +351,30 @@ span.right {
 }
 
 #createNewMenu li:hover {
-    background-color: #ccc;
+	background-color: #ccc;
 }
 
-#createNewMenu a, #createNewMenu span.inactive {
+#createNewMenu a,#createNewMenu span.inactive {
 	display: block;
-    padding-left: 8px;
-    width: 100%;
-    height: 100%;
+	padding-left: 8px;
+	width: 100%;
+	height: 100%;
 }
 
-#createNewMenu li.separator, #createNewMenu li.separator:hover {
+#createNewMenu li.separator,#createNewMenu li.separator:hover {
 	display: block;
 	background: #aaa;
 	width: 100%;
 	height: 1px;
 	padding: 0;
 }
-	
 
 /* Tabs menu */
-
 #menu {
-    border-bottom: 1px solid #ccc;
-    margin: 0;
-    padding: 0 0 0 200px;
-    height: 18px;
+	border-bottom: 1px solid #ccc;
+	margin: 0;
+	padding: 0 0 0 200px;
+	height: 18px;
 }
 
 #menu ul {
@@ -386,40 +390,39 @@ span.right {
 	margin: 0 0 0 8px;
 }
 
-#menu li a:link, #menu a:visited {
-    color: #444;
-    background: transparent url('../img/main_tabs.png') no-repeat;
-    background-position: 100% -100px;
-    padding: 4px 7px 2px 0;
+#menu li a:link,#menu a:visited {
+	color: #444;
+	background: transparent url('../img/main_tabs.png') no-repeat;
+	background-position: 100% -100px;
+	padding: 4px 7px 2px 0;
 }
 
 #menu li img {
-    vertical-align: bottom;	
+	vertical-align: bottom;
 }
 
 #menu li.selected a {
-    background-position: 100% -150px;
-    padding-bottom: 3px;
+	background-position: 100% -150px;
+	padding-bottom: 3px;
 }
 
 #menu a:hover {
-    color: #e50;	
+	color: #e50;
 }
 
 #menu a span {
-    margin: 0;
-    padding: 4px 0 2px 7px;
-    background: transparent url('../img/main_tabs.png') no-repeat;
-    background-position: 0 0;	
+	margin: 0;
+	padding: 4px 0 2px 7px;
+	background: transparent url('../img/main_tabs.png') no-repeat;
+	background-position: 0 0;
 }
 
 #menu li.selected a span {
 	padding-bottom: 3px;
-    background-position: 0 -50px;	
+	background-position: 0 -50px;
 }
 
 /* Tabs style ends */
-
 .formTable textarea {
 	overflow: auto;
 	overflow-y: scroll;
@@ -434,11 +437,11 @@ span.right {
 }
 
 .formTable a.assignees span {
-   color: #ff0000;
+	color: #ff0000;
 }
 
 .formTable a.assignees:hover span {
-   color: #e50;
+	color: #e50;
 }
 
 .progressTable select {
@@ -472,6 +475,7 @@ span.right {
 	overflow: visible;
 	height: 1px;
 }
+
 .iterationGoalDescColumn:hover div {
 	max-height: 2.5em;
 }
@@ -504,9 +508,9 @@ span.right {
 }
 
 .editColumn {
-    width: 200px;
-    white-space: nowrap;
-    overflow: visible;	
+	width: 200px;
+	white-space: nowrap;
+	overflow: visible;
 }
 
 .editColumn div {
@@ -531,15 +535,18 @@ span.right {
 .responsibleColumn {
 	overflow: hidden;
 }
+
 .responsibleColumn div {
 	overflow: hidden;
 	width: 90px;
 	max-height: 2.5em;
 }
+
 .responsibleColumn:hover {
 	overflow: visible;
 	height: 1px;
 }
+
 .responsibleColumn:hover div {
 	max-height: none;
 }
@@ -566,9 +573,6 @@ span.right {
 	vertical-align: top;
 	text-align: right;
 }
-
-
-
 
 /*
 .shortNameColumn{
@@ -610,7 +614,6 @@ span.right {
 	margin: 0 0 5px 0;
 	list-style-type: none;
 }*/
-
 #hierarchyList .path,#hierarchyList .archivePath .path {
 	color: #e50;
 }
@@ -637,7 +640,7 @@ td.deleteButton {
 }
 
 #treemenu .past a {
-    color: #444;	
+	color: #444;
 }
 
 #hierarchyList span.archivePath {
@@ -650,43 +653,54 @@ td.deleteButton {
 
 #deleteButtonRight {
 	text-align: right !important;
-	
 }
 
 .backlogDropdownColumn select {
 	width: 700px;
 }
 
-
 /* Multiuser selection styles */
-.userselect ul, #multiplebli_userselect ul, #userselect ul, .userSelector ul, #multiplebli_themeselect ul {
+.userselect ul,#multiplebli_userselect ul,#userselect ul,.userSelector ul,#multiplebli_themeselect ul
+	{
 	list-style-type: none;
 	margin-top: 3px;
 	margin-bottom: 3px;
 	padding-left: 0px;
 }
-.userselect .users_0, #multiplebli_userselect .users_0, #userselect .users_0 {
+
+.userselect .users_0,#multiplebli_userselect .users_0,#userselect .users_0
+	{
+	
 }
-.userselect .groups, #multiplebli_userselect .groups, #userselect .groups {
+
+.userselect .groups,#multiplebli_userselect .groups,#userselect .groups
+	{
+	
 }
-.userselect .groups li, #multiplebli_userselect .groups li, #userselect .groups li, .userSelector .groups li {
+
+.userselect .groups li,#multiplebli_userselect .groups li,#userselect .groups li,.userSelector .groups li
+	{
 	cursor: pointer;
 	text-decoration: underline;
 	margin-top: 2px;
 	color: #0000FF;
 }
 
-.userselect .groups li:hover, #multiplebli_userselect .groups li:hover, #userselect .groups li:hover, .userSelector .groups li:hover {
+.userselect .groups li:hover,#multiplebli_userselect .groups li:hover,#userselect .groups li:hover,.userSelector .groups li:hover
+	{
 	cursor: pointer;
 	text-decoration: underline;
 	margin-top: 2px;
 	color: #EE5500;
 }
 
-.userselect div.left, #multiplebli_userselect div.left, #userselect div.left, .userSelector div.left{
+.userselect div.left,#multiplebli_userselect div.left,#userselect div.left,.userSelector div.left
+	{
 	float: left;
 }
-.userselect div.right, #multiplebli_userselect div.right, #userselect div.right, .userSelector div.right {
+
+.userselect div.right,#multiplebli_userselect div.right,#userselect div.right,.userSelector div.right
+	{
 	float: left;
 	margin-left: 15px;
 }
@@ -694,21 +708,24 @@ td.deleteButton {
 .projectUsers {
 	float: left;
 }
+
 .projectTeams {
 	float: left;
 }
+
 .projectTeams label,.teamselect label {
 	font-weight: bold;
 	position: relative;
 	top: 3px;
 }
+
 .projectTeams li,.teamselect ul {
 	display: table;
 	list-style-type: none;
 	padding-left: 0px;
 }
-.projectTeams li,.teamselect li {
-	/*display: table-row, table-cell;*/
+
+.projectTeams li,.teamselect li { /*display: table-row, table-cell;*/
 	padding: 2px;
 	cursor: pointer;
 	text-decoration: underline;
@@ -726,6 +743,7 @@ td.deleteButton {
 a.unassigned {
 	color: #ff0000;
 }
+
 a.unassigned:hover {
 	color: #e50;
 }
@@ -737,7 +755,6 @@ a.unassigned:hover {
 .overhead {
 	white-space: nowrap;
 }
-
 
 h2 .timeframe {
 	font-variant: small-caps;
@@ -752,43 +769,42 @@ h2 .editLink {
 	border: none;
 }
 
-#subItemHeader table, .subItemHeader table {
+#subItemHeader table,.subItemHeader table {
 	width: 100%;
 	font-family: "Arial", sans-serif;
 	margin: 0;
 	padding: 0 0 0 3px;
 }
 
-#subItemHeader table td, .subItemHeader table td  {
-	/*color: #ffffff;*/
+#subItemHeader table td,.subItemHeader table td { /*color: #ffffff;*/
 	font-weight: bold;
 }
 
-#subItemHeader table .header, .subItemHeader table .header {
+#subItemHeader table .header,.subItemHeader table .header {
 	height: 22px;
 	padding-left: 3px;
 }
 
 .header a {
-	font-weight: normal;	
+	font-weight: normal;
 }
 
 td.icons {
 	width: 2px;
 	white-space: nowrap;
-    padding: 2px 5px 0 5px;
-    text-align: right;
-    border-left: 1px solid #666;
-    background-color: #eef;
+	padding: 2px 5px 0 5px;
+	text-align: right;
+	border-left: 1px solid #666;
+	background-color: #eef;
 }
 
 td.icons img {
-    cursor: pointer;	
+	cursor: pointer;
 }
 
 td.icons a img {
-    margin: 0;
-    padding: 0;
+	margin: 0;
+	padding: 0;
 }
 
 .descriptionDiv {
@@ -822,7 +838,7 @@ td.icons a img {
 
 .infoTable .info2 {
 	width: 90px;
-	padding: 2px;	
+	padding: 2px;
 }
 
 .infoTable .info3 {
@@ -845,22 +861,21 @@ td.icons a img {
 }
 
 .infoTable .smallBurndown img {
-    display: inline;
+	display: inline;
 }
 
 .infoTable .loadMeterDiv {
-    text-align: center;
-    width: 100%;
-    margin: 0;
-    padding: 0;
-    height: 130px;
-    overflow: hidden;
+	text-align: center;
+	width: 100%;
+	margin: 0;
+	padding: 0;
+	height: 130px;
+	overflow: hidden;
 }
 
 .infoTable .loadMeterDiv img {
-    display: inline;
+	display: inline;
 }
-
 
 .infoTable .description {
 	padding: 6px 15px;
@@ -880,26 +895,22 @@ option.productOption {
 }
 
 option.projectOption {
-    padding-left: 15px;
+	padding-left: 15px;
 }
 
 option.iterationOption {
-    padding-left: 25px;
+	padding-left: 25px;
 }
 
 div.legend {
-	margin-bottom:2px;
-	margin-left:10px;
-	margin-right:0pt;
-	margin-top:0pt;
-}
-
-.actionColumn {
-    white-space: nowrap;
+	margin-bottom: 2px;
+	margin-left: 10px;
+	margin-right: 0pt;
+	margin-top: 0pt;
 }
 
 .iterationGoalNameColumn {
-    width: 200px;
+	width: 200px;
 }
 
 div.calendar {
@@ -907,18 +918,18 @@ div.calendar {
 }
 
 div.disclaimer {
-    width: 300px;
-    font-size: 80%;
-    padding: 5px;
-    margin: 10px;
-    border: 1px solid #ccc;
-    color: #f00;
+	width: 300px;
+	font-size: 80%;
+	padding: 5px;
+	margin: 10px;
+	border: 1px solid #ccc;
+	color: #f00;
 }
 
 /* Styles for timesheet */
 table.reportTable {
-	width:100%;
-	padding:3px;
+	width: 100%;
+	padding: 3px;
 }
 
 table.reportTable tr {
@@ -926,121 +937,117 @@ table.reportTable tr {
 }
 
 table.reportTable tr th {
-	text-align:left;
-	background-color:#b2b2b2;
-	padding:4px;
+	text-align: left;
+	background-color: #b2b2b2;
+	padding: 4px;
 }
 
 table.reportTable tr th.product {
-	text-align:left;
-	background-color:#cccccc;
-	padding:4px;
-	font-weight:normal;
-	border-top:1px solid #000000;
+	text-align: left;
+	background-color: #cccccc;
+	padding: 4px;
+	font-weight: normal;
+	border-top: 1px solid #000000;
 }
 
 table.reportTable tr th.project {
-	text-align:left;
-	background-color:#dddddd;
-	padding:4px;
-	font-weight:normal;
+	text-align: left;
+	background-color: #dddddd;
+	padding: 4px;
+	font-weight: normal;
 }
 
 table.reportTable tr th.iteration {
-	text-align:left;
-	background-color:#e6e6e6;
-	padding:4px;
-	font-weight:normal;
+	text-align: left;
+	background-color: #e6e6e6;
+	padding: 4px;
+	font-weight: normal;
 }
 
 table.reportTable tr th.backlogitem {
-	text-align:left;
-	background-color:#f5f5f5;
-	padding:4px;
-	font-weight:normal;
+	text-align: left;
+	background-color: #f5f5f5;
+	padding: 4px;
+	font-weight: normal;
 }
 
 table.reportTable tr.backlogitem {
-	display:none;
+	display: none;
 }
 
 table.reportTable tr.special th {
-	background-color:#e6eee6 !important;
-	background-color:#e4ecff !important;
+	background-color: #e6eee6 !important;
+	background-color: #e4ecff !important;
 }
 
 table.reportTable tr.special th.first {
-	background-image:url(../img/special-hour-entry-report.gif);
-	background-repeat:no-repeat;
-	background-position:16px 9px;
-	padding-left:31px;
+	background-image: url(../img/special-hour-entry-report.gif);
+	background-repeat: no-repeat;
+	background-position: 16px 9px;
+	padding-left: 31px;
 }
 
 table.reportTable tr.special.backlogitemshead th.first {
-	font-weight:normal;
+	font-weight: normal;
 }
 
 table.reportTable tr.special.hourentryhead th {
-	border-top:0px solid #000000;
+	border-top: 0px solid #000000;
 }
 
 tr.leftborder .first {
-	border-left:4px solid #b2d8b2; /* #dddda8 */
-	border-left:4px solid #b2caff;
+	border-left: 4px solid #b2d8b2; /* #dddda8 */
+	border-left: 4px solid #b2caff;
 }
 
 tr.leftborder {
-	display:none;
+	display: none;
 }
 
-table.reportTable tr th.backlogitem a,
-table.reportTable tr th.iteration a,
-table.reportTable tr th.project a,
-table.reportTable tr th.product a {
-	text-decoration:none;
-	color:blue;
-	cursor:pointer;
+table.reportTable tr th.backlogitem a,table.reportTable tr th.iteration a,table.reportTable tr th.project a,table.reportTable tr th.product a
+	{
+	text-decoration: none;
+	color: blue;
+	cursor: pointer;
 }
 
-table.reportTable tr th.backlogitem a:hover,
-table.reportTable tr th.iteration a:hover,
-table.reportTable tr th.project a:hover,
-table.reportTable tr th.product a:hover {
-	text-decoration:underline;
-	color:blue;
+table.reportTable tr th.backlogitem a:hover,table.reportTable tr th.iteration a:hover,table.reportTable tr th.project a:hover,table.reportTable tr th.product a:hover
+	{
+	text-decoration: underline;
+	color: blue;
 }
 
 table.reportTable tr th.backlogitem.second {
-	font-weight:bold;
+	font-weight: bold;
 }
 
 table.reportTable tr th.backlogitem.third {
-	font-weight:bold;
+	font-weight: bold;
 }
 
 table.reportTable tr.hourentries {
-	display:none;
+	display: none;
 }
 
 table.reportTable tr td.hourentry {
-	text-align:left;
-	background-color:#ffffff;
-	padding:4px;
-	font-weight:normal;
+	text-align: left;
+	background-color: #ffffff;
+	padding: 4px;
+	font-weight: normal;
 }
 
 table.reportTable tr td.hourentry.first {
-	padding-left:30px;
-	overflow:hidden;
-	max-width:395px;
+	padding-left: 30px;
+	overflow: hidden;
+	max-width: 395px;
 }
 
 table.reportTable tr td.hourentry.second {
-	white-space:nowrap;
+	white-space: nowrap;
 }
 
 table.reportTable tr.total th.total {
-	border-top:1px solid #000000;
+	border-top: 1px solid #000000;
 }
 
 .businessThemeTable select {
@@ -1048,22 +1055,21 @@ table.reportTable tr.total th.total {
 }
 
 .businessThemeTable .businessThemeNameColumn {
-    width: 200px;	
+	width: 200px;
 }
 
 /* End of timesheet styles */
-
 span.businessTheme {
 	background-color: #ffd;
 	color: #a74;
 	font-size: 80%;
 	float: left;
-	padding: 1px 1px 1px 3px;	
+	padding: 1px 1px 1px 3px;
 }
 
 .globalThemeColors {
-    background-color: #cff !important;
-    color: #06c !important;	
+	background-color: #cff !important;
+	color: #06c !important;
 }
 
 span.businessTheme a {
@@ -1072,23 +1078,24 @@ span.businessTheme a {
 }
 
 ul.themeList {
-	list-style-type: none;	
+	list-style-type: none;
 	padding: 0px;
 	margin: 0px;
 }
+
 ul.themeList li {
 	display: inline;
 	padding-right: 8px;
 	color: #c96;
 	white-space: nowrap;
 }
+
 ul.themeList li a {
 	color: #c96;
 	text-decoration: none;
 }
 
 /* Edit window main */
-
 #editMenu {
 	padding: 5px;
 	margin: 0 0 0 0px;
@@ -1109,25 +1116,25 @@ ul.themeList li a {
 	margin: 0 0 0 8px;
 }
 
-#editMenu li a:link, #editMenu a:visited {
-    background: #E8EBF0;
-    color: #444;
-    padding: 3px 5px 2px 3px;
-    margin: 0 0 2px 0;
-    border: 1px solid #ccc;
+#editMenu li a:link,#editMenu a:visited {
+	background: #E8EBF0;
+	color: #444;
+	padding: 3px 5px 2px 3px;
+	margin: 0 0 2px 0;
+	border: 1px solid #ccc;
 }
 
 #editMenu li img {
-    vertical-align: bottom;	
+	vertical-align: bottom;
 }
 
 #editMenu li.selected a {
-    background-color: #fff;
-    border-bottom: 1px solid #fff;
+	background-color: #fff;
+	border-bottom: 1px solid #fff;
 }
 
 #editMenu a:hover {
-    color: #e50;	
+	color: #e50;
 }
 
 #editMain {
@@ -1138,7 +1145,7 @@ ul.themeList li a {
 }
 
 .listTable {
-    width: 99%;
+	width: 99%;
 }
 
 .listTable textfield {
@@ -1151,8 +1158,8 @@ ul.themeList li a {
 
 .themeEditNameColumn {
 	width: 200px;
-    white-space: nowrap;
-    overflow: visible;
+	white-space: nowrap;
+	overflow: visible;
 }
 
 .themeDescriptionColumn {
@@ -1160,23 +1167,23 @@ ul.themeList li a {
 }
 
 label.error {
-    color: #f00;	
+	color: #f00;
 }
 
 .closeDialogButton {
-    margin-right: 6px;	
+	margin-right: 6px;
 }
 
 .statusColumn {
 	width: 15px;
 	white-space: nowrap;
-    overflow: visible;
+	overflow: visible;
 }
 
 select.statusSelect option {
-	background-repeat:no-repeat;
-	background-position:bottom left;
-	padding-left:30px;	
+	background-repeat: no-repeat;
+	background-position: bottom left;
+	padding-left: 30px;
 }
 
 #loadingDiv {
@@ -1191,7 +1198,7 @@ select.statusSelect option {
 }
 
 .loadTableWeekColumn {
-    min-width: 70px;	
+	min-width: 70px;
 }
 
 .loadTableBacklogColumn {
@@ -1211,23 +1218,55 @@ select.statusSelect option {
 }
 
 .iconsbefore {
-    width: 2px;	
+	width: 2px;
 }
 
 .iconsbefore .expand {
-    background-image: url('../img/expand.png');
-    background-position: 0% 0%;
-    background-repeat: no-repeat;
-    cursor: pointer;
-    width: 16px;
-    height: 16px;
+	background-image: url('../img/expand.png');
+	background-position: 0% 0%;
+	background-repeat: no-repeat;
+	cursor: pointer;
+	width: 16px;
+	height: 16px;
+}
+
+.iconsbefore .expand:hover {
+	background-position: 100% 0%;
 }
 
 .iconsbefore .collapse {
-    background-image: url('../img/expand.png');
-    background-position: 100% 0%;
-    background-repeat: no-repeat;
-    cursor: pointer;
+	background-image: url('../img/expand.png');
+	background-position: 0% 100%;
+	background-repeat: no-repeat;
+	cursor: pointer;
+	width: 16px;
+	height: 16px;
+}
+
+.iconsbefore .collapse:hover {
+	background-position: 100% 100%;
+}
+
+td.icons a {
+	display: block;
     width: 16px;
     height: 16px;
+    background-position: 0%;
+    margin: 0;
+    padding: 0;
 }
+
+td.icons a:hover {
+    background-position: 100%;
+}
+
+td.icons a.openCreateDialog {
+	background-image: url('../img/create_new.png');
+}
+
+td.icons a.editLink {
+	background-image: url('../img/edit_new.png');
+}
+
+
+

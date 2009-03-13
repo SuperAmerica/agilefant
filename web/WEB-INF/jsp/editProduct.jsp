@@ -66,8 +66,8 @@ var productId = ${product.id};
                     </td>
 					<td class="header">Details</td>
 					<td class="icons">
-                        <img src="static/img/edit.png" onclick="editProduct();"
-                          height="18" width="18" alt="Edit" title="Edit product details"/>
+					   <a href="#" onclick="editProduct(); return false;"
+					       class="editLink" title="Edit product details" />
                     </td>
 				</tr>
 			</table>
@@ -189,8 +189,11 @@ var productId = ${product.id};
 	                    <ww:url id="createLink" action="ajaxCreateProject" includeParams="none">
 						  <ww:param name="productId" value="${product.id}" />
 						</ww:url>
-						<ww:a href="%{createLink}" title="Create a new project" cssClass="openCreateDialog openProjectDialog" onclick="return false;">
-						<img src="static/img/new.png" width="16" height="16" alt="Create new"/></ww:a>
+						<ww:a href="%{createLink}"
+						  title="Create a new project"
+						  cssClass="openCreateDialog openProjectDialog" onclick="return false;">
+						  &nbsp;
+						</ww:a>
 					</td>
 					</tr>
 				</table>
@@ -282,7 +285,8 @@ var productId = ${product.id};
 							     <ww:param name="productId" value="${productId}"></ww:param>
 							 </ww:url>
 							 <ww:a href="%{createThemeLink}" cssClass="openCreateDialog openThemeDialog" onclick="return false;"
-							     title="Create a new theme"><img src="static/img/new.png" width="16" height="16" alt="Create new"/></ww:a>
+							     title="Create a new theme">
+							     </ww:a>
 							 </td>
 						</tr>
 					</table>
@@ -388,7 +392,6 @@ var productId = ${product.id};
 				</ww:url> <ww:a cssClass="openCreateDialog openBacklogItemDialog"
 					href="%{createBacklogItemLink}" onclick="return false;"
 					title="Create a new backlog item">
-					<img src="static/img/new.png" width="16" height="16" alt="Create new"/>
 					</ww:a>
 					</td>
 					</tr>

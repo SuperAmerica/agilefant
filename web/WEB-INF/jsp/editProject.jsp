@@ -116,9 +116,8 @@ $(document).ready(function() {
 												        height="18" width="18" alt="Log effort" />
 												    </ww:a>
                                                   </c:if>
-						                          <img src="static/img/edit.png" title="Edit project details"
-						                              height="18" width="18" alt="Edit"
-						                              onclick="editProject();" />
+                                                  <a href="#" onclick="editProject(); return false;"
+                                                    class="editLink" title="Edit project details" />
 						                        </td>
 											</tr>
 										</table>
@@ -550,8 +549,8 @@ $(document).ready(function() {
 						  						<ww:param name="projectId" value="${project.id}" />
 					   						</ww:url>
 					   						<ww:a
-												href="%{createLink}" cssClass="openCreateDialog openIterationDialog" onclick="return false;">
-												<img src="static/img/new.png" width="16" height="16" alt="Create new"/>
+												href="%{createLink}" cssClass="openCreateDialog openIterationDialog"
+												onclick="return false;" title="Create a new iteration">
                                             </ww:a>
 					   					</td>
 									</tr>
@@ -625,7 +624,6 @@ $(document).ready(function() {
 											<ww:a cssClass="openCreateDialog openBacklogItemDialog"
 												href="%{createBacklogItemLink}" onclick="return false;"
 												title="Create a new backlog item">
-                                                <img src="static/img/new.png" width="16" height="16" alt="Create new"/>
 											</ww:a>
 										</td>
 									</tr>

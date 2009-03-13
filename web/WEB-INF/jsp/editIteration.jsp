@@ -49,8 +49,8 @@ $(document).ready(function() {
                         </td>
 						<td class="header">Details</td>
 						<td class="icons">
-						  <img src="static/img/edit.png" title="Edit iteration details"
-						      height="18" width="18" alt="Edit" onclick="editIteration();" />
+						  <a href="#" title="Edit iteration details" onclick="editIteration(); return none;"
+						      class="editLink" />
 						</td>
 					</tr>
 				</table>
@@ -394,7 +394,6 @@ $(document).ready( function() {
                         </ww:url>
                         <ww:a cssClass="openCreateDialog openIterationGoalDialog" onclick="return false;"
                             href="%{createIterationGoalLink}" title="Create a new iteration goal">
-                                <img src="static/img/new.png" width="16" height="16" alt="Create new"/>
                             </ww:a>
 						</td>
 					</tr>
@@ -514,7 +513,6 @@ $(document).ready( function() {
 							<ww:param name="backlogId" value="${iteration.id}" />
 						</ww:url> <ww:a cssClass="openCreateDialog openBacklogItemDialog" onclick="return false;"
 							href="%{createBacklogItemLink}" title="Create a new backlog item">
-                        <img src="static/img/new.png" width="16" height="16" alt="Create new"/>
                         </ww:a>
 						</td>
 					</tr>

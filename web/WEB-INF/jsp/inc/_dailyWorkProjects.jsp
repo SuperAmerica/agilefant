@@ -30,7 +30,7 @@ $(document).ready(function() {
 		<c:set var="totalSum" value="${null}" />
 	</c:if>
 
-	<div id="subItemHeader">
+	<div class="subItemHeader">
 	<table cellspacing="0" cellpadding="0">
         <tr>
         <td class="header">
@@ -57,24 +57,29 @@ $(document).ready(function() {
 		</c:choose>
 		</td>
         <td class="icons">
+          <table cellpadding="0" cellspacing="0">
+          <tr>
+          <c:if test="${hourReport}">
+          <td>
+            <ww:url id="createLink" action="ajaxCreateHourEntry" includeParams="none">
+                <ww:param name="backlogId" value="${pro.id}" />
+            </ww:url>
+            <ww:a cssClass="openCreateDialog openUserDialog logEffortLink" onclick="return false;" title="Log effort to ${pro.name}" href="%{createLink}">
+            </ww:a>
+            </td>
+          </c:if>
+          <td>
           <ww:url id="createBLILink" action="ajaxCreateBacklogItem" includeParams="none">
             <ww:param name="backlogId" value="${pro.id}" />
           </ww:url>
           <ww:a cssClass="openCreateDialog openBacklogItemDialog"
                 onclick="return false;" title="Create a new backlog item"
                 href="%{createBLILink}">
-            <img src="static/img/new.png"
-                height="16" width="16" alt="Create a new backlog item" />
           </ww:a>
-          <c:if test="${hourReport}">
-            <ww:url id="createLink" action="ajaxCreateHourEntry" includeParams="none">
-                <ww:param name="backlogId" value="${pro.id}" />
-            </ww:url>
-            <ww:a cssClass="openCreateDialog openUserDialog" onclick="return false;" title="Log effort to ${pro.name}" href="%{createLink}">
-            <img src="static/img/timesheets.png"
-                  height="16" width="16" alt="Log effort" />
-            </ww:a>
-          </c:if>
+          </td>
+          
+          </tr>
+          </table>
           </td>
 		</tr>
 		</table>

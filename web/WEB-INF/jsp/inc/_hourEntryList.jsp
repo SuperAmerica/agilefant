@@ -35,13 +35,18 @@ $(document).ready(function() {
      	Logged effort
      	</td>
      	<td class="icons">
+     	<table cellpadding="0" cellspacing="0">
+     	<tr>
+     	<td>
         <ww:url id="createLink" action="ajaxCreateHourEntry" includeParams="none">
 		<ww:param name="backlogId" value="${backlog.id}" />
 		</ww:url>
-		<ww:a cssClass="openCreateDialog openHourEntryDialog" href="%{createLink}"
+		<ww:a cssClass="openCreateDialog openHourEntryDialog logEffortLink" href="%{createLink}"
 		  title="Log effort" onclick="return false;">
-		  <img src="static/img/timesheets.png" height="16" width="16" alt="Log effort" />
 		</ww:a>
+		</td>
+		</tr>
+		</table>
 		</td>
 		</tr>
 		</table>

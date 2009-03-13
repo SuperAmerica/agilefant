@@ -30,13 +30,19 @@ $(document).ready(function() {
                              Business themes
                              </td>
                              <td class="icons">
+                             <table cellpadding="0" cellspacing="0">
+		                    <tr>
+		                    <td>
                              <ww:url id="createThemeLink" action="ajaxCreateBusinessTheme" includeParams="none">
                                  <ww:param name="productId" value="${productId}"></ww:param>
                              </ww:url>
                              <ww:a href="%{createThemeLink}" cssClass="openCreateDialog openThemeDialog" onclick="return false;"
                                  title="Create a new theme">
-                                 <img src="static/img/new.png" width="16" height="16" alt="Create new"/>
                                  </ww:a>
+                             
+                             </td>
+                            </tr>
+                             </table>
                              </td>
                         </tr>
                     </table>
@@ -45,7 +51,7 @@ $(document).ready(function() {
                 
                 
                 <c:if test="${!empty activeBusinessThemes}">
-                <div id="subItemContent">
+                <div class="subItemContent">
                 <display:table class="themeEditTable" name="activeBusinessThemes"
                     id="row" defaultsort="1" requestURI="editProduct.action">
                     <display:column title="Name" class="themeEditNameColumn" sortable="true" sortProperty="name">
@@ -77,8 +83,8 @@ $(document).ready(function() {
 <table> 
     <tr>
         <td>
-            <div id="subItems" id="subItems_editProductNonActiveThemesList">
-                <div id="subItemHeader">
+            <div class="subItems" id="subItems_editProductNonActiveThemesList">
+                <div class="subItemHeader">
                     <table cellspacing="0" cellpadding="0">
                         <tr>
                              <td class="header">
@@ -88,7 +94,7 @@ $(document).ready(function() {
                     </table>
                 </div>
                                 
-                <div id="subItemContent">
+                <div class="subItemContent">
                 <display:table class="themeEditTable" name="nonActiveBusinessThemes"
                     id="row" defaultsort="1" requestURI="editProduct.action">
                     <display:column title="Name" class="themeEditNameColumn" sortable="true" sortProperty="name">

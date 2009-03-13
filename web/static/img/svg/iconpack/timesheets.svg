@@ -39,13 +39,13 @@
      objecttolerance="10"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.7"
-     inkscape:cx="172.63729"
-     inkscape:cy="-43.311924"
+     inkscape:zoom="1.4"
+     inkscape:cx="86.785714"
+     inkscape:cy="79.352077"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
-     inkscape:window-width="1008"
+     inkscape:window-width="1459"
      inkscape:window-height="1000"
      inkscape:window-x="219"
      inkscape:window-y="41" />
@@ -66,7 +66,10 @@
      id="layer1"
      transform="translate(-1.1793253e-5,-892.36227)">
     <g
-       id="g3203">
+       id="g3174"
+       inkscape:export-xdpi="9"
+       inkscape:export-ydpi="9"
+       inkscape:export-filename="C:\Documents and Settings\rjokelai\Desktop\icon pack\png\timesheets.png">
       <rect
          ry="26.736244"
          y="892.3623"
@@ -74,24 +77,27 @@
          height="160"
          width="160"
          id="rect2383"
-         style="fill:#666666;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:20.46841621000000100;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
-      <path
-         transform="matrix(0.875,0,0,0.875,11.250014,894.86231)"
-         d="M 135.71428,88.571426 A 57.142857,57.142857 0 1 1 21.42857,88.571426 A 57.142857,57.142857 0 1 1 135.71428,88.571426 z"
-         sodipodi:ry="57.142857"
-         sodipodi:rx="57.142857"
-         sodipodi:cy="88.571426"
-         sodipodi:cx="78.571426"
-         id="path2408"
-         style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-         sodipodi:type="arc" />
-      <path
-         sodipodi:nodetypes="ccc"
-         id="path2412"
-         d="M 78.405074,928.80308 L 78.047931,974.67158 L 108.73781,1007.7073"
-         style="fill:none;fill-rule:evenodd;stroke:#666666;stroke-width:10;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+         style="fill:#666666;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:20.46841621;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <g
+         id="g2392">
+        <path
+           sodipodi:type="arc"
+           style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           id="path2408"
+           sodipodi:cx="78.571426"
+           sodipodi:cy="88.571426"
+           sodipodi:rx="57.142857"
+           sodipodi:ry="57.142857"
+           d="M 135.71428,88.571426 A 57.142857,57.142857 0 1 1 21.42857,88.571426 A 57.142857,57.142857 0 1 1 135.71428,88.571426 z"
+           transform="matrix(0.875,0,0,0.875,11.250014,894.86231)" />
+        <path
+           style="fill:none;fill-rule:evenodd;stroke:#666666;stroke-width:10;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           d="M 78.405074,928.80308 L 78.047931,974.67158 L 108.73781,989.13587"
+           id="path2412"
+           sodipodi:nodetypes="ccc" />
+      </g>
       <rect
-         style="fill:#9200ff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:20.46841621000000100;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         style="fill:#9200ff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:20.46841621;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
          id="rect3191"
          width="160"
          height="160"
@@ -101,7 +107,7 @@
       <path
          sodipodi:type="arc"
          style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-         id="path3193"
+         id="path2398"
          sodipodi:cx="78.571426"
          sodipodi:cy="88.571426"
          sodipodi:rx="57.142857"
@@ -110,8 +116,8 @@
          transform="matrix(0.875,0,0,0.875,171.25001,894.86231)" />
       <path
          style="fill:none;fill-rule:evenodd;stroke:#9200ff;stroke-width:10;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-         d="M 238.40507,928.80308 L 238.04793,974.67158 L 268.73781,1007.7073"
-         id="path3195"
+         d="M 238.40507,928.80308 L 238.04793,974.67158 L 268.73781,989.13587"
+         id="path2400"
          sodipodi:nodetypes="ccc" />
     </g>
   </g>

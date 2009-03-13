@@ -20,10 +20,15 @@ $(document).ready(function() {
 			<tr>
 				<td class="header">Enabled users</td>
 				<td class="icons">
+				    <table cellpadding="0" cellspacing="0">
+				    <tr>
+				    <td>
 					<a href="ajaxCreateUser.action" class="openCreateDialog openUserDialog"
 					title="Create a new user" onclick="return false;">
-					   <img src="static/img/new.png" width="16" height="16" alt="Create new"/>
 					</a>
+					</td>
+					</tr>
+					</table>
 				</td>
 			</tr>
 		</table>

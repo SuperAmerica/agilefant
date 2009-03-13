@@ -792,7 +792,6 @@ h2 .editLink {
 td.icons {
 	width: 2px;
 	white-space: nowrap;
-	padding: 2px 5px 0 5px;
 	text-align: right;
 	border-left: 1px solid #666;
 	background-color: #eef;
@@ -1268,5 +1267,23 @@ td.icons a.editLink {
 	background-image: url('../img/edit_new.png');
 }
 
+td.icons a.logEffortLink {
+    background-image: url('../img/timesheets_new.png');
+}
+
+td.icons table  {
+	margin: 0 2px;
+	padding: 0 3px;
+}
+
+td.icons table tr {
+    margin: 0;
+    padding: 0;	
+}
+
+td.icons table tr td {
+    margin: 0;
+    padding: 0 1px 0 0;	
+}
 
 

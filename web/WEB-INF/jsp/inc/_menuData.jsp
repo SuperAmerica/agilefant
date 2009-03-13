@@ -63,7 +63,7 @@
         "text": '<a href="${editLink}">Business themes</a>',
         "hasChildren": false,
         
-        <c:if test="${subnavi == 'globalThemes'}">
+        <c:if test="${subnavi == 'businessThemes'}">
         "classes": "selected path",
         </c:if>
     },

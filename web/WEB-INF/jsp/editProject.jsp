@@ -99,7 +99,7 @@ $(document).ready(function() {
 												toggleDiv('editProjectForm'); toggleDiv('descriptionDiv'); showWysiwyg('projectDescription'); return false;
 											}
 										</script>
-										<table cellspacing="0" cellpadding="0">
+										  <table cellspacing="0" cellpadding="0">
 											<tr>
                                                 <td class="iconsbefore">
                                                     <div class="expand" title="Expand" onclick="toggleExpand(this, '#descriptionDiv');">
@@ -107,17 +107,25 @@ $(document).ready(function() {
 						                        </td>
 												<td class="header">Details</td>
 												<td class="icons">
-                                                    <c:if test="${hourReport}">
+												<table cellpadding="0" cellspacing="0">
+												<tr>
+												
+                                                <c:if test="${hourReport}">
+                                                <td>
                                                         <ww:url id="createLink" action="ajaxCreateHourEntry" includeParams="none">
                                                             <ww:param name="backlogId" value="${projectId}" />
                                                         </ww:url>
-                                                    <ww:a cssClass="openCreateDialog openUserDialog" onclick="return false;" title="Log effort" href="%{createLink}">
-												    <img src="static/img/timesheets.png"
-												        height="18" width="18" alt="Log effort" />
+                                                    <ww:a cssClass="openCreateDialog openUserDialog logEffortLink"
+                                                    onclick="return false;" title="Log effort" href="%{createLink}">
 												    </ww:a>
+												    </td>
                                                   </c:if>
+                                               <td>
                                                   <a href="#" onclick="editProject(); return false;"
-                                                    class="editLink" title="Edit project details" />
+                                                    class="editLink" title="Edit project details" /> 
+                                                </td>
+                                                </tr>
+                                                </table>
 						                        </td>
 											</tr>
 										</table>
@@ -545,6 +553,9 @@ $(document).ready(function() {
 									<tr>
 					   					<td class="header">Iterations</td>
 					   					<td class="icons">
+					   					<table cellpadding="0" cellspacing="0">
+					   					<tr>
+					   					<td>
 					   						<ww:url id="createLink" action="ajaxCreateIteration" includeParams="none" >
 						  						<ww:param name="projectId" value="${project.id}" />
 					   						</ww:url>
@@ -552,6 +563,9 @@ $(document).ready(function() {
 												href="%{createLink}" cssClass="openCreateDialog openIterationDialog"
 												onclick="return false;" title="Create a new iteration">
                                             </ww:a>
+                                        </td>
+                                        </tr>
+                                        </table>
 					   					</td>
 									</tr>
 								</table>
@@ -610,25 +624,32 @@ $(document).ready(function() {
 								</div>
 							</c:if>
 							</div>
-							<div class="subItems" id="subItems_editProjectBacklogItems">
-							<div class="subItemHeader">
-								<table cellpadding="0" cellspacing="0">
-                    				<tr>
-                       					<td class="header">Backlog items</td>
-                       					<td class="icons">
-                       					<ww:url
-												id="createBacklogItemLink" action="ajaxCreateBacklogItem"
-												includeParams="none">
-												<ww:param name="backlogId" value="${project.id}" />
-											</ww:url>
-											<ww:a cssClass="openCreateDialog openBacklogItemDialog"
-												href="%{createBacklogItemLink}" onclick="return false;"
-												title="Create a new backlog item">
-											</ww:a>
-										</td>
-									</tr>
-								</table>
-							</div>
+		<div class="subItems" id="subItems_editProjectBacklogItems">
+		<div class="subItemHeader">
+			<table cellspacing="0" cellpadding="0">
+                    <tr>
+                        <td class="header">
+                        Backlog items
+                        </td>
+                        <td class="icons">
+                        <table cellspacing="0" cellpadding="0">
+                            <tr>
+                            <td>
+			                        <ww:url
+			                    id="createBacklogItemLink" action="ajaxCreateBacklogItem"
+			                    includeParams="none">
+			                    <ww:param name="backlogId" value="${project.id}" />
+			                </ww:url> <ww:a cssClass="openCreateDialog openBacklogItemDialog"
+			                    href="%{createBacklogItemLink}" onclick="return false;"
+			                    title="Create a new backlog item">
+			                    </ww:a>
+			                    </td>
+			                    </tr>
+			                    </table>
+	                    </td>
+	                    </tr>
+	                </table>
+					</div>
 							<c:if test="${!empty project.backlogItems}">
 								<div class="subItemContent">
 									<%@ include	file="./inc/_backlogList.jsp"%>

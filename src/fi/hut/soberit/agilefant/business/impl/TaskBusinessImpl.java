@@ -169,9 +169,19 @@ public class TaskBusinessImpl implements TaskBusiness {
         }
         return res;
     }
+    public void delete(int taskId) {
+        Task cur = taskDAO.get(taskId);
+        if(cur != null) {
+            cur.getBacklogItem().getTasks().remove(cur);
+            taskDAO.remove(taskId);
+        }
+        
+    }
 
     public void setBacklogItemDAO(BacklogItemDAO backlogItemDAO) {
         this.backlogItemDAO = backlogItemDAO;
     }
+
+
 
 }

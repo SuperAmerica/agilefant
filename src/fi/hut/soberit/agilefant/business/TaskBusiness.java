@@ -75,4 +75,6 @@ public interface TaskBusiness {
     public abstract Task getTaskById(int taskId) throws ObjectNotFoundException;
     
     public Map<Integer,Integer> getTaskCountByState(int backlogItemId);
+    
+    public void delete(int taskId);
 }

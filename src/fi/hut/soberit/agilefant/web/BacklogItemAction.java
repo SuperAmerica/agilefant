@@ -14,6 +14,7 @@ import fi.hut.soberit.agilefant.business.BacklogItemBusiness;
 import fi.hut.soberit.agilefant.business.BusinessThemeBusiness;
 import fi.hut.soberit.agilefant.business.HistoryBusiness;
 import fi.hut.soberit.agilefant.business.HourEntryBusiness;
+import fi.hut.soberit.agilefant.business.TaskBusiness;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.Backlog;
@@ -67,6 +68,10 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
     private String bliListContext;
     
     private List<BusinessTheme> bliActiveOrSelectedThemes;
+    
+    private int fromTaskId = 0;
+    
+    private TaskBusiness taskBusiness;
 
     public String getBliListContext() {
         return bliListContext;
@@ -192,6 +197,10 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
             BacklogItem bli = backlogItemBusiness.storeBacklogItem(backlogItemId, backlogId, backlogItem, userIds.keySet(), iterationGoalId);
             if (tasksToDone) {
                 backlogItemBusiness.setTasksToDone(backlogItemId);
+            }
+            //delete the "parent" todo
+            if(fromTaskId > 0 && backlogItemId == 0) {
+                taskBusiness.delete(fromTaskId);
             }
             businessThemeBusiness.setBacklogItemThemes(themeIds, bli);
             backlogItem = bli;
@@ -390,6 +399,14 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
 
     public Set<Integer> getThemeIds() {
         return themeIds;
+    }
+
+    public void setFromTaskId(int fromTaskId) {
+        this.fromTaskId = fromTaskId;
+    }
+
+    public void setTaskBusiness(TaskBusiness taskBusiness) {
+        this.taskBusiness = taskBusiness;
     }
 
     public void setSpentEffortComment(String spentEffortComment) {

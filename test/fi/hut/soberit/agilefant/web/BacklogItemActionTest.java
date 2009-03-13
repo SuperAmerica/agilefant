@@ -7,6 +7,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
+import com.opensymphony.xwork.Action;
+
 import fi.hut.soberit.agilefant.business.BusinessThemeBusiness;
 import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
@@ -360,7 +362,38 @@ public class BacklogItemActionTest extends SpringTestCase {
         assertEquals(Calendar.getInstance().get(Calendar.MONTH),backlogItemDAO.get(action.getBacklogItemId()).getCreatedDate().get(Calendar.MONTH));
         assertEquals(Calendar.getInstance().get(Calendar.DAY_OF_MONTH),backlogItemDAO.get(action.getBacklogItemId()).getCreatedDate().get(Calendar.DAY_OF_MONTH));
         assertEquals(this.userId, backlogItemDAO.get(action.getBacklogItemId()).getCreator().getId());
-        }
+     }
+    
+    /**
+     * Test transforming todo to bli
+     */
+    
+    public void testCreateFromTodo() {
+        action.setBacklogId(backlogId);
+        action.create();
+        action.getBacklogItem().setName("Updated");
+        action.getBacklogItem().setDescription("Updated");
+        action.getBacklogItem().setPriority(Priority.CRITICAL);
+        action.getBacklogItem().setOriginalEstimate(new AFTime("1h 15min"));
+        action.getBacklogItem().setState(State.IMPLEMENTED);
+        action.getBacklogItem().setEffortLeft(new AFTime("1h 15min"));
+        SecurityUtil.setLoggedUser(userDAO.get(this.userId));
+        assertEquals(Action.SUCCESS,action.store());
+        
+        Task foo = new Task();
+        foo.setBacklogItem(action.getBacklogItem());
+        foo.setState(State.NOT_STARTED);
+        foo.setCreator(SecurityUtil.getLoggedUser());
+        foo.setRank(0);
+        foo.setPriority(Priority.BLOCKER);
+        
+        int taskId = (Integer)taskDAO.create(foo);
+        action.setBacklogItemId(0);
+        action.setFromTaskId(taskId);
+        action.store();
+        assertEquals(null, taskDAO.get(taskId));
+    }
+    
     /**
      * Test quickStoreBacklogItem used by tasklist.tag
      */

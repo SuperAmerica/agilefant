@@ -398,6 +398,10 @@ public class AFTime extends java.sql.Time {
         // just call toHMString.
         return toHMString();
     }
+    
+    public double toDouble() {
+        return (double)super.getTime()/(double)HOUR_IN_MILLIS;
+    }
 
     /**
      * Sums another AFTime to this

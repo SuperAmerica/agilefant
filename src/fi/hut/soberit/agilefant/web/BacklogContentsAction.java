@@ -66,13 +66,12 @@ public class BacklogContentsAction extends ActionSupport {
     protected SettingBusiness settingBusiness;
 
     protected void initializeContents(int backlogId) {
-        Backlog bl;
         try {
-            bl = backlogBusiness.getBacklog(backlogId);
+            backlog = backlogBusiness.getBacklog(backlogId);
         } catch (ObjectNotFoundException e) {
             return;
         }
-        initializeContents(bl);
+        initializeContents(backlog);
     }
 
     protected void initializeContents(Backlog backlog) {

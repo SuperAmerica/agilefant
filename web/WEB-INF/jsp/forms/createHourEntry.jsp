@@ -30,14 +30,6 @@ function updatePastEffort(immediate) {
     }
 }
 
-function showOldEffort() {
-    if($("#showPastEffort").is(":checked")) {
-        $("#pastEffortShower").show();
-    } else {
-        $("#pastEffortShower").hide();
-    }
-}
-
 $(document).ready(function() {
     $('#userChooserLink-createHourEntry').userChooser({
         backlogItemId: ${backlogItemId},
@@ -54,107 +46,111 @@ $(document).ready(function() {
 });
 </script>
 
-<div class="validateWrapper validateNewHourEntry">
-<ww:form action="storeHourEntry">
-    <ww:hidden name="backlogItemId" />
-    <ww:hidden name="backlogId" />
-    
-    <table class="formTable">
-    <tr>
-        <td colspan="4">
-        
-            <input type="checkbox" name="showPastEffort" id="showPastEffort" onclick="javascript:showOldEffort();" /> Show Past Effort
-            <div id="pastEffortShower" style="display: none; border: 1px solid #A0A0A0;">
-            
-                <table> 
-                <tr>
-                <td colspan="2">
-                    <table>
-                        <tr><td>Today:</td><td>${todayEffortSum}</td><td style="width: 50px;"></td>
-                        <td>This week:</td><td>${weekEffortSum}</td>
-                        
-                        </tr><tr>
-                        <td>Yesterday:</td><td>${yesterdayEffortSum}</td>
-                        <td></td>
-                        <td>This month:</td><td>${monthEffortSum}</td></tr>
-                    </table>
-                </td>
-                </tr>
-                <tr>
-                <td>
-             
-                <input type="checkbox" name="pastEffortInterval" id="pastEffortInterval" onclick="javascript:updatePastEffort();" /> Custom interval
-                <div id="pastEffortChoosers" style="display: none;">
-                    <table>
-                    <tr>
-                        <td>
-                            <aef:datepicker id="effStartDate" name="effStartDate" format="%{getText('webwork.shortDateTime.format')}" value="" />   
-                        </td>
-                        <td style="width: 30px; text-align: center;"> - </td>
-                        <td>
-                            <aef:datepicker id="effEndDate" name="effEndDate" format="%{getText('webwork.shortDateTime.format')}" value="" />
-                        </td>
-                        <td>
-                            <input type="button" value="Update" onclick="javascript:updatePastEffort(true);"/>     
-                        </td>
-                        <td></td>
-                        <td><div id="hourDisplay"></div></td>
-                    </tr>
-                    </table>
-                </div>
-            </td>
-            </tr>
-            </table>
-            </div>
-                <br />
-                <br />
-        </td>          
-    </tr>
-    <tr>
-            <td>Effort spent</td>
-            <td></td>
-            <td colspan="2">
-                    <ww:textfield name="hourEntry.timeSpent" />(e.g. "2h 30min" or "2.5")
-            </td>
-        </tr>
-        </tr>
-        <tr>
-            <td>When</td>
-            <td></td>
-            <td>
-                        <ww:date name="%{hourEntry.date}" id="date" format="%{getText('webwork.shortDateTime.format')}" />
-                        <aef:datepicker id="he_date" name="date" format="%{getText('webwork.shortDateTime.format')}" value="%{#date}" />                
-            </td>
-        </tr>
+<div class="validateWrapper validateNewHourEntry"><ww:form
+	action="storeHourEntry">
+	<ww:hidden name="backlogItemId" />
+	<ww:hidden name="backlogId" />
 
-        <tr>
-            
-            <td>By whom</td>
-            <td></td>
-            <td colspan="2">
-            <div>
-                <a id="userChooserLink-createHourEntry" href="#" class="assigneeLink">
-                    <img src="static/img/users.png"/>
-                    <span id="userListContainer-createHourEntry">
-                    <c:out value="${currentUser.initials}" />
-                    <input type="hidden" name="userIds" value="${currentUser.id}"/>
-                    </span>
-                </a>
-            </div>
-            </td>
-        </tr>
-        <tr>
-            <td>Comment</td>
-            <td></td>
-            <td colspan="2"><ww:textfield size="60" name="hourEntry.description" /></td>
-        </tr>
-        <tr>
-            <td></td>
-            <td></td>
-            <td><ww:submit value="Save" id="createButton" /></td>
-            <td class="deleteButton"><ww:reset value="Cancel"
-                cssClass="closeDialogButton" /></td>
-        </tr>
-    </table>
+	<table class="formTable">
+
+		<tr>
+			<td>Effort spent</td>
+			<td></td>
+			<td colspan="2"><ww:textfield name="hourEntry.timeSpent" />(e.g.
+			"2h 30min" or "2.5")</td>
+		</tr>
+		<tr>
+			<td>When</td>
+			<td></td>
+			<td><ww:date name="%{hourEntry.date}" id="date"
+				format="%{getText('webwork.shortDateTime.format')}" /> <aef:datepicker
+				id="he_date" name="date"
+				format="%{getText('webwork.shortDateTime.format')}" value="%{#date}" />
+			</td>
+		</tr>
+
+		<tr>
+
+			<td>By whom</td>
+			<td></td>
+			<td colspan="2">
+			<div><a id="userChooserLink-createHourEntry" href="#"
+				class="assigneeLink"> <img src="static/img/users.png" /> <span
+				id="userListContainer-createHourEntry"> <c:out
+				value="${currentUser.initials}" /> <input type="hidden"
+				name="userIds" value="${currentUser.id}" /> </span> </a></div>
+			</td>
+		</tr>
+		<tr>
+			<td>Comment</td>
+			<td></td>
+			<td colspan="2"><ww:textfield size="60"
+				name="hourEntry.description" /></td>
+		</tr>
+		<tr>
+			<td></td>
+			<td></td>
+			<td><ww:submit value="Save" id="createButton" /></td>
+			<td class="deleteButton"><ww:reset value="Cancel"
+				cssClass="closeDialogButton" /></td>
+		</tr>
+		<tr>
+			<td colspan="4">Past Effort
+			<div id="pastEffortShower" style="border: 1px solid #A0A0A0;">
+
+			<table>
+				<tr>
+					<td colspan="2">
+					<table>
+						<tr>
+							<td>Today:</td>
+							<td>${todayEffortSum}</td>
+							<td style="width: 50px;"></td>
+							<td>This week:</td>
+							<td>${weekEffortSum}</td>
+
+						</tr>
+						<tr>
+							<td>Yesterday:</td>
+							<td>${yesterdayEffortSum}</td>
+							<td></td>
+							<td>This month:</td>
+							<td>${monthEffortSum}</td>
+						</tr>
+					</table>
+					</td>
+				</tr>
+				<tr>
+					<td><input type="checkbox" name="pastEffortInterval"
+						id="pastEffortInterval" onclick="javascript:updatePastEffort();" />
+					Custom interval
+					<div id="pastEffortChoosers" style="display: none;">
+					<table>
+						<tr>
+							<td><aef:datepicker id="effStartDate" name="effStartDate"
+								format="%{getText('webwork.shortDateTime.format')}" value="" />
+							</td>
+							<td style="width: 30px; text-align: center;">-</td>
+							<td><aef:datepicker id="effEndDate" name="effEndDate"
+								format="%{getText('webwork.shortDateTime.format')}" value="" />
+							</td>
+							<td><input type="button" value="Update"
+								onclick="javascript:updatePastEffort(true);" /></td>
+							<td></td>
+							<td>
+							<div id="hourDisplay"></div>
+							</td>
+						</tr>
+					</table>
+					</div>
+					</td>
+				</tr>
+			</table>
+			</div>
+			<br />
+			<br />
+			</td>
+		</tr>
+	</table>
 </ww:form>
 </div>

@@ -107,7 +107,10 @@ public class UserEffortSumTag extends SpringTagSupport {
         startCalendar.set(Calendar.HOUR_OF_DAY, 0);
         startCalendar.set(Calendar.DAY_OF_WEEK, startCalendar.getFirstDayOfWeek());
         startDate = startCalendar.getTime();
-        
+
+        endCalendar.setTime(startDate);
+        endCalendar.add(Calendar.WEEK_OF_YEAR, 1); //next week's first day of week
+        endCalendar.add(Calendar.DAY_OF_YEAR, -1); //rewind one day
         endCalendar.set(Calendar.HOUR_OF_DAY, 23);
         endCalendar.set(Calendar.MINUTE, 59);
         endDate = endCalendar.getTime();
@@ -128,6 +131,9 @@ public class UserEffortSumTag extends SpringTagSupport {
         startCalendar.set(Calendar.DAY_OF_MONTH, 1);
         startDate = startCalendar.getTime();
         
+        endCalendar.setTime(startDate);
+        endCalendar.add(Calendar.MONTH, 1);
+        endCalendar.add(Calendar.DAY_OF_YEAR, -1);
         endCalendar.set(Calendar.HOUR_OF_DAY, 23);
         endCalendar.set(Calendar.MINUTE, 59);
         endDate = endCalendar.getTime();

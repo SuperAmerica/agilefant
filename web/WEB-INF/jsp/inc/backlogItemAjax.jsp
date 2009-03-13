@@ -472,16 +472,15 @@ $(document).ready(function() {
 	<table>
 	<tbody>
 		<tr>
+			<td>State</td>
 			<td>
-				Backlog item state
 				<ww:select name="state"
 					id="stateSelectProgress_${backlogItem.id}-${bliListContext}" value="#attr.backlogItem.state.name"
 					list="@fi.hut.soberit.agilefant.model.State@values()" listKey="name"
 					listValue="getText('backlogItem.state.' + name())" />
-			</td>
-			
-			<td>
-				Effort estimate			
+            </td>
+            <td>Effort left</td>
+            <td>
 				<ww:hidden name="backlogItemId" value="${backlogItem.id}" />
 				<ww:hidden name="contextViewName" value="${contextViewName}" />
 				<ww:hidden name="contextObjectId" value="${contextObjectId}" />
@@ -498,13 +497,18 @@ $(document).ready(function() {
 				</c:choose>	
 			</td>
 			
+		</tr>
+		<c:if test="${hourReport}">
+		<tr>
+			<td>Log effort for <c:out value="${currentUser.initials}"/></td>
 			<td>
-				<c:if test="${hourReport}">			
-				Log effort for <c:out value="${currentUser.initials}"/> 					
-				<ww:textfield size="5" name="spentEffort" id="effortSpent_${backlogItem.id}-${bliListContext}"/>  
-				</c:if>
+			 <ww:textfield size="5" name="spentEffort" id="effortSpent_${backlogItem.id}-${bliListContext}"/>
 			</td>
-	
+			<td>Comment:</td>
+            <td>
+             <ww:textfield size="30" name="spentEffortComment" id="effortSpentComment_${backlogItem.id}-${bliListContext}"/> 
+	        </td>
+	    </c:if>
 	</td>
 	</tr>
 	</tbody>

@@ -61,6 +61,8 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
     private boolean tasksToDone = false; 
     
     private String spentEffort = null;
+    
+    private String spentEffortComment = null;
         
     private String bliListContext;
     
@@ -231,7 +233,7 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
                eff = new AFTime(spentEffort,false);
                BacklogItem parent = backlogItemBusiness.getBacklogItem(backlogItemId);
                if(parent != null) {
-                   hourEntryBusiness.addEntryForCurrentUser(parent, eff);
+                   hourEntryBusiness.addEntryForCurrentUser(parent, eff, spentEffortComment);
                }
             } catch ( IllegalArgumentException e ) {
                 addActionError("Invalid format in spent effort.");
@@ -388,5 +390,9 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
 
     public Set<Integer> getThemeIds() {
         return themeIds;
+    }
+
+    public void setSpentEffortComment(String spentEffortComment) {
+        this.spentEffortComment = spentEffortComment;
     }
 }

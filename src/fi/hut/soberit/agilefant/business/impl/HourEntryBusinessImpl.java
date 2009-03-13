@@ -105,14 +105,22 @@ public class HourEntryBusinessImpl implements HourEntryBusiness {
     /**
      * {@inheritDoc}
      */
-    public void addEntryForCurrentUser(TimesheetLoggable parent, AFTime effort) {
+    public void addEntryForCurrentUser(TimesheetLoggable parent, AFTime effort, String comment) {
         User currentUser = SecurityUtil.getLoggedUser();
         HourEntry store = new HourEntry();
         Calendar cal = Calendar.getInstance();
         store.setDate(cal.getTime());
         store.setTimeSpent(effort);
         store.setUser(currentUser);
+        store.setDescription(comment);
         store(parent,store);
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void addEntryForCurrentUser(TimesheetLoggable parent, AFTime effort) {
+        this.addEntryForCurrentUser(parent, effort, null);
     }
 
     /**

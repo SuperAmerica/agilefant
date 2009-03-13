@@ -62,6 +62,15 @@ public interface HourEntryBusiness {
     public void addEntryForCurrentUser(TimesheetLoggable parent, AFTime effort);
     
     /**
+     * Add hour entry for current user
+     * 
+     * @param parent Owner for the entry.
+     * @param effort Effort to be stored in the entry.
+     * @param comment Description of the logged effort.
+     */
+    public void addEntryForCurrentUser(TimesheetLoggable parent, AFTime effort, String comment);
+    
+    /**
      * Get HourEntry or any of the hour entry sub-types by given unique id. 
      * 
      * @param id

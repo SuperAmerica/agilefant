@@ -2,6 +2,10 @@ package fi.hut.soberit.agilefant.web;
 
 
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.security.Principal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -11,6 +15,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.security.providers.UsernamePasswordAuthenticationToken;
 import org.springframework.security.providers.rememberme.RememberMeAuthenticationToken;
 
@@ -24,8 +34,15 @@ import fi.hut.soberit.agilefant.business.UserBusiness;
 import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.Backlog;
+import fi.hut.soberit.agilefant.model.BacklogHourEntry;
+import fi.hut.soberit.agilefant.model.BacklogItem;
+import fi.hut.soberit.agilefant.model.BacklogItemHourEntry;
+import fi.hut.soberit.agilefant.model.HourEntry;
+import fi.hut.soberit.agilefant.model.Iteration;
+import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.security.AgilefantUserDetails;
+import fi.hut.soberit.agilefant.util.BacklogItemTimesheetNode;
 import fi.hut.soberit.agilefant.util.BacklogTimesheetNode;
 import flexjson.JSONSerializer;
 
@@ -74,6 +91,10 @@ public class TimesheetAction extends ActionSupport implements PrincipalAware {
     private AFTime totalSpentTime;
 
     private int currentUserId = 0;
+    
+    private ByteArrayOutputStream excelData;
+        
+    private CellStyle dateStyle;
     
     public int[] getBacklogIds() {
         return backlogIds;
@@ -172,6 +193,113 @@ public class TimesheetAction extends ActionSupport implements PrincipalAware {
         return Action.SUCCESS;
     }
 
+    public String generateExcel() {
+        
+        Workbook wb = new HSSFWorkbook();
+        Sheet effort = wb.createSheet("Agilefant timesheet");
+        if(generateTree().equals(Action.ERROR)) {
+            return Action.ERROR;
+        }
+        dateStyle = wb.createCellStyle();
+        dateStyle.setDataFormat(wb.getCreationHelper().createDataFormat().getFormat("m.d.yy h:mm"));
+        Row head = effort.createRow(0);
+        head.createCell(0).setCellValue("Product");
+        head.createCell(1).setCellValue("Project");
+        head.createCell(2).setCellValue("Iteration");
+        head.createCell(3).setCellValue("Iteration goal");
+        head.createCell(4).setCellValue("Backlog item");
+        head.createCell(5).setCellValue("Description");
+        head.createCell(6).setCellValue("User");
+        head.createCell(7).setCellValue("Date");
+        head.createCell(8).setCellValue("Spent effort (hours)");
+        generateExcelNode(products, effort);
+        effort.autoSizeColumn(0);
+        effort.autoSizeColumn(1);
+        effort.autoSizeColumn(2);
+        effort.setColumnWidth(3, 55*256);
+        effort.setColumnWidth(4, 55*256);
+        effort.setColumnWidth(5, 55*256);
+        effort.autoSizeColumn(6);
+        effort.autoSizeColumn(8);
+        effort.autoSizeColumn(9);
+        
+        try {
+            excelData = new ByteArrayOutputStream();
+            wb.write(excelData);
+        } catch (IOException e) {
+            return Action.ERROR;
+        }
+        return Action.SUCCESS;
+    }
+    
+    private void generateExcelNode(List<BacklogTimesheetNode> bls, Sheet effSheet) {
+        for(BacklogTimesheetNode rnode : bls) {
+            if(rnode.getChildBacklogs() != null) {
+                generateExcelNode(rnode.getChildBacklogs(), effSheet);
+            }
+            if(rnode.getHourEntries() != null) {
+                for(HourEntry entry : rnode.getHourEntries()) {
+                    Row row = effSheet.createRow(effSheet.getLastRowNum()+1);
+                    addExcelRow(row, entry, rnode.getBacklog(), null);
+                    
+                }
+            }
+            if(rnode.getChildBacklogItems() != null) {
+                for(BacklogItemTimesheetNode bnode : rnode.getChildBacklogItems()) {
+                    for(HourEntry bentry : bnode.getHourEntries()) {
+                        Row row = effSheet.createRow(effSheet.getLastRowNum()+1);
+                        addExcelRow(row, bentry, rnode.getBacklog(), bnode.getBacklogItem());
+                    }
+                }
+            }
+        }
+        
+    }
+    
+    private void addExcelRow(Row row, HourEntry entry, Backlog bl, BacklogItem bli) {
+        Cell prod = row.createCell(0);
+        Cell proj = row.createCell(1);
+        Cell iter = row.createCell(2);
+        Cell blic = row.createCell(3);
+        Cell goal = row.createCell(4);
+        Cell desc = row.createCell(5);
+        Cell user = row.createCell(6);
+        Cell time = row.createCell(7);
+        Cell eff = row.createCell(8);
+        
+        if(bl instanceof Iteration) {
+            Iteration ite = (Iteration)bl;
+            prod.setCellValue(ite.getProject().getProduct().getName());
+            proj.setCellValue(ite.getProject().getName());
+            iter.setCellValue(ite.getName());
+        } else if(bl instanceof Project) {
+            Project prj = (Project)bl;
+            proj.setCellValue(prj.getName());
+            prod.setCellValue(prj.getProduct().getName());
+        } else {
+            prod.setCellValue(bl.getName());
+        }
+        if(bli != null) {
+            blic.setCellValue(bli.getName());
+            if(bli.getIterationGoal() != null) {
+                goal.setCellValue(bli.getIterationGoal().getName());
+            }
+        }
+        if(entry.getUser() != null) {
+            user.setCellValue(entry.getUser().getFullName());
+        }
+        if(entry.getDate() != null) {
+            time.setCellValue(entry.getDate());
+            time.setCellStyle(dateStyle);
+        }
+        if(entry.getDescription() != null) {
+            desc.setCellValue(entry.getDescription());
+        }
+        if(entry.getTimeSpent() != null) {
+            eff.setCellValue(((double)Math.round(entry.getTimeSpent().toDouble()*100))/100);
+            eff.setCellType(Cell.CELL_TYPE_NUMERIC);
+        }
+    }
     public TimesheetBusiness getTimesheetBusiness() {
         return timesheetBusiness;
     }
@@ -310,5 +438,8 @@ public class TimesheetAction extends ActionSupport implements PrincipalAware {
         this.userIds = userIds;
     }
     
+    public InputStream getSheetData() {
+        return new ByteArrayInputStream(excelData.toByteArray());
+    }
     
 }

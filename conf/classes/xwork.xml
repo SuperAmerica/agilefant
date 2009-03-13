@@ -875,6 +875,14 @@
 			<result name="success">/WEB-INF/jsp/timesheet.jsp</result>
 		</action>
 		
+		<action name="generateExcel" method="generateExcel" class="timesheetAction">
+			<result name="success" type="stream">
+				<param name="contentType">application/xls</param>
+				<param name="inputName">sheetData</param>
+				<param name="contentDisposition">filename="agilefantTimesheet.xls"</param>
+			</result>
+		</action>		
+		
 		<!-- Hour Entry actions -->
 		<action name="ajaxCreateHourEntry" class="hourEntryAction" method="create">
             <result>/WEB-INF/jsp/forms/createHourEntry.jsp</result>

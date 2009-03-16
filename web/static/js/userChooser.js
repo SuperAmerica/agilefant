@@ -282,7 +282,7 @@
             var teamTable = $('<table/>').appendTo(this.teamCell);
             $.each(this.data.teams, function() {
                 var row = $('<tr/>').appendTo(teamTable);
-                $('<td/>').text(this.name).appendTo(row);
+                $('<td/>').css('white-space','nowrap').text(this.name).appendTo(row);
                 var actionCell = $('<td/>').appendTo(row);
                 var plusButton = $('<img src="static/img/team_add_users.png"/>').addClass('clickable')
                     .attr('title','Select team\'s users').attr('alt','Select team\'s users').appendTo(actionCell);

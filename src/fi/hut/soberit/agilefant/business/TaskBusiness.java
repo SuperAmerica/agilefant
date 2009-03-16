@@ -77,4 +77,6 @@ public interface TaskBusiness {
     public Map<Integer,Integer> getTaskCountByState(int backlogItemId);
     
     public void delete(int taskId);
+    
+    public Task getTask(int taskId);
 }

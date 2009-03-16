@@ -545,6 +545,14 @@ $(document).ready(function() {
 						</display:column>
 											
 						<display:column sortable="false" title="Actions" style="width:102px;">
+							<ww:url id="createBacklogItemLink"
+								action="ajaxCreateBacklogItem" includeParams="none">
+								<ww:param name="fromTodoId" value="${row.id }" />
+							</ww:url>
+							<ww:a cssClass="openCreateDialog openBacklogItemDialog"
+								href="%{createBacklogItemLink}" onclick="return false;"
+								title="Create a new backlog item">BLI
+							</ww:a>
 							<ww:url id="moveTaskTopLink" action="moveTaskTop" includeParams="none">
 								<ww:param name="taskId" value="${row.id}" />
 							</ww:url>

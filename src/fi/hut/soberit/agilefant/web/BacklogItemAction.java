@@ -69,7 +69,7 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
     
     private List<BusinessTheme> bliActiveOrSelectedThemes;
     
-    private int fromTaskId = 0;
+    private int fromTodoId = 0;
     
     private TaskBusiness taskBusiness;
 
@@ -109,9 +109,19 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
         // Id of newly created, not yet persisted backlog item is 0
         backlogItemId = 0;
         
-        if (backlogId == 0) {
+        if (backlogId == 0 && fromTodoId == 0) {
             backlogItem = new BacklogItem();
-            return Action.SUCCESS;
+        } else if(fromTodoId > 0) { 
+            backlogItem = new BacklogItem();
+            Task data = taskBusiness.getTask(fromTodoId);
+            if(data != null) {
+                backlogItem.setName(data.getName());
+                backlogItem.setState(data.getState());
+                backlog = data.getBacklogItem().getBacklog();
+                backlogId = data.getBacklogItem().getBacklog().getId();
+                backlogItem.setIterationGoal(data.getBacklogItem().getIterationGoal());
+                backlogItem.setPriority(data.getBacklogItem().getPriority());
+            }
         } else {
             backlogItem = backlogBusiness.createBacklogItemToBacklog(backlogId);
             if (backlogItem == null) {
@@ -120,8 +130,8 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
             }
             backlog = backlogItem.getBacklog();
             backlogId = backlog.getId();
-            return Action.SUCCESS;
         }
+        return Action.SUCCESS;
     }
     
     public String delete() {
@@ -199,8 +209,8 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
                 backlogItemBusiness.setTasksToDone(backlogItemId);
             }
             //delete the "parent" todo
-            if(fromTaskId > 0 && backlogItemId == 0) {
-                taskBusiness.delete(fromTaskId);
+            if(fromTodoId > 0 && backlogItemId == 0) {
+                taskBusiness.delete(fromTodoId);
             }
             businessThemeBusiness.setBacklogItemThemes(themeIds, bli);
             backlogItem = bli;
@@ -401,8 +411,12 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
         return themeIds;
     }
 
-    public void setFromTaskId(int fromTaskId) {
-        this.fromTaskId = fromTaskId;
+    public void setFromTodoId(int fromTaskId) {
+        this.fromTodoId = fromTaskId;
+    }
+    
+    public int getFromTodoId() {
+        return this.fromTodoId;
     }
 
     public void setTaskBusiness(TaskBusiness taskBusiness) {

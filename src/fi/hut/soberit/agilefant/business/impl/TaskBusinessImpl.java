@@ -177,6 +177,10 @@ public class TaskBusinessImpl implements TaskBusiness {
         }
         
     }
+    
+    public Task getTask(int taskId) {
+        return taskDAO.get(taskId);
+    }
 
     public void setBacklogItemDAO(BacklogItemDAO backlogItemDAO) {
         this.backlogItemDAO = backlogItemDAO;

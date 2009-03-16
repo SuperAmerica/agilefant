@@ -368,7 +368,7 @@ public class BacklogItemActionTest extends SpringTestCase {
      * Test transforming todo to bli
      */
     
-    public void testCreateFromTodo() {
+    public void testCreateNewFromTodo() {
         action.setBacklogId(backlogId);
         action.create();
         action.getBacklogItem().setName("Updated");
@@ -389,11 +389,38 @@ public class BacklogItemActionTest extends SpringTestCase {
         
         int taskId = (Integer)taskDAO.create(foo);
         action.setBacklogItemId(0);
-        action.setFromTaskId(taskId);
+        action.setFromTodoId(taskId);
         action.store();
         assertEquals(null, taskDAO.get(taskId));
     }
     
+    public void testCreateFromTodo() {
+        action.setBacklogId(backlogId);
+        action.create();
+        action.getBacklogItem().setName("Updated");
+        action.getBacklogItem().setDescription("Updated");
+        action.getBacklogItem().setPriority(Priority.CRITICAL);
+        action.getBacklogItem().setOriginalEstimate(new AFTime("1h 15min"));
+        action.getBacklogItem().setState(State.IMPLEMENTED);
+        action.getBacklogItem().setEffortLeft(new AFTime("1h 15min"));
+        SecurityUtil.setLoggedUser(userDAO.get(this.userId));
+        assertEquals(Action.SUCCESS,action.store());
+        
+        Task foo = new Task();
+        foo.setBacklogItem(action.getBacklogItem());
+        foo.setState(State.NOT_STARTED);
+        foo.setCreator(SecurityUtil.getLoggedUser());
+        foo.setRank(0);
+        foo.setPriority(Priority.BLOCKER);
+        
+        int taskId = (Integer)taskDAO.create(foo);
+        
+        action.setBacklogItem(null);
+        action.setFromTodoId(taskId);
+        action.create();
+        assertEquals(foo.getName(), action.getBacklogItem().getName());
+        assertEquals(foo.getState(), action.getBacklogItem().getState());
+    }
     /**
      * Test quickStoreBacklogItem used by tasklist.tag
      */

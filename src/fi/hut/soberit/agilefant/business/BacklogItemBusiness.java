@@ -180,4 +180,12 @@ public interface BacklogItemBusiness {
     public void setBacklogItemIterationGoal(BacklogItem item,
             IterationGoal iterationGoal);
 
+    /**
+     * Fill a non-persisted backlog item object using data from given todo and
+     * todo's parent backlog item.
+     * 
+     * @param todoId
+     * @return
+     */
+    public BacklogItem createBacklogItemFromTodo(int todoId);
 }

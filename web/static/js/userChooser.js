@@ -409,7 +409,12 @@
 	                       me.data.selectedList = me.getFromUserListContainer();
 	                    }
 	                    else {
-	                        me.data.selectedList = data.responsibles;
+	                        var inContainer = me.getFromUserListContainer();
+	                    	if(inContainer.length > 0) {
+	                    		me.data.selectedList = inContainer;
+	                    	} else {
+	                    		me.data.selectedList = data.responsibles;
+	                    	}
 	                    }
 		            }
 		            $.each(me.data.showUsers, function(key, val) {
@@ -487,7 +492,7 @@
             var ulc = $(this.userListContainer);
             var list = [];
             
-            ulc.find('input[name=userIds]').each(function() {
+            ulc.find('input[name^=userIds]').each(function() {
                 list.push(parseInt($(this).val()));
             });
             

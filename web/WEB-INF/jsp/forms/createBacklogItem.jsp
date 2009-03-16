@@ -139,7 +139,20 @@ $(document).ready(function() {
                 <a id="userChooserLink-createBLI" href="#" class="assigneeLink">
                     <img src="static/img/users.png"/>
                     <span id="userListContainer-createBLI">
-                    (none)
+                    <c:set var="count" value="0" />
+                    <c:set var="listLength" value="${fn:length(backlogItem.responsibles)}"/>
+                    <c:choose>
+                        <c:when test="${listLength > 0}">
+                            <c:forEach items="${backlogItem.responsibles}" var="resp">
+                                <input type="hidden" name="userIds[${resp.id}]" value="${resp.id}"/>
+                                <c:set var="count" value="${count + 1}" />
+                                <c:out value="${resp.initials}" /><c:if test="${count != listLength}">, </c:if>
+                            </c:forEach>    
+                        </c:when>
+                        <c:otherwise>
+                            (none)
+                        </c:otherwise>
+                    </c:choose>
                     </span>
                 </a>
             </div>
@@ -154,7 +167,26 @@ $(document).ready(function() {
                 <a id="themeChooserLink-createBLI" href="#" class="assigneeLink">
                     <img src="static/img/theme.png"/>
                     <span id="themeListContainer-createBLI">
-                    (none)
+                    <c:set var="count" value="0" />
+                    <c:set var="listLength" value="${fn:length(backlogItem.businessThemes)}"/>
+                    <c:choose>
+                        <c:when test="${listLength > 0}">
+                            <c:forEach items="${backlogItem.businessThemes}" var="bt">
+                                <input type="hidden" name="themeIds" value="${bt.id}" />
+			            	   <c:choose>
+			            	       <c:when test="${bt.global}">
+			            	           <span class="businessTheme globalThemeColors" style="float: none;"><c:out value="${bt.name}"/></span>
+			            	       </c:when>
+			            	       <c:otherwise>
+			            	           <span class="businessTheme" style="float: none;"><c:out value="${bt.name}"/></span>   
+			            	       </c:otherwise>
+			            	   </c:choose>                                
+                            </c:forEach>    
+                        </c:when>
+                        <c:otherwise>
+                            (none)
+                        </c:otherwise>
+                    </c:choose>
                     </span>
                 </a>
             </div>

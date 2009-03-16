@@ -112,15 +112,9 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
         if (backlogId == 0 && fromTodoId == 0) {
             backlogItem = new BacklogItem();
         } else if(fromTodoId > 0) { 
-            backlogItem = new BacklogItem();
-            Task data = taskBusiness.getTask(fromTodoId);
-            if(data != null) {
-                backlogItem.setName(data.getName());
-                backlogItem.setState(data.getState());
-                backlog = data.getBacklogItem().getBacklog();
-                backlogId = data.getBacklogItem().getBacklog().getId();
-                backlogItem.setIterationGoal(data.getBacklogItem().getIterationGoal());
-                backlogItem.setPriority(data.getBacklogItem().getPriority());
+            backlogItem = backlogItemBusiness.createBacklogItemFromTodo(fromTodoId);
+            if(backlogItem.getBacklog() != null) {
+                backlogId = backlogItem.getBacklog().getId();
             }
         } else {
             backlogItem = backlogBusiness.createBacklogItemToBacklog(backlogId);

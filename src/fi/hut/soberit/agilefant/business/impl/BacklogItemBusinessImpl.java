@@ -384,6 +384,21 @@ public class BacklogItemBusinessImpl implements BacklogItemBusiness {
         return null;
     }
     
+    public BacklogItem createBacklogItemFromTodo(int todoId) {
+        BacklogItem backlogItem = new BacklogItem();
+        Task data = taskBusiness.getTask(todoId);
+        if(data != null) {
+            backlogItem.setName(data.getName());
+            backlogItem.setState(data.getState());
+            backlogItem.setBacklog(data.getBacklogItem().getBacklog());
+            backlogItem.setIterationGoal(data.getBacklogItem().getIterationGoal());
+            backlogItem.setPriority(data.getBacklogItem().getPriority());
+            backlogItem.setResponsibles(data.getBacklogItem().getResponsibles());
+            backlogItem.setBusinessThemes(data.getBacklogItem().getBusinessThemes());
+        }
+        return backlogItem;
+    }
+    
     public void setTaskBusiness(TaskBusiness taskBusiness) {
         this.taskBusiness = taskBusiness;
     }

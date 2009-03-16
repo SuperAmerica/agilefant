@@ -90,6 +90,12 @@
             return false;
         },
         renderTableContents: function() {
+            this.headerRow = $('<tr/>').appendTo(this.table);
+            this.contentRow = $('<tr/>').appendTo(this.table);
+            this.assignedCell = $('<td/>').appendTo(this.contentRow);
+            this.notAssignedCell = $('<td/>').appendTo(this.contentRow);
+            this.teamCell = $('<td/>').appendTo(this.contentRow);
+        
             if (this.options.renderFor == 'project') {
                 this.selectAction = this.projectSelectAction;
                 this.renderForProject();
@@ -103,15 +109,14 @@
                 this.renderForAllUsers();
             }
             
+            this.selectCheckboxes(this.data.selectedList);
+            this.renderTeamList();
+            this.renderButtons();
+            this.validation();
         },
         renderForProject: function() {
             var me = this;
-            var headerRow = $('<tr/>').appendTo(this.table);
-            headerRow.append('<th class="userColumn">Users</th><th class="userColumn">Personal overhead</th><th>Teams</th>')
-            var row = $('<tr/>').appendTo(this.table);
-            this.assignedCell = $('<td/>').appendTo(row);
-            this.notAssignedCell = $('<td/>').appendTo(row);
-            this.teamCell = $('<td/>').appendTo(row);
+            this.headerRow.append('<th class="userColumn">Users</th><th class="userColumn">Personal overhead</th><th>Teams</th>');           
             
             /* Render the columns */
             var nameList = $('<ul/>').addClass('projectAssigneeList').appendTo(this.assignedCell);
@@ -156,75 +161,40 @@
                     }
                 });
             });
-            
-            /* Render the team list */
-            this.selectCheckboxes(this.data.selectedList);
-            this.renderTeamList();
-            this.renderButtons();
-            this.validation();
         },
         renderForAllUsers: function() {
             var me = this;
-            var headerRow = $('<tr/>').appendTo(this.table);
+            this.headerRow.append('<th>Enabled users</th><th>Disabled users</th><th>Teams</th>');
             
-            headerRow.append('<th>Enabled users</th><th>Disabled users</th><th>Teams</th>');
-            
-            var row = $('<tr/>').appendTo(this.table);
-            this.assignedCell = $('<td/>').appendTo(row);
-            this.notAssignedCell = $('<td/>').appendTo(row);
-            this.teamCell = $('<td/>').appendTo(row); 
-            
-            var firstList = [];
-            var secondList = [];
+            var firstList = []; var secondList = [];
             
             $.each(this.data.enabledUsers, function() { firstList.push(this.id); });
             $.each(this.data.disabledUsers, function() { secondList.push(this.id); });
             
             this.assignedCell.append(this.renderCheckboxList(firstList));
             this.notAssignedCell.append(this.renderCheckboxList(secondList));
-            
-            this.selectCheckboxes(this.data.selectedList);
-            this.renderTeamList();
-            this.renderButtons();
-            this.validation();
         },
         renderForBLI: function() {
             var me = this;
-            var headerRow = $('<tr/>').appendTo(this.table);
-            
-            var row = $('<tr/>').appendTo(this.table);
-            this.assignedCell = $('<td/>').appendTo(row);
-            this.notAssignedCell = $('<td/>').appendTo(row);
-            this.teamCell = $('<td/>').appendTo(row);
-                     
             if (this.data.notAssignedIds.length == 0 || this.data.assignments.length == 0) {
                 var firstLength = Math.ceil(me.data.showCount / 2);
                 var firstList = [];
                 var secondList = [];
                 var i = 0;
                 $.each(me.data.showUsers, function() {
-                    if (i < firstLength) {
-                        firstList.push(this.id);
-                    }
-                    else {
-                        secondList.push(this.id);
-                    }
+                    if (i < firstLength) { firstList.push(this.id); }
+                    else { secondList.push(this.id); }
                     i++;
                 });
                 this.assignedCell.append(this.renderCheckboxList(firstList));
                 this.notAssignedCell.append(this.renderCheckboxList(secondList));
-                headerRow.append('<th class="userColumn">Users</th><th class="userColumn"></th><th class="teamColumn">Teams</th>');
+                this.headerRow.append('<th class="userColumn">Users</th><th class="userColumn"></th><th class="teamColumn">Teams</th>');
             }
             else {
                 this.assignedCell.append(this.renderCheckboxList(this.data.assignments));
                 this.notAssignedCell.append(this.renderCheckboxList(this.data.notAssignedIds));
-                headerRow.append('<th class="userColumn">In project</th><th class="userColumn">Not in project</th><th class="teamColumn">Teams</th>');
+                this.headerRow.append('<th class="userColumn">In project</th><th class="userColumn">Not in project</th><th class="teamColumn">Teams</th>');
             }
-            
-            this.selectCheckboxes(this.data.selectedList);
-            this.renderTeamList();
-            this.renderButtons();
-            this.validation();
         },
         validation: function() {
             var me = this;

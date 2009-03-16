@@ -26,7 +26,8 @@ $(document).ready(function() {
         legacyMode: false,
         renderFor: 'allUsers',
         backlogItemId: 0,
-        userListContainer: '#userListContainer-createBLI'
+        userListContainer: '#userListContainer-createBLI',
+        emptySelectionText: "(all)"
     });
 });
 
@@ -216,7 +217,7 @@ $(document).ready( function() {
 							                    <c:set var="userCount" value="${fn:length(selUser)}" />
 							                    <c:set var="curUserNo" value="0" />
                                                 <c:if test="${userCount == 0}">
-                                                (none)
+                                                (all)
                                                 </c:if>
 							                    <c:forEach items="${selUser}" var="selu">
                                                     <input type="hidden" name="userIds" value="${selu.id}" />

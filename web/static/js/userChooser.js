@@ -27,6 +27,7 @@
             backlogIdField: null,
             userListContainer: null,
             selectThese: null,
+            emptySelectionText: "(none)",
             validation: {
                 selectAtLeast: 0,
                 AFTime: false
@@ -34,8 +35,7 @@
             renderFor: 'backlogItem',
             overlayUpdate: function() {
                 $('.ui-dialog-overlay').css("height",$(document).height()).css("width",$(document).width());
-            },
-            
+            }
         };
         jQuery.extend(options, opt);
         
@@ -448,7 +448,7 @@
                 userListContainer.append(selectedInitials.substring(0, selectedInitials.length - 2));
             }
             else {
-                userListContainer.append("(none)");
+                userListContainer.append(this.options.emptySelectionText);
             }
             
             this.data.overheads = overheads;
@@ -497,7 +497,7 @@
                 userListContainer.append(selectedInitials.substring(0, selectedInitials.length - 2));
             }
             else {
-                userListContainer.append("(none)");
+                userListContainer.append(this.options.emptySelectionText);
             }
             
             this.data.selectedList = this.getSelected();

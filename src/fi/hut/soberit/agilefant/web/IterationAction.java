@@ -20,6 +20,7 @@ import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.IterationGoal;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.util.BacklogMetrics;
+import fi.hut.soberit.agilefant.util.CalendarUtils;
 import fi.hut.soberit.agilefant.util.EffortSumData;
 
 public class IterationAction extends BacklogContentsAction implements CRUDAction {
@@ -189,8 +190,8 @@ public class IterationAction extends BacklogContentsAction implements CRUDAction
     }
 
     protected void fillObject(Iteration fillable) throws ParseException {
-        fillable.setEndDate(endDate, dateFormat);
-        fillable.setStartDate(startDate, dateFormat);
+        fillable.setEndDate(CalendarUtils.parseDateFromString(endDate));
+        fillable.setStartDate(CalendarUtils.parseDateFromString(startDate));
         if (this.iteration.getName() == null ||
                 this.iteration.getName().trim().equals("")) {
             super.addActionError(super.getText("iteration.missingName"));

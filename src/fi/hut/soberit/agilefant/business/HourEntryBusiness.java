@@ -1,6 +1,5 @@
 package fi.hut.soberit.agilefant.business;
 
-import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -29,15 +28,6 @@ public interface HourEntryBusiness {
      */
     public void addHourEntryForMultipleUsers(TimesheetLoggable parent,HourEntry hourEntry, Set<Integer> userIds);
    
-    /**
-     * Format date.
-     * 
-     * @todo Move to static system wide util.
-     * @param date String representing a date and time in format yyyy-mm-dd HH:MM
-     * @return Date object set to the given moment.
-     * @throws ParseException
-     */
-    public Date formatDate(String date) throws ParseException;
     
     /**
      * Store new entry to a given parent or alter an existing entry. If give

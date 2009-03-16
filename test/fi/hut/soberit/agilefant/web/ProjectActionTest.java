@@ -13,6 +13,7 @@ import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.ProjectType;
 import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.util.CalendarUtils;
 import fi.hut.soberit.agilefant.util.SpringTestCase;
 
 /**
@@ -53,8 +54,8 @@ public class ProjectActionTest extends SpringTestCase {
         project.setDescription("Test Description");
         project.setId((Integer) backlogDAO.create(project));
         ((Project) project)
-                .setStartDate("2007-11-13 06:00", "yyyy-MM-dd HH:mm");
-        ((Project) project).setEndDate("2007-11-13 16:00", "yyyy-MM-dd HH:mm");
+                .setStartDate(CalendarUtils.parseDateFromString("2007-11-13 06:00"));
+        ((Project) project).setEndDate(CalendarUtils.parseDateFromString("2007-11-13 16:00"));
         ((Project) project).setProduct((Product) product);
         ArrayList<Project> projects = new ArrayList<Project>();
         projects.add((Project) project);

@@ -46,19 +46,17 @@ public class TimesheetBusinessImpl implements TimesheetBusiness {
         
         Backlog backlog, parent;
         BacklogTimesheetNode backlogNode, parentNode, childNode;
-            
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-        df.setLenient(true);
+        
         try{
             if(startDateString == null || startDateString.trim().length() == 0)
                 this.startDate = null;
             else
-                this.startDate = df.parse(startDateString);
+                this.startDate = CalendarUtils.parseDateFromString(startDateString);
             
             if(endDateString == null || endDateString.trim().length() == 0)
                 this.endDate = null;
             else
-                this.endDate = df.parse(endDateString);
+                this.endDate = CalendarUtils.parseDateFromString(endDateString);
             
         }catch(ParseException e){
             System.err.println("Error in parsing date");
@@ -72,12 +70,7 @@ public class TimesheetBusinessImpl implements TimesheetBusiness {
         
         roots = new ArrayList<BacklogTimesheetNode>();
         nodes = new HashMap<Integer, BacklogTimesheetNode>();
-
-        /* DEBUG
-        System.out.println("DEBUG: backlogIds.length = "+  backlogIds.length + ", backlogIds[0] = " + backlogIds[0] + 
-                           ", userIds.size() = " + userIds.size() + ", userIds = " + userIds.toString());
-        */
-        
+      
         for(int id : backlogIds){
             backlog = backlogDAO.get(id);
             if(backlog != null){
@@ -120,20 +113,6 @@ public class TimesheetBusinessImpl implements TimesheetBusiness {
                 }
             }
         }
-        
-        /*
-        // DEBUG
-        if(roots != null){
-            for(BacklogTimesheetNode root : roots){
-                root.print();
-            }
-        }
-        */
-        
-        /* DEBUG
-        System.out.println("End generateTree: userIds = " + userIds.toString() + ", roots.size() = " + roots.size() +
-                           "Root 0 = " + roots.get(0).getBacklog().getName());
-        */
         
         return roots;
     }

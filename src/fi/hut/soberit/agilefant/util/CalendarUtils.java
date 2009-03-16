@@ -1,5 +1,7 @@
 package fi.hut.soberit.agilefant.util;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -62,6 +64,33 @@ public class CalendarUtils {
         cal.set(GregorianCalendar.MILLISECOND, 0);
         return cal.getTime();
     }
+    
+    /**
+     * Parse date from string. Sets the time to 12 p.m., if no time is supplied.
+     * Accepted time formats are as follows:
+     *  "2008-11-02" YYYY-MM-DD
+     *  "2008-11-02 18:03" YYYY-MM-DD HH:MM 
+     * @param date the date as string
+     * @return
+     * @throws ParseException 
+     */
+    public static Date parseDateFromString(String date) throws ParseException {
+        Calendar cal = Calendar.getInstance();       
+        try {
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+            df.setLenient(true);
+            cal.setTime(df.parse(date));
+        }
+        catch (ParseException pe) {
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+            df.setLenient(true);
+            cal.setTime(df.parse(date));
+            cal.set(Calendar.HOUR_OF_DAY, 12);
+            cal.set(Calendar.MINUTE, 0);
+        }
+        return cal.getTime();
+    }
+    
     
     /**
      * Get the length of a timeframe in days rounded up. 

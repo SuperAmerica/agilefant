@@ -16,6 +16,7 @@ import fi.hut.soberit.agilefant.db.ProjectDAO;
 import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.model.HourEntry;
 import fi.hut.soberit.agilefant.model.TimesheetLoggable;
+import fi.hut.soberit.agilefant.util.CalendarUtils;
 
 
 public class HourEntryAction extends ActionSupport implements CRUDAction {
@@ -176,7 +177,7 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
 
     public void setDate(String sDate) {
         try {
-            this.internalDate = hourEntryBusiness.formatDate(sDate);
+            this.internalDate = CalendarUtils.parseDateFromString(sDate);
         } catch(ParseException e) {
             
         }

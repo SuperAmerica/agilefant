@@ -1,7 +1,6 @@
 package fi.hut.soberit.agilefant.business.impl;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -24,6 +23,7 @@ import fi.hut.soberit.agilefant.model.HourEntry;
 import fi.hut.soberit.agilefant.model.TimesheetLoggable;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.security.SecurityUtil;
+import fi.hut.soberit.agilefant.util.CalendarUtils;
 
 public class HourEntryBusinessImpl implements HourEntryBusiness {
     private BacklogItemHourEntryDAO backlogItemHourEntryDAO;
@@ -123,15 +123,6 @@ public class HourEntryBusinessImpl implements HourEntryBusiness {
         this.addEntryForCurrentUser(parent, effort, null);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public Date formatDate(String startDate)
-        throws ParseException {
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-        df.setLenient(true);
-        return df.parse(startDate);
-    }
     /**
      * {@inheritDoc}
      */
@@ -250,8 +241,8 @@ public class HourEntryBusinessImpl implements HourEntryBusiness {
             throws IllegalArgumentException {
         AFTime sum;
         try {
-            Date start = this.formatDate(startDate);
-            Date end = this.formatDate(endDate);   
+            Date start = CalendarUtils.parseDateFromString(startDate);
+            Date end = CalendarUtils.parseDateFromString(endDate);   
             sum = getEffortSumByUserAndTimeInterval(user,start,end);
         } catch (ParseException pe) {
             throw new IllegalArgumentException("Invalid format.");
@@ -305,7 +296,7 @@ public class HourEntryBusinessImpl implements HourEntryBusiness {
                 Integer userId = Integer.parseInt(userIds.get(entryId)[0]);
                 String dateStr = dates.get(entryId)[0];
                 AFTime effort = new AFTime(efforts.get(entryId)[0]);      
-                Date date = formatDate(dateStr);
+                Date date = CalendarUtils.parseDateFromString(dateStr);
                 entry.setDate(date);
                 User user = userDAO.get(userId);
                 if(user == null) throw new Exception();

@@ -1,7 +1,5 @@
 package fi.hut.soberit.agilefant.model;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -13,8 +11,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Transient;
 
-//import org.apache.commons.logging.Log;
-//import org.apache.commons.logging.LogFactory;
 import org.hibernate.annotations.BatchSize;
 
 import fi.hut.soberit.agilefant.util.BacklogMetrics;
@@ -86,13 +82,6 @@ public class Iteration extends Backlog implements PageItem {
         this.endDate = endDate;
     }
 
-    public void setEndDate(String endDate, String dateFormat)
-            throws ParseException {
-        SimpleDateFormat df = new SimpleDateFormat(dateFormat);
-        df.setLenient(true);
-        this.endDate = df.parse(endDate);
-    }
-
     // @Column(nullable = false)
     @JSON
     public Date getStartDate() {
@@ -102,14 +91,7 @@ public class Iteration extends Backlog implements PageItem {
     public void setStartDate(Date startDate) {
         this.startDate = startDate;
     }
-
-    public void setStartDate(String startDate, String dateFormat)
-            throws ParseException {
-        SimpleDateFormat df = new SimpleDateFormat(dateFormat);
-        df.setLenient(true);
-        this.startDate = df.parse(startDate);
-    }
-    
+   
     /** {@inheritDoc} */
     @Transient
     @JSON(include = false)

@@ -31,6 +31,7 @@ import fi.hut.soberit.agilefant.model.ProjectType;
 import fi.hut.soberit.agilefant.model.Status;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.util.BacklogMetrics;
+import fi.hut.soberit.agilefant.util.CalendarUtils;
 import fi.hut.soberit.agilefant.util.EffortSumData;
 
 public class ProjectAction extends BacklogContentsAction implements CRUDAction {
@@ -307,13 +308,13 @@ public class ProjectAction extends BacklogContentsAction implements CRUDAction {
             super.addActionError(super.getText("project.missingName"));
             return;
         }
-        project.setStartDate(startDate, dateFormat);
+        project.setStartDate(CalendarUtils.parseDateFromString(startDate));
         if (project.getStartDate() == null) {
             super.addActionError(super.getText("project.missingStartDate"));
             return;
         }
 
-        project.setEndDate(endDate, dateFormat);
+        project.setEndDate(CalendarUtils.parseDateFromString(endDate));
         if (project.getEndDate() == null) {
             super.addActionError(super.getText("project.missingEndDate"));
             return;
@@ -363,8 +364,8 @@ public class ProjectAction extends BacklogContentsAction implements CRUDAction {
         }
         */
         storable.setStatus(project.getStatus());
-        storable.setEndDate(endDate, dateFormat);
-        storable.setStartDate(startDate, dateFormat);
+        storable.setEndDate(CalendarUtils.parseDateFromString(endDate));
+        storable.setStartDate(CalendarUtils.parseDateFromString(startDate));
         storable.setName(project.getName());
         storable.setDescription(project.getDescription());
         storable.setDefaultOverhead(project.getDefaultOverhead());

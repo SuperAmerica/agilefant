@@ -1,7 +1,5 @@
 package fi.hut.soberit.agilefant.model;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -13,7 +11,6 @@ import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
-
 
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.OrderBy;
@@ -123,14 +120,6 @@ public class Project extends Backlog implements PageItem {
         this.startDate = startDate;
     }
 
-    // TODO: Refactor to business layer and remove dateformat parameter    
-    public void setStartDate(String startDate, String dateFormat)
-            throws ParseException {
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-        df.setLenient(true);
-        this.startDate = df.parse(startDate);
-    }
-
     // @Column(nullable = false)
     @JSON
     public Date getEndDate() {
@@ -139,14 +128,6 @@ public class Project extends Backlog implements PageItem {
 
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
-    }
-
-    // TODO: Refactor to business layer and remove dateformat parameter
-    public void setEndDate(String endDate, String dateFormat)
-            throws ParseException {
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-        df.setLenient(true);
-        this.endDate = df.parse(endDate);
     }
 
     @ManyToOne

@@ -453,8 +453,18 @@ $(document).ready(function() {
 										<div class="subItemHeader">
 										    <table cellspacing="0" cellpadding="0">
 					            			    <tr>
-					            			    	<td class="header">Themes <a id="addProjectBusinessTheme" href="#">Attach theme &raquo;</a></td>
+					            			    	<td class="header">Themes</td>
+												<td class="icons">
+							                        <table cellspacing="0" cellpadding="0">
+							                            <tr>
+							                            <td>
+							                          <a href="#" title="Attach theme" onclick="return false;" class="attachLink" id="addProjectBusinessTheme" />
+							                            </td>
+							                            </tr>
+							                            </table>      
+							                        </td>
 												</tr>
+												
 											</table>
 										</div>
 										<div class="subItemContent">

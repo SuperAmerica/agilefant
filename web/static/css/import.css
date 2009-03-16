@@ -1271,6 +1271,10 @@ td.icons a.logEffortLink {
     background-image: url('../img/timesheets_new.png');
 }
 
+td.icons a.attachLink {
+    background-image: url('../img/attach.png');
+}
+
 td.icons table  {
 	margin: 0 2px;
 	padding: 0 3px;

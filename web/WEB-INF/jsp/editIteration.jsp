@@ -52,8 +52,8 @@ $(document).ready(function() {
 						<table cellspacing="0" cellpadding="0">
                             <tr>
                             <td>
-						  <a href="#" title="Edit iteration details"
-						  onclick="editIteration(); return none;"
+						  <a href="#" title="Attach theme"
+						  onclick="editIteration(); return false;"
 						      class="editLink" />
 						    </td>
 						    </tr>
@@ -321,8 +321,17 @@ $(document).ready( function() {
 					<div class="subItemHeader">
 					    <table cellspacing="0" cellpadding="0">
             			    <tr>
-            			    	<td class="header">Themes <a id="addIterationBusinessTheme" href="#">Attach theme &raquo;</a>
-            			    	</td>
+            			    	<td class="header">Themes</td>
+            			    	<td class="icons">
+		                        <table cellspacing="0" cellpadding="0">
+		                            <tr>
+		                            <td>
+			                          <a href="#" id="addIterationBusinessTheme" title="Edit iteration details"
+			                          onclick="return false;" class="attachLink" />
+		                            </td>
+		                            </tr>
+		                            </table>      
+		                        </td>
 							</tr>
 						</table>
 					</div>

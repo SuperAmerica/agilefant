@@ -30,7 +30,8 @@ jQuery.validator.addMethod("aftime",function(value, element, param) {
 /* Add the validator for time format */
 jQuery.validator.addMethod("time",function(value, element, param) {
     var standardDateFormat = new RegExp("^[ ]*[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])[ ]+([0-1][0-9]|2[0-3]):[0-5][0-9][ ]*$");
-    return (standardDateFormat.test(value) ); 
+    var secondDateFormat = new RegExp("^[ ]*[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])[ ]*$");
+    return (standardDateFormat.test(value) || secondDateFormat.test(value)); 
 }, "Invalid date format");
 
 /* param[0] should be the id of the other field */

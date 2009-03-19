@@ -95,7 +95,7 @@ $(document).ready(function() {
 				cssClass="closeDialogButton" /></td>
 		</tr>
 		<tr>
-			<td colspan="4">Past Effort
+			<td colspan="4">My logged effort
 			<div id="pastEffortShower" style="border: 1px solid #A0A0A0;">
 
 			<table>

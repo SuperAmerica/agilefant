@@ -18,6 +18,7 @@ import java.util.Set;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -198,19 +199,46 @@ public class TimesheetAction extends ActionSupport implements PrincipalAware {
         if(generateTree().equals(Action.ERROR)) {
             return Action.ERROR;
         }
+        CellStyle boldStyle = wb.createCellStyle();
+        Font boldFont = wb.createFont();
+        boldStyle.setFont(boldFont);
+        boldFont.setBoldweight(Font.BOLDWEIGHT_BOLD);
         dateStyle = wb.createCellStyle();
         dateStyle.setDataFormat(wb.getCreationHelper().createDataFormat().getFormat("m.d.yy h:mm"));
         Row head = effort.createRow(0);
-        head.createCell(0).setCellValue("Product");
-        head.createCell(1).setCellValue("Project");
-        head.createCell(2).setCellValue("Iteration");
-        head.createCell(3).setCellValue("Iteration goal");
-        head.createCell(4).setCellValue("Backlog item");
-        head.createCell(5).setCellValue("Comment");
-        head.createCell(6).setCellValue("User");
-        head.createCell(7).setCellValue("Date");
-        head.createCell(8).setCellValue("Spent effort (hours)");
+        Cell tmp;
+        tmp = head.createCell(0);
+        tmp.setCellValue("Product");
+        tmp.setCellStyle(boldStyle);
+        tmp = head.createCell(1); 
+        tmp.setCellValue("Project");
+        tmp.setCellStyle(boldStyle);
+        tmp = head.createCell(2);
+        tmp.setCellValue("Iteration");
+        tmp.setCellStyle(boldStyle);
+        tmp = head.createCell(3);
+        tmp.setCellValue("Iteration goal");
+        tmp.setCellStyle(boldStyle);
+        tmp = head.createCell(4);
+        tmp.setCellValue("Backlog item");
+        tmp.setCellStyle(boldStyle);
+        tmp = head.createCell(5);
+        tmp.setCellValue("Comment");
+        tmp.setCellStyle(boldStyle);
+        tmp = head.createCell(6);
+        tmp.setCellValue("User");
+        tmp.setCellStyle(boldStyle);
+        tmp = head.createCell(7);
+        tmp.setCellValue("Date");
+        tmp.setCellStyle(boldStyle);
+        tmp = head.createCell(8);
+        tmp.setCellValue("Spent effort (hours)");
+        tmp.setCellStyle(boldStyle);
+        
+        effort.createFreezePane(0, 1, 0, 1);
+        
         generateExcelNode(products, effort);
+        
         effort.autoSizeColumn(0);
         effort.autoSizeColumn(1);
         effort.autoSizeColumn(2);

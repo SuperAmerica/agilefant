@@ -234,7 +234,7 @@ $(document).ready( function() {
 									<td></td>
 									<td>
 										<ww:submit value="Calculate" />
-										<ww:submit value="Generate Excel report" action="generateExcel" />
+										<ww:submit value="Export to Excel" action="generateExcel" />
 									</td>
 								</tr>
 							</tbody>

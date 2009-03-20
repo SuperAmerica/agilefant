@@ -137,7 +137,7 @@ $(document).ready(function() {
 													<th class="info1"><ww:text name="general.uniqueId"/></th>
 													<td class="info3"><aef:quickReference item="${project}" /></td>
 													<td class="info4" rowspan="8">
-                                                        <c:if test="${(!empty project.backlogItems) && projectBurndown}">
+                                                        <c:if test="${(!empty project.backlogItems) && (projectBurndown || (empty project.iterations))}">
                                                             <div class="smallBurndown"><a href="#bigChart">
                                                                 <img src="drawSmallProjectChart.action?projectId=${project.id}"/>
                                                             </a></div>
@@ -270,12 +270,13 @@ $(document).ready(function() {
 	                                                				</ww:url>
 	                                                				<c:choose>
 	                                                    				<c:when test="${count < listSize - 1}">
-	                                                        				<a href="${userDailyWorkLink}"><c:out value="${responsible.initials}" /></a>,
+	                                                        				<%--<a href="${userDailyWorkLink}"><c:out value="${responsible.initials}" /></a>,--%>
+	                                                        				<c:out value="${responsible.initials}" />, 
 	                                                    				</c:when>
 	                                                    				<c:otherwise>
-	                                                        				<ww:a href="${userDailyWorkLink}">
+	                                                        				<%--<ww:a href="${userDailyWorkLink}"> --%>
 	                                                            				<c:out value="${responsible.initials}" />
-	                                                        				</ww:a>
+	                                                        				<%-- </ww:a>--%>
 	                                                    				</c:otherwise>
 	                                                				</c:choose>
 	                                                				<c:set var="count" value="${count + 1}" scope="page" />
@@ -666,7 +667,7 @@ $(document).ready(function() {
 								</div>
 							</c:if>
 						</div>
-						<c:if test="${(!empty project.backlogItems) && projectBurndown}">
+						<c:if test="${(!empty project.backlogItems) && (projectBurndown || (empty project.iterations))}">
 							<p>
 								<img src="drawProjectChart.action?projectId=${project.id}" id="bigChart"
 								   width="780" height="600" />

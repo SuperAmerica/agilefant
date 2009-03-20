@@ -51,12 +51,17 @@ public class ResponsibleColumnTag extends SpringTagSupport {
 
         for (User user : bli.getResponsibles()) {
             if (!assignedUsers.contains(user) && backlog != null) {
-                printString +=
+                /*printString +=
                     "<a href=\"dailyWork.action?userId=" + user.getId() + "\" class=\"unassigned\">"    
                     + user.getInitials().trim() + "</a>";
+                 */
+                printString += "<span class=\"unassigned\">" + user.getInitials().trim() + "</span>";
             } else {
+                /*
                 printString += "<a href=\"dailyWork.action?userId=" + user.getId() + "\">"
                     + user.getInitials().trim() + "</a>";
+                */
+                printString += user.getInitials().trim();
             }
 
             if (i != (bli.getResponsibles().size() - 1)) {

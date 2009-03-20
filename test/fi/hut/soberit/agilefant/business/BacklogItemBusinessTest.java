@@ -4,6 +4,10 @@ import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
+
+import java.util.ArrayList;
+import java.util.Collection;
+
 import junit.framework.TestCase;
 import fi.hut.soberit.agilefant.business.impl.BacklogItemBusinessImpl;
 import fi.hut.soberit.agilefant.business.impl.HourEntryBusinessImpl;
@@ -16,8 +20,11 @@ import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.BusinessTheme;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.IterationGoal;
+import fi.hut.soberit.agilefant.model.Priority;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.State;
+import fi.hut.soberit.agilefant.model.Task;
+import fi.hut.soberit.agilefant.model.User;
 
 public class BacklogItemBusinessTest extends TestCase {
 
@@ -512,5 +519,36 @@ public class BacklogItemBusinessTest extends TestCase {
         verify(dao);
         verify(hBuss);
         verify(blBuss);
+    }
+    
+    public void testCreateFromTodo() {
+        TaskBusiness tb = createMock(TaskBusiness.class);
+        BacklogItemBusinessImpl testable = new BacklogItemBusinessImpl();
+        testable.setTaskBusiness(tb);
+        Task from = new Task();
+        BacklogItem parent = new BacklogItem();
+        Iteration bl = new Iteration();
+        parent.setBacklog(bl);
+        Collection<User> users = new ArrayList<User>();
+        User u1 = new User();
+        u1.setId(1);
+        users.add(u1);
+        parent.setResponsibles(users);
+        
+        parent.setPriority(Priority.BLOCKER);
+        
+        from.setBacklogItem(parent);
+        from.setState(State.DONE);
+        from.setName("foo");
+        
+        expect(tb.getTask(1)).andReturn(from).once();
+        BacklogItem r = testable.createBacklogItemFromTodo(1);
+        assertEquals(from.getState(), r.getState());
+        assertEquals(from.getName(), r.getName());
+        assertEquals(parent.getResponsibles(), r.getResponsibles());
+        assertEquals(parent.getPriority(), r.getPriority());
+        replay(tb);
+        
+        verify(tb);
     }
 }

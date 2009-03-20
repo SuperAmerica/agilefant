@@ -469,7 +469,7 @@ $(document).ready( function() {
 		</c:if>
 
 		<display:column sortable="false" title="Actions"
-			class="actionColumn">
+			class="actionColumn" style="width: 140px !important;">
 			<ww:url id="moveTopLink" action="prioritizeIterationGoal"
 				includeParams="none">
 				<ww:param name="iterationGoalId" value="${row.id}" />

@@ -110,12 +110,12 @@ $(document).ready(function() {
 				<c:set var="currentResponsibleCount" value="${currentResponsibleCount + 1}" />
 				<c:choose>
 					<c:when test="${itemResponsible.inProject == false}">
-						<a href="dailyWork.action?userId=${itemResponsible.user.id}" class="unassigned"> 
-							${itemResponsible.user.initials}</a><c:if test="${currentResponsibleCount !=  responsibleCount}">,</c:if>
+						<%--<a href="dailyWork.action?userId=${itemResponsible.user.id}" class="unassigned">--%>
+							<span class="unassigned">${itemResponsible.user.initials}</span><c:if test="${currentResponsibleCount !=  responsibleCount}">,</c:if>
 					</c:when>
 					<c:otherwise>
-						<a href="dailyWork.action?userId=${itemResponsible.user.id}">
-							${itemResponsible.user.initials}</a><c:if test="${currentResponsibleCount !=  responsibleCount}">,</c:if>
+						<%--<a href="dailyWork.action?userId=${itemResponsible.user.id}">--%>
+							${itemResponsible.user.initials}<c:if test="${currentResponsibleCount !=  responsibleCount}">,</c:if>
 					</c:otherwise>
 				</c:choose>
 			</c:forEach>

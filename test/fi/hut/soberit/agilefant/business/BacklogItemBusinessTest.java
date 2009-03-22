@@ -542,12 +542,13 @@ public class BacklogItemBusinessTest extends TestCase {
         from.setName("foo");
         
         expect(tb.getTask(1)).andReturn(from).once();
+        replay(tb);
+        
         BacklogItem r = testable.createBacklogItemFromTodo(1);
         assertEquals(from.getState(), r.getState());
         assertEquals(from.getName(), r.getName());
         assertEquals(parent.getResponsibles(), r.getResponsibles());
         assertEquals(parent.getPriority(), r.getPriority());
-        replay(tb);
         
         verify(tb);
     }

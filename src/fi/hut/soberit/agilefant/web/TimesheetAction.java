@@ -235,16 +235,26 @@ public class TimesheetAction extends ActionSupport implements PrincipalAware {
         tmp.setCellValue("Spent effort (hours)");
         tmp.setCellStyle(boldStyle);
         
-        effort.createFreezePane(0, 1, 0, 1);
+        //effort.createFreezePane(0, 1, 0, 1);
         
         generateExcelNode(products, effort);
         
         effort.autoSizeColumn(0);
         effort.autoSizeColumn(1);
         effort.autoSizeColumn(2);
-        effort.setColumnWidth(3, 55*256);
-        effort.setColumnWidth(4, 55*256);
-        effort.setColumnWidth(5, 55*256);
+        //try to autosize, but limit size to 55 characters
+        effort.autoSizeColumn(3);
+        if(effort.getColumnWidth(3) > 55*256) {
+            effort.setColumnWidth(3, 55*256);
+        }
+        effort.autoSizeColumn(4);
+        if(effort.getColumnWidth(4) > 55*256) {
+            effort.setColumnWidth(4, 55*256);
+        }
+        effort.autoSizeColumn(5);
+        if(effort.getColumnWidth(5) > 55*256) {
+            effort.setColumnWidth(5, 55*256);
+        }
         effort.autoSizeColumn(6);
         effort.autoSizeColumn(8);
         effort.autoSizeColumn(9);
@@ -286,8 +296,8 @@ public class TimesheetAction extends ActionSupport implements PrincipalAware {
         Cell prod = row.createCell(0);
         Cell proj = row.createCell(1);
         Cell iter = row.createCell(2);
-        Cell blic = row.createCell(3);
-        Cell goal = row.createCell(4);
+        Cell goal = row.createCell(3);
+        Cell blic = row.createCell(4);
         Cell desc = row.createCell(5);
         Cell user = row.createCell(6);
         Cell time = row.createCell(7);

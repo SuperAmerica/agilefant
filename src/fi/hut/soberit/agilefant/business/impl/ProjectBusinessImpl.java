@@ -875,8 +875,16 @@ public class ProjectBusinessImpl implements ProjectBusiness {
         }
         BacklogMetrics projMetrics = backlogBusiness
                 .calculateLimitedBacklogMetrics(proj);
-        metrics.getEffortLeft().add(projMetrics.getEffortLeft());
-        metrics.getOriginalEstimate().add(projMetrics.getOriginalEstimate());
+        if(metrics.getEffortLeft() != null) {
+            metrics.getEffortLeft().add(projMetrics.getEffortLeft());
+        } else {
+            metrics.setEffortLeft(projMetrics.getEffortLeft());
+        }
+        if(metrics.getOriginalEstimate() != null) {
+            metrics.getOriginalEstimate().add(projMetrics.getOriginalEstimate());
+        } else {
+            metrics.setOriginalEstimate(projMetrics.getOriginalEstimate());
+        }
         metrics.setTotalItems(metrics.getTotalItems()
                 + projMetrics.getTotalItems());
         if(metrics.getCompletedItems() != null) {

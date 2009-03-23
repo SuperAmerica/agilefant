@@ -110,7 +110,7 @@ public class CalendarUtils {
         }
         
         CalendarUtils.setHoursMinutesAndSeconds(calStart, 0, 0, 0);
-        CalendarUtils.setHoursMinutesAndSeconds(calEnd, 1, 0, 0);
+        CalendarUtils.setHoursMinutesAndSeconds(calEnd, 5, 0, 0);
                 
         long endf = (long)calEnd.getTime().getTime();
         long startf = (long)calStart.getTime().getTime();

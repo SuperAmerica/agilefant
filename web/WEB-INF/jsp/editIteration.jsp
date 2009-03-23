@@ -52,7 +52,7 @@ $(document).ready(function() {
 						<table cellspacing="0" cellpadding="0">
                             <tr>
                             <td>
-						  <a href="#" title="Attach theme"
+						  <a href="#" title="Edit iteration details"
 						  onclick="editIteration(); return false;"
 						      class="editLink" />
 						    </td>
@@ -326,7 +326,7 @@ $(document).ready( function() {
 		                        <table cellspacing="0" cellpadding="0">
 		                            <tr>
 		                            <td>
-			                          <a href="#" id="addIterationBusinessTheme" title="Edit iteration details"
+			                          <a href="#" id="addIterationBusinessTheme" title="Attach theme"
 			                          onclick="return false;" class="attachLink" />
 		                            </td>
 		                            </tr>

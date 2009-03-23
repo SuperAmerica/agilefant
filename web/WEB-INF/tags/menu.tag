@@ -157,7 +157,7 @@ Agilefant
 <!-- Create new -menu -->
 <span id="createNewMenuLink">
 <a href="#">
-    <img src="static/img/new.png" alt="Create new" />
+    <span> </span>
     Create new &raquo;
 </a>
 </span>

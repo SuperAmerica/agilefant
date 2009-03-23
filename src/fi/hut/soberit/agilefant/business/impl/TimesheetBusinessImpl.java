@@ -1,7 +1,6 @@
 package fi.hut.soberit.agilefant.business.impl;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -19,7 +18,8 @@ import fi.hut.soberit.agilefant.model.BacklogHourEntry;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.BacklogItemHourEntry;
 import fi.hut.soberit.agilefant.model.HourEntry;
-import fi.hut.soberit.agilefant.util.*;
+import fi.hut.soberit.agilefant.util.BacklogTimesheetNode;
+import fi.hut.soberit.agilefant.util.CalendarUtils;
 
 public class TimesheetBusinessImpl implements TimesheetBusiness {
     private BacklogDAO backlogDAO;

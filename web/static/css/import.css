@@ -333,8 +333,18 @@ span.right {
 	left: 5px;
 }
 
-#createNewMenuLink img {
-	vertical-align: bottom;
+#createNewMenuLink a span {
+  display: block;
+  float: left;
+  width: 16px;
+  height: 16px;
+  margin-right: 3px;
+  background-image: url('../img/create_new.png');
+  background-position: 0%;
+}
+
+#createNewMenuLink a:hover span {
+  background-position: 100%;  
 }
 
 #createNewMenu {

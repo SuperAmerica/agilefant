@@ -350,7 +350,7 @@ var productId = ${product.id};
 <table>	
 	<tr>
 		<td>
-			<div id="subItems_editProductNonActiveThemesList">
+			<div id="subItems_editProductNonActiveThemesList" class="subItems">
 				<div class="subItemHeader">
 					<table cellspacing="0" cellpadding="0">
 						<tr>

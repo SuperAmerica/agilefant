@@ -799,7 +799,7 @@ h2 .editLink {
 	font-weight: normal;
 }
 
-td.icons {
+td.icons, td.icons_old {
 	width: 2px;
 	white-space: nowrap;
 	text-align: right;

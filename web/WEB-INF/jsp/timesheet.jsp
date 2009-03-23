@@ -258,7 +258,7 @@ $(document).ready( function() {
 								<tbody>
 									<tr>
 										<td class="header">Entries</td>
-										<td class="icons">
+										<td class="icons_old" style="padding: 2px 3px 0 3px;">
 											<a onclick="javascript:$('.toggleall').show();" style="cursor:pointer;"><img src="static/img/plus.png" alt="Expand" title="Expand" height="18" width="18"></a>
 											<a onclick="javascript:$('.toggleall').hide();" style="cursor:pointer;"><img src="static/img/minus.png" alt="Collapse" title="Collapse" height="18" width="18"></a>
 										</td>

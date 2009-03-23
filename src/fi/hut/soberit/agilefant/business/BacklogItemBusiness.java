@@ -9,6 +9,7 @@ import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.IterationGoal;
+import fi.hut.soberit.agilefant.model.Priority;
 import fi.hut.soberit.agilefant.model.State;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.util.BacklogItemResponsibleContainer;
@@ -54,9 +55,10 @@ public interface BacklogItemBusiness {
      *                new state for item
      * @param newEffortLeft
      *                new effort left for item
+     * @param newPriority TODO
      */
-    public void updateBacklogItemStateAndEffortLeft(int backlogItemId,
-            State newState, AFTime newEffortLeft)
+    public void updateBacklogItemStatePriorityAndEffortLeft(int backlogItemId,
+            State newState, AFTime newEffortLeft, Priority newPriority)
             throws ObjectNotFoundException;
 
     /**
@@ -71,13 +73,15 @@ public interface BacklogItemBusiness {
      *                new state for backlog item
      * @param newEffortLeft
      *                new effort left for backlog item
+     * @param newPriority
+     *                new priority for the backlog item
      * @param newTaskStates
      *                <code>Map</code> of elements of form [task_id =>
      *                new_status]
      */
 
     public void updateBacklogItemEffortLeftStateAndTaskStates(
-            int backlogItemId, State newState, AFTime newEffortLeft,
+            int backlogItemId, State newState, AFTime newEffortLeft, Priority newPriority,
             Map<Integer, State> newTaskStates, Map<Integer, String> newTaskNames) throws ObjectNotFoundException;
 
     /**

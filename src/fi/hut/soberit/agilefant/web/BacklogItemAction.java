@@ -20,6 +20,7 @@ import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.BusinessTheme;
+import fi.hut.soberit.agilefant.model.Priority;
 import fi.hut.soberit.agilefant.model.State;
 import fi.hut.soberit.agilefant.model.Task;
 
@@ -36,6 +37,8 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
     private State state;
 
     private AFTime effortLeft;
+    
+    private Priority priority;
 
     private BacklogItem backlogItem;
 
@@ -235,7 +238,8 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
            
         try {
             backlogItemBusiness.updateBacklogItemEffortLeftStateAndTaskStates(
-                    backlogItemId, this.state, this.effortLeft, taskStates, taskNames);
+                    backlogItemId, this.state, this.effortLeft,
+                    this.priority, taskStates, taskNames);
         } catch (ObjectNotFoundException e) {
             return CRUDAction.AJAX_ERROR;
         }
@@ -419,5 +423,13 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
 
     public void setSpentEffortComment(String spentEffortComment) {
         this.spentEffortComment = spentEffortComment;
+    }
+
+    public Priority getPriority() {
+        return priority;
+    }
+
+    public void setPriority(Priority priority) {
+        this.priority = priority;
     }
 }

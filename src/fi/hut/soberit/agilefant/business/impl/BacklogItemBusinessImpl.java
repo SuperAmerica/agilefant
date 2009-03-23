@@ -26,6 +26,7 @@ import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.BusinessTheme;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.IterationGoal;
+import fi.hut.soberit.agilefant.model.Priority;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.State;
 import fi.hut.soberit.agilefant.model.Task;
@@ -233,8 +234,8 @@ public class BacklogItemBusinessImpl implements BacklogItemBusiness {
         this.historyBusiness = historyBusiness;
     }
 
-    public void updateBacklogItemStateAndEffortLeft(int backlogItemId,
-            State newState, AFTime newEffortLeft)
+    public void updateBacklogItemStatePriorityAndEffortLeft(int backlogItemId,
+            State newState, AFTime newEffortLeft, Priority newPriority)
             throws ObjectNotFoundException {
         BacklogItem backlogItem = backlogItemDAO.get(backlogItemId);
         if (backlogItem == null) {
@@ -256,6 +257,7 @@ public class BacklogItemBusinessImpl implements BacklogItemBusiness {
         }
 
         backlogItem.setState(newState);
+        backlogItem.setPriority(newPriority);
         // set effortleft to 0 if state changed to done
         if (newState == State.DONE)
             backlogItem.setEffortLeft(new AFTime(0));
@@ -266,14 +268,14 @@ public class BacklogItemBusinessImpl implements BacklogItemBusiness {
     }
 
     public void updateBacklogItemEffortLeftStateAndTaskStates(
-            int backlogItemId, State newState, AFTime newEffortLeft,
+            int backlogItemId, State newState, AFTime newEffortLeft, Priority newPriority,
             Map<Integer, State> newTaskStates, Map<Integer, String> newTaskNames) throws ObjectNotFoundException {
         BacklogItem backlogItem = backlogItemDAO.get(backlogItemId);
         if (backlogItem == null) {
             throw new ObjectNotFoundException("backlogItem.notFound");
         } else {
-            updateBacklogItemStateAndEffortLeft(backlogItemId, newState,
-                newEffortLeft);
+            updateBacklogItemStatePriorityAndEffortLeft(backlogItemId, newState,
+                newEffortLeft, newPriority);
             taskBusiness.updateMultipleTasks(backlogItem, newTaskStates, newTaskNames);
         }
     }

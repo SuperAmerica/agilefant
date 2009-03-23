@@ -472,15 +472,18 @@ $(document).ready(function() {
 	<table>
 	<tbody>
 		<tr>
-			<td>State</td>
-			<td>
+			<td>State
+
 				<ww:select name="state"
 					id="stateSelectProgress_${backlogItem.id}-${bliListContext}" value="#attr.backlogItem.state.name"
 					list="@fi.hut.soberit.agilefant.model.State@values()" listKey="name"
 					listValue="getText('backlogItem.state.' + name())" />
-            </td>
-            <td>Effort left</td>
-            <td>
+            Priority
+            <ww:select name="priority"
+                    value="backlogItem.priority.name"
+                    list="#@java.util.LinkedHashMap@{'UNDEFINED':'undefined', 'BLOCKER':'+++++', 'CRITICAL':'++++', 'MAJOR':'+++', 'MINOR':'++', 'TRIVIAL':'+'}" />
+            Effort left
+            
 				<ww:hidden name="backlogItemId" value="${backlogItem.id}" />
 				<ww:hidden name="contextViewName" value="${contextViewName}" />
 				<ww:hidden name="contextObjectId" value="${contextObjectId}" />
@@ -500,13 +503,10 @@ $(document).ready(function() {
 		</tr>
 		<c:if test="${hourReport}">
 		<tr>
-			<td>Log effort for <c:out value="${currentUser.initials}"/></td>
-			<td>
+			<td>Log effort for <c:out value="${currentUser.initials}"/>
 			 <ww:textfield size="5" name="spentEffort" id="effortSpent_${backlogItem.id}-${bliListContext}"/>
-			</td>
-			<td>Comment:</td>
-            <td>
-             <ww:textfield size="30" name="spentEffortComment" id="effortSpentComment_${backlogItem.id}-${bliListContext}"/> 
+			Comment:
+             <ww:textfield size="28" name="spentEffortComment" id="effortSpentComment_${backlogItem.id}-${bliListContext}"/> 
 	        </td>
 	    </c:if>
 	</td>
@@ -551,9 +551,9 @@ $(document).ready(function() {
 							</ww:url>
 							<ww:a cssClass="openCreateDialog openBacklogItemDialog"
 								href="%{createBacklogItemLink}" onclick="return false;"
-								title="Create a new backlog item">
-                                <img src="static/img/new.png" alt="New BLI"
-                                    title="Create a new backlog item" />
+								title="Split as a new backlog item">
+                                <img src="static/img/new.png" alt="Split"
+                                    title="Split as a new backlog item" />
 							</ww:a>
 							<ww:url id="moveTaskTopLink" action="moveTaskTop" includeParams="none">
 								<ww:param name="taskId" value="${row.id}" />

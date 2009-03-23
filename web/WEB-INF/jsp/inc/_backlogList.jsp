@@ -28,7 +28,7 @@ function disableThemeSelect(value) {
 		boxes[x].disabled = value;
 }
 
-$(document).ready(function() {        
+$(document).ready(function() {
     <c:forEach items="${openBacklogItemTabs}" var="openBacklogItem">
         handleTabEvent("backlogItemTabContainer-${openBacklogItem[0]}-${bliListContext}", "bli", ${openBacklogItem[0]}, ${openBacklogItem[1]}, '${bliListContext}');
     </c:forEach>

@@ -120,8 +120,8 @@ public class BacklogItemBusinessTest extends TestCase {
         replay(historyBusiness);
 
         try {
-            bliBusiness.updateBacklogItemStateAndEffortLeft(bliId, newState,
-                    newEffortLeft);
+            bliBusiness.updateBacklogItemStatePriorityAndEffortLeft(bliId, newState,
+                    newEffortLeft, null);
         } catch (ObjectNotFoundException onfe) {
             fail("Object not found.");
         }

@@ -459,7 +459,7 @@
             return false;
         },
         getFromUserListContainer: function() {
-            var ulc = $(this.userListContainer);
+            var ulc = $(this.options.userListContainer);
             var list = [];
             
             ulc.find('input[name^=userIds]').each(function() {

@@ -204,7 +204,7 @@ public class TimesheetAction extends ActionSupport implements PrincipalAware {
         boldStyle.setFont(boldFont);
         boldFont.setBoldweight(Font.BOLDWEIGHT_BOLD);
         dateStyle = wb.createCellStyle();
-        dateStyle.setDataFormat(wb.getCreationHelper().createDataFormat().getFormat("m.d.yy h:mm"));
+        dateStyle.setDataFormat(wb.getCreationHelper().createDataFormat().getFormat("dd.mm.yyyy hh:mm"));
         Row head = effort.createRow(0);
         Cell tmp;
         tmp = head.createCell(0);
@@ -256,8 +256,8 @@ public class TimesheetAction extends ActionSupport implements PrincipalAware {
             effort.setColumnWidth(5, 55*256);
         }
         effort.autoSizeColumn(6);
-        effort.setColumnWidth(8, 15*256);
-        effort.autoSizeColumn(9);
+        effort.setColumnWidth(7, 15*256);
+        effort.autoSizeColumn(8);
         
         try {
             excelData = new ByteArrayOutputStream();

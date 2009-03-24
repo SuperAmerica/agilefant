@@ -1,6 +1,6 @@
-Agilefant 1.5.4
+Agilefant 1.5.5 RC
 RELEASE NOTES
-3.3.2008
+24.3.2008
 
 INSTALLATION INSTRUCTIONS AND SYSTEM REQUIREMENTS
 -------------------------------------------------
@@ -53,6 +53,15 @@ Daily work view
 Timesheets
   + log spent effort to projects and/or individual backlog items
   + generate reports of spent effort
+
+CHANGES FROM AGILEFANT 1.5.4
+----------------------------
++ TODO's can be spliced into new backlog items
++ timesheet report data can now be exported to Excel
++ comments for logged effort can now be entered directly from the Progress tab
++ item priority can now be adjusted directly from the Progress tab
++ bugfix for: 0000029
++ other small UI and usability tweaks
 
 CHANGES FROM AGILEFANT 1.5.3
 ----------------------------

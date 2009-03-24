@@ -149,7 +149,7 @@ public class TimesheetAction extends ActionSupport implements PrincipalAware {
     }
     public String initialize() {
         this.interval = "TODAY";
-        this.onlyOngoing = true;
+        this.onlyOngoing = false;
         this.userIds.add(this.currentUserId);
         return Action.SUCCESS;
     }
@@ -256,7 +256,7 @@ public class TimesheetAction extends ActionSupport implements PrincipalAware {
             effort.setColumnWidth(5, 55*256);
         }
         effort.autoSizeColumn(6);
-        effort.autoSizeColumn(8);
+        effort.setColumnWidth(8, 15*256);
         effort.autoSizeColumn(9);
         
         try {

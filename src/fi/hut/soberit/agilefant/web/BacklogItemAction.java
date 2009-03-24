@@ -118,6 +118,9 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
             backlogItem = backlogItemBusiness.createBacklogItemFromTodo(fromTodoId);
             if(backlogItem.getBacklog() != null) {
                 backlogId = backlogItem.getBacklog().getId();
+                if(backlogItem.getIterationGoal() != null) {
+                    iterationGoalId = backlogItem.getIterationGoal().getId();
+                }
             }
         } else {
             backlogItem = backlogBusiness.createBacklogItemToBacklog(backlogId);

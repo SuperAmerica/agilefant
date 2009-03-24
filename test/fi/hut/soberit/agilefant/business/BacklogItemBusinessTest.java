@@ -529,11 +529,13 @@ public class BacklogItemBusinessTest extends TestCase {
         BacklogItem parent = new BacklogItem();
         Iteration bl = new Iteration();
         parent.setBacklog(bl);
+        IterationGoal g = new IterationGoal();
         Collection<User> users = new ArrayList<User>();
         User u1 = new User();
         u1.setId(1);
         users.add(u1);
         parent.setResponsibles(users);
+        parent.setIterationGoal(g);
         
         parent.setPriority(Priority.BLOCKER);
         
@@ -549,6 +551,33 @@ public class BacklogItemBusinessTest extends TestCase {
         assertEquals(from.getName(), r.getName());
         assertEquals(parent.getResponsibles(), r.getResponsibles());
         assertEquals(parent.getPriority(), r.getPriority());
+        assertEquals(parent.getIterationGoal(), r.getIterationGoal());
+        
+        verify(tb);
+    }
+    
+    public void testCreateFromTodo_nulls() {
+        TaskBusiness tb = createMock(TaskBusiness.class);
+        BacklogItemBusinessImpl testable = new BacklogItemBusinessImpl();
+        testable.setTaskBusiness(tb);
+        Task from = new Task();
+        BacklogItem parent = new BacklogItem();
+        Iteration bl = new Iteration();
+        parent.setBacklog(bl);
+        
+        from.setBacklogItem(parent);
+        from.setState(State.DONE);
+        from.setName("foo");
+        
+        expect(tb.getTask(1)).andReturn(from).once();
+        replay(tb);
+        
+        BacklogItem r = testable.createBacklogItemFromTodo(1);
+        assertEquals(from.getState(), r.getState());
+        assertEquals(from.getName(), r.getName());
+        assertEquals(parent.getResponsibles(), r.getResponsibles());
+        assertEquals(parent.getPriority(), r.getPriority());
+        assertEquals(parent.getIterationGoal(), r.getIterationGoal());
         
         verify(tb);
     }

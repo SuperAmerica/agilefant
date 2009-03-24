@@ -364,6 +364,7 @@ public class BacklogItemActionTest extends SpringTestCase {
         assertEquals(this.userId, backlogItemDAO.get(action.getBacklogItemId()).getCreator().getId());
      }
     
+    
     /**
      * Test transforming todo to bli
      */
@@ -404,7 +405,9 @@ public class BacklogItemActionTest extends SpringTestCase {
         action.getBacklogItem().setState(State.IMPLEMENTED);
         action.getBacklogItem().setEffortLeft(new AFTime("1h 15min"));
         SecurityUtil.setLoggedUser(userDAO.get(this.userId));
+        action.setIterationGoalId(goalId);
         assertEquals(Action.SUCCESS,action.store());
+        action.setIterationGoalId(0);
         
         Task foo = new Task();
         foo.setBacklogItem(action.getBacklogItem());
@@ -420,6 +423,8 @@ public class BacklogItemActionTest extends SpringTestCase {
         action.create();
         assertEquals(foo.getName(), action.getBacklogItem().getName());
         assertEquals(foo.getState(), action.getBacklogItem().getState());
+        assertEquals(goalId, action.getIterationGoalId());
+        assertEquals(backlogId, action.getBacklogId());
     }
     /**
      * Test quickStoreBacklogItem used by tasklist.tag

@@ -46,7 +46,7 @@
 					${hibernate.dialect}
 				</prop>
 				<prop key="hibernate.show_sql">
-					true
+					false
 				</prop>
 				<prop key="hibernate.max_fetch_depth">
 					1

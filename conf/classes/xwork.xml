@@ -253,9 +253,7 @@
 		</action>
 		<action name="deleteProject" method="delete"
 			class="projectAction">
-			<result type="redirect">
-				editProduct.action?productId=${productId}
-			</result>
+			<result type="redirect">editProduct.action?productId=${productId}</result>
 		</action>
 		<action name="storeProject" method="store"
 			class="projectAction">
@@ -301,15 +299,9 @@
 		<!-- Backlog actions -->
 		<action name="editBacklog" method="edit"
 			class="backlogAction">
-			<result name="editProduct" type="redirect">
-				editProduct.action?productId=${backlogId}
-			</result>
-			<result name="editProject" type="redirect">
-				editProject.action?projectId=${backlogId}
-			</result>
-			<result name="editIteration" type="redirect">
-				editIteration.action?iterationId=${backlogId}
-			</result>
+			<result name="editProduct" type="redirect">editProduct.action?productId=${backlogId}</result>
+			<result name="editProject" type="redirect">editProject.action?projectId=${backlogId}</result>
+			<result name="editIteration" type="redirect">editIteration.action?iterationId=${backlogId}</result>
 		</action>
 
 		<action name="doActionOnMultipleBacklogItems"
@@ -322,28 +314,16 @@
 
 		<action name="changePriorityOfSelectedItems"
 			method="changePriorityOfSelectedItems" class="backlogAction">
-			<result name="editProduct" type="redirect">
-				editProduct.action?productId=${backlogId}
-			</result>
-			<result name="editProject" type="redirect">
-				editProject.action?projectId=${backlogId}
-			</result>
-			<result name="editIteration" type="redirect">
-				editIteration.action?iterationId=${backlogId}
-			</result>
+			<result name="editProduct" type="redirect">editProduct.action?productId=${backlogId}</result>
+			<result name="editProject" type="redirect">editProject.action?projectId=${backlogId}</result>
+			<result name="editIteration" type="redirect">editIteration.action?iterationId=${backlogId}</result>
 		</action>
 
 		<action name="moveSelectedItems" method="moveSelectedItems"
 			class="backlogAction">
-			<result name="editProduct" type="redirect">
-				editProduct.action?productId=${backlogId}
-			</result>
-			<result name="editProject" type="redirect">
-				editProject.action?projectId=${backlogId}
-			</result>
-			<result name="editIteration" type="redirect">
-				editIteration.action?iterationId=${backlogId}
-			</result>
+			<result name="editProduct" type="redirect">editProduct.action?productId=${backlogId}</result>
+			<result name="editProject" type="redirect">editProject.action?projectId=${backlogId}</result>
+			<result name="editIteration" type="redirect">editIteration.action?iterationId=${backlogId}</result>
 		</action>
 
 		<action name="deleteSelectedItems" method="deleteSelectedItems"
@@ -355,15 +335,9 @@
 
 		<action name="moveBacklogItem" method="moveBacklogItem"
 			class="backlogAction">
-			<result name="editProduct" type="redirect">
-				editProduct.action?productId=${backlogId}
-			</result>
-			<result name="editProject" type="redirect">
-				editProject.action?projectId=${backlogId}
-			</result>
-			<result name="editIteration" type="redirect">
-				editIteration.action?iterationId=${backlogId}
-			</result>
+			<result name="editProduct" type="redirect">editProduct.action?productId=${backlogId}</result>
+			<result name="editProject" type="redirect">editProject.action?projectId=${backlogId}</result>
+			<result name="editIteration" type="redirect">editIteration.action?iterationId=${backlogId}</result>
 		</action>
 		<action name="timelineBubble" method="editWithMetrics"
 			class="backlogAction">
@@ -453,9 +427,7 @@
         </action>
 		<action name="deleteIteration" method="delete"
 			class="iterationAction">
-			<result type="redirect">
-				editProject.action?projectId=${projectId}
-			</result>
+			<result type="redirect">editProject.action?projectId=${projectId}</result>
 		</action>
 		<action name="storeIteration" method="store"
 			class="iterationAction">
@@ -681,9 +653,7 @@
 
 		<action name="moveIterationGoal" method="moveIterationGoal"
 			class="iterationAction">
-			<result type="redirect">
-				editIterationGoal.action?iterationGoalId=${iterationGoalId}
-			</result>
+			<result type="redirect">editIterationGoal.action?iterationGoalId=${iterationGoalId}</result>
 		</action>
 		
 		<action name="iterationGoalTabs" method="edit"
@@ -907,9 +877,7 @@
 		<action name="deleteBusinessTheme" method="delete"
 			class="businessThemeAction">
 			
-			<result name="success_product" type="redirect">
-                editProduct.action?productId=${productId}
-			</result>
+			<result name="success_product" type="redirect">editProduct.action?productId=${productId}</result>
 			<result name="success_globalThemes" type="redirect-action">
                 <param name="actionName">globalThemes</param>
 			</result>

@@ -1,6 +1,6 @@
 Agilefant 1.5.5 RC
 RELEASE NOTES
-26.3.2008
+26.3.2009
 
 INSTALLATION INSTRUCTIONS AND SYSTEM REQUIREMENTS
 -------------------------------------------------

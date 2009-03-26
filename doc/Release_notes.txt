@@ -1,6 +1,6 @@
 Agilefant 1.5.5 RC
 RELEASE NOTES
-24.3.2008
+26.3.2008
 
 INSTALLATION INSTRUCTIONS AND SYSTEM REQUIREMENTS
 -------------------------------------------------
@@ -60,7 +60,7 @@ CHANGES FROM AGILEFANT 1.5.4
 + timesheet report data can now be exported to Excel
 + comments for logged effort can now be entered directly from the Progress tab
 + item priority can now be adjusted directly from the Progress tab
-+ bugfix for: 0000029
++ bugfix for: 0000037 and 0000036
 + other small UI and usability tweaks
 
 CHANGES FROM AGILEFANT 1.5.3

@@ -1,4 +1,4 @@
-Agilefant 1.5.5 RC
+Agilefant 1.5.5
 RELEASE NOTES
 26.3.2009
 

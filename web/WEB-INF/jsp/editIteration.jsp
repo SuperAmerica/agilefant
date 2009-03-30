@@ -1,14 +1,7 @@
 <%@ include file="./inc/_taglibs.jsp"%>
 <%@ include file="./inc/_header.jsp"%>
 
-<c:choose>
-	<c:when test="${iteration.id == 0}">
-		<aef:bct projectId="${projectId}" />
-	</c:when>
-	<c:otherwise>
-		<aef:bct iterationId="${iterationId}" />
-	</c:otherwise>
-</c:choose>
+<aef:bct iterationId="${iterationId}" />
 
 <aef:openDialogs context="iterationGoal" id="openIterationGoalTabs" />
 
@@ -18,14 +11,6 @@
 
 <ww:actionerror />
 <ww:actionmessage />
-
-<script type="text/javascript">
-$(document).ready(function() {        
-    <c:forEach items="${openIterationGoalTabs}" var="openIterationGoal">
-        handleTabEvent("iterationGoalTabContainer-${openIterationGoal[0]}", "iterationGoal", ${openIterationGoal[0]}, ${openIterationGoal[1]});
-    </c:forEach>
-});
-</script>
 
 <h2><c:out value="${iteration.name}" /></h2>
 <table>
@@ -39,7 +24,6 @@ $(document).ready(function() {
                 	toggleDiv('editIterationForm'); toggleDiv('descriptionDiv'); showWysiwyg('iterationDescription'); return false;
                 }
                 </script>
-
 
 				<table cellspacing="0" cellpadding="0">
 					<tr>
@@ -259,27 +243,6 @@ $(document).ready(function() {
 	<script type="text/javascript">
 	
 $(document).ready( function() {
-    $('.moveUp').click(function() {
-        var me = $(this);
-        $.get(me.attr('href'), null, function() {me.moveup();});
-        return false;
-        });
-    $('.moveDown').click(function() {
-        var me = $(this);
-        $.get(me.attr('href'), null, function() {me.movedown();});
-        return false;
-        });
-    $('.moveTop').click(function() {
-        var me = $(this);
-        $.get(me.attr('href'), null, function() {me.movetop();});
-        return false;
-        });
-    $('.moveBottom').click(function() {
-        var me = $(this);
-        $.get(me.attr('href'), null, function() {me.movebottom();});
-        return false;
-        });
-
 	var projectThemes = [];
     <c:if test="${!empty iteration.project.businessThemeBindings}">
 	    projectThemes = [<c:forEach items="${iteration.project.businessThemeBindings}" var="them">${them.businessTheme.id},</c:forEach>-1];
@@ -394,172 +357,9 @@ $(document).ready( function() {
 </table>
 
 
-<table>
-	<tr>
-		<td><c:if test="${iterationId != 0}">
-<div class="subItems" id="subItems_editIterationIterationGoalsList">
-<div class="subItemHeader">
-<table cellspacing="0" cellpadding="0">
-	<tr>
-		<td class="header">Iteration goals</td>
-		<td class="icons">
-		<table cellspacing="0" cellpadding="0">
-                        <tr>
-                        <td>
-		<ww:url
-                        id="createIterationGoalLink" action="ajaxCreateIterationGoal"
-                        includeParams="none">
-                        <ww:param name="iterationId" value="${iteration.id}" />
-                    </ww:url>
-                    <ww:a cssClass="openCreateDialog openIterationGoalDialog" onclick="return false;"
-                        href="%{createIterationGoalLink}" title="Create a new iteration goal">
-                        </ww:a>
-                       </td>
-                       </tr>
-                       </table>
-		</td>
-	</tr>
-</table>
-</div>
-<c:if test="${!empty iteration.iterationGoals}">
-	<aef:hourReporting id="hourReport"></aef:hourReporting>
-	<c:if test="${hourReport}">
-		<aef:backlogHourEntrySums id="iterationGoalEffortSpent"
-			groupBy="IterationGoal" target="${iteration}" />
-	</c:if>
-	<div class="subItemContent">
-	<p><display:table class="listTable"
-		name="iteration.iterationGoals" id="row"
-		requestURI="editIteration.action">
 
-		<display:column sortable="true" title="Name" sortProperty="name" class="iterationGoalNameColumn">							
-			<a class="nameLink" onclick="handleTabEvent('iterationGoalTabContainer-${row.id}', 'iterationGoal', ${row.id}, 0); return false;">
-				${aef:html(row.name)}
-			</a>							
-			<div id="iterationGoalTabContainer-${row.id}" class="tabContainer" style="overflow:visible; white-space: nowrap; width: 0px;"></div>
-		</display:column>
-
-		<display:column sortable="true" sortProperty="description"
-			title="Description" class="iterationGoalDescColumn">
-			<div>
-			${aef:html(row.description)}
-			</div>
-		</display:column>
-		<display:column sortable="false" title="# of backlog items">
-  ${aef:html(fn:length(row.backlogItems))}
-</display:column>
-
-		<display:column sortable="false" title="Effort left sum">
-			<c:out value="${iterationGoalEffLeftSums[row.id]}" />
-		</display:column>
-
-		<display:column sortable="false" title="Original estimate sum">
-			<c:out value="${iterationGoalOrigEstSums[row.id]}" />
-		</display:column>
-
-		<c:if test="${hourReport}">
-			<display:column sortable="false" title="Effort Spent">
-				<c:choose>
-					<c:when test="${iterationGoalEffortSpent[row.id] != null}">
-						<c:out value="${iterationGoalEffortSpent[row.id]}" />
-					</c:when>
-					<c:otherwise>&mdash;</c:otherwise>
-				</c:choose>
-			</display:column>
-		</c:if>
-
-		<display:column sortable="false" title="Actions"
-			class="actionColumn" style="width: 140px !important; white-space: nowrap !important;">
-			<ww:url id="moveTopLink" action="prioritizeIterationGoal"
-				includeParams="none">
-				<ww:param name="iterationGoalId" value="${row.id}" />
-				<ww:param name="iterationId" value="${iterationId}" />
-			</ww:url>
-			<ww:a cssClass="moveTop" href="%{moveTopLink}&amp;moveTo=top">
-				<img src="static/img/arrow_top.png" alt="Send to top"
-					title="Send to top" />
-			</ww:a>
-
-			<ww:url id="moveUpLink" action="prioritizeIterationGoal"
-				includeParams="none">
-				<ww:param name="iterationGoalId" value="${row.id}" />
-				<ww:param name="iterationId" value="${iterationId}" />
-			</ww:url>
-			<ww:a cssClass="moveUp" href="%{moveUpLink}&amp;moveTo=up">
-				<img src="static/img/arrow_up.png" alt="Move up" title="Move up" />
-			</ww:a>
-			<ww:url id="moveDownLink" action="prioritizeIterationGoal"
-				includeParams="none">
-				<ww:param name="iterationGoalId" value="${row.id}" />
-				<ww:param name="iterationId" value="${iterationId}" />
-			</ww:url>
-			<ww:a cssClass="moveDown" href="%{moveDownLink}&amp;moveTo=down">
-				<img src="static/img/arrow_down.png" alt="Move down"
-					title="Move down" />
-			</ww:a>
-
-			<ww:url id="moveBottomLink" action="prioritizeIterationGoal"
-				includeParams="none">
-				<ww:param name="iterationGoalId" value="${row.id}" />
-				<ww:param name="iterationId" value="${iterationId}" />
-			</ww:url>
-			<ww:a cssClass="moveBottom"
-				href="%{moveBottomLink}&amp;moveTo=bottom">
-				<img src="static/img/arrow_bottom.png" alt="Send to bottom"
-					title="Send to bottom" />
-			</ww:a>
-			<img src="static/img/edit.png" alt="Edit" title="Edit" style="cursor: pointer;" onclick="handleTabEvent('iterationGoalTabContainer-${row.id}', 'iterationGoal', ${row.id}, 0); return false;" />
-			<ww:url id="deleteLink" action="deleteIterationGoal"
-				includeParams="none">
-				<ww:param name="iterationGoalId" value="${row.id}" />
-				<ww:param name="iterationId" value="${iteration.id}" />
-			</ww:url>
-			<ww:a href="%{deleteLink}" onclick="return confirmDelete()">
-				<img src="static/img/delete_18.png" alt="Delete" title="Delete" />
-			</ww:a>
-		</display:column>
-
-	</display:table></p>
-	</div>
-</c:if>
-              </div>
-  <div class="subItems" id="subItems_editIterationBacklogItemsList">
-<div class="subItemHeader">
-<table cellspacing="0" cellpadding="0">
-        <tr>
-            <td class="header">
-            Backlog items
-            </td>
-            <td class="icons">
-            <table cellspacing="0" cellpadding="0">
-                <tr>
-                <td>
-                        <ww:url
-                  id="createBacklogItemLink" action="ajaxCreateBacklogItem"
-                  includeParams="none">
-                  <ww:param name="backlogId" value="${iteration.id}" />
-              </ww:url> <ww:a cssClass="openCreateDialog openBacklogItemDialog"
-                  href="%{createBacklogItemLink}" onclick="return false;"
-                  title="Create a new backlog item">
-                  </ww:a>
-                  </td>
-                  </tr>
-                  </table>
-          </td>
-          </tr>
-      </table>
-      </div>
-
-<c:if test="${!empty iteration.backlogItems}">
-	<div class="subItemContent">
-	<p><%@ include file="./inc/_backlogList.jsp"%>
-	</p>
-	</div>
-</c:if></div>
 <p><img src="drawChart.action?iterationId=${iteration.id}"
 	id="bigChart" width="780" height="600" /></p>
-</c:if></td>
-	</tr>
-</table>
+
 
 	<%@ include file="./inc/_footer.jsp"%>

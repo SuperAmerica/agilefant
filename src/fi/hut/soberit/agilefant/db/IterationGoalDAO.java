@@ -1,5 +1,7 @@
 package fi.hut.soberit.agilefant.db;
 
+import java.util.List;
+
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.IterationGoal;
 
@@ -42,4 +44,6 @@ public interface IterationGoalDAO extends GenericDAO<IterationGoal> {
      */
     public void raiseRankBetween(Integer lowLimitRank, Integer upperLimitRank,
             Iteration iteration);
+
+    public List<IterationGoal> getGoalsByIteration(Iteration iter);
 }

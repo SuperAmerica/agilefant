@@ -9,6 +9,7 @@ import java.util.Map;
 import com.opensymphony.xwork.Action;
 
 import fi.hut.soberit.agilefant.business.HistoryBusiness;
+import fi.hut.soberit.agilefant.business.IterationBusiness;
 import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.db.IterationDAO;
@@ -22,6 +23,8 @@ import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.util.BacklogMetrics;
 import fi.hut.soberit.agilefant.util.CalendarUtils;
 import fi.hut.soberit.agilefant.util.EffortSumData;
+import fi.hut.soberit.agilefant.util.IterationDataContainer;
+import flexjson.JSONSerializer;
 
 public class IterationAction extends BacklogContentsAction implements CRUDAction {
 
@@ -63,6 +66,10 @@ public class IterationAction extends BacklogContentsAction implements CRUDAction
     
     private BacklogMetrics iterationMetrics;
     
+    private String json;
+    
+    private IterationBusiness iterationBusiness;
+    
     
     public String create() {
         iterationId = 0;
@@ -70,6 +77,18 @@ public class IterationAction extends BacklogContentsAction implements CRUDAction
         backlog = iteration;
         
         return Action.SUCCESS;
+    }
+    
+    public String iterationContents() {
+        IterationDataContainer data = this.iterationBusiness.getIterationContents(iterationId);
+        if(data == null) {
+            return AJAX_ERROR;
+        }
+        JSONSerializer serializer = new JSONSerializer();
+        
+        json = serializer.prettyPrint(data);
+        
+        return AJAX_SUCCESS;
     }
 
     public String edit() {
@@ -440,6 +459,14 @@ public class IterationAction extends BacklogContentsAction implements CRUDAction
 
     public void setIterationMetrics(BacklogMetrics iterationMetrics) {
         this.iterationMetrics = iterationMetrics;
+    }
+
+    public String getJsonData() {
+        return json;
+    }
+
+    public void setIterationBusiness(IterationBusiness iterationBusiness) {
+        this.iterationBusiness = iterationBusiness;
     }
 
 }

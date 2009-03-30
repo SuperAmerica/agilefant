@@ -126,7 +126,7 @@ public class IterationGoal implements PageItem {
     }
 
     @Column(nullable = false)
-    @JSON(include = false)
+    @JSON(include = true)
     public Integer getPriority() {
         return priority;
     }

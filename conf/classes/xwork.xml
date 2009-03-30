@@ -463,6 +463,13 @@
 				<param name="location">/WEB-INF/jsp/inc/ajaxIterationResult.jsp</param>
 			</result>
 		</action>
+		
+		<action name="iterationData" class="iterationAction" method="iterationContents">
+			<result name="ajax_success" type="dispatcher">
+				<param name="status">200</param>
+				<param name="location">/WEB-INF/jsp/jsonData.jsp</param>
+			</result>
+		</action>
 
 		<!-- /Iteration actions -->
 

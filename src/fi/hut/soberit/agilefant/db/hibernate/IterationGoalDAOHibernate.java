@@ -2,6 +2,9 @@ package fi.hut.soberit.agilefant.db.hibernate;
 
 import java.util.List;
 
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
+
 import fi.hut.soberit.agilefant.db.IterationGoalDAO;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.IterationGoal;
@@ -97,6 +100,15 @@ public class IterationGoalDAOHibernate extends
                                     iteration });
         } else
             throw new IllegalArgumentException("Both limits cannot be null.");
+    }
+    
+    @SuppressWarnings("unchecked")
+    public List<IterationGoal> getGoalsByIteration(Iteration iter) {
+        DetachedCriteria crit = DetachedCriteria.forClass(IterationGoal.class);
+        crit.add(Restrictions.eq("iteration", iter));
+        List<IterationGoal> goals = this.getHibernateTemplate().findByCriteria(crit);
+        this.getHibernateTemplate().evict(goals);
+        return goals;
     }
 
 }

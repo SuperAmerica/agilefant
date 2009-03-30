@@ -34,7 +34,9 @@
      <bean id="businessThemeBusiness" singleton="false"
         class="fi.hut.soberit.agilefant.business.impl.BusinessThemeBusinessImpl" />
      <bean id="timelineBusiness" singleton="false"
-        class="fi.hut.soberit.agilefant.business.impl.TimelineBusinessImpl" />   
+        class="fi.hut.soberit.agilefant.business.impl.TimelineBusinessImpl" />
+     <bean id="iterationBusiness" singleton="false"
+        class="fi.hut.soberit.agilefant.business.impl.IterationBusinessImpl" />          
 
 	<bean name="chartBusiness" singleton="false"
 		class="fi.hut.soberit.agilefant.business.impl.ChartBusinessImpl">

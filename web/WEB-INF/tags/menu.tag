@@ -23,7 +23,7 @@
 
 <script type="text/javascript" src="static/js/datacache.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
 <script type="text/javascript" src="static/js/generic.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
-<script type="text/javascript" src="static/js/jquery-1.2.6.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/jquery.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
 <script type="text/javascript" src="static/js/jquery.cookie.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
 <script type="text/javascript" src="static/js/jquery.treeview.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
 <script type="text/javascript" src="static/js/jquery.treeview.async.js?<ww:text name="webwork.agilefantReleaseId" />"></script>

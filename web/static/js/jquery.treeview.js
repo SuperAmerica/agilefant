@@ -188,7 +188,7 @@
 			this.addClass("treeview");
 			
 			// prepare branches and find all tree items with child lists
-			var branches = this.find("li").prepareBranches(settings);
+			var branches = this.children("li").prepareBranches(settings);
 			
 			switch(settings.persist) {
 			case "cookie":
@@ -225,7 +225,7 @@
 				.find(">.hitarea")
 					.removeClass(CLASSES.lastCollapsableHitarea)
 					.removeClass(CLASSES.lastExpandableHitarea);
-				$(branches).find("li").andSelf().prepareBranches(settings).applyClasses(settings, toggler);
+				$(branches).find("ul>li").andSelf().prepareBranches(settings).applyClasses(settings, toggler);
 			});
 		}
 	});

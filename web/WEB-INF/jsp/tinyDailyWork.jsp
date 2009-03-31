@@ -19,7 +19,7 @@ Agilefant
 
 <script type="text/javascript" src="static/js/datacache.js?${fileTimestamp}"></script>
 <script type="text/javascript" src="static/js/generic.js?${fileTimestamp}"></script>
-<script type="text/javascript" src="static/js/jquery-1.2.6.js?${fileTimestamp}"></script>
+<script type="text/javascript" src="static/js/jquery.js?${fileTimestamp}"></script>
 <script type="text/javascript" src="static/js/jquery.cookie.js?${fileTimestamp}"></script>
 <script type="text/javascript" src="static/js/jquery.treeview.js?${fileTimestamp}"></script>
 <script type="text/javascript" src="static/js/jquery.treeview.async.js?${fileTimestamp}"></script>

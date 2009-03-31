@@ -16,32 +16,34 @@
 ;(function($) {
 
 function load(settings, root, child, container) {
-    $.ajax({url: settings.url, type: 'post', data: { requestId: root }, cache: false, dataType:'json', success: function(response) {
-		function createNode(parent) {
-			var current = $("<li/>").attr("id", this.id || "").html("<span>" + this.text + "</span>").appendTo(parent);
-			if (this.classes) {
-				current.children("span").addClass(this.classes);
-			}
-			if (this.expanded) {
-				current.addClass("open");
-			}
-			if (this.hasChildren || this.children && this.children.length) {
-				var branch = $("<ul/>").appendTo(current);
-				if (this.hasChildren) {
-					current.addClass("hasChildren");
-					createNode.call({
-						text:'<img src="static/img/working.gif" alt="working" width="13" height="13" />',
-						id:"placeholder",
-						children:[]
-					}, branch);
-				}
-				if (this.children && this.children.length) {
-					$.each(this.children, createNode, [branch])
-				}
-			}
+
+	function createNode(parent) {
+		var current = $("<li/>").attr("id", this.id || "").html("<span>" + this.text + "</span>").appendTo(parent);
+		if (this.classes) {
+			current.children("span").addClass(this.classes);
 		}
+		if (this.expanded) {
+			current.addClass("open");
+		}
+		if (this.hasChildren || this.children && this.children.length) {
+			var branch = $("<ul/>").appendTo(current);
+			if (this.hasChildren) {
+				current.addClass("hasChildren");
+				createNode.call({
+					text:'&nbsp;',
+					id:"placeholder",
+					children:[]
+				}, branch);
+			}
+			if (this.children && this.children.length) {
+				$.each(this.children, createNode, [branch])
+			}			
+		}
+	}
+	$.ajax({url: settings.url, type: 'post', data: { requestId: root }, cache: false, dataType:'json', success: function(response) {
 		$.each(response, createNode, [child]);
-        $(container).treeview({add: child});
+		var direct = child.children("li");
+		$(container).treeview({add: direct}); 
     }});
 }
 
@@ -53,7 +55,7 @@ $.fn.treeview = function(settings) {
 	var container = this;
 	load(settings, "backlog_0", this, container);
 	var userToggle = settings.toggle;
-	return proxied.call(this, $.extend({}, settings, {
+	var ret = proxied.call(this, $.extend({}, settings, {
 		collapsed: true,
 		toggle: function() {
 			var $this = $(this);
@@ -67,6 +69,7 @@ $.fn.treeview = function(settings) {
 			}
 		}
 	}));
+	return ret;
 };
 
 })(jQuery);

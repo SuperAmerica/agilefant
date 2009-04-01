@@ -354,36 +354,32 @@ $(document).ready( function() {
 			</c:if>
 		</td>
 	</tr>
-
-
-<tr>
-<td>
+</table>
 <div class="dynamictable">
 
   <div class="dynamictable-row">
-    <div class="dynamictable-cell">
+    <div class="dynamictable-cell" style="width: 70%">
     </div>
-    <div class="dynamictable-cell">
+    <div class="dynamictable-cell" style="width: 10%">
+    </div>
+    <div class="dynamictable-cell" style="width: 10%">
     </div>
   </div>
   
   <div class="dynamictable-row">
-    <div class="dynamictable-cell">
+    <div class="dynamictable-cell" style="width: 70%">
     </div>
-    <div class="dynamictable-cell">
+    <div class="dynamictable-cell" style="width: 10%">
     </div>
-    <div class="dynamictable-cell">
+    <div class="dynamictable-cell" style="width: 10%">
     </div>
-    <div class="dynamictable-cell" />
   </div>
   
-  <div class="dynamictable-padder" />
+  <div class="dynamictable-padder">
+  </div>
 
 </div>
-</td>
-</tr>
 
-</table>
 
 
 <p><img src="drawChart.action?iterationId=${iteration.id}"

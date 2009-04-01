@@ -1,5 +1,5 @@
 .dynamictable {
-  border: 1px solid #666;
+  border: 1px solid #ccc;
   width: 100%;
   clear: both;
 }
@@ -9,7 +9,7 @@
 	padding: 0;
   width: 100%;
   clear: both;
-  white-space: nowrap;
+  overflow: hidden;
 }
 
 .dynamictable .dynamictable-row .dynamictable-cell {
@@ -17,6 +17,7 @@
   min-height: 15px;
   min-width: 30px;
   display: block;
+  width: auto;
   float: left;
 }
 

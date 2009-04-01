@@ -1,0 +1,26 @@
+.dynamictable {
+  border: 1px solid #666;
+  width: 100%;
+  clear: both;
+}
+
+.dynamictable-row {
+	margin: 0;
+	padding: 0;
+  width: 100%;
+  clear: both;
+  white-space: nowrap;
+}
+
+.dynamictable .dynamictable-row .dynamictable-cell {
+	border: 1px solid #666;
+  min-height: 15px;
+  min-width: 30px;
+  display: block;
+  float: left;
+}
+
+.dynamictable-padder {
+  width: 100%;
+  clear: both;
+}

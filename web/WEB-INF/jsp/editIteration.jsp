@@ -354,12 +354,39 @@ $(document).ready( function() {
 			</c:if>
 		</td>
 	</tr>
-</table>
 
+
+<tr>
+<td>
+<div class="dynamictable">
+
+  <div class="dynamictable-row">
+    <div class="dynamictable-cell">
+    </div>
+    <div class="dynamictable-cell">
+    </div>
+  </div>
+  
+  <div class="dynamictable-row">
+    <div class="dynamictable-cell">
+    </div>
+    <div class="dynamictable-cell">
+    </div>
+    <div class="dynamictable-cell">
+    </div>
+    <div class="dynamictable-cell" />
+  </div>
+  
+  <div class="dynamictable-padder" />
+
+</div>
+</td>
+</tr>
+
+</table>
 
 
 <p><img src="drawChart.action?iterationId=${iteration.id}"
 	id="bigChart" width="780" height="600" /></p>
-
 
 	<%@ include file="./inc/_footer.jsp"%>

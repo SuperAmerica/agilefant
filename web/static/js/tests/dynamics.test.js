@@ -31,4 +31,22 @@ $(document).ready(function() {
 	test("aftime to string", function() {
 		
 	});
+	
+	module("Dynamic Table");
+	
+	test("insert table", function() { 
+		var temp = $("<div />").appendTo(document.body).hide();
+		
+		temp.dynamicTable();
+		
+		ok(temp.data("dynamicTable") != undefined, "Table data set");
+		ok(typeof(temp.createRow) == "function", "Can create new row");
+		
+		var row = temp.createRow();
+		
+		ok(row.parent().parent().get(0) == temp.get(0), "Row has been created within the table");
+		ok(typeof(row.createCell) == "function", "Can create new cell");
+		
+		temp.remove();
+	});
 });

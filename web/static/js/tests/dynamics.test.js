@@ -32,21 +32,45 @@ $(document).ready(function() {
 		
 	});
 	
-	module("Dynamic Table");
+	module("Dynamic Table", {
+		setup: function() {
+			$("<div />").appendTo(document.body).attr("id","testTable").hide();
+		},
+		teardown: function() {
+			$("#testTable").remove();
+		}
+	});
 	
 	test("insert table", function() { 
-		var temp = $("<div />").appendTo(document.body).hide();
+		var temp = $("#testTable");
 		
-		temp.dynamicTable();
+		var table = temp.dynamicTable();
 		
-		ok(temp.data("dynamicTable") != undefined, "Table data set");
-		ok(typeof(temp.createRow) == "function", "Can create new row");
+		ok(temp.data("dynamicTable") != undefined && table, "Table data set");
+		ok(typeof(table.createRow) == "function", "Can create new row");
 		
-		var row = temp.createRow();
+		var row = table.createRow();
 		
-		ok(row.parent().parent().get(0) == temp.get(0), "Row has been created within the table");
+		ok(row.getElement().parent().parent().get(0) == temp.get(0), "Row has been created within the table");
 		ok(typeof(row.createCell) == "function", "Can create new cell");
+	});
+	
+	test("One row one cell", function() {
+		var table = $("#testTable").dynamicTable();
+		var row = table.createRow();
+		var cell = row.createCell();
 		
-		temp.remove();
+		ok(cell.getElement().parent().get(0) == row.getElement().get(0), "Cell has correct parent");
+	});
+	
+	test("Cell value callback", function() {
+		var table = $("#testTable").dynamicTable();
+		var row = table.createRow();
+		var getter = function() {
+			return 11;
+		}
+		var cell = row.createCell({get: getter});
+		
+		equals("11", cell.getElement().text(), "Cell has correct value");
 	});
 });

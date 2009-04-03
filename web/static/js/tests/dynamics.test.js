@@ -47,11 +47,10 @@ $(document).ready(function() {
 		var table = temp.dynamicTable();
 		
 		ok(temp.data("dynamicTable") != undefined && table, "Table data set");
-		ok(typeof(table.createRow) == "function", "Can create new row");
-		
+		ok(typeof(table.createRow) == "function", "Can create new row");	
 		var row = table.createRow();
 		
-		ok(row.getElement().parent().parent().get(0) == temp.get(0), "Row has been created within the table");
+		ok(row.getElement().parent().parent().parent().get(0) == temp.get(0), "Row has been created within the table");
 		ok(typeof(row.createCell) == "function", "Can create new cell");
 	});
 	
@@ -70,6 +69,7 @@ $(document).ready(function() {
 			return 11;
 		}
 		var cell = row.createCell({get: getter});
+		table.render();
 		
 		equals("11", cell.getElement().text(), "Cell has correct value");
 	});

@@ -13,7 +13,7 @@ modelFactory.prototype = {
 			error: function() {
 				//throw "Data request failed!";
 			},
-			complete: function(data,type) {
+			success: function(data,type) {
 				var iteration = new iterationModel(data);
 				callback(iteration);
 			},

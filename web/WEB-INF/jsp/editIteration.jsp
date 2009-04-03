@@ -355,6 +355,16 @@ $(document).ready( function() {
 		</td>
 	</tr>
 </table>
+    <script type="text/javascript" src="static/js/dynamics/utils.js"></script>
+    <script type="text/javascript" src="static/js/dynamics/model.js"></script>
+    <script type="text/javascript" src="static/js/dynamics/controller.js"></script>
+    <script type="text/javascript" src="static/js/dynamics/dynamicTable.js"></script>
+    <div id="iterationGoals">&nbsp;</div>
+    <script type="text/javascript">
+    $(document).ready(function() {
+		new iterationController(${iterationId}, $("#iterationGoals"));
+    });
+	</script>
 <div class="dynamictable">
 
   <div class="dynamictable-row">

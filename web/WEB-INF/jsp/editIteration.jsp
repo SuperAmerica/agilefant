@@ -355,40 +355,17 @@ $(document).ready( function() {
 		</td>
 	</tr>
 </table>
-    <script type="text/javascript" src="static/js/dynamics/utils.js"></script>
-    <script type="text/javascript" src="static/js/dynamics/model.js"></script>
-    <script type="text/javascript" src="static/js/dynamics/controller.js"></script>
-    <script type="text/javascript" src="static/js/dynamics/dynamicTable.js"></script>
-    <div id="iterationGoals">&nbsp;</div>
-    <script type="text/javascript">
-    $(document).ready(function() {
-		new iterationController(${iterationId}, $("#iterationGoals"));
-    });
-	</script>
-<div class="dynamictable">
+<script type="text/javascript" src="static/js/dynamics/utils.js"></script>
+<script type="text/javascript" src="static/js/dynamics/model.js"></script>
+<script type="text/javascript" src="static/js/dynamics/controller.js"></script>
+<script type="text/javascript" src="static/js/dynamics/dynamicTable.js"></script>
+<div id="iterationGoals">&nbsp;</div>
+<script type="text/javascript">
+$(document).ready(function() {
+  new iterationController(${iterationId}, $("#iterationGoals"));
+});
+</script>
 
-  <div class="dynamictable-row">
-    <div class="dynamictable-cell" style="width: 70%">
-    </div>
-    <div class="dynamictable-cell" style="width: 10%">
-    </div>
-    <div class="dynamictable-cell" style="width: 10%">
-    </div>
-  </div>
-  
-  <div class="dynamictable-row">
-    <div class="dynamictable-cell" style="width: 70%">
-    </div>
-    <div class="dynamictable-cell" style="width: 10%">
-    </div>
-    <div class="dynamictable-cell" style="width: 10%">
-    </div>
-  </div>
-  
-  <div class="dynamictable-padder">
-  </div>
-
-</div>
 
 
 

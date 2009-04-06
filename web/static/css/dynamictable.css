@@ -1,14 +1,13 @@
 .dynamictable {
   border: 1px solid #ccc;
   width: 100%;
-  clear: both;
+  overflow: auto;
 }
 
 .dynamictable-row {
 	margin: 0;
 	padding: 0;
   width: 100%;
-  clear: both;
   overflow: hidden;
 }
 
@@ -19,9 +18,13 @@
   display: block;
   width: auto;
   float: left;
+  margin: 1px;
+  padding: 1px;
 }
 
 .dynamictable-padder {
   width: 100%;
-  clear: both;
+  height: 1px;
+  margin: 0;
+  padding: 0;
 }

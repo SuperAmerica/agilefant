@@ -13,8 +13,6 @@
 		this.container = $("<div />").appendTo(this.element).addClass(cssClasses.table);
 		this.table = $("<div />").appendTo(this.container).hide();
 		this.headerRow = null;
-		//to resolve border overflow etc. issues
-		$("<div />").appendTo(this.container).css("clear","both").width("100%").height("1px").css("margin","0").css("padding","0");
 	};
 	
 	dynamicTable.prototype = {
@@ -69,9 +67,12 @@
 	/** TABLE CELL **/
 	var dynamicTableCell = function(row, options) {
 		this.row = row;
-		this.options = {};
+		this.options = {
+		    css: { 'width': '200px' }
+		};
 		$.extend(this.options,options);
 		this.cell = $("<div />").appendTo(this.row.getElement()).addClass(cssClasses.tableCell);
+		this.cell.css(this.options.css);
 	};
 	
 	dynamicTableCell.prototype = {

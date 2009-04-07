@@ -65,7 +65,6 @@
 			  if (this.options.headerCols[this.options.defaultSortColumn]) {
 			    this.doSort(this.options.defaultSortColumn, this.options.headerCols[this.options.defaultSortColumn].sort);
 			  }
-			  this.updateRowCss();
 			},
 			renderHeader: function() {
 			  if (this.options.headerCols.length == 0) {
@@ -85,11 +84,6 @@
 	        me.headerRow.children(i).css(v);
 	      });
 			},
-			updateRowCss: function() {
-			  var t = $(this.table);
-			  t.children(':odd').removeClass(cssClasses.oddRow + " " + cssClasses.evenRow).addClass(cssClasses.oddRow);
-			  t.children(':even').removeClass(cssClasses.oddRow + " " + cssClasses.evenRow).addClass(cssClasses.evenRow);
-			},
 			doSort: function(colNo, comparator) {
 			  if (typeof(comparator) != "function") {
 			    return false;
@@ -107,7 +101,6 @@
 			  for(var i = 0; i < sorted.length; i++) {
 			    sorted[i].row.appendTo(this.table);
 			  }
-			  this.updateRowCss();
       },
       calculateColumnWidths: function(params) {
         var num = 0;
@@ -217,25 +210,27 @@
 		},
 		iterationGoalTable: function(options) {
 		  var opts = {
-		      colCss: { },
-		      headerCols: [
-		                   {
-		                     name: 'Name',
-		                     sort: agilefantUtils.comparators.nameComparator
-		                   },
-		                   {
-		                     name: 'Description',
-		                     sort: agilefantUtils.comparators.descComparator
-		                   }
-		      ],
+		      colCss: {
+		        ':lt(2)': { 'background': '#ffc' },
+		        ':eq(2)': { 'background': '#fcc' }
+		      },
+		      headerCols: [],
 		      colWidths: [
 		                  {
-		                    minwidth: 100,
+		                    minwidth: 120,
 		                    auto: true
 		                  },
 		                  {
-                        minwidth: 200,
-                        auto: true
+		                    minwidth: 40,
+		                    auto: true
+		                  },
+		                  {
+		                    minwidth: 40,
+		                    auto: true
+		                  },
+		                  {
+                        width: 95,
+                        auto: false
                       }
 		                  ]
 		  }

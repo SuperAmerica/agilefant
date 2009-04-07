@@ -17,21 +17,29 @@
   display: block;
   width: auto;
   float: left;
-  margin: 0 0 -30em 0;
-  padding: 0 0 30em 0;
+  margin: 0 0 -29.5em 0;
+  padding: 0 0 30em 3px;
   overflow: hidden;
   border-style: solid;
   border-color: #fff;
-  border-width: 0 2px;
+  border-width: 0 2px 0 1px;
 }
 
-.dynamictable-header {
-  background: #ccc !important;
+.dynamictable-header .dynamictable-cell {
   font-weight: bold;
+  background-color: #ddd !important;
 }
 
 .dynamictable-header .dynamictable-cell {
   padding-left: 4px;  
+}
+
+.dynamictable-even .dynamictable-cell {
+  background-color: #eee;  
+}
+
+.dynamictable-odd .dynamictable-cell {
+  background-color: #fff;
 }
 
 .dynamictable-padder {

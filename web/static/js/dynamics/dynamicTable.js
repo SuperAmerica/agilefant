@@ -3,12 +3,15 @@
 		tableRow: "dynamictable-row",
 		tableCell: "dynamictable-cell",
 		tableHeader: "dynamictable-header",
-		table: "dynamictable"
+		table: "dynamictable",
+		oddRow: "dynamictable-odd",
+		evenRow: "dynamictable-even"
 	};
 	/** TABLE **/
 	var dynamicTable = function(element, options) {
     this.options = {
-        colCss: { }
+        colCss: {},
+        headerCols: []
     };
     $.extend(this.options,options);
 		this.element = element;
@@ -38,22 +41,29 @@
 			  this.updateRowCss();
 			},
 			renderHeader: function() {
-			  this.headerRow = $('<div />').addClass(cssClasses.tableRow).addClass(cssClasses.tableHeader);
+			  if (this.options.headerCols.length == 0) {
+			    return false;
+			  }
 			  var me = this;
+			  this.headerRow = $('<div />').addClass(cssClasses.tableRow).addClass(cssClasses.tableHeader).prependTo(this.table);
+			  
 			  $.each(this.options.headerCols, function(i,v) {
 			    var col = $('<div />').addClass(cssClasses.tableCell).appendTo(me.headerRow);
 			    $('<a href="#"/>').text(v.name).click(function() { v.sort(); return false; }).appendTo(col);
 			  });
+			  
 			  $.each(this.options.colCss, function(i,v) {
 	        me.headerRow.children(i).css(v);
 	      });
-			  this.table.prepend(this.headerRow);
 			},
 			updateRowCss: function() {
 			  var t = $(this.table);
-			  t.children(':odd').removeClass("odd even").addClass("odd");
-			  t.children(':even').removeClass("odd even").addClass("even");
-			}
+			  t.children(':odd').removeClass(cssClasses.oddRow + " " + cssClasses.evenRow).addClass(cssClasses.oddRow);
+			  t.children(':even').removeClass(cssClasses.oddRow + " " + cssClasses.evenRow).addClass(cssClasses.evenRow);
+			},
+			doSort: function() {
+        this.rows.sort(agilefantUtils.comparators.stringCompare);
+      }
 	};
 	
 	/** TABLE ROW **/
@@ -133,7 +143,7 @@
 		  var opts = {
 		      colCss: {
 		        ':eq(0)': {'width': '40%'},
-		        ':eq(1)': {'width': '55%'}
+		        ':eq(1)': {'width': '57%'}
 		      },
 		      headerCols: [
 		                   {
@@ -153,4 +163,4 @@
 			return ret;
 		}
 	});
-})(jQuery);
+})(jQuery)

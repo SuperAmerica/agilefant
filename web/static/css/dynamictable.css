@@ -1,11 +1,11 @@
 .dynamictable {
   border: 1px solid #ccc;
   width: 100%;
-  overflow: auto;
+  overflow: hidden;
 }
 
 .dynamictable-row {
-	margin: 0;
+	margin: 3px 0;
 	padding: 0;
   width: 100%;
   overflow: hidden;
@@ -17,12 +17,21 @@
   display: block;
   width: auto;
   float: left;
-  margin: 0 0 -200px 0;
-  padding: 0px 0px 200px 0px;
+  margin: 0 0 -30em 0;
+  padding: 0 0 30em 0;
   overflow: hidden;
   border-style: solid;
   border-color: #fff;
-  border-right: 2px;
+  border-width: 0 2px;
+}
+
+.dynamictable-header {
+  background: #ccc !important;
+  font-weight: bold;
+}
+
+.dynamictable-header .dynamictable-cell {
+  padding-left: 4px;  
 }
 
 .dynamictable-padder {

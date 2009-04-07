@@ -8,9 +8,7 @@
 	/** TABLE **/
 	var dynamicTable = function(element, options) {
     this.options = {
-        colCss: {
-          '.dynamictable-cell': { 'width': '32%' }
-        }
+        colCss: { }
     };
     $.extend(this.options,options);
 		this.element = element;
@@ -40,7 +38,16 @@
 			  this.updateRowCss();
 			},
 			renderHeader: function() {
-			  
+			  this.headerRow = $('<div />').addClass(cssClasses.tableRow).addClass(cssClasses.tableHeader);
+			  var me = this;
+			  $.each(this.options.headerCols, function(i,v) {
+			    var col = $('<div />').addClass(cssClasses.tableCell).appendTo(me.headerRow);
+			    $('<a href="#"/>').text(v.name).click(function() { v.sort(); return false; }).appendTo(col);
+			  });
+			  $.each(this.options.colCss, function(i,v) {
+	        me.headerRow.children(i).css(v);
+	      });
+			  this.table.prepend(this.headerRow);
 			},
 			updateRowCss: function() {
 			  var t = $(this.table);
@@ -127,7 +134,17 @@
 		      colCss: {
 		        ':eq(0)': {'width': '40%'},
 		        ':eq(1)': {'width': '55%'}
-		      }
+		      },
+		      headerCols: [
+		                   {
+		                     name: 'Name',
+		                     sort: function() { alert('Sort by name'); return false; }
+		                   },
+		                   {
+		                     name: 'Description',
+		                     sort: function() { alert('Sort by desc'); return false; }
+		                   }
+		      ]
 		  }
 		  $.extend(opts,options);
 			var ret = this.dynamicTable(opts);

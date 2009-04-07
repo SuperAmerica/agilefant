@@ -74,21 +74,51 @@ $(document).ready(function() {
 		equals("11", cell.getElement().text(), "Cell has correct value");
 	});
 	
+	test("Test column width calculation", function() {
+	  var table = $('#testTable').dynamicTable();
+	  var widths = table.calculateColumnWidths([
+	                                            {
+	                                              minwidth: 20,
+	                                              auto: true
+	                                            },
+	                                            {
+	                                              minwidth: 100,
+	                                              auto: true
+	                                            }
+	                                            ]);
+	  same(widths, [ 15, 79 ], "Column widths calculated correctly")
+	  widths = table.calculateColumnWidths([
+                                              {
+                                                minwidth: 20,
+                                                auto: true
+                                              },                                              
+                                              {
+                                                minwidth: 100,
+                                                auto: true
+                                              },
+                                              {
+                                                minwidth: 100,
+                                                auto: false
+                                              }
+                                              ]);
+    same(widths, [ 15, 79, null ], "Column widths calculated correctly")
+	});
+	
 	test("Test sort direction changing", function() {
 	  var table = $('#testTable').iterationGoalTable();
 	  
 	  table.render();
 	  
-	  equals(table.sorting.column, 0, "Table has correct sorting column");
-    equals(table.sorting.direction, 0, "Table has correct sorting direction");
+	  equals(table.getSorting().column, 0, "Table has correct sorting column");
+    equals(table.getSorting().direction, 0, "Table has correct sorting direction");
 	  table.headerRow.find('div:eq(0) a').click();
-	  equals(table.sorting.column, 0, "Table has correct sorting column");
-	  equals(table.sorting.direction, 1, "Table has correct sorting direction");
+	  equals(table.getSorting().column, 0, "Table has correct sorting column");
+	  equals(table.getSorting().direction, 1, "Table has correct sorting direction");
 	  table.headerRow.find('div:eq(0) a').click();
-	  equals(table.sorting.column, 0, "Table has correct sorting column");
-    equals(table.sorting.direction, 0, "Table has correct sorting direction");
+	  equals(table.getSorting().column, 0, "Table has correct sorting column");
+    equals(table.getSorting().direction, 0, "Table has correct sorting direction");
     table.headerRow.find('div:eq(1) a').click();
-    equals(table.sorting.column, 1, "Table has correct sorting column");
-    equals(table.sorting.direction, 0, "Table has correct sorting direction");
+    equals(table.getSorting().column, 1, "Table has correct sorting column");
+    equals(table.getSorting().direction, 0, "Table has correct sorting direction");
 	});
 });

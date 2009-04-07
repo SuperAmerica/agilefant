@@ -7,14 +7,24 @@
 		oddRow: "dynamictable-odd",
 		evenRow: "dynamictable-even"
 	};
+	var statics = {
+	  borderPerColumn: 3
+	};
 	/** TABLE **/
 	var dynamicTable = function(element, options) {
     this.options = {
         colCss: {},
+        colWidths: [],
         headerCols: [],
         defaultSortColumn: 0
     };
     $.extend(this.options,options);
+    var widths = this.calculateColumnWidths(this.options.colWidths);
+    for (var i = 0; i < widths.length; i++) {
+      if (widths[i]) {
+        this.options.colWidths[i].width = widths[i];
+      }
+    }
 		this.element = element;
 		this.rows = [];
 		this.container = $("<div />").appendTo(this.element).addClass(cssClasses.table);
@@ -23,7 +33,7 @@
 		this.sorting = {
 		    column: this.options.defaultSortColumn,
 		    direction: -1
-		}
+		};
 	};
 	
 	dynamicTable.prototype = {
@@ -34,6 +44,15 @@
 			},
 			getElement: function() {
 				return this.table;
+			},
+			getOptions: function() {
+			  return this.options;
+			},
+			getColWidth: function(colno) {
+			  return this.options.colWidths[colno];
+			},
+			getSorting: function() {
+			  return this.sorting;
 			},
 			render: function() {
 			  if(this.headerRow == null) {
@@ -56,7 +75,9 @@
 			  this.headerRow = $('<div />').addClass(cssClasses.tableRow).addClass(cssClasses.tableHeader).prependTo(this.table);
 			  
 			  $.each(this.options.headerCols, function(i,v) {
-			    var col = $('<div />').addClass(cssClasses.tableCell).appendTo(me.headerRow);
+			    var col = $('<div />').addClass(cssClasses.tableCell).appendTo(me.headerRow)
+			      .css('min-width',me.options.colWidths[i].minwidth + 'px')
+			      .css('width',me.options.colWidths[i].width + '%');
 			    $('<a href="#"/>').text(v.name).click(function() { me.doSort(i, v.sort); return false; }).appendTo(col);
 			  });
 			  
@@ -87,6 +108,31 @@
 			    sorted[i].row.appendTo(this.table);
 			  }
 			  this.updateRowCss();
+      },
+      calculateColumnWidths: function(params) {
+        var num = 0;
+        var totalwidth = 0;
+        for (var i = 0; i < params.length; i++) {
+          if (params[i].auto) {
+            num++;
+            totalwidth += params[i].minwidth;
+          }
+        }
+        totalwidth += statics.borderPerColumn * num;
+        
+        var retval = [];
+        
+        for (var j = 0; j < params.length; j++) {
+          var cell = params[j];
+          if (!cell.auto) {
+            retval.push(null);
+          }
+          else {
+            var percent = Math.floor(100 * (cell.minwidth / totalwidth));
+            retval.push(percent);
+          }
+        }
+        return retval;
       }
 	};
 	
@@ -102,12 +148,15 @@
 	
 	dynamicTableRow.prototype = {
 		createCell: function(options) {
-			var newCell = new dynamicTableCell(this, options);
+			var newCell = new dynamicTableCell(this, this.cells.length, options);
 			this.cells.push(newCell);
 			return newCell;
 		},
 		getElement: function() {
 			return this.row;
+		},
+		getTable: function() {
+		  return this.table;
 		},
 		render: function() {
 		  for(var i = 0; i < this.cells.length; i++) {
@@ -124,14 +173,17 @@
 	};
 	
 	/** TABLE CELL **/
-	var dynamicTableCell = function(row, options) {
+	var dynamicTableCell = function(row, cellno, options) {
 		this.row = row;
-		this.options = {
-		    css: { }
-		};
+		this.cellno = cellno;
+		this.options = {};
 		$.extend(this.options,options);
 		this.cell = $("<div />").appendTo(this.row.getElement()).addClass(cssClasses.tableCell);
-		this.cell.css(this.options.css);
+		var a = row.getTable().getColWidth(cellno);
+		if (a) {
+		  if (a.minwidth) { this.cell.css('min-width',a.minwidth + 'px'); }
+		  if (a.width) { this.cell.css('width',a.width + '%'); }
+		}
 	};
 	
 	dynamicTableCell.prototype = {
@@ -165,10 +217,7 @@
 		},
 		iterationGoalTable: function(options) {
 		  var opts = {
-		      colCss: {
-		        ':eq(0)': {'width': '40%'},
-		        ':eq(1)': {'width': '57%'}
-		      },
+		      colCss: { },
 		      headerCols: [
 		                   {
 		                     name: 'Name',
@@ -178,7 +227,17 @@
 		                     name: 'Description',
 		                     sort: agilefantUtils.comparators.descComparator
 		                   }
-		      ]
+		      ],
+		      colWidths: [
+		                  {
+		                    minwidth: 100,
+		                    auto: true
+		                  },
+		                  {
+                        minwidth: 200,
+                        auto: true
+                      }
+		                  ]
 		  }
 		  $.extend(opts,options);
 			var ret = this.dynamicTable(opts);

@@ -8,9 +8,7 @@
 	var dynamicTable = function(element, options) {
     this.options = {
         colCss: {
-          '.dynamictable-cell': { 'width': '32%' },
-          ':eq(0)': { 'font-weight': 'bold' },
-          ':eq(1)': { 'background': '#fcf' }
+          '.dynamictable-cell': { 'width': '32%' }
         }
     };
     $.extend(this.options,options);
@@ -65,10 +63,6 @@
 		createCell: function(options) {
 			var newCell = new dynamicTableCell(this, options);
 			this.cells.push(newCell);
-			var newCell2 = new dynamicTableCell(this, options);
-      this.cells.push(newCell2);
-      var newCell3 = new dynamicTableCell(this, options);
-      this.cells.push(newCell3);
 			return newCell;
 		},
 		getElement: function() {
@@ -84,10 +78,7 @@
 		  var me = this;
 		  $.each(this.table.options.colCss, function(i,v) {
 		    me.row.children(i).css(v);
-		    me.table.counter++;
 		  });
-		  var a = this.table.counter;
-		  var b = 60;
 		}
 	};
 	

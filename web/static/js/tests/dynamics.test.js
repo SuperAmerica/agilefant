@@ -73,4 +73,22 @@ $(document).ready(function() {
 		
 		equals("11", cell.getElement().text(), "Cell has correct value");
 	});
+	
+	test("Test sort direction changing", function() {
+	  var table = $('#testTable').iterationGoalTable();
+	  
+	  table.render();
+	  
+	  equals(table.sorting.column, 0, "Table has correct sorting column");
+    equals(table.sorting.direction, 0, "Table has correct sorting direction");
+	  table.headerRow.find('div:eq(0) a').click();
+	  equals(table.sorting.column, 0, "Table has correct sorting column");
+	  equals(table.sorting.direction, 1, "Table has correct sorting direction");
+	  table.headerRow.find('div:eq(0) a').click();
+	  equals(table.sorting.column, 0, "Table has correct sorting column");
+    equals(table.sorting.direction, 0, "Table has correct sorting direction");
+    table.headerRow.find('div:eq(1) a').click();
+    equals(table.sorting.column, 1, "Table has correct sorting column");
+    equals(table.sorting.direction, 0, "Table has correct sorting direction");
+	});
 });

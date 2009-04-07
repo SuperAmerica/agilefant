@@ -14,5 +14,13 @@ var agilefantUtils = {
 	},
 	isAftimeString: function(string) {
 		
+	},
+	comparators: {
+	  nameComparator: function(a,b) {
+	    return (a.name.toLowerCase() > b.name.toLowerCase());
+	  },
+	  descComparator: function(a,b) {
+	    return (a.description.toLowerCase() > b.description.toLowerCase());
+	  }
 	}
 };

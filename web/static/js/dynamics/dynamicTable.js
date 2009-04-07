@@ -11,7 +11,8 @@
 	var dynamicTable = function(element, options) {
     this.options = {
         colCss: {},
-        headerCols: []
+        headerCols: [],
+        defaultSortColumn: 0
     };
     $.extend(this.options,options);
 		this.element = element;
@@ -19,6 +20,10 @@
 		this.container = $("<div />").appendTo(this.element).addClass(cssClasses.table);
 		this.table = $("<div />").appendTo(this.container).hide();
 		this.headerRow = null;
+		this.sorting = {
+		    column: this.options.defaultSortColumn,
+		    direction: -1
+		}
 	};
 	
 	dynamicTable.prototype = {
@@ -38,6 +43,9 @@
 			    this.rows[i].render();
 			  }
 			  this.table.show();
+			  if (this.options.headerCols[this.options.defaultSortColumn]) {
+			    this.doSort(this.options.defaultSortColumn, this.options.headerCols[this.options.defaultSortColumn].sort);
+			  }
 			  this.updateRowCss();
 			},
 			renderHeader: function() {
@@ -49,7 +57,7 @@
 			  
 			  $.each(this.options.headerCols, function(i,v) {
 			    var col = $('<div />').addClass(cssClasses.tableCell).appendTo(me.headerRow);
-			    $('<a href="#"/>').text(v.name).click(function() { v.sort(); return false; }).appendTo(col);
+			    $('<a href="#"/>').text(v.name).click(function() { me.doSort(i, v.sort); return false; }).appendTo(col);
 			  });
 			  
 			  $.each(this.options.colCss, function(i,v) {
@@ -61,8 +69,24 @@
 			  t.children(':odd').removeClass(cssClasses.oddRow + " " + cssClasses.evenRow).addClass(cssClasses.oddRow);
 			  t.children(':even').removeClass(cssClasses.oddRow + " " + cssClasses.evenRow).addClass(cssClasses.evenRow);
 			},
-			doSort: function() {
-        this.rows.sort(agilefantUtils.comparators.stringCompare);
+			doSort: function(colNo, comparator) {
+			  if (typeof(comparator) != "function") {
+			    return false;
+			  }		  
+			  if ((this.sorting.column == colNo) && this.sorting.direction == 0) {
+			    this.sorting.direction = 1;
+			  }
+			  else {
+			    this.sorting.direction = 0;
+			  }
+			  this.sorting.column = colNo;
+			  
+			  var sorted = (this.rows.sort(function(a,b) { return comparator(a.model,b.model); }));
+			  if (this.sorting.direction == 1) { sorted = sorted.reverse(); }
+			  for(var i = 0; i < sorted.length; i++) {
+			    sorted[i].row.appendTo(this.table);
+			  }
+			  this.updateRowCss();
       }
 	};
 	
@@ -148,11 +172,11 @@
 		      headerCols: [
 		                   {
 		                     name: 'Name',
-		                     sort: function() { alert('Sort by name'); return false; }
+		                     sort: agilefantUtils.comparators.nameComparator
 		                   },
 		                   {
 		                     name: 'Description',
-		                     sort: function() { alert('Sort by desc'); return false; }
+		                     sort: agilefantUtils.comparators.descComparator
 		                   }
 		      ]
 		  }

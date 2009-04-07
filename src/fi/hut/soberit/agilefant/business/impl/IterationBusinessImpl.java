@@ -2,11 +2,13 @@ package fi.hut.soberit.agilefant.business.impl;
 
 import java.util.List;
 
+import fi.hut.soberit.agilefant.business.BacklogItemBusiness;
 import fi.hut.soberit.agilefant.business.IterationBusiness;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.db.BusinessThemeDAO;
 import fi.hut.soberit.agilefant.db.IterationDAO;
 import fi.hut.soberit.agilefant.db.IterationGoalDAO;
+import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.IterationGoal;
 import fi.hut.soberit.agilefant.util.IterationDataContainer;
@@ -14,6 +16,7 @@ import fi.hut.soberit.agilefant.util.IterationDataContainer;
 public class IterationBusinessImpl implements IterationBusiness {
 
     private BacklogItemDAO backlogItemDAO;
+    private BacklogItemBusiness backlogItemBusiness;
     private BusinessThemeDAO businessThemeDAO;
     private IterationGoalDAO iterationGoalDAO;
     private IterationDAO iterationDAO;
@@ -29,6 +32,25 @@ public class IterationBusinessImpl implements IterationBusiness {
     public IterationDataContainer getIterationContents(Iteration iter) {
         List<IterationGoal> goals = this.iterationGoalDAO.getGoalsByIteration(iter);
         
+        List<BacklogItem> blis = backlogItemBusiness.getBacklogItemsByBacklog(iter);
+
+        //calculate efforts from pre-fetched backlog items
+        for(IterationGoal goal : goals) {
+            for(BacklogItem bli : blis) {
+                if(bli.getIterationGoal() == goal) {
+                    if(bli.getEffortLeft() != null) {
+                        goal.getMetrics().getEffortLeft().add(bli.getEffortLeft());
+                    }
+                    if(bli.getEffortSpent() != null) {
+                        goal.getMetrics().getEffortSpent().add(bli.getEffortSpent());
+                    }
+                    if(bli.getOriginalEstimate() != null) {
+                        goal.getMetrics().getOriginalEstimate().add(bli.getOriginalEstimate());
+                    }
+                    goal.getMetrics().addTask(bli);
+                }
+            }
+        }
         IterationDataContainer iterData = new IterationDataContainer();
         iterData.setIterationGoals(goals);
         return iterData;
@@ -51,6 +73,10 @@ public class IterationBusinessImpl implements IterationBusiness {
     
     public void setIterationDAO(IterationDAO iterationDAO) {
         this.iterationDAO = iterationDAO;
+    }
+
+    public void setBacklogItemBusiness(BacklogItemBusiness backlogItemBusiness) {
+        this.backlogItemBusiness = backlogItemBusiness;
     }
 
 }

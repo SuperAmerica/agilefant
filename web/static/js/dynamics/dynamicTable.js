@@ -114,6 +114,8 @@
         totalwidth += statics.borderPerColumn * num;
         
         var retval = [];
+       
+        var totalPercentage = Math.floor(100 * (statics.borderPerColumn * (num - 1)  / totalwidth));
         
         for (var j = 0; j < params.length; j++) {
           var cell = params[j];
@@ -122,7 +124,14 @@
           }
           else {
             var percent = Math.floor(100 * (cell.minwidth / totalwidth));
+            totalPercentage += percent;
             retval.push(percent);
+          }
+        }
+        for (var j = 0; j < params.length; j++) {
+          var cell = params[j];
+          if(!cell.auto && cell.setMaxWidth == true) {
+            retval[j] = totalPercentage;
           }
         }
         return retval;
@@ -176,6 +185,7 @@
 		if (a) {
 		  if (a.minwidth) { this.cell.css('min-width',a.minwidth + 'px'); }
 		  if (a.width) { this.cell.css('width',a.width + '%'); }
+		  if(a.setMaxWidth) { this.cell.css("clear","left"); }
 		}
 	};
 	
@@ -211,8 +221,9 @@
 		iterationGoalTable: function(options) {
 		  var opts = {
 		      colCss: {
-		        ':lt(2)': { 'background': '#ffc' },
-		        ':eq(2)': { 'background': '#fcc' }
+		        ':lt(3)': { 'background': '#ffc' },
+		        ':eq(3)': { 'background': '#fcc' },
+		        ':eq(4)': { 'background': '#cfc' }
 		      },
 		      headerCols: [],
 		      colWidths: [
@@ -225,12 +236,20 @@
 		                    auto: true
 		                  },
 		                  {
+		                	minwidth: 40,
+		                	auto: true
+		                  },
+		                  {
 		                    minwidth: 40,
 		                    auto: true
 		                  },
 		                  {
-                        width: 95,
+                        setMaxWidth: true,
                         auto: false
+                      },
+                      {
+                        auto: false,
+                        setMaxWidth: true
                       }
 		                  ]
 		  }

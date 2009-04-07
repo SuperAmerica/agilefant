@@ -16,6 +16,7 @@ import javax.persistence.Transient;
 
 import org.hibernate.annotations.Type;
 
+import fi.hut.soberit.agilefant.util.IterationGoalMetrics;
 import fi.hut.soberit.agilefant.web.page.PageItem;
 import flexjson.JSON;
 
@@ -51,6 +52,8 @@ public class IterationGoal implements PageItem {
     private Collection<BacklogItem> backlogItems = new HashSet<BacklogItem>();
 
     private Integer priority = new Integer(0);
+    
+    private IterationGoalMetrics metrics = new IterationGoalMetrics();
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -133,5 +136,15 @@ public class IterationGoal implements PageItem {
 
     public void setPriority(Integer priority) {
         this.priority = priority;
+    }
+
+    @Transient
+    @JSON(include=true)
+    public IterationGoalMetrics getMetrics() {
+        return metrics;
+    }
+
+    public void setMetrics(IterationGoalMetrics metrics) {
+        this.metrics = metrics;
     }
 }

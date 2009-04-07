@@ -86,7 +86,7 @@ $(document).ready(function() {
 	                                              auto: true
 	                                            }
 	                                            ]);
-	  same(widths, [ 15, 79 ], "Column widths calculated correctly")
+	  same(widths, [ 15, 79 ], "Column widths calculated correctly");
 	  widths = table.calculateColumnWidths([
                                               {
                                                 minwidth: 20,
@@ -101,7 +101,22 @@ $(document).ready(function() {
                                                 auto: false
                                               }
                                               ]);
-    same(widths, [ 15, 79, null ], "Column widths calculated correctly")
+    same(widths, [ 15, 79, null ], "Column widths calculated correctly");
+	widths = table.calculateColumnWidths([
+                                            {
+                                              minwidth: 20,
+                                              auto: true
+                                            },                                              
+                                            {
+                                              minwidth: 100,
+                                              auto: true
+                                            },
+                                            {
+                                              auto: false,
+                                              setMaxWidth: true
+                                            }
+                                            ]);
+    same(widths, [ 15, 79, 96 ], "Column widths calculated correctly")
 	});
 	
 	test("Test sort direction changing", function() {

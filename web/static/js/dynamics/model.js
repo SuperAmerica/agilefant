@@ -60,5 +60,20 @@ iterationGoalModel.prototype = {
 	},
 	getPriority: function() {
 		return this.priority;
+	},
+	getEffortLeft: function() {
+		return this.metrics.effortLeft;
+	},
+	getEffortSpent: function() {
+		return this.metrics.effortSpent;
+	},
+	getOriginalEstimate: function() {
+		return this.metrics.originalEstimate;
+	},
+	getDoneTasks: function() {
+		return this.metrics.doneTasks;
+	},
+	getTotalTasks: function() {
+		return this.metrics.totalTasks;
 	}
 };

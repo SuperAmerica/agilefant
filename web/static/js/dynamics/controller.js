@@ -11,7 +11,7 @@ iterationController.prototype = {
       var me = this;
       jQuery.each(goals, function(index, goal){
         var row = me.view.createRow(goal);
-        var name = row.createCell({get: function() { return goal.getName();}});
+        var name = row.createCell({type: "text", get: function() { return goal.getName();}, set: function(val){ goal.setName(val);}});
         var sums = row.createCell({get: function() { 
         	return agilefantUtils.aftimeToString(goal.getEffortLeft()) + " / " +  
         		agilefantUtils.aftimeToString(goal.getOriginalEstimate()) + " / " +
@@ -21,7 +21,7 @@ iterationController.prototype = {
         	return goal.getDoneTasks() + " / " + goal.getTotalTasks();
         	}});
         var buttons = row.createCell({get: function() { return "Napit" }});
-        var desc = row.createCell({get: function() { return goal.description; }});
+        var desc = row.createCell({type: "wysiwyg", get: function() { return goal.description; }, set: function(val) { goal.setDescription(val);}});
       });
       this.view.render();
     }

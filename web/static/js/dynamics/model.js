@@ -55,11 +55,20 @@ iterationGoalModel.prototype = {
 	getName: function() {
 		return this.name;
 	},
+	setName: function(name) {
+		this.name = name;
+	},
 	getDescription: function() {
 		return this.description;
 	},
+	setDescription: function(description) {
+		this.description = description;
+	},
 	getPriority: function() {
 		return this.priority;
+	},
+	setPriority: function() {
+		this.priority = priority;
 	},
 	getEffortLeft: function() {
 		return this.metrics.effortLeft;
@@ -75,5 +84,14 @@ iterationGoalModel.prototype = {
 	},
 	getTotalTasks: function() {
 		return this.metrics.totalTasks;
+	},
+	save: function() {
+		var data  = {
+				"iterationGoal.name": this.name,
+				"iterationGoal.description": this.description,
+				"iteationGoal.priority": this.priority,
+				id: this.id
+		};
+		//TODO: implement ajax
 	}
 };

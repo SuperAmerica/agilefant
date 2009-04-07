@@ -171,6 +171,11 @@
 		  $.each(this.table.options.colCss, function(i,v) {
 		    me.row.children(i).css(v);
 		  });
+		},
+		editable: function() {
+		  for(var i = 0; i < this.cells.length; i++) {
+		    this.cells[i].editable();
+		  }
 		}
 	};
 	
@@ -200,6 +205,19 @@
 		},
 		getElement: function() {
 			return this.cell;
+		},
+		editable: function() {
+		  if(this.options.type) {
+			  //TODO: implement in-cell edits
+			  switch(this.options.type) {
+			  case "text":
+				  
+				  break;
+			  case "wysiwyg":
+				  
+				  break;
+			  }
+		  }
 		}
 	};
 	

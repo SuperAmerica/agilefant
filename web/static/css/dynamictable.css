@@ -12,14 +12,16 @@
 }
 
 .dynamictable .dynamictable-row .dynamictable-cell {
-	border: 1px solid #666;
   min-height: 15px;
   min-width: 30px;
   display: block;
   width: auto;
   float: left;
-  margin: 1px;
+  margin: 0;
   padding: 1px;
+  overflow: hidden;
+  white-space: nowrap;
+  border: 2px solid #fff;
 }
 
 .dynamictable-padder {

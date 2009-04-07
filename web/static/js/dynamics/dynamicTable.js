@@ -6,13 +6,20 @@
 	};
 	/** TABLE **/
 	var dynamicTable = function(element, options) {
-    this.options = {};
+    this.options = {
+        colCss: {
+          '.dynamictable-cell': { 'width': '32%' },
+          ':eq(0)': { 'font-weight': 'bold' },
+          ':eq(1)': { 'background': '#fcf' }
+        }
+    };
     $.extend(this.options,options);
 		this.element = element;
 		this.rows = [];
 		this.container = $("<div />").appendTo(this.element).addClass(cssClasses.table);
 		this.table = $("<div />").appendTo(this.container).hide();
 		this.headerRow = null;
+		this.counter = 0;
 	};
 	
 	dynamicTable.prototype = {
@@ -32,9 +39,15 @@
 			    this.rows[i].render();
 			  }
 			  this.table.show();
+			  this.updateRowCss();
 			},
 			renderHeader: function() {
 			  
+			},
+			updateRowCss: function() {
+			  var t = $(this.table);
+			  t.children(':odd').removeClass("odd even").addClass("odd");
+			  t.children(':even').removeClass("odd even").addClass("even");
 			}
 	};
 	
@@ -52,6 +65,10 @@
 		createCell: function(options) {
 			var newCell = new dynamicTableCell(this, options);
 			this.cells.push(newCell);
+			var newCell2 = new dynamicTableCell(this, options);
+      this.cells.push(newCell2);
+      var newCell3 = new dynamicTableCell(this, options);
+      this.cells.push(newCell3);
 			return newCell;
 		},
 		getElement: function() {
@@ -61,6 +78,16 @@
 		  for(var i = 0; i < this.cells.length; i++) {
 		    this.cells[i].render();
 		  }
+		  this.updateColCss();
+		},
+		updateColCss: function() {
+		  var me = this;
+		  $.each(this.table.options.colCss, function(i,v) {
+		    me.row.children(i).css(v);
+		    me.table.counter++;
+		  });
+		  var a = this.table.counter;
+		  var b = 60;
 		}
 	};
 	
@@ -68,7 +95,7 @@
 	var dynamicTableCell = function(row, options) {
 		this.row = row;
 		this.options = {
-		    css: { 'width': '200px' }
+		    css: { }
 		};
 		$.extend(this.options,options);
 		this.cell = $("<div />").appendTo(this.row.getElement()).addClass(cssClasses.tableCell);

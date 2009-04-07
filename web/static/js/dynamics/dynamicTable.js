@@ -2,6 +2,7 @@
 	var cssClasses = {
 		tableRow: "dynamictable-row",
 		tableCell: "dynamictable-cell",
+		tableHeader: "dynamictable-header",
 		table: "dynamictable"
 	};
 	/** TABLE **/
@@ -17,7 +18,6 @@
 		this.container = $("<div />").appendTo(this.element).addClass(cssClasses.table);
 		this.table = $("<div />").appendTo(this.container).hide();
 		this.headerRow = null;
-		this.counter = 0;
 	};
 	
 	dynamicTable.prototype = {
@@ -123,7 +123,14 @@
 			return null;
 		},
 		iterationGoalTable: function(options) {
-			var ret = this.dynamicTable();
+		  var opts = {
+		      colCss: {
+		        ':eq(0)': {'width': '40%'},
+		        ':eq(1)': {'width': '55%'}
+		      }
+		  }
+		  $.extend(opts,options);
+			var ret = this.dynamicTable(opts);
 			//TODO: sortable etc stuff
 			
 			return ret;

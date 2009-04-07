@@ -355,10 +355,10 @@ $(document).ready( function() {
 		</td>
 	</tr>
 </table>
-<script type="text/javascript" src="static/js/dynamics/utils.js"></script>
-<script type="text/javascript" src="static/js/dynamics/model.js"></script>
-<script type="text/javascript" src="static/js/dynamics/controller.js"></script>
-<script type="text/javascript" src="static/js/dynamics/dynamicTable.js"></script>
+<script type="text/javascript" src="static/js/dynamics/utils.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/dynamics/model.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/dynamics/controller.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/dynamics/dynamicTable.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
 <div id="iterationGoals">&nbsp;</div>
 <script type="text/javascript">
 $(document).ready(function() {

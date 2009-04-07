@@ -17,11 +17,12 @@
   display: block;
   width: auto;
   float: left;
-  margin: 0;
-  padding: 1px;
+  margin: 0 0 -200px 0;
+  padding: 0px 0px 200px 0px;
   overflow: hidden;
-  white-space: nowrap;
-  border: 2px solid #fff;
+  border-style: solid;
+  border-color: #fff;
+  border-right: 2px;
 }
 
 .dynamictable-padder {

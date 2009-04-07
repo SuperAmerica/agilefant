@@ -12,6 +12,7 @@ iterationController.prototype = {
       jQuery.each(goals, function(index, goal){
         var row = me.view.createRow(goal);
         var name = row.createCell({get: function() { return goal.getName();}});
+        var desc = row.createCell({get: function() { return goal.getDescription();}});
       });
       this.view.render();
     }

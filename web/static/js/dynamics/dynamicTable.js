@@ -105,6 +105,7 @@
       calculateColumnWidths: function(params) {
         var num = 0;
         var totalwidth = 0;
+        //calculate total minimum width
         for (var i = 0; i < params.length; i++) {
           if (params[i].auto) {
             num++;
@@ -115,7 +116,8 @@
         
         var retval = [];
        
-        var totalPercentage = Math.floor(100 * (statics.borderPerColumn * (num - 1)  / totalwidth));
+        //percentage taken by column borders
+        var totalPercentage = Math.floor(100 * ((statics.borderPerColumn * num)  / totalwidth));
         
         for (var j = 0; j < params.length; j++) {
           var cell = params[j];
@@ -209,18 +211,22 @@
 		editable: function() {
 		  if(this.options.type) {
 			  //TODO: implement in-cell edits
-			  switch(this.options.type) {
-			  case "text":
-				  
-				  break;
-			  case "wysiwyg":
-				  
-				  break;
-			  }
+		    
 		  }
 		}
 	};
 	
+	var tableRowActions = function(row,options) {
+	  
+	};
+	tableRowActions.prototype = {
+	 open: function() {
+	  
+	 },
+	 close: function() {
+	   
+	 }
+	};
 	$.fn.extend({
 		//NOTE: WILL NOT RETURN CHAINABLE jQuery OBJECT!
 		dynamicTable: function(options) {
@@ -246,19 +252,19 @@
 		      headerCols: [],
 		      colWidths: [
 		                  {
-		                    minwidth: 120,
+		                    minwidth: 200,
+		                    auto: true
+		                  },
+		                  {
+		                    minwidth: 100,
 		                    auto: true
 		                  },
 		                  {
 		                    minwidth: 40,
-		                    auto: true
+		                	  auto: true
 		                  },
 		                  {
-		                	minwidth: 40,
-		                	auto: true
-		                  },
-		                  {
-		                    minwidth: 40,
+		                    minwidth: 60,
 		                    auto: true
 		                  },
 		                  {
@@ -270,7 +276,7 @@
                         setMaxWidth: true
                       }
 		                  ]
-		  }
+		  };
 		  $.extend(opts,options);
 			var ret = this.dynamicTable(opts);
 			//TODO: sortable etc stuff

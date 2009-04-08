@@ -116,7 +116,7 @@ $(document).ready(function() {
                                               setMaxWidth: true
                                             }
                                             ]);
-    same(widths, [ 15, 79, 96 ], "Column widths calculated correctly")
+    same(widths, [ 15, 79, 98 ], "Column widths calculated correctly")
 	});
 	
 	test("Test sort direction changing", function() {

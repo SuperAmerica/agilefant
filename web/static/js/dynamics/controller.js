@@ -18,7 +18,17 @@ iterationController.prototype = {
         var tasks = row.createCell({get: function() { 
         	return goal.getDoneTasks() + " / " + goal.getTotalTasks();
         	}});
-        var buttons = row.createCell({get: function() { return "Napit" }});
+        var buttons = row.createCell();
+        buttons.setActionCell({items: [
+                                       {
+                                         text: "Edit",
+                                         callback: function(row) {
+                                           row.openEdit();
+                                         }
+                                       }, {
+                                         text: "Delete"
+                                       }
+                                       ]});
         var desc = row.createCell({type: "wysiwyg", get: function() { return goal.description; }, set: function(val) { goal.setDescription(val);}});
       });
       this.view.render();

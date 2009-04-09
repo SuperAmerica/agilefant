@@ -73,7 +73,13 @@ function showWysiwyg(id) {
 	}
 }
 function setUpWysiwyg(id) {
-	$("#"+id).wysiwyg({
+  var obj;
+  if(typeof(id) == "object") {
+    obj = id;
+  } else {
+    obj = $("#"+id);
+  }
+	obj.wysiwyg({
 		controls : {
         separator04 : { visible : true },
 

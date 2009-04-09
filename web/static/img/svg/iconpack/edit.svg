@@ -14,7 +14,7 @@
    sodipodi:version="0.32"
    inkscape:version="0.46"
    version="1.0"
-   inkscape:export-filename="C:\Documents and Settings\rjokelai\Desktop\icon pack\png\edit_new.png"
+   inkscape:export-filename="C:\Documents and Settings\rjokelai\Desktop\edit_new.png"
    inkscape:export-xdpi="9"
    inkscape:export-ydpi="9"
    sodipodi:docname="edit.svg"
@@ -39,16 +39,16 @@
      objecttolerance="10"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.7"
-     inkscape:cx="-535.86164"
-     inkscape:cy="12.356144"
+     inkscape:zoom="1.4"
+     inkscape:cx="66.863759"
+     inkscape:cy="145.08283"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
      inkscape:window-width="1568"
      inkscape:window-height="1000"
-     inkscape:window-x="219"
-     inkscape:window-y="41" />
+     inkscape:window-x="28"
+     inkscape:window-y="39" />
   <metadata
      id="metadata7">
     <rdf:RDF>
@@ -81,15 +81,38 @@
        width="160"
        id="rect3271"
        style="fill:#e9590a;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:20.46841621;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
-    <path
-       style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1;stroke-miterlimit:4;stroke-opacity:1"
-       d="M 44.956009,987.20332 L 114.38093,917.77836 L 134.58396,937.98139 L 65.159034,1007.4064 L 24.000011,1028.3624 L 44.956009,987.20332 z"
-       id="rect2386"
-       sodipodi:nodetypes="cccccc" />
-    <path
-       sodipodi:nodetypes="cccccc"
-       id="path3163"
-       d="M 204.956,987.20332 L 274.38092,917.77836 L 294.58394,937.98139 L 225.15902,1007.4064 L 184,1028.3624 L 204.956,987.20332 z"
-       style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1;stroke-miterlimit:4;stroke-opacity:1" />
+    <g
+       id="g3256">
+      <path
+         sodipodi:nodetypes="cccc"
+         id="path2461"
+         d="M 24.321772,1029.5656 L 40.10682,989.91703 L 62.088941,1010.337 L 24.321772,1029.5656 z"
+         style="fill:#ffffff;fill-opacity:0.94117647;fill-rule:nonzero;stroke:none;stroke-width:4.74407339;stroke-miterlimit:4;stroke-opacity:1" />
+      <rect
+         transform="matrix(-0.7226844,-0.6911782,0.6911782,-0.7226844,0,0)"
+         y="-671.05206"
+         x="-743.1936"
+         height="94.93924"
+         width="30"
+         id="rect3246"
+         style="fill:#ffffff;fill-opacity:0.94117647;fill-rule:nonzero;stroke:none;stroke-width:5.91099977;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    </g>
+    <g
+       id="g3260"
+       transform="translate(160,0)">
+      <path
+         style="fill:#ffffff;fill-opacity:0.94117647;fill-rule:nonzero;stroke:none;stroke-width:4.74407339;stroke-miterlimit:4;stroke-opacity:1"
+         d="M 24.321772,1029.5656 L 40.10682,989.91703 L 62.088941,1010.337 L 24.321772,1029.5656 z"
+         id="path3262"
+         sodipodi:nodetypes="cccc" />
+      <rect
+         style="fill:#ffffff;fill-opacity:0.94117647;fill-rule:nonzero;stroke:none;stroke-width:5.91099977;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="rect3264"
+         width="30"
+         height="94.93924"
+         x="-743.1936"
+         y="-671.05206"
+         transform="matrix(-0.7226844,-0.6911782,0.6911782,-0.7226844,0,0)" />
+    </g>
   </g>
 </svg>

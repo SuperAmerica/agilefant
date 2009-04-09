@@ -77,7 +77,14 @@
 			    var col = $('<div />').addClass(cssClasses.tableCell).appendTo(me.headerRow)
 			      .css('min-width',me.options.colWidths[i].minwidth + 'px') 
 			      .css('width',me.options.colWidths[i].width + '%');
-			    $('<a href="#"/>').text(v.name).click(function() { me.doSort(i, v.sort); return false; }).appendTo(col);
+			    var f;
+			    if (v.sort) {
+			      f = $('<a href="#"/>').text(v.name).click(function() { me.doSort(i, v.sort); return false; }).appendTo(col);
+			    }
+			    else {
+			      f = $('<span />').text(v.name).appendTo(col);
+			    }
+			    if (v.tooltip) f.attr('title',v.tooltip);
 			  });
 			  
 			  $.each(this.options.colCss, function(i,v) {
@@ -242,6 +249,8 @@
 		cancelEdit: function(elem) {
 		  // BUG: field value is not restored when cancelling
       elem.field.unbind();
+      var asd = elem.value;
+      alert("cancelled");
 		  elem.field.val(elem.value);
 		  elem.field.hide(); elem.content.show();
 		},
@@ -259,7 +268,10 @@
 		    if (this.options.type == "select") {
 		      this.field = $('<select/>').appendTo(this.cell).hide();
 		    }
-		    else {
+		    else if (this.options.type == "wysiwyg") {
+		      this.field = $('<textfield />').appendTo(this.cell).hide();
+		    }
+		    else if (this.options.type == "text"){
 		      this.field = $('<input type="text"/>').attr('size','50').appendTo(this.cell).hide();
 		    }
 		  }
@@ -297,15 +309,33 @@
 		      colCss: {
 		        ':lt(3)': { 'background': '#ffc' },
 		        ':eq(3)': { 'background': '#fcc' },
-		        ':eq(4)': { 'background': '#cfc' }
+		        ':eq(4)': { 'background': '#cfc' },
+		        ':last': { 'background': '#cff' }
 		      },
 		      headerCols: [
 		                   {
 		                     name: 'Name',
+		                     tooltip: 'Iteration goal name',
 		                     sort: agilefantUtils.comparators.nameComparator
 		                   },
 		                   {
-                         name: 'EL / OE / ES',
+                         name: 'EL',
+                         tooltip: 'Total effort left',
+                         sort: null
+                       },
+                       {
+                         name: 'OE',
+                         tooltip: 'Total original estimate',
+                         sort: null
+                       },
+                       {
+                         name: 'ES',
+                         tooltip: 'Total effort spent',
+                         sort: null
+                       },
+                       {
+                         name: 'Done / Total',
+                         tooltip: 'Done / Total backlog items',
                          sort: null
                        }
 		                   ],
@@ -315,9 +345,17 @@
 		                    auto: true
 		                  },
 		                  {
-		                    minwidth: 100,
+		                    minwidth: 30,
 		                    auto: true
 		                  },
+		                  {
+                        minwidth: 30,
+                        auto: true
+                      },
+                      {
+                        minwidth: 30,
+                        auto: true
+                      },
 		                  {
 		                    minwidth: 40,
 		                	  auto: true

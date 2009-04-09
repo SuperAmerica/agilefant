@@ -120,7 +120,28 @@ $(document).ready(function() {
 	});
 	
 	test("Test sort direction changing", function() {
-	  var table = $('#testTable').iterationGoalTable();
+	  var table = $('#testTable').dynamicTable({
+	    colWidths: [
+                  {
+                    minwidth: 200,
+                    auto: true
+                  },
+                  {
+                    minwidth: 100,
+                    auto: true
+                  }
+                  ],
+	    headerCols: [
+	                 {
+	                   name: 'Name',
+	                   sort: function() { return false; } 
+	                 },
+	                 {
+	                   name: 'Description',
+	                   sort: function() { return false; }
+	                 }
+	                 ]
+	  });
 	  
 	  table.render();
 	  

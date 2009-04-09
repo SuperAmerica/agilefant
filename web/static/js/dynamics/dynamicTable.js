@@ -75,7 +75,7 @@
 			  
 			  $.each(this.options.headerCols, function(i,v) {
 			    var col = $('<div />').addClass(cssClasses.tableCell).appendTo(me.headerRow)
-			      .css('min-width',me.options.colWidths[i].minwidth + 'px')
+			      .css('min-width',me.options.colWidths[i].minwidth + 'px') 
 			      .css('width',me.options.colWidths[i].width + '%');
 			    $('<a href="#"/>').text(v.name).click(function() { me.doSort(i, v.sort); return false; }).appendTo(col);
 			  });
@@ -188,11 +188,21 @@
 		this.options = {};
 		$.extend(this.options,options);
 		this.cell = $("<div />").appendTo(this.row.getElement()).addClass(cssClasses.tableCell);
+		this.content = $("<span/>").appendTo(this.cell);
+		this.value = null;
+		this.field = null;
 		var a = row.getTable().getColWidth(cellno);
 		if (a) {
 		  if (a.minwidth) { this.cell.css('min-width',a.minwidth + 'px'); }
 		  if (a.width) { this.cell.css('width',a.width + '%'); }
 		  if(a.setMaxWidth) { this.cell.css("clear","left"); }
+		}
+		// TODO: Remove next row, only for development
+		this.row.editable();
+		var me = this;
+		var dblclick_cb = function() { me.openEdit(me) };
+		if (this.options.type) {
+		  this.cell.dblclick(dblclick_cb);
 		}
 	};
 	
@@ -203,15 +213,55 @@
 			}
 		},
 		setValue: function(newValue) {
-			this.cell.html(newValue);
+		  this.value = newValue;
+			this.content.html(newValue);
+			if (this.field) this.field.val(newValue);
 		},
 		getElement: function() {
 			return this.cell;
 		},
+		openEdit: function(elem) {
+		  var key_cb = function(keyevent) { elem.handleKeyEvent(elem, keyevent); };
+		  var blur_cb = function() { elem.closeEdit(elem); elem.field.unbind('blur',blur_cb); };
+		  if (elem.field) {
+		    elem.field.show(); elem.content.hide();
+        elem.field.blur(blur_cb);
+        elem.field.keydown(key_cb);
+        elem.field.focus();	    
+		  }
+		},
+		closeEdit: function(elem) {
+		  elem.field.hide(); elem.content.show();
+		  elem.field.unbind('keydown');
+		  if (elem.field.val() != elem.value) {
+        elem.options.set(elem.field.val());
+        // TODO: remove after implementing callback
+        elem.setValue(elem.field.val());
+      }
+		},
+		cancelEdit: function(elem) {
+		  // BUG: field value is not restored when cancelling
+      elem.field.unbind();
+		  elem.field.val(elem.value);
+		  elem.field.hide(); elem.content.show();
+		},
+		handleKeyEvent: function(me, keyevent) {
+		  if (keyevent.keyCode == 27) {
+		    me.cancelEdit(me);
+		  }
+		  else if (keyevent.keyCode == 13) {
+		    me.closeEdit(me);
+		  }
+		},
 		editable: function() {
-		  if(this.options.type) {
-			  //TODO: implement in-cell edits
-		    
+		  if(this.options.type && !this.field) {
+			  // TODO: implement in-cell edits
+		    if (this.options.type == "select") {
+		      this.field = $('<select/>').appendTo(this.cell).hide();
+		    }
+		    else {
+		      this.field = $('<input type="text"/>').attr('size','50').appendTo(this.cell).hide();
+		    }
 		  }
 		}
 	};
@@ -249,7 +299,16 @@
 		        ':eq(3)': { 'background': '#fcc' },
 		        ':eq(4)': { 'background': '#cfc' }
 		      },
-		      headerCols: [],
+		      headerCols: [
+		                   {
+		                     name: 'Name',
+		                     sort: agilefantUtils.comparators.nameComparator
+		                   },
+		                   {
+                         name: 'EL / OE / ES',
+                         sort: null
+                       }
+		                   ],
 		      colWidths: [
 		                  {
 		                    minwidth: 200,

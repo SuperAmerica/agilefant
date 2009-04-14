@@ -54,6 +54,7 @@
 	border: 1px solid black;
 	width: 50px;
 	padding: 0;
+	margin: 0;
 }
 .actionCell li {
 	list-style: none;

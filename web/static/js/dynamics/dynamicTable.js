@@ -124,7 +124,10 @@
         var retval = [];
        
         //percentage taken by column borders
-        var totalPercentage = Math.floor(100 * ((statics.borderPerColumn * num)  / totalwidth));
+        var totalPercentage = Math.floor(10000 * ((statics.borderPerColumn * num)  / totalwidth))/100;
+
+        //scale total width down to 95% in order to prevent cell wrapping
+        totalwidth = totalwidth*1.05;
         
         for (var j = 0; j < params.length; j++) {
           var cell = params[j];
@@ -132,7 +135,7 @@
             retval.push(null);
           }
           else {
-            var percent = Math.floor(100 * (cell.minwidth / totalwidth));
+            var percent = Math.floor(10000 * (cell.minwidth / totalwidth))/100;
             totalPercentage += percent;
             retval.push(percent);
           }
@@ -151,6 +154,8 @@
 	var dynamicTableRow = function(table, model, options) {
 		this.table = table;
 		this.model = model;
+		var me = this;
+		this.model.addListener(function() { me.render(); });
 		this.cells = [];
 		this.options = {};
 		$.extend(this.options,options);
@@ -185,7 +190,17 @@
 		  for(var i = 0; i < this.cells.length; i++) {
 		    this.cells[i].openEdit(true);
 		  }
-		}
+		},
+		cancelEdit: function() {
+		  for(var i = 0; i < this.cells.length; i++) {
+        this.cells[i].cancelEdit();
+      }
+		},
+		closeEdit: function() {
+		  for(var i = 0; i < this.cells.length; i++) {
+        this.cells[i].closeEdit();
+      }
+		},
 	};
 	
 	/** TABLE CELL **/
@@ -229,6 +244,9 @@
 		},
 
 		closeEdit: function() {
+		  if(!this.field) {
+		    return;
+		  }
 		  this.content.show();
 		  this.field.unbind('keydown');
 		  if (this.field.val() != this.value) {
@@ -237,11 +255,26 @@
         this.setValue(this.field.val());
       }
 		  this.field.remove(); 
+		  if(this.addedButtons) {
+  		  $.each(this.addedButtons, function(k,v) {
+  		    v.remove();
+  		  });
+		  }
+		  this.cell.find(".wysiwyg").remove();
 		},
 		cancelEdit: function() {
-		  this.field.remove();
+		  if(!this.field) {
+		    return;
+		  }
+	    this.field.remove();
 		  this.content.show();
 		  this.field = null;
+  		if(this.addedButtons) {
+        $.each(this.addedButtons, function(k,v) {
+          v.remove();
+        });
+  		}
+		  this.cell.find(".wysiwyg").remove();
 		},
 		handleKeyEvent: function(me, keyevent) {
 		  if (keyevent.keyCode == 27) {
@@ -272,7 +305,6 @@
 		        
 		        $(document).unbind("click", kh);
 		        $(document).unbind("keydown", kh);
-		        wysiwyg.remove();
 		        me.cancelEdit();
 		      };
 		      if(noAutoclose != true) {
@@ -294,6 +326,15 @@
           }
 		    }
         this.content.hide();
+        if(noAutoclose && this.options.buttons) {
+          var me = this;
+          me.addedButtons = [];
+          $.each(this.options.buttons, function(button, opts) {
+            var button = $("<button />").appendTo(me.cell).text(opts.text)
+              .click(opts.action).addClass("dynamicButton");
+            me.addedButtons.push(button);
+          });
+        }
 		  }
 		  
 		}
@@ -308,16 +349,21 @@
 	    me.open();
 	  };
 	  var el = this.cell.getElement();
-	  var act = $("<span>Actions</span>").appendTo(el);
-	  act.mouseover(open);
+	  this.act = $("<span>Actions</span>").appendTo(el);
+	  this.act.mouseover(open);
 	  
 	};
 	tableRowActions.prototype = {
 	 open: function() {
+	  var me = this;
+	  this.handler = function() {
+      me.close();
+	  };
+	  $(document.body).trigger("dynamictable-close-actions").bind("dynamictable-close-actions", this.handler);
 	  this.menu = $('<ul>&nbsp;</ul>').appendTo(document.body).addClass("actionCell");
-	  this.menu.css("position","absolute");
-  	var pos = this.cell.getElement().position();
-	  this.menu.css("top",pos.top);
+	  this.menu.css("position","absolute").css("overflow","visible").css("z-index","100");
+	  var pos = this.cell.getElement().position();
+	  this.menu.css("top",pos.top + 16);
 	  this.menu.css("left",pos.left);
    var me = this;
 	  $.each(this.options.items, function(index, item) {
@@ -327,10 +373,11 @@
 	      it.click(function() { item.callback(row); });
 	    }
 	  });
-  	//this.menu.mouseout(function() { me.close();});
+  	this.act.click(this.handler);
 	 },
 	 close: function() {
 	   this.menu.remove();
+	   $(document.body).unbind("dynamictable-close-actions",this.handler);
 	 }
 	};
 	$.fn.extend({

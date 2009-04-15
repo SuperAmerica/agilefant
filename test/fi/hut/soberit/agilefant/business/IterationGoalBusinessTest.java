@@ -34,7 +34,6 @@ public class IterationGoalBusinessTest extends TestCase {
     private IterationGoalDAO iterationGoalDAO;
     private IterationDAO iterationDAO;
     
-   @Before
    public void setUp() {
        iterationGoalDAO = createMock(IterationGoalDAO.class);
        iterationDAO = createMock(IterationDAO.class);

@@ -9,9 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import junit.framework.TestCase;
-
-import org.junit.Before;
-
 import fi.hut.soberit.agilefant.business.impl.IterationGoalBusinessImpl;
 import fi.hut.soberit.agilefant.db.IterationDAO;
 import fi.hut.soberit.agilefant.db.IterationGoalDAO;

@@ -67,8 +67,6 @@ public class BacklogBusinessImpl implements BacklogBusiness {
 
     private HourEntryBusiness hourEntryBusiness;
 
-    private IterationGoalBusiness iterationGoalBusiness;
-
     private BusinessThemeBusiness businessThemeBusiness;
 
     private ProductDAO productDAO;
@@ -968,15 +966,6 @@ public class BacklogBusinessImpl implements BacklogBusiness {
 
     public void setHourEntryBusiness(HourEntryBusiness hourEntryBusiness) {
         this.hourEntryBusiness = hourEntryBusiness;
-    }
-
-    public IterationGoalBusiness getIterationGoalBusiness() {
-        return iterationGoalBusiness;
-    }
-
-    public void setIterationGoalBusiness(
-            IterationGoalBusiness iterationGoalBusiness) {
-        this.iterationGoalBusiness = iterationGoalBusiness;
     }
 
     public ProductDAO getProductDAO() {

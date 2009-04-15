@@ -54,7 +54,6 @@ public class BacklogBusinessTest extends TestCase {
     private AssignmentDAO assignmentDAO;
     private UserDAO userDAO;
     private BacklogItemHourEntryDAO bliheDAO;
-    private IterationGoalBusiness iterGoalBusiness;
     private BusinessThemeDAO businessThemeDAO;
 
     public void testChangePriorityOfMultipleItems() throws Exception {
@@ -646,24 +645,5 @@ public class BacklogBusinessTest extends TestCase {
         assertTrue(list.contains(projects.get(0)));
         assertTrue(list.contains(projects.get(1)));
         assertFalse(list.contains(projects.get(2)));
-    }
-
-    public void testIterationGoalsAsJSON_noGoals() {
-        iterGoalBusiness = createMock(IterationGoalBusiness.class);
-        backlogBusiness.setIterationGoalBusiness(iterGoalBusiness);
-
-        /* Create the test data */
-        Product prod = new Product();
-        prod.setId(6);
-
-        /* The verified string */
-        String verifiedJson = "[]";
-
-        replay(iterGoalBusiness);
-
-        String json = backlogBusiness.getIterationGoalsAsJSON(prod);
-        assertEquals(verifiedJson, json);
-
-        verify(iterGoalBusiness);
     }
 }

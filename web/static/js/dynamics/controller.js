@@ -41,16 +41,9 @@ iterationController.prototype = {
         }
       });
     },
-    render: function(data) {
-      var me = this;
-      this.view = jQuery(this.element).iterationGoalTable();
-      
-      this.view.activateSortable({update: function(ev,el) { me.changeIterationGoalPriority(ev,el);}});
-      
-      var goals = data.getIterationGoals();
-      this.model = data;
-      jQuery.each(goals, function(index, goal){
-        var row = me.view.createRow(goal);
+    addRow: function(goal) {
+        var me = this;
+    	var row = me.view.createRow(goal);
         var prio = row.createCell({
           get: function() { return goal.priority; }
         });
@@ -97,6 +90,28 @@ iterationController.prototype = {
               row.cancelEdit();
             }}
           }});
+    },
+    render: function(data) {
+      var me = this;
+      this.view = jQuery(this.element).iterationGoalTable();
+      
+      this.view.activateSortable({update: function(ev,el) { me.changeIterationGoalPriority(ev,el);}});
+      
+      this.view.setActionCellParams({ items:
+         [
+          {
+        	  text: "Add iteration goal",
+        	  callback: function(row) {
+        	    me.createGoal();
+          	   }
+          }
+          ]
+      });
+      
+      var goals = data.getIterationGoals();
+      this.model = data;
+      jQuery.each(goals, function(index, goal){
+    	  me.addRow(goal);
       });
       var row = me.view.createRow();
       row.createCell();
@@ -108,5 +123,45 @@ iterationController.prototype = {
       row.setNotSortable();
       this.view.render();
 
+    },
+    storeGoal: function(row,goal) {
+    	row.saveEdit();
+        this.addRow(goal);
+        goal.commit();
+    },
+    createGoal: function() {
+    	var me = this;
+    	var fakeGoal = new iterationGoalModel(this.iterationId);
+    	fakeGoal.beginTransaction(); //block autosaves
+        var row = this.view.createRow(fakeGoal);
+        var prio = row.createCell();
+        var name = row.createCell({
+          type: "text", get: function() { return ""; },
+          set: function(val){ fakeGoal.setName(val);}});
+        var elsum = row.createCell();
+        var oesum = row.createCell();
+        var essum = row.createCell();
+        var tasks = row.createCell();
+        var buttons = row.createCell();
+        buttons.setActionCell({items: [{
+                                         text: "Cancel",
+                                         callback: function() {
+                                           row.remove();
+                                         }
+                                       }
+                                       ]});
+        var desc = row.createCell({
+          type: "wysiwyg",  get: function() { return ""; },
+          set: function(val) { fakeGoal.setDescription(val);},
+          buttons: {
+            save: {text: "Save", action: function() {
+              me.storeGoal(row,fakeGoal);           
+            }},
+            cancel: {text: "Cancel", action: function() {
+            	row.remove();
+            }}
+          }});
+        row.render();
+        row.openEdit();
     }
 }

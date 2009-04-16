@@ -37,8 +37,8 @@
 	};
 	
 	dynamicTable.prototype = {
-			createRow: function(model) {
-				var newRow = new dynamicTableRow(this, model);
+			createRow: function(model, opt) {
+				var newRow = new dynamicTableRow(this, model, opt);
 				this.rows.push(newRow);
 				return newRow;
 			},
@@ -82,12 +82,13 @@
 			    return false;
 			  }
 			  var me = this;
-			  this.headerRow = $('<div />').addClass(cssClasses.tableRow).addClass(cssClasses.tableHeader).addClass("dynamictable-notsortable").prependTo(this.table);
+			  this.headerRow = new dynamicTableRow(this, null, {toTop: true});
+			  this.headerRow.getElement().addClass(cssClasses.tableHeader).addClass("dynamictable-notsortable")
+			  var row = this.headerRow;
 			  
 			  $.each(this.options.headerCols, function(i,v) {
-			    var col = $('<div />').addClass(cssClasses.tableCell).appendTo(me.headerRow)
-			      .css('min-width',me.options.colWidths[i].minwidth + 'px') 
-			      .css('width',me.options.colWidths[i].width + '%');
+			    var c = row.createCell();
+			    var col = c.getElement();
 			    var f;
 			    if (v.sort) {
 			      f = $('<a href="#"/>').text(v.name).click(function() { me.doSort(i, v.sort); return false; }).appendTo(col);
@@ -95,12 +96,18 @@
 			    else {
 			      f = $('<span />').text(v.name).appendTo(col);
 			    }
+			    if(v.actionCell && me.actionParams) {
+			    	new tableRowActions(c,row,me.actionParams);
+			    }
 			    if (v.tooltip) f.attr('title',v.tooltip);
 			  });
 			  
 			  $.each(this.options.colCss, function(i,v) {
-	        me.headerRow.children(i).css(v);
+	          me.headerRow.getElement().children(i).css(v);
 	      });
+			},
+			setActionCellParams: function(params) {
+				this.actionParams = params;
 			},
 			doSort: function(colNo, comparator) {
 			  if (typeof(comparator) != "function") {
@@ -198,7 +205,11 @@
 		this.cells = [];
 		this.options = {};
 		$.extend(this.options,options);
-		this.row = $("<div />").appendTo(this.table.getElement()).addClass(cssClasses.tableRow);
+		if(this.options.toTop) {
+			this.row = $("<div />").prependTo(this.table.getElement()).addClass(cssClasses.tableRow);
+		} else {
+			this.row = $("<div />").appendTo(this.table.getElement()).addClass(cssClasses.tableRow);
+		}
 		this.row.data("model",model);
 	};
 	
@@ -297,7 +308,7 @@
 		  if(!this.editorOpen) {
 		    return;
 		  }
-		  if(!this.editor.isValid()) {
+		  if(this.editor.isValid() != true) {
 			  //TODO handle error
 			  alert("data not valid");
 			  return false;
@@ -318,6 +329,7 @@
 		  this.content.show();
 		  this.removeButtons();
 		  this.editor.remove();
+		  this.editorOpen = false;
 		  this.editor = null;
 		},
 		openEdit: function(noAutoClose) {
@@ -537,7 +549,8 @@
                          sort: null
                        },
                        {
-                         name: ' ',
+                         name: '',
+                         actionCell: true,
                          tooltip: "",
                          sort: null
                        }

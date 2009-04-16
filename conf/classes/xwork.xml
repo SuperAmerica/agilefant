@@ -615,69 +615,24 @@
 			class="iterationGoalAction">
 			<result>/WEB-INF/jsp/editIterationGoal.jsp</result>
 		</action>
-		<action name="createIterationGoal" method="create"
-			class="iterationGoalAction">
-			<result>/WEB-INF/jsp/editIterationGoal.jsp</result>
-		</action>
 		<action name="ajaxCreateIterationGoal" method="create"
             class="iterationGoalAction">
             <result>/WEB-INF/jsp/forms/createIterationGoal.jsp</result>
         </action>
-		<action name="deleteIterationGoal" method="delete"
-			class="iterationGoalAction">
-			<result type="redirect-action">
-				<param name="actionName">editIteration</param>
-				<param name="iterationId">${iterationId}</param>
-			</result>
-		</action>
+
 		<action name="storeIterationGoal" method="store"
 			class="iterationGoalAction">
-			<result type="redirect-action">
-				<param name="actionName">editIterationGoal</param>
-				<param name="iterationGoalId">${iterationGoalId}</param>
-				<param name="contextViewName">editIteration</param>
-				<param name="contextObjectId">${iterationId}</param>
+			<result name="ajax_success" type="dispatcher">
+				<param name="status">200</param>
+				<param name="location">/WEB-INF/jsp/jsonData.jsp</param>
 			</result>
 		</action>
-		<action name="storeNewIterationGoal" method="store"
-			class="iterationGoalAction">
-		</action>
 
-		<action name="storeCloseIterationGoal" method="store"
-			class="iterationGoalAction">
-			<result type="redirect-action">
-				<param name="actionName">popContext</param>
-			</result>
-		</action>
-		
-		<action name="prioritizeIterationGoal" method="prioritizeIterationGoal"
-            class="iterationGoalAction">
-            <result type="redirect-action">
-                <param name="actionName">editIteration</param>
-                <param name="iterationId">${iterationId}</param>
-            </result>
-        </action>
-
-		<action name="moveIterationGoal" method="moveIterationGoal"
-			class="iterationAction">
-			<result type="redirect">editIterationGoal.action?iterationGoalId=${iterationGoalId}</result>
-		</action>
-		
 		<action name="iterationGoalTabs" method="edit"
 			class="iterationGoalAction">
 			<result>/WEB-INF/jsp/inc/iterationGoalAjax.jsp</result>
 		</action>
 
-		<action name="ajaxStoreIterationGoal" method="ajaxStoreIterationGoal"
-			class="iterationGoalAction">		
-			<result name="ajax_error" type="httpheader">
-				<param name="status">400</param>
-			</result>
-			<result name="ajax_success" type="dispatcher">
-				<param name="status">200</param>
-				<param name="location">/WEB-INF/jsp/inc/ajaxIterationGoalResult.jsp</param>
-			</result>
-		</action>
 		<!-- /IterationGoal actions -->
 
 		<action name="drawChart" method="execute" class="chartAction">

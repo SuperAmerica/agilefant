@@ -21,6 +21,9 @@ var agilefantUtils = {
 	  },
 	  descComparator: function(a,b) {
 	    return (a.description.toLowerCase() > b.description.toLowerCase());
+	  },
+	  priorityComparator: function(a,b) {
+	    return (a.priority > b.priority);
 	  }
 	}
 };

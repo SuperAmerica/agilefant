@@ -14,7 +14,7 @@ modelFactory.prototype = {
 				//throw "Data request failed!";
 			},
 			success: function(data,type) {
-				var iteration = new iterationModel(data);
+				var iteration = new iterationModel(data, iterationId);
 				callback(iteration);
 			},
 			cache: false,
@@ -30,8 +30,9 @@ ModelFactory = new modelFactory();
 
 /** ITERATION MODEL **/
 
-iterationModel = function(iterationData) {
+iterationModel = function(iterationData, iterationId) {
 	var goalPointer = [];
+	this.iterationId = iterationId;
 	jQuery.each(iterationData.iterationGoals, function(index,iterationGoalData) { 
 		goalPointer.push(new iterationGoalModel(iterationGoalData));
 	});
@@ -40,17 +41,52 @@ iterationModel = function(iterationData) {
 iterationModel.prototype = {
 	getIterationGoals: function() {
 		return this.iterationGoals;
-	}
+	},
+	reloadGoalData: function() {
+	  var me = this;
+	   jQuery.ajax({
+	      async: true,
+	      success: function(data,type) {
+	        data = data.iterationGoals;
+	        for(var i = 0 ; i < data.length; i++) {
+	          for(var j = 0; j < me.iterationGoals.length; j++) {
+	            if(data[i].id == me.iterationGoals[j].id) {
+	              me.iterationGoals[i].setData(data[i]);
+	            }
+	          }
+	        }
+	      },
+	      cache: false,
+	      dataType: "json",
+	      type: "POST",
+	      url: "iterationData.action",
+	      data: {iterationId: this.iterationId}
+	    });
+	},
 };
 
 /** ITERATION GOAL MODEL **/
 
 iterationGoalModel = function(iterationGoalData) {
-	jQuery.extend(this,iterationGoalData);
+	this.setData(iterationGoalData, true);
 	this.listeners = [];
 };
 iterationGoalModel.prototype = {
-	getId: function() {
+	setData: function(data, includeMetrics) {
+    this.description = data.description;
+    this.name = data.name;
+    this.priority = data.priority;
+    this.id = data.id;
+    if(includeMetrics) {
+      this.metrics = data.metrics;
+    }
+    if(this.listeners) {
+      for(var i = 0; i < this.listeners.length; i++) {
+        this.listeners[i]();
+      }
+    }
+  },
+  getId: function() {
 		return this.id;
 	},
 	getName: function() {
@@ -70,7 +106,7 @@ iterationGoalModel.prototype = {
 	getPriority: function() {
 		return this.priority;
 	},
-	setPriority: function() {
+	setPriority: function(priority) {
 		this.priority = priority;
 		this.save();
 	},
@@ -89,7 +125,7 @@ iterationGoalModel.prototype = {
 	getTotalTasks: function() {
 		return this.metrics.totalTasks;
 	},
-	openTransaction: function() {
+	beginTransaction: function() {
 	  this.inTransaction = true;
 	},
 	commit: function() {
@@ -107,7 +143,7 @@ iterationGoalModel.prototype = {
 		var data  = {
 				"iterationGoal.name": this.name,
 				"iterationGoal.description": this.description,
-				"iteationGoal.priority": this.priority,
+				"priority": this.priority,
 				iterationGoalId: this.id
 		};
     jQuery.ajax({
@@ -116,16 +152,12 @@ iterationGoalModel.prototype = {
         //throw "Data request failed!";
       },
       success: function(data,type) {
-        if(me.listeners) {
-          for(var i = 0; i < me.listeners.length; i++) {
-            me.listeners[i]();
-          }
-        }
+        me.setData(data,false);
       },
       cache: false,
       dataType: "json",
       type: "POST",
-      url: "ajaxStoreIterationGoal.action",
+      url: "storeIterationGoal.action",
       data: data
     });
 	}

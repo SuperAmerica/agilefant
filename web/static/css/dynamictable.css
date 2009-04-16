@@ -26,6 +26,14 @@
   border-width: 0 2px 0 1px;
 }
 
+.dynamictable-placeholder {
+  margin: 3px 2px 3px 2px; height : 1.5em;
+  background-color: #ffffdd;
+  border: 1px dashed #666;
+  height: 3em;
+  width: 95%;
+}
+
 .dynamictable-header .dynamictable-cell {
   font-weight: bold;
   background-color: #ddd !important;

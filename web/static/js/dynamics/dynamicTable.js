@@ -65,13 +65,14 @@
 			  if (this.options.headerCols[this.options.defaultSortColumn]) {
 			    this.doSort(this.options.defaultSortColumn, this.options.headerCols[this.options.defaultSortColumn].sort);
 			  }
+			  this._sortable();
 			},
 			renderHeader: function() {
 			  if (this.options.headerCols.length == 0) {
 			    return false;
 			  }
 			  var me = this;
-			  this.headerRow = $('<div />').addClass(cssClasses.tableRow).addClass(cssClasses.tableHeader).prependTo(this.table);
+			  this.headerRow = $('<div />').addClass(cssClasses.tableRow).addClass(cssClasses.tableHeader).addClass("dynamictable-notsortable").prependTo(this.table);
 			  
 			  $.each(this.options.headerCols, function(i,v) {
 			    var col = $('<div />').addClass(cssClasses.tableCell).appendTo(me.headerRow)
@@ -103,7 +104,15 @@
 			  }
 			  this.sorting.column = colNo;
 			  
-			  var sorted = (this.rows.sort(function(a,b) { return comparator(a.model,b.model); }));
+			  var sorted = (this.rows.sort(function(a,b) { 
+			    if(!a.model) {
+			      return 1;
+			    }
+			    if(!b.model) {
+			      return -1;
+			    }
+			    return comparator(a.model,b.model); 
+			    }));
 			  if (this.sorting.direction == 1) { sorted = sorted.reverse(); }
 			  for(var i = 0; i < sorted.length; i++) {
 			    sorted[i].row.appendTo(this.table);
@@ -147,6 +156,23 @@
           }
         }
         return retval;
+      },
+      activateSortable: function(options) {
+        this.options.sortOptions = options;
+        this.options.sortable = true;
+      },
+      _sortable: function() {
+        if(!this.sortActive && this.options.sortable) {
+          this.sortActive = true;
+          var defOpt = {
+           handle: '.dynamictable-sorthandle',
+           items: '> *:not(.dynamictable-notsortable)',
+            cursor: 'move',
+            placeholder : 'dynamictable-placeholder' 
+          };
+          $.extend(defOpt, this.options.sortOptions);
+          this.table.sortable(defOpt);
+        }
       }
 	};
 	
@@ -155,11 +181,14 @@
 		this.table = table;
 		this.model = model;
 		var me = this;
-		this.model.addListener(function() { me.render(); });
+		if(this.model) {
+		  this.model.addListener(function() { me.render(); });
+		}
 		this.cells = [];
 		this.options = {};
 		$.extend(this.options,options);
 		this.row = $("<div />").appendTo(this.table.getElement()).addClass(cssClasses.tableRow);
+		this.row.data("model",model);
 	};
 	
 	dynamicTableRow.prototype = {
@@ -201,6 +230,9 @@
         this.cells[i].closeEdit();
       }
 		},
+		setNotSortable: function() {
+		  this.row.addClass("dynamictable-notsortable");
+		}
 	};
 	
 	/** TABLE CELL **/
@@ -230,6 +262,9 @@
 	  setActionCell: function(options) {
 	    new tableRowActions(this,this.row,options);
 	  },
+	  activateSortHandle: function() {
+	    this.cell.addClass("dynamictable-sorthandle");
+	  },
 		render: function() {
 			if(typeof(this.options.get) == "function") {
 				this.setValue(this.options.get());
@@ -251,10 +286,9 @@
 		  this.field.unbind('keydown');
 		  if (this.field.val() != this.value) {
         this.options.set(this.field.val());
-        // TODO: remove after implementing callback
-        this.setValue(this.field.val());
       }
-		  this.field.remove(); 
+		  this.field.remove();
+		  this.field = null;
 		  if(this.addedButtons) {
   		  $.each(this.addedButtons, function(k,v) {
   		    v.remove();
@@ -295,6 +329,9 @@
 		      var me = this;
 		      var kh  = function(event) {
 		        if(event.target) {
+		          if(!me.field) {
+		            return;
+		          }
 		          var target = $(event.target);
 		          var parent = target.closest("div.wysiwyg");
 		          var wysiwyg = me.field.prev("div.wysiwyg");
@@ -318,7 +355,7 @@
 		    if(this.options.type != "wysiwyg") {
   		    var me = this;
           var key_cb = function(keyevent) { me.handleKeyEvent(me, keyevent); };
-          var blur_cb = function() { me.closeEdit(me); me.field.unbind('blur',blur_cb); };
+          var blur_cb = function() { me.closeEdit(me); };
           if(noAutoclose != true) {
             this.field.blur(blur_cb);
             this.field.keydown(key_cb);
@@ -326,7 +363,7 @@
           }
 		    }
         this.content.hide();
-        if(noAutoclose && this.options.buttons) {
+        if((noAutoclose || this.options.type == "wysiwyg") && this.options.buttons) {
           var me = this;
           me.addedButtons = [];
           $.each(this.options.buttons, function(button, opts) {
@@ -398,12 +435,14 @@
 		iterationGoalTable: function(options) {
 		  var opts = {
 		      colCss: {
-		        ':lt(3)': { 'background': '#ffc' },
-		        ':eq(3)': { 'background': '#fcc' },
-		        ':eq(4)': { 'background': '#cfc' },
-		        ':last': { 'background': '#cff' }
+		        ':lt(7)': { 'background': '#cceeee' },
+		        ':eq(7)': { 'background': '#eeffff' }
 		      },
-		      headerCols: [
+		      headerCols: [ {
+		                     name: "Prio",
+		                     tooltio: "Priority",
+		                     sort: agilefantUtils.comparators.priorityComparator
+		                   },
 		                   {
 		                     name: 'Name',
 		                     tooltip: 'Iteration goal name',
@@ -428,9 +467,18 @@
                          name: 'Done / Total',
                          tooltip: 'Done / Total backlog items',
                          sort: null
+                       },
+                       {
+                         name: ' ',
+                         tooltip: "",
+                         sort: null
                        }
-		                   ],
+                       ],
 		      colWidths: [
+		                  {
+		                    minwidth: 15,
+		                    auto: true
+		                  },
 		                  {
 		                    minwidth: 200,
 		                    auto: true
@@ -452,7 +500,7 @@
 		                	  auto: true
 		                  },
 		                  {
-		                    minwidth: 60,
+		                    minwidth: 40,
 		                    auto: true
 		                  },
 		                  {
@@ -467,7 +515,6 @@
 		  };
 		  $.extend(opts,options);
 			var ret = this.dynamicTable(opts);
-			//TODO: sortable etc stuff
 			
 			return ret;
 		}

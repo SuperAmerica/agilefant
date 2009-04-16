@@ -17,6 +17,30 @@ iterationController.prototype = {
       //all goals must be updated
       this.model.reloadGoalData();
     },
+    deleteGoal: function(goal) {
+      var parent = $("<div />").appendTo(document.body).text("Are you sure you wish to delete this iteration goal?");
+      var me = this;
+      parent.dialog({
+        resizable: false,
+        height:140,
+        modal: true,
+        overlay: {
+          backgroundColor: '#000000',
+          opacity: 0.5
+        },
+        buttons: {
+          'Yes': function() {
+            $(this).dialog('close');
+            parent.remove();
+            me.model.removeGoal(goal);
+          },
+          Cancel: function() {
+            $(this).dialog('close');
+            parent.remove();
+          }
+        }
+      });
+    },
     render: function(data) {
       var me = this;
       this.view = jQuery(this.element).iterationGoalTable();
@@ -53,7 +77,10 @@ iterationController.prototype = {
                                            row.openEdit();
                                          }
                                        }, {
-                                         text: "Delete"
+                                         text: "Delete",
+                                         callback: function() {
+                                           me.deleteGoal(goal);
+                                         }
                                        }
                                        ]});
         var desc = row.createCell({

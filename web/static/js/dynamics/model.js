@@ -63,13 +63,26 @@ iterationModel.prototype = {
 	      data: {iterationId: this.iterationId}
 	    });
 	},
+	removeGoal: function(goal) {
+	  var goals = [];
+	  for(var i = 0 ; i < this.iterationGoals.length; i++) {
+	    if(this.iterationGoals[i] != goal) {
+	      goals.push(this.iterationGoals[i]);
+	    }
+	  }
+	  var me = this;
+	  goal.remove(function() {
+	    me.iterationGoals = goals;
+	  });
+	}
 };
 
 /** ITERATION GOAL MODEL **/
 
 iterationGoalModel = function(iterationGoalData) {
 	this.setData(iterationGoalData, true);
-	this.listeners = [];
+	this.editListeners = [];
+	this.deleteListeners = [];
 };
 iterationGoalModel.prototype = {
 	setData: function(data, includeMetrics) {
@@ -80,9 +93,9 @@ iterationGoalModel.prototype = {
     if(includeMetrics) {
       this.metrics = data.metrics;
     }
-    if(this.listeners) {
-      for(var i = 0; i < this.listeners.length; i++) {
-        this.listeners[i]();
+    if(this.editListeners) {
+      for(var i = 0; i < this.editListeners.length; i++) {
+        this.editListeners[i]();
       }
     }
   },
@@ -132,8 +145,30 @@ iterationGoalModel.prototype = {
 	  this.inTransaction = false;
 	  this.save();
 	},
-	addListener: function(listener) {
-	  this.listeners.push(listener);
+	addEditListener: function(listener) {
+	  this.editListeners.push(listener);
+	},
+	addDeleteListener: function(listener) {
+	  this.deleteListeners.push(listener);
+	},
+	remove: function(cb) {
+	  var me = this;
+	  jQuery.ajax({
+      async: true,
+      error: function() {
+
+      },
+      success: function(data,type) {
+        cb();
+        for(var i = 0; i < me.deleteListeners.length; i++) {
+          me.deleteListeners[i]();
+        }
+      },
+      cache: false,
+      type: "POST",
+      url: "deleteIterationGoal.action",
+      data: {iterationGoalId: this.id}
+    });
 	},
 	save: function() {
 	  if(this.inTransaction) {

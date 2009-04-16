@@ -42,6 +42,16 @@
 				this.rows.push(newRow);
 				return newRow;
 			},
+			deleteRow: function(row) {
+			  var rows = [];
+			  for(var i = 0 ; i < this.rows.length; i++) {
+			    if(this.rows[i] != row) {
+			      rows.push(this.rows[i]);
+			    }
+			  }
+			  this.rows = rows;
+			  $(document.body).trigger("dynamictable-close-actions");
+			},
 			getElement: function() {
 				return this.table;
 			},
@@ -182,7 +192,8 @@
 		this.model = model;
 		var me = this;
 		if(this.model) {
-		  this.model.addListener(function() { me.render(); });
+		  this.model.addEditListener(function() { me.render(); });
+		  this.model.addDeleteListener(function() { me.remove(); });
 		}
 		this.cells = [];
 		this.options = {};
@@ -196,6 +207,10 @@
 			var newCell = new dynamicTableCell(this, this.cells.length, options);
 			this.cells.push(newCell);
 			return newCell;
+		},
+		remove: function() {
+		  this.table.deleteRow(this);
+		  this.row.remove();
 		},
 		getElement: function() {
 			return this.row;

@@ -90,7 +90,7 @@ iterationController.prototype = {
           buttons: {
             save: {text: "Save", action: function() {
               goal.beginTransaction();
-              row.closeEdit();
+              row.saveEdit();
               goal.commit();
             }},
             cancel: {text: "Cancel", action: function() {

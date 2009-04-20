@@ -169,4 +169,10 @@ iterationController.prototype = {
         row.render();
         row.openEdit();
     }
-}
+};
+var backlogItemController = function(parentController, model) {
+  
+};
+backlogItemController.prototype = {
+    
+};

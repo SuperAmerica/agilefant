@@ -357,10 +357,12 @@ public class BacklogItemActionTest extends SpringTestCase {
         action.getBacklogItem().setState(State.IMPLEMENTED);
         action.getBacklogItem().setEffortLeft(new AFTime("1h 15min"));
         SecurityUtil.setLoggedUser(userDAO.get(this.userId));
+        Calendar created = Calendar.getInstance();
         assertEquals("ajax_success", action.ajaxStoreBacklogItem());
-        assertEquals(Calendar.getInstance().get(Calendar.YEAR),backlogItemDAO.get(action.getBacklogItemId()).getCreatedDate().get(Calendar.YEAR));
-        assertEquals(Calendar.getInstance().get(Calendar.MONTH),backlogItemDAO.get(action.getBacklogItemId()).getCreatedDate().get(Calendar.MONTH));
-        assertEquals(Calendar.getInstance().get(Calendar.DAY_OF_MONTH),backlogItemDAO.get(action.getBacklogItemId()).getCreatedDate().get(Calendar.DAY_OF_MONTH));
+        created.setTime(backlogItemDAO.get(action.getBacklogItemId()).getCreatedDate());
+        assertEquals(Calendar.getInstance().get(Calendar.YEAR),created.get(Calendar.YEAR));
+        assertEquals(Calendar.getInstance().get(Calendar.MONTH),created.get(Calendar.MONTH));
+        assertEquals(Calendar.getInstance().get(Calendar.DAY_OF_MONTH),created.get(Calendar.DAY_OF_MONTH));
         assertEquals(this.userId, backlogItemDAO.get(action.getBacklogItemId()).getCreator().getId());
      }
     

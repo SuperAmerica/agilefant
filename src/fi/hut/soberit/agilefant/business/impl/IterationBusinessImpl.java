@@ -1,5 +1,6 @@
 package fi.hut.soberit.agilefant.business.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import fi.hut.soberit.agilefant.business.BacklogItemBusiness;
@@ -36,6 +37,7 @@ public class IterationBusinessImpl implements IterationBusiness {
 
         //calculate efforts from pre-fetched backlog items
         for(IterationGoal goal : goals) {
+            goal.setBacklogItems(new ArrayList<BacklogItem>());
             for(BacklogItem bli : blis) {
                 if(bli.getIterationGoal() == goal) {
                     if(bli.getEffortLeft() != null) {
@@ -48,11 +50,13 @@ public class IterationBusinessImpl implements IterationBusiness {
                         goal.getMetrics().getOriginalEstimate().add(bli.getOriginalEstimate());
                     }
                     goal.getMetrics().addTask(bli);
+                    goal.getBacklogItems().add(bli);
                 }
             }
         }
         IterationDataContainer iterData = new IterationDataContainer();
         iterData.setIterationGoals(goals);
+        iterData.setItemsWithoutGoal(iterationDAO.getBacklogItemsWihoutIterationGoal(iter));
         return iterData;
     }
 

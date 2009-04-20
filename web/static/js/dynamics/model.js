@@ -113,6 +113,9 @@ iterationGoalModel.prototype = {
     if(!copy.metrics) copy.metrics = {};
     return copy;
   },
+  getBacklogItems: function() {
+    return this.backlogItems;
+  },
   getId: function() {
 		return this.id;
 	},
@@ -220,4 +223,35 @@ iterationGoalModel.prototype = {
       data: data
     });
 	}
+};
+
+var backlogItemModel = function(data) {
+  this.editListeners = [];
+  this.deleteListener = [];
+};
+backlogItemModel.prototype = {
+  setData: function(data) {
+    this.persistedData = data;
+  },
+  addEditListener: function(listener) {
+    this.editListeners.push(listener);
+  },
+  addDeleteListener: function(listener) {
+    this.deleteListeners.push(listener);
+  },
+  beginTransaction: function() {
+ 
+  },
+  commit: function() {
+    
+  },
+  rollBack: function() {
+    
+  },
+  remove: function() {
+    
+  },
+  save: function() {
+    
+  }
 };

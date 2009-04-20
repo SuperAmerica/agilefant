@@ -120,7 +120,7 @@ public class BacklogItemBusinessImpl implements BacklogItemBusiness {
         }
         if(storable == null) {
             storable = new BacklogItem();
-            storable.setCreatedDate(Calendar.getInstance());
+            storable.setCreatedDate(Calendar.getInstance().getTime());
             try {
                 storable.setCreator(SecurityUtil.getLoggedUser()); //may fail if request is multithreaded
             } catch(Exception e) { } //however, saving item should not fail.

@@ -1,8 +1,8 @@
 package fi.hut.soberit.agilefant.model;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 
@@ -28,6 +28,7 @@ import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.Type;
 
 import fi.hut.soberit.agilefant.web.page.PageItem;
+import flexjson.JSON;
 
 /**
  * Hibernate entity bean representing a back log. A Backlog is a work log that
@@ -93,18 +94,19 @@ public class BacklogItem implements PageItem, Assignable, EffortContainer, Times
 
     private AFTime effortSpent;
     
-    private Calendar createdDate;
+    private Date createdDate;
     
     private User creator;
     
-    public Calendar getCreatedDate() {
+    public Date getCreatedDate() {
         return this.createdDate;
     }
 
-    public void setCreatedDate(Calendar createdDate) {
+    public void setCreatedDate(Date createdDate) {
         this.createdDate = createdDate;
     }
     @ManyToOne
+    @JSON(include=false)
     public User getCreator() {
         return this.creator;
     }
@@ -186,6 +188,7 @@ public class BacklogItem implements PageItem, Assignable, EffortContainer, Times
     @OrderBy(value="rank ASC")
     @Cascade(CascadeType.DELETE_ORPHAN)
     @BatchSize(size=20)
+    @JSON(include=false)
     public Collection<Task> getTasks() {
         return tasks;
     }
@@ -209,6 +212,7 @@ public class BacklogItem implements PageItem, Assignable, EffortContainer, Times
     @ManyToOne
     @Cascade(CascadeType.REFRESH)
     @JoinColumn(nullable = false)
+    @JSON(include=false)
     public Backlog getBacklog() {
         return backlog;
     }
@@ -226,6 +230,7 @@ public class BacklogItem implements PageItem, Assignable, EffortContainer, Times
 
     /** {@inheritDoc} */
     @Transient
+    @JSON(include=false)
     public Collection<PageItem> getChildren() {
         Collection<PageItem> c = new HashSet<PageItem>(this.tasks.size());
         c.addAll(this.tasks);
@@ -234,6 +239,7 @@ public class BacklogItem implements PageItem, Assignable, EffortContainer, Times
 
     /** {@inheritDoc} */
     @Transient
+    @JSON(include=false)
     public PageItem getParent() {
         // TODO: do some checks
         return (PageItem) getBacklog();
@@ -241,6 +247,7 @@ public class BacklogItem implements PageItem, Assignable, EffortContainer, Times
 
     /** {@inheritDoc} */
     @Transient
+    @JSON(include=false)
     public boolean hasChildren() {
         return this.tasks.size() > 0 ? true : false;
     }
@@ -259,6 +266,7 @@ public class BacklogItem implements PageItem, Assignable, EffortContainer, Times
 
     /** {@inheritDoc} */
     @ManyToOne
+    @JSON(include=false)
     public User getAssignee() {
         return assignee;
     }
@@ -296,6 +304,7 @@ public class BacklogItem implements PageItem, Assignable, EffortContainer, Times
      * @return iterationGoal the iteration goal to of the backlog item
      */
     @ManyToOne
+    @JSON(include=false)
     @JoinColumn(nullable = true)
     public IterationGoal getIterationGoal() {
         return iterationGoal;
@@ -311,41 +320,8 @@ public class BacklogItem implements PageItem, Assignable, EffortContainer, Times
         this.iterationGoal = iterationGoal;
     }
 
-    /**
-     * Returns the placeholder task of this backlog item. DO NOT USE THIS. IT
-     * WILL BE REMOVED IN FOLLOWING VERSIONS.
-     * 
-     * @deprecated
-     * @param placeHolder
-     *                the placeHolder
-     * @return the placeHolder
-     */
-    /*
-     * @OneToOne @Cascade(CascadeType.DELETE_ORPHAN) public Task
-     * getPlaceHolder() { return placeHolder; }
-     */
-
-    /**
-     * Sets the placeholder task of this backlog items. DO NOT USE THIS. IT WILL
-     * BE REMOVED IN FOLLOWING VERSIONS.
-     * 
-     * @deprecated
-     * @param placeHolder
-     *                the placeHolder to set
-     */
-    /*
-     * public void setPlaceHolder(Task placeHolder) { this.placeHolder =
-     * placeHolder; }
-     */
-
-    /**
-     * Get the backlog items parent backlogs.
-     * 
-     * @param item
-     *                backlog item whose parents are to be get.
-     * @return list of parent backlogs.
-     */
     @Transient
+    @JSON(include=false)
     public List<Backlog> getParentBacklogs() {
         List<Backlog> retlist = new ArrayList<Backlog>();
         Backlog firstParent = getBacklog();
@@ -390,6 +366,7 @@ public class BacklogItem implements PageItem, Assignable, EffortContainer, Times
      * @return
      */
     @Transient
+    @JSON(include=false)
     public Product getProduct() {
         Backlog parent = getBacklog();
         if( parent instanceof Iteration ) {
@@ -436,6 +413,7 @@ public class BacklogItem implements PageItem, Assignable, EffortContainer, Times
     )
     @OrderBy("initials")
     @BatchSize(size=20)
+    @JSON(include=false)
     public Collection<User> getResponsibles() {
         return responsibles;
     }
@@ -488,6 +466,7 @@ public class BacklogItem implements PageItem, Assignable, EffortContainer, Times
             targetEntity = fi.hut.soberit.agilefant.model.BacklogItemHourEntry.class,
             mappedBy = "backlogItem"
     )
+    @JSON(include=false)
     public Collection<BacklogItemHourEntry> getHourEntries() {
         return hourEntries;
     }

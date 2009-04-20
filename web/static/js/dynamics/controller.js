@@ -113,7 +113,7 @@ iterationController.prototype = {
       jQuery.each(goals, function(index, goal){
     	  me.addRow(goal);
       });
-      var row = me.view.createRow();
+      var row = me.view.createRow(null);
       row.createCell();
       var name = row.createCell().setValue("Items without goal.");
       var elsum = row.createCell();
@@ -125,15 +125,20 @@ iterationController.prototype = {
 
     },
     storeGoal: function(row,goal) {
-    	row.saveEdit();
+    	  row.saveEdit();
+    	  row.remove();
+    	  goal = goal.copy();
         this.addRow(goal);
+        this.model.addGoal(goal);
         goal.commit();
+        this.model.reloadGoalData();
+        this.view.sortTable();
     },
     createGoal: function() {
     	var me = this;
     	var fakeGoal = new iterationGoalModel(this.iterationId);
     	fakeGoal.beginTransaction(); //block autosaves
-        var row = this.view.createRow(fakeGoal);
+        var row = this.view.createRow(fakeGoal,{toTop: true}, true);
         var prio = row.createCell();
         var name = row.createCell({
           type: "text", get: function() { return ""; },

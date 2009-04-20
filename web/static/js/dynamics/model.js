@@ -33,8 +33,9 @@ ModelFactory = new modelFactory();
 iterationModel = function(iterationData, iterationId) {
 	var goalPointer = [];
 	this.iterationId = iterationId;
+	var me = this;
 	jQuery.each(iterationData.iterationGoals, function(index,iterationGoalData) { 
-		goalPointer.push(new iterationGoalModel(iterationGoalData));
+		goalPointer.push(new iterationGoalModel(iterationGoalData, me));
 	});
 	this.iterationGoals = goalPointer;
 };
@@ -45,7 +46,7 @@ iterationModel.prototype = {
 	reloadGoalData: function() {
 	  var me = this;
 	   jQuery.ajax({
-	      async: true,
+	      async: false,
 	      success: function(data,type) {
 	        data = data.iterationGoals;
 	        for(var i = 0 ; i < data.length; i++) {
@@ -63,6 +64,10 @@ iterationModel.prototype = {
 	      data: {iterationId: this.iterationId}
 	    });
 	},
+	addGoal: function(goal) {
+	  goal.iteration = this;
+	  this.iterationGoals.push(goal);
+	},
 	removeGoal: function(goal) {
 	  var goals = [];
 	  for(var i = 0 ; i < this.iterationGoals.length; i++) {
@@ -79,13 +84,16 @@ iterationModel.prototype = {
 
 /** ITERATION GOAL MODEL **/
 
-iterationGoalModel = function(iterationGoalData) {
+iterationGoalModel = function(iterationGoalData, parent) {
+  this.metrics = {};
 	this.setData(iterationGoalData, true);
+	this.iteration = parent;
 	this.editListeners = [];
 	this.deleteListeners = [];
 };
 iterationGoalModel.prototype = {
 	setData: function(data, includeMetrics) {
+    this.persistedData = data;
     this.description = data.description;
     this.name = data.name;
     this.priority = data.priority;
@@ -98,6 +106,12 @@ iterationGoalModel.prototype = {
         this.editListeners[i]();
       }
     }
+  },
+  copy: function() {
+    var copy = new iterationGoalModel({}, this.iteration);
+    copy.setData(this, true);
+    if(!copy.metrics) copy.metrics = {};
+    return copy;
   },
   getId: function() {
 		return this.id;
@@ -145,6 +159,10 @@ iterationGoalModel.prototype = {
 	  this.inTransaction = false;
 	  this.save();
 	},
+	rollBack: function() {
+	  this.setData(this.persistedData);
+	  this.inTransaction = false;
+	},
 	addEditListener: function(listener) {
 	  this.editListeners.push(listener);
 	},
@@ -156,13 +174,15 @@ iterationGoalModel.prototype = {
 	  jQuery.ajax({
       async: true,
       error: function() {
-
+	      this.rollBack();
+	      commonView.showError("An error occured while deleting an iteration goal.");
       },
       success: function(data,type) {
         cb();
-        for(var i = 0; i < me.deleteListeners.length; i++) {
+        for(var i = 0 ; i < me.deleteListeners.length; i++) {
           me.deleteListeners[i]();
         }
+        commonView.showOk("Iteration goal deleted.");
       },
       cache: false,
       type: "POST",
@@ -178,16 +198,20 @@ iterationGoalModel.prototype = {
 		var data  = {
 				"iterationGoal.name": this.name,
 				"iterationGoal.description": this.description,
-				"priority": this.priority,
-				iterationGoalId: this.id
+				iterationId: this.iteration.iterationId
 		};
+		if(this.priority) data.priority = this.priority;
+		if(this.id) data.iterationGoalId = this.id;
+		if(this.name == undefined) data.name = "";
+		if(this.description == undefined) data.description = "";
     jQuery.ajax({
-      async: true,
+      async: false,
       error: function() {
-        //throw "Data request failed!";
+        commonView.showError("An error occured while saving an iteration goal.");
       },
       success: function(data,type) {
         me.setData(data,false);
+        commonView.showOk("Iteration goal saved succesfully.");
       },
       cache: false,
       dataType: "json",

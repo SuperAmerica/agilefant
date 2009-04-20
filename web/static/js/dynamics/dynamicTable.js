@@ -37,9 +37,11 @@
 	};
 	
 	dynamicTable.prototype = {
-			createRow: function(model, opt) {
+			createRow: function(model, opt, noSort) {
 				var newRow = new dynamicTableRow(this, model, opt);
-				this.rows.push(newRow);
+				if(!noSort) {
+				  this.rows.push(newRow);
+				}
 				return newRow;
 			},
 			deleteRow: function(row) {
@@ -76,6 +78,11 @@
 			    this.doSort(this.options.defaultSortColumn, this.options.headerCols[this.options.defaultSortColumn].sort);
 			  }
 			  this._sortable();
+			},
+			sortTable: function() {
+			  if(this.sorting.direction == 1) this.sorting.direction = 0;
+			  if(this.sorting.direction == 0) this.sorting.direction = 1;
+			  this.doSort(this.sorting.column, this.options.headerCols[this.sorting.column].sort);
 			},
 			renderHeader: function() {
 			  if (this.options.headerCols.length == 0) {
@@ -206,7 +213,11 @@
 		this.options = {};
 		$.extend(this.options,options);
 		if(this.options.toTop) {
-			this.row = $("<div />").prependTo(this.table.getElement()).addClass(cssClasses.tableRow);
+		  if(this.table.headerRow) {
+		    this.row = $("<div />").insertAfter(this.table.headerRow.getElement()).addClass(cssClasses.tableRow);
+		  } else {
+		    this.row = $("<div />").prependTo(this.table.getElement()).addClass(cssClasses.tableRow);
+		  }
 		} else {
 			this.row = $("<div />").appendTo(this.table.getElement()).addClass(cssClasses.tableRow);
 		}

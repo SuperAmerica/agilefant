@@ -76,6 +76,10 @@ public class IterationGoalBusinessImpl implements IterationGoalBusiness {
                 throw new ObjectNotFoundException("iteration.noFound");
             }
         }
+        //iteration goal has to have a parent 
+        if(goal.getIteration() == null && iterationId == 0) {
+            throw new IllegalArgumentException("iteration.notFound");
+        }
         if(goal.getIteration() != null && iterationId != 0) {
             if(goal.getIteration() != newIteration) {
                 goal.getIteration().getIterationGoals().remove(goal);

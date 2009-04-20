@@ -69,3 +69,24 @@
 	margin: 0;
 	padding: 0;	
 }
+
+div.okMessage {
+	background-color:#00FFCC;
+	border:1px solid #CCCCCC;
+	font-weight:bold;
+	padding:3px 5px;
+	position:fixed;
+	right:100px;
+	top:82px;
+	z-index:3699;
+}
+div.errorMessage {
+	background-color:#FF0066;
+	border:1px solid #CCCCCC;
+	font-weight:bold;
+	padding:3px 5px;
+	position:fixed;
+	right:100px;
+	top:82px;
+	z-index:3699;
+}

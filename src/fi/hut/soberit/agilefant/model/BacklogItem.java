@@ -350,6 +350,7 @@ public class BacklogItem implements PageItem, Assignable, EffortContainer, Times
      * @return
      */
     @Transient
+    @JSON(include=false)
     public Project getProject() {
         Backlog parent = getBacklog();
         if( parent instanceof Iteration ) {

@@ -5,8 +5,8 @@ import fi.hut.soberit.agilefant.util.IterationDataContainer;
 
 public interface IterationBusiness {
     
-    public IterationDataContainer getIterationContents(int iterationId);
+    public IterationDataContainer getIterationContents(int iterationId, boolean excludeBacklogItems);
     
-    public IterationDataContainer getIterationContents(Iteration iter);
+    public IterationDataContainer getIterationContents(Iteration iter, boolean excludeBacklogItems);
 
 }

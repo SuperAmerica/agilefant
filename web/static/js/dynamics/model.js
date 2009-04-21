@@ -61,7 +61,7 @@ iterationModel.prototype = {
 	      dataType: "json",
 	      type: "POST",
 	      url: "iterationData.action",
-	      data: {iterationId: this.iterationId}
+	      data: {iterationId: this.iterationId, excludeBacklogItems: true}
 	    });
 	},
 	addGoal: function(goal) {
@@ -101,9 +101,20 @@ iterationGoalModel.prototype = {
     if(includeMetrics) {
       this.metrics = data.metrics;
     }
+    if(data.backlogItems && data.backlogItems.length > 0) {
+      this.setBacklogItems(data.backlogItems);
+    }
     if(this.editListeners) {
       for(var i = 0; i < this.editListeners.length; i++) {
         this.editListeners[i]();
+      }
+    }
+  },
+  setBacklogItems: function(backlogItems) {
+    if(!this.backlogItems || this.backlogItems.length == 0) {
+      this.backlogItems = [];
+      for(var i = 0 ; i < backlogItems.length ; i++) {
+        this.backlogItems.push(new backlogItemModel(backlogItems[i], this));
       }
     }
   },
@@ -225,13 +236,51 @@ iterationGoalModel.prototype = {
 	}
 };
 
-var backlogItemModel = function(data) {
+var backlogItemModel = function(data, iterationGoal) {
   this.editListeners = [];
   this.deleteListener = [];
+  this.setData(data);
 };
 backlogItemModel.prototype = {
   setData: function(data) {
     this.persistedData = data;
+    this.name = data.name;
+    this.description = data.description;
+    this.created = data.created;
+    this.priority = data.priority;
+    this.state = data.state;
+    
+  },
+  getName: function() {
+    return this.name;
+  },
+  setName: function(name) {
+    this.name = name;
+    this.save();
+  },
+  getDescription: function() {
+    return this.description;
+  },
+  setDescription: function(description) {
+    this.description = description;
+    this.save();
+  },
+  getCreated: function() {
+    return this.created;
+  },
+  getPriority: function() {
+    return this.priority;
+  },
+  setPriority: function(priority) {
+    this.priority = priority;
+    this.save();
+  },
+  getState: function() {
+    return this.state;
+  },
+  setState: function(state) {
+    this.state = state;
+    this.save();
   },
   addEditListener: function(listener) {
     this.editListeners.push(listener);
@@ -240,18 +289,22 @@ backlogItemModel.prototype = {
     this.deleteListeners.push(listener);
   },
   beginTransaction: function() {
- 
+    this.inTransaction = true;
   },
   commit: function() {
-    
+    this.inTransaction = false;
+    this.save();
   },
   rollBack: function() {
-    
+    this.setData(this.persisted);
+    this.inTransaction = false;
   },
   remove: function() {
     
   },
   save: function() {
-    
+    if(this.inTransaction) {
+      return;
+    }
   }
 };

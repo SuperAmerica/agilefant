@@ -70,6 +70,8 @@ public class IterationAction extends BacklogContentsAction implements CRUDAction
     
     private IterationBusiness iterationBusiness;
     
+    private boolean excludeBacklogItems = false;
+    
     
     public String create() {
         iterationId = 0;
@@ -80,11 +82,15 @@ public class IterationAction extends BacklogContentsAction implements CRUDAction
     }
     
     public String iterationContents() {
-        IterationDataContainer data = this.iterationBusiness.getIterationContents(iterationId);
+        IterationDataContainer data = this.iterationBusiness.getIterationContents(iterationId, excludeBacklogItems);
         if(data == null) {
             return AJAX_ERROR;
         }
         JSONSerializer serializer = new JSONSerializer();
+        if(!excludeBacklogItems) {
+            serializer.include("iterationGoals.backlogItems");
+            serializer.include("itemsWithoutGoal");
+        }
         
         json = serializer.prettyPrint(data);
         
@@ -467,6 +473,10 @@ public class IterationAction extends BacklogContentsAction implements CRUDAction
 
     public void setIterationBusiness(IterationBusiness iterationBusiness) {
         this.iterationBusiness = iterationBusiness;
+    }
+
+    public void setExcludeBacklogItems(boolean excludeBacklogItems) {
+        this.excludeBacklogItems = excludeBacklogItems;
     }
 
 }

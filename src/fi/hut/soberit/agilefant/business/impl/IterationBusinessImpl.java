@@ -22,19 +22,25 @@ public class IterationBusinessImpl implements IterationBusiness {
     private IterationGoalDAO iterationGoalDAO;
     private IterationDAO iterationDAO;
     
-    public IterationDataContainer getIterationContents(int iterationId) {
+    public IterationDataContainer getIterationContents(int iterationId, boolean excludeBacklogItems) {
         Iteration iter = this.iterationDAO.get(iterationId);
         if(iter == null) {
             return null;
         }
-        return this.getIterationContents(iter);
+        return this.getIterationContents(iter, excludeBacklogItems);
     }
 
-    public IterationDataContainer getIterationContents(Iteration iter) {
+    public IterationDataContainer getIterationContents(Iteration iter, boolean excludeBacklogItems) {
         List<IterationGoal> goals = this.iterationGoalDAO.getGoalsByIteration(iter);
         
         List<BacklogItem> blis = backlogItemBusiness.getBacklogItemsByBacklog(iter);
-
+        
+        IterationDataContainer iterData = new IterationDataContainer();
+        iterData.setIterationGoals(goals);
+        
+        if(excludeBacklogItems) {
+            return iterData;
+        }
         //calculate efforts from pre-fetched backlog items
         for(IterationGoal goal : goals) {
             goal.setBacklogItems(new ArrayList<BacklogItem>());
@@ -54,8 +60,6 @@ public class IterationBusinessImpl implements IterationBusiness {
                 }
             }
         }
-        IterationDataContainer iterData = new IterationDataContainer();
-        iterData.setIterationGoals(goals);
         iterData.setItemsWithoutGoal(iterationDAO.getBacklogItemsWihoutIterationGoal(iter));
         return iterData;
     }

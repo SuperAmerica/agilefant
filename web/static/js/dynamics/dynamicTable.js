@@ -232,7 +232,10 @@
 		},
 		remove: function() {
 		  this.table.deleteRow(this);
-		  this.row.remove();
+		  var me = this;
+		  this.row.fadeOut(300, function() {
+		    me.row.remove();
+		  });
 		},
 		getElement: function() {
 			return this.row;

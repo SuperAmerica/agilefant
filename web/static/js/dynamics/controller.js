@@ -6,14 +6,14 @@ var iterationController = function(iterationId, element) {
 }
 iterationController.prototype = {
     changeIterationGoalPriority: function(ev, el) {
-      var position = 0;
+      var priority = 0;
       var model = el.item.data("model");
-      var cur = el.item.prev();
-      while(cur.length == 1 && !cur.hasClass("dynamictable-notsortable")) {
-        position++;
-        cur = cur.prev();
+      var previous = el.item.prev();
+      var prevModel = previous.data("model");
+      if(prevModel) {
+        priority = prevModel.getPriority() + 1;
       }
-      model.setPriority(position);
+      model.setPriority(priority);
       //all goals must be updated
       this.model.reloadGoalData();
     },

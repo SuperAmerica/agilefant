@@ -1,14 +1,10 @@
 var commonView = {
   showError: function(message) {
     var messageScreen = $('<div />').html(message).addClass("errorMessage").appendTo(document.body);
-    setTimeout(function() {
-      messageScreen.hide("highlight",{},"normal", function() { messageScreen.remove()});
-    }, 5000);
+    messageScreen.fadeOut(2000, function() { messageScreen.remove()});
   },
   showOk: function(message) {
     var messageScreen = $('<div />').html(message).addClass("okMessage").appendTo(document.body);
-    setTimeout(function() {
-      messageScreen.hide("highlight",{},"normal", function() { messageScreen.remove()});
-    }, 5000);
+    messageScreen.fadeOut(2000, function() { messageScreen.remove()});
   }
 };

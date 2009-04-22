@@ -62,7 +62,7 @@ public class IterationGoalBusinessImpl implements IterationGoalBusiness {
         }
         if(goal.getBacklogItems() != null) {
             for(BacklogItem item : goal.getBacklogItems()) {
-                backlogItemBusiness.setBacklogItemIterationGoal(item, null);
+                item.setIterationGoal(null);
             }
         }
         iterationGoalDAO.remove(iterationGoalId);

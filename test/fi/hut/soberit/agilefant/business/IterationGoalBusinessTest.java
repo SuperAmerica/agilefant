@@ -108,8 +108,6 @@ public class IterationGoalBusinessTest extends TestCase {
        bli2.setIterationGoal(removeMe);
        iteration.getIterationGoals().add(removeMe);
        
-       backlogItemBusiness.setBacklogItemIterationGoal(bli1, null);
-       backlogItemBusiness.setBacklogItemIterationGoal(bli2, null);
        iterationGoalDAO.remove(1);
        expect(iterationGoalDAO.get(1)).andReturn(removeMe).once();
        
@@ -121,9 +119,10 @@ public class IterationGoalBusinessTest extends TestCase {
            fail();
        }
        assertFalse(iteration.getIterationGoals().contains(removeMe));
+       assertEquals(null, bli1.getIterationGoal());
+       assertEquals(null, bli2.getIterationGoal());
        
        verify(iterationGoalDAO);
-       verify(backlogItemBusiness);
    }
    private List<IterationGoal> createUpdatePrioData(Iteration iter) {
        List<IterationGoal> goals = new ArrayList<IterationGoal>();

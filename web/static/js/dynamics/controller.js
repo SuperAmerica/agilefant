@@ -139,6 +139,7 @@ iterationController.prototype = {
     	var fakeGoal = new iterationGoalModel(this.iterationId);
     	fakeGoal.beginTransaction(); //block autosaves
         var row = this.view.createRow(fakeGoal,{toTop: true}, true);
+        row.setNotSortable();
         var prio = row.createCell();
         var name = row.createCell({
           type: "text", get: function() { return ""; },

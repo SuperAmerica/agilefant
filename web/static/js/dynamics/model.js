@@ -188,7 +188,7 @@ iterationGoalModel.prototype = {
 	  jQuery.ajax({
       async: true,
       error: function() {
-	      this.rollBack();
+	      me.rollBack();
 	      commonView.showError("An error occured while deleting an iteration goal.");
       },
       success: function(data,type) {

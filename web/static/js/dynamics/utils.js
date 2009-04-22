@@ -17,13 +17,22 @@ var agilefantUtils = {
 	},
 	comparators: {
 	  nameComparator: function(a,b) {
-	    return (a.name.toLowerCase() > b.name.toLowerCase());
+	    return (a.getName().toLowerCase() > b.getName().toLowerCase());
 	  },
 	  descComparator: function(a,b) {
-	    return (a.description.toLowerCase() > b.description.toLowerCase());
+	    return (a.getDescription().toLowerCase() > b.getDescription().toLowerCase());
 	  },
 	  priorityComparator: function(a,b) {
-	    return (a.priority > b.priority);
-	  }
+	    return (a.getPriority() > b.getPriority());
+	  },
+	  effortLeftComparator: function(a,b) {
+	    return (a.getEffortLeft() > b.getEffortLeft());
+	  },
+	  originalEstimateComparator: function(a,b) {
+      return (a.getOriginalEstimate() > b.getOriginalEstimate());
+    },
+    effortSpentComparator: function(a,b) {
+      return (a.getEffortSpent() > b.getEffortSpent());
+    }
 	}
 };

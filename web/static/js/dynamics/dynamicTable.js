@@ -545,17 +545,17 @@
 		                   {
                          name: 'EL',
                          tooltip: 'Total effort left',
-                         sort: null
+                         sort: agilefantUtils.comparators.effortLeftComparator
                        },
                        {
                          name: 'OE',
                          tooltip: 'Total original estimate',
-                         sort: null
+                         sort: agilefantUtils.comparators.originalEstimateComparator
                        },
                        {
                          name: 'ES',
                          tooltip: 'Total effort spent',
-                         sort: null
+                         sort: agilefantUtils.comparators.effortSpentComparator
                        },
                        {
                          name: 'Done / Total',

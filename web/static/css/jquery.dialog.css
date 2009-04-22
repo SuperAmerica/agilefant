@@ -161,3 +161,14 @@ body .ui-resizable-autohide .ui-resizable-handle { display: none; } /* use 'body
 .ui-dialog.ui-draggable .ui-dialog-titlebar {
     cursor: move;
 }
+.ui-widget-overlay {
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #000;
+    filter: alpha(opacity=20);
+    opacity: 0.20;
+    -moz-opacity: 0.20:
+}

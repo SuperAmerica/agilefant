@@ -105,53 +105,6 @@ function addFormValidators(target) {
 function confirmOpenCreateDialog(element) {
     return false;
 }
- /*
-  *  COMMENTED OUT BECAUSE COULD BE USED AS A CONFIRM DIALOG
-  *  IN THE FUTURE TO REPLACE THE JAVASCRIPT ALERT BOXES.
- 
-function confirmOpenCreateDialog(element) {
-    var e = $("<div class=\"confirmDialog\">"
-        +"<p>Previously opened dialogs will be destroyed! Really continue?</p>"
-        +"<form><input type=\"submit\" value=\"Yes\" class=\"yesButton\"/>&nbsp;"
-        +"<input type=\"submit\" value=\"No\" class=\"noButton\"/></form></div>");
-    e.appendTo(document.body);
-    
-    e.find(".yesButton").click(function() {
-        $(".createDialogWindow").dialog("destroy");
-        $(".createDialogWindow").remove();
-        openCreateDialog(element);
-        $('.ui-dialog-overlay').remove();
-        e.parent().parent().remove();
-        return false;
-    });
-    e.find(".noButton").click(function() {
-		$('.ui-dialog-overlay').remove();
-        e.parent().parent().remove();
-		return false;
-    });
-    
-    
-    var windowOptions = {
-        modal: true,
-        resizable: false,
-        draggable: false,
-        close: function() { e.dialog("destroy"); e.remove(); },
-        title: "Close open dialogs?",
-        height: 150,
-        width: 300,
-        overlay: {
-            "background-color": "#666666",
-            "filter": "alpha(opacity=50)",
-            "opacity": 0.5,
-            "-moz-opacity": 0.5,
-            "height": "100%",
-            "width": "100%"
-        }
-    }
-    
-    e.dialog(windowOptions);
-    return false;
-}*/
 
 var overlayUpdate = function() {
    $('.ui-dialog-overlay').css("height",$(document).height()).css("width",$(document).width());
@@ -171,12 +124,7 @@ function openCreateDialog(element) {
 	    resizable: false,
 	    modal: true,
 	    overlay: {
-            "background-color": "#000000",
-            "filter": "alpha(opacity=20)",
-            "opacity": 0.20,
-            "-moz-opacity": 0.20,
-            "height": "100%",
-            "width": "100%"
+            
         }
 	};
 

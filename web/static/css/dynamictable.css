@@ -18,12 +18,14 @@
   display: block;
   width: auto;
   float: left;
-  margin: 0 0 -29.5em 0;
-  padding: 0 0 30em 3px;
+  margin: 0 0.2% -29.5em 0;
+  padding: 0 0 30em 0.2%;
   overflow: hidden;
-  border-style: solid;
-  border-color: #fff;
-  border-width: 0 2px 0 1px;
+  border: none;
+}
+
+.dynamictable-cell span {
+    
 }
 
 .dynamictable-placeholder {

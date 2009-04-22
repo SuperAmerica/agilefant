@@ -8,7 +8,7 @@
 		evenRow: "dynamictable-even"
 	};
 	var statics = {
-	  borderPerColumn: 3
+	  borderPerColumn: 0.4
 	};
 	/** TABLE **/
 	var dynamicTable = function(element, options) {
@@ -152,15 +152,14 @@
             totalwidth += params[i].minwidth;
           }
         }
-        totalwidth += statics.borderPerColumn * num;
         
         var retval = [];
        
         //percentage taken by column borders
-        var totalPercentage = Math.floor(10000 * ((statics.borderPerColumn * num)  / totalwidth))/100;
+        var totalPercentage = (statics.borderPerColumn * num) / 100;
 
         //scale total width down to 95% in order to prevent cell wrapping
-        totalwidth = totalwidth*1.05;
+        totalwidth = totalwidth / (0.95 - totalPercentage);
         
         for (var j = 0; j < params.length; j++) {
           var cell = params[j];
@@ -168,15 +167,16 @@
             retval.push(null);
           }
           else {
-            var percent = Math.floor(10000 * (cell.minwidth / totalwidth))/100;
+            var percent = Math.round(1000 * (cell.minwidth / totalwidth))/10;
             totalPercentage += percent;
             retval.push(percent);
           }
         }
+        var maxWidth = Math.round(10 * (totalPercentage + ((num - 1) * statics.borderPerColumn)))/10;
         for (var j = 0; j < params.length; j++) {
           var cell = params[j];
           if(!cell.auto && cell.setMaxWidth == true) {
-            retval[j] = totalPercentage;
+            retval[j] = maxWidth;
           }
         }
         return retval;

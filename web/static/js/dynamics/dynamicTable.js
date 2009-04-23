@@ -546,8 +546,9 @@
 		iterationGoalTable: function(options) {
 		  var opts = {
 		      colCss: {
-		        ':lt(7)': { 'background': '#eeeeee' },
-		        ':eq(7)': { 'background': '#ffffff' }
+		        ':lt(7)': { 'background': '#cccccc' },
+		        ':eq(7)': { 'background': '#eeeeee' },
+		        ':eq(8)': { 'background': '#ffffff' }
 		      },
 		      headerCols: [ {
 		                     name: "Prio",
@@ -622,6 +623,10 @@
                       {
                         auto: false,
                         setMaxWidth: true
+                      },
+                      {
+                        auto: false,
+                        setMaxWidth: true
                       }
 		                  ]
 		  };
@@ -629,6 +634,63 @@
 			var ret = this.dynamicTable(opts);
 			
 			return ret;
-		}
+		},
+		backlogItemsTable: function(options) {
+      var opts = {
+          colCss: { },
+          headerCols: [
+                       {
+                         name: 'Name',
+                         tooltip: 'Backlog item name',
+                         sort: agilefantUtils.comparators.nameComparator
+                       },
+                       {
+                         name: 'State',
+                         tooltip: 'Backlog item state',
+                         sort: agilefantUtils.comparators.stateComparator
+                       },
+                       {
+                         name: 'EL',
+                         tooltip: 'Total effort left',
+                         sort: agilefantUtils.comparators.effortLeftComparator
+                       },
+                       {
+                         name: 'OE',
+                         tooltip: 'Total original estimate',
+                         sort: agilefantUtils.comparators.originalEstimateComparator
+                       },
+                       {
+                         name: 'ES',
+                         tooltip: 'Total effort spent',
+                         sort: agilefantUtils.comparators.effortSpentComparator
+                       }
+                       ],
+          colWidths: [
+                      {
+                        minwidth: 200,
+                        auto: true
+                      },
+                      {
+                        minwidth: 50,
+                        auto: true
+                      },
+                      {
+                        minwidth: 30,
+                        auto: true
+                      },
+                      {
+                        minwidth: 30,
+                        auto: true
+                      },
+                      {
+                        minwidth: 30,
+                        auto: true
+                      }
+                      ]
+      };
+      $.extend(opts,options);
+      var ret = this.dynamicTable(opts);
+      return ret;
+    }
 	});
 })(jQuery)

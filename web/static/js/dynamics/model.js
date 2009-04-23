@@ -238,7 +238,7 @@ iterationGoalModel.prototype = {
 
 var backlogItemModel = function(data, iterationGoal) {
   this.editListeners = [];
-  this.deleteListener = [];
+  this.deleteListeners = [];
   this.setData(data);
 };
 backlogItemModel.prototype = {
@@ -249,7 +249,9 @@ backlogItemModel.prototype = {
     this.created = data.created;
     this.priority = data.priority;
     this.state = data.state;
-    
+    this.effortLeft = data.effortLeft;
+    this.effortSpent = data.effortSpent;
+    this.originalEstimate = data.originalEstimate;
   },
   getName: function() {
     return this.name;
@@ -280,6 +282,27 @@ backlogItemModel.prototype = {
   },
   setState: function(state) {
     this.state = state;
+    this.save();
+  },
+  getEffortLeft: function() {
+    return this.effortLeft;
+  },
+  setEffortLeft: function(effortLeft) {
+    this.effortLeft = effortLeft;
+    this.save();
+  },
+  getEffortSpent: function() {
+    return this.effortSpent;
+  },
+  setEffortSpent: function(effortSpent) {
+    this.effortSpent = effortSpent;
+    this.save();
+  },
+  getOriginalEstimate: function() {
+    return this.effortOriginalEstimate;
+  },
+  setOriginalEstimate: function(OriginalEstimate) {
+    this.OriginalEstimate = effortOriginalEstimate;
     this.save();
   },
   addEditListener: function(listener) {

@@ -15,6 +15,30 @@ var agilefantUtils = {
 	isAftimeString: function(string) {
 		
 	},
+	stateToString: function(state) {
+	  switch (state) {
+	  case 'NOT_STARTED':
+	    return 'Not started';
+	    break;
+	  case 'STARTED':
+	    return 'Started';
+	    break;
+	  case 'IMPLEMENTED':
+	    return 'Implemented';
+	    break;
+	  case 'BLOCKED':
+	    return 'Blocked';
+	    break;
+	  case 'PENDING':
+	    return 'Pending';
+	    break;
+	  case 'DONE':
+	    return 'Done';
+	    break;
+	  default:
+	    return state;
+	  }
+	},
 	comparators: {
 	  nameComparator: function(a,b) {
 	    return (a.getName().toLowerCase() > b.getName().toLowerCase());
@@ -33,6 +57,9 @@ var agilefantUtils = {
     },
     effortSpentComparator: function(a,b) {
       return (a.getEffortSpent() > b.getEffortSpent());
+    },
+    bliStateComparator: function(a,b) {
+      return (a.getState() > b.getState());
     }
 	}
 };

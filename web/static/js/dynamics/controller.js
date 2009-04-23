@@ -24,10 +24,6 @@ iterationController.prototype = {
         resizable: false,
         height:140,
         modal: true,
-        overlay: {
-          backgroundColor: '#000000',
-          opacity: 0.5
-        },
         buttons: {
           'Yes': function() {
             $(this).dialog('close');
@@ -90,6 +86,8 @@ iterationController.prototype = {
               row.cancelEdit();
             }}
           }});
+        var blis = row.createCell();
+        var blictrl = new iterationGoalController(blis.getElement(), goal);
     },
     render: function(data) {
       var me = this;
@@ -120,6 +118,10 @@ iterationController.prototype = {
       var oesum = row.createCell();
       var essum = row.createCell();
       var tasks = row.createCell();
+      var acts = row.createCell();
+      var blis = row.createCell({
+        get: function() { return "Backlog items"; }
+      });
       row.setNotSortable();
       this.view.render();
 
@@ -171,9 +173,46 @@ iterationController.prototype = {
         row.openEdit();
     }
 };
+
+
+var iterationGoalController = function(element, model) {
+  this.element = element;
+  this.data = model;
+  this.render(this.data);
+};
+iterationGoalController.prototype = {
+  addRow: function(bli) {
+    var row = this.view.createRow(bli);
+    //row.getElement().draggable();
+    var name = row.createCell({
+      get: function() { return bli.getName(); }
+    });
+    var state = row.createCell({
+      get: function() { return agilefantUtils.stateToString(bli.getState()); }
+    });
+    var el = row.createCell({
+      get: function() { return agilefantUtils.aftimeToString(bli.getEffortLeft()); }});
+    var oe = row.createCell({
+      get: function() { return agilefantUtils.aftimeToString(bli.getOriginalEstimate()); }});
+    var es = row.createCell({
+      get: function() { return agilefantUtils.aftimeToString(bli.getEffortSpent()); }});
+  },
+  render: function(data) {
+    var me = this;
+    var blis = data.getBacklogItems();
+    this.view = jQuery(this.element).backlogItemsTable();
+    //this.view.getElement().droppable();
+    $.each(blis, function(i,v) {
+      me.addRow(v);
+    });
+    this.view.render();
+  }
+};
+
+
 var backlogItemController = function(parentController, model) {
-  
+
 };
 backlogItemController.prototype = {
-    
+
 };

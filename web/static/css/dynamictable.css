@@ -28,6 +28,22 @@
     
 }
 
+.dynamictable-sortimg {
+  background-image: url('../img/sort.png');
+  background-position: 0% 0%;
+  width: 8px;
+  height: 8px;
+  float: left;
+  margin: 5px 2px 0 0; 
+}
+
+.dynamictable-sortimg-up {
+  background-position: 100% 0%;
+}
+.dynamictable-sortimg-down {
+  background-position: 0% 100%;
+}
+
 .dynamictable-placeholder {
   margin: 3px 2px 3px 2px; height : 1.5em;
   background-color: #ffffdd;
@@ -39,10 +55,10 @@
 .dynamictable-header .dynamictable-cell {
   font-weight: bold;
   background-color: #ddd !important;
+  padding-left: 4px;
 }
-
-.dynamictable-header .dynamictable-cell {
-  padding-left: 4px;  
+.dynamictable-header .dynamictable-cell a, .dynamictable-header .dynamictable-cell span {
+  white-space: nowrap;
 }
 
 .dynamictable-even .dynamictable-cell {

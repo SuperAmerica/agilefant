@@ -4,8 +4,12 @@
 		tableCell: "dynamictable-cell",
 		tableHeader: "dynamictable-header",
 		table: "dynamictable",
+		notSortable: "dynamictable-notsortable",
 		oddRow: "dynamictable-odd",
-		evenRow: "dynamictable-even"
+		evenRow: "dynamictable-even",
+		sortImg: "dynamictable-sortimg",
+		sortImgUp: "dynamictable-sortimg-up",
+		sortImgDown: "dynamictable-sortimg-down"
 	};
 	var statics = {
 	  borderPerColumn: 0.4
@@ -90,7 +94,7 @@
 			  }
 			  var me = this;
 			  this.headerRow = new dynamicTableRow(this, null, {toTop: true});
-			  this.headerRow.getElement().addClass(cssClasses.tableHeader).addClass("dynamictable-notsortable")
+			  this.headerRow.getElement().addClass(cssClasses.tableHeader).addClass(cssClasses.notSortable);
 			  var row = this.headerRow;
 			  
 			  $.each(this.options.headerCols, function(i,v) {
@@ -99,6 +103,7 @@
 			    var f;
 			    if (v.sort) {
 			      f = $('<a href="#"/>').text(v.name).click(function() { me.doSort(i, v.sort); return false; }).appendTo(col);
+			      $('<div/>').addClass(cssClasses.sortImg).prependTo(f);
 			    }
 			    else {
 			      f = $('<span />').text(v.name).appendTo(col);
@@ -108,7 +113,6 @@
 			    }
 			    if (v.tooltip) f.attr('title',v.tooltip);
 			  });
-			  
 			  $.each(this.options.colCss, function(i,v) {
 	          me.headerRow.getElement().children(i).css(v);
 	      });
@@ -127,6 +131,7 @@
 			    this.sorting.direction = 0;
 			  }
 			  this.sorting.column = colNo;
+			  this.updateSortArrow(this.sorting.column, this.sorting.direction);
 			  
 			  var sorted = (this.rows.sort(function(a,b) { 
 			    if(!a.model) {
@@ -141,6 +146,18 @@
 			  for(var i = 0; i < sorted.length; i++) {
 			    sorted[i].row.appendTo(this.table);
 			  }
+      },
+      updateSortArrow: function(col, dir) {
+        this.headerRow.getElement().find('.' + cssClasses.sortImg).removeClass(cssClasses.sortImgDown)
+          .removeClass(cssClasses.sortImgUp);
+        var a = this.headerRow.getElement().find('.' + cssClasses.tableCell + ':eq('+col+')')
+          .find('.' + cssClasses.sortImg).addClass(cssClasses.sortImgUp);
+        if (dir == 0) {
+          a.addClass(cssClasses.sortImgUp);
+        }
+        else {
+          a.addClass(cssClasses.sortImgDown);
+        }
       },
       calculateColumnWidths: function(params) {
         var num = 0;
@@ -529,8 +546,8 @@
 		iterationGoalTable: function(options) {
 		  var opts = {
 		      colCss: {
-		        ':lt(7)': { 'background': '#cceeee' },
-		        ':eq(7)': { 'background': '#eeffff' }
+		        ':lt(7)': { 'background': '#eeeeee' },
+		        ':eq(7)': { 'background': '#ffffff' }
 		      },
 		      headerCols: [ {
 		                     name: "Prio",

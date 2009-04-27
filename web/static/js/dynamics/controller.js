@@ -2,6 +2,7 @@ var iterationController = function(iterationId, element) {
  this.iterationId = iterationId;
  this.element = element;
  var me = this;
+ this.iterationGoalControllers = [];
  ModelFactory.getIteration(this.iterationId, function(data) { me.render(data); });
 }
 iterationController.prototype = {
@@ -16,6 +17,16 @@ iterationController.prototype = {
       model.setPriority(priority);
       //all goals must be updated
       this.model.reloadGoalData();
+    },
+    showBacklogItems: function() {
+      for(var i = 0 ; i < this.iterationGoalControllers.length; i++) {
+        this.iterationGoalControllers[i].parentView.getElement().show();
+      }
+    },
+    hideBacklogItems: function() {
+      for(var i = 0 ; i < this.iterationGoalControllers.length; i++) {
+        this.iterationGoalControllers[i].parentView.getElement().hide();
+      }      
     },
     deleteGoal: function(goal) {
       var parent = $("<div />").appendTo(document.body).text("Are you sure you wish to delete this iteration goal?");
@@ -87,7 +98,8 @@ iterationController.prototype = {
             }}
           }});
         var blis = row.createCell();
-        var blictrl = new iterationGoalController(blis.getElement(), goal);
+        var blictrl = new iterationGoalController(blis, goal);
+        this.iterationGoalControllers.push(blictrl);
     },
     render: function(data) {
       var me = this;
@@ -99,9 +111,21 @@ iterationController.prototype = {
          [
           {
         	  text: "Add iteration goal",
-        	  callback: function(row) {
+        	  callback: function() {
         	    me.createGoal();
           	   }
+          },
+          {
+            text: "Show all blis",
+            callback: function() {
+              me.showBacklogItems();
+            }
+          }, 
+          {
+            text: "Hine all blis",
+            callback: function() {
+              me.hideBacklogItems();
+            }
           }
           ]
       });
@@ -121,7 +145,7 @@ iterationController.prototype = {
       var acts = row.createCell();
       row.setNotSortable();
       var blis = row.createCell();
-      var blictrl = new iterationGoalController(blis.getElement(), data);
+      var blictrl = new iterationGoalController(blis, data);
       this.view.render();
 
     },
@@ -174,10 +198,11 @@ iterationController.prototype = {
 };
 
 
-var iterationGoalController = function(element, model) {
+var iterationGoalController = function(parentView, model) {
   //this.element = element;
-  element.css("padding-left","2%");
-  this.element = $("<div />").width("95%").appendTo(element);
+  this.parentView = parentView;
+  parentView.getElement().css("padding-left","2%"); //TODO: refactor
+  this.element = $("<div />").width("95%").appendTo(parentView.getElement());
   this.data = model;
   this.render(this.data);
 };
@@ -191,7 +216,8 @@ iterationGoalController.prototype = {
       get: function() { return bli.getName(); }
     });
     var state = row.createCell({
-      type: "state",
+      type: "select",
+      items: commonView.states,
       set: function(val) {},
       get: function() { return agilefantUtils.stateToString(bli.getState()); }
     });

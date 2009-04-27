@@ -375,8 +375,8 @@
             	this.editor = new wysiwygEdit(this, autoClose);
             } else if(this.options.type == "effort") {
               this.editor = new effortEdit(this, autoClose);
-            } else if(this.options.type == "state") {
-              
+            } else if(this.options.type == "select") {
+              //TODO
             }
             if(!autoClose && this.options.buttons) {
 	          var me = this;
@@ -493,8 +493,10 @@
 	/** EFFORT EDIT **/
 	 var effortEdit = function(cell, autoClose) {
 	    this.cell = cell;
-	    this.field = $('<input type="text"/>').attr("size","20").appendTo(this.cell.getElement()).focus();
-	      this.field.val(this.cell.options.get());
+	    this.field = $('<input type="text"/>').attr("size","15").appendTo(this.cell.getElement()).focus();
+	    var val = this.cell.options.get();
+	    if(val == "&mdash;") val = "";
+	    this.field.val(val);
 	      var me = this;
 	      if(autoClose == true) {
 	        var key_cb = function(keyevent) { me._handleKeyEvent(keyevent); };

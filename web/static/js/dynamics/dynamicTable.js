@@ -373,6 +373,10 @@
             	this.editor = new textEdit(this, autoClose);
             } else if(this.options.type == "wysiwyg") {
             	this.editor = new wysiwygEdit(this, autoClose);
+            } else if(this.options.type == "effort") {
+              this.editor = new effortEdit(this, autoClose);
+            } else if(this.options.type == "state") {
+              
             }
             if(!autoClose && this.options.buttons) {
 	          var me = this;
@@ -486,11 +490,43 @@
 	};
 	$.extend(textEdit.prototype, commonEdit);
 	
+	/** EFFORT EDIT **/
+	 var effortEdit = function(cell, autoClose) {
+	    this.cell = cell;
+	    this.field = $('<input type="text"/>').attr("size","20").appendTo(this.cell.getElement()).focus();
+	      this.field.val(this.cell.options.get());
+	      var me = this;
+	      if(autoClose == true) {
+	        var key_cb = function(keyevent) { me._handleKeyEvent(keyevent); };
+	        var blur_cb = function() { me._store(); };
+	            this.field.blur(blur_cb);
+	            this.field.keydown(key_cb);
+	          this.field.focus(); 
+	      }
+	  };
+	  effortEdit.prototype = {
+	    _handleKeyEvent: function(keyevent) {
+	      if (keyevent.keyCode == 27) {
+	        this._cancel();
+	      }
+	      else if (keyevent.keyCode == 13) {
+	        this._store();
+	      }
+	    },
+	    isValid: function() {
+	      return validateEstimateFormat(this.field.val());
+	    },
+	    remove: function() {
+	      this.field.remove();
+	    }
+	  };
+	  $.extend(effortEdit.prototype, commonEdit);
 	
 	/** ROW ACTIONS **/
 	var tableRowActions = function(cell, row, options) {
 	  this.cell = cell;
 	  this.row = row
+	  this.inMenu = false;
 	  this.options = options;
 	  var me = this;
 	  var open  = function() {
@@ -509,6 +545,12 @@
 	  };
 	  $(document.body).trigger("dynamictable-close-actions").bind("dynamictable-close-actions", this.handler);
 	  this.menu = $('<ul>&nbsp;</ul>').appendTo(document.body).addClass("actionCell");
+	  this.menu.mouseenter(function() { me.inMenu = true; });
+	  this.menu.mouseleave(function() { 
+	    if(me.inMenu) {
+	      me.close();
+	    }
+	  });
 	  this.menu.css("position","absolute").css("overflow","visible").css("z-index","100");
 	  var pos = this.cell.getElement().position();
 	  this.menu.css("top",pos.top + 16);
@@ -663,15 +705,25 @@
                          name: 'ES',
                          tooltip: 'Total effort spent',
                          sort: agilefantUtils.comparators.effortSpentComparator
+                       },
+                       {
+                         name: 'Actions',
+                         tooltip: "",
+                         sort: null
                        }
                        ],
           colWidths: [
+                      
                       {
                         minwidth: 200,
                         auto: true
                       },
                       {
                         minwidth: 50,
+                        auto: true
+                      },
+                      {
+                        minwidth: 30,
                         auto: true
                       },
                       {

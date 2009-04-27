@@ -33,10 +33,16 @@ ModelFactory = new modelFactory();
 iterationModel = function(iterationData, iterationId) {
 	var goalPointer = [];
 	this.iterationId = iterationId;
+	this.itemsWithoutGoal = [];
 	var me = this;
 	jQuery.each(iterationData.iterationGoals, function(index,iterationGoalData) { 
 		goalPointer.push(new iterationGoalModel(iterationGoalData, me));
 	});
+	if(iterationData.itemsWithoutGoal) {
+	jQuery.each(iterationData.itemsWithoutGoal, function(k,v) { 
+	  me.itemsWithoutGoal.push(new backlogItemModel(v,null));
+	});
+	}
 	this.iterationGoals = goalPointer;
 };
 iterationModel.prototype = {
@@ -79,6 +85,9 @@ iterationModel.prototype = {
 	  goal.remove(function() {
 	    me.iterationGoals = goals;
 	  });
+	}, 
+	getBacklogItems: function() { //blis without an iteration goal
+	  return this.itemsWithoutGoal;
 	}
 };
 
@@ -299,10 +308,10 @@ backlogItemModel.prototype = {
     this.save();
   },
   getOriginalEstimate: function() {
-    return this.effortOriginalEstimate;
+    return this.originalEstimate;
   },
-  setOriginalEstimate: function(OriginalEstimate) {
-    this.OriginalEstimate = effortOriginalEstimate;
+  setOriginalEstimate: function(originalEstimate) {
+    this.originalEstimate = originalEstimate;
     this.save();
   },
   addEditListener: function(listener) {

@@ -119,10 +119,9 @@ iterationController.prototype = {
       var essum = row.createCell();
       var tasks = row.createCell();
       var acts = row.createCell();
-      var blis = row.createCell({
-        get: function() { return "Backlog items"; }
-      });
       row.setNotSortable();
+      var blis = row.createCell();
+      var blictrl = new iterationGoalController(blis.getElement(), data);
       this.view.render();
 
     },
@@ -176,7 +175,9 @@ iterationController.prototype = {
 
 
 var iterationGoalController = function(element, model) {
-  this.element = element;
+  //this.element = element;
+  element.css("padding-left","2%");
+  this.element = $("<div />").width("95%").appendTo(element);
   this.data = model;
   this.render(this.data);
 };
@@ -185,26 +186,54 @@ iterationGoalController.prototype = {
     var row = this.view.createRow(bli);
     //row.getElement().draggable();
     var name = row.createCell({
+      type: "text",
+      set: function(val) {},
       get: function() { return bli.getName(); }
     });
     var state = row.createCell({
+      type: "state",
+      set: function(val) {},
       get: function() { return agilefantUtils.stateToString(bli.getState()); }
     });
     var el = row.createCell({
+      type: "effort",
+      set: function(val) {},
       get: function() { return agilefantUtils.aftimeToString(bli.getEffortLeft()); }});
     var oe = row.createCell({
+      type: "effort",
+      set: function(val) {},
       get: function() { return agilefantUtils.aftimeToString(bli.getOriginalEstimate()); }});
     var es = row.createCell({
+      type: "effort",
+      set: function(val) {},
       get: function() { return agilefantUtils.aftimeToString(bli.getEffortSpent()); }});
+    var buttons = row.createCell();
+    buttons.setActionCell({items: [
+                                   {
+                                     text: "Edit",
+                                     callback: function(row) {
+                                       row.openEdit();
+                                     }
+                                   }, {
+                                     text: "Delete",
+                                     callback: function() {
+                                       
+                                     }
+                                   }
+                                   ]});
   },
   render: function(data) {
     var me = this;
     var blis = data.getBacklogItems();
     this.view = jQuery(this.element).backlogItemsTable();
     //this.view.getElement().droppable();
-    $.each(blis, function(i,v) {
-      me.addRow(v);
-    });
+    if(blis && blis.length > 0) {
+      for(var i = 0; i < blis.length; i++) {
+        me.addRow(blis[i]);
+      }
+    } else {
+      this.element.hide();
+    }
     this.view.render();
   }
 };

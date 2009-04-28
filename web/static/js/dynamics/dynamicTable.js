@@ -377,26 +377,26 @@
 		  if(noAutoClose) autoClose = false;
 		  if(this.options.type && !this.editorOpen) {
 		    this.editorOpen = true;
-            this.content.hide();
-            if(this.options.type == "text") {
-            	this.editor = new textEdit(this, autoClose);
-            } else if(this.options.type == "wysiwyg") {
-            	this.editor = new wysiwygEdit(this, autoClose);
-            } else if(this.options.type == "effort") {
-              this.editor = new effortEdit(this, autoClose);
-            } else if(this.options.type == "select") {
-              //TODO
-            }
-            if(!autoClose && this.options.buttons) {
-	          var me = this;
-	          me.addedButtons = [];
-	          $.each(this.options.buttons, function(button, opts) {
-	            var button = $("<button />").appendTo(me.cell).text(opts.text)
-	              .click(opts.action).addClass("dynamicButton");
-	            me.addedButtons.push(button);
-	          });
-	         }
-		  	}
+        this.content.hide();
+        if(this.options.type == "text") {
+        	this.editor = new textEdit(this, autoClose);
+        } else if(this.options.type == "wysiwyg") {
+        	this.editor = new wysiwygEdit(this, autoClose);
+        } else if(this.options.type == "effort") {
+          this.editor = new effortEdit(this, autoClose);
+        } else if(this.options.type == "select") {
+          this.editor = new selectEdit(this, this.options.items, autoClose);
+        }
+        if(!autoClose && this.options.buttons) {
+          var me = this;
+          me.addedButtons = [];
+          $.each(this.options.buttons, function(button, opts) {
+            var button = $("<button />").appendTo(me.cell).text(opts.text)
+              .click(opts.action).addClass("dynamicButton");
+            me.addedButtons.push(button);
+          });
+        }
+		  }
 		},
 		removeButtons: function() {
 			if(this.addedButtons) {
@@ -500,20 +500,20 @@
 	$.extend(textEdit.prototype, commonEdit);
 	
 	/** EFFORT EDIT **/
-	 var effortEdit = function(cell, autoClose) {
+	 var effortEdit = function(cell, items, autoClose) {
 	    this.cell = cell;
 	    this.field = $('<input type="text"/>').attr("size","15").appendTo(this.cell.getElement()).focus();
 	    var val = this.cell.options.get();
 	    if(val == "&mdash;") val = "";
 	    this.field.val(val);
-	      var me = this;
-	      if(autoClose == true) {
-	        var key_cb = function(keyevent) { me._handleKeyEvent(keyevent); };
-	        var blur_cb = function() { me._store(); };
-	            this.field.blur(blur_cb);
-	            this.field.keydown(key_cb);
-	          this.field.focus(); 
-	      }
+      var me = this;
+      if(autoClose == true) {
+        var key_cb = function(keyevent) { me._handleKeyEvent(keyevent); };
+        var blur_cb = function() { me._store(); };
+        this.field.blur(blur_cb);
+        this.field.keydown(key_cb);
+        this.field.focus(); 
+      }
 	  };
 	  effortEdit.prototype = {
 	    _handleKeyEvent: function(keyevent) {
@@ -533,6 +533,44 @@
 	  };
 	  $.extend(effortEdit.prototype, commonEdit);
 	
+	/** SELECT EDIT **/
+	var selectEdit = function(cell, items, autoClose) {
+	  var me = this;
+	  this.cell = cell;
+	  this.field = $('<select/>').css('width','100%').appendTo(this.cell.getElement()).focus();
+    $.each(items, function(i,v) {
+      $('<option/>').attr('value',i).text(v).appendTo(me.field);
+    });
+    var val = this.cell.options.get();
+    this.field.val(val);
+    if (autoClose == true) {
+      var key_cb = function(keyevent) { me._handleKeyEvent(keyevent); };
+      var blur_cb = function() { me._cancel(); };
+      var change_cb = function() { me._store(); };
+      this.field.blur(blur_cb);
+      this.field.keydown(key_cb);
+      this.field.change(change_cb);
+      this.field.focus();
+    }
+	};
+	selectEdit.prototype = {
+	  _handleKeyEvent: function(keyevent) {
+	    if (keyevent.keyCode == 27) {
+	      this._cancel();
+	    }
+	    else if (keyevent.keyCode == 13) {
+	      this._store();
+	    }
+	  },
+	  isValid: function() {
+	    return true;
+	  },
+	  remove: function() {
+	    this.field.remove();
+	  }
+	};
+	$.extend(selectEdit.prototype, commonEdit);
+	  
 	/** ROW ACTIONS **/
 	var tableRowActions = function(cell, row, options) {
 	  this.cell = cell;

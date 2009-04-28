@@ -88,7 +88,7 @@ iterationController.prototype = {
             cancel: {text: "Cancel", action: function() {
               row.cancelEdit();
             }}
-          }});
+          }}).getElement().hide();
         var blis = row.createCell();
         var blictrl = new iterationGoalController(blis, goal);
         this.iterationGoalControllers.push(blictrl);
@@ -237,12 +237,15 @@ iterationGoalController.prototype = {
     });
     var state = row.createCell({
       type: "select",
-      items: commonView.states,
+      items: agilefantUtils.states,
       set: function(val) { bli.setState(val); },
       get: function() { return agilefantUtils.stateToString(bli.getState()); }
     });
     row.createCell({
-      get: function() { return agilefantUtils.priorityToString(bli.getPriority()); }
+      type: "select",
+      items: agilefantUtils.priorities, 
+      get: function() { return agilefantUtils.priorityToString(bli.getPriority()); },
+      set: function(val) { bli.setPriority(val); }
     });
     row.createCell();
     var el = row.createCell({

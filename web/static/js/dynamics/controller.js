@@ -20,12 +20,12 @@ iterationController.prototype = {
     },
     showBacklogItems: function() {
       for(var i = 0 ; i < this.iterationGoalControllers.length; i++) {
-        this.iterationGoalControllers[i].parentView.getElement().show();
+        this.iterationGoalControllers[i].showBacklogItems();
       }
     },
     hideBacklogItems: function() {
       for(var i = 0 ; i < this.iterationGoalControllers.length; i++) {
-        this.iterationGoalControllers[i].parentView.getElement().hide();
+        this.iterationGoalControllers[i].hideBacklogItems();
       }      
     },
     deleteGoal: function(goal) {
@@ -207,6 +207,12 @@ var iterationGoalController = function(parentView, model) {
   this.render(this.data);
 };
 iterationGoalController.prototype = {
+  hideBacklogItems: function() {
+    this.parentView.getElement().hide();
+  },
+  showBacklogItems: function() {
+    this.parentView.getElement().show();
+  },
   addRow: function(bli) {
     var row = this.view.createRow(bli);
     //row.getElement().draggable();

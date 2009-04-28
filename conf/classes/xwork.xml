@@ -220,7 +220,7 @@
 			</result>
 			<result name="ajax_success" type="dispatcher">
 				<param name="status">200</param>
-				<param name="location">/WEB-INF/jsp/inc/ajaxBacklogItemResult.jsp</param>
+				<param name="location">/WEB-INF/jsp/jsonData.jsp</param>
 			</result>
 		</action>
 		<action name="deleteBacklogItem" method="delete"

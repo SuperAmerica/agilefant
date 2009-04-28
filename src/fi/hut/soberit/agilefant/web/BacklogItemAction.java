@@ -23,6 +23,7 @@ import fi.hut.soberit.agilefant.model.BusinessTheme;
 import fi.hut.soberit.agilefant.model.Priority;
 import fi.hut.soberit.agilefant.model.State;
 import fi.hut.soberit.agilefant.model.Task;
+import flexjson.JSONSerializer;
 
 public class BacklogItemAction extends ActionSupport implements CRUDAction {
 
@@ -75,6 +76,12 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
     private int fromTodoId = 0;
     
     private TaskBusiness taskBusiness;
+    
+    private String jsonData = "";
+
+    public String getJsonData() {
+        return jsonData;
+    }
 
     public String getBliListContext() {
         return bliListContext;
@@ -186,6 +193,8 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
         if(this.bliStore() == false) {
             return CRUDAction.AJAX_ERROR;
         }
+        JSONSerializer ser = new JSONSerializer();
+        jsonData = ser.serialize(this.backlogItem);
         return CRUDAction.AJAX_SUCCESS;
     }
     

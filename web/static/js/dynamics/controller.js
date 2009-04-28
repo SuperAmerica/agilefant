@@ -12,7 +12,11 @@ iterationController.prototype = {
       var previous = el.item.prev();
       var prevModel = previous.data("model");
       if(prevModel) {
-        priority = prevModel.getPriority() + 1;
+        if(prevModel.getPriority() > model.getPriority()) {
+          priority = prevModel.getPriority();
+        } else {
+          priority = prevModel.getPriority() + 1;
+        }
       }
       model.setPriority(priority);
       //all goals must be updated
@@ -226,7 +230,6 @@ iterationGoalController.prototype = {
   },
   addRow: function(bli) {
     var row = this.view.createRow(bli);
-    //row.getElement().draggable();
     var name = row.createCell({
       type: "text",
       set: function(val) { bli.setName(val); },
@@ -269,7 +272,10 @@ iterationGoalController.prototype = {
     var me = this;
     var blis = data.getBacklogItems();
     this.view = jQuery(this.element).backlogItemsTable();
-    //this.view.getElement().droppable();
+    this.view.getElement().addClass('dynamictable-backlogitem-droppable');
+    this.view.getElement().sortable({
+        connectWith: '.dynamictable-backlogitem-droppable'
+      });
     if(blis && blis.length > 0) {
       for(var i = 0; i < blis.length; i++) {
         me.addRow(blis[i]);

@@ -40,7 +40,7 @@ iterationModel = function(iterationData, iterationId) {
 	});
 	if(iterationData.itemsWithoutGoal) {
 	jQuery.each(iterationData.itemsWithoutGoal, function(k,v) { 
-	  me.itemsWithoutGoal.push(new backlogItemModel(v,null));
+	  me.itemsWithoutGoal.push(new backlogItemModel(v,me,null));
 	});
 	}
 	this.iterationGoals = goalPointer;
@@ -48,6 +48,9 @@ iterationModel = function(iterationData, iterationId) {
 iterationModel.prototype = {
 	getIterationGoals: function() {
 		return this.iterationGoals;
+	},
+	getId: function() {
+	  return this.iterationId;
 	},
 	reloadGoalData: function() {
 	  var me = this;
@@ -95,8 +98,8 @@ iterationModel.prototype = {
 
 iterationGoalModel = function(iterationGoalData, parent) {
   this.metrics = {};
-	this.setData(iterationGoalData, true);
-	this.iteration = parent;
+  this.iteration = parent;
+  this.setData(iterationGoalData, true);
 	this.editListeners = [];
 	this.deleteListeners = [];
 };
@@ -123,7 +126,7 @@ iterationGoalModel.prototype = {
     if(!this.backlogItems || this.backlogItems.length == 0) {
       this.backlogItems = [];
       for(var i = 0 ; i < backlogItems.length ; i++) {
-        this.backlogItems.push(new backlogItemModel(backlogItems[i], this));
+        this.backlogItems.push(new backlogItemModel(backlogItems[i], this.iteration, this));
       }
     }
   },
@@ -245,9 +248,10 @@ iterationGoalModel.prototype = {
 	}
 };
 
-var backlogItemModel = function(data, iterationGoal) {
+var backlogItemModel = function(data, backlog, iterationGoal) {
   this.editListeners = [];
   this.deleteListeners = [];
+  this.backlog = backlog;
   this.iterationGoal = iterationGoal;
   this.setData(data);
 };
@@ -263,6 +267,9 @@ backlogItemModel.prototype = {
     this.effortLeft = data.effortLeft;
     this.effortSpent = data.effortSpent;
     this.originalEstimate = data.originalEstimate;
+    for (var i = 0; i < this.editListeners.length; i++) {
+      this.editListeners[i]();
+    }
   },
   getName: function() {
     return this.name;
@@ -343,10 +350,12 @@ backlogItemModel.prototype = {
     var me = this;
     var data  = {
         "backlogItem.name": this.name,
-        "backlogItem.state": this.state
+        "backlogItem.state": this.state,
+        "backlogItem.priority": this.priority,
+        backlogId: this.backlog.getId(),
+        backlogItemId: this.id,
+        iterationGoalId: this.iterationGoal.id
     };
-    if(this.state) data.state = this.state;
-    if(this.id) data.backlogItemId = this.id;
     if(this.name == undefined) data.name = "";
     if(this.description == undefined) data.description = "";
     jQuery.ajax({

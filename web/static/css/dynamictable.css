@@ -78,15 +78,21 @@
 .actionCell {
 	background-color: #ccc;
 	border: 1px solid black;
-	width: 50px;
 	padding: 0;
 	margin: 0;
 }
+
 .actionCell li {
 	list-style: none;
 	margin: 0;
-	padding: 0;	
+	padding: 0 2px 0 3px;
+	min-width: 70px;	
 }
+
+.actionCell li:hover {
+  background-color: #ffc;
+  cursor: pointer;
+}  
 
 div.okMessage {
 	background-color:#00FFCC;

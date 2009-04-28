@@ -122,7 +122,7 @@ iterationController.prototype = {
             }
           }, 
           {
-            text: "Hine all blis",
+            text: "Hide all blis",
             callback: function() {
               me.hideBacklogItems();
             }

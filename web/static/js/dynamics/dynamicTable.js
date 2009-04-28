@@ -546,18 +546,24 @@
       me.close();
 	  };
 	  $(document.body).trigger("dynamictable-close-actions").bind("dynamictable-close-actions", this.handler);
-	  this.menu = $('<ul>&nbsp;</ul>').appendTo(document.body).addClass("actionCell");
+	  this.menu = $('<ul/>').appendTo(document.body).addClass("actionCell");
 	  this.menu.mouseenter(function() { me.inMenu = true; });
 	  this.menu.mouseleave(function() { 
 	    if(me.inMenu) {
 	      me.close();
 	    }
 	  });
-	  this.menu.css("position","absolute").css("overflow","visible").css("z-index","100");
 	  var pos = this.cell.getElement().position();
-	  this.menu.css("top",pos.top + 16);
-	  this.menu.css("left",pos.left);
-   var me = this;
+	  var menuCss = {
+	      "position":    "absolute",
+	      "overflow":    "visible",
+	      "z-index":     "100",
+	      "white-space": "nowrap",
+	      "top":         pos.top + 16,
+	      "left":        pos.left
+	  }
+	  this.menu.css(menuCss);
+    var me = this;
 	  $.each(this.options.items, function(index, item) {
 	    var it = $('<li />').text(item.text).appendTo(me.menu);
 	    if(item.callback) {

@@ -15,30 +15,36 @@ var agilefantUtils = {
 	isAftimeString: function(string) {
 		
 	},
-	stateToString: function(state) {
-	  switch (state) {
-	  case 'NOT_STARTED':
-	    return 'Not started';
-	    break;
-	  case 'STARTED':
-	    return 'Started';
-	    break;
-	  case 'IMPLEMENTED':
-	    return 'Implemented';
-	    break;
-	  case 'BLOCKED':
-	    return 'Blocked';
-	    break;
-	  case 'PENDING':
-	    return 'Pending';
-	    break;
-	  case 'DONE':
-	    return 'Done';
-	    break;
-	  default:
-	    return state;
-	  }
+	states: {
+	  "NOT_STARTED": "Not Started",
+	  "STARTED": "Started",
+	  "PENDING": "Pending",
+	  "BLOCKED": "Blocked",
+	  "IMPLEMENTED": "Implemented",
+	  "DONE": "Done"
 	},
+	stateToString: function(state) {
+	  return agilefantUtils.states[state];
+	},
+	priorities: {
+    "BLOCKER": "+++++",
+    "CRITICAL": "++++",
+    "MAJOR": "+++",
+    "MINOR": "++",
+    "TRIVIAL": "+",
+    "UNDEFINED": "undefined"
+  },
+  prioritiesToNumber: {
+    "BLOCKER": 1,
+    "CRITICAL": 2,
+    "MAJOR": 3,
+    "MINOR": 4,
+    "TRIVIAL": 5,
+    "UNDEFINED": 0
+  },
+  priorityToString: function(priority) {
+    return agilefantUtils.priorities[priority];
+  },
 	comparators: {
 	  nameComparator: function(a,b) {
 	    return (a.getName().toLowerCase() > b.getName().toLowerCase());
@@ -48,6 +54,9 @@ var agilefantUtils = {
 	  },
 	  priorityComparator: function(a,b) {
 	    return (a.getPriority() > b.getPriority());
+	  },
+	  bliPriorityComparator: function(a,b) {
+	    return (agilefantUtils.prioritiesToNumber[a.getPriority()] > agilefantUtils.prioritiesToNumber[b.getPriority()]);
 	  },
 	  effortLeftComparator: function(a,b) {
 	    return (a.getEffortLeft() > b.getEffortLeft());

@@ -241,6 +241,10 @@ iterationGoalController.prototype = {
       set: function(val) { bli.setState(val); },
       get: function() { return agilefantUtils.stateToString(bli.getState()); }
     });
+    row.createCell({
+      get: function() { return agilefantUtils.priorityToString(bli.getPriority()); }
+    });
+    row.createCell();
     var el = row.createCell({
       type: "effort",
       set: function(val) {},
@@ -274,7 +278,8 @@ iterationGoalController.prototype = {
     this.view = jQuery(this.element).backlogItemsTable();
     this.view.getElement().addClass('dynamictable-backlogitem-droppable');
     this.view.getElement().sortable({
-        connectWith: '.dynamictable-backlogitem-droppable'
+        connectWith: '.dynamictable-backlogitem-droppable',
+        not: '.dynamictable-notsortable'
       });
     if(blis && blis.length > 0) {
       for(var i = 0; i < blis.length; i++) {

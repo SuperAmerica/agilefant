@@ -8,6 +8,5 @@ var commonView = {
   showOk: function(message) {
     var messageScreen = $('<div />').html(message).addClass("okMessage").appendTo(document.body);
     messageScreen.fadeOut(2000, function() { messageScreen.remove()});
-  },
-  states: {"NOT_STARTED": "Not Started", "STARTED": "Started", "PENDING": "Pending", "BLOCKED": "Blocked", "IMPLEMENTED": "Implemented", "DONE": "Done"}
+  }
 };

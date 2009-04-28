@@ -131,7 +131,7 @@
 			doSort: function(colNo, comparator) {
 			  if (typeof(comparator) != "function") {
 			    return false;
-			  }		  
+			  }
 			  if ((this.sorting.column == colNo) && this.sorting.direction == 0) {
 			    this.sorting.direction = 1;
 			  }
@@ -540,12 +540,12 @@
 	  this.inMenu = false;
 	  this.options = options;
 	  var me = this;
-	  var open  = function() {
+	  this.openEvent  = function() {
 	    me.open();
 	  };
 	  var el = this.cell.getElement();
 	  this.act = $("<span>Actions</span>").appendTo(el);
-	  this.act.mouseover(open);
+	  this.act.click(this.openEvent);
 	  
 	};
 	tableRowActions.prototype = {
@@ -583,6 +583,7 @@
   	this.act.click(this.handler);
 	 },
 	 close: function() {
+	   this.act.unbind('click').click(this.openEvent);
 	   this.menu.remove();
 	   $(document.body).unbind("dynamictable-close-actions",this.handler);
 	 }
@@ -712,6 +713,16 @@
                          sort: agilefantUtils.comparators.stateComparator
                        },
                        {
+                         name: 'Priority',
+                         tooltip: 'Backlog item priority',
+                         sort: agilefantUtils.comparators.bliPriorityComparator
+                       },
+                       {
+                         name: 'Responsibles',
+                         tooltip: 'Backlog item responsibles',
+                         sort: null
+                       },
+                       {
                          name: 'EL',
                          tooltip: 'Total effort left',
                          sort: agilefantUtils.comparators.effortLeftComparator
@@ -736,6 +747,14 @@
                       
                       {
                         minwidth: 200,
+                        auto: true
+                      },
+                      {
+                        minwidth: 50,
+                        auto: true
+                      },
+                      {
+                        minwidth: 50,
                         auto: true
                       },
                       {

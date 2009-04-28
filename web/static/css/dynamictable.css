@@ -8,7 +8,7 @@
   width: 100%;
   height: 22px;
   font-weight: bold;
-  padding-left: 3px;
+  padding: 2px 0 0 3px;
   background: transparent url(../img/gradient.png) repeat-x scroll 80% 60%;  
 }
 
@@ -84,10 +84,11 @@
   padding: 0;
 }
 .actionCell {
-	background-color: #ccc;
+	background-color: #eee;
 	border: 1px solid black;
 	padding: 0;
 	margin: 0;
+	cursor: pointer;
 }
 
 .actionCell li {
@@ -98,12 +99,12 @@
 }
 
 .actionCell li:hover {
-  background-color: #ffc;
+  background: transparent url(../img/gradient.png) 80% 60% repeat-x;
   cursor: pointer;
 }  
 
 div.okMessage {
-	background-color:#00FFCC;
+	background-color:#3f0;
 	border:1px solid #CCCCCC;
 	font-weight:bold;
 	padding:3px 5px;
@@ -113,7 +114,7 @@ div.okMessage {
 	z-index:3699;
 }
 div.errorMessage {
-	background-color:#FF0066;
+	background-color:#f33;
 	border:1px solid #CCCCCC;
 	font-weight:bold;
 	padding:3px 5px;

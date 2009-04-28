@@ -248,11 +248,13 @@ iterationGoalModel.prototype = {
 var backlogItemModel = function(data, iterationGoal) {
   this.editListeners = [];
   this.deleteListeners = [];
+  this.iterationGoal = iterationGoal;
   this.setData(data);
 };
 backlogItemModel.prototype = {
   setData: function(data) {
     this.persistedData = data;
+    this.id = data.id;
     this.name = data.name;
     this.description = data.description;
     this.created = data.created;
@@ -338,5 +340,29 @@ backlogItemModel.prototype = {
     if(this.inTransaction) {
       return;
     }
+    var me = this;
+    var data  = {
+        "backlogItem.name": this.name,
+        "backlogItem.state": this.state
+    };
+    if(this.state) data.state = this.state;
+    if(this.id) data.backlogItemId = this.id;
+    if(this.name == undefined) data.name = "";
+    if(this.description == undefined) data.description = "";
+    jQuery.ajax({
+      async: false,
+      error: function() {
+        commonView.showError("An error occured while saving the backlog item.");
+      },
+      success: function(data,type) {
+        me.setData(data,false);
+        commonView.showOk("Backlog item saved succesfully.");
+      },
+      cache: false,
+      dataType: "json",
+      type: "POST",
+      url: "ajaxStoreBacklogItem.action",
+      data: data
+    });
   }
 };

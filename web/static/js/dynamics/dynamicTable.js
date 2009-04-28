@@ -608,7 +608,8 @@
 		      colCss: {
 		        ':lt(7)': { 'background': '#dddddd' },
 		        ':eq(7)': { 'background': '#eeeeee' },
-		        ':eq(8)': { 'background': '#ffffff' }
+		        ':eq(8)': { 'background': '#ffffff' },
+		        ':eq(6)': { 'cursor': 'pointer' }
 		      },
 		      headerCols: [ {
 		                     name: "Prio",
@@ -698,7 +699,7 @@
 		backlogItemsTable: function(options) {
       var opts = {
           captionText: "Backlog items",
-          colCss: { },
+          colCss: { ':eq(5)': { 'cursor': 'pointer' } },
           headerCols: [
                        {
                          name: 'Name',

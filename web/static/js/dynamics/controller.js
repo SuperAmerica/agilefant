@@ -229,13 +229,13 @@ iterationGoalController.prototype = {
     //row.getElement().draggable();
     var name = row.createCell({
       type: "text",
-      set: function(val) {},
+      set: function(val) { bli.setName(val); },
       get: function() { return bli.getName(); }
     });
     var state = row.createCell({
       type: "select",
       items: commonView.states,
-      set: function(val) {},
+      set: function(val) { bli.setState(val); },
       get: function() { return agilefantUtils.stateToString(bli.getState()); }
     });
     var el = row.createCell({

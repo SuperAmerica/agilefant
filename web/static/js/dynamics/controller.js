@@ -50,7 +50,7 @@ iterationController.prototype = {
     },
     addRow: function(goal) {
         var me = this;
-    	var row = me.view.createRow(goal);
+        var row = me.view.createRow(goal);
         var prio = row.createCell({
           get: function() { return goal.priority; }
         });
@@ -70,19 +70,7 @@ iterationController.prototype = {
         	  return goal.getDoneTasks() + " / " + goal.getTotalTasks();
         	}});
         var buttons = row.createCell();
-        buttons.setActionCell({items: [
-                                       {
-                                         text: "Edit",
-                                         callback: function(row) {
-                                           row.openEdit();
-                                         }
-                                       }, {
-                                         text: "Delete",
-                                         callback: function() {
-                                           me.deleteGoal(goal);
-                                         }
-                                       }
-                                       ]});
+        
         var desc = row.createCell({
           type: "wysiwyg", 
           get: function() { return goal.description; }, 
@@ -100,6 +88,29 @@ iterationController.prototype = {
         var blis = row.createCell();
         var blictrl = new iterationGoalController(blis, goal);
         this.iterationGoalControllers.push(blictrl);
+        buttons.setActionCell({items: [
+                                       {
+                                         text: "Edit",
+                                         callback: function(row) {
+                                           row.openEdit();
+                                         }
+                                       }, {
+                                         text: "Delete",
+                                         callback: function() {
+                                           me.deleteGoal(goal);
+                                         }
+                                       }, {
+                                         text: "Show BLIs",
+                                         callback: function() {
+                                           blictrl.showBacklogItems();
+                                         }
+                                       }, {
+                                         text: "Hide BLIs",
+                                         callback: function() {
+                                           blictrl.hideBacklogItems();
+                                         }
+                                       }
+                                       ]});
     },
     render: function(data) {
       var me = this;
@@ -267,6 +278,7 @@ iterationGoalController.prototype = {
       this.element.hide();
     }
     this.view.render();
+    this.hideBacklogItems();
   }
 };
 

@@ -3,6 +3,7 @@
 		tableRow: "dynamictable-row",
 		tableCell: "dynamictable-cell",
 		tableHeader: "dynamictable-header",
+		tableCaption: "dynamictable-caption",
 		table: "dynamictable",
 		notSortable: "dynamictable-notsortable",
 		oddRow: "dynamictable-odd",
@@ -20,7 +21,8 @@
         colCss: {},
         colWidths: [],
         headerCols: [],
-        defaultSortColumn: 0
+        defaultSortColumn: 0,
+        captionText: "Table"
     };
     $.extend(this.options,options);
     var widths = this.calculateColumnWidths(this.options.colWidths);
@@ -34,6 +36,7 @@
 		this.container = $("<div />").appendTo(this.element).addClass(cssClasses.table);
 		this.table = $("<div />").appendTo(this.container).hide();
 		this.headerRow = null;
+		this.caption = $('<div />').addClass(cssClasses.tableCaption).text(this.options.captionText).prependTo(this.container);
 		this.sorting = {
 		    column: this.options.defaultSortColumn,
 		    direction: -1
@@ -88,12 +91,17 @@
 			  if(this.sorting.direction == 0) this.sorting.direction = 1;
 			  this.doSort(this.sorting.column, this.options.headerCols[this.sorting.column].sort);
 			},
+			renderCaption: function() {
+			  this.caption = new dynamicTableRow(this, null, {toTop: true});
+			  this.caption.getElement().addClass(cssClasses.tableCaption).addClass(cssClasses.notSortable);
+			  $('<span/>').text(this.options.captionText).appendTo(this.caption.getElement());
+			},
 			renderHeader: function() {
 			  if (this.options.headerCols.length == 0) {
 			    return false;
 			  }
 			  var me = this;
-			  this.headerRow = new dynamicTableRow(this, null, {toTop: true});
+			  this.headerRow = new dynamicTableRow(this, null, {caption: true});
 			  this.headerRow.getElement().addClass(cssClasses.tableHeader).addClass(cssClasses.notSortable);
 			  var row = this.headerRow;
 			  
@@ -229,14 +237,15 @@
 		this.cells = [];
 		this.options = {};
 		$.extend(this.options,options);
-		if(this.options.toTop) {
-		  if(this.table.headerRow) {
-		    this.row = $("<div />").insertAfter(this.table.headerRow.getElement()).addClass(cssClasses.tableRow);
-		  } else {
-		    this.row = $("<div />").prependTo(this.table.getElement()).addClass(cssClasses.tableRow);
+		this.row = $("<div />").addClass(cssClasses.tableRow);
+	  if(this.options.toTop) {
+	    if(this.table.headerRow) {
+	      this.row.insertAfter(this.table.headerRow.getElement());
+	    } else {
+	        this.row.prependTo(this.table.getElement());
 		  }
 		} else {
-			this.row = $("<div />").appendTo(this.table.getElement()).addClass(cssClasses.tableRow);
+			this.row.appendTo(this.table.getElement());
 		}
 		this.row.data("model",model);
 	};
@@ -595,8 +604,9 @@
 		},
 		iterationGoalTable: function(options) {
 		  var opts = {
+		      captionText: "Iteration Goals",
 		      colCss: {
-		        ':lt(7)': { 'background': '#cccccc' },
+		        ':lt(7)': { 'background': '#dddddd' },
 		        ':eq(7)': { 'background': '#eeeeee' },
 		        ':eq(8)': { 'background': '#ffffff' }
 		      },
@@ -639,7 +649,7 @@
                        ],
 		      colWidths: [
 		                  {
-		                    minwidth: 15,
+		                    minwidth: 20,
 		                    auto: true
 		                  },
 		                  {
@@ -687,6 +697,7 @@
 		},
 		backlogItemsTable: function(options) {
       var opts = {
+          captionText: "Backlog items",
           colCss: { },
           headerCols: [
                        {

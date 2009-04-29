@@ -247,7 +247,9 @@ iterationGoalController.prototype = {
       get: function() { return agilefantUtils.priorityToString(bli.getPriority()); },
       set: function(val) { bli.setPriority(val); }
     });
-    row.createCell();
+    row.createCell({
+    	get: function() { return agilefantUtils.userlistToHTML(bli.getUsers()); }
+    });
     var el = row.createCell({
       type: "effort",
       set: function(val) {},

@@ -12,6 +12,7 @@ import java.util.Set;
 
 import fi.hut.soberit.agilefant.business.BacklogBusiness;
 import fi.hut.soberit.agilefant.business.BacklogItemBusiness;
+import fi.hut.soberit.agilefant.business.BusinessThemeBusiness;
 import fi.hut.soberit.agilefant.business.HistoryBusiness;
 import fi.hut.soberit.agilefant.business.HourEntryBusiness;
 import fi.hut.soberit.agilefant.business.SettingBusiness;
@@ -54,6 +55,7 @@ public class BacklogItemBusinessImpl implements BacklogItemBusiness {
     private SettingBusiness settingBusiness;
     private BacklogBusiness backlogBusiness;
     private IterationGoalDAO iterationGoalDAO;
+    private BusinessThemeBusiness businessThemeBusiness;
 
     public BacklogItemDAO getBacklogItemDAO() {
         return backlogItemDAO;
@@ -345,6 +347,25 @@ public class BacklogItemBusinessImpl implements BacklogItemBusiness {
         }
         return null;
     }
+    
+    public List<BacklogItem> getBacklogItemsByBacklogWithCache(Backlog backlog) {
+        List<BacklogItem> items = this.getBacklogItemsByBacklog(backlog);
+        Map<BacklogItem, List<BacklogItemResponsibleContainer>> userData = this.getResponsiblesByBacklog(backlog);
+        Map<BacklogItem, TodoMetrics> todoMetrics = this.getTasksByBacklog(backlog);
+        Map<BacklogItem, List<BusinessTheme>> themes = this.businessThemeBusiness.getBacklogItemBusinessThemesByBacklog(backlog);
+        for(BacklogItem item : items) {
+            if(userData.get(item) != null) {
+                item.setUserData(userData.get(item));
+            }
+            if(todoMetrics.get(item) != null) {
+                item.setTodoMetrics(todoMetrics.get(item));
+            }
+            if(themes.get(item) != null) {
+                item.setBusinessThemes(themes.get(item));
+            }
+        }
+        return items;
+    }
 
     //TODO: write test
     public Map<BacklogItem, List<BacklogItemResponsibleContainer>> getResponsiblesByBacklog(Backlog backlog) {
@@ -361,6 +382,9 @@ public class BacklogItemBusinessImpl implements BacklogItemBusiness {
            for(Object[] row : data) {
                BacklogItem item = (BacklogItem)row[0];
                User user = (User)row[1];
+               if(user == null) {
+                   continue;
+               }
                boolean inProject = false;
                if(result.get(item) == null) {
                    result.put(item, new ArrayList<BacklogItemResponsibleContainer>());
@@ -423,6 +447,10 @@ public class BacklogItemBusinessImpl implements BacklogItemBusiness {
 
     public void setIterationGoalDAO(IterationGoalDAO iterationGoalDAO) {
         this.iterationGoalDAO = iterationGoalDAO;
+    }
+
+    public void setBusinessThemeBusiness(BusinessThemeBusiness businessThemeBusiness) {
+        this.businessThemeBusiness = businessThemeBusiness;
     }
 
 

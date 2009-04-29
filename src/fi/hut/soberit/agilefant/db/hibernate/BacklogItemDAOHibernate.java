@@ -31,7 +31,9 @@ public class BacklogItemDAOHibernate extends GenericDAOHibernate<BacklogItem>
         criteria.add(Restrictions.eq("backlog", backlog));
         criteria.setFetchMode("iterationGoal", FetchMode.JOIN);
         List<BacklogItem> items =  this.getHibernateTemplate().findByCriteria(criteria);
-        this.getHibernateTemplate().evict(items);
+        for(BacklogItem item : items) {
+            this.getHibernateTemplate().evict(item);
+        }
         return items;
     }
 

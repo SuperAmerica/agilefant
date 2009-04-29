@@ -267,9 +267,15 @@ backlogItemModel.prototype = {
     this.effortLeft = data.effortLeft;
     this.effortSpent = data.effortSpent;
     this.originalEstimate = data.originalEstimate;
+    if(data.userData) {
+    	this.users = data.userData;
+    }
     for (var i = 0; i < this.editListeners.length; i++) {
       this.editListeners[i]();
     }
+  },
+  getUsers: function() {
+	  return this.users;
   },
   getName: function() {
     return this.name;

@@ -27,6 +27,8 @@ import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.Type;
 
+import fi.hut.soberit.agilefant.util.BacklogItemResponsibleContainer;
+import fi.hut.soberit.agilefant.util.TodoMetrics;
 import fi.hut.soberit.agilefant.web.page.PageItem;
 import flexjson.JSON;
 
@@ -97,6 +99,27 @@ public class BacklogItem implements PageItem, Assignable, EffortContainer, Times
     private Date createdDate;
     
     private User creator;
+    
+    private List<BacklogItemResponsibleContainer> userData;
+   
+    private TodoMetrics todoMetrics;
+    
+    @Override
+    public boolean equals(Object obj) {
+        if(!(obj instanceof BacklogItem)) {
+            return false;
+        }
+        BacklogItem bli = (BacklogItem)obj;
+        if(bli != null) {
+            return bli.getId() == this.id;
+        }
+        return false;
+    }
+    
+    @Override
+    public int hashCode() {
+        return this.id;
+    }
     
     public Date getCreatedDate() {
         return this.createdDate;
@@ -267,11 +290,13 @@ public class BacklogItem implements PageItem, Assignable, EffortContainer, Times
     /** {@inheritDoc} */
     @ManyToOne
     @JSON(include=false)
+    @Deprecated
     public User getAssignee() {
         return assignee;
     }
 
     /** {@inheritDoc} */
+    @Deprecated
     public void setAssignee(User assignee) {
         this.assignee = assignee;
     }
@@ -322,6 +347,7 @@ public class BacklogItem implements PageItem, Assignable, EffortContainer, Times
 
     @Transient
     @JSON(include=false)
+    @Deprecated
     public List<Backlog> getParentBacklogs() {
         List<Backlog> retlist = new ArrayList<Backlog>();
         Backlog firstParent = getBacklog();
@@ -474,6 +500,26 @@ public class BacklogItem implements PageItem, Assignable, EffortContainer, Times
 
     public void setHourEntries(Collection<BacklogItemHourEntry> hourEntries) {
         this.hourEntries = hourEntries;
+    }
+
+    @Transient
+    @JSON
+    public List<BacklogItemResponsibleContainer> getUserData() {
+        return userData;
+    }
+
+    public void setUserData(List<BacklogItemResponsibleContainer> userData) {
+        this.userData = userData;
+    }
+
+    @Transient
+    @JSON
+    public TodoMetrics getTodoMetrics() {
+        return todoMetrics;
+    }
+
+    public void setTodoMetrics(TodoMetrics todoMetrics) {
+        this.todoMetrics = todoMetrics;
     }
     
 }

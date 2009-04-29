@@ -15,6 +15,22 @@ var agilefantUtils = {
 	isAftimeString: function(string) {
 		
 	},
+	userlistToHTML: function(users) {
+		var html = $("<span />");
+		if(users && users.length > 0) {
+			var len = users.length;
+			for(var i = 0; i < len; i++) {
+				var user = users[i];
+				if(user.inProject == true) {
+					$("<span />").text(user.user.initials).appendTo(html);
+				} else {
+					$("<span />").text(user.user.initials).appendTo(html).addClass("unassigned");
+				}
+				//TODO add separator
+			}
+		}
+		return html.html();
+	},
 	states: {
 	  "NOT_STARTED": "Not Started",
 	  "STARTED": "Started",

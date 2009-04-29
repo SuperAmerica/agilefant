@@ -139,6 +139,7 @@ public class BusinessThemeDAOHibernate extends
         for(Object[] row : respBli) {
            BacklogItem item = (BacklogItem)row[0];
            BusinessTheme theme  = (BusinessTheme)row[1];
+           this.getHibernateTemplate().evict(theme);
            if(res.get(item) == null) {
                res.put(item, new ArrayList<BusinessTheme>());
            }

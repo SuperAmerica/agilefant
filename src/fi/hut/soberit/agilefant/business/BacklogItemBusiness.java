@@ -120,6 +120,8 @@ public interface BacklogItemBusiness {
     
     public List<BacklogItem> getBacklogItemsByBacklog(Backlog backlog);
     
+    public List<BacklogItem> getBacklogItemsByBacklogWithCache(Backlog backlog);
+    
     /**
      * Update or create new backlog item and persist the object to database.
      * 

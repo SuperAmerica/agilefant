@@ -6,6 +6,7 @@ import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import junit.framework.TestCase;
@@ -100,8 +101,10 @@ public class IterationGoalBusinessTest extends TestCase {
        BacklogItem bli2 = new BacklogItem();
        IterationGoal removeMe = new IterationGoal();
        
-       removeMe.getBacklogItems().add(bli2);
-       removeMe.getBacklogItems().add(bli1);
+       Collection<BacklogItem> blis = new ArrayList<BacklogItem>();
+       blis.add(bli1);
+       blis.add(bli2);
+       removeMe.setBacklogItems(blis);
        removeMe.setIteration(iteration);
        
        bli1.setIterationGoal(removeMe);

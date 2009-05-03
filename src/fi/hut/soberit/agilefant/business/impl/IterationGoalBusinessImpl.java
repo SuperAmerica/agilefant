@@ -1,5 +1,7 @@
 package fi.hut.soberit.agilefant.business.impl;
 
+import java.util.Collection;
+
 import fi.hut.soberit.agilefant.business.BacklogItemBusiness;
 import fi.hut.soberit.agilefant.business.IterationGoalBusiness;
 import fi.hut.soberit.agilefant.db.IterationDAO;
@@ -60,9 +62,10 @@ public class IterationGoalBusinessImpl implements IterationGoalBusiness {
         if(goal.getIteration() != null) {
             goal.getIteration().getIterationGoals().remove(goal);
         }
-        if(goal.getBacklogItems() != null) {
-            for(BacklogItem item : goal.getBacklogItems()) {
-                item.setIterationGoal(null);
+        Collection<BacklogItem> backlogItems = goal.getBacklogItems();
+        if(backlogItems != null) {
+            for(BacklogItem item : backlogItems) {
+                item.setIterationGoal(null); 
             }
         }
         iterationGoalDAO.remove(iterationGoalId);

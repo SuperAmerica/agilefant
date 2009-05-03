@@ -21,12 +21,28 @@ var agilefantUtils = {
 			var len = users.length;
 			for(var i = 0; i < len; i++) {
 				var user = users[i];
-				if(user.inProject == true) {
+				if(user.inProject) {
 					$("<span />").text(user.user.initials).appendTo(html);
 				} else {
 					$("<span />").text(user.user.initials).appendTo(html).addClass("unassigned");
 				}
-				//TODO add separator
+				if(i+1 != len) {
+					$(document.createTextNode(", ")).appendTo(html);
+				}
+			}
+		}
+		return html.html();
+	},
+	themesToHTML: function(themes) {
+		var html = $("<span />");
+		if(themes && themes.length > 0) {
+			for(var i = 0; i < themes.length; i++) {
+				var theme = themes[i];
+				var item = $("<span />").text(theme.name).appendTo(html).addClass("businessTheme");
+				if(theme.globa) {
+					item.addClass("globalThemeColors");
+				}
+				$(document.createTextNode(" ")).appendTo(html);
 			}
 		}
 		return html.html();

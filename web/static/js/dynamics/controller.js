@@ -230,6 +230,9 @@ iterationGoalController.prototype = {
   },
   addRow: function(bli) {
     var row = this.view.createRow(bli);
+    var themes = row.createCell({
+    	get: function() { return agilefantUtils.themesToHTML(bli.getThemes()); }
+    });
     var name = row.createCell({
       type: "text",
       set: function(val) { bli.setName(val); },

@@ -270,9 +270,20 @@ backlogItemModel.prototype = {
     if(data.userData) {
     	this.users = data.userData;
     }
+    if(data.businessThemes) {
+    	this.themes = [];
+    	for(var i = 0 ; i < data.businessThemes.length; i++) {
+    		if(data.businessThemes[i] != null) {
+    			this.themes.push(data.businessThemes[i]);
+    		}
+    	}
+    }
     for (var i = 0; i < this.editListeners.length; i++) {
       this.editListeners[i]();
     }
+  },
+  getThemes: function() {
+	return this.themes;  
   },
   getUsers: function() {
 	  return this.users;

@@ -90,6 +90,8 @@ public class IterationAction extends BacklogContentsAction implements CRUDAction
         if(!excludeBacklogItems) {
             serializer.include("iterationGoals.backlogItems");
             serializer.include("itemsWithoutGoal");
+            serializer.include("itemsWithoutGoal.businessThemes");
+            serializer.include("iterationGoals.backlogItems.businessThemes");
         }
         
         json = serializer.prettyPrint(data);

@@ -737,9 +737,15 @@
 		},
 		backlogItemsTable: function(options) {
       var opts = {
+    	  defaultSortColumn: 1,
           captionText: "Backlog items",
-          colCss: { ':eq(5)': { 'cursor': 'pointer' } },
+          colCss: { ':eq(6)': { 'cursor': 'pointer' } },
           headerCols: [
+                       {
+                    	 name: "Themes",
+                    	 tooltip: "Business themes",
+                    	 sort: null
+                       },
                        {
                          name: 'Name',
                          tooltip: 'Backlog item name',
@@ -782,9 +788,12 @@
                        }
                        ],
           colWidths: [
-                      
                       {
-                        minwidth: 200,
+                    	minwidth: 30,
+                    	auto: true
+                      },
+                      {
+                        minwidth: 180,
                         auto: true
                       },
                       {

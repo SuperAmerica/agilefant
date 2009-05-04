@@ -739,7 +739,10 @@
       var opts = {
           defaultSortColumn: 3,
           captionText: "Backlog items",
-          colCss: { ':eq(6)': { 'cursor': 'pointer' } },
+          colCss: { ':eq(8)': { 'cursor': 'pointer' },
+                    ':lt(9)': { 'background-color': '#eee' },
+                    ':eq(9)': { 'background-color': '#fff' }
+                  },
           headerCols: [
                        {
                     	 name: "Themes",
@@ -823,6 +826,10 @@
                       {
                         minwidth: 30,
                         auto: true
+                      },
+                      {
+                        auto: false,
+                        setMaxWidth: true
                       }
                       ]
       };

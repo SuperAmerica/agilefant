@@ -88,7 +88,7 @@ iterationController.prototype = {
             cancel: {text: "Cancel", action: function() {
               row.cancelEdit();
             }}
-          }}).getElement().hide();
+          }}) //.getElement().hide();
         var blis = row.createCell();
         var blictrl = new iterationGoalController(blis, goal);
         this.iterationGoalControllers.push(blictrl);
@@ -254,15 +254,15 @@ iterationGoalController.prototype = {
     	get: function() { return agilefantUtils.userlistToHTML(bli.getUsers()); }
     });
     var el = row.createCell({
-      type: "effort",
+      //type: "effort",
       set: function(val) {},
       get: function() { return agilefantUtils.aftimeToString(bli.getEffortLeft()); }});
     var oe = row.createCell({
-      type: "effort",
+      //type: "effort",
       set: function(val) {},
       get: function() { return agilefantUtils.aftimeToString(bli.getOriginalEstimate()); }});
     var es = row.createCell({
-      type: "effort",
+      //type: "effort",
       set: function(val) {},
       get: function() { return agilefantUtils.aftimeToString(bli.getEffortSpent()); }});
     var buttons = row.createCell();
@@ -279,6 +279,20 @@ iterationGoalController.prototype = {
                                      }
                                    }
                                    ]});
+    var desc = row.createCell({
+      type: "wysiwyg", 
+      get: function() { return bli.description; }, 
+      set: function(val) { bli.setDescription(val);},
+      buttons: {
+        save: {text: "Save", action: function() {
+          bli.beginTransaction();
+          row.saveEdit();
+          bli.commit();
+        }},
+        cancel: {text: "Cancel", action: function() {
+          row.cancelEdit();
+        }}
+      }}) //.getElement().hide();
   },
   render: function(data) {
     var me = this;

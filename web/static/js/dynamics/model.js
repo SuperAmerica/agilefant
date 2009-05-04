@@ -369,6 +369,7 @@ backlogItemModel.prototype = {
         "backlogItem.name": this.name,
         "backlogItem.state": this.state,
         "backlogItem.priority": this.priority,
+        "backlogItem.description": this.description,
         backlogId: this.backlog.getId(),
         backlogItemId: this.id,
         iterationGoalId: this.iterationGoal.id

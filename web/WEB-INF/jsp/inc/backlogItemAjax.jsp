@@ -23,7 +23,8 @@ $(document).ready(function() {
     $('#userChooserLink-${backlogItemId}-${bliListContext}').userChooser({
         backlogItemId: ${backlogItemId},
         backlogIdField: '#backlogSelect-${backlogItemId}-${bliListContext}',
-        userListContainer: '#userListContainer-${backlogItemId}-${bliListContext}'
+        userListContainer: '#userListContainer-${backlogItemId}-${bliListContext}',
+        legacyMode: false
     }); 
     $('#themeChooserLink-${backlogItemId}-${bliListContext}').themeChooser({
         backlogId: '#backlogSelect-${backlogItemId}-${bliListContext}',

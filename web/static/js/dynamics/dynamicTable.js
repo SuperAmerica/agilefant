@@ -319,8 +319,17 @@
 		}
 		var me = this;
 		var dblclick_cb = function() { me.openEdit() };
-		if (this.options.type) {
+		if (this.options.type && this.options.type != "userchooser") {
 		  this.cell.dblclick(dblclick_cb);
+		}
+		else if (this.options.type == "userchooser") {
+		  this.cell.userChooser({
+		    legacyMode: false,
+		    backlogId: me.options.backlogId,
+		    selectCallback: me.options.userchooserCallback,
+		    userListContainer: me.getElement(),
+		    backlogItemId: me.options.backlogItemId
+		  });
 		}
 	};
 	

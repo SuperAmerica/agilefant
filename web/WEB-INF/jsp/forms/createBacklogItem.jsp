@@ -16,6 +16,7 @@ $(document).ready(function() {
     });
     $('#userChooserLink-createBLI').userChooser({
         backlogItemId: ${backlogItemId},
+        legacyMode: false,
         backlogIdField: '#createBLIBacklogId',
         userListContainer: '#userListContainer-createBLI'
     });

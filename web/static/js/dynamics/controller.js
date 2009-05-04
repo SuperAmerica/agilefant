@@ -228,7 +228,11 @@ iterationGoalController.prototype = {
   showBacklogItems: function() {
     this.parentView.getElement().show();
   },
+  userchooserCallback: function() {
+    alert("Yippikaiyee, motherfucker.");
+  },
   addRow: function(bli) {
+    var me = this;
     var row = this.view.createRow(bli);
     var themes = row.createCell({
     	get: function() { return agilefantUtils.themesToHTML(bli.getThemes()); }
@@ -251,7 +255,11 @@ iterationGoalController.prototype = {
       set: function(val) { bli.setPriority(val); }
     });
     row.createCell({
-    	get: function() { return agilefantUtils.userlistToHTML(bli.getUsers()); }
+      type: "userchooser",
+    	get: function() { return agilefantUtils.userlistToHTML(bli.getUsers()); },
+      userchooserCallback: me.userchooserCallback,
+      backlogId: bli.backlog.getId(),
+      backlogItemId: bli.getId()
     });
     var el = row.createCell({
       //type: "effort",
@@ -281,7 +289,7 @@ iterationGoalController.prototype = {
                                    ]});
     var desc = row.createCell({
       type: "wysiwyg", 
-      get: function() { return bli.description; }, 
+      get: function() { return bli.getDescription(); }, 
       set: function(val) { bli.setDescription(val);},
       buttons: {
         save: {text: "Save", action: function() {
@@ -301,7 +309,8 @@ iterationGoalController.prototype = {
     this.view.getElement().addClass('dynamictable-backlogitem-droppable');
     this.view.getElement().sortable({
         connectWith: '.dynamictable-backlogitem-droppable',
-        not: '.dynamictable-notsortable'
+        not: '.dynamictable-notsortable',
+        placeholder : 'dynamictable-placeholder'
       });
     if(blis && blis.length > 0) {
       for(var i = 0; i < blis.length; i++) {

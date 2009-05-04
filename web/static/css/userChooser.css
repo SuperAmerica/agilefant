@@ -8,7 +8,8 @@
 }
 
 .userChooserDialog table td {
-    vertical-align: top;    
+    vertical-align: top;
+    white-space: nowrap;
 }
 .userChooserDialog table th {
     text-align: left;    
@@ -21,6 +22,7 @@
 
 .userChooserDialog table ul li {
     list-style-type: none;
+    white-space: nowrap;
 }
 
 .userChooserDialog table ul li label.disabledUser {

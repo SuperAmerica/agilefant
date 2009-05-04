@@ -288,6 +288,9 @@ backlogItemModel.prototype = {
   getUsers: function() {
 	  return this.users;
   },
+  getId: function() {
+    return this.id;
+  },
   getName: function() {
     return this.name;
   },
@@ -370,10 +373,14 @@ backlogItemModel.prototype = {
         "backlogItem.state": this.state,
         "backlogItem.priority": this.priority,
         "backlogItem.description": this.description,
+        userIds: [],
         backlogId: this.backlog.getId(),
         backlogItemId: this.id,
         iterationGoalId: this.iterationGoal.id
     };
+    /*$.each(this.users, function(i,v) {
+      data.userIds.push();
+    });*/
     if(this.name == undefined) data.name = "";
     if(this.description == undefined) data.description = "";
     jQuery.ajax({

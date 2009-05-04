@@ -47,7 +47,8 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
 
     private int iterationGoalId;
     
-    private Map<Integer, String> userIds = new HashMap<Integer, String>();
+    private Set<Integer> userIds = new HashSet<Integer>();
+    //private Map<Integer, String> userIds = new HashMap<Integer, String>();
     
     private Set<Integer> themeIds = new HashSet<Integer>();
     
@@ -213,7 +214,7 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
         
         //save backlog item, update todos and store backlog item themes
         try {
-            BacklogItem bli = backlogItemBusiness.storeBacklogItem(backlogItemId, backlogId, backlogItem, userIds.keySet(), iterationGoalId);
+            BacklogItem bli = backlogItemBusiness.storeBacklogItem(backlogItemId, backlogId, backlogItem, userIds, iterationGoalId);
             if (tasksToDone) {
                 backlogItemBusiness.setTasksToDone(backlogItemId);
             }
@@ -345,11 +346,11 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
         this.effortLeft = effortLeft;
     }
     
-    public Map<Integer, String> getUserIds() {
+    public Set<Integer> getUserIds() {
         return userIds;
     }
 
-    public void setUserIds(Map<Integer, String> userIds) {
+    public void setUserIds(Set<Integer> userIds) {
         this.userIds = userIds;
     }
 

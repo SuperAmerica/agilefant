@@ -284,7 +284,7 @@
                   return false;
                 }
             });
-            cancelButton.click(function() { me.cancelAction(); });
+            cancelButton.click(function() { me.cancelAction(me); });
         },
         renderTeamList: function() {
             var me = this;
@@ -507,7 +507,7 @@
             me.data.selectedList = me.getSelected();
             me.cache = me.data;
         },
-        cancelAction: function(me) { return; }
+        cancelAction: function(me) { me.destroy(); }
     };
     
     jQuery.fn.extend({

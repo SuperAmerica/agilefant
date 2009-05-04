@@ -35,7 +35,7 @@
             renderFor: 'backlogItem',
             overlayUpdate: function() {
                 $('.ui-dialog-overlay').css("height",$(document).height()).css("width",$(document).width());
-            }
+            } 
         };
         jQuery.extend(options, opt);
         
@@ -97,16 +97,22 @@
             this.teamCell = $('<td/>').appendTo(this.contentRow);
         
             if (this.options.renderFor == 'project') {
-                this.selectAction = this.projectSelectAction;
+                if (!this.options.selectCallback) {
+                  this.options.selectCallback = this.projectSelectAction;
+                }
                 this.renderForProject();
             }
             else if (this.options.renderFor == 'backlogItem') {
-                this.selectAction = this.bliSelectAction;
-                this.renderForBLI();
+              if (!this.options.selectCallback) {
+                this.options.selectCallback  = this.bliSelectAction;
+              }
+              this.renderForBLI();
             }
             else {
-                this.selectAction = this.bliSelectAction;
-                this.renderForAllUsers();
+              if (!this.options.selectCallback) {
+                this.options.selectCallback  = this.bliSelectAction;
+              }
+              this.renderForAllUsers();
             }
             
             this.selectCheckboxes(this.data.selectedList);
@@ -271,8 +277,11 @@
                     return false;
                 }
                 else {
-                    me.selectAction();
-                    return false;
+                  if (me.options.selectCallback) {  
+                    me.options.selectCallback(me);
+                  }
+                  me.destroy();
+                  return false;
                 }
             });
             cancelButton.click(function() { me.cancelAction(); });
@@ -419,10 +428,9 @@
                 }
             });
         },
-        projectSelectAction: function() {
-            var me = this;
-            var selectedList = this.getSelected();
-            var userListContainer = $(this.options.userListContainer);
+        projectSelectAction: function(me) {
+            var selectedList = me.getSelected();
+            var userListContainer = $(me.options.userListContainer);
             var selectedInitials = "";
             
             var overheads = {};
@@ -448,15 +456,12 @@
                 userListContainer.append(selectedInitials.substring(0, selectedInitials.length - 2));
             }
             else {
-                userListContainer.append(this.options.emptySelectionText);
+                userListContainer.append(me.options.emptySelectionText);
             }
             
-            this.data.overheads = overheads;
-            this.data.selectedList = this.getSelected();
-            this.cache = this.data;
-            
-            this.destroy();
-            return false;
+            me.data.overheads = overheads;
+            me.data.selectedList = me.getSelected();
+            me.cache = me.data;
         },
         getFromUserListContainer: function() {
             var ulc = $(this.options.userListContainer);
@@ -468,10 +473,9 @@
             
             return list;
         },
-        bliSelectAction: function() {
-            var me = this;
-            var selectedList = this.getSelected();
-            var userListContainer = $(this.options.userListContainer);
+        bliSelectAction: function(me) {
+            var selectedList = me.getSelected();
+            var userListContainer = $(me.options.userListContainer);
             var selectedInitials = "";
             
             userListContainer.empty();
@@ -497,19 +501,13 @@
                 userListContainer.append(selectedInitials.substring(0, selectedInitials.length - 2));
             }
             else {
-                userListContainer.append(this.options.emptySelectionText);
+                userListContainer.append(me.options.emptySelectionText);
             }
             
-            this.data.selectedList = this.getSelected();
-            this.cache = this.data;
-            
-            this.destroy();
-            return false;
+            me.data.selectedList = me.getSelected();
+            me.cache = me.data;
         },
-        cancelAction: function() {
-            this.destroy();
-            return false;
-        }
+        cancelAction: function(me) { return; }
     };
     
     jQuery.fn.extend({

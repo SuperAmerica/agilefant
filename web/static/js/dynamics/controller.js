@@ -228,8 +228,10 @@ iterationGoalController.prototype = {
   showBacklogItems: function() {
     this.parentView.getElement().show();
   },
-  userchooserCallback: function() {
-    alert("Yippikaiyee, motherfucker.");
+  userchooserCallback: function(uc) {
+    var a = uc.data;
+    var sel = uc.getSelected();
+    var b = 5;
   },
   addRow: function(bli) {
     var me = this;

@@ -382,6 +382,9 @@
 		  this.editor = null;
 		},
 		openEdit: function(noAutoClose) {
+		  if (this.options.type == "userchooser") {
+		    return;
+		  }
 		  var autoClose = true;
 		  if(noAutoClose) autoClose = false;
 		  if(this.options.type && !this.editorOpen) {

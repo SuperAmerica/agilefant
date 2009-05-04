@@ -101,6 +101,17 @@ var agilefantUtils = {
     },
     bliStateComparator: function(a,b) {
       return (a.getState() > b.getState());
+    },
+    bliPriorityAndStateComparator: function(a,b) {
+      if (a.getState() == "DONE" && b.getState() != "DONE") {
+        return 1;
+      }
+      else if (a.getState() != "DONE" && b.getState() == "DONE") {
+        return -1;
+      }
+      else {
+        return agilefantUtils.comparators.bliPriorityComparator(a, b);
+      }
     }
 	}
 };

@@ -737,7 +737,7 @@
 		},
 		backlogItemsTable: function(options) {
       var opts = {
-    	  defaultSortColumn: 1,
+          defaultSortColumn: 3,
           captionText: "Backlog items",
           colCss: { ':eq(6)': { 'cursor': 'pointer' } },
           headerCols: [
@@ -754,12 +754,12 @@
                        {
                          name: 'State',
                          tooltip: 'Backlog item state',
-                         sort: agilefantUtils.comparators.stateComparator
+                         sort: null
                        },
                        {
                          name: 'Priority',
                          tooltip: 'Backlog item priority',
-                         sort: agilefantUtils.comparators.bliPriorityComparator
+                         sort: agilefantUtils.comparators.bliPriorityAndStateComparator
                        },
                        {
                          name: 'Responsibles',

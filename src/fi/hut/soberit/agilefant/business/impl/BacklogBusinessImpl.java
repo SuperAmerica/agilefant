@@ -451,6 +451,9 @@ public class BacklogBusinessImpl implements BacklogBusiness {
 
     public Collection<User> getUsers(Backlog backlog, boolean areAssigned) {
         Collection<User> users;
+        if (backlog == null) {
+            return new ArrayList<User>();
+        }
         Collection<Assignment> assignments = backlog.getAssignments();
         users = new HashSet<User>();
         for (Assignment ass : assignments) {

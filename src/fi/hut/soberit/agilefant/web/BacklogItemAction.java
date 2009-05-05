@@ -25,6 +25,7 @@ import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.BusinessTheme;
 import fi.hut.soberit.agilefant.model.Priority;
+import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.State;
 import fi.hut.soberit.agilefant.model.Task;
@@ -204,7 +205,7 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
         }
         // TODO: Optimize this
         List<BacklogItemResponsibleContainer> list = new ArrayList<BacklogItemResponsibleContainer>();
-        Collection<User> assignees = backlogBusiness.getUsers(this.backlogItem.getBacklog(), false);
+        Collection<User> assignees = backlogBusiness.getUsers(this.backlogItem.getProject(), false);
         for (User u : this.backlogItem.getResponsibles()) {
             boolean inProject = true;
             if (assignees.contains(u)) {

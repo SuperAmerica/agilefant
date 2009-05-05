@@ -47,13 +47,25 @@ var agilefantUtils = {
 			for(var i = 0; i < themes.length; i++) {
 				var theme = themes[i];
 				var item = $("<span />").text(theme.name).appendTo(html).addClass("businessTheme");
-				if(theme.globa) {
+				if(theme.global) {
 					item.addClass("globalThemeColors");
 				}
 				$(document.createTextNode(" ")).appendTo(html);
 			}
 		}
 		return html.html();
+	},
+	objectToIdArray: function(objectList) {
+		var idArr = [];
+		if(objectList.length) {
+			for(var i = 0 ; i < objectList.length; i++) {
+				var obj = objectList[i];
+				if(obj.id) {
+					idArr.push(obj.id);
+				}
+			}
+		}
+		return idArr;
 	},
 	states: {
 	  "NOT_STARTED": "Not Started",

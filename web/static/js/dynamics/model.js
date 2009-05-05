@@ -289,7 +289,12 @@ backlogItemModel.prototype = {
 	  return this.users;
   },
   setUserIds: function(userIds) {
-    this.save(userIds);
+	this.userIds = userIds;
+    this.save();
+  },
+  setThemeIds: function(themeIds) {
+	this.themeIds = themeIds;
+	this.save();
   },
   getId: function() {
     return this.id;
@@ -366,7 +371,7 @@ backlogItemModel.prototype = {
   remove: function() {
     
   },
-  save: function(userIds) {
+  save: function() {
     if(this.inTransaction) {
       return;
     }
@@ -377,17 +382,23 @@ backlogItemModel.prototype = {
         "backlogItem.priority": this.priority,
         "backlogItem.description": this.description,
         "userIds": [],
+        "themeIds": [],
         backlogId: this.backlog.getId(),
         backlogItemId: this.id,
         iterationGoalId: this.iterationGoal.id
     };
-    if (userIds) {
+    if (this.userIds) {
       data["userIds"] = userIds;
+      this.userIds = null;
     }
-    else if (this.users){
-      $.each(this.users, function(i,v) {
-        data["userIds"].push(v.user.id);
-      });
+    else if (this.users) {
+      data["userIds"] = agilefantUtils.objectToIdArray(this.users);
+    }
+    if(this.themeIds) {
+      data["themeIds"] = this.themeIds;
+      this.themeIds = null;
+    } else if(this.themes) {
+      data["themeIds"] = agilefantUtils.objectToIdArray(this.themes);
     }
     if(this.name == undefined) data.name = "";
     if(this.description == undefined) data.description = "";

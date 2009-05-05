@@ -16,6 +16,12 @@
         this.options = options;
         this.data = null;
         
+        if(this.options.onSelect) {
+        	this.selectCallback = this.options.onSelect;
+        } else {
+        	this.selectCallback = this.selectAction;
+        }
+        
         //reset theme container if product changes
         var blSelect = $(options.backlogId);
         var themeContainer = $(options.themeListContainer);
@@ -92,7 +98,9 @@
             var cancelButton = $('<input type="reset" />').val('Cancel').appendTo(cancelButtonCol);
             
             this.form.submit(function() {
-                return me.selectAction();
+                me.selectCallback(me.getSelectedThemes());
+                me.destroy();
+                return false;
             });
             cancelButton.click(function() { return me.cancelAction(); });
         },
@@ -104,6 +112,9 @@
         },
         
         selectedThemes: function(){
+            if(this.options.selectedThemes) {
+            	return this.options.selectedThemes();
+            }
             var themeListContainer = $(this.options.themeListContainer);
     
 			// getting all hidden field with selected ids
@@ -118,14 +129,22 @@
 			// selecting checkboxes in dialog
 			return themeIdList;
         },
+        
+        getSelectedThemes: function() {
+        	var themeIds = [];
+        	var checkboxes = $(this.form).find(':checked');
+        	checkboxes.each(function() {
+            	var themeId= parseInt($(this).val());
+            	themeIds.push(themeId);
+        	});
+        	return themeIds;
+        },
 
-        selectAction: function() {
+        selectAction: function(selectedThemes) {
             var me = this;
             var themeListContainer = $(this.options.themeListContainer);
             themeListContainer.empty();
-        
-            $(this.form).find(':checked').each(function() {
-            	var themeId= parseInt($(this).val());
+            $.each(selectedThemes, function(i, themeId) {
                 var span = $('<span/>').appendTo(themeListContainer).addClass('businessTheme').css('float','none').text(me.data[themeId].name);
                 if(me.data[themeId]['global']) {
                 	span.addClass('globalThemeColors');
@@ -137,8 +156,6 @@
             if(themeListContainer.html().length == 0) {
                 themeListContainer.append("(none)");
             }
-            
-            this.destroy();
             return false;
         },
         
@@ -148,8 +165,14 @@
         },
         getData: function() {
             var me = this;
+            var backlogId;
+            if(typeof(this.options.backlogId) == "number") {
+            	backlogId = this.options.backlogId;
+            } else {
+            	backlogId = $(me.options.backlogId).val();
+            }
             jQuery.getJSON("activeThemesByBacklog.action",
-                { 'backlogId': $(me.options.backlogId).val() },
+                { 'backlogId': backlogId },
                 function(data, status) {
                 	me.productThemes = [];
                 	me.globalThemes = [];
@@ -207,6 +230,8 @@
 			}
         }
     };
+    
+    window.agilefantThemeChooser = ThemeChooser;
     
     jQuery.fn.extend({
         /**

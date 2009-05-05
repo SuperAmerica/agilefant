@@ -17,7 +17,6 @@ import fi.hut.soberit.agilefant.business.BacklogItemBusiness;
 import fi.hut.soberit.agilefant.business.BusinessThemeBusiness;
 import fi.hut.soberit.agilefant.business.HistoryBusiness;
 import fi.hut.soberit.agilefant.business.HourEntryBusiness;
-import fi.hut.soberit.agilefant.business.ProjectBusiness;
 import fi.hut.soberit.agilefant.business.TaskBusiness;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.AFTime;
@@ -25,8 +24,6 @@ import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.BusinessTheme;
 import fi.hut.soberit.agilefant.model.Priority;
-import fi.hut.soberit.agilefant.model.Product;
-import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.State;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
@@ -216,6 +213,7 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
         Collections.sort(list, new BacklogItemUserComparator());
         this.backlogItem.setUserData(list);
         JSONSerializer ser = new JSONSerializer();
+        ser.include("businessThemes");
         jsonData = ser.serialize(this.backlogItem);
         return CRUDAction.AJAX_SUCCESS;
     }

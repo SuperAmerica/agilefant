@@ -342,7 +342,11 @@
 	  },
 		render: function() {
 			if(typeof(this.options.get) == "function") {
-				this.setValue(this.options.get());
+				var value = this.options.get();
+				if(typeof(this.options.decorator) == "function") {
+					value = this.options.decorator(value);
+				}
+				this.setValue(value);
 			}
 		},
 		setValue: function(newValue) {
@@ -384,6 +388,15 @@
 		openEdit: function(noAutoClose) {
 		  if (this.options.type == "userchooser") {
 		    return;
+		  } else if(this.options.type == "theme" && !noAutoClose) {
+			  var me = this;
+			  var tc = new agilefantThemeChooser({
+				  selectedThemes: function() { return agilefantUtils.objectToIdArray(me.options.get()); },
+				  onSelect: function(themes) { me.options.set(themes); },
+				  backlogId: this.options.backlogId
+			  });
+			  tc.init();
+			  return;
 		  }
 		  var autoClose = true;
 		  if(noAutoClose) autoClose = false;

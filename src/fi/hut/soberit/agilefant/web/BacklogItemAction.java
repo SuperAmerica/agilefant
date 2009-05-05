@@ -1,5 +1,8 @@
 package fi.hut.soberit.agilefant.web;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -14,6 +17,7 @@ import fi.hut.soberit.agilefant.business.BacklogItemBusiness;
 import fi.hut.soberit.agilefant.business.BusinessThemeBusiness;
 import fi.hut.soberit.agilefant.business.HistoryBusiness;
 import fi.hut.soberit.agilefant.business.HourEntryBusiness;
+import fi.hut.soberit.agilefant.business.ProjectBusiness;
 import fi.hut.soberit.agilefant.business.TaskBusiness;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.AFTime;
@@ -21,8 +25,12 @@ import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.BusinessTheme;
 import fi.hut.soberit.agilefant.model.Priority;
+import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.State;
 import fi.hut.soberit.agilefant.model.Task;
+import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.util.BacklogItemResponsibleContainer;
+import fi.hut.soberit.agilefant.util.BacklogItemUserComparator;
 import flexjson.JSONSerializer;
 
 public class BacklogItemAction extends ActionSupport implements CRUDAction {
@@ -194,6 +202,18 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
         if(this.bliStore() == false) {
             return CRUDAction.AJAX_ERROR;
         }
+        // TODO: Optimize this
+        List<BacklogItemResponsibleContainer> list = new ArrayList<BacklogItemResponsibleContainer>();
+        Collection<User> assignees = backlogBusiness.getUsers(this.backlogItem.getBacklog(), false);
+        for (User u : this.backlogItem.getResponsibles()) {
+            boolean inProject = true;
+            if (assignees.contains(u)) {
+                inProject = false;
+            }
+            list.add(new BacklogItemResponsibleContainer(u, inProject));
+        }
+        Collections.sort(list, new BacklogItemUserComparator());
+        this.backlogItem.setUserData(list);
         JSONSerializer ser = new JSONSerializer();
         jsonData = ser.serialize(this.backlogItem);
         return CRUDAction.AJAX_SUCCESS;
@@ -346,14 +366,6 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
         this.effortLeft = effortLeft;
     }
     
-    public Set<Integer> getUserIds() {
-        return userIds;
-    }
-
-    public void setUserIds(Set<Integer> userIds) {
-        this.userIds = userIds;
-    }
-
     public void setHistoryBusiness(HistoryBusiness historyBusiness) {
         this.historyBusiness = historyBusiness;
     }
@@ -444,5 +456,13 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
 
     public void setPriority(Priority priority) {
         this.priority = priority;
+    }
+
+    public Set<Integer> getUserIds() {
+        return userIds;
+    }
+
+    public void setUserIds(Set<Integer> userIds) {
+        this.userIds = userIds;
     }
 }

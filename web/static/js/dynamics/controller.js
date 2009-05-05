@@ -228,11 +228,6 @@ iterationGoalController.prototype = {
   showBacklogItems: function() {
     this.parentView.getElement().show();
   },
-  userchooserCallback: function(uc) {
-    var a = uc.data;
-    var sel = uc.getSelected();
-    var b = 5;
-  },
   addRow: function(bli) {
     var me = this;
     var row = this.view.createRow(bli);
@@ -259,7 +254,7 @@ iterationGoalController.prototype = {
     row.createCell({
       type: "userchooser",
     	get: function() { return agilefantUtils.userlistToHTML(bli.getUsers()); },
-      userchooserCallback: me.userchooserCallback,
+      userchooserCallback: function(uc) { bli.setUserIds(uc.getSelected()); },
       backlogId: bli.backlog.getId(),
       backlogItemId: bli.getId()
     });

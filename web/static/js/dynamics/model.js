@@ -376,17 +376,17 @@ backlogItemModel.prototype = {
         "backlogItem.state": this.state,
         "backlogItem.priority": this.priority,
         "backlogItem.description": this.description,
-        userIds: [],
+        "userIds": [],
         backlogId: this.backlog.getId(),
         backlogItemId: this.id,
         iterationGoalId: this.iterationGoal.id
     };
     if (userIds) {
-      data.userIds = userIds;
+      data["userIds"] = userIds;
     }
-    else {
+    else if (this.users){
       $.each(this.users, function(i,v) {
-        data.userIds.push(v.user.id);
+        data["userIds"].push(v.user.id);
       });
     }
     if(this.name == undefined) data.name = "";

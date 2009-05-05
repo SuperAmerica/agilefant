@@ -753,7 +753,8 @@
           captionText: "Backlog items",
           colCss: { ':eq(8)': { 'cursor': 'pointer' },
                     ':lt(9)': { 'background-color': '#eee' },
-                    ':eq(9)': { 'background-color': '#fff' }
+                    ':eq(9)': { 'background-color': '#fff' },
+                    ':eq(4)': { 'cursor': 'pointer' }
                   },
           headerCols: [
                        {

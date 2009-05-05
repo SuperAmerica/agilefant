@@ -282,6 +282,7 @@ iterationGoalController.prototype = {
                                    {
                                      text: "Edit",
                                      callback: function(row) {
+                                	   bli.beginTransaction();
                                        row.openEdit();
                                      }
                                    }, {
@@ -297,14 +298,88 @@ iterationGoalController.prototype = {
       set: function(val) { bli.setDescription(val);},
       buttons: {
         save: {text: "Save", action: function() {
-          bli.beginTransaction();
           row.saveEdit();
           bli.commit();
         }},
         cancel: {text: "Cancel", action: function() {
           row.cancelEdit();
         }}
-      }}) //.getElement().hide();
+      }}); //.getElement().hide();
+  },
+  createBli: function() {
+    var me = this;
+    var bli = new backlogItemModel();
+    bli.backlogId = this.model.getId();
+    bli.beginTransaction();
+    var row = this.view.createRow(bli);
+    var themes = row.createCell({
+    	type: "theme",
+    	backlogId: bli.backlog.getId(),
+    	set: function(themes) { bli.setThemeIds(themes); },
+    	get: function() { return bli.getThemes(); },
+    	decorator: agilefantUtils.themesToHTML
+    });
+    var name = row.createCell({
+      type: "text",
+      set: function(val) { bli.setName(val); },
+      get: function() { return bli.getName(); }
+    });
+    var state = row.createCell({
+      type: "select",
+      items: agilefantUtils.states,
+      set: function(val) { bli.setState(val); },
+      get: function() { return bli.getState(); },
+      decorator: agilefantUtils.stateToString
+    });
+    row.createCell({
+      type: "select",
+      items: agilefantUtils.priorities, 
+      get: function() { return bli.getPriority(); },
+      decorator: agilefantUtils.priorityToString,
+      set: function(val) { bli.setPriority(val); }
+    });
+    row.createCell({
+      type: "userchooser",
+    	get: function() { return bli.getUsers(); },
+    	decorator: agilefantUtils.userlistToHTML,
+      userchooserCallback: function(uc) { bli.setUserIds(uc.getSelected()); },
+      backlogId: bli.backlog.getId(),
+      backlogItemId: bli.getId()
+    });
+    var el = row.createCell();
+    var oe = row.createCell({
+      //type: "effort",
+      set: function(val) {},
+      get: function() { return agilefantUtils.aftimeToString(bli.getOriginalEstimate()); }});
+    var es = row.createCell();
+    var buttons = row.createCell();
+    buttons.setActionCell({items: [
+                                   {
+                                     text: "Cancel",
+                                     callback: function(row) {
+                                	   row.remove();
+                                     }
+                                   }
+                                   ]});
+    var desc = row.createCell({
+      type: "wysiwyg", 
+      get: function() { return bli.getDescription(); }, 
+      set: function(val) { bli.setDescription(val);},
+      buttons: {
+        save: {text: "Save", action: function() {
+    	  alert("IMPLEMENT!");
+          row.saveEdit();
+          row.remove();
+          bli = bli.copy();
+          me.view.addRow(bli);
+          //TODO: ADD BLI TO ITERATION GOAL
+          bli.commit();
+          me.view.sortTable();
+        }},
+        cancel: {text: "Cancel", action: function() {
+          row.remove();
+        }}
+      }}); 
   },
   render: function(data) {
     var me = this;

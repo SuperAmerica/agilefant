@@ -366,6 +366,8 @@ backlogItemModel.prototype = {
   },
   rollBack: function() {
     this.setData(this.persisted);
+    this.userIds = null;
+    this.themeIds = null;
     this.inTransaction = false;
   },
   remove: function() {
@@ -388,7 +390,7 @@ backlogItemModel.prototype = {
         iterationGoalId: this.iterationGoal.id
     };
     if (this.userIds) {
-      data["userIds"] = userIds;
+      data["userIds"] = this.userIds;
       this.userIds = null;
     }
     else if (this.users) {

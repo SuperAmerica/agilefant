@@ -381,14 +381,15 @@
 		  }
 		  this.content.show();
 		  this.removeButtons();
-		  this.editor.remove();
+		  if(this.editor)  this.editor.remove();
 		  this.editorOpen = false;
 		  this.editor = null;
 		},
 		openEdit: function(noAutoClose) {
 		  if (this.options.type == "userchooser") {
 		    return;
-		  } else if(this.options.type == "theme" && !noAutoClose) {
+		  } else if(this.options.type == "theme") {
+			  if(noAutoClose) return;
 			  var me = this;
 			  var tc = new agilefantThemeChooser({
 				  selectedThemes: function() { return agilefantUtils.objectToIdArray(me.options.get()); },

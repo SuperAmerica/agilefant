@@ -403,12 +403,6 @@ public class BacklogItemBusinessImpl implements BacklogItemBusiness {
         return null;
     }
     
-    /** {@inheritDoc} */
-    public List<BacklogItemResponsibleContainer> getResponsiblesByBacklogItem(BacklogItem bli) {
-        List<Object[]> data = backlogItemDAO.getResponsiblesByBacklog(bli.getBacklog());
-        return null;
-    }
-
     public Map<BacklogItem, TodoMetrics> getTasksByBacklog(Backlog backlog) {
         if(backlog != null) {
             return backlogItemDAO.getTasksByBacklog(backlog);

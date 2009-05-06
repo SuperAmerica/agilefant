@@ -74,7 +74,7 @@ $(document).ready(function() {
 				<c:out value="${backlogItem.creator.fullName}" />
 				<c:choose>
 				<c:when test="${backlogItem.createdDate != null}">
-				 on <c:out value="${aef:calendarAsString(backlogItem.createdDate)}"/>
+				 on <c:out value="${aef:timestampToString(backlogItem.createdDate)}"/>
 				</c:when>
 				</c:choose>
 				</div>

@@ -610,9 +610,9 @@
 	</function>
 	
     <function>
-	  <name>calendarAsString</name>
+	  <name>timestampToString</name>
 	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
-	  <function-signature>String calendarAsString(java.util.Calendar)</function-signature>
+	  <function-signature>String timestampToString(java.sql.Timestamp)</function-signature>
 	</function>
 	
 	<function>

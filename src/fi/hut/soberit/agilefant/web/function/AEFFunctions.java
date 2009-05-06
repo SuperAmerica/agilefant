@@ -1,5 +1,6 @@
 package fi.hut.soberit.agilefant.web.function;
 
+import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -162,8 +163,9 @@ public class AEFFunctions {
         return fmt.format(GregorianCalendar.getInstance().getTime());
     }
     
-    public static String calendarAsString(Calendar cal) {
-        return String.format("%1$tY-%1$tm-%1$td",cal);
+    public static String timestampToString(Timestamp ts) {
+        DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        return fmt.format(ts);
     }
     
     public static String stripHTML(String htmlString) {

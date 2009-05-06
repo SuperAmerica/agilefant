@@ -203,7 +203,7 @@ function handleTabEvent(target, context, id, tabId, bliContext) {
 						    }});
                         }
                         panel.data('wysiwyg','registered');
-                        ajaxOpenDialog(context, id, ui.options.selected);
+                        ajaxOpenDialog(context, id, ui.index);
                     }});
             
             var closeLinkLi = $('<li/>').addClass('closeTabsLink');

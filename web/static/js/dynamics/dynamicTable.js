@@ -604,13 +604,16 @@
 	  this.cell = cell;
 	  this.row = row
 	  this.inMenu = false;
-	  this.options = options;
+	  this.options = {
+	      title: '<div class="gear" />'
+	  };
+	  $.extend(this.options, options);
 	  var me = this;
 	  this.openEvent  = function() {
 	    me.open();
 	  };
 	  var el = this.cell.getElement();
-	  this.act = $("<span>Actions</span>").appendTo(el);
+	  this.act = $('<div/>').html(this.options.title).appendTo(el);
 	  this.act.click(this.openEvent);
 	  
 	};

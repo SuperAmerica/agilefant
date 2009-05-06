@@ -261,7 +261,9 @@ iterationGoalController.prototype = {
       type: "userchooser",
     	get: function() { return bli.getUsers(); },
     	decorator: agilefantUtils.userlistToHTML,
-      userchooserCallback: function(uc) { bli.setUserIds(uc.getSelected()); },
+      userchooserCallback: function(uc) {
+    	  bli.setUserIds(uc.getSelected());
+    	  },
       backlogId: bli.backlog.getId(),
       backlogItemId: bli.getId()
     });

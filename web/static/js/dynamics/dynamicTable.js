@@ -449,7 +449,9 @@
 	
 	var wysiwygEdit = function(cell, autoClose) {
 		this.cell = cell;
-		this.field = $('<textarea>' + this.cell.options.get() + '</textarea>').appendTo(this.cell.getElement()).width("80%");
+		var value = this.cell.options.get();
+		if (!value) value = "";
+		this.field = $('<textarea>' + value + '</textarea>').appendTo(this.cell.getElement()).width("80%");
 	    setUpWysiwyg(this.field);
 	    this.editor = this.cell.getElement().find(".wysiwyg");
 	    this.editorBody = this.editor.find("iframe").contents();

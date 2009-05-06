@@ -200,7 +200,15 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
         if(this.bliStore() == false) {
             return CRUDAction.AJAX_ERROR;
         }
-        // TODO: Optimize this
+        this.backlogItem.setUserData(getResponsiblesAsUserData());
+        JSONSerializer ser = new JSONSerializer();
+        ser.include("businessThemes");
+        jsonData = ser.serialize(this.backlogItem);
+        return CRUDAction.AJAX_SUCCESS;
+    }
+    
+    private List<BacklogItemResponsibleContainer> getResponsiblesAsUserData() {
+        //  TODO: Optimize this
         List<BacklogItemResponsibleContainer> list = new ArrayList<BacklogItemResponsibleContainer>();
         Collection<User> assignees = backlogBusiness.getUsers(this.backlogItem.getProject(), false);
         for (User u : this.backlogItem.getResponsibles()) {
@@ -211,11 +219,7 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
             list.add(new BacklogItemResponsibleContainer(u, inProject));
         }
         Collections.sort(list, new BacklogItemUserComparator());
-        this.backlogItem.setUserData(list);
-        JSONSerializer ser = new JSONSerializer();
-        ser.include("businessThemes");
-        jsonData = ser.serialize(this.backlogItem);
-        return CRUDAction.AJAX_SUCCESS;
+        return list;
     }
     
     private boolean bliStore() {

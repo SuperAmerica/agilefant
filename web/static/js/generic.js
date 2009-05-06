@@ -119,7 +119,7 @@ function handleTabEvent(target, context, id, tabId, bliContext) {
     
     if (target.length == 0) { return false; }
     if (target.attr("tab-data-loaded")) {
-        var tabs = target.find("ul.ajaxWindowTabs");
+        var tabs = target.find("div.ajaxWindowTabsDiv");
         var selected = tabs.data('selected.tabs');
         if (target.is(":visible")) {
             target.toggle();
@@ -191,7 +191,7 @@ function handleTabEvent(target, context, id, tabId, bliContext) {
         target.data("aef-context",context);
         target.data("aef-id",id);
         target.load(targetAction[context], targetParams[context], function(data, status) {
-            var ajaxTabs = target.find('ul.ajaxWindowTabs');
+            var ajaxTabs = target.find('div.ajaxWindowTabsDiv');
             ajaxTabs.tabs({ selected: tabId,
                     show: function(event, ui) {
                         var panel = $(ui.panel);

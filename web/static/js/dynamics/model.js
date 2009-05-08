@@ -130,6 +130,20 @@ iterationGoalModel.prototype = {
       }
     }
   },
+  addBacklogItem: function(bli) {
+	bli.backlog = this.iteration;
+	bli.iterationGoal = this;
+    this.backlogItems.push(bli);
+  },
+  removeBacklogItem: function(bli) {
+    var tmp = this.backlogItems;
+    this.backlogItems = [];
+    for(var i = 0; i < tmp.length; i++) {
+      if(tmp[i] != bli) {
+    	  this.backlogItems.push(tmp[i]);
+      }
+    }
+  },
   copy: function() {
     var copy = new iterationGoalModel({}, this.iteration);
     copy.setData(this, true);
@@ -253,7 +267,7 @@ var backlogItemModel = function(data, backlog, iterationGoal) {
   this.deleteListeners = [];
   this.backlog = backlog;
   this.iterationGoal = iterationGoal;
-  this.setData(data);
+  if(data) this.setData(data);
 };
 backlogItemModel.prototype = {
   setData: function(data) {
@@ -285,8 +299,14 @@ backlogItemModel.prototype = {
   getThemes: function() {
 	return this.themes;  
   },
+  setThemes: function(themes) {
+	this.themes = themes;  
+  },
   getUsers: function() {
 	  return this.users;
+  },
+  setUsers: function(users) {
+	this.users = users;  
   },
   setUserIds: function(userIds) {
 	this.userIds = userIds;
@@ -365,12 +385,31 @@ backlogItemModel.prototype = {
     this.save();
   },
   rollBack: function() {
-    this.setData(this.persisted);
+    this.setData(this.persistedData);
     this.userIds = null;
     this.themeIds = null;
     this.inTransaction = false;
   },
   remove: function() {
+	  var me = this;
+	  jQuery.ajax({
+      async: true,
+      error: function() {
+	      me.rollBack();
+	      commonView.showError("An error occured while deleting the backlog item.");
+      },
+      success: function(data,type) {
+    	me.iterationGoal.removeBacklogItem(me);
+        for(var i = 0 ; i < me.deleteListeners.length; i++) {
+          me.deleteListeners[i]();
+        }
+        commonView.showOk("Backlog item deleted.");
+      },
+      cache: false,
+      type: "POST",
+      url: "ajaxDeleteBacklogItem.action",
+      data: {backlogItemId: this.id}
+    });
     
   },
   save: function() {

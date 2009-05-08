@@ -17,7 +17,14 @@
         this.data = null;
         
         if(this.options.onSelect) {
-        	this.selectCallback = this.options.onSelect;
+        	this.selectCallback = function(selection) {
+        		var themes = [];
+        		if(!selection) selection = [];
+        		for(var i = 0; i < selection.length; i++) {
+        			themes.push(me.data[selection[i]]);
+        		}
+        		this.options.onSelect(themes);
+        	};
         } else {
         	this.selectCallback = this.selectAction;
         }

@@ -57,7 +57,7 @@ var agilefantUtils = {
 	},
 	objectToIdArray: function(objectList) {
 		var idArr = [];
-		if(objectList.length) {
+		if(objectList && objectList.length) {
 			for(var i = 0 ; i < objectList.length; i++) {
 				var obj = objectList[i];
 				if(obj.id) {
@@ -66,6 +66,16 @@ var agilefantUtils = {
 			}
 		}
 		return idArr;
+	},
+	createPseudoUserContainer: function(users) {
+		var ret = [];
+		for(var i = 0; i < users.length; i++) {
+			ret.push({
+				inProject: true,
+				user: users[i]
+			});
+		}
+		return ret;
 	},
 	states: {
 	  "NOT_STARTED": "Not Started",

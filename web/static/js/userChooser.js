@@ -407,10 +407,16 @@
                 }
             });
         },
-        getSelected: function() {
+        getSelected: function(includeUserData) {
             var list = [];
+            var me = this;
             $(this.form).find(':checked').each(function() {
-                list.push(parseInt($(this).val()));
+            	var userId = parseInt($(this).val());
+            	if(includeUserData) {
+                	list.push(me.data.users[userId]);
+                } else {
+                	list.push(userId);
+                }
             });
             return list;
         },

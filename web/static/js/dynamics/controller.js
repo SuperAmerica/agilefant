@@ -107,12 +107,24 @@ iterationController.prototype = {
                                          text: "Show BLIs",
                                          callback: function() {
                                            blictrl.showBacklogItems();
+                                           desc.getElement().hide();
                                          }
                                        }, {
                                          text: "Hide BLIs",
                                          callback: function() {
                                            blictrl.hideBacklogItems();
                                          }
+                                       }, {
+                                    	   text: "Toggle description",
+                                    	   callback: function() {
+                                    	   	desc.getElement().toggle();
+                                           }
+                                       },
+                                       {
+                                    	 text: "Add Backlog item",
+                                    	 callback: function() {
+                                    	   	blictrl.createBli();
+                                       	 }
                                        }
                                        ]});
     },
@@ -172,7 +184,7 @@ iterationController.prototype = {
         this.model.addGoal(goal);
         goal.commit();
         this.model.reloadGoalData();
-        this.view.sortTable();
+        //this.view.sortTable();
     },
     createGoal: function() {
     	var me = this;
@@ -228,13 +240,33 @@ iterationGoalController.prototype = {
   showBacklogItems: function() {
     this.parentView.getElement().show();
   },
+  deleteBli: function(goal) {
+      var parent = $("<div />").appendTo(document.body).text("Are you sure you wish to delete this backlog item?");
+      var me = this;
+      parent.dialog({
+        resizable: false,
+        height:140,
+        modal: true,
+        buttons: {
+          'Yes': function() {
+            $(this).dialog('close');
+            parent.remove();
+            goal.remove();
+          },
+          Cancel: function() {
+            $(this).dialog('close');
+            parent.remove();
+          }
+        }
+      });
+    },
   addRow: function(bli) {
     var me = this;
     var row = this.view.createRow(bli);
     var themes = row.createCell({
     	type: "theme",
     	backlogId: bli.backlog.getId(),
-    	set: function(themes) { bli.setThemeIds(themes); },
+    	set: function(themes) { bli.setThemes(themes); bli.setThemeIds(agilefantUtils.objectToIdArray(themes)); },
     	get: function() { return bli.getThemes(); },
     	decorator: agilefantUtils.themesToHTML
     });
@@ -262,7 +294,9 @@ iterationGoalController.prototype = {
     	get: function() { return bli.getUsers(); },
     	decorator: agilefantUtils.userlistToHTML,
       userchooserCallback: function(uc) {
-    	  bli.setUserIds(uc.getSelected());
+    	  bli.setUsers(agilefantUtils.createPseudoUserContainer(uc.getSelected(true))); 
+    	  row.render();
+    	  bli.setUserIds(uc.getSelected());	  
     	  },
       backlogId: bli.backlog.getId(),
       backlogItemId: bli.getId()
@@ -290,7 +324,7 @@ iterationGoalController.prototype = {
                                    }, {
                                      text: "Delete",
                                      callback: function() {
-                                       
+                                       me.deleteBli(bli);
                                      }
                                    }
                                    ]});
@@ -304,6 +338,7 @@ iterationGoalController.prototype = {
           bli.commit();
         }},
         cancel: {text: "Cancel", action: function() {
+          bli.rollBack();
           row.cancelEdit();
         }}
       }}); //.getElement().hide();
@@ -311,13 +346,14 @@ iterationGoalController.prototype = {
   createBli: function() {
     var me = this;
     var bli = new backlogItemModel();
-    bli.backlogId = this.model.getId();
+    bli.backlog = this.data.iteration;
+    bli.id = 0;
     bli.beginTransaction();
-    var row = this.view.createRow(bli);
+    var row = this.view.createRow(bli,{toTop: true}, true);
     var themes = row.createCell({
     	type: "theme",
     	backlogId: bli.backlog.getId(),
-    	set: function(themes) { bli.setThemeIds(themes); },
+    	set: function(themes) { bli.setThemeIds(agilefantUtils.objectToIdArray(themes)); bli.setThemes(themes);},
     	get: function() { return bli.getThemes(); },
     	decorator: agilefantUtils.themesToHTML
     });
@@ -344,7 +380,11 @@ iterationGoalController.prototype = {
       type: "userchooser",
     	get: function() { return bli.getUsers(); },
     	decorator: agilefantUtils.userlistToHTML,
-      userchooserCallback: function(uc) { bli.setUserIds(uc.getSelected()); },
+      userchooserCallback: function(uc) { 
+      	  bli.setUsers(agilefantUtils.createPseudoUserContainer(uc.getSelected(true))); 
+    	  row.render();
+    	  bli.setUserIds(uc.getSelected());	  
+    	},
       backlogId: bli.backlog.getId(),
       backlogItemId: bli.getId()
     });
@@ -369,19 +409,19 @@ iterationGoalController.prototype = {
       set: function(val) { bli.setDescription(val);},
       buttons: {
         save: {text: "Save", action: function() {
-    	  alert("IMPLEMENT!");
           row.saveEdit();
           row.remove();
-          bli = bli.copy();
-          me.view.addRow(bli);
-          //TODO: ADD BLI TO ITERATION GOAL
+          me.data.addBacklogItem(bli);
+          me.addRow(bli);
           bli.commit();
-          me.view.sortTable();
+          //me.view.sortTable();
         }},
         cancel: {text: "Cancel", action: function() {
           row.remove();
         }}
-      }}); 
+      }});
+    row.updateColCss();
+    row.openEdit();
   },
   render: function(data) {
     var me = this;

@@ -35,6 +35,10 @@
 		this.rows = [];
 		this.container = $("<div />").appendTo(this.element).addClass(cssClasses.table);
 		this.table = $("<div />").appendTo(this.container).hide();
+		var me = this;
+		this.table.bind("tableDataUpdated", function() {
+		 me.sortTable();
+		});
 		this.headerRow = null;
 		this.caption = $('<div />').addClass(cssClasses.tableCaption).text(this.options.captionText).prependTo(this.container);
 		this.sorting = {
@@ -231,7 +235,10 @@
 		this.model = model;
 		var me = this;
 		if(this.model) {
-		  this.model.addEditListener(function() { me.render(); });
+		  this.model.addEditListener(function() { 
+			  me.render(); 
+			  me.getElement().trigger("tableDataUpdated", {row: me});
+		  });
 		  this.model.addDeleteListener(function() { me.remove(); });
 		}
 		this.cells = [];
@@ -393,7 +400,10 @@
 			  var me = this;
 			  var tc = new agilefantThemeChooser({
 				  selectedThemes: function() { return agilefantUtils.objectToIdArray(me.options.get()); },
-				  onSelect: function(themes) { me.options.set(themes); },
+				  onSelect: function(themes) {
+				     me.options.set(themes); 
+				     me.render();
+				  },
 				  backlogId: this.options.backlogId
 			  });
 			  tc.init();

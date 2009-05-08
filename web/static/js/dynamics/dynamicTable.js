@@ -504,6 +504,11 @@
 			  $(document.body).unbind("click",this.mouseEvent);
 		  },
 		  isValid: function() {
+			  if(this.cell.options.required && this.field.val().length == 0) {
+				  this.field.addClass("invalidValue");
+				  return false;
+			  }
+			  this.field.removeClass("invalidValue");
 			  return true;
 		  }
 	};
@@ -568,7 +573,15 @@
 	      }
 	    },
 	    isValid: function() {
-	      return agilefantUtils.isAftimeString(this.field.val());
+	      if(agilefantUtils.isAftimeString(this.field.val())) {
+	    	  this.field.removeClass("invalidValue");
+	    	  if(this.errorMsg) this.errorMsg.remove();
+	    	  return true;
+	      } else {
+	    	  if(!this.errorMsg) this.errorMsg = commonView.effortError().appendTo(this.cell.getElement());
+	    	  this.field.addClass("invalidValue");
+	    	  return false;
+	      }
 	    },
 	    remove: function() {
 	      this.field.remove();

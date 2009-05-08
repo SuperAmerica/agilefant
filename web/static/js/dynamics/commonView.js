@@ -8,5 +8,17 @@ var commonView = {
   showOk: function(message) {
     var messageScreen = $('<div />').html(message).addClass("okMessage").appendTo(document.body);
     messageScreen.fadeOut(2000, function() { messageScreen.remove()});
+  },
+  effortError: function() {
+	 var err = $("<div />").addClass("cellErrorMessage");
+	 $("<span />").css("color", "red").text("Invalid value!").appendTo(err);
+	 $("<br />").appendTo(err);
+	 $("<span />").text("1.5 / 1.5h / 1h 30min / 30min").appendTo(err);
+	 return err;
+  },
+  requiredFieldError: function() {
+	  var err = $("<div />").addClass("cellErrorMessage");
+	 $("<span />").css("color", "red").text("Required field").appendTo(err);
   }
+  
 };

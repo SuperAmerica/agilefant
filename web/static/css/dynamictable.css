@@ -124,3 +124,12 @@ div.errorMessage {
 	top:82px;
 	z-index:3699;
 }
+
+.invalidValue {
+  background-color: #FF6666;
+}
+.cellErrorMessage {
+  width: 150px;
+  background-color: #FFFF66;
+  border: 1px solid #FFFFFF;
+}

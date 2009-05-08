@@ -10,6 +10,7 @@ import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.IterationGoal;
+import fi.hut.soberit.agilefant.util.IterationGoalMetrics;
 
 public class IterationGoalBusinessImpl implements IterationGoalBusiness {
 
@@ -142,6 +143,15 @@ public class IterationGoalBusinessImpl implements IterationGoalBusiness {
         }
         goal.setPriority(insertAtPriority);
         iterationGoalDAO.store(goal);
+    }
+    
+    public IterationGoalMetrics getIterationGoalMetrics(int iterationGoalId, int iterationId) throws ObjectNotFoundException {
+        IterationGoal goal = this.iterationGoalDAO.get(iterationGoalId);
+        Iteration iter = this.iterationDAO.get(iterationId);
+        if(iter == null) {
+            throw new ObjectNotFoundException();
+        }
+        return this.iterationGoalDAO.loadIterationGoalMetrics(goal, iter);
     }
 
     

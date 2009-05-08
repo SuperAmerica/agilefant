@@ -118,7 +118,7 @@ iterationGoalModel.prototype = {
     }
     if(this.editListeners) {
       for(var i = 0; i < this.editListeners.length; i++) {
-        this.editListeners[i]();
+        this.editListeners[i]({bubbleEvent: []});
       }
     }
   },
@@ -230,6 +230,24 @@ iterationGoalModel.prototype = {
       data: {iterationGoalId: this.id}
     });
 	},
+	reloadMetrics: function() {
+		var me = this;
+		jQuery.ajax({
+			url: "calculateIterationGoalMetrics.action",
+			data: {
+				iterationGoalId: this.id,
+				iterationId: this.iteration.iterationId
+		    },
+		    cache: false,
+		    type: "POST",
+		    dataType: "json",
+		    success: function(data,type) {
+		    	var nData = me.persistedData;
+		    	nData.metrics = data;
+		    	me.setData(nData,true);
+		    }
+		});
+	},
 	save: function() {
 	  if(this.inTransaction) {
 	    return;
@@ -273,7 +291,6 @@ var backlogItemModel = function(data, backlog, iterationGoal) {
 };
 backlogItemModel.prototype = {
   setData: function(data) {
-    this.persistedData = data;
     this.id = data.id;
     this.name = data.name;
     this.description = data.description;
@@ -283,6 +300,14 @@ backlogItemModel.prototype = {
     this.effortLeft = data.effortLeft;
     this.effortSpent = data.effortSpent;
     this.originalEstimate = data.originalEstimate;
+    var bubbleEvents = [];
+    if(this.persistedData) {
+    	if(this.persistedData.effortLeft != this.effortLeft || this.persistedData.originalEstimate != this.originalEstimate || this.persistedData.state != data.state) {
+    		bubbleEvents.push("metricsUpdated");
+    	}
+    } else if(!this.persistedData && data) {
+    	bubbleEvents.push("metricsUpdated");
+    }
     if(data.userData) {
     	this.users = data.userData;
     }
@@ -294,8 +319,9 @@ backlogItemModel.prototype = {
     		}
     	}
     }
+    this.persistedData = data;
     for (var i = 0; i < this.editListeners.length; i++) {
-      this.editListeners[i]();
+      this.editListeners[i]({bubbleEvent: bubbleEvents});
     }
   },
   getThemes: function() {

@@ -32,6 +32,12 @@ public class IterationGoalMetrics {
     public void setOriginalEstimate(AFTime originalEstimate) {
         this.originalEstimate = originalEstimate;
     }
+    public void setDoneTasks(int doneTasks) {
+        this.doneTasks = doneTasks;
+    }
+    public void setTotalTasks(int totalTasks) {
+        this.totalTasks = totalTasks;
+    }
     public int getDoneTasks() {
         return doneTasks;
     }

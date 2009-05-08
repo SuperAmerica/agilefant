@@ -8,6 +8,7 @@ import fi.hut.soberit.agilefant.business.IterationGoalBusiness;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.IterationGoal;
+import fi.hut.soberit.agilefant.util.IterationGoalMetrics;
 import flexjson.JSONSerializer;
 
 public class IterationGoalAction extends ActionSupport {
@@ -66,6 +67,17 @@ public class IterationGoalAction extends ActionSupport {
     public String ajaxGetIterationGoals() {
         jsonData = backlogBusiness.getIterationGoalsAsJSON(iterationId);        
         return Action.SUCCESS;
+    }
+    
+    public String getMetrics() {
+        IterationGoalMetrics metrics;
+        try {
+            metrics = this.iterationGoalBusiness.getIterationGoalMetrics(iterationGoalId, iterationId);
+            jsonData = new JSONSerializer().serialize(metrics);
+        } catch (Exception e) {
+            return CRUDAction.AJAX_ERROR;
+        }
+        return CRUDAction.AJAX_SUCCESS;
     }
 
 

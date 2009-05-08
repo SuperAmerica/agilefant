@@ -55,55 +55,11 @@
 						<td class="info3"><aef:quickReference item="${iteration}" /></td>
 						
 						<td class="info4" rowspan="5">
-                        <div class="smallBurndown"><a href="#bigChart"><img
+                        <div class="smallBurndown"><a href="#bigChart"><img id="smallChart" 
                             src="drawSmallChart.action?iterationId=${iteration.id}" /></a></div>
-
-                        <table>
-                            <tr>
-                                <th>Velocity</th>
-                                <td><c:out value="${iterationMetrics.dailyVelocity}" /> /
-                                day</td>
-                            </tr>
-                            <c:if test="${iterationMetrics.backlogOngoing}">
-                                <tr>
-                                    <th>Schedule variance</th>
-                                    <td><c:choose>
-                                        <c:when test="${iterationMetrics.scheduleVariance != null}">
-                                            <c:choose>
-                                                <c:when test="${iterationMetrics.scheduleVariance > 0}">
-                                                    <span class="red">+ 
-                                                </c:when>
-                                                <c:otherwise>
-                                                    <span>
-                                                </c:otherwise>
-                                            </c:choose>
-                                            <c:out value="${iterationMetrics.scheduleVariance}" /> days
-                                            </c:when>
-                                        <c:otherwise>
-                                                unknown
-                                            </c:otherwise>
-                                    </c:choose></td>
-                                </tr>
-                                <tr>
-                                    <th>Scoping needed</th>
-                                    <td><c:choose>
-                                        <c:when test="${iterationMetrics.scopingNeeded != null}">
-                                            <c:out value="${iterationMetrics.scopingNeeded}" />
-                                        </c:when>
-                                        <c:otherwise>
-                                                unknown
-                                            </c:otherwise>
-                                    </c:choose></td>
-                                </tr>
-                            </c:if>
-                            <tr>
-                                <th>Done</th>
-                                <td><c:out value="${iterationMetrics.percentDone}" />% (<c:out
-                                    value="${iterationMetrics.completedItems}" /> / <c:out
-                                    value="${iterationMetrics.totalItems}" />)</td>
-                            </tr>
-                        </table>
-
+                        <div id="iterationMetrics">
+                          <%@ include file="./inc/iterationMetrics.jsp"%>
+                        </div>
                         </td>					
 					</tr>
 					<tr>	
@@ -365,6 +321,13 @@ $(document).ready( function() {
 <script type="text/javascript">
 $(document).ready(function() {
   new iterationController(${iterationId}, $("#iterationGoals"));
+  $(document.body).bind("metricsUpdated", function() {
+	  var bigChart = $("#bigChart");
+	  bigChart.attr("src",bigChart.attr("src")+"#");
+    var smallChart = $("#smallChart");
+    smallChart.attr("src",smallChart.attr("src")+"#");
+    $("#iterationMetrics").load("iterationMetrics.action",{iterationId: ${iterationId}});
+	});
 });
 </script>
 

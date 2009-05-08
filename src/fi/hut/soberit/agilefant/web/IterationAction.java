@@ -133,6 +133,7 @@ public class IterationAction extends BacklogContentsAction implements CRUDAction
         super.initializeContents();
         
         /* Get the effort left sums of iteration goals */
+       /*
         for (IterationGoal ig : iteration.getIterationGoals()) {
             Collection<BacklogItem> blis = ig.getBacklogItems();
             EffortSumData igEffSum = backlogBusiness.getEffortLeftSum(blis);
@@ -142,13 +143,19 @@ public class IterationAction extends BacklogContentsAction implements CRUDAction
             iterationGoalEffLeftSums.put(new Integer(ig.getId()), igEffSum);
             iterationGoalOrigEstSums.put(new Integer(ig.getId()), igOrigEstSum);           
         }
-        
+        */
         /* Get the original estimate sums of iteration goals */
         
         // Load metrics data
         iterationMetrics = backlogBusiness.getBacklogMetrics(iteration);
         businessThemeBusiness.loadBacklogThemeMetrics(iteration);
         
+        return Action.SUCCESS;
+    }
+    
+    public String iterationMetrics() {
+        iteration = iterationDAO.get(iterationId);
+        iterationMetrics = backlogBusiness.getBacklogMetrics(iteration);
         return Action.SUCCESS;
     }
 

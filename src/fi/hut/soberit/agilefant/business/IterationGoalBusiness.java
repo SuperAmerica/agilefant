@@ -2,6 +2,7 @@ package fi.hut.soberit.agilefant.business;
 
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.IterationGoal;
+import fi.hut.soberit.agilefant.util.IterationGoalMetrics;
 
 public interface IterationGoalBusiness {
 
@@ -21,5 +22,7 @@ public interface IterationGoalBusiness {
 
     public void attachGoalToIteration(IterationGoal goal, int iterationId)
             throws ObjectNotFoundException;
+
+    public IterationGoalMetrics getIterationGoalMetrics(int iterationGoalId, int iterationId) throws ObjectNotFoundException;
 
 }

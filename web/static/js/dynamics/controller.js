@@ -127,6 +127,9 @@ iterationController.prototype = {
                                        	 }
                                        }
                                        ]});
+        row.getElement().bind("metricsUpdated", function() {
+        	goal.reloadMetrics();
+        });
     },
     render: function(data) {
       var me = this;

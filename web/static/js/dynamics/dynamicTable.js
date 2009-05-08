@@ -235,7 +235,12 @@
 		this.model = model;
 		var me = this;
 		if(this.model) {
-		  this.model.addEditListener(function() { 
+		  this.model.addEditListener(function(eventData) { 
+			  if(eventData.bubbleEvent) {
+				  $.each(eventData.bubbleEvent, function(k,v) {
+					 me.getElement().trigger(v,{}); 
+				  });
+			  }
 			  me.render(); 
 			  me.getElement().trigger("tableDataUpdated", {row: me});
 		  });

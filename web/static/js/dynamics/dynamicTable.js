@@ -393,6 +393,11 @@
 		  this.editor = null;
 		},
 		openEdit: function(noAutoClose) {
+		  if(typeof(this.options.canEdit) == "function") {
+			  if(!this.options.canEdit()) {
+				  return;
+			  }
+		  }
 		  if (this.options.type == "userchooser") {
 		    return;
 		  } else if(this.options.type == "theme") {
@@ -538,11 +543,11 @@
 	$.extend(textEdit.prototype, commonEdit);
 	
 	/** EFFORT EDIT **/
-	 var effortEdit = function(cell, items, autoClose) {
+	 var effortEdit = function(cell, autoClose) {
 	    this.cell = cell;
 	    this.field = $('<input type="text"/>').attr("size","15").appendTo(this.cell.getElement()).focus();
 	    var val = this.cell.options.get();
-	    if(val == "&mdash;") val = "";
+	    if(val) val = agilefantUtils.aftimeToString(val, true);
 	    this.field.val(val);
       var me = this;
       if(autoClose == true) {
@@ -563,7 +568,7 @@
 	      }
 	    },
 	    isValid: function() {
-	      return validateEstimateFormat(this.field.val());
+	      return agilefantUtils.isAftimeString(this.field.val());
 	    },
 	    remove: function() {
 	      this.field.remove();

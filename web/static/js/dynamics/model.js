@@ -263,6 +263,8 @@ iterationGoalModel.prototype = {
 };
 
 var backlogItemModel = function(data, backlog, iterationGoal) {
+  this.effortLeft = "";
+  this.originalEstimate = "";
   this.editListeners = [];
   this.deleteListeners = [];
   this.backlog = backlog;
@@ -354,8 +356,11 @@ backlogItemModel.prototype = {
     return this.effortLeft;
   },
   setEffortLeft: function(effortLeft) {
-    this.effortLeft = effortLeft;
-    this.save();
+	var millis = agilefantUtils.aftimeToMillis(effortLeft);
+	if(millis !== null) {
+		this.effortLeft = millis;
+    	this.save();
+	}
   },
   getEffortSpent: function() {
     return this.effortSpent;
@@ -368,8 +373,11 @@ backlogItemModel.prototype = {
     return this.originalEstimate;
   },
   setOriginalEstimate: function(originalEstimate) {
-    this.originalEstimate = originalEstimate;
-    this.save();
+	var millis = agilefantUtils.aftimeToMillis(originalEstimate);
+	if(millis !== null) {  
+      this.originalEstimate = millis;
+      this.save();
+	}
   },
   addEditListener: function(listener) {
     this.editListeners.push(listener);
@@ -412,6 +420,28 @@ backlogItemModel.prototype = {
     });
     
   },
+  resetOriginalEstimate: function() {
+	    if(this.inTransaction) {
+	        return;
+	      }
+	      var me = this;
+	      var data = {backlogItemId: this.id};
+	      jQuery.ajax({
+	        async: false,
+	        error: function() {
+	          commonView.showError("An error occured while saving the backlog item.");
+	        },
+	        success: function(data,type) {
+	          me.setData(data,false);
+	          commonView.showOk("Original estimate reseted succesfully.");
+	        },
+	        cache: false,
+	        dataType: "json",
+	        type: "POST",
+	        url: "resetOriginalEstimate.action",
+	        data: data
+	      });
+  },
   save: function() {
     if(this.inTransaction) {
       return;
@@ -422,6 +452,8 @@ backlogItemModel.prototype = {
         "backlogItem.state": this.state,
         "backlogItem.priority": this.priority,
         "backlogItem.description": this.description,
+        "backlogItem.effortLeft": this.effortLeft,
+        "backlogItem.originalEstimate": this.originalEstimate,
         "userIds": [],
         "themeIds": [],
         backlogId: this.backlog.getId(),
@@ -441,6 +473,9 @@ backlogItemModel.prototype = {
     } else if(this.themes) {
       data["themeIds"] = agilefantUtils.objectToIdArray(this.themes);
     }
+    if(data["backlogItem.effortLeft"]) data["backlogItem.effortLeft"] /= 3600;
+    if(data["backlogItem.effortLeft"] == null) data["backlogItem.effortLeft"] = "";
+    if(data["backlogItem.originalEstimate"]) data["backlogItem.originalEstimate"] /= 3600;
     if(this.name == undefined) data.name = "";
     if(this.description == undefined) data.description = "";
     jQuery.ajax({
@@ -449,7 +484,7 @@ backlogItemModel.prototype = {
         commonView.showError("An error occured while saving the backlog item.");
       },
       success: function(data,type) {
-        me.setData(data,false);
+        me.setData(data);
         commonView.showOk("Backlog item saved succesfully.");
       },
       cache: false,

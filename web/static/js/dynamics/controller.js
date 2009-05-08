@@ -302,19 +302,31 @@ iterationGoalController.prototype = {
       backlogItemId: bli.getId()
     });
     var el = row.createCell({
-      //type: "effort",
-      set: function(val) {},
-      get: function() { return agilefantUtils.aftimeToString(bli.getEffortLeft()); }});
+      type: "effort",
+      set: function(val) { bli.setEffortLeft(val); },
+      get: function() { return bli.getEffortLeft(); },
+      canEdit: function() { return (bli.getOriginalEstimate() != null);},
+      decorator: agilefantUtils.aftimeToString
+    });
     var oe = row.createCell({
-      //type: "effort",
-      set: function(val) {},
-      get: function() { return agilefantUtils.aftimeToString(bli.getOriginalEstimate()); }});
+      type: "effort",
+      get: function() { return bli.getOriginalEstimate(); },
+      canEdit: function() { return (!bli.getOriginalEstimate());},
+      set: function(val) { bli.setOriginalEstimate(val); },
+      decorator: agilefantUtils.aftimeToString
+    });
     var es = row.createCell({
-      //type: "effort",
-      set: function(val) {},
-      get: function() { return agilefantUtils.aftimeToString(bli.getEffortSpent()); }});
+      get: function() { return bli.getEffortSpent(); },
+      decorator: agilefantUtils.aftimeToString
+    });
     var buttons = row.createCell();
-    buttons.setActionCell({items: [
+    buttons.setActionCell({items: [ 
+                                   {
+                                	 text: "Reset original estimate",
+                                	 callback: function() {
+                                	   bli.resetOriginalEstimate();
+                                   	 }
+                                   },
                                    {
                                      text: "Edit",
                                      callback: function(row) {
@@ -390,9 +402,11 @@ iterationGoalController.prototype = {
     });
     var el = row.createCell();
     var oe = row.createCell({
-      //type: "effort",
-      set: function(val) {},
-      get: function() { return agilefantUtils.aftimeToString(bli.getOriginalEstimate()); }});
+      type: "effort",
+      set: function(val) { bli.setOriginalEstimate(val); },
+      get: function() { return bli.getOriginalEstimate(); },
+      decorator: agilefantUtils.aftimeToString  
+    });
     var es = row.createCell();
     var buttons = row.createCell();
     buttons.setActionCell({items: [

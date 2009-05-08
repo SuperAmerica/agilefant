@@ -1,6 +1,6 @@
 var agilefantUtils = {
-	aftimeToString: function(aftime) {
-		if(!aftime || aftime < 1) {
+	aftimeToString: function(aftime, hideDash) {
+		if(!hideDash && (!aftime || aftime < 1)) {
 			return "&mdash;";
 		}
 		var hours = Math.round(aftime/360)/10;
@@ -9,11 +9,39 @@ var agilefantUtils = {
 		}
 		return hours + "h";
 	},
-	stringToAftime: function(string) {
-		
+	aftimeToMillis: function(string) {
+		string = jQuery.trim(string);
+		string = string.toLowerCase();
+		string = string.replace(/,/,".");
+		var retVal = 0;
+		if(!agilefantUtils.isAftimeString(string)) {
+			return null;
+		}
+		var factors = {h: 3600, d: 3600*30, m: 60, min: 60};
+		var timeParts = string.split(" ");
+		for(var i = 0 ; i < timeParts.length; i++) {
+			var currentPart = timeParts[i];
+			var valueType = currentPart.split(/(\d+[.]?\d*)([h|min|m]?)/);
+			var value = valueType[1];
+			var type = valueType[2];
+			if(type == "") {
+				retVal += value*3600;
+			} else {
+				if(factors[type]) {
+					retVal += factors[type]*value;
+				}
+			}
+		}
+		return retVal;
 	},
 	isAftimeString: function(string) {
-		
+		if(!string) string = "";
+		string = string.toLowerCase();
+		var hourOnly = new RegExp("^[ ]*[0-9]+h?[ ]*$"); //10h
+		var minuteOnly = new RegExp("^[ ]*[0-9]+min[ ]*$"); //10min
+		var hourAndMinute = new RegExp("^[ ]*[0-9]+h[ ]+[0-9]+min[ ]*$"); //1h 10min
+		var shortFormat = new RegExp("^[0-9]+[.,][0-9]+h?$"); //1.5 or 1,5
+		return (hourOnly.test(string) || minuteOnly.test(string) || hourAndMinute.test(string) || shortFormat.test(string));
 	},
 	userlistToHTML: function(users) {
 		var html = $("<span />");

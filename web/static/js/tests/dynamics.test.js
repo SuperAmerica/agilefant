@@ -25,13 +25,33 @@ $(document).ready(function() {
 		same(agilefantUtils.aftimeToString(halfhour),"0.5h","30mins");
 		same(agilefantUtils.aftimeToString(hour),"1.0h","one hour");
 	});
-	test("is aftime", function() {
-		
-	});
-	test("aftime to string", function() {
-		
-	});
 	
+	test("is aftime", function() {
+		ok(agilefantUtils.isAftimeString("1h"), "1h");
+		ok(agilefantUtils.isAftimeString("1,5h"), "1,5h");
+		ok(agilefantUtils.isAftimeString("1.5h"), "1.5h");
+		ok(agilefantUtils.isAftimeString("1,5"), "1,5");
+		ok(agilefantUtils.isAftimeString("1.5"), "1.5");
+		ok(agilefantUtils.isAftimeString("1"), "1");
+		ok(agilefantUtils.isAftimeString("1h 10min"), "1h 10min");
+		ok(agilefantUtils.isAftimeString("10min"), "10min");
+		ok(!agilefantUtils.isAftimeString("1,5h 10min"), "1,5h 10min");
+		ok(!agilefantUtils.isAftimeString("10min 1h"), "10min 1h");
+		ok(!agilefantUtils.isAftimeString("daadaa 1h"), "daadaa 1h");
+		ok(!agilefantUtils.isAftimeString("1h daadaa"), "1h daadaa");
+		ok(!agilefantUtils.isAftimeString("1h d 10min"), "1h d 10min");
+	});
+	test("aftime to millis", function() {
+		equals(agilefantUtils.aftimeToMillis("1h"), 3600,"1h");
+		equals(agilefantUtils.aftimeToMillis("1,5h"), 5400 ,"1,5h");
+		equals(agilefantUtils.aftimeToMillis("1.5h"), 5400 ,"1.5h");
+		equals(agilefantUtils.aftimeToMillis("1,5"),  5400, "1,5");
+		equals(agilefantUtils.aftimeToMillis("1.5"),  5400,"1.5");
+		equals(agilefantUtils.aftimeToMillis("1"), 3600 ,"1");
+		equals(agilefantUtils.aftimeToMillis("1h 10min"), 4200 ,"1h 10min");
+		equals(agilefantUtils.aftimeToMillis("10min"), 600 ,"10min");
+	});
+
 	module("Dynamic Table", {
 		setup: function() {
 			$("<div />").appendTo(document.body).attr("id","testTable").hide();

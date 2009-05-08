@@ -196,14 +196,19 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
         }
         return SUCCESS;
     }
-    public String ajaxStoreBacklogItem() {
-        if(this.bliStore() == false) {
-            return CRUDAction.AJAX_ERROR;
-        }
+    
+    private void loadBacklogItemJSON() {
         this.backlogItem.setUserData(getResponsiblesAsUserData());
         JSONSerializer ser = new JSONSerializer();
         ser.include("businessThemes");
         jsonData = ser.serialize(this.backlogItem);
+    }
+    
+    public String ajaxStoreBacklogItem() {
+        if(this.bliStore() == false) {
+            return CRUDAction.AJAX_ERROR;
+        }
+        this.loadBacklogItemJSON();
         return CRUDAction.AJAX_SUCCESS;
     }
     
@@ -305,6 +310,17 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
         return Action.SUCCESS;
     }    
 
+    public String resetOriginalEstimate() {
+        try {
+            backlogItemBusiness.resetBliOrigEstAndEffortLeft(backlogItemId);
+            backlogItem = backlogItemBusiness.getBacklogItem(backlogItemId);
+        } catch (ObjectNotFoundException e) {
+            addActionError(e.getMessage());
+            return AJAX_ERROR;
+        }
+        this.loadBacklogItemJSON();
+        return AJAX_SUCCESS;
+    }
     public Backlog getBacklog() {
         return backlog;
     }

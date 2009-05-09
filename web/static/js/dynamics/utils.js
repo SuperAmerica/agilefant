@@ -36,6 +36,9 @@ var agilefantUtils = {
 	},
 	isAftimeString: function(string) {
 		if(!string) string = "";
+		if(string == "") {
+			return true;
+		}
 		string = string.toLowerCase();
 		var hourOnly = new RegExp("^[ ]*[0-9]+h?[ ]*$"); //10h
 		var minuteOnly = new RegExp("^[ ]*[0-9]+min[ ]*$"); //10min

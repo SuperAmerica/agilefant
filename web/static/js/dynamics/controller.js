@@ -95,7 +95,9 @@ iterationController.prototype = {
           buttons: {
             save: {text: "Save", action: function() {
               goal.beginTransaction();
-              row.saveEdit();
+              if(!row.saveEdit()) {
+            	  return;
+              } 
               goal.commit();
             }},
             cancel: {text: "Cancel", action: function() {
@@ -104,12 +106,14 @@ iterationController.prototype = {
           }}) //.getElement().hide();
         this.descCells.push(desc);
         var blis = row.createCell();
+        blis.getElement().hide();
         var blictrl = new iterationGoalController(blis, goal);
         this.iterationGoalControllers.push(blictrl);
         buttons.setActionCell({items: [
                                        {
                                          text: "Edit",
                                          callback: function(row) {
+                                    	   desc.getElement().show();
                                            row.openEdit();
                                          }
                                        }, {
@@ -117,7 +121,13 @@ iterationController.prototype = {
                                          callback: function() {
                                            me.deleteGoal(goal);
                                          }
-                                       },
+                                       }, {
+                                    	 text: "Create backlog item",
+                                    	 callback: function() {
+                                    	   blis.getElement().show();
+                                    	   blictrl.createBli();
+                                         }
+                                       }
                                        ]});
         row.getElement().bind("metricsUpdated", function() {
         	goal.reloadMetrics();
@@ -165,7 +175,7 @@ iterationController.prototype = {
       });
       var goal = data.getPseudoGoal();
       var row = me.view.createRow(goal);
-      row.createCell();
+      var expand = row.createCell();
       var name = row.createCell().setValue("Items without goal.");
       var elsum = row.createCell({
           get: function() { return goal.getEffortLeft(); },
@@ -186,27 +196,30 @@ iterationController.prototype = {
       });
       var buttons = row.createCell();
       row.setNotSortable();
+      row.createCell().getElement().hide(); //dymmy description
       var blis = row.createCell();
+      blis.getElement().hide();
       var blictrl = new iterationGoalController(blis, goal);
       this.iterationGoalControllers.push(blictrl);
-      buttons.setActionCell({items: [
-                                      {
-                                       text: "Show BLIs",
-                                       callback: function() {
-                                         blictrl.showBacklogItems();
-                                       }
-                                     }, {
-                                       text: "Hide BLIs",
-                                       callback: function() {
-                                         blictrl.hideBacklogItems();
-                                       }
-                                     }
-                                     ]});
+      buttons.setActionCell({items: [{
+                                    	 text: "Create backlog item",
+                                    	 callback: function() {
+                                    	   blis.getElement().show();
+                                    	   blictrl.createBli();
+                                         }
+      								}]});
+      commonView.expandCollapse(expand.getElement(), function() {
+      	blictrl.showBacklogItems();
+      }, function() {
+      	blictrl.hideBacklogItems();
+      });
+      
       this.view.render();
-
     },
     storeGoal: function(row,goal) {
-    	  row.saveEdit();
+    	  if(!row.saveEdit()) {
+    		  return;
+    	  }
     	  row.remove();
     	  goal = goal.copy();
         this.addRow(goal);
@@ -263,6 +276,7 @@ var iterationGoalController = function(parentView, model) {
   parentView.getElement().css("padding-left","2%"); //TODO: refactor
   this.element = $("<div />").width("95%").appendTo(parentView.getElement());
   this.data = model;
+  this.view = jQuery(this.element).backlogItemsTable();
   this.render(this.data);
 };
 iterationGoalController.prototype = {
@@ -305,6 +319,7 @@ iterationGoalController.prototype = {
     });
     var name = row.createCell({
       type: "text",
+      required: true,
       set: function(val) { bli.setName(val); },
       get: function() { return bli.getName(); }
     });
@@ -361,7 +376,9 @@ iterationGoalController.prototype = {
       set: function(val) { bli.setDescription(val);},
       buttons: {
         save: {text: "Save", action: function() {
-          row.saveEdit();
+          if(!row.saveEdit()) {
+        	  return;
+          }
           desc.getElement().hide();
           bli.commit();
         }},
@@ -405,6 +422,7 @@ iterationGoalController.prototype = {
     bli.id = 0;
     bli.beginTransaction();
     var row = this.view.createRow(bli,{toTop: true}, true);
+    row.createCell();
     var themes = row.createCell({
     	type: "theme",
     	backlogId: bli.backlog.getId(),
@@ -414,6 +432,7 @@ iterationGoalController.prototype = {
     });
     var name = row.createCell({
       type: "text",
+      required: true,
       set: function(val) { bli.setName(val); },
       get: function() { return bli.getName(); }
     });
@@ -468,7 +487,9 @@ iterationGoalController.prototype = {
       set: function(val) { bli.setDescription(val);},
       buttons: {
         save: {text: "Save", action: function() {
-          row.saveEdit();
+          if(!row.saveEdit()) {
+        	  return;
+          }
           row.remove();
           me.data.addBacklogItem(bli);
           me.addRow(bli);
@@ -485,7 +506,6 @@ iterationGoalController.prototype = {
   render: function(data) {
     var me = this;
     var blis = data.getBacklogItems();
-    this.view = jQuery(this.element).backlogItemsTable();
     
     this.view.addCaptionAction("createNew", {
   	  text: "Create Backlog Item",
@@ -505,11 +525,8 @@ iterationGoalController.prototype = {
       for(var i = 0; i < blis.length; i++) {
         me.addRow(blis[i]);
       }
-    } else {
-      this.element.hide();
     }
     this.view.render();
-    this.hideBacklogItems();
   }
 };
 

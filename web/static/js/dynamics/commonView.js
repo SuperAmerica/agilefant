@@ -20,16 +20,21 @@ var commonView = {
 		collapseCb();
 	});
   },
-  effortError: function() {
-	 var err = $("<div />").addClass("cellErrorMessage");
+  effortError: function(connectTo) {
+	 var err = $("<div />").addClass("cellErrorMessage").appendTo(document.body);
 	 $("<span />").css("color", "red").text("Invalid value!").appendTo(err);
 	 $("<br />").appendTo(err);
-	 $("<span />").text("1.5 / 1.5h / 1h 30min / 30min").appendTo(err);
+	 $("<span />").text("e.g. 1.5h or 1h 30min").appendTo(err);
+	 var cpos = connectTo.position();
+	 err.css({position: "absolute", top: cpos.top + connectTo.height(), left: cpos.left});
 	 return err;
   },
-  requiredFieldError: function() {
-	  var err = $("<div />").addClass("cellErrorMessage");
+  requiredFieldError: function(connectTo) {
+	  var err = $("<div />").addClass("cellErrorMessage").appendTo(document.body);
 	 $("<span />").css("color", "red").text("Required field").appendTo(err);
+	 var cpos = connectTo.position();
+	 err.css({position: "absolute", top: cpos.top + connectTo.height(), left: cpos.left});
+	 return err;
   }
   
 };

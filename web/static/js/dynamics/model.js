@@ -108,6 +108,7 @@ iterationModel.prototype = {
 iterationGoalModel = function(iterationGoalData, parent) {
   this.metrics = {};
   this.iteration = parent;
+  this.backlogItems = [];
   this.setData(iterationGoalData, true);
 	this.editListeners = [];
 	this.deleteListeners = [];
@@ -271,8 +272,8 @@ iterationGoalModel.prototype = {
 		};
 		if(this.priority) data.priority = this.priority;
 		if(this.id) data.iterationGoalId = this.id;
-		if(this.name == undefined) data.name = "";
-		if(this.description == undefined) data.description = "";
+		if(this.name == undefined) data["iterationGoal.name"] = "";
+		if(this.description == undefined) data["iterationGoal.description"] = "";
     jQuery.ajax({
       async: false,
       error: function() {

@@ -329,8 +329,14 @@
 		},
 		saveEdit: function() {
 		  for(var i = 0; i < this.cells.length; i++) {
-        this.cells[i].saveEdit();
-      }
+			  if(this.cells[i].isValid() == false) {
+				  return false;
+			  }
+		  }
+		  for(var i = 0; i < this.cells.length; i++) {
+			  this.cells[i].saveEdit();
+		  }
+		  return true;
 		},
 		setNotSortable: function() {
 		  this.row.addClass("dynamictable-notsortable");
@@ -392,14 +398,17 @@
 		getElement: function() {
 			return this.cell;
 		},
-
+		isValid: function() {
+			if(!this.editor) {
+				return true;
+			}
+			return this.editor.isValid();
+		},
 		saveEdit: function() {
 		  if(!this.editorOpen) {
 		    return;
 		  }
 		  if(this.editor.isValid() != true) {
-			  //TODO handle error
-			  alert("data not valid");
 			  return false;
 		  }
 		  this.content.show();
@@ -533,11 +542,6 @@
 			  $(document.body).unbind("click",this.mouseEvent);
 		  },
 		  isValid: function() {
-			  if(this.cell.options.required && this.field.val().length == 0) {
-				  this.field.addClass("invalidValue");
-				  return false;
-			  }
-			  this.field.removeClass("invalidValue");
 			  return true;
 		  }
 	};
@@ -568,9 +572,20 @@
 		  }
 		},
 		isValid: function() {
+			if(this.cell.options.required && this.field.val().length == 0) {
+			  this.field.addClass("invalidValue");
+			  if(!this.errorMsg) this.errorMsg = commonView.requiredFieldError(this.cell.getElement());
+			  return false;
+			}
+			this.field.removeClass("invalidValue");
+			if(this.errorMsg) {
+				this.errorMsg.remove(); 
+				this.errorMsg = null;
+			}
 			return true;
 		},
 		remove: function() {
+			if(this.errorMsg) this.errorMsg.remove();
 			this.field.remove();
 		}
 	};
@@ -604,15 +619,19 @@
 	    isValid: function() {
 	      if(agilefantUtils.isAftimeString(this.field.val())) {
 	    	  this.field.removeClass("invalidValue");
-	    	  if(this.errorMsg) this.errorMsg.remove();
+	    	  if(this.errorMsg) { 
+	    		  this.errorMsg.remove();
+	    		  this.errorMsg = null;
+	    	  }
 	    	  return true;
 	      } else {
-	    	  if(!this.errorMsg) this.errorMsg = commonView.effortError().appendTo(this.cell.getElement());
+	    	  if(!this.errorMsg) this.errorMsg = commonView.effortError(this.cell.getElement());
 	    	  this.field.addClass("invalidValue");
 	    	  return false;
 	      }
 	    },
 	    remove: function() {
+	      if(this.errorMsg) this.errorMsg.remove();
 	      this.field.remove();
 	    }
 	  };

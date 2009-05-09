@@ -10,6 +10,8 @@
 		evenRow: "dynamictable-even",
 		sortImg: "dynamictable-sortimg",
 		sortImgUp: "dynamictable-sortimg-up",
+		captionActions: "dynamictable-captionactions",
+		captionAction: "dynamictable-captionaction",
 		sortImgDown: "dynamictable-sortimg-down"
 	};
 	var statics = {
@@ -40,11 +42,14 @@
 		 me.sortTable();
 		});
 		this.headerRow = null;
-		this.caption = $('<div />').addClass(cssClasses.tableCaption).text(this.options.captionText).prependTo(this.container);
+		this.caption = $('<div />').addClass(cssClasses.tableCaption).prependTo(this.container);
+		$("<div />").css("float", "left").text(this.options.captionText).appendTo(this.caption).width("30%");
+		this.captionAction = $('<ul />').addClass(cssClasses.captionActions).appendTo(this.caption).css("float","right").width("68%");
 		this.sorting = {
 		    column: this.options.defaultSortColumn,
 		    direction: -1
 		};
+		this.captionActions = {};
 	};
 	
 	dynamicTable.prototype = {
@@ -90,6 +95,25 @@
 			  }
 			  this._sortable();
 			},
+			addCaptionAction: function(name, options) {
+				options.element = $('<li />').addClass(cssClasses.captionAction).appendTo(this.captionAction).css("float","right");
+				var me = this;
+				options.element.click(function() { 
+					if(options.toggleWith) {
+						me.captionActions[options.toggleWith].element.toggle();
+						options.element.toggle();
+					}
+					options.callback();
+				});
+				options.element.text(options.text);
+				if(options.style) {
+					options.element.addClass(options.style)
+				}
+				if(options.hide) {
+					options.element.hide();
+				}
+				this.captionActions[name] = options;
+			},
 			sortTable: function() {
 			  if(this.sorting.direction == 1) this.sorting.direction = 0;
 			  if(this.sorting.direction == 0) this.sorting.direction = 1;
@@ -105,7 +129,7 @@
 			    return false;
 			  }
 			  var me = this;
-			  this.headerRow = new dynamicTableRow(this, null, {caption: true});
+			  this.headerRow = new dynamicTableRow(this, null, {toTop: true});
 			  this.headerRow.getElement().addClass(cssClasses.tableHeader).addClass(cssClasses.notSortable);
 			  var row = this.headerRow;
 			  
@@ -250,10 +274,10 @@
 		this.options = {};
 		$.extend(this.options,options);
 		this.row = $("<div />").addClass(cssClasses.tableRow);
-	  if(this.options.toTop) {
-	    if(this.table.headerRow) {
-	      this.row.insertAfter(this.table.headerRow.getElement());
-	    } else {
+	    if(this.options.toTop) {
+	      if(this.table.headerRow) {
+	        this.row.insertAfter(this.table.headerRow.getElement());
+	      } else {
 	        this.row.prependTo(this.table.getElement());
 		  }
 		} else {
@@ -642,8 +666,8 @@
 	  };
 	  $.extend(this.options, options);
 	  var me = this;
-	  this.openEvent  = function() {
-	    me.open();
+	  this.openEvent  = function(cEvent) {
+	    me.open(cEvent);
 	  };
 	  var el = this.cell.getElement();
 	  this.act = $('<div/>').html(this.options.title).appendTo(el);
@@ -651,45 +675,68 @@
 	  
 	};
 	tableRowActions.prototype = {
-	 open: function() {
-	  var me = this;
-	  this.handler = function() {
-      me.close();
-	  };
-	  $(document.body).trigger("dynamictable-close-actions").bind("dynamictable-close-actions", this.handler);
-	  this.menu = $('<ul/>').appendTo(document.body).addClass("actionCell");
-	  this.menu.mouseenter(function() { me.inMenu = true; });
-	  this.menu.mouseleave(function() { 
-	    if(me.inMenu) {
-	      me.close();
-	    }
-	  });
-	  var pos = this.cell.getElement().position();
-	  var menuCss = {
-	      "position":    "absolute",
-	      "overflow":    "visible",
-	      "z-index":     "100",
-	      "white-space": "nowrap",
-	      "top":         pos.top + 16,
-	      "left":        pos.left
-	  }
-	  this.menu.css(menuCss);
-    var me = this;
-	  $.each(this.options.items, function(index, item) {
-	    var it = $('<li />').text(item.text).appendTo(me.menu);
-	    if(item.callback) {
-	      var row = me.row;
-	      it.click(function() { item.callback(row); });
-	    }
-	  });
-  	this.act.click(this.handler);
-	 },
-	 close: function() {
-	   this.act.unbind('click').click(this.openEvent);
-	   this.menu.remove();
-	   $(document.body).unbind("dynamictable-close-actions",this.handler);
-	 }
+		open: function(cEvent) {
+			var me = this;
+			this.handler = function() {
+				me.close();
+			};
+			$(document.body).trigger("dynamictable-close-actions").bind("dynamictable-close-actions", this.handler);
+			this.menu = $('<ul/>').appendTo(document.body).addClass("actionCell");
+			this.menu.mouseenter(function() { me.inMenu = true; });
+			this.menu.mouseleave(function() { 
+				if(me.inMenu) {
+					me.close();
+				}
+			});
+			var pos = this.cell.getElement().position();
+			var menuCss = {
+					"position":    "absolute",
+					"overflow":    "visible",
+					"z-index":     "100",
+					"white-space": "nowrap",
+					"top":         pos.top + 16,
+					"left":        pos.left
+			}
+			this.menu.css(menuCss);
+			var me = this;
+			$.each(this.options.items, function(index, item) {
+				var it = $('<li />').text(item.text).appendTo(me.menu);
+				if(item.callback) {
+					var row = me.row;
+					it.click(function() { item.callback(row); return false;});
+				}
+			});
+			this.act.click(this.handler);
+			this.closeClick = function(event) {
+				if($(event.target).closest("ul.actionCell").length == 0) {
+					me.close();
+				}
+			};
+			cEvent.stopPropagation();
+			$(window).click(this.closeClick);
+			return false;
+		},
+		close: function() {
+			this.act.unbind('click').click(this.openEvent);
+			this.menu.remove();
+			$(document.body).unbind("dynamictable-close-actions",this.handler);
+			$(window).unbind("click", this.closeClick);
+		}
 	};
+	function addTableColumn(optObj, width,header) {
+		if(!optObj.headerCols) {
+			optObj.headerCols = [];
+		}
+		if(!optObj.colWidths) {
+			optObj.colWidths = [];
+		}
+		if(width) {
+			optObj.colWidths.push(width);
+		}
+		if(header) {
+			optObj.headerCols.push(header);
+		}
+	}
 	$.fn.extend({
 		//NOTE: WILL NOT RETURN CHAINABLE jQuery OBJECT!
 		dynamicTable: function(options) {
@@ -706,201 +753,158 @@
 			return null;
 		},
 		iterationGoalTable: function(options) {
-		  var opts = {
-		      captionText: "Iteration Goals",
-		      colCss: {
+		  var opts = { captionText: "Iteration Goals"};
+		  if(agilefantUtils.isTimesheetsEnables()) {
+		      opts.colCss = {
 		        ':lt(7)': { 'background': '#dddddd' },
 		        ':eq(7)': { 'background': '#eeeeee' },
 		        ':eq(8)': { 'background': '#ffffff' },
 		        ':eq(6)': { 'cursor': 'pointer' }
-		      },
-		      headerCols: [ {
-		                     name: "Prio",
-		                     tooltio: "Priority",
-		                     sort: agilefantUtils.comparators.priorityComparator
-		                   },
-		                   {
-		                     name: 'Name',
-		                     tooltip: 'Iteration goal name',
-		                     sort: agilefantUtils.comparators.nameComparator
-		                   },
-		                   {
-                         name: 'EL',
-                         tooltip: 'Total effort left',
-                         sort: agilefantUtils.comparators.effortLeftComparator
-                       },
-                       {
-                         name: 'OE',
-                         tooltip: 'Total original estimate',
-                         sort: agilefantUtils.comparators.originalEstimateComparator
-                       },
-                       {
-                         name: 'ES',
-                         tooltip: 'Total effort spent',
-                         sort: agilefantUtils.comparators.effortSpentComparator
-                       },
-                       {
-                         name: 'Done / Total',
-                         tooltip: 'Done / Total backlog items',
-                         sort: null
-                       },
-                       {
-                         name: '',
-                         actionCell: true,
-                         tooltip: "",
-                         sort: null
-                       }
-                       ],
-		      colWidths: [
-		                  {
-		                    minwidth: 20,
-		                    auto: true
-		                  },
-		                  {
-		                    minwidth: 200,
-		                    auto: true
-		                  },
-		                  {
-		                    minwidth: 30,
-		                    auto: true
-		                  },
-		                  {
-                        minwidth: 30,
-                        auto: true
-                      },
-                      {
-                        minwidth: 30,
-                        auto: true
-                      },
-		                  {
-		                    minwidth: 40,
-		                	  auto: true
-		                  },
-		                  {
-		                    minwidth: 40,
-		                    auto: true
-		                  },
-		                  {
-                        setMaxWidth: true,
-                        auto: false
-                      },
-                      {
-                        auto: false,
-                        setMaxWidth: true
-                      },
-                      {
-                        auto: false,
-                        setMaxWidth: true
-                      }
-		                  ]
-		  };
+		      };
+		  } else {
+		      opts.colCss = {
+		        ':lt(6)': { 'background': '#dddddd' },
+		        ':eq(6)': { 'background': '#eeeeee' },
+		        ':eq(7)': { 'background': '#ffffff' },
+		        ':eq(6)': { 'cursor': 'pointer' }
+			  };			  
+		  }
+		  addTableColumn(opts, 
+				  { minwidth: 20, auto: true },
+				  { name: "Prio",
+					tooltio: "Priority",
+					sort: agilefantUtils.comparators.priorityComparator
+				  });
+		  addTableColumn(opts,
+				  { minwidth: 200, auto: true },
+				  { name: 'Name',
+			        tooltip: 'Iteration goal name',
+			        sort: agilefantUtils.comparators.nameComparator
+				  });
+		  addTableColumn(opts,
+				  { minwidth: 30, auto: true },
+				  { name: 'EL',
+					tooltip: 'Total effort left',
+			        sort: agilefantUtils.comparators.effortLeftComparator
+				  });
+		  addTableColumn(opts, 
+				  { minwidth: 30, auto: true },
+				  { name: 'OE',
+			        tooltip: 'Total original estimate',
+			        sort: agilefantUtils.comparators.originalEstimateComparator
+				  });
+		  if(agilefantUtils.isTimesheetsEnables()) {
+			  addTableColumn(opts,
+					  { minwidth: 30, auto: true },
+			          { name: 'ES',
+				        tooltip: 'Total effort spent',
+				        sort: agilefantUtils.comparators.effortSpentComparator
+			          });
+		  }
+		  addTableColumn(opts,		                  
+				  { minwidth: 40, auto: true },
+				  { name: 'Done / Total',
+			        tooltip: 'Done / Total backlog items',
+			        sort: null
+				  });
+		  addTableColumn(opts,
+				  { minwidth: 40, auto: true},
+				  { name: 'Actions',
+				    actionCell: true,
+					tooltip: "Actions",
+					sort: null
+				  });
+		  addTableColumn(opts,{ setMaxWidth: true, auto: false });
+		  addTableColumn(opts,{ auto: false, setMaxWidth: true });
+		  addTableColumn(opts,{ auto: false, setMaxWidth: true });
 		  $.extend(opts,options);
 			var ret = this.dynamicTable(opts);
 			
 			return ret;
 		},
 		backlogItemsTable: function(options) {
-      var opts = {
-          defaultSortColumn: 3,
-          captionText: "Backlog items",
-          colCss: { ':eq(8)': { 'cursor': 'pointer' },
-                    ':lt(9)': { 'background-color': '#eee' },
-                    ':eq(9)': { 'background-color': '#fff' },
-                    ':eq(4)': { 'cursor': 'pointer' }
-                  },
-          headerCols: [
-                       {
-                    	 name: "Themes",
-                    	 tooltip: "Business themes",
-                    	 sort: null
-                       },
-                       {
-                         name: 'Name',
-                         tooltip: 'Backlog item name',
-                         sort: agilefantUtils.comparators.nameComparator
-                       },
-                       {
-                         name: 'State',
-                         tooltip: 'Backlog item state',
-                         sort: null
-                       },
-                       {
-                         name: 'Priority',
-                         tooltip: 'Backlog item priority',
-                         sort: agilefantUtils.comparators.bliPriorityAndStateComparator
-                       },
-                       {
-                         name: 'Responsibles',
-                         tooltip: 'Backlog item responsibles',
-                         sort: null
-                       },
-                       {
-                         name: 'EL',
-                         tooltip: 'Total effort left',
-                         sort: agilefantUtils.comparators.effortLeftComparator
-                       },
-                       {
-                         name: 'OE',
-                         tooltip: 'Total original estimate',
-                         sort: agilefantUtils.comparators.originalEstimateComparator
-                       },
-                       {
-                         name: 'ES',
-                         tooltip: 'Total effort spent',
-                         sort: agilefantUtils.comparators.effortSpentComparator
-                       },
-                       {
-                         name: 'Actions',
-                         tooltip: "",
-                         sort: null
-                       }
-                       ],
-          colWidths: [
-                      {
-                    	minwidth: 30,
-                    	auto: true
-                      },
-                      {
-                        minwidth: 180,
-                        auto: true
-                      },
-                      {
-                        minwidth: 50,
-                        auto: true
-                      },
-                      {
-                        minwidth: 50,
-                        auto: true
-                      },
-                      {
-                        minwidth: 50,
-                        auto: true
-                      },
-                      {
-                        minwidth: 30,
-                        auto: true
-                      },
-                      {
-                        minwidth: 30,
-                        auto: true
-                      },
-                      {
-                        minwidth: 30,
-                        auto: true
-                      },
-                      {
-                        minwidth: 30,
-                        auto: true
-                      },
-                      {
-                        auto: false,
-                        setMaxWidth: true
-                      }
-                      ]
-      };
-      $.extend(opts,options);
-      var ret = this.dynamicTable(opts);
-      return ret;
-    }
+	      var opts = {
+	          defaultSortColumn: 3,
+	          captionText: "Backlog items"
+	      };
+	      if(agilefantUtils.isTimesheetsEnables()) {
+	          opts.colCss = { ':eq(9)': { 'cursor': 'pointer' },
+	                    ':lt(10)': { 'background-color': '#eee' },
+	                    ':eq(10)': { 'background-color': '#fff' },
+	                    ':eq(5)': { 'cursor': 'pointer' }
+	          };
+	      } else {
+	          opts.colCss = { ':eq(8)': { 'cursor': 'pointer' },
+	                    ':lt(9)': { 'background-color': '#eee' },
+	                    ':eq(9)': { 'background-color': '#fff' },
+	                    ':eq(5)': { 'cursor': 'pointer' }
+	          };	    	  
+	      }
+	      addTableColumn(opts, 
+	    		  {minwidth: 16, auto: true },
+	    		  {name: " ", sort: null}
+	      );
+	      addTableColumn(opts,
+	    		  { minwidth: 30, auto: true },
+	              { name: "Themes",
+	                tooltip: "Business themes",
+	                sort: null
+	              });
+	      addTableColumn(opts,
+	    		  { minwidth: 180, auto: true },
+	              { name: 'Name',
+	                tooltip: 'Backlog item name',
+	                sort: agilefantUtils.comparators.nameComparator
+	              });
+	      addTableColumn(opts,
+	    		  { minwidth: 50, auto: true },
+	              { name: 'State',
+	                tooltip: 'Backlog item state',
+	                sort: null
+	              });
+	      addTableColumn(opts,
+	    		  { minwidth: 50, auto: true },
+	              { name: 'Priority',
+	                tooltip: 'Backlog item priority',
+	                sort: agilefantUtils.comparators.bliPriorityAndStateComparator
+	              });
+	      addTableColumn(opts,
+	    		  { minwidth: 50, auto: true },
+	              { name: 'Responsibles',
+	                tooltip: 'Backlog item responsibles',
+	                sort: null
+	              });
+	      addTableColumn(opts,
+	    		  { minwidth: 30, auto: true },
+	              { name: 'EL',
+	                tooltip: 'Total effort left',
+	                sort: agilefantUtils.comparators.effortLeftComparator
+	              });
+	      addTableColumn(opts,
+	    		  { minwidth: 30, auto: true },
+	              { name: 'OE',
+	                tooltip: 'Total original estimate',
+	                sort: agilefantUtils.comparators.originalEstimateComparator
+	              });
+		  if(agilefantUtils.isTimesheetsEnables()) {
+		      addTableColumn(opts,
+		    		  { minwidth: 30, auto: true },
+		              { name: 'ES',
+		                tooltip: 'Total effort spent',
+		                sort: agilefantUtils.comparators.effortSpentComparator
+		              });
+		  }
+	      addTableColumn(opts,
+	    		  { minwidth: 50, auto: true },
+	              { name: 'Actions',
+		            tooltip: "",
+		            sort: null
+		          });
+	      addTableColumn(opts,{ auto: false, setMaxWidth: true });
+	
+	      $.extend(opts,options);
+	      var ret = this.dynamicTable(opts);
+	      return ret;
+		}
 	});
 })(jQuery)

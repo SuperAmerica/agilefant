@@ -11,6 +11,10 @@
 
 <ww:actionerror />
 <ww:actionmessage />
+<aef:hourReporting id="hourReporting" />
+<script type="text/javascript">
+    var agilefantTimesheetsEnabled = ${hourReporting};
+</script>
 
 <h2><c:out value="${iteration.name}" /></h2>
 <table>

@@ -3,6 +3,7 @@ var iterationController = function(iterationId, element) {
  this.element = element;
  var me = this;
  this.iterationGoalControllers = [];
+ this.descCells = [];
  ModelFactory.getIteration(this.iterationId, function(data) { me.render(data); });
 }
 iterationController.prototype = {
@@ -26,11 +27,17 @@ iterationController.prototype = {
       for(var i = 0 ; i < this.iterationGoalControllers.length; i++) {
         this.iterationGoalControllers[i].showBacklogItems();
       }
+      for(var i = 0; i < this.descCells.length; i++) {
+    	this.descCells[i].getElement().hide();
+      }
     },
     hideBacklogItems: function() {
       for(var i = 0 ; i < this.iterationGoalControllers.length; i++) {
         this.iterationGoalControllers[i].hideBacklogItems();
-      }      
+      }  
+      for(var i = 0; i < this.descCells.length; i++) {
+      	this.descCells[i].getElement().show();
+      }
     },
     deleteGoal: function(goal) {
       var parent = $("<div />").appendTo(document.body).text("Are you sure you wish to delete this iteration goal?");
@@ -55,20 +62,26 @@ iterationController.prototype = {
     addRow: function(goal) {
         var me = this;
         var row = me.view.createRow(goal);
-        var prio = row.createCell({
-          get: function() { return goal.priority; }
-        });
+        var expand = row.createCell();
         var name = row.createCell({
           type: "text", 
           get: function() { return goal.getName();}, 
           set: function(val){ goal.setName(val);}});
         name.activateSortHandle();
         var elsum = row.createCell({
-          get: function() { return agilefantUtils.aftimeToString(goal.getEffortLeft()); }});
+          get: function() { return goal.getEffortLeft(); },
+          decorator: agilefantUtils.aftimeToString
+          });
         var oesum = row.createCell({
-          get: function() { return agilefantUtils.aftimeToString(goal.getOriginalEstimate()); }});
-        var essum = row.createCell({
-          get: function() { return agilefantUtils.aftimeToString(goal.getEffortSpent()); }});
+          get: function() { return goal.getOriginalEstimate(); },
+          decorator: agilefantUtils.aftimeToString
+        });
+        if(agilefantUtils.isTimesheetsEnables()) {
+	        var essum = row.createCell({
+	          get: function() { return goal.getEffortSpent(); },
+	          decorator: agilefantUtils.aftimeToString
+	        });
+        }
         var tasks = row.createCell({
           get: function() { 
         	  return goal.getDoneTasks() + " / " + goal.getTotalTasks();
@@ -89,6 +102,7 @@ iterationController.prototype = {
               row.cancelEdit();
             }}
           }}) //.getElement().hide();
+        this.descCells.push(desc);
         var blis = row.createCell();
         var blictrl = new iterationGoalController(blis, goal);
         this.iterationGoalControllers.push(blictrl);
@@ -103,32 +117,17 @@ iterationController.prototype = {
                                          callback: function() {
                                            me.deleteGoal(goal);
                                          }
-                                       }, {
-                                         text: "Show BLIs",
-                                         callback: function() {
-                                           blictrl.showBacklogItems();
-                                           desc.getElement().hide();
-                                         }
-                                       }, {
-                                         text: "Hide BLIs",
-                                         callback: function() {
-                                           blictrl.hideBacklogItems();
-                                         }
-                                       }, {
-                                    	   text: "Toggle description",
-                                    	   callback: function() {
-                                    	   	desc.getElement().toggle();
-                                           }
                                        },
-                                       {
-                                    	 text: "Add Backlog item",
-                                    	 callback: function() {
-                                    	   	blictrl.createBli();
-                                       	 }
-                                       }
                                        ]});
         row.getElement().bind("metricsUpdated", function() {
         	goal.reloadMetrics();
+        });
+        commonView.expandCollapse(expand.getElement(), function() {
+        	blictrl.showBacklogItems();
+        	desc.getElement().hide();
+        }, function() {
+        	blictrl.hideBacklogItems();
+        	desc.getElement().show();
         });
     },
     render: function(data) {
@@ -137,27 +136,26 @@ iterationController.prototype = {
       
       this.view.activateSortable({update: function(ev,el) { me.changeIterationGoalPriority(ev,el);}});
       
-      this.view.setActionCellParams({ items:
-         [
-          {
-        	  text: "Add iteration goal",
-        	  callback: function() {
-        	    me.createGoal();
-          	   }
-          },
-          {
-            text: "Show all blis",
-            callback: function() {
-              me.showBacklogItems();
-            }
-          }, 
-          {
-            text: "Hide all blis",
-            callback: function() {
-              me.hideBacklogItems();
-            }
-          }
-          ]
+      this.view.addCaptionAction("createNew", {
+    	  text: "Create iteration goal",
+    	  callback: function() {
+    	  	me.createGoal();
+      	  }
+      });
+      this.view.addCaptionAction("showBlis", {
+    	  text: "Show BLIs",
+    	  toggleWith: "hideBlis",
+    	  callback: function() {
+    	  	me.showBacklogItems();
+      	  }
+      });
+      this.view.addCaptionAction("hideBlis", {
+    	  text: "Hide BLIs",
+    	  toggleWith: "showBlis",
+    	  hide: true,
+    	  callback: function() {
+    	  	me.hideBacklogItems();
+      	  }
       });
       
       var goals = data.getIterationGoals();
@@ -165,17 +163,45 @@ iterationController.prototype = {
       jQuery.each(goals, function(index, goal){
     	  me.addRow(goal);
       });
-      var row = me.view.createRow(null);
+      var goal = data.getPseudoGoal();
+      var row = me.view.createRow(goal);
       row.createCell();
       var name = row.createCell().setValue("Items without goal.");
-      var elsum = row.createCell();
-      var oesum = row.createCell();
-      var essum = row.createCell();
-      var tasks = row.createCell();
-      var acts = row.createCell();
+      var elsum = row.createCell({
+          get: function() { return goal.getEffortLeft(); },
+          decorator: agilefantUtils.aftimeToString
+          });
+	    var oesum = row.createCell({
+	      get: function() { return goal.getOriginalEstimate(); },
+	      decorator: agilefantUtils.aftimeToString
+	    });
+	 if(agilefantUtils.isTimesheetsEnables()) {
+	    var essum = row.createCell({
+	      get: function() { return goal.getEffortSpent(); },
+	      decorator: agilefantUtils.aftimeToString
+	    });
+	  }
+      var tasks = row.createCell({
+    	  get: function() { return goal.getDoneTasks() + " / " + goal.getTotalTasks(); }
+      });
+      var buttons = row.createCell();
       row.setNotSortable();
       var blis = row.createCell();
-      var blictrl = new iterationGoalController(blis, data);
+      var blictrl = new iterationGoalController(blis, goal);
+      this.iterationGoalControllers.push(blictrl);
+      buttons.setActionCell({items: [
+                                      {
+                                       text: "Show BLIs",
+                                       callback: function() {
+                                         blictrl.showBacklogItems();
+                                       }
+                                     }, {
+                                       text: "Hide BLIs",
+                                       callback: function() {
+                                         blictrl.hideBacklogItems();
+                                       }
+                                     }
+                                     ]});
       this.view.render();
 
     },
@@ -201,7 +227,9 @@ iterationController.prototype = {
           set: function(val){ fakeGoal.setName(val);}});
         var elsum = row.createCell();
         var oesum = row.createCell();
-        var essum = row.createCell();
+        if(agilefantUtils.isTimesheetsEnables()) {
+        	var essum = row.createCell();
+        }
         var tasks = row.createCell();
         var buttons = row.createCell();
         buttons.setActionCell({items: [{
@@ -227,6 +255,7 @@ iterationController.prototype = {
     }
 };
 
+/** ITERATION GOAL CONTROLLER **/
 
 var iterationGoalController = function(parentView, model) {
   //this.element = element;
@@ -266,6 +295,7 @@ iterationGoalController.prototype = {
   addRow: function(bli) {
     var me = this;
     var row = this.view.createRow(bli);
+    var expand = row.createCell();
     var themes = row.createCell({
     	type: "theme",
     	backlogId: bli.backlog.getId(),
@@ -308,41 +338,23 @@ iterationGoalController.prototype = {
       type: "effort",
       set: function(val) { bli.setEffortLeft(val); },
       get: function() { return bli.getEffortLeft(); },
-      canEdit: function() { return (bli.getOriginalEstimate() != null);},
+      canEdit: function() { return (bli.getOriginalEstimate() != null && bli.getState() != "DONE");},
       decorator: agilefantUtils.aftimeToString
     });
     var oe = row.createCell({
       type: "effort",
       get: function() { return bli.getOriginalEstimate(); },
-      canEdit: function() { return (!bli.getOriginalEstimate());},
+      canEdit: function() { return (!bli.getOriginalEstimate() && bli.getState() != "DONE");},
       set: function(val) { bli.setOriginalEstimate(val); },
       decorator: agilefantUtils.aftimeToString
     });
-    var es = row.createCell({
-      get: function() { return bli.getEffortSpent(); },
-      decorator: agilefantUtils.aftimeToString
-    });
+    if(agilefantUtils.isTimesheetsEnables()) {
+    	var es = row.createCell({
+    	  get: function() { return bli.getEffortSpent(); },
+      	  decorator: agilefantUtils.aftimeToString
+    	});
+    }
     var buttons = row.createCell();
-    buttons.setActionCell({items: [ 
-                                   {
-                                	 text: "Reset original estimate",
-                                	 callback: function() {
-                                	   bli.resetOriginalEstimate();
-                                   	 }
-                                   },
-                                   {
-                                     text: "Edit",
-                                     callback: function(row) {
-                                	   bli.beginTransaction();
-                                       row.openEdit();
-                                     }
-                                   }, {
-                                     text: "Delete",
-                                     callback: function() {
-                                       me.deleteBli(bli);
-                                     }
-                                   }
-                                   ]});
     var desc = row.createCell({
       type: "wysiwyg", 
       get: function() { return bli.getDescription(); }, 
@@ -350,13 +362,41 @@ iterationGoalController.prototype = {
       buttons: {
         save: {text: "Save", action: function() {
           row.saveEdit();
+          desc.getElement().hide();
           bli.commit();
         }},
         cancel: {text: "Cancel", action: function() {
           bli.rollBack();
+          desc.getElement().hide();
           row.cancelEdit();
         }}
-      }}); //.getElement().hide();
+      }});
+    desc.getElement().hide();
+    buttons.setActionCell({items: [ 
+           {
+        	 text: "Reset original estimate",
+        	 callback: function() {
+        	   bli.resetOriginalEstimate();
+           	 }
+           }, {
+             text: "Edit",
+             callback: function(row) {
+        	   desc.getElement().show();
+        	   bli.beginTransaction();
+               row.openEdit();
+             }
+           }, {
+             text: "Delete",
+             callback: function() {
+               me.deleteBli(bli);
+             }
+           }
+           ]});
+    commonView.expandCollapse(expand.getElement(), function() {
+    	desc.getElement().show();
+    }, function() {
+    	desc.getElement().hide();
+    });
   },
   createBli: function() {
     var me = this;
@@ -410,7 +450,9 @@ iterationGoalController.prototype = {
       get: function() { return bli.getOriginalEstimate(); },
       decorator: agilefantUtils.aftimeToString  
     });
-    var es = row.createCell();
+    if(agilefantUtils.isTimesheetsEnables()) {
+    	var es = row.createCell();
+    }
     var buttons = row.createCell();
     buttons.setActionCell({items: [
                                    {
@@ -444,12 +486,21 @@ iterationGoalController.prototype = {
     var me = this;
     var blis = data.getBacklogItems();
     this.view = jQuery(this.element).backlogItemsTable();
+    
+    this.view.addCaptionAction("createNew", {
+  	  text: "Create Backlog Item",
+  	  callback: function() {
+  	  	me.createBli();
+    	  }
+    });
+    /*
     this.view.getElement().addClass('dynamictable-backlogitem-droppable');
     this.view.getElement().sortable({
         connectWith: '.dynamictable-backlogitem-droppable',
         not: '.dynamictable-notsortable',
         placeholder : 'dynamictable-placeholder'
       });
+      */
     if(blis && blis.length > 0) {
       for(var i = 0; i < blis.length; i++) {
         me.addRow(blis[i]);

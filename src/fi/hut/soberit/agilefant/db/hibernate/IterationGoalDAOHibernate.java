@@ -126,7 +126,11 @@ public class IterationGoalDAOHibernate extends
         sums.add(Projections.sum("effortLeft"));
         sums.add(Projections.count("id"));
         crit.setProjection(sums);
-        crit.add(Restrictions.eq("iterationGoal", iterationGoal));
+        if(iterationGoal == null) {
+            crit.add(Restrictions.isNull("iterationGoal"));
+        } else {
+            crit.add(Restrictions.eq("iterationGoal", iterationGoal));
+        }
         crit.add(Restrictions.eq("backlog", iteration));
         Object[] sumData = (Object[])this.getHibernateTemplate().findByCriteria(crit).get(0);
         
@@ -135,7 +139,11 @@ public class IterationGoalDAOHibernate extends
         ProjectionList doneProj = Projections.projectionList();
         doneProj.add(Projections.count("id"));
         doneCrit.setProjection(doneProj);
-        doneCrit.add(Restrictions.eq("iterationGoal", iterationGoal));
+        if(iterationGoal == null) {
+            doneCrit.add(Restrictions.isNull("iterationGoal"));
+        } else {
+            doneCrit.add(Restrictions.eq("iterationGoal", iterationGoal));
+        }
         doneCrit.add(Restrictions.eq("backlog", iteration));
         doneCrit.add(Restrictions.eq("state", State.DONE));
         Object doneData = this.getHibernateTemplate().findByCriteria(doneCrit).get(0);
@@ -146,7 +154,11 @@ public class IterationGoalDAOHibernate extends
         spentEffProj.add(Projections.sum("he.timeSpent"));
         spentEffCrit.createAlias("hourEntries", "he");
         spentEffCrit.setProjection(spentEffProj);
-        spentEffCrit.add(Restrictions.eq("iterationGoal", iterationGoal));
+        if(iterationGoal == null) {
+            spentEffCrit.add(Restrictions.isNull("iterationGoal"));
+        } else {
+            spentEffCrit.add(Restrictions.eq("iterationGoal", iterationGoal));
+        }
         spentEffCrit.add(Restrictions.eq("backlog", iteration));
         Object spentEffData = this.getHibernateTemplate().findByCriteria(spentEffCrit).get(0);
         

@@ -39,9 +39,15 @@ iterationModel = function(iterationData, iterationId) {
 		goalPointer.push(new iterationGoalModel(iterationGoalData, me));
 	});
 	if(iterationData.itemsWithoutGoal) {
-	jQuery.each(iterationData.itemsWithoutGoal, function(k,v) { 
-	  me.itemsWithoutGoal.push(new backlogItemModel(v,me,null));
-	});
+		this.containerGoal = new iterationGoalModel({id: ""}, this);
+		this.containerGoal.save = function() {};
+		this.containerGoal.remove = function() {};
+		this.containerGoal.backlogItems = this.itemsWithoutGoal;
+		this.containerGoal.metrics = {};
+		this.containerGoal.reloadMetrics();
+		jQuery.each(iterationData.itemsWithoutGoal, function(k,v) { 
+			me.itemsWithoutGoal.push(new backlogItemModel(v,me,me.containerGoal));
+		});
 	}
 	this.iterationGoals = goalPointer;
 };
@@ -91,6 +97,9 @@ iterationModel.prototype = {
 	}, 
 	getBacklogItems: function() { //blis without an iteration goal
 	  return this.itemsWithoutGoal;
+	},
+	getPseudoGoal: function() {
+		return this.containerGoal;
 	}
 };
 
@@ -134,6 +143,7 @@ iterationGoalModel.prototype = {
 	bli.backlog = this.iteration;
 	bli.iterationGoal = this;
     this.backlogItems.push(bli);
+    this.reloadMetrics();
   },
   removeBacklogItem: function(bli) {
     var tmp = this.backlogItems;
@@ -143,6 +153,7 @@ iterationGoalModel.prototype = {
     	  this.backlogItems.push(tmp[i]);
       }
     }
+    this.reloadMetrics();
   },
   copy: function() {
     var copy = new iterationGoalModel({}, this.iteration);
@@ -483,15 +494,20 @@ backlogItemModel.prototype = {
         "userIds": [],
         "themeIds": [],
         backlogId: this.backlog.getId(),
-        backlogItemId: this.id,
-        iterationGoalId: this.iterationGoal.id
+        backlogItemId: this.id
     };
+    if(this.iterationGoal) {
+    	data.iterationGoalId = this.iterationGoal.id;
+    }
     if (this.userIds) {
       data["userIds"] = this.userIds;
       this.userIds = null;
     }
     else if (this.users) {
-      data["userIds"] = agilefantUtils.objectToIdArray(this.users);
+      data["userIds"] = [];
+      for(var i = 0; i < this.users.length; i++) {
+    	  data["userIds"].push(this.users[i].user.id);
+      }
     }
     if(this.themeIds) {
       data["themeIds"] = this.themeIds;
@@ -499,11 +515,14 @@ backlogItemModel.prototype = {
     } else if(this.themes) {
       data["themeIds"] = agilefantUtils.objectToIdArray(this.themes);
     }
+    //conversions
     if(data["backlogItem.effortLeft"]) data["backlogItem.effortLeft"] /= 3600;
     if(data["backlogItem.effortLeft"] == null) data["backlogItem.effortLeft"] = "";
     if(data["backlogItem.originalEstimate"]) data["backlogItem.originalEstimate"] /= 3600;
+    if(data["backlogItem.originalEstimate"] == null) data["backlogItem.originalEstimate"] = "";
     if(this.name == undefined) data.name = "";
     if(this.description == undefined) data.description = "";
+    
     jQuery.ajax({
       async: false,
       error: function() {

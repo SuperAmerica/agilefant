@@ -46,13 +46,3 @@
     color: red;
 }
 
-div.gear {
-  width: 16px;
-  height: 16px;
-  background-image: url('../img/gear.png');
-  background-position: 0%;
-}
-
-div.gear:hover {
-  background-position: 100%;
-}

@@ -43,6 +43,12 @@ var agilefantUtils = {
 		var shortFormat = new RegExp("^[0-9]+[.,][0-9]+h?$"); //1.5 or 1,5
 		return (hourOnly.test(string) || minuteOnly.test(string) || hourAndMinute.test(string) || shortFormat.test(string));
 	},
+	isTimesheetsEnables: function() {
+		if(agilefantTimesheetsEnabled == true) {
+			return true;
+		}
+		return false;
+	},
 	userlistToHTML: function(users) {
 		var html = $("<span />");
 		if(users && users.length > 0) {

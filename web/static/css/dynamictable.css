@@ -6,7 +6,7 @@
 }
 
 .dynamictable-caption {
-  width: 100%;
+  width: 95.8%;
   height: 22px;
   font-weight: bold;
   padding: 2px 0 0 3px;
@@ -125,6 +125,18 @@ div.errorMessage {
 	z-index:3699;
 }
 
+div.gear {
+  width: 16px;
+  height: 16px;
+  background-image: url('../img/gear.png');
+  background-position: 0%;
+  background-repeat: no-repeat;
+}
+
+div.gear:hover {
+  background-position: 100%;
+}
+
 .invalidValue {
   background-color: #FF6666;
 }
@@ -132,4 +144,46 @@ div.errorMessage {
   width: 150px;
   background-color: #FFFF66;
   border: 1px solid #FFFFFF;
+}
+
+.dynamictable-captionaction {
+  background-color: #eee;
+  border: 1px solid black;
+  margin-left: 5px;
+  padding: 2px;	
+  width: 130px;
+}
+
+.dynamictable-captionaction:hover {
+  float: left !impotant;
+  background-color: #eee;
+  background: transparent url(../img/gradient.png) 80% 60% repeat-x;
+  border: 1px solid black;  
+  cursor: pointer;
+}
+
+.dynamictable-captionactions {
+  margin-top: 0px;
+  padding-left: 0px;
+  display: inline;
+  list-style: none;
+  list-style-type: none;
+  width: 60%;
+}
+
+.dynamictable-expand {
+	background-image:url(../img/expand.png);
+	background-position:0 0;
+	background-repeat:no-repeat;
+	cursor:pointer;
+	height:16px;
+	width:16px;
+}
+.dynamictable-collapse {
+	background-image:url(../img/expand.png);
+	background-position:0 100%;
+	background-repeat:no-repeat;
+	cursor:pointer;
+	height:16px;
+	width:16px;
 }

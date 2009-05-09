@@ -9,6 +9,17 @@ var commonView = {
     var messageScreen = $('<div />').html(message).addClass("okMessage").appendTo(document.body);
     messageScreen.fadeOut(2000, function() { messageScreen.remove()});
   },
+  expandCollapse: function(parent, expandCb, collapseCb) {
+	var button = $("<div />").addClass("dynamictable-expand").appendTo(parent);
+	button.toggle(function() {
+		button.toggleClass("dynamictable-expand").toggleClass("dynamictable-collapse");
+		expandCb();
+	},
+	function() {
+		button.toggleClass("dynamictable-expand").toggleClass("dynamictable-collapse");
+		collapseCb();
+	});
+  },
   effortError: function() {
 	 var err = $("<div />").addClass("cellErrorMessage");
 	 $("<span />").css("color", "red").text("Invalid value!").appendTo(err);

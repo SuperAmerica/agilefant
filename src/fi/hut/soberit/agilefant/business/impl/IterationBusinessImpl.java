@@ -56,7 +56,13 @@ public class IterationBusinessImpl implements IterationBusiness {
                 }
             }
         }
-        iterData.setItemsWithoutGoal(iterationDAO.getBacklogItemsWihoutIterationGoal(iter));
+        List<BacklogItem> itemsWithoutGoal = new ArrayList<BacklogItem>();
+        for(BacklogItem item : blis) {
+            if(item.getIterationGoal() == null) {
+                itemsWithoutGoal.add(item);
+            }
+        }
+        iterData.setItemsWithoutGoal(itemsWithoutGoal);
         return iterData;
     }
 

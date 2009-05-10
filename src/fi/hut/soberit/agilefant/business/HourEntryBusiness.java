@@ -160,5 +160,7 @@ public interface HourEntryBusiness {
     public void updateMultiple(Map<Integer, String[]> userIds,
             Map<Integer, String[]> dates, Map<Integer, String[]> efforts,
             Map<Integer, String[]> descriptions);
+    
+    public void setBacklogItemSpentEffortSum(BacklogItem bli);
    
 }

@@ -17,6 +17,7 @@ import fi.hut.soberit.agilefant.business.BacklogItemBusiness;
 import fi.hut.soberit.agilefant.business.BusinessThemeBusiness;
 import fi.hut.soberit.agilefant.business.HistoryBusiness;
 import fi.hut.soberit.agilefant.business.HourEntryBusiness;
+import fi.hut.soberit.agilefant.business.SettingBusiness;
 import fi.hut.soberit.agilefant.business.TaskBusiness;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.AFTime;
@@ -63,6 +64,8 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
     private BacklogItemBusiness backlogItemBusiness;
     
     private BusinessThemeBusiness businessThemeBusiness;
+    
+    private SettingBusiness settingBusiness;
         
     private HourEntryBusiness hourEntryBusiness;
 
@@ -198,6 +201,9 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
     }
     
     private void loadBacklogItemJSON() {
+        if(this.settingBusiness.isHourReportingEnabled()) {
+            this.hourEntryBusiness.setBacklogItemSpentEffortSum(this.backlogItem);
+        }
         this.backlogItem.setUserData(getResponsiblesAsUserData());
         JSONSerializer ser = new JSONSerializer();
         ser.include("businessThemes");
@@ -483,5 +489,9 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
 
     public void setUserIds(Set<Integer> userIds) {
         this.userIds = userIds;
+    }
+
+    public void setSettingBusiness(SettingBusiness settingBusiness) {
+        this.settingBusiness = settingBusiness;
     }
 }

@@ -2,6 +2,7 @@ package fi.hut.soberit.agilefant.business.impl;
 
 import java.text.ParseException;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -60,6 +61,19 @@ public class HourEntryBusinessImpl implements HourEntryBusiness {
 
     public void setUserDAO(UserDAO userDAO) {
         this.userDAO = userDAO;
+    }
+    
+    public void setBacklogItemSpentEffortSum(BacklogItem bli) {
+        Collection<BacklogItemHourEntry> entries = bli.getHourEntries();
+        if(entries != null) {
+            AFTime sum = new AFTime(0);
+            for(BacklogItemHourEntry entry : entries) {
+                if(entry.getTimeSpent() != null) {
+                    sum.add(entry.getTimeSpent());
+                }
+            }
+            bli.setEffortSpent(sum);
+        }
     }
     
     /**

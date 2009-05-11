@@ -682,7 +682,7 @@
 	  this.row = row
 	  this.inMenu = false;
 	  this.options = {
-	      title: '<div class="gear" />'
+	      title: '<div><div class="gear" style="float:left;"/><div style="float: left;">&nbsp; Actions</div></div>'
 	  };
 	  $.extend(this.options, options);
 	  var me = this;

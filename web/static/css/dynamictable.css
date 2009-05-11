@@ -148,17 +148,19 @@ div.gear:hover {
 
 .dynamictable-captionaction {
   background-color: #eee;
+  float: left !impotant;
   border: 1px solid black;
   margin-left: 5px;
   padding: 2px;	
-  width: 130px;
+  width: 135px;
+  -moz-border-radius: 0.5em;
+  border-radius: 0.5em;
+  text-align: center;
 }
 
 .dynamictable-captionaction:hover {
   float: left !impotant;
-  background-color: #eee;
-  background: transparent url(../img/gradient.png) 80% 60% repeat-x;
-  border: 1px solid black;  
+  background-color: #ccc; 
   cursor: pointer;
 }
 

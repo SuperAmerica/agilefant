@@ -189,3 +189,37 @@ div.gear:hover {
 	height:16px;
 	width:16px;
 }
+
+.tabMenu {
+  width: 15%;
+  /*height: 100%;*/
+  min-height: 15px;
+  max-height: 999em;
+  min-width: 30px;
+  display: block;
+  width: auto;
+  float: left !important;
+  background-color: #eee;
+  margin: 0 0.2% -1000em 0;
+  padding: 0 0 1000.5em 0.2%;
+  overflow: hidden;
+  border: none;
+		
+}
+.cellTabs .ui-tabs-nav li {
+	float: none !important;
+}
+.cellTabs .ui-tabs-nav li a span {
+	text-align: left;	
+}
+.tabData {
+  min-height: 15px;
+  max-height: 999em;
+  min-width: 30px;
+  width: auto;
+  float: left !important;
+  margin: 0 0.2% -1000em 0;
+  padding: 0 0 1000.5em 0.2%;
+  overflow: hidden;
+  border: none;
+}

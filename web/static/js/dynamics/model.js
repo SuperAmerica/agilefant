@@ -541,3 +541,111 @@ backlogItemModel.prototype = {
     });
   }
 };
+
+/** BACKLOG ITEM HOUR ENTRY  **/
+
+var backlogItemHourEntryModel = function(data, backlogItem) {
+	
+	this.editListeners = [];
+	this.deleteListeners = [];
+	this.backlogItem = backlogItem;
+	this.setData(data);
+};
+backlogItemHourEntryModel.prototype = {
+	setData: function(data) {
+		var bubbleEvents = [];
+		if(!this.persistedData || this.timeSpent != this.persistedData.timeSpent) {
+			bubbleEvents.push("metricsUpdated");
+		}
+		for (var i = 0; i < this.editListeners.length; i++) {
+			this.editListeners[i]({bubbleEvent: bubbleEvents});
+		}
+		this.persistedData = data;
+	},
+	setTimeSpent: function(timeSpent) {
+		this.timeSpent = timeSpent;
+	},
+	getTimeSpent: function() {
+		return this.timeSpent;
+	},
+	setUser: function() {
+		
+	},
+	getUser: function() {
+		return this.user;
+	},
+	addEditListener: function(listener) {
+		this.editListeners.push(listener);
+	},
+	addDeleteListener: function(listener) {
+		this.deleteListeners.push(listener);
+	},
+	beginTransaction: function() {
+		this.inTransaction = true;
+	},
+	commit: function() {
+		this.inTransaction = false;
+		this.save();
+	},
+	rollBack: function() {
+		this.setData(this.persistedData);
+		this.inTransaction = false;
+	},
+	remove: function() {
+		
+	},
+	save: function() {
+		if(this.inTransaction) {
+			return;
+		}
+	}
+};
+
+/** TODO MODEL **/
+
+var todoModel = function(data, backlogItem) {
+	
+};
+todoModel.prototype = {
+	setData: function(data) {
+		var bubbleEvents = [];
+		if(!this.persistedData || this.state != this.persistedData.state) {
+			bubbleEvents.push("metricsUpdated");
+		}
+		for (var i = 0; i < this.editListeners.length; i++) {
+			this.editListeners[i]({bubbleEvent: bubbleEvents});
+		}
+		this.persistedData = data;
+	},
+	setState: function(state) {
+		this.state = state;
+	},
+	getState: function() {
+		return this.state;
+	},
+	addEditListener: function(listener) {
+		this.editListeners.push(listener);
+	},
+	addDeleteListener: function(listener) {
+		this.deleteListeners.push(listener);
+	},
+	beginTransaction: function() {
+		this.inTransaction = true;
+	},
+	commit: function() {
+		this.inTransaction = false;
+		this.save();
+	},
+	rollBack: function() {
+		this.setData(this.persistedData);
+		this.inTransaction = false;
+	},
+	remove: function() {
+		
+	},
+	save: function() {
+		if(this.inTransaction) {
+			return;
+		}
+	}
+};

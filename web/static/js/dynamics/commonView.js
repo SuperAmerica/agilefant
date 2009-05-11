@@ -11,14 +11,24 @@ var commonView = {
   },
   expandCollapse: function(parent, expandCb, collapseCb) {
 	var button = $("<div />").addClass("dynamictable-expand").appendTo(parent);
-	button.toggle(function() {
+	var cb = function(event) {
+		if(button.hasClass("dynamictable-expand")) {
+			expandCb();
+		} else {
+			collapseCb();
+		}
 		button.toggleClass("dynamictable-expand").toggleClass("dynamictable-collapse");
+	};
+	button.click(cb);
+	button.bind("showContents", function() {
 		expandCb();
-	},
-	function() {
-		button.toggleClass("dynamictable-expand").toggleClass("dynamictable-collapse");
-		collapseCb();
+		button.removeClass("dynamictable-expand").addClass("dynamictable-collapse");
 	});
+	button.bind("hideContents", function() {
+		collapseCb();
+		button.removeClass("dynamictable-collapse").addClass("dynamictable-expand");
+	});
+	return button;
   },
   effortError: function(connectTo) {
 	 var err = $("<div />").addClass("cellErrorMessage").appendTo(document.body);

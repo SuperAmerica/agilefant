@@ -4,6 +4,7 @@ var iterationController = function(iterationId, element) {
  var me = this;
  this.iterationGoalControllers = [];
  this.descCells = [];
+ this.buttonCells = [];
  ModelFactory.getIteration(this.iterationId, function(data) { me.render(data); });
 }
 iterationController.prototype = {
@@ -24,19 +25,13 @@ iterationController.prototype = {
       this.model.reloadGoalData();
     },
     showBacklogItems: function() {
-      for(var i = 0 ; i < this.iterationGoalControllers.length; i++) {
-        this.iterationGoalControllers[i].showBacklogItems();
-      }
-      for(var i = 0; i < this.descCells.length; i++) {
-    	this.descCells[i].getElement().hide();
+      for(var i = 0; i < this.buttonCells.length; i++) {
+    	this.buttonCells[i].trigger("showContents");
       }
     },
     hideBacklogItems: function() {
-      for(var i = 0 ; i < this.iterationGoalControllers.length; i++) {
-        this.iterationGoalControllers[i].hideBacklogItems();
-      }  
-      for(var i = 0; i < this.descCells.length; i++) {
-      	this.descCells[i].getElement().show();
+      for(var i = 0; i < this.buttonCells.length; i++) {
+      	this.buttonCells[i].trigger("hideContents");
       }
     },
     deleteGoal: function(goal) {
@@ -132,13 +127,13 @@ iterationController.prototype = {
         row.getElement().bind("metricsUpdated", function() {
         	goal.reloadMetrics();
         });
-        commonView.expandCollapse(expand.getElement(), function() {
+        this.buttonCells.push(commonView.expandCollapse(expand.getElement(), function() {
         	blictrl.showBacklogItems();
         	desc.getElement().hide();
         }, function() {
         	blictrl.hideBacklogItems();
         	desc.getElement().show();
-        });
+        }));
     },
     render: function(data) {
       var me = this;
@@ -208,11 +203,11 @@ iterationController.prototype = {
                                     	   blictrl.createBli();
                                          }
       								}]});
-      commonView.expandCollapse(expand.getElement(), function() {
+      this.buttonCells.push(commonView.expandCollapse(expand.getElement(), function() {
       	blictrl.showBacklogItems();
       }, function() {
       	blictrl.hideBacklogItems();
-      });
+      }));
       
       this.view.render();
     },
@@ -274,7 +269,7 @@ var iterationGoalController = function(parentView, model) {
   //this.element = element;
   this.parentView = parentView;
   parentView.getElement().css("padding-left","2%"); //TODO: refactor
-  this.element = $("<div />").width("95%").appendTo(parentView.getElement());
+  this.element = $("<div />").width("98%").appendTo(parentView.getElement());
   this.data = model;
   this.view = jQuery(this.element).backlogItemsTable();
   this.render(this.data);

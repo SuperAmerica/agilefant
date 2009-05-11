@@ -146,10 +146,12 @@ var agilefantUtils = {
   },
 	comparators: {
 	  nameComparator: function(a,b) {
+	    if(a == null || a.getName() == null) return -1;
+	    if(b == null || b.getName() == null) return 1;
 	    return (a.getName().toLowerCase() > b.getName().toLowerCase());
 	  },
-	  descComparator: function(a,b) {
-	    return (a.getDescription().toLowerCase() > b.getDescription().toLowerCase());
+	  descComparator: function(a,b) {	     
+		return (a.getDescription().toLowerCase() > b.getDescription().toLowerCase());
 	  },
 	  priorityComparator: function(a,b) {
 	    return (a.getPriority() > b.getPriority());

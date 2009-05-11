@@ -321,7 +321,7 @@ $(document).ready( function() {
 <script type="text/javascript" src="static/js/dynamics/dynamicTable.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
 <script type="text/javascript" src="static/js/dynamics/commonView.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
 
-<div id="iterationGoals">&nbsp;</div>
+<div id="iterationGoals" style="min-width: 800px;">&nbsp;</div>
 <script type="text/javascript">
 $(document).ready(function() {
   new iterationController(${iterationId}, $("#iterationGoals"));

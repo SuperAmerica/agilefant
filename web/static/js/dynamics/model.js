@@ -39,7 +39,7 @@ iterationModel = function(iterationData, iterationId) {
 		goalPointer.push(new iterationGoalModel(iterationGoalData, me));
 	});
 	if(iterationData.itemsWithoutGoal) {
-		this.containerGoal = new iterationGoalModel({id: ""}, this);
+		this.containerGoal = new iterationGoalModel({id: "", priority: 9999999}, this);
 		this.containerGoal.save = function() {};
 		this.containerGoal.remove = function() {};
 		this.containerGoal.backlogItems = this.itemsWithoutGoal;

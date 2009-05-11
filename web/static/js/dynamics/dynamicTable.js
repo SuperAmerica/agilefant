@@ -42,7 +42,7 @@
 		 me.sortTable();
 		});
 		this.headerRow = null;
-		this.caption = $('<div />').addClass(cssClasses.tableCaption).prependTo(this.container);
+		this.caption = $('<div />').addClass(cssClasses.tableCaption).prependTo(this.container).width(this.maxWidth+"%");
 		$("<div />").css("float", "left").text(this.options.captionText).appendTo(this.caption).width("30%");
 		this.captionAction = $('<ul />').addClass(cssClasses.captionActions).appendTo(this.caption).css("float","right").width("68%");
 		this.sorting = {
@@ -211,8 +211,8 @@
         //percentage taken by column borders
         var totalPercentage = (statics.borderPerColumn * num) / 100;
 
-        //scale total width down to 95% in order to prevent cell wrapping
-        totalwidth = totalwidth / (0.95 - totalPercentage);
+        //scale total width down to 98% in order to prevent cell wrapping
+        totalwidth = totalwidth / (0.99 - totalPercentage);
         
         for (var j = 0; j < params.length; j++) {
           var cell = params[j];
@@ -226,6 +226,7 @@
           }
         }
         var maxWidth = Math.round(10 * (totalPercentage + ((num - 1) * statics.borderPerColumn)))/10;
+        this.maxWidth = maxWidth;
         for (var j = 0; j < params.length; j++) {
           var cell = params[j];
           if(!cell.auto && cell.setMaxWidth == true) {
@@ -789,45 +790,45 @@
 			  };			  
 		  }
 		  addTableColumn(opts, 
-				  { minwidth: 20, auto: true },
+				  { minwidth: 36, auto: true },
 				  { name: "Prio",
 					tooltio: "Priority",
 					sort: agilefantUtils.comparators.priorityComparator
 				  });
 		  addTableColumn(opts,
-				  { minwidth: 200, auto: true },
+				  { minwidth: 350, auto: true },
 				  { name: 'Name',
 			        tooltip: 'Iteration goal name',
 			        sort: agilefantUtils.comparators.nameComparator
 				  });
 		  addTableColumn(opts,
-				  { minwidth: 30, auto: true },
+				  { minwidth: 70, auto: true },
 				  { name: 'EL',
 					tooltip: 'Total effort left',
 			        sort: agilefantUtils.comparators.effortLeftComparator
 				  });
 		  addTableColumn(opts, 
-				  { minwidth: 30, auto: true },
+				  { minwidth: 70, auto: true },
 				  { name: 'OE',
 			        tooltip: 'Total original estimate',
 			        sort: agilefantUtils.comparators.originalEstimateComparator
 				  });
 		  if(agilefantUtils.isTimesheetsEnables()) {
 			  addTableColumn(opts,
-					  { minwidth: 30, auto: true },
+					  { minwidth: 70, auto: true },
 			          { name: 'ES',
 				        tooltip: 'Total effort spent',
 				        sort: agilefantUtils.comparators.effortSpentComparator
 			          });
 		  }
 		  addTableColumn(opts,		                  
-				  { minwidth: 40, auto: true },
+				  { minwidth: 90, auto: true },
 				  { name: 'Done / Total',
 			        tooltip: 'Done / Total backlog items',
 			        sort: null
 				  });
 		  addTableColumn(opts,
-				  { minwidth: 40, auto: true},
+				  { minwidth: 80, auto: true},
 				  { name: 'Actions',
 				    actionCell: true,
 					tooltip: "Actions",

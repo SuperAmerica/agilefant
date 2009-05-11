@@ -850,13 +850,13 @@
 	      if(agilefantUtils.isTimesheetsEnables()) {
 	          opts.colCss = { ':eq(9)': { 'cursor': 'pointer' },
 	                    ':lt(10)': { 'background-color': '#eee' },
-	                    ':eq(10)': { 'background-color': '#fff' },
+	                    ':gt(9)': { 'background-color': '#fff' },
 	                    ':eq(5)': { 'cursor': 'pointer' }
 	          };
 	      } else {
 	          opts.colCss = { ':eq(8)': { 'cursor': 'pointer' },
 	                    ':lt(9)': { 'background-color': '#eee' },
-	                    ':eq(9)': { 'background-color': '#fff' },
+	                    ':gt(8)': { 'background-color': '#fff' },
 	                    ':eq(5)': { 'cursor': 'pointer' }
 	          };	    	  
 	      }
@@ -921,10 +921,41 @@
 		            sort: null
 		          });
 	      addTableColumn(opts,{ auto: false, setMaxWidth: true });
+	      addTableColumn(opts,{ auto: false, setMaxWidth: true });
 	
 	      $.extend(opts,options);
 	      var ret = this.dynamicTable(opts);
 	      return ret;
 		}
 	});
-})(jQuery)
+})(jQuery);
+
+var backlogItemTabs = function(backlogItem, parentView) {
+  var id = backlogItem.getId();
+  if(id == 0) { //when creating new item etc.
+    var tmp = new Date();
+    id = tmp.getTime();
+  }
+  this.parentView = parentView;
+  this.prefix = "backlogItemTab-"+id;
+  this.tabs = [];
+  this.addFrame();
+};
+backlogItemTabs.prototype = {
+    addFrame: function() {
+      this.container = $('<div />').appendTo(this.parentView).width("100%").addClass("cellTabs");
+      this.tabList = $('<ul />').addClass("tab-menu").appendTo(this.container).addClass("tabMenu");
+      this.container.tabs();
+    },
+    createTabId: function() {
+      return this.prefix+"-"+this.tabs.length;
+    },
+    addTab: function(title) {
+      var id = this.createTabId();
+      var t = $('<div />').attr("id",id).appendTo(this.tabList);
+      t.addClass("ui-tabs").addClass("tabData");
+      this.tabs.push(t);
+      this.container.tabs("add","#"+id, title);
+      return t;
+    }
+};

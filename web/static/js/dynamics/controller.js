@@ -406,10 +406,16 @@ iterationGoalController.prototype = {
              }
            }
            ]});
+    var tabCell = row.createCell();
+    tabCell.getElement().hide();
+    var tabs = new backlogItemTabs(bli,tabCell.getElement());
+    tabs.addTab("Info").html("tab 0 <br /> <br /> fadfsadfdsdfasfsf <br /> <br /> <br/><br/><br/><br/>TEXT<br/>");
+    tabs.addTab("TODOs").html("tab 1 <br /> <br /> fadfsadfdsdfasfsf <br /><br/><br/>");
+    tabs.addTab("Spent effort").html("tab 2 <br /> <br /> fadfsadfdsdfasfsf <br /><br/><br/><br/><br/><br/> TEXT");
     commonView.expandCollapse(expand.getElement(), function() {
-    	desc.getElement().show();
+    	tabCell.getElement().show();
     }, function() {
-    	desc.getElement().hide();
+    	tabCell.getElement().hide();
     });
   },
   createBli: function() {

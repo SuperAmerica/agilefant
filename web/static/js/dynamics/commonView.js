@@ -46,5 +46,4 @@ var commonView = {
 	 err.css({position: "absolute", top: cpos.top + connectTo.height(), left: cpos.left});
 	 return err;
   }
-  
 };

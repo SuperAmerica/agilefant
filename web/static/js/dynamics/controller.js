@@ -104,6 +104,14 @@ iterationController.prototype = {
         blis.getElement().hide();
         var blictrl = new iterationGoalController(blis, goal);
         this.iterationGoalControllers.push(blictrl);
+        var expandButton = commonView.expandCollapse(expand.getElement(), function() {
+          blictrl.showBacklogItems();
+          desc.getElement().hide();
+        }, function() {
+          blictrl.hideBacklogItems();
+          desc.getElement().show();
+        });
+        this.buttonCells.push(expandButton);
         buttons.setActionCell({items: [
                                        {
                                          text: "Edit",
@@ -119,7 +127,7 @@ iterationController.prototype = {
                                        }, {
                                     	 text: "Create backlog item",
                                     	 callback: function() {
-                                    	   blis.getElement().show();
+                                    	   expandButton.trigger("showContents");
                                     	   blictrl.createBli();
                                          }
                                        }
@@ -127,13 +135,7 @@ iterationController.prototype = {
         row.getElement().bind("metricsUpdated", function() {
         	goal.reloadMetrics();
         });
-        this.buttonCells.push(commonView.expandCollapse(expand.getElement(), function() {
-        	blictrl.showBacklogItems();
-        	desc.getElement().hide();
-        }, function() {
-        	blictrl.hideBacklogItems();
-        	desc.getElement().show();
-        }));
+
     },
     render: function(data) {
       var me = this;

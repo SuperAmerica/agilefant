@@ -934,7 +934,7 @@
 
 var backlogItemTabs = function(backlogItem, parentView) {
   var id = backlogItem.getId();
-  if(id == 0) { //when creating new item etc.
+  if(id == 0) { // when creating new item etc.
     var tmp = new Date();
     id = tmp.getTime();
   }

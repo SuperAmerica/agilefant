@@ -575,13 +575,17 @@
 		isValid: function() {
 			if(this.cell.options.required && this.field.val().length == 0) {
 			  this.field.addClass("invalidValue");
-			  if(!this.errorMsg) this.errorMsg = commonView.requiredFieldError(this.cell.getElement());
+			  if(!this.errorMsg) {
+			    this.errorMsg = commonView.requiredFieldError(this.cell.getElement());
+			    this.cell.getElement().addClass('cellError');
+			  }
 			  return false;
 			}
 			this.field.removeClass("invalidValue");
 			if(this.errorMsg) {
 				this.errorMsg.remove(); 
 				this.errorMsg = null;
+				this.cell.getElement().removeClass('cellError');
 			}
 			return true;
 		},
@@ -595,7 +599,7 @@
 	/** EFFORT EDIT **/
 	 var effortEdit = function(cell, autoClose) {
 	    this.cell = cell;
-	    this.field = $('<input type="text"/>').attr("size","15").appendTo(this.cell.getElement()).focus();
+	    this.field = $('<input type="text"/>').width('80%').appendTo(this.cell.getElement()).focus();
 	    var val = this.cell.options.get();
 	    if(val) val = agilefantUtils.aftimeToString(val, true);
 	    this.field.val(val);
@@ -623,11 +627,13 @@
 	    	  if(this.errorMsg) { 
 	    		  this.errorMsg.remove();
 	    		  this.errorMsg = null;
+	    		  this.cell.getElement().removeClass('cellError');
 	    	  }
 	    	  return true;
 	      } else {
 	    	  if(!this.errorMsg) this.errorMsg = commonView.effortError(this.cell.getElement());
 	    	  this.field.addClass("invalidValue");
+	    	  this.cell.getElement().addClass('cellError');
 	    	  return false;
 	      }
 	    },
@@ -682,7 +688,7 @@
 	  this.row = row
 	  this.inMenu = false;
 	  this.options = {
-	      title: '<div><div class="gear" style="float:left;"/><div style="float: left;">&nbsp; Actions</div></div>'
+	      title: '<div class="actionColumn"><div class="gear" style="float:left;"/><div style="float: left;">&nbsp; Actions</div></div>'
 	  };
 	  $.extend(this.options, options);
 	  var me = this;

@@ -133,12 +133,16 @@ div.gear {
   background-repeat: no-repeat;
 }
 
-div.gear:hover {
+.actionColumn:hover .gear {
   background-position: 100%;
 }
 
 .invalidValue {
   background-color: #FF6666;
+}
+.dynamictable-row .cellError {
+    position: relative !important;
+    overflow: visible !important;
 }
 .cellErrorMessage {
   width: 150px;

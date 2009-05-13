@@ -52,6 +52,22 @@ var agilefantUtils = {
 		}
 		return false;
 	},
+	dateToString: function(d) {
+	   var date = new Date();
+	   date.setTime(d);
+	   var _zeroPad = function(num) {
+	     var s = '0'+num;
+	     return s.substring(s.length-2);
+	   };
+	   return "yyyy-mm-dd HH:MM"
+     .split('yyyy').join(date.getFullYear())
+     .split('yy').join((date.getFullYear() + '').substring(2))
+     .split('mmm').join(date.getMonthName(true))
+     .split('mm').join(_zeroPad(date.getMonth()+1))
+     .split('dd').join(_zeroPad(date.getDate()))
+        .split('HH').join(_zeroPad(date.getHours()))
+        .split('MM').join(_zeroPad(date.getMinutes()));
+	},
 	userlistToHTML: function(users) {
 		var html = $("<span />");
 		if(users && users.length > 0) {

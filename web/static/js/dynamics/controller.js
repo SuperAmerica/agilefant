@@ -576,6 +576,19 @@ backlogItemController.prototype = {
        get: function() { return todo.getState(); },
        decorator: agilefantUtils.stateToString
      });
+     row.createCell().setActionCell({items: [ 
+                {
+                    text: "Edit",
+                    callback: function(row) {
+
+                    }
+                  }, {
+                    text: "Delete",
+                    callback: function() {
+                     
+                    }
+                  }
+                  ]});
     },
     renderSpentEffort: function() {
       var entries = this.model.getHourEntries();
@@ -587,7 +600,8 @@ backlogItemController.prototype = {
     addEffortEntry: function(entry) {
       var row = this.spentEffortView.createRow();
       row.createCell({
-        get: function() { return entry.getDate();}
+        get: function() { return entry.getDate();},
+        decorator: agilefantUtils.dateToString
       });
       row.createCell({
         get: function() { return entry.getUser().fullName;}
@@ -599,6 +613,19 @@ backlogItemController.prototype = {
       row.createCell({
         get: function() { return entry.getComment();}
       });
+      row.createCell().setActionCell({items: [ 
+                      {
+                          text: "Edit",
+                          callback: function(row) {
+
+                          }
+                        }, {
+                          text: "Delete",
+                          callback: function() {
+                           
+                          }
+                        }
+                        ]});
 
     }
 };

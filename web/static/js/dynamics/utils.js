@@ -1,6 +1,6 @@
 var agilefantUtils = {
 	aftimeToString: function(aftime, hideDash) {
-		if(!hideDash && (aftime === 0 || aftime < 1)) {
+		if(!hideDash && ((aftime === null && typeof(aftime) == "object")|| aftime < 0)) {
 			return "&mdash;";
 		}
 		var hours = Math.round(aftime/360)/10;

@@ -899,13 +899,13 @@
 	      addTableColumn(opts,
 	    		  { minwidth: 30, auto: true },
 	              { name: 'EL',
-	                tooltip: 'Total effort left',
+	                tooltip: 'Effort left',
 	                sort: agilefantUtils.comparators.effortLeftComparator
 	              });
 	      addTableColumn(opts,
 	    		  { minwidth: 30, auto: true },
 	              { name: 'OE',
-	                tooltip: 'Total original estimate',
+	                tooltip: 'Original estimate',
 	                sort: agilefantUtils.comparators.originalEstimateComparator
 	              });
 		  if(agilefantUtils.isTimesheetsEnabled()) {
@@ -928,7 +928,84 @@
 	      $.extend(opts,options);
 	      var ret = this.dynamicTable(opts);
 	      return ret;
-		}
+		},
+    todoTable: function(options) {
+      var opts = {
+          defaultSortColumn: 0,
+          captionText: "TODOs"
+      };
+      opts.colCss = { ':eq(2)': { 'cursor': 'pointer' },
+                '*': { 'background-color': '#eee' },
+                
+      };          
+      addTableColumn(opts,
+          { minwidth: 380, auto: true },
+              { name: 'Name',
+                tooltip: 'TODO name',
+                sort: agilefantUtils.comparators.nameComparator
+              });
+      addTableColumn(opts,
+          { minwidth: 50, auto: true },
+              { name: 'State',
+                tooltip: 'TODO state',
+                sort: null
+              });
+      addTableColumn(opts,
+          { minwidth: 50, auto: true },
+              { name: 'Actions',
+              tooltip: "",
+              sort: null
+            });
+
+      $.extend(opts,options);
+      var ret = this.dynamicTable(opts);
+      return ret;
+  },
+  spentEffortTable: function(options) {
+    var opts = {
+        defaultSortColumn: 0,
+        captionText: "Spent Effort"
+    };
+    opts.colCss = { ':eq(2)': { 'cursor': 'pointer' },
+              '*': { 'background-color': '#eee' },
+              
+    };          
+    addTableColumn(opts,
+        { minwidth: 50, auto: true },
+            { name: 'Date',
+              tooltip: 'Date',
+              sort: null
+            });
+    addTableColumn(opts,
+        { minwidth: 150, auto: true },
+            { name: 'User',
+              tooltip: 'User',
+              sort: null
+            });
+    addTableColumn(opts,
+        { minwidth: 50, auto: true },
+            { name: 'Spent effort',
+              tooltip: 'Spent effort',
+              sort: null
+            });
+    addTableColumn(opts,
+        { minwidth: 250, auto: true },
+            { name: 'Comment',
+              tooltip: 'Comment',
+              sort: null
+            });
+    addTableColumn(opts,
+        { minwidth: 50, auto: true },
+            { name: 'Actions',
+            tooltip: "",
+            sort: null
+          });
+
+    $.extend(opts,options);
+    var ret = this.dynamicTable(opts);
+    return ret;
+}
+  
 	});
 })(jQuery);
 
@@ -948,6 +1025,11 @@ backlogItemTabs.prototype = {
       this.container = $('<div />').appendTo(this.parentView).width("100%").addClass("cellTabs");
       this.tabList = $('<ul />').addClass("tab-menu").appendTo(this.container).addClass("tabMenu");
       this.container.tabs();
+    },
+    setOnShow: function(cb) {
+      this.container.bind('tabsshow', function(event, ui) {
+        cb(ui.index);
+      });
     },
     createTabId: function() {
       return this.prefix+"-"+this.tabs.length;

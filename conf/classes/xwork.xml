@@ -233,7 +233,17 @@
         <param name="location">/WEB-INF/jsp/jsonData.jsp</param>
       </result>
     </action>
-		
+      
+	<action name="backlogItemJSON"
+      method="getBacklogItemJSON" class="backlogItemAction">
+       <result name="ajax_error" type="httpheader">
+        <param name="status">400</param>
+      </result>
+      <result name="ajax_success" type="dispatcher">
+        <param name="status">200</param>
+        <param name="location">/WEB-INF/jsp/jsonData.jsp</param>
+      </result>
+    </action>
 		<action name="deleteBacklogItem" method="delete"
 			class="backlogItemAction">
 			<result type="redirect-action">

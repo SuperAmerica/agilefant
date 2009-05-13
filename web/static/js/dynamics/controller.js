@@ -408,10 +408,7 @@ iterationGoalController.prototype = {
            ]});
     var tabCell = row.createCell();
     tabCell.getElement().hide();
-    var tabs = new backlogItemTabs(bli,tabCell.getElement());
-    tabs.addTab("Info").html("tab 0 <br /> <br /> fadfsadfdsdfasfsf <br /> <br /> <br/><br/><br/><br/>TEXT<br/>");
-    tabs.addTab("TODOs").html("tab 1 <br /> <br /> fadfsadfdsdfasfsf <br /><br/><br/>");
-    tabs.addTab("Spent effort").html("tab 2 <br /> <br /> fadfsadfdsdfasfsf <br /><br/><br/><br/><br/><br/> TEXT");
+    var childController = new backlogItemController(tabCell, bli, this);
     commonView.expandCollapse(expand.getElement(), function() {
     	tabCell.getElement().show();
     }, function() {
@@ -534,9 +531,74 @@ iterationGoalController.prototype = {
 };
 
 
-var backlogItemController = function(parentController, model) {
-
+var backlogItemController = function(parentView, model, parentController) {
+  this.model = model;
+  var tabs = new backlogItemTabs(model,parentView.getElement());
+  tabs.addTab("Info").html(model.getDescription());
+  var todos = tabs.addTab("TODOs");
+  this.todoView = todos.todoTable();
+  var effView = tabs.addTab("Spent effort");
+  this.spentEffortView = effView.spentEffortTable(); 
+  var me = this;
+  var onShow = function(index) { me.showTab(index); };
+  tabs.setOnShow(onShow);
+  this.tabsLoaded = {};
+ 
 };
 backlogItemController.prototype = {
+    showTab: function(index) {
+      if(!this.tabsLoaded[index]) {
+        switch(index) {
+        case 1: 
+          this.renderTodos();
+          this.tabsLoaded[1] = true;
+          break;
+        case 2:
+          this.renderSpentEffort();
+          this.tabsLoaded[2] = true;
+          break;
+        }
+      }
+    },
+    renderTodos: function() {
+      var todoItems = this.model.getTodos();
+      for(var i = 0; i < todoItems.length; i++) {
+        this.addTodo(todoItems[i]);
+      }
+      this.todoView.render();
+    },
+    addTodo: function(todo) {
+     var row = this.todoView.createRow();
+     row.createCell({
+       get: function() { return todo.getName(); }
+     });
+     row.createCell({
+       get: function() { return todo.getState(); },
+       decorator: agilefantUtils.stateToString
+     });
+    },
+    renderSpentEffort: function() {
+      var entries = this.model.getHourEntries();
+      for(var i = 0; i < entries.length; i++) {
+        this.addEffortEntry(entries[i]);
+      }
+      this.spentEffortView.render();
+    },
+    addEffortEntry: function(entry) {
+      var row = this.spentEffortView.createRow();
+      row.createCell({
+        get: function() { return entry.getDate();}
+      });
+      row.createCell({
+        get: function() { return entry.getUser().fullName;}
+      });
+      row.createCell({
+        get: function() { return entry.getTimeSpent();},
+        decorator: agilefantUtils.aftimeToString
+      });
+      row.createCell({
+        get: function() { return entry.getComment();}
+      });
 
+    }
 };

@@ -331,10 +331,58 @@ backlogItemModel.prototype = {
     		}
     	}
     }
+    if(data.hourEntries) {
+      this.hourEntries = [];
+      for(var i = 0 ; i < data.hourEntries.length; i++) {
+        if(data.hourEntries[i] != null) {
+          this.hourEntries.push(new backlogItemHourEntryModel(this, data.hourEntries[i]));
+        }
+      }
+    }
+    if(data.tasks) {
+      this.todos = [];
+      for(var i = 0 ; i < data.tasks.length; i++) {
+        if(data.tasks[i] != null) {
+          this.todos.push(new todoModel(this,data.tasks[i]));
+        }
+      }
+    }
     this.persistedData = data;
     for (var i = 0; i < this.editListeners.length; i++) {
       this.editListeners[i]({bubbleEvent: bubbleEvents});
     }
+  },
+  loadTodoAndSpentEffortData: function() {
+    var me = this;
+    $.ajax({
+      url: "backlogItemJSON.action",
+      data: {backlogItemId: this.id},
+      async: false,
+      cache: false,
+      dataType: 'json',
+      type: 'POST',
+      success: function(data,type) {
+        me.setData(data);
+      }
+    });
+  },
+  getHourEntries: function() {
+    if(this.hourEntries == null) {
+      this.loadTodoAndSpentEffortData();
+    }
+    return this.hourEntries;
+  },
+  reloadHourEntries: function() {
+    this.loadTodoAndSpentEffortData();
+  },
+  reloadTodos: function() {
+    this.loadTodoAndSpentEffortData();
+  },
+  getTodos: function() {
+    if(this.todos == null) {
+      this.loadTodoAndSpentEffortData();
+    }
+    return this.todos;
   },
   getThemes: function() {
 	return this.themes;  
@@ -544,7 +592,7 @@ backlogItemModel.prototype = {
 
 /** BACKLOG ITEM HOUR ENTRY  **/
 
-var backlogItemHourEntryModel = function(data, backlogItem) {
+var backlogItemHourEntryModel = function(backlogItem, data) {
 	
 	this.editListeners = [];
 	this.deleteListeners = [];
@@ -557,6 +605,12 @@ backlogItemHourEntryModel.prototype = {
 		if(!this.persistedData || this.timeSpent != this.persistedData.timeSpent) {
 			bubbleEvents.push("metricsUpdated");
 		}
+		
+		this.user = data.user;
+		this.timeSpent = data.timeSpent;
+		this.comment = data.comment;
+		this.date = data.date;
+		
 		for (var i = 0; i < this.editListeners.length; i++) {
 			this.editListeners[i]({bubbleEvent: bubbleEvents});
 		}
@@ -568,11 +622,23 @@ backlogItemHourEntryModel.prototype = {
 	getTimeSpent: function() {
 		return this.timeSpent;
 	},
-	setUser: function() {
-		
+	setUser: function(userId) {
+		this.userId = userId;
 	},
 	getUser: function() {
 		return this.user;
+	},
+	setComment: function(comment) {
+	  this.comment = comment;
+	},
+	getComment: function() {
+	  return this.comment;
+	},
+	setDate: function(date) {
+	  this.date = date;
+	},
+	getDate: function() {
+	  return this.date;
 	},
 	addEditListener: function(listener) {
 		this.editListeners.push(listener);
@@ -603,8 +669,11 @@ backlogItemHourEntryModel.prototype = {
 
 /** TODO MODEL **/
 
-var todoModel = function(data, backlogItem) {
-	
+var todoModel = function(backlogItem, data) {
+  this.editListeners = [];
+  this.deleteListeners = [];
+	this.backlogItem = backlogItem;
+	this.setData(data);
 };
 todoModel.prototype = {
 	setData: function(data) {
@@ -612,6 +681,9 @@ todoModel.prototype = {
 		if(!this.persistedData || this.state != this.persistedData.state) {
 			bubbleEvents.push("metricsUpdated");
 		}
+		this.state = data.state;
+		this.name = data.name;
+		
 		for (var i = 0; i < this.editListeners.length; i++) {
 			this.editListeners[i]({bubbleEvent: bubbleEvents});
 		}
@@ -622,6 +694,12 @@ todoModel.prototype = {
 	},
 	getState: function() {
 		return this.state;
+	},
+	setName: function(name) {
+	  this.name = name;
+	},
+	getName: function() {
+	  return this.name;
 	},
 	addEditListener: function(listener) {
 		this.editListeners.push(listener);

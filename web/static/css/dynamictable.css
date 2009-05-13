@@ -205,7 +205,7 @@ div.gear {
   max-height: 999em;
   min-width: 30px;
   display: block;
-  width: auto;
+  width: 12%;
   float: left !important;
   background-color: #eee;
   margin: 0 0.2% -1000em 0;
@@ -235,7 +235,7 @@ div.gear {
   min-height: 15px;
   max-height: 999em;
   min-width: 30px;
-  width: auto;
+  width: 86%;
   float: left !important;
   margin: 0 0.2% -1000em 0;
   padding: 0 0 1000.5em 0.2%;

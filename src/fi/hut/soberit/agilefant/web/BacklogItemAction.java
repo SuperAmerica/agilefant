@@ -207,7 +207,18 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
         this.backlogItem.setUserData(getResponsiblesAsUserData());
         JSONSerializer ser = new JSONSerializer();
         ser.include("businessThemes");
+        ser.include("tasks");
+        ser.include("hourEntries");
         jsonData = ser.serialize(this.backlogItem);
+    }
+    
+    public String getBacklogItemJSON() {
+        this.backlogItem = this.backlogItemBusiness.getBacklogItem(backlogItemId);
+        if(this.backlogItem == null) {
+            return CRUDAction.AJAX_ERROR;
+        }
+        this.loadBacklogItemJSON();
+        return CRUDAction.AJAX_SUCCESS;
     }
     
     public String ajaxStoreBacklogItem() {

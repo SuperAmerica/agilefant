@@ -133,6 +133,10 @@ div.gear {
   background-repeat: no-repeat;
 }
 
+.actionColumn, .actionColumn div{
+  cursor: pointer;  
+}
+
 .actionColumn:hover .gear {
   background-position: 100%;
 }

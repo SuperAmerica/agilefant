@@ -71,7 +71,7 @@ iterationController.prototype = {
           get: function() { return goal.getOriginalEstimate(); },
           decorator: agilefantUtils.aftimeToString
         });
-        if(agilefantUtils.isTimesheetsEnables()) {
+        if(agilefantUtils.isTimesheetsEnabled()) {
 	        var essum = row.createCell({
 	          get: function() { return goal.getEffortSpent(); },
 	          decorator: agilefantUtils.aftimeToString
@@ -182,7 +182,7 @@ iterationController.prototype = {
 	      get: function() { return goal.getOriginalEstimate(); },
 	      decorator: agilefantUtils.aftimeToString
 	    });
-	 if(agilefantUtils.isTimesheetsEnables()) {
+	 if(agilefantUtils.isTimesheetsEnabled()) {
 	    var essum = row.createCell({
 	      get: function() { return goal.getEffortSpent(); },
 	      decorator: agilefantUtils.aftimeToString
@@ -237,7 +237,7 @@ iterationController.prototype = {
           set: function(val){ fakeGoal.setName(val);}});
         var elsum = row.createCell();
         var oesum = row.createCell();
-        if(agilefantUtils.isTimesheetsEnables()) {
+        if(agilefantUtils.isTimesheetsEnabled()) {
         	var essum = row.createCell();
         }
         var tasks = row.createCell();
@@ -360,7 +360,7 @@ iterationGoalController.prototype = {
       set: function(val) { bli.setOriginalEstimate(val); },
       decorator: agilefantUtils.aftimeToString
     });
-    if(agilefantUtils.isTimesheetsEnables()) {
+    if(agilefantUtils.isTimesheetsEnabled()) {
     	var es = row.createCell({
     	  get: function() { return bli.getEffortSpent(); },
       	  decorator: agilefantUtils.aftimeToString
@@ -472,7 +472,7 @@ iterationGoalController.prototype = {
       get: function() { return bli.getOriginalEstimate(); },
       decorator: agilefantUtils.aftimeToString  
     });
-    if(agilefantUtils.isTimesheetsEnables()) {
+    if(agilefantUtils.isTimesheetsEnabled()) {
     	var es = row.createCell();
     }
     var buttons = row.createCell();

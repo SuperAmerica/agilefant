@@ -780,19 +780,17 @@
 		},
 		iterationGoalTable: function(options) {
 		  var opts = { captionText: "Iteration Goals"};
-		  if(agilefantUtils.isTimesheetsEnables()) {
+		  if(agilefantUtils.isTimesheetsEnabled()) {
 		      opts.colCss = {
 		        ':lt(7)': { 'background': '#dddddd' },
 		        ':eq(7)': { 'background': '#eeeeee' },
-		        ':eq(8)': { 'background': '#ffffff' },
-		        ':eq(6)': { 'cursor': 'pointer' }
+		        ':eq(8)': { 'background': '#ffffff' }
 		      };
 		  } else {
 		      opts.colCss = {
 		        ':lt(6)': { 'background': '#dddddd' },
 		        ':eq(6)': { 'background': '#eeeeee' },
-		        ':eq(7)': { 'background': '#ffffff' },
-		        ':eq(6)': { 'cursor': 'pointer' }
+		        ':eq(7)': { 'background': '#ffffff' }
 			  };			  
 		  }
 		  addTableColumn(opts, 
@@ -819,7 +817,7 @@
 			        tooltip: 'Total original estimate',
 			        sort: agilefantUtils.comparators.originalEstimateComparator
 				  });
-		  if(agilefantUtils.isTimesheetsEnables()) {
+		  if(agilefantUtils.isTimesheetsEnabled()) {
 			  addTableColumn(opts,
 					  { minwidth: 70, auto: true },
 			          { name: 'ES',
@@ -853,17 +851,15 @@
 	          defaultSortColumn: 3,
 	          captionText: "Backlog items"
 	      };
-	      if(agilefantUtils.isTimesheetsEnables()) {
+	      if(agilefantUtils.isTimesheetsEnabled()) {
 	          opts.colCss = { ':eq(9)': { 'cursor': 'pointer' },
 	                    ':lt(10)': { 'background-color': '#eee' },
-	                    ':gt(9)': { 'background-color': '#fff' },
-	                    ':eq(5)': { 'cursor': 'pointer' }
+	                    ':gt(9)': { 'background-color': '#fff' }
 	          };
 	      } else {
 	          opts.colCss = { ':eq(8)': { 'cursor': 'pointer' },
 	                    ':lt(9)': { 'background-color': '#eee' },
-	                    ':gt(8)': { 'background-color': '#fff' },
-	                    ':eq(5)': { 'cursor': 'pointer' }
+	                    ':gt(8)': { 'background-color': '#fff' }
 	          };	    	  
 	      }
 	      addTableColumn(opts, 
@@ -912,7 +908,7 @@
 	                tooltip: 'Total original estimate',
 	                sort: agilefantUtils.comparators.originalEstimateComparator
 	              });
-		  if(agilefantUtils.isTimesheetsEnables()) {
+		  if(agilefantUtils.isTimesheetsEnabled()) {
 		      addTableColumn(opts,
 		    		  { minwidth: 30, auto: true },
 		              { name: 'ES',

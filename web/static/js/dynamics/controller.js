@@ -551,14 +551,16 @@ var backlogItemController = function(parentView, model, parentController) {
       
       }
   });
-  var effView = tabs.addTab("Spent effort");
-  this.spentEffortView = effView.spentEffortTable(); 
-  this.spentEffortView.addCaptionAction("logEffort", {
-    text: "Log effort",
-    callback: function() {
-      
-      }
-  });
+  if(agilefantUtils.isTimesheetsEnabled()) {
+    var effView = tabs.addTab("Spent effort");
+    this.spentEffortView = effView.spentEffortTable(); 
+    this.spentEffortView.addCaptionAction("logEffort", {
+      text: "Log effort",
+      callback: function() {
+        
+        }
+    });
+  }
   var me = this;
   var onShow = function(index) { me.showTab(index); };
   tabs.setOnShow(onShow);

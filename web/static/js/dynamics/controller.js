@@ -94,9 +94,11 @@ iterationController.prototype = {
             	  return;
               } 
               goal.commit();
+              return false;
             }},
             cancel: {text: "Cancel", action: function() {
               row.cancelEdit();
+              return false;
             }}
           }}) //.getElement().hide();
         this.descCells.push(desc);
@@ -255,9 +257,11 @@ iterationController.prototype = {
           buttons: {
             save: {text: "Save", action: function() {
               me.storeGoal(row,fakeGoal);           
+              return false;
             }},
             cancel: {text: "Cancel", action: function() {
             	row.remove();
+            	return false;
             }}
           }});
         row.render();
@@ -378,11 +382,13 @@ iterationGoalController.prototype = {
           }
           desc.getElement().hide();
           bli.commit();
+          return false;
         }},
         cancel: {text: "Cancel", action: function() {
           bli.rollBack();
           desc.getElement().hide();
           row.cancelEdit();
+          return false;
         }}
       }});
     desc.getElement().hide();
@@ -495,9 +501,11 @@ iterationGoalController.prototype = {
           me.addRow(bli);
           bli.commit();
           //me.view.sortTable();
+          return false;
         }},
         cancel: {text: "Cancel", action: function() {
           row.remove();
+          return false;
         }}
       }});
     row.updateColCss();

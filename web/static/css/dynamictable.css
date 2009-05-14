@@ -217,11 +217,16 @@ div.gear {
 .cellTabs .ui-tabs-nav li {
 	float: none !important;
 	background-image: url('../img/vert_tabs.png') !important;
-	background-position: 50% 80% !important;
+	background-position: 100% 50% !important;
 	border: 1px solid #bba !important;
 }
+
+.cellTabs .ui-tabs-nav li.ui-state-active {
+  background-position: 100% 87% !important	
+}
+
 .cellTabs .ui-tabs-nav li:hover {
-  background-position: 50% 20% !important;
+  background-position: 100% 15% !important;
 }
 .cellTabs .ui-tabs-nav li a {
   background: none !important;  

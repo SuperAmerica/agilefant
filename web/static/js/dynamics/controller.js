@@ -537,8 +537,20 @@ var backlogItemController = function(parentView, model, parentController) {
   this.infoTable = tabs.addTab("Info").genericTable({noHeader: true, colCss: {}, colWidths: [{minwidth: 10, auto:true},{minwidth: 90, auto: true}]});
   var todos = tabs.addTab("TODOs");
   this.todoView = todos.todoTable();
+  this.todoView.addCaptionAction("createTODO", {
+    text: "Create TODO",
+    callback: function() {
+      
+      }
+  });
   var effView = tabs.addTab("Spent effort");
   this.spentEffortView = effView.spentEffortTable(); 
+  this.spentEffortView.addCaptionAction("logEffort", {
+    text: "Log effort",
+    callback: function() {
+      
+      }
+  });
   var me = this;
   var onShow = function(index) { me.showTab(index); };
   tabs.setOnShow(onShow);

@@ -534,7 +534,7 @@ iterationGoalController.prototype = {
 var backlogItemController = function(parentView, model, parentController) {
   this.model = model;
   var tabs = new backlogItemTabs(model,parentView.getElement());
-  tabs.addTab("Info").html(model.getDescription());
+  this.infoTable = tabs.addTab("Info").genericTable({noHeader: true, colCss: {}, colWidths: [{minwidth: 10, auto:true},{minwidth: 90, auto: true}]});
   var todos = tabs.addTab("TODOs");
   this.todoView = todos.todoTable();
   var effView = tabs.addTab("Spent effort");
@@ -542,6 +542,7 @@ var backlogItemController = function(parentView, model, parentController) {
   var me = this;
   var onShow = function(index) { me.showTab(index); };
   tabs.setOnShow(onShow);
+  this.renderInfo();
   this.tabsLoaded = {};
  
 };
@@ -559,6 +560,28 @@ backlogItemController.prototype = {
           break;
         }
       }
+    },
+    renderInfo: function() {
+      var descRow = this.infoTable.createRow(this.model);
+      descRow.createCell().setValue("Description");
+      var me = this.model;
+      descRow.createCell({
+        get: function() { return me.getDescription(); },
+        set: function(val) { me.setDescription(val); },
+        type: "wysiwyg"
+      });
+      var creatorRow = this.infoTable.createRow();
+      creatorRow.createCell().setValue("Creator");
+      creatorRow.createCell({
+        get: function() { return me.getCreator(); }
+      });
+      var created = this.infoTable.createRow();
+      created.createCell().setValue("Created");
+      created.createCell({
+        get: function() { return me.getCreated(); },
+        decorator: agilefantUtils.dateToString
+      });
+      this.infoTable.render();
     },
     renderTodos: function() {
       var todoItems = this.model.getTodos();

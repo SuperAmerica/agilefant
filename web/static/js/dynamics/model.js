@@ -306,12 +306,13 @@ backlogItemModel.prototype = {
     this.id = data.id;
     this.name = data.name;
     this.description = data.description;
-    this.created = data.created;
+    this.created = data.createdDate;
     this.priority = data.priority;
     this.state = data.state;
     this.effortLeft = data.effortLeft;
     this.effortSpent = data.effortSpent;
     this.originalEstimate = data.originalEstimate;
+    this.creator = data.creator;
     var bubbleEvents = [];
     if(this.persistedData) {
     	if(this.persistedData.effortLeft != this.effortLeft || this.persistedData.originalEstimate != this.originalEstimate || this.persistedData.state != data.state) {
@@ -409,6 +410,14 @@ backlogItemModel.prototype = {
   },
   getName: function() {
     return this.name;
+  },
+  getCreator: function() {
+    if(this.creator) {
+      return this.creator.fullName;
+    }
+  },
+  getCreated: function() {
+    return this.created;
   },
   setName: function(name) {
     this.name = name;

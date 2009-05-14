@@ -24,7 +24,8 @@
         colWidths: [],
         headerCols: [],
         defaultSortColumn: 0,
-        captionText: "Table"
+        captionText: "Table",
+        noHeader: false
     };
     $.extend(this.options,options);
     var widths = this.calculateColumnWidths(this.options.colWidths);
@@ -42,9 +43,11 @@
 		 me.sortTable();
 		});
 		this.headerRow = null;
-		this.caption = $('<div />').addClass(cssClasses.tableCaption).prependTo(this.container).width(this.maxWidth+"%");
-		$("<div />").css("float", "left").text(this.options.captionText).appendTo(this.caption).width("30%");
-		this.captionAction = $('<ul />').addClass(cssClasses.captionActions).appendTo(this.caption).css("float","right").width("68%");
+		if(!this.options.noHeader) {
+		  this.caption = $('<div />').addClass(cssClasses.tableCaption).prependTo(this.container).width(this.maxWidth+"%");
+		  $("<div />").css("float", "left").text(this.options.captionText).appendTo(this.caption).width("30%");
+		  this.captionAction = $('<ul />').addClass(cssClasses.captionActions).appendTo(this.caption).css("float","right").width("68%");
+		}
 		this.sorting = {
 		    column: this.options.defaultSortColumn,
 		    direction: -1
@@ -83,7 +86,7 @@
 			  return this.sorting;
 			},
 			render: function() {
-			  if(this.headerRow == null) {
+			  if(this.headerRow == null && !this.options.noHeader) {
 			    this.renderHeader();
 			  }
 			  for(var i = 0; i < this.rows.length; i++) {
@@ -117,6 +120,9 @@
 			sortTable: function() {
 			  if(this.sorting.direction == 1) this.sorting.direction = 0;
 			  if(this.sorting.direction == 0) this.sorting.direction = 1;
+			  if(!this.sorting || !this.sorting.column || !this.options.headerCols[this.sorting.column]) {
+			    return;
+			  }
 			  this.doSort(this.sorting.column, this.options.headerCols[this.sorting.column].sort);
 			},
 			renderCaption: function() {
@@ -1004,8 +1010,11 @@
     $.extend(opts,options);
     var ret = this.dynamicTable(opts);
     return ret;
-}
-  
+  },
+  genericTable: function(options) {
+    var ret = this.dynamicTable(options);
+    return ret;
+  }
 	});
 })(jQuery);
 

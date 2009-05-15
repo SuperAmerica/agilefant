@@ -613,19 +613,38 @@ backlogItemController.prototype = {
       }
       this.todoView.render();
     },
+    deleteTodo: function(todo) {
+      var parent = $("<div />").appendTo(document.body).text("Are you sure you wish to delete this todo?");
+      var me = this;
+      parent.dialog({
+        resizable: false,
+        height:140,
+        modal: true,
+        buttons: {
+          'Yes': function() {
+            $(this).dialog('close');
+            parent.remove();
+            todo.remove();
+          },
+          Cancel: function() {
+            $(this).dialog('close');
+            parent.remove();
+          }
+        }
+      });
+    },
     addTodo: function(todo) {
+     var me = this;
      var row = this.todoView.createRow(todo);
      row.createCell({
+       type: "text",
        get: function() { return todo.getName(); },
-       set: function() { return; }
+       set: function(val) { todo.setName(val); }
      });
      row.createCell({
-       get: function() {
-         var a = todo;
-         return todo.getState();
-         },
-       set: function(val) { todo.setState(val); },
        type: "select",
+       get: function() { return todo.getState(); },
+       set: function(val) { todo.setState(val); },
        items: agilefantUtils.states,
        decorator: agilefantUtils.stateToString
      });
@@ -633,12 +652,13 @@ backlogItemController.prototype = {
                 {
                     text: "Edit",
                     callback: function(row) {
-
+                      todo.beginTransaction();
+                      row.openEdit();
                     }
                   }, {
                     text: "Delete",
                     callback: function() {
-                     
+                      me.deleteTodo(todo);
                     }
                   }
                   ]});
@@ -670,7 +690,7 @@ backlogItemController.prototype = {
                       {
                           text: "Edit",
                           callback: function(row) {
-
+                            
                           }
                         }, {
                           text: "Delete",

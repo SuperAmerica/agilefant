@@ -385,6 +385,17 @@ backlogItemModel.prototype = {
     }
     return this.todos;
   },
+  removeTodo: function(todo) {
+    // TODO: Pasi koodaa ;)
+    var tmp = this.todos;
+    this.todos = [];
+    for(var i = 0; i < tmp.length; i++) {
+      if(tmp[i] != todo) {
+        this.todos.push(tmp[i]);
+      }
+    }
+    this.reloadTodos();
+  },
   getThemes: function() {
 	return this.themes;  
   },
@@ -734,7 +745,25 @@ todoModel.prototype = {
 		this.inTransaction = false;
 	},
 	remove: function() {
-		
+	  var me = this;
+    jQuery.ajax({
+      async: true,
+      error: function() {
+        me.rollBack();
+        commonView.showError("An error occured while deleting the todo.");
+      },
+      success: function(data,type) {
+        me.backlogItem.removeTodo(me);
+        for(var i = 0 ; i < me.deleteListeners.length; i++) {
+          me.deleteListeners[i]();
+        }
+        commonView.showOk("Todo deleted successfully.");
+      },
+      cache: false,
+      type: "POST",
+      url: "ajaxDeleteTask.action",
+      data: {taskId: this.id}
+    });
 	},
 	save: function() {
 		if(this.inTransaction) {

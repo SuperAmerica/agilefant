@@ -61,6 +61,14 @@ public class TaskBusinessImpl implements TaskBusiness {
         }
     }
     
+    public void removeTask(int taskId) throws ObjectNotFoundException {
+        this.taskDAO.remove(taskId);    
+    }
+    
+    public void removeTask(Task task) throws ObjectNotFoundException{
+        this.removeTask(task.getId());
+    }
+    
     public void updateMultipleTasks(BacklogItem bli, Map<Integer, State> newStatesMap, Map<Integer, String> newNamesMap)
             throws ObjectNotFoundException {
         // Map of new tasks.

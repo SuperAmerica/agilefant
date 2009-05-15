@@ -37,6 +37,19 @@ public interface TaskBusiness {
     public Task storeTask(Task storable, BacklogItem bli, String name, State state);
     
     /**
+     * Removes the specified task.
+     * @param task task to remove
+     */
+    public void removeTask(Task task) throws ObjectNotFoundException;
+    
+    /**
+     * Removes the specified task.
+     * @param task the id task to remove
+     */
+    public void removeTask(int taskId) throws ObjectNotFoundException;
+    
+    
+    /**
      * Updates multiple tasks' states with one call. Takes Map with elements of
      * form: <code>[task_id => new_status] </code> as parameter.
      * 

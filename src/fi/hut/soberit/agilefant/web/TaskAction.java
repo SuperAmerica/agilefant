@@ -90,6 +90,19 @@ public class TaskAction extends ActionSupport implements CRUDAction {
         jsonData = ser.serialize(ret);
         return CRUDAction.AJAX_SUCCESS;
     }
+    
+    /**
+     * Deletes the task for an ajax request.
+     */
+    public String ajaxDelete() {
+        try {
+            taskBusiness.removeTask(taskId);
+        }
+        catch (Exception e) {
+            return CRUDAction.AJAX_ERROR;
+        }
+        return CRUDAction.AJAX_SUCCESS;
+    }
 
     /**
      * Stores the task (a new task created with create() or an old one fetched

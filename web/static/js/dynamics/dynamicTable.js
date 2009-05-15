@@ -371,7 +371,7 @@
 		if (this.options.type && this.options.type != "empty") {
 		  this.cell.dblclick(dblclick_cb);
 		  this.cell.attr("title","Double-click the cell to edit it.");
-		}
+		} 
 	};
 	
 	dynamicTableCell.prototype = {

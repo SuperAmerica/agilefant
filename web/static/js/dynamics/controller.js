@@ -591,7 +591,7 @@ var backlogItemController = function(parentView, model, parentController, effort
 	  effortCell.getElement().dblclick(function() {
 		  me.showTab(2);
 		  me.createEffortEntry();
-	  });
+	  }).attr("title","Double-click to log effort.");
   }
  
 };

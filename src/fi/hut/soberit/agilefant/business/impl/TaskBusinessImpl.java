@@ -26,7 +26,7 @@ public class TaskBusinessImpl implements TaskBusiness {
             }
         }
         BacklogItem bli = null;
-        if (taskId > 0) {
+        if (backlogItemId > 0) {
             bli = backlogItemDAO.get(backlogItemId);
             if (bli == null) {
                 throw new ObjectNotFoundException("backlogItem.notFound");

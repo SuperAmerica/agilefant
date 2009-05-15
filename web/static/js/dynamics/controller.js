@@ -549,7 +549,11 @@ var backlogItemController = function(parentView, model, parentController) {
   this.todoView.addCaptionAction("createTODO", {
     text: "Create TODO",
     callback: function() {
-        me.addTodo();
+        var newTodo = new todoModel(me.model, { id: 0 });
+        newTodo.beginTransaction();
+        var row = me.addTodo(newTodo);
+        row.render();
+        row.openEdit();
       }
   });
   if(agilefantUtils.isTimesheetsEnabled()) {
@@ -680,6 +684,7 @@ backlogItemController.prototype = {
        }}
      }
      });
+     return row;
     },
     renderSpentEffort: function() {
       var entries = this.model.getHourEntries();

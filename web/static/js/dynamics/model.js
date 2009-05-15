@@ -690,6 +690,7 @@ todoModel.prototype = {
 		if(!this.persistedData || this.state != this.persistedData.state) {
 			bubbleEvents.push("metricsUpdated");
 		}
+		this.id = data.id;
 		this.state = data.state;
 		this.name = data.name;
 		
@@ -698,14 +699,19 @@ todoModel.prototype = {
 		}
 		this.persistedData = data;
 	},
+	getId: function() {
+	  return this.id;
+	},
 	setState: function(state) {
 		this.state = state;
+		this.save();
 	},
 	getState: function() {
 		return this.state;
 	},
 	setName: function(name) {
 	  this.name = name;
+	  this.save();
 	},
 	getName: function() {
 	  return this.name;
@@ -734,5 +740,27 @@ todoModel.prototype = {
 		if(this.inTransaction) {
 			return;
 		}
+		var data = {
+		    "taskId": this.id,
+		    "backlogItemId": this.backlogItem.getId(),
+		    "task.state": this.state,
+		    "task.name": this.name
+		}
+		var me = this;
+		jQuery.ajax({
+      async: false,
+      error: function() {
+        commonView.showError("An error occured while saving the todo.");
+      },
+      success: function(data,type) {
+        me.setData(data);
+        commonView.showOk("Todo saved succesfully.");
+      },
+      cache: false,
+      dataType: "json",
+      type: "POST",
+      url: "ajaxStoreTask.action",
+      data: data
+    });
 	}
 };

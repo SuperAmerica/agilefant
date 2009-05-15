@@ -388,7 +388,7 @@ public class BacklogItemActionTest extends SpringTestCase {
         foo.setState(State.NOT_STARTED);
         foo.setCreator(SecurityUtil.getLoggedUser());
         foo.setRank(0);
-        foo.setPriority(Priority.BLOCKER);
+        //foo.setPriority(Priority.BLOCKER);
         
         int taskId = (Integer)taskDAO.create(foo);
         action.setBacklogItemId(0);
@@ -416,7 +416,7 @@ public class BacklogItemActionTest extends SpringTestCase {
         foo.setState(State.NOT_STARTED);
         foo.setCreator(SecurityUtil.getLoggedUser());
         foo.setRank(0);
-        foo.setPriority(Priority.BLOCKER);
+        //foo.setPriority(Priority.BLOCKER);
         
         int taskId = (Integer)taskDAO.create(foo);
         

@@ -13,6 +13,7 @@ import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.security.SecurityUtil;
+import flexjson.JSONSerializer;
 
 /**
  * Task Action
@@ -33,9 +34,9 @@ public class TaskAction extends ActionSupport implements CRUDAction {
 
     private BacklogItemDAO backlogItemDAO;
 
-//    private Log logger = LogFactory.getLog(getClass());
-
     private TaskBusiness taskBusiness;
+    
+    private String jsonData = "";
 
     public TaskBusiness getTaskBusiness() {
         return taskBusiness;
@@ -71,6 +72,24 @@ public class TaskAction extends ActionSupport implements CRUDAction {
         backlogItemId = task.getBacklogItem().getId();
         return Action.SUCCESS;
     }
+    
+    
+    /**
+     * Stores the task for an ajax request.
+     */
+    public String ajaxStore() {
+        Task ret = null;
+        try {
+            ret = taskBusiness.storeTask(taskId, backlogItemId, task.getName(), task.getState());
+        }
+        catch (Exception e) {
+            return CRUDAction.AJAX_ERROR;
+        }
+        JSONSerializer ser = new JSONSerializer();
+        ser.include("name").include("id").include("state").exclude("*");
+        jsonData = ser.serialize(ret);
+        return CRUDAction.AJAX_SUCCESS;
+    }
 
     /**
      * Stores the task (a new task created with create() or an old one fetched
@@ -79,6 +98,7 @@ public class TaskAction extends ActionSupport implements CRUDAction {
      * @return Action.SUCCESS if task is saved ok or Action.ERROR if there's
      *         something wrong. (more information with getActionErrors())
      */
+    @Deprecated
     public String store() {
         Task storable = new Task();
         //Backlog backlog;
@@ -195,6 +215,7 @@ public class TaskAction extends ActionSupport implements CRUDAction {
         }
         // Inherit from task's backlogItem
         backlogItem.setBacklog(storedTask.getBacklogItem().getBacklog());
+        //TODO: Deprecated method
         backlogItem.setAssignee(storedTask.getBacklogItem().getAssignee());
         backlogItem.setIterationGoal(storedTask.getBacklogItem()
                 .getIterationGoal());
@@ -235,7 +256,7 @@ public class TaskAction extends ActionSupport implements CRUDAction {
             super.addActionError(super.getText("task.missingName"));
             return;
         }
-        storable.setPriority(task.getPriority());
+        //storable.setPriority(task.getPriority());
         storable.setState(task.getState());
         storable.setName(task.getName());
         storable.setDescription(task.getDescription());
@@ -344,6 +365,10 @@ public class TaskAction extends ActionSupport implements CRUDAction {
             addActionError(onfe.getMessage());
             return CRUDAction.AJAX_ERROR;
         }
+    }
+
+    public String getJsonData() {
+        return jsonData;
     }
 
 }

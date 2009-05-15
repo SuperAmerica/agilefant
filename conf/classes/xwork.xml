@@ -393,18 +393,27 @@
 			</result>
 		</action>
 		
-		<action name="storeTask" method="store" class="taskAction">
-			<result type="redirect-action">
-				<param name="actionName">editTask</param>
-				<param name="taskId">${taskId}</param>
-			</result>
+		<action name="ajaxStoreTask" method="ajaxStore" class="taskAction">
+		  <result name="ajax_error" type="httpheader">
+        <param name="status">400</param>
+      </result>
+      <result name="ajax_success" type="dispatcher">
+        <param name="status">200</param>
+        <param name="location">/WEB-INF/jsp/jsonData.jsp</param>
+      </result>
 		</action>
-		<action name="storeNewTask" method="store" class="taskAction">
-			<result type="redirect-action">
-				<param name="actionName">editTask</param>
-				<param name="taskId">${taskId}</param>
-			</result>
-		</action>
+		
+		<action name="ajaxDeleteTask" method="ajaxDelete" class="taskAction">
+      <result name="ajax_error" type="httpheader">
+        <param name="status">400</param>
+      </result>
+      <result name="ajax_success" type="dispatcher">
+        <param name="status">200</param>
+        <param name="location">/WEB-INF/jsp/jsonData.jsp</param>
+      </result>
+    </action>
+		
+		<!-- 
 		<action name="storeCloseTask" method="store"
 			class="taskAction">
 			<result type="redirect-action">
@@ -417,6 +426,7 @@
 				<param name="actionName">popContext</param>
 			</result>
 		</action>
+    -->
 
 		<action name="moveTaskUp" class="taskAction"
 			method="moveTaskUp">

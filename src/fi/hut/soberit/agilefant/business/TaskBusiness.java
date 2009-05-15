@@ -16,6 +16,27 @@ import fi.hut.soberit.agilefant.model.Task;
 public interface TaskBusiness {
 
     /**
+     * Stores a task.
+     * @param taskId the id of the task
+     * @param backlogItemId the id of the task's parent backlog item
+     * @param name the name of the task
+     * @param state the current state of the task
+     * @return
+     */
+    public Task storeTask(int taskId, int backlogItemId, String name, State state)
+        throws ObjectNotFoundException;
+    
+    /**
+     * Stores a task 
+     * @param storable the task to store
+     * @param bli the task's parent backlog item
+     * @param name the name of the task
+     * @param state the current state of the task
+     * @return
+     */
+    public Task storeTask(Task storable, BacklogItem bli, String name, State state);
+    
+    /**
      * Updates multiple tasks' states with one call. Takes Map with elements of
      * form: <code>[task_id => new_status] </code> as parameter.
      * 

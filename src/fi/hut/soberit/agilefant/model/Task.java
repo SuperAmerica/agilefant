@@ -49,7 +49,7 @@ public class Task implements PageItem {
 
     private int id;
 
-    private Priority priority;
+    //private Priority priority;
 
     private State state = State.NOT_STARTED;
 
@@ -143,7 +143,7 @@ public class Task implements PageItem {
         // TODO Auto-generated method stub
         return false;
     }
-
+/*
     @Type(type = "fi.hut.soberit.agilefant.db.hibernate.EnumUserType", parameters = {
             @Parameter(name = "useOrdinal", value = "true"),
             @Parameter(name = "enumClassName", value = "fi.hut.soberit.agilefant.model.Priority") })
@@ -154,7 +154,7 @@ public class Task implements PageItem {
     public void setPriority(Priority priority) {
         this.priority = priority;
     }
-
+*/
     @Type(type = "fi.hut.soberit.agilefant.db.hibernate.EnumUserType", parameters = {
             @Parameter(name = "useOrdinal", value = "true"),
             @Parameter(name = "enumClassName", value = "fi.hut.soberit.agilefant.model.State") })

@@ -540,6 +540,7 @@ iterationGoalController.prototype = {
 
 
 var backlogItemController = function(parentView, model, parentController) {
+  var me = this;
   this.model = model;
   var tabs = new backlogItemTabs(model,parentView.getElement());
   this.infoTable = tabs.addTab("Info").genericTable({noHeader: true, colCss: {}, colWidths: [{minwidth: 10, auto:true},{minwidth: 90, auto: true}]});
@@ -548,7 +549,7 @@ var backlogItemController = function(parentView, model, parentController) {
   this.todoView.addCaptionAction("createTODO", {
     text: "Create TODO",
     callback: function() {
-      
+        me.addTodo();
       }
   });
   if(agilefantUtils.isTimesheetsEnabled()) {
@@ -613,12 +614,19 @@ backlogItemController.prototype = {
       this.todoView.render();
     },
     addTodo: function(todo) {
-     var row = this.todoView.createRow();
+     var row = this.todoView.createRow(todo);
      row.createCell({
-       get: function() { return todo.getName(); }
+       get: function() { return todo.getName(); },
+       set: function() { return; }
      });
      row.createCell({
-       get: function() { return todo.getState(); },
+       get: function() {
+         var a = todo;
+         return todo.getState();
+         },
+       set: function(val) { todo.setState(val); },
+       type: "select",
+       items: agilefantUtils.states,
        decorator: agilefantUtils.stateToString
      });
      row.createCell().setActionCell({items: [ 

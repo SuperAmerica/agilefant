@@ -15,6 +15,52 @@ public class TaskBusinessImpl implements TaskBusiness {
     private TaskDAO taskDAO;
     private BacklogItemDAO backlogItemDAO;
 
+    /** {@inheritDoc} */
+    public Task storeTask(int taskId, int backlogItemId, String name,
+            State state) throws ObjectNotFoundException {
+        Task task = null;
+        if (taskId > 0) {
+            task = taskDAO.get(taskId);
+            if (task == null) {
+                throw new ObjectNotFoundException("task.notFound");
+            }
+        }
+        BacklogItem bli = null;
+        if (taskId > 0) {
+            bli = backlogItemDAO.get(backlogItemId);
+            if (bli == null) {
+                throw new ObjectNotFoundException("backlogItem.notFound");
+            }
+        }
+        return this.storeTask(task, bli, name, state);
+    }
+    
+    /** {@inheritDoc} */
+    public Task storeTask(Task storable, BacklogItem bli, String name, State state) {
+        if (bli == null) {
+            throw new IllegalArgumentException("Backlog item must be not null");
+        }
+        if (state == null) {
+            throw new IllegalArgumentException("State must be not null");
+        }
+        if (storable == null) {
+            storable = new Task();
+        }
+        
+        storable.setName(name);
+        storable.setState(state);
+        storable.setBacklogItem(bli);
+        
+        if (storable.getId() == 0) {
+            int persistedId = (Integer)taskDAO.create(storable);
+            return taskDAO.get(persistedId);
+        }
+        else {
+            taskDAO.store(storable);
+            return storable;
+        }
+    }
+    
     public void updateMultipleTasks(BacklogItem bli, Map<Integer, State> newStatesMap, Map<Integer, String> newNamesMap)
             throws ObjectNotFoundException {
         // Map of new tasks.

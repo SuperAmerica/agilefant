@@ -182,7 +182,7 @@ div.gear {
 }
 
 .dynamictable-expand {
-	background-image:url(../img/expand.png);
+	background-image:url(../img/open_close.png);
 	background-position:0 0;
 	background-repeat:no-repeat;
 	cursor:pointer;
@@ -190,12 +190,18 @@ div.gear {
 	width:16px;
 }
 .dynamictable-collapse {
-	background-image:url(../img/expand.png);
+	background-image:url(../img/open_close.png);
 	background-position:0 100%;
 	background-repeat:no-repeat;
 	cursor:pointer;
 	height:16px;
 	width:16px;
+}
+.dynamictable-expand:hover {
+  background-position: 100% 0;  
+}
+.dynamictable-collapse:hover {
+  background-position: 100% 100%;  
 }
 
 .tabMenu {

@@ -368,23 +368,15 @@
 		}
 		var me = this;
 		var dblclick_cb = function() { me.openEdit() };
-		if (this.options.type && this.options.type != "userchooser") {
+		if (this.options.type && this.options.type != "empty") {
 		  this.cell.dblclick(dblclick_cb);
-		}
-		else if (this.options.type == "userchooser") {
-		  this.cell.userChooser({
-		    legacyMode: false,
-		    backlogId: me.options.backlogId,
-		    selectCallback: me.options.userchooserCallback,
-		    userListContainer: me.getElement(),
-		    backlogItemId: me.options.backlogItemId
-		  });
 		}
 	};
 	
 	dynamicTableCell.prototype = {
 	  setActionCell: function(options) {
-	    new tableRowActions(this,this.row,options);
+	    this.actionObj = new tableRowActions(this,this.row,options);
+	    this.isActionCell = true;
 	  },
 	  activateSortHandle: function() {
 	    this.cell.addClass("dynamictable-sorthandle");
@@ -425,6 +417,7 @@
 		  this.editor.remove();
 		  this.editor = null;
 		  this.removeButtons();
+		  if(this.isActionCell) this.actionObj.getElement().show();
 		  this.editorOpen = false;
 		},
 		cancelEdit: function() {
@@ -435,6 +428,7 @@
 		  this.removeButtons();
 		  if(this.editor)  this.editor.remove();
 		  this.editorOpen = false;
+		  if(this.isActionCell) this.actionObj.getElement().show();
 		  this.editor = null;
 		},
 		openEdit: function(noAutoClose) {
@@ -443,8 +437,21 @@
 				  return;
 			  }
 		  }
-		  if (this.options.type == "userchooser") {
-		    return;
+		  if (this.options.type == "user") { 
+			  if(noAutoClose) return;
+			  var me = this;
+			  var uc = new agilefantUserChooser({
+				  selectThese: function() { return agilefantUtils.objectToIdArray(me.options.get()); },
+				  selectCallback: function(chooser) {
+					 var users = chooser.getSelected(true);
+				     me.options.set(users); 
+				     me.render();
+				  },
+				  backlogId: this.options.backlogId,
+				  backlogItemId: this.options.backlogItemId
+			  });
+			  uc.init();
+			  return;
 		  } else if(this.options.type == "theme") {
 			  if(noAutoClose) return;
 			  var me = this;
@@ -464,6 +471,7 @@
 		  if(this.options.type && !this.editorOpen) {
 		    this.editorOpen = true;
         this.content.hide();
+        if(this.isActionCell) this.actionObj.getElement().hide();
         if(this.options.type == "text") {
         	this.editor = new textEdit(this, autoClose);
         } else if(this.options.type == "wysiwyg") {
@@ -474,6 +482,8 @@
           this.editor = new selectEdit(this, this.options.items, autoClose);
         } else if(this.options.type == "empty") {
           this.editor = new emptyEdit(this);
+        } else if(this.options.type == "date") {
+        	this.editor = new dateEdit(this,autoClose);
         }
         if(!autoClose && this.options.buttons) {
           var me = this;
@@ -510,11 +520,13 @@
 	/** EMPTY EDIT **/
 	var emptyEdit = function(cell) {
 	  this.cell = cell;
-	  this.cell.getElement().show();
+	  if(typeof(cell.options.action) == "function") {
+		  cell.options.action();
+	  }
 	};
 	emptyEdit.prototype = {
 	  _mouseClick: function(event) { return false; },
-	  remove: function() { $(document.body).unbind("click",this.mouseEvent); },
+	  remove: function() { },
 	  isValid: function() { return true; },
 	  getValue: function() { return ""; }
 	};
@@ -664,6 +676,53 @@
 	  };
 	  $.extend(effortEdit.prototype, commonEdit);
 	
+	/** DATE EDIT **/
+	 var dateEdit = function(cell, autoClose) {
+	    this.cell = cell;
+	    this.field = $('<input type="text"/>').width('80%').appendTo(this.cell.getElement()).focus();
+	    var val = this.cell.options.get();
+	    if(val) val = agilefantUtils.dateToString(val, true);
+	    this.field.val(val);
+      var me = this;
+      if(autoClose == true) {
+        var key_cb = function(keyevent) { me._handleKeyEvent(keyevent); };
+        var blur_cb = function() { me._store(); };
+        this.field.blur(blur_cb);
+        this.field.keydown(key_cb);
+        this.field.focus(); 
+      }
+	  };
+	  dateEdit.prototype = {
+	    _handleKeyEvent: function(keyevent) {
+	      if (keyevent.keyCode == 27) {
+	        this._cancel();
+	      }
+	      else if (keyevent.keyCode == 13) {
+	        this._store();
+	      }
+	    },
+	    isValid: function() {
+	      if(agilefantUtils.isDateString(this.field.val())) {
+	    	  this.field.removeClass("invalidValue");
+	    	  if(this.errorMsg) { 
+	    		  this.errorMsg.remove();
+	    		  this.errorMsg = null;
+	    		  this.cell.getElement().removeClass('cellError');
+	    	  }
+	    	  return true;
+	      } else {
+	    	  if(!this.errorMsg) this.errorMsg = commonView.dateError(this.cell.getElement());
+	    	  this.field.addClass("invalidValue");
+	    	  this.cell.getElement().addClass('cellError');
+	    	  return false;
+	      }
+	    },
+	    remove: function() {
+	      if(this.errorMsg) this.errorMsg.remove();
+	      this.field.remove();
+	    }
+	  };
+	  $.extend(dateEdit.prototype, commonEdit);
 	/** SELECT EDIT **/
 	var selectEdit = function(cell, items, autoClose) {
 	  var me = this;
@@ -721,6 +780,9 @@
 	  
 	};
 	tableRowActions.prototype = {
+	    getElement: function() {
+			return this.act;
+		},
 		open: function(cEvent) {
 			var me = this;
 			this.handler = function() {
@@ -956,7 +1018,6 @@
       };
       opts.colCss = { ':eq(2)': { 'cursor': 'pointer' },
                 '*': { 'background-color': '#eee' },
-                ':eq(3)': { 'display': 'none' }
       };          
       addTableColumn(opts,
           { minwidth: 380, auto: true },
@@ -971,12 +1032,11 @@
                 sort: null
               });
       addTableColumn(opts,
-          { minwidth: 50, auto: true },
+          { minwidth: 100, auto: true },
               { name: 'Actions',
               tooltip: "",
               sort: null
             });
-      addTableColumn(opts,{ auto: false, setMaxWidth: true });
 
       $.extend(opts,options);
       var ret = this.dynamicTable(opts);
@@ -987,12 +1047,11 @@
         defaultSortColumn: 0,
         captionText: "Spent Effort"
     };
-    opts.colCss = { ':eq(2)': { 'cursor': 'pointer' },
-              '*': { 'background-color': '#eee' },
+    opts.colCss = {'*': { 'background-color': '#eee' },
               
     };          
     addTableColumn(opts,
-        { minwidth: 50, auto: true },
+        { minwidth: 100, auto: true },
             { name: 'Date',
               tooltip: 'Date',
               sort: null
@@ -1016,7 +1075,7 @@
               sort: null
             });
     addTableColumn(opts,
-        { minwidth: 50, auto: true },
+        { minwidth: 100, auto: true },
             { name: 'Actions',
             tooltip: "",
             sort: null

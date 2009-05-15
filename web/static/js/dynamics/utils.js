@@ -52,6 +52,9 @@ var agilefantUtils = {
 		}
 		return false;
 	},
+	isDateString: function(val) {
+		return validateDateFormat(val);
+	},
 	dateToString: function(d) {
 	   var date = new Date();
 	   date.setTime(d);
@@ -87,11 +90,6 @@ var agilefantUtils = {
 		else {
 		  $(document.createTextNode('(none)')).appendTo(html);
 		}
-		var img = $('<img/>').attr({
-		    'src': 'static/img/users.png',
-		    'alt': '',
-		    'title': 'Choose users'
-		  }).prependTo(html);
 		return html.html();
 	},
 	themesToHTML: function(themes) {

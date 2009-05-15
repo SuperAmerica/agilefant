@@ -17,6 +17,7 @@ import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.model.HourEntry;
 import fi.hut.soberit.agilefant.model.TimesheetLoggable;
 import fi.hut.soberit.agilefant.util.CalendarUtils;
+import flexjson.JSONSerializer;
 
 
 public class HourEntryAction extends ActionSupport implements CRUDAction {
@@ -36,6 +37,7 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
     private int iterationId;
     private int projectId;
     private int productId;
+    private String jsonData = "";
     
     //multi edit
     private Map<Integer, String[]> userIdss = new HashMap<Integer,String[]>();
@@ -116,6 +118,7 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
         if(hourEntryId > 0 || userId > 0) {
             storable.setUser(userDAO.get(userId));
             hourEntryBusiness.store(parent,storable);
+            jsonData = new JSONSerializer().serialize(storable);
         } else if(userId == 0) {
             if(userIds.size() < 1) {
                 super.addActionError(super.getText("hourEntry.noUsers"));
@@ -293,6 +296,10 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
 
     public Map<Integer, String[]> getEfforts() {
         return efforts;
+    }
+
+    public String getJsonData() {
+        return jsonData;
     }
     
 }

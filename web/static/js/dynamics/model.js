@@ -302,7 +302,7 @@ var backlogItemModel = function(data, backlog, iterationGoal) {
   if(data) this.setData(data);
 };
 backlogItemModel.prototype = {
-  setData: function(data) {
+  setData: function(data, noEvents) {
     this.id = data.id;
     this.name = data.name;
     this.description = data.description;
@@ -314,11 +314,11 @@ backlogItemModel.prototype = {
     this.originalEstimate = data.originalEstimate;
     this.creator = data.creator;
     var bubbleEvents = [];
-    if(this.persistedData) {
+    if(this.persistedData && !noEvents) {
     	if(this.persistedData.effortLeft != this.effortLeft || this.persistedData.originalEstimate != this.originalEstimate || this.persistedData.state != data.state) {
     		bubbleEvents.push("metricsUpdated");
     	}
-    } else if(!this.persistedData && data) {
+    } else if(!this.persistedData && data && !noEvents) {
     	bubbleEvents.push("metricsUpdated");
     }
     if(data.userData) {
@@ -333,16 +333,30 @@ backlogItemModel.prototype = {
     	}
     }
     if(data.hourEntries) {
-      this.hourEntries = [];
+      if(!this.hourEntries) {
+        this.hourEntries = [];
+      }
       for(var i = 0 ; i < data.hourEntries.length; i++) {
+    	for(var j = 0; j < this.hourEntries.length; j++) {
+    		if(this.hourEntries[j].id == data.hourEntries[i].id) {
+    			break;
+    		}
+    	}
         if(data.hourEntries[i] != null) {
           this.hourEntries.push(new backlogItemHourEntryModel(this, data.hourEntries[i]));
         }
       }
     }
     if(data.tasks) {
-      this.todos = [];
+      if(!this.todos) {
+        this.todos = [];
+      }
       for(var i = 0 ; i < data.tasks.length; i++) {
+      	for(var j = 0; j < this.todos.length; j++) {
+    		if(this.todos[j].id == data.tasks[i].id) {
+    			break;
+    		}
+    	}
         if(data.tasks[i] != null) {
           this.todos.push(new todoModel(this,data.tasks[i]));
         }
@@ -353,7 +367,7 @@ backlogItemModel.prototype = {
       this.editListeners[i]({bubbleEvent: bubbleEvents});
     }
   },
-  loadTodoAndSpentEffortData: function() {
+  reloadData: function(noEvents) {
     var me = this;
     $.ajax({
       url: "backlogItemJSON.action",
@@ -363,38 +377,46 @@ backlogItemModel.prototype = {
       dataType: 'json',
       type: 'POST',
       success: function(data,type) {
-        me.setData(data);
+        me.setData(data,!noEvents);
       }
     });
   },
   getHourEntries: function() {
     if(this.hourEntries == null) {
-      this.loadTodoAndSpentEffortData();
+      this.reloadData(false);
     }
     return this.hourEntries;
   },
-  reloadHourEntries: function() {
-    this.loadTodoAndSpentEffortData();
+  addHourEntry: function(entry) {
+	  this.getHourEntries().push(entry);
+	  this.reloadData(false);
   },
-  reloadTodos: function() {
-    this.loadTodoAndSpentEffortData();
+  removeHourEntry: function(entry) {
+	var tmp = this.getHourEntries();
+	this.hourEntries = [];
+	for(var i = 0; i < tmp.length; i++) {
+		if(tmp[i] != entry) {
+			this.hourEntries.push(tmp[i]);
+		}
+	}
   },
   getTodos: function() {
     if(this.todos == null) {
-      this.loadTodoAndSpentEffortData();
+      this.reloadtData(false);
     }
     return this.todos;
   },
+  addTodo: function(todo) {
+	  this.getTodos().push(todo);
+  },
   removeTodo: function(todo) {
-    // TODO: Pasi koodaa ;)
-    var tmp = this.todos;
+    var tmp = this.getTodos();
     this.todos = [];
     for(var i = 0; i < tmp.length; i++) {
       if(tmp[i] != todo) {
         this.todos.push(tmp[i]);
       }
     }
-    this.reloadTodos();
   },
   getThemes: function() {
 	return this.themes;  
@@ -622,14 +644,17 @@ var backlogItemHourEntryModel = function(backlogItem, data) {
 backlogItemHourEntryModel.prototype = {
 	setData: function(data) {
 		var bubbleEvents = [];
-		if(!this.persistedData || this.timeSpent != this.persistedData.timeSpent) {
+		if(!this.persistedData || this.timeSpent != this.persistedData.timeSpent || this.id != this.persisted.id) {
 			bubbleEvents.push("metricsUpdated");
 		}
 		
 		this.user = data.user;
+		if(data.user) this.userId = data.user.id;
 		this.timeSpent = data.timeSpent;
-		this.comment = data.comment;
+		this.description = data.description;
 		this.date = data.date;
+		this.id = data.id;
+		this.dateStr = agilefantUtils.dateToString(this.date);
 		
 		for (var i = 0; i < this.editListeners.length; i++) {
 			this.editListeners[i]({bubbleEvent: bubbleEvents});
@@ -637,25 +662,29 @@ backlogItemHourEntryModel.prototype = {
 		this.persistedData = data;
 	},
 	setTimeSpent: function(timeSpent) {
-		this.timeSpent = timeSpent;
+		this.timeSpent = agilefantUtils.aftimeToMillis(timeSpent);
+		this.save();
 	},
 	getTimeSpent: function() {
 		return this.timeSpent;
 	},
 	setUser: function(userId) {
 		this.userId = userId;
+		this.save();
 	},
 	getUser: function() {
 		return this.user;
 	},
 	setComment: function(comment) {
-	  this.comment = comment;
+	  this.description = comment;
+	  this.save();
 	},
 	getComment: function() {
-	  return this.comment;
+	  return this.description;
 	},
 	setDate: function(date) {
-	  this.date = date;
+	  this.dateStr = date;
+	  this.save();
 	},
 	getDate: function() {
 	  return this.date;
@@ -678,12 +707,62 @@ backlogItemHourEntryModel.prototype = {
 		this.inTransaction = false;
 	},
 	remove: function() {
-		
+	  var me = this;
+	    jQuery.ajax({
+	      async: true,
+	      error: function() {
+	        me.rollBack();
+	        commonView.showError("An error occured while effort entry.");
+	      },
+	      success: function(data,type) {
+	        me.backlogItem.removeHourEntry(me);
+	        for(var i = 0 ; i < me.deleteListeners.length; i++) {
+	          me.deleteListeners[i]();
+	        }
+	        commonView.showOk("Effor entry deleted successfully.");
+	      },
+	      cache: false,
+	      type: "POST",
+	      url: "ajaxDeleteHourEntry.action",
+	      data: {hourEntryId: this.id}
+	    });
 	},
 	save: function() {
 		if(this.inTransaction) {
 			return;
 		}
+		var data = {};
+		if(this.comment) {
+			data["hourEntry.comment"] = this.comment;
+		}
+
+		data["userId"] = this.userId;
+		data["date"] = this.dateStr;
+		data["hourEntry.description"] = this.description;
+		if(this.timeSpent) {
+			data["hourEntry.timeSpent"] = this.timeSpent/3600;
+		} else {
+			data["hourEntry.timeSpent"] = "";
+		}
+		
+		data["backlogItemId"] = this.backlogItem.getId();
+		data["hourEntryId"] = this.id;
+		var me = this;
+		jQuery.ajax({
+	      async: false,
+	      error: function() {
+	        commonView.showError("An error occured while logging effort.");
+	      },
+	      success: function(data,type) {
+	        me.setData(data);
+	        commonView.showOk("Effort logged succesfully.");
+	      },
+	      cache: false,
+	      dataType: "json",
+	      type: "POST",
+	      url: "ajaxStoreHourEntry.action",
+	      data: data
+	    });
 	}
 };
 

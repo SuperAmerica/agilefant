@@ -863,16 +863,31 @@
 		<action name="ajaxCreateHourEntry" class="hourEntryAction" method="create">
             <result>/WEB-INF/jsp/forms/createHourEntry.jsp</result>
         </action>
+    <action name="newHourEntry" class="hourEntryAction" method="create">
+            <result>/WEB-INF/jsp/inc/createHourEntry.jsp</result>
+        </action>
 		<action name="storeHourEntry" class="hourEntryAction" method="store">
 			<result type="redirect-action">
 				<param name="actionName">popContext</param>
 			</result>
 		</action>
+		<action name="ajaxStoreHourEntry" class="hourEntryAction" method="store">
+      <result name="ajax_error" type="httpheader">
+        <param name="status">400</param>
+      </result>
+      <result name="ajax_success" type="dispatcher">
+        <param name="status">200</param>
+        <param name="location">/WEB-INF/jsp/jsonData.jsp</param>
+      </result>
+    </action>
 		<action name="deleteHourEntry" method="delete" class="hourEntryAction">
 			<result type="redirect-action">
 				<param name="actionName">popContext</param>
 			</result>
 		</action>
+    <action name="ajaxDeleteHourEntry" method="delete" class="hourEntryAction">
+    </action>
+
 		
 		<action name="getHourSum" method="sumHours" class="getHourSumAction">
 			<result name="success">/WEB-INF/jsp/inc/_hourSum.jsp</result>

@@ -339,16 +339,15 @@ iterationGoalController.prototype = {
       set: function(val) { bli.setPriority(val); }
     });
     row.createCell({
-      type: "userchooser",
+      type: "user",
     	get: function() { return bli.getUsers(); },
     	decorator: agilefantUtils.userlistToHTML,
-      userchooserCallback: function(uc) {
-    	  bli.setUsers(agilefantUtils.createPseudoUserContainer(uc.getSelected(true))); 
-    	  row.render();
-    	  bli.setUserIds(uc.getSelected());	  
-    	  },
-      backlogId: bli.backlog.getId(),
-      backlogItemId: bli.getId()
+        set: function(users) {
+    	  bli.setUsers(agilefantUtils.createPseudoUserContainer(users)); 
+    	  bli.setUserIds(agilefantUtils.objectToIdArray(users));	  
+    	},
+        backlogId: bli.backlog.getId(),
+        backlogItemId: bli.getId()
     });
     var el = row.createCell({
       type: "effort",
@@ -364,8 +363,9 @@ iterationGoalController.prototype = {
       set: function(val) { bli.setOriginalEstimate(val); },
       decorator: agilefantUtils.aftimeToString
     });
+    var es = null;
     if(agilefantUtils.isTimesheetsEnabled()) {
-    	var es = row.createCell({
+    	es = row.createCell({
     	  get: function() { return bli.getEffortSpent(); },
       	  decorator: agilefantUtils.aftimeToString
     	});
@@ -414,7 +414,7 @@ iterationGoalController.prototype = {
            ]});
     var tabCell = row.createCell();
     tabCell.getElement().hide();
-    var childController = new backlogItemController(tabCell, bli, this);
+    var childController = new backlogItemController(tabCell, bli, this, es);
     commonView.expandCollapse(expand.getElement(), function() {
     	tabCell.getElement().show();
     }, function() {
@@ -457,17 +457,16 @@ iterationGoalController.prototype = {
       set: function(val) { bli.setPriority(val); }
     });
     row.createCell({
-      type: "userchooser",
-    	get: function() { return bli.getUsers(); },
-    	decorator: agilefantUtils.userlistToHTML,
-      userchooserCallback: function(uc) { 
-      	  bli.setUsers(agilefantUtils.createPseudoUserContainer(uc.getSelected(true))); 
-    	  row.render();
-    	  bli.setUserIds(uc.getSelected());	  
-    	},
-      backlogId: bli.backlog.getId(),
-      backlogItemId: bli.getId()
-    });
+        type: "user",
+      	get: function() { return bli.getUsers(); },
+      	decorator: agilefantUtils.userlistToHTML,
+          set: function(users) {
+      	  bli.setUsers(agilefantUtils.createPseudoUserContainer(users)); 
+      	  bli.setUserIds(agilefantUtils.objectToIdArray(users));	  
+      	  },
+        backlogId: bli.backlog.getId(),
+        backlogItemId: bli.getId()
+      });
     var el = row.createCell();
     var oe = row.createCell({
       type: "effort",
@@ -539,7 +538,7 @@ iterationGoalController.prototype = {
 };
 
 
-var backlogItemController = function(parentView, model, parentController) {
+var backlogItemController = function(parentView, model, parentController, effortCell) {
   var me = this;
   this.model = model;
   var tabs = new backlogItemTabs(model,parentView.getElement());
@@ -562,6 +561,7 @@ var backlogItemController = function(parentView, model, parentController) {
     this.spentEffortView.addCaptionAction("logEffort", {
       text: "Log effort",
       callback: function() {
+    		me.createEffortEntry();
         
         }
     });
@@ -571,6 +571,12 @@ var backlogItemController = function(parentView, model, parentController) {
   tabs.setOnShow(onShow);
   this.renderInfo();
   this.tabsLoaded = {};
+  if(agilefantUtils.isTimesheetsEnabled()) {
+	  effortCell.getElement().dblclick(function() {
+		  me.showTab(2);
+		  me.createEffortEntry();
+	  });
+  }
  
 };
 backlogItemController.prototype = {
@@ -652,7 +658,29 @@ backlogItemController.prototype = {
        items: agilefantUtils.states,
        decorator: agilefantUtils.stateToString
      });
-     row.createCell().setActionCell({items: [ 
+     var actions = row.createCell({
+    	 type: "empty",
+         get: function() { return ""; },
+         buttons: {
+         save: {text: "Save", action: function() {
+           if(!row.saveEdit()) {
+             return;
+           }
+           todo.commit();
+           return false;
+         }},
+         cancel: {text: "Cancel", action: function() {
+           if(todo.id == 0) {
+        	 row.remove();
+        	 return;
+           }
+           todo.rollBack();
+           row.cancelEdit();
+           return false;
+         }}
+       }
+       });
+     actions.setActionCell({items: [ 
                 {
                     text: "Edit",
                     callback: function(row) {
@@ -666,24 +694,7 @@ backlogItemController.prototype = {
                     }
                   }
                   ]});
-     row.createCell({
-       type: "empty",
-       get: function() { return ""; },
-       buttons: {
-       save: {text: "Save", action: function() {
-         if(!row.saveEdit()) {
-           return;
-         }
-         todo.commit();
-         return false;
-       }},
-       cancel: {text: "Cancel", action: function() {
-         todo.rollBack();
-         row.cancelEdit();
-         return false;
-       }}
-     }
-     });
+       
      return row;
     },
     renderSpentEffort: function() {
@@ -694,34 +705,121 @@ backlogItemController.prototype = {
       this.spentEffortView.render();
     },
     addEffortEntry: function(entry) {
-      var row = this.spentEffortView.createRow();
+      var row = this.spentEffortView.createRow(entry);
       row.createCell({
         get: function() { return entry.getDate();},
-        decorator: agilefantUtils.dateToString
+        decorator: agilefantUtils.dateToString,
+        set: function(val) { entry.setDate(val); },
+        type: "date"
       });
       row.createCell({
-        get: function() { return entry.getUser().fullName;}
-      });
+        get: function() { return entry.getUser(); },
+          type: "user",
+          decorator: function(u) { return u.fullName; },
+          set: function(users) {
+        	  var user = users[0];
+        	  entry.setUser(user);	  
+          },
+          backlogId: entry.backlogItem.backlog.getId(),
+          backlogItemId: entry.backlogItem.getId()
+        });
       row.createCell({
         get: function() { return entry.getTimeSpent();},
-        decorator: agilefantUtils.aftimeToString
+        decorator: agilefantUtils.aftimeToString,
+        type: "effort",
+        set: function(val) { entry.setTimeSpent(val); }
       });
       row.createCell({
-        get: function() { return entry.getComment();}
+        get: function() { return entry.getComment();},
+        type: "text",
+        set: function(val) { entry.setComment(val); }
       });
-      row.createCell().setActionCell({items: [ 
+      var buttons = row.createCell({ type: "empty",
+    	         get: function() { return ""; },
+    	         buttons: {
+    	         save: {text: "Save", action: function() {
+    	           if(!row.saveEdit()) {
+    	             return;
+    	           }
+    	           todo.commit();
+    	           return false;
+    	         }},
+    	         cancel: {text: "Cancel", action: function() {
+    	           if(entry.id == 0) {
+    	        	 row.remove();
+    	        	 return;
+    	           }
+    	           entry.rollBack();
+    	           entry.cancelEdit();
+    	           return false;
+    	         }}
+    	       }
+    	       });
+      buttons.setActionCell({items: [ 
                       {
                           text: "Edit",
                           callback: function(row) {
-                            
+                    	    entry.beginTransaction();
+                            row.openEdit();
                           }
                         }, {
                           text: "Delete",
                           callback: function() {
-                           
+                           entry.remove();
                           }
                         }
                         ]});
 
-    }
+    },
+    createEffortEntry: function() {
+    	var me = this;
+        var parent = $("<div />").appendTo(document.body);
+        parent.load("newHourEntry.action", {backlogItemId: this.model.getId()});
+        var me = this;
+        parent.dialog({
+          resizable: true,
+          minHeight:250,
+          minWidth: 720,
+          width: 720,
+          modal: true,
+          title: "Log effort",
+          buttons: {
+            'Save': function() {
+              $(this).dialog('close');
+              var form = parent.find("form");
+              var tmp = {id: 0};
+              var timeSpent = form.find("input[name='hourEntry.timeSpent']").val();
+              tmp["description"] = form.find("input[name='hourEntry.description']").val();
+              var date = form.find("input[name=date]").val();
+              var users = form.find("input[name='userIds']");
+              if(users.length == 1) {
+            	var entry = new backlogItemHourEntryModel(me.model, tmp);
+            	entry.beginTransaction();
+            	entry.setUser(users.val());
+            	entry.setDate(date);
+            	entry.setTimeSpent(timeSpent);
+            	entry.commit();
+            	me.model.addHourEntry(entry);
+            	me.addEffortEntry(entry);
+              } else if(users.length > 1) {
+            	 users.each(function() {
+                 	var entry = new backlogItemHourEntryModel(me.model, tmp);
+                 	entry.beginTransaction();
+                	entry.setUser($(this).val());
+                	entry.setDate(date);
+                	entry.setTimeSpent(timeSpent);
+                	entry.commit();
+                	me.model.addHourEntry(entry);
+                	me.addEffortEntry(entry);
+            	 });
+              }
+              me.spentEffortView.render();
+            },
+            Cancel: function() {
+              $(this).dialog('destroy');
+              parent.remove();
+            }
+          }
+        });    	
+    },
 };

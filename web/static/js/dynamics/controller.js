@@ -662,6 +662,24 @@ backlogItemController.prototype = {
                     }
                   }
                   ]});
+     row.createCell({
+       type: "buttons",
+       get: function() { return ""; },
+       buttons: {
+       save: {text: "Save", action: function() {
+         if(!row.saveEdit()) {
+           return;
+         }
+         todo.commit();
+         return false;
+       }},
+       cancel: {text: "Cancel", action: function() {
+         todo.rollBack();
+         row.cancelEdit();
+         return false;
+       }}
+     }
+     });
     },
     renderSpentEffort: function() {
       var entries = this.model.getHourEntries();

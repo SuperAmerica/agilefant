@@ -222,12 +222,13 @@ div.gear {
 }
 
 .cellTabs .ui-tabs-nav li.ui-state-active {
-  background-position: 100% 87% !important	
+  background-position: 100% 87% !important;
 }
 
 .cellTabs .ui-tabs-nav li:hover {
   background-position: 100% 15% !important;
 }
+
 .cellTabs .ui-tabs-nav li a {
   background: none !important;  
 }

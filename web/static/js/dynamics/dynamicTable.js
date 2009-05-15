@@ -472,6 +472,8 @@
           this.editor = new effortEdit(this, autoClose);
         } else if(this.options.type == "select") {
           this.editor = new selectEdit(this, this.options.items, autoClose);
+        } else if(this.options.type == "buttons") {
+          this.editor = new emptyEdit(this);
         }
         if(!autoClose && this.options.buttons) {
           var me = this;
@@ -503,6 +505,18 @@
 			_store: function() {
 				this.cell.saveEdit();
 			}
+	};
+	
+	/** EMPTY EDIT **/
+	var emptyEdit = function(cell) {
+	  this.cell = cell;
+	  this.cell.getElement().show();
+	};
+	emptyEdit.prototype = {
+	  _mouseClick: function(event) { return false; },
+	  remove: function() { $(document.body).unbind("click",this.mouseEvent); },
+	  isValid: function() { return true; },
+	  getValue: function() { return ""; }
 	};
 	
 	/** WYSIWYG EDIT **/
@@ -942,7 +956,7 @@
       };
       opts.colCss = { ':eq(2)': { 'cursor': 'pointer' },
                 '*': { 'background-color': '#eee' },
-                
+                ':eq(3)': { 'display': 'none' }
       };          
       addTableColumn(opts,
           { minwidth: 380, auto: true },
@@ -962,6 +976,7 @@
               tooltip: "",
               sort: null
             });
+      addTableColumn(opts,{ auto: false, setMaxWidth: true });
 
       $.extend(opts,options);
       var ret = this.dynamicTable(opts);

@@ -663,7 +663,7 @@ backlogItemController.prototype = {
                   }
                   ]});
      row.createCell({
-       type: "buttons",
+       type: "empty",
        get: function() { return ""; },
        buttons: {
        save: {text: "Save", action: function() {

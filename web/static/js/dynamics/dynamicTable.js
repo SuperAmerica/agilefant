@@ -472,7 +472,7 @@
           this.editor = new effortEdit(this, autoClose);
         } else if(this.options.type == "select") {
           this.editor = new selectEdit(this, this.options.items, autoClose);
-        } else if(this.options.type == "buttons") {
+        } else if(this.options.type == "empty") {
           this.editor = new emptyEdit(this);
         }
         if(!autoClose && this.options.buttons) {

@@ -117,8 +117,7 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
         TimesheetLoggable parent = getParent();
         if(hourEntryId > 0 || userId > 0) {
             storable.setUser(userDAO.get(userId));
-            hourEntryBusiness.store(parent,storable);
-            jsonData = new JSONSerializer().serialize(storable);
+            jsonData = new JSONSerializer().serialize(hourEntryBusiness.store(parent,storable));
         } else if(userId == 0) {
             if(userIds.size() < 1) {
                 super.addActionError(super.getText("hourEntry.noUsers"));

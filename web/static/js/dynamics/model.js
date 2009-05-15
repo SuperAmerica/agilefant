@@ -302,7 +302,7 @@ var backlogItemModel = function(data, backlog, iterationGoal) {
   if(data) this.setData(data);
 };
 backlogItemModel.prototype = {
-  setData: function(data, noEvents) {
+  setData: function(data) {
     this.id = data.id;
     this.name = data.name;
     this.description = data.description;
@@ -314,11 +314,12 @@ backlogItemModel.prototype = {
     this.originalEstimate = data.originalEstimate;
     this.creator = data.creator;
     var bubbleEvents = [];
-    if(this.persistedData && !noEvents) {
-    	if(this.persistedData.effortLeft != this.effortLeft || this.persistedData.originalEstimate != this.originalEstimate || this.persistedData.state != data.state) {
+    if(this.persistedData) {
+    	if(this.persistedData.effortLeft != this.effortLeft || this.persistedData.originalEstimate != this.originalEstimate || 
+    			this.persistedData.state != data.state || this.effortSpent != this.persistedData.effortSpent) {
     		bubbleEvents.push("metricsUpdated");
     	}
-    } else if(!this.persistedData && data && !noEvents) {
+    } else if(!this.persistedData && data) {
     	bubbleEvents.push("metricsUpdated");
     }
     if(data.userData) {
@@ -367,7 +368,7 @@ backlogItemModel.prototype = {
       this.editListeners[i]({bubbleEvent: bubbleEvents});
     }
   },
-  reloadData: function(noEvents) {
+  reloadData: function() {
     var me = this;
     $.ajax({
       url: "backlogItemJSON.action",
@@ -377,19 +378,18 @@ backlogItemModel.prototype = {
       dataType: 'json',
       type: 'POST',
       success: function(data,type) {
-        me.setData(data,!noEvents);
+        me.setData(data);
       }
     });
   },
   getHourEntries: function() {
     if(this.hourEntries == null) {
-      this.reloadData(false);
+      this.reloadData();
     }
     return this.hourEntries;
   },
   addHourEntry: function(entry) {
 	  this.getHourEntries().push(entry);
-	  this.reloadData(false);
   },
   removeHourEntry: function(entry) {
 	var tmp = this.getHourEntries();
@@ -639,15 +639,18 @@ var backlogItemHourEntryModel = function(backlogItem, data) {
 	this.editListeners = [];
 	this.deleteListeners = [];
 	this.backlogItem = backlogItem;
-	this.setData(data);
+	if(data) {
+		this.setData(data);
+	} else {
+		this.id = 0;
+	}
 };
 backlogItemHourEntryModel.prototype = {
 	setData: function(data) {
 		var bubbleEvents = [];
-		if(!this.persistedData || this.timeSpent != this.persistedData.timeSpent || this.id != this.persisted.id) {
-			bubbleEvents.push("metricsUpdated");
+		if(this.persistedData && this.timeSpent != this.persistedData.timeSpent) {
+			this.backlogItem.reloadData();
 		}
-		
 		this.user = data.user;
 		if(data.user) this.userId = data.user.id;
 		this.timeSpent = data.timeSpent;
@@ -661,12 +664,12 @@ backlogItemHourEntryModel.prototype = {
 		}
 		this.persistedData = data;
 	},
+	getTimeSpent: function() {
+		return this.timeSpent;
+	},
 	setTimeSpent: function(timeSpent) {
 		this.timeSpent = agilefantUtils.aftimeToMillis(timeSpent);
 		this.save();
-	},
-	getTimeSpent: function() {
-		return this.timeSpent;
 	},
 	setUser: function(userId) {
 		this.userId = userId;
@@ -719,6 +722,7 @@ backlogItemHourEntryModel.prototype = {
 	        for(var i = 0 ; i < me.deleteListeners.length; i++) {
 	          me.deleteListeners[i]();
 	        }
+	        me.backlogItem.reloadData();
 	        commonView.showOk("Effor entry deleted successfully.");
 	      },
 	      cache: false,
@@ -772,7 +776,11 @@ var todoModel = function(backlogItem, data) {
   this.editListeners = [];
   this.deleteListeners = [];
 	this.backlogItem = backlogItem;
-	this.setData(data);
+	if(!data) {
+		this.id = 0;
+	} else {
+		this.setData(data);
+	}
 };
 todoModel.prototype = {
 	setData: function(data) {

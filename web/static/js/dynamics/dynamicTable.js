@@ -370,6 +370,7 @@
 		var dblclick_cb = function() { me.openEdit() };
 		if (this.options.type && this.options.type != "empty") {
 		  this.cell.dblclick(dblclick_cb);
+		  this.cell.attr("title","Double-click the cell to edit it.");
 		}
 	};
 	
@@ -441,7 +442,7 @@
 			  if(noAutoClose) return;
 			  var me = this;
 			  var uc = new agilefantUserChooser({
-				  selectThese: function() { return agilefantUtils.objectToIdArray(me.options.get()); },
+				  selectThese: agilefantUtils.objectToIdArray(me.options.getEdit()),
 				  selectCallback: function(chooser) {
 					 var users = chooser.getSelected(true);
 				     me.options.set(users); 
@@ -790,12 +791,13 @@
 			};
 			$(document.body).trigger("dynamictable-close-actions").bind("dynamictable-close-actions", this.handler);
 			this.menu = $('<ul/>').appendTo(document.body).addClass("actionCell");
-			this.menu.mouseenter(function() { me.inMenu = true; });
+			/*this.menu.mouseenter(function() { me.inMenu = true; });
 			this.menu.mouseleave(function() { 
 				if(me.inMenu) {
 					me.close();
 				}
 			});
+			*/
 			var pos = this.cell.getElement().position();
 			var menuCss = {
 					"position":    "absolute",

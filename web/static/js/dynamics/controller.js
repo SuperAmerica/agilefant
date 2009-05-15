@@ -341,6 +341,14 @@ iterationGoalController.prototype = {
     row.createCell({
       type: "user",
     	get: function() { return bli.getUsers(); },
+    	getEdit: function() { 
+    		var users = [];
+    		var tmp = bli.getUsers();
+    		for(var i = 0; i < tmp.length; i++) {
+    			if(tmp[i]) users.push(tmp[i].user);
+    		}
+    		return users;
+    	},
     	decorator: agilefantUtils.userlistToHTML,
         set: function(users) {
     	  bli.setUsers(agilefantUtils.createPseudoUserContainer(users)); 
@@ -459,6 +467,14 @@ iterationGoalController.prototype = {
     row.createCell({
         type: "user",
       	get: function() { return bli.getUsers(); },
+       	getEdit: function() { 
+    		var users = [];
+    		var tmp = bli.getUsers();
+    		for(var i = 0; i < tmp.length; i++) {
+    			if(tmp[i]) users.push(tmp[i].user);
+    		}
+    		return users;
+    	},
       	decorator: agilefantUtils.userlistToHTML,
           set: function(users) {
       	  bli.setUsers(agilefantUtils.createPseudoUserContainer(users)); 
@@ -714,6 +730,7 @@ backlogItemController.prototype = {
       });
       row.createCell({
         get: function() { return entry.getUser(); },
+        getEdit: function() { return [entry.getUser()];},
           type: "user",
           decorator: function(u) { return u.fullName; },
           set: function(users) {
@@ -741,7 +758,7 @@ backlogItemController.prototype = {
     	           if(!row.saveEdit()) {
     	             return;
     	           }
-    	           todo.commit();
+    	           entry.commit();
     	           return false;
     	         }},
     	         cancel: {text: "Cancel", action: function() {
@@ -774,7 +791,7 @@ backlogItemController.prototype = {
     createEffortEntry: function() {
     	var me = this;
         var parent = $("<div />").appendTo(document.body);
-        parent.load("newHourEntry.action", {backlogItemId: this.model.getId()});
+        parent.load("newHourEntry.action", {backlogItemId: this.model.getId()}, function() { addFormValidators(parent);});
         var me = this;
         parent.dialog({
           resizable: true,
@@ -785,17 +802,20 @@ backlogItemController.prototype = {
           title: "Log effort",
           buttons: {
             'Save': function() {
+        	  var form = parent.find("form");
+        	  if(!form.validate()) {
+        		  return;
+        	  }
               $(this).dialog('close');
-              var form = parent.find("form");
-              var tmp = {id: 0};
               var timeSpent = form.find("input[name='hourEntry.timeSpent']").val();
-              tmp["description"] = form.find("input[name='hourEntry.description']").val();
+              var description = form.find("input[name='hourEntry.description']").val();
               var date = form.find("input[name=date]").val();
               var users = form.find("input[name='userIds']");
               if(users.length == 1) {
-            	var entry = new backlogItemHourEntryModel(me.model, tmp);
+            	var entry = new backlogItemHourEntryModel(me.model, null);
             	entry.beginTransaction();
             	entry.setUser(users.val());
+            	entry.setComment(description);
             	entry.setDate(date);
             	entry.setTimeSpent(timeSpent);
             	entry.commit();
@@ -803,16 +823,18 @@ backlogItemController.prototype = {
             	me.addEffortEntry(entry);
               } else if(users.length > 1) {
             	 users.each(function() {
-                 	var entry = new backlogItemHourEntryModel(me.model, tmp);
+                 	var entry = new backlogItemHourEntryModel(me.model, null);
                  	entry.beginTransaction();
                 	entry.setUser($(this).val());
                 	entry.setDate(date);
                 	entry.setTimeSpent(timeSpent);
+                	entry.setComment(description);
                 	entry.commit();
                 	me.model.addHourEntry(entry);
                 	me.addEffortEntry(entry);
             	 });
               }
+              me.model.reloadData();
               me.spentEffortView.render();
             },
             Cancel: function() {

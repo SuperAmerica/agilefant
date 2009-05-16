@@ -328,6 +328,11 @@
 		  for(var i = 0; i < this.cells.length; i++) {
 		    this.cells[i].openEdit(true);
 		  }
+		  for(var i = 0; i < this.cells.length; i++) {
+		    if(this.cells[i].setEditFocus()) {
+		    	break;
+		    }
+		  }
 		},
 		cancelEdit: function() {
 		  for(var i = 0; i < this.cells.length; i++) {
@@ -432,6 +437,11 @@
 		  if(this.isActionCell) this.actionObj.getElement().show();
 		  this.editor = null;
 		},
+		setEditFocus: function() {
+			if(this.editorOpen && this.editor) {
+				return this.editor.focus();
+			}
+		},
 		openEdit: function(noAutoClose) {
 		  if(typeof(this.options.canEdit) == "function") {
 			  if(!this.options.canEdit()) {
@@ -515,7 +525,14 @@
 			},
 			_store: function() {
 				this.cell.saveEdit();
-			}
+			},
+			focus: function() {
+				if(this.field) {
+					this.field.focus();
+					return true;
+				}
+				return false;
+			},
 	};
 	
 	/** EMPTY EDIT **/
@@ -938,12 +955,12 @@
 	      if(agilefantUtils.isTimesheetsEnabled()) {
 	          opts.colCss = { ':eq(9)': { 'cursor': 'pointer' },
 	                    ':lt(10)': { 'background-color': '#eee' },
-	                    ':gt(9)': { 'background-color': '#fff' }
+	                    ':gt(9)': { 'background-color': '#fff', 'position': 'relative' }
 	          };
 	      } else {
 	          opts.colCss = { ':eq(8)': { 'cursor': 'pointer' },
 	                    ':lt(9)': { 'background-color': '#eee' },
-	                    ':gt(8)': { 'background-color': '#fff' }
+	                    ':gt(8)': { 'background-color': '#fff', 'position': 'relative' }
 	          };	    	  
 	      }
 	      addTableColumn(opts, 

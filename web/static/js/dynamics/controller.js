@@ -224,6 +224,7 @@ iterationController.prototype = {
         this.addRow(goal);
         this.model.addGoal(goal);
         goal.commit();
+        ModelFactory.setIterationGoal(goal);
         this.model.reloadGoalData();
         //this.view.sortTable();
     },
@@ -424,6 +425,7 @@ iterationGoalController.prototype = {
     tabCell.getElement().hide();
     var childController = new backlogItemController(tabCell, bli, this, es);
     commonView.expandCollapse(expand.getElement(), function() {
+    	childController.initialize();
     	tabCell.getElement().show();
     }, function() {
     	tabCell.getElement().hide();
@@ -515,7 +517,7 @@ iterationGoalController.prototype = {
           me.data.addBacklogItem(bli);
           me.addRow(bli);
           bli.commit();
-          //me.view.sortTable();
+          ModelFactory.setBacklogItem(bli);
           return false;
         }},
         cancel: {text: "Cancel", action: function() {
@@ -557,45 +559,57 @@ iterationGoalController.prototype = {
 var backlogItemController = function(parentView, model, parentController, effortCell) {
   var me = this;
   this.model = model;
-  var tabs = new backlogItemTabs(model,parentView.getElement());
-  this.infoTable = tabs.addTab("Info").genericTable({noHeader: true, colCss: {}, colWidths: [{minwidth: 10, auto:true},{minwidth: 90, auto: true}]});
-  var todos = tabs.addTab("TODOs");
-  this.todoView = todos.todoTable();
-  this.todoView.addCaptionAction("createTODO", {
-    text: "Create TODO",
-    callback: function() {
-        var newTodo = new todoModel(me.model, { id: 0 });
-        newTodo.beginTransaction();
-        var row = me.addTodo(newTodo);
-        row.render();
-        row.openEdit();
-      }
-  });
+  this.parentView = parentView;
+  this.effortCell = effortCell;
+  this.parentController = parentController;
+  this.initialized = false;
   if(agilefantUtils.isTimesheetsEnabled()) {
-    var effView = tabs.addTab("Spent effort");
-    this.spentEffortView = effView.spentEffortTable(); 
-    this.spentEffortView.addCaptionAction("logEffort", {
-      text: "Log effort",
-      callback: function() {
-    		me.createEffortEntry();
-        
-        }
-    });
-  }
-  var me = this;
-  var onShow = function(index) { me.showTab(index); };
-  tabs.setOnShow(onShow);
-  this.renderInfo();
-  this.tabsLoaded = {};
-  if(agilefantUtils.isTimesheetsEnabled()) {
-	  effortCell.getElement().dblclick(function() {
+	  this.effortCell.getElement().dblclick(function() {
+		  me.initialize();
 		  me.showTab(2);
 		  me.createEffortEntry();
 	  }).attr("title","Double-click to log effort.");
   }
+
  
 };
 backlogItemController.prototype = {
+	initialize: function() {
+	  if(this.initialized) {
+		  return;
+	  }
+	  var tabs = new backlogItemTabs(this.model,this.parentView.getElement());
+	  this.infoTable = tabs.addTab("Info").genericTable({noHeader: true, colCss: {}, colWidths: [{minwidth: 10, auto:true},{minwidth: 90, auto: true}]});
+	  var todos = tabs.addTab("TODOs");
+	  this.todoView = todos.todoTable();
+	  this.todoView.addCaptionAction("createTODO", {
+	    text: "Create TODO",
+	    callback: function() {
+	        var newTodo = new todoModel(me.model, { id: 0 });
+	        newTodo.beginTransaction();
+	        var row = me.addTodo(newTodo);
+	        row.render();
+	        row.openEdit();
+	      }
+	  });
+	  if(agilefantUtils.isTimesheetsEnabled()) {
+	    var effView = tabs.addTab("Spent effort");
+	    this.spentEffortView = effView.spentEffortTable(); 
+	    this.spentEffortView.addCaptionAction("logEffort", {
+	      text: "Log effort",
+	      callback: function() {
+	    		me.createEffortEntry();
+	        
+	        }
+	    });
+	  }
+	  var me = this;
+	  var onShow = function(index) { me.showTab(index); };
+	  tabs.setOnShow(onShow);
+	  this.renderInfo();
+	  this.tabsLoaded = {};
+	  this.initialized = true;
+	},
     showTab: function(index) {
       if(!this.tabsLoaded[index]) {
         switch(index) {
@@ -682,11 +696,14 @@ backlogItemController.prototype = {
            if(!row.saveEdit()) {
              return;
            }
+           var oid = todo.id;
            todo.commit();
+           if(!oid) ModelFactory.setTodo(todo);
            return false;
          }},
          cancel: {text: "Cancel", action: function() {
-           if(todo.id == 0) {
+           var oid = todo.id;
+           if(oid == 0) {
         	 row.remove();
         	 return;
            }
@@ -819,6 +836,7 @@ backlogItemController.prototype = {
             	entry.setDate(date);
             	entry.setTimeSpent(timeSpent);
             	entry.commit();
+            	ModelFactory.setEffortEntry(entry);
             	me.model.addHourEntry(entry);
             	me.addEffortEntry(entry);
               } else if(users.length > 1) {
@@ -830,6 +848,7 @@ backlogItemController.prototype = {
                 	entry.setTimeSpent(timeSpent);
                 	entry.setComment(description);
                 	entry.commit();
+                	ModelFactory.setEffortEntry(entry);
                 	me.model.addHourEntry(entry);
                 	me.addEffortEntry(entry);
             	 });

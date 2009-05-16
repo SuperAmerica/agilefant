@@ -129,7 +129,7 @@ public class BacklogItem implements PageItem, Assignable, EffortContainer, Times
         this.createdDate = createdDate;
     }
     @ManyToOne
-    @JSON(include=false)
+    @JSON(include=true)
     public User getCreator() {
         return this.creator;
     }

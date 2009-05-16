@@ -1,5 +1,10 @@
 /** MODEL FACTORY **/
-var modelFactory = function() { };
+var modelFactory = function() { 
+	this.iterationGoals = {};
+	this.backlogItems = {};
+	this.todos = {};
+	this.effortEntries = {};
+};
 modelFactory.prototype = {
 	getIteration: function(iterationId, callback) {
 		if(!iterationId || iterationId < 1) {
@@ -23,7 +28,64 @@ modelFactory.prototype = {
 			url: "iterationData.action",
 			data: {iterationId: iterationId}
 		});
+	},
+	iterationGoalSingleton: function(id, parent, data) {
+		if(!this.iterationGoals[id]) {
+			this.iterationGoals[id] = new iterationGoalModel(data,parent);
+		} else {
+			this.iterationGoals[id].setData(data);
+		}
+		return this.iterationGoals[id];
+	},
+	setIterationGoal: function(goal) {
+		this.iterationGoals[goal.id] = goal;
+	},
+	removeIterationGoal: function(id) {
+		this.iterationGoals[id] = null;
+	},
+	backlogItemSingleton: function(id, backlog, iterationGoal, data) {
+		if(!this.backlogItems[id]) {
+			this.backlogItems[id] = new backlogItemModel(data, backlog, iterationGoal);
+		} else {
+			this.backlogItems[id].setData(data);
+		}
+		return this.backlogItems[id];
+	},
+	removeBacklogItem: function(id) {
+		this.backlogItems[id] = null;
+	},
+	setBacklogItem: function(bli) {
+		this.backlogItems[bli.id] = bli;
+	},
+	todoSingleton: function(id, parent, data) {
+		if(!this.todos[id]) {
+			this.todos[id] = new todoModel(parent, data);
+		} else {
+			this.todos[id].setData(data);
+		}
+		return this.todos[id];
+	},
+	removeTodo: function(id) {
+		this.todos[id] = null;
+	},
+	setTodo: function(todo) {
+		this.todos[todo.id] = todo;
+	},
+	backlogItemHourEntrySingleton: function(id, parent, data) {
+		if(!this.effortEntries[id]) {
+			this.effortEntries[id] = new backlogItemHourEntryModel(parent, data);
+		} else {
+			this.effortEntries[id].setData(data);
+		}
+		return this.effortEntries[id];
+	},
+	removeEffortEntry: function(id) {
+		this.effortEntries[id] = null;
+	},
+	setEffortEntry: function(entry) {
+		this.effortEntries[entry.id] = entry;
 	}
+	
 };
 
 ModelFactory = new modelFactory();
@@ -36,6 +98,7 @@ iterationModel = function(iterationData, iterationId) {
 	this.itemsWithoutGoal = [];
 	var me = this;
 	jQuery.each(iterationData.iterationGoals, function(index,iterationGoalData) { 
+		goalPointer.push(ModelFactory.iterationGoalSingleton(iterationGoalData.id, me, iterationGoalData));
 		goalPointer.push(new iterationGoalModel(iterationGoalData, me));
 	});
 	if(iterationData.itemsWithoutGoal) {
@@ -46,7 +109,7 @@ iterationModel = function(iterationData, iterationId) {
 		this.containerGoal.metrics = {};
 		this.containerGoal.reloadMetrics();
 		jQuery.each(iterationData.itemsWithoutGoal, function(k,v) { 
-			me.itemsWithoutGoal.push(new backlogItemModel(v,me,me.containerGoal));
+			me.itemsWithoutGoal.push(ModelFactory.backlogItemSingleton(v.id, me,me.containerGoal, v));
 		});
 	}
 	this.iterationGoals = goalPointer;
@@ -65,11 +128,7 @@ iterationModel.prototype = {
 	      success: function(data,type) {
 	        data = data.iterationGoals;
 	        for(var i = 0 ; i < data.length; i++) {
-	          for(var j = 0; j < me.iterationGoals.length; j++) {
-	            if(data[i].id == me.iterationGoals[j].id) {
-	              me.iterationGoals[i].setData(data[i]);
-	            }
-	          }
+	          ModelFactory.iterationGoalSingleton(data[i].id, this, data);
 	        }
 	      },
 	      cache: false,
@@ -136,7 +195,7 @@ iterationGoalModel.prototype = {
     if(!this.backlogItems || this.backlogItems.length == 0) {
       this.backlogItems = [];
       for(var i = 0 ; i < backlogItems.length ; i++) {
-        this.backlogItems.push(new backlogItemModel(backlogItems[i], this.iteration, this));
+    	  this.backlogItems.push(ModelFactory.backlogItemSingleton(backlogItems[i].id, this.iteration, this, backlogItems[i]));
       }
     }
   },
@@ -231,6 +290,7 @@ iterationGoalModel.prototype = {
       },
       success: function(data,type) {
         cb();
+        ModelFactory.removeIterationGoal(me.id);
         for(var i = 0 ; i < me.deleteListeners.length; i++) {
           me.deleteListeners[i]();
         }
@@ -334,32 +394,18 @@ backlogItemModel.prototype = {
     	}
     }
     if(data.hourEntries) {
-      if(!this.hourEntries) {
-        this.hourEntries = [];
-      }
+      this.hourEntries = [];
       for(var i = 0 ; i < data.hourEntries.length; i++) {
-    	for(var j = 0; j < this.hourEntries.length; j++) {
-    		if(this.hourEntries[j].id == data.hourEntries[i].id) {
-    			break;
-    		}
-    	}
         if(data.hourEntries[i] != null) {
-          this.hourEntries.push(new backlogItemHourEntryModel(this, data.hourEntries[i]));
+          this.hourEntries.push(ModelFactory.backlogItemHourEntrySingleton(data.hourEntries[i].id, this, data.hourEntries[i]));
         }
       }
     }
     if(data.tasks) {
-      if(!this.todos) {
         this.todos = [];
-      }
       for(var i = 0 ; i < data.tasks.length; i++) {
-      	for(var j = 0; j < this.todos.length; j++) {
-    		if(this.todos[j].id == data.tasks[i].id) {
-    			break;
-    		}
-    	}
         if(data.tasks[i] != null) {
-          this.todos.push(new todoModel(this,data.tasks[i]));
+        	this.todos.push(ModelFactory.todoSingleton(data.tasks[i].id, this,data.tasks[i]));
         }
       }
     }
@@ -402,7 +448,7 @@ backlogItemModel.prototype = {
   },
   getTodos: function() {
     if(this.todos == null) {
-      this.reloadtData(false);
+      this.reloadData();
     }
     return this.todos;
   },
@@ -536,6 +582,7 @@ backlogItemModel.prototype = {
       },
       success: function(data,type) {
     	me.iterationGoal.removeBacklogItem(me);
+    	ModelFactory.removeBacklogItem(me.id);
         for(var i = 0 ; i < me.deleteListeners.length; i++) {
           me.deleteListeners[i]();
         }
@@ -719,6 +766,7 @@ backlogItemHourEntryModel.prototype = {
 	      },
 	      success: function(data,type) {
 	        me.backlogItem.removeHourEntry(me);
+	        ModelFactory.removeEffortEntry(me.id);
 	        for(var i = 0 ; i < me.deleteListeners.length; i++) {
 	          me.deleteListeners[i]();
 	        }
@@ -841,6 +889,7 @@ todoModel.prototype = {
       },
       success: function(data,type) {
         me.backlogItem.removeTodo(me);
+        ModelFactory.removeTodo(me.id);
         for(var i = 0 ; i < me.deleteListeners.length; i++) {
           me.deleteListeners[i]();
         }

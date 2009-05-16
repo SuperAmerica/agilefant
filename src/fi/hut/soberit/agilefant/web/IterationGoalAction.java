@@ -79,6 +79,11 @@ public class IterationGoalAction extends ActionSupport {
         }
         return CRUDAction.AJAX_SUCCESS;
     }
+    
+    public String getContents() {
+        jsonData = new JSONSerializer().serialize(iterationGoalBusiness.getIterationGoalContents(iterationGoalId, iterationId));
+        return CRUDAction.AJAX_SUCCESS;
+    }
 
 
 

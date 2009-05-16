@@ -45,7 +45,9 @@ iterationController.prototype = {
     		'Yes': function() {
     		$(this).dialog('close');
     		parent.remove();
-    		me.model.removeGoal(goal);
+    		goal.remove();
+   			me.itemsWithOutGoalContainer.reloadBacklogItems();
+   			me.noGoalItemController.render();
     	},
     	Cancel: function() {
     		$(this).dialog('close');
@@ -173,6 +175,7 @@ iterationController.prototype = {
     		me.addRow(goal);
     	});
     	var goal = data.getPseudoGoal();
+    	this.itemsWithOutGoalContainer = goal;
     	var row = me.view.createRow(goal);
     	var expand = row.createCell();
     	var name = row.createCell().setValue("Items without goal.");
@@ -198,19 +201,19 @@ iterationController.prototype = {
     	row.createCell().getElement().hide(); //dymmy description
     	var blis = row.createCell();
     	blis.getElement().hide();
-    	var blictrl = new iterationGoalController(blis, goal);
-    	this.iterationGoalControllers.push(blictrl);
+    	this.noGoalItemController = new iterationGoalController(blis, goal);
+    	this.iterationGoalControllers.push(this.noGoalItemController);
     	buttons.setActionCell({items: [{
     		text: "Create a new task",
     		callback: function() {
     		blis.getElement().show();
-    		blictrl.createBli();
+    		me.noGoalItemController.createBli();
     	}
     	}]});
     	this.buttonCells.push(commonView.expandCollapse(expand.getElement(), function() {
-    		blictrl.showBacklogItems();
+    		me.noGoalItemController.showBacklogItems();
     	}, function() {
-    		blictrl.hideBacklogItems();
+    		me.noGoalItemController.hideBacklogItems();
     	}));
 
     	this.view.render();
@@ -221,16 +224,16 @@ iterationController.prototype = {
     	}
     	row.remove();
     	goal = goal.copy();
-    	this.addRow(goal);
-    	this.model.addGoal(goal);
     	goal.commit();
+    	this.model.addGoal(goal);
+    	this.addRow(goal);
+    	this.view.render();
     	ModelFactory.setIterationGoal(goal);
     	this.model.reloadGoalData();
-    	//this.view.sortTable();
     },
     createGoal: function() {
     	var me = this;
-    	var fakeGoal = new iterationGoalModel(this.iterationId);
+    	var fakeGoal = new iterationGoalModel({}, this.model);
     	fakeGoal.beginTransaction(); //block autosaves
     	var row = this.view.createRow(fakeGoal,{toTop: true}, true);
     	row.setNotSortable();
@@ -280,7 +283,22 @@ var iterationGoalController = function(parentView, model) {
 	this.element = $("<div />").width("98%").appendTo(parentView.getElement());
 	this.data = model;
 	this.view = jQuery(this.element).backlogItemsTable();
-	this.render(this.data);
+	var me = this;
+	this.view.addCaptionAction("createNew", {
+		text: "Create a new task",
+		callback: function() {
+		me.createBli();
+	}
+	});
+	/*
+	this.view.getElement().addClass('dynamictable-backlogitem-droppable');
+	this.view.getElement().sortable({
+	    connectWith: '.dynamictable-backlogitem-droppable',
+	    not: '.dynamictable-notsortable',
+	    placeholder : 'dynamictable-placeholder'
+	 });
+	 */
+	this.render();
 };
 iterationGoalController.prototype = {
 	hideBacklogItems: function() {
@@ -289,7 +307,7 @@ iterationGoalController.prototype = {
 	showBacklogItems: function() {
 		this.parentView.getElement().show();
 	},
-	deleteBli: function(goal) {
+	deleteBli: function(bli) {
 		var parent = $("<div />").appendTo(document.body).text("Are you sure you wish to delete this task?");
 		var me = this;
 		parent.dialog({
@@ -300,7 +318,7 @@ iterationGoalController.prototype = {
 			'Yes': function() {
 			$(this).dialog('close');
 			parent.remove();
-			goal.remove();
+			bli.remove();
 		},
 		Cancel: function() {
 			$(this).dialog('close');
@@ -310,6 +328,9 @@ iterationGoalController.prototype = {
 		});
 	},
 	addRow: function(bli) {
+    	if(this.view.isInTable(bli)) { //avoid duplicate entries, should be refatored to the view layer?
+        	return;
+        }
 		var me = this;
 		var row = this.view.createRow(bli);
 		var expand = row.createCell();
@@ -529,24 +550,9 @@ iterationGoalController.prototype = {
 		row.updateColCss();
 		row.openEdit();
 	},
-	render: function(data) {
+	render: function() {
 		var me = this;
-		var blis = data.getBacklogItems();
-
-		this.view.addCaptionAction("createNew", {
-			text: "Create a new task",
-			callback: function() {
-			me.createBli();
-		}
-		});
-		/*
-    this.view.getElement().addClass('dynamictable-backlogitem-droppable');
-    this.view.getElement().sortable({
-        connectWith: '.dynamictable-backlogitem-droppable',
-        not: '.dynamictable-notsortable',
-        placeholder : 'dynamictable-placeholder'
-      });
-		 */
+		var blis = this.data.getBacklogItems();
 		if(blis && blis.length > 0) {
 			for(var i = 0; i < blis.length; i++) {
 				me.addRow(blis[i]);

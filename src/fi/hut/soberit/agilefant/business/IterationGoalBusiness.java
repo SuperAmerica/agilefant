@@ -1,6 +1,10 @@
 package fi.hut.soberit.agilefant.business;
 
+import java.util.Collection;
+
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
+import fi.hut.soberit.agilefant.model.BacklogItem;
+import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.IterationGoal;
 import fi.hut.soberit.agilefant.util.IterationGoalMetrics;
 
@@ -25,4 +29,8 @@ public interface IterationGoalBusiness {
 
     public IterationGoalMetrics getIterationGoalMetrics(int iterationGoalId, int iterationId) throws ObjectNotFoundException;
 
+    public Collection<BacklogItem> getIterationGoalContents(IterationGoal goal,
+            Iteration iter);
+    
+    public Collection<BacklogItem> getIterationGoalContents(int iterationGoalId, int iterationId);
 }

@@ -19,21 +19,21 @@
 	};
 	/** TABLE **/
 	var dynamicTable = function(element, options) {
-    this.options = {
-        colCss: {},
-        colWidths: [],
-        headerCols: [],
-        defaultSortColumn: 0,
-        captionText: "Table",
-        noHeader: false
-    };
-    $.extend(this.options,options);
-    var widths = this.calculateColumnWidths(this.options.colWidths);
-    for (var i = 0; i < widths.length; i++) {
-      if (widths[i]) {
-        this.options.colWidths[i].width = widths[i];
-      }
-    }
+	    this.options = {
+	        colCss: {},
+	        colWidths: [],
+	        headerCols: [],
+	        defaultSortColumn: 0,
+	        captionText: "Table",
+	        noHeader: false
+	    };
+	    $.extend(this.options,options);
+	    var widths = this.calculateColumnWidths(this.options.colWidths);
+	    for (var i = 0; i < widths.length; i++) {
+	      if (widths[i]) {
+	        this.options.colWidths[i].width = widths[i];
+	      }
+	    }
 		this.element = element;
 		this.rows = [];
 		this.container = $("<div />").appendTo(this.element).addClass(cssClasses.table);
@@ -43,221 +43,248 @@
 		 me.sortTable();
 		});
 		this.headerRow = null;
-		if(!this.options.noHeader) {
-		  this.caption = $('<div />').addClass(cssClasses.tableCaption).prependTo(this.container).width(this.maxWidth+"%");
-		  $("<div />").css("float", "left").text(this.options.captionText).appendTo(this.caption).width("30%");
-		  this.captionAction = $('<ul />').addClass(cssClasses.captionActions).appendTo(this.caption).css("float","right").width("68%");
-		}
 		this.sorting = {
 		    column: this.options.defaultSortColumn,
 		    direction: -1
 		};
 		this.captionActions = {};
+		this.tableRowHashes = [];
 	};
 	
 	dynamicTable.prototype = {
-			createRow: function(model, opt, noSort) {
-				var newRow = new dynamicTableRow(this, model, opt);
-				if(!noSort) {
-				  this.rows.push(newRow);
+		createRow: function(model, opt, noSort) {
+			var newRow = new dynamicTableRow(this, model, opt);
+			if(!noSort) {
+			  this.rows.push(newRow);
+			}
+			if(typeof(model.getHashCode) == "function" && model.getHashCode()) {
+				this.tableRowHashes.push(model.getHashCode());
+			}
+			return newRow;
+		},
+		deleteRow: function(row) {
+			var rows = [];
+			for(var i = 0 ; i < this.rows.length; i++) {
+				if(this.rows[i] != row) {
+					rows.push(this.rows[i]);
 				}
-				return newRow;
-			},
-			deleteRow: function(row) {
-			  var rows = [];
-			  for(var i = 0 ; i < this.rows.length; i++) {
-			    if(this.rows[i] != row) {
-			      rows.push(this.rows[i]);
-			    }
-			  }
-			  this.rows = rows;
-			  $(document.body).trigger("dynamictable-close-actions");
-			},
-			getElement: function() {
-				return this.table;
-			},
-			getOptions: function() {
-			  return this.options;
-			},
-			getColWidth: function(colno) {
-			  return this.options.colWidths[colno];
-			},
-			getSorting: function() {
-			  return this.sorting;
-			},
-			render: function() {
-			  if(this.headerRow == null && !this.options.noHeader) {
-			    this.renderHeader();
-			  }
-			  for(var i = 0; i < this.rows.length; i++) {
-			    this.rows[i].render();
-			  }
-			  this.table.show();
-			  if (this.options.headerCols[this.options.defaultSortColumn]) {
-			    this.doSort(this.options.defaultSortColumn, this.options.headerCols[this.options.defaultSortColumn].sort);
-			  }
-			  this._sortable();
-			},
-			addCaptionAction: function(name, options) {
-				options.element = $('<li />').addClass(cssClasses.captionAction).appendTo(this.captionAction).css("float","right");
-				var me = this;
-				options.element.click(function() { 
-					if(options.toggleWith) {
-						me.captionActions[options.toggleWith].element.toggle();
-						options.element.toggle();
+			}
+			if(row.model && typeof(row.model.getHashCode) == "function" && row.model.getHashCode()) {
+				var hashCode = row.model.getHashCode();
+				var tmp = this.tableRowHashes;
+				this.tableRowHashes = [];
+				for(var i = 0; i < tmp.length; i++) {
+					if(tmp[i] != hashCode) {
+						this.tableRowHashes.push(tmp[i]);
 					}
-					options.callback();
-				});
-				options.element.text(options.text);
-				if(options.style) {
-					options.element.addClass(options.style)
 				}
-				if(options.hide) {
-					options.element.hide();
+			}
+			this.rows = rows;
+			$(document.body).trigger("dynamictable-close-actions");
+		},
+		getElement: function() {
+			return this.table;
+		},
+		getOptions: function() {
+			return this.options;
+		},
+		getColWidth: function(colno) {
+			return this.options.colWidths[colno];
+		},
+		getSorting: function() {
+			return this.sorting;
+		},
+		render: function() {
+			if(this.headerRow == null && !this.options.noHeader) {
+				this.renderHeader();
+			}
+			if(this.caption == null && !this.options.noHeader) {
+				this.renderCaption();
+			}
+			for(var i = 0; i < this.rows.length; i++) {
+				this.rows[i].render();
+			}
+			this.table.show();
+			this.sortTable();
+			this._sortable();
+		},
+		addCaptionAction: function(name, options) {
+			if(this.options.noHeader) {
+				return;
+			}
+			if(!this.caption) {
+				this.renderCaption();
+			}
+			options.element = $('<li />').addClass(cssClasses.captionAction).appendTo(this.captionAction).css("float","right");
+			var me = this;
+			options.element.click(function() { 
+				if(options.toggleWith) {
+					me.captionActions[options.toggleWith].element.toggle();
+					options.element.toggle();
 				}
-				this.captionActions[name] = options;
-			},
-			sortTable: function() {
-			  if(this.sorting.direction == 1) this.sorting.direction = 0;
-			  if(this.sorting.direction == 0) this.sorting.direction = 1;
-			  if(!this.sorting || !this.sorting.column || !this.options.headerCols[this.sorting.column]) {
-			    return;
-			  }
-			  this.doSort(this.sorting.column, this.options.headerCols[this.sorting.column].sort);
-			},
-			renderCaption: function() {
-			  this.caption = new dynamicTableRow(this, null, {toTop: true});
-			  this.caption.getElement().addClass(cssClasses.tableCaption).addClass(cssClasses.notSortable);
-			  $('<span/>').text(this.options.captionText).appendTo(this.caption.getElement());
-			},
-			renderHeader: function() {
-			  if (this.options.headerCols.length == 0) {
-			    return false;
-			  }
-			  var me = this;
-			  this.headerRow = new dynamicTableRow(this, null, {toTop: true});
-			  this.headerRow.getElement().addClass(cssClasses.tableHeader).addClass(cssClasses.notSortable);
-			  var row = this.headerRow;
-			  
-			  $.each(this.options.headerCols, function(i,v) {
-			    var c = row.createCell();
-			    var col = c.getElement();
-			    var f;
-			    if (v.sort) {
-			      f = $('<a href="#"/>').text(v.name).click(function() { me.doSort(i, v.sort); return false; }).appendTo(col);
-			      $('<div/>').addClass(cssClasses.sortImg).prependTo(f);
-			    }
-			    else {
-			      f = $('<span />').text(v.name).appendTo(col);
-			    }
-			    if(v.actionCell && me.actionParams) {
-			    	new tableRowActions(c,row,me.actionParams);
-			    }
-			    if (v.tooltip) f.attr('title',v.tooltip);
-			  });
-			  $.each(this.options.colCss, function(i,v) {
-	          me.headerRow.getElement().children(i).css(v);
-	      });
-			},
-			setActionCellParams: function(params) {
-				this.actionParams = params;
-			},
-			doSort: function(colNo, comparator) {
-			  if (typeof(comparator) != "function") {
-			    return false;
-			  }
-			  if ((this.sorting.column == colNo) && this.sorting.direction == 0) {
-			    this.sorting.direction = 1;
-			  }
-			  else {
-			    this.sorting.direction = 0;
-			  }
-			  this.sorting.column = colNo;
-			  this.updateSortArrow(this.sorting.column, this.sorting.direction);
-			  
-			  var sorted = (this.rows.sort(function(a,b) { 
-			    if(!a.model) {
-			      return 1;
-			    }
-			    if(!b.model) {
-			      return -1;
-			    }
-			    return comparator(a.model,b.model); 
-			    }));
-			  if (this.sorting.direction == 1) { sorted = sorted.reverse(); }
-			  for(var i = 0; i < sorted.length; i++) {
-			    sorted[i].row.appendTo(this.table);
-			  }
-      },
-      updateSortArrow: function(col, dir) {
-        this.headerRow.getElement().find('.' + cssClasses.sortImg).removeClass(cssClasses.sortImgDown)
-          .removeClass(cssClasses.sortImgUp);
-        var a = this.headerRow.getElement().find('.' + cssClasses.tableCell + ':eq('+col+')')
-          .find('.' + cssClasses.sortImg).addClass(cssClasses.sortImgUp);
-        if (dir == 0) {
-          a.addClass(cssClasses.sortImgUp);
-        }
-        else {
-          a.addClass(cssClasses.sortImgDown);
-        }
-      },
-      calculateColumnWidths: function(params) {
-        var num = 0;
-        var totalwidth = 0;
-        //calculate total minimum width
-        for (var i = 0; i < params.length; i++) {
-          if (params[i].auto) {
-            num++;
-            totalwidth += params[i].minwidth;
-          }
-        }
-        
-        var retval = [];
-       
-        //percentage taken by column borders
-        var totalPercentage = (statics.borderPerColumn * num) / 100;
+				options.callback();
+			});
+			options.element.text(options.text);
+			if(options.style) {
+				options.element.addClass(options.style)
+			}
+			if(options.hide) {
+				options.element.hide();
+			}
+			this.captionActions[name] = options;
+		},
+		sortTable: function() {
+			if(!this.sorting || !this.options.headerCols[this.sorting.column]) {
+				return;
+			}
+			this._sort(this.sorting.column, this.options.headerCols[this.sorting.column].sort, this.sorting.direction);
+		},
+		renderCaption: function() {
+			if(!this.options.noHeader) {
+				  this.caption = $('<div />').addClass(cssClasses.tableCaption).prependTo(this.container).width(this.maxWidth+"%");
+				  $("<div />").css("float", "left").text(this.options.captionText).appendTo(this.caption).width("30%");
+				  this.captionAction = $('<ul />').addClass(cssClasses.captionActions).appendTo(this.caption).css("float","right").width("68%");
+			}
+		},
+		renderHeader: function() {
+			if (this.options.headerCols.length == 0) {
+				return false;
+			}
+			var me = this;
+			this.headerRow = new dynamicTableRow(this, null, {toTop: true});
+			this.headerRow.getElement().addClass(cssClasses.tableHeader).addClass(cssClasses.notSortable);
+			var row = this.headerRow;
 
-        //scale total width down to 98% in order to prevent cell wrapping
-        totalwidth = totalwidth / (0.99 - totalPercentage);
-        
-        for (var j = 0; j < params.length; j++) {
-          var cell = params[j];
-          if (!cell.auto) {
-            retval.push(null);
-          }
-          else {
-            var percent = Math.round(1000 * (cell.minwidth / totalwidth))/10;
-            totalPercentage += percent;
-            retval.push(percent);
-          }
-        }
-        var maxWidth = Math.round(10 * (totalPercentage + ((num - 1) * statics.borderPerColumn)))/10;
-        this.maxWidth = maxWidth;
-        for (var j = 0; j < params.length; j++) {
-          var cell = params[j];
-          if(!cell.auto && cell.setMaxWidth == true) {
-            retval[j] = maxWidth;
-          }
-        }
-        return retval;
-      },
-      activateSortable: function(options) {
-        this.options.sortOptions = options;
-        this.options.sortable = true;
-      },
-      _sortable: function() {
-        if(!this.sortActive && this.options.sortable) {
-          this.sortActive = true;
-          var defOpt = {
-           handle: '.dynamictable-sorthandle',
-           items: '> *:not(.dynamictable-notsortable)',
-            cursor: 'move',
-            placeholder : 'dynamictable-placeholder' 
-          };
-          $.extend(defOpt, this.options.sortOptions);
-          this.table.sortable(defOpt);
-        }
-      }
+			$.each(this.options.headerCols, function(i,v) {
+				var c = row.createCell();
+				var col = c.getElement();
+				var f;
+				if (v.sort) {
+					f = $('<a href="#"/>').text(v.name).click(function() { me.doSort(i, v.sort); return false; }).appendTo(col);
+					$('<div/>').addClass(cssClasses.sortImg).prependTo(f);
+				}
+				else {
+					f = $('<span />').text(v.name).appendTo(col);
+				}
+				if(v.actionCell && me.actionParams) {
+					new tableRowActions(c,row,me.actionParams);
+				}
+				if (v.tooltip) f.attr('title',v.tooltip);
+			});
+			$.each(this.options.colCss, function(i,v) {
+				me.headerRow.getElement().children(i).css(v);
+			});
+		},
+		setActionCellParams: function(params) {
+			this.actionParams = params;
+		},
+		doSort: function(colNo, comparator) {
+			if (typeof(comparator) != "function") {
+				return false;
+			}
+			if ((this.sorting.column == colNo) && this.sorting.direction == 0) {
+				this.sorting.direction = 1;
+			}
+			else {
+				this.sorting.direction = 0;
+			}
+			this.sorting.column = colNo;
+			this._sort(colNo, comparator, this.sorting.direction);
+		},
+		_sort: function(colNo, comparator, direction) {
+			if (typeof(comparator) != "function") {
+				return false;
+			}
+			this.updateSortArrow(this.sorting.column, direction);
+			var sorted = (this.rows.sort(function(a,b) { 
+				if(!a.model) {
+					return 1;
+				}
+				if(!b.model) {
+					return -1;
+				}
+				return comparator(a.model,b.model); 
+			}));
+			if (direction == 1) { sorted = sorted.reverse(); }
+			for(var i = 0; i < sorted.length; i++) {
+				sorted[i].row.appendTo(this.table);
+			}
+		},
+		updateSortArrow: function(col, dir) {
+			this.headerRow.getElement().find('.' + cssClasses.sortImg).removeClass(cssClasses.sortImgDown)
+			.removeClass(cssClasses.sortImgUp);
+			var a = this.headerRow.getElement().find('.' + cssClasses.tableCell + ':eq('+col+')')
+			.find('.' + cssClasses.sortImg).addClass(cssClasses.sortImgUp);
+			if (dir == 0) {
+				a.addClass(cssClasses.sortImgUp);
+			}
+			else {
+				a.addClass(cssClasses.sortImgDown);
+			}
+		},
+		calculateColumnWidths: function(params) {
+			var num = 0;
+			var totalwidth = 0;
+			//calculate total minimum width
+			for (var i = 0; i < params.length; i++) {
+				if (params[i].auto) {
+					num++;
+					totalwidth += params[i].minwidth;
+				}
+			}
+
+			var retval = [];
+
+			//percentage taken by column borders
+			var totalPercentage = (statics.borderPerColumn * num) / 100;
+
+			//scale total width down to 98% in order to prevent cell wrapping
+			totalwidth = totalwidth / (0.99 - totalPercentage);
+
+			for (var j = 0; j < params.length; j++) {
+				var cell = params[j];
+				if (!cell.auto) {
+					retval.push(null);
+				}
+				else {
+					var percent = Math.round(1000 * (cell.minwidth / totalwidth))/10;
+					totalPercentage += percent;
+					retval.push(percent);
+				}
+			}
+			var maxWidth = Math.round(10 * (totalPercentage + ((num - 1) * statics.borderPerColumn)))/10;
+			this.maxWidth = maxWidth;
+			for (var j = 0; j < params.length; j++) {
+				var cell = params[j];
+				if(!cell.auto && cell.setMaxWidth == true) {
+					retval[j] = maxWidth;
+				}
+			}
+			return retval;
+		},
+		activateSortable: function(options) {
+			this.options.sortOptions = options;
+			this.options.sortable = true;
+		},
+		_sortable: function() {
+			if(!this.sortActive && this.options.sortable) {
+				this.sortActive = true;
+				var defOpt = {
+						handle: '.dynamictable-sorthandle',
+						items: '> *:not(.dynamictable-notsortable)',
+						cursor: 'move',
+						placeholder : 'dynamictable-placeholder' 
+				};
+				$.extend(defOpt, this.options.sortOptions);
+				this.table.sortable(defOpt);
+			}
+		},
+		isInTable: function(model) {
+			if(typeof(model.getHashCode) == "function" && model.getHashCode()) {
+				return ($.inArray(model.getHashCode(), this.tableRowHashes) != -1);
+			}
+			return false;
+		}
 	};
 	
 	/** TABLE ROW **/
@@ -880,7 +907,7 @@
 			return null;
 		},
 		iterationGoalTable: function(options) {
-		  var opts = { captionText: "Iteration Goals"};
+		  var opts = { captionText: "Iteration Goals", defaultSortColumn: 0};
 		  if(agilefantUtils.isTimesheetsEnabled()) {
 		      opts.colCss = {
 		        ':lt(7)': { 'background': '#dddddd' },

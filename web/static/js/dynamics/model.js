@@ -1,5 +1,5 @@
 /** MODEL FACTORY **/
-var modelFactory = function() { 
+var modelFactory = function() { 
 	this.iterationGoals = {};
 	this.backlogItems = {};
 	this.todos = {};

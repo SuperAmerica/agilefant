@@ -127,7 +127,7 @@ iterationController.prototype = {
                                            me.deleteGoal(goal);
                                          }
                                        }, {
-                                    	 text: "Create backlog item",
+                                    	 text: "Create a new task",
                                     	 callback: function() {
                                     	   expandButton.trigger("showContents");
                                     	   blictrl.createBli();
@@ -152,14 +152,14 @@ iterationController.prototype = {
       	  }
       });
       this.view.addCaptionAction("showBlis", {
-    	  text: "Show BLIs",
+    	  text: "Show tasks",
     	  toggleWith: "hideBlis",
     	  callback: function() {
     	  	me.showBacklogItems();
       	  }
       });
       this.view.addCaptionAction("hideBlis", {
-    	  text: "Hide BLIs",
+    	  text: "Hide tasks",
     	  toggleWith: "showBlis",
     	  hide: true,
     	  callback: function() {
@@ -201,7 +201,7 @@ iterationController.prototype = {
       var blictrl = new iterationGoalController(blis, goal);
       this.iterationGoalControllers.push(blictrl);
       buttons.setActionCell({items: [{
-                                    	 text: "Create backlog item",
+                                    	 text: "Create a new task",
                                     	 callback: function() {
                                     	   blis.getElement().show();
                                     	   blictrl.createBli();
@@ -236,7 +236,8 @@ iterationController.prototype = {
         row.setNotSortable();
         var prio = row.createCell();
         var name = row.createCell({
-          type: "text", get: function() { return ""; },
+          type: "text", 
+          get: function() { return " "; },
           set: function(val){ fakeGoal.setName(val);}});
         var elsum = row.createCell();
         var oesum = row.createCell();
@@ -253,7 +254,7 @@ iterationController.prototype = {
                                        }
                                        ]});
         var desc = row.createCell({
-          type: "wysiwyg",  get: function() { return ""; },
+          type: "wysiwyg",  get: function() { return ""; },
           set: function(val) { fakeGoal.setDescription(val);},
           buttons: {
             save: {text: "Save", action: function() {
@@ -289,7 +290,7 @@ iterationGoalController.prototype = {
     this.parentView.getElement().show();
   },
   deleteBli: function(goal) {
-      var parent = $("<div />").appendTo(document.body).text("Are you sure you wish to delete this backlog item?");
+      var parent = $("<div />").appendTo(document.body).text("Are you sure you wish to delete this task?");
       var me = this;
       parent.dialog({
         resizable: false,
@@ -533,7 +534,7 @@ iterationGoalController.prototype = {
     var blis = data.getBacklogItems();
     
     this.view.addCaptionAction("createNew", {
-  	  text: "Create Backlog Item",
+  	  text: "Create a new task",
   	  callback: function() {
   	  	me.createBli();
     	  }
@@ -808,7 +809,7 @@ backlogItemController.prototype = {
     createEffortEntry: function() {
     	var me = this;
         var parent = $("<div />").appendTo(document.body);
-        parent.load("newHourEntry.action", {backlogItemId: this.model.getId()}, function() { addFormValidators(parent);});
+        parent.load("newHourEntry.action", {backlogItemId: this.model.getId()}, function() { addFormValidators(parent);});
         var me = this;
         parent.dialog({
           resizable: true,

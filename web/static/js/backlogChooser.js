@@ -107,7 +107,7 @@
 				this.auxFields.empty();
 				var me = this;
 				if(this.useDateLimit) {
-					$.each(options,function() {
+					$.each(options, function() {
 						var backlogId = $(this).attr("value");
 						var field = $('<input type="hidden" />').attr("value",backlogId);
 						if(container == me.projectContainer) {

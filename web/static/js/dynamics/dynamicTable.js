@@ -467,7 +467,7 @@
 			  if(noAutoClose) return;
 			  var me = this;
 			  var tc = new agilefantThemeChooser({
-				  selectedThemes: function() { return agilefantUtils.objectToIdArray(me.options.get()); },
+				  selectedThemes: function() { return agilefantUtils.objectToIdArray(me.options.get()); },
 				  onSelect: function(themes) {
 				     me.options.set(themes); 
 				     me.render();
@@ -872,7 +872,7 @@
 				if(!this.data("dynamicTable")) {
 					table = new dynamicTable(this, options);
 					this.data("dynamicTable", table);
-				} else {
+                } else {
 					table = this.data("dynamicTable");
 				}
 				return table;
@@ -963,9 +963,11 @@
 	                    ':gt(8)': { 'background-color': '#fff', 'position': 'relative' }
 	          };	    	  
 	      }
-	      addTableColumn(opts, 
-	    		  {minwidth: 16, auto: true },
-	    		  {name: " ", sort: null}
+	      addTableColumn(opts,
+	    		  { minwidth: 16, auto: true },
+	    		  { name: " ", 
+	    			  sort: null
+	    		  }
 	      );
 	      addTableColumn(opts,
 	    		  { minwidth: 30, auto: true },

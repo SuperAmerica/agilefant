@@ -57,7 +57,7 @@
 			if(!noSort) {
 			  this.rows.push(newRow);
 			}
-			if(typeof(model.getHashCode) == "function" && model.getHashCode()) {
+			if(model && typeof(model.getHashCode) == "function" && model.getHashCode()) {
 				this.tableRowHashes.push(model.getHashCode());
 			}
 			return newRow;

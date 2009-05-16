@@ -69,6 +69,7 @@
 					rows.push(this.rows[i]);
 				}
 			}
+			//check if row is associated with a model that has a hash code, if so the hash must be removed
 			if(row.model && typeof(row.model.getHashCode) == "function" && row.model.getHashCode()) {
 				var hashCode = row.model.getHashCode();
 				var tmp = this.tableRowHashes;
@@ -112,6 +113,7 @@
 			if(this.options.noHeader) {
 				return;
 			}
+			//caption containers must be inserted first
 			if(!this.caption) {
 				this.renderCaption();
 			}
@@ -133,6 +135,7 @@
 			}
 			this.captionActions[name] = options;
 		},
+		//sort table without changing sort direction
 		sortTable: function() {
 			if(!this.sorting || !this.options.headerCols[this.sorting.column]) {
 				return;
@@ -160,7 +163,7 @@
 				var col = c.getElement();
 				var f;
 				if (v.sort) {
-					f = $('<a href="#"/>').text(v.name).click(function() { me.doSort(i, v.sort); return false; }).appendTo(col);
+					f = $('<a href="#"/>').text(v.name).click(function() { me.sortAndUpdateDirection(i, v.sort); return false; }).appendTo(col);
 					$('<div/>').addClass(cssClasses.sortImg).prependTo(f);
 				}
 				else {
@@ -178,7 +181,8 @@
 		setActionCellParams: function(params) {
 			this.actionParams = params;
 		},
-		doSort: function(colNo, comparator) {
+		//sort and change sort direction
+		sortAndUpdateDirection: function(colNo, comparator) {
 			if (typeof(comparator) != "function") {
 				return false;
 			}
@@ -191,6 +195,7 @@
 			this.sorting.column = colNo;
 			this._sort(colNo, comparator, this.sorting.direction);
 		},
+		//private sort method
 		_sort: function(colNo, comparator, direction) {
 			if (typeof(comparator) != "function") {
 				return false;
@@ -238,7 +243,7 @@
 			//percentage taken by column borders
 			var totalPercentage = (statics.borderPerColumn * num) / 100;
 
-			//scale total width down to 98% in order to prevent cell wrapping
+			//scale total width down to 99% in order to prevent cell wrapping
 			totalwidth = totalwidth / (0.99 - totalPercentage);
 
 			for (var j = 0; j < params.length; j++) {
@@ -266,6 +271,7 @@
 			this.options.sortOptions = options;
 			this.options.sortable = true;
 		},
+		//activate drag'n'drop sorting within table rows
 		_sortable: function() {
 			if(!this.sortActive && this.options.sortable) {
 				this.sortActive = true;
@@ -279,6 +285,7 @@
 				this.table.sortable(defOpt);
 			}
 		},
+		//check whether model (having a hash code) has been inserted into the table
 		isInTable: function(model) {
 			if(typeof(model.getHashCode) == "function" && model.getHashCode()) {
 				return ($.inArray(model.getHashCode(), this.tableRowHashes) != -1);
@@ -363,8 +370,25 @@
 		},
 		cancelEdit: function() {
 		  for(var i = 0; i < this.cells.length; i++) {
-        this.cells[i].cancelEdit();
-      }
+			  this.cells[i].cancelEdit();
+		  }
+		},
+		/*
+		 * callback is executed if following conditions are met:
+		 * 1) row is in edit mode
+		 * 2) enter is pressed in one of the row's fields
+		 * 3) all fields are valid
+		 */
+		setSaveCallback: function(callback) {
+			var me = this;
+			this.options.saveCallback = function() {
+				for(var i = 0; i < me.cells.length; i++) {
+					if(!me.cells[i].isValid()) {
+						return;
+					}
+				}
+				callback();
+			};
 		},
 		saveEdit: function() {
 		  for(var i = 0; i < this.cells.length; i++) {
@@ -436,6 +460,9 @@
 			}
 			return this.editor.isValid();
 		},
+		getRow: function() {
+			return this.row;
+		},
 		saveEdit: function() {
 		  if(!this.editorOpen) {
 		    return;
@@ -469,6 +496,12 @@
 				return this.editor.focus();
 			}
 		},
+		/* 
+		 * when no auto close is set no mouse or keyboard
+		 * events will be registered to close and save the 
+		 * editor. Instead save edit must be manually called.
+		 * See dynamicTableRow.openEdit
+		 */
 		openEdit: function(noAutoClose) {
 		  if(typeof(this.options.canEdit) == "function") {
 			  if(!this.options.canEdit()) {
@@ -560,6 +593,22 @@
 				}
 				return false;
 			},
+			_storeRow: function() {
+				var opt = this.cell.getRow().options;
+				if(opt && typeof(opt.saveCallback) == "function") {
+					opt.saveCallback();
+				}
+			},
+			_handleKeyEvent: function(keyevent) {
+				if (keyevent.keyCode == 27 && this.autoClose) {
+					this._cancel();
+				}
+				else if (keyevent.keyCode == 13 && this.autoClose) {
+					this._store();
+				} else if(keyevent.keyCode == 13 && !this.autoClose) {
+					this._storeRow();
+				}
+			},
 	};
 	
 	/** EMPTY EDIT **/
@@ -629,26 +678,19 @@
 	
 	var textEdit = function(cell, autoClose) {
 		this.cell = cell;
+		this.autoClose = autoClose;
 		this.field = $('<input type="text"/>').width("80%").appendTo(this.cell.getElement()).focus();
 	    this.field.val(this.cell.options.get());
 	  	var me = this;
+    	var key_cb = function(keyevent) { me._handleKeyEvent(keyevent); };
+        this.field.keydown(key_cb);
 	    if(autoClose == true) {
-	    	var key_cb = function(keyevent) { me._handleKeyEvent(keyevent); };
 	    	var blur_cb = function() { me._store(); };
             this.field.blur(blur_cb);
-            this.field.keydown(key_cb);
 	        this.field.focus(); 
 	    }
 	};
 	textEdit.prototype = {
-		_handleKeyEvent: function(keyevent) {
-		  if (keyevent.keyCode == 27) {
-		    this._cancel();
-		  }
-		  else if (keyevent.keyCode == 13) {
-		    this._store();
-		  }
-		},
 		isValid: function() {
 			if(this.cell.options.required && this.field.val().length == 0) {
 			  this.field.addClass("invalidValue");
@@ -676,28 +718,21 @@
 	/** EFFORT EDIT **/
 	 var effortEdit = function(cell, autoClose) {
 	    this.cell = cell;
+	    this.autoClose = autoClose;
 	    this.field = $('<input type="text"/>').width('80%').appendTo(this.cell.getElement()).focus();
 	    var val = this.cell.options.get();
 	    if(val) val = agilefantUtils.aftimeToString(val, true);
 	    this.field.val(val);
-      var me = this;
-      if(autoClose == true) {
+        var me = this;
         var key_cb = function(keyevent) { me._handleKeyEvent(keyevent); };
-        var blur_cb = function() { me._store(); };
-        this.field.blur(blur_cb);
         this.field.keydown(key_cb);
-        this.field.focus(); 
-      }
+        if(autoClose == true) {
+          var blur_cb = function() { me._store(); };
+          this.field.blur(blur_cb);
+          this.field.focus(); 
+        }
 	  };
 	  effortEdit.prototype = {
-	    _handleKeyEvent: function(keyevent) {
-	      if (keyevent.keyCode == 27) {
-	        this._cancel();
-	      }
-	      else if (keyevent.keyCode == 13) {
-	        this._store();
-	      }
-	    },
 	    isValid: function() {
 	      if(agilefantUtils.isAftimeString(this.field.val())) {
 	    	  this.field.removeClass("invalidValue");
@@ -724,28 +759,21 @@
 	/** DATE EDIT **/
 	 var dateEdit = function(cell, autoClose) {
 	    this.cell = cell;
+	    this.autoClose = autoClose;
 	    this.field = $('<input type="text"/>').width('80%').appendTo(this.cell.getElement()).focus();
 	    var val = this.cell.options.get();
 	    if(val) val = agilefantUtils.dateToString(val, true);
 	    this.field.val(val);
       var me = this;
+      var key_cb = function(keyevent) { me._handleKeyEvent(keyevent); };
+      this.field.keydown(key_cb);
       if(autoClose == true) {
-        var key_cb = function(keyevent) { me._handleKeyEvent(keyevent); };
         var blur_cb = function() { me._store(); };
         this.field.blur(blur_cb);
-        this.field.keydown(key_cb);
         this.field.focus(); 
       }
 	  };
 	  dateEdit.prototype = {
-	    _handleKeyEvent: function(keyevent) {
-	      if (keyevent.keyCode == 27) {
-	        this._cancel();
-	      }
-	      else if (keyevent.keyCode == 13) {
-	        this._store();
-	      }
-	    },
 	    isValid: function() {
 	      if(agilefantUtils.isDateString(this.field.val())) {
 	    	  this.field.removeClass("invalidValue");
@@ -772,31 +800,24 @@
 	var selectEdit = function(cell, items, autoClose) {
 	  var me = this;
 	  this.cell = cell;
+	  this.autoClose = autoClose;
 	  this.field = $('<select/>').css('width','100%').appendTo(this.cell.getElement()).focus();
     $.each(items, function(i,v) {
       $('<option/>').attr('value',i).text(v).appendTo(me.field);
     });
     var val = this.cell.options.get();
     this.field.val(val);
+    var key_cb = function(keyevent) { me._handleKeyEvent(keyevent); };
+    this.field.keydown(key_cb);
     if (autoClose == true) {
-      var key_cb = function(keyevent) { me._handleKeyEvent(keyevent); };
       var blur_cb = function() { me._cancel(); };
       var change_cb = function() { me._store(); };
       this.field.blur(blur_cb);
-      this.field.keydown(key_cb);
       this.field.change(change_cb);
       this.field.focus();
     }
 	};
 	selectEdit.prototype = {
-	  _handleKeyEvent: function(keyevent) {
-	    if (keyevent.keyCode == 27) {
-	      this._cancel();
-	    }
-	    else if (keyevent.keyCode == 13) {
-	      this._store();
-	    }
-	  },
 	  isValid: function() {
 	    return true;
 	  },

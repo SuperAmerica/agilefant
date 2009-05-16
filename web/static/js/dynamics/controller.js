@@ -256,6 +256,9 @@ iterationController.prototype = {
     	}
     	}
     	]});
+    	row.setSaveCallback(function() {
+    		me.storeGoal(row, fakeGoal);
+    	});
     	var desc = row.createCell({
     		type: "wysiwyg",  get: function() { return ""; },
     		set: function(val) { fakeGoal.setDescription(val);},
@@ -402,19 +405,21 @@ iterationGoalController.prototype = {
 			});
 		}
 		var buttons = row.createCell();
+		var saveCb = function() {
+			if(!row.saveEdit()) {
+				return;
+			}
+			desc.getElement().hide();
+			bli.commit();
+			return false;
+		};
+		row.setSaveCallback(saveCb);
 		var desc = row.createCell({
 			type: "wysiwyg", 
 			get: function() { return bli.getDescription(); }, 
 			set: function(val) { bli.setDescription(val);},
 			buttons: {
-				save: {text: "Save", action: function() {
-				if(!row.saveEdit()) {
-					return;
-				}
-				desc.getElement().hide();
-				bli.commit();
-				return false;
-			}},
+				save: {text: "Save", action: saveCb},
 			cancel: {text: "Cancel", action: function() {
 				bli.rollBack();
 				desc.getElement().hide();
@@ -526,22 +531,24 @@ iterationGoalController.prototype = {
 		                               }
 		                               }
 		                               ]});
+		var saveCb = function() {
+			if(!row.saveEdit()) {
+				return;
+			}
+			row.remove();
+			me.data.addBacklogItem(bli);
+			me.addRow(bli);
+			bli.commit();
+			ModelFactory.setBacklogItem(bli);
+			return false;
+		};
+		row.setSaveCallback(saveCb);
 		var desc = row.createCell({
 			type: "wysiwyg", 
 			get: function() { return bli.getDescription(); }, 
 			set: function(val) { bli.setDescription(val);},
 			buttons: {
-				save: {text: "Save", action: function() {
-				if(!row.saveEdit()) {
-					return;
-				}
-				row.remove();
-				me.data.addBacklogItem(bli);
-				me.addRow(bli);
-				bli.commit();
-				ModelFactory.setBacklogItem(bli);
-				return false;
-			}},
+				save: {text: "Save", action: saveCb},
 			cancel: {text: "Cancel", action: function() {
 				row.remove();
 				return false;
@@ -697,19 +704,21 @@ backlogItemController.prototype = {
 			items: agilefantUtils.states,
 			decorator: agilefantUtils.stateToString
 		});
+		var saveCb = function() {
+			if(!row.saveEdit()) {
+				return;
+			}
+			var oid = todo.id;
+			todo.commit();
+			if(!oid) ModelFactory.setTodo(todo);
+			return false;
+		};
+		row.setSaveCallback(saveCb);
 		var actions = row.createCell({
 			type: "empty",
 			get: function() { return ""; },
 			buttons: {
-				save: {text: "Save", action: function() {
-				if(!row.saveEdit()) {
-					return;
-				}
-				var oid = todo.id;
-				todo.commit();
-				if(!oid) ModelFactory.setTodo(todo);
-				return false;
-			}},
+				save: {text: "Save", action: saveCb},
 			cancel: {text: "Cancel", action: function() {
 				var oid = todo.id;
 				if(oid == 0) {
@@ -777,16 +786,18 @@ backlogItemController.prototype = {
 			type: "text",
 			set: function(val) { entry.setComment(val); }
 		});
+		var saveCb = function() {
+			if(!row.saveEdit()) {
+				return;
+			}
+			entry.commit();
+			return false;
+		};
+		row.setSaveCallback(saveCb);
 		var buttons = row.createCell({ type: "empty",
 			get: function() { return ""; },
 			buttons: {
-				save: {text: "Save", action: function() {
-				if(!row.saveEdit()) {
-					return;
-				}
-				entry.commit();
-				return false;
-			}},
+				save: {text: "Save", action: saveCb},
 			cancel: {text: "Cancel", action: function() {
 				if(entry.id == 0) {
 					row.remove();

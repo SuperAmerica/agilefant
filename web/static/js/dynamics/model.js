@@ -99,7 +99,6 @@ iterationModel = function(iterationData, iterationId) {
 	var me = this;
 	jQuery.each(iterationData.iterationGoals, function(index,iterationGoalData) { 
 		goalPointer.push(ModelFactory.iterationGoalSingleton(iterationGoalData.id, me, iterationGoalData));
-		goalPointer.push(new iterationGoalModel(iterationGoalData, me));
 	});
 	if(iterationData.itemsWithoutGoal) {
 		this.containerGoal = new iterationGoalModel({id: "", priority: 9999999}, this);

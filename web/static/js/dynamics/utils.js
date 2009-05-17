@@ -24,7 +24,7 @@ var agilefantUtils = {
 			var valueType = currentPart.split(/(\d+[.]?\d*)([h|min|m]?)/);
 			var value = valueType[1];
 			var type = valueType[2];
-			if(type == "") {
+			if(!type) {
 				retVal += value*3600;
 			} else {
 				if(factors[type]) {
@@ -35,11 +35,13 @@ var agilefantUtils = {
 		return retVal;
 	},
 	isAftimeString: function(string) {
-		if(!string) string = "";
-		if(string == "") {
-			return true;
+		if(!string) {
+			string = "";
 		}
 		string = string.toLowerCase();
+		if(string === "") {
+			return true;
+		}
 		var hourOnly = new RegExp("^[ ]*[0-9]+h?[ ]*$"); //10h
 		var minuteOnly = new RegExp("^[ ]*[0-9]+min[ ]*$"); //10min
 		var hourAndMinute = new RegExp("^[ ]*[0-9]+h[ ]+[0-9]+min[ ]*$"); //1h 10min
@@ -47,7 +49,7 @@ var agilefantUtils = {
 		return (hourOnly.test(string) || minuteOnly.test(string) || hourAndMinute.test(string) || shortFormat.test(string));
 	},
 	isTimesheetsEnabled: function() {
-		if(agilefantTimesheetsEnabled == true) {
+		if(agilefantTimesheetsEnabled === true) {
 			return true;
 		}
 		return false;
@@ -160,8 +162,12 @@ var agilefantUtils = {
   },
 	comparators: {
 	  nameComparator: function(a,b) {
-	    if(a == null || a.getName() == null) return -1;
-	    if(b == null || b.getName() == null) return 1;
+	    if(a === null || a.getName() === null) {
+	    	return -1;
+	    }
+	    if(b === null || b.getName() === null) {
+	    	return 1;
+	    }
 	    return (a.getName().toLowerCase() > b.getName().toLowerCase());
 	  },
 	  descComparator: function(a,b) {	     
@@ -186,10 +192,10 @@ var agilefantUtils = {
       return (a.getState() > b.getState());
     },
     bliPriorityAndStateComparator: function(a,b) {
-      if (a.getState() == "DONE" && b.getState() != "DONE") {
+      if (a.getState() === "DONE" && b.getState() !== "DONE") {
         return 1;
       }
-      else if (a.getState() != "DONE" && b.getState() == "DONE") {
+      else if (a.getState() !== "DONE" && b.getState() === "DONE") {
         return -1;
       }
       else {

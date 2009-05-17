@@ -128,7 +128,7 @@
 			});
 			options.element.text(options.text);
 			if(options.style) {
-				options.element.addClass(options.style)
+				options.element.addClass(options.style);
 			}
 			if(options.hide) {
 				options.element.hide();
@@ -170,7 +170,7 @@
 					f = $('<span />').text(v.name).appendTo(col);
 				}
 				if(v.actionCell && me.actionParams) {
-					new tableRowActions(c,row,me.actionParams);
+					var col = new tableRowActions(c,row,me.actionParams);
 				}
 				if (v.tooltip) f.attr('title',v.tooltip);
 			});
@@ -470,15 +470,18 @@
 		  if(this.editor.isValid() != true) {
 			  return false;
 		  }
-		  this.content.show();
-		  if(this.editor.getValue() != this.options.get()) {
-			  this.options.set(this.editor.getValue());
-		  }
+		  var newValue = this.editor.getValue();
 		  this.editor.remove();
 		  this.editor = null;
+		  this.content.show();
 		  this.removeButtons();
-		  if(this.isActionCell) this.actionObj.getElement().show();
+		  if(this.isActionCell) { 
+			  this.actionObj.getElement().show();
+		  }
 		  this.editorOpen = false;
+		  if(newValue != this.options.get()) {
+			  this.options.set(newValue);
+		  }
 		},
 		cancelEdit: function() {
 		  if(!this.editorOpen) {
@@ -488,7 +491,9 @@
 		  this.removeButtons();
 		  if(this.editor)  this.editor.remove();
 		  this.editorOpen = false;
-		  if(this.isActionCell) this.actionObj.getElement().show();
+		  if(this.isActionCell) { 
+			  this.actionObj.getElement().show();
+		  }
 		  this.editor = null;
 		},
 		setEditFocus: function() {
@@ -601,14 +606,17 @@
 			},
 			_handleKeyEvent: function(keyevent) {
 				if (keyevent.keyCode == 27 && this.autoClose) {
+					keyevent.stopPropagation();
 					this._cancel();
 				}
 				else if (keyevent.keyCode == 13 && this.autoClose) {
+					keyevent.stopPropagation();
 					this._store();
 				} else if(keyevent.keyCode == 13 && !this.autoClose) {
+					keyevent.stopPropagation();
 					this._storeRow();
 				}
-			},
+			}
 	};
 	
 	/** EMPTY EDIT **/
@@ -856,13 +864,6 @@
 			};
 			$(document.body).trigger("dynamictable-close-actions").bind("dynamictable-close-actions", this.handler);
 			this.menu = $('<ul/>').appendTo(document.body).addClass("actionCell");
-			/*this.menu.mouseenter(function() { me.inMenu = true; });
-			this.menu.mouseleave(function() { 
-				if(me.inMenu) {
-					me.close();
-				}
-			});
-			*/
 			var pos = this.cell.getElement().position();
 			var menuCss = {
 					"position":    "absolute",
@@ -995,7 +996,7 @@
 			
 			return ret;
 		},
-		backlogItemsTable: function(options) {
+		taskTable: function(options) {
 	      var opts = {
 	          defaultSortColumn: 3,
 	          captionText: "Backlog items"
@@ -1161,18 +1162,18 @@
 	});
 })(jQuery);
 
-var backlogItemTabs = function(backlogItem, parentView) {
-  var id = backlogItem.getId();
+var taskTabs = function(task, parentView) {
+  var id = task.getId();
   if(id == 0) { // when creating new item etc.
     var tmp = new Date();
     id = tmp.getTime();
   }
   this.parentView = parentView;
-  this.prefix = "backlogItemTab-"+id;
+  this.prefix = "taskTab-"+id;
   this.tabs = [];
   this.addFrame();
 };
-backlogItemTabs.prototype = {
+taskTabs.prototype = {
     addFrame: function() {
       this.container = $('<div />').appendTo(this.parentView).width("100%").addClass("cellTabs");
       this.tabList = $('<ul />').addClass("tab-menu").appendTo(this.container).addClass("tabMenu");

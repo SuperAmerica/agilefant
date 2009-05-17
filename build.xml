@@ -317,10 +317,10 @@
 	<target name="war" depends="webapp">
 		<jar basedir="${build.webapp}" includes="**" destfile="${warFile}" />
 	</target>
-	
-	 <target name="production-war" depends="compress-js">
-	    <jar basedir="${build.webapp}" includes="**" destfile="${warFile}" />
-	  </target>
+
+	<target name="production-war" depends="compress-js">
+		<jar basedir="${build.webapp}" includes="**" destfile="${warFile}" />
+	</target>
 
 	<!-- 
 	<target name="release"
@@ -429,30 +429,44 @@
 				<path refid="yuicompressor.classpath"/>
 			</classpath>
 		</taskdef>
-    <delete dir="${build.webapp}/static/js-packed/"/>
-    <mkdir dir="${build.webapp}/static/js-packed/" />
-    <copy todir="${build.webapp}/static/js-packed/">
-      <fileset dir="${build.webapp}/static/js/" >
-        <include name="**/*jquery*.js"/>
-        <include name="**/*timeline*.js"/>
-      </fileset>
-    </copy>
-    <yuicompress linebreak="300" warn="false" munge="yes" preserveallsemicolons="true"
+		<delete dir="${build.webapp}/static/js-packed/"/>
+		<mkdir dir="${build.webapp}/static/js-packed/" />
+		<copy todir="${build.webapp}/static/js-packed/">
+			<fileset dir="${build.webapp}/static/js/" >
+				<include name="**/*jquery*.js"/>
+				<include name="**/*timeline*.js"/>
+			</fileset>
+		</copy>
+		<yuicompress linebreak="300" warn="false" munge="yes" preserveallsemicolons="true"
               outputfolder="${build.webapp}/static/js-packed/" >
-      <fileset dir="${build.webapp}/static/js/" >
-        <exclude name="**/*jquery*.js"/>
-        <exclude name="**/*timeline*.js"/>
-      	<exclude name="**/*simile*.js"/>
-        <include name="**/*.js" />
-      </fileset>
-    </yuicompress>
-    <delete dir="${build.webapp}/static/js/"/>
-    <mkdir dir="${build.webapp}/static/js/"/>
-    <copy todir="${build.webapp}/static/js/">
-      <fileset dir="${build.webapp}/static/js-packed/" >
-        <include name="**/*.js" />
-      </fileset>
-    </copy>
-    <delete dir="${build.webapp}/static/js-packed/"/>
+			<fileset dir="${build.webapp}/static/js/" >
+				<exclude name="**/*jquery*.js"/>
+				<exclude name="**/*timeline*.js"/>
+				<exclude name="**/*simile*.js"/>
+				<include name="**/*.js" />
+			</fileset>
+		</yuicompress>
+		<delete dir="${build.webapp}/static/js/"/>
+		<mkdir dir="${build.webapp}/static/js/"/>
+		<copy todir="${build.webapp}/static/js/">
+			<fileset dir="${build.webapp}/static/js-packed/" >
+				<include name="**/*.js" />
+			</fileset>
+		</copy>
+		<delete dir="${build.webapp}/static/js-packed/"/>
 	</target>
+
+	<target name="jslint" description="javascript check" depends="webapp">
+		<taskdef name="jslint"
+                 classname="net.happygiraffe.jslint.ant.JSLintTask"
+                 classpath="${lib}/jslint4java-1.2.1+rhino.jar" />
+
+		<jslint>
+			<formatter type="plain" />
+			<fileset dir="${build.webapp}/static/js/dynamics/" >
+				<include name="**/*.js" />
+			</fileset>
+		</jslint>
+	</target>
+
 </project>

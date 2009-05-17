@@ -2,11 +2,11 @@ var iterationController = function(iterationId, element) {
 	this.iterationId = iterationId;
 	this.element = element;
 	var me = this;
-	this.iterationGoalControllers = [];
+	this.IterationGoalControllers = [];
 	this.descCells = [];
 	this.buttonCells = [];
 	ModelFactory.getIteration(this.iterationId, function(data) { me.render(data); });
-}
+};
 iterationController.prototype = {
     changeIterationGoalPriority: function(ev, el) {
 		var priority = 0;
@@ -24,12 +24,12 @@ iterationController.prototype = {
 		//all goals must be updated
 		this.model.reloadGoalData();
     },
-    showBacklogItems: function() {
+    showTasks: function() {
     	for(var i = 0; i < this.buttonCells.length; i++) {
     		this.buttonCells[i].trigger("showContents");
     	}
     },
-    hideBacklogItems: function() {
+    hideTasks: function() {
     	for(var i = 0; i < this.buttonCells.length; i++) {
     		this.buttonCells[i].trigger("hideContents");
     	}
@@ -46,7 +46,7 @@ iterationController.prototype = {
     		$(this).dialog('close');
     		parent.remove();
     		goal.remove();
-   			me.itemsWithOutGoalContainer.reloadBacklogItems();
+   			me.itemsWithOutGoalContainer.reloadTasks();
    			me.noGoalItemController.render();
     	},
     	Cancel: function() {
@@ -102,17 +102,17 @@ iterationController.prototype = {
     			row.cancelEdit();
     			return false;
     		}}
-    		}}) //.getElement().hide();
+    		}});
     		this.descCells.push(desc);
     	var blis = row.createCell();
     	blis.getElement().hide();
-    	var blictrl = new iterationGoalController(blis, goal);
-    	this.iterationGoalControllers.push(blictrl);
+    	var blictrl = new IterationGoalController(blis, goal);
+    	this.IterationGoalControllers.push(blictrl);
     	var expandButton = commonView.expandCollapse(expand.getElement(), function() {
-    		blictrl.showBacklogItems();
+    		blictrl.showTasks();
     		desc.getElement().hide();
     	}, function() {
-    		blictrl.hideBacklogItems();
+    		blictrl.hideTasks();
     		desc.getElement().show();
     	});
     	this.buttonCells.push(expandButton);
@@ -157,7 +157,7 @@ iterationController.prototype = {
     		text: "Show tasks",
     		toggleWith: "hideBlis",
     		callback: function() {
-    		me.showBacklogItems();
+    		me.showTasks();
     	}
     	});
     	this.view.addCaptionAction("hideBlis", {
@@ -165,7 +165,7 @@ iterationController.prototype = {
     		toggleWith: "showBlis",
     		hide: true,
     		callback: function() {
-    		me.hideBacklogItems();
+    		me.hideTasks();
     	}
     	});
 
@@ -201,8 +201,8 @@ iterationController.prototype = {
     	row.createCell().getElement().hide(); //dymmy description
     	var blis = row.createCell();
     	blis.getElement().hide();
-    	this.noGoalItemController = new iterationGoalController(blis, goal);
-    	this.iterationGoalControllers.push(this.noGoalItemController);
+    	this.noGoalItemController = new IterationGoalController(blis, goal);
+    	this.IterationGoalControllers.push(this.noGoalItemController);
     	buttons.setActionCell({items: [{
     		text: "Create a new task",
     		callback: function() {
@@ -211,9 +211,9 @@ iterationController.prototype = {
     	}
     	}]});
     	this.buttonCells.push(commonView.expandCollapse(expand.getElement(), function() {
-    		me.noGoalItemController.showBacklogItems();
+    		me.noGoalItemController.showTasks();
     	}, function() {
-    		me.noGoalItemController.hideBacklogItems();
+    		me.noGoalItemController.hideTasks();
     	}));
 
     	this.view.render();
@@ -233,7 +233,7 @@ iterationController.prototype = {
     },
     createGoal: function() {
     	var me = this;
-    	var fakeGoal = new iterationGoalModel({}, this.model);
+    	var fakeGoal = new IterationGoalModel({}, this.model);
     	fakeGoal.beginTransaction(); //block autosaves
     	var row = this.view.createRow(fakeGoal,{toTop: true}, true);
     	row.setNotSortable();
@@ -279,13 +279,13 @@ iterationController.prototype = {
 
 /** ITERATION GOAL CONTROLLER **/
 
-var iterationGoalController = function(parentView, model) {
+var IterationGoalController = function(parentView, model) {
 	//this.element = element;
 	this.parentView = parentView;
 	parentView.getElement().css("padding-left","2%"); //TODO: refactor
 	this.element = $("<div />").width("98%").appendTo(parentView.getElement());
 	this.data = model;
-	this.view = jQuery(this.element).backlogItemsTable();
+	this.view = jQuery(this.element).taskTable();
 	var me = this;
 	this.view.addCaptionAction("createNew", {
 		text: "Create a new task",
@@ -303,11 +303,11 @@ var iterationGoalController = function(parentView, model) {
 	 */
 	this.render();
 };
-iterationGoalController.prototype = {
-	hideBacklogItems: function() {
+IterationGoalController.prototype = {
+	hideTasks: function() {
 		this.parentView.getElement().hide();
 	},
-	showBacklogItems: function() {
+	showTasks: function() {
 		this.parentView.getElement().show();
 	},
 	deleteBli: function(bli) {
@@ -371,7 +371,9 @@ iterationGoalController.prototype = {
 				var users = [];
 				var tmp = bli.getUsers();
 				for(var i = 0; i < tmp.length; i++) {
-					if(tmp[i]) users.push(tmp[i].user);
+					if(tmp[i]) {
+						users.push(tmp[i].user);
+					}
 				}
 				return users;
 			},
@@ -387,13 +389,13 @@ iterationGoalController.prototype = {
 			type: "effort",
 			set: function(val) { bli.setEffortLeft(val); },
 			get: function() { return bli.getEffortLeft(); },
-			canEdit: function() { return (bli.getOriginalEstimate() != null && bli.getState() != "DONE");},
+			canEdit: function() { return (bli.getOriginalEstimate() !== null && bli.getState() !== "DONE");},
 			decorator: agilefantUtils.aftimeToString
 		});
 		var oe = row.createCell({
 			type: "effort",
 			get: function() { return bli.getOriginalEstimate(); },
-			canEdit: function() { return (!bli.getOriginalEstimate() && bli.getState() != "DONE");},
+			canEdit: function() { return (!bli.getOriginalEstimate() && bli.getState() !== "DONE");},
 			set: function(val) { bli.setOriginalEstimate(val); },
 			decorator: agilefantUtils.aftimeToString
 		});
@@ -450,7 +452,7 @@ iterationGoalController.prototype = {
 		                               ]});
 		var tabCell = row.createCell();
 		tabCell.getElement().hide();
-		var childController = new backlogItemController(tabCell, bli, this, es);
+		var childController = new TaskController(tabCell, bli, this, es);
 		commonView.expandCollapse(expand.getElement(), function() {
 			childController.initialize();
 			tabCell.getElement().show();
@@ -460,7 +462,7 @@ iterationGoalController.prototype = {
 	},
 	createBli: function() {
 		var me = this;
-		var bli = new backlogItemModel();
+		var bli = new TaskModel();
 		bli.backlog = this.data.iteration;
 		bli.id = 0;
 		bli.beginTransaction();
@@ -500,7 +502,9 @@ iterationGoalController.prototype = {
 				var users = [];
 				var tmp = bli.getUsers();
 				for(var i = 0; i < tmp.length; i++) {
-					if(tmp[i]) users.push(tmp[i].user);
+					if(tmp[i]) { 
+						users.push(tmp[i].user);
+					}
 				}
 				return users;
 			},
@@ -536,10 +540,10 @@ iterationGoalController.prototype = {
 				return;
 			}
 			row.remove();
-			me.data.addBacklogItem(bli);
+			me.data.addTask(bli);
 			me.addRow(bli);
 			bli.commit();
-			ModelFactory.setBacklogItem(bli);
+			ModelFactory.setTask(bli);
 			return false;
 		};
 		row.setSaveCallback(saveCb);
@@ -559,7 +563,7 @@ iterationGoalController.prototype = {
 	},
 	render: function() {
 		var me = this;
-		var blis = this.data.getBacklogItems();
+		var blis = this.data.getTasks();
 		if(blis && blis.length > 0) {
 			for(var i = 0; i < blis.length; i++) {
 				me.addRow(blis[i]);
@@ -572,7 +576,7 @@ iterationGoalController.prototype = {
 
 /** BACKLOG ITEM CONTROLLER **/
 
-var backlogItemController = function(parentView, model, parentController, effortCell) {
+var TaskController = function(parentView, model, parentController, effortCell) {
   var me = this;
   this.model = model;
   this.parentView = parentView;
@@ -589,19 +593,19 @@ var backlogItemController = function(parentView, model, parentController, effort
 
  
 };
-backlogItemController.prototype = {
+TaskController.prototype = {
 	initialize: function() {
 		if(this.initialized) {
 			return;
 		}
-		var tabs = new backlogItemTabs(this.model,this.parentView.getElement());
+		var tabs = new taskTabs(this.model,this.parentView.getElement());
 		this.infoTable = tabs.addTab("Info").genericTable({noHeader: true, colCss: {}, colWidths: [{minwidth: 10, auto:true},{minwidth: 90, auto: true}]});
 		var todos = tabs.addTab("TODOs");
 		this.todoView = todos.todoTable();
 		this.todoView.addCaptionAction("createTODO", {
 			text: "Create TODO",
 			callback: function() {
-			var newTodo = new todoModel(me.model, { id: 0 });
+			var newTodo = new TodoModel(me.model, { id: 0 });
 			newTodo.beginTransaction();
 			var row = me.addTodo(newTodo);
 			row.render();
@@ -710,7 +714,9 @@ backlogItemController.prototype = {
 			}
 			var oid = todo.id;
 			todo.commit();
-			if(!oid) ModelFactory.setTodo(todo);
+			if(!oid) { 
+				ModelFactory.setTodo(todo);
+			}
 			return false;
 		};
 		row.setSaveCallback(saveCb);
@@ -721,7 +727,7 @@ backlogItemController.prototype = {
 				save: {text: "Save", action: saveCb},
 			cancel: {text: "Cancel", action: function() {
 				var oid = todo.id;
-				if(oid == 0) {
+				if(oid) {
 					row.remove();
 					return;
 				}
@@ -772,8 +778,8 @@ backlogItemController.prototype = {
 				var user = users[0];
 				entry.setUser(user);	  
 			},
-			backlogId: entry.backlogItem.backlog.getId(),
-			backlogItemId: entry.backlogItem.getId()
+			backlogId: entry.task.backlog.getId(),
+			backlogItemId: entry.task.getId()
 		});
 		row.createCell({
 			get: function() { return entry.getTimeSpent();},
@@ -799,7 +805,7 @@ backlogItemController.prototype = {
 			buttons: {
 				save: {text: "Save", action: saveCb},
 			cancel: {text: "Cancel", action: function() {
-				if(entry.id == 0) {
+				if(entry.id) {
 					row.remove();
 					return;
 				}
@@ -828,7 +834,6 @@ backlogItemController.prototype = {
 	createEffortEntry: function() {
 		var me = this;
 		var parent = $("<div />").appendTo(document.body);
-		var me = this;
 		parent.load("newHourEntry.action", {backlogItemId: this.model.getId()}, function() { 
 			addFormValidators(parent);
 			parent.dialog({
@@ -850,7 +855,7 @@ backlogItemController.prototype = {
 						var date = form.find("input[name=date]").val();
 						var users = form.find("input[name='userIds']");
 						if(users.length == 1) {
-							var entry = new backlogItemHourEntryModel(me.model, null);
+							var entry = new TaskHourEntryModel(me.model, null);
 							entry.beginTransaction();
 							entry.setUser(users.val());
 							entry.setComment(description);
@@ -862,7 +867,7 @@ backlogItemController.prototype = {
 							me.addEffortEntry(entry);
 						} else if(users.length > 1) {
 							users.each(function() {
-								var entry = new backlogItemHourEntryModel(me.model, null);
+								var entry = new TaskHourEntryModel(me.model, null);
 								entry.beginTransaction();
 								entry.setUser($(this).val());
 								entry.setDate(date);
@@ -884,5 +889,5 @@ backlogItemController.prototype = {
 				}
 			}); 
 		});
-	},
+	}
 };

@@ -461,7 +461,7 @@
                  classname="net.happygiraffe.jslint.ant.JSLintTask"
                  classpath="${lib}/jslint4java-1.2.1+rhino.jar" />
 
-		<jslint>
+		<jslint options="laxbreak">
 			<formatter type="plain" />
 			<fileset dir="${build.webapp}/static/js/dynamics/" >
 				<include name="**/*.js" />

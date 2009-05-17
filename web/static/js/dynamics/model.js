@@ -159,7 +159,7 @@ IterationModel = function(iterationData, iterationId) {
 	this.iterationGoals = goalPointer;
 };
 
-IterationMode.prototype = new CommonAgilefantModel();
+IterationModel.prototype = new CommonAgilefantModel();
 
 IterationModel.prototype.getIterationGoals = function() {
 	return this.iterationGoals;
@@ -200,7 +200,7 @@ IterationModel.prototype.removeGoal = function(goal) {
 	}
 	this.iterationGoals = goals;
 };
-IterationModel.prototypeget.Tasks = function() { //blis without an iteration goal
+IterationModel.prototype.getTasks = function() { //blis without an iteration goal
 	return this.itemsWithoutGoal;
 };
 IterationModel.prototype.getPseudoGoal = function() {
@@ -230,7 +230,7 @@ IterationGoalModel.prototype.setData = function(data, includeMetrics) {
 	if(data.backlogItems && data.backlogItems.length > 0) {
 		this.setTasks(data.backlogItems);
 	}
-	this.callEditListeners({bubbleEvent: []})
+	this.callEditListeners({bubbleEvent: []});
 };
 IterationGoalModel.prototype.reloadTasks = function() {
 	var me = this;
@@ -249,7 +249,7 @@ IterationGoalModel.prototype.reloadTasks = function() {
 	data: {iterationGoalId: this.id, iterationId: this.iteration.getId()}
 	});
 };
-IterationGoalModel.prototype.setTask = function(tasks) {
+IterationGoalModel.prototype.setTasks = function(tasks) {
 	if(tasks) {
 		this.tasks = [];
 		for(var i = 0 ; i < tasks.length ; i++) {
@@ -404,357 +404,360 @@ IterationGoalModel.prototype.save = function() {
 };
 
 var TaskModel = function(data, backlog, iterationGoal) {
-  this.effortLeft = "";
-  this.originalEstimate = "";
-  this.editListeners = [];
-  this.deleteListeners = [];
-  this.backlog = backlog;
-  this.iterationGoal = iterationGoal;
-  if(data) {
-	  this.setData(data);
-  }
+	this.effortLeft = "";
+	this.originalEstimate = "";
+	this.editListeners = [];
+	this.deleteListeners = [];
+	this.backlog = backlog;
+	this.iterationGoal = iterationGoal;
+	if (data) {
+		this.setData(data);
+	}
 };
-TaskModel.prototype = {
-  setData: function(data) {
-    this.id = data.id;
-    this.name = data.name;
-    this.description = data.description;
-    this.created = data.createdDate;
-    this.priority = data.priority;
-    this.state = data.state;
-    this.effortLeft = data.effortLeft;
-    this.effortSpent = data.effortSpent;
-    this.originalEstimate = data.originalEstimate;
-    this.creator = data.creator;
-    var bubbleEvents = [];
-    if(this.persistedData) {
-    	if(this.persistedData.effortLeft != this.effortLeft || this.persistedData.originalEstimate != this.originalEstimate || 
-    			this.persistedData.state != data.state || this.effortSpent != this.persistedData.effortSpent) {
-    		bubbleEvents.push("metricsUpdated");
-    	}
-    } else if(!this.persistedData && data) {
-    	bubbleEvents.push("metricsUpdated");
-    }
-    if(data.userData) {
-    	this.users = data.userData;
-    }
-    var i = 0;
-    if(data.businessThemes) {
-    	this.themes = [];
-    	for(i = 0 ; i < data.businessThemes.length; i++) {
-    		if(data.businessThemes[i]) {
-    			this.themes.push(data.businessThemes[i]);
-    		}
-    	}
-    }
-    if(data.hourEntries) {
-      this.hourEntries = [];
-      for(i = 0 ; i < data.hourEntries.length; i++) {
-        if(data.hourEntries[i]) {
-          this.hourEntries.push(ModelFactory.taskHourEntrySingleton(data.hourEntries[i].id, this, data.hourEntries[i]));
-        }
-      }
-    }
-    if(data.tasks) {
-        this.todos = [];
-      for(i = 0 ; i < data.tasks.length; i++) {
-        if(data.tasks[i]) {
-        	this.todos.push(ModelFactory.todoSingleton(data.tasks[i].id, this,data.tasks[i]));
-        }
-      }
-    }
-    this.persistedData = data;
-    for (i = 0; i < this.editListeners.length; i++) {
-      this.editListeners[i]({bubbleEvent: bubbleEvents});
-    }
-  },
-  reloadData: function() {
-    var me = this;
-    //prevent multiple updates at the same time that could result in infinite recursion
-    if(this.updating) {
-    	return;
-    }
-    this.updating = true;
-    $.ajax({
-      url: "backlogItemJSON.action",
-      data: {backlogItemId: this.id},
-      async: false,
-      cache: false,
-      dataType: 'json',
-      type: 'POST',
-      success: function(data,type) {
-        me.setData(data);
-        me.updating = false;
-      }
-    });
-  },
-  getHourEntries: function() {
-    if(!this.hourEntries) {
-      this.reloadData();
-    }
-    return this.hourEntries;
-  },
-  addHourEntry: function(entry) {
-	  this.getHourEntries().push(entry);
-  },
-  removeHourEntry: function(entry) {
+
+TaskModel.prototype = new CommonAgilefantModel();
+
+TaskModel.prototype.setData = function(data) {
+	this.id = data.id;
+	this.name = data.name;
+	this.description = data.description;
+	this.created = data.createdDate;
+	this.priority = data.priority;
+	this.state = data.state;
+	this.effortLeft = data.effortLeft;
+	this.effortSpent = data.effortSpent;
+	this.originalEstimate = data.originalEstimate;
+	this.creator = data.creator;
+	var bubbleEvents = [];
+	if (this.persistedData) {
+		if (this.persistedData.effortLeft != this.effortLeft
+				|| this.persistedData.originalEstimate != this.originalEstimate
+				|| this.persistedData.state != data.state
+				|| this.effortSpent != this.persistedData.effortSpent) {
+			bubbleEvents.push("metricsUpdated");
+		}
+	} else if (!this.persistedData && data) {
+		bubbleEvents.push("metricsUpdated");
+	}
+	if (data.userData) {
+		this.users = data.userData;
+	}
+	var i = 0;
+	if (data.businessThemes) {
+		this.themes = [];
+		for (i = 0; i < data.businessThemes.length; i++) {
+			if (data.businessThemes[i]) {
+				this.themes.push(data.businessThemes[i]);
+			}
+		}
+	}
+	if (data.hourEntries) {
+		this.hourEntries = [];
+		for (i = 0; i < data.hourEntries.length; i++) {
+			if (data.hourEntries[i]) {
+				this.hourEntries.push(ModelFactory.taskHourEntrySingleton(
+						data.hourEntries[i].id, this, data.hourEntries[i]));
+			}
+		}
+	}
+	if (data.tasks) {
+		this.todos = [];
+		for (i = 0; i < data.tasks.length; i++) {
+			if (data.tasks[i]) {
+				this.todos.push(ModelFactory.todoSingleton(data.tasks[i].id,
+						this, data.tasks[i]));
+			}
+		}
+	}
+	this.persistedData = data;
+	this.callEditListeners({
+			bubbleEvent: bubbleEvents
+		});
+};
+TaskModel.prototype.reloadData = function() {
+	var me = this;
+	// prevent multiple updates at the same time that could result in infinite
+	// recursion
+	if (this.updating) {
+		return;
+	}
+	this.updating = true;
+	$.ajax( {
+		url: "backlogItemJSON.action",
+		data: {
+		backlogItemId: this.id
+	},
+	async: false,
+	cache: false,
+	dataType: 'json',
+	type: 'POST',
+	success: function(data, type) {
+		me.setData(data);
+		me.updating = false;
+	}
+	});
+};
+TaskModel.prototype.getHourEntries = function() {
+	if (!this.hourEntries) {
+		this.reloadData();
+	}
+	return this.hourEntries;
+};
+TaskModel.prototype.addHourEntry = function(entry) {
+	this.getHourEntries().push(entry);
+};
+TaskModel.prototype.removeHourEntry = function(entry) {
 	var tmp = this.getHourEntries();
 	this.hourEntries = [];
-	for(var i = 0; i < tmp.length; i++) {
-		if(tmp[i] != entry) {
+	for ( var i = 0; i < tmp.length; i++) {
+		if (tmp[i] != entry) {
 			this.hourEntries.push(tmp[i]);
 		}
 	}
-  },
-  getTodos: function() {
-    if(!this.todos) {
-      this.reloadData();
-    }
-    return this.todos;
-  },
-  addTodo: function(todo) {
-	  this.getTodos().push(todo);
-  },
-  removeTodo: function(todo) {
-    var tmp = this.getTodos();
-    this.todos = [];
-    for(var i = 0; i < tmp.length; i++) {
-      if(tmp[i] != todo) {
-        this.todos.push(tmp[i]);
-      }
-    }
-  },
-  getThemes: function() {
-	return this.themes;  
-  },
-  setThemes: function(themes) {
-	this.themes = themes;  
-  },
-  getUsers: function() {
-	  return this.users;
-  },
-  setUsers: function(users) {
-	this.users = users;  
-  },
-  setUserIds: function(userIds) {
+};
+TaskModel.prototype.getTodos = function() {
+	if (!this.todos) {
+		this.reloadData();
+	}
+	return this.todos;
+};
+TaskModel.prototype.addTodo = function(todo) {
+	this.getTodos().push(todo);
+};
+TaskModel.prototype.removeTodo = function(todo) {
+	var tmp = this.getTodos();
+	this.todos = [];
+	for ( var i = 0; i < tmp.length; i++) {
+		if (tmp[i] != todo) {
+			this.todos.push(tmp[i]);
+		}
+	}
+};
+TaskModel.prototype.getThemes = function() {
+	return this.themes;
+};
+TaskModel.prototype.setThemes = function(themes) {
+	this.themes = themes;
+};
+TaskModel.prototype.getUsers = function() {
+	return this.users;
+};
+TaskModel.prototype.setUsers = function(users) {
+	this.users = users;
+};
+TaskModel.prototype.setUserIds = function(userIds) {
 	this.userIds = userIds;
-    this.save();
-  },
-  setThemeIds: function(themeIds) {
+	this.save();
+};
+TaskModel.prototype.setThemeIds = function(themeIds) {
 	this.themeIds = themeIds;
 	this.save();
-  },
-  getHashCode: function() {
-	return "task-"+this.id;  
-  },
-  getId: function() {
-    return this.id;
-  },
-  getName: function() {
-    return this.name;
-  },
-  getCreator: function() {
-    if(this.creator) {
-      return this.creator.fullName;
-    }
-  },
-  getCreated: function() {
-    return this.created;
-  },
-  setName: function(name) {
-    this.name = name;
-    this.save();
-  },
-  getDescription: function() {
-    return this.description;
-  },
-  setDescription: function(description) {
-    this.description = description;
-    this.save();
-  },
-  getCreated: function() {
-    return this.created;
-  },
-  getPriority: function() {
-    return this.priority;
-  },
-  setPriority: function(priority) {
-    this.priority = priority;
-    this.save();
-  },
-  getState: function() {
-    return this.state;
-  },
-  setState: function(state) {
-    this.state = state;
-    this.save();
-  },
-  getEffortLeft: function() {
-    return this.effortLeft;
-  },
-  setEffortLeft: function(effortLeft) {
+};
+TaskModel.prototype.getHashCode = function() {
+	return "task-" + this.id;
+};
+TaskModel.prototype.getId = function() {
+	return this.id;
+};
+TaskModel.prototype.getName = function() {
+	return this.name;
+};
+TaskModel.prototype.getCreator = function() {
+	if (this.creator) {
+		return this.creator.fullName;
+	}
+};
+TaskModel.prototype.getCreated = function() {
+	return this.created;
+};
+TaskModel.prototype.setName = function(name) {
+	this.name = name;
+	this.save();
+};
+TaskModel.prototype.getDescription = function() {
+	return this.description;
+};
+TaskModel.prototype.setDescription = function(description) {
+	this.description = description;
+	this.save();
+};
+TaskModel.prototype.getCreated = function() {
+	return this.created;
+};
+TaskModel.prototype.getPriority = function() {
+	return this.priority;
+};
+TaskModel.prototype.setPriority = function(priority) {
+	this.priority = priority;
+	this.save();
+};
+TaskModel.prototype.getState = function() {
+	return this.state;
+};
+TaskModel.prototype.setState = function(state) {
+	this.state = state;
+	this.save();
+};
+TaskModel.prototype.getEffortLeft = function() {
+	return this.effortLeft;
+};
+TaskModel.prototype.setEffortLeft = function(effortLeft) {
 	var millis = agilefantUtils.aftimeToMillis(effortLeft);
-	if(millis !== null) {
+	if (millis !== null) {
 		this.effortLeft = millis;
-    	this.save();
+		this.save();
 	}
-  },
-  getEffortSpent: function() {
-    return this.effortSpent;
-  },
-  setEffortSpent: function(effortSpent) {
-    this.effortSpent = effortSpent;
-    this.save();
-  },
-  getOriginalEstimate: function() {
-    return this.originalEstimate;
-  },
-  setOriginalEstimate: function(originalEstimate) {
+};
+TaskModel.prototype.getEffortSpent = function() {
+	return this.effortSpent;
+};
+TaskModel.prototype.setEffortSpent = function(effortSpent) {
+	this.effortSpent = effortSpent;
+	this.save();
+};
+TaskModel.prototype.getOriginalEstimate = function() {
+	return this.originalEstimate;
+};
+TaskModel.prototype.setOriginalEstimate = function(originalEstimate) {
 	var millis = agilefantUtils.aftimeToMillis(originalEstimate);
-	if(millis !== null) {  
-      this.originalEstimate = millis;
-      this.save();
+	if (millis !== null) {
+		this.originalEstimate = millis;
+		this.save();
 	}
-  },
-  addEditListener: function(listener) {
-    this.editListeners.push(listener);
-  },
-  addDeleteListener: function(listener) {
-    this.deleteListeners.push(listener);
-  },
-  beginTransaction: function() {
-    this.inTransaction = true;
-  },
-  commit: function() {
-    this.inTransaction = false;
-    this.save();
-  },
-  rollBack: function() {
-    this.setData(this.persistedData);
-    this.userIds = null;
-    this.themeIds = null;
-    this.inTransaction = false;
-  },
-  remove: function() {
-	  var me = this;
-	  jQuery.ajax({
-      async: true,
-      error: function() {
-	      me.rollBack();
-	      commonView.showError("An error occured while deleting the backlog item.");
-      },
-      success: function(data,type) {
-    	me.iterationGoal.removeTask(me);
-    	ModelFactory.removeTask(me.id);
-        for(var i = 0 ; i < me.deleteListeners.length; i++) {
-          me.deleteListeners[i]();
-        }
-        commonView.showOk("Backlog item deleted.");
-      },
-      cache: false,
-      type: "POST",
-      url: "ajaxDeleteBacklogItem.action",
-      data: {backlogItemId: this.id}
-    });
-    
-  },
-  resetOriginalEstimate: function() {
-	    if(this.inTransaction) {
-	        return;
-	      }
-	      var me = this;
-	      var data = {backlogItemId: this.id};
-	      jQuery.ajax({
-	        async: false,
-	        error: function() {
-	          commonView.showError("An error occured while saving the backlog item.");
-	        },
-	        success: function(data,type) {
-	          me.setData(data,false);
-	          commonView.showOk("Original estimate reseted succesfully.");
-	        },
-	        cache: false,
-	        dataType: "json",
-	        type: "POST",
-	        url: "resetOriginalEstimate.action",
-	        data: data
-	      });
-  },
-  save: function() {
-    if(this.inTransaction) {
-      return;
-    }
-    var me = this;
-    var data  = {
-        "backlogItem.name": this.name,
-        "backlogItem.state": this.state,
-        "backlogItem.priority": this.priority,
-        "backlogItem.description": this.description,
-        "backlogItem.effortLeft": this.effortLeft,
-        "backlogItem.originalEstimate": this.originalEstimate,
-        "userIds": [],
-        "themeIds": [],
-        backlogId: this.backlog.getId(),
-        backlogItemId: this.id
-    };
-    if(this.iterationGoal) {
-    	data.iterationGoalId = this.iterationGoal.id;
-    }
-    if (this.userIds) {
-      data.userIds = this.userIds;
-      this.userIds = null;
-    }
-    else if (this.users) {
-      data.userIds = [];
-      for(var i = 0; i < this.users.length; i++) {
-    	  data.userIds.push(this.users[i].user.id);
-      }
-    }
-    if(this.themeIds) {
-      data.themeIds = this.themeIds;
-      this.themeIds = null;
-    } else if(this.themes) {
-      data.themeIds = agilefantUtils.objectToIdArray(this.themes);
-    }
-    //conversions
-    if(data["backlogItem.effortLeft"]) {
-    	data["backlogItem.effortLeft"] /= 3600;
-    }
-    if(!data["backlogItem.effortLeft"]) {
-    	data["backlogItem.effortLeft"] = "";
-    }
-    if(data["backlogItem.originalEstimate"]) {
-    	data["backlogItem.originalEstimate"] /= 3600;
-    }
-    if(!data["backlogItem.originalEstimate"]) {
-    	data["backlogItem.originalEstimate"] = "";
-    }
-    if(!this.name) {
-    	data["backlogItem.name"] = "";
-    }
-    if(!this.description) {
-    	data["backlogItem.description"] = "";
-    }
-    
-    jQuery.ajax({
-      async: false,
-      error: function() {
-        commonView.showError("An error occured while saving the backlog item.");
-      },
-      success: function(data,type) {
-        me.setData(data);
-        commonView.showOk("Backlog item saved succesfully.");
-      },
-      cache: false,
-      dataType: "json",
-      type: "POST",
-      url: "ajaxStoreBacklogItem.action",
-      data: data
-    });
-  }
 };
 
-/** BACKLOG ITEM HOUR ENTRY  **/
+TaskModel.prototype.rollBack = function() {
+	this.setData(this.persistedData);
+	this.userIds = null;
+	this.themeIds = null;
+	this.inTransaction = false;
+};
+TaskModel.prototype.remove = function() {
+	var me = this;
+	jQuery
+	.ajax( {
+		async: true,
+		error: function() {
+		me.rollBack();
+		commonView
+		.showError("An error occured while deleting the backlog item.");
+	},
+	success : function(data, type) {
+		me.iterationGoal.removeTask(me);
+		ModelFactory.removeTask(me.id);
+		this.callDeleteListeners();
+		commonView.showOk("Backlog item deleted.");
+	},
+	cache: false,
+	type: "POST",
+	url: "ajaxDeleteBacklogItem.action",
+	data: {
+		backlogItemId: this.id
+	}
+	});
+
+};
+TaskModel.prototype.resetOriginalEstimate = function() {
+	if (this.inTransaction) {
+		return;
+	}
+	var me = this;
+	var data = {
+			backlogItemId: this.id
+	};
+	jQuery
+	.ajax( {
+		async: false,
+		error: function() {
+		commonView
+		.showError("An error occured while saving the backlog item.");
+	},
+	success : function(data, type) {
+		me.setData(data, false);
+		commonView.showOk("Original estimate reseted succesfully.");
+	},
+	cache: false,
+	dataType: "json",
+	type: "POST",
+	url: "resetOriginalEstimate.action",
+	data: data
+	});
+};
+save = function() {
+	if (this.inTransaction) {
+		return;
+	}
+	var me = this;
+	var data = {
+			"backlogItem.name": this.name,
+			"backlogItem.state": this.state,
+			"backlogItem.priority": this.priority,
+			"backlogItem.description": this.description,
+			"backlogItem.effortLeft": this.effortLeft,
+			"backlogItem.originalEstimate": this.originalEstimate,
+			"userIds": [],
+			"themeIds": [],
+			backlogId: this.backlog.getId(),
+			backlogItemId: this.id
+	};
+	if (this.iterationGoal) {
+		data.iterationGoalId = this.iterationGoal.id;
+	}
+	if (this.userIds) {
+		data.userIds = this.userIds;
+		this.userIds = null;
+	} else if (this.users) {
+		data.userIds = [];
+		for ( var i = 0; i < this.users.length; i++) {
+			data.userIds.push(this.users[i].user.id);
+		}
+	}
+	if (this.themeIds) {
+		data.themeIds = this.themeIds;
+		this.themeIds = null;
+	} else if (this.themes) {
+		data.themeIds = agilefantUtils.objectToIdArray(this.themes);
+	}
+	//conversions
+	if (data["backlogItem.effortLeft"]) {
+		data["backlogItem.effortLeft"] /= 3600;
+	}
+	if (!data["backlogItem.effortLeft"]) {
+		data["backlogItem.effortLeft"] = "";
+	}
+	if (data["backlogItem.originalEstimate"]) {
+		data["backlogItem.originalEstimate"] /= 3600;
+	}
+	if (!data["backlogItem.originalEstimate"]) {
+		data["backlogItem.originalEstimate"] = "";
+	}
+	if (!this.name) {
+		data["backlogItem.name"] = "";
+	}
+	if (!this.description) {
+		data["backlogItem.description"] = "";
+	}
+
+	jQuery
+	.ajax( {
+		async: false,
+		error: function() {
+		commonView
+		.showError("An error occured while saving the backlog item.");
+	},
+	success: function(data, type) {
+		me.setData(data);
+		commonView.showOk("Backlog item saved succesfully.");
+	},
+	cache: false,
+	dataType: "json",
+	type: "POST",
+	url: "ajaxStoreBacklogItem.action",
+	data: data
+	});
+};
+
+/** BACKLOG ITEM HOUR ENTRY * */
 
 var TaskHourEntryModel = function(task, data) {
 	

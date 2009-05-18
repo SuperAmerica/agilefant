@@ -35,7 +35,29 @@ iterationController.prototype = {
     	}
     },
     deleteGoal: function(goal) {
-    	var parent = $("<div />").appendTo(document.body).text("Are you sure you wish to delete this iteration goal?");
+    	var parent = $("<div />").appendTo(document.body).text("Are you sure you wish to delete this story?");
+    	var me = this;
+    	parent.dialog({
+    		resizable: false,
+    		height:140,
+    		modal: true,
+    		buttons: {
+    		'Yes': function() {
+    		$(this).dialog('close');
+    		parent.remove();
+    		goal.remove();
+   			me.itemsWithOutGoalContainer.reloadTasks();
+   			me.noGoalItemController.render();
+    	},
+    	Cancel: function() {
+    		$(this).dialog('close');
+    		parent.remove();
+    	}
+    	}
+    	});
+    },
+    moveGoal: function(row, goal) {
+    	var parent = $("<div />").appendTo(document.body).text("Are you sure you wish to delete this story?");
     	var me = this;
     	parent.dialog({
     		resizable: false,
@@ -148,7 +170,7 @@ iterationController.prototype = {
     	this.view.activateSortable({update: function(ev,el) { me.changeIterationGoalPriority(ev,el);}});
 
     	this.view.addCaptionAction("createNew", {
-    		text: "Create iteration goal",
+    		text: "Create a new story",
     		callback: function() {
     		me.createGoal();
     	}
@@ -389,7 +411,9 @@ IterationGoalController.prototype = {
 			type: "effort",
 			set: function(val) { bli.setEffortLeft(val); },
 			get: function() { return bli.getEffortLeft(); },
-			canEdit: function() { return (bli.getOriginalEstimate() !== null && bli.getState() !== "DONE");},
+			canEdit: function() { 
+				return (bli.getOriginalEstimate() > 0 && bli.getState() !== "DONE");
+			},
 			decorator: agilefantUtils.aftimeToString
 		});
 		var oe = row.createCell({

@@ -18,7 +18,7 @@
 	  borderPerColumn: 0.4
 	};
 	/** TABLE **/
-	var dynamicTable = function(element, options) {
+	var DynamicTable = function(element, options) {
 	    this.options = {
 	        colCss: {},
 	        colWidths: [],
@@ -51,30 +51,31 @@
 		this.tableRowHashes = [];
 	};
 	
-	dynamicTable.prototype = {
+	DynamicTable.prototype = {
 		createRow: function(model, opt, noSort) {
-			var newRow = new dynamicTableRow(this, model, opt);
+			var newRow = new DynamicTableRow(this, model, opt);
 			if(!noSort) {
 			  this.rows.push(newRow);
 			}
-			if(model && typeof(model.getHashCode) == "function" && model.getHashCode()) {
+			if(model && typeof model.getHashCode == "function" && model.getHashCode()) {
 				this.tableRowHashes.push(model.getHashCode());
 			}
 			return newRow;
 		},
 		deleteRow: function(row) {
 			var rows = [];
-			for(var i = 0 ; i < this.rows.length; i++) {
+			var i = 0;
+			for(i = 0 ; i < this.rows.length; i++) {
 				if(this.rows[i] != row) {
 					rows.push(this.rows[i]);
 				}
 			}
 			//check if row is associated with a model that has a hash code, if so the hash must be removed
-			if(row.model && typeof(row.model.getHashCode) == "function" && row.model.getHashCode()) {
+			if(row.model && typeof row.model.getHashCode == "function" && row.model.getHashCode()) {
 				var hashCode = row.model.getHashCode();
 				var tmp = this.tableRowHashes;
 				this.tableRowHashes = [];
-				for(var i = 0; i < tmp.length; i++) {
+				for(i = 0; i < tmp.length; i++) {
 					if(tmp[i] != hashCode) {
 						this.tableRowHashes.push(tmp[i]);
 					}
@@ -96,10 +97,10 @@
 			return this.sorting;
 		},
 		render: function() {
-			if(this.headerRow == null && !this.options.noHeader) {
+			if(!this.headerRow && !this.options.noHeader) {
 				this.renderHeader();
 			}
-			if(this.caption == null && !this.options.noHeader) {
+			if(!this.caption && !this.options.noHeader) {
 				this.renderCaption();
 			}
 			for(var i = 0; i < this.rows.length; i++) {
@@ -150,11 +151,11 @@
 			}
 		},
 		renderHeader: function() {
-			if (this.options.headerCols.length == 0) {
+			if (this.options.headerCols.length === 0) {
 				return false;
 			}
 			var me = this;
-			this.headerRow = new dynamicTableRow(this, null, {toTop: true});
+			this.headerRow = new DynamicTableRow(this, null, {toTop: true});
 			this.headerRow.getElement().addClass(cssClasses.tableHeader).addClass(cssClasses.notSortable);
 			var row = this.headerRow;
 
@@ -170,9 +171,11 @@
 					f = $('<span />').text(v.name).appendTo(col);
 				}
 				if(v.actionCell && me.actionParams) {
-					var col = new tableRowActions(c,row,me.actionParams);
+					var actCol = new TableRowActions(c,row,me.actionParams);
 				}
-				if (v.tooltip) f.attr('title',v.tooltip);
+				if (v.tooltip) {
+				  f.attr('title',v.tooltip);
+				}
 			});
 			$.each(this.options.colCss, function(i,v) {
 				me.headerRow.getElement().children(i).css(v);
@@ -186,7 +189,7 @@
 			if (typeof(comparator) != "function") {
 				return false;
 			}
-			if ((this.sorting.column == colNo) && this.sorting.direction == 0) {
+			if ((this.sorting.column == colNo) && this.sorting.direction === 0) {
 				this.sorting.direction = 1;
 			}
 			else {
@@ -201,7 +204,7 @@
 				return false;
 			}
 			this.updateSortArrow(this.sorting.column, direction);
-			var sorted = (this.rows.sort(function(a,b) { 
+			var sorted = this.rows.sort(function(a,b) { 
 				if(!a.model) {
 					return 1;
 				}
@@ -209,7 +212,7 @@
 					return -1;
 				}
 				return comparator(a.model,b.model); 
-			}));
+			});
 			if (direction == 1) { sorted = sorted.reverse(); }
 			for(var i = 0; i < sorted.length; i++) {
 				sorted[i].row.appendTo(this.table);
@@ -220,7 +223,7 @@
 			.removeClass(cssClasses.sortImgUp);
 			var a = this.headerRow.getElement().find('.' + cssClasses.tableCell + ':eq('+col+')')
 			.find('.' + cssClasses.sortImg).addClass(cssClasses.sortImgUp);
-			if (dir == 0) {
+			if (dir === 0) {
 				a.addClass(cssClasses.sortImgUp);
 			}
 			else {
@@ -245,8 +248,9 @@
 
 			//scale total width down to 99% in order to prevent cell wrapping
 			totalwidth = totalwidth / (0.99 - totalPercentage);
-
-			for (var j = 0; j < params.length; j++) {
+			var j;
+			
+			for (j = 0; j < params.length; j++) {
 				var cell = params[j];
 				if (!cell.auto) {
 					retval.push(null);
@@ -259,9 +263,9 @@
 			}
 			var maxWidth = Math.round(10 * (totalPercentage + ((num - 1) * statics.borderPerColumn)))/10;
 			this.maxWidth = maxWidth;
-			for (var j = 0; j < params.length; j++) {
-				var cell = params[j];
-				if(!cell.auto && cell.setMaxWidth == true) {
+			for (j = 0; j < params.length; j++) {
+				var curCell = params[j];
+				if(!curCell.auto && curCell.setMaxWidth === true) {
 					retval[j] = maxWidth;
 				}
 			}
@@ -287,7 +291,7 @@
 		},
 		//check whether model (having a hash code) has been inserted into the table
 		isInTable: function(model) {
-			if(typeof(model.getHashCode) == "function" && model.getHashCode()) {
+			if(typeof model.getHashCode == "function" && model.getHashCode()) {
 				return ($.inArray(model.getHashCode(), this.tableRowHashes) != -1);
 			}
 			return false;
@@ -295,7 +299,7 @@
 	};
 	
 	/** TABLE ROW **/
-	var dynamicTableRow = function(table, model, options) {
+	var DynamicTableRow = function(table, model, options) {
 		this.table = table;
 		this.model = model;
 		var me = this;
@@ -327,9 +331,9 @@
 		this.row.data("model",model);
 	};
 	
-	dynamicTableRow.prototype = {
+	DynamicTableRow.prototype = {
 		createCell: function(options) {
-			var newCell = new dynamicTableCell(this, this.cells.length, options);
+			var newCell = new DynamicTableCell(this, this.cells.length, options);
 			this.cells.push(newCell);
 			return newCell;
 		},
@@ -354,15 +358,21 @@
 		},
 		updateColCss: function() {
 		  var me = this;
-		  $.each(this.table.options.colCss, function(i,v) {
+		  var rules = {};
+		  $.extend(rules, this.table.options.colCss);
+		  if(this.options.colCss) {
+			  $.extend(rules, this.options.colCss);
+		  }
+		  $.each(rules, function(i,v) {
 		    me.row.children(i).css(v);
 		  });
 		},
 		openEdit: function() {
-		  for(var i = 0; i < this.cells.length; i++) {
+		  var i;
+		  for(i = 0; i < this.cells.length; i++) {
 		    this.cells[i].openEdit(true);
 		  }
-		  for(var i = 0; i < this.cells.length; i++) {
+		  for(i = 0; i < this.cells.length; i++) {
 		    if(this.cells[i].setEditFocus()) {
 		    	break;
 		    }
@@ -391,12 +401,13 @@
 			};
 		},
 		saveEdit: function() {
-		  for(var i = 0; i < this.cells.length; i++) {
-			  if(this.cells[i].isValid() == false) {
+		  var i;
+		  for(i = 0; i < this.cells.length; i++) {
+			  if(!this.cells[i].isValid()) {
 				  return false;
 			  }
 		  }
-		  for(var i = 0; i < this.cells.length; i++) {
+		  for(i = 0; i < this.cells.length; i++) {
 			  this.cells[i].saveEdit();
 		  }
 		  return true;
@@ -407,7 +418,7 @@
 	};
 	
 	/** TABLE CELL **/
-	var dynamicTableCell = function(row, cellno, options) {
+	var DynamicTableCell = function(row, cellno, options) {
 		this.row = row;
 		this.cellno = cellno;
 		this.options = {};
@@ -423,25 +434,30 @@
 		  if(a.setMaxWidth) { this.cell.css("clear","left"); }
 		}
 		var me = this;
-		var dblclick_cb = function() { me.openEdit() };
+		var dblclick_cb = function() { me.openEdit(); };
 		if (this.options.type && this.options.type != "empty") {
-		  this.cell.dblclick(dblclick_cb);
-		  this.cell.attr("title","Double-click the cell to edit it.");
+		  if(this.options.type == "wysiwyg") {
+        this.cell.dblclick(dblclick_cb);
+        this.cell.attr("title","Double-click the cell to edit it.");		    
+		  } else {
+		    this.cell.click(dblclick_cb);
+		    this.cell.attr("title","Click the cell to edit it.");
+		  }
 		} 
 	};
 	
-	dynamicTableCell.prototype = {
+	DynamicTableCell.prototype = {
 	  setActionCell: function(options) {
-	    this.actionObj = new tableRowActions(this,this.row,options);
+	    this.actionObj = new TableRowActions(this,this.row,options);
 	    this.isActionCell = true;
 	  },
 	  activateSortHandle: function() {
 	    this.cell.addClass("dynamictable-sorthandle");
 	  },
 		render: function() {
-			if(typeof(this.options.get) == "function") {
+			if(typeof this.options.get === "function") {
 				var value = this.options.get();
-				if(typeof(this.options.decorator) == "function") {
+				if(typeof this.options.decorator === "function") {
 					value = this.options.decorator(value);
 				}
 				this.setValue(value);
@@ -467,7 +483,7 @@
 		  if(!this.editorOpen) {
 		    return;
 		  }
-		  if(this.editor.isValid() != true) {
+		  if(!this.editor.isValid()) {
 			  return false;
 		  }
 		  var newValue = this.editor.getValue();
@@ -489,7 +505,9 @@
 		  }
 		  this.content.show();
 		  this.removeButtons();
-		  if(this.editor)  this.editor.remove();
+		  if(this.editor)  { 
+		    this.editor.remove();
+		  }
 		  this.editorOpen = false;
 		  if(this.isActionCell) { 
 			  this.actionObj.getElement().show();
@@ -505,72 +523,78 @@
 		 * when no auto close is set no mouse or keyboard
 		 * events will be registered to close and save the 
 		 * editor. Instead save edit must be manually called.
-		 * See dynamicTableRow.openEdit
+		 * See DynamicTableRow.openEdit
 		 */
 		openEdit: function(noAutoClose) {
-		  if(typeof(this.options.canEdit) == "function") {
-			  if(!this.options.canEdit()) {
-				  return;
-			  }
-		  }
-		  if (this.options.type == "user") { 
-			  if(noAutoClose) return;
-			  var me = this;
-			  var uc = new agilefantUserChooser({
-				  selectThese: agilefantUtils.objectToIdArray(me.options.getEdit()),
-				  selectCallback: function(chooser) {
-					 var users = chooser.getSelected(true);
-				     me.options.set(users); 
-				     me.render();
-				  },
-				  backlogId: this.options.backlogId,
-				  backlogItemId: this.options.backlogItemId
-			  });
-			  uc.init();
-			  return;
-		  } else if(this.options.type == "theme") {
-			  if(noAutoClose) return;
-			  var me = this;
-			  var tc = new agilefantThemeChooser({
-				  selectedThemes: function() { return agilefantUtils.objectToIdArray(me.options.get()); },
-				  onSelect: function(themes) {
-				     me.options.set(themes); 
-				     me.render();
-				  },
-				  backlogId: this.options.backlogId
-			  });
-			  tc.init();
-			  return;
-		  }
-		  var autoClose = true;
-		  if(noAutoClose) autoClose = false;
-		  if(this.options.type && !this.editorOpen) {
-		    this.editorOpen = true;
-        this.content.hide();
-        if(this.isActionCell) this.actionObj.getElement().hide();
-        if(this.options.type == "text") {
-        	this.editor = new textEdit(this, autoClose);
-        } else if(this.options.type == "wysiwyg") {
-        	this.editor = new wysiwygEdit(this, autoClose);
-        } else if(this.options.type == "effort") {
-          this.editor = new effortEdit(this, autoClose);
-        } else if(this.options.type == "select") {
-          this.editor = new selectEdit(this, this.options.items, autoClose);
-        } else if(this.options.type == "empty") {
-          this.editor = new emptyEdit(this);
-        } else if(this.options.type == "date") {
-        	this.editor = new dateEdit(this,autoClose);
-        }
-        if(!autoClose && this.options.buttons) {
-          var me = this;
-          me.addedButtons = [];
-          $.each(this.options.buttons, function(button, opts) {
-            var button = $("<button />").appendTo(me.cell).text(opts.text)
-              .click(opts.action).addClass("dynamicButton");
-            me.addedButtons.push(button);
-          });
-        }
-		  }
+			var me = this;
+			if(typeof this.options.canEdit == "function") {
+				if(!this.options.canEdit()) {
+					return;
+				}
+			}
+			if (this.options.type == "user") { 
+				if(noAutoClose) { 
+					return;
+				}
+				var uc = new AgilefantUserChooser({
+					selectThese: agilefantUtils.objectToIdArray(me.options.getEdit()),
+					selectCallback: function(chooser) {
+					var users = chooser.getSelected(true);
+					me.options.set(users); 
+					me.render();
+				},
+				backlogId: this.options.backlogId,
+				backlogItemId: this.options.backlogItemId
+				});
+				uc.init();
+				return;
+			} else if(this.options.type == "theme") {
+				if(noAutoClose) { 
+					return;
+				}
+				var tc = new AgilefantThemeChooser({
+					selectedThemes: function() { return agilefantUtils.objectToIdArray(me.options.get()); },
+					onSelect: function(themes) {
+						me.options.set(themes); 
+						me.render();
+					},
+					backlogId: this.options.backlogId
+				});
+				tc.init();
+				return;
+			}
+			var autoClose = true;
+			if(noAutoClose) { 
+				autoClose = false;
+			}
+			if(this.options.type && !this.editorOpen) {
+				this.editorOpen = true;
+				this.content.hide();
+				if(this.isActionCell) { 
+					this.actionObj.getElement().hide();
+				}
+				if(this.options.type == "text") {
+					this.editor = new TextEdit(this, autoClose);
+				} else if(this.options.type == "wysiwyg") {
+					this.editor = new WysiwygEdit(this, autoClose);
+				} else if(this.options.type == "effort") {
+					this.editor = new EffortEdit(this, autoClose);
+				} else if(this.options.type == "select") {
+					this.editor = new SelectEdit(this, this.options.items, autoClose);
+				} else if(this.options.type == "empty") {
+					this.editor = new EmptyEdit(this);
+				} else if(this.options.type == "date") {
+					this.editor = new DateEdit(this,autoClose);
+				}
+				if(!autoClose && this.options.buttons) {
+					me.addedButtons = [];
+					$.each(this.options.buttons, function(button, opts) {
+						var nbutton = $("<button />").appendTo(me.cell).text(opts.text)
+						.click(opts.action).addClass("dynamicButton");
+						me.addedButtons.push(nbutton);
+					});
+				}
+			}
 		},
 		removeButtons: function() {
 			if(this.addedButtons) {
@@ -600,7 +624,7 @@
 			},
 			_storeRow: function() {
 				var opt = this.cell.getRow().options;
-				if(opt && typeof(opt.saveCallback) == "function") {
+				if(opt && typeof opt.saveCallback == "function") {
 					opt.saveCallback();
 				}
 			},
@@ -620,13 +644,13 @@
 	};
 	
 	/** EMPTY EDIT **/
-	var emptyEdit = function(cell) {
+	var EmptyEdit = function(cell) {
 	  this.cell = cell;
-	  if(typeof(cell.options.action) == "function") {
+	  if(typeof cell.options.action == "function") {
 		  cell.options.action();
 	  }
 	};
-	emptyEdit.prototype = {
+	EmptyEdit.prototype = {
 	  _mouseClick: function(event) { return false; },
 	  remove: function() { },
 	  isValid: function() { return true; },
@@ -635,16 +659,18 @@
 	
 	/** WYSIWYG EDIT **/
 	
-	var wysiwygEdit = function(cell, autoClose) {
+	var WysiwygEdit = function(cell, autoClose) {
 		this.cell = cell;
 		var value = this.cell.options.get();
-		if (!value) value = "";
+		if (!value) { 
+			value = "";
+		}
 		this.field = $('<textarea>' + value + '</textarea>').appendTo(this.cell.getElement()).width("80%");
 	    setUpWysiwyg(this.field);
 	    this.editor = this.cell.getElement().find(".wysiwyg");
 	    this.editorBody = this.editor.find("iframe").contents();
 	    this.editorBody.focus();
-	    if(autoClose == true) {
+	    if(autoClose === true) {
 	    	var me = this;
 	    	this.mouseEvent = function(event) { me._mouseClick(event); };
 	    	$(document.body).click(this.mouseEvent);
@@ -657,7 +683,7 @@
 	    	
 	    }
 	};
-	wysiwygEdit.prototype = {
+	WysiwygEdit.prototype = {
 		  _mouseClick: function(event) {
 			if(event.target) {
 				var target = $(event.target);
@@ -667,7 +693,7 @@
 				  return false;
 				} else {
 				  this._store();
-				  $(document.body).unbind("click",this.mouseEvent)
+				  $(document.body).unbind("click",this.mouseEvent);
 				}
 			}
 		  },
@@ -680,11 +706,11 @@
 			  return true;
 		  }
 	};
-	$.extend(wysiwygEdit.prototype, commonEdit);
+	$.extend(WysiwygEdit.prototype, commonEdit);
 
 	/** TEXT EDIT **/
 	
-	var textEdit = function(cell, autoClose) {
+	var TextEdit = function(cell, autoClose) {
 		this.cell = cell;
 		this.autoClose = autoClose;
 		this.field = $('<input type="text"/>').width("80%").appendTo(this.cell.getElement()).focus();
@@ -692,15 +718,15 @@
 	  	var me = this;
     	var key_cb = function(keyevent) { me._handleKeyEvent(keyevent); };
         this.field.keydown(key_cb);
-	    if(autoClose == true) {
+	    if(autoClose === true) {
 	    	var blur_cb = function() { me._store(); };
             this.field.blur(blur_cb);
 	        this.field.focus(); 
 	    }
 	};
-	textEdit.prototype = {
+	TextEdit.prototype = {
 		isValid: function() {
-			if(this.cell.options.required && this.field.val().length == 0) {
+			if(this.cell.options.required && this.field.val().length === 0) {
 			  this.field.addClass("invalidValue");
 			  if(!this.errorMsg) {
 			    this.errorMsg = commonView.requiredFieldError(this.cell.getElement());
@@ -717,30 +743,34 @@
 			return true;
 		},
 		remove: function() {
-			if(this.errorMsg) this.errorMsg.remove();
+			if(this.errorMsg) { 
+				this.errorMsg.remove();
+			}
 			this.field.remove();
 		}
 	};
-	$.extend(textEdit.prototype, commonEdit);
+	$.extend(TextEdit.prototype, commonEdit);
 	
 	/** EFFORT EDIT **/
-	 var effortEdit = function(cell, autoClose) {
+	 var EffortEdit = function(cell, autoClose) {
 	    this.cell = cell;
 	    this.autoClose = autoClose;
 	    this.field = $('<input type="text"/>').width('80%').appendTo(this.cell.getElement()).focus();
 	    var val = this.cell.options.get();
-	    if(val) val = agilefantUtils.aftimeToString(val, true);
+	    if(val)  { 
+	    	val = agilefantUtils.aftimeToString(val, true);
+	    }
 	    this.field.val(val);
         var me = this;
         var key_cb = function(keyevent) { me._handleKeyEvent(keyevent); };
         this.field.keydown(key_cb);
-        if(autoClose == true) {
+        if(autoClose === true) {
           var blur_cb = function() { me._store(); };
           this.field.blur(blur_cb);
           this.field.focus(); 
         }
 	  };
-	  effortEdit.prototype = {
+	  EffortEdit.prototype = {
 	    isValid: function() {
 	      if(agilefantUtils.isAftimeString(this.field.val())) {
 	    	  this.field.removeClass("invalidValue");
@@ -751,37 +781,43 @@
 	    	  }
 	    	  return true;
 	      } else {
-	    	  if(!this.errorMsg) this.errorMsg = commonView.effortError(this.cell.getElement());
+	    	  if(!this.errorMsg) { 
+	    		  this.errorMsg = commonView.effortError(this.cell.getElement());
+	    	  }
 	    	  this.field.addClass("invalidValue");
 	    	  this.cell.getElement().addClass('cellError');
 	    	  return false;
 	      }
 	    },
 	    remove: function() {
-	      if(this.errorMsg) this.errorMsg.remove();
+	      if(this.errorMsg) {
+	    	  this.errorMsg.remove();
+	      }
 	      this.field.remove();
 	    }
 	  };
-	  $.extend(effortEdit.prototype, commonEdit);
+	  $.extend(EffortEdit.prototype, commonEdit);
 	
 	/** DATE EDIT **/
-	 var dateEdit = function(cell, autoClose) {
+	 var DateEdit = function(cell, autoClose) {
 	    this.cell = cell;
 	    this.autoClose = autoClose;
 	    this.field = $('<input type="text"/>').width('80%').appendTo(this.cell.getElement()).focus();
 	    var val = this.cell.options.get();
-	    if(val) val = agilefantUtils.dateToString(val, true);
+	    if(val) {
+	    	val = agilefantUtils.dateToString(val, true);
+	    }
 	    this.field.val(val);
       var me = this;
       var key_cb = function(keyevent) { me._handleKeyEvent(keyevent); };
       this.field.keydown(key_cb);
-      if(autoClose == true) {
+      if(autoClose === true) {
         var blur_cb = function() { me._store(); };
         this.field.blur(blur_cb);
         this.field.focus(); 
       }
 	  };
-	  dateEdit.prototype = {
+	  DateEdit.prototype = {
 	    isValid: function() {
 	      if(agilefantUtils.isDateString(this.field.val())) {
 	    	  this.field.removeClass("invalidValue");
@@ -792,20 +828,24 @@
 	    	  }
 	    	  return true;
 	      } else {
-	    	  if(!this.errorMsg) this.errorMsg = commonView.dateError(this.cell.getElement());
+	    	  if(!this.errorMsg) { 
+	    		  this.errorMsg = commonView.dateError(this.cell.getElement());
+	    	  }
 	    	  this.field.addClass("invalidValue");
 	    	  this.cell.getElement().addClass('cellError');
 	    	  return false;
 	      }
 	    },
 	    remove: function() {
-	      if(this.errorMsg) this.errorMsg.remove();
+	      if(this.errorMsg) { 
+	    	  this.errorMsg.remove();
+	      }
 	      this.field.remove();
 	    }
 	  };
-	  $.extend(dateEdit.prototype, commonEdit);
+	  $.extend(DateEdit.prototype, commonEdit);
 	/** SELECT EDIT **/
-	var selectEdit = function(cell, items, autoClose) {
+	var SelectEdit = function(cell, items, autoClose) {
 	  var me = this;
 	  this.cell = cell;
 	  this.autoClose = autoClose;
@@ -817,7 +857,7 @@
     this.field.val(val);
     var key_cb = function(keyevent) { me._handleKeyEvent(keyevent); };
     this.field.keydown(key_cb);
-    if (autoClose == true) {
+    if (autoClose === true) {
       var blur_cb = function() { me._cancel(); };
       var change_cb = function() { me._store(); };
       this.field.blur(blur_cb);
@@ -825,7 +865,7 @@
       this.field.focus();
     }
 	};
-	selectEdit.prototype = {
+	SelectEdit.prototype = {
 	  isValid: function() {
 	    return true;
 	  },
@@ -833,12 +873,12 @@
 	    this.field.remove();
 	  }
 	};
-	$.extend(selectEdit.prototype, commonEdit);
+	$.extend(SelectEdit.prototype, commonEdit);
 	  
 	/** ROW ACTIONS **/
-	var tableRowActions = function(cell, row, options) {
+	var TableRowActions = function(cell, row, options) {
 	  this.cell = cell;
-	  this.row = row
+	  this.row = row;
 	  this.inMenu = false;
 	  this.options = {
 	      title: '<div class="actionColumn"><div class="gear" style="float:left;"/><div style="float: left;">&nbsp; Actions</div></div>'
@@ -853,7 +893,7 @@
 	  this.act.click(this.openEvent);
 	  
 	};
-	tableRowActions.prototype = {
+	TableRowActions.prototype = {
 	    getElement: function() {
 			return this.act;
 		},
@@ -864,17 +904,16 @@
 			};
 			$(document.body).trigger("dynamictable-close-actions").bind("dynamictable-close-actions", this.handler);
 			this.menu = $('<ul/>').appendTo(document.body).addClass("actionCell");
-			var pos = this.cell.getElement().position();
+			var off = this.cell.getElement().offset();
 			var menuCss = {
 					"position":    "absolute",
 					"overflow":    "visible",
 					"z-index":     "100",
 					"white-space": "nowrap",
-					"top":         pos.top + 16,
-					"left":        pos.left
-			}
+					"top":         off.top + 16,
+					"left":        off.left
+			};
 			this.menu.css(menuCss);
-			var me = this;
 			$.each(this.options.items, function(index, item) {
 				var it = $('<li />').text(item.text).appendTo(me.menu);
 				if(item.callback) {
@@ -884,7 +923,7 @@
 			});
 			this.act.click(this.handler);
 			this.closeClick = function(event) {
-				if($(event.target).closest("ul.actionCell").length == 0) {
+				if($(event.target).closest("ul.actionCell").length === 0) {
 					me.close();
 				}
 			};
@@ -915,14 +954,14 @@
 	}
 	$.fn.extend({
 		//NOTE: WILL NOT RETURN CHAINABLE jQuery OBJECT!
-		dynamicTable: function(options) {
+		DynamicTable: function(options) {
 			if(this.length == 1) {
 				var table;
-				if(!this.data("dynamicTable")) {
-					table = new dynamicTable(this, options);
-					this.data("dynamicTable", table);
+				if(!this.data("DynamicTable")) {
+					table = new DynamicTable(this, options);
+					this.data("DynamicTable", table);
                 } else {
-					table = this.data("dynamicTable");
+					table = this.data("DynamicTable");
 				}
 				return table;
 			}
@@ -992,7 +1031,7 @@
 		  addTableColumn(opts,{ auto: false, setMaxWidth: true });
 		  addTableColumn(opts,{ auto: false, setMaxWidth: true });
 		  $.extend(opts,options);
-			var ret = this.dynamicTable(opts);
+			var ret = this.DynamicTable(opts);
 			
 			return ret;
 		},
@@ -1078,7 +1117,7 @@
 	      addTableColumn(opts,{ auto: false, setMaxWidth: true });
 	
 	      $.extend(opts,options);
-	      var ret = this.dynamicTable(opts);
+	      var ret = this.DynamicTable(opts);
 	      return ret;
 		},
     todoTable: function(options) {
@@ -1087,7 +1126,7 @@
           captionText: "TODOs"
       };
       opts.colCss = { ':eq(2)': { 'cursor': 'pointer' },
-                '*': { 'background-color': '#eee' },
+                '*': { 'background-color': '#eee' }
       };          
       addTableColumn(opts,
           { minwidth: 380, auto: true },
@@ -1109,7 +1148,7 @@
             });
 
       $.extend(opts,options);
-      var ret = this.dynamicTable(opts);
+      var ret = this.DynamicTable(opts);
       return ret;
   },
   spentEffortTable: function(options) {
@@ -1117,8 +1156,7 @@
         defaultSortColumn: 0,
         captionText: "Spent Effort"
     };
-    opts.colCss = {'*': { 'background-color': '#eee' },
-              
+    opts.colCss = {'*': { 'background-color': '#eee' }
     };          
     addTableColumn(opts,
         { minwidth: 100, auto: true },
@@ -1152,11 +1190,11 @@
           });
 
     $.extend(opts,options);
-    var ret = this.dynamicTable(opts);
+    var ret = this.DynamicTable(opts);
     return ret;
   },
   genericTable: function(options) {
-    var ret = this.dynamicTable(options);
+    var ret = this.DynamicTable(options);
     return ret;
   }
 	});
@@ -1164,7 +1202,7 @@
 
 var taskTabs = function(task, parentView) {
   var id = task.getId();
-  if(id == 0) { // when creating new item etc.
+  if(!id) { // when creating new item etc.
     var tmp = new Date();
     id = tmp.getTime();
   }

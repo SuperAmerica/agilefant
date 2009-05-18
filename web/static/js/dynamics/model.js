@@ -358,9 +358,8 @@ IterationGoalModel.prototype.reloadMetrics = function() {
 	type: "POST",
 	dataType: "json",
 	success: function(data,type) {
-		var nData = me.persistedData;
-		nData.metrics = data;
-		me.setData(nData,true);
+		me.metrics = data;
+		me.callEditListeners({bubbleEvent: []});
 	}
 	});
 };
@@ -683,7 +682,7 @@ TaskModel.prototype.resetOriginalEstimate = function() {
 	data: data
 	});
 };
-save = function() {
+TaskModel.prototype.save = function() {
 	if (this.inTransaction) {
 		return;
 	}

@@ -515,7 +515,7 @@
         },
         cancelAction: function(me) { me.destroy(); }
     };
-    window.agilefantUserChooser = UserChooser;
+    window.AgilefantUserChooser = UserChooser;
     jQuery.fn.extend({
         /**
          * Call this for the link that should open a new user chooser.

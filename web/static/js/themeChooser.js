@@ -238,7 +238,7 @@
         }
     };
     
-    window.agilefantThemeChooser = ThemeChooser;
+    window.AgilefantThemeChooser = ThemeChooser;
     
     jQuery.fn.extend({
         /**

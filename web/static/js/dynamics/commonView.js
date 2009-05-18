@@ -14,8 +14,10 @@ var commonView = {
 	var cb = function(event) {
 		if(button.hasClass("dynamictable-expand")) {
 			expandCb();
+			button.attr("title","Collapse");
 		} else {
 			collapseCb();
+			button.attr("title","Expand");
 		}
 		button.toggleClass("dynamictable-expand").toggleClass("dynamictable-collapse");
 	};
@@ -23,10 +25,12 @@ var commonView = {
 	button.bind("showContents", function() {
 		expandCb();
 		button.removeClass("dynamictable-expand").addClass("dynamictable-collapse");
+		button.attr("title","Collapse");
 	});
 	button.bind("hideContents", function() {
 		collapseCb();
 		button.removeClass("dynamictable-collapse").addClass("dynamictable-expand");
+		button.attr("title","Expand");
 	});
 	return button;
   },

@@ -922,7 +922,9 @@ public class BacklogBusinessImpl implements BacklogBusiness {
         String json = "";
         JSONSerializer ser = new JSONSerializer();
         ser.exclude("*.description");
-        if(backlog instanceof Product) {            
+        if(backlog == null) {
+            json = ser.serialize(productDAO.getAll());
+        } else if(backlog instanceof Product) {            
             json = ser.serialize(((Product)backlog).getProjects());
         } else if(backlog instanceof Project) {
             json = ser.serialize(((Project)backlog).getIterations());
@@ -932,9 +934,6 @@ public class BacklogBusinessImpl implements BacklogBusiness {
 
     public String getSubBacklogsAsJSON(int backlogId) {
         Backlog bl = this.backlogDAO.get(backlogId);
-        if(bl == null) {
-            return "";
-        }
         return getSubBacklogsAsJSON(bl);
     }
 

@@ -375,8 +375,7 @@
 			<result>/WEB-INF/jsp/jsonData.jsp</result>
 		</action>
 		
-		<action name="backlogSelection" method="backlogSelector" 
-			class="backlogAction">
+		<action name="backlogSelection">
 			<result>/WEB-INF/jsp/inc/selectBacklog.jsp</result>
 		</action>
 		<!-- /Backlog actions -->

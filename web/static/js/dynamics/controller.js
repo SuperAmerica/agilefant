@@ -41,41 +41,43 @@ iterationController.prototype = {
     		resizable: false,
     		height:140,
     		modal: true,
+    		close: function() { parent.dialog('destroy'); parent.remove(); },
     		buttons: {
     		'Yes': function() {
-    		$(this).dialog('close');
+    		$(this).dialog('destroy');
     		parent.remove();
     		goal.remove();
    			me.itemsWithOutGoalContainer.reloadTasks();
    			me.noGoalItemController.render();
     	},
     	Cancel: function() {
-    		$(this).dialog('close');
+    		$(this).dialog('destroy');
     		parent.remove();
     	}
     	}
     	});
     },
     moveGoal: function(row, goal) {
-    	var parent = $("<div />").appendTo(document.body).text("Are you sure you wish to delete this story?");
+    	var parent = $("<div />").appendTo(document.body);
     	var me = this;
-    	parent.dialog({
-    		resizable: false,
-    		height:140,
-    		modal: true,
-    		buttons: {
-    		'Yes': function() {
-    		$(this).dialog('close');
-    		parent.remove();
-    		goal.remove();
-   			me.itemsWithOutGoalContainer.reloadTasks();
-   			me.noGoalItemController.render();
-    	},
-    	Cancel: function() {
-    		$(this).dialog('close');
-    		parent.remove();
-    	}
-    	}
+    	parent.load("backlogSelection.action", {}, function() {
+	    	parent.dialog({
+	    		resizable: false,
+	    		height:200,
+	    		width: 700,
+	    		modal: true,
+	    		close: function() { parent.dialog('destroy'); parent.remove(); },
+	    		buttons: {
+		    		'Yes': function() {
+
+		    		
+		    		},
+		    		Cancel: function() {
+		    			$(this).dialog('destroy');
+		    			parent.remove();
+		    		}
+	    		}
+	    	});
     	});
     },
     addRow: function(goal) {
@@ -156,6 +158,11 @@ iterationController.prototype = {
     	                            	   expandButton.trigger("showContents");
     	                            	   blictrl.createBli();
     	                               }
+    	                               }, {
+    	                            	   text: "Move story",
+    	                            	   callback: function() {
+    	                            	   		me.moveGoal(row, goal);
+    	                               		}
     	                               }
     	                               ]});
     	row.getElement().bind("metricsUpdated", function() {
@@ -339,14 +346,15 @@ IterationGoalController.prototype = {
 			resizable: false,
 			height:140,
 			modal: true,
+			close: function() { parent.dialog('destroy'); parent.remove(); },
 			buttons: {
 			'Yes': function() {
-			$(this).dialog('close');
+			$(this).dialog('destroy');
 			parent.remove();
 			bli.remove();
 		},
 		Cancel: function() {
-			$(this).dialog('close');
+			$(this).dialog('destroy');
 			parent.remove();
 		}
 		}
@@ -704,14 +712,15 @@ TaskController.prototype = {
 			resizable: false,
 			height:140,
 			modal: true,
+			close: function() { parent.dialog('destroy'); parent.remove(); },
 			buttons: {
 			'Yes': function() {
-			$(this).dialog('close');
+			$(this).dialog('destroy');
 			parent.remove();
 			todo.remove();
 		},
 		Cancel: function() {
-			$(this).dialog('close');
+			$(this).dialog('destroy');
 			parent.remove();
 		}
 		}
@@ -862,6 +871,7 @@ TaskController.prototype = {
 			addFormValidators(parent);
 			parent.dialog({
 				resizable: true,
+				close: function() { parent.dialog('destroy'); parent.remove(); },
 				minHeight:250,
 				minWidth: 720,
 				width: 720,
@@ -873,7 +883,7 @@ TaskController.prototype = {
 						if(!form.valid()) {
 							return;
 						}
-						$(this).dialog('close');
+						$(this).dialog('destroy');
 						var timeSpent = form.find("input[name='hourEntry.timeSpent']").val();
 						var description = form.find("input[name='hourEntry.description']").val();
 						var date = form.find("input[name=date]").val();

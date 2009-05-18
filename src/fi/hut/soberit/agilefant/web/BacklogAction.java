@@ -352,10 +352,7 @@ public class BacklogAction extends ActionSupport {
         super.addActionError(super.getText("backlog.unknownType"));
         return Action.ERROR;
     }
-    public String backlogSelector() {
-        this.jsonData = this.backlogBusiness.getAllProductsAsJSON();
-        return SUCCESS;
-    }
+
     public String hasSameProduct() {
         underSameProduct = backlogBusiness.isUnderSameProduct(backlogId, targetBacklogId);
         return Action.SUCCESS;

@@ -652,6 +652,9 @@
             <result>/WEB-INF/jsp/forms/createIterationGoal.jsp</result>
         </action>
 
+    <action name="moveIterationGoal" method="moveIterationGoal"
+      class="iterationGoalAction">
+    </action>
 		<action name="storeIterationGoal" method="store"
 			class="iterationGoalAction">
 			<result name="ajax_success" type="dispatcher">

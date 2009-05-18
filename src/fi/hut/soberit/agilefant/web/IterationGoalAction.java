@@ -26,6 +26,8 @@ public class IterationGoalAction extends ActionSupport {
     private int iterationGoalId;
     
     private int priority;
+    
+    private boolean moveBacklogItems = false;
 
     private IterationGoal iterationGoal = new IterationGoal();
     
@@ -84,8 +86,16 @@ public class IterationGoalAction extends ActionSupport {
         jsonData = new JSONSerializer().serialize(iterationGoalBusiness.getIterationGoalContents(iterationGoalId, iterationId));
         return CRUDAction.AJAX_SUCCESS;
     }
-
-
+    
+    public String moveIterationGoal() {
+        try {
+            this.iterationGoalBusiness.attachGoalToIteration(iterationGoalId, iterationId, moveBacklogItems);
+        } catch (Exception e) {
+            return CRUDAction.AJAX_ERROR;
+        }
+        
+        return CRUDAction.AJAX_SUCCESS;
+    }
 
     public int getIterationId() {
         return iterationId;
@@ -137,6 +147,10 @@ public class IterationGoalAction extends ActionSupport {
 
     public void setBacklogBusiness(BacklogBusiness backlogBusiness) {
         this.backlogBusiness = backlogBusiness;
+    }
+
+    public void setMoveBacklogItems(boolean moveBacklogItems) {
+        this.moveBacklogItems = moveBacklogItems;
     }
 
 

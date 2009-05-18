@@ -73,13 +73,22 @@ public class IterationGoalBusinessImpl implements IterationGoalBusiness {
         }
         iterationGoalDAO.remove(iterationGoalId);
     }
-    
     public void attachGoalToIteration(IterationGoal goal, int iterationId) throws ObjectNotFoundException {
+        this.attachGoalToIteration(goal, iterationId, false);
+    }
+    public void attachGoalToIteration(int iterationGoalId, int iterationId, boolean moveBacklogItems) throws ObjectNotFoundException {
+        IterationGoal goal = iterationGoalDAO.get(iterationGoalId);
+        if(goal == null) {
+            throw new ObjectNotFoundException("iterationGoal.notFound");
+        }
+        this.attachGoalToIteration(goal, iterationId, moveBacklogItems);
+    }
+    public void attachGoalToIteration(IterationGoal goal, int iterationId, boolean moveBacklogItems) throws ObjectNotFoundException {
         Iteration newIteration = null;
         if(iterationId != 0) {
             newIteration = iterationDAO.get(iterationId);
             if(newIteration == null) {
-                throw new ObjectNotFoundException("iteration.noFound");
+                throw new ObjectNotFoundException("iteration.notFound");
             }
         }
         //iteration goal has to have a parent 
@@ -92,7 +101,11 @@ public class IterationGoalBusinessImpl implements IterationGoalBusiness {
                 goal.setIteration(newIteration);
                 goal.getIteration().getIterationGoals().add(goal);
                 for(BacklogItem bli : goal.getBacklogItems()) {
-                    backlogItemBusiness.setBacklogItemIterationGoal(bli, null);
+                    if(moveBacklogItems) {
+                        backlogItemBusiness.moveItemToBacklog(bli, newIteration);
+                    } else {
+                        backlogItemBusiness.setBacklogItemIterationGoal(bli, null);
+                    }
                 }
                 goal.getBacklogItems().clear();
             }

@@ -26,7 +26,11 @@ public interface IterationGoalBusiness {
 
     public void attachGoalToIteration(IterationGoal goal, int iterationId)
             throws ObjectNotFoundException;
+       
+    public void attachGoalToIteration(int iterationGoalId, int iterationId, boolean moveBacklogItems) throws ObjectNotFoundException;
 
+    public void attachGoalToIteration(IterationGoal goal, int iterationId, boolean moveBacklogItems) throws ObjectNotFoundException;
+    
     public IterationGoalMetrics getIterationGoalMetrics(int iterationGoalId, int iterationId) throws ObjectNotFoundException;
 
     public Collection<BacklogItem> getIterationGoalContents(IterationGoal goal,

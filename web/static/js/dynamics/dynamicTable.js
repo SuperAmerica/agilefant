@@ -1200,7 +1200,7 @@
 	});
 })(jQuery);
 
-var taskTabs = function(task, parentView) {
+var TaskTabs = function(task, parentView) {
   var id = task.getId();
   if(!id) { // when creating new item etc.
     var tmp = new Date();
@@ -1211,7 +1211,7 @@ var taskTabs = function(task, parentView) {
   this.tabs = [];
   this.addFrame();
 };
-taskTabs.prototype = {
+TaskTabs.prototype = {
     addFrame: function() {
       this.container = $('<div />').appendTo(this.parentView).width("100%").addClass("cellTabs");
       this.tabList = $('<ul />').addClass("tab-menu").appendTo(this.container).addClass("tabMenu");

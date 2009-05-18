@@ -324,7 +324,7 @@ $(document).ready( function() {
 <form onsubmit="return false;"><div id="iterationGoals" style="min-width: 800px;">&nbsp;</div></form>
 <script type="text/javascript">
 $(document).ready(function() {
-  new iterationController(${iterationId}, $("#iterationGoals"));
+  new IterationController(${iterationId}, $("#iterationGoals"));
   $(document.body).bind("metricsUpdated", function() {
 	  var bigChart = $("#bigChart");
 	  bigChart.attr("src",bigChart.attr("src")+"#");

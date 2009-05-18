@@ -1,4 +1,4 @@
-var iterationController = function(iterationId, element) {
+var IterationController = function(iterationId, element) {
 	this.iterationId = iterationId;
 	this.element = element;
 	var me = this;
@@ -7,7 +7,41 @@ var iterationController = function(iterationId, element) {
 	this.buttonCells = [];
 	ModelFactory.getIteration(this.iterationId, function(data) { me.render(data); });
 };
-iterationController.prototype = {
+
+var IterationGoalController = function(parentView, model) {
+	//this.element = element;
+	this.parentView = parentView;
+	parentView.getElement().css("padding-left","2%"); //TODO: refactor
+	this.element = $("<div />").width("98%").appendTo(parentView.getElement());
+	this.data = model;
+	this.view = jQuery(this.element).taskTable();
+	var me = this;
+	this.view.addCaptionAction("createNew", {
+		text: "Create a new task",
+		callback: function() {
+		me.createBli();
+	}
+	});
+	this.render();
+};
+
+var TaskController = function(parentView, model, parentController, effortCell) {
+	  var me = this;
+	  this.model = model;
+	  this.parentView = parentView;
+	  this.effortCell = effortCell;
+	  this.parentController = parentController;
+	  this.initialized = false;
+	  if(agilefantUtils.isTimesheetsEnabled()) {
+		  this.effortCell.getElement().dblclick(function() {
+			  me.initialize();
+			  me.showTab(2);
+			  me.createEffortEntry();
+		  }).attr("title","Double-click to log effort.");
+	  }
+	};
+
+IterationController.prototype = {
     changeIterationGoalPriority: function(ev, el) {
 		var priority = 0;
 		var model = el.item.data("model");
@@ -308,30 +342,6 @@ iterationController.prototype = {
 
 /** ITERATION GOAL CONTROLLER **/
 
-var IterationGoalController = function(parentView, model) {
-	//this.element = element;
-	this.parentView = parentView;
-	parentView.getElement().css("padding-left","2%"); //TODO: refactor
-	this.element = $("<div />").width("98%").appendTo(parentView.getElement());
-	this.data = model;
-	this.view = jQuery(this.element).taskTable();
-	var me = this;
-	this.view.addCaptionAction("createNew", {
-		text: "Create a new task",
-		callback: function() {
-		me.createBli();
-	}
-	});
-	/*
-	this.view.getElement().addClass('dynamictable-backlogitem-droppable');
-	this.view.getElement().sortable({
-	    connectWith: '.dynamictable-backlogitem-droppable',
-	    not: '.dynamictable-notsortable',
-	    placeholder : 'dynamictable-placeholder'
-	 });
-	 */
-	this.render();
-};
 IterationGoalController.prototype = {
 	hideTasks: function() {
 		this.parentView.getElement().hide();
@@ -608,29 +618,12 @@ IterationGoalController.prototype = {
 
 /** BACKLOG ITEM CONTROLLER **/
 
-var TaskController = function(parentView, model, parentController, effortCell) {
-  var me = this;
-  this.model = model;
-  this.parentView = parentView;
-  this.effortCell = effortCell;
-  this.parentController = parentController;
-  this.initialized = false;
-  if(agilefantUtils.isTimesheetsEnabled()) {
-	  this.effortCell.getElement().dblclick(function() {
-		  me.initialize();
-		  me.showTab(2);
-		  me.createEffortEntry();
-	  }).attr("title","Double-click to log effort.");
-  }
-
- 
-};
 TaskController.prototype = {
 	initialize: function() {
 		if(this.initialized) {
 			return;
 		}
-		var tabs = new taskTabs(this.model,this.parentView.getElement());
+		var tabs = new TaskTabs(this.model,this.parentView.getElement());
 		this.infoTable = tabs.addTab("Info").genericTable({noHeader: true, colCss: {}, colWidths: [{minwidth: 10, auto:true},{minwidth: 90, auto: true}]});
 		var todos = tabs.addTab("TODOs");
 		this.todoView = todos.todoTable();

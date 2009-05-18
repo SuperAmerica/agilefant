@@ -1,11 +1,44 @@
-/** MODEL FACTORY **/
-var modelFactory = function() { 
+/** CONSTRUCTORS **/
+var ModelFactoryClass = function() { 
 	this.iterationGoals = {};
 	this.tasks = {};
 	this.todos = {};
 	this.effortEntries = {};
 };
-modelFactory.prototype = {
+IterationGoalModel = function(iterationGoalData, parent) {
+	this.metrics = {};
+	this.iteration = parent;
+	this.tasks = [];
+	this.setData(iterationGoalData, true);
+};
+var TaskModel = function(data, backlog, iterationGoal) {
+	this.effortLeft = "";
+	this.originalEstimate = "";
+	this.backlog = backlog;
+	this.iterationGoal = iterationGoal;
+	if (data) {
+		this.setData(data);
+	}
+};
+var TodoModel = function(task, data) {
+	this.task = task;
+	if(!data) {
+		this.id = 0;
+	} else {
+		this.setData(data);
+	}
+};
+var TaskHourEntryModel = function(task, data) {
+	this.task = task;
+	if(data) {
+		this.setData(data);
+	} else {
+		this.id = 0;
+	}
+};
+
+/** MODEL FACTORY **/
+ModelFactoryClass.prototype = {
 	getIteration: function(iterationId, callback) {
 		if(!iterationId || iterationId < 1) {
 			throw "Invalid iteration id";
@@ -88,7 +121,7 @@ modelFactory.prototype = {
 	
 };
 
-ModelFactory = new modelFactory();
+ModelFactory = new ModelFactoryClass();
 
 var CommonAgilefantModel = function() {
 	this.editListeners = [];
@@ -133,7 +166,6 @@ CommonAgilefantModel.prototype.save = function() {
 CommonAgilefantModel.prototype.setData = function() {
 	throw "Abstract method called.";
 };
-
 
 /** ITERATION MODEL **/
 
@@ -208,13 +240,6 @@ IterationModel.prototype.getPseudoGoal = function() {
 };
 
 /** ITERATION GOAL MODEL **/
-
-IterationGoalModel = function(iterationGoalData, parent) {
-	this.metrics = {};
-	this.iteration = parent;
-	this.tasks = [];
-	this.setData(iterationGoalData, true);
-};
 
 IterationGoalModel.prototype = new CommonAgilefantModel();
 
@@ -402,17 +427,6 @@ IterationGoalModel.prototype.save = function() {
 	});
 };
 
-var TaskModel = function(data, backlog, iterationGoal) {
-	this.effortLeft = "";
-	this.originalEstimate = "";
-	this.editListeners = [];
-	this.deleteListeners = [];
-	this.backlog = backlog;
-	this.iterationGoal = iterationGoal;
-	if (data) {
-		this.setData(data);
-	}
-};
 
 TaskModel.prototype = new CommonAgilefantModel();
 
@@ -644,7 +658,7 @@ TaskModel.prototype.remove = function() {
 	success : function(data, type) {
 		me.iterationGoal.removeTask(me);
 		ModelFactory.removeTask(me.id);
-		this.callDeleteListeners();
+		me.callDeleteListeners();
 		commonView.showOk("Backlog item deleted.");
 	},
 	cache: false,
@@ -758,261 +772,213 @@ TaskModel.prototype.save = function() {
 
 /** BACKLOG ITEM HOUR ENTRY * */
 
-var TaskHourEntryModel = function(task, data) {
-	
-	this.editListeners = [];
-	this.deleteListeners = [];
-	this.task = task;
-	if(data) {
-		this.setData(data);
-	} else {
-		this.id = 0;
-	}
-};
-TaskHourEntryModel.prototype = {
-	
-	setData: function(data, noBubling) {
-		/*
-		 * noBubling is set true when setData is called from singleton updater to prevent infinite loops
-		 * as task.setData calls the singleton and this methods calls task.setData.
-		 */
-		if(!noBubling && (this.persistedData && this.timeSpent != this.persistedData.timeSpent)) {
-			this.task.reloadData();
-		}
-		this.user = data.user;
-		if(data.user) {
-			this.userId = data.user.id;
-		}
-		this.timeSpent = data.timeSpent;
-		this.description = data.description;
-		this.date = data.date;
-		this.id = data.id;
-		this.dateStr = agilefantUtils.dateToString(this.date);
-		
-		for (var i = 0; i < this.editListeners.length; i++) {
-			this.editListeners[i]({bubbleEvent: []});
-		}
-		this.persistedData = data;
-	},
-	getTimeSpent: function() {
-		return this.timeSpent;
-	},
-	setTimeSpent: function(timeSpent) {
-		this.timeSpent = agilefantUtils.aftimeToMillis(timeSpent);
-		this.save();
-	},
-	setUser: function(userId) {
-		this.userId = userId;
-		this.save();
-	},
-	getUser: function() {
-		return this.user;
-	},
-	setComment: function(comment) {
-	  this.description = comment;
-	  this.save();
-	},
-	getComment: function() {
-	  return this.description;
-	},
-	setDate: function(date) {
-	  this.dateStr = date;
-	  this.save();
-	},
-	getDate: function() {
-	  return this.date;
-	},
-	addEditListener: function(listener) {
-		this.editListeners.push(listener);
-	},
-	addDeleteListener: function(listener) {
-		this.deleteListeners.push(listener);
-	},
-	beginTransaction: function() {
-		this.inTransaction = true;
-	},
-	commit: function() {
-		this.inTransaction = false;
-		this.save();
-	},
-	rollBack: function() {
-		this.setData(this.persistedData);
-		this.inTransaction = false;
-	},
-	remove: function() {
-	  var me = this;
-	    jQuery.ajax({
-	      async: true,
-	      error: function() {
-	        me.rollBack();
-	        commonView.showError("An error occured while effort entry.");
-	      },
-	      success: function(data,type) {
-	        me.task.removeHourEntry(me);
-	        ModelFactory.removeEffortEntry(me.id);
-	        for(var i = 0 ; i < me.deleteListeners.length; i++) {
-	          me.deleteListeners[i]();
-	        }
-	        me.task.reloadData();
-	        commonView.showOk("Effor entry deleted successfully.");
-	      },
-	      cache: false,
-	      type: "POST",
-	      url: "ajaxDeleteHourEntry.action",
-	      data: {hourEntryId: this.id}
-	    });
-	},
-	save: function() {
-		if(this.inTransaction) {
-			return;
-		}
-		var data = {};
-		if(this.comment) {
-			data["hourEntry.comment"] = this.comment;
-		}
 
-		data.userId = this.userId;
-		data.date = this.dateStr;
-		data["hourEntry.description"] = this.description;
-		if(this.timeSpent) {
-			data["hourEntry.timeSpent"] = this.timeSpent/3600;
-		} else {
-			data["hourEntry.timeSpent"] = "";
-		}
-		
-		data.backlogItemId = this.task.getId();
-		data.hourEntryId = this.id;
-		var me = this;
-		jQuery.ajax({
-	      async: false,
-	      error: function() {
-	        commonView.showError("An error occured while logging effort.");
-	      },
-	      success: function(data,type) {
-	        me.setData(data);
-	        commonView.showOk("Effort logged succesfully.");
-	      },
-	      cache: false,
-	      dataType: "json",
-	      type: "POST",
-	      url: "ajaxStoreHourEntry.action",
-	      data: data
-	    });
+TaskHourEntryModel.prototype = new CommonAgilefantModel();
+
+TaskHourEntryModel.prototype.setData = function(data, noBubling) {
+	/*
+	 * noBubling is set true when setData is called from singleton updater to prevent infinite loops
+	 * as task.setData calls the singleton and this methods calls task.setData.
+	 */
+	if(!noBubling && (this.persistedData && this.timeSpent != this.persistedData.timeSpent)) {
+		this.task.reloadData();
 	}
+	this.user = data.user;
+	if(data.user) {
+		this.userId = data.user.id;
+	}
+	this.timeSpent = data.timeSpent;
+	this.description = data.description;
+	this.date = data.date;
+	this.id = data.id;
+	this.dateStr = agilefantUtils.dateToString(this.date);
+
+	for (var i = 0; i < this.editListeners.length; i++) {
+		this.editListeners[i]({bubbleEvent: []});
+	}
+	this.persistedData = data;
+};
+TaskHourEntryModel.prototype.getHashCode = function() {
+	return "hourEntry-"+this.id;
+};
+TaskHourEntryModel.prototype.getTimeSpent = function() {
+	return this.timeSpent;
+};
+TaskHourEntryModel.prototype.setTimeSpent = function(timeSpent) {
+	this.timeSpent = agilefantUtils.aftimeToMillis(timeSpent);
+	this.save();
+};
+TaskHourEntryModel.prototype.setUser = function(userId) {
+	this.userId = userId;
+	this.save();
+};
+TaskHourEntryModel.prototype.getUser = function() {
+	return this.user;
+};
+TaskHourEntryModel.prototype.setComment = function(comment) {
+	this.description = comment;
+	this.save();
+};
+TaskHourEntryModel.prototype.getComment = function() {
+	return this.description;
+};
+TaskHourEntryModel.prototype.setDate = function(date) {
+	this.dateStr = date;
+	this.save();
+};
+TaskHourEntryModel.prototype.getDate = function() {
+	return this.date;
+};
+TaskHourEntryModel.prototype.remove = function() {
+	var me = this;
+	jQuery.ajax({
+		async: true,
+		error: function() {
+		me.rollBack();
+		commonView.showError("An error occured while effort entry.");
+	},
+	success: function(data,type) {
+		me.task.removeHourEntry(me);
+		ModelFactory.removeEffortEntry(me.id);
+		for(var i = 0 ; i < me.deleteListeners.length; i++) {
+			me.deleteListeners[i]();
+		}
+		me.task.reloadData();
+		commonView.showOk("Effor entry deleted successfully.");
+	},
+	cache: false,
+	type: "POST",
+	url: "ajaxDeleteHourEntry.action",
+	data: {hourEntryId: this.id}
+	});
+};
+TaskHourEntryModel.prototype.save = function() {
+	if(this.inTransaction) {
+		return;
+	}
+	var data = {};
+	if(this.comment) {
+		data["hourEntry.comment"] = this.comment;
+	}
+
+	data.userId = this.userId;
+	data.date = this.dateStr;
+	data["hourEntry.description"] = this.description;
+	if(this.timeSpent) {
+		data["hourEntry.timeSpent"] = this.timeSpent/3600;
+	} else {
+		data["hourEntry.timeSpent"] = "";
+	}
+
+	data.backlogItemId = this.task.getId();
+	data.hourEntryId = this.id;
+	var me = this;
+	jQuery.ajax({
+		async: false,
+		error: function() {
+		commonView.showError("An error occured while logging effort.");
+	},
+	success: function(data,type) {
+		me.setData(data);
+		commonView.showOk("Effort logged succesfully.");
+	},
+	cache: false,
+	dataType: "json",
+	type: "POST",
+	url: "ajaxStoreHourEntry.action",
+	data: data
+	});
 };
 
 /** TODO MODEL **/
 
-var TodoModel = function(task, data) {
-  this.editListeners = [];
-  this.deleteListeners = [];
-	this.task = task;
-	if(!data) {
-		this.id = 0;
-	} else {
-		this.setData(data);
+TodoModel.prototype = new CommonAgilefantModel();
+
+TodoModel.prototype.setData = function(data, noBubling) {
+	/*
+	 * noBubling is set true when setData is called from singleton updater to prevent infinite loops
+	 * as task.setData calls the singleton and this methods calls task.setData.
+	 */
+	var bubbleEvents = [];
+	if(!noBubling && (!this.persistedData || this.state != this.persistedData.state)) {
+		bubbleEvents.push("metricsUpdated");
 	}
+	this.id = data.id;
+	this.state = data.state;
+	this.name = data.name;
+
+	for (var i = 0; i < this.editListeners.length; i++) {
+		this.editListeners[i]({bubbleEvent: bubbleEvents});
+	}
+	this.persistedData = data;
 };
-TodoModel.prototype = {
-	setData: function(data, noBubling) {
-		/*
-		 * noBubling is set true when setData is called from singleton updater to prevent infinite loops
-		 * as task.setData calls the singleton and this methods calls task.setData.
-		 */
-		var bubbleEvents = [];
-		if(!noBubling && (!this.persistedData || this.state != this.persistedData.state)) {
-			bubbleEvents.push("metricsUpdated");
+TodoModel.prototype.getId = function() {
+	return this.id;
+};
+TodoModel.prototype.getHashCode = function() {
+	return "todo-"+this.id;
+};
+TodoModel.prototype.setState = function(state) {
+	this.state = state;
+	this.save();
+};
+TodoModel.prototype.getState = function() {
+	return this.state;
+};
+TodoModel.prototype.setName = function(name) {
+	this.name = name;
+	this.save();
+};
+TodoModel.prototype.getName = function() {
+	return this.name;
+};
+
+TodoModel.prototype.remove = function() {
+	var me = this;
+	jQuery.ajax({
+		async: true,
+		error: function() {
+		me.rollBack();
+		commonView.showError("An error occured while deleting the todo.");
+	},
+	success: function(data,type) {
+		me.task.removeTodo(me);
+		ModelFactory.removeTodo(me.id);
+		for(var i = 0 ; i < me.deleteListeners.length; i++) {
+			me.deleteListeners[i]();
 		}
-		this.id = data.id;
-		this.state = data.state;
-		this.name = data.name;
-		
-		for (var i = 0; i < this.editListeners.length; i++) {
-			this.editListeners[i]({bubbleEvent: bubbleEvents});
-		}
-		this.persistedData = data;
+		commonView.showOk("Todo deleted successfully.");
 	},
-	getId: function() {
-	  return this.id;
-	},
-	setState: function(state) {
-		this.state = state;
-		this.save();
-	},
-	getState: function() {
-		return this.state;
-	},
-	setName: function(name) {
-	  this.name = name;
-	  this.save();
-	},
-	getName: function() {
-	  return this.name;
-	},
-	addEditListener: function(listener) {
-		this.editListeners.push(listener);
-	},
-	addDeleteListener: function(listener) {
-		this.deleteListeners.push(listener);
-	},
-	beginTransaction: function() {
-		this.inTransaction = true;
-	},
-	commit: function() {
-		this.inTransaction = false;
-		this.save();
-	},
-	rollBack: function() {
-		this.setData(this.persistedData);
-		this.inTransaction = false;
-	},
-	remove: function() {
-	  var me = this;
-    jQuery.ajax({
-      async: true,
-      error: function() {
-        me.rollBack();
-        commonView.showError("An error occured while deleting the todo.");
-      },
-      success: function(data,type) {
-        me.task.removeTodo(me);
-        ModelFactory.removeTodo(me.id);
-        for(var i = 0 ; i < me.deleteListeners.length; i++) {
-          me.deleteListeners[i]();
-        }
-        commonView.showOk("Todo deleted successfully.");
-      },
-      cache: false,
-      type: "POST",
-      url: "ajaxDeleteTask.action",
-      data: {taskId: this.id}
-    });
-	},
-	save: function() {
-		if(this.inTransaction) {
-			return;
-		}
-		var data = {
-		    "taskId": this.id,
-		    "backlogItemId": this.task.getId(),
-		    "task.state": this.state,
-		    "task.name": this.name
-		};
-		var me = this;
-		jQuery.ajax({
-      async: false,
-      error: function() {
-        commonView.showError("An error occured while saving the todo.");
-      },
-      success: function(data,type) {
-        me.setData(data);
-        commonView.showOk("Todo saved succesfully.");
-      },
-      cache: false,
-      dataType: "json",
-      type: "POST",
-      url: "ajaxStoreTask.action",
-      data: data
-    });
+	cache: false,
+	type: "POST",
+	url: "ajaxDeleteTask.action",
+	data: {taskId: this.id}
+	});
+};
+TodoModel.prototype.save = function() {
+	if(this.inTransaction) {
+		return;
 	}
+	var data = {
+			"taskId": this.id,
+			"backlogItemId": this.task.getId(),
+			"task.state": this.state,
+			"task.name": this.name
+	};
+	var me = this;
+	jQuery.ajax({
+		async: false,
+		error: function() {
+		commonView.showError("An error occured while saving the todo.");
+	},
+	success: function(data,type) {
+		me.setData(data);
+		commonView.showOk("Todo saved succesfully.");
+	},
+	cache: false,
+	dataType: "json",
+	type: "POST",
+	url: "ajaxStoreTask.action",
+	data: data
+	});
 };

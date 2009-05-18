@@ -296,7 +296,7 @@ IterationController.prototype = {
     },
     createGoal: function() {
     	var me = this;
-    	var fakeGoal = new IterationGoalModel({}, this.model);
+    	var fakeGoal = new StoryModel({}, this.model);
     	fakeGoal.beginTransaction(); //block autosaves
     	var row = this.view.createRow(fakeGoal,{toTop: true}, true);
     	row.setNotSortable();

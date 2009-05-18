@@ -5,7 +5,7 @@ var ModelFactoryClass = function() {
 	this.todos = {};
 	this.effortEntries = {};
 };
-IterationGoalModel = function(iterationGoalData, parent) {
+StoryModel = function(iterationGoalData, parent) {
 	this.metrics = {};
 	this.iteration = parent;
 	this.tasks = [];
@@ -64,7 +64,7 @@ ModelFactoryClass.prototype = {
 	},
 	iterationGoalSingleton: function(id, parent, data) {
 		if(!this.iterationGoals[id]) {
-			this.iterationGoals[id] = new IterationGoalModel(data,parent);
+			this.iterationGoals[id] = new StoryModel(data,parent);
 		} else {
 			this.iterationGoals[id].setData(data);
 		}
@@ -178,7 +178,7 @@ IterationModel = function(iterationData, iterationId) {
 		goalPointer.push(ModelFactory.iterationGoalSingleton(iterationGoalData.id, me, iterationGoalData));
 	});
 	if(iterationData.itemsWithoutGoal) {
-		this.containerGoal = new IterationGoalModel({id: "", priority: 9999999}, this);
+		this.containerGoal = new StoryModel({id: "", priority: 9999999}, this);
 		this.containerGoal.save = function() {};
 		this.containerGoal.remove = function() {};
 		this.containerGoal.tasks = this.itemsWithoutGoal;
@@ -241,9 +241,9 @@ IterationModel.prototype.getPseudoGoal = function() {
 
 /** ITERATION GOAL MODEL **/
 
-IterationGoalModel.prototype = new CommonAgilefantModel();
+StoryModel.prototype = new CommonAgilefantModel();
 
-IterationGoalModel.prototype.setData = function(data, includeMetrics) {
+StoryModel.prototype.setData = function(data, includeMetrics) {
 	this.persistedData = data;
 	this.description = data.description;
 	this.name = data.name;
@@ -257,7 +257,7 @@ IterationGoalModel.prototype.setData = function(data, includeMetrics) {
 	}
 	this.callEditListeners({bubbleEvent: []});
 };
-IterationGoalModel.prototype.reloadTasks = function() {
+StoryModel.prototype.reloadTasks = function() {
 	var me = this;
 	jQuery.ajax({
 		async: false,
@@ -274,7 +274,7 @@ IterationGoalModel.prototype.reloadTasks = function() {
 	data: {iterationGoalId: this.id, iterationId: this.iteration.getId()}
 	});
 };
-IterationGoalModel.prototype.setTasks = function(tasks) {
+StoryModel.prototype.setTasks = function(tasks) {
 	if(tasks) {
 		this.tasks = [];
 		for(var i = 0 ; i < tasks.length ; i++) {
@@ -282,13 +282,13 @@ IterationGoalModel.prototype.setTasks = function(tasks) {
 		}
 	}
 };
-IterationGoalModel.prototype.addTask = function(bli) {
+StoryModel.prototype.addTask = function(bli) {
 	bli.backlog = this.iteration;
 	bli.iterationGoal = this;
 	this.tasks.push(bli);
 	this.reloadMetrics();
 };
-IterationGoalModel.prototype.removeTask = function(bli) {
+StoryModel.prototype.removeTask = function(bli) {
 	var tmp = this.tasks;
 	this.tasks = [];
 	for(var i = 0; i < tmp.length; i++) {
@@ -298,60 +298,60 @@ IterationGoalModel.prototype.removeTask = function(bli) {
 	}
 	this.reloadMetrics();
 };
-IterationGoalModel.prototype.copy = function() {
-	var copy = new IterationGoalModel({}, this.iteration);
+StoryModel.prototype.copy = function() {
+	var copy = new StoryModel({}, this.iteration);
 	copy.setData(this, true);
 	if(!copy.metrics) { 
 		copy.metrics = {};
 	}
 	return copy;
 };
-IterationGoalModel.prototype.getTasks = function() {
+StoryModel.prototype.getTasks = function() {
 	return this.tasks;
 };
-IterationGoalModel.prototype.getHashCode = function() {
+StoryModel.prototype.getHashCode = function() {
 	return "iterationGoal-"+this.id;  
 };
-IterationGoalModel.prototype.getId = function() {
+StoryModel.prototype.getId = function() {
 	return this.id;
 };
-IterationGoalModel.prototype.getName = function() {
+StoryModel.prototype.getName = function() {
 	return this.name;
 };
-IterationGoalModel.prototype.setName = function(name) {
+StoryModel.prototype.setName = function(name) {
 	this.name = name;
 	this.save();
 };
-IterationGoalModel.prototype.getDescription = function() {
+StoryModel.prototype.getDescription = function() {
 	return this.description;
 };
-IterationGoalModel.prototype.setDescription = function(description) {
+StoryModel.prototype.setDescription = function(description) {
 	this.description = description;
 	this.save();
 };
-IterationGoalModel.prototype.getPriority = function() {
+StoryModel.prototype.getPriority = function() {
 	return this.priority;
 };
-IterationGoalModel.prototype.setPriority = function(priority) {
+StoryModel.prototype.setPriority = function(priority) {
 	this.priority = priority;
 	this.save();
 };
-IterationGoalModel.prototype.getEffortLeft = function() {
+StoryModel.prototype.getEffortLeft = function() {
 	return this.metrics.effortLeft;
 };
-IterationGoalModel.prototype.getEffortSpent = function() {
+StoryModel.prototype.getEffortSpent = function() {
 	return this.metrics.effortSpent;
 };
-IterationGoalModel.prototype.getOriginalEstimate = function() {
+StoryModel.prototype.getOriginalEstimate = function() {
 	return this.metrics.originalEstimate;
 };
-IterationGoalModel.prototype.getDoneTasks = function() {
+StoryModel.prototype.getDoneTasks = function() {
 	return this.metrics.doneTasks;
 };
-IterationGoalModel.prototype.getTotalTasks = function() {
+StoryModel.prototype.getTotalTasks = function() {
 	return this.metrics.totalTasks;
 };
-IterationGoalModel.prototype.remove = function() {
+StoryModel.prototype.remove = function() {
 	var me = this;
 	jQuery.ajax({
 		async: false,
@@ -371,7 +371,7 @@ IterationGoalModel.prototype.remove = function() {
 	data: {iterationGoalId: this.id}
 	});
 };
-IterationGoalModel.prototype.reloadMetrics = function() {
+StoryModel.prototype.reloadMetrics = function() {
 	var me = this;
 	jQuery.ajax({
 		url: "calculateIterationGoalMetrics.action",
@@ -388,7 +388,7 @@ IterationGoalModel.prototype.reloadMetrics = function() {
 	}
 	});
 };
-IterationGoalModel.prototype.save = function() {
+StoryModel.prototype.save = function() {
 	if(this.inTransaction) {
 		return;
 	}

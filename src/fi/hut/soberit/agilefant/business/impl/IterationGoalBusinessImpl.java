@@ -102,12 +102,14 @@ public class IterationGoalBusinessImpl implements IterationGoalBusiness {
                 goal.getIteration().getIterationGoals().add(goal);
                 for(BacklogItem bli : goal.getBacklogItems()) {
                     if(moveBacklogItems) {
-                        backlogItemBusiness.moveItemToBacklog(bli, newIteration);
+                        backlogItemBusiness.moveItemToBacklog(bli, newIteration, true);
                     } else {
                         backlogItemBusiness.setBacklogItemIterationGoal(bli, null);
                     }
                 }
-                goal.getBacklogItems().clear();
+                if(!moveBacklogItems) {
+                    goal.getBacklogItems().clear();
+                }
             }
         } else if(iterationId != 0) {
             goal.setIteration(newIteration);

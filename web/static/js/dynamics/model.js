@@ -128,26 +128,38 @@ var CommonAgilefantModel = function() {
 	this.deleteListeners = [];
 	this.inTransaction = false;
 };
-CommonAgilefantModel.prototype.addEditListener = function(listener) {
-	this.editListeners.push(listener);
+CommonAgilefantModel.prototype.addEditListener = function(listener, id) {
+	this.editListeners.push({cb: listener, id: id});
 };
-CommonAgilefantModel.prototype.addDeleteListener = function(listener) {
-	this.deleteListeners.push(listener);
+CommonAgilefantModel.prototype.addDeleteListener = function(listener, id) {
+	this.deleteListeners.push({cb: listener, id: id});
 };
-CommonAgilefantModel.prototype.removeEditListener = function(listener) {
-	//TODO: implement
+CommonAgilefantModel.prototype.removeEditListener = function(id) {
+	var tmp = this.editListeners;
+	this.editListeners = [];
+	for(var i = 0; i < tmp.length; i++) {
+		if(tmp[i].id !== id) {
+			this.editListeners.push(tmp[i]);
+		}
+	}
 };
-CommonAgilefantModel.prototype.removeDeletetListener = function(listener) {
-	//TODO: implement
+CommonAgilefantModel.prototype.removeDeleteListener = function(id) {
+	var tmp = this.deleteListeners;
+	this.deleteListeners = [];
+	for(var i = 0; i < tmp.length; i++) {
+		if(tmp[i].id !== id) {
+			this.deleteListeners.push(tmp[i]);
+		}
+	}
 };
 CommonAgilefantModel.prototype.callEditListeners = function(eventData) {
 	for(var i = 0; i < this.editListeners.length; i++) {
-		this.editListeners[i](eventData);
+		this.editListeners[i].cb(eventData);
 	}
 };
 CommonAgilefantModel.prototype.callDeleteListeners = function(eventData) {
 	for(var i = 0; i < this.deleteListeners.length; i++) {
-		this.deleteListeners[i](eventData);
+		this.deleteListeners[i].cb(eventData);
 	}
 };
 CommonAgilefantModel.prototype.beginTransaction = function() {
@@ -350,6 +362,23 @@ StoryModel.prototype.getDoneTasks = function() {
 };
 StoryModel.prototype.getTotalTasks = function() {
 	return this.metrics.totalTasks;
+};
+StoryModel.prototype.moveToIteration = function(newIteration) {
+	var me = this;
+	var me = this;
+	jQuery.ajax({
+		async: false,
+		error: function() {
+			commonView.showError("Unable to move selected story to selected iteration.");
+		},
+		success: function(data,type) {
+			me.iteration.removeGoal(me);
+		},
+		cache: false,
+		type: "POST",
+		url: "moveIterationGoal.action",
+		data: {iterationGoalId: this.id, iterationId: newIteration, moveBacklogItems: true}
+	});
 };
 StoryModel.prototype.remove = function() {
 	var me = this;
@@ -670,6 +699,11 @@ TaskModel.prototype.remove = function() {
 	});
 
 };
+TaskModel.prototype.changeStory = function(newStory) {
+	this.iterationGoal.removeTask(this);
+	newStory.addTask(this);
+	this.save();
+},
 TaskModel.prototype.resetOriginalEstimate = function() {
 	if (this.inTransaction) {
 		return;

@@ -172,8 +172,10 @@ public interface BacklogItemBusiness {
      * 
      * @param item
      * @param backlog
+     * @param ignoreIterationGoal Do not alter backlog item's iteration goal
      */
-    public void moveItemToBacklog(BacklogItem item, Backlog backlog);
+    public void moveItemToBacklog(BacklogItem item, Backlog backlog, boolean ignoreIterationGoal);
+    
 
     /**
      * Sets backlog item's iteration goal if backlog item is in an iteration.

@@ -75,6 +75,7 @@ IterationController.prototype = {
     		resizable: false,
     		height:140,
     		modal: true,
+    		title: "Delete story",
     		close: function() { parent.dialog('destroy'); parent.remove(); },
     		buttons: {
     		'Yes': function() {
@@ -93,25 +94,35 @@ IterationController.prototype = {
     },
     moveGoal: function(row, goal) {
     	var parent = $("<div />").appendTo(document.body);
+    	var err = $("<div />").appendTo(parent).css("color","red").hide();
+    	var sel = $("<div />").appendTo(parent);
     	var me = this;
-    	parent.load("backlogSelection.action", {}, function() {
-	    	parent.dialog({
-	    		resizable: false,
-	    		height:200,
-	    		width: 700,
-	    		modal: true,
-	    		close: function() { parent.dialog('destroy'); parent.remove(); },
-	    		buttons: {
-		    		'Yes': function() {
-
-		    		
-		    		},
-		    		Cancel: function() {
-		    			$(this).dialog('destroy');
-		    			parent.remove();
-		    		}
+		sel.iterationSelect();
+    	parent.dialog({
+    		resizable: false,
+    		height:200,
+    		width: 700,
+    		title: "Move story",
+    		modal: true,
+    		close: function() { parent.dialog('destroy'); parent.remove(); },
+    		buttons: {
+	    		'Move': function() {
+    				var iteration = sel.iterationSelect("getSelected");
+    				if(iteration < 1) {
+    					err.text("Please select an iteration.").show();
+    					return;
+    				} else if(iteration != goal.iteration.iterationId){
+    					goal.moveToIteration(iteration);
+    					row.remove();
+    				}
+					$(this).dialog('destroy');
+	    			parent.remove();
+	    		},
+	    		Cancel: function() {
+	    			$(this).dialog('destroy');
+	    			parent.remove();
 	    		}
-	    	});
+    		}
     	});
     },
     addRow: function(goal) {
@@ -202,6 +213,20 @@ IterationController.prototype = {
     	row.getElement().bind("metricsUpdated", function() {
     		goal.reloadMetrics();
     	});
+    	row.getElement().droppable({
+			accept: function(droppable) {
+    			return (droppable.data("dragTask") === true);
+    		},
+    		hoverClass: 'drophover',
+    		greedy: true,
+    		drop: function(ev,ui) {
+    			var row = ui.draggable.data("row");
+    			var model = row.model;
+    			row.remove();
+    			model.changeStory(goal);
+    			blictrl.render();
+    		}
+		});
 
     },
     render: function(data) {
@@ -278,7 +303,20 @@ IterationController.prototype = {
     	}, function() {
     		me.noGoalItemController.hideTasks();
     	}));
-
+    	row.getElement().droppable({
+			accept: function(droppable) {
+    			return (droppable.data("dragTask") === true);
+    		},
+    		hoverClass: 'drophover',
+    		greedy: true,
+    		drop: function(ev,ui) {
+    			var row = ui.draggable.data("row");
+    			var model = row.model;
+    			row.remove();
+    			model.changeStory(goal);
+    			me.noGoalItemController.render();
+    		}
+		});
     	this.view.render();
     },
     storeGoal: function(row,goal) {
@@ -500,6 +538,24 @@ IterationGoalController.prototype = {
 			tabCell.getElement().show();
 		}, function() {
 			tabCell.getElement().hide();
+		});
+		row.getElement().draggable({
+			revert: 'invalid',
+			helper: function(event) {
+				var el = $(this);
+				var clone = el.clone();
+				clone.width(el.width());
+				return clone;
+			},
+			start: function(event) {
+				$(this).data("row", row);
+				$(this).data("dragTask", true);
+			},
+			stop: function(event) {
+				$(this).data("dragTask", false);
+				$(this).data("row", null);
+			},
+			handle: name.getElement()
 		});
 	},
 	createBli: function() {

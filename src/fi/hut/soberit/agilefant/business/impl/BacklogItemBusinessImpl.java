@@ -143,7 +143,7 @@ public class BacklogItemBusinessImpl implements BacklogItemBusiness {
         }
         
         if(storable.getBacklog() != null && storable.getBacklog() != backlog) {
-            this.moveItemToBacklog(storable, backlog);
+            this.moveItemToBacklog(storable, backlog, false);
             historyUpdated = true;
         } else if(storable.getBacklog() == null) {
             storable.setBacklog(backlog);
@@ -168,7 +168,7 @@ public class BacklogItemBusinessImpl implements BacklogItemBusiness {
         return persisted;
     }
     
-    public void moveItemToBacklog(BacklogItem item, Backlog backlog) {
+    public void moveItemToBacklog(BacklogItem item, Backlog backlog, boolean ignoreIterationGoal) {
 
         Backlog oldBacklog = item.getBacklog();
         oldBacklog.getBacklogItems().remove(item);
@@ -177,7 +177,7 @@ public class BacklogItemBusinessImpl implements BacklogItemBusiness {
         historyBusiness.updateBacklogHistory(oldBacklog.getId());
         historyBusiness.updateBacklogHistory(backlog.getId());
         
-        if(item.getIterationGoal() != null) {
+        if(item.getIterationGoal() != null && !ignoreIterationGoal) {
             item.getIterationGoal().getBacklogItems().remove(item);
             item.setIterationGoal(null);
         }        

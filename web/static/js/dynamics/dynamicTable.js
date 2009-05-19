@@ -17,6 +17,9 @@
 	var statics = {
 	  borderPerColumn: 0.4
 	};
+	
+	var dynamicTableId = 0;
+	
 	/** TABLE **/
 	var DynamicTable = function(element, options) {
 	    this.options = {
@@ -28,6 +31,7 @@
 	        noHeader: false
 	    };
 	    $.extend(this.options,options);
+	    this.tableId = dynamicTableId++;
 	    var widths = this.calculateColumnWidths(this.options.colWidths);
 	    for (var i = 0; i < widths.length; i++) {
 	      if (widths[i]) {
@@ -312,8 +316,8 @@
 			  }
 			  me.render(); 
 			  me.getElement().trigger("tableDataUpdated", {row: me});
-		  });
-		  this.model.addDeleteListener(function() { me.remove(); });
+		  }, this.table.tableId);
+		  this.model.addDeleteListener(function() { me.remove(); }, this.table.tableId);
 		}
 		this.cells = [];
 		this.options = {};
@@ -339,8 +343,12 @@
 		},
 		remove: function() {
 		  this.table.deleteRow(this);
+		  if(this.model) {
+			  this.model.removeEditListener(this.table.tableId);
+			  this.model.removeDeleteListener(this.table.tableId);
+		  }
 		  var me = this;
-		  this.row.fadeOut(300, function() {
+		  this.row.fadeOut(200, function() {
 		    me.row.remove();
 		  });
 		},

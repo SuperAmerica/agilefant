@@ -268,7 +268,7 @@ public class BacklogItemBusinessTest extends TestCase {
         replay(hBuss);
         replay(blBusiness);
         
-        testable.moveItemToBacklog(bli, proj2);
+        testable.moveItemToBacklog(bli, proj2,false);
         
         assertEquals(2, bli.getBusinessThemes().size());
         assertEquals(0, proj1.getBacklogItems().size());
@@ -312,7 +312,7 @@ public class BacklogItemBusinessTest extends TestCase {
         replay(hBuss);
         replay(blBusiness);
         
-        testable.moveItemToBacklog(bli, proj2);
+        testable.moveItemToBacklog(bli, proj2, false);
         
         assertEquals(1, bli.getBusinessThemes().size());
         assertTrue(bli.getBusinessThemes().contains(globalTheme));

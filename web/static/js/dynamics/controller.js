@@ -134,6 +134,10 @@ IterationController.prototype = {
     		get: function() { return goal.getName();}, 
     		set: function(val){ goal.setName(val);}});
     	name.activateSortHandle();
+    	var tasks = row.createCell({
+    		get: function() { 
+    		return goal.getDoneTasks() + " / " + goal.getTotalTasks();
+    	}});
     	var elsum = row.createCell({
     		get: function() { return goal.getEffortLeft(); },
     		decorator: agilefantUtils.aftimeToString
@@ -148,10 +152,7 @@ IterationController.prototype = {
     			decorator: agilefantUtils.aftimeToString
     		});
     	}
-    	var tasks = row.createCell({
-    		get: function() { 
-    		return goal.getDoneTasks() + " / " + goal.getTotalTasks();
-    	}});
+
     	var buttons = row.createCell();
 
     	var desc = row.createCell({
@@ -267,6 +268,9 @@ IterationController.prototype = {
     	var row = me.view.createRow(goal);
     	var expand = row.createCell();
     	var name = row.createCell().setValue("Items without goal.");
+    	var tasks = row.createCell({
+    		get: function() { return goal.getDoneTasks() + " / " + goal.getTotalTasks(); }
+    	});
     	var elsum = row.createCell({
     		get: function() { return goal.getEffortLeft(); },
     		decorator: agilefantUtils.aftimeToString
@@ -281,9 +285,7 @@ IterationController.prototype = {
     			decorator: agilefantUtils.aftimeToString
     		});
     	}
-    	var tasks = row.createCell({
-    		get: function() { return goal.getDoneTasks() + " / " + goal.getTotalTasks(); }
-    	});
+
     	var buttons = row.createCell();
     	row.setNotSortable();
     	row.createCell().getElement().hide(); //dymmy description

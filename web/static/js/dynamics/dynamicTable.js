@@ -978,7 +978,7 @@
 			return null;
 		},
 		iterationGoalTable: function(options) {
-		  var opts = { captionText: "Iteration Goals", defaultSortColumn: 0};
+		  var opts = { captionText: "Stories", defaultSortColumn: 0};
 		  if(agilefantUtils.isTimesheetsEnabled()) {
 		      opts.colCss = {
 		        ':lt(7)': { 'background': '#dddddd' },
@@ -999,39 +999,40 @@
 					sort: agilefantUtils.comparators.priorityComparator
 				  });
 		  addTableColumn(opts,
-				  { minwidth: 350, auto: true },
+				  { minwidth: 280, auto: true },
 				  { name: 'Name',
-			        tooltip: 'Iteration goal name',
+			        tooltip: 'Story name',
 			        sort: agilefantUtils.comparators.nameComparator
 				  });
+		  addTableColumn(opts,		                  
+				  { minwidth: 60, auto: true },
+				  { name: 'Done / Total',
+			        tooltip: 'Done / Total tasks',
+			        sort: null
+				  });
 		  addTableColumn(opts,
-				  { minwidth: 70, auto: true },
+				  { minwidth: 30, auto: true },
 				  { name: 'EL',
 					tooltip: 'Total effort left',
 			        sort: agilefantUtils.comparators.effortLeftComparator
 				  });
 		  addTableColumn(opts, 
-				  { minwidth: 70, auto: true },
+				  { minwidth: 30, auto: true },
 				  { name: 'OE',
 			        tooltip: 'Total original estimate',
 			        sort: agilefantUtils.comparators.originalEstimateComparator
 				  });
 		  if(agilefantUtils.isTimesheetsEnabled()) {
 			  addTableColumn(opts,
-					  { minwidth: 70, auto: true },
+					  { minwidth: 30, auto: true },
 			          { name: 'ES',
 				        tooltip: 'Total effort spent',
 				        sort: agilefantUtils.comparators.effortSpentComparator
 			          });
 		  }
-		  addTableColumn(opts,		                  
-				  { minwidth: 90, auto: true },
-				  { name: 'Done / Total',
-			        tooltip: 'Done / Total backlog items',
-			        sort: null
-				  });
+
 		  addTableColumn(opts,
-				  { minwidth: 80, auto: true},
+				  { minwidth: 50, auto: true},
 				  { name: 'Actions',
 				    actionCell: true,
 					tooltip: "Actions",
@@ -1048,7 +1049,7 @@
 		taskTable: function(options) {
 	      var opts = {
 	          defaultSortColumn: 3,
-	          captionText: "Backlog items"
+	          captionText: "Tasks"
 	      };
 	      if(agilefantUtils.isTimesheetsEnabled()) {
 	          opts.colCss = { ':eq(9)': { 'cursor': 'pointer' },
@@ -1070,31 +1071,31 @@
 	      addTableColumn(opts,
 	    		  { minwidth: 30, auto: true },
 	              { name: "Themes",
-	                tooltip: "Business themes",
+	                tooltip: "Task themes",
 	                sort: null
 	              });
 	      addTableColumn(opts,
 	    		  { minwidth: 180, auto: true },
 	              { name: 'Name',
-	                tooltip: 'Backlog item name',
+	                tooltip: 'Task name',
 	                sort: agilefantUtils.comparators.nameComparator
 	              });
 	      addTableColumn(opts,
 	    		  { minwidth: 50, auto: true },
 	              { name: 'State',
-	                tooltip: 'Backlog item state',
+	                tooltip: 'Task state',
 	                sort: null
 	              });
 	      addTableColumn(opts,
 	    		  { minwidth: 50, auto: true },
 	              { name: 'Priority',
-	                tooltip: 'Backlog item priority',
+	                tooltip: 'Task priority',
 	                sort: agilefantUtils.comparators.bliPriorityAndStateComparator
 	              });
 	      addTableColumn(opts,
 	    		  { minwidth: 50, auto: true },
 	              { name: 'Responsibles',
-	                tooltip: 'Backlog item responsibles',
+	                tooltip: 'Task responsibles',
 	                sort: null
 	              });
 	      addTableColumn(opts,

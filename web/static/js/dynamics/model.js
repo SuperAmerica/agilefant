@@ -769,13 +769,13 @@ TaskModel.prototype.save = function() {
 	if (data["backlogItem.effortLeft"]) {
 		data["backlogItem.effortLeft"] /= 3600;
 	}
-	if (!data["backlogItem.effortLeft"]) {
+	if (data["backlogItem.effortLeft"] === null || data["backlogItem.effortLeft"] === undefined) {
 		data["backlogItem.effortLeft"] = "";
 	}
 	if (data["backlogItem.originalEstimate"]) {
 		data["backlogItem.originalEstimate"] /= 3600;
 	}
-	if (!data["backlogItem.originalEstimate"]) {
+	if (data["backlogItem.originalEstimate"] === null || data["backlogItem.originalEstimate"] === undefined) {
 		data["backlogItem.originalEstimate"] = "";
 	}
 	if (!this.name) {
@@ -827,9 +827,7 @@ TaskHourEntryModel.prototype.setData = function(data, noBubling) {
 	this.id = data.id;
 	this.dateStr = agilefantUtils.dateToString(this.date);
 
-	for (var i = 0; i < this.editListeners.length; i++) {
-		this.editListeners[i]({bubbleEvent: []});
-	}
+	this.callEditListeners({bubbleEvent: []});
 	this.persistedData = data;
 };
 TaskHourEntryModel.prototype.getHashCode = function() {
@@ -941,9 +939,7 @@ TodoModel.prototype.setData = function(data, noBubling) {
 	this.state = data.state;
 	this.name = data.name;
 
-	for (var i = 0; i < this.editListeners.length; i++) {
-		this.editListeners[i]({bubbleEvent: bubbleEvents});
-	}
+	this.callEditListeners({bubbleEvent: []});
 	this.persistedData = data;
 };
 TodoModel.prototype.getId = function() {

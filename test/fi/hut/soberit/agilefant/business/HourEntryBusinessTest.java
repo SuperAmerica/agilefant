@@ -3,6 +3,7 @@ package fi.hut.soberit.agilefant.business;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -25,6 +26,8 @@ import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.IterationGoal;
 import fi.hut.soberit.agilefant.model.Setting;
 import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.util.CalendarUtils;
+import fi.hut.soberit.agilefant.util.DailySpentEffort;
 import junit.framework.TestCase;
 import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
@@ -393,5 +396,100 @@ public class HourEntryBusinessTest extends TestCase {
         }
             
         assertTrue("Invalid data with null children", result.isEmpty());
+    }
+    
+    private static HourEntry createEntry(int year, int month, int day, AFTime effort) {
+        HourEntry entry = new HourEntry();
+        Calendar cal = Calendar.getInstance();
+        CalendarUtils.setHoursMinutesAndSeconds(cal, 0, 0, 0);
+        cal.set(year, month, day);
+        entry.setDate(cal.getTime());
+        entry.setTimeSpent(effort);
+        return entry;
+    }
+    
+    public void testGetDailySpentEffortByIntervalAndUser_noData() {
+        heDAO = createMock(HourEntryDAO.class);
+        hourEntryBusiness = new HourEntryBusinessImpl();
+        hourEntryBusiness.setHourEntryDAO(heDAO);
+        Calendar start = Calendar.getInstance();
+        Calendar end = Calendar.getInstance();
+        start.set(2009, Calendar.JUNE, 1, 0, 0);
+        end.set(2009, Calendar.JUNE, 7, 0, 0);
+        
+        List<HourEntry> entries = new ArrayList<HourEntry>();
+
+        expect(heDAO.getEntriesByIntervalAndUser(start.getTime(), end.getTime(), null)).andReturn(entries);
+
+        replay(heDAO);
+        List<DailySpentEffort> res = hourEntryBusiness.getDailySpentEffortByIntervalAndUser(start.getTime(), end.getTime(), null);
+        assertEquals(7, res.size());
+        assertEquals(new AFTime(0), res.get(0).getSpentEffort());
+        assertEquals(new AFTime(0), res.get(1).getSpentEffort());
+        assertEquals(new AFTime(0), res.get(2).getSpentEffort());
+        assertEquals(new AFTime(0), res.get(3).getSpentEffort());
+        assertEquals(new AFTime(0), res.get(4).getSpentEffort());
+        assertEquals(new AFTime(0), res.get(5).getSpentEffort());
+        assertEquals(new AFTime(0), res.get(6).getSpentEffort());
+        
+        verify(heDAO);
+    }
+    public void testGetDailySpentEffortByIntervalAndUser_yearChanges() {
+        heDAO = createMock(HourEntryDAO.class);
+        hourEntryBusiness = new HourEntryBusinessImpl();
+        hourEntryBusiness.setHourEntryDAO(heDAO);
+        List<HourEntry> entries = new ArrayList<HourEntry>();
+        entries.add(createEntry(2008, Calendar.JANUARY, 28, new AFTime(100)));
+        entries.add(createEntry(2008, Calendar.DECEMBER, 28, new AFTime(900)));
+        entries.add(createEntry(2008, Calendar.DECEMBER, 28, new AFTime(1000)));
+        entries.add(createEntry(2008, Calendar.DECEMBER, 29, new AFTime(4000)));
+        entries.add(createEntry(2009, Calendar.JANUARY, 1, new AFTime(50000)));
+        entries.add(createEntry(2009, Calendar.JANUARY, 2, new AFTime(6000000)));
+        entries.add(createEntry(2009, Calendar.SEPTEMBER, 28, new AFTime(70000000)));
+        Calendar start = Calendar.getInstance();
+        Calendar end = Calendar.getInstance();
+        start.set(2008, Calendar.DECEMBER, 27, 0, 0);
+        end.set(2009, Calendar.JANUARY, 3, 0, 0);
+        
+        expect(heDAO.getEntriesByIntervalAndUser(start.getTime(), end.getTime(), null)).andReturn(entries);
+        replay(heDAO);
+        List<DailySpentEffort> res = hourEntryBusiness.getDailySpentEffortByIntervalAndUser(start.getTime(), end.getTime(), null);
+        assertEquals(8, res.size());
+        assertEquals(new AFTime(0), res.get(0).getSpentEffort());
+        assertEquals(new AFTime(1900), res.get(1).getSpentEffort());
+        assertEquals(new AFTime(4000), res.get(2).getSpentEffort());
+        assertEquals(new AFTime(0), res.get(3).getSpentEffort());
+        assertEquals(new AFTime(0), res.get(4).getSpentEffort());
+        assertEquals(new AFTime(50000), res.get(5).getSpentEffort());
+        assertEquals(new AFTime(6000000), res.get(6).getSpentEffort());
+        assertEquals(new AFTime(0), res.get(7).getSpentEffort());
+        verify(heDAO);
+    }
+    public void testGetDailySpentEffortByIntervalAndUser() {
+        heDAO = createMock(HourEntryDAO.class);
+        hourEntryBusiness = new HourEntryBusinessImpl();
+        hourEntryBusiness.setHourEntryDAO(heDAO);
+        List<HourEntry> entries = new ArrayList<HourEntry>();
+        entries.add(createEntry(2009, 1, 28, new AFTime(100)));
+        entries.add(createEntry(2009, Calendar.APRIL, 28, new AFTime(900)));
+        entries.add(createEntry(2009, Calendar.APRIL, 28, new AFTime(1000)));
+        entries.add(createEntry(2009, Calendar.APRIL, 30, new AFTime(4000)));
+        entries.add(createEntry(2009, Calendar.APRIL, 30, new AFTime(50000)));
+        entries.add(createEntry(2009, Calendar.MAY, 1, new AFTime(6000000)));
+        entries.add(createEntry(2009, Calendar.MAY, 28, new AFTime(70000000)));
+        Calendar start = Calendar.getInstance();
+        Calendar end = Calendar.getInstance();
+        start.set(2009, Calendar.APRIL, 28, 0, 0);
+        end.set(2009, Calendar.MAY, 1, 23, 59);
+        
+        expect(heDAO.getEntriesByIntervalAndUser(start.getTime(), end.getTime(), null)).andReturn(entries);
+        replay(heDAO);
+        List<DailySpentEffort> res = hourEntryBusiness.getDailySpentEffortByIntervalAndUser(start.getTime(), end.getTime(), null);
+        assertEquals(4, res.size());
+        assertEquals(new AFTime(1900), res.get(0).getSpentEffort());
+        assertEquals(new AFTime(0), res.get(1).getSpentEffort());
+        assertEquals(new AFTime(54000), res.get(2).getSpentEffort());
+        assertEquals(new AFTime(6000000), res.get(3).getSpentEffort());
+        verify(heDAO);
     }
 }

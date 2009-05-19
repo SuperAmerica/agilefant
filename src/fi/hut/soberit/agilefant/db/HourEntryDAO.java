@@ -26,4 +26,6 @@ public interface HourEntryDAO extends GenericDAO<HourEntry> {
     public List<HourEntry> getHourEntriesByUser(User user);
     
     public Map<BacklogItem, AFTime> getSpentEffortSumsByBacklog(Backlog backlog);
+    
+    public List<HourEntry> getEntriesByIntervalAndUser(Date start, Date end, User user);
 }

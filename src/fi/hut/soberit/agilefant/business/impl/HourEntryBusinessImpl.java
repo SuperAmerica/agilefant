@@ -1,6 +1,7 @@
 package fi.hut.soberit.agilefant.business.impl;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
@@ -25,6 +26,7 @@ import fi.hut.soberit.agilefant.model.TimesheetLoggable;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.security.SecurityUtil;
 import fi.hut.soberit.agilefant.util.CalendarUtils;
+import fi.hut.soberit.agilefant.util.DailySpentEffort;
 
 public class HourEntryBusinessImpl implements HourEntryBusiness {
     private BacklogItemHourEntryDAO backlogItemHourEntryDAO;
@@ -324,6 +326,43 @@ public class HourEntryBusinessImpl implements HourEntryBusiness {
         
     }
     
+    public List<DailySpentEffort> getDailySpentEffortByIntervalAndUser(Date start, Date end, User user) {
+        Calendar cal = Calendar.getInstance();
+        Map<Date, AFTime> tmp = new HashMap<Date, AFTime>();
+        List<DailySpentEffort> dailyEffort = new ArrayList<DailySpentEffort>();
+        Calendar stop = Calendar.getInstance();
+        stop.setTime(end);
+        
+        if(start.after(end)) {
+            return null;
+        }
+        List<HourEntry> entries = this.hourEntryDAO.getEntriesByIntervalAndUser(start, end, user);
+        
+        //sum day entries
+        for(HourEntry entry : entries) {
+            cal.setTime(entry.getDate());
+            CalendarUtils.setHoursMinutesAndSeconds(cal, 0, 0, 0);
+            if(tmp.get(cal.getTime()) == null) {
+                tmp.put(cal.getTime(), new AFTime(0));
+            }
+            tmp.get(cal.getTime()).add(entry.getTimeSpent());
+        }
+        
+        cal.setTime(start);
+        CalendarUtils.setHoursMinutesAndSeconds(cal, 0, 0, 0);
+        //construct list of all days in given interval
+        while(cal.before(stop)) {
+            DailySpentEffort dailyEntry = new DailySpentEffort();
+            Date day = cal.getTime();
+            if(tmp.get(day) != null) {
+                dailyEntry.setSpentEffort(tmp.get(day));
+            }
+            dailyEntry.setDay(day);
+            dailyEffort.add(dailyEntry);
+            cal.add(Calendar.DAY_OF_YEAR, 1);
+         }
+        return dailyEffort;
+    }
     public BacklogHourEntryDAO getBacklogHourEntryDAO() {
         return backlogHourEntryDAO;
     }

@@ -1,11 +1,13 @@
 package fi.hut.soberit.agilefant.db.hibernate;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
@@ -17,6 +19,7 @@ import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.BacklogItemHourEntry;
 import fi.hut.soberit.agilefant.model.HourEntry;
 import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.util.DailySpentEffort;
 
 public class HourEntryDAOHibernate extends GenericDAOHibernate<HourEntry> implements
         HourEntryDAO{
@@ -70,4 +73,18 @@ public class HourEntryDAOHibernate extends GenericDAOHibernate<HourEntry> implem
         } catch(Exception e) { }
         return result;
     }
+    
+    public List<HourEntry> getEntriesByIntervalAndUser(Date start, Date end, User user) {
+        DetachedCriteria crit = DetachedCriteria.forClass(HourEntry.class);
+
+        crit.add(Restrictions.ge("date", start));
+        crit.add(Restrictions.le("date", end));
+        crit.add(Restrictions.eq("user", user));
+        crit.addOrder(Order.asc("date"));
+        
+        List<HourEntry> res = this.getHibernateTemplate().findByCriteria(crit); 
+        this.getHibernateTemplate().evict(res);
+        return res;
+    }
+    
 }

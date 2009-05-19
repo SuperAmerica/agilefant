@@ -254,3 +254,29 @@ div.gear {
   overflow: hidden;
   border: none;
 }
+.taskState {
+	display: block;
+	width: 80px;
+	padding: 1px;
+	text-align: center;
+	-moz-border-radius: 2px;
+  	border-radius: 2px;
+}
+.taskStateNOT_STARTED {
+	background-color: #dddddd;
+}
+.taskStateSTARTED {
+	background-color: #ffdd88;
+}
+.taskStatePENDING {
+	background-color: #66ddff;
+}
+.taskStateBLOCKED {
+	background-color: #ff7766
+}
+.taskStateIMPLEMENTED {
+	background-color: #66ff66;
+}
+.taskStateDONE {
+	background-color: #00bb44;
+}

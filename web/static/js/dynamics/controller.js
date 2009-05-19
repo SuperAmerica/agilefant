@@ -433,7 +433,8 @@ IterationGoalController.prototype = {
 			items: agilefantUtils.states,
 			set: function(val) { bli.setState(val); },
 			get: function() { return bli.getState(); },
-			decorator: agilefantUtils.stateToString
+			decorator: agilefantUtils.stateToString,
+			htmlDecorator: agilefantUtils.stateDecorator
 		});
 		row.createCell({
 			type: "select",
@@ -584,7 +585,8 @@ IterationGoalController.prototype = {
 			items: agilefantUtils.states,
 			set: function(val) { bli.setState(val); },
 			get: function() { return bli.getState(); },
-			decorator: agilefantUtils.stateToString
+			decorator: agilefantUtils.stateToString,
+			htmlDecorator: agilefantUtils.stateDecorator
 		});
 		row.createCell({
 			type: "select",
@@ -788,7 +790,8 @@ TaskController.prototype = {
 			get: function() { return todo.getState(); },
 			set: function(val) { todo.setState(val); },
 			items: agilefantUtils.states,
-			decorator: agilefantUtils.stateToString
+			decorator: agilefantUtils.stateToString,
+			htmlDecorator: agilefantUtils.stateDecorator
 		});
 		var saveCb = function() {
 			if(!row.saveEdit()) {
@@ -809,7 +812,7 @@ TaskController.prototype = {
 				save: {text: "Save", action: saveCb},
 			cancel: {text: "Cancel", action: function() {
 				var oid = todo.id;
-				if(oid) {
+				if(!oid) {
 					row.remove();
 					return;
 				}
@@ -887,7 +890,7 @@ TaskController.prototype = {
 			buttons: {
 				save: {text: "Save", action: saveCb},
 			cancel: {text: "Cancel", action: function() {
-				if(entry.id) {
+				if(!entry.id) {
 					row.remove();
 					return;
 				}

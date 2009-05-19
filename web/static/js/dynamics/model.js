@@ -872,9 +872,7 @@ TaskHourEntryModel.prototype.remove = function() {
 	success: function(data,type) {
 		me.task.removeHourEntry(me);
 		ModelFactory.removeEffortEntry(me.id);
-		for(var i = 0 ; i < me.deleteListeners.length; i++) {
-			me.deleteListeners[i]();
-		}
+		me.callDeleteListeners();
 		me.task.reloadData();
 		commonView.showOk("Effor entry deleted successfully.");
 	},
@@ -974,9 +972,7 @@ TodoModel.prototype.remove = function() {
 	success: function(data,type) {
 		me.task.removeTodo(me);
 		ModelFactory.removeTodo(me.id);
-		for(var i = 0 ; i < me.deleteListeners.length; i++) {
-			me.deleteListeners[i]();
-		}
+		me.callDeleteListeners();
 		commonView.showOk("Todo deleted successfully.");
 	},
 	cache: false,

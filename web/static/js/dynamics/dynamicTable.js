@@ -465,7 +465,9 @@
 		render: function() {
 			if(typeof this.options.get === "function") {
 				var value = this.options.get();
-				if(typeof this.options.decorator === "function") {
+				if(typeof this.options.htmlDecorator === "function") {
+					value = this.options.htmlDecorator(value);
+				} else if(typeof this.options.decorator === "function") {
 					value = this.options.decorator(value);
 				}
 				this.setValue(value);

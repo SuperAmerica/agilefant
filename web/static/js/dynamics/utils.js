@@ -141,13 +141,17 @@ var agilefantUtils = {
 	stateToString: function(state) {
 	  return agilefantUtils.states[state];
 	},
+	stateDecorator: function(state) {
+		var text = agilefantUtils.stateToString(state);
+		return '<div class="taskState taskState'+state+'">'+text+'</div>';
+	},
 	priorities: {
+	"UNDEFINED": "undefined",
     "BLOCKER": "+++++",
     "CRITICAL": "++++",
     "MAJOR": "+++",
     "MINOR": "++",
-    "TRIVIAL": "+",
-    "UNDEFINED": "undefined"
+    "TRIVIAL": "+"
   },
   prioritiesToNumber: {
     "BLOCKER": 1,
@@ -155,7 +159,7 @@ var agilefantUtils = {
     "MAJOR": 3,
     "MINOR": 4,
     "TRIVIAL": 5,
-    "UNDEFINED": 0
+    "UNDEFINED": 6
   },
   priorityToString: function(priority) {
     return agilefantUtils.priorities[priority];

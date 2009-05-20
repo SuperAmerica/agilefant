@@ -332,9 +332,8 @@ public class HourEntryBusinessImpl implements HourEntryBusiness {
         start.set(Calendar.YEAR, year);
         start.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
         CalendarUtils.setHoursMinutesAndSeconds(start, 0, 0, 0);
-        end.set(Calendar.WEEK_OF_YEAR, week);
-        end.set(Calendar.YEAR, year);
-        end.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+        end.setTime(start.getTime());
+        end.add(Calendar.DAY_OF_YEAR, 6);
         CalendarUtils.setHoursMinutesAndSeconds(end, 23, 59, 59);
         User user = this.userDAO.get(userId);
         return this.getDailySpentEffortByIntervalAndUser(start.getTime(), end.getTime(), user);
@@ -346,7 +345,6 @@ public class HourEntryBusinessImpl implements HourEntryBusiness {
         List<DailySpentEffort> dailyEffort = new ArrayList<DailySpentEffort>();
         Calendar stop = Calendar.getInstance();
         stop.setTime(end);
-        
         if(start.after(end)) {
             return null;
         }

@@ -1,6 +1,5 @@
 package fi.hut.soberit.agilefant.db.hibernate;
 
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -74,9 +73,9 @@ public class HourEntryDAOHibernate extends GenericDAOHibernate<HourEntry> implem
         return result;
     }
     
+    @SuppressWarnings("unchecked")
     public List<HourEntry> getEntriesByIntervalAndUser(Date start, Date end, User user) {
         DetachedCriteria crit = DetachedCriteria.forClass(HourEntry.class);
-
         crit.add(Restrictions.ge("date", start));
         crit.add(Restrictions.le("date", end));
         crit.add(Restrictions.eq("user", user));

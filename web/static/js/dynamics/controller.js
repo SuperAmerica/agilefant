@@ -165,7 +165,7 @@ IterationController.prototype = {
     			if(!row.saveEdit()) {
     				return;
     			} 
-    			goal.commit();
+    			goal.commit(true);
     			return false;
     		}},
     		cancel: {text: "Cancel", action: function() {
@@ -327,12 +327,14 @@ IterationController.prototype = {
     	}
     	row.remove();
     	goal = goal.copy();
-    	goal.commit();
-    	this.model.addGoal(goal);
-    	this.addRow(goal);
-    	this.view.render();
-    	ModelFactory.setIterationGoal(goal);
-    	this.model.reloadGoalData();
+    	var me = this;
+	    goal.commit(function() {
+	    	me.model.addGoal(goal);
+	    	me.addRow(goal);
+	    	me.view.render();
+	    	ModelFactory.setIterationGoal(goal);
+	    	me.model.reloadGoalData();
+    	});
     },
     createGoal: function() {
     	var me = this;
@@ -495,7 +497,7 @@ IterationGoalController.prototype = {
 				return;
 			}
 			desc.getElement().hide();
-			bli.commit();
+			bli.commit(true);
 			return false;
 		};
 		row.setSaveCallback(saveCb);
@@ -644,8 +646,9 @@ IterationGoalController.prototype = {
 			row.remove();
 			me.data.addTask(bli);
 			me.addRow(bli);
-			bli.commit();
-			ModelFactory.setTask(bli);
+			bli.commit(function() {
+				ModelFactory.setTask(bli);
+			});
 			return false;
 		};
 		row.setSaveCallback(saveCb);
@@ -800,10 +803,11 @@ TaskController.prototype = {
 				return;
 			}
 			var oid = todo.id;
-			todo.commit();
-			if(!oid) { 
-				ModelFactory.setTodo(todo);
-			}
+			todo.commit(function() {
+				if(!oid) { 
+					ModelFactory.setTodo(todo);
+				}
+			});
 			return false;
 		};
 		row.setSaveCallback(saveCb);
@@ -883,7 +887,7 @@ TaskController.prototype = {
 			if(!row.saveEdit()) {
 				return;
 			}
-			entry.commit();
+			entry.commit(true);
 			return false;
 		};
 		row.setSaveCallback(saveCb);
@@ -949,10 +953,11 @@ TaskController.prototype = {
 							entry.setComment(description);
 							entry.setDate(date);
 							entry.setTimeSpent(timeSpent);
-							entry.commit();
-							ModelFactory.setEffortEntry(entry);
-							me.model.addHourEntry(entry);
-							me.addEffortEntry(entry);
+							entry.commit(function() {
+								ModelFactory.setEffortEntry(entry);
+								me.model.addHourEntry(entry);
+								me.addEffortEntry(entry);
+							});
 						} else if(users.length > 1) {
 							users.each(function() {
 								var entry = new TaskHourEntryModel(me.model, null);
@@ -961,10 +966,11 @@ TaskController.prototype = {
 								entry.setDate(date);
 								entry.setTimeSpent(timeSpent);
 								entry.setComment(description);
-								entry.commit();
-								ModelFactory.setEffortEntry(entry);
-								me.model.addHourEntry(entry);
-								me.addEffortEntry(entry);
+								entry.commit(function() {
+									ModelFactory.setEffortEntry(entry);
+									me.model.addHourEntry(entry);
+									me.addEffortEntry(entry);
+								});
 							});
 						}
 						me.model.reloadData();

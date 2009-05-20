@@ -6,12 +6,14 @@ var ModelFactoryClass = function() {
 	this.effortEntries = {};
 };
 StoryModel = function(iterationGoalData, parent) {
+	this.init();
 	this.metrics = {};
 	this.iteration = parent;
 	this.tasks = [];
 	this.setData(iterationGoalData, true);
 };
 var TaskModel = function(data, backlog, iterationGoal) {
+	this.init();
 	this.effortLeft = "";
 	this.originalEstimate = "";
 	this.backlog = backlog;
@@ -21,6 +23,7 @@ var TaskModel = function(data, backlog, iterationGoal) {
 	}
 };
 var TodoModel = function(task, data) {
+	this.init();
 	this.task = task;
 	if(!data) {
 		this.id = 0;
@@ -29,6 +32,7 @@ var TodoModel = function(task, data) {
 	}
 };
 var TaskHourEntryModel = function(task, data) {
+	this.init();
 	this.task = task;
 	if(data) {
 		this.setData(data);
@@ -124,6 +128,8 @@ ModelFactoryClass.prototype = {
 ModelFactory = new ModelFactoryClass();
 
 var CommonAgilefantModel = function() {
+};
+CommonAgilefantModel.prototype.init = function() {
 	this.editListeners = [];
 	this.deleteListeners = [];
 	this.inTransaction = false;
@@ -165,9 +171,15 @@ CommonAgilefantModel.prototype.callDeleteListeners = function(eventData) {
 CommonAgilefantModel.prototype.beginTransaction = function() {
 	this.inTransaction = true;
 };
-CommonAgilefantModel.prototype.commit = function() {
+CommonAgilefantModel.prototype.commit = function(arg) {
 	this.inTransaction = false;
-	this.save();
+	if(typeof arg === "function") {
+		this.save(false, arg);
+	} else if(arg === true) {
+		this.save(false);
+	} else {
+		this.save(true);
+	}
 };
 CommonAgilefantModel.prototype.rollBack = function() {
 	this.setData(this.persistedData);
@@ -411,16 +423,18 @@ StoryModel.prototype.reloadMetrics = function() {
 	cache: false,
 	type: "POST",
 	dataType: "json",
+	async: true,
 	success: function(data,type) {
 		me.metrics = data;
 		me.callEditListeners({bubbleEvent: []});
 	}
 	});
 };
-StoryModel.prototype.save = function() {
+StoryModel.prototype.save = function(synchronous, callback) {
 	if(this.inTransaction) {
 		return;
 	}
+	var asynch = !synchronous;
 	var me = this;
 	var data  = {
 			"iterationGoal.name": this.name,
@@ -440,12 +454,15 @@ StoryModel.prototype.save = function() {
 		data["iterationGoal.description"] = "";
 	}
 	jQuery.ajax({
-		async: false,
+		async: asynch,
 		error: function() {
 		commonView.showError("An error occured while saving an iteration goal.");
 	},
 	success: function(data,type) {
 		me.setData(data,false);
+		if(asynch && typeof callback == "function") {
+			callback();
+		}
 		commonView.showOk("Iteration goal saved succesfully.");
 	},
 	cache: false,
@@ -730,10 +747,11 @@ TaskModel.prototype.resetOriginalEstimate = function() {
 	data: data
 	});
 };
-TaskModel.prototype.save = function() {
+TaskModel.prototype.save = function(synchronous, callback) {
 	if (this.inTransaction) {
 		return;
 	}
+	var asynch = !synchronous;
 	var me = this;
 	var data = {
 			"backlogItem.name": this.name,
@@ -769,13 +787,13 @@ TaskModel.prototype.save = function() {
 	if (data["backlogItem.effortLeft"]) {
 		data["backlogItem.effortLeft"] /= 3600;
 	}
-	if (data["backlogItem.effortLeft"] === null || data["backlogItem.effortLeft"] === undefined) {
+	if (typeof data["backlogItem.effortLeft"] !== "number") {
 		data["backlogItem.effortLeft"] = "";
 	}
 	if (data["backlogItem.originalEstimate"]) {
 		data["backlogItem.originalEstimate"] /= 3600;
 	}
-	if (data["backlogItem.originalEstimate"] === null || data["backlogItem.originalEstimate"] === undefined) {
+	if (typeof data["backlogItem.originalEstimate"] !== "number") {
 		data["backlogItem.originalEstimate"] = "";
 	}
 	if (!this.name) {
@@ -784,16 +802,18 @@ TaskModel.prototype.save = function() {
 	if (!this.description) {
 		data["backlogItem.description"] = "";
 	}
-
 	jQuery
 	.ajax( {
-		async: false,
+		async: asynch,
 		error: function() {
 		commonView
 		.showError("An error occured while saving the backlog item.");
 	},
 	success: function(data, type) {
 		me.setData(data);
+		if(asynch && typeof callback == "function") {
+			callback();
+		}
 		commonView.showOk("Backlog item saved succesfully.");
 	},
 	cache: false,
@@ -882,10 +902,11 @@ TaskHourEntryModel.prototype.remove = function() {
 	data: {hourEntryId: this.id}
 	});
 };
-TaskHourEntryModel.prototype.save = function() {
+TaskHourEntryModel.prototype.save = function(synchronous, callback) {
 	if(this.inTransaction) {
 		return;
 	}
+	var asynch = !synchronous;
 	var data = {};
 	if(this.comment) {
 		data["hourEntry.comment"] = this.comment;
@@ -904,13 +925,16 @@ TaskHourEntryModel.prototype.save = function() {
 	data.hourEntryId = this.id;
 	var me = this;
 	jQuery.ajax({
-		async: false,
+		async: asynch,
 		error: function() {
 		commonView.showError("An error occured while logging effort.");
 	},
 	success: function(data,type) {
 		me.setData(data);
 		commonView.showOk("Effort logged succesfully.");
+		if(asynch && typeof callback == "function") {
+			callback();
+		}
 	},
 	cache: false,
 	dataType: "json",
@@ -981,10 +1005,11 @@ TodoModel.prototype.remove = function() {
 	data: {taskId: this.id}
 	});
 };
-TodoModel.prototype.save = function() {
+TodoModel.prototype.save = function(synchronous, callback) {
 	if(this.inTransaction) {
 		return;
 	}
+	var asynch = !synchronous;
 	var data = {
 			"taskId": this.id,
 			"backlogItemId": this.task.getId(),
@@ -993,13 +1018,16 @@ TodoModel.prototype.save = function() {
 	};
 	var me = this;
 	jQuery.ajax({
-		async: false,
+		async: asynch,
 		error: function() {
 		commonView.showError("An error occured while saving the todo.");
 	},
 	success: function(data,type) {
 		me.setData(data);
 		commonView.showOk("Todo saved succesfully.");
+		if(asynch && typeof callback == "function") {
+			callback();
+		}
 	},
 	cache: false,
 	dataType: "json",

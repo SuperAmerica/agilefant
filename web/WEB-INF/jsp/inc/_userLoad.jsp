@@ -1,21 +1,21 @@
 <%@ include file="./_taglibs.jsp"%>
 
-
-<div class="subItems" id="subItems_dailyWorkUserLoad">
-<div class="subItemHeader">
-<table cellspacing="0" cellpadding="0">
-	<tr>
-        <td class="iconsbefore">
-            <div class="expand" title="Expand" onclick="toggleHide(this,['#detailedLoadTable','#smallLoadTable']);"></div>
-        </td>
-		<td class="header">Load</td>
-	</tr>
-</table>
+<script type="text/javascript">
+$(document).ready(function() {
+	$("#dailyWorkTabs").show().tabs();
+});
+</script>
+<div id="dailyWorkTabs" style="display: none;">
+<ul style="height: 1px; width: 785px;">
+	<li><a href="#smallLoadTable"><span>Basic load</span></a></li>
+	<li><a href="#detailedLoadTable"><span>Detailed load</span></a></li>
+	<li><a href="#spentEffort"><span>Spent effort</span></a></li>
+</ul>
+<div class="subItems">
+<div id="spentEffort" class="ui-tabs-hide">
+here be calendar view
 </div>
-<div class="subItemContent">
-
-
-<div id="detailedLoadTable" style="display: none;">
+<div id="detailedLoadTable" class="ui-tabs-hide">
 <table class="infoTable" cellspacing="0" cellpadding="0">
 <tbody>
 <tr>
@@ -229,6 +229,6 @@
 </tbody>
 </table>
 </div>
+</div>
+</div>
 
-</div>
-</div>

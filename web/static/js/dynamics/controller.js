@@ -215,8 +215,9 @@ IterationController.prototype = {
     		goal.reloadMetrics();
     	});
     	row.getElement().droppable({
-			accept: function(droppable) {
-    			return (droppable.data("dragTask") === true);
+			accept: function(draggable) {
+				var model = draggable.data("row").model;
+				return (draggable.data("dragTask") === true && model.iterationGoal.getId() !== goal.getId());
     		},
     		hoverClass: 'drophover',
     		greedy: true,
@@ -306,10 +307,11 @@ IterationController.prototype = {
     		me.noGoalItemController.hideTasks();
     	}));
     	row.getElement().droppable({
-			accept: function(droppable) {
-    			return (droppable.data("dragTask") === true);
+			accept: function(draggable) {
+    			var model = draggable.data("row").model;
+    			return (draggable.data("dragTask") === true && model.iterationGoal.getId() !== goal.getId());
     		},
-    		hoverClass: 'drophover',
+    		hoverClass: '.drophover',
     		greedy: true,
     		drop: function(ev,ui) {
     			var row = ui.draggable.data("row");
@@ -453,9 +455,11 @@ IterationGoalController.prototype = {
 			getEdit: function() { 
 				var users = [];
 				var tmp = bli.getUsers();
-				for(var i = 0; i < tmp.length; i++) {
-					if(tmp[i]) {
-						users.push(tmp[i].user);
+				if(tmp) {
+					for(var i = 0; i < tmp.length; i++) {
+						if(tmp[i]) {
+							users.push(tmp[i].user);
+						}
 					}
 				}
 				return users;
@@ -550,6 +554,7 @@ IterationGoalController.prototype = {
 				var el = $(this);
 				var clone = el.clone();
 				clone.width(el.width());
+				clone.addClass("dynamicTableRow-drag");
 				return clone;
 			},
 			start: function(event) {

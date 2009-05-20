@@ -33,6 +33,10 @@
   border: none;
 }
 
+.dynamicTableRow-drag {
+	background-color: #dddddd;	
+	border: 1px solid #aaaaaa;
+}
 .dynamictable-cell span {
     
 }
@@ -253,6 +257,11 @@ div.gear {
   padding: 0 0 1000.5em 0.2%;
   overflow: hidden;
   border: none;
+}
+.drophover {
+	opacity: .6;
+	-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=60)";
+	filter: alpha(opacity=60);
 }
 .taskState {
 	display: block;

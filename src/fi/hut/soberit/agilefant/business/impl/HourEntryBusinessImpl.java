@@ -325,6 +325,20 @@ public class HourEntryBusinessImpl implements HourEntryBusiness {
         }
         
     }
+    public List<DailySpentEffort> getDailySpentEffortByWeekAndUser(int week, int year, int userId) {
+        Calendar start = Calendar.getInstance();
+        Calendar end = Calendar.getInstance();
+        start.set(Calendar.WEEK_OF_YEAR, week);
+        start.set(Calendar.YEAR, year);
+        start.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+        CalendarUtils.setHoursMinutesAndSeconds(start, 0, 0, 0);
+        end.set(Calendar.WEEK_OF_YEAR, week);
+        end.set(Calendar.YEAR, year);
+        end.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+        CalendarUtils.setHoursMinutesAndSeconds(end, 23, 59, 59);
+        User user = this.userDAO.get(userId);
+        return this.getDailySpentEffortByIntervalAndUser(start.getTime(), end.getTime(), user);
+    }
     
     public List<DailySpentEffort> getDailySpentEffortByIntervalAndUser(Date start, Date end, User user) {
         Calendar cal = Calendar.getInstance();
@@ -363,6 +377,20 @@ public class HourEntryBusinessImpl implements HourEntryBusiness {
          }
         return dailyEffort;
     }
+    
+    public List<HourEntry> getEntriesByUserAndDay(int day, int year, int userId) {
+        Calendar start = Calendar.getInstance();
+        Calendar end = Calendar.getInstance();
+        start.set(Calendar.DAY_OF_YEAR, day);
+        start.set(Calendar.YEAR, year);
+        CalendarUtils.setHoursMinutesAndSeconds(start, 0, 0, 0);
+        end.set(Calendar.DAY_OF_YEAR, day);
+        end.set(Calendar.YEAR, year);
+        CalendarUtils.setHoursMinutesAndSeconds(end, 23, 59, 59);
+        User user = this.userDAO.get(userId);
+        return this.hourEntryDAO.getEntriesByIntervalAndUser(start.getTime(), end.getTime(), user);
+    }
+    
     public BacklogHourEntryDAO getBacklogHourEntryDAO() {
         return backlogHourEntryDAO;
     }

@@ -13,6 +13,7 @@ import fi.hut.soberit.agilefant.model.BacklogItemHourEntry;
 import fi.hut.soberit.agilefant.model.HourEntry;
 import fi.hut.soberit.agilefant.model.TimesheetLoggable;
 import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.util.DailySpentEffort;
 
 /**
  * Business interface for handling functionality related to Hour Entries
@@ -163,4 +164,16 @@ public interface HourEntryBusiness {
     
     public void setBacklogItemSpentEffortSum(BacklogItem bli);
    
+    
+    public List<DailySpentEffort> getDailySpentEffortByIntervalAndUser(Date start, Date end, User user);
+    public List<DailySpentEffort> getDailySpentEffortByWeekAndUser(int week, int year, int userId);
+    
+    /**
+     * 
+     * @param day Day of year
+     * @param year
+     * @param userId
+     * @return
+     */
+    public List<HourEntry> getEntriesByUserAndDay(int day, int year, int userId);
 }

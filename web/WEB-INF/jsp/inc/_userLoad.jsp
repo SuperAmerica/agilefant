@@ -2,19 +2,41 @@
 
 <script type="text/javascript">
 $(document).ready(function() {
-	$("#dailyWorkTabs").show().tabs();
+	$("#dwTabs").show();
+
+	$("#dailyWorkTabs").tabs({
+		select: function(event, ui) {
+			if(ui.index == 2) {
+				var panel = $(ui.panel);
+				if(panel.data("spentEffortLoaded")) {
+					return true;
+			 	}
+			 	panel.data("spentEffortLoaded", true);
+				var clickRegister = function() {
+					var me = this;
+					$('a:not(.detailLink)',panel).click(function() {
+						panel.load(this.href, function() { clickRegister(); });
+						return false;
+					});
+					$('a.detailLink',panel).click(function() {
+						$('.details',panel).load(this.href);
+						return false;
+					});
+				};
+			 	panel.load("weeklyWpentEffort.action",{userId: ${userId}}, function(data) { clickRegister(); });
+			}
+		}
+		});
 });
 </script>
-<div id="dailyWorkTabs" style="display: none;">
-<ul style="height: 1px; width: 785px;">
-	<li><a href="#smallLoadTable"><span>Basic load</span></a></li>
-	<li><a href="#detailedLoadTable"><span>Detailed load</span></a></li>
-	<li><a href="#spentEffort"><span>Spent effort</span></a></li>
+<div id="dailyWorkTabs">
+<ul id="dwTabs" style="display: none; height: 1px; width: 785px;">
+	<li><a href="#smallLoadTable"><span>Load</span></a></li>
+	<li><a href="#detailedLoadTable"><span>Detailed</span></a></li>
+	<li><a href="#Spent_Effort" title="Spent Effort"><span>Spent effort</span></a></li>
 </ul>
 <div class="subItems">
-<div id="spentEffort" class="ui-tabs-hide">
-here be calendar view
-</div>
+<div id="Spent_Effort"></div>
 <div id="detailedLoadTable" class="ui-tabs-hide">
 <table class="infoTable" cellspacing="0" cellpadding="0">
 <tbody>

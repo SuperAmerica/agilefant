@@ -909,6 +909,12 @@
 		</action>
 		
 		<action name="updateMultipleHourEntries" class="hourEntryAction" method="multiEdit" />
+		<action name="weeklyWpentEffort" method="getDaySumsByWeek" class="hourEntryAction">
+			<result type="dispatcher">/WEB-INF/jsp/inc/spentEffort.jsp</result>
+		</action>
+		<action name="hourEntriesByUserAndWeek" class="hourEntryAction" method="getHourEntriesByUserAndWeek">
+			<result type="dispatcher">/WEB-INF/jsp/inc/effortByWeek.jsp</result>
+		</action>
 		<!-- Business theme actions -->
 		<action name="deleteBusinessTheme" method="delete"
 			class="businessThemeAction">

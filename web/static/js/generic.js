@@ -192,6 +192,7 @@ function handleTabEvent(target, context, id, tabId, bliContext) {
         target.data("aef-id",id);
         target.load(targetAction[context], targetParams[context], function(data, status) {
             var ajaxTabs = target.find('div.ajaxWindowTabsDiv');
+            var ajaxTabsUl = ajaxTabs.find('ul.ajaxWindowTabs');
             ajaxTabs.tabs({ selected: tabId,
                     show: function(event, ui) {
                         var panel = $(ui.panel);
@@ -212,7 +213,7 @@ function handleTabEvent(target, context, id, tabId, bliContext) {
                 target.hide();
                 return false;
             });
-            closeLinkLi.appendTo(ajaxTabs);
+            closeLinkLi.appendTo(ajaxTabsUl);
             
             initOnLoad(target);
         });

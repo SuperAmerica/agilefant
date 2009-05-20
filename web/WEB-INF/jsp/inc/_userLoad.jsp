@@ -23,7 +23,7 @@ $(document).ready(function() {
 						return false;
 					});
 				};
-			 	panel.load("weeklyWpentEffort.action",{userId: ${userId}}, function(data) { clickRegister(); });
+			 	panel.load("weeklySpentEffort.action",{userId: ${userId}}, function(data) { clickRegister(); });
 			}
 		}
 		});

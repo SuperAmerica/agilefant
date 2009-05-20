@@ -2,13 +2,13 @@
 <table style="width: 700px;" class="listTable">
 	<tr>
 		<th><a
-			href="weeklyWpentEffort.action?userId=${userId}&amp;week=${prevWeek}&amp;year=${prevYear}">Previous
+			href="weeklySpentEffort.action?userId=${userId}&amp;week=${prevWeek}&amp;year=${prevYear}">Previous
 		week</a></th>
 		<c:forEach items="${dailyEffort}" var="dayEffort">
 			<th style="width: 70px;">${dayEffort.date}.${dayEffort.month}</th>
 		</c:forEach>
 		<th><a
-			href="weeklyWpentEffort.action?userId=${userId}&week=${nextWeek}&year=${nextYear}">Next
+			href="weeklySpentEffort.action?userId=${userId}&week=${nextWeek}&year=${nextYear}">Next
 		week</a></th>
 	</tr>
 	<tr>

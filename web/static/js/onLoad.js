@@ -79,6 +79,17 @@ function addFormValidators(target) {
         var form = $(this).find('form');
         //workaround for explicitOriginalTarget which only exists in mozilla based browsers.
         form.find(":submit").click(function() {form.data("lastSubmitEvent",this); });
+        var saveAndClose = form.find(':submit[name=SaveClose]');
+        if (saveAndClose) {
+            form.find("input[type=text]").each(function() {
+                $(this).blur(function() {
+                    form.data("focusedTextField", false);
+                });
+                $(this).focus(function() {
+                    form.data("focusedTextField", true);
+                });
+            });
+        }
         var classes = $.makeArray($(this).attr('class').split(' '));
         $.each(classes, function(i) {
             if (validationRulesByHTMLClass[this] != null) {
@@ -87,9 +98,15 @@ function addFormValidators(target) {
                 form.submit(submitDialogForm);
                 if(target.data && target.data("aef-tabs") == "1") {
                 	var mySubm = function(evt) {
-                		if(form.valid() && form.data("lastSubmitEvent").name == "SaveClose")
-                			ajaxCloseDialog(target.data("aef-context"),target.data("aef-id"));
-                	}; 	
+                        if(form.valid()) {
+                            // Close the form if the user clicked "Save & Close"
+                            // OR had focus in a text field and pressed ENTER
+                            if (form.data("lastSubmitEvent").name == "SaveClose"
+                                || form.data("focusedTextField") == true) {
+                                ajaxCloseDialog(target.data("aef-context"),target.data("aef-id"));
+                            }
+                        }
+                    };
                 	form.submit(mySubm);
                 }
                 return false;

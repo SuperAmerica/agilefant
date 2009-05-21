@@ -136,44 +136,4 @@ $(document).ready(function() {
                                               ]);
    same(widths, [39.6, 39.6, 18.6, 98.6], "Column widths calculated correctly");
 	});
-	/*
-	test("Test sort direction changing", function() {
-	  var table = $('#testTable').DynamicTable({
-	    colWidths: [
-                  {
-                    minwidth: 200,
-                    auto: true
-                  },
-                  {
-                    minwidth: 100,
-                    auto: true
-                  }
-                  ],
-	    headerCols: [
-	                 {
-	                   name: 'Name',
-	                   sort: function() { return false; } 
-	                 },
-	                 {
-	                   name: 'Description',
-	                   sort: function() { return false; }
-	                 }
-	                 ]
-	  });
-	  
-	  table.render();
-	  
-	  equals(table.getSorting().column, 0, "Table has correct sorting column");
-    equals(table.getSorting().direction, -1, "Table has correct sorting direction");
-	  table.headerRow.getElement().find('div:eq(0) a').click();
-	  equals(table.getSorting().column, 0, "Table has correct sorting column");
-	  equals(table.getSorting().direction, 1, "Table has correct sorting direction");
-	  table.headerRow.getElement().find('div:eq(0) a').click();
-	  equals(table.getSorting().column, 0, "Table has correct sorting column");
-    equals(table.getSorting().direction, 0, "Table has correct sorting direction");
-    table.headerRow.getElement().find('div:eq(1) a').click();
-    equals(table.getSorting().column, 1, "Table has correct sorting column");
-    equals(table.getSorting().direction, 0, "Table has correct sorting direction");
-   
-	});*/
 });

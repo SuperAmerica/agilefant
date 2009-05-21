@@ -216,8 +216,12 @@ IterationController.prototype = {
     	});
     	row.getElement().droppable({
 			accept: function(draggable) {
+				var isTask = draggable.data("dragTask");
+				if(isTask !== true) {
+					return false;
+				}
 				var model = draggable.data("row").model;
-				return (draggable.data("dragTask") === true && model.iterationGoal.getId() !== goal.getId());
+				return (model.iterationGoal.getId() !== goal.getId());
     		},
     		hoverClass: 'drophover',
     		greedy: true,
@@ -308,8 +312,12 @@ IterationController.prototype = {
     	}));
     	row.getElement().droppable({
 			accept: function(draggable) {
+    			var isTask = draggable.data("dragTask");
+    			if(isTask !== true) {
+    				return false;
+    			}
     			var model = draggable.data("row").model;
-    			return (draggable.data("dragTask") === true && model.iterationGoal.getId() !== goal.getId());
+    			return (model.iterationGoal.getId() !== goal.getId());
     		},
     		hoverClass: '.drophover',
     		greedy: true,

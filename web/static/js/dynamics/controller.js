@@ -987,6 +987,7 @@ TaskController.prototype = {
 				var description = form.find("input[name='hourEntry.description']").val();
 				var date = form.find("input[name=date]").val();
 				var users = form.find("input[name='userIds']");
+				parent.remove();
 				if(users.length == 1) {
 					var entry = new TaskHourEntryModel(me.model, null);
 					entry.beginTransaction();

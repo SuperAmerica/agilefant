@@ -1,13 +1,13 @@
 var agilefantUtils = {
 	aftimeToString: function(aftime, hideDash) {
-		if(!hideDash && (typeof aftime !== "number" || aftime === NaN || aftime < 0)) {
+		if(!hideDash && (typeof aftime !== "number" || isNaN(aftime) || aftime < 0)) {
 			return "&mdash;";
 		}
 		var hours = Math.round(aftime/360)/10;
-		if(hours === NaN && !hideDash) {
+		if(isNaN(hours) && !hideDash) {
 			return "&mdash;";
 		}
-		if(hours === NaN) {
+		if(isNaN(hours)) {
 			return "";
 		}
 		if(Math.round(hours) == hours) {

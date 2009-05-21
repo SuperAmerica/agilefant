@@ -377,7 +377,6 @@ StoryModel.prototype.getTotalTasks = function() {
 };
 StoryModel.prototype.moveToIteration = function(newIteration) {
 	var me = this;
-	var me = this;
 	jQuery.ajax({
 		async: false,
 		error: function() {
@@ -720,7 +719,7 @@ TaskModel.prototype.changeStory = function(newStory) {
 	this.iterationGoal.removeTask(this);
 	newStory.addTask(this);
 	this.save();
-},
+};
 TaskModel.prototype.resetOriginalEstimate = function() {
 	if (this.inTransaction) {
 		return;
@@ -787,13 +786,13 @@ TaskModel.prototype.save = function(synchronous, callback) {
 	if (data["backlogItem.effortLeft"]) {
 		data["backlogItem.effortLeft"] /= 3600;
 	}
-	if (typeof data["backlogItem.effortLeft"] !== "number") {
+	if (!data["backlogItem.effortLeft"] && data["backlogItem.effortLeft"] !== 0) {
 		data["backlogItem.effortLeft"] = "";
 	}
 	if (data["backlogItem.originalEstimate"]) {
 		data["backlogItem.originalEstimate"] /= 3600;
 	}
-	if (typeof data["backlogItem.originalEstimate"] !== "number") {
+	if (!data["backlogItem.originalEstimate"] && data["backlogItem.originalEstimate"] !== 0) {
 		data["backlogItem.originalEstimate"] = "";
 	}
 	if (!this.name) {

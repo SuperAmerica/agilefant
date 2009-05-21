@@ -444,13 +444,8 @@
 		var me = this;
 		var dblclick_cb = function() { me.openEdit(); };
 		if (this.options.type && this.options.type != "empty") {
-		  if(this.options.type == "wysiwyg") {
-        this.cell.dblclick(dblclick_cb);
-        this.cell.attr("title","Double-click the cell to edit it.");		    
-		  } else {
-		    this.cell.click(dblclick_cb);
-		    this.cell.attr("title","Click the cell to edit it.");
-		  }
+			this.cell.dblclick(dblclick_cb);
+			this.updateTooltip();
 		} 
 	};
 	
@@ -461,6 +456,13 @@
 	  },
 	  activateSortHandle: function() {
 	    this.cell.addClass("dynamictable-sorthandle");
+	  },
+	  updateTooltip: function() {
+		  if(this.editorOpen) {
+			  this.cell.removeAttr("title");
+		  } else {
+			  this.cell.attr("title","Double-click the cell to edit it."); 
+		  }
 	  },
 		render: function() {
 			if(typeof this.options.get === "function") {
@@ -505,6 +507,7 @@
 			  this.actionObj.getElement().show();
 		  }
 		  this.editorOpen = false;
+		  this.updateTooltip();
 		  if(newValue != this.options.get()) {
 			  this.options.set(newValue);
 		  }
@@ -519,6 +522,7 @@
 		    this.editor.remove();
 		  }
 		  this.editorOpen = false;
+		  this.updateTooltip();
 		  if(this.isActionCell) { 
 			  this.actionObj.getElement().show();
 		  }
@@ -605,6 +609,7 @@
 					});
 				}
 			}
+			this.updateTooltip();
 		},
 		removeButtons: function() {
 			if(this.addedButtons) {

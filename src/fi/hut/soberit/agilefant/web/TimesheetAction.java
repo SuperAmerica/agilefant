@@ -217,10 +217,10 @@ public class TimesheetAction extends ActionSupport implements PrincipalAware {
         tmp.setCellValue("Iteration");
         tmp.setCellStyle(boldStyle);
         tmp = head.createCell(3);
-        tmp.setCellValue("Iteration goal");
+        tmp.setCellValue("Story");
         tmp.setCellStyle(boldStyle);
         tmp = head.createCell(4);
-        tmp.setCellValue("Backlog item");
+        tmp.setCellValue("Task");
         tmp.setCellStyle(boldStyle);
         tmp = head.createCell(5);
         tmp.setCellValue("Comment");

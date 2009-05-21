@@ -10,7 +10,7 @@
 	<li><a href="#iterationInfoTab-${iterationId}"><span><img src="static/img/info.png" alt="Info" /> Info</span></a></li>
 	<li><a href="#iterationEditTab-${iterationId}"><span><img src="static/img/edit.png" alt="Edit" /> Edit iteration</span></a></li>
 	<li><a href="#iterationThemesTab-${iterationId}"><span><img src="static/img/theme.png" alt="Iterations" /> Themes</span></a></li>
-	<li><a href="#iterationGoalsTab-${iterationId}"><span><img src="static/img/goal.png" alt="Iterations" /> Iteration goals</span></a></li>
+	<li><a href="#iterationGoalsTab-${iterationId}"><span><img src="static/img/goal.png" alt="Stories" /> Stories</span></a></li>
 </ul>
 
 <div id="iterationInfoTab-${iterationId}" class="iterationNaviTab">
@@ -360,7 +360,7 @@ $(document).ready( function() {
 		</ww:url>
 		<ww:a cssClass="openCreateDialog openIterationGoalDialog" onclick="return false;"
 			href="%{createIterationGoalLink}">
-			Create new iteration goal &raquo;
+			Create a new story &raquo;
 		</ww:a>
 		<c:if test="${!empty iteration.iterationGoals}">
 			<aef:hourReporting id="hourReport"></aef:hourReporting>
@@ -383,7 +383,7 @@ $(document).ready( function() {
 					${aef:html(row.description)}
 				</display:column>
 				
-				<display:column sortable="false" title="# of backlog items">
+				<display:column sortable="false" title="# of tasks">
 				  ${aef:html(fn:length(row.backlogItems))}
 				</display:column>
 

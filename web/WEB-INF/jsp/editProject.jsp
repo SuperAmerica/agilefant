@@ -640,7 +640,7 @@ $(document).ready(function() {
 			<table cellspacing="0" cellpadding="0">
                     <tr>
                         <td class="header">
-                        Backlog items
+                        Stories
                         </td>
                         <td class="icons">
                         <table cellspacing="0" cellpadding="0">
@@ -652,7 +652,7 @@ $(document).ready(function() {
 			                    <ww:param name="backlogId" value="${project.id}" />
 			                </ww:url> <ww:a cssClass="openCreateDialog openBacklogItemDialog"
 			                    href="%{createBacklogItemLink}" onclick="return false;"
-			                    title="Create a new backlog item">
+			                    title="Create a new story">
 			                    </ww:a>
 			                    </td>
 			                    </tr>

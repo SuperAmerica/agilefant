@@ -73,7 +73,7 @@ $(document).ready(function() {
             <ww:param name="backlogId" value="${pro.id}" />
           </ww:url>
           <ww:a cssClass="openCreateDialog openBacklogItemDialog"
-                onclick="return false;" title="Create a new backlog item"
+                onclick="return false;" title="Create a new story"
                 href="%{createBLILink}">
           </ww:a>
           </td>

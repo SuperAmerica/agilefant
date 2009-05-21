@@ -272,7 +272,7 @@ IterationController.prototype = {
     	this.itemsWithOutGoalContainer = goal;
     	var row = me.view.createRow(goal);
     	var expand = row.createCell();
-    	var name = row.createCell().setValue("Items without goal.");
+        var name = row.createCell().setValue("Tasks without story.");
     	var tasks = row.createCell({
     		get: function() { return goal.getDoneTasks() + " / " + goal.getTotalTasks(); }
     	});

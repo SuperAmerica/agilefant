@@ -262,8 +262,8 @@ $(document).ready(function() {
 					</c:forEach>
 				</select></td>
 			</tr>
-			<tr>
-				<td>Iteration goal</td>
+			<tr style="display: none">
+				<td>Story</td>
 				<td></td>
 				<%-- If iteration goals doesn't exist default value is 0--%>
                 <td colspan="2">
@@ -281,11 +281,9 @@ $(document).ready(function() {
                         id="iterationGoalSelectBLI-${backlogItemId}-${bliListContext}"
                         name="iterationGoalId" list="#attr.iterationGoals"
                         listKey="id" listValue="name" value="${goalId}" />
-                        <span style="display: none;">(none)</span>
                      </c:when>
                      <c:otherwise>
-                     	<select id="iterationGoalSelectBLI-${backlogItemId}-${bliListContext}" name="iterationGoalId" style="display: none;"></select>
-                     	<span>(none)</span>
+                       <select id="iterationGoalSelectBLI-${backlogItemId}-${bliListContext}" name="iterationGoalId"></select>
                      </c:otherwise>
                     </c:choose>
                 </td>

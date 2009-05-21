@@ -209,8 +209,8 @@ $(document).ready(function() {
 		
 		<display:column title="Completed BLIs" style="width: 90px;">
 			<c:out value="${row.metrics.percentDone}" />%
-			(<c:out value="${row.metrics.completedItems}" /> /
-			<c:out value="${row.metrics.totalItems}" />)	
+			<c:out value="( ${row.metrics.completedItems} / " />
+			<c:out value="${row.metrics.totalItems} )" />
 		</display:column>
 		
 		<display:column title="Effort left">

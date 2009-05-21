@@ -239,7 +239,7 @@ function getIterationGoals(backlogId, element, preselectedId) {
         var select = $(element);
         
         if (data.length > 0) {
-            select.show().empty().val('').next().hide();
+            select.parents('tr:eq(0)').show();
             $('<option/>').attr('value','').attr('class','inactive').text('(none)').appendTo(select);
             for (var i = 0; i < data.length; i++) {
                 var opt = $('<option/>').attr('value',data[i].id).text(data[i].name).appendTo(select);
@@ -249,7 +249,7 @@ function getIterationGoals(backlogId, element, preselectedId) {
             }
         }
         else {
-            select.hide().empty().val('').next().show();
+            select.parents('tr:eq(0)').hide();
         }
     });
 }

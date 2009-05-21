@@ -200,6 +200,9 @@ Agilefant
     </c:choose>
     </li>
     
+<!--
+    Commented because of story-task terminology problems
+ 
     <li>
     <c:choose>
         <c:when test="${hasIterations}">
@@ -214,18 +217,18 @@ Agilefant
         </c:otherwise>
     </c:choose>
     </li>
-
+ -->
     <li>
     <c:choose>
         <c:when test="${hasProducts}">
             <ww:url id="createLink" action="ajaxCreateBacklogItem"
                 includeParams="none" />
-            <ww:a href="%{createLink}" onclick="return false;" title="Create a new backlog item" cssClass="openCreateDialog openBacklogItemDialog">Backlog item &raquo;</ww:a>
+            <ww:a href="%{createLink}" onclick="return false;" title="Create a new story/task" cssClass="openCreateDialog openBacklogItemDialog">Story/task &raquo;</ww:a>
         </c:when>
         <c:otherwise>
             <span class="inactive"
-                title="Create a product before creating a backlog item">
-            Backlog item &raquo;</span>
+                title="Create a product before creating a story/task">
+            Story/task &raquo;</span>
         </c:otherwise>
     </c:choose>
     </li>

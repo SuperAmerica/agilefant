@@ -27,7 +27,7 @@ $(document).ready(function() {
 <table cellspacing="0" cellpadding="0">
 <tr>
 <td class="header">
-Backlog items
+Stories/tasks
 </td>
 </tr>
 </table>
@@ -60,7 +60,7 @@ Backlog items
 	</display:column>
 
 	<!-- Display the iteration goal -->
-	<display:column sortable="true" title="Iteration goal"
+	<display:column sortable="true" title="Story"
 		class="iterationGoalColumn" sortProperty="iterationGoal.name">
 		<ww:url id="editLink" action="editIterationGoal" includeParams="none">
 			<ww:param name="iterationGoalId" value="${row.iterationGoal.id}" />

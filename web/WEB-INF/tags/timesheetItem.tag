@@ -48,7 +48,7 @@
 	<c:if test="${!empty node.childBacklogItems}">
 		<c:if test="${!aef:isIteration(node.backlog)}">
 			<tr class="backlogitem node${divId} special backlogitemshead ${blueLeft} toggleall">
-				<th class="backlogitem first" colspan="3">Backlog items</th>
+				<th class="backlogitem first" colspan="3">Stories</th>
 				<th class="backlogitem fourth">${aef:html(node.hoursForChildBacklogItems)}</th>
 			</tr>
 		</c:if>
@@ -76,4 +76,4 @@
 	<c:if test="${!empty node.childBacklogs}">
 		<aef:timesheetItem nodes="${node.childBacklogs}" />
 	</c:if>
-</c:forEach>						
+</c:forEach>

@@ -112,14 +112,14 @@ $(document).ready(function() {
 				</c:forEach>
             </select></td>
 		</tr>
-		<tr>
-			<td>Iteration goal</td>
+		<tr style="display: none">
+			<td>Story</td>
 			<td></td>
 			<%-- If iteration goals doesn't exist default value is 0--%>
 			<td colspan="2">
 			<select name="iterationGoalId" id="createBLIIterGoalSelect">
 			</select>
-			<span>(none)</span></td>
+			</td>
 		</tr>
 		<tr>
 			<td>Priority</td>

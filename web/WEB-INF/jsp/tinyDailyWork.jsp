@@ -94,7 +94,7 @@ $(document).ready(function() {
 	<ww:param name="contextObjectId" value="${currentPageId}" />
 	<ww:param name="resetContextView" value="true" />
 </ww:url>
-<p>There are no backlog items assigned to user <c:out value="${user.fullName}" />.</p>
+<p>There are no stories or tasks assigned to user <c:out value="${user.fullName}" />.</p>
 <p>Explore <ww:a href="%{backlogsLink}">backlogs</ww:a> to find some items.</p>
 </c:otherwise>
 </c:choose>

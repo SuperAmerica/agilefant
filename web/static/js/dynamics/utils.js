@@ -1,9 +1,15 @@
 var agilefantUtils = {
 	aftimeToString: function(aftime, hideDash) {
-		if(!hideDash && ((aftime === null && typeof(aftime) == "object")|| aftime < 0)) {
+		if(!hideDash && (typeof aftime !== "number" || aftime === NaN || aftime < 0)) {
 			return "&mdash;";
 		}
 		var hours = Math.round(aftime/360)/10;
+		if(hours === NaN && !hideDash) {
+			return "&mdash;";
+		}
+		if(hours === NaN) {
+			return "";
+		}
 		if(Math.round(hours) == hours) {
 			hours += ".0";
 		}

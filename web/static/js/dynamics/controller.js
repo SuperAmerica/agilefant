@@ -653,9 +653,11 @@ IterationGoalController.prototype = {
 			getEdit: function() { 
 				var users = [];
 				var tmp = bli.getUsers();
-				for(var i = 0; i < tmp.length; i++) {
-					if(tmp[i]) { 
-						users.push(tmp[i].user);
+				if(tmp) {
+					for(var i = 0; i < tmp.length; i++) {
+						if(tmp[i]) { 
+							users.push(tmp[i].user);
+						}
 					}
 				}
 				return users;

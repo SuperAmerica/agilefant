@@ -542,7 +542,7 @@
 		openEdit: function(noAutoClose) {
 			var me = this;
 			if(typeof this.options.onEdit == "function") {
-				if(!this.options.onEdit()) {
+				if(!this.options.onEdit(noAutoClose)) {
 					return;
 				}
 			}

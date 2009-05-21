@@ -492,13 +492,16 @@ IterationGoalController.prototype = {
 		var oe = row.createCell({
 			type: "effort",
 			get: function() { return bli.getOriginalEstimate(); },
-			onEdit: function() {
+			onEdit: function(noAutoClose) {
 			  var a = bli;
 			  if (bli.getState() == "DONE") {
 			    return false;
 			  }
-			  if (!bli.getOriginalEstimate()) {
+			  else if (!bli.getOriginalEstimate()) {
 			    return true;
+			  }
+			  else if (noAutoClose) {
+			    return false;
 			  }
 			  else {
 			    var parent = $("<div />").appendTo(document.body).text("Do you want to reset the original estimate?");

@@ -172,10 +172,10 @@ var agilefantUtils = {
   },
 	comparators: {
 	  nameComparator: function(a,b) {
-	    if(a === null || a.getName() === null) {
+	    if(!a || !a.getName()) {
 	    	return -1;
 	    }
-	    if(b === null || b.getName() === null) {
+	    if(!b || !b.getName()) {
 	    	return 1;
 	    }
 	    return (a.getName().toLowerCase() > b.getName().toLowerCase());

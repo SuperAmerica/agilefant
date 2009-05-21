@@ -23,7 +23,12 @@ $(document).ready(function() {
 		
 		same(agilefantUtils.aftimeToString(noData),"&mdash;","No data to be shown");
 		same(agilefantUtils.aftimeToString(halfhour),"0.5h","30mins");
-		same(agilefantUtils.aftimeToString(hour),"1.0h","one hour");
+		same(agilefantUtils.aftimeToString(null),"&mdash;","null");
+		same(agilefantUtils.aftimeToString(""),"&mdash;","empty");
+		same(agilefantUtils.aftimeToString(NaN),"&mdash;","NaN");
+		same(agilefantUtils.aftimeToString(null, true),"0.0h","null");
+		same(agilefantUtils.aftimeToString("", true),"0.0h","empty");
+		same(agilefantUtils.aftimeToString(NaN, true),"","NaN");
 	});
 	
 	test("is aftime", function() {

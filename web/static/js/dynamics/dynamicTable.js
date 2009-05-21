@@ -1086,7 +1086,7 @@
 	                sort: agilefantUtils.comparators.nameComparator
 	              });
 	      addTableColumn(opts,
-	    		  { minwidth: 50, auto: true },
+	    		  { minwidth: 60, auto: true },
 	              { name: 'State',
 	                tooltip: 'Task state',
 	                sort: null
@@ -1151,7 +1151,7 @@
                 sort: agilefantUtils.comparators.nameComparator
               });
       addTableColumn(opts,
-          { minwidth: 50, auto: true },
+          { minwidth: 70, auto: true },
               { name: 'State',
                 tooltip: 'TODO state',
                 sort: null

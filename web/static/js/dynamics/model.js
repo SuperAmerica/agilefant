@@ -289,7 +289,7 @@ StoryModel.prototype.reloadTasks = function() {
 		commonView.showError("Unable to load iteration goal contents.");
 	},
 	success: function(data,type) {
-		me.settasks(data);
+		me.setTasks(data);
 	},
 	cache: false,
 	dataType: "json",

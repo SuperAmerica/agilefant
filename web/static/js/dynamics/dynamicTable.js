@@ -1011,7 +1011,7 @@
 				  });
 		  addTableColumn(opts,		                  
 				  { minwidth: 60, auto: true },
-				  { name: 'Done / Total',
+				  { name: 'Tasks done',
 			        tooltip: 'Done / Total tasks',
 			        sort: null
 				  });
@@ -1053,7 +1053,7 @@
 		},
 		taskTable: function(options) {
 	      var opts = {
-	          defaultSortColumn: 3,
+	          defaultSortColumn: 4,
 	          captionText: "Tasks"
 	      };
 	      if(agilefantUtils.isTimesheetsEnabled()) {

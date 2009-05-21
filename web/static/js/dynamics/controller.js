@@ -188,13 +188,18 @@ IterationController.prototype = {
     	this.buttonCells.push(expandButton);
     	buttons.setActionCell({items: [
     	                               {
-    	                            	   text: "Edit",
+    	                            	   text: "Edit story",
     	                            	   callback: function(row) {
     	                            	   desc.getElement().show();
     	                            	   row.openEdit();
     	                               }
     	                               }, {
-    	                            	   text: "Delete",
+    	                            	   text: "Move story",
+    	                            	   callback: function() {
+    	                            	   		me.moveGoal(row, goal);
+    	                               		}
+    	                               }, {
+    	                            	   text: "Delete story",
     	                            	   callback: function() {
     	                            	   me.deleteGoal(goal);
     	                               }
@@ -204,11 +209,6 @@ IterationController.prototype = {
     	                            	   expandButton.trigger("showContents");
     	                            	   blictrl.createBli();
     	                               }
-    	                               }, {
-    	                            	   text: "Move story",
-    	                            	   callback: function() {
-    	                            	   		me.moveGoal(row, goal);
-    	                               		}
     	                               }
     	                               ]});
     	row.getElement().bind("metricsUpdated", function() {
@@ -485,7 +485,7 @@ IterationGoalController.prototype = {
 			set: function(val) { bli.setEffortLeft(val); },
 			get: function() { return bli.getEffortLeft(); },
 			onEdit: function() {
-				return (bli.getOriginalEstimate() > 0 && bli.getState() !== "DONE");
+				return (bli.getState() !== "DONE");
 			},
 			decorator: agilefantUtils.aftimeToString
 		});
@@ -972,6 +972,49 @@ TaskController.prototype = {
 		var parent = $("<div />").appendTo(document.body);
 		parent.load("newHourEntry.action", {backlogItemId: this.model.getId()}, function() { 
 			addFormValidators(parent);
+			var form = parent.find("form");
+			var saveEffort = function() {
+				if(!form.valid()) {
+					return;
+				}
+				parent.dialog('destroy');
+				var timeSpent = form.find("input[name='hourEntry.timeSpent']").val();
+				var description = form.find("input[name='hourEntry.description']").val();
+				var date = form.find("input[name=date]").val();
+				var users = form.find("input[name='userIds']");
+				if(users.length == 1) {
+					var entry = new TaskHourEntryModel(me.model, null);
+					entry.beginTransaction();
+					entry.setUser(users.val());
+					entry.setComment(description);
+					entry.setDate(date);
+					entry.setTimeSpent(timeSpent);
+					entry.commit(function() {
+						ModelFactory.setEffortEntry(entry);
+						me.model.addHourEntry(entry);
+						me.addEffortEntry(entry);
+					});
+				} else if(users.length > 1) {
+					users.each(function() {
+						var entry = new TaskHourEntryModel(me.model, null);
+						entry.beginTransaction();
+						entry.setUser($(this).val());
+						entry.setDate(date);
+						entry.setTimeSpent(timeSpent);
+						entry.setComment(description);
+						entry.commit(function() {
+							ModelFactory.setEffortEntry(entry);
+							me.model.addHourEntry(entry);
+							me.addEffortEntry(entry);
+						});
+					});
+				}
+				me.model.reloadData();
+				me.spentEffortView.render();
+			};
+			form.submit(function() {
+				return saveEffort();
+			});
 			parent.dialog({
 				resizable: true,
 				close: function() { parent.dialog('destroy'); parent.remove(); },
@@ -982,44 +1025,7 @@ TaskController.prototype = {
 				title: "Log effort",
 				buttons: {
 					'Save': function() {
-						var form = parent.find("form");
-						if(!form.valid()) {
-							return;
-						}
-						$(this).dialog('destroy');
-						var timeSpent = form.find("input[name='hourEntry.timeSpent']").val();
-						var description = form.find("input[name='hourEntry.description']").val();
-						var date = form.find("input[name=date]").val();
-						var users = form.find("input[name='userIds']");
-						if(users.length == 1) {
-							var entry = new TaskHourEntryModel(me.model, null);
-							entry.beginTransaction();
-							entry.setUser(users.val());
-							entry.setComment(description);
-							entry.setDate(date);
-							entry.setTimeSpent(timeSpent);
-							entry.commit(function() {
-								ModelFactory.setEffortEntry(entry);
-								me.model.addHourEntry(entry);
-								me.addEffortEntry(entry);
-							});
-						} else if(users.length > 1) {
-							users.each(function() {
-								var entry = new TaskHourEntryModel(me.model, null);
-								entry.beginTransaction();
-								entry.setUser($(this).val());
-								entry.setDate(date);
-								entry.setTimeSpent(timeSpent);
-								entry.setComment(description);
-								entry.commit(function() {
-									ModelFactory.setEffortEntry(entry);
-									me.model.addHourEntry(entry);
-									me.addEffortEntry(entry);
-								});
-							});
-						}
-						me.model.reloadData();
-						me.spentEffortView.render();
+						return saveEffort();
 					},
 					Cancel: function() {
 						$(this).dialog('destroy');

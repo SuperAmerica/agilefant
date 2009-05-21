@@ -421,6 +421,36 @@ public class BacklogItemBusinessTest extends TestCase {
 
     }
     
+    public void testStoreBacklogItem_OriginalEstimateFromEL() {
+        BacklogItemBusinessImpl testable = new BacklogItemBusinessImpl();
+        BacklogItemDAO dao = createMock(BacklogItemDAO.class);
+        HistoryBusiness hBuss = createMock(HistoryBusiness.class);
+        testable.setBacklogItemDAO(dao);
+        testable.setHistoryBusiness(hBuss);
+        
+        BacklogItem persisted = new BacklogItem();
+        BacklogItem dataItem = new BacklogItem();
+        Backlog backlog = new Project();
+        dataItem.setOriginalEstimate(null);
+        dataItem.setEffortLeft(new AFTime(500));
+        persisted.setBacklog(backlog);
+        backlog.setId(1);
+        persisted.setId(1);
+        
+        dao.store(persisted);
+        hBuss.updateBacklogHistory(1); 
+        
+        replay(dao);
+        replay(hBuss);
+        
+        testable.storeBacklogItem(persisted, backlog, dataItem, null, null);
+        assertEquals(new AFTime(500), persisted.getOriginalEstimate());
+        
+        verify(dao);
+        verify(hBuss);
+
+    }
+    
     public void testStoreBacklogItem_createNew() {
         BacklogItemBusinessImpl testable = new BacklogItemBusinessImpl();
         BacklogItemDAO dao = createMock(BacklogItemDAO.class);

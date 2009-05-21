@@ -131,7 +131,11 @@ public class BacklogItemBusinessImpl implements BacklogItemBusiness {
         storable.setEffortLeft(dataItem.getEffortLeft());
         storable.setName(dataItem.getName());
         if(storable.getOriginalEstimate() == null) {
-            storable.setOriginalEstimate(dataItem.getOriginalEstimate());
+            if(dataItem.getOriginalEstimate() == null) {
+                storable.setOriginalEstimate(dataItem.getEffortLeft());
+            } else { 
+                storable.setOriginalEstimate(dataItem.getOriginalEstimate());
+            }
         }
         storable.setPriority(dataItem.getPriority());
         storable.setState(dataItem.getState());

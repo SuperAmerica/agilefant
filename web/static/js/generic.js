@@ -122,11 +122,11 @@ function handleTabEvent(target, context, id, tabId, bliContext) {
         var tabs = target.find("div.ajaxWindowTabsDiv");
         var selected = tabs.data('selected.tabs');
         if (target.is(":visible")) {
-            target.toggle();
+            target.hide();
             ajaxCloseDialog(context, id);
         }
         else {
-            target.toggle();
+            target.show();
             ajaxOpenDialog(context, id, tabId);
             tabs.tabs('select', tabId);
         }

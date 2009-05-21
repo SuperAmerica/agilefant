@@ -28,8 +28,8 @@ function initOnLoad(elem) {
         me.find(':reset[value=Cancel]').click(function() {
             $(this).trigger('reset');
             ajaxCloseDialog(me.data('aef-context'), me.data('aef-id'));
-            me.toggle();
-            me.find('.assigneeLink').restoreUserChooser();
+            me.hide();
+            me.find('.assigneeLink:not(.themeChooserLink)').restoreUserChooser();
             return true;
         });
     }

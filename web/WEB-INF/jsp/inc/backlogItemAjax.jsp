@@ -333,7 +333,7 @@ $(document).ready(function() {
 				<td colspan="2">
 	
 				<div>
-				<a id="themeChooserLink-${backlogItemId}-${bliListContext}" href="#" class="assigneeLink">
+				<a id="themeChooserLink-${backlogItemId}-${bliListContext}" href="#" class="assigneeLink themeChooserLink">
 				    <img src="static/img/theme.png"/>
                     <span id="themeListContainer-${backlogItemId}-${bliListContext}">
                     <c:set var="count" value="0" />

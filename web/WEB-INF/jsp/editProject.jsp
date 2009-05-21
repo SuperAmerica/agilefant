@@ -225,7 +225,7 @@ $(document).ready(function() {
 												</tr>
 												<c:if test="${(project.defaultOverhead != null) && (project.defaultOverhead.time > 0)}">
 												<tr>
-								    				<th class="info1">Default overhead</th>
+								    				<th class="info1">Default baseline load</th>
 								    				<td class="info3" ondblclick="return editProject();">
 								    					<c:choose>
 								    					<c:when test="${(!empty project.defaultOverhead)}">
@@ -359,7 +359,7 @@ $(document).ready(function() {
 														</td>
 													</tr>
 													<tr>
-														<td>Default Overhead</td>
+														<td>Default Baseline load</td>
 														<td></td>
 														<td colspan="2"><ww:textfield size="10" name="project.defaultOverhead" /> / person / week</td>
 													</tr>

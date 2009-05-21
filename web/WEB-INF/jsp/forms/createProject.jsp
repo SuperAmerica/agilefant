@@ -68,7 +68,7 @@ $(document).ready(function() {
 					</td>
 				</tr>
 				<tr>
-					<td>Default Overhead</td>
+					<td>Default Baseline load</td>
 					<td></td>
 					<td colspan="2"><ww:textfield size="10" id="default_overhead"
 						name="project.defaultOverhead" />/ person / week

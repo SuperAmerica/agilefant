@@ -24,7 +24,7 @@ Product and business management
   
 Project management
   + assign users to projects
-  + set weekly overhead for being involved in a project
+  + set weekly baseline load for being involved in a project
   + communicate the status of your project (red/yellow/green)
   + get an overview of progress through burndown graph and metrics
   
@@ -42,7 +42,7 @@ Development portfolio management
   + track the status and relative priorities of all ongoing projects
   + see who are assigned to which projects
   + see who are involved in projects they have NOT been assigned to
-  + adjust weekly overhead from projects on an individual basis
+  + adjust weekly baseline load from projects on an individual basis
   + define project types
   
 Daily work view
@@ -53,6 +53,10 @@ Daily work view
 Timesheets
   + log spent effort to projects and/or individual backlog items
   + generate reports of spent effort
+
+CHANGES FROM AGILEFANT 1.5.5
+----------------------------
++ Renamed overhead to baseline load
 
 CHANGES FROM AGILEFANT 1.5.4
 ----------------------------

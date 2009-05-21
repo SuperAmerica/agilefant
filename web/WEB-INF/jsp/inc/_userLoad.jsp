@@ -114,7 +114,7 @@ $(document).ready(function() {
 		<c:set var="rowClass" value="odd" />
 	</c:otherwise>
 </c:choose>
-	<td>&nbsp;&nbsp;Overhead</td>
+	<td>&nbsp;&nbsp;Baseline load</td>
 	<c:forEach items="${weekNumbers}" var="week">
 		<td>
 		<c:choose>
@@ -204,7 +204,7 @@ $(document).ready(function() {
 	</c:forEach>
 </tr>
 <tr class="even">
-	<td>Overhead</td>
+	<td>Baseline load</td>
 	<c:forEach items="${weekNumbers}" var="weekNumber">
 	<td>
 		<c:choose>

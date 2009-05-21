@@ -1,12 +1,9 @@
 package fi.hut.soberit.agilefant.web;
 
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -20,7 +17,6 @@ import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.model.HourEntry;
 import fi.hut.soberit.agilefant.model.TimesheetLoggable;
 import fi.hut.soberit.agilefant.util.CalendarUtils;
-import fi.hut.soberit.agilefant.util.DailySpentEffort;
 import flexjson.JSONSerializer;
 
 
@@ -42,17 +38,7 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
     private int projectId;
     private int productId;
     private String jsonData = "";
-    private int week = -1;
-    private int prevWeek;
-    private int nextWeek;
-    private int prevYear;
-    private int nextYear;
-    private int year = 0;
-    private int day = 1;
-    
-    private List<DailySpentEffort> dailyEffort;
-    private List<Object[]> weeks;
-    private List<HourEntry> effortEntries;
+
     
     //multi edit
     private Map<Integer, String[]> userIdss = new HashMap<Integer,String[]>();
@@ -153,39 +139,6 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
         storable.setTimeSpent(this.hourEntry.getTimeSpent());
         storable.setUser(this.hourEntry.getUser());
     }
-    
-    public String getDaySumsByWeek() {
-        Calendar cal = Calendar.getInstance();
-        if(week == -1) {
-            week = cal.get(Calendar.WEEK_OF_YEAR);
-            year = cal.get(Calendar.YEAR);
-        } else {
-            cal.set(Calendar.YEAR, this.year);
-            cal.set(Calendar.WEEK_OF_YEAR, this.week);
-        }
-        cal.add(Calendar.WEEK_OF_YEAR, 1);
-        nextWeek = cal.get(Calendar.WEEK_OF_YEAR);
-        nextYear = cal.get(Calendar.YEAR);
-        cal.add(Calendar.WEEK_OF_YEAR, -2);
-        prevWeek = cal.get(Calendar.WEEK_OF_YEAR);
-        prevYear = cal.get(Calendar.YEAR);
-        this.dailyEffort = this.hourEntryBusiness.getDailySpentEffortByWeekAndUser(this.week, this.year, this.userId);
-        cal.add(Calendar.WEEK_OF_YEAR, -9);
-        this.weeks = new ArrayList<Object[]>();
-        for(int i = 0; i < 20; i++) {
-            Object[] cur = new Object[] {cal.get(Calendar.YEAR),cal.get(Calendar.WEEK_OF_YEAR)};
-            this.weeks.add(cur);
-            cal.add(Calendar.WEEK_OF_YEAR, 1);
-        }
-        return SUCCESS;
-    }
-    
-    public String getHourEntriesByUserAndWeek() {
-        this.effortEntries = this.hourEntryBusiness.getEntriesByUserAndDay(day, year, userId);
-        return SUCCESS;
-    }
-    
-    
 
     public int getHourEntryId() {
         return hourEntryId;
@@ -347,65 +300,6 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
 
     public String getJsonData() {
         return jsonData;
-    }
-
-    public List<DailySpentEffort> getDailyEffort() {
-        return dailyEffort;
-    }
-
-    public void setDailyEffort(List<DailySpentEffort> dailyEffort) {
-        this.dailyEffort = dailyEffort;
-    }
-
-    public void setWeek(int week) {
-        this.week = week;
-    }
-
-    public int getWeek() {
-        return this.week;
-    }
-    
-    public int getPrevWeek() {
-        return prevWeek;
-    }
-
-    public int getNextWeek() {
-        return nextWeek;
-    }
-
-    public void setYear(int year) {
-        this.year = year;
-    }
-    public int getYear() {
-        return this.year;
-    }
-
-    public int getPrevYear() {
-        return prevYear;
-    }
-
-    public int getNextYear() {
-        return nextYear;
-    }
-
-    public List<HourEntry> getEffortEntries() {
-        return effortEntries;
-    }
-
-    public void setEffortEntries(List<HourEntry> effortEntries) {
-        this.effortEntries = effortEntries;
-    }
-
-    public void setDay(int day) {
-        this.day = day;
-    }
-
-    public List<Object[]> getWeeks() {
-        return weeks;
-    }
-
-    public void setWeeks(List<Object[]> weeks) {
-        this.weeks = weeks;
     }
     
 }

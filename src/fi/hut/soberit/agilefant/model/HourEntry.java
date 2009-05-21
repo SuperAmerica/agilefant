@@ -9,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Type;
@@ -103,5 +104,15 @@ public class HourEntry {
     
     public void setUser(User user) {
         this.user = user;
+    }
+    
+    @Transient
+    public boolean isBacklogEffortEntry() {
+        return (this instanceof BacklogHourEntry);
+    }
+    
+    @Transient
+    public boolean isTaskEffortEntry() {
+        return (this instanceof BacklogItemHourEntry);
     }
 }

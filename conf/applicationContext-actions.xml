@@ -102,4 +102,7 @@
     <bean name="exportBacklogAction"
         class="fi.hut.soberit.agilefant.web.ExportBacklogAction"
         autowire="byName" singleton="false" />
+    <bean name="spentEffortAction"
+        class="fi.hut.soberit.agilefant.web.SpentEffortAction"
+        autowire="byName" singleton="false" />
 </beans>

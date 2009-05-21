@@ -909,10 +909,10 @@
 		</action>
 		
 		<action name="updateMultipleHourEntries" class="hourEntryAction" method="multiEdit" />
-		<action name="weeklySpentEffort" method="getDaySumsByWeek" class="hourEntryAction">
+		<action name="weeklySpentEffort" method="getDaySumsByWeek" class="spentEffortAction">
 			<result type="dispatcher">/WEB-INF/jsp/inc/spentEffort.jsp</result>
 		</action>
-		<action name="hourEntriesByUserAndWeek" class="hourEntryAction" method="getHourEntriesByUserAndWeek">
+		<action name="hourEntriesByUserAndWeek" class="spentEffortAction" method="getHourEntriesByUserAndDay">
 			<result type="dispatcher">/WEB-INF/jsp/inc/effortByWeek.jsp</result>
 		</action>
 		<!-- Business theme actions -->

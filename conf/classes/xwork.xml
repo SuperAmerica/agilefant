@@ -1027,5 +1027,13 @@
         <action name="qr" method="resolveLinkTarget" class="quickReferenceAction">
         	<result name="success" type="redirect">${uri}</result>
         </action>
+        
+        <action name="exportBacklog" method="exportBacklog" class="exportBacklogAction">
+			<result name="success" type="stream">
+				<param name="contentType">application/xls</param>
+				<param name="inputName">sheetData</param>
+				<param name="contentDisposition">filename="agilefant-backlog-${backlogId}.xls"</param>
+			</result>
+		</action>
 </package>
 </xwork>

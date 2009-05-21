@@ -99,7 +99,4 @@
     <bean name="quickReferenceAction"
         class="fi.hut.soberit.agilefant.web.QuickReferenceAction"
         autowire="byName" singleton="false" />
-    <bean name="exportBacklogAction"
-        class="fi.hut.soberit.agilefant.web.ExportBacklogAction"
-        autowire="byName" singleton="false" />
 </beans>

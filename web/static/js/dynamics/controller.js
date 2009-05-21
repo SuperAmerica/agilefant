@@ -484,7 +484,7 @@ IterationGoalController.prototype = {
 			type: "effort",
 			set: function(val) { bli.setEffortLeft(val); },
 			get: function() { return bli.getEffortLeft(); },
-			canEdit: function() { 
+			onEdit: function() {
 				return (bli.getOriginalEstimate() > 0 && bli.getState() !== "DONE");
 			},
 			decorator: agilefantUtils.aftimeToString
@@ -492,7 +492,39 @@ IterationGoalController.prototype = {
 		var oe = row.createCell({
 			type: "effort",
 			get: function() { return bli.getOriginalEstimate(); },
-			canEdit: function() { return (!bli.getOriginalEstimate() && bli.getState() !== "DONE");},
+			onEdit: function() {
+			  var a = bli;
+			  if (bli.getState() == "DONE") {
+			    return false;
+			  }
+			  if (!bli.getOriginalEstimate()) {
+			    return true;
+			  }
+			  else {
+			    var parent = $("<div />").appendTo(document.body).text("Do you want to reset the original estimate?");
+			    var me = this;
+			    parent.dialog({
+  			      resizable: false,
+  			      height:140,
+  			      modal: true,
+  			      close: function() { parent.dialog('destroy'); parent.remove(); },
+  			      buttons: {
+    			      'Yes': function() {
+      			      $(this).dialog('destroy');
+      			      parent.remove();
+      			      bli.resetOriginalEstimate();
+      			      return false;
+      			    },
+      			    'No': function() {
+      			      $(this).dialog('destroy');
+      			      parent.remove();
+      			      return false;
+      			    }
+  			      }
+			    });
+			  }
+			  return false;
+			},
 			set: function(val) { bli.setOriginalEstimate(val); },
 			decorator: agilefantUtils.aftimeToString
 		});

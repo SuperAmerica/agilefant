@@ -541,8 +541,8 @@
 		 */
 		openEdit: function(noAutoClose) {
 			var me = this;
-			if(typeof this.options.canEdit == "function") {
-				if(!this.options.canEdit()) {
+			if(typeof this.options.onEdit == "function") {
+				if(!this.options.onEdit()) {
 					return;
 				}
 			}

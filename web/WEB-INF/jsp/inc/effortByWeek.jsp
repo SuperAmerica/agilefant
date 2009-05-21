@@ -20,4 +20,7 @@
 	<display:column sortable="false" title="Comment">
 		<c:out value="${row.description}" />
 	</display:column>
+	<display:column sortable="false" title="Context">
+    TODO
+	</display:column>
 </display:table>

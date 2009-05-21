@@ -1302,4 +1302,14 @@ td.icons table tr td {
     padding: 0 1px 0 0;	
 }
 
+a.detailedEffort {
+  color: red;
+}
+.spentEffortArrow {
+  font-size:19pt;
+  text-align:center !important;
+  vertical-align:middle;
+  width:23px;
+}
+	
 

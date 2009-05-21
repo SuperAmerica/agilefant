@@ -6,7 +6,7 @@ import java.util.Date;
 import fi.hut.soberit.agilefant.model.AFTime;
 
 public class DailySpentEffort {
-    private AFTime spentEffort = new AFTime(0);
+    private AFTime spentEffort = null;
     private Date day;
     public AFTime getSpentEffort() {
         return spentEffort;

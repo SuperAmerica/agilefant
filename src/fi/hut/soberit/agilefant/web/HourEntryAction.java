@@ -1,6 +1,7 @@
 package fi.hut.soberit.agilefant.web;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -50,6 +51,7 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
     private int day = 1;
     
     private List<DailySpentEffort> dailyEffort;
+    private List<Object[]> weeks;
     private List<HourEntry> effortEntries;
     
     //multi edit
@@ -168,6 +170,13 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
         prevWeek = cal.get(Calendar.WEEK_OF_YEAR);
         prevYear = cal.get(Calendar.YEAR);
         this.dailyEffort = this.hourEntryBusiness.getDailySpentEffortByWeekAndUser(this.week, this.year, this.userId);
+        cal.add(Calendar.WEEK_OF_YEAR, -9);
+        this.weeks = new ArrayList<Object[]>();
+        for(int i = 0; i < 20; i++) {
+            Object[] cur = new Object[] {cal.get(Calendar.YEAR),cal.get(Calendar.WEEK_OF_YEAR)};
+            this.weeks.add(cur);
+            cal.add(Calendar.WEEK_OF_YEAR, 1);
+        }
         return SUCCESS;
     }
     
@@ -352,6 +361,10 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
         this.week = week;
     }
 
+    public int getWeek() {
+        return this.week;
+    }
+    
     public int getPrevWeek() {
         return prevWeek;
     }
@@ -385,6 +398,14 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
 
     public void setDay(int day) {
         this.day = day;
+    }
+
+    public List<Object[]> getWeeks() {
+        return weeks;
+    }
+
+    public void setWeeks(List<Object[]> weeks) {
+        this.weeks = weeks;
     }
     
 }

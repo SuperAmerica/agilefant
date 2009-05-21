@@ -424,13 +424,13 @@ public class HourEntryBusinessTest extends TestCase {
         replay(heDAO);
         List<DailySpentEffort> res = hourEntryBusiness.getDailySpentEffortByIntervalAndUser(start.getTime(), end.getTime(), null);
         assertEquals(7, res.size());
-        assertEquals(new AFTime(0), res.get(0).getSpentEffort());
-        assertEquals(new AFTime(0), res.get(1).getSpentEffort());
-        assertEquals(new AFTime(0), res.get(2).getSpentEffort());
-        assertEquals(new AFTime(0), res.get(3).getSpentEffort());
-        assertEquals(new AFTime(0), res.get(4).getSpentEffort());
-        assertEquals(new AFTime(0), res.get(5).getSpentEffort());
-        assertEquals(new AFTime(0), res.get(6).getSpentEffort());
+        assertEquals(null, res.get(0).getSpentEffort());
+        assertEquals(null, res.get(1).getSpentEffort());
+        assertEquals(null, res.get(2).getSpentEffort());
+        assertEquals(null, res.get(3).getSpentEffort());
+        assertEquals(null, res.get(4).getSpentEffort());
+        assertEquals(null, res.get(5).getSpentEffort());
+        assertEquals(null, res.get(6).getSpentEffort());
         
         verify(heDAO);
     }
@@ -455,14 +455,14 @@ public class HourEntryBusinessTest extends TestCase {
         replay(heDAO);
         List<DailySpentEffort> res = hourEntryBusiness.getDailySpentEffortByIntervalAndUser(start.getTime(), end.getTime(), null);
         assertEquals(8, res.size());
-        assertEquals(new AFTime(0), res.get(0).getSpentEffort());
+        assertEquals(null, res.get(0).getSpentEffort());
         assertEquals(new AFTime(1900), res.get(1).getSpentEffort());
         assertEquals(new AFTime(4000), res.get(2).getSpentEffort());
-        assertEquals(new AFTime(0), res.get(3).getSpentEffort());
-        assertEquals(new AFTime(0), res.get(4).getSpentEffort());
+        assertEquals(null, res.get(3).getSpentEffort());
+        assertEquals(null, res.get(4).getSpentEffort());
         assertEquals(new AFTime(50000), res.get(5).getSpentEffort());
         assertEquals(new AFTime(6000000), res.get(6).getSpentEffort());
-        assertEquals(new AFTime(0), res.get(7).getSpentEffort());
+        assertEquals(null, res.get(7).getSpentEffort());
         verify(heDAO);
     }
     public void testGetDailySpentEffortByIntervalAndUser() {
@@ -487,7 +487,7 @@ public class HourEntryBusinessTest extends TestCase {
         List<DailySpentEffort> res = hourEntryBusiness.getDailySpentEffortByIntervalAndUser(start.getTime(), end.getTime(), null);
         assertEquals(4, res.size());
         assertEquals(new AFTime(1900), res.get(0).getSpentEffort());
-        assertEquals(new AFTime(0), res.get(1).getSpentEffort());
+        assertEquals(null, res.get(1).getSpentEffort());
         assertEquals(new AFTime(54000), res.get(2).getSpentEffort());
         assertEquals(new AFTime(6000000), res.get(3).getSpentEffort());
         verify(heDAO);

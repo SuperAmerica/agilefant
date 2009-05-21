@@ -357,7 +357,11 @@ public class HourEntryBusinessImpl implements HourEntryBusiness {
             if(tmp.get(cal.getTime()) == null) {
                 tmp.put(cal.getTime(), new AFTime(0));
             }
-            tmp.get(cal.getTime()).add(entry.getTimeSpent());
+            if(entry.getTimeSpent() == null) {
+                tmp.get(cal.getTime()).add(new AFTime(0));
+            } else {
+                tmp.get(cal.getTime()).add(entry.getTimeSpent());
+            }
         }
         
         cal.setTime(start);

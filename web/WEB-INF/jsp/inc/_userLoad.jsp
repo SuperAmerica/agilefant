@@ -18,7 +18,17 @@ $(document).ready(function() {
 						panel.load(this.href, function() { clickRegister(); });
 						return false;
 					});
+					$('select',panel).change(function() {
+						  var val = $(this).val();
+						  var parts = val.split("-");
+						  if(parts.length != 2) {
+							  return;
+						  }
+						  panel.load("weeklySpentEffort.action",{userId: ${userId}, week: parts[1], year: parts[0]}, function(data) { clickRegister(); });
+					});
 					$('a.detailLink',panel).click(function() {
+						$('a.detailLink',panel).removeClass("detailedEffort");
+						$(this).addClass("detailedEffort");
 						$('.details',panel).load(this.href);
 						return false;
 					});

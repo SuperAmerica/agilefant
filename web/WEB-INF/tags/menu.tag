@@ -438,32 +438,6 @@ Agilefant
 				href="%{iterLink}&contextName=iteration">${aef:out(page.name)}</ww:a>
 		</c:when>
 
-		<c:when test="${aef:isIterationGoal(page)}">
-								&gt;
-								<ww:url id="iterGoalLink" action="editIterationGoal"
-				includeParams="none">
-				<ww:param name="iterationGoalId" value="${page.id}" />
-			</ww:url>
-			<ww:a title="IterationGoal: ${page.name}" href="%{iterGoalLink}">${aef:out(page.name)}</ww:a>
-		</c:when>
-
-		<c:when test="${aef:isBacklogItem(page)}">
-								&gt;
-								<ww:url id="bliLink" action="editBacklogItem"
-				includeParams="none">
-				<ww:param name="backlogItemId" value="${page.id}" />
-			</ww:url>
-			<ww:a title="Backlog Item: ${page.name}" href="%{bliLink}">${aef:out(page.name)}</ww:a>
-		</c:when>
-
-		<c:when test="${aef:isTask(page)}">
-								&gt;
-								<ww:url id="taskLink" action="editTask" includeParams="none">
-				<ww:param name="taskId" value="${page.id}" />
-			</ww:url>
-			<ww:a title="Task: ${page.name}" href="%{taskLink}">${aef:out(page.name)}</ww:a>
-		</c:when>
-
 		<c:when test="${aef:isUser(page)}">
 			<ww:url id="userLink" action="listUsers" includeParams="none" />
 			<ww:a href="%{userLink}">User list</ww:a>

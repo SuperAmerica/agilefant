@@ -281,7 +281,8 @@ div.gear {
 	background-color: #66ddff;
 }
 .taskStateBLOCKED {
-	background-color: #ff7766
+	background-color: #e33;
+	color: #ddd;
 }
 .taskStateIMPLEMENTED {
 	background-color: #66ff66;

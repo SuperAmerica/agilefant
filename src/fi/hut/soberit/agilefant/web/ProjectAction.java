@@ -192,7 +192,7 @@ public class ProjectAction extends BacklogContentsAction implements CRUDAction {
             storable = projectDAO.get(projectId);
             if (storable == null) {
                 super.addActionError(super.getText("project.notFound"));
-                return CRUDAction.AJAX_ERROR;
+                return ERROR;
             }
             if(storable.getProduct() != null && productId > 0 &&
                     storable.getProduct().getId() != productId) {
@@ -207,7 +207,7 @@ public class ProjectAction extends BacklogContentsAction implements CRUDAction {
         }
 
         if (super.hasActionErrors()) {
-            return CRUDAction.AJAX_ERROR;
+            return ERROR;
         }
         // project-olion on oltava kannassa ennen kuin Assignmentit tehdään.
         if (projectId == 0) {
@@ -217,7 +217,7 @@ public class ProjectAction extends BacklogContentsAction implements CRUDAction {
         }
         backlogBusiness.setAssignments(selectedUserIds, this.assignments, projectDAO
                 .get(projectId));
-        return CRUDAction.AJAX_SUCCESS;
+        return SUCCESS;
     }
 
     public String ajaxStoreProject() {

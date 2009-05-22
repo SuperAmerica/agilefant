@@ -10,7 +10,6 @@
 @import url(static/css/v5.css); 
 -->
 </style>
-<!--[if IE 5]><link href="static/css/msie5.css" type="text/css" rel="stylesheet" media="screen,projection" /><![endif]--><!--[if IE 6]><link href="static/css/msie6.css" type="text/css" rel="stylesheet" media="screen,projection" /><![endif]-->
 
 <script type="text/javascript" src="static/js/generic.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
 <script type="text/javascript" src="static/js/jquery.js?<ww:text name="webwork.agilefantReleaseId" />"></script>

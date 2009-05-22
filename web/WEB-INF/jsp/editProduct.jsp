@@ -324,7 +324,7 @@ var productId = ${product.id};
 					<display:column title="Description" class="themeDescriptionColumn" sortable="true">
 					   <c:out value="${fn:substring(aef:stripHTML(row.description), 0, 50)}" />
 					</display:column>
-					<display:column title="Completed BLIs">
+					<display:column title="Completed stories">
 						<c:out value="${businessThemeMetrics[row].donePercentage}" />% 
 						(<c:out value="${businessThemeMetrics[row].numberOfDoneBlis}" /> /
 						<c:out value="${businessThemeMetrics[row].numberOfBlis}" />)					
@@ -373,7 +373,7 @@ var productId = ${product.id};
 					<display:column title="Description" class="themeDescriptionColumn" sortable="true">
                        <c:out value="${fn:substring(aef:stripHTML(row.description), 0, 50)}" />
                     </display:column>
-					<display:column title="Completed BLIs">
+					<display:column title="Completed stories">
 						<c:out value="${businessThemeMetrics[row].donePercentage}" />% 
 						(<c:out value="${businessThemeMetrics[row].numberOfDoneBlis}" /> /
 						<c:out value="${businessThemeMetrics[row].numberOfBlis}" />)					

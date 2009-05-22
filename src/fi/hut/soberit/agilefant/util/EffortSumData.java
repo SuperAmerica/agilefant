@@ -29,12 +29,7 @@ public class EffortSumData {
             effortHoursString = "";
             plusString = "";
         }
-        if (nonEstimatedItems == 1)
-            nonEstimatedString += plusString + nonEstimatedItems
-                    + " non-est. BLI";
-        else if (nonEstimatedItems > 1)
-            nonEstimatedString += plusString + nonEstimatedItems
-                    + " non-est. BLIs";
+        nonEstimatedString += plusString + nonEstimatedItems + " non-est.";
         return effortHoursString + nonEstimatedString;
     }
     

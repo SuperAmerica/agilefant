@@ -455,7 +455,10 @@
 	    this.isActionCell = true;
 	  },
 	  activateSortHandle: function() {
-	    this.cell.addClass("dynamictable-sorthandle");
+	    this.cell.addClass("dynamictable-sorthandle").addClass("dragHandle");
+	  },
+	  setDragHandle: function() {
+		this.cell.addClass("dragHandle"); 
 	  },
 	  updateTooltip: function() {
 		  if(this.editorOpen) {

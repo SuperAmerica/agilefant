@@ -259,6 +259,9 @@ IterationModel.prototype.removeGoal = function(goal) {
 IterationModel.prototype.getTasks = function() { //blis without an iteration goal
 	return this.itemsWithoutGoal;
 };
+IterationModel.prototype.addTask = function(task) {
+	this.itemsWithoutGoal.push(task);
+};
 IterationModel.prototype.getPseudoGoal = function() {
 	return this.containerGoal;
 };

@@ -55,6 +55,9 @@ $(document).ready(function() {
 		equals(agilefantUtils.aftimeToMillis("1"), 3600 ,"1");
 		equals(agilefantUtils.aftimeToMillis("1h 10min"), 4200 ,"1h 10min");
 		equals(agilefantUtils.aftimeToMillis("10min"), 600 ,"10min");
+		equals(agilefantUtils.aftimeToMillis("  "),0,"empty");
+		equals(agilefantUtils.aftimeToMillis(""),0,"empty");
+		equals(agilefantUtils.aftimeToMillis("0"),0,"0");
 	});
 
 	module("Dynamic Table", {

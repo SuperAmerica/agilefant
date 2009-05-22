@@ -133,7 +133,7 @@ IterationController.prototype = {
     		type: "text", 
     		get: function() { return goal.getName();}, 
     		set: function(val){ goal.setName(val);}});
-    	name.activateSortHandle();
+    	expand.activateSortHandle();
     	var tasks = row.createCell({
     		get: function() { 
     		return goal.getDoneTasks() + " / " + goal.getTotalTasks();
@@ -317,15 +317,16 @@ IterationController.prototype = {
     				return false;
     			}
     			var model = draggable.data("row").model;
-    			return (model.iterationGoal.getId() !== goal.getId());
+    			return (model.iterationGoal.getId() !== 0);
     		},
-    		hoverClass: '.drophover',
+    		hoverClass: 'drophover',
     		greedy: true,
     		drop: function(ev,ui) {
     			var row = ui.draggable.data("row");
     			var model = row.model;
     			row.remove();
     			model.changeStory(goal);
+    			me.model.addTask(model);
     			me.noGoalItemController.render();
     		}
 		});
@@ -608,8 +609,9 @@ IterationGoalController.prototype = {
 				$(this).data("dragTask", false);
 				$(this).data("row", null);
 			},
-			handle: name.getElement()
+			handle: expand.getElement()
 		});
+		expand.setDragHandle();
 	},
 	createBli: function() {
 		var me = this;

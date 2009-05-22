@@ -263,6 +263,11 @@ div.gear {
 	-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=60)";
 	filter: alpha(opacity=60);
 }
+
+.dragHandle:hover {
+	background-color: #99ffdd !important;
+	cursor: move;
+}
 .taskState {
 	display: block;
 	width: 80px;

@@ -18,6 +18,9 @@ var agilefantUtils = {
 	aftimeToMillis: function(string) {
 		string = jQuery.trim(string);
 		string = string.toLowerCase();
+		if(string === "") {
+			return 0;
+		}
 		string = string.replace(/,/,".");
 		var retVal = 0;
 		if(!agilefantUtils.isAftimeString(string)) {

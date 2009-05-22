@@ -899,7 +899,9 @@
 	  this.row = row;
 	  this.inMenu = false;
 	  this.options = {
-	      title: '<div class="actionColumn"><div class="gear" style="float:left;"/><div style="float: left;">&nbsp; Actions</div></div>'
+	      title: '<div class="actionColumn">' +
+	      '<button class="edit"><div class="gear" style="float: left;"/><div style="float: right;">Actions</div></button>' +
+	      '</div>'
 	  };
 	  $.extend(this.options, options);
 	  var me = this;

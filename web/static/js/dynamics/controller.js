@@ -978,7 +978,6 @@ TaskController.prototype = {
 		var me = this;
 		var parent = $("<div />").appendTo(document.body);
 		parent.load("newHourEntry.action", {backlogItemId: this.model.getId()}, function() { 
-			addFormValidators(parent);
 			var form = parent.find("form");
 			var saveEffort = function() {
 				if(!form.valid()) {
@@ -1026,6 +1025,7 @@ TaskController.prototype = {
 					saveEffort();
 				}
 			});
+			addFormValidators(parent,saveEffort);
 			parent.dialog({
 				resizable: true,
 				close: function() { parent.dialog('destroy'); parent.remove(); },

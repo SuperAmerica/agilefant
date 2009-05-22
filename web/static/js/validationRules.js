@@ -38,7 +38,7 @@ jQuery.validator.addMethod("time",function(value, element, param) {
 jQuery.validator.addMethod("before", function(value, element, param) {
     var elem = $(element);
     var date1 = Date.fromString(value);
-    var date2 = Date.fromString(elem.parents('form:eq(0)').find('[@name=' + param[0] + ']').val());
+    var date2 = Date.fromString(elem.parents('form:eq(0)').find('[name=' + param[0] + ']').val());
     if (date1 == false || date2 == false) {
         return true;
     }

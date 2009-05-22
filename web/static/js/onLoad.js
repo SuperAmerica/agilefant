@@ -73,7 +73,7 @@ function submitDialogForm(evt) {
 /**
  * Call this function to add validators to your form according to css classes.
  */
-function addFormValidators(target) {
+function addFormValidators(target, customSubmit) {
     var wrappers = $(target).find('div.validateWrapper');
     $.each(wrappers, function() {
         var form = $(this).find('form');
@@ -94,8 +94,14 @@ function addFormValidators(target) {
         $.each(classes, function(i) {
             if (validationRulesByHTMLClass[this] != null) {
                 var rules = validationRulesByHTMLClass[this];
-                form.validate(rules); 
-                form.submit(submitDialogForm);
+            	var myRules = {};
+            	$.extend(myRules,rules); //prevent modifying the global rules
+            	rules = myRules;
+                if(customSubmit) {
+                	rules.submitHandler = customSubmit;
+                } else {
+                	rules.submitHandler = submitDialogForm;
+                } 
                 if(target.data && target.data("aef-tabs") == "1") {
                 	var mySubm = function(evt) {
                         if(form.valid()) {
@@ -107,8 +113,9 @@ function addFormValidators(target) {
                             }
                         }
                     };
-                	form.submit(mySubm);
+                	rules.submitHandler = mySubm;
                 }
+                form.validate(rules);
                 return false;
             }
         });
@@ -152,7 +159,6 @@ function openCreateDialog(element) {
 	        dialog.dialog("destroy");
 	        dialog.remove();
 	    });
-	    dialog.find('form').submit(submitDialogForm);
 	    dialog.show();
 	    /* Show it as a dialog */
         dialog.dialog(windowOptions);
@@ -163,9 +169,7 @@ function openCreateDialog(element) {
             insertUnorderedList : { visible : true }
         }});
         
-        /*var form = dialog.find('form');
-        form.validate(ruleset);*/
-        addFormValidators(dialog);
+        addFormValidators(dialog); //will attach submitDialogForm
         
         dialog.css('height','100%');
         

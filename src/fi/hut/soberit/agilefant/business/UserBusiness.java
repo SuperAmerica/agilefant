@@ -71,7 +71,7 @@ public interface UserBusiness {
 
     /**
      * Get user by id.
-     * 
+     *
      * @param userId
      *                id number of the user
      * @return the user with id userId
@@ -142,4 +142,14 @@ public interface UserBusiness {
      * @return
      */
     public String getUserJSON(int userId);
+
+    /**
+     * Get user by name.
+     * 
+     * @param uname
+     *                name of the user
+     * @return the user or null if not found
+     */
+    User getUser(String name);
+
 }

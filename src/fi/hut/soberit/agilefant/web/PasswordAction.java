@@ -4,7 +4,7 @@ import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
 
 import fi.hut.soberit.agilefant.business.PasswordBusiness;
-import fi.hut.soberit.agilefant.db.UserDAO;
+import fi.hut.soberit.agilefant.business.UserBusiness;
 import fi.hut.soberit.agilefant.model.User;
 
 /**
@@ -19,7 +19,7 @@ public class PasswordAction extends ActionSupport {
 
     private PasswordBusiness passwordBusiness;
 
-    private UserDAO userDAO;
+    private UserBusiness userBusiness;
 
     private String name;
 
@@ -31,7 +31,7 @@ public class PasswordAction extends ActionSupport {
      * @return
      */
     public String generate() {
-        User user = userDAO.getUser(name);
+        User user = userBusiness.getUser(name);
         if (user == null)
             return Action.ERROR; // User not found.
 
@@ -68,11 +68,12 @@ public class PasswordAction extends ActionSupport {
         this.passwordBusiness = passwordBusiness;
     }
 
-    public UserDAO getUserDAO() {
-        return userDAO;
+    public UserBusiness getUserBusiness() {
+        return userBusiness;
     }
 
-    public void setUserDAO(UserDAO userDAO) {
-        this.userDAO = userDAO;
+    public void setUserBusiness(UserBusiness userBusiness) {
+        this.userBusiness = userBusiness;
     }
+
 }

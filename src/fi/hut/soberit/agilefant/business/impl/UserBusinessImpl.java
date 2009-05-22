@@ -191,6 +191,10 @@ public class UserBusinessImpl implements UserBusiness {
         return (List<User>) userDAO.getAll();
     }
 
+    public User getUser(String name) {
+        return userDAO.getUser(name);
+    }
+
     public User getUser(int userId) {
         return userDAO.get(userId);
     }

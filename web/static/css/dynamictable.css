@@ -189,6 +189,7 @@ div.gear {
 	background-image:url(../img/open_close.png);
 	background-position:0 0;
 	background-repeat:no-repeat;
+	margin-top: 5px;
 	cursor:pointer;
 	height:16px;
 	width:16px;
@@ -197,6 +198,7 @@ div.gear {
 	background-image:url(../img/open_close.png);
 	background-position:0 100%;
 	background-repeat:no-repeat;
+	margin-top: 5px;
 	cursor:pointer;
 	height:16px;
 	width:16px;
@@ -264,8 +266,12 @@ div.gear {
 	filter: alpha(opacity=60);
 }
 
+button.edit {
+  white-space: nowrap !important;  
+}
+
 .dragHandle:hover {
-	background-color: #99ffdd !important;
+	background-color: #6cf !important;
 	cursor: move;
 }
 .taskState {

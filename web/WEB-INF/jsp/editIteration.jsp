@@ -52,7 +52,7 @@
 				</div>
 				<div class="subItemContent">
 				<div id="descriptionDiv" class="descriptionDiv"
-					style="display: block;">
+					style="display: block; max-height: 17em !important;">
 				<table class="infoTable" cellpadding="0" cellspacing="0">
 					<tr>
 						<th class="info1"><ww:text name="general.uniqueId"/></th>

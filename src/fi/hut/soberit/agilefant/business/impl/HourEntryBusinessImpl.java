@@ -393,6 +393,10 @@ public class HourEntryBusinessImpl implements HourEntryBusiness {
         return this.hourEntryDAO.getEntriesByIntervalAndUser(start.getTime(), end.getTime(), user);
     }
     
+    public AFTime getTotalSpentEffrotByBacklog(Backlog backlog) {
+        return this.hourEntryDAO.getTotalSpentEffortByBacklog(backlog);
+    }
+    
     public BacklogHourEntryDAO getBacklogHourEntryDAO() {
         return backlogHourEntryDAO;
     }

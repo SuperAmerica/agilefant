@@ -176,4 +176,6 @@ public interface HourEntryBusiness {
      * @return
      */
     public List<HourEntry> getEntriesByUserAndDay(int day, int year, int userId);
+    
+    public AFTime getTotalSpentEffrotByBacklog(Backlog backlog);
 }

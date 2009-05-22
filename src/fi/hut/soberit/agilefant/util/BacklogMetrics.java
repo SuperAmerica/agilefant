@@ -7,6 +7,7 @@ public class BacklogMetrics {
     private AFTime scopingNeeded = new AFTime(0);
     private AFTime effortLeft = new AFTime(0);
     private AFTime originalEstimate = new AFTime(0);
+    private AFTime spentEffort = new AFTime(0);
     private Integer scheduleVariance = new Integer(0);
     private Integer completedItems = new Integer(0);
     private Integer totalItems = new Integer(0);
@@ -70,5 +71,11 @@ public class BacklogMetrics {
     }
     public void setOriginalEstimate(AFTime originalEstimate) {
         this.originalEstimate = originalEstimate;
+    }
+    public AFTime getSpentEffort() {
+        return spentEffort;
+    }
+    public void setSpentEffort(AFTime spentEffort) {
+        this.spentEffort = spentEffort;
     }
 }

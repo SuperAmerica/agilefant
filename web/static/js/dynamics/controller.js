@@ -180,10 +180,10 @@ IterationController.prototype = {
     	this.IterationGoalControllers.push(blictrl);
     	var expandButton = commonView.expandCollapse(expand.getElement(), function() {
     		blictrl.showTasks();
-    		//desc.getElement().hide();
+    		desc.getElement().hide();
     	}, function() {
     		blictrl.hideTasks();
-    		//desc.getElement().show();
+    		desc.getElement().show();
     	});
     	this.buttonCells.push(expandButton);
     	buttons.setActionCell({items: [
@@ -1020,8 +1020,11 @@ TaskController.prototype = {
 				me.model.reloadData();
 				me.spentEffortView.render();
 			};
-			form.submit(function() {
-				return saveEffort();
+			//hack: for some unknown reason form.submit refuses to work
+			form.find("input:visible").keypress(function(event) {
+				if(event.keyCode === 13) {
+					saveEffort();
+				}
 			});
 			parent.dialog({
 				resizable: true,

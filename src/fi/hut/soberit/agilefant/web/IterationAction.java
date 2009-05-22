@@ -16,7 +16,6 @@ import fi.hut.soberit.agilefant.db.IterationDAO;
 import fi.hut.soberit.agilefant.db.IterationGoalDAO;
 import fi.hut.soberit.agilefant.db.ProjectDAO;
 import fi.hut.soberit.agilefant.model.Backlog;
-import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.IterationGoal;
 import fi.hut.soberit.agilefant.model.Project;
@@ -33,8 +32,6 @@ public class IterationAction extends BacklogContentsAction implements CRUDAction
     private int iterationId;
 
     private Iteration iteration;
-
-    //private Backlog backlog;
 
     private IterationDAO iterationDAO;
 
@@ -116,12 +113,6 @@ public class IterationAction extends BacklogContentsAction implements CRUDAction
 
         project = iteration.getProject();
 
-        /*
-         * We need Backlog-class object to generate backlog list in
-         * _backlogList.jsp
-         */
-        backlog = iteration;
-
         if (project == null) {
             super
                     .addActionError(super
@@ -129,22 +120,6 @@ public class IterationAction extends BacklogContentsAction implements CRUDAction
             return Action.INPUT;
         }
         projectId = project.getId();
-        
-        super.initializeContents();
-        
-        /* Get the effort left sums of iteration goals */
-       /*
-        for (IterationGoal ig : iteration.getIterationGoals()) {
-            Collection<BacklogItem> blis = ig.getBacklogItems();
-            EffortSumData igEffSum = backlogBusiness.getEffortLeftSum(blis);
-            EffortSumData igOrigEstSum = backlogBusiness.getOriginalEstimateSum(blis);
-            
-            
-            iterationGoalEffLeftSums.put(new Integer(ig.getId()), igEffSum);
-            iterationGoalOrigEstSums.put(new Integer(ig.getId()), igOrigEstSum);           
-        }
-        */
-        /* Get the original estimate sums of iteration goals */
         
         // Load metrics data
         iterationMetrics = backlogBusiness.getBacklogMetrics(iteration);

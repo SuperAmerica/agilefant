@@ -1,4 +1,5 @@
 <%@ include file="./_taglibs.jsp"%>
+<aef:hourReporting id="hourReporting" />
 <table>
 	<tr>
 		<th>Velocity</th>
@@ -42,4 +43,18 @@
 			value="${iterationMetrics.completedItems}" /> / <c:out
 			value="${iterationMetrics.totalItems}" />)</td>
 	</tr>
+		<tr>
+		<th>Effort left</th>
+		<td><c:out value="${iterationMetrics.effortLeft}" /></td>
+	</tr>
+	<tr>
+		<th>Original estimate</th>
+		<td><c:out value="${iterationMetrics.originalEstimate}" /></td>
+	</tr>
+	<c:if test="${hourReporting}">
+	<tr>
+		<th>Spent effort</th>
+		<td><c:out value="${iterationMetrics.spentEffort}" /></td>
+	</tr>	
+	</c:if>
 </table>

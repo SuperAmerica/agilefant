@@ -16,6 +16,7 @@ import fi.hut.soberit.agilefant.business.BacklogBusiness;
 import fi.hut.soberit.agilefant.business.BusinessThemeBusiness;
 import fi.hut.soberit.agilefant.business.HistoryBusiness;
 import fi.hut.soberit.agilefant.business.HourEntryBusiness;
+import fi.hut.soberit.agilefant.business.SettingBusiness;
 import fi.hut.soberit.agilefant.db.AssignmentDAO;
 import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
@@ -71,6 +72,8 @@ public class BacklogBusinessImpl implements BacklogBusiness {
     private ProductDAO productDAO;
 
     private BusinessThemeDAO businessThemeDAO;
+    
+    private SettingBusiness settingBusiness;
 
     /** {@inheritDoc} */
     public Backlog getBacklog(int backlogId) throws ObjectNotFoundException {
@@ -671,23 +674,6 @@ public class BacklogBusinessImpl implements BacklogBusiness {
             }
         }
 
-        // Calculate the absolute total
-        /*
-         * data.getAbsoluteTotal().add(data.getTotalEffort());
-         * data.getAbsoluteTotal().add(data.getTotalOverhead());
-         */
-
-        /*
-         * System.out.println("Week\tEffort\tOverhead\tTotal"); // Print loop
-         * for debugging for (Integer weekno : data.getWeekNumbers()) {
-         * System.out.println(weekno + "\t" + data.getEfforts().get(weekno) +
-         * "\t" + data.getOverheads().get(weekno) + "\t" +
-         * data.getWeeklyTotals().get(weekno)); }
-         * 
-         * System.out.println("Total\t" + data.getTotalEffort() + "\t" +
-         * data.getTotalOverhead() + "\t" + data.getAbsoluteTotal());
-         */
-
         return data;
     }
 
@@ -807,6 +793,10 @@ public class BacklogBusinessImpl implements BacklogBusiness {
         } else {
             metrics.setBacklogOngoing(true);
         }
+        if(this.settingBusiness.isHourReportingEnabled()) {
+            metrics.setSpentEffort(this.hourEntryBusiness.getTotalSpentEffrotByBacklog(backlog));
+        }
+        
 
         return metrics;
     }
@@ -1004,6 +994,10 @@ public class BacklogBusinessImpl implements BacklogBusiness {
 
     public void setHistoryBusiness(HistoryBusiness historyBusiness) {
         this.historyBusiness = historyBusiness;
+    }
+
+    public void setSettingBusiness(SettingBusiness settingBusiness) {
+        this.settingBusiness = settingBusiness;
     }
 
 }

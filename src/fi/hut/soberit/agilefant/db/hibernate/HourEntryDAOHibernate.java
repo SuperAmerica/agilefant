@@ -85,5 +85,17 @@ public class HourEntryDAOHibernate extends GenericDAOHibernate<HourEntry> implem
         this.getHibernateTemplate().evict(res);
         return res;
     }
+
+    public AFTime getTotalSpentEffortByBacklog(Backlog backlog) {
+        DetachedCriteria crit = DetachedCriteria.forClass(BacklogItem.class);
+        crit.add(Restrictions.eq("backlog",backlog));
+        crit.createAlias("hourEntries", "he");
+        ProjectionList total = Projections.projectionList();
+        total.add(Projections.sum("he.timeSpent"));
+        total.add(Projections.groupProperty("backlog"));
+        crit.setProjection(total);
+        Object[] res = (Object[])this.getHibernateTemplate().findByCriteria(crit).get(0);
+        return (AFTime)res[0];
+    }
     
 }

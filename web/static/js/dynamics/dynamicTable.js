@@ -1003,7 +1003,7 @@
 		  addTableColumn(opts, 
 				  { minwidth: 36, auto: true },
 				  { name: "Prio",
-					tooltio: "Priority",
+					tooltip: "Story priority",
 					sort: agilefantUtils.comparators.priorityComparator
 				  });
 		  addTableColumn(opts,

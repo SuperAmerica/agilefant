@@ -39,7 +39,6 @@ var commonView = {
 	 $("<span />").css("color", "red").text("Invalid value!").appendTo(err);
 	 $("<br />").appendTo(err);
 	 $("<span />").text("e.g. 1.5h or 1h 30min").appendTo(err);
-	 var cpos = connectTo.position();
 	 return err;
   },
   dateError: function(connectTo) {
@@ -47,14 +46,11 @@ var commonView = {
 		 $("<span />").css("color", "red").text("Invalid format!").appendTo(err);
 		 $("<br />").appendTo(err);
 		 $("<span />").text("e.g. 2009-05-29 14:59").appendTo(err);
-		 var cpos = connectTo.position();
 		 return err;
 	  },
   requiredFieldError: function(connectTo) {
-	  var err = $("<div />").addClass("cellErrorMessage").appendTo(document.body);
-	 $("<span />").css("color", "red").text("Required field").appendTo(err);
-	 var cpos = connectTo.position();
-	 err.css({position: "absolute", top: cpos.top + connectTo.height(), left: cpos.left});
+		  var err = $("<div />").addClass("cellErrorMessage").appendTo(connectTo);
+		  $("<span />").css("color", "red").text("Required field").appendTo(err);
 	 return err;
   }
 };

@@ -138,7 +138,8 @@ div.gear {
 }
 
 .actionColumn, .actionColumn div{
-  cursor: pointer;  
+  cursor: pointer;
+  white-space: nowrap;
 }
 
 .actionColumn:hover .gear {

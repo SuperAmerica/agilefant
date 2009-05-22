@@ -8,7 +8,7 @@ package fi.hut.soberit.agilefant.model;
  * @see fi.hut.soberit.agilefant.model.Task
  */
 public enum Status {
-    OK, CHALLENGED, CRITICAL;
+    GREEN, YELLOW, RED, GREY, BLACK;
 
     public int getOrdinal() {
         return this.ordinal();

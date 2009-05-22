@@ -67,7 +67,7 @@ public class Project extends Backlog implements PageItem {
     
     private AFTime defaultOverhead;
     
-    private Status status = Status.OK;
+    private Status status = Status.GREEN;
     
     private ProjectMetrics metrics;
     

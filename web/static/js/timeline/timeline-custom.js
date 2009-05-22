@@ -115,8 +115,8 @@ Timeline.AgilefantEventSource.Event = function(event) {
 		
         this._textColor = '#666666';
         
-        var icons = {"OK":"green","CHALLENGED":"yellow","CRITICAL":"red"};
-        var stateToCss = {"OK":"ok","CHALLENGED":"challenged","CRITICAL":"critical"};
+        var icons = {"GREEN":"green","YELLOW":"yellow","RED":"red","BLACK":"black","GREY":"grey"};
+        var stateToCss = {"GREEN":"green","YELLOW":"yellow","RED":"red","GREY":"grey","BLACK":"black"};
         if(this.isProject() && stateToCss[event.status] != undefined) {
         	this._bandClass = 'timeline-band-project-' + stateToCss[event.status];
         	this._classname = 'timeline-project';

@@ -166,9 +166,11 @@ var productId = ${product.id};
     <div id="timelineLegend" style="width:100%; text-align:center; margin-bottom: 10px;">
     <table style="margin: auto; border: 1px solid #ccc;" cellpadding="2" cellspacing="2">
         <tr>
-            <td><div class="timeline-band-project-ok" style="display:block;width:50px;height:5px;margin:2px;">&nbsp;</div>
-            <div class="timeline-band-project-challenged" style="display:block;width:50px;height:5px;margin:2px;">&nbsp;</div>
-            <div class="timeline-band-project-critical" style="display:block;width:50px;height:5px;margin:2px;">&nbsp;</div></td>
+            <td><div class="timeline-band-project-green" style="display:block;width:50px;height:5px;margin:2px;">&nbsp;</div>
+            <div class="timeline-band-project-yellow" style="display:block;width:50px;height:5px;margin:2px;">&nbsp;</div>
+            <div class="timeline-band-project-red" style="display:block;width:50px;height:5px;margin:2px;">&nbsp;</div>
+            <div class="timeline-band-project-grey" style="display:block;width:50px;height:5px;margin:2px;">&nbsp;</div>
+            <div class="timeline-band-project-black" style="display:block;width:50px;height:5px;margin:2px;">&nbsp;</div></td>
             <td>Project</td>
             <td><div class="timeline-band-iteration" style="display:block;width:50px;height:5px;margin:2px;">&nbsp;</div></td>
             <td>Iteration</td>

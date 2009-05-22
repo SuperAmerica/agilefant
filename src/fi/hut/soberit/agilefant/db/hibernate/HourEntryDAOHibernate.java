@@ -86,6 +86,7 @@ public class HourEntryDAOHibernate extends GenericDAOHibernate<HourEntry> implem
         return res;
     }
 
+    @SuppressWarnings("unchecked")
     public AFTime getTotalSpentEffortByBacklog(Backlog backlog) {
         DetachedCriteria crit = DetachedCriteria.forClass(BacklogItem.class);
         crit.add(Restrictions.eq("backlog",backlog));
@@ -94,8 +95,11 @@ public class HourEntryDAOHibernate extends GenericDAOHibernate<HourEntry> implem
         total.add(Projections.sum("he.timeSpent"));
         total.add(Projections.groupProperty("backlog"));
         crit.setProjection(total);
-        Object[] res = (Object[])this.getHibernateTemplate().findByCriteria(crit).get(0);
-        return (AFTime)res[0];
+        List<Object[]> res = (List<Object[]>)this.getHibernateTemplate().findByCriteria(crit);
+        if(res.size() == 1) {
+            return (AFTime)res.get(0)[0];
+        }
+        return new AFTime(0);
     }
     
 }

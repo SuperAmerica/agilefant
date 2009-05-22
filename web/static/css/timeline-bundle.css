@@ -22,16 +22,21 @@
 .timeline-band-project {
     background-color: #009944 !important;
 }
-.timeline-band-project-ok {
+.timeline-band-project-green {
     background-color: #009944 !important;
 }
-.timeline-band-project-challenged {
+.timeline-band-project-yellow {
     background-color: #FF9955 !important;
 }
-.timeline-band-project-critical {
+.timeline-band-project-red {
     background-color: #CC0000 !important;
 }
-
+.timeline-band-project-grey {
+    background-color: #888888 !important;
+}
+.timeline-band-project-black {
+    background-color: #000000 !important;
+}
 /*------------------- Horizontal / Vertical lines ----------------*/
 
 /* style for ethers */

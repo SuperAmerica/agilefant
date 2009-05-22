@@ -168,7 +168,7 @@ var agilefantUtils = {
     "MAJOR": 3,
     "MINOR": 4,
     "TRIVIAL": 5,
-    "UNDEFINED": 6
+    "UNDEFINED": 0
   },
   priorityToString: function(priority) {
     return agilefantUtils.priorities[priority];
@@ -183,26 +183,44 @@ var agilefantUtils = {
 	    }
 	    return (a.getName().toLowerCase() > b.getName().toLowerCase());
 	  },
-	  descComparator: function(a,b) {	     
+	  descComparator: function(a,b) {	
 		return (a.getDescription().toLowerCase() > b.getDescription().toLowerCase());
 	  },
 	  priorityComparator: function(a,b) {
-	    return (a.getPriority() > b.getPriority());
+		if(a.getPriority() > b.getPriority()) {
+			return 1;
+		}
+		return -1;
 	  },
 	  bliPriorityComparator: function(a,b) {
-	    return (agilefantUtils.prioritiesToNumber[a.getPriority()] > agilefantUtils.prioritiesToNumber[b.getPriority()]);
+		if((agilefantUtils.prioritiesToNumber[a.getPriority()] > agilefantUtils.prioritiesToNumber[b.getPriority()])) {
+		  return 1;
+		}
+ 	    return -1;
 	  },
 	  effortLeftComparator: function(a,b) {
-	    return (a.getEffortLeft() > b.getEffortLeft());
+		if((a.getEffortLeft() > b.getEffortLeft())) {
+		  return 1;
+		}
+	    return -1;
 	  },
 	  originalEstimateComparator: function(a,b) {
-      return (a.getOriginalEstimate() > b.getOriginalEstimate());
+	    if((a.getOriginalEstimate() > b.getOriginalEstimate())) {
+	      return 1;
+	    }
+        return -1;
     },
     effortSpentComparator: function(a,b) {
-      return (a.getEffortSpent() > b.getEffortSpent());
+	    if((a.getEffortSpent() > b.getEffortSpent())) {
+	    	return 1;
+	    }
+    	return -1;
     },
     bliStateComparator: function(a,b) {
-      return (a.getState() > b.getState());
+      if((a.getState() > b.getState())) {
+        return 1;
+      }
+      return -1;
     },
     bliPriorityAndStateComparator: function(a,b) {
       if (a.getState() === "DONE" && b.getState() !== "DONE") {

@@ -180,10 +180,10 @@ IterationController.prototype = {
     	this.IterationGoalControllers.push(blictrl);
     	var expandButton = commonView.expandCollapse(expand.getElement(), function() {
     		blictrl.showTasks();
-    		desc.getElement().hide();
+    		//desc.getElement().hide();
     	}, function() {
     		blictrl.hideTasks();
-    		desc.getElement().show();
+    		//desc.getElement().show();
     	});
     	this.buttonCells.push(expandButton);
     	buttons.setActionCell({items: [

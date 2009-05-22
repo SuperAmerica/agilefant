@@ -20,6 +20,8 @@ public class SpentEffortAction extends ActionSupport {
     private int nextYear;
     private int year = 0;
     private int day = 1;
+    private int currentWeek = 0;
+    private int currentYear = 0;
     private HourEntryBusiness hourEntryBusiness;
     private int userId;
     
@@ -30,6 +32,8 @@ public class SpentEffortAction extends ActionSupport {
     
     public String getDaySumsByWeek() {
         Calendar cal = Calendar.getInstance();
+        this.currentWeek = cal.get(Calendar.WEEK_OF_YEAR);
+        this.currentYear = cal.get(Calendar.YEAR);
         if(week == -1) {
             week = cal.get(Calendar.WEEK_OF_YEAR);
             year = cal.get(Calendar.YEAR);
@@ -47,7 +51,8 @@ public class SpentEffortAction extends ActionSupport {
         cal.add(Calendar.WEEK_OF_YEAR, -9);
         this.weeks = new ArrayList<Object[]>();
         for(int i = 0; i < 20; i++) {
-            Object[] cur = new Object[] {cal.get(Calendar.YEAR),cal.get(Calendar.WEEK_OF_YEAR)};
+            Object[] cur = new Object[] {cal.get(Calendar.YEAR),cal.get(Calendar.WEEK_OF_YEAR), 
+                    cal.get(Calendar.DAY_OF_MONTH), cal.get(Calendar.MONTH)+1};
             this.weeks.add(cur);
             cal.add(Calendar.WEEK_OF_YEAR, 1);
         }
@@ -128,5 +133,13 @@ public class SpentEffortAction extends ActionSupport {
 
     public void setUserId(int userId) {
         this.userId = userId;
+    }
+
+    public int getCurrentWeek() {
+        return currentWeek;
+    }
+
+    public int getCurrentYear() {
+        return currentYear;
     }
 }

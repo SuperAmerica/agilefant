@@ -49,7 +49,7 @@
 		this.headerRow = null;
 		this.sorting = {
 		    column: this.options.defaultSortColumn,
-		    direction: -1
+		    direction: 0
 		};
 		this.captionActions = {};
 		this.tableRowHashes = [];

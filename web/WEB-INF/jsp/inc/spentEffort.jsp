@@ -13,7 +13,7 @@
 			   <c:forEach items="${weeks}" var="curWeek">
 			     <c:choose>
 			       <c:when test="${curWeek[1] == week}">
-			         <option selected="selected" value="${curWeek[0]}-${curWeek[1]}">Week ${curWeek[1]}</option>
+			         <option selected="selected" value="${curWeek[0]}-${curWeek[1]}">Week ${curWeek[1]} (${curWeek[2]}.${curWeek[3]}.)</option>
 			       </c:when>
 			       <c:otherwise>
 			         <option value="${curWeek[0]}-${curWeek[1]}">Week ${curWeek[1]}</option>
@@ -37,7 +37,7 @@
 				</c:choose>
 			</td>
 		</c:forEach>
-		<td></td>
+		<td><a href="weeklySpentEffort.action?userId=${userId}&week=${currentWeek}&year=${currentYear}">Current week</a></td>
 	</tr>
 </table>
 <div class="details"></div>

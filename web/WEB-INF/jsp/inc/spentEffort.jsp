@@ -4,8 +4,9 @@
 		<th rowspan="2" class="spentEffortArrow"><a title="Previous week" 
 			href="weeklySpentEffort.action?userId=${userId}&amp;week=${prevWeek}&amp;year=${prevYear}">&laquo;</a></th>
 		<c:forEach items="${dailyEffort}" var="dayEffort">
-			<th style="width: 86px;">${dayEffort.date}.${dayEffort.month}.</th>
+			<th style="width: 78px;">${dayEffort.date}.${dayEffort.month}.</th>
 		</c:forEach>
+		<th style="width: 65px;">Total</th>
 		<th rowspan="2" class="spentEffortArrow"><a title="Next week" 
 			href="weeklySpentEffort.action?userId=${userId}&week=${nextWeek}&year=${nextYear}">&raquo;</a></th>
 			<td>
@@ -16,7 +17,7 @@
 			         <option selected="selected" value="${curWeek[0]}-${curWeek[1]}">Week ${curWeek[1]} (${curWeek[2]}.${curWeek[3]}.)</option>
 			       </c:when>
 			       <c:otherwise>
-			         <option value="${curWeek[0]}-${curWeek[1]}">Week ${curWeek[1]}</option>
+			         <option value="${curWeek[0]}-${curWeek[1]}">Week ${curWeek[1]} (${curWeek[2]}.${curWeek[3]}.)</option>
 			       </c:otherwise>
 			     </c:choose>
 			   </c:forEach>
@@ -37,6 +38,7 @@
 				</c:choose>
 			</td>
 		</c:forEach>
+    <td>${weekEffort}</td>
 		<td><a href="weeklySpentEffort.action?userId=${userId}&week=${currentWeek}&year=${currentYear}">Current week</a></td>
 	</tr>
 </table>

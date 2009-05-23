@@ -198,6 +198,7 @@ public class HourEntryBusinessImpl implements HourEntryBusiness {
     /**
      * {@inheritDoc}
      */
+    @Deprecated
     public Map<Integer, AFTime> getSumsByIterationGoal(Backlog parent) {
         Map<Integer, AFTime> sums = new HashMap<Integer, AFTime>();
         List<BacklogItemHourEntry> entries = 
@@ -264,6 +265,11 @@ public class HourEntryBusinessImpl implements HourEntryBusiness {
             throw new IllegalArgumentException("Invalid format.");
         }
         return sum;
+    }
+    
+    public AFTime getEFfortSumByUserAndTimeInterval(int userId, Date start, Date end) {
+        User user = userDAO.get(userId);
+        return this.getEffortSumByUserAndTimeInterval(user, start, end);
     }
     
     /**

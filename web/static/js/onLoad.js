@@ -39,14 +39,13 @@ function initOnLoad(elem) {
     return false;
 }
 
-function submitDialogForm(evt) {
-    var me = $(this);
+function submitDialogForm(form) {
+    var me = $(form);
     if(me.valid()) {
         me.find("input[type=submit]").attr("disabled", "disabled");
         $.post(me.attr("action"), me.serializeArray(),
             function(data, status) {
                 var prev = window.location.href;
-                var tmpE = evt;
                 if (prev.indexOf('#') > -1) {
                     prev = prev.substr(0, prev.indexOf('#'));
                 }
@@ -103,7 +102,7 @@ function addFormValidators(target, customSubmit) {
                 	rules.submitHandler = submitDialogForm;
                 } 
                 if(target.data && target.data("aef-tabs") == "1") {
-                	var mySubm = function(evt) {
+                	var mySubm = function(origForm) {
                         if(form.valid()) {
                             // Close the form if the user clicked "Save & Close"
                             // OR had focus in a text field and pressed ENTER
@@ -112,7 +111,7 @@ function addFormValidators(target, customSubmit) {
                                 ajaxCloseDialog(target.data("aef-context"),target.data("aef-id"));
                             }
                         }
-                        submitDialogForm(evt);
+                        submitDialogForm.call(this, origForm);
                     };
                 	rules.submitHandler = mySubm;
                 }

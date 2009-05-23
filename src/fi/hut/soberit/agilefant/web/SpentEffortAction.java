@@ -7,7 +7,9 @@ import java.util.List;
 import com.opensymphony.xwork.ActionSupport;
 
 import fi.hut.soberit.agilefant.business.HourEntryBusiness;
+import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.HourEntry;
+import fi.hut.soberit.agilefant.util.CalendarUtils;
 import fi.hut.soberit.agilefant.util.DailySpentEffort;
 
 public class SpentEffortAction extends ActionSupport {
@@ -24,6 +26,7 @@ public class SpentEffortAction extends ActionSupport {
     private int currentYear = 0;
     private HourEntryBusiness hourEntryBusiness;
     private int userId;
+    private AFTime weekEffort = new AFTime(0);
     
     private List<DailySpentEffort> dailyEffort;
     private List<Object[]> weeks;
@@ -56,11 +59,26 @@ public class SpentEffortAction extends ActionSupport {
             this.weeks.add(cur);
             cal.add(Calendar.WEEK_OF_YEAR, 1);
         }
+        this.totalEffortForWeek();
         return SUCCESS;
     }
     
     public String getHourEntriesByUserAndDay() {
         this.effortEntries = this.hourEntryBusiness.getEntriesByUserAndDay(day, year, userId);
+        return SUCCESS;
+    }
+    
+    public String totalEffortForWeek() {
+        Calendar monday = Calendar.getInstance();
+        Calendar sunday = Calendar.getInstance();
+        monday.set(Calendar.YEAR,this.year);
+        monday.set(Calendar.WEEK_OF_YEAR, this.week);
+        monday.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+        sunday.setTime(monday.getTime());
+        sunday.add(Calendar.DAY_OF_YEAR, 6);
+        CalendarUtils.setHoursMinutesAndSeconds(monday, 0, 0, 0);
+        CalendarUtils.setHoursMinutesAndSeconds(sunday, 23, 59, 59);
+        this.weekEffort = this.hourEntryBusiness.getEFfortSumByUserAndTimeInterval(userId, monday.getTime(), sunday.getTime());
         return SUCCESS;
     }
     
@@ -141,5 +159,9 @@ public class SpentEffortAction extends ActionSupport {
 
     public int getCurrentYear() {
         return currentYear;
+    }
+
+    public AFTime getWeekEffort() {
+        return weekEffort;
     }
 }

@@ -112,6 +112,7 @@ function addFormValidators(target, customSubmit) {
                                 ajaxCloseDialog(target.data("aef-context"),target.data("aef-id"));
                             }
                         }
+                        submitDialogForm(evt);
                     };
                 	rules.submitHandler = mySubm;
                 }

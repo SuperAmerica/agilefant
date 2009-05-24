@@ -867,6 +867,9 @@
 	  var me = this;
 	  this.cell = cell;
 	  this.autoClose = autoClose;
+	  if(typeof items === "function") {
+		  items = items();
+	  }
 	  this.field = $('<select/>').css('width','100%').appendTo(this.cell.getElement()).focus();
     $.each(items, function(i,v) {
       $('<option/>').attr('value',i).text(v).appendTo(me.field);

@@ -125,6 +125,7 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
                 return CRUDAction.AJAX_ERROR;
             }
             hourEntryBusiness.addHourEntryForMultipleUsers(parent,storable, userIds);
+            jsonData = new JSONSerializer().serialize(new Object()); //hack in order to make the returned data look like json data
         } 
         return CRUDAction.AJAX_SUCCESS;
     }

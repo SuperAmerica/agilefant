@@ -466,7 +466,7 @@ StoryModel.prototype.save = function(synchronous, callback) {
 	success: function(data,type) {
 		me.setData(data,false);
 		if(asynch && typeof callback == "function") {
-			callback();
+			callback.call(me);
 		}
 		commonView.showOk("Iteration goal saved succesfully.");
 	},
@@ -834,7 +834,7 @@ TaskModel.prototype.save = function(synchronous, callback) {
 	success: function(data, type) {
 		me.setData(data);
 		if(asynch && typeof callback == "function") {
-			callback();
+			callback.call(me);
 		}
 		commonView.showOk("Backlog item saved succesfully.");
 	},
@@ -886,6 +886,9 @@ TaskHourEntryModel.prototype.setUser = function(userId) {
 	this.userId = userId;
 	this.save();
 };
+TaskHourEntryModel.prototype.setUsers = function(users) {
+	this.userIds = users;
+};
 TaskHourEntryModel.prototype.getUser = function() {
 	return this.user;
 };
@@ -934,7 +937,11 @@ TaskHourEntryModel.prototype.save = function(synchronous, callback) {
 		data["hourEntry.comment"] = this.comment;
 	}
 
-	data.userId = this.userId;
+	if(this.userIds) {
+		data.userIds = this.userIds;
+	} else { 
+		data.userId = this.userId;
+	}
 	data.date = this.dateStr;
 	data["hourEntry.description"] = this.description;
 	if(this.timeSpent) {
@@ -955,7 +962,7 @@ TaskHourEntryModel.prototype.save = function(synchronous, callback) {
 		me.setData(data);
 		commonView.showOk("Effort logged succesfully.");
 		if(asynch && typeof callback == "function") {
-			callback();
+			callback.call(me);
 		}
 	},
 	cache: false,
@@ -1048,7 +1055,7 @@ TodoModel.prototype.save = function(synchronous, callback) {
 		me.setData(data);
 		commonView.showOk("Todo saved succesfully.");
 		if(asynch && typeof callback == "function") {
-			callback();
+			callback.call(me);
 		}
 	},
 	cache: false,

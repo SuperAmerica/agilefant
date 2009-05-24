@@ -139,6 +139,22 @@ var agilefantUtils = {
 		}
 		return ret;
 	},
+	getAllUsersAsObject: function() {
+		var users = {};
+		$.ajax({
+			url: "getUserJSON.action",
+			cache: true,
+			async: false,
+			type: "POST",
+			dataType: "json",
+			success: function(data,type) {
+				$.each(data, function(k,v){
+					users[v.id] = v.fullName;
+				});
+			}
+		});
+		return users;
+	},
 	states: {
 	  "NOT_STARTED": "Not Started",
 	  "STARTED": "Started",

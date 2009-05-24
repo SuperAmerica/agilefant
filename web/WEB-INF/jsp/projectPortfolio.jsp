@@ -13,7 +13,7 @@ var teams = [<aef:teamJson items="${teamList}"/>]
 
 
 
-<div class="subItems" style="width: 645px;" id="subItems_portfolioRankedProjectsList">
+<div class="subItems" style="width: 780px;" id="subItems_portfolioRankedProjectsList">
 	<div class="subItemHeader">
 		<table cellspacing="0" cellpadding="0">
 			<tr>
@@ -24,28 +24,38 @@ var teams = [<aef:teamJson items="${teamList}"/>]
 	</div>
 
 	<div class="subItemContent">
-	<display:table name="${ongoingRankedProjects}" id="row">
-	<display:column title="Rank">
+	<display:table name="${ongoingRankedProjects}" id="row" style="width: 770px;">
+	<display:column title="Rank" style="width: 45px;">
 		<c:out value="${row_rowNum}" />
 	</display:column>
-	<display:column title="St.">
+	<display:column title="St." style="width: 20px;">
 	 	<c:choose>
-			<c:when test="${row.status == 'OK'}">
-				<img src="static/img/status-green.png" alt="OK" title="OK"/>
+			<c:when test="${row.status == 'GREEN'}">
+				<img src="static/img/status-green.png" alt="Green" title="Green"/>
 			</c:when>
-			<c:when test="${row.status == 'CHALLENGED'}">
-				<img src="static/img/status-yellow.png" alt="Challenged" title="Challenged"/>
+			<c:when test="${row.status == 'YELLOW'}">
+				<img src="static/img/status-yellow.png" alt="Yellow" title="Yellow"/>
 			</c:when>
-			<c:when test="${row.status == 'CRITICAL'}">
-				<img src="static/img/status-red.png" alt="Critical" title="Critical"/>
+			<c:when test="${row.status == 'RED'}">
+				<img src="static/img/status-red.png" alt="Red" title="Red"/>
 			</c:when>
+			<c:when test="${row.status == 'GREY'}">
+        <img src="static/img/status-grey.png" alt="Grey" title="Grey"/>
+      </c:when>
+      <c:when test="${row.status == 'BLACK'}">
+        <img src="static/img/status-black.png" alt="Black" title="Black"/>
+      </c:when>
 		</c:choose>
+	</display:column>
+	<display:column title="Timeframe" style="width: 180px;">
+	<ww:date name="#attr.row.startDate" /> - <ww:date name="#attr.row.endDate" />
 	</display:column>
 	<display:column title="Project Name" class="portfolioNameColumn">
 		<ww:a
 			href="contextView.action?contextObjectId=${row.id}&resetContextView=true&contextName=project">
 			<c:out value="${row.product.name}: ${row.name}" />
 		</ww:a>
+		(<c:out value="${row.projectType.name}" />)
 	</display:column>
 	
 		<display:column title="Assignees" class="portfolioUsersColumn">
@@ -159,7 +169,7 @@ var teams = [<aef:teamJson items="${teamList}"/>]
 			
 		</display:column>		
 		
-		<display:column title="Action" class="portfolioActionColumn">
+		<display:column title="Action" class="portfolioActionColumn" style="width: 110px;">
 		<ww:url id="moveTopLink" action="moveProjectTop">
 			<ww:param name="projectId" value="${row.id}" />
 		</ww:url>
@@ -192,7 +202,7 @@ var teams = [<aef:teamJson items="${teamList}"/>]
 		
 		
 <c:if test="${!empty ongoingUnrankedProjects}">
-<div class="subItems" style="width: 545px;" id="subItems_portfolioUnrankedProjects">
+<div class="subItems" style="width: 780px;" id="subItems_portfolioUnrankedProjects">
 	<div class="subItemHeader">
 		<table cellspacing="0" cellpadding="0">
 			<tr>
@@ -203,7 +213,7 @@ var teams = [<aef:teamJson items="${teamList}"/>]
 	</div>
 
 	<div class="subItemContent">
-	<display:table name="${ongoingUnrankedProjects}" id="row" style="width: 535px;">		
+	<display:table name="${ongoingUnrankedProjects}" id="row" style="width: 770px;">		
 		<display:column title="Project Name">
 			<ww:a
 				href="contextView.action?contextObjectId=${row.id}&resetContextView=true&contextName=project">

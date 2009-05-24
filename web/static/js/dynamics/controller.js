@@ -963,6 +963,9 @@ TaskController.prototype = {
 		this.spentEffortView.render();
 	},
 	addEffortEntry: function(entry) {
+		if(this.spentEffortView.isInTable(entry)) {
+			return;
+		}
 		var row = this.spentEffortView.createRow(entry);
 		row.createCell({
 			get: function() { return entry.getDate();},
@@ -971,16 +974,11 @@ TaskController.prototype = {
 			type: "date"
 		});
 		row.createCell({
-			get: function() { return entry.getUser(); },
-			getEdit: function() { return [entry.getUser()];},
-			type: "user",
-			decorator: function(u) { return u.fullName; },
-			set: function(users) {
-				var user = users[0];
-				entry.setUser(user);	  
-			},
-			backlogId: entry.task.backlog.getId(),
-			backlogItemId: entry.task.getId()
+			get: function() { return entry.getUser().fullName; },
+			getEdit: function() { return entry.getUser().id;},
+			type: "select",
+			items: function() { return agilefantUtils.getAllUsersAsObject(); },
+			set: function(val) { entry.setUser(val); }
 		});
 		row.createCell({
 			get: function() { return entry.getTimeSpent();},
@@ -1006,10 +1004,6 @@ TaskController.prototype = {
 			buttons: {
 				save: {text: "Save", action: saveCb},
 			cancel: {text: "Cancel", action: function() {
-				if(!entry.id) {
-					row.remove();
-					return;
-				}
 				entry.rollBack();
 				entry.cancelEdit();
 				return false;
@@ -1047,35 +1041,24 @@ TaskController.prototype = {
 				var date = form.find("input[name=date]").val();
 				var users = form.find("input[name='userIds']");
 				parent.remove();
+				var entry = new TaskHourEntryModel(me.model, null);
+				entry.beginTransaction();
+				entry.setComment(description);
+				entry.setDate(date);
+				entry.setTimeSpent(timeSpent);
+				var userIds = [];
 				if(users.length == 1) {
-					var entry = new TaskHourEntryModel(me.model, null);
-					entry.beginTransaction();
-					entry.setUser(users.val());
-					entry.setComment(description);
-					entry.setDate(date);
-					entry.setTimeSpent(timeSpent);
-					entry.commit(function() {
-						ModelFactory.setEffortEntry(entry);
-						me.model.addHourEntry(entry);
-						me.addEffortEntry(entry);
-					});
+					userIds.push(users.val());
 				} else if(users.length > 1) {
 					users.each(function() {
-						var entry = new TaskHourEntryModel(me.model, null);
-						entry.beginTransaction();
-						entry.setUser($(this).val());
-						entry.setDate(date);
-						entry.setTimeSpent(timeSpent);
-						entry.setComment(description);
-						entry.commit(function() {
-							ModelFactory.setEffortEntry(entry);
-							me.model.addHourEntry(entry);
-							me.addEffortEntry(entry);
-						});
+						userIds.push($(this).val());
 					});
 				}
-				me.model.reloadData();
-				me.spentEffortView.render();
+				entry.setUsers(userIds);
+				entry.commit(function() {
+					me.model.reloadData();
+					me.renderSpentEffort();
+				});
 			};
 			//hack: for some unknown reason form.submit refuses to work
 			form.find("input:visible").keypress(function(event) {

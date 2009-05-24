@@ -8,9 +8,10 @@ var IterationController = function(iterationId, element) {
 	ModelFactory.getIteration(this.iterationId, function(data) { me.render(data); });
 };
 
-var IterationGoalController = function(parentView, model) {
+var IterationGoalController = function(parentView, model, parentController) {
 	//this.element = element;
 	this.parentView = parentView;
+	this.parentController = parentController;
 	parentView.getElement().css("padding-left","2%"); //TODO: refactor
 	this.element = $("<div />").width("98%").appendTo(parentView.getElement());
 	this.data = model;
@@ -176,7 +177,7 @@ IterationController.prototype = {
     		this.descCells.push(desc);
     	var blis = row.createCell();
     	blis.getElement().hide();
-    	var blictrl = new IterationGoalController(blis, goal);
+    	var blictrl = new IterationGoalController(blis, goal, this);
     	this.IterationGoalControllers.push(blictrl);
     	var expandButton = commonView.expandCollapse(expand.getElement(), function() {
     		blictrl.showTasks();
@@ -296,7 +297,7 @@ IterationController.prototype = {
     	row.createCell().getElement().hide(); //dymmy description
     	var blis = row.createCell();
     	blis.getElement().hide();
-    	this.noGoalItemController = new IterationGoalController(blis, goal);
+    	this.noGoalItemController = new IterationGoalController(blis, goal, this);
     	this.IterationGoalControllers.push(this.noGoalItemController);
     	buttons.setActionCell({items: [{
     		text: "Create a new task",
@@ -390,6 +391,17 @@ IterationController.prototype = {
     		}});
     	row.render();
     	row.openEdit();
+    },
+    getGoalController: function(id) {
+    	if(id === 0) {
+    		return this.noGoalItemController;
+    	}
+    	for(var i = 0; i < this.IterationGoalControllers.length; i++) {
+    		if(this.IterationGoalControllers[i].data.id === id) {
+    			return this.IterationGoalControllers[i];
+    		}
+    	}
+    	return null;
     }
 };
 
@@ -570,14 +582,19 @@ IterationGoalController.prototype = {
 		                            	   bli.resetOriginalEstimate();
 		                               }
 		                               }, {
-		                            	   text: "Edit",
+		                            	   text: "Edit task",
 		                            	   callback: function(row) {
 		                            	   desc.getElement().show();
 		                            	   bli.beginTransaction();
 		                            	   row.openEdit();
 		                               }
 		                               }, {
-		                            	   text: "Delete",
+		                            	   text: "Move task",
+		                            	   callback: function() {
+		                            	   me.moveTask(row,bli);
+		                               }
+		                               },{
+		                            	   text: "Delete task",
 		                            	   callback: function() {
 		                            	   me.deleteBli(bli);
 		                               }
@@ -727,6 +744,47 @@ IterationGoalController.prototype = {
 			}
 		}
 		this.view.render();
+	},
+	moveTask: function(row, task) {
+    	var parent = $("<div />").appendTo(document.body);
+    	var err = $("<div />").appendTo(parent).css("color","red").hide();
+    	var sel = $("<div />").appendTo(parent);
+    	var me = this;
+		sel.iterationSelect({selectStory: true});
+    	parent.dialog({
+    		resizable: false,
+    		height:200,
+    		width: 700,
+    		title: "Move task",
+    		modal: true,
+    		close: function() { parent.dialog('destroy'); parent.remove(); },
+    		buttons: {
+	    		'Move': function() {
+    				var story = sel.iterationSelect("getStory");
+    				var iteration = sel.iterationSelect("getSelected");
+    				if(iteration < 1) {
+    					err.text("Please select an iteration.").show();
+    					return;
+    				} else if(story != task.iterationGoal.id){
+    					var blId = task.backlog.getId();
+    					task.moveTo(story, iteration);
+    					if(iteration == blId) {
+    						var ctrl = me.parentController.getGoalController(story);
+    						if(ctrl) {
+    							ctrl.render();
+    						}
+    					}
+    					row.remove();
+    				}
+					$(this).dialog('destroy');
+	    			parent.remove();
+	    		},
+	    		Cancel: function() {
+	    			$(this).dialog('destroy');
+	    			parent.remove();
+	    		}
+    		}
+    	});
 	}
 };
 

@@ -77,6 +77,9 @@ ModelFactoryClass.prototype = {
 	setIterationGoal: function(goal) {
 		this.iterationGoals[goal.id] = goal;
 	},
+	getIterationGoal: function(id) {
+		return this.iterationGoals[id];
+	},
 	removeIterationGoal: function(id) {
 		this.iterationGoals[id] = null;
 	},
@@ -684,6 +687,23 @@ TaskModel.prototype.setOriginalEstimate = function(originalEstimate) {
 	if (millis !== null) {
 		this.originalEstimate = millis;
 		this.save();
+	}
+};
+
+TaskModel.prototype.moveTo = function(storyId, iterationId) {
+	var oli = this.iterationGoal;
+	if(storyId != this.iterationGoal.id) {
+		this.iterationGoal.removeTask(this);
+		if(iterationId === this.backlog.getId()) {
+			var newStory = ModelFactory.getIterationGoal(storyId);
+			newStory.addTask(this);
+			this.save();
+		} else {
+			this.backlog = {getId: function() { return iterationId; }};
+			this.iterationGoal = {id: storyId};
+			this.save();
+		}
+		oli.reloadMetrics();
 	}
 };
 

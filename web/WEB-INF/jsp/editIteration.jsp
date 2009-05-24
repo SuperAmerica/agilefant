@@ -321,7 +321,7 @@ $(document).ready( function() {
 <script type="text/javascript" src="static/js/dynamics/dynamicTable.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
 <script type="text/javascript" src="static/js/dynamics/commonView.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
 
-<form onsubmit="return false;"><div id="iterationGoals" style="min-width: 800px;">&nbsp;</div></form>
+<form onsubmit="return false;"><div id="iterationGoals" style="min-width: 800px; width: 98%;">&nbsp;</div></form>
 <script type="text/javascript">
 $(document).ready(function() {
   new IterationController(${iterationId}, $("#iterationGoals"));

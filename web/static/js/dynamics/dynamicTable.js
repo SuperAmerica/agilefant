@@ -899,7 +899,7 @@
 	  this.row = row;
 	  this.inMenu = false;
 	  this.options = {
-	      title: '<div class="actionColumn"><button class="edit"><div class="gear" style="float: left;"/>&nbsp;Actions</button></div>'
+	      title: '<div class="actionColumn"><button class="edit"><div class="gear" style="float: left;"/>&nbsp;Edit</button></div>'
 	  };
 	  $.extend(this.options, options);
 	  var me = this;
@@ -929,7 +929,7 @@
 					"z-index":     "100",
 					"white-space": "nowrap",
 					"top":         off.top + 16,
-					"left":        off.left
+					"left":        off.left - 32
 			};
 			this.menu.css(menuCss);
 			$.each(this.options.items, function(index, item) {

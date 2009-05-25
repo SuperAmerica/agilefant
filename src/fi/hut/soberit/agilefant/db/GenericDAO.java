@@ -90,4 +90,12 @@ public interface GenericDAO<T> {
      *                object instance to refreshed
      */
     public void refresh(T object);
+
+    /**
+     * Retrieves the amount of data model objects of this type in the database
+     * 
+     * @return amount of objects
+     */
+    int count();
+
 }

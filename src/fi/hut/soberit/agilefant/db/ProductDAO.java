@@ -17,4 +17,7 @@ public interface ProductDAO extends GenericDAO<Product> {
      * @return all products ordered by name in descending order
      */
     public List<Product> getAllOrderByName();
+
+    int count();
+
 }

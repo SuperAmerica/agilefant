@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.NoSuchElementException;
 
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Projections;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 import fi.hut.soberit.agilefant.db.GenericDAO;
@@ -91,4 +93,13 @@ public abstract class GenericDAOHibernate<T> extends HibernateDaoSupport
             }
         }
     }
+
+    public int count() {
+        DetachedCriteria criteria = DetachedCriteria.forClass(this
+                .getPersistentClass());
+        criteria.setProjection(Projections.rowCount());
+        return ((Integer) super.getHibernateTemplate().findByCriteria(criteria)
+                .get(0)).intValue();
+    }
+
 }

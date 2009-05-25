@@ -20,4 +20,5 @@ public class ProductDAOHibernate extends GenericDAOHibernate<Product> implements
         final String query = "from Product p order by p.name asc";
         return (List<Product>) super.getHibernateTemplate().find(query);
     }
+
 }

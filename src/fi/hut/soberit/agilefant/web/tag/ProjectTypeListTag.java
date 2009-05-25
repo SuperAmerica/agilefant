@@ -3,7 +3,7 @@ package fi.hut.soberit.agilefant.web.tag;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.Tag;
 
-import fi.hut.soberit.agilefant.db.ProjectTypeDAO;
+import fi.hut.soberit.agilefant.business.ProjectTypeBusiness;
 
 public class ProjectTypeListTag extends SpringTagSupport {
    
@@ -11,14 +11,14 @@ public class ProjectTypeListTag extends SpringTagSupport {
 
     public static final String PROJECTTYPE_LIST_KEY = "projectTypeList";
 
-    private ProjectTypeDAO projectTypeDAO;
+    private ProjectTypeBusiness projectTypeBusiness;
 
     @Override
     public int doStartTag() throws JspException {
-        projectTypeDAO = (ProjectTypeDAO) super.getApplicationContext().getBean(
-                "projectTypeDAO");
+        projectTypeBusiness = (ProjectTypeBusiness) super.getApplicationContext().getBean(
+                "projectTypeBusiness");
         super.getPageContext().setAttribute(ProjectTypeListTag.PROJECTTYPE_LIST_KEY,
-                projectTypeDAO.getAll());
+                projectTypeBusiness.getAll());
         return Tag.EVAL_BODY_INCLUDE;
     }
 }

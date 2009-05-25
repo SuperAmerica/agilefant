@@ -29,4 +29,14 @@ public abstract class SpringTagSupport extends TagSupport {
     protected ApplicationContext getApplicationContext() {
         return applicationContext;
     }
+
+    @SuppressWarnings("unchecked")
+    protected <T> T requireBean(String name) {
+        Object bean = applicationContext.getBean(name);
+        if (bean == null) {
+            throw new IllegalStateException("Could not find required bean '" + name + "'");
+        }
+        return (T) bean;
+    }
+
 }

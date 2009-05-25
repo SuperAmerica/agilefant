@@ -43,4 +43,6 @@
 		<property name="iterationDAO" ref="iterationDAO" />
 		<property name="backlogItemDAO" ref="backlogItemDAO" />
 	</bean>
+	<bean name="projectTypeBusiness" class="fi.hut.soberit.agilefant.business.impl.ProjectTypeBusinessImpl">
+	</bean>
 </beans>

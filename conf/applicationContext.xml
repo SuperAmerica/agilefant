@@ -2,17 +2,34 @@
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
                        "http://www.springframework.org/dtd/spring-beans.dtd">
 <beans>
-	<bean id="placeholderConfig"
-		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-		<property name="locations">
-			<list>
-				<value>WEB-INF/configuration.properties</value>
-				<value>WEB-INF/database.properties</value>
-				<value>WEB-INF/configuration-user.properties</value>
-			</list>
+	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<!--
+		This PropertyPlaceholderConfigurer exists only to retrieve system properties for placeholders
+		=> If agilefant.properties has been defined in the system environment, we'll
+		have its location
+		-->
+		<property name="ignoreUnresolvablePlaceholders" value="true" />
+		<property name="order" value="0" />
+	</bean>
+	<bean id="applicationProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+		<property name="ignoreResourceNotFound" value="false" />
+		<property name="location" value="file://${agilefant.properties}" />
+		<property name="properties">
+			<bean id="defaultProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+				<property name="locations">
+					<list>
+						<value>/WEB-INF/database.properties</value>
+						<value>/WEB-INF/configuration.properties</value>
+					</list>
+				</property>
+			</bean>
 		</property>
 	</bean>
-
+	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="order" value="1" />
+		<property name="properties" ref="applicationProperties" />
+	</bean>
+	
 	<bean name="hibernateTransactionManager"
 		class="org.springframework.orm.hibernate3.HibernateTransactionManager">
 		<property name="sessionFactory" ref="sessionFactory" />
@@ -40,19 +57,7 @@
 		<property name="configLocation">
 			<value>/WEB-INF/hibernate.cfg.xml</value>
 		</property>
-		<property name="hibernateProperties">
-			<props>
-				<prop key="hibernate.dialect">
-					${hibernate.dialect}
-				</prop>
-				<prop key="hibernate.show_sql">
-					false
-				</prop>
-				<prop key="hibernate.max_fetch_depth">
-					1
-				</prop>
-			</props>
-		</property>
+		<property name="hibernateProperties" ref="applicationProperties" />
 	</bean>
 
 	<bean name="contextViewManager"

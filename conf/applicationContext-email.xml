@@ -6,13 +6,13 @@
 	<bean name="mailSender"
 		class="org.springframework.mail.javamail.JavaMailSenderImpl">
 		<property name="host">
-			<value>smtp.hut.fi</value>
+			<value>${smtp.host}</value>
 		</property>
 	</bean>
 
 	<bean name="updateTaskTemplate"
 		class="org.springframework.mail.SimpleMailMessage">
-		<property name="from" value="agilefant@agilefant.org" />
+		<property name="from" value="${smtp.from}" />
 		<property name="subject" value="Task updated: $task.name$" />
 		<property name="text">
 			<value>
@@ -26,7 +26,7 @@ This message was automatically sent by Agilefant]]>
 
 	<bean name="newPasswordTemplate"
 		class="org.springframework.mail.SimpleMailMessage">
-		<property name="from" value="agilefant@agilefant.org" />
+		<property name="from" value="${smtp.from}" />
 		<property name="subject" value="Your new Agilefant Password" />
 		<property name="text">
 			<value>
@@ -39,7 +39,7 @@ This message was automatically sent by Agilefant]]>
 
 	<bean name="createTaskTemplate"
 		class="org.springframework.mail.SimpleMailMessage">
-		<property name="from" value="agilefant@agilefant.org" />
+		<property name="from" value="${smtp.from}" />
 		<property name="subject" value="Task created: $task.name$" />
 		<property name="text">
 			<value>

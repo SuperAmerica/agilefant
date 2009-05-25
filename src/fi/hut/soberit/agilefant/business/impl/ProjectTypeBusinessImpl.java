@@ -30,4 +30,8 @@ public class ProjectTypeBusinessImpl implements ProjectTypeBusiness {
         this.projectTypeDAO = projectTypeDAO;
     }
 
+    public int count() {
+        return projectTypeDAO.count();
+    }
+
 }

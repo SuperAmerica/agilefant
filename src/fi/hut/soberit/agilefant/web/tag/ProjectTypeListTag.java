@@ -14,8 +14,12 @@ public class ProjectTypeListTag extends SpringTagSupport {
     private ProjectTypeBusiness projectTypeBusiness;
 
     @Override
-    public int doStartTag() throws JspException {
+    protected void retrieveSingletons() {
         projectTypeBusiness = requireBean("projectTypeBusiness");
+    }
+
+    @Override
+    public int doStartTag() throws JspException {
         super.getPageContext().setAttribute(ProjectTypeListTag.PROJECTTYPE_LIST_KEY,
                 projectTypeBusiness.getAll());
         return Tag.EVAL_BODY_INCLUDE;

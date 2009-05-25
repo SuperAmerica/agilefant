@@ -3,7 +3,7 @@ package fi.hut.soberit.agilefant.web;
 import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
 
-import fi.hut.soberit.agilefant.db.ProjectTypeDAO;
+import fi.hut.soberit.agilefant.business.ProjectTypeBusiness;
 import fi.hut.soberit.agilefant.db.WorkTypeDAO;
 import fi.hut.soberit.agilefant.model.ProjectType;
 import fi.hut.soberit.agilefant.model.WorkType;
@@ -22,12 +22,12 @@ public class WorkTypeAction extends ActionSupport implements CRUDAction {
 
     private WorkTypeDAO workTypeDAO;
 
-    private ProjectTypeDAO projectTypeDAO;
+    private ProjectTypeBusiness projectTypeBusiness;
 
     private int storedWorkTypeId;
 
     public String create() {
-        projectType = projectTypeDAO.get(projectTypeId);
+        projectType = projectTypeBusiness.get(projectTypeId);
         if (projectType == null) {
             super
                     .addActionError(super
@@ -40,7 +40,7 @@ public class WorkTypeAction extends ActionSupport implements CRUDAction {
     }
 
     public String edit() {
-        projectType = projectTypeDAO.get(projectTypeId);
+        projectType = projectTypeBusiness.get(projectTypeId);
         if (projectType == null) {
             super
                     .addActionError(super
@@ -70,7 +70,7 @@ public class WorkTypeAction extends ActionSupport implements CRUDAction {
             super.addActionError(super.getText("workType.missingForm"));
             return Action.INPUT;
         }
-        projectType = projectTypeDAO.get(projectTypeId);
+        projectType = projectTypeBusiness.get(projectTypeId);
         if (projectType == null) {
             super
                     .addActionError(super
@@ -128,8 +128,8 @@ public class WorkTypeAction extends ActionSupport implements CRUDAction {
         return projectType;
     }
 
-    public void setProjectTypeDAO(ProjectTypeDAO projectTypeDAO) {
-        this.projectTypeDAO = projectTypeDAO;
+    public void setProjectTypeBusiness(ProjectTypeBusiness projectTypeBusiness) {
+        this.projectTypeBusiness = projectTypeBusiness;
     }
 
     public void setWorkTypeDAO(WorkTypeDAO workTypeDAO) {

@@ -992,19 +992,19 @@
 		  var opts = { captionText: "Stories", defaultSortColumn: 0};
 		  if(agilefantUtils.isTimesheetsEnabled()) {
 		      opts.colCss = {
-		        ':lt(7)': { 'background': '#dddddd' },
-		        ':eq(7)': { 'background': '#eeeeee' },
-		        ':eq(8)': { 'background': '#ffffff' }
+		        ':lt(7)': { 'background': '#eee' },
+		        ':eq(7)': { 'background': '#fff' },
+		        ':eq(8)': { 'background': '#fff' }
 		      };
 		  } else {
 		      opts.colCss = {
-		        ':lt(6)': { 'background': '#dddddd' },
-		        ':eq(6)': { 'background': '#eeeeee' },
-		        ':eq(7)': { 'background': '#ffffff' }
+		        ':lt(6)': { 'background': '#eee' },
+		        ':eq(6)': { 'background': '#fff' },
+		        ':eq(7)': { 'background': '#fff' }
 			  };			  
 		  }
 		  addTableColumn(opts, 
-				  { minwidth: 36, auto: true },
+				  { minwidth: 30, auto: true },
 				  { name: "Prio",
 					tooltip: "Story priority",
 					sort: agilefantUtils.comparators.priorityComparator

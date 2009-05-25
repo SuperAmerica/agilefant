@@ -175,6 +175,7 @@ IterationController.prototype = {
     		}}
     		}});
     		this.descCells.push(desc);
+    	desc.getElement().addClass("description-cell");
     	var blis = row.createCell();
     	blis.getElement().hide();
     	var blictrl = new IterationGoalController(blis, goal, this);

@@ -28,7 +28,7 @@
   width: auto;
   float: left;
   margin: 0 0.2% -1000em 0;
-  padding: 0 0 1000.5em 0.2%;
+  padding: 0 0 1000.2em 0.2%;
   overflow: hidden;
   border: none;
 }
@@ -190,7 +190,6 @@ div.gear {
 	background-image:url(../img/open_close.png);
 	background-position:0 0;
 	background-repeat:no-repeat;
-	margin-top: 5px;
 	cursor:pointer;
 	height:16px;
 	width:16px;
@@ -199,7 +198,6 @@ div.gear {
 	background-image:url(../img/open_close.png);
 	background-position:0 100%;
 	background-repeat:no-repeat;
-	margin-top: 5px;
 	cursor:pointer;
 	height:16px;
 	width:16px;
@@ -220,7 +218,7 @@ div.gear {
   display: block;
   width: 12%;
   float: left !important;
-  background-color: #eee;
+  background-color: #fff;
   margin: 0 0.2% -1000em 0;
   padding: 0 0 1000.5em 0.2%;
   overflow: hidden;
@@ -269,6 +267,8 @@ div.gear {
 
 button.edit {
   white-space: nowrap !important;  
+  height: 16px !important;
+  border: none;
 }
 
 .dragHandle:hover {
@@ -302,3 +302,6 @@ button.edit {
 .taskStateDONE {
 	background-color: #00bb44;
 }
+.dynamictable .dynamictable-row .description-cell {
+	padding-left: 6%;	
+} 

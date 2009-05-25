@@ -234,4 +234,7 @@ public interface ProjectBusiness {
      * @return
      */
     public Map<BusinessTheme,AFTime> formatThemeBindings(Project proj);
+
+    int count();
+
 }

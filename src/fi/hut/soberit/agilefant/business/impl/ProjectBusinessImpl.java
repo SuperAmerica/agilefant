@@ -902,6 +902,10 @@ public class ProjectBusinessImpl implements ProjectBusiness {
         return metrics;
     }
 
+    public int count() {
+        return projectDAO.count();
+    }
+
     /** {@inheritDoc} */
     public Map<BusinessTheme, AFTime> formatThemeBindings(Project proj) {
         Map<BusinessTheme, Collection<BacklogThemeBinding>> tmp = new HashMap<BusinessTheme, Collection<BacklogThemeBinding>>();

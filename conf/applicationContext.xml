@@ -12,8 +12,13 @@
 		<property name="order" value="0" />
 	</bean>
 	<bean id="applicationProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
-		<property name="ignoreResourceNotFound" value="false" />
-		<property name="location" value="file://${agilefant.properties}" />
+		<property name="ignoreResourceNotFound" value="true" />
+		<property name="locations">
+			<list>
+				<value>classpath:agilefant.properties</value>
+				<value>file://${agilefant.properties}</value>
+			</list>
+		</property>
 		<property name="properties">
 			<bean id="defaultProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
 				<property name="locations">

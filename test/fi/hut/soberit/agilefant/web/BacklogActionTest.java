@@ -15,8 +15,7 @@ import junit.framework.TestCase;
 import com.opensymphony.xwork.Action;
 
 import fi.hut.soberit.agilefant.business.BacklogBusiness;
-import fi.hut.soberit.agilefant.db.BacklogDAO;
-import fi.hut.soberit.agilefant.db.BacklogItemDAO;
+import fi.hut.soberit.agilefant.business.BacklogItemBusiness;
 import fi.hut.soberit.agilefant.db.IterationGoalDAO;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.Backlog;
@@ -38,10 +37,9 @@ public class BacklogActionTest extends TestCase {
     // class under test
     private BacklogAction backlogAction = new BacklogAction();
 
-    private BacklogDAO backlogDAO;
-    private BacklogItemDAO backlogItemDAO;
     private IterationGoalDAO iterationGoalDAO;
 
+    private BacklogItemBusiness backlogItemBusiness;
     private BacklogBusiness backlogBusiness;
 
     /**
@@ -49,8 +47,8 @@ public class BacklogActionTest extends TestCase {
      */
     
     public void testEdit() {
-        backlogDAO = createMock(BacklogDAO.class);
-        backlogAction.setBacklogDAO(backlogDAO);
+        backlogBusiness = createMock(BacklogBusiness.class);
+        backlogAction.setBacklogBusiness(backlogBusiness);
         
         Product product = new Product();
         product.setId(123);
@@ -59,11 +57,11 @@ public class BacklogActionTest extends TestCase {
         Iteration iteration = new Iteration();
         iteration.setId(666);
         
-        expect(backlogDAO.get(123)).andReturn(product);
-        expect(backlogDAO.get(125)).andReturn(project);
-        expect(backlogDAO.get(666)).andReturn(iteration);
-        expect(backlogDAO.get(-100)).andReturn(null);
-        replay(backlogDAO);
+        expect(backlogBusiness.get(123)).andReturn(product);
+        expect(backlogBusiness.get(125)).andReturn(project);
+        expect(backlogBusiness.get(666)).andReturn(iteration);
+        expect(backlogBusiness.get(-100)).andReturn(null);
+        replay(backlogBusiness);
         
         // test product
         backlogAction.setBacklogId(product.getId());
@@ -78,18 +76,18 @@ public class BacklogActionTest extends TestCase {
         backlogAction.setBacklogId(-100);
         assertEquals("error", backlogAction.edit());
         
-        verify(backlogDAO);
+        verify(backlogBusiness);
     }
 
     /**
      * Test MoveBacklogItem method.
      */
     public void testMoveBacklogItem() {
-        backlogDAO = createMock(BacklogDAO.class);
-        backlogItemDAO = createMock(BacklogItemDAO.class);
+        backlogBusiness = createMock(BacklogBusiness.class);
         iterationGoalDAO = createMock(IterationGoalDAO.class);
-        backlogAction.setBacklogDAO(backlogDAO);
-        backlogAction.setBacklogItemDAO(backlogItemDAO);
+        backlogItemBusiness = createMock(BacklogItemBusiness.class);
+        backlogAction.setBacklogBusiness(backlogBusiness);
+        backlogAction.setBacklogItemBusiness(backlogItemBusiness);
         
         // Generate test data
         Iteration origBacklog = new Iteration();                
@@ -116,34 +114,34 @@ public class BacklogActionTest extends TestCase {
         
         // Record expected behavior
         expect(iterationGoalDAO.get(987)).andReturn(ig);
-        expect(backlogDAO.get(128)).andReturn(targetBacklog);
-        expect(backlogItemDAO.get(66)).andReturn(bli);
+        expect(backlogBusiness.get(128)).andReturn(targetBacklog);
+        expect(backlogItemBusiness.getBacklogItem(66)).andReturn(bli);
         bli.getBacklog().getBacklogItems().remove(bli);
         targetBacklog.getBacklogItems().add(bli);
         bli.setBacklog(targetBacklog);
         bli.getIterationGoal().getBacklogItems().remove(bli);
         bli.setIterationGoal(null);
-        backlogItemDAO.store(bli);
+        backlogItemBusiness.store(bli);
         
-        replay(backlogDAO);
-        replay(backlogItemDAO);
+        replay(backlogBusiness);
+        replay(backlogItemBusiness);
         
         assertSame(iterationGoalDAO.get(987), bli.getIterationGoal());        
         assertEquals("editProject", backlogAction.moveBacklogItem());
         assertNull(bli.getIterationGoal());
         
-        verify(backlogDAO);
-        verify(backlogItemDAO);
+        verify(backlogBusiness);
+        verify(backlogItemBusiness);
     }
     
     /**
      * Test with invalid backlog id.
      */
     public void testMoveBacklogItem_invalidBacklogId() {
-        backlogDAO = createMock(BacklogDAO.class);
-        backlogItemDAO = createMock(BacklogItemDAO.class);
-        backlogAction.setBacklogDAO(backlogDAO);
-        backlogAction.setBacklogItemDAO(backlogItemDAO);
+        backlogBusiness = createMock(BacklogBusiness.class);
+        backlogItemBusiness = createMock(BacklogItemBusiness.class);
+        backlogAction.setBacklogBusiness(backlogBusiness);
+        backlogAction.setBacklogItemBusiness(backlogItemBusiness);
         
         BacklogItem bli = new BacklogItem();
         bli.setId(66);
@@ -151,26 +149,26 @@ public class BacklogActionTest extends TestCase {
         backlogAction.setBacklogId(-100);
         backlogAction.setBacklogItemId(66);
         
-        expect(backlogDAO.get(-100)).andReturn(null);
-        expect(backlogItemDAO.get(66)).andReturn(bli);
+        expect(backlogBusiness.get(-100)).andReturn(null);
+        expect(backlogItemBusiness.getBacklogItem(66)).andReturn(bli);
         
-        replay(backlogDAO);
-        replay(backlogItemDAO);
+        replay(backlogBusiness);
+        replay(backlogItemBusiness);
         
         assertEquals(Action.ERROR, backlogAction.moveBacklogItem());
         
-        verify(backlogDAO);
-        verify(backlogItemDAO);
+        verify(backlogBusiness);
+        verify(backlogItemBusiness);
     }
     
     /**
      * Test with invalid bli id.backlogItemIds
      */
     public void testMoveBacklogItem_invalidBliId() {
-        backlogDAO = createMock(BacklogDAO.class);
-        backlogItemDAO = createMock(BacklogItemDAO.class);
-        backlogAction.setBacklogDAO(backlogDAO);
-        backlogAction.setBacklogItemDAO(backlogItemDAO);
+        backlogBusiness = createMock(BacklogBusiness.class);
+        backlogItemBusiness = createMock(BacklogItemBusiness.class);
+        backlogAction.setBacklogBusiness(backlogBusiness);
+        backlogAction.setBacklogItemBusiness(backlogItemBusiness);
         
         Backlog backlog = new Project();
         backlog.setId(66);
@@ -178,25 +176,24 @@ public class BacklogActionTest extends TestCase {
         backlogAction.setBacklogId(66);
         backlogAction.setBacklogItemId(-100);
         
-        expect(backlogDAO.get(66)).andReturn(backlog);
-        expect(backlogItemDAO.get(-100)).andReturn(null);
+        expect(backlogBusiness.get(66)).andReturn(backlog);
+        expect(backlogItemBusiness.getBacklogItem(-100)).andReturn(null);
         
-        replay(backlogDAO);
-        replay(backlogItemDAO);
+        replay(backlogBusiness);
+        replay(backlogItemBusiness);
         
         assertEquals(Action.ERROR, backlogAction.moveBacklogItem());
         
-        verify(backlogDAO);
-        verify(backlogItemDAO);
+        verify(backlogBusiness);
+        verify(backlogItemBusiness);
     }
     
     /**
      * Test moving selected items.
      */
     public void testDoActionOnMultipleBacklogItems() {
-        backlogDAO = createMock(BacklogDAO.class);
-        backlogItemDAO = createMock(BacklogItemDAO.class);
         backlogBusiness = createMock(BacklogBusiness.class);
+        backlogItemBusiness = createMock(BacklogItemBusiness.class);
         
         // Generate test data
         Backlog origBacklog = new Iteration();
@@ -231,8 +228,8 @@ public class BacklogActionTest extends TestCase {
         responsibleIds.put(6, "true");
         
         // Set the attributes for the backlogAction
-        backlogAction.setBacklogDAO(backlogDAO);
-        backlogAction.setBacklogItemDAO(backlogItemDAO);
+        backlogAction.setBacklogBusiness(backlogBusiness);
+        backlogAction.setBacklogItemBusiness(backlogItemBusiness);
         backlogAction.setBacklogBusiness(backlogBusiness);
         backlogAction.setBacklogItemIds(selected);
         
@@ -247,7 +244,7 @@ public class BacklogActionTest extends TestCase {
         backlogAction.setKeepThemes(1);
         
         // The test
-        expect(backlogDAO.get(255)).andReturn(origBacklog);
+        expect(backlogBusiness.get(255)).andReturn(origBacklog);
         try {
             backlogBusiness.changePriorityOfMultipleItems(selected,
                 Priority.values()[3]);
@@ -261,15 +258,13 @@ public class BacklogActionTest extends TestCase {
             fail(e.getMessage());
         }
         
-        replay(backlogDAO);
-        replay(backlogItemDAO);
         replay(backlogBusiness);
+        replay(backlogItemBusiness);
         
         assertEquals("editIteration", backlogAction.doActionOnMultipleBacklogItems());
         
-        verify(backlogDAO);
-        verify(backlogItemDAO);
         verify(backlogBusiness);
+        verify(backlogItemBusiness);
         
     }
 
@@ -277,9 +272,8 @@ public class BacklogActionTest extends TestCase {
      * Test moving selected items.
      */
     public void testDoActionOnMultipleBacklogItemsWithThemes() {
-        backlogDAO = createMock(BacklogDAO.class);
-        backlogItemDAO = createMock(BacklogItemDAO.class);
-        backlogBusiness = createMock(BacklogBusiness.class);                
+        backlogBusiness = createMock(BacklogBusiness.class);
+        backlogItemBusiness = createMock(BacklogItemBusiness.class);
         
         // Generate test data
         Iteration origIteration = new Iteration();
@@ -339,8 +333,8 @@ public class BacklogActionTest extends TestCase {
         int[] selected = {15, 17, 18};                
         
         // Set the attributes for the backlogAction
-        backlogAction.setBacklogDAO(backlogDAO);
-        backlogAction.setBacklogItemDAO(backlogItemDAO);
+        backlogAction.setBacklogBusiness(backlogBusiness);
+        backlogAction.setBacklogItemBusiness(backlogItemBusiness);
         backlogAction.setBacklogBusiness(backlogBusiness);
         backlogAction.setBacklogItemIds(selected);
                 
@@ -354,7 +348,7 @@ public class BacklogActionTest extends TestCase {
         backlogAction.setKeepThemes(1);
         
         // The test
-        expect(backlogDAO.get(255)).andReturn(origIteration);
+        expect(backlogBusiness.get(255)).andReturn(origIteration);
         bli1.getBusinessThemes().clear();
         bli2.getBusinessThemes().clear();
         bli3.getBusinessThemes().clear();
@@ -366,9 +360,8 @@ public class BacklogActionTest extends TestCase {
             fail(e.getMessage());
         }
         
-        replay(backlogDAO);
-        replay(backlogItemDAO);
         replay(backlogBusiness);
+        replay(backlogItemBusiness);
         
         assertEquals("editIteration", backlogAction.doActionOnMultipleBacklogItems());
         assertEquals(0, bli1.getBusinessThemes().size());
@@ -376,9 +369,8 @@ public class BacklogActionTest extends TestCase {
         assertEquals(0, bli3.getBusinessThemes().size());
         assertEquals(0, bli4.getBusinessThemes().size());
         
-        verify(backlogDAO);
-        verify(backlogItemDAO);
         verify(backlogBusiness);
+        verify(backlogItemBusiness);
         
     }
     
@@ -386,10 +378,10 @@ public class BacklogActionTest extends TestCase {
      * Move an item with a theme under another product. 
      */
     public void testMoveBacklogItemWithBusinessThemeUnderDifferentProduct() {
-        backlogDAO = createMock(BacklogDAO.class);
-        backlogItemDAO = createMock(BacklogItemDAO.class);        
-        backlogAction.setBacklogDAO(backlogDAO);
-        backlogAction.setBacklogItemDAO(backlogItemDAO);
+        backlogBusiness = createMock(BacklogBusiness.class);
+        backlogItemBusiness = createMock(BacklogItemBusiness.class);
+        backlogAction.setBacklogBusiness(backlogBusiness);
+        backlogAction.setBacklogItemBusiness(backlogItemBusiness);
         
         // Generate test data
         Iteration origIteration = new Iteration();
@@ -433,32 +425,32 @@ public class BacklogActionTest extends TestCase {
         backlogAction.setBacklogItemId(66);
         
         // Record expected behavior        
-        expect(backlogDAO.get(128)).andReturn(targetProject);
-        expect(backlogItemDAO.get(66)).andReturn(bli);
+        expect(backlogBusiness.get(128)).andReturn(targetProject);
+        expect(backlogItemBusiness.getBacklogItem(66)).andReturn(bli);
         bli.getBacklog().getBacklogItems().remove(bli);
         targetProject.getBacklogItems().add(bli);
         bli.getBusinessThemes().clear();        
         bli.setBacklog(targetProject);        
-        backlogItemDAO.store(bli);
+        backlogItemBusiness.store(bli);
         
-        replay(backlogDAO);
-        replay(backlogItemDAO);
+        replay(backlogBusiness);
+        replay(backlogItemBusiness);
                  
         assertEquals("editProject", backlogAction.moveBacklogItem());
         assertEquals(0, bli.getBusinessThemes().size());
         
-        verify(backlogDAO);
-        verify(backlogItemDAO);
+        verify(backlogBusiness);
+        verify(backlogItemBusiness);
     }
     
     /**
      * Move an item with a theme under another product. 
      */
     public void testMoveBacklogItemWithBusinessThemeUnderSameProduct() {
-        backlogDAO = createMock(BacklogDAO.class);
-        backlogItemDAO = createMock(BacklogItemDAO.class);        
-        backlogAction.setBacklogDAO(backlogDAO);
-        backlogAction.setBacklogItemDAO(backlogItemDAO);
+        backlogBusiness = createMock(BacklogBusiness.class);
+        backlogItemBusiness = createMock(BacklogItemBusiness.class);
+        backlogAction.setBacklogBusiness(backlogBusiness);
+        backlogAction.setBacklogItemBusiness(backlogItemBusiness);
         
         // Generate test data
         Iteration origIteration = new Iteration();
@@ -499,33 +491,30 @@ public class BacklogActionTest extends TestCase {
         backlogAction.setBacklogItemId(66);
         
         // Record expected behavior        
-        expect(backlogDAO.get(128)).andReturn(targetProject);
-        expect(backlogItemDAO.get(66)).andReturn(bli);
+        expect(backlogBusiness.get(128)).andReturn(targetProject);
+        expect(backlogItemBusiness.getBacklogItem(66)).andReturn(bli);
         bli.getBacklog().getBacklogItems().remove(bli);
         targetProject.getBacklogItems().add(bli);              
         bli.setBacklog(targetProject);        
-        backlogItemDAO.store(bli);
+        backlogItemBusiness.store(bli);
         
-        replay(backlogDAO);
-        replay(backlogItemDAO);
+        replay(backlogBusiness);
+        replay(backlogItemBusiness);
                  
         assertEquals("editProject", backlogAction.moveBacklogItem());
         assertEquals(1, bli.getBusinessThemes().size());
         
-        verify(backlogDAO);
-        verify(backlogItemDAO);
+        verify(backlogBusiness);
+        verify(backlogItemBusiness);
     }
     
     /**
      * Test delete multiple backlogItems.
      */
     public void testDeleteMultiple() {
-        backlogDAO = createMock(BacklogDAO.class);
-        backlogItemDAO = createMock(BacklogItemDAO.class);
         backlogBusiness = createMock(BacklogBusiness.class);
-        
-        backlogAction.setBacklogDAO(backlogDAO);
-        backlogAction.setBacklogItemDAO(backlogItemDAO);
+        backlogItemBusiness = createMock(BacklogItemBusiness.class);
+        backlogAction.setBacklogItemBusiness(backlogItemBusiness);
         backlogAction.setBacklogBusiness(backlogBusiness);
         backlogAction.setItemAction("DeleteSelected");
         backlogAction.setBacklogId(10);
@@ -543,7 +532,7 @@ public class BacklogActionTest extends TestCase {
         
         backlogAction.setBacklogItemIds(selected);
         
-        expect(backlogDAO.get(10)).andReturn(project);
+        expect(backlogBusiness.get(10)).andReturn(project);
         try {
             backlogBusiness.deleteMultipleItems(10, selected);
         }
@@ -551,14 +540,12 @@ public class BacklogActionTest extends TestCase {
             fail(e.getMessage());
         }
         
-        replay(backlogDAO);
-        replay(backlogItemDAO);
         replay(backlogBusiness);
+        replay(backlogItemBusiness);
         
         backlogAction.doActionOnMultipleBacklogItems();
         
-        verify(backlogDAO);
-        verify(backlogItemDAO);
         verify(backlogBusiness);
+        verify(backlogItemBusiness);
     }
 }

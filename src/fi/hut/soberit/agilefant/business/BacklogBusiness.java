@@ -353,4 +353,11 @@ public interface BacklogBusiness {
 
     Collection<Backlog> getMultiple(Collection<Integer> idList);
 
+    /**
+     * Get a backlog by its id, but without throwing a checked exception.
+     * @param id backlog id
+     * @return backlog object or null
+     */
+    Backlog get(int id);
+
 }

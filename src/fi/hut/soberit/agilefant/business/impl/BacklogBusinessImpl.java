@@ -84,6 +84,10 @@ public class BacklogBusinessImpl implements BacklogBusiness {
         return backlog;
     }
 
+    public Backlog get(int id) {
+        return backlogDAO.get(id);
+    }
+
     // @Override
     public void deleteMultipleItems(int backlogId, int[] backlogItemIds)
             throws ObjectNotFoundException {

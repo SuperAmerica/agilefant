@@ -428,7 +428,11 @@ public class BacklogItemBusinessImpl implements BacklogItemBusiness {
         }
         return backlogItem;
     }
-    
+
+    public void store(BacklogItem backlogItem) {
+        backlogItemDAO.store(backlogItem);
+    }
+
     public void setTaskBusiness(TaskBusiness taskBusiness) {
         this.taskBusiness = taskBusiness;
     }

@@ -12,9 +12,8 @@ import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
 
 import fi.hut.soberit.agilefant.business.BacklogBusiness;
+import fi.hut.soberit.agilefant.business.BacklogItemBusiness;
 import fi.hut.soberit.agilefant.business.ProjectBusiness;
-import fi.hut.soberit.agilefant.db.BacklogDAO;
-import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.Backlog;
@@ -32,8 +31,6 @@ public class BacklogAction extends ActionSupport {
     private static final long serialVersionUID = 8061288993804046816L;
 
     private int backlogId;
-
-    private BacklogDAO backlogDAO;
 
     private int backlogItemId;
 
@@ -56,7 +53,7 @@ public class BacklogAction extends ActionSupport {
     
     private Map<Integer, String> userIds = new HashMap<Integer, String>();
 
-    private BacklogItemDAO backlogItemDAO;
+    private BacklogItemBusiness backlogItemBusiness;
 
     private BacklogBusiness backlogBusiness;
     
@@ -83,12 +80,12 @@ public class BacklogAction extends ActionSupport {
     private String itemAction;
     
     public String edit() {
-        Backlog backlog = backlogDAO.get(backlogId);
+        Backlog backlog = backlogBusiness.get(backlogId);
         return solveResult(backlog);
     }
     
     public String editWithMetrics() {
-        backlog = backlogDAO.get(backlogId);
+        backlog = backlogBusiness.get(backlogId);
         if(backlog instanceof Project) {
             Project project = (Project)backlog;
             if (project.getIterations().size() == 0) {  
@@ -133,17 +130,13 @@ public class BacklogAction extends ActionSupport {
     }
     
     
-    public void setBacklogDAO(BacklogDAO backlogDAO) {
-        this.backlogDAO = backlogDAO;
-    }
-
     public String getSubBacklogsAsJSON() {
          jsonData = this.backlogBusiness.getSubBacklogsAsJSON(backlogId);
          return Action.SUCCESS;
     }
     public String moveBacklogItem() {
-        Backlog backlog = backlogDAO.get(backlogId);
-        BacklogItem backlogItem = backlogItemDAO.get(backlogItemId);
+        Backlog backlog = backlogBusiness.get(backlogId);
+        BacklogItem backlogItem = backlogItemBusiness.getBacklogItem(backlogItemId);
         if (backlog == null) {
             super.addActionError(super.getText("backlog.notFound"));
             return Action.ERROR;
@@ -160,7 +153,7 @@ public class BacklogAction extends ActionSupport {
             backlogItem.getIterationGoal().getBacklogItems().remove(backlogItem);
             backlogItem.setIterationGoal(null);
         }
-        backlogItemDAO.store(backlogItem);
+        backlogItemBusiness.store(backlogItem);
 
         return this.solveResult(backlog);
     }
@@ -273,7 +266,7 @@ public class BacklogAction extends ActionSupport {
      *         determined.
      */
     public String doActionOnMultipleBacklogItems() {
-        Backlog currentBacklog = this.backlogDAO.get(backlogId);
+        Backlog currentBacklog = backlogBusiness.get(backlogId);
         Log logger = LogFactory.getLog(getClass());
         
         if (itemAction.equals("ChangeSelected")) {
@@ -389,10 +382,6 @@ public class BacklogAction extends ActionSupport {
         this.itemAction = itemAction;
     }
 
-    public void setBacklogItemDAO(BacklogItemDAO backlogItemDAO) {
-        this.backlogItemDAO = backlogItemDAO;
-    }
-
     public BacklogBusiness getBacklogBusiness() {
         return backlogBusiness;
     }
@@ -494,8 +483,9 @@ public class BacklogAction extends ActionSupport {
     public String getJsonData() {
         return jsonData;
     }
-    
-    
-    
-   
+
+    public void setBacklogItemBusiness(BacklogItemBusiness backlogItemBusiness) {
+        this.backlogItemBusiness = backlogItemBusiness;
+    }
+
 }

@@ -196,4 +196,7 @@ public interface BacklogItemBusiness {
      * @return
      */
     public BacklogItem createBacklogItemFromTodo(int todoId);
+
+    void store(BacklogItem backlogItem);
+
 }

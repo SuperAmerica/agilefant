@@ -5,7 +5,7 @@ import org.springframework.security.userdetails.UserDetails;
 import org.springframework.security.userdetails.UserDetailsService;
 import org.springframework.security.userdetails.UsernameNotFoundException;
 
-import fi.hut.soberit.agilefant.db.UserDAO;
+import fi.hut.soberit.agilefant.business.UserBusiness;
 import fi.hut.soberit.agilefant.model.User;
 
 /**
@@ -29,10 +29,10 @@ public class AgilefantUserDetailsService implements UserDetailsService {
         }
     }
 
-    private UserDAO userDAO;
+    private UserBusiness userBusiness;
 
-    public void setUserDAO(UserDAO userDAO) {
-        this.userDAO = userDAO;
+    public void setUserBusiness(UserBusiness userBusiness) {
+        this.userBusiness = userBusiness;
     }
 
     /**
@@ -41,11 +41,11 @@ public class AgilefantUserDetailsService implements UserDetailsService {
      */
     public UserDetails loadUserByUsername(String userName)
             throws UsernameNotFoundException, DataAccessException {
-        if (userDAO == null)
-            throw new AgilefantDataAccessException("DAO was null");
+        if (userBusiness == null)
+            throw new AgilefantDataAccessException("userBusiness was null");
 
         // try getting user by given username
-        User user = userDAO.getUser(userName);
+        User user = userBusiness.getUser(userName);
 
         // no user found, throw exception
         if (user == null)

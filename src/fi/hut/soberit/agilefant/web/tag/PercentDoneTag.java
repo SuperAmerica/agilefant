@@ -16,10 +16,8 @@ public class PercentDoneTag extends SpringTagSupport {
     @Override
     public int doEndTag() throws javax.servlet.jsp.JspTagException {
 
-        TaskDAO dao = (TaskDAO) super.getApplicationContext()
-                .getBean("taskDAO");
-        BacklogItemDAO bliDao = (BacklogItemDAO) super.getApplicationContext()
-                .getBean("backlogItemDAO");
+        TaskDAO dao = requireBean("taskDAO");
+        BacklogItemDAO bliDao = requireBean("backlogItemDAO");
         BacklogItem bli = bliDao.get(backlogItemId);
 
         int done = dao.getTasksByStateAndBacklogItem(bli,

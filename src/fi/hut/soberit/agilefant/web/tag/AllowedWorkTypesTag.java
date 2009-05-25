@@ -27,8 +27,7 @@ public class AllowedWorkTypesTag extends SpringTagSupport {
     public int doStartTag() throws JspException {
         Collection<WorkType> result = null;
         if (backlogItem.getBacklog() instanceof Product) {
-            WorkTypeDAO workTypeDAO = (WorkTypeDAO) super
-                    .getApplicationContext().getBean("workTypeDAO");
+            WorkTypeDAO workTypeDAO = requireBean("workTypeDAO");
             result = workTypeDAO.getAll();
         } else {
             Project project = null;

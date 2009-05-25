@@ -13,8 +13,7 @@ public class HourReportingTag extends SpringTagSupport {
 
     @Override
     public int doStartTag() throws JspException {
-        settingBusiness = (SettingBusiness) super.getApplicationContext().getBean(
-                "settingBusiness");
+        settingBusiness = requireBean("settingBusiness");
         
         super.getPageContext().setAttribute(super.getId(), 
                 settingBusiness.isHourReportingEnabled());

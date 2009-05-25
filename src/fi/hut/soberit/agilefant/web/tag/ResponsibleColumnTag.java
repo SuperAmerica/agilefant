@@ -24,10 +24,8 @@ public class ResponsibleColumnTag extends SpringTagSupport {
 
     @Override
     public int doStartTag() throws JspException {
-        backlogItemDAO = (BacklogItemDAO) super.getApplicationContext()
-                .getBean("backlogItemDAO");
-        backlogBusiness = (BacklogBusiness) super.getApplicationContext()
-                .getBean("backlogBusiness");
+        backlogItemDAO = requireBean("backlogItemDAO");
+        backlogBusiness = requireBean("backlogBusiness");
 
         BacklogItem bli = backlogItemDAO.get(backlogItemId);
 

@@ -19,7 +19,7 @@ public class EnabledUserListTag extends SpringTagSupport {
 
     @Override
     public int doStartTag() throws JspException {
-        userBusiness = (UserBusiness) super.getApplicationContext().getBean("userBusiness");
+        userBusiness = requireBean("userBusiness");
 
         List<User> list = (List<User>) userBusiness.getEnabledUsers();
 

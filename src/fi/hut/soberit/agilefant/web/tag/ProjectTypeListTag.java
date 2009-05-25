@@ -15,8 +15,7 @@ public class ProjectTypeListTag extends SpringTagSupport {
 
     @Override
     public int doStartTag() throws JspException {
-        projectTypeBusiness = (ProjectTypeBusiness) super.getApplicationContext().getBean(
-                "projectTypeBusiness");
+        projectTypeBusiness = requireBean("projectTypeBusiness");
         super.getPageContext().setAttribute(ProjectTypeListTag.PROJECTTYPE_LIST_KEY,
                 projectTypeBusiness.getAll());
         return Tag.EVAL_BODY_INCLUDE;

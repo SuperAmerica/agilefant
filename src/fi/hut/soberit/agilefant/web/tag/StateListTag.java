@@ -50,7 +50,8 @@ public class StateListTag extends SpringTagSupport {
                 new State[] { State.DONE }).size();
         
         */
-        Map<Integer,Integer> tmp = ((TaskBusiness)super.getApplicationContext().getBean("taskBusiness")).getTaskCountByState(backlogItemId);
+        TaskBusiness taskBusiness = requireBean("taskBusiness");
+        Map<Integer,Integer> tmp = taskBusiness.getTaskCountByState(backlogItemId);
 
         map.put(NOT_STARTED, tmp.get(State.NOT_STARTED.getOrdinal()));
         map.put(STARTED, tmp.get(State.STARTED.getOrdinal()));

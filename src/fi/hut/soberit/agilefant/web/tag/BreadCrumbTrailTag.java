@@ -50,44 +50,37 @@ public class BreadCrumbTrailTag extends SpringTagSupport {
     }
 
     public void setProductId(int id) {
-        ProductDAO dao = (ProductDAO) super.getApplicationContext().getBean(
-                "productDAO");
+        ProductDAO dao = requireBean("productDAO");
         this.page = dao.get(id);
     }
 
     public void setProjectId(int id) {
-        ProjectDAO dao = (ProjectDAO) super.getApplicationContext()
-                .getBean("projectDAO");
+        ProjectDAO dao = requireBean("productDAO");
         this.page = dao.get(id);
     }
 
     public void setIterationId(int id) {
-        IterationDAO dao = (IterationDAO) super.getApplicationContext()
-                .getBean("iterationDAO");
+        IterationDAO dao = requireBean("iterationDAO");
         this.page = dao.get(id);
     }
 
     public void setIterationGoalId(int id) {
-        IterationGoalDAO dao = (IterationGoalDAO) super.getApplicationContext()
-                .getBean("iterationGoalDAO");
+        IterationGoalDAO dao = requireBean("iterationGoalDAO");
         this.page = dao.get(id);
     }
 
     public void setBacklogItemId(int id) {
-        BacklogItemDAO dao = (BacklogItemDAO) super.getApplicationContext()
-                .getBean("backlogItemDAO");
+        BacklogItemDAO dao = requireBean("backlogItemDAO");
         this.page = dao.get(id);
     }
 
     public void setBacklogId(int id) {
-        BacklogDAO dao = (BacklogDAO) super.getApplicationContext().getBean(
-                "backlogDAO");
+        BacklogDAO dao = requireBean("backlogDAO");
         this.page = (PageItem) dao.get(id);
     }
 
     public void setTaskId(int id) {
-        TaskDAO dao = (TaskDAO) super.getApplicationContext()
-                .getBean("taskDAO");
+        TaskDAO dao = requireBean("taskDAO");
         this.page = dao.get(id);
     }
 

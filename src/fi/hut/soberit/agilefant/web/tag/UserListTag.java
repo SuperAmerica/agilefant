@@ -6,7 +6,7 @@ import java.util.List;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.Tag;
 
-import fi.hut.soberit.agilefant.db.UserDAO;
+import fi.hut.soberit.agilefant.business.UserBusiness;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.util.UserComparator;
 
@@ -15,13 +15,13 @@ public class UserListTag extends SpringTagSupport {
 
     public static final String USER_LIST_KEY = "userList";
 
-    private UserDAO userDAO;
+    private UserBusiness userBusiness;
 
     @Override
     public int doStartTag() throws JspException {
-        userDAO = (UserDAO) super.getApplicationContext().getBean("userDAO");
+        userBusiness = requireBean("userBusiness");
 
-        List<User> list = (List<User>) userDAO.getAll();
+        List<User> list = (List<User>) userBusiness.getAllUsers();
 
         Collections.sort(list, new UserComparator());
 

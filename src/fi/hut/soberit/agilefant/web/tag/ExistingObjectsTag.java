@@ -29,14 +29,10 @@ public class ExistingObjectsTag extends SpringTagSupport {
 
     @Override
     public int doStartTag() throws JspException {
-        productBusiness = (ProductBusiness) super.getApplicationContext().getBean(
-                "productBusiness");
-        projectBusiness = (ProjectBusiness) super.getApplicationContext().getBean(
-                "projectBusiness");
-        iterationBusiness = (IterationBusiness) super.getApplicationContext().getBean(
-                "iterationBusiness");
-        projectTypeBusiness = (ProjectTypeBusiness) super
-                .getApplicationContext().getBean("projectTypeBusiness");
+        productBusiness = requireBean("productBusiness");
+        projectBusiness = requireBean("projectBusiness");
+        iterationBusiness = requireBean("iterationBusiness");
+        projectTypeBusiness = requireBean("projectTypeBusiness");
         super.getPageContext().setAttribute(ExistingObjectsTag.HAS_PRODUCTS,
                 productBusiness.count() > 0);
         super.getPageContext().setAttribute(ExistingObjectsTag.HAS_PROJECTS,

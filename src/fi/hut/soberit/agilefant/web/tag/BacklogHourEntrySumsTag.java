@@ -25,8 +25,7 @@ public class BacklogHourEntrySumsTag extends SpringTagSupport {
     @Override
     public int doStartTag() throws JspException {
         
-        hourEntryBusiness = (HourEntryBusiness) super.getApplicationContext().getBean(
-                "hourEntryBusiness");
+        hourEntryBusiness = requireBean("hourEntryBusiness");
         
         Map<Integer,AFTime> sums = null;
         if(groupBy.equals("BacklogItem")) {

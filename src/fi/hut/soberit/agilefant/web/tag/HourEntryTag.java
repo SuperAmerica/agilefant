@@ -26,9 +26,7 @@ public class HourEntryTag extends SpringTagSupport {
     @SuppressWarnings("unchecked")
     public int doStartTag() throws JspException {
         List list = null;
-        hourEntryBusiness = (HourEntryBusiness) super.getApplicationContext().getBean(
-            "hourEntryBusiness");
-
+        hourEntryBusiness = requireBean("hourEntryBusiness");
         
         if(target instanceof BacklogItem) {
             BacklogItem item = (BacklogItem) target;

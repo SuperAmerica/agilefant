@@ -12,8 +12,7 @@ public class IterationListTag extends SpringTagSupport {
 
     @Override
     public int doStartTag() throws JspException {
-        iterationDAO = (IterationDAO) super.getApplicationContext().getBean(
-                "iterationDAO");
+        iterationDAO = requireBean("iterationDAO");
         super.getPageContext().setAttribute(super.getId(),
                 iterationDAO.getAll());
         return Tag.EVAL_BODY_INCLUDE;

@@ -13,8 +13,7 @@ public class BacklogItemById extends SpringTagSupport {
 
     @Override
     public int doStartTag() throws JspException {
-        BacklogItemBusiness backlogItemBusiness = (BacklogItemBusiness) super
-                .getApplicationContext().getBean("backlogItemBusiness");
+        BacklogItemBusiness backlogItemBusiness = requireBean("backlogItemBusiness");
 
         BacklogItem bli = null;
         if (backlogItemId > 0) {

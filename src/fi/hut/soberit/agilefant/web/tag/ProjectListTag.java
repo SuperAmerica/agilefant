@@ -12,8 +12,7 @@ public class ProjectListTag extends SpringTagSupport {
 
     @Override
     public int doStartTag() throws JspException {
-        projectDAO = (ProjectDAO) super.getApplicationContext()
-                .getBean("projectDAO");
+        projectDAO = requireBean("projectDAO");
         super.getPageContext().setAttribute(super.getId(),
                 projectDAO.getAll());
         return Tag.EVAL_BODY_INCLUDE;

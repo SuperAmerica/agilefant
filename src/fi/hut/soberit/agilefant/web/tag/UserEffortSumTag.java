@@ -30,8 +30,7 @@ public class UserEffortSumTag extends SpringTagSupport {
     public int doStartTag() throws JspException {
         AFTime sum = null;
         
-        hourEntryBusiness = (HourEntryBusiness) super.getApplicationContext().getBean(
-                "hourEntryBusiness");
+        hourEntryBusiness = requireBean("hourEntryBusiness");
         
         if (timeInterval.equals("Today")) {
             sum = this.getSpentEffortForToday();

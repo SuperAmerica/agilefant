@@ -40,61 +40,83 @@ function addZero($string) {
 function change_selected_interval(value) {
     var startDate = document.getElementById('effStartDate');
     var endDate = document.getElementById('effEndDate');
-    // Current timestamp
-    var now = new Date();
-    
-    // Yesterday's timestamp
-    var yesterday = new Date(now.getTime() - 86400000);
-    
-    // This monday
-    var daysfrommonday = 0;
-    if(now.getDay() == 0) {
-        daysfrommonday = 6;
-    } else {
-        daysfrommonday = now.getDay() - 1;
-    }
-    var thismonday = new Date(now.getTime() - (86400000 * daysfrommonday));
-    
-    // Last week's monday
-    var lastmonday = new Date(thismonday.getTime() - (86400000 * 7));
-    
-    // Last month
-    var lastmonth = new Date();
-    if(now.getMonth() == 0) {
-        lastmonth.setMonth(11)
-        lastmonth.setFullYear(now.getFullYear() - 1);
-    } else {
-        lastmonth.setMonth(now.getMonth() - 1)
-    }
-    
-    
+
+	var today = new Date();
+	today.zeroTime();
+	var yesterday = new Date();
+	yesterday.zeroTime();
+	yesterday.addDays(-1);
+	var thisweek = new Date();
+	thisweek.zeroTime();
+	thisweek.addDays(1 - thisweek.getDay());
+	var lastweek = new Date();
+	lastweek.zeroTime();
+	lastweek.addDays(1 - lastweek.getDay());
+	lastweek.addDays(-7);
+	var thismonth = new Date();
+	thismonth.zeroTime();
+	thismonth.setDate(1);
+	var lastmonth = new Date();
+	lastmonth.zeroTime();
+	lastmonth.addMonths(-1);
+	lastmonth.setDate(1);
+	var thisyear = new Date();
+	thisyear.zeroTime();
+	thisyear.setMonth(0);
+	thisyear.setDate(1);
+	var lastyear = new Date();
+	lastyear.zeroTime();
+	lastyear.setDate(1);
+	lastyear.setMonth(0);
+	lastyear.addYears(-1);
+    $(".dateSelectRow").hide();
     if (value == 'TODAY') {
-        startDate.value = now.getFullYear() + '-' + addZero(now.getMonth() + 1) + '-' + addZero(now.getDate()) + ' 00:00';
-        endDate.value   = now.getFullYear() + '-' + addZero(now.getMonth() + 1) + '-' + addZero(now.getDate()) + ' ' + addZero(now.getHours()) + ':' + addZero(now.getMinutes());
+        startDate.value = today.asString();
+        today.setHours(23);
+        today.setMinutes(59);
+        endDate.value   = today.asString();
     } else if (value == 'YESTERDAY') {
-        startDate.value = yesterday.getFullYear() + '-' + addZero(yesterday.getMonth() + 1) + '-' + addZero(yesterday.getDate()) + ' 00:00';
-        endDate.value   = now.getFullYear() + '-' + addZero(now.getMonth() + 1) + '-' + addZero(now.getDate()) + ' 00:00';
+        startDate.value = yesterday.asString();
+        yesterday.setHours(23);
+        yesterday.setMinutes(59);
+        endDate.value   = yesterday.asString();
     } else if (value == 'THIS_WEEK') {
-        startDate.value = thismonday.getFullYear() + '-' + addZero(thismonday.getMonth() + 1) + '-' + addZero(thismonday.getDate()) + ' 00:00';
-        endDate.value   = now.getFullYear() + '-' + addZero(now.getMonth() + 1) + '-' + addZero(now.getDate()) + ' ' + addZero(now.getHours()) + ':' + addZero(now.getMinutes());
+        startDate.value = thisweek.asString();
+        thisweek.addDays(6);
+        thisweek.setHours(23);
+        thisweek.setMinutes(59);
+        endDate.value   = thisweek.asString();
     } else if (value == 'LAST_WEEK') {
-        startDate.value = lastmonday.getFullYear() + '-' + addZero(lastmonday.getMonth() + 1) + '-' + addZero(lastmonday.getDate()) + ' 00:00';
-        endDate.value   = thismonday.getFullYear() + '-' + addZero(thismonday.getMonth() + 1) + '-' + addZero(thismonday.getDate()) + ' 00:00';
+        startDate.value = lastweek.asString();
+        lastweek.addDays(6);
+        lastweek.setHours(23);
+        lastweek.setMinutes(59);
+        endDate.value   = lastweek.asString();
     } else if (value == 'THIS_MONTH') {
-        startDate.value = now.getFullYear() + '-' + addZero(now.getMonth() + 1) + '-01 00:00';
-        endDate.value   = now.getFullYear() + '-' + addZero(now.getMonth() + 1) + '-' + addZero(now.getDate()) + ' ' + addZero(now.getHours()) + ':' + addZero(now.getMinutes());
+        startDate.value = thismonth.asString();
+        thismonth.addMonths(1);
+        thismonth.addMinutes(-1);
+        endDate.value   = thismonth.asString();
     } else if (value == 'LAST_MONTH') {
-        startDate.value = lastmonth.getFullYear() + '-' + addZero(lastmonth.getMonth() + 1) + '-01 00:00';
-        endDate.value   = now.getFullYear() + '-' + addZero(now.getMonth() + 1) + '-01 00:00';
+        startDate.value = lastmonth.asString();
+        lastmonth.addMonths(1);
+        lastmonth.addMinutes(-1);
+        endDate.value   = lastmonth.asString();
     } else if (value == 'THIS_YEAR') {
-        startDate.value = now.getFullYear() + '-01-01 00:00';
-        endDate.value   = now.getFullYear() + '-' + addZero(now.getMonth() + 1) + '-' + addZero(now.getDate()) + ' ' + addZero(now.getHours()) + ':' + addZero(now.getMinutes());
+        startDate.value = thisyear.asString();
+        thisyear.addYears(1);
+        thisyear.addMinutes(-1);
+        endDate.value   = thisyear.asString();
     } else if (value == 'LAST_YEAR') {
-        startDate.value = (now.getFullYear() - 1) + '-01-01 00:00';
-        endDate.value   = now.getFullYear() + '-01-01 00:00';
+        startDate.value = lastyear.asString();
+        lastyear.addYears(1);
+        lastyear.addMinutes(-1);
+        endDate.value   = lastyear.asString();
     } else if (value == 'NO_INTERVAL') {
         startDate.value = '';
         endDate.value   = '';
+    } else {
+		$(".dateSelectRow").show();
     }
 }
 $(document).ready( function() {
@@ -193,14 +215,14 @@ $(document).ready( function() {
 									</td>
 								</tr>
 								<!--  Start date -->
-								<tr>				
+								<tr class="dateSelectRow" style="display: none;">				
 									<td>Start date</td>
 									<td>
 	                       				<aef:datepicker value="${startDate}" id="effStartDate" name="startDate" format="%{getText('webwork.shortDateTime.format')}" />
 									</td>
 								</tr>
 								<!--  End date -->
-								<tr>				
+								<tr class="dateSelectRow" style="display: none;">				
 									<td>End date</td>
 									<td>
 	                       				<aef:datepicker value="${endDate}" id="effEndDate" name="endDate" format="%{getText('webwork.shortDateTime.format')}" />

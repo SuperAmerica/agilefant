@@ -18,6 +18,14 @@ public class ProjectTypeBusinessImpl implements ProjectTypeBusiness {
         return projectTypeDAO.getAll();
     }
 
+    public ProjectType get(int id) {
+        return projectTypeDAO.get(id);
+    }
+
+    public void store(ProjectType projectType) {
+        projectTypeDAO.store(projectType);
+    }
+
     public void setProjectTypeDAO(ProjectTypeDAO projectTypeDAO) {
         this.projectTypeDAO = projectTypeDAO;
     }

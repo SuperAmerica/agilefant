@@ -8,4 +8,8 @@ public interface ProjectTypeBusiness {
 
     public Collection<ProjectType> getAll();
 
+    public ProjectType get(int id);
+
+    public void store(ProjectType projectType);
+
 }

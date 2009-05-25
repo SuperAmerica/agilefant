@@ -17,7 +17,7 @@ $(document).ready(function() {
 
 </script>
 
-<h2>Started items assigned to <c:out value="${user.fullName}" /></h2>
+<h2>Started stories and tasks assigned to <c:out value="${user.fullName}" /></h2>
 
 
 <c:if test="${!(empty backlogItemsForUserInProgress)}">

@@ -21,7 +21,7 @@ $(document).ready(function() {
 
 <c:if test="${!empty projects}">
 
-<h2>All items assigned to <c:out value="${user.fullName}" /> from ongoing projects</h2>
+<h2>All stories assigned to <c:out value="${user.fullName}" /> from ongoing projects</h2>
 
 <div class="subItems" id="subItems_dailyWorkProjectItems">
 

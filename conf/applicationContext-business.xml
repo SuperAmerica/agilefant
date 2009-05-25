@@ -45,4 +45,6 @@
 	</bean>
 	<bean name="projectTypeBusiness" class="fi.hut.soberit.agilefant.business.impl.ProjectTypeBusinessImpl">
 	</bean>
+	<bean name="productBusiness" class="fi.hut.soberit.agilefant.business.impl.ProductBusinessImpl">
+	</bean>
 </beans>

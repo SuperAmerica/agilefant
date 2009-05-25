@@ -3,10 +3,10 @@ package fi.hut.soberit.agilefant.web.tag;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.Tag;
 
+import fi.hut.soberit.agilefant.business.IterationBusiness;
+import fi.hut.soberit.agilefant.business.ProductBusiness;
+import fi.hut.soberit.agilefant.business.ProjectBusiness;
 import fi.hut.soberit.agilefant.business.ProjectTypeBusiness;
-import fi.hut.soberit.agilefant.db.ProjectDAO;
-import fi.hut.soberit.agilefant.db.IterationDAO;
-import fi.hut.soberit.agilefant.db.ProductDAO;
 
 public class ExistingObjectsTag extends SpringTagSupport {
     private static final long serialVersionUID = 1810440984222729111L;
@@ -19,30 +19,30 @@ public class ExistingObjectsTag extends SpringTagSupport {
 
     public static final String HAS_PROJECTTYPES = "hasProjectTypes";
 
-    private ProductDAO productDAO;
+    private ProductBusiness productBusiness;
 
-    private ProjectDAO projectDAO;
+    private ProjectBusiness projectBusiness;
 
-    private IterationDAO iterationDAO;
+    private IterationBusiness iterationBusiness;
 
     private ProjectTypeBusiness projectTypeBusiness;
 
     @Override
     public int doStartTag() throws JspException {
-        productDAO = (ProductDAO) super.getApplicationContext().getBean(
-                "productDAO");
-        projectDAO = (ProjectDAO) super.getApplicationContext()
-                .getBean("projectDAO");
-        iterationDAO = (IterationDAO) super.getApplicationContext().getBean(
-                "iterationDAO");
-        projectTypeBusiness = (ProjectTypeBusiness) super.getApplicationContext()
-                .getBean("projectTypeBusiness");
+        productBusiness = (ProductBusiness) super.getApplicationContext().getBean(
+                "productBusiness");
+        projectBusiness = (ProjectBusiness) super.getApplicationContext().getBean(
+                "projectBusiness");
+        iterationBusiness = (IterationBusiness) super.getApplicationContext().getBean(
+                "iterationBusiness");
+        projectTypeBusiness = (ProjectTypeBusiness) super
+                .getApplicationContext().getBean("projectTypeBusiness");
         super.getPageContext().setAttribute(ExistingObjectsTag.HAS_PRODUCTS,
-                !productDAO.getAll().isEmpty());
+                productBusiness.count() > 0);
         super.getPageContext().setAttribute(ExistingObjectsTag.HAS_PROJECTS,
-                !projectDAO.getAll().isEmpty());
+                projectBusiness.count() > 0);
         super.getPageContext().setAttribute(ExistingObjectsTag.HAS_ITERATIONS,
-                !iterationDAO.getAll().isEmpty());
+                iterationBusiness.count() > 0);
         super.getPageContext().setAttribute(
                 ExistingObjectsTag.HAS_PROJECTTYPES,
                 projectTypeBusiness.count() > 0);

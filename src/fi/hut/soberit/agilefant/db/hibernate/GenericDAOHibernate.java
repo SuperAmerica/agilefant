@@ -94,10 +94,13 @@ public abstract class GenericDAOHibernate<T> extends HibernateDaoSupport
         }
     }
 
+    protected DetachedCriteria createCriteria() {
+        return DetachedCriteria.forClass(this.getPersistentClass());
+    }
+
     public int count() {
-        DetachedCriteria criteria = DetachedCriteria.forClass(this
-                .getPersistentClass());
-        criteria.setProjection(Projections.rowCount());
+        DetachedCriteria criteria = createCriteria()
+        .setProjection(Projections.rowCount());
         return ((Integer) super.getHibernateTemplate().findByCriteria(criteria)
                 .get(0)).intValue();
     }

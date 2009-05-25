@@ -8,12 +8,12 @@ import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
 
 import fi.hut.soberit.agilefant.business.ProjectBusiness;
-import fi.hut.soberit.agilefant.db.ProjectTypeDAO;
+import fi.hut.soberit.agilefant.business.ProjectTypeBusiness;
 import fi.hut.soberit.agilefant.db.ProjectDAO;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.exception.OperationNotPermittedException;
-import fi.hut.soberit.agilefant.model.ProjectType;
 import fi.hut.soberit.agilefant.model.Project;
+import fi.hut.soberit.agilefant.model.ProjectType;
 
 public class ProjectTypeAction extends ActionSupport implements CRUDAction {
 
@@ -23,18 +23,18 @@ public class ProjectTypeAction extends ActionSupport implements CRUDAction {
 
     private ProjectType projectType;
 
-    private ProjectTypeDAO projectTypeDAO;
+    private ProjectTypeBusiness projectTypeBusiness;
 
     private ProjectDAO projectDAO;
 
     private Collection<ProjectType> projectTypes;
-    
+
     private ProjectBusiness projectBusiness;
-    
+
     private String jsonData = "";
 
     public String getAll() {
-        projectTypes = projectTypeDAO.getAll();
+        projectTypes = projectTypeBusiness.getAll();
         return Action.SUCCESS;
     }
 
@@ -45,7 +45,7 @@ public class ProjectTypeAction extends ActionSupport implements CRUDAction {
     }
 
     public String edit() {
-        projectType = projectTypeDAO.get(projectTypeId);
+        projectType = projectTypeBusiness.get(projectTypeId);
         if (projectType == null) {
             super.addActionError(super.getText("projectType.notFound"));
             return Action.ERROR;
@@ -59,7 +59,7 @@ public class ProjectTypeAction extends ActionSupport implements CRUDAction {
         }
         ProjectType fillable = new ProjectType();
         if (projectTypeId > 0) {
-            fillable = projectTypeDAO.get(projectTypeId);
+            fillable = projectTypeBusiness.get(projectTypeId);
             if (fillable == null) {
                 super.addActionError(super.getText("projectType.notFound"));
                 return Action.ERROR;
@@ -70,21 +70,21 @@ public class ProjectTypeAction extends ActionSupport implements CRUDAction {
             return Action.ERROR;
         }
         try {
-            projectTypeDAO.store(fillable);
+            projectTypeBusiness.store(fillable);
         } catch (DataIntegrityViolationException dve) {
             super.addActionError(super.getText("projectType.duplicateName"));
             return Action.ERROR;
         }
         return Action.SUCCESS;
     }
-    
+
     public String ajaxStoreProjectType() {
         if (projectType == null) {
             super.addActionError(super.getText("projectType.missingForm"));
         }
         ProjectType fillable = new ProjectType();
         if (projectTypeId > 0) {
-            fillable = projectTypeDAO.get(projectTypeId);
+            fillable = projectTypeBusiness.get(projectTypeId);
             if (fillable == null) {
                 super.addActionError(super.getText("projectType.notFound"));
                 return CRUDAction.AJAX_ERROR;
@@ -95,7 +95,7 @@ public class ProjectTypeAction extends ActionSupport implements CRUDAction {
             return CRUDAction.AJAX_ERROR;
         }
         try {
-            projectTypeDAO.store(fillable);
+            projectTypeBusiness.store(fillable);
         } catch (DataIntegrityViolationException dve) {
             super.addActionError(super.getText("projectType.duplicateName"));
             return CRUDAction.AJAX_ERROR;
@@ -104,13 +104,14 @@ public class ProjectTypeAction extends ActionSupport implements CRUDAction {
     }
 
     public String delete() {
-        projectType = projectTypeDAO.get(projectTypeId);
+        projectType = projectTypeBusiness.get(projectTypeId);
         if (projectType == null) {
             super.addActionError(super.getText("projectType.notFound"));
             return Action.ERROR;
         }
         for (Project d : projectDAO.getAll()) {
-            if (d.getProjectType() != null &&  d.getProjectType().getId() == projectTypeId) {
+            if (d.getProjectType() != null
+                    && d.getProjectType().getId() == projectTypeId) {
                 super.addActionError(super
                         .getText("projectType.projectsLinked"));
                 return Action.ERROR;
@@ -118,22 +119,20 @@ public class ProjectTypeAction extends ActionSupport implements CRUDAction {
         }
         try {
             projectBusiness.deleteProjectType(projectTypeId);
-        }
-        catch (OperationNotPermittedException e) {
+        } catch (OperationNotPermittedException e) {
+            super.addActionError(e.getMessage());
+            return Action.ERROR;
+        } catch (ObjectNotFoundException e) {
             super.addActionError(e.getMessage());
             return Action.ERROR;
         }
-        catch (ObjectNotFoundException e) {
-            super.addActionError(e.getMessage());
-            return Action.ERROR;
-        }
-        
+
         return Action.SUCCESS;
     }
 
     protected void fillObject(ProjectType fillable) {
-        if (projectType.getName() == null || 
-                projectType.getName().trim().equals("")) {
+        if (projectType.getName() == null
+                || projectType.getName().trim().equals("")) {
             super.addActionError("Project type name cannot be empty.");
         }
         fillable.setName(projectType.getName());
@@ -143,13 +142,12 @@ public class ProjectTypeAction extends ActionSupport implements CRUDAction {
     public String getProjectTypeJSON() {
         if (projectTypeId > 0) {
             jsonData = projectBusiness.getProjectTypeJSON(projectTypeId);
-        }
-        else {
+        } else {
             jsonData = projectBusiness.getAllProjectTypesAsJSON();
         }
         return Action.SUCCESS;
     }
-    
+
     public int getProjectTypeId() {
         return projectTypeId;
     }
@@ -170,8 +168,8 @@ public class ProjectTypeAction extends ActionSupport implements CRUDAction {
         return projectTypes;
     }
 
-    public void setProjectTypeDAO(ProjectTypeDAO projectTypeDAO) {
-        this.projectTypeDAO = projectTypeDAO;
+    public void setProjectTypeBusiness(ProjectTypeBusiness projectTypeBusiness) {
+        this.projectTypeBusiness = projectTypeBusiness;
     }
 
     public void setProjectDAO(ProjectDAO projectDAO) {

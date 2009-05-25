@@ -23,10 +23,6 @@ import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
 
 import fi.hut.soberit.agilefant.business.ChartBusiness;
-import fi.hut.soberit.agilefant.db.BacklogItemDAO;
-import fi.hut.soberit.agilefant.db.IterationDAO;
-import fi.hut.soberit.agilefant.db.ProjectDAO;
-import fi.hut.soberit.agilefant.db.TaskDAO;
 
 public class ChartAction extends ActionSupport {
 
@@ -43,14 +39,6 @@ public class ChartAction extends ActionSupport {
     private int projectId;
     
     private int userId;
-
-    private TaskDAO taskDAO;
-
-    private BacklogItemDAO backlogItemDAO;
-
-    private IterationDAO iterationDAO;
-
-    private ProjectDAO projectDAO;
 
     private int workDone;
 
@@ -345,14 +333,6 @@ public class ChartAction extends ActionSupport {
         return new ByteArrayInputStream(result);
     }
 
-    public BacklogItemDAO getBacklogItemDAO() {
-        return backlogItemDAO;
-    }
-
-    public void setBacklogItemDAO(BacklogItemDAO backlogItemDAO) {
-        this.backlogItemDAO = backlogItemDAO;
-    }
-
     public int getBacklogItemId() {
         return backlogItemId;
     }
@@ -361,28 +341,12 @@ public class ChartAction extends ActionSupport {
         this.backlogItemId = backlogItemId;
     }
 
-    public ProjectDAO getProjectDAO() {
-        return projectDAO;
-    }
-
-    public void setProjectDAO(ProjectDAO projectDAO) {
-        this.projectDAO = projectDAO;
-    }
-
     public int getProjectId() {
         return projectId;
     }
 
     public void setProjectId(int projectId) {
         this.projectId = projectId;
-    }
-
-    public IterationDAO getIterationDAO() {
-        return iterationDAO;
-    }
-
-    public void setIterationDAO(IterationDAO iterationDAO) {
-        this.iterationDAO = iterationDAO;
     }
 
     public int getIterationId() {
@@ -399,14 +363,6 @@ public class ChartAction extends ActionSupport {
 
     public void setResult(byte[] result) {
         this.result = result;
-    }
-
-    public TaskDAO getTaskDAO() {
-        return taskDAO;
-    }
-
-    public void setTaskDAO(TaskDAO taskDAO) {
-        this.taskDAO = taskDAO;
     }
 
     public int getTaskId() {

@@ -55,7 +55,7 @@ public class BreadCrumbTrailTag extends SpringTagSupport {
     }
 
     public void setProjectId(int id) {
-        ProjectDAO dao = requireBean("productDAO");
+        ProjectDAO dao = requireBean("projectDAO");
         this.page = dao.get(id);
     }
 

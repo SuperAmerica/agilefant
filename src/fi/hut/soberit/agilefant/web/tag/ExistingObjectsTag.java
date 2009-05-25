@@ -3,7 +3,7 @@ package fi.hut.soberit.agilefant.web.tag;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.Tag;
 
-import fi.hut.soberit.agilefant.db.ProjectTypeDAO;
+import fi.hut.soberit.agilefant.business.ProjectTypeBusiness;
 import fi.hut.soberit.agilefant.db.ProjectDAO;
 import fi.hut.soberit.agilefant.db.IterationDAO;
 import fi.hut.soberit.agilefant.db.ProductDAO;
@@ -25,7 +25,7 @@ public class ExistingObjectsTag extends SpringTagSupport {
 
     private IterationDAO iterationDAO;
 
-    private ProjectTypeDAO projectTypeDAO;
+    private ProjectTypeBusiness projectTypeBusiness;
 
     @Override
     public int doStartTag() throws JspException {
@@ -35,8 +35,8 @@ public class ExistingObjectsTag extends SpringTagSupport {
                 .getBean("projectDAO");
         iterationDAO = (IterationDAO) super.getApplicationContext().getBean(
                 "iterationDAO");
-        projectTypeDAO = (ProjectTypeDAO) super.getApplicationContext()
-                .getBean("projectTypeDAO");
+        projectTypeBusiness = (ProjectTypeBusiness) super.getApplicationContext()
+                .getBean("projectTypeBusiness");
         super.getPageContext().setAttribute(ExistingObjectsTag.HAS_PRODUCTS,
                 !productDAO.getAll().isEmpty());
         super.getPageContext().setAttribute(ExistingObjectsTag.HAS_PROJECTS,
@@ -45,7 +45,8 @@ public class ExistingObjectsTag extends SpringTagSupport {
                 !iterationDAO.getAll().isEmpty());
         super.getPageContext().setAttribute(
                 ExistingObjectsTag.HAS_PROJECTTYPES,
-                !projectTypeDAO.getAll().isEmpty());
+                projectTypeBusiness.count() > 0);
         return Tag.EVAL_BODY_INCLUDE;
     }
+
 }

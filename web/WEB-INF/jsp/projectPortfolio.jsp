@@ -129,7 +129,7 @@ var teams = [<aef:teamJson items="${teamList}"/>]
 				<c:out value="${loadLefts[idstring]}" />
 			</display:column>
 			
-			<display:column title="Baseline load +/-">
+			<display:column title="Personal load +/-">
 			
 			<!-- Check whether user is assigned. If is assigned -> show overhead -->
 			<c:choose>	
@@ -292,7 +292,7 @@ var teams = [<aef:teamJson items="${teamList}"/>]
 				<c:out value="${loadLefts[idstring]}" />
 			</display:column>
 			
-			<display:column title="Baseline load +/-">
+			<display:column title="Personal load +/-">
 			<!-- Check whether user is assigned. If is assigned -> show overhead -->
 			<c:choose>	
 			<c:when test="${flag == 1}"> 

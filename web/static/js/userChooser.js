@@ -122,7 +122,7 @@
         },
         renderForProject: function() {
             var me = this;
-            this.headerRow.append('<th class="userColumn">Users</th><th class="userColumn">Personal baseline load</th><th>Teams</th>');           
+            this.headerRow.append('<th class="userColumn">Users</th><th class="userColumn">Personal load</th><th>Teams</th>');           
             
             /* Render the columns */
             var nameList = $('<ul/>').addClass('projectAssigneeList').appendTo(this.assignedCell);

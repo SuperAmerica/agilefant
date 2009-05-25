@@ -15,6 +15,7 @@ import org.apache.log4j.Logger;
 import com.opensymphony.xwork.Action;
 
 import fi.hut.soberit.agilefant.business.ProjectBusiness;
+import fi.hut.soberit.agilefant.business.ProjectTypeBusiness;
 import fi.hut.soberit.agilefant.business.UserBusiness;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.db.ProductDAO;
@@ -52,7 +53,7 @@ public class ProjectAction extends BacklogContentsAction implements CRUDAction {
 
     private ProjectDAO projectDAO;
 
-    private ProjectTypeDAO projectTypeDAO;
+    private ProjectTypeBusiness projectTypeBusiness;
 
     private ProductDAO productDAO;
 
@@ -341,7 +342,7 @@ public class ProjectAction extends BacklogContentsAction implements CRUDAction {
         }
 
         if (this.project.getProjectType() != null) {
-            ProjectType type = projectTypeDAO.get(this.project
+            ProjectType type = projectTypeBusiness.get(this.project
                     .getProjectType().getId());
             storable.setProjectType(type);
         }
@@ -417,12 +418,12 @@ public class ProjectAction extends BacklogContentsAction implements CRUDAction {
         this.projectTypeId = projectTypeId;
     }
 
-    public void setProjectTypeDAO(ProjectTypeDAO projectTypeDAO) {
-        this.projectTypeDAO = projectTypeDAO;
+    public void setProjectTypeBusiness(ProjectTypeBusiness projectTypeBusiness) {
+        this.projectTypeBusiness = projectTypeBusiness;
     }
 
     private void prepareProjectTypes() {
-        this.projectTypes = (List<ProjectType>)projectTypeDAO.getAll();
+        this.projectTypes = (List<ProjectType>)projectTypeBusiness.getAll();
         Collections.sort(this.projectTypes);
     }
 

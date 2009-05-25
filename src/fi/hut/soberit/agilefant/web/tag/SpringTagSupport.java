@@ -20,8 +20,15 @@ public abstract class SpringTagSupport extends TagSupport {
         this.pageContext = pageContext;
         this.applicationContext = WebApplicationContextUtils
                 .getWebApplicationContext(pageContext.getServletContext());
+        retrieveSingletons();
     }
 
+    /**
+     * Stub method that is called after the ApplicationContext has been retrieved.
+     */
+    protected void retrieveSingletons() {
+    }
+    
     protected PageContext getPageContext() {
         return this.pageContext;
     }
@@ -30,6 +37,13 @@ public abstract class SpringTagSupport extends TagSupport {
         return applicationContext;
     }
 
+    /**
+     * Retrieves a bean from the ApplicationContext and also does a null check.
+     * 
+     * @param <T> bean type
+     * @param name bean name
+     * @return bean that was found
+     */
     @SuppressWarnings("unchecked")
     protected <T> T requireBean(String name) {
         Object bean = applicationContext.getBean(name);

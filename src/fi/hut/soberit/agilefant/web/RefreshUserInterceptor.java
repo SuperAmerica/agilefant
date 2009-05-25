@@ -5,7 +5,7 @@ import org.apache.log4j.Logger;
 import com.opensymphony.xwork.ActionInvocation;
 import com.opensymphony.xwork.interceptor.Interceptor;
 
-import fi.hut.soberit.agilefant.db.UserDAO;
+import fi.hut.soberit.agilefant.business.UserBusiness;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.security.SecurityUtil;
 
@@ -19,7 +19,7 @@ public class RefreshUserInterceptor implements Interceptor {
 
     private Logger log = Logger.getLogger(RefreshUserInterceptor.class);
 
-    private UserDAO userDAO;
+    private UserBusiness userBusiness;
 
     public void destroy() {
     }
@@ -45,7 +45,7 @@ public class RefreshUserInterceptor implements Interceptor {
         }
 
         // get the user object corresponding to the id
-        User user = userDAO.get(userId);
+        User user = userBusiness.getUser(userId);
         
         //check that user hasn't been removed during the session
         if(user == null) {
@@ -70,8 +70,8 @@ public class RefreshUserInterceptor implements Interceptor {
         return result;
     }
 
-    public void setUserDAO(UserDAO userDAO) {
-        this.userDAO = userDAO;
+    public void setUserBusiness(UserBusiness userBusiness) {
+        this.userBusiness = userBusiness;
     }
 
 }

@@ -350,4 +350,7 @@ public interface BacklogBusiness {
      *         under different products. Else true.
      */
     public boolean isUnderSameProduct(int backlogId1, int backlogId2);
+
+    Collection<Backlog> getMultiple(Collection<Integer> idList);
+
 }

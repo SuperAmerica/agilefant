@@ -10,6 +10,7 @@ import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.jfree.util.Log;
 
 import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.model.AFTime;
@@ -96,4 +97,5 @@ public class BacklogDAOHibernate extends GenericDAOHibernate<Backlog> implements
           return null;  
         } 
     }
+
 }

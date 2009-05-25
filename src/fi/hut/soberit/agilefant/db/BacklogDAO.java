@@ -39,4 +39,5 @@ public interface BacklogDAO extends GenericDAO<Backlog> {
     
     
     public Collection<BacklogItem> getBlisWithSpentEffortByBacklog(Backlog bl, Date start, Date end, Set<Integer> users);
+
 }

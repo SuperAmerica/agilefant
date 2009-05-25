@@ -1000,4 +1000,15 @@ public class BacklogBusinessImpl implements BacklogBusiness {
         this.settingBusiness = settingBusiness;
     }
 
+    public Collection<Backlog> getMultiple(Collection<Integer> idList) {
+        ArrayList<Backlog> result = new ArrayList<Backlog>();
+        for (Integer id : idList) {
+            Backlog backlog = backlogDAO.get(id.intValue());
+            if (backlog != null) {
+                result.add(backlog);
+            }
+        }
+        return result;
+    }
+
 }

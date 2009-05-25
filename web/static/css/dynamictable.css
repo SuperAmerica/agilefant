@@ -302,6 +302,10 @@ button.edit {
 .taskStateDONE {
 	background-color: #00bb44;
 }
-.dynamictable .dynamictable-row .description-cell {
-	padding-left: 6%;	
+.dynamictable .dynamictable-row .description-cell span {
+   display: block;
+	 margin-left: 8%;	
+	 margin-right: 4%;
+	 font-size: 8pt;
+	 color: #555;
 } 

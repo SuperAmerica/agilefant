@@ -79,4 +79,7 @@ public interface ProjectDAO extends GenericDAO<Project> {
     public Integer getDoneBLIs(Project proj);
     
     public List<BacklogThemeBinding> getProjectThemeData(Project proj);
+
+    int countByProjectType(int projectTypeId);
+
 }

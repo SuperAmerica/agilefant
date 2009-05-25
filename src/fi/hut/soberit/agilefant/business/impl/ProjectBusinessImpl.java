@@ -906,6 +906,10 @@ public class ProjectBusinessImpl implements ProjectBusiness {
         return projectDAO.count();
     }
 
+    public int countByProjectType(int projectTypeId) {
+        return projectDAO.countByProjectType(projectTypeId);
+    }
+
     /** {@inheritDoc} */
     public Map<BusinessTheme, AFTime> formatThemeBindings(Project proj) {
         Map<BusinessTheme, Collection<BacklogThemeBinding>> tmp = new HashMap<BusinessTheme, Collection<BacklogThemeBinding>>();

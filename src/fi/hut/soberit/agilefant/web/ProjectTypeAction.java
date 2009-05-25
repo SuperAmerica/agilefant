@@ -9,10 +9,8 @@ import com.opensymphony.xwork.ActionSupport;
 
 import fi.hut.soberit.agilefant.business.ProjectBusiness;
 import fi.hut.soberit.agilefant.business.ProjectTypeBusiness;
-import fi.hut.soberit.agilefant.db.ProjectDAO;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.exception.OperationNotPermittedException;
-import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.ProjectType;
 
 public class ProjectTypeAction extends ActionSupport implements CRUDAction {
@@ -24,8 +22,6 @@ public class ProjectTypeAction extends ActionSupport implements CRUDAction {
     private ProjectType projectType;
 
     private ProjectTypeBusiness projectTypeBusiness;
-
-    private ProjectDAO projectDAO;
 
     private Collection<ProjectType> projectTypes;
 
@@ -109,13 +105,9 @@ public class ProjectTypeAction extends ActionSupport implements CRUDAction {
             super.addActionError(super.getText("projectType.notFound"));
             return Action.ERROR;
         }
-        for (Project d : projectDAO.getAll()) {
-            if (d.getProjectType() != null
-                    && d.getProjectType().getId() == projectTypeId) {
-                super.addActionError(super
-                        .getText("projectType.projectsLinked"));
-                return Action.ERROR;
-            }
+        if (projectBusiness.countByProjectType(projectTypeId) > 0) {
+            super.addActionError(super.getText("projectType.projectsLinked"));
+            return Action.ERROR;
         }
         try {
             projectBusiness.deleteProjectType(projectTypeId);
@@ -170,10 +162,6 @@ public class ProjectTypeAction extends ActionSupport implements CRUDAction {
 
     public void setProjectTypeBusiness(ProjectTypeBusiness projectTypeBusiness) {
         this.projectTypeBusiness = projectTypeBusiness;
-    }
-
-    public void setProjectDAO(ProjectDAO projectDAO) {
-        this.projectDAO = projectDAO;
     }
 
     public ProjectBusiness getProjectBusiness() {

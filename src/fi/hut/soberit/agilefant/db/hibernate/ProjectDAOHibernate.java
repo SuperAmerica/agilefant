@@ -201,4 +201,12 @@ public class ProjectDAOHibernate extends GenericDAOHibernate<Project>
         return super.getHibernateTemplate().findByCriteria(crit);
     }
 
+    public int countByProjectType(int projectTypeId) {
+        DetachedCriteria crit = DetachedCriteria.forClass(this.getPersistentClass())
+        .createCriteria("projectType")
+        .add(Restrictions.idEq(projectTypeId))
+        .setProjection(Projections.rowCount());
+        return ((Integer) super.getHibernateTemplate().findByCriteria(crit).get(0)).intValue();
+    }
+
 }

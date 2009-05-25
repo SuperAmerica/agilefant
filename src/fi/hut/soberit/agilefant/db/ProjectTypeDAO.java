@@ -9,6 +9,4 @@ import fi.hut.soberit.agilefant.model.ProjectType;
  */
 public interface ProjectTypeDAO extends GenericDAO<ProjectType> {
 
-    int count();
-
 }

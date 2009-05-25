@@ -237,4 +237,6 @@ public interface ProjectBusiness {
 
     int count();
 
+    int countByProjectType(int projectTypeId);
+
 }

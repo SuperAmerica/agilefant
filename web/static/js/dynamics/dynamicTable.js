@@ -464,6 +464,7 @@
 	  },
 	  activateSortHandle: function() {
 	    this.cell.addClass("dynamictable-sorthandle").addClass("dragHandle");
+	    this.cell.attr("title","Change story priority order by dragging and dropping.");	    
 	  },
 	  setDragHandle: function() {
 		this.cell.addClass("dragHandle"); 

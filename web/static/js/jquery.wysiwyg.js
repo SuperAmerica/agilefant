@@ -8,6 +8,11 @@
  *   http://www.opensource.org/licenses/mit-license.php
  *   http://www.gnu.org/licenses/gpl.html
  *
+ *
+ * 090526 Reko: Made changes to method appendMenu to add tooltips to buttons.
+ *              Also added the method camelcaseToTooltip for the purpose. 
+ *
+ *
  * $Id: $
  */
 (function( $ )

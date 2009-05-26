@@ -1311,7 +1311,9 @@ a.detailedEffort {
   vertical-align:middle;
   width:23px;
 }
-
+.spentEffortText {
+	font-size: 9pt;	
+}
 ul#dwTabs li.ui-state-active a span {
   background-position: 0 -151px !important;  
 }

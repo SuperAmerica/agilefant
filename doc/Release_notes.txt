@@ -57,6 +57,10 @@ Timesheets
 CHANGES FROM AGILEFANT 1.5.5
 ----------------------------
 + Renamed overhead to baseline load
++ Renamed iteration goal to story
++ Renamed backlog item to story in products and projects, and to task in iterations
++ Changed quick enter functionality from save to save & close
++ Other small UI and usability tweaks
 
 CHANGES FROM AGILEFANT 1.5.4
 ----------------------------

@@ -818,9 +818,9 @@ td.icons a img {
 	padding: 0;
 }
 
-.descriptionDiv {
-	max-height: 14em;
-	overflow: hidden;
+div.backlogDescription {
+	max-height: 16em;
+	overflow: auto;
 }
 
 .infoTable {

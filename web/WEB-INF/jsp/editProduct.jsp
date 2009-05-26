@@ -61,8 +61,6 @@ var productId = ${product.id};
 			<table cellspacing="0" cellpadding="0">
 				<tr>
 				    <td class="iconsbefore">
-                        <div class="expand" title="Expand" onclick="toggleExpand(this, '#descriptionDiv');">
-                        </div>
                     </td>
 					<td class="header">Details</td>
 					<td class="icons">
@@ -88,7 +86,7 @@ var productId = ${product.id};
 					<td class="info4" rowspan="2">&nbsp;</td>
 				</tr>
 				<tr>
-					<td colspan="2" class="description">${product.description}</td>
+					<td colspan="2" class="description"><div class="backlogDescription">${product.description}</div></td>
 					<td></td>
 				</tr>
 			</table>

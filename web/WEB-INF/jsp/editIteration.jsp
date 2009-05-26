@@ -32,8 +32,7 @@
 				<table cellspacing="0" cellpadding="0">
 					<tr>
 					    <td class="iconsbefore">
-                            <div class="expand" title="Expand" onclick="toggleExpand(this, '#descriptionDiv');">
-                            </div>
+
                         </td>
 						<td class="header">Details</td>
 						<td class="icons">
@@ -51,8 +50,7 @@
 				</table>
 				</div>
 				<div class="subItemContent">
-				<div id="descriptionDiv" class="descriptionDiv"
-					style="display: block; max-height: 17em !important;">
+				<div id="descriptionDiv" class="descriptionDiv">
 				<table class="infoTable" cellpadding="0" cellspacing="0">
 					<tr>
 						<th class="info1"><ww:text name="general.uniqueId"/></th>
@@ -90,7 +88,9 @@
 					</tr>
 
 					<tr>
-						<td colspan="2" class="description">${iteration.description}</td>
+						<td colspan="2" class="description">
+							<div class="backlogDescription">${iteration.description}</div>
+						</td>
 						<td></td>
 					</tr>
 

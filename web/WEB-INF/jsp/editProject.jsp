@@ -102,8 +102,6 @@ $(document).ready(function() {
 										  <table cellspacing="0" cellpadding="0">
 											<tr>
                                                 <td class="iconsbefore">
-                                                    <div class="expand" title="Expand" onclick="toggleExpand(this, '#descriptionDiv');">
-                                                    </div>
 						                        </td>
 												<td class="header">Details</td>
 												<td class="icons">
@@ -295,7 +293,8 @@ $(document).ready(function() {
 	                                    			</td>
 												</tr>
 												<tr>
-								    				<td colspan="2" class="description">${project.description}</td>
+								    				<td colspan="2" class="description">
+								    				<div class="backlogDescription">${project.description}</div></td>
 												</tr>
 											</table>
 										</div>

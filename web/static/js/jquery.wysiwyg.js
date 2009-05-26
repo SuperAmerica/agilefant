@@ -589,14 +589,17 @@
                 $(this.original).val(content);
             }
         },
-
+        camelcaseToTooltip: function(str) {
+          var a = str.replace(/([A-Z])/g, " $1").toLowerCase();
+          return a.slice(0,1).toUpperCase() + a.slice(1);
+        },
         appendMenu : function( cmd, args, className, fn )
         {
             var self = this;
             var args = args || [];
 
             $('<li></li>').append(
-                $('<a><!-- --></a>').addClass(className || cmd)
+                $('<a><!-- --></a>').attr({'title': self.camelcaseToTooltip(cmd)}).addClass(className || cmd)
             ).mousedown(function() {
                 if ( fn ) fn.apply(self); else self.editorDoc.execCommand(cmd, false, args);
                 if ( self.options.autoSave ) self.saveContent();

@@ -273,10 +273,10 @@
             increaseFontSize : { visible : false && !( $.browser.msie ), tags : ['big'] },
             decreaseFontSize : { visible : false && !( $.browser.msie ), tags : ['small'] },
 
-            separator09 : { separator : true },
+            separator09 : { separator : false },
 
             html : {
-                visible : true,
+                visible : false,
                 exec    : function()
                 {
                     if ( this.viewHTML )

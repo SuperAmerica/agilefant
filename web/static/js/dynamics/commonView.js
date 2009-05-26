@@ -14,9 +14,11 @@ var commonView = {
 	var cb = function(event) {
 		if(button.hasClass("dynamictable-expand")) {
 			expandCb();
+			var a = button;
 			button.attr("title","Collapse");
 		} else {
 			collapseCb();
+			var a = button;
 			button.attr("title","Expand");
 		}
 		button.toggleClass("dynamictable-expand").toggleClass("dynamictable-collapse");
@@ -32,6 +34,12 @@ var commonView = {
 		button.removeClass("dynamictable-collapse").addClass("dynamictable-expand");
 		button.attr("title","Expand");
 	});
+	if (button.hasClass("dynamictable-expand")) {
+		button.attr("title","Expand");
+	} else {
+		button.attr("title","Collapse");
+	}
+	
 	return button;
   },
   effortError: function(connectTo) {

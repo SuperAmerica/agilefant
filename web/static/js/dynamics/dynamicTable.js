@@ -41,7 +41,7 @@
 		this.element = element;
 		this.rows = [];
 		this.container = $("<div />").appendTo(this.element).addClass(cssClasses.table);
-		this.table = $("<div />").appendTo(this.container).hide();
+		this.table = $("<div />").appendTo(this.container);
 		var me = this;
 		this.table.bind("tableDataUpdated", function() {
 		 me.sortTable();
@@ -58,6 +58,9 @@
 	DynamicTable.prototype = {
 		createRow: function(model, opt, noSort) {
 			var newRow = new DynamicTableRow(this, model, opt);
+			if(this.rows.length === 0 && this.headerRow) {
+				this.headerRow.getElement().show();
+			}
 			if(!noSort) {
 			  this.rows.push(newRow);
 			}
@@ -73,6 +76,9 @@
 				if(this.rows[i] != row) {
 					rows.push(this.rows[i]);
 				}
+			}
+			if(rows.length === 0) {
+				this.headerRow.getElement().hide();
 			}
 			//check if row is associated with a model that has a hash code, if so the hash must be removed
 			if(row.model && typeof row.model.getHashCode == "function" && row.model.getHashCode()) {
@@ -162,7 +168,9 @@
 			this.headerRow = new DynamicTableRow(this, null, {toTop: true});
 			this.headerRow.getElement().addClass(cssClasses.tableHeader).addClass(cssClasses.notSortable);
 			var row = this.headerRow;
-
+			if(this.rows.length === 0) {
+				this.headerRow.getElement().hide();
+			}
 			$.each(this.options.headerCols, function(i,v) {
 				var c = row.createCell();
 				var col = c.getElement();
@@ -902,12 +910,16 @@
 	  this.row = row;
 	  this.inMenu = false;
 	  this.options = {
-	      title: '<div class="actionColumn"><button class="edit"><div class="gear" style="float: left;"/>&nbsp;Edit</button></div>'
+	      title: '<div class="actionColumn"><div class="edit"><div class="gear" style="float: left;"/><div style="float: right">Edit</div></div></div>'
 	  };
 	  $.extend(this.options, options);
 	  var me = this;
 	  this.openEvent  = function(cEvent) {
-	    me.open(cEvent);
+		if(me.menuOpen) {
+			me.close();
+		} else {
+			me.open(cEvent);
+		}
 	  };
 	  var el = this.cell.getElement();
 	  this.act = $('<div/>').html(this.options.title).appendTo(el);
@@ -920,6 +932,7 @@
 		},
 		open: function(cEvent) {
 			var me = this;
+			this.menuOpen = true;
 			this.handler = function() {
 				me.close();
 			};
@@ -931,7 +944,7 @@
 					"overflow":    "visible",
 					"z-index":     "100",
 					"white-space": "nowrap",
-					"top":         off.top + 16,
+					"top":         off.top + 18,
 					"left":        off.left - 32
 			};
 			this.menu.css(menuCss);
@@ -957,6 +970,7 @@
 			this.menu.remove();
 			$(document.body).unbind("dynamictable-close-actions",this.handler);
 			$(window).unbind("click", this.closeClick);
+			this.menuOpen = false;
 		}
 	};
 	function addTableColumn(optObj, width,header) {

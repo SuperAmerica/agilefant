@@ -47,8 +47,8 @@ var teams = [<aef:teamJson items="${teamList}"/>]
       </c:when>
 		</c:choose>
 	</display:column>
-	<display:column title="Timeframe" style="width: 180px;">
-	<ww:date name="#attr.row.startDate" /> - <ww:date name="#attr.row.endDate" />
+	<display:column title="Deadline" style="width: 75px;">
+		<ww:date name="#attr.row.endDate" />
 	</display:column>
 	<display:column title="Project Name" class="portfolioNameColumn">
 		<ww:a

@@ -231,7 +231,7 @@ IterationModel.prototype.reloadGoalData = function() {
 	jQuery.ajax({
 		async: false,
 		error: function() {
-		commonView.showError("Unable to load iteration goal.");
+		commonView.showError("Unable to load story.");
 	},
 	success: function(data,type) {
 		data = data.iterationGoals;
@@ -259,7 +259,7 @@ IterationModel.prototype.removeGoal = function(goal) {
 	}
 	this.iterationGoals = goals;
 };
-IterationModel.prototype.getTasks = function() { //blis without an iteration goal
+IterationModel.prototype.getTasks = function() { //blis without a story
 	return this.itemsWithoutGoal;
 };
 IterationModel.prototype.addTask = function(task) {
@@ -292,7 +292,7 @@ StoryModel.prototype.reloadTasks = function() {
 	jQuery.ajax({
 		async: false,
 		error: function() {
-		commonView.showError("Unable to load iteration goal contents.");
+		commonView.showError("Unable to load story contents.");
 	},
 	success: function(data,type) {
 		me.setTasks(data);
@@ -403,13 +403,13 @@ StoryModel.prototype.remove = function() {
 		async: false,
 		error: function() {
 		me.rollBack();
-		commonView.showError("An error occured while deleting an iteration goal.");
+		commonView.showError("An error occured while deleting a story.");
 	},
 	success: function(data,type) {
 		me.iteration.removeGoal(me);
 		ModelFactory.removeIterationGoal(me.id);
 		me.callDeleteListeners();
-		commonView.showOk("Iteration goal deleted.");
+		commonView.showOk("Story deleted.");
 	},
 	cache: false,
 	type: "POST",
@@ -461,7 +461,7 @@ StoryModel.prototype.save = function(synchronous, callback) {
 	jQuery.ajax({
 		async: asynch,
 		error: function() {
-		commonView.showError("An error occured while saving an iteration goal.");
+		commonView.showError("An error occured while saving a story.");
 	},
 	success: function(data,type) {
 		me.setData(data,false);

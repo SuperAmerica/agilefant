@@ -1,16 +1,16 @@
 .dynamictable {
-  border: 1px solid #ccc;
+ /* border: 1px solid #ccc;*/
   width: 100%;
   overflow: hidden;
   margin-top: 5px;
 }
 
 .dynamictable-caption {
- /* width: 99%; */
-  height: 22px;
-  font-weight: bold;
-  padding: 2px 0 0 3px;
-  background: transparent url(../img/gradient.png) repeat-x scroll 80% 60%;  
+	border-bottom:2px solid #CCCCCC;
+	border-left:2px solid #CCCCCC;
+	font-weight:bold;
+	height:19px;
+	padding:0 0 0 1px;
 }
 
 .dynamictable-row {
@@ -67,7 +67,7 @@
 
 .dynamictable-header .dynamictable-cell {
   font-weight: bold;
-  background-color: #ddd !important;
+  background-color: #d6dde5 !important;
   padding-left: 4px;
 }
 .dynamictable-header .dynamictable-cell a, .dynamictable-header .dynamictable-cell span {
@@ -159,13 +159,14 @@ div.gear {
   border: 1px solid #FFFFFF;
 }
 
-.dynamictable-captionaction {
+li.dynamictable-captionaction {
   background-color: #eee;
   float: left !impotant;
   border: 1px solid black;
   margin-left: 5px;
-  padding: 2px;	
+  padding: 0px 2px 0px 2px;	
   width: 135px;
+  font-weight: normal;
   -moz-border-radius: 0.5em;
   border-radius: 0.5em;
   text-align: center;
@@ -194,6 +195,7 @@ div.gear {
 	height:16px;
 	width:16px;
 	margin-top: 2px;
+	float: right;
 }
 .dynamictable-collapse {
 	background-image:url(../img/open_close.png);
@@ -203,6 +205,7 @@ div.gear {
 	height:16px;
 	width:16px;
 	margin-top: 2px;
+	float: right;
 }
 .dynamictable-expand:hover {
   background-position: 100% 0;  
@@ -305,19 +308,19 @@ div.gear {
 }
 .taskStateBLOCKED {
 	background-color: #e33;
-	color: #ddd;
+	color: #eee;
 }
 .taskStateIMPLEMENTED {
 	background-color: #66ff66;
 }
 .taskStateDONE {
 	background-color: #00bb44;
-	color: #ddd;
+	color: #eee;
 }
 .dynamictable .dynamictable-row .description-cell {
 	min-height: 0px !important;	
 }
-.dynamictable .dynamictable-row .description-cell span {
+.dynamictable .dynamictable-row .description-cell > span {
 	margin-left: 8%;
 	color: #666;	
 	 margin-right: 4%;
@@ -325,3 +328,8 @@ div.gear {
 	 color: #555;
 	 display: block;
 } 
+.taskTable {
+width: 92%;
+margin-left: 4%;
+margin-right: 4%;
+}

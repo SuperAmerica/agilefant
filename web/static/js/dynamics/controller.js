@@ -12,8 +12,7 @@ var IterationGoalController = function(parentView, model, parentController) {
 	//this.element = element;
 	this.parentView = parentView;
 	this.parentController = parentController;
-	parentView.getElement().css("padding-left","2%"); //TODO: refactor
-	this.element = $("<div />").width("98%").appendTo(parentView.getElement());
+	this.element = $("<div />").addClass("taskTable").appendTo(parentView.getElement());
 	this.data = model;
 	this.view = jQuery(this.element).taskTable();
 	var me = this;
@@ -130,6 +129,7 @@ IterationController.prototype = {
     	var me = this;
     	var row = me.view.createRow(goal);
     	var expand = row.createCell();
+    	expand.getElement().attr("tooltip","Drag to prioritize.");
     	var name = row.createCell({
     		type: "text", 
     		get: function() { return goal.getName();}, 

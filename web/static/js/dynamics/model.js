@@ -364,7 +364,7 @@ StoryModel.prototype.getPriority = function() {
 };
 StoryModel.prototype.setPriority = function(priority) {
 	this.priority = priority;
-	this.save();
+	this.save(true);
 };
 StoryModel.prototype.getEffortLeft = function() {
 	return this.metrics.effortLeft;

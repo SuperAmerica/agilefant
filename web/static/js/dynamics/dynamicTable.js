@@ -464,7 +464,6 @@
 	  },
 	  activateSortHandle: function() {
 	    this.cell.addClass("dynamictable-sorthandle").addClass("dragHandle");
-	    this.cell.attr("title","Change story priority order by dragging and dropping.");	    
 	  },
 	  setDragHandle: function() {
 		this.cell.addClass("dragHandle"); 
@@ -1007,13 +1006,13 @@
 		  var opts = { captionText: "Stories", defaultSortColumn: 0};
 		  if(agilefantUtils.isTimesheetsEnabled()) {
 		      opts.colCss = {
-		        ':lt(7)': { 'background': '#eee' },
+		        ':lt(7)': { 'background': '#e9ebed' },
 		        ':eq(7)': { 'background': '#fff' },
 		        ':eq(8)': { 'background': '#fff' }
 		      };
 		  } else {
 		      opts.colCss = {
-		        ':lt(6)': { 'background': '#eee' },
+		        ':lt(6)': { 'background': '#e9ebed' },
 		        ':eq(6)': { 'background': '#fff' },
 		        ':eq(7)': { 'background': '#fff' }
 			  };			  
@@ -1032,7 +1031,7 @@
 				  });
 		  addTableColumn(opts,		                  
 				  { minwidth: 60, auto: true },
-				  { name: 'Tasks done',
+				  { name: 'Tasks',
 			        tooltip: 'Done / Total tasks',
 			        sort: null
 				  });
@@ -1058,7 +1057,7 @@
 		  }
 
 		  addTableColumn(opts,
-				  { minwidth: 50, auto: true},
+				  { minwidth: 48, auto: true},
 				  { name: 'Actions',
 				    actionCell: true,
 					tooltip: "Actions",
@@ -1113,7 +1112,7 @@
 	                sort: null
 	              });
 	      addTableColumn(opts,
-	    		  { minwidth: 50, auto: true },
+	    		  { minwidth: 40, auto: true },
 	              { name: 'Priority',
 	                tooltip: 'Task priority',
 	                sort: agilefantUtils.comparators.bliPriorityAndStateComparator
@@ -1145,7 +1144,7 @@
 		              });
 		  }
 	      addTableColumn(opts,
-	    		  { minwidth: 50, auto: true },
+	    		  { minwidth: 45, auto: true },
 	              { name: 'Actions',
 		            tooltip: "",
 		            sort: null

@@ -24,6 +24,7 @@
 	var DynamicTable = function(element, options) {
 	    this.options = {
 	        colCss: {},
+	        colStyle: [],
 	        colWidths: [],
 	        headerCols: [],
 	        defaultSortColumn: 0,
@@ -103,6 +104,9 @@
 		getColWidth: function(colno) {
 			return this.options.colWidths[colno];
 		},
+		getColStyle: function(colno) {
+			return this.options.colStyle[colno];
+		},
 		getSorting: function() {
 			return this.sorting;
 		},
@@ -137,7 +141,7 @@
 				}
 				options.callback();
 			});
-			options.element.text(options.text);
+			options.element.html(options.text);
 			if(options.style) {
 				options.element.addClass(options.style);
 			}
@@ -448,6 +452,10 @@
 		  if (a.minwidth) { this.cell.css('min-width',a.minwidth + 'px'); }
 		  if (a.width) { this.cell.css('width',a.width + '%'); }
 		  if(a.setMaxWidth) { this.cell.css("clear","left"); }
+		}
+		var cssClass = row.getTable().getColStyle(cellno);
+		if(cssClass) {
+			this.cell.addClass(cssClass);
 		}
 		var me = this;
 		var dblclick_cb = function() { me.openEdit(); };
@@ -973,18 +981,24 @@
 			this.menuOpen = false;
 		}
 	};
-	function addTableColumn(optObj, width,header) {
+	function addTableColumn(optObj, width,header, colStyle) {
 		if(!optObj.headerCols) {
 			optObj.headerCols = [];
 		}
 		if(!optObj.colWidths) {
 			optObj.colWidths = [];
 		}
+		if(!optObj.colStyle) {
+			optObj.colStyle = [];
+		}
 		if(width) {
 			optObj.colWidths.push(width);
 		}
 		if(header) {
 			optObj.headerCols.push(header);
+		}
+		if(colStyle) {
+			optObj.colStyle.push(colStyle);
 		}
 	}
 	$.fn.extend({
@@ -1004,6 +1018,7 @@
 		},
 		iterationGoalTable: function(options) {
 		  var opts = { captionText: "Stories", defaultSortColumn: 0};
+/*
 		  if(agilefantUtils.isTimesheetsEnabled()) {
 		      opts.colCss = {
 		        ':lt(7)': { 'background': '#e9ebed' },
@@ -1017,43 +1032,44 @@
 		        ':eq(7)': { 'background': '#fff' }
 			  };			  
 		  }
+*/
 		  addTableColumn(opts, 
 				  { minwidth: 30, auto: true },
 				  { name: "Prio",
 					tooltip: "Story priority",
 					sort: agilefantUtils.comparators.priorityComparator
-				  });
+				  }, 'story-row');
 		  addTableColumn(opts,
 				  { minwidth: 280, auto: true },
 				  { name: 'Name',
 			        tooltip: 'Story name',
 			        sort: agilefantUtils.comparators.nameComparator
-				  });
+				  }, 'story-row');
 		  addTableColumn(opts,		                  
 				  { minwidth: 60, auto: true },
 				  { name: 'Tasks',
 			        tooltip: 'Done / Total tasks',
 			        sort: null
-				  });
+				  }, 'story-row');
 		  addTableColumn(opts,
 				  { minwidth: 30, auto: true },
 				  { name: 'EL',
 					tooltip: 'Total effort left',
 			        sort: agilefantUtils.comparators.effortLeftComparator
-				  });
+				  }, 'story-row');
 		  addTableColumn(opts, 
 				  { minwidth: 30, auto: true },
 				  { name: 'OE',
 			        tooltip: 'Total original estimate',
 			        sort: agilefantUtils.comparators.originalEstimateComparator
-				  });
+				  }, 'story-row');
 		  if(agilefantUtils.isTimesheetsEnabled()) {
 			  addTableColumn(opts,
 					  { minwidth: 30, auto: true },
 			          { name: 'ES',
 				        tooltip: 'Total effort spent',
 				        sort: agilefantUtils.comparators.effortSpentComparator
-			          });
+			          }, 'story-row');
 		  }
 
 		  addTableColumn(opts,
@@ -1062,10 +1078,10 @@
 				    actionCell: true,
 					tooltip: "Actions",
 					sort: null
-				  });
-		  addTableColumn(opts,{ setMaxWidth: true, auto: false });
-		  addTableColumn(opts,{ auto: false, setMaxWidth: true });
-		  addTableColumn(opts,{ auto: false, setMaxWidth: true });
+				  }, 'story-row');
+		  addTableColumn(opts,{ setMaxWidth: true, auto: false },null, 'story-data');
+		  addTableColumn(opts,{ auto: false, setMaxWidth: true },null, 'story-data');
+		  addTableColumn(opts,{ auto: false, setMaxWidth: true },null, 'story-data');
 		  $.extend(opts,options);
 			var ret = this.DynamicTable(opts);
 			
@@ -1077,80 +1093,76 @@
 	          captionText: "Tasks"
 	      };
 	      if(agilefantUtils.isTimesheetsEnabled()) {
-	          opts.colCss = { ':eq(9)': { 'cursor': 'pointer' },
-	                    ':lt(10)': { 'background-color': '#eee' },
-	                    ':gt(9)': { 'background-color': '#fff', 'position': 'relative' }
+	          opts.colCss = { ':gt(9)': {'position': 'relative' }
 	          };
 	      } else {
-	          opts.colCss = { ':eq(8)': { 'cursor': 'pointer' },
-	                    ':lt(9)': { 'background-color': '#eee' },
-	                    ':gt(8)': { 'background-color': '#fff', 'position': 'relative' }
+	          opts.colCss = { ':gt(8)': { 'position': 'relative' }
 	          };	    	  
 	      }
 	      addTableColumn(opts,
 	    		  { minwidth: 16, auto: true },
 	    		  { name: " ", 
 	    			  sort: null
-	    		  }
+	    		  }, 'task-row'
 	      );
 	      addTableColumn(opts,
 	    		  { minwidth: 30, auto: true },
 	              { name: "Themes",
 	                tooltip: "Task themes",
 	                sort: null
-	              });
+	              }, 'task-row');
 	      addTableColumn(opts,
 	    		  { minwidth: 180, auto: true },
 	              { name: 'Name',
 	                tooltip: 'Task name',
 	                sort: agilefantUtils.comparators.nameComparator
-	              });
+	              }, 'task-row');
 	      addTableColumn(opts,
 	    		  { minwidth: 60, auto: true },
 	              { name: 'State',
 	                tooltip: 'Task state',
 	                sort: null
-	              });
+	              }, 'task-row');
 	      addTableColumn(opts,
 	    		  { minwidth: 40, auto: true },
 	              { name: 'Priority',
 	                tooltip: 'Task priority',
 	                sort: agilefantUtils.comparators.bliPriorityAndStateComparator
-	              });
+	              }, 'task-row');
 	      addTableColumn(opts,
 	    		  { minwidth: 50, auto: true },
 	              { name: 'Responsibles',
 	                tooltip: 'Task responsibles',
 	                sort: null
-	              });
+	              }, 'task-row');
 	      addTableColumn(opts,
 	    		  { minwidth: 30, auto: true },
 	              { name: 'EL',
 	                tooltip: 'Effort left',
 	                sort: agilefantUtils.comparators.effortLeftComparator
-	              });
+	              }, 'task-row');
 	      addTableColumn(opts,
 	    		  { minwidth: 30, auto: true },
 	              { name: 'OE',
 	                tooltip: 'Original estimate',
 	                sort: agilefantUtils.comparators.originalEstimateComparator
-	              });
+	              }, 'task-row');
 		  if(agilefantUtils.isTimesheetsEnabled()) {
 		      addTableColumn(opts,
 		    		  { minwidth: 30, auto: true },
 		              { name: 'ES',
 		                tooltip: 'Total effort spent',
 		                sort: agilefantUtils.comparators.effortSpentComparator
-		              });
+		              }, 'task-row');
 		  }
 	      addTableColumn(opts,
 	    		  { minwidth: 45, auto: true },
 	              { name: 'Actions',
 		            tooltip: "",
 		            sort: null
-		          });
-	      addTableColumn(opts,{ auto: false, setMaxWidth: true });
-	      addTableColumn(opts,{ auto: false, setMaxWidth: true });
+		          }, 'task-row');
+	      addTableColumn(opts,{ auto: false, setMaxWidth: true },null, 'task-data');
+	      addTableColumn(opts,{ auto: false, setMaxWidth: true },null, 'task-data');
 	
 	      $.extend(opts,options);
 	      var ret = this.DynamicTable(opts);

@@ -125,7 +125,6 @@ ModelFactoryClass.prototype = {
 	setEffortEntry: function(entry) {
 		this.effortEntries[entry.id] = entry;
 	}
-	
 };
 
 ModelFactory = new ModelFactoryClass();
@@ -162,6 +161,10 @@ CommonAgilefantModel.prototype.removeDeleteListener = function(id) {
 	}
 };
 CommonAgilefantModel.prototype.callEditListeners = function(eventData) {
+	if(this.noEvent) {
+		this.noEvent = false;
+		return;
+	}
 	for(var i = 0; i < this.editListeners.length; i++) {
 		this.editListeners[i].cb(eventData);
 	}
@@ -192,6 +195,9 @@ CommonAgilefantModel.prototype.save = function() {
 };
 CommonAgilefantModel.prototype.setData = function() {
 	throw "Abstract method called.";
+};
+CommonAgilefantModel.prototype.preventNextEvent = function() {
+	this.noEvent = true;
 };
 
 /** ITERATION MODEL **/
@@ -231,7 +237,7 @@ IterationModel.prototype.reloadGoalData = function() {
 	jQuery.ajax({
 		async: false,
 		error: function() {
-		commonView.showError("Unable to load iteration goal.");
+		commonView.showError("Unable to load story.");
 	},
 	success: function(data,type) {
 		data = data.iterationGoals;
@@ -292,7 +298,7 @@ StoryModel.prototype.reloadTasks = function() {
 	jQuery.ajax({
 		async: false,
 		error: function() {
-		commonView.showError("Unable to load iteration goal contents.");
+		commonView.showError("Unable to load story contents.");
 	},
 	success: function(data,type) {
 		me.setTasks(data);
@@ -364,6 +370,7 @@ StoryModel.prototype.getPriority = function() {
 };
 StoryModel.prototype.setPriority = function(priority) {
 	this.priority = priority;
+	this.preventNextEvent();
 	this.save(true);
 };
 StoryModel.prototype.getEffortLeft = function() {
@@ -403,13 +410,13 @@ StoryModel.prototype.remove = function() {
 		async: false,
 		error: function() {
 		me.rollBack();
-		commonView.showError("An error occured while deleting an iteration goal.");
+		commonView.showError("An error occured while deleting an story.");
 	},
 	success: function(data,type) {
 		me.iteration.removeGoal(me);
 		ModelFactory.removeIterationGoal(me.id);
 		me.callDeleteListeners();
-		commonView.showOk("Iteration goal deleted.");
+		commonView.showOk("Story deleted.");
 	},
 	cache: false,
 	type: "POST",
@@ -461,14 +468,15 @@ StoryModel.prototype.save = function(synchronous, callback) {
 	jQuery.ajax({
 		async: asynch,
 		error: function() {
-		commonView.showError("An error occured while saving an iteration goal.");
+		commonView.showError("An error occured while saving an story.");
+		me.noEvent = false;
 	},
 	success: function(data,type) {
 		me.setData(data,false);
 		if(asynch && typeof callback == "function") {
 			callback.call(me);
 		}
-		commonView.showOk("Iteration goal saved succesfully.");
+		commonView.showOk("Story saved succesfully.");
 	},
 	cache: false,
 	dataType: "json",

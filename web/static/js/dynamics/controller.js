@@ -17,7 +17,7 @@ var IterationGoalController = function(parentView, model, parentController) {
 	this.view = jQuery(this.element).taskTable();
 	var me = this;
 	this.view.addCaptionAction("createNew", {
-		text: "Create a new task",
+		text: commonView.buttonWithIcon("create","Create task"),
 		callback: function() {
 		me.createBli();
 	}
@@ -196,6 +196,12 @@ IterationController.prototype = {
     	                            	   row.openEdit();
     	                               }
     	                               }, {
+    	                            	   text: "Create task",
+    	                            	   callback: function() {
+    	                            	   expandButton.trigger("showContents");
+    	                            	   blictrl.createBli();
+    	                               }
+    	                               }, {
     	                            	   text: "Move story",
     	                            	   callback: function() {
     	                            	   		me.moveGoal(row, goal);
@@ -204,12 +210,6 @@ IterationController.prototype = {
     	                            	   text: "Delete story",
     	                            	   callback: function() {
     	                            	   me.deleteGoal(goal);
-    	                               }
-    	                               }, {
-    	                            	   text: "Create a new task",
-    	                            	   callback: function() {
-    	                            	   expandButton.trigger("showContents");
-    	                            	   blictrl.createBli();
     	                               }
     	                               }
     	                               ]});
@@ -244,20 +244,20 @@ IterationController.prototype = {
     	this.view.activateSortable({update: function(ev,el) { me.changeIterationGoalPriority(ev,el);}});
 
     	this.view.addCaptionAction("createNew", {
-    		text: "Create a new story",
+    		text: commonView.buttonWithIcon("create", "Create story"),
     		callback: function() {
     		me.createGoal();
     	}
     	});
     	this.view.addCaptionAction("showBlis", {
-    		text: "Show tasks",
+    		text: commonView.buttonWithIcon("show", "Show tasks"),
     		toggleWith: "hideBlis",
     		callback: function() {
     		me.showTasks();
     	}
     	});
     	this.view.addCaptionAction("hideBlis", {
-    		text: "Hide tasks",
+    		text: commonView.buttonWithIcon("hide", "Hide tasks"),
     		toggleWith: "showBlis",
     		hide: true,
     		callback: function() {
@@ -301,7 +301,7 @@ IterationController.prototype = {
     	this.noGoalItemController = new IterationGoalController(blis, goal, this);
     	this.IterationGoalControllers.push(this.noGoalItemController);
     	buttons.setActionCell({items: [{
-    		text: "Create a new task",
+    		text: "Create task",
     		callback: function() {
     		blis.getElement().show();
     		me.noGoalItemController.createBli();
@@ -578,11 +578,6 @@ IterationGoalController.prototype = {
 		desc.getElement().hide();
 		buttons.setActionCell({items: [ 
 		                               {
-		                            	   text: "Reset original estimate",
-		                            	   callback: function() {
-		                            	   bli.resetOriginalEstimate();
-		                               }
-		                               }, {
 		                            	   text: "Edit task",
 		                            	   callback: function(row) {
 		                            	   desc.getElement().show();
@@ -598,6 +593,11 @@ IterationGoalController.prototype = {
 		                            	   text: "Delete task",
 		                            	   callback: function() {
 		                            	   me.deleteBli(bli);
+		                               }
+		                               }, {
+		                            	   text: "Reset original estimate",
+		                            	   callback: function() {
+		                            	   bli.resetOriginalEstimate();
 		                               }
 		                               }
 		                               ]});
@@ -766,7 +766,7 @@ IterationGoalController.prototype = {
     				if(iteration < 1) {
     					err.text("Please select an iteration.").show();
     					return;
-    				} else if(story != task.iterationGoal.id){
+    				} else if(story !== task.iterationGoal.id && task.iterationGoal.id !== 0){
     					var blId = task.backlog.getId();
     					task.moveTo(story, iteration);
     					if(iteration == blId) {
@@ -802,7 +802,7 @@ TaskController.prototype = {
 		var todos = tabs.addTab("TODOs");
 		this.todoView = todos.todoTable();
 		this.todoView.addCaptionAction("createTODO", {
-			text: "Create TODO",
+			text: commonView.buttonWithIcon("create","Create TODO"),
 			callback: function() {
 			var newTodo = new TodoModel(me.model, { id: 0 });
 			newTodo.beginTransaction();
@@ -815,7 +815,7 @@ TaskController.prototype = {
 			var effView = tabs.addTab("Spent effort");
 			this.spentEffortView = effView.spentEffortTable(); 
 			this.spentEffortView.addCaptionAction("logEffort", {
-				text: "Log effort",
+				text: commonView.buttonWithIcon("effort", "Log effort"),
 				callback: function() {
 				me.createEffortEntry();
 	

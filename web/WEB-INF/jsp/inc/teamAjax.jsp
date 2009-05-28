@@ -2,7 +2,7 @@
 
 <aef:userList />
 
-<div class="ajaxTeamWindowTabsDiv">
+<div class="ajaxTeamWindowTabsDiv ajaxWindowTabsDiv">
 <ul class="ajaxWindowTabs">
 	<li><a href="#teamEditTab-${teamId}"><span><img src="static/img/edit.png" alt="Edit" /> Edit team</span></a></li>
 </ul>

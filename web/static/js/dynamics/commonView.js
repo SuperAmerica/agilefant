@@ -60,5 +60,11 @@ var commonView = {
 		  var err = $("<div />").addClass("cellErrorMessage").appendTo(connectTo);
 		  $("<span />").css("color", "red").text("Required field").appendTo(err);
 	 return err;
+  },
+  buttonWithIcon: function(icon, text) {
+	  var b = $('<div />');
+	  $('<div />').addClass(icon).appendTo(b).css("float","left").width("16px").height("16px");
+	  $('<div />').addClass("text").appendTo(b).text(text).css("float","left").width("80px");
+	  return b.html();
   }
 };

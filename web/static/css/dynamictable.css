@@ -160,12 +160,12 @@ div.gear {
 }
 
 li.dynamictable-captionaction {
-  background-color: #eee;
+  background-color: #f3f3f3;
   float: left !impotant;
   border: 1px solid black;
   margin-left: 5px;
-  padding: 0px 2px 0px 2px;	
-  width: 135px;
+  padding: 1px 7px 1px 2px;	
+  width: 100px;
   font-weight: normal;
   -moz-border-radius: 0.5em;
   border-radius: 0.5em;
@@ -174,10 +174,41 @@ li.dynamictable-captionaction {
 
 .dynamictable-captionaction:hover {
   float: left !impotant;
-  background-color: #ccc; 
   cursor: pointer;
+  color: #e50;
 }
-
+.dynamictable-captionaction div.create {
+  background-image: url('../img/create_new.png');
+  background-position: 0%;
+}
+.dynamictable-captionaction:hover div.create {
+  background-image: url('../img/create_new.png');
+  background-position: 100%;
+}
+.dynamictable-captionaction div.show {
+	background-image:url(../img/open_close.png);
+	background-position:0 0;
+}
+.dynamictable-captionaction:hover div.show {
+	background-image:url(../img/open_close.png);
+	background-position:100% 0;
+}
+.dynamictable-captionaction div.hide {
+	background-image:url(../img/open_close.png);
+	background-position:0 100%;
+}
+.dynamictable-captionaction:hover div.hide {
+	background-image:url(../img/open_close.png);
+	background-position:100% 100%;
+}
+.dynamictable-captionaction div.effort {
+	background-image:url(../img/timesheets_new.png);
+	background-position:0 0;
+}
+.dynamictable-captionaction:hover div.effort {
+	background-image:url(../img/timesheets_new.png);
+	background-position:100% 0;
+}
 .dynamictable-captionactions {
   margin-top: 0px;
   padding-left: 0px;
@@ -272,7 +303,7 @@ li.dynamictable-captionaction {
 
 .actionColumn .edit {
 	-moz-border-radius:5px;
-	background-color:#dadade;
+	background-color:#f3f3f3;
 	border:0.5px solid black;
 	font-size:10pt;
 	height:16px !important;
@@ -282,11 +313,11 @@ li.dynamictable-captionaction {
 	width:43px;
 }
 .actionColumn .edit:hover {
-	background-color:#ccddee;
+	color: #e50;
 }
 
 .dragHandle:hover {
-	background-color: #6cf !important;
+	background-color: #e50 !important;
 	cursor: move;
 }
 .taskState {
@@ -332,4 +363,22 @@ li.dynamictable-captionaction {
 width: 92%;
 margin-left: 4%;
 margin-right: 4%;
+}
+.dynamictable .dynamictable-row .story-row {
+	background-color: #cceeee;
+}
+.dynamictable .dynamictable-row .story-data {
+	background-color: #fff;
+}
+.dynamictable .dynamictable-row .task-row {
+	background-color: #eee;
+}
+.dynamictable .dynamictable-row .task-data {
+	background-color: #fff;
+}
+.dynamictable-header > .story-row {
+
+}
+.dynamictable-header > .task-row {
+	background-color: #D6DDE5 !important; 
 }

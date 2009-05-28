@@ -524,12 +524,12 @@ TaskModel.prototype.setData = function(data) {
 			}
 		}
 	}
-	if (data.tasks) {
+	if (data.todos) {
 		this.todos = [];
-		for (i = 0; i < data.tasks.length; i++) {
-			if (data.tasks[i]) {
-				this.todos.push(ModelFactory.todoSingleton(data.tasks[i].id,
-						this, data.tasks[i]));
+		for (i = 0; i < data.todos.length; i++) {
+			if (data.todos[i]) {
+				this.todos.push(ModelFactory.todoSingleton(data.todos[i].id,
+						this, data.todos[i]));
 			}
 		}
 	}

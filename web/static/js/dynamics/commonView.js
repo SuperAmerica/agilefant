@@ -65,7 +65,7 @@ var commonView = {
   buttonWithIcon: function(icon, text) {
 	  var b = $('<div />');
 	  $('<div />').addClass(icon).appendTo(b).css("float","left").width("16px").height("16px");
-	  $('<div />').addClass("text").appendTo(b).text(text).css("float","left").width("80px");
+	  $('<div />').addClass("text").appendTo(b).text(text).css({"float": "left", "white-space": "nowrap"}).width("85px");
 	  return b.html();
   }
 };

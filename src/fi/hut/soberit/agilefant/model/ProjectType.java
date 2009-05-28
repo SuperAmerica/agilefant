@@ -42,10 +42,6 @@ public class ProjectType implements Comparable<ProjectType> {
 
     private String description;
 
-    private Collection<WorkType> workTypes = new HashSet<WorkType>();
-
-    private int targetSpendingPercentage = 0;
-
     /**
      * Get the id of this object.
      * <p>
@@ -88,30 +84,6 @@ public class ProjectType implements Comparable<ProjectType> {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    /**
-     * Single activity type can contain many work types, single worktype is part
-     * of a single activity type.
-     */
-    @OneToMany(mappedBy = "projectType")
-    @JSON(include = false)
-    public Collection<WorkType> getWorkTypes() {
-        return workTypes;
-    }
-
-    public void setWorkTypes(Collection<WorkType> workTypes) {
-        this.workTypes = workTypes;
-    }
-
-    @Range(min = 0, max = 100)
-    @JSON(include = false)
-    public int getTargetSpendingPercentage() {
-        return targetSpendingPercentage;
-    }
-
-    public void setTargetSpendingPercentage(int targetSpendingPercentage) {
-        this.targetSpendingPercentage = targetSpendingPercentage;
     }
 
     public int compareTo(ProjectType o) {

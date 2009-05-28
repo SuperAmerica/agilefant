@@ -53,16 +53,8 @@ public abstract class Backlog implements PageItem {
 
     private String description;
 
-    @Type(type = "escaped_text")
-    @JSON
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
+    private Backlog parent;
+    
     /**
      * Get the id of this object.
      * <p>
@@ -96,4 +88,30 @@ public abstract class Backlog implements PageItem {
         this.name = name;
     }
 
+    @Type(type = "escaped_text")
+    @JSON
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+    
+    /**
+     * Get the backlog's parent backlog.
+     * @return the parent backlog
+     */
+    @JSON(include = false)
+    public Backlog getParent() {
+        return parent;
+    }
+
+    /**
+     * Set the backlog's parent backlog.
+     * @param parent the parent backlog
+     */
+    public void setParent(Backlog parent) {
+        this.parent = parent;
+    }
 }

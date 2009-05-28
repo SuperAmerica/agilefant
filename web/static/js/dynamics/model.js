@@ -280,18 +280,27 @@ IterationModel.prototype.getPseudoGoal = function() {
 StoryModel.prototype = new CommonAgilefantModel();
 
 StoryModel.prototype.setData = function(data, includeMetrics) {
-	this.persistedData = data;
 	this.description = data.description;
 	this.name = data.name;
 	this.priority = data.priority;
 	this.id = data.id;
+	var event = [];
 	if(includeMetrics && data.metrics) {
 		this.metrics = data.metrics;
+		if(this.persistedData && this.persistedData.metrics &&
+				(this.persistedData.metrics.effortLeft !== data.metrics.effortLeft || 
+						this.persistedData.metrics.effortSpent !== data.metrics.effortSpent || 
+						this.persistedData.metrics.originalEstimate !== data.metrics.originalEstimate || 
+						this.persistedData.metrics.doneTasks !== data.metrics.doneTasks || 
+						this.persistedData.metrics.totalTasks !== data.metrics.totalTasks)) {
+			event = ["metricsUpdated"];	
+		}
 	}
 	if(data.backlogItems && data.backlogItems.length > 0) {
 		this.setTasks(data.backlogItems);
 	}
-	this.callEditListeners({bubbleEvent: []});
+	this.persistedData = data;
+	this.callEditListeners({bubbleEvent: event});
 };
 StoryModel.prototype.reloadTasks = function() {
 	var me = this;
@@ -302,6 +311,7 @@ StoryModel.prototype.reloadTasks = function() {
 	},
 	success: function(data,type) {
 		me.setTasks(data);
+		me.reloadMetrics();
 	},
 	cache: false,
 	dataType: "json",
@@ -318,13 +328,15 @@ StoryModel.prototype.setTasks = function(tasks) {
 		}
 	}
 };
-StoryModel.prototype.addTask = function(bli) {
+StoryModel.prototype.addTask = function(bli, noReload) {
 	bli.backlog = this.iteration;
 	bli.iterationGoal = this;
 	this.tasks.push(bli);
-	this.reloadMetrics();
+	if(!noReload) {
+		this.reloadMetrics();
+	}
 };
-StoryModel.prototype.removeTask = function(bli) {
+StoryModel.prototype.removeTask = function(bli, noReload) {
 	var tmp = this.tasks;
 	this.tasks = [];
 	for(var i = 0; i < tmp.length; i++) {
@@ -332,7 +344,9 @@ StoryModel.prototype.removeTask = function(bli) {
 			this.tasks.push(tmp[i]);
 		}
 	}
-	this.reloadMetrics();
+	if(!noReload) { 
+		this.reloadMetrics();
+	}
 };
 StoryModel.prototype.copy = function() {
 	var copy = new StoryModel({}, this.iteration);
@@ -437,8 +451,19 @@ StoryModel.prototype.reloadMetrics = function() {
 	dataType: "json",
 	async: true,
 	success: function(data,type) {
+		var event = [];
+		if(!me.persistedData || !me.persistedData.metrics) {
+			event = ["metricsUpdated"];
+		} else if(me.persistedData.metrics.effortLeft !== data.effortLeft || 
+						me.persistedData.metrics.effortSpent !== data.effortSpent || 
+						me.persistedData.metrics.originalEstimate !== data.originalEstimate || 
+						me.persistedData.metrics.doneTasks !== data.doneTasks || 
+						me.persistedData.metrics.totalTasks !== data.totalTasks) {
+			event = ["metricsUpdated"];	
+		}
+		me.persistedData.metrics = data;
 		me.metrics = data;
-		me.callEditListeners({bubbleEvent: []});
+		me.callEditListeners({bubbleEvent: event});
 	}
 	});
 };
@@ -704,8 +729,9 @@ TaskModel.prototype.moveTo = function(storyId, iterationId) {
 		this.iterationGoal.removeTask(this);
 		if(iterationId === this.backlog.getId()) {
 			var newStory = ModelFactory.getIterationGoal(storyId);
-			newStory.addTask(this);
-			this.save();
+			newStory.addTask(this, false);
+			this.save(false);
+			newStory.reloadMetrics();
 		} else {
 			this.backlog = {getId: function() { return iterationId; }};
 			this.iterationGoal = {id: storyId};
@@ -747,9 +773,14 @@ TaskModel.prototype.remove = function() {
 
 };
 TaskModel.prototype.changeStory = function(newStory) {
-	this.iterationGoal.removeTask(this);
-	newStory.addTask(this);
-	this.save();
+	var oldStory = this.iterationGoal;	
+	this.iterationGoal.removeTask(this, true);
+	newStory.addTask(this, true);
+	this.save(false, function() {
+		oldStory.reloadMetrics();
+		newStory.reloadMetrics();
+	});
+	
 };
 TaskModel.prototype.resetOriginalEstimate = function() {
 	if (this.inTransaction) {
@@ -797,6 +828,9 @@ TaskModel.prototype.save = function(synchronous, callback) {
 	};
 	if (this.iterationGoal) {
 		data.iterationGoalId = this.iterationGoal.id;
+		if(data.iterationGoalId === undefined) {
+			data.iterationGoalId = 0;
+		}
 	}
 	if (this.userIds) {
 		data.userIds = this.userIds;

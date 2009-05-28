@@ -84,6 +84,7 @@ IterationController.prototype = {
     		goal.remove();
    			me.itemsWithOutGoalContainer.reloadTasks();
    			me.noGoalItemController.render();
+   			//me.view.getElement().trigger("metricsUpdated");
     	},
     	Cancel: function() {
     		$(this).dialog('destroy');
@@ -114,6 +115,7 @@ IterationController.prototype = {
     				} else if(iteration != goal.iteration.iterationId){
     					goal.moveToIteration(iteration);
     					row.remove();
+    					row.getElement().trigger("metricsUpdated");
     				}
 					$(this).dialog('destroy');
 	    			parent.remove();
@@ -187,7 +189,7 @@ IterationController.prototype = {
     		blictrl.hideTasks();
     		desc.getElement().show();
     	});
-    	tasks.getElement().click(function() { expandButton.click()});
+    	tasks.getElement().click(function() { expandButton.click();});
     	this.buttonCells.push(expandButton);
     	buttons.setActionCell({items: [
     	                               {
@@ -214,7 +216,7 @@ IterationController.prototype = {
     	                               }
     	                               }
     	                               ]});
-    	row.getElement().bind("metricsUpdated", function() {
+    	blis.getElement().bind("metricsUpdated", function() {
     		goal.reloadMetrics();
     	});
     	row.getElement().droppable({
@@ -232,6 +234,7 @@ IterationController.prototype = {
     			var row = ui.draggable.data("row");
     			var model = row.model;
     			row.remove();
+    			var oldGoal = model.iterationGoal;
     			model.changeStory(goal);
     			blictrl.render();
     		}

@@ -18,7 +18,6 @@ import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.BacklogItemHourEntry;
 import fi.hut.soberit.agilefant.model.HourEntry;
 import fi.hut.soberit.agilefant.model.User;
-import fi.hut.soberit.agilefant.util.DailySpentEffort;
 
 public class HourEntryDAOHibernate extends GenericDAOHibernate<HourEntry> implements
         HourEntryDAO{

@@ -1,7 +1,7 @@
 package fi.hut.soberit.agilefant.util;
 
 import fi.hut.soberit.agilefant.model.State;
-import fi.hut.soberit.agilefant.model.Task;
+import fi.hut.soberit.agilefant.model.Todo;
 
 public class TodoMetrics {
     private int doneTodos = 0;
@@ -12,7 +12,7 @@ public class TodoMetrics {
     private int total = 0;
     private int blockedTodos = 0;
     
-    public void addTodo(Task todo) {
+    public void addTodo(Todo todo) {
         if(todo == null) {
             return;
         }

@@ -23,16 +23,16 @@ public class TaskActions extends Fixture {
     }
 
     public void createTask() {
-        Task task = new Task();
-        task.setName(taskName);
-        this.bi.getTasks().add(task);
+        Todo todo = new Todo();
+        todo.setName(taskName);
+        this.bi.getTodos().add(todo);
     }
 
     public int taskAmount() {
         if (this.bi == null)
             return -1;
         else
-            return this.bi.getTasks().size();
+            return this.bi.getTodos().size();
     }
 
     public int estimatedEffort() {

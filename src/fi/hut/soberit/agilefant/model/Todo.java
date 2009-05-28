@@ -19,33 +19,33 @@ import org.hibernate.annotations.Type;
 import fi.hut.soberit.agilefant.web.page.PageItem;
 
 /**
- * Hibernate entity bean representing a Task.
+ * Hibernate entity bean representing a Todo.
  * <p>
- * Conceptually task represents some work which is no further divided to smaller
- * pieces. It's work of a single person. A task is under a backlog item, which
+ * Conceptually todo represents some work which is no further divided to smaller
+ * pieces. It's work of a single person. A todo is under a backlog item, which
  * is a bigger container of work.
  * <p>
- * Technically there's one-to-many relation between backlog item and a task. It
+ * Technically there's one-to-many relation between backlog item and a todo. It
  * has a creator and an assignee.
  * <p>
- * Task is a unit which, within a Cycle of Control model, is in interest of
- * workers of a team, and sometimes their project manager also. Task is a
+ * Todo is a unit which, within a Cycle of Control model, is in interest of
+ * workers of a team, and sometimes their project manager also. Todo is a
  * sub-part of a BacklogItem, and may be assigned to a named person.
  * <p>
- * Workers are interested in Tasks which have been assigned to them as things to
- * be done. To know better, which Task should be tackled next, there is a
- * priority attached to a Task. Task has a capability to log efforts done to it.
+ * Workers are interested in todos which have been assigned to them as things to
+ * be done. To know better, which todo should be tackled next, there is a
+ * priority attached to a todo. Todo has a capability to log efforts done to it.
  * <p>
- * Project manager is generally more interested in BacklogItems than Tasks, but
+ * Project manager is generally more interested in BacklogItems than todos, but
  * in small projects, of for personal interests, may want to see the progress of
- * a single Task, too. Also, planning the future work to be assigned, it may be
- * useful for a Project manager to see the multitude of the tasks assigned to
+ * a single todo, too. Also, planning the future work to be assigned, it may be
+ * useful for a Project manager to see the multitude of the todos assigned to
  * each worker, to be able to balance the workload within her crew.
  */
 @BatchSize(size=20)
 @Entity
-@Table(name = "task")
-public class Task implements PageItem {
+@Table(name = "todo")
+public class Todo implements PageItem {
 
     private int id;
 
@@ -75,7 +75,7 @@ public class Task implements PageItem {
     /**
      * Get the id of this object.
      * <p>
-     * The id is unique among all tasks.
+     * The id is unique among all todos.
      */
     // tag this field as the id
     @Id

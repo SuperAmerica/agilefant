@@ -15,7 +15,7 @@ import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.db.IterationGoalDAO;
 import fi.hut.soberit.agilefant.db.ProductDAO;
 import fi.hut.soberit.agilefant.db.ProjectDAO;
-import fi.hut.soberit.agilefant.db.TaskDAO;
+import fi.hut.soberit.agilefant.db.TodoDAO;
 import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.Backlog;
@@ -27,7 +27,7 @@ import fi.hut.soberit.agilefant.model.Priority;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.State;
-import fi.hut.soberit.agilefant.model.Task;
+import fi.hut.soberit.agilefant.model.Todo;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.security.SecurityUtil;
 import fi.hut.soberit.agilefant.util.SpringTestCase;
@@ -43,7 +43,7 @@ public class BacklogItemActionTest extends SpringTestCase {
 
     private BacklogDAO backlogDAO = null;
     private BacklogItemDAO backlogItemDAO = null;
-    private TaskDAO taskDAO = null;
+    private TodoDAO todoDAO = null;
     private IterationGoalDAO iterationGoalDAO = null;
     private UserDAO userDAO = null;
     private ProjectDAO projectDAO = null;
@@ -53,7 +53,7 @@ public class BacklogItemActionTest extends SpringTestCase {
 
     private int backlogId;
     private int bliId;
-    private int taskId;
+    private int todoId;
     private int goalId;
     private int userId;
     private int projectId;
@@ -109,15 +109,15 @@ public class BacklogItemActionTest extends SpringTestCase {
         backlogItemDAO.store(bli);
         
 
-        // set bli tasks
-        ArrayList<Task> tasks = new ArrayList<Task>();
-        Task task = new Task();
-        task.setName("Test Task");
-        task.setBacklogItem(bli);
-        taskId = (Integer) taskDAO.create(task);
-        task = taskDAO.get(taskId);
-        tasks.add(task);
-        bli.setTasks(tasks);
+        // set bli todos
+        ArrayList<Todo> todos = new ArrayList<Todo>();
+        Todo todo = new Todo();
+        todo.setName("Test todo");
+        todo.setBacklogItem(bli);
+        todoId = (Integer) todoDAO.create(todo);
+        todo = todoDAO.get(todoId);
+        todos.add(todo);
+        bli.setTodos(todos);
         backlogItemDAO.store(bli);
 
         // set bli goal
@@ -156,8 +156,8 @@ public class BacklogItemActionTest extends SpringTestCase {
         assertEquals(Priority.BLOCKER, action.getBacklogItem().getPriority());
         assertEquals("2h 15min", action.getBacklogItem().getOriginalEstimate()
                 .toString());
-        assertEquals("Test Task", ((Task) ((List) action.getBacklogItem()
-                .getTasks()).get(0)).getName());
+        assertEquals("Test todo", ((Todo) ((List) action.getBacklogItem()
+                .getTodos()).get(0)).getName());
         assertEquals(State.BLOCKED, action.getBacklogItem().getState());
         assertEquals("2h 15min", action.getBacklogItem().getEffortLeft()
                 .toString());
@@ -211,36 +211,36 @@ public class BacklogItemActionTest extends SpringTestCase {
     }
 
     /**
-     * Test store operation with updating tasks.
+     * Test store operation with updating todos.
      */
     @SuppressWarnings("unchecked")
-    public void testStore_updateTasks() {
+    public void testStore_updateTodos() {
         // execute edit operation
         assertNull(action.getBacklogItem());
         action.setBacklogItemId(bliId);
         assertEquals("success", action.edit());
         assertNotNull(action.getBacklogItem());
 
-        // update bli tasks and execute store
-        List<Task> tasks = (List) action.getBacklogItem().getTasks();
-        // edit existing task
-        Task task = tasks.get(0);
-        task.setName("Updated");
-        // create new task
-        Task task2 = new Task();
-        task2.setName("Test Task2");
-        task2.setBacklogItem(action.getBacklogItem());
-        int task2Id = (Integer) taskDAO.create(task2);
-        task2 = taskDAO.get(task2Id);
-        tasks.add(task2);
+        // update bli todos and execute store
+        List<Todo> todos = (List) action.getBacklogItem().getTodos();
+        // edit existing todo
+        Todo todo = todos.get(0);
+        todo.setName("Updated");
+        // create new todo
+        Todo todo2 = new Todo();
+        todo2.setName("Test todo2");
+        todo2.setBacklogItem(action.getBacklogItem());
+        int todo2Id = (Integer) todoDAO.create(todo2);
+        todo2 = todoDAO.get(todo2Id);
+        todos.add(todo2);
         // execute store operation
         assertEquals("ajax_success", action.ajaxStoreBacklogItem());
 
-        // check that tasks are updated
-        assertEquals("Updated", ((Task) ((List) backlogItemDAO.get(bliId)
-                .getTasks()).get(0)).getName());
-        assertEquals("Test Task2", ((Task) ((List) backlogItemDAO.get(
-                bliId).getTasks()).get(1)).getName());
+        // check that todos are updated
+        assertEquals("Updated", ((Todo) ((List) backlogItemDAO.get(bliId)
+                .getTodos()).get(0)).getName());
+        assertEquals("Test todo2", ((Todo) ((List) backlogItemDAO.get(
+                bliId).getTodos()).get(1)).getName());
     }
 
     /**
@@ -383,18 +383,18 @@ public class BacklogItemActionTest extends SpringTestCase {
         SecurityUtil.setLoggedUser(userDAO.get(this.userId));
         assertEquals(Action.SUCCESS,action.store());
         
-        Task foo = new Task();
+        Todo foo = new Todo();
         foo.setBacklogItem(action.getBacklogItem());
         foo.setState(State.NOT_STARTED);
         foo.setCreator(SecurityUtil.getLoggedUser());
         foo.setRank(0);
         //foo.setPriority(Priority.BLOCKER);
         
-        int taskId = (Integer)taskDAO.create(foo);
+        int todoId = (Integer)todoDAO.create(foo);
         action.setBacklogItemId(0);
-        action.setFromTodoId(taskId);
+        action.setFromTodoId(todoId);
         action.store();
-        assertEquals(null, taskDAO.get(taskId));
+        assertEquals(null, todoDAO.get(todoId));
     }
     
     public void testCreateFromTodo() {
@@ -411,28 +411,25 @@ public class BacklogItemActionTest extends SpringTestCase {
         assertEquals(Action.SUCCESS,action.store());
         action.setIterationGoalId(0);
         
-        Task foo = new Task();
+        Todo foo = new Todo();
         foo.setBacklogItem(action.getBacklogItem());
         foo.setState(State.NOT_STARTED);
         foo.setCreator(SecurityUtil.getLoggedUser());
         foo.setRank(0);
         //foo.setPriority(Priority.BLOCKER);
         
-        int taskId = (Integer)taskDAO.create(foo);
+        int todoId = (Integer)todoDAO.create(foo);
         
         action.setBacklogItem(null);
-        action.setFromTodoId(taskId);
+        action.setFromTodoId(todoId);
         action.create();
         assertEquals(foo.getName(), action.getBacklogItem().getName());
         assertEquals(foo.getState(), action.getBacklogItem().getState());
         assertEquals(goalId, action.getIterationGoalId());
         assertEquals(backlogId, action.getBacklogId());
     }
-    /**
-     * Test quickStoreBacklogItem used by tasklist.tag
-     */
 
-    public void testQuickStoreTaskList() {
+    public void testQuickStoreTodoList() {
         // execute edit operation
         action.setBacklogItemId(bliId);
         assertEquals("success", action.edit());
@@ -441,26 +438,26 @@ public class BacklogItemActionTest extends SpringTestCase {
         action.setState(State.PENDING);
         action.setEffortLeft(new AFTime("3h 15min"));
 
-        // Get first task from backlog item
-        Task task = backlogItemDAO.get(bliId).getTasks().iterator().next();
-        // Create Map of new task states
-        Map<Integer, State> newTaskStates = new HashMap<Integer, State>();
-        newTaskStates.put(task.getId(), State.PENDING);
-        action.setTaskStates(newTaskStates);
+        // Get first todo from backlog item
+        Todo todo = backlogItemDAO.get(bliId).getTodos().iterator().next();
+        // Create Map of new todo states
+        Map<Integer, State> newTodoStates = new HashMap<Integer, State>();
+        newTodoStates.put(todo.getId(), State.PENDING);
+        action.setTodoStates(newTodoStates);
 
         // execute quickStoreBacklogItem operation
-        assertEquals("ajax_success", action.quickStoreTaskList());
+        assertEquals("ajax_success", action.quickStoreTodoList());
         // check that bli was updated both to action and database
         assertEquals(State.PENDING, action.getBacklogItem().getState());
         assertEquals("3h 15min", action.getBacklogItem().getEffortLeft()
                 .toString());
-        assertEquals(State.PENDING, action.getTaskStates().get(task.getId()));
+        assertEquals(State.PENDING, action.getTodoStates().get(todo.getId()));
 
         assertEquals(State.PENDING, backlogItemDAO.get(bliId).getState());
         assertEquals("3h 15min", backlogItemDAO.get(bliId).getEffortLeft()
                 .toString());
-        // Check that the new status is updated for the task
-        assertEquals(State.PENDING, backlogItemDAO.get(bliId).getTasks()
+        // Check that the new status is updated for the todo
+        assertEquals(State.PENDING, backlogItemDAO.get(bliId).getTodos()
                 .iterator().next().getState());
 
     }
@@ -468,9 +465,9 @@ public class BacklogItemActionTest extends SpringTestCase {
     /**
      * Test create operation with invalid backlog id.
      */
-    public void testQuickStoreTaskList_invalidId() {
+    public void testQuickStoreTodoList_invalidId() {
         action.setBacklogItemId(-500);
-        assertEquals("ajax_error", action.quickStoreTaskList());
+        assertEquals("ajax_error", action.quickStoreTodoList());
     }
 
     /**
@@ -511,8 +508,8 @@ public class BacklogItemActionTest extends SpringTestCase {
         this.action = action;
     }
 
-    public void setTaskDAO(TaskDAO taskDAO) {
-        this.taskDAO = taskDAO;
+    public void setTodoDAO(TodoDAO todoDAO) {
+        this.todoDAO = todoDAO;
     }
 
     public void setIterationGoalDAO(IterationGoalDAO iterationGoalDAO) {
@@ -535,8 +532,8 @@ public class BacklogItemActionTest extends SpringTestCase {
         this.bliId = bliId;
     }
 
-    public void setTaskId(int taskId) {
-        this.taskId = taskId;
+    public void setTodoId(int todoId) {
+        this.todoId = todoId;
     }
 
     public void setGoalId(int goalId) {

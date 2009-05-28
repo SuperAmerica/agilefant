@@ -1,11 +1,10 @@
 package fi.hut.soberit.agilefant.model;
 
 /**
- * A priority enumeration, which represents the priority of a task and a backlog
- * item.
+ * A priority enumeration, which represents the priority of a todo and a story.
  * 
  * @see fi.hut.soberit.agilefant.model.BacklogItem
- * @see fi.hut.soberit.agilefant.model.Task
+ * @see fi.hut.soberit.agilefant.model.Todo
  */
 public enum Priority {
     TRIVIAL, MINOR, MAJOR, CRITICAL, BLOCKER, UNDEFINED;

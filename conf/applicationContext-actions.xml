@@ -23,8 +23,8 @@
 			<ref local="dateFormat"/>
 		</property>
 	</bean>
-	<bean name="taskAction"
-		class="fi.hut.soberit.agilefant.web.TaskAction" singleton="false"
+	<bean name="todoAction"
+		class="fi.hut.soberit.agilefant.web.TodoAction" singleton="false"
 		autowire="byName" />
 	<bean name="backlogAction"
 		class="fi.hut.soberit.agilefant.web.BacklogAction" singleton="false"

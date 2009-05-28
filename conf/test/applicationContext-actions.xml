@@ -5,7 +5,7 @@
 	<bean name="projectTypeAction" class="fi.hut.soberit.agilefant.web.ProjectTypeAction" singleton="false" autowire="byName"/>
 	<bean name="workTypeAction" class="fi.hut.soberit.agilefant.web.WorkTypeAction" singleton="false" autowire="byName"/>
 	<bean name="projectAction" class="fi.hut.soberit.agilefant.web.ProjectAction" singleton="false" autowire="byName"/>
-	<bean name="taskAction" class="fi.hut.soberit.agilefant.web.TaskAction" singleton="false" autowire="byName"/>
+	<bean name="todoAction" class="fi.hut.soberit.agilefant.web.TodoAction" singleton="false" autowire="byName"/>
 	<bean name="backlogAction" class="fi.hut.soberit.agilefant.web.BacklogAction" singleton="false" autowire="byName"/>
 	<bean name="iterationAction" class="fi.hut.soberit.agilefant.web.IterationAction" singleton="false" autowire="byName"/>	
 	<bean name="productAction" class="fi.hut.soberit.agilefant.web.ProductAction" singleton="false" autowire="byName"/>

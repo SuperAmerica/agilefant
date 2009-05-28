@@ -8,7 +8,7 @@ import java.util.List;
 import fi.hut.soberit.agilefant.business.impl.UserBusinessImpl;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.db.ProductDAO;
-import fi.hut.soberit.agilefant.db.TaskDAO;
+import fi.hut.soberit.agilefant.db.TodoDAO;
 import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.model.Assignment;
 import fi.hut.soberit.agilefant.model.Backlog;
@@ -39,7 +39,7 @@ public class UserBusinessTest extends SpringTestCase {
 
     private BacklogItemDAO backlogItemDAO;
 
-    private TaskDAO taskDAO;
+    private TodoDAO todoDAO;
 
     private UserBusiness userBusiness;
 
@@ -75,12 +75,12 @@ public class UserBusinessTest extends SpringTestCase {
         this.backlogItemDAO = backlogItemDAO;
     }
 
-    public TaskDAO getTaskDAO() {
-        return taskDAO;
+    public TodoDAO getTodoDAO() {
+        return todoDAO;
     }
 
-    public void setTaskDAO(TaskDAO taskDAO) {
-        this.taskDAO = taskDAO;
+    public void setTodoDAO(TodoDAO todoDAO) {
+        this.todoDAO = todoDAO;
     }
 
     public UserBusiness getUserBusiness() {

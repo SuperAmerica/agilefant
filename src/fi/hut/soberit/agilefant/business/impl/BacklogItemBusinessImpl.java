@@ -16,7 +16,7 @@ import fi.hut.soberit.agilefant.business.BusinessThemeBusiness;
 import fi.hut.soberit.agilefant.business.HistoryBusiness;
 import fi.hut.soberit.agilefant.business.HourEntryBusiness;
 import fi.hut.soberit.agilefant.business.SettingBusiness;
-import fi.hut.soberit.agilefant.business.TaskBusiness;
+import fi.hut.soberit.agilefant.business.TodoBusiness;
 import fi.hut.soberit.agilefant.business.UserBusiness;
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.db.IterationGoalDAO;
@@ -30,7 +30,7 @@ import fi.hut.soberit.agilefant.model.IterationGoal;
 import fi.hut.soberit.agilefant.model.Priority;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.State;
-import fi.hut.soberit.agilefant.model.Task;
+import fi.hut.soberit.agilefant.model.Todo;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.security.SecurityUtil;
 import fi.hut.soberit.agilefant.util.BacklogItemComparator;
@@ -48,7 +48,7 @@ import fi.hut.soberit.agilefant.util.UserComparator;
  */
 public class BacklogItemBusinessImpl implements BacklogItemBusiness {
     private BacklogItemDAO backlogItemDAO;
-    private TaskBusiness taskBusiness;
+    private TodoBusiness todoBusiness;
     private HistoryBusiness historyBusiness;
     private UserBusiness userBusiness;
     private HourEntryBusiness hourEntryBusiness;
@@ -273,29 +273,29 @@ public class BacklogItemBusinessImpl implements BacklogItemBusiness {
                 .getId());
     }
 
-    public void updateBacklogItemEffortLeftStateAndTaskStates(
+    public void updateBacklogItemEffortLeftStateAndTodoStates(
             int backlogItemId, State newState, AFTime newEffortLeft, Priority newPriority,
-            Map<Integer, State> newTaskStates, Map<Integer, String> newTaskNames) throws ObjectNotFoundException {
+            Map<Integer, State> newTodoStates, Map<Integer, String> newTodoNames) throws ObjectNotFoundException {
         BacklogItem backlogItem = backlogItemDAO.get(backlogItemId);
         if (backlogItem == null) {
             throw new ObjectNotFoundException("backlogItem.notFound");
         } else {
             updateBacklogItemStatePriorityAndEffortLeft(backlogItemId, newState,
                 newEffortLeft, newPriority);
-            taskBusiness.updateMultipleTasks(backlogItem, newTaskStates, newTaskNames);
+            todoBusiness.updateMultipleTodos(backlogItem, newTodoStates, newTodoNames);
         }
     }
     
-    public void setTasksToDone(int backlogItemId) throws ObjectNotFoundException {
+    public void setTodosToDone(int backlogItemId) throws ObjectNotFoundException {
         BacklogItem backlogItem = backlogItemDAO.get(backlogItemId);
         if (backlogItem == null) {
             throw new ObjectNotFoundException("backlogItem.notFound");
         } else {
             Map<Integer, State> doneStates = new HashMap<Integer, State>();
-            for (Task t: backlogItem.getTasks()) {
+            for (Todo t: backlogItem.getTodos()) {
                 doneStates.put(t.getId(), State.DONE);
             }
-            taskBusiness.updateMultipleTasks(backlogItem, doneStates, new HashMap<Integer, String>());
+            todoBusiness.updateMultipleTodos(backlogItem, doneStates, new HashMap<Integer, String>());
         }
     }
 
@@ -355,7 +355,7 @@ public class BacklogItemBusinessImpl implements BacklogItemBusiness {
     public List<BacklogItem> getBacklogItemsByBacklogWithCache(Backlog backlog) {
         List<BacklogItem> items = this.getBacklogItemsByBacklog(backlog);
         Map<BacklogItem, List<BacklogItemResponsibleContainer>> userData = this.getResponsiblesByBacklog(backlog);
-        Map<BacklogItem, TodoMetrics> todoMetrics = this.getTasksByBacklog(backlog);
+        Map<BacklogItem, TodoMetrics> todoMetrics = this.getTodosByBacklog(backlog);
         Map<BacklogItem, List<BusinessTheme>> themes = this.businessThemeBusiness.getBacklogItemBusinessThemesByBacklog(backlog);
         for(BacklogItem item : items) {
             if(userData.get(item) != null) {
@@ -407,16 +407,16 @@ public class BacklogItemBusinessImpl implements BacklogItemBusiness {
         return null;
     }
     
-    public Map<BacklogItem, TodoMetrics> getTasksByBacklog(Backlog backlog) {
+    public Map<BacklogItem, TodoMetrics> getTodosByBacklog(Backlog backlog) {
         if(backlog != null) {
-            return backlogItemDAO.getTasksByBacklog(backlog);
+            return backlogItemDAO.getTodosByBacklog(backlog);
         }
         return null;
     }
     
     public BacklogItem createBacklogItemFromTodo(int todoId) {
         BacklogItem backlogItem = new BacklogItem();
-        Task data = taskBusiness.getTask(todoId);
+        Todo data = todoBusiness.getTodo(todoId);
         if(data != null) {
             backlogItem.setName(data.getName());
             backlogItem.setState(data.getState());
@@ -431,10 +431,6 @@ public class BacklogItemBusinessImpl implements BacklogItemBusiness {
 
     public void store(BacklogItem backlogItem) {
         backlogItemDAO.store(backlogItem);
-    }
-
-    public void setTaskBusiness(TaskBusiness taskBusiness) {
-        this.taskBusiness = taskBusiness;
     }
 
     public UserBusiness getUserBusiness() {
@@ -459,6 +455,10 @@ public class BacklogItemBusinessImpl implements BacklogItemBusiness {
 
     public void setBusinessThemeBusiness(BusinessThemeBusiness businessThemeBusiness) {
         this.businessThemeBusiness = businessThemeBusiness;
+    }
+
+    public void setTodoBusiness(TodoBusiness todoBusiness) {
+        this.todoBusiness = todoBusiness;
     }
 
 

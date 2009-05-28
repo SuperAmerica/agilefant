@@ -21,7 +21,7 @@ import flexjson.JSON;
  * A Hibernate entity bean which represents an iteration.
  * <p>
  * Conceptually, an iteration is a type of a backlog. A iteration-backlog
- * represents work (backlog items, tasks) to be done during an iteration.
+ * represents work (backlog items, todos) to be done during an iteration.
  * Iteration is a time period, a conceptual tool, used to divide and manage
  * work. It's usually a few weeks in length.
  * <p>

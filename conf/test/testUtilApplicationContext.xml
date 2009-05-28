@@ -7,7 +7,7 @@
 		<property name="userDAO" ref="userDAO"/>
 		<property name="productDAO" ref="productDAO"/>
 		<property name="backlogItemDAO" ref="backlogItemDAO"/>
-		<property name="taskDAO" ref="taskDAO"/>
+		<property name="todoDAO" ref="todoDAO"/>
 		<property name="iterationDAO" ref="iterationDAO"/>
 		<property name="projectDAO" ref="projectDAO"/>
 	</bean>

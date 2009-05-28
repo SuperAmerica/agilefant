@@ -64,7 +64,7 @@ public interface BacklogItemBusiness {
     /**
      * Transaction wrapper method to call
      * <code>BacklogItemBusiness.updateBacklogItemStateAndEffortLeft</code>
-     * and <code>TaskBusiness.updateMultipleTasks</code> in one
+     * and <code>TodoBusiness.updateMultipleTodos</code> in one
      * transaction.
      * 
      * @param backlogItemId
@@ -75,14 +75,14 @@ public interface BacklogItemBusiness {
      *                new effort left for backlog item
      * @param newPriority
      *                new priority for the backlog item
-     * @param newTaskStates
-     *                <code>Map</code> of elements of form [task_id =>
+     * @param newTodoStates
+     *                <code>Map</code> of elements of form [todo_id =>
      *                new_status]
      */
 
-    public void updateBacklogItemEffortLeftStateAndTaskStates(
+    public void updateBacklogItemEffortLeftStateAndTodoStates(
             int backlogItemId, State newState, AFTime newEffortLeft, Priority newPriority,
-            Map<Integer, State> newTaskStates, Map<Integer, String> newTaskNames) throws ObjectNotFoundException;
+            Map<Integer, State> newTodoStates, Map<Integer, String> newTodoNames) throws ObjectNotFoundException;
 
     /**
      * Resets backlog item's original estimate and effort left to null.
@@ -96,11 +96,11 @@ public interface BacklogItemBusiness {
             throws ObjectNotFoundException;
     
     /**
-     * Sets backlog item's tasks to done.
+     * Sets backlog item's todos to done.
      * @param backlogItemId
      * @throws ObjectNotFoundException
      */
-    public void setTasksToDone(int backlogItemId) throws ObjectNotFoundException;
+    public void setTodosToDone(int backlogItemId) throws ObjectNotFoundException;
     
     public HistoryBusiness getHistoryBusiness();
 
@@ -114,7 +114,7 @@ public interface BacklogItemBusiness {
      */
     public List<User> getPossibleResponsibles(BacklogItem bli);
     
-    public Map<BacklogItem, TodoMetrics> getTasksByBacklog(Backlog backlog);
+    public Map<BacklogItem, TodoMetrics> getTodosByBacklog(Backlog backlog);
     
     public Map<BacklogItem, List<BacklogItemResponsibleContainer>> getResponsiblesByBacklog(Backlog backlog);
     

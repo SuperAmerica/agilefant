@@ -1030,7 +1030,7 @@ TodoModel.prototype.remove = function() {
 	},
 	cache: false,
 	type: "POST",
-	url: "ajaxDeleteTask.action",
+	url: "ajaxDeleteTodo.action",
 	data: {taskId: this.id}
 	});
 };
@@ -1040,10 +1040,10 @@ TodoModel.prototype.save = function(synchronous, callback) {
 	}
 	var asynch = !synchronous;
 	var data = {
-			"taskId": this.id,
+			"todoId": this.id,
 			"backlogItemId": this.task.getId(),
-			"task.state": this.state,
-			"task.name": this.name
+			"todo.state": this.state,
+			"todo.name": this.name
 	};
 	var me = this;
 	jQuery.ajax({
@@ -1061,7 +1061,7 @@ TodoModel.prototype.save = function(synchronous, callback) {
 	cache: false,
 	dataType: "json",
 	type: "POST",
-	url: "ajaxStoreTask.action",
+	url: "ajaxStoreTodo.action",
 	data: data
 	});
 };

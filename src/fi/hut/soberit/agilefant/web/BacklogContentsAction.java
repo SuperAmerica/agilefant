@@ -81,7 +81,7 @@ public class BacklogContentsAction extends ActionSupport {
         
         backlogItems = backlogItemBusiness.getBacklogItemsByBacklog(backlog);
         backlogResponsibles = backlogItemBusiness.getResponsiblesByBacklog(backlog);
-        backlogTodos = backlogItemBusiness.getTasksByBacklog(backlog);
+        backlogTodos = backlogItemBusiness.getTodosByBacklog(backlog);
         backlogThemes = businessThemeBusiness.getBacklogItemBusinessThemesByBacklog(backlog);
         
         //calculate sum data

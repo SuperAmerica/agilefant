@@ -11,10 +11,10 @@
 <a class="nameLink" onclick="handleTabEvent('backlogItemTabContainer-${backlogItem.id}-${bliListContext}','${dialogContext}',${backlogItem.id},1,'${bliListContext}'); return false;">
 </c:if>
 <c:choose>
-	<c:when test="${!(empty backlogItem.tasks)}">	
+	<c:when test="${!(empty backlogItem.todos)}">	
 		<aef:stateList backlogItemId="${backlogItem.id}" id="tsl" />	
 		<c:choose><c:when test="${tsl['done'] == null}">0</c:when><c:otherwise>${tsl['done']}</c:otherwise></c:choose>
-		 / ${fn:length(backlogItem.tasks)} TODOs done
+		 / ${fn:length(backlogItem.todos)} TODOs done
 	</c:when>
 	<c:otherwise>		
 		<ww:text name="backlogItem.state.${backlogItem.state}"/><br />
@@ -58,7 +58,7 @@
 </c:choose>
 							
 <c:choose>
-	<c:when test="${!(empty backlogItem.tasks)}">					 
+	<c:when test="${!(empty backlogItem.todos)}">					 
 		<ww:url id="imgUrl" action="drawExtendedBarChart" includeParams="none">
 			<ww:param name="notStarted" value="${tsl['notStarted']}" />
 			<ww:param name="started" value="${tsl['started']}" />

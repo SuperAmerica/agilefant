@@ -3,7 +3,7 @@ package fi.hut.soberit.agilefant.web.tag;
 import java.util.HashMap;
 import java.util.Map;
 
-import fi.hut.soberit.agilefant.business.TaskBusiness;
+import fi.hut.soberit.agilefant.business.TodoBusiness;
 import fi.hut.soberit.agilefant.model.State;
 
 public class StateListTag extends SpringTagSupport {
@@ -29,29 +29,8 @@ public class StateListTag extends SpringTagSupport {
 
         
         Map<String, Integer> map = new HashMap<String, Integer>();
-        /*
-        TaskDAO dao = (TaskDAO) super.getApplicationContext()
-                .getBean("taskDAO");
-        BacklogItemDAO bliDao = (BacklogItemDAO) super.getApplicationContext()
-                .getBean("backlogItemDAO");
-        BacklogItem bli = bliDao.get(backlogItemId);
-
-        int notStarted = dao.getTasksByStateAndBacklogItem(bli,
-                new State[] { State.NOT_STARTED }).size();
-        int started = dao.getTasksByStateAndBacklogItem(bli,
-                new State[] { State.STARTED }).size();
-        int pending = dao.getTasksByStateAndBacklogItem(bli,
-                new State[] { State.PENDING }).size();
-        int blocked = dao.getTasksByStateAndBacklogItem(bli,
-                new State[] { State.BLOCKED }).size();
-        int implemented = dao.getTasksByStateAndBacklogItem(bli,
-                new State[] { State.IMPLEMENTED }).size();
-        int done = dao.getTasksByStateAndBacklogItem(bli,
-                new State[] { State.DONE }).size();
-        
-        */
-        TaskBusiness taskBusiness = requireBean("taskBusiness");
-        Map<Integer,Integer> tmp = taskBusiness.getTaskCountByState(backlogItemId);
+        TodoBusiness todoBusiness = requireBean("todoBusiness");
+        Map<Integer,Integer> tmp = todoBusiness.getTodoCountByState(backlogItemId);
 
         map.put(NOT_STARTED, tmp.get(State.NOT_STARTED.getOrdinal()));
         map.put(STARTED, tmp.get(State.STARTED.getOrdinal()));

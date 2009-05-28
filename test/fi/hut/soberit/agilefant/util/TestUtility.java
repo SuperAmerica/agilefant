@@ -12,7 +12,7 @@ import fi.hut.soberit.agilefant.db.GenericDAO;
 import fi.hut.soberit.agilefant.db.IterationDAO;
 import fi.hut.soberit.agilefant.db.ProductDAO;
 import fi.hut.soberit.agilefant.db.ProjectDAO;
-import fi.hut.soberit.agilefant.db.TaskDAO;
+import fi.hut.soberit.agilefant.db.TodoDAO;
 import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.Backlog;
@@ -20,11 +20,11 @@ import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
-import fi.hut.soberit.agilefant.model.Task;
+import fi.hut.soberit.agilefant.model.Todo;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.security.SecurityUtil;
 import fi.hut.soberit.agilefant.web.BacklogItemAction;
-import fi.hut.soberit.agilefant.web.TaskAction;
+import fi.hut.soberit.agilefant.web.TodoAction;
 
 /**
  * Utility class for testing
@@ -39,7 +39,7 @@ public class TestUtility extends SpringTestCase {
 
     private BacklogItemDAO backlogItemDAO;
 
-    private TaskDAO taskDAO;
+    private TodoDAO todoDAO;
 
     private ProjectDAO projectDAO;
 
@@ -182,7 +182,7 @@ public class TestUtility extends SpringTestCase {
     }
 
     /**
-     * Create a backlog item. Doesn't create placeholder task.
+     * Create a backlog item.
      * 
      * @param name
      *                the name for the backlog item
@@ -215,35 +215,35 @@ public class TestUtility extends SpringTestCase {
     }
 
     /**
-     * Create a task. Doens't create task event history items.
+     * Create a todo. Doens't create todo event history items.
      * 
      * @param name
-     *                the name for the task
+     *                the name for the todo
      * @param backlogItem
-     *                the backlog item the task belongs to
-     * @return the id of the generated task
+     *                the backlog item the todo belongs to
+     * @return the id of the generated todo
      */
-    public Integer createTask(User creator, String name, BacklogItem backlogItem) {
+    public Integer createTodo(User creator, String name, BacklogItem backlogItem) {
         Integer id;
-        Task task = new Task();
-        task.setName(name);
-        task.setBacklogItem(backlogItem);
-        task.setCreator(creator);
-        id = (Integer) taskDAO.create(task);
-        pushToCleanupstack(taskDAO);
+        Todo todo = new Todo();
+        todo.setName(name);
+        todo.setBacklogItem(backlogItem);
+        todo.setCreator(creator);
+        id = (Integer) todoDAO.create(todo);
+        pushToCleanupstack(todoDAO);
         return id;
     }
 
     /**
-     * Create a task. Create a generic backlog item and backlog for the task.
+     * Create a todo. Create a generic backlog item and backlog for the todo.
      * 
      * @param name
-     *                the name for the task
-     * @return the id of the generated task
+     *                the name for the todo
+     * @return the id of the generated todo
      */
-    public Integer createTask(User creator, String name) {
+    public Integer createTodo(User creator, String name) {
         BacklogItem backlogItem = backlogItemDAO.get(createBacklogItem(name));
-        return createTask(creator, name, backlogItem);
+        return createTodo(creator, name, backlogItem);
     }
 
 
@@ -352,22 +352,22 @@ public class TestUtility extends SpringTestCase {
     }
 
     /**
-     * Creates a test task using action
+     * Creates a test todo using action
      * 
      * @param backlogItem
-     *                the backlog item this task belongs to
+     *                the backlog item this todo belongs to
      * @param backlogItemAction
      *                the action used in creation
      * @param estimate
-     *                the estimate for the task
-     * @return the ID of the task created
+     *                the estimate for the todo
+     * @return the ID of the todo created
      */
-    public static int createTestTask(BacklogItem backlogItem,
-            TaskAction taskAction, long estimate) {
-        taskAction.create();
-        taskAction.setBacklogItemId(backlogItem.getId());
-        taskAction.getTask().setName("Test task");
-        return taskAction.storeNew();
+    public static int createTestTodo(BacklogItem backlogItem,
+            TodoAction todoAction, long estimate) {
+        todoAction.create();
+        todoAction.setBacklogItemId(backlogItem.getId());
+        todoAction.getTodo().setName("Test todo");
+        return todoAction.storeNew();
     }
 
 
@@ -422,9 +422,9 @@ public class TestUtility extends SpringTestCase {
         }
     }
 
-    public static void clearData(TaskDAO taskDAO) {
-        for (Task i : taskDAO.getAll()) {
-            taskDAO.remove(i.getId());
+    public static void clearData(TodoDAO todoDAO) {
+        for (Todo i : todoDAO.getAll()) {
+            todoDAO.remove(i.getId());
         }
     }
 
@@ -489,18 +489,18 @@ public class TestUtility extends SpringTestCase {
     }
 
     /**
-     * @return the taskDAO
+     * @return the todoDAO
      */
-    public TaskDAO getTaskDAO() {
-        return taskDAO;
+    public TodoDAO getTodoDAO() {
+        return todoDAO;
     }
 
     /**
-     * @param taskDAO
-     *                the taskDAO to set
+     * @param todoDAO
+     *                the todoDAO to set
      */
-    public void setTaskDAO(TaskDAO taskDAO) {
-        this.taskDAO = taskDAO;
+    public void setTodoDAO(TodoDAO todoDAO) {
+        this.todoDAO = todoDAO;
     }
 
     /**

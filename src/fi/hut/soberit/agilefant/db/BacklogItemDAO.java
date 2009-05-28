@@ -14,7 +14,7 @@ import fi.hut.soberit.agilefant.util.TodoMetrics;
  */
 public interface BacklogItemDAO extends GenericDAO<BacklogItem> {
     
-    public Map<BacklogItem, TodoMetrics> getTasksByBacklog(Backlog backlog);
+    public Map<BacklogItem, TodoMetrics> getTodosByBacklog(Backlog backlog);
     
     public List<Object[]> getResponsiblesByBacklog(Backlog backlog);
     

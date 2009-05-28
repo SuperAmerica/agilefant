@@ -3,7 +3,7 @@ package fi.hut.soberit.agilefant.web.tag;
 import javax.servlet.jsp.JspTagException;
 
 import fi.hut.soberit.agilefant.db.BacklogItemDAO;
-import fi.hut.soberit.agilefant.db.TaskDAO;
+import fi.hut.soberit.agilefant.db.TodoDAO;
 import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.State;
 
@@ -16,15 +16,15 @@ public class PercentDoneTag extends SpringTagSupport {
     @Override
     public int doEndTag() throws javax.servlet.jsp.JspTagException {
 
-        TaskDAO dao = requireBean("taskDAO");
+        TodoDAO dao = requireBean("todoDAO");
         BacklogItemDAO bliDao = requireBean("backlogItemDAO");
         BacklogItem bli = bliDao.get(backlogItemId);
 
-        int done = dao.getTasksByStateAndBacklogItem(bli,
+        int done = dao.getTodosByStateAndBacklogItem(bli,
                 new State[] { State.DONE }).size();
 
         // TODO: Use HQL-query instead of arithmetics here to calculate #
-        int total = bli.getTasks().size();
+        int total = bli.getTodos().size();
         int percentDone = 100;
         if (total > 0) {
             percentDone = Math.round(done * 100 / total);

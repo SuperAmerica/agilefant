@@ -42,11 +42,11 @@ import flexjson.JSON;
  * Product, Project and Iteration are all backlogs.
  * <p>
  * Conceptually, a backlog is a work log, which can contain some backlog items,
- * which in turn can contain some tasks. An example hierarchy would be
+ * which in turn can contain some todos. An example hierarchy would be
  * <p>
  * backlog: "iteration 3" <br>
  * backlog item : "saving implemented" <br>
- * task: "implement saving .foo files" <br>
+ * todo: "implement saving .foo files" <br>
  * <p>
  * Through Backlog, BacklogItems are appendable as a child for the implementing
  * object.
@@ -55,7 +55,7 @@ import flexjson.JSON;
  * @see fi.hut.soberit.agilefant.model.Project
  * @see fi.hut.soberit.agilefant.model.Iteration
  * @see fi.hut.soberit.agilefant.model.BacklogItem
- * @see fi.hut.soberit.agilefant.model.Task
+ * @see fi.hut.soberit.agilefant.model.Todo
  */
 @BatchSize(size=20)
 @Entity

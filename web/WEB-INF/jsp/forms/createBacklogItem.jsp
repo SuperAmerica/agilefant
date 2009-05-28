@@ -62,7 +62,7 @@ $(document).ready(function() {
 				name="backlogItem.state" id="stateSelect"
 				value="backlogItem.state.name"
 				list="@fi.hut.soberit.agilefant.model.State@values()" listKey="name"
-				listValue="getText('task.state.' + name())"
+				listValue="getText('todo.state.' + name())"
 				onchange="disableElementIfValue(this, '#createBLI_originalEstimateField', 'DONE');"/></td>
 		</tr>
 

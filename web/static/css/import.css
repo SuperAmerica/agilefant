@@ -501,7 +501,7 @@ span.right {
 	color: #EE5500;
 }
 
-.taskColumn div {
+.todoColumn div {
 	width: 115px;
 	white-space: nowrap;
 	overflow: visible;
@@ -586,26 +586,6 @@ span.right {
 	text-align: right;
 }
 
-/*
-.shortNameColumn{
-	display: block;
-	white-space: nowrap;
-	overflow: hidden;
-	width: 200px;	
-}
-.taskColumn{
-	display: block;
-	white-space: nowrap;
-	overflow: hidden;	
-	width: 150px;
-}
-.iterationGoalColumn{
-	display: block;
-	overflow: hidden;
-	width: 150px;	
-	height: 2.5em;
-}
-*/
 #hierarchyList {
 	padding: 20px 5px 5px 5px;
 	float: left;

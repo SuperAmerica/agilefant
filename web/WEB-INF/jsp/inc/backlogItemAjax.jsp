@@ -157,7 +157,7 @@ $(document).ready(function() {
 				<td>State</td>
 				<td></td>
 				<td colspan="2">
-				<c:set var="hasUndoneTasks" value="${undoneTasks}" scope="request" />				
+				<c:set var="hasUndoneTodos" value="${undoneTodos}" scope="request" />				
 				<script type="text/javascript">
 				function change_estimate_enabled(value, itemId, context) {
 					var effLeftField = document.getElementById("effortLeftField_" + itemId + "-" + context);
@@ -194,14 +194,14 @@ $(document).ready(function() {
 					}
 				}
 				
-				<%-- If user changed the item's state to DONE and there are tasks not DONE, ask if they should be set to DONE as well. --%>				
+				<%-- If user changed the item's state to DONE and there are todos not DONE, ask if they should be set to DONE as well. --%>				
 				$(document).ready(function() {					
 					$("#stateSelect_${backlogItem.id}-${bliListContext}").change(function() {
 						change_estimate_enabled($(this).val(), ${backlogItem.id}, '${bliListContext}');						
-						if ($(this).val() == 'DONE' && ${hasUndoneTasks}) {
+						if ($(this).val() == 'DONE' && ${hasUndoneTodos}) {
 							var prompt = window.confirm("Do you wish to set all the TODOs' states to Done as well?");
 							if (prompt) {
-								$("#tasksToDone_${backlogItem.id}-${bliListContext}").val('true');
+								$("#todosToDone_${backlogItem.id}-${bliListContext}").val('true');
 							}						
 						}
 					});
@@ -209,13 +209,13 @@ $(document).ready(function() {
 					
 				});
 				</script>
-				<%-- Tasks to DONE confirmation script ends. --%>
-				<ww:hidden name="tasksToDone" value="${tasksToDone}" id="tasksToDone_${backlogItem.id}-${bliListContext}" />			
+				<%-- Todos to DONE confirmation script ends. --%>
+				<ww:hidden name="todosToDone" value="${todosToDone}" id="todosToDone_${backlogItem.id}-${bliListContext}" />			
 				<ww:select name="backlogItem.state"
 					id="stateSelect_${backlogItem.id}-${bliListContext}"
 					value="backlogItem.state.name"
 					list="@fi.hut.soberit.agilefant.model.State@values()" listKey="name"
-					listValue="getText('task.state.' + name())"  /></td>
+					listValue="getText('todo.state.' + name())"  /></td>
 			</tr>
 	
 			<tr>
@@ -387,12 +387,12 @@ $(document).ready(function() {
 </div>
 <!-- edit tab ends -->
 
-<!-- tasks tab begins -->
+<!-- todos tab begins -->
 <div id="backlogItemProgressTab-${backlogItemId}-${bliListContext}" class="backlogItemNaviTab">
 
 <script type="text/javascript">
 	$(document).ready( function() {
-		// Task ranking
+		// Todo ranking
 		$('.moveUp').click(function() {
 			var me = $(this);
 			$.get(me.attr('href'), null, function() {me.moveup();});
@@ -424,40 +424,40 @@ $(document).ready(function() {
 		}
 	}
 	
-	<%-- If user changed the item's state to DONE and there are tasks not DONE, ask if they should be set to DONE as well. --%>
+	<%-- If user changed the item's state to DONE and there are todos not DONE, ask if they should be set to DONE as well. --%>
 		$(document).ready(function() {
 			$("#stateSelectProgress_${backlogItem.id}-${bliListContext}").change(function() {
 				change_effort_enabled($(this).val(), ${backlogItem.id}, '${bliListContext}');
-				var tasksDone = true;
-				$(".taskStateSelect_${backlogItem.id}-${bliListContext}").each(function() {
+				var todosDone = true;
+				$(".todoStateSelect_${backlogItem.id}-${bliListContext}").each(function() {
 					if ($(this).val() != 'DONE') {
-						tasksDone = false;
+						todosDone = false;
 					}
 				});
-				if ($(this).val() == 'DONE' && !tasksDone) {
-					var prompt = window.confirm("Do you wish to set all the tasks' states to Done as well?");
+				if ($(this).val() == 'DONE' && !todosDone) {
+					var prompt = window.confirm("Do you wish to set all the todos' states to Done as well?");
 					if (prompt) {
-						$("#todoTable-${backlogItemId}-${bliListContext}").find('select[name^=taskStates]').val('DONE');
+						$("#todoTable-${backlogItemId}-${bliListContext}").find('select[name^=todoStates]').val('DONE');
 					}					
 				}
 			});
 			$('#todoTable-${backlogItemId}-${bliListContext}').inlineTableEdit({
 						  add: '#addTodo-${backlogItemId}-${bliListContext}', 
 						  useId: true,
-						  deleteaction: 'deleteTask.action',
-						  submitParam: 'taskId',
+						  deleteaction: 'deleteTodo.action',
+						  submitParam: 'todoId',
 						  fields: {
-						  	taskNames: {cell: 0, type: 'text', size: 50},
-						  	taskStates: {cell: 1,type: 'select', data: {'NOT_STARTED': 'Not started', 'STARTED': 'Started', 'PENDING': 'Pending', 'BLOCKED': 'Blocked', 'IMPLEMENTED': 'Implemented', 'DONE': 'Done'}},											  	
+						  	todoNames: {cell: 0, type: 'text', size: 50},
+						  	todoStates: {cell: 1,type: 'select', data: {'NOT_STARTED': 'Not started', 'STARTED': 'Started', 'PENDING': 'Pending', 'BLOCKED': 'Blocked', 'IMPLEMENTED': 'Implemented', 'DONE': 'Done'}},											  	
 						  	reset: {cell: 2, type: 'reset'}
 						  }
 			});
 		});
-	<%-- Tasks to DONE confirmation script ends. --%>
+	<%-- todos to DONE confirmation script ends. --%>
 </script>
 
 <div class="validateWrapper validateBLIProgressTab">
-<ww:form action="quickStoreTaskList" validate="false" method="post">
+<ww:form action="quickStoreTodoList" validate="false" method="post">
 
 <table>
 <tbody>
@@ -518,29 +518,29 @@ $(document).ready(function() {
 	
 	<tr>
 	<td colspan="2">
-	<!-- task table begins -->
+	<!-- todo table begins -->
 	<table>
 		<tr>
 			<td>
 				<div class="subItems" style="margin-top: 0px; width: 710px;">
 				<a id="addTodo-${backlogItemId}-${bliListContext}" href="#">Add new TODO &raquo;</a>				
 				<c:choose>
-				<c:when test="${!empty backlogItem.tasks}">
+				<c:when test="${!empty backlogItem.todos}">
 					<div class="subItemContent">										
 					<p>
-					<display:table htmlId="todoTable-${backlogItemId}-${bliListContext}" class="listTable" name="backlogItem.tasks"
+					<display:table htmlId="todoTable-${backlogItemId}-${bliListContext}" class="listTable" name="backlogItem.todos"
 						id="row">
 						
 						<display:column sortable="false" title="Name"
 							class="shortNameColumn">
-							<ww:textfield size="50" name="taskNames[${row.id}]" value="${row.name}" />												
+							<ww:textfield size="50" name="todoNames[${row.id}]" value="${row.name}" />												
 						</display:column>
 														
 						<display:column sortable="false" title="State">											
-							<ww:select cssClass="taskStateSelect_${backlogItem.id}-${bliListContext}"
-								name="taskStates[${row.id}]" value="#attr.row.state.name"
+							<ww:select cssClass="todoStateSelect_${backlogItem.id}-${bliListContext}"
+								name="todoStates[${row.id}]" value="#attr.row.state.name"
 								list="@fi.hut.soberit.agilefant.model.State@values()" listKey="name"
-								listValue="getText('task.state.' + name())" id="taskStateSelect_${row.id}-${bliListContext}"/>														
+								listValue="getText('todo.state.' + name())" id="todoStateSelect_${row.id}-${bliListContext}"/>														
 						</display:column>
 											
 						<display:column sortable="false" title="Actions" style="width:125px;">
@@ -554,33 +554,33 @@ $(document).ready(function() {
                                 <img src="static/img/new.png" alt="Split"
                                     title="Split as a new backlog item" />
 							</ww:a>
-							<ww:url id="moveTaskTopLink" action="moveTaskTop" includeParams="none">
-								<ww:param name="taskId" value="${row.id}" />
+							<ww:url id="movetodoTopLink" action="movetodoTop" includeParams="none">
+								<ww:param name="todoId" value="${row.id}" />
 							</ww:url>
-							<ww:a cssClass="moveTop" href="%{moveTaskTopLink}">
+							<ww:a cssClass="moveTop" href="%{movetodoTopLink}">
 								<img src="static/img/arrow_top.png" alt="Send to top"
 									title="Send to top" />
 							</ww:a>
 	
-							<ww:url id="moveTaskUpLink" action="moveTaskUp" includeParams="none">
-								<ww:param name="taskId" value="${row.id}" />
+							<ww:url id="movetodoUpLink" action="movetodoUp" includeParams="none">
+								<ww:param name="todoId" value="${row.id}" />
 							</ww:url>
-							<ww:a cssClass="moveUp" href="%{moveTaskUpLink}">
+							<ww:a cssClass="moveUp" href="%{movetodoUpLink}">
 								<img src="static/img/arrow_up.png" alt="Move up" title="Move up" />
 							</ww:a>
 	
-							<ww:url id="moveTaskDownLink" action="moveTaskDown" includeParams="none">
-								<ww:param name="taskId" value="${row.id}" />
+							<ww:url id="movetodoDownLink" action="movetodoDown" includeParams="none">
+								<ww:param name="todoId" value="${row.id}" />
 							</ww:url>
-							<ww:a cssClass="moveDown" href="%{moveTaskDownLink}">
+							<ww:a cssClass="moveDown" href="%{movetodoDownLink}">
 								<img src="static/img/arrow_down.png" alt="Move down"
 									title="Move down" />
 							</ww:a>
 	
-							<ww:url id="moveTaskBottomLink" action="moveTaskBottom" includeParams="none">
-								<ww:param name="taskId" value="${row.id}" />
+							<ww:url id="movetodoBottomLink" action="movetodoBottom" includeParams="none">
+								<ww:param name="todoId" value="${row.id}" />
 							</ww:url>
-							<ww:a cssClass="moveBottom" href="%{moveTaskBottomLink}">
+							<ww:a cssClass="moveBottom" href="%{movetodoBottomLink}">
 								<img src="static/img/arrow_bottom.png" alt="Send to bottom"
 									title="Send to bottom" />
 							</ww:a>
@@ -592,7 +592,7 @@ $(document).ready(function() {
 					</div>
 				</c:when> 
 				<c:otherwise>
-				<%-- No tasks: container --%>
+				<%-- No todos: container --%>
 					<table id="todoTable-${backlogItemId}-${bliListContext}" style="display: none;" class="listTable"><tr><th>Name</th><th>State</th><th>Actions</th></tr></table>
 				</c:otherwise>
 				</c:choose>
@@ -600,14 +600,14 @@ $(document).ready(function() {
 			</td>
 		</tr>
 	</table>
-	<!-- task table ends -->
+	<!-- todo table ends -->
 	</td>
 	</tr>
 	
 	<tr>
 	<td>
-		<ww:submit value="Save" action="quickStoreTaskList" />
-		<ww:submit value="Save & Close" id="saveCloseTaskList" name="SaveClose" />
+		<ww:submit value="Save" action="quickStoreTodoList" />
+		<ww:submit value="Save & Close" id="saveCloseTodoList" name="SaveClose" />
 	</td>
 	<td class="deleteButton">
 		<ww:reset value="Cancel" onclick="$('#todoTable-${backlogItemId}-${bliListContext}').resetTableEdit();"/>				
@@ -625,7 +625,7 @@ $(document).ready(function() {
 </ww:form>
 </div>
 </div>
-<!-- Tasks tab ends -->
+<!-- Todos tab ends -->
 <c:if test="${hourReport == true}">
 <div id="backlogItemSpentEffTab-${backlogItemId}-${bliListContext}" class="backlogItemNaviTab">
 

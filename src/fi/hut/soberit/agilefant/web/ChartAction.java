@@ -30,7 +30,7 @@ public class ChartAction extends ActionSupport {
 
     private byte[] result;
 
-    private int taskId;
+    private int todoId;
 
     private int backlogItemId;
 
@@ -365,12 +365,12 @@ public class ChartAction extends ActionSupport {
         this.result = result;
     }
 
-    public int getTaskId() {
-        return taskId;
+    public int getTodoId() {
+        return todoId;
     }
 
-    public void setTaskId(int taskId) {
-        this.taskId = taskId;
+    public void setTodoId(int todoId) {
+        this.todoId = todoId;
     }
 
     public int getWorkDone() {

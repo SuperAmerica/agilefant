@@ -59,7 +59,7 @@ public class UserBusinessImpl implements UserBusiness {
         List<BacklogItem> returnItems = new ArrayList<BacklogItem>();
         
         /*
-         * Sort out the not started and done tasks and tasks from not current
+         * Sort out the not started and done todos and todos from not current
          * iterations
          */
         Iterator<BacklogItem> iter = userItems.iterator();

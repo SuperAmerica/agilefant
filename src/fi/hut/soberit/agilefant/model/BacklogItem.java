@@ -34,7 +34,7 @@ import flexjson.JSON;
 
 /**
  * Hibernate entity bean representing a back log. A Backlog is a work log that
- * can contain several tasks. A backlog item itself is in turn contained in a
+ * can contain several todos. A backlog item itself is in turn contained in a
  * backlog.
  * <p>
  * If the backlog, the backlog item belongs in, is an iteration, the backlog
@@ -51,14 +51,14 @@ import flexjson.JSON;
  * interested in the progress of the BacklogItem.
  * <p>
  * Workers are mainly interested in BacklogItems as things to be done, usually
- * this means the sub-parts of the BacklogItems, namely Tasks, which have been
+ * this means the sub-parts of the BacklogItems, namely Todos, which have been
  * assigned to them. To know better, which BacklogItem should be tackled next,
  * there is a priority attached to a BacklogItem.
  * <p>
  * Backlog items may be tagged with themes.
  * 
  * @see fi.hut.soberit.agilefant.model.Backlog
- * @see fi.hut.soberit.agilefant.model.Task
+ * @see fi.hut.soberit.agilefant.model.Todo
  * @see fi.hut.soberit.agilefant.model.BusinessTheme
  */
 @Entity
@@ -75,7 +75,7 @@ public class BacklogItem implements PageItem, Assignable, EffortContainer, Times
 
     private Backlog backlog;
 
-    private Collection<Task> tasks = new HashSet<Task>();
+    private Collection<Todo> todos = new HashSet<Todo>();
 
     private Collection<BacklogItemHourEntry> hourEntries = new ArrayList<BacklogItemHourEntry>();
 
@@ -203,28 +203,28 @@ public class BacklogItem implements PageItem, Assignable, EffortContainer, Times
     }
 
     /**
-     * Gets the tasks belonging in this backlog item.
+     * Gets the todos belonging in this backlog item.
      * 
-     * @return Collection of tasks belonging to this backlog item
+     * @return Collection of todos belonging to this backlog item
      */
     @OneToMany(mappedBy = "backlogItem", fetch = FetchType.LAZY)
     @OrderBy(value="rank ASC")
     @Cascade(CascadeType.DELETE_ORPHAN)
     @BatchSize(size=20)
     @JSON(include=false)
-    public Collection<Task> getTasks() {
-        return tasks;
+    public Collection<Todo> getTodos() {
+        return todos;
     }
 
     /**
-     * Sets the tasks belonging in this backlog item.
+     * Sets the todos belonging in this backlog item.
      * 
-     * @param tasks
-     *                Collection of tasks belonging to this backlog item
+     * @param todos
+     *                Collection of todos belonging to this backlog item
      */
 
-    public void setTasks(Collection<Task> tasks) {
-        this.tasks = tasks;
+    public void setTodos(Collection<Todo> todos) {
+        this.todos = todos;
     }
 
     /**
@@ -255,8 +255,8 @@ public class BacklogItem implements PageItem, Assignable, EffortContainer, Times
     @Transient
     @JSON(include=false)
     public Collection<PageItem> getChildren() {
-        Collection<PageItem> c = new HashSet<PageItem>(this.tasks.size());
-        c.addAll(this.tasks);
+        Collection<PageItem> c = new HashSet<PageItem>(this.todos.size());
+        c.addAll(this.todos);
         return c;
     }
 
@@ -272,7 +272,7 @@ public class BacklogItem implements PageItem, Assignable, EffortContainer, Times
     @Transient
     @JSON(include=false)
     public boolean hasChildren() {
-        return this.tasks.size() > 0 ? true : false;
+        return this.todos.size() > 0 ? true : false;
     }
 
     /** Backlog item priority. */

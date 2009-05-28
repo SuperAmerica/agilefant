@@ -83,7 +83,7 @@ Stories/tasks
 	</display:column>
 
 	<!-- Display progress -->
-	<display:column title="Progress" sortable="false" class="taskColumn">
+	<display:column title="Progress" sortable="false" class="todoColumn">
 		<aef:backlogItemProgressBar backlogItem="${row}" bliListContext="${bliListContext}" dialogContext="${dialogContext}" hasLink="${true}"/>		
 	</display:column>
 

@@ -17,7 +17,7 @@ import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.IterationGoal;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
-import fi.hut.soberit.agilefant.model.Task;
+import fi.hut.soberit.agilefant.model.Todo;
 import fi.hut.soberit.agilefant.model.User;
 
 
@@ -48,8 +48,8 @@ public class AEFFunctions {
         return obj instanceof BacklogItem;
     }
 
-    public static boolean isTask(Object obj) {
-        return obj instanceof Task;
+    public static boolean isTodo(Object obj) {
+        return obj instanceof Todo;
     }
 
     public static boolean isUser(Object obj) {

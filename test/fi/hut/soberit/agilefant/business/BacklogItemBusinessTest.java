@@ -23,7 +23,7 @@ import fi.hut.soberit.agilefant.model.IterationGoal;
 import fi.hut.soberit.agilefant.model.Priority;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.State;
-import fi.hut.soberit.agilefant.model.Task;
+import fi.hut.soberit.agilefant.model.Todo;
 import fi.hut.soberit.agilefant.model.User;
 
 public class BacklogItemBusinessTest extends TestCase {
@@ -552,10 +552,10 @@ public class BacklogItemBusinessTest extends TestCase {
     }
     
     public void testCreateFromTodo() {
-        TaskBusiness tb = createMock(TaskBusiness.class);
+        TodoBusiness tb = createMock(TodoBusiness.class);
         BacklogItemBusinessImpl testable = new BacklogItemBusinessImpl();
-        testable.setTaskBusiness(tb);
-        Task from = new Task();
+        testable.setTodoBusiness(tb);
+        Todo from = new Todo();
         BacklogItem parent = new BacklogItem();
         Iteration bl = new Iteration();
         parent.setBacklog(bl);
@@ -573,7 +573,7 @@ public class BacklogItemBusinessTest extends TestCase {
         from.setState(State.DONE);
         from.setName("foo");
         
-        expect(tb.getTask(1)).andReturn(from).once();
+        expect(tb.getTodo(1)).andReturn(from).once();
         replay(tb);
         
         BacklogItem r = testable.createBacklogItemFromTodo(1);
@@ -587,10 +587,10 @@ public class BacklogItemBusinessTest extends TestCase {
     }
     
     public void testCreateFromTodo_nulls() {
-        TaskBusiness tb = createMock(TaskBusiness.class);
+        TodoBusiness tb = createMock(TodoBusiness.class);
         BacklogItemBusinessImpl testable = new BacklogItemBusinessImpl();
-        testable.setTaskBusiness(tb);
-        Task from = new Task();
+        testable.setTodoBusiness(tb);
+        Todo from = new Todo();
         BacklogItem parent = new BacklogItem();
         Iteration bl = new Iteration();
         parent.setBacklog(bl);
@@ -599,7 +599,7 @@ public class BacklogItemBusinessTest extends TestCase {
         from.setState(State.DONE);
         from.setName("foo");
         
-        expect(tb.getTask(1)).andReturn(from).once();
+        expect(tb.getTodo(1)).andReturn(from).once();
         replay(tb);
         
         BacklogItem r = testable.createBacklogItemFromTodo(1);

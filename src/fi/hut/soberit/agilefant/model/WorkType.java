@@ -14,7 +14,7 @@ import org.hibernate.annotations.Type;
 /**
  * Hibernate entity bean representing a work type.
  * <p>
- * WorkType is a category for a work to be done, reported in Task level.
+ * WorkType is a category for a work to be done, reported in Todo level.
  * Percentages of WorkTypes done may be telling whether the company is doing
  * what is thought it should be doing.
  * <p>

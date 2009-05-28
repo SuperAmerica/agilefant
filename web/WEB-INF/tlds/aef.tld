@@ -49,58 +49,13 @@
 	</tag>
 	
 	<tag>
-        <name>enabledUserList</name>
-        <tag-class>fi.hut.soberit.agilefant.web.tag.EnabledUserListTag</tag-class>
-        <body-content>JSP</body-content>
-        <description>
-            Lists all enabled users to variable enabledUserList
-        </description>
-    </tag>
-	
-
-	
-	<tag>
-		<name>unfinishedTaskList</name>
-		<tag-class>fi.hut.soberit.agilefant.web.tag.UnfinishedTaskListTag</tag-class>
-		<body-content>JSP</body-content>
-		<description>
-			Lists all unfinished tasks for the given user to variable unfinishedTaskList
-	    </description>
-	    <attribute>
-	    	<name>userId</name>
-	    	<required>true</required>	  
-	    	<rtexprvalue>true</rtexprvalue>  
-	    </attribute>	    
-	</tag>
-
-	<tag>
-		<name>heartbeatTimeBoxLists</name>
-		<tag-class>fi.hut.soberit.agilefant.web.tag.HeartbeatTimeBoxListsTag</tag-class>
-		<body-content>JSP</body-content>
-		<description>
-			Lists unfinished tasks for the given user to variable unfinishedTaskList, 
-			as well as user's backlog items to variable backlogItemsList. 
-			All intersecting the given timeframe.
-			
-			Timeframe is specified using timeStart and timeEnd, but is by default the current day.
-	    </description>
-	    <attribute>
-	    	<name>userId</name>
-	    	<required>true</required>	  
-	    	<rtexprvalue>true</rtexprvalue>  
-	    </attribute>    
-	    <attribute>
-	    	<name>timeStart</name>
-	    	<required>false</required>	  
-	    	<rtexprvalue>true</rtexprvalue>  
-	    </attribute> 
-
-	    <attribute>
-	    	<name>timeEnd</name>
-	    	<required>false</required>	  
-	    	<rtexprvalue>true</rtexprvalue>  
-	    </attribute> 
-	</tag>
+    <name>enabledUserList</name>
+    <tag-class>fi.hut.soberit.agilefant.web.tag.EnabledUserListTag</tag-class>
+    <body-content>JSP</body-content>
+    <description>
+        Lists all enabled users to variable enabledUserList
+    </description>
+  </tag>
 	
 	<tag>
 		<name>priorityList</name>
@@ -174,7 +129,7 @@
 		<tag-class>fi.hut.soberit.agilefant.web.tag.PercentDoneTag</tag-class>
 		<body-content>JSP</body-content>
 		<description>
-			Calculates bli's percent done tasks 
+			Calculates bli's percent done todos 
 	    </description>
 	    <attribute>
 	    	<name>backlogItemId</name>
@@ -234,7 +189,7 @@
 		<tag-class>fi.hut.soberit.agilefant.web.tag.StateListTag</tag-class>
 		<body-content>JSP</body-content>
 		<description>
-			Stores tasks by state
+			Stores todos by state
 	    </description>
 	    <attribute>
 	    	<name>id</name>
@@ -527,9 +482,9 @@
 	  <function-signature>boolean isBacklogItem(java.lang.Object)</function-signature>
 	</function>  	 
 	<function>
-	  <name>isTask</name>
+	  <name>isTodo</name>
 	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
-	  <function-signature>boolean isTask(java.lang.Object)</function-signature>
+	  <function-signature>boolean isTodo(java.lang.Object)</function-signature>
 	</function>  	 
 	<function>
 	  <name>isUser</name>

@@ -54,7 +54,7 @@ $(document).ready(function() {
 	</display:column>
 
 	<!-- Display estimates -->
-	<display:column title="Estimate" sortable="false" class="taskColumn">
+	<display:column title="Estimate" sortable="false" class="todoColumn">
 		<div style="overflow:hidden; width: 55px; max-height: 3.7em;">
 		<c:choose>	
 			<c:when test="${row.effortLeft == null}">&mdash;</c:when>

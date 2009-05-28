@@ -23,7 +23,7 @@ import flexjson.JSON;
  * Hibernate entity bean representing a product.
  * <p>
  * Conceptually, a product is a type of a backlog. A project-backlog
- * represents work (projects, iterations, backlog items, tasks) done / to be
+ * represents work (projects, iterations, backlog items, todos) done / to be
  * done for the product.
  * <p>
  * A product contains projects, which are some partial outcomes of the

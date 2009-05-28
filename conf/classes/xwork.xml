@@ -69,9 +69,6 @@
 				<param name="actionName">editProduct</param>
 				<param name="productId">${contextObjectId}</param>
 			</result>
-			<result name="success_myTasks" type="redirect-action">
-				<param name="actionName">myTasks</param>
-			</result>
 			<result name="success_dailyWork" type="redirect-action">
 				<param name="actionName">dailyWork</param>
 			</result>
@@ -187,7 +184,7 @@
             class="backlogItemAction">
             <result name="success" type="dispatcher">/WEB-INF/jsp/forms/createBacklogItem.jsp</result>
         </action>
-		<action name="quickStoreTaskList" method="quickStoreTaskList"
+		<action name="quickStoreTodoList" method="quickStoreTodoList"
 			class="backlogItemAction">			
 			<result name="ajax_error" type="httpheader">
 				<param name="status">400</param>
@@ -390,14 +387,14 @@
         </action>
         <!-- /Menu actions -->
 
-		<!-- Task actions -->
-		<action name="deleteTask" method="delete" class="taskAction">
+		<!-- Todo actions -->
+		<action name="deleteTodo" method="delete" class="todoAction">
 			<result type="redirect-action">
 				<param name="actionName">popContext</param>
 			</result>
 		</action>
 		
-		<action name="ajaxStoreTask" method="ajaxStore" class="taskAction">
+		<action name="ajaxStoreTodo" method="ajaxStore" class="todoAction">
 		  <result name="ajax_error" type="httpheader">
         <param name="status">400</param>
       </result>
@@ -407,38 +404,23 @@
       </result>
 		</action>
 		
-		<action name="ajaxDeleteTask" method="ajaxDelete" class="taskAction">
+		<action name="ajaxDeleteTodo" method="ajaxDelete" class="todoAction">
     </action>
-		
-		<!-- 
-		<action name="storeCloseTask" method="store"
-			class="taskAction">
-			<result type="redirect-action">
-				<param name="actionName">popContext</param>
-			</result>
-		</action>
-		<action name="quickStoreTask" method="store"
-			class="taskAction">
-			<result type="redirect-action">
-				<param name="actionName">popContext</param>
-			</result>
-		</action>
-    -->
 
-		<action name="moveTaskUp" class="taskAction"
-			method="moveTaskUp">
+		<action name="moveTodoUp" class="todoAction"
+			method="moveTodoUp">
 		</action>
-		<action name="moveTaskDown" class="taskAction"
-			method="moveTaskDown">
+		<action name="moveTodoDown" class="todoAction"
+			method="moveTodoDown">
 		</action>
-		<action name="moveTaskTop" class="taskAction"
-			method="moveTaskTop">
+		<action name="moveTodoTop" class="todoAction"
+			method="moveTodoTop">
 		</action>
-		<action name="moveTaskBottom" class="taskAction"
-			method="moveTaskBottom">
+		<action name="moveTodoBottom" class="todoAction"
+			method="moveTodoBottom">
 		</action>
 
-		<!-- /Task actions -->
+		<!-- /Todo actions -->
 
 		<!-- Iteration actions -->
 		<action name="editIteration" method="edit"
@@ -788,13 +770,6 @@
 				<param name="iterationGoalId">
 					${view.contextObject}
 				</param>
-			</result>
-
-			<result name="success_editMyTasks" type="redirect-action">
-				<param name="actionName">editMyTasks</param>
-			</result>
-			<result name="success_myTasks" type="redirect-action">
-				<param name="actionName">myTasks</param>
 			</result>
 
 			<result name="success_dailyWork" type="redirect-action">

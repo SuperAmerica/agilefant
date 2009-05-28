@@ -18,7 +18,7 @@ import fi.hut.soberit.agilefant.business.BusinessThemeBusiness;
 import fi.hut.soberit.agilefant.business.HistoryBusiness;
 import fi.hut.soberit.agilefant.business.HourEntryBusiness;
 import fi.hut.soberit.agilefant.business.SettingBusiness;
-import fi.hut.soberit.agilefant.business.TaskBusiness;
+import fi.hut.soberit.agilefant.business.TodoBusiness;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.Backlog;
@@ -26,7 +26,7 @@ import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.BusinessTheme;
 import fi.hut.soberit.agilefant.model.Priority;
 import fi.hut.soberit.agilefant.model.State;
-import fi.hut.soberit.agilefant.model.Task;
+import fi.hut.soberit.agilefant.model.Todo;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.util.BacklogItemResponsibleContainer;
 import fi.hut.soberit.agilefant.util.BacklogItemUserComparator;
@@ -69,11 +69,11 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
         
     private HourEntryBusiness hourEntryBusiness;
 
-    private Map<Integer, State> taskStates = new HashMap<Integer, State>();
+    private Map<Integer, State> todoStates = new HashMap<Integer, State>();
     
-    private Map<Integer, String> taskNames = new HashMap<Integer, String>();
+    private Map<Integer, String> todoNames = new HashMap<Integer, String>();
     
-    private boolean tasksToDone = false; 
+    private boolean todosToDone = false; 
     
     private String spentEffort = null;
     
@@ -85,7 +85,7 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
     
     private int fromTodoId = 0;
     
-    private TaskBusiness taskBusiness;
+    private TodoBusiness todoBusiness;
     
     private String jsonData = "";
 
@@ -101,12 +101,12 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
         this.bliListContext = bliListContext;
     }
 
-    public Map<Integer, State> getTaskStates() {
-        return taskStates;
+    public Map<Integer, State> getTodoStates() {
+        return todoStates;
     }
 
-    public void setTaskStates(Map<Integer, State> taskStates) {
-        this.taskStates = taskStates;
+    public void setTodoStates(Map<Integer, State> todoStates) {
+        this.todoStates = todoStates;
     }
 
     public BacklogItemBusiness getBacklogItemBusiness() {
@@ -207,7 +207,7 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
         this.backlogItem.setUserData(getResponsiblesAsUserData());
         JSONSerializer ser = new JSONSerializer();
         ser.include("businessThemes");
-        ser.include("tasks");
+        ser.include("todos");
         ser.include("hourEntries");
         jsonData = ser.serialize(this.backlogItem);
     }
@@ -260,12 +260,12 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
         //save backlog item, update todos and store backlog item themes
         try {
             BacklogItem bli = backlogItemBusiness.storeBacklogItem(backlogItemId, backlogId, backlogItem, userIds, iterationGoalId);
-            if (tasksToDone) {
-                backlogItemBusiness.setTasksToDone(backlogItemId);
+            if (todosToDone) {
+                backlogItemBusiness.setTodosToDone(backlogItemId);
             }
             //delete the "parent" todo
             if(fromTodoId > 0 && backlogItemId == 0) {
-                taskBusiness.delete(fromTodoId);
+                todoBusiness.delete(fromTodoId);
             }
             businessThemeBusiness.setBacklogItemThemes(themeIds, bli);
             backlogItem = bli;
@@ -283,11 +283,10 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
 
     
     /**
-     * Updates backlog item's state and effort left and its tasks' states. Used
-     * by tasklist tag.
+     * Updates backlog item's state and effort left and its todos' states.
      */
 
-    public String quickStoreTaskList() {               
+    public String quickStoreTodoList() {               
         
         // check that AFTime is not negative
         if (this.effortLeft != null && this.effortLeft.getTime() < 0) {
@@ -295,9 +294,9 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
         }        
            
         try {
-            backlogItemBusiness.updateBacklogItemEffortLeftStateAndTaskStates(
+            backlogItemBusiness.updateBacklogItemEffortLeftStateAndTodoStates(
                     backlogItemId, this.state, this.effortLeft,
-                    this.priority, taskStates, taskNames);
+                    this.priority, todoStates, todoNames);
         } catch (ObjectNotFoundException e) {
             return CRUDAction.AJAX_ERROR;
         }
@@ -422,23 +421,23 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
         this.businessThemeBusiness = businessThemeBusiness;
     }
 
-    public Map<Integer, String> getTaskNames() {
-        return taskNames;
+    public Map<Integer, String> getTodoNames() {
+        return todoNames;
     }
 
-    public void setTaskNames(Map<Integer, String> taskNames) {
-        this.taskNames = taskNames;
+    public void setTodoNames(Map<Integer, String> todoNames) {
+        this.todoNames = todoNames;
     }
    
-    public boolean getUndoneTasks() {
+    public boolean getUndoneTodos() {
         backlogItem = backlogItemBusiness.getBacklogItem(backlogItemId);
         if (backlogItem == null) {
             return false;
         }
-        if (backlogItem.getTasks() == null || backlogItem.getTasks().size() == 0) {
+        if (backlogItem.getTodos() == null || backlogItem.getTodos().size() == 0) {
             return false;
         }
-        for (Task t: backlogItem.getTasks()) {
+        for (Todo t: backlogItem.getTodos()) {
             if (t.getState() != State.DONE) {
                 return true;
             }
@@ -446,12 +445,12 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
         return false;    
     }
     
-    public boolean isTasksToDone() {
-        return tasksToDone;
+    public boolean isTodosToDone() {
+        return todosToDone;
     }
 
-    public void setTasksToDone(boolean tasksToDone) {
-        this.tasksToDone = tasksToDone;
+    public void setTodosToDone(boolean todosToDone) {
+        this.todosToDone = todosToDone;
     }
     
     public List<BusinessTheme> getBliActiveOrSelectedThemes() {
@@ -470,16 +469,12 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
         return themeIds;
     }
 
-    public void setFromTodoId(int fromTaskId) {
-        this.fromTodoId = fromTaskId;
+    public void setFromTodoId(int fromTodoId) {
+        this.fromTodoId = fromTodoId;
     }
     
     public int getFromTodoId() {
         return this.fromTodoId;
-    }
-
-    public void setTaskBusiness(TaskBusiness taskBusiness) {
-        this.taskBusiness = taskBusiness;
     }
 
     public void setSpentEffortComment(String spentEffortComment) {
@@ -504,5 +499,9 @@ public class BacklogItemAction extends ActionSupport implements CRUDAction {
 
     public void setSettingBusiness(SettingBusiness settingBusiness) {
         this.settingBusiness = settingBusiness;
+    }
+
+    public void setTodoBusiness(TodoBusiness todoBusiness) {
+        this.todoBusiness = todoBusiness;
     }
 }

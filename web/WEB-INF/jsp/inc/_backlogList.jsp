@@ -127,7 +127,7 @@ $(document).ready(function() {
 			<ww:text name="backlogItem.priority.${row.priority}" />
 		</display:column>
 
-		<display:column title="Progress" sortable="false" class="taskColumn">			
+		<display:column title="Progress" sortable="false" class="todoColumn">			
 			<c:set var="itemTodos" value="${backlogTodos[row]}"/>
 			<a class="nameLink" onclick="handleTabEvent('backlogItemTabContainer-${row.id}-${bliListContext}','${dialogContext}',${row.id},1,'${bliListContext}'); return false;">
 			<c:choose>

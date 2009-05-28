@@ -58,7 +58,7 @@
 	</display:column>
 	
 	<!-- Display progress -->
-	<display:column title="Progress" sortable="false" class="taskColumn" style="width:115px">
+	<display:column title="Progress" sortable="false" class="todoColumn" style="width:115px">
 		<aef:backlogItemProgressBar backlogItem="${row}" bliListContext="${bliListContext}" dialogContext="${dialogContext}" hasLink="${false}"/>
 	</display:column>
 	

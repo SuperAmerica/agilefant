@@ -11,7 +11,7 @@ import fi.hut.soberit.agilefant.db.ProjectDAO;
 import fi.hut.soberit.agilefant.db.IterationDAO;
 import fi.hut.soberit.agilefant.db.IterationGoalDAO;
 import fi.hut.soberit.agilefant.db.ProductDAO;
-import fi.hut.soberit.agilefant.db.TaskDAO;
+import fi.hut.soberit.agilefant.db.TodoDAO;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.web.page.PageItem;
 
@@ -80,7 +80,7 @@ public class BreadCrumbTrailTag extends SpringTagSupport {
     }
 
     public void setTaskId(int id) {
-        TaskDAO dao = requireBean("taskDAO");
+        TodoDAO dao = requireBean("todoDAO");
         this.page = dao.get(id);
     }
 

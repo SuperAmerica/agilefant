@@ -44,8 +44,8 @@
 		class="fi.hut.soberit.agilefant.db.hibernate.ProjectDAOHibernate" />
 	<bean name="backlogItemDAOTarget" parent="abstractDAOTarget"
 		class="fi.hut.soberit.agilefant.db.hibernate.BacklogItemDAOHibernate" />
-	<bean name="taskDAOTarget" parent="abstractDAOTarget"
-		class="fi.hut.soberit.agilefant.db.hibernate.TaskDAOHibernate" />
+	<bean name="todoDAOTarget" parent="abstractDAOTarget"
+		class="fi.hut.soberit.agilefant.db.hibernate.TodoDAOHibernate" />
 	<bean name="userDAOTarget" parent="abstractDAOTarget"
 		class="fi.hut.soberit.agilefant.db.hibernate.UserDAOHibernate" />
 	<bean name="iterationGoalDAOTarget" parent="abstractDAOTarget"
@@ -67,8 +67,8 @@
 		<property name="target" ref="backlogItemDAOTarget" />
 	</bean>
 
-	<bean name="taskDAO" parent="abstractDAO">
-		<property name="target" ref="taskDAOTarget" />
+	<bean name="todoDAO" parent="abstractDAO">
+		<property name="target" ref="todoDAOTarget" />
 	</bean>
 
 	<bean name="userDAO" parent="abstractDAO">

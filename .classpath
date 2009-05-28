@@ -93,5 +93,8 @@
 	<classpathentry kind="lib" path="lib/poi-3.5-beta5-20090219.jar"/>
 	<classpathentry kind="lib" path="lib/YUIAnt.jar"/>
 	<classpathentry kind="lib" path="lib/yuicompressor-2.4.2.jar"/>
+	<classpathentry kind="lib" path="lib/joda-time-1.6.jar" sourcepath="lib-src/joda-time-1.6-sources.jar"/>
+	<classpathentry kind="lib" path="lib/joda-time-hibernate-1.1.jar"/>
+	<classpathentry kind="lib" path="lib/joda-time-jsptags-1.0.2.jar"/>
 	<classpathentry kind="output" path="eclipse-classes"/>
 </classpath>

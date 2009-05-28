@@ -365,7 +365,7 @@ margin-left: 4%;
 margin-right: 4%;
 }
 .dynamictable .dynamictable-row .story-row {
-	background-color: #cceeee;
+	background-color: #ddfbf1;
 }
 .dynamictable .dynamictable-row .story-data {
 	background-color: #fff;
@@ -377,7 +377,7 @@ margin-right: 4%;
 	background-color: #fff;
 }
 .dynamictable-header > .story-row {
-
+	background-color: #bfd8d0 !important;
 }
 .dynamictable-header > .task-row {
 	background-color: #D6DDE5 !important; 

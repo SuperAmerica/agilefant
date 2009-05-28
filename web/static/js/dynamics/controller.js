@@ -187,6 +187,7 @@ IterationController.prototype = {
     		blictrl.hideTasks();
     		desc.getElement().show();
     	});
+    	tasks.getElement().click(function() { expandButton.click()});
     	this.buttonCells.push(expandButton);
     	buttons.setActionCell({items: [
     	                               {

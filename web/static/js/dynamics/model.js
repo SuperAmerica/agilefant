@@ -7,7 +7,7 @@ var ModelFactoryClass = function() {
 };
 StoryModel = function(iterationGoalData, parent) {
 	this.init();
-	this.metrics = {};
+	this.metrics = {totalTasks: '-', doneTasks: '-', effortLeft: null, originalEstimate: null, effortSpent: null};
 	this.iteration = parent;
 	this.tasks = [];
 	this.setData(iterationGoalData, true);

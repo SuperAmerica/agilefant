@@ -22,6 +22,7 @@ var commonView = {
 			button.attr("title","Expand");
 		}
 		button.toggleClass("dynamictable-expand").toggleClass("dynamictable-collapse");
+		return false;
 	};
 	button.click(cb);
 	button.bind("showContents", function() {

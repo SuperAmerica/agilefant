@@ -7,62 +7,21 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+
 import org.apache.log4j.Logger;
+import org.joda.time.DateMidnight;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeConstants;
+import org.joda.time.Days;
 
 public class CalendarUtils {
 
     private Logger log = Logger.getLogger(this.getClass());
     
-    public Date nextMonday(Date date){
-        GregorianCalendar cal = new GregorianCalendar();
-        cal.setTime(date);
-
-        switch(cal.get(GregorianCalendar.DAY_OF_WEEK)){
-        
-            case GregorianCalendar.MONDAY :
-            {
-                cal.add(GregorianCalendar.DATE, 7);
-                break;
-            }
-            case GregorianCalendar.TUESDAY :
-            {
-                cal.add(GregorianCalendar.DATE, 6);
-                break;
-            }
-            case GregorianCalendar.WEDNESDAY :
-            {
-                cal.add(GregorianCalendar.DATE, 5);
-                break;
-            }
-            case GregorianCalendar.THURSDAY :
-            {
-                cal.add(GregorianCalendar.DATE, 4);
-                break;
-            }
-            case GregorianCalendar.FRIDAY :
-            {
-                cal.add(GregorianCalendar.DATE, 3);
-                break;
-            }
-            case GregorianCalendar.SATURDAY :
-            {
-                cal.add(GregorianCalendar.DATE, 2);
-                break;
-            }
-            case GregorianCalendar.SUNDAY :
-            {
-                cal.add(GregorianCalendar.DATE, 1);
-                break;
-            }
-            default:{
-                return null; 
-            }
-        }
-        cal.set(GregorianCalendar.HOUR_OF_DAY, 0);
-        cal.set(GregorianCalendar.MINUTE, 0);
-        cal.set(GregorianCalendar.SECOND, 0);
-        cal.set(GregorianCalendar.MILLISECOND, 0);
-        return cal.getTime();
+    public Date nextMonday(Date date) {
+        DateTime jodaDate = new DateTime(date);
+        DateTime nextMonday = jodaDate.plusWeeks(1).withDayOfWeek(DateTimeConstants.MONDAY);
+        return nextMonday.toDateMidnight().toDate();
     }
     
     /**
@@ -90,37 +49,19 @@ public class CalendarUtils {
         }
         return cal.getTime();
     }
-    
-    
+
     /**
      * Get the length of a timeframe in days rounded up. 
      */
-    public static int getLengthInDays(Date start, Date end){
-        Calendar calStart = GregorianCalendar.getInstance();
-        Calendar calEnd = GregorianCalendar.getInstance();
-        
-        /* Swap dates */
-        if (end.before(start)) {
-            calStart.setTime(end);
-            calEnd.setTime(start);
-        }
-        else {
-            calStart.setTime(start);
-            calEnd.setTime(end);
-        }
-        
-        CalendarUtils.setHoursMinutesAndSeconds(calStart, 0, 0, 0);
-        CalendarUtils.setHoursMinutesAndSeconds(calEnd, 5, 0, 0);
-                
-        long endf = (long)calEnd.getTime().getTime();
-        long startf = (long)calStart.getTime().getTime();
-        
-        long diffL = endf - startf;
-        double diff = (diffL) / (24.0 * 3600.0 * 1000.0);
-        double diffD = Math.ceil(diff);
-        return (int)diffD;
+    public static int getLengthInDays(Date start, Date end) {
+        DateMidnight jodaStart = new DateTime(start).toDateMidnight();
+        DateMidnight jodaEnd = new DateTime(end).toDateMidnight();
+        // If end < start, we don't want a negative day amount
+        int absDays = Math.abs(Days.daysBetween(jodaStart, jodaEnd).getDays());
+        // Because we always round up, we can simply add 1 to the result
+        return absDays + 1;
     }
-    
+
     public int getProjectDaysDaysInTimeFrame(Date projectStart, Date projectEnd, Date start, Date end){
         
         // 1. Project not in timeframe
@@ -196,29 +137,17 @@ public class CalendarUtils {
     }
     
     public int getWeekEndDays(Date start, Date end){
+        DateTime currentDate = new DateTime(start);
+        DateTime jodaEnd = new DateTime(end);
 
-     // invalid range
-        if(start.after(end)){
-            return 0;
-        } 
-        
         int days = 0;
-        GregorianCalendar cal = new GregorianCalendar();
-        
-        // Add 1 day to end, as we want the actual end date included
-        cal.setTime(end);
-        cal.add(GregorianCalendar.DATE, 1);
-        end = cal.getTime();
-        cal.setTime(start);
-        
-        while(cal.getTime().before(end)){
-            if(cal.get(GregorianCalendar.DAY_OF_WEEK) == GregorianCalendar.SATURDAY ||
-                    cal.get(GregorianCalendar.DAY_OF_WEEK) == GregorianCalendar.SUNDAY){
+        while (jodaEnd.isAfter(currentDate)) {
+            int dayOfWeek = currentDate.getDayOfWeek();
+            if (dayOfWeek == DateTimeConstants.SUNDAY || dayOfWeek == DateTimeConstants.SATURDAY) {
                 days++;
             }
-            cal.add(GregorianCalendar.DATE, 1);
+            currentDate = currentDate.plusDays(1);
         }
-        
         return days;
     }
     

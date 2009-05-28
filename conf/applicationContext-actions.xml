@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
-                       "http://www.springframework.org/dtd/spring-beans.dtd">
-<beans>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="
+  http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+  http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd">
+	<context:component-scan base-package="fi.hut.soberit.agilefant.web" />
+	
 	<!-- Define date format for parsing Date values from Strings.
 		Must be equal to the webwork.shortDateTime.format property value -->
 	<bean id="dateFormat" class="java.lang.String">
@@ -9,7 +13,12 @@
 			<value>yyyy-MM-dd HH:mm</value>
 		</constructor-arg>
 	</bean>
-	
+	<!-- 
+	<bean name="menuAction"
+        class="fi.hut.soberit.agilefant.web.MenuAction"
+        autowire="byType" scope="prototype" />
+         -->
+	<!-- 
 	<bean name="projectTypeAction"
 		class="fi.hut.soberit.agilefant.web.ProjectTypeAction"
 		singleton="false" autowire="byName" />
@@ -63,9 +72,6 @@
 	<bean name="dailyWorkAction"
 		class="fi.hut.soberit.agilefant.web.DailyWorkAction"
 		autowire="byName" singleton="false" />
-	<bean name="menuAction"
-        class="fi.hut.soberit.agilefant.web.MenuAction"
-        autowire="byName" singleton="false" />
 	<bean name="projectPortfolioAction"
 		class="fi.hut.soberit.agilefant.web.ProjectPortfolioAction"
 		singleton="false" autowire="byName" />
@@ -105,4 +111,5 @@
     <bean name="spentEffortAction"
         class="fi.hut.soberit.agilefant.web.SpentEffortAction"
         autowire="byName" singleton="false" />
+         -->
 </beans>

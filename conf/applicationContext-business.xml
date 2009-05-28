@@ -1,50 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
-                       "http://www.springframework.org/dtd/spring-beans.dtd">
-<beans default-autowire="byName">
-
-	<bean id="backlogBusiness" singleton="false"
-		class="fi.hut.soberit.agilefant.business.impl.BacklogBusinessImpl"/>
-	<bean id="userBusiness" singleton="false"
-		class="fi.hut.soberit.agilefant.business.impl.UserBusinessImpl" />
-	<bean id="passwordBusiness" singleton="false"
-		class="fi.hut.soberit.agilefant.business.impl.PasswordBusinessImpl" />
-	<bean id="projectBusiness" singleton="false"
-		class="fi.hut.soberit.agilefant.business.impl.ProjectBusinessImpl" />
-	<bean id="backlogItemBusiness" singleton="false"
-		class="fi.hut.soberit.agilefant.business.impl.BacklogItemBusinessImpl" />
-	<bean id="historyBusiness" singleton="false"
-		class="fi.hut.soberit.agilefant.business.impl.HistoryBusinessImpl" />
-	<bean id="iterationGoalBusiness" singleton="false"
-        class="fi.hut.soberit.agilefant.business.impl.IterationGoalBusinessImpl" />
-    <bean id="jsonBusiness" singleton="false"
-        class="fi.hut.soberit.agilefant.business.impl.JSONBusinessImpl" />
-	<bean id="todoBusiness" singleton="false"
-		class="fi.hut.soberit.agilefant.business.impl.TodoBusinessImpl" />
-	<bean id="teamBusiness" singleton="false"
-		class="fi.hut.soberit.agilefant.business.impl.TeamBusinessImpl" />
-	<bean id="settingBusiness" singleton="false"
-		class="fi.hut.soberit.agilefant.business.impl.SettingBusinessImpl" />
-	<bean id="hourEntryBusiness" singleton="false"
-		class="fi.hut.soberit.agilefant.business.impl.HourEntryBusinessImpl" />
-	<bean id="timesheetBusiness" singleton="false"
-		class="fi.hut.soberit.agilefant.business.impl.TimesheetBusinessImpl" />
-	<bean id="menuBusiness" singleton="false"
-        class="fi.hut.soberit.agilefant.business.impl.MenuBusinessImpl" />
-     <bean id="businessThemeBusiness" singleton="false"
-        class="fi.hut.soberit.agilefant.business.impl.BusinessThemeBusinessImpl" />
-     <bean id="timelineBusiness" singleton="false"
-        class="fi.hut.soberit.agilefant.business.impl.TimelineBusinessImpl" />
-     <bean id="iterationBusiness" singleton="false"
-        class="fi.hut.soberit.agilefant.business.impl.IterationBusinessImpl" />          
-
-	<bean name="chartBusiness" singleton="false"
-		class="fi.hut.soberit.agilefant.business.impl.ChartBusinessImpl">
-		<property name="iterationDAO" ref="iterationDAO" />
-		<property name="backlogItemDAO" ref="backlogItemDAO" />
-	</bean>
-	<bean name="projectTypeBusiness" class="fi.hut.soberit.agilefant.business.impl.ProjectTypeBusinessImpl">
-	</bean>
-	<bean name="productBusiness" class="fi.hut.soberit.agilefant.business.impl.ProductBusinessImpl">
-	</bean>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="
+  http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+  http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd">
+	<context:component-scan base-package="fi.hut.soberit.agilefant.business.impl" />
 </beans>

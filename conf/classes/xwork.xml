@@ -34,15 +34,14 @@
 			<result name="ajax_success" type="httpheader">
 				<param name="status">200</param>
 			</result>
-			<result name="rootException" type="chain">exceptionHandler</result>
+			<result name="rootException" type="dispatcher">exceptionHandler</result>
 			<!-- <result name="dbException" type="chain">dbExceptionHandler</result> -->
 		</global-results>
 		 
+<!-- 
 		<global-exception-mappings>
-            <!-- <exception-mapping result="dbException" exception="org.springframework.transaction.CannotCreateTransactionException" /> -->
             <exception-mapping exception="java.lang.Exception" result="rootException"/>
         </global-exception-mappings>
-
 		<action name="exceptionHandler"
 			class="fi.hut.soberit.agilefant.web.ExceptionHandler" method="handleException">
 			<result name="success" type="dispatcher">/WEB-INF/jsp/fatalError.jsp</result>
@@ -51,6 +50,7 @@
 			class="fi.hut.soberit.agilefant.web.ExceptionHandler" method="handleDbException">
 			<result name="success" type="dispatcher">/WEB-INF/jsp/fatalError.jsp</result>
 		</action>
+ -->
 		<!-- Context view -->
 		<action name="contextView"
 			class="fi.hut.soberit.agilefant.web.ContextViewAction">
@@ -109,6 +109,7 @@
 			</result>
 		</action>
 		<!-- Project type actions -->
+		<!-- 
 		<action name="listProjectTypes" method="getAll"
             class="projectTypeAction">
             <result>/WEB-INF/jsp/listProjectTypes.jsp</result>
@@ -142,8 +143,10 @@
 				<param name="location">/WEB-INF/jsp/inc/ajaxProjectTypeResult.jsp</param>
 			</result>
 		</action>
+		 -->
 		<!-- /Project type actions -->
 		<!-- Product actions -->
+		<!-- 
 		<action name="editProduct" method="edit"
 			class="productAction">
 			<result>/WEB-INF/jsp/editProduct.jsp</result>
@@ -178,8 +181,10 @@
 				<param name="resetContextView">true</param>
 			</result>
 		</action>
+		 -->
 		<!-- /Product actions -->
 		<!-- BacklogItem actions -->
+		<!-- 
 		<action name="ajaxCreateBacklogItem" method="create"
             class="backlogItemAction">
             <result name="success" type="dispatcher">/WEB-INF/jsp/forms/createBacklogItem.jsp</result>
@@ -251,9 +256,11 @@
 		<action name="ajaxDeleteBacklogItem" method="ajaxDeleteBacklogItem"
 			class="backlogItemAction">	
 		</action>
+		 -->
 		<!-- /BacklogItem actions -->
 
 		<!-- Project actions -->
+		<!-- 
 		<action name="listProjects">
 			<result>/WEB-INF/jsp/listProjects.jsp</result>
 		</action>
@@ -309,12 +316,14 @@
 				<param name="location">/WEB-INF/jsp/inc/ajaxProjectResult.jsp</param>
 			</result>
 		</action>
+		 -->
 		<!-- /Project actions -->
 
 		<!-- Work type actions -->
 		<!-- TODO -->
 
 		<!-- Backlog actions -->
+		<!-- 
 		<action name="editBacklog" method="edit"
 			class="backlogAction">
 			<result name="editProduct" type="redirect">editProduct.action?productId=${backlogId}</result>
@@ -375,11 +384,11 @@
 		<action name="backlogSelection">
 			<result>/WEB-INF/jsp/inc/selectBacklog.jsp</result>
 		</action>
+		 -->
 		<!-- /Backlog actions -->
 
         <!-- Menu actions -->
-        <action name="menuData" method="execute"
-            class="menuAction">
+        <action name="menuData" method="execute" class="menuAction">
             <result>/WEB-INF/jsp/inc/_menuData.jsp</result>
         </action>
         <action name="ajaxUpdateOpenMenus" method="ajaxUpdateOpenMenus"
@@ -388,6 +397,7 @@
         <!-- /Menu actions -->
 
 		<!-- Todo actions -->
+		<!-- 
 		<action name="deleteTodo" method="delete" class="todoAction">
 			<result type="redirect-action">
 				<param name="actionName">popContext</param>
@@ -419,10 +429,11 @@
 		<action name="moveTodoBottom" class="todoAction"
 			method="moveTodoBottom">
 		</action>
-
+ -->
 		<!-- /Todo actions -->
 
 		<!-- Iteration actions -->
+		<!-- 
 		<action name="editIteration" method="edit"
 			class="iterationAction">
 			<result>/WEB-INF/jsp/editIteration.jsp</result>
@@ -484,10 +495,11 @@
 		<action name="iterationMetrics" class="iterationAction" method="iterationMetrics">
 		  <result name="success" type="dispatcher">/WEB-INF/jsp/inc/iterationMetrics.jsp</result>
 		</action>
-
+ -->
 		<!-- /Iteration actions -->
 
 		<!-- User actions -->
+		<!-- 
 		<action name="listUsers" method="list" class="userAction">
 			<result>/WEB-INF/jsp/administration/listUsers.jsp</result>
 		</action>
@@ -520,10 +532,11 @@
 			class="userAction">
 			<result>/WEB-INF/jsp/inc/userAjax.jsp</result>
 		</action>
-
+ -->
 		<!-- /User actions -->
 
 		<!-- Team actions -->
+		<!-- 
 		<action name="listTeams" method="list" class="teamAction">
             <result>/WEB-INF/jsp/administration/listTeams.jsp</result>
         </action>
@@ -550,10 +563,11 @@
 			class="teamAction">
 			<result>/WEB-INF/jsp/inc/teamAjax.jsp</result>
 		</action>
+		 -->
 		<!-- /Team actions -->
 
 		<!-- These functions are for Saving and Deleting backlog items on daily work page -->
-
+<!-- 
 		<action name="storeBacklogItemInDailyWork" method="store"
 			class="backlogItemAction">
 			<result type="redirect-action">
@@ -567,20 +581,25 @@
 				<param name="actionName">dailyWork</param>
 			</result>
 		</action>
-
+ -->
 		<!-- Daily work -->
+		<!-- 
 		<action name="dailyWork" class="dailyWorkAction">
 			<result>/WEB-INF/jsp/dailyWork.jsp</result>
 		</action>
+		 -->
 		<!-- /Daily work -->
 		
 		<!-- Tiny Daily work -->
+		<!-- 
 		<action name="tinyDailyWork" class="dailyWorkAction">
 			<result>/WEB-INF/jsp/tinyDailyWork.jsp</result>
 		</action>
+		 -->
 		<!-- /Tiny Daily work -->
 
 		<!-- Project portfolio -->
+		<!-- 
 		<action name="projectPortfolio"
 			class="projectPortfolioAction">
 			<result>/WEB-INF/jsp/projectPortfolio.jsp</result>
@@ -589,8 +608,9 @@
             class="businessThemeAction" method="listGlobalThemes">
             <result>/WEB-INF/jsp/globalThemes.jsp</result>
         </action>
-
+ -->
 		<!-- Actions for moving ranked items in list. -->
+		<!-- 
 		<action name="moveProjectUp" class="projectPortfolioAction"
 			method="moveProjectUp">
 			<result type="redirect-action">
@@ -621,10 +641,11 @@
 				<param name="actionName">projectPortfolio</param>
 			</result>
 		</action>
-
+ -->
 		<!-- /Project portfolio -->
 
 		<!-- IterationGoal actions -->
+		<!-- 
 		<action name="editIterationGoal" method="edit"
 			class="iterationGoalAction">
 			<result>/WEB-INF/jsp/editIterationGoal.jsp</result>
@@ -673,9 +694,9 @@
 			class="iterationGoalAction">
 			<result>/WEB-INF/jsp/inc/iterationGoalAjax.jsp</result>
 		</action>
-
+ -->
 		<!-- /IterationGoal actions -->
-
+<!-- 
 		<action name="drawChart" method="execute" class="chartAction">
 			<result name="success" type="stream">
 				<param name="contentType">${contentType}</param>
@@ -746,7 +767,7 @@
 				<param name="actionName">editProject</param>
 				<param name="projectId">${view.contextObject}</param>
 			</result>
-
+ -->
 			<!-- <result name="success_editBacklogItem"
 				type="redirect-action">
 				<param name="actionName">editBacklogItem</param>
@@ -754,7 +775,7 @@
 					${view.contextObject}
 				</param>
 			</result>-->
-
+<!-- 
 			<result name="success_listProducts"
 				type="redirect-action">
 				<param name="actionName">listProducts</param>
@@ -783,12 +804,14 @@
 				<param name="status">200</param>
 			</result>
 		</action>
+ -->
 
 		<action name="selectBacklog">
 			<result>/WEB-INF/jsp/selectBacklog.jsp</result>
 		</action>
-
+		
 		<!-- Actions for generating a new password and e-mailing it to an <code>User</code> -->
+		<!-- 
 		<action name="newPassword">
 			<interceptor-ref name="noAuthenticationStack" />
 			<result>/WEB-INF/jsp/newPassword.jsp</result>
@@ -800,7 +823,7 @@
 			<result name="success">success.jsp</result>
 			<result name="error">success.jsp?error=1</result>
 		</action>
-		
+		 -->
 		<!-- Actions for changing settings -->
 		<action name="settings" class="settingAction">
 			<result>/WEB-INF/jsp/administration/settings.jsp</result>
@@ -809,11 +832,9 @@
 		<action name="editSetting" class="settingAction" method="edit">
 			<result>/WEB-INF/jsp/administration/settings.jsp</result>
 		</action>
-		
 		<!--<action name="storeSetting" class="settingAction" method="store">
 			<result>/WEB-INF/jsp/administration/settings.jsp</result>
 		</action>-->
-		
 		<action name="createSetting" class="settingAction" method="create">
 			<result>/WEB-INF/jsp/administration/settings.jsp</result>
 		</action>
@@ -824,9 +845,8 @@
 		<action name="storeSettings" class="settingAction" method="storeSettings">
 			<result name="success">/WEB-INF/jsp/administration/settings.jsp</result>
 		</action>
-	
 		<!-- timesheet actions -->
-		  
+		  <!-- 
 		<action name="timesheet" method="initialize" class="timesheetAction">
 			<result>/WEB-INF/jsp/timesheet.jsp</result>
 		</action>
@@ -848,8 +868,9 @@
 				<param name="contentDisposition">filename="agilefantTimesheet.xls"</param>
 			</result>
 		</action>		
-		
+		 -->
 		<!-- Hour Entry actions -->
+		<!-- 
 		<action name="ajaxCreateHourEntry" class="hourEntryAction" method="create">
             <result>/WEB-INF/jsp/forms/createHourEntry.jsp</result>
         </action>
@@ -890,7 +911,9 @@
 		<action name="hourEntriesByUserAndWeek" class="spentEffortAction" method="getHourEntriesByUserAndDay">
 			<result type="dispatcher">/WEB-INF/jsp/inc/effortByWeek.jsp</result>
 		</action>
+		 -->
 		<!-- Business theme actions -->
+		<!-- 
 		<action name="deleteBusinessTheme" method="delete"
 			class="businessThemeAction">
 			
@@ -958,10 +981,11 @@
        		class="businessThemeAction">
        		<result>/WEB-INF/jsp/jsonData.jsp</result>
        	</action>
-       		
+       	 -->	
 		<!-- /Business theme actions -->
 		
 		<!-- Product timeline actions -->
+		<!-- 
 		<action name="timelineData" method="productData"
             class="timelineAction">
             <result>/WEB-INF/jsp/inc/timelineData.jsp</result>
@@ -971,14 +995,18 @@
             class="timelineAction">
             <result>/WEB-INF/jsp/inc/timelineData.jsp</result>
         </action>
+         -->
 		<!-- /Product timeline actions -->
 		
 		<!-- Session actions -->
+		<!-- 
 		<action name="ajaxOpenDialog" method="ajaxOpenDialog" class="sessionAction" />
         <action name="ajaxCloseDialog" method="ajaxCloseDialog" class="sessionAction" />
+         -->
 		<!-- /Session actions -->
 
         <!-- JSON actions -->
+        <!-- 
         <action name="ajaxGetIterationGoals" method="ajaxGetIterationGoals"
             class="iterationGoalAction">
             <result>/WEB-INF/jsp/jsonData.jsp</result>
@@ -997,8 +1025,9 @@
         </action>
         <action name="getUserChooserJSON" method="ajaxGetUserChooserJSON" class="jsonAction">
             <result>/WEB-INF/jsp/jsonData.jsp</result>
-        </action>
+        </action> -->
         <!-- /JSON actions -->
+        <!-- 
         <action name="qr" method="resolveLinkTarget" class="quickReferenceAction">
         	<result name="success" type="redirect">${uri}</result>
         </action>
@@ -1009,6 +1038,6 @@
 				<param name="inputName">sheetData</param>
 				<param name="contentDisposition">filename="agilefant-backlog-${backlogId}.xls"</param>
 			</result>
-		</action>
+		</action> -->
 </package>
 </xwork>

@@ -172,7 +172,7 @@
 
 	<bean id="userDetailsService"
 		class="fi.hut.soberit.agilefant.security.AgilefantUserDetailsService"
-		autowire="byName" />
+		autowire="byType" />
 
 	<!-- This bean is optional; it isn't used by any other bean as it only listens and logs -->
 	<bean id="loggerListener"

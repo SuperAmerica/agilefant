@@ -61,12 +61,6 @@ public class MenuBusinessImpl implements MenuBusiness {
         return data;
     }
 
-    
-    
-    public ProductDAO getProductDAO() {
-        return productDAO;
-    }
-
     @Autowired
     public void setProductDAO(ProductDAO productDAO) {
         this.productDAO = productDAO;

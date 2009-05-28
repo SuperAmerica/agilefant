@@ -58,7 +58,6 @@ public class User implements PageItem {
     @Id
     // generate automatically
     @GeneratedValue(strategy = GenerationType.AUTO)
-    // not nullable
     @JSON
     public int getId() {
         return id;

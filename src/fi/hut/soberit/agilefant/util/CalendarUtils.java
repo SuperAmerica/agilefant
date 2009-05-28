@@ -138,7 +138,7 @@ public class CalendarUtils {
     
     public int getWeekEndDays(Date start, Date end){
         DateTime currentDate = new DateTime(start);
-        DateTime jodaEnd = new DateTime(end);
+        DateTime jodaEnd = new DateTime(end).plusDays(1);
 
         int days = 0;
         while (jodaEnd.isAfter(currentDate)) {

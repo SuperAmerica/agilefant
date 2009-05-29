@@ -33,24 +33,24 @@ import flexjson.JSON;
 @Entity
 @BatchSize(size=20)
 public class Product extends Backlog {
+    
 
-    private List<Project> projects = new ArrayList<Project>();
+//  private List<Project> projects = new ArrayList<Project>();
     
     private List<Story> stories = new ArrayList<Story>();
     
-    /** Get the collection of projects belonging to this product. */
-    @OneToMany(mappedBy = "parent")
-//    @OrderBy(clause = "startDate asc, endDate asc")
-    @BatchSize(size=20)
-    @JSON(include = false)
-    public List<Project> getProjects() {
-        return projects;
-    }
-
-    /** Set the collection of projects belonging to this product. */
-    public void setProjects(List<Project> projects) {
-        this.projects = projects;
-    }
+//    /** Get the collection of projects belonging to this product. */
+//    @OneToMany(mappedBy = "parent")
+//    @BatchSize(size=20)
+//    @JSON(include = false)
+//    public List<Project> getProjects() {
+//        return projects;
+//    }
+//
+//    /** Set the collection of projects belonging to this product. */
+//    public void setProjects(List<Project> projects) {
+//        this.projects = projects;
+//    }
 
     public void setStories(List<Story> stories) {
         this.stories = stories;

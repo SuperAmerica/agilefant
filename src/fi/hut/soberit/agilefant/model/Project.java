@@ -10,7 +10,6 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.Transient;
 
 import org.hibernate.annotations.BatchSize;
 
@@ -54,7 +53,7 @@ public class Project extends Backlog {
 
     private Date startDate;
 
-    private List<Iteration> iterations = new ArrayList<Iteration>();
+//    private List<Iteration> iterations = new ArrayList<Iteration>();
 
     private List<Story> stories = new ArrayList<Story>();
 
@@ -75,16 +74,16 @@ public class Project extends Backlog {
     }
 
     /** Iterations under this project. */
-    @OneToMany(mappedBy = "parent")
-    @BatchSize(size = 20)
-    @JSON(include = false)
-    public List<Iteration> getIterations() {
-        return iterations;
-    }
-
-    public void setIterations(List<Iteration> iterations) {
-        this.iterations = iterations;
-    }
+//    @OneToMany(mappedBy = "parent")
+//    @BatchSize(size = 20)
+//    @JSON(include = false)
+//    public List<Iteration> getIterations() {
+//        return iterations;
+//    }
+//
+//    public void setIterations(List<Iteration> iterations) {
+//        this.iterations = iterations;
+//    }
 
     @JSON
     public Date getStartDate() {

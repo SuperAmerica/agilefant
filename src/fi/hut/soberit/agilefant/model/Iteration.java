@@ -50,16 +50,16 @@ public class Iteration extends Backlog {
 
     private List<Story> stories = new ArrayList<Story>();
 
-    /** The project, under which this iteration is. */
-    @ManyToOne(optional = false)
-    @JSON(include = false)
-    public Project getProject() {
-        return project;
-    }
-
-    public void setProject(Project project) {
-        this.project = project;
-    }
+//    /** The project, under which this iteration is. */
+//    @ManyToOne(optional = false)
+//    @JSON(include = false)
+//    public Project getProject() {
+//        return project;
+//    }
+//
+//    public void setProject(Project project) {
+//        this.project = project;
+//    }
 
     @JSON
     public Date getEndDate() {

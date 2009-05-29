@@ -1,10 +1,6 @@
 <%@ include file="./inc/_taglibs.jsp"%>
 <%@ include file="./inc/_header.jsp"%>
 
-<c:if test="${product.id > 0}">
-	<aef:bct productId="${product.id}" />
-</c:if>
-
 <c:set var="divId" value="1336" scope="page" />
 <aef:menu navi="backlog" pageHierarchy="${pageHierarchy}" title="${product.name}"/>
 <ww:actionerror />

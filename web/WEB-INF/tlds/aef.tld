@@ -217,68 +217,6 @@
 	</tag>
 	
 	<tag>
-		<name>bct</name>
-		<tag-class>fi.hut.soberit.agilefant.web.tag.BreadCrumbTrailTag</tag-class>
-		<body-content>JSP</body-content>
-		<description>
-			Builds page hierarchy for bread crumb trail links
-	    </description>
-        <attribute>
-            <name>backlogId</name>
-            <required>false</required>
-			<rtexprvalue>true</rtexprvalue>            
-        </attribute>
-        <attribute>
-            <name>backlogItemId</name>
-            <required>false</required>
-			<rtexprvalue>true</rtexprvalue>            
-        </attribute>	    
-        <attribute>
-            <name>projectId</name>
-            <required>false</required>
-			<rtexprvalue>true</rtexprvalue>            
-        </attribute>	    
-        <attribute>
-            <name>iterationId</name>
-            <required>false</required>
-						<rtexprvalue>true</rtexprvalue>            
-        </attribute>
-        
-        <attribute>
-        	<name>iterationGoalId</name>
-        	<required>false</required>
-        	<rtexprvalue>true</rtexprvalue>   
-        </attribute>
-        
-        <attribute>
-            <name>productId</name>
-            <required>false</required>
-			<rtexprvalue>true</rtexprvalue>            
-        </attribute>
-        <attribute>
-            <name>taskId</name>
-            <required>false</required>
-			<rtexprvalue>true</rtexprvalue>            
-        </attribute>	    
-        <attribute>
-            <name>userId</name>
-            <required>false</required>
-			<rtexprvalue>true</rtexprvalue>            
-        </attribute>	    
-        <attribute>
-            <name>portfolioId</name>
-            <required>false</required>
-			<rtexprvalue>true</rtexprvalue>            
-        </attribute>	    
-        <attribute>
-            <name>managementPageId</name>
-            <required>false</required>
-			<rtexprvalue>true</rtexprvalue>            
-        </attribute>	    
-	</tag>
-	
-	
-	<tag>
 		<name>hourReporting</name>
 		<tag-class>fi.hut.soberit.agilefant.web.tag.HourReportingTag</tag-class>
 		<body-content>JSP</body-content>

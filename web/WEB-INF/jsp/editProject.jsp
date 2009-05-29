@@ -18,15 +18,6 @@
 	</c:otherwise>
 </c:choose>
 
-<c:choose>
-	<c:when test="${project.id == 0}">
-		<aef:bct productId="${productId}" />
-	</c:when>
-	<c:otherwise>
-		<aef:bct projectId="${projectId}" />
-	</c:otherwise>
-</c:choose>
-
 <c:set var="divId" value="1336" scope="page" />
 <aef:menu navi="backlog" pageHierarchy="${pageHierarchy}" title="${project.name}"/>
 <ww:actionerror />

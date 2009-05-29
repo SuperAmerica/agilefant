@@ -4,11 +4,21 @@ import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
+
+import java.util.Arrays;
+import java.util.Collection;
+
 import junit.framework.TestCase;
+
+import org.junit.Before;
+import org.junit.Test;
+
 import fi.hut.soberit.agilefant.business.impl.BacklogBusinessImpl;
 import fi.hut.soberit.agilefant.db.BacklogDAO;
+import fi.hut.soberit.agilefant.db.ProductDAO;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Product;
+import flexjson.JSONSerializer;
 
 
 /**
@@ -21,10 +31,19 @@ import fi.hut.soberit.agilefant.model.Product;
 public class BacklogBusinessTest extends TestCase {
 
     private BacklogBusinessImpl backlogBusiness = new BacklogBusinessImpl();
-
-    public void testGetNumberOfChildren() {
-        BacklogDAO backlogDAO = createMock(BacklogDAO.class);
+    private BacklogDAO backlogDAO;
+    private ProductDAO productDAO;
+    
+    @Before
+    public void setUp() {
+        backlogDAO = createMock(BacklogDAO.class);
         backlogBusiness.setBacklogDAO(backlogDAO);
+        productDAO = createMock(ProductDAO.class);
+        backlogBusiness.setProductDAO(productDAO);
+    }
+    
+    @Test
+    public void testGetNumberOfChildren() {
         Backlog backlog = new Product();
         backlog.setId(5);
         
@@ -36,6 +55,38 @@ public class BacklogBusinessTest extends TestCase {
         verify(backlogDAO);
     }
 
+    @Test
+    public void testGetBacklogAsJSON() {
+        Backlog backlog = new Product();
+        backlog.setName("Backlog test");
+        backlog.setId(2);
+        
+        expect(backlogDAO.get(2)).andReturn(backlog);
+        replay(backlogDAO);
+                
+        backlogBusiness.getBacklogAsJSON(2);
+        
+        verify(backlogDAO);
+    }
+    
+    @Test
+    public void testGetAllProductsAsJSON() {
+        Product prod1 = new Product();
+        prod1.setName("Product 1");
+        prod1.setId(123);
+        Product prod2 = new Product();
+        prod2.setName("Product 2");
+        prod2.setId(124);
+        Collection<Product> list = Arrays.asList(prod1, prod2);
+        String json = new JSONSerializer().serialize(list);
+        
+        expect(productDAO.getAll()).andReturn(list);
+        replay(productDAO);
+        
+        assertEquals(json, backlogBusiness.getAllProductsAsJSON());
+        
+        verify(productDAO);
+    }
     
 //    private HistoryBusiness historyBusiness;
 //    private HourEntryBusinessImpl hourEntryBusiness = new HourEntryBusinessImpl();

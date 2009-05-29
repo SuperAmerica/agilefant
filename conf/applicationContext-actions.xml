@@ -45,9 +45,10 @@
 			<ref local="dateFormat"/>
 		</property>		
 	</bean>
-	<bean name="productAction"
-		class="fi.hut.soberit.agilefant.web.ProductAction" singleton="false"
-		autowire="byName" />
+	-->
+	<bean name="productAction" class="fi.hut.soberit.agilefant.web.ProductAction"
+		autowire="byName" scope="prototype" />
+	<!-- 
 	<bean name="backlogItemAction"
 		class="fi.hut.soberit.agilefant.web.BacklogItemAction"
 		singleton="false" autowire="byName" />

@@ -2,20 +2,12 @@ package fi.hut.soberit.agilefant.web;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 
 import com.opensymphony.xwork.Action;
 
 import fi.hut.soberit.agilefant.business.ProjectBusiness;
-import fi.hut.soberit.agilefant.db.BacklogItemDAO;
 import fi.hut.soberit.agilefant.db.ProductDAO;
-import fi.hut.soberit.agilefant.model.BacklogItem;
-import fi.hut.soberit.agilefant.model.BusinessTheme;
 import fi.hut.soberit.agilefant.model.Product;
-import fi.hut.soberit.agilefant.model.Project;
-import fi.hut.soberit.agilefant.util.BusinessThemeMetrics;
-import fi.hut.soberit.agilefant.util.EffortSumData;
 
 public class ProductAction extends BacklogContentsAction implements CRUDAction {
 
@@ -23,7 +15,7 @@ public class ProductAction extends BacklogContentsAction implements CRUDAction {
 
     private ProductDAO productDAO;
 
-    private BacklogItemDAO backlogItemDAO;
+//    private BacklogItemDAO backlogItemDAO;
 
     private ProjectBusiness projectBusiness;
     
@@ -33,11 +25,11 @@ public class ProductAction extends BacklogContentsAction implements CRUDAction {
 
     private Collection<Product> products = new ArrayList<Product>();
     
-    private Map<Project, EffortSumData> effLeftSums;
-    
-    private Map<Project, EffortSumData> origEstSums;
-    
-    private Map<BusinessTheme, BusinessThemeMetrics> themeMetrics;
+//    private Map<Project, EffortSumData> effLeftSums;
+//    
+//    private Map<Project, EffortSumData> origEstSums;
+//    
+//    private Map<BusinessTheme, BusinessThemeMetrics> themeMetrics;
     
     //private BusinessThemeBusiness businessThemeBusiness; 
     
@@ -58,14 +50,14 @@ public class ProductAction extends BacklogContentsAction implements CRUDAction {
             super.addActionError(super.getText("product.notFound"));
             return Action.ERROR;
         }
-        if (p.getBacklogItems().size() > 0 || p.getProjects().size() > 0) {
-            super.addActionError(super.getText("product.notEmptyWhenDeleting"));
-            return Action.ERROR;
-        }
-        if (p.getBusinessThemes().size() > 0) {
-            super.addActionError(super.getText("product.notEmptyOfThemesWhenDeleting"));
-            return Action.ERROR;
-        }
+//        if (p.getBacklogItems().size() > 0 || p.getProjects().size() > 0) {
+//            super.addActionError(super.getText("product.notEmptyWhenDeleting"));
+//            return Action.ERROR;
+//        }
+//        if (p.getBusinessThemes().size() > 0) {
+//            super.addActionError(super.getText("product.notEmptyOfThemesWhenDeleting"));
+//            return Action.ERROR;
+//        }
         productDAO.remove(productId);
         return Action.SUCCESS;
     }
@@ -83,24 +75,24 @@ public class ProductAction extends BacklogContentsAction implements CRUDAction {
         
         // Calculate product's projects' effort lefts and original estimates
         
-        effLeftSums = new HashMap<Project, EffortSumData>();
-        origEstSums = new HashMap<Project, EffortSumData>();
-        
-        // Calculate themes' done blis
-        themeMetrics = businessThemeBusiness.getThemeMetrics(productId);
-        
-        // Calculate projects' metrics.
-        projectBusiness.calculateProjectMetrics(product);
-        
-        Collection<Project> projects = product.getProjects();
-        
-        for (Project pro : projects) {
-            Collection<BacklogItem> blis = projectBusiness.getBlisInProjectAndItsIterations(pro);
-            EffortSumData projectEffLeftSum = backlogBusiness.getEffortLeftSum(blis);
-            EffortSumData projectOrigEstSum = backlogBusiness.getOriginalEstimateSum(blis);
-            effLeftSums.put(pro, projectEffLeftSum);
-            origEstSums.put(pro, projectOrigEstSum);
-        }
+//        effLeftSums = new HashMap<Project, EffortSumData>();
+//        origEstSums = new HashMap<Project, EffortSumData>();
+//        
+//        // Calculate themes' done blis
+//        themeMetrics = businessThemeBusiness.getThemeMetrics(productId);
+//        
+//        // Calculate projects' metrics.
+//        projectBusiness.calculateProjectMetrics(product);
+//        
+//        Collection<Project> projects = product.getProjects();
+//        
+//        for (Project pro : projects) {
+//            Collection<BacklogItem> blis = projectBusiness.getBlisInProjectAndItsIterations(pro);
+//            EffortSumData projectEffLeftSum = backlogBusiness.getEffortLeftSum(blis);
+//            EffortSumData projectOrigEstSum = backlogBusiness.getOriginalEstimateSum(blis);
+//            effLeftSums.put(pro, projectEffLeftSum);
+//            origEstSums.put(pro, projectOrigEstSum);
+//        }
         
         return Action.SUCCESS;
     }
@@ -185,28 +177,14 @@ public class ProductAction extends BacklogContentsAction implements CRUDAction {
         this.products = products;
     }
 
-    /**
-     * @return the backlogItemDAO
-     */
-    public BacklogItemDAO getBacklogItemDAO() {
-        return backlogItemDAO;
-    }
-
-    /**
-     * @param backlogItemDAO
-     *                the backlogItemDAO to set
-     */
-    public void setBacklogItemDAO(BacklogItemDAO backlogItemDAO) {
-        this.backlogItemDAO = backlogItemDAO;
-    }
-
-    public Map<Project, EffortSumData> getEffLeftSums() {
-        return effLeftSums;
-    }
-
-    public Map<Project, EffortSumData> getOrigEstSums() {
-        return origEstSums;
-    }
+    
+//    public Map<Project, EffortSumData> getEffLeftSums() {
+//        return effLeftSums;
+//    }
+//
+//    public Map<Project, EffortSumData> getOrigEstSums() {
+//        return origEstSums;
+//    }
 
     public ProjectBusiness getProjectBusiness() {
         return projectBusiness;
@@ -215,26 +193,26 @@ public class ProductAction extends BacklogContentsAction implements CRUDAction {
     public void setProjectBusiness(ProjectBusiness projectBusiness) {
         this.projectBusiness = projectBusiness;
     }
-
-    public void setEffLeftSums(Map<Project, EffortSumData> effLeftSums) {
-        this.effLeftSums = effLeftSums;
-    }
-
-    public void setOrigEstSums(Map<Project, EffortSumData> origEstSums) {
-        this.origEstSums = origEstSums;
-    }
-    
-    public Collection<BusinessTheme> getActiveBusinessThemes() {
-        return businessThemeBusiness.getActiveBusinessThemes(productId);
-    }
-
-    public Collection<BusinessTheme> getNonActiveBusinessThemes() {
-        return businessThemeBusiness.getNonActiveBusinessThemes(productId);
-    }
-
-    public Map<BusinessTheme, BusinessThemeMetrics> getBusinessThemeMetrics() {
-        return themeMetrics;
-    }
+//
+//    public void setEffLeftSums(Map<Project, EffortSumData> effLeftSums) {
+//        this.effLeftSums = effLeftSums;
+//    }
+//
+//    public void setOrigEstSums(Map<Project, EffortSumData> origEstSums) {
+//        this.origEstSums = origEstSums;
+//    }
+//    
+//    public Collection<BusinessTheme> getActiveBusinessThemes() {
+//        return businessThemeBusiness.getActiveBusinessThemes(productId);
+//    }
+//
+//    public Collection<BusinessTheme> getNonActiveBusinessThemes() {
+//        return businessThemeBusiness.getNonActiveBusinessThemes(productId);
+//    }
+//
+//    public Map<BusinessTheme, BusinessThemeMetrics> getBusinessThemeMetrics() {
+//        return themeMetrics;
+//    }
 
     public String getJsonData() {
         return jsonData;

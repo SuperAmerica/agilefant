@@ -13,7 +13,7 @@
 <aef:openDialogs context="businessTheme" id="openThemes" />
 
 <aef:openDialogs context="project" id="openProjects" />
-
+<%--
 <script type="text/javascript">
 
 function editProduct() {
@@ -50,7 +50,7 @@ var productId = ${product.id};
 <script type="text/javascript" src="static/js/timeline/timeline-load.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
 <script type="text/javascript" src="static/js/timeline/timeline-bundle.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
 <script type="text/javascript" src="static/js/timeline/timeline-custom.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
-
+--%>
 <h2><c:out value="${product.name}" /></h2>
 <table>
 	<tbody>
@@ -135,7 +135,7 @@ var productId = ${product.id};
 		</tr>
 	</tbody>
 </table>
-
+<%--
 <c:if test="${product.id > 0}">
 <table>
     <!-- The timeline -->
@@ -431,5 +431,5 @@ var productId = ${product.id};
 	</tr>
 </table>
 
-</c:if>
+</c:if>--%>
 <%@ include file="./inc/_footer.jsp"%>

@@ -146,11 +146,12 @@
 		 -->
 		<!-- /Project type actions -->
 		<!-- Product actions -->
-		<!-- 
+		
 		<action name="editProduct" method="edit"
 			class="productAction">
 			<result>/WEB-INF/jsp/editProduct.jsp</result>
 		</action>
+		<!-- 
 		<action name="ajaxCreateProduct" method="create"
             class="productAction">
             <result>/WEB-INF/jsp/forms/createProduct.jsp</result>

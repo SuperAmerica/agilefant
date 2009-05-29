@@ -9,7 +9,7 @@
 	border-bottom:2px solid #CCCCCC;
 	font-weight:bold;
 	height:19px;
-	padding:0 0 0 1px;
+	padding:0 0 0 0.5em;
 	font-size: 12pt;
 	padding-top: 6px;
 }
@@ -59,11 +59,11 @@
 }
 
 .dynamictable-placeholder {
-  margin: 3px 2px 3px 2px; height : 1.5em;
+  margin: 3px 2px 3px 2px;
   background-color: #ffffdd;
   border: 1px dashed #666;
   height: 3em;
-  width: 95%;
+  width: 98%;
 }
 
 .dynamictable-header .dynamictable-cell {
@@ -228,6 +228,7 @@ li.dynamictable-captionaction {
 	height:16px;
 	width:16px;
 	margin-top: 2px;
+	margin-right: 4px;
 	float: right;
 }
 .dynamictable-collapse {
@@ -238,6 +239,7 @@ li.dynamictable-captionaction {
 	height:16px;
 	width:16px;
 	margin-top: 2px;
+	margin-right: 4px;
 	float: right;
 }
 .dynamictable-expand:hover {
@@ -319,7 +321,7 @@ li.dynamictable-captionaction {
 }
 
 .dragHandle:hover {
-	background-color: #e50 !important;
+	background-color: #f91 !important;
 	cursor: move;
 }
 .taskState {
@@ -369,7 +371,11 @@ margin-left: 4%;
 margin-right: 4%;
 }
 .dynamictable .dynamictable-row .story-row {
-	background-color: #ffffbb;
+	background-color: #e9eeff;
+}
+.dynamictable .dynamictable-row .story-task {
+	background-color: #e9eeff;
+	cursor: pointer;
 }
 .dynamictable .dynamictable-row .story-data {
 	background-color: #fff;
@@ -380,9 +386,19 @@ margin-right: 4%;
 .dynamictable .dynamictable-row .task-data {
 	background-color: #fff;
 }
-.dynamictable-header > .story-row {
+.dynamictable-header > .story-row, .dynamictable-header > .story-task {
 	background-color: #fff !important;
 }
 .dynamictable-header > .task-row {
-	background-color: #D6DDE5 !important; 
+	background-color: #fff !important; 
+}
+div.loadingStories { 
+	background-color:#EEEEEE;
+	border:1px solid #666666;
+	font-size:10pt;
+	font-style:italic;
+	height:55px;
+	margin:15px 5px 0;
+	padding:30px 0 0 10px;
+	width:100%;
 }

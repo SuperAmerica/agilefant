@@ -5,7 +5,12 @@ var IterationController = function(iterationId, element) {
 	this.IterationGoalControllers = [];
 	this.descCells = [];
 	this.buttonCells = [];
-	ModelFactory.getIteration(this.iterationId, function(data) { me.render(data); });
+	var loading = $('<div />').html('<img alt="Working" src="static/img/working.gif"/> &nbsp; Loading iteration stories...').addClass("loadingStories").appendTo(element);
+	ModelFactory.getIteration(this.iterationId, function(data) { 
+		loading.hide();
+		me.render(data); 
+		
+	});
 };
 
 var IterationGoalController = function(parentView, model, parentController) {
@@ -216,6 +221,7 @@ IterationController.prototype = {
     	                               }
     	                               }
     	                               ]});
+    	buttons.activateSortHandle();
     	blis.getElement().bind("metricsUpdated", function() {
     		goal.reloadMetrics();
     	});

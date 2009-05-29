@@ -1034,7 +1034,7 @@
 		  }
 */
 		  addTableColumn(opts, 
-				  { minwidth: 30, auto: true },
+				  { minwidth: 24, auto: true },
 				  { name: "Prio",
 					tooltip: "Story priority",
 					sort: agilefantUtils.comparators.priorityComparator
@@ -1050,7 +1050,7 @@
 				  { name: 'Tasks',
 			        tooltip: 'Done / Total tasks',
 			        sort: null
-				  }, 'story-row');
+				  }, 'story-task');
 		  addTableColumn(opts,
 				  { minwidth: 30, auto: true },
 				  { name: 'EL',

@@ -725,8 +725,8 @@ TaskModel.prototype.setOriginalEstimate = function(originalEstimate) {
 
 TaskModel.prototype.moveTo = function(storyId, iterationId) {
 	var oli = this.iterationGoal;
-	if(storyId != this.iterationGoal.id) {
-		this.iterationGoal.removeTask(this);
+	if(storyId !== this.iterationGoal.id || (storyId === 0 && iterationId !== this.backlog.getId())) {
+		this.iterationGoal.removeTask(this, true);
 		if(iterationId === this.backlog.getId()) {
 			var newStory = ModelFactory.getIterationGoal(storyId);
 			newStory.addTask(this, false);

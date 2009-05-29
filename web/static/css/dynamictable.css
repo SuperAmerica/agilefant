@@ -7,10 +7,11 @@
 
 .dynamictable-caption {
 	border-bottom:2px solid #CCCCCC;
-	border-left:2px solid #CCCCCC;
 	font-weight:bold;
 	height:19px;
 	padding:0 0 0 1px;
+	font-size: 12pt;
+	padding-top: 6px;
 }
 
 .dynamictable-row {
@@ -170,6 +171,7 @@ li.dynamictable-captionaction {
   -moz-border-radius: 0.5em;
   border-radius: 0.5em;
   text-align: center;
+  font-size: 10pt;
 }
 
 .dynamictable-captionaction:hover {
@@ -350,8 +352,8 @@ li.dynamictable-captionaction {
 }
 .dynamictable .dynamictable-row .description-cell {
 	min-height: 0px !important;	
-	max-height: 15em !important;
-	overflow: auto !important;
+/*	max-height: 15em !important;*/
+/*	overflow: auto !important;*/
 }
 .dynamictable .dynamictable-row .description-cell > span {
 	margin-left: 8%;
@@ -367,7 +369,7 @@ margin-left: 4%;
 margin-right: 4%;
 }
 .dynamictable .dynamictable-row .story-row {
-	background-color: #ddfbf1;
+	background-color: #ffffbb;
 }
 .dynamictable .dynamictable-row .story-data {
 	background-color: #fff;
@@ -379,7 +381,7 @@ margin-right: 4%;
 	background-color: #fff;
 }
 .dynamictable-header > .story-row {
-	background-color: #bfd8d0 !important;
+	background-color: #fff !important;
 }
 .dynamictable-header > .task-row {
 	background-color: #D6DDE5 !important; 

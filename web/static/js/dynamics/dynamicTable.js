@@ -297,7 +297,7 @@
 				this.sortActive = true;
 				var defOpt = {
 						handle: '.dynamictable-sorthandle',
-						items: '> *:not(.dynamictable-notsortable)',
+						items: '.dynamictable-row:not(.dynamictable-notsortable)',
 						cursor: 'move',
 						placeholder : 'dynamictable-placeholder' 
 				};

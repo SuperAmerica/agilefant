@@ -18,7 +18,6 @@ import fi.hut.soberit.agilefant.business.BacklogBusiness;
 import fi.hut.soberit.agilefant.business.MenuBusiness;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.util.MenuData;
-import fi.hut.soberit.agilefant.web.page.PageItem;
 
 /**
  * The action class for populating the lefthand menu.
@@ -37,12 +36,12 @@ public class MenuAction extends ActionSupport {
 
     private String requestId = "";
     private int backlogId;
-    private PageItem pageitem;
+    private Backlog backlog;
 
     private MenuData menuData;
 
     private Set<Backlog> openBacklogs = new HashSet<Backlog>();
-    private Map<PageItem, MenuData> openDatas = new HashMap<PageItem, MenuData>();
+    private Map<Backlog, MenuData> openDatas = new HashMap<Backlog, MenuData>();
 
     private int numberOfItems = 0;
 
@@ -83,13 +82,13 @@ public class MenuAction extends ActionSupport {
 
         // Get the pageitem
         if (backlogId == 0) {
-            pageitem = null;
+            backlog = null;
         } else {
-            pageitem = backlogBusiness.retrieve(backlogId);
+            backlog = backlogBusiness.retrieve(backlogId);
         }
 
         // Get the data
-        menuData = menuBusiness.getSubMenuData(pageitem);
+        menuData = menuBusiness.getSubMenuData(backlog);
 
         // Get the submenu data
         for (Backlog blog : openBacklogs) {
@@ -189,12 +188,12 @@ public class MenuAction extends ActionSupport {
         this.backlogId = backlogId;
     }
 
-    public PageItem getPageitem() {
-        return pageitem;
+    public Backlog getPageitem() {
+        return backlog;
     }
 
-    public void setPageitem(PageItem pageitem) {
-        this.pageitem = pageitem;
+    public void setPageitem(Backlog pageitem) {
+        this.backlog = pageitem;
     }
 
     public MenuData getMenuData() {
@@ -237,11 +236,11 @@ public class MenuAction extends ActionSupport {
         this.openBacklogs = openBacklogs;
     }
 
-    public Map<PageItem, MenuData> getOpenDatas() {
+    public Map<Backlog, MenuData> getOpenDatas() {
         return openDatas;
     }
 
-    public void setOpenDatas(Map<PageItem, MenuData> openDatas) {
+    public void setOpenDatas(Map<Backlog, MenuData> openDatas) {
         this.openDatas = openDatas;
     }
 

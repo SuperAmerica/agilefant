@@ -6,13 +6,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import fi.hut.soberit.agilefant.business.BacklogBusiness;
 import fi.hut.soberit.agilefant.business.MenuBusiness;
 import fi.hut.soberit.agilefant.db.ProductDAO;
+import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.util.MenuData;
-import fi.hut.soberit.agilefant.web.page.PageItem;
+
 
 /**
  * The implementation class for calculating data to the lefthand
@@ -23,25 +25,26 @@ import fi.hut.soberit.agilefant.web.page.PageItem;
 public class MenuBusinessImpl implements MenuBusiness {
 
     private ProductDAO productDAO;
+    private BacklogBusiness backlogBusiness;
     
     /** {@inheritDoc} */
     @Transactional(readOnly = true)
-    public MenuData getSubMenuData(PageItem pageitem) {
+    public MenuData getSubMenuData(Backlog backlog) {
         MenuData data = new MenuData();
-        data.setMenuItems(new ArrayList<PageItem>());
+        data.setMenuItems(new ArrayList<Backlog>());
         
         // If the requested pageitem is null, return all product backlogs
-        if (pageitem == null) {
+        if (backlog == null) {
             data.getMenuItems().addAll(productDAO.getAllOrderByName());
         }
         else {
-            if (pageitem.getChildren() != null) {
-                data.getMenuItems().addAll(pageitem.getChildren());
+            if (backlog.getChildren() != null) {
+                data.getMenuItems().addAll(backlog.getChildren());
             }
         }
         
         // Update the hasChildren and objectType properties
-        for (PageItem item : data.getMenuItems()) {
+        for (Backlog item : data.getMenuItems()) {
             String type = "";
             // Check the type
             if (item instanceof Product) {
@@ -54,7 +57,8 @@ public class MenuBusinessImpl implements MenuBusiness {
                 type = "iteration";
             }
             
-            data.getHasChildren().put(item, item.hasChildren());
+            data.getHasChildren().put(item,
+                    (backlogBusiness.getNumberOfChildren(backlog) > 0));
             data.getObjectTypes().put(item, type);
         }
         
@@ -64,6 +68,11 @@ public class MenuBusinessImpl implements MenuBusiness {
     @Autowired
     public void setProductDAO(ProductDAO productDAO) {
         this.productDAO = productDAO;
+    }
+
+    @Autowired
+    public void setBacklogBusiness(BacklogBusiness backlogBusiness) {
+        this.backlogBusiness = backlogBusiness;
     }
     
 }

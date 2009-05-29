@@ -14,7 +14,6 @@ import javax.persistence.Transient;
 
 import org.hibernate.annotations.BatchSize;
 
-import fi.hut.soberit.agilefant.web.page.PageItem;
 import flexjson.JSON;
 
 /**
@@ -45,7 +44,7 @@ import flexjson.JSON;
  */
 @Entity
 @BatchSize(size = 20)
-public class Project extends Backlog implements PageItem {
+public class Project extends Backlog {
 
     private Product product;
 
@@ -88,7 +87,7 @@ public class Project extends Backlog implements PageItem {
     }
 
     /** Iterations under this project. */
-    @OneToMany(mappedBy = "project")
+    @OneToMany(mappedBy = "parent")
     @BatchSize(size = 20)
     @JSON(include = false)
     public List<Iteration> getIterations() {
@@ -99,7 +98,6 @@ public class Project extends Backlog implements PageItem {
         this.iterations = iterations;
     }
 
-    // @Column(nullable = false)
     @JSON
     public Date getStartDate() {
         return startDate;
@@ -109,7 +107,6 @@ public class Project extends Backlog implements PageItem {
         this.startDate = startDate;
     }
 
-    // @Column(nullable = false)
     @JSON
     public Date getEndDate() {
         return endDate;
@@ -127,29 +124,6 @@ public class Project extends Backlog implements PageItem {
 
     public void setProjectType(ProjectType projectType) {
         this.projectType = projectType;
-    }
-
-    /** {@inheritDoc} */
-    @Transient
-    @JSON(include = false)
-    public List<PageItem> getChildren() {
-        List<PageItem> c = new ArrayList<PageItem>(this.iterations.size());
-        c.addAll(this.iterations);
-        return c;
-    }
-
-    /** {@inheritDoc} */
-    @Transient
-    @JSON(include = false)
-    public PageItem getParent() {
-        return getProduct();
-    }
-
-    /** {@inheritDoc} */
-    @Transient
-    @JSON(include = false)
-    public boolean hasChildren() {
-        return this.iterations.size() > 0 ? true : false;
     }
 
     @Column(nullable = false)

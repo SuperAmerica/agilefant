@@ -1,5 +1,7 @@
 package fi.hut.soberit.agilefant.model;
 
+import java.util.Collection;
+
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorType;
 import javax.persistence.Entity;
@@ -8,12 +10,13 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Type;
 
-import fi.hut.soberit.agilefant.web.page.PageItem;
 import flexjson.JSON;
 
 /**
@@ -45,7 +48,7 @@ import flexjson.JSON;
 // subclass types discriminated using string column
 @DiscriminatorColumn(name = "backlogtype", discriminatorType = DiscriminatorType.STRING)
 @Table(name = "backlog")
-public abstract class Backlog implements PageItem {
+public abstract class Backlog {
 
     private int id;
 
@@ -54,6 +57,8 @@ public abstract class Backlog implements PageItem {
     private String description;
 
     private Backlog parent;
+    
+    private Collection<Backlog> children;
     
     /**
      * Get the id of this object.
@@ -103,6 +108,7 @@ public abstract class Backlog implements PageItem {
      * @return the parent backlog
      */
     @JSON(include = false)
+    @ManyToOne
     public Backlog getParent() {
         return parent;
     }
@@ -114,4 +120,22 @@ public abstract class Backlog implements PageItem {
     public void setParent(Backlog parent) {
         this.parent = parent;
     }
+
+    /**
+     * Set the backlog's child backlogs.
+     * @param children
+     */
+    public void setChildren(Collection<Backlog> children) {
+        this.children = children;
+    }
+
+    /**
+     * Get the backlog's child backlogs.
+     * @return
+     */
+    @OneToMany(mappedBy = "parent")
+    public Collection<Backlog> getChildren() {
+        return children;
+    }
+   
 }

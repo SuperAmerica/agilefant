@@ -6,11 +6,9 @@ import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
-import javax.persistence.Transient;
 
 import org.hibernate.annotations.BatchSize;
 
-import fi.hut.soberit.agilefant.web.page.PageItem;
 import flexjson.JSON;
 
 /**
@@ -34,14 +32,14 @@ import flexjson.JSON;
  */
 @Entity
 @BatchSize(size=20)
-public class Product extends Backlog implements PageItem {
+public class Product extends Backlog {
 
     private List<Project> projects = new ArrayList<Project>();
     
     private List<Story> stories = new ArrayList<Story>();
     
     /** Get the collection of projects belonging to this product. */
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "parent")
 //    @OrderBy(clause = "startDate asc, endDate asc")
     @BatchSize(size=20)
     @JSON(include = false)
@@ -54,32 +52,6 @@ public class Product extends Backlog implements PageItem {
         this.projects = projects;
     }
 
-    /** {@inheritDoc} */
-    @Transient
-    @JSON(include = false)
-    public List<PageItem> getChildren() {
-        List<PageItem> c = new ArrayList<PageItem>(this.projects.size());
-        c.addAll(this.projects);
-        return c;
-    }
-
-    /** {@inheritDoc} */
-    @Transient
-    @JSON(include = false)
-    public PageItem getParent() {
-
-        // We don't really want to show portfolio as root
-        // return new PortfolioPageItem();
-        return null;
-    }
-    
-    /** {@inheritDoc} */
-    @Transient
-    @JSON(include = false)
-    public boolean hasChildren() {
-        return this.projects.size() > 0 ? true : false;
-    }
-    
     public void setStories(List<Story> stories) {
         this.stories = stories;
     }
@@ -88,6 +60,5 @@ public class Product extends Backlog implements PageItem {
     public Collection<Story> getStories() {
         return stories;
     }
-        
 }
         

@@ -16,7 +16,7 @@ import javax.persistence.Transient;
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Type;
 
-import fi.hut.soberit.agilefant.web.page.PageItem;
+import fi.hut.soberit.agilefant.web.page.Backlog;
 
 /**
  * Hibernate entity bean representing a Todo.
@@ -45,7 +45,7 @@ import fi.hut.soberit.agilefant.web.page.PageItem;
 @BatchSize(size=20)
 @Entity
 @Table(name = "todos")
-public class Todo implements PageItem {
+public class Todo implements Backlog {
 
     private int id;
 
@@ -114,14 +114,14 @@ public class Todo implements PageItem {
 
     /** {@inheritDoc} */
     @Transient
-    public Collection<PageItem> getChildren() {
+    public Collection<Backlog> getChildren() {
         // TODO Auto-generated method stub
         return null;
     }
 
     /** {@inheritDoc} */
     @Transient
-    public PageItem getParent() {
+    public Backlog getParent() {
         return null;
         //return getBacklogItem();
     }

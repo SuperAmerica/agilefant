@@ -33,4 +33,8 @@ public interface BacklogBusiness extends GenericBusiness<Backlog> {
 
     Collection<Backlog> retrieveMultiple(Collection<Integer> idList);
 
+    /**
+     * Get the number of backlog's child backlogs.
+     */
+    public Integer getNumberOfChildren(Backlog backlog);
 }

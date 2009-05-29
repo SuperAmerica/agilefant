@@ -8,10 +8,10 @@ import java.util.Collection;
  * @author jukka
  * 
  */
-public interface PageItem {
-    public Collection<PageItem> getChildren();
+public interface Backlog {
+    public Collection<Backlog> getChildren();
 
-    public PageItem getParent();
+    public Backlog getParent();
 
     public boolean hasChildren();
 

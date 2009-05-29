@@ -12,7 +12,6 @@ import javax.persistence.Transient;
 
 import org.hibernate.annotations.BatchSize;
 
-import fi.hut.soberit.agilefant.web.page.PageItem;
 import flexjson.JSON;
 
 /**
@@ -41,7 +40,7 @@ import flexjson.JSON;
  */
 @Entity
 @BatchSize(size = 20)
-public class Iteration extends Backlog implements PageItem {
+public class Iteration extends Backlog {
 
     private Date startDate;
 
@@ -78,30 +77,6 @@ public class Iteration extends Backlog implements PageItem {
 
     public void setStartDate(Date startDate) {
         this.startDate = startDate;
-    }
-
-    /** {@inheritDoc} */
-    @Transient
-    @JSON(include = false)
-    public Collection<PageItem> getChildren() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    /** {@inheritDoc} */
-    @Transient
-    @JSON(include = false)
-    public PageItem getParent() {
-        // TODO Auto-generated method stub
-        return getProject();
-    }
-
-    /** {@inheritDoc} */
-    @Transient
-    @JSON(include = false)
-    public boolean hasChildren() {
-        // TODO Auto-generated method stub
-        return false;
     }
 
     public void setStories(List<Story> stories) {

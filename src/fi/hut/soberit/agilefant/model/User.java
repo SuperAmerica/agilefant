@@ -18,7 +18,7 @@ import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Type;
 
 import fi.hut.soberit.agilefant.db.hibernate.Email;
-import fi.hut.soberit.agilefant.web.page.PageItem;
+import fi.hut.soberit.agilefant.web.page.Backlog;
 import flexjson.JSON;
 
 /**
@@ -31,7 +31,7 @@ import flexjson.JSON;
 @BatchSize(size = 20)
 @Entity
 @Table(name = "users")
-public class User implements PageItem {
+public class User implements Backlog {
 
     private int id;
 
@@ -112,7 +112,7 @@ public class User implements PageItem {
     /** {@inheritDoc} */
     @Transient
     @JSON(include = false)
-    public Collection<PageItem> getChildren() {
+    public Collection<Backlog> getChildren() {
         // TODO Auto-generated method stub
         return null;
     }
@@ -127,7 +127,7 @@ public class User implements PageItem {
     /** {@inheritDoc} */
     @Transient
     @JSON(include = false)
-    public PageItem getParent() {
+    public Backlog getParent() {
         return null;
     }
 

@@ -9,4 +9,13 @@ import fi.hut.soberit.agilefant.model.Backlog;
  */
 public interface BacklogDAO extends GenericDAO<Backlog> {
 
+    /**
+     * Gets the number of backlog's child backlogs.
+     */
+    public Integer getNumberOfChildren(Backlog backlog);
+    
+    /**
+     * Gets the number of backlog's child backlogs.
+     */
+    public Integer getNumberOfChildren(int backlogId);
 }

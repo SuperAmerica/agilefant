@@ -40,4 +40,8 @@ public class BacklogBusinessImpl extends GenericBusinessImpl<Backlog> implements
         return result;        
     }
 
+    /** {@inheritDoc} */    
+    public Integer getNumberOfChildren(Backlog backlog) {
+        return backlogDAO.getNumberOfChildren(backlog);
+    }
 }

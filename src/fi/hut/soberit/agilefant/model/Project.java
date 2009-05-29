@@ -58,8 +58,6 @@ public class Project extends Backlog {
 
     private List<Story> stories = new ArrayList<Story>();
 
-    private User owner;
-
     private int rank = 0;
 
     private Status status = Status.GREEN;
@@ -74,16 +72,6 @@ public class Project extends Backlog {
 
     public void setProduct(Product product) {
         this.product = product;
-    }
-
-    @ManyToOne
-    @JSON(include = false)
-    public User getOwner() {
-        return owner;
-    }
-
-    public void setOwner(User owner) {
-        this.owner = owner;
     }
 
     /** Iterations under this project. */

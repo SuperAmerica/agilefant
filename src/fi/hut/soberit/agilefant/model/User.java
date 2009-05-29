@@ -31,7 +31,7 @@ import flexjson.JSON;
 @BatchSize(size = 20)
 @Entity
 @Table(name = "users")
-public class User implements Backlog {
+public class User {
 
     private int id;
 
@@ -109,33 +109,11 @@ public class User implements Backlog {
         this.password = password;
     }
 
-    /** {@inheritDoc} */
-    @Transient
-    @JSON(include = false)
-    public Collection<Backlog> getChildren() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
     /** Get login name. */
     @Transient
     @JSON
     public String getName() {
         return this.loginName;
-    }
-
-    /** {@inheritDoc} */
-    @Transient
-    @JSON(include = false)
-    public Backlog getParent() {
-        return null;
-    }
-
-    /** {@inheritDoc} */
-    @Transient
-    public boolean hasChildren() {
-        // TODO Auto-generated method stub
-        return false;
     }
 
     /**

@@ -9,7 +9,6 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Type;
-import org.hibernate.validator.Range;
 
 import flexjson.JSON;
 

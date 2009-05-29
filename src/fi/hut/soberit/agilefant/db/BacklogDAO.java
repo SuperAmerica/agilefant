@@ -1,5 +1,7 @@
 package fi.hut.soberit.agilefant.db;
 
+import java.util.Collection;
+
 import fi.hut.soberit.agilefant.model.Backlog;
 
 /**
@@ -12,10 +14,7 @@ public interface BacklogDAO extends GenericDAO<Backlog> {
     /**
      * Gets the number of backlog's child backlogs.
      */
-    public Integer getNumberOfChildren(Backlog backlog);
-    
-    /**
-     * Gets the number of backlog's child backlogs.
-     */
-    public Integer getNumberOfChildren(int backlogId);
+    public int getNumberOfChildren(Backlog backlog);
+
+    public Collection<Backlog> retrieveMultiple(Collection<Integer> idList);
 }

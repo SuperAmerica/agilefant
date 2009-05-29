@@ -45,8 +45,6 @@ import flexjson.JSON;
 @BatchSize(size = 20)
 public class Project extends Backlog {
 
-    private Product product;
-
     private ProjectType projectType;
 
     private Date endDate;
@@ -62,16 +60,15 @@ public class Project extends Backlog {
     private Status status = Status.GREEN;
 
     /** The product, under which this project belongs. */
-    @ManyToOne(optional = false)
-    // @JoinColumn (nullable = true)
-    @JSON(include = false)
-    public Product getProduct() {
-        return product;
-    }
-
-    public void setProduct(Product product) {
-        this.product = product;
-    }
+//    @OneToMany(mappedBy = "parent")
+//    @JSON(include = false)
+//    public Product getProduct() {
+//        return product;
+//    }
+//
+//    public void setProduct(Product product) {
+//        this.product = product;
+//    }
 
     /** Iterations under this project. */
 //    @OneToMany(mappedBy = "parent")
@@ -113,7 +110,7 @@ public class Project extends Backlog {
         this.projectType = projectType;
     }
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     @JSON
     public int getRank() {
         return rank;

@@ -151,15 +151,17 @@
 			class="productAction">
 			<result>/WEB-INF/jsp/editProduct.jsp</result>
 		</action>
-		<!-- 
+		
 		<action name="ajaxCreateProduct" method="create"
             class="productAction">
-            <result>/WEB-INF/jsp/forms/createProduct.jsp</result>
-        </action>
+      <result>/WEB-INF/jsp/forms/createProduct.jsp</result>
+    </action>
+		<!-- 
 		<action name="createProduct" method="create"
 			class="productAction">
 			<result>/WEB-INF/jsp/editProduct.jsp</result>
 		</action>
+		
 		<action name="deleteProduct" method="delete"
 			class="productAction">
 			<result type="redirect-action">selectBacklog</result>
@@ -173,6 +175,7 @@
 				<param name="resetContextView">true</param>
 			</result>
 		</action>
+		-->
 		<action name="storeNewProduct" method="store"
 			class="productAction">
 			<result type="redirect-action">
@@ -182,7 +185,6 @@
 				<param name="resetContextView">true</param>
 			</result>
 		</action>
-		 -->
 		<!-- /Product actions -->
 		<!-- BacklogItem actions -->
 		<!-- 

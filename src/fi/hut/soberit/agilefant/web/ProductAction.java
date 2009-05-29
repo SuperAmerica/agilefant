@@ -3,11 +3,15 @@ package fi.hut.soberit.agilefant.web;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.opensymphony.xwork.Action;
 
+import fi.hut.soberit.agilefant.business.ProductBusiness;
 import fi.hut.soberit.agilefant.business.ProjectBusiness;
 import fi.hut.soberit.agilefant.db.ProductDAO;
 import fi.hut.soberit.agilefant.model.Product;
+import flexjson.JSONSerializer;
 
 public class ProductAction extends BacklogContentsAction implements CRUDAction {
 
@@ -18,6 +22,8 @@ public class ProductAction extends BacklogContentsAction implements CRUDAction {
 //    private BacklogItemDAO backlogItemDAO;
 
     private ProjectBusiness projectBusiness;
+    
+    private ProductBusiness productBusiness;
     
     private int productId;
 
@@ -64,7 +70,7 @@ public class ProductAction extends BacklogContentsAction implements CRUDAction {
 
     public String edit() {
         // Date startDate = new Date(0);
-        product = productDAO.get(productId);
+        product = productBusiness.retrieve(productId);
         if (product == null) {
             super.addActionError(super.getText("product.notFound"));
             return Action.ERROR;
@@ -113,9 +119,9 @@ public class ProductAction extends BacklogContentsAction implements CRUDAction {
         }
 
         if (productId == 0) {
-            productId = (Integer) productDAO.create(storable);
+            productId = (Integer) backlogBusiness.create(storable);
         } else {
-            productDAO.store(storable);
+            backlogBusiness.store(storable);
         }
         return CRUDAction.AJAX_SUCCESS;
     }
@@ -134,12 +140,30 @@ public class ProductAction extends BacklogContentsAction implements CRUDAction {
         storable.setDescription(this.product.getDescription());
     }
     
+    /**
+     * @return a string of JSON serialized products 
+     */
+    public String getAllProductsAsJSON() {
+        return new JSONSerializer().serialize(productBusiness.retrieveAll());
+    }
+    
+    public String getProductAsJSON() {
+        return new JSONSerializer().serialize(productBusiness.retrieve(productId));
+    }
+    
+    /**
+     * Get product data as JSON.
+     * <p>
+     * If given product id is greater than 0, return the product's data.
+     * Otherwise, return all products' data.
+     * @return product data as JSON string  
+     */
     public String getProductJSON() {
         if (productId > 0) {
-            jsonData = backlogBusiness.getBacklogAsJSON(productId);
+            jsonData = this.getProductAsJSON();
         }
         else {
-            jsonData = backlogBusiness.getAllProductsAsJSON();
+            jsonData = this.getAllProductsAsJSON();
         }
         return Action.SUCCESS;
     }
@@ -220,5 +244,10 @@ public class ProductAction extends BacklogContentsAction implements CRUDAction {
 
     public void setJsonData(String jsonData) {
         this.jsonData = jsonData;
+    }
+
+    @Autowired
+    public void setProductBusiness(ProductBusiness productBusiness) {
+        this.productBusiness = productBusiness;
     }
 }

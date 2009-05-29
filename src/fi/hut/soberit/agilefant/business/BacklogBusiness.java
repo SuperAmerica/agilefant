@@ -36,20 +36,5 @@ public interface BacklogBusiness extends GenericBusiness<Backlog> {
     /**
      * Get the number of backlog's child backlogs.
      */
-    public Integer getNumberOfChildren(Backlog backlog);
-    
-    /**
-     * Get the backlog as JSON.
-     */
-    public String getBacklogAsJSON(Backlog backlog);
-    
-    /**
-     * Get the backlog as JSON.
-     */
-    public String getBacklogAsJSON(int backlogId);
-    
-    /**
-     * Get all product's as JSON notation.
-     */
-    public String getAllProductsAsJSON();
+    public int getNumberOfChildren(Backlog backlog);
 }

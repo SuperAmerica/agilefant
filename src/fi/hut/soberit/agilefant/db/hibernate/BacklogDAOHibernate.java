@@ -1,5 +1,8 @@
 package fi.hut.soberit.agilefant.db.hibernate;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
@@ -20,15 +23,21 @@ public class BacklogDAOHibernate extends GenericDAOHibernate<Backlog> implements
     }
     
     /** {@inheritDoc} */
-    public Integer getNumberOfChildren(Backlog backlog) {
-        return getNumberOfChildren(backlog.getId());
+    public int getNumberOfChildren(Backlog backlog) {
+        DetachedCriteria crit = DetachedCriteria.forClass(Backlog.class);
+        crit.add(Restrictions.eq("parent", backlog));
+        crit.setProjection(Projections.rowCount());
+        Integer numberOfChildren = (Integer)(hibernateTemplate.findByCriteria(crit).get(0));
+        return numberOfChildren;
     }
     
-    /** {@inheritDoc} */
-    public Integer getNumberOfChildren(int backlogId) {
+    @SuppressWarnings("unchecked")
+    public Collection<Backlog> retrieveMultiple(Collection<Integer> idList) {
+        if (idList == null || idList.isEmpty()) {
+            return new ArrayList<Backlog>();
+        }
         DetachedCriteria crit = DetachedCriteria.forClass(Backlog.class);
-        crit.add(Restrictions.eq("parent.id", backlogId));
-        crit.setProjection(Projections.rowCount());
-        return (Integer)hibernateTemplate.findByCriteria(crit).get(0);
+        crit.add(Restrictions.in("id", idList));
+        return hibernateTemplate.findByCriteria(crit);
     }
 }

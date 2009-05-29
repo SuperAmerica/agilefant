@@ -5,6 +5,7 @@ import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 
@@ -15,10 +16,8 @@ import org.junit.Test;
 
 import fi.hut.soberit.agilefant.business.impl.BacklogBusinessImpl;
 import fi.hut.soberit.agilefant.db.BacklogDAO;
-import fi.hut.soberit.agilefant.db.ProductDAO;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Product;
-import flexjson.JSONSerializer;
 
 
 /**
@@ -32,14 +31,11 @@ public class BacklogBusinessTest extends TestCase {
 
     private BacklogBusinessImpl backlogBusiness = new BacklogBusinessImpl();
     private BacklogDAO backlogDAO;
-    private ProductDAO productDAO;
     
     @Before
     public void setUp() {
         backlogDAO = createMock(BacklogDAO.class);
         backlogBusiness.setBacklogDAO(backlogDAO);
-        productDAO = createMock(ProductDAO.class);
-        backlogBusiness.setProductDAO(productDAO);
     }
     
     @Test
@@ -50,42 +46,26 @@ public class BacklogBusinessTest extends TestCase {
         expect(backlogDAO.getNumberOfChildren(backlog)).andReturn(2);
         replay(backlogDAO);
         
-        assertEquals(new Integer(2), backlogBusiness.getNumberOfChildren(backlog));
+        assertEquals(2, backlogBusiness.getNumberOfChildren(backlog));
         
         verify(backlogDAO);
     }
 
     @Test
-    public void testGetBacklogAsJSON() {
-        Backlog backlog = new Product();
-        backlog.setName("Backlog test");
-        backlog.setId(2);
+    public void testRetrieveMultipleBacklogs() {
+        Collection<Integer> idList = Arrays.asList(1,2);
+        Collection<Backlog> retrievedBacklogs = new ArrayList<Backlog>();
+        Product prod1 = new Product();
+        Product prod2 = new Product();
+        retrievedBacklogs.add(prod1);
+        retrievedBacklogs.add(prod2);
         
-        expect(backlogDAO.get(2)).andReturn(backlog);
+        expect(backlogDAO.retrieveMultiple(idList)).andReturn(retrievedBacklogs);
         replay(backlogDAO);
-                
-        backlogBusiness.getBacklogAsJSON(2);
+        
+        backlogBusiness.retrieveMultiple(idList);
         
         verify(backlogDAO);
-    }
-    
-    @Test
-    public void testGetAllProductsAsJSON() {
-        Product prod1 = new Product();
-        prod1.setName("Product 1");
-        prod1.setId(123);
-        Product prod2 = new Product();
-        prod2.setName("Product 2");
-        prod2.setId(124);
-        Collection<Product> list = Arrays.asList(prod1, prod2);
-        String json = new JSONSerializer().serialize(list);
-        
-        expect(productDAO.getAll()).andReturn(list);
-        replay(productDAO);
-        
-        assertEquals(json, backlogBusiness.getAllProductsAsJSON());
-        
-        verify(productDAO);
     }
     
 //    private HistoryBusiness historyBusiness;

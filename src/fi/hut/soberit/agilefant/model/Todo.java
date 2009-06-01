@@ -16,8 +16,6 @@ import javax.persistence.Transient;
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Type;
 
-import fi.hut.soberit.agilefant.web.page.Backlog;
-
 /**
  * Hibernate entity bean representing a Todo.
  * <p>
@@ -45,7 +43,7 @@ import fi.hut.soberit.agilefant.web.page.Backlog;
 @BatchSize(size=20)
 @Entity
 @Table(name = "todos")
-public class Todo implements Backlog {
+public class Todo {
 
     private int id;
 

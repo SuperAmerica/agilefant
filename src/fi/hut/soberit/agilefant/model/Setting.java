@@ -13,8 +13,6 @@ import javax.persistence.Transient;
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Type;
 
-import fi.hut.soberit.agilefant.web.page.Backlog;
-
 /**
  * Hibernate entity bean representing a Setting.
  * <p>
@@ -32,7 +30,7 @@ import fi.hut.soberit.agilefant.web.page.Backlog;
 @BatchSize(size=20)
 @Entity
 @Table(name = "settings")
-public class Setting implements Backlog {
+public class Setting {
 
     private int id;
     

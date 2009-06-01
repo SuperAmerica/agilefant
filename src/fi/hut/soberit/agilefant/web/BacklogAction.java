@@ -1,6 +1,5 @@
 package fi.hut.soberit.agilefant.web;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -51,7 +50,7 @@ public class BacklogAction extends ActionSupport {
     //Ugly hack, refactor later
     private int iterationGoalId = 0;
     
-    private Map<Integer, String> userIds = new HashMap<Integer, String>();
+    private Set<Integer> userIds = new HashSet<Integer>();
 
     private BacklogItemBusiness backlogItemBusiness;
 
@@ -227,7 +226,7 @@ public class BacklogAction extends ActionSupport {
     private void changeResponsiblesOfSelectedItems() {
         try {
             backlogBusiness.setResponsiblesForMultipleBacklogItems(backlogItemIds,
-                    userIds.keySet());
+                    userIds);
         } catch (ObjectNotFoundException e) {
             super.addActionError(super.getText(e.getMessage()));
         }
@@ -422,11 +421,11 @@ public class BacklogAction extends ActionSupport {
         this.keepResponsibles = keepResponsibles;
     }
 
-    public Map<Integer, String> getUserIds() {
+    public Set<Integer> getUserIds() {
         return userIds;
     }
 
-    public void setUserIds(Map<Integer, String> userIds) {
+    public void setUserIds(Set<Integer> userIds) {
         this.userIds = userIds;
     }
     

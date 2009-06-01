@@ -35,6 +35,7 @@ public class SpentEffortAction extends ActionSupport {
     
     public String getDaySumsByWeek() {
         Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
         this.currentWeek = cal.get(Calendar.WEEK_OF_YEAR);
         this.currentYear = cal.get(Calendar.YEAR);
         if(week == -1) {

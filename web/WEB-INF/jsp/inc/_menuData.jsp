@@ -82,7 +82,7 @@
 
 <%-- Backlog hierarchy --%>
 <c:otherwise>
-
+<aef:currentBacklog backlogId="${contextObjectId}"/>
 <c:set var="count" value="0" />
 <c:set var="amount" value="${fn:length(menuData.menuItems)}" />
 [

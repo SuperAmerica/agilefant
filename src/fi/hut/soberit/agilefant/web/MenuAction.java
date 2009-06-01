@@ -37,6 +37,8 @@ public class MenuAction extends ActionSupport {
     private String requestId = "";
     private int backlogId;
     private Backlog backlog;
+    
+    private int contextObjectId = 0;
 
     private MenuData menuData;
 
@@ -258,6 +260,14 @@ public class MenuAction extends ActionSupport {
 
     public void setSubnavi(String subnavi) {
         this.subnavi = subnavi;
+    }
+
+    public void setContextObjectId(int contextObjectId) {
+        this.contextObjectId = contextObjectId;
+    }
+
+    public int getContextObjectId() {
+        return contextObjectId;
     }
     
 }

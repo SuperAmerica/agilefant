@@ -4,6 +4,7 @@
 
 <%@attribute name="navi"%>
 <%@attribute name="subnavi"%>
+<%@attribute name="menuContextId"%>
 <%@attribute name="title"%>
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
@@ -247,11 +248,12 @@ Agilefant
 	$("#loadingDiv").ajaxStart(function() {
 	    $(this).show();
 	});
-    var navi = '<%=navi%>';
-    var subnavi = '<%=subnavi%>';
+    var navi = '${navi}';
+    var subnavi = '${subnavi}';
+    var contextObjectId = '${menuContextId}';
     
     $("#treemenu").treeview({
-        url: "menuData.action?navi=" + navi + "&subnavi=" + subnavi,
+        url: "menuData.action?navi=" + navi + "&subnavi=" + subnavi + "&contextObjectId=" + contextObjectId,
         collapsed: false,
         unique: false,
         

@@ -4,7 +4,8 @@
 <c:set var="divId" value="1336" scope="page" />
 <aef:currentBacklog backlogId="${product.id}"/>
 
-<aef:menu navi="backlog" title="${product.name}"/>
+<aef:menu navi="backlog" title="${product.name}" menuContextId="${product.id}"/>
+
 <ww:actionerror />
 <ww:actionmessage />
 

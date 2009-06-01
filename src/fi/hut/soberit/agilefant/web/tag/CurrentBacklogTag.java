@@ -36,7 +36,7 @@ public class CurrentBacklogTag extends SpringTagSupport {
     @Override
     public int doStartTag() throws JspException {
         backlogBusiness = requireBean("backlogBusiness");
-        this.backlog = backlogBusiness.retrieve(backlogId);
+        this.backlog = backlogBusiness.retrieveIfExists(backlogId);
         this.resolveIds();
         super.getPageContext().setAttribute(
                 CurrentBacklogTag.CURRENT_ACTION, this.currentAction);

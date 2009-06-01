@@ -5,7 +5,7 @@
 <aef:currentBacklog backlogId="${iteration.id}"/>
 
 <c:set var="divId" value="1336" scope="page" />
-<aef:menu navi="backlog" title="${iteration.name}"/>
+<aef:menu navi="backlog" title="${iteration.name}" menuContextId="${iteration.id}"/>
 <aef:productList />
 
 <ww:actionerror />

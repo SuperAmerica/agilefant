@@ -58,7 +58,9 @@ public class MenuBusinessImpl implements MenuBusiness {
                 type = "iteration";
             }
             
-            boolean hasChildren = (backlogBusiness.getNumberOfChildren(backlog) > 0);
+            int num = backlogBusiness.getNumberOfChildren(item);
+            
+            boolean hasChildren = (num > 0);
             data.getHasChildren().put(item, hasChildren);
             data.getObjectTypes().put(item, type);
         }

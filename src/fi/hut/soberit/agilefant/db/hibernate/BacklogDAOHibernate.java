@@ -3,7 +3,9 @@ package fi.hut.soberit.agilefant.db.hibernate;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.hibernate.Criteria;
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Projection;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
@@ -24,11 +26,11 @@ public class BacklogDAOHibernate extends GenericDAOHibernate<Backlog> implements
     
     /** {@inheritDoc} */
     public int getNumberOfChildren(Backlog backlog) {
-        DetachedCriteria crit = DetachedCriteria.forClass(Backlog.class);
-        crit.add(Restrictions.eq("parent", backlog));
-        crit.setProjection(Projections.rowCount());
-        Integer numberOfChildren = (Integer)(hibernateTemplate.findByCriteria(crit).get(0));
-        return numberOfChildren;
+        Criteria criteria = getCurrentSession().createCriteria(Backlog.class);
+        criteria.add(Restrictions.idEq(backlog.getId()));
+        criteria.createCriteria("children");
+        criteria.setProjection(Projections.rowCount());
+        return ((Integer)criteria.list().get(0)).intValue();
     }
     
     @SuppressWarnings("unchecked")

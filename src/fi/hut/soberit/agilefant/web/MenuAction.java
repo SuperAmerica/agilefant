@@ -89,7 +89,7 @@ public class MenuAction extends ActionSupport {
 
         // Get the data
         menuData = menuBusiness.getSubMenuData(backlog);
-
+        
         // Get the submenu data
         for (Backlog blog : openBacklogs) {
             openDatas.put(blog, menuBusiness.getSubMenuData(blog));

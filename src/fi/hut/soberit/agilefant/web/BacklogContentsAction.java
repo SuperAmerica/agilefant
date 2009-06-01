@@ -1,5 +1,7 @@
 package fi.hut.soberit.agilefant.web;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.opensymphony.xwork.ActionSupport;
 
 import fi.hut.soberit.agilefant.business.BacklogBusiness;
@@ -42,14 +44,17 @@ public class BacklogContentsAction extends ActionSupport {
 //    
 //    private AFTime spentEffortSum = new AFTime(0);
 //    
+    @Autowired
     protected BacklogBusiness backlogBusiness;
     
 //    protected BacklogItemBusiness backlogItemBusiness;
 //    
 //    protected BusinessThemeBusiness businessThemeBusiness;
     
+    @Autowired
     protected HourEntryBusiness hourEntryBusiness;
     
+    @Autowired
     protected SettingBusiness settingBusiness;
 
     protected void initializeContents(int backlogId) {

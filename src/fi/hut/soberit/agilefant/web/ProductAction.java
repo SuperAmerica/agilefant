@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 import com.opensymphony.xwork.Action;
 
@@ -13,16 +15,21 @@ import fi.hut.soberit.agilefant.db.ProductDAO;
 import fi.hut.soberit.agilefant.model.Product;
 import flexjson.JSONSerializer;
 
+@Component("productAction")
+@Scope("prototype")
 public class ProductAction extends BacklogContentsAction implements CRUDAction {
 
     private static final long serialVersionUID = 1834399750050895118L;
 
+    @Autowired
     private ProductDAO productDAO;
 
 //    private BacklogItemDAO backlogItemDAO;
 
+    @Autowired
     private ProjectBusiness projectBusiness;
     
+    @Autowired
     private ProductBusiness productBusiness;
     
     private int productId;

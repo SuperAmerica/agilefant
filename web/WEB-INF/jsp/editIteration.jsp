@@ -16,6 +16,7 @@
 </script>
 
 <h2><c:out value="${iteration.name}" /></h2>
+
 <table>
 	<table>
 		<tbody>
@@ -66,6 +67,7 @@
 					<tr>	
 						<th class="info1">Planned iteration size</th>
 						<td class="info3" ondblclick="return editIteration();">
+            <%--
 							<c:choose>
 							<c:when test="${(!empty iteration.backlogSize)}">
 								<c:out value="${iteration.backlogSize}"/>h
@@ -73,7 +75,7 @@
 							<c:otherwise>
 								-
 							</c:otherwise>
-							</c:choose>
+							</c:choose> --%>
 						</td>
 					    <td></td>			
 					</tr>
@@ -131,7 +133,7 @@
 								<option class="inactive" value="">(select project)</option>
 								<c:forEach items="${productList}" var="product">
 									<option value="" class="inactive productOption">${aef:out(product.name)}</option>
-									<c:forEach items="${product.projects}" var="project">
+									<c:forEach items="${product.children}" var="project">
 										<c:choose>
 											<c:when test="${project.id == currentProjectId}">
 												<option selected="selected" value="${project.id}"
@@ -146,20 +148,17 @@
 								</c:forEach>
 							</select></td>
 						</tr>
-
+<%--
                         <tr>
 							<td>Planned iteration size</td>
 							<td></td>
 							<td colspan="2"><ww:textfield size="10" id="iteration.backlogSize" name="iteration.backlogSize" /> (total man hours)
 							</td>
-						</tr>
+						</tr> --%>
 						<tr>
 							<td>Start date</td>
 							<td>*</td>
-							<td colspan="2"><%--<ww:datepicker value="%{#start}" size="15"
-										showstime="true"
-										format="%{getText('webwork.datepicker.format')}"
-										name="startDate" />--%> <aef:datepicker id="start_date"
+							<td colspan="2"> <aef:datepicker id="start_date"
 								name="startDate"
 								format="%{getText('webwork.shortDateTime.format')}"
 								value="%{#start}" /></td>
@@ -167,10 +166,7 @@
 						<tr>
 							<td>End date</td>
 							<td>*</td>
-							<td colspan="2"><%--<ww:datepicker value="%{#end}" size="15"
-										showstime="true"
-										format="%{getText('webwork.datepicker.format')}"
-										name="endDate" />--%> <aef:datepicker id="end_date"
+							<td colspan="2"> <aef:datepicker id="end_date"
 								name="endDate"
 								format="%{getText('webwork.shortDateTime.format')}"
 								value="%{#end}" /></td>
@@ -197,7 +193,7 @@
 			</tr>
 		</tbody>
 	</table>
-
+<%--
 
 	<script type="text/javascript">
 	
@@ -339,5 +335,5 @@ $(document).ready(function() {
 
 <p><img src="drawChart.action?iterationId=${iteration.id}"
 	id="bigChart" width="780" height="600" /></p>
-
+--%>
 	<%@ include file="./inc/_footer.jsp"%>

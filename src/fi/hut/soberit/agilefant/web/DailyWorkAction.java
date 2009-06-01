@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
 import com.opensymphony.xwork.ActionContext;
 import com.opensymphony.xwork.ActionSupport;
 
@@ -18,6 +22,11 @@ import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.security.SecurityUtil;
 import fi.hut.soberit.agilefant.util.UserComparator;
 
+
+
+
+@Component("dailyWorkAction")
+@Scope("prototype")
 public class DailyWorkAction extends ActionSupport {
     private static final long serialVersionUID = 5732278003634700787L;
 
@@ -33,14 +42,19 @@ public class DailyWorkAction extends ActionSupport {
 
     private User user;
 
+    @Autowired
     private BacklogBusiness backlogBusiness;
     
+    @Autowired
     private ProjectBusiness projectBusiness;
 
+    @Autowired
     private UserBusiness userBusiness;
     
+    @Autowired
     private HourEntryBusiness hourEntryBusiness;
     
+    @Autowired
     private SettingBusiness settingBusiness;
 
     private int userId;

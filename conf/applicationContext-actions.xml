@@ -25,14 +25,14 @@
 	<bean name="workTypeAction"
 		class="fi.hut.soberit.agilefant.web.WorkTypeAction" singleton="false"
 		autowire="byName" />
-	-->
+
 	<bean name="projectAction" class="fi.hut.soberit.agilefant.web.ProjectAction"
 			scope="prototype" autowire="byName">
 		<property name="dateFormat">
 			<ref local="dateFormat"/>
 		</property>
 	</bean>
-	<!-- 
+
 	<bean name="todoAction"
 		class="fi.hut.soberit.agilefant.web.TodoAction" singleton="false"
 		autowire="byName" />
@@ -46,10 +46,10 @@
 			<ref local="dateFormat"/>
 		</property>		
 	</bean>
-	-->
+
 	<bean name="productAction" class="fi.hut.soberit.agilefant.web.ProductAction"
 		autowire="byName" scope="prototype" />
-	<!-- 
+
 	<bean name="backlogItemAction"
 		class="fi.hut.soberit.agilefant.web.BacklogItemAction"
 		singleton="false" autowire="byName" />
@@ -71,10 +71,10 @@
 	<bean name="contextViewInterceptor"
 		class="fi.hut.soberit.agilefant.web.context.ContextViewInterceptor"
 		autowire="byName" />
-		-->
+
 	<bean name="dailyWorkAction" class="fi.hut.soberit.agilefant.web.DailyWorkAction"
 		autowire="byName" scope="prototype" />
-		<!-- 
+
 	<bean name="projectPortfolioAction"
 		class="fi.hut.soberit.agilefant.web.ProjectPortfolioAction"
 		singleton="false" autowire="byName" />

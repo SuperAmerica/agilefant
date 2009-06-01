@@ -3,7 +3,6 @@ package fi.hut.soberit.agilefant.web;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -11,6 +10,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 import com.opensymphony.xwork.Action;
 
@@ -18,8 +20,6 @@ import fi.hut.soberit.agilefant.business.ProductBusiness;
 import fi.hut.soberit.agilefant.business.ProjectBusiness;
 import fi.hut.soberit.agilefant.business.ProjectTypeBusiness;
 import fi.hut.soberit.agilefant.business.UserBusiness;
-import fi.hut.soberit.agilefant.db.ProductDAO;
-import fi.hut.soberit.agilefant.db.ProjectDAO;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.ProjectType;
@@ -27,6 +27,8 @@ import fi.hut.soberit.agilefant.model.Status;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.util.CalendarUtils;
 
+@Component("projectAction")
+@Scope("prototype")
 public class ProjectAction extends BacklogContentsAction implements CRUDAction {
 
     Logger log = Logger.getLogger(this.getClass());
@@ -45,6 +47,7 @@ public class ProjectAction extends BacklogContentsAction implements CRUDAction {
 
 //    private ProjectDAO projectDAO;
 
+    @Autowired
     private ProjectTypeBusiness projectTypeBusiness;
 
     // private ProductDAO productDAO;
@@ -73,10 +76,13 @@ public class ProjectAction extends BacklogContentsAction implements CRUDAction {
     
     private List<User> assignableUsers = new ArrayList<User>();
 
+    @Autowired
     private UserBusiness userBusiness;
 
+    @Autowired
     private ProjectBusiness projectBusiness;
     
+    @Autowired
     private ProductBusiness productBusiness;
     
 //    private Map<Iteration, EffortSumData> effLeftSums;

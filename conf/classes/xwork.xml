@@ -434,23 +434,27 @@
 		<!-- /Todo actions -->
 
 		<!-- Iteration actions -->
-		<!-- 
+		 
 		<action name="editIteration" method="edit"
 			class="iterationAction">
 			<result>/WEB-INF/jsp/editIteration.jsp</result>
 		</action>
+		<!--
 		<action name="createIteration" method="create"
 			class="iterationAction">
 			<result>/WEB-INF/jsp/editIteration.jsp</result>
 		</action>
+		-->
 		<action name="ajaxCreateIteration" method="create"
-            class="iterationAction">
-            <result>/WEB-INF/jsp/forms/createIteration.jsp</result>
-        </action>
-		<action name="deleteIteration" method="delete"
+        class="iterationAction">
+        <result>/WEB-INF/jsp/forms/createIteration.jsp</result>
+    </action>
+ 
+    <action name="deleteIteration" method="delete"
 			class="iterationAction">
 			<result type="redirect">editProject.action?projectId=${projectId}</result>
 		</action>
+		
 		<action name="storeIteration" method="store"
 			class="iterationAction">
 			<result type="redirect-action">
@@ -460,6 +464,8 @@
 				<param name="resetContextView">true</param>
 			</result>
 		</action>
+
+		
 		<action name="storeNewIteration" method="store"
 			class="iterationAction">
 			<result type="redirect-action">
@@ -470,6 +476,7 @@
 			</result>
 		</action>
 		
+		<!-- 
 		<action name="iterationTabs" method="edit"
 			class="iterationAction">
 			<result>/WEB-INF/jsp/inc/iterationAjax.jsp</result>
@@ -651,8 +658,8 @@
 		<action name="ajaxCreateIterationGoal" method="create"
             class="iterationGoalAction">
             <result>/WEB-INF/jsp/forms/createIterationGoal.jsp</result>
-        </action>
-
+    </action>
+   
     <action name="moveIterationGoal" method="moveIterationGoal"
       class="iterationGoalAction">
     </action>

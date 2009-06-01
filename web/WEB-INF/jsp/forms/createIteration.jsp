@@ -31,7 +31,7 @@
 				<option class="inactive" value="">(select project)</option>
 				<c:forEach items="${productList}" var="product">
 					<option value="" class="inactive productOption">${aef:out(product.name)}</option>
-					<c:forEach items="${product.projects}" var="project">
+					<c:forEach items="${product.children}" var="project">
 						<c:choose>
 							<c:when test="${project.id == projectId}">
 								<option selected="selected" value="${project.id}"

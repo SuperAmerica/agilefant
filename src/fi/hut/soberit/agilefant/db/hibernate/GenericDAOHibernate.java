@@ -140,13 +140,18 @@ public abstract class GenericDAOHibernate<T> implements GenericDAO<T> {
     }
     
     @SuppressWarnings("unchecked")
-    public Collection<T> asCollection(Criteria criteria) {
+    public <ResultType> Collection<ResultType> asCollection(Criteria criteria) {
         return criteria.list();
     }
 
     @SuppressWarnings("unchecked")
-    public List<T> asList(Criteria criteria) {
+    public <ResultType> List<ResultType> asList(Criteria criteria) {
         return criteria.list();
+    }
+    
+    @SuppressWarnings("unchecked")
+    public <ResultType> ResultType uniqueResult(Criteria criteria) {
+        return (ResultType) criteria.uniqueResult();
     }
 
 }

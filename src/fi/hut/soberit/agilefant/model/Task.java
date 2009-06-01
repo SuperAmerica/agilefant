@@ -1,11 +1,15 @@
 package fi.hut.soberit.agilefant.model;
 
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.IndexColumn;
 import org.hibernate.annotations.Type;
 
 import flexjson.JSON;
@@ -25,6 +29,7 @@ public class Task {
     private String description;
     private Iteration iteration;
     private Story story;
+    private List<Todo> todos;
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -72,5 +77,15 @@ public class Task {
 
     public void setStory(Story story) {
         this.story = story;
+    }
+
+    public void setTodos(List<Todo> todos) {
+        this.todos = todos;
+    }
+
+    @OneToMany(mappedBy = "task")
+    @IndexColumn(name="rank")
+    public List<Todo> getTodos() {
+        return todos;
     }
 }

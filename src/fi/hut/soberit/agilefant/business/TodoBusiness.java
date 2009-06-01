@@ -3,50 +3,51 @@ package fi.hut.soberit.agilefant.business;
 import java.util.Map;
 
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
-import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.State;
+import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.Todo;
 
 /**
  * Business interface for handling functionality related to todos.
  * 
+ * @author praty
  * @author Mika Salminen
  * 
  */
-public interface TodoBusiness {
+public interface TodoBusiness extends GenericBusiness<Todo>{
 
     /**
      * Stores a todo.
      * @param todoId the id of the todo
-     * @param backlogItemId the id of the todo's parent backlog item
+     * @param taskId the id of the todo's parent task
      * @param name the name of the todo
      * @param state the current state of the todo 
      * @return
      */
-    public Todo storeTodo(int todoId, int backlogItemId, String name, State state)
+    public Todo store(int todoId, int taskId, String name, State state)
         throws ObjectNotFoundException;
     
     /**
      * Stores a todo 
      * @param storable the todo to store
-     * @param bli the todo's parent backlog item
+     * @param task the todo's parent task
      * @param name the name of the todo
      * @param state the current state of the todo
      * @return
      */
-    public Todo storeTodo(Todo storable, BacklogItem bli, String name, State state);
+    public Todo store(Todo storable, Task task, String name, State state);
     
     /**
      * Removes the specified todo.
      * @param todo todo to remove
      */
-    public void removeTodo(Todo todo) throws ObjectNotFoundException;
+    public void delete(Todo todo) throws ObjectNotFoundException;
     
     /**
      * Removes the specified todo.
      * @param todo the id todo to remove
      */
-    public void removeTodo(int todoId) throws ObjectNotFoundException;
+    public void delete(int todoId) throws ObjectNotFoundException;
     
     
     /**
@@ -61,7 +62,7 @@ public interface TodoBusiness {
      * 
      */
 
-    public void updateMultipleTodos(BacklogItem bli, Map<Integer, State> newStatesMap, Map<Integer, String> newNamesMap)
+    public void updateMultipleTodos(Task task, Map<Integer, State> newStatesMap, Map<Integer, String> newNamesMap)
             throws ObjectNotFoundException;
 
     /**
@@ -77,7 +78,7 @@ public interface TodoBusiness {
 
     /**
      * Gives the todo the highest rank (i.e. rank value 0) among the todos owned
-     * by the same backlog item. If the todo is highest ranked, does nothing.
+     * by the same task. If the todo is highest ranked, does nothing.
      * 
      * @param todoId
      * @throws ObjectNotFoundException
@@ -87,7 +88,7 @@ public interface TodoBusiness {
 
     /**
      * Gives the todo the highest rank (i.e. rank value 0) among the todos owned
-     * by the same backlog item. If the todo is already highest ranked, does
+     * by the same task. If the todo is already highest ranked, does
      * nothing.
      * 
      * @param todoId
@@ -98,8 +99,8 @@ public interface TodoBusiness {
     public abstract void rankTodoTop(int todoId) throws ObjectNotFoundException;
 
     /**
-     * Gives the todo the lowest rank among the todos owned by the same backlog
-     * item. If the todo is already lowest ranked, does nothing.
+     * Gives the todo the lowest rank among the todos owned by the same task.
+     * If the todo is already lowest ranked, does nothing.
      * 
      * @param todoId
      * @throws ObjectNotFoundException
@@ -111,7 +112,5 @@ public interface TodoBusiness {
     
     public Map<Integer,Integer> getTodoCountByState(int backlogItemId);
     
-    public void delete(int todoId);
-    
-    public Todo getTodo(int todoId);
+    public Todo retrieve(int todoId);
 }

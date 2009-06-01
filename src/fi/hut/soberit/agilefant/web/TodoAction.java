@@ -1,16 +1,16 @@
 package fi.hut.soberit.agilefant.web;
 
-//import org.apache.commons.logging.Log;
-//import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
 
+import fi.hut.soberit.agilefant.business.TaskBusiness;
 import fi.hut.soberit.agilefant.business.TodoBusiness;
-import fi.hut.soberit.agilefant.db.BacklogItemDAO;
-import fi.hut.soberit.agilefant.db.TodoDAO;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
-import fi.hut.soberit.agilefant.model.BacklogItem;
+import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.Todo;
 import fi.hut.soberit.agilefant.security.SecurityUtil;
 import flexjson.JSONSerializer;
@@ -18,26 +18,27 @@ import flexjson.JSONSerializer;
 /**
  * Todo Action
  * 
+ * @author praty
  * @author khel
  */
-public class TodoAction extends ActionSupport implements CRUDAction {
+@Component("todoAction")
+@Scope("prototype")
+public class TodoAction extends ActionSupport {
 
     private static final long serialVersionUID = -8560828440589313663L;
 
     private int todoId;
 
-    private int backlogItemId;
+    private int taskId;
 
     private Todo todo;
 
-    private TodoDAO todoDAO;
-
-    private BacklogItemDAO backlogItemDAO;
+    private TaskBusiness taskBusiness;
 
     private TodoBusiness todoBusiness;
     
-    private String jsonData = "";
-
+    private String jsonData;
+    
     /**
      * Creates a new todo.
      * 
@@ -56,12 +57,11 @@ public class TodoAction extends ActionSupport implements CRUDAction {
      *         found
      */
     public String edit() {
-        todo = todoDAO.get(todoId);
+        todo = todoBusiness.retrieve(todoId);
         if (todo == null) {
             super.addActionError(super.getText("todo.notFound"));
             return Action.ERROR;
         }
-        backlogItemId = todo.getBacklogItem().getId();
         return Action.SUCCESS;
     }
     
@@ -72,7 +72,7 @@ public class TodoAction extends ActionSupport implements CRUDAction {
     public String ajaxStore() {
         Todo ret = null;
         try {
-            ret = todoBusiness.storeTodo(todoId, backlogItemId, todo.getName(), todo.getState());
+            ret = todoBusiness.store(todoId, taskId, todo.getName(), todo.getState());
         }
         catch (Exception e) {
             return CRUDAction.AJAX_ERROR;
@@ -88,66 +88,12 @@ public class TodoAction extends ActionSupport implements CRUDAction {
      */
     public String ajaxDelete() {
         try {
-            todoBusiness.removeTodo(todoId);
+            todoBusiness.delete(todoId);
         }
         catch (Exception e) {
             return CRUDAction.AJAX_ERROR;
         }
         return CRUDAction.AJAX_SUCCESS;
-    }
-
-    /**
-     * Stores the todo (a new todo created with create() or an old one fetched
-     * with edit()
-     * 
-     * @return Action.SUCCESS if todo is saved ok or Action.ERROR if there's
-     *         something wrong. (more information with getActionErrors())
-     */
-    @Deprecated
-    public String store() {
-        Todo storable = new Todo();
-        //Backlog backlog;
-
-        if (todo.getName().equals("")) {
-            super.addActionError(super.getText("todo.missingName"));
-            return Action.ERROR;
-        }
-
-        if (todoId > 0) {
-            storable = todoDAO.get(todoId);
-            if (storable == null) {
-                super.addActionError(super.getText("todo.notFound"));
-                return Action.ERROR;
-            }
-        }
-
-        this.fillStorable(storable);
-
-        if (super.hasActionErrors()) {
-            return Action.ERROR;
-        }
-
-        if (todoId == 0) {
-            // Set rank for todo temporarily to -1 to indicate new item 
-            storable.setRank(-1);
-            todoId = (Integer) todoDAO.create(storable);
-            // Get rank for new todo.
-            Todo lowestRankedTodo = todoDAO.getLowestRankedTodo(storable.getBacklogItem());
-            if(lowestRankedTodo == null || lowestRankedTodo.getRank() < 0) {
-                storable.setRank(0);
-            }
-            else {
-                storable.setRank(lowestRankedTodo.getRank() + 1);
-            }
-            todoDAO.store(storable);
-        }
-        else
-            todoDAO.store(storable);
-                
-        /* Update effort history */
-        backlogItemDAO.get(backlogItemId).getBacklog();
-
-        return Action.SUCCESS;
     }
 
     /**
@@ -169,7 +115,7 @@ public class TodoAction extends ActionSupport implements CRUDAction {
             return null;
         }
 
-        return (Integer) todoDAO.create(storable);
+        return (Integer) todoBusiness.create(storable);
     }
 
     /**
@@ -179,19 +125,7 @@ public class TodoAction extends ActionSupport implements CRUDAction {
      *         found
      */
     public String delete() {
-        todo = todoDAO.get(todoId);
-        
-        if (todo == null) {
-            super.addActionError(super.getText("todo.notFound"));
-            return Action.ERROR;
-        }
-        
-        BacklogItem backlogItem = todo.getBacklogItem();
-        backlogItemId = backlogItem.getId();
-        backlogItem.getTodos().remove(todo);
-        todo.setBacklogItem(null);
-        todoDAO.remove(todo);
-
+        todoBusiness.delete(todoId);
         return Action.SUCCESS;
     }
 
@@ -200,6 +134,7 @@ public class TodoAction extends ActionSupport implements CRUDAction {
      * 
      * @author hhaataja
      */
+    /*
     public String transformToBacklogItem() {
         // First store the todo if any changes were made
         this.store();
@@ -213,7 +148,7 @@ public class TodoAction extends ActionSupport implements CRUDAction {
         }
 
         // Get todo from database
-        storedTodo = todoDAO.get(todoId);
+        storedTodo = todoBusiness.get(todoId);
         if (storedTodo == null) {
             super.addActionError(super.getText("todo.notFound"));
             return Action.ERROR;
@@ -236,23 +171,24 @@ public class TodoAction extends ActionSupport implements CRUDAction {
 
         // Remove the persistent todo because it has been transformed to backlog
         // item
-        todoDAO.remove(storedTodo);
-        backlogItemDAO.store(backlogItem);
+        todoBusiness.remove(storedTodo);
+        storyBusiness.store(backlogItem);
 
         this.setBacklogItemId(backlogItem.getId());
 
         return Action.SUCCESS;
     }
+    */
 
     protected void fillStorable(Todo storable) {
-        if (storable.getBacklogItem() == null) {
-            BacklogItem backlogItem = backlogItemDAO.get(backlogItemId);
-            if (backlogItem == null) {
+        if (storable.getTask() == null) {
+            Task task = taskBusiness.retrieve(taskId);
+            if (task == null) {
                 super.addActionError(super.getText("backlogItem.notFound"));
                 return;
             }
-            storable.setBacklogItem(backlogItem);
-            backlogItem.getTodos().add(storable);
+            storable.setTask(task);
+            task.getTodos().add(storable);
             storable.setCreator(SecurityUtil.getLoggedUser());
         }
 
@@ -270,8 +206,8 @@ public class TodoAction extends ActionSupport implements CRUDAction {
     public String moveTodoUp() {
         try {
             this.todoBusiness.rankTodoUp(todoId);
-            this.backlogItemId = this.todoBusiness.getTodoById(todoId)
-                    .getBacklogItem().getId();
+            this.taskId = this.todoBusiness.getTodoById(todoId)
+                    .getTask().getId();
             return CRUDAction.AJAX_SUCCESS;
         } catch (ObjectNotFoundException onfe) {
             addActionError(onfe.getMessage());
@@ -282,8 +218,8 @@ public class TodoAction extends ActionSupport implements CRUDAction {
     public String moveTodoDown() {
         try {
             this.todoBusiness.rankTodoDown(todoId);
-            this.backlogItemId = this.todoBusiness.getTodoById(todoId)
-                    .getBacklogItem().getId();
+            this.taskId = this.todoBusiness.getTodoById(todoId)
+                    .getTask().getId();
             return CRUDAction.AJAX_SUCCESS;
         } catch (ObjectNotFoundException onfe) {
             addActionError(onfe.getMessage());
@@ -294,8 +230,8 @@ public class TodoAction extends ActionSupport implements CRUDAction {
     public String moveTodoBottom() {
         try {
             this.todoBusiness.rankTodoBottom(todoId);
-            this.backlogItemId = this.todoBusiness.getTodoById(todoId)
-                    .getBacklogItem().getId();
+            this.taskId = this.todoBusiness.getTodoById(todoId)
+                    .getTask().getId();
             return CRUDAction.AJAX_SUCCESS;
         } catch (ObjectNotFoundException onfe) {
             addActionError(onfe.getMessage());
@@ -306,8 +242,8 @@ public class TodoAction extends ActionSupport implements CRUDAction {
     public String moveTodoTop() {
         try {
             this.todoBusiness.rankTodoTop(todoId);
-            this.backlogItemId = this.todoBusiness.getTodoById(todoId)
-                    .getBacklogItem().getId();
+            this.taskId = this.todoBusiness.getTodoById(todoId)
+                    .getTask().getId();
             return CRUDAction.AJAX_SUCCESS;
         } catch (ObjectNotFoundException onfe) {
             addActionError(onfe.getMessage());
@@ -326,11 +262,11 @@ public class TodoAction extends ActionSupport implements CRUDAction {
     }
 
     public int getBacklogItemId() {
-        return backlogItemId;
+        return taskId;
     }
 
     public void setBacklogItemId(int backlogItemId) {
-        this.backlogItemId = backlogItemId;
+        this.taskId = backlogItemId;
     }
 
     public Todo getTodo() {
@@ -349,14 +285,12 @@ public class TodoAction extends ActionSupport implements CRUDAction {
         return jsonData;
     }
 
-    public void setTodoDAO(TodoDAO todoDAO) {
-        this.todoDAO = todoDAO;
+    @Autowired
+    public void setTaskBusiness(TaskBusiness taskBusiness) {
+        this.taskBusiness = taskBusiness;
     }
 
-    public void setBacklogItemDAO(BacklogItemDAO backlogItemDAO) {
-        this.backlogItemDAO = backlogItemDAO;
-    }
-
+    @Autowired
     public void setTodoBusiness(TodoBusiness todoBusiness) {
         this.todoBusiness = todoBusiness;
     }

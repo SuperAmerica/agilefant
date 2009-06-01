@@ -3,20 +3,21 @@ package fi.hut.soberit.agilefant.business.impl;
 import java.util.HashMap;
 import java.util.Map;
 
+import fi.hut.soberit.agilefant.business.GenericBusiness;
 import fi.hut.soberit.agilefant.business.TodoBusiness;
-import fi.hut.soberit.agilefant.db.BacklogItemDAO;
+import fi.hut.soberit.agilefant.db.TaskDAO;
 import fi.hut.soberit.agilefant.db.TodoDAO;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
-import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.State;
+import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.Todo;
 
-public class TodoBusinessImpl implements TodoBusiness {
+public class TodoBusinessImpl extends GenericBusinessImpl<Todo> implements TodoBusiness {
     private TodoDAO todoDAO;
-    private BacklogItemDAO backlogItemDAO;
+    private TaskDAO taskDAO;
 
     /** {@inheritDoc} */
-    public Todo storeTodo(int todoId, int backlogItemId, String name,
+    public Todo store(int todoId, int taskId, String name,
             State state) throws ObjectNotFoundException {
         Todo todo = null;
         if (todoId > 0) {
@@ -25,20 +26,20 @@ public class TodoBusinessImpl implements TodoBusiness {
                 throw new ObjectNotFoundException("todo.notFound");
             }
         }
-        BacklogItem bli = null;
-        if (backlogItemId > 0) {
-            bli = backlogItemDAO.get(backlogItemId);
-            if (bli == null) {
-                throw new ObjectNotFoundException("backlogItem.notFound");
+        Task task = null;
+        if (taskId > 0) {
+            task = taskDAO.get(taskId);
+            if (task == null) {
+                throw new ObjectNotFoundException("task.notFound");
             }
         }
-        return this.storeTodo(todo, bli, name, state);
+        return this.store(todo, task, name, state);
     }
     
     /** {@inheritDoc} */
-    public Todo storeTodo(Todo storable, BacklogItem bli, String name, State state) {
-        if (bli == null) {
-            throw new IllegalArgumentException("Backlog item must be not null");
+    public Todo store(Todo storable, Task task, String name, State state) {
+        if (task == null) {
+            throw new IllegalArgumentException("Task must be not null");
         }
         if (state == null) {
             throw new IllegalArgumentException("State must be not null");
@@ -49,7 +50,7 @@ public class TodoBusinessImpl implements TodoBusiness {
         
         storable.setName(name);
         storable.setState(state);
-        storable.setBacklogItem(bli);
+        storable.setTask(task);
         
         if (storable.getId() == 0) {
             int persistedId = (Integer)todoDAO.create(storable);
@@ -60,16 +61,9 @@ public class TodoBusinessImpl implements TodoBusiness {
             return storable;
         }
     }
-    
-    public void removeTodo(int todoId) throws ObjectNotFoundException {
-        this.todoDAO.remove(todoId);    
-    }
-    
-    public void removeTodo(Todo todo) throws ObjectNotFoundException{
-        this.removeTodo(todo.getId());
-    }
-    
-    public void updateMultipleTodos(BacklogItem bli, Map<Integer, State> newStatesMap, Map<Integer, String> newNamesMap)
+      
+    public void updateMultipleTodos(Task task,
+            Map<Integer, State> newStatesMap, Map<Integer, String> newNamesMap)
             throws ObjectNotFoundException {
         // Map of new todos.
         Map<Integer, Todo> newTodos = new HashMap<Integer, Todo>();
@@ -109,16 +103,16 @@ public class TodoBusinessImpl implements TodoBusiness {
         // Save new todos, ranks in reverse order.
         if (newTodos.size() > 0) {
         int lowestRank = -1;
-        if (todoDAO.getLowestRankedTodo(bli) != null) {
-            lowestRank = todoDAO.getLowestRankedTodo(bli).getRank();
+        if (todoDAO.getLowestRankedTodo(task) != null) {
+            lowestRank = todoDAO.getLowestRankedTodo(task).getRank();
         }
         int size = newTodos.size();
         int rankOrder = 1;
         
         for (Integer i: newTodos.keySet()) {           
             Todo todo = newTodos.get(i);
-            todo.setBacklogItem(bli);
-            bli.getTodos().add(todo);
+            todo.setTask(task);
+            task.getTodos().add(todo);
             if(lowestRank  < 0) {
                 todo.setRank(size - rankOrder);
             }
@@ -168,7 +162,7 @@ public class TodoBusinessImpl implements TodoBusiness {
         Todo todo = getTodoById(todoId);
         // Raise rank for all todos which have lower rank than the todo we are
         // moving.
-        this.todoDAO.raiseRankBetween(0, todo.getRank(), todo.getBacklogItem());
+        this.todoDAO.raiseRankBetween(0, todo.getRank(), todo.getTask());
         // Set todo's rank to zero to send it to top
         todo.setRank(0);
     }
@@ -179,7 +173,7 @@ public class TodoBusinessImpl implements TodoBusiness {
     public void rankTodoBottom(int todoId) throws ObjectNotFoundException {
         Todo todo = getTodoById(todoId);
         Todo lowestRankedTodo = this.todoDAO.getLowestRankedTodo(todo
-                .getBacklogItem());
+                .getTask());
         // If this is the first todo, this gets first rank in any case.               
         if (lowestRankedTodo.getId() == todo.getId()) {
             return;
@@ -207,9 +201,9 @@ public class TodoBusinessImpl implements TodoBusiness {
     public Map<Integer, Integer> getTodoCountByState(int backlogItemId) {
         Map<Integer, Integer> res = new HashMap<Integer,Integer>();
         
-        BacklogItem bli = backlogItemDAO.get(backlogItemId);
-        if(bli != null) {
-            for(Todo t : bli.getTodos()) {
+        Task task = taskDAO.get(backlogItemId);
+        if(task != null) {
+            for(Todo t : task.getTodos()) {
                 if(res.get(t.getState().getOrdinal()) == null) {
                     res.put(t.getState().getOrdinal(), 0);
                 }
@@ -221,24 +215,23 @@ public class TodoBusinessImpl implements TodoBusiness {
     public void delete(int todoId) {
         Todo cur = todoDAO.get(todoId);
         if(cur != null) {
-            cur.getBacklogItem().getTodos().remove(cur);
+            cur.getTask().getTodos().remove(cur);
             todoDAO.remove(todoId);
         }
         
     }
     
-    public Todo getTodo(int todoId) {
+    public Todo retrieve(int todoId) {
         return todoDAO.get(todoId);
     }
 
-    public void setBacklogItemDAO(BacklogItemDAO backlogItemDAO) {
-        this.backlogItemDAO = backlogItemDAO;
+    public void setTaskDAO(TaskDAO taskDAO) {
+        this.taskDAO = taskDAO;
     }
 
     public void setTodoDAO(TodoDAO todoDAO) {
-        this.todoDAO = todoDAO;
+        this.genericDAO = this.todoDAO = todoDAO;
     }
-
 
 
 }

@@ -28,13 +28,13 @@ import org.hibernate.annotations.Type;
  * <p>
  * Todo is a unit which, within a Cycle of Control model, is in interest of
  * workers of a team, and sometimes their project manager also. Todo is a
- * sub-part of a BacklogItem, and may be assigned to a named person.
+ * sub-part of a task, and may be assigned to a named person.
  * <p>
  * Workers are interested in todos which have been assigned to them as things to
  * be done. To know better, which todo should be tackled next, there is a
  * priority attached to a todo. Todo has a capability to log efforts done to it.
  * <p>
- * Project manager is generally more interested in BacklogItems than todos, but
+ * Project manager is generally more interested in Tasks than todos, but
  * in small projects, of for personal interests, may want to see the progress of
  * a single todo, too. Also, planning the future work to be assigned, it may be
  * useful for a Project manager to see the multitude of the todos assigned to
@@ -58,6 +58,13 @@ public class Todo {
     private User creator;
     
     private Integer rank;
+    
+    private Task task;
+
+    @ManyToOne(optional = false)
+    public Task getTask() {
+        return task;
+    }
 
     @Type(type = "escaped_text")
     public String getDescription() {
@@ -110,21 +117,12 @@ public class Todo {
         this.creator = creator;
     }
 
-    /** {@inheritDoc} */
     @Transient
     public Collection<Backlog> getChildren() {
         // TODO Auto-generated method stub
         return null;
     }
 
-    /** {@inheritDoc} */
-    @Transient
-    public Backlog getParent() {
-        return null;
-        //return getBacklogItem();
-    }
-
-    /** {@inheritDoc} */
     @Transient
     public boolean hasChildren() {
         // TODO Auto-generated method stub
@@ -158,6 +156,11 @@ public class Todo {
 
     public void setRank(Integer rank) {
         this.rank = rank;
+    }
+
+    public void setTask(Task task) {
+        this.task = task;
+        
     }
 
 }

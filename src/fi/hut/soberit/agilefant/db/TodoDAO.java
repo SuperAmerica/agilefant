@@ -2,7 +2,7 @@ package fi.hut.soberit.agilefant.db;
 
 import java.util.Collection;
 
-import fi.hut.soberit.agilefant.model.BacklogItem;
+import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.Todo;
 import fi.hut.soberit.agilefant.model.State;
 
@@ -14,16 +14,16 @@ import fi.hut.soberit.agilefant.model.State;
 public interface TodoDAO extends GenericDAO<Todo> {
 
     /**
-     * Get all todos of the given backlog item, which have one of the given
+     * Get all todos of the given task, which have one of the given
      * states.
      * 
-     * @param bli
-     *                backlog item, todos of which to find
+     * @param task
+     *                task, todos of which to find
      * @param states
      *                array of accepted states
      * @return all todos matching the criteria
      */
-    public Collection<Todo> getTodosByStateAndBacklogItem(BacklogItem bli,
+    public Collection<Todo> getTodosByStateAndBacklogItem(Task task,
             State[] states);
 
     /**
@@ -59,21 +59,21 @@ public interface TodoDAO extends GenericDAO<Todo> {
      * Finds the lowest ranked todo in given backlog item.
      * 
      * @param backlogItem
-     * @return lowest ranked todo in backlog item, null if backlog item does not
+     * @return lowest ranked todo in backlog item, null if task does not
      *         have any todos
      */
-    public Todo getLowestRankedTodo(BacklogItem backlogItem);
+    public Todo getLowestRankedTodo(Task task);
 
     /**
      * Raises todos' rank for all todos that have rank in range <i>lowLimitRank <=
-     * todo.rank < upperLimitRank</i> and belong to given backlog item. Does
+     * todo.rank < upperLimitRank</i> and belong to given task. Does
      * nothing if there are no todos that have their rank in the range.
      * 
      * @param lowLimitRank
      * @param upperLimitRank
-     * @param backlogItem
+     * @param task
      */
     public void raiseRankBetween(Integer lowLimitRank, Integer upperLimitRank,
-            BacklogItem backlogItem);
+            Task task);
 
 }

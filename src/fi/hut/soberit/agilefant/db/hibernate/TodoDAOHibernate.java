@@ -8,8 +8,8 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
 import fi.hut.soberit.agilefant.db.TodoDAO;
-import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.State;
+import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.Todo;
 
 /**
@@ -60,7 +60,7 @@ public class TodoDAOHibernate extends GenericDAOHibernate<Todo> implements
 
     /** {@inheritDoc} */
     @SuppressWarnings("unchecked")
-    public Collection<Todo> getTodosByStateAndBacklogItem(BacklogItem bli,
+    public Collection<Todo> getTodosByStateAndBacklogItem(Task bli,
             State[] states) {
         String[] ids = new String[states.length + 1];
         Object[] values = new Object[states.length + 1];
@@ -77,7 +77,7 @@ public class TodoDAOHibernate extends GenericDAOHibernate<Todo> implements
             query += " )";
         }
 
-        return (Collection<Todo>) super.getHibernateTemplate()
+        return (Collection<Todo>) hibernateTemplate
                 .findByNamedParam(query, ids, values);
     }
 
@@ -95,43 +95,40 @@ public class TodoDAOHibernate extends GenericDAOHibernate<Todo> implements
             query += " )";
         }
 
-        return (Collection<Todo>) super.getHibernateTemplate()
+        return (Collection<Todo>) hibernateTemplate
                 .findByNamedParam(query, ids, values);
     }
 
     public void raiseRankBetween(Integer lowLimitRank, Integer upperLimitRank,
-            BacklogItem backlogItem) {
+            Task task) {
         //List projects = null;
 
         if (lowLimitRank == null) {
-            super
-                    .getHibernateTemplate()
+                    hibernateTemplate
                     .bulkUpdate(
                             "update Todo t set t.rank = (t.rank + 1) where (t.rank < ?) and (t.backlogItem=?)",
-                            new Object[] { lowLimitRank, backlogItem });
+                            new Object[] { lowLimitRank, task });
         } else if (upperLimitRank == null) {
-            super
-                    .getHibernateTemplate()
+                    hibernateTemplate
                     .bulkUpdate(
                             "update Todo t set t.rank = (t.rank + 1) where (t.rank >= ?) and (t.backlogItem=?)",
-                            new Object[] { lowLimitRank, backlogItem });
+                            new Object[] { lowLimitRank, task });
         } else if (lowLimitRank != null && upperLimitRank != null) {
-            super
-                    .getHibernateTemplate()
+                    hibernateTemplate
                     .bulkUpdate(
                             "update Todo t set t.rank = (t.rank + 1) where (t.rank >= ?) and (t.rank < ?) and (t.backlogItem=?)",
                             new Object[] { lowLimitRank, upperLimitRank,
-                                    backlogItem });
+                                    task });
         } else
             throw new IllegalArgumentException("Both limits cannot be null.");
     }
     
     @SuppressWarnings("unchecked")
-    public Todo getLowestRankedTodo(BacklogItem backlogItem) {
+    public Todo getLowestRankedTodo(Task task) {
         DetachedCriteria criteria = DetachedCriteria.forClass(Todo.class);
-        criteria.add(Restrictions.eq("backlogItem", backlogItem));
+        criteria.add(Restrictions.eq("backlogItem", task));
         criteria.addOrder(Order.desc("rank"));
-        List<Todo> results = getHibernateTemplate().findByCriteria(criteria);
+        List<Todo> results = hibernateTemplate.findByCriteria(criteria);
         if (results == null || results.size() == 0) {
             return null;
         } else {
@@ -142,10 +139,10 @@ public class TodoDAOHibernate extends GenericDAOHibernate<Todo> implements
     @SuppressWarnings("unchecked")
     public Todo findLowerRankedTodo(Todo todo) {
         DetachedCriteria criteria = DetachedCriteria.forClass(Todo.class);
-        criteria.add(Restrictions.eq("backlogItem", todo.getBacklogItem()));
+        criteria.add(Restrictions.eq("backlogItem", todo.getTask()));
         criteria.add(Restrictions.gt("rank", todo.getRank()));
         criteria.addOrder(Order.asc("rank"));
-        List<Todo> results = getHibernateTemplate().findByCriteria(criteria);
+        List<Todo> results = hibernateTemplate.findByCriteria(criteria);
         if (results == null || results.size() == 0) {
             return null;
         } else {
@@ -156,10 +153,10 @@ public class TodoDAOHibernate extends GenericDAOHibernate<Todo> implements
     @SuppressWarnings("unchecked")
     public Todo findUpperRankedTodo(Todo todo) {
         DetachedCriteria criteria = DetachedCriteria.forClass(Todo.class);
-        criteria.add(Restrictions.eq("backlogItem", todo.getBacklogItem()));
+        criteria.add(Restrictions.eq("backlogItem", todo.getTask()));
         criteria.add(Restrictions.lt("rank", todo.getRank()));
         criteria.addOrder(Order.desc("rank"));
-        List<Todo> results = getHibernateTemplate().findByCriteria(criteria);
+        List<Todo> results = hibernateTemplate.findByCriteria(criteria);
         if (results == null || results.size() == 0) {
             return null;
         } else {

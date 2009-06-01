@@ -12,8 +12,8 @@ import junit.framework.TestCase;
 import fi.hut.soberit.agilefant.business.impl.TodoBusinessImpl;
 import fi.hut.soberit.agilefant.db.TodoDAO;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
-import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.State;
+import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.Todo;
 
 public class TodoBusinessTest extends TestCase {
@@ -23,7 +23,7 @@ public class TodoBusinessTest extends TestCase {
     private Todo todo1;
     private Todo todo2;
     private Todo todo3;
-    BacklogItem backlogItem;
+    Task task;
 
     /**
      * Method for testing the most basic functionality of the tested method.
@@ -33,7 +33,7 @@ public class TodoBusinessTest extends TestCase {
         todoDao = createMock(TodoDAO.class);
         todoBusiness.setTodoDAO(todoDao);
 
-        BacklogItem bli = new BacklogItem();
+        Task task = new Task();
         
         // Create test todos
         Todo todo1 = new Todo();
@@ -54,7 +54,7 @@ public class TodoBusinessTest extends TestCase {
 
         // Run the test case
         try {
-            todoBusiness.updateMultipleTodos(bli, newTodoStates, new HashMap<Integer, String>());
+            todoBusiness.updateMultipleTodos(task, newTodoStates, new HashMap<Integer, String>());
         } catch (ObjectNotFoundException e) {
             fail("Unexpected ObjectNotFoundException.");
         }
@@ -76,20 +76,20 @@ public class TodoBusinessTest extends TestCase {
         todoDao = createMock(TodoDAO.class);
         todoBusiness.setTodoDAO(todoDao);
 
-        backlogItem = new BacklogItem();
-        backlogItem.setId(100);
+        task = new Task();
+        task.setId(100);
         todo1 = new Todo();
         todo1.setId(1);
         todo1.setRank(1);
-        todo1.setBacklogItem(backlogItem);
+        todo1.setTask(task);
         todo2 = new Todo();
         todo2.setId(2);
         todo2.setRank(2);
-        todo2.setBacklogItem(backlogItem);
+        todo2.setTask(task);
         todo3 = new Todo();
         todo3.setId(3);
         todo3.setRank(3);
-        todo3.setBacklogItem(backlogItem);
+        todo3.setTask(task);
     }
 
     public void testMoveUp_basic() {
@@ -193,7 +193,7 @@ public class TodoBusinessTest extends TestCase {
     public void testMoveBottom_basic() {
         prepareRankTests();
         expect(todoDao.get(1)).andReturn(todo1);
-        expect(todoDao.getLowestRankedTodo(backlogItem)).andReturn(todo3);
+        expect(todoDao.getLowestRankedTodo(task)).andReturn(todo3);
         replay(todoDao);
         try {
             todoBusiness.rankTodoBottom(1);
@@ -210,7 +210,7 @@ public class TodoBusinessTest extends TestCase {
     public void testMoveBottom_alreadyAtBottom() {
         prepareRankTests();
         expect(todoDao.get(3)).andReturn(todo3);
-        expect(todoDao.getLowestRankedTodo(backlogItem)).andReturn(todo3);
+        expect(todoDao.getLowestRankedTodo(task)).andReturn(todo3);
         replay(todoDao);
         try {
             todoBusiness.rankTodoBottom(3);

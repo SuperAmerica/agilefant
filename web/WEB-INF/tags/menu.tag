@@ -7,6 +7,8 @@
 <%@attribute name="menuContextId"%>
 <%@attribute name="title"%>
 
+<aef:currentBacklog backlogId="${menuContextId}"/>
+
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
 <link rel="shortcut icon" href="static/img/favicon.png" type="image/png" />
@@ -142,7 +144,9 @@ Agilefant
     <c:choose>
         <c:when test="${hasProducts}">
             <ww:url id="createLink" action="ajaxCreateProject"
-                includeParams="none" />
+                includeParams="none">
+                <ww:param name="productId">${currentProductId}</ww:param>
+            </ww:url>
             <ww:a href="%{createLink}" onclick="return false;" title="Create a new project" cssClass="openCreateDialog openProjectDialog">Project &raquo;</ww:a>
         </c:when>
         <c:otherwise>
@@ -157,7 +161,9 @@ Agilefant
     <c:choose>
         <c:when test="${hasProjects}">
             <ww:url id="createLink" action="ajaxCreateIteration"
-                includeParams="none" />
+                includeParams="none">
+                <ww:param name="projectId">${currentProjectId}</ww:param>
+            </ww:url>
             <ww:a href="%{createLink}" onclick="return false;"  title="Create a new iteration" cssClass="openCreateDialog openIterationDialog">Iteration &raquo;</ww:a>
         </c:when>
         <c:otherwise>

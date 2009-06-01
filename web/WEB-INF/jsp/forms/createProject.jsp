@@ -30,13 +30,14 @@ $(document).ready(function() {
 					<td colspan="2"><ww:textfield size="60" name="project.name" /></td>
 				</tr>
 				<tr>
+        
 					<td>Product</td>
 					<td>*</td>
 					<td colspan="2"><select name="productId">
 						<option class="inactive" value="">(select product)</option>
 						<c:forEach items="${productList}" var="product">
 							<c:choose>
-								<c:when test="${product.id == currentProductId}">
+								<c:when test="${product.id == productId}">
 									<option selected="selected" value="${product.id}"
 										title="${product.name}" class="productOption">${aef:out(product.name)}</option>
 								</c:when>

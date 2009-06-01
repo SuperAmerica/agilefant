@@ -5,6 +5,7 @@ import java.util.HashSet;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -50,6 +51,8 @@ public class User {
     private Collection<Team> teams = new HashSet<Team>();
     
     private Collection<Assignment> assignments = new HashSet<Assignment>();
+    
+    private Collection<Story> stories = new HashSet<Story>();
 
     /**
      * Get the id of this object.
@@ -210,6 +213,18 @@ public class User {
 
     public void setAssignments(Collection<Assignment> assignments) {
         this.assignments = assignments;
+    }
+
+    public void setStories(Collection<Story> stories) {
+        this.stories = stories;
+    }
+
+    /** Get stories, of which the user is responsible. */
+    @ManyToMany(mappedBy = "responsibles",
+            targetEntity = fi.hut.soberit.agilefant.model.Story.class,
+            fetch = FetchType.LAZY)
+    public Collection<Story> getStories() {
+        return stories;
     }
 
 }

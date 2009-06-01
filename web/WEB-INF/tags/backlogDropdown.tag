@@ -32,7 +32,7 @@ item containers (e.g. product) -->
 		</c:if>
 		
 		<!-- List projects -->
-		<c:forEach items="${product.projects}" var="project">	
+		<c:forEach items="${product.children}" var="project">	
 
 			<c:if test="${project.id == preselectedBacklogId}">
 				<option selected="selected"  class="projectOption"
@@ -48,7 +48,7 @@ item containers (e.g. product) -->
 			</c:if>
 			
 			<!-- List iterations -->
-			<c:forEach items="${project.iterations}" var="iteration">
+			<c:forEach items="${project.children}" var="iteration">
 				
 				<c:if test="${iteration.id == preselectedBacklogId}">
 					<option	selected="selected" class="iterationOption"

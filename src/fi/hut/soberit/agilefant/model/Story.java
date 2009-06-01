@@ -1,12 +1,26 @@
 package fi.hut.soberit.agilefant.model;
 
+import java.util.Collection;
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.IndexColumn;
+
+import flexjson.JSON;
 
 @Entity
 @Table(name = "stories")
@@ -19,7 +33,8 @@ public class Story {
     private State state = State.NOT_STARTED;
     private Priority priority;
     private User creator;
-
+    private List<User> responsibles;
+    
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     public int getId() {
@@ -81,4 +96,26 @@ public class Story {
         this.creator = creator;
     }
 
+    public void setResponsibles(List<User> responsibles) {
+        this.responsibles = responsibles;
+    }
+
+    /**
+     * Get the users responsible for this story item.
+     * @return collection of the responsible users
+     */
+    @ManyToMany(
+            targetEntity = fi.hut.soberit.agilefant.model.User.class,
+            fetch = FetchType.LAZY
+    )
+    @JoinTable(
+            name = "story_user",
+            joinColumns={@JoinColumn(name = "Story_id")},
+            inverseJoinColumns={@JoinColumn(name = "User_id")}
+    )
+    @OrderBy("initials")
+    @BatchSize(size=20)
+    public Collection<User> getResponsibles() {
+        return responsibles;
+    }
 }

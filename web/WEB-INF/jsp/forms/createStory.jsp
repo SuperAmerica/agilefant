@@ -83,7 +83,7 @@ $(document).ready(function() {
 								class="productOption"><c:out value="${product.name}" /></option>
 						</c:otherwise>
 					</c:choose>
-					<c:forEach items="${product.projects}" var="project">
+					<c:forEach items="${product.children}" var="project">
 						<c:choose>
 							<c:when test="${project.id == backlogId}">
 								<option selected="selected" value="${project.id}"
@@ -94,7 +94,7 @@ $(document).ready(function() {
 									class="projectOption"><c:out value="${project.name}" /></option>
 							</c:otherwise>
 						</c:choose>
-						<c:forEach items="${project.iterations}" var="iteration">
+						<c:forEach items="${project.children}" var="iteration">
 							<c:choose>
 								<c:when test="${iteration.id == backlogId}">
 									<option selected="selected" value="${iteration.id}"
@@ -149,6 +149,7 @@ $(document).ready(function() {
             </div>
 			</td>
 		</tr>
+		<%-- TODO: Add theme support
 		<tr>
 			<td>Themes</td>
 			<td></td>
@@ -183,6 +184,7 @@ $(document).ready(function() {
             </div>
 			</td>
 		</tr>
+		 --%>
 		<tr>
             <td></td>
             <td></td>

@@ -235,7 +235,7 @@ $(document).ready(function() {
 								<option value="${product.id}" title="${product.name}" class="productOption">${aef:out(product.name)}</option>
 							</c:otherwise>
 						</c:choose>
-						<c:forEach items="${product.projects}" var="project">
+						<c:forEach items="${product.children}" var="project">
 							<c:choose>
 								<c:when test="${project.id == story.backlog.id}">
 									<option selected="selected" value="${project.id}" class="projectOption"

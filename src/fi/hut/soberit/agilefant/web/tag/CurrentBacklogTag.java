@@ -22,10 +22,10 @@ public class CurrentBacklogTag extends SpringTagSupport {
     
     private String currentAction = "";
     private String currentContext = "";
-    private int currentPageId = 0;
-    private int currentProductId = 0;
-    private int currentProjectId = 0;
-    private int currentIterationId = 0;
+    private Integer currentPageId = 0;
+    private Integer currentProductId = 0;
+    private Integer currentProjectId = 0;
+    private Integer currentIterationId = 0;
     
     private BacklogBusiness backlogBusiness;
     
@@ -58,14 +58,17 @@ public class CurrentBacklogTag extends SpringTagSupport {
             currentAction = "editProduct";
             currentContext = "product";
             currentPageId = backlog.getId();
-            currentProductId = backlog.getId();   
+            currentProductId = backlog.getId();
+            currentProjectId = null;
+            currentIterationId = null;
         }
         else if (backlog instanceof Project) {
             currentAction = "editProject";
             currentContext = "project";
             currentPageId = backlog.getId();
             currentProductId = backlog.getParent().getId(); 
-            currentProjectId = backlog.getId();   
+            currentProjectId = backlog.getId();
+            currentIterationId = null;
         }
         else if (backlog instanceof Iteration) {
             currentAction = "editIteration";

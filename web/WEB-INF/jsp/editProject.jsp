@@ -559,6 +559,8 @@ $(document).ready(function() {
 								
 				</td>
 				</tr>
+        --%>
+        
 				<tr>
 				<td>
 					<c:if test="${project.id > 0}">
@@ -585,9 +587,9 @@ $(document).ready(function() {
 									</tr>
 								</table>
 							</div>
-							<c:if test="${!empty project.iterations}">
+							<c:if test="${!empty project.children}">
 								<div class="subItemContent">
-										<display:table class="listTable" name="project.iterations"
+										<display:table class="listTable" name="project.children"
 											id="row" requestURI="editProject.action">
 											
 											<display:column sortable="true" sortProperty="name" title="Name">
@@ -602,7 +604,7 @@ $(document).ready(function() {
 												</div>
 												<div id="iterationTabContainer-${row.id}" class="tabContainer" style="overflow:visible; white-space: nowrap; width: 0px;"></div>
 											</display:column>
-											
+											<%--
 											<display:column sortable="true" title="Items">
 												${fn:length(row.backlogItems)}
 											</display:column>
@@ -617,13 +619,14 @@ $(document).ready(function() {
 												defaultorder="descending">
 												${origEstSums[row]}
 											</display:column>
-
+--%>
 											<display:column sortable="true" title="Start date">
 												<ww:date name="#attr.row.startDate" />
 											</display:column>
 											<display:column sortable="true" title="End date">
 												<ww:date name="#attr.row.endDate" />
 											</display:column>
+                      
 											<display:column sortable="false" title="Actions">
 												<img src="static/img/edit.png" alt="Edit" title="Edit" style="cursor: pointer;" onclick="handleTabEvent('iterationTabContainer-${row.id}', 'iteration', ${row.id}, 1);" />
 												<ww:url id="deleteLink" action="deleteIteration"
@@ -639,6 +642,8 @@ $(document).ready(function() {
 								</div>
 							</c:if>
 							</div>
+              
+              <%--
 		<div class="subItems" id="subItems_editProjectBacklogItems">
 		<div class="subItemHeader">
 			<table cellspacing="0" cellpadding="0">
@@ -677,11 +682,12 @@ $(document).ready(function() {
 								   width="780" height="600" />
 							</p>
 						</c:if>
+            --%>
 					</c:if>
 				</td>
 			</tr>
 		</table>
---%>
+
 <%-- Hour reporting here - Remember to expel David H. --%>
 <%--
 <aef:hourReporting id="hourReport"></aef:hourReporting>

@@ -17,6 +17,7 @@ import fi.hut.soberit.agilefant.model.User;
  * 
  */
 @Service("userBusiness")
+@Transactional
 public class UserBusinessImpl extends GenericBusinessImpl<User> implements
         UserBusiness {
 

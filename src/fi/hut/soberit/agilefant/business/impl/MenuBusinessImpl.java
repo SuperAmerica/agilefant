@@ -22,6 +22,7 @@ import fi.hut.soberit.agilefant.util.MenuData;
  * @author rjokelai
  */
 @Service("menuBusiness")
+@Transactional
 public class MenuBusinessImpl implements MenuBusiness {
 
     private ProductDAO productDAO;

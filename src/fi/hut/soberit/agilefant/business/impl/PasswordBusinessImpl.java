@@ -18,6 +18,7 @@ import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.model.User;
 
 @Service("passwordBusiness")
+@Transactional
 public class PasswordBusinessImpl implements PasswordBusiness {
     private JavaMailSender mailSender;
 

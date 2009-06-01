@@ -17,6 +17,7 @@ import fi.hut.soberit.agilefant.model.Setting;
  * 
  */
 @Service("settingBusiness")
+@Transactional
 public class SettingBusinessImpl extends GenericBusinessImpl<Setting> implements
         SettingBusiness {
 

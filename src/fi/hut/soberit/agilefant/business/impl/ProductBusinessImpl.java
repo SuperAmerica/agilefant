@@ -11,6 +11,7 @@ import fi.hut.soberit.agilefant.db.ProductDAO;
 import fi.hut.soberit.agilefant.model.Product;
 
 @Service("productBusiness")
+@Transactional
 public class ProductBusinessImpl extends GenericBusinessImpl<Product> implements
         ProductBusiness {
 

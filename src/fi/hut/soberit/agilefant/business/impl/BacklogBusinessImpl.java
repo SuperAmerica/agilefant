@@ -16,6 +16,7 @@ import fi.hut.soberit.agilefant.model.Backlog;
  * 
  */
 @Service("backlogBusiness")
+@Transactional
 public class BacklogBusinessImpl extends GenericBusinessImpl<Backlog> implements
         BacklogBusiness {
 
@@ -32,7 +33,8 @@ public class BacklogBusinessImpl extends GenericBusinessImpl<Backlog> implements
         return backlogDAO.retrieveMultiple(idList);
     }
 
-    /** {@inheritDoc} */    
+    /** {@inheritDoc} */
+    @Transactional(readOnly = true)
     public int getNumberOfChildren(Backlog backlog) {
         return backlogDAO.getNumberOfChildren(backlog);
     }

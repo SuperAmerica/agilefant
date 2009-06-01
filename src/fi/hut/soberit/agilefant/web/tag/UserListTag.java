@@ -21,11 +21,12 @@ public class UserListTag extends SpringTagSupport {
     public int doStartTag() throws JspException {
         userBusiness = requireBean("userBusiness");
 
-        List<User> list = (List<User>) userBusiness.getAllUsers();
+        List<User> list = (List<User>) userBusiness.retrieveAll();
 
         Collections.sort(list, new UserComparator());
 
         super.getPageContext().setAttribute(UserListTag.USER_LIST_KEY, list);
         return Tag.EVAL_BODY_INCLUDE;
     }
+    
 }

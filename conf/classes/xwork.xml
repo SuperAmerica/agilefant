@@ -539,7 +539,6 @@
 		<!-- /User actions -->
 
 		<!-- Team actions -->
-		<!-- 
 		<action name="listTeams" method="list" class="teamAction">
             <result>/WEB-INF/jsp/administration/listTeams.jsp</result>
         </action>
@@ -566,7 +565,7 @@
 			class="teamAction">
 			<result>/WEB-INF/jsp/inc/teamAjax.jsp</result>
 		</action>
-		 -->
+
 		<!-- /Team actions -->
 
 		<!-- These functions are for Saving and Deleting backlog items on daily work page -->
@@ -1015,9 +1014,11 @@
         <action name="getUserJSON" method="getUserJSON" class="userAction">
             <result>/WEB-INF/jsp/jsonData.jsp</result>
         </action>
+        -->
         <action name="getTeamJSON" method="getTeamJSON" class="teamAction">
             <result>/WEB-INF/jsp/jsonData.jsp</result>
         </action>
+        <!--
         <action name="getProjectTypeJSON" method="getProjectTypeJSON" class="projectTypeAction">
             <result>/WEB-INF/jsp/jsonData.jsp</result>
         </action>

@@ -10,4 +10,8 @@ import fi.hut.soberit.agilefant.model.Team;
  */
 public interface TeamBusiness extends GenericBusiness<Team> {
 
+    String retrieveJSON(int id);
+
+    String retrieveAllAsJSON();
+
 }

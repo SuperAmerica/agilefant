@@ -6,15 +6,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
 import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
 
 import fi.hut.soberit.agilefant.business.TeamBusiness;
-import fi.hut.soberit.agilefant.db.TeamDAO;
-import fi.hut.soberit.agilefant.db.UserDAO;
+import fi.hut.soberit.agilefant.business.UserBusiness;
 import fi.hut.soberit.agilefant.model.Team;
 import fi.hut.soberit.agilefant.model.User;
 
+@Component("teamAction")
+@Scope("prototype")
 public class TeamAction extends ActionSupport implements CRUDAction {
 
     private static final long serialVersionUID = -3334278151418035144L;
@@ -23,16 +28,14 @@ public class TeamAction extends ActionSupport implements CRUDAction {
 
     private Team team;
 
-    private TeamDAO teamDAO;
-
-    private UserDAO userDAO;
-    
     private TeamBusiness teamBusiness;
 
+    private UserBusiness userBusiness;
+
     private Map<Integer, String> userIds = new HashMap<Integer, String>();
-    
+
     private List<Team> teamList = new ArrayList<Team>();
-    
+
     private String jsonData = "";
 
     /**
@@ -44,9 +47,9 @@ public class TeamAction extends ActionSupport implements CRUDAction {
         team.setUsers(new ArrayList<User>());
         return Action.SUCCESS;
     }
-    
+
     public String list() {
-        teamList.addAll(teamDAO.getAll());
+        teamList.addAll(teamBusiness.retrieveAll());
         return Action.SUCCESS;
     }
 
@@ -54,7 +57,7 @@ public class TeamAction extends ActionSupport implements CRUDAction {
      * Delete an existing team.
      */
     public String delete() {
-        teamDAO.remove(teamId);
+        teamBusiness.delete(teamId);
         return Action.SUCCESS;
     }
 
@@ -62,7 +65,7 @@ public class TeamAction extends ActionSupport implements CRUDAction {
      * Edit a team.
      */
     public String edit() {
-        team = teamDAO.get(teamId);
+        team = teamBusiness.retrieveIfExists(teamId);
         if (team == null) {
             super.addActionError("Team not found!");
             return Action.ERROR;
@@ -76,7 +79,7 @@ public class TeamAction extends ActionSupport implements CRUDAction {
     public String store() {
         Team storable = new Team();
         if (teamId > 0) {
-            storable = teamDAO.get(teamId);
+            storable = teamBusiness.retrieveIfExists(teamId);
             if (storable == null) {
                 super.addActionError("Team not found!");
                 return Action.ERROR;
@@ -90,14 +93,14 @@ public class TeamAction extends ActionSupport implements CRUDAction {
         if (super.hasActionErrors()) {
             return Action.ERROR;
         }
-        teamDAO.store(storable);
+        teamBusiness.store(storable);
         return Action.SUCCESS;
     }
-    
+
     public String ajaxStoreTeam() {
         Team storable = new Team();
         if (teamId > 0) {
-            storable = teamDAO.get(teamId);
+            storable = teamBusiness.retrieve(teamId);
             if (storable == null) {
                 super.addActionError("Team not found!");
                 return CRUDAction.AJAX_ERROR;
@@ -111,7 +114,7 @@ public class TeamAction extends ActionSupport implements CRUDAction {
         if (super.hasActionErrors()) {
             return CRUDAction.AJAX_ERROR;
         }
-        teamDAO.store(storable);
+        teamBusiness.store(storable);
         return CRUDAction.AJAX_SUCCESS;
     }
 
@@ -119,8 +122,8 @@ public class TeamAction extends ActionSupport implements CRUDAction {
         storable.setDescription(team.getDescription());
 
         // Check that the name is valid
-        if (team.getName() == null || team.getName().length() == 0 ||
-                team.getName().trim().compareTo("") == 0) {
+        if (team.getName() == null || team.getName().length() == 0
+                || team.getName().trim().compareTo("") == 0) {
             super.addActionError("The team name can't be empty.");
             return;
         }
@@ -130,18 +133,17 @@ public class TeamAction extends ActionSupport implements CRUDAction {
         Collection<User> users = new ArrayList<User>();
 
         for (Integer uid : userIds.keySet()) {
-            users.add(userDAO.get(uid));
+            users.add(userBusiness.retrieve(uid));
         }
 
         storable.setUsers(users);
     }
-    
+
     public String getTeamJSON() {
         if (teamId > 0) {
-            jsonData = teamBusiness.getTeamJSON(teamId);
-        }
-        else {
-            jsonData = teamBusiness.getAllTeamsAsJSON();
+            jsonData = teamBusiness.retrieveJSON(teamId);
+        } else {
+            jsonData = teamBusiness.retrieveAllAsJSON();
         }
         return Action.SUCCESS;
     }
@@ -159,7 +161,7 @@ public class TeamAction extends ActionSupport implements CRUDAction {
 
     /**
      * @param teamId
-     *                the teamId to set
+     *            the teamId to set
      */
     public void setTeamId(int teamId) {
         this.teamId = teamId;
@@ -174,33 +176,10 @@ public class TeamAction extends ActionSupport implements CRUDAction {
 
     /**
      * @param team
-     *                the team to set
+     *            the team to set
      */
     public void setTeam(Team team) {
         this.team = team;
-    }
-
-    /**
-     * @return the teamDAO
-     */
-    public TeamDAO getTeamDAO() {
-        return teamDAO;
-    }
-
-    /**
-     * @param teamDAO
-     *                the teamDAO to set
-     */
-    public void setTeamDAO(TeamDAO teamDAO) {
-        this.teamDAO = teamDAO;
-    }
-
-    public UserDAO getUserDAO() {
-        return userDAO;
-    }
-
-    public void setUserDAO(UserDAO userDAO) {
-        this.userDAO = userDAO;
     }
 
     public Map<Integer, String> getUserIds() {
@@ -219,10 +198,7 @@ public class TeamAction extends ActionSupport implements CRUDAction {
         this.teamList = teamList;
     }
 
-    public TeamBusiness getTeamBusiness() {
-        return teamBusiness;
-    }
-
+    @Autowired
     public void setTeamBusiness(TeamBusiness teamBusiness) {
         this.teamBusiness = teamBusiness;
     }
@@ -234,5 +210,10 @@ public class TeamAction extends ActionSupport implements CRUDAction {
     public void setJsonData(String jsonData) {
         this.jsonData = jsonData;
     }
-    
+
+    @Autowired
+    public void setUserBusiness(UserBusiness userBusiness) {
+        this.userBusiness = userBusiness;
+    }
+
 }

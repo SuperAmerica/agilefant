@@ -137,4 +137,10 @@ public class Team implements Comparable<Team> {
         return getName().compareToIgnoreCase(o.getName());
     }
 
+    @Transient
+    @JSON(include = false)
+    public int getNumberOfUsers() {
+        return getUsers().size();
+    }
+
 }

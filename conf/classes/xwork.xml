@@ -283,23 +283,21 @@
 			class="projectAction">
 			<result type="redirect">editProduct.action?productId=${productId}</result>
 		</action>
-		<action name="storeProject" method="store"
-			class="projectAction">
-			<result type="redirect-action">
-				<param name="actionName">contextView</param>
-				<param name="contextName">project</param>
-				<param name="contextObjectId">${projectId}</param>
-				<param name="resetContextView">true</param>
-			</result>
-		</action>
-
-		<action name="saveProjectAssignments"
-			method="saveProjectAssignments" class="projectAction">
-			<result type="redirect-action">
-				<param name="actionName">projectPortfolio</param>
-			</result>
-		</action>
--->
+		-->
+    <action name="storeProject" method="store"
+      class="projectAction">
+      <result type="redirect-action">
+        <param name="actionName">contextView</param>
+        <param name="contextName">project</param>
+        <param name="contextObjectId">${projectId}</param>
+        <param name="resetContextView">true</param>
+      </result>
+    </action>
+	<!--
+		<action name="saveProjectAssignments" method="saveProjectAssignments"
+		class="projectAction"> <result type="redirect-action"> <param
+		name="actionName">projectPortfolio</param> </result> </action>
+	-->
 		<action name="storeNewProject" method="ajaxStoreProject"
 			class="projectAction">
 		</action>

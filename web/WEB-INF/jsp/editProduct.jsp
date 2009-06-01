@@ -9,13 +9,16 @@
 <aef:openDialogs context="businessTheme" id="openThemes" />
 
 <aef:openDialogs context="project" id="openProjects" />
-<%--
+
 <script type="text/javascript">
+
+var productId = ${product.id};
 
 function editProduct() {
     toggleDiv('editProductForm'); toggleDiv('descriptionDiv'); showWysiwyg('productDescription'); return false;
 }
 
+/*
 $(document).ready(function() {
     <c:forEach items="${openThemes}" var="openTheme">
         handleTabEvent("businessThemeTabContainer-${openTheme[0]}", "businessTheme", ${openTheme[0]}, ${openTheme[1]});
@@ -25,24 +28,22 @@ $(document).ready(function() {
         handleTabEvent("projectTabContainer-${openProject[0]}", "project", ${openProject[0]}, ${openProject[1]});
     </c:forEach>
 });
-
+*/
 
 
 /* Initialize the SimileAjax object */
+/*
 var SimileAjax = {
     loaded:                 false,
     loadingScriptsCount:    0,
     error:                  null,
     params:                 { bundle:"true" }
 };
-SimileAjax.Platform = new Object();
+SimileAjax.Platform = new Object();*/
 </script>
-<script type="text/javascript" src="static/js/timeline/simile-ajax-bundle.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
+<%--<script type="text/javascript" src="static/js/timeline/simile-ajax-bundle.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
 
 <!-- Include timeline -->
-<script type="text/javascript">
-var productId = ${product.id};
-</script>
 <script type="text/javascript" src="static/js/timeline/timeline-load.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
 <script type="text/javascript" src="static/js/timeline/timeline-bundle.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
 <script type="text/javascript" src="static/js/timeline/timeline-custom.js?<ww:text name="webwork.agilefantReleaseId" />"></script>

@@ -51,7 +51,7 @@ public class ProductAction extends BacklogContentsAction implements CRUDAction {
     }
 
     public String delete() {
-        Product p = productDAO.get(productId);
+        Product p = productBusiness.retrieve(productId);
         if (p == null) {
             super.addActionError(super.getText("product.notFound"));
             return Action.ERROR;
@@ -64,7 +64,7 @@ public class ProductAction extends BacklogContentsAction implements CRUDAction {
 //            super.addActionError(super.getText("product.notEmptyOfThemesWhenDeleting"));
 //            return Action.ERROR;
 //        }
-        productDAO.remove(productId);
+        productBusiness.delete(productId);
         return Action.SUCCESS;
     }
 

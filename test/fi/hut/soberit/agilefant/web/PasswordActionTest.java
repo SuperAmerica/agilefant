@@ -42,7 +42,7 @@ public class PasswordActionTest extends TestCase {
 
     public void testGenerate() {
         passwordBusiness.generateAndMailPassword(TESTUSER_ID);
-        expect(userBusiness.getUser("keimolantio")).andReturn(createTestUser());
+        expect(userBusiness.retrieveByLoginName("keimolantio")).andReturn(createTestUser());
         replay(passwordBusiness, userBusiness);
 
         action.setName("keimolantio");
@@ -53,7 +53,7 @@ public class PasswordActionTest extends TestCase {
     }
 
     public void testGenerateWithUnknownName() {
-        expect(userBusiness.getUser("leimokantio")).andReturn(null);
+        expect(userBusiness.retrieveByLoginName("leimokantio")).andReturn(null);
         replay(passwordBusiness, userBusiness);
 
         action.setName("leimokantio");
@@ -64,7 +64,7 @@ public class PasswordActionTest extends TestCase {
     }
 
     public void testGenerateWithWrongEmail() {
-        expect(userBusiness.getUser("keimolantio")).andReturn(createTestUser());
+        expect(userBusiness.retrieveByLoginName("keimolantio")).andReturn(createTestUser());
         replay(passwordBusiness, userBusiness);
 
         action.setName("keimolantio");

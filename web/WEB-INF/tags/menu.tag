@@ -4,7 +4,6 @@
 
 <%@attribute name="navi"%>
 <%@attribute name="subnavi"%>
-<%@attribute type="java.util.Collection" name="pageHierarchy"%>
 <%@attribute name="title"%>
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
@@ -121,39 +120,6 @@ Agilefant
 		<c:set var="currentBacklog" value="${backlogId}" scope="page" />
 	</c:otherwise>
 </c:choose>
-
-<%-- Variable currentContext resolves which context is selected --%>
-
-<%-- Check the pageitem type --%>
-<c:forEach var="page" items="${pageHierarchy}">
-    <c:if test="${aef:isProduct(page)}">
-        <c:set var="currentAction" value="editProduct" scope="session" />
-        <c:set var="currentContext" value="product" scope="session" />
-        <c:set var="currentPageId" value="${page.id}" scope="session" />
-        <c:set var="currentIterationId" value="" scope="session" />
-        <c:set var="currentProjectId" value="" scope="session" />
-        <c:set var="currentProductId" value="${page.id}" scope="session" />
-    </c:if>
-    <c:if test="${aef:isProject(page)}">
-        <c:set var="currentAction" value="editProject" scope="session" />
-        <c:set var="currentContext" value="project" scope="session" />
-        <c:set var="currentPageId" value="${page.id}" scope="session" />
-        <c:set var="currentIterationId" value="" scope="session" />
-        <c:set var="currentProjectId" value="${page.id}" scope="session" />
-        <c:set var="currentProductId" value="${page.parent.id}"
-            scope="session" />
-    </c:if>
-    <c:if test="${aef:isIteration(page)}">
-        <c:set var="currentAction" value="editIteration" scope="session" />
-        <c:set var="currentContext" value="iteration" scope="session" />
-        <c:set var="currentPageId" value="${page.id}" scope="session" />
-        <c:set var="currentIterationId" value="${page.id}" scope="session" />
-        <c:set var="currentProjectId" value="${page.parent.id}"
-            scope="session" />
-        <c:set var="currentProductId" value="${page.parent.parent.id}"
-            scope="session" />
-    </c:if>
-</c:forEach>
 
 <!-- Create new -menu -->
 <span id="createNewMenuLink">

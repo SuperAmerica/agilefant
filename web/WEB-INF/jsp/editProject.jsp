@@ -4,7 +4,7 @@
 
 <aef:projectTypeList id="projectTypes"/>
 <aef:openDialogs context="iteration" id="openIterations" />
-
+<aef:currentBacklog backlogId="${project.id}"/>
 <c:choose>
 	<c:when test="${!empty project.id}">
 		<c:set var="currentProjectId" value="${project.id}" scope="page" />
@@ -19,7 +19,7 @@
 </c:choose>
 
 <c:set var="divId" value="1336" scope="page" />
-<aef:menu navi="backlog" pageHierarchy="${pageHierarchy}" title="${project.name}"/>
+<aef:menu navi="backlog" title="${project.name}"/>
 <ww:actionerror />
 <ww:actionmessage />
 <aef:hourReporting id="hourReport" />

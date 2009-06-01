@@ -2,7 +2,9 @@
 <%@ include file="./inc/_header.jsp"%>
 
 <c:set var="divId" value="1336" scope="page" />
-<aef:menu navi="backlog" pageHierarchy="${pageHierarchy}" title="${product.name}"/>
+<aef:currentBacklog backlogId="${product.id}"/>
+
+<aef:menu navi="backlog" title="${product.name}"/>
 <ww:actionerror />
 <ww:actionmessage />
 

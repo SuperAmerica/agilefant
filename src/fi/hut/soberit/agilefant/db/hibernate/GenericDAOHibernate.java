@@ -2,6 +2,7 @@ package fi.hut.soberit.agilefant.db.hibernate;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -141,12 +142,20 @@ public abstract class GenericDAOHibernate<T> implements GenericDAO<T> {
     
     @SuppressWarnings("unchecked")
     public <ResultType> Collection<ResultType> asCollection(Criteria criteria) {
-        return criteria.list();
+        Collection<ResultType> list = criteria.list();
+        if (list == null) {
+            return Collections.EMPTY_LIST;
+        }
+        return list;
     }
 
     @SuppressWarnings("unchecked")
     public <ResultType> List<ResultType> asList(Criteria criteria) {
-        return criteria.list();
+        List<ResultType> list = criteria.list();
+        if (list == null) {
+            return Collections.EMPTY_LIST;
+        }
+        return list;
     }
     
     @SuppressWarnings("unchecked")

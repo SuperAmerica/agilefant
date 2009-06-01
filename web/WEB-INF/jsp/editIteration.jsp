@@ -2,9 +2,10 @@
 <%@ include file="./inc/_header.jsp"%>
 
 <aef:openDialogs context="iterationGoal" id="openIterationGoalTabs" />
+<aef:currentBacklog backlogId="${iteration.id}"/>
 
 <c:set var="divId" value="1336" scope="page" />
-<aef:menu navi="backlog" pageHierarchy="${pageHierarchy}" title="${iteration.name}"/>
+<aef:menu navi="backlog" title="${iteration.name}"/>
 <aef:productList />
 
 <ww:actionerror />

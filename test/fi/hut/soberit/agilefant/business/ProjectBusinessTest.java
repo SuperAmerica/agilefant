@@ -46,8 +46,9 @@ public class ProjectBusinessTest {
     @Test
     public void testGetUsersAssignableToProject() {     
         expect(userBusiness.getEnabledUsers()).andReturn(Arrays.asList(user1, user2));
-        projectBusiness.getAssignedUsers(project);
+        expect(projectDAO.getAssignedUsers(project)).andReturn(Arrays.asList(user1));
         replay(userBusiness);
+        replay(projectDAO);
         
         Collection<User> assignableUsers = projectBusiness.getUsersAssignableToProject(project);
         assertTrue("List does not contain an enabled user", assignableUsers.contains(user1));
@@ -55,6 +56,7 @@ public class ProjectBusinessTest {
         assertEquals("List probably contains duplicates", 2, assignableUsers.size());
         
         verify(userBusiness);
+        verify(projectDAO);
     }
  
     @Test

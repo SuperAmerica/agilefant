@@ -587,11 +587,9 @@
 		</action>
  -->
 		<!-- Daily work -->
-		<!-- 
 		<action name="dailyWork" class="dailyWorkAction">
 			<result>/WEB-INF/jsp/dailyWork.jsp</result>
 		</action>
-		 -->
 		<!-- /Daily work -->
 		
 		<!-- Tiny Daily work -->

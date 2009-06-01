@@ -20,7 +20,9 @@
 	onchange="this.form.submit();" /></h2>
 </ww:form>
 
+<%--
 <%@ include file="./inc/_userLoad.jsp" %>
+--%>
 
 <c:choose>
 <c:when test="${!((empty backlogItemsForUserInProgress) &&
@@ -28,13 +30,13 @@
 		(empty projects))}" >
 
 
-
+<%--
 <%@ include file="./inc/_workInProgress.jsp" %>
 
 <%@ include file="./inc/_dailyWorkIterations.jsp" %>
 
 <%@ include file="./inc/_dailyWorkProjects.jsp" %>
-
+--%>
 </c:when>
 <c:otherwise>
 <ww:url id="backlogsLink" action="contextView" includeParams="none">

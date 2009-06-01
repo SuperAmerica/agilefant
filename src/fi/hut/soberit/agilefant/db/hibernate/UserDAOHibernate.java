@@ -1,5 +1,6 @@
 package fi.hut.soberit.agilefant.db.hibernate;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.hibernate.criterion.DetachedCriteria;
@@ -36,5 +37,4 @@ public class UserDAOHibernate extends GenericDAOHibernate<User> implements
                 Expression.eq("enabled", enabled));
         return hibernateTemplate.findByCriteria(criteria);
     }
-
 }

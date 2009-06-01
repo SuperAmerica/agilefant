@@ -30,12 +30,12 @@ public class UserBusinessImpl extends GenericBusinessImpl<User> implements
 
     @Transactional(readOnly = true)
     public List<User> getDisabledUsers() {
-        return null;
+        return userDAO.listUsersByEnabledStatus(false);
     }
 
     @Transactional(readOnly = true)
     public List<User> getEnabledUsers() {
-        return null;
+        return userDAO.listUsersByEnabledStatus(true);
     }
 
     @Transactional(readOnly = true)

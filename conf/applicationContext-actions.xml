@@ -70,9 +70,10 @@
 	<bean name="contextViewInterceptor"
 		class="fi.hut.soberit.agilefant.web.context.ContextViewInterceptor"
 		autowire="byName" />
-	<bean name="dailyWorkAction"
-		class="fi.hut.soberit.agilefant.web.DailyWorkAction"
-		autowire="byName" singleton="false" />
+		-->
+	<bean name="dailyWorkAction" class="fi.hut.soberit.agilefant.web.DailyWorkAction"
+		autowire="byName" scope="prototype" />
+		<!-- 
 	<bean name="projectPortfolioAction"
 		class="fi.hut.soberit.agilefant.web.ProjectPortfolioAction"
 		singleton="false" autowire="byName" />

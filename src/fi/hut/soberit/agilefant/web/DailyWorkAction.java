@@ -2,11 +2,7 @@ package fi.hut.soberit.agilefant.web;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import com.opensymphony.xwork.ActionContext;
 import com.opensymphony.xwork.ActionSupport;
@@ -16,17 +12,10 @@ import fi.hut.soberit.agilefant.business.HourEntryBusiness;
 import fi.hut.soberit.agilefant.business.ProjectBusiness;
 import fi.hut.soberit.agilefant.business.SettingBusiness;
 import fi.hut.soberit.agilefant.business.UserBusiness;
-import fi.hut.soberit.agilefant.model.AFTime;
-import fi.hut.soberit.agilefant.model.Backlog;
-import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.security.SecurityUtil;
-import fi.hut.soberit.agilefant.util.BacklogComparator;
-import fi.hut.soberit.agilefant.util.BacklogLoadData;
-import fi.hut.soberit.agilefant.util.DailyWorkLoadData;
-import fi.hut.soberit.agilefant.util.EffortSumData;
 import fi.hut.soberit.agilefant.util.UserComparator;
 
 public class DailyWorkAction extends ActionSupport {
@@ -36,11 +25,11 @@ public class DailyWorkAction extends ActionSupport {
 
     private List<Project> projects;
 
-    private Map<Backlog, EffortSumData> effortSums;
-
-    private Map<Backlog, EffortSumData> originalEstimates;
-
-    private Map<Backlog, List<BacklogItem>> bliMap;
+//    private Map<Backlog, EffortSumData> effortSums;
+//
+//    private Map<Backlog, EffortSumData> originalEstimates;
+//
+//    private Map<Backlog, List<BacklogItem>> bliMap;
 
     private User user;
 
@@ -56,19 +45,19 @@ public class DailyWorkAction extends ActionSupport {
 
     private int userId;
 
-    private List<BacklogItem> backlogItemsForUserInProgress;
+//    private List<BacklogItem> backlogItemsForUserInProgress;
 
     private List<User> userList;
     
     private List<User> enabledUsers = new ArrayList<User>();
     
-    private Map<Backlog, BacklogLoadData> loadDatas = new HashMap<Backlog, BacklogLoadData>();
-    
-    private DailyWorkLoadData dailyWorkLoadData = new DailyWorkLoadData();
+//    private Map<Backlog, BacklogLoadData> loadDatas = new HashMap<Backlog, BacklogLoadData>();
+//    
+//    private DailyWorkLoadData dailyWorkLoadData = new DailyWorkLoadData();
     
     /*private Map<Integer, String> effortsLeftMap = new HashMap<Integer, String>();
     private Map<Integer, String> overheadsMap = new HashMap<Integer, String>();*/
-    private Map<Integer, AFTime> totalsMap = new HashMap<Integer, AFTime>();
+//    private Map<Integer, AFTime> totalsMap = new HashMap<Integer, AFTime>();
     private int weeksAhead = 5;
     private List<Integer> weekNumbers;
     private String[] overallTotals;
@@ -98,53 +87,55 @@ public class DailyWorkAction extends ActionSupport {
             }
         }
 
-        user = userBusiness.getUser(userId);
-        effortSums = new HashMap<Backlog, EffortSumData>();
-        originalEstimates = new HashMap<Backlog, EffortSumData>();
-
-        bliMap = userBusiness.getBacklogItemsAssignedToUser(user);
+        user = userBusiness.retrieve(userId);
+//        effortSums = new HashMap<Backlog, EffortSumData>();
+//        originalEstimates = new HashMap<Backlog, EffortSumData>();
+//
+//        bliMap = userBusiness.getBacklogItemsAssignedToUser(user);
         projects = new ArrayList<Project>();
         iterations = new ArrayList<Iteration>();
 
-        Set<Backlog> backlogs = bliMap.keySet();
-        Iterator<Backlog> iter = backlogs.iterator();
+//        Set<Backlog> backlogs = bliMap.keySet();
+//        Iterator<Backlog> iter = backlogs.iterator();
 
-        while (iter.hasNext()) {
-            Backlog backlog = iter.next();
-            if (backlog instanceof Project) {
-                projects.add((Project) backlog);
-            } else if (backlog instanceof Iteration) {
-                iterations.add((Iteration) backlog);
-            }
-            List<BacklogItem> blis = bliMap.get(backlog);
-            EffortSumData effLeftSum = backlogBusiness.getEffortLeftSum(blis);
-            effortSums.put(backlog, effLeftSum);
-            EffortSumData origEstSum = backlogBusiness.getOriginalEstimateSum(blis);
-            originalEstimates.put(backlog, origEstSum);
-            
-            hourEntryBusiness.loadSumsToBacklogItems(backlog);
-        }
+//        while (iter.hasNext()) {
+//            Backlog backlog = iter.next();
+//            if (backlog instanceof Project) {
+//                projects.add((Project) backlog);
+//            } else if (backlog instanceof Iteration) {
+//                iterations.add((Iteration) backlog);
+//            }
+//            List<BacklogItem> blis = bliMap.get(backlog);
+//            EffortSumData effLeftSum = backlogBusiness.getEffortLeftSum(blis);
+//            effortSums.put(backlog, effLeftSum);
+//            EffortSumData origEstSum = backlogBusiness.getOriginalEstimateSum(blis);
+//            originalEstimates.put(backlog, origEstSum);
+//            
+//            hourEntryBusiness.loadSumsToBacklogItems(backlog);
+//        }
+//
+//        Collections.sort(projects, new BacklogComparator());
+//        Collections.sort(iterations, new BacklogComparator());
+//
+//        backlogItemsForUserInProgress = userBusiness
+//                .getBacklogItemsInProgress(user);
 
-        Collections.sort(projects, new BacklogComparator());
-        Collections.sort(iterations, new BacklogComparator());
-
-        backlogItemsForUserInProgress = userBusiness
-                .getBacklogItemsInProgress(user);
-
-        userList = userBusiness.getAllUsers();
-        enabledUsers = userBusiness.getEnabledUsers();
+        userList = new ArrayList<User>(); 
+        userList.addAll(userBusiness.retrieveAll());
+        
+        enabledUsers.addAll(userBusiness.getEnabledUsers());
         Collections.sort(userList, new UserComparator());
         Collections.sort(enabledUsers, new UserComparator());
 
-        DailyWorkLoadData data = this.projectBusiness.getDailyWorkLoadData(this.user, this.weeksAhead);
+//        DailyWorkLoadData data = this.projectBusiness.getDailyWorkLoadData(this.user, this.weeksAhead);
         
-        setDailyWorkLoadData(data);
-        
-        setWeekNumbers(data.getWeekNumbers());
-        
-        setTotalsMap(data.getWeeklyTotals());
-                
-        this.setLoadDatas(data.getLoadDatas());
+//        setDailyWorkLoadData(data);
+//        
+//        setWeekNumbers(data.getWeekNumbers());
+//        
+//        setTotalsMap(data.getWeeklyTotals());
+//                
+//        this.setLoadDatas(data.getLoadDatas());
         return super.execute();
     }
 
@@ -164,13 +155,13 @@ public class DailyWorkAction extends ActionSupport {
         this.userId = userId;
     }
 
-    public Map<Backlog, List<BacklogItem>> getBliMap() {
-        return bliMap;
-    }
-
-    public void setBliMap(Map<Backlog, List<BacklogItem>> bliMap) {
-        this.bliMap = bliMap;
-    }
+//    public Map<Backlog, List<BacklogItem>> getBliMap() {
+//        return bliMap;
+//    }
+//
+//    public void setBliMap(Map<Backlog, List<BacklogItem>> bliMap) {
+//        this.bliMap = bliMap;
+//    }
 
     public List<User> getUserList() {
         return userList;
@@ -196,22 +187,22 @@ public class DailyWorkAction extends ActionSupport {
         this.userBusiness = userBusiness; 
     }
 
-    public List<BacklogItem> getBacklogItemsForUserInProgress() {
-        return backlogItemsForUserInProgress;
-    }
-
-    public void setBacklogItemsForUserInProgress(
-            List<BacklogItem> backlogItemsForUserInProgress) {
-        this.backlogItemsForUserInProgress = backlogItemsForUserInProgress;
-    }
-
-    public Map<Backlog, EffortSumData> getEffortSums() {
-        return effortSums;
-    }
-
-    public void setEffortSums(Map<Backlog, EffortSumData> effortSums) {
-        this.effortSums = effortSums;
-    }
+//    public List<BacklogItem> getBacklogItemsForUserInProgress() {
+//        return backlogItemsForUserInProgress;
+//    }
+//
+//    public void setBacklogItemsForUserInProgress(
+//            List<BacklogItem> backlogItemsForUserInProgress) {
+//        this.backlogItemsForUserInProgress = backlogItemsForUserInProgress;
+//    }
+//
+//    public Map<Backlog, EffortSumData> getEffortSums() {
+//        return effortSums;
+//    }
+//
+//    public void setEffortSums(Map<Backlog, EffortSumData> effortSums) {
+//        this.effortSums = effortSums;
+//    }
 
     public BacklogBusiness getBacklogBusiness() {
         return backlogBusiness;
@@ -221,9 +212,9 @@ public class DailyWorkAction extends ActionSupport {
         this.backlogBusiness = backlogBusiness;
     }
 
-    public Map<Backlog, EffortSumData> getOriginalEstimates() {
-        return originalEstimates;
-    }
+//    public Map<Backlog, EffortSumData> getOriginalEstimates() {
+//        return originalEstimates;
+//    }
 
     public int getWeeksAhead() {
         return weeksAhead;
@@ -258,29 +249,29 @@ public class DailyWorkAction extends ActionSupport {
         this.overallTotals = overallTotals;
     }
 
-    public Map<Backlog, BacklogLoadData> getLoadDatas() {
-        return loadDatas;
-    }
-
-    public void setLoadDatas(Map<Backlog, BacklogLoadData> loadDatas) {
-        this.loadDatas = loadDatas;
-    }
-
-    public DailyWorkLoadData getDailyWorkLoadData() {
-        return dailyWorkLoadData;
-    }
-
-    public void setDailyWorkLoadData(DailyWorkLoadData dailyWorkLoadData) {
-        this.dailyWorkLoadData = dailyWorkLoadData;
-    }
-
-    public Map<Integer, AFTime> getTotalsMap() {
-        return totalsMap;
-    }
-
-    public void setTotalsMap(Map<Integer, AFTime> totalsMap) {
-        this.totalsMap = totalsMap;
-    }
+//    public Map<Backlog, BacklogLoadData> getLoadDatas() {
+//        return loadDatas;
+//    }
+//
+//    public void setLoadDatas(Map<Backlog, BacklogLoadData> loadDatas) {
+//        this.loadDatas = loadDatas;
+//    }
+//
+//    public DailyWorkLoadData getDailyWorkLoadData() {
+//        return dailyWorkLoadData;
+//    }
+//
+//    public void setDailyWorkLoadData(DailyWorkLoadData dailyWorkLoadData) {
+//        this.dailyWorkLoadData = dailyWorkLoadData;
+//    }
+//
+//    public Map<Integer, AFTime> getTotalsMap() {
+//        return totalsMap;
+//    }
+//
+//    public void setTotalsMap(Map<Integer, AFTime> totalsMap) {
+//        this.totalsMap = totalsMap;
+//    }
 
     public List<User> getEnabledUsers() {
         return enabledUsers;

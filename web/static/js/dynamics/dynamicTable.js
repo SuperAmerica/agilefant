@@ -930,7 +930,7 @@
 		}
 	  };
 	  var el = this.cell.getElement();
-	  this.act = $('<div/>').html(this.options.title).appendTo(el);
+	  this.act = $('<div/>').html(this.options.title).appendTo(el).width("68px");
 	  this.act.click(this.openEvent);
 	  
 	};

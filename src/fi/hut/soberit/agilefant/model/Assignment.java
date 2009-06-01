@@ -21,39 +21,39 @@ public class Assignment implements Serializable {
     private static final long serialVersionUID = 5391104304173714927L;
     
     private int id;
-    private Backlog backlog;
+    private Project project;
     private User user;
-    private AFTime deltaOverhead;
+//    private AFTime deltaOverhead;
 
     /**
      * Deviation from project's default overhead.
      */
-    @Type(type = "af_time")
-    @JSON
-    public AFTime getDeltaOverhead() {
-        return deltaOverhead;
-    }
-
-    public void setDeltaOverhead(AFTime deltaOverhead) {
-        this.deltaOverhead = deltaOverhead;
-    }
+//    @Type(type = "af_time")
+//    @JSON
+//    public AFTime getDeltaOverhead() {
+//        return deltaOverhead;
+//    }
+//
+//    public void setDeltaOverhead(AFTime deltaOverhead) {
+//        this.deltaOverhead = deltaOverhead;
+//    }
 
     public Assignment() {
     }
 
-    public Assignment(User user, Backlog backlog) {
+    public Assignment(User user, Project project) {
         this.user = user;
-        this.backlog = backlog;
+        this.project = project;
     }
 
     @ManyToOne
     @JSON(include = false)
-    public Backlog getBacklog() {
-        return backlog;
+    public Project getProject() {
+        return project;
     }
 
-    public void setBacklog(Backlog backlog) {
-        this.backlog = backlog;
+    public void setProject(Project project) {
+        this.project = project;
     }
 
     @ManyToOne

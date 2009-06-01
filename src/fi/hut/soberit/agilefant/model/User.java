@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -18,7 +19,6 @@ import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Type;
 
 import fi.hut.soberit.agilefant.db.hibernate.Email;
-import fi.hut.soberit.agilefant.web.page.Backlog;
 import flexjson.JSON;
 
 /**
@@ -48,6 +48,8 @@ public class User {
     private boolean enabled = true;
 
     private Collection<Team> teams = new HashSet<Team>();
+    
+    private Collection<Assignment> assignments = new HashSet<Assignment>();
 
     /**
      * Get the id of this object.
@@ -194,6 +196,20 @@ public class User {
      */
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    /**
+     * Get the users assignments to backlogs.
+     * @return
+     */
+    @OneToMany(mappedBy = "user")
+    @JSON(include = false)
+    public Collection<Assignment> getAssignments() {
+        return assignments;
+    }
+
+    public void setAssignments(Collection<Assignment> assignments) {
+        this.assignments = assignments;
     }
 
 }

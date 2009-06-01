@@ -8,16 +8,14 @@ import static org.easymock.EasyMock.verify;
 import java.util.Arrays;
 import java.util.List;
 
-import junit.framework.TestCase;
-
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
+import static org.junit.Assert.*;
 
 import fi.hut.soberit.agilefant.business.impl.UserBusinessImpl;
 import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.model.User;
 
-public class UserBusinessTest extends TestCase {
+public class UserBusinessTest {
 
     UserBusinessImpl userBusiness = new UserBusinessImpl();
     UserDAO userDAO;

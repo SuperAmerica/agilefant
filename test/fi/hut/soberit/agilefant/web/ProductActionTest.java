@@ -8,15 +8,13 @@ import static org.easymock.EasyMock.verify;
 import java.util.Arrays;
 import java.util.Collection;
 
-import junit.framework.TestCase;
-
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
+import static org.junit.Assert.*;
 
 import fi.hut.soberit.agilefant.business.ProductBusiness;
 import fi.hut.soberit.agilefant.model.Product;
 
-public class ProductActionTest extends TestCase {
+public class ProductActionTest {
 
     ProductAction productAction = new ProductAction();
     ProductBusiness productBusiness;

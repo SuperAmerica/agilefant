@@ -23,6 +23,7 @@
 <ww:actionerror />
 <ww:actionmessage />
 <aef:hourReporting id="hourReport" />
+<%--
 <script type="text/javascript">
 <!--
 $(document).ready(function() {
@@ -64,6 +65,7 @@ $(document).ready(function() {
 });
 //-->
 </script>
+--%>
 <ww:date name="%{new java.util.Date()}" id="start"
 	format="%{getText('webwork.shortDateTime.format')}" />
 <ww:date name="%{new java.util.Date()}" id="end"

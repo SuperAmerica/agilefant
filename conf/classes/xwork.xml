@@ -276,10 +276,12 @@
 			class="projectAction">
 			<result>/WEB-INF/jsp/editProject.jsp</result>
 		</action>
+		-->
 		<action name="ajaxCreateProject" method="create"
 			class="projectAction">
 			<result>/WEB-INF/jsp/forms/createProject.jsp</result>
 		</action>
+		<!-- 
 		<action name="deleteProject" method="delete"
 			class="projectAction">
 			<result type="redirect">editProduct.action?productId=${productId}</result>

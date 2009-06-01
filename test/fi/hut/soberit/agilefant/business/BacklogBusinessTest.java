@@ -9,10 +9,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 
-import junit.framework.TestCase;
-
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
+import static org.junit.Assert.*;
 
 import fi.hut.soberit.agilefant.business.impl.BacklogBusinessImpl;
 import fi.hut.soberit.agilefant.db.BacklogDAO;
@@ -27,7 +25,7 @@ import fi.hut.soberit.agilefant.model.Product;
  * 
  */
 
-public class BacklogBusinessTest extends TestCase {
+public class BacklogBusinessTest {
 
     private BacklogBusinessImpl backlogBusiness = new BacklogBusinessImpl();
     private BacklogDAO backlogDAO;

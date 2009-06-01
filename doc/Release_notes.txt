@@ -1,6 +1,6 @@
-Agilefant 1.5.5
+Agilefant 1.6
 RELEASE NOTES
-26.3.2009
+1.6.2009
 
 INSTALLATION INSTRUCTIONS AND SYSTEM REQUIREMENTS
 -------------------------------------------------
@@ -56,13 +56,13 @@ Timesheets
 
 CHANGES FROM AGILEFANT 1.5.5
 ----------------------------
++ New iteration view
++ Added spent effort calendar to daily work view for browsing logged effort entries 
 + Renamed overhead to baseline load
 + Renamed iteration goal to story
 + Renamed backlog item to story in products and projects, and to task in iterations
 + Changed quick enter functionality from save to save & close
 + Other small UI and usability tweaks
-+ A new team is working on Agilefant, for more info see 
-  http://www.agilefant.org/wiki/display/AEF/2009/05/25/Agilefant+Monza
 
 CHANGES FROM AGILEFANT 1.5.4
 ----------------------------

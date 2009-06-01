@@ -2,10 +2,13 @@ package fi.hut.soberit.agilefant.db.hibernate;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 import javax.annotation.PostConstruct;
 
+import org.hibernate.Criteria;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Projections;
@@ -130,6 +133,20 @@ public abstract class GenericDAOHibernate<T> implements GenericDAO<T> {
                 .setProjection(Projections.rowCount());
         return ((Integer) hibernateTemplate.findByCriteria(crit).get(0))
                 .intValue() > 0;
+    }
+    
+    public Session getCurrentSession() {
+        return this.sessionFactory.getCurrentSession();
+    }
+    
+    @SuppressWarnings("unchecked")
+    public Collection<T> asCollection(Criteria criteria) {
+        return criteria.list();
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<T> asList(Criteria criteria) {
+        return criteria.list();
     }
 
 }

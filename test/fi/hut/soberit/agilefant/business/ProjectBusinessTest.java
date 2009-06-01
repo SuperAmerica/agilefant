@@ -24,9 +24,19 @@ public class ProjectBusinessTest {
     ProjectBusinessImpl projectBusiness = new ProjectBusinessImpl();
     ProjectDAO projectDAO;
     UserBusiness userBusiness;
+    Project project;
+    User user1;
+    User user2;
     
     @Before
     public void setUp() {
+        project = new Project();
+        project.setId(123);
+        user1 = new User();
+        user1.setId(1);
+        user2 = new User();
+        user2.setId(2);
+        
         projectDAO = createMock(ProjectDAO.class);
         projectBusiness.setProjectDAO(projectDAO);
         userBusiness = createMock(UserBusiness.class);
@@ -34,15 +44,7 @@ public class ProjectBusinessTest {
     }
     
     @Test
-    public void testGetUsersAssignableToProject() {
-        Project project = new Project();
-        // Belongs to project
-        User user1 = new User();
-        user1.setId(1);
-        // Doesn't belog to project
-        User user2 = new User();
-        user2.setId(2);
-        
+    public void testGetUsersAssignableToProject() {     
         expect(userBusiness.getEnabledUsers()).andReturn(Arrays.asList(user1, user2));
         projectBusiness.getAssignedUsers(project);
         replay(userBusiness);
@@ -57,7 +59,12 @@ public class ProjectBusinessTest {
  
     @Test
     public void testGetAssignedUsers() {
-        assertNotNull(projectBusiness.getAssignedUsers(null));
-        assertTrue("TODO: Write working test and code to getAssignedUsers",false);
+        Collection<User> expected = Arrays.asList(user1, user2);
+        expect(projectDAO.getAssignedUsers(project)).andReturn(expected);
+        replay(projectDAO);
+        
+        assertSame("List doesn't contain expected users", expected, projectBusiness.getAssignedUsers(project));
+        
+        verify(projectDAO);
     }
 }

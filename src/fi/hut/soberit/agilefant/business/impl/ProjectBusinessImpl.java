@@ -46,6 +46,6 @@ public class ProjectBusinessImpl extends GenericBusinessImpl<Project> implements
     /** {@inheritDoc} */
     @Transactional(readOnly = true)
     public Collection<User> getAssignedUsers(Project project) {
-        return new ArrayList<User>();
+        return projectDAO.getAssignedUsers(project);
     }
 }

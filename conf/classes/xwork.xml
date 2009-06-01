@@ -809,7 +809,7 @@
 		</action>
 		
 		<!-- Actions for generating a new password and e-mailing it to an <code>User</code> -->
-		<!-- 
+ 
 		<action name="newPassword">
 			<interceptor-ref name="noAuthenticationStack" />
 			<result>/WEB-INF/jsp/newPassword.jsp</result>
@@ -821,7 +821,7 @@
 			<result name="success">success.jsp</result>
 			<result name="error">success.jsp?error=1</result>
 		</action>
-		 -->
+
 		<!-- Actions for changing settings -->
 		<action name="settings" class="settingAction">
 			<result>/WEB-INF/jsp/administration/settings.jsp</result>

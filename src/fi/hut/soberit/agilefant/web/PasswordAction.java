@@ -31,12 +31,16 @@ public class PasswordAction extends ActionSupport {
      * @return
      */
     public String generate() {
-        User user = userBusiness.getUser(name);
-        if (user == null)
+        User user = userBusiness.retrieveByLoginName(name);
+        if (user == null) {
             return Action.ERROR; // User not found.
-
-        else if (!user.getEmail().equals(email))
-            return Action.ERROR; // Wrong e-mail.
+        }
+        else {
+            String user_email = user.getEmail();
+            if (user_email == null || !user_email.equalsIgnoreCase(email)) {
+                return Action.ERROR;
+            }
+        }
 
         passwordBusiness.generateAndMailPassword(user.getId());
         addActionMessage("A new password has been sent to: " + user.getEmail()

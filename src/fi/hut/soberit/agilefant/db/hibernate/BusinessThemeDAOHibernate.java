@@ -116,7 +116,6 @@ public class BusinessThemeDAOHibernate extends
                 iterationCriteria);
         List<BacklogThemeBinding> ret = new ArrayList<BacklogThemeBinding>();
         for (Object ob : res) {
-            System.out.println(ob);
             Iteration iter = (Iteration) ob;
             if (iter.getBusinessThemeBindings() != null) {
                 ret.addAll(iter.getBusinessThemeBindings());

@@ -23,9 +23,7 @@ public class HistoryDAOHibernate extends
         Object[] params = new Object[] { new java.sql.Date(date.getTime()), backlogId };
         
         List list = super.getHibernateTemplate().find(hql, params);
-        
-        System.out.println(hql);
-        
+                
         try {
             Object[] ob = (Object[])list.get(0);
             return (HistoryEntry<BacklogHistory>)ob[0];

@@ -1,11 +1,8 @@
 package fi.hut.soberit.agilefant.model;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import javax.persistence.Entity;
-import javax.persistence.OneToMany;
 
 import org.hibernate.annotations.BatchSize;
 
@@ -43,8 +40,6 @@ public class Iteration extends Backlog {
 
     private Date endDate;
 
-    private List<Story> stories = new ArrayList<Story>();
-
 //    /** The project, under which this iteration is. */
 //    @ManyToOne(optional = false)
 //    @JSON(include = false)
@@ -72,15 +67,6 @@ public class Iteration extends Backlog {
 
     public void setStartDate(Date startDate) {
         this.startDate = startDate;
-    }
-
-    public void setStories(List<Story> stories) {
-        this.stories = stories;
-    }
-
-    @OneToMany(mappedBy = "iteration")
-    public List<Story> getStories() {
-        return stories;
     }
 
 }

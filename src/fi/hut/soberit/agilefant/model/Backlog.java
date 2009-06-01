@@ -60,6 +60,8 @@ public abstract class Backlog {
     
     private Collection<Backlog> children;
     
+    private Collection<Story> stories;
+    
     /**
      * Get the id of this object.
      * <p>
@@ -138,4 +140,12 @@ public abstract class Backlog {
         return children;
     }
    
+    @OneToMany(mappedBy = "backlog")
+    public Collection<Story> getStories() {
+        return stories;
+    }
+    
+    public void setStories(Collection<Story> stories) {
+        this.stories = stories;
+    }
 }

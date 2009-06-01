@@ -15,9 +15,7 @@ public class Story {
     private int id;
     private String name;
     private String description;
-    private Product product;
-    private Project project;
-    private Iteration iteration;
+    private Backlog backlog;
     private State state = State.NOT_STARTED;
     private Priority priority;
     private User creator;
@@ -50,30 +48,12 @@ public class Story {
     }
 
     @ManyToOne(optional = false)
-    public Product getProduct() {
-        return product;
+    public Backlog getBacklog() {
+        return backlog;
     }
 
-    public void setProduct(Product product) {
-        this.product = product;
-    }
-
-    @ManyToOne(optional = true)
-    public Project getProject() {
-        return project;
-    }
-
-    public void setProject(Project project) {
-        this.project = project;
-    }
-
-    @ManyToOne(optional = true)
-    public Iteration getIteration() {
-        return iteration;
-    }
-
-    public void setIteration(Iteration iteration) {
-        this.iteration = iteration;
+    public void setBacklog(Backlog backlog) {
+        this.backlog = backlog;
     }
 
     public State getState() {

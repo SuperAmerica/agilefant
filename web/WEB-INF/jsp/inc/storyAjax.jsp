@@ -4,31 +4,30 @@
 <aef:currentUser />
 <aef:userList />
 <aef:teamList />
-<aef:iterationGoalList id="iterationGoals" backlogId="${backlogId}" />
 <aef:productList />
 
 <div class="ajaxWindowTabsDiv">
 <ul class="ajaxWindowTabs">
-	<li><a href="#backlogItemEditTab-${backlogItemId}-${bliListContext}"><span><img src="static/img/edit.png" alt="Edit" /> Edit</span></a></li>
-	<li><a href="#backlogItemProgressTab-${backlogItemId}-${bliListContext}"><span><img src="static/img/progress.png" alt="Progress" /> Progress</span></a></li>
+	<li><a href="#storyEditTab-${storyId}-${storyListContext}"><span><img src="static/img/edit.png" alt="Edit" /> Edit</span></a></li>
+	<li><a href="#storyProgressTab-${storyId}-${storyListContext}"><span><img src="static/img/progress.png" alt="Progress" /> Progress</span></a></li>
 <c:if test="${hourReport == true}">
-	<li><a href="#backlogItemSpentEffTab-${backlogItemId}-${bliListContext}"><span><img src="static/img/timesheets.png" alt="Spent Effort" /> Spent Effort</span></a></li>
+	<li><a href="#storySpentEffTab-${storyId}-${storyListContext}"><span><img src="static/img/timesheets.png" alt="Spent Effort" /> Spent Effort</span></a></li>
 </c:if>
 </ul>
 
-<div id="backlogItemEditTab-${backlogItemId}-${bliListContext}" class="backlogItemNaviTab">
+<div id="storyEditTab-${storyId}-${storyListContext}" class="storyNaviTab">
 
 <script type="text/javascript">
 $(document).ready(function() {
-    $('#userChooserLink-${backlogItemId}-${bliListContext}').userChooser({
-        backlogItemId: ${backlogItemId},
-        backlogIdField: '#backlogSelect-${backlogItemId}-${bliListContext}',
-        userListContainer: '#userListContainer-${backlogItemId}-${bliListContext}',
+    $('#userChooserLink-${storyId}-${storyListContext}').userChooser({
+        storyId: ${storyId},
+        backlogIdField: '#backlogSelect-${storyId}-${storyListContext}',
+        userListContainer: '#userListContainer-${storyId}-${storyListContext}',
         legacyMode: false
     }); 
-    $('#themeChooserLink-${backlogItemId}-${bliListContext}').themeChooser({
-        backlogId: '#backlogSelect-${backlogItemId}-${bliListContext}',
-        themeListContainer: '#themeListContainer-${backlogItemId}-${bliListContext}'
+    $('#themeChooserLink-${storyId}-${storyListContext}').themeChooser({
+        backlogId: '#backlogSelect-${storyId}-${storyListContext}',
+        themeListContainer: '#themeListContainer-${storyId}-${storyListContext}'
     });
 });
 
@@ -39,42 +38,42 @@ $(document).ready(function() {
 	<tr>
 	<td>
 	<div class="subItems" style="margin-top: 0px; width: 715px;"> 
-	<div class="validateWrapper validateBacklogItem">
-	<ww:form action="ajaxStoreBacklogItem" method="post">
-		<ww:hidden name="backlogItemId" value="${backlogItem.id}" />	
-		<ww:hidden name="effortLeft" value="${backlogItem.effortLeft}" />				
+	<div class="validateWrapper validateStory">
+	<ww:form action="ajaxStoreStory" method="post">
+		<ww:hidden name="storyId" value="${story.id}" />	
+		<ww:hidden name="effortLeft" value="${story.effortLeft}" />				
 	
 		<table class="formTable">	
 			<tr>
 				<td><ww:text name="general.uniqueId"/></td>
 				<td></td>
-				<td><aef:quickReference item="${backlogItem}" /></td>
+				<td><aef:quickReference item="${story}" /></td>
 			</tr>	
 			<tr>						
 				<td>Name</td>											
 				<td>*</td>
-				<td colspan="2"><ww:textfield size="60" name="backlogItem.name" /></td>
+				<td colspan="2"><ww:textfield size="60" name="story.name" /></td>
 			</tr>
 			
 			<tr>
 				<td>Description</td>
 				<td></td>
 				<td colspan="2">
-					<ww:textarea cols="70" rows="10" cssClass="useWysiwyg" id="backlogItemDescription" 
-					name="backlogItem.description" value="${aef:nl2br(backlogItem.description)}" /></td>
+					<ww:textarea cols="70" rows="10" cssClass="useWysiwyg" id="storyDescription" 
+					name="story.description" value="${aef:nl2br(story.description)}" /></td>
 			</tr>
 			<c:choose>
-			<c:when test="${backlogItem.creator != null}">
+			<c:when test="${story.creator != null}">
 			<tr>
 				<td>Created by</td>
 				<td></td>
 				<td colspan="2">
 	
 				<div>
-				<c:out value="${backlogItem.creator.fullName}" />
+				<c:out value="${story.creator.fullName}" />
 				<c:choose>
-				<c:when test="${backlogItem.createdDate != null}">
-				 on <c:out value="${aef:timestampToString(backlogItem.createdDate)}"/>
+				<c:when test="${story.createdDate != null}">
+				 on <c:out value="${aef:timestampToString(story.createdDate)}"/>
 				</c:when>
 				</c:choose>
 				</div>
@@ -83,22 +82,22 @@ $(document).ready(function() {
 			</c:when>
 			</c:choose>
 			<c:choose>
-				<c:when test="${backlogItem.originalEstimate == null}">
+				<c:when test="${story.originalEstimate == null}">
 					<tr>
 						<td>Original estimate</td>
 						<td></td>
 						<td colspan="2">
 						<c:choose>
-							<c:when test="${backlogItem.state.name != 'DONE'}">
+							<c:when test="${story.state.name != 'DONE'}">
 								<ww:textfield size="10"
-								name="backlogItem.originalEstimate"
-								id="originalEstimateField_${backlogItem.id}-${bliListContext}" />
+								name="story.originalEstimate"
+								id="originalEstimateField_${story.id}-${storyListContext}" />
 							</c:when>
 							<c:otherwise>
 								<ww:textfield size="10"
-								name="backlogItem.originalEstimate"
+								name="story.originalEstimate"
 								disabled="true"
-								id="originalEstimateField_${backlogItem.id}-${bliListContext}" />
+								id="originalEstimateField_${story.id}-${storyListContext}" />
 							</c:otherwise>
 						</c:choose>
 						<ww:label value="%{getText('webwork.estimateExample')}" /></td>
@@ -111,21 +110,21 @@ $(document).ready(function() {
 					<tr>
 						<td>Original estimate</td>
 						<td></td>
-						<td colspan="2"><%--<ww:label value="${backlogItem.originalEstimate}" />--%>
-						    <ww:textfield name="backlogItem.originalEstimate"
-						                  value="${backlogItem.originalEstimate}"
+						<td colspan="2"><%--<ww:label value="${story.originalEstimate}" />--%>
+						    <ww:textfield name="story.originalEstimate"
+						                  value="${story.originalEstimate}"
 						                  disabled="true" size="10"/>
 						<c:choose>
-							<c:when test="${backlogItem.state.name == 'DONE'}">
-								<span id="resetText_${backlogItem.id}-${bliListContext}" style="color: #666;">(reset)</span>
-								<span id="resetLink_${backlogItem.id}-${bliListContext}" style="display: none;">
+							<c:when test="${story.state.name == 'DONE'}">
+								<span id="resetText_${story.id}-${storyListContext}" style="color: #666;">(reset)</span>
+								<span id="resetLink_${story.id}-${storyListContext}" style="display: none;">
 							</c:when>
 							<c:otherwise>
-							<span id="resetText_${backlogItem.id}-${bliListContext}" style="color: #666; display: none;">(reset)</span>
-								<span id="resetLink_${backlogItem.id}-${bliListContext}">
+							<span id="resetText_${story.id}-${storyListContext}" style="color: #666; display: none;">(reset)</span>
+								<span id="resetLink_${story.id}-${storyListContext}">
 							</c:otherwise>
 						</c:choose>						
-						<ww:a href="#" onclick="resetBLIOriginalEstimate(${backlogItem.id}, this); return false;">(reset)</ww:a>
+						<ww:a href="#" onclick="resetBLIOriginalEstimate(${story.id}, this); return false;">(reset)</ww:a>
 						</span>
 												
 						</td>
@@ -135,16 +134,16 @@ $(document).ready(function() {
 						<td></td>
 						<td colspan="2">
 						<c:choose>
-							<c:when test="${backlogItem.state.name != 'DONE'}">
+							<c:when test="${story.state.name != 'DONE'}">
 								<ww:textfield size="10"
-								name="backlogItem.effortLeft"
-								id="effortLeftField_${backlogItem.id}-${bliListContext}" />
+								name="story.effortLeft"
+								id="effortLeftField_${story.id}-${storyListContext}" />
 							</c:when>
 							<c:otherwise>
 								<ww:textfield size="10"
-								name="backlogItem.effortLeft"
+								name="story.effortLeft"
 								disabled="true"
-								id="effortLeftField_${backlogItem.id}-${bliListContext}" />
+								id="effortLeftField_${story.id}-${storyListContext}" />
 							</c:otherwise>
 						</c:choose>
 						<ww:label value="%{getText('webwork.estimateExample')}" />
@@ -196,12 +195,12 @@ $(document).ready(function() {
 				
 				<%-- If user changed the item's state to DONE and there are todos not DONE, ask if they should be set to DONE as well. --%>				
 				$(document).ready(function() {					
-					$("#stateSelect_${backlogItem.id}-${bliListContext}").change(function() {
-						change_estimate_enabled($(this).val(), ${backlogItem.id}, '${bliListContext}');						
+					$("#stateSelect_${story.id}-${storyListContext}").change(function() {
+						change_estimate_enabled($(this).val(), ${story.id}, '${storyListContext}');						
 						if ($(this).val() == 'DONE' && ${hasUndoneTodos}) {
 							var prompt = window.confirm("Do you wish to set all the TODOs' states to Done as well?");
 							if (prompt) {
-								$("#todosToDone_${backlogItem.id}-${bliListContext}").val('true');
+								$("#todosToDone_${story.id}-${storyListContext}").val('true');
 							}						
 						}
 					});
@@ -210,10 +209,10 @@ $(document).ready(function() {
 				});
 				</script>
 				<%-- Todos to DONE confirmation script ends. --%>
-				<ww:hidden name="todosToDone" value="${todosToDone}" id="todosToDone_${backlogItem.id}-${bliListContext}" />			
-				<ww:select name="backlogItem.state"
-					id="stateSelect_${backlogItem.id}-${bliListContext}"
-					value="backlogItem.state.name"
+				<ww:hidden name="todosToDone" value="${todosToDone}" id="todosToDone_${story.id}-${storyListContext}" />			
+				<ww:select name="story.state"
+					id="stateSelect_${story.id}-${storyListContext}"
+					value="story.state.name"
 					list="@fi.hut.soberit.agilefant.model.State@values()" listKey="name"
 					listValue="getText('todo.state.' + name())"  /></td>
 			</tr>
@@ -222,14 +221,13 @@ $(document).ready(function() {
 				<td>Backlog</td>
 				<td></td>
 				<td colspan="2">
-					<select name="backlogId" id="backlogSelect-${backlogItemId}-${bliListContext}"
-					   onchange="getIterationGoals(this.value, '#iterationGoalSelectBLI-${backlogItemId}-${bliListContext}')">
+					<select name="backlogId" id="backlogSelect-${storyId}-${storyListContext}">
 	
 					<%-- Generate a drop-down list showing all backlogs in a hierarchical manner --%>
 					<option class="inactive" value="">(select backlog)</option>
 					<c:forEach items="${productList}" var="product">
 						<c:choose>
-							<c:when test="${product.id == backlogItem.backlog.id}">
+							<c:when test="${product.id == story.backlog.id}">
 								<option selected="selected" value="${product.id}" class="productOption"
 									title="${product.name}">${aef:out(product.name)}</option>
 							</c:when>
@@ -239,7 +237,7 @@ $(document).ready(function() {
 						</c:choose>
 						<c:forEach items="${product.projects}" var="project">
 							<c:choose>
-								<c:when test="${project.id == backlogItem.backlog.id}">
+								<c:when test="${project.id == story.backlog.id}">
 									<option selected="selected" value="${project.id}" class="projectOption"
 										title="${project.name}">${aef:out(project.name)}</option>
 								</c:when>
@@ -249,7 +247,7 @@ $(document).ready(function() {
 							</c:choose>
 							<c:forEach items="${project.iterations}" var="iteration">
 								<c:choose>
-									<c:when test="${iteration.id == backlogItem.backlog.id}">
+									<c:when test="${iteration.id == story.backlog.id}">
 										<option selected="selected" value="${iteration.id}" class="iterationOption"
 											title="${iteration.name}">${aef:out(iteration.name)}</option>
 									</c:when>
@@ -262,37 +260,12 @@ $(document).ready(function() {
 					</c:forEach>
 				</select></td>
 			</tr>
-			<tr style="display: none">
-				<td>Story</td>
-				<td></td>
-				<%-- If iteration goals doesn't exist default value is 0--%>
-                <td colspan="2">
-                    <c:set var="goalId" value="0" scope="page" />
-                    <c:if test="${iterationGoalId > 0}">
-                        <c:set var="goalId" value="${iterationGoalId}" />
-                    </c:if>
-                    <c:if test="${!empty backlogItem.iterationGoal}">
-                        <c:set var="goalId" value="${backlogItem.iterationGoal.id}"
-                            scope="page" />
-                    </c:if>
-                    <c:choose>
-                    	<c:when test="${!empty iterationGoals}">
-                    <ww:select headerKey="0" headerValue="(none)"
-                        id="iterationGoalSelectBLI-${backlogItemId}-${bliListContext}"
-                        name="iterationGoalId" list="#attr.iterationGoals"
-                        listKey="id" listValue="name" value="${goalId}" />
-                     </c:when>
-                     <c:otherwise>
-                       <select id="iterationGoalSelectBLI-${backlogItemId}-${bliListContext}" name="iterationGoalId"></select>
-                     </c:otherwise>
-                    </c:choose>
-                </td>
-			</tr>
+			
 			<tr>
 				<td>Priority</td>
 				<td></td>
-				<td colspan="2"><ww:select name="backlogItem.priority"
-					value="backlogItem.priority.name"
+				<td colspan="2"><ww:select name="story.priority"
+					value="story.priority.name"
 					list="#@java.util.LinkedHashMap@{'UNDEFINED':'undefined', 'BLOCKER':'+++++', 'CRITICAL':'++++', 'MAJOR':'+++', 'MINOR':'++', 'TRIVIAL':'+'}" /></td>
 				<%--
 			If you change something about priorities, remember to update conf/classes/messages.properties as well!
@@ -305,14 +278,14 @@ $(document).ready(function() {
 				<td colspan="2">
 	
 				<div>
-				<a id="userChooserLink-${backlogItemId}-${bliListContext}" href="#" class="assigneeLink">
+				<a id="userChooserLink-${storyId}-${storyListContext}" href="#" class="assigneeLink">
 				    <img src="static/img/users.png"/>
-                    <span id="userListContainer-${backlogItemId}-${bliListContext}">
+                    <span id="userListContainer-${storyId}-${storyListContext}">
                     <c:set var="count" value="0" />
-                    <c:set var="listLength" value="${fn:length(backlogItem.responsibles)}"/>
+                    <c:set var="listLength" value="${fn:length(story.responsibles)}"/>
                     <c:choose>
                         <c:when test="${listLength > 0}">
-                            <c:forEach items="${backlogItem.responsibles}" var="resp">
+                            <c:forEach items="${story.responsibles}" var="resp">
                                 <input type="hidden" name="userIds[${resp.id}]" value="${resp.id}"/>
                                 <c:set var="count" value="${count + 1}" />
                                 <c:out value="${resp.initials}" /><c:if test="${count != listLength}">, </c:if>
@@ -333,14 +306,14 @@ $(document).ready(function() {
 				<td colspan="2">
 	
 				<div>
-				<a id="themeChooserLink-${backlogItemId}-${bliListContext}" href="#" class="assigneeLink themeChooserLink">
+				<a id="themeChooserLink-${storyId}-${storyListContext}" href="#" class="assigneeLink themeChooserLink">
 				    <img src="static/img/theme.png"/>
-                    <span id="themeListContainer-${backlogItemId}-${bliListContext}">
+                    <span id="themeListContainer-${storyId}-${storyListContext}">
                     <c:set var="count" value="0" />
-                    <c:set var="listLength" value="${fn:length(backlogItem.businessThemes)}"/>
+                    <c:set var="listLength" value="${fn:length(story.businessThemes)}"/>
                     <c:choose>
                         <c:when test="${listLength > 0}">
-                            <c:forEach items="${backlogItem.businessThemes}" var="bt">
+                            <c:forEach items="${story.businessThemes}" var="bt">
                                 <input type="hidden" name="themeIds" value="${bt.id}" />
 			            	   <c:choose>
 			            	       <c:when test="${bt.global}">
@@ -367,7 +340,7 @@ $(document).ready(function() {
 				<td><ww:submit value="Save" id="saveButton" />
 				<ww:submit name="SaveClose" value="Save & Close" id="saveClose"  /></td>
 				<td class="deleteButton">
-				<ww:submit value="Delete" action="deleteBacklogItem" />
+				<ww:submit value="Delete" action="deleteStory" />
 				<ww:reset value="Cancel"/>	
 				</td>
 			</tr>
@@ -388,7 +361,7 @@ $(document).ready(function() {
 <!-- edit tab ends -->
 
 <!-- todos tab begins -->
-<div id="backlogItemProgressTab-${backlogItemId}-${bliListContext}" class="backlogItemNaviTab">
+<div id="storyProgressTab-${storyId}-${storyListContext}" class="storyNaviTab">
 
 <script type="text/javascript">
 	$(document).ready( function() {
@@ -415,21 +388,21 @@ $(document).ready(function() {
 		});				
 	});
 
-	function change_effort_enabled(value, bliId, context) {
+	function change_effort_enabled(value, storyId, context) {
 		if (value == "DONE") {
-			document.getElementById("effortBli_" + bliId + "-" + context).disabled = true;							
+			document.getElementById("effortBli_" + storyId + "-" + context).disabled = true;							
 		}
 		else {
-			document.getElementById("effortBli_" + bliId + "-" + context).disabled = false;
+			document.getElementById("effortBli_" + storyId + "-" + context).disabled = false;
 		}
 	}
 	
 	<%-- If user changed the item's state to DONE and there are todos not DONE, ask if they should be set to DONE as well. --%>
 		$(document).ready(function() {
-			$("#stateSelectProgress_${backlogItem.id}-${bliListContext}").change(function() {
-				change_effort_enabled($(this).val(), ${backlogItem.id}, '${bliListContext}');
+			$("#stateSelectProgress_${story.id}-${storyListContext}").change(function() {
+				change_effort_enabled($(this).val(), ${story.id}, '${storyListContext}');
 				var todosDone = true;
-				$(".todoStateSelect_${backlogItem.id}-${bliListContext}").each(function() {
+				$(".todoStateSelect_${story.id}-${storyListContext}").each(function() {
 					if ($(this).val() != 'DONE') {
 						todosDone = false;
 					}
@@ -437,12 +410,12 @@ $(document).ready(function() {
 				if ($(this).val() == 'DONE' && !todosDone) {
 					var prompt = window.confirm("Do you wish to set all the todos' states to Done as well?");
 					if (prompt) {
-						$("#todoTable-${backlogItemId}-${bliListContext}").find('select[name^=todoStates]').val('DONE');
+						$("#todoTable-${storyId}-${storyListContext}").find('select[name^=todoStates]').val('DONE');
 					}					
 				}
 			});
-			$('#todoTable-${backlogItemId}-${bliListContext}').inlineTableEdit({
-						  add: '#addTodo-${backlogItemId}-${bliListContext}', 
+			$('#todoTable-${storyId}-${storyListContext}').inlineTableEdit({
+						  add: '#addTodo-${storyId}-${storyListContext}', 
 						  useId: true,
 						  deleteaction: 'deleteTodo.action',
 						  submitParam: 'todoId',
@@ -474,26 +447,26 @@ $(document).ready(function() {
 			<td>State
 
 				<ww:select name="state"
-					id="stateSelectProgress_${backlogItem.id}-${bliListContext}" value="#attr.backlogItem.state.name"
+					id="stateSelectProgress_${story.id}-${storyListContext}" value="#attr.story.state.name"
 					list="@fi.hut.soberit.agilefant.model.State@values()" listKey="name"
-					listValue="getText('backlogItem.state.' + name())" />
+					listValue="getText('story.state.' + name())" />
             Priority
             <ww:select name="priority"
-                    value="backlogItem.priority.name"
+                    value="story.priority.name"
                     list="#@java.util.LinkedHashMap@{'UNDEFINED':'undefined', 'BLOCKER':'+++++', 'CRITICAL':'++++', 'MAJOR':'+++', 'MINOR':'++', 'TRIVIAL':'+'}" />
             Effort left
             
-				<ww:hidden name="backlogItemId" value="${backlogItem.id}" />
+				<ww:hidden name="storyId" value="${story.id}" />
 				<ww:hidden name="contextViewName" value="${contextViewName}" />
 				<ww:hidden name="contextObjectId" value="${contextObjectId}" />
 				<c:choose>
-					<c:when test="${backlogItem.state.name != 'DONE'}">
+					<c:when test="${story.state.name != 'DONE'}">
 						<ww:textfield size="5" name="effortLeft"
-							value="${backlogItem.effortLeft}" id="effortBli_${backlogItem.id}-${bliListContext}" />	
+							value="${story.effortLeft}" id="effortBli_${story.id}-${storyListContext}" />	
 					</c:when>
 					<c:otherwise>
 						<ww:textfield size="5" name="effortLeft"
-							value="${backlogItem.effortLeft}" id="effortBli_${backlogItem.id}-${bliListContext}"
+							value="${story.effortLeft}" id="effortBli_${story.id}-${storyListContext}"
 							disabled="true" />
 					</c:otherwise>
 				</c:choose>	
@@ -503,9 +476,9 @@ $(document).ready(function() {
 		<c:if test="${hourReport}">
 		<tr>
 			<td>Log effort for <c:out value="${currentUser.initials}"/>
-			 <ww:textfield size="5" name="spentEffort" id="effortSpent_${backlogItem.id}-${bliListContext}"/>
+			 <ww:textfield size="5" name="spentEffort" id="effortSpent_${story.id}-${storyListContext}"/>
 			Comment:
-             <ww:textfield size="28" name="spentEffortComment" id="effortSpentComment_${backlogItem.id}-${bliListContext}"/> 
+             <ww:textfield size="28" name="spentEffortComment" id="effortSpentComment_${story.id}-${storyListContext}"/> 
 	        </td>
 	    </c:if>
 	</td>
@@ -523,12 +496,12 @@ $(document).ready(function() {
 		<tr>
 			<td>
 				<div class="subItems" style="margin-top: 0px; width: 710px;">
-				<a id="addTodo-${backlogItemId}-${bliListContext}" href="#">Add new TODO &raquo;</a>				
+				<a id="addTodo-${storyId}-${storyListContext}" href="#">Add new TODO &raquo;</a>				
 				<c:choose>
-				<c:when test="${!empty backlogItem.todos}">
+				<c:when test="${!empty story.todos}">
 					<div class="subItemContent">										
 					<p>
-					<display:table htmlId="todoTable-${backlogItemId}-${bliListContext}" class="listTable" name="backlogItem.todos"
+					<display:table htmlId="todoTable-${storyId}-${storyListContext}" class="listTable" name="story.todos"
 						id="row">
 						
 						<display:column sortable="false" title="Name"
@@ -537,19 +510,19 @@ $(document).ready(function() {
 						</display:column>
 														
 						<display:column sortable="false" title="State">											
-							<ww:select cssClass="todoStateSelect_${backlogItem.id}-${bliListContext}"
+							<ww:select cssClass="todoStateSelect_${story.id}-${storyListContext}"
 								name="todoStates[${row.id}]" value="#attr.row.state.name"
 								list="@fi.hut.soberit.agilefant.model.State@values()" listKey="name"
-								listValue="getText('todo.state.' + name())" id="todoStateSelect_${row.id}-${bliListContext}"/>														
+								listValue="getText('todo.state.' + name())" id="todoStateSelect_${row.id}-${storyListContext}"/>														
 						</display:column>
 											
 						<display:column sortable="false" title="Actions" style="width:125px;">
-							<ww:url id="createBacklogItemLink"
-								action="ajaxCreateBacklogItem" includeParams="none">
+							<ww:url id="createStoryLink"
+								action="ajaxCreateStory" includeParams="none">
 								<ww:param name="fromTodoId" value="${row.id }" />
 							</ww:url>
-							<ww:a cssClass="openCreateDialog openBacklogItemDialog"
-								href="%{createBacklogItemLink}" onclick="return false;"
+							<ww:a cssClass="openCreateDialog openStoryDialog"
+								href="%{createStoryLink}" onclick="return false;"
 								title="Split as a new backlog item">
                                 <img src="static/img/new.png" alt="Split"
                                     title="Split as a new backlog item" />
@@ -593,7 +566,7 @@ $(document).ready(function() {
 				</c:when> 
 				<c:otherwise>
 				<%-- No todos: container --%>
-					<table id="todoTable-${backlogItemId}-${bliListContext}" style="display: none;" class="listTable"><tr><th>Name</th><th>State</th><th>Actions</th></tr></table>
+					<table id="todoTable-${storyId}-${storyListContext}" style="display: none;" class="listTable"><tr><th>Name</th><th>State</th><th>Actions</th></tr></table>
 				</c:otherwise>
 				</c:choose>
 				</div>
@@ -610,7 +583,7 @@ $(document).ready(function() {
 		<ww:submit value="Save & Close" id="saveCloseTodoList" name="SaveClose" />
 	</td>
 	<td class="deleteButton">
-		<ww:reset value="Cancel" onclick="$('#todoTable-${backlogItemId}-${bliListContext}').resetTableEdit();"/>				
+		<ww:reset value="Cancel" onclick="$('#todoTable-${storyId}-${storyListContext}').resetTableEdit();"/>				
 	</td>
 	</tr>
 	
@@ -627,9 +600,9 @@ $(document).ready(function() {
 </div>
 <!-- Todos tab ends -->
 <c:if test="${hourReport == true}">
-<div id="backlogItemSpentEffTab-${backlogItemId}-${bliListContext}" class="backlogItemNaviTab">
+<div id="storySpentEffTab-${storyId}-${storyListContext}" class="storyNaviTab">
 
-<aef:hourEntries id="hourEntries" target="${backlogItem}" />
+<aef:hourEntries id="hourEntries" target="${story}" />
 
 <script type="text/javascript">
 $(document).ready(function() {
@@ -639,8 +612,8 @@ $(document).ready(function() {
 		jQuery.each(users,function() {if(this.enabled) {ret[this.id] = this.fullName; } });
 		return ret;
 	};
-	$('#spentEffort-${backlogItemId}-${bliListContext}').inlineTableEdit({
-				  submit: '#saveSpentEffort-${backlogItemId}-${bliListContext}',
+	$('#spentEffort-${storyId}-${storyListContext}').inlineTableEdit({
+				  submit: '#saveSpentEffort-${storyId}-${storyListContext}',
 				  useId: true,
 				  deleteaction: 'deleteHourEntry.action',
                   submitParam: 'hourEntryId',
@@ -659,7 +632,7 @@ $(document).ready(function() {
 <div class="subItemContent">
 <div class="subItems validateWrapper validateEmpty" style="margin-top: 0; margin-left: 3px; width: 710px;">
 	<ww:url id="createLink" action="ajaxCreateHourEntry" includeParams="none">
-		<ww:param name="backlogItemId" value="${backlogItemId}" />
+		<ww:param name="storyId" value="${storyId}" />
 	</ww:url>
 	<ww:a cssClass="openCreateDialog openHourEntryDialog" title="Log effort"
 		href="%{createLink}" onclick="return false;">
@@ -667,7 +640,7 @@ $(document).ready(function() {
 	</ww:a>
 	<c:if test="${!empty hourEntries}">		
 	<ww:form action="updateMultipleHourEntries.action" method="post">		
-	<display:table name="${hourEntries}" htmlId="spentEffort-${backlogItemId}-${bliListContext}" id="row" defaultsort="1" defaultorder="descending" requestURI="${currentAction}.action"
+	<display:table name="${hourEntries}" htmlId="spentEffort-${storyId}-${storyListContext}" id="row" defaultsort="1" defaultorder="descending" requestURI="${currentAction}.action"
 	   style="width: 700px;">
 						
 		<display:column sortable="false" title="Date" style="white-space:nowrap; width: 140px;">
@@ -693,7 +666,7 @@ $(document).ready(function() {
             <img src="static/img/delete_18.png" alt="Delete" title="Delete" class="table_edit_delete" style="cursor: pointer;"/>								
 		</display:column>
 	</display:table>
-	<input type="submit" value="Save" style="display: none;" id="saveSpentEffort-${backlogItemId}-${bliListContext}" />
+	<input type="submit" value="Save" style="display: none;" id="saveSpentEffort-${storyId}-${storyListContext}" />
 	</ww:form>
 	</c:if> <%-- No entries --%>				
 	</div>

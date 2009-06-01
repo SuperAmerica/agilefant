@@ -3,52 +3,50 @@
 <aef:userList />
 <aef:teamList />
 <aef:currentUser />
-<aef:iterationGoalList id="iterationGoals" backlogId="${backlogId}" />
 <aef:productList />
 
 <script type="text/javascript">
 
 $(document).ready(function() {
-    $('#themeChooserLink-createBLI').themeChooser({
-        backlogItemId: ${backlogItemId},
-        backlogId: '#createBLIBacklogId',
-        themeListContainer: '#themeListContainer-createBLI'
+    $('#themeChooserLink-createStory').themeChooser({
+        storyId: ${storyId},
+        backlogId: '#createStoryBacklogId',
+        themeListContainer: '#themeListContainer-createStory'
     });
-    $('#userChooserLink-createBLI').userChooser({
-        backlogItemId: ${backlogItemId},
+    $('#userChooserLink-createStory').userChooser({
+        storyId: ${storyId},
         legacyMode: false,
-        backlogIdField: '#createBLIBacklogId',
-        userListContainer: '#userListContainer-createBLI'
+        backlogIdField: '#createStoryBacklogId',
+        userListContainer: '#userListContainer-createStory'
     });
-    getIterationGoals($('#createBLIBacklogId').val(),
-        '#createBLIIterGoalSelect', '${iterationGoalId}');
+ 
 });
 
 </script>
 
-<div class="validateWrapper validateNewBacklogItem">
-<ww:form action="storeNewBacklogItem" method="post">
+<div class="validateWrapper validateNewStory">
+<ww:form action="storeNewStory" method="post">
 	<ww:hidden name="fromTodoId" />
 	<table class="formTable">
 		<tr>
 			<td>Name</td>
 			<td>*</td>
-			<td colspan="2"><ww:textfield size="60" name="backlogItem.name" /></td>
+			<td colspan="2"><ww:textfield size="60" name="story.name" /></td>
 		</tr>
 
 		<tr>
 			<td>Description</td>
 			<td></td>
 			<td colspan="2"><ww:textarea cols="70" rows="10"
-				cssClass="useWysiwyg" id="createBacklogItemDescription"
-				name="backlogItem.description" /></td>
+				cssClass="useWysiwyg" id="createStoryDescription"
+				name="story.description" /></td>
 		</tr>
 
 		<tr>
 			<td>Original estimate</td>
 			<td></td>
 			<td colspan="2">
-                      <ww:textfield size="10" name="backlogItem.originalEstimate"
+                      <ww:textfield size="10" name="story.originalEstimate"
                           id="createBLI_originalEstimateField" />
                       <ww:label value="%{getText('webwork.estimateExample')}" />
                   </td>
@@ -59,8 +57,8 @@ $(document).ready(function() {
 			<td></td>
 			<td colspan="2">
 			<ww:select
-				name="backlogItem.state" id="stateSelect"
-				value="backlogItem.state.name"
+				name="story.state" id="stateSelect"
+				value="story.state.name"
 				list="@fi.hut.soberit.agilefant.model.State@values()" listKey="name"
 				listValue="getText('todo.state.' + name())"
 				onchange="disableElementIfValue(this, '#createBLI_originalEstimateField', 'DONE');"/></td>
@@ -71,7 +69,7 @@ $(document).ready(function() {
 			<td></td>
 			<td colspan="2">
 			
-			<select name="backlogId" id="createBLIBacklogId" onchange="getIterationGoals(this.value, '#createBLIIterGoalSelect');">
+			<select name="backlogId" id="createStoryBacklogId">
 				<%-- Generate a drop-down list showing all backlogs in a hierarchical manner --%>
 				<option class="inactive" value="">(select backlog)</option>
 				<c:forEach items="${productList}" var="product">
@@ -112,20 +110,12 @@ $(document).ready(function() {
 				</c:forEach>
             </select></td>
 		</tr>
-		<tr style="display: none">
-			<td>Story</td>
-			<td></td>
-			<%-- If iteration goals doesn't exist default value is 0--%>
-			<td colspan="2">
-			<select name="iterationGoalId" id="createBLIIterGoalSelect">
-			</select>
-			</td>
-		</tr>
+		
 		<tr>
 			<td>Priority</td>
 			<td></td>
-			<td colspan="2"><ww:select name="backlogItem.priority"
-				value="backlogItem.priority.name"
+			<td colspan="2"><ww:select name="story.priority"
+				value="story.priority.name"
 				list="#@java.util.LinkedHashMap@{'UNDEFINED':'undefined', 'BLOCKER':'+++++', 'CRITICAL':'++++', 'MAJOR':'+++', 'MINOR':'++', 'TRIVIAL':'+'}" /></td>
 			<%--
         If you change something about priorities, remember to update conf/classes/messages.properties as well!
@@ -137,14 +127,14 @@ $(document).ready(function() {
 			<td colspan="2">
 
 			<div>
-                <a id="userChooserLink-createBLI" href="#" class="assigneeLink">
+                <a id="userChooserLink-createStory" href="#" class="assigneeLink">
                     <img src="static/img/users.png"/>
-                    <span id="userListContainer-createBLI">
+                    <span id="userListContainer-createStory">
                     <c:set var="count" value="0" />
-                    <c:set var="listLength" value="${fn:length(backlogItem.responsibles)}"/>
+                    <c:set var="listLength" value="${fn:length(story.responsibles)}"/>
                     <c:choose>
                         <c:when test="${listLength > 0}">
-                            <c:forEach items="${backlogItem.responsibles}" var="resp">
+                            <c:forEach items="${story.responsibles}" var="resp">
                                 <input type="hidden" name="userIds[${resp.id}]" value="${resp.id}"/>
                                 <c:set var="count" value="${count + 1}" />
                                 <c:out value="${resp.initials}" /><c:if test="${count != listLength}">, </c:if>
@@ -165,14 +155,14 @@ $(document).ready(function() {
 			<td colspan="2">
 
 			<div>
-                <a id="themeChooserLink-createBLI" href="#" class="assigneeLink">
+                <a id="themeChooserLink-createStory" href="#" class="assigneeLink">
                     <img src="static/img/theme.png"/>
-                    <span id="themeListContainer-createBLI">
+                    <span id="themeListContainer-createStory">
                     <c:set var="count" value="0" />
-                    <c:set var="listLength" value="${fn:length(backlogItem.businessThemes)}"/>
+                    <c:set var="listLength" value="${fn:length(story.businessThemes)}"/>
                     <c:choose>
                         <c:when test="${listLength > 0}">
-                            <c:forEach items="${backlogItem.businessThemes}" var="bt">
+                            <c:forEach items="${story.businessThemes}" var="bt">
                                 <input type="hidden" name="themeIds" value="${bt.id}" />
 			            	   <c:choose>
 			            	       <c:when test="${bt.global}">

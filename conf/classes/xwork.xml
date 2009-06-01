@@ -187,40 +187,41 @@
 			</result>
 		</action>
 		<!-- /Product actions -->
-		<!-- BacklogItem actions -->
-		<!-- 
-		<action name="ajaxCreateBacklogItem" method="create"
-            class="backlogItemAction">
-            <result name="success" type="dispatcher">/WEB-INF/jsp/forms/createBacklogItem.jsp</result>
+		<!-- Story actions -->
+
+		<action name="ajaxCreateStory" method="create"
+            class="storyAction">
+            <result name="success" type="dispatcher">/WEB-INF/jsp/forms/createStory.jsp</result>
         </action>
 		<action name="quickStoreTodoList" method="quickStoreTodoList"
-			class="backlogItemAction">			
+			class="storyAction">			
 			<result name="ajax_error" type="httpheader">
 				<param name="status">400</param>
 			</result>
 			<result name="ajax_success" type="dispatcher">
 				<param name="status">200</param>
-				<param name="location">/WEB-INF/jsp/inc/ajaxBacklogItemResult.jsp</param>
+				<param name="location">/WEB-INF/jsp/inc/ajaxStoryResult.jsp</param>
 			</result>
 		</action>
 
+<!-- 
 		<action name="resetBliOrigEstAndEffortLeft"
 			method="resetBliOrigEstAndEffortLeft" class="backlogItemAction">
 			<result type="redirect-action">
 				<param name="actionName">popContext</param>
 			</result>
 		</action>
-
-		<action name="storeNewBacklogItem" method="ajaxStoreBacklogItem"
-			class="backlogItemAction">
+ -->
+		<action name="storeNewStory" method="ajaxStoreStory"
+			class="storyAction">
 		</action>
 
-		<action name="backlogItemTabs" method="edit"
-			class="backlogItemAction">
-			<result>/WEB-INF/jsp/inc/backlogItemAjax.jsp</result>
+		<action name="storyTabs" method="edit"
+			class="storyAction">
+			<result>/WEB-INF/jsp/inc/storyAjax.jsp</result>
 		</action>
-		<action name="ajaxStoreBacklogItem" method="ajaxStoreBacklogItem"
-			class="backlogItemAction">		
+		<action name="ajaxStoreStory" method="ajaxStoreStory"
+			class="storyAction">		
 			<result name="ajax_error" type="httpheader">
 				<param name="status">400</param>
 			</result>
@@ -229,6 +230,7 @@
 				<param name="location">/WEB-INF/jsp/jsonData.jsp</param>
 			</result>
 		</action>
+		<!-- 
 		<action name="resetOriginalEstimate"
       method="resetOriginalEstimate" class="backlogItemAction">
        <result name="ajax_error" type="httpheader">
@@ -239,9 +241,10 @@
         <param name="location">/WEB-INF/jsp/jsonData.jsp</param>
       </result>
     </action>
+     -->
       
-	<action name="backlogItemJSON"
-      method="getBacklogItemJSON" class="backlogItemAction">
+	<action name="storyJSON"
+      method="getStoryJSON" class="storyAction">
        <result name="ajax_error" type="httpheader">
         <param name="status">400</param>
       </result>
@@ -250,18 +253,18 @@
         <param name="location">/WEB-INF/jsp/jsonData.jsp</param>
       </result>
     </action>
-		<action name="deleteBacklogItem" method="delete"
-			class="backlogItemAction">
+		<action name="deleteStory" method="delete"
+			class="storyAction">
 			<result type="redirect-action">
                 <param name="actionName">editBacklog</param>
                 <param name="backlogId">${backlogId}</param>
 			</result>
 		</action>
-		<action name="ajaxDeleteBacklogItem" method="ajaxDeleteBacklogItem"
-			class="backlogItemAction">	
+		<action name="ajaxDeleteStory" method="ajaxDeleteStory"
+			class="storyAction">	
 		</action>
-		 -->
-		<!-- /BacklogItem actions -->
+
+		<!-- /Story actions -->
 
 		<!-- Project actions -->
 		<action name="editProject" method="edit"

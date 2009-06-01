@@ -1,10 +1,8 @@
 package fi.hut.soberit.agilefant.model;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -54,8 +52,6 @@ public class Project extends Backlog {
     private Date startDate;
 
 //    private List<Iteration> iterations = new ArrayList<Iteration>();
-
-    private List<Story> stories = new ArrayList<Story>();
 
     private int rank = 0;
 
@@ -137,15 +133,6 @@ public class Project extends Backlog {
 
     public void setStatus(Status status) {
         this.status = status;
-    }
-
-    public void setStories(List<Story> stories) {
-        this.stories = stories;
-    }
-
-    @OneToMany(mappedBy = "project")
-    public List<Story> getStories() {
-        return stories;
     }
 
     @OneToMany(targetEntity = fi.hut.soberit.agilefant.model.Assignment.class,

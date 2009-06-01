@@ -79,6 +79,7 @@ $(document).ready(function() {
 </c:if>
 
 <%--  TODO: fiksumpi virheenk�sittely --%>
+
 		<aef:productList />
 			<h2><c:out value="${project.name}" /></h2>
 				<table>
@@ -121,6 +122,7 @@ $(document).ready(function() {
 											</tr>
 										</table>
 									</div>
+                  
 									<div class="subItemContent">
 										<div id="descriptionDiv" class="descriptionDiv" style="display: block;">
 											<table class="infoTable" cellpadding="0" cellspacing="0">
@@ -128,6 +130,7 @@ $(document).ready(function() {
 													<th class="info1"><ww:text name="general.uniqueId"/></th>
 													<td class="info3"><aef:quickReference item="${project}" /></td>
 													<td class="info4" rowspan="8">
+                          <%--
                                                         <c:if test="${(!empty project.backlogItems) && (projectBurndown || (empty project.iterations))}">
                                                             <div class="smallBurndown"><a href="#bigChart">
                                                                 <img src="drawSmallProjectChart.action?projectId=${project.id}"/>
@@ -181,6 +184,7 @@ $(document).ready(function() {
                                                           </tr>
                                                        </table>
                                                        </c:if>
+                                                       --%>
                                                     </td>
 												</tr>
 												<tr>
@@ -220,6 +224,7 @@ $(document).ready(function() {
 													</c:choose>
 													</td>													
 												</tr>
+                        <%--
 												<c:if test="${(project.defaultOverhead != null) && (project.defaultOverhead.time > 0)}">
 												<tr>
 								    				<th class="info1">Baseline load</th>
@@ -234,7 +239,9 @@ $(document).ready(function() {
 								    					</c:choose>
 								    				</td>							
 												</tr>
-											     </c:if>				
+											     </c:if>
+                           --%>		
+                           <%--		
 										         <tr>
 													<th class="info1">Planned project size</th>
 													<td class="info3" ondblclick="return editProject();">
@@ -248,12 +255,13 @@ $(document).ready(function() {
 														</c:choose>
 													</td>
 												</tr>	
+                        --%>
 												<tr>
 	                                				<th class="info1">Timeframe</th>
 	                                				<td class="info3" ondblclick="return editProject();"><c:out value="${project.startDate.date}.${project.startDate.month + 1}.${project.startDate.year + 1900}" /> - 
 	                                					<c:out value="${project.endDate.date}.${project.endDate.month + 1}.${project.endDate.year + 1900}" /></td>
 												</tr>
-												<tr>
+												<tr><%--
 								    				<th class="info1">Assignees</th>
 								    				<td class="info3"><c:set var="listSize"
 	                                        			value="${fn:length(project.responsibles)}" scope="page" />
@@ -267,13 +275,10 @@ $(document).ready(function() {
 	                                                				</ww:url>
 	                                                				<c:choose>
 	                                                    				<c:when test="${count < listSize - 1}">
-	                                                        				<%--<a href="${userDailyWorkLink}"><c:out value="${responsible.initials}" /></a>,--%>
 	                                                        				<c:out value="${responsible.initials}" />, 
 	                                                    				</c:when>
 	                                                    				<c:otherwise>
-	                                                        				<%--<ww:a href="${userDailyWorkLink}"> --%>
-	                                                            				<c:out value="${responsible.initials}" />
-	                                                        				<%-- </ww:a>--%>
+	                                                        				<c:out value="${responsible.initials}" />
 	                                                    				</c:otherwise>
 	                                                				</c:choose>
 	                                                				<c:set var="count" value="${count + 1}" scope="page" />
@@ -284,6 +289,7 @@ $(document).ready(function() {
 	                                        				</c:otherwise>
 	                                    				</c:choose>
 	                                    			</td>
+                                            --%>
 												</tr>
 												<tr>
 								    				<td colspan="2" class="description">
@@ -323,7 +329,6 @@ $(document).ready(function() {
 													<tr>
 														<td>Project type</td>
 														<td></td>														
-														<%-- If project types don't exist default value is 0--%>
 														<td colspan="2">
 														<c:choose>
 															<c:when test="${!empty projectTypes}">
@@ -359,12 +364,12 @@ $(document).ready(function() {
 													<tr>
 														<td>Baseline load</td>
 														<td></td>
-														<td colspan="2"><ww:textfield size="10" name="project.defaultOverhead" /> / person / week</td>
+														<%--<td colspan="2"><ww:textfield size="10" name="project.defaultOverhead" /> / person / week</td>--%>
 													</tr>
 						                			<tr>
 														<td>Planned project size</td>
 														<td></td>
-														<td colspan="2"><ww:textfield size="10" id="project.backlogSize" name="project.backlogSize" /> (total man hours)
+														<%--<td colspan="2"><ww:textfield size="10" id="project.backlogSize" name="project.backlogSize" /> (total man hours)--%>
 														</td>
 													</tr>													
 													<tr>
@@ -443,6 +448,7 @@ $(document).ready(function() {
 						</tr>
 					</tbody>
 				</table>
+        <%--
 		<table>
 			<tr>
 				<td>
@@ -600,7 +606,7 @@ $(document).ready(function() {
 											<display:column sortable="true" title="Items">
 												${fn:length(row.backlogItems)}
 											</display:column>
-											<%-- REFACTOR THIS --%>
+											
 											<display:column sortable="true" title="Effort left"
 												sortProperty="totalEffortLeftSum.time"
 												defaultorder="descending">
@@ -675,13 +681,13 @@ $(document).ready(function() {
 				</td>
 			</tr>
 		</table>
-
+--%>
 <%-- Hour reporting here - Remember to expel David H. --%>
-
+<%--
 <aef:hourReporting id="hourReport"></aef:hourReporting>
 <c:if test="${hourReport == 'true' && projectId != 0}">
 	<c:set var="myAction" value="editProject" scope="session" />
 	<%@ include file="./inc/_hourEntryList.jsp"%>
-</c:if> <%-- Hour reporting on --%>
+</c:if>--%> <%-- Hour reporting on --%>
 
 <%@ include file="./inc/_footer.jsp"%>

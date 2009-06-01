@@ -14,6 +14,7 @@ import org.apache.log4j.Logger;
 
 import com.opensymphony.xwork.Action;
 
+import fi.hut.soberit.agilefant.business.ProductBusiness;
 import fi.hut.soberit.agilefant.business.ProjectBusiness;
 import fi.hut.soberit.agilefant.business.ProjectTypeBusiness;
 import fi.hut.soberit.agilefant.business.UserBusiness;
@@ -24,6 +25,7 @@ import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.ProjectType;
 import fi.hut.soberit.agilefant.model.Status;
 import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.util.CalendarUtils;
 
 public class ProjectAction extends BacklogContentsAction implements CRUDAction {
 
@@ -41,11 +43,11 @@ public class ProjectAction extends BacklogContentsAction implements CRUDAction {
 
     private Project project;
 
-    private ProjectDAO projectDAO;
+//    private ProjectDAO projectDAO;
 
     private ProjectTypeBusiness projectTypeBusiness;
 
-    private ProductDAO productDAO;
+    // private ProductDAO productDAO;
 
     private List<ProjectType> projectTypes;
 
@@ -74,6 +76,8 @@ public class ProjectAction extends BacklogContentsAction implements CRUDAction {
     private UserBusiness userBusiness;
 
     private ProjectBusiness projectBusiness;
+    
+    private ProductBusiness productBusiness;
     
 //    private Map<Iteration, EffortSumData> effLeftSums;
 //    
@@ -129,7 +133,7 @@ public class ProjectAction extends BacklogContentsAction implements CRUDAction {
     public String edit() {       
         Date startDate;
         this.prepareProjectTypes();
-        project = projectDAO.get(projectId);
+        project = projectBusiness.retrieve(projectId);
 
         if (project == null) {
             super.addActionError("Invalid project id!");
@@ -180,7 +184,7 @@ public class ProjectAction extends BacklogContentsAction implements CRUDAction {
        
         Project storable = new Project();
         if (projectId > 0) {
-            storable = projectDAO.get(projectId);
+            storable = projectBusiness.retrieve(projectId);
             if (storable == null) {
                 super.addActionError(super.getText("project.notFound"));
                 return CRUDAction.AJAX_ERROR; 
@@ -202,9 +206,9 @@ public class ProjectAction extends BacklogContentsAction implements CRUDAction {
         }
         // project-olion on oltava kannassa ennen kuin Assignmentit tehdään.
         if (projectId == 0) {
-            projectId = (Integer) projectDAO.create(storable);
+            projectId = (Integer) projectBusiness.create(storable);
         } else {
-            projectDAO.store(storable);
+            projectBusiness.store(storable);
         }
 //        backlogBusiness.setAssignments(selectedUserIds, this.assignments, projectDAO
 //                .get(projectId));
@@ -214,7 +218,7 @@ public class ProjectAction extends BacklogContentsAction implements CRUDAction {
     public String ajaxStoreProject() {
         Project storable = new Project();
         if (projectId > 0) {
-            storable = projectDAO.get(projectId);
+            storable = projectBusiness.retrieve(projectId);
             if (storable == null) {
                 super.addActionError(super.getText("project.notFound"));
                 return CRUDAction.AJAX_ERROR;
@@ -236,9 +240,9 @@ public class ProjectAction extends BacklogContentsAction implements CRUDAction {
             return CRUDAction.AJAX_ERROR;
         }        
         if (projectId == 0) {
-            projectId = (Integer) projectDAO.create(storable);
+            projectId = (Integer) projectBusiness.create(storable);
         } else {
-            projectDAO.store(storable);
+            projectBusiness.store(storable);
         }
 //        backlogBusiness.setAssignments(selectedUserIds, this.assignments, projectDAO
 //                .get(projectId));
@@ -256,7 +260,7 @@ public class ProjectAction extends BacklogContentsAction implements CRUDAction {
     }
 
     public String delete() {
-        project = projectDAO.get(projectId);
+        project = projectBusiness.retrieve(projectId);
         if (project == null) {
             super.addActionError(super.getText("project.notFound"));
             return Action.ERROR;
@@ -299,17 +303,18 @@ public class ProjectAction extends BacklogContentsAction implements CRUDAction {
             super.addActionError(super.getText("project.missingName"));
             return;
         }
-//        project.setStartDate(CalendarUtils.parseDateFromString(startDate));
-//        if (project.getStartDate() == null) {
-//            super.addActionError(super.getText("project.missingStartDate"));
-//            return;
-//        }
-//
-//        project.setEndDate(CalendarUtils.parseDateFromString(endDate));
-//        if (project.getEndDate() == null) {
-//            super.addActionError(super.getText("project.missingEndDate"));
-//            return;
-//        }
+        project.setStartDate(CalendarUtils.parseDateFromString(startDate));
+        if (project.getStartDate() == null) {
+            super.addActionError(super.getText("project.missingStartDate"));
+            return;
+        }
+
+        project.setEndDate(CalendarUtils.parseDateFromString(endDate));
+        if (project.getEndDate() == null) {
+            super.addActionError(super.getText("project.missingEndDate"));
+            return;
+        }
+       
         if (project.getStartDate().after(project.getEndDate())) {
             super
                     .addActionError(super
@@ -317,20 +322,19 @@ public class ProjectAction extends BacklogContentsAction implements CRUDAction {
             return;
         }
 
-        Product product = productDAO.get(productId);
+        Product product = productBusiness.retrieve(productId);
         if (product == null) {
             super.addActionError(super.getText("product.notFound"));
             return;
+        } else if (storable.getParent() != product) {
+            /*
+             * Setting the relation in one end of the relation is enought to
+             * change the relation in both ends! Hibernate takes care of both
+             * ends.
+             */
+            storable.setParent(product);
+            // product.getProjects().add(storable);
         }
-//        } else if (storable.getProduct() != product) {
-//            /*
-//             * Setting the relation in one end of the relation is enought to
-//             * change the relation in both ends! Hibernate takes care of both
-//             * ends.
-//             */
-//            storable.setProduct(product);
-//            // product.getProjects().add(storable);
-//        }
 
 //        if (this.project.getProjectType() != null) {
 //            ProjectType type = projectTypeBusiness.get(this.project
@@ -355,11 +359,11 @@ public class ProjectAction extends BacklogContentsAction implements CRUDAction {
             
         }
         */
-//        storable.setStatus(project.getStatus());
-//        storable.setEndDate(CalendarUtils.parseDateFromString(endDate));
-//        storable.setStartDate(CalendarUtils.parseDateFromString(startDate));
-//        storable.setName(project.getName());
-//        storable.setDescription(project.getDescription());
+        storable.setStatus(project.getStatus());
+        storable.setEndDate(CalendarUtils.parseDateFromString(endDate));
+        storable.setStartDate(CalendarUtils.parseDateFromString(startDate));
+        storable.setName(project.getName());
+        storable.setDescription(project.getDescription());
 //        storable.setDefaultOverhead(project.getDefaultOverhead());
 //        storable.setBacklogSize(this.project.getBacklogSize());
     }
@@ -373,7 +377,7 @@ public class ProjectAction extends BacklogContentsAction implements CRUDAction {
     }
 
     public Collection<Project> getAllProjects() {
-        return this.projectDAO.getAll();
+        return this.projectBusiness.retrieveAll();
     }
 
     public Project getProject() {
@@ -385,20 +389,12 @@ public class ProjectAction extends BacklogContentsAction implements CRUDAction {
         this.backlog = project;
     }
 
-    public void setProjectDAO(ProjectDAO projectDAO) {
-        this.projectDAO = projectDAO;
-    }
-
     public int getProductId() {
         return productId;
     }
 
     public void setProductId(int productId) {
         this.productId = productId;
-    }
-
-    public void setProductDAO(ProductDAO productDAO) {
-        this.productDAO = productDAO;
     }
 
     public int getProjectTypeId() {
@@ -413,9 +409,12 @@ public class ProjectAction extends BacklogContentsAction implements CRUDAction {
         this.projectTypeBusiness = projectTypeBusiness;
     }
 
+
     private void prepareProjectTypes() {
-//        this.projectTypes = (List<ProjectType>)projectTypeBusiness.getAll();
-        Collections.sort(this.projectTypes);
+        // TODO: 090601 Reko: Fix this for project types to work
+        // this.projectTypes = (List<ProjectType>)projectTypeBusiness.getAll();
+        //Collections.sort(this.projectTypes);
+        this.projectTypes = new ArrayList<ProjectType>();
     }
 
     public Collection<ProjectType> getProjectTypes() {
@@ -558,5 +557,9 @@ public class ProjectAction extends BacklogContentsAction implements CRUDAction {
 
     public boolean isProjectBurndown() {
         return projectBurndown;
+    }
+
+    public void setProductBusiness(ProductBusiness productBusiness) {
+        this.productBusiness = productBusiness;
     }
 }

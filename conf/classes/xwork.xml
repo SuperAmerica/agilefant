@@ -264,14 +264,11 @@
 		<!-- /BacklogItem actions -->
 
 		<!-- Project actions -->
-		<!-- 
-		<action name="listProjects">
-			<result>/WEB-INF/jsp/listProjects.jsp</result>
-		</action>
 		<action name="editProject" method="edit"
 			class="projectAction">
 			<result>/WEB-INF/jsp/editProject.jsp</result>
 		</action>
+		<!-- 
 		<action name="createProject" method="create"
 			class="projectAction">
 			<result>/WEB-INF/jsp/editProject.jsp</result>
@@ -302,11 +299,11 @@
 				<param name="actionName">projectPortfolio</param>
 			</result>
 		</action>
-
+-->
 		<action name="storeNewProject" method="ajaxStoreProject"
 			class="projectAction">
 		</action>
-		
+		<!-- 
 		<action name="projectTabs" method="edit"
 			class="projectAction">
 			<result>/WEB-INF/jsp/inc/projectAjax.jsp</result>

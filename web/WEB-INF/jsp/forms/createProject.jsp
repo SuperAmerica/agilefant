@@ -1,7 +1,7 @@
 <%@ include file="../inc/_taglibs.jsp"%>
 
 <aef:productList />
-<aef:projectTypeList id="projectTypes"/>
+<%--<aef:projectTypeList id="projectTypes"/>--%>
 
 <script type="text/javascript">
 $(document).ready(function() {

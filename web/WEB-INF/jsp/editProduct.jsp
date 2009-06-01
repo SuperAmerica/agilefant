@@ -132,9 +132,9 @@ SimileAjax.Platform = new Object();*/
 		</tr>
 	</tbody>
 </table>
-<%--
-<c:if test="${product.id > 0}">
+
 <table>
+<%--
     <!-- The timeline -->
     <tr>
     <td>
@@ -178,7 +178,7 @@ SimileAjax.Platform = new Object();*/
     </div>
     </td>
     </tr>
-
+--%>
 	<tr>
 		<td>
 			<div class="subItems" id="subItems_editProductProjectList">
@@ -207,9 +207,9 @@ SimileAjax.Platform = new Object();*/
 				</table>
 				</div>
 
-				<c:if test="${!empty product.projects}">
+				<c:if test="${!empty product.children}">
 				<div class="subItemContent">
-				<display:table class="listTable" name="product.projects"
+				<display:table class="listTable" name="product.children"
 					id="row" requestURI="editProduct.action">
 							
 					<display:column sortable="false" title="St." class="statusColumn">
@@ -240,15 +240,18 @@ SimileAjax.Platform = new Object();*/
 						</c:choose>
 						</div>
 					</display:column>
-										
+          
+          <%--
 					<display:column sortable="false" title="Iter. info">
 						<c:out value="${row.metrics.numberOfOngoingIterations}" /> / 
 						<c:out value="${row.metrics.numberOfAllIterations}" />
 					</display:column>
+          
 					
 					<display:column sortable="false" title="Assignees">
 						<c:out value="${row.metrics.assignees}" />
-					</display:column>					
+					</display:column>
+          --%>					
 															
 					<display:column sortable="true" title="Start date">
 						<ww:date name="#attr.row.startDate" />
@@ -277,7 +280,7 @@ SimileAjax.Platform = new Object();*/
 		</td>
 	</tr>
 </table>
-
+<%--
 <table>	
 	<tr>
 		<td>
@@ -427,6 +430,5 @@ SimileAjax.Platform = new Object();*/
 		</td>
 	</tr>
 </table>
-
-</c:if>--%>
+--%>
 <%@ include file="./inc/_footer.jsp"%>

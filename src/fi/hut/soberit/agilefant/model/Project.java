@@ -1,7 +1,9 @@
 package fi.hut.soberit.agilefant.model;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -58,6 +60,8 @@ public class Project extends Backlog {
     private int rank = 0;
 
     private Status status = Status.GREEN;
+    
+    private Collection<Assignment> assignments = new HashSet<Assignment>();
 
     /** The product, under which this project belongs. */
 //    @OneToMany(mappedBy = "parent")
@@ -142,6 +146,16 @@ public class Project extends Backlog {
     @OneToMany(mappedBy = "project")
     public List<Story> getStories() {
         return stories;
+    }
+
+    @OneToMany(mappedBy = "project")
+    @JSON(include = false)
+    public Collection<Assignment> getAssignments() {
+        return assignments;
+    }
+
+    public void setAssignments(Collection<Assignment> assignments) {
+        this.assignments = assignments;
     }
 
 }

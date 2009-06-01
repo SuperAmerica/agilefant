@@ -30,11 +30,13 @@
             <td></td>
             <td colspan="2"><ww:checkbox name="user.enabled" value="${user.enabled}" /> Enabled</td>
         </tr>
+<%-- 
         <tr>
             <td>Weekly hours</td>
             <td>*</td>
             <td colspan="2"><ww:textfield name="user.weekHours" value="${user.weekHours}" /></td>
-        </tr>       
+        </tr>  
+--%>     
         <tr>
             <td>Password</td>
             <td>*</td>

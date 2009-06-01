@@ -56,11 +56,13 @@
 					    	<ww:hidden name="user.enabled" value="${user.enabled}" />
 					    </c:otherwise>
 					</c:choose>
+					<%--
 					<tr>
 						<td>Weekly hours</td>
 						<td>*</td>
 						<td colspan="2"><ww:textfield name="user.weekHours" value="${user.weekHours}" /></td>
-					</tr>		
+					</tr>
+					--%>		
 					<tr>
 						<td>Password</td>
 						<td>*</td>

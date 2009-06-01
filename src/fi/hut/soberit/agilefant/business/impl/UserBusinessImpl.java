@@ -55,4 +55,15 @@ public class UserBusinessImpl extends GenericBusinessImpl<User> implements
         this.storyDAO = storyDAO;
     }
 
+    public void disableUser(int id) {
+        User user = userDAO.get(id);
+        user.setEnabled(false);        
+    }
+
+    public void enableUser(int id) {
+        User user = userDAO.get(id);
+        user.setEnabled(true);  
+    }
+    
+
 }

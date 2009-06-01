@@ -500,7 +500,7 @@
 		<!-- /Iteration actions -->
 
 		<!-- User actions -->
-		<!-- 
+		
 		<action name="listUsers" method="list" class="userAction">
 			<result>/WEB-INF/jsp/administration/listUsers.jsp</result>
 		</action>
@@ -533,7 +533,7 @@
 			class="userAction">
 			<result>/WEB-INF/jsp/inc/userAjax.jsp</result>
 		</action>
- -->
+ 
 		<!-- /User actions -->
 
 		<!-- Team actions -->
@@ -997,10 +997,10 @@
 		<!-- /Product timeline actions -->
 		
 		<!-- Session actions -->
-		<!-- 
+	
 		<action name="ajaxOpenDialog" method="ajaxOpenDialog" class="sessionAction" />
-        <action name="ajaxCloseDialog" method="ajaxCloseDialog" class="sessionAction" />
-         -->
+    <action name="ajaxCloseDialog" method="ajaxCloseDialog" class="sessionAction" />
+
 		<!-- /Session actions -->
 
         <!-- JSON actions -->

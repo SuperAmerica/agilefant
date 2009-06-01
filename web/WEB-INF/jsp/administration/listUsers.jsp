@@ -48,8 +48,8 @@ $(document).ready(function() {
 			<display:column sortable="true" title="User ID" property="loginName" />
 			<display:column sortable="true" title="Initials" property="initials" />
 			<display:column sortable="true" title="Email" property="email" style="width: 125px;"/>
-			<display:column sortable="true" title="Week hours"
-				property="weekHours" />
+<%--			<display:column sortable="true" title="Week hours"
+			property="weekHours" /> --%>
 			<display:column sortable="false" title="Actions" style="width: 70px;">
 				<img src="static/img/edit.png" alt="Edit" title="Edit" style="cursor: pointer;" onclick="handleTabEvent('userTabContainer-${row.id}', 'user', ${row.id}, 0); return false;" />
 				<c:if test="${row.id != 1}">

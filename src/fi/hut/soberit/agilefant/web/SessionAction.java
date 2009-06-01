@@ -3,6 +3,9 @@ package fi.hut.soberit.agilefant.web;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
 import com.opensymphony.xwork.ActionContext;
 import com.opensymphony.xwork.ActionSupport;
 
@@ -11,6 +14,8 @@ import com.opensymphony.xwork.ActionSupport;
  * 
  * @author rjokelai
  */
+@Component("sessionAction")
+@Scope("prototype")
 public class SessionAction extends ActionSupport {
     private static final long serialVersionUID = -137364974320138538L;
     

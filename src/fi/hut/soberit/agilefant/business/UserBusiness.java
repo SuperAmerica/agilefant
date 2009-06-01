@@ -36,4 +36,8 @@ public interface UserBusiness extends GenericBusiness<User> {
      */
     List<User> getDisabledUsers();
 
+    void disableUser(int id);
+
+    void enableUser(int id);
+
 }

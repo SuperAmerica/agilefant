@@ -209,9 +209,9 @@ function openCreateDialog(element) {
 	        dialogSetup(agilefantValidationRules.iterationGoal, "Create a new story");
 	    };
 	}
-	else if (element.hasClass('openBacklogItemDialog')) {
-        callback = function(data, status) {
-            dialogSetup(agilefantValidationRules.backlogItem, "Create a new backlog item");
+	else if (element.hasClass('openStoryDialog')) {
+		callback = function(data, status) {
+            dialogSetup(agilefantValidationRules.story, "Create a new story");
         };
     }
     else if (element.hasClass('openHourEntryDialog')) {

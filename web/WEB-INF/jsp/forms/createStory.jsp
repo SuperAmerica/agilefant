@@ -66,7 +66,7 @@ $(document).ready(function() {
 
 		<tr>
 			<td>Backlog</td>
-			<td></td>
+			<td>*</td>
 			<td colspan="2">
 			
 			<select name="backlogId" id="createStoryBacklogId">

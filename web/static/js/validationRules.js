@@ -246,26 +246,26 @@ var agilefantValidationRules = {
            }
 	   }
 	},
-	backlogItem: {
+	story: {
 	   rules: {
-	       "backlogItem.name": {
+	       "story.name": {
 	           required: true
 	       },
 	       "backlogId": {
 	           required: true
 	       },
-	       "backlogItem.originalEstimate": {
+	       "story.originalEstimate": {
 	           aftime: [ false ]
 	       }
 	   },
 	   messages: {
-	       "backlogItem.name": {
+	       "story.name": {
                required: "Please enter a name"
            },
            "backlogId": {
                required: "Please select a backlog"
            },
-           "backlogItem.originalEstimate": {
+           "story.originalEstimate": {
                aftime: "Invalid format"
            }
 	   }
@@ -477,7 +477,6 @@ var agilefantValidationRules = {
     }
 };
 agilefantValidationRules.businessTheme = agilefantValidationRules.theme;
-agilefantValidationRules.bli = agilefantValidationRules.backlogItem;
 
 /*
  * Add the error placement rules to each ruleset.
@@ -503,8 +502,8 @@ jQuery.each(agilefantValidationRules, function() {
 
 
 var validationRulesByHTMLClass = {
-    'validateNewBacklogItem': agilefantValidationRules.backlogItem,
-    'validateBacklogItem': agilefantValidationRules.backlogItem,
+    'validateNewStory': agilefantValidationRules.story,
+    'validateStory': agilefantValidationRules.story,
     'validateNewHourEntry': agilefantValidationRules.hourEntry,
     'validateNewIteration': agilefantValidationRules.iteration,
     'validateIteration': agilefantValidationRules.iteration,

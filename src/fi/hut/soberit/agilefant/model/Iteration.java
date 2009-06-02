@@ -28,7 +28,7 @@ import flexjson.JSON;
  * backlog items can work towards a single iteration goal.
  * 
  * @see fi.hut.soberit.agilefant.model.Backlog
- * @see fi.hut.soberit.agilefant.model.BacklogItem
+ * @see fi.hut.soberit.agilefant.model.Story
  * @see fi.hut.soberit.agilefant.model.Iteration
  * @see fi.hut.soberit.agilefant.model.IterationGoal
  */

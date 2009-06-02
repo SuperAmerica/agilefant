@@ -27,7 +27,7 @@ import org.hibernate.annotations.Type;
  * information. Class is not defined abstract as it us used as common logged
  * effort information container.
  * 
- * @see fi.hut.soberit.agilefant.model.BacklogItemHourEntry
+ * @see fi.hut.soberit.agilefant.model.StoryHourEntry
  * @see fi.hut.soberit.agilefant.model.BacklogHourEntry
  * @author Pasi Pekkanen, Roni Tammisalo
  * 

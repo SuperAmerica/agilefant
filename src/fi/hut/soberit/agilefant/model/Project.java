@@ -37,7 +37,7 @@ import flexjson.JSON;
  * compared to all other project's ranks to find out rank order.
  * 
  * @see fi.hut.soberit.agilefant.model.Backlog
- * @see fi.hut.soberit.agilefant.model.BacklogItem
+ * @see fi.hut.soberit.agilefant.model.Story
  * @see fi.hut.soberit.agilefant.model.ProjectType
  * @see fi.hut.soberit.agilefant.model.Iteration
  */

@@ -32,13 +32,13 @@ import flexjson.JSON;
  * backlog item : "saving implemented" <br>
  * todo: "implement saving .foo files" <br>
  * <p>
- * Through Backlog, BacklogItems are appendable as a child for the implementing
+ * Through Backlog, Stories are appendable as a child for the implementing
  * object.
  * 
  * @see fi.hut.soberit.agilefant.model.Product
  * @see fi.hut.soberit.agilefant.model.Project
  * @see fi.hut.soberit.agilefant.model.Iteration
- * @see fi.hut.soberit.agilefant.model.BacklogItem
+ * @see fi.hut.soberit.agilefant.model.Story
  * @see fi.hut.soberit.agilefant.model.Todo
  */
 @BatchSize(size=20)

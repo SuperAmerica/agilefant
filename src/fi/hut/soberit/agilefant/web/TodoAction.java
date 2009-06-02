@@ -261,12 +261,12 @@ public class TodoAction extends ActionSupport {
         this.todoId = todoId;
     }
 
-    public int getBacklogItemId() {
+    public int getTaskId() {
         return taskId;
     }
 
-    public void setBacklogItemId(int backlogItemId) {
-        this.taskId = backlogItemId;
+    public void setTaskId(int taskId) {
+        this.taskId = taskId;
     }
 
     public Todo getTodo() {

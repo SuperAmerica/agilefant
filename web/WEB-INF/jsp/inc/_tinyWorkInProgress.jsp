@@ -1,6 +1,6 @@
 <%@ include file="./_taglibs.jsp"%>
 
-<aef:openDialogs context="bliWorkInProgress" id="openBacklogItemTabs" />
+<aef:openDialogs context="bliWorkInProgress" id="openStoryTabs" />
 
 <!-- context variable for backlog item ajax to know its context -->
 <c:set var="bliListContext" value="workInProgress" scope="session" />
@@ -10,8 +10,8 @@
 <script language="javascript" type="text/javascript">
 
 $(document).ready(function() {        
-    <c:forEach items="${openBacklogItemTabs}" var="openBacklogItem">
-        handleTabEvent("backlogItemTabContainer-${openBacklogItem[0]}-${bliListContext}", "bliWorkInProgress", ${openBacklogItem[0]}, ${openBacklogItem[1]}, '${bliListContext}');
+    <c:forEach items="${openStoryTabs}" var="openStory">
+        handleTabEvent("backlogItemTabContainer-${openStory[0]}-${bliListContext}", "bliWorkInProgress", ${openStory[0]}, ${openStory[1]}, '${bliListContext}');
     </c:forEach>
 });
 

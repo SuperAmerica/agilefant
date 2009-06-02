@@ -5,7 +5,7 @@
 
 <c:set var="dialogContext" value="bliDWInterations" scope="session" />
 
-<aef:openDialogs context="bliDWInterations" id="openBacklogItemTabs" />
+<aef:openDialogs context="bliDWInterations" id="openStoryTabs" />
 
 <c:if test="${hourReport}">
 	<c:set var="totalSum" value="${null}" />
@@ -14,8 +14,8 @@
 <script language="javascript" type="text/javascript">
 
 $(document).ready(function() {        
-    <c:forEach items="${openBacklogItemTabs}" var="openBacklogItem">
-        handleTabEvent("backlogItemTabContainer-${openBacklogItem[0]}-${bliListContext}", "bliDWInterations", ${openBacklogItem[0]}, ${openBacklogItem[1]} ,'${bliListContext}');
+    <c:forEach items="${openStoryTabs}" var="openStory">
+        handleTabEvent("backlogItemTabContainer-${openStory[0]}-${bliListContext}", "bliDWInterations", ${openStory[0]}, ${openStory[1]} ,'${bliListContext}');
     </c:forEach>
 });
 
@@ -77,10 +77,10 @@ $(document).ready(function() {
             </td>
           </c:if>
 		  <td>
-		  <ww:url id="createBLILink" action="ajaxCreateBacklogItem" includeParams="none">
+		  <ww:url id="createBLILink" action="ajaxCreateStory" includeParams="none">
             <ww:param name="backlogId" value="${it.id}" />
           </ww:url>
-          <ww:a cssClass="openCreateDialog openBacklogItemDialog"
+          <ww:a cssClass="openCreateDialog openStoryDialog"
                 onclick="return false;" title="Create a new task"
                 href="%{createBLILink}">
           </ww:a>
@@ -103,7 +103,7 @@ $(document).ready(function() {
 		</c:if>
 
 		<div class="subItemContent">
-		<table class="dailyWorkBacklogItems">
+		<table class="dailyWorkStorys">
 			<tr>
 				<td class="backlogItemList"><display:table class="dailyWorkIteration"
 					name="${bliMap[it]}" id="row"
@@ -184,7 +184,7 @@ $(document).ready(function() {
 
 					<display:column title="Actions">
 						<img src="static/img/edit.png" alt="Edit" title="Edit" style="cursor: pointer;" onclick="handleTabEvent('backlogItemTabContainer-${row.id}-${bliListContext}','bliDWInterations',${row.id},0, '${bliListContext}'); return false;" />
-						<img src="static/img/delete_18.png" alt="Delete" title="Delete" style="cursor: pointer;" onclick="deleteBacklogItem(${row.id}); return false;" />
+						<img src="static/img/delete_18.png" alt="Delete" title="Delete" style="cursor: pointer;" onclick="deleteStory(${row.id}); return false;" />
 					</display:column>
 
 					<display:footer>

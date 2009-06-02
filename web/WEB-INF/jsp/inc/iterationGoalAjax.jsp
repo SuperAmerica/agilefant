@@ -109,12 +109,12 @@ $(document).ready(function() {
 
 <div id="iterationGoalBliTab-${iterationGoalId}" class="iterationNaviTab">
 
-<ww:url id="createBLILink" action="ajaxCreateBacklogItem" includeParams="none">
+<ww:url id="createBLILink" action="ajaxCreateStory" includeParams="none">
     <ww:param name="backlogId">${iterationGoal.iteration.id}</ww:param>
     <ww:param name="iterationGoalId">${iterationGoalId}</ww:param>
 </ww:url>
 
-<ww:a href="%{createBLILink}" cssClass="openCreateDialog openBacklogItemDialog" onclick="return false">
+<ww:a href="%{createBLILink}" cssClass="openCreateDialog openStoryDialog" onclick="return false">
     Create new &raquo;
 </ww:a>
 

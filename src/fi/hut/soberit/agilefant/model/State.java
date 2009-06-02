@@ -1,7 +1,7 @@
 package fi.hut.soberit.agilefant.model;
 
 /**
- * A state enumeration, which represents the state of a Todo and BacklogItem.
+ * A state enumeration, which represents the state of a Todo and Story.
  * <p>
  * Possible values are "not started", "started", "blocked", "implemented" and
  * "done".

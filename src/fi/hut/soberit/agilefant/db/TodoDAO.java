@@ -23,7 +23,7 @@ public interface TodoDAO extends GenericDAO<Todo> {
      *                array of accepted states
      * @return all todos matching the criteria
      */
-    public Collection<Todo> getTodosByStateAndBacklogItem(Task task,
+    public Collection<Todo> getTodosByStateAndStory(Task task,
             State[] states);
 
     /**

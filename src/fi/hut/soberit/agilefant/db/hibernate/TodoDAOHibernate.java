@@ -60,7 +60,7 @@ public class TodoDAOHibernate extends GenericDAOHibernate<Todo> implements
 
     /** {@inheritDoc} */
     @SuppressWarnings("unchecked")
-    public Collection<Todo> getTodosByStateAndBacklogItem(Task bli,
+    public Collection<Todo> getTodosByStateAndStory(Task bli,
             State[] states) {
         String[] ids = new String[states.length + 1];
         Object[] values = new Object[states.length + 1];

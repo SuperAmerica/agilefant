@@ -397,7 +397,7 @@ SimileAjax.Platform = new Object();*/
 <table>	
 	<tr>
 		<td>
-			<div class="subItems" id="subItems_editProductBacklogItemsList">
+			<div class="subItems" id="subItems_editProductStorysList">
 			<div class="subItemHeader">
 				<table cellspacing="0" cellpadding="0">
 	                <tr>
@@ -409,11 +409,11 @@ SimileAjax.Platform = new Object();*/
                             <tr>
                             <td>
 	                    <ww:url
-					id="createBacklogItemLink" action="ajaxCreateBacklogItem"
+					id="createStoryLink" action="ajaxCreateStory"
 					includeParams="none">
 					<ww:param name="backlogId" value="${product.id}" />
-				</ww:url> <ww:a cssClass="openCreateDialog openBacklogItemDialog"
-					href="%{createBacklogItemLink}" onclick="return false;"
+				</ww:url> <ww:a cssClass="openCreateDialog openStoryDialog"
+					href="%{createStoryLink}" onclick="return false;"
 					title="Create a new story">
 					</ww:a>
 					</td>

@@ -243,7 +243,7 @@ IterationModel.prototype.reloadGoalData = function() {
 	dataType: "json",
 	type: "POST",
 	url: "iterationData.action",
-	data: {iterationId: this.iterationId, excludeBacklogItems: true}
+	data: {iterationId: this.iterationId, excludeStorys: true}
 	});
 };
 IterationModel.prototype.addGoal = function(goal) {
@@ -394,7 +394,7 @@ StoryModel.prototype.moveToIteration = function(newIteration) {
 		cache: false,
 		type: "POST",
 		url: "moveIterationGoal.action",
-		data: {iterationGoalId: this.id, iterationId: newIteration, moveBacklogItems: true}
+		data: {iterationGoalId: this.id, iterationId: newIteration, moveStorys: true}
 	});
 };
 StoryModel.prototype.remove = function() {
@@ -731,7 +731,7 @@ TaskModel.prototype.remove = function() {
 	},
 	cache: false,
 	type: "POST",
-	url: "ajaxDeleteBacklogItem.action",
+	url: "ajaxDeleteStory.action",
 	data: {
 		backlogItemId: this.id
 	}
@@ -841,7 +841,7 @@ TaskModel.prototype.save = function(synchronous, callback) {
 	cache: false,
 	dataType: "json",
 	type: "POST",
-	url: "ajaxStoreBacklogItem.action",
+	url: "ajaxStoreStory.action",
 	data: data
 	});
 };

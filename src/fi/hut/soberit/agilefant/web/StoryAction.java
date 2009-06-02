@@ -142,7 +142,7 @@ public class StoryAction extends ActionSupport implements CRUDAction {
         return SUCCESS;
     }
 
-    public String ajaxDeleteBacklogItem() {
+    public String ajaxDeleteStory() {
         try {
             storyBusiness.delete(storyId);
         } catch (ObjectNotFoundException e) {

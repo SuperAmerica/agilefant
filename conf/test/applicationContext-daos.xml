@@ -52,7 +52,7 @@
 	<bean name="projectDAOTarget" parent="abstractDAOTarget"
 		class="fi.hut.soberit.agilefant.db.hibernate.ProjectDAOHibernate" />
 	<bean name="backlogItemDAOTarget" parent="abstractDAOTarget"
-		class="fi.hut.soberit.agilefant.db.hibernate.BacklogItemDAOHibernate" />
+		class="fi.hut.soberit.agilefant.db.hibernate.StoryDAOHibernate" />
 	<bean name="todoDAOTarget" parent="abstractDAOTarget"
 		class="fi.hut.soberit.agilefant.db.hibernate.TodoDAOHibernate" />
 	<bean name="userDAOTarget" parent="abstractDAOTarget"
@@ -110,7 +110,7 @@
 	</bean>
 	
 	<bean name="backlogItemHourEntryDAOTarget" parent="abstractDAOTarget"
-		class="fi.hut.soberit.agilefant.db.hibernate.BacklogItemHourEntryDAOHibernate" />
+		class="fi.hut.soberit.agilefant.db.hibernate.StoryHourEntryDAOHibernate" />
 	<bean name="backlogItemHourEntryDAO" parent="abstractDAO">
 		<property name="target" ref="backlogItemHourEntryDAOTarget" />
 	</bean>

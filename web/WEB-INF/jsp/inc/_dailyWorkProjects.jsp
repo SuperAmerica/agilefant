@@ -2,7 +2,7 @@
 
 <aef:hourReporting id="hourReport"></aef:hourReporting>
 
-<aef:openDialogs context="bliDWProjects" id="openBacklogItemTabs" />
+<aef:openDialogs context="bliDWProjects" id="openStoryTabs" />
 
 <!-- context variable for backlog item ajax to know its context -->
 <c:set var="bliListContext" value="dailyWorkProjects" scope="session" />
@@ -12,8 +12,8 @@
 <script language="javascript" type="text/javascript">
 
 $(document).ready(function() {        
-    <c:forEach items="${openBacklogItemTabs}" var="openBacklogItem">
-        handleTabEvent("backlogItemTabContainer-${openBacklogItem[0]}-${bliListContext}", "bliDWProjects", ${openBacklogItem[0]}, ${openBacklogItem[1]}, '${bliListContext}');
+    <c:forEach items="${openStoryTabs}" var="openStory">
+        handleTabEvent("backlogItemTabContainer-${openStory[0]}-${bliListContext}", "bliDWProjects", ${openStory[0]}, ${openStory[1]}, '${bliListContext}');
     </c:forEach>
 });
 
@@ -69,10 +69,10 @@ $(document).ready(function() {
             </td>
           </c:if>
           <td>
-          <ww:url id="createBLILink" action="ajaxCreateBacklogItem" includeParams="none">
+          <ww:url id="createBLILink" action="ajaxCreateStory" includeParams="none">
             <ww:param name="backlogId" value="${pro.id}" />
           </ww:url>
-          <ww:a cssClass="openCreateDialog openBacklogItemDialog"
+          <ww:a cssClass="openCreateDialog openStoryDialog"
                 onclick="return false;" title="Create a new story"
                 href="%{createBLILink}">
           </ww:a>
@@ -97,7 +97,7 @@ $(document).ready(function() {
 
 <div class="subItemContent">
 
-<table class="dailyWorkBacklogItems">
+<table class="dailyWorkStorys">
 <tr>
 				<td class="backlogItemList"><display:table class="dailyWorkProject"
 					name="${bliMap[pro]}" id="row"
@@ -178,7 +178,7 @@ $(document).ready(function() {
 
 					<display:column title="Actions">
 						<img src="static/img/edit.png" alt="Edit" title="Edit" style="cursor: pointer;" onclick="handleTabEvent('backlogItemTabContainer-${row.id}-${bliListContext}','bliDWProjects',${row.id},0, '${bliListContext}'); return false;" />
-						<img src="static/img/delete_18.png" alt="Delete" title="Delete" style="cursor: pointer;" onclick="deleteBacklogItem(${row.id}); return false;" />
+						<img src="static/img/delete_18.png" alt="Delete" title="Delete" style="cursor: pointer;" onclick="deleteStory(${row.id}); return false;" />
 					</display:column>
 
 					<display:footer>

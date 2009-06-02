@@ -3,7 +3,7 @@ package fi.hut.soberit.agilefant.model;
 /**
  * A priority enumeration, which represents the priority of a todo and a story.
  * 
- * @see fi.hut.soberit.agilefant.model.BacklogItem
+ * @see fi.hut.soberit.agilefant.model.Story
  * @see fi.hut.soberit.agilefant.model.Todo
  */
 public enum Priority {

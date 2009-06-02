@@ -1,6 +1,6 @@
 <%@ include file="./_taglibs.jsp"%>
 
-<aef:openDialogs context="bliWorkInProgress" id="openBacklogItemTabs" />
+<aef:openDialogs context="bliWorkInProgress" id="openStoryTabs" />
 
 <!-- context variable for backlog item ajax to know its context -->
 <c:set var="bliListContext" value="workInProgress" scope="session" />
@@ -10,8 +10,8 @@
 <script language="javascript" type="text/javascript">
 
 $(document).ready(function() {        
-    <c:forEach items="${openBacklogItemTabs}" var="openBacklogItem">
-        handleTabEvent("backlogItemTabContainer-${openBacklogItem[0]}-${bliListContext}", "bliWorkInProgress", ${openBacklogItem[0]}, ${openBacklogItem[1]}, '${bliListContext}');
+    <c:forEach items="${openStoryTabs}" var="openStory">
+        handleTabEvent("backlogItemTabContainer-${openStory[0]}-${bliListContext}", "bliWorkInProgress", ${openStory[0]}, ${openStory[1]}, '${bliListContext}');
     </c:forEach>
 });
 
@@ -140,7 +140,7 @@ Stories/tasks
 
 	<display:column title="Actions">
 		<img src="static/img/edit.png" alt="Edit" title="Edit" style="cursor: pointer;" onclick="handleTabEvent('backlogItemTabContainer-${row.id}-${bliListContext}','bliWorkInProgress',${row.id},0, '${bliListContext}'); return false;" />
-		<img src="static/img/delete_18.png" alt="Delete" title="Delete" style="cursor: pointer;" onclick="deleteBacklogItem(${row.id}); return false;" />
+		<img src="static/img/delete_18.png" alt="Delete" title="Delete" style="cursor: pointer;" onclick="deleteStory(${row.id}); return false;" />
 	</display:column>
 
 </display:table></div>

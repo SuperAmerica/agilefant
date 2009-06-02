@@ -8,8 +8,8 @@ function confirmDelete() { return confirm("Are you sure?"); }
 function confirmDeleteTeam() { return confirm("Really delete the team?"); }
 function confirmReset() { return confirm("Really reset the original estimate?"); }
 
-function deleteBacklogItem(backlogItemId) {
-	var url = "ajaxDeleteBacklogItem.action";			
+function deleteStory(backlogItemId) {
+	var url = "ajaxDeleteStory.action";			
 	if (confirmDeleteBli()) {
 		$.post(url,{backlogItemId: backlogItemId},function(data) {
 			reloadPage();

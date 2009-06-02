@@ -643,7 +643,7 @@ $(document).ready(function() {
 							</div>
               
               <%--
-		<div class="subItems" id="subItems_editProjectBacklogItems">
+		<div class="subItems" id="subItems_editProjectStorys">
 		<div class="subItemHeader">
 			<table cellspacing="0" cellpadding="0">
                     <tr>
@@ -655,11 +655,11 @@ $(document).ready(function() {
                             <tr>
                             <td>
 			                        <ww:url
-			                    id="createBacklogItemLink" action="ajaxCreateBacklogItem"
+			                    id="createStoryLink" action="ajaxCreateStory"
 			                    includeParams="none">
 			                    <ww:param name="backlogId" value="${project.id}" />
-			                </ww:url> <ww:a cssClass="openCreateDialog openBacklogItemDialog"
-			                    href="%{createBacklogItemLink}" onclick="return false;"
+			                </ww:url> <ww:a cssClass="openCreateDialog openStoryDialog"
+			                    href="%{createStoryLink}" onclick="return false;"
 			                    title="Create a new story">
 			                    </ww:a>
 			                    </td>

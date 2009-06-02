@@ -18,7 +18,7 @@ import fi.hut.soberit.agilefant.model.Backlog;
  * with underlying model. One should add <code>Business</code> classes for
  * different <em>aspects</em> of the program, not for different classes.
  * Hence, <code>BacklogBusiness</code> can naturally handle actions targeted
- * at both <code>BacklogItem</code> and <code>Backlog</code>. How and when
+ * at both <code>Story</code> and <code>Backlog</code>. How and when
  * new <code>Business</code> objects are created is usually be the
  * responsibility of the project architect.
  * 

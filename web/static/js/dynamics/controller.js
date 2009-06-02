@@ -176,15 +176,15 @@ IterationController.prototype = {
     		}});
     		this.descCells.push(desc);
     	desc.getElement().addClass("description-cell");
-    	var blis = row.createCell();
-    	blis.getElement().hide();
-    	var blictrl = new IterationGoalController(blis, goal, this);
-    	this.IterationGoalControllers.push(blictrl);
+    	var storys = row.createCell();
+    	storys.getElement().hide();
+    	var storyctrl = new IterationGoalController(storys, goal, this);
+    	this.IterationGoalControllers.push(storyctrl);
     	var expandButton = commonView.expandCollapse(expand.getElement(), function() {
-    		blictrl.showTasks();
+    		storyctrl.showTasks();
     		desc.getElement().hide();
     	}, function() {
-    		blictrl.hideTasks();
+    		storyctrl.hideTasks();
     		desc.getElement().show();
     	});
     	this.buttonCells.push(expandButton);
@@ -209,7 +209,7 @@ IterationController.prototype = {
     	                            	   text: "Create a new task",
     	                            	   callback: function() {
     	                            	   expandButton.trigger("showContents");
-    	                            	   blictrl.createBli();
+    	                            	   storyctrl.createBli();
     	                               }
     	                               }
     	                               ]});
@@ -232,7 +232,7 @@ IterationController.prototype = {
     			var model = row.model;
     			row.remove();
     			model.changeStory(goal);
-    			blictrl.render();
+    			storyctrl.render();
     		}
 		});
 
@@ -296,14 +296,14 @@ IterationController.prototype = {
     	var buttons = row.createCell();
     	row.setNotSortable();
     	row.createCell().getElement().hide(); //dymmy description
-    	var blis = row.createCell();
-    	blis.getElement().hide();
-    	this.noGoalItemController = new IterationGoalController(blis, goal, this);
+    	var storys = row.createCell();
+    	storys.getElement().hide();
+    	this.noGoalItemController = new IterationGoalController(storys, goal, this);
     	this.IterationGoalControllers.push(this.noGoalItemController);
     	buttons.setActionCell({items: [{
     		text: "Create a new task",
     		callback: function() {
-    		blis.getElement().show();
+    		storys.getElement().show();
     		me.noGoalItemController.createBli();
     	}
     	}]});
@@ -415,7 +415,7 @@ IterationGoalController.prototype = {
 	showTasks: function() {
 		this.parentView.getElement().show();
 	},
-	deleteBli: function(bli) {
+	deleteBli: function(story) {
 		var parent = $("<div />").appendTo(document.body).text("Are you sure you wish to delete this task?");
 		var me = this;
 		parent.dialog({
@@ -427,7 +427,7 @@ IterationGoalController.prototype = {
 			'Yes': function() {
 			$(this).dialog('destroy');
 			parent.remove();
-			bli.remove();
+			story.remove();
 		},
 		Cancel: function() {
 			$(this).dialog('destroy');
@@ -436,47 +436,47 @@ IterationGoalController.prototype = {
 		}
 		});
 	},
-	addRow: function(bli) {
-    	if(this.view.isInTable(bli)) { //avoid duplicate entries, should be refatored to the view layer?
+	addRow: function(story) {
+    	if(this.view.isInTable(story)) { //avoid duplicate entries, should be refatored to the view layer?
         	return;
         }
 		var me = this;
-		var row = this.view.createRow(bli);
+		var row = this.view.createRow(story);
 		var expand = row.createCell();
 		var themes = row.createCell({
 			type: "theme",
-			backlogId: bli.backlog.getId(),
-			set: function(themes) { bli.setThemes(themes); bli.setThemeIds(agilefantUtils.objectToIdArray(themes)); },
-			get: function() { return bli.getThemes(); },
+			backlogId: story.backlog.getId(),
+			set: function(themes) { story.setThemes(themes); story.setThemeIds(agilefantUtils.objectToIdArray(themes)); },
+			get: function() { return story.getThemes(); },
 			decorator: agilefantUtils.themesToHTML
 		});
 		var name = row.createCell({
 			type: "text",
 			required: true,
-			set: function(val) { bli.setName(val); },
-			get: function() { return bli.getName(); }
+			set: function(val) { story.setName(val); },
+			get: function() { return story.getName(); }
 		});
 		var state = row.createCell({
 			type: "select",
 			items: agilefantUtils.states,
-			set: function(val) { bli.setState(val); },
-			get: function() { return bli.getState(); },
+			set: function(val) { story.setState(val); },
+			get: function() { return story.getState(); },
 			decorator: agilefantUtils.stateToString,
 			htmlDecorator: agilefantUtils.stateDecorator
 		});
 		row.createCell({
 			type: "select",
 			items: agilefantUtils.priorities, 
-			get: function() { return bli.getPriority(); },
+			get: function() { return story.getPriority(); },
 			decorator: agilefantUtils.priorityToString,
-			set: function(val) { bli.setPriority(val); }
+			set: function(val) { story.setPriority(val); }
 		});
 		row.createCell({
 			type: "user",
-			get: function() { return bli.getUsers(); },
+			get: function() { return story.getUsers(); },
 			getEdit: function() { 
 				var users = [];
-				var tmp = bli.getUsers();
+				var tmp = story.getUsers();
 				if(tmp) {
 					for(var i = 0; i < tmp.length; i++) {
 						if(tmp[i]) {
@@ -488,30 +488,30 @@ IterationGoalController.prototype = {
 			},
 			decorator: agilefantUtils.userlistToHTML,
 			set: function(users) {
-				bli.setUsers(agilefantUtils.createPseudoUserContainer(users)); 
-				bli.setUserIds(agilefantUtils.objectToIdArray(users));	  
+				story.setUsers(agilefantUtils.createPseudoUserContainer(users)); 
+				story.setUserIds(agilefantUtils.objectToIdArray(users));	  
 			},
-			backlogId: bli.backlog.getId(),
-			storyId: bli.getId()
+			backlogId: story.backlog.getId(),
+			storyId: story.getId()
 		});
 		var el = row.createCell({
 			type: "effort",
-			set: function(val) { bli.setEffortLeft(val); },
-			get: function() { return bli.getEffortLeft(); },
+			set: function(val) { story.setEffortLeft(val); },
+			get: function() { return story.getEffortLeft(); },
 			onEdit: function() {
-				return (bli.getState() !== "DONE");
+				return (story.getState() !== "DONE");
 			},
 			decorator: agilefantUtils.aftimeToString
 		});
 		var oe = row.createCell({
 			type: "effort",
-			get: function() { return bli.getOriginalEstimate(); },
+			get: function() { return story.getOriginalEstimate(); },
 			onEdit: function(noAutoClose) {
-			  var a = bli;
-			  if (bli.getState() == "DONE") {
+			  var a = story;
+			  if (story.getState() == "DONE") {
 			    return false;
 			  }
-			  else if (!bli.getOriginalEstimate()) {
+			  else if (!story.getOriginalEstimate()) {
 			    return true;
 			  }
 			  else if (noAutoClose) {
@@ -529,7 +529,7 @@ IterationGoalController.prototype = {
     			      'Yes': function() {
       			      $(this).dialog('destroy');
       			      parent.remove();
-      			      bli.resetOriginalEstimate();
+      			      story.resetOriginalEstimate();
       			      return false;
       			    },
       			    'No': function() {
@@ -542,13 +542,13 @@ IterationGoalController.prototype = {
 			  }
 			  return false;
 			},
-			set: function(val) { bli.setOriginalEstimate(val); },
+			set: function(val) { story.setOriginalEstimate(val); },
 			decorator: agilefantUtils.aftimeToString
 		});
 		var es = null;
 		if(agilefantUtils.isTimesheetsEnabled()) {
 			es = row.createCell({
-				get: function() { return bli.getEffortSpent(); },
+				get: function() { return story.getEffortSpent(); },
 				decorator: agilefantUtils.aftimeToString
 			});
 		}
@@ -558,18 +558,18 @@ IterationGoalController.prototype = {
 				return;
 			}
 			desc.getElement().hide();
-			bli.commit(true);
+			story.commit(true);
 			return false;
 		};
 		row.setSaveCallback(saveCb);
 		var desc = row.createCell({
 			type: "wysiwyg", 
-			get: function() { return bli.getDescription(); }, 
-			set: function(val) { bli.setDescription(val);},
+			get: function() { return story.getDescription(); }, 
+			set: function(val) { story.setDescription(val);},
 			buttons: {
 				save: {text: "Save", action: saveCb},
 			cancel: {text: "Cancel", action: function() {
-				bli.rollBack();
+				story.rollBack();
 				desc.getElement().hide();
 				row.cancelEdit();
 				return false;
@@ -580,30 +580,30 @@ IterationGoalController.prototype = {
 		                               {
 		                            	   text: "Reset original estimate",
 		                            	   callback: function() {
-		                            	   bli.resetOriginalEstimate();
+		                            	   story.resetOriginalEstimate();
 		                               }
 		                               }, {
 		                            	   text: "Edit task",
 		                            	   callback: function(row) {
 		                            	   desc.getElement().show();
-		                            	   bli.beginTransaction();
+		                            	   story.beginTransaction();
 		                            	   row.openEdit();
 		                               }
 		                               }, {
 		                            	   text: "Move task",
 		                            	   callback: function() {
-		                            	   me.moveTask(row,bli);
+		                            	   me.moveTask(row,story);
 		                               }
 		                               },{
 		                            	   text: "Delete task",
 		                            	   callback: function() {
-		                            	   me.deleteBli(bli);
+		                            	   me.deleteBli(story);
 		                               }
 		                               }
 		                               ]});
 		var tabCell = row.createCell();
 		tabCell.getElement().hide();
-		var childController = new TaskController(tabCell, bli, this, es);
+		var childController = new TaskController(tabCell, story, this, es);
 		commonView.expandCollapse(expand.getElement(), function() {
 			childController.initialize();
 			tabCell.getElement().show();
@@ -633,46 +633,46 @@ IterationGoalController.prototype = {
 	},
 	createBli: function() {
 		var me = this;
-		var bli = new TaskModel();
-		bli.backlog = this.data.iteration;
-		bli.id = 0;
-		bli.beginTransaction();
-		var row = this.view.createRow(bli,{toTop: true}, true);
+		var story = new TaskModel();
+		story.backlog = this.data.iteration;
+		story.id = 0;
+		story.beginTransaction();
+		var row = this.view.createRow(story,{toTop: true}, true);
 		row.createCell();
 		var themes = row.createCell({
 			type: "theme",
-			backlogId: bli.backlog.getId(),
-			set: function(themes) { bli.setThemeIds(agilefantUtils.objectToIdArray(themes)); bli.setThemes(themes);},
-			get: function() { return bli.getThemes(); },
+			backlogId: story.backlog.getId(),
+			set: function(themes) { story.setThemeIds(agilefantUtils.objectToIdArray(themes)); story.setThemes(themes);},
+			get: function() { return story.getThemes(); },
 			decorator: agilefantUtils.themesToHTML
 		});
 		var name = row.createCell({
 			type: "text",
 			required: true,
-			set: function(val) { bli.setName(val); },
-			get: function() { return bli.getName(); }
+			set: function(val) { story.setName(val); },
+			get: function() { return story.getName(); }
 		});
 		var state = row.createCell({
 			type: "select",
 			items: agilefantUtils.states,
-			set: function(val) { bli.setState(val); },
-			get: function() { return bli.getState(); },
+			set: function(val) { story.setState(val); },
+			get: function() { return story.getState(); },
 			decorator: agilefantUtils.stateToString,
 			htmlDecorator: agilefantUtils.stateDecorator
 		});
 		row.createCell({
 			type: "select",
 			items: agilefantUtils.priorities, 
-			get: function() { return bli.getPriority(); },
+			get: function() { return story.getPriority(); },
 			decorator: agilefantUtils.priorityToString,
-			set: function(val) { bli.setPriority(val); }
+			set: function(val) { story.setPriority(val); }
 		});
 		row.createCell({
 			type: "user",
-			get: function() { return bli.getUsers(); },
+			get: function() { return story.getUsers(); },
 			getEdit: function() { 
 				var users = [];
-				var tmp = bli.getUsers();
+				var tmp = story.getUsers();
 				if(tmp) {
 					for(var i = 0; i < tmp.length; i++) {
 						if(tmp[i]) { 
@@ -684,17 +684,17 @@ IterationGoalController.prototype = {
 			},
 			decorator: agilefantUtils.userlistToHTML,
 			set: function(users) {
-				bli.setUsers(agilefantUtils.createPseudoUserContainer(users)); 
-				bli.setUserIds(agilefantUtils.objectToIdArray(users));	  
+				story.setUsers(agilefantUtils.createPseudoUserContainer(users)); 
+				story.setUserIds(agilefantUtils.objectToIdArray(users));	  
 			},
-			backlogId: bli.backlog.getId(),
-			storyId: bli.getId()
+			backlogId: story.backlog.getId(),
+			storyId: story.getId()
 		});
 		var el = row.createCell();
 		var oe = row.createCell({
 			type: "effort",
-			set: function(val) { bli.setOriginalEstimate(val); },
-			get: function() { return bli.getOriginalEstimate(); },
+			set: function(val) { story.setOriginalEstimate(val); },
+			get: function() { return story.getOriginalEstimate(); },
 			decorator: agilefantUtils.aftimeToString  
 		});
 		if(agilefantUtils.isTimesheetsEnabled()) {
@@ -714,18 +714,18 @@ IterationGoalController.prototype = {
 				return;
 			}
 			row.remove();
-			me.data.addTask(bli);
-			me.addRow(bli);
-			bli.commit(function() {
-				ModelFactory.setTask(bli);
+			me.data.addTask(story);
+			me.addRow(story);
+			story.commit(function() {
+				ModelFactory.setTask(story);
 			});
 			return false;
 		};
 		row.setSaveCallback(saveCb);
 		var desc = row.createCell({
 			type: "wysiwyg", 
-			get: function() { return bli.getDescription(); }, 
-			set: function(val) { bli.setDescription(val);},
+			get: function() { return story.getDescription(); }, 
+			set: function(val) { story.setDescription(val);},
 			buttons: {
 				save: {text: "Save", action: saveCb},
 			cancel: {text: "Cancel", action: function() {
@@ -738,10 +738,10 @@ IterationGoalController.prototype = {
 	},
 	render: function() {
 		var me = this;
-		var blis = this.data.getTasks();
-		if(blis && blis.length > 0) {
-			for(var i = 0; i < blis.length; i++) {
-				me.addRow(blis[i]);
+		var storys = this.data.getTasks();
+		if(storys && storys.length > 0) {
+			for(var i = 0; i < storys.length; i++) {
+				me.addRow(storys[i]);
 			}
 		}
 		this.view.render();

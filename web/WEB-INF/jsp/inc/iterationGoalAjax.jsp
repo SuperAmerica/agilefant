@@ -14,7 +14,7 @@
 <div class="ajaxWindowTabsDiv">
 <ul class="ajaxWindowTabs">
 	<li><a href="#iterationGoalEditTab-${iterationGoalId}"><span><img src="static/img/edit.png" alt="Edit" /> Edit iteration goal</span></a></li>
-	<li><a href="#iterationGoalBliTab-${iterationGoalId}"><span><img src="static/img/bli2.png" alt="Backlog items" /> Backlog items</span></a></li>
+	<li><a href="#iterationGoalBliTab-${iterationGoalId}"><span><img src="static/img/story2.png" alt="Backlog items" /> Backlog items</span></a></li>
 </ul>
 
 <div id="iterationGoalEditTab-${iterationGoalId}" class="iterationNaviTab">
@@ -125,7 +125,7 @@ $(document).ready(function() {
 	defaultorder="descending">					
 
 	<display:column title="Name" sortable="false" sortProperty="name" class="shortNameColumn">												
-		<c:forEach items="${bliThemeCache[row]}" var="businessTheme">
+		<c:forEach items="${storyThemeCache[row]}" var="businessTheme">
             		<c:choose>
             			<c:when test="${businessTheme.global}">
 		            		<span class="businessTheme globalThemeColors" title="${businessTheme.description}"><c:out value="${businessTheme.name}"/></span>            			
@@ -135,7 +135,7 @@ $(document).ready(function() {
             			</c:otherwise>
             		</c:choose>
             </c:forEach>
-		<%-- Link to go to the bli in the iteration page. --%>												
+		<%-- Link to go to the story in the iteration page. --%>												
 		<ww:a href="qr.action?id=BLI:${row.id}">
 			${aef:html(row.name)}
 		</ww:a>						
@@ -150,7 +150,7 @@ $(document).ready(function() {
 	</display:column>
 
 	<display:column title="Progress" sortable="false" class="todoColumn">
-		<aef:storyProgressBar story="${row}" bliListContext="${bliListContext}" dialogContext="${dialogContext}" hasLink="${false}"/>		
+		<aef:storyProgressBar story="${row}" storyListContext="${storyListContext}" dialogContext="${dialogContext}" hasLink="${false}"/>		
 	</display:column>
 
 	<display:column title="Effort Left<br/>" sortable="false" sortProperty="effortLeft"

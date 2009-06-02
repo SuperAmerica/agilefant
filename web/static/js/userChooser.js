@@ -104,13 +104,13 @@
             }
             else if (this.options.renderFor == 'story') {
               if (!this.options.selectCallback) {
-                this.options.selectCallback  = this.bliSelectAction;
+                this.options.selectCallback  = this.storySelectAction;
               }
               this.renderForBLI();
             }
             else {
               if (!this.options.selectCallback) {
-                this.options.selectCallback  = this.bliSelectAction;
+                this.options.selectCallback  = this.storySelectAction;
               }
               this.renderForAllUsers();
             }
@@ -479,7 +479,7 @@
             
             return list;
         },
-        bliSelectAction: function(me) {
+        storySelectAction: function(me) {
             var selectedList = me.getSelected();
             var userListContainer = $(me.options.userListContainer);
             var selectedInitials = "";

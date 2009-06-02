@@ -2,12 +2,12 @@
 
 <aef:hourReporting id="hourReport" />
 
-<aef:openDialogs context="bli" id="openStoryTabs" />
+<aef:openDialogs context="story" id="openStoryTabs" />
 
 <!-- context variable for backlog item ajax to know its context -->
-<c:set var="bliListContext" value="backlogList" scope="session" />
+<c:set var="storyListContext" value="backlogList" scope="session" />
 
-<c:set var="dialogContext" value="bli" scope="session" />
+<c:set var="dialogContext" value="story" scope="session" />
 
 <aef:currentUser />
 <script language="javascript" type="text/javascript">
@@ -30,7 +30,7 @@ function disableThemeSelect(value) {
 
 $(document).ready(function() {
     <c:forEach items="${openStoryTabs}" var="openStory">
-        handleTabEvent("storyTabContainer-${openStory[0]}-${bliListContext}", "bli", ${openStory[0]}, ${openStory[1]}, '${bliListContext}');
+        handleTabEvent("storyTabContainer-${openStory[0]}-${storyListContext}", "story", ${openStory[0]}, ${openStory[1]}, '${storyListContext}');
     </c:forEach>
     $('#themeChooserLink-multipleSelect').themeChooser({
         backlogId: 'select[name=targetBacklog]',
@@ -57,7 +57,7 @@ $(document).ready(function() {
 		<display:column sortable="false" title="<input type='checkbox' name='selectall' onclick='selectAllBLIs(this.checked)'/>" class="selectColumn">
 			<div><ww:checkbox name="selected" fieldValue="${row.id}" /></div>
 			<div style="height: 15px;"></div>
-			<div id="storyTabContainer-${row.id}-${bliListContext}" class="tabContainer" style="overflow:visible; white-space: nowrap; width: 15px;"></div>
+			<div id="storyTabContainer-${row.id}-${storyListContext}" class="tabContainer" style="overflow:visible; white-space: nowrap; width: 15px;"></div>
 		</display:column>
 		
 		<!-- Make the columns fit in the iteration-page. -->
@@ -71,10 +71,10 @@ $(document).ready(function() {
 		</c:choose>
 				
 		<display:column sortable="true" sortProperty="name" title="Name" class="${nameClass}">												
-			<div id="bli_${row.id}">
+			<div id="story_${row.id}">
 
             <c:forEach items="${backlogThemes[row]}" var="businessTheme">
-            	<a href="#" onclick="handleTabEvent('storyTabContainer-${row.id}-${bliListContext}','bli',${row.id},0, '${bliListContext}'); return false;">
+            	<a href="#" onclick="handleTabEvent('storyTabContainer-${row.id}-${storyListContext}','story',${row.id},0, '${storyListContext}'); return false;">
             	   <c:choose>
             	       <c:when test="${businessTheme.global}">
             	           <span class="businessTheme globalThemeColors" title="${aef:stripHTML(businessTheme.description)}"><c:out value="${businessTheme.name}"/></span>
@@ -86,7 +86,7 @@ $(document).ready(function() {
             	</a>
             </c:forEach>
             
-			<a class="nameLink" onclick="handleTabEvent('storyTabContainer-${row.id}-${bliListContext}','bli',${row.id},0, '${bliListContext}'); return false;">
+			<a class="nameLink" onclick="handleTabEvent('storyTabContainer-${row.id}-${storyListContext}','story',${row.id},0, '${storyListContext}'); return false;">
 				${aef:html(row.name)}
 			</a>			
 			</div>						
@@ -129,7 +129,7 @@ $(document).ready(function() {
 
 		<display:column title="Progress" sortable="false" class="todoColumn">			
 			<c:set var="itemTodos" value="${backlogTodos[row]}"/>
-			<a class="nameLink" onclick="handleTabEvent('storyTabContainer-${row.id}-${bliListContext}','${dialogContext}',${row.id},1,'${bliListContext}'); return false;">
+			<a class="nameLink" onclick="handleTabEvent('storyTabContainer-${row.id}-${storyListContext}','${dialogContext}',${row.id},1,'${storyListContext}'); return false;">
 			<c:choose>
 				<c:when test="${itemTodos != null && itemTodos.total != 0}">		
 					${itemTodos.doneTodos} / ${itemTodos.total} TODOs done <br />
@@ -224,7 +224,7 @@ $(document).ready(function() {
 		</c:choose>
 		
 		<display:column title="Actions" sortable="false">
-			<img src="static/img/edit.png" alt="Edit" title="Edit" style="cursor: pointer;" onclick="handleTabEvent('storyTabContainer-${row.id}-${bliListContext}','bli',${row.id},0, '${bliListContext}'); return false;" />
+			<img src="static/img/edit.png" alt="Edit" title="Edit" style="cursor: pointer;" onclick="handleTabEvent('storyTabContainer-${row.id}-${storyListContext}','story',${row.id},0, '${storyListContext}'); return false;" />
 			<img src="static/img/delete_18.png" alt="Delete" title="Delete" style="cursor: pointer;" onclick="deleteStory(${row.id}); return false;" />
 		</display:column>
 		
@@ -240,7 +240,7 @@ $(document).ready(function() {
 				</c:if>
 				<%-- Effort left --%>
 				<%--
-				<td><c:out value="${backlog.bliEffortLeftSum}" /></td>
+				<td><c:out value="${backlog.storyEffortLeftSum}" /></td>
 				--%>
 				<td><c:out value="${effortLeftSum}" /></td>
 				<%-- Original estimate --%>

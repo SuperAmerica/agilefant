@@ -1,11 +1,11 @@
 <%@ include file="./_taglibs.jsp"%>
 
 <!-- context variable for backlog item ajax to know its context -->
-<c:set var="bliListContext" value="dailyWorkIterations" scope="session" />
+<c:set var="storyListContext" value="dailyWorkIterations" scope="session" />
 
-<c:set var="dialogContext" value="bliDWInterations" scope="session" />
+<c:set var="dialogContext" value="storyDWInterations" scope="session" />
 
-<aef:openDialogs context="bliDWInterations" id="openStoryTabs" />
+<aef:openDialogs context="storyDWInterations" id="openStoryTabs" />
 
 <c:if test="${hourReport}">
 	<c:set var="totalSum" value="${null}" />
@@ -15,7 +15,7 @@
 
 $(document).ready(function() {        
     <c:forEach items="${openStoryTabs}" var="openStory">
-        handleTabEvent("storyTabContainer-${openStory[0]}-${bliListContext}", "bliDWInterations", ${openStory[0]}, ${openStory[1]} ,'${bliListContext}');
+        handleTabEvent("storyTabContainer-${openStory[0]}-${storyListContext}", "storyDWInterations", ${openStory[0]}, ${openStory[1]} ,'${storyListContext}');
     </c:forEach>
 });
 
@@ -106,16 +106,16 @@ $(document).ready(function() {
 		<table class="dailyWorkStorys">
 			<tr>
 				<td class="storyList"><display:table class="dailyWorkIteration"
-					name="${bliMap[it]}" id="row"
+					name="${storyMap[it]}" id="row"
 					requestURI="${currentAction}.action">
 					<c:if test="${hourReport}">
-						<aef:backlogHourEntrySums id="bliTotals" target="${it}" />
+						<aef:backlogHourEntrySums id="storyTotals" target="${it}" />
 					</c:if>					
 
 					<display:column sortable="true" sortProperty="name" title="Name">						
 						<div style="overflow:hidden; width: 170px; max-height: 3.7em;">						
 						<c:forEach items="${row.businessThemes}" var="businessTheme">
-                            <a href="#" onclick="handleTabEvent('storyTabContainer-${row.id}-${bliListContext}','bliDWInterations',${row.id},0, '${bliListContext}'); return false;">
+                            <a href="#" onclick="handleTabEvent('storyTabContainer-${row.id}-${storyListContext}','storyDWInterations',${row.id},0, '${storyListContext}'); return false;">
                             <c:choose>
                                 <c:when test="${businessTheme.global}">
                                    <span class="businessTheme globalThemeColors" title="${aef:stripHTML(businessTheme.description)}"><c:out value="${businessTheme.name}"/></span>
@@ -126,11 +126,11 @@ $(document).ready(function() {
                            </c:choose>
                             </a>
                         </c:forEach>						
-						<a class="nameLink" onclick="handleTabEvent('storyTabContainer-${row.id}-${bliListContext}','bliDWInterations',${row.id},0,'${bliListContext}'); return false;">
+						<a class="nameLink" onclick="handleTabEvent('storyTabContainer-${row.id}-${storyListContext}','storyDWInterations',${row.id},0,'${storyListContext}'); return false;">
 							${aef:html(row.name)}
 						</a>
 						</div>
-						<div id="storyTabContainer-${row.id}-${bliListContext}" class="tabContainer" style="overflow:visible; white-space: nowrap; width: 0px;"></div>
+						<div id="storyTabContainer-${row.id}-${storyListContext}" class="tabContainer" style="overflow:visible; white-space: nowrap; width: 0px;"></div>
 					</display:column>
 					
 					<display:column sortable="true" title="Responsibles" class="responsibleColumn">
@@ -143,7 +143,7 @@ $(document).ready(function() {
 					</display:column>
 
 					<display:column title="Progress" sortable="false" class="todoColumn">
-						<aef:storyProgressBar story="${row}" bliListContext="${bliListContext}" dialogContext="${dialogContext}" hasLink="${true}"/>												
+						<aef:storyProgressBar story="${row}" storyListContext="${storyListContext}" dialogContext="${dialogContext}" hasLink="${true}"/>												
 					</display:column>
 
 					<display:column sortable="true" sortProperty="effortLeft"
@@ -183,7 +183,7 @@ $(document).ready(function() {
 					</c:choose>
 
 					<display:column title="Actions">
-						<img src="static/img/edit.png" alt="Edit" title="Edit" style="cursor: pointer;" onclick="handleTabEvent('storyTabContainer-${row.id}-${bliListContext}','bliDWInterations',${row.id},0, '${bliListContext}'); return false;" />
+						<img src="static/img/edit.png" alt="Edit" title="Edit" style="cursor: pointer;" onclick="handleTabEvent('storyTabContainer-${row.id}-${storyListContext}','storyDWInterations',${row.id},0, '${storyListContext}'); return false;" />
 						<img src="static/img/delete_18.png" alt="Delete" title="Delete" style="cursor: pointer;" onclick="deleteStory(${row.id}); return false;" />
 					</display:column>
 

@@ -113,7 +113,7 @@ function closeTabs(context, target, id) {
 
 function trim (str) { return jQuery.trim(str); }
 
-function handleTabEvent(target, context, id, tabId, bliContext) {
+function handleTabEvent(target, context, id, tabId, storyContext) {
 	
     var target = $("#" + target);
     
@@ -134,10 +134,10 @@ function handleTabEvent(target, context, id, tabId, bliContext) {
     }
     else {
         var targetAction = {
-        	"bli": "storyTabs.action",
-        	"bliWorkInProgress": "storyTabs.action",
-        	"bliDWInterations": "storyTabs.action",
-        	"bliDWProjects": "storyTabs.action",
+        	"story": "storyTabs.action",
+        	"storyWorkInProgress": "storyTabs.action",
+        	"storyDWInterations": "storyTabs.action",
+        	"storyDWProjects": "storyTabs.action",
             "project": "projectTabs.action",
             "iteration": "iterationTabs.action",
             "iterationGoal": "iterationGoalTabs.action",
@@ -148,21 +148,21 @@ function handleTabEvent(target, context, id, tabId, bliContext) {
         };
         
         var targetParams = {
-        	"bli": {
+        	"story": {
                 storyId: id,
-                bliListContext: bliContext
+                storyListContext: storyContext
             },
-            "bliWorkInProgress": {
+            "storyWorkInProgress": {
                 storyId: id,
-                bliListContext: bliContext
+                storyListContext: storyContext
             },
-            "bliDWInterations": {
+            "storyDWInterations": {
                 storyId: id,
-                bliListContext: bliContext
+                storyListContext: storyContext
             },
-            "bliDWProjects": {
+            "storyDWProjects": {
                 storyId: id,
-                bliListContext: bliContext
+                storyListContext: storyContext
             },
             "project": {
                 projectId: id
@@ -276,12 +276,12 @@ function handleQuickRef(form) {
 }
 
 
-function resetBLIOriginalEstimate(bliId, me) {
+function resetBLIOriginalEstimate(storyId, me) {
     if (!confirmReset()) {
         return false;
     }
     // Send the request to the server
-    jQuery.post('resetBliOrigEstAndEffortLeft.action', {storyId: bliId});
+    jQuery.post('resetBliOrigEstAndEffortLeft.action', {storyId: storyId});
     
     var form = $(me).parents('form:eq(0)');
     var origEstField = form.find('input[name=story.originalEstimate]').removeAttr('disabled').val('');

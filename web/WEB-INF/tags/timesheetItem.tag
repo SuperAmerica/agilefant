@@ -52,18 +52,18 @@
 				<th class="story fourth">${aef:html(node.hoursForChildStorys)}</th>
 			</tr>
 		</c:if>
-		<c:forEach items="${node.childStorys}" var="bli">
+		<c:forEach items="${node.childStorys}" var="story">
 			<c:set var="heDivId" value="${heDivId + 1}" scope="request" />
 			<tr class="story node${divId} ${blueLeft} toggleall">
-				<c:if test="${!empty bli.hourEntries}">
-					<th class="story first" colspan="3">&nbsp; &nbsp; &raquo; <a onclick="javascript:$('.hour${heDivId}').toggle();"><c:out value="${bli.story.name}"/></a></th>
+				<c:if test="${!empty story.hourEntries}">
+					<th class="story first" colspan="3">&nbsp; &nbsp; &raquo; <a onclick="javascript:$('.hour${heDivId}').toggle();"><c:out value="${story.story.name}"/></a></th>
 				</c:if>
-				<c:if test="${empty bli.hourEntries}">
-					<th class="story first" colspan="3">&nbsp; &nbsp; &raquo; <c:out value="${bli.story.name}"/></th>
+				<c:if test="${empty story.hourEntries}">
+					<th class="story first" colspan="3">&nbsp; &nbsp; &raquo; <c:out value="${story.story.name}"/></th>
 				</c:if>
-				<th class="story"><c:out value="${bli.hourTotal}"/></th>
+				<th class="story"><c:out value="${story.hourTotal}"/></th>
 			</tr>
-			<c:forEach items="${bli.hourEntries}" var="he">
+			<c:forEach items="${story.hourEntries}" var="he">
 				<tr class="hourentries hour${heDivId} node${divId} ${blueLeft} toggleall">
 					<td class="hourentry first"><c:out value="${he.description}"/></td>
 					<td class="hourentry second"><ww:date name="#attr.he.date" format="dd.MM.yyyy HH:mm" /></td>

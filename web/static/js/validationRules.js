@@ -457,7 +457,7 @@ var agilefantValidationRules = {
             }
         }
     },
-    bliProgress: {
+    storyProgress: {
         rules: {
             "effortLeft": {
                 aftime: [ false ]
@@ -520,7 +520,7 @@ var validationRulesByHTMLClass = {
     'validateTheme': agilefantValidationRules.theme,
     'validateNewUser': agilefantValidationRules.newUser,
     'validateUser': agilefantValidationRules.user,
-    'validateBLIProgressTab': agilefantValidationRules.bliProgress,
+    'validateBLIProgressTab': agilefantValidationRules.storyProgress,
     'validateExistingProduct': agilefantValidationRules.product,
     'validateEmpty': agilefantValidationRules.empty
 };

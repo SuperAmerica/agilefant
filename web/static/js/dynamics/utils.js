@@ -208,7 +208,7 @@ var agilefantUtils = {
 		}
 		return -1;
 	  },
-	  bliPriorityComparator: function(a,b) {
+	  storyPriorityComparator: function(a,b) {
 		if((agilefantUtils.prioritiesToNumber[a.getPriority()] > agilefantUtils.prioritiesToNumber[b.getPriority()])) {
 		  return 1;
 		}
@@ -232,13 +232,13 @@ var agilefantUtils = {
 	    }
     	return -1;
     },
-    bliStateComparator: function(a,b) {
+    storyStateComparator: function(a,b) {
       if((a.getState() > b.getState())) {
         return 1;
       }
       return -1;
     },
-    bliPriorityAndStateComparator: function(a,b) {
+    storyPriorityAndStateComparator: function(a,b) {
       if (a.getState() === "DONE" && b.getState() !== "DONE") {
         return 1;
       }
@@ -246,7 +246,7 @@ var agilefantUtils = {
         return -1;
       }
       else {
-        return agilefantUtils.comparators.bliPriorityComparator(a, b);
+        return agilefantUtils.comparators.storyPriorityComparator(a, b);
       }
     }
 	}

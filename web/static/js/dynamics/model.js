@@ -94,8 +94,8 @@ ModelFactoryClass.prototype = {
 	removeTask: function(id) {
 		this.tasks[id] = null;
 	},
-	setTask: function(bli) {
-		this.tasks[bli.id] = bli;
+	setTask: function(story) {
+		this.tasks[story.id] = story;
 	},
 	todoSingleton: function(id, parent, data) {
 		if(!this.todos[id]) {
@@ -259,7 +259,7 @@ IterationModel.prototype.removeGoal = function(goal) {
 	}
 	this.iterationGoals = goals;
 };
-IterationModel.prototype.getTasks = function() { //blis without a story
+IterationModel.prototype.getTasks = function() { //tasks without a story
 	return this.itemsWithoutGoal;
 };
 IterationModel.prototype.addTask = function(task) {
@@ -312,17 +312,17 @@ StoryModel.prototype.setTasks = function(tasks) {
 		}
 	}
 };
-StoryModel.prototype.addTask = function(bli) {
-	bli.backlog = this.iteration;
-	bli.iterationGoal = this;
-	this.tasks.push(bli);
+StoryModel.prototype.addTask = function(story) {
+	story.backlog = this.iteration;
+	story.iterationGoal = this;
+	this.tasks.push(story);
 	this.reloadMetrics();
 };
-StoryModel.prototype.removeTask = function(bli) {
+StoryModel.prototype.removeTask = function(story) {
 	var tmp = this.tasks;
 	this.tasks = [];
 	for(var i = 0; i < tmp.length; i++) {
-		if(tmp[i] != bli) {
+		if(tmp[i] != story) {
 			this.tasks.push(tmp[i]);
 		}
 	}

@@ -3,7 +3,7 @@
 <ul class="ajaxWindowTabs">
 
 	<li><a href="#businessThemeEditTab-${businessThemeId}"><span><img src="static/img/edit.png" alt="Edit" /> Edit theme</span></a></li>
-	<li><a href="#businessThemeBLITab-${businessThemeId}"><span><img src="static/img/bli2.png" alt="Backlog items" /> Backlog items</span></a></li>
+	<li><a href="#businessThemeBLITab-${businessThemeId}"><span><img src="static/img/story2.png" alt="Backlog items" /> Backlog items</span></a></li>
 	<li><a href="#businessThemeBLTab-${businessThemeId}"><span><img src="static/img/backlog.png" alt="Backlogs" /> Backlogs</span></a></li>
 </ul>
 <div id="businessThemeEditTab-${businessThemeId}" class="businessThemeNaviTab validateWrapper validateTheme">
@@ -59,7 +59,7 @@
 	
 	<!-- Display progress -->
 	<display:column title="Progress" sortable="false" class="todoColumn" style="width:115px">
-		<aef:storyProgressBar story="${row}" bliListContext="${bliListContext}" dialogContext="${dialogContext}" hasLink="${false}"/>
+		<aef:storyProgressBar story="${row}" storyListContext="${storyListContext}" dialogContext="${dialogContext}" hasLink="${false}"/>
 	</display:column>
 	
 	<!-- Display context -->

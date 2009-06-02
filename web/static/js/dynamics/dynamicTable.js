@@ -1116,7 +1116,7 @@
 	    		  { minwidth: 50, auto: true },
 	              { name: 'Priority',
 	                tooltip: 'Task priority',
-	                sort: agilefantUtils.comparators.bliPriorityAndStateComparator
+	                sort: agilefantUtils.comparators.storyPriorityAndStateComparator
 	              });
 	      addTableColumn(opts,
 	    		  { minwidth: 50, auto: true },

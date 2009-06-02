@@ -60,16 +60,16 @@ public class TodoDAOHibernate extends GenericDAOHibernate<Todo> implements
 
     /** {@inheritDoc} */
     @SuppressWarnings("unchecked")
-    public Collection<Todo> getTodosByStateAndStory(Task bli,
+    public Collection<Todo> getTodosByStateAndStory(Task story,
             State[] states) {
         String[] ids = new String[states.length + 1];
         Object[] values = new Object[states.length + 1];
         String query;
 
-        ids[0] = "bliid";
-        values[0] = bli.getId();
+        ids[0] = "storyid";
+        values[0] = story.getId();
 
-        query = "from Todo t where t.story.id = :bliid ";
+        query = "from Todo t where t.story.id = :storyid ";
 
         if (states != null && states.length != 0) {
             query += " and ( ";

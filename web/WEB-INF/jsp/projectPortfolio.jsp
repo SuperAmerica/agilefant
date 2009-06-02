@@ -109,7 +109,7 @@ var teams = [<aef:teamJson items="${teamList}"/>]
 			
 			<display:column title="Users" sortProperty="fullName">						
 			
-				<!-- Check whether user is not assigned to project although has bli:s assigned -->
+				<!-- Check whether user is not assigned to project although has story:s assigned -->
 				<c:choose>	
 				<c:when test="${unassignedUsers[idstring] == 1}"> 
 				<a href="dailyWork.action?userId=${user.id}" class="unassigned">
@@ -272,7 +272,7 @@ var teams = [<aef:teamJson items="${teamList}"/>]
 			</display:column>		
 			
 			<display:column title="Users" sortProperty="fullName">
-				<!-- Check whether user is not assigned to project although has bli:s assigned -->
+				<!-- Check whether user is not assigned to project although has story:s assigned -->
 				<c:choose>	
 				<c:when test="${unassignedUsers[idstring] == 1}"> 
 				<a href="dailyWork.action?userId=${user.id}" class="unassigned">

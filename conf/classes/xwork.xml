@@ -260,6 +260,15 @@
 
 		<!-- /Story actions -->
 
+		<!-- Task actions -->
+
+		<action name="ajaxCreateTask" method="create"
+            class="taskAction">
+            <result name="success" type="dispatcher">/WEB-INF/jsp/forms/createTask.jsp</result>
+        </action>
+
+		<!-- /Task actions -->
+
 		<!-- Project actions -->
 		<action name="editProject" method="edit"
 			class="projectAction">

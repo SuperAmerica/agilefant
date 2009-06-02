@@ -9,10 +9,12 @@
 <div class="ajaxWindowTabsDiv">
 <ul class="ajaxWindowTabs">
 	<li><a href="#storyEditTab-${storyId}-${storyListContext}"><span><img src="static/img/edit.png" alt="Edit" /> Edit</span></a></li>
+	<%--
 	<li><a href="#storyProgressTab-${storyId}-${storyListContext}"><span><img src="static/img/progress.png" alt="Progress" /> Progress</span></a></li>
-<c:if test="${hourReport == true}">
-	<li><a href="#storySpentEffTab-${storyId}-${storyListContext}"><span><img src="static/img/timesheets.png" alt="Spent Effort" /> Spent Effort</span></a></li>
-</c:if>
+  <c:if test="${hourReport == true}">
+	 <li><a href="#storySpentEffTab-${storyId}-${storyListContext}"><span><img src="static/img/timesheets.png" alt="Spent Effort" /> Spent Effort</span></a></li>
+  </c:if>
+  --%>
 </ul>
 
 <div id="storyEditTab-${storyId}-${storyListContext}" class="storyNaviTab">
@@ -41,7 +43,7 @@ $(document).ready(function() {
 	<div class="validateWrapper validateStory">
 	<ww:form action="ajaxStoreStory" method="post">
 		<ww:hidden name="storyId" value="${story.id}" />	
-		<ww:hidden name="effortLeft" value="${story.effortLeft}" />				
+		<%--<ww:hidden name="effortLeft" value="${story.effortLeft}" />--%>				
 	
 		<table class="formTable">	
 			<tr>
@@ -62,6 +64,7 @@ $(document).ready(function() {
 					<ww:textarea cols="70" rows="10" cssClass="useWysiwyg" id="storyDescription" 
 					name="story.description" value="${aef:nl2br(story.description)}" /></td>
 			</tr>
+			<%--
 			<c:choose>
 			<c:when test="${story.creator != null}">
 			<tr>
@@ -110,7 +113,7 @@ $(document).ready(function() {
 					<tr>
 						<td>Original estimate</td>
 						<td></td>
-						<td colspan="2"><%--<ww:label value="${story.originalEstimate}" />--%>
+						<td colspan="2">
 						    <ww:textfield name="story.originalEstimate"
 						                  value="${story.originalEstimate}"
 						                  disabled="true" size="10"/>
@@ -151,7 +154,7 @@ $(document).ready(function() {
 					</tr>
 				</c:otherwise>
 			</c:choose>
-	
+	--%>
 			<tr>
 				<td>State</td>
 				<td></td>
@@ -245,7 +248,7 @@ $(document).ready(function() {
 									<option value="${project.id}" title="${project.name}"  class="projectOption">${aef:out(project.name)}</option>
 								</c:otherwise>
 							</c:choose>
-							<c:forEach items="${project.iterations}" var="iteration">
+							<c:forEach items="${project.children}" var="iteration">
 								<c:choose>
 									<c:when test="${iteration.id == story.backlog.id}">
 										<option selected="selected" value="${iteration.id}" class="iterationOption"
@@ -261,13 +264,14 @@ $(document).ready(function() {
 				</select></td>
 			</tr>
 			
+			<%--
 			<tr>
 				<td>Priority</td>
 				<td></td>
 				<td colspan="2"><ww:select name="story.priority"
 					value="story.priority.name"
 					list="#@java.util.LinkedHashMap@{'UNDEFINED':'undefined', 'BLOCKER':'+++++', 'CRITICAL':'++++', 'MAJOR':'+++', 'MINOR':'++', 'TRIVIAL':'+'}" /></td>
-				<%--
+				
 			If you change something about priorities, remember to update conf/classes/messages.properties as well!
 			--%>
 			</tr>
@@ -300,6 +304,7 @@ $(document).ready(function() {
 				</div>
 				</td>
 			</tr>
+			<%--
 			<tr>
 				<td>Themes</td>
 				<td></td>
@@ -334,6 +339,7 @@ $(document).ready(function() {
 				</div>
 				</td>
 			</tr>
+			--%>
 			<tr>
 				<td></td>
 				<td></td>
@@ -359,7 +365,7 @@ $(document).ready(function() {
 	
 </div>
 <!-- edit tab ends -->
-
+<%--
 <!-- todos tab begins -->
 <div id="storyProgressTab-${storyId}-${storyListContext}" class="storyNaviTab">
 
@@ -397,7 +403,7 @@ $(document).ready(function() {
 		}
 	}
 	
-	<%-- If user changed the item's state to DONE and there are todos not DONE, ask if they should be set to DONE as well. --%>
+
 		$(document).ready(function() {
 			$("#stateSelectProgress_${story.id}-${storyListContext}").change(function() {
 				change_effort_enabled($(this).val(), ${story.id}, '${storyListContext}');
@@ -426,7 +432,7 @@ $(document).ready(function() {
 						  }
 			});
 		});
-	<%-- todos to DONE confirmation script ends. --%>
+
 </script>
 
 <div class="validateWrapper validateStoryProgressTab">
@@ -521,14 +527,14 @@ $(document).ready(function() {
 								action="ajaxCreateStory" includeParams="none">
 								<ww:param name="fromTodoId" value="${row.id }" />
 							</ww:url>
-							<%--
+							
 							<ww:a cssClass="openCreateDialog openStoryDialog"
 								href="%{createStoryLink}" onclick="return false;"
 								title="Split as a new backlog item">
                                 <img src="static/img/new.png" alt="Split"
                                     title="Split as a new backlog item" />
 							</ww:a>
-							--%>
+							
 							<ww:url id="movetodoTopLink" action="movetodoTop" includeParams="none">
 								<ww:param name="todoId" value="${row.id}" />
 							</ww:url>
@@ -567,7 +573,6 @@ $(document).ready(function() {
 					</div>
 				</c:when> 
 				<c:otherwise>
-				<%-- No todos: container --%>
 					<table id="todoTable-${storyId}-${storyListContext}" style="display: none;" class="listTable"><tr><th>Name</th><th>State</th><th>Actions</th></tr></table>
 				</c:otherwise>
 				</c:choose>
@@ -670,10 +675,12 @@ $(document).ready(function() {
 	</display:table>
 	<input type="submit" value="Save" style="display: none;" id="saveSpentEffort-${storyId}-${storyListContext}" />
 	</ww:form>
-	</c:if> <%-- No entries --%>				
+	</c:if>			
 	</div>
 	</div>					
 </div>
 </c:if>
 
+
 </div>
+--%>

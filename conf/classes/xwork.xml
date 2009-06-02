@@ -35,9 +35,9 @@
 				<param name="status">200</param>
 			</result>
 			<result name="rootException" type="dispatcher">exceptionHandler</result>
-			<result name="dbException" type="chain">dbExceptionHandler</result>
+			<!--<result name="dbException" type="chain">dbExceptionHandler</result>-->
 		</global-results>
-
+<!--
 		<global-exception-mappings>
             <exception-mapping exception="java.lang.Exception" result="rootException"/>
         </global-exception-mappings>
@@ -49,7 +49,7 @@
 			class="fi.hut.soberit.agilefant.web.ExceptionHandler" method="handleDbException">
 			<result name="success" type="dispatcher">/WEB-INF/jsp/fatalError.jsp</result>
 		</action>
-
+-->
 		<!-- Context view -->
 		<action name="contextView"
 			class="fi.hut.soberit.agilefant.web.ContextViewAction">

@@ -2,6 +2,7 @@ package fi.hut.soberit.agilefant.db.hibernate;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.criterion.DetachedCriteria;
@@ -41,5 +42,11 @@ public class BacklogDAOHibernate extends GenericDAOHibernate<Backlog> implements
         DetachedCriteria crit = DetachedCriteria.forClass(Backlog.class);
         crit.add(Restrictions.in("id", idList));
         return hibernateTemplate.findByCriteria(crit);
+    }
+    
+    @SuppressWarnings("unchecked")
+    public List<Object[]> getResponsiblesByBacklog(Backlog backlog) {
+        String hql = "from Story as story left outer join story.responsibles as resp WHERE story.backlog = ?";
+        return (List<Object[]>)hibernateTemplate.find(hql, new Object[] {backlog});
     }
 }

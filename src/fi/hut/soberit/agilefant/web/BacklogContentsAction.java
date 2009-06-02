@@ -1,7 +1,9 @@
 package fi.hut.soberit.agilefant.web;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -14,6 +16,7 @@ import fi.hut.soberit.agilefant.business.StoryBusiness;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Story;
+import fi.hut.soberit.agilefant.util.ResponsibleContainer;
 
 /**
  * Action for listing backlogs contents.
@@ -39,7 +42,7 @@ public class BacklogContentsAction extends ActionSupport {
 
 //    private List<BacklogItem> backlogItems = new ArrayList<BacklogItem>();
 //    
-//    private Map<BacklogItem, List<BacklogItemResponsibleContainer>> backlogResponsibles = new HashMap<BacklogItem, List<BacklogItemResponsibleContainer>>();
+    private Map<Story, List<ResponsibleContainer>> backlogResponsibles = new HashMap<Story, List<ResponsibleContainer>>();
 //
 //    private Map<BacklogItem, List<BusinessTheme>> backlogThemes = new HashMap<BacklogItem, List<BusinessTheme>>();
 //
@@ -84,7 +87,7 @@ public class BacklogContentsAction extends ActionSupport {
         stories = storyBusiness.getStoriesByBacklog(backlog);
         
 //        backlogItems = backlogItemBusiness.getBacklogItemsByBacklog(backlog);
-//        backlogResponsibles = backlogItemBusiness.getResponsiblesByBacklog(backlog);
+        backlogResponsibles = backlogBusiness.getResponsiblesByBacklog(backlog);
 //        backlogTodos = backlogItemBusiness.getTodosByBacklog(backlog);
 //        backlogThemes = businessThemeBusiness.getBacklogItemBusinessThemesByBacklog(backlog);
 //        
@@ -127,14 +130,6 @@ public class BacklogContentsAction extends ActionSupport {
         this.backlog = backlog;
     }
 
-//    public Map<BacklogItem, List<BacklogItemResponsibleContainer>> getBacklogResponsibles() {
-//        return backlogResponsibles;
-//    }
-//
-//    public void setBacklogResponsibles(
-//            Map<BacklogItem, List<BacklogItemResponsibleContainer>> backlogResponsibles) {
-//        this.backlogResponsibles = backlogResponsibles;
-//    }
 //
 //    public Map<BacklogItem, List<BusinessTheme>> getBacklogThemes() {
 //        return backlogThemes;
@@ -203,6 +198,10 @@ public class BacklogContentsAction extends ActionSupport {
 
     public void setStoryBusiness(StoryBusiness storyBusiness) {
         this.storyBusiness = storyBusiness;
+    }
+
+    public Map<Story, List<ResponsibleContainer>> getBacklogResponsibles() {
+        return backlogResponsibles;
     }
 
 }

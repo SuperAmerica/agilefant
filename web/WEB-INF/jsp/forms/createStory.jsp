@@ -42,6 +42,7 @@ $(document).ready(function() {
 				name="story.description" /></td>
 		</tr>
 
+<%--
 		<tr>
 			<td>Original estimate</td>
 			<td></td>
@@ -51,6 +52,7 @@ $(document).ready(function() {
                       <ww:label value="%{getText('webwork.estimateExample')}" />
                   </td>
 		</tr>
+		--%>
 
 		<tr>
 			<td>State</td>
@@ -111,16 +113,18 @@ $(document).ready(function() {
             </select></td>
 		</tr>
 		
+		<%--
 		<tr>
 			<td>Priority</td>
 			<td></td>
 			<td colspan="2"><ww:select name="story.priority"
 				value="story.priority.name"
 				list="#@java.util.LinkedHashMap@{'UNDEFINED':'undefined', 'BLOCKER':'+++++', 'CRITICAL':'++++', 'MAJOR':'+++', 'MINOR':'++', 'TRIVIAL':'+'}" /></td>
-			<%--
+			
         If you change something about priorities, remember to update conf/classes/messages.properties as well!
-        --%>
+        
 		</tr>
+		--%>
 		<tr>
 			<td>Responsibles</td>
 			<td></td>

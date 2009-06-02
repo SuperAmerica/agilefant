@@ -2,13 +2,13 @@ package fi.hut.soberit.agilefant.util;
 
 import fi.hut.soberit.agilefant.model.User;
 
-public class BacklogItemResponsibleContainer {
+public class ResponsibleContainer {
     
     private User user;
     
     private boolean inProject;
     
-    public BacklogItemResponsibleContainer(User user, boolean inProject) {
+    public ResponsibleContainer(User user, boolean inProject) {
         this.user = user;
         this.inProject = inProject;
     }

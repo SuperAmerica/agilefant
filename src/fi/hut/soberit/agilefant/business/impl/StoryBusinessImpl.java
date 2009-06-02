@@ -139,7 +139,8 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
             storable.setBacklog(backlog);
         }
         
-//        storable.setResponsibles(responsibles);
+        storable.getResponsibles().clear();
+        storable.getResponsibles().addAll(responsibles);
                
         Story persisted;
         

@@ -60,16 +60,16 @@ public class TodoDAOHibernate extends GenericDAOHibernate<Todo> implements
 
     /** {@inheritDoc} */
     @SuppressWarnings("unchecked")
-    public Collection<Todo> getTodosByStateAndStory(Task story,
+    public Collection<Todo> getTodosByStateAndTask(Task task,
             State[] states) {
         String[] ids = new String[states.length + 1];
         Object[] values = new Object[states.length + 1];
         String query;
 
-        ids[0] = "storyid";
-        values[0] = story.getId();
+        ids[0] = "taskid";
+        values[0] = task.getId();
 
-        query = "from Todo t where t.story.id = :storyid ";
+        query = "from Todo t where t.task.id = :taskid ";
 
         if (states != null && states.length != 0) {
             query += " and ( ";
@@ -106,17 +106,17 @@ public class TodoDAOHibernate extends GenericDAOHibernate<Todo> implements
         if (lowLimitRank == null) {
                     hibernateTemplate
                     .bulkUpdate(
-                            "update Todo t set t.rank = (t.rank + 1) where (t.rank < ?) and (t.story=?)",
+                            "update Todo t set t.rank = (t.rank + 1) where (t.rank < ?) and (t.task=?)",
                             new Object[] { lowLimitRank, task });
         } else if (upperLimitRank == null) {
                     hibernateTemplate
                     .bulkUpdate(
-                            "update Todo t set t.rank = (t.rank + 1) where (t.rank >= ?) and (t.story=?)",
+                            "update Todo t set t.rank = (t.rank + 1) where (t.rank >= ?) and (t.task=?)",
                             new Object[] { lowLimitRank, task });
         } else if (lowLimitRank != null && upperLimitRank != null) {
                     hibernateTemplate
                     .bulkUpdate(
-                            "update Todo t set t.rank = (t.rank + 1) where (t.rank >= ?) and (t.rank < ?) and (t.story=?)",
+                            "update Todo t set t.rank = (t.rank + 1) where (t.rank >= ?) and (t.rank < ?) and (t.task=?)",
                             new Object[] { lowLimitRank, upperLimitRank,
                                     task });
         } else
@@ -126,7 +126,7 @@ public class TodoDAOHibernate extends GenericDAOHibernate<Todo> implements
     @SuppressWarnings("unchecked")
     public Todo getLowestRankedTodo(Task task) {
         DetachedCriteria criteria = DetachedCriteria.forClass(Todo.class);
-        criteria.add(Restrictions.eq("story", task));
+        criteria.add(Restrictions.eq("task", task));
         criteria.addOrder(Order.desc("rank"));
         List<Todo> results = hibernateTemplate.findByCriteria(criteria);
         if (results == null || results.size() == 0) {
@@ -139,7 +139,7 @@ public class TodoDAOHibernate extends GenericDAOHibernate<Todo> implements
     @SuppressWarnings("unchecked")
     public Todo findLowerRankedTodo(Todo todo) {
         DetachedCriteria criteria = DetachedCriteria.forClass(Todo.class);
-        criteria.add(Restrictions.eq("story", todo.getTask()));
+        criteria.add(Restrictions.eq("task", todo.getTask()));
         criteria.add(Restrictions.gt("rank", todo.getRank()));
         criteria.addOrder(Order.asc("rank"));
         List<Todo> results = hibernateTemplate.findByCriteria(criteria);
@@ -153,7 +153,7 @@ public class TodoDAOHibernate extends GenericDAOHibernate<Todo> implements
     @SuppressWarnings("unchecked")
     public Todo findUpperRankedTodo(Todo todo) {
         DetachedCriteria criteria = DetachedCriteria.forClass(Todo.class);
-        criteria.add(Restrictions.eq("story", todo.getTask()));
+        criteria.add(Restrictions.eq("task", todo.getTask()));
         criteria.add(Restrictions.lt("rank", todo.getRank()));
         criteria.addOrder(Order.desc("rank"));
         List<Todo> results = hibernateTemplate.findByCriteria(criteria);

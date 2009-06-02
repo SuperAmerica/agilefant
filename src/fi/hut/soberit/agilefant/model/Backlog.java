@@ -47,7 +47,7 @@ import flexjson.JSON;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 // subclass types discriminated using string column
 @DiscriminatorColumn(name = "backlogtype", discriminatorType = DiscriminatorType.STRING)
-@Table(name = "backlog")
+@Table(name = "backlogs")
 public abstract class Backlog {
 
     private int id;

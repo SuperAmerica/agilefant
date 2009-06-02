@@ -13,7 +13,7 @@
 <script language="javascript" type="text/javascript">
 
 function validateDeletion() {
-    return confirm("The selected backlog items will be gone forever. Are you sure?");
+    return confirm("The selected stories will be gone forever. Are you sure?");
 }
 
 function selectAllBLIs(val) {
@@ -53,7 +53,7 @@ $(document).ready(function() {
 	<display:table class="listTable" name="backlogItems" id="row"
 		requestURI="${currentAction}.action" >
 
-		<!-- Checkboxes for bulk-moving backlog items -->
+		<!-- Checkboxes for bulk-moving stories -->
 		<display:column sortable="false" title="<input type='checkbox' name='selectall' onclick='selectAllBLIs(this.checked)'/>" class="selectColumn">
 			<div><ww:checkbox name="selected" fieldValue="${row.id}" /></div>
 			<div style="height: 15px;"></div>

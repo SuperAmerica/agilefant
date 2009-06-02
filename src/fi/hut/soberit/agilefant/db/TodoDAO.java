@@ -56,10 +56,10 @@ public interface TodoDAO extends GenericDAO<Todo> {
     public Todo findLowerRankedTodo(Todo todo);
 
     /**
-     * Finds the lowest ranked todo in given backlog item.
+     * Finds the lowest ranked todo in given task.
      * 
      * @param backlogItem
-     * @return lowest ranked todo in backlog item, null if task does not
+     * @return lowest ranked todo in task, null if task does not
      *         have any todos
      */
     public Todo getLowestRankedTodo(Task task);

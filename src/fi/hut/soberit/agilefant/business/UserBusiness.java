@@ -13,10 +13,10 @@ import fi.hut.soberit.agilefant.model.User;
 public interface UserBusiness extends GenericBusiness<User> {
 
     /**
-     * Check if user is creator of any backlog item.
+     * Check if user is creator of any stories.
      * 
      * @param user
-     * @return true is user has created backlog items, false otherwise.
+     * @return true is user has created stories, false otherwise.
      */
     boolean hasUserCreatedStories(User user);
 

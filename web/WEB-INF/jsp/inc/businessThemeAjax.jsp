@@ -101,7 +101,7 @@
 </display:table>
 </c:when>
 <c:otherwise>
-No backlog items have been tagged with this theme.
+No stories have been tagged with this theme.
 </c:otherwise>
 </c:choose>
 

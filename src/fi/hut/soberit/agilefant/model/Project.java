@@ -19,12 +19,12 @@ import flexjson.JSON;
  * A Hibernate entity bean which represents a project.
  * <p>
  * Conceptually, a project is a type of a backlog. A project-backlog represents
- * work (iterations, backlog items, todos) to be done towards some project
+ * work (iterations, stories) to be done towards some project
  * outcome (documents, code, plans, etc.).
  * <p>
  * A project is further divided up to smaller containers for work, the
  * iterations. Project also is a part of a bigger container, the product. Since
- * a project is a backlog, it can contain backlog items, which, in turn, are
+ * a project is a backlog, it can contain stories, which, in turn, are
  * smaller containers for work.
  * <p>
  * Example projects would be "Acme KillerApp v1.3" or "User Documentation".

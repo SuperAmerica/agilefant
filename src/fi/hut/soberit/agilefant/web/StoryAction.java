@@ -117,7 +117,7 @@ public class StoryAction extends ActionSupport implements CRUDAction {
     }
 
     public String create() {
-        // Id of newly created, not yet persisted backlog item is 0
+        // Id of newly created, not yet persisted story is 0
         storyId = 0;
 
         story = new Story();
@@ -240,7 +240,7 @@ public class StoryAction extends ActionSupport implements CRUDAction {
         // return false;
         // }
 
-        // save backlog item, update todos and store backlog item themes
+        // save story and store backlog item themes
         try {
             story = storyBusiness.store(storyId, backlogId, story,
                     userIds);

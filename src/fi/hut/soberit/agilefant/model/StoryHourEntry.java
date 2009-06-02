@@ -6,9 +6,9 @@ import javax.persistence.ManyToOne;
 import org.hibernate.annotations.BatchSize;
 
 /**
- * Hibernate entity bean which represents an hour entry owned by a backlog item.
+ * Hibernate entity bean which represents an hour entry owned by a story.
  * 
- * Represents a job effort logged for a specific backlog item.
+ * Represents a job effort logged for a specific story.
  * 
  * @see fi.hut.soberit.agilefant.model.HourEntry
  * @author User

@@ -25,12 +25,12 @@ import flexjson.JSON;
  * All other entities providing backlog functionality inherit from this class.
  * Product, Project and Iteration are all backlogs.
  * <p>
- * Conceptually, a backlog is a work log, which can contain some backlog items,
- * which in turn can contain some todos. An example hierarchy would be
+ * Conceptually, a backlog is a work log, which can contain some stories,
+ * which in turn can contain some tasks. An example hierarchy would be
  * <p>
  * backlog: "iteration 3" <br>
- * backlog item : "saving implemented" <br>
- * todo: "implement saving .foo files" <br>
+ * story : "saving implemented" <br>
+ * task: "implement saving .foo files" <br>
  * <p>
  * Through Backlog, Stories are appendable as a child for the implementing
  * object.

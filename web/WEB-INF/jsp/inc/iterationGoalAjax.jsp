@@ -219,7 +219,7 @@ $(document).ready(function() {
 
 </c:when>
 <c:otherwise>
-No backlog items.
+No stories.
 </c:otherwise>
 </c:choose>
 

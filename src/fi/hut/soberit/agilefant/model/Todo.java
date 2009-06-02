@@ -20,10 +20,10 @@ import org.hibernate.annotations.Type;
  * Hibernate entity bean representing a Todo.
  * <p>
  * Conceptually todo represents some work which is no further divided to smaller
- * pieces. It's work of a single person. A todo is under a backlog item, which
+ * pieces. It's work of a single person. A todo is under a task, which
  * is a bigger container of work.
  * <p>
- * Technically there's one-to-many relation between backlog item and a todo. It
+ * Technically there's one-to-many relation between a task and todos. It
  * has a creator and an assignee.
  * <p>
  * Todo is a unit which, within a Cycle of Control model, is in interest of

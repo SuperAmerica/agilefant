@@ -67,7 +67,7 @@ public interface TodoBusiness extends GenericBusiness<Todo>{
 
     /**
      * Gives the todo the lowest rank (i.e. currentLowestRank + 1) among the
-     * todos owned by the same backlog item. If the todo is lowest ranked, does
+     * todos owned by the same task. If the todo is lowest ranked, does
      * nothing.
      * 
      * @param todoId

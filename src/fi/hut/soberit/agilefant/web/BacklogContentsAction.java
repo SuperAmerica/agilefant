@@ -18,8 +18,8 @@ import fi.hut.soberit.agilefant.model.Story;
 /**
  * Action for listing backlogs contents.
  * 
- * Action contains caches for backlog item responsibles, themes, spent effort
- * entries and todos to ensure best performance compared to domain object lazy
+ * Action contains caches for story responsibles, themes and spent effort
+ * entries to ensure best performance compared to domain object lazy
  * fetching strategy.
  * 
  * ALL actions that list backlog contents should be derived from this class.

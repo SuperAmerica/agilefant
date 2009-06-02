@@ -12,20 +12,16 @@ import flexjson.JSON;
  * A Hibernate entity bean which represents an iteration.
  * <p>
  * Conceptually, an iteration is a type of a backlog. A iteration-backlog
- * represents work (backlog items, todos) to be done during an iteration.
+ * represents work (stories, tasks) to be done during an iteration.
  * Iteration is a time period, a conceptual tool, used to divide and manage
  * work. It's usually a few weeks in length.
  * <p>
- * Since a project is a backlog, it can contain backlog items, which, in turn,
+ * Since a project is a backlog, it can contain stories, which, in turn,
  * are smaller containers for work. An iteration is a part of a bigger work
  * container, the project.
  * <p>
  * An iteration is part of a project. Start- and ending dates can be defined, as
  * well as effort estimate.
- * <p>
- * An iteration can contain some iteration goals to which underlying backlog
- * items can be bound to. Iteration goals are higher level concepts. Multiple
- * backlog items can work towards a single iteration goal.
  * 
  * @see fi.hut.soberit.agilefant.model.Backlog
  * @see fi.hut.soberit.agilefant.model.Story

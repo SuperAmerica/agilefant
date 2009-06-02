@@ -2,13 +2,13 @@ var IterationController = function(iterationId, element) {
 	this.iterationId = iterationId;
 	this.element = element;
 	var me = this;
-	this.IterationGoalControllers = [];
+	this.StoryControllers = [];
 	this.descCells = [];
 	this.buttonCells = [];
 	ModelFactory.getIteration(this.iterationId, function(data) { me.render(data); });
 };
 
-var IterationGoalController = function(parentView, model, parentController) {
+var StoryController = function(parentView, model, parentController) {
 	//this.element = element;
 	this.parentView = parentView;
 	this.parentController = parentController;
@@ -43,7 +43,7 @@ var TaskController = function(parentView, model, parentController, effortCell) {
 	};
 
 IterationController.prototype = {
-    changeIterationGoalPriority: function(ev, el) {
+    changeStoryPriority: function(ev, el) {
 		var priority = 0;
 		var model = el.item.data("model");
 		var previous = el.item.prev();
@@ -56,8 +56,8 @@ IterationController.prototype = {
 			}
 		}
 		model.setPriority(priority);
-		//all goals must be updated
-		this.model.reloadGoalData();
+		//all stories must be updated
+		this.model.reloadStoryData();
     },
     showTasks: function() {
     	for(var i = 0; i < this.buttonCells.length; i++) {
@@ -69,7 +69,7 @@ IterationController.prototype = {
     		this.buttonCells[i].trigger("hideContents");
     	}
     },
-    deleteGoal: function(goal) {
+    deleteStory: function(story) {
     	var parent = $("<div />").appendTo(document.body).text("Are you sure you wish to delete this story?");
     	var me = this;
     	parent.dialog({
@@ -82,9 +82,9 @@ IterationController.prototype = {
     		'Yes': function() {
     		$(this).dialog('destroy');
     		parent.remove();
-    		goal.remove();
-   			me.itemsWithOutGoalContainer.reloadTasks();
-   			me.noGoalItemController.render();
+    		story.remove();
+   			me.tasksWithoutStoryContainer.reloadTasks();
+   			me.noStoryTaskController.render();
     	},
     	Cancel: function() {
     		$(this).dialog('destroy');
@@ -93,7 +93,7 @@ IterationController.prototype = {
     	}
     	});
     },
-    moveGoal: function(row, goal) {
+    moveStory: function(row, story) {
     	var parent = $("<div />").appendTo(document.body);
     	var err = $("<div />").appendTo(parent).css("color","red").hide();
     	var sel = $("<div />").appendTo(parent);
@@ -112,8 +112,8 @@ IterationController.prototype = {
     				if(iteration < 1) {
     					err.text("Please select an iteration.").show();
     					return;
-    				} else if(iteration != goal.iteration.iterationId){
-    					goal.moveToIteration(iteration);
+    				} else if(iteration != story.iteration.iterationId){
+    					story.moveToIteration(iteration);
     					row.remove();
     				}
 					$(this).dialog('destroy');
@@ -126,30 +126,30 @@ IterationController.prototype = {
     		}
     	});
     },
-    addRow: function(goal) {
+    addRow: function(story) {
     	var me = this;
-    	var row = me.view.createRow(goal);
+    	var row = me.view.createRow(story);
     	var expand = row.createCell();
     	var name = row.createCell({
     		type: "text", 
-    		get: function() { return goal.getName();}, 
-    		set: function(val){ goal.setName(val);}});
+    		get: function() { return story.getName();}, 
+    		set: function(val){ story.setName(val);}});
     	expand.activateSortHandle();
     	var tasks = row.createCell({
     		get: function() { 
-    		return goal.getDoneTasks() + " / " + goal.getTotalTasks();
+    		return story.getDoneTasks() + " / " + story.getTotalTasks();
     	}});
     	var elsum = row.createCell({
-    		get: function() { return goal.getEffortLeft(); },
+    		get: function() { return story.getEffortLeft(); },
     		decorator: agilefantUtils.aftimeToString
     	});
     	var oesum = row.createCell({
-    		get: function() { return goal.getOriginalEstimate(); },
+    		get: function() { return story.getOriginalEstimate(); },
     		decorator: agilefantUtils.aftimeToString
     	});
     	if(agilefantUtils.isTimesheetsEnabled()) {
     		var essum = row.createCell({
-    			get: function() { return goal.getEffortSpent(); },
+    			get: function() { return story.getEffortSpent(); },
     			decorator: agilefantUtils.aftimeToString
     		});
     	}
@@ -158,15 +158,15 @@ IterationController.prototype = {
 
     	var desc = row.createCell({
     		type: "wysiwyg", 
-    		get: function() { return goal.description; }, 
-    		set: function(val) { goal.setDescription(val);},
+    		get: function() { return story.description; }, 
+    		set: function(val) { story.setDescription(val);},
     		buttons: {
     			save: {text: "Save", action: function() {
-    			goal.beginTransaction();
+    			story.beginTransaction();
     			if(!row.saveEdit()) {
     				return;
     			} 
-    			goal.commit(true);
+    			story.commit(true);
     			return false;
     		}},
     		cancel: {text: "Cancel", action: function() {
@@ -178,8 +178,8 @@ IterationController.prototype = {
     	desc.getElement().addClass("description-cell");
     	var storys = row.createCell();
     	storys.getElement().hide();
-    	var storyctrl = new IterationGoalController(storys, goal, this);
-    	this.IterationGoalControllers.push(storyctrl);
+    	var storyctrl = new StoryController(storys, story, this);
+    	this.StoryControllers.push(storyctrl);
     	var expandButton = commonView.expandCollapse(expand.getElement(), function() {
     		storyctrl.showTasks();
     		desc.getElement().hide();
@@ -198,12 +198,12 @@ IterationController.prototype = {
     	                               }, {
     	                            	   text: "Move story",
     	                            	   callback: function() {
-    	                            	   		me.moveGoal(row, goal);
+    	                            	   		me.moveStory(row, story);
     	                               		}
     	                               }, {
     	                            	   text: "Delete story",
     	                            	   callback: function() {
-    	                            	   me.deleteGoal(goal);
+    	                            	   me.deleteStory(story);
     	                               }
     	                               }, {
     	                            	   text: "Create a new task",
@@ -214,7 +214,7 @@ IterationController.prototype = {
     	                               }
     	                               ]});
     	row.getElement().bind("metricsUpdated", function() {
-    		goal.reloadMetrics();
+    		story.reloadMetrics();
     	});
     	row.getElement().droppable({
 			accept: function(draggable) {
@@ -223,7 +223,7 @@ IterationController.prototype = {
 					return false;
 				}
 				var model = draggable.data("row").model;
-				return (model.iterationGoal.getId() !== goal.getId());
+				return (model.story.getId() !== story.getId());
     		},
     		hoverClass: 'drophover',
     		greedy: true,
@@ -231,7 +231,7 @@ IterationController.prototype = {
     			var row = ui.draggable.data("row");
     			var model = row.model;
     			row.remove();
-    			model.changeStory(goal);
+    			model.changeStory(story);
     			storyctrl.render();
     		}
 		});
@@ -239,14 +239,14 @@ IterationController.prototype = {
     },
     render: function(data) {
     	var me = this;
-    	this.view = jQuery(this.element).iterationGoalTable();
+    	this.view = jQuery(this.element).storyTable();
 
-    	this.view.activateSortable({update: function(ev,el) { me.changeIterationGoalPriority(ev,el);}});
+    	this.view.activateSortable({update: function(ev,el) { me.changeStoryPriority(ev,el);}});
 
     	this.view.addCaptionAction("createNew", {
     		text: "Create a new story",
     		callback: function() {
-    		me.createGoal();
+    		me.createStory();
     	}
     	});
     	this.view.addCaptionAction("showTasks", {
@@ -265,30 +265,30 @@ IterationController.prototype = {
     	}
     	});
 
-    	var goals = data.getIterationGoals();
+    	var stories = data.getStories();
     	this.model = data;
-    	jQuery.each(goals, function(index, goal){
-    		me.addRow(goal);
+    	jQuery.each(stories, function(index, story){
+    		me.addRow(story);
     	});
-    	var goal = data.getPseudoGoal();
-    	this.itemsWithOutGoalContainer = goal;
-    	var row = me.view.createRow(goal);
+    	var story = data.getPseudoStory();
+    	this.tasksWithoutStoryContainer = story;
+    	var row = me.view.createRow(story);
     	var expand = row.createCell();
         var name = row.createCell().setValue("Tasks without story.");
     	var tasks = row.createCell({
-    		get: function() { return goal.getDoneTasks() + " / " + goal.getTotalTasks(); }
+    		get: function() { return story.getDoneTasks() + " / " + story.getTotalTasks(); }
     	});
     	var elsum = row.createCell({
-    		get: function() { return goal.getEffortLeft(); },
+    		get: function() { return story.getEffortLeft(); },
     		decorator: agilefantUtils.aftimeToString
     	});
     	var oesum = row.createCell({
-    		get: function() { return goal.getOriginalEstimate(); },
+    		get: function() { return story.getOriginalEstimate(); },
     		decorator: agilefantUtils.aftimeToString
     	});
     	if(agilefantUtils.isTimesheetsEnabled()) {
     		var essum = row.createCell({
-    			get: function() { return goal.getEffortSpent(); },
+    			get: function() { return story.getEffortSpent(); },
     			decorator: agilefantUtils.aftimeToString
     		});
     	}
@@ -296,21 +296,21 @@ IterationController.prototype = {
     	var buttons = row.createCell();
     	row.setNotSortable();
     	row.createCell().getElement().hide(); //dymmy description
-    	var storys = row.createCell();
-    	storys.getElement().hide();
-    	this.noGoalItemController = new IterationGoalController(storys, goal, this);
-    	this.IterationGoalControllers.push(this.noGoalItemController);
+    	var tasks = row.createCell();
+    	tasks.getElement().hide();
+    	this.noStoryTaskController = new StoryController(tasks, story, this);
+    	this.StoryControllers.push(this.noStoryTaskController);
     	buttons.setActionCell({items: [{
     		text: "Create a new task",
     		callback: function() {
-    		storys.getElement().show();
-    		me.noGoalItemController.createStory();
+    		tasks.getElement().show();
+    		me.noStoryTaskController.createTask();
     	}
     	}]});
     	this.buttonCells.push(commonView.expandCollapse(expand.getElement(), function() {
-    		me.noGoalItemController.showTasks();
+    		me.noStoryTaskController.showTasks();
     	}, function() {
-    		me.noGoalItemController.hideTasks();
+    		me.noStoryTaskController.hideTasks();
     	}));
     	row.getElement().droppable({
 			accept: function(draggable) {
@@ -319,7 +319,7 @@ IterationController.prototype = {
     				return false;
     			}
     			var model = draggable.data("row").model;
-    			return (model.iterationGoal.getId() !== 0);
+    			return (model.story.getId() !== 0);
     		},
     		hoverClass: 'drophover',
     		greedy: true,
@@ -327,39 +327,39 @@ IterationController.prototype = {
     			var row = ui.draggable.data("row");
     			var model = row.model;
     			row.remove();
-    			model.changeStory(goal);
+    			model.changeStory(story);
     			me.model.addTask(model);
-    			me.noGoalItemController.render();
+    			me.noStoryTaskController.render();
     		}
 		});
     	this.view.render();
     },
-    storeGoal: function(row,goal) {
+    storeStory: function(row, story) {
     	if(!row.saveEdit()) {
     		return;
     	}
     	row.remove();
-    	goal = goal.copy();
+    	story = story.copy();
     	var me = this;
-	    goal.commit(function() {
-	    	me.model.addGoal(goal);
-	    	me.addRow(goal);
+    	story.commit(function() {
+	    	me.model.addStory(story);
+	    	me.addRow(story);
 	    	me.view.render();
-	    	ModelFactory.setIterationGoal(goal);
-	    	me.model.reloadGoalData();
+	    	ModelFactory.setStory(story);
+	    	me.model.reloadStoryData();
     	});
     },
-    createGoal: function() {
+    createStory: function() {
     	var me = this;
-    	var fakeGoal = new StoryModel({}, this.model);
-    	fakeGoal.beginTransaction(); //block autosaves
-    	var row = this.view.createRow(fakeGoal,{toTop: true}, true);
+    	var fakeStory = new StoryModel({}, this.model);
+    	fakeStory.beginTransaction(); //block autosaves
+    	var row = this.view.createRow(fakeStory,{toTop: true}, true);
     	row.setNotSortable();
     	var prio = row.createCell();
     	var name = row.createCell({
     		type: "text", 
     		get: function() { return " "; },
-    		set: function(val){ fakeGoal.setName(val);}});
+    		set: function(val){ fakeStory.setName(val);}});
     	var elsum = row.createCell();
     	var oesum = row.createCell();
     	if(agilefantUtils.isTimesheetsEnabled()) {
@@ -375,14 +375,14 @@ IterationController.prototype = {
     	}
     	]});
     	row.setSaveCallback(function() {
-    		me.storeGoal(row, fakeGoal);
+    		me.storeStory(row, fakeStory);
     	});
     	var desc = row.createCell({
     		type: "wysiwyg",  get: function() { return ""; },
-    		set: function(val) { fakeGoal.setDescription(val);},
+    		set: function(val) { fakeStory.setDescription(val);},
     		buttons: {
     			save: {text: "Save", action: function() {
-    			me.storeGoal(row,fakeGoal);           
+    			me.storeStory(row, fakeStory);           
     			return false;
     		}},
     		cancel: {text: "Cancel", action: function() {
@@ -393,22 +393,22 @@ IterationController.prototype = {
     	row.render();
     	row.openEdit();
     },
-    getGoalController: function(id) {
+    getStoryController: function(id) {
     	if(id === 0) {
-    		return this.noGoalItemController;
+    		return this.noStoryTaskController;
     	}
-    	for(var i = 0; i < this.IterationGoalControllers.length; i++) {
-    		if(this.IterationGoalControllers[i].data.id === id) {
-    			return this.IterationGoalControllers[i];
+    	for(var i = 0; i < this.StoryControllers.length; i++) {
+    		if(this.StoryControllers[i].data.id === id) {
+    			return this.StoryControllers[i];
     		}
     	}
     	return null;
     }
 };
 
-/** ITERATION GOAL CONTROLLER **/
+/** STORY CONTROLLER **/
 
-IterationGoalController.prototype = {
+StoryController.prototype = {
 	hideTasks: function() {
 		this.parentView.getElement().hide();
 	},
@@ -766,11 +766,11 @@ IterationGoalController.prototype = {
     				if(iteration < 1) {
     					err.text("Please select an iteration.").show();
     					return;
-    				} else if(story != task.iterationGoal.id){
+    				} else if(story != task.story.id){
     					var blId = task.backlog.getId();
     					task.moveTo(story, iteration);
     					if(iteration == blId) {
-    						var ctrl = me.parentController.getGoalController(story);
+    						var ctrl = me.parentController.getStoryController(story);
     						if(ctrl) {
     							ctrl.render();
     						}

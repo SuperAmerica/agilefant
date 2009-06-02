@@ -1,23 +1,23 @@
 /** CONSTRUCTORS **/
 var ModelFactoryClass = function() { 
-	this.iterationGoals = {};
+	this.stories = {};
 	this.tasks = {};
 	this.todos = {};
 	this.effortEntries = {};
 };
-StoryModel = function(iterationGoalData, parent) {
+StoryModel = function(storyData, parent) {
 	this.init();
 	this.metrics = {};
 	this.iteration = parent;
 	this.tasks = [];
-	this.setData(iterationGoalData, true);
+	this.setData(storyData, true);
 };
-var TaskModel = function(data, backlog, iterationGoal) {
+var TaskModel = function(data, backlog, story) {
 	this.init();
 	this.effortLeft = "";
 	this.originalEstimate = "";
 	this.backlog = backlog;
-	this.iterationGoal = iterationGoal;
+	this.story = story;
 	if (data) {
 		this.setData(data);
 	}
@@ -66,26 +66,26 @@ ModelFactoryClass.prototype = {
 			data: {iterationId: iterationId}
 		});
 	},
-	iterationGoalSingleton: function(id, parent, data) {
-		if(!this.iterationGoals[id]) {
-			this.iterationGoals[id] = new StoryModel(data,parent);
+	storySingleton: function(id, parent, data) {
+		if(!this.stories[id]) {
+			this.stories[id] = new StoryModel(data,parent);
 		} else {
-			this.iterationGoals[id].setData(data);
+			this.stories[id].setData(data);
 		}
-		return this.iterationGoals[id];
+		return this.stories[id];
 	},
-	setIterationGoal: function(goal) {
-		this.iterationGoals[goal.id] = goal;
+	setStory: function(story) {
+		this.stories[story.id] = story;
 	},
-	getIterationGoal: function(id) {
-		return this.iterationGoals[id];
+	getStory: function(id) {
+		return this.stories[id];
 	},
-	removeIterationGoal: function(id) {
-		this.iterationGoals[id] = null;
+	removeStory: function(id) {
+		this.stories[id] = null;
 	},
-	taskSingleton: function(id, backlog, iterationGoal, data) {
+	taskSingleton: function(id, backlog, story, data) {
 		if(!this.tasks[id]) {
-			this.tasks[id] = new TaskModel(data, backlog, iterationGoal);
+			this.tasks[id] = new TaskModel(data, backlog, story);
 		} else {
 			this.tasks[id].setData(data);
 		}
@@ -197,36 +197,36 @@ CommonAgilefantModel.prototype.setData = function() {
 /** ITERATION MODEL **/
 
 IterationModel = function(iterationData, iterationId) {
-	var goalPointer = [];
+	var storyPointer = [];
 	this.iterationId = iterationId;
-	this.itemsWithoutGoal = [];
+	this.tasksWithoutStory = [];
 	var me = this;
-	jQuery.each(iterationData.iterationGoals, function(index,iterationGoalData) { 
-		goalPointer.push(ModelFactory.iterationGoalSingleton(iterationGoalData.id, me, iterationGoalData));
+	jQuery.each(iterationData.stories, function(index, storyData) { 
+		storyPointer.push(ModelFactory.storySingleton(storyData.id, me, storyData));
 	});
-	if(iterationData.itemsWithoutGoal) {
-		this.containerGoal = new StoryModel({id: "", priority: 9999999}, this);
-		this.containerGoal.save = function() {};
-		this.containerGoal.remove = function() {};
-		this.containerGoal.tasks = this.itemsWithoutGoal;
-		this.containerGoal.metrics = {};
-		this.containerGoal.reloadMetrics();
-		jQuery.each(iterationData.itemsWithoutGoal, function(k,v) { 
-			me.itemsWithoutGoal.push(ModelFactory.taskSingleton(v.id, me,me.containerGoal, v));
+	if(iterationData.tasksWithoutStory) {
+		this.containerStory = new StoryModel({id: "", priority: 9999999}, this);
+		this.containerStory.save = function() {};
+		this.containerStory.remove = function() {};
+		this.containerStory.tasks = this.tasksWithoutStory;
+		this.containerStory.metrics = {};
+		this.containerStory.reloadMetrics();
+		jQuery.each(iterationData.tasksWithoutStory, function(k,v) { 
+			me.tasksWithoutStory.push(ModelFactory.taskSingleton(v.id, me,me.containerStory, v));
 		});
 	}
-	this.iterationGoals = goalPointer;
+	this.stories = storyPointer;
 };
 
 IterationModel.prototype = new CommonAgilefantModel();
 
-IterationModel.prototype.getIterationGoals = function() {
-	return this.iterationGoals;
+IterationModel.prototype.getStories = function() {
+	return this.stories;
 };
 IterationModel.prototype.getId = function() {
 	return this.iterationId;
 };
-IterationModel.prototype.reloadGoalData = function() {
+IterationModel.prototype.reloadStoryData = function() {
 	var me = this;
 	jQuery.ajax({
 		async: false,
@@ -234,9 +234,9 @@ IterationModel.prototype.reloadGoalData = function() {
 		commonView.showError("Unable to load story.");
 	},
 	success: function(data,type) {
-		data = data.iterationGoals;
+		data = data.stories;
 		for(var i = 0 ; i < data.length; i++) {
-			ModelFactory.iterationGoalSingleton(data[i].id, this, data[i]);
+			ModelFactory.storySingleton(data[i].id, this, data[i]);
 		}
 	},
 	cache: false,
@@ -246,30 +246,30 @@ IterationModel.prototype.reloadGoalData = function() {
 	data: {iterationId: this.iterationId, excludeStorys: true}
 	});
 };
-IterationModel.prototype.addGoal = function(goal) {
-	goal.iteration = this;
-	this.iterationGoals.push(goal);
+IterationModel.prototype.addStory = function(story) {
+	story.iteration = this;
+	this.stories.push(story);
 };
-IterationModel.prototype.removeGoal = function(goal) {
-	var goals = [];
-	for(var i = 0 ; i < this.iterationGoals.length; i++) {
-		if(this.iterationGoals[i] != goal) {
-			goals.push(this.iterationGoals[i]);
+IterationModel.prototype.removeStory = function(story) {
+	var stories = [];
+	for(var i = 0 ; i < this.stories.length; i++) {
+		if(this.stories[i] != story) {
+			stories.push(this.stories[i]);
 		}
 	}
-	this.iterationGoals = goals;
+	this.stories = stories;
 };
 IterationModel.prototype.getTasks = function() { //tasks without a story
-	return this.itemsWithoutGoal;
+	return this.tasksWithoutStory;
 };
 IterationModel.prototype.addTask = function(task) {
-	this.itemsWithoutGoal.push(task);
+	this.tasksWithoutStory.push(task);
 };
-IterationModel.prototype.getPseudoGoal = function() {
-	return this.containerGoal;
+IterationModel.prototype.getPseudoStory = function() {
+	return this.containerStory;
 };
 
-/** ITERATION GOAL MODEL **/
+/** STORY MODEL **/
 
 StoryModel.prototype = new CommonAgilefantModel();
 
@@ -300,8 +300,8 @@ StoryModel.prototype.reloadTasks = function() {
 	cache: false,
 	dataType: "json",
 	type: "POST",
-	url: "iterationGoalContents.action",
-	data: {iterationGoalId: this.id, iterationId: this.iteration.getId()}
+	url: "storyContents.action",
+	data: {storyId: this.id, iterationId: this.iteration.getId()}
 	});
 };
 StoryModel.prototype.setTasks = function(tasks) {
@@ -313,16 +313,16 @@ StoryModel.prototype.setTasks = function(tasks) {
 	}
 };
 StoryModel.prototype.addTask = function(story) {
-	story.backlog = this.iteration;
-	story.iterationGoal = this;
-	this.tasks.push(story);
+	task.backlog = this.iteration;
+	task.story = this;
+	this.tasks.push(task);
 	this.reloadMetrics();
 };
-StoryModel.prototype.removeTask = function(story) {
+StoryModel.prototype.removeTask = function(task) {
 	var tmp = this.tasks;
 	this.tasks = [];
 	for(var i = 0; i < tmp.length; i++) {
-		if(tmp[i] != story) {
+		if(tmp[i] != task) {
 			this.tasks.push(tmp[i]);
 		}
 	}
@@ -340,7 +340,7 @@ StoryModel.prototype.getTasks = function() {
 	return this.tasks;
 };
 StoryModel.prototype.getHashCode = function() {
-	return "iterationGoal-"+this.id;  
+	return "story-"+this.id;  
 };
 StoryModel.prototype.getId = function() {
 	return this.id;
@@ -389,12 +389,12 @@ StoryModel.prototype.moveToIteration = function(newIteration) {
 			commonView.showError("Unable to move selected story to selected iteration.");
 		},
 		success: function(data,type) {
-			me.iteration.removeGoal(me);
+			me.iteration.removeStory(me);
 		},
 		cache: false,
 		type: "POST",
-		url: "moveIterationGoal.action",
-		data: {iterationGoalId: this.id, iterationId: newIteration, moveStorys: true}
+		url: "moveStory.action",
+		data: {storyId: this.id, iterationId: newIteration, moveStorys: true}
 	});
 };
 StoryModel.prototype.remove = function() {
@@ -406,23 +406,23 @@ StoryModel.prototype.remove = function() {
 		commonView.showError("An error occured while deleting a story.");
 	},
 	success: function(data,type) {
-		me.iteration.removeGoal(me);
-		ModelFactory.removeIterationGoal(me.id);
+		me.iteration.removeStory(me);
+		ModelFactory.removeStory(me.id);
 		me.callDeleteListeners();
 		commonView.showOk("Story deleted.");
 	},
 	cache: false,
 	type: "POST",
-	url: "deleteIterationGoal.action",
-	data: {iterationGoalId: this.id}
+	url: "deleteStory.action",
+	data: {storyId: this.id}
 	});
 };
 StoryModel.prototype.reloadMetrics = function() {
 	var me = this;
 	jQuery.ajax({
-		url: "calculateIterationGoalMetrics.action",
+		url: "calculateStoryMetrics.action",
 		data: {
-		iterationGoalId: this.id,
+		storyId: this.id,
 		iterationId: this.iteration.iterationId
 	},
 	cache: false,
@@ -442,21 +442,21 @@ StoryModel.prototype.save = function(synchronous, callback) {
 	var asynch = !synchronous;
 	var me = this;
 	var data  = {
-			"iterationGoal.name": this.name,
-			"iterationGoal.description": this.description,
+			"story.name": this.name,
+			"story.description": this.description,
 			iterationId: this.iteration.iterationId
 	};
 	if(this.priority) { 
 		data.priority = this.priority;
 	}
 	if(this.id) { 
-		data.iterationGoalId = this.id;
+		data.storyId = this.id;
 	}
 	if(!this.name) {
-		data["iterationGoal.name"] = "";
+		data["story.name"] = "";
 	}
 	if(!this.description) {
-		data["iterationGoal.description"] = "";
+		data["story.description"] = "";
 	}
 	jQuery.ajax({
 		async: asynch,
@@ -468,12 +468,12 @@ StoryModel.prototype.save = function(synchronous, callback) {
 		if(asynch && typeof callback == "function") {
 			callback.call(me);
 		}
-		commonView.showOk("Iteration goal saved succesfully.");
+		commonView.showOk("Story saved succesfully.");
 	},
 	cache: false,
 	dataType: "json",
 	type: "POST",
-	url: "storeIterationGoal.action",
+	url: "storeStory.action",
 	data: data
 	});
 };
@@ -691,16 +691,16 @@ TaskModel.prototype.setOriginalEstimate = function(originalEstimate) {
 };
 
 TaskModel.prototype.moveTo = function(storyId, iterationId) {
-	var oli = this.iterationGoal;
-	if(storyId != this.iterationGoal.id) {
-		this.iterationGoal.removeTask(this);
+	var oli = this.story;
+	if(storyId != this.story.id) {
+		this.story.removeTask(this);
 		if(iterationId === this.backlog.getId()) {
-			var newStory = ModelFactory.getIterationGoal(storyId);
+			var newStory = ModelFactory.getStory(storyId);
 			newStory.addTask(this);
 			this.save();
 		} else {
 			this.backlog = {getId: function() { return iterationId; }};
-			this.iterationGoal = {id: storyId};
+			this.story = {id: storyId};
 			this.save();
 		}
 		oli.reloadMetrics();
@@ -724,7 +724,7 @@ TaskModel.prototype.remove = function() {
 		.showError("An error occured while deleting the task.");
 	},
 	success : function(data, type) {
-		me.iterationGoal.removeTask(me);
+		me.story.removeTask(me);
 		ModelFactory.removeTask(me.id);
 		me.callDeleteListeners();
 		commonView.showOk("task deleted.");
@@ -739,7 +739,7 @@ TaskModel.prototype.remove = function() {
 
 };
 TaskModel.prototype.changeStory = function(newStory) {
-	this.iterationGoal.removeTask(this);
+	this.story.removeTask(this);
 	newStory.addTask(this);
 	this.save();
 };
@@ -787,8 +787,8 @@ TaskModel.prototype.save = function(synchronous, callback) {
 			backlogId: this.backlog.getId(),
 			storyId: this.id
 	};
-	if (this.iterationGoal) {
-		data.iterationGoalId = this.iterationGoal.id;
+	if (this.story) {
+		data.storyId = this.story.id;
 	}
 	if (this.userIds) {
 		data.userIds = this.userIds;

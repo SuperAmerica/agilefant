@@ -1003,7 +1003,7 @@
 			}
 			return null;
 		},
-		iterationGoalTable: function(options) {
+		storyTable: function(options) {
 		  var opts = { captionText: "Stories", defaultSortColumn: 0};
 		  if(agilefantUtils.isTimesheetsEnabled()) {
 		      opts.colCss = {

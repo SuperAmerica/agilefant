@@ -140,8 +140,8 @@ function handleTabEvent(target, context, id, tabId, storyContext) {
         	"storyDWProjects": "storyTabs.action",
             "project": "projectTabs.action",
             "iteration": "iterationTabs.action",
-            "iterationGoal": "iterationGoalTabs.action",
             "businessTheme": "businessThemeTabs.action",
+            "task": "taskTabs.action",
             "user": "userTabs.action",
             "team": "teamTabs.action",
             "projectType": "projectTypeTabs.action"
@@ -170,8 +170,8 @@ function handleTabEvent(target, context, id, tabId, storyContext) {
             "iteration": {
                 iterationId: id
             },
-            "iterationGoal": {
-                iterationGoalId: id
+            "task": {
+                taskId: id
             },      
             "businessTheme": {
                 businessThemeId: id
@@ -233,8 +233,8 @@ function disableElementIfValue(me, handle, ref) {
     return false;
 }
 
-function getIterationGoals(backlogId, element, preselectedId) {
-    jQuery.getJSON("ajaxGetIterationGoals.action",
+function getStories(backlogId, element, preselectedId) {
+    jQuery.getJSON("ajaxGetStories.action",
         { 'iterationId': backlogId }, function(data, status) {
         var select = $(element);
         

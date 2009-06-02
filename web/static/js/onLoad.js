@@ -204,9 +204,9 @@ function openCreateDialog(element) {
 	        dialogSetup(agilefantValidationRules.iteration, "Create a new iteration");
 	    };
 	}
-	else if (element.hasClass('openIterationGoalDialog')) {
+	else if (element.hasClass('openTaskDialog')) {
 	    callback = function(data, status) {
-	        dialogSetup(agilefantValidationRules.iterationGoal, "Create a new story");
+	        dialogSetup(agilefantValidationRules.task, "Create a new task");
 	    };
 	}
 	else if (element.hasClass('openStoryDialog')) {

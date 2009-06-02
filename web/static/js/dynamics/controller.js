@@ -790,7 +790,7 @@ IterationGoalController.prototype = {
 };
 
 
-/** BACKLOG ITEM CONTROLLER **/
+/** TASK CONTROLLER **/
 
 TaskController.prototype = {
 	initialize: function() {

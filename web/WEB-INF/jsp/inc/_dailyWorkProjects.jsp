@@ -4,7 +4,7 @@
 
 <aef:openDialogs context="storyDWProjects" id="openStoryTabs" />
 
-<!-- context variable for backlog item ajax to know its context -->
+<!-- context variable for story ajax to know its context -->
 <c:set var="storyListContext" value="dailyWorkProjects" scope="session" />
 
 <c:set var="dialogContext" value="storyDWProjects" scope="session" />

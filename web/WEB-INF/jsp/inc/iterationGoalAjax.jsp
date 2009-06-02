@@ -14,7 +14,7 @@
 <div class="ajaxWindowTabsDiv">
 <ul class="ajaxWindowTabs">
 	<li><a href="#iterationGoalEditTab-${iterationGoalId}"><span><img src="static/img/edit.png" alt="Edit" /> Edit iteration goal</span></a></li>
-	<li><a href="#iterationGoalBliTab-${iterationGoalId}"><span><img src="static/img/story2.png" alt="Backlog items" /> Backlog items</span></a></li>
+	<li><a href="#iterationGoalBliTab-${iterationGoalId}"><span><img src="static/img/story2.png" alt="Stories" /> Stories</span></a></li>
 </ul>
 
 <div id="iterationGoalEditTab-${iterationGoalId}" class="iterationNaviTab">

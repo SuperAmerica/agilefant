@@ -7,7 +7,7 @@
      *  - url: where to get the json data from
      *  - legacyMode: true: the hidden fields' names will be 'userIds[XX]'
      *               false: the hidden fields' names will be 'userIds'
-     *  - storyId: when rendering for backlog item, the item's id.
+     *  - storyId: when rendering for story, the item's id.
      *  - backlogId/backlogIdField: the backlog id can be given directly or
      *                              by a jQuery selector if the backlog can change.
      *  - userListContainer: the element where the list of assigned users' initials are shown

@@ -3,7 +3,7 @@
 <ul class="ajaxWindowTabs">
 
 	<li><a href="#businessThemeEditTab-${businessThemeId}"><span><img src="static/img/edit.png" alt="Edit" /> Edit theme</span></a></li>
-	<li><a href="#businessThemeStoryTab-${businessThemeId}"><span><img src="static/img/story2.png" alt="Backlog items" /> Backlog items</span></a></li>
+	<li><a href="#businessThemeStoryTab-${businessThemeId}"><span><img src="static/img/story2.png" alt="Stories" /> Stories</span></a></li>
 	<li><a href="#businessThemeBLTab-${businessThemeId}"><span><img src="static/img/backlog.png" alt="Backlogs" /> Backlogs</span></a></li>
 </ul>
 <div id="businessThemeEditTab-${businessThemeId}" class="businessThemeNaviTab validateWrapper validateTheme">

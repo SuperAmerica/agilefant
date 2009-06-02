@@ -1,6 +1,6 @@
 <%@ include file="./_taglibs.jsp"%>
 
-<!-- context variable for backlog item ajax to know its context -->
+<!-- context variable for story ajax to know its context -->
 <c:set var="storyListContext" value="dailyWorkIterations" scope="session" />
 
 <c:set var="dialogContext" value="storyDWInterations" scope="session" />

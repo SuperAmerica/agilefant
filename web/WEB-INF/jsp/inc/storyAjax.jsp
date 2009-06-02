@@ -521,12 +521,14 @@ $(document).ready(function() {
 								action="ajaxCreateStory" includeParams="none">
 								<ww:param name="fromTodoId" value="${row.id }" />
 							</ww:url>
+							<%--
 							<ww:a cssClass="openCreateDialog openStoryDialog"
 								href="%{createStoryLink}" onclick="return false;"
 								title="Split as a new backlog item">
                                 <img src="static/img/new.png" alt="Split"
                                     title="Split as a new backlog item" />
 							</ww:a>
+							--%>
 							<ww:url id="movetodoTopLink" action="movetodoTop" includeParams="none">
 								<ww:param name="todoId" value="${row.id}" />
 							</ww:url>

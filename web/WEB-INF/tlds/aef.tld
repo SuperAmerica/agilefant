@@ -304,7 +304,7 @@
 		<tag-class>fi.hut.soberit.agilefant.web.tag.StoryById</tag-class>
 		<body-content>JSP</body-content>
 		<description>
-			Get backlog item by id
+			Get story by id
 	    </description>
 	    <attribute>
 	    	<name>id</name>

@@ -3,7 +3,7 @@ function toggleDiv(id) { $('#' + id).toggle(); }
 
 function confirmDeleteTodo() { return confirm("Really delete TODO?");}
 function confirmDeleteHour() { return confirm("Really delete hour entry?"); }
-function confirmDeleteBli() { return confirm("Deleting the backlog item will cause all of its TODOs and logged effort to be deleted.");}
+function confirmDeleteStory() { return confirm("Deleting the story will cause all of its tasks and logged effort to be deleted.");}
 function confirmDelete() { return confirm("Are you sure?"); }
 function confirmDeleteTeam() { return confirm("Really delete the team?"); }
 function confirmReset() { return confirm("Really reset the original estimate?"); }

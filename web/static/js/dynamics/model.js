@@ -721,17 +721,17 @@ TaskModel.prototype.remove = function() {
 		error: function() {
 		me.rollBack();
 		commonView
-		.showError("An error occured while deleting the backlog item.");
+		.showError("An error occured while deleting the task.");
 	},
 	success : function(data, type) {
 		me.iterationGoal.removeTask(me);
 		ModelFactory.removeTask(me.id);
 		me.callDeleteListeners();
-		commonView.showOk("Backlog item deleted.");
+		commonView.showOk("task deleted.");
 	},
 	cache: false,
 	type: "POST",
-	url: "ajaxDeleteStory.action",
+	url: "ajaxDeleteTask.action",
 	data: {
 		storyId: this.id
 	}
@@ -756,7 +756,7 @@ TaskModel.prototype.resetOriginalEstimate = function() {
 		async: false,
 		error: function() {
 		commonView
-		.showError("An error occured while saving the backlog item.");
+		.showError("An error occured while saving the task.");
 	},
 	success : function(data, type) {
 		me.setData(data, false);
@@ -829,14 +829,14 @@ TaskModel.prototype.save = function(synchronous, callback) {
 		async: asynch,
 		error: function() {
 		commonView
-		.showError("An error occured while saving the backlog item.");
+		.showError("An error occured while saving the task.");
 	},
 	success: function(data, type) {
 		me.setData(data);
 		if(asynch && typeof callback == "function") {
 			callback.call(me);
 		}
-		commonView.showOk("Backlog item saved succesfully.");
+		commonView.showOk("Task saved succesfully.");
 	},
 	cache: false,
 	dataType: "json",
@@ -846,7 +846,7 @@ TaskModel.prototype.save = function(synchronous, callback) {
 	});
 };
 
-/** BACKLOG ITEM HOUR ENTRY * */
+/** TASK HOUR ENTRY * */
 
 
 TaskHourEntryModel.prototype = new CommonAgilefantModel();

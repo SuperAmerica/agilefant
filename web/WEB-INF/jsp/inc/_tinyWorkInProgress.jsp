@@ -2,7 +2,7 @@
 
 <aef:openDialogs context="storyWorkInProgress" id="openStoryTabs" />
 
-<!-- context variable for backlog item ajax to know its context -->
+<!-- context variable for story ajax to know its context -->
 <c:set var="storyListContext" value="workInProgress" scope="session" />
 
 <c:set var="dialogContext" value="storyWorkInProgress" scope="session" />

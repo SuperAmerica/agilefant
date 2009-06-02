@@ -563,7 +563,6 @@ $(document).ready(function() {
         
 				<tr>
 				<td>
-					<c:if test="${project.id > 0}">
 						<div class="subItems" id="subItems_editProjectIterations">
 							<div class="subItemHeader">
 								<table cellpadding="0" cellspacing="0">
@@ -683,10 +682,44 @@ $(document).ready(function() {
 							</p>
 						</c:if>
             --%>
-					</c:if>
 				</td>
 			</tr>
 		</table>
+
+<ww:url id="createStoryLink" action="ajaxCreateStory" includeParams="none">
+  <ww:param name="backlogId" value="${product.id}" />
+</ww:url>
+
+<table>
+  <tr>
+    <td>
+      <div class="subItems" id="subItems_editProjectStoryList">
+        <div class="subItemHeader">
+          <table cellspacing="0" cellpadding="0">
+            <tr>
+              <td class="header">Stories</td>
+              <td class="icons">
+                <table cellpadding="0" cellspacing="0">
+                  <tr>
+                    <td><ww:a cssClass="openCreateDialog openStoryDialog"
+                          href="%{createStoryLink}" onclick="return false;"
+                          title="Create a new story">
+                        </ww:a></td>
+                  </tr>
+                </table>     
+              </td>
+            </tr>
+          </table>
+        </div>
+        <c:if test="${!empty stories}">
+          <div class="subItemContent">
+            <%@ include file="./inc/_storyList.jsp"%>
+          </div>
+        </c:if>
+      </div>
+    </td>
+  </tr>
+</table>
 
 <%-- Hour reporting here - Remember to expel David H. --%>
 <%--

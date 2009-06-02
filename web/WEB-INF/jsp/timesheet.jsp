@@ -22,11 +22,11 @@ $(document).ready(function() {
         selectedProjects: ${JSONProjects},
         selectedIterations: ${JSONIterations}
     });
-    $('#userChooserLink-createBLI').userChooser({
+    $('#userChooserLink-createStory').userChooser({
         legacyMode: false,
         renderFor: 'allUsers',
         storyId: 0,
-        userListContainer: '#userListContainer-createBLI',
+        userListContainer: '#userListContainer-createStory',
         emptySelectionText: "(all)"
     });
 });
@@ -233,9 +233,9 @@ $(document).ready( function() {
 									<td>Users</td>
 									<td>                        
 	                    				<div>
-							                <a id="userChooserLink-createBLI" href="#" class="assigneeLink">
+							                <a id="userChooserLink-createStory" href="#" class="assigneeLink">
 							                    <img src="static/img/users.png"/>
-							                    <span id="userListContainer-createBLI">
+							                    <span id="userListContainer-createStory">
 							                    <c:set var="userCount" value="${fn:length(selUser)}" />
 							                    <c:set var="curUserNo" value="0" />
                                                 <c:if test="${userCount == 0}">

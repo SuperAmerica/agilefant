@@ -151,10 +151,10 @@ $(document).ready(function() {
 	<img src="static/img/nonestimated.png" alt="There are unestimated items" />
 	<c:choose>
 		<c:when test="${nonEstimatedBLs > 1}">
-			<c:out value="Non-estimated BLI(s) in ${nonEstimatedBLs} backlogs." />
+			<c:out value="Non-estimated Story(s) in ${nonEstimatedBLs} backlogs." />
 		</c:when>
 		<c:otherwise>
-			<c:out value="Non-estimated BLI(s) in ${nonEstimatedBLs} backlog." />
+			<c:out value="Non-estimated Story(s) in ${nonEstimatedBLs} backlog." />
 		</c:otherwise>
 	</c:choose>
 </c:if>
@@ -245,10 +245,10 @@ $(document).ready(function() {
 	<img src="static/img/nonestimated.png" alt="There are unestimated items" />
 	<c:choose>
 		<c:when test="${nonEstimatedBLs > 1}">
-			<c:out value="Non-estimated BLI(s) in ${nonEstimatedBLs} backlogs." />
+			<c:out value="Non-estimated Story(s) in ${nonEstimatedBLs} backlogs." />
 		</c:when>
 		<c:otherwise>
-			<c:out value="Non-estimated BLI(s) in ${nonEstimatedBLs} backlog." />
+			<c:out value="Non-estimated Story(s) in ${nonEstimatedBLs} backlog." />
 		</c:otherwise>
 	</c:choose>
 </c:if>

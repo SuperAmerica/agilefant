@@ -207,7 +207,7 @@ $(document).ready(function() {
 				</ww:a>
 		</display:column>
 		
-		<display:column title="Completed BLIs" style="width: 90px;">
+		<display:column title="Completed Storys" style="width: 90px;">
 			<c:out value="${row.metrics.percentDone}" />%
 			<c:out value="( ${row.metrics.completedItems} / " />
 			<c:out value="${row.metrics.totalItems} )" />

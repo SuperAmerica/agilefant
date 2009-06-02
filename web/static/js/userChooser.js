@@ -106,7 +106,7 @@
               if (!this.options.selectCallback) {
                 this.options.selectCallback  = this.storySelectAction;
               }
-              this.renderForBLI();
+              this.renderForStory();
             }
             else {
               if (!this.options.selectCallback) {
@@ -180,7 +180,7 @@
             this.assignedCell.append(this.renderCheckboxList(firstList));
             this.notAssignedCell.append(this.renderCheckboxList(secondList));
         },
-        renderForBLI: function() {
+        renderForStory: function() {
             var me = this;
             if (this.data.notAssignedIds.length == 0 || this.data.assignments.length == 0) {
                 var firstLength = Math.ceil(me.data.showCount / 2);

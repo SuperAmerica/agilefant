@@ -47,7 +47,7 @@ $(document).ready(function() {
 			<td></td>
 			<td colspan="2">
                       <ww:textfield size="10" name="story.originalEstimate"
-                          id="createBLI_originalEstimateField" />
+                          id="createStory_originalEstimateField" />
                       <ww:label value="%{getText('webwork.estimateExample')}" />
                   </td>
 		</tr>
@@ -61,7 +61,7 @@ $(document).ready(function() {
 				value="story.state.name"
 				list="@fi.hut.soberit.agilefant.model.State@values()" listKey="name"
 				listValue="getText('todo.state.' + name())"
-				onchange="disableElementIfValue(this, '#createBLI_originalEstimateField', 'DONE');"/></td>
+				onchange="disableElementIfValue(this, '#createStory_originalEstimateField', 'DONE');"/></td>
 		</tr>
 
 		<tr>

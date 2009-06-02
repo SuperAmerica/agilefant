@@ -69,12 +69,12 @@ $(document).ready(function() {
             </td>
           </c:if>
           <td>
-          <ww:url id="createBLILink" action="ajaxCreateStory" includeParams="none">
+          <ww:url id="createStoryLink" action="ajaxCreateStory" includeParams="none">
             <ww:param name="backlogId" value="${pro.id}" />
           </ww:url>
           <ww:a cssClass="openCreateDialog openStoryDialog"
                 onclick="return false;" title="Create a new story"
-                href="%{createBLILink}">
+                href="%{createStoryLink}">
           </ww:a>
           </td>
           

@@ -37,7 +37,7 @@ public class ResolveObjectNamespaceTag extends SpringTagSupport {
 //            namespace = "TH";
 //            oid = ((BusinessTheme)this.item).getId();
 //        } else if(this.item instanceof BacklogItem) {
-//            namespace = "BLI";
+//            namespace = "Story";
 //            oid = ((BacklogItem)this.item).getId();
 //        } else if(this.item instanceof IterationGoal) {  
 //            namespace = "IG";

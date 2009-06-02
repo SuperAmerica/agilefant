@@ -520,7 +520,7 @@ var validationRulesByHTMLClass = {
     'validateTheme': agilefantValidationRules.theme,
     'validateNewUser': agilefantValidationRules.newUser,
     'validateUser': agilefantValidationRules.user,
-    'validateBLIProgressTab': agilefantValidationRules.storyProgress,
+    'validateStoryProgressTab': agilefantValidationRules.storyProgress,
     'validateExistingProduct': agilefantValidationRules.product,
     'validateEmpty': agilefantValidationRules.empty
 };

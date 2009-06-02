@@ -16,7 +16,7 @@ function validateDeletion() {
     return confirm("The selected stories will be gone forever. Are you sure?");
 }
 
-function selectAllBLIs(val) {
+function selectAllStorys(val) {
 	var elems = document.getElementsByName("selected");
 	for(var x in elems)
 		elems[x].checked = val;
@@ -54,7 +54,7 @@ $(document).ready(function() {
 		requestURI="${currentAction}.action" >
 
 		<!-- Checkboxes for bulk-moving stories -->
-		<display:column sortable="false" title="<input type='checkbox' name='selectall' onclick='selectAllBLIs(this.checked)'/>" class="selectColumn">
+		<display:column sortable="false" title="<input type='checkbox' name='selectall' onclick='selectAllStorys(this.checked)'/>" class="selectColumn">
 			<div><ww:checkbox name="selected" fieldValue="${row.id}" /></div>
 			<div style="height: 15px;"></div>
 			<div id="storyTabContainer-${row.id}-${storyListContext}" class="tabContainer" style="overflow:visible; white-space: nowrap; width: 15px;"></div>

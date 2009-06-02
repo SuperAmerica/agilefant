@@ -276,7 +276,7 @@ function handleQuickRef(form) {
 }
 
 
-function resetBLIOriginalEstimate(storyId, me) {
+function resetStoryOriginalEstimate(storyId, me) {
     if (!confirmReset()) {
         return false;
     }

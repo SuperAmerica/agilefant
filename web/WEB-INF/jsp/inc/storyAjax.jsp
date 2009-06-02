@@ -124,7 +124,7 @@ $(document).ready(function() {
 								<span id="resetLink_${story.id}-${storyListContext}">
 							</c:otherwise>
 						</c:choose>						
-						<ww:a href="#" onclick="resetBLIOriginalEstimate(${story.id}, this); return false;">(reset)</ww:a>
+						<ww:a href="#" onclick="resetStoryOriginalEstimate(${story.id}, this); return false;">(reset)</ww:a>
 						</span>
 												
 						</td>
@@ -429,7 +429,7 @@ $(document).ready(function() {
 	<%-- todos to DONE confirmation script ends. --%>
 </script>
 
-<div class="validateWrapper validateBLIProgressTab">
+<div class="validateWrapper validateStoryProgressTab">
 <ww:form action="quickStoreTodoList" validate="false" method="post">
 
 <table>

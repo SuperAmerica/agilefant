@@ -50,11 +50,11 @@
         <tr>
         <c:choose>
         <c:when test="${fn:length(teamList) > 0}">
-            <td><a href="javascript:toggleDiv('createBLIteamlist');">Select teams</a></td>
+            <td><a href="javascript:toggleDiv('createStoryteamlist');">Select teams</a></td>
             <td></td>
             <td>
             <p>User is currently in <c:out value="${fn:length(user.teams)}" /> teams</p>
-            <ul id="createBLIteamlist" style="display:none;list-style-type:none;">
+            <ul id="createStoryteamlist" style="display:none;list-style-type:none;">
             
             <c:forEach items="${teamList}" var="team" varStatus="status">
                 <c:choose>

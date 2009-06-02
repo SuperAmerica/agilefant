@@ -10,7 +10,7 @@ function confirmReset() { return confirm("Really reset the original estimate?");
 
 function deleteStory(storyId) {
 	var url = "ajaxDeleteStory.action";			
-	if (confirmDeleteBli()) {
+	if (confirmDeleteStory()) {
 		$.post(url,{storyId: storyId},function(data) {
 			reloadPage();
 		});
@@ -281,7 +281,7 @@ function resetStoryOriginalEstimate(storyId, me) {
         return false;
     }
     // Send the request to the server
-    jQuery.post('resetBliOrigEstAndEffortLeft.action', {storyId: storyId});
+    jQuery.post('resetStoryOrigEstAndEffortLeft.action', {storyId: storyId});
     
     var form = $(me).parents('form:eq(0)');
     var origEstField = form.find('input[name=story.originalEstimate]').removeAttr('disabled').val('');

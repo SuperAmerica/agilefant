@@ -20,7 +20,7 @@ var IterationGoalController = function(parentView, model, parentController) {
 	this.view.addCaptionAction("createNew", {
 		text: "Create a new task",
 		callback: function() {
-		me.createBli();
+		me.createStory();
 	}
 	});
 	this.render();
@@ -209,7 +209,7 @@ IterationController.prototype = {
     	                            	   text: "Create a new task",
     	                            	   callback: function() {
     	                            	   expandButton.trigger("showContents");
-    	                            	   storyctrl.createBli();
+    	                            	   storyctrl.createStory();
     	                               }
     	                               }
     	                               ]});
@@ -249,16 +249,16 @@ IterationController.prototype = {
     		me.createGoal();
     	}
     	});
-    	this.view.addCaptionAction("showBlis", {
+    	this.view.addCaptionAction("showTasks", {
     		text: "Show tasks",
-    		toggleWith: "hideBlis",
+    		toggleWith: "hideTasks",
     		callback: function() {
     		me.showTasks();
     	}
     	});
-    	this.view.addCaptionAction("hideBlis", {
+    	this.view.addCaptionAction("hideTasks", {
     		text: "Hide tasks",
-    		toggleWith: "showBlis",
+    		toggleWith: "showTasks",
     		hide: true,
     		callback: function() {
     		me.hideTasks();
@@ -304,7 +304,7 @@ IterationController.prototype = {
     		text: "Create a new task",
     		callback: function() {
     		storys.getElement().show();
-    		me.noGoalItemController.createBli();
+    		me.noGoalItemController.createStory();
     	}
     	}]});
     	this.buttonCells.push(commonView.expandCollapse(expand.getElement(), function() {
@@ -415,7 +415,7 @@ IterationGoalController.prototype = {
 	showTasks: function() {
 		this.parentView.getElement().show();
 	},
-	deleteBli: function(story) {
+	deleteStory: function(story) {
 		var parent = $("<div />").appendTo(document.body).text("Are you sure you wish to delete this task?");
 		var me = this;
 		parent.dialog({
@@ -597,7 +597,7 @@ IterationGoalController.prototype = {
 		                               },{
 		                            	   text: "Delete task",
 		                            	   callback: function() {
-		                            	   me.deleteBli(story);
+		                            	   me.deleteStory(story);
 		                               }
 		                               }
 		                               ]});
@@ -631,7 +631,7 @@ IterationGoalController.prototype = {
 		});
 		expand.setDragHandle();
 	},
-	createBli: function() {
+	createStory: function() {
 		var me = this;
 		var story = new TaskModel();
 		story.backlog = this.data.iteration;

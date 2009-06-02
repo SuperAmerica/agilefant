@@ -390,10 +390,10 @@ $(document).ready(function() {
 
 	function change_effort_enabled(value, storyId, context) {
 		if (value == "DONE") {
-			document.getElementById("effortBli_" + storyId + "-" + context).disabled = true;							
+			document.getElementById("effortStory_" + storyId + "-" + context).disabled = true;							
 		}
 		else {
-			document.getElementById("effortBli_" + storyId + "-" + context).disabled = false;
+			document.getElementById("effortStory_" + storyId + "-" + context).disabled = false;
 		}
 	}
 	
@@ -462,11 +462,11 @@ $(document).ready(function() {
 				<c:choose>
 					<c:when test="${story.state.name != 'DONE'}">
 						<ww:textfield size="5" name="effortLeft"
-							value="${story.effortLeft}" id="effortBli_${story.id}-${storyListContext}" />	
+							value="${story.effortLeft}" id="effortStory_${story.id}-${storyListContext}" />	
 					</c:when>
 					<c:otherwise>
 						<ww:textfield size="5" name="effortLeft"
-							value="${story.effortLeft}" id="effortBli_${story.id}-${storyListContext}"
+							value="${story.effortLeft}" id="effortStory_${story.id}-${storyListContext}"
 							disabled="true" />
 					</c:otherwise>
 				</c:choose>	

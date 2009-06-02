@@ -291,7 +291,7 @@ $(document).ready( function() {
 								</c:choose>
 							</display:column>
 							<display:column sortable="false" sortProperty="businessTheme.metrics.donePercentage" title="Progress">
-								${row.businessTheme.metrics.donePercentage} (${row.businessTheme.metrics.numberOfDoneBlis} / ${row.businessTheme.metrics.numberOfBlis})
+								${row.businessTheme.metrics.donePercentage} (${row.businessTheme.metrics.numberOfDoneStories} / ${row.businessTheme.metrics.numberOfStories})
 							</display:column>
 							<display:column sortable="false" title="Actions">
 								<span class="uniqueId" style="display: none;">${row.id}</span>

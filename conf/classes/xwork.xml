@@ -179,12 +179,6 @@
 		
 		<action name="storeNewProduct" method="store"
 			class="productAction">
-			<result type="redirect-action">
-				<param name="actionName">contextView</param>
-				<param name="contextName">product</param>
-				<param name="contextObjectId">${productId}</param>
-				<param name="resetContextView">true</param>
-			</result>
 		</action>
 		<!-- /Product actions -->
 		<!-- Story actions -->
@@ -1030,9 +1024,11 @@
         <action name="getProjectTypeJSON" method="getProjectTypeJSON" class="projectTypeAction">
             <result>/WEB-INF/jsp/jsonData.jsp</result>
         </action>
+        -->
         <action name="getProductJSON" method="getProductJSON" class="productAction">
             <result>/WEB-INF/jsp/jsonData.jsp</result>
         </action>
+        <!-- 
         <action name="getUserChooserJSON" method="ajaxGetUserChooserJSON" class="jsonAction">
             <result>/WEB-INF/jsp/jsonData.jsp</result>
         </action> -->

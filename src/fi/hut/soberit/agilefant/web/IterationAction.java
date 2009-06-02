@@ -15,6 +15,8 @@ import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.util.CalendarUtils;
+import fi.hut.soberit.agilefant.util.IterationDataContainer;
+import flexjson.JSONSerializer;
 
 @Component("iterationAction")
 @Scope("prototype")
@@ -52,7 +54,7 @@ public class IterationAction extends BacklogContentsAction implements CRUDAction
     @Autowired
     private ProjectBusiness projectBusiness;
     
-//    private boolean excludeBacklogItems = false;
+    private boolean excludeStories = false;
     
     
     public String create() {
@@ -64,19 +66,19 @@ public class IterationAction extends BacklogContentsAction implements CRUDAction
     }
     
     public String iterationContents() {
-//        IterationDataContainer data = this.iterationBusiness.getIterationContents(iterationId, excludeBacklogItems);
-//        if(data == null) {
-//            return AJAX_ERROR;
-//        }
-//        JSONSerializer serializer = new JSONSerializer();
-//        if(!excludeBacklogItems) {
-//            serializer.include("iterationGoals.backlogItems");
-//            serializer.include("itemsWithoutGoal");
-//            serializer.include("itemsWithoutGoal.businessThemes");
-//            serializer.include("iterationGoals.backlogItems.businessThemes");
-//        }
-//        
-//        json = serializer.prettyPrint(data);
+        IterationDataContainer data = this.iterationBusiness.getIterationContents(iterationId, excludeStories);
+        if(data == null) {
+            return AJAX_ERROR;
+        }
+        JSONSerializer serializer = new JSONSerializer();
+        if(!excludeStories) {
+            serializer.include("iterationGoals.backlogItems");
+            serializer.include("itemsWithoutGoal");
+            serializer.include("itemsWithoutGoal.businessThemes");
+            serializer.include("iterationGoals.backlogItems.businessThemes");
+        }
+        
+        json = serializer.prettyPrint(data);
         
         return AJAX_SUCCESS;
     }

@@ -310,28 +310,32 @@ $(document).ready( function() {
 		</td>
 	</tr>
 </table>
+--%>
+
 <script type="text/javascript" src="static/js/dynamics/utils.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
 <script type="text/javascript" src="static/js/dynamics/model.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
 <script type="text/javascript" src="static/js/dynamics/controller.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
 <script type="text/javascript" src="static/js/dynamics/dynamicTable.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
 <script type="text/javascript" src="static/js/dynamics/commonView.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
 
-<form onsubmit="return false;"><div id="iterationGoals" style="min-width: 800px; width: 98%;">&nbsp;</div></form>
+
+
+<form onsubmit="return false;"><div id="stories" style="min-width: 800px; width: 98%;">&nbsp;</div></form>
 <script type="text/javascript">
 $(document).ready(function() {
-  new IterationController(${iterationId}, $("#iterationGoals"));
+  new IterationController(${iterationId}, $("#stories"));
   $(document.body).bind("metricsUpdated", function() {
-	  var bigChart = $("#bigChart");
-	  bigChart.attr("src",bigChart.attr("src")+"#");
-    var smallChart = $("#smallChart");
-    smallChart.attr("src",smallChart.attr("src")+"#");
-    $("#iterationMetrics").load("iterationMetrics.action",{iterationId: ${iterationId}});
+	  //var bigChart = $("#bigChart");
+	  //bigChart.attr("src",bigChart.attr("src")+"#");
+    //var smallChart = $("#smallChart");
+    //smallChart.attr("src",smallChart.attr("src")+"#");
+    //$("#iterationMetrics").load("iterationMetrics.action",{iterationId: ${iterationId}});
 	});
 });
 </script>
 
 
-
+<%--
 
 <p><img src="drawChart.action?iterationId=${iteration.id}"
 	id="bigChart" width="780" height="600" /></p>

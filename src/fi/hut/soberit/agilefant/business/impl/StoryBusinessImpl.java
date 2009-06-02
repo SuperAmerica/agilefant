@@ -48,7 +48,7 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         if(storyId > 0) {
             item = storyDAO.get(storyId);
             if(item == null) {
-                throw new ObjectNotFoundException("backlogItem.notFound");
+                throw new ObjectNotFoundException("story.notFound");
             }
         }
         Backlog backlog = backlogDAO.get(backlogId);

@@ -2,6 +2,7 @@ package fi.hut.soberit.agilefant.web;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -13,6 +14,7 @@ import fi.hut.soberit.agilefant.business.ProductBusiness;
 import fi.hut.soberit.agilefant.business.ProjectBusiness;
 import fi.hut.soberit.agilefant.db.ProductDAO;
 import fi.hut.soberit.agilefant.model.Product;
+import fi.hut.soberit.agilefant.model.Story;
 import flexjson.JSONSerializer;
 
 @Component("productAction")
@@ -37,6 +39,8 @@ public class ProductAction extends BacklogContentsAction implements CRUDAction {
     private Product product;
 
     private Collection<Product> products = new ArrayList<Product>();
+    
+    
     
 //    private Map<Project, EffortSumData> effLeftSums;
 //    
@@ -257,4 +261,5 @@ public class ProductAction extends BacklogContentsAction implements CRUDAction {
     public void setProductBusiness(ProductBusiness productBusiness) {
         this.productBusiness = productBusiness;
     }
+
 }

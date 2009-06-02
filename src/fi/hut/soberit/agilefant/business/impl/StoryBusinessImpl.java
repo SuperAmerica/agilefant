@@ -2,6 +2,7 @@ package fi.hut.soberit.agilefant.business.impl;
 
 import java.util.Calendar;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,11 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         this.genericDAO = storyDAO;
         this.storyDAO = storyDAO;
     }
+    
+    public List<Story> getStoriesByBacklog(Backlog backlog) {
+        return storyDAO.getStoriesByBacklog(backlog);
+    }
+    
 
     public Story store(int storyId, int backlogId, Story dataItem, Set<Integer> responsibles) throws ObjectNotFoundException {
         Story item = null; 

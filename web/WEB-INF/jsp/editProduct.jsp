@@ -434,4 +434,43 @@ SimileAjax.Platform = new Object();*/
 	</tr>
 </table>
 --%>
+
+
+<ww:url id="createStoryLink" action="ajaxCreateStory" includeParams="none">
+  <ww:param name="backlogId" value="${product.id}" />
+</ww:url>
+
+<table>
+  <tr>
+    <td>
+      <div class="subItems" id="subItems_editProductStoryList">
+        <div class="subItemHeader">
+          <table cellspacing="0" cellpadding="0">
+            <tr>
+              <td class="header">Stories</td>
+              <td class="icons">
+                <table cellpadding="0" cellspacing="0">
+                  <tr>
+                    <td><ww:a cssClass="openCreateDialog openStoryDialog"
+                          href="%{createStoryLink}" onclick="return false;"
+                          title="Create a new story">
+                        </ww:a></td>
+                  </tr>
+                </table>     
+              </td>
+            </tr>
+          </table>
+        </div>
+        <c:if test="${!empty product.stories}">
+          <div class="subItemContent">
+            <%@ include file="./inc/_storyList.jsp"%>
+          </div>
+        </c:if>
+      </div>
+    </td>
+  </tr>
+</table>
+
+
+
 <%@ include file="./inc/_footer.jsp"%>

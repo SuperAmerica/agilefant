@@ -1,5 +1,8 @@
 package fi.hut.soberit.agilefant.web;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.opensymphony.xwork.ActionSupport;
@@ -7,8 +10,10 @@ import com.opensymphony.xwork.ActionSupport;
 import fi.hut.soberit.agilefant.business.BacklogBusiness;
 import fi.hut.soberit.agilefant.business.HourEntryBusiness;
 import fi.hut.soberit.agilefant.business.SettingBusiness;
+import fi.hut.soberit.agilefant.business.StoryBusiness;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.Backlog;
+import fi.hut.soberit.agilefant.model.Story;
 
 /**
  * Action for listing backlogs contents.
@@ -29,6 +34,8 @@ public class BacklogContentsAction extends ActionSupport {
     protected int backlogId;
 
     protected Backlog backlog;
+    
+    private List<Story> stories = new ArrayList<Story>();
 
 //    private List<BacklogItem> backlogItems = new ArrayList<BacklogItem>();
 //    
@@ -44,6 +51,9 @@ public class BacklogContentsAction extends ActionSupport {
 //    
 //    private AFTime spentEffortSum = new AFTime(0);
 //    
+    @Autowired
+    private StoryBusiness storyBusiness;
+    
     @Autowired
     protected BacklogBusiness backlogBusiness;
     
@@ -70,6 +80,8 @@ public class BacklogContentsAction extends ActionSupport {
         if (backlog == null) {
             return;
         }
+        
+        stories = storyBusiness.getStoriesByBacklog(backlog);
         
 //        backlogItems = backlogItemBusiness.getBacklogItemsByBacklog(backlog);
 //        backlogResponsibles = backlogItemBusiness.getResponsiblesByBacklog(backlog);
@@ -179,6 +191,18 @@ public class BacklogContentsAction extends ActionSupport {
 
     public void setSettingBusiness(SettingBusiness settingBusiness) {
         this.settingBusiness = settingBusiness;
+    }
+
+    public List<Story> getStories() {
+        return stories;
+    }
+
+    public void setStories(List<Story> stories) {
+        this.stories = stories;
+    }
+
+    public void setStoryBusiness(StoryBusiness storyBusiness) {
+        this.storyBusiness = storyBusiness;
     }
 
 }

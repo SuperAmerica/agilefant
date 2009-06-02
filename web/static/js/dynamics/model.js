@@ -210,7 +210,8 @@ IterationModel = function(iterationData, iterationId) {
 		this.containerStory.remove = function() {};
 		this.containerStory.tasks = this.tasksWithoutStory;
 		this.containerStory.metrics = {};
-		this.containerStory.reloadMetrics();
+		// TODO: Uncomment when metrics work again
+		//this.containerStory.reloadMetrics();
 		jQuery.each(iterationData.tasksWithoutStory, function(k,v) { 
 			me.tasksWithoutStory.push(ModelFactory.taskSingleton(v.id, me,me.containerStory, v));
 		});
@@ -316,7 +317,8 @@ StoryModel.prototype.addTask = function(story) {
 	task.backlog = this.iteration;
 	task.story = this;
 	this.tasks.push(task);
-	this.reloadMetrics();
+	// TODO: Uncomment when metrics work again
+	// this.reloadMetrics();
 };
 StoryModel.prototype.removeTask = function(task) {
 	var tmp = this.tasks;
@@ -326,7 +328,8 @@ StoryModel.prototype.removeTask = function(task) {
 			this.tasks.push(tmp[i]);
 		}
 	}
-	this.reloadMetrics();
+	// TODO: Uncomment when metrics work again
+	// this.reloadMetrics();
 };
 StoryModel.prototype.copy = function() {
 	var copy = new StoryModel({}, this.iteration);

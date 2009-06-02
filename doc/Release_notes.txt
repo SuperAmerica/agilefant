@@ -1,6 +1,6 @@
-Agilefant 1.6
+Agilefant 1.6 RC2
 RELEASE NOTES
-1.6.2009
+2.6.2009 
 
 INSTALLATION INSTRUCTIONS AND SYSTEM REQUIREMENTS
 -------------------------------------------------
@@ -59,6 +59,8 @@ CHANGES FROM AGILEFANT 1.5.5
 + Renovation of the iteration view (give us feedback at the forum!)
 + Calendar view to daily work view for browsing spent effort
 + Renamed Overhead as Baseline load
++ Renamed existing project statuses green, yellow and red
++ Added new project statuses grey and black
 + Terminology changed to match the concepts in Scrum:
       * Iteration goal =>Story
       * Backlog item in products and projects => Story

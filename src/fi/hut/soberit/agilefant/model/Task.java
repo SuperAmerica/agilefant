@@ -1,5 +1,7 @@
 package fi.hut.soberit.agilefant.model;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import javax.persistence.AttributeOverride;
@@ -7,14 +9,18 @@ import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.IndexColumn;
+import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.Type;
 
 import flexjson.JSON;
@@ -35,10 +41,15 @@ public class Task {
     private String description;
     private Iteration iteration;
     private Story story;
-    private List<Todo> todos;
-    private ExactEstimate estimate;
+    
+    private State state;
+    private Priority priority;
+    
+    private List<Todo> todos = new ArrayList<Todo>();
+    private ExactEstimate effortLeft;
     private ExactEstimate originalEstimate;
-    private List<TaskHistoryEntry> historyEntries;
+    private List<TaskHistoryEntry> historyEntries = new ArrayList<TaskHistoryEntry>();
+    private Collection<User> responsibles = new ArrayList<User>();
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -100,14 +111,14 @@ public class Task {
         return todos;
     }
 
-    public void setEstimate(ExactEstimate estimate) {
-        this.estimate = estimate;
+    public void setEffortLeft(ExactEstimate estimate) {
+        this.effortLeft = estimate;
     }
 
     @Embedded
-    @AttributeOverrides(@AttributeOverride(name = "minorUnits", column = @Column(name = "estimate")))
-    public ExactEstimate getEstimate() {
-        return estimate;
+    @AttributeOverrides(@AttributeOverride(name = "minorUnits", column = @Column(name = "effortleft")))
+    public ExactEstimate getEffortLeft() {
+        return effortLeft;
     }
 
     public void setHistoryEntries(List<TaskHistoryEntry> historyEntries) {
@@ -129,4 +140,44 @@ public class Task {
         this.originalEstimate = originalEstimate;
     }
 
+    @JSON
+    @Type(type = "fi.hut.soberit.agilefant.db.hibernate.EnumUserType", parameters = {
+                @Parameter(name = "useOrdinal", value = "true"),
+                @Parameter(name = "enumClassName", value = "fi.hut.soberit.agilefant.model.State")
+    })
+    public State getState() {
+        return state;
+    }
+
+    public void setState(State state) {
+        this.state = state;
+    }
+
+    @ManyToMany(
+            targetEntity = fi.hut.soberit.agilefant.model.User.class,
+            fetch = FetchType.LAZY
+    )
+    @JoinTable(
+            name = "task_user"
+    )
+    @JSON(include = false)
+    public Collection<User> getResponsibles() {
+        return responsibles;
+    }
+    
+    public void setResponsibles(Collection<User> responsibles) {
+        this.responsibles = responsibles;
+    }
+
+    @Type(type = "fi.hut.soberit.agilefant.db.hibernate.EnumUserType", parameters = {
+            @Parameter(name = "useOrdinal", value = "true"),
+            @Parameter(name = "enumClassName", value = "fi.hut.soberit.agilefant.model.Priority")
+    })
+    public Priority getPriority() {
+        return priority;
+    }
+
+    public void setPriority(Priority priority) {
+        this.priority = priority;
+    }
 }

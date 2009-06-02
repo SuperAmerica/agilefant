@@ -7,39 +7,46 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.support.PropertyComparator;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import fi.hut.soberit.agilefant.business.BacklogBusiness;
-import fi.hut.soberit.agilefant.business.BacklogItemBusiness;
 import fi.hut.soberit.agilefant.business.JSONBusiness;
 import fi.hut.soberit.agilefant.business.TeamBusiness;
 import fi.hut.soberit.agilefant.business.UserBusiness;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
-import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.Assignment;
 import fi.hut.soberit.agilefant.model.Backlog;
-import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Team;
 import fi.hut.soberit.agilefant.model.User;
 import flexjson.JSONSerializer;
 
+@Service("jsonBusiness")
+@Transactional
 public class JSONBusinessImpl implements JSONBusiness {
 
+    @Autowired
     private UserBusiness userBusiness;
+    @Autowired
     private BacklogBusiness backlogBusiness;
-    private BacklogItemBusiness backlogItemBusiness;
+    @Autowired
     private TeamBusiness teamBusiness;
 
+//  private BacklogItemBusiness backlogItemBusiness;
+    
     /** {@inheritDoc} */
     @SuppressWarnings("unchecked")
-    public String getUserChooserJSON(int backlogItemId, int backlogId) {
-        BacklogItem bli = null;
+    @Transactional(readOnly = true)
+    public String getUserChooserJSON(int backlogId) {
+//        BacklogItem bli = null;
         Backlog backlog = null;
         Collection<Integer> assignments = new ArrayList<Integer>();
         Collection<Integer> responsibles = new ArrayList<Integer>();
-        Map<Integer, AFTime> deltaOverheads = new HashMap<Integer, AFTime>();
+//        Map<Integer, AFTime> deltaOverheads = new HashMap<Integer, AFTime>();
 
         String backlogJson = "";
         String userJson = "";
@@ -48,50 +55,52 @@ public class JSONBusinessImpl implements JSONBusiness {
         String responsibleJson = "";
         String overheadJson = "";
 
-        if (!(backlogItemId == 0 && backlogId == 0)) {
-            try {
-                bli = backlogItemBusiness.getBacklogItem(backlogItemId);
-                if (backlogId > 0) {
-                    backlog = backlogBusiness.getBacklog(backlogId);
-                }
-                else if (bli != null) {
-                    backlog = bli.getBacklog();
-                }
-            } catch (ObjectNotFoundException onfe) {
-            }
-    
-            /*
-             * Get the assignments.
-             */
-            if (backlog != null) {
-                Project proj = null;
-                if (backlog instanceof Iteration) {
-                    proj = ((Iteration) backlog).getProject();
-                } else if (backlog instanceof Project) {
-                    proj = (Project) backlog;
-                }
-                if (proj != null) {
-                    for (Assignment ass : proj.getAssignments()) {
-                        assignments.add(ass.getUser().getId());
-                        deltaOverheads.put(ass.getUser().getId(), ass.getDeltaOverhead());
-                    }
-                }
-            }
-            /*
-             * Get the bli's responsibles.
-             */
-            if (bli != null) {
-                for (User user : bli.getResponsibles()) {
-                    responsibles.add(user.getId());
-                }
-            }
-        }
+//        if (backlog != null) {
+//            Project proj = null;
+//            if (backlog instanceof Iteration) {
+//                proj = ((Iteration) backlog).getProject();
+//            } else if (backlog instanceof Project) {
+//                proj = (Project) backlog;
+//            }
+//            if (proj != null) {
+//                for (Assignment ass : proj.getAssignments()) {
+//                    assignments.add(ass.getUser().getId());
+//                    deltaOverheads.put(ass.getUser().getId(), ass.getDeltaOverhead());
+//                }
+//            }
+//        }
+        
+//        if (!(backlogItemId == 0 && backlogId == 0)) {
+//            try {
+//                bli = backlogItemBusiness.getBacklogItem(backlogItemId);
+//                if (backlogId > 0) {
+//                    backlog = backlogBusiness.getBacklog(backlogId);
+//                }
+//                else if (bli != null) {
+//                    backlog = bli.getBacklog();
+//                }
+//            } catch (ObjectNotFoundException onfe) {
+//            }
+//    
+//            /*
+//             * Get the assignments.
+//             */
+//            
+//            /*
+//             * Get the bli's responsibles.
+//             */
+//            if (bli != null) {
+//                for (User user : bli.getResponsibles()) {
+//                    responsibles.add(user.getId());
+//                }
+//            }
+//        }
         /*
          * Get all teams and users as json
          */
-        List<User> users = userBusiness.getAllUsers();
+        List<User> users = new ArrayList<User>(userBusiness.retrieveAll());
         Collections.sort(users, new PropertyComparator("fullName", false, true));
-        List<Team> teams = teamBusiness.getAllTeams();
+        List<Team> teams = new ArrayList<Team>(teamBusiness.retrieveAll());
         Collections.sort(teams, new PropertyComparator("name", false, true));
         
         userJson = new JSONSerializer().include("id").include("fullName")
@@ -103,12 +112,12 @@ public class JSONBusinessImpl implements JSONBusiness {
         assignmentJson = new JSONSerializer().serialize(assignments);
         responsibleJson = new JSONSerializer().include("id").exclude("*")
                 .serialize(responsibles);
-        overheadJson = new JSONSerializer().serialize(deltaOverheads);
+//        overheadJson = new JSONSerializer().serialize(deltaOverheads);
         backlogJson = new JSONSerializer().include("id").include("defaultOverhead").exclude("*").serialize(backlog);
 
         return "{users:" + userJson + ",teams:" + teamJson + ",assignments:"
                 + assignmentJson + ",responsibles:" + responsibleJson + "," +
-                "overheads:" + overheadJson + "," +
+//                "overheads:" + overheadJson + "," +
                 "backlog:" + backlogJson + "}";
     }
     
@@ -128,9 +137,9 @@ public class JSONBusinessImpl implements JSONBusiness {
         this.backlogBusiness = backlogBusiness;
     }
 
-    public void setBacklogItemBusiness(BacklogItemBusiness backlogItemBusiness) {
-        this.backlogItemBusiness = backlogItemBusiness;
-    }
+//    public void setBacklogItemBusiness(BacklogItemBusiness backlogItemBusiness) {
+//        this.backlogItemBusiness = backlogItemBusiness;
+//    }
 
     public void setTeamBusiness(TeamBusiness teamBusiness) {
         this.teamBusiness = teamBusiness;

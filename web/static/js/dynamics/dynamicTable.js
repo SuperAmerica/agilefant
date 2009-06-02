@@ -1007,15 +1007,15 @@
 		  var opts = { captionText: "Stories", defaultSortColumn: 0};
 		  if(agilefantUtils.isTimesheetsEnabled()) {
 		      opts.colCss = {
-		        ':lt(7)': { 'background': '#eee' },
-		        ':eq(7)': { 'background': '#fff' },
-		        ':eq(8)': { 'background': '#fff' }
-		      };
-		  } else {
-		      opts.colCss = {
 		        ':lt(6)': { 'background': '#eee' },
 		        ':eq(6)': { 'background': '#fff' },
 		        ':eq(7)': { 'background': '#fff' }
+		      };
+		  } else {
+		      opts.colCss = {
+		        ':lt(5)': { 'background': '#eee' },
+		        ':eq(5)': { 'background': '#fff' },
+		        ':eq(6)': { 'background': '#fff' }
 			  };			  
 		  }
 		  addTableColumn(opts, 
@@ -1036,6 +1036,7 @@
 			        tooltip: 'Done / Total tasks',
 			        sort: null
 				  });
+		  /*
 		  addTableColumn(opts,
 				  { minwidth: 30, auto: true },
 				  { name: 'EL',
@@ -1048,6 +1049,7 @@
 			        tooltip: 'Total original estimate',
 			        sort: agilefantUtils.comparators.originalEstimateComparator
 				  });
+				  */
 		  if(agilefantUtils.isTimesheetsEnabled()) {
 			  addTableColumn(opts,
 					  { minwidth: 30, auto: true },

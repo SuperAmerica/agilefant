@@ -6,6 +6,11 @@ public interface GenericBusiness<T> {
 
     Collection<T> retrieveAll();
 
+    /**
+     * Returns the object with the given id.
+     * <p>
+     * Throws <code>ObjectNotFoundException</code> if not found.
+     */
     T retrieve(int id);
 
     void store(T object);
@@ -18,6 +23,11 @@ public interface GenericBusiness<T> {
 
     boolean exists(int id);
 
+    /**
+     * Returns the object with the given id.
+     * <p>
+     * Will return <code>null</code> if not found.
+     */
     T retrieveIfExists(int id);
 
 }

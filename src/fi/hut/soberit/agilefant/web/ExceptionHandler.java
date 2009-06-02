@@ -3,9 +3,14 @@ package fi.hut.soberit.agilefant.web;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
 import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
 
+@Component("exceptionHandler")
+@Scope("prototype")
 public class ExceptionHandler extends ActionSupport {
 
     private static final long serialVersionUID = 8739605249663386007L;

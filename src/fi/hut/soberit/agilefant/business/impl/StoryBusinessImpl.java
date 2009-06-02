@@ -41,6 +41,7 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         return storyDAO.getStoriesByBacklog(backlog);
     }
     
+    @Transactional(readOnly = true)
     public Collection<Task> getStoryContents(Story story) {
         // TODO Auto-generated method stub
         return null;

@@ -13,5 +13,5 @@ public interface JSONBusiness {
      * Get the JSON object needed for user chooser.
      * @return
      */
-    public String getUserChooserJSON(int backlogItemId, int backlogId);
+    public String getUserChooserJSON(int backlogId);
 }

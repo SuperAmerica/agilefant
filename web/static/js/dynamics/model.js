@@ -313,7 +313,7 @@ StoryModel.prototype.setTasks = function(tasks) {
 		}
 	}
 };
-StoryModel.prototype.addTask = function(story) {
+StoryModel.prototype.addTask = function(task) {
 	task.backlog = this.iteration;
 	task.story = this;
 	this.tasks.push(task);
@@ -369,6 +369,7 @@ StoryModel.prototype.setPriority = function(priority) {
 	this.priority = priority;
 	this.save();
 };
+/*
 StoryModel.prototype.getEffortLeft = function() {
 	return this.metrics.effortLeft;
 };
@@ -378,6 +379,7 @@ StoryModel.prototype.getEffortSpent = function() {
 StoryModel.prototype.getOriginalEstimate = function() {
 	return this.metrics.originalEstimate;
 };
+*/
 StoryModel.prototype.getDoneTasks = function() {
 	return this.metrics.doneTasks;
 };
@@ -397,7 +399,7 @@ StoryModel.prototype.moveToIteration = function(newIteration) {
 		cache: false,
 		type: "POST",
 		url: "moveStory.action",
-		data: {storyId: this.id, iterationId: newIteration, moveStorys: true}
+		data: {storyId: this.id, iterationId: newIteration, moveTasks: true}
 	});
 };
 StoryModel.prototype.remove = function() {
@@ -550,7 +552,7 @@ TaskModel.prototype.reloadData = function() {
 	}
 	this.updating = true;
 	$.ajax( {
-		url: "storyJSON.action",
+		url: "taskJSON.action",
 		data: {
 		storyId: this.id
 	},
@@ -780,16 +782,16 @@ TaskModel.prototype.save = function(synchronous, callback) {
 	var asynch = !synchronous;
 	var me = this;
 	var data = {
-			"story.name": this.name,
-			"story.state": this.state,
-			"story.priority": this.priority,
-			"story.description": this.description,
-			"story.effortLeft": this.effortLeft,
-			"story.originalEstimate": this.originalEstimate,
+			"task.name": this.name,
+			"task.state": this.state,
+			"task.priority": this.priority,
+			"task.description": this.description,
+			"task.effortLeft": this.effortLeft,
+			"task.originalEstimate": this.originalEstimate,
 			"userIds": [],
 			"themeIds": [],
-			backlogId: this.backlog.getId(),
-			storyId: this.id
+			"backlogId": this.backlog.getId(),
+			"task.id": this.id
 	};
 	if (this.story) {
 		data.storyId = this.story.id;
@@ -810,23 +812,23 @@ TaskModel.prototype.save = function(synchronous, callback) {
 		data.themeIds = agilefantUtils.objectToIdArray(this.themes);
 	}
 	//conversions
-	if (data["story.effortLeft"]) {
-		data["story.effortLeft"] /= 3600;
+	if (data["task.effortLeft"]) {
+		data["task.effortLeft"] /= 3600;
 	}
-	if (!data["story.effortLeft"] && data["story.effortLeft"] !== 0) {
-		data["story.effortLeft"] = "";
+	if (!data["task.effortLeft"] && data["task.effortLeft"] !== 0) {
+		data["task.effortLeft"] = "";
 	}
-	if (data["story.originalEstimate"]) {
-		data["story.originalEstimate"] /= 3600;
+	if (data["task.originalEstimate"]) {
+		data["task.originalEstimate"] /= 3600;
 	}
-	if (!data["story.originalEstimate"] && data["story.originalEstimate"] !== 0) {
-		data["story.originalEstimate"] = "";
+	if (!data["task.originalEstimate"] && data["task.originalEstimate"] !== 0) {
+		data["task.originalEstimate"] = "";
 	}
 	if (!this.name) {
-		data["story.name"] = "";
+		data["task.name"] = "";
 	}
 	if (!this.description) {
-		data["story.description"] = "";
+		data["task.description"] = "";
 	}
 	jQuery
 	.ajax( {
@@ -845,7 +847,7 @@ TaskModel.prototype.save = function(synchronous, callback) {
 	cache: false,
 	dataType: "json",
 	type: "POST",
-	url: "ajaxStoreStory.action",
+	url: "ajaxStoreTask.action",
 	data: data
 	});
 };

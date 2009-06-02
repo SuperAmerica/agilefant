@@ -1,17 +1,24 @@
 package fi.hut.soberit.agilefant.web;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
 import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
 
 import fi.hut.soberit.agilefant.business.JSONBusiness;
 
+@Component("jsonAction")
+@Scope("prototype")
 public class JSONAction extends ActionSupport {
     private static final long serialVersionUID = -6416506476416200967L;
     
+    @Autowired
     private JSONBusiness jsonBusiness;
     
     private int backlogId;
-    private int backlogItemId;
+//    private int backlogItemId;
     private String jsonData = "";
 
     @Override
@@ -20,7 +27,7 @@ public class JSONAction extends ActionSupport {
     }
     
     public String ajaxGetUserChooserJSON() {
-        jsonData = jsonBusiness.getUserChooserJSON(backlogItemId, backlogId);
+        jsonData = jsonBusiness.getUserChooserJSON(backlogId);
         return Action.SUCCESS;
     }
     
@@ -37,13 +44,13 @@ public class JSONAction extends ActionSupport {
         this.backlogId = backlogId;
     }
 
-    public int getBacklogItemId() {
-        return backlogItemId;
-    }
-
-    public void setBacklogItemId(int backlogItemId) {
-        this.backlogItemId = backlogItemId;
-    }
+//    public int getBacklogItemId() {
+//        return backlogItemId;
+//    }
+//
+//    public void setBacklogItemId(int backlogItemId) {
+//        this.backlogItemId = backlogItemId;
+//    }
 
     public void setJsonBusiness(JSONBusiness jsonBusiness) {
         this.jsonBusiness = jsonBusiness;

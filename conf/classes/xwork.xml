@@ -35,10 +35,9 @@
 				<param name="status">200</param>
 			</result>
 			<result name="rootException" type="dispatcher">exceptionHandler</result>
-			<!-- <result name="dbException" type="chain">dbExceptionHandler</result> -->
+			<result name="dbException" type="chain">dbExceptionHandler</result>
 		</global-results>
-		 
-<!-- 
+
 		<global-exception-mappings>
             <exception-mapping exception="java.lang.Exception" result="rootException"/>
         </global-exception-mappings>
@@ -50,7 +49,7 @@
 			class="fi.hut.soberit.agilefant.web.ExceptionHandler" method="handleDbException">
 			<result name="success" type="dispatcher">/WEB-INF/jsp/fatalError.jsp</result>
 		</action>
- -->
+
 		<!-- Context view -->
 		<action name="contextView"
 			class="fi.hut.soberit.agilefant.web.ContextViewAction">
@@ -265,7 +264,17 @@
 		<action name="ajaxCreateTask" method="create"
             class="taskAction">
             <result name="success" type="dispatcher">/WEB-INF/jsp/forms/createTask.jsp</result>
-        </action>
+    </action>
+    
+    <action name="ajaxStoreTask" method="ajaxStoreTask" class="taskAction">
+      <result name="ajax_error" type="httpheader">
+        <param name="status">400</param>
+      </result>
+      <result name="ajax_success" type="dispatcher">
+        <param name="status">200</param>
+        <param name="location">/WEB-INF/jsp/jsonData.jsp</param>
+      </result>
+    </action>
 
 		<!-- /Task actions -->
 
@@ -1036,10 +1045,10 @@
         <action name="getProductJSON" method="getProductJSON" class="productAction">
             <result>/WEB-INF/jsp/jsonData.jsp</result>
         </action>
-        <!-- 
+        
         <action name="getUserChooserJSON" method="ajaxGetUserChooserJSON" class="jsonAction">
             <result>/WEB-INF/jsp/jsonData.jsp</result>
-        </action> -->
+        </action>
         <!-- /JSON actions -->
         <!-- 
         <action name="qr" method="resolveLinkTarget" class="quickReferenceAction">

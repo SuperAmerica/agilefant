@@ -139,6 +139,9 @@ IterationController.prototype = {
     		get: function() { 
     		return story.getDoneTasks() + " / " + story.getTotalTasks();
     	}});
+    	
+    	// TODO: 090602 Reko: Implement storypoints
+    	/*
     	var elsum = row.createCell({
     		get: function() { return story.getEffortLeft(); },
     		decorator: agilefantUtils.aftimeToString
@@ -146,7 +149,7 @@ IterationController.prototype = {
     	var oesum = row.createCell({
     		get: function() { return story.getOriginalEstimate(); },
     		decorator: agilefantUtils.aftimeToString
-    	});
+    	});*/
     	if(agilefantUtils.isTimesheetsEnabled()) {
     		var essum = row.createCell({
     			get: function() { return story.getEffortSpent(); },
@@ -279,6 +282,7 @@ IterationController.prototype = {
     	var tasks = row.createCell({
     		get: function() { return story.getDoneTasks() + " / " + story.getTotalTasks(); }
     	});
+    	/*
     	var elsum = row.createCell({
     		get: function() { return story.getEffortLeft(); },
     		decorator: agilefantUtils.aftimeToString
@@ -286,7 +290,7 @@ IterationController.prototype = {
     	var oesum = row.createCell({
     		get: function() { return story.getOriginalEstimate(); },
     		decorator: agilefantUtils.aftimeToString
-    	});
+    	});*/
     	if(agilefantUtils.isTimesheetsEnabled()) {
     		var essum = row.createCell({
     			get: function() { return story.getEffortSpent(); },

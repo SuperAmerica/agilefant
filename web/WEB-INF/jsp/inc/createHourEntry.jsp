@@ -36,7 +36,7 @@ function updatePastEffort(immediate) {
 
 $(document).ready(function() {
     $('#userChooserLink-createHourEntry').userChooser({
-        backlogItemId: ${backlogItemId},
+        storyId: ${storyId},
         backlogId: ${backlogId},
         userListContainer: '#userListContainer-createHourEntry',
         selectThese: [${currentUser.id}],

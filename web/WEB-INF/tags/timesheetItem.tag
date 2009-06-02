@@ -56,10 +56,10 @@
 			<c:set var="heDivId" value="${heDivId + 1}" scope="request" />
 			<tr class="story node${divId} ${blueLeft} toggleall">
 				<c:if test="${!empty bli.hourEntries}">
-					<th class="story first" colspan="3">&nbsp; &nbsp; &raquo; <a onclick="javascript:$('.hour${heDivId}').toggle();"><c:out value="${bli.backlogItem.name}"/></a></th>
+					<th class="story first" colspan="3">&nbsp; &nbsp; &raquo; <a onclick="javascript:$('.hour${heDivId}').toggle();"><c:out value="${bli.story.name}"/></a></th>
 				</c:if>
 				<c:if test="${empty bli.hourEntries}">
-					<th class="story first" colspan="3">&nbsp; &nbsp; &raquo; <c:out value="${bli.backlogItem.name}"/></th>
+					<th class="story first" colspan="3">&nbsp; &nbsp; &raquo; <c:out value="${bli.story.name}"/></th>
 				</c:if>
 				<th class="story"><c:out value="${bli.hourTotal}"/></th>
 			</tr>

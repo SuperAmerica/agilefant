@@ -547,9 +547,9 @@ TaskModel.prototype.reloadData = function() {
 	}
 	this.updating = true;
 	$.ajax( {
-		url: "backlogItemJSON.action",
+		url: "storyJSON.action",
 		data: {
-		backlogItemId: this.id
+		storyId: this.id
 	},
 	async: false,
 	cache: false,
@@ -733,7 +733,7 @@ TaskModel.prototype.remove = function() {
 	type: "POST",
 	url: "ajaxDeleteStory.action",
 	data: {
-		backlogItemId: this.id
+		storyId: this.id
 	}
 	});
 
@@ -749,7 +749,7 @@ TaskModel.prototype.resetOriginalEstimate = function() {
 	}
 	var me = this;
 	var data = {
-			backlogItemId: this.id
+			storyId: this.id
 	};
 	jQuery
 	.ajax( {
@@ -776,16 +776,16 @@ TaskModel.prototype.save = function(synchronous, callback) {
 	var asynch = !synchronous;
 	var me = this;
 	var data = {
-			"backlogItem.name": this.name,
-			"backlogItem.state": this.state,
-			"backlogItem.priority": this.priority,
-			"backlogItem.description": this.description,
-			"backlogItem.effortLeft": this.effortLeft,
-			"backlogItem.originalEstimate": this.originalEstimate,
+			"story.name": this.name,
+			"story.state": this.state,
+			"story.priority": this.priority,
+			"story.description": this.description,
+			"story.effortLeft": this.effortLeft,
+			"story.originalEstimate": this.originalEstimate,
 			"userIds": [],
 			"themeIds": [],
 			backlogId: this.backlog.getId(),
-			backlogItemId: this.id
+			storyId: this.id
 	};
 	if (this.iterationGoal) {
 		data.iterationGoalId = this.iterationGoal.id;
@@ -806,23 +806,23 @@ TaskModel.prototype.save = function(synchronous, callback) {
 		data.themeIds = agilefantUtils.objectToIdArray(this.themes);
 	}
 	//conversions
-	if (data["backlogItem.effortLeft"]) {
-		data["backlogItem.effortLeft"] /= 3600;
+	if (data["story.effortLeft"]) {
+		data["story.effortLeft"] /= 3600;
 	}
-	if (!data["backlogItem.effortLeft"] && data["backlogItem.effortLeft"] !== 0) {
-		data["backlogItem.effortLeft"] = "";
+	if (!data["story.effortLeft"] && data["story.effortLeft"] !== 0) {
+		data["story.effortLeft"] = "";
 	}
-	if (data["backlogItem.originalEstimate"]) {
-		data["backlogItem.originalEstimate"] /= 3600;
+	if (data["story.originalEstimate"]) {
+		data["story.originalEstimate"] /= 3600;
 	}
-	if (!data["backlogItem.originalEstimate"] && data["backlogItem.originalEstimate"] !== 0) {
-		data["backlogItem.originalEstimate"] = "";
+	if (!data["story.originalEstimate"] && data["story.originalEstimate"] !== 0) {
+		data["story.originalEstimate"] = "";
 	}
 	if (!this.name) {
-		data["backlogItem.name"] = "";
+		data["story.name"] = "";
 	}
 	if (!this.description) {
-		data["backlogItem.description"] = "";
+		data["story.description"] = "";
 	}
 	jQuery
 	.ajax( {
@@ -950,7 +950,7 @@ TaskHourEntryModel.prototype.save = function(synchronous, callback) {
 		data["hourEntry.timeSpent"] = "";
 	}
 
-	data.backlogItemId = this.task.getId();
+	data.storyId = this.task.getId();
 	data.hourEntryId = this.id;
 	var me = this;
 	jQuery.ajax({
@@ -1041,7 +1041,7 @@ TodoModel.prototype.save = function(synchronous, callback) {
 	var asynch = !synchronous;
 	var data = {
 			"todoId": this.id,
-			"backlogItemId": this.task.getId(),
+			"storyId": this.task.getId(),
 			"todo.state": this.state,
 			"todo.name": this.name
 	};

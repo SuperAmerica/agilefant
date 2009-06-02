@@ -492,7 +492,7 @@ IterationGoalController.prototype = {
 				bli.setUserIds(agilefantUtils.objectToIdArray(users));	  
 			},
 			backlogId: bli.backlog.getId(),
-			backlogItemId: bli.getId()
+			storyId: bli.getId()
 		});
 		var el = row.createCell({
 			type: "effort",
@@ -688,7 +688,7 @@ IterationGoalController.prototype = {
 				bli.setUserIds(agilefantUtils.objectToIdArray(users));	  
 			},
 			backlogId: bli.backlog.getId(),
-			backlogItemId: bli.getId()
+			storyId: bli.getId()
 		});
 		var el = row.createCell();
 		var oe = row.createCell({
@@ -1030,7 +1030,7 @@ TaskController.prototype = {
 	createEffortEntry: function() {
 		var me = this;
 		var parent = $("<div />").appendTo(document.body);
-		parent.load("newHourEntry.action", {backlogItemId: this.model.getId()}, function() { 
+		parent.load("newHourEntry.action", {storyId: this.model.getId()}, function() { 
 			var form = parent.find("form");
 			var saveEffort = function() {
 				if(!form.valid()) {

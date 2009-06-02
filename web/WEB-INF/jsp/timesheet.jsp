@@ -25,7 +25,7 @@ $(document).ready(function() {
     $('#userChooserLink-createBLI').userChooser({
         legacyMode: false,
         renderFor: 'allUsers',
-        backlogItemId: 0,
+        storyId: 0,
         userListContainer: '#userListContainer-createBLI',
         emptySelectionText: "(all)"
     });

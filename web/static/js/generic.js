@@ -8,10 +8,10 @@ function confirmDelete() { return confirm("Are you sure?"); }
 function confirmDeleteTeam() { return confirm("Really delete the team?"); }
 function confirmReset() { return confirm("Really reset the original estimate?"); }
 
-function deleteStory(backlogItemId) {
+function deleteStory(storyId) {
 	var url = "ajaxDeleteStory.action";			
 	if (confirmDeleteBli()) {
-		$.post(url,{backlogItemId: backlogItemId},function(data) {
+		$.post(url,{storyId: storyId},function(data) {
 			reloadPage();
 		});
 	}
@@ -134,10 +134,10 @@ function handleTabEvent(target, context, id, tabId, bliContext) {
     }
     else {
         var targetAction = {
-        	"bli": "backlogItemTabs.action",
-        	"bliWorkInProgress": "backlogItemTabs.action",
-        	"bliDWInterations": "backlogItemTabs.action",
-        	"bliDWProjects": "backlogItemTabs.action",
+        	"bli": "storyTabs.action",
+        	"bliWorkInProgress": "storyTabs.action",
+        	"bliDWInterations": "storyTabs.action",
+        	"bliDWProjects": "storyTabs.action",
             "project": "projectTabs.action",
             "iteration": "iterationTabs.action",
             "iterationGoal": "iterationGoalTabs.action",
@@ -149,19 +149,19 @@ function handleTabEvent(target, context, id, tabId, bliContext) {
         
         var targetParams = {
         	"bli": {
-                backlogItemId: id,
+                storyId: id,
                 bliListContext: bliContext
             },
             "bliWorkInProgress": {
-                backlogItemId: id,
+                storyId: id,
                 bliListContext: bliContext
             },
             "bliDWInterations": {
-                backlogItemId: id,
+                storyId: id,
                 bliListContext: bliContext
             },
             "bliDWProjects": {
-                backlogItemId: id,
+                storyId: id,
                 bliListContext: bliContext
             },
             "project": {
@@ -281,11 +281,11 @@ function resetBLIOriginalEstimate(bliId, me) {
         return false;
     }
     // Send the request to the server
-    jQuery.post('resetBliOrigEstAndEffortLeft.action', {backlogItemId: bliId});
+    jQuery.post('resetBliOrigEstAndEffortLeft.action', {storyId: bliId});
     
     var form = $(me).parents('form:eq(0)');
-    var origEstField = form.find('input[name=backlogItem.originalEstimate]').removeAttr('disabled').val('');
-    var effLeftField = form.find('input[name=backlogItem.effortLeft]');
+    var origEstField = form.find('input[name=story.originalEstimate]').removeAttr('disabled').val('');
+    var effLeftField = form.find('input[name=story.effortLeft]');
     
     effLeftField.parents('tr:eq(0)').remove();
     

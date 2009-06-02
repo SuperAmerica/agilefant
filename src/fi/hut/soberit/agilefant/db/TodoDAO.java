@@ -23,7 +23,7 @@ public interface TodoDAO extends GenericDAO<Todo> {
      *                array of accepted states
      * @return all todos matching the criteria
      */
-    public Collection<Todo> getTodosByStateAndStory(Task task,
+    public Collection<Todo> getTodosByStateAndTask(Task task,
             State[] states);
 
     /**
@@ -58,7 +58,7 @@ public interface TodoDAO extends GenericDAO<Todo> {
     /**
      * Finds the lowest ranked todo in given task.
      * 
-     * @param backlogItem
+     * @param task
      * @return lowest ranked todo in task, null if task does not
      *         have any todos
      */

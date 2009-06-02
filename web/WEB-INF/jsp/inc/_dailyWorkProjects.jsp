@@ -13,7 +13,7 @@
 
 $(document).ready(function() {        
     <c:forEach items="${openStoryTabs}" var="openStory">
-        handleTabEvent("backlogItemTabContainer-${openStory[0]}-${bliListContext}", "bliDWProjects", ${openStory[0]}, ${openStory[1]}, '${bliListContext}');
+        handleTabEvent("storyTabContainer-${openStory[0]}-${bliListContext}", "bliDWProjects", ${openStory[0]}, ${openStory[1]}, '${bliListContext}');
     </c:forEach>
 });
 
@@ -99,14 +99,14 @@ $(document).ready(function() {
 
 <table class="dailyWorkStorys">
 <tr>
-				<td class="backlogItemList"><display:table class="dailyWorkProject"
+				<td class="storyList"><display:table class="dailyWorkProject"
 					name="${bliMap[pro]}" id="row"
 					requestURI="${currentAction}.action">					
 
 					<display:column sortable="true" sortProperty="name" title="Name" >						
 						<div style="overflow:hidden; width: 170px; max-height: 3.7em;">
 						<c:forEach items="${row.businessThemes}" var="businessTheme">
-                            <a href="#" onclick="handleTabEvent('backlogItemTabContainer-${row.id}-${bliListContext}','bliDWProjects',${row.id},0, '${bliListContext}'); return false;">
+                            <a href="#" onclick="handleTabEvent('storyTabContainer-${row.id}-${bliListContext}','bliDWProjects',${row.id},0, '${bliListContext}'); return false;">
                                 <c:choose>
 	                                <c:when test="${businessTheme.global}">
 	                                   <span class="businessTheme globalThemeColors" title="${aef:stripHTML(businessTheme.description)}"><c:out value="${businessTheme.name}"/></span>
@@ -117,24 +117,24 @@ $(document).ready(function() {
 	                           </c:choose>
                             </a>
                         </c:forEach>												
-						<a class="nameLink" onclick="handleTabEvent('backlogItemTabContainer-${row.id}-${bliListContext}','bliDWProjects',${row.id},0, '${bliListContext}'); return false;">
+						<a class="nameLink" onclick="handleTabEvent('storyTabContainer-${row.id}-${bliListContext}','bliDWProjects',${row.id},0, '${bliListContext}'); return false;">
 							${aef:html(row.name)}
 						</a>
 						</div>
-						<div id="backlogItemTabContainer-${row.id}-${bliListContext}" class="tabContainer" style="overflow:visible; white-space: nowrap; width: 0px;"></div>
+						<div id="storyTabContainer-${row.id}-${bliListContext}" class="tabContainer" style="overflow:visible; white-space: nowrap; width: 0px;"></div>
 					</display:column>
 
 					<display:column sortable="true" title="Responsibles" class="responsibleColumn">
-						<div><aef:responsibleColumn backlogItemId="${row.id}"/></div>
+						<div><aef:responsibleColumn storyId="${row.id}"/></div>
 					</display:column>
 
 					<display:column sortable="true" defaultorder="descending"
 						title="Priority">
-						<ww:text name="backlogItem.priority.${row.priority}" />
+						<ww:text name="story.priority.${row.priority}" />
 					</display:column>
 
 					<display:column title="Progress" sortable="false" class="todoColumn">
-						<aef:backlogItemProgressBar backlogItem="${row}" bliListContext="${bliListContext}" dialogContext="${dialogContext}" hasLink="${true}"/>												
+						<aef:storyProgressBar story="${row}" bliListContext="${bliListContext}" dialogContext="${dialogContext}" hasLink="${true}"/>												
 					</display:column>
 
 					<display:column sortable="true" sortProperty="effortLeft"
@@ -177,7 +177,7 @@ $(document).ready(function() {
 					</c:choose>
 
 					<display:column title="Actions">
-						<img src="static/img/edit.png" alt="Edit" title="Edit" style="cursor: pointer;" onclick="handleTabEvent('backlogItemTabContainer-${row.id}-${bliListContext}','bliDWProjects',${row.id},0, '${bliListContext}'); return false;" />
+						<img src="static/img/edit.png" alt="Edit" title="Edit" style="cursor: pointer;" onclick="handleTabEvent('storyTabContainer-${row.id}-${bliListContext}','bliDWProjects',${row.id},0, '${bliListContext}'); return false;" />
 						<img src="static/img/delete_18.png" alt="Delete" title="Delete" style="cursor: pointer;" onclick="deleteStory(${row.id}); return false;" />
 					</display:column>
 

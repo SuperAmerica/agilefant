@@ -110,7 +110,7 @@ public interface TodoBusiness extends GenericBusiness<Todo>{
 
     public abstract Todo getTodoById(int todoId) throws ObjectNotFoundException;
     
-    public Map<Integer,Integer> getTodoCountByState(int backlogItemId);
+    public Map<Integer,Integer> getTodoCountByState(int storyId);
     
     public Todo retrieve(int todoId);
 }

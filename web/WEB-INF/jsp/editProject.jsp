@@ -60,7 +60,7 @@ $(document).ready(function() {
             selectAtLeast: 0,
             aftime: true
         },
-        backlogItemId: 0
+        storyId: 0
     });
 });
 //-->

@@ -11,7 +11,7 @@
 
 $(document).ready(function() {        
     <c:forEach items="${openStoryTabs}" var="openStory">
-        handleTabEvent("backlogItemTabContainer-${openStory[0]}-${bliListContext}", "bliWorkInProgress", ${openStory[0]}, ${openStory[1]}, '${bliListContext}');
+        handleTabEvent("storyTabContainer-${openStory[0]}-${bliListContext}", "bliWorkInProgress", ${openStory[0]}, ${openStory[1]}, '${bliListContext}');
     </c:forEach>
 });
 
@@ -28,7 +28,7 @@ $(document).ready(function() {
 	<display:column sortable="true" sortProperty="name" title="Name">				
 		<div style="overflow:hidden; width: 150px; max-height: 3.7em;">
 		<c:forEach items="${row.businessThemes}" var="businessTheme">
-            <a href="#" onclick="handleTabEvent('backlogItemTabContainer-${row.id}-${bliListContext}','bli',${row.id},3, '${bliListContext}'); return false;">
+            <a href="#" onclick="handleTabEvent('storyTabContainer-${row.id}-${bliListContext}','bli',${row.id},3, '${bliListContext}'); return false;">
                 <c:choose>
                    <c:when test="${businessTheme.global}">
                       <span class="businessTheme globalThemeColors" title="${businessTheme.description}"><c:out value="${businessTheme.name}"/></span>
@@ -39,17 +39,17 @@ $(document).ready(function() {
                 </c:choose>
             </a>
         </c:forEach>
-		<a class="nameLink" onclick="handleTabEvent('backlogItemTabContainer-${row.id}-${bliListContext}','bliWorkInProgress',${row.id},0,'${bliListContext}'); return false;">
+		<a class="nameLink" onclick="handleTabEvent('storyTabContainer-${row.id}-${bliListContext}','bliWorkInProgress',${row.id},0,'${bliListContext}'); return false;">
 			${aef:html(row.name)}
 		</a>
 		</div>
-		<div id="backlogItemTabContainer-${row.id}-${bliListContext}" class="tabContainer" style="overflow:visible; white-space: nowrap; width: 0px;"></div>		
+		<div id="storyTabContainer-${row.id}-${bliListContext}" class="tabContainer" style="overflow:visible; white-space: nowrap; width: 0px;"></div>		
 	</display:column>
 
 	<!-- Display progress -->
 	<display:column title="Progress" sortable="false" class="progressColumn">
 		<div class="tinyfier">
-			<aef:backlogItemProgressBar backlogItem="${row}" bliListContext="${bliListContext}" dialogContext="${dialogContext}" hasLink="${true}"/>
+			<aef:storyProgressBar story="${row}" bliListContext="${bliListContext}" dialogContext="${dialogContext}" hasLink="${true}"/>
 		</div>		
 	</display:column>
 

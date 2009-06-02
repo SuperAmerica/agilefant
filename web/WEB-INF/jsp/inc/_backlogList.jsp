@@ -30,7 +30,7 @@ function disableThemeSelect(value) {
 
 $(document).ready(function() {
     <c:forEach items="${openStoryTabs}" var="openStory">
-        handleTabEvent("backlogItemTabContainer-${openStory[0]}-${bliListContext}", "bli", ${openStory[0]}, ${openStory[1]}, '${bliListContext}');
+        handleTabEvent("storyTabContainer-${openStory[0]}-${bliListContext}", "bli", ${openStory[0]}, ${openStory[1]}, '${bliListContext}');
     </c:forEach>
     $('#themeChooserLink-multipleSelect').themeChooser({
         backlogId: 'select[name=targetBacklog]',
@@ -39,7 +39,7 @@ $(document).ready(function() {
     $('#userChooserLink-multipleSelect').userChooser({
         backlogIdField: 'select[name=targetBacklog]',
         userListContainer: '#userListContainer-multipleSelect',
-        backlogItemId: 0,
+        storyId: 0,
         legacyMode: false
     });
 });
@@ -57,7 +57,7 @@ $(document).ready(function() {
 		<display:column sortable="false" title="<input type='checkbox' name='selectall' onclick='selectAllBLIs(this.checked)'/>" class="selectColumn">
 			<div><ww:checkbox name="selected" fieldValue="${row.id}" /></div>
 			<div style="height: 15px;"></div>
-			<div id="backlogItemTabContainer-${row.id}-${bliListContext}" class="tabContainer" style="overflow:visible; white-space: nowrap; width: 15px;"></div>
+			<div id="storyTabContainer-${row.id}-${bliListContext}" class="tabContainer" style="overflow:visible; white-space: nowrap; width: 15px;"></div>
 		</display:column>
 		
 		<!-- Make the columns fit in the iteration-page. -->
@@ -74,7 +74,7 @@ $(document).ready(function() {
 			<div id="bli_${row.id}">
 
             <c:forEach items="${backlogThemes[row]}" var="businessTheme">
-            	<a href="#" onclick="handleTabEvent('backlogItemTabContainer-${row.id}-${bliListContext}','bli',${row.id},0, '${bliListContext}'); return false;">
+            	<a href="#" onclick="handleTabEvent('storyTabContainer-${row.id}-${bliListContext}','bli',${row.id},0, '${bliListContext}'); return false;">
             	   <c:choose>
             	       <c:when test="${businessTheme.global}">
             	           <span class="businessTheme globalThemeColors" title="${aef:stripHTML(businessTheme.description)}"><c:out value="${businessTheme.name}"/></span>
@@ -86,7 +86,7 @@ $(document).ready(function() {
             	</a>
             </c:forEach>
             
-			<a class="nameLink" onclick="handleTabEvent('backlogItemTabContainer-${row.id}-${bliListContext}','bli',${row.id},0, '${bliListContext}'); return false;">
+			<a class="nameLink" onclick="handleTabEvent('storyTabContainer-${row.id}-${bliListContext}','bli',${row.id},0, '${bliListContext}'); return false;">
 				${aef:html(row.name)}
 			</a>			
 			</div>						
@@ -124,18 +124,18 @@ $(document).ready(function() {
 
 		<display:column sortable="true" defaultorder="descending"
 			title="Priority">
-			<ww:text name="backlogItem.priority.${row.priority}" />
+			<ww:text name="story.priority.${row.priority}" />
 		</display:column>
 
 		<display:column title="Progress" sortable="false" class="todoColumn">			
 			<c:set var="itemTodos" value="${backlogTodos[row]}"/>
-			<a class="nameLink" onclick="handleTabEvent('backlogItemTabContainer-${row.id}-${bliListContext}','${dialogContext}',${row.id},1,'${bliListContext}'); return false;">
+			<a class="nameLink" onclick="handleTabEvent('storyTabContainer-${row.id}-${bliListContext}','${dialogContext}',${row.id},1,'${bliListContext}'); return false;">
 			<c:choose>
 				<c:when test="${itemTodos != null && itemTodos.total != 0}">		
 					${itemTodos.doneTodos} / ${itemTodos.total} TODOs done <br />
 				</c:when>
 				<c:otherwise>		
-					<ww:text name="backlogItem.state.${row.state}"/><br />
+					<ww:text name="story.state.${row.state}"/><br />
 				</c:otherwise>
 			</c:choose>
 			</a>										
@@ -224,7 +224,7 @@ $(document).ready(function() {
 		</c:choose>
 		
 		<display:column title="Actions" sortable="false">
-			<img src="static/img/edit.png" alt="Edit" title="Edit" style="cursor: pointer;" onclick="handleTabEvent('backlogItemTabContainer-${row.id}-${bliListContext}','bli',${row.id},0, '${bliListContext}'); return false;" />
+			<img src="static/img/edit.png" alt="Edit" title="Edit" style="cursor: pointer;" onclick="handleTabEvent('storyTabContainer-${row.id}-${bliListContext}','bli',${row.id},0, '${bliListContext}'); return false;" />
 			<img src="static/img/delete_18.png" alt="Delete" title="Delete" style="cursor: pointer;" onclick="deleteStory(${row.id}); return false;" />
 		</display:column>
 		

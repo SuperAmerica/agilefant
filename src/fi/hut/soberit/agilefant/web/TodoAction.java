@@ -184,7 +184,7 @@ public class TodoAction extends ActionSupport {
         if (storable.getTask() == null) {
             Task task = taskBusiness.retrieve(taskId);
             if (task == null) {
-                super.addActionError(super.getText("backlogItem.notFound"));
+                super.addActionError(super.getText("story.notFound"));
                 return;
             }
             storable.setTask(task);

@@ -570,7 +570,7 @@
 					me.render();
 				},
 				backlogId: this.options.backlogId,
-				backlogItemId: this.options.backlogItemId
+				storyId: this.options.storyId
 				});
 				uc.init();
 				return;

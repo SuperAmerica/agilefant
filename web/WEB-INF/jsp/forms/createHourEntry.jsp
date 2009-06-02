@@ -32,7 +32,7 @@ function updatePastEffort(immediate) {
 
 $(document).ready(function() {
     $('#userChooserLink-createHourEntry').userChooser({
-        backlogItemId: ${backlogItemId},
+        storyId: ${storyId},
         backlogId: ${backlogId},
         userListContainer: '#userListContainer-createHourEntry',
         selectThese: [${currentUser.id}],
@@ -48,7 +48,7 @@ $(document).ready(function() {
 
 <div class="validateWrapper validateNewHourEntry"><ww:form
 	action="storeHourEntry">
-	<ww:hidden name="backlogItemId" />
+	<ww:hidden name="storyId" />
 	<ww:hidden name="backlogId" />
 
 	<table class="formTable">

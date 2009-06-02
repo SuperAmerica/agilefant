@@ -134,7 +134,7 @@ public class StoryAction extends ActionSupport implements CRUDAction {
             backlogId = story.getBacklog().getId();
             storyBusiness.delete(storyId);
         } catch (ObjectNotFoundException e) {
-            super.addActionError(super.getText("backlogItem.notFound"));
+            super.addActionError(super.getText("story.notFound"));
             return ERROR;
         }
 
@@ -146,7 +146,7 @@ public class StoryAction extends ActionSupport implements CRUDAction {
         try {
             storyBusiness.delete(storyId);
         } catch (ObjectNotFoundException e) {
-            super.addActionError(super.getText("backlogItem.notFound"));
+            super.addActionError(super.getText("story.notFound"));
             return CRUDAction.AJAX_ERROR;
         }
 
@@ -157,7 +157,7 @@ public class StoryAction extends ActionSupport implements CRUDAction {
     public String edit() {
         story = storyBusiness.retrieveIfExists(storyId);
         if (story == null) {
-            super.addActionError(super.getText("backlogItem.notFound"));
+            super.addActionError(super.getText("story.notFound"));
             return Action.ERROR;
         }
         backlog = story.getBacklog();
@@ -304,8 +304,8 @@ public class StoryAction extends ActionSupport implements CRUDAction {
         return story.getName();
     }
 
-    public void setStoryName(String backlogItemName) {
-        story.setName(backlogItemName);
+    public void setStoryName(String storyName) {
+        story.setName(storyName);
     }
 
     public State getState() {

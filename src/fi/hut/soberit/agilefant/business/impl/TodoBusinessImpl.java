@@ -197,21 +197,6 @@ public class TodoBusinessImpl extends GenericBusinessImpl<Todo> implements TodoB
         return todo;
     }
 
-    //TODO: refactor!
-    public Map<Integer, Integer> getTodoCountByState(int backlogItemId) {
-        Map<Integer, Integer> res = new HashMap<Integer,Integer>();
-        
-        Task task = taskDAO.get(backlogItemId);
-        if(task != null) {
-            for(Todo t : task.getTodos()) {
-                if(res.get(t.getState().getOrdinal()) == null) {
-                    res.put(t.getState().getOrdinal(), 0);
-                }
-                res.put(t.getState().getOrdinal(), res.get(t.getState().getOrdinal()) + 1);
-            }
-        }
-        return res;
-    }
     public void delete(int todoId) {
         Todo cur = todoDAO.get(todoId);
         if(cur != null) {

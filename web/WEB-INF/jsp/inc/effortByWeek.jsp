@@ -23,8 +23,8 @@
 			<c:set var="backlog" value="${row.backlog}" />
 		</c:if>
 		<c:if test="${row.taskEffortEntry}">
-			<c:set var="backlog" value="${row.backlogItem.backlog}" />
-			<c:out value="${row.backlogItem.name}" />
+			<c:set var="backlog" value="${row.story.backlog}" />
+			<c:out value="${row.story.name}" />
 			<br />
 		</c:if>
 		<c:choose>

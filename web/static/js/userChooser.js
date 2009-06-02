@@ -7,7 +7,7 @@
      *  - url: where to get the json data from
      *  - legacyMode: true: the hidden fields' names will be 'userIds[XX]'
      *               false: the hidden fields' names will be 'userIds'
-     *  - backlogItemId: when rendering for backlog item, the item's id.
+     *  - storyId: when rendering for backlog item, the item's id.
      *  - backlogId/backlogIdField: the backlog id can be given directly or
      *                              by a jQuery selector if the backlog can change.
      *  - userListContainer: the element where the list of assigned users' initials are shown
@@ -22,7 +22,7 @@
         var options = {
             url: "getUserChooserJSON.action",
             legacyMode: true,
-            backlogItemId: null,
+            storyId: null,
             backlogId: null,
             backlogIdField: null,
             userListContainer: null,
@@ -32,7 +32,7 @@
                 selectAtLeast: 0,
                 AFTime: false
             },
-            renderFor: 'backlogItem',
+            renderFor: 'story',
             overlayUpdate: function() {
                 $('.ui-dialog-overlay').css("height",$(document).height()).css("width",$(document).width());
             } 
@@ -102,7 +102,7 @@
                 }
                 this.renderForProject();
             }
-            else if (this.options.renderFor == 'backlogItem') {
+            else if (this.options.renderFor == 'story') {
               if (!this.options.selectCallback) {
                 this.options.selectCallback  = this.bliSelectAction;
               }
@@ -350,7 +350,7 @@
                 data: {
 
                     backlogId: backlogId,
-                    backlogItemId: this.options.backlogItemId
+                    storyId: this.options.storyId
                 },
                 
                 success: function(data, status) {

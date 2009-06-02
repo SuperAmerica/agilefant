@@ -115,8 +115,8 @@ Agilefant
 <aef:productList />
 
 <c:choose>
-	<c:when test="${!empty backlogItem.backlog}">
-		<c:set var="currentPageId" value="${backlogItem.backlog.id}"
+	<c:when test="${!empty story.backlog}">
+		<c:set var="currentPageId" value="${story.backlog.id}"
 			scope="page" />
 	</c:when>
 	<c:otherwise>

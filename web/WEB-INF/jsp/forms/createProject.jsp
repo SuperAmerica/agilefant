@@ -9,7 +9,7 @@ $(document).ready(function() {
         backlogIdField: '#createProject_backlogId',
         userListContainer: '#userListContainer-createProject',
         renderFor: 'project',
-        backlogItemId: 0
+        storyId: 0
     });
 });
 </script>

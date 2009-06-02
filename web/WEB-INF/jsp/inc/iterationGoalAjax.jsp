@@ -142,15 +142,15 @@ $(document).ready(function() {
 	</display:column>
 
 	<display:column title="Responsibles" sortable="false" class="responsibleColumn">
-		<div><aef:responsibleColumn backlogItemId="${row.id}" /></div>
+		<div><aef:responsibleColumn storyId="${row.id}" /></div>
 	</display:column>
 
 	<display:column title="Priority" sortable="false" defaultorder="descending">
-		<ww:text name="backlogItem.priority.${row.priority}" />
+		<ww:text name="story.priority.${row.priority}" />
 	</display:column>
 
 	<display:column title="Progress" sortable="false" class="todoColumn">
-		<aef:backlogItemProgressBar backlogItem="${row}" bliListContext="${bliListContext}" dialogContext="${dialogContext}" hasLink="${false}"/>		
+		<aef:storyProgressBar story="${row}" bliListContext="${bliListContext}" dialogContext="${dialogContext}" hasLink="${false}"/>		
 	</display:column>
 
 	<display:column title="Effort Left<br/>" sortable="false" sortProperty="effortLeft"

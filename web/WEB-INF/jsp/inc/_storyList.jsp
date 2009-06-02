@@ -39,7 +39,7 @@ $(document).ready(function() {
     $('#userChooserLink-multipleSelect').userChooser({
         backlogIdField: 'select[name=targetBacklog]',
         userListContainer: '#userListContainer-multipleSelect',
-        backlogItemId: 0,
+        storyId: 0,
         legacyMode: false
     });
 });

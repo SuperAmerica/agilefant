@@ -29,7 +29,7 @@ Project management
   + get an overview of progress through burndown graph and metrics
   
 Iteration management
-  + focus team efforts with iteration goals
+  + focus team efforts with stories
   + get an overview of progress through burndown graph and metrics
 
 Resource management
@@ -56,13 +56,17 @@ Timesheets
 
 CHANGES FROM AGILEFANT 1.5.5
 ----------------------------
-+ New iteration view
-+ Added spent effort calendar to daily work view for browsing logged effort entries 
-+ Renamed overhead to baseline load
-+ Renamed iteration goal to story
-+ Renamed backlog item to story in products and projects, and to task in iterations
-+ Changed quick enter functionality from save to save & close
-+ Other small UI and usability tweaks
++ Renovation of the iteration view (give us feedback at the forum!)
++ Calendar view to daily work view for browsing spent effort
++ Renamed Overhead as Baseline load
++ Terminology changed to match the concepts in Scrum:
+      * Iteration goal =>Story
+      * Backlog item in products and projects => Story
+      * Backlog item in an iteration => Task
++ Small UI and usability tweaks:
+      * Quick enter => save & close (instead of save)
+      * Improved interval selection in timesheets
+      * Improved displaying long backlog descriptions
 
 CHANGES FROM AGILEFANT 1.5.4
 ----------------------------

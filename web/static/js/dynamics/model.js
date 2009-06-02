@@ -703,7 +703,8 @@ TaskModel.prototype.moveTo = function(storyId, iterationId) {
 			this.story = {id: storyId};
 			this.save();
 		}
-		oli.reloadMetrics();
+		// TODO: Uncomment when metrics work again
+		// oli.reloadMetrics();
 	}
 };
 

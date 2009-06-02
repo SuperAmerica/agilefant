@@ -78,7 +78,7 @@ public class StoryAction extends ActionSupport implements CRUDAction {
 
     // private TodoBusiness todoBusiness;
 
-    private String jsonData = "";
+    private String jsonData;
 
     public String getJsonData() {
         return jsonData;
@@ -188,6 +188,15 @@ public class StoryAction extends ActionSupport implements CRUDAction {
         // ser.include("todos");
         // ser.include("hourEntries");
         jsonData = ser.serialize(this.story);
+    }
+    
+    public String getStoryContents() {
+        story = storyBusiness.retrieveIfExists(storyId);
+        if (story == null) {
+            return CRUDAction.AJAX_ERROR;
+        }
+        jsonData = new JSONSerializer().serialize(storyBusiness.getStoryContents(story));
+        return CRUDAction.AJAX_SUCCESS;
     }
 
     public String getStoryJSON() {

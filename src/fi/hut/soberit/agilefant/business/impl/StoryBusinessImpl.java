@@ -1,6 +1,6 @@
 package fi.hut.soberit.agilefant.business.impl;
 
-import java.util.Calendar;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -11,13 +11,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import fi.hut.soberit.agilefant.business.StoryBusiness;
 import fi.hut.soberit.agilefant.db.BacklogDAO;
-import fi.hut.soberit.agilefant.db.GenericDAO;
 import fi.hut.soberit.agilefant.db.StoryDAO;
 import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.Backlog;
-import fi.hut.soberit.agilefant.model.State;
 import fi.hut.soberit.agilefant.model.Story;
+import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.security.SecurityUtil;
 
@@ -42,7 +41,35 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         return storyDAO.getStoriesByBacklog(backlog);
     }
     
-
+    public Collection<Task> getStoryContents(Story story) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+    
+//    public Collection<BacklogItem> getIterationGoalContents(int iterationGoalId, int iterationId) {
+//        IterationGoal goal = iterationGoalDAO.get(iterationGoalId);
+//        Iteration iter = iterationDAO.get(iterationId);
+//        if(iter == null) {
+//            return null;
+//        }
+//        return getIterationGoalContents(goal, iter);
+//    }
+    
+//    public Collection<BacklogItem> getIterationGoalContents(IterationGoal goal,
+//            Iteration iter) {
+//
+//        List<BacklogItem> blis = backlogItemBusiness
+//                .getBacklogItemsByBacklogWithCache(iter);
+//        Collection<BacklogItem> goalBlis = new ArrayList<BacklogItem>();
+//        for (BacklogItem bli : blis) {
+//            if (bli.getIterationGoal() == goal) {
+//                goalBlis.add(bli);
+//            }
+//        }
+//        return goalBlis;
+//    }
+    
+    
     public Story store(int storyId, int backlogId, Story dataItem, Set<Integer> responsibles) throws ObjectNotFoundException {
         Story item = null; 
         if(storyId > 0) {

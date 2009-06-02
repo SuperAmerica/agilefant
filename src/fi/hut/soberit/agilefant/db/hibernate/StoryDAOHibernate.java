@@ -1,5 +1,6 @@
 package fi.hut.soberit.agilefant.db.hibernate;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.hibernate.criterion.DetachedCriteria;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import fi.hut.soberit.agilefant.db.StoryDAO;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Story;
+import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
 
 @Repository("storyDAO")
@@ -33,5 +35,9 @@ public class StoryDAOHibernate extends GenericDAOHibernate<Story> implements
         crit.add(Restrictions.eq("backlog", backlog));
         return (List<Story>)hibernateTemplate.findByCriteria(crit);
     }
-
+    
+    public Collection<Task> getStoryTasks(Story story) {
+        DetachedCriteria criteria = DetachedCriteria.forClass(Task.class);
+        return null;
+    }
 }

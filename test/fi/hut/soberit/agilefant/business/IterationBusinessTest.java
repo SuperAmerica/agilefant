@@ -68,7 +68,7 @@ public class IterationBusinessTest {
     
     @Test
     public void testGetIterationContents_excludeTasks() {       
-        assertTrue("Not implemented", false);
+        fail("Not implemented");
     }
 
     @Test(expected = ObjectNotFoundException.class)

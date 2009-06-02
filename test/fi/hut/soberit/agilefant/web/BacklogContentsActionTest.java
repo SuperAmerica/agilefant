@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.junit.*;
 
-import fi.hut.soberit.agilefant.business.ProductBusiness;
 import fi.hut.soberit.agilefant.business.StoryBusiness;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Product;

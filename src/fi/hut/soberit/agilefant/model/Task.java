@@ -30,6 +30,7 @@ public class Task {
     private Iteration iteration;
     private Story story;
     private List<Todo> todos;
+    private ExactEstimate estimate;
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -87,5 +88,13 @@ public class Task {
     @IndexColumn(name="rank")
     public List<Todo> getTodos() {
         return todos;
+    }
+
+    public void setEstimate(ExactEstimate estimate) {
+        this.estimate = estimate;
+    }
+
+    public ExactEstimate getEstimate() {
+        return estimate;
     }
 }

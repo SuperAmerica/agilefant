@@ -119,9 +119,9 @@ $(document).ready(function() {
 </ww:a>
 
 <c:choose>
-<c:when test="${!(empty iterationGoal.backlogItems)}" >
+<c:when test="${!(empty iterationGoal.stories)}" >
 <display:table class="listTable"
-	name="iterationGoal.backlogItems" id="row" requestURI="editIterationGoal.action" defaultsort="4"
+	name="iterationGoal.stories" id="row" requestURI="editIterationGoal.action" defaultsort="4"
 	defaultorder="descending">					
 
 	<display:column title="Name" sortable="false" sortProperty="name" class="shortNameColumn">												

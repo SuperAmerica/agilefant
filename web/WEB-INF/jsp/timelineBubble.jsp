@@ -14,7 +14,7 @@
 	  				</c:choose>
 	  			</td>
 	  			<c:choose>
-	  				<c:when test="${aef:isIteration(backlog) || ((!empty backlog.backlogItems) && (empty backlog.iterations))}">
+	  				<c:when test="${aef:isIteration(backlog) || ((!empty backlog.stories) && (empty backlog.iterations))}">
 		   			<td rowspan="6">
 						<div class="smallBurndown">
 						  <c:choose>

@@ -17,12 +17,12 @@ $(document).ready(function() {
 
 </script>
 
-<c:if test="${!(empty backlogItemsForUserInProgress)}">
-<div class="subItems" id="subItems_backlogItemsForUserInProgress">
+<c:if test="${!(empty storiesForUserInProgress)}">
+<div class="subItems" id="subItems_storiesForUserInProgress">
 
 <div class="subItemContent">
 
-<display:table name="backlogItemsForUserInProgress" id="row" requestURI="dailyWork.action">	
+<display:table name="storiesForUserInProgress" id="row" requestURI="dailyWork.action">	
 	
 	<!-- Display the backlog row name -->
 	<display:column sortable="true" sortProperty="name" title="Name">				

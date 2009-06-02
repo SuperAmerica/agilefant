@@ -424,7 +424,7 @@ SimileAjax.Platform = new Object();*/
 				</table>
 			</div>			
 
-			<c:if test="${!empty product.backlogItems}">
+			<c:if test="${!empty product.stories}">
 			<div class="subItemContent">
 				<%@ include file="./inc/_backlogList.jsp"%>
 			</div>

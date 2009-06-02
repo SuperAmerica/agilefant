@@ -50,7 +50,7 @@ $(document).ready(function() {
 	<!-- Return to this backlog after submit -->
 	<ww:hidden name="backlogId" value="${backlog.id}" />
 
-	<display:table class="listTable" name="backlogItems" id="row"
+	<display:table class="listTable" name="stories" id="row"
 		requestURI="${currentAction}.action" >
 
 		<!-- Checkboxes for bulk-moving stories -->

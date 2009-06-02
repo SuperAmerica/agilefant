@@ -85,7 +85,7 @@ $(document).ready(function() {
 </table>
 
 <c:choose>
-	<c:when test="${!(empty backlogItemsForUserInProgress)}" >
+	<c:when test="${!(empty storiesForUserInProgress)}" >
 		<%@ include file="./inc/_tinyWorkInProgress.jsp" %>
 	</c:when>
 	<c:otherwise>

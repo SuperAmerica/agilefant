@@ -359,7 +359,7 @@ $(document).ready( function() {
 				</display:column>
 				
 				<display:column sortable="false" title="# of tasks">
-				  ${aef:html(fn:length(row.backlogItems))}
+				  ${aef:html(fn:length(row.stories))}
 				</display:column>
 
 				<display:column sortable="false" title="Effort left sum">

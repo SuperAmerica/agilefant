@@ -131,7 +131,7 @@ $(document).ready(function() {
 													<td class="info3"><aef:quickReference item="${project}" /></td>
 													<td class="info4" rowspan="8">
                           <%--
-                                                        <c:if test="${(!empty project.backlogItems) && (projectBurndown || (empty project.iterations))}">
+                                                        <c:if test="${(!empty project.stories) && (projectBurndown || (empty project.iterations))}">
                                                             <div class="smallBurndown"><a href="#bigChart">
                                                                 <img src="drawSmallProjectChart.action?projectId=${project.id}"/>
                                                             </a></div>
@@ -605,7 +605,7 @@ $(document).ready(function() {
 											</display:column>
 											<%--
 											<display:column sortable="true" title="Items">
-												${fn:length(row.backlogItems)}
+												${fn:length(row.stories)}
 											</display:column>
 											
 											<display:column sortable="true" title="Effort left"
@@ -669,13 +669,13 @@ $(document).ready(function() {
 	                    </tr>
 	                </table>
 					</div>
-							<c:if test="${!empty project.backlogItems}">
+							<c:if test="${!empty project.stories}">
 								<div class="subItemContent">
 									<%@ include	file="./inc/_backlogList.jsp"%>
 								</div>
 							</c:if>
 						</div>
-						<c:if test="${(!empty project.backlogItems) && (projectBurndown || (empty project.iterations))}">
+						<c:if test="${(!empty project.stories) && (projectBurndown || (empty project.iterations))}">
 							<p>
 								<img src="drawProjectChart.action?projectId=${project.id}" id="bigChart"
 								   width="780" height="600" />

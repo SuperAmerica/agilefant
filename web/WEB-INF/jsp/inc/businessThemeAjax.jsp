@@ -49,8 +49,8 @@
 <div id="businessThemeBLITab-${businessThemeId}" class="businessThemeNaviTab">
 
 <c:choose>
-<c:when test="${!(empty businessTheme.backlogItems)}" >
-<display:table class="listTable" name="businessTheme.backlogItems" id="row" style="width:700px">
+<c:when test="${!(empty businessTheme.stories)}" >
+<display:table class="listTable" name="businessTheme.stories" id="row" style="width:700px">
 
 	<!-- Display name -->
 	<display:column title="Name" style="width:355px">

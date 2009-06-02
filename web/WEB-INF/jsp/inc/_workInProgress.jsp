@@ -20,8 +20,8 @@ $(document).ready(function() {
 <h2>Started stories and tasks assigned to <c:out value="${user.fullName}" /></h2>
 
 
-<c:if test="${!(empty backlogItemsForUserInProgress)}">
-<div class="subItems" id="subItems_backlogItemsForUserInProgress">
+<c:if test="${!(empty storiesForUserInProgress)}">
+<div class="subItems" id="subItems_storiesForUserInProgress">
 
 <div class="subItemHeader">
 <table cellspacing="0" cellpadding="0">
@@ -34,7 +34,7 @@ Stories/tasks
 </div>
 
 <div class="subItemContent"><display:table
-	name="backlogItemsForUserInProgress" id="row"
+	name="storiesForUserInProgress" id="row"
 	requestURI="dailyWork.action">	
 	
 	<!-- Display the backlog row name -->

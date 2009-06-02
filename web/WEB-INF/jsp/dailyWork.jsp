@@ -25,7 +25,7 @@
 --%>
 
 <c:choose>
-<c:when test="${!((empty backlogItemsForUserInProgress) &&
+<c:when test="${!((empty storiesForUserInProgress) &&
 		(empty iterations) &&
 		(empty projects))}" >
 

@@ -282,8 +282,8 @@ StoryModel.prototype.setData = function(data, includeMetrics) {
 	if(includeMetrics && data.metrics) {
 		this.metrics = data.metrics;
 	}
-	if(data.backlogItems && data.backlogItems.length > 0) {
-		this.setTasks(data.backlogItems);
+	if(data.stories && data.stories.length > 0) {
+		this.setTasks(data.stories);
 	}
 	this.callEditListeners({bubbleEvent: []});
 };

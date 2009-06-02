@@ -57,11 +57,13 @@
 						<td class="info3"><aef:quickReference item="${iteration}" /></td>
 						
 						<td class="info4" rowspan="5">
+						            <%--
                         <div class="smallBurndown"><a href="#bigChart"><img id="smallChart" 
                             src="drawSmallChart.action?iterationId=${iteration.id}" /></a></div>
                         <div id="iterationMetrics">
                           <%@ include file="./inc/iterationMetrics.jsp"%>
                         </div>
+                        --%>
                         </td>					
 					</tr>
 					<tr>	

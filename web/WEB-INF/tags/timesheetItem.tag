@@ -23,7 +23,7 @@
 	</c:if>
 	<tr>
 		<c:if test="${!(empty node.hourEntries && empty node.childStorys)}">
-			<th class="${type} first" colspan="3">${rowsymbols}<a onclick="javascript:if($('.backlogitem.node${divId}').is(':visible')) { $('.node${divId}').hide(); } else { $('.backlogitem.node${divId}').show(); }"><c:out value="${node.backlog.name}"/></a></th>
+			<th class="${type} first" colspan="3">${rowsymbols}<a onclick="javascript:if($('.story.node${divId}').is(':visible')) { $('.node${divId}').hide(); } else { $('.story.node${divId}').show(); }"><c:out value="${node.backlog.name}"/></a></th>
 		</c:if>
 		<c:if test="${empty node.hourEntries && empty node.childStorys}">
 			<th class="${type} first" colspan="3">${rowsymbols}<c:out value="${node.backlog.name}"/></th>
@@ -32,9 +32,9 @@
 	</tr>
 	<c:if test="${!empty node.hourEntries}">
 		<c:set var="heDivId" value="${heDivId + 1}" scope="request" />
-		<tr class="backlogitem node${divId} special hourentryhead ${blueLeft} toggleall">
-			<th class="backlogitem first" colspan="3"><a onclick="javascript:$('.hour${heDivId}').toggle();">Logged effort</a></th>
-			<th class="backlogitem fourth"><c:out value="${node.spentHours}"/></th>
+		<tr class="story node${divId} special hourentryhead ${blueLeft} toggleall">
+			<th class="story first" colspan="3"><a onclick="javascript:$('.hour${heDivId}').toggle();">Logged effort</a></th>
+			<th class="story fourth"><c:out value="${node.spentHours}"/></th>
 		</tr>
 		<c:forEach items="${node.hourEntries}" var="he">
 			<tr class="hourentries hour${heDivId} node${divId} ${blueLeft} toggleall">
@@ -47,21 +47,21 @@
 	</c:if>
 	<c:if test="${!empty node.childStorys}">
 		<c:if test="${!aef:isIteration(node.backlog)}">
-			<tr class="backlogitem node${divId} special backlogitemshead ${blueLeft} toggleall">
-				<th class="backlogitem first" colspan="3">Stories</th>
-				<th class="backlogitem fourth">${aef:html(node.hoursForChildStorys)}</th>
+			<tr class="story node${divId} special storyshead ${blueLeft} toggleall">
+				<th class="story first" colspan="3">Stories</th>
+				<th class="story fourth">${aef:html(node.hoursForChildStorys)}</th>
 			</tr>
 		</c:if>
 		<c:forEach items="${node.childStorys}" var="bli">
 			<c:set var="heDivId" value="${heDivId + 1}" scope="request" />
-			<tr class="backlogitem node${divId} ${blueLeft} toggleall">
+			<tr class="story node${divId} ${blueLeft} toggleall">
 				<c:if test="${!empty bli.hourEntries}">
-					<th class="backlogitem first" colspan="3">&nbsp; &nbsp; &raquo; <a onclick="javascript:$('.hour${heDivId}').toggle();"><c:out value="${bli.backlogItem.name}"/></a></th>
+					<th class="story first" colspan="3">&nbsp; &nbsp; &raquo; <a onclick="javascript:$('.hour${heDivId}').toggle();"><c:out value="${bli.backlogItem.name}"/></a></th>
 				</c:if>
 				<c:if test="${empty bli.hourEntries}">
-					<th class="backlogitem first" colspan="3">&nbsp; &nbsp; &raquo; <c:out value="${bli.backlogItem.name}"/></th>
+					<th class="story first" colspan="3">&nbsp; &nbsp; &raquo; <c:out value="${bli.backlogItem.name}"/></th>
 				</c:if>
-				<th class="backlogitem"><c:out value="${bli.hourTotal}"/></th>
+				<th class="story"><c:out value="${bli.hourTotal}"/></th>
 			</tr>
 			<c:forEach items="${bli.hourEntries}" var="he">
 				<tr class="hourentries hour${heDivId} node${divId} ${blueLeft} toggleall">

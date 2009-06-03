@@ -687,7 +687,7 @@ $(document).ready(function() {
 		</table>
 
 <ww:url id="createStoryLink" action="ajaxCreateStory" includeParams="none">
-  <ww:param name="backlogId" value="${product.id}" />
+  <ww:param name="backlogId" value="${project.id}" />
 </ww:url>
 
 <table>

@@ -244,7 +244,7 @@ IterationModel.prototype.reloadStoryData = function() {
 	dataType: "json",
 	type: "POST",
 	url: "iterationData.action",
-	data: {iterationId: this.iterationId, excludeStorys: true}
+	data: {iterationId: this.iterationId, excludeStorys: false}
 	});
 };
 IterationModel.prototype.addStory = function(story) {
@@ -283,8 +283,8 @@ StoryModel.prototype.setData = function(data, includeMetrics) {
 	if(includeMetrics && data.metrics) {
 		this.metrics = data.metrics;
 	}
-	if(data.stories && data.stories.length > 0) {
-		this.setTasks(data.stories);
+	if(data.tasks && data.tasks.length > 0) {
+		this.setTasks(data.tasks);
 	}
 	this.callEditListeners({bubbleEvent: []});
 };

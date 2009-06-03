@@ -27,6 +27,9 @@ public class TaskAction extends ActionSupport {
     // Helper fields
     private Task task;
     private int backlogId;
+    private int storyId;
+
+
     private Set<Integer> userIds = new HashSet<Integer>();
     
     private String jsonData;
@@ -39,7 +42,7 @@ public class TaskAction extends ActionSupport {
     
     public String ajaxStoreTask() {
         try {
-            task = taskBusiness.storeTask(task, backlogId, 0, userIds);
+            task = taskBusiness.storeTask(task, backlogId, storyId, userIds);
             populateJsonData();
         } catch (Exception e) {
             return CRUDAction.AJAX_ERROR;
@@ -78,5 +81,9 @@ public class TaskAction extends ActionSupport {
 
     public void setUserIds(Set<Integer> userIds) {
         this.userIds = userIds;
+    }
+    
+    public void setStoryId(int storyId) {
+        this.storyId = storyId;
     }
 }

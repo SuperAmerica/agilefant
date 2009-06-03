@@ -1,5 +1,6 @@
 package fi.hut.soberit.agilefant.model;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -13,6 +14,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
@@ -29,8 +31,9 @@ public class Story {
     private State state = State.NOT_STARTED;
     private Priority priority;
     private User creator;
-    private List<User> responsibles;
-    
+    private List<User> responsibles = new ArrayList<User>();
+    private Collection<Task> tasks = new ArrayList<Task>();
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     public int getId() {
@@ -113,5 +116,16 @@ public class Story {
     @BatchSize(size=20)
     public Collection<User> getResponsibles() {
         return responsibles;
+    }
+    
+    @OneToMany(targetEntity = fi.hut.soberit.agilefant.model.Task.class,
+            mappedBy = "story"
+    )
+    public Collection<Task> getTasks() {
+        return tasks;
+    }
+
+    public void setTasks(Collection<Task> tasks) {
+        this.tasks = tasks;
     }
 }

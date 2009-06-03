@@ -80,16 +80,16 @@ IterationController.prototype = {
     		close: function() { parent.dialog('destroy'); parent.remove(); },
     		buttons: {
     		'Yes': function() {
-    		$(this).dialog('destroy');
-    		parent.remove();
-    		story.remove();
-   			me.tasksWithoutStoryContainer.reloadTasks();
-   			me.noStoryTaskController.render();
-    	},
-    	Cancel: function() {
-    		$(this).dialog('destroy');
-    		parent.remove();
-    	}
+      		$(this).dialog('destroy');
+      		parent.remove();
+      		story.remove();
+     			me.tasksWithoutStoryContainer.reloadTasks();
+     			me.noStoryTaskController.render();
+      	},
+      	Cancel: function() {
+      		$(this).dialog('destroy');
+      		parent.remove();
+      	}
     	}
     	});
     },
@@ -365,8 +365,8 @@ IterationController.prototype = {
     		type: "text", 
     		get: function() { return " "; },
     		set: function(val){ fakeStory.setName(val);}});
-    	var elsum = row.createCell();
-    	var oesum = row.createCell();
+    	/*var elsum = row.createCell();
+    	var oesum = row.createCell();*/
     	if(agilefantUtils.isTimesheetsEnabled()) {
     		var essum = row.createCell();
     	}

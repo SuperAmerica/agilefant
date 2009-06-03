@@ -205,7 +205,7 @@
 			</result>
 		</action>
  -->
-		<action name="storeNewStory" method="ajaxStoreStory"
+		<action name="storeStory" method="ajaxStoreStory"
 			class="storyAction">
 		</action>
 

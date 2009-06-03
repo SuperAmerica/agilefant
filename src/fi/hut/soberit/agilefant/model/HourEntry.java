@@ -1,7 +1,5 @@
 package fi.hut.soberit.agilefant.model;
 
-import java.util.Date;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -14,6 +12,7 @@ import javax.persistence.Transient;
 
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Type;
+import org.joda.time.DateTime;
 
 /**
  * Hibernate entity bean which represents an hour entry.
@@ -40,7 +39,7 @@ public class HourEntry {
 
     private int id;
 
-    private Date date;
+    private DateTime date;
 
     private long minutesSpent;
 
@@ -48,7 +47,8 @@ public class HourEntry {
 
     private String description;
 
-    public Date getDate() {
+    @Type(type = "org.joda.time.contrib.hibernate.PersistentDateTime")
+    public DateTime getDate() {
         return this.date;
     }
 
@@ -75,7 +75,7 @@ public class HourEntry {
         return this.user;
     }
 
-    public void setDate(Date date) {
+    public void setDate(DateTime date) {
         this.date = date;
     }
 

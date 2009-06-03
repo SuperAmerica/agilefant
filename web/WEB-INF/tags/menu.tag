@@ -207,6 +207,7 @@ Agilefant
     </c:choose>
     </li>
     
+    <!-- 
     <li>
     <c:choose>
         <c:when test="${hasProducts}">
@@ -221,7 +222,8 @@ Agilefant
         </c:otherwise>
     </c:choose>
     </li>
-
+    -->
+    
     <li class="separator"></li>
 
     <li><ww:url id="createLink" action="ajaxCreateProjectType"

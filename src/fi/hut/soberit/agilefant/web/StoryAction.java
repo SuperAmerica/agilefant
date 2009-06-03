@@ -11,8 +11,6 @@ import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
 
 import fi.hut.soberit.agilefant.business.BacklogBusiness;
-import fi.hut.soberit.agilefant.business.HourEntryBusiness;
-import fi.hut.soberit.agilefant.business.SettingBusiness;
 import fi.hut.soberit.agilefant.business.StoryBusiness;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.Backlog;
@@ -55,16 +53,6 @@ public class StoryAction extends ActionSupport implements CRUDAction {
     private StoryBusiness storyBusiness;
 
     // private BusinessThemeBusiness businessThemeBusiness;
-
-    private SettingBusiness settingBusiness;
-
-    private HourEntryBusiness hourEntryBusiness;
-
-    // private Map<Integer, State> todoStates = new HashMap<Integer, State>();
-    //    
-    // private Map<Integer, String> todoNames = new HashMap<Integer, String>();
-    //    
-    // private boolean todosToDone = false;
 
     private String spentEffort = null;
 
@@ -341,10 +329,6 @@ public class StoryAction extends ActionSupport implements CRUDAction {
         this.userIds = userIds;
     }
 
-    public void setSettingBusiness(SettingBusiness settingBusiness) {
-        this.settingBusiness = settingBusiness;
-    }
-
     public int getStoryId() {
         return storyId;
     }
@@ -352,9 +336,4 @@ public class StoryAction extends ActionSupport implements CRUDAction {
     public void setStoryId(int storyId) {
         this.storyId = storyId;
     }
-
-    public void setHourEntryBusiness(HourEntryBusiness hourEntryBusiness) {
-        this.hourEntryBusiness = hourEntryBusiness;
-    }
-
 }

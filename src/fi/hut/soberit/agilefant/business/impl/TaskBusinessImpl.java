@@ -22,8 +22,6 @@ import fi.hut.soberit.agilefant.model.User;
 public class TaskBusinessImpl extends GenericBusinessImpl<Task> implements
         TaskBusiness {
 
-    private TaskDAO taskDAO;
-    
     @Autowired
     private IterationBusiness iterationBusiness;
     
@@ -36,7 +34,6 @@ public class TaskBusinessImpl extends GenericBusinessImpl<Task> implements
     @Autowired
     public void setTaskDAO(TaskDAO taskDAO) {
         this.genericDAO = taskDAO;
-        this.taskDAO = taskDAO;
     }
     
     public void setIterationBusiness(IterationBusiness iterationBusiness) {

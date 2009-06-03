@@ -14,7 +14,6 @@ import org.springframework.stereotype.Component;
 import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
 
-import fi.hut.soberit.agilefant.business.BacklogBusiness;
 import fi.hut.soberit.agilefant.business.HourEntryBusiness;
 import fi.hut.soberit.agilefant.business.TeamBusiness;
 import fi.hut.soberit.agilefant.business.UserBusiness;
@@ -41,8 +40,6 @@ public class UserAction extends ActionSupport implements CRUDAction {
 
     private TeamBusiness teamBusiness;
 
-    private BacklogBusiness backlogBusiness;
-    
     private UserBusiness userBusiness;
     
     private HourEntryBusiness hourEntryBusiness;
@@ -352,11 +349,6 @@ public class UserAction extends ActionSupport implements CRUDAction {
 
     public void setTeamList(List<Team> teamList) {
         this.teamList = teamList;
-    }
-
-    @Autowired
-    public void setBacklogBusiness(BacklogBusiness backlogBusiness) {
-        this.backlogBusiness = backlogBusiness;
     }
 
     public UserBusiness getUserBusiness() {

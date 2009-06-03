@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import fi.hut.soberit.agilefant.business.IterationBusiness;
-import fi.hut.soberit.agilefant.business.StoryBusiness;
 import fi.hut.soberit.agilefant.db.IterationDAO;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.util.IterationDataContainer;
@@ -16,18 +15,11 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration> implem
         IterationBusiness {
 
     private IterationDAO iterationDAO;
-    
-    @Autowired
-    private StoryBusiness storyBusiness;
 
     @Autowired
     public void setIterationDAO(IterationDAO iterationDAO) {
         this.genericDAO = iterationDAO;
         this.iterationDAO = iterationDAO;
-    }
-   
-    public void setStoryBusiness(StoryBusiness storyBusiness) {
-        this.storyBusiness = storyBusiness;
     }
 
     @Transactional(readOnly = true)

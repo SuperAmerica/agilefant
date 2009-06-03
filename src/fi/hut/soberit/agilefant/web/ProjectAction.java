@@ -18,7 +18,6 @@ import com.opensymphony.xwork.Action;
 
 import fi.hut.soberit.agilefant.business.ProductBusiness;
 import fi.hut.soberit.agilefant.business.ProjectBusiness;
-import fi.hut.soberit.agilefant.business.ProjectTypeBusiness;
 import fi.hut.soberit.agilefant.business.UserBusiness;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
@@ -46,11 +45,6 @@ public class ProjectAction extends BacklogContentsAction implements CRUDAction {
     private Project project;
 
 //    private ProjectDAO projectDAO;
-
-    @Autowired
-    private ProjectTypeBusiness projectTypeBusiness;
-
-    // private ProductDAO productDAO;
 
     private List<ProjectType> projectTypes;
 
@@ -410,11 +404,6 @@ public class ProjectAction extends BacklogContentsAction implements CRUDAction {
     public void setProjectTypeId(int projectTypeId) {
         this.projectTypeId = projectTypeId;
     }
-
-    public void setProjectTypeBusiness(ProjectTypeBusiness projectTypeBusiness) {
-        this.projectTypeBusiness = projectTypeBusiness;
-    }
-
 
     private void prepareProjectTypes() {
         // TODO: 090601 Reko: Fix this for project types to work

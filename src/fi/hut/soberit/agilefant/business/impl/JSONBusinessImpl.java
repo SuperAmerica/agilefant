@@ -9,7 +9,6 @@ import org.springframework.beans.support.PropertyComparator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import fi.hut.soberit.agilefant.business.BacklogBusiness;
 import fi.hut.soberit.agilefant.business.JSONBusiness;
 import fi.hut.soberit.agilefant.business.TeamBusiness;
 import fi.hut.soberit.agilefant.business.UserBusiness;
@@ -24,8 +23,6 @@ public class JSONBusinessImpl implements JSONBusiness {
 
     @Autowired
     private UserBusiness userBusiness;
-    @Autowired
-    private BacklogBusiness backlogBusiness;
     @Autowired
     private TeamBusiness teamBusiness;
 
@@ -124,10 +121,6 @@ public class JSONBusinessImpl implements JSONBusiness {
      */
     public void setUserBusiness(UserBusiness userBusiness) {
         this.userBusiness = userBusiness;
-    }
-
-    public void setBacklogBusiness(BacklogBusiness backlogBusiness) {
-        this.backlogBusiness = backlogBusiness;
     }
 
 //    public void setBacklogItemBusiness(BacklogItemBusiness backlogItemBusiness) {

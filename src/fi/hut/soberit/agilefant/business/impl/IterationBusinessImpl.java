@@ -1,7 +1,5 @@
 package fi.hut.soberit.agilefant.business.impl;
 
-import java.util.ArrayList;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,7 +8,6 @@ import fi.hut.soberit.agilefant.business.IterationBusiness;
 import fi.hut.soberit.agilefant.business.StoryBusiness;
 import fi.hut.soberit.agilefant.db.IterationDAO;
 import fi.hut.soberit.agilefant.model.Iteration;
-import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.util.IterationDataContainer;
 
 @Service("iterationBusiness")

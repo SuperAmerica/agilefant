@@ -3,7 +3,6 @@ package fi.hut.soberit.agilefant.business.impl;
 import java.util.HashMap;
 import java.util.Map;
 
-import fi.hut.soberit.agilefant.business.GenericBusiness;
 import fi.hut.soberit.agilefant.business.TodoBusiness;
 import fi.hut.soberit.agilefant.db.TaskDAO;
 import fi.hut.soberit.agilefant.db.TodoDAO;

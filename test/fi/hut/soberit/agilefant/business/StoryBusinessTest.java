@@ -1,6 +1,5 @@
 package fi.hut.soberit.agilefant.business;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 

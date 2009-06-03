@@ -1,7 +1,9 @@
 package fi.hut.soberit.agilefant.web;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.*;
 
@@ -10,6 +12,7 @@ import fi.hut.soberit.agilefant.business.StoryBusiness;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Story;
+import fi.hut.soberit.agilefant.util.ResponsibleContainer;
 import static org.junit.Assert.*;
 
 import static org.easymock.EasyMock.createMock;
@@ -40,8 +43,9 @@ public class BacklogContentsActionTest {
     @Test
     public void testInitializeContents_interaction() {
         List<Story> storiesList = Arrays.asList(story1, story2);
+        Map<Story, List<ResponsibleContainer>> responsibleMap = new HashMap<Story, List<ResponsibleContainer>>();
         expect(storyBusiness.getStoriesByBacklog(backlog)).andReturn(storiesList);
-        expect(backlogBusiness.getResponsiblesByBacklog(backlog)).andReturn();
+        expect(backlogBusiness.getResponsiblesByBacklog(backlog)).andReturn(responsibleMap);
         replay(storyBusiness, backlogBusiness);
         
         backlogContentsAction.initializeContents(backlog);

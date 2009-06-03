@@ -24,7 +24,6 @@ public class IterationBusinessTest {
 
     IterationBusinessImpl iterationBusiness = new IterationBusinessImpl();
     IterationDAO iterationDAO;
-    StoryBusiness storyBusiness;
     Iteration iteration;
     Story story1;
     Story story2;
@@ -47,8 +46,6 @@ public class IterationBusinessTest {
         
         iterationDAO = createMock(IterationDAO.class);
         iterationBusiness.setIterationDAO(iterationDAO);
-        storyBusiness = createMock(StoryBusiness.class);
-        iterationBusiness.setStoryBusiness(storyBusiness);
     }
 
     @Test

@@ -1,5 +1,6 @@
 package fi.hut.soberit.agilefant.web;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -17,6 +18,8 @@ import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Priority;
 import fi.hut.soberit.agilefant.model.State;
 import fi.hut.soberit.agilefant.model.Story;
+import fi.hut.soberit.agilefant.util.ResponsibleContainer;
+import fi.hut.soberit.agilefant.util.StoryTO;
 import flexjson.JSONSerializer;
 
 @Component("storyAction")
@@ -166,6 +169,8 @@ public class StoryAction extends ActionSupport implements CRUDAction {
     }
 
     private void loadStoryJSON() {
+        StoryTO storyTO = new StoryTO(story);
+        storyTO.setUserData(getResponsiblesAsUserData());
         // if (this.settingBusiness.isHourReportingEnabled()) {
         // this.hourEntryBusiness
         // .setBacklogItemSpentEffortSum(this.story);
@@ -175,7 +180,11 @@ public class StoryAction extends ActionSupport implements CRUDAction {
         // ser.include("businessThemes");
         // ser.include("todos");
         // ser.include("hourEntries");
-        jsonData = ser.serialize(this.story);
+        jsonData = ser.serialize(storyTO);
+    }
+    
+    private Collection<ResponsibleContainer> getResponsiblesAsUserData() {
+        return storyBusiness.getStoryResponsibles(story);
     }
     
     public String getStoryContents() {

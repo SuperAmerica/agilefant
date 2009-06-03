@@ -1,8 +1,11 @@
 package fi.hut.soberit.agilefant.business;
 
+import java.util.Collection;
 import java.util.Set;
 
+import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
+import fi.hut.soberit.agilefant.util.ResponsibleContainer;
 
 public interface TaskBusiness extends GenericBusiness<Task> {
 
@@ -12,4 +15,6 @@ public interface TaskBusiness extends GenericBusiness<Task> {
      * @return the newly stored task
      */
     public Task storeTask(Task task, int iterationId, int storyId, Set<Integer> userIds);
+    
+    public Collection<ResponsibleContainer> getTaskResponsibles(Task task);
 }

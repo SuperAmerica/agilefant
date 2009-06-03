@@ -1,5 +1,8 @@
 package fi.hut.soberit.agilefant.business.impl;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -7,7 +10,9 @@ import org.springframework.transaction.annotation.Transactional;
 import fi.hut.soberit.agilefant.business.IterationBusiness;
 import fi.hut.soberit.agilefant.db.IterationDAO;
 import fi.hut.soberit.agilefant.model.Iteration;
+import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.util.IterationDataContainer;
+import fi.hut.soberit.agilefant.util.StoryTO;
 
 @Service("iterationBusiness")
 @Transactional
@@ -29,14 +34,22 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration> implem
         IterationDataContainer iterationData = new IterationDataContainer();
         Iteration iteration = this.retrieve(iterationId);
         
-        // 1. Set iteration's stories
-        iterationData.getStories().addAll(iteration.getStories());
+        // 1. Set iteration's stories as transfer objects
+        iterationData.getStories().addAll(iterationContentsASTOs(iteration));
         
         // 2. Set the tasks without a story
         iterationData.setTasksWithoutStory(
                 iterationDAO.getTasksWithoutStoryForIteration(iteration));
         
         return iterationData;
+    }
+    
+    private Collection<Story> iterationContentsASTOs(Iteration iteration) {
+        Collection<Story> stories = new ArrayList<Story>();
+        for (Story story : iteration.getStories()) {
+            stories.add(new StoryTO(story));
+        }
+        return stories;
     }
     
     

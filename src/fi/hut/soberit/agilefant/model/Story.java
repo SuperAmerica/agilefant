@@ -114,7 +114,7 @@ public class Story {
     )
     @OrderBy("initials")
     @BatchSize(size=20)
-    public Collection<User> getResponsibles() {
+    public List<User> getResponsibles() {
         return responsibles;
     }
     

@@ -1,5 +1,6 @@
 package fi.hut.soberit.agilefant.business.impl;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -19,6 +20,7 @@ import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.security.SecurityUtil;
+import fi.hut.soberit.agilefant.util.ResponsibleContainer;
 
 @Service("storyBusiness")
 @Transactional
@@ -69,6 +71,16 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
 //        }
 //        return goalBlis;
 //    }
+    
+    @Transactional(readOnly = true)
+    public Collection<ResponsibleContainer> getStoryResponsibles(Story story) {
+        Collection<ResponsibleContainer> responsibleContainers = new ArrayList<ResponsibleContainer>();
+        Collection<User> storyResponsibles = story.getResponsibles();
+        for (User user : storyResponsibles) {
+            responsibleContainers.add(new ResponsibleContainer(user, true));
+        }
+        return responsibleContainers;
+    }
     
     
     public Story store(int storyId, int backlogId, Story dataItem, Set<Integer> responsibles) throws ObjectNotFoundException {

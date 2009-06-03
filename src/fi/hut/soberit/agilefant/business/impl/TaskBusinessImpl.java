@@ -1,5 +1,7 @@
 package fi.hut.soberit.agilefant.business.impl;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -16,6 +18,7 @@ import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.util.ResponsibleContainer;
 
 @Service("taskBusiness")
 @Transactional
@@ -48,6 +51,15 @@ public class TaskBusinessImpl extends GenericBusinessImpl<Task> implements
         this.userBusiness = userBusiness;
     }
 
+    public Collection<ResponsibleContainer> getTaskResponsibles(Task task) {
+        Collection<ResponsibleContainer> responsibleContainers = new ArrayList<ResponsibleContainer>();
+        Collection<User> storyResponsibles = task.getResponsibles();
+        for (User user : storyResponsibles) {
+            responsibleContainers.add(new ResponsibleContainer(user, true));
+        }
+        return responsibleContainers;
+    }
+    
     /** {@inheritDoc} */
     public Task storeTask(Task task, int iterationId, int storyId, Set<Integer> userIds) {
         Task storedTask;

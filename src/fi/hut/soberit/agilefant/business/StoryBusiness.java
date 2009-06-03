@@ -8,6 +8,8 @@ import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
+import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.util.ResponsibleContainer;
 
 public interface StoryBusiness extends GenericBusiness<Story> {
 
@@ -21,4 +23,6 @@ public interface StoryBusiness extends GenericBusiness<Story> {
      * Get the story's tasks as <code>StoryData</code>
      */
     public Collection<Task> getStoryContents(Story story);
+    
+    public Collection<ResponsibleContainer> getStoryResponsibles(Story story);
 }

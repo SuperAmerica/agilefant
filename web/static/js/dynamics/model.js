@@ -449,7 +449,7 @@ StoryModel.prototype.save = function(synchronous, callback) {
 	var data  = {
 			"story.name": this.name,
 			"story.description": this.description,
-			iterationId: this.iteration.iterationId
+			"backlogId": this.iteration.iterationId
 	};
 	if(this.priority) { 
 		data.priority = this.priority;

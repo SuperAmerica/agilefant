@@ -29,7 +29,6 @@ public class TaskAction extends ActionSupport {
     private int backlogId;
     private int storyId;
 
-
     private Set<Integer> userIds = new HashSet<Integer>();
     
     private String jsonData;

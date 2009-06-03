@@ -239,8 +239,7 @@ public class StoryAction extends ActionSupport implements CRUDAction {
 
         // save story and store backlog item themes
         try {
-            story = storyBusiness.store(storyId, backlogId, story,
-                    userIds);
+            story = storyBusiness.store(storyId, backlogId, story, userIds);
 //            businessThemeBusiness.setBacklogItemThemes(themeIds, story);
             storyId = story.getId();
         } catch (ObjectNotFoundException onfe) {

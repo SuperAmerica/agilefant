@@ -44,10 +44,4 @@ public class StoryBusinessTest {
         
         verify(storyDAO);
     }
-    
-    @Test
-    public void testGetStoryContents() {
-        assertNull(storyBusiness.getStoryContents(story1));
-        fail("Not yet implemented");
-    }
 }

@@ -34,15 +34,13 @@ public class StoryActionTest {
     @Test
     public void testGetStoryContents() {
         storyAction.setStoryId(story.getId());
-        
+        story.setTasks(Arrays.asList(new Task(), new Task()));
         expect(storyBusiness.retrieveIfExists(story.getId())).andReturn(story);
-        expect(storyBusiness.getStoryContents(story)).andReturn(Arrays.asList(new Task(), new Task()));
         replay(storyBusiness);
         
         assertNull(storyAction.getJsonData());
         assertEquals(CRUDAction.AJAX_SUCCESS, storyAction.getStoryContents());
         assertNotNull(storyAction.getJsonData());
-        
         verify(storyBusiness);
     }
     

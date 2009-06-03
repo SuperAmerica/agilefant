@@ -183,7 +183,7 @@ public class StoryAction extends ActionSupport implements CRUDAction {
         if (story == null) {
             return CRUDAction.AJAX_ERROR;
         }
-        jsonData = new JSONSerializer().serialize(storyBusiness.getStoryContents(story));
+        jsonData = new JSONSerializer().serialize(story.getTasks());
         return CRUDAction.AJAX_SUCCESS;
     }
 

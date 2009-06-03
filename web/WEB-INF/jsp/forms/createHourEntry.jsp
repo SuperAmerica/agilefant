@@ -2,10 +2,12 @@
 
 <aef:currentUser />
 <aef:enabledUserList/>
+<%-- 
 <aef:userEffortSum user="${currentUser}" timeInterval="Today" id="todayEffortSum" />
 <aef:userEffortSum user="${currentUser}" timeInterval="Yesterday" id="yesterdayEffortSum" />
 <aef:userEffortSum user="${currentUser}" timeInterval="This week" id="weekEffortSum" />
 <aef:userEffortSum user="${currentUser}" timeInterval="This month" id="monthEffortSum" />
+ --%>
 <script type="text/javascript">
 function updatePastEffort(immediate) {
     var data = new Object();
@@ -56,14 +58,13 @@ $(document).ready(function() {
 		<tr>
 			<td>Effort spent</td>
 			<td></td>
-			<td colspan="2"><ww:textfield name="hourEntry.timeSpent" />(e.g.
+			<td colspan="2"><ww:textfield name="hourEntry.minutesSpent" />(e.g.
 			"2h 30min" or "2.5")</td>
 		</tr>
 		<tr>
 			<td>When</td>
 			<td></td>
-			<td><ww:date name="%{hourEntry.date}" id="date"
-				format="%{getText('webwork.shortDateTime.format')}" /> <aef:datepicker
+			<td><joda:format value="${hourEntry.date}" style="S-" /> <aef:datepicker
 				id="he_date" name="date"
 				format="%{getText('webwork.shortDateTime.format')}" value="%{#date}" />
 			</td>

@@ -22,7 +22,7 @@ import org.hibernate.annotations.BatchSize;
 
 @Entity
 @Table(name = "stories")
-public class Story {
+public class Story implements TimesheetLoggable {
 
     private int id;
     private String name;

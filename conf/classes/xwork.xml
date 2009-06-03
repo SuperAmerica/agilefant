@@ -895,7 +895,6 @@
 		</action>		
 		 -->
 		<!-- Hour Entry actions -->
-		<!-- 
 		<action name="ajaxCreateHourEntry" class="hourEntryAction" method="create">
             <result>/WEB-INF/jsp/forms/createHourEntry.jsp</result>
         </action>
@@ -924,7 +923,7 @@
     <action name="ajaxDeleteHourEntry" method="delete" class="hourEntryAction">
     </action>
 
-		
+<!-- 		
 		<action name="getHourSum" method="sumHours" class="getHourSumAction">
 			<result name="success">/WEB-INF/jsp/inc/_hourSum.jsp</result>
 		</action>

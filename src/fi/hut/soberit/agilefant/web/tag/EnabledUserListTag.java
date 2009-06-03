@@ -25,7 +25,9 @@ public class EnabledUserListTag extends SpringTagSupport {
 
         Collections.sort(list, new UserComparator());
 
-        super.getPageContext().setAttribute(EnabledUserListTag.USER_LIST_KEY, list);
+        super.getPageContext().setAttribute(EnabledUserListTag.USER_LIST_KEY,
+                list);
         return Tag.EVAL_BODY_INCLUDE;
     }
+
 }

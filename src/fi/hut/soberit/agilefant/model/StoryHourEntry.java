@@ -20,7 +20,7 @@ public class StoryHourEntry extends HourEntry {
 
     private Story story;
 
-    @ManyToOne(optional = false)
+    @ManyToOne
     public Story getStory() {
         return story;
     }

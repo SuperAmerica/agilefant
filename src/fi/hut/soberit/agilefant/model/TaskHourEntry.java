@@ -15,7 +15,7 @@ public class TaskHourEntry extends HourEntry {
         this.task = task;
     }
 
-    @ManyToOne(optional = false)
+    @ManyToOne
     public Task getTask() {
         return task;
     }

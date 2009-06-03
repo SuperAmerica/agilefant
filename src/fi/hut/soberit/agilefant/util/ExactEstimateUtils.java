@@ -30,6 +30,10 @@ public class ExactEstimateUtils {
         ExactEstimateUtils.minorUnit = minorUnit;
     }
     
+    public static int getMinorsPerMajor() {
+        return minorsPerMajor;
+    }
+    
     public static String convertToString(ExactEstimate estimate) {
         long majors = estimate.getMinorUnits() / minorsPerMajor;
         long minors = estimate.getMinorUnits() % minorsPerMajor;

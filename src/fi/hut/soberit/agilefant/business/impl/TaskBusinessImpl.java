@@ -69,6 +69,12 @@ public class TaskBusinessImpl extends GenericBusinessImpl<Task> implements
         task.setIteration(iteration);
         task.setStory(story);
         
+        // If we are setting the original estimate,
+        // set effortLeft accordingly
+        if (task.getEffortLeft() == null && task.getOriginalEstimate() != null) {
+            task.setEffortLeft(task.getOriginalEstimate());
+        }
+        
         this.populateUserData(task, userIds);
         
         if (task.getId() == 0) {
@@ -102,4 +108,12 @@ public class TaskBusinessImpl extends GenericBusinessImpl<Task> implements
         task.getResponsibles().clear();
         task.getResponsibles().addAll(userSet);
     }
+
+    public Task resetOriginalEstimate(int taskId) {
+        Task task = retrieve(taskId);
+        task.setEffortLeft(null);
+        task.setOriginalEstimate(null);
+        return task;
+    }
+    
 }

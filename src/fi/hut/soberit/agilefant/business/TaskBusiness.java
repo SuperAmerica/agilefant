@@ -17,4 +17,7 @@ public interface TaskBusiness extends GenericBusiness<Task> {
     public Task storeTask(Task task, int iterationId, int storyId, Set<Integer> userIds);
     
     public Collection<ResponsibleContainer> getTaskResponsibles(Task task);
+
+    public Task resetOriginalEstimate(int taskId);
+    
 }

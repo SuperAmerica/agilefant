@@ -13,6 +13,7 @@ import org.junit.*;
 import fi.hut.soberit.agilefant.business.impl.TaskBusinessImpl;
 import fi.hut.soberit.agilefant.db.TaskDAO;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
+import fi.hut.soberit.agilefant.model.ExactEstimate;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
@@ -115,4 +116,34 @@ public class TaskBusinessTest {
         
         verify(iterationBusiness);
     }
+    
+    @Test
+    public void testResetOriginalEstimate() {
+        task.setEffortLeft(new ExactEstimate());
+        task.setOriginalEstimate(new ExactEstimate());
+        expect(taskDAO.get(task.getId())).andReturn(task);
+        
+        replay(taskDAO);
+        
+        Task returnedTask = taskBusiness.resetOriginalEstimate(task.getId());
+
+        assertNull(returnedTask.getEffortLeft());
+        assertNull(returnedTask.getOriginalEstimate());
+        
+        verify(taskDAO);
+    }
+    
+    @Test(expected = ObjectNotFoundException.class)
+    public void testResetOriginalEstimate_nonExistentTask() {
+        task.setEffortLeft(new ExactEstimate());
+        task.setOriginalEstimate(new ExactEstimate());
+        expect(taskDAO.get(task.getId())).andReturn(null);
+        
+        replay(taskDAO);
+        
+        taskBusiness.resetOriginalEstimate(task.getId());
+
+        verify(taskDAO);
+    }
+
 }

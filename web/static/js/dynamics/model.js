@@ -755,7 +755,7 @@ TaskModel.prototype.resetOriginalEstimate = function() {
 	}
 	var me = this;
 	var data = {
-			storyId: this.id
+			taskId: this.id
 	};
 	jQuery
 	.ajax( {

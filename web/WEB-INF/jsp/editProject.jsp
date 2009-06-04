@@ -722,11 +722,11 @@ $(document).ready(function() {
 </table>
 
 <%-- Hour reporting here - Remember to expel David H. --%>
-<%--
+
 <aef:hourReporting id="hourReport"></aef:hourReporting>
 <c:if test="${hourReport == 'true' && projectId != 0}">
 	<c:set var="myAction" value="editProject" scope="session" />
 	<%@ include file="./inc/_hourEntryList.jsp"%>
-</c:if>--%> <%-- Hour reporting on --%>
+</c:if> <%-- Hour reporting on --%>
 
 <%@ include file="./inc/_footer.jsp"%>

@@ -1,5 +1,7 @@
 package fi.hut.soberit.agilefant.business.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -67,6 +69,10 @@ public class HourEntryBusinessImpl extends GenericBusinessImpl<HourEntry>
             backlogHourEntryDAO.store((BacklogHourEntry) storable);
         }
         return storable;
+    }
+
+    public List<BacklogHourEntry> retrieveByParent(Backlog parent) {
+        return backlogHourEntryDAO.retrieveByBacklog(parent);
     }
 
 }

@@ -8,8 +8,6 @@ import javax.servlet.jsp.tagext.Tag;
 import fi.hut.soberit.agilefant.business.HourEntryBusiness;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogHourEntry;
-import fi.hut.soberit.agilefant.model.BacklogItem;
-import fi.hut.soberit.agilefant.model.BacklogItemHourEntry;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.TimesheetLoggable;
 
@@ -27,13 +25,13 @@ public class HourEntryTag extends SpringTagSupport {
     public int doStartTag() throws JspException {
         List list = null;
         hourEntryBusiness = requireBean("hourEntryBusiness");
-        
+    /*    
         if(target instanceof BacklogItem) {
             BacklogItem item = (BacklogItem) target;
             list = (List<BacklogItemHourEntry>) hourEntryBusiness.getEntriesByParent( item );
-        } else if(target instanceof Project) {
+        } else*/ if(target instanceof Project) {
             Backlog item = (Backlog) target;
-            list = (List<BacklogHourEntry>) hourEntryBusiness.getEntriesByParent( item );
+            list = (List<BacklogHourEntry>) hourEntryBusiness.retrieveByParent( item );
         }
    
         /*

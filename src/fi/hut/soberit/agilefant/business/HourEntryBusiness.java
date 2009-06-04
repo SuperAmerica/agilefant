@@ -1,5 +1,9 @@
 package fi.hut.soberit.agilefant.business;
 
+import java.util.List;
+
+import fi.hut.soberit.agilefant.model.Backlog;
+import fi.hut.soberit.agilefant.model.BacklogHourEntry;
 import fi.hut.soberit.agilefant.model.HourEntry;
 import fi.hut.soberit.agilefant.model.TimesheetLoggable;
 
@@ -12,5 +16,7 @@ import fi.hut.soberit.agilefant.model.TimesheetLoggable;
 public interface HourEntryBusiness extends GenericBusiness<HourEntry> {
 
     HourEntry store(TimesheetLoggable parent, HourEntry hourEntry);
+
+    List<BacklogHourEntry> retrieveByParent(Backlog item);
 
 }

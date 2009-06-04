@@ -713,15 +713,14 @@
         <param name="location">/WEB-INF/jsp/jsonData.jsp</param>
       </result>
     </action>		
-    <!--
-		<action name="calculateIterationGoalMetrics" method="getMetrics"
-      class="iterationGoalAction">
+		<action name="calculateStoryMetrics" method="getMetrics"
+      class="storyAction">
       <result name="ajax_success" type="dispatcher">
         <param name="status">200</param>
         <param name="location">/WEB-INF/jsp/jsonData.jsp</param>
       </result>
     </action>
-		
+<!--		
 		<action name="deleteIterationGoal" method="delete"
 			class="iterationGoalAction">
 			<result name="ajax_success" type="dispatcher">

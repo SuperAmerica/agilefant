@@ -19,6 +19,7 @@ import fi.hut.soberit.agilefant.model.Priority;
 import fi.hut.soberit.agilefant.model.State;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.util.ResponsibleContainer;
+import fi.hut.soberit.agilefant.util.StoryMetrics;
 import fi.hut.soberit.agilefant.util.StoryTO;
 import flexjson.JSONSerializer;
 
@@ -35,6 +36,8 @@ public class StoryAction extends ActionSupport implements CRUDAction {
     private int storyId;
 
     private State state;
+    
+    private int iterationId;
 
     // private AFTime effortLeft;
 
@@ -231,6 +234,21 @@ public class StoryAction extends ActionSupport implements CRUDAction {
     // return list;
     // }
 
+    public String getMetrics() {
+        StoryMetrics metrics;
+        try {
+            if (storyId > 0) {
+                metrics = storyBusiness.calculateMetrics(storyId);
+            } else {
+                metrics = storyBusiness.calculateMetricsWithoutStory(iterationId);
+            }
+            jsonData = new JSONSerializer().serialize(metrics);
+        } catch (Exception e) {
+            return CRUDAction.AJAX_ERROR;
+        }
+        return CRUDAction.AJAX_SUCCESS;
+    }
+
     private boolean storyStore() {
         // validate original estimate, name and effort left
         if (this.story.getName() == null
@@ -260,28 +278,8 @@ public class StoryAction extends ActionSupport implements CRUDAction {
         return true;
     }
 
-//    public String resetBliOrigEstAndEffortLeft() {
-//        try {
-//            backlogItemBusiness.resetBliOrigEstAndEffortLeft(backlogItemId);
-//        } catch (ObjectNotFoundException e) {
-//            addActionError(e.getMessage());
-//            return Action.ERROR;
-//        }
-//        return Action.SUCCESS;
-//    }
-//
-//    public String resetOriginalEstimate() {
-//        try {
-//            backlogItemBusiness.resetBliOrigEstAndEffortLeft(backlogItemId);
-//            story = backlogItemBusiness.getBacklogItem(backlogItemId);
-//        } catch (ObjectNotFoundException e) {
-//            addActionError(e.getMessage());
-//            return AJAX_ERROR;
-//        }
-//        this.loadStoryJSON();
-//        return AJAX_SUCCESS;
-//    }
-
+    
+    
     public Backlog getBacklog() {
         return backlog;
     }
@@ -344,4 +342,13 @@ public class StoryAction extends ActionSupport implements CRUDAction {
     public void setStoryId(int storyId) {
         this.storyId = storyId;
     }
+    
+    public void setIterationId(int iterationId) {
+        this.iterationId = iterationId;
+    }
+    
+    public int getIterationId() {
+        return iterationId;
+    }
+    
 }

@@ -9,14 +9,17 @@ import org.springframework.transaction.annotation.Transactional;
 
 import fi.hut.soberit.agilefant.business.IterationBusiness;
 import fi.hut.soberit.agilefant.business.ProjectBusiness;
+import fi.hut.soberit.agilefant.business.StoryBusiness;
 import fi.hut.soberit.agilefant.business.TransferObjectBusiness;
 import fi.hut.soberit.agilefant.db.IterationDAO;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Project;
+import fi.hut.soberit.agilefant.model.State;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.util.IterationDataContainer;
+import fi.hut.soberit.agilefant.util.StoryMetrics;
 import fi.hut.soberit.agilefant.util.StoryTO;
 import fi.hut.soberit.agilefant.util.TaskTO;
 
@@ -26,10 +29,13 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration> implem
         IterationBusiness {
 
     private IterationDAO iterationDAO;
+    
     @Autowired
     private TransferObjectBusiness transferObjectBusiness;
     @Autowired
     private ProjectBusiness projectBusiness;
+    @Autowired
+    private StoryBusiness storyBusiness;
 
     @Autowired
     public void setIterationDAO(IterationDAO iterationDAO) {
@@ -74,4 +80,14 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration> implem
     public void setProjectBusiness(ProjectBusiness projectBusiness) {
         this.projectBusiness = projectBusiness;
     }
+    private Collection<Story> iterationContentsASTOs(Iteration iteration) {
+        Collection<Story> stories = new ArrayList<Story>();
+        for (Story story : iteration.getStories()) {
+            StoryTO storyTO = new StoryTO(story);
+            storyTO.setMetrics(storyBusiness.calculateMetrics(story));
+            stories.add(storyTO);
+        }
+        return stories;
+    }
+    
 }

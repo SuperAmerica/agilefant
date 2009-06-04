@@ -140,16 +140,14 @@ IterationController.prototype = {
     		return story.getDoneTasks() + " / " + story.getTotalTasks();
     	}});
     	
-    	// TODO: 090602 Reko: Implement storypoints
-    	/*
     	var elsum = row.createCell({
     		get: function() { return story.getEffortLeft(); },
-    		decorator: agilefantUtils.aftimeToString
+    		decorator: agilefantUtils.exactEstimateToString
     	});
     	var oesum = row.createCell({
     		get: function() { return story.getOriginalEstimate(); },
-    		decorator: agilefantUtils.aftimeToString
-    	});*/
+    		decorator: agilefantUtils.exactEstimateToString
+    	});
     	if(agilefantUtils.isTimesheetsEnabled()) {
     		var essum = row.createCell({
     			get: function() { return story.getEffortSpent(); },
@@ -281,15 +279,14 @@ IterationController.prototype = {
     	var tasks = row.createCell({
     		get: function() { return story.getDoneTasks() + " / " + story.getTotalTasks(); }
     	});
-    	/*
     	var elsum = row.createCell({
     		get: function() { return story.getEffortLeft(); },
-    		decorator: agilefantUtils.aftimeToString
+    		decorator: agilefantUtils.exactEstimateToString
     	});
     	var oesum = row.createCell({
     		get: function() { return story.getOriginalEstimate(); },
-    		decorator: agilefantUtils.aftimeToString
-    	});*/
+    		decorator: agilefantUtils.exactEstimateToString
+    	});
     	if(agilefantUtils.isTimesheetsEnabled()) {
     		var essum = row.createCell({
     			get: function() { return story.getEffortSpent(); },
@@ -363,8 +360,8 @@ IterationController.prototype = {
     		type: "text", 
     		get: function() { return " "; },
     		set: function(val){ fakeStory.setName(val);}});
-    	/*var elsum = row.createCell();
-    	var oesum = row.createCell();*/
+    	var elsum = row.createCell();
+    	var oesum = row.createCell();
     	if(agilefantUtils.isTimesheetsEnabled()) {
     		var essum = row.createCell();
     	}

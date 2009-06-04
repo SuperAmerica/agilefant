@@ -6,10 +6,12 @@ import java.util.Collection;
 import fi.hut.soberit.agilefant.model.Story;
 
 public class StoryTO extends Story {
-    
+
     // Not included in story
     private Collection<ResponsibleContainer> userData = new ArrayList<ResponsibleContainer>();
-    
+
+    private StoryMetrics metrics;
+
     public StoryTO(Story story) {
         this.setId(story.getId());
         this.setName(story.getName());
@@ -20,7 +22,7 @@ public class StoryTO extends Story {
         this.setCreator(story.getCreator());
         this.setResponsibles(story.getResponsibles());
     }
-    
+
     public void setUserData(Collection<ResponsibleContainer> userData) {
         this.userData = userData;
     }
@@ -28,4 +30,13 @@ public class StoryTO extends Story {
     public Collection<ResponsibleContainer> getUserData() {
         return userData;
     }
+
+    public void setMetrics(StoryMetrics metrics) {
+        this.metrics = metrics;
+    }
+
+    public StoryMetrics getMetrics() {
+        return metrics;
+    }
+
 }

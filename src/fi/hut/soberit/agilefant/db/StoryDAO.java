@@ -7,6 +7,7 @@ import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.util.StoryMetrics;
 
 public interface StoryDAO extends GenericDAO<Story> {
 
@@ -20,4 +21,9 @@ public interface StoryDAO extends GenericDAO<Story> {
      * @return
      */
     public Collection<Task> getStoryTasks(Story story);
+
+    StoryMetrics calculateMetrics(int storyId);
+
+    StoryMetrics calculateMetricsWithoutStory(int iterationId);
+    
 }

@@ -1036,7 +1036,6 @@
 			        tooltip: 'Done / Total tasks',
 			        sort: null
 				  });
-		  /*
 		  addTableColumn(opts,
 				  { minwidth: 30, auto: true },
 				  { name: 'EL',
@@ -1049,7 +1048,6 @@
 			        tooltip: 'Total original estimate',
 			        sort: agilefantUtils.comparators.originalEstimateComparator
 				  });
-				  */
 		  if(agilefantUtils.isTimesheetsEnabled()) {
 			  addTableColumn(opts,
 					  { minwidth: 30, auto: true },

@@ -210,8 +210,7 @@ IterationModel = function(iterationData, iterationId) {
 		this.containerStory.remove = function() {};
 		this.containerStory.tasks = this.tasksWithoutStory;
 		this.containerStory.metrics = {};
-		// TODO: Uncomment when metrics work again
-		//this.containerStory.reloadMetrics();
+		this.containerStory.reloadMetrics();
 		jQuery.each(iterationData.tasksWithoutStory, function(k,v) { 
 			me.tasksWithoutStory.push(ModelFactory.taskSingleton(v.id, me,me.containerStory, v));
 		});
@@ -317,8 +316,7 @@ StoryModel.prototype.addTask = function(task) {
 	task.backlog = this.iteration;
 	task.story = this;
 	this.tasks.push(task);
-	// TODO: Uncomment when metrics work again
-	// this.reloadMetrics();
+	this.reloadMetrics();
 };
 StoryModel.prototype.removeTask = function(task) {
 	var tmp = this.tasks;
@@ -328,8 +326,7 @@ StoryModel.prototype.removeTask = function(task) {
 			this.tasks.push(tmp[i]);
 		}
 	}
-	// TODO: Uncomment when metrics work again
-	// this.reloadMetrics();
+	this.reloadMetrics();
 };
 StoryModel.prototype.copy = function() {
 	var copy = new StoryModel({}, this.iteration);
@@ -369,7 +366,6 @@ StoryModel.prototype.setPriority = function(priority) {
 	this.priority = priority;
 	this.save();
 };
-/*
 StoryModel.prototype.getEffortLeft = function() {
 	return this.metrics.effortLeft;
 };
@@ -379,7 +375,6 @@ StoryModel.prototype.getEffortSpent = function() {
 StoryModel.prototype.getOriginalEstimate = function() {
 	return this.metrics.originalEstimate;
 };
-*/
 StoryModel.prototype.getDoneTasks = function() {
 	return this.metrics.doneTasks;
 };
@@ -696,7 +691,7 @@ TaskModel.prototype.setOriginalEstimate = function(originalEstimate) {
 };
 
 TaskModel.prototype.moveTo = function(storyId, iterationId) {
-	var oli = this.story;
+	var story = this.story;
 	if(storyId != this.story.id) {
 		this.story.removeTask(this);
 		if(iterationId === this.backlog.getId()) {
@@ -708,8 +703,7 @@ TaskModel.prototype.moveTo = function(storyId, iterationId) {
 			this.story = {id: storyId};
 			this.save();
 		}
-		// TODO: Uncomment when metrics work again
-		// oli.reloadMetrics();
+		story.reloadMetrics();
 	}
 };
 

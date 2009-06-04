@@ -941,15 +941,19 @@
 		<action name="getHourSum" method="sumHours" class="getHourSumAction">
 			<result name="success">/WEB-INF/jsp/inc/_hourSum.jsp</result>
 		</action>
+		-->
 		
 		<action name="updateMultipleHourEntries" class="hourEntryAction" method="multiEdit" />
+		
+		<!--
 		<action name="weeklySpentEffort" method="getDaySumsByWeek" class="spentEffortAction">
 			<result type="dispatcher">/WEB-INF/jsp/inc/spentEffort.jsp</result>
 		</action>
+		
 		<action name="hourEntriesByUserAndWeek" class="spentEffortAction" method="getHourEntriesByUserAndDay">
 			<result type="dispatcher">/WEB-INF/jsp/inc/effortByWeek.jsp</result>
 		</action>
-		 -->
+		-->
 		<!-- Business theme actions -->
 		<!-- 
 		<action name="deleteBusinessTheme" method="delete"
@@ -1049,10 +1053,12 @@
             class="iterationGoalAction">
             <result>/WEB-INF/jsp/jsonData.jsp</result>
         </action>
+        -->
+        
         <action name="getUserJSON" method="getUserJSON" class="userAction">
             <result>/WEB-INF/jsp/jsonData.jsp</result>
         </action>
-        -->
+        
         <action name="getTeamJSON" method="getTeamJSON" class="teamAction">
             <result>/WEB-INF/jsp/jsonData.jsp</result>
         </action>

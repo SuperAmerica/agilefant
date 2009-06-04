@@ -64,9 +64,12 @@ $(document).ready(function() {
 		<tr>
 			<td>When</td>
 			<td></td>
-			<td><joda:format value="${hourEntry.date}" style="S-" /> <aef:datepicker
+			<td>
+			<joda:format value="${hourEntry.date}" var="date"
+				pattern="yyyy-MM-dd HH:mm" />
+			<aef:datepicker
 				id="he_date" name="date"
-				format="%{getText('webwork.shortDateTime.format')}" value="%{#date}" />
+				format="%{getText('webwork.shortDateTime.format')}" value="${date}" />
 			</td>
 		</tr>
 

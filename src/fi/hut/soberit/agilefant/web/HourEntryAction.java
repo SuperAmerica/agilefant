@@ -45,6 +45,8 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
     private int userId = 0;
     private String date;
     private DateTime internalDate;
+
+
     private int backlogId = 0;
     private int storyId = 0;
     private int taskId = 0;
@@ -138,10 +140,13 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
         return CRUDAction.AJAX_SUCCESS;
     }
 
-    /*
-     * public String multiEdit() { hourEntryBusiness.updateMultiple(userIdss,
-     * dates, efforts, descriptions); return CRUDAction.AJAX_SUCCESS; }
-     */
+
+    public String multiEdit() { 
+        hourEntryBusiness.updateMultiple(userIdss,
+                dates, efforts, descriptions); 
+        return CRUDAction.AJAX_SUCCESS; 
+    }
+
     protected void fillStorable(HourEntry storable) {
         storable.setDate(this.internalDate);
         storable.setDescription(this.hourEntry.getDescription());
@@ -305,6 +310,10 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
 
     public void setStoryBusiness(StoryBusiness storyBusiness) {
         this.storyBusiness = storyBusiness;
+    }
+    
+    public DateTime getInternalDate() {
+        return internalDate;
     }
 
 }

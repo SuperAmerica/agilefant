@@ -1,6 +1,7 @@
 package fi.hut.soberit.agilefant.business;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import fi.hut.soberit.agilefant.model.Backlog;
@@ -26,6 +27,18 @@ public interface HourEntryBusiness extends GenericBusiness<HourEntry> {
      */
     public void addHourEntryForMultipleUsers(TimesheetLoggable parent,
             HourEntry hourEntry, Set<Integer> userIds);
+
+    /**
+     * Update multiple hour entries
+     * 
+     * @param userIds
+     * @param dates
+     * @param efforts
+     * @param descriptions
+     */
+    public void updateMultiple(Map<Integer, String[]> userIds,
+            Map<Integer, String[]> dates, Map<Integer, String[]> efforts,
+            Map<Integer, String[]> descriptions);
 
     
     HourEntry store(TimesheetLoggable parent, HourEntry hourEntry);

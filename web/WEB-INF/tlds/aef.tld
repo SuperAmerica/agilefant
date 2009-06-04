@@ -447,6 +447,24 @@
 	</function>  
 	
 	<function>
+	  <name>dateTimeToFormattedString</name>
+	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
+	  <function-signature>String dateTimeToFormattedString(org.joda.time.DateTime)</function-signature>
+	</function>  
+	
+	<function>
+	  <name>dateTimeToDate</name>
+	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
+	  <function-signature>public static Date dateTimeToDate(org.joda.time.DateTime)</function-signature>
+	</function> 
+	
+	<function>
+	  <name>currentDateTime</name>
+	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
+	  <function-signature>public static DateTime currentDateTime()</function-signature>
+	</function>
+	
+	<function>
 	  <name>html</name>
 	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
 	  <function-signature>String htmlOut(java.lang.String)</function-signature>

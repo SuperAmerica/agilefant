@@ -1,8 +1,12 @@
 package fi.hut.soberit.agilefant.business.impl;
 
+import java.text.ParseException;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +23,7 @@ import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.StoryHourEntry;
 import fi.hut.soberit.agilefant.model.TimesheetLoggable;
 import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.util.CalendarUtils;
 
 @Service("hourEntryBusiness")
 @Transactional
@@ -100,6 +105,35 @@ public class HourEntryBusinessImpl extends GenericBusinessImpl<HourEntry>
 
     public UserDAO getUserDAO() {
         return userDAO;
+    }
+
+    public void updateMultiple(Map<Integer, String[]> userIds,
+            Map<Integer, String[]> dates, Map<Integer, String[]> efforts,
+            Map<Integer, String[]> descriptions) {
+        Set<Integer> ids = userIds.keySet();
+        for(Integer entryId : ids) {      
+            HourEntry entry = hourEntryDAO.get(entryId);
+            if(entry == null)
+                continue;
+            Integer userId = Integer.parseInt(userIds.get(entryId)[0]);
+            String dateStr = dates.get(entryId)[0];
+            entry.setMinutesSpent(Long.parseLong(efforts.get(entryId)[0]));
+            DateTime date;
+            try {
+                date = new DateTime(CalendarUtils.parseDateFromString(dateStr));
+                entry.setDate(date);
+            } catch (ParseException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            User user = userDAO.get(userId);
+            if(user == null)
+                continue;
+            entry.setUser(user);
+            entry.setDescription(descriptions.get(entryId)[0]);
+            hourEntryDAO.store(entry);
+        }
+        
     }
 
 

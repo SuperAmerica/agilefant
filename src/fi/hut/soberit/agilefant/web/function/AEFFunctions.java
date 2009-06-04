@@ -9,6 +9,8 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import org.joda.time.DateTime;
+
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
@@ -131,4 +133,15 @@ public class AEFFunctions {
         return htmlString.replaceAll("\\<.*?>", "");
     }
 
+    public static Date dateTimeToDate(DateTime dateTime) {
+        return dateTime.toDate();
+    }
+    
+    public static DateTime currentDateTime() {
+        return new DateTime();
+    }
+    
+    public static String dateTimeToFormattedString(DateTime dateTime) {
+        return dateTime.toString("YYYY-MM-dd HH:mm");
+    }
 }

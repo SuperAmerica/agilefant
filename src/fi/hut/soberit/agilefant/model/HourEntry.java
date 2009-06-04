@@ -113,5 +113,4 @@ public class HourEntry {
     public void setMinutesSpent(long minutesSpent) {
         this.minutesSpent = minutesSpent;
     }
-
 }

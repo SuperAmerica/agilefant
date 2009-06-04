@@ -65,7 +65,7 @@ $(document).ready(function() {
 						</display:column>
 						
 						<display:column sortable="false" title="Spent effort" sortProperty="timeSpent">
-							${aef:html(row.timeSpent)}
+							${aef:html(row.minutesSpent)}
 						</display:column>
 						
 						<display:column sortable="false" title="Comment">

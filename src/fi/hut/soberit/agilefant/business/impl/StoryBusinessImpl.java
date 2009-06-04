@@ -12,10 +12,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import fi.hut.soberit.agilefant.business.StoryBusiness;
 import fi.hut.soberit.agilefant.db.BacklogDAO;
+import fi.hut.soberit.agilefant.db.IterationDAO;
 import fi.hut.soberit.agilefant.db.StoryDAO;
 import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.Backlog;
+import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
@@ -31,6 +33,8 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
     @Autowired
     private BacklogDAO backlogDAO;
     @Autowired
+    private IterationDAO iterationDAO;
+    @Autowired
     private UserDAO userDAO;
 
     @Autowired
@@ -44,7 +48,7 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
     }
     
     @Transactional(readOnly = true)
-    public Collection<Task> getStoryContents(Story story) {
+    public Collection<Task> getStoryContents(Story story, Iteration iteration) {
         // TODO Auto-generated method stub
         return null;
     }
@@ -198,5 +202,9 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
     
     public void setUserDAO(UserDAO userDAO) {
         this.userDAO = userDAO;
+    }
+
+    public void setIterationDAO(IterationDAO iterationDAO) {
+        this.iterationDAO = iterationDAO;
     }
 }

@@ -8,6 +8,7 @@ import static org.easymock.EasyMock.verify;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 
 import org.junit.*;
 import static org.junit.Assert.*;
@@ -83,6 +84,19 @@ public class TransferObjectBusinessTest {
         Collection<StoryTO> stories =
             transferObjectBusiness.constructIterationDataWithUserData(iteration, null);
         assertEquals(0, stories.size());
+    }
+    
+    @Test
+    public void testConstructTaskTO_delegate() {
+        task.setIteration(iteration);
+        expect(projectBusiness.getAssignedUsers((Project)task.getIteration().getParent()))
+            .andReturn(Arrays.asList(assignedUser));
+        replay(projectBusiness);
+        
+        assertEquals(task.getId(),
+                transferObjectBusiness.constructTaskTO(task).getId());
+        
+        verify(projectBusiness);
     }
     
     @Test

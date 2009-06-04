@@ -407,19 +407,19 @@ StoryModel.prototype.remove = function() {
 	jQuery.ajax({
 		async: false,
 		error: function() {
-		me.rollBack();
-		commonView.showError("An error occured while deleting a story.");
-	},
-	success: function(data,type) {
-		me.iteration.removeStory(me);
-		ModelFactory.removeStory(me.id);
-		me.callDeleteListeners();
-		commonView.showOk("Story deleted.");
-	},
-	cache: false,
-	type: "POST",
-	url: "deleteStory.action",
-	data: {storyId: this.id}
+  		me.rollBack();
+  		commonView.showError("An error occured while deleting a story.");
+  	},
+  	success: function(data,type) {
+  		me.iteration.removeStory(me);
+  		ModelFactory.removeStory(me.id);
+  		me.callDeleteListeners();
+  		commonView.showOk("Story deleted.");
+  	},
+  	cache: false,
+  	type: "POST",
+  	url: "ajaxDeleteStory.action",
+  	data: {storyId: this.id}
 	});
 };
 StoryModel.prototype.reloadMetrics = function() {

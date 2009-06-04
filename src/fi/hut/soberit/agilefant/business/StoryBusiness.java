@@ -6,6 +6,7 @@ import java.util.Set;
 
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.Backlog;
+import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
@@ -20,9 +21,11 @@ public interface StoryBusiness extends GenericBusiness<Story> {
     public List<Story> getStoriesByBacklog(Backlog backlog);
     
     /**
-     * Get the story's tasks as <code>StoryData</code>
+     * Get the story's tasks as <code>StoryData</code>.
+     * <p>
+     * If <code>story</code> is null, return tasks without story.
      */
-    public Collection<Task> getStoryContents(Story story);
+    public Collection<Task> getStoryContents(Story story, Iteration iteration);
     
     public Collection<ResponsibleContainer> getStoryResponsibles(Story story);
 }

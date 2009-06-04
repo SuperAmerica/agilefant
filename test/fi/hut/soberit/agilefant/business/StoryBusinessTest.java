@@ -58,4 +58,14 @@ public class StoryBusinessTest {
         
         assertEquals(responsibles.size(), storyBusiness.getStoryResponsibles(story1).size());
     }
+    
+    @Test
+    public void testGetStoryContents_delegate() {
+        fail("Not implemented");
+    }
+    
+    @Test
+    public void testGetStoryContents() {
+        assertNull(storyBusiness.getStoryContents(story1, null));
+    }
 }

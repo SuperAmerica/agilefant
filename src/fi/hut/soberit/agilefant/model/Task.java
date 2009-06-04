@@ -17,6 +17,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.IndexColumn;
@@ -160,6 +161,7 @@ public class Task implements TimesheetLoggable {
     @JoinTable(
             name = "task_user"
     )
+    @OrderBy("initials asc")
     @JSON(include = false)
     public Collection<User> getResponsibles() {
         return responsibles;

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import fi.hut.soberit.agilefant.business.ProjectBusiness;
 import fi.hut.soberit.agilefant.business.TransferObjectBusiness;
 import fi.hut.soberit.agilefant.model.Iteration;
+import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
@@ -52,6 +53,13 @@ public class TransferObjectBusinessImpl implements TransferObjectBusiness {
         }
         
         return taskTO;
+    }
+    
+    /** {@inheritDoc} */
+    public TaskTO constructTaskTO(Task task) {
+        Collection<User> assignedUsers
+            = projectBusiness.getAssignedUsers((Project)task.getIteration().getParent());
+        return this.constructTaskTO(task, assignedUsers);
     }
 
     public void setProjectBusiness(ProjectBusiness projectBusiness) {

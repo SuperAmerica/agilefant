@@ -9,44 +9,53 @@ import org.junit.*;
 import static org.junit.Assert.*;
 
 import fi.hut.soberit.agilefant.business.TaskBusiness;
+import fi.hut.soberit.agilefant.business.TransferObjectBusiness;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.Task;
+import fi.hut.soberit.agilefant.util.TaskTO;
 
 public class TaskActionTest {
 
     private TaskAction taskAction = new TaskAction();
     private TaskBusiness taskBusiness;
+    private TransferObjectBusiness transferObjectBusiness;
     private Task task;
     
     @Before
     public void setUp() {
         task = new Task();
-        taskBusiness = createMock(TaskBusiness.class);
-        taskAction.setTaskBusiness(taskBusiness);
         taskAction.setTask(task);
         taskAction.setBacklogId(2);
+        
+        transferObjectBusiness = createMock(TransferObjectBusiness.class);
+        taskAction.setTransferObjectBusiness(transferObjectBusiness);
+        
+        taskBusiness = createMock(TaskBusiness.class);
+        taskAction.setTaskBusiness(taskBusiness);
     }
     
     @Test
     public void testAjaxStoreTask_newTask() {
         expect(taskBusiness.storeTask(task, 2, 0, taskAction.getUserIds())).andReturn(task);
-        expect(taskBusiness.getTaskResponsibles(task)).andReturn(null);
-        replay(taskBusiness);
+//        expect(taskBusiness.getTaskResponsibles(task)).andReturn(null);
+        expect(transferObjectBusiness.constructTaskTO(task))
+            .andReturn(new TaskTO(task));
+        replay(taskBusiness, transferObjectBusiness);
         
         assertEquals(CRUDAction.AJAX_SUCCESS, taskAction.ajaxStoreTask());
         
-        verify(taskBusiness);
+        verify(taskBusiness, transferObjectBusiness);
     }
     
     @Test
     public void testAjaxStoreTask_error() {
         expect(taskBusiness.storeTask(task, 2, 0, taskAction.getUserIds()))
             .andThrow(new ObjectNotFoundException("Iteration not found"));
-        replay(taskBusiness);
+        replay(taskBusiness, transferObjectBusiness);
         
         assertEquals(CRUDAction.AJAX_ERROR, taskAction.ajaxStoreTask());
         
-        verify(taskBusiness);
+        verify(taskBusiness, transferObjectBusiness);
     }
     
     @Test

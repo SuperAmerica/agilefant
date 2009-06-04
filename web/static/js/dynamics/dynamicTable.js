@@ -1013,9 +1013,9 @@
 		      };
 		  } else {
 		      opts.colCss = {
-		        ':lt(5)': { 'background': '#eee' },
-		        ':eq(5)': { 'background': '#fff' },
-		        ':eq(6)': { 'background': '#fff' }
+		        ':lt(4)': { 'background': '#eee' },
+		        ':eq(4)': { 'background': '#fff' },
+		        ':eq(5)': { 'background': '#fff' }
 			  };			  
 		  }
 		  addTableColumn(opts, 

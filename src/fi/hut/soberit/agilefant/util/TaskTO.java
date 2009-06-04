@@ -4,10 +4,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import fi.hut.soberit.agilefant.model.Task;
+import flexjson.JSON;
 
 public class TaskTO extends Task {
    
     // Helper fields
+    
     private Collection<ResponsibleContainer> userData = new ArrayList<ResponsibleContainer>();
     
     public TaskTO(Task task) {
@@ -29,6 +31,7 @@ public class TaskTO extends Task {
         this.userData = userData;
     }
 
+    @JSON(include = true)
     public Collection<ResponsibleContainer> getUserData() {
         return userData;
     }

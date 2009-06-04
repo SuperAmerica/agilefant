@@ -11,6 +11,7 @@ import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
 
 import fi.hut.soberit.agilefant.business.TaskBusiness;
+import fi.hut.soberit.agilefant.business.TransferObjectBusiness;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.util.TaskTO;
 import flexjson.JSONSerializer;
@@ -24,6 +25,9 @@ public class TaskAction extends ActionSupport {
     // Services
     @Autowired
     private TaskBusiness taskBusiness;
+    
+    @Autowired
+    private TransferObjectBusiness transferObjectBusiness;
     
     // Helper fields
     private Task task;
@@ -61,8 +65,7 @@ public class TaskAction extends ActionSupport {
     }
     
     private void populateJsonData() {
-        TaskTO taskTO = new TaskTO(task); 
-        taskTO.setUserData(taskBusiness.getTaskResponsibles(task));
+        TaskTO taskTO = transferObjectBusiness.constructTaskTO(task);
         jsonData = new JSONSerializer().serialize(taskTO);
     }
 
@@ -101,5 +104,10 @@ public class TaskAction extends ActionSupport {
 
     public void setTaskId(int taskId) {
         this.taskId = taskId;
+    }
+
+    public void setTransferObjectBusiness(
+            TransferObjectBusiness transferObjectBusiness) {
+        this.transferObjectBusiness = transferObjectBusiness;
     }
 }

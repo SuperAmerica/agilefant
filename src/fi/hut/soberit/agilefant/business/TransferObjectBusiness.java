@@ -22,7 +22,15 @@ public interface TransferObjectBusiness {
      * Constructs a new transfer object based on given task.
      * <p>
      * Will inject <code>UserData</code>
-     * @param assignedUsers TODO
+     * @param assignedUsers collection of users assigned to project
      */
     public TaskTO constructTaskTO(Task task, Collection<User> assignedUsers);
+    
+    /**
+     * Constructs a new transfer object based on given task.
+     * <p>
+     * Will inject <code>UserData</code>.
+     * Will fetch project assignee information.
+     */
+    public TaskTO constructTaskTO(Task task);
 }

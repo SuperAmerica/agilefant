@@ -739,7 +739,7 @@ TaskModel.prototype.remove = function() {
 	type: "POST",
 	url: "ajaxDeleteTask.action",
 	data: {
-		storyId: this.id
+		taskId: this.id
 	}
 	});
 

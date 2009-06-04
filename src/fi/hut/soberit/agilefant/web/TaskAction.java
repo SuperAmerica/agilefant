@@ -27,6 +27,7 @@ public class TaskAction extends ActionSupport {
     
     // Helper fields
     private Task task;
+    private int taskId;
     private int backlogId;
     private int storyId;
 
@@ -44,6 +45,15 @@ public class TaskAction extends ActionSupport {
         try {
             task = taskBusiness.storeTask(task, backlogId, storyId, userIds);
             populateJsonData();
+        } catch (Exception e) {
+            return CRUDAction.AJAX_ERROR;
+        }
+        return CRUDAction.AJAX_SUCCESS;
+    }
+    
+    public String ajaxDeleteTask() {
+        try {
+            taskBusiness.delete(taskId);
         } catch (Exception e) {
             return CRUDAction.AJAX_ERROR;
         }
@@ -87,5 +97,9 @@ public class TaskAction extends ActionSupport {
     
     public void setStoryId(int storyId) {
         this.storyId = storyId;
+    }
+
+    public void setTaskId(int taskId) {
+        this.taskId = taskId;
     }
 }

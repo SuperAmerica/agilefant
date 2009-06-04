@@ -30,6 +30,7 @@ public class TaskActionTest {
     @Test
     public void testAjaxStoreTask_newTask() {
         expect(taskBusiness.storeTask(task, 2, 0, taskAction.getUserIds())).andReturn(task);
+        expect(taskBusiness.getTaskResponsibles(task)).andReturn(null);
         replay(taskBusiness);
         
         assertEquals(CRUDAction.AJAX_SUCCESS, taskAction.ajaxStoreTask());
@@ -46,5 +47,15 @@ public class TaskActionTest {
         assertEquals(CRUDAction.AJAX_ERROR, taskAction.ajaxStoreTask());
         
         verify(taskBusiness);
+    }
+    
+    @Test
+    public void testAjaxDeleteTask() {
+       taskBusiness.delete(task.getId());
+       replay(taskBusiness);
+       
+       assertEquals(CRUDAction.AJAX_SUCCESS, taskAction.ajaxDeleteTask());
+       
+       verify(taskBusiness);
     }
 }

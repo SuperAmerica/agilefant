@@ -131,7 +131,8 @@ IterationController.prototype = {
     	var row = me.view.createRow(story);
     	var expand = row.createCell();
     	var name = row.createCell({
-    		type: "text", 
+    		type: "text",
+    		required: true,
     		get: function() { return story.getName();}, 
     		set: function(val){ story.setName(val);}});
     	expand.activateSortHandle();

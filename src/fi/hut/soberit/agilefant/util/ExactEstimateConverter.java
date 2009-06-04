@@ -2,15 +2,11 @@ package fi.hut.soberit.agilefant.util;
 
 import java.util.Map;
 
-import org.apache.log4j.Logger;
-
 import com.opensymphony.webwork.util.WebWorkTypeConverter;
 
 import fi.hut.soberit.agilefant.model.ExactEstimate;
 
 public class ExactEstimateConverter extends WebWorkTypeConverter {
-
-    private final Logger log = Logger.getLogger(this.getClass());
 
     @SuppressWarnings("unchecked")
     @Override
@@ -19,21 +15,19 @@ public class ExactEstimateConverter extends WebWorkTypeConverter {
             return null;
         }
         ExactEstimate result = new ExactEstimate();
-        double value;
+        long value;
         try {
-            value = Double.parseDouble(values[0]);
+            value = Long.parseLong(values[0]);
         } catch (NumberFormatException e) {
             return null;
         }
-        result.setMinorUnits((long) (value * ExactEstimateUtils
-                .getMinorsPerMajor()));
+        result.setMinorUnits(value);
         return result;
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public String convertToString(Map context, Object o) {
-        log.info("ToString");
         if (o == null)
             return null;
         if (o instanceof ExactEstimate)

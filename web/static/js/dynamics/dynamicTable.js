@@ -785,7 +785,7 @@
 	    this.field = $('<input type="text"/>').width('80%').appendTo(this.cell.getElement()).focus();
 	    var val = this.cell.options.get();
 	    if(val)  { 
-	    	val = agilefantUtils.aftimeToString(val, true);
+	    	val = agilefantUtils.exactEstimateToString(val, true);
 	    }
 	    this.field.val(val);
         var me = this;

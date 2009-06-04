@@ -671,9 +671,9 @@ TaskModel.prototype.getEffortLeft = function() {
 	return this.effortLeft;
 };
 TaskModel.prototype.setEffortLeft = function(effortLeft) {
-	var millis = agilefantUtils.aftimeToMillis(effortLeft);
-	if (millis !== null) {
-		this.effortLeft = millis;
+	var estimate = agilefantUtils.parseExactEstimate(effortLeft);
+	if (estimate !== null) {
+		this.effortLeft = estimate;
 		this.save();
 	}
 };
@@ -688,9 +688,9 @@ TaskModel.prototype.getOriginalEstimate = function() {
 	return this.originalEstimate;
 };
 TaskModel.prototype.setOriginalEstimate = function(originalEstimate) {
-	var millis = agilefantUtils.aftimeToMillis(originalEstimate);
-	if (millis !== null) {
-		this.originalEstimate = millis;
+	var estimate = agilefantUtils.parseExactEstimate(originalEstimate);
+	if (estimate !== null) {
+		this.originalEstimate = estimate;
 		this.save();
 	}
 };
@@ -812,15 +812,18 @@ TaskModel.prototype.save = function(synchronous, callback) {
 		data.themeIds = agilefantUtils.objectToIdArray(this.themes);
 	}
 	//conversions
+	/*
 	if (data["task.effortLeft"]) {
 		data["task.effortLeft"] /= 3600;
-	}
+	}*/
 	if (!data["task.effortLeft"] && data["task.effortLeft"] !== 0) {
 		data["task.effortLeft"] = "";
 	}
+	/*
 	if (data["task.originalEstimate"]) {
 		data["task.originalEstimate"] /= 3600;
 	}
+	*/
 	if (!data["task.originalEstimate"] && data["task.originalEstimate"] !== 0) {
 		data["task.originalEstimate"] = "";
 	}

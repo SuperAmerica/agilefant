@@ -156,7 +156,6 @@ IterationController.prototype = {
     			decorator: agilefantUtils.aftimeToString
     		});
     	}
-
     	var buttons = row.createCell();
 
     	var desc = row.createCell({
@@ -296,8 +295,7 @@ IterationController.prototype = {
     			get: function() { return story.getEffortSpent(); },
     			decorator: agilefantUtils.aftimeToString
     		});
-    	}
-
+    	}		
     	var buttons = row.createCell();
     	row.setNotSortable();
     	row.createCell().getElement().hide(); //dymmy description
@@ -441,47 +439,47 @@ StoryController.prototype = {
 		}
 		});
 	},
-	addRow: function(story) {
-    	if(this.view.isInTable(story)) { //avoid duplicate entries, should be refatored to the view layer?
+	addRow: function(task) {
+    	if(this.view.isInTable(task)) { //avoid duplicate entries, should be refatored to the view layer?
         	return;
         }
 		var me = this;
-		var row = this.view.createRow(story);
+		var row = this.view.createRow(task);
 		var expand = row.createCell();
 		var themes = row.createCell({
 			type: "theme",
-			backlogId: story.backlog.getId(),
-			set: function(themes) { story.setThemes(themes); story.setThemeIds(agilefantUtils.objectToIdArray(themes)); },
-			get: function() { return story.getThemes(); },
+			backlogId: task.backlog.getId(),
+			set: function(themes) { task.setThemes(themes); task.setThemeIds(agilefantUtils.objectToIdArray(themes)); },
+			get: function() { return task.getThemes(); },
 			decorator: agilefantUtils.themesToHTML
 		});
 		var name = row.createCell({
 			type: "text",
 			required: true,
-			set: function(val) { story.setName(val); },
-			get: function() { return story.getName(); }
+			set: function(val) { task.setName(val); },
+			get: function() { return task.getName(); }
 		});
 		var state = row.createCell({
 			type: "select",
 			items: agilefantUtils.states,
-			set: function(val) { story.setState(val); },
-			get: function() { return story.getState(); },
+			set: function(val) { task.setState(val); },
+			get: function() { return task.getState(); },
 			decorator: agilefantUtils.stateToString,
 			htmlDecorator: agilefantUtils.stateDecorator
 		});
 		row.createCell({
 			type: "select",
 			items: agilefantUtils.priorities, 
-			get: function() { return story.getPriority(); },
+			get: function() { return task.getPriority(); },
 			decorator: agilefantUtils.priorityToString,
-			set: function(val) { story.setPriority(val); }
+			set: function(val) { task.setPriority(val); }
 		});
 		row.createCell({
 			type: "user",
-			get: function() { return story.getUsers(); },
+			get: function() { return task.getUsers(); },
 			getEdit: function() { 
 				var users = [];
-				var tmp = story.getUsers();
+				var tmp = task.getUsers();
 				if(tmp) {
 					for(var i = 0; i < tmp.length; i++) {
 						if(tmp[i]) {
@@ -493,30 +491,30 @@ StoryController.prototype = {
 			},
 			decorator: agilefantUtils.userlistToHTML,
 			set: function(users) {
-				story.setUsers(agilefantUtils.createPseudoUserContainer(users)); 
-				story.setUserIds(agilefantUtils.objectToIdArray(users));	  
+				task.setUsers(agilefantUtils.createPseudoUserContainer(users)); 
+				task.setUserIds(agilefantUtils.objectToIdArray(users));	  
 			},
-			backlogId: story.backlog.getId(),
-			storyId: story.getId()
+			backlogId: task.backlog.getId(),
+			taskId: task.getId()
 		});
 		var el = row.createCell({
 			type: "effort",
-			set: function(val) { story.setEffortLeft(val); },
-			get: function() { return story.getEffortLeft(); },
+			set: function(val) { task.setEffortLeft(val); },
+			get: function() { return task.getEffortLeft(); },
 			onEdit: function() {
-				return (story.getState() !== "DONE");
+				return (task.getState() !== "DONE");
 			},
-			decorator: agilefantUtils.aftimeToString
+			decorator: agilefantUtils.exactEstimateToString
 		});
 		var oe = row.createCell({
 			type: "effort",
-			get: function() { return story.getOriginalEstimate(); },
+			get: function() { return task.getOriginalEstimate(); },
 			onEdit: function(noAutoClose) {
-			  var a = story;
-			  if (story.getState() == "DONE") {
+			  var a = task;
+			  if (task.getState() == "DONE") {
 			    return false;
 			  }
-			  else if (!story.getOriginalEstimate()) {
+			  else if (!task.getOriginalEstimate()) {
 			    return true;
 			  }
 			  else if (noAutoClose) {
@@ -534,7 +532,7 @@ StoryController.prototype = {
     			      'Yes': function() {
       			      $(this).dialog('destroy');
       			      parent.remove();
-      			      story.resetOriginalEstimate();
+      			      task.resetOriginalEstimate();
       			      return false;
       			    },
       			    'No': function() {
@@ -547,13 +545,13 @@ StoryController.prototype = {
 			  }
 			  return false;
 			},
-			set: function(val) { story.setOriginalEstimate(val); },
-			decorator: agilefantUtils.aftimeToString
+			set: function(val) { task.setOriginalEstimate(val); },
+			decorator: agilefantUtils.exactEstimateToString
 		});
 		var es = null;
 		if(agilefantUtils.isTimesheetsEnabled()) {
 			es = row.createCell({
-				get: function() { return story.getEffortSpent(); },
+				get: function() { return task.getEffortSpent(); },
 				decorator: agilefantUtils.aftimeToString
 			});
 		}
@@ -563,18 +561,18 @@ StoryController.prototype = {
 				return;
 			}
 			desc.getElement().hide();
-			story.commit(true);
+			task.commit(true);
 			return false;
 		};
 		row.setSaveCallback(saveCb);
 		var desc = row.createCell({
 			type: "wysiwyg", 
-			get: function() { return story.getDescription(); }, 
-			set: function(val) { story.setDescription(val);},
+			get: function() { return task.getDescription(); }, 
+			set: function(val) { task.setDescription(val);},
 			buttons: {
 				save: {text: "Save", action: saveCb},
 			cancel: {text: "Cancel", action: function() {
-				story.rollBack();
+					task.rollBack();
 				desc.getElement().hide();
 				row.cancelEdit();
 				return false;
@@ -585,30 +583,30 @@ StoryController.prototype = {
 		                               {
 		                            	   text: "Reset original estimate",
 		                            	   callback: function() {
-		                            	   story.resetOriginalEstimate();
+		                            	   task.resetOriginalEstimate();
 		                               }
 		                               }, {
 		                            	   text: "Edit task",
 		                            	   callback: function(row) {
 		                            	   desc.getElement().show();
-		                            	   story.beginTransaction();
+		                            	   task.beginTransaction();
 		                            	   row.openEdit();
 		                               }
 		                               }, {
 		                            	   text: "Move task",
 		                            	   callback: function() {
-		                            	   me.moveTask(row,story);
+		                            	   me.moveTask(row,task);
 		                               }
 		                               },{
 		                            	   text: "Delete task",
 		                            	   callback: function() {
-		                            	   me.deleteStory(story);
+		                            	   me.deleteStory(task);
 		                               }
 		                               }
 		                               ]});
 		var tabCell = row.createCell();
 		tabCell.getElement().hide();
-		var childController = new TaskController(tabCell, story, this, es);
+		var childController = new TaskController(tabCell, task, this, es);
 		commonView.expandCollapse(expand.getElement(), function() {
 			childController.initialize();
 			tabCell.getElement().show();

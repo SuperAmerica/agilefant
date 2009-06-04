@@ -75,6 +75,7 @@ public class IterationAction extends BacklogContentsAction implements CRUDAction
             serializer.include("stories.tasks");
             serializer.include("stories.tasks.userData");
             serializer.include("tasksWithoutStory");
+            serializer.include("tasksWithoutStory.userData");
             //serializer.include("tasksWithoutStory.businessThemes");
             //serializer.include("iterationGoals.backlogItems.businessThemes");
         }

@@ -6,7 +6,9 @@ import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 import org.junit.Before;
@@ -16,43 +18,78 @@ import fi.hut.soberit.agilefant.business.impl.IterationBusinessImpl;
 import fi.hut.soberit.agilefant.db.IterationDAO;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.Iteration;
+import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
+import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.util.IterationDataContainer;
+import fi.hut.soberit.agilefant.util.StoryTO;
+import fi.hut.soberit.agilefant.util.TaskTO;
 
 public class IterationBusinessTest {
 
     IterationBusinessImpl iterationBusiness = new IterationBusinessImpl();
+    TransferObjectBusiness transferObjectBusiness;
+    ProjectBusiness projectBusiness;
     IterationDAO iterationDAO;
     Iteration iteration;
-    Story story1;
-    Story story2;
-    List<Story> storiesList;
+    List<StoryTO> storiesList;
     List<Task> tasksWithoutStoryList;
+    List<TaskTO> tasksTOsWithoutStoryList;
     IterationDataContainer expectedIterationData;
+    Task task;
+    TaskTO taskTO;
     
      
     @Before
     public void setUp() {
         iteration = new Iteration();
         iteration.setId(123);
-        storiesList = Arrays.asList(new Story(), new Story());
-        tasksWithoutStoryList = Arrays.asList(new Task(), new Task());
-        iteration.setStories(storiesList);
+        
+        Story story1 = new Story();
+        story1.setId(666);
+        Story story2 = new Story();
+        story2.setId(667);
+        StoryTO storyTO1 = new StoryTO(story1);
+        StoryTO storyTO2 = new StoryTO(story2);
+        storiesList = Arrays.asList(storyTO1, storyTO2);
+        
+        task = new Task();
+        task.setId(1254);
+        taskTO = new TaskTO(task);
+        tasksWithoutStoryList = Arrays.asList(task);
+        tasksTOsWithoutStoryList = Arrays.asList(taskTO);
         
         expectedIterationData = new IterationDataContainer();
-        expectedIterationData.setStories(storiesList);
-        expectedIterationData.setTasksWithoutStory(tasksWithoutStoryList);
+        expectedIterationData.getStories().addAll(storiesList);
+        expectedIterationData.getTasksWithoutStory().addAll(tasksTOsWithoutStoryList);
         
         iterationDAO = createMock(IterationDAO.class);
         iterationBusiness.setIterationDAO(iterationDAO);
+        
+        projectBusiness = createMock(ProjectBusiness.class);
+        iterationBusiness.setProjectBusiness(projectBusiness);
+        
+        transferObjectBusiness = createMock(TransferObjectBusiness.class);
+        iterationBusiness.setTransferObjectBusiness(transferObjectBusiness);
     }
 
     @Test
-    public void testGetIterationContents_doNotExcludeTasks() {       
+    public void testGetIterationContents_doNotExcludeTasks() {
+        Collection<User> assignedUsers = Arrays.asList(new User());
+        
         expect(iterationDAO.get(iteration.getId())).andReturn(iteration);
-        expect(iterationDAO.getTasksWithoutStoryForIteration(iteration)).andReturn(tasksWithoutStoryList);
-        replay(iterationDAO);
+        expect(projectBusiness.getAssignedUsers((Project)iteration.getParent()))
+            .andReturn(assignedUsers);
+        expect(transferObjectBusiness.constructIterationDataWithUserData(iteration, null))
+            .andReturn(storiesList);
+        expect(iterationDAO.getTasksWithoutStoryForIteration(iteration))
+            .andReturn(tasksWithoutStoryList);
+        
+        expect(transferObjectBusiness.constructTaskTO(task, assignedUsers))
+            .andReturn(taskTO);
+        
+        replay(iterationDAO, transferObjectBusiness, projectBusiness);
         
         IterationDataContainer actualIterationData =
             iterationBusiness.getIterationContents(iteration.getId(), false);
@@ -60,7 +97,7 @@ public class IterationBusinessTest {
         assertEquals(expectedIterationData.getStories(), actualIterationData.getStories());
         assertEquals(expectedIterationData.getTasksWithoutStory(), actualIterationData.getTasksWithoutStory());
         
-        verify(iterationDAO);
+        verify(iterationDAO, transferObjectBusiness, projectBusiness);
     }
     
     @Test

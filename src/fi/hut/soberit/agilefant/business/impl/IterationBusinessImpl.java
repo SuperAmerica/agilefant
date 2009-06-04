@@ -8,11 +8,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import fi.hut.soberit.agilefant.business.IterationBusiness;
+import fi.hut.soberit.agilefant.business.ProjectBusiness;
+import fi.hut.soberit.agilefant.business.TransferObjectBusiness;
 import fi.hut.soberit.agilefant.db.IterationDAO;
 import fi.hut.soberit.agilefant.model.Iteration;
+import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
+import fi.hut.soberit.agilefant.model.Task;
+import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.util.IterationDataContainer;
 import fi.hut.soberit.agilefant.util.StoryTO;
+import fi.hut.soberit.agilefant.util.TaskTO;
 
 @Service("iterationBusiness")
 @Transactional
@@ -20,6 +26,10 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration> implem
         IterationBusiness {
 
     private IterationDAO iterationDAO;
+    @Autowired
+    private TransferObjectBusiness transferObjectBusiness;
+    @Autowired
+    private ProjectBusiness projectBusiness;
 
     @Autowired
     public void setIterationDAO(IterationDAO iterationDAO) {
@@ -34,64 +44,34 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration> implem
         IterationDataContainer iterationData = new IterationDataContainer();
         Iteration iteration = this.retrieve(iterationId);
         
+        // Get the project's assignees
+        Collection<User> assignedUsers = projectBusiness
+            .getAssignedUsers((Project)iteration.getParent());
+        
         // 1. Set iteration's stories as transfer objects
-        iterationData.getStories().addAll(iterationContentsASTOs(iteration));
+        iterationData.getStories().addAll(
+                transferObjectBusiness.constructIterationDataWithUserData(iteration, assignedUsers));
         
         // 2. Set the tasks without a story
-        iterationData.setTasksWithoutStory(
-                iterationDAO.getTasksWithoutStoryForIteration(iteration));
+        Collection<Task> tasksWithoutStory
+            = iterationDAO.getTasksWithoutStoryForIteration(iteration);
+        
+        iterationData.setTasksWithoutStory(new ArrayList<Task>());
+        
+        for (Task task : tasksWithoutStory) {
+            TaskTO taskTO = transferObjectBusiness.constructTaskTO(task, assignedUsers);
+            iterationData.getTasksWithoutStory().add(taskTO);
+        }
         
         return iterationData;
     }
     
-    private Collection<Story> iterationContentsASTOs(Iteration iteration) {
-        Collection<Story> stories = new ArrayList<Story>();
-        for (Story story : iteration.getStories()) {
-            stories.add(new StoryTO(story));
-        }
-        return stories;
+    public void setTransferObjectBusiness(
+            TransferObjectBusiness transferObjectBusiness) {
+        this.transferObjectBusiness = transferObjectBusiness;
     }
-    
-    
-    /*
-    public IterationDataContainer getIterationContents(Iteration iter, boolean excludeBacklogItems) {
-        List<IterationGoal> goals = this.iterationGoalDAO.getGoalsByIteration(iter);
-        
-        List<BacklogItem> blis = backlogItemBusiness.getBacklogItemsByBacklogWithCache(iter);
-        
-        IterationDataContainer iterData = new IterationDataContainer();
-        iterData.setIterationGoals(goals);
-        
-        if(excludeBacklogItems) {
-            return iterData;
-        }
-        //calculate efforts from pre-fetched backlog items
-        for(IterationGoal goal : goals) {
-            goal.setBacklogItems(new ArrayList<BacklogItem>());
-            for(BacklogItem bli : blis) {
-                if(bli.getIterationGoal() == goal) {
-                    if(bli.getEffortLeft() != null) {
-                        goal.getMetrics().getEffortLeft().add(bli.getEffortLeft());
-                    }
-                    if(bli.getEffortSpent() != null) {
-                        goal.getMetrics().getEffortSpent().add(bli.getEffortSpent());
-                    }
-                    if(bli.getOriginalEstimate() != null) {
-                        goal.getMetrics().getOriginalEstimate().add(bli.getOriginalEstimate());
-                    }
-                    goal.getMetrics().addTask(bli);
-                    goal.getBacklogItems().add(bli);
-                }
-            }
-        }
-        List<BacklogItem> itemsWithoutGoal = new ArrayList<BacklogItem>();
-        for(BacklogItem item : blis) {
-            if(item.getIterationGoal() == null) {
-                itemsWithoutGoal.add(item);
-            }
-        }
-        iterData.setItemsWithoutGoal(itemsWithoutGoal);
-        return iterData;
-    }*/
 
+    public void setProjectBusiness(ProjectBusiness projectBusiness) {
+        this.projectBusiness = projectBusiness;
+    }
 }

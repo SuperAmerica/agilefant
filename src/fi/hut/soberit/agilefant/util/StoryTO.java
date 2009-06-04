@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import fi.hut.soberit.agilefant.model.Story;
-import fi.hut.soberit.agilefant.model.Task;
 
 public class StoryTO extends Story {
     
@@ -20,17 +19,6 @@ public class StoryTO extends Story {
         this.setPriority(story.getPriority());
         this.setCreator(story.getCreator());
         this.setResponsibles(story.getResponsibles());
-        
-        setTasksAsTOs(story.getTasks());
-    }
-    
-    private void setTasksAsTOs(Collection<Task> tasks) {
-        Collection<TaskTO> newTasks = new ArrayList<TaskTO>();
-        for (Task task : tasks) {
-            newTasks.add(new TaskTO(task));
-        }
-        this.setTasks(new ArrayList<Task>());
-        this.getTasks().addAll(newTasks);
     }
     
     public void setUserData(Collection<ResponsibleContainer> userData) {

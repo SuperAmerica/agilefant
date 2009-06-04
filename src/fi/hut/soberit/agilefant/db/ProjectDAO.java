@@ -16,4 +16,6 @@ public interface ProjectDAO extends GenericDAO<Project> {
      * Gets a collection of users assigned to the project.
      */
     public Collection<User> getAssignedUsers(Project project);
+    
+    public Collection<Project> getProjectsWithUserAssigned(User user);
 }

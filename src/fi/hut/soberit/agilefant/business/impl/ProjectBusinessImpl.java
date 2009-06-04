@@ -48,4 +48,10 @@ public class ProjectBusinessImpl extends GenericBusinessImpl<Project> implements
     public Collection<User> getAssignedUsers(Project project) {
         return projectDAO.getAssignedUsers(project);
     }
+    
+    public boolean isUserAssignedToProject(Project project, User user) {
+        Collection<Project> usersProjects
+            = projectDAO.getProjectsWithUserAssigned(user);
+        return usersProjects.contains(project);
+    }
 }

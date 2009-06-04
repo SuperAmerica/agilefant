@@ -1,5 +1,6 @@
 package fi.hut.soberit.agilefant.model;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.persistence.DiscriminatorColumn;
@@ -58,9 +59,9 @@ public abstract class Backlog {
 
     private Backlog parent;
     
-    private Collection<Backlog> children;
+    private Collection<Backlog> children = new ArrayList<Backlog>();
     
-    private Collection<Story> stories;
+    private Collection<Story> stories = new ArrayList<Story>();
     
     /**
      * Get the id of this object.

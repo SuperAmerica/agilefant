@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import fi.hut.soberit.agilefant.model.Task;
-import fi.hut.soberit.agilefant.model.User;
 
 public class TaskTO extends Task {
    
@@ -24,15 +23,6 @@ public class TaskTO extends Task {
         this.setOriginalEstimate(task.getOriginalEstimate());
         this.setHistoryEntries(task.getHistoryEntries());
         this.setResponsibles(task.getResponsibles());
-        
-        responsiblesToUserData();
-    }
-    
-    // TODO: 090603 Reko: Set project assignments 
-    private void responsiblesToUserData() {
-        for (User user : this.getResponsibles()) {
-            userData.add(new ResponsibleContainer(user, true));
-        }
     }
     
     public void setUserData(Collection<ResponsibleContainer> userData) {

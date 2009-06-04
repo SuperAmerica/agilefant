@@ -16,9 +16,9 @@ public interface ProjectBusiness extends GenericBusiness<Project> {
     public Collection<User> getUsersAssignableToProject(Project project);
 
     /**
-     * Get users assigned to the project
-     * @param project
-     * @return
+     * Get users assigned to the project.
      */
     public Collection<User> getAssignedUsers(Project project);
+    
+    public boolean isUserAssignedToProject(Project project, User user);
 }

@@ -31,4 +31,13 @@ public class ProjectDAOHibernate extends GenericDAOHibernate<Project> implements
         crit = crit.createCriteria("user");
         return asCollection(crit);
     }
+    
+    public Collection<Project> getProjectsWithUserAssigned(User user) {
+        Session session = sessionFactory.getCurrentSession();
+        Criteria criteria = session.createCriteria(User.class);
+        criteria.add(Restrictions.idEq(user.getId()));
+        criteria = criteria.createCriteria("assignments");
+        criteria = criteria.createCriteria("project");
+        return asCollection(criteria);
+    }
 }

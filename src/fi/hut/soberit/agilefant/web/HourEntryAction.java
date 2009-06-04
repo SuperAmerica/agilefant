@@ -124,9 +124,7 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
             storable.setUser(userBusiness.retrieve(userId));
             jsonData = new JSONSerializer().serialize(hourEntryBusiness.store(
                     parent, storable));
-        } else if (userId == 0) {
-            throw new UnsupportedOperationException("Currently unimplemented");
-            /*
+        } else if (userId == 0 /* We have a list of user ids */) {
             if (userIds.size() < 1) {
                 super.addActionError(super.getText("hourEntry.noUsers"));
                 return CRUDAction.AJAX_ERROR;
@@ -134,7 +132,7 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
             hourEntryBusiness.addHourEntryForMultipleUsers(parent, storable,
                     userIds);
             jsonData = new JSONSerializer().serialize(new Object());
-            */
+
             // hack in order to make the returned data look like json data
         }
         return CRUDAction.AJAX_SUCCESS;

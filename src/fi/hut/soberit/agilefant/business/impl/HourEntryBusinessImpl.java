@@ -1,6 +1,7 @@
 package fi.hut.soberit.agilefant.business.impl;
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,12 +11,14 @@ import fi.hut.soberit.agilefant.business.HourEntryBusiness;
 import fi.hut.soberit.agilefant.db.BacklogHourEntryDAO;
 import fi.hut.soberit.agilefant.db.HourEntryDAO;
 import fi.hut.soberit.agilefant.db.StoryHourEntryDAO;
+import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogHourEntry;
 import fi.hut.soberit.agilefant.model.HourEntry;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.StoryHourEntry;
 import fi.hut.soberit.agilefant.model.TimesheetLoggable;
+import fi.hut.soberit.agilefant.model.User;
 
 @Service("hourEntryBusiness")
 @Transactional
@@ -28,6 +31,8 @@ public class HourEntryBusinessImpl extends GenericBusinessImpl<HourEntry>
     private StoryHourEntryDAO storyHourEntryDAO;
     @Autowired
     private BacklogHourEntryDAO backlogHourEntryDAO;
+    @Autowired
+    private UserDAO userDAO;
 
     @Autowired
     public void setHourEntryDAO(HourEntryDAO hourEntryDAO) {
@@ -74,5 +79,28 @@ public class HourEntryBusinessImpl extends GenericBusinessImpl<HourEntry>
     public List<BacklogHourEntry> retrieveByParent(Backlog parent) {
         return backlogHourEntryDAO.retrieveByBacklog(parent);
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void addHourEntryForMultipleUsers(TimesheetLoggable parent, HourEntry hourEntry, Set<Integer> userIds) {
+        for (int id : userIds) {
+            User current = getUserDAO().get(id);
+            if(current != null) {
+                hourEntry.setUser(current);
+                store(parent,hourEntry);
+            }
+        }
+        hourEntry.setUser(null);
+    }
+
+    public void setUserDAO(UserDAO userDAO) {
+        this.userDAO = userDAO;
+    }
+
+    public UserDAO getUserDAO() {
+        return userDAO;
+    }
+
 
 }

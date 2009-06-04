@@ -105,7 +105,7 @@ $(document).ready(function() {
                                                 <c:if test="${hourReport}">
                                                 <td>
                                                         <ww:url id="createLink" action="ajaxCreateHourEntry" includeParams="none">
-                                                            <ww:param name="backlogId" value="${projectId}" />
+                                                            <ww:param name="backlogId" value="${project.id}" />
                                                         </ww:url>
                                                     <ww:a cssClass="openCreateDialog openUserDialog logEffortLink"
                                                     onclick="return false;" title="Log effort" href="%{createLink}">
@@ -425,7 +425,7 @@ $(document).ready(function() {
 														<td></td>
 														<td></td>
 														<c:choose>
-															<c:when test="${projectId == 0}">
+															<c:when test="${project.id == 0}">
 																<td><ww:submit value="Create"
 															    disabled="disabled" cssClass="undisableMe"/></td>
 															</c:when>
@@ -723,10 +723,12 @@ $(document).ready(function() {
 
 <%-- Hour reporting here - Remember to expel David H. --%>
 
-<aef:hourReporting id="hourReport"></aef:hourReporting>
-<c:if test="${hourReport == 'true' && projectId != 0}">
+<%-- <aef:hourReporting id="hourReport"></aef:hourReporting> --%>
+<c:if test="${hourReport == 'true' && project.id != 0}" >
 	<c:set var="myAction" value="editProject" scope="session" />
 	<%@ include file="./inc/_hourEntryList.jsp"%>
-</c:if> <%-- Hour reporting on --%>
+</c:if> 
+
+<%-- Hour reporting on --%>
 
 <%@ include file="./inc/_footer.jsp"%>

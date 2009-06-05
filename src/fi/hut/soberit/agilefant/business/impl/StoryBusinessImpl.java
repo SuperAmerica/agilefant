@@ -186,7 +186,9 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
             storyDAO.store(storable);
             persisted = storable;
         }
-        updateStoryPriority(persisted, priority);
+        if (persisted.getBacklog() instanceof Iteration) {
+            updateStoryPriority(persisted, priority);
+        }
         // if(!historyUpdated) {
         // historyBusiness.updateBacklogHistory(backlog.getId());
         // }

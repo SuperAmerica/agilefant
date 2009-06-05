@@ -87,21 +87,24 @@ $(document).ready(function() {
 
 
     <display:column sortable="false" title="Responsibles" class="responsibleColumn">
+      <aef:responsibleColumn storyId="${row.id}"/>
+    <%--
       <c:set var="responsibleCount" value="${fn:length(backlogResponsibles[row])}" />
       <c:set var="currentResponsibleCount" value="0" />
       <c:forEach items="${backlogResponsibles[row]}" var="itemResponsible">
         <c:set var="currentResponsibleCount" value="${currentResponsibleCount + 1}" />
         <c:choose>
           <c:when test="${itemResponsible.inProject == false}">
-            <%--<a href="dailyWork.action?userId=${itemResponsible.user.id}" class="unassigned">--%>
+            
               <span class="unassigned">${itemResponsible.user.initials}</span><c:if test="${currentResponsibleCount !=  responsibleCount}">,</c:if>
           </c:when>
           <c:otherwise>
-            <%--<a href="dailyWork.action?userId=${itemResponsible.user.id}">--%>
+            
               ${itemResponsible.user.initials}<c:if test="${currentResponsibleCount !=  responsibleCount}">,</c:if>
           </c:otherwise>
         </c:choose>
       </c:forEach>
+      --%>
     </display:column>
 
 <%--

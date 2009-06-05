@@ -197,7 +197,7 @@ $(document).ready(function() {
 				}
 				
 				<%-- If user changed the item's state to DONE and there are todos not DONE, ask if they should be set to DONE as well. --%>				
-				$(document).ready(function() {					
+				/*$(document).ready(function() {					
 					$("#stateSelect_${story.id}-${storyListContext}").change(function() {
 						change_estimate_enabled($(this).val(), ${story.id}, '${storyListContext}');						
 						if ($(this).val() == 'DONE' && ${hasUndoneTodos}) {
@@ -209,7 +209,7 @@ $(document).ready(function() {
 					});
 
 					
-				});
+				});*/
 				</script>
 				<%-- Todos to DONE confirmation script ends. --%>
 				<ww:hidden name="todosToDone" value="${todosToDone}" id="todosToDone_${story.id}-${storyListContext}" />			

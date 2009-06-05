@@ -19,5 +19,4 @@ public interface TaskBusiness extends GenericBusiness<Task> {
     public Collection<ResponsibleContainer> getTaskResponsibles(Task task);
 
     public Task resetOriginalEstimate(int taskId);
-    
 }

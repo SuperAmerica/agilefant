@@ -46,4 +46,11 @@ public interface BacklogBusiness extends GenericBusiness<Backlog> {
      * Get the backlog's responsibles grouped by story.
      */
     public Map<Story, List<ResponsibleContainer>> getResponsiblesByBacklog(Backlog backlog);
+
+    
+    /**
+     * Gets the backlog's child backlogs or all products if backlog is <code>null</code>.
+     */
+    public Collection<Backlog> getChildBacklogs(Backlog backlog);
+    
 }

@@ -14,8 +14,13 @@ import static org.junit.Assert.*;
 
 import fi.hut.soberit.agilefant.business.impl.BacklogBusinessImpl;
 import fi.hut.soberit.agilefant.db.BacklogDAO;
+import fi.hut.soberit.agilefant.db.IterationDAO;
+import fi.hut.soberit.agilefant.db.ProductDAO;
+import fi.hut.soberit.agilefant.db.ProjectDAO;
 import fi.hut.soberit.agilefant.model.Backlog;
+import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Product;
+import fi.hut.soberit.agilefant.model.Project;
 
 
 /**
@@ -29,11 +34,23 @@ public class BacklogBusinessTest {
 
     private BacklogBusinessImpl backlogBusiness = new BacklogBusinessImpl();
     private BacklogDAO backlogDAO;
+    private ProductDAO productDAO;
+    private ProjectDAO projectDAO;
+    private IterationDAO iterationDAO;
     
     @Before
     public void setUp() {
         backlogDAO = createMock(BacklogDAO.class);
         backlogBusiness.setBacklogDAO(backlogDAO);
+        
+        productDAO = createMock(ProductDAO.class);
+        backlogBusiness.setProductDAO(productDAO);
+        
+        projectDAO = createMock(ProjectDAO.class);
+        backlogBusiness.setProjectDAO(projectDAO);
+        
+        iterationDAO = createMock(IterationDAO.class);
+        backlogBusiness.setIterationDAO(iterationDAO);
     }
     
     @Test
@@ -59,11 +76,48 @@ public class BacklogBusinessTest {
         retrievedBacklogs.add(prod2);
         
         expect(backlogDAO.retrieveMultiple(idList)).andReturn(retrievedBacklogs);
-        replay(backlogDAO);
+        replay(backlogDAO, productDAO, projectDAO, iterationDAO);
         
         backlogBusiness.retrieveMultiple(idList);
         
-        verify(backlogDAO);
+        verify(backlogDAO, productDAO, projectDAO, iterationDAO);
+    }
+    
+    @Test
+    public void testGetChildBacklogs_allProducts() {
+        expect(productDAO.getAll()).andReturn(Arrays.asList(new Product()));
+        replay(backlogDAO, productDAO, projectDAO, iterationDAO);
+        backlogBusiness.getChildBacklogs(null);
+        verify(backlogDAO, productDAO, projectDAO, iterationDAO);
+    }
+    
+    @Test
+    public void testGetChildBacklogs_forProduct() {
+        Backlog product = new Product();
+        Project project = new Project();
+        product.getChildren().add(project);
+        replay(backlogDAO, productDAO, projectDAO, iterationDAO);
+        
+        Collection<Backlog> actualChildren = backlogBusiness.getChildBacklogs(product);
+        
+        assertTrue(actualChildren.contains(project));
+        assertEquals(1, actualChildren.size());
+        
+        verify(backlogDAO, productDAO, projectDAO, iterationDAO);
+    }
+    
+    @Test
+    public void testGetChildBacklogs_forProject() {
+        Backlog project = new Project();
+        Iteration iteration = new Iteration();
+        project.getChildren().add(iteration);
+        replay(backlogDAO, productDAO, projectDAO, iterationDAO);
+        
+        Collection<Backlog> actualChildren = backlogBusiness.getChildBacklogs(project);
+        assertTrue(actualChildren.contains(iteration));
+        assertEquals(1, actualChildren.size());
+        
+        verify(backlogDAO, productDAO, projectDAO, iterationDAO);
     }
     
     

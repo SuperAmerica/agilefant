@@ -75,6 +75,10 @@ public class StoryAction extends ActionSupport implements CRUDAction {
     // private TodoBusiness todoBusiness;
 
     private String jsonData;
+    
+    private boolean moveTasks;
+
+
 
     public String getJsonData() {
         return jsonData;
@@ -140,6 +144,11 @@ public class StoryAction extends ActionSupport implements CRUDAction {
         return SUCCESS;
     }
 
+    public String moveStory() {
+        storyBusiness.attachStoryToIteration(storyId, iterationId, moveTasks);
+        return CRUDAction.AJAX_SUCCESS;
+    }
+    
     public String ajaxDeleteStory() {
         try {
             storyBusiness.remove(storyId);
@@ -350,6 +359,10 @@ public class StoryAction extends ActionSupport implements CRUDAction {
 
     public Integer getPriority() {
         return priority;
+    }
+    
+    public void setMoveTasks(boolean moveTasks) {
+        this.moveTasks = moveTasks;
     }
     
 }

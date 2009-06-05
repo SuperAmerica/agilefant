@@ -412,12 +412,18 @@
 			class="backlogAction">
 			<result>/WEB-INF/jsp/inc/underSameProduct.jsp</result>	
 		</action>
-		
+		-->
 		<action name="getSubBacklogsAsJSON" method="getSubBacklogsAsJSON"
 			class="backlogAction">
-			<result>/WEB-INF/jsp/jsonData.jsp</result>
+      <result name="ajax_error" type="httpheader">
+        <param name="status">400</param>
+      </result>
+      <result name="ajax_success" type="dispatcher">
+        <param name="status">200</param>
+        <param name="location">/WEB-INF/jsp/jsonData.jsp</param>
+      </result>
 		</action>
-		
+		<!-- 
 		<action name="backlogSelection">
 			<result>/WEB-INF/jsp/inc/selectBacklog.jsp</result>
 		</action>
@@ -695,18 +701,18 @@
             class="iterationGoalAction">
             <result>/WEB-INF/jsp/forms/createIterationGoal.jsp</result>
     </action>
-   
-    <action name="moveIterationGoal" method="moveIterationGoal"
-      class="iterationGoalAction">
+   -->
+    <action name="moveStory" method="moveStory"
+      class="storyAction">
     </action>
+    <!-- 
 		<action name="storeIterationGoal" method="store"
 			class="iterationGoalAction">
 			<result name="ajax_success" type="dispatcher">
 				<param name="status">200</param>
 				<param name="location">/WEB-INF/jsp/jsonData.jsp</param>
 			</result>
-		</action>
-		-->
+		</action>-->
     <action name="storyContents" method="getStoryContents" class="storyAction">
       <result name="ajax_success" type="dispatcher">
         <param name="status">200</param>

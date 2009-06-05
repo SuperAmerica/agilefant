@@ -305,5 +305,52 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
     public StoryMetrics calculateMetricsWithoutStory(int iterationId) {
         return storyDAO.calculateMetricsWithoutStory(iterationId);
     }
+    
+    public void attachStoryToIteration(Story story, int iterationId) throws ObjectNotFoundException {
+        this.attachStoryToIteration(story, iterationId, false);
+    }
+    public void attachStoryToIteration(int storyId, int iterationId, boolean moveTasks) throws ObjectNotFoundException {
+        Story story = this.retrieve(storyId);
+        this.attachStoryToIteration(story, iterationId, moveTasks);
+    }
+    public void attachStoryToIteration(Story story, int iterationId, boolean moveTasks) throws ObjectNotFoundException {
+        Iteration newIteration = null;
+        if(iterationId != 0) {
+            newIteration = iterationDAO.get(iterationId);
+            if(newIteration == null) {
+                throw new ObjectNotFoundException("iteration.notFound");
+            }
+        }
+        // story has to have a parent 
+        if(story.getBacklog() == null && iterationId == 0) {
+            throw new IllegalArgumentException("iteration.notFound");
+        }
+        if(story.getBacklog() != null && iterationId != 0) {
+            if(story.getBacklog() != newIteration) {
+                story.getBacklog().getStories().remove(story);
+                story.setBacklog(newIteration);
+                story.getBacklog().getStories().add(story);
+                for(Task task : story.getTasks()) {
+                    if(moveTasks) {
+                        task.setIteration(newIteration);
+                    } else {
+                        task.setStory(null);
+                    }
+                }
+                if(!moveTasks) {
+                    story.getTasks().clear();
+                }
+            }
+        } else if(iterationId != 0) {
+            story.setBacklog(newIteration);
+            story.getBacklog().getStories().add(story);
+        }
+        
+        if(story.getBacklog() == null) {
+            throw new IllegalArgumentException("story.noIteration");
+        }
+    }
+
+    
 
 }

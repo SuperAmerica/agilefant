@@ -128,5 +128,4 @@ public class TaskBusinessImpl extends GenericBusinessImpl<Task> implements
         task.setOriginalEstimate(null);
         return task;
     }
-    
 }

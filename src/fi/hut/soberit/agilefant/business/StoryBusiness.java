@@ -37,6 +37,10 @@ public interface StoryBusiness extends GenericBusiness<Story> {
 
     StoryMetrics calculateMetrics(Story story);
     
-
+    /**
+     * Moves a story to another iteration.
+     * @param moveTasks whether the tasks should be moved with the story.
+     */
+    public void attachStoryToIteration(int storyId, int iterationId, boolean moveTasks);
 
 }

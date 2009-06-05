@@ -24,7 +24,7 @@ var StoryController = function(parentView, model, parentController) {
   this.view.addCaptionAction("createNew", {
     text: commonView.buttonWithIcon("create","Create task"),
     callback: function() {
-    me.createStory();
+    me.createTask();
   }
   });
   this.render();

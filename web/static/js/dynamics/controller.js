@@ -311,23 +311,23 @@ IterationController.prototype = {
       buttons.setActionCell({items: [{
         text: "Create task",
         callback: function() {
-        tasks.getElement().show();
-        me.noStoryTaskController.createTask();
-      }
-      }]});
-      this.buttonCells.push(commonView.expandCollapse(expand.getElement(), function() {
-        me.noStoryTaskController.showTasks();
-      }, function() {
-        me.noStoryTaskController.hideTasks();
-      }));
-      row.getElement().droppable({
-      accept: function(draggable) {
-          var isTask = draggable.data("dragTask");
-          if(isTask !== true) {
-            return false;
-          }
-          var model = draggable.data("row").model;
-          return (model.story.getId() !== 0);
+          tasks.getElement().show();
+          me.noStoryTaskController.createTask();
+        }
+        }]});
+        this.buttonCells.push(commonView.expandCollapse(expand.getElement(), function() {
+          me.noStoryTaskController.showTasks();
+        }, function() {
+          me.noStoryTaskController.hideTasks();
+        }));
+        row.getElement().droppable({
+        accept: function(draggable) {
+            var isTask = draggable.data("dragTask");
+            if(isTask !== true) {
+              return false;
+            }
+            var model = draggable.data("row").model;
+            return (model.story.getId() !== 0);
         },
         hoverClass: 'drophover',
         greedy: true,
@@ -639,7 +639,7 @@ StoryController.prototype = {
     });
     expand.setDragHandle();
   },
-  createStory: function() {
+  createTask: function() {
     var me = this;
     var story = new TaskModel();
     story.backlog = this.data.iteration;

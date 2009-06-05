@@ -41,7 +41,7 @@ public class StoryAction extends ActionSupport implements CRUDAction {
 
     // private AFTime effortLeft;
 
-    private Priority priority;
+    private int priority;
 
     private Story story;
 
@@ -115,6 +115,7 @@ public class StoryAction extends ActionSupport implements CRUDAction {
         storyId = 0;
 
         story = new Story();
+        story.setPriority(-1);
         if (backlogId != 0) {
             backlog = backlogBusiness.retrieve(backlogId);
             story.setBacklog(backlog);
@@ -124,9 +125,10 @@ public class StoryAction extends ActionSupport implements CRUDAction {
 
     public String delete() {
         try {
-            Story story = storyBusiness.retrieve(storyId);
+            storyBusiness.remove(storyId);
+            /*Story story = storyBusiness.retrieve(storyId);
             backlogId = story.getBacklog().getId();
-            storyBusiness.delete(storyId);
+            storyBusiness.delete(storyId);*/
         } catch (ObjectNotFoundException e) {
             super.addActionError(super.getText("story.notFound"));
             return ERROR;
@@ -138,7 +140,7 @@ public class StoryAction extends ActionSupport implements CRUDAction {
 
     public String ajaxDeleteStory() {
         try {
-            storyBusiness.delete(storyId);
+            storyBusiness.remove(storyId);
         } catch (ObjectNotFoundException e) {
             super.addActionError(super.getText("story.notFound"));
             return CRUDAction.AJAX_ERROR;
@@ -266,7 +268,7 @@ public class StoryAction extends ActionSupport implements CRUDAction {
 
         // save story and store backlog item themes
         try {
-            story = storyBusiness.store(storyId, backlogId, story, userIds);
+            story = storyBusiness.store(storyId, backlogId, story, userIds, priority);
 //            businessThemeBusiness.setBacklogItemThemes(themeIds, story);
             storyId = story.getId();
         } catch (ObjectNotFoundException onfe) {
@@ -319,14 +321,6 @@ public class StoryAction extends ActionSupport implements CRUDAction {
         this.state = state;
     }
 
-    public Priority getPriority() {
-        return priority;
-    }
-
-    public void setPriority(Priority priority) {
-        this.priority = priority;
-    }
-
     public Set<Integer> getUserIds() {
         return userIds;
     }
@@ -349,6 +343,14 @@ public class StoryAction extends ActionSupport implements CRUDAction {
     
     public int getIterationId() {
         return iterationId;
+    }
+
+    public void setPriority(Integer priority) {
+        this.priority = priority;
+    }
+
+    public Integer getPriority() {
+        return priority;
     }
     
 }

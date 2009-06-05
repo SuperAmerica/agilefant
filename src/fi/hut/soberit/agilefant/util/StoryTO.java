@@ -20,6 +20,7 @@ public class StoryTO extends Story {
         this.setState(story.getState());
         this.setPriority(story.getPriority());
         this.setCreator(story.getCreator());
+        this.setCreatedDate(story.getCreatedDate());
         this.setResponsibles(story.getResponsibles());
     }
 

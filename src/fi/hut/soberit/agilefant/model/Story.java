@@ -2,6 +2,7 @@ package fi.hut.soberit.agilefant.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -20,6 +21,8 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.BatchSize;
 
+import flexjson.JSON;
+
 @Entity
 @Table(name = "stories")
 public class Story implements TimesheetLoggable {
@@ -29,8 +32,10 @@ public class Story implements TimesheetLoggable {
     private String description;
     private Backlog backlog;
     private State state = State.NOT_STARTED;
-    private Priority priority;
+    private Integer priority = new Integer(0);
     private User creator;
+    private Date createdDate;
+    
     private List<User> responsibles = new ArrayList<User>();
     private Collection<Task> tasks = new ArrayList<Task>();
 
@@ -78,15 +83,8 @@ public class Story implements TimesheetLoggable {
         this.state = state;
     }
 
-    public Priority getPriority() {
-        return priority;
-    }
-
-    public void setPriority(Priority priority) {
-        this.priority = priority;
-    }
-
     @ManyToOne(optional = false)
+    @JSON(include = true)
     public User getCreator() {
         return creator;
     }
@@ -127,5 +125,21 @@ public class Story implements TimesheetLoggable {
 
     public void setTasks(Collection<Task> tasks) {
         this.tasks = tasks;
+    }
+
+    public Integer getPriority() {
+        return priority;
+    }
+
+    public void setPriority(Integer priority) {
+        this.priority = priority;
+    }
+    
+    public Date getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
     }
 }

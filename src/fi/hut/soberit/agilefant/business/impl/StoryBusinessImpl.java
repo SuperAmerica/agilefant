@@ -1,6 +1,7 @@
 package fi.hut.soberit.agilefant.business.impl;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -91,12 +92,13 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
     }
 
     public Story store(int storyId, int backlogId, Story dataItem,
-            Set<Integer> responsibles) throws ObjectNotFoundException {
+            Set<Integer> responsibles, int priority) throws ObjectNotFoundException {
         Story item = null;
         if (storyId > 0) {
             item = storyDAO.get(storyId);
             if (item == null) {
                 item = new Story();
+                item.setPriority(-1);
             }
         }
         Backlog backlog = backlogDAO.get(backlogId);
@@ -113,11 +115,27 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
             }
         }
 
-        return this.store(item, backlog, dataItem, responsibleUsers);
+        return this.store(item, backlog, dataItem, responsibleUsers, priority);
     }
 
+    /** {@inheritDoc} */
+    public void remove(int storyId) throws ObjectNotFoundException {
+        Story story = this.retrieve(storyId);
+        if(story.getBacklog() != null) {
+            story.getBacklog().getStories().remove(story);
+        }
+        Collection<Task> tasks = story.getTasks();
+        if(tasks != null) {
+            for(Task item : tasks) {
+                item.setStory(null); 
+            }
+        }
+        storyDAO.remove(storyId);
+    }
+
+    
     public Story store(Story storable, Backlog backlog, Story dataItem,
-            Set<User> responsibles) {
+            Set<User> responsibles, Integer priority) {
 
         boolean historyUpdated = false;
 
@@ -129,7 +147,7 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         }
         if (storable == null) {
             storable = new Story();
-            // storable.setCreatedDate(Calendar.getInstance().getTime());
+            storable.setCreatedDate(Calendar.getInstance().getTime());
             try {
                 storable.setCreator(SecurityUtil.getLoggedUser()); // may fail
                                                                    // if request
@@ -148,6 +166,7 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         // storable.setOriginalEstimate(dataItem.getOriginalEstimate());
         // }
         // }
+
         storable.setPriority(dataItem.getPriority());
         storable.setState(dataItem.getState());
 
@@ -170,12 +189,14 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         Story persisted;
 
         if (storable.getId() == 0) {
+            storable.setPriority(-1);
             int persistedId = (Integer) storyDAO.create(storable);
             persisted = storyDAO.get(persistedId);
         } else {
             storyDAO.store(storable);
             persisted = storable;
         }
+        updateStoryPriority(persisted, priority);
         // if(!historyUpdated) {
         // historyBusiness.updateBacklogHistory(backlog.getId());
         // }
@@ -217,6 +238,7 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
     public void setIterationDAO(IterationDAO iterationDAO) {
         this.iterationDAO = iterationDAO;
     }
+
     public StoryMetrics calculateMetrics(Story story) {
         StoryMetrics metrics = new StoryMetrics();
         int tasks = 0;
@@ -239,6 +261,50 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         metrics.setTotalTasks(tasks);
         return metrics;
     }
+    
+    // 090605 Reko: Copied from update iteration goal priority
+    public void updateStoryPriority(Story story, int insertAtPriority) {
+        if(insertAtPriority == story.getPriority()) {
+            return;
+        }
+        if(story.getBacklog() == null || !(story.getBacklog() instanceof Iteration)) {
+            throw new IllegalArgumentException("backlog.notFound");
+        }
+        Iteration iter = (Iteration)story.getBacklog();
+        if(iter.getStories().size() == 0) {
+            throw new IllegalArgumentException("story.notFound");
+        }
+        int oldPriority = story.getPriority();
+        
+        for(Story item : iter.getStories()) {
+            //drop new goal to its place
+            if(oldPriority == -1) {
+                if(item.getPriority() >= insertAtPriority) {
+                    item.setPriority(item.getPriority() + 1);
+                    storyDAO.store(item);
+                }
+            } else {
+                //when prioritizing downwards raise all goals by one which are between the old and new priorities 
+                if(oldPriority < insertAtPriority && 
+                        item.getPriority() > oldPriority && 
+                        item.getPriority() <= insertAtPriority) {
+                    item.setPriority(item.getPriority() - 1);
+                    storyDAO.store(item);
+                }
+                //vice versa when prioritizing upwards
+                if(oldPriority > insertAtPriority &&
+                        item.getPriority() >= insertAtPriority &&
+                        item.getPriority() < oldPriority) {
+                    item.setPriority(item.getPriority() + 1);
+                    storyDAO.store(item);
+                }
+            }
+
+        }
+        story.setPriority(insertAtPriority);
+        storyDAO.store(story);
+    }
+
 
     @Transactional(readOnly = true)
     public StoryMetrics calculateMetrics(int storyId) {

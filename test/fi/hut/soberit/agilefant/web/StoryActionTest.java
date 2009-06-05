@@ -11,6 +11,7 @@ import org.junit.*;
 import static org.junit.Assert.*;
 
 import fi.hut.soberit.agilefant.business.StoryBusiness;
+import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
 
@@ -33,21 +34,20 @@ public class StoryActionTest {
     
     @Test
     public void testGetStoryContents() {
+        Iteration iter = new Iteration();
+        iter.setId(6446);
+        storyAction.setIterationId(iter.getId());
+        story.setBacklog(iter);
         storyAction.setStoryId(story.getId());
         story.setTasks(Arrays.asList(new Task(), new Task()));
-        expect(storyBusiness.retrieveIfExists(story.getId())).andReturn(story);
+        expect(storyBusiness.getStoryContents(story.getId(), iter.getId()))
+            .andReturn(null);
         replay(storyBusiness);
         
         assertNull(storyAction.getJsonData());
         assertEquals(CRUDAction.AJAX_SUCCESS, storyAction.getStoryContents());
         assertNotNull(storyAction.getJsonData());
         verify(storyBusiness);
-    }
-    
-    @Test
-    public void testGetStoryContents_nullStory() {
-        storyAction.setStoryId(0);
-        assertEquals(CRUDAction.AJAX_ERROR, storyAction.getStoryContents());
     }
     
 }

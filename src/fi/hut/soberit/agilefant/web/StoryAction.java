@@ -15,9 +15,11 @@ import fi.hut.soberit.agilefant.business.BacklogBusiness;
 import fi.hut.soberit.agilefant.business.StoryBusiness;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.Backlog;
+import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Priority;
 import fi.hut.soberit.agilefant.model.State;
 import fi.hut.soberit.agilefant.model.Story;
+import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.util.ResponsibleContainer;
 import fi.hut.soberit.agilefant.util.StoryMetrics;
 import fi.hut.soberit.agilefant.util.StoryTO;
@@ -193,11 +195,8 @@ public class StoryAction extends ActionSupport implements CRUDAction {
     }
     
     public String getStoryContents() {
-        story = storyBusiness.retrieveIfExists(storyId);
-        if (story == null) {
-            return CRUDAction.AJAX_ERROR;
-        }
-        jsonData = new JSONSerializer().serialize(story.getTasks());
+        Collection<Task> storyContents = storyBusiness.getStoryContents(storyId, iterationId);
+        jsonData = new JSONSerializer().serialize(storyContents);
         return CRUDAction.AJAX_SUCCESS;
     }
 

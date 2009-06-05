@@ -1,7 +1,9 @@
 package fi.hut.soberit.agilefant.db.hibernate;
 
 import java.util.Collection;
+import java.util.List;
 
+import org.hibernate.Criteria;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
@@ -27,5 +29,12 @@ public class IterationDAOHibernate extends GenericDAOHibernate<Iteration> implem
         crit.add(Restrictions.eq("iteration", iteration));
         crit.add(Restrictions.isNull("story"));
         return hibernateTemplate.findByCriteria(crit);
+    }
+    
+    public List<Task> getAllTasksForIteration(Iteration iteration) {
+        Criteria criteria = getCurrentSession().createCriteria(Task.class);
+        criteria = criteria.createCriteria("iteration");
+        criteria.add(Restrictions.idEq(iteration.getId()));
+        return asList(criteria);
     }
 }

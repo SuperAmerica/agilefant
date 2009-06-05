@@ -52,34 +52,24 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
 
     @Transactional(readOnly = true)
     public Collection<Task> getStoryContents(Story story, Iteration iteration) {
-        // TODO Auto-generated method stub
-        return null;
+        List<Task> tasks = iterationDAO.getAllTasksForIteration(iteration);
+        Collection<Task> storyTasks = new ArrayList<Task>();
+        for (Task bli : tasks) {
+            if (bli.getStory() == story) {
+                storyTasks.add(bli);
+            }
+        }
+        return storyTasks;
     }
-
-    // public Collection<BacklogItem> getIterationGoalContents(int
-    // iterationGoalId, int iterationId) {
-    // IterationGoal goal = iterationGoalDAO.get(iterationGoalId);
-    // Iteration iter = iterationDAO.get(iterationId);
-    // if(iter == null) {
-    // return null;
-    // }
-    // return getIterationGoalContents(goal, iter);
-    // }
-
-    // public Collection<BacklogItem> getIterationGoalContents(IterationGoal
-    // goal,
-    // Iteration iter) {
-    //
-    // List<BacklogItem> blis = backlogItemBusiness
-    // .getBacklogItemsByBacklogWithCache(iter);
-    // Collection<BacklogItem> goalBlis = new ArrayList<BacklogItem>();
-    // for (BacklogItem bli : blis) {
-    // if (bli.getIterationGoal() == goal) {
-    // goalBlis.add(bli);
-    // }
-    // }
-    // return goalBlis;
-    // }
+    
+    public Collection<Task> getStoryContents(int storyId, int iterationId) {
+        Story story = storyDAO.get(storyId);
+        Iteration iter = iterationDAO.get(iterationId);
+        if (iter == null) {
+            return null;
+        }
+        return getStoryContents(story, iter);
+    }
 
     @Transactional(readOnly = true)
     public Collection<ResponsibleContainer> getStoryResponsibles(Story story) {

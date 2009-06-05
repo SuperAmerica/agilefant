@@ -81,7 +81,7 @@ public class IterationBusinessTest {
         expect(iterationDAO.get(iteration.getId())).andReturn(iteration);
         expect(projectBusiness.getAssignedUsers((Project)iteration.getParent()))
             .andReturn(assignedUsers);
-        expect(transferObjectBusiness.constructIterationDataWithUserData(iteration, null))
+        expect(transferObjectBusiness.constructIterationDataWithUserData(iteration, assignedUsers))
             .andReturn(storiesList);
         expect(iterationDAO.getTasksWithoutStoryForIteration(iteration))
             .andReturn(tasksWithoutStoryList);
@@ -99,6 +99,7 @@ public class IterationBusinessTest {
         
         verify(iterationDAO, transferObjectBusiness, projectBusiness);
     }
+    
     
     @Test
     public void testGetIterationContents_excludeTasks() {       

@@ -27,6 +27,7 @@ public interface StoryBusiness extends GenericBusiness<Story> {
      * If <code>story</code> is null, return tasks without story.
      */
     public Collection<Task> getStoryContents(Story story, Iteration iteration);
+    public Collection<Task> getStoryContents(int storyId, int iterationId);
     
     public Collection<ResponsibleContainer> getStoryResponsibles(Story story);
 

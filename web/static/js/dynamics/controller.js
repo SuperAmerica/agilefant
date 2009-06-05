@@ -807,7 +807,7 @@ TaskController.prototype = {
     }
     var tabs = new TaskTabs(this.model,this.parentView.getElement());
     this.infoTable = tabs.addTab("Info").genericTable({noHeader: true, colCss: {}, colWidths: [{minwidth: 10, auto:true},{minwidth: 90, auto: true}]});
-    var todos = tabs.addTab("TODOs");
+    /*var todos = tabs.addTab("TODOs");
     this.todoView = todos.todoTable();
     this.todoView.addCaptionAction("createTODO", {
       text: commonView.buttonWithIcon("create","Create TODO"),
@@ -818,7 +818,7 @@ TaskController.prototype = {
       row.render();
       row.openEdit();
     }
-    });
+    });*/
     if(agilefantUtils.isTimesheetsEnabled()) {
       var effView = tabs.addTab("Spent effort");
       this.spentEffortView = effView.spentEffortTable(); 
@@ -873,6 +873,7 @@ TaskController.prototype = {
     });
     this.infoTable.render();
   },
+  /*
   renderTodos: function() {
     var todoItems = this.model.getTodos();
     for(var i = 0; i < todoItems.length; i++) {
@@ -963,7 +964,7 @@ TaskController.prototype = {
                                    ]});
   
     return row;
-  },
+  },*/
   renderSpentEffort: function() {
     var entries = this.model.getHourEntries();
     for(var i = 0; i < entries.length; i++) {

@@ -55,8 +55,8 @@ $(document).ready(function() {
 		<div class="subItemContent validateWrapper validateEmpty">		
 				<ww:form action="updateMultipleHourEntries.action" method="post">		
 					<display:table class="listTable" htmlId="spentEffort-${myAction}" name="${hourEntries}" id="row" defaultsort="1" defaultorder="descending" requestURI="${myAction}.action">						
-						<display:column sortable="false" title="Date" style="white-space:nowrap;">
-							<ww:date name="#attr.row.date" format="yyyy-MM-dd HH:mm" />
+						<display:column sortable="false" title="Date" style="white-space:nowrap;">					
+							<joda:format value="${row.date}" pattern="yyyy-MM-dd HH:mm" />
 						</display:column>
 						
 						<display:column sortable="false" title="User">

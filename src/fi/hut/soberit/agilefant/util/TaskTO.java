@@ -25,6 +25,8 @@ public class TaskTO extends Task {
         this.setOriginalEstimate(task.getOriginalEstimate());
         this.setHistoryEntries(task.getHistoryEntries());
         this.setResponsibles(task.getResponsibles());
+        this.setCreatedDate(task.getCreatedDate());
+        this.setCreator(task.getCreator());
     }
     
     public void setUserData(Collection<ResponsibleContainer> userData) {

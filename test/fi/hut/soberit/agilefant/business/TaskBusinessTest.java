@@ -22,7 +22,13 @@ import static org.junit.Assert.*;
 
 public class TaskBusinessTest {
     
-    private TaskBusinessImpl taskBusiness = new TaskBusinessImpl();
+    private TaskBusinessImpl taskBusiness = new TaskBusinessImpl() {
+        // Overrided to skip static call to SecurityUtil
+        @Override
+        public User getLoggedInUser() {
+            return user;
+        }
+    };
     private IterationBusiness iterationBusiness;
     private StoryBusiness storyBusiness;
     private UserBusiness userBusiness;
@@ -31,6 +37,7 @@ public class TaskBusinessTest {
     private Iteration iteration;
     private Story story;
     private Task task;
+    private User user;
    
     @Before
     public void setUp() {
@@ -49,18 +56,25 @@ public class TaskBusinessTest {
         story = new Story();
         story.setId(123);
         task.setId(0);
+        
+        user = new User();
+        user.setId(666);
     }
     
     @Test
     public void testStoreTask_newTask() {
+        
         expect(iterationBusiness.retrieve(iteration.getId())).andReturn(iteration);
         expect(storyBusiness.retrieveIfExists(story.getId())).andReturn(story);
         expect(taskDAO.create(task)).andReturn(1351);
-        expect(taskDAO.get(1351)).andReturn(new Task());
+        expect(taskDAO.get(1351)).andReturn(task);
         
         replay(iterationBusiness, storyBusiness, taskDAO);
         
-        taskBusiness.storeTask(task, iteration.getId(), story.getId(), null);
+        Task actualTask = taskBusiness.storeTask(task, iteration.getId(), story.getId(), null);
+        
+        assertNotNull(actualTask.getCreatedDate());
+        assertEquals(user, actualTask.getCreator());
         
         verify(iterationBusiness, storyBusiness, taskDAO);
     }

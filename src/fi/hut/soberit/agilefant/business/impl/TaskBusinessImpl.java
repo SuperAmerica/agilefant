@@ -2,6 +2,7 @@ package fi.hut.soberit.agilefant.business.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -18,6 +19,7 @@ import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.security.SecurityUtil;
 import fi.hut.soberit.agilefant.util.ResponsibleContainer;
 
 @Service("taskBusiness")
@@ -69,6 +71,10 @@ public class TaskBusinessImpl extends GenericBusinessImpl<Task> implements
         task.setIteration(iteration);
         task.setStory(story);
         
+        // Set creator
+        task.setCreator(getLoggedInUser());
+        task.setCreatedDate(GregorianCalendar.getInstance().getTime());
+        
         // If we are setting the original estimate,
         // set effortLeft accordingly
         if (task.getEffortLeft() == null && task.getOriginalEstimate() != null) {
@@ -87,6 +93,13 @@ public class TaskBusinessImpl extends GenericBusinessImpl<Task> implements
         }
         
         return storedTask;
+    }
+    
+    public User getLoggedInUser() {
+        User loggedUser = null;
+        // May fail if request is multithreaded
+        loggedUser = SecurityUtil.getLoggedUser();
+        return loggedUser;
     }
     
     /**

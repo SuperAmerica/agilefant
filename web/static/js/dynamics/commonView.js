@@ -22,6 +22,7 @@ var commonView = {
 			button.attr("title","Expand");
 		}
 		button.toggleClass("dynamictable-expand").toggleClass("dynamictable-collapse");
+		return false;
 	};
 	button.click(cb);
 	button.bind("showContents", function() {
@@ -60,5 +61,11 @@ var commonView = {
 		  var err = $("<div />").addClass("cellErrorMessage").appendTo(connectTo);
 		  $("<span />").css("color", "red").text("Required field").appendTo(err);
 	 return err;
+  },
+  buttonWithIcon: function(icon, text) {
+	  var b = $('<div />');
+	  $('<div />').addClass(icon).appendTo(b).css("float","left").width("16px").height("16px");
+	  $('<div />').addClass("text").appendTo(b).text(text).css({"float": "left", "white-space": "nowrap"}).width("85px");
+	  return b.html();
   }
 };

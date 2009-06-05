@@ -290,7 +290,7 @@ $(document).ready(function() {
                     <c:choose>
                         <c:when test="${listLength > 0}">
                             <c:forEach items="${story.responsibles}" var="resp">
-                                <input type="hidden" name="userIds[${resp.id}]" value="${resp.id}"/>
+                                <input type="hidden" name="userIds" value="${resp.id}"/>
                                 <c:set var="count" value="${count + 1}" />
                                 <c:out value="${resp.initials}" /><c:if test="${count != listLength}">, </c:if>
                             </c:forEach>    

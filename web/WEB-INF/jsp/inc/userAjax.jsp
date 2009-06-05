@@ -3,7 +3,7 @@
 <ww:actionerror />
 <ww:actionmessage />
 
-<div class="ajaxUserWindowTabsDiv">
+<div class="ajaxUserWindowTabsDiv ajaxWindowTabsDiv">
 <ul class="ajaxWindowTabs">
 	<li><a href="#userEditTab-${userId}"><span><img src="static/img/edit.png" alt="Edit" /> Edit user</span></a></li>
 </ul>

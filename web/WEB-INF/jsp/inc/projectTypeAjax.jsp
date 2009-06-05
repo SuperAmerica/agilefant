@@ -3,7 +3,7 @@
 <ww:actionerror />
 <ww:actionmessage />
 
-<div class="ajaxProjectTypeWindowTabsDiv">
+<div class="ajaxProjectTypeWindowTabsDiv ajaxWindowTabsDiv ">
 <ul class="ajaxWindowTabs">
 	<li><a href="#projectTypeEditTab-${projectTypeId}"><span><img src="static/img/edit.png" alt="Edit" /> Edit project type</span></a></li>
 </ul>

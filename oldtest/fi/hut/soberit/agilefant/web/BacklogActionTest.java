@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import junit.framework.TestCase;
 
@@ -222,10 +223,10 @@ public class BacklogActionTest extends TestCase {
         bli4.setPriority(Priority.MAJOR);
         
         int[] selected = {15, 17, 18};
-        Map<Integer, String> responsibleIds = new HashMap<Integer, String>();
-        responsibleIds.put(3, "true");
-        responsibleIds.put(5, "true");
-        responsibleIds.put(6, "true");
+        Set<Integer> responsibleIds = new HashSet<Integer>();
+        responsibleIds.add(3);
+        responsibleIds.add(5);
+        responsibleIds.add(6);
         
         // Set the attributes for the backlogAction
         backlogAction.setBacklogBusiness(backlogBusiness);
@@ -251,7 +252,7 @@ public class BacklogActionTest extends TestCase {
             backlogBusiness.changeStateOfMultipleItems(selected,
                     State.values()[2]);
             backlogBusiness.setResponsiblesForMultipleBacklogItems(selected,
-                    responsibleIds.keySet());
+                    responsibleIds);
             backlogBusiness.moveMultipleBacklogItemsToBacklog(selected, 100);
         }
         catch (ObjectNotFoundException e) {

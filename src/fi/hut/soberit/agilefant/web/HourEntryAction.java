@@ -216,12 +216,12 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
         this.backlogId = backlogId;
     }
 
-    public int getBacklogItemId() {
+    public int getStoryId() {
         return storyId;
     }
 
-    public void setBacklogItemId(int backlogItemId) {
-        this.storyId = backlogItemId;
+    public void setStoryId(int storyId) {
+        this.storyId = storyId;
     }
 
     public int getUserId() {

@@ -126,10 +126,10 @@
             
             /* Render the columns */
             var nameList = $('<ul/>').addClass('projectAssigneeList').appendTo(this.assignedCell);
-            var overheadList = $('<ul/>').addClass('projectAssigneeList').appendTo(this.notAssignedCell);
+            var personalLoadList = $('<ul/>').addClass('projectAssigneeList').appendTo(this.notAssignedCell);
             $.each(this.data.showUsers, function() {
                 var nameLi = $('<li/>').appendTo(nameList);
-                var overheadLi = $('<li/>').appendTo(overheadList);
+                var personalLoadLi = $('<li/>').appendTo(personalLoadList);
 
                 /* Print the name */
                 var e = me.data.users[this.id];
@@ -140,29 +140,29 @@
                 }
                 nameLi.append(checkbox).append(label).appendTo(nameList);
                 
-                /* Print the overhead */
-                var overheadText = $('<span/>').appendTo(overheadLi).hide();
+                /* Print the personal load */
+                var personalLoadText = $('<span/>').appendTo(personalLoadLi).hide();
                 var deltaValue = "";
-                if (me.data.overheads[this.id] == null) {
+                if (me.data.personalLoads[this.id] == null) {
                     deltaValue = "";
-                } else if(typeof(me.data.overheads[this.id]) == 'number') {
-                    var a = me.data.overheads[this.id];
-                    deltaValue = Date.millisToAFTime((me.data.overheads[this.id] * 1000));
+                } else if(typeof(me.data.personalLoads[this.id]) == 'number') {
+                    var a = me.data.personalLoads[this.id];
+                    deltaValue = Date.millisToAFTime((me.data.personalLoads[this.id] * 1000));
                 } else {
-                    deltaValue = me.data.overheads[this.id];
+                    deltaValue = me.data.personalLoads[this.id];
                 }
                 var input = $('<input type="text" size="5"/>').attr('name','delta')
                     .attr('id','delta_user_' + e.id).val(deltaValue)
-                    .addClass('aftimeField').appendTo(overheadText);
+                    .addClass('aftimeField').appendTo(personalLoadText);
                 
                 /* Bind the hide/show event */
                 checkbox.change(function() {
                     if (checkbox.is(":checked")) {
-                        overheadText.show();
+                        personalLoadText.show();
                         input.removeAttr('disabled');
                     }
                     else {
-                        overheadText.hide();
+                        personalLoadText.hide();
                         input.attr('disabled','disabled');
                     }
                 });
@@ -439,7 +439,7 @@
             var userListContainer = $(me.options.userListContainer);
             var selectedInitials = "";
             
-            var overheads = {};
+            var personalLoads = {};
             
             userListContainer.empty();
             
@@ -453,9 +453,9 @@
                 
                 var assDelta = me.form.find('#delta_user_' + this).val();
                 var assD = $('<input type="hidden"/>').appendTo(userListContainer);
-                assD.attr('name','assignments[\'' + this + '\'].deltaOverhead').val(assDelta);
+                assD.attr('name','assignments[\'' + this + '\'].personalLoad').val(assDelta);
                 
-                overheads[this] = assDelta;
+                personalLoads[this] = assDelta;
             });
             
             if (selectedInitials.length > 0) {
@@ -465,7 +465,7 @@
                 userListContainer.append(me.options.emptySelectionText);
             }
             
-            me.data.overheads = overheads;
+            me.data.personalLoads = personalLoads;
             me.data.selectedList = me.getSelected();
             me.cache = me.data;
         },

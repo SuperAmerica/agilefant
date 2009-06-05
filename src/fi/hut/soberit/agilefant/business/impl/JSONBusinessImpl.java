@@ -3,7 +3,10 @@ package fi.hut.soberit.agilefant.business.impl;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.support.PropertyComparator;
 import org.springframework.stereotype.Service;
@@ -12,7 +15,11 @@ import org.springframework.transaction.annotation.Transactional;
 import fi.hut.soberit.agilefant.business.JSONBusiness;
 import fi.hut.soberit.agilefant.business.TeamBusiness;
 import fi.hut.soberit.agilefant.business.UserBusiness;
+import fi.hut.soberit.agilefant.model.Assignment;
 import fi.hut.soberit.agilefant.model.Backlog;
+import fi.hut.soberit.agilefant.model.ExactEstimate;
+import fi.hut.soberit.agilefant.model.Iteration;
+import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Team;
 import fi.hut.soberit.agilefant.model.User;
 import flexjson.JSONSerializer;
@@ -36,29 +43,29 @@ public class JSONBusinessImpl implements JSONBusiness {
         Backlog backlog = null;
         Collection<Integer> assignments = new ArrayList<Integer>();
         Collection<Integer> responsibles = new ArrayList<Integer>();
-//        Map<Integer, AFTime> deltaOverheads = new HashMap<Integer, AFTime>();
+        Map<Integer, ExactEstimate> personalLoads = new HashMap<Integer, ExactEstimate>();
 
         String backlogJson = "";
         String userJson = "";
         String teamJson = "";
         String assignmentJson = "";
         String responsibleJson = "";
-        String overheadJson = "";
+        String personalLoadJson = "";
 
-//        if (backlog != null) {
-//            Project proj = null;
-//            if (backlog instanceof Iteration) {
-//                proj = ((Iteration) backlog).getProject();
-//            } else if (backlog instanceof Project) {
-//                proj = (Project) backlog;
-//            }
-//            if (proj != null) {
-//                for (Assignment ass : proj.getAssignments()) {
-//                    assignments.add(ass.getUser().getId());
-//                    deltaOverheads.put(ass.getUser().getId(), ass.getDeltaOverhead());
-//                }
-//            }
-//        }
+        if (backlog != null) {
+            Project proj = null;
+            if (backlog instanceof Iteration) {
+                proj = (Project)backlog.getParent();
+            } else if (backlog instanceof Project) {
+                proj = (Project) backlog;
+            }
+            if (proj != null) {
+                for (Assignment ass : proj.getAssignments()) {
+                    assignments.add(ass.getUser().getId());
+                    personalLoads.put(ass.getUser().getId(), ass.getPersonalLoad());
+                }
+            }
+        }
         
 //        if (!(backlogItemId == 0 && backlogId == 0)) {
 //            try {
@@ -102,12 +109,12 @@ public class JSONBusinessImpl implements JSONBusiness {
         assignmentJson = new JSONSerializer().serialize(assignments);
         responsibleJson = new JSONSerializer().include("id").exclude("*")
                 .serialize(responsibles);
-//        overheadJson = new JSONSerializer().serialize(deltaOverheads);
+        personalLoadJson = new JSONSerializer().serialize(personalLoads);
         backlogJson = new JSONSerializer().include("id").include("defaultOverhead").exclude("*").serialize(backlog);
 
         return "{users:" + userJson + ",teams:" + teamJson + ",assignments:"
                 + assignmentJson + ",responsibles:" + responsibleJson + "," +
-//                "overheads:" + overheadJson + "," +
+                "personalLoads:" + personalLoadJson + "," +
                 "backlog:" + backlogJson + "}";
     }
     

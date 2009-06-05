@@ -23,10 +23,11 @@
 <ww:actionerror />
 <ww:actionmessage />
 <aef:hourReporting id="hourReport" />
-<%--
+
 <script type="text/javascript">
 <!--
 $(document).ready(function() {
+  <%--
 	<c:forEach items="${openIterations}" var="openIteration">
         handleTabEvent("iterationTabContainer-${openIteration[0]}", "iteration", ${openIteration[0]}, ${openIteration[1]});
     </c:forEach>
@@ -52,6 +53,7 @@ $(document).ready(function() {
 											  	reset: {cell: 2, type: 'reset'}
 											  }
 											 });
+                       --%>
     $('#userChooserLink-editProject').userChooser({
         backlogIdField: '#editProject-projectId',
         userListContainer: '#userListContainer-editProject',
@@ -65,7 +67,7 @@ $(document).ready(function() {
 });
 //-->
 </script>
---%>
+
 <ww:date name="%{new java.util.Date()}" id="start"
 	format="%{getText('webwork.shortDateTime.format')}" />
 <ww:date name="%{new java.util.Date()}" id="end"
@@ -401,7 +403,7 @@ $(document).ready(function() {
 											                            <c:forEach items="${project.assignments}" var="ass">
 											                                <input type="hidden" name="selectedUserIds" value="${ass.user.id}"/>
 											                                <input type="hidden" name="assignments['${ass.user.id}'].user.id" value="${ass.user.id}"/>
-											                                <input type="hidden" name="assignments['${ass.user.id}'].deltaOverhead" value="${ass.deltaOverhead}"/>
+											                                <input type="hidden" name="assignments['${ass.user.id}'].personalLoad" value="${ass.personalLoad}"/>
 											                                <c:set var="count" value="${count + 1}" />
 											                                <c:out value="${ass.user.initials}" /><c:if test="${count != listLength}">, </c:if>
 											                            </c:forEach>    

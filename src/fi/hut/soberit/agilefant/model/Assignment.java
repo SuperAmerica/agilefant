@@ -2,6 +2,10 @@ package fi.hut.soberit.agilefant.model;
 
 import java.io.Serializable;
 
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
+import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -22,21 +26,21 @@ public class Assignment implements Serializable {
     private int id;
     private Project project;
     private User user;
-//    private AFTime deltaOverhead;
+    private ExactEstimate personalLoad;
 
     /**
      * Deviation from project's default overhead.
      */
-//    @Type(type = "af_time")
-//    @JSON
-//    public AFTime getDeltaOverhead() {
-//        return deltaOverhead;
-//    }
-//
-//    public void setDeltaOverhead(AFTime deltaOverhead) {
-//        this.deltaOverhead = deltaOverhead;
-//    }
+    public void setPersonalLoad(ExactEstimate personalLoad) {
+        this.personalLoad = personalLoad;
+    }
 
+    @Embedded
+    @AttributeOverrides(@AttributeOverride(name = "minorUnits", column = @Column(name = "delta_personal_load")))
+    public ExactEstimate getPersonalLoad() {
+        return personalLoad;
+    }
+    
     public Assignment() {
     }
 

@@ -19,7 +19,8 @@ import com.opensymphony.xwork.Action;
 import fi.hut.soberit.agilefant.business.ProductBusiness;
 import fi.hut.soberit.agilefant.business.ProjectBusiness;
 import fi.hut.soberit.agilefant.business.UserBusiness;
-import fi.hut.soberit.agilefant.model.Product;
+import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
+import fi.hut.soberit.agilefant.model.Assignment;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.ProjectType;
 import fi.hut.soberit.agilefant.model.Status;
@@ -85,7 +86,7 @@ public class ProjectAction extends BacklogContentsAction implements CRUDAction {
 //    
 //    private AFTime defaultOverhead;
 //    
-//    private Map<String,Assignment> assignments = new HashMap<String, Assignment>();
+    private Map<String, Assignment> assignments = new HashMap<String, Assignment>();
 //    
 //    private Map<Integer, AFTime> totalOverheads = new HashMap<Integer, AFTime>();
 //    
@@ -153,9 +154,9 @@ public class ProjectAction extends BacklogContentsAction implements CRUDAction {
 //        effLeftSums = new HashMap<Iteration, EffortSumData>();
 //        origEstSums = new HashMap<Iteration, EffortSumData>(); 
 //        defaultOverhead = project.getDefaultOverhead();        
-//        for (Assignment ass: project.getAssignments()) {
-//            assignments.put("" + ass.getUser().getId(), ass);
-//        }
+        for (Assignment ass: project.getAssignments()) {
+            assignments.put("" + ass.getUser().getId(), ass);
+        }
         //totalOverheads = projectBusiness.calculateTotalOverheads(project);
         
         // Get backlog metrics
@@ -179,85 +180,48 @@ public class ProjectAction extends BacklogContentsAction implements CRUDAction {
         
         return Action.SUCCESS;
     }
-
-    public String store() {
-       
-        Project storable = new Project();
-        if (projectId > 0) {
-            storable = projectBusiness.retrieve(projectId);
-            if (storable == null) {
-                super.addActionError(super.getText("project.notFound"));
-                return CRUDAction.AJAX_ERROR; 
-            }
-            if(storable.getParent() != null && productId > 0 &&
-                    storable.getParent().getId() != productId) {
-//                backlogBusiness.removeThemeBindings(storable);
-            }
+    
+    private boolean projectStore() {
+        // Data collection
+        try {
+            project.setId(projectId);
+            project.setStartDate(CalendarUtils.parseDateFromString(startDate));
+            project.setEndDate(CalendarUtils.parseDateFromString(endDate));
+            project.setParent(productBusiness.retrieve(productId));
+            
+            // TODO: Fix when project types are done
+            project.setProjectType(null);
+        } catch (ParseException pe) {
+            return false;
+        } catch (ObjectNotFoundException onfe) {
+            return false;
         }
         
-        try {
-            this.fillStorable(storable);
-        } catch (ParseException e) {
-            super.addActionError(e.toString());
-        }
-
-        if (super.hasActionErrors()) {
-            return CRUDAction.AJAX_ERROR; 
-        }
-        // project-olion on oltava kannassa ennen kuin Assignmentit tehdään.
-        if (projectId == 0) {
-            projectId = (Integer) projectBusiness.create(storable);
-        } else {
-            projectBusiness.store(storable);
-        }
-//        backlogBusiness.setAssignments(selectedUserIds, this.assignments, projectDAO
-//                .get(projectId));
-        return CRUDAction.AJAX_SUCCESS;
-    }
-
-    public String ajaxStoreProject() {
-        Project storable = new Project();
-        if (projectId > 0) {
-            storable = projectBusiness.retrieve(projectId);
-            if (storable == null) {
-                super.addActionError(super.getText("project.notFound"));
-                return CRUDAction.AJAX_ERROR;
-            }
-            if(storable.getParent() != null && productId > 0 &&
-                    storable.getParent().getId() != productId) {
-//                backlogBusiness.removeThemeBindings(storable);
-            }
-        }
-
-        try {
-            this.fillStorable(storable);
-        } catch (ParseException e) {
-            super.addActionError(e.toString());
-            return CRUDAction.AJAX_ERROR;
-        }
-
-        if (super.hasActionErrors()) {
-            return CRUDAction.AJAX_ERROR;
-        }        
-        if (projectId == 0) {
-            projectId = (Integer) projectBusiness.create(storable);
-        } else {
-            projectBusiness.store(storable);
-        }
-//        backlogBusiness.setAssignments(selectedUserIds, this.assignments, projectDAO
-//                .get(projectId));
-        return CRUDAction.AJAX_SUCCESS;
+        projectBusiness.storeProject(project, assignments.values());
+        
+        return true;
     }
     
-    public String saveProjectAssignments() {
-        if (projectId == 0) {
-            super.addActionError(super.getText("project.notFound"));
-            return Action.ERROR;
-        }
-//        backlogBusiness.setAssignments(selectedUserIds, this.assignments, projectDAO
-//                .get(projectId));
-        return Action.SUCCESS;
+    public String store() {
+       if (!this.projectStore()) {
+           return CRUDAction.AJAX_ERROR;
+       }
+       return CRUDAction.AJAX_SUCCESS;
     }
+    
+    public String ajaxStoreProject() {
+        return this.store();
+    }
+    
+//    public String saveProjectAssignments() {
+//        if (projectId == 0) {
+//            super.addActionError(super.getText("project.notFound"));
+//            return Action.ERROR;
+//        }
+////        backlogBusiness.setAssignments(selectedUserIds, this.assignments, projectDAO
+////                .get(projectId));
+//        return Action.SUCCESS;
+//    }
 
     public String delete() {
         project = projectBusiness.retrieve(projectId);
@@ -265,108 +229,105 @@ public class ProjectAction extends BacklogContentsAction implements CRUDAction {
             super.addActionError(super.getText("project.notFound"));
             return Action.ERROR;
         }
-//        if (project.getBacklogItems().size() > 0
-//                || project.getIterations().size() > 0
+        if (project.getStories().size() > 0
+                || project.getChildren().size() > 0) {
 //                || (project.getBusinessThemeBindings() != null
 //                        && project.getBusinessThemeBindings().size() > 0)) {
-//            super.addActionError(super.getText("project.notEmptyWhenDeleting"));
-//            return Action.ERROR;
-//        }
+            super.addActionError(super.getText("project.notEmptyWhenDeleting"));
+            return Action.ERROR;
+        }
 //        
 //        projectBusiness.removeAllHourEntries( project );
 //        
-//        backlogBusiness.setAssignments(null, null, project);
-//        Product product = project.getProduct();
-//        productId = product.getId();
-//        product.getProjects().remove(project);
-//        project.setProduct(null);
+        projectBusiness.setProjectAssignments(project, null);
+        project.getParent().getChildren().remove(project);
         projectBusiness.delete(projectId);
         return Action.SUCCESS;
     }
 
-    protected void fillStorable(Project storable) throws ParseException {
-//        if(project.getDefaultOverhead() != null && project.getDefaultOverhead().getTime() < 0) {
-//            super.addActionError("Default overhead cannot be negative.");
+//    protected void fillStorable(Project storable) throws ParseException {
+////        if(project.getDefaultOverhead() != null && project.getDefaultOverhead().getTime() < 0) {
+////            super.addActionError("Default overhead cannot be negative.");
+////            return;
+////        }
+//        
+//        if (startDate == null) {
+//            super.addActionError(super.getText("Invalid startdate!"));
+//            return;
+//        } else if (endDate == null) {
+//            super.addActionError(super.getText("Invalid enddate!"));
 //            return;
 //        }
-        
-        if (startDate == null) {
-            super.addActionError(super.getText("Invalid startdate!"));
-            return;
-        } else if (endDate == null) {
-            super.addActionError(super.getText("Invalid enddate!"));
-            return;
-        }
-
-        if (this.project.getName() == null ||
-                this.project.getName().trim().equals("")) {
-            super.addActionError(super.getText("project.missingName"));
-            return;
-        }
-        project.setStartDate(CalendarUtils.parseDateFromString(startDate));
-        if (project.getStartDate() == null) {
-            super.addActionError(super.getText("project.missingStartDate"));
-            return;
-        }
-
-        project.setEndDate(CalendarUtils.parseDateFromString(endDate));
-        if (project.getEndDate() == null) {
-            super.addActionError(super.getText("project.missingEndDate"));
-            return;
-        }
-       
-        if (project.getStartDate().after(project.getEndDate())) {
-            super
-                    .addActionError(super
-                            .getText("backlog.startDateAfterEndDate"));
-            return;
-        }
-
-        Product product = productBusiness.retrieve(productId);
-        if (product == null) {
-            super.addActionError(super.getText("product.notFound"));
-            return;
-        } else if (storable.getParent() != product) {
-            /*
-             * Setting the relation in one end of the relation is enought to
-             * change the relation in both ends! Hibernate takes care of both
-             * ends.
-             */
-            storable.setParent(product);
-            // product.getProjects().add(storable);
-        }
-
-//        if (this.project.getProjectType() != null) {
-//            ProjectType type = projectTypeBusiness.get(this.project
-//                    .getProjectType().getId());
-//            storable.setProjectType(type);
+//
+//        if (this.project.getName() == null ||
+//                this.project.getName().trim().equals("")) {
+//            super.addActionError(super.getText("project.missingName"));
+//            return;
 //        }
-        /*
-        if (storable.getProjectType() == null
-                || storable.getProjectType().getId() != projectTypeId) {
-            ProjectType projectType = null;
-            if (projectTypeId > 0) {
-                projectType = projectTypeDAO.get(projectTypeId);
-            }
-            storable.setProjectType(projectType);
-            
-            
-            else {
-                super.addActionError(super
-                        .getText("project.missingProjectType"));
-                return;
-            }
-            
-        }
-        */
-        storable.setStatus(project.getStatus());
-        storable.setEndDate(CalendarUtils.parseDateFromString(endDate));
-        storable.setStartDate(CalendarUtils.parseDateFromString(startDate));
-        storable.setName(project.getName());
-        storable.setDescription(project.getDescription());
-//        storable.setDefaultOverhead(project.getDefaultOverhead());
-//        storable.setBacklogSize(this.project.getBacklogSize());
-    }
+//        project.setStartDate(CalendarUtils.parseDateFromString(startDate));
+//        if (project.getStartDate() == null) {
+//            super.addActionError(super.getText("project.missingStartDate"));
+//            return;
+//        }
+//
+//        project.setEndDate(CalendarUtils.parseDateFromString(endDate));
+//        if (project.getEndDate() == null) {
+//            super.addActionError(super.getText("project.missingEndDate"));
+//            return;
+//        }
+//       
+//        if (project.getStartDate().after(project.getEndDate())) {
+//            super
+//                    .addActionError(super
+//                            .getText("backlog.startDateAfterEndDate"));
+//            return;
+//        }
+//
+//        Product product = productBusiness.retrieve(productId);
+//        if (product == null) {
+//            super.addActionError(super.getText("product.notFound"));
+//            return;
+//        } else if (storable.getParent() != product) {
+//            /*
+//             * Setting the relation in one end of the relation is enought to
+//             * change the relation in both ends! Hibernate takes care of both
+//             * ends.
+//             */
+//            storable.setParent(product);
+//            // product.getProjects().add(storable);
+//        }
+//
+////        if (this.project.getProjectType() != null) {
+////            ProjectType type = projectTypeBusiness.get(this.project
+////                    .getProjectType().getId());
+////            storable.setProjectType(type);
+////        }
+//        /*
+//        if (storable.getProjectType() == null
+//                || storable.getProjectType().getId() != projectTypeId) {
+//            ProjectType projectType = null;
+//            if (projectTypeId > 0) {
+//                projectType = projectTypeDAO.get(projectTypeId);
+//            }
+//            storable.setProjectType(projectType);
+//            
+//            
+//            else {
+//                super.addActionError(super
+//                        .getText("project.missingProjectType"));
+//                return;
+//            }
+//            
+//        }
+//        */
+//        storable.setStatus(project.getStatus());
+//        storable.setEndDate(CalendarUtils.parseDateFromString(endDate));
+//        storable.setStartDate(CalendarUtils.parseDateFromString(startDate));
+//        storable.setName(project.getName());
+//        storable.setDescription(project.getDescription());
+////        storable.setDefaultOverhead(project.getDefaultOverhead());
+////        storable.setBacklogSize(this.project.getBacklogSize());
+//    }
 
     public int getProjectId() {
         return projectId;
@@ -556,5 +517,13 @@ public class ProjectAction extends BacklogContentsAction implements CRUDAction {
 
     public void setProductBusiness(ProductBusiness productBusiness) {
         this.productBusiness = productBusiness;
+    }
+
+    public Map<String, Assignment> getAssignments() {
+        return assignments;
+    }
+
+    public void setAssignments(Map<String, Assignment> assignments) {
+        this.assignments = assignments;
     }
 }

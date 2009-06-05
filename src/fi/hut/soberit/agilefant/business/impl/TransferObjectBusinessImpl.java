@@ -56,6 +56,20 @@ public class TransferObjectBusinessImpl implements TransferObjectBusiness {
     }
     
     /** {@inheritDoc} */
+    public StoryTO constructStoryTO(Story story, Collection<User> assignedUsers) {
+        StoryTO storyTO = new StoryTO(story);
+        
+        for (User responsible : storyTO.getResponsibles()) {
+            ResponsibleContainer rc
+                = new ResponsibleContainer(responsible,
+                        assignedUsers.contains(responsible));
+            storyTO.getUserData().add(rc);
+        }
+        
+        return storyTO;
+    }
+    
+    /** {@inheritDoc} */
     public TaskTO constructTaskTO(Task task) {
         Collection<User> assignedUsers
             = projectBusiness.getAssignedUsers((Project)task.getIteration().getParent());

@@ -127,6 +127,34 @@ public class TransferObjectBusinessTest {
         assertTrue("User not found in responsible containers", assignedUserFound && notAssignedUserFound);
     }
     
+    @Test
+    public void testConstructStoryTO() {
+        story1.setBacklog(iteration);
+        story1.setResponsibles(Arrays.asList(assignedUser, notAssignedUser));       
+        
+        replay(projectBusiness);
+        StoryTO actualTO = transferObjectBusiness
+            .constructStoryTO(story1, Arrays.asList(assignedUser));
+        verify(projectBusiness);
+        
+        assertEquals("Task and transfer object id's not equal",
+                story1.getId(), actualTO.getId());
+       
+        boolean assignedUserFound = false;
+        boolean notAssignedUserFound = false;
+        for (ResponsibleContainer rc : actualTO.getUserData()) {
+            if (rc.getUser() == assignedUser) {
+                assignedUserFound = true;
+                assertTrue("The assigned user seems not to be assigned to project", rc.isInProject());
+            }
+            if (rc.getUser() == notAssignedUser) {
+                notAssignedUserFound = true;
+                assertFalse("The not assigned user seems to be assigned to project", rc.isInProject());
+            }
+        }
+        assertTrue("User not found in responsible containers", assignedUserFound && notAssignedUserFound);
+    }
+    
     /**
      * Helper method to check that the stories list contains a story with a specific id.
      */

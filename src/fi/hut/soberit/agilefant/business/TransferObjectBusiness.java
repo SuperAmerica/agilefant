@@ -3,6 +3,7 @@ package fi.hut.soberit.agilefant.business;
 import java.util.Collection;
 
 import fi.hut.soberit.agilefant.model.Iteration;
+import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.util.StoryTO;
@@ -30,7 +31,13 @@ public interface TransferObjectBusiness {
      * Constructs a new transfer object based on given task.
      * <p>
      * Will inject <code>UserData</code>.
-     * Will fetch project assignee information.
      */
     public TaskTO constructTaskTO(Task task);
+    
+    /**
+     * Constructs a new transfer object based on given story.
+     * <p>
+     * Will inject <code>UserData</code>.
+     */
+    public StoryTO constructStoryTO(Story story, Collection<User> assignedUsers);
 }

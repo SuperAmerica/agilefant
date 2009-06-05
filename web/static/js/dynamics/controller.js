@@ -142,6 +142,31 @@ IterationController.prototype = {
         get: function() { return story.getName();}, 
         set: function(val){ story.setName(val);}});
       expand.activateSortHandle();
+      
+      var users = row.createCell({
+        type: "user",
+        get: function() { return story.getUsers(); },
+        getEdit: function() { 
+          var users = [];
+          var tmp = story.getUsers();
+          if(tmp) {
+            for(var i = 0; i < tmp.length; i++) {
+              if(tmp[i]) {
+                users.push(tmp[i].user);
+              }
+            }
+          }
+          return users;
+        },
+        decorator: agilefantUtils.userlistToHTML,
+        set: function(users) {
+          story.setUsers(agilefantUtils.createPseudoUserContainer(users)); 
+          story.setUserIds(agilefantUtils.objectToIdArray(users));   
+        },
+        backlogId: story.backlog.getId(),
+        storyId: story.getId()
+      });
+      
       var tasks = row.createCell({
         get: function() { 
         return story.getDoneTasks() + " / " + story.getTotalTasks();
@@ -284,6 +309,7 @@ IterationController.prototype = {
       var row = me.view.createRow(story);
       var expand = row.createCell();
         var name = row.createCell().setValue("Tasks without story.");
+      var responsibles = row.createCell();
       var tasks = row.createCell({
         get: function() { return story.getDoneTasks() + " / " + story.getTotalTasks(); }
       });

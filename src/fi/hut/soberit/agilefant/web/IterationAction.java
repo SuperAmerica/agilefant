@@ -73,6 +73,7 @@ public class IterationAction extends BacklogContentsAction implements CRUDAction
         JSONSerializer serializer = new JSONSerializer();
         if(!excludeStories) {
             serializer.include("stories.tasks");
+            serializer.include("stories.userData");
             serializer.include("stories.tasks.userData");
             serializer.include("tasksWithoutStory");
             serializer.include("tasksWithoutStory.userData");

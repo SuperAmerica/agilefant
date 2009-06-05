@@ -572,12 +572,12 @@
         var uc = new AgilefantUserChooser({
           selectThese: agilefantUtils.objectToIdArray(me.options.getEdit()),
           selectCallback: function(chooser) {
-          var users = chooser.getSelected(true);
-          me.options.set(users); 
-          me.render();
-        },
-        backlogId: this.options.backlogId,
-        storyId: this.options.storyId
+            var users = chooser.getSelected(true);
+            me.options.set(users); 
+            me.render();
+          },
+          backlogId: this.options.backlogId,
+          storyId: this.options.storyId
         });
         uc.init();
         return;
@@ -1043,6 +1043,12 @@
               tooltip: 'Story name',
               sort: agilefantUtils.comparators.nameComparator
           }, 'story-row');
+      addTableColumn(opts,                      
+          { minwidth: 60, auto: true },
+          { name: 'Responsibles',
+              tooltip: 'Story\'s responsibles',
+              sort: null
+          }, 'story-responsibles');
       addTableColumn(opts,                      
           { minwidth: 60, auto: true },
           { name: 'Tasks',

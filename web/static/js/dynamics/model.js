@@ -9,6 +9,7 @@ StoryModel = function(storyData, parent) {
   this.init();
   this.metrics = {totalTasks: '-', doneTasks: '-', effortLeft: null, originalEstimate: null, effortSpent: null};
   this.iteration = parent;
+  this.backlog = this.iteration;
   this.tasks = [];
   this.setData(storyData, true);
 };
@@ -299,6 +300,9 @@ StoryModel.prototype.setData = function(data, includeMetrics) {
   if(data.tasks && data.tasks.length > 0) {
     this.setTasks(data.tasks);
   }
+  if (data.userData) {
+    this.users = data.userData;
+  }
   this.persistedData = data;
   this.callEditListeners({bubbleEvent: event});
 };
@@ -390,6 +394,12 @@ StoryModel.prototype.setPriority = function(priority) {
   this.priority = priority;
   this.preventNextEvent();
   this.save(true);
+};
+StoryModel.prototype.getUsers = function() {
+  return this.users;
+};
+StoryModel.prototype.setUsers = function(users) {
+  this.users = users;
 };
 StoryModel.prototype.getEffortLeft = function() {
   return this.metrics.effortLeft;

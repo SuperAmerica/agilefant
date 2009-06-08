@@ -65,7 +65,7 @@ $(document).ready(function() {
 						</display:column>
 						
 						<display:column sortable="false" title="Spent effort" sortProperty="minutesSpent">
-							${aef:minorUnitsToString(row.minutesSpent)}
+							${aef:minutesToString(row.minutesSpent)}
 						</display:column>
 						
 						<display:column sortable="false" title="Comment">

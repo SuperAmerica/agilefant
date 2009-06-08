@@ -15,7 +15,6 @@ import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.User;
-import fi.hut.soberit.agilefant.util.ExactEstimateUtils;
 import fi.hut.soberit.agilefant.util.MinorUnitsParser;
 
 /**
@@ -24,6 +23,8 @@ import fi.hut.soberit.agilefant.util.MinorUnitsParser;
 public class AEFFunctions {
 
     private static int maxStrLength = 30;
+    
+    private static MinorUnitsParser minutesParser = new MinorUnitsParser("h", "min", 60);
 
     public static boolean isProduct(Object obj) {
         return obj instanceof Product;
@@ -73,9 +74,8 @@ public class AEFFunctions {
         return out(s, newLength, true);
     }
 
-    public static String minorUnitsToString(long minor) {
-        MinorUnitsParser p = new MinorUnitsParser("h","min",60);
-        return htmlOut(p.convertToString(minor));
+    public static String minutesToString(long minor) {
+        return minutesParser.convertToString(minor);
     }
     
     public static String nl2br(String s) {

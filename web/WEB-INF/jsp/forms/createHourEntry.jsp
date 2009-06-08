@@ -108,18 +108,18 @@ $(document).ready(function() {
 					<table>
 						<tr>
 							<td>Today:</td>
-							<td>${todayEffortSum}</td>
+							<td>${aef:minutesToString(todayEffortSum)}</td>
 							<td style="width: 50px;"></td>
 							<td>This week:</td>
-							<td>${weekEffortSum}</td>
+							<td>${aef:minutesToString(weekEffortSum)}</td>
 
 						</tr>
 						<tr>
 							<td>Yesterday:</td>
-							<td>${yesterdayEffortSum}</td>
+							<td>${aef:minutesToString(yesterdayEffortSum)}</td>
 							<td></td>
 							<td>This month:</td>
-							<td>${monthEffortSum}</td>
+							<td>${aef:minutesToString(monthEffortSum)}</td>
 						</tr>
 					</table>
 					</td>

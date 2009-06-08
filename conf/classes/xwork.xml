@@ -943,11 +943,9 @@
     <action name="ajaxDeleteHourEntry" method="delete" class="hourEntryAction">
     </action>
 
-<!-- 		
 		<action name="getHourSum" method="sumHours" class="getHourSumAction">
 			<result name="success">/WEB-INF/jsp/inc/_hourSum.jsp</result>
 		</action>
-		-->
 		
 		<action name="updateMultipleHourEntries" class="hourEntryAction" method="multiEdit" />
 		

@@ -12,7 +12,8 @@ public class MinorUnitsParser {
 
     private int minorsPerMajor;
 
-    public MinorUnitsParser(String majorUnit, String minorUnit, int minorsPerMajor) {
+    public MinorUnitsParser(String majorUnit, String minorUnit,
+            int minorsPerMajor) {
         this.minorUnit = minorUnit;
         this.majorUnit = majorUnit;
         this.minorsPerMajor = minorsPerMajor;
@@ -24,9 +25,11 @@ public class MinorUnitsParser {
         long majors = minorsUnits / minorsPerMajor;
         long minors = minorsUnits % minorsPerMajor;
         StringBuilder builder = new StringBuilder();
-        builder.append(majors);
-        builder.append(majorUnit);
-        builder.append(' ');
+        if (majors > 0) {
+            builder.append(majors);
+            builder.append(majorUnit);
+            builder.append(' ');
+        }
         builder.append(minors);
         builder.append(minorUnit);
         return builder.toString();

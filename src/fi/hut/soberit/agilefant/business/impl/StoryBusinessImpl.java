@@ -180,6 +180,7 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
 
         if (storable.getId() == 0) {
             storable.setPriority(-1);
+            backlog.getStories().add(storable);
             int persistedId = (Integer) storyDAO.create(storable);
             persisted = storyDAO.get(persistedId);
         } else {

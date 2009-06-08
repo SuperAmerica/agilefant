@@ -81,10 +81,4 @@
 		<property name="maxStrLength" value="15" />
 	</bean>
 
-	<bean class="fi.hut.soberit.agilefant.util.ExactEstimateUtilsConfigurer">
-		<property name="minorUnit" value="${exactestimate.minor}" />
-		<property name="majorUnit" value="${exactestimate.major}" />
-		<property name="minorsPerMajor" value="${exactestimate.minorsPerMajor}" />
-	</bean>
-
 </beans>

@@ -9,7 +9,6 @@ import com.opensymphony.xwork.ActionSupport;
 
 import fi.hut.soberit.agilefant.business.BacklogBusiness;
 import fi.hut.soberit.agilefant.business.StoryBusiness;
-import fi.hut.soberit.agilefant.db.StoryDAO;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Product;
@@ -34,8 +33,6 @@ public class QuickReferenceAction extends ActionSupport {
 
     //private BusinessThemeBusiness businessThemeBusiness;
     
-    private StoryDAO storyDAO;
-
     public String resolveLinkTarget() {
         String context = "";
         int objectId = -1;
@@ -113,16 +110,8 @@ public class QuickReferenceAction extends ActionSupport {
         this.id = id;
     }
 
-    public BacklogBusiness getBacklogBusiness() {
-        return backlogBusiness;
-    }
-
     public void setBacklogBusiness(BacklogBusiness backlogBusiness) {
         this.backlogBusiness = backlogBusiness;
-    }
-
-    public StoryBusiness getStoryBusiness() {
-        return storyBusiness;
     }
 
     public void setStoryBusiness(StoryBusiness storyBusiness) {
@@ -139,11 +128,4 @@ public class QuickReferenceAction extends ActionSupport {
     }
     */
 
-    public StoryDAO getStoryDAO() {
-        return storyDAO;
-    }
-
-    public void setStoryDAO(StoryDAO StoryDAO) {
-        this.storyDAO = storyDAO;
-    }
 }

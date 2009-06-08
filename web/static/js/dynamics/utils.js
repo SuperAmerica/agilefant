@@ -42,7 +42,7 @@ var agilefantUtils = {
 				}
 			}
 		}
-		return minorUnits;		
+		return minorUnits;
 	},
 	isExactEstimateString: function(string) {
 		if(!string) {

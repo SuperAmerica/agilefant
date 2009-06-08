@@ -5,7 +5,7 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class ExactEstimate {
 
-    private long minorUnits;
+    private Long minorUnits;
 
     public ExactEstimate() {
     }
@@ -14,11 +14,11 @@ public class ExactEstimate {
         this.minorUnits = minorUnits;
     }
 
-    public void setMinorUnits(long minorUnits) {
+    public void setMinorUnits(Long minorUnits) {
         this.minorUnits = minorUnits;
     }
 
-    public long getMinorUnits() {
+    public Long getMinorUnits() {
         return minorUnits;
     }
 

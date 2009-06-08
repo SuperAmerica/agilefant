@@ -15,8 +15,8 @@ StoryModel = function(storyData, parent) {
 };
 var TaskModel = function(data, backlog, story) {
   this.init();
-  this.effortLeft = "";
-  this.originalEstimate = "";
+  this.effortLeft = null;
+  this.originalEstimate = null;
   this.backlog = backlog;
   this.story = story;
   if (data) {
@@ -315,8 +315,7 @@ StoryModel.prototype.reloadTasks = function() {
   },
   success: function(data,type) {
     me.setTasks(data);
-    // TODO: Fix when metrics work
-    //me.reloadMetrics();
+    me.reloadMetrics();
   },
   cache: false,
   dataType: "json",
@@ -337,10 +336,9 @@ StoryModel.prototype.addTask = function(task, noReload) {
   task.backlog = this.iteration;
   task.story = this;
   this.tasks.push(task);
-// TODO: Fix when metrics work
-  /*if(!noReload) {
+  if(!noReload) {
     this.reloadMetrics();
-  }*/
+  }
 };
 StoryModel.prototype.removeTask = function(task, noReload) {
   var tmp = this.tasks;
@@ -350,11 +348,9 @@ StoryModel.prototype.removeTask = function(task, noReload) {
       this.tasks.push(tmp[i]);
     }
   }
-  // TODO: Fix when metrics work
-  /*
   if(!noReload) { 
     this.reloadMetrics();
-  }*/
+  }
 };
 StoryModel.prototype.copy = function() {
   var copy = new StoryModel({}, this.iteration);
@@ -549,6 +545,12 @@ TaskModel.prototype.setData = function(data) {
     }
   } else if (!this.persistedData && data) {
     bubbleEvents.push("metricsUpdated");
+  }
+  if (this.effortLeft) {
+	  this.effortLeft = this.effortLeft.minorUnits;
+  }
+  if (this.originalEstimate) {
+	  this.originalEstimate = this.originalEstimate.minorUnits;
   }
   if (data.userData) {
     this.users = data.userData;
@@ -745,7 +747,6 @@ TaskModel.prototype.moveTo = function(storyId, iterationId) {
       var newStory = ModelFactory.getStory(storyId);
       newStory.addTask(this, false);
       this.save(false);
-      // TODO: Fix when metrics work
       newStory.reloadMetrics();
     } else {
       this.backlog = {getId: function() { return iterationId; }};
@@ -792,9 +793,8 @@ TaskModel.prototype.changeStory = function(newStory) {
   this.story.removeTask(this, true);
   newStory.addTask(this, true);
   this.save(false, function() {
-    // TODO: fix when metrics work
-/*    oldStory.reloadMetrics();
-    newStory.reloadMetrics();*/
+    oldStory.reloadMetrics();
+    newStory.reloadMetrics();
   });
   
 };
@@ -864,21 +864,6 @@ TaskModel.prototype.save = function(synchronous, callback) {
     data.themeIds = agilefantUtils.objectToIdArray(this.themes);
   }
   //conversions
-  /*
-  if (data["task.effortLeft"]) {
-    data["task.effortLeft"] /= 3600;
-  }*/
-  if (!data["task.effortLeft"] && data["task.effortLeft"] !== 0) {
-    data["task.effortLeft"] = "";
-  }
-  /*
-  if (data["task.originalEstimate"]) {
-    data["task.originalEstimate"] /= 3600;
-  }
-  */
-  if (!data["task.originalEstimate"] && data["task.originalEstimate"] !== 0) {
-    data["task.originalEstimate"] = "";
-  }
   if (!this.name) {
     data["task.name"] = "";
   }

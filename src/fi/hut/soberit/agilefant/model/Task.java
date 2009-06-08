@@ -48,8 +48,8 @@ public class Task implements TimesheetLoggable {
     private Priority priority;
     
     private List<Todo> todos = new ArrayList<Todo>();
-    private ExactEstimate effortLeft;
-    private ExactEstimate originalEstimate;
+    private ExactEstimate effortLeft = new ExactEstimate();
+    private ExactEstimate originalEstimate = new ExactEstimate();
     private List<TaskHistoryEntry> historyEntries = new ArrayList<TaskHistoryEntry>();
     private Collection<User> responsibles = new ArrayList<User>();
     

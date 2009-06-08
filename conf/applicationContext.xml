@@ -50,7 +50,8 @@
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 
-	<bean name="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+	<bean name="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close">
 		<property name="driverClassName">
 			<value>${hibernate.connection.driver_class}</value>
 		</property>

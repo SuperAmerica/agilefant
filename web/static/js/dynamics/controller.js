@@ -393,12 +393,13 @@ IterationController.prototype = {
         type: "text", 
         get: function() { return " "; },
         set: function(val){ fakeStory.setName(val);}});
+      var responsibles = row.createCell();
+      var tasks = row.createCell();
       var elsum = row.createCell();
       var oesum = row.createCell();
       if(agilefantUtils.isTimesheetsEnabled()) {
         var essum = row.createCell();
       }
-      var tasks = row.createCell();
       var buttons = row.createCell();
       buttons.setActionCell({items: [{
         text: "Cancel",

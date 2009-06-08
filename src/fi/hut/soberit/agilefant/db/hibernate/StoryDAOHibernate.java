@@ -70,21 +70,23 @@ public class StoryDAOHibernate extends GenericDAOHibernate<Story> implements
         int allTasksCount = 0;
         long allTasksOriginalEstimateSum = 0;
         long allTasksEffortLeftSum = 0;
-        for (Object[] results : resultsByState) {
-            int count = ((Integer)results[0]).intValue();
-            ExactEstimate originalEstimateSum = (ExactEstimate) results[1];
-            ExactEstimate effortLeftSum = (ExactEstimate) results[2];
-            TaskState state = (TaskState) results[3];
-            if (state == TaskState.DONE) {
-                metrics.setDoneTasks(count);
+        if (resultsByState != null) {
+            for (Object[] results : resultsByState) {
+                int count = ((Integer)results[0]).intValue();
+                ExactEstimate originalEstimateSum = (ExactEstimate) results[1];
+                ExactEstimate effortLeftSum = (ExactEstimate) results[2];
+                TaskState state = (TaskState) results[3];
+                if (state == TaskState.DONE) {
+                    metrics.setDoneTasks(count);
+                }
+                if (originalEstimateSum != null) {
+                    allTasksOriginalEstimateSum += originalEstimateSum.getMinorUnits();
+                }
+                if (effortLeftSum != null) {
+                    allTasksEffortLeftSum += effortLeftSum.getMinorUnits();
+                }
+                allTasksCount += count;
             }
-            if (originalEstimateSum != null) {
-                allTasksOriginalEstimateSum += originalEstimateSum.getMinorUnits();
-            }
-            if (effortLeftSum != null) {
-                allTasksEffortLeftSum += effortLeftSum.getMinorUnits();
-            }
-            allTasksCount += count;
         }
         metrics.setTotalTasks(allTasksCount);
         metrics.setOriginalEstimate(allTasksOriginalEstimateSum);

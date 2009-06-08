@@ -7,11 +7,11 @@ public class ExactEstimateUtils {
     private static MinorUnitsParser parser = new MinorUnitsParser("h", "min", 60);
     
     public static String convertToString(ExactEstimate estimate) {
-        return parser.convertToString(estimate);
+        return parser.convertToString(estimate.getMinorUnits());
     }
 
     public static ExactEstimate convertFromString(String string) {
-        return parser.convertFromString(string);
+        return new ExactEstimate(parser.convertFromString(string));
     }
 
 }

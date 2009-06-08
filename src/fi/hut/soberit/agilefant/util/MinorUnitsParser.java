@@ -3,8 +3,6 @@ package fi.hut.soberit.agilefant.util;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import fi.hut.soberit.agilefant.model.ExactEstimate;
-
 public class MinorUnitsParser {
 
     private final String minorUnit;
@@ -22,9 +20,9 @@ public class MinorUnitsParser {
                 + majorUnit + ")?\\s*((\\d+)" + minorUnit + ")?\\s*");
     }
 
-    public String convertToString(ExactEstimate estimate) {
-        long majors = estimate.getMinorUnits() / minorsPerMajor;
-        long minors = estimate.getMinorUnits() % minorsPerMajor;
+    public String convertToString(long minorsUnits) {
+        long majors = minorsUnits / minorsPerMajor;
+        long minors = minorsUnits % minorsPerMajor;
         StringBuilder builder = new StringBuilder();
         builder.append(majors);
         builder.append(majorUnit);
@@ -34,7 +32,7 @@ public class MinorUnitsParser {
         return builder.toString();
     }
 
-    public ExactEstimate convertFromString(String string) {
+    public long convertFromString(String string) {
         int parsedMajors;
         double parsedMajorsDecimals;
         int parsedMinors;
@@ -49,13 +47,11 @@ public class MinorUnitsParser {
         } catch (Exception e) {
             throw new IllegalArgumentException("Invalid input", e);
         }
-        ExactEstimate estimate = new ExactEstimate();
 
         long minors = parsedMinors + parsedMajors * minorsPerMajor;
         minors = minors + (long) (parsedMajorsDecimals * minorsPerMajor);
-        estimate.setMinorUnits(minors);
 
-        return estimate;
+        return minors;
     }
 
     private static double parseDoubleSafely(String string) {

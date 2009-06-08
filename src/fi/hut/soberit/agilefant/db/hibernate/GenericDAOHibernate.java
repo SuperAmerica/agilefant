@@ -141,7 +141,7 @@ public abstract class GenericDAOHibernate<T> implements GenericDAO<T> {
     }
     
     @SuppressWarnings("unchecked")
-    public <ResultType> Collection<ResultType> asCollection(Criteria criteria) {
+    protected <ResultType> Collection<ResultType> asCollection(Criteria criteria) {
         Collection<ResultType> list = criteria.list();
         if (list == null) {
             return Collections.EMPTY_LIST;
@@ -150,7 +150,7 @@ public abstract class GenericDAOHibernate<T> implements GenericDAO<T> {
     }
 
     @SuppressWarnings("unchecked")
-    public <ResultType> List<ResultType> asList(Criteria criteria) {
+    protected <ResultType> List<ResultType> asList(Criteria criteria) {
         List<ResultType> list = criteria.list();
         if (list == null) {
             return Collections.EMPTY_LIST;
@@ -159,7 +159,7 @@ public abstract class GenericDAOHibernate<T> implements GenericDAO<T> {
     }
     
     @SuppressWarnings("unchecked")
-    public <ResultType> ResultType uniqueResult(Criteria criteria) {
+    protected <ResultType> ResultType uniqueResult(Criteria criteria) {
         return (ResultType) criteria.uniqueResult();
     }
 

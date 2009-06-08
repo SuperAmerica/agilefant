@@ -6,7 +6,7 @@
 	<property file="conf/database-mysql5.properties" />
 
 	<!-- Clover parameters -->
-	<property name="clover.jar" location="${basedir}/lib/clover.jar" />
+  <property name="clover.jar" location="${basedir}/lib/build/clover.jar" />
 	<taskdef resource="cloverlib.xml" classpath="${clover.jar}" />
 
 
@@ -19,7 +19,7 @@
 		<mkdir dir="${build.test.classes.dir}" />
 
 		<path id="yuicompressor.classpath">
-			<fileset dir="${lib}">
+      <fileset dir="${lib}/build">
 				<include name="yuicompressor-*.jar"/>
 				<include name="YUIAnt.jar"/>
 			</fileset>
@@ -160,7 +160,7 @@
 
 	<target name="test-checkstyle-xmlreport" description="Generates a report of code convention violations.">
 		<mkdir dir="${test.reports.checkstyle}" />
-		<taskdef resource="checkstyletask.properties" classpath="${basedir}/lib/checkstyle-all-4.3.jar" />
+    <taskdef resource="checkstyletask.properties" classpath="${basedir}/lib/build/checkstyle-all-4.3.jar" />
 		<checkstyle config="${test.conf.dir}/checkstyle/sun_checks.xml" failureProperty="checkstyle.failure" failOnViolation="false">
 			<formatter type="xml" tofile="${test.reports.checkstyle}/checkstyle_report.xml" />
 			<fileset dir="src" includes="**/*.java" />
@@ -460,7 +460,7 @@
 	<target name="jslint" description="javascript check" depends="webapp">
 		<taskdef name="jslint"
                  classname="net.happygiraffe.jslint.ant.JSLintTask"
-                 classpath="${lib}/jslint4java-1.2.1+rhino.jar" />
+                 classpath="${lib}/build/jslint4java-1.2.1+rhino.jar" />
 
 		<jslint options="laxbreak">
 			<formatter type="plain" />

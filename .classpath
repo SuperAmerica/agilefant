@@ -80,19 +80,19 @@
 	<classpathentry exported="true" kind="lib" path="lib/flexjson.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/mysql-connector-java-5.1.7-bin.jar"/>
 	<classpathentry kind="lib" path="lib/poi-3.5-beta5-20090219.jar"/>
-	<classpathentry kind="lib" path="lib/YUIAnt.jar"/>
-	<classpathentry kind="lib" path="lib/yuicompressor-2.4.2.jar"/>
 	<classpathentry kind="lib" path="lib/joda-time-1.6.jar" sourcepath="lib-src/joda-time-1.6-sources.jar"/>
 	<classpathentry kind="lib" path="lib/joda-time-hibernate-1.1.jar"/>
 	<classpathentry kind="lib" path="lib/joda-time-jsptags-1.0.2.jar"/>
 	<classpathentry kind="lib" path="lib/spring-test.jar"/>
 	<classpathentry kind="lib" path="lib/build/junit-4.6.jar"/>
-	<classpathentry kind="lib" path="lib/easymockclassextension-2.4.jar"/>
 	<classpathentry kind="lib" path="lib/build/dbunit-2.4.5.jar"/>
 	<classpathentry kind="lib" path="lib/build/h2-1.1.114.jar"/>
 	<classpathentry kind="lib" path="lib/jettison-1.0.1.jar"/>
 	<classpathentry kind="lib" path="lib/xpp3_min-1.1.4c.jar"/>
 	<classpathentry kind="lib" path="lib/xstream-1.3.1.jar"/>
-	<classpathentry kind="lib" path="lib/easymock-2.5.jar"/>
+	<classpathentry kind="lib" path="lib/build/easymock-2.5.jar"/>
+	<classpathentry kind="lib" path="lib/build/easymockclassextension-2.4.jar"/>
+	<classpathentry kind="lib" path="lib/build/YUIAnt.jar"/>
+	<classpathentry kind="lib" path="lib/build/yuicompressor-2.4.2.jar"/>
 	<classpathentry kind="output" path="eclipse-classes"/>
 </classpath>

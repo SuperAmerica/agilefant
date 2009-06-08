@@ -64,8 +64,8 @@ $(document).ready(function() {
 							${aef:html(row.user.fullName)}
 						</display:column>
 						
-						<display:column sortable="false" title="Spent effort" sortProperty="timeSpent">
-							${aef:html(row.minutesSpent)}
+						<display:column sortable="false" title="Spent effort" sortProperty="minutesSpent">
+							${aef:minorUnitsToString(row.minutesSpent)}
 						</display:column>
 						
 						<display:column sortable="false" title="Comment">

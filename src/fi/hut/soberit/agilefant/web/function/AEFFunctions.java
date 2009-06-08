@@ -15,6 +15,8 @@ import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.util.ExactEstimateUtils;
+import fi.hut.soberit.agilefant.util.MinorUnitsParser;
 
 /**
  * custom functions for jsp pages
@@ -71,6 +73,11 @@ public class AEFFunctions {
         return out(s, newLength, true);
     }
 
+    public static String minorUnitsToString(long minor) {
+        MinorUnitsParser p = new MinorUnitsParser("h","min",60);
+        return htmlOut(p.convertToString(minor));
+    }
+    
     public static String nl2br(String s) {
         if (s == null)
             return s;

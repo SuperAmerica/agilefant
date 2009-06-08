@@ -130,9 +130,6 @@ public class StoryAction extends ActionSupport implements CRUDAction {
     public String delete() {
         try {
             storyBusiness.remove(storyId);
-            /*Story story = storyBusiness.retrieve(storyId);
-            backlogId = story.getBacklog().getId();
-            storyBusiness.delete(storyId);*/
         } catch (ObjectNotFoundException e) {
             super.addActionError(super.getText("story.notFound"));
             return ERROR;

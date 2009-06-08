@@ -52,7 +52,6 @@ public class Task implements TimesheetLoggable {
     private List<Todo> todos = new ArrayList<Todo>();
     private ExactEstimate effortLeft = new ExactEstimate();
     private ExactEstimate originalEstimate = new ExactEstimate();
-    private List<TaskHistoryEntry> historyEntries = new ArrayList<TaskHistoryEntry>();
     private Collection<User> responsibles = new ArrayList<User>();
     
     private Date createdDate;
@@ -126,15 +125,6 @@ public class Task implements TimesheetLoggable {
     @AttributeOverrides(@AttributeOverride(name = "minorUnits", column = @Column(name = "effortleft")))
     public ExactEstimate getEffortLeft() {
         return effortLeft;
-    }
-
-    public void setHistoryEntries(List<TaskHistoryEntry> historyEntries) {
-        this.historyEntries = historyEntries;
-    }
-
-    @OneToMany(mappedBy = "task")
-    public List<TaskHistoryEntry> getHistoryEntries() {
-        return historyEntries;
     }
 
     @Embedded

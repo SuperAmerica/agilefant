@@ -23,7 +23,6 @@ public class TaskTO extends Task {
         this.setTodos(task.getTodos());
         this.setEffortLeft(task.getEffortLeft());
         this.setOriginalEstimate(task.getOriginalEstimate());
-        this.setHistoryEntries(task.getHistoryEntries());
         this.setResponsibles(task.getResponsibles());
         this.setCreatedDate(task.getCreatedDate());
         this.setCreator(task.getCreator());

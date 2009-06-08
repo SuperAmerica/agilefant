@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import fi.hut.soberit.agilefant.business.IterationHistoryEntryBusiness;
 import fi.hut.soberit.agilefant.business.StoryBusiness;
 import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.db.IterationDAO;
@@ -38,7 +39,9 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
     @Autowired
     private IterationDAO iterationDAO;
     @Autowired
-    private UserDAO userDAO;
+    private UserDAO userDAO;    
+    @Autowired
+    private IterationHistoryEntryBusiness iterationHistoryEntryBusiness;
 
     @Autowired
     public void setStoryDAO(StoryDAO storyDAO) {
@@ -190,9 +193,9 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         if (persisted.getBacklog() instanceof Iteration) {
             updateStoryPriority(persisted, priority);
         }
-        // if(!historyUpdated) {
-        // historyBusiness.updateBacklogHistory(backlog.getId());
-        // }
+        if(!historyUpdated) {
+            iterationHistoryEntryBusiness.updateIterationHistory(backlog.getId());
+        }
         return persisted;
     }
 
@@ -202,9 +205,9 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         oldBacklog.getStories().remove(story);
         story.setBacklog(backlog);
         backlog.getStories().add(story);
-        // historyBusiness.updateBacklogHistory(oldBacklog.getId());
-        // historyBusiness.updateBacklogHistory(backlog.getId());
-
+        iterationHistoryEntryBusiness.updateIterationHistory(oldBacklog.getId());
+        iterationHistoryEntryBusiness.updateIterationHistory(backlog.getId());
+        
         // if(!backlogBusiness.isUnderSameProduct(oldBacklog, backlog)) {
         // //remove only product themes
         // Collection<BusinessTheme> removeThese = new
@@ -353,7 +356,5 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
             throw new IllegalArgumentException("story.noIteration");
         }
     }
-
-    
 
 }

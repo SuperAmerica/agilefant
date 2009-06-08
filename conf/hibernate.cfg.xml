@@ -16,6 +16,7 @@
 		<mapping class="fi.hut.soberit.agilefant.model.BacklogHourEntry" />
     <mapping class="fi.hut.soberit.agilefant.model.ExactEstimate" />		
 		<mapping class="fi.hut.soberit.agilefant.model.Iteration" />
+		<mapping class="fi.hut.soberit.agilefant.model.IterationHistoryEntry" />
 		<mapping class="fi.hut.soberit.agilefant.model.Product" />
 		<mapping class="fi.hut.soberit.agilefant.model.Project" />
 		<mapping class="fi.hut.soberit.agilefant.model.ProjectType" />
@@ -23,7 +24,6 @@
 		<mapping class="fi.hut.soberit.agilefant.model.Story" />
 		<mapping class="fi.hut.soberit.agilefant.model.StoryHourEntry" />
 		<mapping class="fi.hut.soberit.agilefant.model.Task" />
-		<mapping class="fi.hut.soberit.agilefant.model.TaskHistoryEntry" />
 		<mapping class="fi.hut.soberit.agilefant.model.TaskHourEntry" />
 		<mapping class="fi.hut.soberit.agilefant.model.Team" />
 		<mapping class="fi.hut.soberit.agilefant.model.Todo" />

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import fi.hut.soberit.agilefant.business.IterationBusiness;
+import fi.hut.soberit.agilefant.business.IterationHistoryEntryBusiness;
 import fi.hut.soberit.agilefant.business.StoryBusiness;
 import fi.hut.soberit.agilefant.business.TaskBusiness;
 import fi.hut.soberit.agilefant.business.UserBusiness;
@@ -37,8 +38,14 @@ public class TaskBusinessImpl extends GenericBusinessImpl<Task> implements
     private UserBusiness userBusiness;
 
     @Autowired
+    private IterationHistoryEntryBusiness iterationHistoryEntryBusiness;
+    
+    private TaskDAO taskDAO;
+    
+    @Autowired
     public void setTaskDAO(TaskDAO taskDAO) {
         this.genericDAO = taskDAO;
+        this.taskDAO = taskDAO;
     }
     
     public void setIterationBusiness(IterationBusiness iterationBusiness) {
@@ -53,6 +60,11 @@ public class TaskBusinessImpl extends GenericBusinessImpl<Task> implements
         this.userBusiness = userBusiness;
     }
 
+    public void setIterationHistoryEntryBusiness(
+            IterationHistoryEntryBusiness iterationHistoryEntryBusiness) {
+        this.iterationHistoryEntryBusiness = iterationHistoryEntryBusiness;
+    }
+    
     public Collection<ResponsibleContainer> getTaskResponsibles(Task task) {
         Collection<ResponsibleContainer> responsibleContainers = new ArrayList<ResponsibleContainer>();
         Collection<User> storyResponsibles = task.getResponsibles();
@@ -91,6 +103,8 @@ public class TaskBusinessImpl extends GenericBusinessImpl<Task> implements
             this.store(task);
             storedTask = task;
         }
+                        
+        iterationHistoryEntryBusiness.updateIterationHistory(iterationId);
         
         return storedTask;
     }
@@ -126,6 +140,21 @@ public class TaskBusinessImpl extends GenericBusinessImpl<Task> implements
         Task task = retrieve(taskId);
         task.setEffortLeft(null);
         task.setOriginalEstimate(null);
+        taskDAO.store(task);
+        iterationHistoryEntryBusiness.updateIterationHistory(task.getIteration().getId());
         return task;
     }
+    
+    @Override
+    public void delete(int id) {        
+        delete(taskDAO.get(id));
+    }
+    
+    @Override
+    public void delete(Task task) {
+        int iterationId = task.getIteration().getId();
+        super.delete(task);
+        iterationHistoryEntryBusiness.updateIterationHistory(iterationId);
+    }    
+    
 }

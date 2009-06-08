@@ -1,7 +1,6 @@
 package fi.hut.soberit.agilefant.business.impl;
 
 import java.text.ParseException;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -134,6 +133,12 @@ public class HourEntryBusinessImpl extends GenericBusinessImpl<HourEntry>
             hourEntryDAO.store(entry);
         }
         
+    }
+
+    @Transactional(readOnly = true)
+    public long calculateSumByUserAndTimeInterval(User user,
+            DateTime startDate, DateTime endDate) {
+        return hourEntryDAO.calculateSumByUserAndTimeInterval(user, startDate, endDate);
     }
 
 

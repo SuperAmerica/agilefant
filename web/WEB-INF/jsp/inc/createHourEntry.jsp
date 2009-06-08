@@ -2,7 +2,7 @@
 
 <aef:currentUser />
 <aef:enabledUserList />
-<%-- 
+ 
 <aef:userEffortSum user="${currentUser}" timeInterval="Today"
 	id="todayEffortSum" />
 <aef:userEffortSum user="${currentUser}" timeInterval="Yesterday"
@@ -11,7 +11,7 @@
 	id="weekEffortSum" />
 <aef:userEffortSum user="${currentUser}" timeInterval="This month"
 	id="monthEffortSum" />
---%>
+
 <script type="text/javascript">
 function updatePastEffort(immediate) {
     var data = new Object();

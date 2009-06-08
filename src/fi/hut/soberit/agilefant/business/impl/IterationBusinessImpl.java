@@ -79,5 +79,9 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration> implem
     public void setProjectBusiness(ProjectBusiness projectBusiness) {
         this.projectBusiness = projectBusiness;
     }
-    
+
+    public void setStoryBusiness(StoryBusiness storyBusiness) {
+        this.storyBusiness = storyBusiness;
+    }
+
 }

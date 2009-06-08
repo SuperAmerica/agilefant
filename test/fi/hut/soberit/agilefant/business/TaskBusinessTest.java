@@ -30,6 +30,7 @@ public class TaskBusinessTest {
         }
     };
     private IterationBusiness iterationBusiness;
+    private IterationHistoryEntryBusiness iterationHistoryEntryBusiness; 
     private StoryBusiness storyBusiness;
     private UserBusiness userBusiness;
     private TaskDAO taskDAO;
@@ -49,6 +50,8 @@ public class TaskBusinessTest {
         taskBusiness.setStoryBusiness(storyBusiness);
         userBusiness = createMock(UserBusiness.class);
         taskBusiness.setUserBusiness(userBusiness);
+        iterationHistoryEntryBusiness = createMock(IterationHistoryEntryBusiness.class);
+        taskBusiness.setIterationHistoryEntryBusiness(iterationHistoryEntryBusiness);
         
         task = new Task();
         iteration = new Iteration();
@@ -135,16 +138,19 @@ public class TaskBusinessTest {
     public void testResetOriginalEstimate() {
         task.setEffortLeft(new ExactEstimate());
         task.setOriginalEstimate(new ExactEstimate());
+        task.setIteration(iteration);
         expect(taskDAO.get(task.getId())).andReturn(task);
+        taskDAO.store(task);
+        iterationHistoryEntryBusiness.updateIterationHistory(iteration.getId());
         
-        replay(taskDAO);
+        replay(taskDAO, iterationHistoryEntryBusiness);
         
         Task returnedTask = taskBusiness.resetOriginalEstimate(task.getId());
 
         assertNull(returnedTask.getEffortLeft());
         assertNull(returnedTask.getOriginalEstimate());
         
-        verify(taskDAO);
+        verify(taskDAO, iterationHistoryEntryBusiness);
     }
     
     @Test(expected = ObjectNotFoundException.class)

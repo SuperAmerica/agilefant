@@ -31,6 +31,7 @@ public class IterationBusinessTest {
     IterationBusinessImpl iterationBusiness = new IterationBusinessImpl();
     TransferObjectBusiness transferObjectBusiness;
     ProjectBusiness projectBusiness;
+    StoryBusiness storyBusiness;
     IterationDAO iterationDAO;
     Iteration iteration;
     List<StoryTO> storiesList;
@@ -67,6 +68,9 @@ public class IterationBusinessTest {
         iterationDAO = createMock(IterationDAO.class);
         iterationBusiness.setIterationDAO(iterationDAO);
         
+        storyBusiness = createMock(StoryBusiness.class);
+        iterationBusiness.setStoryBusiness(storyBusiness);
+
         projectBusiness = createMock(ProjectBusiness.class);
         iterationBusiness.setProjectBusiness(projectBusiness);
         
@@ -83,13 +87,16 @@ public class IterationBusinessTest {
             .andReturn(assignedUsers);
         expect(transferObjectBusiness.constructIterationDataWithUserData(iteration, assignedUsers))
             .andReturn(storiesList);
+        for (StoryTO storyTO: storiesList) {
+            expect(storyBusiness.calculateMetrics(storyTO)).andReturn(null);
+        }
         expect(iterationDAO.getTasksWithoutStoryForIteration(iteration))
             .andReturn(tasksWithoutStoryList);
         
         expect(transferObjectBusiness.constructTaskTO(task, assignedUsers))
             .andReturn(taskTO);
         
-        replay(iterationDAO, transferObjectBusiness, projectBusiness);
+        replay(iterationDAO, transferObjectBusiness, projectBusiness, storyBusiness);
         
         IterationDataContainer actualIterationData =
             iterationBusiness.getIterationContents(iteration.getId(), false);
@@ -97,7 +104,7 @@ public class IterationBusinessTest {
         assertEquals(expectedIterationData.getStories(), actualIterationData.getStories());
         assertEquals(expectedIterationData.getTasksWithoutStory(), actualIterationData.getTasksWithoutStory());
         
-        verify(iterationDAO, transferObjectBusiness, projectBusiness);
+        verify(iterationDAO, transferObjectBusiness, projectBusiness, storyBusiness);
     }
     
     

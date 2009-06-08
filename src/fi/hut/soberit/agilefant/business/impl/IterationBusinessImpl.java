@@ -14,12 +14,9 @@ import fi.hut.soberit.agilefant.business.TransferObjectBusiness;
 import fi.hut.soberit.agilefant.db.IterationDAO;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Project;
-import fi.hut.soberit.agilefant.model.State;
-import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.util.IterationDataContainer;
-import fi.hut.soberit.agilefant.util.StoryMetrics;
 import fi.hut.soberit.agilefant.util.StoryTO;
 import fi.hut.soberit.agilefant.util.TaskTO;
 
@@ -54,9 +51,11 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration> implem
         Collection<User> assignedUsers = projectBusiness
             .getAssignedUsers((Project)iteration.getParent());
         
-        // 1. Set iteration's stories as transfer objects
-        iterationData.getStories().addAll(
-                transferObjectBusiness.constructIterationDataWithUserData(iteration, assignedUsers));
+        // 1. Set iteration's stories as transfer objects and include story metrics
+        for (StoryTO storyTO : transferObjectBusiness.constructIterationDataWithUserData(iteration, assignedUsers)) {
+            storyTO.setMetrics(storyBusiness.calculateMetrics(storyTO));
+            iterationData.getStories().add(storyTO);
+        }
         
         // 2. Set the tasks without a story
         Collection<Task> tasksWithoutStory
@@ -79,15 +78,6 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration> implem
 
     public void setProjectBusiness(ProjectBusiness projectBusiness) {
         this.projectBusiness = projectBusiness;
-    }
-    private Collection<Story> iterationContentsASTOs(Iteration iteration) {
-        Collection<Story> stories = new ArrayList<Story>();
-        for (Story story : iteration.getStories()) {
-            StoryTO storyTO = new StoryTO(story);
-            storyTO.setMetrics(storyBusiness.calculateMetrics(story));
-            stories.add(storyTO);
-        }
-        return stories;
     }
     
 }

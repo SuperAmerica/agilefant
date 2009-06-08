@@ -247,8 +247,7 @@ IterationController.prototype = {
                                      }
                                      ]});
       row.getElement().bind("metricsUpdated", function() {
-        // TODO: Uncomment when metrics work again
-        // story.reloadMetrics();
+        story.reloadMetrics();
       });
       row.getElement().droppable({
       accept: function(draggable) {

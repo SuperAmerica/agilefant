@@ -129,7 +129,7 @@
 					<exclude name="**/TestUtility.java" />
 					<exclude name="**/SpringEnabledTestCase.java" />
 					<exclude name="**/SpringTestCase.java" />
-					<include name="**/*Test*.java" />
+					<include name="**/*Test.java" />
 				</fileset>
 			</batchtest>
 		</junit>

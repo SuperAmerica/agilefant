@@ -10,13 +10,13 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.jdbc.SimpleJdbcTestUtils;
 import org.springframework.transaction.annotation.Transactional;
 
-import fi.hut.soberit.agilefant.test.AbstractHibernateTest;
+import fi.hut.soberit.agilefant.test.AbstractHibernateTests;
 import fi.hut.soberit.agilefant.test.SampleDAO;
 import fi.hut.soberit.agilefant.test.SampleEntity;
 
 @ContextConfiguration
 @Transactional
-public class GenericDAOTest extends AbstractHibernateTest {
+public class GenericDAOTest extends AbstractHibernateTests {
 
     @Autowired
     private SampleDAO sampleDAO;

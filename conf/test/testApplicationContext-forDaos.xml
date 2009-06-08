@@ -6,14 +6,15 @@
   http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
   http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
 	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
-	
+
 	<bean name="transactionManager"
 		class="org.springframework.orm.hibernate3.HibernateTransactionManager">
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 
-	<bean name="dataSource" class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
-		<property name="driverClass" value="org.h2.Driver" />
+	<bean name="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close">
+		<property name="driverClassName" value="org.h2.Driver" />
 		<property name="username" value="sa" />
 		<property name="password" value="sa" />
 		<property name="url" value="jdbc:h2:mem:aeftest" />
@@ -22,8 +23,19 @@
 	<bean name="sessionFactory"
 		class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
 		<property name="dataSource" ref="dataSource" />
-		<property name="configLocation">
-			<value>classpath:hibernate.cfg.xml</value>
+		<property name="annotatedPackages" value="fi.hut.soberit.agilefant.model" />
+		<property name="packagesToScan" value="fi.hut.soberit.agilefant.model" />
+		<property name="eventListeners">
+			<map>
+				<entry key="pre-update">
+					<bean
+						class="org.hibernate.validator.event.ValidatePreUpdateEventListener" />
+				</entry>
+				<entry key="pre-insert">
+					<bean
+						class="org.hibernate.validator.event.ValidatePreInsertEventListener" />
+				</entry>
+			</map>
 		</property>
 		<property name="hibernateProperties">
 			<map>

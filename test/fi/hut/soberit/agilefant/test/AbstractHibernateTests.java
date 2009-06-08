@@ -8,7 +8,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 import org.springframework.test.context.junit38.AbstractTransactionalJUnit38SpringContextTests;
 import org.springframework.test.jdbc.SimpleJdbcTestUtils;
 
-public class AbstractHibernateTest extends
+public abstract class AbstractHibernateTests extends
         AbstractTransactionalJUnit38SpringContextTests {
 
     @Autowired
@@ -16,15 +16,15 @@ public class AbstractHibernateTest extends
 
     @Autowired
     protected SimpleJdbcTemplate simpleJdbcTemplate;
-    
+
     @Autowired
     protected SessionFactory sessionFactory;
 
     protected void forceFlush() {
-        sessionFactory.getCurrentSession().flush();        
+        sessionFactory.getCurrentSession().flush();
     }
-    
-    public void executeClassSql() {
+
+    protected void executeClassSql() {
         final StackTraceElement callerFromStackTrace = new Throwable()
                 .getStackTrace()[1];
         StringBuilder builder = new StringBuilder();
@@ -34,7 +34,7 @@ public class AbstractHibernateTest extends
         executeSql(builder.toString());
     }
 
-    public void executeMethodSql() {
+    protected void executeMethodSql() {
         final StackTraceElement callerFromStackTrace = new Throwable()
                 .getStackTrace()[1];
         StringBuilder builder = new StringBuilder();
@@ -46,7 +46,7 @@ public class AbstractHibernateTest extends
         executeSql(builder.toString());
     }
 
-    public void executeSql(String location) {
+    protected void executeSql(String location) {
         Resource resource = applicationContext.getResource(location);
         SimpleJdbcTestUtils.executeSqlScript(simpleJdbcTemplate, resource,
                 false);

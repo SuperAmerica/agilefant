@@ -3,8 +3,8 @@ package fi.hut.soberit.agilefant.business;
 import java.util.Map;
 
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
-import fi.hut.soberit.agilefant.model.State;
 import fi.hut.soberit.agilefant.model.Task;
+import fi.hut.soberit.agilefant.model.TaskState;
 import fi.hut.soberit.agilefant.model.Todo;
 
 /**
@@ -24,7 +24,7 @@ public interface TodoBusiness extends GenericBusiness<Todo>{
      * @param state the current state of the todo 
      * @return
      */
-    public Todo store(int todoId, int taskId, String name, State state)
+    public Todo store(int todoId, int taskId, String name, TaskState state)
         throws ObjectNotFoundException;
     
     /**
@@ -35,7 +35,7 @@ public interface TodoBusiness extends GenericBusiness<Todo>{
      * @param state the current state of the todo
      * @return
      */
-    public Todo store(Todo storable, Task task, String name, State state);
+    public Todo store(Todo storable, Task task, String name, TaskState state);
     
     /**
      * Removes the specified todo.
@@ -62,7 +62,7 @@ public interface TodoBusiness extends GenericBusiness<Todo>{
      * 
      */
 
-    public void updateMultipleTodos(Task task, Map<Integer, State> newStatesMap, Map<Integer, String> newNamesMap)
+    public void updateMultipleTodos(Task task, Map<Integer, TaskState> newStatesMap, Map<Integer, String> newNamesMap)
             throws ObjectNotFoundException;
 
     /**

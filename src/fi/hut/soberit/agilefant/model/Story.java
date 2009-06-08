@@ -31,7 +31,7 @@ public class Story implements TimesheetLoggable {
     private String name;
     private String description;
     private Backlog backlog;
-    private State state = State.NOT_STARTED;
+    private StoryState state = StoryState.NOT_STARTED;
     private Integer priority = new Integer(0);
     private User creator;
     private Date createdDate;
@@ -75,11 +75,11 @@ public class Story implements TimesheetLoggable {
         this.backlog = backlog;
     }
 
-    public State getState() {
+    public StoryState getState() {
         return state;
     }
 
-    public void setState(State state) {
+    public void setState(StoryState state) {
         this.state = state;
     }
 

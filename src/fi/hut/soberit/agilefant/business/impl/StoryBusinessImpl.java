@@ -19,9 +19,9 @@ import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Iteration;
-import fi.hut.soberit.agilefant.model.State;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
+import fi.hut.soberit.agilefant.model.TaskState;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.security.SecurityUtil;
 import fi.hut.soberit.agilefant.util.ResponsibleContainer;
@@ -245,7 +245,7 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
                         + task.getEffortLeft().getMinorUnits());
             }
             tasks += 1;
-            if (task.getState() == State.DONE) {
+            if (task.getState() == TaskState.DONE) {
                 doneTasks += 1;
             }
         }

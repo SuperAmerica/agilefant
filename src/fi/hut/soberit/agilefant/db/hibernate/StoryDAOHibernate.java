@@ -13,9 +13,9 @@ import org.springframework.stereotype.Repository;
 import fi.hut.soberit.agilefant.db.StoryDAO;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.ExactEstimate;
-import fi.hut.soberit.agilefant.model.State;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
+import fi.hut.soberit.agilefant.model.TaskState;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.util.StoryMetrics;
 
@@ -74,8 +74,8 @@ public class StoryDAOHibernate extends GenericDAOHibernate<Story> implements
             int count = ((Integer)results[0]).intValue();
             ExactEstimate originalEstimateSum = (ExactEstimate) results[1];
             ExactEstimate effortLeftSum = (ExactEstimate) results[2];
-            State state = (State) results[3];
-            if (state == State.DONE) {
+            TaskState state = (TaskState) results[3];
+            if (state == TaskState.DONE) {
                 metrics.setDoneTasks(count);
             }
             if (originalEstimateSum != null) {

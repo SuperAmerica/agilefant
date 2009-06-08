@@ -8,8 +8,8 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
 import fi.hut.soberit.agilefant.db.TodoDAO;
-import fi.hut.soberit.agilefant.model.State;
 import fi.hut.soberit.agilefant.model.Task;
+import fi.hut.soberit.agilefant.model.TaskState;
 import fi.hut.soberit.agilefant.model.Todo;
 
 /**
@@ -40,13 +40,13 @@ public class TodoDAOHibernate extends GenericDAOHibernate<Todo> implements
      *                first index of "ids" and "values" to use
      * @return where clause
      */
-    private String getStateClause(State[] allowedStates, String[] ids,
+    private String getStateClause(TaskState[] allowedStates, String[] ids,
             Object[] values, int startIndex) {
         String query = "";
 
         boolean prev = false;
         int i = 0;
-        for (State state : allowedStates) {
+        for (TaskState state : allowedStates) {
             if (prev)
                 query += " or ";
             query += "( t.state = :state" + i + " )";
@@ -61,7 +61,7 @@ public class TodoDAOHibernate extends GenericDAOHibernate<Todo> implements
     /** {@inheritDoc} */
     @SuppressWarnings("unchecked")
     public Collection<Todo> getTodosByStateAndTask(Task task,
-            State[] states) {
+            TaskState[] states) {
         String[] ids = new String[states.length + 1];
         Object[] values = new Object[states.length + 1];
         String query;
@@ -83,7 +83,7 @@ public class TodoDAOHibernate extends GenericDAOHibernate<Todo> implements
 
     /** {@inheritDoc} */
     @SuppressWarnings("unchecked")
-    public Collection<Todo> getTodosByState(State[] states) {
+    public Collection<Todo> getTodosByState(TaskState[] states) {
         String[] ids = new String[states.length];
         Object[] values = new Object[states.length];
 

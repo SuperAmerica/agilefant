@@ -7,8 +7,8 @@ import fi.hut.soberit.agilefant.business.TodoBusiness;
 import fi.hut.soberit.agilefant.db.TaskDAO;
 import fi.hut.soberit.agilefant.db.TodoDAO;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
-import fi.hut.soberit.agilefant.model.State;
 import fi.hut.soberit.agilefant.model.Task;
+import fi.hut.soberit.agilefant.model.TaskState;
 import fi.hut.soberit.agilefant.model.Todo;
 
 public class TodoBusinessImpl extends GenericBusinessImpl<Todo> implements TodoBusiness {
@@ -17,7 +17,7 @@ public class TodoBusinessImpl extends GenericBusinessImpl<Todo> implements TodoB
 
     /** {@inheritDoc} */
     public Todo store(int todoId, int taskId, String name,
-            State state) throws ObjectNotFoundException {
+            TaskState state) throws ObjectNotFoundException {
         Todo todo = null;
         if (todoId > 0) {
             todo = todoDAO.get(todoId);
@@ -36,7 +36,7 @@ public class TodoBusinessImpl extends GenericBusinessImpl<Todo> implements TodoB
     }
     
     /** {@inheritDoc} */
-    public Todo store(Todo storable, Task task, String name, State state) {
+    public Todo store(Todo storable, Task task, String name, TaskState state) {
         if (task == null) {
             throw new IllegalArgumentException("Task must be not null");
         }
@@ -62,7 +62,7 @@ public class TodoBusinessImpl extends GenericBusinessImpl<Todo> implements TodoB
     }
       
     public void updateMultipleTodos(Task task,
-            Map<Integer, State> newStatesMap, Map<Integer, String> newNamesMap)
+            Map<Integer, TaskState> newStatesMap, Map<Integer, String> newNamesMap)
             throws ObjectNotFoundException {
         // Map of new todos.
         Map<Integer, Todo> newTodos = new HashMap<Integer, Todo>();

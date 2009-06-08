@@ -216,7 +216,7 @@ $(document).ready(function() {
 				<ww:select name="story.state"
 					id="stateSelect_${story.id}-${storyListContext}"
 					value="story.state.name"
-					list="@fi.hut.soberit.agilefant.model.State@values()" listKey="name"
+					list="@fi.hut.soberit.agilefant.model.StoryState@values()" listKey="name"
 					listValue="getText('todo.state.' + name())"  /></td>
 			</tr>
 	
@@ -273,8 +273,8 @@ $(document).ready(function() {
 					list="#@java.util.LinkedHashMap@{'UNDEFINED':'undefined', 'BLOCKER':'+++++', 'CRITICAL':'++++', 'MAJOR':'+++', 'MINOR':'++', 'TRIVIAL':'+'}" /></td>
 				
 			If you change something about priorities, remember to update conf/classes/messages.properties as well!
-			--%>
 			</tr>
+			--%>
 			
 			<tr>
 				<td>Responsibles</td>

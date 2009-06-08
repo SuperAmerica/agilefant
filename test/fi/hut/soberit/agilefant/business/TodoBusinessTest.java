@@ -12,8 +12,8 @@ import junit.framework.TestCase;
 import fi.hut.soberit.agilefant.business.impl.TodoBusinessImpl;
 import fi.hut.soberit.agilefant.db.TodoDAO;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
-import fi.hut.soberit.agilefant.model.State;
 import fi.hut.soberit.agilefant.model.Task;
+import fi.hut.soberit.agilefant.model.TaskState;
 import fi.hut.soberit.agilefant.model.Todo;
 
 public class TodoBusinessTest extends TestCase {
@@ -38,14 +38,14 @@ public class TodoBusinessTest extends TestCase {
         // Create test todos
         Todo todo1 = new Todo();
         todo1.setId(1);
-        todo1.setState(State.NOT_STARTED);
+        todo1.setState(TaskState.NOT_STARTED);
         Todo todo2 = new Todo();
-        todo1.setState(State.NOT_STARTED);
+        todo1.setState(TaskState.NOT_STARTED);
 
         // Create new states map
-        Map<Integer, State> newTodoStates = new HashMap<Integer, State>();
-        newTodoStates.put(1, State.BLOCKED);
-        newTodoStates.put(2, State.DONE);
+        Map<Integer, TaskState> newTodoStates = new HashMap<Integer, TaskState>();
+        newTodoStates.put(1, TaskState.BLOCKED);
+        newTodoStates.put(2, TaskState.DONE);
 
         // Prepare mocks
         expect(todoDao.get(1)).andReturn(todo1);
@@ -60,8 +60,8 @@ public class TodoBusinessTest extends TestCase {
         }
 
         // Check that States were changed
-        assertEquals(State.BLOCKED, todo1.getState());
-        assertEquals(State.DONE, todo2.getState());
+        assertEquals(TaskState.BLOCKED, todo1.getState());
+        assertEquals(TaskState.DONE, todo2.getState());
 
         // Verify that methods were called on todoDao.
         verify(todoDao);

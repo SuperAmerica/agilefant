@@ -10,6 +10,8 @@ import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -44,7 +46,7 @@ public class Task implements TimesheetLoggable {
     private Iteration iteration;
     private Story story;
     
-    private State state;
+    private TaskState state;
     private Priority priority;
     
     private List<Todo> todos = new ArrayList<Todo>();
@@ -146,15 +148,12 @@ public class Task implements TimesheetLoggable {
     }
 
     @JSON
-    @Type(type = "fi.hut.soberit.agilefant.db.hibernate.EnumUserType", parameters = {
-                @Parameter(name = "useOrdinal", value = "true"),
-                @Parameter(name = "enumClassName", value = "fi.hut.soberit.agilefant.model.State")
-    })
-    public State getState() {
+    @Enumerated(EnumType.ORDINAL)
+    public TaskState getState() {
         return state;
     }
 
-    public void setState(State state) {
+    public void setState(TaskState state) {
         this.state = state;
     }
 

@@ -49,7 +49,7 @@ public class Todo {
 
     //private Priority priority;
 
-    private State state = State.NOT_STARTED;
+    private TaskState state = TaskState.NOT_STARTED;
 
     private String name;
 
@@ -141,11 +141,11 @@ public class Todo {
     }
 */
     @Enumerated(EnumType.ORDINAL)
-    public State getState() {
+    public TaskState getState() {
         return state;
     }
 
-    public void setState(State state) {
+    public void setState(TaskState state) {
         this.state = state;
     }
     

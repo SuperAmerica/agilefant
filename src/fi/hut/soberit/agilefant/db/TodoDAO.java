@@ -3,8 +3,8 @@ package fi.hut.soberit.agilefant.db;
 import java.util.Collection;
 
 import fi.hut.soberit.agilefant.model.Task;
+import fi.hut.soberit.agilefant.model.TaskState;
 import fi.hut.soberit.agilefant.model.Todo;
-import fi.hut.soberit.agilefant.model.State;
 
 /**
  * Interface for a DAO of a todo.
@@ -24,7 +24,7 @@ public interface TodoDAO extends GenericDAO<Todo> {
      * @return all todos matching the criteria
      */
     public Collection<Todo> getTodosByStateAndTask(Task task,
-            State[] states);
+            TaskState[] states);
 
     /**
      * Get all todos, which have one of the given states.
@@ -33,7 +33,7 @@ public interface TodoDAO extends GenericDAO<Todo> {
      *                array of accepted states
      * @return all todos matching the criteria
      */
-    public Collection<Todo> getTodosByState(State[] states);
+    public Collection<Todo> getTodosByState(TaskState[] states);
 
     /**
      * Finds the next upper ranked (x.rank < todo.rank) todo starting from the

@@ -61,7 +61,7 @@ $(document).ready(function() {
 			<ww:select
 				name="story.state" id="stateSelect"
 				value="story.state.name"
-				list="@fi.hut.soberit.agilefant.model.State@values()" listKey="name"
+				list="@fi.hut.soberit.agilefant.model.StoryState@values()" listKey="name"
 				listValue="getText('todo.state.' + name())"
 				onchange="disableElementIfValue(this, '#createStory_originalEstimateField', 'DONE');"/></td>
 		</tr>

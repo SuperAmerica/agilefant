@@ -15,10 +15,8 @@ import fi.hut.soberit.agilefant.business.BacklogBusiness;
 import fi.hut.soberit.agilefant.business.StoryBusiness;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.Backlog;
-import fi.hut.soberit.agilefant.model.Iteration;
-import fi.hut.soberit.agilefant.model.Priority;
-import fi.hut.soberit.agilefant.model.State;
 import fi.hut.soberit.agilefant.model.Story;
+import fi.hut.soberit.agilefant.model.StoryState;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.util.ResponsibleContainer;
 import fi.hut.soberit.agilefant.util.StoryMetrics;
@@ -37,7 +35,7 @@ public class StoryAction extends ActionSupport implements CRUDAction {
 
     private int storyId;
 
-    private State state;
+    private StoryState state;
     
     private int iterationId;
 
@@ -321,11 +319,11 @@ public class StoryAction extends ActionSupport implements CRUDAction {
         story.setName(storyName);
     }
 
-    public State getState() {
+    public StoryState getState() {
         return state;
     }
 
-    public void setState(State state) {
+    public void setState(StoryState state) {
         this.state = state;
     }
 

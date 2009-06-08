@@ -1,11 +1,19 @@
 package fi.hut.soberit.agilefant.business;
 
-import java.util.ArrayList;
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-import org.junit.*;
+import org.junit.Before;
+import org.junit.Test;
 
 import fi.hut.soberit.agilefant.business.impl.StoryBusinessImpl;
 import fi.hut.soberit.agilefant.db.IterationDAO;
@@ -17,12 +25,6 @@ import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.util.ResponsibleContainer;
-import static org.junit.Assert.*;
-
-import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
 
 public class StoryBusinessTest {
 

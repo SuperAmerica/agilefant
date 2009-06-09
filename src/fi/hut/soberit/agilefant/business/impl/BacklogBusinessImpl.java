@@ -17,7 +17,6 @@ import fi.hut.soberit.agilefant.db.IterationDAO;
 import fi.hut.soberit.agilefant.db.ProductDAO;
 import fi.hut.soberit.agilefant.db.ProjectDAO;
 import fi.hut.soberit.agilefant.model.Backlog;
-import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.util.ResponsibleContainer;
@@ -115,4 +114,10 @@ public class BacklogBusinessImpl extends GenericBusinessImpl<Backlog> implements
          }
          return null;
     }
+    
+    @Transactional(readOnly = true)
+    public int calculateStoryPointSum(int backlogId) {
+         return backlogDAO.calculateStoryPointSum(backlogId);
+    }
+
 }

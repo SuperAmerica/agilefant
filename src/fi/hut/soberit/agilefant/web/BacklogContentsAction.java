@@ -43,14 +43,13 @@ public class BacklogContentsAction extends ActionSupport {
 //    private List<BacklogItem> backlogItems = new ArrayList<BacklogItem>();
 //    
     private Map<Story, List<ResponsibleContainer>> backlogResponsibles = new HashMap<Story, List<ResponsibleContainer>>();
+    
+    private int storyPointSum;
+    
 //
 //    private Map<BacklogItem, List<BusinessTheme>> backlogThemes = new HashMap<BacklogItem, List<BusinessTheme>>();
 //
 //    private Map<BacklogItem, TodoMetrics> backlogTodos = new HashMap<BacklogItem, TodoMetrics>();
-//    
-//    private EffortSumData origEstSum = new EffortSumData();
-//    
-//    private EffortSumData effortLeftSum = new EffortSumData();
 //    
 //    private AFTime spentEffortSum = new AFTime(0);
 //    
@@ -88,6 +87,7 @@ public class BacklogContentsAction extends ActionSupport {
         
 //        backlogItems = backlogItemBusiness.getBacklogItemsByBacklog(backlog);
         backlogResponsibles = backlogBusiness.getResponsiblesByBacklog(backlog);
+        storyPointSum = backlogBusiness.calculateStoryPointSum(backlog.getId());
 //        backlogTodos = backlogItemBusiness.getTodosByBacklog(backlog);
 //        backlogThemes = businessThemeBusiness.getBacklogItemBusinessThemesByBacklog(backlog);
 //        
@@ -172,18 +172,6 @@ public class BacklogContentsAction extends ActionSupport {
         this.hourEntryBusiness = hourEntryBusiness;
     }
 
-//    public EffortSumData getOrigEstSum() {
-//        return origEstSum;
-//    }
-//
-//    public EffortSumData getEffortLeftSum() {
-//        return effortLeftSum;
-//    }
-//
-//    public AFTime getSpentEffortSum() {
-//        return spentEffortSum;
-//    }
-
     public void setSettingBusiness(SettingBusiness settingBusiness) {
         this.settingBusiness = settingBusiness;
     }
@@ -202,6 +190,10 @@ public class BacklogContentsAction extends ActionSupport {
 
     public Map<Story, List<ResponsibleContainer>> getBacklogResponsibles() {
         return backlogResponsibles;
+    }
+    
+    public int getStoryPointSum() {
+        return storyPointSum;
     }
 
 }

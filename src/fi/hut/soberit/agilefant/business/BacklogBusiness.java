@@ -52,5 +52,7 @@ public interface BacklogBusiness extends GenericBusiness<Backlog> {
      * Gets the backlog's child backlogs or all products if backlog is <code>null</code>.
      */
     public Collection<Backlog> getChildBacklogs(Backlog backlog);
+
+    int calculateStoryPointSum(int backlogId);
     
 }

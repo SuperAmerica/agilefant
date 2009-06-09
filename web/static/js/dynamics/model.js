@@ -285,6 +285,7 @@ StoryModel.prototype.setData = function(data, includeMetrics) {
   this.name = data.name;
   this.priority = data.priority;
   this.id = data.id;
+  this.userIds = null;
   var event = [];
   if(includeMetrics && data.metrics) {
     this.metrics = data.metrics;
@@ -397,6 +398,10 @@ StoryModel.prototype.getUsers = function() {
 StoryModel.prototype.setUsers = function(users) {
   this.users = users;
 };
+StoryModel.prototype.setUserIds = function(userIds) {
+  this.userIds = userIds;
+  this.save();
+};
 StoryModel.prototype.getEffortLeft = function() {
   return this.metrics.effortLeft;
 };
@@ -427,6 +432,12 @@ StoryModel.prototype.moveToIteration = function(newIteration) {
     url: "moveStory.action",
     data: {storyId: this.id, iterationId: newIteration, moveTasks: true}
   });
+};
+StoryModel.prototype.rollBack = function() {
+  this.setData(this.persistedData);
+  this.userIds = null;
+  this.themeIds = null;
+  this.inTransaction = false;
 };
 StoryModel.prototype.remove = function() {
   var me = this;
@@ -486,8 +497,18 @@ StoryModel.prototype.save = function(synchronous, callback) {
   var data  = {
       "story.name": this.name,
       "story.description": this.description,
-      "backlogId": this.iteration.iterationId
+      "backlogId": this.iteration.iterationId,
+      "userIds": []
   };
+  if (this.userIds) {
+    data.userIds = this.userIds;
+    this.userIds = null;
+  } else if (this.users) {
+    data.userIds = [];
+    for ( var i = 0; i < this.users.length; i++) {
+      data.userIds.push(this.users[i].user.id);
+    }
+  }
   if(this.priority) { 
     data.priority = this.priority;
   }
@@ -556,6 +577,7 @@ TaskModel.prototype.setData = function(data) {
     this.users = data.userData;
   }
   var i = 0;
+  
   if (data.businessThemes) {
     this.themes = [];
     for (i = 0; i < data.businessThemes.length; i++) {

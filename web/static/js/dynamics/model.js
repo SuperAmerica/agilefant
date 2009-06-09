@@ -945,11 +945,10 @@ TaskHourEntryModel.prototype.setData = function(data, noBubling) {
   if(data.user) {
     this.userId = data.user.id;
   }
-  this.timeSpent = agilefantUtils.hourEntryToString(data.minutesSpent);
+  this.timeSpent = data.minutesSpent;
   this.description = data.description;
   this.date = data.dateMilliSeconds;
   this.id = data.id;
-  this.dateStr = agilefantUtils.dateToString(data.dateMilliSeconds);
 
   this.callEditListeners({bubbleEvent: []});
   this.persistedData = data;
@@ -981,8 +980,8 @@ TaskHourEntryModel.prototype.setComment = function(comment) {
 TaskHourEntryModel.prototype.getComment = function() {
   return this.description;
 };
-TaskHourEntryModel.prototype.setDate = function(date) {
-  this.dateStr = date;
+TaskHourEntryModel.prototype.setDate = function(dateStr) {
+  this.dateStr = dateStr;
   this.save();
 };
 TaskHourEntryModel.prototype.getDate = function() {
@@ -1026,12 +1025,7 @@ TaskHourEntryModel.prototype.save = function(synchronous, callback) {
   }
   data.date = this.dateStr;
   data["hourEntry.description"] = this.description;
-  if(this.timeSpent) {
-	  // TODO: proper data["hourEntry.timeSpent"] = this.timeSpent/3600;
-    data["hourEntry.timeSpent"] = 1;
-  } else {
-    data["hourEntry.timeSpent"] = "";
-  }
+  data["hourEntry.minutesSpent"] = this.timeSpent;
 
   data.taskId = this.task.getId();
   data.hourEntryId = this.id;

@@ -153,7 +153,7 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
     protected void fillStorable(HourEntry storable) {
         storable.setDate(this.internalDate);
         storable.setDescription(this.hourEntry.getDescription());
-        storable.setMinutesSpent(HourEntryUtils.convertFromString(effortSpent));
+        storable.setMinutesSpent(this.hourEntry.getMinutesSpent());
         storable.setUser(this.hourEntry.getUser());
     }
 

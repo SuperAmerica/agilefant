@@ -25,6 +25,7 @@ import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.TaskHourEntry;
 import fi.hut.soberit.agilefant.model.TimesheetLoggable;
 import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.transfer.HourEntryTO;
 import fi.hut.soberit.agilefant.util.CalendarUtils;
 import fi.hut.soberit.agilefant.util.HourEntryUtils;
 
@@ -87,7 +88,9 @@ public class HourEntryBusinessImpl extends GenericBusinessImpl<HourEntry>
         if (parent instanceof Story) {
             storyHourEntryDAO.store((StoryHourEntry) storable);
         } else if(parent instanceof Task){
-            taskHourEntryDAO.store((TaskHourEntry) storable);
+            TaskHourEntry t = (TaskHourEntry) storable;
+            taskHourEntryDAO.store(t);
+            storable = new HourEntryTO(t);
         } else {
             backlogHourEntryDAO.store((BacklogHourEntry) storable);
         } 

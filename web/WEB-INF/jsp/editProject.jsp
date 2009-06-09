@@ -54,6 +54,7 @@ $(document).ready(function() {
 											  }
 											 });
                        --%>
+                       /*
     $('#userChooserLink-editProject').userChooser({
         backlogIdField: '#editProject-projectId',
         userListContainer: '#userListContainer-editProject',
@@ -63,7 +64,7 @@ $(document).ready(function() {
             aftime: true
         },
         storyId: 0
-    });
+    });*/
 });
 //-->
 </script>
@@ -371,8 +372,8 @@ $(document).ready(function() {
 						                			<tr>
 														<td>Planned project size</td>
 														<td></td>
-														<%--<td colspan="2"><ww:textfield size="10" id="project.backlogSize" name="project.backlogSize" /> (total man hours)--%>
-														</td>
+														<%--<td colspan="2"><ww:textfield size="10" id="project.backlogSize" name="project.backlogSize" /> (total man hours)
+														</td>--%>
 													</tr>													
 													<tr>
 														<td>Start date</td>
@@ -388,6 +389,7 @@ $(document).ready(function() {
 														<aef:datepicker id="end_date" name="endDate" format="%{getText('webwork.shortDateTime.format')}" value="%{#end}" />
 														</td>
 													</tr>
+                          <%--
 													<tr>
 														<td>Assigned Users</td>
 														<td></td>
@@ -416,6 +418,7 @@ $(document).ready(function() {
 									                        </a>
 									                    </div>
 														</td>
+                            --%>
 													</tr>
 	                								<tr>
 	                    								<td>Description</td>

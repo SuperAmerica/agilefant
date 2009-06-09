@@ -5,5 +5,5 @@ import fi.hut.soberit.agilefant.util.IterationDataContainer;
 
 public interface IterationBusiness extends GenericBusiness<Iteration> {
 
-    public IterationDataContainer getIterationContents(int iterationId, boolean excludeTasks);
+    public IterationDataContainer getIterationContents(int iterationId);
 }

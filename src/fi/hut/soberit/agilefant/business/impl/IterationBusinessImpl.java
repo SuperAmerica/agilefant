@@ -41,8 +41,7 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration> implem
     }
 
     @Transactional(readOnly = true)
-    public IterationDataContainer getIterationContents(int iterationId,
-            boolean excludeTasks) {
+    public IterationDataContainer getIterationContents(int iterationId) {
 
         IterationDataContainer iterationData = new IterationDataContainer();
         Iteration iteration = this.retrieve(iterationId);

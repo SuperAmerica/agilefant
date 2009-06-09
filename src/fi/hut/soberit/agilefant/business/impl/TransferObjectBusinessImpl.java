@@ -5,6 +5,7 @@ import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import fi.hut.soberit.agilefant.business.ProjectBusiness;
 import fi.hut.soberit.agilefant.business.TransferObjectBusiness;
@@ -18,18 +19,20 @@ import fi.hut.soberit.agilefant.transfer.TaskTO;
 import fi.hut.soberit.agilefant.util.ResponsibleContainer;
 
 @Service("transferObjectBusiness")
+@Transactional
 public class TransferObjectBusinessImpl implements TransferObjectBusiness {
 
     @Autowired
     private ProjectBusiness projectBusiness;
     
     /** {@inheritDoc} */
+    @Transactional(readOnly = true)
     public Collection<StoryTO> constructIterationDataWithUserData(
             Iteration iteration, Collection<User> assignedUsers) {
         Collection<StoryTO> iterationStories = new ArrayList<StoryTO>();
         
         for (Story story : iteration.getStories()) {
-            StoryTO storyTO = new StoryTO(story);
+            StoryTO storyTO = this.constructStoryTO(story, assignedUsers);
             storyTO.getTasks().clear();
             
             for (Task task : story.getTasks()) {
@@ -42,6 +45,7 @@ public class TransferObjectBusinessImpl implements TransferObjectBusiness {
     }
     
     /** {@inheritDoc} */
+    @Transactional(readOnly = true)
     public TaskTO constructTaskTO(Task task, Collection<User> assignedUsers) {
         TaskTO taskTO = new TaskTO(task);
         
@@ -56,6 +60,7 @@ public class TransferObjectBusinessImpl implements TransferObjectBusiness {
     }
     
     /** {@inheritDoc} */
+    @Transactional(readOnly = true)
     public StoryTO constructStoryTO(Story story, Collection<User> assignedUsers) {
         StoryTO storyTO = new StoryTO(story);
         

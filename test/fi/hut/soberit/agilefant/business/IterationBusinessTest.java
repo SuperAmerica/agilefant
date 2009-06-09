@@ -99,7 +99,7 @@ public class IterationBusinessTest {
         replay(iterationDAO, transferObjectBusiness, projectBusiness, storyBusiness);
         
         IterationDataContainer actualIterationData =
-            iterationBusiness.getIterationContents(iteration.getId(), false);
+            iterationBusiness.getIterationContents(iteration.getId());
         
         assertEquals(expectedIterationData.getStories(), actualIterationData.getStories());
         assertEquals(expectedIterationData.getTasksWithoutStory(), actualIterationData.getTasksWithoutStory());
@@ -107,17 +107,11 @@ public class IterationBusinessTest {
         verify(iterationDAO, transferObjectBusiness, projectBusiness, storyBusiness);
     }
     
-    
-    @Test
-    public void testGetIterationContents_excludeTasks() {       
-        fail("Not implemented");
-    }
-
     @Test(expected = ObjectNotFoundException.class)
     public void testGetIterationContents_nullBacklog() {
         expect(iterationDAO.get(0)).andReturn(null);
         replay(iterationDAO);
-        assertNull(iterationBusiness.getIterationContents(0, false));
+        assertNull(iterationBusiness.getIterationContents(0));
         verify(iterationDAO);
     }
 }

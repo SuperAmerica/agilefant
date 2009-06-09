@@ -66,7 +66,7 @@ public class IterationAction extends BacklogContentsAction implements CRUDAction
     }
     
     public String iterationContents() {
-        IterationDataContainer data = this.iterationBusiness.getIterationContents(iterationId, excludeStories);
+        IterationDataContainer data = this.iterationBusiness.getIterationContents(iterationId);
         if(data == null) {
             return AJAX_ERROR;
         }
@@ -79,6 +79,11 @@ public class IterationAction extends BacklogContentsAction implements CRUDAction
             serializer.include("tasksWithoutStory.userData");
             //serializer.include("tasksWithoutStory.businessThemes");
             //serializer.include("iterationGoals.backlogItems.businessThemes");
+        }
+        else {
+            serializer.exclude("stories.tasks");
+            serializer.include("stories.userData");
+            serializer.exclude("tasksWithoutStory");
         }
         
         json = serializer.prettyPrint(data);

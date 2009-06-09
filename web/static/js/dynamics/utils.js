@@ -73,6 +73,7 @@ var agilefantUtils = {
 	parseStoryPointString: function(string) {
 	  string = jQuery.trim(string);
 	  return string;
+	},
 	hourEntryToString: function(minorUnits, hideDash) {
 		if(!hideDash && (typeof minorUnits !== "number" || isNaN(minorUnits) || minorUnits < 0)) {
 			return "&mdash;";

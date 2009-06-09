@@ -4,23 +4,29 @@ import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 import java.util.Arrays;
+import java.util.Collection;
 
-import org.junit.*;
-import static org.junit.Assert.*;
+import org.junit.Before;
+import org.junit.Test;
 
+import fi.hut.soberit.agilefant.business.BacklogBusiness;
 import fi.hut.soberit.agilefant.business.StoryBusiness;
+import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
-
-
+import flexjson.JSONSerializer;
 
 
 public class StoryActionTest {
 
     StoryAction storyAction = new StoryAction();
+    BacklogBusiness backlogBusiness;
     StoryBusiness storyBusiness;
     Story story;
     Iteration iter;
@@ -34,11 +40,13 @@ public class StoryActionTest {
         
         storyBusiness = createMock(StoryBusiness.class);
         storyAction.setStoryBusiness(storyBusiness);
+        
+        backlogBusiness = createMock(BacklogBusiness.class);
+        storyAction.setBacklogBusiness(backlogBusiness);
     }
     
     @Test
     public void testGetStoryContents() {
-        
         storyAction.setIterationId(iter.getId());
         story.setBacklog(iter);
         storyAction.setStoryId(story.getId());
@@ -58,9 +66,35 @@ public class StoryActionTest {
         storyAction.setStoryId(story.getId());
         storyAction.setIterationId(iter.getId());
         storyBusiness.attachStoryToIteration(story.getId(), iter.getId(), false);
-        replay(storyBusiness);
+        replay(storyBusiness, backlogBusiness);
         assertEquals(CRUDAction.AJAX_SUCCESS, storyAction.moveStory());
-        verify(storyBusiness);
+        verify(storyBusiness, backlogBusiness);
     }
     
+    @Test
+    public void testAjaxGetStories() {
+        Collection<Story> stories = Arrays.asList(story); 
+        iter.setStories(stories);
+        
+        storyAction.setBacklogId(iter.getId());
+        expect(backlogBusiness.retrieve(iter.getId())).andReturn(iter);
+        replay(storyBusiness, backlogBusiness);
+
+        assertEquals(CRUDAction.AJAX_SUCCESS, storyAction.ajaxGetStories());
+        assertEquals(new JSONSerializer().serialize(stories), storyAction.getJsonData());
+        
+        verify(storyBusiness, backlogBusiness);
+    }
+    
+    @Test
+    public void testAjaxGetStories_invalidBacklog() {
+        storyAction.setBacklogId(-1);
+        
+        expect(backlogBusiness.retrieve(-1)).andThrow(new ObjectNotFoundException());
+        replay(storyBusiness, backlogBusiness);
+        
+        assertEquals(CRUDAction.AJAX_ERROR, storyAction.ajaxGetStories());
+        
+        verify(storyBusiness, backlogBusiness);
+    }
 }

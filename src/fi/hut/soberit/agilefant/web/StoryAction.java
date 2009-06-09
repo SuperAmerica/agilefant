@@ -78,41 +78,20 @@ public class StoryAction extends ActionSupport implements CRUDAction {
 
 
 
-    public String getJsonData() {
-        return jsonData;
+    /**
+     * Get the iteration's stories and transform them to JSON. 
+     */
+    public String ajaxGetStories() {
+        try {
+            backlog = backlogBusiness.retrieve(backlogId);
+            jsonData = new JSONSerializer().serialize(backlog.getStories());
+        }
+        catch (ObjectNotFoundException onfe) {
+            return CRUDAction.AJAX_ERROR;
+        }
+        return CRUDAction.AJAX_SUCCESS;
     }
 
-    public String getStoryListContext() {
-        return storyListContext;
-    }
-
-    public void setStoryListContext(String storyListContext) {
-        this.storyListContext = storyListContext;
-    }
-
-    // public Map<Integer, State> getTodoStates() {
-    // return todoStates;
-    // }
-    //
-    // public void setTodoStates(Map<Integer, State> todoStates) {
-    // this.todoStates = todoStates;
-    // }
-
-    public StoryBusiness getStoryBusiness() {
-        return storyBusiness;
-    }
-
-    public void setStoryBusiness(StoryBusiness storyBusiness) {
-        this.storyBusiness = storyBusiness;
-    }
-
-    public BacklogBusiness getBacklogBusiness() {
-        return backlogBusiness;
-    }
-
-    public void setBacklogBusiness(BacklogBusiness backlogBusiness) {
-        this.backlogBusiness = backlogBusiness;
-    }
 
     public String create() {
         // Id of newly created, not yet persisted story is 0
@@ -358,6 +337,35 @@ public class StoryAction extends ActionSupport implements CRUDAction {
     
     public void setMoveTasks(boolean moveTasks) {
         this.moveTasks = moveTasks;
+    }
+
+    public String getJsonData() {
+        return jsonData;
+    }
+    
+
+    public StoryBusiness getStoryBusiness() {
+        return storyBusiness;
+    }
+
+    public String getStoryListContext() {
+        return storyListContext;
+    }
+
+    public void setStoryListContext(String storyListContext) {
+        this.storyListContext = storyListContext;
+    }
+    
+    public void setStoryBusiness(StoryBusiness storyBusiness) {
+        this.storyBusiness = storyBusiness;
+    }
+
+    public BacklogBusiness getBacklogBusiness() {
+        return backlogBusiness;
+    }
+
+    public void setBacklogBusiness(BacklogBusiness backlogBusiness) {
+        this.backlogBusiness = backlogBusiness;
     }
     
 }

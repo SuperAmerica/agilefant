@@ -33,29 +33,12 @@ public interface GenericDAO<T> {
     T get(int id);
 
     /**
-     * Get data model object of this type by id.
-     * 
-     * @param id
-     *            requested id
-     * @return object with given id, or null if not found
-     */
-    T get(Serializable id);
-
-    /**
      * Removes the object of this type with given id.
      * 
      * @param id
      *            requested id
      */
     void remove(int id);
-
-    /**
-     * Removes the object of this type with given id.
-     * 
-     * @param id
-     *            requested id
-     */
-    void remove(Serializable id);
 
     /**
      * Removes given object.
@@ -82,14 +65,6 @@ public interface GenericDAO<T> {
      * @return generated ID
      */
     Serializable create(T object);
-
-    /**
-     * Refereshed an data model object from the database.
-     * 
-     * @param object
-     *            object instance to refreshed
-     */
-    void refresh(T object);
 
     /**
      * Retrieves the amount of data model objects of this type in the database

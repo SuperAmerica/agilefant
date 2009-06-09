@@ -873,11 +873,13 @@ TaskController.prototype = {
   showTab: function(index) {
     if(!this.tabsLoaded[index]) {
       switch(index) {
+      /* TODO: todos are hidden
       case 1: 
         this.renderTodos();
         this.tabsLoaded[1] = true;
         break;
-      case 2:
+        */
+      case 1:
         this.renderSpentEffort();
         this.tabsLoaded[2] = true;
         break;

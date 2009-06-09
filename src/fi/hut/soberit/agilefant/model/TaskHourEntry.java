@@ -5,6 +5,8 @@ import javax.persistence.ManyToOne;
 
 import org.hibernate.annotations.BatchSize;
 
+import flexjson.JSON;
+
 @Entity
 @BatchSize(size = 20)
 public class TaskHourEntry extends HourEntry {
@@ -16,6 +18,7 @@ public class TaskHourEntry extends HourEntry {
     }
 
     @ManyToOne
+    @JSON(include = false)
     public Task getTask() {
         return task;
     }

@@ -11,5 +11,4 @@ public class TaskDAOHibernate extends GenericDAOHibernate<Task> implements TaskD
     public TaskDAOHibernate() {
         super(Task.class);
     }
-    
 }

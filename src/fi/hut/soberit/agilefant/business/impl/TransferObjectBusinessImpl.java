@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import fi.hut.soberit.agilefant.business.ProjectBusiness;
 import fi.hut.soberit.agilefant.business.TransferObjectBusiness;
+import fi.hut.soberit.agilefant.db.TaskHourEntryDAO;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
@@ -24,6 +25,9 @@ public class TransferObjectBusinessImpl implements TransferObjectBusiness {
 
     @Autowired
     private ProjectBusiness projectBusiness;
+    
+    @Autowired
+    private TaskHourEntryDAO taskHourEntryDAO;
     
     /** {@inheritDoc} */
     @Transactional(readOnly = true)
@@ -47,7 +51,7 @@ public class TransferObjectBusinessImpl implements TransferObjectBusiness {
     /** {@inheritDoc} */
     @Transactional(readOnly = true)
     public TaskTO constructTaskTO(Task task, Collection<User> assignedUsers) {
-        TaskTO taskTO = new TaskTO(task);
+        TaskTO taskTO = new TaskTO(task, taskHourEntryDAO.retrieveByTask(task));
         
         for (User responsible : taskTO.getResponsibles()) {
             ResponsibleContainer rc
@@ -84,5 +88,9 @@ public class TransferObjectBusinessImpl implements TransferObjectBusiness {
     public void setProjectBusiness(ProjectBusiness projectBusiness) {
         this.projectBusiness = projectBusiness;
     }
-    
+
+    public void setTaskHourEntryDAO(TaskHourEntryDAO taskHourEntryDAO) {
+        this.taskHourEntryDAO = taskHourEntryDAO;
+    }
+
 }

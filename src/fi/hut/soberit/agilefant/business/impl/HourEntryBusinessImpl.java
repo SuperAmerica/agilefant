@@ -14,12 +14,15 @@ import fi.hut.soberit.agilefant.business.HourEntryBusiness;
 import fi.hut.soberit.agilefant.db.BacklogHourEntryDAO;
 import fi.hut.soberit.agilefant.db.HourEntryDAO;
 import fi.hut.soberit.agilefant.db.StoryHourEntryDAO;
+import fi.hut.soberit.agilefant.db.TaskHourEntryDAO;
 import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogHourEntry;
 import fi.hut.soberit.agilefant.model.HourEntry;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.StoryHourEntry;
+import fi.hut.soberit.agilefant.model.Task;
+import fi.hut.soberit.agilefant.model.TaskHourEntry;
 import fi.hut.soberit.agilefant.model.TimesheetLoggable;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.util.CalendarUtils;
@@ -38,6 +41,9 @@ public class HourEntryBusinessImpl extends GenericBusinessImpl<HourEntry>
     private BacklogHourEntryDAO backlogHourEntryDAO;
     @Autowired
     private UserDAO userDAO;
+
+    @Autowired
+    private TaskHourEntryDAO taskHourEntryDAO;
 
     @Autowired
     public void setHourEntryDAO(HourEntryDAO hourEntryDAO) {
@@ -65,6 +71,11 @@ public class HourEntryBusinessImpl extends GenericBusinessImpl<HourEntry>
                 storable = new BacklogHourEntry();
             }
             ((BacklogHourEntry) storable).setBacklog((Backlog) parent);
+        } else if (parent instanceof Task) {
+            if ((storable = taskHourEntryDAO.get(hourEntry.getId())) == null) {
+                storable = new TaskHourEntry();
+            }
+            ((TaskHourEntry) storable).setTask((Task) parent);
         } else {
             throw new IllegalArgumentException("Unknown parent type.");
         }
@@ -75,9 +86,11 @@ public class HourEntryBusinessImpl extends GenericBusinessImpl<HourEntry>
         storable.setDate(hourEntry.getDate());
         if (parent instanceof Story) {
             storyHourEntryDAO.store((StoryHourEntry) storable);
+        } else if(parent instanceof Task){
+            taskHourEntryDAO.store((TaskHourEntry) storable);
         } else {
             backlogHourEntryDAO.store((BacklogHourEntry) storable);
-        }
+        } 
         return storable;
     }
 
@@ -141,5 +154,13 @@ public class HourEntryBusinessImpl extends GenericBusinessImpl<HourEntry>
             DateTime startDate, DateTime endDate) {
         return hourEntryDAO.calculateSumByUserAndTimeInterval(user, startDate, endDate);
     }
-    
+	
+    public TaskHourEntryDAO getTaskHourEntryDAO() {
+        return taskHourEntryDAO;
+    }
+
+    public void setTaskHourEntryDAO(TaskHourEntryDAO taskHourEntryDAO) {
+        this.taskHourEntryDAO = taskHourEntryDAO;
+    }
+
 }

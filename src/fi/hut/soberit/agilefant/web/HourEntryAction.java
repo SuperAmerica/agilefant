@@ -327,4 +327,12 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
         return effortSpent;
     }
 
+    public int getTaskId() {
+        return taskId;
+    }
+
+    public void setTaskId(int taskId) {
+        this.taskId = taskId;
+    }
+
 }

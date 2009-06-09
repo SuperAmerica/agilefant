@@ -5,6 +5,8 @@ import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 
+import java.util.Arrays;
+
 import org.junit.*;
 import static org.junit.Assert.*;
 
@@ -12,6 +14,7 @@ import fi.hut.soberit.agilefant.business.TaskBusiness;
 import fi.hut.soberit.agilefant.business.TransferObjectBusiness;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.Task;
+import fi.hut.soberit.agilefant.model.TaskHourEntry;
 import fi.hut.soberit.agilefant.transfer.TaskTO;
 
 public class TaskActionTest {
@@ -39,7 +42,7 @@ public class TaskActionTest {
         expect(taskBusiness.storeTask(task, 2, 0, taskAction.getUserIds())).andReturn(task);
 //        expect(taskBusiness.getTaskResponsibles(task)).andReturn(null);
         expect(transferObjectBusiness.constructTaskTO(task))
-            .andReturn(new TaskTO(task));
+            .andReturn(new TaskTO(task, Arrays.asList(new TaskHourEntry())));
         replay(taskBusiness, transferObjectBusiness);
         
         assertEquals(CRUDAction.AJAX_SUCCESS, taskAction.ajaxStoreTask());

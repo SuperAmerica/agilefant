@@ -14,6 +14,8 @@ import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 
+import flexjson.JSON;
+
 /**
  * Hibernate entity bean which represents an hour entry.
  * 
@@ -48,6 +50,7 @@ public class HourEntry {
     private String description;
 
     @Type(type = "org.joda.time.contrib.hibernate.PersistentDateTime")
+    @JSON(include = false)
     public DateTime getDate() {
         return this.date;
     }

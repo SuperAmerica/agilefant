@@ -630,7 +630,7 @@ TaskModel.prototype.reloadData = function() {
   $.ajax( {
     url: "taskJSON.action",
     data: {
-    storyId: this.id
+    taskId: this.id
   },
   async: false,
   cache: false,
@@ -941,11 +941,11 @@ TaskHourEntryModel.prototype.setData = function(data, noBubling) {
   if(data.user) {
     this.userId = data.user.id;
   }
-  this.timeSpent = data.timeSpent;
+  this.timeSpent = agilefantUtils.hourEntryToString(data.minutesSpent);
   this.description = data.description;
-  this.date = data.date;
+  this.date = data.dateMilliSeconds;
   this.id = data.id;
-  this.dateStr = agilefantUtils.dateToString(this.date);
+  this.dateStr = agilefantUtils.dateToString(data.dateMilliSeconds);
 
   this.callEditListeners({bubbleEvent: []});
   this.persistedData = data;
@@ -1023,12 +1023,13 @@ TaskHourEntryModel.prototype.save = function(synchronous, callback) {
   data.date = this.dateStr;
   data["hourEntry.description"] = this.description;
   if(this.timeSpent) {
-    data["hourEntry.timeSpent"] = this.timeSpent/3600;
+	  // TODO: proper data["hourEntry.timeSpent"] = this.timeSpent/3600;
+    data["hourEntry.timeSpent"] = 1;
   } else {
     data["hourEntry.timeSpent"] = "";
   }
 
-  data.storyId = this.task.getId();
+  data.taskId = this.task.getId();
   data.hourEntryId = this.id;
   var me = this;
   jQuery.ajax({

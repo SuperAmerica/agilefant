@@ -11,6 +11,7 @@ StoryModel = function(storyData, parent) {
   this.iteration = parent;
   this.backlog = this.iteration;
   this.tasks = [];
+  this.storyPoints = null;
   this.setData(storyData, true);
 };
 var TaskModel = function(data, backlog, story) {
@@ -530,6 +531,9 @@ StoryModel.prototype.save = function(synchronous, callback) {
   }
   if(!this.description) {
     data["story.description"] = "";
+  }
+  if (!this.storyPoints) {
+	data["story.storyPoints"] = "";
   }
   jQuery.ajax({
     async: asynch,

@@ -386,6 +386,7 @@ IterationController.prototype = {
         me.view.render();
         ModelFactory.setStory(story);
         me.model.reloadStoryData();
+        story.reloadMetrics();
       });
     },
     createStory: function() {

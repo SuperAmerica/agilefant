@@ -1,9 +1,11 @@
-package fi.hut.soberit.agilefant.util;
+package fi.hut.soberit.agilefant.transfer;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
 import fi.hut.soberit.agilefant.model.Story;
+import fi.hut.soberit.agilefant.util.ResponsibleContainer;
+import fi.hut.soberit.agilefant.util.StoryMetrics;
 
 public class StoryTO extends Story {
 

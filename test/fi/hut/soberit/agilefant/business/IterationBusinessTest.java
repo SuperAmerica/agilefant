@@ -22,9 +22,9 @@ import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.transfer.StoryTO;
+import fi.hut.soberit.agilefant.transfer.TaskTO;
 import fi.hut.soberit.agilefant.util.IterationDataContainer;
-import fi.hut.soberit.agilefant.util.StoryTO;
-import fi.hut.soberit.agilefant.util.TaskTO;
 
 public class IterationBusinessTest {
 

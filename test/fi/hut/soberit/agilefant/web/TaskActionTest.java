@@ -12,7 +12,7 @@ import fi.hut.soberit.agilefant.business.TaskBusiness;
 import fi.hut.soberit.agilefant.business.TransferObjectBusiness;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.Task;
-import fi.hut.soberit.agilefant.util.TaskTO;
+import fi.hut.soberit.agilefant.transfer.TaskTO;
 
 public class TaskActionTest {
 

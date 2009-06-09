@@ -1,9 +1,10 @@
-package fi.hut.soberit.agilefant.util;
+package fi.hut.soberit.agilefant.transfer;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
 import fi.hut.soberit.agilefant.model.Task;
+import fi.hut.soberit.agilefant.util.ResponsibleContainer;
 import flexjson.JSON;
 
 public class TaskTO extends Task {

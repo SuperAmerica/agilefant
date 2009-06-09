@@ -69,8 +69,19 @@
 	<bean name="sessionFactory"
 		class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
 		<property name="dataSource" ref="dataSource" />
-		<property name="configLocation">
-			<value>/WEB-INF/hibernate.cfg.xml</value>
+		<property name="annotatedPackages" value="fi.hut.soberit.agilefant.model" />
+		<property name="packagesToScan" value="fi.hut.soberit.agilefant.model" />
+		<property name="eventListeners">
+			<map>
+				<entry key="pre-update">
+					<bean
+						class="org.hibernate.validator.event.ValidatePreUpdateEventListener" />
+				</entry>
+				<entry key="pre-insert">
+					<bean
+						class="org.hibernate.validator.event.ValidatePreInsertEventListener" />
+				</entry>
+			</map>
 		</property>
 		<property name="hibernateProperties" ref="applicationProperties" />
 	</bean>

@@ -145,6 +145,7 @@ public class Story implements TimesheetLoggable {
         this.createdDate = createdDate;
     }
 
+    @JSON
     public Integer getStoryPoints() {
         return storyPoints;
     }

@@ -171,7 +171,12 @@ IterationController.prototype = {
         get: function() { 
         return story.getDoneTasks() + " / " + story.getTotalTasks();
       }});
-      
+      var estimate = row.createCell({
+        type: "storyPoint",
+        get: function() { return story.getStoryPoints(); },
+        set: function(val) { story.setStoryPoints(val); },
+        decorator: agilefantUtils.storyPointsToString
+      });
       var elsum = row.createCell({
         get: function() { return story.getEffortLeft(); },
         decorator: agilefantUtils.exactEstimateToString
@@ -312,6 +317,7 @@ IterationController.prototype = {
       var tasks = row.createCell({
         get: function() { return story.getDoneTasks() + " / " + story.getTotalTasks(); }
       });
+      var estimate = row.createCell();
       var elsum = row.createCell({
         get: function() { return story.getEffortLeft(); },
         decorator: agilefantUtils.exactEstimateToString
@@ -395,6 +401,7 @@ IterationController.prototype = {
         set: function(val){ fakeStory.setName(val);}});
       var responsibles = row.createCell();
       var tasks = row.createCell();
+      var estimate = row.createCell();
       var elsum = row.createCell();
       var oesum = row.createCell();
       if(agilefantUtils.isTimesheetsEnabled()) {

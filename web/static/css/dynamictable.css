@@ -366,9 +366,9 @@ li.dynamictable-captionaction {
 	display: block;
 } 
 .taskTable {
-width: 92%;
-margin-left: 4%;
-margin-right: 4%;
+  width: 92%;
+  margin-left: 4%;
+  margin-right: 4%;
 }
 .dynamictable .dynamictable-row .story-row {
 	background-color: #e9eeff;
@@ -384,13 +384,19 @@ margin-right: 4%;
   background-color: #e9eeff;
   cursor: pointer;
 }
+.dynamictable .dynamictable-row .story-estimate {
+  background-color: #e9eeff;
+}
 .dynamictable .dynamictable-row .task-row {
 	background-color: #eee;
 }
 .dynamictable .dynamictable-row .task-data {
 	background-color: #fff;
 }
-.dynamictable-header > .story-row, .dynamictable-header > .story-task, .dynamictable-header > .story-responsibles {
+.dynamictable-header > .story-row,
+.dynamictable-header > .story-task,
+.dynamictable-header > .story-responsibles,
+.dynamictable-header > .story-estimate {
 	background-color: #fff !important;
 }
 .dynamictable-header > .task-row {

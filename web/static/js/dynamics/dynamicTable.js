@@ -612,6 +612,8 @@
           this.editor = new WysiwygEdit(this, autoClose);
         } else if(this.options.type == "effort") {
           this.editor = new EffortEdit(this, autoClose);
+        } else if(this.options.type == "storyPoint") {
+          this.editor = new StoryPointEdit(this, autoClose);
         } else if(this.options.type == "select") {
           this.editor = new SelectEdit(this, this.options.items, autoClose);
         } else if(this.options.type == "empty") {
@@ -831,6 +833,51 @@
       }
     };
     $.extend(EffortEdit.prototype, commonEdit);
+    
+    
+  /** STORY POINT EDIT **/
+  var StoryPointEdit = function(cell, autoClose) {
+     this.cell = cell;
+     this.autoClose = autoClose;
+     this.field = $('<input type="text"/>').width('80%').appendTo(this.cell.getElement()).focus();
+     var val = this.cell.options.get();
+     this.field.val(val);
+       var me = this;
+       var key_cb = function(keyevent) { me._handleKeyEvent(keyevent); };
+       this.field.keydown(key_cb);
+       if(autoClose === true) {
+         var blur_cb = function() { me._store(); };
+         this.field.blur(blur_cb);
+         this.field.focus(); 
+       }
+   };
+   StoryPointEdit.prototype = {
+     isValid: function() {
+       if(agilefantUtils.isStoryPointString(this.field.val())) {
+         this.field.removeClass("invalidValue");
+         if(this.errorMsg) { 
+           this.errorMsg.remove();
+           this.errorMsg = null;
+           this.cell.getElement().removeClass('cellError');
+         }
+         return true;
+       } else {
+         if(!this.errorMsg) { 
+           this.errorMsg = commonView.storyPointError(this.cell.getElement());
+         }
+         this.field.addClass("invalidValue");
+         this.cell.getElement().addClass('cellError');
+         return false;
+       }
+     },
+     remove: function() {
+       if(this.errorMsg) {
+         this.errorMsg.remove();
+       }
+       this.field.remove();
+     }
+  };
+  $.extend(StoryPointEdit.prototype, commonEdit);
   
   /** DATE EDIT **/
    var DateEdit = function(cell, autoClose) {
@@ -1055,6 +1102,12 @@
               tooltip: 'Done / Total tasks',
               sort: null
           }, 'story-task');
+      addTableColumn(opts,                      
+          { minwidth: 60, auto: true },
+          { name: 'Estimate',
+              tooltip: 'Estimate in story points',
+              sort: null
+          }, 'story-estimate');
       addTableColumn(opts,
           { minwidth: 30, auto: true },
           { name: 'EL',

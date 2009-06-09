@@ -286,6 +286,7 @@ StoryModel.prototype.setData = function(data, includeMetrics) {
   this.priority = data.priority;
   this.id = data.id;
   this.userIds = null;
+  this.storyPoints = data.storyPoints;
   var event = [];
   if(includeMetrics && data.metrics) {
     this.metrics = data.metrics;
@@ -375,6 +376,14 @@ StoryModel.prototype.getName = function() {
 };
 StoryModel.prototype.setName = function(name) {
   this.name = name;
+  this.save();
+};
+StoryModel.prototype.getStoryPoints = function() {
+  return this.storyPoints;
+};
+StoryModel.prototype.setStoryPoints = function(storyPoints) {
+  var estimate = agilefantUtils.parseStoryPointString(storyPoints);
+  this.storyPoints = estimate;
   this.save();
 };
 StoryModel.prototype.getDescription = function() {
@@ -498,7 +507,8 @@ StoryModel.prototype.save = function(synchronous, callback) {
       "story.name": this.name,
       "story.description": this.description,
       "backlogId": this.iteration.iterationId,
-      "userIds": []
+      "userIds": [],
+      "story.storyPoints": this.storyPoints
   };
   if (this.userIds) {
     data.userIds = this.userIds;

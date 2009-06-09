@@ -58,6 +58,22 @@ var agilefantUtils = {
 		var shortFormat = new RegExp("^[0-9]+[.,][0-9]+h?$"); //1.5 or 1,5
 		return (majorOnly.test(string) || minorOnly.test(string) || majorAndMinor.test(string) || shortFormat.test(string));
 	},
+	isStoryPointString: function(string) {
+	  var onlyDigits = new RegExp("^[ ]*[0-9]*[ ]*$");
+	  return onlyDigits.test(string);
+	},
+	storyPointsToString: function(storyPoints) {
+	  if (storyPoints === undefined || storyPoints === null) {
+	    return "&mdash;";
+	  }
+	  else {
+	    return storyPoints + "sp.";
+	  }
+	},
+	parseStoryPointString: function(string) {
+	  string = jQuery.trim(string);
+	  return string;
+	},
 	aftimeToString: function(aftime, hideDash) {
 		if(!hideDash && (typeof aftime !== "number" || isNaN(aftime) || aftime < 0)) {
 			return "&mdash;";

@@ -20,7 +20,7 @@ var agilefantUtils = {
 		string = jQuery.trim(string);
 		string = string.toLowerCase();
 		if(string === "") {
-			return 0;
+			return null;
 		}
 		string = string.replace(/,/,".");
 		var minorUnits = 0;

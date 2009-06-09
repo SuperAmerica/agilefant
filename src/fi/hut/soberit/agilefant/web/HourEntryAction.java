@@ -23,6 +23,7 @@ import fi.hut.soberit.agilefant.model.HourEntry;
 import fi.hut.soberit.agilefant.model.TimesheetLoggable;
 import fi.hut.soberit.agilefant.util.CalendarUtils;
 import fi.hut.soberit.agilefant.util.HourEntryUtils;
+import fi.hut.soberit.agilefant.util.MinorUnitsParser;
 import flexjson.JSONSerializer;
 
 @Component("hourEntryAction")
@@ -46,7 +47,8 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
     private int userId = 0;
     private String date;
     private DateTime internalDate;
-    private String effortSpent;
+    /** Used with project page that doesn't use AJAX */
+    private String effortString;
 
 
     private int backlogId = 0;
@@ -56,6 +58,7 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
     private int projectId;
     private int productId;
     private String jsonData = "";
+    
 
     // multi edit
     private Map<Integer, String[]> userIdss = new HashMap<Integer, String[]>();
@@ -67,6 +70,8 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
     private Set<Integer> userIds = new HashSet<Integer>();
 
     // private Log logger = LogFactory.getLog(getClass());
+    
+    private static final MinorUnitsParser minorParser = new MinorUnitsParser("h","min",60);
 
     /**
      * {@inheritDoc}
@@ -102,7 +107,7 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
             create();
             return Action.ERROR;
         }
-        effortSpent = HourEntryUtils.convertToString(hourEntry.getMinutesSpent());
+        setEffortString(HourEntryUtils.convertToString(hourEntry.getMinutesSpent()));
         internalDate = hourEntry.getDate();
         return Action.SUCCESS;
     }
@@ -153,7 +158,10 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
     protected void fillStorable(HourEntry storable) {
         storable.setDate(this.internalDate);
         storable.setDescription(this.hourEntry.getDescription());
-        storable.setMinutesSpent(this.hourEntry.getMinutesSpent());
+        if(effortString == null) // AJAX for tasks
+            storable.setMinutesSpent(this.hourEntry.getMinutesSpent());
+        else // project page
+            storable.setMinutesSpent(minorParser.convertFromString(effortString));
         storable.setUser(this.hourEntry.getUser());
     }
 
@@ -318,14 +326,14 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
     public DateTime getInternalDate() {
         return internalDate;
     }
-    
-    public void setEffortSpent(String effortSpent) {
-        this.effortSpent = effortSpent;
+
+    public void setEffortString(String effortString) {
+        this.effortString = effortString;
     }
-    
-    public String getEffortSpent() {
-        return effortSpent;
-    }
+
+    public String getEffortString() {
+        return effortString;
+    }    
 
     public int getTaskId() {
         return taskId;

@@ -150,7 +150,9 @@ var agilefantUtils = {
 				if(user.inProject) {
 					$("<span />").text(user.user.initials).appendTo(html);
 				} else {
-					$("<span />").text(user.user.initials).appendTo(html).addClass("unassigned");
+					$("<span />").text(user.user.initials).appendTo(html);
+					// TODO: 090609 Reko: Uncomment when project assignees back online
+					//.addClass("unassigned");
 				}
 				if(i+1 != len) {
 					$(document.createTextNode(", ")).appendTo(html);

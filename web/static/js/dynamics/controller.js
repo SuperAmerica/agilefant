@@ -188,7 +188,7 @@ IterationController.prototype = {
       if(agilefantUtils.isTimesheetsEnabled()) {
         var essum = row.createCell({
           get: function() { return story.getEffortSpent(); },
-          decorator: agilefantUtils.aftimeToString
+          decorator: agilefantUtils.hourEntryToString
         });
       }
       var buttons = row.createCell();
@@ -329,7 +329,7 @@ IterationController.prototype = {
       if(agilefantUtils.isTimesheetsEnabled()) {
         var essum = row.createCell({
           get: function() { return story.getEffortSpent(); },
-          decorator: agilefantUtils.aftimeToString
+          decorator: agilefantUtils.hourEntryToString
         });
       }   
       var buttons = row.createCell();
@@ -590,7 +590,7 @@ StoryController.prototype = {
     if(agilefantUtils.isTimesheetsEnabled()) {
       es = row.createCell({
         get: function() { return task.getEffortSpent(); },
-        decorator: agilefantUtils.aftimeToString
+        decorator: agilefantUtils.hourEntryToString
       });
     }
     var buttons = row.createCell();
@@ -736,7 +736,7 @@ StoryController.prototype = {
       type: "effort",
       set: function(val) { story.setOriginalEstimate(val); },
       get: function() { return story.getOriginalEstimate(); },
-      decorator: agilefantUtils.aftimeToString  
+      decorator: agilefantUtils.exactEstimateToString  
     });
     if(agilefantUtils.isTimesheetsEnabled()) {
       var es = row.createCell();
@@ -1025,7 +1025,7 @@ TaskController.prototype = {
     });
     row.createCell({
       get: function() { return entry.getTimeSpent();},
-      decorator: agilefantUtils.aftimeToString,
+      decorator: agilefantUtils.hourEntryToString,
       type: "effort",
       set: function(val) { entry.setTimeSpent(val); }
     });

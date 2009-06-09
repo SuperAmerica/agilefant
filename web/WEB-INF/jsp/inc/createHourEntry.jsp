@@ -62,7 +62,7 @@ $(document).ready(function() {
 			<tr>
 				<td>Effort spent</td>
 				<td></td>
-				<td colspan="2"><input type="text" size="10" name="hourEntry.minutesSpent" />(e.g.
+				<td colspan="2"><input type="text" size="10" name="effortSpent" />(e.g.
 				"2h 30min" or "2.5")</td>
 			</tr>
 			<tr>

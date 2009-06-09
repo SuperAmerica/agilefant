@@ -1,0 +1,17 @@
+INSERT INTO backlogs (id, backlogtype, name) VALUES (1, 'Iteration', 'Iteration 1');
+INSERT INTO backlogs (id, backlogtype, name) VALUES (2, 'Iteration', 'Iteration 2');
+INSERT INTO users (id, enabled) VALUES (1, true);
+INSERT INTO stories (id, backlog_id, name, creator_id) VALUES (1, 1, 'Story 1', 1);
+INSERT INTO stories (id, backlog_id, name, creator_id) VALUES (2, 1, 'Story 2', 1);
+INSERT INTO stories (id, backlog_id, name, creator_id) VALUES (3, 1, 'Story 3', 1);
+INSERT INTO tasks (id, story_id) VALUES (1, 1);
+INSERT INTO tasks (id, story_id) VALUES (2, 1);
+INSERT INTO tasks (id, story_id) VALUES (3, 1);
+INSERT INTO tasks (id, iteration_id) VALUES (4, 1);
+INSERT INTO tasks (id, iteration_id) VALUES (5, 1);
+INSERT INTO hourentries (id, dtype, minutesspent, user_id, task_id) VALUES (1, 'TaskHourEntry', 20, 1, 1);
+INSERT INTO hourentries (id, dtype, minutesspent, user_id, task_id) VALUES (2, 'TaskHourEntry', 30, 1, 1);
+INSERT INTO hourentries (id, dtype, minutesspent, user_id, task_id) VALUES (3, 'TaskHourEntry', 40, 1, 2);
+INSERT INTO hourentries (id, dtype, minutesspent, user_id, task_id) VALUES (4, 'TaskHourEntry', 50, 1, 2);
+INSERT INTO hourentries (id, dtype, minutesspent, user_id, task_id) VALUES (5, 'TaskHourEntry', 20, 1, 4);
+INSERT INTO hourentries (id, dtype, minutesspent, user_id, task_id) VALUES (6, 'TaskHourEntry', 40, 1, 4);

@@ -957,7 +957,7 @@ TaskHourEntryModel.prototype.getTimeSpent = function() {
   return this.timeSpent;
 };
 TaskHourEntryModel.prototype.setTimeSpent = function(timeSpent) {
-  this.timeSpent = agilefantUtils.aftimeToMillis(timeSpent);
+  this.timeSpent = agilefantUtils.parseHourEntry(timeSpent);
   this.save();
 };
 TaskHourEntryModel.prototype.setUser = function(userId) {

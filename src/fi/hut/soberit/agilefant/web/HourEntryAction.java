@@ -22,6 +22,7 @@ import fi.hut.soberit.agilefant.business.UserBusiness;
 import fi.hut.soberit.agilefant.model.HourEntry;
 import fi.hut.soberit.agilefant.model.TimesheetLoggable;
 import fi.hut.soberit.agilefant.util.CalendarUtils;
+import fi.hut.soberit.agilefant.util.HourEntryUtils;
 import flexjson.JSONSerializer;
 
 @Component("hourEntryAction")
@@ -45,6 +46,7 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
     private int userId = 0;
     private String date;
     private DateTime internalDate;
+    private String effortSpent;
 
 
     private int backlogId = 0;
@@ -100,6 +102,7 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
             create();
             return Action.ERROR;
         }
+        effortSpent = HourEntryUtils.convertToString(hourEntry.getMinutesSpent());
         internalDate = hourEntry.getDate();
         return Action.SUCCESS;
     }
@@ -150,7 +153,7 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
     protected void fillStorable(HourEntry storable) {
         storable.setDate(this.internalDate);
         storable.setDescription(this.hourEntry.getDescription());
-        storable.setMinutesSpent(this.hourEntry.getMinutesSpent());
+        storable.setMinutesSpent(HourEntryUtils.convertFromString(effortSpent));
         storable.setUser(this.hourEntry.getUser());
     }
 
@@ -314,6 +317,14 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
     
     public DateTime getInternalDate() {
         return internalDate;
+    }
+    
+    public void setEffortSpent(String effortSpent) {
+        this.effortSpent = effortSpent;
+    }
+    
+    public String getEffortSpent() {
+        return effortSpent;
     }
 
 }

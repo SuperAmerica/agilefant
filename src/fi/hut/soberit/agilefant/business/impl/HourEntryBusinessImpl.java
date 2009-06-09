@@ -23,6 +23,7 @@ import fi.hut.soberit.agilefant.model.StoryHourEntry;
 import fi.hut.soberit.agilefant.model.TimesheetLoggable;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.util.CalendarUtils;
+import fi.hut.soberit.agilefant.util.HourEntryUtils;
 
 @Service("hourEntryBusiness")
 @Transactional
@@ -116,7 +117,7 @@ public class HourEntryBusinessImpl extends GenericBusinessImpl<HourEntry>
                 continue;
             Integer userId = Integer.parseInt(userIds.get(entryId)[0]);
             String dateStr = dates.get(entryId)[0];
-            entry.setMinutesSpent(Long.parseLong(efforts.get(entryId)[0]));
+            entry.setMinutesSpent(HourEntryUtils.convertFromString(efforts.get(entryId)[0]));
             DateTime date;
             try {
                 date = new DateTime(CalendarUtils.parseDateFromString(dateStr));
@@ -140,6 +141,5 @@ public class HourEntryBusinessImpl extends GenericBusinessImpl<HourEntry>
             DateTime startDate, DateTime endDate) {
         return hourEntryDAO.calculateSumByUserAndTimeInterval(user, startDate, endDate);
     }
-
-
+    
 }

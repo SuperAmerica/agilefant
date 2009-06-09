@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import fi.hut.soberit.agilefant.business.IterationHistoryEntryBusiness;
 import fi.hut.soberit.agilefant.business.StoryBusiness;
 import fi.hut.soberit.agilefant.db.BacklogDAO;
+import fi.hut.soberit.agilefant.db.HourEntryDAO;
 import fi.hut.soberit.agilefant.db.IterationDAO;
 import fi.hut.soberit.agilefant.db.StoryDAO;
 import fi.hut.soberit.agilefant.db.UserDAO;
@@ -39,7 +40,9 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
     @Autowired
     private IterationDAO iterationDAO;
     @Autowired
-    private UserDAO userDAO;    
+    private UserDAO userDAO;
+    @Autowired
+    private HourEntryDAO hourEntryDAO;
     @Autowired
     private IterationHistoryEntryBusiness iterationHistoryEntryBusiness;
 
@@ -240,6 +243,7 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         this.iterationDAO = iterationDAO;
     }
 
+    @Transactional(readOnly = true)
     public StoryMetrics calculateMetrics(Story story) {
         StoryMetrics metrics = new StoryMetrics();
         int tasks = 0;
@@ -258,6 +262,7 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
                 doneTasks += 1;
             }
         }
+        metrics.setEffortSpent(hourEntryDAO.calculateSumByStory(story.getId()));
         metrics.setDoneTasks(doneTasks);
         metrics.setTotalTasks(tasks);
         return metrics;
@@ -307,14 +312,22 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
     }
 
 
+    public void setHourEntryDAO(HourEntryDAO hourEntryDAO) {
+        this.hourEntryDAO = hourEntryDAO;
+    }
+    
     @Transactional(readOnly = true)
     public StoryMetrics calculateMetrics(int storyId) {
-        return storyDAO.calculateMetrics(storyId);
+        StoryMetrics metrics = storyDAO.calculateMetrics(storyId);
+        metrics.setEffortSpent(hourEntryDAO.calculateSumByStory(storyId));
+        return metrics;
     }
 
     @Transactional(readOnly = true)
     public StoryMetrics calculateMetricsWithoutStory(int iterationId) {
-        return storyDAO.calculateMetricsWithoutStory(iterationId);
+        StoryMetrics metrics = storyDAO.calculateMetricsWithoutStory(iterationId);
+        metrics.setEffortSpent(hourEntryDAO.calculateSumFromTasksWithoutStory(iterationId));
+        return metrics;
     }
     
     public void attachStoryToIteration(Story story, int iterationId) throws ObjectNotFoundException {

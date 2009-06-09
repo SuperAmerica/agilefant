@@ -218,7 +218,7 @@ $(document).ready(function() {
         <td>&nbsp;</td>
         <td>&nbsp;</td>
         <td>&nbsp;</td>
-        <td>&nbsp;</td>
+        <td><c:out value="Total: ${storyPointSum}sp." /></td>
         <td>&nbsp;</td>
         <%-- Effort left --%>
         <%--

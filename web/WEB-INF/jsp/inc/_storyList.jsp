@@ -107,7 +107,11 @@ $(document).ready(function() {
       --%>
     </display:column>
 
-<%--
+    <display:column sortable="true" title="Estimate" class="storyPointColumn">
+      <aef:storyPointFormat story="${row}"/>
+    </display:column>
+
+    <%--
     <display:column sortable="true" defaultorder="descending"
       title="Priority">
       <ww:text name="story.priority.${row.priority}" />

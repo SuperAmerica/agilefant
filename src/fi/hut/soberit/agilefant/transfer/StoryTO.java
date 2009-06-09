@@ -24,6 +24,7 @@ public class StoryTO extends Story {
         this.setCreator(story.getCreator());
         this.setCreatedDate(story.getCreatedDate());
         this.setResponsibles(story.getResponsibles());
+        this.setStoryPoints(story.getStoryPoints());
     }
 
     public void setUserData(Collection<ResponsibleContainer> userData) {

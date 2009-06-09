@@ -119,18 +119,14 @@
 	</tag>
 	
 	<tag>
-		<name>iterationGoalList</name>
-		<tag-class>fi.hut.soberit.agilefant.web.tag.IterationGoalListTag</tag-class>
+		<name>storyPointFormat</name>
+		<tag-class>fi.hut.soberit.agilefant.web.tag.StoryPointFormatTag</tag-class>
 		<body-content>JSP</body-content>
 		<description>
-			Stores available iteration goals
+			Gets a story and transforms it's estimate to string.
 	    </description>
 	    <attribute>
-	    	<name>id</name>
-	    	<required>true</required>	    
-	    </attribute>
-	    <attribute>
-	    	<name>backlogId</name>
+	    	<name>story</name>
 	    	<required>true</required>
 	    	<rtexprvalue>true</rtexprvalue>
 	    </attribute>

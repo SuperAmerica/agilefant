@@ -39,6 +39,8 @@ public class Story implements TimesheetLoggable {
     private List<User> responsibles = new ArrayList<User>();
     private Collection<Task> tasks = new ArrayList<Task>();
 
+    private Integer storyPoints;
+    
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     public int getId() {
@@ -141,5 +143,13 @@ public class Story implements TimesheetLoggable {
 
     public void setCreatedDate(Date createdDate) {
         this.createdDate = createdDate;
+    }
+
+    public Integer getStoryPoints() {
+        return storyPoints;
+    }
+
+    public void setStoryPoints(Integer storyPoints) {
+        this.storyPoints = storyPoints;
     }
 }

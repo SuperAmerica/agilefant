@@ -192,9 +192,9 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         }
         if (persisted.getBacklog() instanceof Iteration) {
             updateStoryPriority(persisted, priority);
-        }
-        if(!historyUpdated) {
-            iterationHistoryEntryBusiness.updateIterationHistory(backlog.getId());
+            if(!historyUpdated) {
+                iterationHistoryEntryBusiness.updateIterationHistory(backlog.getId());
+            }
         }
         return persisted;
     }
@@ -205,8 +205,12 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         oldBacklog.getStories().remove(story);
         story.setBacklog(backlog);
         backlog.getStories().add(story);
-        iterationHistoryEntryBusiness.updateIterationHistory(oldBacklog.getId());
-        iterationHistoryEntryBusiness.updateIterationHistory(backlog.getId());
+        if (oldBacklog instanceof Iteration) {
+            iterationHistoryEntryBusiness.updateIterationHistory(oldBacklog.getId());
+        }
+        if (backlog instanceof Iteration) {
+            iterationHistoryEntryBusiness.updateIterationHistory(backlog.getId());
+        }
         
         // if(!backlogBusiness.isUnderSameProduct(oldBacklog, backlog)) {
         // //remove only product themes

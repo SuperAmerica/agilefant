@@ -98,6 +98,48 @@ public class TaskBusinessTest {
     }
     
     @Test
+    public void testStoreTask_updateEffortLeftWhenSettingOriginalEstimate() {
+        task.setId(12);
+        task.setEffortLeft(null);
+        task.setOriginalEstimate(new ExactEstimate(120));
+        
+        expect(iterationBusiness.retrieve(iteration.getId())).andReturn(iteration);
+        expect(storyBusiness.retrieveIfExists(story.getId())).andReturn(story);
+        taskDAO.store(task);
+        
+        replay(iterationBusiness, storyBusiness, taskDAO);
+        
+        Task actualTask = taskBusiness.storeTask(task, iteration.getId(), story
+                .getId(), null);
+        
+        assertEquals(new ExactEstimate(120).getMinorUnits(), actualTask.getOriginalEstimate().getMinorUnits());
+        assertEquals(new ExactEstimate(120).getMinorUnits(), actualTask.getEffortLeft().getMinorUnits());
+        
+        verify(iterationBusiness, storyBusiness, taskDAO);
+    }
+    
+    @Test
+    public void testStoreTask_updateNullOriginalEstimateWhenSettingEffortLeft() {
+        task.setId(12);
+        task.setEffortLeft(new ExactEstimate(90));
+        task.setOriginalEstimate(null);
+        
+        expect(iterationBusiness.retrieve(iteration.getId())).andReturn(iteration);
+        expect(storyBusiness.retrieveIfExists(story.getId())).andReturn(story);
+        taskDAO.store(task);
+        
+        replay(iterationBusiness, storyBusiness, taskDAO);
+        
+        Task actualTask = taskBusiness.storeTask(task, iteration.getId(), story
+                .getId(), null);
+        
+        assertEquals(new ExactEstimate(90).getMinorUnits(), actualTask.getOriginalEstimate().getMinorUnits());
+        assertEquals(new ExactEstimate(90).getMinorUnits(), actualTask.getEffortLeft().getMinorUnits());
+        
+        verify(iterationBusiness, storyBusiness, taskDAO);
+    }
+    
+    @Test
     public void testStoreTask_responsibles() {
         task.setId(123515);
         User user1 = new User();

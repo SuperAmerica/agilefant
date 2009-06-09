@@ -93,6 +93,10 @@ public class TaskBusinessImpl extends GenericBusinessImpl<Task> implements
             task.setEffortLeft(task.getOriginalEstimate());
         }
         
+        if (task.getOriginalEstimate() == null && task.getEffortLeft() != null) {
+            task.setOriginalEstimate(task.getEffortLeft());
+        }
+        
         this.populateUserData(task, userIds);
         
         if (task.getId() == 0) {

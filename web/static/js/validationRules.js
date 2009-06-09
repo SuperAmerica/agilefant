@@ -254,8 +254,8 @@ var agilefantValidationRules = {
 	       "backlogId": {
 	           required: true
 	       },
-	       "story.originalEstimate": {
-	           aftime: [ false ]
+	       "story.storyPoints": {
+	           digits: true
 	       }
 	   },
 	   messages: {

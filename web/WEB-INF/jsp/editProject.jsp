@@ -244,7 +244,7 @@ $(document).ready(function() {
 												</tr>
 											     </c:if>
                            --%>		
-                           <%--		
+                           		
 										         <tr>
 													<th class="info1">Planned project size</th>
 													<td class="info3" ondblclick="return editProject();">
@@ -258,7 +258,7 @@ $(document).ready(function() {
 														</c:choose>
 													</td>
 												</tr>	
-                        --%>
+                        
 												<tr>
 	                                				<th class="info1">Timeframe</th>
 	                                				<td class="info3" ondblclick="return editProject();"><c:out value="${project.startDate.date}.${project.startDate.month + 1}.${project.startDate.year + 1900}" /> - 
@@ -372,8 +372,8 @@ $(document).ready(function() {
 						                			<tr>
 														<td>Planned project size</td>
 														<td></td>
-														<%--<td colspan="2"><ww:textfield size="10" id="project.backlogSize" name="project.backlogSize" /> (total man hours)
-														</td>--%>
+														<td colspan="2"><ww:textfield size="10" id="project.backlogSize" name="project.backlogSize" /> (total man hours)
+														</td>
 													</tr>													
 													<tr>
 														<td>Start date</td>

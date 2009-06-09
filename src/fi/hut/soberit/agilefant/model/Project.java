@@ -51,36 +51,14 @@ public class Project extends Backlog implements TimesheetLoggable {
 
     private Date startDate;
 
-//    private List<Iteration> iterations = new ArrayList<Iteration>();
-
     private int rank = 0;
 
     private Status status = Status.GREEN;
     
     private Collection<Assignment> assignments = new HashSet<Assignment>();
+    
+    private Integer backlogSize;
 
-    /** The product, under which this project belongs. */
-//    @OneToMany(mappedBy = "parent")
-//    @JSON(include = false)
-//    public Product getProduct() {
-//        return product;
-//    }
-//
-//    public void setProduct(Product product) {
-//        this.product = product;
-//    }
-
-    /** Iterations under this project. */
-//    @OneToMany(mappedBy = "parent")
-//    @BatchSize(size = 20)
-//    @JSON(include = false)
-//    public List<Iteration> getIterations() {
-//        return iterations;
-//    }
-//
-//    public void setIterations(List<Iteration> iterations) {
-//        this.iterations = iterations;
-//    }
 
     @JSON
     public Date getStartDate() {
@@ -144,6 +122,15 @@ public class Project extends Backlog implements TimesheetLoggable {
 
     public void setAssignments(Collection<Assignment> assignments) {
         this.assignments = assignments;
+    }
+
+    @JSON
+    public Integer getBacklogSize() {
+        return backlogSize;
+    }
+
+    public void setBacklogSize(Integer backlogSize) {
+        this.backlogSize = backlogSize;
     }
 
 }

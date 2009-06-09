@@ -35,17 +35,8 @@ public class Iteration extends Backlog {
     private Date startDate;
 
     private Date endDate;
-
-//    /** The project, under which this iteration is. */
-//    @ManyToOne(optional = false)
-//    @JSON(include = false)
-//    public Project getProject() {
-//        return project;
-//    }
-//
-//    public void setProject(Project project) {
-//        this.project = project;
-//    }
+    
+    private Integer backlogSize;
 
     @JSON
     public Date getEndDate() {
@@ -63,6 +54,15 @@ public class Iteration extends Backlog {
 
     public void setStartDate(Date startDate) {
         this.startDate = startDate;
+    }
+
+    @JSON
+    public Integer getBacklogSize() {
+        return backlogSize;
+    }
+
+    public void setBacklogSize(Integer backlogSize) {
+        this.backlogSize = backlogSize;
     }
 
 }

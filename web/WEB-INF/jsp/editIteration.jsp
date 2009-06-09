@@ -71,7 +71,7 @@
 					<tr>	
 						<th class="info1">Planned iteration size</th>
 						<td class="info3" ondblclick="return editIteration();">
-            <%--
+            
 							<c:choose>
 							<c:when test="${(!empty iteration.backlogSize)}">
 								<c:out value="${iteration.backlogSize}"/>h
@@ -79,7 +79,7 @@
 							<c:otherwise>
 								-
 							</c:otherwise>
-							</c:choose> --%>
+							</c:choose>
 						</td>
 					    <td></td>			
 					</tr>
@@ -152,13 +152,13 @@
 								</c:forEach>
 							</select></td>
 						</tr>
-<%--
+
                         <tr>
 							<td>Planned iteration size</td>
 							<td></td>
 							<td colspan="2"><ww:textfield size="10" id="iteration.backlogSize" name="iteration.backlogSize" /> (total man hours)
 							</td>
-						</tr> --%>
+						</tr>
 						<tr>
 							<td>Start date</td>
 							<td>*</td>

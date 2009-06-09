@@ -3,7 +3,7 @@ package fi.hut.soberit.agilefant.util;
 public class Pair<First, Second> {
 
     public static final Pair<?, ?> EMPTY = create(null, null);
-    
+
     public final First first;
 
     public final Second second;
@@ -32,16 +32,23 @@ public class Pair<First, Second> {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null) return false;
-        if (!(obj instanceof Pair)) return false;
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (!(obj instanceof Pair))
+            return false;
         Pair<?, ?> other = (Pair<?, ?>) obj;
         if (first == null) {
-            if (other.first != null) return false;
-        } else if (!first.equals(other.first)) return false;
+            if (other.first != null)
+                return false;
+        } else if (!first.equals(other.first))
+            return false;
         if (second == null) {
-            if (other.second != null) return false;
-        } else if (!second.equals(other.second)) return false;
+            if (other.second != null)
+                return false;
+        } else if (!second.equals(other.second))
+            return false;
         return true;
     }
 
@@ -49,9 +56,17 @@ public class Pair<First, Second> {
     public String toString() {
         StringBuilder builder = new StringBuilder();
         builder.append("{[");
-        builder.append(first.toString());
+        if (first == null) {
+            builder.append("null");
+        } else {
+            builder.append(first.toString());
+        }
         builder.append("], [");
-        builder.append(second.toString());
+        if (second == null) {
+            builder.append("null");
+        } else {
+            builder.append(second.toString());
+        }
         builder.append("]}");
         return builder.toString();
     }

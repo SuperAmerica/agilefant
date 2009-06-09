@@ -24,6 +24,12 @@ public abstract class AbstractHibernateTests extends
         sessionFactory.getCurrentSession().flush();
     }
 
+    /**
+     * Executes an SQL script from the classpath. The expected
+     * script file name is 'the/package/of/the/class/ClassName-data.sql'
+     * 
+     * If the SQL script does not exist, this method will throw an exception
+     */
     protected void executeClassSql() {
         final StackTraceElement callerFromStackTrace = new Throwable()
                 .getStackTrace()[1];
@@ -34,18 +40,12 @@ public abstract class AbstractHibernateTests extends
         executeSql(builder.toString());
     }
 
-    protected void executeMethodSql() {
-        final StackTraceElement callerFromStackTrace = new Throwable()
-                .getStackTrace()[1];
-        StringBuilder builder = new StringBuilder();
-        builder.append("classpath:");
-        builder.append(callerFromStackTrace.getClassName().replace('.', '/'));
-        builder.append('-');
-        builder.append(callerFromStackTrace.getMethodName());
-        builder.append("-data.sql");
-        executeSql(builder.toString());
-    }
-
+    /**
+     * Executes an SQL script from a location. The location is a standard
+     * spring resource (for example classpath:test.sql, file:/home/jorma/test.sql).
+     * 
+     * @param location SQL script location
+     */
     protected void executeSql(String location) {
         Resource resource = applicationContext.getResource(location);
         SimpleJdbcTestUtils.executeSqlScript(simpleJdbcTemplate, resource,

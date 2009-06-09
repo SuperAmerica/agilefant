@@ -20,7 +20,6 @@ public class IterationHistoryEntryDAOTest extends AbstractHibernateTests {
     @Test
     public void testRetrieveLatest() {
         executeClassSql();
-        executeMethodSql();
         IterationHistoryEntry entry = iterationHistoryEntryDAO.retrieveLatest(1);
         assertEquals(4, entry.getId());
     }
@@ -28,14 +27,13 @@ public class IterationHistoryEntryDAOTest extends AbstractHibernateTests {
     @Test
     public void testRetrieveLatest_noHistory() {
         executeClassSql();
-        IterationHistoryEntry entry = iterationHistoryEntryDAO.retrieveLatest(1);
+        IterationHistoryEntry entry = iterationHistoryEntryDAO.retrieveLatest(2);
         assertNull(entry);
     }
     
     @Test
     public void testCalculateCurrentHistoryData() {
         executeClassSql();
-        executeMethodSql();
         Pair<ExactEstimate, ExactEstimate> sums = iterationHistoryEntryDAO.calculateCurrentHistoryData(1);
         assertEquals(100, sums.first.getMinorUnits().longValue());
         assertEquals(180, sums.second.getMinorUnits().longValue());
@@ -44,7 +42,7 @@ public class IterationHistoryEntryDAOTest extends AbstractHibernateTests {
     @Test
     public void testCalculateCurrentHistoryData_noTasks() {
         executeClassSql();
-        Pair<ExactEstimate, ExactEstimate> sums = iterationHistoryEntryDAO.calculateCurrentHistoryData(1);
+        Pair<ExactEstimate, ExactEstimate> sums = iterationHistoryEntryDAO.calculateCurrentHistoryData(2);
         assertEquals(Pair.EMPTY, sums);
     }
 

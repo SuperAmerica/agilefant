@@ -64,6 +64,13 @@ $(document).ready(function() {
 					<ww:textarea cols="70" rows="10" cssClass="useWysiwyg" id="storyDescription" 
 					name="story.description" value="${aef:nl2br(story.description)}" /></td>
 			</tr>
+      
+      <tr>
+        <td>Story point estimate</td>
+        <td></td>
+        <td colspan="2"><ww:textfield size="15" name="story.storyPoints" /></td>
+      </tr>
+      
 			<%--
 			<c:choose>
 			<c:when test="${story.creator != null}">

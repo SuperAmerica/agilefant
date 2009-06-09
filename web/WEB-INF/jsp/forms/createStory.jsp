@@ -41,6 +41,12 @@ $(document).ready(function() {
 				cssClass="useWysiwyg" id="createStoryDescription"
 				name="story.description" /></td>
 		</tr>
+    
+    <tr>
+      <td>Story point estimate</td>
+      <td></td>
+      <td colspan="2"><ww:textfield size="15" name="story.storyPoints" /></td>
+    </tr>
 
 <%--
 		<tr>

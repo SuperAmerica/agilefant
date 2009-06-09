@@ -15,7 +15,7 @@ public class TaskTO extends Task {
     private Collection<ResponsibleContainer> userData = new ArrayList<ResponsibleContainer>();
     private Collection<HourEntryTO> hourEntries;
     
-    public TaskTO(Task task, Collection<TaskHourEntry> hourEntries) {
+    public TaskTO(Task task) {
         this.setId(task.getId());
         this.setName(task.getName());
         this.setDescription(task.getDescription());
@@ -29,6 +29,10 @@ public class TaskTO extends Task {
         this.setResponsibles(task.getResponsibles());
         this.setCreatedDate(task.getCreatedDate());
         this.setCreator(task.getCreator());
+    }
+    
+    public TaskTO(Task task, Collection<HourEntryTO> hourEntries) {
+        this(task);
         this.setHourEntries(hourEntries);
     }
     
@@ -41,12 +45,8 @@ public class TaskTO extends Task {
         return userData;
     }
 
-    public void setHourEntries(Collection<TaskHourEntry> hourEntries) {
-        ArrayList<HourEntryTO> toEntries = new ArrayList<HourEntryTO>();
-        for(TaskHourEntry t : hourEntries) {
-            toEntries.add(new HourEntryTO(t));
-        }
-        this.hourEntries = toEntries;
+    public void setHourEntries(Collection<HourEntryTO> hourEntries) {
+        this.hourEntries = hourEntries;
     }
 
     @JSON(include = true)

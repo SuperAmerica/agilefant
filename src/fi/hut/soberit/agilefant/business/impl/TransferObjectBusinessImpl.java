@@ -14,7 +14,9 @@ import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
+import fi.hut.soberit.agilefant.model.TaskHourEntry;
 import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.transfer.HourEntryTO;
 import fi.hut.soberit.agilefant.transfer.StoryTO;
 import fi.hut.soberit.agilefant.transfer.TaskTO;
 import fi.hut.soberit.agilefant.util.ResponsibleContainer;
@@ -48,10 +50,24 @@ public class TransferObjectBusinessImpl implements TransferObjectBusiness {
         return iterationStories;
     }
     
+    private Collection<HourEntryTO> constructHourEntries(Task task) {
+        Collection<TaskHourEntry> hourEntries = taskHourEntryDAO.retrieveByTask(task);
+        if(hourEntries == null) {
+            return null;
+        }
+        Collection<HourEntryTO> toEntries = new ArrayList<HourEntryTO>();
+
+        for(TaskHourEntry t : hourEntries) {
+            toEntries.add(new HourEntryTO(t));
+        }
+        
+        return toEntries;
+    }
+    
     /** {@inheritDoc} */
     @Transactional(readOnly = true)
     public TaskTO constructTaskTO(Task task, Collection<User> assignedUsers) {
-        TaskTO taskTO = new TaskTO(task, taskHourEntryDAO.retrieveByTask(task));
+        TaskTO taskTO = new TaskTO(task, constructHourEntries(task));
         
         for (User responsible : taskTO.getResponsibles()) {
             ResponsibleContainer rc

@@ -42,7 +42,7 @@ public class TaskActionTest {
         expect(taskBusiness.storeTask(task, 2, 0, taskAction.getUserIds())).andReturn(task);
 //        expect(taskBusiness.getTaskResponsibles(task)).andReturn(null);
         expect(transferObjectBusiness.constructTaskTO(task))
-            .andReturn(new TaskTO(task, Arrays.asList(new TaskHourEntry())));
+            .andReturn(new TaskTO(task));
         replay(taskBusiness, transferObjectBusiness);
         
         assertEquals(CRUDAction.AJAX_SUCCESS, taskAction.ajaxStoreTask());

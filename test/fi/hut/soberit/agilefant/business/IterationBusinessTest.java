@@ -23,6 +23,7 @@ import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.TaskHourEntry;
 import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.transfer.HourEntryTO;
 import fi.hut.soberit.agilefant.transfer.StoryTO;
 import fi.hut.soberit.agilefant.transfer.TaskTO;
 import fi.hut.soberit.agilefant.util.IterationDataContainer;
@@ -58,7 +59,7 @@ public class IterationBusinessTest {
         
         task = new Task();
         task.setId(1254);
-        taskTO = new TaskTO(task, Arrays.asList(new TaskHourEntry()));
+        taskTO = new TaskTO(task);
         tasksWithoutStoryList = Arrays.asList(task);
         tasksTOsWithoutStoryList = Arrays.asList(taskTO);
         

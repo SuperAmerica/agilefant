@@ -14,6 +14,7 @@ import org.junit.*;
 import static org.junit.Assert.*;
 
 import fi.hut.soberit.agilefant.business.impl.TransferObjectBusinessImpl;
+import fi.hut.soberit.agilefant.db.TaskHourEntryDAO;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
@@ -27,6 +28,7 @@ public class TransferObjectBusinessTest {
 
     private TransferObjectBusinessImpl transferObjectBusiness = new TransferObjectBusinessImpl();
     private ProjectBusiness projectBusiness;
+    private TaskHourEntryDAO taskHourEntryDAO;
     Iteration iteration;
     Story story1;
     Story story2;
@@ -38,6 +40,8 @@ public class TransferObjectBusinessTest {
     public void setUp() {
         projectBusiness = createMock(ProjectBusiness.class);
         transferObjectBusiness.setProjectBusiness(projectBusiness);
+        taskHourEntryDAO = createMock(TaskHourEntryDAO.class);
+        transferObjectBusiness.setTaskHourEntryDAO(taskHourEntryDAO);
         
         iteration = new Iteration();
         Project project = new Project();

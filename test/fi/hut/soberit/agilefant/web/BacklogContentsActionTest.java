@@ -46,6 +46,7 @@ public class BacklogContentsActionTest {
         Map<Story, List<ResponsibleContainer>> responsibleMap = new HashMap<Story, List<ResponsibleContainer>>();
         expect(storyBusiness.getStoriesByBacklog(backlog)).andReturn(storiesList);
         expect(backlogBusiness.getResponsiblesByBacklog(backlog)).andReturn(responsibleMap);
+        expect(backlogBusiness.calculateStoryPointSum(backlog.getId())).andReturn(20);
         replay(storyBusiness, backlogBusiness);
         
         backlogContentsAction.initializeContents(backlog);

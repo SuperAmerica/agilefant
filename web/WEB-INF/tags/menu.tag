@@ -339,6 +339,7 @@ Agilefant
 </li>
 
 <!-- Development portfolio -->
+<%--
 <c:choose>
     <c:when test="${navi == 'portfolio'}">
         <li class="selected">
@@ -354,6 +355,8 @@ Agilefant
     </span>
     </a>
 </li>
+--%>
+
 
 <%-- Timesheet --%>
 <aef:hourReporting id="hourReport" />
@@ -374,6 +377,7 @@ Agilefant
     </a>
 </li>
 </c:if>
+
 
 <%-- Settings --%>
 <c:choose>

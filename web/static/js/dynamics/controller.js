@@ -333,6 +333,9 @@ IterationController.prototype = {
         });
       }   
       var buttons = row.createCell();
+      row.getElement().bind("metricsUpdated", function() {
+        story.reloadMetrics();
+      });
       row.setNotSortable();
       row.createCell().getElement().hide(); //dymmy description
       var tasks = row.createCell();

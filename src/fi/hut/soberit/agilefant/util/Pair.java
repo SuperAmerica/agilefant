@@ -2,6 +2,8 @@ package fi.hut.soberit.agilefant.util;
 
 public class Pair<First, Second> {
 
+    public static final Pair<?, ?> EMPTY = create(null, null);
+    
     public final First first;
 
     public final Second second;

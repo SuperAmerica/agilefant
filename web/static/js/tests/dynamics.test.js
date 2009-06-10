@@ -16,36 +16,37 @@ $(document).ready(function() {
 	});
 	
 	module("Dynamics utils");
-	test("aftime to string", function() {
+	test("hour entry to string", function() {
 		var noData = "";
 		var halfhour = 1800;
 		var hour = 3600;
 		
-		same(agilefantUtils.aftimeToString(noData),"&mdash;","No data to be shown");
-		same(agilefantUtils.aftimeToString(halfhour),"0.5h","30mins");
-		same(agilefantUtils.aftimeToString(null),"&mdash;","null");
-		same(agilefantUtils.aftimeToString(""),"&mdash;","empty");
-		same(agilefantUtils.aftimeToString(NaN),"&mdash;","NaN");
-		same(agilefantUtils.aftimeToString(null, true),"0.0h","null");
-		same(agilefantUtils.aftimeToString("", true),"0.0h","empty");
-		same(agilefantUtils.aftimeToString(NaN, true),"","NaN");
+		same(agilefantParsers.hourEntryToString(noData),"&mdash;","No data to be shown");
+		same(agilefantParsers.hourEntryToString(halfhour),"0.5h","30min");
+		same(agilefantParsers.hourEntryToString(null),"&mdash;","null");
+		same(agilefantParsers.hourEntryToString(""),"&mdash;","empty");
+		same(agilefantParsers.hourEntryToString(NaN),"&mdash;","NaN");
+		same(agilefantParsers.hourEntryToString(null, true),"0.0h","null");
+		same(agilefantParsers.hourEntryToString("", true),"0.0h","empty");
+		same(agilefantParsers.hourEntryToString(NaN, true),"","NaN");
 	});
 	
-	test("is aftime", function() {
-		ok(agilefantUtils.isAftimeString("1h"), "1h");
-		ok(agilefantUtils.isAftimeString("1,5h"), "1,5h");
-		ok(agilefantUtils.isAftimeString("1.5h"), "1.5h");
-		ok(agilefantUtils.isAftimeString("1,5"), "1,5");
-		ok(agilefantUtils.isAftimeString("1.5"), "1.5");
-		ok(agilefantUtils.isAftimeString("1"), "1");
-		ok(agilefantUtils.isAftimeString("1h 10min"), "1h 10min");
-		ok(agilefantUtils.isAftimeString("10min"), "10min");
-		ok(!agilefantUtils.isAftimeString("1,5h 10min"), "1,5h 10min");
-		ok(!agilefantUtils.isAftimeString("10min 1h"), "10min 1h");
-		ok(!agilefantUtils.isAftimeString("daadaa 1h"), "daadaa 1h");
-		ok(!agilefantUtils.isAftimeString("1h daadaa"), "1h daadaa");
-		ok(!agilefantUtils.isAftimeString("1h d 10min"), "1h d 10min");
+	test("is hour entry", function() {
+		ok(agilefantParsers.isHourEntryString("1h"), "1h");
+		ok(agilefantParsers.isHourEntryString("1,5h"), "1,5h");
+		ok(agilefantParsers.isHourEntryString("1.5h"), "1.5h");
+		ok(agilefantParsers.isHourEntryString("1,5"), "1,5");
+		ok(agilefantParsers.isHourEntryString("1.5"), "1.5");
+		ok(agilefantParsers.isHourEntryString("1"), "1");
+		ok(agilefantParsers.isHourEntryString("1h 10min"), "1h 10min");
+		ok(agilefantParsers.isHourEntryString("10min"), "10min");
+		ok(!agilefantParsers.isHourEntryString("1,5h 10min"), "1,5h 10min");
+		ok(!agilefantParsers.isHourEntryString("10min 1h"), "10min 1h");
+		ok(!agilefantParsers.isHourEntryString("daadaa 1h"), "daadaa 1h");
+		ok(!agilefantParsers.isHourEntryString("1h daadaa"), "1h daadaa");
+		ok(!agilefantParsers.isHourEntryString("1h d 10min"), "1h d 10min");
 	});
+	/*
 	test("aftime to millis", function() {
 		equals(agilefantUtils.aftimeToMillis("1h"), 3600,"1h");
 		equals(agilefantUtils.aftimeToMillis("1,5h"), 5400 ,"1,5h");
@@ -58,7 +59,7 @@ $(document).ready(function() {
 		equals(agilefantUtils.aftimeToMillis("  "),0,"empty");
 		equals(agilefantUtils.aftimeToMillis(""),0,"empty");
 		equals(agilefantUtils.aftimeToMillis("0"),0,"0");
-	});
+	});*/
 
 	module("Dynamic Table", {
 		setup: function() {

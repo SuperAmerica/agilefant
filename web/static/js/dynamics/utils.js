@@ -42,7 +42,7 @@ var agilefantUtils = {
 				}
 			}
 		}
-		return minorUnits;
+		return Math.round(minorUnits);
 	},
 	isExactEstimateString: function(string) {
 		if(!string) {
@@ -117,7 +117,7 @@ var agilefantUtils = {
 				}
 			}
 		}
-		return minorUnits;
+		return Math.round(minorUnits);
 	},
 	isHourEntryString: function(string) {
 		if(!string) {

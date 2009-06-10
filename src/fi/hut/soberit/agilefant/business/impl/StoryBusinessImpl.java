@@ -163,7 +163,7 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         // }
         // }
 
-        storable.setPriority(dataItem.getPriority());
+        //storable.setPriority(dataItem.getPriority());
         storable.setState(dataItem.getState());
         storable.setStoryPoints(dataItem.getStoryPoints());
 

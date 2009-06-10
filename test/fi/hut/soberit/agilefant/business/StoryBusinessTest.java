@@ -8,6 +8,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -89,5 +90,101 @@ public class StoryBusinessTest {
         assertTrue(storyBusiness.getStoryContents(story1, iteration)
                 .contains(task2));
         verify(storyDAO, iterationDAO);
+    }
+    
+    public void testUpdateStoryPriority_noUpdate() {
+        Iteration iter = new Iteration();
+        List<Story> stories = createUpdatePrioData(iter);
+        storyBusiness.updateStoryPriority(stories.get(4), 4);
+    }
+    
+    public void testUpdateStoryPriority_oneUp() {
+        Iteration iter = new Iteration();
+        List<Story> stories = createUpdatePrioData(iter);
+        
+        storyDAO.store(stories.get(3));
+        storyDAO.store(stories.get(4));
+        replay(storyDAO);
+        storyBusiness.updateStoryPriority(stories.get(4), 3);
+        assertSame(0, stories.get(0).getPriority());
+        assertSame(1, stories.get(1).getPriority());
+        assertSame(2, stories.get(2).getPriority());
+        assertSame(4, stories.get(3).getPriority());
+        assertSame(3, stories.get(4).getPriority());
+        assertSame(5, stories.get(5).getPriority());
+        verify(storyDAO);
+    }
+    
+    public void testUpdateStoryPriority_oneDown() {
+        Iteration iter = new Iteration();
+        List<Story> stories = createUpdatePrioData(iter);
+        
+        storyDAO.store(stories.get(4));
+        storyDAO.store(stories.get(5));
+        replay(storyDAO);
+        storyBusiness.updateStoryPriority(stories.get(4), 5);
+        assertSame(0, stories.get(0).getPriority());
+        assertSame(1, stories.get(1).getPriority());
+        assertSame(2, stories.get(2).getPriority());
+        assertSame(3, stories.get(3).getPriority());
+        assertSame(5, stories.get(4).getPriority());
+        assertSame(4, stories.get(5).getPriority());
+        verify(storyDAO);
+    }
+    
+    public void testUpdateStoryPriority_toTop() {
+        Iteration iter = new Iteration();
+        List<Story> stories = createUpdatePrioData(iter);
+
+        storyDAO.store(stories.get(0));
+        storyDAO.store(stories.get(1));
+        storyDAO.store(stories.get(2));
+        storyDAO.store(stories.get(3));
+        storyDAO.store(stories.get(4));
+        storyDAO.store(stories.get(5));
+        replay(storyDAO);
+        storyBusiness.updateStoryPriority(stories.get(5), 0);
+        assertSame(1, stories.get(0).getPriority());
+        assertSame(2, stories.get(1).getPriority());
+        assertSame(3, stories.get(2).getPriority());
+        assertSame(4, stories.get(3).getPriority());
+        assertSame(5, stories.get(4).getPriority());
+        assertSame(0, stories.get(5).getPriority());
+        verify(storyDAO);
+    }
+    
+    public void testUpdateStoryPriority_insertNew() {
+        Iteration iter = new Iteration();
+        List<Story> stories = createUpdatePrioData(iter);
+        Story newStory = new Story();
+        newStory.setBacklog(iter);
+        newStory.setPriority(-1);
+        
+        storyDAO.store(stories.get(3));
+        storyDAO.store(stories.get(4));
+        storyDAO.store(stories.get(5));
+        storyDAO.store(newStory);
+        replay(storyDAO);
+        storyBusiness.updateStoryPriority(newStory, 3);
+        assertSame(0, stories.get(0).getPriority());
+        assertSame(1, stories.get(1).getPriority());
+        assertSame(2, stories.get(2).getPriority());
+        assertSame(4, stories.get(3).getPriority());
+        assertSame(5, stories.get(4).getPriority());
+        assertSame(6, stories.get(5).getPriority());
+        assertSame(3, newStory.getPriority());
+        verify(storyDAO);
+    }
+    
+    private List<Story> createUpdatePrioData(Iteration iter) {
+        List<Story> stories = new ArrayList<Story>();
+        for(int i = 0 ; i < 6; i++) {
+            Story tmp = new Story();
+            tmp.setPriority(i);
+            tmp.setBacklog(iter);
+            stories.add(tmp);
+            iter.getStories().add(tmp);
+        }
+        return stories;
     }
 }

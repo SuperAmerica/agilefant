@@ -175,20 +175,20 @@ IterationController.prototype = {
         type: "storyPoint",
         get: function() { return story.getStoryPoints(); },
         set: function(val) { story.setStoryPoints(val); },
-        decorator: agilefantUtils.storyPointsToString
+        decorator: agilefantParsers.storyPointsToString
       });
       var elsum = row.createCell({
         get: function() { return story.getEffortLeft(); },
-        decorator: agilefantUtils.exactEstimateToString
+        decorator: agilefantParsers.exactEstimateToString
       });
       var oesum = row.createCell({
         get: function() { return story.getOriginalEstimate(); },
-        decorator: agilefantUtils.exactEstimateToString
+        decorator: agilefantParsers.exactEstimateToString
       });
       if(agilefantUtils.isTimesheetsEnabled()) {
         var essum = row.createCell({
           get: function() { return story.getEffortSpent(); },
-          decorator: agilefantUtils.hourEntryToString
+          decorator: agilefantParsers.hourEntryToString
         });
       }
       var buttons = row.createCell();
@@ -320,16 +320,16 @@ IterationController.prototype = {
       var estimate = row.createCell();
       var elsum = row.createCell({
         get: function() { return story.getEffortLeft(); },
-        decorator: agilefantUtils.exactEstimateToString
+        decorator: agilefantParsers.exactEstimateToString
       });
       var oesum = row.createCell({
         get: function() { return story.getOriginalEstimate(); },
-        decorator: agilefantUtils.exactEstimateToString
+        decorator: agilefantParsers.exactEstimateToString
       });
       if(agilefantUtils.isTimesheetsEnabled()) {
         var essum = row.createCell({
           get: function() { return story.getEffortSpent(); },
-          decorator: agilefantUtils.hourEntryToString
+          decorator: agilefantParsers.hourEntryToString
         });
       }   
       var buttons = row.createCell();
@@ -546,7 +546,7 @@ StoryController.prototype = {
       onEdit: function() {
         return (task.getState() !== "DONE");
       },
-      decorator: agilefantUtils.exactEstimateToString
+      decorator: agilefantParsers.exactEstimateToString
     });
     var oe = row.createCell({
       type: "effort",
@@ -588,13 +588,13 @@ StoryController.prototype = {
         return false;
       },
       set: function(val) { task.setOriginalEstimate(val); },
-      decorator: agilefantUtils.exactEstimateToString
+      decorator: agilefantParsers.exactEstimateToString
     });
     var es = null;
     if(agilefantUtils.isTimesheetsEnabled()) {
       es = row.createCell({
         get: function() { return task.getEffortSpent(); },
-        decorator: agilefantUtils.hourEntryToString
+        decorator: agilefantParsers.hourEntryToString
       });
     }
     var buttons = row.createCell();
@@ -740,7 +740,7 @@ StoryController.prototype = {
       type: "effort",
       set: function(val) { story.setOriginalEstimate(val); },
       get: function() { return story.getOriginalEstimate(); },
-      decorator: agilefantUtils.exactEstimateToString  
+      decorator: agilefantParsers.exactEstimateToString  
     });
     if(agilefantUtils.isTimesheetsEnabled()) {
       var es = row.createCell();
@@ -1030,10 +1030,10 @@ TaskController.prototype = {
       set: function(val) { entry.setUser(val); }
     });
     row.createCell({
-      get: function() { return entry.getTimeSpent();},
-      decorator: agilefantUtils.hourEntryToString,
+      get: function() { return entry.getMinutesSpent();},
+      decorator: agilefantParsers.hourEntryToString,
       type: "effort",
-      set: function(val) { entry.setTimeSpent(val); }
+      set: function(val) { entry.setMinutesSpent(val); }
     });
     row.createCell({
       get: function() { return entry.getComment();},
@@ -1085,7 +1085,7 @@ TaskController.prototype = {
           return;
         }
         parent.dialog('destroy');
-        var timeSpent = form.find("input[name='hourEntry.timeSpent']").val();
+        var minutesSpent = form.find("input[name='hourEntry.minutesSpent']").val();
         var description = form.find("input[name='hourEntry.description']").val();
         var date = form.find("input[name=date]").val();
         var users = form.find("input[name='userIds']");
@@ -1094,7 +1094,7 @@ TaskController.prototype = {
         entry.beginTransaction();
         entry.setComment(description);
         entry.setDate(date);
-        entry.setTimeSpent(timeSpent);
+        entry.setMinutesSpent(minutesSpent);
         var userIds = [];
         if(users.length == 1) {
           userIds.push(users.val());

@@ -52,7 +52,7 @@ $(document).ready(function() {
 });
 </script>
 
-<div class="validateWrapper validateNewHourEntry">
+<div class="validateWrapper validateNewHourEntryAjax">
 <form onsubmit="return false;">
 <table>
 	<tr>
@@ -62,7 +62,7 @@ $(document).ready(function() {
 			<tr>
 				<td>Effort spent</td>
 				<td></td>
-				<td colspan="2"><input type="text" size="10" name="hourEntry.timeSpent" />(e.g.
+				<td colspan="2"><input type="text" size="10" name="hourEntry.minutesSpent" />(e.g.
 				"2h 30min" or "2.5")</td>
 			</tr>
 			<tr>

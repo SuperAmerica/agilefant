@@ -794,7 +794,7 @@
       this.field = $('<input type="text"/>').width('80%').appendTo(this.cell.getElement()).focus();
       var val = this.cell.options.get();
       if(val)  { 
-        val = agilefantUtils.exactEstimateToString(val, true);
+        val = agilefantParsers.exactEstimateToString(val, true);
       }
       this.field.val(val);
         var me = this;
@@ -808,7 +808,7 @@
     };
     EffortEdit.prototype = {
       isValid: function() {
-        if(agilefantUtils.isAftimeString(this.field.val())) {
+        if(agilefantParsers.isHourEntryString(this.field.val())) {
           this.field.removeClass("invalidValue");
           if(this.errorMsg) { 
             this.errorMsg.remove();
@@ -853,7 +853,7 @@
    };
    StoryPointEdit.prototype = {
      isValid: function() {
-       if(agilefantUtils.isStoryPointString(this.field.val())) {
+       if(agilefantParsers.isStoryPointString(this.field.val())) {
          this.field.removeClass("invalidValue");
          if(this.errorMsg) { 
            this.errorMsg.remove();

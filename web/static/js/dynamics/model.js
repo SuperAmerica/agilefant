@@ -383,7 +383,7 @@ StoryModel.prototype.getStoryPoints = function() {
   return this.storyPoints;
 };
 StoryModel.prototype.setStoryPoints = function(storyPoints) {
-  var estimate = agilefantUtils.parseStoryPointString(storyPoints);
+  var estimate = agilefantParsers.parseStoryPointString(storyPoints);
   this.storyPoints = estimate;
   this.save();
 };
@@ -751,7 +751,7 @@ TaskModel.prototype.getEffortLeft = function() {
   return this.effortLeft;
 };
 TaskModel.prototype.setEffortLeft = function(effortLeft) {
-  var estimate = agilefantUtils.parseExactEstimate(effortLeft);
+  var estimate = agilefantParsers.parseExactEstimate(effortLeft);
   if (estimate !== null) {
     this.effortLeft = estimate;
     this.save();
@@ -768,7 +768,7 @@ TaskModel.prototype.getOriginalEstimate = function() {
   return this.originalEstimate;
 };
 TaskModel.prototype.setOriginalEstimate = function(originalEstimate) {
-  var estimate = agilefantUtils.parseExactEstimate(originalEstimate);
+  var estimate = agilefantParsers.parseExactEstimate(originalEstimate);
   if (estimate !== null) {
     this.originalEstimate = estimate;
     this.save();
@@ -938,14 +938,14 @@ TaskHourEntryModel.prototype.setData = function(data, noBubling) {
    * noBubling is set true when setData is called from singleton updater to prevent infinite loops
    * as task.setData calls the singleton and this methods calls task.setData.
    */
-  if(!noBubling && (this.persistedData && this.timeSpent != this.persistedData.timeSpent)) {
+  if(!noBubling && (this.persistedData && this.minutesSpent != this.persistedData.minutesSpent)) {
     this.task.reloadData();
   }
   this.user = data.user;
   if(data.user) {
     this.userId = data.user.id;
   }
-  this.timeSpent = data.minutesSpent;
+  this.minutesSpent = data.minutesSpent;
   this.description = data.description;
   this.date = data.dateMilliSeconds;
   this.dateStr = agilefantUtils.dateToString(this.date);
@@ -957,11 +957,11 @@ TaskHourEntryModel.prototype.setData = function(data, noBubling) {
 TaskHourEntryModel.prototype.getHashCode = function() {
   return "hourEntry-"+this.id;
 };
-TaskHourEntryModel.prototype.getTimeSpent = function() {
-  return this.timeSpent;
+TaskHourEntryModel.prototype.getMinutesSpent = function() {
+  return this.minutesSpent;
 };
-TaskHourEntryModel.prototype.setTimeSpent = function(timeSpent) {
-  this.timeSpent = agilefantUtils.parseHourEntry(timeSpent);
+TaskHourEntryModel.prototype.setMinutesSpent = function(minutesSpent) {
+  this.minutesSpent = agilefantParsers.parseHourEntry(minutesSpent);
   this.save();
 };
 TaskHourEntryModel.prototype.setUser = function(userId) {
@@ -1026,7 +1026,7 @@ TaskHourEntryModel.prototype.save = function(synchronous, callback) {
   }
   data.date = this.dateStr;
   data["hourEntry.description"] = this.description;
-  data["hourEntry.minutesSpent"] = this.timeSpent;
+  data["hourEntry.minutesSpent"] = this.minutesSpent;
 
   data.taskId = this.task.getId();
   data.hourEntryId = this.id;

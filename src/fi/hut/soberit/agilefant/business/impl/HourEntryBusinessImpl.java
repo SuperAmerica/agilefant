@@ -1,6 +1,7 @@
 package fi.hut.soberit.agilefant.business.impl;
 
 import java.text.ParseException;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -8,6 +9,7 @@ import java.util.Set;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import fi.hut.soberit.agilefant.business.HourEntryBusiness;
@@ -160,12 +162,21 @@ public class HourEntryBusinessImpl extends GenericBusinessImpl<HourEntry>
         this.taskHourEntryDAO = taskHourEntryDAO;
     }
 
+    @Transactional(propagation = Propagation.SUPPORTS)
+    public long calculateSum(Collection<? extends HourEntry> hourEntries) {
+        long effortSpent = 0;
+        for (HourEntry hourEntry : hourEntries) {
+            effortSpent += hourEntry.getMinutesSpent();
+        }
+        return effortSpent;
+    }
+    
     public void setBacklogHourEntryDAO(BacklogHourEntryDAO backlogHourEntryDAO) {
         this.backlogHourEntryDAO = backlogHourEntryDAO;
     }
     
     public void setUserDAO(UserDAO userDAO) {
         this.userDAO = userDAO;
-    }
-
+    }    
+    
 }

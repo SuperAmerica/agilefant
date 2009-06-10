@@ -1,5 +1,6 @@
 package fi.hut.soberit.agilefant.business;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -50,5 +51,7 @@ public interface HourEntryBusiness extends GenericBusiness<HourEntry> {
 
     long calculateSumByUserAndTimeInterval(User user,
             DateTime startDate, DateTime endDate);
+    
+    long calculateSum(Collection<? extends HourEntry> hourEntries);
 
 }

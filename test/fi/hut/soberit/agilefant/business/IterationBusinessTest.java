@@ -34,6 +34,7 @@ public class IterationBusinessTest {
     TransferObjectBusiness transferObjectBusiness;
     ProjectBusiness projectBusiness;
     StoryBusiness storyBusiness;
+    HourEntryBusiness hourEntryBusiness;
     IterationDAO iterationDAO;
     Iteration iteration;
     List<StoryTO> storiesList;
@@ -42,13 +43,12 @@ public class IterationBusinessTest {
     IterationDataContainer expectedIterationData;
     Task task;
     TaskTO taskTO;
-    
-     
+
     @Before
     public void setUp() {
         iteration = new Iteration();
         iteration.setId(123);
-        
+
         Story story1 = new Story();
         story1.setId(666);
         Story story2 = new Story();
@@ -56,26 +56,30 @@ public class IterationBusinessTest {
         StoryTO storyTO1 = new StoryTO(story1);
         StoryTO storyTO2 = new StoryTO(story2);
         storiesList = Arrays.asList(storyTO1, storyTO2);
-        
+
         task = new Task();
         task.setId(1254);
         taskTO = new TaskTO(task);
         tasksWithoutStoryList = Arrays.asList(task);
         tasksTOsWithoutStoryList = Arrays.asList(taskTO);
-        
+
         expectedIterationData = new IterationDataContainer();
         expectedIterationData.getStories().addAll(storiesList);
-        expectedIterationData.getTasksWithoutStory().addAll(tasksTOsWithoutStoryList);
-        
+        expectedIterationData.getTasksWithoutStory().addAll(
+                tasksTOsWithoutStoryList);
+
         iterationDAO = createMock(IterationDAO.class);
         iterationBusiness.setIterationDAO(iterationDAO);
-        
+
         storyBusiness = createMock(StoryBusiness.class);
         iterationBusiness.setStoryBusiness(storyBusiness);
 
         projectBusiness = createMock(ProjectBusiness.class);
         iterationBusiness.setProjectBusiness(projectBusiness);
-        
+
+        hourEntryBusiness = createMock(HourEntryBusiness.class);
+        iterationBusiness.setHourEntryBusiness(hourEntryBusiness);
+
         transferObjectBusiness = createMock(TransferObjectBusiness.class);
         iterationBusiness.setTransferObjectBusiness(transferObjectBusiness);
     }
@@ -83,32 +87,41 @@ public class IterationBusinessTest {
     @Test
     public void testGetIterationContents_doNotExcludeTasks() {
         Collection<User> assignedUsers = Arrays.asList(new User());
-        
+
         expect(iterationDAO.get(iteration.getId())).andReturn(iteration);
-        expect(projectBusiness.getAssignedUsers((Project)iteration.getParent()))
-            .andReturn(assignedUsers);
-        expect(transferObjectBusiness.constructIterationDataWithUserData(iteration, assignedUsers))
-            .andReturn(storiesList);
-        for (StoryTO storyTO: storiesList) {
+        expect(
+                projectBusiness.getAssignedUsers((Project) iteration
+                        .getParent())).andReturn(assignedUsers);
+        expect(
+                transferObjectBusiness.constructIterationDataWithUserData(
+                        iteration, assignedUsers)).andReturn(storiesList);
+        for (StoryTO storyTO : storiesList) {
             expect(storyBusiness.calculateMetrics(storyTO)).andReturn(null);
         }
         expect(iterationDAO.getTasksWithoutStoryForIteration(iteration))
-            .andReturn(tasksWithoutStoryList);
-        
+                .andReturn(tasksWithoutStoryList);
+
         expect(transferObjectBusiness.constructTaskTO(task, assignedUsers))
-            .andReturn(taskTO);
-        
-        replay(iterationDAO, transferObjectBusiness, projectBusiness, storyBusiness);
-        
-        IterationDataContainer actualIterationData =
-            iterationBusiness.getIterationContents(iteration.getId());
-        
-        assertEquals(expectedIterationData.getStories(), actualIterationData.getStories());
-        assertEquals(expectedIterationData.getTasksWithoutStory(), actualIterationData.getTasksWithoutStory());
-        
-        verify(iterationDAO, transferObjectBusiness, projectBusiness, storyBusiness);
+                .andReturn(taskTO);
+
+        expect(hourEntryBusiness.calculateSum(taskTO.getHourEntries()))
+                .andReturn(Long.valueOf(0));
+
+        replay(iterationDAO, transferObjectBusiness, projectBusiness,
+                storyBusiness, hourEntryBusiness);
+
+        IterationDataContainer actualIterationData = iterationBusiness
+                .getIterationContents(iteration.getId());
+
+        assertEquals(expectedIterationData.getStories(), actualIterationData
+                .getStories());
+        assertEquals(expectedIterationData.getTasksWithoutStory(),
+                actualIterationData.getTasksWithoutStory());
+
+        verify(iterationDAO, transferObjectBusiness, projectBusiness,
+                storyBusiness, hourEntryBusiness);
     }
-    
+
     @Test(expected = ObjectNotFoundException.class)
     public void testGetIterationContents_nullBacklog() {
         expect(iterationDAO.get(0)).andReturn(null);

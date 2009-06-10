@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import fi.hut.soberit.agilefant.business.HourEntryBusiness;
 import fi.hut.soberit.agilefant.business.IterationBusiness;
 import fi.hut.soberit.agilefant.business.ProjectBusiness;
 import fi.hut.soberit.agilefant.business.StoryBusiness;
@@ -33,6 +34,8 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration> implem
     private ProjectBusiness projectBusiness;
     @Autowired
     private StoryBusiness storyBusiness;
+    @Autowired
+    private HourEntryBusiness hourEntryBusiness;
 
     @Autowired
     public void setIterationDAO(IterationDAO iterationDAO) {
@@ -64,6 +67,7 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration> implem
         
         for (Task task : tasksWithoutStory) {
             TaskTO taskTO = transferObjectBusiness.constructTaskTO(task, assignedUsers);
+            taskTO.setEffortSpent(hourEntryBusiness.calculateSum(taskTO.getHourEntries()));
             iterationData.getTasksWithoutStory().add(taskTO);
         }
         
@@ -83,4 +87,7 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration> implem
         this.storyBusiness = storyBusiness;
     }
 
+    public void setHourEntryBusiness(HourEntryBusiness hourEntryBusiness) {
+        this.hourEntryBusiness = hourEntryBusiness;
+    }
 }

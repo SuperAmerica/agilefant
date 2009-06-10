@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import fi.hut.soberit.agilefant.business.HourEntryBusiness;
 import fi.hut.soberit.agilefant.business.ProjectBusiness;
 import fi.hut.soberit.agilefant.business.TransferObjectBusiness;
 import fi.hut.soberit.agilefant.db.TaskHourEntryDAO;
@@ -31,6 +32,9 @@ public class TransferObjectBusinessImpl implements TransferObjectBusiness {
     @Autowired
     private TaskHourEntryDAO taskHourEntryDAO;
     
+    @Autowired
+    private HourEntryBusiness hourEntryBusiness;
+    
     /** {@inheritDoc} */
     @Transactional(readOnly = true)
     public Collection<StoryTO> constructIterationDataWithUserData(
@@ -43,6 +47,7 @@ public class TransferObjectBusinessImpl implements TransferObjectBusiness {
             
             for (Task task : story.getTasks()) {
                 TaskTO taskTO = this.constructTaskTO(task, assignedUsers);
+                taskTO.setEffortSpent(hourEntryBusiness.calculateSum(taskTO.getHourEntries()));
                 storyTO.getTasks().add(taskTO);
             }
             iterationStories.add(storyTO);
@@ -68,6 +73,7 @@ public class TransferObjectBusinessImpl implements TransferObjectBusiness {
     @Transactional(readOnly = true)
     public TaskTO constructTaskTO(Task task, Collection<User> assignedUsers) {
         TaskTO taskTO = new TaskTO(task, constructHourEntries(task));
+        taskTO.setEffortSpent(hourEntryBusiness.calculateSum(taskTO.getHourEntries()));
         
         for (User responsible : taskTO.getResponsibles()) {
             ResponsibleContainer rc
@@ -109,4 +115,8 @@ public class TransferObjectBusinessImpl implements TransferObjectBusiness {
         this.taskHourEntryDAO = taskHourEntryDAO;
     }
 
+    public void setHourEntryBusiness(HourEntryBusiness hourEntryBusiness) {
+        this.hourEntryBusiness = hourEntryBusiness;
+    }
+    
 }

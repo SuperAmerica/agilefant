@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import fi.hut.soberit.agilefant.model.Task;
-import fi.hut.soberit.agilefant.model.TaskHourEntry;
 import fi.hut.soberit.agilefant.util.ResponsibleContainer;
 import flexjson.JSON;
 
@@ -13,8 +12,9 @@ public class TaskTO extends Task {
     // Helper fields
     
     private Collection<ResponsibleContainer> userData = new ArrayList<ResponsibleContainer>();
-    private Collection<HourEntryTO> hourEntries;
-    
+    private Collection<HourEntryTO> hourEntries = new ArrayList<HourEntryTO>();
+    private long effortSpent;    
+
     public TaskTO(Task task) {
         this.setId(task.getId());
         this.setName(task.getName());
@@ -53,5 +53,14 @@ public class TaskTO extends Task {
     public Collection<HourEntryTO> getHourEntries() {
         return hourEntries;
     }
+
+    public long getEffortSpent() {
+        return effortSpent;
+    }
+
+    public void setEffortSpent(long effortSpent) {
+        this.effortSpent = effortSpent;
+    }
+
 }
 

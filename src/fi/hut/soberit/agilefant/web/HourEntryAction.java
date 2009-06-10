@@ -19,6 +19,7 @@ import fi.hut.soberit.agilefant.business.ProjectBusiness;
 import fi.hut.soberit.agilefant.business.StoryBusiness;
 import fi.hut.soberit.agilefant.business.TaskBusiness;
 import fi.hut.soberit.agilefant.business.UserBusiness;
+import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.HourEntry;
 import fi.hut.soberit.agilefant.model.TimesheetLoggable;
 import fi.hut.soberit.agilefant.util.CalendarUtils;
@@ -87,9 +88,9 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
      * {@inheritDoc}
      */
     public String delete() {
-        HourEntry h = hourEntryBusiness.retrieve(hourEntryId);
-        if (h == null) {
-            super.addActionError(super.getText("hourEntry.notFound"));
+        try {
+            hourEntry = hourEntryBusiness.retrieve(hourEntryId);
+        } catch (ObjectNotFoundException onfe) {
             return CRUDAction.AJAX_ERROR;
         }
         hourEntryBusiness.delete(hourEntryId);
@@ -100,8 +101,11 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
      * {@inheritDoc}
      */
     public String edit() {
-
-        hourEntry = hourEntryBusiness.retrieve(hourEntryId);
+        try {
+            hourEntry = hourEntryBusiness.retrieve(hourEntryId);
+        } catch (ObjectNotFoundException onfe) {
+            return Action.ERROR;
+        }
         if (hourEntry == null) {
             super.addActionError(super.getText("hourEntry.notFound"));
             create();
@@ -341,6 +345,10 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
 
     public void setTaskId(int taskId) {
         this.taskId = taskId;
+    }
+
+    public void setUserBusiness(UserBusiness userBusiness) {
+        this.userBusiness = userBusiness;
     }
 
 }

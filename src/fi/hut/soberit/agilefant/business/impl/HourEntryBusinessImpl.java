@@ -106,7 +106,7 @@ public class HourEntryBusinessImpl extends GenericBusinessImpl<HourEntry>
      */
     public void addHourEntryForMultipleUsers(TimesheetLoggable parent, HourEntry hourEntry, Set<Integer> userIds) {
         for (int id : userIds) {
-            User current = getUserDAO().get(id);
+            User current = userDAO.get(id);
             if(current != null) {
                 hourEntry.setUser(current);
                 store(parent,hourEntry);
@@ -115,13 +115,7 @@ public class HourEntryBusinessImpl extends GenericBusinessImpl<HourEntry>
         hourEntry.setUser(null);
     }
 
-    public void setUserDAO(UserDAO userDAO) {
-        this.userDAO = userDAO;
-    }
 
-    public UserDAO getUserDAO() {
-        return userDAO;
-    }
 
     public void updateMultiple(Map<Integer, String[]> userIds,
             Map<Integer, String[]> dates, Map<Integer, String[]> efforts,
@@ -164,6 +158,14 @@ public class HourEntryBusinessImpl extends GenericBusinessImpl<HourEntry>
 
     public void setTaskHourEntryDAO(TaskHourEntryDAO taskHourEntryDAO) {
         this.taskHourEntryDAO = taskHourEntryDAO;
+    }
+
+    public void setBacklogHourEntryDAO(BacklogHourEntryDAO backlogHourEntryDAO) {
+        this.backlogHourEntryDAO = backlogHourEntryDAO;
+    }
+    
+    public void setUserDAO(UserDAO userDAO) {
+        this.userDAO = userDAO;
     }
 
 }

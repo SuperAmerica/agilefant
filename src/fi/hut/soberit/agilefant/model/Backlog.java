@@ -49,7 +49,7 @@ import flexjson.JSON;
 // subclass types discriminated using string column
 @DiscriminatorColumn(name = "backlogtype", discriminatorType = DiscriminatorType.STRING)
 @Table(name = "backlogs")
-public abstract class Backlog {
+public abstract class Backlog implements TimesheetLoggable {
 
     private int id;
 

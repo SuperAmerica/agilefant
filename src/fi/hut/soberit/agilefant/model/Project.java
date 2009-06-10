@@ -43,7 +43,7 @@ import flexjson.JSON;
  */
 @Entity
 @BatchSize(size = 20)
-public class Project extends Backlog implements TimesheetLoggable {
+public class Project extends Backlog {
 
     private ProjectType projectType;
 

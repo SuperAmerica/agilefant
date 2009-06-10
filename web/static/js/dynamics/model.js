@@ -948,6 +948,7 @@ TaskHourEntryModel.prototype.setData = function(data, noBubling) {
   this.timeSpent = data.minutesSpent;
   this.description = data.description;
   this.date = data.dateMilliSeconds;
+  this.dateStr = agilefantUtils.dateToString(this.date);
   this.id = data.id;
 
   this.callEditListeners({bubbleEvent: []});

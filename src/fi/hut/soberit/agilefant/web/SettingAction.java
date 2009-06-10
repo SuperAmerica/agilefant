@@ -12,6 +12,7 @@ import com.opensymphony.xwork.ActionSupport;
 
 import fi.hut.soberit.agilefant.business.SettingBusiness;
 import fi.hut.soberit.agilefant.business.impl.SettingBusinessImpl;
+import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.Setting;
 
 @Component("settingAction")
@@ -29,8 +30,10 @@ public class SettingAction extends ActionSupport {
     private String optimalHighValue;
     private String criticalLowValue;
     private Setting setting;
-    private SettingBusiness settingBusiness;
     private String projectBurndown;
+    
+    @Autowired
+    private SettingBusiness settingBusiness;
     
     @Override
     public String execute() throws Exception {        
@@ -57,9 +60,10 @@ public class SettingAction extends ActionSupport {
      * {@inheritDoc}
      */
     public String delete() {
-        Setting s = settingBusiness.retrieve(settingID);
-        if (s == null) {
-            super.addActionError(super.getText("setting.notFound"));
+        try {
+             setting = settingBusiness.retrieve(settingID);
+        }
+        catch (ObjectNotFoundException onfe) {
             return Action.ERROR;
         }
         settingBusiness.delete(settingID);
@@ -88,8 +92,13 @@ public class SettingAction extends ActionSupport {
     public String store() {
         Setting storable = new Setting();
         if (settingID > 0) {
-            storable = settingBusiness.retrieve(settingID);
-        }else if( name != null ){
+            try {
+                storable = settingBusiness.retrieve(settingID);                
+            } catch (ObjectNotFoundException onfe) {
+                return Action.ERROR;
+            }
+            
+        } else if( name != null ){
             storable = settingBusiness.retrieveByName(name); 
         }
         if (storable == null) {

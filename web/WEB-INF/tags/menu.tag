@@ -330,7 +330,7 @@ Agilefant
         <li>
     </c:otherwise>
 </c:choose>
-    <a href="contextView.action?contextName=${currentContext}&contextObjectId=${currentPageId}&resetContextView=true">
+    <a href="contextView.action?contextName=${currentBacklogContext}&contextObjectId=${currentBacklogId}&resetContextView=true">
     <span>
     <img src="static/img/backlog.png" alt="Backlogs" />
     Backlogs

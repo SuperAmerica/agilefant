@@ -52,5 +52,22 @@ public abstract class SpringTagSupport extends TagSupport {
         }
         return (T) bean;
     }
+    
+    @SuppressWarnings("unchecked")
+    protected <T> T getSessionAttribute(String name) {
+        return (T) this.getPageContext().getSession().getAttribute(name);
+    }
+
+    @SuppressWarnings("unchecked")
+    protected <T> T getPageAttribute(String name) {
+        return (T) this.getPageContext().getAttribute(name);
+    }
+    
+    protected void setSessionAttribute(String name, Object value) {
+        this.getPageContext().getSession().setAttribute(name, value);
+    }
+    protected void setPageAttribute(String name, Object value) {
+        this.getPageContext().setAttribute(name, value);
+    }
 
 }

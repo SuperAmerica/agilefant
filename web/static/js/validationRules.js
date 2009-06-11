@@ -31,7 +31,7 @@ var agilefantParsers = {
 	    return "&mdash;";
 	  }
 	  else {
-	    return storyPoints + "sp.";
+	    return storyPoints + "sp";
 	  }
 	},
 	parseStoryPointString: function(string) {

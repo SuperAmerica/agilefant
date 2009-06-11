@@ -1090,6 +1090,12 @@
               tooltip: 'Story name',
               sort: agilefantUtils.comparators.nameComparator
           }, 'story-row');
+      addTableColumn(opts,
+              { minwidth: 60, auto: true },
+                  { name: 'State',
+                    tooltip: 'Story state',
+                    sort: null
+                  }, 'story-row');
       addTableColumn(opts,                      
           { minwidth: 60, auto: true },
           { name: 'Responsibles',

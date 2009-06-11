@@ -288,6 +288,7 @@ StoryModel.prototype.setData = function(data, includeMetrics) {
   this.id = data.id;
   this.userIds = null;
   this.storyPoints = data.storyPoints;
+  this.state = data.state;
   var event = [];
   if(includeMetrics && data.metrics) {
     this.metrics = data.metrics;
@@ -358,6 +359,9 @@ StoryModel.prototype.removeTask = function(task, noReload) {
 StoryModel.prototype.copy = function() {
   var copy = new StoryModel({}, this.iteration);
   copy.setData(this, true);
+  // We have to copy users/userIds manually because setData only supports userData
+  copy.users = this.users;
+  copy.userIds = this.userIds;
   if(!copy.metrics) { 
     copy.metrics = {};
   }
@@ -387,6 +391,13 @@ StoryModel.prototype.setStoryPoints = function(storyPoints) {
   this.storyPoints = estimate;
   this.save();
 };
+StoryModel.prototype.getState = function() {
+	  return this.state;
+	};
+	StoryModel.prototype.setState = function(state) {
+	  this.state = state;
+	  this.save();
+	};
 StoryModel.prototype.getDescription = function() {
   return this.description;
 };
@@ -509,7 +520,8 @@ StoryModel.prototype.save = function(synchronous, callback) {
       "story.description": this.description,
       "backlogId": this.iteration.iterationId,
       "userIds": [],
-      "story.storyPoints": this.storyPoints
+      "story.storyPoints": this.storyPoints,
+      "story.state": this.state
   };
   if (this.userIds) {
     data.userIds = this.userIds;
@@ -520,6 +532,7 @@ StoryModel.prototype.save = function(synchronous, callback) {
       data.userIds.push(this.users[i].user.id);
     }
   }
+  
   if(this.priority) { 
     data.priority = this.priority;
   }

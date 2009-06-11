@@ -352,6 +352,34 @@ li.dynamictable-captionaction {
 	background-color: #00bb44;
 	color: #eee;
 }
+.storyState {
+	display: block;
+	width: 80px;
+	padding: 1px;
+	text-align: center;
+	-moz-border-radius: 2px;
+  	border-radius: 2px;
+}
+.storyStateNOT_STARTED {
+	background-color: #dddddd;
+}
+.storyStateSTARTED {
+	background-color: #ffdd88;
+}
+.storyStatePENDING {
+	background-color: #66ddff;
+}
+.storyStateBLOCKED {
+	background-color: #e33;
+	color: #eee;
+}
+.storyStateIMPLEMENTED {
+	background-color: #66ff66;
+}
+.storyStateDONE {
+	background-color: #00bb44;
+	color: #eee;
+}
 .dynamictable .dynamictable-row .description-cell {
 	min-height: 0px !important;	
 /*	max-height: 15em !important;*/

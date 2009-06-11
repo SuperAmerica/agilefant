@@ -114,6 +114,22 @@ var agilefantUtils = {
 		var text = agilefantUtils.stateToString(state);
 		return '<div class="taskState taskState'+state+'">'+text+'</div>';
 	},
+	storyStates: {
+		  "NOT_STARTED": "Not Started",
+		  "STARTED": "Started",
+		  "PENDING": "Pending",
+		  "BLOCKED": "Blocked",
+		  "IMPLEMENTED": "Implemented",
+		  "DONE": "Done"
+		},
+		storyStateToString: function(state) {
+		  return agilefantUtils.storyStates[state];
+		},
+		storyStateDecorator: function(state) {
+			var text = agilefantUtils.storyStateToString(state);
+			return '<div class="storyState storyState'+state+'">'+text+'</div>';
+		},	
+	
 	priorities: {
 	"UNDEFINED": "undefined",
     "BLOCKER": "+++++",

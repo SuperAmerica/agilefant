@@ -143,6 +143,15 @@ IterationController.prototype = {
         set: function(val){ story.setName(val);}});
       expand.activateSortHandle();
       
+      var state = row.createCell({
+          type: "select",
+          items: agilefantUtils.storyStates,
+          set: function(val) { story.setState(val); },
+          get: function() { return story.getState(); },
+          decorator: agilefantUtils.storyStateToString,
+          htmlDecorator: agilefantUtils.storyStateDecorator
+        });
+      
       var users = row.createCell({
         type: "user",
         get: function() { return story.getUsers(); },
@@ -312,7 +321,8 @@ IterationController.prototype = {
       this.tasksWithoutStoryContainer = story;
       var row = me.view.createRow(story);
       var expand = row.createCell();
-        var name = row.createCell().setValue("Tasks without story.");
+      var name = row.createCell().setValue("Tasks without story.");
+      var state = row.createCell();
       var responsibles = row.createCell();
       var tasks = row.createCell({
         get: function() { return story.getDoneTasks() + " / " + story.getTotalTasks(); }
@@ -403,9 +413,44 @@ IterationController.prototype = {
         type: "text", 
         get: function() { return " "; },
         set: function(val){ fakeStory.setName(val);}});
-      var responsibles = row.createCell();
+      var state = row.createCell({
+          type: "select",
+          items: agilefantUtils.storyStates,
+          set: function(val) { fakeStory.setState(val); },
+          get: function() { return fakeStory.getState(); },
+          decorator: agilefantUtils.storyStateToString,
+          htmlDecorator: agilefantUtils.storyStateDecorator
+        });
+      var user = row.createCell({
+          type: "user",
+          get: function() { return fakeStory.getUsers(); },
+          getEdit: function() { 
+            var users = [];
+            var tmp = fakeStory.getUsers();
+            if(tmp) {
+              for(var i = 0; i < tmp.length; i++) {
+                if(tmp[i]) { 
+                  users.push(tmp[i].user);
+                }
+              }
+            }
+            return users;
+          },
+          decorator: agilefantUtils.userlistToHTML,
+          set: function(users) {
+        	  fakeStory.setUsers(agilefantUtils.createPseudoUserContainer(users)); 
+        	  fakeStory.setUserIds(agilefantUtils.objectToIdArray(users));    
+          },
+          backlogId: fakeStory.backlog.getId(),
+          storyId: fakeStory.getId()
+        });
       var tasks = row.createCell();
-      var estimate = row.createCell();
+      var estimate = row.createCell({
+          type: "storyPoint",
+          get: function() { return fakeStory.getStoryPoints(); },
+          set: function(val) { fakeStory.setStoryPoints(val); },
+          decorator: agilefantParsers.storyPointsToString
+        });
       var elsum = row.createCell();
       var oesum = row.createCell();
       if(agilefantUtils.isTimesheetsEnabled()) {

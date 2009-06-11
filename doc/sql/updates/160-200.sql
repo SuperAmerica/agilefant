@@ -1,16 +1,17 @@
-/* If this is not set we can only create deterministic functions */
+﻿/* If this is not set we can only create deterministic functions */
 /* SET GLOBAL log_bin_trust_function_creators = 1; */
 
 DROP PROCEDURE IF EXISTS DropFK;
 
-DELIMITER $$ ;
-CREATE PROCEDURE ExecDyn(IN sql_str VARCHAR(1000))
+delimiter //
+
+CREATE PROCEDURE ExecDyn(IN sqlstr VARCHAR(1000))
 BEGIN
-	SET @sql = sql_str;
-	PREPARE stmt FROM @sql;
-	EXECUTE stmt;
-	DEALLOCATE PREPARE stmt;
-END $$
+  SET @sql = sqlstr;
+  PREPARE stmt FROM @sql;
+  EXECUTE stmt;
+  DEALLOCATE PREPARE stmt;
+END //
 
 CREATE PROCEDURE DropFK(IN table_name VARCHAR(100), IN key_name VARCHAR(100))
 	NOT DETERMINISTIC
@@ -18,7 +19,7 @@ CREATE PROCEDURE DropFK(IN table_name VARCHAR(100), IN key_name VARCHAR(100))
 	BEGIN
 		Call ExecDyn(CONCAT('ALTER TABLE ', table_name,' DROP FOREIGN KEY ', key_name));
 		Call ExecDyn(CONCAT('ALTER TABLE ', table_name,' DROP KEY ', key_name));
-	END $$
+	END //
 
 CREATE PROCEDURE DropAllForeignKeys()
 BEGIN
@@ -31,7 +32,7 @@ BEGIN
 		FROM information_schema.key_column_usage
 		WHERE referenced_table_name IS NOT NULL
 			AND table_schema='agilefant';
-	
+
 	DECLARE CONTINUE HANDLER FOR SQLSTATE '02000' SET done = TRUE;
 	OPEN cur;
 
@@ -43,9 +44,11 @@ BEGIN
 		END IF;
 		CALL DropFK(table_str,constraint_str);
 	END LOOP;
-END $$
+END //
 
-CALL DropAllForeignKeys() $$
+CALL DropAllForeignKeys() //
+
+delimiter ;
 
 /*** ASSIGNMENT ***/
 
@@ -306,4 +309,3 @@ SELECT 'Foreign keys for team user pivot' AS status;
 ALTER TABLE team_user ADD FOREIGN KEY (Team_id) REFERENCES team(id);
 ALTER TABLE team_user ADD FOREIGN KEY (User_id) REFERENCES users(id);
 ALTER TABLE team_user ADD PRIMARY KEY (Team_id, User_id);
-

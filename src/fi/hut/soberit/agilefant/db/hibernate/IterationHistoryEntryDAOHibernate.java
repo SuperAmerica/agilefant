@@ -1,5 +1,8 @@
 package fi.hut.soberit.agilefant.db.hibernate;
 
+import java.util.HashMap;
+import java.util.List;
+
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
@@ -38,6 +41,15 @@ public class IterationHistoryEntryDAOHibernate extends
                 Projections.sum("originalEstimate")));
         Object[] results = (Object[]) crit.uniqueResult();
         return Pair.create((ExactEstimate) results[0], (ExactEstimate) results[1]);
+    }
+    
+    
+    public List<IterationHistoryEntry> getHistoryEntriesForIteration(
+            int iterationId) {
+        Criteria crit = getCurrentSession().createCriteria(IterationHistoryEntry.class);
+        crit.add(Restrictions.eq("iteration.id", iterationId));
+        crit.addOrder(Order.asc("timestamp"));
+        return asList(crit);
     }
     
 }

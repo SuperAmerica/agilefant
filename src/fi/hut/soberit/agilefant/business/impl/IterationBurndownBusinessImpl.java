@@ -48,6 +48,8 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
     protected static final int DEFAULT_WIDTH = 780;
     protected static final int DEFAULT_HEIGHT = 600;
     
+    
+    
     /* Series colors */
     protected static Color BURNDOWN_COLOR = new Color(220, 100, 87);
     protected static Color REFERENCE_COLOR = new Color(90, 145, 210);
@@ -127,11 +129,17 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
         return burndown;
     }
     
+    /**
+     * Sets the chart's and plot's background colors.
+     */
     protected void formatChartStyle(JFreeChart chart) {
         chart.setBackgroundPaint(CHART_BACKGROUND_COLOR);
         chart.getPlot().setBackgroundPaint(PLOT_BACKGROUND_COLOR);
     }
     
+    /**
+     * Sets the correct start and end dates and date format.
+     */
     protected void formatChartAxes(JFreeChart chart, DateTime start, DateTime end) {
         XYPlot plot = chart.getXYPlot();
         DateAxis axis = (DateAxis)plot.getDomainAxis();

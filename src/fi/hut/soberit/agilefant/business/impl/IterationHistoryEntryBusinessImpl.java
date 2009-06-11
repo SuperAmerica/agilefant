@@ -1,8 +1,14 @@
 package fi.hut.soberit.agilefant.business.impl;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.joda.time.DateTime;
+import org.joda.time.Days;
+import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import fi.hut.soberit.agilefant.business.IterationHistoryEntryBusiness;
@@ -30,7 +36,7 @@ public class IterationHistoryEntryBusinessImpl extends
         this.iterationHistoryEntryDAO = iterationHistoryEntryDAO;
         this.genericDAO = iterationHistoryEntryDAO;
     }
-
+  
     public void updateIterationHistory(int iterationId) {
         Iteration iteration = iterationDAO.get(iterationId);
         IterationHistoryEntry latest = iterationHistoryEntryDAO.retrieveLatest(iterationId);
@@ -42,16 +48,41 @@ public class IterationHistoryEntryBusinessImpl extends
         long oldOriginalEstimateSum = (latest == null) ? 0 : latest.getOriginalEstimateSum();
         long effortLeftSum = (sums.first == null) ? 0 : sums.first.getMinorUnits();
         long originalEstimateSum = (sums.second == null) ? 0 : sums.second.getMinorUnits();
-        newEntry.setEffortLeftSum(effortLeftSum);
-        newEntry.setOriginalEstimateSum(originalEstimateSum);
-        newEntry.setDeltaEffortLeft(effortLeftSum - oldEffortLeftSum);
-        newEntry.setDeltaOriginalEstimate(originalEstimateSum - oldOriginalEstimateSum);
-        iterationHistoryEntryDAO.store(newEntry);        
+        
+        if (latest != null && Days.daysBetween(latest.getTimestamp(), new DateTime()).getDays() == 0) {
+            latest.setEffortLeftSum(effortLeftSum);
+            latest.setOriginalEstimateSum(originalEstimateSum);
+            latest.setDeltaEffortLeft(latest.getDeltaEffortLeft() + effortLeftSum - oldEffortLeftSum);
+            latest.setDeltaOriginalEstimate(latest.getDeltaOriginalEstimate() + originalEstimateSum - oldOriginalEstimateSum);
+            iterationHistoryEntryDAO.store(latest);
+        }
+        else {
+            newEntry.setEffortLeftSum(effortLeftSum);
+            newEntry.setOriginalEstimateSum(originalEstimateSum);
+            newEntry.setDeltaEffortLeft(effortLeftSum - oldEffortLeftSum);
+            newEntry.setDeltaOriginalEstimate(originalEstimateSum - oldOriginalEstimateSum);
+            iterationHistoryEntryDAO.create(newEntry);
+        }
     }
     
+    @Transactional(readOnly = true)
     public ExactEstimate getLatestOriginalEstimateSum(Iteration iteration) {
         IterationHistoryEntry latestEntry = iterationHistoryEntryDAO.retrieveLatest(iteration.getId());
+        if (latestEntry == null) {
+            return new ExactEstimate(0);
+        }
         return new ExactEstimate(latestEntry.getOriginalEstimateSum());
+    }
+    
+    /** {@inheritDoc} */
+    @Transactional(readOnly = true)
+    public Map<LocalDate, IterationHistoryEntry> getHistoryEntriesForIteration(
+            Iteration iteration) {
+        Map<LocalDate, IterationHistoryEntry> entriesMap = new HashMap<LocalDate, IterationHistoryEntry>();
+        for (IterationHistoryEntry entry : iterationHistoryEntryDAO.getHistoryEntriesForIteration(iteration.getId())) {
+            entriesMap.put(entry.getTimestamp().toLocalDate(), entry);
+        }
+        return entriesMap;
     }
     
     public void setIterationDAO(IterationDAO iterationDAO) {

@@ -47,12 +47,8 @@ public class TaskAction extends ActionSupport {
     }
     
     public String ajaxStoreTask() {
-        try {
-            task = taskBusiness.storeTask(task, backlogId, storyId, userIds);
-            populateJsonData();
-        } catch (Exception e) {
-            return CRUDAction.AJAX_ERROR;
-        }
+        task = taskBusiness.storeTask(task, backlogId, storyId, userIds);
+        populateJsonData();
         return CRUDAction.AJAX_SUCCESS;
     }
     

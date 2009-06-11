@@ -1,5 +1,10 @@
 package fi.hut.soberit.agilefant.db;
 
+import java.util.List;
+import java.util.Map;
+
+import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -46,4 +51,14 @@ public class IterationHistoryEntryDAOTest extends AbstractHibernateTests {
         assertEquals(Pair.EMPTY, sums);
     }
 
+    @Test
+    public void testGetHistoryEntriesForIteration() {
+        executeClassSql();
+        List<IterationHistoryEntry> actualEntries
+            = iterationHistoryEntryDAO.getHistoryEntriesForIteration(1);
+        assertNotNull(actualEntries);
+        assertEquals(60, actualEntries.get(0).getEffortLeftSum());
+        assertEquals(60, actualEntries.get(0).getOriginalEstimateSum());
+        assertEquals(4, actualEntries.size());
+    }
 }

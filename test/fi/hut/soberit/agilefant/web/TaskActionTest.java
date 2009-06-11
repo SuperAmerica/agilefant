@@ -50,13 +50,13 @@ public class TaskActionTest {
         verify(taskBusiness, transferObjectBusiness);
     }
     
-    @Test
+    @Test(expected = ObjectNotFoundException.class)
     public void testAjaxStoreTask_error() {
         expect(taskBusiness.storeTask(task, 2, 0, taskAction.getUserIds()))
             .andThrow(new ObjectNotFoundException("Iteration not found"));
         replay(taskBusiness, transferObjectBusiness);
         
-        assertEquals(CRUDAction.AJAX_ERROR, taskAction.ajaxStoreTask());
+        taskAction.ajaxStoreTask();
         
         verify(taskBusiness, transferObjectBusiness);
     }

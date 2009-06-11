@@ -352,18 +352,20 @@ IterationController.prototype = {
       tasks.getElement().hide();
       this.noStoryTaskController = new StoryController(tasks, story, this);
       this.StoryControllers.push(this.noStoryTaskController);
+      var expandButton = commonView.expandCollapse(expand.getElement(), function() {
+        me.noStoryTaskController.showTasks();
+      }, function() {
+        me.noStoryTaskController.hideTasks();
+      });
+      
       buttons.setActionCell({items: [{
         text: "Create task",
         callback: function() {
-          tasks.getElement().show();
+    	  expandButton.trigger("showContents");
           me.noStoryTaskController.createTask();
         }
         }]});
-        this.buttonCells.push(commonView.expandCollapse(expand.getElement(), function() {
-          me.noStoryTaskController.showTasks();
-        }, function() {
-          me.noStoryTaskController.hideTasks();
-        }));
+        this.buttonCells.push(expandButton);
         row.getElement().droppable({
         accept: function(draggable) {
             var isTask = draggable.data("dragTask");
@@ -717,7 +719,7 @@ StoryController.prototype = {
         $(this).data("dragTask", false);
         $(this).data("row", null);
       },
-      handle: expand.getElement()
+      handle : expand.getElement()
     });
     expand.setDragHandle();
   },

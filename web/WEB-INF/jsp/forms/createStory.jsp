@@ -45,7 +45,8 @@ $(document).ready(function() {
     <tr>
       <td>Story point estimate</td>
       <td></td>
-      <td colspan="2"><ww:textfield size="15" name="story.storyPoints" /></td>
+      <td colspan="2"><ww:textfield size="15" name="story.storyPoints" 
+      					id="createStory_storyPointsField"/></td>
     </tr>
 
 <%--
@@ -68,8 +69,8 @@ $(document).ready(function() {
 				name="story.state" id="stateSelect"
 				value="story.state.name"
 				list="@fi.hut.soberit.agilefant.model.StoryState@values()" listKey="name"
-				listValue="getText('todo.state.' + name())"
-				onchange="disableElementIfValue(this, '#createStory_originalEstimateField', 'DONE');"/></td>
+				listValue="getText('story.state.' + name())"
+				onchange="disableElementIfValue(this, '#createStory_storyPointsField', 'DONE');"/></td>
 		</tr>
 
 		<tr>

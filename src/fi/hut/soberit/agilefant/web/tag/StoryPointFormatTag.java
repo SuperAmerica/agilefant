@@ -13,7 +13,7 @@ public class StoryPointFormatTag extends SpringTagSupport {
     
     private Story story;
     
-    public static final String STORY_POINT_UNITS = "sp.";
+    public static final String STORY_POINT_UNITS = "sp";
     
     @Override
     public int doStartTag() throws JspException {

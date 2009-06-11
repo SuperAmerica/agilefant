@@ -117,19 +117,21 @@ $(document).ready(function() {
       <ww:text name="story.priority.${row.priority}" />
     </display:column>
 --%>
-<%--
-    <display:column title="Progress" sortable="false" class="todoColumn">     
+
+    <display:column title="State" sortable="false" class="todoColumn">     
+      <%--
       <c:set var="itemTodos" value="${backlogTodos[row]}"/>
+      --%>
+      
+      <%-- 
       <a class="nameLink" onclick="handleTabEvent('storyTabContainer-${row.id}-${storyListContext}','${dialogContext}',${row.id},1,'${storyListContext}'); return false;">
-      <c:choose>
-        <c:when test="${itemTodos != null && itemTodos.total != 0}">    
-          ${itemTodos.doneTodos} / ${itemTodos.total} TODOs done <br />
-        </c:when>
-        <c:otherwise>   
+      --%>
           <ww:text name="story.state.${row.state}"/><br />
-        </c:otherwise>
-      </c:choose>
+      <%--
       </a>                    
+      --%>
+      
+      <%--
       <c:choose>
         <c:when test="${row.state == 'NOT_STARTED'}" >
           <ww:url id="imgUrl" action="drawExtendedBarChart" includeParams="none">
@@ -156,6 +158,7 @@ $(document).ready(function() {
           <ww:param name="done" value="1" /> </ww:url> 
         </c:when>
       </c:choose>
+      
       <div style="margin:0px auto;background-image:url(${imgUrl}); background-position: -16px -4px; height:8px; width:82px; background-repeat:no-repeat;border-right:1px solid #BFBFBF; "></div>
               
       <c:choose>
@@ -170,9 +173,11 @@ $(document).ready(function() {
           </ww:url> 
           <div style="margin:0px auto;background-image:url(${imgUrl}); background-position: -16px -4px; height:8px; width:82px; background-repeat:no-repeat;border-right:1px solid #BFBFBF; "></div>                              
         </c:when>
-      </c:choose>     
+      </c:choose>
+      --%>     
     </display:column>
       
+    <%--
     <display:column sortable="true" sortProperty="effortLeft" defaultorder="descending"
       title="Effort Left<br/>" class="effortLeftColumn">
       <span style="white-space: nowrap">
@@ -218,7 +223,7 @@ $(document).ready(function() {
         <td>&nbsp;</td>
         <td>&nbsp;</td>
         <td>&nbsp;</td>
-        <td><c:out value="Total: ${storyPointSum}sp." /></td>
+        <td><c:out value="Total: ${storyPointSum}sp" /></td>
         <td>&nbsp;</td>
         <%-- Effort left --%>
         <%--

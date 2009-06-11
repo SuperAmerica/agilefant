@@ -68,7 +68,7 @@ $(document).ready(function() {
       <tr>
         <td>Story point estimate</td>
         <td></td>
-        <td colspan="2"><ww:textfield size="15" name="story.storyPoints" /></td>
+        <td colspan="2"><ww:textfield size="15" id="storyPointsField_${story.id}-${storyListContext}" name="story.storyPoints" /></td>
       </tr>
       
 			<%--
@@ -224,7 +224,7 @@ $(document).ready(function() {
 					id="stateSelect_${story.id}-${storyListContext}"
 					value="story.state.name"
 					list="@fi.hut.soberit.agilefant.model.StoryState@values()" listKey="name"
-					listValue="getText('todo.state.' + name())"  /></td>
+					listValue="getText('story.state.' + name())"  /></td>
 			</tr>
 	
 			<tr>

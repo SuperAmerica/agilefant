@@ -137,31 +137,11 @@ public class IterationHistoryEntryBusinessTest {
     
     @Test
     public void testGetHistoryEntriesForIteration() {
-        IterationHistoryEntry entry1 = new IterationHistoryEntry();
-        entry1.setTimestamp(new DateTime(2009,4,1,0,0,0,0));
-        entry1.setEffortLeftSum(120);
-        entry1.setOriginalEstimateSum(240);
-        IterationHistoryEntry entry2 = new IterationHistoryEntry();
-        entry2.setTimestamp(new DateTime(2009,4,2,0,0,0,0));
-        entry2.setEffortLeftSum(800);
-        entry2.setOriginalEstimateSum(1600);
-        
-        List<IterationHistoryEntry> returnedList = new ArrayList<IterationHistoryEntry>();
-        returnedList.add(entry1);
-        returnedList.add(entry2);
-        
         expect(iterationHistoryEntryDAO.getHistoryEntriesForIteration(iteration.getId()))
-            .andReturn(returnedList);
+            .andReturn(null);
         replay(iterationHistoryEntryDAO);
         
-        
-        Map<LocalDate, IterationHistoryEntry> actualEntries
-            = iterationHistoryEntryBusiness.getHistoryEntriesForIteration(iteration);
-        
-        assertEquals(120, actualEntries.get(new LocalDate(2009,4,1)).getEffortLeftSum());
-        assertEquals(240, actualEntries.get(new LocalDate(2009,4,1)).getOriginalEstimateSum());
-        assertEquals(800, actualEntries.get(new LocalDate(2009,4,2)).getEffortLeftSum());
-        assertEquals(1600, actualEntries.get(new LocalDate(2009,4,2)).getOriginalEstimateSum());
+        iterationHistoryEntryBusiness.getHistoryEntriesForIteration(iteration);
         
         verify(iterationHistoryEntryDAO);
     }

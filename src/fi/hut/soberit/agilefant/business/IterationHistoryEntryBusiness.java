@@ -1,9 +1,7 @@
 package fi.hut.soberit.agilefant.business;
 
 import java.util.List;
-import java.util.Map;
 
-import org.joda.time.LocalDate;
 
 import fi.hut.soberit.agilefant.model.ExactEstimate;
 import fi.hut.soberit.agilefant.model.Iteration;
@@ -22,7 +20,7 @@ public interface IterationHistoryEntryBusiness extends
      * Will get data from <code>startDates</code> 00.00.00 to
      * <code>endDates</code> 23.59.59.
      */
-    public Map<LocalDate, IterationHistoryEntry> getHistoryEntriesForIteration(
+    public List<IterationHistoryEntry> getHistoryEntriesForIteration(
             Iteration iteration);
     
     

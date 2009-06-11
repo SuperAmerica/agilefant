@@ -3,6 +3,10 @@ package fi.hut.soberit.agilefant.business;
 import java.awt.Color;
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
@@ -12,11 +16,15 @@ import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.data.time.TimeSeriesDataItem;
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.junit.*;
+
+import sun.misc.GC.LatencyRequest;
 
 import fi.hut.soberit.agilefant.business.impl.IterationBurndownBusinessImpl;
 import fi.hut.soberit.agilefant.model.ExactEstimate;
 import fi.hut.soberit.agilefant.model.Iteration;
+import fi.hut.soberit.agilefant.model.IterationHistoryEntry;
 import fi.hut.soberit.agilefant.util.ExactEstimateUtils;
 import static org.junit.Assert.*;
 
@@ -39,6 +47,7 @@ public class IterationBurndownBusinessTest extends IterationBurndownBusinessImpl
     DateTime startDate;
     DateTime endDate;
     ExactEstimate originalEstimateSum;
+    IterationHistoryEntry entry;
     JFreeChart chart;
        
     @Before
@@ -57,20 +66,40 @@ public class IterationBurndownBusinessTest extends IterationBurndownBusinessImpl
         iteration.setEndDate(endDate.toDate());
         originalEstimateSum = new ExactEstimate(100 * 60);
         
-        chart = ChartFactory.createTimeSeriesChart(BURNDOWN_NAME,
+        chart = ChartFactory.createTimeSeriesChart(BURNDOWN_SERIES_NAME,
                 DATE_AXIS_LABEL,
                 EFFORT_AXIS_LABEL,
                 null, true, true, false);
+        
+        entry = new IterationHistoryEntry();
+        entry.setTimestamp(new DateTime(2009,1,1,0,0,0,0));
+        entry.setEffortLeftSum(240);
     }
     
     @Test
     public void testGetIterationBurndown() {
+        expect(iterationHistoryEntryBusiness.getLatestOriginalEstimateSum(iteration))
+        .andReturn(originalEstimateSum);
+        expect(iterationHistoryEntryBusiness.getHistoryEntriesForIteration(iteration))
+            .andReturn(Arrays.asList(entry));
+        replay(iterationHistoryEntryBusiness);
+        
         assertNotNull(iterationBurndownBusiness.getIterationBurndown(iteration));
+        
+        verify(iterationHistoryEntryBusiness);
     }
     
     @Test
     public void testConstructChart() {
+        expect(iterationHistoryEntryBusiness.getLatestOriginalEstimateSum(iteration))
+            .andReturn(originalEstimateSum);
+        expect(iterationHistoryEntryBusiness.getHistoryEntriesForIteration(iteration))
+            .andReturn(Arrays.asList(entry));
+        replay(iterationHistoryEntryBusiness);
+        
         assertEquals(JFreeChart.class, super.constructChart(iteration).getClass());
+        
+        verify(iterationHistoryEntryBusiness);
     }
     
     @Test
@@ -93,12 +122,16 @@ public class IterationBurndownBusinessTest extends IterationBurndownBusinessImpl
     
     @Test
     public void testGetDataset() {
+        
         expect(iterationHistoryEntryBusiness.getLatestOriginalEstimateSum(iteration))
             .andReturn(originalEstimateSum);
+        expect(iterationHistoryEntryBusiness.getHistoryEntriesForIteration(iteration))
+            .andReturn(Arrays.asList(entry));
         replay(iterationHistoryEntryBusiness);
         
         TimeSeriesCollection actualTimeSeries = super.getDataset(iteration);
         assertNotNull(actualTimeSeries.getSeries(REFERENCE_SERIES_NAME));
+        assertNotNull(actualTimeSeries.getSeries(BURNDOWN_SERIES_NAME));
         
         verify(iterationHistoryEntryBusiness);
     }
@@ -126,6 +159,33 @@ public class IterationBurndownBusinessTest extends IterationBurndownBusinessImpl
         assertEquals("Reference end instant not correct", endPoint.getPeriod(),
                 actualSeries.getDataItem(1).getPeriod());
         
+    }
+    
+    @Test
+    public void testGetBurndownTimeSeries() {
+        IterationHistoryEntry entry1 = new IterationHistoryEntry();
+        entry1.setTimestamp(startDate);
+        entry1.setEffortLeftSum(100);
+        entry1.setOriginalEstimateSum(100);
+        IterationHistoryEntry entry2 = new IterationHistoryEntry();
+        entry2.setTimestamp(startDate.plusDays(1));
+        entry2.setEffortLeftSum(0);
+        entry2.setOriginalEstimateSum(100);
+        
+        List<IterationHistoryEntry> returnedList = Arrays.asList(entry1, entry2);
+        
+        expect(iterationHistoryEntryBusiness.getHistoryEntriesForIteration(iteration))
+            .andReturn(returnedList);
+        replay(iterationHistoryEntryBusiness);
+        
+        TimeSeries actualSeries = super.getBurndownTimeSeries(iteration);
+        
+        assertEquals(ExactEstimateUtils.extractMajorUnits(new ExactEstimate(entry1.getEffortLeftSum())),
+                actualSeries.getDataItem(0).getValue());
+        assertEquals(ExactEstimateUtils.extractMajorUnits(new ExactEstimate(entry2.getEffortLeftSum())),
+                actualSeries.getDataItem(1).getValue());
+        
+        verify(iterationHistoryEntryBusiness);
     }
     
     @Test

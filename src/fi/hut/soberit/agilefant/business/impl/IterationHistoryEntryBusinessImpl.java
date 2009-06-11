@@ -1,6 +1,7 @@
 package fi.hut.soberit.agilefant.business.impl;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.joda.time.DateTime;
@@ -76,13 +77,8 @@ public class IterationHistoryEntryBusinessImpl extends
     
     /** {@inheritDoc} */
     @Transactional(readOnly = true)
-    public Map<LocalDate, IterationHistoryEntry> getHistoryEntriesForIteration(
-            Iteration iteration) {
-        Map<LocalDate, IterationHistoryEntry> entriesMap = new HashMap<LocalDate, IterationHistoryEntry>();
-        for (IterationHistoryEntry entry : iterationHistoryEntryDAO.getHistoryEntriesForIteration(iteration.getId())) {
-            entriesMap.put(entry.getTimestamp().toLocalDate(), entry);
-        }
-        return entriesMap;
+    public List<IterationHistoryEntry> getHistoryEntriesForIteration(Iteration iteration) {
+        return iterationHistoryEntryDAO.getHistoryEntriesForIteration(iteration.getId());
     }
     
     public void setIterationDAO(IterationDAO iterationDAO) {

@@ -6,6 +6,8 @@ import java.awt.GradientPaint;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.List;
+import java.util.Map;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartUtilities;
@@ -19,6 +21,7 @@ import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.data.time.TimeSeriesDataItem;
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +30,7 @@ import fi.hut.soberit.agilefant.business.IterationBurndownBusiness;
 import fi.hut.soberit.agilefant.business.IterationHistoryEntryBusiness;
 import fi.hut.soberit.agilefant.model.ExactEstimate;
 import fi.hut.soberit.agilefant.model.Iteration;
+import fi.hut.soberit.agilefant.model.IterationHistoryEntry;
 import fi.hut.soberit.agilefant.util.ExactEstimateUtils;
 
 /**
@@ -60,7 +64,7 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
     protected static Color PLOT_BACKGROUND_COLOR = new Color(0xee, 0xee, 0xee);
 
     /* Chart titles */
-    protected static final String BURNDOWN_NAME = "Iteration burndown";
+    protected static final String BURNDOWN_SERIES_NAME = "Iteration burndown";
     protected static final String DATE_AXIS_LABEL = "Date";
     protected static final String EFFORT_AXIS_LABEL = "Effort left";
     
@@ -114,7 +118,7 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
     }
     
     protected JFreeChart constructChart(Iteration iteration) {
-        JFreeChart burndown = ChartFactory.createTimeSeriesChart(BURNDOWN_NAME,
+        JFreeChart burndown = ChartFactory.createTimeSeriesChart(BURNDOWN_SERIES_NAME,
                 DATE_AXIS_LABEL,
                 EFFORT_AXIS_LABEL,
                 getDataset(iteration),
@@ -160,6 +164,8 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
                 new DateTime(iteration.getEndDate()),
                 iterationHistoryEntryBusiness.getLatestOriginalEstimateSum(iteration)));
         
+        chartDataset.addSeries(getBurndownTimeSeries(iteration));
+        
         return chartDataset;
     }
 
@@ -179,6 +185,24 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
                 .toDateMidnight().toDateTime(), new ExactEstimate(0)));
         
         return referenceSeries;
+    }
+    
+    
+    /**
+     * Gets the history entry for each day and transforms it to a
+     * <code>JFreeChart</code> entry.
+     */
+    protected TimeSeries getBurndownTimeSeries(Iteration iteration) {
+        TimeSeries burndownSeries = new TimeSeries(BURNDOWN_SERIES_NAME);
+        List<IterationHistoryEntry> entries
+            = iterationHistoryEntryBusiness.getHistoryEntriesForIteration(iteration);
+        for (IterationHistoryEntry entry : entries) {
+            TimeSeriesDataItem item = new TimeSeriesDataItem(
+                        new Second(entry.getTimestamp().toDateMidnight().toDate()),
+                        ExactEstimateUtils.extractMajorUnits(new ExactEstimate(entry.getEffortLeftSum())));
+            burndownSeries.add(item);
+        }
+        return burndownSeries;
     }
     
     

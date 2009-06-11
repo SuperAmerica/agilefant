@@ -68,5 +68,9 @@ public class MinorUnitsParser {
             return 0;
         return Integer.parseInt(string);
     }
+    
+    public double toMajorUnits(long minorUnits) {
+        return minorUnits / minorsPerMajor;
+    }
 
 }

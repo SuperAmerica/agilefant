@@ -339,9 +339,7 @@ $(document).ready(function() {
 </script>
 
 
-<%--
-
-<p><img src="drawChart.action?iterationId=${iteration.id}"
+<p><img src="drawIterationBurndown.action?backlogId=${iteration.id}"
 	id="bigChart" width="780" height="600" /></p>
---%>
+
 	<%@ include file="./inc/_footer.jsp"%>

@@ -15,5 +15,10 @@ public class ExactEstimateUtils {
         if (string == null) return new ExactEstimate();
         return new ExactEstimate(parser.convertFromString(string));
     }
+    
+    public static double extractMajorUnits(ExactEstimate estimate) {
+        if (estimate == null) return 0.0;
+        return parser.toMajorUnits(estimate.getMinorUnits());
+    }
 
 }

@@ -4,6 +4,8 @@ import org.easymock.Capture;
 import org.junit.Before;
 import org.junit.Test;
 
+import static org.junit.Assert.*;
+
 import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.capture;
 import static org.easymock.EasyMock.expect;
@@ -28,6 +30,9 @@ public class IterationHistoryEntryBusinessTest {
     
     private IterationDAO iterationDAO;
     
+    Iteration iteration;
+    IterationHistoryEntry latestEntry;
+    
     @Before
     public void setUp() {
         this.iterationHistoryEntryBusiness = new IterationHistoryEntryBusinessImpl();
@@ -35,17 +40,29 @@ public class IterationHistoryEntryBusinessTest {
         this.iterationDAO = createMock(IterationDAO.class);
         iterationHistoryEntryBusiness.setIterationDAO(iterationDAO);
         iterationHistoryEntryBusiness.setIterationHistoryEntryDAO(iterationHistoryEntryDAO);
+        
+        iteration = new Iteration();
+        iteration.setId(1);
+        
+        latestEntry = new IterationHistoryEntry();
+        latestEntry.setEffortLeftSum(60);
+        latestEntry.setOriginalEstimateSum(90);
+    }
+    
+    @Test
+    public void testGetLatestOriginalEstimateSum() {
+        expect(iterationHistoryEntryDAO.retrieveLatest(iteration.getId()))
+                .andReturn(latestEntry);
+        replay(iterationHistoryEntryDAO);
+        ExactEstimate expectedEstimate = new ExactEstimate(latestEntry.getOriginalEstimateSum());
+        assertEquals(expectedEstimate.getMinorUnits(), iterationHistoryEntryBusiness
+                .getLatestOriginalEstimateSum(iteration).getMinorUnits());
+
+        verify(iterationHistoryEntryDAO);
     }
     
     @Test
     public void testUpdateIterationHistory() {
-        Iteration iteration = new Iteration();
-        iteration.setId(1);
-        
-        IterationHistoryEntry latestEntry = new IterationHistoryEntry();
-        latestEntry.setEffortLeftSum(60);
-        latestEntry.setOriginalEstimateSum(90);
-        
         Pair<ExactEstimate, ExactEstimate> sums = Pair.create(new ExactEstimate(10), new ExactEstimate(20));
         
         expect(iterationDAO.get(1)).andReturn(iteration);

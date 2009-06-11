@@ -762,13 +762,14 @@
 		</action>
  -->
 		<!-- /IterationGoal actions -->
-<!-- 
-		<action name="drawChart" method="execute" class="chartAction">
+
+		<action name="drawIterationBurndown" method="getIterationBurndown" class="chartAction">
 			<result name="success" type="stream">
 				<param name="contentType">${contentType}</param>
 				<param name="inputName">inputStream</param>
 			</result>
 		</action>
+		<!-- 
 		<action name="drawProjectChart" method="projectChart"
 			class="chartAction">
 			<result name="success" type="stream">

@@ -49,6 +49,11 @@ public class IterationHistoryEntryBusinessImpl extends
         iterationHistoryEntryDAO.store(newEntry);        
     }
     
+    public ExactEstimate getLatestOriginalEstimateSum(Iteration iteration) {
+        IterationHistoryEntry latestEntry = iterationHistoryEntryDAO.retrieveLatest(iteration.getId());
+        return new ExactEstimate(latestEntry.getOriginalEstimateSum());
+    }
+    
     public void setIterationDAO(IterationDAO iterationDAO) {
         this.iterationDAO = iterationDAO;
     }

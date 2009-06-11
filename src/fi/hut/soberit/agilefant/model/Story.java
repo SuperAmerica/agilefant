@@ -85,7 +85,11 @@ public class Story implements TimesheetLoggable {
         this.state = state;
     }
 
-    @ManyToOne(optional = false)
+    /**
+     * Can't be nullable = false because there's legacy data
+     * that doesn't have a creator.
+     */
+    @ManyToOne
     @JSON(include = true)
     public User getCreator() {
         return creator;

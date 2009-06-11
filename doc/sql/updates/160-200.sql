@@ -88,6 +88,8 @@ ALTER TABLE backlogs DROP COLUMN product_id;
 
 /* Temporary table because mysql can't use the table to be
    updated in sub querys for where statements */
+DROP TABLE IF EXISTS items_with_todos;
+
 CREATE TEMPORARY TABLE items_with_todos (
 	id INT(11)
 );
@@ -188,24 +190,24 @@ DROP TABLE iterationgoal;
 DROP TABLE backlogitem;
 
 /*** ASSOCIATIONS FROM USERS TO TASKS AND STORIES ***/
-CREATE TABLE story_users (
+CREATE TABLE story_user (
 	story_id INT(11) NOT NULL REFERENCES stories(id),
 	user_id INT(11) NOT NULL REFERENCES user(id),
 	PRIMARY KEY(story_id,user_id)
 ) ENGINE=InnoDB;
 
-CREATE TABLE tasks_users (
-	task_id INT(11) NOT NULL REFERENCES tasks(id),
-	user_id INT(11) NOT NULL REFERENCES user(id),
-	PRIMARY KEY(task_id,user_id)
+CREATE TABLE task_user (
+	tasks_id INT(11) NOT NULL REFERENCES tasks(id),
+	responsibles_id INT(11) NOT NULL REFERENCES user(id),
+	PRIMARY KEY(tasks_id,responsibles_id)
 ) ENGINE=InnoDB;
 
-INSERT INTO story_users
+INSERT INTO story_user
 SELECT BacklogItem_id, user_id
 FROM backlogitem_user bu
 WHERE bu.BacklogItem_id IN (SELECT stories.id FROM stories);
 
-INSERT INTO tasks_users
+INSERT INTO task_user
 SELECT BacklogItem_id, user_id
 FROM backlogitem_user bu
 WHERE bu.BacklogItem_id IN (SELECT tasks.id FROM tasks);
@@ -251,7 +253,8 @@ WHERE backlogs.backlogtype = 'Iteration';
 
 DROP TABLE historyentry;
 
-/*** MISC TABLES ***/
+/*** HOUR ENTRIES ***/
+
 ALTER TABLE hourentry CHANGE timeSpent minutesSpent BIGINT(20);
 UPDATE hourentry SET minutesSpent=(minutesSpent/60);
 
@@ -267,9 +270,17 @@ WHERE backlogItem_id IN (SELECT tasks.id FROM tasks);
 
 ALTER TABLE hourentry DROP COLUMN backlogItem_id;
 
+ALTER TABLE hourentry RENAME hourentries;
+
+/*** MISC TABLES ***/
+
 ALTER TABLE user RENAME users;
 
 DROP TABLE worktype;
+
+ALTER TABLE projecttype RENAME projecttypes;
+ALTER TABLE setting RENAME settings;
+ALTER TABLE team RENAME team;
 
 /*** BRING BACK FOREIGN KEYS ***/
 
@@ -291,10 +302,10 @@ ALTER TABLE backlogthemebinding
 ALTER TABLE businesstheme ADD FOREIGN KEY (product_id) REFERENCES backlogs(id);
 
 SELECT 'Foreign keys for hour entries' AS status;
-ALTER TABLE hourentry ADD FOREIGN KEY (user_id) REFERENCES users(id);
-ALTER TABLE hourentry ADD FOREIGN KEY (backlog_id) REFERENCES backlogs(id);
-ALTER TABLE hourentry ADD FOREIGN KEY (story_id) REFERENCES stories(id);
-ALTER TABLE hourentry ADD FOREIGN KEY (task_id) REFERENCES tasks(id);
+ALTER TABLE hourentries ADD FOREIGN KEY (user_id) REFERENCES users(id);
+ALTER TABLE hourentries ADD FOREIGN KEY (backlog_id) REFERENCES backlogs(id);
+ALTER TABLE hourentries ADD FOREIGN KEY (story_id) REFERENCES stories(id);
+ALTER TABLE hourentries ADD FOREIGN KEY (task_id) REFERENCES tasks(id);
 
 SELECT 'Foreign keys for stories' AS status;
 ALTER TABLE stories ADD FOREIGN KEY (creator_id) REFERENCES users(id);

@@ -67,7 +67,7 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         }
         return storyTasks;
     }
-    
+
     public Collection<Task> getStoryContents(int storyId, int iterationId) {
         Story story = storyDAO.get(storyId);
         Iteration iter = iterationDAO.get(iterationId);
@@ -88,7 +88,8 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
     }
 
     public Story store(int storyId, int backlogId, Story dataItem,
-            Set<Integer> responsibles, int priority) throws ObjectNotFoundException {
+            Set<Integer> responsibles, int priority)
+            throws ObjectNotFoundException {
         Story item = null;
         if (storyId > 0) {
             item = storyDAO.get(storyId);
@@ -117,19 +118,18 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
     /** {@inheritDoc} */
     public void remove(int storyId) throws ObjectNotFoundException {
         Story story = this.retrieve(storyId);
-        if(story.getBacklog() != null) {
+        if (story.getBacklog() != null) {
             story.getBacklog().getStories().remove(story);
         }
         Collection<Task> tasks = story.getTasks();
-        if(tasks != null) {
-            for(Task item : tasks) {
-                item.setStory(null); 
+        if (tasks != null) {
+            for (Task item : tasks) {
+                item.setStory(null);
             }
         }
         storyDAO.remove(storyId);
     }
 
-    
     public Story store(Story storable, Backlog backlog, Story dataItem,
             Set<User> responsibles, Integer priority) {
 
@@ -146,9 +146,9 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
             storable.setCreatedDate(Calendar.getInstance().getTime());
             try {
                 storable.setCreator(SecurityUtil.getLoggedUser()); // may fail
-                                                                   // if request
-                                                                   // is
-                                                                   // multithreaded
+                // if request
+                // is
+                // multithreaded
             } catch (Exception e) {
             } // however, saving item should not fail.
         }
@@ -163,7 +163,7 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         // }
         // }
 
-        //storable.setPriority(dataItem.getPriority());
+        // storable.setPriority(dataItem.getPriority());
         storable.setState(dataItem.getState());
         storable.setStoryPoints(dataItem.getStoryPoints());
 
@@ -196,8 +196,9 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         }
         if (persisted.getBacklog() instanceof Iteration) {
             updateStoryPriority(persisted, priority);
-            if(!historyUpdated) {
-                iterationHistoryEntryBusiness.updateIterationHistory(backlog.getId());
+            if (!historyUpdated) {
+                iterationHistoryEntryBusiness.updateIterationHistory(backlog
+                        .getId());
             }
         }
         return persisted;
@@ -210,12 +211,14 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         story.setBacklog(backlog);
         backlog.getStories().add(story);
         if (oldBacklog instanceof Iteration) {
-            iterationHistoryEntryBusiness.updateIterationHistory(oldBacklog.getId());
+            iterationHistoryEntryBusiness.updateIterationHistory(oldBacklog
+                    .getId());
         }
         if (backlog instanceof Iteration) {
-            iterationHistoryEntryBusiness.updateIterationHistory(backlog.getId());
+            iterationHistoryEntryBusiness.updateIterationHistory(backlog
+                    .getId());
         }
-        
+
         // if(!backlogBusiness.isUnderSameProduct(oldBacklog, backlog)) {
         // //remove only product themes
         // Collection<BusinessTheme> removeThese = new
@@ -267,40 +270,42 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         metrics.setTotalTasks(tasks);
         return metrics;
     }
-    
+
     // 090605 Reko: Copied from update iteration goal priority
     public void updateStoryPriority(Story story, int insertAtPriority) {
-        if(insertAtPriority == story.getPriority()) {
+        if (insertAtPriority == story.getPriority()) {
             return;
         }
-        if(story.getBacklog() == null || !(story.getBacklog() instanceof Iteration)) {
+        if (story.getBacklog() == null
+                || !(story.getBacklog() instanceof Iteration)) {
             throw new IllegalArgumentException("backlog.notFound");
         }
-        Iteration iter = (Iteration)story.getBacklog();
-        if(iter.getStories().size() == 0) {
+        Iteration iter = (Iteration) story.getBacklog();
+        if (iter.getStories().size() == 0) {
             throw new IllegalArgumentException("story.notFound");
         }
         int oldPriority = story.getPriority();
-        
-        for(Story item : iter.getStories()) {
-            //drop new goal to its place
-            if(oldPriority == -1) {
-                if(item.getPriority() >= insertAtPriority) {
+
+        for (Story item : iter.getStories()) {
+            // drop new goal to its place
+            if (oldPriority == -1) {
+                if (item.getPriority() >= insertAtPriority) {
                     item.setPriority(item.getPriority() + 1);
                     storyDAO.store(item);
                 }
             } else {
-                //when prioritizing downwards raise all goals by one which are between the old and new priorities 
-                if(oldPriority < insertAtPriority && 
-                        item.getPriority() > oldPriority && 
-                        item.getPriority() <= insertAtPriority) {
+                // when prioritizing downwards raise all goals by one which are
+                // between the old and new priorities
+                if (oldPriority < insertAtPriority
+                        && item.getPriority() > oldPriority
+                        && item.getPriority() <= insertAtPriority) {
                     item.setPriority(item.getPriority() - 1);
                     storyDAO.store(item);
                 }
-                //vice versa when prioritizing upwards
-                if(oldPriority > insertAtPriority &&
-                        item.getPriority() >= insertAtPriority &&
-                        item.getPriority() < oldPriority) {
+                // vice versa when prioritizing upwards
+                if (oldPriority > insertAtPriority
+                        && item.getPriority() >= insertAtPriority
+                        && item.getPriority() < oldPriority) {
                     item.setPriority(item.getPriority() + 1);
                     storyDAO.store(item);
                 }
@@ -311,11 +316,10 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         storyDAO.store(story);
     }
 
-
     public void setHourEntryDAO(HourEntryDAO hourEntryDAO) {
         this.hourEntryDAO = hourEntryDAO;
     }
-    
+
     @Transactional(readOnly = true)
     public StoryMetrics calculateMetrics(int storyId) {
         StoryMetrics metrics = storyDAO.calculateMetrics(storyId);
@@ -325,52 +329,70 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
 
     @Transactional(readOnly = true)
     public StoryMetrics calculateMetricsWithoutStory(int iterationId) {
-        StoryMetrics metrics = storyDAO.calculateMetricsWithoutStory(iterationId);
-        metrics.setEffortSpent(hourEntryDAO.calculateSumFromTasksWithoutStory(iterationId));
+        StoryMetrics metrics = storyDAO
+                .calculateMetricsWithoutStory(iterationId);
+        metrics.setEffortSpent(hourEntryDAO
+                .calculateSumFromTasksWithoutStory(iterationId));
         return metrics;
     }
-    
-    public void attachStoryToIteration(Story story, int iterationId) throws ObjectNotFoundException {
+
+    public void attachStoryToIteration(Story story, int iterationId)
+            throws ObjectNotFoundException {
         this.attachStoryToIteration(story, iterationId, false);
     }
-    public void attachStoryToIteration(int storyId, int iterationId, boolean moveTasks) throws ObjectNotFoundException {
+
+    public void attachStoryToIteration(int storyId, int iterationId,
+            boolean moveTasks) throws ObjectNotFoundException {
         Story story = this.retrieve(storyId);
         this.attachStoryToIteration(story, iterationId, moveTasks);
     }
-    public void attachStoryToIteration(Story story, int iterationId, boolean moveTasks) throws ObjectNotFoundException {
+
+    public void attachStoryToIteration(Story story, int iterationId,
+            boolean moveTasks) throws ObjectNotFoundException {
         Iteration newIteration = null;
-        if(iterationId != 0) {
+        if (iterationId != 0) {
             newIteration = iterationDAO.get(iterationId);
-            if(newIteration == null) {
+            if (newIteration == null) {
                 throw new ObjectNotFoundException("iteration.notFound");
             }
         }
-        // story has to have a parent 
-        if(story.getBacklog() == null && iterationId == 0) {
+        // story has to have a parent
+        if (story.getBacklog() == null && iterationId == 0) {
             throw new IllegalArgumentException("iteration.notFound");
         }
-        if(story.getBacklog() != null && iterationId != 0) {
-            if(story.getBacklog() != newIteration) {
-                story.getBacklog().getStories().remove(story);
-                story.setBacklog(newIteration);
-                story.getBacklog().getStories().add(story);
-                for(Task task : story.getTasks()) {
-                    if(moveTasks) {
-                        task.setIteration(newIteration);
-                    } else {
-                        task.setStory(null);
+
+        if (iterationId != 0) {
+
+            if (story.getBacklog() != null) {
+                if (story.getBacklog() != newIteration) {
+                    Backlog oldBacklog = story.getBacklog();
+                    oldBacklog.getStories().remove(story);
+                    story.setBacklog(newIteration);
+                    story.getBacklog().getStories().add(story);
+                    for (Task task : story.getTasks()) {
+                        if (moveTasks) {
+                            task.setIteration(newIteration);
+                        } else {
+                            task.setStory(null);
+                        }
+                    }
+                    if (!moveTasks) {
+                        story.getTasks().clear();
+                    } else if (oldBacklog instanceof Iteration) {
+                        iterationHistoryEntryBusiness
+                                .updateIterationHistory(oldBacklog.getId());
                     }
                 }
-                if(!moveTasks) {
-                    story.getTasks().clear();
-                }
+            } else {
+                story.setBacklog(newIteration);
+                story.getBacklog().getStories().add(story);
             }
-        } else if(iterationId != 0) {
-            story.setBacklog(newIteration);
-            story.getBacklog().getStories().add(story);
+
+            storyDAO.store(story);
+            iterationHistoryEntryBusiness.updateIterationHistory(iterationId);
         }
-        
-        if(story.getBacklog() == null) {
+
+        if (story.getBacklog() == null) {
             throw new IllegalArgumentException("story.noIteration");
         }
     }

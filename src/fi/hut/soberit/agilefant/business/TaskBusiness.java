@@ -3,7 +3,6 @@ package fi.hut.soberit.agilefant.business;
 import java.util.Collection;
 import java.util.Set;
 
-import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.util.ResponsibleContainer;
 
@@ -19,4 +18,6 @@ public interface TaskBusiness extends GenericBusiness<Task> {
     public Collection<ResponsibleContainer> getTaskResponsibles(Task task);
 
     public Task resetOriginalEstimate(int taskId);
+
+    public Task move(int taskId, int iterationId, int storyId);
 }

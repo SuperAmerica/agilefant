@@ -787,7 +787,7 @@ TaskModel.prototype.moveTo = function(storyId, iterationId) {
     } else {
       this.backlog = {getId: function() { return iterationId; }};
       this.story = {id: storyId};
-      this.save();
+      this.move();
     }
     story.reloadMetrics();
   }
@@ -927,6 +927,44 @@ TaskModel.prototype.save = function(synchronous, callback) {
   data: data
   });
 };
+
+TaskModel.prototype.move = function(synchronous, callback) {
+	  if (this.inTransaction) {
+	    return;
+	  }
+	  var asynch = !synchronous;
+	  var me = this;
+	  var data = {
+	      "backlogId": this.backlog.getId(),
+	      "task.id": this.id
+	  };
+	  if (this.story) {
+	    data.storyId = this.story.id;
+	    if(data.storyId === undefined) {
+	      data.storyId = 0;
+	    }
+	  }
+	  jQuery
+	  .ajax( {
+	    async: asynch,
+	    error: function() {
+	    commonView
+	    .showError("An error occured while moving the task.");
+	  },
+	  success: function(data, type) {
+	    me.setData(data);
+	    if(asynch && typeof callback == "function") {
+	      callback.call(me);
+	    }
+	    commonView.showOk("Task moved succesfully.");
+	  },
+	  cache: false,
+	  dataType: "json",
+	  type: "POST",
+	  url: "ajaxMoveTask.action",
+	  data: data
+	  });
+	};
 
 /** TASK HOUR ENTRY * */
 

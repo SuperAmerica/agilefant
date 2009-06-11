@@ -76,10 +76,10 @@ public class TaskBusinessImpl extends GenericBusinessImpl<Task> implements
     
     /** {@inheritDoc} */
     public Task storeTask(Task task, int iterationId, int storyId, Set<Integer> userIds) {
-        Task storedTask;
+        Task storedTask = null;
         Iteration iteration = iterationBusiness.retrieve(iterationId);
         Story story = storyBusiness.retrieveIfExists(storyId);
-        
+       
         task.setIteration(iteration);
         task.setStory(story);
         
@@ -107,10 +107,32 @@ public class TaskBusinessImpl extends GenericBusinessImpl<Task> implements
             this.store(task);
             storedTask = task;
         }
-                        
+  
         iterationHistoryEntryBusiness.updateIterationHistory(iterationId);
         
         return storedTask;
+    }
+    
+    public Task move(int taskId, int iterationId, int storyId) {
+        Task task = retrieve(taskId);
+        Iteration iteration = iterationBusiness.retrieve(iterationId);
+        Story story = storyBusiness.retrieveIfExists(storyId);
+        Iteration oldIteration = null;
+        if (task.getIteration() != null) {
+            oldIteration = task.getIteration();
+            oldIteration.getTasks().remove(task);
+        }
+        
+        task.setIteration(iteration);
+        task.setStory(story);
+        
+        if (oldIteration != null) {
+            iterationHistoryEntryBusiness.updateIterationHistory(oldIteration.getId());
+        }
+        
+        iterationHistoryEntryBusiness.updateIterationHistory(iterationId);
+        
+        return task;
     }
     
     public User getLoggedInUser() {

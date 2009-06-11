@@ -56,6 +56,16 @@ public class TaskAction extends ActionSupport {
         return CRUDAction.AJAX_SUCCESS;
     }
     
+    public String ajaxMoveTask() {
+        try {
+            task = taskBusiness.move(task.getId(), backlogId, storyId);
+            populateJsonData();
+        } catch (Exception e) {
+            return CRUDAction.AJAX_ERROR;
+        }
+        return CRUDAction.AJAX_SUCCESS;
+    }
+    
     public String ajaxDeleteTask() {
         try {
             taskBusiness.delete(taskId);

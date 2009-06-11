@@ -210,7 +210,7 @@ public class IterationAction extends BacklogContentsAction implements CRUDAction
         fillable.setParent(this.project);
         fillable.setName(this.iteration.getName());
         fillable.setDescription(this.iteration.getDescription());
-//        fillable.setBacklogSize(this.iteration.getBacklogSize());
+        fillable.setBacklogSize(this.iteration.getBacklogSize());
         if (fillable.getStartDate().after(fillable.getEndDate())) {
             super
                     .addActionError(super

@@ -80,7 +80,7 @@
 		},
 		selectStory: function(container, backlogId, firstRow) {
 			var me = this;
-			$.getJSON("ajaxGetStories.action", {iterationId: backlogId}, function(data, type) {
+			$.getJSON("ajaxGetStories.action", {"backlogId": backlogId}, function(data, type) {
 				me.sortData(data);
 				me.renderSelect(container, data, firstRow);
 			});

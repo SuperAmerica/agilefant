@@ -71,7 +71,7 @@ public class IterationHistoryEntryBusinessTest {
                 .andReturn(null);
         replay(iterationHistoryEntryDAO);
 
-        assertEquals(0, iterationHistoryEntryBusiness
+        assertEquals(new Long(0), iterationHistoryEntryBusiness
                 .getLatestOriginalEstimateSum(iteration).getMinorUnits());
 
         verify(iterationHistoryEntryDAO);        

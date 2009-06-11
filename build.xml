@@ -173,7 +173,7 @@
 	</target>
 
 
-	<target name="test-bamboo" depends="clean,test-clover-enable,compile-tests,test,test-clover-xmlreport,test-clover-clean,test-checkstyle-xmlreport" description="Bamboo uses this target" />
+	<target name="test-bamboo" depends="clean,test-clover-enable,compile-tests,test,test-clover-htmlreport,test-clover-clean,test-checkstyle-xmlreport" description="Bamboo uses this target" />
 
 
 	<target name="compile-tests" depends="compile">

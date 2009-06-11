@@ -1,12 +1,15 @@
 package fi.hut.soberit.agilefant.business;
 
-import java.awt.Color;
-import java.lang.reflect.Method;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.classextension.EasyMock.createMock;
+import static org.easymock.classextension.EasyMock.replay;
+import static org.easymock.classextension.EasyMock.verify;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
@@ -16,19 +19,14 @@ import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.data.time.TimeSeriesDataItem;
 import org.joda.time.DateTime;
-import org.joda.time.LocalDate;
-import org.junit.*;
-
-import sun.misc.GC.LatencyRequest;
+import org.junit.Before;
+import org.junit.Test;
 
 import fi.hut.soberit.agilefant.business.impl.IterationBurndownBusinessImpl;
 import fi.hut.soberit.agilefant.model.ExactEstimate;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.IterationHistoryEntry;
 import fi.hut.soberit.agilefant.util.ExactEstimateUtils;
-import static org.junit.Assert.*;
-
-import static org.easymock.classextension.EasyMock.*;
 
 /**
  * Test class for <code>IterationBurndownBusiness</code>.

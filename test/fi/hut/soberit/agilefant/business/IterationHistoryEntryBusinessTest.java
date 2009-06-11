@@ -1,26 +1,18 @@
 package fi.hut.soberit.agilefant.business;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import org.easymock.Capture;
-import org.joda.time.DateTime;
-import org.joda.time.LocalDate;
-import org.junit.Before;
-import org.junit.Test;
-
-import clover.retrotranslator.edu.emory.mathcs.backport.java.util.Arrays;
-
-import static org.junit.Assert.*;
-
-import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.capture;
+import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+
+import org.easymock.Capture;
+import org.joda.time.DateTime;
+import org.junit.Before;
+import org.junit.Test;
+
 import fi.hut.soberit.agilefant.business.impl.IterationHistoryEntryBusinessImpl;
 import fi.hut.soberit.agilefant.db.IterationDAO;
 import fi.hut.soberit.agilefant.db.IterationHistoryEntryDAO;

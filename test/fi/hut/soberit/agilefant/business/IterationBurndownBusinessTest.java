@@ -125,6 +125,8 @@ public class IterationBurndownBusinessTest extends IterationBurndownBusinessImpl
                 newChart.getXYPlot().getDataset().getSeriesKey(BURNDOWN_SERIES_NO));
         assertEquals(CURRENT_DAY_SERIES_NAME,
                 newChart.getXYPlot().getDataset().getSeriesKey(CURRENT_DAY_SERIES_NO));
+        assertEquals(SCOPING_SERIES_NAME,
+                newChart.getXYPlot().getDataset().getSeriesKey(SCOPING_SERIES_NO));
         
         verify(iterationHistoryEntryBusiness);
     }
@@ -163,6 +165,9 @@ public class IterationBurndownBusinessTest extends IterationBurndownBusinessImpl
         assertEquals(CURRENT_DAY_SERIES_SHAPE, rend.getSeriesShape(CURRENT_DAY_SERIES_NO));
         assertEquals(CURRENT_DAY_SERIES_SHAPE_VISIBLE, rend.getSeriesShapesVisible(CURRENT_DAY_SERIES_NO));
         assertEquals(CURRENT_DAY_SERIES_SHAPE_FILLED, rend.getSeriesShapesFilled(CURRENT_DAY_SERIES_NO));
+        
+        assertEquals(SCOPING_SERIES_STROKE, rend.getSeriesStroke(SCOPING_SERIES_NO));
+        assertEquals(SCOPING_SERIES_COLOR, rend.getSeriesPaint(SCOPING_SERIES_NO));
     }
     
     @Test
@@ -175,6 +180,7 @@ public class IterationBurndownBusinessTest extends IterationBurndownBusinessImpl
         assertNotNull(actualTimeSeries.getSeries(REFERENCE_SERIES_NAME));
         assertNotNull(actualTimeSeries.getSeries(BURNDOWN_SERIES_NAME));
         assertNotNull(actualTimeSeries.getSeries(CURRENT_DAY_SERIES_NAME));
+        assertNotNull(actualTimeSeries.getSeries(SCOPING_SERIES_NAME));
         
         verify(iterationHistoryEntryBusiness);
     }
@@ -443,6 +449,33 @@ public class IterationBurndownBusinessTest extends IterationBurndownBusinessImpl
                 actualSeries.getDataItem(0).getValue());
     }
     
+    
+    @Test
+    public void testGetScopingTimeSeries() {
+        DateTime startTime = new DateTime(2012, 7, 4, 12, 38, 12, 57);
+        IterationHistoryEntry firstEntry = new IterationHistoryEntry();
+        firstEntry.setTimestamp(startTime);
+        firstEntry.setOriginalEstimateSum(130);
+        firstEntry.setDeltaOriginalEstimate(0);
+        IterationHistoryEntry secondEntry = new IterationHistoryEntry();
+        secondEntry.setTimestamp(startTime.plusDays(1));
+        secondEntry.setOriginalEstimateSum(156);
+        secondEntry.setDeltaOriginalEstimate(26);
+        IterationHistoryEntry thirdEntry = new IterationHistoryEntry();
+        thirdEntry.setTimestamp(startTime.plusDays(2));
+        thirdEntry.setOriginalEstimateSum(88);
+        thirdEntry.setDeltaOriginalEstimate(-68);
+        
+        List<IterationHistoryEntry> entries = Arrays.asList(firstEntry, secondEntry, thirdEntry);
+        
+        TimeSeries actualSeries = super.getScopingTimeSeries(entries,
+                startDate.toLocalDate(), startTime.plusDays(5).toLocalDate());
+        
+        assertEquals(SCOPING_SERIES_NAME, actualSeries.getKey());
+        assertEquals(6, actualSeries.getItemCount());
+    }
+    
+    
     @Test
     public void testGetSeriesByStartAndEndPoints() {
         ExactEstimate value1 = new ExactEstimate(entry1.getEffortLeftSum());
@@ -456,6 +489,31 @@ public class IterationBurndownBusinessTest extends IterationBurndownBusinessImpl
         assertEquals("Test series", actualSeries.getKey());
     }
     
+    @Test
+    public void testGetScopeSeriesDataItem() {
+        initializeEntriesForScopingTest();
+        startEntry.setTimestamp(new DateTime(2008, 4, 2, 12, 25, 32, 0));
+        endEntry.setTimestamp(new DateTime(2008, 4, 3, 10, 19, 22, 0));
+        startEntry.setEffortLeftSum(128);
+        endEntry.setDeltaOriginalEstimate(150);
+        DateTime expectedTimestamp = new DateTime(2008, 4, 3, 0, 0, 0, 0);
+        
+        List<TimeSeriesDataItem> actualItems
+            = super.getScopeSeriesDataItems(startEntry, endEntry);
+        
+        TimeSeriesDataItem firstItem = actualItems.get(0);
+        TimeSeriesDataItem secondItem = actualItems.get(1);
+        TimeSeriesDataItem nullItem = actualItems.get(2);
+        ExactEstimate expectedFirstValue = new ExactEstimate(128);
+        ExactEstimate expectedSecondValue = new ExactEstimate(128 + 150);
+        
+        assertEquals(new Second(expectedTimestamp.toDate()), firstItem.getPeriod());
+        assertEquals(ExactEstimateUtils.extractMajorUnits(expectedFirstValue), firstItem.getValue());
+        assertEquals(new Second(expectedTimestamp.plusSeconds(2).toDate()), secondItem.getPeriod());
+        assertEquals(ExactEstimateUtils.extractMajorUnits(expectedSecondValue), secondItem.getValue());
+        assertEquals(new Second(expectedTimestamp.plusSeconds(3).toDate()), nullItem.getPeriod());
+        assertNull(nullItem.getValue());
+    }
 
     private void testSeriesStartAndEndCorrect(TimeSeries series, ExactEstimate value1, ExactEstimate value2) {
         assertEquals(ExactEstimateUtils.extractMajorUnits(value1), series.getDataItem(0).getValue());

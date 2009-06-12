@@ -8,15 +8,13 @@ import java.awt.Shape;
 import java.awt.Stroke;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.List;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.DateAxis;
-import org.jfree.chart.axis.DateTickUnit;
-import org.jfree.chart.axis.DateTickUnitType;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.data.time.Second;
@@ -42,6 +40,14 @@ import fi.hut.soberit.agilefant.util.Pair;
  * <p>
  * All methods are marked initially as read-only transactions.
  * Override with <code>@Transactional</code>.
+ * 
+ * <b>Note</b>: the date handling in burndown chart calculations
+ * Effort left sum for a day is drawn at next midnight.
+ * I.e. The effort left sum of 4.6. is drawn in the burndown at 5.6. 00.00.
+ * 
+ * Scoping done, i.e. changes to original estimate, are drawn at the beginning
+ * of each day.
+ * I.e. The scoping done on 4.6. is drawn in the burndown at 4.6. 00.00.
  * 
  * @author rjokelai, jsorvett
  *
@@ -74,6 +80,7 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
     /* Series colors */
     protected static final Color BURNDOWN_SERIES_COLOR  = new Color(220, 100, 87);
     protected static final Color CURRENT_DAY_SERIES_COLOR  = BURNDOWN_SERIES_COLOR;
+    protected static final Color SCOPING_SERIES_COLOR  = BURNDOWN_SERIES_COLOR;
     protected static final Color REFERENCE_SERIES_COLOR = new Color(90, 145, 210);
     protected static final Color EXPECTED_COLOR  = new Color(80, 80, 80);
     
@@ -86,12 +93,16 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
     
     /* Series stroke */
     protected static final Stroke CURRENT_DAY_SERIES_STROKE = new BasicStroke(
-            1.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0.0f,
-            new float[] { 7.0f, 3.0f }, 0.0f);
+            1.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL,
+            0.0f, new float[] { 7.0f, 3.0f }, 0.0f);
+    protected static final Stroke SCOPING_SERIES_STROKE = new BasicStroke(1.0f,
+            BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL,
+            0.0f, new float[] { 2.0f, 4.0f }, 0.0f);
     
     /* Series names */
     protected static final String BURNDOWN_SERIES_NAME = "Iteration burndown";
     protected static final String REFERENCE_SERIES_NAME = "Reference velocity";
+    protected static final String SCOPING_SERIES_NAME = "Scoping";
     protected static final String CURRENT_DAY_SERIES_NAME = "Current day";
 
     @Autowired
@@ -181,6 +192,9 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
         rend.setSeriesShape(CURRENT_DAY_SERIES_NO, CURRENT_DAY_SERIES_SHAPE);
         rend.setSeriesShapesVisible(CURRENT_DAY_SERIES_NO, CURRENT_DAY_SERIES_SHAPE_VISIBLE);
         rend.setSeriesShapesFilled(CURRENT_DAY_SERIES_NO, CURRENT_DAY_SERIES_SHAPE_FILLED);
+        
+        rend.setSeriesPaint(SCOPING_SERIES_NO, SCOPING_SERIES_COLOR);
+        rend.setSeriesStroke(SCOPING_SERIES_NO, SCOPING_SERIES_STROKE);
     }
     
     /**
@@ -208,10 +222,11 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
         LocalDate today = new LocalDate();
         IterationHistoryEntry yesterdayEntry = getHistoryEntryForDate(iterationEntries, yesterday);
         IterationHistoryEntry todayEntry = getHistoryEntryForDate(iterationEntries, today);
+        DateTime iterationStartDate = new DateTime(iteration.getStartDate());
+        DateTime iterationEndDate = new DateTime(iteration.getEndDate());
         
         chartDataset.addSeries(getReferenceVelocityTimeSeries(
-                new DateTime(iteration.getStartDate()),
-                new DateTime(iteration.getEndDate()),
+                iterationStartDate, iterationEndDate,
                 new ExactEstimate(todayEntry.getOriginalEstimateSum())));
         
         chartDataset.addSeries(getBurndownTimeSeries(iterationEntries,
@@ -219,6 +234,10 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
                 determineEndDate(new LocalDate(iteration.getEndDate()))));
         
         chartDataset.addSeries(getCurrentDayTimeSeries(yesterdayEntry, todayEntry));
+        
+        chartDataset.addSeries(getScopingTimeSeries(iterationEntries,
+                iterationStartDate.toLocalDate(),
+                iterationEndDate.toLocalDate()));
         
         return chartDataset;
     }
@@ -333,8 +352,49 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
         return Pair.create(nullItem, scopedItem);
     }
     
+    
+    protected List<TimeSeriesDataItem> getScopeSeriesDataItems(
+            IterationHistoryEntry yesterdayEntry,
+            IterationHistoryEntry todayEntry) {
+        
+        // Second item is places 2 seconds after the first
+        // Resulting in a almost vertical line in the graph
+        // Null value is added to break the line
+        Second firstItemPeriod = new Second(todayEntry.getTimestamp().toDateMidnight().toDate());
+        Second secondItemPeriod = new Second(todayEntry.getTimestamp().toDateMidnight().toDateTime().plusSeconds(2).toDate());
+        Second nullItemPeriod = new Second(todayEntry.getTimestamp().toDateMidnight().toDateTime().plusSeconds(3).toDate());
+        
+        ExactEstimate firstValue = new ExactEstimate(yesterdayEntry.getEffortLeftSum());
+        long secondValueAsLong = yesterdayEntry.getEffortLeftSum() + todayEntry.getDeltaOriginalEstimate();
+        ExactEstimate secondValue = new ExactEstimate(secondValueAsLong);
+        
+        TimeSeriesDataItem firstItem = new TimeSeriesDataItem(firstItemPeriod, ExactEstimateUtils.extractMajorUnits(firstValue));
+        TimeSeriesDataItem secondItem = new TimeSeriesDataItem(secondItemPeriod, ExactEstimateUtils.extractMajorUnits(secondValue));
+        TimeSeriesDataItem nullItem = new TimeSeriesDataItem(nullItemPeriod, null);
+        
+        return Arrays.asList(firstItem, secondItem, nullItem);
+    }
+    
     protected boolean isScopingDone(IterationHistoryEntry entry) {
         return (entry.getDeltaOriginalEstimate() != 0);
+    }
+    
+    
+    protected TimeSeries getScopingTimeSeries(List<IterationHistoryEntry> iterationHistoryEntries, LocalDate startDate, LocalDate endDate) {
+        TimeSeries scopingSeries = new TimeSeries(SCOPING_SERIES_NAME);
+        for (LocalDate iter = startDate.minusDays(1); iter.compareTo(endDate) < 0; iter = iter.plusDays(1)) {
+            IterationHistoryEntry todayEntry = getHistoryEntryForDate(iterationHistoryEntries, iter);
+            IterationHistoryEntry yesterdayEntry = getHistoryEntryForDate(iterationHistoryEntries, iter.minusDays(1));
+            
+            if (isScopingDone(todayEntry)) {
+                List<TimeSeriesDataItem> scopeItems
+                    = getScopeSeriesDataItems(yesterdayEntry, todayEntry);
+                scopingSeries.add(scopeItems.get(0));
+                scopingSeries.add(scopeItems.get(1));
+                scopingSeries.add(scopeItems.get(2));
+            }
+        }
+        return scopingSeries;
     }
     
     

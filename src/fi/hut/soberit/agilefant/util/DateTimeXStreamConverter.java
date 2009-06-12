@@ -13,7 +13,7 @@ public class DateTimeXStreamConverter implements SingleValueConverter {
     }
 
     public Object fromString(String value) {
-        if (value == null || value.isEmpty()) {
+        if (value == null || value.trim().length() == 0) {
             return null;
         }
         long millis = Long.parseLong(value);

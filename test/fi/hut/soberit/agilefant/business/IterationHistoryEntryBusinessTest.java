@@ -91,10 +91,10 @@ public class IterationHistoryEntryBusinessTest {
         
         iterationHistoryEntryBusiness.updateIterationHistory(1);
         IterationHistoryEntry entry = capturedEntry.getValue();
-        assertEquals(-50, entry.getDeltaEffortLeft());
-        assertEquals(-70, entry.getDeltaOriginalEstimate());
-        assertEquals(10, entry.getEffortLeftSum());
-        assertEquals(20, entry.getOriginalEstimateSum());
+        assertEquals((long)-50, entry.getDeltaEffortLeft());
+        assertEquals((long)-70, entry.getDeltaOriginalEstimate());
+        assertEquals((long)10, entry.getEffortLeftSum());
+        assertEquals((long)20, entry.getOriginalEstimateSum());
         assertEquals(0, entry.getId());
         assertNotNull(entry.getTimestamp());
         assertEquals(iteration, entry.getIteration());
@@ -115,10 +115,10 @@ public class IterationHistoryEntryBusinessTest {
         
         iterationHistoryEntryBusiness.updateIterationHistory(1);
         IterationHistoryEntry entry = capturedEntry.getValue();
-        assertEquals(-50, entry.getDeltaEffortLeft());
-        assertEquals(-70, entry.getDeltaOriginalEstimate());
-        assertEquals(10, entry.getEffortLeftSum());
-        assertEquals(20, entry.getOriginalEstimateSum());
+        assertEquals((long)-50, entry.getDeltaEffortLeft());
+        assertEquals((long)-70, entry.getDeltaOriginalEstimate());
+        assertEquals((long)10, entry.getEffortLeftSum());
+        assertEquals((long)20, entry.getOriginalEstimateSum());
         assertNotNull(entry.getTimestamp());
         assertEquals(latestEntry.getId(), entry.getId());
         assertEquals(iteration, entry.getIteration());

@@ -7,7 +7,6 @@ import static org.easymock.classextension.EasyMock.verify;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -215,8 +214,8 @@ public class IterationBurndownBusinessTest extends IterationBurndownBusinessImpl
         
         assertEquals(entry2.getOriginalEstimateSum(), actualEntry.getOriginalEstimateSum());
         assertEquals(entry2.getEffortLeftSum(), actualEntry.getEffortLeftSum());
-        assertEquals(0, actualEntry.getDeltaEffortLeft());
-        assertEquals(0, actualEntry.getDeltaOriginalEstimate());
+        assertEquals(0l, actualEntry.getDeltaEffortLeft());
+        assertEquals(0l, actualEntry.getDeltaOriginalEstimate());
     }
     
     @Test
@@ -228,8 +227,8 @@ public class IterationBurndownBusinessTest extends IterationBurndownBusinessImpl
         
         assertEquals(entry2.getOriginalEstimateSum(), actualEntry.getOriginalEstimateSum());
         assertEquals(entry2.getEffortLeftSum(), actualEntry.getEffortLeftSum());
-        assertEquals(0, actualEntry.getDeltaEffortLeft());
-        assertEquals(0, actualEntry.getDeltaOriginalEstimate());
+        assertEquals(0l, actualEntry.getDeltaEffortLeft());
+        assertEquals(0l, actualEntry.getDeltaOriginalEstimate());
     }
     
     @Test
@@ -248,18 +247,18 @@ public class IterationBurndownBusinessTest extends IterationBurndownBusinessImpl
         
         assertEquals(entry2.getOriginalEstimateSum(), actualEntry.getOriginalEstimateSum());
         assertEquals(entry2.getEffortLeftSum(), actualEntry.getEffortLeftSum());
-        assertEquals(0, actualEntry.getDeltaEffortLeft());
-        assertEquals(0, actualEntry.getDeltaOriginalEstimate());
+        assertEquals(0l, actualEntry.getDeltaEffortLeft());
+        assertEquals(0l, actualEntry.getDeltaOriginalEstimate());
     }
     
     @Test
     public void testGetHistoryEntryForDate_emptyEntry() {
         List<IterationHistoryEntry> emptyList = new ArrayList<IterationHistoryEntry>();
         IterationHistoryEntry actualEntry = super.getHistoryEntryForDate(emptyList, startDate.toLocalDate());
-        assertEquals(0 , actualEntry.getEffortLeftSum());
-        assertEquals(0 , actualEntry.getOriginalEstimateSum());
-        assertEquals(0 , actualEntry.getDeltaOriginalEstimate());
-        assertEquals(0 , actualEntry.getDeltaEffortLeft());
+        assertEquals(0l , actualEntry.getEffortLeftSum());
+        assertEquals(0l , actualEntry.getOriginalEstimateSum());
+        assertEquals(0l , actualEntry.getDeltaOriginalEstimate());
+        assertEquals(0l , actualEntry.getDeltaEffortLeft());
     }
     
     @Test

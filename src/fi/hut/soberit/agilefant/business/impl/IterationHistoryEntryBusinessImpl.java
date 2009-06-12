@@ -46,7 +46,8 @@ public class IterationHistoryEntryBusinessImpl extends
         long effortLeftSum = (sums.first == null) ? 0 : sums.first.getMinorUnits();
         long originalEstimateSum = (sums.second == null) ? 0 : sums.second.getMinorUnits();
         
-        if (latest != null && Days.daysBetween(latest.getTimestamp(), new DateTime()).getDays() == 0) {
+        if (latest != null &&
+                Days.daysBetween(latest.getTimestamp().toDateMidnight(), new DateTime().toDateMidnight()).getDays() == 0) {
             latest.setEffortLeftSum(effortLeftSum);
             latest.setOriginalEstimateSum(originalEstimateSum);
             latest.setDeltaEffortLeft(latest.getDeltaEffortLeft() + effortLeftSum - oldEffortLeftSum);

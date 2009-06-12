@@ -127,6 +127,8 @@ public class HourEntryDAOHibernate extends GenericDAOHibernate<HourEntry>
             return Collections.emptyList();
         }
         
+        List<TaskHourEntry> result;
+        
         Criteria crit = getCurrentSession().createCriteria(TaskHourEntry.class);
         
         crit.createAlias("task.story.backlog", "bl",
@@ -135,25 +137,34 @@ public class HourEntryDAOHibernate extends GenericDAOHibernate<HourEntry>
                 CriteriaSpecification.LEFT_JOIN);
         crit.createAlias("task.story.backlog.parent.parent", "blParentParent",
                 CriteriaSpecification.LEFT_JOIN);
+        
+
+        Criterion parentProject = Restrictions.or(Restrictions.in("bl.id", backlogIds), Restrictions
+                .in("blParent.id", backlogIds));
+        crit.add(Restrictions.or(Restrictions.in("blParentParent.id",
+                backlogIds), parentProject));
+        this.setDateUserFilter(crit, startDate, endDate, userIds);
+        
+        result = asList(crit);
+        
+        //entries where task has no story attachment
+        crit = getCurrentSession().createCriteria(TaskHourEntry.class);
+        
         crit.createAlias("task.iteration", "iBl", CriteriaSpecification.LEFT_JOIN);
         crit.createAlias("task.iteration.parent", "iBlParent",
                 CriteriaSpecification.LEFT_JOIN);
         crit.createAlias("task.iteration.parent.parent", "iBlParentParent",
                 CriteriaSpecification.LEFT_JOIN);
-
+        
         Criterion iterationParents = Restrictions.or(Restrictions.in(
                 "iBlParent.id", backlogIds), Restrictions.in("iBlParentParent.id",
                 backlogIds));
-        Criterion iterationParent = Restrictions.or(iterationParents,
-                Restrictions.in("iBl.id", backlogIds));
-        Criterion parentIteration = Restrictions.or(iterationParent,
-                Restrictions.in("bl.id", backlogIds));
-        Criterion parentProject = Restrictions.or(parentIteration, Restrictions
-                .in("blParent.id", backlogIds));
-        crit.add(Restrictions.or(Restrictions.in("blParentParent.id",
-                backlogIds), parentProject));
-        this.setDateUserFilter(crit, startDate, endDate, userIds);
-        return asList(crit);
+        crit.add( Restrictions.or(iterationParents,
+                Restrictions.in("iBl.id", backlogIds)));
+        List<TaskHourEntry> hourentriesWithoutStory = asList(crit);
+        result.addAll(hourentriesWithoutStory);
+        
+        return result;
     }
 
 }

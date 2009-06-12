@@ -275,6 +275,9 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
                 startDate, originalEstimateSum, endDate.plusDays(1), new ExactEstimate(0));
     }
     
+    /**
+     * Get the <code>TimeSeries</code> for drawing the current day line.
+     */
     protected TimeSeries getCurrentDayTimeSeries(IterationHistoryEntry yesterdayEntry, IterationHistoryEntry todayEntry) {
         ExactEstimate startValue = this.getTodaysStartValueWithScoping(yesterdayEntry, todayEntry);
 

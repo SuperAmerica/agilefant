@@ -286,7 +286,7 @@ public class IterationBurndownBusinessTest extends IterationBurndownBusinessImpl
     @Test
     public void testGetTodaysStartValueWithScoping_noScope() {
         initializeEntriesForScopingTest();
-        assertEquals(120,
+        assertEquals(new Double(120),
                 super.getTodaysStartValueWithScoping(startEntry, endEntry).getMinorUnits());
     }
     
@@ -295,7 +295,7 @@ public class IterationBurndownBusinessTest extends IterationBurndownBusinessImpl
         initializeEntriesForScopingTest();
         endEntry.setDeltaOriginalEstimate(-20);
         endEntry.setOriginalEstimateSum(100);
-        assertEquals(100,
+        assertEquals(new Double(100),
                 super.getTodaysStartValueWithScoping(startEntry, endEntry).getMinorUnits());
     }
     
@@ -304,7 +304,7 @@ public class IterationBurndownBusinessTest extends IterationBurndownBusinessImpl
         initializeEntriesForScopingTest();
         endEntry.setDeltaOriginalEstimate(97);
         endEntry.setOriginalEstimateSum(217);
-        assertEquals(217,
+        assertEquals(new Double(217),
                 super.getTodaysStartValueWithScoping(startEntry, endEntry).getMinorUnits());   
     }
     

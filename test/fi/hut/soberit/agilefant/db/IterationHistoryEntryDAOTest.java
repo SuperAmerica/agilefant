@@ -1,10 +1,7 @@
 package fi.hut.soberit.agilefant.db;
 
 import java.util.List;
-import java.util.Map;
 
-import org.joda.time.DateTime;
-import org.joda.time.LocalDate;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;

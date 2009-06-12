@@ -8,8 +8,8 @@ import static org.easymock.EasyMock.verify;
 import java.util.Arrays;
 import java.util.Collection;
 
-import org.junit.*;
-import static org.junit.Assert.*;
+import org.junit.Before;
+import org.junit.Test;
 
 import fi.hut.soberit.agilefant.business.ProductBusiness;
 import fi.hut.soberit.agilefant.model.Product;

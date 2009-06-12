@@ -1,6 +1,5 @@
 package fi.hut.soberit.agilefant.db.hibernate;
 
-import java.util.Collection;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -42,11 +41,6 @@ public class StoryDAOHibernate extends GenericDAOHibernate<Story> implements
         DetachedCriteria crit = DetachedCriteria.forClass(Story.class);
         crit.add(Restrictions.eq("backlog", backlog));
         return (List<Story>) hibernateTemplate.findByCriteria(crit);
-    }
-
-    public Collection<Task> getStoryTasks(Story story) {
-        DetachedCriteria criteria = DetachedCriteria.forClass(Task.class);
-        return null;
     }
 
     @SuppressWarnings("unchecked")

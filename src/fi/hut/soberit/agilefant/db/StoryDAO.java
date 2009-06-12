@@ -15,13 +15,6 @@ public interface StoryDAO extends GenericDAO<Story> {
 
     public List<Story> getStoriesByBacklog(Backlog backlog);
     
-    /**
-     * Get the story's tasks.
-     * @param story
-     * @return
-     */
-    public Collection<Task> getStoryTasks(Story story);
-
     StoryMetrics calculateMetrics(int storyId);
 
     StoryMetrics calculateMetricsWithoutStory(int iterationId);

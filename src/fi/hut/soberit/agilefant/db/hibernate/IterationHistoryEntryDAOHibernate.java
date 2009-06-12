@@ -1,6 +1,5 @@
 package fi.hut.soberit.agilefant.db.hibernate;
 
-import java.util.HashMap;
 import java.util.List;
 
 import org.hibernate.Criteria;

@@ -291,7 +291,7 @@ ALTER TABLE assignment ADD FOREIGN KEY (user_id) REFERENCES users(id);
 
 SELECT 'Foreign keys for backlogs' AS status;
 ALTER TABLE backlogs ADD FOREIGN KEY (parent_id) REFERENCES backlogs(id);
-ALTER TABLE backlogs ADD FOREIGN KEY (projectType_id) REFERENCES projecttype(id);
+ALTER TABLE backlogs ADD FOREIGN KEY (projectType_id) REFERENCES projecttypes(id);
 
 SELECT 'Foreign keys for themes' AS status;
 ALTER TABLE backlogthemebinding
@@ -320,3 +320,9 @@ SELECT 'Foreign keys for team user pivot' AS status;
 ALTER TABLE team_user ADD FOREIGN KEY (Team_id) REFERENCES team(id);
 ALTER TABLE team_user ADD FOREIGN KEY (User_id) REFERENCES users(id);
 ALTER TABLE team_user ADD PRIMARY KEY (Team_id, User_id);
+
+/*** DROP TEMPORARY PROCEDURES ***/
+
+DROP PROCEDURE ExecDyn;
+DROP PROCEDURE DropFK;
+DROP PROCEDURE DropAllForeignKeys;

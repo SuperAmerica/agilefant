@@ -64,14 +64,6 @@ public class IterationHistoryEntry {
         this.originalEstimateSum = originalEstimateSum;
     }
 
-    public long getDeltaEffortLeft() {
-        return deltaEffortLeft;
-    }
-
-    public void setDeltaEffortLeft(long deltaEffortLeft) {
-        this.deltaEffortLeft = deltaEffortLeft;
-    }
-
     public long getDeltaOriginalEstimate() {
         return deltaOriginalEstimate;
     }

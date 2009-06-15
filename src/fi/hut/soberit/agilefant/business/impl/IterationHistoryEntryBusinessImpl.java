@@ -50,14 +50,12 @@ public class IterationHistoryEntryBusinessImpl extends
                 Days.daysBetween(latest.getTimestamp().toDateMidnight(), new DateTime().toDateMidnight()).getDays() == 0) {
             latest.setEffortLeftSum(effortLeftSum);
             latest.setOriginalEstimateSum(originalEstimateSum);
-            latest.setDeltaEffortLeft(latest.getDeltaEffortLeft() + effortLeftSum - oldEffortLeftSum);
             latest.setDeltaOriginalEstimate(latest.getDeltaOriginalEstimate() + originalEstimateSum - oldOriginalEstimateSum);
             iterationHistoryEntryDAO.store(latest);
         }
         else {
             newEntry.setEffortLeftSum(effortLeftSum);
             newEntry.setOriginalEstimateSum(originalEstimateSum);
-            newEntry.setDeltaEffortLeft(effortLeftSum - oldEffortLeftSum);
             newEntry.setDeltaOriginalEstimate(originalEstimateSum - oldOriginalEstimateSum);
             iterationHistoryEntryDAO.create(newEntry);
         }

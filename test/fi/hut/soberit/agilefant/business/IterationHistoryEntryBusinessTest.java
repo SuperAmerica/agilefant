@@ -91,7 +91,6 @@ public class IterationHistoryEntryBusinessTest {
         
         iterationHistoryEntryBusiness.updateIterationHistory(1);
         IterationHistoryEntry entry = capturedEntry.getValue();
-        assertEquals((long)-50, entry.getDeltaEffortLeft());
         assertEquals((long)-70, entry.getDeltaOriginalEstimate());
         assertEquals((long)10, entry.getEffortLeftSum());
         assertEquals((long)20, entry.getOriginalEstimateSum());
@@ -115,7 +114,6 @@ public class IterationHistoryEntryBusinessTest {
         
         iterationHistoryEntryBusiness.updateIterationHistory(1);
         IterationHistoryEntry entry = capturedEntry.getValue();
-        assertEquals((long)-50, entry.getDeltaEffortLeft());
         assertEquals((long)-70, entry.getDeltaOriginalEstimate());
         assertEquals((long)10, entry.getEffortLeftSum());
         assertEquals((long)20, entry.getOriginalEstimateSum());

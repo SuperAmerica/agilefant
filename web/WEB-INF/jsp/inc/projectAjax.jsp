@@ -3,7 +3,9 @@
 <ul class="ajaxWindowTabs">
 	<li><a href="#projectEditTab-${projectId}"><span><img src="static/img/edit.png" alt="Edit" /> Edit project</span></a></li>
 	<li><a href="#projectIterationsTab-${projectId}"><span><img src="static/img/backlog.png" alt="Iterations" /> Iterations</span></a></li>
+	<%-- TODO: Bring back themes
 	<li><a href="#projectThemesTab-${projectId}"><span><img src="static/img/theme.png" alt="Themes" /> Themes</span></a></li>
+	 --%>
 </ul>
 <div id="projectEditTab-${projectId}" class="projectNaviTab">
 
@@ -18,7 +20,7 @@
 		format="%{getText('webwork.shortDateTime.format')}" />
 </c:if>
 <ww:hidden name="projectId" value="${project.id}" />
-<ww:hidden name="productId" value="${project.product.id}" />
+<ww:hidden name="productId" value="${project.parent.id}" />
 
 <aef:productList />
 <aef:projectTypeList id="projectTypes"/>
@@ -194,10 +196,10 @@ $(document).ready(function() {
 <div id="projectIterationsTab-${projectId}" class="projectNaviTab">
 
 <c:choose>
-<c:when test="${!empty project.iterations}">
+<c:when test="${!empty project.children}">
 	<div class="subItemContent">
 	<p>
-	<display:table class="listTable" name="project.iterations" id="row" requestURI="editProject.action">
+	<display:table class="listTable" name="project.children" id="row" requestURI="editProject.action">
 		<display:column title="Name" class="shortNameColumn">
 			<ww:url id="editLink" action="editIteration" includeParams="none">
 			<ww:param name="iterationId" value="${row.id}" />
@@ -241,14 +243,14 @@ $(document).ready(function() {
 </c:otherwise>
 </c:choose>
 </div>
-
+<%-- TODO: Bring back themes
 <div id="projectThemesTab-${projectId}" class="projectNaviTab">
 <script type="text/javascript">
 $(document).ready( function() {
     var iterationThemes = [<c:forEach items="${iterationThemes}" var="bind">${bind.businessTheme.id},</c:forEach>-1];
 	var getThemeData = function() {
 		var ret = {};
-		var data = jsonDataCache.get('themesByProduct',{data: {productId: ${project.product.id}, includeGlobalThemes: true}},${project.product.id});
+		var data = jsonDataCache.get('themesByProduct',{data: {productId: ${project.parent.id}, includeGlobalThemes: true}},${project.parent.id});
 		jQuery.each(data,function() {
 			if(this.active === true && jQuery.inArray(this.id,iterationThemes) == -1) {
 				ret[this.id] = this.name;
@@ -270,8 +272,7 @@ $(document).ready( function() {
 });
 
 </script>
-
-
+--%>
 <table>
 <tr>
 <td>

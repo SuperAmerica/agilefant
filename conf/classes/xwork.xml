@@ -358,12 +358,13 @@
 		<action name="storeNewProject" method="ajaxStoreProject"
 			class="projectAction">
 		</action>
-		<!-- 
+
 		<action name="projectTabs" method="edit"
 			class="projectAction">
 			<result>/WEB-INF/jsp/inc/projectAjax.jsp</result>
 		</action>
-		
+
+		<!-- 		
 		<action name="ajaxStoreProject" method="ajaxStoreProject"
 			class="projectAction">		
 			<result name="ajax_error" type="httpheader">

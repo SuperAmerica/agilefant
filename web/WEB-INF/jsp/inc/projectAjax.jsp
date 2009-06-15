@@ -62,7 +62,7 @@ $(document).ready(function() {
 							<option class="inactive" value="">(select product)</option>
 							<c:forEach items="${productList}" var="product">
 								<c:choose>
-									<c:when test="${product.id == currentProductId}">
+									<c:when test="${product.id == productId}">
 										<option selected="selected" value="${product.id}"
 											title="${product.name}">${aef:out(product.name)}</option>
 									</c:when>
@@ -74,6 +74,7 @@ $(document).ready(function() {
 						</select>
 						</td>
 					</tr>
+          <%--
 					<tr>
 						<td>Project type</td>
 						<td></td>
@@ -98,6 +99,7 @@ $(document).ready(function() {
 						</c:choose>							
 						</td>
 					</tr>
+          --%>
 					<tr>
 						<td>Status</td>
 						<td></td>
@@ -107,6 +109,7 @@ $(document).ready(function() {
 								listKey="name" listValue="getText('project.status.' + name())" />							
 						</td>
 					</tr>
+          <%--
 					<tr>
 						<td>Baseline load</td>
 						<td></td>
@@ -114,6 +117,7 @@ $(document).ready(function() {
 							name="project.defaultOverhead" /> / person / week
 							<span class="errorMessage"></span></td>
 					</tr>
+          --%>
 					<tr>
                         <td>Planned project size</td>
                         <td></td>
@@ -137,7 +141,8 @@ $(document).ready(function() {
 							format="%{getText('webwork.shortDateTime.format')}"
 							value="%{#end}" /></td>
 					</tr>
-					<tr>
+          <%--
+          <tr>
 						<td>Assigned Users</td>
 						<td></td>
 						<td colspan="2">
@@ -167,6 +172,7 @@ $(document).ready(function() {
 						
 						</td>
 					</tr>
+          --%>
 					<tr>
 						<td>Description</td>
 						<td></td>

@@ -214,6 +214,7 @@ $(document).ready(function() {
 								    				</td>
 								    				<td></td>						
 												</tr>
+                        <%--
 												<tr>
 													<th class="info1">Project type</th>
 													<td class="info3" ondblclick="return editProject();">
@@ -227,6 +228,7 @@ $(document).ready(function() {
 													</c:choose>
 													</td>													
 												</tr>
+                        --%>
                         <%--
 												<c:if test="${(project.defaultOverhead != null) && (project.defaultOverhead.time > 0)}">
 												<tr>
@@ -329,6 +331,7 @@ $(document).ready(function() {
 															</select>
 														</td>
 													</tr>
+                          <%--
 													<tr>
 														<td>Project type</td>
 														<td></td>														
@@ -353,6 +356,7 @@ $(document).ready(function() {
 														</c:choose>
 														</td>																																																																																										
 													</tr>
+                          --%>
 													<tr>
 														<td>Status</td>
 														<td></td>
@@ -364,11 +368,13 @@ $(document).ready(function() {
 																listValue="getText('project.status.' + name())"	/>
 														</td>
 													</tr>
+                          <%--
 													<tr>
 														<td>Baseline load</td>
 														<td></td>
-														<%--<td colspan="2"><ww:textfield size="10" name="project.defaultOverhead" /> / person / week</td>--%>
+														<td colspan="2"><ww:textfield size="10" name="project.defaultOverhead" /> / person / week</td>
 													</tr>
+                          --%>
 						                			<tr>
 														<td>Planned project size</td>
 														<td></td>

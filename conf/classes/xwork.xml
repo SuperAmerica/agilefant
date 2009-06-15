@@ -364,7 +364,7 @@
 			<result>/WEB-INF/jsp/inc/projectAjax.jsp</result>
 		</action>
 
-		<!-- 		
+		 		
 		<action name="ajaxStoreProject" method="ajaxStoreProject"
 			class="projectAction">		
 			<result name="ajax_error" type="httpheader">
@@ -375,7 +375,7 @@
 				<param name="location">/WEB-INF/jsp/inc/ajaxProjectResult.jsp</param>
 			</result>
 		</action>
-		 -->
+		
 		<!-- /Project actions -->
 
 		<!-- Work type actions -->

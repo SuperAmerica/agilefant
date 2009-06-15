@@ -113,6 +113,7 @@ public class ProjectBusinessImpl extends GenericBusinessImpl<Project> implements
             storable.setDescription(project.getDescription());
             storable.setStatus(project.getStatus());
             storable.setBacklogSize(project.getBacklogSize());
+            storable.setParent(project.getParent());
             
         } else {
             validateProjectData(project);

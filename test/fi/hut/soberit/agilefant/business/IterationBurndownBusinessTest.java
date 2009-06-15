@@ -7,6 +7,7 @@ import static org.easymock.classextension.EasyMock.verify;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import java.awt.BasicStroke;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -15,7 +16,9 @@ import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.DateAxis;
 import org.jfree.chart.plot.XYPlot;
+import org.jfree.chart.renderer.xy.XYItemRenderer;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
+import org.jfree.chart.title.TextTitle;
 import org.jfree.data.time.Second;
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
@@ -111,6 +114,17 @@ public class IterationBurndownBusinessTest extends IterationBurndownBusinessImpl
     }
     
     @Test
+    public void testGetSmallIterationBurndown() {
+        expect(iterationHistoryEntryBusiness.getHistoryEntriesForIteration(iteration))
+        .andReturn(Arrays.asList(entry));
+        replay(iterationHistoryEntryBusiness);
+
+        assertNotNull(iterationBurndownBusiness.getSmallIterationBurndown(iteration));
+
+        verify(iterationHistoryEntryBusiness);
+    }
+    
+    @Test
     public void testConstructChart() {
         expect(iterationHistoryEntryBusiness.getHistoryEntriesForIteration(iteration))
             .andReturn(Arrays.asList(entry));
@@ -128,6 +142,60 @@ public class IterationBurndownBusinessTest extends IterationBurndownBusinessImpl
                 newChart.getXYPlot().getDataset().getSeriesKey(SCOPING_SERIES_NO));
         
         verify(iterationHistoryEntryBusiness);
+    }
+    
+    @Test
+    public void testConstructSmallChart() {
+        expect(iterationHistoryEntryBusiness.getHistoryEntriesForIteration(iteration))
+            .andReturn(Arrays.asList(entry));
+        replay(iterationHistoryEntryBusiness);
+        
+        JFreeChart newChart = super.constructSmallChart(iteration);
+        
+        assertEquals(REFERENCE_SERIES_NAME,
+                newChart.getXYPlot().getDataset().getSeriesKey(REFERENCE_SERIES_NO));
+        assertEquals(BURNDOWN_SERIES_NAME,
+                newChart.getXYPlot().getDataset().getSeriesKey(BURNDOWN_SERIES_NO));
+        assertEquals(CURRENT_DAY_SERIES_NAME,
+                newChart.getXYPlot().getDataset().getSeriesKey(CURRENT_DAY_SERIES_NO));
+        assertEquals(SCOPING_SERIES_NAME,
+                newChart.getXYPlot().getDataset().getSeriesKey(SCOPING_SERIES_NO));
+               
+        testSmallChartFormating(newChart);
+        
+        verify(iterationHistoryEntryBusiness);
+    }
+    
+    private void testSmallChartFormating(JFreeChart chart) {
+        assertEquals(PLOT_BACKGROUND_COLOR, chart.getPlot().getBackgroundPaint());
+       
+        XYPlot plot = chart.getXYPlot();
+        XYLineAndShapeRenderer rend = (XYLineAndShapeRenderer)chart.getXYPlot().getRenderer();
+        assertEquals(BURNDOWN_SERIES_COLOR, rend.getSeriesPaint(BURNDOWN_SERIES_NO));
+        assertEquals(BURNDOWN_SERIES_COLOR, rend.getSeriesPaint(SCOPING_SERIES_NO));
+        assertEquals(BURNDOWN_SERIES_COLOR, rend.getSeriesPaint(CURRENT_DAY_SERIES_NO));
+        assertEquals(REFERENCE_SERIES_COLOR, rend.getSeriesPaint(REFERENCE_SERIES_NO));
+        
+        assertFalse(plot.getDomainAxis().isVisible());
+        assertFalse(plot.getRangeAxis().isVisible());
+        assertFalse(plot.isDomainGridlinesVisible());
+        assertFalse(plot.isRangeGridlinesVisible());
+        
+        assertFalse(rend.getSeriesShapesVisible(BURNDOWN_SERIES_NO));
+        assertFalse(rend.getSeriesShapesVisible(REFERENCE_SERIES_NO));
+        assertFalse(rend.getSeriesShapesVisible(SCOPING_SERIES_NO));
+        assertFalse(rend.getSeriesShapesVisible(CURRENT_DAY_SERIES_NO));
+        
+        assertEquals(null, plot.getDomainAxis().getLabel());
+        assertEquals(null, plot.getRangeAxis().getLabel());
+        
+        assertNull(chart.getLegend());
+    }
+    
+    @Test
+    public void testTransformToSmallChart() {
+        JFreeChart newChart = super.transformToSmallChart(chart);
+        testSmallChartFormating(newChart);
     }
     
     @Test

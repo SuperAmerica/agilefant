@@ -16,6 +16,7 @@ import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.DateAxis;
 import org.jfree.chart.plot.XYPlot;
+import org.jfree.chart.renderer.xy.XYItemRenderer;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.data.time.Second;
 import org.jfree.data.time.TimeSeries;
@@ -60,11 +61,14 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
     
     /* Chart sizes */
     protected static final int DEFAULT_WIDTH = 780;
-    protected static final int DEFAULT_HEIGHT = 600;   
+    protected static final int DEFAULT_HEIGHT = 600;
+    protected static final int SMALL_WIDTH = 110;
+    protected static final int SMALL_HEIGHT = 85;
+
 
     /* Chart backgrounds */
     protected static Color CHART_BACKGROUND_COLOR = Color.white;
-    protected static Color PLOT_BACKGROUND_COLOR = new Color(0xee, 0xee, 0xee);
+    protected static Color PLOT_BACKGROUND_COLOR = Color.white;
     
     /* Axis titles */
     protected static final String DATE_AXIS_LABEL = "Date";
@@ -151,6 +155,14 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
         return getChartImageByteArray(constructChart(iteration));
     }
     
+    public byte[] getSmallIterationBurndown(Iteration iteration) {
+        return getChartImageByteArray(constructSmallChart(iteration), SMALL_WIDTH, SMALL_HEIGHT);
+    }
+    
+    protected JFreeChart constructChart(Iteration iteration, boolean drawLegend) {
+        return constructChart(iteration);
+    }
+
     protected JFreeChart constructChart(Iteration iteration) {
         JFreeChart burndown = ChartFactory.createTimeSeriesChart(BURNDOWN_SERIES_NAME,
                 DATE_AXIS_LABEL,
@@ -167,6 +179,45 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
         return burndown;
     }
     
+    protected JFreeChart constructSmallChart(Iteration iteration) {
+        JFreeChart burndown = this.constructChart(iteration);
+        return transformToSmallChart(burndown);
+    }
+    
+    /**
+     * Trims and transforms a big burndown chart to a small one.
+     */
+    protected JFreeChart transformToSmallChart(JFreeChart burndownChart) {
+        JFreeChart chart = burndownChart;
+        XYPlot plot = chart.getXYPlot();
+        XYLineAndShapeRenderer renderer = (XYLineAndShapeRenderer)plot.getRenderer();
+        
+        chart.setBackgroundPaint(CHART_BACKGROUND_COLOR);
+        plot.setBackgroundPaint(PLOT_BACKGROUND_COLOR);
+        
+        renderer.setSeriesPaint(BURNDOWN_SERIES_NO, BURNDOWN_SERIES_COLOR);
+        renderer.setSeriesPaint(CURRENT_DAY_SERIES_NO, BURNDOWN_SERIES_COLOR);
+        renderer.setSeriesPaint(SCOPING_SERIES_NO, BURNDOWN_SERIES_COLOR);
+        renderer.setSeriesPaint(REFERENCE_SERIES_NO, REFERENCE_SERIES_COLOR);
+        
+        renderer.setSeriesShapesVisible(BURNDOWN_SERIES_NO, false);
+        renderer.setSeriesShapesVisible(CURRENT_DAY_SERIES_NO, false);
+        renderer.setSeriesShapesVisible(SCOPING_SERIES_NO, false);
+        renderer.setSeriesShapesVisible(REFERENCE_SERIES_NO, false);
+        
+        plot.setDomainGridlinesVisible(false);
+        plot.setRangeGridlinesVisible(false);
+        plot.getDomainAxis().setVisible(false);
+        plot.getRangeAxis().setVisible(false);
+        
+        plot.getDomainAxis().setLabel(null);
+        plot.getRangeAxis().setLabel(null);
+        
+        chart.removeLegend();
+        chart.setTitle("");
+        return chart;
+    }
+    
     /**
      * Sets the chart's and plot's background colors.
      */
@@ -178,8 +229,7 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
     }
     
     protected void setSeriesStyles(JFreeChart chart) {
-        XYLineAndShapeRenderer rend = (XYLineAndShapeRenderer) ((XYPlot) chart
-                .getPlot()).getRenderer();
+        XYLineAndShapeRenderer rend = (XYLineAndShapeRenderer)chart.getXYPlot().getRenderer();
         
         rend.setSeriesPaint(BURNDOWN_SERIES_NO, BURNDOWN_SERIES_COLOR);
         rend.setSeriesShape(BURNDOWN_SERIES_NO, BURNDOWN_SERIES_SHAPE);
@@ -195,6 +245,7 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
         
         rend.setSeriesPaint(SCOPING_SERIES_NO, SCOPING_SERIES_COLOR);
         rend.setSeriesStroke(SCOPING_SERIES_NO, SCOPING_SERIES_STROKE);
+        
     }
     
     /**
@@ -417,4 +468,5 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
         return new TimeSeriesDataItem(startInstant, ExactEstimateUtils
                 .extractMajorUnits(value));
     }
+
 }

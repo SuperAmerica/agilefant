@@ -52,7 +52,7 @@
 				<div class="subItemContent">
 				<div id="descriptionDiv" class="descriptionDiv">
 				<table class="infoTable" cellpadding="0" cellspacing="0">
-					<%-- TODO: Add support for charts/metrics
+					<%-- TODO: Add support for charts/metrics --%>
 					<tr>
 						<th class="info1"><ww:text name="general.uniqueId"/></th>
 						<td class="info3"><aef:quickReference item="${iteration}" /></td>
@@ -60,14 +60,14 @@
 						<td class="info4" rowspan="5">
 						            
                         <div class="smallBurndown"><a href="#bigChart"><img id="smallChart" 
-                            src="drawSmallChart.action?iterationId=${iteration.id}" /></a></div>
+                            src="drawSmallIterationBurndown.action?backlogId=${iteration.id}" /></a></div>
                         <div id="iterationMetrics">
                           <%@ include file="./inc/iterationMetrics.jsp"%>
                         </div>
                         
                         </td>					
 					</tr>
-					--%>
+					
 					<tr>	
 						<th class="info1">Planned iteration size</th>
 						<td class="info3" ondblclick="return editIteration();">
@@ -331,8 +331,8 @@ $(document).ready(function() {
   $(document.body).bind("metricsUpdated", function() {
 	  var bigChart = $("#bigChart");
 	  bigChart.attr("src",bigChart.attr("src")+"#");
-    //var smallChart = $("#smallChart");
-    //smallChart.attr("src",smallChart.attr("src")+"#");
+    var smallChart = $("#smallChart");
+    smallChart.attr("src",smallChart.attr("src")+"#");
     //$("#iterationMetrics").load("iterationMetrics.action",{iterationId: ${iterationId}});
 	});
 });

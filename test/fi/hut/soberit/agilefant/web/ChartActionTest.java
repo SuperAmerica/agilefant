@@ -17,6 +17,7 @@ public class ChartActionTest {
     ChartAction chartAction = new ChartAction();
     IterationBurndownBusiness iterationBurndownBusiness;
     IterationBusiness iterationBusiness;
+    Iteration iteration;
 
     @Before
     public void setUp() {
@@ -25,13 +26,13 @@ public class ChartActionTest {
 
         iterationBusiness = createMock(IterationBusiness.class);
         chartAction.setIterationBusiness(iterationBusiness);
+        
+        iteration = new Iteration();
+        iteration.setId(100);
     }
 
     @Test
     public void testGetIterationBurndown() {
-        Iteration iteration = new Iteration();
-        iteration.setId(100);
-        
         byte[] expected = new byte[100];
 
         chartAction.setBacklogId(iteration.getId());
@@ -48,4 +49,20 @@ public class ChartActionTest {
         verify(iterationBusiness, iterationBurndownBusiness);
     }
 
+    @Test
+    public void testGetSmallIterationBurndown() {
+        byte[] expected = new byte[100];
+
+        chartAction.setBacklogId(iteration.getId());
+        expect(iterationBusiness.retrieve(iteration.getId())).andReturn(
+                iteration);
+        expect(iterationBurndownBusiness.getSmallIterationBurndown(iteration))
+                .andReturn(expected);
+        replay(iterationBusiness, iterationBurndownBusiness);
+
+        assertEquals(Action.SUCCESS, chartAction.getSmallIterationBurndown());
+        assertEquals(expected, chartAction.getResult());
+        
+        
+        verify(iterationBusiness, iterationBurndownBusiness);    }
 }

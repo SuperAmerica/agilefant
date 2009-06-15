@@ -44,6 +44,12 @@ public class ChartAction extends ActionSupport {
         return Action.SUCCESS;
     }
 
+    public String getSmallIterationBurndown() {
+        Iteration iteration = iterationBusiness.retrieve(backlogId);
+        result = iterationBurndownBusiness.getSmallIterationBurndown(iteration);
+        return Action.SUCCESS;
+    }
+    
     public InputStream getInputStream() {
         return new ByteArrayInputStream(result);
     }

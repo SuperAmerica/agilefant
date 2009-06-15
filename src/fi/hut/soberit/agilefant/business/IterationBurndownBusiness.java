@@ -12,4 +12,5 @@ public interface IterationBurndownBusiness {
      */
     public byte[] getIterationBurndown(Iteration iteration);
 
+    public byte[] getSmallIterationBurndown (Iteration iteration);
 }

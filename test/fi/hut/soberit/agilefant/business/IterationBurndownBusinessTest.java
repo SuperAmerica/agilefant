@@ -206,6 +206,9 @@ public class IterationBurndownBusinessTest extends IterationBurndownBusinessImpl
         
         assertEquals("Start date not same", startDate.toDateMidnight().toDate(), actualAxis.getMinimumDate());
         assertEquals("End date not same", endDate.plusDays(1).toDateMidnight().toDate(), actualAxis.getMaximumDate());
+        
+        assertEquals(GRIDLINE_COLOR, chart.getXYPlot().getRangeGridlinePaint());
+        assertEquals(GRIDLINE_COLOR, chart.getXYPlot().getDomainGridlinePaint());
     } 
     
     @Test

@@ -8,6 +8,7 @@ import java.awt.Shape;
 import java.awt.Stroke;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.List;
 
@@ -67,8 +68,9 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
 
 
     /* Chart backgrounds */
-    protected static Color CHART_BACKGROUND_COLOR = Color.white;
-    protected static Color PLOT_BACKGROUND_COLOR = Color.white;
+    protected static final Color CHART_BACKGROUND_COLOR = Color.white;
+    protected static final Color PLOT_BACKGROUND_COLOR = Color.white;
+    protected static final Color GRIDLINE_COLOR = new Color(0xcc, 0xcc, 0xcc);
     
     /* Axis titles */
     protected static final String DATE_AXIS_LABEL = "Date";
@@ -245,7 +247,6 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
         
         rend.setSeriesPaint(SCOPING_SERIES_NO, SCOPING_SERIES_COLOR);
         rend.setSeriesStroke(SCOPING_SERIES_NO, SCOPING_SERIES_STROKE);
-        
     }
     
     /**
@@ -256,8 +257,10 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
         DateAxis axis = (DateAxis)plot.getDomainAxis();
         axis.setMaximumDate(end.plusDays(1).toDateMidnight().toDate());
         axis.setMinimumDate(start.toDateMidnight().toDate());
-//        axis.setDateFormatOverride(new SimpleDateFormat("EEE d.M."));
-//        axis.setTickUnit(new DateTickUnit(DateTickUnitType.DAY, 1));
+        axis.setDateFormatOverride(new SimpleDateFormat("EEE d.M."));
+        
+        plot.setDomainGridlinePaint(GRIDLINE_COLOR);
+        plot.setRangeGridlinePaint(GRIDLINE_COLOR);
     }
     
     /**

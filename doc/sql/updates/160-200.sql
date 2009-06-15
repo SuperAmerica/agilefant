@@ -66,7 +66,6 @@ ALTER TABLE backlog RENAME backlogs;
 
 ALTER TABLE backlogs DROP COLUMN assignee_id;
 ALTER TABLE backlogs DROP COLUMN owner_id;
-ALTER TABLE backlogs DROP COLUMN history_fk;
 
 ALTER TABLE backlogs
 	CHANGE project_id parent_id INT(11);
@@ -230,7 +229,6 @@ DROP TABLE backlogitem_businesstheme;
 
 /*** History entries ***/
 
-DROP TABLE history;
 
 CREATE TABLE history_iterations (
 	id BIGINT AUTO_INCREMENT,
@@ -245,13 +243,17 @@ CREATE TABLE history_iterations (
 
 INSERT INTO history_iterations(effortLeftSum,originalEstimateSum,timestamp,iteration_id,
                                deltaEffortLeft)
-SELECT effortLeft, originalEstimate, date, history_id, deltaEffortLeft
+SELECT effortLeft, originalEstimate, `date`, history_id, deltaEffortLeft
 FROM historyentry h
 INNER JOIN backlogs
-ON h.history_id = backlogs.id
+ON h.history_id = backlogs.history_fk
 WHERE backlogs.backlogtype = 'Iteration';
 
+/* Cleanup */ 
+
 DROP TABLE historyentry;
+ALTER TABLE backlogs DROP COLUMN history_fk;
+DROP TABLE history;
 
 /*** HOUR ENTRIES ***/
 

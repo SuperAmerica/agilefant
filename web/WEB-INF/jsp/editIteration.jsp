@@ -329,8 +329,8 @@ $(document).ready( function() {
 $(document).ready(function() {
   new IterationController(${iterationId}, $("#stories"));
   $(document.body).bind("metricsUpdated", function() {
-	  //var bigChart = $("#bigChart");
-	  //bigChart.attr("src",bigChart.attr("src")+"#");
+	  var bigChart = $("#bigChart");
+	  bigChart.attr("src",bigChart.attr("src")+"#");
     //var smallChart = $("#smallChart");
     //smallChart.attr("src",smallChart.attr("src")+"#");
     //$("#iterationMetrics").load("iterationMetrics.action",{iterationId: ${iterationId}});

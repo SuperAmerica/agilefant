@@ -1,6 +1,8 @@
 package fi.hut.soberit.agilefant.business.impl;
 
 
+import static org.junit.Assert.assertEquals;
+
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Rectangle;
@@ -23,6 +25,7 @@ import org.jfree.data.time.Second;
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.data.time.TimeSeriesDataItem;
+import org.jfree.ui.RectangleInsets;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,12 +72,12 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
 
     /* Chart backgrounds */
     protected static final Color CHART_BACKGROUND_COLOR = Color.white;
-    protected static final Color PLOT_BACKGROUND_COLOR = Color.white;
-    protected static final Color GRIDLINE_COLOR = new Color(0xcc, 0xcc, 0xcc);
+    protected static final Color PLOT_BACKGROUND_COLOR  = Color.white;
+    protected static final Color GRIDLINE_COLOR         = new Color(0xcc, 0xcc, 0xcc);
     
     /* Axis titles */
-    protected static final String DATE_AXIS_LABEL = "Date";
-    protected static final String EFFORT_AXIS_LABEL = "Effort left";
+    protected static final String DATE_AXIS_LABEL       = "Date";
+    protected static final String EFFORT_AXIS_LABEL     = "Effort left";
     
     /* Series numbers */
     protected static final int REFERENCE_SERIES_NO      = 0;
@@ -84,20 +87,21 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
     protected static final int EXPECTED_SERIES_NO       = 4;
     
     /* Series colors */
-    protected static final Color BURNDOWN_SERIES_COLOR  = new Color(220, 100, 87);
-    protected static final Color CURRENT_DAY_SERIES_COLOR  = BURNDOWN_SERIES_COLOR;
-    protected static final Color SCOPING_SERIES_COLOR  = BURNDOWN_SERIES_COLOR;
-    protected static final Color REFERENCE_SERIES_COLOR = new Color(90, 145, 210);
-    protected static final Color EXPECTED_COLOR  = new Color(80, 80, 80);
+    protected static final Color BURNDOWN_SERIES_COLOR          = new Color(220, 100, 87);
+    protected static final Color CURRENT_DAY_SERIES_COLOR       = BURNDOWN_SERIES_COLOR;
+    protected static final Color SCOPING_SERIES_COLOR           = BURNDOWN_SERIES_COLOR;
+    protected static final Color REFERENCE_SERIES_COLOR         = new Color(90, 145, 210);
+    protected static final Color EXPECTED_COLOR                 = new Color(80, 80, 80);
     
     /* Series shape */
-    protected static final Shape BURNDOWN_SERIES_SHAPE = new Rectangle(-2, -2, 4, 4);
-    protected static final boolean BURNDOWN_SERIES_SHAPE_VISIBLE = true;
-    protected static final Shape CURRENT_DAY_SERIES_SHAPE = new Rectangle(-2, -2, 4, 4);
-    protected static final boolean CURRENT_DAY_SERIES_SHAPE_VISIBLE = true;
-    protected static final boolean CURRENT_DAY_SERIES_SHAPE_FILLED = false;
+    protected static final Shape BURNDOWN_SERIES_SHAPE                  = new Rectangle(-2, -2, 4, 4);
+    protected static final boolean BURNDOWN_SERIES_SHAPE_VISIBLE        = true;
+    protected static final Shape CURRENT_DAY_SERIES_SHAPE               = new Rectangle(-2, -2, 4, 4);
+    protected static final boolean CURRENT_DAY_SERIES_SHAPE_VISIBLE     = true;
+    protected static final boolean CURRENT_DAY_SERIES_SHAPE_FILLED      = false;
     
     /* Series stroke */
+    protected static final Stroke SMALL_BURNDOWN_STROKE = new BasicStroke(1.0f);
     protected static final Stroke CURRENT_DAY_SERIES_STROKE = new BasicStroke(
             1.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL,
             0.0f, new float[] { 7.0f, 3.0f }, 0.0f);
@@ -202,6 +206,11 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
         renderer.setSeriesPaint(SCOPING_SERIES_NO, BURNDOWN_SERIES_COLOR);
         renderer.setSeriesPaint(REFERENCE_SERIES_NO, REFERENCE_SERIES_COLOR);
         
+        renderer.setSeriesStroke(BURNDOWN_SERIES_NO, SMALL_BURNDOWN_STROKE);
+        renderer.setSeriesStroke(CURRENT_DAY_SERIES_NO, SMALL_BURNDOWN_STROKE);
+        renderer.setSeriesStroke(SCOPING_SERIES_NO, SMALL_BURNDOWN_STROKE);
+        renderer.setSeriesStroke(REFERENCE_SERIES_NO, SMALL_BURNDOWN_STROKE);
+        
         renderer.setSeriesShapesVisible(BURNDOWN_SERIES_NO, false);
         renderer.setSeriesShapesVisible(CURRENT_DAY_SERIES_NO, false);
         renderer.setSeriesShapesVisible(SCOPING_SERIES_NO, false);
@@ -214,6 +223,9 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
         
         plot.getDomainAxis().setLabel(null);
         plot.getRangeAxis().setLabel(null);
+        
+        RectangleInsets ins = new RectangleInsets(-6, -8, -3, -7);
+        chart.setPadding(ins);
         
         chart.removeLegend();
         chart.setTitle("");

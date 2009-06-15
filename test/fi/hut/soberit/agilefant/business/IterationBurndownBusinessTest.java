@@ -23,6 +23,7 @@ import org.jfree.data.time.Second;
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.data.time.TimeSeriesDataItem;
+import org.jfree.ui.RectangleInsets;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.junit.Before;
@@ -175,6 +176,11 @@ public class IterationBurndownBusinessTest extends IterationBurndownBusinessImpl
         assertEquals(BURNDOWN_SERIES_COLOR, rend.getSeriesPaint(SCOPING_SERIES_NO));
         assertEquals(BURNDOWN_SERIES_COLOR, rend.getSeriesPaint(CURRENT_DAY_SERIES_NO));
         assertEquals(REFERENCE_SERIES_COLOR, rend.getSeriesPaint(REFERENCE_SERIES_NO));
+        
+        assertEquals(SMALL_BURNDOWN_STROKE, rend.getSeriesStroke(BURNDOWN_SERIES_NO));
+        assertEquals(SMALL_BURNDOWN_STROKE, rend.getSeriesStroke(CURRENT_DAY_SERIES_NO));
+        assertEquals(SMALL_BURNDOWN_STROKE, rend.getSeriesStroke(SCOPING_SERIES_NO));
+        assertEquals(SMALL_BURNDOWN_STROKE, rend.getSeriesStroke(REFERENCE_SERIES_NO));
         
         assertFalse(plot.getDomainAxis().isVisible());
         assertFalse(plot.getRangeAxis().isVisible());

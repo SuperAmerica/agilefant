@@ -46,9 +46,12 @@ BEGIN
 	END LOOP;
 END //
 
+SELECT 'Drop All Foreign Keys' AS status;
 CALL DropAllForeignKeys() //
 
 delimiter ;
+
+SELECT 'Schema changes' AS status;
 
 /*** ASSIGNMENT ***/
 
@@ -234,20 +237,71 @@ CREATE TABLE history_iterations (
 	id BIGINT AUTO_INCREMENT,
 	effortLeftSum INT(11) NOT NULL,
 	originalEstimateSum INT(11) NOT NULL,
-	deltaEffortLeft INT(11) NOT NULL DEFAULT 0,
 	deltaOriginalEstimate INT(11) NOT NULL DEFAULT 0,
-	timestamp DATETIME,
-	iteration_id INT(11),
+	timestamp DATE NOT NULL,
+	iteration_id INT(11) NOT NULL,
 	PRIMARY KEY(id)
 ) ENGINE=InnoDB;
 
 INSERT INTO history_iterations(effortLeftSum,originalEstimateSum,timestamp,iteration_id,
-                               deltaEffortLeft)
+                               deltaOriginalEstimate)
 SELECT effortLeft/60, originalEstimate/60, `date`, backlogs.id, deltaEffortLeft/60
 FROM historyentry h
 INNER JOIN backlogs
 ON h.history_id = backlogs.history_fk
 WHERE backlogs.backlogtype = 'Iteration';
+
+/* New logic expects delta entries for today.
+   Before they were written for yesterday */
+
+SELECT 'Deleting all but the latest history entry for a day' AS status;
+
+DROP TABLE IF EXISTS he_temp;
+CREATE TEMPORARY TABLE he_temp SELECT * FROM history_iterations;
+
+DELETE history_iterations
+FROM history_iterations
+INNER JOIN he_temp newer ON newer.id > history_iterations.id
+	AND newer.iteration_id = history_iterations.iteration_id
+	AND newer.timestamp = history_iterations.timestamp;
+
+/* Add a constraint so that we can't get the db into a bad state any more */
+ALTER TABLE history_iterations ADD CONSTRAINT UNIQUE (iteration_id, timestamp);
+
+DROP TABLE he_temp;
+
+SELECT 'Shift deltaOriginalEstimate forward' AS status;
+
+CREATE TEMPORARY TABLE he_temp SELECT * FROM history_iterations;
+UPDATE he_temp SET timestamp = (timestamp + INTERVAL 1 DAY);
+ALTER TABLE he_temp DROP COLUMN id;
+
+/* We don't want any entries to the future and they would be zero anyway */
+DELETE FROM he_temp
+WHERE timestamp > NOW();
+
+UPDATE history_iterations
+SET deltaOriginalEstimate=(
+	SELECT deltaOriginalEstimate FROM he_temp
+	WHERE he_temp.timestamp = history_iterations.timestamp
+	      AND  he_temp.iteration_id = history_iterations.iteration_id
+);
+
+SELECT 'Delete updated from temporary table' AS status;
+
+DELETE he_temp
+FROM he_temp
+INNER JOIN history_iterations
+	ON he_temp.timestamp = history_iterations.timestamp
+	AND he_temp.iteration_id = history_iterations.iteration_id;
+
+SELECT 'Insert rest as new items' AS status;
+
+/* Have to list columns manually because we need a new id */
+INSERT INTO history_iterations (effortLeftSum, originalEstimateSum, deltaOriginalEstimate,
+	timestamp, iteration_id)
+SELECT effortLeftSum, originalEstimateSum, deltaOriginalEstimate,timestamp,
+    iteration_id FROM he_temp;
 
 /* Cleanup */ 
 
@@ -256,6 +310,8 @@ ALTER TABLE backlogs DROP COLUMN history_fk;
 DROP TABLE history;
 
 /*** HOUR ENTRIES ***/
+
+SELECT 'Hour entries' AS status;
 
 ALTER TABLE hourentry CHANGE timeSpent minutesSpent BIGINT(20);
 UPDATE hourentry SET minutesSpent=(minutesSpent/60);
@@ -282,7 +338,7 @@ DROP TABLE worktype;
 
 ALTER TABLE projecttype RENAME projecttypes;
 ALTER TABLE setting RENAME settings;
-ALTER TABLE team RENAME team;
+ALTER TABLE team RENAME teams;
 
 /*** BRING BACK FOREIGN KEYS ***/
 
@@ -319,12 +375,13 @@ ALTER TABLE tasks ADD FOREIGN KEY (creator_id) REFERENCES users(id);
 ALTER TABLE tasks ADD FOREIGN KEY (story_id) REFERENCES stories(id);
 
 SELECT 'Foreign keys for team user pivot' AS status;
-ALTER TABLE team_user ADD FOREIGN KEY (Team_id) REFERENCES team(id);
+ALTER TABLE team_user ADD FOREIGN KEY (Team_id) REFERENCES teams(id);
 ALTER TABLE team_user ADD FOREIGN KEY (User_id) REFERENCES users(id);
 ALTER TABLE team_user ADD PRIMARY KEY (Team_id, User_id);
 
 /*** DROP TEMPORARY PROCEDURES ***/
 
+SELECT 'Drop procedures' AS status;
 DROP PROCEDURE ExecDyn;
 DROP PROCEDURE DropFK;
 DROP PROCEDURE DropAllForeignKeys;

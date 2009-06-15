@@ -243,7 +243,7 @@ CREATE TABLE history_iterations (
 
 INSERT INTO history_iterations(effortLeftSum,originalEstimateSum,timestamp,iteration_id,
                                deltaEffortLeft)
-SELECT effortLeft, originalEstimate, `date`, history_id, deltaEffortLeft
+SELECT effortLeft/60, originalEstimate/60, `date`, history_id, deltaEffortLeft/60
 FROM historyentry h
 INNER JOIN backlogs
 ON h.history_id = backlogs.history_fk

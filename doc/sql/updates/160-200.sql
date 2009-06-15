@@ -262,10 +262,10 @@ ALTER TABLE hourentry ADD COLUMN story_id BIGINT;
 ALTER TABLE hourentry ADD COLUMN task_id BIGINT;
 
 
-UPDATE hourentry SET story_id=backlogItem_id
+UPDATE hourentry SET story_id=backlogItem_id, DTYPE='StoryHourEntry'
 WHERE backlogItem_id IN (SELECT stories.id FROM stories);
 
-UPDATE hourentry SET task_id=backlogItem_id
+UPDATE hourentry SET task_id=backlogItem_id, DTYPE='TaskHourEntry'
 WHERE backlogItem_id IN (SELECT tasks.id FROM tasks);
 
 ALTER TABLE hourentry DROP COLUMN backlogItem_id;

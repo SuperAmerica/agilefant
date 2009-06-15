@@ -6,12 +6,13 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 
 @Entity
-@Table(name = "history_iterations")
+@Table(name = "history_iterations", uniqueConstraints = @UniqueConstraint(columnNames={"iteration_id","timestamp"}))
 public class IterationHistoryEntry {
 
     private int id;

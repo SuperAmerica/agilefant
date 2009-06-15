@@ -540,7 +540,7 @@
 			</result>
 		</action>
 		
-		<!-- 
+		 
 		<action name="iterationTabs" method="edit"
 			class="iterationAction">
 			<result>/WEB-INF/jsp/inc/iterationAjax.jsp</result>
@@ -556,7 +556,7 @@
 				<param name="location">/WEB-INF/jsp/inc/ajaxIterationResult.jsp</param>
 			</result>
 		</action>
-		-->
+		
 		<action name="iterationData" class="iterationAction" method="iterationContents">
 			<result name="ajax_success" type="dispatcher">
 				<param name="status">200</param>

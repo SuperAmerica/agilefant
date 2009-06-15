@@ -9,11 +9,13 @@
 <ul class="ajaxWindowTabs">
 	<li><a href="#iterationInfoTab-${iterationId}"><span><img src="static/img/info.png" alt="Info" /> Info</span></a></li>
 	<li><a href="#iterationEditTab-${iterationId}"><span><img src="static/img/edit.png" alt="Edit" /> Edit iteration</span></a></li>
-	<li><a href="#iterationThemesTab-${iterationId}"><span><img src="static/img/theme.png" alt="Iterations" /> Themes</span></a></li>
-	<li><a href="#iterationGoalsTab-${iterationId}"><span><img src="static/img/goal.png" alt="Stories" /> Stories</span></a></li>
+	<%-- <li><a href="#iterationThemesTab-${iterationId}"><span><img src="static/img/theme.png" alt="Themes" /> Themes</span></a></li>--%>
+	<%--<li><a href="#iterationGoalsTab-${iterationId}"><span><img src="static/img/goal.png" alt="Stories" /> Stories</span></a></li>--%>
 </ul>
 
 <div id="iterationInfoTab-${iterationId}" class="iterationNaviTab">
+
+<ww:hidden name="projectId" value="${iteration.parent.id}" />
 
 <table>
 <tbody>
@@ -142,9 +144,9 @@
 				<option class="inactive" value="">(select project)</option>
 				<c:forEach items="${productList}" var="product">
 					<option value="" class="inactive productOption">${aef:out(product.name)}</option>
-					<c:forEach items="${product.projects}" var="project">
+					<c:forEach items="${product.children}" var="project">
 						<c:choose>
-							<c:when test="${project.id == currentProjectId}">
+							<c:when test="${project.id == projectId}">
 								<option selected="selected" value="${project.id}"
 									class="projectOption" title="${project.name}">${aef:out(project.name)}</option>
 							</c:when>
@@ -202,7 +204,7 @@
 
 
 </div>
-
+<%--
 <div id="iterationThemesTab-${iterationId}" class="iterationNaviTab">
 
 <script type="text/javascript">
@@ -317,7 +319,10 @@ $(document).ready( function() {
 </table>
 
 </div>
+--%>
 
+
+<%--
 <div id="iterationGoalsTab-${iterationId}" class="iterationNaviTab">
 
 
@@ -401,5 +406,5 @@ $(document).ready( function() {
 	</tr>
 </table>
 </div>
-
+--%>
 </div>

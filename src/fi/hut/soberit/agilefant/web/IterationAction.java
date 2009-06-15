@@ -14,6 +14,7 @@ import fi.hut.soberit.agilefant.business.ProjectBusiness;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Project;
+import fi.hut.soberit.agilefant.transfer.IterationMetrics;
 import fi.hut.soberit.agilefant.util.CalendarUtils;
 import fi.hut.soberit.agilefant.util.IterationDataContainer;
 import flexjson.JSONSerializer;
@@ -40,11 +41,7 @@ public class IterationAction extends BacklogContentsAction implements CRUDAction
 
 //    private HistoryBusiness historyBusiness;
 //            
-//    private Map<Integer, EffortSumData> iterationGoalEffLeftSums = new HashMap<Integer, EffortSumData>();
-//    
-//    private Map<Integer, EffortSumData> iterationGoalOrigEstSums = new HashMap<Integer, EffortSumData>();
-//    
-//    private BacklogMetrics iterationMetrics;
+    private IterationMetrics iterationMetrics;
     
     private String json;
     
@@ -117,7 +114,7 @@ public class IterationAction extends BacklogContentsAction implements CRUDAction
         projectId = project.getId();
         
         // Load metrics data
-//        iterationMetrics = backlogBusiness.getBacklogMetrics(iteration);
+        iterationMetrics = iterationBusiness.getIterationMetrics(iteration);
 //        businessThemeBusiness.loadBacklogThemeMetrics(iteration);
         
         return Action.SUCCESS;
@@ -125,7 +122,7 @@ public class IterationAction extends BacklogContentsAction implements CRUDAction
     
     public String iterationMetrics() {
         iteration = iterationBusiness.retrieve(iterationId);
-//        iterationMetrics = backlogBusiness.getBacklogMetrics(iteration);
+        iterationMetrics = iterationBusiness.getIterationMetrics(iteration);
         return Action.SUCCESS;
     }
 

@@ -76,6 +76,11 @@ public class IterationHistoryEntryBusinessImpl extends
         return iterationHistoryEntryDAO.getHistoryEntriesForIteration(iteration.getId());
     }
     
+    @Transactional(readOnly = true)
+    public IterationHistoryEntry retrieveLatest(Iteration iteration) {
+        return iterationHistoryEntryDAO.retrieveLatest(iteration.getId());
+    }
+    
     public void setIterationDAO(IterationDAO iterationDAO) {
         this.iterationDAO = iterationDAO;
     }

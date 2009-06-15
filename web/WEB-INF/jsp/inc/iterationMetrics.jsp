@@ -9,12 +9,17 @@
 		<th>Original estimate</th>
 		<td><c:out value="${iterationMetrics.originalEstimate}" /></td>
 	</tr>
+  <tr>
+    <th>Story points</th>
+    <td><c:out value="${iterationMetrics.storyPoints}" /></td>
+  </tr>
 	<c:if test="${hourReporting}">
 		<tr>
 			<th>Spent effort</th>
 			<td><c:out value="${iterationMetrics.spentEffort}" /></td>
 		</tr>
 	</c:if>
+  <%--
 	<tr>
 		<th>Velocity</th>
 		<td><c:out value="${iterationMetrics.dailyVelocity}" /> / day</td>
@@ -57,5 +62,5 @@
 			value="${iterationMetrics.completedItems}" /> / <c:out
 			value="${iterationMetrics.totalItems}" />)</td>
 	</tr>
-
+  --%>
 </table>

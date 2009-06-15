@@ -18,5 +18,6 @@ public interface StoryDAO extends GenericDAO<Story> {
     StoryMetrics calculateMetrics(int storyId);
 
     StoryMetrics calculateMetricsWithoutStory(int iterationId);
-    
+
+    public int getStoryPointSumByBacklog(int backlogId);
 }

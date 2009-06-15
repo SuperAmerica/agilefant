@@ -333,7 +333,7 @@ $(document).ready(function() {
 	  bigChart.attr("src",bigChart.attr("src")+"#");
     var smallChart = $("#smallChart");
     smallChart.attr("src",smallChart.attr("src")+"#");
-    //$("#iterationMetrics").load("iterationMetrics.action",{iterationId: ${iterationId}});
+    $("#iterationMetrics").load("iterationMetrics.action",{iterationId: ${iterationId}});
 	});
 });
 </script>

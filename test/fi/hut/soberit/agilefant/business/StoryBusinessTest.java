@@ -187,4 +187,16 @@ public class StoryBusinessTest {
         }
         return stories;
     }
+    
+    @Test
+    public void testGetStoryPointSumByBacklog() {
+        expect(storyDAO.getStoryPointSumByBacklog(backlog.getId()))
+            .andReturn(6);
+        replay(storyDAO);
+        
+        assertEquals(6, storyBusiness.getStoryPointSumByBacklog(backlog));
+        
+        verify(storyDAO);
+        
+    }
 }

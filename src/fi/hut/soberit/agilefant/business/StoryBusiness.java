@@ -43,4 +43,5 @@ public interface StoryBusiness extends GenericBusiness<Story> {
      */
     public void attachStoryToIteration(int storyId, int iterationId, boolean moveTasks);
 
+    public int getStoryPointSumByBacklog(Backlog backlog);
 }

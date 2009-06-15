@@ -396,5 +396,9 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
             throw new IllegalArgumentException("story.noIteration");
         }
     }
+    
+    public int getStoryPointSumByBacklog(Backlog backlog) {
+        return storyDAO.getStoryPointSumByBacklog(backlog.getId());
+    }
 
 }

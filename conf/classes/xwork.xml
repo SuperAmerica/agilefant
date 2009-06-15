@@ -37,7 +37,8 @@
 			<result name="rootException" type="dispatcher">exceptionHandler</result>
 			<!--<result name="dbException" type="chain">dbExceptionHandler</result>-->
 		</global-results>
-<!--
+
+<!-- 
 		<global-exception-mappings>
             <exception-mapping exception="java.lang.Exception" result="rootException"/>
         </global-exception-mappings>
@@ -563,11 +564,11 @@
 				<param name="location">/WEB-INF/jsp/jsonData.jsp</param>
 			</result>
 		</action>
-		<!-- 
+		
 		<action name="iterationMetrics" class="iterationAction" method="iterationMetrics">
 		  <result name="success" type="dispatcher">/WEB-INF/jsp/inc/iterationMetrics.jsp</result>
 		</action>
-		-->
+		
 		<!-- /Iteration actions -->
 
 		<!-- User actions -->

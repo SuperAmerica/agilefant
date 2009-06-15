@@ -88,6 +88,14 @@ public class StoryDAOHibernate extends GenericDAOHibernate<Story> implements
         return metrics;        
     }
     
+    public int getStoryPointSumByBacklog(int backlogId) {
+        Criteria criteria = getCurrentSession().createCriteria(Story.class);
+        criteria.add(Restrictions.eq("backlog.id", backlogId));
+        criteria.add(Restrictions.isNotNull("storyPoints"));
+        criteria.setProjection(Projections.sum("storyPoints"));
+        return Integer.parseInt(criteria.uniqueResult().toString());
+    }
+    
     public StoryMetrics calculateMetrics(int storyId) {
         return calculateMetrics(storyId, false);
     }

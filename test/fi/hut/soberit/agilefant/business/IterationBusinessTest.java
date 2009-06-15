@@ -4,8 +4,7 @@ import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -18,10 +17,12 @@ import fi.hut.soberit.agilefant.business.impl.IterationBusinessImpl;
 import fi.hut.soberit.agilefant.db.IterationDAO;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.Iteration;
+import fi.hut.soberit.agilefant.model.IterationHistoryEntry;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.transfer.IterationMetrics;
 import fi.hut.soberit.agilefant.transfer.StoryTO;
 import fi.hut.soberit.agilefant.transfer.TaskTO;
 import fi.hut.soberit.agilefant.util.IterationDataContainer;
@@ -34,6 +35,8 @@ public class IterationBusinessTest {
     StoryBusiness storyBusiness;
     HourEntryBusiness hourEntryBusiness;
     IterationDAO iterationDAO;
+    IterationHistoryEntryBusiness iterationHistoryEntryBusiness;
+    
     Iteration iteration;
     List<StoryTO> storiesList;
     List<Task> tasksWithoutStoryList;
@@ -42,6 +45,27 @@ public class IterationBusinessTest {
     Task task;
     TaskTO taskTO;
 
+    @Before
+    public void createDependencies() {
+        iterationDAO = createMock(IterationDAO.class);
+        iterationBusiness.setIterationDAO(iterationDAO);
+
+        storyBusiness = createMock(StoryBusiness.class);
+        iterationBusiness.setStoryBusiness(storyBusiness);
+
+        projectBusiness = createMock(ProjectBusiness.class);
+        iterationBusiness.setProjectBusiness(projectBusiness);
+
+        hourEntryBusiness = createMock(HourEntryBusiness.class);
+        iterationBusiness.setHourEntryBusiness(hourEntryBusiness);
+
+        transferObjectBusiness = createMock(TransferObjectBusiness.class);
+        iterationBusiness.setTransferObjectBusiness(transferObjectBusiness);
+        
+        iterationHistoryEntryBusiness = createMock(IterationHistoryEntryBusiness.class);
+        iterationBusiness.setIterationHistoryEntryBusiness(iterationHistoryEntryBusiness);
+    }
+    
     @Before
     public void setUp() {
         iteration = new Iteration();
@@ -65,21 +89,6 @@ public class IterationBusinessTest {
         expectedIterationData.getStories().addAll(storiesList);
         expectedIterationData.getTasksWithoutStory().addAll(
                 tasksTOsWithoutStoryList);
-
-        iterationDAO = createMock(IterationDAO.class);
-        iterationBusiness.setIterationDAO(iterationDAO);
-
-        storyBusiness = createMock(StoryBusiness.class);
-        iterationBusiness.setStoryBusiness(storyBusiness);
-
-        projectBusiness = createMock(ProjectBusiness.class);
-        iterationBusiness.setProjectBusiness(projectBusiness);
-
-        hourEntryBusiness = createMock(HourEntryBusiness.class);
-        iterationBusiness.setHourEntryBusiness(hourEntryBusiness);
-
-        transferObjectBusiness = createMock(TransferObjectBusiness.class);
-        iterationBusiness.setTransferObjectBusiness(transferObjectBusiness);
     }
 
     @Test
@@ -126,5 +135,37 @@ public class IterationBusinessTest {
         replay(iterationDAO);
         assertNull(iterationBusiness.getIterationContents(0));
         verify(iterationDAO);
+    }
+    
+    @Test
+    public void testGetIterationMetrics() {
+        IterationHistoryEntry latestEntry = new IterationHistoryEntry();
+        latestEntry.setEffortLeftSum(112);
+        latestEntry.setOriginalEstimateSum(257);
+        
+        int expectedStoryPoint = 68;
+        
+        expect(iterationHistoryEntryBusiness.retrieveLatest(iteration))
+            .andReturn(latestEntry);
+//        expect(storyBusiness.getStoryPointSumByBacklog(iteration))
+//            .andReturn(expectedStoryPoint);
+        replay(iterationHistoryEntryBusiness);
+        
+        IterationMetrics actualMetrics = iterationBusiness.getIterationMetrics(iteration);
+        
+        assertNotNull(actualMetrics);
+        
+        assertEquals(latestEntry.getEffortLeftSum(), actualMetrics.getEffortLeft().getMinorUnits());
+        assertEquals(latestEntry.getOriginalEstimateSum(), actualMetrics.getOriginalEstimate().getMinorUnits());
+        
+//        assertEquals(expectedStoryPoint, actualMetrics.getStoryPoints());
+        
+        verify(iterationHistoryEntryBusiness);
+    }
+    
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void testGetIterationMetrics_nullIteration() {
+        iterationBusiness.getIterationMetrics(null);
     }
 }

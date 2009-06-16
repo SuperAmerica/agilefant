@@ -93,7 +93,11 @@ public class StoryDAOHibernate extends GenericDAOHibernate<Story> implements
         criteria.add(Restrictions.eq("backlog.id", backlogId));
         criteria.add(Restrictions.isNotNull("storyPoints"));
         criteria.setProjection(Projections.sum("storyPoints"));
-        return Integer.parseInt(criteria.uniqueResult().toString());
+        Object result = criteria.uniqueResult();
+        if (result == null) {
+            return 0;
+        }
+        return Integer.parseInt(result.toString());
     }
     
     public StoryMetrics calculateMetrics(int storyId) {

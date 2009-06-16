@@ -6,16 +6,21 @@ import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+import org.easymock.Capture;
+import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 
 import fi.hut.soberit.agilefant.business.impl.IterationBusinessImpl;
 import fi.hut.soberit.agilefant.db.IterationDAO;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
+import fi.hut.soberit.agilefant.model.BacklogHourEntry;
+import fi.hut.soberit.agilefant.model.HourEntry;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.IterationHistoryEntry;
 import fi.hut.soberit.agilefant.model.Project;
@@ -143,24 +148,34 @@ public class IterationBusinessTest {
         latestEntry.setEffortLeftSum(112);
         latestEntry.setOriginalEstimateSum(257);
         
-        int expectedStoryPoint = 68;
+        BacklogHourEntry he1 = new BacklogHourEntry();
+        BacklogHourEntry he2 = new BacklogHourEntry();
+        he1.setMinutesSpent(39);
+        he2.setMinutesSpent(88);
+        
+        List<BacklogHourEntry> hourEntries = new ArrayList<BacklogHourEntry>();
+        hourEntries.addAll(Arrays.asList(he1, he2));
+        
+        int expectedStoryPoints = 68;
+        long expectedSpentEffort = 127;
         
         expect(iterationHistoryEntryBusiness.retrieveLatest(iteration))
             .andReturn(latestEntry);
-//        expect(storyBusiness.getStoryPointSumByBacklog(iteration))
-//            .andReturn(expectedStoryPoint);
-        replay(iterationHistoryEntryBusiness);
+        expect(storyBusiness.getStoryPointSumByBacklog(iteration))
+            .andReturn(expectedStoryPoints);
+        expect(hourEntryBusiness.calculateSumOfIterationsHourEntries(iteration))
+            .andReturn(expectedSpentEffort);
+        replay(iterationHistoryEntryBusiness, storyBusiness, hourEntryBusiness);
         
         IterationMetrics actualMetrics = iterationBusiness.getIterationMetrics(iteration);
         
         assertNotNull(actualMetrics);
-        
         assertEquals(latestEntry.getEffortLeftSum(), actualMetrics.getEffortLeft().getMinorUnits().longValue());
         assertEquals(latestEntry.getOriginalEstimateSum(), actualMetrics.getOriginalEstimate().getMinorUnits().longValue());
+        assertEquals(expectedStoryPoints, actualMetrics.getStoryPoints().intValue());
+        assertEquals(expectedSpentEffort, actualMetrics.getSpentEffort().getMinorUnits().longValue());
         
-//        assertEquals(expectedStoryPoint, actualMetrics.getStoryPoints());
-        
-        verify(iterationHistoryEntryBusiness);
+        verify(iterationHistoryEntryBusiness, storyBusiness, hourEntryBusiness);
     }
     
     

@@ -21,6 +21,7 @@ import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogHourEntry;
 import fi.hut.soberit.agilefant.model.HourEntry;
+import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.StoryHourEntry;
 import fi.hut.soberit.agilefant.model.Task;
@@ -117,8 +118,6 @@ public class HourEntryBusinessImpl extends GenericBusinessImpl<HourEntry>
         hourEntry.setUser(null);
     }
 
-
-
     public void updateMultiple(Map<Integer, String[]> userIds,
             Map<Integer, String[]> dates, Map<Integer, String[]> efforts,
             Map<Integer, String[]> descriptions) {
@@ -153,14 +152,6 @@ public class HourEntryBusinessImpl extends GenericBusinessImpl<HourEntry>
             DateTime startDate, DateTime endDate) {
         return hourEntryDAO.calculateSumByUserAndTimeInterval(user, startDate, endDate);
     }
-	
-    public TaskHourEntryDAO getTaskHourEntryDAO() {
-        return taskHourEntryDAO;
-    }
-
-    public void setTaskHourEntryDAO(TaskHourEntryDAO taskHourEntryDAO) {
-        this.taskHourEntryDAO = taskHourEntryDAO;
-    }
 
     @Transactional(propagation = Propagation.SUPPORTS)
     public long calculateSum(Collection<? extends HourEntry> hourEntries) {
@@ -171,12 +162,24 @@ public class HourEntryBusinessImpl extends GenericBusinessImpl<HourEntry>
         return effortSpent;
     }
     
+    @Transactional(readOnly = true)
+    public long calculateSumOfIterationsHourEntries(Iteration iteration) {
+        if (iteration == null) {
+            throw new IllegalArgumentException("Iteration can't be null");
+        }
+        return hourEntryDAO.calculateIterationHourEntriesSum(iteration.getId());
+    }
+    
     public void setBacklogHourEntryDAO(BacklogHourEntryDAO backlogHourEntryDAO) {
         this.backlogHourEntryDAO = backlogHourEntryDAO;
     }
     
     public void setUserDAO(UserDAO userDAO) {
         this.userDAO = userDAO;
-    }    
+    }
+
+    public void setTaskHourEntryDAO(TaskHourEntryDAO taskHourEntryDAO) {
+        this.taskHourEntryDAO = taskHourEntryDAO;
+    }
     
 }

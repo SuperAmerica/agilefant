@@ -1,5 +1,6 @@
 package fi.hut.soberit.agilefant.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -109,6 +110,7 @@ public class HourEntry {
         return (this instanceof StoryHourEntry);
     }
 
+    @Column(nullable = false)
     public long getMinutesSpent() {
         return minutesSpent;
     }

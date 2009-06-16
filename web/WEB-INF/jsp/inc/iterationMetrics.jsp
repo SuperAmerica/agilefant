@@ -3,11 +3,11 @@
 <table>
 	<tr>
 		<th>Effort left</th>
-		<td><c:out value="${iterationMetrics.effortLeft}" /></td>
+		<td><c:out value="${aef:minutesToString(iterationMetrics.effortLeft.minorUnits)}" /></td>
 	</tr>
 	<tr>
 		<th>Original estimate</th>
-		<td><c:out value="${iterationMetrics.originalEstimate}" /></td>
+		<td><c:out value="${aef:minutesToString(iterationMetrics.originalEstimate.minorUnits)}" /></td>
 	</tr>
   <tr>
     <th>Story points</th>
@@ -16,7 +16,7 @@
 	<c:if test="${hourReporting}">
 		<tr>
 			<th>Spent effort</th>
-			<td><c:out value="${iterationMetrics.spentEffort}" /></td>
+			<td><c:out value="${aef:minutesToString(iterationMetrics.spentEffort.minorUnits)}" /></td>
 		</tr>
 	</c:if>
   <%--

@@ -310,47 +310,26 @@ public class IterationAction extends BacklogContentsAction implements CRUDAction
         this.projectId = projectId;
     }
 
-    /**
-     * @return the endDate
-     */
     public String getEndDate() {
         return endDate;
     }
 
-    /**
-     * @param endDate
-     *                the endDate to set
-     */
     public void setEndDate(String endDate) {
         this.endDate = endDate;
     }
 
-    /**
-     * @return the startDate
-     */
     public String getStartDate() {
         return startDate;
     }
 
-    /**
-     * @param startDate
-     *                the startDate to set
-     */
     public void setStartDate(String startDate) {
         this.startDate = startDate;
     }
 
-    /**
-     * @return the dateFormat
-     */
     public String getDateFormat() {
         return dateFormat;
     }
 
-    /**
-     * @param dateFormat
-     *                the dateFormat to set
-     */
     public void setDateFormat(String dateFormat) {
         this.dateFormat = dateFormat;
     }
@@ -365,6 +344,10 @@ public class IterationAction extends BacklogContentsAction implements CRUDAction
 
     public void setProjectBusiness(ProjectBusiness projectBusiness) {
         this.projectBusiness = projectBusiness;
+    }
+
+    public IterationMetrics getIterationMetrics() {
+        return iterationMetrics;
     }
 
 }

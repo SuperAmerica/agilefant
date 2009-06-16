@@ -44,5 +44,9 @@ public interface HourEntryDAO extends GenericDAO<HourEntry> {
     public List<StoryHourEntry> getStoryHourEntriesByFilter(Set<Integer> backlogIds,
             DateTime startDate, DateTime endDate, Set<Integer> userIds);
     
-
+    /**
+     * Gets the iterations backlog, story and task hour entries and
+     * calculates the sum of their spent time.
+     */
+    public long calculateIterationHourEntriesSum(int iterationId);
 }

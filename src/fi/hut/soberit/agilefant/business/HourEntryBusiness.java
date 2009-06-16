@@ -10,6 +10,7 @@ import org.joda.time.DateTime;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogHourEntry;
 import fi.hut.soberit.agilefant.model.HourEntry;
+import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.TimesheetLoggable;
 import fi.hut.soberit.agilefant.model.User;
 
@@ -47,6 +48,12 @@ public interface HourEntryBusiness extends GenericBusiness<HourEntry> {
     
     HourEntry store(TimesheetLoggable parent, HourEntry hourEntry);
 
+    /**
+     * Gets all task, story and backlog hour entries for an iteration
+     * and calculates their sum.
+     */
+    long calculateSumOfIterationsHourEntries(Iteration iteration);
+    
     List<BacklogHourEntry> retrieveByParent(Backlog item);
 
     long calculateSumByUserAndTimeInterval(User user,

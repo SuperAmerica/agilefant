@@ -4,7 +4,13 @@ import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
+
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.joda.time.DateTime;
 import org.junit.Before;
@@ -20,6 +26,9 @@ import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogHourEntry;
 import fi.hut.soberit.agilefant.model.HourEntry;
 import fi.hut.soberit.agilefant.model.Iteration;
+import fi.hut.soberit.agilefant.model.Project;
+import fi.hut.soberit.agilefant.model.Story;
+import fi.hut.soberit.agilefant.model.StoryHourEntry;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.TaskHourEntry;
 import fi.hut.soberit.agilefant.model.User;
@@ -52,10 +61,12 @@ public class HourEntryBusinessTest {
     }
     
     @Before
-    public void setUp() {
+    public void setUp_dependencies() {
         hourEntryBusiness = new HourEntryBusinessImpl();
+        heDAO = createMock(HourEntryDAO.class);
         theDAO = createMock(TaskHourEntryDAO.class);
         blheDAO = createMock(BacklogHourEntryDAO.class);
+        hourEntryBusiness.setHourEntryDAO(heDAO);
         hourEntryBusiness.setBacklogHourEntryDAO(blheDAO);
         hourEntryBusiness.setTaskHourEntryDAO(theDAO);
     }
@@ -111,5 +122,22 @@ public class HourEntryBusinessTest {
         verify(theDAO);
         verify(blheDAO);
     }
-
+    
+    @Test
+    public void testCalculateSumOfBacklogsHourEntries() {
+        Iteration iteration = new Iteration();
+        iteration.setId(123);
+        expect(heDAO.calculateIterationHourEntriesSum(123))
+            .andReturn(22332L);
+        replay(heDAO);
+        
+        assertEquals(22332L, hourEntryBusiness.calculateSumOfIterationsHourEntries(iteration));
+        
+        verify(heDAO);
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void testCalculateSumOfBacklogsHourEntries_nullBacklog() {
+        hourEntryBusiness.calculateSumOfIterationsHourEntries(null);
+    }
 }

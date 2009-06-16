@@ -131,6 +131,7 @@ public class HourEntryDAOHibernate extends GenericDAOHibernate<HourEntry>
         
         Criteria crit = getCurrentSession().createCriteria(TaskHourEntry.class);
         
+        crit.createAlias("task.story", "story");
         crit.createAlias("task.story.backlog", "bl",
                 CriteriaSpecification.LEFT_JOIN);
         crit.createAlias("task.story.backlog.parent", "blParent",
@@ -166,5 +167,82 @@ public class HourEntryDAOHibernate extends GenericDAOHibernate<HourEntry>
         
         return result;
     }
+    
+    public long calculateIterationHourEntriesSum(int iterationId) {
+        long tasksEntrySum = getSumForTaskHourEntriesWithoutStoryForIteration(iterationId);
+        long storyEntrySum = getSumForStoryHourEntriesForIteration(iterationId);
+        long backlogEntrySum = getSumForBacklogHourEntriesForIteration(iterationId);
+        
+        return tasksEntrySum + storyEntrySum + backlogEntrySum;
+    }
+    
+    private long getSumForTaskHourEntriesWithoutStoryForIteration(int iterationId) {
+        Criteria criteria = getCurrentSession().createCriteria(TaskHourEntry.class);
+        
+        criteria.setProjection(Projections.sum("minutesSpent"));
 
+        criteria = criteria.createCriteria("task");
+        criteria = criteria.createCriteria("iteration");
+        criteria.add(Restrictions.idEq(iterationId));
+        
+        Long result = (Long)uniqueResult(criteria);
+        
+        if (result == null) {
+            return 0;
+        }
+        return result;
+    }
+
+//    private long getSumForTaskHourEntriesWithStoryForIteration(int iterationId) {
+//        Criteria criteria = getCurrentSession().createCriteria(TaskHourEntry.class);
+//        
+//        criteria.setProjection(Projections.sum("minutesSpent"));
+//
+//        criteria = criteria.createCriteria("task");
+//        criteria = criteria.createCriteria("story");
+//        criteria = criteria.createCriteria("backlog");
+//        criteria.add(Restrictions.idEq(iterationId));
+//        
+//        Long result = (Long)uniqueResult(criteria);
+//        
+//        if (result == null) {
+//            return 0;
+//        }
+//        return result;
+//    }
+
+    
+    private long getSumForStoryHourEntriesForIteration(int iterationId) {
+        Criteria criteria = getCurrentSession().createCriteria(StoryHourEntry.class);
+        
+        criteria.setProjection(Projections.sum("minutesSpent"));
+
+        criteria = criteria.createCriteria("story");
+        criteria = criteria.createCriteria("backlog");
+        criteria.add(Restrictions.idEq(iterationId));
+        
+        Long result = (Long)uniqueResult(criteria);
+        
+        if (result == null) {
+            return 0;
+        }
+        return result;
+    }
+
+    private long getSumForBacklogHourEntriesForIteration(int iterationId) {
+        Criteria criteria = getCurrentSession().createCriteria(BacklogHourEntry.class);
+        
+        criteria.setProjection(Projections.sum("minutesSpent"));
+        
+        criteria = criteria.createCriteria("backlog");
+        criteria.add(Restrictions.idEq(iterationId));
+        
+        Long result = (Long)uniqueResult(criteria);
+        
+        if (result == null) {
+            return 0;
+        }
+        return result;
+        
+    }
 }

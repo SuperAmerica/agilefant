@@ -1,5 +1,6 @@
 package fi.hut.soberit.agilefant.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -9,7 +10,6 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 import org.hibernate.annotations.Type;
-import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 
 @Entity
@@ -23,8 +23,6 @@ public class IterationHistoryEntry {
     private long effortLeftSum;
 
     private long originalEstimateSum;
-
-    private long deltaEffortLeft;
 
     private long deltaOriginalEstimate;
 
@@ -74,6 +72,7 @@ public class IterationHistoryEntry {
     }
 
     @Type(type = "org.joda.time.contrib.hibernate.PersistentLocalDate")
+    @Column(nullable = false)
     public LocalDate getTimestamp() {
         return timestamp;
     }

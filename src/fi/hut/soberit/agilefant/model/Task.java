@@ -49,7 +49,6 @@ public class Task implements TimesheetLoggable {
     private TaskState state;
     private Priority priority;
     
-    private List<Todo> todos = new ArrayList<Todo>();
     private ExactEstimate effortLeft = new ExactEstimate();
     private ExactEstimate originalEstimate = new ExactEstimate();
     private Collection<User> responsibles = new ArrayList<User>();
@@ -104,16 +103,6 @@ public class Task implements TimesheetLoggable {
 
     public void setStory(Story story) {
         this.story = story;
-    }
-
-    public void setTodos(List<Todo> todos) {
-        this.todos = todos;
-    }
-
-    @OneToMany(mappedBy = "task")
-    @IndexColumn(name = "rank")
-    public List<Todo> getTodos() {
-        return todos;
     }
 
     public void setEffortLeft(ExactEstimate estimate) {

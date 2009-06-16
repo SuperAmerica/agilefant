@@ -77,6 +77,7 @@ public class Story implements TimesheetLoggable {
         this.backlog = backlog;
     }
 
+    @Column(nullable = false)
     public StoryState getState() {
         return state;
     }

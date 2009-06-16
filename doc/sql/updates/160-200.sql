@@ -1,6 +1,8 @@
 ﻿/* If this is not set we can only create deterministic functions */
 /* SET GLOBAL log_bin_trust_function_creators = 1; */
 
+SET autocommit = 0;
+
 DROP PROCEDURE IF EXISTS DropFK;
 
 delimiter //
@@ -130,7 +132,7 @@ CREATE TABLE tasks (
 	originalestimate INT(11),
 	name VARCHAR(255),
 	priority INT(11),
-	state INT(11),
+	state INT(11) NOT NULL,
 	description text,
 	iteration_id INT(11),
 	creator_id INT(11),
@@ -156,7 +158,7 @@ CREATE TABLE stories (
 	storyPoints INT(11),
 	name VARCHAR(255),
 	priority INT(11),
-	state INT(11),
+	state INT(11) NOT NULL,
 	description text,
 	creator_id INT(11),
 	backlog_id INT(11),

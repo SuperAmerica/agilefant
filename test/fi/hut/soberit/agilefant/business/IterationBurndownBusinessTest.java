@@ -87,16 +87,16 @@ public class IterationBurndownBusinessTest extends IterationBurndownBusinessImpl
                 null, true, true, false);
         
         entry = new IterationHistoryEntry();
-        entry.setTimestamp(new DateTime(2009,1,1,0,0,0,0));
+        entry.setTimestamp(new LocalDate(2009,1,1));
         entry.setEffortLeftSum(240);
         
         
         entry1 = new IterationHistoryEntry();
-        entry1.setTimestamp(startDate);
+        entry1.setTimestamp(startDate.toLocalDate());
         entry1.setEffortLeftSum(100);
         entry1.setOriginalEstimateSum(100);
         entry2 = new IterationHistoryEntry();
-        entry2.setTimestamp(startDate.plusDays(1));
+        entry2.setTimestamp(startDate.plusDays(1).toLocalDate());
         entry2.setEffortLeftSum(0);
         entry2.setOriginalEstimateSum(100);
         
@@ -278,15 +278,14 @@ public class IterationBurndownBusinessTest extends IterationBurndownBusinessImpl
     
     @Test
     public void testGetHistoryEntryForDate_dateFound() {
-        assertEquals(entry1, super.getHistoryEntryForDate(entriesList, entry1
-                .getTimestamp().toLocalDate()));
+        assertEquals(entry1, super.getHistoryEntryForDate(entriesList, entry1.getTimestamp()));
     }
     
     @Test
     public void testGetHistoryEntryForDate_entryFromYesterday() {
         entry2.setDeltaOriginalEstimate(228);
         IterationHistoryEntry actualEntry = super.getHistoryEntryForDate(
-                entriesList, entry2.getTimestamp().plusDays(1).toLocalDate());
+                entriesList, entry2.getTimestamp().plusDays(1));
         
         assertEquals(entry2.getOriginalEstimateSum(), actualEntry.getOriginalEstimateSum());
         assertEquals(entry2.getEffortLeftSum(), actualEntry.getEffortLeftSum());
@@ -297,7 +296,7 @@ public class IterationBurndownBusinessTest extends IterationBurndownBusinessImpl
     public void testGetHistoryEntryForDate_entryFromFarBehind() {
         entry2.setDeltaOriginalEstimate(228);
         IterationHistoryEntry actualEntry = super.getHistoryEntryForDate(
-                entriesList, entry2.getTimestamp().plusDays(102).toLocalDate());
+                entriesList, entry2.getTimestamp().plusDays(102));
         
         assertEquals(entry2.getOriginalEstimateSum(), actualEntry.getOriginalEstimateSum());
         assertEquals(entry2.getEffortLeftSum(), actualEntry.getEffortLeftSum());
@@ -307,7 +306,7 @@ public class IterationBurndownBusinessTest extends IterationBurndownBusinessImpl
     @Test
     public void testGetHistoryEntryForDate_endDateBetweenEntries() {
         IterationHistoryEntry forecomingEntry = new IterationHistoryEntry();
-        forecomingEntry.setTimestamp(new DateTime().plusDays(66));
+        forecomingEntry.setTimestamp(new LocalDate().plusDays(66));
         
         List<IterationHistoryEntry> newEntries = new ArrayList<IterationHistoryEntry>();
         newEntries.addAll(entriesList);
@@ -315,7 +314,7 @@ public class IterationBurndownBusinessTest extends IterationBurndownBusinessImpl
         
         entry2.setDeltaOriginalEstimate(228);
         IterationHistoryEntry actualEntry = super.getHistoryEntryForDate(
-                entriesList, entry2.getTimestamp().plusDays(16).toLocalDate());
+                entriesList, entry2.getTimestamp().plusDays(16));
         
         assertEquals(entry2.getOriginalEstimateSum(), actualEntry.getOriginalEstimateSum());
         assertEquals(entry2.getEffortLeftSum(), actualEntry.getEffortLeftSum());
@@ -347,13 +346,13 @@ public class IterationBurndownBusinessTest extends IterationBurndownBusinessImpl
         startEntry.setOriginalEstimateSum(120);
         startEntry.setEffortLeftSum(120);
         startEntry.setDeltaOriginalEstimate(0);
-        startEntry.setTimestamp(new DateTime(2009,1,1,14,38,25,0));
+        startEntry.setTimestamp(new LocalDate(2009,1,1));
         
         endEntry = new IterationHistoryEntry();
         endEntry.setOriginalEstimateSum(120);
         endEntry.setEffortLeftSum(60);
         endEntry.setDeltaOriginalEstimate(0);
-        endEntry.setTimestamp(new DateTime(2009,1,2,12,12,25,0));
+        endEntry.setTimestamp(new LocalDate(2009,1,2));
     }
     
     @Test
@@ -435,15 +434,15 @@ public class IterationBurndownBusinessTest extends IterationBurndownBusinessImpl
     public void testGetBurndownTimeSeries_scoped() {
         DateTime startTime = new DateTime(2012, 7, 4, 12, 38, 12, 57);
         IterationHistoryEntry firstEntry = new IterationHistoryEntry();
-        firstEntry.setTimestamp(startTime);
+        firstEntry.setTimestamp(startTime.toLocalDate());
         firstEntry.setOriginalEstimateSum(130);
         firstEntry.setDeltaOriginalEstimate(0);
         IterationHistoryEntry secondEntry = new IterationHistoryEntry();
-        secondEntry.setTimestamp(startTime.plusDays(1));
+        secondEntry.setTimestamp(startTime.plusDays(1).toLocalDate());
         secondEntry.setOriginalEstimateSum(156);
         secondEntry.setDeltaOriginalEstimate(26);
         IterationHistoryEntry thirdEntry = new IterationHistoryEntry();
-        thirdEntry.setTimestamp(startTime.plusDays(2));
+        thirdEntry.setTimestamp(startTime.plusDays(2).toLocalDate());
         thirdEntry.setOriginalEstimateSum(88);
         thirdEntry.setDeltaOriginalEstimate(-68);
         
@@ -468,8 +467,8 @@ public class IterationBurndownBusinessTest extends IterationBurndownBusinessImpl
     public void testGetBurndownScopedDataItemForDay() {
         initializeEntriesForScopingTest();
         
-        startEntry.setTimestamp(new DateTime(2008, 4, 2, 12, 25, 32, 0));
-        endEntry.setTimestamp(new DateTime(2008, 4, 3, 10, 19, 22, 0));
+        startEntry.setTimestamp(new LocalDate(2008, 4, 2));
+        endEntry.setTimestamp(new LocalDate(2008, 4, 3));
         startEntry.setEffortLeftSum(128);
         endEntry.setDeltaOriginalEstimate(150);
         DateTime expectedTimestamp = new DateTime(2008, 4, 3, 0, 0, 2, 0);
@@ -519,15 +518,15 @@ public class IterationBurndownBusinessTest extends IterationBurndownBusinessImpl
     public void testGetScopingTimeSeries() {
         DateTime startTime = new DateTime(2012, 7, 4, 12, 38, 12, 57);
         IterationHistoryEntry firstEntry = new IterationHistoryEntry();
-        firstEntry.setTimestamp(startTime);
+        firstEntry.setTimestamp(startTime.toLocalDate());
         firstEntry.setOriginalEstimateSum(130);
         firstEntry.setDeltaOriginalEstimate(0);
         IterationHistoryEntry secondEntry = new IterationHistoryEntry();
-        secondEntry.setTimestamp(startTime.plusDays(1));
+        secondEntry.setTimestamp(startTime.plusDays(1).toLocalDate());
         secondEntry.setOriginalEstimateSum(156);
         secondEntry.setDeltaOriginalEstimate(26);
         IterationHistoryEntry thirdEntry = new IterationHistoryEntry();
-        thirdEntry.setTimestamp(startTime.plusDays(2));
+        thirdEntry.setTimestamp(startTime.plusDays(2).toLocalDate());
         thirdEntry.setOriginalEstimateSum(88);
         thirdEntry.setDeltaOriginalEstimate(-68);
         
@@ -547,8 +546,8 @@ public class IterationBurndownBusinessTest extends IterationBurndownBusinessImpl
         ExactEstimate value2 = new ExactEstimate(entry2.getEffortLeftSum());
         TimeSeries actualSeries = super.getSeriesByStartAndEndPoints(
                 "Test series",
-                entry1.getTimestamp(), value1,
-                entry2.getTimestamp(), value2);
+                new DateTime(entry1.getTimestamp().toDateMidnight().toDateTime()), value1,
+                new DateTime(entry2.getTimestamp().toDateMidnight().toDateTime()), value2);
         
         testSeriesStartAndEndCorrect(actualSeries, value1, value2);
         assertEquals("Test series", actualSeries.getKey());
@@ -557,8 +556,8 @@ public class IterationBurndownBusinessTest extends IterationBurndownBusinessImpl
     @Test
     public void testGetScopeSeriesDataItem() {
         initializeEntriesForScopingTest();
-        startEntry.setTimestamp(new DateTime(2008, 4, 2, 12, 25, 32, 0));
-        endEntry.setTimestamp(new DateTime(2008, 4, 3, 10, 19, 22, 0));
+        startEntry.setTimestamp(new LocalDate(2008, 4, 2));
+        endEntry.setTimestamp(new LocalDate(2008, 4, 3));
         startEntry.setEffortLeftSum(128);
         endEntry.setDeltaOriginalEstimate(150);
         DateTime expectedTimestamp = new DateTime(2008, 4, 3, 0, 0, 0, 0);

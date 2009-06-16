@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.joda.time.DateTime;
 import org.joda.time.Days;
+import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,7 +40,7 @@ public class IterationHistoryEntryBusinessImpl extends
         IterationHistoryEntry latest = iterationHistoryEntryDAO.retrieveLatest(iterationId);
         IterationHistoryEntry newEntry = new IterationHistoryEntry();
         newEntry.setIteration(iteration);
-        newEntry.setTimestamp(new DateTime());
+        newEntry.setTimestamp(new LocalDate());
         Pair<ExactEstimate, ExactEstimate> sums = iterationHistoryEntryDAO.calculateCurrentHistoryData(iterationId);
         long oldEffortLeftSum = (latest == null) ? 0 : latest.getEffortLeftSum();
         long oldOriginalEstimateSum = (latest == null) ? 0 : latest.getOriginalEstimateSum();

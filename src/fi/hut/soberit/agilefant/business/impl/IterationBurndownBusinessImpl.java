@@ -319,16 +319,16 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
     protected IterationHistoryEntry getHistoryEntryForDate(List<IterationHistoryEntry> entries, LocalDate date) {
         IterationHistoryEntry foundEntry = new IterationHistoryEntry();
         for ( IterationHistoryEntry entry : entries ) {
-            if (entry.getTimestamp().toLocalDate().equals(date)) {
+            if (entry.getTimestamp().equals(date)) {
                 return entry;
             }
-            if (entry.getTimestamp().toLocalDate().compareTo(date) > 0) {
+            if (entry.getTimestamp().compareTo(date) > 0) {
                 break;
             }
             foundEntry = entry;
         }
         IterationHistoryEntry returnable = new IterationHistoryEntry();
-        returnable.setTimestamp(date.toDateMidnight().toDateTime());
+        returnable.setTimestamp(date.toDateMidnight().toLocalDate());
         returnable.setEffortLeftSum(foundEntry.getEffortLeftSum());
         returnable.setOriginalEstimateSum(foundEntry.getOriginalEstimateSum());
         return returnable;
@@ -369,8 +369,8 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
         ExactEstimate endValue = new ExactEstimate(todayEntry.getEffortLeftSum());
         
         return this.getSeriesByStartAndEndPoints(CURRENT_DAY_SERIES_NAME,
-                todayEntry.getTimestamp(), startValue,
-                todayEntry.getTimestamp().plusDays(1), endValue);
+                todayEntry.getTimestamp().toDateMidnight().toDateTime(), startValue,
+                todayEntry.getTimestamp().toDateMidnight().toDateTime().plusDays(1), endValue);
     }
     
     /**

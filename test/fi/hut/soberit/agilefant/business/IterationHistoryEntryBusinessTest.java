@@ -9,6 +9,7 @@ import static org.junit.Assert.*;
 
 import org.easymock.Capture;
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -48,7 +49,7 @@ public class IterationHistoryEntryBusinessTest {
         latestEntry.setId(666);
         latestEntry.setEffortLeftSum(60);
         latestEntry.setOriginalEstimateSum(90);
-        latestEntry.setTimestamp(new DateTime());
+        latestEntry.setTimestamp(new LocalDate());
     }
     
     @Test
@@ -78,7 +79,7 @@ public class IterationHistoryEntryBusinessTest {
     
     @Test
     public void testUpdateIterationHistory_latestEntryYesterday() {
-        latestEntry.setTimestamp(new DateTime().minusDays(1));
+        latestEntry.setTimestamp(new LocalDate().minusDays(1));
         Pair<ExactEstimate, ExactEstimate> sums = Pair.create(new ExactEstimate(10), new ExactEstimate(20));
         
         expect(iterationDAO.get(1)).andReturn(iteration);

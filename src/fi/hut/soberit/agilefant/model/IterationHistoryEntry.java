@@ -10,6 +10,7 @@ import javax.persistence.UniqueConstraint;
 
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 
 @Entity
 @Table(name = "history_iterations", uniqueConstraints = @UniqueConstraint(columnNames={"iteration_id","timestamp"}))
@@ -27,7 +28,7 @@ public class IterationHistoryEntry {
 
     private long deltaOriginalEstimate;
 
-    private DateTime timestamp;
+    private LocalDate timestamp;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -72,13 +73,14 @@ public class IterationHistoryEntry {
         this.deltaOriginalEstimate = deltaOriginalEstimate;
     }
 
-    @Type(type = "org.joda.time.contrib.hibernate.PersistentDateTime")
-    public DateTime getTimestamp() {
+    @Type(type = "org.joda.time.contrib.hibernate.PersistentLocalDate")
+    public LocalDate getTimestamp() {
         return timestamp;
     }
-
-    public void setTimestamp(DateTime timestamp) {
+    
+    public void setTimestamp(LocalDate timestamp) {
         this.timestamp = timestamp;
     }
+
 
 }

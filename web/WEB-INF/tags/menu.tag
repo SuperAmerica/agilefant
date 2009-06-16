@@ -225,17 +225,17 @@ Agilefant
     -->
     
     <li class="separator"></li>
-
+<!-- 
     <li><ww:url id="createLink" action="ajaxCreateProjectType"
         includeParams="none" />
         <ww:a href="%{createLink}" onclick="return false;" title="Create a new project type" cssClass="openCreateDialog openProjectTypeDialog">Project type &raquo;</ww:a>
     </li>
-    
+ -->    
     <li><ww:url id="createLink" action="ajaxCreateTeam"
         includeParams="none" />
         <ww:a href="%{createLink}" onclick="return false;" title="Create a new team" cssClass="openCreateDialog openTeamDialog">Team &raquo;</ww:a>
     </li>
-    
+    <!-- 
     <li>
     <c:choose>
         <c:when test="${hasProducts}">
@@ -250,7 +250,7 @@ Agilefant
         </c:otherwise>
     </c:choose>
     </li>
-    
+    -->
     <li><ww:url id="createLink" action="ajaxCreateUser"
         includeParams="none" /> <ww:a href="%{createLink}" onclick="return false;" title="Create a new user" cssClass="openCreateDialog openUserDialog">User &raquo;</ww:a>
     </li>

@@ -77,7 +77,6 @@ public class Task implements TimesheetLoggable {
         this.name = name;
     }
 
-    @Type(type = "escaped_truncated_varchar")
     @JSON
     public String getDescription() {
         return description;
@@ -139,6 +138,7 @@ public class Task implements TimesheetLoggable {
 
     @JSON
     @Enumerated(EnumType.ORDINAL)
+    @Column(nullable = false)
     public TaskState getState() {
         return state;
     }

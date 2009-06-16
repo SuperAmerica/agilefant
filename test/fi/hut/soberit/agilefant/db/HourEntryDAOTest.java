@@ -194,17 +194,17 @@ public class HourEntryDAOTest extends AbstractHibernateTests {
     
     // TODO: Fix these
     // Dependent on tasks iteration id and story id duplicates.
-//    @Test
-//    public void testCalculateIterationHourEntries() {
-//        executeClassSql();
-//        long actualSum = hourEntryDAO.calculateIterationHourEntriesSum(5);
-//        assertEquals(4240, actualSum);
-//    }
-//    
-//    @Test
-//    public void testCalculateIterationHourEntries_emptyIteration() {
-//        executeClassSql();
-//        long actualSum = hourEntryDAO.calculateIterationHourEntriesSum(6);
-//        assertEquals(0, actualSum);
-//    }
+    @Test
+    public void testCalculateIterationHourEntries() {
+        executeClassSql();
+        long actualSum = hourEntryDAO.calculateIterationHourEntriesSum(5);
+        assertEquals(4240, actualSum);
+    }
+    
+    @Test
+    public void testCalculateIterationHourEntries_emptyIteration() {
+        executeClassSql();
+        long actualSum = hourEntryDAO.calculateIterationHourEntriesSum(6);
+        assertEquals(0, actualSum);
+    }
 }

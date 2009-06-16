@@ -155,8 +155,8 @@ public class IterationBusinessTest {
         
         assertNotNull(actualMetrics);
         
-        assertEquals(latestEntry.getEffortLeftSum(), actualMetrics.getEffortLeft().getMinorUnits());
-        assertEquals(latestEntry.getOriginalEstimateSum(), actualMetrics.getOriginalEstimate().getMinorUnits());
+        assertEquals(latestEntry.getEffortLeftSum(), actualMetrics.getEffortLeft().getMinorUnits().longValue());
+        assertEquals(latestEntry.getOriginalEstimateSum(), actualMetrics.getOriginalEstimate().getMinorUnits().longValue());
         
 //        assertEquals(expectedStoryPoint, actualMetrics.getStoryPoints());
         

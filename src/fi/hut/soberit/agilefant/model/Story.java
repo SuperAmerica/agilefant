@@ -20,6 +20,8 @@ import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.Type;
 
 import flexjson.JSON;
@@ -39,6 +41,7 @@ public class Story implements TimesheetLoggable {
     
     private List<User> responsibles = new ArrayList<User>();
     private Collection<Task> tasks = new ArrayList<Task>();
+    private Collection<StoryHourEntry> hourEntries = new ArrayList<StoryHourEntry>();
 
     private Integer storyPoints;
     
@@ -160,4 +163,17 @@ public class Story implements TimesheetLoggable {
     public void setStoryPoints(Integer storyPoints) {
         this.storyPoints = storyPoints;
     }
+
+    @OneToMany(mappedBy = "story",
+            targetEntity = fi.hut.soberit.agilefant.model.StoryHourEntry.class )
+    @Cascade(value = CascadeType.DELETE_ORPHAN)
+    public Collection<StoryHourEntry> getHourEntries() {
+        return hourEntries;
+    }
+    
+    public void setHourEntries(Collection<StoryHourEntry> hourEntries) {
+        this.hourEntries = hourEntries;
+    }
+
+    
 }

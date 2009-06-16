@@ -54,11 +54,12 @@ $(document).ready(function() {
     requestURI="${currentAction}.action" >
 
     <!-- Checkboxes for bulk-moving strories -->
+    <%--
     <display:column sortable="false" title="<input type='checkbox' name='selectall' onclick='selectAllStories(this.checked)'/>" class="selectColumn">
       <div><ww:checkbox name="selected" fieldValue="${row.id}" /></div>
       <div style="height: 15px;"></div>
       <div id="storyTabContainer-${row.id}-${storyListContext}" class="tabContainer" style="overflow:visible; white-space: nowrap; width: 15px;"></div>
-    </display:column>
+    </display:column>--%>
     
     <!-- Make the columns fit in the iteration-page. -->
     <c:set var="nameClass" value="nameColumn" />
@@ -252,6 +253,7 @@ $(document).ready(function() {
 
   <aef:productList />
 
+<%--
   <table class="formTable">
   <tr>
     <td>State</td>
@@ -266,7 +268,7 @@ $(document).ready(function() {
         preselectedBacklogId="${backlog.id}" backlogs="${productList}" />
     </td>
   </tr>
-  <%--
+  <!--
   <tr>
     <c:if test="${aef:isIteration(backlog)}">
     <td>Iteration goal</td>
@@ -280,7 +282,7 @@ $(document).ready(function() {
       </select>
     </td>
     </c:if>
-  </tr>--%>
+  </tr>-->
   <tr>
     <td>Priority</td>
     <td class="targetPriorityDropdown" colspan="2">
@@ -352,4 +354,5 @@ $(document).ready(function() {
         onclick="return validateDeletion()" label="Delete selected" /></td>
   </tr>
   </table>
+  --%>
 </ww:form>

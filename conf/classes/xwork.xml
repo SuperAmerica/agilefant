@@ -193,7 +193,6 @@
 				<param name="status">400</param>
 			</result>
 			<result name="ajax_success" type="dispatcher">
-				<param name="status">200</param>
 				<param name="location">/WEB-INF/jsp/inc/ajaxStoryResult.jsp</param>
 			</result>
 		</action>
@@ -211,7 +210,6 @@
         <param name="status">400</param>
       </result>
       <result name="ajax_success" type="dispatcher">
-        <param name="status">200</param>
         <param name="location">/WEB-INF/jsp/jsonData.jsp</param>
       </result>
 		</action>
@@ -226,7 +224,6 @@
 				<param name="status">400</param>
 			</result>
 			<result name="ajax_success" type="dispatcher">
-				<param name="status">200</param>
 				<param name="location">/WEB-INF/jsp/jsonData.jsp</param>
 			</result>
 		</action>
@@ -236,7 +233,6 @@
         <param name="status">400</param>
       </result>
       <result name="ajax_success" type="dispatcher">
-        <param name="status">200</param>
         <param name="location">/WEB-INF/jsp/jsonData.jsp</param>
       </result>
     </action>
@@ -247,7 +243,6 @@
         <param name="status">400</param>
       </result>
       <result name="ajax_success" type="dispatcher">
-        <param name="status">200</param>
         <param name="location">/WEB-INF/jsp/jsonData.jsp</param>
       </result>
     </action>
@@ -264,7 +259,6 @@
         <param name="status">400</param>
       </result>
       <result name="ajax_success" type="dispatcher">
-        <param name="status">200</param>
         <param name="location">/WEB-INF/jsp/jsonData.jsp</param>
       </result>
 		</action>
@@ -283,7 +277,6 @@
 	        <param name="status">400</param>
 	      </result>
 	      <result name="ajax_success" type="dispatcher">
-	        <param name="status">200</param>
 	        <param name="location">/WEB-INF/jsp/jsonData.jsp</param>
 	      </result>
 	    </action>
@@ -293,7 +286,6 @@
 	        <param name="status">400</param>
 	      </result>
 	      <result name="ajax_success" type="dispatcher">
-	        <param name="status">200</param>
 	        <param name="location">/WEB-INF/jsp/jsonData.jsp</param>
 	      </result>
 	    </action>
@@ -303,7 +295,6 @@
 	        <param name="status">400</param>
 	      </result>
 	      <result name="ajax_success" type="dispatcher">
-	        <param name="status">200</param>
 	        <param name="location">/WEB-INF/jsp/jsonData.jsp</param>
 	      </result>
 	    </action>
@@ -314,7 +305,6 @@
 	        <param name="status">400</param>
 	      </result>
 	      <result name="ajax_success" type="dispatcher">
-	        <param name="status">200</param>
 	        <param name="location">/WEB-INF/jsp/jsonData.jsp</param>
 	      </result>
 	    </action>
@@ -372,7 +362,6 @@
 				<param name="status">400</param>
 			</result>
 			<result name="ajax_success" type="dispatcher">
-				<param name="status">200</param>
 				<param name="location">/WEB-INF/jsp/inc/ajaxProjectResult.jsp</param>
 			</result>
 		</action>
@@ -442,7 +431,6 @@
         <param name="status">400</param>
       </result>
       <result name="ajax_success" type="dispatcher">
-        <param name="status">200</param>
         <param name="location">/WEB-INF/jsp/jsonData.jsp</param>
       </result>
 		</action>
@@ -461,42 +449,6 @@
             class="menuAction">
         </action>
         <!-- /Menu actions -->
-
-		<!-- Todo actions -->
-		<!-- 
-		<action name="deleteTodo" method="delete" class="todoAction">
-			<result type="redirect-action">
-				<param name="actionName">popContext</param>
-			</result>
-		</action>
-		
-		<action name="ajaxStoreTodo" method="ajaxStore" class="todoAction">
-		  <result name="ajax_error" type="httpheader">
-        <param name="status">400</param>
-      </result>
-      <result name="ajax_success" type="dispatcher">
-        <param name="status">200</param>
-        <param name="location">/WEB-INF/jsp/jsonData.jsp</param>
-      </result>
-		</action>
-		
-		<action name="ajaxDeleteTodo" method="ajaxDelete" class="todoAction">
-    </action>
-
-		<action name="moveTodoUp" class="todoAction"
-			method="moveTodoUp">
-		</action>
-		<action name="moveTodoDown" class="todoAction"
-			method="moveTodoDown">
-		</action>
-		<action name="moveTodoTop" class="todoAction"
-			method="moveTodoTop">
-		</action>
-		<action name="moveTodoBottom" class="todoAction"
-			method="moveTodoBottom">
-		</action>
- -->
-		<!-- /Todo actions -->
 
 		<!-- Iteration actions -->
 		 
@@ -531,14 +483,7 @@
 		</action>
 
 		
-		<action name="storeNewIteration" method="store"
-			class="iterationAction">
-			<result type="redirect-action">
-				<param name="actionName">contextView</param>
-				<param name="contextName">iteration</param>
-				<param name="contextObjectId">${iterationId}</param>
-				<param name="resetContextView">true</param>
-			</result>
+		<action name="storeNewIteration" method="store"	class="iterationAction">
 		</action>
 		
 		 
@@ -553,14 +498,12 @@
 				<param name="status">400</param>
 			</result>
 			<result name="ajax_success" type="dispatcher">
-				<param name="status">200</param>
 				<param name="location">/WEB-INF/jsp/inc/ajaxIterationResult.jsp</param>
 			</result>
 		</action>
 		
 		<action name="iterationData" class="iterationAction" method="iterationContents">
 			<result name="ajax_success" type="dispatcher">
-				<param name="status">200</param>
 				<param name="location">/WEB-INF/jsp/jsonData.jsp</param>
 			</result>
 		</action>
@@ -597,7 +540,6 @@
 				<param name="status">400</param>
 			</result>
 			<result name="ajax_success" type="dispatcher">
-				<param name="status">200</param>
 				<param name="location">/WEB-INF/jsp/inc/ajaxUserResult.jsp</param>
 			</result>
 		</action>
@@ -627,7 +569,6 @@
 				<param name="status">400</param>
 			</result>
 			<result name="ajax_success" type="dispatcher">
-				<param name="status">200</param>
 				<param name="location">/WEB-INF/jsp/inc/ajaxTeamResult.jsp</param>
 			</result>
 		</action>
@@ -728,24 +669,14 @@
     <action name="moveStory" method="moveStory"
       class="storyAction">
     </action>
-    <!-- 
-		<action name="storeIterationGoal" method="store"
-			class="iterationGoalAction">
-			<result name="ajax_success" type="dispatcher">
-				<param name="status">200</param>
-				<param name="location">/WEB-INF/jsp/jsonData.jsp</param>
-			</result>
-		</action>-->
     <action name="storyContents" method="getStoryContents" class="storyAction">
       <result name="ajax_success" type="dispatcher">
-        <param name="status">200</param>
         <param name="location">/WEB-INF/jsp/jsonData.jsp</param>
       </result>
     </action>		
 		<action name="calculateStoryMetrics" method="getMetrics"
       class="storyAction">
       <result name="ajax_success" type="dispatcher">
-        <param name="status">200</param>
         <param name="location">/WEB-INF/jsp/jsonData.jsp</param>
       </result>
     </action>
@@ -962,7 +893,6 @@
         <param name="status">400</param>
       </result>
       <result name="ajax_success" type="dispatcher">
-        <param name="status">200</param>
         <param name="location">/WEB-INF/jsp/jsonData.jsp</param>
       </result>
     </action>
@@ -1089,7 +1019,6 @@
 		        <param name="status">400</param>
 		      </result>
 		      <result name="ajax_success" type="dispatcher">
-		        <param name="status">200</param>
 		        <param name="location">/WEB-INF/jsp/jsonData.jsp</param>
 		      </result>
         </action>

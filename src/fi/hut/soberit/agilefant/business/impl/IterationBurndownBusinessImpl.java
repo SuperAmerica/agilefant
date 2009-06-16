@@ -80,10 +80,10 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
     protected static final String EFFORT_AXIS_LABEL     = "Effort left";
     
     /* Series numbers */
-    protected static final int REFERENCE_SERIES_NO      = 0;
-    protected static final int BURNDOWN_SERIES_NO       = 1;
-    protected static final int CURRENT_DAY_SERIES_NO    = 2;
-    protected static final int SCOPING_SERIES_NO        = 3;
+    protected static final int BURNDOWN_SERIES_NO       = 0;
+    protected static final int CURRENT_DAY_SERIES_NO    = 1;
+    protected static final int SCOPING_SERIES_NO        = 2;
+    protected static final int REFERENCE_SERIES_NO      = 3;
     protected static final int EXPECTED_SERIES_NO       = 4;
     
     /* Series colors */
@@ -291,19 +291,19 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
         DateTime iterationStartDate = new DateTime(iteration.getStartDate());
         DateTime iterationEndDate = new DateTime(iteration.getEndDate());
         
-        chartDataset.addSeries(getReferenceVelocityTimeSeries(
-                iterationStartDate, iterationEndDate,
-                new ExactEstimate(todayEntry.getOriginalEstimateSum())));
-        
         chartDataset.addSeries(getBurndownTimeSeries(iterationEntries,
                 new LocalDate(iteration.getStartDate()),
                 determineEndDate(new LocalDate(iteration.getEndDate()))));
-        
+
         chartDataset.addSeries(getCurrentDayTimeSeries(yesterdayEntry, todayEntry));
         
         chartDataset.addSeries(getScopingTimeSeries(iterationEntries,
                 iterationStartDate.toLocalDate(),
                 iterationEndDate.toLocalDate()));
+
+        chartDataset.addSeries(getReferenceVelocityTimeSeries(
+                iterationStartDate, iterationEndDate,
+                new ExactEstimate(todayEntry.getOriginalEstimateSum())));
         
         return chartDataset;
     }

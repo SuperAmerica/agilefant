@@ -6,17 +6,7 @@
 	</projects>
 	<buildSpec>
 		<buildCommand>
-			<name>com.cenqua.clover.core.prejavabuilder</name>
-			<arguments>
-			</arguments>
-		</buildCommand>
-		<buildCommand>
 			<name>org.eclipse.jdt.core.javabuilder</name>
-			<arguments>
-			</arguments>
-		</buildCommand>
-		<buildCommand>
-			<name>com.cenqua.clover.core.postjavabuilder</name>
 			<arguments>
 			</arguments>
 		</buildCommand>
@@ -49,6 +39,5 @@
 		<nature>org.eclipse.jem.workbench.JavaEMFNature</nature>
 		<nature>com.sysdeo.eclipse.tomcat.tomcatnature</nature>
 		<nature>org.hibernate.eclipse.console.hibernateNature</nature>
-		<nature>com.cenqua.clover.core.clovernature</nature>
 	</natures>
 </projectDescription>

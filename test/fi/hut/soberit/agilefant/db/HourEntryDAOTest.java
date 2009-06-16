@@ -192,8 +192,6 @@ public class HourEntryDAOTest extends AbstractHibernateTests {
         assertEquals(6, actualEntries.size());
     }
     
-    // TODO: Fix these
-    // Dependent on tasks iteration id and story id duplicates.
     @Test
     public void testCalculateIterationHourEntries() {
         executeClassSql();

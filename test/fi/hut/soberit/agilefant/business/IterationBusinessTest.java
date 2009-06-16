@@ -51,7 +51,7 @@ public class IterationBusinessTest {
     TaskTO taskTO;
 
     @Before
-    public void createDependencies() {
+    public void setUp_Dependencies() {
         iterationDAO = createMock(IterationDAO.class);
         iterationBusiness.setIterationDAO(iterationDAO);
 
@@ -178,6 +178,19 @@ public class IterationBusinessTest {
         verify(iterationHistoryEntryBusiness, storyBusiness, hourEntryBusiness);
     }
     
+    @Test
+    public void testGetIterationMetrics_nullLatestHistoryEntry() {
+        expect(iterationHistoryEntryBusiness.retrieveLatest(iteration))
+            .andReturn(null);
+        replay(iterationHistoryEntryBusiness);
+        
+        IterationMetrics actualMetrics = iterationBusiness.getIterationMetrics(iteration); 
+        
+        assertEquals(0, actualMetrics.getEffortLeft().getMinorUnits());
+        assertEquals(0, actualMetrics.getOriginalEstimate().getMinorUnits());
+        
+        verify(iterationHistoryEntryBusiness);
+    }
     
     @Test(expected = IllegalArgumentException.class)
     public void testGetIterationMetrics_nullIteration() {

@@ -91,8 +91,14 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration> implem
             = iterationHistoryEntryBusiness.retrieveLatest(iteration);
         
         // 1. Set original estimate and effort left
-        metrics.setOriginalEstimate(new ExactEstimate(latestHistoryEntry.getOriginalEstimateSum()));
-        metrics.setEffortLeft(new ExactEstimate(latestHistoryEntry.getEffortLeftSum()));
+        if (latestHistoryEntry == null) {
+            metrics.setOriginalEstimate(new ExactEstimate(0));
+            metrics.setEffortLeft(new ExactEstimate(0));
+        }
+        else {
+            metrics.setOriginalEstimate(new ExactEstimate(latestHistoryEntry.getOriginalEstimateSum()));
+            metrics.setEffortLeft(new ExactEstimate(latestHistoryEntry.getEffortLeftSum()));
+        }
         
         // 2. Set story points
         metrics.setStoryPoints(storyBusiness.getStoryPointSumByBacklog(iteration));

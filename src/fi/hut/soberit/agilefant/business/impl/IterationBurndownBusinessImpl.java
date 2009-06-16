@@ -448,7 +448,7 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
     
     protected TimeSeries getScopingTimeSeries(List<IterationHistoryEntry> iterationHistoryEntries, LocalDate startDate, LocalDate endDate) {
         TimeSeries scopingSeries = new TimeSeries(SCOPING_SERIES_NAME);
-        for (LocalDate iter = startDate.minusDays(1); iter.compareTo(endDate) < 0; iter = iter.plusDays(1)) {
+        for (LocalDate iter = startDate.minusDays(1); iter.compareTo(endDate.plusDays(1)) < 0; iter = iter.plusDays(1)) {
             IterationHistoryEntry todayEntry = getHistoryEntryForDate(iterationHistoryEntries, iter);
             IterationHistoryEntry yesterdayEntry = getHistoryEntryForDate(iterationHistoryEntries, iter.minusDays(1));
             

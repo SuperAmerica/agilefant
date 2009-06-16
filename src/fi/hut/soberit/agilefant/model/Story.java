@@ -20,6 +20,7 @@ import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.Type;
 
 import flexjson.JSON;
 
@@ -60,6 +61,7 @@ public class Story implements TimesheetLoggable {
         this.name = name;
     }
 
+    @Type(type = "escaped_text")
     public String getDescription() {
         return description;
     }

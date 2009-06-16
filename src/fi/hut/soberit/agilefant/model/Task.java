@@ -77,6 +77,7 @@ public class Task implements TimesheetLoggable {
     }
 
     @JSON
+    @Type(type = "escaped_text")
     public String getDescription() {
         return description;
     }

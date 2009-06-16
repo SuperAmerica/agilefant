@@ -46,7 +46,7 @@ BEGIN
 	END LOOP;
 END //
 
-SELECT 'Drop All Foreign Keys' AS status;
+SELECT 'Drop All Foreign Keys' AS status //
 CALL DropAllForeignKeys() //
 
 delimiter ;

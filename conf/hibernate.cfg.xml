@@ -26,7 +26,6 @@
 		<mapping class="fi.hut.soberit.agilefant.model.Task" />
 		<mapping class="fi.hut.soberit.agilefant.model.TaskHourEntry" />
 		<mapping class="fi.hut.soberit.agilefant.model.Team" />
-		<mapping class="fi.hut.soberit.agilefant.model.Todo" />
 		<mapping class="fi.hut.soberit.agilefant.model.User" />
 		
 		<!-- 

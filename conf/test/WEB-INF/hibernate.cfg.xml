@@ -15,7 +15,6 @@
         <mapping class="fi.hut.soberit.agilefant.model.Project"/>
         <mapping class="fi.hut.soberit.agilefant.model.Iteration"/>
         <mapping class="fi.hut.soberit.agilefant.model.Product"/>
-        <mapping class="fi.hut.soberit.agilefant.model.Todo"/>
         <mapping class="fi.hut.soberit.agilefant.model.Team"/>
         <mapping class="fi.hut.soberit.agilefant.model.User"/>
         <mapping class="fi.hut.soberit.agilefant.model.WorkType"/>

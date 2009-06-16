@@ -59,7 +59,7 @@ SELECT 'Schema changes' AS status;
 ALTER TABLE assignment
 	CHANGE backlog_id project_id INT(11) DEFAULT NULL;
 ALTER TABLE assignment
-	CHANGE deltaOverhead delta_personal_load BIGINT(11) DEFAULT NULL;
+	CHANGE deltaOverhead delta_personal_load BIGINT(20) DEFAULT NULL;
 
 /* convert from seconds to minutes */
 UPDATE assignment SET delta_personal_load = (delta_personal_load / 60);
@@ -127,17 +127,17 @@ DROP TABLE task;
 SELECT 'Split backlog items to new tables' AS status;
 
 CREATE TABLE tasks (
-	id BIGINT AUTO_INCREMENT,
+	id INT(11) AUTO_INCREMENT,
 	createdDate DATETIME,
-	effortLeft INT(11),
-	originalestimate INT(11),
+	effortLeft BIGINT(20),
+	originalestimate BIGINT(20),
 	name VARCHAR(255),
 	priority INT(11),
-	state INT(11) NOT NULL DEFAULT 0,
+	state INT(11) NOT NULL,
 	description text,
 	iteration_id INT(11),
 	creator_id INT(11),
-	story_id BIGINT,
+	story_id INT(11),
 	PRIMARY KEY(id)
 ) ENGINE=InnoDB;
 
@@ -154,15 +154,15 @@ INSERT INTO tasks (id,createdDate,effortLeft,originalestimate,name,
 /* We have stuff coming here from both backlogitem
    and iterationgoal */
 CREATE TABLE stories (
-	id BIGINT AUTO_INCREMENT,
+	id INT(11) AUTO_INCREMENT,
 	createdDate DATETIME,
 	storyPoints INT(11),
-	name VARCHAR(255),
+	name VARCHAR(255) NOT NULL,
 	priority INT(11),
-	state INT(11) NOT NULL DEFAULT 0,
+	state INT(11) NOT NULL,
 	description text,
 	creator_id INT(11),
-	backlog_id INT(11),
+	backlog_id INT(11) NOT NULL,
 	iterationGoal_id INT(11), /* temporary */
 	PRIMARY KEY(id)
 ) ENGINE=InnoDB;
@@ -180,8 +180,8 @@ INSERT INTO stories (id,createdDate,storyPoints,name,
 
 /* Use automatic ids as there's only one refence to iteration goals
    to fix. */
-INSERT INTO stories (name,priority,description,backlog_id,iterationGoal_id)
-	SELECT item.name, item.priority,item.description,item.iteration_id,item.id
+INSERT INTO stories (name,priority,description,backlog_id,iterationGoal_id,state)
+	SELECT item.name, item.priority,item.description,item.iteration_id,item.id,0
 	FROM iterationgoal AS item;
 
 /* Fix references from tasks to stories */
@@ -195,16 +195,20 @@ DROP TABLE iterationgoal;
 DROP TABLE backlogitem;
 
 /*** ASSOCIATIONS FROM USERS TO TASKS AND STORIES ***/
+SELECT 'Pivot tables' AS status;
+
 CREATE TABLE story_user (
-	story_id INT(11) NOT NULL REFERENCES stories(id),
-	user_id INT(11) NOT NULL REFERENCES user(id),
-	PRIMARY KEY(story_id,user_id)
+	story_id INT(11) NOT NULL,
+	user_id INT(11) NOT NULL,
+	FOREIGN KEY (story_id) REFERENCES stories(id),
+	FOREIGN KEY (user_id) REFERENCES user(id)
 ) ENGINE=InnoDB;
 
 CREATE TABLE task_user (
-	tasks_id INT(11) NOT NULL REFERENCES tasks(id),
-	responsibles_id INT(11) NOT NULL REFERENCES user(id),
-	PRIMARY KEY(tasks_id,responsibles_id)
+	tasks_id INT(11) NOT NULL,
+	responsibles_id INT(11) NOT NULL,
+	FOREIGN KEY (tasks_id) REFERENCES tasks(id),
+	FOREIGN KEY (responsibles_id) REFERENCES user(id)
 ) ENGINE=InnoDB;
 
 INSERT INTO story_user
@@ -221,9 +225,10 @@ DROP TABLE backlogitem_user;
 
 /*** BUSINESS THEMES ***/
 CREATE TABLE story_businesstheme (
-	story_id INT(11) NOT NULL REFERENCES story(id),
-	businesstheme_id INT(11) NOT NULL REFERENCES businesstheme(id),
-	PRIMARY KEY(story_id,businesstheme_id)
+	story_id INT(11) NOT NULL,
+	businesstheme_id INT(11) NOT NULL,
+	FOREIGN KEY (story_id) REFERENCES stories(id),
+	FOREIGN KEY (businesstheme_id) REFERENCES businesstheme(id)
 ) ENGINE=InnoDB;
 
 INSERT INTO story_businesstheme
@@ -237,13 +242,14 @@ DROP TABLE backlogitem_businesstheme;
 
 
 CREATE TABLE history_iterations (
-	id BIGINT AUTO_INCREMENT,
-	effortLeftSum INT(11) NOT NULL,
-	originalEstimateSum INT(11) NOT NULL,
-	deltaOriginalEstimate INT(11) NOT NULL DEFAULT 0,
+	id INT(11) AUTO_INCREMENT,
+	effortLeftSum BIGINT NOT NULL,
+	originalEstimateSum BIGINT NOT NULL,
+	deltaOriginalEstimate BIGINT NOT NULL,
 	timestamp DATE NOT NULL,
 	iteration_id INT(11) NOT NULL,
-	PRIMARY KEY(id)
+	PRIMARY KEY(id),
+	FOREIGN KEY (iteration_id) REFERENCES backlogs(id)
 ) ENGINE=InnoDB;
 
 INSERT INTO history_iterations(effortLeftSum,originalEstimateSum,timestamp,iteration_id,
@@ -283,7 +289,6 @@ ALTER TABLE he_temp DROP COLUMN id;
 DELETE FROM he_temp
 WHERE timestamp > NOW();
 
-DROP TABLE IF EXISTS he_temp_copy;
 /* MySQL can't use a temporary table in two different subqueries */
 CREATE TEMPORARY TABLE he_temp_copy SELECT * FROM he_temp;
 
@@ -327,11 +332,12 @@ DROP TABLE history;
 
 SELECT 'Hour entries' AS status;
 
-ALTER TABLE hourentry CHANGE timeSpent minutesSpent BIGINT(20);
+UPDATE hourentry SET timeSpent=0 WHERE timeSpent IS NULL;
+ALTER TABLE hourentry CHANGE timeSpent minutesSpent BIGINT(20) NOT NULL;
 UPDATE hourentry SET minutesSpent=(minutesSpent/60);
 
-ALTER TABLE hourentry ADD COLUMN story_id BIGINT;
-ALTER TABLE hourentry ADD COLUMN task_id BIGINT;
+ALTER TABLE hourentry ADD COLUMN story_id INT(11);
+ALTER TABLE hourentry ADD COLUMN task_id INT(11);
 
 
 UPDATE hourentry SET story_id=backlogItem_id, DTYPE='StoryHourEntry'
@@ -347,10 +353,13 @@ ALTER TABLE hourentry RENAME hourentries;
 /*** MISC TABLES ***/
 
 ALTER TABLE user RENAME users;
+ALTER TABLE users DROP COLUMN description;
 
 DROP TABLE worktype;
 
 ALTER TABLE projecttype RENAME projecttypes;
+ALTER TABLE projecttypes DROP COLUMN targetSpendingPercentage;
+
 ALTER TABLE setting RENAME settings;
 ALTER TABLE team RENAME teams;
 
@@ -399,3 +408,6 @@ SELECT 'Drop procedures' AS status;
 DROP PROCEDURE ExecDyn;
 DROP PROCEDURE DropFK;
 DROP PROCEDURE DropAllForeignKeys;
+DROP TABLE he_temp;
+DROP TABLE he_temp_copy;
+DROP TABLE items_with_todos;

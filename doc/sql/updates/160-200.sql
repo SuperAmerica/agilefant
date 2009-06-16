@@ -2,8 +2,7 @@
 /* SET GLOBAL log_bin_trust_function_creators = 1; */
 
 SET autocommit = 0;
-
-DROP PROCEDURE IF EXISTS DropFK;
+SET SESSION SQL_MODE='TRADITIONAL';
 
 delimiter //
 
@@ -125,6 +124,8 @@ DROP TABLE task;
    
 /*** SPLITTING BACKLOG ITEMS ***/
 
+SELECT 'Split backlog items to new tables' AS status;
+
 CREATE TABLE tasks (
 	id BIGINT AUTO_INCREMENT,
 	createdDate DATETIME,
@@ -132,7 +133,7 @@ CREATE TABLE tasks (
 	originalestimate INT(11),
 	name VARCHAR(255),
 	priority INT(11),
-	state INT(11) NOT NULL,
+	state INT(11) NOT NULL DEFAULT 0,
 	description text,
 	iteration_id INT(11),
 	creator_id INT(11),
@@ -158,7 +159,7 @@ CREATE TABLE stories (
 	storyPoints INT(11),
 	name VARCHAR(255),
 	priority INT(11),
-	state INT(11) NOT NULL,
+	state INT(11) NOT NULL DEFAULT 0,
 	description text,
 	creator_id INT(11),
 	backlog_id INT(11),
@@ -282,12 +283,20 @@ ALTER TABLE he_temp DROP COLUMN id;
 DELETE FROM he_temp
 WHERE timestamp > NOW();
 
+/* MySQL can't use a temporary table in two different subqueries */
+CREATE TEMPORARY TABLE he_temp_copy SELECT * FROM he_temp;
+
 UPDATE history_iterations
 SET deltaOriginalEstimate=(
 	SELECT deltaOriginalEstimate FROM he_temp
 	WHERE he_temp.timestamp = history_iterations.timestamp
 	      AND  he_temp.iteration_id = history_iterations.iteration_id
-);
+)
+WHERE (
+	SELECT COUNT(*) FROM he_temp_copy t
+	WHERE t.timestamp = history_iterations.timestamp
+	      AND  t.iteration_id = history_iterations.iteration_id
+	) > 0;
 
 SELECT 'Delete updated from temporary table' AS status;
 

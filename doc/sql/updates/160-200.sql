@@ -283,8 +283,11 @@ ALTER TABLE he_temp DROP COLUMN id;
 DELETE FROM he_temp
 WHERE timestamp > NOW();
 
+DROP TABLE IF EXISTS he_temp_copy;
 /* MySQL can't use a temporary table in two different subqueries */
 CREATE TEMPORARY TABLE he_temp_copy SELECT * FROM he_temp;
+
+UPDATE history_iterations SET deltaOriginalEstimate = 0;
 
 UPDATE history_iterations
 SET deltaOriginalEstimate=(

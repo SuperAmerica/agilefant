@@ -186,8 +186,8 @@ public class IterationBusinessTest {
         
         IterationMetrics actualMetrics = iterationBusiness.getIterationMetrics(iteration); 
         
-        assertEquals(0, actualMetrics.getEffortLeft().getMinorUnits().longValue());
-        assertEquals(0, actualMetrics.getOriginalEstimate().getMinorUnits().longValue());
+        assertEquals(0L, actualMetrics.getEffortLeft().getMinorUnits().longValue());
+        assertEquals(0L, actualMetrics.getOriginalEstimate().getMinorUnits().longValue());
         
         verify(iterationHistoryEntryBusiness);
     }

@@ -73,8 +73,10 @@ public class TimesheetAction extends ActionSupport implements PrincipalAware {
         currentUserId = ud.getUserId();
         
     }
-    
-    private Set<Integer> selectedBacklogs() {
+    /*
+     * -1 in product, project or iteration id array remarks "select all" option
+     */
+    public Set<Integer> getSelectedBacklogs() {
         Set<Integer> ret = new HashSet<Integer>();
         if(this.projectIds.contains(-1)) {
             if(this.onlyOngoing) {
@@ -97,6 +99,7 @@ public class TimesheetAction extends ActionSupport implements PrincipalAware {
                 ret.addAll(this.iterationIds);
             }
         }
+        ret.remove(-1);
         return ret;
     }
     public String initialize() {
@@ -106,7 +109,7 @@ public class TimesheetAction extends ActionSupport implements PrincipalAware {
         return Action.SUCCESS;
     }
     public String generateTree(){
-        Set<Integer> selectedBacklogIds = this.selectedBacklogs();
+        Set<Integer> selectedBacklogIds = this.getSelectedBacklogs();
         if(selectedBacklogIds == null || selectedBacklogIds.size() == 0) {
             addActionError("No backlogs selected.");
             return Action.ERROR;

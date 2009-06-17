@@ -54,12 +54,12 @@ $(document).ready(function() {
     requestURI="${currentAction}.action" >
 
     <!-- Checkboxes for bulk-moving strories -->
-    <%--
+    
     <display:column sortable="false" title="<input type='checkbox' name='selectall' onclick='selectAllStories(this.checked)'/>" class="selectColumn">
       <div><ww:checkbox name="selected" fieldValue="${row.id}" /></div>
       <div style="height: 15px;"></div>
       <div id="storyTabContainer-${row.id}-${storyListContext}" class="tabContainer" style="overflow:visible; white-space: nowrap; width: 15px;"></div>
-    </display:column>--%>
+    </display:column>
     
     <!-- Make the columns fit in the iteration-page. -->
     <c:set var="nameClass" value="nameColumn" />

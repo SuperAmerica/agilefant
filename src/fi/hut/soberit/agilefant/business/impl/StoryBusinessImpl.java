@@ -336,42 +336,42 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         return metrics;
     }
 
-    public void attachStoryToIteration(Story story, int iterationId)
+    public void attachStoryToBacklog(Story story, int backlogId)
             throws ObjectNotFoundException {
-        this.attachStoryToIteration(story, iterationId, false);
+        this.attachStoryToBacklog(story, backlogId, false);
     }
 
-    public void attachStoryToIteration(int storyId, int iterationId,
+    public void attachStoryToBacklog(int storyId, int backlogId,
             boolean moveTasks) throws ObjectNotFoundException {
         Story story = this.retrieve(storyId);
-        this.attachStoryToIteration(story, iterationId, moveTasks);
+        this.attachStoryToBacklog(story, backlogId, moveTasks);
     }
 
-    public void attachStoryToIteration(Story story, int iterationId,
+    public void attachStoryToBacklog(Story story, int backlogId,
             boolean moveTasks) throws ObjectNotFoundException {
-        Iteration newIteration = null;
-        if (iterationId != 0) {
-            newIteration = iterationDAO.get(iterationId);
-            if (newIteration == null) {
-                throw new ObjectNotFoundException("iteration.notFound");
+        Backlog newBacklog = null;
+        if (backlogId != 0) {
+            newBacklog = backlogDAO.get(backlogId);
+            if (newBacklog == null) {
+                throw new ObjectNotFoundException("backlog.notFound");
             }
         }
         // story has to have a parent
-        if (story.getBacklog() == null && iterationId == 0) {
-            throw new IllegalArgumentException("iteration.notFound");
+        if (story.getBacklog() == null && backlogId == 0) {
+            throw new IllegalArgumentException("backlog.notFound");
         }
 
-        if (iterationId != 0) {
+        if (backlogId != 0) {
 
             if (story.getBacklog() != null) {
-                if (story.getBacklog() != newIteration) {
+                if (story.getBacklog() != newBacklog) {
                     Backlog oldBacklog = story.getBacklog();
                     oldBacklog.getStories().remove(story);
-                    story.setBacklog(newIteration);
+                    story.setBacklog(newBacklog);
                     story.getBacklog().getStories().add(story);
                     for (Task task : story.getTasks()) {
                         if (moveTasks) {
-                            task.setIteration(newIteration);
+                            task.setIteration((Iteration) newBacklog);
                         } else {
                             task.setStory(null);
                         }
@@ -384,12 +384,14 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
                     }
                 }
             } else {
-                story.setBacklog(newIteration);
+                story.setBacklog(newBacklog);
                 story.getBacklog().getStories().add(story);
             }
 
             storyDAO.store(story);
-            iterationHistoryEntryBusiness.updateIterationHistory(iterationId);
+            if (newBacklog instanceof Iteration) {
+                iterationHistoryEntryBusiness.updateIterationHistory(backlogId);
+            }
         }
 
         if (story.getBacklog() == null) {

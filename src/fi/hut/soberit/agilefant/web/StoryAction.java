@@ -119,7 +119,7 @@ public class StoryAction extends ActionSupport implements CRUDAction {
     }
 
     public String moveStory() {
-        storyBusiness.attachStoryToIteration(storyId, iterationId, moveTasks);
+        storyBusiness.attachStoryToBacklog(storyId, backlogId, moveTasks);
         return CRUDAction.AJAX_SUCCESS;
     }
     

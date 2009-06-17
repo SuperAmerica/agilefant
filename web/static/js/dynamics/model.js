@@ -438,20 +438,20 @@ StoryModel.prototype.getDoneTasks = function() {
 StoryModel.prototype.getTotalTasks = function() {
   return this.metrics.totalTasks;
 };
-StoryModel.prototype.moveToIteration = function(newIteration) {
+StoryModel.prototype.moveToBacklog = function(backlogId, moveTasks) {
   var me = this;
   jQuery.ajax({
     async: false,
     error: function() {
-      commonView.showError("Unable to move selected story to selected iteration.");
+      commonView.showError("Unable to move selected story to selected backlog.");
     },
-    success: function(data,type) {
+    success: function(data,type) {   
       me.iteration.removeStory(me);
     },
     cache: false,
     type: "POST",
     url: "moveStory.action",
-    data: {storyId: this.id, iterationId: newIteration, moveTasks: true}
+    data: {storyId: this.id, backlogId: backlogId, moveTasks: moveTasks}
   });
 };
 StoryModel.prototype.rollBack = function() {

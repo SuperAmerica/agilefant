@@ -102,7 +102,7 @@ IterationController.prototype = {
       var err = $("<div />").appendTo(parent).css("color","red").hide();
       var sel = $("<div />").appendTo(parent);
       var me = this;
-    sel.iterationSelect();
+      sel.iterationSelect();
       parent.dialog({
         resizable: false,
         height:200,
@@ -112,14 +112,32 @@ IterationController.prototype = {
         close: function() { parent.dialog('destroy'); parent.remove(); },
         buttons: {
           'Move': function() {
+            var product = sel.iterationSelect("getSelectedProduct");
+            var project = sel.iterationSelect("getSelectedProject");
             var iteration = sel.iterationSelect("getSelected");
-            if(iteration < 1) {
-              err.text("Please select an iteration.").show();
-              return;
-            } else if(iteration != story.iteration.iterationId){
-              story.moveToIteration(iteration);
-              row.remove();
-              row.getElement().trigger("metricsUpdated");
+            var backlogId = 0;
+            if (isNaN(iteration) || iteration < 1) {
+            	if (isNaN(project) || project < 1) {
+            		if (isNaN(product) || product < 1) {
+                        err.text("Please select a backlog.").show();
+            			return;
+            		} else {
+            			backlogId = product;
+            		}
+            	} else {
+            		backlogId = project;
+            	}
+            } else if (iteration != story.iteration.iterationId) {
+            	backlogId = iteration;
+            }
+            if (backlogId > 0) {
+            	var moveTasks = (!isNaN(iteration) && iteration > 0);
+            	story.moveToBacklog(backlogId, moveTasks);
+            	row.remove();
+            	if (!moveTasks) {
+            		me.tasksWithoutStoryContainer.reloadTasks();
+            		me.noStoryTaskController.render();
+            	}
             }
           $(this).dialog('destroy');
             parent.remove();

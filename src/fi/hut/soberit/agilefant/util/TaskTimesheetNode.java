@@ -1,5 +1,6 @@
 package fi.hut.soberit.agilefant.util;
 
+import java.util.Collections;
 import java.util.List;
 
 import fi.hut.soberit.agilefant.model.Task;
@@ -14,19 +15,16 @@ public class TaskTimesheetNode extends TimesheetNode {
     }
     @Override
     public List<? extends TimesheetNode> getChildren() {
-        // TODO Auto-generated method stub
-        return null;
+        return Collections.emptyList();
     }
 
     @Override
     public String getName() {
-        // TODO Auto-generated method stub
-        return null;
+        return this.task.getName();
     }
 
     @Override
     public boolean hasChildren() {
-        // TODO Auto-generated method stub
         return false;
     }
     @Override

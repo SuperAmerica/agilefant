@@ -3,7 +3,6 @@ package fi.hut.soberit.agilefant.util;
 import java.util.ArrayList;
 import java.util.List;
 
-import fi.hut.soberit.agilefant.model.HourEntry;
 import fi.hut.soberit.agilefant.model.Story;
 
 /**
@@ -30,8 +29,7 @@ public class StoryTimesheetNode extends TimesheetNode {
 
     @Override
     public String getName() {
-        // TODO Auto-generated method stub
-        return null;
+        return this.story.getName();
     }
 
     @Override

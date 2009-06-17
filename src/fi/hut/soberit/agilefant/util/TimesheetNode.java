@@ -16,10 +16,21 @@ import fi.hut.soberit.agilefant.model.HourEntry;
  */
 public abstract class TimesheetNode {
     List<HourEntry> hourEntries = new ArrayList<HourEntry>();
-    ExactEstimate effortSum = new ExactEstimate(0);
     
     public TimesheetNode() {
         
+    }
+    
+    public ExactEstimate getEffortSum() {
+        ExactEstimate effortSum = new ExactEstimate(0);
+        for(HourEntry entry : this.hourEntries) {
+            effortSum.setMinorUnits(effortSum.getMinorUnits() + entry.getMinutesSpent());
+        }
+        for(TimesheetNode node : this.getChildren()) {
+            effortSum.setMinorUnits(effortSum.getMinorUnits() + node.getEffortSum().getMinorUnits());
+        }
+        
+        return effortSum;
     }
     public abstract boolean hasChildren();
     public abstract List<? extends TimesheetNode> getChildren();

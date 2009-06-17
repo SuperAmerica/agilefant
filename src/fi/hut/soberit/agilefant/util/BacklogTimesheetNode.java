@@ -25,13 +25,15 @@ public class BacklogTimesheetNode extends TimesheetNode {
     }
     @Override
     public List<? extends TimesheetNode> getChildren() {
-        // TODO Auto-generated method stub
-        return null;
+        List<TimesheetNode> children = new ArrayList<TimesheetNode>();
+        children.addAll(this.childBacklogs);
+        children.addAll(this.childStories);
+        children.addAll(this.childTasks);
+        return children;
     }
     @Override
     public String getName() {
-        // TODO Auto-generated method stub
-        return null;
+        return this.backlog.getName();
     }
     @Override
     public boolean hasChildren() {

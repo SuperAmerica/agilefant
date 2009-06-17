@@ -92,6 +92,41 @@ public class TimesheetBusinessTest extends TimesheetBusinessImpl {
     }
     
     @Test
+    public void testGetRootNodes_simple() {
+        TimesheetData sheetData = new TimesheetData();
+        Product prod = new Product();
+        BacklogTimesheetNode rootNode = new BacklogTimesheetNode(prod);
+        sheetData.addNode(rootNode);
+        TimesheetBusiness tsb = new TimesheetBusinessImpl();
+        List<BacklogTimesheetNode> nodes = tsb.getRootNodes(sheetData);
+        assertEquals(1, nodes.size());
+    }
+    @Test
+    public void testGetRootNodes_noRoots() {
+        TimesheetData sheetData = new TimesheetData();
+        TimesheetBusiness tsb = new TimesheetBusinessImpl();
+        List<BacklogTimesheetNode> nodes = tsb.getRootNodes(sheetData);
+        assertEquals(0, nodes.size());
+    }
+    
+    @Test
+    public void testGetRootNodes_muptipleBacklogs() {
+        TimesheetData sheetData = new TimesheetData();
+        Product prod = new Product();
+        prod.setId(1);
+        BacklogTimesheetNode rootNode = new BacklogTimesheetNode(prod);
+        Project proj = new Project();
+        proj.setId(2);
+        BacklogTimesheetNode nonRootNode = new BacklogTimesheetNode(proj);
+
+        sheetData.addNode(rootNode);
+        sheetData.addNode(nonRootNode);
+        TimesheetBusiness tsb = new TimesheetBusinessImpl();
+        List<BacklogTimesheetNode> nodes = tsb.getRootNodes(sheetData);
+        assertEquals(1, nodes.size());
+    }
+    
+    @Test
     public void testGetUnlinkedTimesheetData_emptyDataset() {
         List<BacklogHourEntry> emptyBacklogHEList = new ArrayList<BacklogHourEntry>();
         List<StoryHourEntry> emptyStoryHEList = new ArrayList<StoryHourEntry>();

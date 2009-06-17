@@ -64,7 +64,7 @@ public class StoryActionTest {
     @Test
     public void testMoveStory() {
         storyAction.setStoryId(story.getId());
-        storyAction.setIterationId(iter.getId());
+        storyAction.setBacklogId(iter.getId());
         storyBusiness.attachStoryToBacklog(story.getId(), iter.getId(), false);
         replay(storyBusiness, backlogBusiness);
         assertEquals(CRUDAction.AJAX_SUCCESS, storyAction.moveStory());

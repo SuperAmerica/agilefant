@@ -5,11 +5,18 @@ var ModelFactoryClass = function() {
   this.todos = {};
   this.effortEntries = {};
 };
-StoryModel = function(storyData, parent) {
+var StoryModel = function(storyData, parent) {
   this.init();
   this.metrics = {totalTasks: '-', doneTasks: '-', effortLeft: null, originalEstimate: null, effortSpent: null};
-  this.iteration = parent;
-  this.backlog = this.iteration;
+  this.iteration = null;
+  this.project = null;
+  this.backlog = parent;
+  if (parent instanceof IterationModel) {
+    this.iteration = parent;
+  }
+  else if (parent instanceof ProjectModel) {
+    this.project = parent;
+  }
   this.tasks = [];
   this.storyPoints = null;
   this.setData(storyData, true);
@@ -66,6 +73,29 @@ ModelFactoryClass.prototype = {
       type: "POST",
       url: "iterationData.action",
       data: {iterationId: iterationId}
+    });
+  },
+  getProject: function(projectId, callback) {
+    if(!projectId || projectId < 1) {
+      throw "Invalid project id";
+    }
+    if(typeof(callback) != "function") {
+      throw "Invalid call back";
+    }
+    jQuery.ajax({
+      async: true,
+      error: function() {
+        commonView.showError("Unable to load project data.");
+      },
+      success: function(data, type) {
+        var project = new ProjectModel(data, projectId);
+        callback(project);
+      },
+      cache: false,
+      dataType: "json",
+      type: "POST",
+      url: "projectData.action",
+      data: {projectId: projectId}
     });
   },
   storySingleton: function(id, parent, data) {
@@ -202,8 +232,17 @@ CommonAgilefantModel.prototype.preventNextEvent = function() {
   this.noEvent = true;
 };
 
-/** ITERATION MODEL **/
 
+/** BACKLOG MODEL **/
+BacklogModel = function() {
+};
+BacklogModel.prototype = new CommonAgilefantModel();
+
+BacklogModel.prototype.getId = function() {
+  throw "Abstract method called";
+}
+
+/** ITERATION MODEL **/
 IterationModel = function(iterationData, iterationId) {
   var storyPointer = [];
   this.iterationId = iterationId;
@@ -226,7 +265,7 @@ IterationModel = function(iterationData, iterationId) {
   this.stories = storyPointer;
 };
 
-IterationModel.prototype = new CommonAgilefantModel();
+IterationModel.prototype = new BacklogModel();
 
 IterationModel.prototype.getStories = function() {
   return this.stories;
@@ -275,6 +314,62 @@ IterationModel.prototype.addTask = function(task) {
 };
 IterationModel.prototype.getPseudoStory = function() {
   return this.containerStory;
+};
+
+
+/** PROJECT MODEL **/
+
+ProjectModel = function(projectData, projectId) {
+  var storyPointer = [];
+  this.projectId = projectId;
+  this.tasksWithoutStory = [];
+  var me = this;
+  jQuery.each(projectData.stories, function(index, storyData) { 
+    storyPointer.push(ModelFactory.storySingleton(storyData.id, me, storyData));
+  });
+  this.stories = storyPointer;
+};
+ProjectModel.prototype.reloadStoryData = function() {
+  var me = this;
+  jQuery.ajax({
+    async: false,
+    error: function() {
+    commonView.showError("Unable to load story.");
+  },
+  success: function(data,type) {
+    data = data.stories;
+    for(var i = 0 ; i < data.length; i++) {
+      ModelFactory.storySingleton(data[i].id, this, data[i]);
+    }
+  },
+  cache: false,
+  dataType: "json",
+  type: "POST",
+  url: "projectData.action",
+  data: {projectId: this.projectId, excludeStorys: false}
+  });
+};
+ProjectModel.prototype = new BacklogModel();
+
+ProjectModel.prototype.getStories = function() {
+  return this.stories;
+};
+ProjectModel.prototype.getId = function() {
+  return this.projectId;
+};
+
+IterationModel.prototype.addStory = function(story) {
+  story.backlog = this;
+  this.stories.push(story);
+};
+IterationModel.prototype.removeStory = function(story) {
+  var stories = [];
+  for(var i = 0 ; i < this.stories.length; i++) {
+    if(this.stories[i] != story) {
+      stories.push(this.stories[i]);
+    }
+  }
+  this.stories = stories;
 };
 
 /** STORY MODEL **/
@@ -332,7 +427,7 @@ StoryModel.prototype.setTasks = function(tasks) {
   if(tasks) {
     this.tasks = [];
     for(var i = 0 ; i < tasks.length ; i++) {
-      this.tasks.push(ModelFactory.taskSingleton(tasks[i].id, this.iteration, this, tasks[i]));
+      this.tasks.push(ModelFactory.taskSingleton(tasks[i].id, this.backlog, this, tasks[i]));
     }
   }
 };
@@ -518,7 +613,7 @@ StoryModel.prototype.save = function(synchronous, callback) {
   var data  = {
       "story.name": this.name,
       "story.description": this.description,
-      "backlogId": this.iteration.iterationId,
+      "backlogId": this.backlog.getId(),
       "userIds": [],
       "story.storyPoints": this.storyPoints,
       "story.state": this.state

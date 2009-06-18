@@ -25,7 +25,9 @@ import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.ProjectType;
 import fi.hut.soberit.agilefant.model.Status;
 import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.transfer.ProjectDataContainer;
 import fi.hut.soberit.agilefant.util.CalendarUtils;
+import flexjson.JSONSerializer;
 
 @Component("projectAction")
 @Scope("prototype")
@@ -45,11 +47,7 @@ public class ProjectAction extends BacklogContentsAction implements CRUDAction {
 
     private Project project;
 
-//    private ProjectDAO projectDAO;
-
     private List<ProjectType> projectTypes;
-
-//    private BacklogItemDAO backlogItemDAO;
 
     private String startDate;
 
@@ -70,6 +68,12 @@ public class ProjectAction extends BacklogContentsAction implements CRUDAction {
     private Map<User, Integer> unassignedHasWork = new HashMap<User, Integer>();
     
     private List<User> assignableUsers = new ArrayList<User>();
+    
+    private Map<String, Assignment> assignments = new HashMap<String, Assignment>();
+      
+    private boolean projectBurndown;
+    
+    private String jsonData;
 
     @Autowired
     private UserBusiness userBusiness;
@@ -79,23 +83,6 @@ public class ProjectAction extends BacklogContentsAction implements CRUDAction {
     
     @Autowired
     private ProductBusiness productBusiness;
-    
-//    private Map<Iteration, EffortSumData> effLeftSums;
-//    
-//    private Map<Iteration, EffortSumData> origEstSums;
-//    
-//    private AFTime defaultOverhead;
-//    
-    private Map<String, Assignment> assignments = new HashMap<String, Assignment>();
-//    
-//    private Map<Integer, AFTime> totalOverheads = new HashMap<Integer, AFTime>();
-//    
-//    private BacklogMetrics projectMetrics = new BacklogMetrics();
-//        
-//    private List<BacklogThemeBinding> iterationThemes;
-      
-    private boolean projectBurndown; 
-    
 
     /**
      * @return the dateFormat
@@ -104,6 +91,21 @@ public class ProjectAction extends BacklogContentsAction implements CRUDAction {
         return dateFormat;
     }
 
+    
+    public String projectContents() {
+        ProjectDataContainer data = projectBusiness.getProjectContents(projectId);
+        JSONSerializer ser = new JSONSerializer();
+        
+        ser.include("stories.userData");
+        ser.include("stories.tasks");
+        ser.include("stories.tasks.userData");
+        
+        jsonData = ser.serialize(data);
+        
+        return CRUDAction.AJAX_SUCCESS;
+    }
+    
+    
     /**
      * @param dateFormat
      *                the dateFormat to set
@@ -525,5 +527,10 @@ public class ProjectAction extends BacklogContentsAction implements CRUDAction {
 
     public void setAssignments(Map<String, Assignment> assignments) {
         this.assignments = assignments;
+    }
+
+
+    public String getJsonData() {
+        return jsonData;
     }
 }

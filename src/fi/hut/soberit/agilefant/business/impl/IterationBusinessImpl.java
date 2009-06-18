@@ -22,10 +22,10 @@ import fi.hut.soberit.agilefant.model.IterationHistoryEntry;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.transfer.IterationDataContainer;
 import fi.hut.soberit.agilefant.transfer.IterationMetrics;
 import fi.hut.soberit.agilefant.transfer.StoryTO;
 import fi.hut.soberit.agilefant.transfer.TaskTO;
-import fi.hut.soberit.agilefant.util.IterationDataContainer;
 import fi.hut.soberit.agilefant.util.Pair;
 
 @Service("iterationBusiness")
@@ -77,7 +77,7 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration> implem
             .getAssignedUsers((Project)iteration.getParent());
         
         // 1. Set iteration's stories as transfer objects and include story metrics
-        for (StoryTO storyTO : transferObjectBusiness.constructIterationDataWithUserData(iteration, assignedUsers)) {
+        for (StoryTO storyTO : transferObjectBusiness.constructBacklogDataWithUserData(iteration, assignedUsers)) {
             storyTO.setMetrics(storyBusiness.calculateMetrics(storyTO));
             iterationData.getStories().add(storyTO);
         }

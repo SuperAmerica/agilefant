@@ -23,6 +23,9 @@
 <ww:actionerror />
 <ww:actionmessage />
 <aef:hourReporting id="hourReport" />
+<script type="text/javascript">
+var agilefantTimesheetsEnabled = ${hourReport};
+</script>
 
 <script type="text/javascript">
 <!--
@@ -697,9 +700,11 @@ $(document).ready(function() {
 			</tr>
 		</table>
 
+<%--
 <ww:url id="createStoryLink" action="ajaxCreateStory" includeParams="none">
   <ww:param name="backlogId" value="${project.id}" />
 </ww:url>
+
 
 <table>
   <tr>
@@ -731,10 +736,35 @@ $(document).ready(function() {
     </td>
   </tr>
 </table>
+--%>
+
+<script type="text/javascript" src="static/js/dynamics/utils.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/dynamics/model.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/dynamics/controller.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/dynamics/dynamicTable.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/dynamics/commonView.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
+
+
+<form onsubmit="return false;"><div id="stories" style="min-width: 800px; width: 98%;">&nbsp;</div></form>
+<script type="text/javascript">
+$(document).ready(function() {
+  new ProjectController(${projectId}, $("#stories"));
+  /*
+  $(document.body).bind("metricsUpdated", function() {
+    var bigChart = $("#bigChart");
+    bigChart.attr("src",bigChart.attr("src")+"#");
+    var smallChart = $("#smallChart");
+    smallChart.attr("src",smallChart.attr("src")+"#");
+    $("#iterationMetrics").load("iterationMetrics.action",{iterationId: ${iterationId}});
+  });
+  */
+});
+</script>
+
+
 
 <%-- Hour reporting here - Remember to expel David H. --%>
 
-<%-- <aef:hourReporting id="hourReport"></aef:hourReporting> --%>
 <c:if test="${hourReport == 'true' && project.id != 0}" >
 	<c:set var="myAction" value="editProject" scope="session" />
 	<%@ include file="./inc/_hourEntryList.jsp"%>

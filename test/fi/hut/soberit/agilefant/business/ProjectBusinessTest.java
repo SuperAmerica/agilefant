@@ -7,8 +7,10 @@ import static org.easymock.EasyMock.verify;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 
 import org.joda.time.DateTime;
 import org.junit.*;
@@ -21,7 +23,11 @@ import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.Assignment;
 import fi.hut.soberit.agilefant.model.ExactEstimate;
 import fi.hut.soberit.agilefant.model.Project;
+import fi.hut.soberit.agilefant.model.Story;
+import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.transfer.ProjectDataContainer;
+import fi.hut.soberit.agilefant.transfer.StoryTO;
 
 
 public class ProjectBusinessTest {
@@ -30,21 +36,16 @@ public class ProjectBusinessTest {
     ProjectDAO projectDAO;
     AssignmentDAO assignmentDAO;
     UserBusiness userBusiness;
+    TransferObjectBusiness transferObjectBusiness;
+    
     Project project;
     User user1;
     User user2;
+    Story story1;
+    Story story2;
     
     @Before
-    public void setUp() {
-        project = new Project();
-        project.setId(123);
-        project.setStartDate(new DateTime(2008,1,1,12,0,0,0).toDate());
-        project.setEndDate(new DateTime(2008,3,1,12,0,0,0).toDate());
-        user1 = new User();
-        user1.setId(1);
-        user2 = new User();
-        user2.setId(2);
-        
+    public void setUp_dependencies() {
         projectDAO = createMock(ProjectDAO.class);
         projectBusiness.setProjectDAO(projectDAO);
         
@@ -53,6 +54,80 @@ public class ProjectBusinessTest {
         
         assignmentDAO = createMock(AssignmentDAO.class);
         projectBusiness.setAssignmentDAO(assignmentDAO);
+        
+        transferObjectBusiness = createMock(TransferObjectBusiness.class);
+        projectBusiness.setTransferObjectBusiness(transferObjectBusiness);
+    }
+    
+    @Before
+    public void setUp_data() {
+        project = new Project();
+        project.setId(123);
+        project.setStartDate(new DateTime(2008,1,1,12,0,0,0).toDate());
+        project.setEndDate(new DateTime(2008,3,1,12,0,0,0).toDate());
+        
+        user1 = new User();
+        user1.setId(1);
+        user2 = new User();
+        user2.setId(2);
+        
+        story1 = new Story();
+        story1.setId(127);
+        story2 = new Story();
+        story2.setId(130);
+        story2.setResponsibles(Arrays.asList(user2));
+        
+        Task task = new Task();
+        task.setId(86);
+        task.setResponsibles(Arrays.asList(user1));
+        story1.setTasks(Arrays.asList(task));
+    }
+    
+    @Test
+    public void testGetProjectContents() {
+        Collection<User> assignees = Arrays.asList(user1);
+        
+        expect(projectDAO.get(project.getId())).andReturn(project);
+        expect(projectDAO.getAssignedUsers(project)).andReturn(assignees);
+        expect(transferObjectBusiness.constructBacklogDataWithUserData(project, assignees))
+            .andReturn(Arrays.asList(new StoryTO(story1), new StoryTO(story2)));
+        replay(projectDAO, transferObjectBusiness);
+        
+        ProjectDataContainer actualData = projectBusiness.getProjectContents(project.getId());
+        
+        assertEquals(2, actualData.getStories().size());
+        assertEquals(127, actualData.getStories().get(0).getId());
+        assertEquals(130, actualData.getStories().get(1).getId());
+        
+        verify(projectDAO, transferObjectBusiness);
+    }
+    
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testGetProjectContents_emptyProject() {
+        Collection<User> assignees = Arrays.asList(user1);
+        
+        expect(projectDAO.get(project.getId())).andReturn(project);
+        expect(projectDAO.getAssignedUsers(project)).andReturn(assignees);
+        expect(transferObjectBusiness.constructBacklogDataWithUserData(project, assignees))
+            .andReturn(Collections.EMPTY_LIST);
+        replay(projectDAO, transferObjectBusiness);
+        
+        ProjectDataContainer actualData = projectBusiness.getProjectContents(project.getId());
+        
+        assertEquals(0, actualData.getStories().size());
+        
+        verify(projectDAO, transferObjectBusiness);
+    }
+    
+    @Test(expected = ObjectNotFoundException.class)
+    public void testGetProjectContents_nonExistentProject() {
+        expect(projectDAO.get(-1)).andReturn(null);
+        replay(projectDAO);
+        
+        projectBusiness.getProjectContents(-1);
+        
+        verify(projectDAO);
     }
     
     @Test

@@ -11,7 +11,7 @@ import fi.hut.soberit.agilefant.business.HourEntryBusiness;
 import fi.hut.soberit.agilefant.business.ProjectBusiness;
 import fi.hut.soberit.agilefant.business.TransferObjectBusiness;
 import fi.hut.soberit.agilefant.db.TaskHourEntryDAO;
-import fi.hut.soberit.agilefant.model.Iteration;
+import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
@@ -37,11 +37,11 @@ public class TransferObjectBusinessImpl implements TransferObjectBusiness {
     
     /** {@inheritDoc} */
     @Transactional(readOnly = true)
-    public Collection<StoryTO> constructIterationDataWithUserData(
-            Iteration iteration, Collection<User> assignedUsers) {
+    public Collection<StoryTO> constructBacklogDataWithUserData(
+            Backlog backlog, Collection<User> assignedUsers) {
         Collection<StoryTO> iterationStories = new ArrayList<StoryTO>();
         
-        for (Story story : iteration.getStories()) {
+        for (Story story : backlog.getStories()) {
             StoryTO storyTO = this.constructStoryTO(story, assignedUsers);
             storyTO.getTasks().clear();
             
@@ -55,6 +55,7 @@ public class TransferObjectBusinessImpl implements TransferObjectBusiness {
         return iterationStories;
     }
     
+    @Transactional(readOnly = true)
     private Collection<HourEntryTO> constructHourEntries(Task task) {
         Collection<TaskHourEntry> hourEntries = taskHourEntryDAO.retrieveByTask(task);
         if(hourEntries == null) {

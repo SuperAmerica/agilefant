@@ -27,10 +27,10 @@ import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.transfer.IterationDataContainer;
 import fi.hut.soberit.agilefant.transfer.IterationMetrics;
 import fi.hut.soberit.agilefant.transfer.StoryTO;
 import fi.hut.soberit.agilefant.transfer.TaskTO;
-import fi.hut.soberit.agilefant.util.IterationDataContainer;
 import fi.hut.soberit.agilefant.util.Pair;
 
 public class IterationBusinessTest {
@@ -102,11 +102,9 @@ public class IterationBusinessTest {
         Collection<User> assignedUsers = Arrays.asList(new User());
 
         expect(iterationDAO.get(iteration.getId())).andReturn(iteration);
-        expect(
-                projectBusiness.getAssignedUsers((Project) iteration
+        expect(projectBusiness.getAssignedUsers((Project) iteration
                         .getParent())).andReturn(assignedUsers);
-        expect(
-                transferObjectBusiness.constructIterationDataWithUserData(
+        expect(transferObjectBusiness.constructBacklogDataWithUserData(
                         iteration, assignedUsers)).andReturn(storiesList);
         for (StoryTO storyTO : storiesList) {
             expect(storyBusiness.calculateMetrics(storyTO)).andReturn(null);
@@ -182,6 +180,7 @@ public class IterationBusinessTest {
         
         verify(iterationHistoryEntryBusiness, storyBusiness, hourEntryBusiness, iterationDAO);
     }
+    
     
     @Test
     public void testGetIterationMetrics_nullLatestHistoryEntry() {

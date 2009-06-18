@@ -366,6 +366,12 @@
 			</result>
 		</action>
 		
+		<action name="projectData" class="projectAction" method="projectContents">
+      <result name="ajax_success" type="dispatcher">
+        <param name="location">/WEB-INF/jsp/jsonData.jsp</param>
+      </result>
+    </action>
+		
 		<!-- /Project actions -->
 
 		<!-- Work type actions -->

@@ -1,4 +1,4 @@
-package fi.hut.soberit.agilefant.util;
+package fi.hut.soberit.agilefant.transfer;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -8,10 +8,9 @@ import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
 import flexjson.JSON;
 
-public class IterationDataContainer {
+public class ProjectDataContainer {
 
     private List<Story> stories = new ArrayList<Story>();
-    private Collection<Task> tasksWithoutStory = new ArrayList<Task>();
     
     @JSON(include=true)
     public List<Story> getStories() {
@@ -20,11 +19,5 @@ public class IterationDataContainer {
     public void setStories(List<Story> stories) {
         this.stories = stories;
     }
-    @JSON(include=true)
-    public Collection<Task> getTasksWithoutStory() {
-        return tasksWithoutStory;
-    }
-    public void setTasksWithoutStory(Collection<Task> collection) {
-        this.tasksWithoutStory = collection;
-    }
+
 }

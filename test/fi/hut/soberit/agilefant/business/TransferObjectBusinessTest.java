@@ -7,6 +7,7 @@ import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
@@ -24,6 +25,7 @@ import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.transfer.ProjectDataContainer;
 import fi.hut.soberit.agilefant.transfer.StoryTO;
 import fi.hut.soberit.agilefant.transfer.TaskTO;
 import fi.hut.soberit.agilefant.util.ResponsibleContainer;
@@ -34,6 +36,7 @@ public class TransferObjectBusinessTest {
     private ProjectBusiness projectBusiness;
     private HourEntryBusiness hourEntryBusiness;
     private TaskHourEntryDAO taskHourEntryDAO;
+    Project project;
     Iteration iteration;
     Story story1;
     Story story2;
@@ -42,16 +45,21 @@ public class TransferObjectBusinessTest {
     User notAssignedUser;
 
     @Before
-    public void setUp() {
+    public void setUp_dependencies() {
         projectBusiness = createMock(ProjectBusiness.class);
         transferObjectBusiness.setProjectBusiness(projectBusiness);
+        
         taskHourEntryDAO = createMock(TaskHourEntryDAO.class);
         transferObjectBusiness.setTaskHourEntryDAO(taskHourEntryDAO);
+        
         hourEntryBusiness = createMock(HourEntryBusiness.class);
         transferObjectBusiness.setHourEntryBusiness(hourEntryBusiness);
-
+    }
+    
+    @Before
+    public void setUp() {
         iteration = new Iteration();
-        Project project = new Project();
+        project = new Project();
         project.setId(8474);
         iteration.setParent(project);
 
@@ -70,7 +78,7 @@ public class TransferObjectBusinessTest {
 
     @SuppressWarnings("unchecked")
     @Test
-    public void testContructIterationDataWithUserData() {
+    public void testContructBacklogDataWithUserData() {
         story1.getTasks().add(task);
         iteration.setStories(Arrays.asList(story1, story2));
 
@@ -81,7 +89,7 @@ public class TransferObjectBusinessTest {
 
         Collection<Story> actualStories = new ArrayList<Story>();
         actualStories.addAll(transferObjectBusiness
-                .constructIterationDataWithUserData(iteration, Arrays
+                .constructBacklogDataWithUserData(iteration, Arrays
                         .asList(assignedUser)));
 
         verify(projectBusiness, hourEntryBusiness);
@@ -90,19 +98,18 @@ public class TransferObjectBusinessTest {
                 containsStoryWithId(story1.getId(), actualStories));
         assertTrue("List does not contain correct story transfer object",
                 containsStoryWithId(story2.getId(), actualStories));
-        assertTrue(
-                "Story 1 transfer object does not contain correct task transfer object",
+        assertTrue("Story 1 transfer object does not contain correct task transfer object",
                 containsTaskWithId(task.getId(), story1.getId(), actualStories));
     }
 
     @Test
-    public void testContructIterationDataWithUserData_emptyIteration() {
+    public void testContructBacklogDataWithUserData_emptyIteration() {
         iteration.getStories().clear();
         Collection<StoryTO> stories = transferObjectBusiness
-                .constructIterationDataWithUserData(iteration, null);
+                .constructBacklogDataWithUserData(iteration, null);
         assertEquals(0, stories.size());
     }
-
+    
     @SuppressWarnings("unchecked")
     @Test
     public void testConstructTaskTO_delegate() {

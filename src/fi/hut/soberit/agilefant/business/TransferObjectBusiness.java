@@ -2,7 +2,8 @@ package fi.hut.soberit.agilefant.business;
 
 import java.util.Collection;
 
-import fi.hut.soberit.agilefant.model.Iteration;
+import fi.hut.soberit.agilefant.model.Backlog;
+import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
@@ -12,12 +13,11 @@ import fi.hut.soberit.agilefant.transfer.TaskTO;
 public interface TransferObjectBusiness {
 
     /**
-     * Constructs transfer object based contents of an iteration. 
-     * @param iteration
-     * @param assignedUsers TODO
-     * @return
+     * Constructs transfer object based contents of a backlog. 
+     * @param assignedUsers project assignees
      */
-    public Collection<StoryTO> constructIterationDataWithUserData(Iteration iteration, Collection<User> assignedUsers);
+    public Collection<StoryTO> constructBacklogDataWithUserData(Backlog backlog, Collection<User> assignedUsers);
+    
     
     /**
      * Constructs a new transfer object based on given task.

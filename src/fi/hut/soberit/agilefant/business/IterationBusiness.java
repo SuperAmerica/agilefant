@@ -1,8 +1,8 @@
 package fi.hut.soberit.agilefant.business;
 
 import fi.hut.soberit.agilefant.model.Iteration;
+import fi.hut.soberit.agilefant.transfer.IterationDataContainer;
 import fi.hut.soberit.agilefant.transfer.IterationMetrics;
-import fi.hut.soberit.agilefant.util.IterationDataContainer;
 
 public interface IterationBusiness extends GenericBusiness<Iteration> {
 

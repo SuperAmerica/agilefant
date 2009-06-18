@@ -6,6 +6,7 @@ import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.Assignment;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.transfer.ProjectDataContainer;
 
 public interface ProjectBusiness extends GenericBusiness<Project> {
 
@@ -42,4 +43,9 @@ public interface ProjectBusiness extends GenericBusiness<Project> {
      * Will set the project of the assignments to the given project.
      */
     public void setProjectAssignments(Project project, Collection<Assignment> assignments);
+    
+    /**
+     * Get the projects contents as Transfer Objects.
+     */
+    public ProjectDataContainer getProjectContents(int projectId);
 }

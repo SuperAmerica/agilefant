@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import fi.hut.soberit.agilefant.business.ProjectBusiness;
+import fi.hut.soberit.agilefant.business.TransferObjectBusiness;
 import fi.hut.soberit.agilefant.business.UserBusiness;
 import fi.hut.soberit.agilefant.db.AssignmentDAO;
 import fi.hut.soberit.agilefant.db.ProjectDAO;
@@ -15,6 +16,7 @@ import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.Assignment;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.transfer.ProjectDataContainer;
 import fi.hut.soberit.agilefant.util.ListUtils;
 
 @Service("projectBusiness")
@@ -25,6 +27,7 @@ public class ProjectBusinessImpl extends GenericBusinessImpl<Project> implements
     private ProjectDAO projectDAO;
     private UserBusiness userBusiness;
     private AssignmentDAO assignmentDAO;
+    private TransferObjectBusiness transferObjectBusiness;
 
     @Autowired
     public void setProjectDAO(ProjectDAO projectDAO) {
@@ -41,7 +44,27 @@ public class ProjectBusinessImpl extends GenericBusinessImpl<Project> implements
     public void setAssignmentDAO(AssignmentDAO assignmentDAO) {
         this.assignmentDAO = assignmentDAO;
     }
-
+    
+    @Autowired
+    public void setTransferObjectBusiness(
+            TransferObjectBusiness transferObjectBusiness) {
+        this.transferObjectBusiness = transferObjectBusiness;
+    }
+    
+    
+    /** {@inheritDoc} */
+    public ProjectDataContainer getProjectContents(int projectId) {
+        ProjectDataContainer data = new ProjectDataContainer();
+        
+        Project project = retrieve(projectId);
+        
+        Collection<User> assignedUsers = projectDAO.getAssignedUsers(project);
+        
+        data.getStories().addAll(transferObjectBusiness.constructBacklogDataWithUserData(project, assignedUsers));
+        
+        return data;
+    }
+    
     /** {@inheritDoc} */
     public Project storeProject(Project project,
             Collection<Assignment> assignments) throws ObjectNotFoundException,
@@ -149,5 +172,7 @@ public class ProjectBusinessImpl extends GenericBusinessImpl<Project> implements
     public Collection<User> getAssignedUsers(Project project) {
         return projectDAO.getAssignedUsers(project);
     }
+
+
 
 }

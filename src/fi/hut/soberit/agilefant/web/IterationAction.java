@@ -14,9 +14,9 @@ import fi.hut.soberit.agilefant.business.ProjectBusiness;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Project;
+import fi.hut.soberit.agilefant.transfer.IterationDataContainer;
 import fi.hut.soberit.agilefant.transfer.IterationMetrics;
 import fi.hut.soberit.agilefant.util.CalendarUtils;
-import fi.hut.soberit.agilefant.util.IterationDataContainer;
 import flexjson.JSONSerializer;
 
 @Component("iterationAction")

@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import fi.hut.soberit.agilefant.business.BacklogHistoryEntryBusiness;
 import fi.hut.soberit.agilefant.business.IterationHistoryEntryBusiness;
 import fi.hut.soberit.agilefant.business.StoryBusiness;
 import fi.hut.soberit.agilefant.db.BacklogDAO;
@@ -45,6 +46,8 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
     private HourEntryDAO hourEntryDAO;
     @Autowired
     private IterationHistoryEntryBusiness iterationHistoryEntryBusiness;
+    @Autowired
+    private BacklogHistoryEntryBusiness backlogHistoryEntryBusiness;
 
     @Autowired
     public void setStoryDAO(StoryDAO storyDAO) {
@@ -118,8 +121,9 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
     /** {@inheritDoc} */
     public void remove(int storyId) throws ObjectNotFoundException {
         Story story = this.retrieve(storyId);
-        if (story.getBacklog() != null) {
-            story.getBacklog().getStories().remove(story);
+        Backlog backlog = story.getBacklog();
+        if (backlog != null) {
+            backlog.getStories().remove(story);
         }
         Collection<Task> tasks = story.getTasks();
         if (tasks != null) {
@@ -128,6 +132,7 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
             }
         }
         storyDAO.remove(storyId);
+        backlogHistoryEntryBusiness.updateHistory(backlog.getId());
     }
 
     public Story store(Story storable, Backlog backlog, Story dataItem,
@@ -194,6 +199,7 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
             storyDAO.store(storable);
             persisted = storable;
         }
+        backlogHistoryEntryBusiness.updateHistory(persisted.getBacklog().getId());
         if (persisted.getBacklog() instanceof Iteration) {
             updateStoryPriority(persisted, priority);
             if (!historyUpdated) {
@@ -210,10 +216,12 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         oldBacklog.getStories().remove(story);
         story.setBacklog(backlog);
         backlog.getStories().add(story);
+        backlogHistoryEntryBusiness.updateHistory(oldBacklog.getId());            
         if (oldBacklog instanceof Iteration) {
             iterationHistoryEntryBusiness.updateIterationHistory(oldBacklog
                     .getId());
         }
+        backlogHistoryEntryBusiness.updateHistory(backlog.getId());
         if (backlog instanceof Iteration) {
             iterationHistoryEntryBusiness.updateIterationHistory(backlog
                     .getId());
@@ -244,6 +252,14 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
 
     public void setIterationDAO(IterationDAO iterationDAO) {
         this.iterationDAO = iterationDAO;
+    }
+    public void setBacklogHistoryEntryBusiness(
+            BacklogHistoryEntryBusiness backlogHistoryEntryBusiness) {
+        this.backlogHistoryEntryBusiness = backlogHistoryEntryBusiness;
+    }
+    public void setIterationHistoryEntryBusiness(
+            IterationHistoryEntryBusiness iterationHistoryEntryBusiness) {
+        this.iterationHistoryEntryBusiness = iterationHistoryEntryBusiness;
     }
 
     @Transactional(readOnly = true)
@@ -382,6 +398,7 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
                         iterationHistoryEntryBusiness
                                 .updateIterationHistory(oldBacklog.getId());
                     }
+                    backlogHistoryEntryBusiness.updateHistory(oldBacklog.getId());
                 }
             } else {
                 story.setBacklog(newBacklog);
@@ -389,6 +406,7 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
             }
 
             storyDAO.store(story);
+            backlogHistoryEntryBusiness.updateHistory(backlogId);
             if (newBacklog instanceof Iteration) {
                 iterationHistoryEntryBusiness.updateIterationHistory(backlogId);
             }

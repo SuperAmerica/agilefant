@@ -57,7 +57,7 @@ public class StoryAction extends ActionSupport implements CRUDAction {
 
     @Autowired
     private StoryBusiness storyBusiness;
-
+    
     // private BusinessThemeBusiness businessThemeBusiness;
 
     private String spentEffort = null;
@@ -250,7 +250,7 @@ public class StoryAction extends ActionSupport implements CRUDAction {
 
         // save story and store backlog item themes
         try {
-            story = storyBusiness.store(storyId, backlogId, story, userIds, priority);
+            story = storyBusiness.store(storyId, backlogId, story, userIds, priority);            
 //            businessThemeBusiness.setBacklogItemThemes(themeIds, story);
             storyId = story.getId();
         } catch (ObjectNotFoundException onfe) {

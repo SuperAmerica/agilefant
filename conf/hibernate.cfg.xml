@@ -13,6 +13,7 @@
 
     <mapping class="fi.hut.soberit.agilefant.model.Assignment" />		
 		<mapping class="fi.hut.soberit.agilefant.model.Backlog" />
+		<mapping class="fi.hut.soberit.agilefant.model.BacklogHistoryEntry" />
 		<mapping class="fi.hut.soberit.agilefant.model.BacklogHourEntry" />
     <mapping class="fi.hut.soberit.agilefant.model.ExactEstimate" />		
 		<mapping class="fi.hut.soberit.agilefant.model.Iteration" />

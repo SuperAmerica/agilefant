@@ -26,6 +26,7 @@ import fi.hut.soberit.agilefant.transfer.IterationMetrics;
 import fi.hut.soberit.agilefant.transfer.StoryTO;
 import fi.hut.soberit.agilefant.transfer.TaskTO;
 import fi.hut.soberit.agilefant.util.IterationDataContainer;
+import fi.hut.soberit.agilefant.util.Pair;
 
 @Service("iterationBusiness")
 @Transactional
@@ -123,6 +124,10 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration> implem
         long spentEffort = hourEntryBusiness.calculateSumOfIterationsHourEntries(iteration);
         metrics.setSpentEffort(new ExactEstimate(spentEffort));
         
+        // 3. Tasks done and Total
+        Pair<Integer,Integer> pair = iterationDAO.getCountOfDoneAndAllTasks(iteration);
+        metrics.setTotalTasks(pair.second);
+        metrics.setCompletedTasks(pair.first);
         
         return metrics;
     }

@@ -56,11 +56,11 @@
 			</c:choose></td>
 		</tr>
 	</c:if>
+	  --%>
 	<tr>
 		<th>Tasks done</th>
 		<td><c:out value="${iterationMetrics.percentDone}" />% (<c:out
-			value="${iterationMetrics.completedItems}" /> / <c:out
-			value="${iterationMetrics.totalItems}" />)</td>
+			value="${iterationMetrics.completedTasks}" /> / <c:out
+			value="${iterationMetrics.totalTasks}" />)</td>
 	</tr>
-  --%>
 </table>

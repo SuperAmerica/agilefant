@@ -31,6 +31,7 @@ import fi.hut.soberit.agilefant.transfer.IterationMetrics;
 import fi.hut.soberit.agilefant.transfer.StoryTO;
 import fi.hut.soberit.agilefant.transfer.TaskTO;
 import fi.hut.soberit.agilefant.util.IterationDataContainer;
+import fi.hut.soberit.agilefant.util.Pair;
 
 public class IterationBusinessTest {
 
@@ -165,7 +166,9 @@ public class IterationBusinessTest {
             .andReturn(expectedStoryPoints);
         expect(hourEntryBusiness.calculateSumOfIterationsHourEntries(iteration))
             .andReturn(expectedSpentEffort);
-        replay(iterationHistoryEntryBusiness, storyBusiness, hourEntryBusiness);
+        expect(iterationDAO.getCountOfDoneAndAllTasks(iteration))
+            .andReturn(Pair.create(2,4));
+        replay(iterationHistoryEntryBusiness, storyBusiness, hourEntryBusiness, iterationDAO);
         
         IterationMetrics actualMetrics = iterationBusiness.getIterationMetrics(iteration);
         
@@ -175,21 +178,23 @@ public class IterationBusinessTest {
         assertEquals(expectedStoryPoints, actualMetrics.getStoryPoints().intValue());
         assertEquals(expectedSpentEffort, actualMetrics.getSpentEffort().getMinorUnits().longValue());
         
-        verify(iterationHistoryEntryBusiness, storyBusiness, hourEntryBusiness);
+        verify(iterationHistoryEntryBusiness, storyBusiness, hourEntryBusiness, iterationDAO);
     }
     
     @Test
     public void testGetIterationMetrics_nullLatestHistoryEntry() {
         expect(iterationHistoryEntryBusiness.retrieveLatest(iteration))
             .andReturn(null);
-        replay(iterationHistoryEntryBusiness);
+        expect(iterationDAO.getCountOfDoneAndAllTasks(iteration))
+            .andReturn(Pair.create(2,4));
+        replay(iterationHistoryEntryBusiness, iterationDAO);
         
         IterationMetrics actualMetrics = iterationBusiness.getIterationMetrics(iteration); 
         
         assertEquals(0L, actualMetrics.getEffortLeft().getMinorUnits().longValue());
         assertEquals(0L, actualMetrics.getOriginalEstimate().getMinorUnits().longValue());
         
-        verify(iterationHistoryEntryBusiness);
+        verify(iterationHistoryEntryBusiness, iterationDAO);
     }
     
     @Test(expected = IllegalArgumentException.class)

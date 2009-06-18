@@ -30,8 +30,10 @@ public class MinorUnitsParser {
             builder.append(majorUnit);
             builder.append(' ');
         }
-        builder.append(minors);
-        builder.append(minorUnit);
+        if (minors > 0) {
+            builder.append(minors);
+            builder.append(minorUnit);
+        }
         return builder.toString();
     }
 

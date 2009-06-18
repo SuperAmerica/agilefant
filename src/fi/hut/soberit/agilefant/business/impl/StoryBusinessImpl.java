@@ -221,7 +221,6 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
             iterationHistoryEntryBusiness.updateIterationHistory(oldBacklog
                     .getId());
         }
-        backlogHistoryEntryBusiness.updateHistory(backlog.getId());
         if (backlog instanceof Iteration) {
             iterationHistoryEntryBusiness.updateIterationHistory(backlog
                     .getId());

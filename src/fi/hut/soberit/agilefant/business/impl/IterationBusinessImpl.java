@@ -194,5 +194,10 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration> implem
             IterationHistoryEntryBusiness iterationHistoryEntryBusiness) {
         this.iterationHistoryEntryBusiness = iterationHistoryEntryBusiness;
     }
+    
+    public void setIterationHistoryEntryDAO(
+            IterationHistoryEntryDAO iterationHistoryEntryDAO) {
+        this.iterationHistoryEntryDAO = iterationHistoryEntryDAO;
+    }
 
 }

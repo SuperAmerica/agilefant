@@ -580,7 +580,8 @@ ProjectController.prototype = {
       }
       });
     },
-    /*moveStory: function(row, story) {
+    /*
+    moveStory: function(row, story) {
       var parent = $("<div />").appendTo(document.body);
       var err = $("<div />").appendTo(parent).css("color","red").hide();
       var sel = $("<div />").appendTo(parent);
@@ -909,7 +910,8 @@ ProjectController.prototype = {
         }});
       row.render();
       row.openEdit();
-    },
+    }
+    /*,
     getStoryController: function(id) {
       for(var i = 0; i < this.StoryControllers.length; i++) {
         if(this.StoryControllers[i].data.id === id) {
@@ -917,7 +919,7 @@ ProjectController.prototype = {
         }
       }
       return null;
-    }
+    }*/
 };
 
 /** STORY CONTROLLER **/

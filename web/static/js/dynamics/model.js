@@ -358,11 +358,11 @@ ProjectModel.prototype.getId = function() {
   return this.projectId;
 };
 
-IterationModel.prototype.addStory = function(story) {
+ProjectModel.prototype.addStory = function(story) {
   story.backlog = this;
   this.stories.push(story);
 };
-IterationModel.prototype.removeStory = function(story) {
+ProjectModel.prototype.removeStory = function(story) {
   var stories = [];
   for(var i = 0 ; i < this.stories.length; i++) {
     if(this.stories[i] != story) {
@@ -452,7 +452,7 @@ StoryModel.prototype.removeTask = function(task, noReload) {
   }
 };
 StoryModel.prototype.copy = function() {
-  var copy = new StoryModel({}, this.iteration);
+  var copy = new StoryModel({}, this.backlog);
   copy.setData(this, true);
   // We have to copy users/userIds manually because setData only supports userData
   copy.users = this.users;

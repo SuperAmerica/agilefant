@@ -58,8 +58,14 @@
 	</c:if>
 	  --%>
 	<tr>
+		<th>Stories done</th>
+		<td><c:out value="${iterationMetrics.percentDoneStories}" />% (<c:out
+			value="${iterationMetrics.completedStories}" /> / <c:out
+			value="${iterationMetrics.totalStories}" />)</td>
+	</tr>
+	<tr>
 		<th>Tasks done</th>
-		<td><c:out value="${iterationMetrics.percentDone}" />% (<c:out
+		<td><c:out value="${iterationMetrics.percentDoneTasks}" />% (<c:out
 			value="${iterationMetrics.completedTasks}" /> / <c:out
 			value="${iterationMetrics.totalTasks}" />)</td>
 	</tr>

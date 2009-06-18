@@ -23,4 +23,10 @@ public class IterationDAOTest extends AbstractHibernateTests {
         assertEquals(Pair.create(2,4), iterationDAO.getCountOfDoneAndAllTasks(iteration));
     }
 
+    @Test
+    public void testGetCountOfDoneAndAllStories() {
+        executeClassSql();
+        Iteration iteration = iterationDAO.get(1);
+        assertEquals(Pair.create(1,2), iterationDAO.getCountOfDoneAndAllStories(iteration));
+    }
 }

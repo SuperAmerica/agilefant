@@ -157,7 +157,8 @@ public class IterationBusinessTest {
         
         int expectedStoryPoints = 68;
         long expectedSpentEffort = 127;
-        Integer expectedPercentDone = 50;
+        Integer expectedPercentDoneTasks = 50;
+        Integer expectedPercentDoneStories = 50;
         
         expect(iterationHistoryEntryBusiness.retrieveLatest(iteration))
             .andReturn(latestEntry);
@@ -167,6 +168,8 @@ public class IterationBusinessTest {
             .andReturn(expectedSpentEffort);
         expect(iterationDAO.getCountOfDoneAndAllTasks(iteration))
             .andReturn(Pair.create(2,4));
+        expect(iterationDAO.getCountOfDoneAndAllStories(iteration))
+        .andReturn(Pair.create(1,2));
         replay(iterationHistoryEntryBusiness, storyBusiness, hourEntryBusiness, iterationDAO);
         
         IterationMetrics actualMetrics = iterationBusiness.getIterationMetrics(iteration);
@@ -176,11 +179,30 @@ public class IterationBusinessTest {
         assertEquals(latestEntry.getOriginalEstimateSum(), actualMetrics.getOriginalEstimate().getMinorUnits().longValue());
         assertEquals(expectedStoryPoints, actualMetrics.getStoryPoints().intValue());
         assertEquals(expectedSpentEffort, actualMetrics.getSpentEffort().getMinorUnits().longValue());
-        assertEquals(expectedPercentDone,actualMetrics.getPercentDone());
+        assertEquals(expectedPercentDoneTasks,actualMetrics.getPercentDoneTasks());
+        assertEquals(expectedPercentDoneStories,actualMetrics.getPercentDoneStories());
         
         verify(iterationHistoryEntryBusiness, storyBusiness, hourEntryBusiness, iterationDAO);
     }
     
+    
+    @Test
+    public void testGetIterationMetricsZeroTotals() {
+        expect(iterationHistoryEntryBusiness.retrieveLatest(iteration))
+            .andReturn(null);
+        expect(iterationDAO.getCountOfDoneAndAllTasks(iteration))
+            .andReturn(Pair.create(0,0));
+        expect(iterationDAO.getCountOfDoneAndAllStories(iteration))
+            .andReturn(Pair.create(0,0));
+        replay(iterationHistoryEntryBusiness, iterationDAO);
+        
+        IterationMetrics actualMetrics = iterationBusiness.getIterationMetrics(iteration); 
+        
+        assertEquals(0, actualMetrics.getPercentDoneStories());
+        assertEquals(0, actualMetrics.getPercentDoneStories());
+        
+        verify(iterationHistoryEntryBusiness, iterationDAO);
+    }
     
     @Test
     public void testGetIterationMetrics_nullLatestHistoryEntry() {
@@ -188,6 +210,8 @@ public class IterationBusinessTest {
             .andReturn(null);
         expect(iterationDAO.getCountOfDoneAndAllTasks(iteration))
             .andReturn(Pair.create(2,4));
+        expect(iterationDAO.getCountOfDoneAndAllStories(iteration))
+            .andReturn(Pair.create(1,3));
         replay(iterationHistoryEntryBusiness, iterationDAO);
         
         IterationMetrics actualMetrics = iterationBusiness.getIterationMetrics(iteration); 

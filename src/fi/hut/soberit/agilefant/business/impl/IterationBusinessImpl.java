@@ -123,6 +123,10 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration> implem
         return new ExactEstimate((long) velocity);
     }
     
+    private Integer calculatePercent(Integer part, Integer total) {
+        return Math.round(100.0f*part/total);
+    }
+    
     public IterationMetrics getIterationMetrics(Iteration iteration) {
         if (iteration == null) {
             throw new IllegalArgumentException("Iteration must be not null.");
@@ -156,7 +160,14 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration> implem
         Pair<Integer,Integer> pair = iterationDAO.getCountOfDoneAndAllTasks(iteration);
         metrics.setTotalTasks(pair.second);
         metrics.setCompletedTasks(pair.first);
-        metrics.setPercentDone(Math.round(100.0f*pair.first/pair.second));
+        metrics.setPercentDoneTasks(calculatePercent(pair.first, pair.second));
+        
+        pair = iterationDAO.getCountOfDoneAndAllStories(iteration);
+        metrics.setTotalStories(pair.second);
+        metrics.setCompletedStories(pair.first);
+        metrics.setPercentDoneStories(calculatePercent(pair.first,pair.second));
+        
+        
         
         return metrics;
     }

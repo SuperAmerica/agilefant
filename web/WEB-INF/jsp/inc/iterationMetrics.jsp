@@ -19,11 +19,11 @@
 			<td><c:out value="${aef:minutesToString(iterationMetrics.spentEffort.minorUnits)}" /></td>
 		</tr>
 	</c:if>
-  <%--
 	<tr>
 		<th>Velocity</th>
-		<td><c:out value="${iterationMetrics.dailyVelocity}" /> / day</td>
+		<td><c:out value="${aef:minutesToString(iterationMetrics.dailyVelocity.minorUnits)} / day" /></td>
 	</tr>
+  <%--
 	<c:if test="${iterationMetrics.backlogOngoing}">
 		<tr>
 			<th>Schedule variance</th>

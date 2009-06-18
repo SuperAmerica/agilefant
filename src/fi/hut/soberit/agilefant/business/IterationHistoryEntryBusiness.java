@@ -25,4 +25,5 @@ public interface IterationHistoryEntryBusiness extends
     
     
     public IterationHistoryEntry retrieveLatest(Iteration iteration);
+
 }

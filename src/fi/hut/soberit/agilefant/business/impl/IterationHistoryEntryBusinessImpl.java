@@ -26,7 +26,7 @@ public class IterationHistoryEntryBusinessImpl extends
     private IterationHistoryEntryDAO iterationHistoryEntryDAO;
     
     @Autowired
-    private IterationDAO iterationDAO;
+    private IterationDAO iterationDAO;    
     
     @Autowired
     public void setIterationHistoryEntryDAO(

@@ -3,6 +3,8 @@ package fi.hut.soberit.agilefant.business.impl;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.joda.time.Days;
+import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +17,7 @@ import fi.hut.soberit.agilefant.business.ProjectBusiness;
 import fi.hut.soberit.agilefant.business.StoryBusiness;
 import fi.hut.soberit.agilefant.business.TransferObjectBusiness;
 import fi.hut.soberit.agilefant.db.IterationDAO;
+import fi.hut.soberit.agilefant.db.IterationHistoryEntryDAO;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.ExactEstimate;
 import fi.hut.soberit.agilefant.model.Iteration;
@@ -47,6 +50,8 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration> implem
     private BacklogHistoryEntryBusiness backlogHistoryEntryBusiness;
     @Autowired
     private IterationHistoryEntryBusiness iterationHistoryEntryBusiness;
+    @Autowired
+    private IterationHistoryEntryDAO iterationHistoryEntryDAO;
 
     @Autowired
     public void setIterationDAO(IterationDAO iterationDAO) {
@@ -96,6 +101,27 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration> implem
         
         return iterationData;
     }
+
+    private ExactEstimate calculateDailyVelocity(Iteration iteration) {
+        LocalDate start = new LocalDate(iteration.getStartDate());
+        LocalDate today = new LocalDate();
+        
+        IterationHistoryEntry entry = iterationHistoryEntryDAO.retrieveByDate(iteration.getId(), today.minusDays(1));
+        
+        if (entry == null) return new ExactEstimate(0);
+        
+        double length = Days.daysBetween(start, today).getDays();
+        if (length < 1) {
+            length = 1;
+        }
+        
+        long origEst = entry.getOriginalEstimateSum();
+        long effLeft = entry.getEffortLeftSum();
+        
+        double velocity = (origEst - effLeft) / length;
+        
+        return new ExactEstimate((long) velocity);
+    }
     
     public IterationMetrics getIterationMetrics(Iteration iteration) {
         if (iteration == null) {
@@ -116,6 +142,8 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration> implem
             metrics.setOriginalEstimate(new ExactEstimate(latestHistoryEntry.getOriginalEstimateSum()));
             metrics.setEffortLeft(new ExactEstimate(latestHistoryEntry.getEffortLeftSum()));
         }
+
+        metrics.setDailyVelocity(calculateDailyVelocity(iteration));
         
         // 2. Set story points
         metrics.setStoryPoints(storyBusiness.getStoryPointSumByBacklog(iteration));

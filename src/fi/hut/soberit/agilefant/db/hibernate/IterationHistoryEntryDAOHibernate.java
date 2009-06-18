@@ -6,6 +6,7 @@ import org.hibernate.Criteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.joda.time.LocalDate;
 import org.springframework.stereotype.Repository;
 
 import fi.hut.soberit.agilefant.db.IterationHistoryEntryDAO;
@@ -23,13 +24,24 @@ public class IterationHistoryEntryDAOHibernate extends
         super(IterationHistoryEntry.class);
     }
 
-    public IterationHistoryEntry retrieveLatest(int iterationId) {
+    public IterationHistoryEntry retrieveByDate(int iterationId, LocalDate timestamp) {
+        return retrieveByDateInternal(iterationId, timestamp);
+    }
+
+    private IterationHistoryEntry retrieveByDateInternal(int iterationId, LocalDate timestamp) {
         Criteria crit = getCurrentSession().createCriteria(
                 IterationHistoryEntry.class);
         crit.setMaxResults(1);
+        if (timestamp != null) {
+            crit.add(Restrictions.le("timestamp", timestamp));
+        }
         crit.addOrder(Order.desc("timestamp"));
         crit.add(Restrictions.eq("iteration.id", iterationId));
         return (IterationHistoryEntry) crit.uniqueResult();
+    }
+
+    public IterationHistoryEntry retrieveLatest(int iterationId) {
+        return retrieveByDateInternal(iterationId, null);
     }
 
     public Pair<ExactEstimate, ExactEstimate> calculateCurrentHistoryData(int iterationId) {

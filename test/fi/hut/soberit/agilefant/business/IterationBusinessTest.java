@@ -159,6 +159,7 @@ public class IterationBusinessTest {
         
         int expectedStoryPoints = 68;
         long expectedSpentEffort = 127;
+        Integer expectedPercentDone = 50;
         
         expect(iterationHistoryEntryBusiness.retrieveLatest(iteration))
             .andReturn(latestEntry);
@@ -177,6 +178,7 @@ public class IterationBusinessTest {
         assertEquals(latestEntry.getOriginalEstimateSum(), actualMetrics.getOriginalEstimate().getMinorUnits().longValue());
         assertEquals(expectedStoryPoints, actualMetrics.getStoryPoints().intValue());
         assertEquals(expectedSpentEffort, actualMetrics.getSpentEffort().getMinorUnits().longValue());
+        assertEquals(expectedPercentDone,actualMetrics.getPercentDone());
         
         verify(iterationHistoryEntryBusiness, storyBusiness, hourEntryBusiness, iterationDAO);
     }

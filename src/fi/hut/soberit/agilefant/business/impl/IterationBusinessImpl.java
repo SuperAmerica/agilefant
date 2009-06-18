@@ -128,6 +128,7 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration> implem
         Pair<Integer,Integer> pair = iterationDAO.getCountOfDoneAndAllTasks(iteration);
         metrics.setTotalTasks(pair.second);
         metrics.setCompletedTasks(pair.first);
+        metrics.setPercentDone(Math.round(100.0f*pair.first/pair.second));
         
         return metrics;
     }

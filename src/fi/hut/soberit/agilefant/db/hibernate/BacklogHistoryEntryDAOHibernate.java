@@ -50,7 +50,9 @@ public class BacklogHistoryEntryDAOHibernate extends
         long doneSum = 0;
         if (resultsByState != null) {
             for (Object[] results : resultsByState) {
-                int stateEstimateSum = ((Integer) results[0]).intValue();
+                Integer stateEstimateSumInteger = (Integer) results[0];
+                int stateEstimateSum = (stateEstimateSumInteger == null) ? 0
+                        : stateEstimateSumInteger.intValue();
                 estimateSum += stateEstimateSum;
                 StoryState state = (StoryState) results[1];
                 if (state == StoryState.DONE) {
@@ -64,5 +66,5 @@ public class BacklogHistoryEntryDAOHibernate extends
         entry.setDoneSum(doneSum);
         return entry;
     }
-    
+
 }

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import fi.hut.soberit.agilefant.business.BacklogHistoryEntryBusiness;
 import fi.hut.soberit.agilefant.business.HourEntryBusiness;
 import fi.hut.soberit.agilefant.business.IterationBusiness;
 import fi.hut.soberit.agilefant.business.IterationHistoryEntryBusiness;
@@ -14,6 +15,7 @@ import fi.hut.soberit.agilefant.business.ProjectBusiness;
 import fi.hut.soberit.agilefant.business.StoryBusiness;
 import fi.hut.soberit.agilefant.business.TransferObjectBusiness;
 import fi.hut.soberit.agilefant.db.IterationDAO;
+import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.ExactEstimate;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.IterationHistoryEntry;
@@ -41,6 +43,8 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration> implem
     @Autowired
     private HourEntryBusiness hourEntryBusiness;
     @Autowired
+    private BacklogHistoryEntryBusiness backlogHistoryEntryBusiness;
+    @Autowired
     private IterationHistoryEntryBusiness iterationHistoryEntryBusiness;
 
     @Autowired
@@ -49,6 +53,18 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration> implem
         this.iterationDAO = iterationDAO;
     }
 
+    @Override
+    public void delete(int id) {
+        delete(retrieve(id));
+    }
+    
+    @Override
+    public void delete(Iteration iteration) {
+        Backlog project = iteration.getParent();
+        super.delete(iteration);
+        backlogHistoryEntryBusiness.updateHistory(project.getId());
+    }
+    
     @Transactional(readOnly = true)
     public IterationDataContainer getIterationContents(int iterationId) {
 

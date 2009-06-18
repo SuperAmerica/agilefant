@@ -204,8 +204,8 @@ public class IterationBusinessTest {
         
         IterationMetrics actualMetrics = iterationBusiness.getIterationMetrics(iteration); 
         
-        assertEquals(0, actualMetrics.getPercentDoneStories());
-        assertEquals(0, actualMetrics.getPercentDoneStories());
+        assertEquals(0, actualMetrics.getPercentDoneStories().intValue());
+        assertEquals(0, actualMetrics.getPercentDoneStories().intValue());
         
         verify(iterationHistoryEntryBusiness, iterationDAO);
     }

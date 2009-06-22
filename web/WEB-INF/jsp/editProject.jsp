@@ -689,12 +689,6 @@ $(document).ready(function() {
 								</div>
 							</c:if>
 						</div>
-						<c:if test="${(!empty project.stories) && (projectBurndown || (empty project.iterations))}">
-							<p>
-								<img src="drawProjectChart.action?projectId=${project.id}" id="bigChart"
-								   width="780" height="600" />
-							</p>
-						</c:if>
             --%>
 				</td>
 			</tr>
@@ -763,6 +757,8 @@ $(document).ready(function() {
 </script>
 
 
+<p><img src="drawProjectBurnup.action?backlogId=${project.id}"
+						id="bigChart" width="780" height="600" /></p>
 
 <%-- Hour reporting here - Remember to expel David H. --%>
 

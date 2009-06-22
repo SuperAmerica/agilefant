@@ -398,6 +398,14 @@ li.dynamictable-captionaction {
   margin-left: 4%;
   margin-right: 4%;
 }
+.dynamictable .dynamictable-row .projectstory-row {
+  background-color: #edf;
+}
+.dynamictable .dynamictable-row .projectstory-responsibles {
+  background-color: #edf;
+  cursor: pointer;
+}
+
 .dynamictable .dynamictable-row .story-row {
 	background-color: #e9eeff;
 }

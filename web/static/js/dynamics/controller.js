@@ -9,7 +9,6 @@ var IterationController = function(iterationId, element) {
   ModelFactory.getIteration(this.iterationId, function(data) { 
     loading.hide();
     me.render(data); 
-    
   });
 };
 
@@ -45,20 +44,27 @@ var StoryController = function(parentView, model, parentController) {
 };
 
 var TaskController = function(parentView, model, parentController, effortCell) {
-    var me = this;
-    this.model = model;
-    this.parentView = parentView;
-    this.effortCell = effortCell;
-    this.parentController = parentController;
-    this.initialized = false;
-    if(agilefantUtils.isTimesheetsEnabled()) {
-      this.effortCell.getElement().dblclick(function() {
-        me.initialize();
-        me.showTab(2);
-        me.createEffortEntry();
-      }).attr("title","Double-click to log effort.");
-    }
-  };
+  var me = this;
+  this.model = model;
+  this.parentView = parentView;
+  this.effortCell = effortCell;
+  this.parentController = parentController;
+  this.initialized = false;
+  if(agilefantUtils.isTimesheetsEnabled()) {
+    this.effortCell.getElement().dblclick(function() {
+      me.initialize();
+      me.showTab(2);
+      me.createEffortEntry();
+    }).attr("title","Double-click to log effort.");
+  }
+};
+
+var ReleaseStoryTabsController = function(element, model, parentController) {
+  this.model = model;
+  this.element = element;
+  this.parentController = parentController;
+  this.initialized = false;
+};
 
 IterationController.prototype = {
     changeStoryPriority: function(ev, el) {
@@ -623,10 +629,6 @@ ProjectController.prototype = {
               var moveTasks = (!isNaN(iteration) && iteration > 0);
               story.moveToBacklog(backlogId, moveTasks);
               row.remove();
-              if (!moveTasks) {
-                me.tasksWithoutStoryContainer.reloadTasks();
-                me.noStoryTaskController.render();
-              }
             }
           $(this).dialog('destroy');
             parent.remove();
@@ -682,31 +684,18 @@ ProjectController.prototype = {
         backlogId: story.backlog.getId(),
         storyId: story.getId()
       });
-      
-      var tasks = row.createCell({
-        get: function() { 
-        return story.getDoneTasks() + " / " + story.getTotalTasks();
-      }});
       var estimate = row.createCell({
         type: "storyPoint",
         get: function() { return story.getStoryPoints(); },
         set: function(val) { story.setStoryPoints(val); },
         decorator: agilefantParsers.storyPointsToString
       });
-      var elsum = row.createCell({
-        get: function() { return story.getEffortLeft(); },
-        decorator: agilefantParsers.exactEstimateToString
-      });
-      var oesum = row.createCell({
-        get: function() { return story.getOriginalEstimate(); },
-        decorator: agilefantParsers.exactEstimateToString
-      });
-      if(agilefantUtils.isTimesheetsEnabled()) {
-        var essum = row.createCell({
-          get: function() { return story.getEffortSpent(); },
-          decorator: agilefantParsers.hourEntryToString
-        });
-      }
+//      if(agilefantUtils.isTimesheetsEnabled()) {
+//        var essum = row.createCell({
+//          get: function() { return story.getEffortSpent(); },
+//          decorator: agilefantParsers.hourEntryToString
+//        });
+//      }
       var buttons = row.createCell();
 
       var desc = row.createCell({
@@ -729,20 +718,20 @@ ProjectController.prototype = {
         }});
         this.descCells.push(desc);
       desc.getElement().addClass("description-cell");
-      var storys = row.createCell();
-      storys.getElement().hide();
-      /*
-      var storyctrl = new StoryController(storys, story, this);
-      this.StoryControllers.push(storyctrl);
+      
+      var taskList = row.createCell();
+      taskList.getElement().hide();
+      var taskTabs = new ReleaseStoryTabsController(taskList.getElement(), story, this);
+      
       var expandButton = commonView.expandCollapse(expand.getElement(), function() {
-        storyctrl.showTasks();
-        desc.getElement().hide();
+         desc.getElement().hide();
+         taskTabs.show();
+         taskList.getElement().show();
       }, function() {
-        storyctrl.hideTasks();
-        desc.getElement().show();
+         desc.getElement().show();
+         taskTabs.hide();
       });
-      tasks.getElement().click(function() { expandButton.click();});
-      this.buttonCells.push(expandButton);*/
+      this.buttonCells.push(expandButton);
       buttons.setActionCell({items: [
                                      {
                                        text: "Edit story",
@@ -761,6 +750,7 @@ ProjectController.prototype = {
                                        }
                                      }
                                      ]});
+      
       row.getElement().bind("metricsUpdated", function() {
         story.reloadMetrics();
         });
@@ -772,21 +762,21 @@ ProjectController.prototype = {
           }
           var model = draggable.data("row").model;
           return (model.story.getId() !== story.getId());
-          },
-          hoverClass: 'drophover',
-          greedy: true,
-          drop: function(ev,ui) {
-            var row = ui.draggable.data("row");
-            var model = row.model;
-            row.remove();
-            model.changeStory(story);
-            storyctrl.render();
-          }
+        },
+        hoverClass: 'drophover',
+        greedy: true,
+        drop: function(ev,ui) {
+          var row = ui.draggable.data("row");
+          var model = row.model;
+          row.remove();
+          model.changeStory(story);
+          storyctrl.render();
+        }
       });
     },
     render: function(data) {
       var me = this;
-      this.view = jQuery(this.element).storyTable();
+      this.view = jQuery(this.element).releaseBacklogTable();
 
       this.view.activateSortable({update: function(ev,el) { me.changeStoryPriority(ev,el);}});
 
@@ -800,16 +790,16 @@ ProjectController.prototype = {
         text: commonView.buttonWithIcon("show", "Show tasks"),
         toggleWith: "hideTasks",
         callback: function() {
-        me.showTasks();
-      }
+          me.showTasks();
+        }
       });
       this.view.addCaptionAction("hideTasks", {
         text: commonView.buttonWithIcon("hide", "Hide tasks"),
         toggleWith: "showTasks",
         hide: true,
         callback: function() {
-        me.hideTasks();
-      }
+          me.hideTasks();
+        }
       });
 
       var stories = data.getStories();
@@ -877,18 +867,18 @@ ProjectController.prototype = {
           backlogId: fakeStory.backlog.getId(),
           storyId: fakeStory.getId()
         });
-      var tasks = row.createCell();
+//      var tasks = row.createCell();
       var estimate = row.createCell({
           type: "storyPoint",
           get: function() { return fakeStory.getStoryPoints(); },
           set: function(val) { fakeStory.setStoryPoints(val); },
           decorator: agilefantParsers.storyPointsToString
         });
-      var elsum = row.createCell();
-      var oesum = row.createCell();
-      if(agilefantUtils.isTimesheetsEnabled()) {
-        var essum = row.createCell();
-      }
+//      var elsum = row.createCell();
+//      var oesum = row.createCell();
+//      if(agilefantUtils.isTimesheetsEnabled()) {
+//        var essum = row.createCell();
+//      }
       var buttons = row.createCell();
       buttons.setActionCell({items: [{
         text: "Cancel",
@@ -1314,6 +1304,40 @@ StoryController.prototype = {
   }
 };
 
+/** PROJECT TASK TABS CONTROLLER **/
+ReleaseStoryTabsController.prototype = {
+  initialize: function() {
+    if (this.initialized) {
+      return;
+    }
+    var story = this.model;
+    var taskListTabs = new ReleaseStoryTabs(story, this.element);
+    var taskListTable = taskListTabs.addTab("Tasks").genericTable({noHeader: true, colCss: {}, colWidths: [{minwidth: 40, auto:true},{minwidth: 80, auto: true}]});
+    
+    // Header
+    var headerRow = taskListTable.createRow();
+    headerRow.getElement().addClass('dynamictable-header');
+    headerRow.createCell().setValue('Name');
+    headerRow.createCell().setValue('Description');
+    
+    for (var i = 0; i < story.tasks.length; i++) {
+      var task = story.tasks[i];
+      var newRow = taskListTable.createRow();
+      newRow.createCell().setValue(task.getName());
+      newRow.createCell().setValue(task.getDescription());
+    }
+    
+    this.initialized = true;
+  },
+  show: function() {
+    this.initialize();
+    this.element.show();
+  },
+  hide: function() {
+    this.element.hide();
+  }
+};
+
 
 /** TASK CONTROLLER **/
 
@@ -1366,6 +1390,8 @@ TaskController.prototype = {
       case 1:
         this.renderSpentEffort();
         this.tabsLoaded[2] = true;
+        break;
+      default:
         break;
       }
     }

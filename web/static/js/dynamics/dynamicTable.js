@@ -1110,7 +1110,7 @@
           }, 'story-task');
       addTableColumn(opts,                      
           { minwidth: 60, auto: true },
-          { name: 'Estimate',
+          { name: 'Points',
               tooltip: 'Estimate in story points',
               sort: null
           }, 'story-estimate');
@@ -1142,6 +1142,62 @@
           tooltip: "Actions",
           sort: null
           }, 'story-row');
+      addTableColumn(opts,{ setMaxWidth: true, auto: false },null, 'story-data');
+      addTableColumn(opts,{ auto: false, setMaxWidth: true },null, 'story-data');
+      addTableColumn(opts,{ auto: false, setMaxWidth: true },null, 'story-data');
+      $.extend(opts,options);
+      var ret = this.DynamicTable(opts);
+      
+      return ret;
+    },
+    releaseBacklogTable: function(options) {
+      var opts = { captionText: "Stories", defaultSortColumn: 0};
+      addTableColumn(opts, 
+          { minwidth: 24, auto: true },
+          { name: "Prio",
+          tooltip: "Story priority",
+          sort: agilefantUtils.comparators.priorityComparator
+          }, 'projectstory-row');
+      addTableColumn(opts,
+          { minwidth: 280, auto: true },
+          { name: 'Name',
+              tooltip: 'Story name',
+              sort: agilefantUtils.comparators.nameComparator
+          }, 'projectstory-row');
+      addTableColumn(opts,
+              { minwidth: 60, auto: true },
+                  { name: 'State',
+                    tooltip: 'Story state',
+                    sort: null
+                  }, 'projectstory-row');
+      addTableColumn(opts,                      
+          { minwidth: 60, auto: true },
+          { name: 'Responsibles',
+              tooltip: 'Story\'s responsibles',
+              sort: null
+          }, 'projectstory-responsibles');
+      addTableColumn(opts,                      
+          { minwidth: 60, auto: true },
+          { name: 'Points',
+              tooltip: 'Estimate in story points',
+              sort: null
+          }, 'projectstory-row');
+//      if(agilefantUtils.isTimesheetsEnabled()) {
+//        addTableColumn(opts,
+//            { minwidth: 30, auto: true },
+//                { name: 'ES',
+//                tooltip: 'Total effort spent',
+//                sort: agilefantUtils.comparators.effortSpentComparator
+//                }, 'projectstory-row');
+//      }
+
+      addTableColumn(opts,
+          { minwidth: 48, auto: true},
+          { name: 'Actions',
+            actionCell: true,
+          tooltip: "Actions",
+          sort: null
+          }, 'projectstory-row');
       addTableColumn(opts,{ setMaxWidth: true, auto: false },null, 'story-data');
       addTableColumn(opts,{ auto: false, setMaxWidth: true },null, 'story-data');
       addTableColumn(opts,{ auto: false, setMaxWidth: true },null, 'story-data');
@@ -1313,37 +1369,3 @@
   });
 })(jQuery);
 
-var TaskTabs = function(task, parentView) {
-  var id = task.getId();
-  if(!id) { // when creating new item etc.
-    var tmp = new Date();
-    id = tmp.getTime();
-  }
-  this.parentView = parentView;
-  this.prefix = "taskTab-"+id;
-  this.tabs = [];
-  this.addFrame();
-};
-TaskTabs.prototype = {
-    addFrame: function() {
-      this.container = $('<div />').appendTo(this.parentView).width("100%").addClass("cellTabs");
-      this.tabList = $('<ul />').addClass("tab-menu").appendTo(this.container).addClass("tabMenu");
-      this.container.tabs();
-    },
-    setOnShow: function(cb) {
-      this.container.bind('tabsshow', function(event, ui) {
-        cb(ui.index);
-      });
-    },
-    createTabId: function() {
-      return this.prefix+"-"+this.tabs.length;
-    },
-    addTab: function(title) {
-      var id = this.createTabId();
-      var t = $('<div />').attr("id",id).appendTo(this.tabList);
-      t.addClass("ui-tabs").addClass("tabData");
-      this.tabs.push(t);
-      this.container.tabs("add","#"+id, title);
-      return t;
-    }
-};

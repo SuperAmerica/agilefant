@@ -742,6 +742,7 @@ $(document).ready(function() {
 <script type="text/javascript" src="static/js/dynamics/model.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
 <script type="text/javascript" src="static/js/dynamics/controller.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
 <script type="text/javascript" src="static/js/dynamics/dynamicTable.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/dynamics/dynamics.tabs.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
 <script type="text/javascript" src="static/js/dynamics/commonView.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
 
 

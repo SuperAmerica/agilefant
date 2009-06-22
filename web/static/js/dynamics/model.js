@@ -573,7 +573,7 @@ StoryModel.prototype.remove = function() {
       commonView.showError("An error occured while deleting a story.");
     },
     success: function(data,type) {
-      me.iteration.removeStory(me);
+      me.backlog.removeStory(me);
       ModelFactory.removeStory(me.id);
       me.callDeleteListeners();
       me.callEditListeners({bubbleEvent: ["metricsUpdated"]});
@@ -587,31 +587,36 @@ StoryModel.prototype.remove = function() {
 };
 StoryModel.prototype.reloadMetrics = function() {
   var me = this;
+  var data = {};
+  
+  if (!story) {
+    data.iterationId = this.iteration.id;
+  }
+  else {
+    data.storyId = story.id;
+  }
   jQuery.ajax({
     url: "calculateStoryMetrics.action",
-    data: {
-    storyId: this.id,
-    iterationId: this.iteration.iterationId
-  },
-  cache: false,
-  type: "POST",
-  dataType: "json",
-  async: true,
-  success: function(data,type) {
-    var event = [];
-    if(!me.persistedData || !me.persistedData.metrics) {
-      event = ["metricsUpdated"];
-    } else if(me.persistedData.metrics.effortLeft !== data.effortLeft || 
-            me.persistedData.metrics.effortSpent !== data.effortSpent || 
-            me.persistedData.metrics.originalEstimate !== data.originalEstimate || 
-            me.persistedData.metrics.doneTasks !== data.doneTasks || 
-            me.persistedData.metrics.totalTasks !== data.totalTasks) {
-      event = ["metricsUpdated"]; 
+    data: data,
+    cache: false,
+    type: "POST",
+    dataType: "json",
+    async: true,
+    success: function(data,type) {
+      var event = [];
+      if(!me.persistedData || !me.persistedData.metrics) {
+        event = ["metricsUpdated"];
+      } else if(me.persistedData.metrics.effortLeft !== data.effortLeft || 
+              me.persistedData.metrics.effortSpent !== data.effortSpent || 
+              me.persistedData.metrics.originalEstimate !== data.originalEstimate || 
+              me.persistedData.metrics.doneTasks !== data.doneTasks || 
+              me.persistedData.metrics.totalTasks !== data.totalTasks) {
+        event = ["metricsUpdated"]; 
+      }
+      me.persistedData.metrics = data;
+      me.metrics = data;
+      me.callEditListeners({bubbleEvent: event});
     }
-    me.persistedData.metrics = data;
-    me.metrics = data;
-    me.callEditListeners({bubbleEvent: event});
-  }
   });
 };
 StoryModel.prototype.save = function(synchronous, callback) {

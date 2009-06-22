@@ -550,12 +550,12 @@ StoryModel.prototype.moveToBacklog = function(backlogId, moveTasks) {
       commonView.showError("Unable to move selected story to selected backlog.");
     },
     success: function(data,type) {   
-      me.iteration.removeStory(me);
+      me.backlog.removeStory(me);
     },
     cache: false,
     type: "POST",
     url: "moveStory.action",
-    data: {storyId: this.id, backlogId: backlogId, moveTasks: moveTasks}
+    data: {storyId: this.id, backlogId: backlogId, moveTasks: true}
   });
 };
 StoryModel.prototype.rollBack = function() {
@@ -587,13 +587,12 @@ StoryModel.prototype.remove = function() {
 };
 StoryModel.prototype.reloadMetrics = function() {
   var me = this;
-  var data = {};
+  var data = {
+      storyId: this.id
+  };
   
-  if (!story) {
-    data.iterationId = this.iteration.id;
-  }
-  else {
-    data.storyId = story.id;
+  if (this.iteration) {
+    data.iterationId = this.iteration.getId();
   }
   jQuery.ajax({
     url: "calculateStoryMetrics.action",
@@ -606,9 +605,9 @@ StoryModel.prototype.reloadMetrics = function() {
       var event = [];
       if(!me.persistedData || !me.persistedData.metrics) {
         event = ["metricsUpdated"];
-      } else if(me.persistedData.metrics.effortLeft !== data.effortLeft || 
-              me.persistedData.metrics.effortSpent !== data.effortSpent || 
-              me.persistedData.metrics.originalEstimate !== data.originalEstimate || 
+      } else if(!agilefantUtils.areExactEstimatesEqual(me.persistedData.metrics.effortLeft, data.effortLeft) || 
+              me.persistedData.metrics.effortSpent !== data.effortSpent ||  
+              !agilefantUtils.areExactEstimatesEqual(me.persistedData.metrics.originalEstimate, data.originalEstimate) || 
               me.persistedData.metrics.doneTasks !== data.doneTasks || 
               me.persistedData.metrics.totalTasks !== data.totalTasks) {
         event = ["metricsUpdated"]; 

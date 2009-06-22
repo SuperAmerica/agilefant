@@ -591,7 +591,7 @@ ProjectController.prototype = {
       }
       });
     },
-    /*
+    
     moveStory: function(row, story) {
       var parent = $("<div />").appendTo(document.body);
       var err = $("<div />").appendTo(parent).css("color","red").hide();
@@ -622,12 +622,12 @@ ProjectController.prototype = {
               } else {
                 backlogId = project;
               }
-            } else if (iteration != story.iteration.iterationId) {
+            } else if (iteration != story.backlog.getId()) {
               backlogId = iteration;
             }
             if (backlogId > 0) {
-              var moveTasks = (!isNaN(iteration) && iteration > 0);
-              story.moveToBacklog(backlogId, moveTasks);
+//              var moveTasks = (!isNaN(iteration) && iteration > 0);
+              story.moveToBacklog(backlogId, true);
               row.remove();
             }
           $(this).dialog('destroy');
@@ -639,7 +639,7 @@ ProjectController.prototype = {
           }
         }
       });
-    },*/
+    },
     addRow: function(story) {
       var me = this;
       var row = me.view.createRow(story);

@@ -3,7 +3,7 @@
 	defaultsort="1" defaultorder="ascending" style="width: 760px !important;">
 	<display:column sortable="false" title="Date" sortProperty="date"
 		style="white-space:nowrap; width: 105px;">
-		<ww:date name="#attr.row.date" format="yyyy-MM-dd HH:mm" />
+		<joda:format value="${row.date}" pattern="yyyy-MM-dd HH:mm" />
 	</display:column>
 
 	<display:column sortable="false" title="User" style="width: 40px;">
@@ -12,18 +12,19 @@
 
 	<display:column sortable="false" title="Spent effort" style="width: 70px;" 
 		sortProperty="timeSpent">
-							${aef:html(row.timeSpent)}
+							${aef:minutesToString(row.minutesSpent)}
 						</display:column>
 	<display:column sortable="false" title="Comment" style="width: 250px;">
 		<div class="spentEffortText"><c:out value="${row.description}" /></div>
 	</display:column>
 	<display:column sortable="false" title="Context" style="width: 220px;">
 	<div style="white-space: nowrap; overflow: hidden; width: 220px;" class="spentEffortText">
+	<%--
 		<c:if test="${row.backlogEffortEntry}">
 			<c:set var="backlog" value="${row.backlog}" />
 		</c:if>
 		<c:if test="${row.taskEffortEntry}">
-			<c:set var="backlog" value="${row.story.backlog}" />
+			<c:set var="backlog" value="${row.task.backlog}" />
 			<c:out value="${row.story.name}" />
 			<br />
 		</c:if>
@@ -41,6 +42,7 @@
 				<c:out value="${backlog.name}" />
 			</c:when>
 		</c:choose>
+		--%>
 		</div>
 	</display:column>
 </display:table>

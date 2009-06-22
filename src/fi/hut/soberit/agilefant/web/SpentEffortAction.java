@@ -8,6 +8,8 @@ import org.joda.time.DateTimeConstants;
 import org.joda.time.LocalDate;
 import org.joda.time.MutableDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
@@ -16,6 +18,8 @@ import fi.hut.soberit.agilefant.business.HourEntryBusiness;
 import fi.hut.soberit.agilefant.model.HourEntry;
 import fi.hut.soberit.agilefant.util.DailySpentEffort;
 
+@Component("spentEffortAction")
+@Scope("prototype")
 public class SpentEffortAction extends ActionSupport {
 
     private static final long serialVersionUID = -8867256217181600965L;
@@ -48,6 +52,8 @@ public class SpentEffortAction extends ActionSupport {
     
     public DateTime getSelectedDate() {
         MutableDateTime selectedTime = new MutableDateTime();
+        this.currentWeek = selectedTime.getWeekOfWeekyear();
+        this.currentYear = selectedTime.getYear(); 
         if(this.week == 0 || this.year == 0) {
             this.week = selectedTime.getWeekOfWeekyear();
             this.year = selectedTime.getYear();
@@ -59,8 +65,6 @@ public class SpentEffortAction extends ActionSupport {
         DateTime selectedDate = selectedTime.toDateTime();
         this.prevWeek = selectedDate.minusWeeks(1).toLocalDate();
         this.nextWeek = selectedDate.plusWeeks(1).toLocalDate();
-        this.currentWeek = selectedDate.getWeekOfWeekyear();
-        this.currentYear = selectedDate.getYear(); 
         return selectedDate;
     }
     

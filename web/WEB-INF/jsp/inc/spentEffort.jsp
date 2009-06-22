@@ -38,7 +38,7 @@
 				</c:choose>
 			</td>
 		</c:forEach>
-    <td>${aef:minutesToString(weekEffort)</td>
+    <td>${aef:minutesToString(weekEffort)}</td>
 		<td><a href="weeklySpentEffort.action?userId=${userId}&week=${currentWeek}&year=${currentYear}">Current week</a></td>
 	</tr>
 </table>

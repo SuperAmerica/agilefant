@@ -1,6 +1,8 @@
 package fi.hut.soberit.agilefant.business.impl;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -41,6 +43,50 @@ public class MenuBusinessImpl implements MenuBusiness {
         else {
             if (backlog.getChildren() != null) {
                 data.getMenuItems().addAll(backlog.getChildren());
+            }
+        }
+        
+        if (backlog != null) {
+            if (backlog instanceof Product) {
+                Collections.sort(data.getMenuItems(), new Comparator<Backlog>() {
+                    public int compare(Backlog o1, Backlog o2) {
+                        if (o1 == null) {
+                            if (o2 == null) return 0;
+                            else return -1;
+                        } else {
+                            if (o2 == null) return 1;
+                        }
+                        Project p1 = (Project) o1;
+                        Project p2 = (Project) o2;
+                        if (p1.getStartDate() == null) {
+                            if (p2.getStartDate() == null) return 0;
+                            else return -1;
+                        } else {
+                            if (p2.getStartDate() == null) return 1;
+                        }
+                        return p1.getStartDate().compareTo(p2.getStartDate());
+                    }
+                });
+            } else if (backlog instanceof Project) {
+                Collections.sort(data.getMenuItems(), new Comparator<Backlog>() {
+                    public int compare(Backlog o1, Backlog o2) {
+                        if (o1 == null) {
+                            if (o2 == null) return 0;
+                            else return -1;
+                        } else {
+                            if (o2 == null) return 1;
+                        }
+                        Iteration p1 = (Iteration) o1;
+                        Iteration p2 = (Iteration) o2;
+                        if (p1.getStartDate() == null) {
+                            if (p2.getStartDate() == null) return 0;
+                            else return -1;
+                        } else {
+                            if (p2.getStartDate() == null) return 1;
+                        }
+                        return p1.getStartDate().compareTo(p2.getStartDate());
+                    }
+                });
             }
         }
         

@@ -51,6 +51,7 @@ $(document).ready(function() {
 <div class="subItems">
 <div id="Spent_Effort"></div>
 <div id="detailedLoadTable" class="ui-tabs-hide">
+<%--
 <table class="infoTable" cellspacing="0" cellpadding="0">
 <tbody>
 <tr>
@@ -171,9 +172,10 @@ $(document).ready(function() {
 </table>
 </div>
 
-
+--%>
 
 <div id="smallLoadTable">
+<%--
 <table class="infoTable" cellspacing="0" cellpadding="0">
 <tbody>
 <tr>
@@ -263,6 +265,7 @@ $(document).ready(function() {
 </tr>
 </tbody>
 </table>
+--%>
 </div>
 </div>
 </div>

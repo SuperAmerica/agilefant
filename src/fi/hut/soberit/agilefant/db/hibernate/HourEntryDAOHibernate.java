@@ -267,7 +267,16 @@ public class HourEntryDAOHibernate extends GenericDAOHibernate<HourEntry>
 
     public List<HourEntry> getHourEntriesByFilter(DateTime startTime,
             DateTime endTime, int userId) {
-        // TODO Auto-generated method stub
-        return null;
+        Criteria crit = this.getCurrentSession().createCriteria(HourEntry.class);
+        if(startTime != null) {
+            crit.add(Restrictions.ge("date", startTime));
+        }
+        if(endTime != null) {
+            crit.add(Restrictions.le("date", endTime));
+        }
+        if(userId != 0) {
+            crit.createCriteria("user").add(Restrictions.idEq(userId));
+        }
+        return asList(crit); 
     }
 }

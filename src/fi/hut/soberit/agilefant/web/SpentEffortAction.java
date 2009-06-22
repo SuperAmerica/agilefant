@@ -59,6 +59,8 @@ public class SpentEffortAction extends ActionSupport {
         DateTime selectedDate = selectedTime.toDateTime();
         this.prevWeek = selectedDate.minusWeeks(1).toLocalDate();
         this.nextWeek = selectedDate.plusWeeks(1).toLocalDate();
+        this.currentWeek = selectedDate.getWeekOfWeekyear();
+        this.currentYear = selectedDate.getYear(); 
         return selectedDate;
     }
     

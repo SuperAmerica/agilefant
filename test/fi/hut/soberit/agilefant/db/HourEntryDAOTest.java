@@ -199,4 +199,24 @@ public class HourEntryDAOTest extends AbstractHibernateTests {
         long actualSum = hourEntryDAO.calculateIterationHourEntriesSum(6);
         assertEquals(0, actualSum);
     }
+    
+    @Test
+    public void testGetHourEntriesByFilter() {
+        executeClassSql();
+        DateTime startDate = new DateTime(2009, 5, 12, 10, 20, 0, 0);
+        DateTime endDate = new DateTime(2009, 5, 14, 10, 20, 0, 0);
+        assertEquals(3, hourEntryDAO.getHourEntriesByFilter(startDate, endDate, 1).size());
+    }
+    
+    @Test
+    public void testGetHourEntriesByFilter_noUser() {
+        executeClassSql();
+        assertEquals(23, hourEntryDAO.getHourEntriesByFilter(null, null, 0).size());
+    }
+    
+    @Test
+    public void testGetHourEntriesByFilter_noDates() {
+        executeClassSql();
+        assertEquals(23, hourEntryDAO.getHourEntriesByFilter(null, null, 1).size());
+    }
 }

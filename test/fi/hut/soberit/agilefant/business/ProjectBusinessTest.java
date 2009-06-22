@@ -164,7 +164,7 @@ public class ProjectBusinessTest {
     @Test
     public void testStoreProject_withAssignments() {
         Assignment ass = new Assignment();
-        ass.setBacklog(project);
+        ass.setProject(project);
         ass.setPersonalLoad(new ExactEstimate(180));
         ass.setUser(user1);
         Collection<Assignment> assignments = Arrays.asList(ass);

@@ -20,9 +20,7 @@
 	onchange="this.form.submit();" /></h2>
 </ww:form>
 
-<%--
 <%@ include file="./inc/_userLoad.jsp" %>
---%>
 
 <c:choose>
 <c:when test="${!((empty storiesForUserInProgress) &&

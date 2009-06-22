@@ -156,11 +156,11 @@ public class ProjectBurnupBusinessImpl implements ProjectBurnupBusiness {
         List<DateTime> timestamps = new ArrayList<DateTime>(DEFAULT_DATAPOINTS + 1);
         for (int i = 0; i < DEFAULT_DATAPOINTS; i++) {
             DateTime stamp = start.toDateTime().plusMillis((int) (i * offset));
-            
-            timestamps.add(stamp);
+            if (!timestamps.contains(stamp)) {
+                timestamps.add(stamp);
+            }
         }
 
-        //timestamps.add(end.toDateTime());
         timestamps.add(end.plusDays(1).toDateTime());
         
         List<BacklogHistoryEntry> rawEntries = backlogHistoryEntryBusiness.retrieveForTimestamps(timestamps, project.getId());

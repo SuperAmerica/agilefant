@@ -53,6 +53,8 @@ public class User {
     private Collection<Assignment> assignments = new HashSet<Assignment>();
     
     private Collection<Story> stories = new HashSet<Story>();
+    
+    private ExactEstimate weekEffort = new ExactEstimate(0);
 
     /**
      * Get the id of this object.
@@ -225,6 +227,14 @@ public class User {
             fetch = FetchType.LAZY)
     public Collection<Story> getStories() {
         return stories;
+    }
+    
+    public void setWeekEffort(ExactEstimate weekEffort) {
+        this.weekEffort = weekEffort;
+    }
+    
+    public ExactEstimate getWeekEffort() {
+        return weekEffort;
     }
 
 }

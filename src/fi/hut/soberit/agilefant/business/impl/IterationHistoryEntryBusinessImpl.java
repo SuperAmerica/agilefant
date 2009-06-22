@@ -42,7 +42,6 @@ public class IterationHistoryEntryBusinessImpl extends
         newEntry.setIteration(iteration);
         newEntry.setTimestamp(new LocalDate());
         Pair<ExactEstimate, ExactEstimate> sums = iterationHistoryEntryDAO.calculateCurrentHistoryData(iterationId);
-        long oldEffortLeftSum = (latest == null) ? 0 : latest.getEffortLeftSum();
         long oldOriginalEstimateSum = (latest == null) ? 0 : latest.getOriginalEstimateSum();
         long effortLeftSum = (sums.first == null) ? 0 : sums.first.getMinorUnits();
         long originalEstimateSum = (sums.second == null) ? 0 : sums.second.getMinorUnits();

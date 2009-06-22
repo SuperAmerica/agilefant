@@ -13,9 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import fi.hut.soberit.agilefant.business.BacklogBusiness;
 import fi.hut.soberit.agilefant.db.BacklogDAO;
-import fi.hut.soberit.agilefant.db.IterationDAO;
 import fi.hut.soberit.agilefant.db.ProductDAO;
-import fi.hut.soberit.agilefant.db.ProjectDAO;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.User;
@@ -34,8 +32,6 @@ public class BacklogBusinessImpl extends GenericBusinessImpl<Backlog> implements
 
     private BacklogDAO backlogDAO;
     private ProductDAO productDAO;
-    private ProjectDAO projectDAO;
-    private IterationDAO iterationDAO;
 
     @Autowired
     public void setBacklogDAO(BacklogDAO backlogDAO) {
@@ -48,16 +44,6 @@ public class BacklogBusinessImpl extends GenericBusinessImpl<Backlog> implements
         this.productDAO = productDAO;
     }
 
-    @Autowired
-    public void setProjectDAO(ProjectDAO projectDAO) {
-        this.projectDAO = projectDAO;
-    }
-
-    @Autowired
-    public void setIterationDAO(IterationDAO iterationDAO) {
-        this.iterationDAO = iterationDAO;
-    }
-    
     @Transactional(readOnly = true)
     public Collection<Backlog> retrieveMultiple(Collection<Integer> idList) {
         return backlogDAO.retrieveMultiple(idList);

@@ -2,7 +2,6 @@ package fi.hut.soberit.agilefant.db.hibernate;
 
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Projections;
@@ -22,8 +21,6 @@ import fi.hut.soberit.agilefant.util.StoryMetrics;
 public class StoryDAOHibernate extends GenericDAOHibernate<Story> implements
         StoryDAO {
 
-    private final Logger log = Logger.getLogger(this.getClass());
-    
     public StoryDAOHibernate() {
         super(Story.class);
     }

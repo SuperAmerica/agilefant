@@ -1,8 +1,9 @@
 package fi.hut.soberit.agilefant.util;
 
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Before;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogHourEntry;
@@ -13,7 +14,6 @@ import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.StoryHourEntry;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.TaskHourEntry;
-import fi.hut.soberit.agilefant.model.User;
 
 public class TimesheetExportRowDataTest {
 
@@ -23,7 +23,6 @@ public class TimesheetExportRowDataTest {
     private Product product;
     private Story story;
     private Task task;
-    private User user;
     
     @Before
     public void setUp() {
@@ -33,7 +32,6 @@ public class TimesheetExportRowDataTest {
         iteration = new Iteration();
         story = new Story();
         task = new Task();
-        user = new User();
         
         project.setParent(product);
         iteration.setParent(project);

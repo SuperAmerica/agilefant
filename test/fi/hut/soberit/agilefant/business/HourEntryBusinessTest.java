@@ -16,10 +16,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import fi.hut.soberit.agilefant.business.impl.HourEntryBusinessImpl;
-import fi.hut.soberit.agilefant.business.impl.SettingBusinessImpl;
 import fi.hut.soberit.agilefant.db.BacklogHourEntryDAO;
 import fi.hut.soberit.agilefant.db.HourEntryDAO;
-import fi.hut.soberit.agilefant.db.SettingDAO;
 import fi.hut.soberit.agilefant.db.TaskHourEntryDAO;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogHourEntry;
@@ -35,11 +33,9 @@ import fi.hut.soberit.agilefant.util.DailySpentEffort;
 public class HourEntryBusinessTest {
 
     private HourEntryBusinessImpl hourEntryBusiness;
-    private SettingBusinessImpl settingBusiness;
     private TaskHourEntryDAO theDAO;
     private BacklogHourEntryDAO blheDAO;
     private HourEntryDAO heDAO;
-    private SettingDAO settingDAO;
     
     private void compareHe(HourEntry he1, HourEntry he2) 
             throws Exception {

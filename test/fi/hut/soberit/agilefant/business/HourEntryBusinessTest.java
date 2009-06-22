@@ -244,12 +244,12 @@ public class HourEntryBusinessTest {
         List<DailySpentEffort> res = hourEntryBusiness.getDailySpentEffortByInterval(start, end, 0);
         assertEquals(8, res.size());
         assertEquals(null, res.get(0).getSpentEffort());
-        assertEquals(1900L, res.get(1).getSpentEffort());
-        assertEquals(4000L, res.get(2).getSpentEffort());
+        assertEquals(1900L, (long)res.get(1).getSpentEffort());
+        assertEquals(4000L, (long)res.get(2).getSpentEffort());
         assertEquals(null, res.get(3).getSpentEffort());
         assertEquals(null, res.get(4).getSpentEffort());
-        assertEquals(50000L, res.get(5).getSpentEffort());
-        assertEquals(6000000L, res.get(6).getSpentEffort());
+        assertEquals(50000L, (long)res.get(5).getSpentEffort());
+        assertEquals(6000000L, (long)res.get(6).getSpentEffort());
         assertEquals(null, res.get(7).getSpentEffort());
         verify(heDAO);
     }
@@ -272,10 +272,10 @@ public class HourEntryBusinessTest {
         replay(heDAO);
         List<DailySpentEffort> res = hourEntryBusiness.getDailySpentEffortByInterval(start, end, 0);
         assertEquals(4, res.size());
-        assertEquals(1900L, res.get(0).getSpentEffort());
+        assertEquals(1900L, (long)res.get(0).getSpentEffort());
         assertEquals(null, res.get(1).getSpentEffort());
-        assertEquals(54000L, res.get(2).getSpentEffort());
-        assertEquals(6000000L, res.get(3).getSpentEffort());
+        assertEquals(54000L, (long)res.get(2).getSpentEffort());
+        assertEquals(6000000L, (long)res.get(3).getSpentEffort());
         verify(heDAO);
     }
     

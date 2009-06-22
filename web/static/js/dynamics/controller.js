@@ -216,6 +216,9 @@ IterationController.prototype = {
         type: "storyPoint",
         get: function() { return story.getStoryPoints(); },
         set: function(val) { story.setStoryPoints(val); },
+        onEdit: function() {
+        	return story.getState() !== 'DONE';
+        },
         decorator: agilefantParsers.storyPointsToString
       });
       var elsum = row.createCell({

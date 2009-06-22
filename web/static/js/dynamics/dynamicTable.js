@@ -1168,12 +1168,14 @@
               sort: null
             }, 'task-row'
         );
+        /*
         addTableColumn(opts,
             { minwidth: 30, auto: true },
                 { name: "Themes",
                   tooltip: "Task themes",
                   sort: null
                 }, 'task-row');
+        */
         addTableColumn(opts,
             { minwidth: 180, auto: true },
                 { name: 'Name',

@@ -959,6 +959,7 @@ StoryController.prototype = {
     var me = this;
     var row = this.view.createRow(task);
     var expand = row.createCell();
+    /*
     var themes = row.createCell({
       type: "theme",
       backlogId: task.backlog.getId(),
@@ -966,6 +967,7 @@ StoryController.prototype = {
       get: function() { return task.getThemes(); },
       decorator: agilefantUtils.themesToHTML
     });
+    */
     var name = row.createCell({
       type: "text",
       required: true,
@@ -1155,6 +1157,7 @@ StoryController.prototype = {
     story.beginTransaction();
     var row = this.view.createRow(story,{toTop: true}, true);
     row.createCell();
+    /*
     var themes = row.createCell({
       type: "theme",
       backlogId: story.backlog.getId(),
@@ -1162,6 +1165,7 @@ StoryController.prototype = {
       get: function() { return story.getThemes(); },
       decorator: agilefantUtils.themesToHTML
     });
+    */
     var name = row.createCell({
       type: "text",
       required: true,

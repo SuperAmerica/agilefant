@@ -248,6 +248,7 @@ IterationController.prototype = {
           return false;
         }},
         cancel: {text: "Cancel", action: function() {
+          story.rollBack();
           row.cancelEdit();
           return false;
         }}
@@ -272,6 +273,7 @@ IterationController.prototype = {
                                        text: "Edit story",
                                        callback: function(row) {
                                        desc.getElement().show();
+                                       story.beginTransaction();
                                        row.openEdit();
                                      }
                                      }, {

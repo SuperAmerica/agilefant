@@ -1,11 +1,9 @@
 package fi.hut.soberit.agilefant.transfer;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import fi.hut.soberit.agilefant.model.Story;
-import fi.hut.soberit.agilefant.model.Task;
 import flexjson.JSON;
 
 public class ProjectDataContainer {

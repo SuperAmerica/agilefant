@@ -5,10 +5,6 @@ import java.util.Collections;
 import java.util.List;
 
 import junit.framework.TestCase;
-import static org.junit.Assert.*;
-
-
-import fi.hut.soberit.agilefant.model.ExactEstimate;
 import fi.hut.soberit.agilefant.model.HourEntry;
 
 public class TimesheetNodeTest extends TestCase {

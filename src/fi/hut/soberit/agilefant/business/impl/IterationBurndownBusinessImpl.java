@@ -1,8 +1,6 @@
 package fi.hut.soberit.agilefant.business.impl;
 
 
-import static org.junit.Assert.assertEquals;
-
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Rectangle;
@@ -19,7 +17,6 @@ import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.DateAxis;
 import org.jfree.chart.plot.XYPlot;
-import org.jfree.chart.renderer.xy.XYItemRenderer;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.data.time.Second;
 import org.jfree.data.time.TimeSeries;

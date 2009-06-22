@@ -3,7 +3,6 @@ package fi.hut.soberit.agilefant.util;
 import java.util.ArrayList;
 import java.util.List;
 
-import fi.hut.soberit.agilefant.model.ExactEstimate;
 import fi.hut.soberit.agilefant.model.HourEntry;
 
 /**

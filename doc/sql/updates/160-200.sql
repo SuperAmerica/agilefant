@@ -368,6 +368,8 @@ ALTER TABLE hourentry RENAME hourentries;
 
 ALTER TABLE user RENAME users;
 ALTER TABLE users DROP COLUMN description;
+ALTER TABLE users CHANGE weekHours weekEffort BIGINT;
+UPDATE users SET weekEffort=(weekEffort/60);
 
 DROP TABLE worktype;
 

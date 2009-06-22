@@ -243,7 +243,16 @@ DROP TABLE backlogitem_businesstheme;
 
 /*** History entries ***/
 
-
+CREATE TABLE history_backlogs (
+	id INTEGER NOT NULL AUTO_INCREMENT, 
+	estimateSum BIGINT NOT NULL, 
+	doneSum BIGINT NOT NULL, 
+	timestamp DATETIME, 
+	backlog_id INTEGER, 
+	PRIMARY KEY (id),
+	FOREIGN KEY (backlog_id) REFERENCES backlogs(id)
+)ENGINE=InnoDB;
+	
 CREATE TABLE history_iterations (
 	id INT(11) AUTO_INCREMENT,
 	effortLeftSum BIGINT NOT NULL,
@@ -291,6 +300,8 @@ ALTER TABLE he_temp DROP COLUMN id;
 /* We don't want any entries to the future and they would be zero anyway */
 DELETE FROM he_temp
 WHERE timestamp > NOW();
+
+DROP TABLE IF EXISTS he_temp_copy;
 
 /* MySQL can't use a temporary table in two different subqueries */
 CREATE TEMPORARY TABLE he_temp_copy SELECT * FROM he_temp;

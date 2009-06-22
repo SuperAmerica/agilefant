@@ -2,12 +2,22 @@ package fi.hut.soberit.agilefant.web;
 
 
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.security.Principal;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.poi.ss.usermodel.Workbook;
 import org.joda.time.DateTime;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.providers.UsernamePasswordAuthenticationToken;
 import org.springframework.security.providers.rememberme.RememberMeAuthenticationToken;
 import org.springframework.stereotype.Component;
@@ -18,9 +28,13 @@ import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
 
 import fi.hut.soberit.agilefant.business.TimesheetBusiness;
+import fi.hut.soberit.agilefant.business.TimesheetExportBusiness;
+import fi.hut.soberit.agilefant.business.UserBusiness;
+import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.security.AgilefantUserDetails;
 import fi.hut.soberit.agilefant.util.BacklogTimesheetNode;
-import fi.hut.soberit.agilefant.util.TimesheetData;
+import fi.hut.soberit.agilefant.util.CalendarUtils;
+import flexjson.JSONSerializer;
 
 /**
  * 
@@ -33,7 +47,14 @@ public class TimesheetAction extends ActionSupport implements PrincipalAware {
 
     private static final long serialVersionUID = -8988740967426943267L;
     
+    @Autowired
     private TimesheetBusiness timesheetBusiness;
+    
+    @Autowired
+    private TimesheetExportBusiness timesheetExportBusiness;
+
+    @Autowired
+    private UserBusiness userBusiness;
     
     private Set<Integer> productIds = new HashSet<Integer>();
     
@@ -43,9 +64,9 @@ public class TimesheetAction extends ActionSupport implements PrincipalAware {
     
     private List<BacklogTimesheetNode> products;
     
-    private DateTime startDate;
+    private String startDate;
 
-    private DateTime endDate;
+    private String endDate;
     
     private String interval;
     
@@ -54,6 +75,12 @@ public class TimesheetAction extends ActionSupport implements PrincipalAware {
     private int currentUserId = 0;
     
     private boolean onlyOngoing = true;
+    
+    private long effortSum = 0;
+    
+    private ByteArrayOutputStream exportableReport;
+   
+    
     
     /**
      * Needed for xwork's execAndWait as action is executed in a different
@@ -105,20 +132,57 @@ public class TimesheetAction extends ActionSupport implements PrincipalAware {
     public String initialize() {
         this.interval = "TODAY";
         this.onlyOngoing = false;
-        this.userIds.add(this.currentUserId);
+        //this.userIds.add(this.currentUserId);
         return Action.SUCCESS;
+    }
+    private DateTime getDateTimeFromString(String val) {
+        try {
+            Date dateVal = CalendarUtils.parseDateFromString(val);
+            return new DateTime(dateVal.getTime());
+        } catch (ParseException e) {
+            return null;
+        }
     }
     public String generateTree(){
         Set<Integer> selectedBacklogIds = this.getSelectedBacklogs();
         if(selectedBacklogIds == null || selectedBacklogIds.size() == 0) {
             addActionError("No backlogs selected.");
             return Action.ERROR;
+        }        
+        products = timesheetBusiness.getRootNodes(selectedBacklogIds, getDateTimeFromString(startDate), getDateTimeFromString(endDate), this.userIds);
+        effortSum = timesheetBusiness.getRootNodeSum(products);
+        return Action.SUCCESS;
+    }
+    
+    public String generateExeclReport(){
+        Set<Integer> selectedBacklogIds = this.getSelectedBacklogs();
+        if(selectedBacklogIds == null || selectedBacklogIds.size() == 0) {
+            addActionError("No backlogs selected.");
+            return Action.ERROR;
+        }        
+        Workbook wb = this.timesheetExportBusiness.generateTimesheet(this, selectedBacklogIds, getDateTimeFromString(startDate), getDateTimeFromString(endDate), userIds);
+        this.exportableReport = new ByteArrayOutputStream();
+        try {
+            wb.write(this.exportableReport);
+        } catch (IOException e) {
+            return Action.ERROR;
         }
-        TimesheetData dataSheet = timesheetBusiness.generateTimesheet(selectedBacklogIds, startDate, endDate, this.userIds);
-        products = timesheetBusiness.getRootNodes(dataSheet);
         return Action.SUCCESS;
     }
 
+    public List<User> getSelectedUsers() {
+        if(this.userIds == null) {
+            return Collections.emptyList();
+        }
+        List<User> selectedUsers = new ArrayList<User>();
+        for(int userId : this.getUserIds()) {
+            User user = this.userBusiness.retrieve(userId);
+            if(user != null) {
+                selectedUsers.add(user);
+            }
+        }
+        return selectedUsers;
+    }
     public TimesheetBusiness getTimesheetBusiness() {
         return timesheetBusiness;
     }
@@ -159,19 +223,19 @@ public class TimesheetAction extends ActionSupport implements PrincipalAware {
         this.products = products;
     }
 
-    public DateTime getStartDate() {
+    public String getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(DateTime startDate) {
+    public void setStartDate(String startDate) {
         this.startDate = startDate;
     }
 
-    public DateTime getEndDate() {
+    public String getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(DateTime endDate) {
+    public void setEndDate(String endDate) {
         this.endDate = endDate;
     }
 
@@ -205,6 +269,32 @@ public class TimesheetAction extends ActionSupport implements PrincipalAware {
 
     public void setOnlyOngoing(boolean onlyOngoing) {
         this.onlyOngoing = onlyOngoing;
+    }
+    
+    public String getJSONProducts() {
+        return new JSONSerializer().serialize(this.productIds);
+    }
+    public String getJSONProjects() {
+        return new JSONSerializer().serialize(this.projectIds);
+    }
+    public String getJSONIterations() {
+        return new JSONSerializer().serialize(this.iterationIds);
+    }
+    public long getEffortSum() {
+        return effortSum;
+    }
+    public void setUserBusiness(UserBusiness userBusiness) {
+        this.userBusiness = userBusiness;
+    }
+    public void setTimesheetExportBusiness(
+            TimesheetExportBusiness timesheetExportBusiness) {
+        this.timesheetExportBusiness = timesheetExportBusiness;
+    }
+    public InputStream getSheetData() {
+        return new ByteArrayInputStream(this.exportableReport.toByteArray());
+    }
+    public void setExportableReport(ByteArrayOutputStream exportableReport) {
+        this.exportableReport = exportableReport;
     }
     
 }

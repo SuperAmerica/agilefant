@@ -2,6 +2,7 @@ package fi.hut.soberit.agilefant.business;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -44,6 +45,17 @@ public class TimesheetBusinessTest extends TimesheetBusinessImpl {
     private TaskHourEntry taskHE;
     private TaskHourEntry iterTaskHE;
     private TimesheetData sheetData;
+    
+    private class TimesheetTestNode extends BacklogTimesheetNode {
+
+        public TimesheetTestNode() {
+            super(null);
+        }
+        @Override
+        public long getEffortSum() {
+            return 500L;
+        }
+    }
     
     @Before
     public void setUp() {
@@ -92,20 +104,42 @@ public class TimesheetBusinessTest extends TimesheetBusinessImpl {
     }
     
     @Test
+    public void getRootNodeSum_noNodes() {
+        TimesheetBusiness tsb = new TimesheetBusinessImpl();
+        assertEquals(0L, tsb.getRootNodeSum(null));
+        List<BacklogTimesheetNode> nodes = Collections.emptyList();
+        assertEquals(0L, tsb.getRootNodeSum(nodes));
+    }
+    
+    @Test
+    public void getRootNodeSum_oneNode() {
+        List<BacklogTimesheetNode> nodes = Arrays.asList((BacklogTimesheetNode)new TimesheetTestNode());
+        TimesheetBusiness tsb = new TimesheetBusinessImpl();
+        assertEquals(500L, tsb.getRootNodeSum(nodes));
+    }
+    
+    @Test
+    public void getRootNodeSum_multipleNodes() {
+        List<BacklogTimesheetNode> nodes = Arrays.asList((BacklogTimesheetNode)new TimesheetTestNode(), (BacklogTimesheetNode)new TimesheetTestNode());
+        TimesheetBusiness tsb = new TimesheetBusinessImpl();
+        assertEquals(1000L, tsb.getRootNodeSum(nodes));
+    }
+    
+    @Test
     public void testGetRootNodes_simple() {
         TimesheetData sheetData = new TimesheetData();
         Product prod = new Product();
         BacklogTimesheetNode rootNode = new BacklogTimesheetNode(prod);
         sheetData.addNode(rootNode);
         TimesheetBusiness tsb = new TimesheetBusinessImpl();
-        List<BacklogTimesheetNode> nodes = tsb.getRootNodes(sheetData);
+        List<BacklogTimesheetNode> nodes = tsb.findRootNodes(sheetData);
         assertEquals(1, nodes.size());
     }
     @Test
     public void testGetRootNodes_noRoots() {
         TimesheetData sheetData = new TimesheetData();
         TimesheetBusiness tsb = new TimesheetBusinessImpl();
-        List<BacklogTimesheetNode> nodes = tsb.getRootNodes(sheetData);
+        List<BacklogTimesheetNode> nodes = tsb.findRootNodes(sheetData);
         assertEquals(0, nodes.size());
     }
     
@@ -122,7 +156,7 @@ public class TimesheetBusinessTest extends TimesheetBusinessImpl {
         sheetData.addNode(rootNode);
         sheetData.addNode(nonRootNode);
         TimesheetBusiness tsb = new TimesheetBusinessImpl();
-        List<BacklogTimesheetNode> nodes = tsb.getRootNodes(sheetData);
+        List<BacklogTimesheetNode> nodes = tsb.findRootNodes(sheetData);
         assertEquals(1, nodes.size());
     }
     
@@ -169,12 +203,12 @@ public class TimesheetBusinessTest extends TimesheetBusinessImpl {
     public void testLinkTasks() {
         StoryTimesheetNode parentStoryNode = sheetData.getStoryNode(1);
         BacklogTimesheetNode parentIterationNode = sheetData.getBacklogNode(3);
-        assertFalse(parentStoryNode.hasChildren());
-        assertFalse(parentIterationNode.hasChildren());
+        assertFalse(parentStoryNode.getHasChildren());
+        assertFalse(parentIterationNode.getHasChildren());
         super.linkTasks(sheetData);
-        assertTrue(parentStoryNode.hasChildren());
+        assertTrue(parentStoryNode.getHasChildren());
         assertEquals(1, parentStoryNode.getChildren().size());  
-        assertTrue(parentIterationNode.hasChildren());
+        assertTrue(parentIterationNode.getHasChildren());
         assertEquals(1, parentIterationNode.getTaskNodes().size());
     }
     

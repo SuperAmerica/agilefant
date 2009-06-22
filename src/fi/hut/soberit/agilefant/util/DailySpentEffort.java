@@ -3,15 +3,13 @@ package fi.hut.soberit.agilefant.util;
 import java.util.Calendar;
 import java.util.Date;
 
-import fi.hut.soberit.agilefant.model.AFTime;
-
 public class DailySpentEffort {
-    private AFTime spentEffort = null;
+    private Long spentEffort = null;
     private Date day;
-    public AFTime getSpentEffort() {
+    public Long getSpentEffort() {
         return spentEffort;
     }
-    public void setSpentEffort(AFTime spentEffort) {
+    public void setSpentEffort(Long spentEffort) {
         this.spentEffort = spentEffort;
     }
     public Date getDay() {

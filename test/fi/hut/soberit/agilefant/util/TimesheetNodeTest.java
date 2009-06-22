@@ -16,8 +16,8 @@ public class TimesheetNodeTest extends TestCase {
     class TimesheetStaticTestNode extends TimesheetNode {
         
         @Override
-        public ExactEstimate getEffortSum() {
-            return new ExactEstimate(450);
+        public long calculateEffortSum() {
+            return 450L;
         }
         @Override
         public List<? extends TimesheetNode> getChildren() {
@@ -35,7 +35,7 @@ public class TimesheetNodeTest extends TestCase {
         }
 
         @Override
-        public boolean hasChildren() {
+        public boolean getHasChildren() {
             return false;
         }
         
@@ -67,15 +67,15 @@ public class TimesheetNodeTest extends TestCase {
         }
 
         @Override
-        public boolean hasChildren() {
+        public boolean getHasChildren() {
             return true;
         }   
     }
     
     public void testCalculateEffortSum() {
         TimesheetTestNode testable = new TimesheetTestNode();
-        ExactEstimate sum = testable.getEffortSum();
-        long minorSum = sum.getMinorUnits().longValue();
-        assertEquals(7850L, minorSum);
+        assertEquals(0L, testable.getEffortSum()); //before calculation
+        assertEquals(7850L, testable.calculateEffortSum()); //calculation must return (for chaining)
+        assertEquals(7850L, testable.getEffortSum());
     }
 }

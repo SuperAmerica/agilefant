@@ -29,7 +29,6 @@ import flexjson.JSON;
  * @see fi.hut.soberit.agilefant.model.Backlog
  * @see fi.hut.soberit.agilefant.model.Story
  * @see fi.hut.soberit.agilefant.model.Iteration
- * @see fi.hut.soberit.agilefant.model.IterationGoal
  */
 @Entity
 @BatchSize(size = 20)
@@ -40,6 +39,8 @@ public class Iteration extends Backlog {
     private Date endDate;
     
     private Integer backlogSize;
+    
+    private Collection<Assignment> assignments = new ArrayList<Assignment>();
     
     private Collection<Task> tasks = new ArrayList<Task>();
 
@@ -78,6 +79,17 @@ public class Iteration extends Backlog {
     @JSON(include = false)
     public Collection<Task> getTasks() {
         return tasks;
+    }
+    
+    @OneToMany(targetEntity = fi.hut.soberit.agilefant.model.Assignment.class,
+            mappedBy = "backlog")
+    @JSON(include = false)
+    public Collection<Assignment> getAssignments() {
+        return assignments;
+    }
+    
+    public void setAssignments(Collection<Assignment> assignments) {
+        this.assignments = assignments;
     }
     
 }

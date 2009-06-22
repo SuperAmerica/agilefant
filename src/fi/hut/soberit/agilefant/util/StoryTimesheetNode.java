@@ -33,7 +33,7 @@ public class StoryTimesheetNode extends TimesheetNode {
     }
 
     @Override
-    public boolean hasChildren() {
+    public boolean getHasChildren() {
         return this.childTasks.size() != 0;
     }
     @Override

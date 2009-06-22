@@ -7,6 +7,7 @@ import java.util.Set;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.joda.time.DateTime;
@@ -27,10 +28,10 @@ public class HourEntryDAOHibernate extends GenericDAOHibernate<HourEntry>
         super(HourEntry.class);
     }
 
-    public long calculateSumByUserAndTimeInterval(User user,
+    public long calculateSumByUserAndTimeInterval(int userId,
             DateTime startDate, DateTime endDate) {
         Criteria crit = getCurrentSession().createCriteria(HourEntry.class);
-        crit.add(Restrictions.eq("user", user));
+        crit.createCriteria("user").add(Restrictions.idEq(userId));
         crit.add(Restrictions.between("date", startDate, endDate));
         crit.setProjection(Projections.sum("minutesSpent"));
         Long result = (Long) crit.uniqueResult();
@@ -92,6 +93,7 @@ public class HourEntryDAOHibernate extends GenericDAOHibernate<HourEntry>
         crit.add(Restrictions.or(Restrictions.in("bl.id", backlogIds),
                 Restrictions.or(Restrictions.in("blParent.id", backlogIds),
                         Restrictions.in("blParentParent.id", backlogIds))));
+        crit.addOrder(Order.desc("date"));
         this.setDateUserFilter(crit, startDate, endDate, userIds);
         return asList(crit);
     }
@@ -116,6 +118,7 @@ public class HourEntryDAOHibernate extends GenericDAOHibernate<HourEntry>
         crit.add(Restrictions.or(Restrictions.in("bl.id", backlogIds),
                 Restrictions.or(Restrictions.in("blParent.id", backlogIds),
                         Restrictions.in("blParentParent.id", backlogIds))));
+        crit.addOrder(Order.desc("date"));
         this.setDateUserFilter(crit, startDate, endDate, userIds);
         return asList(crit);
     }
@@ -144,6 +147,7 @@ public class HourEntryDAOHibernate extends GenericDAOHibernate<HourEntry>
                 .in("blParent.id", backlogIds));
         crit.add(Restrictions.or(Restrictions.in("blParentParent.id",
                 backlogIds), parentProject));
+        crit.addOrder(Order.desc("date"));
         this.setDateUserFilter(crit, startDate, endDate, userIds);
         
         result = asList(crit);
@@ -151,6 +155,7 @@ public class HourEntryDAOHibernate extends GenericDAOHibernate<HourEntry>
         //entries where task has no story attachment
         crit = getCurrentSession().createCriteria(TaskHourEntry.class);
         
+        crit.createAlias("task", "task");
         crit.createAlias("task.iteration", "iBl", CriteriaSpecification.LEFT_JOIN);
         crit.createAlias("task.iteration.parent", "iBlParent",
                 CriteriaSpecification.LEFT_JOIN);
@@ -162,6 +167,9 @@ public class HourEntryDAOHibernate extends GenericDAOHibernate<HourEntry>
                 backlogIds));
         crit.add( Restrictions.or(iterationParents,
                 Restrictions.in("iBl.id", backlogIds)));
+        crit.add(Restrictions.isNull("task.story"));
+        crit.addOrder(Order.desc("date"));
+        this.setDateUserFilter(crit, startDate, endDate, userIds);
         List<TaskHourEntry> hourentriesWithoutStory = asList(crit);
         result.addAll(hourentriesWithoutStory);
         
@@ -247,5 +255,19 @@ public class HourEntryDAOHibernate extends GenericDAOHibernate<HourEntry>
         }
         return result;
         
+    }
+
+    public long calculateSumByUserAndTimeInterval(User user,
+            DateTime startDate, DateTime endDate) {
+        if(user == null) {
+            return 0L;
+        }
+        return this.calculateSumByUserAndTimeInterval(user.getId(), startDate, endDate);
+    }
+
+    public List<HourEntry> getHourEntriesByFilter(DateTime startTime,
+            DateTime endTime, int userId) {
+        // TODO Auto-generated method stub
+        return null;
     }
 }

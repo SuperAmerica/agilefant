@@ -1,8 +1,7 @@
 <%@ include file="./inc/_taglibs.jsp"%>
 <%@ include file="./inc/_header.jsp"%>
+<aef:menu navi="timesheet" title="Timesheets"/>
 
-<aef:menu navi="timesheet" pageHierarchy="${pageHierarchy}" title="Timesheets"/>
-<aef:existingObjects />
 
 <script type="text/javascript">
 $(document).ready(function() {
@@ -128,6 +127,13 @@ $(document).ready( function() {
         $("#interval").find("[value='"+current+"']").attr("selected","selected");
     } 
 });
+function tsToggle(caller) {
+	var curRow = $(caller).closest("tr");
+	var nextRow = curRow.next();
+	nextRow.find("> td.innerTable:not(.noToggle)").toggle();
+	var nextRow = nextRow.next();
+	nextRow.find("> td.innerTable:not(.noToggle)").toggle();
+}
 </script>
 
 <h2>Timesheets</h2>
@@ -135,182 +141,116 @@ $(document).ready( function() {
 <table>
 	<tbody>
 		<tr>
-			<td>
-				<ww:form action="generateTree" method="post">
-					<div id="subItems" style="margin-top: 0pt;" id="subItems_timesheetGenerateReport">
-						<div id="subItemHeader">				
-							<table cellpadding="0" cellspacing="0">
-								<tbody><tr>
-									<td class="header">Generate a report</td>
-								</tr>
-								</tbody>
-							</table>
-						</div>
-						<table class="formTable">
-							<tbody>
-	
-								<tr>
-									<td>
-										Backlogs 
-									</td>
-<%-- 									
-									<td>
-										<c:choose>
-											<c:when test="${backlogSelectionType == 1}">
-												<input type="radio" name="backlogSelectionType" value="0" />Advanced
-												<input type="radio" name="backlogSelectionType" value="1" checked="checked"/>My effort from ongoing projects I've been assigned to.										
-											</c:when>
-											<c:otherwise>
-												<input type="radio" name="backlogSelectionType" value="0" checked="checked"/>Advanced
-												<input type="radio" name="backlogSelectionType" value="1" />My effort from ongoing projects I've been assigned to.
-											</c:otherwise>
-										</c:choose>
-									</td>
-								</tr>
-								<tr>
-									<td></td>
-									<td>
-										<c:choose>
-											<c:when test="${backlogSelectionType == 1}">
-												<div id="advancedBacklogs" style="display: none;">
-											</c:when>
-											<c:otherwise>
-												<div id="advancedBacklogs">
-											</c:otherwise>
-										</c:choose>
---%>
-							 		<td>
-							 			<input type="hidden" name="backlogSelectionType" value="0" />
-							 			<div id="advancedBacklogs">
-										<c:choose>
-											<c:when test="${onlyOngoing}">
-												<input id="showOnlyOngoingBacklogs" name="onlyOngoing" type="checkbox" value="true" checked="checked"/>Hide past projects and iterations.<br />								
-											</c:when>
-											<c:otherwise>
-												<input id="showOnlyOngoingBacklogs" name="onlyOngoing" type="checkbox" value="true" />Hide past projects and iterations.<br />						
-											</c:otherwise>
-										</c:choose>
-										<div id="selectBacklogs"></div>
-									</div>
-									</td>
-								</tr>
-								<!-- Interval selection -->			
-								<tr>
-									<td>Interval</td>
-					
-									<td colspan="2">
-										 
-										<select name="interval" id="interval" onchange="change_selected_interval(this.value);">
-												<option value="">Custom</option>
-												<option value="TODAY">Today</option>
-												<option value="YESTERDAY">Yesterday</option>
-												<option value="THIS_WEEK">This week</option>
-												<option value="LAST_WEEK">Last week</option>
-												<option value="THIS_MONTH">This month</option>
-												<option value="LAST_MONTH">Last month</option>
-												<option value="THIS_YEAR">This year</option>
-												<option value="LAST_YEAR">Last year</option>
-												<option value="NO_INTERVAL">(All past entries)</option>
-										</select>
-									</td>
-								</tr>
-								<!--  Start date -->
-								<tr class="dateSelectRow" style="display: none;">				
-									<td>Start date</td>
-									<td>
-	                       				<aef:datepicker value="${startDate}" id="effStartDate" name="startDate" format="%{getText('webwork.shortDateTime.format')}" />
-									</td>
-								</tr>
-								<!--  End date -->
-								<tr class="dateSelectRow" style="display: none;">				
-									<td>End date</td>
-									<td>
-	                       				<aef:datepicker value="${endDate}" id="effEndDate" name="endDate" format="%{getText('webwork.shortDateTime.format')}" />
-									</td>
-								</tr>
-								<!--  User selection -->				
-								<tr id="userSelect">
-									<td>Users</td>
-									<td>                        
-	                    				<div>
-							                <a id="userChooserLink-createStory" href="#" class="assigneeLink">
-							                    <img src="static/img/users.png"/>
-							                    <span id="userListContainer-createStory">
-							                    <c:set var="userCount" value="${fn:length(selUser)}" />
-							                    <c:set var="curUserNo" value="0" />
-                                                <c:if test="${userCount == 0}">
-                                                (all)
-                                                </c:if>
-							                    <c:forEach items="${selUser}" var="selu">
-                                                    <input type="hidden" name="userIds" value="${selu.id}" />
-                                                    <c:set var="curUserNo" value="${curUserNo + 1}" />
-                                                    ${selu.initials}<c:if test="${curUserNo !=  userCount}">,</c:if>									                
-                                                </c:forEach>
-							                    </span>
-							                </a>
-							            </div>
-	                    			</td>
-								</tr>
-								<!-- Submit button -->
-								<tr>
-									<td></td>
-									<td>
-										<ww:submit value="Calculate" />
-										<ww:submit value="Export to Excel" action="generateExcel" />
-									</td>
-								</tr>
-							</tbody>
-						</table>
-					</ww:form>
+			<td><ww:form action="generateTree" method="post">
+				<div id="subItems" style="margin-top: 0pt;"
+					id="subItems_timesheetGenerateReport">
+				<div id="subItemHeader">
+				<table cellpadding="0" cellspacing="0">
+					<tbody>
+						<tr>
+							<td class="header">Generate a report</td>
+						</tr>
+					</tbody>
+				</table>
 				</div>
+				<table class="formTable">
+					<tbody>
+
+						<tr>
+							<td>Backlogs</td>
+							<td><input type="hidden" name="backlogSelectionType"
+								value="0" />
+							<div id="advancedBacklogs"><c:choose>
+								<c:when test="${onlyOngoing}">
+									<input id="showOnlyOngoingBacklogs" name="onlyOngoing"
+										type="checkbox" value="true" checked="checked" />Hide past projects and iterations.<br />
+								</c:when>
+								<c:otherwise>
+									<input id="showOnlyOngoingBacklogs" name="onlyOngoing"
+										type="checkbox" value="true" />Hide past projects and iterations.<br />
+								</c:otherwise>
+							</c:choose>
+							<div id="selectBacklogs"></div>
+							</div>
+							</td>
+						</tr>
+						<!-- Interval selection -->
+						<tr>
+							<td>Interval</td>
+
+							<td colspan="2"><select name="interval" id="interval"
+								onchange="change_selected_interval(this.value);">
+								<option value="">Custom</option>
+								<option value="TODAY">Today</option>
+								<option value="YESTERDAY">Yesterday</option>
+								<option value="THIS_WEEK">This week</option>
+								<option value="LAST_WEEK">Last week</option>
+								<option value="THIS_MONTH">This month</option>
+								<option value="LAST_MONTH">Last month</option>
+								<option value="THIS_YEAR">This year</option>
+								<option value="LAST_YEAR">Last year</option>
+								<option value="NO_INTERVAL">(All past entries)</option>
+							</select></td>
+						</tr>
+						<!--  Start date -->
+						<tr class="dateSelectRow" style="display: none;">
+							<td>Start date</td>
+							<td><aef:datepicker value="${startDate}" id="effStartDate"
+								name="startDate"
+								format="%{getText('webwork.shortDateTime.format')}" /></td>
+						</tr>
+						<!--  End date -->
+						<tr class="dateSelectRow" style="display: none;">
+							<td>End date</td>
+							<td><aef:datepicker value="${endDate}" id="effEndDate"
+								name="endDate"
+								format="%{getText('webwork.shortDateTime.format')}" /></td>
+						</tr>
+						<!--  User selection -->
+						<tr id="userSelect">
+							<td>Users</td>
+							<td>
+							<div><a id="userChooserLink-createStory" href="#" class="assigneeLink"> <img src="static/img/users.png" /> 
+							 <span id="userListContainer-createStory"> 
+								<c:set var="userCount" value="${fn:length(selectedUsers)}" /> 
+								<c:set var="curUserNo" value="0" /> 
+								<c:if test="${userCount == 0}"> (all) </c:if> 
+								<c:forEach items="${selectedUsers}" var="selu">
+								  <input type="hidden" name="userIds" value="${selu.id}" />
+								  <c:set var="curUserNo" value="${curUserNo + 1}" />
+                  ${selu.initials}
+                  <c:if test="${curUserNo !=  userCount}">,</c:if>
+							   </c:forEach> 
+							  </span> 
+							 </a></div>
+							</td>
+						</tr>
+						<!-- Submit button -->
+						<tr>
+							<td></td>
+							<td><ww:submit value="Calculate" /> <ww:submit
+								value="Export to Excel" action="generateExcel" /></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			</ww:form>
 			</td>
 		</tr>
 	</tbody>
 </table>
-
-<%--show the tree--%>
+<div style="width: 800px;">
 <c:if test="${!empty products}">
-	<table style="margin-top:20px;">
-		<tbody>
-			<tr>
-				<td>
-					<div class="subItems" style="margin-top: 0pt;" id="subItems_timesheetEntries">
-						<div class="subItemHeader">
-							<table cellpadding="0" cellspacing="0">
-								<tbody>
-									<tr>
-										<td class="header">Entries</td>
-										<td class="icons_old" style="padding: 2px 3px 0 3px;">
-											<a onclick="javascript:$('.toggleall').show();" style="cursor:pointer;"><img src="static/img/plus.png" alt="Expand" title="Expand" height="18" width="18"></a>
-											<a onclick="javascript:$('.toggleall').hide();" style="cursor:pointer;"><img src="static/img/minus.png" alt="Collapse" title="Collapse" height="18" width="18"></a>
-										</td>
-									</tr>
-								</tbody>
-							</table>
-						</div>
-						<div class="subItemContent">
-						<div id="listProjectHours" style="">
-						<table class="reportTable" cellpadding="0" cellspacing="0">
-							<tbody>
-								<tr>
-									<th>Name / Comment</th>
-									<th style="width:115px;">&nbsp;</th>
-									<th style="width:125px;">&nbsp;</th>
-									<th style="width:120px;">Effort spent</th>
-								</tr>
-								<aef:timesheetItem nodes="${products}" />
-								<tr class="total">
-									<th class="total">Query total</th>
-									<th class="total">&nbsp;</th>
-									<th class="total">&nbsp;</th>
-									<th class="total"><c:out value="${totalSpentTime}"/></th>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-				</td>
-			</tr>
-		</tbody>
-	</table>
+	<aef:timesheetBacklogNode nodes="${products}" />
+	<table class="reportTable" style="width: 100%;">
+	 <tr>
+	   <td>Query total</td>
+	   <td class="effortCol">${aef:minutesToString(effortSum)}</td>
+	  </tr>
+	 </table>
 </c:if>
+<c:if test="${empty products && !empty selectedBacklogs}">
+<p>No matching effort entries were found.</p>
+</c:if>
+</div>
 <%@ include file="./inc/_footer.jsp"%>

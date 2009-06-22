@@ -91,7 +91,7 @@ public class ProjectBusinessImpl extends GenericBusinessImpl<Project> implements
         }
         // Set the new assignments
         for (Assignment newAssignment : assignments) {
-            newAssignment.setProject(project);
+            newAssignment.setBacklog(project);
             project.getAssignments().add(newAssignment);
             assignmentDAO.store(newAssignment);
         }

@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogHourEntry;
@@ -13,6 +14,7 @@ import fi.hut.soberit.agilefant.model.HourEntry;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.TimesheetLoggable;
 import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.util.DailySpentEffort;
 
 /**
  * Business interface for handling functionality related to Hour Entries
@@ -59,6 +61,20 @@ public interface HourEntryBusiness extends GenericBusiness<HourEntry> {
     long calculateSumByUserAndTimeInterval(User user,
             DateTime startDate, DateTime endDate);
     
+    long calculateSumByUserAndTimeInterval(int userId,
+            DateTime startDate, DateTime endDate);
+    
     long calculateSum(Collection<? extends HourEntry> hourEntries);
+    
+    public List<HourEntry> getEntriesByUserAndTimeInterval(int userId, DateTime startDate,
+            DateTime endDate);
+    
+    public List<HourEntry> getEntriesByUserAndDay(LocalDate day, int userId);
+    
+    public List<DailySpentEffort> getDailySpentEffortByWeek(LocalDate week, int userId);
+    
+    public List<DailySpentEffort> getDailySpentEffortByInterval(DateTime start, DateTime end, int userId);
+    
+    public long calculateWeekSum(LocalDate week, int userId);
 
 }

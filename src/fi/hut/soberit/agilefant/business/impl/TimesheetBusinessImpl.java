@@ -32,14 +32,29 @@ public class TimesheetBusinessImpl implements TimesheetBusiness {
     @Autowired
     private HourEntryDAO hourEntryDAO;
     
-    public List<BacklogTimesheetNode> getRootNodes(TimesheetData sheetData) {
+    public long getRootNodeSum(List<BacklogTimesheetNode> nodes) {
+        if(nodes == null) {
+            return 0L;
+        }
+        long sum = 0;
+        for(BacklogTimesheetNode node : nodes) {
+            sum += node.getEffortSum();
+        }
+        return sum;
+    }
+    public List<BacklogTimesheetNode> findRootNodes(TimesheetData sheetData) {
         List<BacklogTimesheetNode> rootNodes = new ArrayList<BacklogTimesheetNode>();
         for(BacklogTimesheetNode node : sheetData.getBacklogNodes()) {
             if(node.getBacklog() instanceof Product) {
+                node.calculateEffortSum();
                 rootNodes.add(node);
             }
         }
         return rootNodes;
+    }
+    public List<BacklogTimesheetNode> getRootNodes(Set<Integer> backlogIds, DateTime startDate, DateTime endDate, Set<Integer> userIds) {
+        TimesheetData sheetData = this.generateTimesheet(backlogIds, startDate, endDate, userIds);
+        return this.findRootNodes(sheetData);
     }
     public TimesheetData generateTimesheet(Set<Integer> backlogIds, DateTime startDate, DateTime endDate, Set<Integer> userIds) {
         TimesheetData sheetData = this.getUnlinkedTimesheetData(backlogIds, startDate, endDate, userIds);

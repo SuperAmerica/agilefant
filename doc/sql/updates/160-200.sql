@@ -55,11 +55,14 @@ delimiter ;
 SELECT 'Schema changes' AS status;
 
 /*** ASSIGNMENT ***/
-
+/*
 ALTER TABLE assignment
 	CHANGE backlog_id project_id INT(11) DEFAULT NULL;
+*/
 ALTER TABLE assignment
 	CHANGE deltaOverhead delta_personal_load BIGINT(20) DEFAULT NULL;
+ALTER TABLE assignment
+    ADD COLUMN availability SMALLINT DEFAULT 100 NOT NULL;
 
 /* convert from seconds to minutes */
 UPDATE assignment SET delta_personal_load = (delta_personal_load / 60);
@@ -367,7 +370,7 @@ ALTER TABLE team RENAME teams;
 
 SELECT 'Foreign keys for assignment' AS status;
 
-ALTER TABLE assignment ADD FOREIGN KEY (project_id) REFERENCES backlogs(id);
+ALTER TABLE assignment ADD FOREIGN KEY (backlog_id) REFERENCES backlogs(id);
 ALTER TABLE assignment ADD FOREIGN KEY (user_id) REFERENCES users(id);
 
 SELECT 'Foreign keys for backlogs' AS status;

@@ -36,7 +36,7 @@ public class BacklogTimesheetNode extends TimesheetNode {
         return this.backlog.getName();
     }
     @Override
-    public boolean hasChildren() {
+    public boolean getHasChildren() {
         return (this.childBacklogs.size() > 0 || this.childStories.size() > 0 || this.childTasks.size() > 0);
     }
     @Override

@@ -859,29 +859,31 @@
 			<result name="success">/WEB-INF/jsp/administration/settings.jsp</result>
 		</action>
 		<!-- timesheet actions -->
-		  <!-- 
+		  
 		<action name="timesheet" method="initialize" class="timesheetAction">
 			<result>/WEB-INF/jsp/timesheet.jsp</result>
 		</action>
 		
 		<action name="generateTree" method="generateTree" class="timesheetAction">
-			<interceptor-ref name="authenticationStack"/>
+			<!--
+						<interceptor-ref name="authenticationStack"/>
 		    <interceptor-ref name="execAndWait">
-			    <param name="delay">1000</param>
+			    <param name="delay">1500</param>
 		        <param name="delaySleepInterval">50</param>
         	</interceptor-ref>
     		<result name="wait">/WEB-INF/jsp/wait.jsp</result>
+			-->
 			<result name="success">/WEB-INF/jsp/timesheet.jsp</result>
 		</action>
 		
-		<action name="generateExcel" method="generateExcel" class="timesheetAction">
+		<action name="generateExcel" method="generateExeclReport" class="timesheetAction">
 			<result name="success" type="stream">
 				<param name="contentType">application/xls</param>
 				<param name="inputName">sheetData</param>
 				<param name="contentDisposition">filename="agilefantTimesheet.xls"</param>
 			</result>
 		</action>		
-		 -->
+		
 		<!-- Hour Entry actions -->
 		<action name="ajaxCreateHourEntry" class="hourEntryAction" method="create">
             <result>/WEB-INF/jsp/forms/createHourEntry.jsp</result>

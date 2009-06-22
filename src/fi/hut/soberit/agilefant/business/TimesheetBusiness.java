@@ -9,6 +9,8 @@ import fi.hut.soberit.agilefant.util.BacklogTimesheetNode;
 import fi.hut.soberit.agilefant.util.TimesheetData;
 
 public interface TimesheetBusiness {
-    public List<BacklogTimesheetNode> getRootNodes(TimesheetData sheetData);
+    public List<BacklogTimesheetNode> getRootNodes(Set<Integer> backlogIds, DateTime startDate, DateTime endDate, Set<Integer> userIds);
     public TimesheetData generateTimesheet(Set<Integer> backlogIds, DateTime startDate, DateTime endDate, Set<Integer> userIds);
+    public List<BacklogTimesheetNode> findRootNodes(TimesheetData sheetData);
+    public long getRootNodeSum(List<BacklogTimesheetNode> nodes);
 }

@@ -59,12 +59,6 @@ public class HourEntryDAOTest extends AbstractHibernateTests {
         List<BacklogHourEntry> actualResult = hourEntryDAO.getBacklogHourEntriesByFilter(backlogs, null, null, null);
         assertNotNull(actualResult);
         assertEquals(6, actualResult.size());
-        assertEquals(7, actualResult.get(0).getId());
-        assertEquals(8, actualResult.get(1).getId());
-        assertEquals(9, actualResult.get(2).getId());
-        assertEquals(10, actualResult.get(3).getId());
-        assertEquals(11, actualResult.get(4).getId());
-        assertEquals(12, actualResult.get(5).getId()); 
     }
     @Test
     public void testGetBacklogHourEntriesByFilter_WithDataFilter() {

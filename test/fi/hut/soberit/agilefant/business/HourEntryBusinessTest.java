@@ -6,10 +6,12 @@ import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.joda.time.DateTime;
@@ -32,6 +34,7 @@ import fi.hut.soberit.agilefant.model.StoryHourEntry;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.TaskHourEntry;
 import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.util.DailySpentEffort;
 
 
 
@@ -140,4 +143,150 @@ public class HourEntryBusinessTest {
     public void testCalculateSumOfBacklogsHourEntries_nullBacklog() {
         hourEntryBusiness.calculateSumOfIterationsHourEntries(null);
     }
+    
+    @Test
+    public void testCalculateSumByUserAndTimeInterval() {
+        DateTime start = new DateTime();
+        DateTime end = start.plusDays(7);
+        User user = new User();
+        user.setId(11);
+        
+        expect(heDAO.calculateSumByUserAndTimeInterval(user, start, end)).andReturn(400L);
+        expect(heDAO.calculateSumByUserAndTimeInterval(11, start, end)).andReturn(400L);
+        
+        replay(heDAO);
+        assertEquals(400L, this.hourEntryBusiness.calculateSumByUserAndTimeInterval(11, start, end));
+        assertEquals(400L, this.hourEntryBusiness.calculateSumByUserAndTimeInterval(user, start, end));
+        verify(heDAO);
+    }
+    
+    @Test
+    public void testGetEntriesByUserAndTimeInterval() {
+        DateTime start = new DateTime();
+        DateTime end = start.plusDays(7);
+        List<HourEntry> noEntries = Collections.emptyList();
+        expect(heDAO.getHourEntriesByFilter(start, end, 11)).andReturn(noEntries);
+        replay(heDAO);
+        assertEquals(noEntries, hourEntryBusiness.getEntriesByUserAndTimeInterval(11, start, end));
+        verify(heDAO);
+    }
+    
+    private static HourEntry createEntry(int year, int month, int day, long effort) {
+        HourEntry entry = new HourEntry();
+        DateTime date = new DateTime(year, month, day, 0,0,0,0);
+        entry.setMinutesSpent(effort);
+        entry.setDate(date);
+        return entry;
+    }
+    @Test
+    public void testGetDailySpentEffortByWeek() {
+        DateTime start = new DateTime(2009,6,1,0,0,1,0);
+        DateTime end = new DateTime(2009,6,7,23,59,59,0);
+        List<HourEntry> entries = Collections.emptyList();
+        
+        expect(heDAO.getHourEntriesByFilter(start, end, 0)).andReturn(entries);
+
+        replay(heDAO);
+        assertEquals(7, hourEntryBusiness.getDailySpentEffortByWeek(start.toLocalDate(), 0).size());
+        verify(heDAO);
+    }
+    
+    @Test
+    public void calculateWeekSum() {
+        DateTime start = new DateTime(2009,6,1,0,0,1,0);
+        DateTime end = new DateTime(2009,6,7,23,59,59,0);
+        
+        expect(heDAO.calculateSumByUserAndTimeInterval(0, start, end)).andReturn(0L);
+
+        replay(heDAO);
+        assertEquals(0L, hourEntryBusiness.calculateWeekSum(start.plusDays(3).toLocalDate(), 0));
+        verify(heDAO);
+    }
+    
+    @Test
+    public void testGetDailySpentEffortByInterval_noData() {
+        DateTime start = new DateTime(2009,6,1,0,0,0,0);
+        DateTime end = new DateTime(2009,6,7,0,0,0,0);
+        
+        List<HourEntry> entries = new ArrayList<HourEntry>();
+
+        expect(heDAO.getHourEntriesByFilter(start, end, 0)).andReturn(entries);
+
+        replay(heDAO);
+        List<DailySpentEffort> res = hourEntryBusiness.getDailySpentEffortByInterval(start, end, 0);
+        assertEquals(7, res.size());
+        assertEquals(null, res.get(0).getSpentEffort());
+        assertEquals(null, res.get(1).getSpentEffort());
+        assertEquals(null, res.get(2).getSpentEffort());
+        assertEquals(null, res.get(3).getSpentEffort());
+        assertEquals(null, res.get(4).getSpentEffort());
+        assertEquals(null, res.get(5).getSpentEffort());
+        assertEquals(null, res.get(6).getSpentEffort());
+        
+        verify(heDAO);
+    }
+    
+    @Test
+    public void testGetDailySpentEffortByInterval_yearChanges() {
+        List<HourEntry> entries = new ArrayList<HourEntry>();
+        entries.add(createEntry(2008, 1, 28, 100));
+        entries.add(createEntry(2008, 12, 28, 900));
+        entries.add(createEntry(2008, 12, 28, 1000));
+        entries.add(createEntry(2008, 12, 29, 4000));
+        entries.add(createEntry(2009, 1, 1, 50000));
+        entries.add(createEntry(2009, 1, 2, 6000000));
+        entries.add(createEntry(2009, 7, 28, 70000000));
+        DateTime start = new DateTime(2008,12,27,0,0,0,0);
+        DateTime end = new DateTime(2009,1,3,0,0,0,0);
+        
+        expect(heDAO.getHourEntriesByFilter(start, end, 0)).andReturn(entries);
+        replay(heDAO);
+        List<DailySpentEffort> res = hourEntryBusiness.getDailySpentEffortByInterval(start, end, 0);
+        assertEquals(8, res.size());
+        assertEquals(null, res.get(0).getSpentEffort());
+        assertEquals(1900L, res.get(1).getSpentEffort());
+        assertEquals(4000L, res.get(2).getSpentEffort());
+        assertEquals(null, res.get(3).getSpentEffort());
+        assertEquals(null, res.get(4).getSpentEffort());
+        assertEquals(50000L, res.get(5).getSpentEffort());
+        assertEquals(6000000L, res.get(6).getSpentEffort());
+        assertEquals(null, res.get(7).getSpentEffort());
+        verify(heDAO);
+    }
+    
+    @Test
+    public void testGetDailySpentEffortByInterval() {
+        List<HourEntry> entries = new ArrayList<HourEntry>();
+        entries.add(createEntry(2009, 1, 28, 100));
+        entries.add(createEntry(2009, 4, 28, 900));
+        entries.add(createEntry(2009, 4, 28, 1000));
+        entries.add(createEntry(2009, 4, 30, 4000));
+        entries.add(createEntry(2009, 4, 30, 50000));
+        entries.add(createEntry(2009, 5, 1, 6000000));
+        entries.add(createEntry(2009, 5, 28, 70000000));
+        DateTime start = new DateTime(2009,4,28,0,0,0,0);
+        DateTime end = new DateTime(2009,5,1,23,59,0,0);
+
+        
+        expect(heDAO.getHourEntriesByFilter(start, end, 0)).andReturn(entries);
+        replay(heDAO);
+        List<DailySpentEffort> res = hourEntryBusiness.getDailySpentEffortByInterval(start, end, 0);
+        assertEquals(4, res.size());
+        assertEquals(1900L, res.get(0).getSpentEffort());
+        assertEquals(null, res.get(1).getSpentEffort());
+        assertEquals(54000L, res.get(2).getSpentEffort());
+        assertEquals(6000000L, res.get(3).getSpentEffort());
+        verify(heDAO);
+    }
+    
+    @Test
+    public void testGetEntriesByUserAndDay() {
+        DateTime start = new DateTime(2009,6,2,0,0,0,0);
+        DateTime end = new DateTime(2009,6,2,23,59,59,0);
+        expect(heDAO.getHourEntriesByFilter(start, end, 42)).andReturn(null);
+        replay(heDAO);
+        assertEquals(null, hourEntryBusiness.getEntriesByUserAndDay(start.toLocalDate(), 42));
+        verify(heDAO);
+    }
+
 }

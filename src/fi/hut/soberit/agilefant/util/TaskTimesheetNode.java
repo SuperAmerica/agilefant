@@ -24,7 +24,7 @@ public class TaskTimesheetNode extends TimesheetNode {
     }
 
     @Override
-    public boolean hasChildren() {
+    public boolean getHasChildren() {
         return false;
     }
     @Override

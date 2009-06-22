@@ -15,6 +15,9 @@ public interface HourEntryDAO extends GenericDAO<HourEntry> {
 
     long calculateSumByUserAndTimeInterval(User user, DateTime startDate,
             DateTime endDate);
+    
+    long calculateSumByUserAndTimeInterval(int userId, DateTime startDate,
+            DateTime endDate);
 
     long calculateSumByStory(int storyId);
 
@@ -49,4 +52,10 @@ public interface HourEntryDAO extends GenericDAO<HourEntry> {
      * calculates the sum of their spent time.
      */
     public long calculateIterationHourEntriesSum(int iterationId);
+    
+    /**
+     * Get all hour entries matching the given filter.
+     */
+    public List<HourEntry> getHourEntriesByFilter(DateTime startTime,
+            DateTime endTime, int userId);
 }

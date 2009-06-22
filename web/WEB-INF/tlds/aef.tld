@@ -375,9 +375,21 @@
 	    <path>/WEB-INF/tags/datepicker.tag</path>
  	 </tag-file>
 	<tag-file>
-		<name>timesheetItem</name>
-		<path>/WEB-INF/tags/timesheetItem.tag</path>
+		<name>timesheetBacklogNode</name>
+		<path>/WEB-INF/tags/timesheetBacklogNode.tag</path>
 	</tag-file>
+	 <tag-file>
+    <name>timesheetStoryNode</name>
+    <path>/WEB-INF/tags/timesheetStoryNode.tag</path>
+  </tag-file>
+    <tag-file>
+    <name>timesheetTaskNode</name>
+    <path>/WEB-INF/tags/timesheetTaskNode.tag</path>
+  </tag-file>
+  <tag-file>
+    <name>timesheetHourEntryList</name>
+    <path>/WEB-INF/tags/timesheetHourEntryList.tag</path>
+  </tag-file>
 	<tag-file>
 		<name>quickReference</name>
 		<path>/WEB-INF/tags/quickReference.tag</path>

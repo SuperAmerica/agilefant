@@ -166,7 +166,6 @@ public class Story implements TimesheetLoggable, NamedObject {
 
     @OneToMany(mappedBy = "story",
             targetEntity = fi.hut.soberit.agilefant.model.StoryHourEntry.class )
-    @Cascade(value = CascadeType.DELETE_ORPHAN)
     public Collection<StoryHourEntry> getHourEntries() {
         return hourEntries;
     }

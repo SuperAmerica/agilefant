@@ -860,10 +860,12 @@ TaskModel.prototype.getEffortLeft = function() {
 };
 TaskModel.prototype.setEffortLeft = function(effortLeft) {
   var estimate = agilefantParsers.parseExactEstimate(effortLeft);
-  if (estimate !== null) {
+  if (estimate == null) {
+	this.effortLeft = 0;
+  } else {
     this.effortLeft = estimate;
-    this.save();
   }
+  this.save();
 };
 TaskModel.prototype.getEffortSpent = function() {
   return this.effortSpent;

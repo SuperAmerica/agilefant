@@ -16,9 +16,11 @@ import fi.hut.soberit.agilefant.business.StoryBusiness;
 import fi.hut.soberit.agilefant.business.TaskBusiness;
 import fi.hut.soberit.agilefant.business.UserBusiness;
 import fi.hut.soberit.agilefant.db.TaskDAO;
+import fi.hut.soberit.agilefant.model.ExactEstimate;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
+import fi.hut.soberit.agilefant.model.TaskState;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.security.SecurityUtil;
 import fi.hut.soberit.agilefant.util.ResponsibleContainer;
@@ -95,6 +97,10 @@ public class TaskBusinessImpl extends GenericBusinessImpl<Task> implements
         
         if (task.getOriginalEstimate() == null && task.getEffortLeft() != null) {
             task.setOriginalEstimate(task.getEffortLeft());
+        }
+        
+        if (task.getState() == TaskState.DONE) {
+            task.setEffortLeft(new ExactEstimate(0));
         }
         
         this.populateUserData(task, userIds);

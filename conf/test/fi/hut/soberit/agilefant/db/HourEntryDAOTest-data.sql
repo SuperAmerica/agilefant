@@ -62,12 +62,10 @@ INSERT INTO hourentries (id, dtype, minutesspent, user_id, backlog_id, `date`) V
 INSERT INTO hourentries (id, dtype, minutesspent, user_id, story_id) VALUES (13, 'StoryHourEntry', 20, 1, 1);
 INSERT INTO hourentries (id, dtype, minutesspent, user_id, story_id) VALUES (14, 'StoryHourEntry', 20, 1, 1);
 
-INSERT INTO hourentries (id, dtype, minutesspent, user_id, story_id) VALUES (15, 'StoryHourEntry', 20, 1, 4);
-INSERT INTO hourentries (id, dtype, minutesspent, user_id, story_id) VALUES (16, 'StoryHourEntry', 20, 1, 4);
 
-INSERT INTO hourentries (id, dtype, minutesspent, user_id, story_id) VALUES (17, 'StoryHourEntry', 20, 1, 6);
+INSERT INTO hourentries (id, dtype, minutesspent, user_id, story_id) VALUES (17, 'StoryHourEntry', 40, 1, 6);
 INSERT INTO hourentries (id, dtype, minutesspent, user_id, story_id) VALUES (18, 'StoryHourEntry', 20, 1, 6);
-INSERT INTO hourentries (id, dtype, minutesspent, user_id, story_id) VALUES (19, 'StoryHourEntry', 20, 1, 6);
+INSERT INTO hourentries (id, dtype, minutesspent, user_id, story_id) VALUES (19, 'StoryHourEntry', 30, 1, 6);
 
 
 

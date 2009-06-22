@@ -40,15 +40,23 @@ public class HourEntryDAOHibernate extends GenericDAOHibernate<HourEntry>
         return result;
     }
 
-    public long calculateSumByStory(int storyId) {
-        Criteria crit = getCurrentSession().createCriteria(TaskHourEntry.class);
+    private long calculateHourSum(boolean task, int storyId) {
+        Class<?> type = task ? TaskHourEntry.class : StoryHourEntry.class;
+        Criteria crit = getCurrentSession().createCriteria(type);
         crit.setProjection(Projections.sum("minutesSpent"));
-        crit.createCriteria("task").createCriteria("story").add(
+        if(task)
+            crit = crit.createCriteria("task");
+        crit.createCriteria("story").add(
                 Restrictions.idEq(storyId));
         Long result = (Long) crit.uniqueResult();
+        
         if (result == null)
             return 0;
         return result;
+    }
+    
+    public long calculateSumByStory(int storyId) {
+        return calculateHourSum(true, storyId) + calculateHourSum(false, storyId);
     }
 
     public long calculateSumFromTasksWithoutStory(int iterationId) {

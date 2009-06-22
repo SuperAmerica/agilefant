@@ -26,9 +26,15 @@ public class HourEntryDAOTest extends AbstractHibernateTests {
     @Test
     public void testCalculateSumByStory() {
         executeClassSql();
-        assertEquals(140, hourEntryDAO.calculateSumByStory(1));
+        assertEquals(80, hourEntryDAO.calculateSumByStory(4));
     }
 
+    @Test
+    public void testCalculateSumByStory_storiesWithHourEntries() {
+        executeClassSql();
+        assertEquals(170, hourEntryDAO.calculateSumByStory(6));
+    }
+    
     @Test
     public void testCalculateSumFromTasksWithoutStory() {
         executeClassSql();
@@ -122,7 +128,7 @@ public class HourEntryDAOTest extends AbstractHibernateTests {
         Set<Integer>  backlogs = new HashSet<Integer>(Arrays.asList(1));
         List<StoryHourEntry> actualEntries = hourEntryDAO.getStoryHourEntriesByFilter(backlogs, null, null, null);
         assertNotNull(actualEntries);
-        assertEquals(7, actualEntries.size());
+        assertEquals(5, actualEntries.size());
     }
     
     @Test
@@ -211,12 +217,12 @@ public class HourEntryDAOTest extends AbstractHibernateTests {
     @Test
     public void testGetHourEntriesByFilter_noUser() {
         executeClassSql();
-        assertEquals(23, hourEntryDAO.getHourEntriesByFilter(null, null, 0).size());
+        assertEquals(21, hourEntryDAO.getHourEntriesByFilter(null, null, 0).size());
     }
     
     @Test
     public void testGetHourEntriesByFilter_noDates() {
         executeClassSql();
-        assertEquals(23, hourEntryDAO.getHourEntriesByFilter(null, null, 1).size());
+        assertEquals(21, hourEntryDAO.getHourEntriesByFilter(null, null, 1).size());
     }
 }

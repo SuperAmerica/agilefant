@@ -22,6 +22,8 @@ import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Iteration;
+import fi.hut.soberit.agilefant.model.Product;
+import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.TaskState;
@@ -206,6 +208,8 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
                 iterationHistoryEntryBusiness.updateIterationHistory(backlog
                         .getId());
             }
+        } else if (persisted.getBacklog() instanceof Project) {
+            updateStoryPriority(persisted, priority);
         }
         return persisted;
     }
@@ -292,16 +296,16 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
             return;
         }
         if (story.getBacklog() == null
-                || !(story.getBacklog() instanceof Iteration)) {
+                || (story.getBacklog() instanceof Product)) {
             throw new IllegalArgumentException("backlog.notFound");
         }
-        Iteration iter = (Iteration) story.getBacklog();
-        if (iter.getStories().size() == 0) {
+        Backlog backlog = story.getBacklog();
+        if (backlog.getStories().size() == 0) {
             throw new IllegalArgumentException("story.notFound");
         }
         int oldPriority = story.getPriority();
 
-        for (Story item : iter.getStories()) {
+        for (Story item : backlog.getStories()) {
             // drop new goal to its place
             if (oldPriority == -1) {
                 if (item.getPriority() >= insertAtPriority) {

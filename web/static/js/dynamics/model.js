@@ -329,6 +329,8 @@ ProjectModel = function(projectData, projectId) {
   });
   this.stories = storyPointer;
 };
+ProjectModel.prototype = new BacklogModel();
+
 ProjectModel.prototype.reloadStoryData = function() {
   var me = this;
   jQuery.ajax({
@@ -349,8 +351,6 @@ ProjectModel.prototype.reloadStoryData = function() {
   data: {projectId: this.projectId, excludeStorys: false}
   });
 };
-ProjectModel.prototype = new BacklogModel();
-
 ProjectModel.prototype.getStories = function() {
   return this.stories;
 };
@@ -680,8 +680,8 @@ TaskModel.prototype.setData = function(data) {
   this.creator = data.creator;
   var bubbleEvents = [];
   if (this.persistedData) {
-    if (this.persistedData.effortLeft != this.effortLeft
-        || this.persistedData.originalEstimate != this.originalEstimate
+    if (!agilefantUtils.areExactEstimatesEqual(this.persistedData.effortLeft, this.effortLeft)
+        || !agilefantUtils.areExactEstimatesEqual(this.persistedData.originalEstimate, this.originalEstimate)
         || this.persistedData.state != data.state
         || this.effortSpent != this.persistedData.effortSpent) {
       bubbleEvents.push("metricsUpdated");

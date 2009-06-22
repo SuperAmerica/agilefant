@@ -46,20 +46,29 @@ $(document).ready(function() {
 		ok(!agilefantParsers.isHourEntryString("1h daadaa"), "1h daadaa");
 		ok(!agilefantParsers.isHourEntryString("1h d 10min"), "1h d 10min");
 	});
-	/*
-	test("aftime to millis", function() {
-		equals(agilefantUtils.aftimeToMillis("1h"), 3600,"1h");
-		equals(agilefantUtils.aftimeToMillis("1,5h"), 5400 ,"1,5h");
-		equals(agilefantUtils.aftimeToMillis("1.5h"), 5400 ,"1.5h");
-		equals(agilefantUtils.aftimeToMillis("1,5"),  5400, "1,5");
-		equals(agilefantUtils.aftimeToMillis("1.5"),  5400,"1.5");
-		equals(agilefantUtils.aftimeToMillis("1"), 3600 ,"1");
-		equals(agilefantUtils.aftimeToMillis("1h 10min"), 4200 ,"1h 10min");
-		equals(agilefantUtils.aftimeToMillis("10min"), 600 ,"10min");
-		equals(agilefantUtils.aftimeToMillis("  "),0,"empty");
-		equals(agilefantUtils.aftimeToMillis(""),0,"empty");
-		equals(agilefantUtils.aftimeToMillis("0"),0,"0");
-	});*/
+	
+	test("exact estimate comparison works", function() {
+	  a = {
+	    minorUnits: 200  
+	  };
+	  b = {
+	    minorUnits: 217
+	  };
+	  c = {};
+	  d = {
+	    minorUnits: 200
+	  };
+	  ok(agilefantUtils.areExactEstimatesEqual(a, a));
+	  ok(!agilefantUtils.areExactEstimatesEqual(a, b));
+	  ok(!agilefantUtils.areExactEstimatesEqual(b, a));
+	  ok(agilefantUtils.areExactEstimatesEqual(b, b));
+	  ok(!agilefantUtils.areExactEstimatesEqual(a, null));
+	  ok(!agilefantUtils.areExactEstimatesEqual(null, b));
+	  ok(agilefantUtils.areExactEstimatesEqual(null, null));
+	  ok(!agilefantUtils.areExactEstimatesEqual(a, c));
+    ok(!agilefantUtils.areExactEstimatesEqual(c, b));
+    ok(agilefantUtils.areExactEstimatesEqual(a, d));
+	});
 
 	module("Dynamic Table", {
 		setup: function() {
@@ -140,4 +149,5 @@ $(document).ready(function() {
                                               ]);
    same(widths, [39.6, 39.6, 18.6, 98.6], "Column widths calculated correctly");
 	});
+	
 });

@@ -149,6 +149,20 @@ var agilefantUtils = {
   priorityToString: function(priority) {
     return agilefantUtils.priorities[priority];
   },
+  areExactEstimatesEqual: function(a, b) {
+    // Check for null values
+    // Nulls are equal with other nulls.
+    if (!a) {
+      if (!b) {
+        return true;
+      }
+      return false;
+    }
+    if (!b) {
+      return false;
+    }
+    return a.minorUnits === b.minorUnits;
+  },
 	comparators: {
 	  nameComparator: function(a,b) {
 	    if(!a || !a.getName()) {

@@ -27,7 +27,7 @@ public class ProjectDAOHibernate extends GenericDAOHibernate<Project> implements
         Session sess =  sessionFactory.getCurrentSession();
         Criteria crit = sess.createCriteria(User.class);
         crit = crit.createCriteria("assignments");
-        crit = crit.createCriteria("project");
+        crit = crit.createCriteria("backlog");
         crit.add(Restrictions.idEq(project.getId()));
         return asCollection(crit);
     }
@@ -37,7 +37,7 @@ public class ProjectDAOHibernate extends GenericDAOHibernate<Project> implements
         Criteria criteria = session.createCriteria(User.class);
         criteria.add(Restrictions.idEq(user.getId()));
         criteria = criteria.createCriteria("assignments");
-        criteria = criteria.createCriteria("project");
+        criteria = criteria.createCriteria("backlog");
         return asCollection(criteria);
     }
 }

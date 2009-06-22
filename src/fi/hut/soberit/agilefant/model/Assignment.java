@@ -24,9 +24,10 @@ public class Assignment implements Serializable {
     private static final long serialVersionUID = 5391104304173714927L;
      
     private int id;
-    private Project project;
+    private Backlog backlog;
     private User user;
     private ExactEstimate personalLoad;
+    private short availability = 100;
 
     /**
      * Deviation from project's default overhead.
@@ -46,17 +47,17 @@ public class Assignment implements Serializable {
 
     public Assignment(User user, Project project) {
         this.user = user;
-        this.project = project;
+        this.backlog = project;
     }
 
     @ManyToOne
     @JSON(include = false)
-    public Project getProject() {
-        return project;
+    public Backlog getBacklog() {
+        return backlog;
     }
 
-    public void setProject(Project project) {
-        this.project = project;
+    public void setBacklog(Backlog backlog) {
+        this.backlog = backlog;
     }
 
     @ManyToOne
@@ -78,6 +79,14 @@ public class Assignment implements Serializable {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public short getAvailability() {
+        return availability;
+    }
+
+    public void setAvailability(short availability) {
+        this.availability = availability;
     }
 
 }

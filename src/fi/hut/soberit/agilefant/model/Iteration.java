@@ -81,4 +81,15 @@ public class Iteration extends Backlog {
         return tasks;
     }
     
+    @OneToMany(targetEntity = fi.hut.soberit.agilefant.model.Assignment.class,
+            mappedBy = "backlog")
+    @JSON(include = false)
+    public Collection<Assignment> getAssignments() {
+        return assignments;
+    }
+    
+    public void setAssignments(Collection<Assignment> assignments) {
+        this.assignments = assignments;
+    }
+    
 }

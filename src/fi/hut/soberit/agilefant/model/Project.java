@@ -114,7 +114,7 @@ public class Project extends Backlog {
     }
 
     @OneToMany(targetEntity = fi.hut.soberit.agilefant.model.Assignment.class,
-                mappedBy = "project")
+                mappedBy = "backlog")
     @JSON(include = false)
     public Collection<Assignment> getAssignments() {
         return assignments;

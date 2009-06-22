@@ -383,7 +383,7 @@ StoryModel.prototype.setData = function(data, includeMetrics) {
   this.id = data.id;
   this.userIds = null;
   this.storyPoints = data.storyPoints;
-  this.state = data.state;
+
   var event = [];
   if(includeMetrics && data.metrics) {
     this.metrics = data.metrics;
@@ -396,6 +396,14 @@ StoryModel.prototype.setData = function(data, includeMetrics) {
       event = ["metricsUpdated"]; 
     }
   }
+  
+  /* Iteration level metrics */
+  if(data.state === 'DONE' || this.state === 'DONE') {
+    event = ['metricsUpdated'];
+  }
+  
+  this.state = data.state;
+  
   if(data.tasks && data.tasks.length > 0) {
     this.setTasks(data.tasks);
   }
@@ -487,12 +495,12 @@ StoryModel.prototype.setStoryPoints = function(storyPoints) {
   this.save();
 };
 StoryModel.prototype.getState = function() {
-	  return this.state;
-	};
-	StoryModel.prototype.setState = function(state) {
-	  this.state = state;
-	  this.save();
-	};
+  return this.state;
+};
+StoryModel.prototype.setState = function(state) {
+  this.state = state;
+  this.save();
+};
 StoryModel.prototype.getDescription = function() {
   return this.description;
 };
@@ -567,6 +575,7 @@ StoryModel.prototype.remove = function() {
       me.iteration.removeStory(me);
       ModelFactory.removeStory(me.id);
       me.callDeleteListeners();
+      me.callEditListeners({bubbleEvent: ["metricsUpdated"]});
       commonView.showOk("Story deleted.");
     },
     cache: false,
@@ -631,9 +640,15 @@ StoryModel.prototype.save = function(synchronous, callback) {
   if(this.priority) { 
     data.priority = this.priority;
   }
+  
+  var updateIterationMetrics = false;
   if(this.id) { 
     data.storyId = this.id;
+  } else {
+	  /* We are creating a new one */
+	  updateIterationMetrics = true;
   }
+  
   if(!this.name) {
     data["story.name"] = "";
   }
@@ -653,6 +668,9 @@ StoryModel.prototype.save = function(synchronous, callback) {
     me.setData(data,false);
     if(asynch && typeof callback == "function") {
       callback.call(me);
+    }
+    if(updateIterationMetrics) {
+      me.callEditListeners({bubbleEvent: ["metricsUpdated"]});
     }
     commonView.showOk("Story saved succesfully.");
   },

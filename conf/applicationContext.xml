@@ -50,21 +50,27 @@
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 
-	<bean name="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
-		destroy-method="close">
-		<property name="driverClassName">
-			<value>${hibernate.connection.driver_class}</value>
-		</property>
-		<property name="username">
-			<value>${hibernate.connection.username}</value>
-		</property>
-		<property name="password">
-			<value>${hibernate.connection.password}</value>
-		</property>
-		<property name="url">
-			<value>${hibernate.connection.url}</value>
-		</property>
-	</bean>
+  <bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+    <property name="jndiName" value="${agilefant.jndi.name}" />
+    <property name="resourceRef" value="true" />
+    <property name="defaultObject">
+			<bean name="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+			destroy-method="close">
+				<property name="driverClassName">
+					<value>${hibernate.connection.driver_class}</value>
+				</property>
+				<property name="username">
+					<value>${hibernate.connection.username}</value>
+				</property>
+				<property name="password">
+					<value>${hibernate.connection.password}</value>
+				</property>
+				<property name="url">
+					<value>${hibernate.connection.url}</value>
+				</property>
+			</bean>
+    </property>
+  </bean>
 
 	<bean name="sessionFactory"
 		class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">

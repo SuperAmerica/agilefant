@@ -11,10 +11,6 @@ import org.springframework.stereotype.Component;
 import com.opensymphony.xwork.ActionContext;
 import com.opensymphony.xwork.ActionSupport;
 
-import fi.hut.soberit.agilefant.business.BacklogBusiness;
-import fi.hut.soberit.agilefant.business.HourEntryBusiness;
-import fi.hut.soberit.agilefant.business.ProjectBusiness;
-import fi.hut.soberit.agilefant.business.SettingBusiness;
 import fi.hut.soberit.agilefant.business.UserBusiness;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Project;
@@ -43,20 +39,8 @@ public class DailyWorkAction extends ActionSupport {
     private User user;
 
     @Autowired
-    private BacklogBusiness backlogBusiness;
-    
-    @Autowired
-    private ProjectBusiness projectBusiness;
-
-    @Autowired
     private UserBusiness userBusiness;
     
-    @Autowired
-    private HourEntryBusiness hourEntryBusiness;
-    
-    @Autowired
-    private SettingBusiness settingBusiness;
-
     private int userId;
 
 //    private List<BacklogItem> backlogItemsForUserInProgress;
@@ -193,10 +177,6 @@ public class DailyWorkAction extends ActionSupport {
         this.user = user;
     }
 
-    public UserBusiness getUserBusiness() {
-        return userBusiness;
-    }
-
     public void setUserBusiness(UserBusiness userBusiness) {
         this.userBusiness = userBusiness; 
     }
@@ -218,14 +198,6 @@ public class DailyWorkAction extends ActionSupport {
 //        this.effortSums = effortSums;
 //    }
 
-    public BacklogBusiness getBacklogBusiness() {
-        return backlogBusiness;
-    }
-
-    public void setBacklogBusiness(BacklogBusiness backlogBusiness) {
-        this.backlogBusiness = backlogBusiness;
-    }
-
 //    public Map<Backlog, EffortSumData> getOriginalEstimates() {
 //        return originalEstimates;
 //    }
@@ -245,14 +217,6 @@ public class DailyWorkAction extends ActionSupport {
 
     public void setWeekNumbers(List<Integer> weekNumbers) {
         this.weekNumbers = weekNumbers;
-    }
-
-    public ProjectBusiness getProjectBusiness() {
-        return projectBusiness;
-    }
-
-    public void setProjectBusiness(ProjectBusiness projectBusiness) {
-        this.projectBusiness = projectBusiness;
     }
 
     public String[] getOverallTotals() {
@@ -295,21 +259,4 @@ public class DailyWorkAction extends ActionSupport {
         this.enabledUsers = enabledUsers;
     }
 
-    public HourEntryBusiness getHourEntryBusiness() {
-        return hourEntryBusiness;
-    }
-
-    public void setHourEntryBusiness(HourEntryBusiness hourEntryBusiness) {
-        this.hourEntryBusiness = hourEntryBusiness;
-    }
-
-    public SettingBusiness getSettingBusiness() {
-        return settingBusiness;
-    }
-
-    public void setSettingBusiness(SettingBusiness settingBusiness) {
-        this.settingBusiness = settingBusiness;
-    }
-    
-    
 }

@@ -53,7 +53,7 @@
 -->
 		<!-- Context view -->
 		<action name="contextView"
-			class="fi.hut.soberit.agilefant.web.ContextViewAction">
+			class="contextViewAction">
 			<result type="redirect-action">
 				<param name="actionName">selectBacklog</param>
 			</result>
@@ -830,7 +830,7 @@
 			<result>/WEB-INF/jsp/newPassword.jsp</result>
 		</action>
 		<action name="generateNewPassword"
-			class="fi.hut.soberit.agilefant.web.PasswordAction"
+			class="passwordAction"
 			method="generate">
 			<interceptor-ref name="noAuthenticationStack" />
 			<result name="success">success.jsp</result>

@@ -18,6 +18,7 @@ import java.util.Set;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.security.providers.UsernamePasswordAuthenticationToken;
 import org.springframework.security.providers.rememberme.RememberMeAuthenticationToken;
 import org.springframework.stereotype.Component;
@@ -43,6 +44,7 @@ import flexjson.JSONSerializer;
  *
  */
 @Component("timesheetAction")
+@Scope("prototype")
 public class TimesheetAction extends ActionSupport implements PrincipalAware {
 
     private static final long serialVersionUID = -8988740967426943267L;

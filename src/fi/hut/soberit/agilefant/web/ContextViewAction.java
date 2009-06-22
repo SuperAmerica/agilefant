@@ -2,6 +2,9 @@ package fi.hut.soberit.agilefant.web;
 
 import java.util.Map;
 
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
 import com.opensymphony.webwork.interceptor.SessionAware;
 import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
@@ -26,6 +29,8 @@ import com.opensymphony.xwork.ActionSupport;
  * this class.
  */
 
+@Component("contextViewAction")
+@Scope("prototype")
 public class ContextViewAction extends ActionSupport implements SessionAware {
 
     private static final long serialVersionUID = 1992243588151483793L;

@@ -28,8 +28,10 @@ public class TeamAction extends ActionSupport implements CRUDAction {
 
     private Team team;
 
+    @Autowired
     private TeamBusiness teamBusiness;
 
+    @Autowired
     private UserBusiness userBusiness;
 
     private Map<Integer, String> userIds = new HashMap<Integer, String>();
@@ -198,7 +200,6 @@ public class TeamAction extends ActionSupport implements CRUDAction {
         this.teamList = teamList;
     }
 
-    @Autowired
     public void setTeamBusiness(TeamBusiness teamBusiness) {
         this.teamBusiness = teamBusiness;
     }
@@ -211,7 +212,6 @@ public class TeamAction extends ActionSupport implements CRUDAction {
         this.jsonData = jsonData;
     }
 
-    @Autowired
     public void setUserBusiness(UserBusiness userBusiness) {
         this.userBusiness = userBusiness;
     }

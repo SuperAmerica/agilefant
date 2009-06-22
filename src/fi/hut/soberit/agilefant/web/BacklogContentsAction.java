@@ -59,8 +59,6 @@ public class BacklogContentsAction extends ActionSupport {
     @Autowired
     protected BacklogBusiness backlogBusiness;
     
-//    protected BacklogItemBusiness backlogItemBusiness;
-//    
 //    protected BusinessThemeBusiness businessThemeBusiness;
     
     @Autowired
@@ -164,9 +162,6 @@ public class BacklogContentsAction extends ActionSupport {
 //        this.businessThemeBusiness = businessThemeBusiness;
 //    }
 //
-//    public void setBacklogItemBusiness(BacklogItemBusiness backlogItemBusiness) {
-//        this.backlogItemBusiness = backlogItemBusiness;
-//    }
 
     public void setHourEntryBusiness(HourEntryBusiness hourEntryBusiness) {
         this.hourEntryBusiness = hourEntryBusiness;

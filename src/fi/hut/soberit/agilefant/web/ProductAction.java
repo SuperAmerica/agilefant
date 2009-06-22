@@ -2,6 +2,7 @@ package fi.hut.soberit.agilefant.web;
 
 import java.util.ArrayList;
 import java.util.Collection;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -9,8 +10,6 @@ import org.springframework.stereotype.Component;
 import com.opensymphony.xwork.Action;
 
 import fi.hut.soberit.agilefant.business.ProductBusiness;
-import fi.hut.soberit.agilefant.business.ProjectBusiness;
-import fi.hut.soberit.agilefant.db.ProductDAO;
 import fi.hut.soberit.agilefant.model.Product;
 import flexjson.JSONSerializer;
 
@@ -20,14 +19,6 @@ public class ProductAction extends BacklogContentsAction implements CRUDAction {
 
     private static final long serialVersionUID = 1834399750050895118L;
 
-    @Autowired
-    private ProductDAO productDAO;
-
-//    private BacklogItemDAO backlogItemDAO;
-
-    @Autowired
-    private ProjectBusiness projectBusiness;
-    
     @Autowired
     private ProductBusiness productBusiness;
     
@@ -115,7 +106,7 @@ public class ProductAction extends BacklogContentsAction implements CRUDAction {
         Product storable = new Product();
 
         if (productId > 0) {
-            storable = productDAO.get(productId);
+            storable = productBusiness.retrieveIfExists(productId);
             if (storable == null) {
                 super.addActionError(super.getText("product.notFound"));
                 return CRUDAction.AJAX_ERROR;
@@ -185,14 +176,6 @@ public class ProductAction extends BacklogContentsAction implements CRUDAction {
         this.backlog = product;
     }
 
-    public void setProductDAO(ProductDAO productDAO) {
-        this.productDAO = productDAO;
-    }
-
-    protected ProductDAO getProductDAO() {
-        return this.productDAO;
-    }
-
     public int getProductId() {
         return productId;
     }
@@ -218,13 +201,6 @@ public class ProductAction extends BacklogContentsAction implements CRUDAction {
 //        return origEstSums;
 //    }
 
-    public ProjectBusiness getProjectBusiness() {
-        return projectBusiness;
-    }
-
-    public void setProjectBusiness(ProjectBusiness projectBusiness) {
-        this.projectBusiness = projectBusiness;
-    }
 //
 //    public void setEffLeftSums(Map<Project, EffortSumData> effLeftSums) {
 //        this.effLeftSums = effLeftSums;
@@ -254,7 +230,6 @@ public class ProductAction extends BacklogContentsAction implements CRUDAction {
         this.jsonData = jsonData;
     }
 
-    @Autowired
     public void setProductBusiness(ProductBusiness productBusiness) {
         this.productBusiness = productBusiness;
     }

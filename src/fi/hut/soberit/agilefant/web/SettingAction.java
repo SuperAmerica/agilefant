@@ -351,11 +351,6 @@ public class SettingAction extends ActionSupport {
         return value;
     }
 
-    public SettingBusiness getSettingBusiness() {
-        return settingBusiness;
-    }
-
-    @Autowired
     public void setSettingBusiness(SettingBusiness settingBusiness) {
         this.settingBusiness = settingBusiness;
     }

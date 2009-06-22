@@ -4,13 +4,13 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
 
 import fi.hut.soberit.agilefant.business.BacklogBusiness;
-import fi.hut.soberit.agilefant.business.ProjectBusiness;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Product;
@@ -18,6 +18,7 @@ import fi.hut.soberit.agilefant.model.Project;
 import flexjson.JSONSerializer;
 
 @Component("backlogAction")
+@Scope("prototype")
 public class BacklogAction extends ActionSupport {
     private static final long serialVersionUID = 8061288993804046816L;
 
@@ -44,13 +45,8 @@ public class BacklogAction extends ActionSupport {
     
     private Set<Integer> userIds = new HashSet<Integer>();
 
-//    private BacklogItemBusiness backlogItemBusiness;
-
     @Autowired
     private BacklogBusiness backlogBusiness;
-    
-    @Autowired
-    private ProjectBusiness projectBusiness;
     
 //    private Map<BusinessTheme, AFTime> themeEffort;
 //    
@@ -376,10 +372,6 @@ public class BacklogAction extends ActionSupport {
         this.itemAction = itemAction;
     }
 
-    public BacklogBusiness getBacklogBusiness() {
-        return backlogBusiness;
-    }
-
     public void setBacklogBusiness(BacklogBusiness backlogBusiness) {
         this.backlogBusiness = backlogBusiness;
     }
@@ -426,14 +418,6 @@ public class BacklogAction extends ActionSupport {
     
     public void setBacklogItemIds(int[] backlogItemIds) {
         this.backlogItemIds = backlogItemIds;
-    }
-
-    public ProjectBusiness getProjectBusiness() {
-        return projectBusiness;
-    }
-
-    public void setProjectBusiness(ProjectBusiness projectBusiness) {
-        this.projectBusiness = projectBusiness;
     }
 
     public Backlog getBacklog() {

@@ -344,10 +344,6 @@ public class StoryAction extends ActionSupport implements CRUDAction {
     }
     
 
-    public StoryBusiness getStoryBusiness() {
-        return storyBusiness;
-    }
-
     public String getStoryListContext() {
         return storyListContext;
     }
@@ -358,10 +354,6 @@ public class StoryAction extends ActionSupport implements CRUDAction {
     
     public void setStoryBusiness(StoryBusiness storyBusiness) {
         this.storyBusiness = storyBusiness;
-    }
-
-    public BacklogBusiness getBacklogBusiness() {
-        return backlogBusiness;
     }
 
     public void setBacklogBusiness(BacklogBusiness backlogBusiness) {

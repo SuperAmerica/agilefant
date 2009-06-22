@@ -15,13 +15,14 @@ import fi.hut.soberit.agilefant.security.SecurityUtil;
  * Interceptor, which ensures proper user-id is set during each request. Ie.
  * makes getLoggedUser - calls valid for webwork stuff.
  */
-@Component
+@Component("refreshUserInterceptor")
 public class RefreshUserInterceptor implements Interceptor {
 
     private static final long serialVersionUID = 1668784370092320107L;
 
     private Logger log = Logger.getLogger(RefreshUserInterceptor.class);
 
+    @Autowired
     private UserBusiness userBusiness;
 
     public void destroy() {
@@ -73,7 +74,6 @@ public class RefreshUserInterceptor implements Interceptor {
         return result;
     }
 
-    @Autowired
     public void setUserBusiness(UserBusiness userBusiness) {
         this.userBusiness = userBusiness;
     }

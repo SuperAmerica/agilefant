@@ -1,5 +1,9 @@
 package fi.hut.soberit.agilefant.web;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
 import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
 
@@ -14,11 +18,15 @@ import fi.hut.soberit.agilefant.model.User;
  * @author Teemu Ilmonen
  * 
  */
+@Component("passwordAction")
+@Scope("prototype")
 public class PasswordAction extends ActionSupport {
     private static final long serialVersionUID = -5808987058415748396L;
 
+    @Autowired
     private PasswordBusiness passwordBusiness;
 
+    @Autowired
     private UserBusiness userBusiness;
 
     private String name;
@@ -64,16 +72,8 @@ public class PasswordAction extends ActionSupport {
         this.email = email;
     }
 
-    public PasswordBusiness getPasswordBusiness() {
-        return passwordBusiness;
-    }
-
     public void setPasswordBusiness(PasswordBusiness passwordBusiness) {
         this.passwordBusiness = passwordBusiness;
-    }
-
-    public UserBusiness getUserBusiness() {
-        return userBusiness;
     }
 
     public void setUserBusiness(UserBusiness userBusiness) {

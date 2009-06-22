@@ -20,20 +20,20 @@ public class ChartAction extends ActionSupport {
 
     private static final long serialVersionUID = -2860355939047563512L;
     
-    IterationBurndownBusiness iterationBurndownBusiness;
+    @Autowired
+    private IterationBurndownBusiness iterationBurndownBusiness;
+    @Autowired
     private IterationBusiness iterationBusiness;
     
     private int backlogId;
     
     private byte[] result;
     
-    @Autowired
     public void setIterationBurndownBusiness(
             IterationBurndownBusiness iterationBurndownBusiness) {
         this.iterationBurndownBusiness = iterationBurndownBusiness;
     }
     
-    @Autowired
     public void setIterationBusiness(IterationBusiness iterationBusiness) {
         this.iterationBusiness = iterationBusiness;
     }

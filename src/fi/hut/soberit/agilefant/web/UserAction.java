@@ -14,7 +14,6 @@ import org.springframework.stereotype.Component;
 import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
 
-import fi.hut.soberit.agilefant.business.HourEntryBusiness;
 import fi.hut.soberit.agilefant.business.TeamBusiness;
 import fi.hut.soberit.agilefant.business.UserBusiness;
 import fi.hut.soberit.agilefant.db.hibernate.EmailValidator;
@@ -38,12 +37,12 @@ public class UserAction extends ActionSupport implements CRUDAction {
 
     private User user;
 
+    @Autowired
     private TeamBusiness teamBusiness;
 
+    @Autowired
     private UserBusiness userBusiness;
     
-    private HourEntryBusiness hourEntryBusiness;
-
     private String password1;
 
     private String password2;
@@ -351,11 +350,6 @@ public class UserAction extends ActionSupport implements CRUDAction {
         this.teamList = teamList;
     }
 
-    public UserBusiness getUserBusiness() {
-        return userBusiness;
-    }
-
-    @Autowired
     public void setUserBusiness(UserBusiness userBusiness) {
         this.userBusiness = userBusiness;
     }
@@ -376,15 +370,6 @@ public class UserAction extends ActionSupport implements CRUDAction {
         this.disabledUsers = disabledUsers;
     }
 
-    public HourEntryBusiness getHourEntryBusiness() {
-        return hourEntryBusiness;
-    }
-
-    @Autowired
-    public void setHourEntryBusiness(HourEntryBusiness hourEntryBusiness) {
-        this.hourEntryBusiness = hourEntryBusiness;
-    }
-
     public String getJsonData() {
         return jsonData;
     }
@@ -393,7 +378,6 @@ public class UserAction extends ActionSupport implements CRUDAction {
         this.jsonData = jsonData;
     }
     
-    @Autowired
     public void setTeamBusiness(TeamBusiness teamBusiness) {
         this.teamBusiness = teamBusiness;
     }

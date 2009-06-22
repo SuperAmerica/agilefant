@@ -383,21 +383,6 @@ public class ProjectAction extends BacklogContentsAction implements CRUDAction {
         this.projectTypes = projectTypes;
     }
 
-//    /**
-//     * @return the backlogItemDAO
-//     */
-//    public BacklogItemDAO getBacklogItemDAO() {
-//        return backlogItemDAO;
-//    }
-//
-//    /**
-//     * @param backlogItemDAO
-//     *                the backlogItemDAO to set
-//     */
-//    public void setBacklogItemDAO(BacklogItemDAO backlogItemDAO) {
-//        this.backlogItemDAO = backlogItemDAO;
-//    }
-
     public String getEndDate() {
         return endDate;
     }

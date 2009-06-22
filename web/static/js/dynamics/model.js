@@ -382,7 +382,6 @@ StoryModel.prototype.setData = function(data, includeMetrics) {
   this.priority = data.priority;
   this.id = data.id;
   this.userIds = null;
-  this.storyPoints = data.storyPoints;
 
   var event = [];
   if(includeMetrics && data.metrics) {
@@ -398,10 +397,12 @@ StoryModel.prototype.setData = function(data, includeMetrics) {
   }
   
   /* Iteration level metrics */
-  if(data.state === 'DONE' || this.state === 'DONE') {
+  if((data.state === 'DONE' || this.state === 'DONE') ||
+     data.storyPoints !== this.storyPoints) {
     event = ['metricsUpdated'];
   }
   
+  this.storyPoints = data.storyPoints;
   this.state = data.state;
   
   if(data.tasks && data.tasks.length > 0) {

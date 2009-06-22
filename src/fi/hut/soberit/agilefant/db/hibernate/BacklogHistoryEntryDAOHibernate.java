@@ -13,7 +13,6 @@ import org.springframework.stereotype.Repository;
 import fi.hut.soberit.agilefant.db.BacklogHistoryEntryDAO;
 import fi.hut.soberit.agilefant.model.BacklogHistoryEntry;
 import fi.hut.soberit.agilefant.model.Story;
-import fi.hut.soberit.agilefant.model.StoryHistoryEntry;
 import fi.hut.soberit.agilefant.model.StoryState;
 
 @Repository("backlogHistoryEntryDAO")
@@ -22,7 +21,7 @@ public class BacklogHistoryEntryDAOHibernate extends
         BacklogHistoryEntryDAO {
 
     public BacklogHistoryEntryDAOHibernate() {
-        super(StoryHistoryEntry.class);
+        super(BacklogHistoryEntry.class);
     }
 
     public BacklogHistoryEntry retrieveLatest(DateTime timestamp, int backlogId) {

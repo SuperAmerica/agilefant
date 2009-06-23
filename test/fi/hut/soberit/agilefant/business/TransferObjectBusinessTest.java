@@ -34,6 +34,8 @@ public class TransferObjectBusinessTest {
     private ProjectBusiness projectBusiness;
     private HourEntryBusiness hourEntryBusiness;
     private TaskHourEntryDAO taskHourEntryDAO;
+    private StoryBusiness storyBusiness;
+    
     Project project;
     Iteration iteration;
     Story story1;
@@ -52,6 +54,9 @@ public class TransferObjectBusinessTest {
         
         hourEntryBusiness = createMock(HourEntryBusiness.class);
         transferObjectBusiness.setHourEntryBusiness(hourEntryBusiness);
+        
+        storyBusiness = createMock(StoryBusiness.class);
+        transferObjectBusiness.setStoryBusiness(storyBusiness);
     }
     
     @Before
@@ -68,6 +73,7 @@ public class TransferObjectBusinessTest {
 
         story1 = new Story();
         story2 = new Story();
+        story1.setBacklog(iteration);
         task = new Task();
         story1.setId(1265);
         story2.setId(8472);
@@ -111,14 +117,34 @@ public class TransferObjectBusinessTest {
     @SuppressWarnings("unchecked")
     @Test
     public void testConstructTaskTO_delegate() {
+        task.setStory(null);
         task.setIteration(iteration);
-
+        
         expect(hourEntryBusiness.calculateSum((Collection<? extends HourEntry>) isNull()))
                 .andReturn(Long.valueOf(0)).anyTimes();
 
-        expect(
-                projectBusiness.getAssignedUsers((Project) task.getIteration()
+        expect(projectBusiness.getAssignedUsers((Project) task.getIteration()
                         .getParent())).andReturn(Arrays.asList(assignedUser));
+
+        replay(projectBusiness, hourEntryBusiness);
+
+        assertEquals(task.getId(), transferObjectBusiness.constructTaskTO(task)
+                .getId());
+
+        verify(projectBusiness, hourEntryBusiness);
+    }
+    
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testConstructTaskTO_delegateForStory() {
+        task.setStory(story1);
+        task.setIteration(null);
+        
+        expect(hourEntryBusiness.calculateSum((Collection<? extends HourEntry>) isNull()))
+                .andReturn(Long.valueOf(0)).anyTimes();
+
+        expect(storyBusiness.getStorysProjectResponsibles(story1))
+            .andReturn(Arrays.asList(assignedUser));
 
         replay(projectBusiness, hourEntryBusiness);
 

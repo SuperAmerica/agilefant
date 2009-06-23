@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import fi.hut.soberit.agilefant.business.BacklogHistoryEntryBusiness;
 import fi.hut.soberit.agilefant.business.IterationHistoryEntryBusiness;
+import fi.hut.soberit.agilefant.business.ProjectBusiness;
 import fi.hut.soberit.agilefant.business.StoryBusiness;
 import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.db.HourEntryDAO;
@@ -50,6 +51,8 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
     private IterationHistoryEntryBusiness iterationHistoryEntryBusiness;
     @Autowired
     private BacklogHistoryEntryBusiness backlogHistoryEntryBusiness;
+    @Autowired
+    private ProjectBusiness projectBusiness;
 
     @Autowired
     public void setStoryDAO(StoryDAO storyDAO) {
@@ -57,6 +60,7 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         this.storyDAO = storyDAO;
     }
 
+    @Transactional(readOnly = true)
     public List<Story> getStoriesByBacklog(Backlog backlog) {
         return storyDAO.getStoriesByBacklog(backlog);
     }
@@ -73,6 +77,7 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         return storyTasks;
     }
 
+    @Transactional(readOnly = true)
     public Collection<Task> getStoryContents(int storyId, int iterationId) {
         Story story = storyDAO.get(storyId);
         Iteration iter = iterationDAO.get(iterationId);
@@ -90,6 +95,17 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
             responsibleContainers.add(new ResponsibleContainer(user, true));
         }
         return responsibleContainers;
+    }
+    
+    @Transactional(readOnly = true)
+    public Collection<User> getStorysProjectResponsibles(Story story) {
+        if (story.getBacklog() instanceof Project) {
+            return projectBusiness.getAssignedUsers((Project)story.getBacklog());
+        }
+        else if (story.getBacklog() instanceof Iteration){
+            return projectBusiness.getAssignedUsers((Project)story.getBacklog().getParent()); 
+        }
+        return new ArrayList<User>();
     }
 
     public Story store(int storyId, int backlogId, Story dataItem,
@@ -245,25 +261,7 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         // }
     }
 
-    public void setBacklogDAO(BacklogDAO backlogDAO) {
-        this.backlogDAO = backlogDAO;
-    }
 
-    public void setUserDAO(UserDAO userDAO) {
-        this.userDAO = userDAO;
-    }
-
-    public void setIterationDAO(IterationDAO iterationDAO) {
-        this.iterationDAO = iterationDAO;
-    }
-    public void setBacklogHistoryEntryBusiness(
-            BacklogHistoryEntryBusiness backlogHistoryEntryBusiness) {
-        this.backlogHistoryEntryBusiness = backlogHistoryEntryBusiness;
-    }
-    public void setIterationHistoryEntryBusiness(
-            IterationHistoryEntryBusiness iterationHistoryEntryBusiness) {
-        this.iterationHistoryEntryBusiness = iterationHistoryEntryBusiness;
-    }
 
     @Transactional(readOnly = true)
     public StoryMetrics calculateMetrics(Story story) {
@@ -335,9 +333,7 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         storyDAO.store(story);
     }
 
-    public void setHourEntryDAO(HourEntryDAO hourEntryDAO) {
-        this.hourEntryDAO = hourEntryDAO;
-    }
+
 
     @Transactional(readOnly = true)
     public StoryMetrics calculateMetrics(int storyId) {
@@ -429,8 +425,35 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         }
     }
     
+    public void setBacklogDAO(BacklogDAO backlogDAO) {
+        this.backlogDAO = backlogDAO;
+    }
+
+    public void setUserDAO(UserDAO userDAO) {
+        this.userDAO = userDAO;
+    }
+
+    public void setIterationDAO(IterationDAO iterationDAO) {
+        this.iterationDAO = iterationDAO;
+    }
+    public void setBacklogHistoryEntryBusiness(
+            BacklogHistoryEntryBusiness backlogHistoryEntryBusiness) {
+        this.backlogHistoryEntryBusiness = backlogHistoryEntryBusiness;
+    }
+    public void setIterationHistoryEntryBusiness(
+            IterationHistoryEntryBusiness iterationHistoryEntryBusiness) {
+        this.iterationHistoryEntryBusiness = iterationHistoryEntryBusiness;
+    }
+    
     public int getStoryPointSumByBacklog(Backlog backlog) {
         return storyDAO.getStoryPointSumByBacklog(backlog.getId());
     }
 
+    public void setProjectBusiness(ProjectBusiness projectBusiness) {
+        this.projectBusiness = projectBusiness;
+    }
+    
+    public void setHourEntryDAO(HourEntryDAO hourEntryDAO) {
+        this.hourEntryDAO = hourEntryDAO;
+    }
 }

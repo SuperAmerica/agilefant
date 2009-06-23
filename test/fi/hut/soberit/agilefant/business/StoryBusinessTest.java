@@ -4,9 +4,7 @@ import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,6 +20,7 @@ import fi.hut.soberit.agilefant.db.StoryDAO;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Product;
+import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
@@ -32,10 +31,18 @@ public class StoryBusinessTest {
     StoryBusinessImpl storyBusiness = new StoryBusinessImpl();
     StoryDAO storyDAO;
     IterationDAO iterationDAO;
+    ProjectBusiness projectBusiness;
+    
     Backlog backlog;
     Iteration iteration;
     Story story1;
     Story story2;
+    
+    User assignedUser; 
+    
+    Story storyInIteration;
+    Story storyInProject;
+    Story storyInProduct;
     
     @Before
     public void setUp() {
@@ -45,10 +52,38 @@ public class StoryBusinessTest {
         story1 = new Story();
         story1.setId(666);
         story2 = new Story();
+    }
+    
+    @Before
+    public void setUp_dependencies() {
         storyDAO = createMock(StoryDAO.class);
         storyBusiness.setStoryDAO(storyDAO);
+        
         iterationDAO = createMock(IterationDAO.class);
         storyBusiness.setIterationDAO(iterationDAO);
+        
+        projectBusiness = createMock(ProjectBusiness.class);
+        storyBusiness.setProjectBusiness(projectBusiness);
+    }
+    
+    @Before
+    public void setUpStorysProjectResponsiblesData() {
+        Iteration iter = new Iteration();
+        Project proj = new Project();
+        Product prod = new Product();
+        iter.setParent(proj);
+        proj.setParent(prod);
+        
+        assignedUser = new User();
+        assignedUser.setId(2233);
+        
+        storyInIteration = new Story();
+        storyInProject = new Story();
+        storyInProduct = new Story();
+        
+        storyInIteration.setBacklog(iter);
+        storyInProject.setBacklog(proj);
+        storyInProduct.setBacklog(prod);
     }
     
     @Test
@@ -90,6 +125,38 @@ public class StoryBusinessTest {
         assertTrue(storyBusiness.getStoryContents(story1, iteration)
                 .contains(task2));
         verify(storyDAO, iterationDAO);
+    }
+    
+
+    @Test
+    public void testGetStorysProjectResponsibles_iteration() {
+        Collection<User> assignedUsers = Arrays.asList(assignedUser);
+        expect(projectBusiness.getAssignedUsers((Project)storyInIteration.getBacklog().getParent()))
+            .andReturn(assignedUsers);
+        replay(projectBusiness);
+        
+        assertEquals(assignedUsers, storyBusiness.getStorysProjectResponsibles(storyInIteration));
+        
+        verify(projectBusiness);
+    }
+    
+    @Test
+    public void testGetStorysProjectResponsibles_project() {
+        Collection<User> assignedUsers = Arrays.asList(assignedUser);
+        expect(projectBusiness.getAssignedUsers((Project)storyInProject.getBacklog()))
+            .andReturn(Arrays.asList(assignedUser));
+        replay(projectBusiness);
+        
+        assertEquals(assignedUsers, storyBusiness.getStorysProjectResponsibles(storyInProject));
+        
+        verify(projectBusiness);
+    }
+    
+    @Test
+    public void testGetStorysProjectResponsibles_product() {
+        replay(projectBusiness);       
+        assertEquals(0, storyBusiness.getStorysProjectResponsibles(storyInProduct).size());
+        verify(projectBusiness);
     }
     
     public void testUpdateStoryPriority_noUpdate() {

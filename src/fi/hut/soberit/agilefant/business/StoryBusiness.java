@@ -9,6 +9,7 @@ import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
+import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.util.ResponsibleContainer;
 import fi.hut.soberit.agilefant.util.StoryMetrics;
 
@@ -36,6 +37,8 @@ public interface StoryBusiness extends GenericBusiness<Story> {
     StoryMetrics calculateMetricsWithoutStory(int iterationId);
 
     StoryMetrics calculateMetrics(Story story);
+    
+    public Collection<User> getStorysProjectResponsibles(Story story);
     
     /**
      * Moves a story to another backlog.

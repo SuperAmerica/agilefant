@@ -84,7 +84,6 @@
 	<classpathentry kind="lib" path="lib/joda-time-jsptags-1.0.2.jar"/>
 	<classpathentry kind="lib" path="lib/spring-test.jar"/>
 	<classpathentry kind="lib" path="lib/build/junit-4.6.jar"/>
-	<classpathentry kind="lib" path="lib/build/dbunit-2.4.5.jar"/>
 	<classpathentry kind="lib" path="lib/build/h2-1.1.114.jar"/>
 	<classpathentry kind="lib" path="lib/jettison-1.0.1.jar"/>
 	<classpathentry kind="lib" path="lib/build/easymock-2.5.jar"/>

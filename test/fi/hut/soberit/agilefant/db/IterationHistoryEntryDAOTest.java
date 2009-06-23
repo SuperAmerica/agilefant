@@ -37,15 +37,16 @@ public class IterationHistoryEntryDAOTest extends AbstractHibernateTests {
     public void testCalculateCurrentHistoryData() {
         executeClassSql();
         Pair<ExactEstimate, ExactEstimate> sums = iterationHistoryEntryDAO.calculateCurrentHistoryData(1);
-        assertEquals(100, sums.first.getMinorUnits().longValue());
-        assertEquals(180, sums.second.getMinorUnits().longValue());
+        assertEquals(140L, sums.first.getMinorUnits().longValue());
+        assertEquals(240L, sums.second.getMinorUnits().longValue());
     }
 
     @Test
     public void testCalculateCurrentHistoryData_noTasks() {
         executeClassSql();
         Pair<ExactEstimate, ExactEstimate> sums = iterationHistoryEntryDAO.calculateCurrentHistoryData(2);
-        assertEquals(Pair.EMPTY, sums);
+        assertEquals(0L, sums.getFirst().getMinorUnits().longValue());
+        assertEquals(0L, sums.getSecond().getMinorUnits().longValue());
     }
 
     @Test

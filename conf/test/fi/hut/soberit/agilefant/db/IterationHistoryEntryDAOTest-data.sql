@@ -1,9 +1,11 @@
 INSERT INTO backlogs (id, backlogtype, name) VALUES (1, 'Iteration', 'Iteration 1');
 INSERT INTO backlogs (id, backlogtype, name) VALUES (2, 'Iteration', 'Iteration 2');
+INSERT INTO stories (id, name, backlog_id, state) VALUES (13, 'Story', 1, 0);
 INSERT INTO tasks (id, effortleft, originalestimate, iteration_id, state) VALUES (1, 30, 20, 1, 0);
 INSERT INTO tasks (id, effortleft, originalestimate, iteration_id, state) VALUES (2, 20, 30, 1, 0);
 INSERT INTO tasks (id, effortleft, originalestimate, iteration_id, state) VALUES (3, 10, 70, 1, 0);
 INSERT INTO tasks (id, effortleft, originalestimate, iteration_id, state) VALUES (4, 40, 60, 1, 0);
+INSERT INTO tasks (id, effortleft, originalestimate, story_id, state) VALUES (10, 40, 60, 13, 0);
 INSERT INTO history_iterations (id, effortleftsum, originalestimatesum, deltaoriginalestimate, iteration_id, timestamp) VALUES (4, 30, 90, 0, 1, '2009-01-04 00:00:00');
 INSERT INTO history_iterations (id, effortleftsum, originalestimatesum, deltaoriginalestimate, iteration_id, timestamp) VALUES (2, 50, 70, 0, 1, '2009-01-02 00:00:00');
 INSERT INTO history_iterations (id, effortleftsum, originalestimatesum, deltaoriginalestimate, iteration_id, timestamp) VALUES (1, 60, 60, 0, 1, '2009-01-01 00:00:00');

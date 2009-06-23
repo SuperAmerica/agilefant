@@ -1011,10 +1011,10 @@ TaskModel.prototype.save = function(synchronous, callback) {
       "task.id": this.id
   };
   if (this.story) {
-    data.storyId = this.story.id;
-    if (data.storyId === null || data.storyId === undefined) {
-      data.backlogId = this.backlog.getId();
-    }
+    data.storyId = this.story.id;    
+  }
+  if (!data.storyId) {
+    data.backlogId = this.backlog.getId();
   }
   if (this.userIds) {
     data.userIds = this.userIds;

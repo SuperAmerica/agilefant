@@ -187,7 +187,14 @@ public class TaskBusinessImpl extends GenericBusinessImpl<Task> implements
         task.setEffortLeft(null);
         task.setOriginalEstimate(null);
         taskDAO.store(task);
-        iterationHistoryEntryBusiness.updateIterationHistory(task.getIteration().getId());
+        
+        if (task.getIteration() != null) {
+            iterationHistoryEntryBusiness.updateIterationHistory(task.getIteration().getId());            
+        }
+        else if (task.getStory().getBacklog() instanceof Iteration){
+            iterationHistoryEntryBusiness.updateIterationHistory(((Iteration)task.getStory().getBacklog()).getId());
+        }
+        
         return task;
     }
     

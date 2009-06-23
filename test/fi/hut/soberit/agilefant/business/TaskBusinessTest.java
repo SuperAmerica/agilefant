@@ -44,18 +44,25 @@ public class TaskBusinessTest {
     private DateTime createdDate;
    
     @Before
-    public void setUp() {
+    public void setUp_dependencies() {
         taskDAO = createMock(TaskDAO.class);
         taskBusiness.setTaskDAO(taskDAO);
+        
         iterationBusiness = createMock(IterationBusiness.class);
         taskBusiness.setIterationBusiness(iterationBusiness);
+        
         storyBusiness = createMock(StoryBusiness.class);
         taskBusiness.setStoryBusiness(storyBusiness);
+        
         userBusiness = createMock(UserBusiness.class);
         taskBusiness.setUserBusiness(userBusiness);
-        iterationHistoryEntryBusiness = createMock(IterationHistoryEntryBusiness.class);
-        taskBusiness.setIterationHistoryEntryBusiness(iterationHistoryEntryBusiness);
         
+        iterationHistoryEntryBusiness = createMock(IterationHistoryEntryBusiness.class);
+        taskBusiness.setIterationHistoryEntryBusiness(iterationHistoryEntryBusiness);    
+    }
+    
+    @Before
+    public void setUp() {
         task = new Task();
         iteration = new Iteration();
         iteration.setId(2);
@@ -232,12 +239,36 @@ public class TaskBusinessTest {
     }
     
     @Test
-    public void testResetOriginalEstimate() {
+    public void testResetOriginalEstimate_underIteration() {
         task.setEffortLeft(new ExactEstimate());
         task.setOriginalEstimate(new ExactEstimate());
         task.setIteration(iteration);
+        task.setStory(null);
         expect(taskDAO.get(task.getId())).andReturn(task);
         taskDAO.store(task);
+        
+        iterationHistoryEntryBusiness.updateIterationHistory(iteration.getId());
+        
+        replay(taskDAO, iterationHistoryEntryBusiness);
+        
+        Task returnedTask = taskBusiness.resetOriginalEstimate(task.getId());
+
+        assertNull(returnedTask.getEffortLeft());
+        assertNull(returnedTask.getOriginalEstimate());
+        
+        verify(taskDAO, iterationHistoryEntryBusiness);
+    }
+    
+    @Test
+    public void testResetOriginalEstimate_underStory() {
+        task.setEffortLeft(new ExactEstimate());
+        task.setOriginalEstimate(new ExactEstimate());
+        task.setStory(story);
+        story.setBacklog(iteration);
+        task.setIteration(null);
+        expect(taskDAO.get(task.getId())).andReturn(task);
+        taskDAO.store(task);
+        
         iterationHistoryEntryBusiness.updateIterationHistory(iteration.getId());
         
         replay(taskDAO, iterationHistoryEntryBusiness);

@@ -54,6 +54,12 @@ Timesheets
   + log spent effort to projects and/or individual backlog items
   + generate reports of spent effort
 
+CHANGES FROM AGILEFANT 1.6.1
+----------------------------
++ Due to migrating to the new data model burndowns start from zero for iterations
+  created before version 1.3.7. This only effects the first data point. Otherwise
+  the burndown data shows up as before.
+
 CHANGES FROM AGILEFANT 1.5.5
 ----------------------------
 + Renovation of the iteration view (give us feedback at the forum!)

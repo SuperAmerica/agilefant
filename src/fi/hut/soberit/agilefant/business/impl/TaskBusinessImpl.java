@@ -6,6 +6,7 @@ import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -77,17 +78,28 @@ public class TaskBusinessImpl extends GenericBusinessImpl<Task> implements
     }
     
     /** {@inheritDoc} */
-    public Task storeTask(Task task, int iterationId, int storyId, Set<Integer> userIds) {
+    public Task storeTask(Task task, Integer iterationId, Integer storyId, Set<Integer> userIds) {
         Task storedTask = null;
-        Iteration iteration = iterationBusiness.retrieve(iterationId);
-        Story story = storyBusiness.retrieveIfExists(storyId);
-       
-        task.setIteration(iteration);
-        task.setStory(story);
         
-        // Set creator
-        task.setCreator(getLoggedInUser());
-        task.setCreatedDate(GregorianCalendar.getInstance().getTime());
+        if (iterationId != null && storyId != null) {
+            throw new IllegalArgumentException("Only one parent can be given");
+        }
+        else if (iterationId != null) {
+            Iteration iteration = iterationBusiness.retrieve(iterationId);
+            task.setIteration(iteration);
+            task.setStory(null);
+        }
+        else {
+            Story story = storyBusiness.retrieve(storyId);
+            task.setStory(story);
+            task.setIteration(null);
+        }
+        
+        // Set creator, if a new task
+        if (task.getId() == 0) {
+            task.setCreator(getLoggedInUser());
+            task.setCreatedDate(new DateTime().toDate());
+        }
         
         // If we are setting the original estimate,
         // set effortLeft accordingly
@@ -113,8 +125,10 @@ public class TaskBusinessImpl extends GenericBusinessImpl<Task> implements
             this.store(task);
             storedTask = task;
         }
-  
-        iterationHistoryEntryBusiness.updateIterationHistory(iterationId);
+        
+        if (iterationId != null) {
+            iterationHistoryEntryBusiness.updateIterationHistory(iterationId);
+        }
         
         return storedTask;
     }

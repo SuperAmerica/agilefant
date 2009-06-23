@@ -26,7 +26,6 @@ public class TaskActionTest {
     public void setUp() {
         task = new Task();
         taskAction.setTask(task);
-        taskAction.setBacklogId(2);
         
         transferObjectBusiness = createMock(TransferObjectBusiness.class);
         taskAction.setTransferObjectBusiness(transferObjectBusiness);
@@ -37,8 +36,9 @@ public class TaskActionTest {
     
     @Test
     public void testAjaxStoreTask_newTask() {
-        expect(taskBusiness.storeTask(task, 2, 0, taskAction.getUserIds())).andReturn(task);
-//        expect(taskBusiness.getTaskResponsibles(task)).andReturn(null);
+        taskAction.setStoryId(null);
+        taskAction.setBacklogId(2);
+        expect(taskBusiness.storeTask(task, 2, null, taskAction.getUserIds())).andReturn(task);
         expect(transferObjectBusiness.constructTaskTO(task))
             .andReturn(new TaskTO(task));
         replay(taskBusiness, transferObjectBusiness);
@@ -50,7 +50,9 @@ public class TaskActionTest {
     
     @Test(expected = ObjectNotFoundException.class)
     public void testAjaxStoreTask_error() {
-        expect(taskBusiness.storeTask(task, 2, 0, taskAction.getUserIds()))
+        taskAction.setBacklogId(2);
+        
+        expect(taskBusiness.storeTask(task, 2, null, taskAction.getUserIds()))
             .andThrow(new ObjectNotFoundException("Iteration not found"));
         replay(taskBusiness, transferObjectBusiness);
         

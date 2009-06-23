@@ -13,7 +13,7 @@ public interface TaskBusiness extends GenericBusiness<Task> {
      * @param storyId the parent story's id, or zero if none.
      * @return the newly stored task
      */
-    public Task storeTask(Task task, int iterationId, int storyId, Set<Integer> userIds);
+    public Task storeTask(Task task, Integer iterationId, Integer storyId, Set<Integer> userIds);
     
     public Collection<ResponsibleContainer> getTaskResponsibles(Task task);
 

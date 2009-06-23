@@ -388,19 +388,28 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
                     oldBacklog.getStories().remove(story);
                     story.setBacklog(newBacklog);
                     story.getBacklog().getStories().add(story);
-                    for (Task task : story.getTasks()) {
-                        if (moveTasks) {
-                            task.setIteration((Iteration) newBacklog);
-                        } else {
+                    
+                    
+//                    for (Task task : story.getTasks()) {
+//                        if (moveTasks) {
+//                            task.setIteration((Iteration) newBacklog);
+//                        } else {
+//                            task.setStory(null);
+//                        }
+//                    }
+                                        
+                    if (!moveTasks && oldBacklog instanceof Iteration) {
+                        for (Task task : story.getTasks()) {
+                            task.setIteration((Iteration)story.getBacklog());
                             task.setStory(null);
                         }
-                    }
-                    if (!moveTasks) {
                         story.getTasks().clear();
                     } else if (oldBacklog instanceof Iteration) {
                         iterationHistoryEntryBusiness
                                 .updateIterationHistory(oldBacklog.getId());
                     }
+                    
+                    
                     backlogHistoryEntryBusiness.updateHistory(oldBacklog.getId());
                 }
             } else {

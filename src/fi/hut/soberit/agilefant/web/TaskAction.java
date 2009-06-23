@@ -33,8 +33,8 @@ public class TaskAction extends ActionSupport {
     // Helper fields
     private Task task;
     private int taskId;
-    private int backlogId;
-    private int storyId;
+    private Integer backlogId;
+    private Integer storyId;
 
     private Set<Integer> userIds = new HashSet<Integer>();
     
@@ -110,10 +110,6 @@ public class TaskAction extends ActionSupport {
         this.taskBusiness = taskBusiness;
     }
 
-    public void setBacklogId(int backlogId) {
-        this.backlogId = backlogId;
-    }
-
     public String getJsonData() {
         return jsonData;
     }
@@ -126,10 +122,6 @@ public class TaskAction extends ActionSupport {
         this.userIds = userIds;
     }
     
-    public void setStoryId(int storyId) {
-        this.storyId = storyId;
-    }
-
     public void setTaskId(int taskId) {
         this.taskId = taskId;
     }
@@ -137,5 +129,13 @@ public class TaskAction extends ActionSupport {
     public void setTransferObjectBusiness(
             TransferObjectBusiness transferObjectBusiness) {
         this.transferObjectBusiness = transferObjectBusiness;
+    }
+
+    public void setBacklogId(Integer backlogId) {
+        this.backlogId = backlogId;
+    }
+
+    public void setStoryId(Integer storyId) {
+        this.storyId = storyId;
     }
 }

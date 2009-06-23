@@ -192,6 +192,9 @@ UPDATE tasks
 SET story_id=(SELECT id FROM stories WHERE iterationGoal_id = tasks.story_id)
 WHERE story_id IS NOT NULL;
 
+/* If tasks have story as parent, remove the iteration association */
+UPDATE tasks SET iteration_id = NULL WHERE story_id IS NOT NULL;
+
 ALTER TABLE stories DROP COLUMN iterationGoal_id;
 
 DROP TABLE iterationgoal;

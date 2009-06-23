@@ -937,10 +937,15 @@ TaskModel.prototype.remove = function() {
   jQuery
   .ajax( {
     async: true,
-    error: function() {
+    error: function(XMLHttpRequest) {
     me.rollBack();
-    commonView
-    .showError("An error occured while deleting the task.");
+    if (XMLHttpRequest.status == 403) {
+    	commonView.showError("Tasks with hour entries cannot be deleted.");
+    }
+    else {
+    	commonView
+    	.showError("An error occured while deleting the task.");
+    }
   },
   success : function(data, type) {
     me.story.removeTask(me);

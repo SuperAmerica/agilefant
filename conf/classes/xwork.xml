@@ -279,6 +279,9 @@
 	      <result name="ajax_success" type="dispatcher">
 	        <param name="location">/WEB-INF/jsp/jsonData.jsp</param>
 	      </result>
+	      <result name="ajax_forbidden" type="httpheader">
+	        <param name="status">403</param>
+	      </result>
 	    </action>
 	    
 	    <action name="ajaxStoreTask" method="ajaxStoreTask" class="taskAction">

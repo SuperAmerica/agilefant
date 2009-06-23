@@ -3,8 +3,10 @@ package fi.hut.soberit.agilefant.web;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Component;
 
 import com.opensymphony.xwork.Action;
@@ -65,7 +67,11 @@ public class TaskAction extends ActionSupport {
     public String ajaxDeleteTask() {
         try {
             taskBusiness.delete(taskId);
-        } catch (Exception e) {
+        } 
+        catch (ConstraintViolationException e) {
+            return CRUDAction.AJAX_FORBIDDEN;
+        }
+        catch (Exception e) { 
             return CRUDAction.AJAX_ERROR;
         }
         return CRUDAction.AJAX_SUCCESS;

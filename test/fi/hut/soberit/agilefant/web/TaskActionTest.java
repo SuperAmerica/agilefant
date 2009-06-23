@@ -4,8 +4,10 @@ import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
+import static org.easymock.EasyMock.expectLastCall;
 import static org.junit.Assert.assertEquals;
 
+import org.hibernate.exception.ConstraintViolationException;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -67,6 +69,17 @@ public class TaskActionTest {
        replay(taskBusiness);
        
        assertEquals(CRUDAction.AJAX_SUCCESS, taskAction.ajaxDeleteTask());
+       
+       verify(taskBusiness);
+    }
+    
+    @Test
+    public void testAjaxDeleteTask_hourEntries() {
+       taskBusiness.delete(task.getId());
+       expectLastCall().andThrow(new ConstraintViolationException("Action not allowed", null, null));
+       replay(taskBusiness);
+       
+       assertEquals(CRUDAction.AJAX_FORBIDDEN, taskAction.ajaxDeleteTask());
        
        verify(taskBusiness);
     }

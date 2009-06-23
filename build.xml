@@ -49,8 +49,6 @@
 
 		<taskdef name="hibernatetool" classname="org.hibernate.tool.ant.HibernateToolTask" classpathref="hibernatetoolslib" />
 
-		<taskdef name="dbunit" classname="org.dbunit.ant.DbUnitTask" classpathref="compile.classpath" />
-
 		<path id="instr.classpath">
 			<pathelement location="${build.classes}" />
 		</path>

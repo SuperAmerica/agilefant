@@ -27,16 +27,24 @@ public class StoryDAOTest extends AbstractHibernateTests {
         assertEquals(33, storyDAO.getStoryPointSumByBacklog(3));
     }
     
-    @Test(expected = ConstraintViolationException.class)
+    @Test
     public void testRemoveStoryWithStoryHourEntries() {
         executeClassSql();
-        storyDAO.remove(2);
+        try {
+            storyDAO.remove(2);
+            forceFlush();
+            fail("Exception not thrown.");
+        } catch (ConstraintViolationException cve) {}
     }
     
-    @Test(expected = ConstraintViolationException.class)
+    @Test
     public void testRemoveStoryWithTaskHourEntries() {
         executeClassSql();
-        storyDAO.remove(3);
+        try {
+            storyDAO.remove(3);
+            forceFlush();
+            fail("Exception not thrown.");
+        } catch (ConstraintViolationException cve) {}
     }
    
 }

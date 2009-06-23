@@ -14,6 +14,7 @@ import fi.hut.soberit.agilefant.db.BacklogHistoryEntryDAO;
 import fi.hut.soberit.agilefant.model.BacklogHistoryEntry;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.StoryState;
+import fi.hut.soberit.agilefant.util.ProjectBurnupData;
 
 @Repository("backlogHistoryEntryDAO")
 public class BacklogHistoryEntryDAOHibernate extends
@@ -32,6 +33,19 @@ public class BacklogHistoryEntryDAOHibernate extends
         crit.addOrder(Order.desc("timestamp"));
         crit.setMaxResults(1);
         return uniqueResult(crit);
+    }
+
+    public ProjectBurnupData retrieveBurnupData(int projectId) {
+        Criteria crit = getCurrentSession().createCriteria(
+                BacklogHistoryEntry.class);
+        crit.add(Restrictions.eq("backlog.id", projectId));
+        crit.addOrder(Order.asc("timestamp"));
+        crit.setProjection(Projections.projectionList().add(
+                Projections.distinct(Projections.property("timestamp"))).add(
+                Projections.property("estimateSum")).add(
+                Projections.property("doneSum")));
+        List<Object[]> data = asList(crit);
+        return new ProjectBurnupData(data);
     }
 
     public BacklogHistoryEntry calculateForBacklog(int backlogId) {

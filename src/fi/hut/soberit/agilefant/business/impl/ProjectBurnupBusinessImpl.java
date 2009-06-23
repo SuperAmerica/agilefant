@@ -3,13 +3,10 @@ package fi.hut.soberit.agilefant.business.impl;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Rectangle;
-import java.awt.Shape;
 import java.awt.Stroke;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartUtilities;
@@ -23,30 +20,28 @@ import org.jfree.data.time.Second;
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.data.time.TimeSeriesDataItem;
-import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import fi.hut.soberit.agilefant.business.BacklogHistoryEntryBusiness;
 import fi.hut.soberit.agilefant.business.ProjectBurnupBusiness;
-import fi.hut.soberit.agilefant.model.BacklogHistoryEntry;
+import fi.hut.soberit.agilefant.db.BacklogHistoryEntryDAO;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.util.Pair;
+import fi.hut.soberit.agilefant.util.ProjectBurnupData;
 
 @Service("projectBurnupBusiness")
 public class ProjectBurnupBusinessImpl implements ProjectBurnupBusiness {
 
     @Autowired
-    private BacklogHistoryEntryBusiness backlogHistoryEntryBusiness;
-    
+    private BacklogHistoryEntryDAO backlogHistoryEntryDAO;
+
     /* Chart sizes */
     protected static final int DEFAULT_WIDTH = 780;
     protected static final int DEFAULT_HEIGHT = 600;
     protected static final int SMALL_WIDTH = 110;
     protected static final int SMALL_HEIGHT = 85;
-    protected static final int DEFAULT_DATAPOINTS = 20;
 
     /* Chart backgrounds */
     protected static final Color CHART_BACKGROUND_COLOR = Color.white;
@@ -54,7 +49,7 @@ public class ProjectBurnupBusinessImpl implements ProjectBurnupBusiness {
     protected static final Color GRIDLINE_COLOR = new Color(0xcc, 0xcc, 0xcc);
 
     /* Series colors */
-    protected static final Color BURNUP_COLOR = new Color(220, 100, 87);
+    protected static final Color PLANNED_COLOR = new Color(220, 100, 87);
     protected static final Color DONE_COLOR = new Color(0, 187, 68);
 
     /* Axis titles */
@@ -63,13 +58,8 @@ public class ProjectBurnupBusinessImpl implements ProjectBurnupBusiness {
 
     /* Names */
     protected static final String CHART_NAME = "Project burnup";
-    protected static final String BURNUP_NAME = "Work planned";
+    protected static final String PLANNED_NAME = "Work planned";
     protected static final String DONE_NAME = "Work done";
-
-    /* Series shape */
-    protected static final boolean BURNUP_SERIES_SHAPE_VISIBLE = false;
-    protected static final Shape DONE_SERIES_SHAPE = new Rectangle(-2, -2, 4, 4);
-    protected static final boolean DONE_SERIES_SHAPE_VISIBLE = true;
 
     /**
      * Generates a byte array (a png image file) from a JFreeChart object
@@ -103,81 +93,21 @@ public class ProjectBurnupBusinessImpl implements ProjectBurnupBusiness {
         return getChartImageByteArray(constructChart(project));
     }
 
-    /**
-     * Assembles all the needed <code>TimeSeries</code>.
-     */
-    protected TimeSeriesCollection getBurnupDataset(
-            List<Pair<DateTime, BacklogHistoryEntry>> entries) {
-        TimeSeriesCollection dataset = new TimeSeriesCollection();
-
-        TimeSeries series = new TimeSeries(BURNUP_NAME);
-
-        for (Pair<DateTime, BacklogHistoryEntry> entry : entries) {
-            Second second = new Second(entry.first.toDate());
-            TimeSeriesDataItem item = new TimeSeriesDataItem(second,
-                    entry.second.getEstimateSum());
-            series.add(item);
-        }
-
-        dataset.addSeries(series);
-        return dataset;
-    }
-
-    protected TimeSeriesCollection getDoneDataset(
-            List<Pair<DateTime, BacklogHistoryEntry>> entries) {
-        TimeSeriesCollection dataset = new TimeSeriesCollection();
-
-        TimeSeries series = new TimeSeries(DONE_NAME);
-
-        for (Pair<DateTime, BacklogHistoryEntry> entry : entries) {
-            Second second = new Second(entry.first.toDate());
-            TimeSeriesDataItem item = new TimeSeriesDataItem(second,
-                    entry.second.getDoneSum());
-            series.add(item);
-        }
-
-        dataset.addSeries(series);
-        return dataset;
-    }
-
     protected JFreeChart constructChart(Project project) {
-        DateMidnight start = new DateTime(project.getStartDate())
-                .toDateMidnight();
-
-        DateTime end = new DateTime(project.getEndDate()).withTime(23, 59, 00, 00);
-
-        long millis = end.getMillis() - start.getMillis();
-
-        double offset = millis / DEFAULT_DATAPOINTS;
-
-        List<Pair<DateTime, BacklogHistoryEntry>> entries = new ArrayList<Pair<DateTime, BacklogHistoryEntry>>(
-                DEFAULT_DATAPOINTS);
-
-        List<DateTime> timestamps = new ArrayList<DateTime>(DEFAULT_DATAPOINTS + 1);
-        for (int i = 0; i < DEFAULT_DATAPOINTS; i++) {
-            DateTime stamp = start.toDateTime().plusMillis((int) (i * offset));
-            if (!timestamps.contains(stamp)) {
-                timestamps.add(stamp);
-            }
-        }
-
-        timestamps.add(end.plusDays(1).toDateTime());
-        
-        List<BacklogHistoryEntry> rawEntries = backlogHistoryEntryBusiness.retrieveForTimestamps(timestamps, project.getId());
-        
-        for (int i = 0; i < rawEntries.size(); i++) {
-            entries.add(Pair.create(timestamps.get(i), rawEntries.get(i)));
-        }
+        ProjectBurnupData data = backlogHistoryEntryDAO
+                .retrieveBurnupData(project.getId());
 
         JFreeChart burnup = ChartFactory.createXYStepChart(CHART_NAME,
                 DATE_AXIS_LABEL, STORYPOINTS_AXIS_LABEL, null,
                 PlotOrientation.VERTICAL, true, true, false);
 
+        Pair<TimeSeriesCollection, TimeSeriesCollection> datasets = convertToDatasets(data);
+
         XYPlot plot = burnup.getXYPlot();
-        plot.setRenderer(0, getBurnupRenderer());
-        plot.setDataset(0, getBurnupDataset(entries));
+        plot.setRenderer(0, getPlannedRenderer());
+        plot.setDataset(0, datasets.first);
         plot.setRenderer(1, getDoneRenderer());
-        plot.setDataset(1, getDoneDataset(entries));
+        plot.setDataset(1, datasets.second);
 
         formatChartAxes(burnup, new DateTime(project.getStartDate()),
                 new DateTime(project.getEndDate()));
@@ -185,6 +115,47 @@ public class ProjectBurnupBusinessImpl implements ProjectBurnupBusiness {
         formatChartStyle(burnup);
 
         return burnup;
+    }
+
+    private Pair<TimeSeriesCollection, TimeSeriesCollection> convertToDatasets(
+            ProjectBurnupData data) {
+        TimeSeries planned = new TimeSeries(PLANNED_NAME);
+        TimeSeries done = new TimeSeries(DONE_NAME);
+        DateTime now = new DateTime();
+
+        ProjectBurnupData.Entry lastEntry = null;
+        ProjectBurnupData.Entry lastDoneEntry = null;
+        for (ProjectBurnupData.Entry entry : data) {
+            if (entry.timestamp.isAfter(now)) {
+                break;
+            }
+            Second second = new Second(entry.timestamp.toDate());
+            if (lastDoneEntry == null || entry.doneSum != lastDoneEntry.doneSum) {
+                TimeSeriesDataItem item = new TimeSeriesDataItem(second,
+                        entry.doneSum);
+                done.add(item);
+                lastDoneEntry = entry;
+            }
+            TimeSeriesDataItem item = new TimeSeriesDataItem(second,
+                    entry.estimateSum);
+            planned.add(item);
+            lastEntry = entry;
+        }
+
+        Second nowSecond = new Second(now.toDate());
+        if (lastEntry != null && !lastEntry.timestamp.isEqual(now)) {
+            TimeSeriesDataItem nowItem = new TimeSeriesDataItem(nowSecond,
+                    lastEntry.estimateSum);
+            planned.add(nowItem);
+        }
+        if (lastDoneEntry != null && !lastDoneEntry.timestamp.isEqual(now)) {
+            TimeSeriesDataItem nowItem = new TimeSeriesDataItem(nowSecond,
+                    lastEntry.doneSum);
+            done.add(nowItem);
+        }
+
+        return Pair.create(new TimeSeriesCollection(planned),
+                new TimeSeriesCollection(done));
     }
 
     /**
@@ -216,7 +187,7 @@ public class ProjectBurnupBusinessImpl implements ProjectBurnupBusiness {
         return result;
     }
 
-    protected XYStepRenderer getBurnupRenderer() {
+    protected XYStepRenderer getPlannedRenderer() {
         XYStepRenderer result = new XYStepRenderer();
         result.setSeriesPaint(0, new Color(220, 100, 87));
         Stroke stroke = new BasicStroke(1.5f);

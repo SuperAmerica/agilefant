@@ -80,17 +80,19 @@ public class TaskBusinessImpl extends GenericBusinessImpl<Task> implements
     /** {@inheritDoc} */
     public Task storeTask(Task task, Integer iterationId, Integer storyId, Set<Integer> userIds) {
         Task storedTask = null;
+        Iteration iteration = null;
+        Story story = null;
         
         if (iterationId != null && storyId != null) {
             throw new IllegalArgumentException("Only one parent can be given");
         }
         else if (iterationId != null) {
-            Iteration iteration = iterationBusiness.retrieve(iterationId);
+            iteration = iterationBusiness.retrieve(iterationId);
             task.setIteration(iteration);
             task.setStory(null);
         }
         else {
-            Story story = storyBusiness.retrieve(storyId);
+            story = storyBusiness.retrieve(storyId);
             task.setStory(story);
             task.setIteration(null);
         }
@@ -126,8 +128,11 @@ public class TaskBusinessImpl extends GenericBusinessImpl<Task> implements
             storedTask = task;
         }
         
-        if (iterationId != null) {
+        if (iteration != null) {
             iterationHistoryEntryBusiness.updateIterationHistory(iterationId);
+        }
+        else if (story != null && story.getBacklog() instanceof Iteration) {
+            iterationHistoryEntryBusiness.updateIterationHistory(story.getBacklog().getId());
         }
         
         return storedTask;

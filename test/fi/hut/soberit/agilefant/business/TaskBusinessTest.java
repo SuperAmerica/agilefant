@@ -1,9 +1,6 @@
 package fi.hut.soberit.agilefant.business;
 
-import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
+import static org.easymock.EasyMock.*;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -115,9 +112,12 @@ public class TaskBusinessTest {
         task.setCreatedDate(null);
         task.setCreator(null);
         
+        story.setBacklog(iteration);
+        
         expect(storyBusiness.retrieve(story.getId())).andReturn(story);
         expect(taskDAO.create(task)).andReturn(1351);
         expect(taskDAO.get(1351)).andReturn(task);
+        iterationHistoryEntryBusiness.updateIterationHistory(iteration.getId());
         
         replay(iterationBusiness, storyBusiness, taskDAO);
         

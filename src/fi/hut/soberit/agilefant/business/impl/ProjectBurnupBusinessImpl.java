@@ -117,7 +117,7 @@ public class ProjectBurnupBusinessImpl implements ProjectBurnupBusiness {
         return burnup;
     }
 
-    private Pair<TimeSeriesCollection, TimeSeriesCollection> convertToDatasets(
+    protected Pair<TimeSeriesCollection, TimeSeriesCollection> convertToDatasets(
             ProjectBurnupData data) {
         TimeSeries planned = new TimeSeries(PLANNED_NAME);
         TimeSeries done = new TimeSeries(DONE_NAME);

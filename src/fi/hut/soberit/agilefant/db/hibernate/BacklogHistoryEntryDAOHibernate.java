@@ -40,12 +40,13 @@ public class BacklogHistoryEntryDAOHibernate extends
                 BacklogHistoryEntry.class);
         crit.add(Restrictions.eq("backlog.id", projectId));
         crit.addOrder(Order.asc("timestamp"));
-        crit.setProjection(Projections.projectionList().add(
-                Projections.distinct(Projections.property("timestamp"))).add(
-                Projections.property("estimateSum")).add(
-                Projections.property("doneSum")));
+        crit
+                .setProjection(Projections.projectionList().add(
+                        Projections.groupProperty("timestamp")).add(
+                        Projections.max("estimateSum")).add(
+                        Projections.max("doneSum")));
         List<Object[]> data = asList(crit);
-        return new ProjectBurnupData(data);
+        return ProjectBurnupData.createFromRawData(data);
     }
 
     public BacklogHistoryEntry calculateForBacklog(int backlogId) {

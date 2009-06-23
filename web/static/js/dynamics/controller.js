@@ -1326,8 +1326,13 @@ ReleaseStoryTabsController.prototype = {
     for (var i = 0; i < story.tasks.length; i++) {
       var task = story.tasks[i];
       var newRow = taskListTable.createRow();
-      newRow.createCell().setValue(task.getName());
-      newRow.createCell().setValue(task.getDescription());
+      var nameCell = newRow.createCell();
+      var descCell = newRow.createCell();
+      nameCell.setValue(task.getName());
+      descCell.setValue(task.getDescription());
+      
+      nameCell.getElement().addClass('dynamictable-tasklist-cell');
+      descCell.getElement().addClass('dynamictable-tasklist-cell');
     }
     
     this.initialized = true;

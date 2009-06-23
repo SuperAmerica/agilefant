@@ -438,6 +438,9 @@ li.dynamictable-captionaction {
 .dynamictable-header > .task-row {
 	background-color: #fff !important; 
 }
+.dynamictable-tasklist-cell {
+  background-color: #eee;  
+}
 div.loadingStories { 
 	background-color:#EEEEEE;
 	border:1px solid #666666;

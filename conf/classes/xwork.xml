@@ -845,25 +845,12 @@
 		</action>
 
 		<!-- Actions for changing settings -->
-		<action name="settings" class="settingAction">
+		<action name="settings" class="settingAction" method="edit">
 			<result>/WEB-INF/jsp/administration/settings.jsp</result>
 		</action>
 		
-		<action name="editSetting" class="settingAction" method="edit">
-			<result>/WEB-INF/jsp/administration/settings.jsp</result>
-		</action>
-		<!--<action name="storeSetting" class="settingAction" method="store">
-			<result>/WEB-INF/jsp/administration/settings.jsp</result>
-		</action>-->
-		<action name="createSetting" class="settingAction" method="create">
-			<result>/WEB-INF/jsp/administration/settings.jsp</result>
-		</action>
-		
-		<action name="deleteSetting" class="settingAction" method="delete">
-			<result>/WEB-INF/jsp/administration/settings.jsp</result>
-		</action>
 		<action name="storeSettings" class="settingAction" method="storeSettings">
-			<result name="success">/WEB-INF/jsp/administration/settings.jsp</result>
+			<result name="success" type="dispatcher">/WEB-INF/jsp/administration/settings.jsp</result>
 		</action>
 		<!-- timesheet actions -->
 		  

@@ -1,165 +1,76 @@
 package fi.hut.soberit.agilefant.web;
 
-import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.*;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import fi.hut.soberit.agilefant.business.SettingBusiness;
-import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
-import fi.hut.soberit.agilefant.model.Setting;
+
 
 public class SettingActionTest {
-
-    private SettingAction settingAction;
-    private SettingBusiness settingBusiness;
-    private Setting setting;
+    public SettingAction testable;
+    public SettingBusiness settingBusiness;
     
     @Before
     public void setUp() {
-        settingAction = new SettingAction();
         settingBusiness = createMock(SettingBusiness.class);
-        settingAction.setSettingBusiness(settingBusiness);
-        
-        setting = new Setting();
-        setting.setName("Test");
-        setting.setDescription("Test Description");
-        setting.setId(123);
-    }
-    
-    
-    /**
-     * Test create operation.
-     */
-    @Test
-    public void testCreate() {
-        assertEquals("success", settingAction.create());
-        assertNotNull(settingAction.getSetting());
-    }
-    
-    /**
-     * Test delete operation.
-     */
-    @Test
-    public void testDelete() {
-        settingAction.setSettingId(setting.getId());
-        
-        expect(settingBusiness.retrieve(setting.getId()))
-            .andReturn(setting);
-        settingBusiness.delete(setting.getId());
-        replay(settingBusiness);
-        
-        assertEquals("success", settingAction.delete());
-        
-        verify(settingBusiness);
+        testable = new SettingAction();
+        testable.setSettingBusiness(settingBusiness);
     }
     
     @Test
-    public void testDelete_invalidSetting() {
-        settingAction.setSettingId(-1);
+    public void testValidateLoadMeterValues() {
+        testable.setRangeLow(50);
+        testable.setOptimalLow(40);
+        testable.setOptimalHigh(30);
+        testable.setCriticalLow(20);
+        testable.setRangeHigh(10);
         
-        expect(settingBusiness.retrieve(-1))
-            .andThrow(new ObjectNotFoundException());
-        replay(settingBusiness);
+        assertFalse(testable.validateLoadMeterValues());
+        testable.setRangeLow(10);
         
-        assertEquals("error", settingAction.delete());
+        assertFalse(testable.validateLoadMeterValues());
+        testable.setOptimalLow(20);
         
-        verify(settingBusiness);
+        assertFalse(testable.validateLoadMeterValues());
+        testable.setOptimalHigh(30);
+        
+        assertFalse(testable.validateLoadMeterValues());
+        testable.setCriticalLow(40);
+        
+        assertFalse(testable.validateLoadMeterValues());
+        testable.setRangeHigh(50);
+        
+        assertTrue(testable.validateLoadMeterValues());
+    }
+    
+    @Test
+    public void testInitilizeEmptyLoadMeterValues_empty() {
+        testable.initilizeEmptyLoadMeterValues();
+        assertEquals(SettingBusiness.DEFAULT_CRITICAL_LOW, testable.getCriticalLow());
+        assertEquals(SettingBusiness.DEFAULT_OPTIMAL_HIGH, testable.getOptimalHigh());
+        assertEquals(SettingBusiness.DEFAULT_OPTIMAL_LOW, testable.getOptimalLow());
+        assertEquals(SettingBusiness.DEFAULT_RANGE_HIGH, testable.getRangeHigh());
+        assertEquals(SettingBusiness.DEFAULT_RANGE_LOW, testable.getRangeLow());
+    }
+    
+    @Test
+    public void testInitilizeEmptyLoadMeterValues() {
+        testable.setRangeLow(5);
+        testable.setOptimalLow(3);
+        testable.setOptimalHigh(2);
+        testable.setCriticalLow(1);
+        testable.setRangeHigh(4);
+        testable.initilizeEmptyLoadMeterValues();
+        assertEquals(1, testable.getCriticalLow());
+        assertEquals(2, testable.getOptimalHigh());
+        assertEquals(3, testable.getOptimalLow());
+        assertEquals(4, testable.getRangeHigh());
+        assertEquals(5, testable.getRangeLow());
     }
 
-    
-    /**
-     * Test store operation.
-     */
-//    @Test
-//    public void testStore() {
-//        // execute edit operation
-//        settingAction.setSettingId(setting.getId());
-//        assertEquals("success", settingAction.edit());
-//        
-//        // update action fields
-//        settingAction.setValue("true");
-//        settingAction.setName("Rautaesirippu");
-//
-//        // execute store operation
-//        assertEquals("success", settingAction.store());
-////        assertEquals("Rautaesirippu", settingDAO.get(setting.getId()).getName());
-//    }
-    
-    @Test
-    public void testStore_happyCase() {
-        settingAction.setSettingId(setting.getId());
-        
-        expect(settingBusiness.retrieve(setting.getId())).andReturn(setting);
-        settingBusiness.store(setting);
-        replay(settingBusiness);
-        
-        settingAction.store();
-        
-        verify(settingBusiness);
-    }
-    
-    @Test
-    public void testStore_invalidSettingId() {
-        settingAction.setSettingId(124214);
-        expect(settingBusiness.retrieve(124214)).andThrow(new ObjectNotFoundException());
-        replay(settingBusiness);
-        
-        assertEquals("error", settingAction.store());
-        
-        verify(settingBusiness);
-    }
-    
-    @Test
-    public void testStore_withName() {
-        settingAction.setName("Setting name");
-        expect(settingBusiness.retrieveByName("Setting name")).andReturn(setting);
-        settingBusiness.store(setting);
-        replay(settingBusiness);
-        
-        settingAction.store();
-        
-        verify(settingBusiness);
-    }
-    
-    @Test
-    public void testStore_withInvalidName() {
-        settingAction.setName("Setting name");
-        expect(settingBusiness.retrieveByName("Setting name")).andReturn(null);
-        replay(settingBusiness);
-        
-        assertEquals("error", settingAction.store());
-        
-        verify(settingBusiness);
-    }
-    
-    @Test
-    public void testStore_withActionErrors() {
-        settingAction.addActionError("Test error");
-        assertEquals("error", settingAction.store());
-    }
-    
-   
-    /**
-     * Test edit operation.
-     */
-    @Test
-    public void testEdit() {
-        settingAction.setSettingId(setting.getId());
-        
-        expect(settingBusiness.retrieve(setting.getId()))
-            .andReturn(setting);
-        replay(settingBusiness);
-        
-        assertEquals("success", settingAction.edit());
-        assertNotNull(settingAction.getSetting());
-        
-        verify(settingBusiness);
-    }
+
 
 }

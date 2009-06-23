@@ -178,8 +178,6 @@ public class ProjectAction extends BacklogContentsAction implements CRUDAction {
 //        
 //        iterationThemes = businessThemeBusiness.getIterationThemesByProject(project);
         
-        projectBurndown = settingBusiness.isProjectBurndownEnabled();
-        
         return Action.SUCCESS;
     }
     

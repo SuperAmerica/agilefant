@@ -19,9 +19,14 @@ public interface BacklogDAO extends GenericDAO<Backlog> {
 
     public Collection<Backlog> retrieveMultiple(Collection<Integer> idList);
 
-    // TODO: REFACTOR
     public List<Object[]> getResponsiblesByBacklog(Backlog backlog);
 
     int calculateStoryPointSum(int backlogId);
-
+    
+    /**
+     * Calculate the stories story point sum.
+     * <p>
+     * Includes all child backlogs' stories.
+     */
+    public int calculateStoryPointSumIncludeChildBacklogs(int backlogId);
 }

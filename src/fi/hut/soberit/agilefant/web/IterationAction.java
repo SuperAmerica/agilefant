@@ -40,9 +40,7 @@ public class IterationAction extends BacklogContentsAction implements CRUDAction
     private String endDate;
 
     private String dateFormat;
-
-//    private HistoryBusiness historyBusiness;
-//            
+ 
     private IterationMetrics iterationMetrics;
     
     private String json;

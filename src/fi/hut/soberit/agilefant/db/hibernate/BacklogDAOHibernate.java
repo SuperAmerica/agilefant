@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.hibernate.Criteria;
+import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
@@ -60,4 +61,25 @@ public class BacklogDAOHibernate extends GenericDAOHibernate<Backlog> implements
         return result.intValue();
     }
     
+    public int calculateStoryPointSumIncludeChildBacklogs(int backlogId) {
+        Criteria crit = getCurrentSession().createCriteria(Story.class);
+        crit.setProjection(Projections.sum("storyPoints"));
+        
+        crit.createAlias("backlog", "backlog");
+        crit.createAlias("backlog.parent", "parentBacklog",
+                CriteriaSpecification.LEFT_JOIN);
+        crit.createAlias("backlog.parent.parent", "parentParentBacklog",
+                CriteriaSpecification.LEFT_JOIN);
+        
+        crit.add(Restrictions.or(Restrictions.eq("backlog.id", backlogId),
+                Restrictions.or(Restrictions.eq("parentBacklog.id", backlogId),
+                        Restrictions.eq("parentParentBacklog.id", backlogId))));
+        
+        crit.add(Restrictions.isNotNull("storyPoints"));
+        
+        Integer result = uniqueResult(crit);
+        
+        if (result == null) return 0;
+        return result.intValue();
+    }
 }

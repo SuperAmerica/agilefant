@@ -1,12 +1,7 @@
 package fi.hut.soberit.agilefant.business;
 
-import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.*;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -18,6 +13,7 @@ import org.junit.Test;
 
 import fi.hut.soberit.agilefant.business.impl.ProjectBusinessImpl;
 import fi.hut.soberit.agilefant.db.AssignmentDAO;
+import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.db.ProjectDAO;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.Assignment;
@@ -27,6 +23,7 @@ import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.transfer.ProjectDataContainer;
+import fi.hut.soberit.agilefant.transfer.ProjectMetrics;
 import fi.hut.soberit.agilefant.transfer.StoryTO;
 
 
@@ -34,6 +31,7 @@ public class ProjectBusinessTest {
 
     ProjectBusinessImpl projectBusiness = new ProjectBusinessImpl();
     ProjectDAO projectDAO;
+    BacklogDAO backlogDAO;
     AssignmentDAO assignmentDAO;
     UserBusiness userBusiness;
     TransferObjectBusiness transferObjectBusiness;
@@ -46,16 +44,19 @@ public class ProjectBusinessTest {
     
     @Before
     public void setUp_dependencies() {
-        projectDAO = createMock(ProjectDAO.class);
+        projectDAO = createStrictMock(ProjectDAO.class);
         projectBusiness.setProjectDAO(projectDAO);
         
-        userBusiness = createMock(UserBusiness.class);
+        backlogDAO = createStrictMock(BacklogDAO.class);
+        projectBusiness.setBacklogDAO(backlogDAO);
+        
+        userBusiness = createStrictMock(UserBusiness.class);
         projectBusiness.setUserBusiness(userBusiness);
         
-        assignmentDAO = createMock(AssignmentDAO.class);
+        assignmentDAO = createStrictMock(AssignmentDAO.class);
         projectBusiness.setAssignmentDAO(assignmentDAO);
         
-        transferObjectBusiness = createMock(TransferObjectBusiness.class);
+        transferObjectBusiness = createStrictMock(TransferObjectBusiness.class);
         projectBusiness.setTransferObjectBusiness(transferObjectBusiness);
     }
     
@@ -128,6 +129,24 @@ public class ProjectBusinessTest {
         projectBusiness.getProjectContents(-1);
         
         verify(projectDAO);
+    }
+    
+    @Test
+    public void testGetProjectMetrics() {
+        expect(backlogDAO.calculateStoryPointSumIncludeChildBacklogs(project.getId()))
+            .andReturn(100);
+        replay(backlogDAO);
+        
+        ProjectMetrics actualMetrics = projectBusiness.getProjectMetrics(project);
+        
+        assertEquals(100, actualMetrics.getStoryPoints());
+        
+        verify(backlogDAO);
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void testGetProjectMetrics_nullProject() {
+        projectBusiness.getProjectMetrics(null);
     }
     
     @Test

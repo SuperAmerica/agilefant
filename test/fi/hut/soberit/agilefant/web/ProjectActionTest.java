@@ -12,11 +12,14 @@ import java.util.Arrays;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.opensymphony.xwork.Action;
+
 import fi.hut.soberit.agilefant.business.ProjectBusiness;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.transfer.ProjectDataContainer;
+import fi.hut.soberit.agilefant.transfer.ProjectMetrics;
 
 public class ProjectActionTest {
     
@@ -97,6 +100,20 @@ public class ProjectActionTest {
         replay(projectBusiness);
         
         projectAction.projectContents();
+        
+        verify(projectBusiness);
+    }
+    
+    @Test
+    public void testProjectMetrics() {
+        ProjectMetrics metrics = new ProjectMetrics();
+        projectAction.setProjectId(project.getId());
+        expect(projectBusiness.retrieve(project.getId())).andReturn(project);
+        expect(projectBusiness.getProjectMetrics(project)).andReturn(metrics);
+        replay(projectBusiness);
+        
+        assertEquals(Action.SUCCESS, projectAction.projectMetrics());
+        assertEquals(metrics, projectAction.getProjectMetrics());
         
         verify(projectBusiness);
     }

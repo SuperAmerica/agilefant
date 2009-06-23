@@ -11,12 +11,14 @@ import fi.hut.soberit.agilefant.business.ProjectBusiness;
 import fi.hut.soberit.agilefant.business.TransferObjectBusiness;
 import fi.hut.soberit.agilefant.business.UserBusiness;
 import fi.hut.soberit.agilefant.db.AssignmentDAO;
+import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.db.ProjectDAO;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.Assignment;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.transfer.ProjectDataContainer;
+import fi.hut.soberit.agilefant.transfer.ProjectMetrics;
 import fi.hut.soberit.agilefant.util.ListUtils;
 
 @Service("projectBusiness")
@@ -25,6 +27,7 @@ public class ProjectBusinessImpl extends GenericBusinessImpl<Project> implements
         ProjectBusiness {
 
     private ProjectDAO projectDAO;
+    private BacklogDAO backlogDAO;
     private UserBusiness userBusiness;
     private AssignmentDAO assignmentDAO;
     private TransferObjectBusiness transferObjectBusiness;
@@ -33,6 +36,11 @@ public class ProjectBusinessImpl extends GenericBusinessImpl<Project> implements
     public void setProjectDAO(ProjectDAO projectDAO) {
         this.genericDAO = projectDAO;
         this.projectDAO = projectDAO;
+    }
+
+    @Autowired
+    public void setBacklogDAO(BacklogDAO backlogDAO) {
+        this.backlogDAO = backlogDAO;
     }
 
     @Autowired
@@ -53,6 +61,7 @@ public class ProjectBusinessImpl extends GenericBusinessImpl<Project> implements
     
     
     /** {@inheritDoc} */
+    @Transactional(readOnly = true)
     public ProjectDataContainer getProjectContents(int projectId) {
         ProjectDataContainer data = new ProjectDataContainer();
         
@@ -63,6 +72,18 @@ public class ProjectBusinessImpl extends GenericBusinessImpl<Project> implements
         data.getStories().addAll(transferObjectBusiness.constructBacklogDataWithUserData(project, assignedUsers));
         
         return data;
+    }
+    
+    /** {@inheritDoc} */
+    @Transactional(readOnly = true)
+    public ProjectMetrics getProjectMetrics(Project project) {
+        if (project == null) {
+            throw new IllegalArgumentException("Project must be supplied");
+        }
+        ProjectMetrics metrics = new ProjectMetrics();
+        metrics.setStoryPoints(
+                backlogDAO.calculateStoryPointSumIncludeChildBacklogs(project.getId()));
+        return metrics;
     }
     
     /** {@inheritDoc} */

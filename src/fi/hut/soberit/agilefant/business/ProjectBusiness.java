@@ -7,6 +7,7 @@ import fi.hut.soberit.agilefant.model.Assignment;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.transfer.ProjectDataContainer;
+import fi.hut.soberit.agilefant.transfer.ProjectMetrics;
 
 public interface ProjectBusiness extends GenericBusiness<Project> {
 
@@ -48,4 +49,6 @@ public interface ProjectBusiness extends GenericBusiness<Project> {
      * Get the projects contents as Transfer Objects.
      */
     public ProjectDataContainer getProjectContents(int projectId);
+    
+    public ProjectMetrics getProjectMetrics(Project project);
 }

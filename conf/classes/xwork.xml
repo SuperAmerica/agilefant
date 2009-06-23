@@ -322,12 +322,6 @@
 			class="projectAction">
 			<result>/WEB-INF/jsp/editProject.jsp</result>
 		</action>
-		<!-- 
-		<action name="createProject" method="create"
-			class="projectAction">
-			<result>/WEB-INF/jsp/editProject.jsp</result>
-		</action>
-		-->
 		<action name="ajaxCreateProject" method="create"
 			class="projectAction">
 			<result>/WEB-INF/jsp/forms/createProject.jsp</result>
@@ -347,11 +341,7 @@
         <param name="resetContextView">true</param>
       </result>
     </action>
-	<!--
-		<action name="saveProjectAssignments" method="saveProjectAssignments"
-		class="projectAction"> <result type="redirect-action"> <param
-		name="actionName">projectPortfolio</param> </result> </action>
-	-->
+
 		<action name="storeNewProject" method="ajaxStoreProject"
 			class="projectAction">
 		</action>
@@ -376,6 +366,10 @@
       <result name="ajax_success" type="dispatcher">
         <param name="location">/WEB-INF/jsp/jsonData.jsp</param>
       </result>
+    </action>
+    
+    <action name="projectMetrics" class="projectAction" method="projectMetrics">
+      <result name="success" type="dispatcher">/WEB-INF/jsp/inc/projectMetrics.jsp</result>
     </action>
 		
 		<!-- /Project actions -->

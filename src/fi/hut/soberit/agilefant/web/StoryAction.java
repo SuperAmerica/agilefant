@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -126,6 +127,8 @@ public class StoryAction extends ActionSupport implements CRUDAction {
     public String ajaxDeleteStory() {
         try {
             storyBusiness.remove(storyId);
+        } catch (ConstraintViolationException e) {
+            return CRUDAction.AJAX_FORBIDDEN;
         } catch (ObjectNotFoundException e) {
             super.addActionError(super.getText("story.notFound"));
             return CRUDAction.AJAX_ERROR;
@@ -280,12 +283,14 @@ public class StoryAction extends ActionSupport implements CRUDAction {
         this.backlogId = backlogId;
     }
 
-   public Story getStory() {
-    return story;
-}
-   public void setStory(Story story) {
-    this.story = story;
-}
+    public Story getStory() {
+        return story;
+    }
+
+    public void setStory(Story story) {
+        this.story = story;
+        this.storyId = story.getId();
+    }
    
     public String getStoryName() {
         return story.getName();

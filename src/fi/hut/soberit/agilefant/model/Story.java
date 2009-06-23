@@ -19,6 +19,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
+import org.dbunit.operation.DeleteOperation;
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
@@ -131,6 +132,7 @@ public class Story implements TimesheetLoggable, NamedObject {
     @OneToMany(targetEntity = fi.hut.soberit.agilefant.model.Task.class,
             mappedBy = "story"
     )
+    @Cascade(CascadeType.DELETE_ORPHAN)
     public Collection<Task> getTasks() {
         return tasks;
     }

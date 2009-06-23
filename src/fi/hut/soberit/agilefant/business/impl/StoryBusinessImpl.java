@@ -143,12 +143,6 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         if (backlog != null) {
             backlog.getStories().remove(story);
         }
-        Collection<Task> tasks = story.getTasks();
-        if (tasks != null) {
-            for (Task item : tasks) {
-                item.setStory(null);
-            }
-        }
         storyDAO.remove(storyId);
         backlogHistoryEntryBusiness.updateHistory(backlog.getId());
     }

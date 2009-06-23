@@ -568,9 +568,13 @@ StoryModel.prototype.remove = function() {
   var me = this;
   jQuery.ajax({
     async: false,
-    error: function() {
+    error: function(XMLHttpRequest) {
       me.rollBack();
-      commonView.showError("An error occured while deleting a story.");
+      if (XMLHttpRequest.status === 403) {
+    	commonView.showError("Stories with task or story hour entries cannot be deleted.")
+      } else {
+    	commonView.showError("An error occured while deleting a story.");
+      }
     },
     success: function(data,type) {
       me.backlog.removeStory(me);
@@ -939,7 +943,7 @@ TaskModel.prototype.remove = function() {
     async: true,
     error: function(XMLHttpRequest) {
     me.rollBack();
-    if (XMLHttpRequest.status == 403) {
+    if (XMLHttpRequest.status === 403) {
     	commonView.showError("Tasks with hour entries cannot be deleted.");
     }
     else {

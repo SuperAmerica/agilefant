@@ -2,6 +2,7 @@ package fi.hut.soberit.agilefant.web;
 
 import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 import static org.junit.Assert.assertEquals;
@@ -11,6 +12,7 @@ import static org.junit.Assert.assertNull;
 import java.util.Arrays;
 import java.util.Collection;
 
+import org.hibernate.exception.ConstraintViolationException;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -37,6 +39,8 @@ public class StoryActionTest {
         story.setId(1234);
         iter = new Iteration();
         iter.setId(6446);
+        
+        storyAction.setStory(story);
         
         storyBusiness = createMock(StoryBusiness.class);
         storyAction.setStoryBusiness(storyBusiness);
@@ -96,5 +100,26 @@ public class StoryActionTest {
         assertEquals(CRUDAction.AJAX_ERROR, storyAction.ajaxGetStories());
         
         verify(storyBusiness, backlogBusiness);
+    }
+    
+    @Test
+    public void testAjaxDeleteStory() {
+       storyBusiness.remove(story.getId());
+       replay(storyBusiness);
+       
+       assertEquals(CRUDAction.AJAX_SUCCESS, storyAction.ajaxDeleteStory());
+       
+       verify(storyBusiness);
+    }
+    
+    @Test
+    public void testAjaxDeleteStory_storyHourEntries() {
+       storyBusiness.remove(story.getId());
+       expectLastCall().andThrow(new ConstraintViolationException("Action not allowed", null, null));
+       replay(storyBusiness);
+       
+       assertEquals(CRUDAction.AJAX_FORBIDDEN, storyAction.ajaxDeleteStory());
+       
+       verify(storyBusiness);
     }
 }

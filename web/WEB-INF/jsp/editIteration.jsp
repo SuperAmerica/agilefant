@@ -184,8 +184,8 @@
 								</c:when>
 								<c:otherwise>
 									<td><ww:submit value="Save" id="saveButton" /></td>
-									<td class="deleteButton"><ww:submit disabled="disabled" cssClass="undisableMe"
-										action="deleteIteration" value="Delete" /></td>
+									<td class="deleteButton"><input type="button"  class="undisableMe"
+										onClick="javascript:deleteIteration(${iterationId},${projectId})" value="Delete" /></td>
 								</c:otherwise>
 							</c:choose>
 						</tr>

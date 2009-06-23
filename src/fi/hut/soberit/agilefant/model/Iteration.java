@@ -8,6 +8,8 @@ import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 
 import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 
 import flexjson.JSON;
 
@@ -44,6 +46,8 @@ public class Iteration extends Backlog {
     
     private Collection<Task> tasks = new ArrayList<Task>();
 
+    private Collection<IterationHistoryEntry> historyEntries = new ArrayList<IterationHistoryEntry>();
+    
     @JSON
     public Date getEndDate() {
         return endDate;
@@ -90,6 +94,17 @@ public class Iteration extends Backlog {
     
     public void setAssignments(Collection<Assignment> assignments) {
         this.assignments = assignments;
+    }
+ 
+    @OneToMany(mappedBy = "iteration")
+    @JSON(include = false)
+    @Cascade(CascadeType.DELETE)
+    public Collection<IterationHistoryEntry> getHistoryEntries() {
+        return historyEntries;
+    }
+
+    public void setHistoryEntries(Collection<IterationHistoryEntry> historyEntries) {
+        this.historyEntries = historyEntries;
     }
     
 }

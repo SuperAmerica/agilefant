@@ -475,14 +475,26 @@
 		</action>
 		-->
 		<action name="ajaxCreateIteration" method="create"
-        class="iterationAction">
-        <result>/WEB-INF/jsp/forms/createIteration.jsp</result>
-    </action>
+       		 class="iterationAction">
+       	 	<result>/WEB-INF/jsp/forms/createIteration.jsp</result>
+ 	   	</action>
  
-    <action name="deleteIteration" method="delete"
+    	<action name="deleteIteration" method="delete"
 			class="iterationAction">
 			<result type="redirect">editProject.action?projectId=${projectId}</result>
 		</action>
+
+	    <action name="ajaxDeleteIteration" method="ajaxDelete" class="iterationAction">
+	      <result name="ajax_error" type="httpheader">
+	        <param name="status">400</param>
+	      </result>
+	      <result name="ajax_success" type="httpheader">
+	        <param name="status">200</param>
+	      </result>
+	      <result name="ajax_forbidden" type="httpheader">
+	        <param name="status">403</param>
+	      </result>
+	    </action>
 		
 		<action name="storeIteration" method="store"
 			class="iterationAction">

@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import org.hibernate.exception.ConstraintViolationException;
+
 import com.opensymphony.xwork.Action;
 
 import fi.hut.soberit.agilefant.business.IterationBusiness;
@@ -186,8 +188,26 @@ public class IterationAction extends BacklogContentsAction implements CRUDAction
 //                    .getText("iteration.notEmptyWhenDeleting"));
 //            return Action.ERROR;
 //        }
+
         iterationBusiness.delete(iterationId);
+
         return Action.SUCCESS;
+    }
+    
+    public String ajaxDelete() {
+        iteration = iterationBusiness.retrieve(iterationId);
+        if (iteration == null) {
+            super.addActionError(super.getText("projectType.notFound"));
+            return CRUDAction.AJAX_ERROR;
+        }
+
+        try {
+            iterationBusiness.delete(iterationId);
+        } catch (ConstraintViolationException e) {
+            return CRUDAction.AJAX_FORBIDDEN;
+        }
+        
+        return CRUDAction.AJAX_SUCCESS;
     }
 
     protected void fillObject(Iteration fillable) throws ParseException {

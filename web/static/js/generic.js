@@ -7,6 +7,7 @@ function confirmDeleteStory() { return confirm("Deleting the story will cause al
 function confirmDelete() { return confirm("Are you sure?"); }
 function confirmDeleteTeam() { return confirm("Really delete the team?"); }
 function confirmReset() { return confirm("Really reset the original estimate?"); }
+function confirmDeleteIteration() { return confirm("Are you sure you wish to delete this iteration?"); }
 
 function deleteStory(storyId) {
 	var url = "ajaxDeleteStory.action";			
@@ -14,6 +15,29 @@ function deleteStory(storyId) {
 		$.post(url,{storyId: storyId},function(data) {
 			reloadPage();
 		});
+	}
+}
+
+function deleteIteration(iterationId, projectId) {
+	var url = "ajaxDeleteIteration.action";
+	if (confirmDeleteIteration()) {
+	  jQuery.ajax({
+		    async: false,
+		    error: function(XMLHttpRequest) {
+		      if (XMLHttpRequest.status === 403) {
+		    	commonView.showError("Iterations with stories or tasks cannot be deleted.")
+		      } else {
+		    	commonView.showError("An error occured while deleting this iteration.");
+		      }
+		    },
+		    success: function() {
+		    	window.location = "editProject.action?projectId=" + projectId;
+		    },
+		    cache: false,
+		    type: "POST",
+		    url: "ajaxDeleteIteration.action",
+		    data: {iterationId: iterationId}
+		  });
 	}
 }
 

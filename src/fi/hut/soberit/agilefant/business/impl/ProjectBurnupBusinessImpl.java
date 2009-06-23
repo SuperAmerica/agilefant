@@ -28,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 import fi.hut.soberit.agilefant.business.ProjectBurnupBusiness;
 import fi.hut.soberit.agilefant.db.BacklogHistoryEntryDAO;
 import fi.hut.soberit.agilefant.model.Project;
+import fi.hut.soberit.agilefant.util.CustomXYStepRenderer;
 import fi.hut.soberit.agilefant.util.Pair;
 import fi.hut.soberit.agilefant.util.ProjectBurnupData;
 
@@ -47,10 +48,6 @@ public class ProjectBurnupBusinessImpl implements ProjectBurnupBusiness {
     protected static final Color CHART_BACKGROUND_COLOR = Color.white;
     protected static final Color PLOT_BACKGROUND_COLOR = Color.white;
     protected static final Color GRIDLINE_COLOR = new Color(0xcc, 0xcc, 0xcc);
-
-    /* Series colors */
-    protected static final Color PLANNED_COLOR = new Color(220, 100, 87);
-    protected static final Color DONE_COLOR = new Color(0, 187, 68);
 
     /* Axis titles */
     protected static final String DATE_AXIS_LABEL = "Date";
@@ -188,11 +185,14 @@ public class ProjectBurnupBusinessImpl implements ProjectBurnupBusiness {
     }
 
     protected XYStepRenderer getPlannedRenderer() {
-        XYStepRenderer result = new XYStepRenderer();
+        CustomXYStepRenderer result = new CustomXYStepRenderer();
         result.setSeriesPaint(0, new Color(220, 100, 87));
         Stroke stroke = new BasicStroke(1.5f);
+        Stroke stepStroke = new BasicStroke(1.5f, BasicStroke.CAP_ROUND,
+                BasicStroke.JOIN_ROUND, 1.0f, new float[] { 6.0f, 6.0f }, 0.0f);
         result.setSeriesStroke(0, stroke);
         result.setSeriesShape(0, null);
+        result.setStepStroke(stepStroke);
         return result;
     }
 

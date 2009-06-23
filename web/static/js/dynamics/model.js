@@ -951,7 +951,7 @@ TaskModel.prototype.remove = function() {
     me.story.removeTask(me);
     ModelFactory.removeTask(me.id);
     me.callDeleteListeners();
-    commonView.showOk("task deleted.");
+    commonView.showOk("Task deleted");
   },
   cache: false,
   type: "POST",

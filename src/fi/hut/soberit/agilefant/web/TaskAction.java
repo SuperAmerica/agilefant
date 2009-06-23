@@ -71,9 +71,9 @@ public class TaskAction extends ActionSupport {
         catch (ConstraintViolationException e) {
             return CRUDAction.AJAX_FORBIDDEN;
         }
-        catch (Exception e) { 
-            return CRUDAction.AJAX_ERROR;
-        }
+//        catch (Exception e) { 
+//            return CRUDAction.AJAX_ERROR;
+//        }
         return CRUDAction.AJAX_SUCCESS;
     }
     

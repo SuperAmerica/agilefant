@@ -210,9 +210,13 @@ public class TaskBusinessImpl extends GenericBusinessImpl<Task> implements
     
     @Override
     public void delete(Task task) {
-        int iterationId = task.getIteration().getId();
-        super.delete(task);
-        iterationHistoryEntryBusiness.updateIterationHistory(iterationId);
+        taskDAO.remove(task.getId());
+        if (task.getIteration() != null) {
+            iterationHistoryEntryBusiness.updateIterationHistory(task.getIteration().getId());  
+        }
+        else if (task.getStory().getBacklog() instanceof Iteration) {
+            iterationHistoryEntryBusiness.updateIterationHistory(task.getStory().getBacklog().getId());
+        }
     }    
     
 }

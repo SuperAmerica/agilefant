@@ -13,6 +13,7 @@ import fi.hut.soberit.agilefant.db.TaskDAO;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.ExactEstimate;
 import fi.hut.soberit.agilefant.model.Iteration;
+import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
@@ -293,5 +294,48 @@ public class TaskBusinessTest {
 
         verify(taskDAO);
     }
+    
+    
+    @Test
+    public void testDelete_underIteration() {
+        task.setStory(null);
+        task.setIteration(iteration);
+        
+        taskDAO.remove(task.getId());
+        iterationHistoryEntryBusiness.updateIterationHistory(iteration.getId());
+        replay(taskDAO, iterationHistoryEntryBusiness);
+        
+        taskBusiness.delete(task);
+        
+        verify(taskDAO, iterationHistoryEntryBusiness);
+    }
+    
+    @Test
+    public void testDelete_underIterationStory() {
+        task.setStory(story);
+        task.setIteration(null);
+        story.setBacklog(iteration);
+        
+        taskDAO.remove(task.getId());
+        iterationHistoryEntryBusiness.updateIterationHistory(iteration.getId());
+        replay(taskDAO, iterationHistoryEntryBusiness);
+        
+        taskBusiness.delete(task);
+        
+        verify(taskDAO, iterationHistoryEntryBusiness);
+    }
+    
+    @Test
+    public void testDelete_underProductStory() {
+        task.setStory(story);
+        task.setIteration(null);
+        story.setBacklog(new Product());
+        
+        taskDAO.remove(task.getId());
+        replay(taskDAO, iterationHistoryEntryBusiness);
+        
+        taskBusiness.delete(task);
+        
+        verify(taskDAO, iterationHistoryEntryBusiness);    }
 
 }

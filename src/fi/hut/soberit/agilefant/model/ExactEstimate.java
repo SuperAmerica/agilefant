@@ -5,6 +5,8 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class ExactEstimate implements Comparable<ExactEstimate> {
 
+    public static final ExactEstimate ZERO = new ExactEstimate(0);
+    
     private Long minorUnits;
 
     public ExactEstimate() {

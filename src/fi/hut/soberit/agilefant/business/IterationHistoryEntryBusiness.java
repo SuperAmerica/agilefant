@@ -2,6 +2,8 @@ package fi.hut.soberit.agilefant.business;
 
 import java.util.List;
 
+import org.joda.time.LocalDate;
+
 
 import fi.hut.soberit.agilefant.model.ExactEstimate;
 import fi.hut.soberit.agilefant.model.Iteration;
@@ -25,5 +27,7 @@ public interface IterationHistoryEntryBusiness extends
     
     
     public IterationHistoryEntry retrieveLatest(Iteration iteration);
+    
+    LocalDate calculateExpectedEffortDoneDate(LocalDate startDate, ExactEstimate effortLeft, ExactEstimate velocity);
 
 }

@@ -102,25 +102,28 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration> implem
         return iterationData;
     }
 
-    private ExactEstimate calculateDailyVelocity(Iteration iteration) {
-        LocalDate start = new LocalDate(iteration.getStartDate());
+    public ExactEstimate calculateDailyVelocity(LocalDate start, IterationHistoryEntry yesterdayEntry) {
         LocalDate today = new LocalDate();
         
-        IterationHistoryEntry entry = iterationHistoryEntryDAO.retrieveByDate(iteration.getId(), today.minusDays(1));
-        
-        if (entry == null) return new ExactEstimate(0);
+        if (yesterdayEntry == null) return new ExactEstimate(0);
         
         double length = Days.daysBetween(start, today).getDays();
         if (length < 1) {
             length = 1;
         }
         
-        long origEst = entry.getOriginalEstimateSum();
-        long effLeft = entry.getEffortLeftSum();
+        long origEst = yesterdayEntry.getOriginalEstimateSum();
+        long effLeft = yesterdayEntry.getEffortLeftSum();
         
         double velocity = (origEst - effLeft) / length;
         
-        return new ExactEstimate((long) velocity);
+        return new ExactEstimate((long) velocity);        
+    }
+    
+    public ExactEstimate calculateDailyVelocity(Iteration iteration) {
+        LocalDate today = new LocalDate();
+        IterationHistoryEntry entry = iterationHistoryEntryDAO.retrieveByDate(iteration.getId(), today.minusDays(1));
+        return calculateDailyVelocity(new LocalDate(iteration.getStartDate()), entry);
     }
     
     private Integer calculatePercent(Integer part, Integer total) {

@@ -7,6 +7,7 @@ import org.joda.time.Days;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import fi.hut.soberit.agilefant.business.IterationHistoryEntryBusiness;
@@ -83,6 +84,14 @@ public class IterationHistoryEntryBusinessImpl extends
     
     public void setIterationDAO(IterationDAO iterationDAO) {
         this.iterationDAO = iterationDAO;
+    }
+
+    @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
+    public LocalDate calculateExpectedEffortDoneDate(LocalDate startDate,
+            ExactEstimate effortLeft, ExactEstimate velocity) {
+        if (velocity.getMinorUnits() == 0) return null;
+        int days = (int)Math.ceil(effortLeft.getMinorUnits() / velocity.getMinorUnits());
+        return startDate.plusDays(days);
     }
     
 }

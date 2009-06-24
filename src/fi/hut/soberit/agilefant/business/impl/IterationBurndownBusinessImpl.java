@@ -30,6 +30,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import fi.hut.soberit.agilefant.business.IterationBurndownBusiness;
+import fi.hut.soberit.agilefant.business.IterationBusiness;
 import fi.hut.soberit.agilefant.business.IterationHistoryEntryBusiness;
 import fi.hut.soberit.agilefant.model.ExactEstimate;
 import fi.hut.soberit.agilefant.model.Iteration;
@@ -60,6 +61,9 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
 
     private IterationHistoryEntryBusiness iterationHistoryEntryBusiness;    
     
+    @Autowired
+    private IterationBusiness iterationBusiness;
+    
     /* Chart sizes */
     protected static final int DEFAULT_WIDTH = 780;
     protected static final int DEFAULT_HEIGHT = 600;
@@ -88,7 +92,7 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
     protected static final Color CURRENT_DAY_SERIES_COLOR       = BURNDOWN_SERIES_COLOR;
     protected static final Color SCOPING_SERIES_COLOR           = BURNDOWN_SERIES_COLOR;
     protected static final Color REFERENCE_SERIES_COLOR         = new Color(90, 145, 210);
-    protected static final Color EXPECTED_COLOR                 = new Color(80, 80, 80);
+    protected static final Color EXPECTED_SERIES_COLOR                 = new Color(80, 80, 80);
     
     /* Series shape */
     protected static final Shape BURNDOWN_SERIES_SHAPE                  = new Rectangle(-2, -2, 4, 4);
@@ -105,17 +109,24 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
     protected static final Stroke SCOPING_SERIES_STROKE = new BasicStroke(1.0f,
             BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL,
             0.0f, new float[] { 2.0f, 4.0f }, 0.0f);
+    protected static final Stroke EXPECTED_SERIES_STROKE = new BasicStroke(1.0f, BasicStroke.CAP_BUTT,
+            BasicStroke.JOIN_BEVEL, 0.0f, new float[] { 2.0f, 4.0f }, 0.0f);
     
     /* Series names */
     protected static final String BURNDOWN_SERIES_NAME = "Iteration burndown";
     protected static final String REFERENCE_SERIES_NAME = "Reference velocity";
     protected static final String SCOPING_SERIES_NAME = "Scoping";
     protected static final String CURRENT_DAY_SERIES_NAME = "Current day";
+    protected static final String EXPECTED_SERIES_NAME = "Predicted velocity";
 
     @Autowired
     public void setIterationHistoryEntryBusiness(
             IterationHistoryEntryBusiness iterationHistoryEntryBusiness) {
         this.iterationHistoryEntryBusiness = iterationHistoryEntryBusiness;
+    }
+    
+    public void setIterationBusiness(IterationBusiness iterationBusiness) {
+        this.iterationBusiness = iterationBusiness;
     }
 
     /**
@@ -223,9 +234,23 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
         
         RectangleInsets ins = new RectangleInsets(-6, -8, -3, -7);
         chart.setPadding(ins);
+
+        if (plot.getDataset() != null) {
+            TimeSeriesCollection dataset = (TimeSeriesCollection) plot.getDataset();            
+            // HORROR!
+            // Will break horribly if some series is missing because the indexes cannot be trusted!!  
+            // The indexes are defined as constants but the indexes come directly
+            // from the order in which the series are added
+            // If one series is missing, EXPECTED_SERIES_NO = 4 but the index for expected series is 3
+            // (and it's even possible that it doesn't exist!)
+            if (dataset.getSeriesCount() > EXPECTED_SERIES_NO) {
+                dataset.removeSeries(EXPECTED_SERIES_NO);
+            }
+        }
         
         chart.removeLegend();
         chart.setTitle("");
+        
         return chart;
     }
     
@@ -256,6 +281,9 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
         
         rend.setSeriesPaint(SCOPING_SERIES_NO, SCOPING_SERIES_COLOR);
         rend.setSeriesStroke(SCOPING_SERIES_NO, SCOPING_SERIES_STROKE);
+        
+        rend.setSeriesPaint(EXPECTED_SERIES_NO, EXPECTED_SERIES_COLOR);
+        rend.setSeriesStroke(EXPECTED_SERIES_NO, EXPECTED_SERIES_STROKE);
     }
     
     /**
@@ -297,10 +325,15 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
         chartDataset.addSeries(getScopingTimeSeries(iterationEntries,
                 iterationStartDate.toLocalDate(),
                 iterationEndDate.toLocalDate()));
-
+        
         chartDataset.addSeries(getReferenceVelocityTimeSeries(
                 iterationStartDate, iterationEndDate,
                 new ExactEstimate(todayEntry.getOriginalEstimateSum())));
+        
+        TimeSeries predictedVelocity = getPredictedVelocityTimeSeries(iterationStartDate.toLocalDate(), iterationEndDate.toLocalDate(), yesterdayEntry, todayEntry);
+        if (predictedVelocity != null) {
+            chartDataset.addSeries(predictedVelocity);
+        }
         
         return chartDataset;
     }
@@ -355,6 +388,16 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
             DateTime endDate, ExactEstimate originalEstimateSum) {
         return this.getSeriesByStartAndEndPoints(REFERENCE_SERIES_NAME,
                 startDate, originalEstimateSum, endDate.plusDays(1), new ExactEstimate(0));
+    }
+    
+    protected TimeSeries getPredictedVelocityTimeSeries(LocalDate iterationStart, LocalDate iterationEnd, IterationHistoryEntry yesterdayEntry, IterationHistoryEntry todayEntry) {
+        LocalDate today = new LocalDate();
+        ExactEstimate startValue = getTodaysStartValueWithScoping(yesterdayEntry, todayEntry);
+        ExactEstimate velocity = iterationBusiness.calculateDailyVelocity(iterationStart, yesterdayEntry);
+        LocalDate startDate = (iterationEnd.isBefore(today)) ? iterationEnd : today;
+        LocalDate endDate = iterationHistoryEntryBusiness.calculateExpectedEffortDoneDate(startDate, startValue, velocity);
+        if (endDate == null) return null;
+        return this.getSeriesByStartAndEndPoints(EXPECTED_SERIES_NAME, today.toDateTimeAtStartOfDay(), startValue, endDate.toDateTimeAtStartOfDay(), ExactEstimate.ZERO);
     }
     
     /**

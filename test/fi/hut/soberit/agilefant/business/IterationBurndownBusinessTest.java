@@ -1,6 +1,7 @@
 package fi.hut.soberit.agilefant.business;
 
 import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.isA;
 import static org.easymock.classextension.EasyMock.createMock;
 import static org.easymock.classextension.EasyMock.replay;
 import static org.easymock.classextension.EasyMock.verify;
@@ -48,6 +49,7 @@ public class IterationBurndownBusinessTest extends IterationBurndownBusinessImpl
 
     IterationBurndownBusinessImpl iterationBurndownBusiness;
     IterationHistoryEntryBusiness iterationHistoryEntryBusiness;
+    IterationBusiness iterationBusiness;
     
     Iteration iteration;
     DateTime startDate;
@@ -70,6 +72,9 @@ public class IterationBurndownBusinessTest extends IterationBurndownBusinessImpl
         iterationBurndownBusiness
                 .setIterationHistoryEntryBusiness(iterationHistoryEntryBusiness);
         super.setIterationHistoryEntryBusiness(iterationHistoryEntryBusiness);
+        iterationBusiness = createMock(IterationBusiness.class);
+        iterationBurndownBusiness.setIterationBusiness(iterationBusiness);
+        super.setIterationBusiness(iterationBusiness);
         
         startDate = new DateTime(2009,1,1,0,0,0,0);
         endDate = new DateTime(2009,1,10,0,0,0,0);
@@ -105,29 +110,35 @@ public class IterationBurndownBusinessTest extends IterationBurndownBusinessImpl
     public void testGetIterationBurndown() {
         expect(iterationHistoryEntryBusiness.getHistoryEntriesForIteration(iteration))
             .andReturn(Arrays.asList(entry));
-        replay(iterationHistoryEntryBusiness);
+        expect(iterationHistoryEntryBusiness.calculateExpectedEffortDoneDate(isA(LocalDate.class), isA(ExactEstimate.class), isA(ExactEstimate.class))).andReturn(null);
+        expect(iterationBusiness.calculateDailyVelocity(isA(LocalDate.class), isA(IterationHistoryEntry.class))).andReturn(ExactEstimate.ZERO);
+        replay(iterationHistoryEntryBusiness, iterationBusiness);
         
         assertNotNull(iterationBurndownBusiness.getIterationBurndown(iteration));
         
-        verify(iterationHistoryEntryBusiness);
+        verify(iterationHistoryEntryBusiness, iterationBusiness);
     }
     
     @Test
     public void testGetSmallIterationBurndown() {
         expect(iterationHistoryEntryBusiness.getHistoryEntriesForIteration(iteration))
         .andReturn(Arrays.asList(entry));
-        replay(iterationHistoryEntryBusiness);
+        expect(iterationHistoryEntryBusiness.calculateExpectedEffortDoneDate(isA(LocalDate.class), isA(ExactEstimate.class), isA(ExactEstimate.class))).andReturn(null);
+        expect(iterationBusiness.calculateDailyVelocity(isA(LocalDate.class), isA(IterationHistoryEntry.class))).andReturn(ExactEstimate.ZERO);
+        replay(iterationHistoryEntryBusiness, iterationBusiness);
 
         assertNotNull(iterationBurndownBusiness.getSmallIterationBurndown(iteration));
 
-        verify(iterationHistoryEntryBusiness);
+        verify(iterationHistoryEntryBusiness, iterationBusiness);
     }
     
     @Test
     public void testConstructChart() {
         expect(iterationHistoryEntryBusiness.getHistoryEntriesForIteration(iteration))
             .andReturn(Arrays.asList(entry));
-        replay(iterationHistoryEntryBusiness);
+        expect(iterationHistoryEntryBusiness.calculateExpectedEffortDoneDate(isA(LocalDate.class), isA(ExactEstimate.class), isA(ExactEstimate.class))).andReturn(null);
+        expect(iterationBusiness.calculateDailyVelocity(isA(LocalDate.class), isA(IterationHistoryEntry.class))).andReturn(ExactEstimate.ZERO);
+        replay(iterationHistoryEntryBusiness, iterationBusiness);
         
         JFreeChart newChart = super.constructChart(iteration);
         
@@ -140,14 +151,16 @@ public class IterationBurndownBusinessTest extends IterationBurndownBusinessImpl
         assertEquals(SCOPING_SERIES_NAME,
                 newChart.getXYPlot().getDataset().getSeriesKey(SCOPING_SERIES_NO));
         
-        verify(iterationHistoryEntryBusiness);
+        verify(iterationHistoryEntryBusiness, iterationBusiness);
     }
     
     @Test
     public void testConstructSmallChart() {
         expect(iterationHistoryEntryBusiness.getHistoryEntriesForIteration(iteration))
             .andReturn(Arrays.asList(entry));
-        replay(iterationHistoryEntryBusiness);
+        expect(iterationHistoryEntryBusiness.calculateExpectedEffortDoneDate(isA(LocalDate.class), isA(ExactEstimate.class), isA(ExactEstimate.class))).andReturn(null);
+        expect(iterationBusiness.calculateDailyVelocity(isA(LocalDate.class), isA(IterationHistoryEntry.class))).andReturn(ExactEstimate.ZERO);
+        replay(iterationHistoryEntryBusiness, iterationBusiness);
         
         JFreeChart newChart = super.constructSmallChart(iteration);
         
@@ -162,7 +175,7 @@ public class IterationBurndownBusinessTest extends IterationBurndownBusinessImpl
                
         testSmallChartFormating(newChart);
         
-        verify(iterationHistoryEntryBusiness);
+        verify(iterationHistoryEntryBusiness, iterationBusiness);
     }
     
     private void testSmallChartFormating(JFreeChart chart) {
@@ -248,7 +261,9 @@ public class IterationBurndownBusinessTest extends IterationBurndownBusinessImpl
     public void testGetDataset() {
         expect(iterationHistoryEntryBusiness.getHistoryEntriesForIteration(iteration))
             .andReturn(Arrays.asList(entry));
-        replay(iterationHistoryEntryBusiness);
+        expect(iterationHistoryEntryBusiness.calculateExpectedEffortDoneDate(isA(LocalDate.class), isA(ExactEstimate.class), isA(ExactEstimate.class))).andReturn(null);
+        expect(iterationBusiness.calculateDailyVelocity(isA(LocalDate.class), isA(IterationHistoryEntry.class))).andReturn(ExactEstimate.ZERO);
+        replay(iterationHistoryEntryBusiness, iterationBusiness);
         
         TimeSeriesCollection actualTimeSeries = super.getDataset(iteration);
         assertNotNull(actualTimeSeries.getSeries(REFERENCE_SERIES_NAME));
@@ -256,7 +271,7 @@ public class IterationBurndownBusinessTest extends IterationBurndownBusinessImpl
         assertNotNull(actualTimeSeries.getSeries(CURRENT_DAY_SERIES_NAME));
         assertNotNull(actualTimeSeries.getSeries(SCOPING_SERIES_NAME));
         
-        verify(iterationHistoryEntryBusiness);
+        verify(iterationHistoryEntryBusiness, iterationBusiness);
     }
     
     @Test

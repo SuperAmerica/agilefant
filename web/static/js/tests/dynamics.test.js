@@ -31,6 +31,10 @@ $(document).ready(function() {
 		same(agilefantParsers.hourEntryToString(NaN, true),"","NaN");
 	});
 	
+	test("parse hour entry", function() {	
+		same(agilefantParsers.parseHourEntry("2h 30min"),150);
+	});
+	
 	test("is hour entry", function() {
 		ok(agilefantParsers.isHourEntryString("1h"), "1h");
 		ok(agilefantParsers.isHourEntryString("1,5h"), "1,5h");

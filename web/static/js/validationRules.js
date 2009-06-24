@@ -76,7 +76,7 @@ var agilefantParsers = {
 		for(var i = 0 ; i < timeParts.length; i++) {
 			var currentPart = timeParts[i];
 			var valueType = currentPart.split(new RegExp("(\\d+[.]?\\d*)(" + major + "|" + minor + ")?"));
-			var value = valueType[1];
+			var value = parseInt(valueType[1]);
 			var type = valueType[2];
 			if(!type) {
 				minorUnits += value * minorsPerMajor;

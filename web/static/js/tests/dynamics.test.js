@@ -18,8 +18,8 @@ $(document).ready(function() {
 	module("Dynamics utils");
 	test("hour entry to string", function() {
 		var noData = "";
-		var halfhour = 1800;
-		var hour = 3600;
+		var halfhour = 30;
+		var hour = 60;
 		
 		same(agilefantParsers.hourEntryToString(noData),"&mdash;","No data to be shown");
 		same(agilefantParsers.hourEntryToString(halfhour),"0.5h","30min");

@@ -1,5 +1,6 @@
 package fi.hut.soberit.agilefant.db.hibernate;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -35,19 +36,20 @@ public class IterationDAOHibernate extends GenericDAOHibernate<Iteration> implem
         crit.add(Restrictions.isNull("story"));
         return hibernateTemplate.findByCriteria(crit);
     }
-    
-    private Criteria addIterationRestriction(Criteria criteria, String key, Iteration iteration) {
-        Criteria result = criteria.createCriteria(key);
-        result.add(Restrictions.idEq(iteration.getId()));
-        return result;
-    }
+
+    private Criteria addIterationRestriction(Criteria criteria, Collection<String> joins, Iteration iteration) {
+        for(String join : joins)
+            criteria = criteria.createCriteria(join);
+        criteria.add(Restrictions.idEq(iteration.getId()));
+        return criteria;
+    }    
     
     public List<Task> getAllTasksForIteration(Iteration iteration) {
         Criteria criteria = getCurrentSession().createCriteria(Task.class);
-        return asList(addIterationRestriction(criteria, "iteration", iteration));
+        return asList(addIterationRestriction(criteria, Arrays.asList("iteration"), iteration));
     }
     
-    private Pair<Integer, Integer> getCounOfDoneAndAll(Class<?> type, Object doneValue, String key, Iteration iteration) {
+    private Pair<Integer, Integer> getCounOfDoneAndAll(Class<?> type, Object doneValue, Collection<String> joins, Iteration iteration) {
         Criteria criteria = getCurrentSession().createCriteria(type);
         criteria.setProjection(
                 Projections.projectionList()
@@ -55,7 +57,7 @@ public class IterationDAOHibernate extends GenericDAOHibernate<Iteration> implem
                 .add(Projections.rowCount(), "taskCount")
                 .add(Projections.groupProperty("state"), "state")
                 );
-        criteria = addIterationRestriction(criteria, key, iteration);
+        criteria = addIterationRestriction(criteria, joins, iteration);
         
         List<Object[]> results = asList(criteria);
         
@@ -73,10 +75,12 @@ public class IterationDAOHibernate extends GenericDAOHibernate<Iteration> implem
     }
     
     public Pair<Integer, Integer> getCountOfDoneAndAllTasks(Iteration iteration) {
-        return getCounOfDoneAndAll(Task.class, TaskState.DONE, "iteration", iteration);
+        Pair<Integer, Integer> noStory = getCounOfDoneAndAll(Task.class, TaskState.DONE, Arrays.asList("iteration"), iteration);
+        Pair<Integer, Integer> inStory = getCounOfDoneAndAll(Task.class, TaskState.DONE, Arrays.asList("story", "backlog"), iteration);
+        return Pair.create(noStory.first + inStory.first, noStory.second + inStory.second);
     }
 
     public Pair<Integer, Integer> getCountOfDoneAndAllStories(Iteration iteration) {
-        return getCounOfDoneAndAll(Story.class, StoryState.DONE, "backlog", iteration);
+        return getCounOfDoneAndAll(Story.class, StoryState.DONE, Arrays.asList("backlog"), iteration);
     }
 }

@@ -397,8 +397,10 @@ StoryModel.prototype.setData = function(data, includeMetrics) {
   }
   
   /* Iteration level metrics */
-  if((data.state === 'DONE' || this.state === 'DONE') ||
-     data.storyPoints !== this.storyPoints) {
+  if(this.persistedData && (
+		  (data.state === 'DONE' || this.persistedData.state === 'DONE') ||
+	  	   data.storyPoints !== this.persistedData.storyPoints)
+	 ) {
     event = ['metricsUpdated'];
   }
   

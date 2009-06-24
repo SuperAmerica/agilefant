@@ -109,6 +109,7 @@ IterationController.prototype = {
           story.remove();
           me.tasksWithoutStoryContainer.reloadTasks();
           me.noStoryTaskController.render();
+          $(document.body).trigger("metricsUpdated");
         },
         Cancel: function() {
           $(this).dialog('destroy');

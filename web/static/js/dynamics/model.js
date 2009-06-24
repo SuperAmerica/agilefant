@@ -580,7 +580,6 @@ StoryModel.prototype.remove = function() {
       me.backlog.removeStory(me);
       ModelFactory.removeStory(me.id);
       me.callDeleteListeners();
-      me.callEditListeners({bubbleEvent: ["metricsUpdated"]});
       commonView.showOk("Story deleted.");
     },
     cache: false,

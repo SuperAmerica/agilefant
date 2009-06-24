@@ -57,6 +57,8 @@ public class User {
     
     private Collection<Story> stories = new HashSet<Story>();
     
+    private Collection<Task> tasks = new HashSet<Task>();
+    
     private ExactEstimate weekEffort = new ExactEstimate(0);
 
     /**
@@ -230,6 +232,18 @@ public class User {
             fetch = FetchType.LAZY)
     public Collection<Story> getStories() {
         return stories;
+    }
+    
+    public void setTasks(Collection<Task> tasks) {
+        this.tasks = tasks;
+    }
+
+    /** Get tasks, of which the user is responsible. */
+    @ManyToMany(mappedBy = "responsibles",
+            targetEntity = fi.hut.soberit.agilefant.model.Task.class,
+            fetch = FetchType.LAZY)
+    public Collection<Task> getTasks() {
+        return tasks;
     }
     
     public void setWeekEffort(ExactEstimate weekEffort) {

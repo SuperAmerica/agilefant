@@ -96,16 +96,14 @@ ALTER TABLE backlogs DROP COLUMN product_id;
    updated in sub querys for where statements */
 DROP TABLE IF EXISTS items_with_todos;
 
+/* find out items with todos */
 CREATE TEMPORARY TABLE items_with_todos (
 	id INT(11)
-);
-
-/* find out items with todos */
-INSERT INTO items_with_todos
-SELECT DISTINCT i.id
-	FROM backlogitem AS i
-	INNER JOIN task AS t
-	ON t.backlogItem_id = t.id;
+)
+SELECT DISTINCT bi.id
+FROM backlogitem AS bi
+INNER JOIN task AS t
+ON t.backlogItem_id = bi.id;
 
 /* how long items can we handle */
 SET SESSION group_concat_max_len = 100000;

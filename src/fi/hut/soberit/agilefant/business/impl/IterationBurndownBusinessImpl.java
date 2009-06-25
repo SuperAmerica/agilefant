@@ -395,8 +395,10 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
         ExactEstimate startValue = getTodaysStartValueWithScoping(yesterdayEntry, todayEntry);
         ExactEstimate velocity = iterationBusiness.calculateDailyVelocity(iterationStart, yesterdayEntry);
         LocalDate startDate = (iterationEnd.isBefore(today)) ? iterationEnd : today;
-        LocalDate endDate = iterationHistoryEntryBusiness.calculateExpectedEffortDoneDate(startDate, startValue, velocity);
+        LocalDate endDate = iterationHistoryEntryBusiness.calculateExpectedEffortDoneDate(startDate, startValue, velocity);        
         if (endDate == null) return null;
+        endDate = endDate.plusDays(1);
+        if (startDate.isEqual(endDate)) return null;
         return this.getSeriesByStartAndEndPoints(EXPECTED_SERIES_NAME, today.toDateTimeAtStartOfDay(), startValue, endDate.toDateTimeAtStartOfDay(), ExactEstimate.ZERO);
     }
     

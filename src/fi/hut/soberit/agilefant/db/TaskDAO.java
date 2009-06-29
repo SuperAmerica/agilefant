@@ -14,4 +14,5 @@ public interface TaskDAO extends GenericDAO<Task> {
     public List<Task> getIterationTasksByUserAndTimeframe(User user, DateTime startDate, DateTime endDate);
     public Map<Integer, Integer> getNumOfResponsiblesByTask(Set<Integer> taskIds);
     public List<Task> getUnassignedTasksByStoryResponsibles(User user, DateTime startDate, DateTime endDate);
+    
 }

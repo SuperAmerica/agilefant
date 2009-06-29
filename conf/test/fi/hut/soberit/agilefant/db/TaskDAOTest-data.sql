@@ -25,3 +25,5 @@ INSERT INTO task_user (tasks_id, responsibles_id) VALUES(4,1);
 INSERT INTO task_user (tasks_id, responsibles_id) VALUES(4,2);
 
 INSERT INTO task_user (tasks_id, responsibles_id) VALUES(5,1);
+
+INSERT INTO story_user (story_id, user_id) VALUES(1,1);

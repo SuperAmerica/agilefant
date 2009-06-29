@@ -1,9 +1,13 @@
 package fi.hut.soberit.agilefant.db.hibernate;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.hibernate.Criteria;
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
@@ -103,6 +107,25 @@ public class StoryDAOHibernate extends GenericDAOHibernate<Story> implements
     
     public StoryMetrics calculateMetricsWithoutStory(int iterationId) {
         return calculateMetrics(iterationId, true);
+    }
+
+    public Map<Integer, Integer> getNumOfResponsiblesByStory(
+            Set<Integer> storyIds) {
+        Criteria crit = getCurrentSession().createCriteria(Story.class);
+        crit.add(Restrictions.in("id", storyIds));
+        crit.createAlias("responsibles", "responsible");
+        ProjectionList sums = Projections.projectionList();
+        sums.add(Projections.groupProperty("id"));
+        sums.add(Projections.count("responsible.id"));
+        
+        crit.setProjection(sums);
+        List<Object[]> rawData = asList(crit);
+        
+        Map<Integer, Integer> result = new HashMap<Integer, Integer>();
+        for(Object[] row : rawData) {
+            result.put((Integer)row[0], (Integer)row[1]);
+        }
+        return result;
     }
 
 }

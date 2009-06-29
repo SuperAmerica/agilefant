@@ -419,6 +419,11 @@ ALTER TABLE team_user ADD FOREIGN KEY (Team_id) REFERENCES teams(id);
 ALTER TABLE team_user ADD FOREIGN KEY (User_id) REFERENCES users(id);
 ALTER TABLE team_user ADD PRIMARY KEY (Team_id, User_id);
 
+create table Holiday (id integer not null auto_increment, endDate date, startDate date, user_id integer, primary key (id)) ENGINE=InnoDB;
+create table HolidayAnomaly (id integer not null auto_increment, date date, user_id integer, primary key (id)) ENGINE=InnoDB;
+alter table Holiday add index FKA44DC038C1610AD2 (user_id), add constraint FKA44DC038C1610AD2 foreign key (user_id) references users (id);
+alter table HolidayAnomaly add index FK267567ABC1610AD2 (user_id), add constraint FK267567ABC1610AD2 foreign key (user_id) references users (id);
+
 /*** DROP TEMPORARY PROCEDURES ***/
 
 SELECT 'Drop procedures' AS status;

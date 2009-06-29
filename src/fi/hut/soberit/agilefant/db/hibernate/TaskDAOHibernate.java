@@ -71,7 +71,15 @@ public class TaskDAOHibernate extends GenericDAOHibernate<Task> implements
 
     public List<Task> getUnassignedTasksByStoryResponsibles(User user,
             DateTime startDate, DateTime endDate) {
-        // TODO Auto-generated method stub
-        return null;
+        
+        Criteria crit = getCurrentSession().createCriteria(Task.class);
+        crit.add(Restrictions.isEmpty("responsibles"));
+        Criteria story = crit.createCriteria("story");
+        story.createCriteria("responsibles").add(Restrictions.idEq(user.getId()));
+        story.createCriteria("backlog").add(
+                Restrictions.and(Restrictions.le("startDate", startDate.toDate()),
+                        Restrictions.ge("endDate", endDate.toDate())));
+        crit.setFetchMode("creator", FetchMode.SELECT);
+        return asList(crit);
     }
 }

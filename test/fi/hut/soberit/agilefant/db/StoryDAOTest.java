@@ -1,5 +1,10 @@
 package fi.hut.soberit.agilefant.db;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
 import org.hibernate.exception.ConstraintViolationException;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,5 +51,13 @@ public class StoryDAOTest extends AbstractHibernateTests {
             fail("Exception not thrown.");
         } catch (ConstraintViolationException cve) {}
     }
-   
+    
+   @Test
+   public void testGetNumberOfResponsiblesByTask() {
+       executeClassSql();
+       Set<Integer> storyIds = new HashSet<Integer>(Arrays.asList(1,2,3));
+       Map<Integer, Integer> actual = this.storyDAO.getNumOfResponsiblesByStory(storyIds);
+       assertEquals(1, actual.size());
+       assertEquals(1, (int)actual.get(1));      
+   }
 }

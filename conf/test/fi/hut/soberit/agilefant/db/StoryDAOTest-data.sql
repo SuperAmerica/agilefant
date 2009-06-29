@@ -19,6 +19,7 @@ INSERT INTO stories (id, state, storyPoints, backlog_id, name) VALUES (9, 4,  nu
 
 -- Create user --
 INSERT INTO users (id, enabled) VALUES (1, true);
+INSERT INTO story_user (story_id, user_id) VALUES(1,1);
 
 -- Tasks for story 3 --
 INSERT INTO tasks (id, story_id, state) VALUES (1, 3, 0);

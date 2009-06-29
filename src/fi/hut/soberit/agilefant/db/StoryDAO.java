@@ -1,6 +1,8 @@
 package fi.hut.soberit.agilefant.db;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Story;
@@ -18,4 +20,6 @@ public interface StoryDAO extends GenericDAO<Story> {
     StoryMetrics calculateMetricsWithoutStory(int iterationId);
 
     public int getStoryPointSumByBacklog(int backlogId);
+
+    public Map<Integer, Integer> getNumOfResponsiblesByStory(Set<Integer> storyIds);
 }

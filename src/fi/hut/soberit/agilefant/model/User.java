@@ -20,6 +20,8 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.Type;
 
 import fi.hut.soberit.agilefant.db.hibernate.Email;
@@ -60,7 +62,11 @@ public class User {
     private Collection<Task> tasks = new HashSet<Task>();
     
     private ExactEstimate weekEffort = new ExactEstimate(0);
-
+    
+    private Collection<Holiday> holidays = new HashSet<Holiday>();
+    
+    private Collection<HolidayAnomaly> holidayAnomalies = new HashSet<HolidayAnomaly>();
+        
     /**
      * Get the id of this object.
      * <p>
@@ -254,6 +260,26 @@ public class User {
     @AttributeOverrides(@AttributeOverride(name = "minorUnits", column = @Column(name = "weekEffort")))
     public ExactEstimate getWeekEffort() {
         return weekEffort;
+    }
+
+    @Cascade(CascadeType.DELETE_ORPHAN)
+    @OneToMany(mappedBy="user", fetch=FetchType.LAZY)
+    public Collection<Holiday> getHolidays() {
+        return holidays;
+    }
+
+    public void setHolidays(Collection<Holiday> holidays) {
+        this.holidays = holidays;
+    }
+
+    @Cascade(CascadeType.DELETE_ORPHAN)
+    @OneToMany(mappedBy="user", fetch=FetchType.LAZY)
+    public Collection<HolidayAnomaly> getHolidayAnomalies() {
+        return holidayAnomalies;
+    }
+
+    public void setHolidayAnomalies(Collection<HolidayAnomaly> holidayAnomalies) {
+        this.holidayAnomalies = holidayAnomalies;
     }
 
 }

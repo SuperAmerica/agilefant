@@ -28,6 +28,8 @@
 		<mapping class="fi.hut.soberit.agilefant.model.TaskHourEntry" />
 		<mapping class="fi.hut.soberit.agilefant.model.Team" />
 		<mapping class="fi.hut.soberit.agilefant.model.User" />
+		<mapping class="fi.hut.soberit.agilefant.model.Holiday" />
+		<mapping class="fi.hut.soberit.agilefant.model.HolidayAnomaly" />
 		
 		<!-- 
 		<mapping class="fi.hut.soberit.agilefant.model.BusinessTheme" />

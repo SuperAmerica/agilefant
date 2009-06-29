@@ -74,9 +74,13 @@ public class TaskDAOTest extends AbstractHibernateTests {
         assertEquals(2, (int)actual.get(4));
         assertEquals(1, (int)actual.get(5));
     }
-    
     @Test
-    public void testGetNumOfResponsiblesByTask_noTasks() {
-        
+    public void testGetUnassignedTasksByStoryResponsibles() {
+        executeClassSql();
+        DateTime start = new DateTime(2009,6,10,1,0,0,0);
+        User user = new User();
+        user.setId(1);
+        List<Task> actual = this.taskDAO.getUnassignedTasksByStoryResponsibles(user, start, start.plusDays(5));
+        assertEquals(1, actual.size());
     }
 }

@@ -378,7 +378,7 @@
 		</taskdef>
 		<jchav srcdir="${jmeter.result.dir}" destdir="${jchav.result.dir}" reporttitle="Agilefant Example walk" />
 	</target>-->
-
+<!--
 	<target name="tomcat-start" description="Start Tomcat application">
 		<taskdef name="start" classname="org.apache.catalina.ant.StartTask">
 			<classpath>
@@ -420,7 +420,7 @@
 		</taskdef>
 		<deploy url="http://localhost:8080/manager" username="tomcat" password="m0t0rh0me" path="/agilefant" war="file:${warFile}" />
 	</target>
-
+-->
 	<target name="compress-js" depends="webapp" description="Minifiy a set of files">
 		<taskdef name="yuicompress" classname="com.yahoo.platform.yui.compressor.YUICompressTask">
 			<classpath>

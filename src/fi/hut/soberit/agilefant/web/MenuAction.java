@@ -258,8 +258,8 @@ public class MenuAction extends ActionSupport {
         this.subnavi = subnavi;
     }
 
-    public void setContextObjectId(int contextObjectId) {
-        this.contextObjectId = contextObjectId;
+    public void setContextObjectId(String contextObjectId) {
+        this.contextObjectId = Integer.parseInt(contextObjectId);
     }
 
     public int getContextObjectId() {

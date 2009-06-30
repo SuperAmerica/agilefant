@@ -56,7 +56,7 @@ $(document).ready(function() {
 			<display:column title="Actions" sortable="false">
 				<img src="static/img/edit.png" alt="Edit" title="Edit" style="cursor: pointer;" onclick="handleTabEvent('teamTabContainer-${row.id}', 'team', ${row.id}, 0); return false;" />
 				<ww:url id="deleteLink" action="deleteTeam" includeParams="none">
-					<ww:param name="teamId" value="${row.id}" />
+					<ww:param name="teamId" value="#attr.row.id" />
 				</ww:url>
 				<ww:a href="%{deleteLink}" onclick="return confirmDelete()">
 				    <img src="static/img/delete_18.png" alt="Edit" title="Edit" />

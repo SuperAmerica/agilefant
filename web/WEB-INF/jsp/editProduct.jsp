@@ -221,7 +221,7 @@ SimileAjax.Platform = new Object();*/
 														
 					<display:column sortable="true" sortProperty="name" title="Name">					
 						<ww:url id="editLink" action="editProject" includeParams="none">
-							<ww:param name="projectId" value="row.id" />
+							<ww:param name="projectId" value="#attr.row.id" />
 						</ww:url>
 						<ww:a
 							href="%{editLink}">

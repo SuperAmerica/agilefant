@@ -37,23 +37,23 @@
 <tbody>
 <tr class="odd">
 <td>Minimum</td>
-<td colspan="2"><ww:textfield name="rangeLow" id="minimumField" value="%{rangeLow}" size="4" /> %</td>
+<td colspan="2"><ww:textfield name="rangeLow" id="minimumField" size="4" /> %</td>
 </tr>
 <tr class="even">
 <td>Optimal Low</td>
-<td><input type="text" name="optimalLow" id="optimalLowField" value="%{optimalLow}" size="4" /> %</td>
+<td><ww:textfield name="optimalLow" id="optimalLowField" size="4" /> %</td>
 </tr>
 <tr class="odd">
 <td>Optimal High</td>
-<td><input type="text" name="optimalHigh" id="optimalHighField" value="%{optimalHigh}" size="4" /> %</td>
+<td><ww:textfield name="optimalHigh" id="optimalHighField" size="4" /> %</td>
 </tr>
 <tr class="even">
 <td>Critical</td>
-<td><input type="text" name="criticalLow" id="criticalLowField" value="%{criticalLow}" size="4" /> %</td>
+<td><ww:textfield name="criticalLow" id="criticalLowField" size="4" /> %</td>
 </tr>
 <tr class="odd">
 <td>Maximum</td>
-<td><input type="text" name="rangeHigh" id="maximumField" value="%{rangeHigh}" size="4" /> %</td>
+<td><ww:textfield name="rangeHigh" id="maximumField" size="4" /> %</td>
 </tr>
 </tbody>
 </table>

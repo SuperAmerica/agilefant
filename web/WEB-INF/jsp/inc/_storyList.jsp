@@ -120,16 +120,10 @@ $(document).ready(function() {
 --%>
 
     <display:column title="State" sortable="false" class="todoColumn">     
-      <%--
-      <c:set var="itemTodos" value="${backlogTodos[row]}"/>
-      --%>
+	   <aef:text name="story.state.${row.state}" />
       
       <%-- 
       <a class="nameLink" onclick="handleTabEvent('storyTabContainer-${row.id}-${storyListContext}','${dialogContext}',${row.id},1,'${storyListContext}'); return false;">
-      --%>
-      Not implemented
-        
-      <%--
       </a>                    
       --%>
     </display:column>

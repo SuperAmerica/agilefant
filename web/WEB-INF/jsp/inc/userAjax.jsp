@@ -40,7 +40,7 @@
 					<tr>
 						<td>Email</td>
 						<td>*</td>
-						<td colspan="2"><ww:textfield name="user.email" value="${user.email}" /></td>
+						<td colspan="2"><ww:textfield name="user.email" /></td>
 					</tr>
 					<c:choose>
 					    <c:when test="${user.id != 1}">
@@ -48,12 +48,12 @@
 							    <td></td>
 							    <td></td>
 							    <td colspan="2">					    
-							    	<ww:checkbox name="user.enabled" value="%{user.enabled}" /> Enabled					    	
+							    	<ww:checkbox name="user.enabled" /> Enabled					    	
 							    </td>					    	
 							</tr>
 						</c:when>
 					    <c:otherwise>
-					    	<ww:hidden name="user.enabled" value="%{user.enabled}" />
+					    	<ww:hidden name="user.enabled"  />
 					    </c:otherwise>
 					</c:choose>
 			        <tr>

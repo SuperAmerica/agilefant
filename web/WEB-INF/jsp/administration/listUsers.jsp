@@ -54,13 +54,13 @@ $(document).ready(function() {
 				<img src="static/img/edit.png" alt="Edit" title="Edit" style="cursor: pointer;" onclick="handleTabEvent('userTabContainer-${row.id}', 'user', ${row.id}, 0); return false;" />
 				<c:if test="${row.id != 1}">
 					<ww:url id="disableLink" action="disableUser" includeParams="none">
-						<ww:param name="userId" value="${row.id}" />
+						<ww:param name="userId" value="#attr.row.id" />
 					</ww:url>
 					<ww:a href="%{disableLink}">
 						<img src="static/img/disable.png" alt="Disable" title="Disable" />
 					</ww:a>
 					<ww:url id="deleteLink" action="deleteUser" includeParams="none">
-						<ww:param name="userId" value="${row.id}" />
+						<ww:param name="userId" value="#attr.row.id" />
 					</ww:url>
 					<ww:a href="%{deleteLink}" onclick="return confirmDelete()">
 						<img src="static/img/delete_18.png" alt="Delete" title="Delete" />
@@ -98,13 +98,13 @@ $(document).ready(function() {
     <display:column sortable="false" title="Actions" style="width: 70px;">
     	<img src="static/img/edit.png" alt="Edit" title="Edit" style="cursor: pointer;" onclick="handleTabEvent('userTabContainer-${row.id}', 'user', ${row.id}, 0); return false;" />
 		<ww:url id="enableLink" action="enableUser" includeParams="none">
-			<ww:param name="userId" value="${row.id}" />
+			<ww:param name="userId" value="#attr.row.id" />
 		</ww:url>
 		<ww:a href="%{enableLink}">
 			<img src="static/img/enable.png" alt="Enable" title="Enable" />
 		</ww:a>
 		<ww:url id="deleteLink" action="deleteUser" includeParams="none">
-            <ww:param name="userId" value="${row.id}" />
+            <ww:param name="userId" value="#attr.row.id" />
         </ww:url>
         <ww:a href="%{deleteLink}" onclick="return confirmDelete()">
             <img src="static/img/delete_18.png" alt="Delete" title="Delete" />

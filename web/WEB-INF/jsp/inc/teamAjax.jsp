@@ -16,7 +16,7 @@
 			<div id="editUserForm" class="validateWrapper validateTeam">
 
 				<ww:form action="ajaxStoreTeam" method="post">
-				<ww:hidden name="teamId" value="${teamId}" />
+				<ww:hidden name="teamId" value="#attr.teamId" />
 				<table class="formTable">
 					<tr>
 						<td>Name</td>
@@ -44,7 +44,7 @@
 									<c:set var="selected" value="" />
 								</c:otherwise>
 							</c:choose>
-							<li class="${(status.index % 2 == 0) ? 'even' : 'odd'}"><ww:checkbox name="userIds[${user.id}]" value="${selected}"/>
+							<li class="${(status.index % 2 == 0) ? 'even' : 'odd'}"><ww:checkbox name="userIds[%{user.id}]" value="#attr.selected"/>
 							<c:out value="${user.fullName}" /></li>
 						</c:forEach>
 						</ul>

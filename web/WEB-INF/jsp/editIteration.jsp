@@ -104,7 +104,7 @@
 				<div id="editIterationForm" class="validateWrapper validateIteration" style="display: none;">
 				<ww:form
 					method="post" id="iterationEditForm" action="storeIteration">
-					<ww:hidden name="iterationId" value="${iteration.id}" />
+					<ww:hidden name="iterationId" value="#attr.iteration.id" />
 					<ww:date name="%{iteration.getTimeOfDayDate(6)}" id="start"
 						format="%{getText('struts.shortDateTime.format')}" />
 					<ww:date name="%{iteration.getTimeOfDayDate(18)}" id="end"

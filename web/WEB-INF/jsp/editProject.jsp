@@ -111,7 +111,7 @@ $(document).ready(function() {
                                                 <c:if test="${hourReport}">
                                                 <td>
                                                         <ww:url id="createLink" action="ajaxCreateHourEntry" includeParams="none">
-                                                            <ww:param name="backlogId" value="${project.id}" />
+                                                            <ww:param name="backlogId" value="#attr.project.id" />
                                                         </ww:url>
                                                     <ww:a cssClass="openCreateDialog openUserDialog logEffortLink"
                                                     onclick="return false;" title="Log effort" href="%{createLink}">
@@ -161,7 +161,7 @@ $(document).ready(function() {
 															<img src="static/img/status-black.png" alt="Black" title="Black"/>
 														</c:when>
 													</c:choose>
-													<ww:text name="project.status.${project.status}" />
+													<aef:text name="project.status.${project.status}" />
 								    				</td>
 								    				<td></td>						
 												</tr>
@@ -255,7 +255,7 @@ $(document).ready(function() {
 										</div>
 										<div id="editProjectForm" style="display: none;" class="validateWrapper validateProject">
 											<ww:form id="projectEditForm" action="storeProject" method="post">
-												<ww:hidden id="editProject-projectId" name="projectId" value="${project.id}" />
+												<ww:hidden id="editProject-projectId" name="projectId" value="#attr.project.id" />
 												<table class="formTable">
 													<tr>
 														<td>Name</td>
@@ -381,7 +381,7 @@ $(document).ready(function() {
 	                    								<td>Description</td>
 	                    								<td></td>
 	                    								<td colspan="2"><ww:textarea cols="70" rows="10" id="projectDescription"
-	                        								name="project.description" value="${aef:nl2br(project.description)}" /></td>
+	                        								name="project.description">${aef:nl2br(project.description)}</ww:textarea></td>
 	                								</tr>
 													<tr>
 														<td></td>
@@ -535,7 +535,7 @@ $(document).ready(function() {
 					   					<tr>
 					   					<td>
 					   						<ww:url id="createLink" action="ajaxCreateIteration" includeParams="none" >
-						  						<ww:param name="projectId" value="${project.id}" />
+						  						<ww:param name="projectId" value="#attr.project.id" />
 					   						</ww:url>
 					   						<ww:a
 												href="%{createLink}" cssClass="openCreateDialog openIterationDialog"
@@ -557,9 +557,10 @@ $(document).ready(function() {
 												<div style="overflow:hidden; width: 170px;">																								
 													<ww:url id="editLink" action="editIteration"
 													includeParams="none">
-														<ww:param name="iterationId" value="${row.id}" />
+														<ww:param name="iterationId" value="#attr.row.id" />
+														<ww:param name="contextObjectId">${project.id}</ww:param>
 													</ww:url>
-													<ww:a href="%{editLink}&contextViewName=editProject&contextObjectId=${project.id}">
+													<ww:a href="%{editLink}&contextViewName=editProject">
 														${aef:html(row.name)}
 													</ww:a>												
 												</div>
@@ -592,11 +593,12 @@ $(document).ready(function() {
 												<img src="static/img/edit.png" alt="Edit" title="Edit" style="cursor: pointer;" onclick="handleTabEvent('iterationTabContainer-${row.id}', 'iteration', ${row.id}, 1);" />
 												<ww:url id="deleteLink" action="deleteIteration"
 													includeParams="none">
-													<ww:param name="projectId" value="${project.id}" />
-													<ww:param name="iterationId" value="${row.id}" />
+													<ww:param name="projectId" value="#attr.project.id" />
+													<ww:param name="iterationId" value="#attr.row.id" />
+													<ww:param name="contextObjectId">${project.id}</ww:param>
 												</ww:url>
 												<ww:a
-													href="%{deleteLink}&contextViewName=editProject&contextObjectId=${project.id}"
+													href="%{deleteLink}&contextViewName=editProject"
 													onclick="return confirmDelete()"><img src="static/img/delete_18.png" alt="Delete" title="Delete" /></ww:a>
 											</display:column>
 										</display:table>

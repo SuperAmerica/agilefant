@@ -8,9 +8,11 @@
 	
 	<!-- Define date format for parsing Date values from Strings.
 		Must be equal to the struts.shortDateTime.format property value -->
+	<!--  
 	<bean id="dateFormat" class="java.lang.String">
 		<constructor-arg>
 			<value>yyyy-MM-dd HH:mm</value>
 		</constructor-arg>
 	</bean>
+	-->
 </beans>

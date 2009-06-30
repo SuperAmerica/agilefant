@@ -11,6 +11,17 @@
 	<description>Agilefant tag library</description>
 
 	<tag>
+		<name>text</name>
+		<tag-class>org.apache.struts2.views.jsp.TextTag</tag-class>
+		<body-content>JSP</body-content>
+		<attribute>
+			<name>name</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<description>Wrapper for struts2 text tag</description>
+	</tag>
+	<tag>
 		<name>productList</name>
 		<tag-class>fi.hut.soberit.agilefant.web.tag.ProductListTag</tag-class>
 		<body-content>JSP</body-content>

@@ -127,7 +127,7 @@ $(document).ready(function() {
       <%-- 
       <a class="nameLink" onclick="handleTabEvent('storyTabContainer-${row.id}-${storyListContext}','${dialogContext}',${row.id},1,'${storyListContext}'); return false;">
       --%>
-      .....
+      Not implemented
         
       <%--
       </a>                    

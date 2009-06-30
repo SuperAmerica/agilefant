@@ -93,7 +93,7 @@
     {
         <%-- Create the link url --%>
         <ww:url id="editLink" action="contextView" includeParams="none">
-            <ww:param name="contextObjectId" value="${item.id}" />
+            <ww:param name="contextObjectId" value="%{item.id}" />
             <ww:param name="resetContextView" value="true" />
         </ww:url>
     
@@ -113,7 +113,7 @@
 	                   <c:set var="subCount" value="${subCount + 1}" />
 	                   { 
                             <ww:url id="subEditLink" action="contextView" includeParams="none">
-                                <ww:param name="contextObjectId" value="${subItem.id}" />
+                                <ww:param name="contextObjectId" value="%{subItem.id}" />
                                 <ww:param name="resetContextView" value="true" />
                             </ww:url>
 
@@ -132,7 +132,7 @@
                                     <c:set var="subsubCount" value="${subsubCount + 1}"/>
                                     {
                                         <ww:url id="subsubEditLink" action="contextView" includeParams="none">
-                                            <ww:param name="contextObjectId" value="${subsubItem.id}" />
+                                            <ww:param name="contextObjectId" value="%{subsubItem.id}" />
                                             <ww:param name="resetContextView" value="true" />
                                         </ww:url>            
                                     

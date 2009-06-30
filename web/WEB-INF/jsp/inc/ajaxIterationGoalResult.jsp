@@ -1,1 +1,0 @@
-<%@ include file="./_taglibs.jsp"%><c:out value="${iterationGoalId}" />

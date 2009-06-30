@@ -96,7 +96,7 @@ SimileAjax.Platform = new Object();*/
 			<div class="validateWrapper validateExistingProduct">
 			<ww:form id="productEditForm" 
 				action="storeProduct" method="post">
-				<ww:hidden name="productId" value="${product.id}" />
+				<ww:hidden name="productId" value="product.id" />
 
 				<table class="formTable">
 					<tr>
@@ -195,7 +195,7 @@ SimileAjax.Platform = new Object();*/
 	                    <tr>
 	                    <td>
 	                    <ww:url id="createLink" action="ajaxCreateProject" includeParams="none">
-						  <ww:param name="productId" value="${product.id}" />
+						  <ww:param name="productId" value="product.id" />
 						</ww:url>
 						<ww:a href="%{createLink}"
 						  title="Create a new project"
@@ -221,7 +221,7 @@ SimileAjax.Platform = new Object();*/
 														
 					<display:column sortable="true" sortProperty="name" title="Name">					
 						<ww:url id="editLink" action="editProject" includeParams="none">
-							<ww:param name="projectId" value="${row.id}" />
+							<ww:param name="projectId" value="row.id" />
 						</ww:url>
 						<ww:a
 							href="%{editLink}">
@@ -265,13 +265,14 @@ SimileAjax.Platform = new Object();*/
 												
 					<display:column sortable="false" title="Actions">
 						<img src="static/img/edit.png" alt="Edit" title="Edit project" style="cursor: pointer;" onclick="handleTabEvent('projectTabContainer-${row.id}','project',${row.id},0); return false;" />						
-						<ww:url id="deleteLink" action="deleteProject"
-							includeParams="none">
-							<ww:param name="productId" value="${product.id}" />
-							<ww:param name="projectId" value="${row.id}" />
+						<ww:url id="deleteLink" action="deleteProject" includeParams="none">
+							<ww:param name="productId" value="product.id" />
+							<ww:param name="projectId" value="row.id" />
+              <ww:param name="resetContextView" value="true" />
+              <ww:param name="contextName" value="product" />
+              <ww:param name="contextObjectId">${product.id}</ww:param>
 						</ww:url>
-						<ww:a href="%{deleteLink}&contextViewName=editProduct&contextObjectId=${product.id}"
-							onclick="return confirmDelete()">
+						<ww:a href="%{deleteLink}" onclick="return confirmDelete()">
 							<img src="static/img/delete_18.png" alt="Delete project" title="Delete project" style="cursor: pointer;"/>
 						</ww:a>
 					</display:column>
@@ -436,7 +437,7 @@ SimileAjax.Platform = new Object();*/
 
 
 <ww:url id="createStoryLink" action="ajaxCreateStory" includeParams="none">
-  <ww:param name="backlogId" value="${product.id}" />
+  <ww:param name="backlogId">${product.id}</ww:param>
 </ww:url>
 
 <table>

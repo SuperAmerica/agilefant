@@ -12,13 +12,13 @@
 		<interceptors>
 			<interceptor name="refreshUser"
 				class="refreshUserInterceptor" />
-			<!-- <interceptor name="contextView"
-				class="contextViewInterceptor" />-->
+			<interceptor name="contextView"
+				class="contextViewInterceptor" />
 			<interceptor-stack name="authenticationStack">
 				<interceptor-ref name="exception" />
 				<interceptor-ref name="completeStack" />
 				<interceptor-ref name="refreshUser" />
-				<!-- <interceptor-ref name="contextView" />-->
+				<interceptor-ref name="contextView" />
 			</interceptor-stack>
 			<interceptor-stack name="noAuthenticationStack">
 				<interceptor-ref name="exception" />

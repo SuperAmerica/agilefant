@@ -48,7 +48,7 @@ $(document).ready(function() {
 <ww:form action="doActionOnMultipleStories">
 
   <!-- Return to this backlog after submit -->
-  <ww:hidden name="backlogId" value="${backlog.id}" />
+  <ww:hidden name="backlogId" value="backlog.id" />
 
   <display:table class="listTable" name="stories" id="row"
     requestURI="${currentAction}.action" >
@@ -56,7 +56,7 @@ $(document).ready(function() {
     <!-- Checkboxes for bulk-moving strories -->
     
     <display:column sortable="false" title="<input type='checkbox' name='selectall' onclick='selectAllStories(this.checked)'/>" class="selectColumn">
-      <div><ww:checkbox name="selected" fieldValue="${row.id}" /></div>
+      <div><ww:checkbox name="selected" fieldValue="row.id" /></div>
       <div style="height: 15px;"></div>
       <div id="storyTabContainer-${row.id}-${storyListContext}" class="tabContainer" style="overflow:visible; white-space: nowrap; width: 15px;"></div>
     </display:column>
@@ -127,7 +127,7 @@ $(document).ready(function() {
       <%-- 
       <a class="nameLink" onclick="handleTabEvent('storyTabContainer-${row.id}-${storyListContext}','${dialogContext}',${row.id},1,'${storyListContext}'); return false;">
       --%>
-          <ww:text name="story.state.${row.state}"/><br />
+          <ww:text name="story.state.<%=row.state%>"/><br />
       <%--
       </a>                    
       --%>

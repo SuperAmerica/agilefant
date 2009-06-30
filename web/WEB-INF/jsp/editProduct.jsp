@@ -269,7 +269,7 @@ SimileAjax.Platform = new Object();*/
 							<ww:param name="productId" value="product.id" />
 							<ww:param name="projectId" value="row.id" />
               <ww:param name="resetContextView" value="true" />
-              <ww:param name="contextName" value="product" />
+              <ww:param name="contextName">product</ww:param>
               <ww:param name="contextObjectId">${product.id}</ww:param>
 						</ww:url>
 						<ww:a href="%{deleteLink}" onclick="return confirmDelete()">

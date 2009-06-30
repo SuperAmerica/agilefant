@@ -67,6 +67,7 @@
 	<jsp-config>
 		<jsp-property-group>
 			<url-pattern>*.jsp</url-pattern>
+			<el-ignored>false</el-ignored>
 			<page-encoding>utf-8</page-encoding>
 		</jsp-property-group>
 	</jsp-config>

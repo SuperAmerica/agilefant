@@ -127,55 +127,11 @@ $(document).ready(function() {
       <%-- 
       <a class="nameLink" onclick="handleTabEvent('storyTabContainer-${row.id}-${storyListContext}','${dialogContext}',${row.id},1,'${storyListContext}'); return false;">
       --%>
-          <ww:text name="story.state.<%=row.state%>"/><br />
+      .....
+        
       <%--
       </a>                    
       --%>
-      
-      <%--
-      <c:choose>
-        <c:when test="${row.state == 'NOT_STARTED'}" >
-          <ww:url id="imgUrl" action="drawExtendedBarChart" includeParams="none">
-          <ww:param name="notStarted" value="1" /> </ww:url> 
-        </c:when>
-        <c:when test="${row.state == 'STARTED'}" >
-          <ww:url id="imgUrl" action="drawExtendedBarChart" includeParams="none">
-          <ww:param name="started" value="1" /> </ww:url> 
-        </c:when>
-        <c:when test="${row.state == 'PENDING'}" >
-          <ww:url id="imgUrl" action="drawExtendedBarChart" includeParams="none">
-          <ww:param name="pending" value="1" /> </ww:url> 
-        </c:when>
-        <c:when test="${row.state == 'BLOCKED'}" >
-          <ww:url id="imgUrl" action="drawExtendedBarChart" includeParams="none">
-          <ww:param name="blocked" value="1" /> </ww:url> 
-        </c:when>
-        <c:when test="${row.state == 'IMPLEMENTED'}" >
-          <ww:url id="imgUrl" action="drawExtendedBarChart" includeParams="none">
-          <ww:param name="implemented" value="1" /> </ww:url> 
-        </c:when>
-        <c:when test="${row.state == 'DONE'}" >
-          <ww:url id="imgUrl" action="drawExtendedBarChart" includeParams="none">
-          <ww:param name="done" value="1" /> </ww:url> 
-        </c:when>
-      </c:choose>
-      
-      <div style="margin:0px auto;background-image:url(${imgUrl}); background-position: -16px -4px; height:8px; width:82px; background-repeat:no-repeat;border-right:1px solid #BFBFBF; "></div>
-              
-      <c:choose>
-        <c:when test="${itemTodos != null && itemTodos.total != 0}">          
-          <ww:url id="imgUrl" action="drawExtendedBarChart" includeParams="none">
-            <ww:param name="notStarted" value="${itemTodos.notStartedTodos}" />
-            <ww:param name="started" value="${itemTodos.startedTodos}" />
-            <ww:param name="pending" value="${itemTodos.pendingTodos}" />
-            <ww:param name="blocked" value="${itemTodos.blockedTodos}" />
-            <ww:param name="implemented" value="${itemTodos.implementedTodos}" />
-            <ww:param name="done" value="${itemTodos.doneTodos}" />
-          </ww:url> 
-          <div style="margin:0px auto;background-image:url(${imgUrl}); background-position: -16px -4px; height:8px; width:82px; background-repeat:no-repeat;border-right:1px solid #BFBFBF; "></div>                              
-        </c:when>
-      </c:choose>
-      --%>     
     </display:column>
       
     <%--

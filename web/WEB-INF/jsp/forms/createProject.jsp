@@ -56,7 +56,7 @@ $(document).ready(function() {
 						<ww:select headerKey="0" headerValue="(undefined)"
 							name="project.projectType.id"
 							list="#attr.projectTypes" listKey="id" listValue="name"
-							value="${project.projectType.id}" />
+							value="%{project.projectType.id}" />
 					</td>
 				</tr>
 				<tr>

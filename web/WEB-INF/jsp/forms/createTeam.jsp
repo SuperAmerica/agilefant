@@ -33,7 +33,7 @@
                         <c:set var="selected" value="" />
                     </c:otherwise>
                 </c:choose>
-                <li class="${(status.index % 2 == 0) ? 'even' : 'odd'}"><ww:checkbox name="userIds[${user.id}]" value="${selected}"/>
+                <li class="${(status.index % 2 == 0) ? 'even' : 'odd'}"><ww:checkbox name="userIds[%{user.id}]" value="%{selected}"/>
                 <c:out value="${user.fullName}" /></li>
             </c:forEach>
             </ul>

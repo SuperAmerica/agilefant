@@ -3,7 +3,7 @@
 <div class="validateWrapper validateNewProduct">
 <ww:form method="post"
 	action="storeNewProduct">
-	<ww:hidden name="productId" value="${product.id}" />
+	<ww:hidden name="productId" value="%{product.id}" />
 	<table class="formTable">
 		<tr>
 			<td>Name</td>

@@ -108,8 +108,7 @@ SimileAjax.Platform = new Object();*/
 						<td>Description</td>
 						<td></td>
 						<td colspan="2"><ww:textarea name="product.description"
-							id="productDescription" cols="70" rows="10"
-							value="${aef:nl2br(product.description)}" /></td>
+							id="productDescription" cols="70" rows="10">${aef:nl2br(product.description)}</ww:textarea></td>
 					</tr>
 					<tr>
 						<td></td>

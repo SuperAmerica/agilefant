@@ -19,7 +19,7 @@
 				<c:if test="${user.id > 0}">
 					<p>To keep the old password, just leave password fields empty.</p>
 				</c:if>
-				<ww:hidden name="userId" value="${user.id}" />
+				<ww:hidden name="userId" value="%{user.id}" />
 			
 				<table class="formTable">
 					<tr>
@@ -48,21 +48,19 @@
 							    <td></td>
 							    <td></td>
 							    <td colspan="2">					    
-							    	<ww:checkbox name="user.enabled" value="${user.enabled}" /> Enabled					    	
+							    	<ww:checkbox name="user.enabled" value="%{user.enabled}" /> Enabled					    	
 							    </td>					    	
 							</tr>
 						</c:when>
 					    <c:otherwise>
-					    	<ww:hidden name="user.enabled" value="${user.enabled}" />
+					    	<ww:hidden name="user.enabled" value="%{user.enabled}" />
 					    </c:otherwise>
 					</c:choose>
-					<%--
-					<tr>
-						<td>Weekly hours</td>
-						<td>*</td>
-						<td colspan="2"><ww:textfield name="user.weekHours" value="${user.weekHours}" /></td>
-					</tr>
-					--%>		
+			        <tr>
+			            <td>Weekly hours</td>
+			            <td>*</td>
+			            <td colspan="2"><ww:textfield name="user.weekEffort" value="%{aef:minutesToString(user.weekEffort.minorUnits)}" /></td>
+			        </tr> 		
 					<tr>
 						<td>Password</td>
 						<td>*</td>
@@ -91,7 +89,7 @@
 									<c:set var="selected" value="" />
 								</c:otherwise>
 							</c:choose>
-							<li class="${(status.index % 2 == 0) ? 'even' : 'odd'}"><ww:checkbox name="teamIds[${team.id}]" value="${selected}"/>
+							<li class="${(status.index % 2 == 0) ? 'even' : 'odd'}"><ww:checkbox name="teamIds[%{team.id}]" value="%{selected}"/>
 							<c:out value="${team.name}" /></li>
 						</c:forEach>
 						</ul>

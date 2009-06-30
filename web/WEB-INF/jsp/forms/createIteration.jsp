@@ -9,7 +9,7 @@
 
 <div id="editIterationForm" class="validateWrapper validateNewIteration">
 <ww:form method="post" action="storeNewIteration">
-	<ww:hidden name="iterationId" value="${iteration.id}" />
+	<ww:hidden name="iterationId" value="%{iteration.id}" />
 	
 
 	<table class="formTable">

@@ -127,8 +127,7 @@
 							<td>Description</td>
 							<td></td>
 							<td colspan="2"><ww:textarea cols="70" rows="10"
-								id="iterationDescription" name="iteration.description"
-								value="${aef:nl2br(iteration.description)}" /></td>
+								id="iterationDescription" name="iteration.description">${aef:nl2br(iteration.description)} </ww:textarea></td>
 						</tr>
 						<tr>
 							<td>Project</td>

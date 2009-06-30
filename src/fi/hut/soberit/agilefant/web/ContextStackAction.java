@@ -1,7 +1,7 @@
 package fi.hut.soberit.agilefant.web;
 
-import com.opensymphony.xwork.Action;
-import com.opensymphony.xwork.ActionSupport;
+import com.opensymphony.xwork2.Action;
+import com.opensymphony.xwork2.ActionSupport;
 
 import fi.hut.soberit.agilefant.web.context.ContextView;
 import fi.hut.soberit.agilefant.web.context.ContextViewManager;

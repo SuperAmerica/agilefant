@@ -3,9 +3,9 @@
 <aef:productList/>
 
 <ww:date name="%{new java.util.Date()}" id="start"
-        format="%{getText('webwork.shortDateTime.format')}" />
+        format="%{getText('struts.shortDateTime.format')}" />
     <ww:date name="%{new java.util.Date()}" id="end"
-        format="%{getText('webwork.shortDateTime.format')}" />
+        format="%{getText('struts.shortDateTime.format')}" />
 
 <div id="editIterationForm" class="validateWrapper validateNewIteration">
 <ww:form method="post" action="storeNewIteration">
@@ -57,7 +57,7 @@
 			<td>*</td>
 			<td colspan="2"><aef:datepicker
 				id="create_iteration_start_date" name="startDate"
-				format="%{getText('webwork.shortDateTime.format')}"
+				format="%{getText('struts.shortDateTime.format')}"
 				value="%{#start}" /></td>
 		</tr>
 		<tr>
@@ -65,7 +65,7 @@
 			<td>*</td>
 			<td colspan="2"><aef:datepicker
 				id="create_iteration_end_date" name="endDate"
-				format="%{getText('webwork.shortDateTime.format')}" value="%{#end}" />
+				format="%{getText('struts.shortDateTime.format')}" value="%{#end}" />
 
 			</td>
 		</tr>

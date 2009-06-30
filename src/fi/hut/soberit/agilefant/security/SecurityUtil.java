@@ -70,7 +70,7 @@ public class SecurityUtil {
      * Get currently logged-in user (for the current thread/request) as set by
      * setLoggedUser.
      * <p>
-     * <b>Currently only valid for webwork-stuff.</b> ... since
+     * <b>Currently only valid for struts-stuff.</b> ... since
      * RefreshUserInterceptor ensures proper user is set.
      * 
      * @see RefreshUserInterceptor

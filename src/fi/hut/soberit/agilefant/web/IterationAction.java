@@ -3,13 +3,12 @@ package fi.hut.soberit.agilefant.web;
 import java.text.ParseException;
 import java.util.Date;
 
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import org.hibernate.exception.ConstraintViolationException;
-
-import com.opensymphony.xwork.Action;
+import com.opensymphony.xwork2.Action;
 
 import fi.hut.soberit.agilefant.business.IterationBusiness;
 import fi.hut.soberit.agilefant.business.ProjectBusiness;
@@ -155,7 +154,7 @@ public class IterationAction extends BacklogContentsAction implements CRUDAction
             this.fillObject(fillable);
         } catch (ParseException e) {
             super.addActionError(super.getText("backlog.unparseableDate")
-                    + super.getText("webwork.shortDateTime.format"));
+                    + super.getText("struts.shortDateTime.format"));
             return Action.ERROR;
         }
 
@@ -195,7 +194,7 @@ public class IterationAction extends BacklogContentsAction implements CRUDAction
     public String ajaxDelete() {
         iteration = iterationBusiness.retrieve(iterationId);
         if (iteration == null) {
-            super.addActionError(super.getText("projectType.notFound"));
+            super.addActionError(super.getText("iteration.notFound"));
             return CRUDAction.AJAX_ERROR;
         }
 
@@ -263,7 +262,7 @@ public class IterationAction extends BacklogContentsAction implements CRUDAction
             this.fillObject(fillable);
         } catch (ParseException e) {
             super.addActionError(super.getText("backlog.unparseableDate")
-                    + super.getText("webwork.shortDateTime.format"));
+                    + super.getText("struts.shortDateTime.format"));
             return CRUDAction.AJAX_ERROR;
         }
 

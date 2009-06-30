@@ -73,15 +73,15 @@ $(document).ready(function() {
 </script>
 
 <ww:date name="%{new java.util.Date()}" id="start"
-	format="%{getText('webwork.shortDateTime.format')}" />
+	format="%{getText('struts.shortDateTime.format')}" />
 <ww:date name="%{new java.util.Date()}" id="end"
-	format="%{getText('webwork.shortDateTime.format')}" />
+	format="%{getText('struts.shortDateTime.format')}" />
 
 <c:if test="${project.id > 0}">
 	<ww:date name="%{project.startDate}" id="start"
-		format="%{getText('webwork.shortDateTime.format')}" />
+		format="%{getText('struts.shortDateTime.format')}" />
 	<ww:date name="%{project.endDate}" id="end"
-		format="%{getText('webwork.shortDateTime.format')}" />
+		format="%{getText('struts.shortDateTime.format')}" />
 </c:if>
 
 <%--  TODO: fiksumpi virheenk�sittely --%>
@@ -336,14 +336,14 @@ $(document).ready(function() {
 														<td>Start date</td>
 														<td>*</td>
 														<td colspan="2">
-														<aef:datepicker id="start_date" name="startDate" format="%{getText('webwork.shortDateTime.format')}" value="%{#start}" />
+														<aef:datepicker id="start_date" name="startDate" format="%{getText('struts.shortDateTime.format')}" value="%{#start}" />
 														</td>
 													</tr>
 													<tr>
 														<td>End date</td>
 														<td>*</td>
 														<td colspan="2">
-														<aef:datepicker id="end_date" name="endDate" format="%{getText('webwork.shortDateTime.format')}" value="%{#end}" />
+														<aef:datepicker id="end_date" name="endDate" format="%{getText('struts.shortDateTime.format')}" value="%{#end}" />
 														</td>
 													</tr>
                           <%--
@@ -680,12 +680,12 @@ $(document).ready(function() {
 </table>
 --%>
 
-<script type="text/javascript" src="static/js/dynamics/utils.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
-<script type="text/javascript" src="static/js/dynamics/model.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
-<script type="text/javascript" src="static/js/dynamics/controller.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
-<script type="text/javascript" src="static/js/dynamics/dynamicTable.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
-<script type="text/javascript" src="static/js/dynamics/dynamics.tabs.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
-<script type="text/javascript" src="static/js/dynamics/commonView.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/dynamics/utils.js?<ww:text name="struts.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/dynamics/model.js?<ww:text name="struts.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/dynamics/controller.js?<ww:text name="struts.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/dynamics/dynamicTable.js?<ww:text name="struts.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/dynamics/dynamics.tabs.js?<ww:text name="struts.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/dynamics/commonView.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 
 
 <form onsubmit="return false;"><div id="stories" style="min-width: 800px; width: 98%;">&nbsp;</div></form>

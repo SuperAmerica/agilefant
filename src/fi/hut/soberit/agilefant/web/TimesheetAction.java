@@ -16,6 +16,8 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.struts2.interceptor.PrincipalAware;
+import org.apache.struts2.interceptor.PrincipalProxy;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -23,10 +25,8 @@ import org.springframework.security.providers.UsernamePasswordAuthenticationToke
 import org.springframework.security.providers.rememberme.RememberMeAuthenticationToken;
 import org.springframework.stereotype.Component;
 
-import com.opensymphony.webwork.interceptor.PrincipalAware;
-import com.opensymphony.webwork.interceptor.PrincipalProxy;
-import com.opensymphony.xwork.Action;
-import com.opensymphony.xwork.ActionSupport;
+import com.opensymphony.xwork2.Action;
+import com.opensymphony.xwork2.ActionSupport;
 
 import fi.hut.soberit.agilefant.business.TimesheetBusiness;
 import fi.hut.soberit.agilefant.business.TimesheetExportBusiness;

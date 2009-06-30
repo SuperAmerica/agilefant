@@ -12,7 +12,7 @@ import java.util.Arrays;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.opensymphony.xwork.Action;
+import com.opensymphony.xwork2.Action;
 
 import fi.hut.soberit.agilefant.business.ProjectBusiness;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;

@@ -11,8 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.opensymphony.xwork.Action;
-import com.opensymphony.xwork.ActionSupport;
+import com.opensymphony.xwork2.Action;
+import com.opensymphony.xwork2.ActionSupport;
 
 import fi.hut.soberit.agilefant.business.HourEntryBusiness;
 import fi.hut.soberit.agilefant.business.ProjectBusiness;

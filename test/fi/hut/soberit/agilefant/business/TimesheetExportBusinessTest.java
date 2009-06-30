@@ -1,5 +1,11 @@
 package fi.hut.soberit.agilefant.business;
 
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
+import static org.junit.Assert.assertEquals;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -17,9 +23,8 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
-import com.opensymphony.xwork.TextProvider;
+import com.opensymphony.xwork2.TextProvider;
 
 import fi.hut.soberit.agilefant.business.impl.TimesheetExportBusinessImpl;
 import fi.hut.soberit.agilefant.db.HourEntryDAO;
@@ -33,7 +38,6 @@ import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.TaskHourEntry;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.util.TimesheetExportRowData;
-import static org.easymock.EasyMock.*;
 
 public class TimesheetExportBusinessTest extends TimesheetExportBusinessImpl {
 

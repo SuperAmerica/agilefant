@@ -6,7 +6,7 @@ import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 import junit.framework.TestCase;
 
-import com.opensymphony.xwork.Action;
+import com.opensymphony.xwork2.Action;
 
 import fi.hut.soberit.agilefant.business.PasswordBusiness;
 import fi.hut.soberit.agilefant.business.UserBusiness;

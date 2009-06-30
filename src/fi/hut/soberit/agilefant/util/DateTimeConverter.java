@@ -7,23 +7,23 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
 
+import org.apache.struts2.util.StrutsTypeConverter;
 import org.joda.time.DateTime;
 
-import com.opensymphony.webwork.util.WebWorkTypeConverter;
-import com.opensymphony.xwork.ActionContext;
-import com.opensymphony.xwork.LocaleProvider;
-import com.opensymphony.xwork.TextProvider;
-import com.opensymphony.xwork.TextProviderSupport;
-import com.opensymphony.xwork.util.TypeConversionException;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.LocaleProvider;
+import com.opensymphony.xwork2.TextProvider;
+import com.opensymphony.xwork2.TextProviderSupport;
+import com.opensymphony.xwork2.conversion.TypeConversionException;
 
-public class DateTimeConverter extends WebWorkTypeConverter implements
+public class DateTimeConverter extends StrutsTypeConverter implements
 LocaleProvider {
 
     private TextProvider textProvider = new TextProviderSupport(
             this.getClass(), this);
 
     protected DateFormat getDateFormat() {
-        String pattern = textProvider.getText("webwork.date.format");
+        String pattern = textProvider.getText("struts.date.format");
         return new SimpleDateFormat(pattern);
         // return DateFormat.getDateInstance(DateFormat.SHORT,
         // ActionContext.getContext().getLocale());

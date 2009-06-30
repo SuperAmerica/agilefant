@@ -6,8 +6,8 @@ import java.io.StringWriter;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.opensymphony.xwork.Action;
-import com.opensymphony.xwork.ActionSupport;
+import com.opensymphony.xwork2.Action;
+import com.opensymphony.xwork2.ActionSupport;
 
 @Component("exceptionHandler")
 @Scope("prototype")

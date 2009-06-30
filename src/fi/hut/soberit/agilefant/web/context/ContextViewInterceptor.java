@@ -3,8 +3,8 @@ package fi.hut.soberit.agilefant.web.context;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.opensymphony.xwork.ActionInvocation;
-import com.opensymphony.xwork.interceptor.Interceptor;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.interceptor.Interceptor;
 
 @Component
 public class ContextViewInterceptor implements Interceptor {

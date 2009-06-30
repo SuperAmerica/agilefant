@@ -44,12 +44,12 @@ var SimileAjax = {
 };
 SimileAjax.Platform = new Object();*/
 </script>
-<%--<script type="text/javascript" src="static/js/timeline/simile-ajax-bundle.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
+<%--<script type="text/javascript" src="static/js/timeline/simile-ajax-bundle.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 
 <!-- Include timeline -->
-<script type="text/javascript" src="static/js/timeline/timeline-load.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
-<script type="text/javascript" src="static/js/timeline/timeline-bundle.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
-<script type="text/javascript" src="static/js/timeline/timeline-custom.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/timeline/timeline-load.js?<ww:text name="struts.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/timeline/timeline-bundle.js?<ww:text name="struts.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/timeline/timeline-custom.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 --%>
 <h2><c:out value="${product.name}" /></h2>
 <table>

@@ -5,7 +5,7 @@ import java.util.Stack;
 
 import org.apache.log4j.Logger;
 
-import com.opensymphony.xwork.ActionContext;
+import com.opensymphony.xwork2.ActionContext;
 
 public class DefaultContextViewManager implements ContextViewManager {
 

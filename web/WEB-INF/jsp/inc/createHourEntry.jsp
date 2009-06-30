@@ -72,7 +72,7 @@ $(document).ready(function() {
 				    <joda:format value="${hourEntry.date}" var="date"
 					pattern="yyyy-MM-dd HH:mm" /> 
 					<aef:datepicker id="he_date"
-					name="date" format="%{getText('webwork.shortDateTime.format')}"
+					name="date" format="%{getText('struts.shortDateTime.format')}"
 					value="${date}" />
 				</td>
 			</tr>
@@ -130,11 +130,11 @@ $(document).ready(function() {
 				<table>
 					<tr>
 						<td><aef:datepicker id="effStartDate" name="effStartDate"
-							format="%{getText('webwork.shortDateTime.format')}" value="" />
+							format="%{getText('struts.shortDateTime.format')}" value="" />
 						</td>
 						<td style="width: 30px; text-align: center;">-</td>
 						<td><aef:datepicker id="effEndDate" name="effEndDate"
-							format="%{getText('webwork.shortDateTime.format')}" value="" />
+							format="%{getText('struts.shortDateTime.format')}" value="" />
 						</td>
 						<td><input type="button" value="Update"
 							onclick="javascript:updatePastEffort(true);" /></td>

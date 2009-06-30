@@ -106,14 +106,14 @@
 					method="post" id="iterationEditForm" action="storeIteration">
 					<ww:hidden name="iterationId" value="${iteration.id}" />
 					<ww:date name="%{iteration.getTimeOfDayDate(6)}" id="start"
-						format="%{getText('webwork.shortDateTime.format')}" />
+						format="%{getText('struts.shortDateTime.format')}" />
 					<ww:date name="%{iteration.getTimeOfDayDate(18)}" id="end"
-						format="%{getText('webwork.shortDateTime.format')}" />
+						format="%{getText('struts.shortDateTime.format')}" />
 					<c:if test="${iteration.id > 0}">
 						<ww:date name="%{iteration.startDate}" id="start"
-							format="%{getText('webwork.shortDateTime.format')}" />
+							format="%{getText('struts.shortDateTime.format')}" />
 						<ww:date name="%{iteration.endDate}" id="end"
-							format="%{getText('webwork.shortDateTime.format')}" />
+							format="%{getText('struts.shortDateTime.format')}" />
 					</c:if>
 
 					<table class="formTable">
@@ -164,7 +164,7 @@
 							<td>*</td>
 							<td colspan="2"> <aef:datepicker id="start_date"
 								name="startDate"
-								format="%{getText('webwork.shortDateTime.format')}"
+								format="%{getText('struts.shortDateTime.format')}"
 								value="%{#start}" /></td>
 						</tr>
 						<tr>
@@ -172,7 +172,7 @@
 							<td>*</td>
 							<td colspan="2"> <aef:datepicker id="end_date"
 								name="endDate"
-								format="%{getText('webwork.shortDateTime.format')}"
+								format="%{getText('struts.shortDateTime.format')}"
 								value="%{#end}" /></td>
 						</tr>
 						<tr>
@@ -316,12 +316,12 @@ $(document).ready( function() {
 </table>
 --%>
 
-<script type="text/javascript" src="static/js/dynamics/utils.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
-<script type="text/javascript" src="static/js/dynamics/model.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
-<script type="text/javascript" src="static/js/dynamics/controller.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
-<script type="text/javascript" src="static/js/dynamics/dynamicTable.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
-<script type="text/javascript" src="static/js/dynamics/dynamics.tabs.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
-<script type="text/javascript" src="static/js/dynamics/commonView.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/dynamics/utils.js?<ww:text name="struts.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/dynamics/model.js?<ww:text name="struts.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/dynamics/controller.js?<ww:text name="struts.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/dynamics/dynamicTable.js?<ww:text name="struts.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/dynamics/dynamics.tabs.js?<ww:text name="struts.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/dynamics/commonView.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 
 
 

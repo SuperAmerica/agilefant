@@ -2,11 +2,11 @@ package fi.hut.soberit.agilefant.util;
 
 import java.util.Map;
 
-import com.opensymphony.webwork.util.WebWorkTypeConverter;
+import org.apache.struts2.util.StrutsTypeConverter;
 
 import fi.hut.soberit.agilefant.model.ExactEstimate;
 
-public class ExactEstimateConverter extends WebWorkTypeConverter {
+public class ExactEstimateConverter extends StrutsTypeConverter {
 
     @SuppressWarnings("unchecked")
     @Override

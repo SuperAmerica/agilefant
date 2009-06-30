@@ -197,14 +197,14 @@ function tsToggle(caller) {
 							<td>Start date</td>
 							<td><aef:datepicker value="${startDate}" id="effStartDate"
 								name="startDate"
-								format="%{getText('webwork.shortDateTime.format')}" /></td>
+								format="%{getText('struts.shortDateTime.format')}" /></td>
 						</tr>
 						<!--  End date -->
 						<tr class="dateSelectRow" style="display: none;">
 							<td>End date</td>
 							<td><aef:datepicker value="${endDate}" id="effEndDate"
 								name="endDate"
-								format="%{getText('webwork.shortDateTime.format')}" /></td>
+								format="%{getText('struts.shortDateTime.format')}" /></td>
 						</tr>
 						<!--  User selection -->
 						<tr id="userSelect">

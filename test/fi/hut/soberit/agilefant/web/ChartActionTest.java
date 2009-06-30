@@ -1,16 +1,19 @@
 package fi.hut.soberit.agilefant.web;
 
-import org.junit.*;
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
+import static org.junit.Assert.assertEquals;
 
-import com.opensymphony.xwork.Action;
+import org.junit.Before;
+import org.junit.Test;
+
+import com.opensymphony.xwork2.Action;
 
 import fi.hut.soberit.agilefant.business.IterationBurndownBusiness;
 import fi.hut.soberit.agilefant.business.IterationBusiness;
 import fi.hut.soberit.agilefant.model.Iteration;
-
-import static org.junit.Assert.*;
-
-import static org.easymock.EasyMock.*;
 
 public class ChartActionTest {
 

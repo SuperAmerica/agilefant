@@ -12,9 +12,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
 <link rel="shortcut icon" href="static/img/favicon.png" type="image/png" />
-<link rel="stylesheet" href="static/css/import.css?<ww:text name="webwork.agilefantReleaseId" />" type="text/css"/>
-<link rel="stylesheet" href="static/css/v5.css?<ww:text name="webwork.agilefantReleaseId" />" type="text/css"/>
-<link rel="stylesheet" href="static/css/datepicker.css?<ww:text name="webwork.agilefantReleaseId" />" type="text/css"/>
+<link rel="stylesheet" href="static/css/import.css?<ww:text name="struts.agilefantReleaseId" />" type="text/css"/>
+<link rel="stylesheet" href="static/css/v5.css?<ww:text name="struts.agilefantReleaseId" />" type="text/css"/>
+<link rel="stylesheet" href="static/css/datepicker.css?<ww:text name="struts.agilefantReleaseId" />" type="text/css"/>
 <title>
 <c:choose>
 	<c:when test="${title != null}">Agilefant - <c:out value="${title}"/></c:when>
@@ -23,25 +23,25 @@
 </title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
-<script type="text/javascript" src="static/js/datacache.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
-<script type="text/javascript" src="static/js/generic.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
-<script type="text/javascript" src="static/js/jquery.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
-<script type="text/javascript" src="static/js/jquery.cookie.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
-<script type="text/javascript" src="static/js/jquery.treeview.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
-<script type="text/javascript" src="static/js/jquery.treeview.async.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
-<script type="text/javascript" src="static/js/jquery-ui.min.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
-<script type="text/javascript" src="static/js/jquery.validate.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
-<script type="text/javascript" src="static/js/multiselect.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
-<script type="text/javascript" src="static/js/taskrank.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
-<script type="text/javascript" src="static/js/date.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
-<script type="text/javascript" src="static/js/datepicker.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
-<script type="text/javascript" src="static/js/jquery.wysiwyg.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
-<script type="text/javascript" src="static/js/validationRules.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
-<script type="text/javascript" src="static/js/inlineEdit.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
-<script type="text/javascript" src="static/js/userChooser.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
-<script type="text/javascript" src="static/js/themeChooser.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
-<script type="text/javascript" src="static/js/backlogChooser.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
-<script type="text/javascript" src="static/js/backlogSelector.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/datacache.js?<ww:text name="struts.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/generic.js?<ww:text name="struts.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/jquery.js?<ww:text name="struts.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/jquery.cookie.js?<ww:text name="struts.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/jquery.treeview.js?<ww:text name="struts.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/jquery.treeview.async.js?<ww:text name="struts.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/jquery-ui.min.js?<ww:text name="struts.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/jquery.validate.js?<ww:text name="struts.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/multiselect.js?<ww:text name="struts.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/taskrank.js?<ww:text name="struts.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/date.js?<ww:text name="struts.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/datepicker.js?<ww:text name="struts.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/jquery.wysiwyg.js?<ww:text name="struts.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/validationRules.js?<ww:text name="struts.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/inlineEdit.js?<ww:text name="struts.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/userChooser.js?<ww:text name="struts.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/themeChooser.js?<ww:text name="struts.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/backlogChooser.js?<ww:text name="struts.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/backlogSelector.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 
 <script type="text/javascript">
 $(document).ready(function() {
@@ -56,7 +56,7 @@ $(document).ready(function() {
 });
 </script>
 
-<script type="text/javascript" src="static/js/onLoad.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/onLoad.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 </head>
 
 <!-- Icons from http://sweetie.sublink.ca/ -->
@@ -79,7 +79,7 @@ Agilefant
 		<tr>
 			<td>
 				<ww:url id="editLink" action="dailyWork" includeParams="none">
-					<ww:param name="userId" value="${currentUser.id}" />
+					<ww:param name="userId" value="%{currentUser.id}" />
 				</ww:url>
 				<ww:a href="%{editLink}">${currentUser.fullName}</ww:a>
 			</td>

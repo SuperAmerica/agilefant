@@ -3,18 +3,28 @@ package fi.hut.soberit.agilefant.web;
 import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
 
+import org.apache.struts2.StrutsTestCase;
 import org.junit.Before;
 import org.junit.Test;
 
 import fi.hut.soberit.agilefant.business.SettingBusiness;
 
+/**
+ * StrutsTestCase extends jUnit 3's <code>TestCase</code>.
+ * Therefore, the tests must be written in jUnit 3 style.
+ */
 
-public class SettingActionTest {
+public class SettingActionTest extends StrutsTestCase {
     public SettingAction testable;
     public SettingBusiness settingBusiness;
-    
+        
     @Before
     public void setUp() {
+        try {
+            super.setUp();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         settingBusiness = createMock(SettingBusiness.class);
         testable = new SettingAction();
         testable.setSettingBusiness(settingBusiness);

@@ -1,5 +1,12 @@
 package fi.hut.soberit.agilefant.web;
 
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -10,14 +17,12 @@ import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.opensymphony.xwork.Action;
+import com.opensymphony.xwork2.Action;
 
 import fi.hut.soberit.agilefant.business.TimesheetBusiness;
 import fi.hut.soberit.agilefant.business.UserBusiness;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.util.BacklogTimesheetNode;
-import static org.junit.Assert.*;
-import static org.easymock.EasyMock.*;
 
 
 public class TimesheetActionTest {

@@ -15,9 +15,9 @@ $(document).ready(function() {
 </script>
 
 <ww:date name="%{new java.util.Date()}" id="start"
-	format="%{getText('webwork.shortDateTime.format')}" />
+	format="%{getText('struts.shortDateTime.format')}" />
 <ww:date name="%{new java.util.Date()}" id="end"
-	format="%{getText('webwork.shortDateTime.format')}" />
+	format="%{getText('struts.shortDateTime.format')}" />
 
 <div class="validateWrapper validateNewProject">
 <ww:form action="storeNewProject" method="post">
@@ -88,7 +88,7 @@ $(document).ready(function() {
 					<td>*</td>
 					<td colspan="2"><aef:datepicker
 						id="start_date_${project.id}" name="startDate"
-						format="%{getText('webwork.shortDateTime.format')}"
+						format="%{getText('struts.shortDateTime.format')}"
 						value="%{#start}" /><label for="start_date">&nbsp;</label></td>
 				</tr>
 				<tr>
@@ -96,7 +96,7 @@ $(document).ready(function() {
 					<td>*</td>
 					<td colspan="2"><aef:datepicker
 						id="end_date_${project.id}" name="endDate"
-						format="%{getText('webwork.shortDateTime.format')}"
+						format="%{getText('struts.shortDateTime.format')}"
 						value="%{#end}" /><label for="end_date">&nbsp;</label></td>
 				</tr>
 				<tr>

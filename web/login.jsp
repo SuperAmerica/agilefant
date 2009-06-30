@@ -11,8 +11,8 @@
 -->
 </style>
 
-<script type="text/javascript" src="static/js/generic.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
-<script type="text/javascript" src="static/js/jquery.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/generic.js?<%--<ww:text name="struts.agilefantReleaseId" />--%>"></script>
+<script type="text/javascript" src="static/js/jquery.js?<%--<ww:text name="struts.agilefantReleaseId" />--%>"></script>
 
 <style type="text/css" media="screen">
 <!--
@@ -34,7 +34,7 @@
 
 
 
-  </head>
+  ----</head>
   <body>
 
   <script type="text/javascript">
@@ -99,8 +99,8 @@
             
             <!-- URL to new password generation -->
             <div id="forgot">
-            	<ww:url id="newPassword" action="newPassword" />
-            	Forgot your password? <ww:a href="${newPassword}">Get a new one!</ww:a>
+            	<ww:url var="newPasswordAction" action="newPassword" />
+            	Forgot your password? <ww:a href="%{newPasswordAction}">Get a new one!</ww:a>
             </div>
             
             <!-- Show disclaimer only if browser is not Mozilla Firefox -->

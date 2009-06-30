@@ -113,14 +113,14 @@
 	<ww:form method="post" id="iterationEditForm" action="storeIteration">
 		<ww:hidden name="iterationId" value="${iteration.id}" />
 		<ww:date name="%{iteration.getTimeOfDayDate(6)}" id="start"
-			format="%{getText('webwork.shortDateTime.format')}" />
+			format="%{getText('struts.shortDateTime.format')}" />
 		<ww:date name="%{iteration.getTimeOfDayDate(18)}" id="end"
-			format="%{getText('webwork.shortDateTime.format')}" />
+			format="%{getText('struts.shortDateTime.format')}" />
 		<c:if test="${iteration.id > 0}">
 			<ww:date name="%{iteration.startDate}" id="start"
-				format="%{getText('webwork.shortDateTime.format')}" />
+				format="%{getText('struts.shortDateTime.format')}" />
 			<ww:date name="%{iteration.endDate}" id="end"
-				format="%{getText('webwork.shortDateTime.format')}" />
+				format="%{getText('struts.shortDateTime.format')}" />
 		</c:if>
 
 		<table class="formTable">
@@ -172,7 +172,7 @@
 				<td>*</td>
 				<td colspan="2">					
 					<aef:datepicker id="start_date_${iteration.id}" name="startDate"
-						format="%{getText('webwork.shortDateTime.format')}"
+						format="%{getText('struts.shortDateTime.format')}"
 						value="%{#start}" />
 				</td>
 			</tr>
@@ -181,7 +181,7 @@
 				<td>*</td>
 				<td colspan="2">
 					<aef:datepicker id="end_date_${iteration.id}" name="endDate"
-						format="%{getText('webwork.shortDateTime.format')}"
+						format="%{getText('struts.shortDateTime.format')}"
 						value="%{#end}" />
 				</td>
 			</tr>

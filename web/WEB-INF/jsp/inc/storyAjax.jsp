@@ -110,7 +110,7 @@ $(document).ready(function() {
 								id="originalEstimateField_${story.id}-${storyListContext}" />
 							</c:otherwise>
 						</c:choose>
-						<ww:label value="%{getText('webwork.estimateExample')}" /></td>
+						<ww:label value="%{getText('struts.estimateExample')}" /></td>
 					</tr>
 				</c:when>
 				<c:otherwise>
@@ -156,7 +156,7 @@ $(document).ready(function() {
 								id="effortLeftField_${story.id}-${storyListContext}" />
 							</c:otherwise>
 						</c:choose>
-						<ww:label value="%{getText('webwork.estimateExample')}" />
+						<ww:label value="%{getText('struts.estimateExample')}" />
 						</td>
 					</tr>
 				</c:otherwise>

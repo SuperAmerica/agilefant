@@ -71,8 +71,8 @@
 	  		<tr>
 	  			<th>Timeframe</th>
 	  			<td>
-	  				<ww:date name="backlog.startDate" format="%{getText('webwork.date.format')}" />
-				- <ww:date name="backlog.endDate" format="%{getText('webwork.date.format')}" />
+	  				<ww:date name="backlog.startDate" format="%{getText('struts.date.format')}" />
+				- <ww:date name="backlog.endDate" format="%{getText('struts.date.format')}" />
 	  			</td>
 	  			<td></td>
 	  		</tr>

@@ -1,22 +1,24 @@
-<!DOCTYPE xwork PUBLIC "-//OpenSymphony Group//XWork 1.1.1//EN"
-"http://www.opensymphony.com/xwork/xwork-1.1.1.dtd">
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
 
-<xwork>
-	<!-- Include webwork defaults (from WebWork JAR). -->
-	<include file="webwork-default.xml" />
+<struts>
+	<!-- Include struts defaults (from Struts JAR). -->
+	<include file="struts-default.xml" />
 
 	<!-- Configuration for the default package. -->
-	<package name="default" extends="webwork-default">
+	<package name="default" extends="struts-default">
 		<interceptors>
 			<interceptor name="refreshUser"
 				class="refreshUserInterceptor" />
-			<interceptor name="contextView"
-				class="contextViewInterceptor" />
+			<!-- <interceptor name="contextView"
+				class="contextViewInterceptor" />-->
 			<interceptor-stack name="authenticationStack">
 				<interceptor-ref name="exception" />
 				<interceptor-ref name="completeStack" />
 				<interceptor-ref name="refreshUser" />
-				<interceptor-ref name="contextView" />
+				<!-- <interceptor-ref name="contextView" />-->
 			</interceptor-stack>
 			<interceptor-stack name="noAuthenticationStack">
 				<interceptor-ref name="exception" />
@@ -52,62 +54,64 @@
 		</action>
 -->
 		<!-- Context view -->
+		
 		<action name="contextView"
 			class="contextViewAction">
-			<result type="redirect-action">
+			<result type="redirectAction">
 				<param name="actionName">selectBacklog</param>
 			</result>
-			<result name="success_iteration" type="redirect-action">
+			<result name="success_iteration" type="redirectAction">
 				<param name="actionName">editIteration</param>
 				<param name="iterationId">${contextObjectId}</param>
 			</result>
-			<result name="success_project" type="redirect-action">
+			<result name="success_project" type="redirectAction">
 				<param name="actionName">editProject</param>
 				<param name="projectId">${contextObjectId}</param>
 			</result>
-			<result name="success_product" type="redirect-action">
+			<result name="success_product" type="redirectAction">
 				<param name="actionName">editProduct</param>
 				<param name="productId">${contextObjectId}</param>
 			</result>
-			<result name="success_dailyWork" type="redirect-action">
+			<result name="success_dailyWork" type="redirectAction">
 				<param name="actionName">dailyWork</param>
 			</result>
 			
-			<result name="success_users" type="redirect-action">
+			<result name="success_users" type="redirectAction">
 				<param name="actionName">listUsers</param>
 			</result>
-			<result name="success_teams" type="redirect-action">
+			<result name="success_teams" type="redirectAction">
                 <param name="actionName">listTeams</param>
             </result>
 			
-			<result name="success_settings" type="redirect-action">
+			<result name="success_settings" type="redirectAction">
 				<param name="actionName">settings</param>
 			</result>
 				
-			<result name="success_timesheet" type="redirect-action">
+			<result name="success_timesheet" type="redirectAction">
 				<param name="actionName">timesheet</param>
 			</result>
 			
 			<result name="success_projectTypes"
-				type="redirect-action">
+				type="redirectAction">
 				<param name="actionName">listProjectTypes</param>
 			</result>
 			<result name="success_businessThemes"
-				type="redirect-action">
+				type="redirectAction">
 				<param name="actionName">listBusinessThemes</param>
 			</result>
 			<result name="success_globalThemes"
-                type="redirect-action">
+                type="redirectAction">
                 <param name="actionName">globalThemes</param>
             </result>
 			<result name="success_projectPortfolio"
-				type="redirect-action">
+				type="redirectAction">
 				<param name="actionName">projectPortfolio</param>
 			</result>
-			<result name="success_" type="redirect-action">
+			<result name="success_" type="redirectAction">
 				<param name="actionName">selectBacklog</param>
 			</result>
 		</action>
+		
 		<!-- Project type actions -->
 		<!-- 
 		<action name="listProjectTypes" method="getAll"
@@ -123,11 +127,11 @@
 		</action>
 		<action name="deleteProjectType" method="delete"
 			class="projectTypeAction">
-			<result type="redirect-action">listProjectTypes</result>
+			<result type="redirectAction">listProjectTypes</result>
 		</action>
 		<action name="storeProjectType" method="store"
 			class="projectTypeAction">
-			<result type="redirect-action">listProjectTypes</result>
+			<result type="redirectAction">listProjectTypes</result>
 		</action>
 		<action name="projectTypeTabs" method="edit"
 			class="projectTypeAction">
@@ -164,12 +168,12 @@
 		-->
 		<action name="deleteProduct" method="delete"
 			class="productAction">
-			<result type="redirect-action">selectBacklog</result>
+			<result type="redirectAction">selectBacklog</result>
 		</action>
 		
 		<action name="storeProduct" method="store"
 			class="productAction">
-			<result type="redirect-action">
+			<result type="redirectAction">
 				<param name="actionName">contextView</param>
 				<param name="contextName">product</param>
 				<param name="contextObjectId">${productId}</param>
@@ -200,7 +204,7 @@
 <!-- 
 		<action name="resetBliOrigEstAndEffortLeft"
 			method="resetBliOrigEstAndEffortLeft" class="backlogItemAction">
-			<result type="redirect-action">
+			<result type="redirectAction">
 				<param name="actionName">popContext</param>
 			</result>
 		</action>
@@ -248,7 +252,7 @@
     </action>
 		<action name="deleteStory" method="delete"
 			class="storyAction">
-			<result type="redirect-action">
+			<result type="redirectAction">
                 <param name="actionName">editBacklog</param>
                 <param name="backlogId">${backlogId}</param>
 			</result>
@@ -334,7 +338,7 @@
 
     <action name="storeProject" method="store"
       class="projectAction">
-      <result type="redirect-action">
+      <result type="redirectAction">
         <param name="actionName">contextView</param>
         <param name="contextName">project</param>
         <param name="contextObjectId">${projectId}</param>
@@ -492,7 +496,7 @@
 		
 		<action name="storeIteration" method="store"
 			class="iterationAction">
-			<result type="redirect-action">
+			<result type="redirectAction">
 				<param name="actionName">contextView</param>
 				<param name="contextName">iteration</param>
 				<param name="contextObjectId">${iterationId}</param>
@@ -541,16 +545,16 @@
             <result>/WEB-INF/jsp/forms/createUser.jsp</result>
         </action>
 		<action name="deleteUser" method="delete" class="userAction">
-			<result type="redirect-action">listUsers</result>
+			<result type="redirectAction">listUsers</result>
 		</action>
 		<action name="disableUser" method="disable" class="userAction">
-		    <result type="redirect-action">listUsers</result>
+		    <result type="redirectAction">listUsers</result>
 		</action>
 		<action name="enableUser" method="enable" class="userAction">
-            <result type="redirect-action">listUsers</result>
+            <result type="redirectAction">listUsers</result>
         </action>
 		<action name="storeUser" method="store" class="userAction">
-			<result type="redirect-action">listUsers</result>			
+			<result type="redirectAction">listUsers</result>			
 		</action>
 		<action name="ajaxStoreUser" method="ajaxStoreUser"
 			class="userAction">		
@@ -576,10 +580,10 @@
             <result>/WEB-INF/jsp/forms/createTeam.jsp</result>
         </action>
 		<action name="deleteTeam" method="delete" class="teamAction">
-			<result type="redirect-action">listTeams</result>
+			<result type="redirectAction">listTeams</result>
 		</action>
 		<action name="storeTeam" method="store" class="teamAction">
-			<result type="redirect-action">listTeams</result>
+			<result type="redirectAction">listTeams</result>
 		</action>
 		<action name="ajaxStoreTeam" method="ajaxStoreTeam"
 			class="teamAction">		
@@ -601,14 +605,14 @@
 <!-- 
 		<action name="storeBacklogItemInDailyWork" method="store"
 			class="backlogItemAction">
-			<result type="redirect-action">
+			<result type="redirectAction">
 				<param name="actionName">dailyWork</param>
 			</result>
 		</action>
 
 		<action name="deleteBacklogItemInDailyWork" method="delete"
 			class="backlogItemAction">
-			<result type="redirect-action">
+			<result type="redirectAction">
 				<param name="actionName">dailyWork</param>
 			</result>
 		</action>
@@ -642,31 +646,31 @@
 		<!-- 
 		<action name="moveProjectUp" class="projectPortfolioAction"
 			method="moveProjectUp">
-			<result type="redirect-action">
+			<result type="redirectAction">
 				<param name="actionName">projectPortfolio</param>
 			</result>
 		</action>
 		<action name="moveProjectDown" class="projectPortfolioAction"
 			method="moveProjectDown">
-			<result type="redirect-action">
+			<result type="redirectAction">
 				<param name="actionName">projectPortfolio</param>
 			</result>
 		</action>
 		<action name="moveProjectTop" class="projectPortfolioAction"
 			method="moveProjectTop">
-			<result type="redirect-action">
+			<result type="redirectAction">
 				<param name="actionName">projectPortfolio</param>
 			</result>
 		</action>
 		<action name="moveProjectBottom" class="projectPortfolioAction"
 			method="moveProjectBottom">
-			<result type="redirect-action">
+			<result type="redirectAction">
 				<param name="actionName">projectPortfolio</param>
 			</result>
 		</action>
 		<action name="unrankProject" class="projectPortfolioAction"
 			method="unrankProject">
-			<result type="redirect-action">
+			<result type="redirectAction">
 				<param name="actionName">projectPortfolio</param>
 			</result>
 		</action>
@@ -786,22 +790,22 @@
 		</action>
 
 		<action name="popContext" class="contextStackAction">
-			<result type="redirect-action">
+			<result type="redirectAction">
 				<param name="actionName">selectBacklog</param>
 			</result>
 			<result name="success_editIteration"
-				type="redirect-action">
+				type="redirectAction">
 				<param name="actionName">editIteration</param>
 				<param name="iterationId">${view.contextObject}</param>
 			</result>
 
-			<result name="success_editProject" type="redirect-action">
+			<result name="success_editProject" type="redirectAction">
 				<param name="actionName">editProject</param>
 				<param name="projectId">${view.contextObject}</param>
 			</result>
  -->
 			<!-- <result name="success_editBacklogItem"
-				type="redirect-action">
+				type="redirectAction">
 				<param name="actionName">editBacklogItem</param>
 				<param name="backlogItemId">
 					${view.contextObject}
@@ -809,23 +813,23 @@
 			</result>-->
 <!-- 
 			<result name="success_listProducts"
-				type="redirect-action">
+				type="redirectAction">
 				<param name="actionName">listProducts</param>
 			</result>
-			<result name="success_editProduct" type="redirect-action">
+			<result name="success_editProduct" type="redirectAction">
 				<param name="actionName">editProduct</param>
 				<param name="productId">${view.contextObject}</param>
 			</result>
 
 			<result name="success_editIterationGoal"
-				type="redirect-action">
+				type="redirectAction">
 				<param name="actionName">editIterationGoal</param>
 				<param name="iterationGoalId">
 					${view.contextObject}
 				</param>
 			</result>
 
-			<result name="success_dailyWork" type="redirect-action">
+			<result name="success_dailyWork" type="redirectAction">
 				<param name="actionName">dailyWork</param>
 			</result>
 
@@ -898,7 +902,7 @@
             <result>/WEB-INF/jsp/inc/createHourEntry.jsp</result>
         </action>
 		<action name="storeHourEntry" class="hourEntryAction" method="store">
-			<result type="redirect-action">
+			<result type="redirectAction">
 				<param name="actionName">popContext</param>
 			</result>
 		</action>
@@ -911,7 +915,7 @@
       </result>
     </action>
 		<action name="deleteHourEntry" method="delete" class="hourEntryAction">
-			<result type="redirect-action">
+			<result type="redirectAction">
 				<param name="actionName">popContext</param>
 			</result>
 		</action>
@@ -937,7 +941,7 @@
 			class="businessThemeAction">
 			
 			<result name="success_product" type="redirect">editProduct.action?productId=${productId}</result>
-			<result name="success_globalThemes" type="redirect-action">
+			<result name="success_globalThemes" type="redirectAction">
                 <param name="actionName">globalThemes</param>
 			</result>
 
@@ -1069,4 +1073,4 @@
 			</result>
 		</action> -->
 </package>
-</xwork>
+</struts>

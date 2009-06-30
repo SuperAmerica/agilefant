@@ -1,5 +1,10 @@
 package fi.hut.soberit.agilefant.web;
-import static org.junit.Assert.*;
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import java.util.Collections;
 import java.util.List;
@@ -9,8 +14,7 @@ import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.opensymphony.xwork.Action;
-import static org.easymock.EasyMock.*;
+import com.opensymphony.xwork2.Action;
 
 import fi.hut.soberit.agilefant.business.HourEntryBusiness;
 import fi.hut.soberit.agilefant.util.DailySpentEffort;

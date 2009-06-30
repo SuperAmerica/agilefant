@@ -62,7 +62,7 @@
 		<property description="The directory containing the jchav jars" name="jchav.libs.dir" value="/opt/jchav-1.1.0" />
 		<property description="The JMeter test plan script we want to run" name="jmeter.testplan" value="/opt/jakarta-jmeter-2.3/plans/Agilefant_single_user.jmx" />
 		<property description="The location to store the per run files" name="jmeter.result.dir" value="${test.reports.jmeter}" />
-		<property description="The resulting file location, make sure this is unique for each build" name="jmeter.result.file" value="${jmeter.result.dir}/result_${webwork.agilefantVersionNumber}_${build.id}.xml" />
+		<property description="The resulting file location, make sure this is unique for each build" name="jmeter.result.file" value="${jmeter.result.dir}/result_${struts.agilefantVersionNumber}_${build.id}.xml" />
 		<property description="The location to generate the html and charts to. " name="jchav.result.dir" value="${test.reports.jchav}" />
 
 	</target>

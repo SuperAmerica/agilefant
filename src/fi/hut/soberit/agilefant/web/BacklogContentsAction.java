@@ -7,7 +7,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.opensymphony.xwork.ActionSupport;
+import com.opensymphony.xwork2.ActionSupport;
 
 import fi.hut.soberit.agilefant.business.BacklogBusiness;
 import fi.hut.soberit.agilefant.business.HourEntryBusiness;

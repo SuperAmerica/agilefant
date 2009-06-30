@@ -10,14 +10,14 @@
 <div id="projectEditTab-${projectId}" class="projectNaviTab">
 
 <ww:date name="%{new java.util.Date()}" id="start"
-	format="%{getText('webwork.shortDateTime.format')}" />
+	format="%{getText('struts.shortDateTime.format')}" />
 <ww:date name="%{new java.util.Date()}" id="end"
-	format="%{getText('webwork.shortDateTime.format')}" />
+	format="%{getText('struts.shortDateTime.format')}" />
 <c:if test="${project.id > 0}">
 	<ww:date name="%{project.startDate}" id="start"
-		format="%{getText('webwork.shortDateTime.format')}" />
+		format="%{getText('struts.shortDateTime.format')}" />
 	<ww:date name="%{project.endDate}" id="end"
-		format="%{getText('webwork.shortDateTime.format')}" />
+		format="%{getText('struts.shortDateTime.format')}" />
 </c:if>
 <ww:hidden name="projectId" value="${project.id}" />
 <ww:hidden name="productId" value="${project.parent.id}" />
@@ -129,7 +129,7 @@ $(document).ready(function() {
 						<td>*</td>
 						<td colspan="2"><aef:datepicker id="start_date_${project.id}"
 							name="startDate"
-							format="%{getText('webwork.shortDateTime.format')}"
+							format="%{getText('struts.shortDateTime.format')}"
 							value="%{#start}" /></td>
 					</tr>
 					<tr>
@@ -138,7 +138,7 @@ $(document).ready(function() {
 						<td colspan="2">
 							<aef:datepicker id="end_date_${project.id}"
 							name="endDate"
-							format="%{getText('webwork.shortDateTime.format')}"
+							format="%{getText('struts.shortDateTime.format')}"
 							value="%{#end}" /></td>
 					</tr>
           <%--

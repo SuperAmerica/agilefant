@@ -6,7 +6,7 @@ import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.joda.time.DateTime;
 
-import com.opensymphony.xwork.TextProvider;
+import com.opensymphony.xwork2.TextProvider;
 
 
 public interface TimesheetExportBusiness {

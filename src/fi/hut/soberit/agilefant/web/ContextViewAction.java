@@ -2,12 +2,12 @@ package fi.hut.soberit.agilefant.web;
 
 import java.util.Map;
 
+import org.apache.struts2.interceptor.SessionAware;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.opensymphony.webwork.interceptor.SessionAware;
-import com.opensymphony.xwork.Action;
-import com.opensymphony.xwork.ActionSupport;
+import com.opensymphony.xwork2.Action;
+import com.opensymphony.xwork2.ActionSupport;
 
 /**
  * This actions acts as a dispatcher for different context based views. Basic

@@ -6,8 +6,8 @@ import java.util.Map;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.opensymphony.xwork.ActionContext;
-import com.opensymphony.xwork.ActionSupport;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionSupport;
 
 /**
  * The action class for populating the lefthand menu.

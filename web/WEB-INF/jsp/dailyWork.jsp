@@ -16,7 +16,7 @@
 
 <ww:form>
 <h2>The daily work of <ww:select list="enabledUsers"
-	listKey="id" listValue="fullName" name="userId" value="${user.id}"
+	listKey="id" listValue="fullName" name="userId" value="%{user.id}"
 	onchange="this.form.submit();" /></h2>
 </ww:form>
 
@@ -38,8 +38,8 @@
 </c:when>
 <c:otherwise>
 <ww:url id="backlogsLink" action="contextView" includeParams="none">
-	<ww:param name="contextName" value="${currentContext}" />
-	<ww:param name="contextObjectId" value="${currentPageId}" />
+	<ww:param name="contextName" value="%{currentContext}" />
+	<ww:param name="contextObjectId" value="%{currentPageId}" />
 	<ww:param name="resetContextView" value="true" />
 </ww:url>
 <p>There are no stories or tasks assigned to user <c:out value="${user.fullName}" />.</p>

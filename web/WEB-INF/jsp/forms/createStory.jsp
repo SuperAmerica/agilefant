@@ -56,7 +56,7 @@ $(document).ready(function() {
 			<td colspan="2">
                       <ww:textfield size="10" name="story.originalEstimate"
                           id="createStory_originalEstimateField" />
-                      <ww:label value="%{getText('webwork.estimateExample')}" />
+                      <ww:label value="%{getText('struts.estimateExample')}" />
                   </td>
 		</tr>
 		--%>

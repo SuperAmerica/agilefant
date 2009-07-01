@@ -30,8 +30,6 @@ public class StoryAction extends ActionSupport implements CRUDAction {
 
     private static final long serialVersionUID = -4289013472775815522L;
 
-    // private HistoryBusiness historyBusiness;
-
     private int backlogId = 0;
 
     private int storyId;
@@ -40,8 +38,6 @@ public class StoryAction extends ActionSupport implements CRUDAction {
     
     private int iterationId;
 
-    // private AFTime effortLeft;
-
     private int priority;
 
     private Story story;
@@ -49,50 +45,19 @@ public class StoryAction extends ActionSupport implements CRUDAction {
     private Backlog backlog;
 
     private Set<Integer> userIds = new HashSet<Integer>();
-    // private Map<Integer, String> userIds = new HashMap<Integer, String>();
-
-    private Set<Integer> themeIds = new HashSet<Integer>();
-
-    @Autowired
-    private BacklogBusiness backlogBusiness;
-
-    @Autowired
-    private StoryBusiness storyBusiness;
     
-    // private BusinessThemeBusiness businessThemeBusiness;
-
-    private String spentEffort = null;
-
-    private String spentEffortComment = null;
-
     private String storyListContext;
-
-    // private List<BusinessTheme> bliActiveOrSelectedThemes;
-
-    // private int fromTodoId = 0;
-
-    // private TodoBusiness todoBusiness;
 
     private String jsonData;
     
     private boolean moveTasks;
 
+    
+    @Autowired
+    private BacklogBusiness backlogBusiness;
 
-
-    /**
-     * Get the iteration's stories and transform them to JSON. 
-     */
-    public String ajaxGetStories() {
-        try {
-            backlog = backlogBusiness.retrieve(backlogId);
-            jsonData = new JSONSerializer().serialize(backlog.getStories());
-        }
-        catch (ObjectNotFoundException onfe) {
-            return CRUDAction.AJAX_ERROR;
-        }
-        return CRUDAction.AJAX_SUCCESS;
-    }
-
+    @Autowired
+    private StoryBusiness storyBusiness;
 
     public String create() {
         // Id of newly created, not yet persisted story is 0

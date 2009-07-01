@@ -258,8 +258,8 @@ function disableElementIfValue(me, handle, ref) {
 }
 
 function getStories(backlogId, element, preselectedId) {
-    jQuery.getJSON("ajaxGetStories.action",
-        { 'iterationId': backlogId }, function(data, status) {
+    jQuery.getJSON("ajax/retrieveStories.action",
+        { 'backlogId': backlogId }, function(data, status) {
         var select = $(element);
         
         if (data.length > 0) {

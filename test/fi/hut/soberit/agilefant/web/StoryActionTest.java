@@ -76,33 +76,6 @@ public class StoryActionTest {
     }
     
     @Test
-    public void testAjaxGetStories() {
-        Collection<Story> stories = Arrays.asList(story); 
-        iter.setStories(stories);
-        
-        storyAction.setBacklogId(iter.getId());
-        expect(backlogBusiness.retrieve(iter.getId())).andReturn(iter);
-        replay(storyBusiness, backlogBusiness);
-
-        assertEquals(CRUDAction.AJAX_SUCCESS, storyAction.ajaxGetStories());
-        assertEquals(new JSONSerializer().serialize(stories), storyAction.getJsonData());
-        
-        verify(storyBusiness, backlogBusiness);
-    }
-    
-    @Test
-    public void testAjaxGetStories_invalidBacklog() {
-        storyAction.setBacklogId(-1);
-        
-        expect(backlogBusiness.retrieve(-1)).andThrow(new ObjectNotFoundException());
-        replay(storyBusiness, backlogBusiness);
-        
-        assertEquals(CRUDAction.AJAX_ERROR, storyAction.ajaxGetStories());
-        
-        verify(storyBusiness, backlogBusiness);
-    }
-    
-    @Test
     public void testAjaxDeleteStory() {
        storyBusiness.remove(story.getId());
        replay(storyBusiness);

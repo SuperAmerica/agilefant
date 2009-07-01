@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+  
+  <package name="ajax" namespace="/ajax" extends="default">
+    
+    <result-types>
+      <!-- JSON result type -->
+      <result-type name="json" default="true" class="code.google.struts2jsonresult.JSONResult">
+        <param name="prettyPrint">false</param>
+        <param name="out.noCache">true</param>
+      </result-type>
+    </result-types>
+    
+    <!-- Interceptors -->
+    <interceptors>
+      <interceptor name="refreshUser" class="refreshUserInterceptor" />
+      <interceptor-stack name="authenticationStack">
+        <interceptor-ref name="exception"  />
+        <interceptor-ref name="completeStack" />
+        <interceptor-ref name="refreshUser" />
+      </interceptor-stack>
+    </interceptors>
+    
+    <default-interceptor-ref name="authenticationStack" />
+    
+    <global-results>
+      <!-- Global errors -->
+      <result name="objectNotFound" type="httpheader">
+        <param name="status">404</param>
+      </result>
+      <result name="conflict" type="httpheader">
+        <param name="status">409</param>
+      </result>
+    </global-results>
+    
+    <!-- AJAX exceptions -->
+    <global-exception-mappings>
+      <exception-mapping result="objectNotFound"
+        exception="fi.hut.soberit.agilefant.exception.ObjectNotFoundException" />
+      
+      <exception-mapping result="conflict"
+        exception="org.hibernate.exception.ConstraintViolationException" />
+        
+    </global-exception-mappings>
+    
+    <!-- AJAX actions -->
+    <action name="retrieveStories" method="retrieveStories" class="backlogAction">
+      <result name="success" type="json">
+        <param name="target">stories</param>
+      </result>
+    </action>
+  
+  </package>
+  
+</struts>

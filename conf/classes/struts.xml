@@ -475,9 +475,9 @@
 		<action name="ajaxCreateIteration" method="create"
        		 class="iterationAction">
        	 	<result>/WEB-INF/jsp/forms/createIteration.jsp</result>
- 	   	</action>
+ 	  </action>
  
-    	<action name="deleteIteration" method="delete"
+    <action name="deleteIteration" method="delete"
 			class="iterationAction">
 			<result type="redirect">editProject.action?projectId=${projectId}</result>
 		</action>
@@ -506,6 +506,9 @@
 
 		
 		<action name="storeNewIteration" method="store"	class="iterationAction">
+		  <result name="success" type="httpheader">
+		    <param name="status">200</param>
+		  </result>
 		</action>
 		
 		 

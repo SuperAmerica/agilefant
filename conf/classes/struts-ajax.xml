@@ -18,8 +18,17 @@
     <!-- Interceptors -->
     <interceptors>
       <interceptor name="refreshUser" class="refreshUserInterceptor" />
+      <interceptor name="singleFieldEdit" class="singleFieldEditInterceptor" />
+      
       <interceptor-stack name="authenticationStack">
-        <interceptor-ref name="exception"  />
+        <interceptor-ref name="exception" />
+        <interceptor-ref name="completeStack" />
+        <interceptor-ref name="refreshUser" />
+      </interceptor-stack>
+      
+      <interceptor-stack name="singleFieldStack">
+        <interceptor-ref name="exception" />
+        <interceptor-ref name="singleFieldEdit" />
         <interceptor-ref name="completeStack" />
         <interceptor-ref name="refreshUser" />
       </interceptor-stack>
@@ -34,6 +43,9 @@
       </result>
       <result name="conflict" type="httpheader">
         <param name="status">409</param>
+      </result>
+      <result name="input" type="httpheader">
+        <param name="status">500</param>
       </result>
     </global-results>
     
@@ -53,6 +65,17 @@
         <param name="target">stories</param>
       </result>
     </action>
+
+    <!--
+    EXAMPLE: Single field editable 
+         
+    <action name="retrieveTask" method="retrieve" class="taskAction">
+      <interceptor-ref name="singleFieldStack" />
+      <result name="success" type="json">
+        <param name="target">task</param>
+      </result>
+    </action>
+    -->
   
   </package>
   

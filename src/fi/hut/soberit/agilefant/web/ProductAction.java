@@ -27,20 +27,8 @@ public class ProductAction extends BacklogContentsAction implements CRUDAction {
     private Product product;
 
     private Collection<Product> products = new ArrayList<Product>();
-    
-    
-    
-//    private Map<Project, EffortSumData> effLeftSums;
-//    
-//    private Map<Project, EffortSumData> origEstSums;
-//    
-//    private Map<BusinessTheme, BusinessThemeMetrics> themeMetrics;
-    
-    //private BusinessThemeBusiness businessThemeBusiness; 
-    
+     
     private String jsonData = "";
-    
-    
 
     public String create() {
         productId = 0;

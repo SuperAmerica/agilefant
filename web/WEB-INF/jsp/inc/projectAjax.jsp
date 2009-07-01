@@ -19,8 +19,8 @@
 	<ww:date name="%{project.endDate}" id="end"
 		format="%{getText('struts.shortDateTime.format')}" />
 </c:if>
-<ww:hidden name="projectId" value="${project.id}" />
-<ww:hidden name="productId" value="${project.parent.id}" />
+<ww:hidden name="projectId" value="%{project.id}" />
+<ww:hidden name="productId" value="%{project.parent.id}" />
 
 <aef:productList />
 <aef:projectTypeList id="projectTypes"/>
@@ -47,7 +47,7 @@ $(document).ready(function() {
 			<div class="subItems" style="margin-top: 0px; width: 720px;">
 			<div id="editProjectForm" class="validateWrapper validateProject">
 			<ww:form action="ajaxStoreProject" method="post">
-				<ww:hidden id="editProject-projectId-${project.id}" name="projectId" value="${project.id}" />
+        <ww:hidden id="editProject-projectId-%{project.id}" name="projectId" value="%{project.id}" />
 				<table class="formTable">
 					<tr>
 						<td>Name</td>
@@ -208,18 +208,20 @@ $(document).ready(function() {
 	<display:table class="listTable" name="project.children" id="row" requestURI="editProject.action">
 		<display:column title="Name" class="shortNameColumn">
 			<ww:url id="editLink" action="editIteration" includeParams="none">
-			<ww:param name="iterationId" value="${row.id}" />
+			<ww:param name="iterationId" value="%{row.id}" />
 			</ww:url>
-				<ww:a href="%{editLink}&contextViewName=editProject&contextObjectId=${project.id}">
+				<ww:a href="%{editLink}&contextViewName=editProject&contextObjectId=%{project.id}">
 					${aef:html(row.name)}
 				</ww:a>
 		</display:column>
 		
+<%--
 		<display:column title="Completed Storys" style="width: 90px;">
 			<c:out value="${row.metrics.percentDone}" />%
 			<c:out value="( ${row.metrics.completedItems} / " />
 			<c:out value="${row.metrics.totalItems} )" />
 		</display:column>
+    
 		
 		<display:column title="Effort left">
 			<c:out value="${row.metrics.effortLeft}" />
@@ -231,8 +233,8 @@ $(document).ready(function() {
 		
 		<display:column title="Velocity">
             <c:out value="${row.metrics.dailyVelocity}" />                           
-        </display:column>
-
+    </display:column>
+--%>
 		<display:column title="Start date">
 			<ww:date name="#attr.row.startDate" />
 		</display:column>
@@ -278,7 +280,8 @@ $(document).ready( function() {
 });
 
 </script>
---%>
+
+
 <table>
 <tr>
 <td>
@@ -286,8 +289,8 @@ $(document).ready( function() {
 <div class="subItems validateWrapper validateEmpty" style="margin-top: 0; margin-left: 3px; width: 710px;">
 	<a id="addProjectBusinessTheme_${project.id}" href="#">Attach theme &raquo;</a>
 
-	<ww:form action="storeBacklogThemebinding" method="post" id="projectBusinessThemesForm_${project.id}">
-	<ww:hidden name="backlogId" value="${project.id}"/>
+	<ww:form action="storeBacklogThemebinding" method="post" id="projectBusinessThemesForm_%{project.id}">
+	<ww:hidden name="backlogId" value="%{project.id}"/>
 	<input type="hidden" name="contextViewName" value="project" />
 	<div class="businessThemeTableWrapper">
 	<c:choose>
@@ -353,9 +356,9 @@ $(document).ready( function() {
 			</display:column>
 			<display:column sortable="false" title="Iteration" sortProperty="backlog.name">
 				<ww:url id="editLink" action="editIteration" includeParams="none">
-					<ww:param name="iterationId" value="${row.backlog.id}" />
+					<ww:param name="iterationId" value="%{row.backlog.id}" />
 				</ww:url>
-				<ww:a href="%{editLink}&contextViewName=editProduct&contextObjectId=${project.id}">						
+				<ww:a href="%{editLink}&contextViewName=editProduct&contextObjectId=%{project.id}">						
 					<c:out value="${row.backlog.name}"/>
 				</ww:a>
 			</display:column>
@@ -366,7 +369,9 @@ $(document).ready( function() {
 </td>
 </tr>
 </table>
-			
+
+--%>
+
 </div>
 
 </div>

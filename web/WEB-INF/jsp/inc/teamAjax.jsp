@@ -16,7 +16,7 @@
 			<div id="editUserForm" class="validateWrapper validateTeam">
 
 				<ww:form action="ajaxStoreTeam" method="post">
-				<ww:hidden name="teamId" value="#attr.teamId" />
+				<ww:hidden name="teamId" value="%{teamId}" />
 				<table class="formTable">
 					<tr>
 						<td>Name</td>
@@ -38,13 +38,13 @@
 						<c:forEach items="${userList}" var="user" varStatus="status">
 							<c:choose>
 								<c:when test="${aef:listContains(team.users, user)}">
-									<c:set var="selected" value="true" />
+									<c:set var="selected" value="checked=\"checked\"" />
 								</c:when>
 								<c:otherwise>
 									<c:set var="selected" value="" />
 								</c:otherwise>
 							</c:choose>
-							<li class="${(status.index % 2 == 0) ? 'even' : 'odd'}"><ww:checkbox name="userIds[%{user.id}]" value="#attr.selected"/>
+							<li class="${(status.index % 2 == 0) ? 'even' : 'odd'}"><input type="checkbox" name="userIds[${user.id}]" ${selected}/>
 							<c:out value="${user.fullName}" /></li>
 						</c:forEach>
 						</ul>

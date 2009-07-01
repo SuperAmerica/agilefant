@@ -83,13 +83,13 @@
 						<c:forEach items="${teamList}" var="team" varStatus="status">
 							<c:choose>
 								<c:when test="${aef:listContains(user.teams, team)}">
-									<c:set var="selected" value="true" />
+									<c:set var="selected" value="checked=\"checked\"" />
 								</c:when>
 								<c:otherwise>
 									<c:set var="selected" value="" />
 								</c:otherwise>
 							</c:choose>
-							<li class="${(status.index % 2 == 0) ? 'even' : 'odd'}"><ww:checkbox name="teamIds[%{team.id}]" value="%{selected}"/>
+							<li class="${(status.index % 2 == 0) ? 'even' : 'odd'}"><input type="checkbox" name="teamIds[${team.id}]" ${selected}/>
 							<c:out value="${team.name}" /></li>
 						</c:forEach>
 						</ul>

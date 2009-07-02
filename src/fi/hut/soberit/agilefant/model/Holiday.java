@@ -31,6 +31,7 @@ public class Holiday {
     public void setUser(User user) {
         this.user = user;
     }
+    /*
     @Type(type = "org.joda.time.contrib.hibernate.PersistentInterval")
     public Interval getInterval() {
         return interval;
@@ -38,5 +39,6 @@ public class Holiday {
     public void setInterval(Interval interval) {
         this.interval = interval;
     }
+    */
     
 }

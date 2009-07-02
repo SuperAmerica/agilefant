@@ -16,6 +16,7 @@
 	<classpathentry kind="lib" path="lib/commons-lang-2.3.jar"/>
 	<classpathentry kind="lib" path="lib/build/struts2-junit-plugin-2.1.6.jar"/>
 	<classpathentry kind="lib" path="lib/struts2jsonresult0.99.jar"/>
+	<classpathentry kind="lib" path="lib/slf4j-log4j12-1.5.8.jar"/>
 	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry exported="true" kind="lib" path="lib/commons-logging.jar">
 		<attributes>
@@ -50,13 +51,11 @@
 			<attribute name="javadoc_location" value="http://www.springframework.org/docs/api/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry exported="true" kind="lib" path="lib/jta.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/commons-pool-1.3.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/asm.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/asm-attrs.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/cglib-2.1_3.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/commons-beanutils.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/commons-collections-2.1.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/displaytag-1.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/postgresql-8.1-407.jdbc3.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/ehcache-1.2.0_03.jar"/>
@@ -92,5 +91,12 @@
 	<classpathentry exported="true" kind="lib" path="lib/jfreechart-1.0.13.jar"/>
 	<classpathentry kind="lib" path="lib/aspectjrt.jar"/>
 	<classpathentry kind="lib" path="lib/aspectjweaver.jar"/>
+	<classpathentry kind="lib" path="lib/common-annotations.jar"/>
+	<classpathentry kind="lib" path="lib/hibernate-commons-annotations.jar"/>
+	<classpathentry kind="lib" path="lib/hibernate-validator.jar"/>
+	<classpathentry kind="lib" path="lib/commons-collections-3.1.jar"/>
+	<classpathentry kind="lib" path="lib/javassist-3.9.0.GA.jar"/>
+	<classpathentry kind="lib" path="lib/jta-1.1.jar"/>
+	<classpathentry kind="lib" path="lib/slf4j-api-1.5.8.jar"/>
 	<classpathentry kind="output" path="eclipse-classes"/>
 </classpath>

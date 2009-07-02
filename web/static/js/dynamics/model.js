@@ -71,7 +71,7 @@ ModelFactoryClass.prototype = {
       cache: false,
       dataType: "json",
       type: "POST",
-      url: "iterationData.action",
+      url: "ajax/iterationData.action",
       data: {iterationId: iterationId}
     });
   },

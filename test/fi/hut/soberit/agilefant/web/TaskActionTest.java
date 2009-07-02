@@ -37,9 +37,18 @@ public class TaskActionTest {
         taskAction.setTaskBusiness(taskBusiness);
     }
     
+    private void replayAll() {
+        replay(transferObjectBusiness, taskBusiness);
+    }
+    
+    private void verifyAll() {
+        verify(transferObjectBusiness, taskBusiness);
+    }
+    
     @Before
     public void setUp() {
         task = new Task();
+        task.setId(444);
         taskAction.setTask(task);
         taskAction.setTaskId(task.getId());
     }
@@ -47,6 +56,29 @@ public class TaskActionTest {
     /*
      * TEST RETRIEVING.
      */
+    @Test
+    public void testRetrieve() {
+        expect(taskBusiness.retrieve(task.getId())).andReturn(task);
+        expect(transferObjectBusiness.constructTaskTO(task)).andReturn(new TaskTO(task));
+        replayAll();
+        
+        assertEquals(Action.SUCCESS, taskAction.retrieve());
+        assertTrue(taskAction.getTask() instanceof TaskTO);
+        
+        verifyAll(); 
+    }
+    
+    @Test(expected = ObjectNotFoundException.class)
+    public void testRetrieve_noSuchTask() {
+        taskAction.setTaskId(-1);
+        expect(taskBusiness.retrieve(-1)).andThrow(new ObjectNotFoundException());
+        replayAll();
+        
+        taskAction.retrieve();
+        
+        verifyAll();
+    }
+    
     
     /*
      * TEST STORING.
@@ -60,11 +92,11 @@ public class TaskActionTest {
             .andReturn(task);
         expect(transferObjectBusiness.constructTaskTO(task))
             .andReturn(new TaskTO(task));
-        replay(taskBusiness, transferObjectBusiness);
+        replayAll();
         
         assertEquals(Action.SUCCESS, taskAction.store());
         
-        verify(taskBusiness, transferObjectBusiness);
+        verifyAll();
     }
     
     @Test(expected = ObjectNotFoundException.class)
@@ -73,11 +105,11 @@ public class TaskActionTest {
         
         expect(taskBusiness.storeTask(task, 2, null, taskAction.getUserIds()))
             .andThrow(new ObjectNotFoundException("Iteration not found"));
-        replay(taskBusiness, transferObjectBusiness);
+        replayAll();
         
         taskAction.store();
         
-        verify(taskBusiness, transferObjectBusiness);
+        verifyAll();
     }
     
     /*
@@ -88,11 +120,11 @@ public class TaskActionTest {
     public void testDeleteTask() {
        expect(taskBusiness.retrieve(task.getId())).andReturn(task);
        taskBusiness.delete(task.getId());
-       replay(taskBusiness);
+       replayAll();
        
        assertEquals(Action.SUCCESS, taskAction.delete());
        
-       verify(taskBusiness);
+       verifyAll();
     }
     
     @Test(expected = ObjectNotFoundException.class)
@@ -100,11 +132,11 @@ public class TaskActionTest {
         taskAction.setTaskId(-1);
         expect(taskBusiness.retrieve(-1))
             .andThrow(new ObjectNotFoundException());
-        replay(taskBusiness);
+        replayAll();
         
         taskAction.delete();
         
-        verify(taskBusiness);
+        verifyAll();
     }
     
     @Test(expected = ConstraintViolationException.class)
@@ -112,11 +144,11 @@ public class TaskActionTest {
        expect(taskBusiness.retrieve(task.getId())).andReturn(task);
        taskBusiness.delete(task.getId());
        expectLastCall().andThrow(new ConstraintViolationException("Action not allowed", null, null));
-       replay(taskBusiness);
+       replayAll();
        
        taskAction.delete();
        
-       verify(taskBusiness);
+       verifyAll();
     }
     
     /*
@@ -140,7 +172,7 @@ public class TaskActionTest {
         assertEquals(Action.SUCCESS, taskAction.move());
         assertTrue(taskAction.getTask() instanceof TaskTO);
         
-        verify(taskBusiness, transferObjectBusiness);
+        verifyAll();
     }
     
     @Test
@@ -161,18 +193,18 @@ public class TaskActionTest {
         assertEquals(Action.SUCCESS, taskAction.move());
         assertTrue(taskAction.getTask() instanceof TaskTO);
         
-        verify(taskBusiness, transferObjectBusiness);
+        verifyAll();
     }
     
     @Test(expected = ObjectNotFoundException.class)
     public void testMoveTask_noSuchTask() {
         taskAction.setTaskId(-1);
         expect(taskBusiness.retrieve(-1)).andThrow(new ObjectNotFoundException());
-        replay(taskBusiness);
+        replayAll();
         
         taskAction.move();
         
-        verify(taskBusiness);
+        verifyAll();
     }
     
     @Test(expected = ObjectNotFoundException.class)
@@ -183,11 +215,11 @@ public class TaskActionTest {
         
         expect(taskBusiness.retrieve(task.getId())).andReturn(task);
         expect(taskBusiness.move(task, 1233, 123)).andThrow(new ObjectNotFoundException());
-        replay(taskBusiness);
+        replayAll();
         
         taskAction.move();
         
-        verify(taskBusiness);
+        verifyAll();
     }
     
     
@@ -200,21 +232,21 @@ public class TaskActionTest {
     public void testInitializePrefetchedData_happyCase() {
         Task expected = new Task();
         expect(taskBusiness.retrieve(123)).andReturn(expected);
-        replay(taskBusiness);
+        replayAll();
         
         taskAction.initializePrefetchedData(123);
         assertEquals(expected, taskAction.getTask());
         
-        verify(taskBusiness);
+        verifyAll();
     }
     
     @Test(expected = ObjectNotFoundException.class)
     public void testInitializePrefetchedData_objectNotFound() {
         expect(taskBusiness.retrieve(-1)).andThrow(new ObjectNotFoundException());
-        replay(taskBusiness);
+        replayAll();
         
         taskAction.initializePrefetchedData(-1);
         
-        verify(taskBusiness);
+        verifyAll();
     }
 }

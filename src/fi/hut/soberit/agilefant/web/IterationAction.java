@@ -52,7 +52,10 @@ public class IterationAction extends BacklogContentsAction implements CRUDAction
     
     private boolean excludeStories = false;
     
+    private IterationDataContainer iterationData;
     
+    
+
     public String create() {
         iterationId = 0;
         iteration = new Iteration();
@@ -62,29 +65,11 @@ public class IterationAction extends BacklogContentsAction implements CRUDAction
     }
     
     public String iterationContents() {
-        IterationDataContainer data = this.iterationBusiness.getIterationContents(iterationId);
-        if(data == null) {
-            return AJAX_ERROR;
+        iterationData = this.iterationBusiness.getIterationContents(iterationId);
+        if(iterationData == null) {
+            return Action.ERROR;
         }
-        JSONSerializer serializer = new JSONSerializer();
-        if(!excludeStories) {
-            serializer.include("stories.tasks");
-            serializer.include("stories.userData");
-            serializer.include("stories.tasks.userData");
-            serializer.include("tasksWithoutStory");
-            serializer.include("tasksWithoutStory.userData");
-            //serializer.include("tasksWithoutStory.businessThemes");
-            //serializer.include("iterationGoals.backlogItems.businessThemes");
-        }
-        else {
-            serializer.exclude("stories.tasks");
-            serializer.include("stories.userData");
-            serializer.exclude("tasksWithoutStory");
-        }
-        
-        json = serializer.prettyPrint(data);
-        
-        return AJAX_SUCCESS;
+        return Action.SUCCESS;
     }
 
     public String retrieve() {
@@ -365,6 +350,10 @@ public class IterationAction extends BacklogContentsAction implements CRUDAction
 
     public IterationMetrics getIterationMetrics() {
         return iterationMetrics;
+    }
+    
+    public IterationDataContainer getIterationData() {
+        return iterationData;
     }
 
 }

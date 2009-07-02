@@ -35,35 +35,44 @@
     </interceptors>
     
     <default-interceptor-ref name="authenticationStack" />
-    
+
     <global-results>
-      <!-- Global errors -->
-      <result name="objectNotFound" type="httpheader">
-        <param name="status">404</param>
+      <result name="input" type="json">
+        <param name="out.statusCode">500</param>
+        <param name="target">fieldErrors</param>
       </result>
-      <result name="conflict" type="httpheader">
-        <param name="status">409</param>
-      </result>
-      <result name="input" type="httpheader">
-        <param name="status">500</param>
-      </result>
-      <result name="success" type="httpheader">
-        <param name="status">200</param>
+      <result name="ajaxException" type="chain">
+        <param name="actionName">ajaxExceptionHandler</param>
       </result>
     </global-results>
-    
+
     <!-- AJAX exceptions -->
     <global-exception-mappings>
-      <exception-mapping result="objectNotFound"
+      <exception-mapping result="ajaxException"
         exception="fi.hut.soberit.agilefant.exception.ObjectNotFoundException" />
-      
-      <exception-mapping result="conflict"
-        exception="org.hibernate.exception.ConstraintViolationException" />
-        
-      <exception-mapping result="input"
-        exception="java.lang.IllegalArgumentException" />
-          
+      <exception-mapping result="ajaxException"
+        exception="java.lang.IllegalArgumentException" />         
     </global-exception-mappings>
+    
+    <action name="ajaxExceptionHandler" class="ajaxExceptionHandler" method="handle">
+      <result name="objectNotFound" type="json">
+        <param name="out.statusCode">404</param>
+        <param name="target">errorMessage</param>
+      </result>
+      <result name="conflict" type="json">
+        <param name="out.statusCode">409</param>
+        <param name="target">errorMessage</param>
+      </result>
+      <result name="input" type="json">
+        <param name="out.statusCode">500</param>
+        <param name="target">errorMessage</param>
+      </result>
+      <result name="genericException" type="json">
+        <param name="out.statusCode">500</param>
+        <param name="target">errorMessage</param>
+      </result>
+    </action>
+    
     
     <!-- AJAX actions -->
     
@@ -72,6 +81,13 @@
     <action name="retrieveStories" method="retrieveStories" class="backlogAction">
       <result name="success" type="json">
         <param name="target">stories</param>
+      </result>
+    </action>
+    
+    <action name="iterationData" class="iterationAction" method="iterationContents">
+      <result name="success" type="json">
+        <param name="target">iterationData</param>
+        <param name="patterns">+stories.tasks, +stories.userData, +sotires.tasks.userData, +tasksWithoutStory, +tasksWithoutStory.userData</param>
       </result>
     </action>
     

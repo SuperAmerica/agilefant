@@ -125,12 +125,7 @@
             class="productAction">
       <result>/WEB-INF/jsp/forms/createProduct.jsp</result>
     </action>
-		<!-- 
-		<action name="createProduct" method="create"
-			class="productAction">
-			<result>/WEB-INF/jsp/editProduct.jsp</result>
-		</action>
-		-->
+
 		<action name="deleteProduct" method="delete"
 			class="productAction">
 			<result type="redirectAction">selectBacklog</result>
@@ -438,12 +433,6 @@
 			</result>
 			<result name="ajax_success" type="dispatcher">
 				<param name="location">/WEB-INF/jsp/inc/ajaxIterationResult.jsp</param>
-			</result>
-		</action>
-		
-		<action name="iterationData" class="iterationAction" method="iterationContents">
-			<result name="ajax_success" type="dispatcher">
-				<param name="location">/WEB-INF/jsp/jsonData.jsp</param>
 			</result>
 		</action>
 		

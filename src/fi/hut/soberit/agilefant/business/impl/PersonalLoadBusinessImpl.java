@@ -119,10 +119,14 @@ public class PersonalLoadBusinessImpl implements PersonalLoadBusiness {
         return userLoadDataPerIteration;
     }
 
+    /*
+     * Update load data in the container to account for the load 
+     * from the given iteration.
+     */
     public void updateUserLoadByInterval(IntervalLoadContainer container,
             Iteration iter, User user, long assignedEffort) {
-        DateTime periodStart = container.getStart();
-        DateTime periodEnd = container.getEnd();
+        DateTime periodStart = container.getInterval().getStart();
+        DateTime periodEnd = container.getInterval().getEnd();
         DateTime iterationStart = new DateTime(iter.getStartDate());
         DateTime iterationEnd = new DateTime(iter.getEndDate());
         Interval iterationInterval = new Interval(iterationStart, iterationEnd);
@@ -171,14 +175,13 @@ public class PersonalLoadBusinessImpl implements PersonalLoadBusiness {
         if (startDate.compareTo(endDate) > 0) {
             return Collections.emptyList();
         }
-        MutableDateTime dateIterator = new MutableDateTime(startDate);
+        MutableDateTime dateIterator = new MutableDateTime(startDate.toDateMidnight());
         while (startDate.compareTo(endDate) < 0) {
-            IntervalLoadContainer interval = new IntervalLoadContainer();
-            interval.setStart(dateIterator.toDateTime());
-            interval.setWorkHours(user.getWeekEffort().getMinorUnits());
+            IntervalLoadContainer period = new IntervalLoadContainer();
+            DateTime start = dateIterator.toDateTime();
             dateIterator.addWeeks(1);
-            interval.setEnd(dateIterator.toDateTime());
-            ret.add(interval);
+            period.setInterval(new Interval(start, dateIterator));
+            ret.add(period);
         }
 
         return ret;

@@ -2,6 +2,9 @@ package fi.hut.soberit.agilefant.business;
 
 import java.util.List;
 
+import org.joda.time.Duration;
+import org.joda.time.Interval;
+
 import fi.hut.soberit.agilefant.model.User;
 
 /**
@@ -39,5 +42,11 @@ public interface UserBusiness extends GenericBusiness<User> {
     void disableUser(int id);
 
     void enableUser(int id);
+    
+    /**
+     * Duration object representing total (days) that the given user can work
+     * within the given timeframe.
+     */
+    public Duration calculateWorktimePerPeriod(User user, Interval interval);
 
 }

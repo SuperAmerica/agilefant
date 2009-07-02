@@ -2,6 +2,10 @@ package fi.hut.soberit.agilefant.business.impl;
 
 import java.util.List;
 
+import org.joda.time.DateTimeConstants;
+import org.joda.time.Duration;
+import org.joda.time.Interval;
+import org.joda.time.MutableDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,6 +46,19 @@ public class UserBusinessImpl extends GenericBusinessImpl<User> implements
     @Transactional(readOnly = true)
     public boolean hasUserCreatedStories(User user) {
         return storyDAO.countByCreator(user) > 0;
+    }
+    
+    public Duration calculateWorktimePerPeriod(User user, Interval interval) {
+        MutableDateTime iterator = new MutableDateTime(interval.getStart());
+        int deductDays = 0;
+        
+        while(iterator.isBefore(interval.getEnd())) {
+            if(iterator.getDayOfWeek() == DateTimeConstants.SATURDAY || iterator.getDayOfWeek() == DateTimeConstants.SUNDAY) {
+                deductDays++;
+            }
+            iterator.addDays(1);
+        }
+        return new Duration(interval.getStart(), interval.getEnd().minusDays(deductDays));
     }
 
     @Autowired

@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.joda.time.DateTime;
+import org.joda.time.Interval;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -27,9 +28,10 @@ public class TaskDAOTest extends AbstractHibernateTests {
     public void testGetIterationTasksByUserAndTimeframe() {
         executeClassSql();
         DateTime start = new DateTime(2009,6,10,1,0,0,0);
+        Interval interval = new Interval(start, start.plusDays(5));
         User user = new User();
         user.setId(1);
-        List<Task> actual = this.taskDAO.getIterationTasksByUserAndTimeframe(user, start, start.plusDays(5));
+        List<Task> actual = this.taskDAO.getIterationTasksByUserAndTimeframe(user, interval);
         assertEquals(2, actual.size());
     }
     
@@ -39,7 +41,8 @@ public class TaskDAOTest extends AbstractHibernateTests {
         DateTime start = new DateTime(2008,6,10,1,0,0,0);
         User user = new User();
         user.setId(1);
-        List<Task> actual = this.taskDAO.getIterationTasksByUserAndTimeframe(user, start, start.plusDays(5));
+        Interval interval = new Interval(start, start.plusDays(5));
+        List<Task> actual = this.taskDAO.getIterationTasksByUserAndTimeframe(user, interval);
         assertEquals(0, actual.size());
     }
     
@@ -49,7 +52,8 @@ public class TaskDAOTest extends AbstractHibernateTests {
         DateTime start = new DateTime(2009,6,10,1,0,0,0);
         User user = new User();
         user.setId(1);
-        List<Task> actual = this.taskDAO.getStoryTasksByUserAndTimeframe(user, start, start.plusDays(5));
+        Interval interval = new Interval(start, start.plusDays(5));
+        List<Task> actual = this.taskDAO.getStoryTasksByUserAndTimeframe(user, interval);
         assertEquals(3, actual.size());
     }
     
@@ -59,7 +63,8 @@ public class TaskDAOTest extends AbstractHibernateTests {
         DateTime start = new DateTime(2008,6,10,1,0,0,0);
         User user = new User();
         user.setId(1);
-        List<Task> actual = this.taskDAO.getStoryTasksByUserAndTimeframe(user, start, start.plusDays(5));
+        Interval interval = new Interval(start, start.plusDays(5));
+        List<Task> actual = this.taskDAO.getStoryTasksByUserAndTimeframe(user, interval);
         assertEquals(0, actual.size());
     }
     
@@ -80,7 +85,8 @@ public class TaskDAOTest extends AbstractHibernateTests {
         DateTime start = new DateTime(2009,6,10,1,0,0,0);
         User user = new User();
         user.setId(1);
-        List<Task> actual = this.taskDAO.getUnassignedTasksByStoryResponsibles(user, start, start.plusDays(5));
+        Interval interval = new Interval(start, start.plusDays(5));
+        List<Task> actual = this.taskDAO.getUnassignedTasksByStoryResponsibles(user, interval);
         assertEquals(1, actual.size());
     }
 }

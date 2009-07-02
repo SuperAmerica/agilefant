@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import fi.hut.soberit.agilefant.business.PersonalLoadBusiness;
+import fi.hut.soberit.agilefant.business.UserBusiness;
 import fi.hut.soberit.agilefant.db.StoryDAO;
 import fi.hut.soberit.agilefant.db.TaskDAO;
 import fi.hut.soberit.agilefant.model.Backlog;
@@ -34,6 +35,9 @@ public class PersonalLoadBusinessImpl implements PersonalLoadBusiness {
 
     @Autowired
     private StoryDAO storyDAO;
+    
+    @Autowired
+    private UserBusiness userBusiness;
 
     /*
      * Calculate sum of task effort left portions for given user per iteration
@@ -115,15 +119,6 @@ public class PersonalLoadBusinessImpl implements PersonalLoadBusiness {
         return userLoadDataPerIteration;
     }
 
-    /*
-     * Duration object representing total (days) that the given user can work
-     * within the given timeframe.
-     */
-    public Duration calculateWorktimePerPeriod(User user, Interval interval) {
-
-        return null;
-    }
-
     public void updateUserLoadByInterval(IntervalLoadContainer container,
             Iteration iter, User user, long assignedEffort) {
         DateTime periodStart = container.getStart();
@@ -157,9 +152,9 @@ public class PersonalLoadBusinessImpl implements PersonalLoadBusiness {
         periodInterval = new Interval(periodStart, periodEnd);
         // (work days in period / total work days in this iteration) * total
         // work
-        Duration workTimeInIteration = this.calculateWorktimePerPeriod(user,
+        Duration workTimeInIteration = this.userBusiness.calculateWorktimePerPeriod(user,
                 iterationInterval);
-        Duration workTimeInPeriod = this.calculateWorktimePerPeriod(user,
+        Duration workTimeInPeriod = this.userBusiness.calculateWorktimePerPeriod(user,
                 periodInterval);
 
         double fraction = (double) workTimeInPeriod.getMillis()
@@ -220,5 +215,9 @@ public class PersonalLoadBusinessImpl implements PersonalLoadBusiness {
 
     public void setStoryDAO(StoryDAO storyDAO) {
         this.storyDAO = storyDAO;
+    }
+
+    public void setUserBusiness(UserBusiness userBusiness) {
+        this.userBusiness = userBusiness;
     }
 }

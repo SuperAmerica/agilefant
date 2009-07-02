@@ -8,6 +8,9 @@ import static org.easymock.EasyMock.verify;
 import java.util.Arrays;
 import java.util.List;
 
+import org.joda.time.Duration;
+import org.joda.time.Interval;
+import org.joda.time.LocalDate;
 import org.junit.*;
 import static org.junit.Assert.*;
 
@@ -46,5 +49,30 @@ public class UserBusinessTest {
         assertSame(listOfDisabledUsers, userBusiness.getDisabledUsers());
         
         verify(userDAO);
+    }
+    
+    @Test
+    public void testCalculateWorktimePerPeriod() {
+        User user = new User();
+        LocalDate start = new LocalDate(2009,6,1);
+        Duration expected = new Duration(start.toDateMidnight(), start.plusDays(4).toDateMidnight());
+        Interval interval = new Interval(start.toDateMidnight(), start.plusDays(4).toDateMidnight());
+        Duration actual = this.userBusiness.calculateWorktimePerPeriod(user, interval);
+        assertEquals(expected.getMillis(), actual.getMillis());
+    }
+    
+    @Test
+    public void testCalculateWorktimePerPeriod_withWeekend() {
+        User user = new User();
+        LocalDate start = new LocalDate(2009,6,1);
+        Duration expected = new Duration(start.toDateMidnight(), start.plusDays(6).toDateMidnight());
+        Interval interval = new Interval(start.toDateMidnight(), start.plusDays(8).toDateMidnight());
+        Duration actual = this.userBusiness.calculateWorktimePerPeriod(user, interval);
+        assertEquals(expected.getMillis(), actual.getMillis());
+    }
+    
+    @Test
+    public void testCalculateWorktimePerPeriod_withVacations() {
+        
     }
 }

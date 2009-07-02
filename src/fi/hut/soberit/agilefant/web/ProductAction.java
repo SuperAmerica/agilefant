@@ -55,7 +55,7 @@ public class ProductAction extends BacklogContentsAction implements CRUDAction {
         return Action.SUCCESS;
     }
 
-    public String edit() {
+    public String retrieve() {
         // Date startDate = new Date(0);
         product = productBusiness.retrieve(productId);
         if (product == null) {

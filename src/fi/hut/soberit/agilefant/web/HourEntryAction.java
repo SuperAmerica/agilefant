@@ -100,7 +100,7 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
     /**
      * {@inheritDoc}
      */
-    public String edit() {
+    public String retrieve() {
         try {
             hourEntry = hourEntryBusiness.retrieve(hourEntryId);
         } catch (ObjectNotFoundException onfe) {

@@ -47,6 +47,9 @@
       <result name="input" type="httpheader">
         <param name="status">500</param>
       </result>
+      <result name="success" type="httpheader">
+        <param name="status">200</param>
+      </result>
     </global-results>
     
     <!-- AJAX exceptions -->
@@ -57,25 +60,49 @@
       <exception-mapping result="conflict"
         exception="org.hibernate.exception.ConstraintViolationException" />
         
+      <exception-mapping result="input"
+        exception="java.lang.IllegalArgumentException" />
+          
     </global-exception-mappings>
     
     <!-- AJAX actions -->
+    
+    <!-- Backlog actions -->
+    
     <action name="retrieveStories" method="retrieveStories" class="backlogAction">
       <result name="success" type="json">
         <param name="target">stories</param>
       </result>
     </action>
+    
+    <!-- /Backlog actions -->
 
-    <!--
-    EXAMPLE: Prefetched data 
-         
-    <action name="retrieveTask" method="retrieve" class="taskAction">
+    <!-- Task actions -->
+    <action name="deleteTask" method="delete" class="taskAction" />
+    
+    <action name="storeTask" method="store" class="taskAction" >
       <interceptor-ref name="prefetchStack" />
       <result name="success" type="json">
         <param name="target">task</param>
       </result>
     </action>
-    -->
+    
+    <action name="retrieveTask" method="retrieve" class="taskAction">
+      <result name="success" type="json">
+        <param name="target">task</param>
+      </result>
+    </action>
+    
+    <action name="moveTask" method="move" class="taskAction">
+      <result name="success" type="json">
+        <param name="target">task</param>
+      </result>
+    </action>
+    <!-- /Task actions -->
+    
+    <!-- Story actions -->
+    
+    <!-- /Story actions -->
   
   </package>
   

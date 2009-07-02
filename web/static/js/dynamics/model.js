@@ -768,7 +768,7 @@ TaskModel.prototype.reloadData = function() {
   }
   this.updating = true;
   $.ajax( {
-    url: "taskJSON.action",
+    url: "ajax/retrieveTask.action",
     data: {
     taskId: this.id
   },
@@ -960,7 +960,7 @@ TaskModel.prototype.remove = function() {
   },
   cache: false,
   type: "POST",
-  url: "ajaxDeleteTask.action",
+  url: "ajax/deleteTask.action",
   data: {
     taskId: this.id
   }
@@ -1065,7 +1065,7 @@ TaskModel.prototype.save = function(synchronous, callback) {
   cache: false,
   dataType: "json",
   type: "POST",
-  url: "ajaxStoreTask.action",
+  url: "ajax/storeTask.action",
   data: data
   });
 };

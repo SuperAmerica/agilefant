@@ -66,7 +66,7 @@ public class TeamAction extends ActionSupport implements CRUDAction {
     /**
      * Edit a team.
      */
-    public String edit() {
+    public String retrieve() {
         team = teamBusiness.retrieveIfExists(teamId);
         if (team == null) {
             super.addActionError("Team not found!");

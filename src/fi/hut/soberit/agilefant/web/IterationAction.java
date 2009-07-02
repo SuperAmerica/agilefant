@@ -87,7 +87,7 @@ public class IterationAction extends BacklogContentsAction implements CRUDAction
         return AJAX_SUCCESS;
     }
 
-    public String edit() {
+    public String retrieve() {
         iteration = iterationBusiness.retrieve(iterationId);
         
 

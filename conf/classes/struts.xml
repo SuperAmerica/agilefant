@@ -84,8 +84,8 @@
 				<param name="actionName">listUsers</param>
 			</result>
 			<result name="success_teams" type="redirectAction">
-                <param name="actionName">listTeams</param>
-            </result>
+        <param name="actionName">listTeams</param>
+      </result>
 			
 			<result name="success_settings" type="redirectAction">
 				<param name="actionName">settings</param>
@@ -103,10 +103,9 @@
 				type="redirectAction">
 				<param name="actionName">listBusinessThemes</param>
 			</result>
-			<result name="success_globalThemes"
-                type="redirectAction">
-                <param name="actionName">globalThemes</param>
-            </result>
+			<result name="success_globalThemes" type="redirectAction">
+        <param name="actionName">globalThemes</param>
+      </result>
 			<result name="success_projectPortfolio"
 				type="redirectAction">
 				<param name="actionName">projectPortfolio</param>
@@ -115,48 +114,10 @@
 				<param name="actionName">selectBacklog</param>
 			</result>
 		</action>
-		
-		<!-- Project type actions -->
-		<!-- 
-		<action name="listProjectTypes" method="getAll"
-            class="projectTypeAction">
-            <result>/WEB-INF/jsp/listProjectTypes.jsp</result>
-        </action>
-		<action name="ajaxCreateProjectType" method="create"
-            class="projectTypeAction">
-            <result>/WEB-INF/jsp/forms/createProjectType.jsp</result>
-        </action>
-		<action name="createProjectType" method="create"
-			class="projectTypeAction">
-		</action>
-		<action name="deleteProjectType" method="delete"
-			class="projectTypeAction">
-			<result type="redirectAction">listProjectTypes</result>
-		</action>
-		<action name="storeProjectType" method="store"
-			class="projectTypeAction">
-			<result type="redirectAction">listProjectTypes</result>
-		</action>
-		<action name="projectTypeTabs" method="edit"
-			class="projectTypeAction">
-			<result>/WEB-INF/jsp/inc/projectTypeAjax.jsp</result>
-		</action>
-		<action name="ajaxStoreProjectType" method="ajaxStoreProjectType"
-			class="projectTypeAction">		
-			<result name="ajax_error" type="httpheader">
-				<param name="status">400</param>
-			</result>
-			<result name="ajax_success" type="dispatcher">
-				<param name="status">200</param>
-				<param name="location">/WEB-INF/jsp/inc/ajaxProjectTypeResult.jsp</param>
-			</result>
-		</action>
-		 -->
-		<!-- /Project type actions -->
+
 		<!-- Product actions -->
 		
-		<action name="editProduct" method="edit"
-			class="productAction">
+		<action name="editProduct" method="retrieve" class="productAction">
 			<result>/WEB-INF/jsp/editProduct.jsp</result>
 		</action>
 		
@@ -276,58 +237,8 @@
 
 		<!-- /Story actions -->
 
-		<!-- Task actions -->
-
-		<action name="ajaxCreateTask" method="create"
-            class="taskAction">
-            <result name="success" type="dispatcher">/WEB-INF/jsp/forms/createTask.jsp</result>
-	    </action>
-	    
-	    <action name="ajaxDeleteTask" method="ajaxDeleteTask" class="taskAction">
-	      <result name="ajax_error" type="httpheader">
-	        <param name="status">400</param>
-	      </result>
-	      <result name="ajax_success" type="dispatcher">
-	        <param name="location">/WEB-INF/jsp/jsonData.jsp</param>
-	      </result>
-	      <result name="ajax_forbidden" type="httpheader">
-	        <param name="status">403</param>
-	      </result>
-	    </action>
-	    
-	    <action name="ajaxStoreTask" method="ajaxStoreTask" class="taskAction">
-	      <result name="ajax_error" type="httpheader">
-	        <param name="status">400</param>
-	      </result>
-	      <result name="ajax_success" type="dispatcher">
-	        <param name="location">/WEB-INF/jsp/jsonData.jsp</param>
-	      </result>
-	    </action>
-
-		<action name="ajaxMoveTask" method="ajaxMoveTask" class="taskAction">
-	      <result name="ajax_error" type="httpheader">
-	        <param name="status">400</param>
-	      </result>
-	      <result name="ajax_success" type="dispatcher">
-	        <param name="location">/WEB-INF/jsp/jsonData.jsp</param>
-	      </result>
-	    </action>
-
-		<action name="taskJSON"
-	      method="getTaskJSON" class="taskAction">
-	       <result name="ajax_error" type="httpheader">
-	        <param name="status">400</param>
-	      </result>
-	      <result name="ajax_success" type="dispatcher">
-	        <param name="location">/WEB-INF/jsp/jsonData.jsp</param>
-	      </result>
-	    </action>
-
-		<!-- /Task actions -->
-
 		<!-- Project actions -->
-		<action name="editProject" method="edit"
-			class="projectAction">
+		<action name="editProject" method="retrieve" class="projectAction">
 			<result>/WEB-INF/jsp/editProject.jsp</result>
 		</action>
 		<action name="ajaxCreateProject" method="create"
@@ -466,8 +377,7 @@
 
 		<!-- Iteration actions -->
 		 
-		<action name="editIteration" method="edit"
-			class="iterationAction">
+		<action name="editIteration" method="retrieve" class="iterationAction">
 			<result>/WEB-INF/jsp/editIteration.jsp</result>
 		</action>
 		<!--

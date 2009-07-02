@@ -140,7 +140,7 @@ public class ProjectAction extends BacklogContentsAction implements CRUDAction {
         return Action.SUCCESS;
     }
 
-    public String edit() {
+    public String retrieve() {
         this.prepareProjectTypes();
         project = projectBusiness.retrieve(projectId);
         productId = project.getParent().getId();

@@ -111,7 +111,7 @@ public class UserAction extends ActionSupport implements CRUDAction {
         return Action.SUCCESS;
     }
 
-    public String edit() {
+    public String retrieve() {
         createTeamList();
         user = userBusiness.retrieve(userId);
         if (user == null) {

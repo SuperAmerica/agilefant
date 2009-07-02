@@ -41,9 +41,9 @@ public interface CRUDAction {
     public String store();
 
     /**
-     * Fetches the object for editing.
+     * Fetches the object.
      * 
      * @return Result of the action. (See com.opensymphony.xwork.Action)
      */
-    public String edit();
+    public String retrieve();
 }

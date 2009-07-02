@@ -103,7 +103,7 @@ public class StoryAction extends ActionSupport implements CRUDAction {
         return CRUDAction.AJAX_SUCCESS;
     }
 
-    public String edit() {
+    public String retrieve() {
         story = storyBusiness.retrieveIfExists(storyId);
         if (story == null) {
             super.addActionError(super.getText("story.notFound"));

@@ -88,7 +88,7 @@ public class HourEntryActionTest {
             .andThrow(new ObjectNotFoundException());
         replay(hourEntryBusiness);
         
-        assertEquals("error", hourEntryAction.edit());
+        assertEquals("error", hourEntryAction.retrieve());
         
         verify(hourEntryBusiness);
     }    

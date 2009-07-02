@@ -14,6 +14,7 @@ import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.ExactEstimate;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Product;
+import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
@@ -46,17 +47,25 @@ public class TaskBusinessTest {
         taskDAO = createMock(TaskDAO.class);
         taskBusiness.setTaskDAO(taskDAO);
         
-        iterationBusiness = createMock(IterationBusiness.class);
+        iterationBusiness = createStrictMock(IterationBusiness.class);
         taskBusiness.setIterationBusiness(iterationBusiness);
         
-        storyBusiness = createMock(StoryBusiness.class);
+        storyBusiness = createStrictMock(StoryBusiness.class);
         taskBusiness.setStoryBusiness(storyBusiness);
         
-        userBusiness = createMock(UserBusiness.class);
+        userBusiness = createStrictMock(UserBusiness.class);
         taskBusiness.setUserBusiness(userBusiness);
         
-        iterationHistoryEntryBusiness = createMock(IterationHistoryEntryBusiness.class);
+        iterationHistoryEntryBusiness = createStrictMock(IterationHistoryEntryBusiness.class);
         taskBusiness.setIterationHistoryEntryBusiness(iterationHistoryEntryBusiness);    
+    }
+    
+    private void replayAll() {
+        replay(taskDAO, iterationBusiness, storyBusiness, userBusiness, iterationHistoryEntryBusiness);
+    }
+    
+    private void verifyAll() {
+        verify(taskDAO, iterationBusiness, storyBusiness, userBusiness, iterationHistoryEntryBusiness);
     }
     
     @Before
@@ -80,14 +89,23 @@ public class TaskBusinessTest {
         task.setCreatedDate(createdDate.toDate());
     }
     
+    
+    /*
+     * TEST STORING.
+     */
+    
     @Test(expected = IllegalArgumentException.class)
     public void testStoreTask_storyAndIterationGiven() {
         taskBusiness.storeTask(task, iteration.getId(), story.getId(), null);
     }
     
+    @Test(expected = IllegalArgumentException.class)
+    public void testStoreTask_nullTask() {
+        taskBusiness.storeTask(null, iteration.getId(), null, null);
+    }
+    
     @Test
     public void testStoreTask_newTaskToIteration() {
-        
         task.setCreatedDate(null);
         task.setCreator(null);
         
@@ -96,7 +114,7 @@ public class TaskBusinessTest {
         expect(taskDAO.get(1351)).andReturn(task);
         iterationHistoryEntryBusiness.updateIterationHistory(iteration.getId());
         
-        replay(iterationBusiness, storyBusiness, taskDAO, iterationHistoryEntryBusiness);
+        replayAll();
         
         Task actualTask = taskBusiness.storeTask(task, iteration.getId(), null, null);
         
@@ -104,7 +122,7 @@ public class TaskBusinessTest {
         assertEquals(loggedInUser, actualTask.getCreator());
         assertEquals(actualTask.getIteration(), iteration);
         
-        verify(iterationBusiness, storyBusiness, taskDAO, iterationHistoryEntryBusiness);
+        verifyAll();
     }
     
     @Test
@@ -120,7 +138,7 @@ public class TaskBusinessTest {
         expect(taskDAO.get(1351)).andReturn(task);
         iterationHistoryEntryBusiness.updateIterationHistory(iteration.getId());
         
-        replay(iterationBusiness, storyBusiness, taskDAO);
+        replayAll();
         
         Task actualTask = taskBusiness.storeTask(task, null, story.getId(), null);
         
@@ -128,7 +146,7 @@ public class TaskBusinessTest {
         assertEquals(loggedInUser, actualTask.getCreator());
         assertEquals(actualTask.getStory(), story);
         
-        verify(iterationBusiness, storyBusiness, taskDAO);
+        verifyAll();
     }
     
     @Test
@@ -138,7 +156,7 @@ public class TaskBusinessTest {
         taskDAO.store(task);
         iterationHistoryEntryBusiness.updateIterationHistory(iteration.getId());
         
-        replay(iterationBusiness, storyBusiness, taskDAO, iterationHistoryEntryBusiness);
+        replayAll();
         
         Task actualTask =
             taskBusiness.storeTask(task, iteration.getId(), null, null);
@@ -147,7 +165,7 @@ public class TaskBusinessTest {
         assertEquals(createdDate.toDate(), actualTask.getCreatedDate());
         assertEquals(creatorUser, actualTask.getCreator());
         
-        verify(iterationBusiness, storyBusiness, taskDAO, iterationHistoryEntryBusiness);
+        verifyAll();
     }
     
     @Test
@@ -159,7 +177,7 @@ public class TaskBusinessTest {
         expect(storyBusiness.retrieve(story.getId())).andReturn(story);
         taskDAO.store(task);
         
-        replay(iterationBusiness, storyBusiness, taskDAO);
+        replayAll();
         
         Task actualTask = taskBusiness.storeTask(task, null, story.getId(), null);
         
@@ -168,7 +186,7 @@ public class TaskBusinessTest {
         assertEquals(createdDate.toDate(), actualTask.getCreatedDate());
         assertEquals(creatorUser, actualTask.getCreator());
         
-        verify(iterationBusiness, storyBusiness, taskDAO);
+        verifyAll();
     }
     
     @Test
@@ -180,7 +198,7 @@ public class TaskBusinessTest {
         expect(storyBusiness.retrieve(story.getId())).andReturn(story);
         taskDAO.store(task);
         
-        replay(iterationBusiness, storyBusiness, taskDAO);
+        replayAll();
         
         Task actualTask = taskBusiness.storeTask(task, null, story.getId(), null);
         
@@ -189,7 +207,7 @@ public class TaskBusinessTest {
         assertEquals(createdDate.toDate(), actualTask.getCreatedDate());
         assertEquals(creatorUser, actualTask.getCreator());
         
-        verify(iterationBusiness, storyBusiness, taskDAO);
+        verifyAll();
     }
     
     @Test
@@ -208,36 +226,40 @@ public class TaskBusinessTest {
         expect(userBusiness.retrieveIfExists(user1.getId())).andReturn(user1);
         expect(userBusiness.retrieveIfExists(user2.getId())).andReturn(user2);
         
-        replay(iterationBusiness, storyBusiness, taskDAO, userBusiness);
+        replayAll();
         
         taskBusiness.storeTask(task, null, story.getId(), userIdsSet);
         
         assertEquals(userIdsSet.size(), task.getResponsibles().size());
         
-        verify(iterationBusiness, storyBusiness, taskDAO, userBusiness);
+        verifyAll();
     }
     
     @Test(expected = ObjectNotFoundException.class)
     public void testStoreTask_nonExistentIteration() {
         expect(iterationBusiness.retrieve(0))
             .andThrow(new ObjectNotFoundException("Iteration not found"));
-        replay(iterationBusiness);
+        replayAll();
         
         taskBusiness.storeTask(task, 0, null, null);
         
-        verify(iterationBusiness);
+        verifyAll();
     }
     
     @Test(expected = ObjectNotFoundException.class)
     public void testStoreTask_nonExistentStory() {
         expect(storyBusiness.retrieve(0))
             .andThrow(new ObjectNotFoundException("Story not found"));
-        replay(storyBusiness);
+        replayAll();
         
         taskBusiness.storeTask(task, null, 0, null);
         
-        verify(storyBusiness);
+        verifyAll();
     }
+    
+    /*
+     * TEST ORIGINAL ESTIMATE RESETING
+     */
     
     @Test
     public void testResetOriginalEstimate_underIteration() {
@@ -250,14 +272,14 @@ public class TaskBusinessTest {
         
         iterationHistoryEntryBusiness.updateIterationHistory(iteration.getId());
         
-        replay(taskDAO, iterationHistoryEntryBusiness);
+        replayAll();
         
         Task returnedTask = taskBusiness.resetOriginalEstimate(task.getId());
 
         assertNull(returnedTask.getEffortLeft());
         assertNull(returnedTask.getOriginalEstimate());
         
-        verify(taskDAO, iterationHistoryEntryBusiness);
+        verifyAll();
     }
     
     @Test
@@ -272,14 +294,14 @@ public class TaskBusinessTest {
         
         iterationHistoryEntryBusiness.updateIterationHistory(iteration.getId());
         
-        replay(taskDAO, iterationHistoryEntryBusiness);
+        replayAll();
         
         Task returnedTask = taskBusiness.resetOriginalEstimate(task.getId());
 
         assertNull(returnedTask.getEffortLeft());
         assertNull(returnedTask.getOriginalEstimate());
         
-        verify(taskDAO, iterationHistoryEntryBusiness);
+        verifyAll();
     }
     
     @Test(expected = ObjectNotFoundException.class)
@@ -288,13 +310,16 @@ public class TaskBusinessTest {
         task.setOriginalEstimate(new ExactEstimate());
         expect(taskDAO.get(task.getId())).andReturn(null);
         
-        replay(taskDAO);
+        replayAll();
         
         taskBusiness.resetOriginalEstimate(task.getId());
 
-        verify(taskDAO);
+        verifyAll();
     }
     
+    /*
+     * TEST DELETION
+     */
     
     @Test
     public void testDelete_underIteration() {
@@ -303,11 +328,11 @@ public class TaskBusinessTest {
         
         taskDAO.remove(task.getId());
         iterationHistoryEntryBusiness.updateIterationHistory(iteration.getId());
-        replay(taskDAO, iterationHistoryEntryBusiness);
+        replayAll();
         
         taskBusiness.delete(task);
         
-        verify(taskDAO, iterationHistoryEntryBusiness);
+        verifyAll();
     }
     
     @Test
@@ -318,11 +343,11 @@ public class TaskBusinessTest {
         
         taskDAO.remove(task.getId());
         iterationHistoryEntryBusiness.updateIterationHistory(iteration.getId());
-        replay(taskDAO, iterationHistoryEntryBusiness);
+        replayAll();
         
         taskBusiness.delete(task);
         
-        verify(taskDAO, iterationHistoryEntryBusiness);
+        verifyAll();
     }
     
     @Test
@@ -332,10 +357,252 @@ public class TaskBusinessTest {
         story.setBacklog(new Product());
         
         taskDAO.remove(task.getId());
-        replay(taskDAO, iterationHistoryEntryBusiness);
+        replayAll();
         
         taskBusiness.delete(task);
         
-        verify(taskDAO, iterationHistoryEntryBusiness);    }
-
+        verifyAll();
+    }
+    
+    /*
+     * TEST ASSIGNING PARENT 
+     */
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void testAssignParentForTask_nullTask() {
+        taskBusiness.assignParentForTask(null, null, null);
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void testAssignParentForTask_bothIdsNull() {
+        taskBusiness.assignParentForTask(task, null, null);
+    }
+    
+    @Test
+    public void testAssignParentForTask_storyIdGiven() {       
+        expect(storyBusiness.retrieve(story.getId())).andReturn(story);
+        replayAll();
+        
+        taskBusiness.assignParentForTask(task, null, story.getId());
+        
+        assertEquals(story, task.getStory());
+        assertNull(task.getIteration());
+        
+        verifyAll();
+    }
+    
+    @Test(expected = ObjectNotFoundException.class)
+    public void testAssignParentForTask_nonExistentStoryIdGiven() {
+        expect(storyBusiness.retrieve(-1)).andThrow(new ObjectNotFoundException());
+        replayAll();
+        
+        taskBusiness.assignParentForTask(task, null, -1);
+        
+        verifyAll();
+    }
+    
+    @Test
+    public void testAssignParentForTask_iterationIdGiven() {
+        expect(iterationBusiness.retrieve(iteration.getId())).andReturn(iteration);
+        replayAll();
+        
+        taskBusiness.assignParentForTask(task, iteration.getId(), null);
+        
+        assertEquals(iteration, task.getIteration());
+        assertNull(task.getStory());
+        
+        verifyAll();
+    }
+    
+    @Test(expected = ObjectNotFoundException.class)
+    public void testAssignParentForTask_nonExistentIterationIdGiven() {
+        expect(iterationBusiness.retrieve(-1)).andThrow(new ObjectNotFoundException());
+        replayAll();
+        
+        
+        taskBusiness.assignParentForTask(task, -1, null);
+        
+        verifyAll();
+    }
+    
+    @Test(expected = ObjectNotFoundException.class)
+    public void testAssignParentForTask_backlogNotIteration() {
+        expect(iterationBusiness.retrieve(123)).andThrow(new ObjectNotFoundException());
+        replayAll();
+        
+        taskBusiness.assignParentForTask(task, 123, null);
+        
+        verifyAll();
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void testAssignParentForTask_bothIdsGiven() {
+        taskBusiness.assignParentForTask(task, 123, 456);
+    }
+    
+    /*
+     * TEST MOVING TASKS.
+     * 
+     * Moving tasks should update both the source and destination
+     * backlogs' histories.
+     */
+       
+    @Test
+    public void testMove_fromIterationToIteration() {
+        Iteration source = new Iteration();
+        source.setId(222);
+        Iteration destination = new Iteration();
+        destination.setId(666);
+        
+        task.setIteration(source);
+        
+        expect(iterationBusiness.retrieve(destination.getId())).andReturn(destination);
+        taskDAO.store(task);
+        iterationHistoryEntryBusiness.updateIterationHistory(source.getId());
+        iterationHistoryEntryBusiness.updateIterationHistory(destination.getId());
+        
+        replayAll();
+        
+        taskBusiness.move(task, destination.getId(), null);
+        
+        assertEquals(destination, task.getIteration());
+        assertNull(task.getStory());
+        
+        verifyAll();
+    }
+    
+    @Test
+    public void testMove_fromIterationStoryToIterationStory() {
+        Iteration iter = new Iteration();
+        iter.setId(654);
+        Iteration iter2 = new Iteration();
+        iter2.setId(999);
+        
+        Story source = new Story();
+        source.setId(397);
+        source.setBacklog(iter);
+        
+        Story destination = new Story();
+        destination.setId(1223);
+        destination.setBacklog(iter2);
+        
+        task.setStory(source);
+        
+        expect(storyBusiness.retrieve(destination.getId())).andReturn(destination);
+        taskDAO.store(task);
+        iterationHistoryEntryBusiness.updateIterationHistory(iter.getId());
+        iterationHistoryEntryBusiness.updateIterationHistory(iter2.getId());
+        
+        replayAll();
+        
+        taskBusiness.move(task, null, destination.getId());
+        
+        assertEquals(destination, task.getStory());
+        assertNull(task.getIteration());
+        
+        verifyAll();
+    }
+    
+    @Test
+    public void testMove_fromProjectStoryToIterationStory() {
+        Project proj = new Project();
+        proj.setId(654);
+        Iteration iter2 = new Iteration();
+        iter2.setId(999);
+        
+        Story source = new Story();
+        source.setId(397);
+        source.setBacklog(proj);
+        
+        Story destination = new Story();
+        destination.setId(1223);
+        destination.setBacklog(iter2);
+        
+        task.setStory(source);
+        
+        expect(storyBusiness.retrieve(destination.getId())).andReturn(destination);
+        taskDAO.store(task);
+        iterationHistoryEntryBusiness.updateIterationHistory(iter2.getId());
+        
+        replayAll();
+        
+        taskBusiness.move(task, null, destination.getId());
+        
+        assertEquals(destination, task.getStory());
+        assertNull(task.getIteration());
+        
+        verifyAll();  
+    }
+    
+    @Test
+    public void testMove_fromIterationToProject() {
+        Project proj = new Project();
+        proj.setId(654);
+        Iteration iter = new Iteration();
+        iter.setId(999);
+        
+        Story source = new Story();
+        source.setId(397);
+        source.setBacklog(iter);
+        
+        Story destination = new Story();
+        destination.setId(1223);
+        destination.setBacklog(proj);
+        
+        task.setStory(source);
+        
+        expect(storyBusiness.retrieve(destination.getId())).andReturn(destination);
+        taskDAO.store(task);
+        iterationHistoryEntryBusiness.updateIterationHistory(iter.getId());
+        
+        replayAll();
+        
+        taskBusiness.move(task, null, destination.getId());
+        
+        assertEquals(destination, task.getStory());
+        assertNull(task.getIteration());
+        
+        verifyAll();  
+    }
+    
+    @Test
+    public void testMove_toStoryUnderSameIteration() {
+        Iteration iter = new Iteration();
+        
+        Story source = new Story();
+        source.setId(397);
+        source.setBacklog(iter);
+        
+        Story destination = new Story();
+        destination.setId(1223);
+        destination.setBacklog(iter);
+        
+        task.setStory(source);
+        
+        expect(storyBusiness.retrieve(destination.getId())).andReturn(destination);
+        taskDAO.store(task);
+        replayAll();
+        
+        taskBusiness.move(task, null, destination.getId());
+        
+        assertEquals(destination, task.getStory());
+        assertNull(task.getIteration());
+        
+        verifyAll();
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void testMove_nullTask() {
+        taskBusiness.move(null, null, null);
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void testMove_bothParentIdsNull() {
+        taskBusiness.move(task, null, null);
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void testMove_bothIdsGiven() {
+        taskBusiness.move(task, 123, 456);
+    }
 }

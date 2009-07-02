@@ -18,7 +18,7 @@
     <!-- Interceptors -->
     <interceptors>
       <interceptor name="refreshUser" class="refreshUserInterceptor" />
-      <interceptor name="singleFieldEdit" class="singleFieldEditInterceptor" />
+      <interceptor name="prefetch" class="prefetchInterceptor" />
       
       <interceptor-stack name="authenticationStack">
         <interceptor-ref name="exception" />
@@ -26,9 +26,9 @@
         <interceptor-ref name="refreshUser" />
       </interceptor-stack>
       
-      <interceptor-stack name="singleFieldStack">
+      <interceptor-stack name="prefetchStack">
         <interceptor-ref name="exception" />
-        <interceptor-ref name="singleFieldEdit" />
+        <interceptor-ref name="prefetch" />
         <interceptor-ref name="completeStack" />
         <interceptor-ref name="refreshUser" />
       </interceptor-stack>
@@ -67,10 +67,10 @@
     </action>
 
     <!--
-    EXAMPLE: Single field editable 
+    EXAMPLE: Prefetched data 
          
     <action name="retrieveTask" method="retrieve" class="taskAction">
-      <interceptor-ref name="singleFieldStack" />
+      <interceptor-ref name="prefetchStack" />
       <result name="success" type="json">
         <param name="target">task</param>
       </result>

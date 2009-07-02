@@ -16,14 +16,14 @@ import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
  * 
  * @author rjokelai
  */
-@Component("singleFieldEditInterceptor")
-public class SingleFieldEditInterceptor extends AbstractInterceptor {
+@Component("prefetchInterceptor")
+public class PrefetchInterceptor extends AbstractInterceptor {
 
     private static final long serialVersionUID = 1668784370092320107L;
 
     public String intercept(ActionInvocation invocation) throws Exception {
-        if (invocation.getAction() instanceof SingleFieldEditable) {
-            SingleFieldEditable action = ((SingleFieldEditable)invocation.getAction());
+        if (invocation.getAction() instanceof Prefetching) {
+            Prefetching action = ((Prefetching)invocation.getAction());
             
             ActionContext context = invocation.getInvocationContext();
             Map<String, Object> params = context.getParameters();
@@ -37,7 +37,7 @@ public class SingleFieldEditInterceptor extends AbstractInterceptor {
                 throw new IllegalArgumentException();
             }
             
-            action.initializeDataForEditing(id);
+            action.initializePrefetchedData(id);
         }
         return invocation.invoke();
     }

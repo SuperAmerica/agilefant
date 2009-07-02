@@ -14,11 +14,11 @@ import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 
-public class SingleFieldEditInterceptorTest {
+public class PrefetchInterceptorTest {
 
-    SingleFieldEditInterceptor singleFieldEditInterceptor;
+    PrefetchInterceptor prefetchInterceptor;
     
-    SingleFieldEditable mockAction;
+    Prefetching mockAction;
     ActionInvocation mockInvocation;
     ActionContext mockContext;
     
@@ -36,10 +36,10 @@ public class SingleFieldEditInterceptorTest {
     
     @Before
     public void setUp_dependencies() {
-        singleFieldEditInterceptor = new SingleFieldEditInterceptor();
+        prefetchInterceptor = new PrefetchInterceptor();
         
         mockInvocation = createStrictMock(ActionInvocation.class);
-        mockAction = createStrictMock(SingleFieldEditable.class);
+        mockAction = createStrictMock(Prefetching.class);
         
         mockContext = createStrictMock(ActionContext.class);
     }
@@ -50,7 +50,7 @@ public class SingleFieldEditInterceptorTest {
         expect(mockInvocation.invoke()).andReturn(Action.SUCCESS);
         replay(mockInvocation, mockAction, mockContext);
         
-        singleFieldEditInterceptor.intercept(mockInvocation);
+        prefetchInterceptor.intercept(mockInvocation);
         
         verify(mockInvocation, mockAction, mockContext);
     }
@@ -62,13 +62,13 @@ public class SingleFieldEditInterceptorTest {
         expect(mockContext.getParameters()).andReturn(parameters);
         
         expect(mockAction.getIdFieldName()).andReturn("testId");
-        mockAction.initializeDataForEditing(validObjectId);
+        mockAction.initializePrefetchedData(validObjectId);
         
         expect(mockInvocation.invoke()).andReturn(Action.SUCCESS);
         
         replay(mockInvocation, mockAction, mockContext);
         
-        singleFieldEditInterceptor.intercept(mockInvocation);
+        prefetchInterceptor.intercept(mockInvocation);
         
         verify(mockInvocation, mockAction, mockContext);
     }
@@ -83,7 +83,7 @@ public class SingleFieldEditInterceptorTest {
                         
         replay(mockInvocation, mockAction, mockContext);
         
-        singleFieldEditInterceptor.intercept(mockInvocation);
+        prefetchInterceptor.intercept(mockInvocation);
         
         verify(mockInvocation, mockAction, mockContext);
     }

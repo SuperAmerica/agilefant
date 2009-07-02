@@ -7,12 +7,10 @@ import java.util.Set;
 
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
-import org.hibernate.criterion.CriteriaSpecification;
-import org.hibernate.criterion.Projection;
 import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
-import org.joda.time.DateTime;
+import org.joda.time.Interval;
 import org.springframework.stereotype.Repository;
 
 import fi.hut.soberit.agilefant.db.TaskDAO;
@@ -28,25 +26,25 @@ public class TaskDAOHibernate extends GenericDAOHibernate<Task> implements
     }
 
     public List<Task> getIterationTasksByUserAndTimeframe(User user,
-            DateTime startDate, DateTime endDate) {
+            Interval interval) {
         Criteria crit = getCurrentSession().createCriteria(Task.class);
         crit.createCriteria("responsibles")
                 .add(Restrictions.idEq(user.getId()));
         crit.createCriteria("iteration").add(
-                Restrictions.and(Restrictions.le("startDate", startDate.toDate()),
-                        Restrictions.ge("endDate", endDate.toDate())));
+                Restrictions.and(Restrictions.le("startDate", interval.getStart().toDate()),
+                        Restrictions.ge("endDate", interval.getEnd().toDate())));
         crit.add(Restrictions.isNull("story"));
         crit.setFetchMode("creator", FetchMode.SELECT);
         return asList(crit);
     }
 
-    public List<Task> getStoryTasksByUserAndTimeframe(User user, DateTime startDate, DateTime endDate) {
+    public List<Task> getStoryTasksByUserAndTimeframe(User user, Interval interval) {
         Criteria crit = getCurrentSession().createCriteria(Task.class);
         crit.createCriteria("responsibles")
                 .add(Restrictions.idEq(user.getId()));
         crit.createCriteria("story").createCriteria("backlog").add(
-                Restrictions.and(Restrictions.le("startDate", startDate.toDate()),
-                        Restrictions.ge("endDate", endDate.toDate())));
+                Restrictions.and(Restrictions.le("startDate", interval.getStart().toDate()),
+                        Restrictions.ge("endDate", interval.getEnd().toDate())));
         crit.setFetchMode("creator", FetchMode.SELECT);
         return asList(crit);
     }
@@ -70,15 +68,15 @@ public class TaskDAOHibernate extends GenericDAOHibernate<Task> implements
     }
 
     public List<Task> getUnassignedTasksByStoryResponsibles(User user,
-            DateTime startDate, DateTime endDate) {
+            Interval interval) {
         
         Criteria crit = getCurrentSession().createCriteria(Task.class);
         crit.add(Restrictions.isEmpty("responsibles"));
         Criteria story = crit.createCriteria("story");
         story.createCriteria("responsibles").add(Restrictions.idEq(user.getId()));
         story.createCriteria("backlog").add(
-                Restrictions.and(Restrictions.le("startDate", startDate.toDate()),
-                        Restrictions.ge("endDate", endDate.toDate())));
+                Restrictions.and(Restrictions.le("startDate", interval.getStart().toDate()),
+                        Restrictions.ge("endDate", interval.getEnd().toDate())));
         crit.setFetchMode("creator", FetchMode.SELECT);
         return asList(crit);
     }

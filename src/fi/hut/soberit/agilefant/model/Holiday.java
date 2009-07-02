@@ -1,19 +1,19 @@
 package fi.hut.soberit.agilefant.model;
 
+import java.sql.Date;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
-import org.hibernate.annotations.Type;
-import org.joda.time.Interval;
-
 @Entity
 public class Holiday {
     private int id;
     private User user;
-    private Interval interval;
+    private Date startDate;
+    private Date endDate;
 
     
     @Id
@@ -31,14 +31,18 @@ public class Holiday {
     public void setUser(User user) {
         this.user = user;
     }
-    /*
-    @Type(type = "org.joda.time.contrib.hibernate.PersistentInterval")
-    public Interval getInterval() {
-        return interval;
+    public Date getStartDate() {
+        return startDate;
     }
-    public void setInterval(Interval interval) {
-        this.interval = interval;
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
     }
-    */
-    
+
+    public Date getEndDate() {
+        return endDate;
+    }
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
 }

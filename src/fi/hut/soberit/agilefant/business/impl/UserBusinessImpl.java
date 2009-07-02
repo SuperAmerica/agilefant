@@ -2,6 +2,7 @@ package fi.hut.soberit.agilefant.business.impl;
 
 import java.util.List;
 
+import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
 import org.joda.time.Duration;
 import org.joda.time.Interval;
@@ -13,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import fi.hut.soberit.agilefant.business.UserBusiness;
 import fi.hut.soberit.agilefant.db.StoryDAO;
 import fi.hut.soberit.agilefant.db.UserDAO;
+import fi.hut.soberit.agilefant.model.Holiday;
 import fi.hut.soberit.agilefant.model.User;
 
 /**
@@ -48,12 +50,24 @@ public class UserBusinessImpl extends GenericBusinessImpl<User> implements
         return storyDAO.countByCreator(user) > 0;
     }
     
+    public boolean isDayUserHoliday(DateTime date, User user) {
+        for(Holiday holiday : user.getHolidays()) {
+            if(holiday.getInterval().contains(date)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
     public Duration calculateWorktimePerPeriod(User user, Interval interval) {
         MutableDateTime iterator = new MutableDateTime(interval.getStart());
         int deductDays = 0;
         
         while(iterator.isBefore(interval.getEnd())) {
             if(iterator.getDayOfWeek() == DateTimeConstants.SATURDAY || iterator.getDayOfWeek() == DateTimeConstants.SUNDAY) {
+                deductDays++;
+            }
+            if(this.isDayUserHoliday(iterator.toDateTime(), user)) {
                 deductDays++;
             }
             iterator.addDays(1);

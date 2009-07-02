@@ -16,6 +16,7 @@ import static org.junit.Assert.*;
 
 import fi.hut.soberit.agilefant.business.impl.UserBusinessImpl;
 import fi.hut.soberit.agilefant.db.UserDAO;
+import fi.hut.soberit.agilefant.model.Holiday;
 import fi.hut.soberit.agilefant.model.User;
 
 public class UserBusinessTest {
@@ -73,6 +74,17 @@ public class UserBusinessTest {
     
     @Test
     public void testCalculateWorktimePerPeriod_withVacations() {
+        User user = new User();
+        LocalDate start = new LocalDate(2009,6,1);
         
+        Holiday holiday = new Holiday();
+        holiday.setStartDate(start.plusDays(1).toDateMidnight().toDate());
+        holiday.setEndDate(start.plusDays(3).toDateMidnight().toDate());
+        user.getHolidays().add(holiday);        
+        
+        Duration expected = new Duration(start.toDateMidnight(), start.plusDays(4).toDateMidnight());
+        Interval interval = new Interval(start.toDateMidnight(), start.plusDays(8).toDateMidnight());
+        Duration actual = this.userBusiness.calculateWorktimePerPeriod(user, interval);
+        assertEquals(expected.getMillis(), actual.getMillis());        
     }
 }

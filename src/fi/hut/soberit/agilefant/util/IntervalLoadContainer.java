@@ -7,6 +7,8 @@ public class IntervalLoadContainer {
     private Interval interval;
     private long assignedLoad = 0L;
     private long totalLoad = 0L;
+    private long basellineLoad = 0L;
+    private long unassignedLoad = 0L;
     private long workHours = 0L;
 
     public long getAssignedLoad() {
@@ -32,5 +34,17 @@ public class IntervalLoadContainer {
     }
     public void setInterval(Interval interval) {
         this.interval = interval;
+    }
+    public long getBasellineLoad() {
+        return basellineLoad;
+    }
+    public void setBasellineLoad(long basellineLoad) {
+        this.basellineLoad = basellineLoad;
+    }
+    public long getUnassignedLoad() {
+        return unassignedLoad;
+    }
+    public void setUnassignedLoad(long unassignedLoad) {
+        this.unassignedLoad = unassignedLoad;
     }
 }

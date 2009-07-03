@@ -23,7 +23,7 @@ $(document).ready(function() {
 				    <table cellpadding="0" cellspacing="0">
 				    <tr>
 				    <td>
-					<a href="ajaxCreateUser.action" class="openCreateDialog openUserDialog"
+					<a href="ajax/createUser.action" class="openCreateDialog openUserDialog"
 					title="Create a new user" onclick="return false;">
 					</a>
 					</td>

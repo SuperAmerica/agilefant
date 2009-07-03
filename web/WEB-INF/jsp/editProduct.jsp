@@ -194,11 +194,10 @@ SimileAjax.Platform = new Object();*/
 	                    <table cellpadding="0" cellspacing="0">
 	                    <tr>
 	                    <td>
-	                    <ww:url id="createLink" action="ajaxCreateProject" includeParams="none">
-						  <ww:param name="productId" value="product.id" />
-						</ww:url>
-						<ww:a href="%{createLink}"
-						  title="Create a new project"
+	                    <ww:url id="createLink" namespace="ajax" action="createProject" includeParams="none">
+          						  <ww:param name="productId" value="product.id" />
+					           	</ww:url>
+						<ww:a href="%{createLink}" title="Create a new project"
 						  cssClass="openCreateDialog openProjectDialog" onclick="return false;">
 						</ww:a>
 						</td>
@@ -394,50 +393,10 @@ SimileAjax.Platform = new Object();*/
 	</tr>
 </table>
 </c:if>
-
-<table>	
-	<tr>
-		<td>
-			<div class="subItems" id="subItems_editProductStorysList">
-			<div class="subItemHeader">
-				<table cellspacing="0" cellpadding="0">
-	                <tr>
-	                    <td class="header">
-	                    Stories
-	                    </td>
-	                    <td class="icons">
-	                    <table cellspacing="0" cellpadding="0">
-                            <tr>
-                            <td>
-	                    <ww:url
-					id="createStoryLink" action="ajaxCreateStory"
-					includeParams="none">
-					<ww:param name="backlogId" value="${product.id}" />
-				</ww:url> <ww:a cssClass="openCreateDialog openStoryDialog"
-					href="%{createStoryLink}" onclick="return false;"
-					title="Create a new story">
-					</ww:a>
-					</td>
-					</tr>
-					</table>
-					</td>
-					</tr>
-				</table>
-			</div>			
-
-			<c:if test="${!empty product.stories}">
-			<div class="subItemContent">
-				<%@ include file="./inc/_backlogList.jsp"%>
-			</div>
-			</c:if>
-			</div>
-		</td>
-	</tr>
-</table>
 --%>
 
 
-<ww:url id="createStoryLink" action="ajaxCreateStory" includeParams="none">
+<ww:url id="createStoryLink" action="createStory" namespace="ajax" includeParams="none">
   <ww:param name="backlogId">${product.id}</ww:param>
 </ww:url>
 

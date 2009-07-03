@@ -534,7 +534,7 @@ $(document).ready(function() {
 					   					<table cellpadding="0" cellspacing="0">
 					   					<tr>
 					   					<td>
-					   						<ww:url id="createLink" action="ajaxCreateIteration" includeParams="none" >
+					   						<ww:url id="createLink" namespace="ajax" action="createIteration" includeParams="none" >
 						  						<ww:param name="projectId" value="#attr.project.id" />
 					   						</ww:url>
 					   						<ww:a
@@ -605,82 +605,11 @@ $(document).ready(function() {
 								</div>
 							</c:if>
 							</div>
-              
-              <%--
-		<div class="subItems" id="subItems_editProjectStorys">
-		<div class="subItemHeader">
-			<table cellspacing="0" cellpadding="0">
-                    <tr>
-                        <td class="header">
-                        Stories
-                        </td>
-                        <td class="icons">
-                        <table cellspacing="0" cellpadding="0">
-                            <tr>
-                            <td>
-			                        <ww:url
-			                    id="createStoryLink" action="ajaxCreateStory"
-			                    includeParams="none">
-			                    <ww:param name="backlogId" value="${project.id}" />
-			                </ww:url> <ww:a cssClass="openCreateDialog openStoryDialog"
-			                    href="%{createStoryLink}" onclick="return false;"
-			                    title="Create a new story">
-			                    </ww:a>
-			                    </td>
-			                    </tr>
-			                    </table>
-	                    </td>
-	                    </tr>
-	                </table>
-					</div>
-							<c:if test="${!empty project.stories}">
-								<div class="subItemContent">
-									<%@ include	file="./inc/_backlogList.jsp"%>
-								</div>
-							</c:if>
-						</div>
-            --%>
 				</td>
 			</tr>
 		</table>
 
-<%--
-<ww:url id="createStoryLink" action="ajaxCreateStory" includeParams="none">
-  <ww:param name="backlogId" value="${project.id}" />
-</ww:url>
 
-
-<table>
-  <tr>
-    <td>
-      <div class="subItems" id="subItems_editProjectStoryList">
-        <div class="subItemHeader">
-          <table cellspacing="0" cellpadding="0">
-            <tr>
-              <td class="header">Stories</td>
-              <td class="icons">
-                <table cellpadding="0" cellspacing="0">
-                  <tr>
-                    <td><ww:a cssClass="openCreateDialog openStoryDialog"
-                          href="%{createStoryLink}" onclick="return false;"
-                          title="Create a new story">
-                        </ww:a></td>
-                  </tr>
-                </table>     
-              </td>
-            </tr>
-          </table>
-        </div>
-        <c:if test="${!empty stories}">
-          <div class="subItemContent">
-            <%@ include file="./inc/_storyList.jsp"%>
-          </div>
-        </c:if>
-      </div>
-    </td>
-  </tr>
-</table>
---%>
 
 <script type="text/javascript" src="static/js/dynamics/utils.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 <script type="text/javascript" src="static/js/dynamics/model.js?<ww:text name="struts.agilefantReleaseId" />"></script>

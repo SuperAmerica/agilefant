@@ -25,7 +25,7 @@ $(document).ready(function() {
 				    <table cellpadding="0" cellspacing="0">
                     <tr>
                     <td>
-					<ww:a href="ajaxCreateTeam.action" cssClass="openCreateDialog openTeamDialog" onclick="return false;"
+					<ww:a href="ajax/createTeam.action" cssClass="openCreateDialog openTeamDialog" onclick="return false;"
 					title="Create a new team">
 					</ww:a>
 					</td>

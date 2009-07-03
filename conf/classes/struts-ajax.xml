@@ -10,7 +10,7 @@
     <result-types>
       <!-- JSON result type -->
       <result-type name="json" default="true" class="code.google.struts2jsonresult.JSONResult">
-        <param name="prettyPrint">false</param>
+        <param name="prettyPrint">true</param>
         <param name="out.noCache">true</param>
       </result-type>
     </result-types>
@@ -77,11 +77,34 @@
     <!-- AJAX actions -->
     
     <!-- Backlog actions -->
-    
     <action name="retrieveStories" method="retrieveStories" class="backlogAction">
       <result name="success" type="json">
         <param name="target">stories</param>
       </result>
+    </action>
+    <!-- /Backlog actions -->
+    
+    
+    
+    <!-- Product actions -->
+    <action name="createProduct" method="create" class="productAction">
+      <result type="dispatcher">/WEB-INF/jsp/forms/createProduct.jsp</result>
+    </action>
+    <!-- /Product actions -->
+    
+
+    
+    <!-- Project actions -->
+    <action name="createProject" method="create" class="projectAction">
+      <result type="dispatcher">/WEB-INF/jsp/forms/createProject.jsp</result>
+    </action>
+    <!-- /Project actions -->
+    
+
+    
+    <!-- Iteration actions -->
+    <action name="createIteration" method="create" class="iterationAction">
+          <result type="dispatcher">/WEB-INF/jsp/forms/createIteration.jsp</result>
     </action>
     
     <action name="iterationData" class="iterationAction" method="iterationContents">
@@ -90,8 +113,18 @@
         <param name="patterns">+stories.tasks, +stories.userData, +sotires.tasks.userData, +tasksWithoutStory, +tasksWithoutStory.userData</param>
       </result>
     </action>
-    
-    <!-- /Backlog actions -->
+    <!-- /Iteration actions -->
+
+
+
+
+    <!-- Story actions -->
+    <action name="createStory" method="create" class="storyAction">
+          <result type="dispatcher">/WEB-INF/jsp/forms/createStory.jsp</result>
+    </action>
+    <!-- /Story actions -->
+
+
 
     <!-- Task actions -->
     <action name="deleteTask" method="delete" class="taskAction" />
@@ -115,11 +148,23 @@
       </result>
     </action>
     <!-- /Task actions -->
-    
-    <!-- Story actions -->
-    
-    <!-- /Story actions -->
-  
+
+
+
+    <!-- User actions -->
+    <action name="createUser" method="create" class="userAction">
+      <result type="dispatcher">/WEB-INF/jsp/forms/createUser.jsp</result>
+    </action>
+    <!-- /User actions -->
+
+
+
+    <!-- Team actions -->
+    <action name="createTeam" method="create" class="teamAction">
+      <result type="dispatcher">/WEB-INF/jsp/forms/createTeam.jsp</result>
+    </action>
+    <!-- /Team actions -->
+
   </package>
   
 </struts>

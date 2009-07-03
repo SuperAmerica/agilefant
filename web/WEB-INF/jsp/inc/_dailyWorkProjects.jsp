@@ -69,7 +69,7 @@ $(document).ready(function() {
             </td>
           </c:if>
           <td>
-          <ww:url id="createStoryLink" action="ajaxCreateStory" includeParams="none">
+          <ww:url id="createStoryLink" action="createStory" namespace="ajax" includeParams="none">
             <ww:param name="backlogId" value="${pro.id}" />
           </ww:url>
           <ww:a cssClass="openCreateDialog openStoryDialog"

@@ -1,5 +1,6 @@
 package fi.hut.soberit.agilefant.db.hibernate;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -66,6 +67,9 @@ public class TaskDAOHibernate extends GenericDAOHibernate<Task> implements
     }
 
     public Map<Integer, Integer> getNumOfResponsiblesByTask(Set<Integer> taskIds) {
+        if(taskIds == null || taskIds.size() == 0) {
+            return Collections.emptyMap();
+        }
         Criteria crit = getCurrentSession().createCriteria(Task.class);
         crit.add(Restrictions.in("id", taskIds));
         crit.createAlias("responsibles", "responsible");

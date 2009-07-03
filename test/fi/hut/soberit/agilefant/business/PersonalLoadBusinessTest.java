@@ -43,8 +43,7 @@ public class PersonalLoadBusinessTest {
     private Iteration iter;
     private Story story;
     private Map<Integer, Integer> assigneeMap;
-    
-    
+
     @Before
     public void setUp() {
         personalLoadBusiness = new PersonalLoadBusinessImpl();
@@ -55,8 +54,9 @@ public class PersonalLoadBusinessTest {
         personalLoadBusiness.setTaskDAO(taskDAO);
         personalLoadBusiness.setUserBusiness(userBusiness);
         user = new User();
-        
+
     }
+
     private void initDataset() {
         task1 = new Task();
         task1.setEffortLeft(new ExactEstimate(500));
@@ -67,7 +67,7 @@ public class PersonalLoadBusinessTest {
         task3 = new Task();
         task3.setEffortLeft(null);
         task3.setId(3);
-        
+
         iter = new Iteration();
         iter.setId(1);
         story = new Story();
@@ -78,9 +78,11 @@ public class PersonalLoadBusinessTest {
         assigneeMap.put(2, 1);
         assigneeMap.put(3, 2);
     }
+
     private void replayAll() {
         replay(userBusiness, taskDAO, storyDAO);
     }
+
     private void verifyAll() {
         verify(userBusiness, taskDAO, storyDAO);
     }
@@ -93,17 +95,21 @@ public class PersonalLoadBusinessTest {
         task3.setStory(story);
         List<Task> tasks = Arrays.asList(task1, task2, task3);
         Map<Integer, IterationLoadContainer> iterationEffortData = new HashMap<Integer, IterationLoadContainer>();
-        
-        expect(taskDAO.getUnassignedTasksByStoryResponsibles(user, null)).andReturn(tasks);
+
+        expect(taskDAO.getUnassignedTasksByStoryResponsibles(user, null))
+                .andReturn(tasks);
         Capture<Set<Integer>> actualStoryIds = new Capture<Set<Integer>>();
-        expect(storyDAO.getNumOfResponsiblesByStory(EasyMock.capture(actualStoryIds))).andReturn(assigneeMap);
+        expect(
+                storyDAO.getNumOfResponsiblesByStory(EasyMock
+                        .capture(actualStoryIds))).andReturn(assigneeMap);
         replayAll();
-        personalLoadBusiness.calculateStoryAssignedTaskLoad(iterationEffortData, user, null);
+        personalLoadBusiness.calculateStoryAssignedTaskLoad(
+                iterationEffortData, user, null);
         assertEquals(1, actualStoryIds.getValue().size());
         assertEquals(2750, iterationEffortData.get(1).getTotalAssignedLoad());
         verifyAll();
     }
-    
+
     @Test
     public void testCalculateDirectlyAssignedTaskLoad() {
         initDataset();
@@ -113,161 +119,186 @@ public class PersonalLoadBusinessTest {
         List<Task> iterTasks = Arrays.asList(task1, task3);
         List<Task> storyTasks = Arrays.asList(task2);
         Map<Integer, IterationLoadContainer> iterationEffortData = new HashMap<Integer, IterationLoadContainer>();
-        
-        expect(taskDAO.getIterationTasksByUserAndTimeframe(user, null)).andReturn(iterTasks);
-        expect(taskDAO.getStoryTasksByUserAndTimeframe(user, null)).andReturn(storyTasks);
-        
+
+        expect(taskDAO.getIterationTasksByUserAndTimeframe(user, null))
+                .andReturn(iterTasks);
+        expect(taskDAO.getStoryTasksByUserAndTimeframe(user, null)).andReturn(
+                storyTasks);
+
         Capture<Set<Integer>> actualStoryIds = new Capture<Set<Integer>>();
-        expect(taskDAO.getNumOfResponsiblesByTask(EasyMock.capture(actualStoryIds))).andReturn(assigneeMap);
+        expect(
+                taskDAO.getNumOfResponsiblesByTask(EasyMock
+                        .capture(actualStoryIds))).andReturn(assigneeMap);
         replayAll();
-        personalLoadBusiness.calculateDirectlyAssignedTaskLoad(iterationEffortData, user, null);
+        personalLoadBusiness.calculateDirectlyAssignedTaskLoad(
+                iterationEffortData, user, null);
         assertEquals(3, actualStoryIds.getValue().size());
         assertEquals(5250, iterationEffortData.get(1).getTotalAssignedLoad());
         verifyAll();
     }
-    
+
     @Test
     public void testUpdateUserLoadByInterval_iterationStarts() {
-       DateTime baseDate = new DateTime(2009,6,1,0,0,0,0);
-       DateTime intervalStart = baseDate;
-       DateTime intervalEnd = baseDate.plusDays(6);
-       DateTime iterationStart = baseDate.plusDays(2);
-       DateTime iterationEnd = baseDate.plusDays(9);
-       
-       //3.6 - 10.6
-       Iteration iter = new Iteration();
-       iter.setStartDate(iterationStart.toDate());
-       iter.setEndDate(iterationEnd.toDate());
-       IterationLoadContainer loadContainer = new IterationLoadContainer();
-       loadContainer.setIteration(iter);
-       
-       //1.6 - 7.6
-       IntervalLoadContainer container = new IntervalLoadContainer();
-       Interval containerInterval = new Interval(intervalStart, intervalEnd);
-       container.setInterval(containerInterval);
-       
-       //total intervals with vacations and weekends
-       Interval actualInterval = new Interval(iterationStart, intervalEnd);
-       Interval iterationInterval = new Interval(iterationStart, iterationEnd);
-       //iteration and period durations without vacations and weekends
-       Duration worktimeInIteration = new Duration(1000*3600*24*5L); //5 days
-       Duration worktimeInPeriod = new Duration(1000*3600*24*3L); //3 days
-       //total assigned effort
-       loadContainer.setTotalAssignedLoad(500L);
-       
-       expect(userBusiness.calculateWorktimePerPeriod(user, iterationInterval)).andReturn(worktimeInIteration);
-       expect(userBusiness.calculateWorktimePerPeriod(user, actualInterval)).andReturn(worktimeInPeriod);
+        DateTime baseDate = new DateTime(2009, 6, 1, 0, 0, 0, 0);
+        DateTime intervalStart = baseDate;
+        DateTime intervalEnd = baseDate.plusDays(6);
+        DateTime iterationStart = baseDate.plusDays(2);
+        DateTime iterationEnd = baseDate.plusDays(9);
 
-       replayAll();
-       personalLoadBusiness.updateUserLoadByInterval(container, loadContainer, user);
-       verifyAll();
-       assertEquals(300, container.getAssignedLoad());
-       
+        // 3.6 - 10.6
+        Iteration iter = new Iteration();
+        iter.setStartDate(iterationStart.toDate());
+        iter.setEndDate(iterationEnd.toDate());
+        IterationLoadContainer loadContainer = new IterationLoadContainer();
+        loadContainer.setIteration(iter);
+
+        // 1.6 - 7.6
+        IntervalLoadContainer container = new IntervalLoadContainer();
+        Interval containerInterval = new Interval(intervalStart, intervalEnd);
+        container.setInterval(containerInterval);
+
+        // total intervals with vacations and weekends
+        Interval actualInterval = new Interval(iterationStart, intervalEnd);
+        Interval iterationInterval = new Interval(iterationStart, iterationEnd);
+        // iteration and period durations without vacations and weekends
+        Duration worktimeInIteration = new Duration(1000 * 3600 * 24 * 5L); // 5
+                                                                            // days
+        Duration worktimeInPeriod = new Duration(1000 * 3600 * 24 * 3L); // 3
+                                                                         // days
+        // total assigned effort
+        loadContainer.setTotalAssignedLoad(500L);
+
+        expect(userBusiness.calculateWorktimePerPeriod(user, iterationInterval))
+                .andReturn(worktimeInIteration);
+        expect(userBusiness.calculateWorktimePerPeriod(user, actualInterval))
+                .andReturn(worktimeInPeriod);
+
+        replayAll();
+        personalLoadBusiness.updateUserLoadByInterval(container, loadContainer,
+                user);
+        verifyAll();
+        assertEquals(300, container.getAssignedLoad());
+
     }
+
     @Test
     public void testupdateUserLoadByInterval_iterationEnds() {
-        DateTime baseDate = new DateTime(2009,6,1,0,0,0,0);
+        DateTime baseDate = new DateTime(2009, 6, 1, 0, 0, 0, 0);
         DateTime intervalStart = baseDate.plusDays(7);
         DateTime intervalEnd = baseDate.plusDays(11);
         DateTime iterationStart = baseDate;
         DateTime iterationEnd = baseDate.plusDays(9);
-        
-        //1.6 - 9.6
+
+        // 1.6 - 9.6
         Iteration iter = new Iteration();
         iter.setStartDate(iterationStart.toDate());
         iter.setEndDate(iterationEnd.toDate());
         IterationLoadContainer loadContainer = new IterationLoadContainer();
         loadContainer.setIteration(iter);
-        
-        //8.6 - 12.6
+
+        // 8.6 - 12.6
         IntervalLoadContainer container = new IntervalLoadContainer();
         Interval containerInterval = new Interval(intervalStart, intervalEnd);
         container.setInterval(containerInterval);
-        
-        //total intervals with vacations and weekends
+
+        // total intervals with vacations and weekends
         Interval actualInterval = new Interval(intervalStart, iterationEnd);
         Interval iterationInterval = new Interval(iterationStart, iterationEnd);
-        //iteration and period durations without vacations and weekends
-        Duration worktimeInIteration = new Duration(1000*3600*24*5L); //5 days
-        Duration worktimeInPeriod = new Duration(1000*3600*24*2L); //2 days
-        //total assigned effort
+        // iteration and period durations without vacations and weekends
+        Duration worktimeInIteration = new Duration(1000 * 3600 * 24 * 5L); // 5
+                                                                            // days
+        Duration worktimeInPeriod = new Duration(1000 * 3600 * 24 * 2L); // 2
+                                                                         // days
+        // total assigned effort
         loadContainer.setTotalAssignedLoad(500L);
-        
-        expect(userBusiness.calculateWorktimePerPeriod(user, iterationInterval)).andReturn(worktimeInIteration);
-        expect(userBusiness.calculateWorktimePerPeriod(user, actualInterval)).andReturn(worktimeInPeriod);
+
+        expect(userBusiness.calculateWorktimePerPeriod(user, iterationInterval))
+                .andReturn(worktimeInIteration);
+        expect(userBusiness.calculateWorktimePerPeriod(user, actualInterval))
+                .andReturn(worktimeInPeriod);
 
         replayAll();
-        personalLoadBusiness.updateUserLoadByInterval(container, loadContainer, user);
+        personalLoadBusiness.updateUserLoadByInterval(container, loadContainer,
+                user);
         verifyAll();
         assertEquals(200, container.getAssignedLoad());
     }
+
     @Test
     public void testupdateUserLoadByInterval_iterationInBetween() {
-        DateTime baseDate = new DateTime(2009,6,1,0,0,0,0);
+        DateTime baseDate = new DateTime(2009, 6, 1, 0, 0, 0, 0);
         DateTime intervalStart = baseDate;
         DateTime intervalEnd = baseDate.plusDays(4);
         DateTime iterationStart = baseDate.plusDays(1);
         DateTime iterationEnd = baseDate.plusDays(3);
-        
-        //2.6 - 4.6
+
+        // 2.6 - 4.6
         Iteration iter = new Iteration();
         iter.setStartDate(iterationStart.toDate());
         iter.setEndDate(iterationEnd.toDate());
         IterationLoadContainer loadContainer = new IterationLoadContainer();
         loadContainer.setIteration(iter);
-        
-        //1.6 - 5.6
+
+        // 1.6 - 5.6
         IntervalLoadContainer container = new IntervalLoadContainer();
         Interval containerInterval = new Interval(intervalStart, intervalEnd);
         container.setInterval(containerInterval);
-        
-        //total intervals with vacations and weekends
+
+        // total intervals with vacations and weekends
         Interval actualInterval = new Interval(iterationStart, iterationEnd);
         Interval iterationInterval = new Interval(iterationStart, iterationEnd);
-        //iteration and period durations without vacations and weekends
-        Duration worktimeInIteration = new Duration(1000*3600*24*3L); //3 days
-        Duration worktimeInPeriod = new Duration(1000*3600*24*3L); //3 days
-        //total assigned effort
+        // iteration and period durations without vacations and weekends
+        Duration worktimeInIteration = new Duration(1000 * 3600 * 24 * 3L); // 3
+                                                                            // days
+        Duration worktimeInPeriod = new Duration(1000 * 3600 * 24 * 3L); // 3
+                                                                         // days
+        // total assigned effort
         loadContainer.setTotalAssignedLoad(500L);
-        
-        expect(userBusiness.calculateWorktimePerPeriod(user, iterationInterval)).andReturn(worktimeInIteration);
-        expect(userBusiness.calculateWorktimePerPeriod(user, actualInterval)).andReturn(worktimeInPeriod);
+
+        expect(userBusiness.calculateWorktimePerPeriod(user, iterationInterval))
+                .andReturn(worktimeInIteration);
+        expect(userBusiness.calculateWorktimePerPeriod(user, actualInterval))
+                .andReturn(worktimeInPeriod);
 
         replayAll();
-        personalLoadBusiness.updateUserLoadByInterval(container, loadContainer, user);
+        personalLoadBusiness.updateUserLoadByInterval(container, loadContainer,
+                user);
         verifyAll();
         assertEquals(500, container.getAssignedLoad());
     }
+
     @Test
     public void testupdateUserLoadByInterval_iterationNotOngoing() {
-        DateTime baseDate = new DateTime(2009,6,1,0,0,0,0);
+        DateTime baseDate = new DateTime(2009, 6, 1, 0, 0, 0, 0);
         DateTime intervalStart = baseDate;
         DateTime intervalEnd = baseDate.plusDays(4);
         DateTime iterationStart = baseDate.plusDays(7);
         DateTime iterationEnd = baseDate.plusDays(15);
-        
-        //1.6 - 4.6
+
+        // 1.6 - 4.6
         Iteration iter = new Iteration();
         iter.setStartDate(iterationStart.toDate());
         iter.setEndDate(iterationEnd.toDate());
         IterationLoadContainer loadContainer = new IterationLoadContainer();
         loadContainer.setIteration(iter);
         loadContainer.setTotalAssignedLoad(500L);
-        //8.6 - 16.6
+        // 8.6 - 16.6
         IntervalLoadContainer container = new IntervalLoadContainer();
         Interval containerInterval = new Interval(intervalStart, intervalEnd);
         container.setInterval(containerInterval);
-        personalLoadBusiness.updateUserLoadByInterval(container, loadContainer, user);
+        personalLoadBusiness.updateUserLoadByInterval(container, loadContainer,
+                user);
         assertEquals(0L, container.getAssignedLoad());
 
     }
-    
+
     @Test
     public void testInitializeLoadContainers() {
-        DateTime start = new DateTime(2009,6,1,0,0,0,0);
+        DateTime start = new DateTime(2009, 6, 1, 0, 0, 0, 0);
         DateTime end = start.plusDays(29);
         Period period = new Period(0, 0, 1, 0, 0, 0, 0, 0);
-        List<IntervalLoadContainer> actual = this.personalLoadBusiness.initializeLoadContainers(user, start, end, period);
+        List<IntervalLoadContainer> actual = this.personalLoadBusiness
+                .initializeLoadContainers(user, start, end, period);
         assertEquals(5, actual.size());
     }
 }

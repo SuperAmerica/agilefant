@@ -204,6 +204,16 @@
       <result type="dispatcher">/WEB-INF/jsp/tabs/teamTabs.jsp</result>
     </action>
     <!-- /Team actions -->
+    
+    
+    
+    <!-- User load actions -->
+    <action name="defaultUserLoad" method="retrieveUserLoad" class="userLoadAction">
+    	<result name="success" type="json">
+    		<param name="target">userLoadData</param>
+    	</result>
+    </action>
+    <!-- /User load actions -->
 
   </package>
   

@@ -1,5 +1,6 @@
 package fi.hut.soberit.agilefant.db.hibernate;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -111,6 +112,9 @@ public class StoryDAOHibernate extends GenericDAOHibernate<Story> implements
 
     public Map<Integer, Integer> getNumOfResponsiblesByStory(
             Set<Integer> storyIds) {
+        if(storyIds == null || storyIds.size() == 0) {
+            return Collections.emptyMap();
+        }
         Criteria crit = getCurrentSession().createCriteria(Story.class);
         crit.add(Restrictions.in("id", storyIds));
         crit.createAlias("responsibles", "responsible");

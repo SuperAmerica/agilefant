@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeConstants;
 import org.joda.time.Duration;
 import org.joda.time.Interval;
 import org.joda.time.LocalDate;
@@ -210,19 +211,30 @@ public class PersonalLoadBusinessImpl implements PersonalLoadBusiness {
     }
 
     public List<IntervalLoadContainer> generatePersonalAssignedLoad(User user,
-            DateTime startDate, DateTime endDate) {
+            DateTime startDate, DateTime endDate, Period len) {
         Interval interval = new Interval(startDate, endDate);
         Map<Integer, IterationLoadContainer> iterationEffortLeft = this
                 .calculateTotalUserLoad(user, interval);
-        Period len = new Period(0);
         List<IntervalLoadContainer> periods = this
-                .initializeLoadContainers(user, startDate, endDate, len.plusWeeks(1));
+                .initializeLoadContainers(user, startDate, endDate, len);
         for (Integer iterationId : iterationEffortLeft.keySet()) {
             for (IntervalLoadContainer period : periods) {
                 this.updateUserLoadByInterval(period, iterationEffortLeft.get(iterationId), user);
             }
         }
         return periods;
+    }
+    
+    public List<IntervalLoadContainer> retrieveUserLoad(User user, int weeksAhead) {
+        Period len = new Period();
+        len = len.plusWeeks(1);
+        MutableDateTime currentWeekStart = new MutableDateTime();
+        currentWeekStart.setDayOfWeek(DateTimeConstants.MONDAY);
+        currentWeekStart.setMillisOfDay(0);
+        
+        DateTime start = currentWeekStart.toDateTime();
+        DateTime end = start.plusWeeks(weeksAhead);
+        return this.generatePersonalAssignedLoad(user, start, end, len);
     }
 
     public TaskDAO getTaskDAO() {

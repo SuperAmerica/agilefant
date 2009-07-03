@@ -1,6 +1,10 @@
 package fi.hut.soberit.agilefant.util;
 
+import java.util.Date;
+
 import org.joda.time.Interval;
+
+import flexjson.JSON;
 
 
 public class IntervalLoadContainer {
@@ -29,9 +33,11 @@ public class IntervalLoadContainer {
     public void setWorkHours(long workHours) {
         this.workHours = workHours;
     }
+    @JSON(include=false)
     public Interval getInterval() {
         return interval;
     }
+
     public void setInterval(Interval interval) {
         this.interval = interval;
     }
@@ -46,5 +52,11 @@ public class IntervalLoadContainer {
     }
     public void setUnassignedLoad(long unassignedLoad) {
         this.unassignedLoad = unassignedLoad;
+    }
+    public Date getStart() {
+        return this.interval.getStart().toDate();
+    }
+    public Date getEnd() {
+        return this.interval.getEnd().toDate();
     }
 }

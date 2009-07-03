@@ -56,4 +56,8 @@ public class ExactEstimate extends Number implements Comparable<ExactEstimate> {
     public long longValue() {
         return this.minorUnits;
     }
+    
+    public String toString() {
+        return String.valueOf(this.minorUnits);
+    }
 }

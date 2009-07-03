@@ -61,7 +61,7 @@ ModelFactoryClass.prototype = {
     }
     jQuery.ajax({
       async: true,
-      error: function() {
+      error: function(a,b,c,d) {
         commonView.showError("Unable to load iteration data.");
       },
       success: function(data,type) {
@@ -289,7 +289,7 @@ IterationModel.prototype.reloadStoryData = function() {
   cache: false,
   dataType: "json",
   type: "POST",
-  url: "iterationData.action",
+  url: "ajax/iterationData.action",
   data: {iterationId: this.iterationId, excludeStorys: false}
   });
 };
@@ -610,9 +610,9 @@ StoryModel.prototype.reloadMetrics = function() {
       var event = [];
       if(!me.persistedData || !me.persistedData.metrics) {
         event = ["metricsUpdated"];
-      } else if(!agilefantUtils.areExactEstimatesEqual(me.persistedData.metrics.effortLeft, data.effortLeft) || 
+      } else if((me.persistedData.metrics.effortLeft !=data.effortLeft) || 
               me.persistedData.metrics.effortSpent !== data.effortSpent ||  
-              !agilefantUtils.areExactEstimatesEqual(me.persistedData.metrics.originalEstimate, data.originalEstimate) || 
+              (me.persistedData.metrics.originalEstimat != data.originalEstimate) || 
               me.persistedData.metrics.doneTasks !== data.doneTasks || 
               me.persistedData.metrics.totalTasks !== data.totalTasks) {
         event = ["metricsUpdated"]; 
@@ -708,8 +708,8 @@ TaskModel.prototype.setData = function(data) {
   this.creator = data.creator;
   var bubbleEvents = [];
   if (this.persistedData) {
-    if (!agilefantUtils.areExactEstimatesEqual(this.persistedData.effortLeft, this.effortLeft)
-        || !agilefantUtils.areExactEstimatesEqual(this.persistedData.originalEstimate, this.originalEstimate)
+    if ((this.persistedData.effortLeft != this.effortLeft)
+        || (this.persistedData.originalEstimate != this.originalEstimate)
         || this.persistedData.state != data.state
         || this.effortSpent != this.persistedData.effortSpent) {
       bubbleEvents.push("metricsUpdated");
@@ -888,8 +888,8 @@ TaskModel.prototype.getEffortLeft = function() {
 };
 TaskModel.prototype.setEffortLeft = function(effortLeft) {
   var estimate = agilefantParsers.parseExactEstimate(effortLeft);
-  if (estimate == null) {
-	this.effortLeft = 0;
+  if (estimate === null) {
+    this.effortLeft = 0;
   } else {
     this.effortLeft = estimate;
   }

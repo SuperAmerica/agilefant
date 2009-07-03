@@ -1,5 +1,6 @@
 package fi.hut.soberit.agilefant.db.hibernate;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -7,6 +8,7 @@ import java.util.Set;
 
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
+import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
@@ -25,14 +27,29 @@ public class TaskDAOHibernate extends GenericDAOHibernate<Task> implements
         super(Task.class);
     }
 
+    private void addIterationIntervalLimit(Criteria crit, Interval interval) {
+        //search only from iterations
+        crit.add(Restrictions.eq("class", "Iteration"));
+        Date startDate = interval.getStart().toDate();
+        Date endDate = interval.getEnd().toDate();
+        //iteration may start during the interval
+        Criterion startDateLimit = Restrictions.between("startDate", startDate,
+                endDate);
+        //iteration end during the interval
+        Criterion endDateLimit = Restrictions.between("endDate", startDate,
+                endDate);
+        //interval may be within the iteration
+        Criterion overlaps = Restrictions.or(startDateLimit, endDateLimit);
+        Criterion withinIteration = Restrictions.and(Restrictions.le(
+                "startDate", startDate), Restrictions.ge("endDate", endDate));
+        crit.add(Restrictions.or(overlaps, withinIteration));
+    }
     public List<Task> getIterationTasksByUserAndTimeframe(User user,
             Interval interval) {
         Criteria crit = getCurrentSession().createCriteria(Task.class);
         crit.createCriteria("responsibles")
                 .add(Restrictions.idEq(user.getId()));
-        crit.createCriteria("iteration").add(
-                Restrictions.and(Restrictions.le("startDate", interval.getStart().toDate()),
-                        Restrictions.ge("endDate", interval.getEnd().toDate())));
+        this.addIterationIntervalLimit(crit.createCriteria("iteration"), interval);
         crit.add(Restrictions.isNull("story"));
         crit.setFetchMode("creator", FetchMode.SELECT);
         return asList(crit);
@@ -42,9 +59,8 @@ public class TaskDAOHibernate extends GenericDAOHibernate<Task> implements
         Criteria crit = getCurrentSession().createCriteria(Task.class);
         crit.createCriteria("responsibles")
                 .add(Restrictions.idEq(user.getId()));
-        crit.createCriteria("story").createCriteria("backlog").add(
-                Restrictions.and(Restrictions.le("startDate", interval.getStart().toDate()),
-                        Restrictions.ge("endDate", interval.getEnd().toDate())));
+       
+        this.addIterationIntervalLimit(crit.createCriteria("story").createCriteria("backlog"), interval);
         crit.setFetchMode("creator", FetchMode.SELECT);
         return asList(crit);
     }
@@ -74,9 +90,7 @@ public class TaskDAOHibernate extends GenericDAOHibernate<Task> implements
         crit.add(Restrictions.isEmpty("responsibles"));
         Criteria story = crit.createCriteria("story");
         story.createCriteria("responsibles").add(Restrictions.idEq(user.getId()));
-        story.createCriteria("backlog").add(
-                Restrictions.and(Restrictions.le("startDate", interval.getStart().toDate()),
-                        Restrictions.ge("endDate", interval.getEnd().toDate())));
+        this.addIterationIntervalLimit(story.createCriteria("backlog"), interval);
         crit.setFetchMode("creator", FetchMode.SELECT);
         return asList(crit);
     }

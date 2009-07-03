@@ -27,3 +27,11 @@ INSERT INTO task_user (tasks_id, responsibles_id) VALUES(4,2);
 INSERT INTO task_user (tasks_id, responsibles_id) VALUES(5,1);
 
 INSERT INTO story_user (story_id, user_id) VALUES(1,1);
+
+--set up project data
+INSERT INTO backlogs (id,backlogtype,startDate, endDate) VALUES (2,'Project','2009-05-20 10:15:00', '2009-07-01 10:15:00');
+INSERT INTO stories (id,backlog_id, name, state) VALUES (2,2, 'Story 2', 1);
+INSERT INTO tasks (id,state, effortLeft, story_id) VALUES (8,1,10000,2);
+INSERT INTO tasks (id,state, effortLeft, story_id) VALUES (9,1,10000,2);
+INSERT INTO task_user (tasks_id, responsibles_id) VALUES(8,1);
+INSERT INTO task_user (tasks_id, responsibles_id) VALUES(9,1);

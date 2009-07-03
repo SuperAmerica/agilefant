@@ -58,6 +58,28 @@ public class TaskDAOTest extends AbstractHibernateTests {
     }
     
     @Test
+    public void testGetStoryTasksByUserAndTimeframe_beginsWithin() {
+        executeClassSql();
+        DateTime start = new DateTime(2009,5,15,1,0,0,0);
+        User user = new User();
+        user.setId(1);
+        Interval interval = new Interval(start, start.plusDays(6));
+        List<Task> actual = this.taskDAO.getStoryTasksByUserAndTimeframe(user, interval);
+        assertEquals(3, actual.size());
+    }
+    
+    @Test
+    public void testGetStoryTasksByUserAndTimeframe_EndsWithin() {
+        executeClassSql();
+        DateTime start = new DateTime(2009,6,29,1,0,0,0);
+        User user = new User();
+        user.setId(1);
+        Interval interval = new Interval(start, start.plusDays(5));
+        List<Task> actual = this.taskDAO.getStoryTasksByUserAndTimeframe(user, interval);
+        assertEquals(3, actual.size());
+    }
+    
+    @Test
     public void testGetStoryTasksByUserAndTimeframe_notInTimeframe() {
         executeClassSql();
         DateTime start = new DateTime(2008,6,10,1,0,0,0);

@@ -396,7 +396,7 @@ SimileAjax.Platform = new Object();*/
 --%>
 
 
-<ww:url id="createStoryLink" action="createStory" namespace="ajax" includeParams="none">
+<ww:url id="createStoryLink" action="createStoryForm" namespace="ajax" includeParams="none">
   <ww:param name="backlogId">${product.id}</ww:param>
 </ww:url>
 

@@ -174,7 +174,7 @@ Agilefant
     <li>
     <c:choose>
         <c:when test="${hasProducts}">
-            <ww:url id="createLink" action="createStory" namespace="ajax" includeParams="none">
+            <ww:url id="createLink" action="createStoryForm" namespace="ajax" includeParams="none">
               <ww:param name="backlogId">${currentPageId}</ww:param>
             </ww:url>
             <ww:a href="%{createLink}" onclick="return false;" title="Create a new story" cssClass="openCreateDialog openStoryDialog">Story &raquo;</ww:a>

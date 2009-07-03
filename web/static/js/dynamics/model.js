@@ -652,11 +652,13 @@ StoryModel.prototype.save = function(synchronous, callback) {
   }
   
   var updateIterationMetrics = false;
+  var url = "ajax/storeStory.action";
   if(this.id) { 
     data.storyId = this.id;
   } else {
 	  /* We are creating a new one */
 	  updateIterationMetrics = true;
+    url = "ajax/createStory.action";
   }
   
   if(!this.name) {
@@ -687,7 +689,7 @@ StoryModel.prototype.save = function(synchronous, callback) {
   cache: false,
   dataType: "json",
   type: "POST",
-  url: "storeStory.action",
+  url: url,
   data: data
   });
 };

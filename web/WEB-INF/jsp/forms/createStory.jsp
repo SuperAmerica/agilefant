@@ -25,7 +25,7 @@ $(document).ready(function() {
 </script>
 
 <div class="validateWrapper validateNewStory">
-<ww:form action="storeStory" method="post">
+<form action="ajax/createStory.action" method="post">
 	<ww:hidden name="fromTodoId" />
 	<table class="formTable">
 		<tr>
@@ -48,18 +48,6 @@ $(document).ready(function() {
       <td colspan="2"><ww:textfield size="15" name="story.storyPoints" 
       					id="createStory_storyPointsField"/></td>
     </tr>
-
-<%--
-		<tr>
-			<td>Original estimate</td>
-			<td></td>
-			<td colspan="2">
-                      <ww:textfield size="10" name="story.originalEstimate"
-                          id="createStory_originalEstimateField" />
-                      <ww:label value="%{getText('struts.estimateExample')}" />
-                  </td>
-		</tr>
-		--%>
 
 		<tr>
 			<td>State</td>
@@ -119,19 +107,7 @@ $(document).ready(function() {
 				</c:forEach>
             </select></td>
 		</tr>
-		
-		<%--
-		<tr>
-			<td>Priority</td>
-			<td></td>
-			<td colspan="2"><ww:select name="story.priority"
-				value="story.priority.name"
-				list="#@java.util.LinkedHashMap@{'UNDEFINED':'undefined', 'BLOCKER':'+++++', 'CRITICAL':'++++', 'MAJOR':'+++', 'MINOR':'++', 'TRIVIAL':'+'}" /></td>
-			
-        If you change something about priorities, remember to update conf/classes/messages.properties as well!
-        
-		</tr>
-		--%>
+
 		<tr>
 			<td>Responsibles</td>
 			<td></td>
@@ -160,42 +136,7 @@ $(document).ready(function() {
             </div>
 			</td>
 		</tr>
-		<%-- TODO: Add theme support
-		<tr>
-			<td>Themes</td>
-			<td></td>
-			<td colspan="2">
 
-			<div>
-                <a id="themeChooserLink-createStory" href="#" class="assigneeLink">
-                    <img src="static/img/theme.png"/>
-                    <span id="themeListContainer-createStory">
-                    <c:set var="count" value="0" />
-                    <c:set var="listLength" value="${fn:length(story.businessThemes)}"/>
-                    <c:choose>
-                        <c:when test="${listLength > 0}">
-                            <c:forEach items="${story.businessThemes}" var="bt">
-                                <input type="hidden" name="themeIds" value="${bt.id}" />
-			            	   <c:choose>
-			            	       <c:when test="${bt.global}">
-			            	           <span class="businessTheme globalThemeColors" style="float: none;"><c:out value="${bt.name}"/></span>
-			            	       </c:when>
-			            	       <c:otherwise>
-			            	           <span class="businessTheme" style="float: none;"><c:out value="${bt.name}"/></span>   
-			            	       </c:otherwise>
-			            	   </c:choose>                                
-                            </c:forEach>    
-                        </c:when>
-                        <c:otherwise>
-                            (none)
-                        </c:otherwise>
-                    </c:choose>
-                    </span>
-                </a>
-            </div>
-			</td>
-		</tr>
-		 --%>
 		<tr>
             <td></td>
             <td></td>
@@ -205,5 +146,5 @@ $(document).ready(function() {
         </tr>
 	</table>
 
-</ww:form>
+</form>
 </div>

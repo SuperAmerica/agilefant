@@ -18,7 +18,6 @@ import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.transfer.IterationDataContainer;
 import fi.hut.soberit.agilefant.transfer.IterationMetrics;
 import fi.hut.soberit.agilefant.util.CalendarUtils;
-import flexjson.JSONSerializer;
 
 @Component("iterationAction")
 @Scope("prototype")

@@ -40,23 +40,17 @@
 			</result>
 			
 			<result name="rootException" type="chain">exceptionHandler</result>
-			<!--<result name="dbException" type="chain">dbExceptionHandler</result>-->
 		</global-results>
 
 
 		<global-exception-mappings>
       <exception-mapping exception="java.lang.Exception" result="rootException"/>
     </global-exception-mappings>
+    
 		<action name="exceptionHandler"
 			class="fi.hut.soberit.agilefant.web.ExceptionHandler" method="handleException">
 			<result name="success" type="dispatcher">/WEB-INF/jsp/fatalError.jsp</result>
 		</action>
-<!-- 
-		<action name="dbExceptionHandler"
-			class="fi.hut.soberit.agilefant.web.ExceptionHandler" method="handleDbException">
-			<result name="success" type="dispatcher">/WEB-INF/jsp/fatalError.jsp</result>
-		</action>
--->
 		<!-- Context view -->
 		
 		<action name="contextView" class="contextViewAction">
@@ -120,13 +114,11 @@
 			<result>/WEB-INF/jsp/editProduct.jsp</result>
 		</action>
 		
-    <action name="deleteProduct" method="delete"
-			class="productAction">
+    <action name="deleteProduct" method="delete" class="productAction">
 			<result type="redirectAction">selectBacklog</result>
 		</action>
 		
-		<action name="storeProduct" method="store"
-			class="productAction">
+		<action name="storeProduct" method="store" class="productAction">
 			<result type="redirectAction">
 				<param name="actionName">contextView</param>
 				<param name="contextName">product</param>
@@ -134,57 +126,7 @@
 				<param name="resetContextView">true</param>
 			</result>
 		</action>
-		
-		<action name="storeNewProduct" method="store"
-			class="productAction">
-		</action>
 		<!-- /Product actions -->
-		<!-- Story actions -->
-		<action name="storeStory" method="ajaxStoreStory" class="storyAction">
-			<result name="ajax_error" type="httpheader">
-        <param name="status">400</param>
-      </result>
-      <result name="ajax_success" type="dispatcher">
-        <param name="location">/WEB-INF/jsp/jsonData.jsp</param>
-      </result>
-		</action>
-
-		<action name="storyTabs" method="edit"
-			class="storyAction">
-			<result>/WEB-INF/jsp/inc/storyAjax.jsp</result>
-		</action>
-		<action name="ajaxStoreStory" method="ajaxStoreStory"
-			class="storyAction">		
-			<result name="ajax_error" type="httpheader">
-				<param name="status">400</param>
-			</result>
-			<result name="ajax_success" type="dispatcher">
-				<param name="location">/WEB-INF/jsp/jsonData.jsp</param>
-			</result>
-		</action>
-		<action name="resetOriginalEstimate"
-      method="resetOriginalEstimate" class="taskAction">
-       <result name="ajax_error" type="httpheader">
-        <param name="status">400</param>
-      </result>
-      <result name="ajax_success" type="dispatcher">
-        <param name="location">/WEB-INF/jsp/jsonData.jsp</param>
-      </result>
-    </action>
-      
-	<action name="storyJSON"
-      method="getStoryJSON" class="storyAction">
-       <result name="ajax_error" type="httpheader">
-        <param name="status">400</param>
-      </result>
-      <result name="ajax_success" type="dispatcher">
-        <param name="location">/WEB-INF/jsp/jsonData.jsp</param>
-      </result>
-    </action>
-
-
-
-		<!-- /Story actions -->
 
 		<!-- Project actions -->
 		<action name="editProject" method="retrieve" class="projectAction">
@@ -424,8 +366,8 @@
 
 		<!-- Team actions -->
 		<action name="listTeams" method="list" class="teamAction">
-            <result>/WEB-INF/jsp/administration/listTeams.jsp</result>
-        </action>
+      <result>/WEB-INF/jsp/administration/listTeams.jsp</result>
+    </action>
 		
 		<action name="deleteTeam" method="delete" class="teamAction">
 			<result type="redirectAction">listTeams</result>
@@ -449,22 +391,6 @@
 
 		<!-- /Team actions -->
 
-		<!-- These functions are for Saving and Deleting backlog items on daily work page -->
-<!-- 
-		<action name="storeBacklogItemInDailyWork" method="store"
-			class="backlogItemAction">
-			<result type="redirectAction">
-				<param name="actionName">dailyWork</param>
-			</result>
-		</action>
-
-		<action name="deleteBacklogItemInDailyWork" method="delete"
-			class="backlogItemAction">
-			<result type="redirectAction">
-				<param name="actionName">dailyWork</param>
-			</result>
-		</action>
- -->
 		<!-- Daily work -->
 		<action name="dailyWork" class="dailyWorkAction">
 			<result>/WEB-INF/jsp/dailyWork.jsp</result>
@@ -478,52 +404,6 @@
 		</action>
 		 -->
 		<!-- /Tiny Daily work -->
-
-		<!-- Project portfolio -->
-		<!-- 
-		<action name="projectPortfolio"
-			class="projectPortfolioAction">
-			<result>/WEB-INF/jsp/projectPortfolio.jsp</result>
-		</action>
-		<action name="globalThemes"
-            class="businessThemeAction" method="listGlobalThemes">
-            <result>/WEB-INF/jsp/globalThemes.jsp</result>
-        </action>
- -->
-		<!-- Actions for moving ranked items in list. -->
-		<!-- 
-		<action name="moveProjectUp" class="projectPortfolioAction"
-			method="moveProjectUp">
-			<result type="redirectAction">
-				<param name="actionName">projectPortfolio</param>
-			</result>
-		</action>
-		<action name="moveProjectDown" class="projectPortfolioAction"
-			method="moveProjectDown">
-			<result type="redirectAction">
-				<param name="actionName">projectPortfolio</param>
-			</result>
-		</action>
-		<action name="moveProjectTop" class="projectPortfolioAction"
-			method="moveProjectTop">
-			<result type="redirectAction">
-				<param name="actionName">projectPortfolio</param>
-			</result>
-		</action>
-		<action name="moveProjectBottom" class="projectPortfolioAction"
-			method="moveProjectBottom">
-			<result type="redirectAction">
-				<param name="actionName">projectPortfolio</param>
-			</result>
-		</action>
-		<action name="unrankProject" class="projectPortfolioAction"
-			method="unrankProject">
-			<result type="redirectAction">
-				<param name="actionName">projectPortfolio</param>
-			</result>
-		</action>
- -->
-		<!-- /Project portfolio -->
 
 		<!-- Story actions -->
     <action name="moveStory" method="moveStory"
@@ -562,52 +442,6 @@
         <param name="inputName">inputStream</param>
       </result>
     </action>
-		<!-- 
-
-		<action name="popContext" class="contextStackAction">
-			<result type="redirectAction">
-				<param name="actionName">selectBacklog</param>
-			</result>
-			<result name="success_editIteration"
-				type="redirectAction">
-				<param name="actionName">editIteration</param>
-				<param name="iterationId">${view.contextObject}</param>
-			</result>
-
-			<result name="success_editProject" type="redirectAction">
-				<param name="actionName">editProject</param>
-				<param name="projectId">${view.contextObject}</param>
-			</result>
- -->
-			<!-- <result name="success_editBacklogItem"
-				type="redirectAction">
-				<param name="actionName">editBacklogItem</param>
-				<param name="backlogItemId">
-					${view.contextObject}
-				</param>
-			</result>-->
-<!-- 
-			<result name="success_listProducts"
-				type="redirectAction">
-				<param name="actionName">listProducts</param>
-			</result>
-			<result name="success_editProduct" type="redirectAction">
-				<param name="actionName">editProduct</param>
-				<param name="productId">${view.contextObject}</param>
-			</result>
-
-			<result name="success_dailyWork" type="redirectAction">
-				<param name="actionName">dailyWork</param>
-			</result>
-
-		</action>
-		
-		<action name="undoPushContext" class="contextStackAction">
-			<result type="httpheader">
-				<param name="status">200</param>
-			</result>
-		</action>
- -->
 
 		<action name="selectBacklog">
 			<result>/WEB-INF/jsp/selectBacklog.jsp</result>
@@ -619,9 +453,7 @@
 			<interceptor-ref name="noAuthenticationStack" />
 			<result>/WEB-INF/jsp/newPassword.jsp</result>
 		</action>
-		<action name="generateNewPassword"
-			class="passwordAction"
-			method="generate">
+		<action name="generateNewPassword" class="passwordAction"	method="generate">
 			<interceptor-ref name="noAuthenticationStack" />
 			<result name="success">success.jsp</result>
 			<result name="error">success.jsp?error=1</result>
@@ -635,6 +467,7 @@
 		<action name="storeSettings" class="settingAction" method="storeSettings">
 			<result name="success" type="dispatcher">/WEB-INF/jsp/administration/settings.jsp</result>
 		</action>
+		
 		<!-- timesheet actions -->
 		  
 		<action name="timesheet" method="initialize" class="timesheetAction">
@@ -642,14 +475,6 @@
 		</action>
 		
 		<action name="generateTree" method="generateTree" class="timesheetAction">
-			<!--
-						<interceptor-ref name="authenticationStack"/>
-		    <interceptor-ref name="execAndWait">
-			    <param name="delay">1500</param>
-		        <param name="delaySleepInterval">50</param>
-        	</interceptor-ref>
-    		<result name="wait">/WEB-INF/jsp/wait.jsp</result>
-			-->
 			<result name="success">/WEB-INF/jsp/timesheet.jsp</result>
 		</action>
 		
@@ -702,92 +527,7 @@
 		<action name="hourEntriesByUserAndWeek" class="spentEffortAction" method="getHourEntriesByUserAndDay">
 			<result type="dispatcher">/WEB-INF/jsp/inc/effortByWeek.jsp</result>
 		</action>
-		<!-- Business theme actions -->
-		<!-- 
-		<action name="deleteBusinessTheme" method="delete"
-			class="businessThemeAction">
-			
-			<result name="success_product" type="redirect">editProduct.action?productId=${productId}</result>
-			<result name="success_globalThemes" type="redirectAction">
-                <param name="actionName">globalThemes</param>
-			</result>
-
-		</action>
-		<action name="storeBusinessTheme" method="store"
-			class="businessThemeAction">
-		</action>
-		<action name="addThemeToBacklogItem" method="addBusinessTheme"
-			class="backlogItemAction">					
-		</action>
-		<action name="removeThemeFromBacklogItem" method="removeBusinessTheme"
-			class="backlogItemAction">					
-		</action>	
-		<action name="ajaxStoreBusinessTheme" method="ajaxStoreBusinessTheme"
-			class="businessThemeAction">		
-			<result name="ajax_error" type="httpheader">
-				<param name="status">400</param>
-			</result>
-			<result name="ajax_success" type="dispatcher">
-				<param name="status">200</param>
-				<param name="location">/WEB-INF/jsp/inc/ajaxBusinessThemeResult.jsp</param>
-			</result>
-		</action>	
-		<action name="businessThemeTabs" method="edit"
-			class="businessThemeAction">
-			<result>/WEB-INF/jsp/inc/businessThemeAjax.jsp</result>
-		</action>
-		<action name="businessThemeBubble" method="edit"
-			class="businessThemeAction">
-			<result>/WEB-INF/jsp/timelineThemeBubble.jsp</result>
-		</action>
-		<action name="ajaxActivateBusinessTheme" method="ajaxActivateBusinessTheme"
-			class="businessThemeAction">	
-		</action>
-		<action name="ajaxDeactivateBusinessTheme" method="ajaxDeactivateBusinessTheme"
-			class="businessThemeAction">	
-		</action>
-		<action name="ajaxDeleteBusinessTheme" method="ajaxDeleteBusinessTheme"
-			class="businessThemeAction">	
-		</action>
-		<action name="ajaxCreateBusinessTheme" method="create"
-            class="businessThemeAction">
-            <result name="success" type="dispatcher">/WEB-INF/jsp/forms/createTheme.jsp</result>
-        </action>
-        <action name="storeBacklogThemebinding" method="storeThemeBinding"
-        	class="businessThemeAction">
-       	</action>
-       	<action name="storeBacklogItemThemes" method="storeBacklogItemThemes"
-        	class="businessThemeAction">
-       	</action>
-        <action name="removeThemeFromBacklog" method="removeThemeBinding"
-        	class="businessThemeAction" />
-       	
-       	<action name="themesByProduct" method="themesByProduct"
-       		class="businessThemeAction">
-       		<result>/WEB-INF/jsp/jsonData.jsp</result>
-       	</action>
-       	
-       	<action name="activeThemesByBacklog" method="activeThemesByBacklog"
-       		class="businessThemeAction">
-       		<result>/WEB-INF/jsp/jsonData.jsp</result>
-       	</action>
-       	 -->	
-		<!-- /Business theme actions -->
-		
-		<!-- Product timeline actions -->
-		<!-- 
-		<action name="timelineData" method="productData"
-            class="timelineAction">
-            <result>/WEB-INF/jsp/inc/timelineData.jsp</result>
-        </action>
-        
-        <action name="timelineThemeData" method="themeData"
-            class="timelineAction">
-            <result>/WEB-INF/jsp/inc/timelineData.jsp</result>
-        </action>
-         -->
-		<!-- /Product timeline actions -->
-		
+	
 		<!-- Session actions -->
 	
 		<action name="ajaxOpenDialog" method="ajaxOpenDialog" class="sessionAction" />
@@ -795,41 +535,9 @@
 
 		<!-- /Session actions -->
 
-        <!-- JSON actions -->
-
+    <action name="qr" method="resolveLinkTarget" class="quickReferenceAction">
+    	<result name="success" type="redirect">${uri}</result>
+    </action>
         
-        <action name="getUserJSON" method="getUserJSON" class="userAction">
-            <result>/WEB-INF/jsp/jsonData.jsp</result>
-        </action>
-        
-        <action name="getTeamJSON" method="getTeamJSON" class="teamAction">
-            <result>/WEB-INF/jsp/jsonData.jsp</result>
-        </action>
-        <!--
-        <action name="getProjectTypeJSON" method="getProjectTypeJSON" class="projectTypeAction">
-            <result>/WEB-INF/jsp/jsonData.jsp</result>
-        </action>
-        -->
-        <action name="getProductJSON" method="getProductJSON" class="productAction">
-            <result>/WEB-INF/jsp/jsonData.jsp</result>
-        </action>
-        
-        <action name="getUserChooserJSON" method="ajaxGetUserChooserJSON" class="jsonAction">
-            <result>/WEB-INF/jsp/jsonData.jsp</result>
-        </action>
-        <!-- /JSON actions -->
-         
-        <action name="qr" method="resolveLinkTarget" class="quickReferenceAction">
-        	<result name="success" type="redirect">${uri}</result>
-        </action>
-        
-        <!--
-        <action name="exportBacklog" method="exportBacklog" class="exportBacklogAction">
-			<result name="success" type="stream">
-				<param name="contentType">application/xls</param>
-				<param name="inputName">sheetData</param>
-				<param name="contentDisposition">filename="agilefant-backlog-${backlogId}.xls"</param>
-			</result>
-		</action> -->
 </package>
 </struts>

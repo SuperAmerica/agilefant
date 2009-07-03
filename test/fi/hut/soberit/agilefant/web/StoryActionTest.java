@@ -1,32 +1,36 @@
 package fi.hut.soberit.agilefant.web;
 
-import static org.easymock.EasyMock.*;
-
-import static org.junit.Assert.*;
+import static org.easymock.EasyMock.createStrictMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
 
 import org.hibernate.exception.ConstraintViolationException;
 import org.junit.Before;
 import org.junit.Test;
 
-
 import com.opensymphony.xwork2.Action;
 
-import fi.hut.soberit.agilefant.business.BacklogBusiness;
 import fi.hut.soberit.agilefant.business.StoryBusiness;
 import fi.hut.soberit.agilefant.business.TransferObjectBusiness;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
+import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.transfer.StoryTO;
 
 
 public class StoryActionTest {
 
     StoryAction storyAction = new StoryAction();
-    BacklogBusiness backlogBusiness;
     StoryBusiness storyBusiness;
     TransferObjectBusiness transferObjectBusiness;
     
@@ -38,20 +42,23 @@ public class StoryActionTest {
         storyBusiness = createStrictMock(StoryBusiness.class);
         storyAction.setStoryBusiness(storyBusiness);
         
-        backlogBusiness = createStrictMock(BacklogBusiness.class);
-        storyAction.setBacklogBusiness(backlogBusiness);
-        
         transferObjectBusiness = createStrictMock(TransferObjectBusiness.class);
         storyAction.setTransferObjectBusiness(transferObjectBusiness);
     }
     
     private void replayAll() {
-        replay(storyBusiness, backlogBusiness, transferObjectBusiness);
+        replay(storyBusiness, transferObjectBusiness);
     }
     
     private void verifyAll() {
-        verify(storyBusiness, backlogBusiness, transferObjectBusiness);
+        verify(storyBusiness, transferObjectBusiness);
     }
+    
+    private void expectStoryToTransferObject(Collection<User> responsibles) {
+        expect(storyBusiness.getStorysProjectResponsibles(story)).andReturn(responsibles);
+        expect(transferObjectBusiness.constructStoryTO(story, responsibles)).andReturn(new StoryTO(story));
+    }
+
     
     @Before
     public void setUp() {
@@ -65,9 +72,11 @@ public class StoryActionTest {
     
     @Test
     public void testRetrieve() {
+        Collection<User> responsibles = Arrays.asList(new User());
+
         expect(storyBusiness.retrieve(story.getId())).andReturn(story);
-        expect(transferObjectBusiness.constructStoryTO(story, null))
-            .andReturn(new StoryTO(story));
+        expectStoryToTransferObject(responsibles);
+        
         replayAll();
         
         assertEquals(Action.SUCCESS, storyAction.retrieve());
@@ -76,6 +85,8 @@ public class StoryActionTest {
         
         verifyAll();
     }
+
+
     
     @Test(expected = ObjectNotFoundException.class)
     public void testRetrieve_noSuchStory() {
@@ -89,19 +100,34 @@ public class StoryActionTest {
     }
     
     @Test
-    public void testGetStoryContents() {
+    public void testStore() {
+        expect(storyBusiness.store(storyAction.getStoryId(),
+                storyAction.getBacklogId(), story, new HashSet<Integer>(),
+                storyAction.getPriority()))
+                .andReturn(story);
+        expectStoryToTransferObject(null);
+        replayAll();
+        assertEquals(Action.SUCCESS, storyAction.store());
+        verifyAll();
+    }
+    
+    
+    @Test
+    public void testStoryContents() {
         storyAction.setIterationId(iter.getId());
         story.setBacklog(iter);
         storyAction.setStoryId(story.getId());
-        story.setTasks(Arrays.asList(new Task(), new Task()));
+        
+        Collection<Task> tasks = Arrays.asList(new Task(), new Task());
+        story.setTasks(tasks);
+        
         expect(storyBusiness.getStoryContents(story.getId(), iter.getId()))
-            .andReturn(null);
+            .andReturn(tasks);
         
         replayAll();
         
-        assertNull(storyAction.getJsonData());
-        assertEquals(CRUDAction.AJAX_SUCCESS, storyAction.getStoryContents());
-        assertNotNull(storyAction.getJsonData());
+        assertEquals(Action.SUCCESS, storyAction.storyContents());
+        assertEquals(tasks, storyAction.getStoryContents());
         
         verifyAll();
     }

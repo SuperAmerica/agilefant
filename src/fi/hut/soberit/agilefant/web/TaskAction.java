@@ -3,7 +3,6 @@ package fi.hut.soberit.agilefant.web;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -13,10 +12,7 @@ import com.opensymphony.xwork2.ActionSupport;
 
 import fi.hut.soberit.agilefant.business.TaskBusiness;
 import fi.hut.soberit.agilefant.business.TransferObjectBusiness;
-import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.Task;
-import fi.hut.soberit.agilefant.transfer.TaskTO;
-import flexjson.JSONSerializer;
 
 @Component("taskAction")
 @Scope("prototype")
@@ -37,11 +33,10 @@ public class TaskAction extends ActionSupport implements Prefetching, CRUDAction
     private Integer backlogId;
     private Integer storyId;
 
-    private Set<Integer> userIds = new HashSet<Integer>();
-    
-    private String jsonData;
-    
+    private Set<Integer> userIds = new HashSet<Integer>();   
 
+    // CRUD
+    
     public String create() {
         setTask(new Task());
         return Action.SUCCESS;
@@ -65,6 +60,8 @@ public class TaskAction extends ActionSupport implements Prefetching, CRUDAction
         return Action.SUCCESS;
     }
     
+    // OTHER FUNCTIONS
+    
     public String move() {
         task = taskBusiness.retrieve(taskId);
         task = taskBusiness.move(task, backlogId, storyId);
@@ -72,28 +69,15 @@ public class TaskAction extends ActionSupport implements Prefetching, CRUDAction
         return Action.SUCCESS;
     }
     
-    private void populateJsonData() {
-        task = transferObjectBusiness.constructTaskTO(task);
+    public String resetOriginalEstimate() {
+        task = taskBusiness.retrieve(taskId);
+        task = taskBusiness.resetOriginalEstimate(taskId);
+        populateJsonData();
+        return Action.SUCCESS;
     }
     
-    public String resetOriginalEstimate() {
-        try {
-            task = taskBusiness.resetOriginalEstimate(taskId);
-        } catch (ObjectNotFoundException e) {
-            addActionError(e.getMessage());
-            return CRUDAction.AJAX_ERROR;
-        }
-        populateJsonData();
-        return CRUDAction.AJAX_SUCCESS;
-    }
-
-    public String getTaskJSON() {
-        this.task = this.taskBusiness.retrieveIfExists(taskId);
-        if (this.task == null) {
-            return CRUDAction.AJAX_ERROR;
-        }
-        populateJsonData();
-        return CRUDAction.AJAX_SUCCESS;
+    private void populateJsonData() {
+        task = transferObjectBusiness.constructTaskTO(task);
     }
     
     // Prefetching
@@ -118,10 +102,6 @@ public class TaskAction extends ActionSupport implements Prefetching, CRUDAction
     
     public void setTaskBusiness(TaskBusiness taskBusiness) {
         this.taskBusiness = taskBusiness;
-    }
-
-    public String getJsonData() {
-        return jsonData;
     }
 
     public Set<Integer> getUserIds() {

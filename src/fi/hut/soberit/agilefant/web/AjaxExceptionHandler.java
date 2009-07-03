@@ -3,7 +3,6 @@ package fi.hut.soberit.agilefant.web;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionSupport;
 
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;

@@ -1,11 +1,9 @@
 package fi.hut.soberit.agilefant.web;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Before;
 import org.junit.Test;
-
-import com.opensymphony.xwork2.Action;
 
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 

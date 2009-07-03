@@ -59,7 +59,6 @@ public class MenuAction extends ActionSupport {
      * Generates the basic backlog hierarchy menu.
      */
     @Override
-    @SuppressWarnings("unchecked")
     public String execute() throws Exception {
         // Parse the request id
         backlogId = parseRequestId(requestId);
@@ -110,7 +109,6 @@ public class MenuAction extends ActionSupport {
      * 
      * @return
      */
-    @SuppressWarnings("unchecked")
     public String ajaxUpdateOpenMenus() {
         String[] openBacklogs = openString.split(",");
         String savedString = "";

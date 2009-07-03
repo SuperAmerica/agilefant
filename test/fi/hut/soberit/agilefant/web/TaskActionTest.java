@@ -53,13 +53,17 @@ public class TaskActionTest {
         taskAction.setTaskId(task.getId());
     }
     
+    private void expectPopulateJsonData() {
+        expect(transferObjectBusiness.constructTaskTO(task)).andReturn(new TaskTO(task));
+    }
+    
     /*
      * TEST RETRIEVING.
      */
     @Test
     public void testRetrieve() {
         expect(taskBusiness.retrieve(task.getId())).andReturn(task);
-        expect(transferObjectBusiness.constructTaskTO(task)).andReturn(new TaskTO(task));
+        expectPopulateJsonData();
         replayAll();
         
         assertEquals(Action.SUCCESS, taskAction.retrieve());
@@ -67,6 +71,7 @@ public class TaskActionTest {
         
         verifyAll(); 
     }
+
     
     @Test(expected = ObjectNotFoundException.class)
     public void testRetrieve_noSuchTask() {
@@ -90,8 +95,7 @@ public class TaskActionTest {
         taskAction.setBacklogId(2);
         expect(taskBusiness.storeTask(task, 2, null, taskAction.getUserIds()))
             .andReturn(task);
-        expect(transferObjectBusiness.constructTaskTO(task))
-            .andReturn(new TaskTO(task));
+        expectPopulateJsonData();
         replayAll();
         
         assertEquals(Action.SUCCESS, taskAction.store());
@@ -165,7 +169,7 @@ public class TaskActionTest {
         
         expect(taskBusiness.retrieve(task.getId())).andReturn(task);
         expect(taskBusiness.move(task, null, story.getId())).andReturn(task);
-        expect(transferObjectBusiness.constructTaskTO(task)).andReturn(new TaskTO(task));
+        expectPopulateJsonData();
         
         replay(taskBusiness, transferObjectBusiness);
 
@@ -186,7 +190,7 @@ public class TaskActionTest {
         
         expect(taskBusiness.retrieve(task.getId())).andReturn(task);
         expect(taskBusiness.move(task, iter.getId(), null)).andReturn(task);
-        expect(transferObjectBusiness.constructTaskTO(task)).andReturn(new TaskTO(task));
+        expectPopulateJsonData();
         
         replay(taskBusiness, transferObjectBusiness);
 
@@ -222,6 +226,31 @@ public class TaskActionTest {
         verifyAll();
     }
     
+    /*
+     * TEST RESETING ORIGINAL ESTIMATE
+     */
+    @Test
+    public void testResetOriginalEstimate() {
+        expect(taskBusiness.retrieve(task.getId())).andReturn(task);
+        expect(taskBusiness.resetOriginalEstimate(task.getId())).andReturn(task);
+        expectPopulateJsonData();
+        replayAll();
+        
+        assertEquals(Action.SUCCESS, taskAction.resetOriginalEstimate());
+        
+        verifyAll();
+    }
+    
+    @Test(expected = ObjectNotFoundException.class)
+    public void testResetOriginalEstimate_noSuchTask() {
+        taskAction.setTaskId(-1);
+        expect(taskBusiness.retrieve(-1)).andThrow(new ObjectNotFoundException());
+        replayAll();
+        
+        taskAction.resetOriginalEstimate();
+        
+        verifyAll();
+    }
     
     
     /*

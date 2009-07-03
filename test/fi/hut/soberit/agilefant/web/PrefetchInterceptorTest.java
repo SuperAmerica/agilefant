@@ -1,9 +1,10 @@
 package fi.hut.soberit.agilefant.web;
 
-import static org.junit.Assert.*;
-import static org.easymock.classextension.EasyMock.*;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.classextension.EasyMock.createStrictMock;
+import static org.easymock.classextension.EasyMock.replay;
+import static org.easymock.classextension.EasyMock.verify;
 
-import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 

@@ -137,7 +137,8 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
     }
 
     /** {@inheritDoc} */
-    public void remove(int storyId) throws ObjectNotFoundException {
+    @Override
+    public void delete(int storyId) throws ObjectNotFoundException {
         Story story = this.retrieve(storyId);
         Backlog backlog = story.getBacklog();
         if (backlog != null) {

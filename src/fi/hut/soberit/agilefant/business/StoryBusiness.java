@@ -17,9 +17,7 @@ public interface StoryBusiness extends GenericBusiness<Story> {
 
     Story store(int storyId, int backlogId, Story dataItem,
             Set<Integer> responsibles, int priority) throws ObjectNotFoundException;
-
-    public void remove(int storyId) throws ObjectNotFoundException;
-    
+  
     public List<Story> getStoriesByBacklog(Backlog backlog);
 
     /**

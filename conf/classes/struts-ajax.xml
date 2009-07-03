@@ -122,6 +122,8 @@
     <action name="createStory" method="create" class="storyAction">
           <result type="dispatcher">/WEB-INF/jsp/forms/createStory.jsp</result>
     </action>
+    
+    <action name="deleteStory" method="delete" class="storyAction" />
     <!-- /Story actions -->
 
 

@@ -586,7 +586,7 @@ StoryModel.prototype.remove = function() {
     },
     cache: false,
     type: "POST",
-    url: "ajaxDeleteStory.action",
+    url: "ajax/deleteStory.action",
     data: {storyId: this.id}
   });
 };

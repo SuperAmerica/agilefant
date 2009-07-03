@@ -10,7 +10,7 @@ function confirmReset() { return confirm("Really reset the original estimate?");
 function confirmDeleteIteration() { return confirm("Are you sure you wish to delete this iteration?"); }
 
 function deleteStory(storyId) {
-	var url = "ajaxDeleteStory.action";			
+	var url = "ajax/deleteStory.action";			
 	if (confirmDeleteStory()) {
 		$.post(url,{storyId: storyId},function(data) {
 			reloadPage();

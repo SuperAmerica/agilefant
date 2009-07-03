@@ -14,6 +14,7 @@ import com.opensymphony.xwork2.ActionSupport;
 
 import fi.hut.soberit.agilefant.business.BacklogBusiness;
 import fi.hut.soberit.agilefant.business.StoryBusiness;
+import fi.hut.soberit.agilefant.business.TransferObjectBusiness;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Story;
@@ -26,7 +27,7 @@ import flexjson.JSONSerializer;
 
 @Component("storyAction")
 @Scope("prototype")
-public class StoryAction extends ActionSupport implements CRUDAction {
+public class StoryAction extends ActionSupport implements CRUDAction, Prefetching {
 
     private static final long serialVersionUID = -4289013472775815522L;
 
@@ -58,64 +59,26 @@ public class StoryAction extends ActionSupport implements CRUDAction {
 
     @Autowired
     private StoryBusiness storyBusiness;
+    
+    @Autowired
+    private TransferObjectBusiness transferObjectBusiness;
 
     public String create() {
-        // Id of newly created, not yet persisted story is 0
         storyId = 0;
-
         story = new Story();
         story.setPriority(-1);
-        if (backlogId != 0) {
-            backlog = backlogBusiness.retrieve(backlogId);
-            story.setBacklog(backlog);
-        }
         return Action.SUCCESS;
     }
 
     public String delete() {
-        try {
-            storyBusiness.remove(storyId);
-        } catch (ObjectNotFoundException e) {
-            super.addActionError(super.getText("story.notFound"));
-            return ERROR;
-        }
-
-        // If exception was not thrown from business method, return success.
-        return SUCCESS;
-    }
-
-    public String moveStory() {
-        storyBusiness.attachStoryToBacklog(storyId, backlogId, moveTasks);
-        return CRUDAction.AJAX_SUCCESS;
-    }
-    
-    public String ajaxDeleteStory() {
-        try {
-            storyBusiness.remove(storyId);
-        } catch (ConstraintViolationException e) {
-            return CRUDAction.AJAX_FORBIDDEN;
-        } catch (ObjectNotFoundException e) {
-            super.addActionError(super.getText("story.notFound"));
-            return CRUDAction.AJAX_ERROR;
-        }
-
-        // If exception was not thrown from business method, return success.
-        return CRUDAction.AJAX_SUCCESS;
+        story = storyBusiness.retrieve(storyId);
+        storyBusiness.delete(story.getId());
+        return Action.SUCCESS;
     }
 
     public String retrieve() {
-        story = storyBusiness.retrieveIfExists(storyId);
-        if (story == null) {
-            super.addActionError(super.getText("story.notFound"));
-            return Action.ERROR;
-        }
-        backlog = story.getBacklog();
-        backlogId = backlog.getId();
-
-        // historyBusiness.updateBacklogHistory(backlog.getId());
-        // bliActiveOrSelectedThemes = businessThemeBusiness
-        // .getBacklogItemActiveOrSelectedThemes(storyId);
-
+        story = storyBusiness.retrieve(storyId);
+        story = this.toTransferObject(story);
         return Action.SUCCESS;
     }
 
@@ -124,6 +87,15 @@ public class StoryAction extends ActionSupport implements CRUDAction {
             return ERROR;
         }
         return SUCCESS;
+    }
+    
+    public String moveStory() {
+        storyBusiness.attachStoryToBacklog(storyId, backlogId, moveTasks);
+        return CRUDAction.AJAX_SUCCESS;
+    }
+    
+    private StoryTO toTransferObject(Story story) {
+        return transferObjectBusiness.constructStoryTO(story, null);
     }
 
     private void loadStoryJSON() {
@@ -168,24 +140,6 @@ public class StoryAction extends ActionSupport implements CRUDAction {
         return CRUDAction.AJAX_SUCCESS;
     }
 
-    // private List<BacklogItemResponsibleContainer> getResponsiblesAsUserData()
-    // {
-    // // TODO: Optimize this
-    // List<BacklogItemResponsibleContainer> list = new
-    // ArrayList<BacklogItemResponsibleContainer>();
-    // Collection<User> assignees = backlogBusiness.getUsers(this.story
-    // .getProject(), false);
-    // for (User u : this.story.getResponsibles()) {
-    // boolean inProject = true;
-    // if (assignees.contains(u)) {
-    // inProject = false;
-    // }
-    // list.add(new BacklogItemResponsibleContainer(u, inProject));
-    // }
-    // Collections.sort(list, new BacklogItemUserComparator());
-    // return list;
-    // }
-
     public String getMetrics() {
         StoryMetrics metrics;
         try {
@@ -207,19 +161,9 @@ public class StoryAction extends ActionSupport implements CRUDAction {
                 || this.story.getName().trim().equals("")) {
             return false;
         }
-        // if (this.story.getEffortLeft() != null
-        // && this.story.getEffortLeft().getTime() < 0) {
-        // return false;
-        // }
-        // if (this.story.getOriginalEstimate() != null
-        // && this.story.getOriginalEstimate().getTime() < 0) {
-        // return false;
-        // }
-
         // save story and store backlog item themes
         try {
             story = storyBusiness.store(storyId, backlogId, story, userIds, priority);            
-//            businessThemeBusiness.setBacklogItemThemes(themeIds, story);
             storyId = story.getId();
         } catch (ObjectNotFoundException onfe) {
             return false;
@@ -230,7 +174,18 @@ public class StoryAction extends ActionSupport implements CRUDAction {
         return true;
     }
 
+    // PREFETCHING
     
+    public String getIdFieldName() {
+        return "storyId";
+    }
+    
+    public void initializePrefetchedData(int objectId) {
+        storyBusiness.retrieve(objectId);
+    }
+    
+    
+    // AUTOGENERATED
     
     public Backlog getBacklog() {
         return backlog;
@@ -312,7 +267,6 @@ public class StoryAction extends ActionSupport implements CRUDAction {
     public String getJsonData() {
         return jsonData;
     }
-    
 
     public String getStoryListContext() {
         return storyListContext;
@@ -328,6 +282,11 @@ public class StoryAction extends ActionSupport implements CRUDAction {
 
     public void setBacklogBusiness(BacklogBusiness backlogBusiness) {
         this.backlogBusiness = backlogBusiness;
+    }
+    
+    public void setTransferObjectBusiness(
+            TransferObjectBusiness transferObjectBusiness) {
+        this.transferObjectBusiness = transferObjectBusiness;
     }
     
 }

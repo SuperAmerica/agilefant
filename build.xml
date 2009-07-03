@@ -467,5 +467,19 @@
 			</fileset>
 		</jslint>
 	</target>
+	
+	<target name="simile widgets" depends="webapp">
+		<concat destfile="${build.webapp}/static/js/simile-widgets.js">
+		  <fileset dir="${build.webapp}/static/js/simile/timeline/">
+		  	<include name="**/*.js" />
+		  </fileset>
+	     <fileset dir="${build.webapp}/static/js/simile/timeplot/">
+	     	<include name="**/*.js" />
+	      </fileset>
+      <fileset dir="${build.webapp}/static/js/simile/">
+        <include name="simile-ajax*.js" />
+        </fileset>
+		</concat>
+	</target>
 
 </project>

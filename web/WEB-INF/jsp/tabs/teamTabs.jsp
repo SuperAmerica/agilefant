@@ -1,4 +1,4 @@
-<%@ include file="_taglibs.jsp"%>
+<%@ include file="../inc/_taglibs.jsp"%>
 
 <aef:userList />
 

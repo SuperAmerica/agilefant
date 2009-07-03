@@ -153,10 +153,7 @@
 			class="projectAction">
 		</action>
 
-		<action name="projectTabs" method="edit"
-			class="projectAction">
-			<result>/WEB-INF/jsp/inc/projectAjax.jsp</result>
-		</action>
+		
 
 		 		
 		<action name="ajaxStoreProject" method="ajaxStoreProject"
@@ -310,10 +307,7 @@
 		</action>
 		
 		 
-		<action name="iterationTabs" method="edit"
-			class="iterationAction">
-			<result>/WEB-INF/jsp/inc/iterationAjax.jsp</result>
-		</action>
+		
 
 		<action name="ajaxStoreIteration" method="ajaxStoreIteration"
 			class="iterationAction">		
@@ -357,10 +351,7 @@
 				<param name="location">/WEB-INF/jsp/inc/ajaxUserResult.jsp</param>
 			</result>
 		</action>
-		<action name="userTabs" method="edit"
-			class="userAction">
-			<result>/WEB-INF/jsp/inc/userAjax.jsp</result>
-		</action>
+		
  
 		<!-- /User actions -->
 
@@ -384,10 +375,7 @@
 				<param name="location">/WEB-INF/jsp/inc/ajaxTeamResult.jsp</param>
 			</result>
 		</action>
-		<action name="teamTabs" method="edit"
-			class="teamAction">
-			<result>/WEB-INF/jsp/inc/teamAjax.jsp</result>
-		</action>
+		
 
 		<!-- /Team actions -->
 

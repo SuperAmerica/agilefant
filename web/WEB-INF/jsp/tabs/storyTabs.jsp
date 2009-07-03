@@ -1,4 +1,4 @@
-<%@ include file="_taglibs.jsp"%>
+<%@ include file="../inc/_taglibs.jsp"%>
 
 <aef:hourReporting id="hourReport" />
 <aef:currentUser />
@@ -41,7 +41,7 @@ $(document).ready(function() {
 	<td>
 	<div class="subItems" style="margin-top: 0px; width: 715px;"> 
 	<div class="validateWrapper validateStory">
-	<ww:form action="ajaxStoreStory" method="post">
+	<form action="ajax/storeStory.action" method="post">
 		<ww:hidden name="storyId" value="%{story.id}" />	
 		<%--<ww:hidden name="effortLeft" value="${story.effortLeft}" />--%>				
 	
@@ -61,8 +61,10 @@ $(document).ready(function() {
 				<td>Description</td>
 				<td></td>
 				<td colspan="2">
-					<ww:textarea cols="70" rows="10" cssClass="useWysiwyg" id="storyDescription" 
-					name="story.description" value="%{aef:nl2br(story.description)}" /></td>
+          <textarea rows="10" cols="70" id="storyDescription" name="story.description" class="useWysiwyg">
+            ${aef:nl2br(story.description)}
+          </textarea>
+        </td>
 			</tr>
       
       <tr>
@@ -287,7 +289,7 @@ $(document).ready(function() {
 			</tr>
 		</table>
 	
-	</ww:form>
+	</form>
 </div>
 </div>
 </div>

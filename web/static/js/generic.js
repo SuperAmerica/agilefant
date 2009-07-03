@@ -157,19 +157,21 @@ function handleTabEvent(target, context, id, tabId, storyContext) {
         return false;
     }
     else {
-        var targetAction = {
+        var targetActionNamespace = "ajax/";
+        var targetActionByContext = {
         	"story": "storyTabs.action",
         	"storyWorkInProgress": "storyTabs.action",
         	"storyDWInterations": "storyTabs.action",
         	"storyDWProjects": "storyTabs.action",
-            "project": "projectTabs.action",
-            "iteration": "iterationTabs.action",
-            "businessTheme": "businessThemeTabs.action",
-            "task": "taskTabs.action",
-            "user": "userTabs.action",
-            "team": "teamTabs.action",
-            "projectType": "projectTypeTabs.action"
+          "project": "projectTabs.action",
+          "iteration": "iterationTabs.action",
+          "businessTheme": "businessThemeTabs.action",
+          "user": "userTabs.action",
+          "team": "teamTabs.action",
+          "projectType": "projectTypeTabs.action"
         };
+        
+        var targetAction = targetActionNamespace + targetActionByContext[context];
         
         var targetParams = {
         	"story": {
@@ -214,7 +216,8 @@ function handleTabEvent(target, context, id, tabId, storyContext) {
         target.data("aef-tabs","1");
         target.data("aef-context",context);
         target.data("aef-id",id);
-        target.load(targetAction[context], targetParams[context], function(data, status) {
+        
+        target.load(targetAction, targetParams[context], function(data, status) {
             var ajaxTabs = target.find('div.ajaxWindowTabsDiv');
             var ajaxTabsUl = ajaxTabs.find('ul.ajaxWindowTabs');
             ajaxTabs.tabs({ selected: tabId,

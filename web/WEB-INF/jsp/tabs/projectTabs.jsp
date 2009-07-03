@@ -1,4 +1,4 @@
-<%@ include file="_taglibs.jsp"%>
+<%@ include file="../inc/_taglibs.jsp"%>
 <div class="ajaxWindowTabsDiv">
 <ul class="ajaxWindowTabs">
 	<li><a href="#projectEditTab-${projectId}"><span><img src="static/img/edit.png" alt="Edit" /> Edit project</span></a></li>

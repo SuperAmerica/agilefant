@@ -92,7 +92,7 @@ public class TaskActionTest {
     @Test
     public void testAjaxStoreTask_newTask() {
         taskAction.setStoryId(null);
-        taskAction.setBacklogId(2);
+        taskAction.setIterationId(2);
         expect(taskBusiness.storeTask(task, 2, null, taskAction.getUserIds()))
             .andReturn(task);
         expectPopulateJsonData();
@@ -105,7 +105,7 @@ public class TaskActionTest {
     
     @Test(expected = ObjectNotFoundException.class)
     public void testAjaxStoreTask_error() {
-        taskAction.setBacklogId(2);
+        taskAction.setIterationId(2);
         
         expect(taskBusiness.storeTask(task, 2, null, taskAction.getUserIds()))
             .andThrow(new ObjectNotFoundException("Iteration not found"));
@@ -164,7 +164,7 @@ public class TaskActionTest {
         story.setId(3);
         
         taskAction.setStoryId(story.getId());
-        taskAction.setBacklogId(null);
+        taskAction.setIterationId(null);
         taskAction.setTaskId(task.getId());
         
         expect(taskBusiness.retrieve(task.getId())).andReturn(task);
@@ -185,7 +185,7 @@ public class TaskActionTest {
         iter.setId(333);
         
         taskAction.setStoryId(null);
-        taskAction.setBacklogId(iter.getId());
+        taskAction.setIterationId(iter.getId());
         taskAction.setTaskId(task.getId());
         
         expect(taskBusiness.retrieve(task.getId())).andReturn(task);
@@ -215,7 +215,7 @@ public class TaskActionTest {
     public void testMoveTask_bothIdsGiven() {
         taskAction.setTaskId(task.getId());
         taskAction.setStoryId(123);
-        taskAction.setBacklogId(1233);
+        taskAction.setIterationId(1233);
         
         expect(taskBusiness.retrieve(task.getId())).andReturn(task);
         expect(taskBusiness.move(task, 1233, 123)).andThrow(new ObjectNotFoundException());

@@ -1018,7 +1018,8 @@ TaskModel.prototype.save = function(synchronous, callback) {
       "task.originalEstimate": this.originalEstimate,
       "userIds": [],
       "themeIds": [],
-      "task.id": this.id
+      "task.id": this.id,
+      "taskId": this.id
   };
   if (this.story) {
     data.storyId = this.story.id;    

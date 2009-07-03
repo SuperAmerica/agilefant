@@ -1049,6 +1049,12 @@ TaskModel.prototype.save = function(synchronous, callback) {
   if (!this.description) {
     data["task.description"] = "";
   }
+  
+  var url = "ajax/storeTask.action";
+  if (!this.id) {
+    url = "ajax/createTask.action";
+  }
+  
   jQuery
   .ajax( {
     async: asynch,
@@ -1066,7 +1072,7 @@ TaskModel.prototype.save = function(synchronous, callback) {
   cache: false,
   dataType: "json",
   type: "POST",
-  url: "ajax/storeTask.action",
+  url: url,
   data: data
   });
 };

@@ -1,8 +1,8 @@
 
 var dataCacheClass = function() {
     this.fetchURLs = {
-        "allUsers": "getUserJSON.action",
-        "allTeams": "getTeamJSON.action",
+        "allUsers": "ajax/retrieveAllUsers.action",
+        "allTeams": "ajax/retrieveAllTeams.action",
         "allProjectTypes": "getProjectTypeJSON.action",
         "allProducts": "getProductJSON.action",
         "themesByProduct": "themesByProduct.action",

@@ -43,13 +43,15 @@ public class UserAction extends ActionSupport implements CRUDAction {
     @Autowired
     private UserBusiness userBusiness;
     
-    private String password1;
+    private String password1 = "";
 
-    private String password2;
+    private String password2 = "";
 
     private String email;
     
 //    private AFTime weekHours;
+    
+    private Collection<User> users;
     
     private List<User> enabledUsers = new ArrayList<User>();
     
@@ -112,12 +114,13 @@ public class UserAction extends ActionSupport implements CRUDAction {
     }
 
     public String retrieve() {
-        createTeamList();
         user = userBusiness.retrieve(userId);
-        if (user == null) {
-            super.addActionError(super.getText("user.notFound"));
-            return Action.ERROR;
-        }
+        createTeamList();
+        return Action.SUCCESS;
+    }
+    
+    public String retrieveAll() {
+        users = userBusiness.retrieveAll();
         return Action.SUCCESS;
     }
     
@@ -154,26 +157,7 @@ public class UserAction extends ActionSupport implements CRUDAction {
 
         return Action.SUCCESS;
     }
-
-    public String ajaxStoreUser() {
-        createTeamList();
-        User storable = new User();
-        if (userId > 0) {
-            storable = userBusiness.retrieve(userId);
-            if (storable == null) {
-                super.addActionError(super.getText("user.notFound"));
-                return CRUDAction.AJAX_ERROR;
-            }
-        }
-        this.fillStorable(storable);
-        if (super.hasActionErrors()) {
-            return CRUDAction.AJAX_ERROR;
-        }
-
-        userBusiness.store(storable);
-
-        return CRUDAction.AJAX_SUCCESS;
-    }
+    
     
     protected void fillStorable(User storable) {
         String md5Pw = null;
@@ -380,6 +364,10 @@ public class UserAction extends ActionSupport implements CRUDAction {
     
     public void setTeamBusiness(TeamBusiness teamBusiness) {
         this.teamBusiness = teamBusiness;
+    }
+
+    public Collection<User> getUsers() {
+        return users;
     }
     
 }

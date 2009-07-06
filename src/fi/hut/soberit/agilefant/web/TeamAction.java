@@ -74,6 +74,11 @@ public class TeamAction extends ActionSupport implements CRUDAction {
         }
         return Action.SUCCESS;
     }
+    
+    public String retrieveAll() {
+        teamList.addAll(teamBusiness.retrieveAll());
+        return Action.SUCCESS;
+    }
 
     /**
      * Store the team.

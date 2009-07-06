@@ -342,15 +342,7 @@
 		<action name="storeUser" method="store" class="userAction">
 			<result type="redirectAction">listUsers</result>			
 		</action>
-		<action name="ajaxStoreUser" method="ajaxStoreUser"
-			class="userAction">		
-			<result name="ajax_error" type="httpheader">
-				<param name="status">400</param>
-			</result>
-			<result name="ajax_success" type="dispatcher">
-				<param name="location">/WEB-INF/jsp/inc/ajaxUserResult.jsp</param>
-			</result>
-		</action>
+		
 		
  
 		<!-- /User actions -->

@@ -290,11 +290,6 @@
 			<result type="dispatcher">/WEB-INF/jsp/inc/effortByWeek.jsp</result>
 		</action>
 	
-		<!-- Session actions -->
-	
-		<action name="ajaxOpenDialog" method="ajaxOpenDialog" class="sessionAction" />
-    <action name="ajaxCloseDialog" method="ajaxCloseDialog" class="sessionAction" />
-
 		<!-- /Session actions -->
 
     <action name="qr" method="resolveLinkTarget" class="quickReferenceAction">

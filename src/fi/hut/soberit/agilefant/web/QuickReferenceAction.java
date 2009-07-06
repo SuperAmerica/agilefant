@@ -59,32 +59,7 @@ public class QuickReferenceAction extends ActionSupport {
             } else if (bl != null && bl instanceof Iteration) {
                 uri = "editIteration.action?iterationId=" + bl.getId();
             }
-            SessionAction ses = new SessionAction();
-            if (context.equals("BLI")) {
-                ses.setContextType("bli");
-                ses.setObjectId(objectId);
-                ses.ajaxOpenDialog();
-                uri += "#backlogItemTabContainer-" + objectId + "-backlogList";
 
-            } /* else if (context.equals("TH")) {
-                BusinessTheme theme = businessThemeBusiness.getBusinessTheme(objectId);
-                Product prod = theme.getProduct();
-                ses.setContextType("businessTheme");
-                ses.setObjectId(objectId);
-                ses.ajaxOpenDialog();
-                
-                if(prod == null) {
-                    uri = "globalThemes.action#businessThemeTabContainer-"+objectId;
-                } else {
-                    uri = "editProduct.action?productId="+prod.getId()+"#businessThemeTabContainer-"+objectId;
-               }
-            } else if(context.equals("IG")) {
-                ses.setContextType("iterationGoal");
-                ses.setObjectId(objectId);
-                ses.ajaxOpenDialog();
-                bl = iterationGoalDAO.get(objectId).getIteration();
-                uri = "editIteration.action?iterationId=" + bl.getId() + "#iterationGoalTabContainer-" + objectId;
-            }*/
             if(uri.length() == 0) {
                 return Action.ERROR;
             }

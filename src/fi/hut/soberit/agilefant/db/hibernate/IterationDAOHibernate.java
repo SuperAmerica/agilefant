@@ -2,7 +2,11 @@ package fi.hut.soberit.agilefant.db.hibernate;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.hibernate.Criteria;
 import org.hibernate.criterion.DetachedCriteria;
@@ -82,5 +86,32 @@ public class IterationDAOHibernate extends GenericDAOHibernate<Iteration> implem
 
     public Pair<Integer, Integer> getCountOfDoneAndAllStories(Iteration iteration) {
         return getCounOfDoneAndAll(Story.class, StoryState.DONE, Arrays.asList("backlog"), iteration);
+    }
+    
+    public List<Iteration> retrieveIterationsByIds(Set<Integer> iterationIds) {
+        if(iterationIds == null || iterationIds.size() == 0) {
+            return Collections.emptyList();
+        }
+        Criteria crit = getCurrentSession().createCriteria(Iteration.class);
+        crit.add(Restrictions.in("id", iterationIds));
+        return asList(crit);
+    }
+    
+    public Map<Integer, Integer> getTotalAvailability(Set<Integer> iterationIds) {
+        if(iterationIds == null || iterationIds.size() == 0) {
+            return Collections.emptyMap();
+        }
+        Criteria crit = getCurrentSession().createCriteria(Iteration.class);
+        crit.add(Restrictions.in("id", iterationIds));
+        crit.createAlias("assignments", "assignments");
+        crit.setProjection(Projections.projectionList().add(
+                Projections.groupProperty("id")).add(
+                Projections.sum("assignments.availability")));
+        List<Object[]> data = asList(crit);
+        Map<Integer, Integer> result = new HashMap<Integer, Integer>();
+        for(Object[] row : data) {
+            result.put((Integer)row[0], (Integer)row[1]);
+        }
+        return result;
     }
 }

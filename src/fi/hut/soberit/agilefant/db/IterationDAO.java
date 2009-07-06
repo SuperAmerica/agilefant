@@ -2,6 +2,8 @@ package fi.hut.soberit.agilefant.db;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Task;
@@ -22,4 +24,8 @@ public interface IterationDAO extends GenericDAO<Iteration> {
 
     public Pair<Integer, Integer> getCountOfDoneAndAllStories(
             Iteration iteration);
+    
+    public List<Iteration> retrieveIterationsByIds(Set<Integer> iterationIds);
+    
+    public Map<Integer, Integer> getTotalAvailability(Set<Integer> iterationIds);
 }

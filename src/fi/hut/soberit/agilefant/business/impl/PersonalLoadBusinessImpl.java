@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import fi.hut.soberit.agilefant.business.PersonalLoadBusiness;
 import fi.hut.soberit.agilefant.business.UserBusiness;
+import fi.hut.soberit.agilefant.db.IterationDAO;
 import fi.hut.soberit.agilefant.db.StoryDAO;
 import fi.hut.soberit.agilefant.db.TaskDAO;
 import fi.hut.soberit.agilefant.model.Iteration;
@@ -27,6 +28,7 @@ import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.transfer.IntervalLoadContainer;
 import fi.hut.soberit.agilefant.transfer.IterationLoadContainer;
+import fi.hut.soberit.agilefant.transfer.UnassignedLoadTO;
 
 @Service("personalLoadBusiness")
 @Transactional(readOnly=true)
@@ -39,6 +41,9 @@ public class PersonalLoadBusinessImpl implements PersonalLoadBusiness {
     
     @Autowired
     private UserBusiness userBusiness;
+    
+    @Autowired
+    private IterationDAO iterationDAO;
 
     /**
      * Calculate sum of task effort left portions for given user per iteration
@@ -130,13 +135,61 @@ public class PersonalLoadBusinessImpl implements PersonalLoadBusiness {
     public void calculateUnassignedTaskLoad(
             Map<Integer, IterationLoadContainer> iterationEffortData,
             User user, Interval interval) {
-        //get raw load data
-        
-        //get iterations
-        
-        //get availability sums per iteration
-        
-        //calculate effort = totalEffort * user availability / (availability sum per iteration)
+        // get raw load data
+        List<UnassignedLoadTO> rawUnassignedLoad = new ArrayList<UnassignedLoadTO>();
+        rawUnassignedLoad.addAll(this.taskDAO
+                .getUnassignedIterationTasksWithEffortLeft(user, interval));
+        rawUnassignedLoad.addAll(this.taskDAO
+                .getUnassignedStoryTasksWithEffortLeft(user, interval));
+
+        Set<Integer> iterationIds = new HashSet<Integer>();
+        for (UnassignedLoadTO row : rawUnassignedLoad) {
+            iterationIds.add(row.iterationId);
+        }
+        // get iterations
+        loadIterationDetails(rawUnassignedLoad, iterationIds);
+
+        for (UnassignedLoadTO row : rawUnassignedLoad) {
+            if (!iterationEffortData.containsKey(row.iterationId)) {
+                IterationLoadContainer newContainer = new IterationLoadContainer();
+                newContainer.setIteration(row.iteration);
+                iterationEffortData.put(row.iterationId, newContainer);
+            }
+            double availabilityFactor = (double) row.availability
+                    / (double) row.availabilitySum;
+
+            double effortFraction = availabilityFactor
+                    * row.effortLeft.doubleValue();
+            IterationLoadContainer currentIter = iterationEffortData
+                    .get(row.iterationId);
+            currentIter.setTotalUnassignedLoad(currentIter
+                    .getTotalUnassignedLoad()
+                    + (long) effortFraction);
+        }
+    }
+
+    public Map<Integer, Integer> loadIterationDetails(
+            List<UnassignedLoadTO> rawUnassignedLoad, Set<Integer> iterationIds) {
+        List<Iteration> iterations = this.iterationDAO
+                .retrieveIterationsByIds(iterationIds);
+        // get availability sums per iteration
+        Map<Integer, Integer> totalAvailabilities = this.iterationDAO
+                .getTotalAvailability(iterationIds);
+
+        for (UnassignedLoadTO row : rawUnassignedLoad) {
+            for (Iteration iter : iterations) {
+                if (iter.getId() == row.iterationId) {
+                    row.iteration = iter;
+                }
+            }
+            if (totalAvailabilities.containsKey(row.iterationId)) {
+                row.availabilitySum = totalAvailabilities.get(row.iterationId);
+            } else {
+                row.availabilitySum = 1;
+            }
+        }
+
+        return totalAvailabilities;
     }
 
     /**
@@ -269,5 +322,9 @@ public class PersonalLoadBusinessImpl implements PersonalLoadBusiness {
 
     public void setUserBusiness(UserBusiness userBusiness) {
         this.userBusiness = userBusiness;
+    }
+
+    public void setIterationDAO(IterationDAO iterationDAO) {
+        this.iterationDAO = iterationDAO;
     }
 }

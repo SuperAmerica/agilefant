@@ -14,10 +14,7 @@
  */
 SimileAjax.version = '2.2.1';
 
-SimileAjax.jQuery = jQuery.noConflict(true);
-if (typeof window["$"] == "undefined") {
-    window.$ = SimileAjax.jQuery;
-}
+SimileAjax.jQuery = jQuery;
 
 SimileAjax.Platform.os = {
     isMac:   false,

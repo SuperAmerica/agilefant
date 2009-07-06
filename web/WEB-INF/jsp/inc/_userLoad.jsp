@@ -57,7 +57,7 @@ $(document).ready(function() {
 			      timeGeometry: timeGeometry,
 			      valueGeometry: valueGeometry,
 			      lineColor: "#ff0000",
-			     /* fillColor: "#cc8080",*/
+			      fillColor: "#cc8080",
 			      showValues: true
 			    }),
 			    Timeplot.createPlotInfo({

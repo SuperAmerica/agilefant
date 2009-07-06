@@ -11,6 +11,9 @@ import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.StoryHourEntry;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.TaskHourEntry;
+import fi.hut.soberit.agilefant.transfer.BacklogTimesheetNode;
+import fi.hut.soberit.agilefant.transfer.StoryTimesheetNode;
+import fi.hut.soberit.agilefant.transfer.TaskTimesheetNode;
 
 public class TimesheetDataTest {
 

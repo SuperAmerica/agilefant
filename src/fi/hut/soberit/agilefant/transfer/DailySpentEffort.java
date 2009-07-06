@@ -1,4 +1,4 @@
-package fi.hut.soberit.agilefant.util;
+package fi.hut.soberit.agilefant.transfer;
 
 import java.util.Calendar;
 import java.util.Date;

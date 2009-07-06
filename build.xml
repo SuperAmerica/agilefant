@@ -476,9 +476,12 @@
 	     <fileset dir="${build.webapp}/static/js/simile/timeplot/">
 	     	<include name="**/*.js" />
 	      </fileset>
-      <fileset dir="${build.webapp}/static/js/simile/">
-        <include name="simile-ajax*.js" />
-        </fileset>
+      <fileset dir="${build.webapp}/static/js/simile/ajax/">
+        <include name="**/*.js" />
+      </fileset>
+      <fileset dir="${build.webapp}/static/js/simile/extensions/">
+        <include name="**/*.js" />
+      </fileset>
 		</concat>
 	</target>
 

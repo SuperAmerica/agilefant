@@ -17,7 +17,7 @@ import org.junit.Test;
 import com.opensymphony.xwork2.Action;
 
 import fi.hut.soberit.agilefant.business.HourEntryBusiness;
-import fi.hut.soberit.agilefant.util.DailySpentEffort;
+import fi.hut.soberit.agilefant.transfer.DailySpentEffort;
 public class SpentEffortActionTest {
 
     private SpentEffortAction testable;

@@ -26,8 +26,8 @@ import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
-import fi.hut.soberit.agilefant.util.IntervalLoadContainer;
-import fi.hut.soberit.agilefant.util.IterationLoadContainer;
+import fi.hut.soberit.agilefant.transfer.IntervalLoadContainer;
+import fi.hut.soberit.agilefant.transfer.IterationLoadContainer;
 import static org.easymock.EasyMock.*;
 
 public class PersonalLoadBusinessTest {
@@ -96,7 +96,7 @@ public class PersonalLoadBusinessTest {
         List<Task> tasks = Arrays.asList(task1, task2, task3);
         Map<Integer, IterationLoadContainer> iterationEffortData = new HashMap<Integer, IterationLoadContainer>();
 
-        expect(taskDAO.getUnassignedTasksByStoryResponsibles(user, null))
+        expect(taskDAO.getStoryAssignedTasksWithEffortLeft(user, null))
                 .andReturn(tasks);
         Capture<Set<Integer>> actualStoryIds = new Capture<Set<Integer>>();
         expect(
@@ -106,7 +106,7 @@ public class PersonalLoadBusinessTest {
         personalLoadBusiness.calculateStoryAssignedTaskLoad(
                 iterationEffortData, user, null);
         assertEquals(1, actualStoryIds.getValue().size());
-        assertEquals(2750, iterationEffortData.get(1).getTotalAssignedLoad());
+        assertEquals(2750L, iterationEffortData.get(1).getTotalAssignedLoad());
         verifyAll();
     }
 
@@ -120,9 +120,9 @@ public class PersonalLoadBusinessTest {
         List<Task> storyTasks = Arrays.asList(task2);
         Map<Integer, IterationLoadContainer> iterationEffortData = new HashMap<Integer, IterationLoadContainer>();
 
-        expect(taskDAO.getIterationTasksByUserAndTimeframe(user, null))
+        expect(taskDAO.getIterationTasksWithEffortLeft(user, null))
                 .andReturn(iterTasks);
-        expect(taskDAO.getStoryTasksByUserAndTimeframe(user, null)).andReturn(
+        expect(taskDAO.getStoryTasksWithEffortLeft(user, null)).andReturn(
                 storyTasks);
 
         Capture<Set<Integer>> actualStoryIds = new Capture<Set<Integer>>();
@@ -133,7 +133,7 @@ public class PersonalLoadBusinessTest {
         personalLoadBusiness.calculateDirectlyAssignedTaskLoad(
                 iterationEffortData, user, null);
         assertEquals(3, actualStoryIds.getValue().size());
-        assertEquals(5250, iterationEffortData.get(1).getTotalAssignedLoad());
+        assertEquals(5250L, iterationEffortData.get(1).getTotalAssignedLoad());
         verifyAll();
     }
 
@@ -177,7 +177,7 @@ public class PersonalLoadBusinessTest {
         personalLoadBusiness.updateUserLoadByInterval(container, loadContainer,
                 user);
         verifyAll();
-        assertEquals(300, container.getAssignedLoad());
+        assertEquals(300L, container.getAssignedLoad());
 
     }
 
@@ -221,7 +221,7 @@ public class PersonalLoadBusinessTest {
         personalLoadBusiness.updateUserLoadByInterval(container, loadContainer,
                 user);
         verifyAll();
-        assertEquals(200, container.getAssignedLoad());
+        assertEquals(200L, container.getAssignedLoad());
     }
 
     @Test
@@ -264,7 +264,7 @@ public class PersonalLoadBusinessTest {
         personalLoadBusiness.updateUserLoadByInterval(container, loadContainer,
                 user);
         verifyAll();
-        assertEquals(500, container.getAssignedLoad());
+        assertEquals(500L, container.getAssignedLoad());
     }
 
     @Test

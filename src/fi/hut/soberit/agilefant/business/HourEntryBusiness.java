@@ -14,7 +14,7 @@ import fi.hut.soberit.agilefant.model.HourEntry;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.TimesheetLoggable;
 import fi.hut.soberit.agilefant.model.User;
-import fi.hut.soberit.agilefant.util.DailySpentEffort;
+import fi.hut.soberit.agilefant.transfer.DailySpentEffort;
 
 /**
  * Business interface for handling functionality related to Hour Entries

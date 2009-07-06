@@ -1,4 +1,4 @@
-package fi.hut.soberit.agilefant.util;
+package fi.hut.soberit.agilefant.transfer;
 
 import fi.hut.soberit.agilefant.model.Iteration;
 

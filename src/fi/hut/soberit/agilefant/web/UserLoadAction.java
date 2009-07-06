@@ -12,7 +12,7 @@ import com.opensymphony.xwork2.ActionSupport;
 import fi.hut.soberit.agilefant.business.PersonalLoadBusiness;
 import fi.hut.soberit.agilefant.business.UserBusiness;
 import fi.hut.soberit.agilefant.model.User;
-import fi.hut.soberit.agilefant.util.IntervalLoadContainer;
+import fi.hut.soberit.agilefant.transfer.IntervalLoadContainer;
 
 @Component("userLoadAction")
 @Scope("prototype")

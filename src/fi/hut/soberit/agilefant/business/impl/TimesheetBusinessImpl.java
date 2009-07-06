@@ -20,9 +20,9 @@ import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.StoryHourEntry;
 import fi.hut.soberit.agilefant.model.TaskHourEntry;
-import fi.hut.soberit.agilefant.util.BacklogTimesheetNode;
-import fi.hut.soberit.agilefant.util.StoryTimesheetNode;
-import fi.hut.soberit.agilefant.util.TaskTimesheetNode;
+import fi.hut.soberit.agilefant.transfer.BacklogTimesheetNode;
+import fi.hut.soberit.agilefant.transfer.StoryTimesheetNode;
+import fi.hut.soberit.agilefant.transfer.TaskTimesheetNode;
 import fi.hut.soberit.agilefant.util.TimesheetData;
 
 @Service("timesheetBusiness")

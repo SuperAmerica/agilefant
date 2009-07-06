@@ -1,4 +1,4 @@
-package fi.hut.soberit.agilefant.util;
+package fi.hut.soberit.agilefant.transfer;
 
 import java.util.Date;
 
@@ -10,7 +10,6 @@ import flexjson.JSON;
 public class IntervalLoadContainer {
     private Interval interval;
     private long assignedLoad = 0L;
-    private long totalLoad = 0L;
     private long basellineLoad = 0L;
     private long unassignedLoad = 0L;
     private long workHours = 0L;
@@ -22,10 +21,7 @@ public class IntervalLoadContainer {
         this.assignedLoad = assignedLoad;
     }
     public long getTotalLoad() {
-        return totalLoad;
-    }
-    public void setTotalLoad(long totalLoad) {
-        this.totalLoad = totalLoad;
+        return assignedLoad + basellineLoad + unassignedLoad;
     }
     public long getWorkHours() {
         return workHours;

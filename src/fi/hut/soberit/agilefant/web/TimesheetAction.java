@@ -33,7 +33,7 @@ import fi.hut.soberit.agilefant.business.TimesheetExportBusiness;
 import fi.hut.soberit.agilefant.business.UserBusiness;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.security.AgilefantUserDetails;
-import fi.hut.soberit.agilefant.util.BacklogTimesheetNode;
+import fi.hut.soberit.agilefant.transfer.BacklogTimesheetNode;
 import fi.hut.soberit.agilefant.util.CalendarUtils;
 import flexjson.JSONSerializer;
 

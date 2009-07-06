@@ -26,7 +26,7 @@ import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.TaskHourEntry;
 import fi.hut.soberit.agilefant.model.User;
-import fi.hut.soberit.agilefant.util.DailySpentEffort;
+import fi.hut.soberit.agilefant.transfer.DailySpentEffort;
 
 
 

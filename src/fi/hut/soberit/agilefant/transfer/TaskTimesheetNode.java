@@ -1,9 +1,10 @@
-package fi.hut.soberit.agilefant.util;
+package fi.hut.soberit.agilefant.transfer;
 
 import java.util.Collections;
 import java.util.List;
 
 import fi.hut.soberit.agilefant.model.Task;
+import fi.hut.soberit.agilefant.util.TimesheetNode;
 
 public class TaskTimesheetNode extends TimesheetNode {
     Task task;

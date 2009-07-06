@@ -16,7 +16,7 @@ import com.opensymphony.xwork2.ActionSupport;
 
 import fi.hut.soberit.agilefant.business.HourEntryBusiness;
 import fi.hut.soberit.agilefant.model.HourEntry;
-import fi.hut.soberit.agilefant.util.DailySpentEffort;
+import fi.hut.soberit.agilefant.transfer.DailySpentEffort;
 
 @Component("spentEffortAction")
 @Scope("prototype")

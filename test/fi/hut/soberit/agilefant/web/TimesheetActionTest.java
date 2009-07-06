@@ -22,7 +22,7 @@ import com.opensymphony.xwork2.Action;
 import fi.hut.soberit.agilefant.business.TimesheetBusiness;
 import fi.hut.soberit.agilefant.business.UserBusiness;
 import fi.hut.soberit.agilefant.model.User;
-import fi.hut.soberit.agilefant.util.BacklogTimesheetNode;
+import fi.hut.soberit.agilefant.transfer.BacklogTimesheetNode;
 
 
 public class TimesheetActionTest {

@@ -1,9 +1,10 @@
-package fi.hut.soberit.agilefant.util;
+package fi.hut.soberit.agilefant.transfer;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import fi.hut.soberit.agilefant.model.Backlog;
+import fi.hut.soberit.agilefant.util.TimesheetNode;
 
 /**
  * A class representing a backlog node in the timesheet tree.

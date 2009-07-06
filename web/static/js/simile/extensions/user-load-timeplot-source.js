@@ -1,7 +1,4 @@
-//initialize namespace if not initialized
-if(!AgilefantTimeplot) {
-	AgilefantTimeplot = {};
-}
+var AgilefantTimeplot = {};
 AgilefantTimeplot.DefaultEventSource = function(eventIndex) {
     Timeline.DefaultEventSource.apply(this, arguments);
 };

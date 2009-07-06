@@ -171,10 +171,10 @@ Timeline.PointHighlightDecorator.prototype.paint = function() {
             
         if (this._timeline.isHorizontal()) {
             div.style.left = minPixel + "px";
-            div.style.width = this._width + "px";
+            div.style.width = this._width;
         } else {
             div.style.top = minPixel + "px";
-            div.style.height = this._width + "px";
+            div.style.height = this._width;
         }
     }
     this._layerDiv.style.display = "block";

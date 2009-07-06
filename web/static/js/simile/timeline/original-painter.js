@@ -82,10 +82,6 @@ Timeline.OriginalEventPainter.prototype.getType = function() {
     return 'original';
 };
 
-Timeline.OriginalEventPainter.prototype.supportsOrthogonalScrolling = function() {
-    return true;
-};
-
 Timeline.OriginalEventPainter.prototype.addOnSelectListener = function(listener) {
     this._onSelectListeners.push(listener);
 };
@@ -140,7 +136,22 @@ Timeline.OriginalEventPainter.prototype.paint = function() {
     this._fireEventPaintListeners('paintStarting', null, null);
     this._prepareForPainting();
     
-    var metrics = this._computeMetrics();
+    var eventTheme = this._params.theme.event;
+    var trackHeight = Math.max(eventTheme.track.height, eventTheme.tape.height + 
+                        this._frc.getLineHeight());
+    var metrics = {
+           trackOffset: eventTheme.track.offset,
+           trackHeight: trackHeight,
+              trackGap: eventTheme.track.gap,
+        trackIncrement: trackHeight + eventTheme.track.gap,
+                  icon: eventTheme.instant.icon,
+             iconWidth: eventTheme.instant.iconWidth,
+            iconHeight: eventTheme.instant.iconHeight,
+            labelWidth: eventTheme.label.width,
+          maxLabelChar: eventTheme.label.maxLabelChar,
+   impreciseIconMargin: eventTheme.instant.impreciseIconMargin
+    }
+    
     var minDate = this._band.getMinDate();
     var maxDate = this._band.getMaxDate();
     
@@ -165,46 +176,9 @@ Timeline.OriginalEventPainter.prototype.paint = function() {
     // update the band object for max number of tracks in this section of the ether
     this._band.updateEventTrackInfo(this._tracks.length, metrics.trackIncrement); 
     this._fireEventPaintListeners('paintEnded', null, null);
-    
-    this._setOrthogonalOffset(metrics);
 };
 
 Timeline.OriginalEventPainter.prototype.softPaint = function() {
-    this._setOrthogonalOffset(this._computeMetrics());
-};
-
-Timeline.OriginalEventPainter.prototype.getOrthogonalExtent = function() {
-    var metrics = this._computeMetrics();
-    return 2 * metrics.trackOffset + this._tracks.length * metrics.trackIncrement;
-};
-
-Timeline.OriginalEventPainter.prototype._setOrthogonalOffset = function(metrics) {
-    var orthogonalOffset = this._band.getViewOrthogonalOffset();
-    
-    this._highlightLayer.style.top = 
-        this._lineLayer.style.top = 
-            this._eventLayer.style.top = 
-                orthogonalOffset + "px";
-};
-
-Timeline.OriginalEventPainter.prototype._computeMetrics = function() {
-     var eventTheme = this._params.theme.event;
-     var trackHeight = Math.max(eventTheme.track.height, eventTheme.tape.height + 
-                         this._frc.getLineHeight());
-     var metrics = {
-            trackOffset: eventTheme.track.offset,
-            trackHeight: trackHeight,
-               trackGap: eventTheme.track.gap,
-         trackIncrement: trackHeight + eventTheme.track.gap,
-                   icon: eventTheme.instant.icon,
-              iconWidth: eventTheme.instant.iconWidth,
-             iconHeight: eventTheme.instant.iconHeight,
-             labelWidth: eventTheme.label.width,
-           maxLabelChar: eventTheme.label.maxLabelChar,
-    impreciseIconMargin: eventTheme.instant.impreciseIconMargin
-     };
-     
-     return metrics;
 };
 
 Timeline.OriginalEventPainter.prototype._prepareForPainting = function() {

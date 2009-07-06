@@ -38,7 +38,7 @@ $(document).ready(function() {
 			}
 		}
 		});
-
+	  window.Timeline.DateTime = window.SimileAjax.DateTime;
 		  var eventSource = new Timeplot.DefaultEventSource();
 		  var plotInfo = [
 		    Timeplot.createPlotInfo({
@@ -46,8 +46,7 @@ $(document).ready(function() {
 		      dataSource: new Timeplot.ColumnSource(eventSource,1)
 		    })
 		  ];
-		  
-		  timeplot = Timeplot.create($("#loadPlot"), plotInfo);
+		  timeplot = Timeplot.create($("#loadPlot").get(0), plotInfo);
 		  //timeplot.loadText("data.txt", ",", eventSource);
 			
 });

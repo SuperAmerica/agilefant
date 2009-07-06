@@ -30,8 +30,8 @@
  *==================================================
  */
 // Note: version is also stored in the build.xml file
-Timeline.version = 'pre 2.4.0';  // use format 'pre 1.2.3' for trunk versions 
-Timeline.ajax_lib_version = SimileAjax.version;
+Timeline.version = '2.3.0';  // use format 'pre 1.2.3' for trunk versions 
+Timeline.ajax_lib_version = SimileAjax.version;  // Waiting for version string method from Ajax library
 Timeline.display_version = Timeline.version + ' (with Ajax lib ' + Timeline.ajax_lib_version + ')';
  // cf method Timeline.writeVersion
 
@@ -65,9 +65,7 @@ Timeline.create = function(elmt, bandInfos, orientation, unit) {
 
 Timeline.createBandInfo = function(params) {
     var theme = ("theme" in params) ? params.theme : Timeline.getDefaultTheme();
-
-    var decorators = ("decorators" in params) ? params.decorators : [];
-        
+    
     var eventSource = ("eventSource" in params) ? params.eventSource : null;
     
     var ether = new Timeline.LinearEther({ 
@@ -127,7 +125,6 @@ Timeline.createBandInfo = function(params) {
         etherPainter:   etherPainter,
         eventPainter:   eventPainter,
         theme:          theme,
-        decorators:     decorators,
         zoomIndex:      ("zoomIndex" in params) ? params.zoomIndex : 0,
         zoomSteps:      ("zoomSteps" in params) ? params.zoomSteps : null
     };
@@ -483,12 +480,12 @@ Timeline._Impl.prototype._initialize = function() {
     }
     
     /*
-     *  inserting copyright and link
+     *  inserting copyright and link to simile
      */
     var elmtCopyright = SimileAjax.Graphics.createTranslucentImage(Timeline.urlPrefix + (this.isHorizontal() ? "images/copyright-vertical.png" : "images/copyright.png"));
     elmtCopyright.className = "timeline-copyright";
-    elmtCopyright.title = "SIMILE Timeline - http://www.simile-widgets.org/";
-    SimileAjax.DOM.registerEvent(elmtCopyright, "click", function() { window.location = "http://www.simile-widgets.org/"; });
+    elmtCopyright.title = "Timeline copyright SIMILE - www.code.google.com/p/simile-widgets/";
+    SimileAjax.DOM.registerEvent(elmtCopyright, "click", function() { window.location = "http://code.google.com/p/simile-widgets/"; });
     containerDiv.appendChild(elmtCopyright);
     
     /*

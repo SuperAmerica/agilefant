@@ -22,6 +22,70 @@ Timeline.DefaultEventSource.prototype.removeListener = function(listener) {
     }
 };
 
+Timeline.DefaultEventSource.prototype.loadXML = function(xml, url) {
+    var base = this._getBaseURL(url);
+    
+    var wikiURL = xml.documentElement.getAttribute("wiki-url");
+    var wikiSection = xml.documentElement.getAttribute("wiki-section");
+
+    var dateTimeFormat = xml.documentElement.getAttribute("date-time-format");
+    var parseDateTimeFunction = this._events.getUnit().getParser(dateTimeFormat);
+
+    var node = xml.documentElement.firstChild;
+    var added = false;
+    while (node != null) {
+        if (node.nodeType == 1) {
+            var description = "";
+            if (node.firstChild != null && node.firstChild.nodeType == 3) {
+                description = node.firstChild.nodeValue;
+            }
+            // instant event: default is true. Or use values from isDuration or durationEvent
+            var instant = (node.getAttribute("isDuration")    === null &&
+                           node.getAttribute("durationEvent") === null) ||
+                          node.getAttribute("isDuration") == "false" ||
+                          node.getAttribute("durationEvent") == "false";
+            
+            var evt = new Timeline.DefaultEventSource.Event( {
+                          id: node.getAttribute("id"),
+                       start: parseDateTimeFunction(node.getAttribute("start")),
+                         end: parseDateTimeFunction(node.getAttribute("end")),
+                 latestStart: parseDateTimeFunction(node.getAttribute("latestStart")),
+                 earliestEnd: parseDateTimeFunction(node.getAttribute("earliestEnd")),
+                     instant: instant,
+                        text: node.getAttribute("title"),
+                 description: description,
+                       image: this._resolveRelativeURL(node.getAttribute("image"), base),
+                        link: this._resolveRelativeURL(node.getAttribute("link") , base),
+                        icon: this._resolveRelativeURL(node.getAttribute("icon") , base),
+                       color: node.getAttribute("color"),
+                   textColor: node.getAttribute("textColor"),
+                   hoverText: node.getAttribute("hoverText"),
+                   classname: node.getAttribute("classname"),
+                   tapeImage: node.getAttribute("tapeImage"),
+                  tapeRepeat: node.getAttribute("tapeRepeat"),
+                     caption: node.getAttribute("caption"),
+                     eventID: node.getAttribute("eventID"),
+                    trackNum: node.getAttribute("trackNum")
+            });
+
+            evt._node = node;
+            evt.getProperty = function(name) {
+                return this._node.getAttribute(name);
+            };
+            evt.setWikiInfo(wikiURL, wikiSection);
+            
+            this._events.add(evt);
+            
+            added = true;
+        }
+        node = node.nextSibling;
+    }
+
+    if (added) {
+        this._fire("onAddMany", []);
+    }
+};
+
 
 Timeline.DefaultEventSource.prototype.loadJSON = function(data, url) {
     var base = this._getBaseURL(url);
@@ -34,49 +98,35 @@ Timeline.DefaultEventSource.prototype.loadJSON = function(data, url) {
         var parseDateTimeFunction = this._events.getUnit().getParser(dateTimeFormat);
        
         for (var i=0; i < data.events.length; i++){
-            var evnt = data.events[i];
-            
-            // New feature: attribute synonyms. The following attribute names are interchangable.
-            // The shorter names enable smaller load files.
-            //    eid -- eventID
-            //      s -- start
-            //      e -- end
-            //     ls -- latestStart
-            //     ee -- earliestEnd
-            //      d -- description
-            //     de -- durationEvent
-            //      t -- title,
-            //      c -- classname
-
+            var event = data.events[i];
             // Fixing issue 33:
             // instant event: default (for JSON only) is false. Or use values from isDuration or durationEvent
             // isDuration was negated (see issue 33, so keep that interpretation
-            var instant = evnt.isDuration ||
-                          (('durationEvent' in evnt) && !evnt.durationEvent) ||
-                          (('de' in evnt) && !evnt.de);
+            var instant = event.isDuration || (event.durationEvent != null && !event.durationEvent);
+
             var evt = new Timeline.DefaultEventSource.Event({
-                          id: ("id" in evnt) ? evnt.id : undefined,
-                       start: parseDateTimeFunction(evnt.start || evnt.s),
-                         end: parseDateTimeFunction(evnt.end || evnt.e),
-                 latestStart: parseDateTimeFunction(evnt.latestStart || evnt.ls),
-                 earliestEnd: parseDateTimeFunction(evnt.earliestEnd || evnt.ee),
+                          id: ("id" in event) ? event.id : undefined,
+                       start: parseDateTimeFunction(event.start),
+                         end: parseDateTimeFunction(event.end),
+                 latestStart: parseDateTimeFunction(event.latestStart),
+                 earliestEnd: parseDateTimeFunction(event.earliestEnd),
                      instant: instant,
-                        text: evnt.title || evnt.t,
-                 description: evnt.description || evnt.d,
-                       image: this._resolveRelativeURL(evnt.image, base),
-                        link: this._resolveRelativeURL(evnt.link , base),
-                        icon: this._resolveRelativeURL(evnt.icon , base),
-                       color: evnt.color,                                      
-                   textColor: evnt.textColor,
-                   hoverText: evnt.hoverText,
-                   classname: evnt.classname || evnt.c,
-                   tapeImage: evnt.tapeImage,
-                  tapeRepeat: evnt.tapeRepeat,
-                     caption: evnt.caption,
-                     eventID: evnt.eventID  || evnt.eid,
-                    trackNum: evnt.trackNum
+                        text: event.title,
+                 description: event.description,
+                       image: this._resolveRelativeURL(event.image, base),
+                        link: this._resolveRelativeURL(event.link , base),
+                        icon: this._resolveRelativeURL(event.icon , base),
+                       color: event.color,                                      
+                   textColor: event.textColor,
+                   hoverText: event.hoverText,
+                   classname: event.classname,
+                   tapeImage: event.tapeImage,
+                  tapeRepeat: event.tapeRepeat,
+                     caption: event.caption,
+                     eventID: event.eventID,
+                    trackNum: event.trackNum
             });
-            evt._obj = evnt;
+            evt._obj = event;
             evt.getProperty = function(name) {
                 return this._obj[name];
             };
@@ -92,7 +142,100 @@ Timeline.DefaultEventSource.prototype.loadJSON = function(data, url) {
     }
 };
 
+/*
+ *  Contributed by Morten Frederiksen, http://www.wasab.dk/morten/
+ */
+Timeline.DefaultEventSource.prototype.loadSPARQL = function(xml, url) {
+    var base = this._getBaseURL(url);
+    
+    var dateTimeFormat = 'iso8601';
+    var parseDateTimeFunction = this._events.getUnit().getParser(dateTimeFormat);
 
+    if (xml == null) {
+        return;
+    }
+    
+    /*
+     *  Find <results> tag
+     */
+    var node = xml.documentElement.firstChild;
+    while (node != null && (node.nodeType != 1 || node.nodeName != 'results')) {
+        node = node.nextSibling;
+    }
+    
+    var wikiURL = null;
+    var wikiSection = null;
+    if (node != null) {
+        wikiURL = node.getAttribute("wiki-url");
+        wikiSection = node.getAttribute("wiki-section");
+        
+        node = node.firstChild;
+    }
+    
+    var added = false;
+    while (node != null) {
+        if (node.nodeType == 1) {
+            var bindings = { };
+            var binding = node.firstChild;
+            while (binding != null) {
+                if (binding.nodeType == 1 && 
+                    binding.firstChild != null && 
+                    binding.firstChild.nodeType == 1 && 
+                    binding.firstChild.firstChild != null && 
+                    binding.firstChild.firstChild.nodeType == 3) {
+                    bindings[binding.getAttribute('name')] = binding.firstChild.firstChild.nodeValue;
+                }
+                binding = binding.nextSibling;
+            }
+            
+            if (bindings["start"] == null && bindings["date"] != null) {
+                bindings["start"] = bindings["date"];
+            }
+            
+            // instant event: default is true. Or use values from isDuration or durationEvent
+            var instant = (bindings["isDuration"]    === null &&
+                           bindings["durationEvent"] === null) ||
+                          bindings["isDuration"] == "false" ||
+                          bindings["durationEvent"] == "false";
+
+            var evt = new Timeline.DefaultEventSource.Event({
+                          id: bindings["id"],
+                       start: parseDateTimeFunction(bindings["start"]),
+                         end: parseDateTimeFunction(bindings["end"]),
+                 latestStart: parseDateTimeFunction(bindings["latestStart"]),
+                 earliestEnd: parseDateTimeFunction(bindings["earliestEnd"]),
+                     instant: instant, // instant
+                        text: bindings["title"], // text
+                 description: bindings["description"],
+                       image: this._resolveRelativeURL(bindings["image"], base),
+                        link: this._resolveRelativeURL(bindings["link"] , base),
+                        icon: this._resolveRelativeURL(bindings["icon"] , base),
+                       color: bindings["color"],                                
+                   textColor: bindings["textColor"],
+                   hoverText: bindings["hoverText"],
+                     caption: bindings["caption"],
+                   classname: bindings["classname"],
+                   tapeImage: bindings["tapeImage"],
+                  tapeRepeat: bindings["tapeRepeat"],
+                     eventID: bindings["eventID"],
+                    trackNum: bindings["trackNum"]
+            });
+            evt._bindings = bindings;
+            evt.getProperty = function(name) {
+                return this._bindings[name];
+            };
+            evt.setWikiInfo(wikiURL, wikiSection);
+            
+            this._events.add(evt);
+            added = true;
+        }
+        node = node.nextSibling;
+    }
+
+    if (added) {
+        this._fire("onAddMany", []);
+    }
+};
 
 Timeline.DefaultEventSource.prototype.add = function(evt) {
     this._events.add(evt);
@@ -315,9 +458,7 @@ Timeline.DefaultEventSource.Event.prototype = {
     },
     
     fillDescription: function(elmt) {
-        if (this._description) {
-            elmt.innerHTML = this._description;
-        }
+        elmt.innerHTML = this._description;
     },
     fillWikiInfo: function(elmt) {
         // Many bubbles will not support a wiki link. 

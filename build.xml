@@ -241,7 +241,7 @@
 		</copy>
 	</target>
 
-	<target name="deploy-local-web" depends="webapp, simile_widgets" description="Deploys web app to local server without reloading webapp">
+	<target name="deploy-local-web" depends="webapp, concat_javascript" description="Deploys web app to local server without reloading webapp">
 		<mkdir dir="${deploy.dir.local}" />
 		<copy todir="${deploy.dir.local}">
 			<fileset dir="${build.webapp}" />
@@ -471,7 +471,7 @@
 			</fileset>
 		</jslint>
 	</target>
-	<target name="simile_widgets" depends="webapp">
+	<target name="concat_javascript" depends="webapp">
 		<concat destfile="${build.webapp}/static/js/simile-widgets.js">
 		  <filelist dir="${build.webapp}/static/js/simile/" files="init.js" />
 		  <filelist dir="${build.webapp}/static/js/simile/ajax/" files="platform.js, debug.js, dom.js, graphics.js, date-time.js, string.js, 
@@ -484,6 +484,15 @@
         <include name="**/*.js" />
       </fileset>
       -->
+		</concat>
+		<concat destfile="${build.webapp}/static/js/dynamics/dynamicTable.js">
+			<filelist dir="${build.webapp}/static/js/dynamics/" files="Table.js, TableCell.js, TableEditors.js, TableRow.js" />
+		</concat>
+		<concat destfile="${build.webapp}/static/js/dynamics/model.js">
+			<filelist dir="${build.webapp}/static/js/dynamics/" files="CommonModel.js, StoryModel.js, TaskModel.js" />
+		</concat>
+		<concat destfile="${build.webapp}/static/js/dynamics/controller.js">
+			<filelist dir="${build.webapp}/static/js/dynamics/" files="CommonController.js, IterationController.js" />
 		</concat>
 	</target>
 

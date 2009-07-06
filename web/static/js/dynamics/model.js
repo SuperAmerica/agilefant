@@ -1027,7 +1027,7 @@ TaskModel.prototype.save = function(synchronous, callback) {
     data.storyId = this.story.id;    
   }
   if (!data.storyId) {
-    data.backlogId = this.backlog.getId();
+    data.iterationId = this.backlog.getId();
   }
   if (this.userIds) {
     data.userIds = this.userIds;

@@ -19,7 +19,6 @@ import fi.hut.soberit.agilefant.business.ProjectBusiness;
 import fi.hut.soberit.agilefant.business.StoryBusiness;
 import fi.hut.soberit.agilefant.business.TaskBusiness;
 import fi.hut.soberit.agilefant.business.UserBusiness;
-import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.HourEntry;
 import fi.hut.soberit.agilefant.model.TimesheetLoggable;
 import fi.hut.soberit.agilefant.util.CalendarUtils;
@@ -88,29 +87,16 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
      * {@inheritDoc}
      */
     public String delete() {
-        try {
-            hourEntry = hourEntryBusiness.retrieve(hourEntryId);
-        } catch (ObjectNotFoundException onfe) {
-            return CRUDAction.AJAX_ERROR;
-        }
+        hourEntry = hourEntryBusiness.retrieve(hourEntryId);
         hourEntryBusiness.delete(hourEntryId);
-        return CRUDAction.AJAX_SUCCESS;
+        return Action.SUCCESS;
     }
 
     /**
      * {@inheritDoc}
      */
     public String retrieve() {
-        try {
-            hourEntry = hourEntryBusiness.retrieve(hourEntryId);
-        } catch (ObjectNotFoundException onfe) {
-            return Action.ERROR;
-        }
-        if (hourEntry == null) {
-            super.addActionError(super.getText("hourEntry.notFound"));
-            create();
-            return Action.ERROR;
-        }
+        hourEntry = hourEntryBusiness.retrieve(hourEntryId);
         setEffortString(HourEntryUtils.convertToString(hourEntry.getMinutesSpent()));
         internalDate = hourEntry.getDate();
         return Action.SUCCESS;
@@ -125,12 +111,12 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
             storable = hourEntryBusiness.retrieve(hourEntryId);
             if (storable == null) {
                 super.addActionError(super.getText("hourEntry.notFound"));
-                return CRUDAction.AJAX_ERROR;
+                return Action.ERROR;
             }
         }
         this.fillStorable(storable);
         if (super.hasActionErrors()) {
-            return CRUDAction.AJAX_ERROR;
+            return Action.ERROR;
         }
         // Existing entries cannot be "shared"
         TimesheetLoggable parent = getParent();
@@ -141,7 +127,7 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
         } else if (userId == 0 /* We have a list of user ids */) {
             if (userIds.size() < 1) {
                 super.addActionError(super.getText("hourEntry.noUsers"));
-                return CRUDAction.AJAX_ERROR;
+                return Action.ERROR;
             }
             hourEntryBusiness.addHourEntryForMultipleUsers(parent, storable,
                     userIds);
@@ -149,14 +135,13 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
 
             // hack in order to make the returned data look like json data
         }
-        return CRUDAction.AJAX_SUCCESS;
+        return Action.SUCCESS;
     }
 
 
     public String multiEdit() { 
-        hourEntryBusiness.updateMultiple(userIdss,
-                dates, efforts, descriptions); 
-        return CRUDAction.AJAX_SUCCESS; 
+        hourEntryBusiness.updateMultiple(userIdss, dates, efforts, descriptions); 
+        return Action.SUCCESS; 
     }
 
     protected void fillStorable(HourEntry storable) {

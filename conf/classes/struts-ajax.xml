@@ -82,6 +82,12 @@
         <param name="target">stories</param>
       </result>
     </action>
+    
+    <action name="retrieveSubBacklogs" method="retrieveSubBacklogs" class="backlogAction">
+      <result name="success" type="json">
+        <param name="target">backlogs</param>
+      </result>
+    </action>
     <!-- /Backlog actions -->
     
     
@@ -99,6 +105,19 @@
       <result type="dispatcher">/WEB-INF/jsp/forms/createProject.jsp</result>
     </action>
     
+    <action name="storeProject" method="store" class="projectAction">    
+      <result name="success" type="json">
+        <param name="target">project</param>
+      </result>
+    </action>
+    
+    <action name="projectData" class="projectAction" method="projectContents">
+      <result name="success" type="json">
+        <param name="target">projectContents</param>
+        <param name="patterns">+stories.userData, +stories.tasks, +stories.tasks.userData</param>
+      </result>
+    </action>
+    
     <action name="projectTabs" method="retrieve" class="projectAction">
       <result type="dispatcher">/WEB-INF/jsp/tabs/projectTabs.jsp</result>
     </action>
@@ -111,12 +130,24 @@
       <result type="dispatcher">/WEB-INF/jsp/forms/createIteration.jsp</result>
     </action>
     
+    <action name="storeIteration" method="store" class="iterationAction">
+      <result name="success" type="json">
+        <param name="target">iteration</param>
+      </result>
+    </action>
+    
     <action name="iterationData" class="iterationAction" method="iterationContents">
       <result name="success" type="json">
         <param name="target">iterationData</param>
         <param name="patterns">+stories.tasks, +stories.userData, +stories.tasks.userData, +tasksWithoutStory, +tasksWithoutStory.userData</param>
       </result>
     </action>
+    
+    <action name="iterationMetrics" class="iterationAction" method="iterationMetrics">
+      <result name="success" type="dispatcher">/WEB-INF/jsp/inc/iterationMetrics.jsp</result>
+    </action>
+    
+    <action name="deleteIteration" method="delete" class="iterationAction" />
     
     <action name="iterationTabs" method="edit" class="iterationAction">
       <result type="dispatcher">/WEB-INF/jsp/tabs/iterationTabs.jsp</result>

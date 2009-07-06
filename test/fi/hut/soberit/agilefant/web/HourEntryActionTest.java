@@ -6,6 +6,9 @@ import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 
 import org.junit.*;
+
+import com.opensymphony.xwork2.Action;
+
 import static org.junit.Assert.*;
 
 import fi.hut.soberit.agilefant.business.HourEntryBusiness;
@@ -31,7 +34,7 @@ public class HourEntryActionTest {
     private User user;
     
     @Before
-    public void setUp() {
+    public void setUp_dependencies() {
         hourEntryAction = new HourEntryAction();
         
         hourEntryBusiness = createMock(HourEntryBusiness.class);
@@ -48,24 +51,35 @@ public class HourEntryActionTest {
         
         userBusiness = createMock(UserBusiness.class);
         hourEntryAction.setUserBusiness(userBusiness);
-        
+    }
+    
+    private void replayAll() {
+        replay(hourEntryBusiness, storyBusiness, taskBusiness, projectBusiness, userBusiness);
+    }
+    
+    private void verifyAll() {
+        verify(hourEntryBusiness, storyBusiness, taskBusiness, projectBusiness, userBusiness);
+    }
+    
+    @Before
+    public void setUp_data() {
         user = new User();
         user.setId(10);
 
         hourEntry = new HourEntry();
-        hourEntry.setId(1); 
+        hourEntry.setId(1);
     }
     
-    @Test
+    @Test(expected = ObjectNotFoundException.class)
     public void testDelete_nonExistentHourEntry() {
         hourEntryAction.setHourEntryId(-1);
         expect(hourEntryBusiness.retrieve(-1))
             .andThrow(new ObjectNotFoundException());
-        replay(hourEntryBusiness);
+        replayAll();
         
-        assertEquals(CRUDAction.AJAX_ERROR, hourEntryAction.delete());
+        hourEntryAction.delete();
         
-        verify(hourEntryBusiness);
+        verifyAll();
     }
     
     @Test
@@ -74,22 +88,21 @@ public class HourEntryActionTest {
         
         expect(hourEntryBusiness.retrieve(hourEntry.getId())).andReturn(hourEntry);
         hourEntryBusiness.delete(hourEntry.getId());
-        replay(hourEntryBusiness);
+        replayAll();
         
-        assertEquals(CRUDAction.AJAX_SUCCESS, hourEntryAction.delete());
+        assertEquals(Action.SUCCESS, hourEntryAction.delete());
         
-        verify(hourEntryBusiness);
+        verifyAll();
     }
     
-    @Test
-    public void testEdit() {
+    @Test(expected = ObjectNotFoundException.class)
+    public void testRetrieve_noSuchHourEntry() {
         hourEntryAction.setHourEntryId(-1);
-        expect(hourEntryBusiness.retrieve(-1))
-            .andThrow(new ObjectNotFoundException());
-        replay(hourEntryBusiness);
+        expect(hourEntryBusiness.retrieve(-1)).andThrow(new ObjectNotFoundException());
+        replayAll();
         
-        assertEquals("error", hourEntryAction.retrieve());
+        hourEntryAction.retrieve();
         
-        verify(hourEntryBusiness);
+        verifyAll();
     }    
 }

@@ -46,7 +46,7 @@ $(document).ready(function() {
 			<td>
 			<div class="subItems" style="margin-top: 0px; width: 720px;">
 			<div id="editProjectForm" class="validateWrapper validateProject">
-			<ww:form action="ajaxStoreProject" method="post">
+			<form action="ajax/storeProject.action" method="post">
         <ww:hidden id="editProject-projectId-%{project.id}" name="projectId" value="%{project.id}" />
 				<table class="formTable">
 					<tr>
@@ -130,7 +130,7 @@ $(document).ready(function() {
 						<td colspan="2"><aef:datepicker id="start_date_${project.id}"
 							name="startDate"
 							format="%{getText('struts.shortDateTime.format')}"
-							value="%{#start}" /></td>
+							value="${start}" /></td>
 					</tr>
 					<tr>
 						<td>End date</td>
@@ -139,7 +139,7 @@ $(document).ready(function() {
 							<aef:datepicker id="end_date_${project.id}"
 							name="endDate"
 							format="%{getText('struts.shortDateTime.format')}"
-							value="%{#end}" /></td>
+							value="${end}" /></td>
 					</tr>
           <%--
           <tr>
@@ -190,7 +190,7 @@ $(document).ready(function() {
 						</td>						
 					</tr>
 				</table>
-			</ww:form>
+			</form>
 			</div>
 			</div>						
 			</td>

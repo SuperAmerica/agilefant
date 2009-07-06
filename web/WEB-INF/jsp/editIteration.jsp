@@ -102,8 +102,7 @@
 				</table>
 				</div>
 				<div id="editIterationForm" class="validateWrapper validateIteration" style="display: none;">
-				<ww:form
-					method="post" id="iterationEditForm" action="storeIteration">
+				<form	method="post" id="iterationEditForm" action="ajax/storeIteration.action">
 					<ww:hidden name="iterationId" value="#attr.iteration.id" />
 					<ww:date name="%{iteration.getTimeOfDayDate(6)}" id="start"
 						format="%{getText('struts.shortDateTime.format')}" />
@@ -164,7 +163,7 @@
 							<td colspan="2"> <aef:datepicker id="start_date"
 								name="startDate"
 								format="%{getText('struts.shortDateTime.format')}"
-								value="%{#start}" /></td>
+								value="${start}" /></td>
 						</tr>
 						<tr>
 							<td>End date</td>
@@ -172,7 +171,7 @@
 							<td colspan="2"> <aef:datepicker id="end_date"
 								name="endDate"
 								format="%{getText('struts.shortDateTime.format')}"
-								value="%{#end}" /></td>
+								value="${end}" /></td>
 						</tr>
 						<tr>
 							<td></td>
@@ -189,7 +188,7 @@
 							</c:choose>
 						</tr>
 					</table>
-				</ww:form></div>
+				</form></div>
 				</div>
 				</div>
 				</td>
@@ -333,7 +332,7 @@ $(document).ready(function() {
 	  bigChart.attr("src",bigChart.attr("src")+"#");
     var smallChart = $("#smallChart");
     smallChart.attr("src",smallChart.attr("src")+"#");
-    $("#iterationMetrics").load("iterationMetrics.action",{iterationId: ${iterationId}});
+    $("#iterationMetrics").load("ajax/iterationMetrics.action",{iterationId: ${iterationId}});
 	});
 });
 </script>

@@ -19,6 +19,7 @@ import fi.hut.soberit.agilefant.business.BacklogBusiness;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Product;
+import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
 
 public class BacklogActionTest {
@@ -35,6 +36,15 @@ public class BacklogActionTest {
         backlogAction.setBacklogBusiness(backlogBusiness);
     }
     
+    private void replayAll() {
+        replay(backlogBusiness);
+    }
+    
+    private void verifyAll() {
+        verify(backlogBusiness);
+    }
+
+    
     @Before
     public void setUp() {
         product = new Product();
@@ -49,43 +59,44 @@ public class BacklogActionTest {
         backlogAction.setBacklogId(product.getId());
         
         expect(backlogBusiness.retrieve(product.getId())).andReturn(product);
-        replay(backlogBusiness);
+        replayAll();
         
         assertEquals(Action.SUCCESS, backlogAction.retrieveStories());
         assertEquals(stories, backlogAction.getStories());
         
-        verify(backlogBusiness);
+        verifyAll();
     }
-    
+
     @Test(expected = ObjectNotFoundException.class)
     public void testRetrieveStories_noSuchBacklog() {
         backlogAction.setBacklogId(-1);
         
         expect(backlogBusiness.retrieve(-1))
             .andThrow(new ObjectNotFoundException("Not found"));
-        replay(backlogBusiness);
+        replayAll();
         
         backlogAction.retrieveStories();
         
-        verify(backlogBusiness);
+        verifyAll();
     }
     
     @Test
-    public void testGetSubBacklogsASJson() {
+    public void testRetrieveSubBacklogs() {
         backlogAction.setBacklogId(product.getId());
-        Collection<Backlog> childBacklogs = new ArrayList<Backlog>();
+        Collection<Backlog> childBacklogs = new ArrayList<Backlog>(); 
+            
+        childBacklogs.addAll(Arrays.asList(new Project(), new Project()));
         
         expect(backlogBusiness.retrieveIfExists(product.getId()))
             .andReturn(product);
         expect(backlogBusiness.getChildBacklogs(product)) 
             .andReturn(childBacklogs);
-        replay(backlogBusiness);
+        replayAll();
         
-        assertEquals(CRUDAction.AJAX_SUCCESS, 
-                backlogAction.getSubBacklogsAsJSON());
-        assertNotNull(backlogAction.getJsonData());
+        assertEquals(Action.SUCCESS, backlogAction.retrieveSubBacklogs());
+        assertEquals(childBacklogs, backlogAction.getBacklogs());
         
-        verify(backlogBusiness);
+        verifyAll();
     }
     
 }

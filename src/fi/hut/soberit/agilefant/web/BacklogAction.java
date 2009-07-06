@@ -17,7 +17,6 @@ import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
-import flexjson.JSONSerializer;
 
 @Component("backlogAction")
 @Scope("prototype")
@@ -31,8 +30,8 @@ public class BacklogAction extends ActionSupport {
     private Backlog backlog;
     
     private Collection<Story> stories;
-        
-    private String jsonData = "";
+    
+    private Collection<Backlog> backlogs;
 
     @Autowired
     private BacklogBusiness backlogBusiness;
@@ -49,10 +48,14 @@ public class BacklogAction extends ActionSupport {
         return Action.SUCCESS;
     }
     
-    public String getSubBacklogsAsJSON() {
+    /**
+     * Gets all sub backlogs or all products if backlog not found.
+     * @return
+     */
+    public String retrieveSubBacklogs() {
         backlog = backlogBusiness.retrieveIfExists(backlogId);
-        jsonData = new JSONSerializer().serialize(backlogBusiness.getChildBacklogs(backlog));
-        return CRUDAction.AJAX_SUCCESS;
+        backlogs = backlogBusiness.getChildBacklogs(backlog);
+        return Action.SUCCESS;
     }
 
     protected String solveResult(Backlog backlog) {
@@ -87,9 +90,6 @@ public class BacklogAction extends ActionSupport {
         return backlog;
     }
 
-    public String getJsonData() {
-        return jsonData;
-    }
     public int getBacklogId() {
         return backlogId;
     }
@@ -100,5 +100,9 @@ public class BacklogAction extends ActionSupport {
     
     public Collection<Story> getStories() {
         return stories;
+    }
+
+    public Collection<Backlog> getBacklogs() {
+        return backlogs;
     }
 }

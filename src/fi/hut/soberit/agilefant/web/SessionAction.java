@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 
@@ -45,8 +46,7 @@ public class SessionAction extends ActionSupport {
             }
         }
         catch (Exception e) {
-            System.out.println("PROBBBBBB!!!");
-            return CRUDAction.AJAX_ERROR;
+            return Action.ERROR;
         }
         
         /* Create, if doesn't exist */
@@ -57,7 +57,7 @@ public class SessionAction extends ActionSupport {
         ajaxContext.put(contextType, openDialogs);
         ActionContext.getContext().getSession().put(CONTEXT_KEY,ajaxContext);
         
-        return CRUDAction.AJAX_SUCCESS;
+        return Action.SUCCESS;
     }
     
     /**
@@ -79,12 +79,12 @@ public class SessionAction extends ActionSupport {
             }
         }
         catch (Exception e) {
-            return CRUDAction.AJAX_ERROR;
+            return Action.ERROR;
         }
    
         /* Create, if doesn't exist */
         if (openDialogs == null) {
-            return CRUDAction.AJAX_SUCCESS;
+            return Action.SUCCESS;
         }
         
         openDialogs.remove(objectId);
@@ -93,7 +93,7 @@ public class SessionAction extends ActionSupport {
         ActionContext.getContext().getSession().put(CONTEXT_KEY,ajaxContext);
 
         
-        return CRUDAction.AJAX_SUCCESS;
+        return Action.SUCCESS;
     }
 
     /*

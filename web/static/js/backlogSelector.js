@@ -87,7 +87,7 @@
 		},
 		updateSelect: function(container, backlogId, firstRow) {
 			var me = this;
-			$.getJSON("getSubBacklogsAsJSON.action", {backlogId: backlogId}, function(data,type) {
+			$.getJSON("ajax/retrieveSubBacklogs.action", {backlogId: backlogId}, function(data,type) {
 				me.sortData(data);
 				me.renderSelect(container, data, firstRow);
 			});

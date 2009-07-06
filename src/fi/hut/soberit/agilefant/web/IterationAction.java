@@ -3,7 +3,6 @@ package fi.hut.soberit.agilefant.web;
 import java.text.ParseException;
 import java.util.Date;
 
-import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -103,6 +102,12 @@ public class IterationAction extends BacklogContentsAction implements CRUDAction
         return Action.SUCCESS;
     }
     
+    public String delete() {
+        iteration = iterationBusiness.retrieve(iterationId);
+        iterationBusiness.delete(iterationId);
+        return Action.SUCCESS;
+    }
+    
     public String iterationMetrics() {
         iteration = iterationBusiness.retrieve(iterationId);
         iterationMetrics = iterationBusiness.getIterationMetrics(iteration);
@@ -155,41 +160,7 @@ public class IterationAction extends BacklogContentsAction implements CRUDAction
         return Action.SUCCESS;
     }
 
-    public String delete() {
-        iteration = iterationBusiness.retrieve(iterationId);
-        if (iteration == null) {
-            super.addActionError(super.getText("projectType.notFound"));
-            return Action.ERROR;
-        }
-//        if (iteration.getBacklogItems().size() > 0
-//                || iteration.getIterationGoals().size() > 0
-//                || (iteration.getBusinessThemeBindings() != null
-//                        && iteration.getBusinessThemeBindings().size() > 0)) {
-//            super.addActionError(super
-//                    .getText("iteration.notEmptyWhenDeleting"));
-//            return Action.ERROR;
-//        }
 
-        iterationBusiness.delete(iterationId);
-
-        return Action.SUCCESS;
-    }
-    
-    public String ajaxDelete() {
-        iteration = iterationBusiness.retrieve(iterationId);
-        if (iteration == null) {
-            super.addActionError(super.getText("iteration.notFound"));
-            return CRUDAction.AJAX_ERROR;
-        }
-
-        try {
-            iterationBusiness.delete(iterationId);
-        } catch (ConstraintViolationException e) {
-            return CRUDAction.AJAX_FORBIDDEN;
-        }
-        
-        return CRUDAction.AJAX_SUCCESS;
-    }
 
     protected void fillObject(Iteration fillable) throws ParseException {
         fillable.setEndDate(CalendarUtils.parseDateFromString(endDate));
@@ -217,70 +188,6 @@ public class IterationAction extends BacklogContentsAction implements CRUDAction
         }
     }
 
-    public String ajaxStoreIteration() {
-        if (iteration == null) {
-            super.addActionError(super.getText("iteration.missingForm"));
-            return CRUDAction.AJAX_ERROR;
-        }
-        project = projectBusiness.retrieve(projectId);
-        if (project == null) {
-            super
-                    .addActionError(super
-                            .getText("iteration.projectNotFound"));
-            return CRUDAction.AJAX_ERROR;
-        }
-        Iteration fillable = new Iteration();
-        if (iterationId > 0) {
-            fillable = iterationBusiness.retrieve(iterationId);
-            if(projectId > 0 && fillable.getParent() != null 
-                    && fillable.getParent().getId() != projectId) {
-//                backlogBusiness.removeThemeBindings(fillable);
-            }
-            if (iteration == null) {
-                super.addActionError(super.getText("iteration.notFound"));
-                return CRUDAction.AJAX_ERROR;
-            }
-        }
-
-        try {
-            this.fillObject(fillable);
-        } catch (ParseException e) {
-            super.addActionError(super.getText("backlog.unparseableDate")
-                    + super.getText("struts.shortDateTime.format"));
-            return CRUDAction.AJAX_ERROR;
-        }
-
-        if (super.hasActionErrors()) {
-            return CRUDAction.AJAX_ERROR;
-        }
-
-        if (iterationId == 0)
-            iterationId = (Integer) iterationBusiness.create(fillable);
-        else
-            iterationBusiness.store(fillable);
-        
-//        historyBusiness.updateBacklogHistory(fillable.getId());
-        return CRUDAction.AJAX_SUCCESS;  
-    }
-    
-//    public String moveIterationGoal() {
-//        Iteration iteration = iterationBusiness.retrieve(iterationId);
-//        IterationGoal iterationGoal = iterationGoalDAO.get(iterationGoalId);
-//        if (iteration == null) {
-//            super.addActionError(super.getText("iteration.notFound"));
-//            return Action.ERROR;
-//        }
-//        if (iterationGoal == null) {
-//            super.addActionError(super.getText("iterationGoal.notFound"));
-//        }
-//
-//        iterationGoal.getIteration().getIterationGoals().remove(iterationGoal);
-//        iteration.getIterationGoals().add(iterationGoal);
-//        iterationGoal.setIteration(iteration);
-//        iterationGoalDAO.store(iterationGoal);
-//
-//        return Action.SUCCESS;
-//    }
 
     public int getIterationId() {
         return iterationId;

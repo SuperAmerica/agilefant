@@ -5,18 +5,6 @@
 <aef:projectTypeList id="projectTypes"/>
 <aef:openDialogs context="iteration" id="openIterations" />
 <aef:currentBacklog backlogId="${project.id}"/>
-<c:choose>
-	<c:when test="${!empty project.id}">
-		<c:set var="currentProjectId" value="${project.id}" scope="page" />
-		<c:if test="${project.id != previousProjectId}">
-			<c:set var="previousProjectId" value="${project.id}" scope="session" />
-		</c:if>
-	</c:when>
-	<c:otherwise>
-		<c:set var="currentProjectId" value="${previousProjectId}"
-			scope="page" />
-	</c:otherwise>
-</c:choose>
 
 <c:set var="divId" value="1336" scope="page" />
 <aef:menu navi="backlog" title="${project.name}" menuContextId="${project.id}"/>
@@ -83,8 +71,6 @@ $(document).ready(function() {
 	<ww:date name="%{project.endDate}" id="end"
 		format="%{getText('struts.shortDateTime.format')}" />
 </c:if>
-
-<%--  TODO: fiksumpi virheenk�sittely --%>
 
 		<aef:productList />
 			<h2><c:out value="${project.name}" /></h2>
@@ -254,8 +240,8 @@ $(document).ready(function() {
 											</table>
 										</div>
 										<div id="editProjectForm" style="display: none;" class="validateWrapper validateProject">
-											<ww:form id="projectEditForm" action="storeProject" method="post">
-												<ww:hidden id="editProject-projectId" name="projectId" value="#attr.project.id" />
+											<form id="projectEditForm" action="ajax/storeProject.action" method="post">
+												<input type="hidden" id="editProject-projectId" name="projectId" value="${project.id}" />
 												<table class="formTable">
 													<tr>
 														<td>Name</td>
@@ -336,14 +322,14 @@ $(document).ready(function() {
 														<td>Start date</td>
 														<td>*</td>
 														<td colspan="2">
-														<aef:datepicker id="start_date" name="startDate" format="%{getText('struts.shortDateTime.format')}" value="%{#start}" />
+														<aef:datepicker id="start_date" name="startDate" format="%{getText('struts.shortDateTime.format')}" value="${start}" />
 														</td>
 													</tr>
 													<tr>
 														<td>End date</td>
 														<td>*</td>
 														<td colspan="2">
-														<aef:datepicker id="end_date" name="endDate" format="%{getText('struts.shortDateTime.format')}" value="%{#end}" />
+														<aef:datepicker id="end_date" name="endDate" format="%{getText('struts.shortDateTime.format')}" value="${end}" />
 														</td>
 													</tr>
                           <%--
@@ -380,8 +366,8 @@ $(document).ready(function() {
 	                								<tr>
 	                    								<td>Description</td>
 	                    								<td></td>
-	                    								<td colspan="2"><ww:textarea cols="70" rows="10" id="projectDescription"
-	                        								name="project.description">${aef:nl2br(project.description)}</ww:textarea></td>
+	                    								<td colspan="2"><ww:textarea cols="70" rows="10"
+                                      id="projectDescription" name="project.description"></ww:textarea></td>
 	                								</tr>
 													<tr>
 														<td></td>
@@ -401,7 +387,7 @@ $(document).ready(function() {
 														</c:choose>
 													</tr>
 												</table>
-											</ww:form>
+											</form>
 										</div>
 									</div>
 									

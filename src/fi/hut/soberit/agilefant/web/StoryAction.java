@@ -89,7 +89,7 @@ public class StoryAction extends ActionSupport implements CRUDAction, Prefetchin
     
     public String moveStory() {
         storyBusiness.attachStoryToBacklog(storyId, backlogId, moveTasks);
-        return CRUDAction.AJAX_SUCCESS;
+        return Action.SUCCESS;
     }
     
     public String storyContents() {

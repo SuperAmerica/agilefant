@@ -64,10 +64,8 @@ public class ProjectActionTest {
             .andReturn(projectDataContainer);
         replay(projectBusiness);
         
-        assertEquals(CRUDAction.AJAX_SUCCESS, projectAction.projectContents());
-        assertEquals('{', projectAction.getJsonData().charAt(0));
-        assertTrue(projectAction.getJsonData().contains("Story 1"));
-        assertTrue(projectAction.getJsonData().contains("Story 2"));
+        assertEquals(Action.SUCCESS, projectAction.projectContents());
+        assertEquals(2, projectAction.getProjectContents().getStories().size());
         
         verify(projectBusiness);
     }
@@ -77,16 +75,14 @@ public class ProjectActionTest {
         projectAction.setProjectId(project.getId());
         
         Story anotherStory = new Story();
-        anotherStory.setName("some characters with no meaning");
         projectDataContainer.setStories(Arrays.asList(anotherStory));
         
         expect(projectBusiness.getProjectContents(project.getId()))
             .andReturn(projectDataContainer);
         replay(projectBusiness);
         
-        assertEquals(CRUDAction.AJAX_SUCCESS, projectAction.projectContents());
-        assertEquals('{', projectAction.getJsonData().charAt(0));
-        assertTrue(projectAction.getJsonData().contains("some characters with no meaning"));
+        assertEquals(Action.SUCCESS, projectAction.projectContents());
+        assertTrue(projectAction.getProjectContents().getStories().contains(anotherStory));
         
         verify(projectBusiness);
     }

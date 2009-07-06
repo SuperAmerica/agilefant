@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 
@@ -140,7 +141,7 @@ public class MenuAction extends ActionSupport {
         ActionContext.getContext().getSession()
                 .put("openBacklogs", savedString);
 
-        return CRUDAction.AJAX_SUCCESS;
+        return Action.SUCCESS;
     }
 
     /**

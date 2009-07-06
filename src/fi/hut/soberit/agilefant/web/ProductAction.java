@@ -97,12 +97,12 @@ public class ProductAction extends BacklogContentsAction implements CRUDAction {
             storable = productBusiness.retrieveIfExists(productId);
             if (storable == null) {
                 super.addActionError(super.getText("product.notFound"));
-                return CRUDAction.AJAX_ERROR;
+                return Action.ERROR;
             }
         }
         this.fillStorable(storable);
         if (super.hasActionErrors()) {
-            return CRUDAction.AJAX_ERROR;
+            return Action.ERROR;
         }
 
         if (productId == 0) {
@@ -110,7 +110,7 @@ public class ProductAction extends BacklogContentsAction implements CRUDAction {
         } else {
             backlogBusiness.store(storable);
         }
-        return CRUDAction.AJAX_SUCCESS;
+        return Action.SUCCESS;
     }
 
     protected void fillStorable(Product storable) {

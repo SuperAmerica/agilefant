@@ -110,7 +110,7 @@ public class TeamAction extends ActionSupport implements CRUDAction {
             storable = teamBusiness.retrieve(teamId);
             if (storable == null) {
                 super.addActionError("Team not found!");
-                return CRUDAction.AJAX_ERROR;
+                return Action.ERROR;
             }
         }
 
@@ -119,10 +119,10 @@ public class TeamAction extends ActionSupport implements CRUDAction {
 
         // Check, if action has errors.
         if (super.hasActionErrors()) {
-            return CRUDAction.AJAX_ERROR;
+            return Action.ERROR;
         }
         teamBusiness.store(storable);
-        return CRUDAction.AJAX_SUCCESS;
+        return Action.SUCCESS;
     }
 
     protected void fillStorable(Team storable) {

@@ -140,7 +140,7 @@ public class StoryActionTest {
         
         replayAll();
         
-        assertEquals(CRUDAction.AJAX_SUCCESS, storyAction.moveStory());
+        assertEquals(Action.SUCCESS, storyAction.moveStory());
         
         verifyAll();
     }

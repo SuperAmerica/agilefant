@@ -94,7 +94,7 @@ ModelFactoryClass.prototype = {
       cache: false,
       dataType: "json",
       type: "POST",
-      url: "projectData.action",
+      url: "ajax/projectData.action",
       data: {projectId: projectId}
     });
   },
@@ -347,7 +347,7 @@ ProjectModel.prototype.reloadStoryData = function() {
   cache: false,
   dataType: "json",
   type: "POST",
-  url: "projectData.action",
+  url: "ajax/projectData.action",
   data: {projectId: this.projectId, excludeStorys: false}
   });
 };

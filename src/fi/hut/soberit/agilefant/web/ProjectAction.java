@@ -75,7 +75,9 @@ public class ProjectAction extends BacklogContentsAction implements CRUDAction {
     
     private ProjectMetrics projectMetrics;
     
-    private String jsonData;
+    private ProjectDataContainer projectContents;
+    
+//    private String jsonData;
 
     @Autowired
     private UserBusiness userBusiness;
@@ -95,16 +97,8 @@ public class ProjectAction extends BacklogContentsAction implements CRUDAction {
 
     
     public String projectContents() {
-        ProjectDataContainer data = projectBusiness.getProjectContents(projectId);
-        JSONSerializer ser = new JSONSerializer();
-        
-        ser.include("stories.userData");
-        ser.include("stories.tasks");
-        ser.include("stories.tasks.userData");
-        
-        jsonData = ser.serialize(data);
-        
-        return CRUDAction.AJAX_SUCCESS;
+        projectContents = projectBusiness.getProjectContents(projectId);        
+        return Action.SUCCESS;
     }
     
     public String projectMetrics() {
@@ -177,9 +171,9 @@ public class ProjectAction extends BacklogContentsAction implements CRUDAction {
     
     public String store() {
        if (!this.projectStore()) {
-           return CRUDAction.AJAX_ERROR;
+           return Action.ERROR;
        }
-       return CRUDAction.AJAX_SUCCESS;
+       return Action.SUCCESS;
     }
     
     public String ajaxStoreProject() {
@@ -352,12 +346,12 @@ public class ProjectAction extends BacklogContentsAction implements CRUDAction {
         this.assignments = assignments;
     }
 
-
-    public String getJsonData() {
-        return jsonData;
-    }
-
     public ProjectMetrics getProjectMetrics() {
         return projectMetrics;
+    }
+
+
+    public ProjectDataContainer getProjectContents() {
+        return projectContents;
     }
 }

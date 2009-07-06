@@ -19,7 +19,7 @@ function deleteStory(storyId) {
 }
 
 function deleteIteration(iterationId, projectId) {
-	var url = "ajaxDeleteIteration.action";
+	var url = "ajax/deleteIteration.action";
 	if (confirmDeleteIteration()) {
 	  jQuery.ajax({
 		    async: false,
@@ -35,7 +35,7 @@ function deleteIteration(iterationId, projectId) {
 		    },
 		    cache: false,
 		    type: "POST",
-		    url: "ajaxDeleteIteration.action",
+		    url: url,
 		    data: {iterationId: iterationId}
 		  });
 	}

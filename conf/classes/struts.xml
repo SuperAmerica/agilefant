@@ -31,14 +31,7 @@
 		
 		<global-results>
 			<result name="input">/WEB-INF/jsp/genericError.jsp</result>
-			<result name="error">/WEB-INF/jsp/genericError.jsp</result>
-			<result name="ajax_error" type="httpheader">
-				<param name="status">400</param>
-			</result>
-			<result name="ajax_success" type="httpheader">
-				<param name="status">200</param>
-			</result>
-			
+			<result name="error">/WEB-INF/jsp/genericError.jsp</result>		
 			<result name="rootException" type="chain">exceptionHandler</result>
 		</global-results>
 
@@ -149,179 +142,36 @@
       </result>
     </action>
 
-		<action name="storeNewProject" method="ajaxStoreProject"
-			class="projectAction">
+		<action name="storeNewProject" method="ajaxStoreProject" class="projectAction">
 		</action>
 
-		
-
-		 		
-		<action name="ajaxStoreProject" method="ajaxStoreProject"
-			class="projectAction">		
-			<result name="ajax_error" type="httpheader">
-				<param name="status">400</param>
-			</result>
-			<result name="ajax_success" type="dispatcher">
-				<param name="location">/WEB-INF/jsp/inc/ajaxProjectResult.jsp</param>
-			</result>
-		</action>
-		
-		<action name="projectData" class="projectAction" method="projectContents">
-      <result name="ajax_success" type="dispatcher">
-        <param name="location">/WEB-INF/jsp/jsonData.jsp</param>
-      </result>
-    </action>
-    
     <action name="projectMetrics" class="projectAction" method="projectMetrics">
       <result name="success" type="dispatcher">/WEB-INF/jsp/inc/projectMetrics.jsp</result>
     </action>
 		
 		<!-- /Project actions -->
 
-		<!-- Work type actions -->
-		<!-- TODO -->
-
-		<!-- Backlog actions -->
-		<!-- 
-		<action name="editBacklog" method="edit"
-			class="backlogAction">
-			<result name="editProduct" type="redirect">editProduct.action?productId=${backlogId}</result>
-			<result name="editProject" type="redirect">editProject.action?projectId=${backlogId}</result>
-			<result name="editIteration" type="redirect">editIteration.action?iterationId=${backlogId}</result>
-		</action>
-
-		<action name="doActionOnMultipleBacklogItems"
-			method="doActionOnMultipleBacklogItems" class="backlogAction">
-			<result name="editProduct" type="redirect">editProduct.action?productId=${backlogId}</result>
-			<result name="editProject" type="redirect">editProject.action?projectId=${backlogId}</result>
-			<result name="editIteration" type="redirect">editIteration.action?iterationId=${backlogId}</result>
-		</action>
-
-		<action name="changePriorityOfSelectedItems"
-			method="changePriorityOfSelectedItems" class="backlogAction">
-			<result name="editProduct" type="redirect">editProduct.action?productId=${backlogId}</result>
-			<result name="editProject" type="redirect">editProject.action?projectId=${backlogId}</result>
-			<result name="editIteration" type="redirect">editIteration.action?iterationId=${backlogId}</result>
-		</action>
-
-		<action name="moveSelectedItems" method="moveSelectedItems"
-			class="backlogAction">
-			<result name="editProduct" type="redirect">editProduct.action?productId=${backlogId}</result>
-			<result name="editProject" type="redirect">editProject.action?projectId=${backlogId}</result>
-			<result name="editIteration" type="redirect">editIteration.action?iterationId=${backlogId}</result>
-		</action>
-
-		<action name="deleteSelectedItems" method="deleteSelectedItems"
-			class="backlogAction">
-			<result name="editProduct" type="redirect">editProduct.action?productId=${backlogId}</result>
-			<result name="editProject" type="redirect">editProject.action?projectId=${backlogId}</result>
-			<result name="editIteration" type="redirect">editIteration.action?iterationId=${backlogId}</result>
-		</action>
-
-		<action name="moveBacklogItem" method="moveBacklogItem"
-			class="backlogAction">
-			<result name="editProduct" type="redirect">editProduct.action?productId=${backlogId}</result>
-			<result name="editProject" type="redirect">editProject.action?projectId=${backlogId}</result>
-			<result name="editIteration" type="redirect">editIteration.action?iterationId=${backlogId}</result>
-		</action>
-		<action name="timelineBubble" method="editWithMetrics"
-			class="backlogAction">
-			<result>/WEB-INF/jsp/timelineBubble.jsp</result>
-		</action>
-		
-		<action name="underSameProduct" method="hasSameProduct"
-			class="backlogAction">
-			<result>/WEB-INF/jsp/inc/underSameProduct.jsp</result>	
-		</action>
-		-->
-		<action name="getSubBacklogsAsJSON" method="getSubBacklogsAsJSON"
-			class="backlogAction">
-      <result name="ajax_error" type="httpheader">
-        <param name="status">400</param>
-      </result>
-      <result name="ajax_success" type="dispatcher">
-        <param name="location">/WEB-INF/jsp/jsonData.jsp</param>
-      </result>
-		</action>
-		<!-- 
-		<action name="backlogSelection">
-			<result>/WEB-INF/jsp/inc/selectBacklog.jsp</result>
-		</action>
-		 -->
-		<!-- /Backlog actions -->
-
-        <!-- Menu actions -->
-        <action name="menuData" method="execute" class="menuAction">
-            <result>/WEB-INF/jsp/inc/_menuData.jsp</result>
-        </action>
-        <action name="ajaxUpdateOpenMenus" method="ajaxUpdateOpenMenus"
-            class="menuAction">
-        </action>
-        <!-- /Menu actions -->
+    <!-- Menu actions -->
+    <action name="menuData" method="execute" class="menuAction">
+        <result>/WEB-INF/jsp/inc/_menuData.jsp</result>
+    </action>
+    <action name="ajaxUpdateOpenMenus" method="ajaxUpdateOpenMenus"
+        class="menuAction">
+    </action>
+    <!-- /Menu actions -->
 
 		<!-- Iteration actions -->
 		 
 		<action name="editIteration" method="retrieve" class="iterationAction">
 			<result>/WEB-INF/jsp/editIteration.jsp</result>
 		</action>
-		<!--
-		<action name="createIteration" method="create"
-			class="iterationAction">
-			<result>/WEB-INF/jsp/editIteration.jsp</result>
-		</action>
-		-->
-		
- 
+	 
     <action name="deleteIteration" method="delete"
 			class="iterationAction">
 			<result type="redirect">editProject.action?projectId=${projectId}</result>
 		</action>
-
-	    <action name="ajaxDeleteIteration" method="ajaxDelete" class="iterationAction">
-	      <result name="ajax_error" type="httpheader">
-	        <param name="status">400</param>
-	      </result>
-	      <result name="ajax_success" type="httpheader">
-	        <param name="status">200</param>
-	      </result>
-	      <result name="ajax_forbidden" type="httpheader">
-	        <param name="status">403</param>
-	      </result>
-	    </action>
 		
-		<action name="storeIteration" method="store"
-			class="iterationAction">
-			<result type="redirectAction">
-				<param name="actionName">contextView</param>
-				<param name="contextName">iteration</param>
-				<param name="contextObjectId">${iterationId}</param>
-				<param name="resetContextView">true</param>
-			</result>
-		</action>
-
 		
-		<action name="storeNewIteration" method="store"	class="iterationAction">
-		  <result name="success" type="httpheader">
-		    <param name="status">200</param>
-		  </result>
-		</action>
-		
-		 
-		
-
-		<action name="ajaxStoreIteration" method="ajaxStoreIteration"
-			class="iterationAction">		
-			<result name="ajax_error" type="httpheader">
-				<param name="status">400</param>
-			</result>
-			<result name="ajax_success" type="dispatcher">
-				<param name="location">/WEB-INF/jsp/inc/ajaxIterationResult.jsp</param>
-			</result>
-		</action>
-		
-		<action name="iterationMetrics" class="iterationAction" method="iterationMetrics">
-		  <result name="success" type="dispatcher">/WEB-INF/jsp/inc/iterationMetrics.jsp</result>
-		</action>
 		
 		<!-- /Iteration actions -->
 

@@ -80,14 +80,14 @@
 		},
 		selectStory: function(container, backlogId, firstRow) {
 			var me = this;
-			$.getJSON("ajaxGetIterationGoals.action", {iterationId: backlogId}, function(data, type) {
+			$.getJSON("ajax/retrieveStories.action", {"backlogId": backlogId}, function(data, type) {
 				me.sortData(data);
 				me.renderSelect(container, data, firstRow);
 			});
 		},
 		updateSelect: function(container, backlogId, firstRow) {
 			var me = this;
-			$.getJSON("getSubBacklogsAsJSON.action", {backlogId: backlogId}, function(data,type) {
+			$.getJSON("ajax/retrieveSubBacklogs.action", {backlogId: backlogId}, function(data,type) {
 				me.sortData(data);
 				me.renderSelect(container, data, firstRow);
 			});
@@ -110,6 +110,12 @@
 		getSelectedIteration: function() {
 			return parseInt(this.iterationSelect.val());
 		},
+		getSelectedProduct: function() {
+			return parseInt(this.productSelect.val());
+		},
+		getSelectedProject: function() {
+			return parseInt(this.projectSelect.val());
+		},
 		getSelectedStory: function() {
 			return parseInt(this.storySelect.val());
 		}
@@ -124,6 +130,10 @@
 					return el.data("iterationSelect").getSelectedIteration();
 				} else if(options === "getStory") {
 					return el.data("iterationSelect").getSelectedStory();
+				} else if (options === "getSelectedProduct") {
+					return el.data("iterationSelect").getSelectedProduct();
+				} else if (options === "getSelectedProject") {
+					return el.data("iterationSelect").getSelectedProject();
 				}
 			}
 		}

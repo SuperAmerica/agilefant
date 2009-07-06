@@ -2,11 +2,19 @@ package fi.hut.soberit.agilefant.db.hibernate;
 
 import java.io.Serializable;
 import java.util.Collection;
-import java.util.NoSuchElementException;
+import java.util.Collections;
+import java.util.List;
 
+import javax.annotation.PostConstruct;
+
+import org.hibernate.Criteria;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Projections;
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+import org.hibernate.criterion.Restrictions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.orm.hibernate3.HibernateTemplate;
 
 import fi.hut.soberit.agilefant.db.GenericDAO;
 
@@ -18,13 +26,29 @@ import fi.hut.soberit.agilefant.db.GenericDAO;
  * implementations to this class.
  * 
  * @param <T>
- *                type of the entity bean / data model object the DAO is for
+ *            type of the entity bean / data model object the DAO is for
  * @see fi.hut.soberit.agilefant.db.GenericDAO
  */
-public abstract class GenericDAOHibernate<T> extends HibernateDaoSupport
-        implements GenericDAO<T> {
+public abstract class GenericDAOHibernate<T> implements GenericDAO<T> {
 
     private Class<?> clazz;
+
+    protected SessionFactory sessionFactory;
+
+    protected HibernateTemplate hibernateTemplate;
+
+    @PostConstruct
+    public void init() {
+        if (sessionFactory == null) {
+            throw new IllegalStateException("SessionFactory cannot be null");
+        }
+    }
+
+    @Autowired
+    public void setSessionFactory(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
+        this.hibernateTemplate = new HibernateTemplate(sessionFactory);
+    }
 
     protected GenericDAOHibernate(Class<?> clazz) {
         this.clazz = clazz;
@@ -35,19 +59,15 @@ public abstract class GenericDAOHibernate<T> extends HibernateDaoSupport
     }
 
     /** {@inheritDoc} */
+    @SuppressWarnings("unchecked")
     public T get(int id) {
-        return this.get(new Integer(id));
+        return (T) hibernateTemplate.get(this.getPersistentClass(), id);
     }
 
     /** {@inheritDoc} */
     @SuppressWarnings("unchecked")
     public Collection<T> getAll() {
-        return super.getHibernateTemplate().loadAll(getPersistentClass());
-    }
-
-    /** {@inheritDoc} */
-    public void refresh(T object) {
-        super.getHibernateTemplate().refresh(object);
+        return hibernateTemplate.loadAll(getPersistentClass());
     }
 
     /** {@inheritDoc} */
@@ -57,41 +77,32 @@ public abstract class GenericDAOHibernate<T> extends HibernateDaoSupport
 
     /** {@inheritDoc} */
     public void remove(T object) {
-        super.getHibernateTemplate().delete(object);
+        hibernateTemplate.delete(object);
     }
 
     /** {@inheritDoc} */
     public void store(T object) {
-        super.getHibernateTemplate().saveOrUpdate(object);
+        hibernateTemplate.saveOrUpdate(object);
     }
 
     /** {@inheritDoc} */
     public Serializable create(T object) {
-        return super.getHibernateTemplate().save(object);
-    }
-
-    /** {@inheritDoc} */
-    @SuppressWarnings("unchecked")
-    public T get(Serializable id) {
-        return (T) super.getHibernateTemplate().get(this.getPersistentClass(),
-                id);
-    }
-
-    /** {@inheritDoc} */
-    public void remove(Serializable id) {
-        this.remove(this.get(id));
+        return hibernateTemplate.save(object);
     }
 
     protected T getFirst(Collection<T> list) {
-        if (list == null) {
+        if (list == null || list.isEmpty()) {
             return null;
-        } else {
-            try {
-                return list.iterator().next();
-            } catch (NoSuchElementException e) {
-                return null;
-            }
         }
+        return list.iterator().next();
+    }
+
+    protected <ResultType> ResultType getFirstTypeSafe(
+            Collection<ResultType> list) {
+        if (list == null || list.isEmpty()) {
+            return null;
+        }
+        return list.iterator().next();
     }
 
     protected DetachedCriteria createCriteria() {
@@ -99,10 +110,49 @@ public abstract class GenericDAOHibernate<T> extends HibernateDaoSupport
     }
 
     public int count() {
-        DetachedCriteria criteria = createCriteria()
-        .setProjection(Projections.rowCount());
-        return ((Integer) super.getHibernateTemplate().findByCriteria(criteria)
-                .get(0)).intValue();
+        DetachedCriteria criteria = createCriteria().setProjection(
+                Projections.rowCount());
+        return ((Integer) hibernateTemplate.findByCriteria(criteria).get(0))
+                .intValue();
+    }
+
+    public boolean exists(int id) {
+        DetachedCriteria crit = createCriteria().add(Restrictions.idEq(id))
+                .setProjection(Projections.rowCount());
+        return ((Integer) hibernateTemplate.findByCriteria(crit).get(0))
+                .intValue() > 0;
+    }
+
+    public Session getCurrentSession() {
+        return this.sessionFactory.getCurrentSession();
+    }
+
+    @SuppressWarnings("unchecked")
+    protected <ResultType> Collection<ResultType> asCollection(Criteria criteria) {
+        Collection<ResultType> list = criteria.list();
+        if (list == null) {
+            return Collections.EMPTY_LIST;
+        }
+        return list;
+    }
+
+    @SuppressWarnings("unchecked")
+    protected <ResultType> List<ResultType> asList(Criteria criteria) {
+        List<ResultType> list = criteria.list();
+        if (list == null) {
+            return Collections.EMPTY_LIST;
+        }
+        return list;
+    }
+
+    protected <ResultType> ResultType firstResult(Criteria criteria) {
+        List<ResultType> list = asList(criteria);
+        return getFirstTypeSafe(list);
+    }
+
+    @SuppressWarnings("unchecked")
+    protected <ResultType> ResultType uniqueResult(Criteria criteria) {
+        return (ResultType) criteria.uniqueResult();
     }
 
 }

@@ -16,30 +16,30 @@
 
 <ww:form>
 <h2>The daily work of <ww:select list="enabledUsers"
-	listKey="id" listValue="fullName" name="userId" value="${user.id}"
+	listKey="id" listValue="fullName" name="userId" value="%{user.id}"
 	onchange="this.form.submit();" /></h2>
 </ww:form>
 
 <%@ include file="./inc/_userLoad.jsp" %>
 
 <c:choose>
-<c:when test="${!((empty backlogItemsForUserInProgress) &&
+<c:when test="${!((empty storiesForUserInProgress) &&
 		(empty iterations) &&
 		(empty projects))}" >
 
 
-
+<%--
 <%@ include file="./inc/_workInProgress.jsp" %>
 
 <%@ include file="./inc/_dailyWorkIterations.jsp" %>
 
 <%@ include file="./inc/_dailyWorkProjects.jsp" %>
-
+--%>
 </c:when>
 <c:otherwise>
 <ww:url id="backlogsLink" action="contextView" includeParams="none">
-	<ww:param name="contextName" value="${currentContext}" />
-	<ww:param name="contextObjectId" value="${currentPageId}" />
+	<ww:param name="contextName" value="%{currentContext}" />
+	<ww:param name="contextObjectId" value="%{currentPageId}" />
 	<ww:param name="resetContextView" value="true" />
 </ww:url>
 <p>There are no stories or tasks assigned to user <c:out value="${user.fullName}" />.</p>

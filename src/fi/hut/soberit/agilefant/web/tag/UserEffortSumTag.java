@@ -1,162 +1,106 @@
 package fi.hut.soberit.agilefant.web.tag;
 
-import java.util.Calendar;
-import java.util.Date;
-
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.Tag;
 
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeConstants;
+import org.joda.time.LocalDate;
+
 import fi.hut.soberit.agilefant.business.HourEntryBusiness;
-import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.User;
 
 /**
- * Calculates the user's hour entry sums for Today/Yesterday/This week/This month.
- * Days start at 00:00 and end at 23:59 for hour entries.
+ * Calculates the user's hour entry sums for Today/Yesterday/This week/This
+ * month. Days start at 00:00 and end at 23:59 for hour entries.
  * 
  * @author Roni Tammisalo
  */
 public class UserEffortSumTag extends SpringTagSupport {
-    
+
     private static final long serialVersionUID = -4749794515584345165L;
 
     private HourEntryBusiness hourEntryBusiness;
-    
+
     private User user;
 
     private String timeInterval;
-    
+
+    @Override
+    protected void retrieveSingletons() {
+        hourEntryBusiness = requireBean("hourEntryBusiness");
+    }
+
     @Override
     public int doStartTag() throws JspException {
-        AFTime sum = null;
-        
-        hourEntryBusiness = requireBean("hourEntryBusiness");
-        
+        long sum = 0;
+
         if (timeInterval.equals("Today")) {
             sum = this.getSpentEffortForToday();
-            
         } else if (timeInterval.equals("Yesterday")) {
             sum = this.getSpentEffortForYesterday();
-            
         } else if (timeInterval.equals("This week")) {
             sum = this.getSpentEffortForThisWeek();
-            
         } else if (timeInterval.equals("This month")) {
             sum = this.getSpentEffortForThisMonth();
         }
-        
+
         super.getPageContext().setAttribute(super.getId(), sum);
-        
+
         return Tag.EVAL_BODY_INCLUDE;
     }
-    
+
     /**
      * Returns total spent effort between startDate and endDate.
      */
-    private AFTime getSpentEffort(Date startDate, Date endDate) {
-        return hourEntryBusiness.getEffortSumByUserAndTimeInterval(user, startDate, endDate);
+    private long getSpentEffort(DateTime startDate, DateTime endDate) {
+        DateTime correctedEndDate = endDate.withTime(23, 59, 0, 0);
+        return hourEntryBusiness.calculateSumByUserAndTimeInterval(user,
+                startDate, correctedEndDate);
     }
-    
+
     /**
      * Returns total spent effort for today.
      */
-    private AFTime getSpentEffortForToday() {
-        Date startDate;
-        Date endDate;
-        Calendar calendar = this.getCorrectedCalendar();
-        
-        calendar.set(Calendar.HOUR_OF_DAY, 0);
-        startDate = calendar.getTime();
-        
-        calendar.set(Calendar.HOUR_OF_DAY, 23);
-        calendar.set(Calendar.MINUTE, 59);
-        endDate = calendar.getTime();
-        
-        return this.getSpentEffort(startDate, endDate);
+    private long getSpentEffortForToday() {
+        DateTime today = getToday();
+        return this.getSpentEffort(today, today);
     }
-    
+
     /**
      * Returns total spent effort for yesterday.
      */
-    private AFTime getSpentEffortForYesterday() {
-        Date startDate;
-        Date endDate;
-        Calendar calendar = this.getCorrectedCalendar();
-        
-        calendar.set(Calendar.HOUR_OF_DAY, 0);
-        calendar.add(Calendar.DAY_OF_YEAR, -1);
-        startDate = calendar.getTime();
-        
-        calendar.set(Calendar.HOUR_OF_DAY, 23);
-        calendar.set(Calendar.MINUTE, 59);
-        endDate = calendar.getTime();
-        
-        return this.getSpentEffort(startDate, endDate);
+    private long getSpentEffortForYesterday() {
+        DateTime yesterday = getToday().minusDays(1);
+        return this.getSpentEffort(yesterday, yesterday);
     }
-    
+
     /**
      * Returns total spent effort for this week.
      */
-    private AFTime getSpentEffortForThisWeek() {
-        Date startDate;
-        Date endDate;
-        Calendar startCalendar = this.getCorrectedCalendar();
-        Calendar endCalendar = this.getCorrectedCalendar();
-        
-        startCalendar.set(Calendar.HOUR_OF_DAY, 0);
-        startCalendar.set(Calendar.DAY_OF_WEEK, startCalendar.getFirstDayOfWeek());
-        startDate = startCalendar.getTime();
-
-        endCalendar.setTime(startDate);
-        endCalendar.add(Calendar.WEEK_OF_YEAR, 1); //next week's first day of week
-        endCalendar.add(Calendar.DAY_OF_YEAR, -1); //rewind one day
-        endCalendar.set(Calendar.HOUR_OF_DAY, 23);
-        endCalendar.set(Calendar.MINUTE, 59);
-        endDate = endCalendar.getTime();
-        
-        return this.getSpentEffort(startDate, endDate);
+    private long getSpentEffortForThisWeek() {
+        DateTime today = getToday();
+        DateTime firstDayOfWeek = today.withDayOfWeek(DateTimeConstants.MONDAY);
+        return this.getSpentEffort(firstDayOfWeek, today);
     }
-    
+
     /**
      * Returns total spent effort for this month.
      */
-    private AFTime getSpentEffortForThisMonth() {
-        Date startDate;
-        Date endDate;
-        Calendar startCalendar = this.getCorrectedCalendar();
-        Calendar endCalendar = this.getCorrectedCalendar();
-        
-        startCalendar.set(Calendar.HOUR_OF_DAY, 0);
-        startCalendar.set(Calendar.DAY_OF_MONTH, 1);
-        startDate = startCalendar.getTime();
-        
-        endCalendar.setTime(startDate);
-        endCalendar.add(Calendar.MONTH, 1);
-        endCalendar.add(Calendar.DAY_OF_YEAR, -1);
-        endCalendar.set(Calendar.HOUR_OF_DAY, 23);
-        endCalendar.set(Calendar.MINUTE, 59);
-        endDate = endCalendar.getTime();
-        
-        return this.getSpentEffort(startDate, endDate);
+    private long getSpentEffortForThisMonth() {
+        DateTime today = getToday();
+        DateTime firstDayOfMonth = today.withDayOfMonth(1);
+        return this.getSpentEffort(firstDayOfMonth, today);
     }
-    
-    /**
-     * Returns a calendar instance with minutes and seconds set to zero.
-     */
-    private Calendar getCorrectedCalendar() {
-        Calendar calendar = Calendar.getInstance();
-        
-        calendar.set(Calendar.MINUTE,0);
-        calendar.set(Calendar.SECOND,0);
-        calendar.setFirstDayOfWeek(Calendar.MONDAY);
-        
-        return calendar;
+
+    private DateTime getToday() {
+        return new LocalDate().toDateTimeAtStartOfDay();
     }
-    
+
     public void setUser(User user) {
         this.user = user;
     }
-    
+
     public void setTimeInterval(String timeInterval) {
         this.timeInterval = timeInterval;
     }

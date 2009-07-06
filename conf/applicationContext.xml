@@ -2,11 +2,12 @@
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
                        "http://www.springframework.org/dtd/spring-beans.dtd">
 <beans>
-	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+	<bean
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 		<!--
-		This PropertyPlaceholderConfigurer exists only to retrieve system properties for placeholders
-		=> If agilefant.properties has been defined in the system environment, we'll
-		have its location
+			This PropertyPlaceholderConfigurer exists only to retrieve system
+			properties for placeholders => If agilefant.properties has been
+			defined in the system environment, we'll have its location
 		-->
 		<property name="ignoreUnresolvablePlaceholders" value="true" />
 		<property name="order" value="0" />
@@ -17,7 +18,8 @@
 			</props>
 		</property>
 	</bean>
-	<bean id="applicationProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+	<bean id="applicationProperties"
+		class="org.springframework.beans.factory.config.PropertiesFactoryBean">
 		<property name="ignoreResourceNotFound" value="true" />
 		<property name="locations">
 			<list>
@@ -26,7 +28,8 @@
 			</list>
 		</property>
 		<property name="properties">
-			<bean id="defaultProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+			<bean id="defaultProperties"
+				class="org.springframework.beans.factory.config.PropertiesFactoryBean">
 				<property name="locations">
 					<list>
 						<value>/WEB-INF/database.properties</value>
@@ -36,31 +39,38 @@
 			</bean>
 		</property>
 	</bean>
-	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+	<bean
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 		<property name="order" value="1" />
 		<property name="properties" ref="applicationProperties" />
 	</bean>
-	
-	<bean name="hibernateTransactionManager"
+
+	<bean name="transactionManager"
 		class="org.springframework.orm.hibernate3.HibernateTransactionManager">
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 
-	<bean name="dataSource"
-		class="org.apache.commons.dbcp.BasicDataSource">
-		<property name="driverClassName">
-			<value>${hibernate.connection.driver_class}</value>
-		</property>
-		<property name="username">
-			<value>${hibernate.connection.username}</value>
-		</property>
-		<property name="password">
-			<value>${hibernate.connection.password}</value>
-		</property>
-		<property name="url">
-			<value>${hibernate.connection.url}</value>
-		</property>
-	</bean>
+  <bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+    <property name="jndiName" value="${agilefant.jndi.name}" />
+    <property name="resourceRef" value="true" />
+    <property name="defaultObject">
+			<bean name="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+			destroy-method="close">
+				<property name="driverClassName">
+					<value>${hibernate.connection.driver_class}</value>
+				</property>
+				<property name="username">
+					<value>${hibernate.connection.username}</value>
+				</property>
+				<property name="password">
+					<value>${hibernate.connection.password}</value>
+				</property>
+				<property name="url">
+					<value>${hibernate.connection.url}</value>
+				</property>
+			</bean>
+    </property>
+  </bean>
 
 	<bean name="sessionFactory"
 		class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
@@ -74,10 +84,8 @@
 	<bean name="contextViewManager"
 		class="fi.hut.soberit.agilefant.web.context.DefaultContextViewManager" />
 
-	<bean name="aefFunctions"
-		class="fi.hut.soberit.agilefant.web.function.AEFFunctions">
+	<bean name="aefFunctions" class="fi.hut.soberit.agilefant.web.function.AEFFunctions">
 		<property name="maxStrLength" value="15" />
 	</bean>
 
-	
 </beans>

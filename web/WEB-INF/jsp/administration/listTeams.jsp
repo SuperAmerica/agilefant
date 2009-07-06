@@ -1,6 +1,6 @@
 <%@ include file="../inc/_taglibs.jsp"%>
 <%@ include file="../inc/_header.jsp"%>
-<aef:menu navi="administration" subnavi="teams" pageHierarchy="${pageHierarchy}" title="Teams"/>
+<aef:menu navi="administration" subnavi="teams"  title="Teams"/>
 
 <aef:openDialogs context="team" id="openTeamTabs" />
 
@@ -25,7 +25,7 @@ $(document).ready(function() {
 				    <table cellpadding="0" cellspacing="0">
                     <tr>
                     <td>
-					<ww:a href="ajaxCreateTeam.action" cssClass="openCreateDialog openTeamDialog" onclick="return false;"
+					<ww:a href="ajax/createTeam.action" cssClass="openCreateDialog openTeamDialog" onclick="return false;"
 					title="Create a new team">
 					</ww:a>
 					</td>
@@ -56,7 +56,7 @@ $(document).ready(function() {
 			<display:column title="Actions" sortable="false">
 				<img src="static/img/edit.png" alt="Edit" title="Edit" style="cursor: pointer;" onclick="handleTabEvent('teamTabContainer-${row.id}', 'team', ${row.id}, 0); return false;" />
 				<ww:url id="deleteLink" action="deleteTeam" includeParams="none">
-					<ww:param name="teamId" value="${row.id}" />
+					<ww:param name="teamId" value="#attr.row.id" />
 				</ww:url>
 				<ww:a href="%{deleteLink}" onclick="return confirmDelete()">
 				    <img src="static/img/delete_18.png" alt="Edit" title="Edit" />

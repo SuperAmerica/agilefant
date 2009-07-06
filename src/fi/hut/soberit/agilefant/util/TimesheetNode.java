@@ -1,9 +1,8 @@
 package fi.hut.soberit.agilefant.util;
 
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.List;
 
-import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.HourEntry;
 
 /**
@@ -11,104 +10,40 @@ import fi.hut.soberit.agilefant.model.HourEntry;
  * In addition to holding child nodes, it calculates the cumulative spent effort
  * in each branch.
  *   
- * @author Vesa Pirila
+ * @author Pasi Pekkanen, Vesa Pirilä
  *
  */
 public abstract class TimesheetNode {
+    List<HourEntry> hourEntries = new ArrayList<HourEntry>();
+    private long effortSum = 0;
     
-    protected List<BacklogTimesheetNode> childBacklogs;
-    protected List<BacklogItemTimesheetNode> childBacklogItems;
-    protected Collection<? extends HourEntry> hourEntries;
-    private AFTime spentHours, hoursForChildBacklogItems, hoursForChildBacklogs, hourTotal;
-
-    /**
-     * Get the effort marked directly to this node
-     * @return The effort marked directly to this node
-     */
-    public AFTime getSpentHours(){
-        if(spentHours == null){
-            spentHours = new AFTime(0);
-            
-            if(hourEntries != null){
-                for(HourEntry hourEntry : hourEntries)
-                    spentHours.add(hourEntry.getTimeSpent());
-            }
-        }
+    public TimesheetNode() {
         
-        return spentHours;
     }
     
-    /**
-     * Get the total sum of effort spent for this node's child backlog items
-     * @return The total sum of effort spent for this node's child backlog items
-     */
-    public AFTime getHoursForChildBacklogItems(){
-        if(hoursForChildBacklogItems == null){
-            hoursForChildBacklogItems = new AFTime(0);
-            
-            if(childBacklogItems != null){
-                for(TimesheetNode child : childBacklogItems)
-                    hoursForChildBacklogItems.add(child.getHourTotal());
-            }
+    public long calculateEffortSum() {
+        effortSum = 0;
+        for(HourEntry entry : this.hourEntries) {
+            effortSum += entry.getMinutesSpent();
         }
-        
-        return hoursForChildBacklogItems;
-    }
-    
-    /**
-     * Get the total sum of effort spent for this node's child backlogs
-     * @return The total sum of effort spent for this node's child backlogs
-     */
-    public AFTime getHoursForChildBacklogs(){
-        if(hoursForChildBacklogs == null){
-            hoursForChildBacklogs = new AFTime(0);
-            
-            if(childBacklogs != null)
-                for(TimesheetNode child : childBacklogs)
-                    hoursForChildBacklogs.add(child.getHourTotal());
+        for(TimesheetNode node : this.getChildren()) {
+            effortSum += node.calculateEffortSum();
         }
-        
-        return hoursForChildBacklogs;
+        return effortSum;
+    }
+    public long getEffortSum() {
+        return this.effortSum;
+    }
+    public abstract boolean getHasChildren();
+    public abstract List<? extends TimesheetNode> getChildren();
+    public abstract String getName();
+    public abstract int getId();
+    
+    public void addHourEntry(HourEntry entry) {
+        this.hourEntries.add(entry);
     }
     
-    /**
-     * Get the total of effort spent for this node and all its children. 
-     * @return The total of effort spent for this node and its children.
-     */
-    public AFTime getHourTotal(){
-        if(hourTotal == null){
-            hourTotal = new AFTime(0);
-
-            hourTotal.add(getHoursForChildBacklogs());
-            hourTotal.add(getHoursForChildBacklogItems());
-            hourTotal.add(getSpentHours());
-        }
-        
-        return hourTotal;
-    }
- 
-    /**
-     * Get this node's child backlogs
-     * @return This node's child backlogs
-     */
-    public List<BacklogTimesheetNode> getChildBacklogs() {
-        return childBacklogs;
-    }
-    
-    /**
-     * Get this node's child backlog items
-     * @return This node's child backlog items
-     */
-    public List<BacklogItemTimesheetNode> getChildBacklogItems() {
-        return childBacklogItems;
-    }
-
-    public Collection<? extends HourEntry> getHourEntries(){
+    public List<HourEntry> getHourEntries() {
         return this.hourEntries;
     }
-    
-    /**
-     * A debug function printing the contents of the node to System.out.
-     */
-    public abstract void print();
 }

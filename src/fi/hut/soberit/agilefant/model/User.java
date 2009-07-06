@@ -3,7 +3,10 @@ package fi.hut.soberit.agilefant.model;
 import java.util.Collection;
 import java.util.HashSet;
 
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -17,10 +20,11 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.Type;
 
 import fi.hut.soberit.agilefant.db.hibernate.Email;
-import fi.hut.soberit.agilefant.web.page.PageItem;
 import flexjson.JSON;
 
 /**
@@ -30,10 +34,10 @@ import flexjson.JSON;
  * The user carries information on username, password, full name and email. Also
  * there're different collections of items, where this user is assigned.
  */
-@BatchSize(size=20)
+@BatchSize(size = 20)
 @Entity
-@Table(name = "user")
-public class User implements PageItem {
+@Table(name = "users")
+public class User {
 
     private int id;
 
@@ -46,19 +50,23 @@ public class User implements PageItem {
     private String email;
 
     private String initials;
-    
-    private AFTime weekHours;
-    
-    private boolean enabled;
 
-    private Collection<Assignment> assignments = new HashSet<Assignment>();
-
-    private Collection<Backlog> backlogs = new HashSet<Backlog>();
-
-    private Collection<BacklogItem> backlogItems = new HashSet<BacklogItem>();
+    private boolean enabled = true;
 
     private Collection<Team> teams = new HashSet<Team>();
-
+    
+    private Collection<Assignment> assignments = new HashSet<Assignment>();
+    
+    private Collection<Story> stories = new HashSet<Story>();
+    
+    private Collection<Task> tasks = new HashSet<Task>();
+    
+    private ExactEstimate weekEffort = new ExactEstimate(0);
+    
+    private Collection<Holiday> holidays = new HashSet<Holiday>();
+    
+    private Collection<HolidayAnomaly> holidayAnomalies = new HashSet<HolidayAnomaly>();
+        
     /**
      * Get the id of this object.
      * <p>
@@ -68,8 +76,6 @@ public class User implements PageItem {
     @Id
     // generate automatically
     @GeneratedValue(strategy = GenerationType.AUTO)
-    // not nullable
-    @Column(nullable = false)
     @JSON
     public int getId() {
         return id;
@@ -87,7 +93,7 @@ public class User implements PageItem {
     /** Get full name. */
     @Type(type = "escaped_truncated_varchar")
     @JSON
-    public String getFullName() {        
+    public String getFullName() {
         return fullName;
     }
 
@@ -121,69 +127,11 @@ public class User implements PageItem {
         this.password = password;
     }
 
-    /** {@inheritDoc} */
-    @Transient
-    @JSON(include = false)
-    public Collection<PageItem> getChildren() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
     /** Get login name. */
     @Transient
     @JSON
     public String getName() {
         return this.loginName;
-    }
-
-    /** {@inheritDoc} */
-    @Transient
-    @JSON(include = false)
-    public PageItem getParent() {
-        return null;
-    }
-
-    /** {@inheritDoc} */
-    @Transient
-    public boolean hasChildren() {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    /** Get backlog items, of which the user is responsible. */
-    @ManyToMany(mappedBy = "responsibles", targetEntity = fi.hut.soberit.agilefant.model.BacklogItem.class, fetch = FetchType.LAZY)
-    @JSON(include = false)
-    public Collection<BacklogItem> getBacklogItems() {
-        return backlogItems;
-    }
-
-    /** Set backlog items, where the user is assigned. */
-    public void setBacklogItems(Collection<BacklogItem> backlogItems) {
-        this.backlogItems = backlogItems;
-    }
-
-    /** Get backlogs, where the user is assigned. */
-    @OneToMany(mappedBy = "assignee")
-    @JSON(include = false)
-    public Collection<Backlog> getBacklogs() {
-        return backlogs;
-    }
-
-    /** Set backlogs, where the user is assigned. */
-    public void setBacklogs(Collection<Backlog> backlogs) {
-        this.backlogs = backlogs;
-    }
-
-    /** Set all Assignables, where this user is assigned. */
-    @Transient
-    @JSON(include = false)
-    public Collection<Assignable> getAssignables() {
-        Collection<Assignable> collection = new HashSet<Assignable>();
-
-        collection.addAll(getBacklogs());
-        collection.addAll(getBacklogItems());
-
-        return collection;
     }
 
     /**
@@ -206,16 +154,6 @@ public class User implements PageItem {
         this.email = email;
     }
 
-    @OneToMany(mappedBy = "user")
-    @JSON(include = false)
-    public Collection<Assignment> getAssignments() {
-        return assignments;
-    }
-
-    public void setAssignments(Collection<Assignment> assignments) {
-        this.assignments = assignments;
-    }
-
     /**
      * Get the user's initials.
      * 
@@ -230,37 +168,19 @@ public class User implements PageItem {
      * Set the user's initials.
      * 
      * @param initials
-     *                the initials to set
+     *            the initials to set
      */
     public void setInitials(String initials) {
         this.initials = initials;
-    }  
-       
-    @Type(type = "af_time")
-    @Column(columnDefinition = "integer default 144000")
-    @JSON
-    public AFTime getWeekHours() {       
-        return weekHours;        
     }
-    
-    public void setWeekHours(AFTime hours) {
-        this.weekHours = hours;
-    } 
-    
+
     /**
      * Get the user's teams.
      * 
      * @return the teams
      */
-    @ManyToMany(
-            targetEntity = fi.hut.soberit.agilefant.model.Team.class,
-            fetch = FetchType.LAZY
-    )
-    @JoinTable(
-            name = "team_user",
-            joinColumns = {@JoinColumn( name = "User_id" )},
-            inverseJoinColumns = {@JoinColumn( name = "Team_id")}
-    )
+    @ManyToMany(targetEntity = Team.class)
+    @JoinTable(name = "team_user", joinColumns = { @JoinColumn(name = "User_id") }, inverseJoinColumns = { @JoinColumn(name = "Team_id") })
     @JSON(include = false)
     public Collection<Team> getTeams() {
         return teams;
@@ -277,19 +197,89 @@ public class User implements PageItem {
 
     /**
      * Check, if the user is disabled
+     * 
      * @return true, if user is disabled, false otherwise
      */
-    @Column(columnDefinition = "boolean default 1")
     @JSON
     public boolean isEnabled() {
         return enabled;
     }
-    
+
     /**
      * Set the user's enabled status.
+     * 
      * @param enabled
      */
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
+
+    /**
+     * Get the users assignments to backlogs.
+     * @return
+     */
+    @OneToMany(mappedBy = "user")
+    @JSON(include = false)
+    public Collection<Assignment> getAssignments() {
+        return assignments;
+    }
+
+    public void setAssignments(Collection<Assignment> assignments) {
+        this.assignments = assignments;
+    }
+
+    public void setStories(Collection<Story> stories) {
+        this.stories = stories;
+    }
+
+    /** Get stories, of which the user is responsible. */
+    @ManyToMany(mappedBy = "responsibles",
+            targetEntity = fi.hut.soberit.agilefant.model.Story.class,
+            fetch = FetchType.LAZY)
+    public Collection<Story> getStories() {
+        return stories;
+    }
+    
+    public void setTasks(Collection<Task> tasks) {
+        this.tasks = tasks;
+    }
+
+    /** Get tasks, of which the user is responsible. */
+    @ManyToMany(mappedBy = "responsibles",
+            targetEntity = fi.hut.soberit.agilefant.model.Task.class,
+            fetch = FetchType.LAZY)
+    public Collection<Task> getTasks() {
+        return tasks;
+    }
+    
+    public void setWeekEffort(ExactEstimate weekEffort) {
+        this.weekEffort = weekEffort;
+    }
+    
+    @Embedded
+    @AttributeOverrides(@AttributeOverride(name = "minorUnits", column = @Column(name = "weekEffort")))
+    public ExactEstimate getWeekEffort() {
+        return weekEffort;
+    }
+
+    @Cascade(CascadeType.DELETE_ORPHAN)
+    @OneToMany(mappedBy="user", fetch=FetchType.LAZY)
+    public Collection<Holiday> getHolidays() {
+        return holidays;
+    }
+
+    public void setHolidays(Collection<Holiday> holidays) {
+        this.holidays = holidays;
+    }
+
+    @Cascade(CascadeType.DELETE_ORPHAN)
+    @OneToMany(mappedBy="user", fetch=FetchType.LAZY)
+    public Collection<HolidayAnomaly> getHolidayAnomalies() {
+        return holidayAnomalies;
+    }
+
+    public void setHolidayAnomalies(Collection<HolidayAnomaly> holidayAnomalies) {
+        this.holidayAnomalies = holidayAnomalies;
+    }
+
 }

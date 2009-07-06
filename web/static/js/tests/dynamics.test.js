@@ -16,48 +16,62 @@ $(document).ready(function() {
 	});
 	
 	module("Dynamics utils");
-	test("aftime to string", function() {
+	test("hour entry to string", function() {
 		var noData = "";
-		var halfhour = 1800;
-		var hour = 3600;
+		var halfhour = 30;
+		var hour = 60;
 		
-		same(agilefantUtils.aftimeToString(noData),"&mdash;","No data to be shown");
-		same(agilefantUtils.aftimeToString(halfhour),"0.5h","30mins");
-		same(agilefantUtils.aftimeToString(null),"&mdash;","null");
-		same(agilefantUtils.aftimeToString(""),"&mdash;","empty");
-		same(agilefantUtils.aftimeToString(NaN),"&mdash;","NaN");
-		same(agilefantUtils.aftimeToString(null, true),"0.0h","null");
-		same(agilefantUtils.aftimeToString("", true),"0.0h","empty");
-		same(agilefantUtils.aftimeToString(NaN, true),"","NaN");
+		same(agilefantParsers.hourEntryToString(noData),"&mdash;","No data to be shown");
+		same(agilefantParsers.hourEntryToString(halfhour),"0.5h","30min");
+		same(agilefantParsers.hourEntryToString(null),"&mdash;","null");
+		same(agilefantParsers.hourEntryToString(""),"&mdash;","empty");
+		same(agilefantParsers.hourEntryToString(NaN),"&mdash;","NaN");
+		same(agilefantParsers.hourEntryToString(null, true),"0.0h","null");
+		same(agilefantParsers.hourEntryToString("", true),"0.0h","empty");
+		same(agilefantParsers.hourEntryToString(NaN, true),"","NaN");
 	});
 	
-	test("is aftime", function() {
-		ok(agilefantUtils.isAftimeString("1h"), "1h");
-		ok(agilefantUtils.isAftimeString("1,5h"), "1,5h");
-		ok(agilefantUtils.isAftimeString("1.5h"), "1.5h");
-		ok(agilefantUtils.isAftimeString("1,5"), "1,5");
-		ok(agilefantUtils.isAftimeString("1.5"), "1.5");
-		ok(agilefantUtils.isAftimeString("1"), "1");
-		ok(agilefantUtils.isAftimeString("1h 10min"), "1h 10min");
-		ok(agilefantUtils.isAftimeString("10min"), "10min");
-		ok(!agilefantUtils.isAftimeString("1,5h 10min"), "1,5h 10min");
-		ok(!agilefantUtils.isAftimeString("10min 1h"), "10min 1h");
-		ok(!agilefantUtils.isAftimeString("daadaa 1h"), "daadaa 1h");
-		ok(!agilefantUtils.isAftimeString("1h daadaa"), "1h daadaa");
-		ok(!agilefantUtils.isAftimeString("1h d 10min"), "1h d 10min");
+	test("parse hour entry", function() {	
+		same(agilefantParsers.parseHourEntry("2h 30min"),150);
 	});
-	test("aftime to millis", function() {
-		equals(agilefantUtils.aftimeToMillis("1h"), 3600,"1h");
-		equals(agilefantUtils.aftimeToMillis("1,5h"), 5400 ,"1,5h");
-		equals(agilefantUtils.aftimeToMillis("1.5h"), 5400 ,"1.5h");
-		equals(agilefantUtils.aftimeToMillis("1,5"),  5400, "1,5");
-		equals(agilefantUtils.aftimeToMillis("1.5"),  5400,"1.5");
-		equals(agilefantUtils.aftimeToMillis("1"), 3600 ,"1");
-		equals(agilefantUtils.aftimeToMillis("1h 10min"), 4200 ,"1h 10min");
-		equals(agilefantUtils.aftimeToMillis("10min"), 600 ,"10min");
-		equals(agilefantUtils.aftimeToMillis("  "),0,"empty");
-		equals(agilefantUtils.aftimeToMillis(""),0,"empty");
-		equals(agilefantUtils.aftimeToMillis("0"),0,"0");
+	
+	test("is hour entry", function() {
+		ok(agilefantParsers.isHourEntryString("1h"), "1h");
+		ok(agilefantParsers.isHourEntryString("1,5h"), "1,5h");
+		ok(agilefantParsers.isHourEntryString("1.5h"), "1.5h");
+		ok(agilefantParsers.isHourEntryString("1,5"), "1,5");
+		ok(agilefantParsers.isHourEntryString("1.5"), "1.5");
+		ok(agilefantParsers.isHourEntryString("1"), "1");
+		ok(agilefantParsers.isHourEntryString("1h 10min"), "1h 10min");
+		ok(agilefantParsers.isHourEntryString("10min"), "10min");
+		ok(!agilefantParsers.isHourEntryString("1,5h 10min"), "1,5h 10min");
+		ok(!agilefantParsers.isHourEntryString("10min 1h"), "10min 1h");
+		ok(!agilefantParsers.isHourEntryString("daadaa 1h"), "daadaa 1h");
+		ok(!agilefantParsers.isHourEntryString("1h daadaa"), "1h daadaa");
+		ok(!agilefantParsers.isHourEntryString("1h d 10min"), "1h d 10min");
+	});
+	
+	test("exact estimate comparison works", function() {
+	  a = {
+	    minorUnits: 200  
+	  };
+	  b = {
+	    minorUnits: 217
+	  };
+	  c = {};
+	  d = {
+	    minorUnits: 200
+	  };
+	  ok(agilefantUtils.areExactEstimatesEqual(a, a));
+	  ok(!agilefantUtils.areExactEstimatesEqual(a, b));
+	  ok(!agilefantUtils.areExactEstimatesEqual(b, a));
+	  ok(agilefantUtils.areExactEstimatesEqual(b, b));
+	  ok(!agilefantUtils.areExactEstimatesEqual(a, null));
+	  ok(!agilefantUtils.areExactEstimatesEqual(null, b));
+	  ok(agilefantUtils.areExactEstimatesEqual(null, null));
+	  ok(!agilefantUtils.areExactEstimatesEqual(a, c));
+    ok(!agilefantUtils.areExactEstimatesEqual(c, b));
+    ok(agilefantUtils.areExactEstimatesEqual(a, d));
 	});
 
 	module("Dynamic Table", {
@@ -139,4 +153,5 @@ $(document).ready(function() {
                                               ]);
    same(widths, [39.6, 39.6, 18.6, 98.6], "Column widths calculated correctly");
 	});
+	
 });

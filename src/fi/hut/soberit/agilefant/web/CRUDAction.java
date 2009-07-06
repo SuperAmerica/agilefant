@@ -10,10 +10,14 @@ package fi.hut.soberit.agilefant.web;
  * @author khel
  */
 public interface CRUDAction {
-    /** Return value to indicate ajax success. */
-    public static final String AJAX_SUCCESS = "ajax_success";
-    /** Return value to indicate ajax error. */
-    public static final String AJAX_ERROR = "ajax_error";
+//    /** Return value to indicate ajax success. */
+//    public static final String AJAX_SUCCESS = "ajax_success";
+//    /** Return value to indicate ajax error. */
+//    public static final String AJAX_ERROR = "ajax_error";
+//    /** Return value to indicate that the ajax request was not allowed.
+//     * This is used for example when trying to delete tasks having hour entries.
+//     */
+//    public static final String AJAX_FORBIDDEN = "ajax_forbidden";
 
     /**
      * Creates an object that can be manipulated and stored.
@@ -37,9 +41,9 @@ public interface CRUDAction {
     public String store();
 
     /**
-     * Fetches the object for editing.
+     * Fetches the object.
      * 
      * @return Result of the action. (See com.opensymphony.xwork.Action)
      */
-    public String edit();
+    public String retrieve();
 }

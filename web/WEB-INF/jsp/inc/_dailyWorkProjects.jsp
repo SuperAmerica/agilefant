@@ -2,18 +2,18 @@
 
 <aef:hourReporting id="hourReport"></aef:hourReporting>
 
-<aef:openDialogs context="bliDWProjects" id="openBacklogItemTabs" />
+<aef:openDialogs context="storyDWProjects" id="openStoryTabs" />
 
-<!-- context variable for backlog item ajax to know its context -->
-<c:set var="bliListContext" value="dailyWorkProjects" scope="session" />
+<!-- context variable for story ajax to know its context -->
+<c:set var="storyListContext" value="dailyWorkProjects" scope="session" />
 
-<c:set var="dialogContext" value="bliDWProjects" scope="session" />
+<c:set var="dialogContext" value="storyDWProjects" scope="session" />
 
 <script language="javascript" type="text/javascript">
 
 $(document).ready(function() {        
-    <c:forEach items="${openBacklogItemTabs}" var="openBacklogItem">
-        handleTabEvent("backlogItemTabContainer-${openBacklogItem[0]}-${bliListContext}", "bliDWProjects", ${openBacklogItem[0]}, ${openBacklogItem[1]}, '${bliListContext}');
+    <c:forEach items="${openStoryTabs}" var="openStory">
+        handleTabEvent("storyTabContainer-${openStory[0]}-${storyListContext}", "storyDWProjects", ${openStory[0]}, ${openStory[1]}, '${storyListContext}');
     </c:forEach>
 });
 
@@ -69,12 +69,12 @@ $(document).ready(function() {
             </td>
           </c:if>
           <td>
-          <ww:url id="createBLILink" action="ajaxCreateBacklogItem" includeParams="none">
+          <ww:url id="createStoryLink" action="createStory" namespace="ajax" includeParams="none">
             <ww:param name="backlogId" value="${pro.id}" />
           </ww:url>
-          <ww:a cssClass="openCreateDialog openBacklogItemDialog"
+          <ww:a cssClass="openCreateDialog openStoryDialog"
                 onclick="return false;" title="Create a new story"
-                href="%{createBLILink}">
+                href="%{createStoryLink}">
           </ww:a>
           </td>
           
@@ -97,16 +97,16 @@ $(document).ready(function() {
 
 <div class="subItemContent">
 
-<table class="dailyWorkBacklogItems">
+<table class="dailyWorkStorys">
 <tr>
-				<td class="backlogItemList"><display:table class="dailyWorkProject"
-					name="${bliMap[pro]}" id="row"
+				<td class="storyList"><display:table class="dailyWorkProject"
+					name="${storyMap[pro]}" id="row"
 					requestURI="${currentAction}.action">					
 
 					<display:column sortable="true" sortProperty="name" title="Name" >						
 						<div style="overflow:hidden; width: 170px; max-height: 3.7em;">
 						<c:forEach items="${row.businessThemes}" var="businessTheme">
-                            <a href="#" onclick="handleTabEvent('backlogItemTabContainer-${row.id}-${bliListContext}','bliDWProjects',${row.id},0, '${bliListContext}'); return false;">
+                            <a href="#" onclick="handleTabEvent('storyTabContainer-${row.id}-${storyListContext}','storyDWProjects',${row.id},0, '${storyListContext}'); return false;">
                                 <c:choose>
 	                                <c:when test="${businessTheme.global}">
 	                                   <span class="businessTheme globalThemeColors" title="${aef:stripHTML(businessTheme.description)}"><c:out value="${businessTheme.name}"/></span>
@@ -117,24 +117,24 @@ $(document).ready(function() {
 	                           </c:choose>
                             </a>
                         </c:forEach>												
-						<a class="nameLink" onclick="handleTabEvent('backlogItemTabContainer-${row.id}-${bliListContext}','bliDWProjects',${row.id},0, '${bliListContext}'); return false;">
+						<a class="nameLink" onclick="handleTabEvent('storyTabContainer-${row.id}-${storyListContext}','storyDWProjects',${row.id},0, '${storyListContext}'); return false;">
 							${aef:html(row.name)}
 						</a>
 						</div>
-						<div id="backlogItemTabContainer-${row.id}-${bliListContext}" class="tabContainer" style="overflow:visible; white-space: nowrap; width: 0px;"></div>
+						<div id="storyTabContainer-${row.id}-${storyListContext}" class="tabContainer" style="overflow:visible; white-space: nowrap; width: 0px;"></div>
 					</display:column>
 
 					<display:column sortable="true" title="Responsibles" class="responsibleColumn">
-						<div><aef:responsibleColumn backlogItemId="${row.id}"/></div>
+						<div><aef:responsibleColumn storyId="${row.id}"/></div>
 					</display:column>
 
 					<display:column sortable="true" defaultorder="descending"
 						title="Priority">
-						<ww:text name="backlogItem.priority.${row.priority}" />
+						<ww:text name="story.priority.${row.priority}" />
 					</display:column>
 
 					<display:column title="Progress" sortable="false" class="todoColumn">
-						<aef:backlogItemProgressBar backlogItem="${row}" bliListContext="${bliListContext}" dialogContext="${dialogContext}" hasLink="${true}"/>												
+						<aef:storyProgressBar story="${row}" storyListContext="${storyListContext}" dialogContext="${dialogContext}" hasLink="${true}"/>												
 					</display:column>
 
 					<display:column sortable="true" sortProperty="effortLeft"
@@ -177,8 +177,8 @@ $(document).ready(function() {
 					</c:choose>
 
 					<display:column title="Actions">
-						<img src="static/img/edit.png" alt="Edit" title="Edit" style="cursor: pointer;" onclick="handleTabEvent('backlogItemTabContainer-${row.id}-${bliListContext}','bliDWProjects',${row.id},0, '${bliListContext}'); return false;" />
-						<img src="static/img/delete_18.png" alt="Delete" title="Delete" style="cursor: pointer;" onclick="deleteBacklogItem(${row.id}); return false;" />
+						<img src="static/img/edit.png" alt="Edit" title="Edit" style="cursor: pointer;" onclick="handleTabEvent('storyTabContainer-${row.id}-${storyListContext}','storyDWProjects',${row.id},0, '${storyListContext}'); return false;" />
+						<img src="static/img/delete_18.png" alt="Delete" title="Delete" style="cursor: pointer;" onclick="deleteStory(${row.id}); return false;" />
 					</display:column>
 
 					<display:footer>

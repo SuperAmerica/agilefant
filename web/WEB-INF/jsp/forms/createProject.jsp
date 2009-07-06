@@ -1,7 +1,7 @@
 <%@ include file="../inc/_taglibs.jsp"%>
 
 <aef:productList />
-<aef:projectTypeList id="projectTypes"/>
+<%--<aef:projectTypeList id="projectTypes"/>--%>
 
 <script type="text/javascript">
 $(document).ready(function() {
@@ -9,15 +9,15 @@ $(document).ready(function() {
         backlogIdField: '#createProject_backlogId',
         userListContainer: '#userListContainer-createProject',
         renderFor: 'project',
-        backlogItemId: 0
+        storyId: 0
     });
 });
 </script>
 
 <ww:date name="%{new java.util.Date()}" id="start"
-	format="%{getText('webwork.shortDateTime.format')}" />
+	format="%{getText('struts.shortDateTime.format')}" />
 <ww:date name="%{new java.util.Date()}" id="end"
-	format="%{getText('webwork.shortDateTime.format')}" />
+	format="%{getText('struts.shortDateTime.format')}" />
 
 <div class="validateWrapper validateNewProject">
 <ww:form action="storeNewProject" method="post">
@@ -30,13 +30,14 @@ $(document).ready(function() {
 					<td colspan="2"><ww:textfield size="60" name="project.name" /></td>
 				</tr>
 				<tr>
+        
 					<td>Product</td>
 					<td>*</td>
 					<td colspan="2"><select name="productId">
 						<option class="inactive" value="">(select product)</option>
 						<c:forEach items="${productList}" var="product">
 							<c:choose>
-								<c:when test="${product.id == currentProductId}">
+								<c:when test="${product.id == productId}">
 									<option selected="selected" value="${product.id}"
 										title="${product.name}" class="productOption">${aef:out(product.name)}</option>
 								</c:when>
@@ -55,7 +56,7 @@ $(document).ready(function() {
 						<ww:select headerKey="0" headerValue="(undefined)"
 							name="project.projectType.id"
 							list="#attr.projectTypes" listKey="id" listValue="name"
-							value="${project.projectType.id}" />
+							value="%{project.projectType.id}" />
 					</td>
 				</tr>
 				<tr>
@@ -87,16 +88,16 @@ $(document).ready(function() {
 					<td>*</td>
 					<td colspan="2"><aef:datepicker
 						id="start_date_${project.id}" name="startDate"
-						format="%{getText('webwork.shortDateTime.format')}"
-						value="%{#start}" /><label for="start_date">&nbsp;</label></td>
+						format="%{getText('struts.shortDateTime.format')}"
+						value="${start}" /><label for="start_date">&nbsp;</label></td>
 				</tr>
 				<tr>
 					<td>End date</td>
 					<td>*</td>
 					<td colspan="2"><aef:datepicker
 						id="end_date_${project.id}" name="endDate"
-						format="%{getText('webwork.shortDateTime.format')}"
-						value="%{#end}" /><label for="end_date">&nbsp;</label></td>
+						format="%{getText('struts.shortDateTime.format')}"
+						value="${end}" /><label for="end_date">&nbsp;</label></td>
 				</tr>
 				<tr>
 					<td>Assigned Users</td>

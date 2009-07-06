@@ -12,16 +12,18 @@ var commonView = {
   expandCollapse: function(parent, expandCb, collapseCb) {
 	var button = $("<div />").addClass("dynamictable-expand").appendTo(parent);
 	var cb = function(event) {
+	  var a;
 		if(button.hasClass("dynamictable-expand")) {
 			expandCb();
-			var a = button;
+			a = button;
 			button.attr("title","Collapse");
 		} else {
 			collapseCb();
-			var a = button;
+			a = button;
 			button.attr("title","Expand");
 		}
 		button.toggleClass("dynamictable-expand").toggleClass("dynamictable-collapse");
+		return false;
 	};
 	button.click(cb);
 	button.bind("showContents", function() {
@@ -49,6 +51,13 @@ var commonView = {
 	 $("<span />").text("e.g. 1.5h or 1h 30min").appendTo(err);
 	 return err;
   },
+  storyPointError: function(connectTo) {
+    var err = $("<div />").addClass("cellErrorMessage").appendTo(connectTo);
+    $("<span />").css("color", "red").text("Invalid value!").appendTo(err);
+    $("<br />").appendTo(err);
+    $("<span />").text("Must be only digits").appendTo(err);
+    return err;
+   },
   dateError: function(connectTo) {
 		 var err = $("<div />").addClass("cellErrorMessage").appendTo(connectTo);
 		 $("<span />").css("color", "red").text("Invalid format!").appendTo(err);
@@ -60,5 +69,11 @@ var commonView = {
 		  var err = $("<div />").addClass("cellErrorMessage").appendTo(connectTo);
 		  $("<span />").css("color", "red").text("Required field").appendTo(err);
 	 return err;
+  },
+  buttonWithIcon: function(icon, text) {
+	  var b = $('<div />');
+	  $('<div />').addClass(icon).appendTo(b).css("float","left").width("16px").height("16px");
+	  $('<div />').addClass("text").appendTo(b).text(text).css({"float": "left", "white-space": "nowrap"}).width("85px");
+	  return b.html();
   }
 };

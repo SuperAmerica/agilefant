@@ -10,7 +10,7 @@ import org.hibernate.validator.Validator;
  * email address.
  * 
  * @author Turkka Äijälä
- * @see fi.hut.soberit.agilefant.db.hibernate.Email
+ * @see fi.fi.hut.soberit.agilefant.db.hibernate.Email
  */
 public class EmailValidator implements Validator<Email>, Serializable {
 

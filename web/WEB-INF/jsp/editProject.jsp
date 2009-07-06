@@ -4,37 +4,21 @@
 
 <aef:projectTypeList id="projectTypes"/>
 <aef:openDialogs context="iteration" id="openIterations" />
-
-<c:choose>
-	<c:when test="${!empty project.id}">
-		<c:set var="currentProjectId" value="${project.id}" scope="page" />
-		<c:if test="${project.id != previousProjectId}">
-			<c:set var="previousProjectId" value="${project.id}" scope="session" />
-		</c:if>
-	</c:when>
-	<c:otherwise>
-		<c:set var="currentProjectId" value="${previousProjectId}"
-			scope="page" />
-	</c:otherwise>
-</c:choose>
-
-<c:choose>
-	<c:when test="${project.id == 0}">
-		<aef:bct productId="${productId}" />
-	</c:when>
-	<c:otherwise>
-		<aef:bct projectId="${projectId}" />
-	</c:otherwise>
-</c:choose>
+<aef:currentBacklog backlogId="${project.id}"/>
 
 <c:set var="divId" value="1336" scope="page" />
-<aef:menu navi="backlog" pageHierarchy="${pageHierarchy}" title="${project.name}"/>
+<aef:menu navi="backlog" title="${project.name}" menuContextId="${project.id}"/>
 <ww:actionerror />
 <ww:actionmessage />
 <aef:hourReporting id="hourReport" />
 <script type="text/javascript">
+var agilefantTimesheetsEnabled = ${hourReport};
+</script>
+
+<script type="text/javascript">
 <!--
 $(document).ready(function() {
+  <%--
 	<c:forEach items="${openIterations}" var="openIteration">
         handleTabEvent("iterationTabContainer-${openIteration[0]}", "iteration", ${openIteration[0]}, ${openIteration[1]});
     </c:forEach>
@@ -60,6 +44,8 @@ $(document).ready(function() {
 											  	reset: {cell: 2, type: 'reset'}
 											  }
 											 });
+                       --%>
+                       /*
     $('#userChooserLink-editProject').userChooser({
         backlogIdField: '#editProject-projectId',
         userListContainer: '#userListContainer-editProject',
@@ -68,24 +54,24 @@ $(document).ready(function() {
             selectAtLeast: 0,
             aftime: true
         },
-        backlogItemId: 0
-    });
+        storyId: 0
+    });*/
 });
 //-->
 </script>
+
 <ww:date name="%{new java.util.Date()}" id="start"
-	format="%{getText('webwork.shortDateTime.format')}" />
+	format="%{getText('struts.shortDateTime.format')}" />
 <ww:date name="%{new java.util.Date()}" id="end"
-	format="%{getText('webwork.shortDateTime.format')}" />
+	format="%{getText('struts.shortDateTime.format')}" />
 
 <c:if test="${project.id > 0}">
 	<ww:date name="%{project.startDate}" id="start"
-		format="%{getText('webwork.shortDateTime.format')}" />
+		format="%{getText('struts.shortDateTime.format')}" />
 	<ww:date name="%{project.endDate}" id="end"
-		format="%{getText('webwork.shortDateTime.format')}" />
+		format="%{getText('struts.shortDateTime.format')}" />
 </c:if>
 
-<%--  TODO: fiksumpi virheenk�sittely --%>
 		<aef:productList />
 			<h2><c:out value="${project.name}" /></h2>
 				<table>
@@ -111,7 +97,7 @@ $(document).ready(function() {
                                                 <c:if test="${hourReport}">
                                                 <td>
                                                         <ww:url id="createLink" action="ajaxCreateHourEntry" includeParams="none">
-                                                            <ww:param name="backlogId" value="${projectId}" />
+                                                            <ww:param name="backlogId" value="#attr.project.id" />
                                                         </ww:url>
                                                     <ww:a cssClass="openCreateDialog openUserDialog logEffortLink"
                                                     onclick="return false;" title="Log effort" href="%{createLink}">
@@ -128,6 +114,7 @@ $(document).ready(function() {
 											</tr>
 										</table>
 									</div>
+                  
 									<div class="subItemContent">
 										<div id="descriptionDiv" class="descriptionDiv" style="display: block;">
 											<table class="infoTable" cellpadding="0" cellspacing="0">
@@ -135,60 +122,10 @@ $(document).ready(function() {
 													<th class="info1"><ww:text name="general.uniqueId"/></th>
 													<td class="info3"><aef:quickReference item="${project}" /></td>
 													<td class="info4" rowspan="8">
-                                                        <c:if test="${(!empty project.backlogItems) && (projectBurndown || (empty project.iterations))}">
-                                                            <div class="smallBurndown"><a href="#bigChart">
-                                                                <img src="drawSmallProjectChart.action?projectId=${project.id}"/>
-                                                            </a></div>
-                                                        
-                                                        
-                                                        <table>
-                                                          <tr>
-                                                             <th>Velocity</th>
-                                                             <td><c:out value="${projectMetrics.dailyVelocity}" /> /
-                                                             day</td>
-                                                          </tr>
-                                                          <c:if test="${projectMetrics.backlogOngoing}">
-                                                          <tr>
-                                                             <th>Schedule variance</th>
-                                                             <td><c:choose>
-                                                                    <c:when test="${projectMetrics.scheduleVariance != null}">
-                                                                       <c:choose>
-                                                                       <c:when test="${projectMetrics.scheduleVariance > 0}">
-                                                                            <span class="red">+
-                                                                       </c:when>
-                                                                        <c:otherwise>
-                                                                            <span>
-                                                                        </c:otherwise>
-                                                                        </c:choose>
-                                                                       <c:out value="${projectMetrics.scheduleVariance}" /> days
-                                                                       </span>
-                                                                </c:when>
-                                                                    <c:otherwise>
-                                                                    unknown
-                                                                </c:otherwise>
-                                                             </c:choose></td>
-                                                          </tr>
-                                                          <tr>
-                                                             <th>Scoping needed</th>
-                                                             <td><c:choose>
-                                                                    <c:when test="${projectMetrics.scopingNeeded != null}">
-                                                                       <c:out value="${projectMetrics.scopingNeeded}" />
-                                                                    </c:when>
-                                                                    <c:otherwise>
-                                                                    unknown
-                                                                </c:otherwise>
-                                                             </c:choose></td>
-                                                          </tr>
-                                                          </c:if>
-                                                          <tr>
-                                                             <th>Done</th>
-                                                             <td><c:out value="${projectMetrics.percentDone}" />% (<c:out
-                                                                    value="${projectMetrics.completedItems}" /> / <c:out
-                                                                    value="${projectMetrics.totalItems}" />)</td>
-                                                          </tr>
-                                                       </table>
-                                                       </c:if>
-                                                    </td>
+                            <div id="projectMetrics">
+                              <%@ include file="./inc/projectMetrics.jsp"%>
+                            </div>
+                          </td>
 												</tr>
 												<tr>
 								    				<th class="info1">Status</th>
@@ -210,10 +147,11 @@ $(document).ready(function() {
 															<img src="static/img/status-black.png" alt="Black" title="Black"/>
 														</c:when>
 													</c:choose>
-													<ww:text name="project.status.${project.status}" />
+													<aef:text name="project.status.${project.status}" />
 								    				</td>
 								    				<td></td>						
 												</tr>
+                        <%--
 												<tr>
 													<th class="info1">Project type</th>
 													<td class="info3" ondblclick="return editProject();">
@@ -227,6 +165,8 @@ $(document).ready(function() {
 													</c:choose>
 													</td>													
 												</tr>
+                        --%>
+                        <%--
 												<c:if test="${(project.defaultOverhead != null) && (project.defaultOverhead.time > 0)}">
 												<tr>
 								    				<th class="info1">Baseline load</th>
@@ -241,7 +181,9 @@ $(document).ready(function() {
 								    					</c:choose>
 								    				</td>							
 												</tr>
-											     </c:if>				
+											     </c:if>
+                           --%>		
+                           		
 										         <tr>
 													<th class="info1">Planned project size</th>
 													<td class="info3" ondblclick="return editProject();">
@@ -255,12 +197,13 @@ $(document).ready(function() {
 														</c:choose>
 													</td>
 												</tr>	
+                        
 												<tr>
 	                                				<th class="info1">Timeframe</th>
 	                                				<td class="info3" ondblclick="return editProject();"><c:out value="${project.startDate.date}.${project.startDate.month + 1}.${project.startDate.year + 1900}" /> - 
 	                                					<c:out value="${project.endDate.date}.${project.endDate.month + 1}.${project.endDate.year + 1900}" /></td>
 												</tr>
-												<tr>
+												<tr><%--
 								    				<th class="info1">Assignees</th>
 								    				<td class="info3"><c:set var="listSize"
 	                                        			value="${fn:length(project.responsibles)}" scope="page" />
@@ -274,13 +217,10 @@ $(document).ready(function() {
 	                                                				</ww:url>
 	                                                				<c:choose>
 	                                                    				<c:when test="${count < listSize - 1}">
-	                                                        				<%--<a href="${userDailyWorkLink}"><c:out value="${responsible.initials}" /></a>,--%>
 	                                                        				<c:out value="${responsible.initials}" />, 
 	                                                    				</c:when>
 	                                                    				<c:otherwise>
-	                                                        				<%--<ww:a href="${userDailyWorkLink}"> --%>
-	                                                            				<c:out value="${responsible.initials}" />
-	                                                        				<%-- </ww:a>--%>
+	                                                        				<c:out value="${responsible.initials}" />
 	                                                    				</c:otherwise>
 	                                                				</c:choose>
 	                                                				<c:set var="count" value="${count + 1}" scope="page" />
@@ -291,6 +231,7 @@ $(document).ready(function() {
 	                                        				</c:otherwise>
 	                                    				</c:choose>
 	                                    			</td>
+                                            --%>
 												</tr>
 												<tr>
 								    				<td colspan="2" class="description">
@@ -299,8 +240,8 @@ $(document).ready(function() {
 											</table>
 										</div>
 										<div id="editProjectForm" style="display: none;" class="validateWrapper validateProject">
-											<ww:form id="projectEditForm" action="storeProject" method="post">
-												<ww:hidden id="editProject-projectId" name="projectId" value="${project.id}" />
+											<form id="projectEditForm" action="ajax/storeProject.action" method="post">
+												<input type="hidden" id="editProject-projectId" name="projectId" value="${project.id}" />
 												<table class="formTable">
 													<tr>
 														<td>Name</td>
@@ -327,10 +268,10 @@ $(document).ready(function() {
 															</select>
 														</td>
 													</tr>
+                          <%--
 													<tr>
 														<td>Project type</td>
 														<td></td>														
-														<%-- If project types don't exist default value is 0--%>
 														<td colspan="2">
 														<c:choose>
 															<c:when test="${!empty projectTypes}">
@@ -352,6 +293,7 @@ $(document).ready(function() {
 														</c:choose>
 														</td>																																																																																										
 													</tr>
+                          --%>
 													<tr>
 														<td>Status</td>
 														<td></td>
@@ -363,11 +305,13 @@ $(document).ready(function() {
 																listValue="getText('project.status.' + name())"	/>
 														</td>
 													</tr>
+                          <%--
 													<tr>
 														<td>Baseline load</td>
 														<td></td>
 														<td colspan="2"><ww:textfield size="10" name="project.defaultOverhead" /> / person / week</td>
 													</tr>
+                          --%>
 						                			<tr>
 														<td>Planned project size</td>
 														<td></td>
@@ -378,16 +322,17 @@ $(document).ready(function() {
 														<td>Start date</td>
 														<td>*</td>
 														<td colspan="2">
-														<aef:datepicker id="start_date" name="startDate" format="%{getText('webwork.shortDateTime.format')}" value="%{#start}" />
+														<aef:datepicker id="start_date" name="startDate" format="%{getText('struts.shortDateTime.format')}" value="${start}" />
 														</td>
 													</tr>
 													<tr>
 														<td>End date</td>
 														<td>*</td>
 														<td colspan="2">
-														<aef:datepicker id="end_date" name="endDate" format="%{getText('webwork.shortDateTime.format')}" value="%{#end}" />
+														<aef:datepicker id="end_date" name="endDate" format="%{getText('struts.shortDateTime.format')}" value="${end}" />
 														</td>
 													</tr>
+                          <%--
 													<tr>
 														<td>Assigned Users</td>
 														<td></td>
@@ -403,7 +348,7 @@ $(document).ready(function() {
 											                            <c:forEach items="${project.assignments}" var="ass">
 											                                <input type="hidden" name="selectedUserIds" value="${ass.user.id}"/>
 											                                <input type="hidden" name="assignments['${ass.user.id}'].user.id" value="${ass.user.id}"/>
-											                                <input type="hidden" name="assignments['${ass.user.id}'].deltaOverhead" value="${ass.deltaOverhead}"/>
+											                                <input type="hidden" name="assignments['${ass.user.id}'].personalLoad" value="${ass.personalLoad}"/>
 											                                <c:set var="count" value="${count + 1}" />
 											                                <c:out value="${ass.user.initials}" /><c:if test="${count != listLength}">, </c:if>
 											                            </c:forEach>    
@@ -416,18 +361,19 @@ $(document).ready(function() {
 									                        </a>
 									                    </div>
 														</td>
+                            --%>
 													</tr>
 	                								<tr>
 	                    								<td>Description</td>
 	                    								<td></td>
-	                    								<td colspan="2"><ww:textarea cols="70" rows="10" id="projectDescription"
-	                        								name="project.description" value="${aef:nl2br(project.description)}" /></td>
+	                    								<td colspan="2"><ww:textarea cols="70" rows="10"
+                                      id="projectDescription" name="project.description"></ww:textarea></td>
 	                								</tr>
 													<tr>
 														<td></td>
 														<td></td>
 														<c:choose>
-															<c:when test="${projectId == 0}">
+															<c:when test="${project.id == 0}">
 																<td><ww:submit value="Create"
 															    disabled="disabled" cssClass="undisableMe"/></td>
 															</c:when>
@@ -441,7 +387,7 @@ $(document).ready(function() {
 														</c:choose>
 													</tr>
 												</table>
-											</ww:form>
+											</form>
 										</div>
 									</div>
 									
@@ -450,6 +396,7 @@ $(document).ready(function() {
 						</tr>
 					</tbody>
 				</table>
+        <%--
 		<table>
 			<tr>
 				<td>
@@ -560,9 +507,10 @@ $(document).ready(function() {
 								
 				</td>
 				</tr>
+        --%>
+        
 				<tr>
 				<td>
-					<c:if test="${project.id > 0}">
 						<div class="subItems" id="subItems_editProjectIterations">
 							<div class="subItemHeader">
 								<table cellpadding="0" cellspacing="0">
@@ -572,8 +520,8 @@ $(document).ready(function() {
 					   					<table cellpadding="0" cellspacing="0">
 					   					<tr>
 					   					<td>
-					   						<ww:url id="createLink" action="ajaxCreateIteration" includeParams="none" >
-						  						<ww:param name="projectId" value="${project.id}" />
+					   						<ww:url id="createLink" namespace="ajax" action="createIteration" includeParams="none" >
+						  						<ww:param name="projectId" value="#attr.project.id" />
 					   						</ww:url>
 					   						<ww:a
 												href="%{createLink}" cssClass="openCreateDialog openIterationDialog"
@@ -586,28 +534,29 @@ $(document).ready(function() {
 									</tr>
 								</table>
 							</div>
-							<c:if test="${!empty project.iterations}">
+							<c:if test="${!empty project.children}">
 								<div class="subItemContent">
-										<display:table class="listTable" name="project.iterations"
+										<display:table class="listTable" name="project.children"
 											id="row" requestURI="editProject.action">
 											
 											<display:column sortable="true" sortProperty="name" title="Name">
 												<div style="overflow:hidden; width: 170px;">																								
 													<ww:url id="editLink" action="editIteration"
 													includeParams="none">
-														<ww:param name="iterationId" value="${row.id}" />
+														<ww:param name="iterationId" value="#attr.row.id" />
+														<ww:param name="contextObjectId">${project.id}</ww:param>
 													</ww:url>
-													<ww:a href="%{editLink}&contextViewName=editProject&contextObjectId=${project.id}">
+													<ww:a href="%{editLink}&contextViewName=editProject">
 														${aef:html(row.name)}
 													</ww:a>												
 												</div>
 												<div id="iterationTabContainer-${row.id}" class="tabContainer" style="overflow:visible; white-space: nowrap; width: 0px;"></div>
 											</display:column>
-											
+											<%--
 											<display:column sortable="true" title="Items">
-												${fn:length(row.backlogItems)}
+												${fn:length(row.stories)}
 											</display:column>
-											<%-- REFACTOR THIS --%>
+											
 											<display:column sortable="true" title="Effort left"
 												sortProperty="totalEffortLeftSum.time"
 												defaultorder="descending">
@@ -618,77 +567,70 @@ $(document).ready(function() {
 												defaultorder="descending">
 												${origEstSums[row]}
 											</display:column>
-
+--%>
 											<display:column sortable="true" title="Start date">
 												<ww:date name="#attr.row.startDate" />
 											</display:column>
 											<display:column sortable="true" title="End date">
 												<ww:date name="#attr.row.endDate" />
 											</display:column>
+                      
 											<display:column sortable="false" title="Actions">
 												<img src="static/img/edit.png" alt="Edit" title="Edit" style="cursor: pointer;" onclick="handleTabEvent('iterationTabContainer-${row.id}', 'iteration', ${row.id}, 1);" />
 												<ww:url id="deleteLink" action="deleteIteration"
 													includeParams="none">
-													<ww:param name="projectId" value="${project.id}" />
-													<ww:param name="iterationId" value="${row.id}" />
+													<ww:param name="projectId" value="#attr.project.id" />
+													<ww:param name="iterationId" value="#attr.row.id" />
+													<ww:param name="contextObjectId">${project.id}</ww:param>
 												</ww:url>
 												<ww:a
-													href="%{deleteLink}&contextViewName=editProject&contextObjectId=${project.id}"
+													href="%{deleteLink}&contextViewName=editProject"
 													onclick="return confirmDelete()"><img src="static/img/delete_18.png" alt="Delete" title="Delete" /></ww:a>
 											</display:column>
 										</display:table>
 								</div>
 							</c:if>
 							</div>
-		<div class="subItems" id="subItems_editProjectBacklogItems">
-		<div class="subItemHeader">
-			<table cellspacing="0" cellpadding="0">
-                    <tr>
-                        <td class="header">
-                        Stories
-                        </td>
-                        <td class="icons">
-                        <table cellspacing="0" cellpadding="0">
-                            <tr>
-                            <td>
-			                        <ww:url
-			                    id="createBacklogItemLink" action="ajaxCreateBacklogItem"
-			                    includeParams="none">
-			                    <ww:param name="backlogId" value="${project.id}" />
-			                </ww:url> <ww:a cssClass="openCreateDialog openBacklogItemDialog"
-			                    href="%{createBacklogItemLink}" onclick="return false;"
-			                    title="Create a new story">
-			                    </ww:a>
-			                    </td>
-			                    </tr>
-			                    </table>
-	                    </td>
-	                    </tr>
-	                </table>
-					</div>
-							<c:if test="${!empty project.backlogItems}">
-								<div class="subItemContent">
-									<%@ include	file="./inc/_backlogList.jsp"%>
-								</div>
-							</c:if>
-						</div>
-						<c:if test="${(!empty project.backlogItems) && (projectBurndown || (empty project.iterations))}">
-							<p>
-								<img src="drawProjectChart.action?projectId=${project.id}" id="bigChart"
-								   width="780" height="600" />
-							</p>
-						</c:if>
-					</c:if>
 				</td>
 			</tr>
 		</table>
 
+
+
+<script type="text/javascript" src="static/js/dynamics/utils.js?<ww:text name="struts.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/dynamics/model.js?<ww:text name="struts.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/dynamics/controller.js?<ww:text name="struts.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/dynamics/dynamicTable.js?<ww:text name="struts.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/dynamics/dynamics.tabs.js?<ww:text name="struts.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/dynamics/commonView.js?<ww:text name="struts.agilefantReleaseId" />"></script>
+
+
+<form onsubmit="return false;"><div id="stories" style="min-width: 800px; width: 98%;">&nbsp;</div></form>
+<script type="text/javascript">
+$(document).ready(function() {
+  new ProjectController(${projectId}, $("#stories"));
+  $(document.body).bind("metricsUpdated", function() {
+/*    var bigChart = $("#bigChart");
+    bigChart.attr("src",bigChart.attr("src")+"#");
+    var smallChart = $("#smallChart");
+    smallChart.attr("src",smallChart.attr("src")+"#");*/
+    $("#projectMetrics").load("projectMetrics.action",{projectId: ${projectId}});
+  });
+  $("#projectMetrics").load("projectMetrics.action",{projectId: ${projectId}});
+});
+</script>
+
+
+<p><img src="drawProjectBurnup.action?backlogId=${project.id}"
+						id="bigChart" width="780" height="600" /></p>
+
 <%-- Hour reporting here - Remember to expel David H. --%>
 
-<aef:hourReporting id="hourReport"></aef:hourReporting>
-<c:if test="${hourReport == 'true' && projectId != 0}">
+<c:if test="${hourReport == 'true' && project.id != 0}" >
 	<c:set var="myAction" value="editProject" scope="session" />
 	<%@ include file="./inc/_hourEntryList.jsp"%>
-</c:if> <%-- Hour reporting on --%>
+</c:if> 
+
+<%-- Hour reporting on --%>
 
 <%@ include file="./inc/_footer.jsp"%>

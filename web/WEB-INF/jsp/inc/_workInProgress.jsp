@@ -1,17 +1,17 @@
 <%@ include file="./_taglibs.jsp"%>
 
-<aef:openDialogs context="bliWorkInProgress" id="openBacklogItemTabs" />
+<aef:openDialogs context="storyWorkInProgress" id="openStoryTabs" />
 
-<!-- context variable for backlog item ajax to know its context -->
-<c:set var="bliListContext" value="workInProgress" scope="session" />
+<!-- context variable for story ajax to know its context -->
+<c:set var="storyListContext" value="workInProgress" scope="session" />
 
-<c:set var="dialogContext" value="bliWorkInProgress" scope="session" />
+<c:set var="dialogContext" value="storyWorkInProgress" scope="session" />
 
 <script language="javascript" type="text/javascript">
 
 $(document).ready(function() {        
-    <c:forEach items="${openBacklogItemTabs}" var="openBacklogItem">
-        handleTabEvent("backlogItemTabContainer-${openBacklogItem[0]}-${bliListContext}", "bliWorkInProgress", ${openBacklogItem[0]}, ${openBacklogItem[1]}, '${bliListContext}');
+    <c:forEach items="${openStoryTabs}" var="openStory">
+        handleTabEvent("storyTabContainer-${openStory[0]}-${storyListContext}", "storyWorkInProgress", ${openStory[0]}, ${openStory[1]}, '${storyListContext}');
     </c:forEach>
 });
 
@@ -20,8 +20,8 @@ $(document).ready(function() {
 <h2>Started stories and tasks assigned to <c:out value="${user.fullName}" /></h2>
 
 
-<c:if test="${!(empty backlogItemsForUserInProgress)}">
-<div class="subItems" id="subItems_backlogItemsForUserInProgress">
+<c:if test="${!(empty storiesForUserInProgress)}">
+<div class="subItems" id="subItems_storiesForUserInProgress">
 
 <div class="subItemHeader">
 <table cellspacing="0" cellpadding="0">
@@ -34,14 +34,14 @@ Stories/tasks
 </div>
 
 <div class="subItemContent"><display:table
-	name="backlogItemsForUserInProgress" id="row"
+	name="storiesForUserInProgress" id="row"
 	requestURI="dailyWork.action">	
 	
 	<!-- Display the backlog row name -->
 	<display:column sortable="true" sortProperty="name" title="Name">				
 		<div style="overflow:hidden; width: 170px; max-height: 3.7em;">
 		<c:forEach items="${row.businessThemes}" var="businessTheme">
-            <a href="#" onclick="handleTabEvent('backlogItemTabContainer-${row.id}-${bliListContext}','bli',${row.id},0, '${bliListContext}'); return false;">
+            <a href="#" onclick="handleTabEvent('storyTabContainer-${row.id}-${storyListContext}','story',${row.id},0, '${storyListContext}'); return false;">
                 <c:choose>
                      <c:when test="${businessTheme.global}">
                         <span class="businessTheme globalThemeColors" title="${aef:stripHTML(businessTheme.description)}"><c:out value="${businessTheme.name}"/></span>
@@ -52,11 +52,11 @@ Stories/tasks
                 </c:choose>
             </a>
         </c:forEach>
-		<a class="nameLink" onclick="handleTabEvent('backlogItemTabContainer-${row.id}-${bliListContext}','bliWorkInProgress',${row.id},0,'${bliListContext}'); return false;">
+		<a class="nameLink" onclick="handleTabEvent('storyTabContainer-${row.id}-${storyListContext}','storyWorkInProgress',${row.id},0,'${storyListContext}'); return false;">
 			${aef:html(row.name)}
 		</a>
 		</div>
-		<div id="backlogItemTabContainer-${row.id}-${bliListContext}" class="tabContainer" style="overflow:visible; white-space: nowrap; width: 0px;"></div>		
+		<div id="storyTabContainer-${row.id}-${storyListContext}" class="tabContainer" style="overflow:visible; white-space: nowrap; width: 0px;"></div>		
 	</display:column>
 
 	<!-- Display the iteration goal -->
@@ -73,18 +73,18 @@ Stories/tasks
 	</display:column>
 	
 	<display:column sortable="true" title="Responsibles" class="responsibleColumn">
-		<div><aef:responsibleColumn backlogItemId="${row.id}"/></div>
+		<div><aef:responsibleColumn storyId="${row.id}"/></div>
 	</display:column>
 
 	<!-- Display the priority -->
 	<display:column sortable="true" defaultorder="descending"
 		title="Priority">
-		<ww:text name="backlogItem.priority.${row.priority}" />
+		<ww:text name="story.priority.${row.priority}" />
 	</display:column>
 
 	<!-- Display progress -->
 	<display:column title="Progress" sortable="false" class="todoColumn">
-		<aef:backlogItemProgressBar backlogItem="${row}" bliListContext="${bliListContext}" dialogContext="${dialogContext}" hasLink="${true}"/>		
+		<aef:storyProgressBar story="${row}" storyListContext="${storyListContext}" dialogContext="${dialogContext}" hasLink="${true}"/>		
 	</display:column>
 
 	<!-- Display context -->
@@ -139,8 +139,8 @@ Stories/tasks
 	</display:column>
 
 	<display:column title="Actions">
-		<img src="static/img/edit.png" alt="Edit" title="Edit" style="cursor: pointer;" onclick="handleTabEvent('backlogItemTabContainer-${row.id}-${bliListContext}','bliWorkInProgress',${row.id},0, '${bliListContext}'); return false;" />
-		<img src="static/img/delete_18.png" alt="Delete" title="Delete" style="cursor: pointer;" onclick="deleteBacklogItem(${row.id}); return false;" />
+		<img src="static/img/edit.png" alt="Edit" title="Edit" style="cursor: pointer;" onclick="handleTabEvent('storyTabContainer-${row.id}-${storyListContext}','storyWorkInProgress',${row.id},0, '${storyListContext}'); return false;" />
+		<img src="static/img/delete_18.png" alt="Delete" title="Delete" style="cursor: pointer;" onclick="deleteStory(${row.id}); return false;" />
 	</display:column>
 
 </display:table></div>

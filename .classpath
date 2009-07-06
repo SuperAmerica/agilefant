@@ -4,6 +4,19 @@
 	<classpathentry kind="src" path="test"/>
 	<classpathentry exported="true" kind="lib" path="conf/test"/>
 	<classpathentry exported="true" kind="lib" path="lib/antlr-2.7.7.jar"/>
+	<classpathentry kind="lib" path="lib/commons-validator-1.3.1.jar"/>
+	<classpathentry kind="lib" path="lib/commons-fileupload-1.2.1.jar"/>
+	<classpathentry kind="lib" path="lib/commons-io-1.3.2.jar"/>
+	<classpathentry kind="lib" path="lib/freemarker-2.3.13.jar"/>
+	<classpathentry kind="lib" path="lib/ognl-2.6.11.jar"/>
+	<classpathentry kind="lib" path="lib/struts2-core-2.1.6.jar"/>
+	<classpathentry kind="lib" path="lib/xwork-2.1.2.jar"/>
+	<classpathentry kind="lib" path="lib/dom4j-1.6.1.jar"/>
+	<classpathentry kind="lib" path="lib/struts2-spring-plugin-2.1.6.jar"/>
+	<classpathentry kind="lib" path="lib/commons-lang-2.3.jar"/>
+	<classpathentry kind="lib" path="lib/build/struts2-junit-plugin-2.1.6.jar"/>
+	<classpathentry kind="lib" path="lib/struts2jsonresult0.99.jar"/>
+	<classpathentry kind="lib" path="lib/slf4j-log4j12-1.5.8.jar"/>
 	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry exported="true" kind="lib" path="lib/commons-logging.jar">
 		<attributes>
@@ -11,7 +24,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry exported="true" kind="lib" path="lib/ejb3-persistence.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/freemarker.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/hibernate-annotations.jar">
 		<attributes>
 			<attribute name="javadoc_location" value="http://www.hibernate.org/hib_docs/annotations/api"/>
@@ -23,10 +35,7 @@
 			<attribute name="javadoc_location" value="http://logging.apache.org/log4j/docs/api/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry exported="true" kind="lib" path="lib/ognl.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/oscore.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/rife-continuations.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/webwork-2.2.4.jar" sourcepath="lib-src/webwork-src-2.2.4.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/hibernate3.jar">
 		<attributes>
 			<attribute name="javadoc_location" value="http://www.hibernate.org/hib_docs/v3/api/"/>
@@ -34,50 +43,28 @@
 	</classpathentry>
 	<classpathentry exported="true" kind="lib" path="lib/jstl.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/standard.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/xwork-1.2.1.jar" sourcepath="lib-src/xwork-src-1.2.1.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/xwork-tiger-1.2.1.jar" sourcepath="lib-src/xwork-tiger-src-1.2.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/build/jsp-api.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/build/servlet-api.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/build/fitlibrary.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/build/fitnesse.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/spring-mock.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="http://www.springframework.org/docs/api"/>
-		</attributes>
-	</classpathentry>
 	<classpathentry exported="true" kind="lib" path="lib/commons-dbcp-1.2.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/spring.jar">
 		<attributes>
 			<attribute name="javadoc_location" value="http://www.springframework.org/docs/api/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry exported="true" kind="lib" path="lib/jta.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/dom4j-1.6.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/commons-pool-1.3.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/asm.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/asm-attrs.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/cglib-2.1_3.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/commons-beanutils.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/commons-collections-2.1.1.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/commons-lang-2.2.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/displaytag-1.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/postgresql-8.1-407.jdbc3.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/ehcache-1.2.0_03.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/build/dbunit-2.1.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="http://dbunit.sourceforge.net/apidocs/"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry exported="true" kind="lib" path="lib/build/emma_ant.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/build/emma.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/commons-codec-1.3.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jcommon-1.0.6.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/jfreechart-1.0.3.jar" sourcepath="lib-src/jfreechart-1.0.3.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/oro-2.0.8.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/build/jdepend-2.9.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/mail.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/commons-email-1.0.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/commons-validator-1.3.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/activation.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/stringtemplate.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/serializer.jar"/>
@@ -85,16 +72,31 @@
 	<classpathentry exported="true" kind="lib" path="lib/xercesImpl.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/xml-apis.jar"/>
 	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
-	<classpathentry exported="true" kind="lib" path="lib/easymock.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/spring-security-core-2.0.3.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/spring-security-core-tiger-2.0.3.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/flexjson.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/mysql-connector-java-5.1.7-bin.jar"/>
 	<classpathentry kind="lib" path="lib/poi-3.5-beta5-20090219.jar"/>
-	<classpathentry kind="lib" path="lib/YUIAnt.jar"/>
-	<classpathentry kind="lib" path="lib/yuicompressor-2.4.2.jar"/>
 	<classpathentry kind="lib" path="lib/joda-time-1.6.jar" sourcepath="lib-src/joda-time-1.6-sources.jar"/>
 	<classpathentry kind="lib" path="lib/joda-time-hibernate-1.1.jar"/>
 	<classpathentry kind="lib" path="lib/joda-time-jsptags-1.0.2.jar"/>
+	<classpathentry kind="lib" path="lib/spring-test.jar"/>
+	<classpathentry kind="lib" path="lib/build/junit-4.6.jar"/>
+	<classpathentry kind="lib" path="lib/build/h2-1.1.114.jar"/>
+	<classpathentry kind="lib" path="lib/jettison-1.0.1.jar"/>
+	<classpathentry kind="lib" path="lib/build/easymock-2.5.jar"/>
+	<classpathentry kind="lib" path="lib/build/easymockclassextension-2.4.jar"/>
+	<classpathentry kind="lib" path="lib/build/YUIAnt.jar"/>
+	<classpathentry kind="lib" path="lib/build/yuicompressor-2.4.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jfreechart-1.0.13.jar"/>
+	<classpathentry kind="lib" path="lib/aspectjrt.jar"/>
+	<classpathentry kind="lib" path="lib/aspectjweaver.jar"/>
+	<classpathentry kind="lib" path="lib/common-annotations.jar"/>
+	<classpathentry kind="lib" path="lib/hibernate-commons-annotations.jar"/>
+	<classpathentry kind="lib" path="lib/hibernate-validator.jar"/>
+	<classpathentry kind="lib" path="lib/commons-collections-3.1.jar"/>
+	<classpathentry kind="lib" path="lib/javassist-3.9.0.GA.jar"/>
+	<classpathentry kind="lib" path="lib/jta-1.1.jar"/>
+	<classpathentry kind="lib" path="lib/slf4j-api-1.5.8.jar"/>
 	<classpathentry kind="output" path="eclipse-classes"/>
 </classpath>

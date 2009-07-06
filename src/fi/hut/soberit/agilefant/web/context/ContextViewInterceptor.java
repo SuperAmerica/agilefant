@@ -1,8 +1,12 @@
 package fi.hut.soberit.agilefant.web.context;
 
-import com.opensymphony.xwork.ActionInvocation;
-import com.opensymphony.xwork.interceptor.Interceptor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.interceptor.Interceptor;
+
+@Component
 public class ContextViewInterceptor implements Interceptor {
 
     private static final long serialVersionUID = 2542730509473988399L;
@@ -55,6 +59,7 @@ public class ContextViewInterceptor implements Interceptor {
         return null;
     }
 
+    @Autowired
     public void setContextViewManager(ContextViewManager contextViewManager) {
         this.contextViewManager = contextViewManager;
     }

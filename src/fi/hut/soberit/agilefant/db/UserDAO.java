@@ -11,18 +11,14 @@ import fi.hut.soberit.agilefant.model.User;
  */
 public interface UserDAO extends GenericDAO<User> {
 
-    /** Get user by name. */
-    public User getUser(String name);
- 
+    User getByLoginName(String loginName);
+
     /**
-     * Get all enabled users
-     * @return all enabled users
+     * Get the users by their enabled status.
+     * <p>
+     * If set to true, gets all enabled users.
+     * If set to false, gets all disabled users.
+     * @param enabled whether the wanted users are enabled or disabled
      */
-    public List<User> getEnabledUsers();
-    
-    /**
-     * Get all disabled users
-     * @return all disabled users
-     */
-    public List<User> getDisabledUsers();
+    List<User> listUsersByEnabledStatus(boolean enabled);
 }

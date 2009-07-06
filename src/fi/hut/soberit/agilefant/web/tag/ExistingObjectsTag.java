@@ -34,14 +34,14 @@ public class ExistingObjectsTag extends SpringTagSupport {
         iterationBusiness = requireBean("iterationBusiness");
         projectTypeBusiness = requireBean("projectTypeBusiness");
         super.getPageContext().setAttribute(ExistingObjectsTag.HAS_PRODUCTS,
-                productBusiness.count() > 0);
+                productBusiness.countAll() > 0);
         super.getPageContext().setAttribute(ExistingObjectsTag.HAS_PROJECTS,
-                projectBusiness.count() > 0);
+                projectBusiness.countAll() > 0);
         super.getPageContext().setAttribute(ExistingObjectsTag.HAS_ITERATIONS,
-                iterationBusiness.count() > 0);
+                iterationBusiness.countAll() > 0);
         super.getPageContext().setAttribute(
                 ExistingObjectsTag.HAS_PROJECTTYPES,
-                projectTypeBusiness.count() > 0);
+                projectTypeBusiness.countAll() > 0);
         return Tag.EVAL_BODY_INCLUDE;
     }
 

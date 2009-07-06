@@ -7,18 +7,19 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
 
-import com.opensymphony.webwork.util.WebWorkTypeConverter;
-import com.opensymphony.xwork.ActionContext;
-import com.opensymphony.xwork.LocaleProvider;
-import com.opensymphony.xwork.TextProvider;
-import com.opensymphony.xwork.TextProviderSupport;
-import com.opensymphony.xwork.util.TypeConversionException;
+import org.apache.struts2.util.StrutsTypeConverter;
+
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.LocaleProvider;
+import com.opensymphony.xwork2.TextProvider;
+import com.opensymphony.xwork2.TextProviderSupport;
+import com.opensymphony.xwork2.conversion.TypeConversionException;
 
 /**
- * Converts dates. Uses WebWorks i18n and key webwork.date.format for finding
+ * Converts dates. Uses Struts' i18n and key struts.date.format for finding
  * pattern. This allows different patterns to be used for different locales.
  */
-public class OnlyDateConverter extends WebWorkTypeConverter implements
+public class OnlyDateConverter extends StrutsTypeConverter implements
         LocaleProvider {
 
     private TextProvider textProvider = new TextProviderSupport(
@@ -57,7 +58,7 @@ public class OnlyDateConverter extends WebWorkTypeConverter implements
     }
 
     protected DateFormat getDateFormat() {
-        String pattern = textProvider.getText("webwork.date.format");
+        String pattern = textProvider.getText("struts.date.format");
         return new SimpleDateFormat(pattern);
         // return DateFormat.getDateInstance(DateFormat.SHORT,
         // ActionContext.getContext().getLocale());

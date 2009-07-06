@@ -60,7 +60,7 @@ ExplicitSpringSupport.java.
 	<bean name="projectTypeDAOTarget" parent="abstractDAOTarget" class="fi.hut.soberit.agilefant.db.hibernate.ProjectTypeDAOHibernate"/>
 	<bean name="workTypeDAOTarget" parent="abstractDAOTarget" class="fi.hut.soberit.agilefant.db.hibernate.WorkTypeDAOHibernate"/>
 	<bean name="projectDAOTarget" parent="abstractDAOTarget" class="fi.hut.soberit.agilefant.db.hibernate.ProjectDAOHibernate"/>
-	<bean name="backlogItemDAOTarget" parent="abstractDAOTarget" class="fi.hut.soberit.agilefant.db.hibernate.BacklogItemDAOHibernate"/>
+	<bean name="StoryDAOTarget" parent="abstractDAOTarget" class="fi.hut.soberit.agilefant.db.hibernate.StoryDAOHibernate"/>
 	<bean name="todoDAOTarget" parent="abstractDAOTarget" class="fi.hut.soberit.agilefant.db.hibernate.TodoDAOHibernate"/>
 	<bean name="userDAOTarget" parent="abstractDAOTarget" class="fi.hut.soberit.agilefant.db.hibernate.UserDAOHibernate"/>
 	<bean name="iterationGoalDAOTarget" parent="abstractDAOTarget" class="fi.hut.soberit.agilefant.db.hibernate.IterationGoalDAOHibernate"/>	
@@ -78,8 +78,8 @@ ExplicitSpringSupport.java.
 	</bean>
 
 
-	<bean name="backlogItemDAO" parent="abstractDAO">
-		<property name="target" ref="backlogItemDAOTarget"/>
+	<bean name="StoryDAO" parent="abstractDAO">
+		<property name="target" ref="StoryDAOTarget"/>
 	</bean>
 
 	<bean name="todoDAO" parent="abstractDAO">

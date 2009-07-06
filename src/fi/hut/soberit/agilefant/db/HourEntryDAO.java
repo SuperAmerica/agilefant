@@ -1,33 +1,61 @@
 package fi.hut.soberit.agilefant.db;
 
-import java.util.Date;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
-import fi.hut.soberit.agilefant.model.AFTime;
-import fi.hut.soberit.agilefant.model.Backlog;
-import fi.hut.soberit.agilefant.model.BacklogItem;
+import org.joda.time.DateTime;
+
+import fi.hut.soberit.agilefant.model.BacklogHourEntry;
 import fi.hut.soberit.agilefant.model.HourEntry;
+import fi.hut.soberit.agilefant.model.StoryHourEntry;
+import fi.hut.soberit.agilefant.model.TaskHourEntry;
 import fi.hut.soberit.agilefant.model.User;
 
 public interface HourEntryDAO extends GenericDAO<HourEntry> {
+
+    long calculateSumByUserAndTimeInterval(User user, DateTime startDate,
+            DateTime endDate);
+    
+    long calculateSumByUserAndTimeInterval(int userId, DateTime startDate,
+            DateTime endDate);
+
+    long calculateSumByStory(int storyId);
+
+    long calculateSumFromTasksWithoutStory(int iterationId);
     
     /**
-     * Returns the total effort spent sum between start and end date for the specified user.
-     */
-    public AFTime getEffortSumByUserAndTimeInterval(User user, Date start, Date end);
-    
-    /**
-     * Get all hour entries associated with give user.
+     * Recursive hour entry lookup. Will search from the given backlogs and all of their sub backlogs.
      * 
-     * @param user
-     * @return List of hour entries associated with given user.
+     * @param backlogIds Set of backlog ids. If argument is null, method will return an empty list.
+     * @param startDate Beginning (or null) of the search interval.
+     * @param endDate End (or null) of the search interval.
+     * @param userIds Set of user ids (or null).
+     * @return List of matched hour entries.
      */
-    public List<HourEntry> getHourEntriesByUser(User user);
+    public List<BacklogHourEntry> getBacklogHourEntriesByFilter(
+            Set<Integer> backlogIds, DateTime startDate, DateTime endDate, Set<Integer> userIds);
+
+    /**
+     * @see getBacklogHourEntriesByFilter
+     */
+    public List<TaskHourEntry> getTaskHourEntriesByFilter(Set<Integer> backlogIds,
+            DateTime startDate, DateTime endDate, Set<Integer> userIds);
+
+    /**
+     * @see getBacklogHourEntriesByFilter
+     */
+    public List<StoryHourEntry> getStoryHourEntriesByFilter(Set<Integer> backlogIds,
+            DateTime startDate, DateTime endDate, Set<Integer> userIds);
     
-    public Map<BacklogItem, AFTime> getSpentEffortSumsByBacklog(Backlog backlog);
+    /**
+     * Gets the iterations backlog, story and task hour entries and
+     * calculates the sum of their spent time.
+     */
+    public long calculateIterationHourEntriesSum(int iterationId);
     
-    public List<HourEntry> getEntriesByIntervalAndUser(Date start, Date end, User user);
-    
-    public AFTime getTotalSpentEffortByBacklog(Backlog backlog);
+    /**
+     * Get all hour entries matching the given filter.
+     */
+    public List<HourEntry> getHourEntriesByFilter(DateTime startTime,
+            DateTime endTime, int userId);
 }

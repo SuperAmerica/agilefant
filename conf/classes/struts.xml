@@ -1,0 +1,373 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+	<!-- Include struts defaults (from Struts JAR). -->
+	<include file="struts-default.xml" />
+	
+	<!-- Include AJAX action mappings -->
+	<include file="struts-ajax.xml" />
+
+	<!-- Configuration for the default package. -->
+	<package name="default" extends="struts-default">
+		<interceptors>
+			<interceptor name="refreshUser"	class="refreshUserInterceptor" />
+			<interceptor name="contextView"	class="contextViewInterceptor" />
+			<interceptor-stack name="authenticationStack">
+				<interceptor-ref name="exception"  />
+				<interceptor-ref name="completeStack" />
+				<interceptor-ref name="refreshUser" />
+				<interceptor-ref name="contextView" />
+			</interceptor-stack>
+			<interceptor-stack name="noAuthenticationStack">
+				<interceptor-ref name="exception" />
+				<interceptor-ref name="completeStack" />
+			</interceptor-stack>
+		</interceptors>
+		
+		<default-interceptor-ref name="authenticationStack" />
+		
+		<global-results>
+			<result name="input">/WEB-INF/jsp/genericError.jsp</result>
+			<result name="error">/WEB-INF/jsp/genericError.jsp</result>		
+			<result name="rootException" type="chain">exceptionHandler</result>
+		</global-results>
+
+
+		<global-exception-mappings>
+      <exception-mapping exception="java.lang.Exception" result="rootException"/>
+    </global-exception-mappings>
+    
+		<action name="exceptionHandler"
+			class="fi.hut.soberit.agilefant.web.ExceptionHandler" method="handleException">
+			<result name="success" type="dispatcher">/WEB-INF/jsp/fatalError.jsp</result>
+		</action>
+		<!-- Context view -->
+		
+		<action name="contextView" class="contextViewAction">
+			<result type="redirectAction">
+				<param name="actionName">selectBacklog</param>
+			</result>
+			<result name="success_iteration" type="redirectAction">
+				<param name="actionName">editIteration</param>
+				<param name="iterationId">${contextObjectId}</param>
+			</result>
+			<result name="success_project" type="redirectAction">
+				<param name="actionName">editProject</param>
+				<param name="projectId">${contextObjectId}</param>
+			</result>
+			<result name="success_product" type="redirectAction">
+				<param name="actionName">editProduct</param>
+				<param name="productId">${contextObjectId}</param>
+			</result>
+			<result name="success_dailyWork" type="redirectAction">
+				<param name="actionName">dailyWork</param>
+			</result>
+			
+			<result name="success_users" type="redirectAction">
+				<param name="actionName">listUsers</param>
+			</result>
+			<result name="success_teams" type="redirectAction">
+        <param name="actionName">listTeams</param>
+      </result>
+			
+			<result name="success_settings" type="redirectAction">
+				<param name="actionName">settings</param>
+			</result>
+				
+			<result name="success_timesheet" type="redirectAction">
+				<param name="actionName">timesheet</param>
+			</result>
+			
+			<result name="success_projectTypes"
+				type="redirectAction">
+				<param name="actionName">listProjectTypes</param>
+			</result>
+			<result name="success_businessThemes"
+				type="redirectAction">
+				<param name="actionName">listBusinessThemes</param>
+			</result>
+			<result name="success_globalThemes" type="redirectAction">
+        <param name="actionName">globalThemes</param>
+      </result>
+			<result name="success_projectPortfolio"
+				type="redirectAction">
+				<param name="actionName">projectPortfolio</param>
+			</result>
+			<result name="success_" type="redirectAction">
+				<param name="actionName">selectBacklog</param>
+			</result>
+		</action>
+
+		<!-- Product actions -->
+		
+		<action name="editProduct" method="retrieve" class="productAction">
+			<result>/WEB-INF/jsp/editProduct.jsp</result>
+		</action>
+		
+    <action name="deleteProduct" method="delete" class="productAction">
+			<result type="redirectAction">selectBacklog</result>
+		</action>
+		
+		<action name="storeProduct" method="store" class="productAction">
+			<result type="redirectAction">
+				<param name="actionName">contextView</param>
+				<param name="contextName">product</param>
+				<param name="contextObjectId">${productId}</param>
+				<param name="resetContextView">true</param>
+			</result>
+		</action>
+		<!-- /Product actions -->
+
+		<!-- Project actions -->
+		<action name="editProject" method="retrieve" class="projectAction">
+			<result>/WEB-INF/jsp/editProject.jsp</result>
+		</action>
+
+
+		<action name="deleteProject" method="delete"
+			class="projectAction">
+			<result type="redirect">editProduct.action?productId=${productId}</result>
+		</action>
+
+    <action name="storeProject" method="store"
+      class="projectAction">
+      <result type="redirectAction">
+        <param name="actionName">contextView</param>
+        <param name="contextName">project</param>
+        <param name="contextObjectId">${projectId}</param>
+        <param name="resetContextView">true</param>
+      </result>
+    </action>
+
+		<action name="storeNewProject" method="ajaxStoreProject" class="projectAction">
+		</action>
+
+    <action name="projectMetrics" class="projectAction" method="projectMetrics">
+      <result name="success" type="dispatcher">/WEB-INF/jsp/inc/projectMetrics.jsp</result>
+    </action>
+		
+		<!-- /Project actions -->
+
+    <!-- Menu actions -->
+    <action name="menuData" method="execute" class="menuAction">
+        <result>/WEB-INF/jsp/inc/_menuData.jsp</result>
+    </action>
+    <action name="ajaxUpdateOpenMenus" method="ajaxUpdateOpenMenus"
+        class="menuAction">
+    </action>
+    <!-- /Menu actions -->
+
+		<!-- Iteration actions -->
+		 
+		<action name="editIteration" method="retrieve" class="iterationAction">
+			<result>/WEB-INF/jsp/editIteration.jsp</result>
+		</action>
+	 
+    <action name="deleteIteration" method="delete"
+			class="iterationAction">
+			<result type="redirect">editProject.action?projectId=${projectId}</result>
+		</action>
+		
+		
+		
+		<!-- /Iteration actions -->
+
+		<!-- User actions -->
+		
+		<action name="listUsers" method="list" class="userAction">
+			<result>/WEB-INF/jsp/administration/listUsers.jsp</result>
+		</action>
+		<action name="deleteUser" method="delete" class="userAction">
+			<result type="redirectAction">listUsers</result>
+		</action>
+		<action name="disableUser" method="disable" class="userAction">
+		    <result type="redirectAction">listUsers</result>
+		</action>
+		<action name="enableUser" method="enable" class="userAction">
+            <result type="redirectAction">listUsers</result>
+        </action>
+		<action name="storeUser" method="store" class="userAction">
+			<result type="redirectAction">listUsers</result>			
+		</action>
+		
+		
+ 
+		<!-- /User actions -->
+
+		<!-- Team actions -->
+		<action name="listTeams" method="list" class="teamAction">
+      <result>/WEB-INF/jsp/administration/listTeams.jsp</result>
+    </action>
+		
+		<action name="deleteTeam" method="delete" class="teamAction">
+			<result type="redirectAction">listTeams</result>
+		</action>
+		<action name="storeTeam" method="store" class="teamAction">
+			<result type="redirectAction">listTeams</result>
+		</action>
+		<action name="ajaxStoreTeam" method="ajaxStoreTeam"
+			class="teamAction">		
+			<result name="ajax_error" type="httpheader">
+				<param name="status">400</param>
+			</result>
+			<result name="ajax_success" type="dispatcher">
+				<param name="location">/WEB-INF/jsp/inc/ajaxTeamResult.jsp</param>
+			</result>
+		</action>
+		
+
+		<!-- /Team actions -->
+
+		<!-- Daily work -->
+		<action name="dailyWork" class="dailyWorkAction">
+			<result>/WEB-INF/jsp/dailyWork.jsp</result>
+		</action>
+		<!-- /Daily work -->
+		
+		<!-- Tiny Daily work -->
+		<!-- 
+		<action name="tinyDailyWork" class="dailyWorkAction">
+			<result>/WEB-INF/jsp/tinyDailyWork.jsp</result>
+		</action>
+		 -->
+		<!-- /Tiny Daily work -->
+
+		<!-- Story actions -->
+    <action name="moveStory" method="moveStory"
+      class="storyAction">
+    </action>
+    <action name="storyContents" method="getStoryContents" class="storyAction">
+      <result name="ajax_success" type="dispatcher">
+        <param name="location">/WEB-INF/jsp/jsonData.jsp</param>
+      </result>
+    </action>		
+		<action name="calculateStoryMetrics" method="getMetrics"
+      class="storyAction">
+      <result name="ajax_success" type="dispatcher">
+        <param name="location">/WEB-INF/jsp/jsonData.jsp</param>
+      </result>
+    </action>
+		<!-- /Story actions -->
+
+		<action name="drawProjectBurnup" method="getProjectBurnup" class="chartAction">
+			<result name="success" type="stream">
+				<param name="contentType">${contentType}</param>
+				<param name="inputName">inputStream</param>
+			</result>
+		</action>
+
+		<action name="drawIterationBurndown" method="getIterationBurndown" class="chartAction">
+			<result name="success" type="stream">
+				<param name="contentType">${contentType}</param>
+				<param name="inputName">inputStream</param>
+			</result>
+		</action>
+		
+    <action name="drawSmallIterationBurndown" method="getSmallIterationBurndown" class="chartAction">
+      <result name="success" type="stream">
+        <param name="contentType">${contentType}</param>
+        <param name="inputName">inputStream</param>
+      </result>
+    </action>
+
+		<action name="selectBacklog">
+			<result>/WEB-INF/jsp/selectBacklog.jsp</result>
+		</action>
+		
+		<!-- Actions for generating a new password and e-mailing it to an <code>User</code> -->
+ 
+		<action name="newPassword">
+			<interceptor-ref name="noAuthenticationStack" />
+			<result>/WEB-INF/jsp/newPassword.jsp</result>
+		</action>
+		<action name="generateNewPassword" class="passwordAction"	method="generate">
+			<interceptor-ref name="noAuthenticationStack" />
+			<result name="success">success.jsp</result>
+			<result name="error">success.jsp?error=1</result>
+		</action>
+
+		<!-- Actions for changing settings -->
+		<action name="settings" class="settingAction" method="edit">
+			<result>/WEB-INF/jsp/administration/settings.jsp</result>
+		</action>
+		
+		<action name="storeSettings" class="settingAction" method="storeSettings">
+			<result name="success" type="dispatcher">/WEB-INF/jsp/administration/settings.jsp</result>
+		</action>
+		
+		<!-- timesheet actions -->
+		  
+		<action name="timesheet" method="initialize" class="timesheetAction">
+			<result>/WEB-INF/jsp/timesheet.jsp</result>
+		</action>
+		
+		<action name="generateTree" method="generateTree" class="timesheetAction">
+			<result name="success">/WEB-INF/jsp/timesheet.jsp</result>
+		</action>
+		
+		<action name="generateExcel" method="generateExeclReport" class="timesheetAction">
+			<result name="success" type="stream">
+				<param name="contentType">application/xls</param>
+				<param name="inputName">sheetData</param>
+				<param name="contentDisposition">filename="agilefantTimesheet.xls"</param>
+			</result>
+		</action>		
+		
+		<!-- Hour Entry actions -->
+		<action name="ajaxCreateHourEntry" class="hourEntryAction" method="create">
+            <result>/WEB-INF/jsp/forms/createHourEntry.jsp</result>
+        </action>
+    <action name="newHourEntry" class="hourEntryAction" method="create">
+            <result>/WEB-INF/jsp/inc/createHourEntry.jsp</result>
+        </action>
+		<action name="storeHourEntry" class="hourEntryAction" method="store">
+			<result type="redirectAction">
+				<param name="actionName">popContext</param>
+			</result>
+		</action>
+		<action name="ajaxStoreHourEntry" class="hourEntryAction" method="store">
+      <result name="ajax_error" type="httpheader">
+        <param name="status">400</param>
+      </result>
+      <result name="ajax_success" type="dispatcher">
+        <param name="location">/WEB-INF/jsp/jsonData.jsp</param>
+      </result>
+    </action>
+		<action name="deleteHourEntry" method="delete" class="hourEntryAction">
+			<result type="redirectAction">
+				<param name="actionName">popContext</param>
+			</result>
+		</action>
+    <action name="ajaxDeleteHourEntry" method="delete" class="hourEntryAction">
+    </action>
+
+		<action name="getHourSum" method="sumHours" class="getHourSumAction">
+			<result name="success">/WEB-INF/jsp/inc/_hourSum.jsp</result>
+		</action>
+		
+		<action name="updateMultipleHourEntries" class="hourEntryAction" method="multiEdit" />
+		
+		<action name="weeklySpentEffort" method="getDaySumsByWeek" class="spentEffortAction">
+			<result type="dispatcher">/WEB-INF/jsp/inc/spentEffort.jsp</result>
+		</action>
+		
+		<action name="hourEntriesByUserAndWeek" class="spentEffortAction" method="getHourEntriesByUserAndDay">
+			<result type="dispatcher">/WEB-INF/jsp/inc/effortByWeek.jsp</result>
+		</action>
+	
+		<!-- Session actions -->
+	
+		<action name="ajaxOpenDialog" method="ajaxOpenDialog" class="sessionAction" />
+    <action name="ajaxCloseDialog" method="ajaxCloseDialog" class="sessionAction" />
+
+		<!-- /Session actions -->
+
+    <action name="qr" method="resolveLinkTarget" class="quickReferenceAction">
+    	<result name="success" type="redirect">${uri}</result>
+    </action>
+        
+</package>
+</struts>

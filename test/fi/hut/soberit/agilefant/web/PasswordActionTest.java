@@ -6,7 +6,7 @@ import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 import junit.framework.TestCase;
 
-import com.opensymphony.xwork.Action;
+import com.opensymphony.xwork2.Action;
 
 import fi.hut.soberit.agilefant.business.PasswordBusiness;
 import fi.hut.soberit.agilefant.business.UserBusiness;
@@ -40,38 +40,27 @@ public class PasswordActionTest extends TestCase {
         return user;
     }
 
-    public void testGenerate() {
-        passwordBusiness.generateAndMailPassword(TESTUSER_ID);
-        expect(userBusiness.getUser("keimolantio")).andReturn(createTestUser());
+    private void runTest(User returnedUser, String name, String email, String result) {
+        expect(userBusiness.retrieveByLoginName(name)).andReturn(returnedUser);
         replay(passwordBusiness, userBusiness);
 
-        action.setName("keimolantio");
-        action.setEmail("keimo.lantio@somewhere.com");
+        action.setName(name);
+        action.setEmail(email);
 
-        assertEquals(Action.SUCCESS, action.generate());
+        assertEquals(result, action.generate());
         verify(passwordBusiness, userBusiness);
+    }
+    
+    public void testGenerate() {
+        passwordBusiness.generateAndMailPassword(TESTUSER_ID);
+        runTest(createTestUser(), "keimolantio", "keimo.lantio@somewhere.com", Action.SUCCESS);
     }
 
     public void testGenerateWithUnknownName() {
-        expect(userBusiness.getUser("leimokantio")).andReturn(null);
-        replay(passwordBusiness, userBusiness);
-
-        action.setName("leimokantio");
-        action.setEmail("keimo.lantio@somewhere.com");
-
-        assertEquals(Action.ERROR, action.generate());
-        verify(passwordBusiness, userBusiness);
+        runTest(null, "leimokantio", "keimo.lantio@somewhere.com", Action.ERROR);
     }
 
     public void testGenerateWithWrongEmail() {
-        expect(userBusiness.getUser("keimolantio")).andReturn(createTestUser());
-        replay(passwordBusiness, userBusiness);
-
-        action.setName("keimolantio");
-        action.setEmail("leimo.kantio@somewhere.com");
-
-        assertEquals(Action.ERROR, action.generate());
-        verify(passwordBusiness, userBusiness);
+        runTest(createTestUser(), "keimolantio", "leimo.kantio@somewhere.com", Action.ERROR);
     }
-
 }

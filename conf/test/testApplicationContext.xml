@@ -24,7 +24,7 @@ ExplicitSpringSupport.java.
 		<property name="locations">
 			<list>
 	  			<value>file:conf/configuration.properties</value>
-		  		<value>file:conf/database-mysql5.properties</value>
+		  		<value>file:conf/database-postgresql.properties</value>
 		  	</list>
 		</property>
 	</bean>

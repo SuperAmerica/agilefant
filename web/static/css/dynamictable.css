@@ -1,16 +1,17 @@
 .dynamictable {
-  border: 1px solid #ccc;
+ /* border: 1px solid #ccc;*/
   width: 100%;
   overflow: hidden;
   margin-top: 5px;
 }
 
 .dynamictable-caption {
- /* width: 99%; */
-  height: 22px;
-  font-weight: bold;
-  padding: 2px 0 0 3px;
-  background: transparent url(../img/gradient.png) repeat-x scroll 80% 60%;  
+	border-bottom:2px solid #CCCCCC;
+	font-weight:bold;
+	height:19px;
+	padding:0 0 0 0.5em;
+	font-size: 12pt;
+	padding-top: 6px;
 }
 
 .dynamictable-row {
@@ -58,16 +59,16 @@
 }
 
 .dynamictable-placeholder {
-  margin: 3px 2px 3px 2px; height : 1.5em;
+  margin: 3px 2px 3px 2px;
   background-color: #ffffdd;
   border: 1px dashed #666;
   height: 3em;
-  width: 95%;
+  width: 98%;
 }
 
 .dynamictable-header .dynamictable-cell {
   font-weight: bold;
-  background-color: #ddd !important;
+  background-color: #d6dde5 !important;
   padding-left: 4px;
 }
 .dynamictable-header .dynamictable-cell a, .dynamictable-header .dynamictable-cell span {
@@ -159,24 +160,57 @@ div.gear {
   border: 1px solid #FFFFFF;
 }
 
-.dynamictable-captionaction {
-  background-color: #eee;
+li.dynamictable-captionaction {
+  background-color: #f3f3f3;
   float: left !impotant;
   border: 1px solid black;
   margin-left: 5px;
-  padding: 2px;	
-  width: 135px;
+  padding: 1px 7px 1px 2px;	
+  width: 105px;
+  font-weight: normal;
   -moz-border-radius: 0.5em;
   border-radius: 0.5em;
   text-align: center;
+  font-size: 10pt;
 }
 
 .dynamictable-captionaction:hover {
   float: left !impotant;
-  background-color: #ccc; 
   cursor: pointer;
+  color: #e50;
 }
-
+.dynamictable-captionaction div.create {
+  background-image: url('../img/create_new.png');
+  background-position: 0%;
+}
+.dynamictable-captionaction:hover div.create {
+  background-image: url('../img/create_new.png');
+  background-position: 100%;
+}
+.dynamictable-captionaction div.show {
+	background-image:url(../img/open_close.png);
+	background-position:0 0;
+}
+.dynamictable-captionaction:hover div.show {
+	background-image:url(../img/open_close.png);
+	background-position:100% 0;
+}
+.dynamictable-captionaction div.hide {
+	background-image:url(../img/open_close.png);
+	background-position:0 100%;
+}
+.dynamictable-captionaction:hover div.hide {
+	background-image:url(../img/open_close.png);
+	background-position:100% 100%;
+}
+.dynamictable-captionaction div.effort {
+	background-image:url(../img/timesheets_new.png);
+	background-position:0 0;
+}
+.dynamictable-captionaction:hover div.effort {
+	background-image:url(../img/timesheets_new.png);
+	background-position:100% 0;
+}
 .dynamictable-captionactions {
   margin-top: 0px;
   padding-left: 0px;
@@ -194,6 +228,8 @@ div.gear {
 	height:16px;
 	width:16px;
 	margin-top: 2px;
+	margin-right: 4px;
+	float: right;
 }
 .dynamictable-collapse {
 	background-image:url(../img/open_close.png);
@@ -203,6 +239,8 @@ div.gear {
 	height:16px;
 	width:16px;
 	margin-top: 2px;
+	margin-right: 4px;
+	float: right;
 }
 .dynamictable-expand:hover {
   background-position: 100% 0;  
@@ -269,7 +307,7 @@ div.gear {
 
 .actionColumn .edit {
 	-moz-border-radius:5px;
-	background-color:#dadade;
+	background-color:#f3f3f3;
 	border:0.5px solid black;
 	font-size:10pt;
 	height:16px !important;
@@ -279,11 +317,11 @@ div.gear {
 	width:43px;
 }
 .actionColumn .edit:hover {
-	background-color:#ccddee;
+	color: #e50;
 }
 
 .dragHandle:hover {
-	background-color: #6cf !important;
+	background-color: #f91 !important;
 	cursor: move;
 }
 .taskState {
@@ -305,23 +343,111 @@ div.gear {
 }
 .taskStateBLOCKED {
 	background-color: #e33;
-	color: #ddd;
+	color: #eee;
 }
 .taskStateIMPLEMENTED {
 	background-color: #66ff66;
 }
 .taskStateDONE {
 	background-color: #00bb44;
-	color: #ddd;
+	color: #eee;
+}
+.storyState {
+	display: block;
+	width: 80px;
+	padding: 1px;
+	text-align: center;
+	-moz-border-radius: 2px;
+  	border-radius: 2px;
+}
+.storyStateNOT_STARTED {
+	background-color: #dddddd;
+}
+.storyStateSTARTED {
+	background-color: #ffdd88;
+}
+.storyStatePENDING {
+	background-color: #66ddff;
+}
+.storyStateBLOCKED {
+	background-color: #e33;
+	color: #eee;
+}
+.storyStateIMPLEMENTED {
+	background-color: #66ff66;
+}
+.storyStateDONE {
+	background-color: #00bb44;
+	color: #eee;
 }
 .dynamictable .dynamictable-row .description-cell {
 	min-height: 0px !important;	
+/*	max-height: 15em !important;*/
+/*	overflow: auto !important;*/
 }
-.dynamictable .dynamictable-row .description-cell span {
+.dynamictable .dynamictable-row .description-cell > span {
 	margin-left: 8%;
 	color: #666;	
-	 margin-right: 4%;
-	 font-size: 8pt;
-	 color: #555;
-	 display: block;
+	margin-right: 4%;
+	font-size: 8pt;
+	color: #555;
+	display: block;
 } 
+.taskTable {
+  width: 92%;
+  margin-left: 4%;
+  margin-right: 4%;
+}
+.dynamictable .dynamictable-row .projectstory-row {
+  background-color: #edf;
+}
+.dynamictable .dynamictable-row .projectstory-responsibles {
+  background-color: #edf;
+  cursor: pointer;
+}
+
+.dynamictable .dynamictable-row .story-row {
+	background-color: #e9eeff;
+}
+.dynamictable .dynamictable-row .story-task {
+	background-color: #e9eeff;
+	cursor: pointer;
+}
+.dynamictable .dynamictable-row .story-data {
+	background-color: #fff;
+}
+.dynamictable .dynamictable-row .story-responsibles {
+  background-color: #e9eeff;
+  cursor: pointer;
+}
+.dynamictable .dynamictable-row .story-estimate {
+  background-color: #e9eeff;
+}
+.dynamictable .dynamictable-row .task-row {
+	background-color: #eee;
+}
+.dynamictable .dynamictable-row .task-data {
+	background-color: #fff;
+}
+.dynamictable-header > .story-row,
+.dynamictable-header > .story-task,
+.dynamictable-header > .story-responsibles,
+.dynamictable-header > .story-estimate {
+	background-color: #fff !important;
+}
+.dynamictable-header > .task-row {
+	background-color: #fff !important; 
+}
+.dynamictable-tasklist-cell {
+  background-color: #eee;  
+}
+div.loadingStories { 
+	background-color:#EEEEEE;
+	border:1px solid #666666;
+	font-size:10pt;
+	font-style:italic;
+	height:55px;
+	margin:15px 5px 0;
+	padding:30px 0 0 10px;
+	width:100%;
+}

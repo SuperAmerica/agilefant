@@ -1,16 +1,12 @@
 <%@ include file="../inc/_taglibs.jsp"%>
 <%@ include file="../inc/_header.jsp"%>
 
-<aef:menu navi="administration" subnavi="settings" pageHierarchy="${pageHierarchy}" title="Settings"/>
+<aef:menu navi="administration" subnavi="settings" title="Settings"/>
 <aef:existingObjects />
 
 <h2>Timesheet settings</h2>
 
 <ww:form action="storeSettings.action" method="post">
-<%-- 
-<ww:hidden name="name" value="HourReporting"/>
-<ww:hidden name="description" value="Description"/>
---%>
 <table id="row">
 <thead>
 <tr>
@@ -21,8 +17,7 @@
 <tr class="odd">
 <td>Timesheets</td>
 <td>
-	<aef:hourReporting id="hourReport"></aef:hourReporting>
-	<ww:checkbox name="value" fieldValue="true" value="${hourReport}"></ww:checkbox>		
+	<ww:checkbox name="hourReportingEnabled" fieldValue="true" value="%{hourReportingEnabled}"></ww:checkbox>		
 </td>
 </tr>
 </tbody>
@@ -37,48 +32,28 @@
 <tr>
 <th>Load</th>
 <th>Threshold</th>
+</tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td>Minimum</td>
-<td colspan="2"><ww:textfield name="rangeLowValue" id="minimumField" value="${settingBusiness.rangeLow}" size="4" /> %</td>
+<td colspan="2"><ww:textfield name="rangeLow" id="minimumField" size="4" /> %</td>
 </tr>
 <tr class="even">
 <td>Optimal Low</td>
-<td><input type="text" name="optimalLowValue" id="optimalLowField" value="${settingBusiness.optimalLow}" size="4" /> %</td>
+<td><ww:textfield name="optimalLow" id="optimalLowField" size="4" /> %</td>
 </tr>
 <tr class="odd">
 <td>Optimal High</td>
-<td><input type="text" name="optimalHighValue" id="optimalHighField" value="${settingBusiness.optimalHigh}" size="4" /> %</td>
+<td><ww:textfield name="optimalHigh" id="optimalHighField" size="4" /> %</td>
 </tr>
 <tr class="even">
 <td>Critical</td>
-<td><input type="text" name="criticalLowValue" id="criticalLowField" value="${settingBusiness.criticalLow}" size="4" /> %</td>
+<td><ww:textfield name="criticalLow" id="criticalLowField" size="4" /> %</td>
 </tr>
 <tr class="odd">
 <td>Maximum</td>
-<td><input type="text" name="rangeHighValue" id="maximumField" value="${settingBusiness.rangeHigh}" size="4" /> %</td>
-</tr>
-</tr>
-</tbody>
-</table>
-
-<h2>Experimental Features</h2>
-
-<p>The use of these features in production environment is strongly discouraged.</p>
-
-<table id="row">
-<thead>
-<tr>
-<th>Setting</th>
-<th>Enabled</th>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Project Burndown</td>
-<td>
-    <ww:checkbox name="projectBurndown" fieldValue="true" value="${projectBurndown}"></ww:checkbox>        
-</td>
+<td><ww:textfield name="rangeHigh" id="maximumField" size="4" /> %</td>
 </tr>
 </tbody>
 </table>

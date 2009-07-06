@@ -1,12 +1,11 @@
 <%@ include file="./inc/_taglibs.jsp"%>
 <%@ include file="./inc/_header.jsp"%>
 
-<c:if test="${product.id > 0}">
-	<aef:bct productId="${product.id}" />
-</c:if>
-
 <c:set var="divId" value="1336" scope="page" />
-<aef:menu navi="backlog" pageHierarchy="${pageHierarchy}" title="${product.name}"/>
+<aef:currentBacklog backlogId="${product.id}"/>
+
+<aef:menu navi="backlog" title="${product.name}" menuContextId="${product.id}"/>
+
 <ww:actionerror />
 <ww:actionmessage />
 
@@ -16,10 +15,13 @@
 
 <script type="text/javascript">
 
+var productId = ${product.id};
+
 function editProduct() {
     toggleDiv('editProductForm'); toggleDiv('descriptionDiv'); showWysiwyg('productDescription'); return false;
 }
 
+/*
 $(document).ready(function() {
     <c:forEach items="${openThemes}" var="openTheme">
         handleTabEvent("businessThemeTabContainer-${openTheme[0]}", "businessTheme", ${openTheme[0]}, ${openTheme[1]});
@@ -29,28 +31,26 @@ $(document).ready(function() {
         handleTabEvent("projectTabContainer-${openProject[0]}", "project", ${openProject[0]}, ${openProject[1]});
     </c:forEach>
 });
-
+*/
 
 
 /* Initialize the SimileAjax object */
+/*
 var SimileAjax = {
     loaded:                 false,
     loadingScriptsCount:    0,
     error:                  null,
     params:                 { bundle:"true" }
 };
-SimileAjax.Platform = new Object();
+SimileAjax.Platform = new Object();*/
 </script>
-<script type="text/javascript" src="static/js/timeline/simile-ajax-bundle.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
+<%--<script type="text/javascript" src="static/js/timeline/simile-ajax-bundle.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 
 <!-- Include timeline -->
-<script type="text/javascript">
-var productId = ${product.id};
-</script>
-<script type="text/javascript" src="static/js/timeline/timeline-load.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
-<script type="text/javascript" src="static/js/timeline/timeline-bundle.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
-<script type="text/javascript" src="static/js/timeline/timeline-custom.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
-
+<script type="text/javascript" src="static/js/timeline/timeline-load.js?<ww:text name="struts.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/timeline/timeline-bundle.js?<ww:text name="struts.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/timeline/timeline-custom.js?<ww:text name="struts.agilefantReleaseId" />"></script>
+--%>
 <h2><c:out value="${product.name}" /></h2>
 <table>
 	<tbody>
@@ -96,7 +96,7 @@ var productId = ${product.id};
 			<div class="validateWrapper validateExistingProduct">
 			<ww:form id="productEditForm" 
 				action="storeProduct" method="post">
-				<ww:hidden name="productId" value="${product.id}" />
+				<ww:hidden name="productId" value="%{product.id}" />
 
 				<table class="formTable">
 					<tr>
@@ -108,8 +108,7 @@ var productId = ${product.id};
 						<td>Description</td>
 						<td></td>
 						<td colspan="2"><ww:textarea name="product.description"
-							id="productDescription" cols="70" rows="10"
-							value="${aef:nl2br(product.description)}" /></td>
+							id="productDescription" cols="70" rows="10">${aef:nl2br(product.description)}</ww:textarea></td>
 					</tr>
 					<tr>
 						<td></td>
@@ -136,8 +135,8 @@ var productId = ${product.id};
 	</tbody>
 </table>
 
-<c:if test="${product.id > 0}">
 <table>
+<%--
     <!-- The timeline -->
     <tr>
     <td>
@@ -181,7 +180,7 @@ var productId = ${product.id};
     </div>
     </td>
     </tr>
-
+--%>
 	<tr>
 		<td>
 			<div class="subItems" id="subItems_editProductProjectList">
@@ -195,11 +194,10 @@ var productId = ${product.id};
 	                    <table cellpadding="0" cellspacing="0">
 	                    <tr>
 	                    <td>
-	                    <ww:url id="createLink" action="ajaxCreateProject" includeParams="none">
-						  <ww:param name="productId" value="${product.id}" />
-						</ww:url>
-						<ww:a href="%{createLink}"
-						  title="Create a new project"
+	                    <ww:url id="createLink" namespace="ajax" action="createProject" includeParams="none">
+          						  <ww:param name="productId" value="product.id" />
+					           	</ww:url>
+						<ww:a href="%{createLink}" title="Create a new project"
 						  cssClass="openCreateDialog openProjectDialog" onclick="return false;">
 						</ww:a>
 						</td>
@@ -210,9 +208,9 @@ var productId = ${product.id};
 				</table>
 				</div>
 
-				<c:if test="${!empty product.projects}">
+				<c:if test="${!empty product.children}">
 				<div class="subItemContent">
-				<display:table class="listTable" name="product.projects"
+				<display:table class="listTable" name="product.children"
 					id="row" requestURI="editProduct.action">
 							
 					<display:column sortable="false" title="St." class="statusColumn">
@@ -222,7 +220,7 @@ var productId = ${product.id};
 														
 					<display:column sortable="true" sortProperty="name" title="Name">					
 						<ww:url id="editLink" action="editProject" includeParams="none">
-							<ww:param name="projectId" value="${row.id}" />
+							<ww:param name="projectId" value="#attr.row.id" />
 						</ww:url>
 						<ww:a
 							href="%{editLink}">
@@ -243,15 +241,18 @@ var productId = ${product.id};
 						</c:choose>
 						</div>
 					</display:column>
-										
+          
+          <%--
 					<display:column sortable="false" title="Iter. info">
 						<c:out value="${row.metrics.numberOfOngoingIterations}" /> / 
 						<c:out value="${row.metrics.numberOfAllIterations}" />
 					</display:column>
+          
 					
 					<display:column sortable="false" title="Assignees">
 						<c:out value="${row.metrics.assignees}" />
-					</display:column>					
+					</display:column>
+          --%>					
 															
 					<display:column sortable="true" title="Start date">
 						<ww:date name="#attr.row.startDate" />
@@ -263,13 +264,15 @@ var productId = ${product.id};
 												
 					<display:column sortable="false" title="Actions">
 						<img src="static/img/edit.png" alt="Edit" title="Edit project" style="cursor: pointer;" onclick="handleTabEvent('projectTabContainer-${row.id}','project',${row.id},0); return false;" />						
-						<ww:url id="deleteLink" action="deleteProject"
-							includeParams="none">
-							<ww:param name="productId" value="${product.id}" />
-							<ww:param name="projectId" value="${row.id}" />
+						<ww:url id="deleteLink" action="deleteProject" includeParams="none">
+							<ww:param name="productId" value="product.id" />
+							<ww:param name="projectId">${row.id}</ww:param>
+              <%--
+              <ww:param name="contextName">product</ww:param>
+              <ww:param name="contextObjectId">${product.id}</ww:param>
+              --%>
 						</ww:url>
-						<ww:a href="%{deleteLink}&contextViewName=editProduct&contextObjectId=${product.id}"
-							onclick="return confirmDelete()">
+						<ww:a href="%{deleteLink}" onclick="return confirmDelete();">
 							<img src="static/img/delete_18.png" alt="Delete project" title="Delete project" style="cursor: pointer;"/>
 						</ww:a>
 					</display:column>
@@ -280,7 +283,7 @@ var productId = ${product.id};
 		</td>
 	</tr>
 </table>
-
+<%--
 <table>	
 	<tr>
 		<td>
@@ -390,46 +393,44 @@ var productId = ${product.id};
 	</tr>
 </table>
 </c:if>
+--%>
 
-<table>	
-	<tr>
-		<td>
-			<div class="subItems" id="subItems_editProductBacklogItemsList">
-			<div class="subItemHeader">
-				<table cellspacing="0" cellpadding="0">
-	                <tr>
-	                    <td class="header">
-	                    Stories
-	                    </td>
-	                    <td class="icons">
-	                    <table cellspacing="0" cellpadding="0">
-                            <tr>
-                            <td>
-	                    <ww:url
-					id="createBacklogItemLink" action="ajaxCreateBacklogItem"
-					includeParams="none">
-					<ww:param name="backlogId" value="${product.id}" />
-				</ww:url> <ww:a cssClass="openCreateDialog openBacklogItemDialog"
-					href="%{createBacklogItemLink}" onclick="return false;"
-					title="Create a new story">
-					</ww:a>
-					</td>
-					</tr>
-					</table>
-					</td>
-					</tr>
-				</table>
-			</div>			
 
-			<c:if test="${!empty product.backlogItems}">
-			<div class="subItemContent">
-				<%@ include file="./inc/_backlogList.jsp"%>
-			</div>
-			</c:if>
-			</div>
-		</td>
-	</tr>
+<ww:url id="createStoryLink" action="createStoryForm" namespace="ajax" includeParams="none">
+  <ww:param name="backlogId">${product.id}</ww:param>
+</ww:url>
+
+<table>
+  <tr>
+    <td>
+      <div class="subItems" id="subItems_editProductStoryList">
+        <div class="subItemHeader">
+          <table cellspacing="0" cellpadding="0">
+            <tr>
+              <td class="header">Stories</td>
+              <td class="icons">
+                <table cellpadding="0" cellspacing="0">
+                  <tr>
+                    <td><ww:a cssClass="openCreateDialog openStoryDialog"
+                          href="%{createStoryLink}" onclick="return false;"
+                          title="Create a new story">
+                        </ww:a></td>
+                  </tr>
+                </table>     
+              </td>
+            </tr>
+          </table>
+        </div>
+        <c:if test="${!empty stories}">
+          <div class="subItemContent">
+            <%@ include file="./inc/_storyList.jsp"%>
+          </div>
+        </c:if>
+      </div>
+    </td>
+  </tr>
 </table>
 
-</c:if>
+
+
 <%@ include file="./inc/_footer.jsp"%>

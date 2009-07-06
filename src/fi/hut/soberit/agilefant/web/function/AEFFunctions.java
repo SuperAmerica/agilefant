@@ -9,17 +9,13 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-import fi.hut.soberit.agilefant.model.AFTime;
-import fi.hut.soberit.agilefant.model.Assignment;
-import fi.hut.soberit.agilefant.model.Backlog;
-import fi.hut.soberit.agilefant.model.BacklogItem;
+import org.joda.time.DateTime;
+
 import fi.hut.soberit.agilefant.model.Iteration;
-import fi.hut.soberit.agilefant.model.IterationGoal;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
-import fi.hut.soberit.agilefant.model.Todo;
 import fi.hut.soberit.agilefant.model.User;
-
+import fi.hut.soberit.agilefant.util.MinorUnitsParser;
 
 /**
  * custom functions for jsp pages
@@ -27,6 +23,8 @@ import fi.hut.soberit.agilefant.model.User;
 public class AEFFunctions {
 
     private static int maxStrLength = 30;
+    
+    private static MinorUnitsParser minutesParser = new MinorUnitsParser("h", "min", 60);
 
     public static boolean isProduct(Object obj) {
         return obj instanceof Product;
@@ -40,18 +38,6 @@ public class AEFFunctions {
         return obj instanceof Iteration;
     }
 
-    public static boolean isIterationGoal(Object obj) {
-        return obj instanceof IterationGoal;
-    }
-
-    public static boolean isBacklogItem(Object obj) {
-        return obj instanceof BacklogItem;
-    }
-
-    public static boolean isTodo(Object obj) {
-        return obj instanceof Todo;
-    }
-
     public static boolean isUser(Object obj) {
         return obj instanceof User;
     }
@@ -60,7 +46,7 @@ public class AEFFunctions {
      * Chop strings to MAX_STR_LENGTH
      * 
      * @param s
-     *                string to shorten
+     *            string to shorten
      * @return shorter string, or original string if length < MAX_STR_LENGTH
      */
     public static String out(String s) {
@@ -71,9 +57,9 @@ public class AEFFunctions {
      * Shorten strings to specified length
      * 
      * @param s
-     *                string to shorten
+     *            string to shorten
      * @param newLength
-     *                length
+     *            length
      * @return shorter string, or original string if length < newLength
      */
     public static String out(String s, int newLength) {
@@ -87,8 +73,14 @@ public class AEFFunctions {
     public static String htmlOut(String s, int newLength) {
         return out(s, newLength, true);
     }
+
+    public static String minutesToString(long minor) {
+        return minutesParser.convertToString(minor);
+    }
+    
     public static String nl2br(String s) {
-        if(s == null) return s;
+        if (s == null)
+            return s;
         if (!s.contains("<br")) { // hack to avoid doubling new lines
             s = s.replaceAll("\r\n", "<br>");
             s = s.replaceAll("\n", "<br>");
@@ -96,16 +88,18 @@ public class AEFFunctions {
         }
         return s;
     }
+
     public static String escapeHTML(String s) {
-        s = s.replaceAll("\"","\\\\\"");
+        s = s.replaceAll("\"", "\\\\\"");
         s = s.replaceAll("\r\n", "\\\\n");
         s = s.replaceAll("\n", "\\\\n");
         s = s.replaceAll("\r", "\\\\r");
         return s;
     }
+
     private static String out(String s, int newLength, boolean asHtml) {
-        String title = s.replaceAll("\\<.*?>","");
-        title = title.replaceAll("/\"/","&quote;");
+        String title = s.replaceAll("\\<.*?>", "");
+        title = title.replaceAll("/\"/", "&quote;");
         return asHtml ? "<span title=\"" + title + "\">" + s + "</span>" : s;
     }
 
@@ -129,48 +123,32 @@ public class AEFFunctions {
         return list;
     }
 
-    public static boolean isUserAssignedTo(Backlog backlog, User user) {
-        if (backlog instanceof Project) {
-            for (Assignment ass : backlog.getAssignments()) {
-                if (ass.getUser() == user)
-                    return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Adds AFTime a and AFTime b together. Either of the arguments
-     * can be null. Returns zero hours if both arguments were null.
-     */
-    public static AFTime calculateAFTimeSum(AFTime a, AFTime b) {
-        AFTime sum = new AFTime(0);
-
-        if (a != null) {
-            sum.add(a);
-        }
-
-        if (b != null) {
-            sum.add(b);
-        }
-
-        return sum;
-    }
-
     public static String currentTime() {
-        DateFormat fmt  = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         return fmt.format(GregorianCalendar.getInstance().getTime());
     }
-    
+
     public static String timestampToString(Timestamp ts) {
         DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         return fmt.format(ts);
     }
-    
+
     public static String stripHTML(String htmlString) {
-        if(htmlString == null) {
+        if (htmlString == null) {
             return null;
         }
-        return htmlString.replaceAll("\\<.*?>","");
+        return htmlString.replaceAll("\\<.*?>", "");
+    }
+
+    public static Date dateTimeToDate(DateTime dateTime) {
+        return dateTime.toDate();
+    }
+    
+    public static DateTime currentDateTime() {
+        return new DateTime();
+    }
+    
+    public static String dateTimeToFormattedString(DateTime dateTime) {
+        return dateTime.toString("YYYY-MM-dd HH:mm");
     }
 }

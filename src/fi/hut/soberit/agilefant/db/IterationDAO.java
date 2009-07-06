@@ -1,9 +1,11 @@
 package fi.hut.soberit.agilefant.db;
 
 import java.util.Collection;
+import java.util.List;
 
-import fi.hut.soberit.agilefant.model.BacklogItem;
 import fi.hut.soberit.agilefant.model.Iteration;
+import fi.hut.soberit.agilefant.model.Task;
+import fi.hut.soberit.agilefant.util.Pair;
 
 /**
  * Interface for a DAO of an Iteration.
@@ -12,10 +14,12 @@ import fi.hut.soberit.agilefant.model.Iteration;
  */
 public interface IterationDAO extends GenericDAO<Iteration> {
 
-    /**
-     * Get all currently ongoing iterations.
-     */
-    public Collection<Iteration> getOngoingIterations();
+    public Collection<Task> getTasksWithoutStoryForIteration(Iteration iteration);
     
-    public Collection<BacklogItem> getBacklogItemsWihoutIterationGoal(Iteration iter);
+    public List<Task> getAllTasksForIteration(Iteration iteration);
+    
+    public Pair<Integer, Integer> getCountOfDoneAndAllTasks(Iteration iteration);
+
+    public Pair<Integer, Integer> getCountOfDoneAndAllStories(
+            Iteration iteration);
 }

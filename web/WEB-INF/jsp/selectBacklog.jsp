@@ -5,22 +5,20 @@
 
 <h2>No backlog selected</h2>
 
-<p>Please select a backlog from left hand side panel or you can
+<p>Please select a backlog from left hand side panel. You can also
 start by creating a new object.</p>
 
 <aef:existingObjects />
 
 <ul>
-    <li><ww:url id="createLink" action="ajaxCreateProduct"
-        includeParams="none" />
+    <li><ww:url id="createLink" action="createProduct" namespace="ajax" includeParams="none" />
         <ww:a href="%{createLink}" onclick="return false;" title="Create a new product" cssClass="openCreateDialog openProductDialog">Product &raquo;</ww:a>
     </li>
 
     <li>
     <c:choose>
         <c:when test="${hasProducts}">
-            <ww:url id="createLink" action="ajaxCreateProject"
-                includeParams="none" />
+            <ww:url id="createLink" action="createProject" namespace="ajax" includeParams="none" />
             <ww:a href="%{createLink}" title="Create a new project" cssClass="openCreateDialog openProjectDialog" onclick="return false;">Project &raquo;</ww:a>
         </c:when>
         <c:otherwise>
@@ -34,8 +32,7 @@ start by creating a new object.</p>
     <li>
     <c:choose>
         <c:when test="${hasProjects}">
-            <ww:url id="createLink" action="ajaxCreateIteration"
-                includeParams="none" />
+            <ww:url id="createLink" action="createIteration" namespace="ajax" includeParams="none" />
             <ww:a href="%{createLink}"  title="Create a new iteration" cssClass="openCreateDialog openIterationDialog" onclick="return false;">Iteration &raquo;</ww:a>
         </c:when>
         <c:otherwise>
@@ -44,40 +41,21 @@ start by creating a new object.</p>
         </c:otherwise>
     </c:choose>
     </li>
-    
-<!--
-    Commented because of story-task terminology problems
- 
-    <li>
-    <c:choose>
-        <c:when test="${hasIterations}">
-           <ww:url id="createLink" action="ajaxCreateIterationGoal"
-                includeParams="none" />
-           <ww:a href="%{createLink}"  title="Create a new iteration goal" cssClass="openCreateDialog openIterationGoalDialog" onclick="return false;">Iteration goal &raquo;</ww:a>
-        </c:when>
-        <c:otherwise>
-            <span class="inactive"
-                title="Create an iteration before creating an iteration goal">
-            Iteration goal &raquo;</span>
-        </c:otherwise>
-    </c:choose>
-    </li>
--->
+
     <li>
     <c:choose>
         <c:when test="${hasProducts}">
-            <ww:url id="createLink" action="ajaxCreateBacklogItem"
-                includeParams="none" />
-            <ww:a href="%{createLink}" title="Create a new story/task" cssClass="openCreateDialog openBacklogItemDialog" onclick="return false;">Story/task &raquo;</ww:a>
+            <ww:url id="createLink" action="createStoryForm" namespace="ajax" includeParams="none" />
+            <ww:a href="%{createLink}" onclick="return false;" title="Create a new story" cssClass="openCreateDialog openStoryDialog">Story &raquo;</ww:a>
         </c:when>
         <c:otherwise>
             <span class="inactive"
-                title="Create a product before creating a story/task">
-            Story/task &raquo;</span>
+                title="Create a product before creating a story">
+            Story &raquo;</span>
         </c:otherwise>
     </c:choose>
     </li>
-    
+        
     <li class="separator" />
 
     <li><ww:url id="createLink" action="ajaxCreateProjectType"
@@ -85,8 +63,7 @@ start by creating a new object.</p>
         <ww:a href="%{createLink}" title="Create a new project type" cssClass="openCreateDialog openProjectTypeDialog" onclick="return false;">Project type &raquo;</ww:a>
     </li>
     
-    <li><ww:url id="createLink" action="ajaxCreateTeam"
-        includeParams="none" />
+    <li><ww:url id="createLink" action="createTeam" namespace="ajax" includeParams="none" />
         <ww:a href="%{createLink}" onclick="return false;"
         cssClass="openCreateDialog openTeamDialog"
         title="Create a new team">Team &raquo;</ww:a>
@@ -109,8 +86,7 @@ start by creating a new object.</p>
     </c:choose>
     </li>
     
-    <li><ww:url id="createLink" action="ajaxCreateUser"
-        includeParams="none" />
+    <li><ww:url id="createLink" action="createUser" namespace="ajax" includeParams="none" />
         <ww:a href="%{createLink}" cssClass="openCreateDialog openUserDialog"
         title="Create a new user" onclick="return false;">User &raquo;</ww:a>
     </li>

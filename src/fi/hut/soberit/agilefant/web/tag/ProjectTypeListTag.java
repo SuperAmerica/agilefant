@@ -21,7 +21,7 @@ public class ProjectTypeListTag extends SpringTagSupport {
     @Override
     public int doStartTag() throws JspException {
         super.getPageContext().setAttribute(ProjectTypeListTag.PROJECTTYPE_LIST_KEY,
-                projectTypeBusiness.getAll());
+                projectTypeBusiness.retrieveAll());
         return Tag.EVAL_BODY_INCLUDE;
     }
 }

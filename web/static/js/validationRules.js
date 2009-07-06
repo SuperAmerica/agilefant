@@ -1,30 +1,131 @@
+var agilefantParsers = {
+	exactEstimateToString: function(minorUnits, hideDash) {
+		if(!hideDash && (typeof minorUnits !== "number" || isNaN(minorUnits) || minorUnits < 0)) {
+			return "&mdash;";
+		}
+		/* We cannot simply divide by 60 because we want to have one decimal place in the number */
+		var majorUnits = Math.round(minorUnits / 6) / 10;
+		if(isNaN(majorUnits) && !hideDash) {
+			return "&mdash;";
+		}
+		if(isNaN(majorUnits)) {
+			return "";
+		}
+		if(Math.round(majorUnits) == majorUnits) {
+			majorUnits += ".0";
+		}
+		return majorUnits + "h";
+	},
+	parseExactEstimate: function(string) {
+		return agilefantParsers.parseMajorAndMinor(string, "h", "min", 60, agilefantParsers.isExactEstimateString);
+	},
+	isExactEstimateString: function(string) {
+		return agilefantParsers.isValidMajorAndMinorString(string, "h", "min", [true]);
+	},
+	isStoryPointString: function(string) {
+	  var onlyDigits = new RegExp("^[ ]*[0-9]*[ ]*$");
+	  return onlyDigits.test(string);
+	},
+	storyPointsToString: function(storyPoints) {
+	  if (storyPoints === undefined || storyPoints === null) {
+	    return "&mdash;";
+	  }
+	  else {
+	    return storyPoints + "sp";
+	  }
+	},
+	parseStoryPointString: function(string) {
+	  string = jQuery.trim(string);
+	  return string;
+	},
+	hourEntryToString: function(minorUnits, hideDash) {
+		if(!hideDash && (typeof minorUnits !== "number" || isNaN(minorUnits) || minorUnits < 0)) {
+			return "&mdash;";
+		}
+		/* We cannot simply divide by 60 because we want to have one decimal place in the number */
+		var majorUnits = Math.round(minorUnits / 6) / 10;
+		if(isNaN(majorUnits) && !hideDash) {
+			return "&mdash;";
+		}
+		if(isNaN(majorUnits)) {
+			return "";
+		}
+		if(Math.round(majorUnits) == majorUnits) {
+			majorUnits += ".0";
+		}
+		return majorUnits + "h";
+	},
+	parseHourEntry: function(string) {
+		return agilefantParsers.parseMajorAndMinor(string, "h", "min", 60, agilefantParsers.isHourEntryString);
+	},
+	isHourEntryString: function(string) {
+		return agilefantParsers.isValidMajorAndMinorString(string, "h", "min", [false]);
+	},
+	parseMajorAndMinor: function(string, major, minor, minorsPerMajor, validator) {
+		string = jQuery.trim(string);
+		string = string.toLowerCase();
+		if(string === "") {
+			return null;
+		}
+		string = string.replace(/,/,".");
+		var minorUnits = 0;
+		if(!validator(string)) {
+			return null;
+		}
+		var timeParts = string.split(" ");
+		for(var i = 0 ; i < timeParts.length; i++) {
+			var currentPart = timeParts[i];
+			var valueType = currentPart.split(new RegExp("(\\d+[.]?\\d*)(" + major + "|" + minor + ")?"));
+			var value = parseInt(valueType[1]);
+			var type = valueType[2];
+			if(!type) {
+				minorUnits += value * minorsPerMajor;
+			} else {
+				if (type == major) {
+					minorUnits += value * minorsPerMajor;
+				} else if (type == minor) {
+					minorUnits += value;
+				}
+			}
+		}
+		return Math.round(minorUnits);		
+	},
+	
+	/*
+	 * Add the validator for a value that consists of two parts (1h 3min, 5banaani 6omena, etc)
+	 * param[0] should be false if empty values are accepted, true otherwise.
+	 * param[1] allow negatives 
+	 */
+	isValidMajorAndMinorString: function(string, major, minor, param) {
+	    if (param == null) {
+	        param = [ true ];
+	    }
+		if(!string) {
+			string = "";
+		}
+		string = string.toLowerCase();
+	    if (param[0] == false && jQuery.trim(string) == "") {
+	        return true;
+	    }
+	    if (param[1] == null) {
+	        param[1] = false;
+	    }
+		var majorOnly = new RegExp("^[ ]*[0-9]+" + major + "?[ ]*$"); //10h
+		var minorOnly = new RegExp("^[ ]*[0-9]+" + minor + "[ ]*$"); //10min
+		var majorAndMinor = new RegExp("^[ ]*[0-9]+" + major + "[ ]+[0-9]+" + minor + "[ ]*$"); //1h 10min
+		var shortFormat = new RegExp("^[0-9]+[.,][0-9]+" + major + "?$"); //1.5 or 1,5
+		if (param[1]) {
+			var majorOnly = new RegExp("^[ ]*-[0-9]+" + major + "?[ ]*$"); //10h
+			var minorOnly = new RegExp("^[ ]*-[0-9]+" + minor + "[ ]*$"); //10min
+			var majorAndMinor = new RegExp("^[ ]*-[0-9]+" + major + "[ ]+[0-9]+" + minor + "[ ]*$"); //1h 10min
+			var shortFormat = new RegExp("^-?[0-9]+[.,][0-9]+" + major + "?$"); //1.5 or 1,5
+		}
+		return (majorOnly.test(string) || minorOnly.test(string) || majorAndMinor.test(string) || shortFormat.test(string));		
+	}
+}
 
-/*
- * Add the validator for AFTime.
- * param[0] should be false if empty values are accepted, true otherwise.
- * param[1] allow negatives 
- */
-jQuery.validator.addMethod("aftime",function(value, element, param) {
-    if (param == null) {
-        param = [ true ];
-    }
-    if (param[0] == false && jQuery.trim(value) == "") {
-        return true;
-    }
-    if (param[1] == null) {
-        param[1] = false;
-    }
-    var hourOnly = new RegExp("^[ ]*[0-9]+h?[ ]*$"); //10h
-    var minuteOnly = new RegExp("^[ ]*[0-9]+min[ ]*$"); //10min
-    var hourAndMinute = new RegExp("^[ ]*[0-9]+h[ ]+[0-9]+min[ ]*$"); //1h 10min
-    var shortFormat = new RegExp("^[0-9]+[.,][0-9]+$"); //1.5 or 1,5
-    if (param[1]) {
-	    hourOnly = new RegExp("^[ ]*-?[0-9]+h?[ ]*$"); //10h
-	    minuteOnly = new RegExp("^[ ]*-?[0-9]+min[ ]*$"); //10min
-	    hourAndMinute = new RegExp("^[ ]*-?[0-9]+h[ ]+[0-9]+min[ ]*$"); //1h 10min
-        shortFormat = new RegExp("^-?[0-9]+[.,][0-9]+$"); //1.5 or 1,5
-    }
-    return (hourOnly.test(value) || minuteOnly.test(value) || hourAndMinute.test(value) || shortFormat.test(value));
+jQuery.validator.addMethod("hourentry",function(value, element, param) {
+	return agilefantParsers.isValidMajorAndMinorString(value, "h", "min", param);
 }, "Invalid format");
 
 /* Add the validator for time format */
@@ -141,7 +242,7 @@ var agilefantValidationRules = {
                 time: true
             },
             "project.defaultOverhead": {
-                aftime: [ false ]
+                hourentry: [ false ]
             },
             "project.backlogSize": {
                 digits: true
@@ -165,7 +266,7 @@ var agilefantValidationRules = {
                 time: "Invalid date format"
             },
             "project.defaultOverhead": {
-                aftime: "Invalid format"
+            	hourentry: "Invalid format"
             },
             "project.backlogSize": {
                 digits: "Please enter only numbers"
@@ -246,35 +347,32 @@ var agilefantValidationRules = {
            }
 	   }
 	},
-	backlogItem: {
+	story: {
 	   rules: {
-	       "backlogItem.name": {
+	       "story.name": {
 	           required: true
 	       },
 	       "backlogId": {
 	           required: true
 	       },
-	       "backlogItem.originalEstimate": {
-	           aftime: [ false ]
+	       "story.storyPoints": {
+	           digits: true
 	       }
 	   },
 	   messages: {
-	       "backlogItem.name": {
+	       "story.name": {
                required: "Please enter a name"
            },
            "backlogId": {
                required: "Please select a backlog"
-           },
-           "backlogItem.originalEstimate": {
-               aftime: "Invalid format"
            }
 	   }
 	},
     hourEntry: {
        rules: {
-           "hourEntry.timeSpent": {
+           "hourEntry.minutesSpent": {
                required: true,
-               aftime: [ true ]
+               hourentry: [ true ]
            },
            "date": {
                required: true,
@@ -286,9 +384,9 @@ var agilefantValidationRules = {
            }
        },
        messages: {
-           "hourEntry.timeSpent": {
+           "hourEntry.minutesSpent": {
                required: "Please enter the time spent",
-               aftime: "Invalid format"
+               hourentry: "Invalid format"
            },
            "date": {
                required: "Please enter a date",
@@ -300,6 +398,36 @@ var agilefantValidationRules = {
            }
        }
     },
+    hourEntryAsString: {
+        rules: {
+            "effortString": {
+                required: true,
+                hourentry: [ true ]
+            },
+            "date": {
+                required: true,
+                time: true
+            },
+            "userIds": {
+                required: true, 
+                minlength: 1
+            }
+        },
+        messages: {
+            "effortString": {
+                required: "Please enter the time spent",
+                hourentry: "Invalid format"
+            },
+            "date": {
+                required: "Please enter a date",
+                time: "Invalid format"
+            },
+            "userIds": {
+                 required: "Select at least 1 user",
+                 minlength: "Select at least 1 user"
+            }
+        }
+     },
     newUser: {
        rules: {
            "user.fullName": {
@@ -317,7 +445,7 @@ var agilefantValidationRules = {
                email: true
            },
            "user.weekHours": {
-               aftime: [ true ]
+               hourentry: [ true ]
            },
            "password1": {
                required: true
@@ -342,7 +470,7 @@ var agilefantValidationRules = {
                email: "Invalid email address"
            },
            "user.weekHours": {
-               aftime: "Invalid format"
+               hourentry: "Invalid format"
            },
            "password1": {
                required: "Please enter a password"
@@ -369,7 +497,7 @@ var agilefantValidationRules = {
                email: true
            },
            "user.weekHours": {
-               aftime: [ true ]
+               hourentry: [ true ]
            },
            "password1": {
                required: false
@@ -394,7 +522,7 @@ var agilefantValidationRules = {
                email: "Invalid email address"
            },
            "user.weekHours": {
-               aftime: "Invalid format"
+               hourentry: "Invalid format"
            },
            "password2": {
                equalTo: "Passwords don't match"
@@ -457,27 +585,26 @@ var agilefantValidationRules = {
             }
         }
     },
-    bliProgress: {
+    storyProgress: {
         rules: {
             "effortLeft": {
-                aftime: [ false ]
+                hourentry: [ false ]
             },
             "spentEffort": {
-                aftime: [ false ]
+                hourentry: [ false ]
             }
         },
         messages: {
             "effortLeft": {
-                aftime: "Invalid format"
+        		hourentry: "Invalid format"
             },
             "spentEffort": {
-                aftime: "Invalid format"
+            	hourentry: "Invalid format"
             }
         }
     }
 };
 agilefantValidationRules.businessTheme = agilefantValidationRules.theme;
-agilefantValidationRules.bli = agilefantValidationRules.backlogItem;
 
 /*
  * Add the error placement rules to each ruleset.
@@ -503,9 +630,10 @@ jQuery.each(agilefantValidationRules, function() {
 
 
 var validationRulesByHTMLClass = {
-    'validateNewBacklogItem': agilefantValidationRules.backlogItem,
-    'validateBacklogItem': agilefantValidationRules.backlogItem,
-    'validateNewHourEntry': agilefantValidationRules.hourEntry,
+    'validateNewStory': agilefantValidationRules.story,
+    'validateStory': agilefantValidationRules.story,
+    'validateNewHourEntry': agilefantValidationRules.hourEntryAsString,
+    'validateNewHourEntryAjax': agilefantValidationRules.hourEntry,
     'validateNewIteration': agilefantValidationRules.iteration,
     'validateIteration': agilefantValidationRules.iteration,
     'validateNewIterationGoal': agilefantValidationRules.iterationGoal,
@@ -521,7 +649,7 @@ var validationRulesByHTMLClass = {
     'validateTheme': agilefantValidationRules.theme,
     'validateNewUser': agilefantValidationRules.newUser,
     'validateUser': agilefantValidationRules.user,
-    'validateBLIProgressTab': agilefantValidationRules.bliProgress,
+    'validateStoryProgressTab': agilefantValidationRules.storyProgress,
     'validateExistingProduct': agilefantValidationRules.product,
     'validateEmpty': agilefantValidationRules.empty
 };

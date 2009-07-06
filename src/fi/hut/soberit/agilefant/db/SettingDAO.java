@@ -1,6 +1,6 @@
 package fi.hut.soberit.agilefant.db;
 
-import java.util.List;
+import java.util.Collection;
 
 import fi.hut.soberit.agilefant.model.Setting;
 
@@ -10,18 +10,9 @@ import fi.hut.soberit.agilefant.model.Setting;
  * @see GenericDAO
  */
 public interface SettingDAO extends GenericDAO<Setting> {
-   
-    /**
-     * Get setting by name
-     * @param settingName The name of the setting
-     * @return the requested setting
-     */
-    public Setting getSetting(String settingName);
-    
-    /**
-     * Get all settings ordered by name in descending order
-     * @return all settings ordered by name in descending order 
-     */
-    public List<Setting> getAllOrderByName();
-    
+
+    Setting getByName(String name);
+
+    Collection<Setting> getAllOrderByName();
+
 }

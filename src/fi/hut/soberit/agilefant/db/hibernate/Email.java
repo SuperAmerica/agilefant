@@ -12,7 +12,7 @@ import org.hibernate.validator.ValidatorClass;
  * Annotation to enable our hibernate custom email validator.
  * 
  * @author Turkka Äijälä
- * @see fi.hut.soberit.agilefant.db.hibernate.EmailValidator
+ * @see fi.fi.hut.soberit.agilefant.db.hibernate.EmailValidator
  */
 @Documented
 @ValidatorClass(EmailValidator.class)

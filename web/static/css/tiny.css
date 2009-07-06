@@ -582,11 +582,11 @@ select{
 	width: 190px;
 }
 
-.backlogItemList {
+.storyList {
 	vertical-align: top;
 }
 
-.dailyWorkBacklogItems {
+.dailyWorkStorys {
 	width: 100%;
 	margin: 0;
 	padding: 0;
@@ -952,14 +952,14 @@ table.reportTable tr th.iteration {
 	font-weight:normal;
 }
 
-table.reportTable tr th.backlogitem {
+table.reportTable tr th.story {
 	text-align:left;
 	background-color:#f5f5f5;
 	padding:4px;
 	font-weight:normal;
 }
 
-table.reportTable tr.backlogitem {
+table.reportTable tr.story {
 	display:none;
 }
 
@@ -975,7 +975,7 @@ table.reportTable tr.special th.first {
 	padding-left:31px;
 }
 
-table.reportTable tr.special.backlogitemshead th.first {
+table.reportTable tr.special.storyshead th.first {
 	font-weight:normal;
 }
 
@@ -992,7 +992,7 @@ tr.leftborder {
 	display:none;
 }
 
-table.reportTable tr th.backlogitem a,
+table.reportTable tr th.story a,
 table.reportTable tr th.iteration a,
 table.reportTable tr th.project a,
 table.reportTable tr th.product a {
@@ -1001,7 +1001,7 @@ table.reportTable tr th.product a {
 	cursor:pointer;
 }
 
-table.reportTable tr th.backlogitem a:hover,
+table.reportTable tr th.story a:hover,
 table.reportTable tr th.iteration a:hover,
 table.reportTable tr th.project a:hover,
 table.reportTable tr th.product a:hover {
@@ -1009,11 +1009,11 @@ table.reportTable tr th.product a:hover {
 	color:blue;
 }
 
-table.reportTable tr th.backlogitem.second {
+table.reportTable tr th.story.second {
 	font-weight:bold;
 }
 
-table.reportTable tr th.backlogitem.third {
+table.reportTable tr th.story.third {
 	font-weight:bold;
 }
 

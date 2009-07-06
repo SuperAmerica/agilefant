@@ -3,13 +3,13 @@
 <aef:productList/>
 
 <ww:date name="%{new java.util.Date()}" id="start"
-        format="%{getText('webwork.shortDateTime.format')}" />
+        format="%{getText('struts.shortDateTime.format')}" />
     <ww:date name="%{new java.util.Date()}" id="end"
-        format="%{getText('webwork.shortDateTime.format')}" />
+        format="%{getText('struts.shortDateTime.format')}" />
 
 <div id="editIterationForm" class="validateWrapper validateNewIteration">
 <ww:form method="post" action="storeNewIteration">
-	<ww:hidden name="iterationId" value="${iteration.id}" />
+	<ww:hidden name="iterationId" value="%{iteration.id}" />
 	
 
 	<table class="formTable">
@@ -31,9 +31,9 @@
 				<option class="inactive" value="">(select project)</option>
 				<c:forEach items="${productList}" var="product">
 					<option value="" class="inactive productOption">${aef:out(product.name)}</option>
-					<c:forEach items="${product.projects}" var="project">
+					<c:forEach items="${product.children}" var="project">
 						<c:choose>
-							<c:when test="${project.id == currentProjectId}">
+							<c:when test="${project.id == projectId}">
 								<option selected="selected" value="${project.id}"
 									class="projectOption" title="${project.name}">${aef:out(project.name)}</option>
 							</c:when>
@@ -57,15 +57,15 @@
 			<td>*</td>
 			<td colspan="2"><aef:datepicker
 				id="create_iteration_start_date" name="startDate"
-				format="%{getText('webwork.shortDateTime.format')}"
-				value="%{#start}" /></td>
+				format="%{getText('struts.shortDateTime.format')}"
+				value="${start}" /></td>
 		</tr>
 		<tr>
 			<td>End date</td>
 			<td>*</td>
 			<td colspan="2"><aef:datepicker
 				id="create_iteration_end_date" name="endDate"
-				format="%{getText('webwork.shortDateTime.format')}" value="%{#end}" />
+				format="%{getText('struts.shortDateTime.format')}" value="${end}" />
 
 			</td>
 		</tr>

@@ -3,17 +3,41 @@ function toggleDiv(id) { $('#' + id).toggle(); }
 
 function confirmDeleteTodo() { return confirm("Really delete TODO?");}
 function confirmDeleteHour() { return confirm("Really delete hour entry?"); }
-function confirmDeleteBli() { return confirm("Deleting the backlog item will cause all of its TODOs and logged effort to be deleted.");}
+function confirmDeleteStory() { return confirm("Deleting the story will cause all of its tasks and logged effort to be deleted.");}
 function confirmDelete() { return confirm("Are you sure?"); }
 function confirmDeleteTeam() { return confirm("Really delete the team?"); }
 function confirmReset() { return confirm("Really reset the original estimate?"); }
+function confirmDeleteIteration() { return confirm("Are you sure you wish to delete this iteration?"); }
 
-function deleteBacklogItem(backlogItemId) {
-	var url = "ajaxDeleteBacklogItem.action";			
-	if (confirmDeleteBli()) {
-		$.post(url,{backlogItemId: backlogItemId},function(data) {
+function deleteStory(storyId) {
+	var url = "ajax/deleteStory.action";			
+	if (confirmDeleteStory()) {
+		$.post(url,{storyId: storyId},function(data) {
 			reloadPage();
 		});
+	}
+}
+
+function deleteIteration(iterationId, projectId) {
+	var url = "ajax/deleteIteration.action";
+	if (confirmDeleteIteration()) {
+	  jQuery.ajax({
+		    async: false,
+		    error: function(XMLHttpRequest) {
+		      if (XMLHttpRequest.status === 403) {
+		    	commonView.showError("Iterations with stories or tasks cannot be deleted.")
+		      } else {
+		    	commonView.showError("An error occured while deleting this iteration.");
+		      }
+		    },
+		    success: function() {
+		    	window.location = "editProject.action?projectId=" + projectId;
+		    },
+		    cache: false,
+		    type: "POST",
+		    url: url,
+		    data: {iterationId: iterationId}
+		  });
 	}
 }
 
@@ -113,7 +137,7 @@ function closeTabs(context, target, id) {
 
 function trim (str) { return jQuery.trim(str); }
 
-function handleTabEvent(target, context, id, tabId, bliContext) {
+function handleTabEvent(target, context, id, tabId, storyContext) {
 	
     var target = $("#" + target);
     
@@ -133,36 +157,38 @@ function handleTabEvent(target, context, id, tabId, bliContext) {
         return false;
     }
     else {
-        var targetAction = {
-        	"bli": "backlogItemTabs.action",
-        	"bliWorkInProgress": "backlogItemTabs.action",
-        	"bliDWInterations": "backlogItemTabs.action",
-        	"bliDWProjects": "backlogItemTabs.action",
-            "project": "projectTabs.action",
-            "iteration": "iterationTabs.action",
-            "iterationGoal": "iterationGoalTabs.action",
-            "businessTheme": "businessThemeTabs.action",
-            "user": "userTabs.action",
-            "team": "teamTabs.action",
-            "projectType": "projectTypeTabs.action"
+        var targetActionNamespace = "ajax/";
+        var targetActionByContext = {
+        	"story": "storyTabs.action",
+        	"storyWorkInProgress": "storyTabs.action",
+        	"storyDWInterations": "storyTabs.action",
+        	"storyDWProjects": "storyTabs.action",
+          "project": "projectTabs.action",
+          "iteration": "iterationTabs.action",
+          "businessTheme": "businessThemeTabs.action",
+          "user": "userTabs.action",
+          "team": "teamTabs.action",
+          "projectType": "projectTypeTabs.action"
         };
         
+        var targetAction = targetActionNamespace + targetActionByContext[context];
+        
         var targetParams = {
-        	"bli": {
-                backlogItemId: id,
-                bliListContext: bliContext
+        	"story": {
+                storyId: id,
+                storyListContext: storyContext
             },
-            "bliWorkInProgress": {
-                backlogItemId: id,
-                bliListContext: bliContext
+            "storyWorkInProgress": {
+                storyId: id,
+                storyListContext: storyContext
             },
-            "bliDWInterations": {
-                backlogItemId: id,
-                bliListContext: bliContext
+            "storyDWInterations": {
+                storyId: id,
+                storyListContext: storyContext
             },
-            "bliDWProjects": {
-                backlogItemId: id,
-                bliListContext: bliContext
+            "storyDWProjects": {
+                storyId: id,
+                storyListContext: storyContext
             },
             "project": {
                 projectId: id
@@ -170,8 +196,8 @@ function handleTabEvent(target, context, id, tabId, bliContext) {
             "iteration": {
                 iterationId: id
             },
-            "iterationGoal": {
-                iterationGoalId: id
+            "task": {
+                taskId: id
             },      
             "businessTheme": {
                 businessThemeId: id
@@ -190,7 +216,8 @@ function handleTabEvent(target, context, id, tabId, bliContext) {
         target.data("aef-tabs","1");
         target.data("aef-context",context);
         target.data("aef-id",id);
-        target.load(targetAction[context], targetParams[context], function(data, status) {
+        
+        target.load(targetAction, targetParams[context], function(data, status) {
             var ajaxTabs = target.find('div.ajaxWindowTabsDiv');
             var ajaxTabsUl = ajaxTabs.find('ul.ajaxWindowTabs');
             ajaxTabs.tabs({ selected: tabId,
@@ -233,9 +260,9 @@ function disableElementIfValue(me, handle, ref) {
     return false;
 }
 
-function getIterationGoals(backlogId, element, preselectedId) {
-    jQuery.getJSON("ajaxGetIterationGoals.action",
-        { 'iterationId': backlogId }, function(data, status) {
+function getStories(backlogId, element, preselectedId) {
+    jQuery.getJSON("ajax/retrieveStories.action",
+        { 'backlogId': backlogId }, function(data, status) {
         var select = $(element);
         
         if (data.length > 0) {
@@ -276,16 +303,16 @@ function handleQuickRef(form) {
 }
 
 
-function resetBLIOriginalEstimate(bliId, me) {
+function resetStoryOriginalEstimate(storyId, me) {
     if (!confirmReset()) {
         return false;
     }
     // Send the request to the server
-    jQuery.post('resetBliOrigEstAndEffortLeft.action', {backlogItemId: bliId});
+    jQuery.post('resetStoryOrigEstAndEffortLeft.action', {storyId: storyId});
     
     var form = $(me).parents('form:eq(0)');
-    var origEstField = form.find('input[name=backlogItem.originalEstimate]').removeAttr('disabled').val('');
-    var effLeftField = form.find('input[name=backlogItem.effortLeft]');
+    var origEstField = form.find('input[name=story.originalEstimate]').removeAttr('disabled').val('');
+    var effLeftField = form.find('input[name=story.effortLeft]');
     
     effLeftField.parents('tr:eq(0)').remove();
     

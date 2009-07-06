@@ -1,26 +1,24 @@
 package fi.hut.soberit.agilefant.db.hibernate;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
+import org.hibernate.Criteria;
+import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.stereotype.Repository;
 
 import fi.hut.soberit.agilefant.db.BacklogDAO;
-import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.Backlog;
-import fi.hut.soberit.agilefant.model.BacklogItem;
-import fi.hut.soberit.agilefant.model.State;
-import fi.hut.soberit.agilefant.util.BacklogMetrics;
+import fi.hut.soberit.agilefant.model.Story;
 
 /**
  * Hibernate implementation of BacklogDAO interface using GenericDAOHibernate.
  */
+@Repository("backlogDAO")
 public class BacklogDAOHibernate extends GenericDAOHibernate<Backlog> implements
         BacklogDAO {
 
@@ -29,72 +27,59 @@ public class BacklogDAOHibernate extends GenericDAOHibernate<Backlog> implements
     }
 
     /** {@inheritDoc} */
-    public int getNumberOfDoneBacklogItems(int backlogId) {
-        return Integer.valueOf(super.getHibernateTemplate().find("select count(*) from BacklogItem b "
-                + "where b.backlog = ? and b.state = ?",
-                new Object[] { this.get(backlogId), State.DONE }).get(0).toString());
-    }
-    
-    public int getNumberOfDoneBacklogItems(Backlog backlog) {
-        return this.getNumberOfDoneBacklogItems(backlog.getId());
+    public int getNumberOfChildren(Backlog backlog) {
+        Criteria criteria = getCurrentSession().createCriteria(Backlog.class);
+        criteria.add(Restrictions.idEq(backlog.getId()));
+        criteria.createCriteria("children");
+        criteria.setProjection(Projections.rowCount());
+        return ((Integer) criteria.list().get(0)).intValue();
     }
 
     @SuppressWarnings("unchecked")
-    public BacklogMetrics getBacklogMetrics(Backlog backlog) {
-        BacklogMetrics metrics = new BacklogMetrics();
-        DetachedCriteria bliCrit = DetachedCriteria.forClass(BacklogItem.class);
-        bliCrit.add(Restrictions.eq("backlog", backlog));
-        ProjectionList sums = Projections.projectionList();
-        sums.add(Projections.sum("effortLeft"));
-        sums.add(Projections.sum("originalEstimate"));
-        sums.add(Projections.count("id"));
-        sums.add(Projections.groupProperty("backlog"));
-        bliCrit.setProjection(sums);
-        List res = super.getHibernateTemplate().findByCriteria(bliCrit);
-        try {
-            Object[] sumData = (Object[])res.get(0);
-            metrics.setEffortLeft((AFTime)sumData[1]);
-            metrics.setOriginalEstimate((AFTime)sumData[2]);
-            metrics.setTotalItems(metrics.getTotalItems() + (Integer)sumData[3]);
-        } catch(Exception e) {
-            return null;
+    public Collection<Backlog> retrieveMultiple(Collection<Integer> idList) {
+        if (idList == null || idList.isEmpty()) {
+            return new ArrayList<Backlog>();
         }
-        return metrics;
-    }
-    
-    @SuppressWarnings("unchecked")
-    public Collection<BacklogItem> getBlisWithSpentEffortByBacklog(Backlog bl, Date start, Date end, Set<Integer> users) {
-        DetachedCriteria bliCrit = DetachedCriteria.forClass(BacklogItem.class);
-        
-        bliCrit.add(Restrictions.eq("backlog", bl));
-        bliCrit.createAlias("hourEntries", "spentEffort");
-        bliCrit.createAlias("hourEntries.user", "effUser");
-        
-        if(start != null) {
-            bliCrit.add(Restrictions.ge("spentEffort.date", start));
-        }
-        if(end != null) {
-            bliCrit.add(Restrictions.le("spentEffort.date", end));
-        }
-        if(users != null && users.size() > 0) {
-            bliCrit.add(Restrictions.in("effUser.id", users));
-        }
-        
-        //bliCrit.setProjection(Projections.projectionList()
-        //        .add(Projections.sum("spentEffort.timeSpent")));
-        
-        List<BacklogItem> data = super.getHibernateTemplate().findByCriteria(bliCrit);
-        try {
-          Collection<BacklogItem> res = new HashSet<BacklogItem>();
-          for(BacklogItem item : data) {
-              if(!res.contains(item)) {
-                  res.add(item);
-              }
-          }
-          return res;  
-        } catch(Exception e) { 
-          return null;  
-        } 
+        DetachedCriteria crit = DetachedCriteria.forClass(Backlog.class);
+        crit.add(Restrictions.in("id", idList));
+        return hibernateTemplate.findByCriteria(crit);
     }
 
+    @SuppressWarnings("unchecked")
+    public List<Object[]> getResponsiblesByBacklog(Backlog backlog) {
+        String hql = "from Story as story left outer join story.responsibles as resp WHERE story.backlog = ?";
+        return (List<Object[]>) hibernateTemplate.find(hql,
+                new Object[] { backlog });
+    }
+
+    public int calculateStoryPointSum(int backlogId) {
+        Criteria crit = getCurrentSession().createCriteria(Story.class);
+        crit.setProjection(Projections.sum("storyPoints"));
+        crit.createCriteria("backlog").add(Restrictions.idEq(backlogId));
+        Integer result = uniqueResult(crit);
+        if (result == null) return 0;
+        return result.intValue();
+    }
+    
+    public int calculateStoryPointSumIncludeChildBacklogs(int backlogId) {
+        Criteria crit = getCurrentSession().createCriteria(Story.class);
+        crit.setProjection(Projections.sum("storyPoints"));
+        
+        crit.createAlias("backlog", "backlog");
+        crit.createAlias("backlog.parent", "parentBacklog",
+                CriteriaSpecification.LEFT_JOIN);
+        crit.createAlias("backlog.parent.parent", "parentParentBacklog",
+                CriteriaSpecification.LEFT_JOIN);
+        
+        crit.add(Restrictions.or(Restrictions.eq("backlog.id", backlogId),
+                Restrictions.or(Restrictions.eq("parentBacklog.id", backlogId),
+                        Restrictions.eq("parentParentBacklog.id", backlogId))));
+        
+        crit.add(Restrictions.isNotNull("storyPoints"));
+        
+        Integer result = uniqueResult(crit);
+        
+        if (result == null) return 0;
+        return result.intValue();
+    }
 }

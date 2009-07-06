@@ -9,7 +9,7 @@
 	<bean name="backlogAction" class="fi.hut.soberit.agilefant.web.BacklogAction" singleton="false" autowire="byName"/>
 	<bean name="iterationAction" class="fi.hut.soberit.agilefant.web.IterationAction" singleton="false" autowire="byName"/>	
 	<bean name="productAction" class="fi.hut.soberit.agilefant.web.ProductAction" singleton="false" autowire="byName"/>
-	<bean name="backlogItemAction" class="fi.hut.soberit.agilefant.web.BacklogItemAction" singleton="false" autowire="byName"/>
+	<bean name="storyAction" class="fi.hut.soberit.agilefant.web.StoryAction" singleton="false" autowire="byName"/>
 	<bean name="userAction" class="fi.hut.soberit.agilefant.web.UserAction" singleton="false" autowire="byName"/>		
 	<bean name="chartAction" class="fi.hut.soberit.agilefant.web.ChartAction" singleton="false" autowire="byName"/>	
 	<bean name="iterationGoalAction" class="fi.hut.soberit.agilefant.web.IterationGoalAction" singleton="false" autowire="byName"/>

@@ -1,30 +1,25 @@
 package fi.hut.soberit.agilefant.web;
 
 import java.text.ParseException;
-import java.util.Collection;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
-import com.opensymphony.xwork.Action;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
-import fi.hut.soberit.agilefant.business.HistoryBusiness;
+import com.opensymphony.xwork2.Action;
+
 import fi.hut.soberit.agilefant.business.IterationBusiness;
-import fi.hut.soberit.agilefant.db.BacklogDAO;
-import fi.hut.soberit.agilefant.db.BacklogItemDAO;
-import fi.hut.soberit.agilefant.db.IterationDAO;
-import fi.hut.soberit.agilefant.db.IterationGoalDAO;
-import fi.hut.soberit.agilefant.db.ProjectDAO;
+import fi.hut.soberit.agilefant.business.ProjectBusiness;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Iteration;
-import fi.hut.soberit.agilefant.model.IterationGoal;
 import fi.hut.soberit.agilefant.model.Project;
-import fi.hut.soberit.agilefant.util.BacklogMetrics;
+import fi.hut.soberit.agilefant.transfer.IterationDataContainer;
+import fi.hut.soberit.agilefant.transfer.IterationMetrics;
 import fi.hut.soberit.agilefant.util.CalendarUtils;
-import fi.hut.soberit.agilefant.util.EffortSumData;
-import fi.hut.soberit.agilefant.util.IterationDataContainer;
-import flexjson.JSONSerializer;
 
+@Component("iterationAction")
+@Scope("prototype")
 public class IterationAction extends BacklogContentsAction implements CRUDAction {
 
     private static final long serialVersionUID = -448825368336871703L;
@@ -33,43 +28,32 @@ public class IterationAction extends BacklogContentsAction implements CRUDAction
 
     private Iteration iteration;
 
-    private IterationDAO iterationDAO;
-
-    private ProjectDAO projectDAO;
-
-    private BacklogItemDAO backlogItemDAO;
-
-    private BacklogDAO backlogDAO;
-
     private Project project;
 
     private int projectId;
-
-    private IterationGoalDAO iterationGoalDAO;
-
-    private int iterationGoalId;
 
     private String startDate;
 
     private String endDate;
 
     private String dateFormat;
-
-    private HistoryBusiness historyBusiness;
-            
-    private Map<Integer, EffortSumData> iterationGoalEffLeftSums = new HashMap<Integer, EffortSumData>();
-    
-    private Map<Integer, EffortSumData> iterationGoalOrigEstSums = new HashMap<Integer, EffortSumData>();
-    
-    private BacklogMetrics iterationMetrics;
+ 
+    private IterationMetrics iterationMetrics;
     
     private String json;
     
+    @Autowired
     private IterationBusiness iterationBusiness;
     
-    private boolean excludeBacklogItems = false;
+    @Autowired
+    private ProjectBusiness projectBusiness;
+    
+    private boolean excludeStories = false;
+    
+    private IterationDataContainer iterationData;
     
     
+
     public String create() {
         iterationId = 0;
         iteration = new Iteration();
@@ -79,25 +63,15 @@ public class IterationAction extends BacklogContentsAction implements CRUDAction
     }
     
     public String iterationContents() {
-        IterationDataContainer data = this.iterationBusiness.getIterationContents(iterationId, excludeBacklogItems);
-        if(data == null) {
-            return AJAX_ERROR;
+        iterationData = this.iterationBusiness.getIterationContents(iterationId);
+        if(iterationData == null) {
+            return Action.ERROR;
         }
-        JSONSerializer serializer = new JSONSerializer();
-        if(!excludeBacklogItems) {
-            serializer.include("iterationGoals.backlogItems");
-            serializer.include("itemsWithoutGoal");
-            serializer.include("itemsWithoutGoal.businessThemes");
-            serializer.include("iterationGoals.backlogItems.businessThemes");
-        }
-        
-        json = serializer.prettyPrint(data);
-        
-        return AJAX_SUCCESS;
+        return Action.SUCCESS;
     }
 
-    public String edit() {
-        iteration = iterationDAO.get(iterationId);
+    public String retrieve() {
+        iteration = iterationBusiness.retrieve(iterationId);
         
 
         if (iteration == null) {
@@ -111,7 +85,7 @@ public class IterationAction extends BacklogContentsAction implements CRUDAction
             startDate = new Date(0);
         }
 
-        project = iteration.getProject();
+        project = (Project) iteration.getParent();
 
         if (project == null) {
             super
@@ -122,15 +96,21 @@ public class IterationAction extends BacklogContentsAction implements CRUDAction
         projectId = project.getId();
         
         // Load metrics data
-        iterationMetrics = backlogBusiness.getBacklogMetrics(iteration);
-        businessThemeBusiness.loadBacklogThemeMetrics(iteration);
+        iterationMetrics = iterationBusiness.getIterationMetrics(iteration);
+//        businessThemeBusiness.loadBacklogThemeMetrics(iteration);
         
         return Action.SUCCESS;
     }
     
+    public String delete() {
+        iteration = iterationBusiness.retrieve(iterationId);
+        iterationBusiness.delete(iterationId);
+        return Action.SUCCESS;
+    }
+    
     public String iterationMetrics() {
-        iteration = iterationDAO.get(iterationId);
-        iterationMetrics = backlogBusiness.getBacklogMetrics(iteration);
+        iteration = iterationBusiness.retrieve(iterationId);
+        iterationMetrics = iterationBusiness.getIterationMetrics(iteration);
         return Action.SUCCESS;
     }
 
@@ -139,7 +119,7 @@ public class IterationAction extends BacklogContentsAction implements CRUDAction
             super.addActionError(super.getText("iteration.missingForm"));
             return Action.INPUT;
         }
-        project = projectDAO.get(projectId);
+        project = projectBusiness.retrieve(projectId);
         if (project == null) {
             super
                     .addActionError(super
@@ -148,10 +128,10 @@ public class IterationAction extends BacklogContentsAction implements CRUDAction
         }
         Iteration fillable = new Iteration();
         if (iterationId > 0) {
-            fillable = iterationDAO.get(iterationId);
-            if(projectId > 0 && fillable.getProject() != null 
-                    && fillable.getProject().getId() != projectId) {
-                backlogBusiness.removeThemeBindings(fillable);
+            fillable = iterationBusiness.retrieve(iterationId);
+            if(projectId > 0 && fillable.getParent() != null 
+                    && fillable.getParent().getId() != projectId) {
+//                backlogBusiness.removeThemeBindings(fillable);
             }
             if (iteration == null) {
                 super.addActionError(super.getText("iteration.notFound"));
@@ -163,7 +143,7 @@ public class IterationAction extends BacklogContentsAction implements CRUDAction
             this.fillObject(fillable);
         } catch (ParseException e) {
             super.addActionError(super.getText("backlog.unparseableDate")
-                    + super.getText("webwork.shortDateTime.format"));
+                    + super.getText("struts.shortDateTime.format"));
             return Action.ERROR;
         }
 
@@ -172,31 +152,15 @@ public class IterationAction extends BacklogContentsAction implements CRUDAction
         }
 
         if (iterationId == 0)
-            iterationId = (Integer) iterationDAO.create(fillable);
+            iterationId = (Integer) iterationBusiness.create(fillable);
         else
-            iterationDAO.store(fillable);
+            iterationBusiness.store(fillable);
         
-        historyBusiness.updateBacklogHistory(fillable.getId());
+//        historyBusiness.updateBacklogHistory(fillable.getId());
         return Action.SUCCESS;
     }
 
-    public String delete() {
-        iteration = iterationDAO.get(iterationId);
-        if (iteration == null) {
-            super.addActionError(super.getText("projectType.notFound"));
-            return Action.ERROR;
-        }
-        if (iteration.getBacklogItems().size() > 0
-                || iteration.getIterationGoals().size() > 0
-                || (iteration.getBusinessThemeBindings() != null
-                        && iteration.getBusinessThemeBindings().size() > 0)) {
-            super.addActionError(super
-                    .getText("iteration.notEmptyWhenDeleting"));
-            return Action.ERROR;
-        }
-        iterationDAO.remove(iteration);
-        return Action.SUCCESS;
-    }
+
 
     protected void fillObject(Iteration fillable) throws ParseException {
         fillable.setEndDate(CalendarUtils.parseDateFromString(endDate));
@@ -212,7 +176,7 @@ public class IterationAction extends BacklogContentsAction implements CRUDAction
                             .getText("backlog.startDateAfterEndDate"));
             return;
         }
-        fillable.setProject(this.project);
+        fillable.setParent(this.project);
         fillable.setName(this.iteration.getName());
         fillable.setDescription(this.iteration.getDescription());
         fillable.setBacklogSize(this.iteration.getBacklogSize());
@@ -224,70 +188,6 @@ public class IterationAction extends BacklogContentsAction implements CRUDAction
         }
     }
 
-    public String ajaxStoreIteration() {
-        if (iteration == null) {
-            super.addActionError(super.getText("iteration.missingForm"));
-            return CRUDAction.AJAX_ERROR;
-        }
-        project = projectDAO.get(projectId);
-        if (project == null) {
-            super
-                    .addActionError(super
-                            .getText("iteration.projectNotFound"));
-            return CRUDAction.AJAX_ERROR;
-        }
-        Iteration fillable = new Iteration();
-        if (iterationId > 0) {
-            fillable = iterationDAO.get(iterationId);
-            if(projectId > 0 && fillable.getProject() != null 
-                    && fillable.getProject().getId() != projectId) {
-                backlogBusiness.removeThemeBindings(fillable);
-            }
-            if (iteration == null) {
-                super.addActionError(super.getText("iteration.notFound"));
-                return CRUDAction.AJAX_ERROR;
-            }
-        }
-
-        try {
-            this.fillObject(fillable);
-        } catch (ParseException e) {
-            super.addActionError(super.getText("backlog.unparseableDate")
-                    + super.getText("webwork.shortDateTime.format"));
-            return CRUDAction.AJAX_ERROR;
-        }
-
-        if (super.hasActionErrors()) {
-            return CRUDAction.AJAX_ERROR;
-        }
-
-        if (iterationId == 0)
-            iterationId = (Integer) iterationDAO.create(fillable);
-        else
-            iterationDAO.store(fillable);
-        
-        historyBusiness.updateBacklogHistory(fillable.getId());
-        return CRUDAction.AJAX_SUCCESS;  
-    }
-    
-    public String moveIterationGoal() {
-        Iteration iteration = iterationDAO.get(iterationId);
-        IterationGoal iterationGoal = iterationGoalDAO.get(iterationGoalId);
-        if (iteration == null) {
-            super.addActionError(super.getText("iteration.notFound"));
-            return Action.ERROR;
-        }
-        if (iterationGoal == null) {
-            super.addActionError(super.getText("iterationGoal.notFound"));
-        }
-
-        iterationGoal.getIteration().getIterationGoals().remove(iterationGoal);
-        iteration.getIterationGoals().add(iterationGoal);
-        iterationGoal.setIteration(iteration);
-        iterationGoalDAO.store(iterationGoal);
-
-        return Action.SUCCESS;
-    }
 
     public int getIterationId() {
         return iterationId;
@@ -310,18 +210,6 @@ public class IterationAction extends BacklogContentsAction implements CRUDAction
         return backlog;
     }
 
-    public void setIterationDAO(IterationDAO iterationDAO) {
-        this.iterationDAO = iterationDAO;
-    }
-
-    public void setProjectDAO(ProjectDAO projectDAO) {
-        this.projectDAO = projectDAO;
-    }
-
-    public Collection<Iteration> getAllIterations() {
-        return this.iterationDAO.getAll();
-    }
-
     public int getProjectId() {
         return projectId;
     }
@@ -330,125 +218,28 @@ public class IterationAction extends BacklogContentsAction implements CRUDAction
         this.projectId = projectId;
     }
 
-    public void setIterationGoalDAO(IterationGoalDAO iterationGoalDAO) {
-        this.iterationGoalDAO = iterationGoalDAO;
-    }
-
-    public void setIterationGoalId(int iterationGoalId) {
-        this.iterationGoalId = iterationGoalId;
-    }
-
-    public int getIterationGoalId() {
-        return iterationGoalId;
-    }
-
-    /**
-     * @return the backlogItemDAO
-     */
-    public BacklogItemDAO getBacklogItemDAO() {
-        return backlogItemDAO;
-    }
-
-    /**
-     * @param backlogItemDAO
-     *                the backlogItemDAO to set
-     */
-    public void setBacklogItemDAO(BacklogItemDAO backlogItemDAO) {
-        this.backlogItemDAO = backlogItemDAO;
-    }
-
-    /**
-     * @return the backlogDAO
-     */
-    public BacklogDAO getBacklogDAO() {
-        return backlogDAO;
-    }
-
-    /**
-     * @param backlogDAO
-     *                the backlogDAO to set
-     */
-    public void setBacklogDAO(BacklogDAO backlogDAO) {
-        this.backlogDAO = backlogDAO;
-    }
-
-    /**
-     * @return the endDate
-     */
     public String getEndDate() {
         return endDate;
     }
 
-    /**
-     * @param endDate
-     *                the endDate to set
-     */
     public void setEndDate(String endDate) {
         this.endDate = endDate;
     }
 
-    /**
-     * @return the startDate
-     */
     public String getStartDate() {
         return startDate;
     }
 
-    /**
-     * @param startDate
-     *                the startDate to set
-     */
     public void setStartDate(String startDate) {
         this.startDate = startDate;
     }
 
-    /**
-     * @return the dateFormat
-     */
     public String getDateFormat() {
         return dateFormat;
     }
 
-    /**
-     * @param dateFormat
-     *                the dateFormat to set
-     */
     public void setDateFormat(String dateFormat) {
         this.dateFormat = dateFormat;
-    }
-
-    public HistoryBusiness getHistoryBusiness() {
-        return historyBusiness;
-    }
-
-    public void setHistoryBusiness(HistoryBusiness historyBusiness) {
-        this.historyBusiness = historyBusiness;
-    }
-
-    public Map<Integer, EffortSumData> getIterationGoalEffLeftSums() {
-        return iterationGoalEffLeftSums;
-    }
-
-    public void setIterationGoalEffLeftSums(
-            Map<Integer, EffortSumData> iterationGoalEffLeftSums) {
-        this.iterationGoalEffLeftSums = iterationGoalEffLeftSums;
-    }
-
-    public Map<Integer, EffortSumData> getIterationGoalOrigEstSums() {
-        return iterationGoalOrigEstSums;
-    }
-
-    public void setIterationGoalOrigEstSums(
-            Map<Integer, EffortSumData> iterationGoalOrigEstSums) {
-        this.iterationGoalOrigEstSums = iterationGoalOrigEstSums;
-    }  
-
-    public BacklogMetrics getIterationMetrics() {
-        return iterationMetrics;
-    }
-
-    public void setIterationMetrics(BacklogMetrics iterationMetrics) {
-        this.iterationMetrics = iterationMetrics;
     }
 
     public String getJsonData() {
@@ -459,8 +250,16 @@ public class IterationAction extends BacklogContentsAction implements CRUDAction
         this.iterationBusiness = iterationBusiness;
     }
 
-    public void setExcludeBacklogItems(boolean excludeBacklogItems) {
-        this.excludeBacklogItems = excludeBacklogItems;
+    public void setProjectBusiness(ProjectBusiness projectBusiness) {
+        this.projectBusiness = projectBusiness;
+    }
+
+    public IterationMetrics getIterationMetrics() {
+        return iterationMetrics;
+    }
+    
+    public IterationDataContainer getIterationData() {
+        return iterationData;
     }
 
 }

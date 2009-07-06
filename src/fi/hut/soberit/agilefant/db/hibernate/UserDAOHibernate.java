@@ -2,8 +2,9 @@ package fi.hut.soberit.agilefant.db.hibernate;
 
 import java.util.List;
 
-import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Expression;
+import org.hibernate.Criteria;
+import org.hibernate.criterion.Restrictions;
+import org.springframework.stereotype.Repository;
 
 import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.model.User;
@@ -11,6 +12,7 @@ import fi.hut.soberit.agilefant.model.User;
 /**
  * Hibernate implementation of UserDAO interface using GenericDAOHibernate.
  */
+@Repository("userDAO")
 public class UserDAOHibernate extends GenericDAOHibernate<User> implements
         UserDAO {
 
@@ -19,32 +21,17 @@ public class UserDAOHibernate extends GenericDAOHibernate<User> implements
     }
 
     /** {@inheritDoc} */
-    @SuppressWarnings("unchecked")
-    public User getUser(String loginName) {
-        DetachedCriteria criteria = DetachedCriteria.forClass(this
-                .getPersistentClass());
-        criteria.add(Expression.eq("loginName", loginName));
-        return super.getFirst(super.getHibernateTemplate().findByCriteria(
-                criteria));
+    public User getByLoginName(String loginName) {
+        Criteria crit = getCurrentSession().createCriteria(User.class);
+        crit.add(Restrictions.eq("loginName", loginName));
+        return firstResult(crit);
     }
 
     /** {@inheritDoc} */
-    @SuppressWarnings("unchecked")
-    public List<User> getEnabledUsers() {
-        DetachedCriteria criteria = DetachedCriteria.forClass(this
-                .getPersistentClass());
-        criteria.add(Expression.eq("enabled", true));
-        return super.getHibernateTemplate().findByCriteria(
-                criteria);
+    public List<User> listUsersByEnabledStatus(boolean enabled) {
+        Criteria crit = getCurrentSession().createCriteria(User.class);
+        crit.add(Restrictions.eq("enabled", enabled));
+        return asList(crit);
     }
 
-    /** {@inheritDoc} */
-    @SuppressWarnings("unchecked")
-    public List<User> getDisabledUsers() {
-        DetachedCriteria criteria = DetachedCriteria.forClass(this
-                .getPersistentClass());
-        criteria.add(Expression.eq("enabled", false));
-        return super.getHibernateTemplate().findByCriteria(
-                criteria);
-    }
 }

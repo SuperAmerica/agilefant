@@ -13,8 +13,6 @@ import javax.persistence.Transient;
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Type;
 
-import fi.hut.soberit.agilefant.web.page.PageItem;
-
 /**
  * Hibernate entity bean representing a Setting.
  * <p>
@@ -31,8 +29,8 @@ import fi.hut.soberit.agilefant.web.page.PageItem;
  */
 @BatchSize(size=20)
 @Entity
-@Table(name = "setting")
-public class Setting implements PageItem {
+@Table(name = "settings")
+public class Setting {
 
     private int id;
     
@@ -49,8 +47,6 @@ public class Setting implements PageItem {
     @Id
     // generate automatically
     @GeneratedValue(strategy = GenerationType.AUTO)
-    // not nullable
-    @Column(nullable = false)
     public int getId() {
         return id;
     }
@@ -93,12 +89,12 @@ public class Setting implements PageItem {
     }
     
     @Transient
-    public PageItem getParent() {
+    public Backlog getParent() {
         return null;
     }
 
     @Transient
-    public Collection<PageItem> getChildren() {
+    public Collection<Backlog> getChildren() {
         return null;
     }
     

@@ -1,7 +1,11 @@
 package fi.hut.soberit.agilefant.business;
 
-public interface ProductBusiness {
+import java.util.Collection;
 
-    int count();
+import fi.hut.soberit.agilefant.model.Product;
+
+public interface ProductBusiness extends GenericBusiness<Product> {
+
+    Collection<Product> retrieveAllOrderByName();
 
 }

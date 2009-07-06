@@ -571,11 +571,11 @@ span.right {
 	width: 190px;
 }
 
-.backlogItemList {
+.storyList {
 	vertical-align: top;
 }
 
-.dailyWorkBacklogItems {
+.dailyWorkStorys {
 	width: 100%;
 	margin: 0;
 	padding: 0;
@@ -920,7 +920,7 @@ div.disclaimer {
 /* Styles for timesheet */
 table.reportTable {
 	width: 100%;
-	padding: 3px;
+	border-collapse: collapse;
 }
 
 table.reportTable tr {
@@ -930,7 +930,8 @@ table.reportTable tr {
 table.reportTable tr th {
 	text-align: left;
 	background-color: #b2b2b2;
-	padding: 4px;
+	margin: 0px;
+	padding: 0px;
 }
 
 table.reportTable tr th.product {
@@ -955,69 +956,48 @@ table.reportTable tr th.iteration {
 	font-weight: normal;
 }
 
-table.reportTable tr th.backlogitem {
+table.reportTable tr th.story {
 	text-align: left;
 	background-color: #f5f5f5;
 	padding: 4px;
 	font-weight: normal;
 }
 
-table.reportTable tr.backlogitem {
-	display: none;
-}
-
-table.reportTable tr.special th {
-	background-color: #e6eee6 !important;
+table.reportTable tr.task td {
 	background-color: #e4ecff !important;
 }
-
-table.reportTable tr.special th.first {
-	background-image: url(../img/special-hour-entry-report.gif);
-	background-repeat: no-repeat;
-	background-position: 16px 9px;
-	padding-left: 31px;
-}
-
-table.reportTable tr.special.backlogitemshead th.first {
-	font-weight: normal;
-}
-
-table.reportTable tr.special.hourentryhead th {
-	border-top: 0px solid #000000;
-}
-
 tr.leftborder .first {
 	border-left: 4px solid #b2d8b2; /* #dddda8 */
 	border-left: 4px solid #b2caff;
 }
-
-tr.leftborder {
-	display: none;
-}
-
-table.reportTable tr th.backlogitem a,table.reportTable tr th.iteration a,table.reportTable tr th.project a,table.reportTable tr th.product a
+table.reportTable tr th.story a,table.reportTable tr th.iteration a,table.reportTable tr th.project a,table.reportTable tr th.product a, table.reportTable tr.task td a
 	{
 	text-decoration: none;
 	color: blue;
 	cursor: pointer;
 }
 
-table.reportTable tr th.backlogitem a:hover,table.reportTable tr th.iteration a:hover,table.reportTable tr th.project a:hover,table.reportTable tr th.product a:hover
+table.reportTable tr th.story a:hover,table.reportTable tr th.iteration a:hover,table.reportTable tr th.project a:hover,table.reportTable tr th.product a:hover, table.reportTable tr.task td a:hover
 	{
 	text-decoration: underline;
 	color: blue;
 }
 
-table.reportTable tr th.backlogitem.second {
+table.reportTable tr th.story.second {
 	font-weight: bold;
 }
 
-table.reportTable tr th.backlogitem.third {
+table.reportTable tr th.story.third {
 	font-weight: bold;
 }
 
 table.reportTable tr.hourentries {
 	display: none;
+}
+
+table.reportTable tr .effortCol {
+  width: 100px;
+  text-align: left;	
 }
 
 table.reportTable tr td.hourentry {
@@ -1026,21 +1006,14 @@ table.reportTable tr td.hourentry {
 	padding: 4px;
 	font-weight: normal;
 }
-
-table.reportTable tr td.hourentry.first {
-	padding-left: 30px;
-	overflow: hidden;
-	max-width: 395px;
-}
-
-table.reportTable tr td.hourentry.second {
-	white-space: nowrap;
+table.reportTable tr .innerTable {
+  padding: 0px 0px 0px 15px;	
 }
 
 table.reportTable tr.total th.total {
 	border-top: 1px solid #000000;
 }
-
+/* End of timesheet styles */
 .businessThemeTable select {
 	width: 100px;
 }
@@ -1049,7 +1022,6 @@ table.reportTable tr.total th.total {
 	width: 200px;
 }
 
-/* End of timesheet styles */
 span.businessTheme {
 	background-color: #ffd;
 	color: #a74;

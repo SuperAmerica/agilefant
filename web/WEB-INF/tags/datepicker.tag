@@ -5,7 +5,7 @@
 <%@ attribute name="format" %>
 <%@ attribute name="id" %>
 
-<ww:textfield id="${id}" value="${value}" name="${name}" size="14" cssClass="datePickerField" cssStyle="float: left;"/>
+<input type="text" id="${id}" value="${value}" name="${name}" size="14" class="datePickerField" style="float: left;" />
 
 <script type="text/javascript">
 <!--

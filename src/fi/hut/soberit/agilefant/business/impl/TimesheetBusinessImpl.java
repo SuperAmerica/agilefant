@@ -1,226 +1,210 @@
 package fi.hut.soberit.agilefant.business.impl;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
-import fi.hut.soberit.agilefant.business.HourEntryBusiness;
+import org.joda.time.DateTime;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import fi.hut.soberit.agilefant.business.TimesheetBusiness;
-import fi.hut.soberit.agilefant.db.BacklogDAO;
-import fi.hut.soberit.agilefant.model.AFTime;
+import fi.hut.soberit.agilefant.db.HourEntryDAO;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogHourEntry;
-import fi.hut.soberit.agilefant.model.BacklogItem;
-import fi.hut.soberit.agilefant.model.BacklogItemHourEntry;
-import fi.hut.soberit.agilefant.model.HourEntry;
-import fi.hut.soberit.agilefant.util.BacklogTimesheetNode;
-import fi.hut.soberit.agilefant.util.CalendarUtils;
+import fi.hut.soberit.agilefant.model.Iteration;
+import fi.hut.soberit.agilefant.model.Product;
+import fi.hut.soberit.agilefant.model.Project;
+import fi.hut.soberit.agilefant.model.Story;
+import fi.hut.soberit.agilefant.model.StoryHourEntry;
+import fi.hut.soberit.agilefant.model.TaskHourEntry;
+import fi.hut.soberit.agilefant.transfer.BacklogTimesheetNode;
+import fi.hut.soberit.agilefant.transfer.StoryTimesheetNode;
+import fi.hut.soberit.agilefant.transfer.TaskTimesheetNode;
+import fi.hut.soberit.agilefant.util.TimesheetData;
 
+@Service("timesheetBusiness")
+@Transactional
 public class TimesheetBusinessImpl implements TimesheetBusiness {
-    private BacklogDAO backlogDAO;
-    private HourEntryBusiness hourEntryBusiness;
-    private List<BacklogTimesheetNode> roots;
     
-    /** The map contains all nodes that are already in the tree, mapped by backlog id.
-     *  It is used to avoid creating duplicate instances of the same node, and to group
-     *  backlogs properly.   
-     */
-    private Map<Integer, BacklogTimesheetNode> nodes;
+    @Autowired
+    private HourEntryDAO hourEntryDAO;
     
-    private Date startDate, endDate;
-    
-    private Set<Integer> userIds;
-    
-    /**
-     * {@inheritDoc}
-     */
-    public List<BacklogTimesheetNode> generateTree(List<Integer> backlogIds,
-                                                   String startDateString, String endDateString,
-                                                   Set<Integer> userIds)
-            throws IllegalArgumentException{
-        
-        Backlog backlog, parent;
-        BacklogTimesheetNode backlogNode, parentNode, childNode;
-        
-        try{
-            if(startDateString == null || startDateString.trim().length() == 0)
-                this.startDate = null;
-            else
-                this.startDate = CalendarUtils.parseDateFromString(startDateString);
-            
-            if(endDateString == null || endDateString.trim().length() == 0)
-                this.endDate = null;
-            else
-                this.endDate = CalendarUtils.parseDateFromString(endDateString);
-            
-        }catch(ParseException e){
-            System.err.println("Error in parsing date");
-            throw new IllegalArgumentException("Error in parsing date");
+    public long getRootNodeSum(List<BacklogTimesheetNode> nodes) {
+        if(nodes == null) {
+            return 0L;
         }
-        
-        if(this.startDate != null && this.endDate != null && this.startDate.after(this.endDate))
-            throw new IllegalArgumentException("End date cannot be before start date");
-        
-        this.userIds = userIds;
-        
-        roots = new ArrayList<BacklogTimesheetNode>();
-        nodes = new HashMap<Integer, BacklogTimesheetNode>();
-      
-        for(int id : backlogIds){
-            backlog = backlogDAO.get(id);
-            if(backlog != null){
-                if(!nodes.containsKey(backlog.getId())){
-                    if((parent = (Backlog) backlog.getParent()) != null){
-                        backlogNode = new BacklogTimesheetNode(backlog, true, this);
-                        nodes.put(id, backlogNode);
-                        
-                        if((parentNode = nodes.get(parent.getId())) != null){
-                            parentNode.addChildBacklog(backlogNode);
-                        }else{
-                            parentNode = new BacklogTimesheetNode(parent, false, this);
-                            parentNode.addChildBacklog(backlogNode);
-                            nodes.put(parentNode.getBacklog().getId(), parentNode);
-                            childNode = parentNode;
-                        
-                            while((parent = (Backlog) childNode.getBacklog().getParent()) != null){
-                                if((parentNode = nodes.get(parent.getId())) != null){
-                                    parentNode.addChildBacklog(childNode);
-                                    break;
-                                }else{
-                                    parentNode = new BacklogTimesheetNode(parent, false, this);
-                                    parentNode.addChildBacklog(childNode);
-                                    nodes.put(parentNode.getBacklog().getId(), parentNode);
-                                    childNode = parentNode;
-                                }
-                            }
-                            
-                            if(!roots.contains(parentNode))
-                                roots.add(parentNode);
-                            
-                        }
-                    }else{ // The node is a root (Product)
-                        roots.add(new BacklogTimesheetNode(backlog, true, this));
-                    }
-                }else{ // Node is already in the tree
-                    BacklogTimesheetNode node = nodes.get(backlog.getId());
-                    if(!node.isExpanded())
-                        node.expandChildren(this, true);
-                }
-            }
-        }
-        
-        return roots;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public List<? extends HourEntry> getFilteredHourEntries(BacklogItem backlogItem){
-        Collection<BacklogItemHourEntry> hourEntries;
-        List<BacklogItemHourEntry> filteredHourEntries = new ArrayList<BacklogItemHourEntry>();
-        
-        hourEntries = backlogItem.getHourEntries();
-        
-        if(hourEntries != null){
-            for(BacklogItemHourEntry hourEntry : hourEntries){
-                if(passesFilters(hourEntry))
-                    filteredHourEntries.add(hourEntry);
-            }
-        }
-        
-        return filteredHourEntries;
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    public List<? extends HourEntry> getFilteredHourEntries(Backlog backlog){
-        List<BacklogHourEntry> hourEntries;
-        List<BacklogHourEntry> filteredHourEntries = new ArrayList<BacklogHourEntry>();
-        
-        hourEntries = hourEntryBusiness.getEntriesByParent(backlog);
-        
-        if(hourEntries != null){
-            for(BacklogHourEntry hourEntry : hourEntries){
-                if(passesFilters(hourEntry))
-                    filteredHourEntries.add(hourEntry);
-            }
-        }
-        
-        return filteredHourEntries;
-    }
-    
-    public Collection<BacklogItem> getBacklogItems(Backlog bl) {
-        return this.backlogDAO.getBlisWithSpentEffortByBacklog(bl,startDate,endDate,userIds);
-    }
-    
-    /**
-     * Check whether the given hourEntry passes the filters that were given in the time sheet query
-     */
-    private boolean passesFilters(HourEntry hourEntry){
-
-        if(hourEntry.getDate() == null)
-            return false;
-        
-        if((this.startDate != null && hourEntry.getDate().before(this.startDate)) | 
-           (this.endDate != null && hourEntry.getDate().after(this.endDate)))
-            return false;
-        
-        if(this.userIds.size() > 0 && !this.userIds.contains(hourEntry.getUser().getId()))
-            return false;
-
-        return true;
-    }
-    
-    public AFTime calculateRootSum(List<BacklogTimesheetNode> roots) {
-        AFTime sum = new AFTime(0);
-        if(roots == null) {
-            return sum;
-        }
-        for(BacklogTimesheetNode node : roots) {
-            sum.add(node.getHourTotal());
+        long sum = 0;
+        for(BacklogTimesheetNode node : nodes) {
+            sum += node.getEffortSum();
         }
         return sum;
     }
-    public BacklogDAO getBacklogDAO() {
-        return backlogDAO;
+    public List<BacklogTimesheetNode> findRootNodes(TimesheetData sheetData) {
+        List<BacklogTimesheetNode> rootNodes = new ArrayList<BacklogTimesheetNode>();
+        for(BacklogTimesheetNode node : sheetData.getBacklogNodes()) {
+            if(node.getBacklog() instanceof Product) {
+                node.calculateEffortSum();
+                rootNodes.add(node);
+            }
+        }
+        return rootNodes;
+    }
+    public List<BacklogTimesheetNode> getRootNodes(Set<Integer> backlogIds, DateTime startDate, DateTime endDate, Set<Integer> userIds) {
+        TimesheetData sheetData = this.generateTimesheet(backlogIds, startDate, endDate, userIds);
+        return this.findRootNodes(sheetData);
+    }
+    public TimesheetData generateTimesheet(Set<Integer> backlogIds, DateTime startDate, DateTime endDate, Set<Integer> userIds) {
+        TimesheetData sheetData = this.getUnlinkedTimesheetData(backlogIds, startDate, endDate, userIds);
+        this.linkTasks(sheetData);
+        this.linkStories(sheetData);
+        this.linkBacklogs(sheetData);
+        return sheetData;
+    }
+    protected TimesheetData getUnlinkedTimesheetData(Set<Integer> backlogIds, DateTime startDate, DateTime endDate, Set<Integer> userIds) {
+        TimesheetData sheetData = new TimesheetData();
+        List<BacklogHourEntry> backlogEntries = this.hourEntryDAO.getBacklogHourEntriesByFilter(backlogIds, startDate, endDate, userIds);
+        List<StoryHourEntry> storyEntries = this.hourEntryDAO.getStoryHourEntriesByFilter(backlogIds, startDate, endDate, userIds);
+        List<TaskHourEntry> taskEntries = this.hourEntryDAO.getTaskHourEntriesByFilter(backlogIds, startDate, endDate, userIds);
+        
+        for(BacklogHourEntry entry : backlogEntries) {
+            sheetData.addEntry(entry);
+        }
+        
+        for(StoryHourEntry entry : storyEntries) {
+            sheetData.addEntry(entry);
+        }
+        
+        for(TaskHourEntry entry : taskEntries) {
+            sheetData.addEntry(entry);
+        }
+        return sheetData;
+    }
+    
+    protected void attachTaskNodeToStoryNode(TimesheetData sheetData, TaskTimesheetNode taskNode) {
+        Story story = taskNode.getTask().getStory();
+        if(story == null) {
+            return;
+        }
+        int storyId = story.getId();
+
+        StoryTimesheetNode parentNode = sheetData.getStoryNode(storyId);
+        
+        if(parentNode != null && parentNode.getChildren().contains(taskNode)) {
+            return;
+        }
+        if(parentNode == null) {
+            parentNode = new StoryTimesheetNode(story);
+            sheetData.addNode(parentNode);
+        }
+        parentNode.addChild(taskNode);
+    }
+    
+    protected void attachTaskNodeToIterationNode(TimesheetData sheetData, TaskTimesheetNode taskNode) {
+        Iteration iteration = taskNode.getTask().getIteration();
+        if(iteration == null) {
+            return;
+        }
+        
+       int iterationId = iteration.getId();
+       BacklogTimesheetNode parentNode = sheetData.getBacklogNode(iterationId);
+       
+       if(parentNode != null && parentNode.getTaskNodes().contains(taskNode)) {
+           return;
+       }
+       
+       if(parentNode == null) {
+           parentNode = new BacklogTimesheetNode(iteration);
+           sheetData.addNode(parentNode);
+       } 
+       parentNode.addChild(taskNode);
+    }
+    protected void attachStoryNodeToBacklogNode(TimesheetData sheetData, StoryTimesheetNode storyNode) {
+        Backlog backlog = storyNode.getStory().getBacklog();
+        if(backlog == null) {
+            return;
+        }
+        
+        int backlogId = backlog.getId();
+        BacklogTimesheetNode parentNode = sheetData.getBacklogNode(backlogId);
+        
+        if(parentNode != null && parentNode.getStoryNodes().contains(storyNode)) {
+            return;
+        }
+        
+        if(parentNode == null) {
+            parentNode = new BacklogTimesheetNode(backlog);
+            sheetData.addNode(parentNode);
+        }
+        parentNode.addChild(storyNode);
+    }
+    
+    protected void attachBacklogNodeToBacklogNode(TimesheetData sheetData, BacklogTimesheetNode backlogNode) {
+        Backlog parentBacklog = backlogNode.getBacklog().getParent();
+        if(parentBacklog == null) {
+            return;
+        }
+        
+        int backlogId = parentBacklog.getId();
+        
+        BacklogTimesheetNode parentNode = sheetData.getBacklogNode(backlogId);
+        
+        if(parentNode != null && parentNode.getBacklogNodes().contains(backlogNode)) {
+            return;
+        }
+        if(parentNode == null) {
+            parentNode = new BacklogTimesheetNode(parentBacklog);
+            sheetData.addNode(parentNode);
+        }
+        parentNode.addChild(backlogNode);
+    }
+    
+    protected void linkTasks(TimesheetData sheetData) {
+        Collection<TaskTimesheetNode> taskNodes = sheetData.getTaskNodes();
+        
+        for(TaskTimesheetNode node : taskNodes) {
+            Story parentStory = node.getTask().getStory();
+            //directly under an iteration
+            if(parentStory == null) {
+                this.attachTaskNodeToIterationNode(sheetData, node);
+            } else {
+                this.attachTaskNodeToStoryNode(sheetData, node);
+            }
+        }
+    }
+    protected void linkStories(TimesheetData sheetData) {
+        Collection<StoryTimesheetNode> storyNodes = sheetData.getStoryNodes();
+        
+        for(StoryTimesheetNode node : storyNodes) {
+            this.attachStoryNodeToBacklogNode(sheetData, node);
+        }
+    }
+    
+    protected void  linkBacklogs(TimesheetData sheetData) {
+        Collection<BacklogTimesheetNode> backlogNodes = new ArrayList<BacklogTimesheetNode>();
+        backlogNodes.addAll(sheetData.getBacklogNodes());
+        for(BacklogTimesheetNode node : backlogNodes) {
+            if(node.getBacklog() instanceof Iteration) {
+                this.attachBacklogNodeToBacklogNode(sheetData, node);
+            }
+        }
+        backlogNodes.addAll(sheetData.getBacklogNodes());
+        for(BacklogTimesheetNode node : backlogNodes) {
+            if(node.getBacklog() instanceof Project) {
+                this.attachBacklogNodeToBacklogNode(sheetData, node);
+            }
+        }
+        backlogNodes.addAll(sheetData.getBacklogNodes());
+        for(BacklogTimesheetNode node : backlogNodes) {
+            if(node.getBacklog() instanceof Product) {
+                this.attachBacklogNodeToBacklogNode(sheetData, node);
+            }
+        }
+    }
+    public void setHourEntryDAO(HourEntryDAO hourEntryDAO) {
+        this.hourEntryDAO = hourEntryDAO;
     }
 
-    public void setBacklogDAO(BacklogDAO backlogDAO) {
-        this.backlogDAO = backlogDAO;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public List<BacklogTimesheetNode> getRoots() {
-        return roots;
-    }
-
-    public void setRoots(List<BacklogTimesheetNode> roots) {
-        // Not available
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public HourEntryBusiness getHourEntryBusiness() {
-        return hourEntryBusiness;
-    }
-
-    public void setHourEntryBusiness(HourEntryBusiness hourEntryBusiness) {
-        this.hourEntryBusiness = hourEntryBusiness;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public Map<Integer, BacklogTimesheetNode> getNodes() {
-        return nodes;
-    }
 }

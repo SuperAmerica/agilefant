@@ -14,7 +14,7 @@
 	  				</c:choose>
 	  			</td>
 	  			<c:choose>
-	  				<c:when test="${aef:isIteration(backlog) || ((!empty backlog.backlogItems) && (empty backlog.iterations))}">
+	  				<c:when test="${aef:isIteration(backlog) || ((!empty backlog.stories) && (empty backlog.iterations))}">
 		   			<td rowspan="6">
 						<div class="smallBurndown">
 						  <c:choose>
@@ -71,8 +71,8 @@
 	  		<tr>
 	  			<th>Timeframe</th>
 	  			<td>
-	  				<ww:date name="backlog.startDate" format="%{getText('webwork.date.format')}" />
-				- <ww:date name="backlog.endDate" format="%{getText('webwork.date.format')}" />
+	  				<ww:date name="backlog.startDate" format="%{getText('struts.date.format')}" />
+				- <ww:date name="backlog.endDate" format="%{getText('struts.date.format')}" />
 	  			</td>
 	  			<td></td>
 	  		</tr>

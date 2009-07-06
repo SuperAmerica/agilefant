@@ -4,15 +4,17 @@
 
 <%@attribute name="navi"%>
 <%@attribute name="subnavi"%>
-<%@attribute type="java.util.Collection" name="pageHierarchy"%>
+<%@attribute name="menuContextId"%>
 <%@attribute name="title"%>
+
+<aef:currentBacklog backlogId="${menuContextId}"/>
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
 <link rel="shortcut icon" href="static/img/favicon.png" type="image/png" />
-<link rel="stylesheet" href="static/css/import.css?<ww:text name="webwork.agilefantReleaseId" />" type="text/css"/>
-<link rel="stylesheet" href="static/css/v5.css?<ww:text name="webwork.agilefantReleaseId" />" type="text/css"/>
-<link rel="stylesheet" href="static/css/datepicker.css?<ww:text name="webwork.agilefantReleaseId" />" type="text/css"/>
+<link rel="stylesheet" href="static/css/import.css?<ww:text name="struts.agilefantReleaseId" />" type="text/css"/>
+<link rel="stylesheet" href="static/css/v5.css?<ww:text name="struts.agilefantReleaseId" />" type="text/css"/>
+<link rel="stylesheet" href="static/css/datepicker.css?<ww:text name="struts.agilefantReleaseId" />" type="text/css"/>
 <title>
 <c:choose>
 	<c:when test="${title != null}">Agilefant - <c:out value="${title}"/></c:when>
@@ -21,25 +23,25 @@
 </title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
-<script type="text/javascript" src="static/js/datacache.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
-<script type="text/javascript" src="static/js/generic.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
-<script type="text/javascript" src="static/js/jquery.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
-<script type="text/javascript" src="static/js/jquery.cookie.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
-<script type="text/javascript" src="static/js/jquery.treeview.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
-<script type="text/javascript" src="static/js/jquery.treeview.async.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
-<script type="text/javascript" src="static/js/jquery-ui.min.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
-<script type="text/javascript" src="static/js/jquery.validate.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
-<script type="text/javascript" src="static/js/multiselect.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
-<script type="text/javascript" src="static/js/taskrank.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
-<script type="text/javascript" src="static/js/date.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
-<script type="text/javascript" src="static/js/datepicker.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
-<script type="text/javascript" src="static/js/jquery.wysiwyg.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
-<script type="text/javascript" src="static/js/validationRules.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
-<script type="text/javascript" src="static/js/inlineEdit.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
-<script type="text/javascript" src="static/js/userChooser.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
-<script type="text/javascript" src="static/js/themeChooser.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
-<script type="text/javascript" src="static/js/backlogChooser.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
-<script type="text/javascript" src="static/js/backlogSelector.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/datacache.js?<ww:text name="struts.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/generic.js?<ww:text name="struts.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/jquery.js?<ww:text name="struts.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/jquery.cookie.js?<ww:text name="struts.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/jquery.treeview.js?<ww:text name="struts.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/jquery.treeview.async.js?<ww:text name="struts.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/jquery-ui.min.js?<ww:text name="struts.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/jquery.validate.js?<ww:text name="struts.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/multiselect.js?<ww:text name="struts.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/taskrank.js?<ww:text name="struts.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/date.js?<ww:text name="struts.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/datepicker.js?<ww:text name="struts.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/jquery.wysiwyg.js?<ww:text name="struts.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/validationRules.js?<ww:text name="struts.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/inlineEdit.js?<ww:text name="struts.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/userChooser.js?<ww:text name="struts.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/themeChooser.js?<ww:text name="struts.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/backlogChooser.js?<ww:text name="struts.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/backlogSelector.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 
 <script type="text/javascript">
 $(document).ready(function() {
@@ -54,7 +56,7 @@ $(document).ready(function() {
 });
 </script>
 
-<script type="text/javascript" src="static/js/onLoad.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/onLoad.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 </head>
 
 <!-- Icons from http://sweetie.sublink.ca/ -->
@@ -77,7 +79,7 @@ Agilefant
 		<tr>
 			<td>
 				<ww:url id="editLink" action="dailyWork" includeParams="none">
-					<ww:param name="userId" value="${currentUser.id}" />
+					<ww:param name="userId" value="%{currentUser.id}" />
 				</ww:url>
 				<ww:a href="%{editLink}">${currentUser.fullName}</ww:a>
 			</td>
@@ -113,47 +115,14 @@ Agilefant
 <aef:productList />
 
 <c:choose>
-	<c:when test="${!empty backlogItem.backlog}">
-		<c:set var="currentPageId" value="${backlogItem.backlog.id}"
+	<c:when test="${!empty story.backlog}">
+		<c:set var="currentPageId" value="${story.backlog.id}"
 			scope="page" />
 	</c:when>
 	<c:otherwise>
 		<c:set var="currentBacklog" value="${backlogId}" scope="page" />
 	</c:otherwise>
 </c:choose>
-
-<%-- Variable currentContext resolves which context is selected --%>
-
-<%-- Check the pageitem type --%>
-<c:forEach var="page" items="${pageHierarchy}">
-    <c:if test="${aef:isProduct(page)}">
-        <c:set var="currentAction" value="editProduct" scope="session" />
-        <c:set var="currentContext" value="product" scope="session" />
-        <c:set var="currentPageId" value="${page.id}" scope="session" />
-        <c:set var="currentIterationId" value="" scope="session" />
-        <c:set var="currentProjectId" value="" scope="session" />
-        <c:set var="currentProductId" value="${page.id}" scope="session" />
-    </c:if>
-    <c:if test="${aef:isProject(page)}">
-        <c:set var="currentAction" value="editProject" scope="session" />
-        <c:set var="currentContext" value="project" scope="session" />
-        <c:set var="currentPageId" value="${page.id}" scope="session" />
-        <c:set var="currentIterationId" value="" scope="session" />
-        <c:set var="currentProjectId" value="${page.id}" scope="session" />
-        <c:set var="currentProductId" value="${page.parent.id}"
-            scope="session" />
-    </c:if>
-    <c:if test="${aef:isIteration(page)}">
-        <c:set var="currentAction" value="editIteration" scope="session" />
-        <c:set var="currentContext" value="iteration" scope="session" />
-        <c:set var="currentPageId" value="${page.id}" scope="session" />
-        <c:set var="currentIterationId" value="${page.id}" scope="session" />
-        <c:set var="currentProjectId" value="${page.parent.id}"
-            scope="session" />
-        <c:set var="currentProductId" value="${page.parent.parent.id}"
-            scope="session" />
-    </c:if>
-</c:forEach>
 
 <!-- Create new -menu -->
 <span id="createNewMenuLink">
@@ -166,16 +135,17 @@ Agilefant
 <aef:existingObjects />
 
 <ul id="createNewMenu" style="display: none">
-    <li><ww:url id="createLink" action="ajaxCreateProduct"
-        includeParams="none" />
+    <li>
+        <ww:url id="createLink" action="createProduct" namespace="ajax" includeParams="none" />
         <ww:a href="%{createLink}" onclick="return false;" title="Create a new product" cssClass="openCreateDialog openProductDialog">Product &raquo;</ww:a>
     </li>
 
     <li>
     <c:choose>
         <c:when test="${hasProducts}">
-            <ww:url id="createLink" action="ajaxCreateProject"
-                includeParams="none" />
+            <ww:url id="createLink" action="createProject" namespace="ajax" includeParams="none">
+                <ww:param name="productId">${currentProductId}</ww:param>
+            </ww:url>
             <ww:a href="%{createLink}" onclick="return false;" title="Create a new project" cssClass="openCreateDialog openProjectDialog">Project &raquo;</ww:a>
         </c:when>
         <c:otherwise>
@@ -189,8 +159,9 @@ Agilefant
     <li>
     <c:choose>
         <c:when test="${hasProjects}">
-            <ww:url id="createLink" action="ajaxCreateIteration"
-                includeParams="none" />
+            <ww:url id="createLink" action="createIteration" namespace="ajax" includeParams="none">
+                <ww:param name="projectId">${currentProjectId}</ww:param>
+            </ww:url>
             <ww:a href="%{createLink}" onclick="return false;"  title="Create a new iteration" cssClass="openCreateDialog openIterationDialog">Iteration &raquo;</ww:a>
         </c:when>
         <c:otherwise>
@@ -200,51 +171,34 @@ Agilefant
     </c:choose>
     </li>
     
-<!--
-    Commented because of story-task terminology problems
- 
-    <li>
-    <c:choose>
-        <c:when test="${hasIterations}">
-		   <ww:url id="createLink" action="ajaxCreateIterationGoal"
-                includeParams="none" />
-		   <ww:a href="%{createLink}" onclick="return false;"  title="Create a new iteration goal" cssClass="openCreateDialog openIterationGoalDialog">Iteration goal &raquo;</ww:a>
-	    </c:when>
-        <c:otherwise>
-            <span class="inactive"
-                title="Create an iteration before creating an iteration goal">
-            Iteration goal &raquo;</span>
-        </c:otherwise>
-    </c:choose>
-    </li>
- -->
     <li>
     <c:choose>
         <c:when test="${hasProducts}">
-            <ww:url id="createLink" action="ajaxCreateBacklogItem"
-                includeParams="none" />
-            <ww:a href="%{createLink}" onclick="return false;" title="Create a new story/task" cssClass="openCreateDialog openBacklogItemDialog">Story/task &raquo;</ww:a>
+            <ww:url id="createLink" action="createStoryForm" namespace="ajax" includeParams="none">
+              <ww:param name="backlogId">${currentPageId}</ww:param>
+            </ww:url>
+            <ww:a href="%{createLink}" onclick="return false;" title="Create a new story" cssClass="openCreateDialog openStoryDialog">Story &raquo;</ww:a>
         </c:when>
         <c:otherwise>
             <span class="inactive"
-                title="Create a product before creating a story/task">
-            Story/task &raquo;</span>
+                title="Create a product before creating a story">
+            Story &raquo;</span>
         </c:otherwise>
     </c:choose>
     </li>
     
+    
     <li class="separator"></li>
-
+<!-- 
     <li><ww:url id="createLink" action="ajaxCreateProjectType"
         includeParams="none" />
         <ww:a href="%{createLink}" onclick="return false;" title="Create a new project type" cssClass="openCreateDialog openProjectTypeDialog">Project type &raquo;</ww:a>
     </li>
-    
-    <li><ww:url id="createLink" action="ajaxCreateTeam"
-        includeParams="none" />
+ -->    
+    <li><ww:url id="createLink" action="createTeam" namespace="ajax" includeParams="none" />
         <ww:a href="%{createLink}" onclick="return false;" title="Create a new team" cssClass="openCreateDialog openTeamDialog">Team &raquo;</ww:a>
     </li>
-    
+    <!-- 
     <li>
     <c:choose>
         <c:when test="${hasProducts}">
@@ -259,9 +213,9 @@ Agilefant
         </c:otherwise>
     </c:choose>
     </li>
-    
-    <li><ww:url id="createLink" action="ajaxCreateUser"
-        includeParams="none" /> <ww:a href="%{createLink}" onclick="return false;" title="Create a new user" cssClass="openCreateDialog openUserDialog">User &raquo;</ww:a>
+    -->
+    <li><ww:url id="createLink" action="createUser" namespace="ajax" includeParams="none" />
+    <ww:a href="%{createLink}" onclick="return false;" title="Create a new user" cssClass="openCreateDialog openUserDialog">User &raquo;</ww:a>
     </li>
 </ul>
 
@@ -281,11 +235,12 @@ Agilefant
 	$("#loadingDiv").ajaxStart(function() {
 	    $(this).show();
 	});
-    var navi = '<%=navi%>';
-    var subnavi = '<%=subnavi%>';
+    var navi = '${navi}';
+    var subnavi = '${subnavi}';
+    var contextObjectId = '${menuContextId}';
     
     $("#treemenu").treeview({
-        url: "menuData.action?navi=" + navi + "&subnavi=" + subnavi,
+        url: "menuData.action?navi=" + navi + "&subnavi=" + subnavi + "&contextObjectId=" + contextObjectId,
         collapsed: false,
         unique: false,
         
@@ -338,7 +293,7 @@ Agilefant
         <li>
     </c:otherwise>
 </c:choose>
-    <a href="contextView.action?contextName=${currentContext}&contextObjectId=${currentPageId}&resetContextView=true">
+    <a href="contextView.action?contextName=${currentBacklogContext}&contextObjectId=${currentBacklogId}&resetContextView=true">
     <span>
     <img src="static/img/backlog.png" alt="Backlogs" />
     Backlogs
@@ -347,6 +302,7 @@ Agilefant
 </li>
 
 <!-- Development portfolio -->
+<%--
 <c:choose>
     <c:when test="${navi == 'portfolio'}">
         <li class="selected">
@@ -362,6 +318,8 @@ Agilefant
     </span>
     </a>
 </li>
+--%>
+
 
 <%-- Timesheet --%>
 <aef:hourReporting id="hourReport" />
@@ -382,6 +340,7 @@ Agilefant
     </a>
 </li>
 </c:if>
+
 
 <%-- Settings --%>
 <c:choose>
@@ -404,50 +363,3 @@ Agilefant
 <!-- The main page begins -->
 <div id="main">
 
-<!-- If the page is not a backlog page, hide the breadcrumb trail -->
-<c:if test="${navi == 'backlog'}">
-<div id="bct">
-
-<c:forEach var="page" items="${pageHierarchy}">
-	<c:choose>
-
-		<c:when test="${aef:isProduct(page)}">
-								&gt;
-								<ww:url id="prodLink" action="contextView" includeParams="none">
-				<ww:param name="contextObjectId" value="${page.id}" />
-				<ww:param name="resetContextView" value="true" />
-			</ww:url>
-			<ww:a title="Product: ${page.name}"
-				href="%{prodLink}&contextName=product">${aef:out(page.name)}</ww:a>
-		</c:when>
-
-		<c:when test="${aef:isProject(page)}">
-								&gt;
-								<ww:url id="delivLink" action="contextView" includeParams="none">
-				<ww:param name="contextObjectId" value="${page.id}" />
-				<ww:param name="resetContextView" value="true" />
-			</ww:url>
-			<ww:a title="Project: ${page.name}"
-				href="%{delivLink}&contextName=project">${aef:out(page.name)}</ww:a>
-		</c:when>
-
-		<c:when test="${aef:isIteration(page)}">
-								&gt;
-								<ww:url id="iterLink" action="contextView" includeParams="none">
-				<ww:param name="contextObjectId" value="${page.id}" />
-				<ww:param name="resetContextView" value="true" />
-			</ww:url>
-			<ww:a title="Iteration: ${page.name}"
-				href="%{iterLink}&contextName=iteration">${aef:out(page.name)}</ww:a>
-		</c:when>
-
-		<c:when test="${aef:isUser(page)}">
-			<ww:url id="userLink" action="listUsers" includeParams="none" />
-			<ww:a href="%{userLink}">User list</ww:a>
-		</c:when>
-	</c:choose>
-</c:forEach>
-&nbsp;
-</div>
-
-</c:if>

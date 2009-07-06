@@ -1,19 +1,22 @@
 package fi.hut.soberit.agilefant.web;
 
-import com.opensymphony.xwork.Action;
-import com.opensymphony.xwork.ActionSupport;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+import com.opensymphony.xwork2.Action;
+import com.opensymphony.xwork2.ActionSupport;
 
 import fi.hut.soberit.agilefant.business.BacklogBusiness;
-import fi.hut.soberit.agilefant.business.BacklogItemBusiness;
-import fi.hut.soberit.agilefant.business.BusinessThemeBusiness;
-import fi.hut.soberit.agilefant.db.IterationGoalDAO;
+import fi.hut.soberit.agilefant.business.StoryBusiness;
 import fi.hut.soberit.agilefant.model.Backlog;
-import fi.hut.soberit.agilefant.model.BacklogItem;
-import fi.hut.soberit.agilefant.model.BusinessTheme;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
+import fi.hut.soberit.agilefant.model.Story;
 
+@Component("quickReferenceAction")
+@Scope("prototype")
 public class QuickReferenceAction extends ActionSupport {
 
     private static final long serialVersionUID = -1633753787414264535L;
@@ -22,14 +25,14 @@ public class QuickReferenceAction extends ActionSupport {
 
     private String id;
 
+    @Autowired
     private BacklogBusiness backlogBusiness;
 
-    private BacklogItemBusiness backlogItemBusiness;
+    @Autowired
+    private StoryBusiness storyBusiness;
 
-    private BusinessThemeBusiness businessThemeBusiness;
+    //private BusinessThemeBusiness businessThemeBusiness;
     
-    private IterationGoalDAO iterationGoalDAO;
-
     public String resolveLinkTarget() {
         String context = "";
         int objectId = -1;
@@ -44,10 +47,10 @@ public class QuickReferenceAction extends ActionSupport {
             objectId = Integer.parseInt(id.substring(id.indexOf(":") + 1));
             Backlog bl = null;
             if (context.equals("BL")) {
-                bl = backlogBusiness.getBacklog(objectId);
+                bl = backlogBusiness.retrieve(objectId);
             } else if (context.equals("BLI")) {
-                BacklogItem bli = backlogItemBusiness.getBacklogItem(objectId);
-                bl = bli.getBacklog();
+                Story story = storyBusiness.retrieve(objectId);
+                bl = story.getBacklog();
             }
             if (bl != null && bl instanceof Product) {
                 uri = "editProduct.action?productId=" + bl.getId();
@@ -63,7 +66,7 @@ public class QuickReferenceAction extends ActionSupport {
                 ses.ajaxOpenDialog();
                 uri += "#backlogItemTabContainer-" + objectId + "-backlogList";
 
-            } else if (context.equals("TH")) {
+            } /* else if (context.equals("TH")) {
                 BusinessTheme theme = businessThemeBusiness.getBusinessTheme(objectId);
                 Product prod = theme.getProduct();
                 ses.setContextType("businessTheme");
@@ -81,7 +84,7 @@ public class QuickReferenceAction extends ActionSupport {
                 ses.ajaxOpenDialog();
                 bl = iterationGoalDAO.get(objectId).getIteration();
                 uri = "editIteration.action?iterationId=" + bl.getId() + "#iterationGoalTabContainer-" + objectId;
-            }
+            }*/
             if(uri.length() == 0) {
                 return Action.ERROR;
             }
@@ -107,22 +110,15 @@ public class QuickReferenceAction extends ActionSupport {
         this.id = id;
     }
 
-    public BacklogBusiness getBacklogBusiness() {
-        return backlogBusiness;
-    }
-
     public void setBacklogBusiness(BacklogBusiness backlogBusiness) {
         this.backlogBusiness = backlogBusiness;
     }
 
-    public BacklogItemBusiness getBacklogItemBusiness() {
-        return backlogItemBusiness;
+    public void setStoryBusiness(StoryBusiness storyBusiness) {
+        this.storyBusiness = storyBusiness;
     }
 
-    public void setBacklogItemBusiness(BacklogItemBusiness bliBusiness) {
-        this.backlogItemBusiness = bliBusiness;
-    }
-
+    /*
     public BusinessThemeBusiness getBusinessThemeBusiness() {
         return businessThemeBusiness;
     }
@@ -130,12 +126,6 @@ public class QuickReferenceAction extends ActionSupport {
     public void setBusinessThemeBusiness(BusinessThemeBusiness themeBusiness) {
         this.businessThemeBusiness = themeBusiness;
     }
+    */
 
-    public IterationGoalDAO getIterationGoalDAO() {
-        return iterationGoalDAO;
-    }
-
-    public void setIterationGoalDAO(IterationGoalDAO iterationGoalDAO) {
-        this.iterationGoalDAO = iterationGoalDAO;
-    }
 }

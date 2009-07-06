@@ -1,104 +1,290 @@
 package fi.hut.soberit.agilefant.db.hibernate;
 
-import java.util.Date;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
-import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.Criteria;
+import org.hibernate.criterion.CriteriaSpecification;
+import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Order;
-import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.joda.time.DateTime;
+import org.springframework.stereotype.Repository;
 
 import fi.hut.soberit.agilefant.db.HourEntryDAO;
-import fi.hut.soberit.agilefant.model.AFTime;
-import fi.hut.soberit.agilefant.model.Backlog;
-import fi.hut.soberit.agilefant.model.BacklogItem;
-import fi.hut.soberit.agilefant.model.BacklogItemHourEntry;
+import fi.hut.soberit.agilefant.model.BacklogHourEntry;
 import fi.hut.soberit.agilefant.model.HourEntry;
+import fi.hut.soberit.agilefant.model.StoryHourEntry;
+import fi.hut.soberit.agilefant.model.TaskHourEntry;
 import fi.hut.soberit.agilefant.model.User;
 
-public class HourEntryDAOHibernate extends GenericDAOHibernate<HourEntry> implements
-        HourEntryDAO{
+@Repository("hourEntryDAO")
+public class HourEntryDAOHibernate extends GenericDAOHibernate<HourEntry>
+        implements HourEntryDAO {
 
-    protected HourEntryDAOHibernate() {
+    public HourEntryDAOHibernate() {
         super(HourEntry.class);
     }
-    
-    /**
-     * {@inheritDoc}
-     */
-    public AFTime getEffortSumByUserAndTimeInterval(User user, Date start, Date end) {
-        DetachedCriteria criteria = DetachedCriteria.forClass(this
-                .getPersistentClass());
-        
-        criteria.add(Restrictions.between("date", start, end));
-        criteria.add(Restrictions.eq("user", user));
-        criteria.setProjection(Projections.sum("timeSpent"));
-        
-        return (AFTime) super.getHibernateTemplate()
-                            .findByCriteria(criteria).get(0);
+
+    public long calculateSumByUserAndTimeInterval(int userId,
+            DateTime startDate, DateTime endDate) {
+        Criteria crit = getCurrentSession().createCriteria(HourEntry.class);
+        crit.createCriteria("user").add(Restrictions.idEq(userId));
+        crit.add(Restrictions.between("date", startDate, endDate));
+        crit.setProjection(Projections.sum("minutesSpent"));
+        Long result = (Long) crit.uniqueResult();
+        if (result == null)
+            return 0;
+        return result;
     }
-    /**
-     * {@inheritDoc}
-     */
-    @SuppressWarnings("unchecked")
-    public List<HourEntry> getHourEntriesByUser(User user) {
-        DetachedCriteria criteria = DetachedCriteria.forClass(this
-                .getPersistentClass());
+
+    private long calculateHourSum(boolean task, int storyId) {
+        Class<?> type = task ? TaskHourEntry.class : StoryHourEntry.class;
+        Criteria crit = getCurrentSession().createCriteria(type);
+        crit.setProjection(Projections.sum("minutesSpent"));
+        if(task)
+            crit = crit.createCriteria("task");
+        crit.createCriteria("story").add(
+                Restrictions.idEq(storyId));
+        Long result = (Long) crit.uniqueResult();
         
-        criteria.add(Restrictions.eq("user", user));
-        return (List<HourEntry>)super.getHibernateTemplate()
-                            .findByCriteria(criteria);
-    }
-    
-    @SuppressWarnings("unchecked")
-    public Map<BacklogItem, AFTime> getSpentEffortSumsByBacklog(Backlog backlog) {
-        DetachedCriteria crit = DetachedCriteria.forClass(BacklogItemHourEntry.class);
-        crit.createAlias("backlogItem", "bli");
-        crit.add(Restrictions.eq("bli.backlog", backlog));
-        ProjectionList proj = Projections.projectionList();
-        proj.add(Projections.groupProperty("backlogItem"));
-        proj.add(Projections.sum("timeSpent"));
-        crit.setProjection(proj);
-        Map<BacklogItem, AFTime> result = new HashMap<BacklogItem, AFTime>();
-        List<Object[]> data = this.getHibernateTemplate().findByCriteria(crit);
-        try {
-            for(Object[] item : data) {
-                result.put((BacklogItem)item[0], (AFTime)item[1]);
-            }
-        } catch(Exception e) { }
+        if (result == null)
+            return 0;
         return result;
     }
     
-    @SuppressWarnings("unchecked")
-    public List<HourEntry> getEntriesByIntervalAndUser(Date start, Date end, User user) {
-        DetachedCriteria crit = DetachedCriteria.forClass(HourEntry.class);
-        crit.add(Restrictions.ge("date", start));
-        crit.add(Restrictions.le("date", end));
-        crit.add(Restrictions.eq("user", user));
-        crit.addOrder(Order.asc("date"));
-        
-        List<HourEntry> res = this.getHibernateTemplate().findByCriteria(crit); 
-        this.getHibernateTemplate().evict(res);
-        return res;
+    public long calculateSumByStory(int storyId) {
+        return calculateHourSum(true, storyId) + calculateHourSum(false, storyId);
     }
 
-    @SuppressWarnings("unchecked")
-    public AFTime getTotalSpentEffortByBacklog(Backlog backlog) {
-        DetachedCriteria crit = DetachedCriteria.forClass(BacklogItem.class);
-        crit.add(Restrictions.eq("backlog",backlog));
-        crit.createAlias("hourEntries", "he");
-        ProjectionList total = Projections.projectionList();
-        total.add(Projections.sum("he.timeSpent"));
-        total.add(Projections.groupProperty("backlog"));
-        crit.setProjection(total);
-        List<Object[]> res = (List<Object[]>)this.getHibernateTemplate().findByCriteria(crit);
-        if(res.size() == 1) {
-            return (AFTime)res.get(0)[0];
-        }
-        return new AFTime(0);
+    public long calculateSumFromTasksWithoutStory(int iterationId) {
+        Criteria crit = getCurrentSession().createCriteria(TaskHourEntry.class);
+        crit.setProjection(Projections.sum("minutesSpent"));
+        Criteria taskCrit = crit.createCriteria("task");
+        taskCrit.add(Restrictions.isNull("story"));
+        taskCrit.createCriteria("iteration")
+                .add(Restrictions.idEq(iterationId));
+        Long result = (Long) crit.uniqueResult();
+        if (result == null)
+            return 0;
+        return result;
     }
     
+    private void setDateUserFilter(Criteria crit, DateTime start, DateTime end, Set<Integer> users) {
+        if(start != null) {
+            crit.add(Restrictions.ge("date", start));
+        }
+        if(end != null) {
+            crit.add(Restrictions.le("date", end));
+        }
+        if(users != null && users.size() > 0) {
+            crit.createAlias("user", "usr");
+            crit.add(Restrictions.in("usr.id", users));
+        }
+    }
+
+    public List<BacklogHourEntry> getBacklogHourEntriesByFilter(
+            Set<Integer> backlogIds, DateTime startDate, DateTime endDate,
+            Set<Integer> userIds) {
+        if (backlogIds == null || backlogIds.size() == 0) {
+            return Collections.emptyList();
+        }
+        Criteria crit = getCurrentSession().createCriteria(
+                BacklogHourEntry.class);
+        crit.createAlias("backlog", "bl", CriteriaSpecification.LEFT_JOIN);
+        crit.createAlias("backlog.parent", "blParent",
+                CriteriaSpecification.LEFT_JOIN);
+        crit.createAlias("backlog.parent.parent", "blParentParent",
+                CriteriaSpecification.LEFT_JOIN);
+        crit.add(Restrictions.or(Restrictions.in("bl.id", backlogIds),
+                Restrictions.or(Restrictions.in("blParent.id", backlogIds),
+                        Restrictions.in("blParentParent.id", backlogIds))));
+        crit.addOrder(Order.desc("date"));
+        this.setDateUserFilter(crit, startDate, endDate, userIds);
+        return asList(crit);
+    }
+
+    public List<StoryHourEntry> getStoryHourEntriesByFilter(
+            Set<Integer> backlogIds, DateTime startDate, DateTime endDate,
+            Set<Integer> userIds) {
+        if (backlogIds == null || backlogIds.size() == 0) {
+            return Collections.emptyList();
+        }
+
+        Criteria crit = getCurrentSession()
+                .createCriteria(StoryHourEntry.class);
+        crit
+                .createAlias("story.backlog", "bl",
+                        CriteriaSpecification.LEFT_JOIN);
+        crit.createAlias("story.backlog.parent", "blParent",
+                CriteriaSpecification.LEFT_JOIN);
+        crit.createAlias("story.backlog.parent.parent", "blParentParent",
+                CriteriaSpecification.LEFT_JOIN);
+
+        crit.add(Restrictions.or(Restrictions.in("bl.id", backlogIds),
+                Restrictions.or(Restrictions.in("blParent.id", backlogIds),
+                        Restrictions.in("blParentParent.id", backlogIds))));
+        crit.addOrder(Order.desc("date"));
+        this.setDateUserFilter(crit, startDate, endDate, userIds);
+        return asList(crit);
+    }
+
+    public List<TaskHourEntry> getTaskHourEntriesByFilter(
+            Set<Integer> backlogIds, DateTime startDate, DateTime endDate,
+            Set<Integer> userIds) {
+        if(backlogIds == null || backlogIds.size() == 0) {
+            return Collections.emptyList();
+        }
+        
+        List<TaskHourEntry> result;
+        
+        Criteria crit = getCurrentSession().createCriteria(TaskHourEntry.class);
+        
+        crit.createAlias("task.story", "story");
+        crit.createAlias("task.story.backlog", "bl",
+                CriteriaSpecification.LEFT_JOIN);
+        crit.createAlias("task.story.backlog.parent", "blParent",
+                CriteriaSpecification.LEFT_JOIN);
+        crit.createAlias("task.story.backlog.parent.parent", "blParentParent",
+                CriteriaSpecification.LEFT_JOIN);
+        
+
+        Criterion parentProject = Restrictions.or(Restrictions.in("bl.id", backlogIds), Restrictions
+                .in("blParent.id", backlogIds));
+        crit.add(Restrictions.or(Restrictions.in("blParentParent.id",
+                backlogIds), parentProject));
+        crit.addOrder(Order.desc("date"));
+        this.setDateUserFilter(crit, startDate, endDate, userIds);
+        
+        result = asList(crit);
+        
+        //entries where task has no story attachment
+        crit = getCurrentSession().createCriteria(TaskHourEntry.class);
+        
+        crit.createAlias("task", "task");
+        crit.createAlias("task.iteration", "iBl", CriteriaSpecification.LEFT_JOIN);
+        crit.createAlias("task.iteration.parent", "iBlParent",
+                CriteriaSpecification.LEFT_JOIN);
+        crit.createAlias("task.iteration.parent.parent", "iBlParentParent",
+                CriteriaSpecification.LEFT_JOIN);
+        
+        Criterion iterationParents = Restrictions.or(Restrictions.in(
+                "iBlParent.id", backlogIds), Restrictions.in("iBlParentParent.id",
+                backlogIds));
+        crit.add( Restrictions.or(iterationParents,
+                Restrictions.in("iBl.id", backlogIds)));
+        crit.add(Restrictions.isNull("task.story"));
+        crit.addOrder(Order.desc("date"));
+        this.setDateUserFilter(crit, startDate, endDate, userIds);
+        List<TaskHourEntry> hourentriesWithoutStory = asList(crit);
+        result.addAll(hourentriesWithoutStory);
+        
+        return result;
+    }
+    
+    public long calculateIterationHourEntriesSum(int iterationId) {
+        long tasksEntrySum = getSumForTaskHourEntriesWithoutStoryForIteration(iterationId);
+        long tasksWithStoryEntrySum = getSumForTaskHourEntriesWithStoryForIteration(iterationId);
+        long storyEntrySum = getSumForStoryHourEntriesForIteration(iterationId);
+        long backlogEntrySum = getSumForBacklogHourEntriesForIteration(iterationId);
+        
+        return tasksEntrySum + tasksWithStoryEntrySum + storyEntrySum + backlogEntrySum;
+    }
+    
+    private long getSumForTaskHourEntriesWithoutStoryForIteration(int iterationId) {
+        Criteria criteria = getCurrentSession().createCriteria(TaskHourEntry.class);
+        
+        criteria.setProjection(Projections.sum("minutesSpent"));
+
+        criteria = criteria.createCriteria("task");
+        criteria.add(Restrictions.isNull("story"));
+        criteria = criteria.createCriteria("iteration");
+        criteria.add(Restrictions.idEq(iterationId));
+        
+        Long result = (Long)uniqueResult(criteria);
+        
+        if (result == null) {
+            return 0;
+        }
+        return result;
+    }
+
+    private long getSumForTaskHourEntriesWithStoryForIteration(int iterationId) {
+        Criteria criteria = getCurrentSession().createCriteria(TaskHourEntry.class);
+        
+        criteria.setProjection(Projections.sum("minutesSpent"));
+
+        criteria = criteria.createCriteria("task");
+        criteria.add(Restrictions.isNotNull("story"));
+        criteria = criteria.createCriteria("story");
+        criteria = criteria.createCriteria("backlog");
+        criteria.add(Restrictions.idEq(iterationId));
+        
+        Long result = (Long)uniqueResult(criteria);
+        
+        if (result == null) {
+            return 0;
+        }
+        return result;
+    }
+
+    
+    private long getSumForStoryHourEntriesForIteration(int iterationId) {
+        Criteria criteria = getCurrentSession().createCriteria(StoryHourEntry.class);
+        
+        criteria.setProjection(Projections.sum("minutesSpent"));
+
+        criteria = criteria.createCriteria("story");
+        criteria = criteria.createCriteria("backlog");
+        criteria.add(Restrictions.idEq(iterationId));
+        
+        Long result = (Long)uniqueResult(criteria);
+        
+        if (result == null) {
+            return 0;
+        }
+        return result;
+    }
+
+    private long getSumForBacklogHourEntriesForIteration(int iterationId) {
+        Criteria criteria = getCurrentSession().createCriteria(BacklogHourEntry.class);
+        
+        criteria.setProjection(Projections.sum("minutesSpent"));
+        
+        criteria = criteria.createCriteria("backlog");
+        criteria.add(Restrictions.idEq(iterationId));
+        
+        Long result = (Long)uniqueResult(criteria);
+        
+        if (result == null) {
+            return 0;
+        }
+        return result;
+        
+    }
+
+    public long calculateSumByUserAndTimeInterval(User user,
+            DateTime startDate, DateTime endDate) {
+        if(user == null) {
+            return 0L;
+        }
+        return this.calculateSumByUserAndTimeInterval(user.getId(), startDate, endDate);
+    }
+
+    public List<HourEntry> getHourEntriesByFilter(DateTime startTime,
+            DateTime endTime, int userId) {
+        Criteria crit = this.getCurrentSession().createCriteria(HourEntry.class);
+        if(startTime != null) {
+            crit.add(Restrictions.ge("date", startTime));
+        }
+        if(endTime != null) {
+            crit.add(Restrictions.le("date", endTime));
+        }
+        if(userId != 0) {
+            crit.createCriteria("user").add(Restrictions.idEq(userId));
+        }
+        return asList(crit); 
+    }
 }

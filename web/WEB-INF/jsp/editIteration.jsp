@@ -1,12 +1,11 @@
 <%@ include file="./inc/_taglibs.jsp"%>
 <%@ include file="./inc/_header.jsp"%>
 
-<aef:bct iterationId="${iterationId}" />
-
 <aef:openDialogs context="iterationGoal" id="openIterationGoalTabs" />
+<aef:currentBacklog backlogId="${iteration.id}"/>
 
 <c:set var="divId" value="1336" scope="page" />
-<aef:menu navi="backlog" pageHierarchy="${pageHierarchy}" title="${iteration.name}"/>
+<aef:menu navi="backlog" title="${iteration.name}" menuContextId="${iteration.id}"/>
 <aef:productList />
 
 <ww:actionerror />
@@ -17,6 +16,7 @@
 </script>
 
 <h2><c:out value="${iteration.name}" /></h2>
+
 <table>
 	<table>
 		<tbody>
@@ -52,21 +52,26 @@
 				<div class="subItemContent">
 				<div id="descriptionDiv" class="descriptionDiv">
 				<table class="infoTable" cellpadding="0" cellspacing="0">
+					<%-- TODO: Add support for charts/metrics --%>
 					<tr>
 						<th class="info1"><ww:text name="general.uniqueId"/></th>
 						<td class="info3"><aef:quickReference item="${iteration}" /></td>
 						
 						<td class="info4" rowspan="5">
+						            
                         <div class="smallBurndown"><a href="#bigChart"><img id="smallChart" 
-                            src="drawSmallChart.action?iterationId=${iteration.id}" /></a></div>
+                            src="drawSmallIterationBurndown.action?backlogId=${iteration.id}" /></a></div>
                         <div id="iterationMetrics">
                           <%@ include file="./inc/iterationMetrics.jsp"%>
                         </div>
+                        
                         </td>					
 					</tr>
+					
 					<tr>	
 						<th class="info1">Planned iteration size</th>
 						<td class="info3" ondblclick="return editIteration();">
+            
 							<c:choose>
 							<c:when test="${(!empty iteration.backlogSize)}">
 								<c:out value="${iteration.backlogSize}"/>h
@@ -97,18 +102,17 @@
 				</table>
 				</div>
 				<div id="editIterationForm" class="validateWrapper validateIteration" style="display: none;">
-				<ww:form
-					method="post" id="iterationEditForm" action="storeIteration">
-					<ww:hidden name="iterationId" value="${iteration.id}" />
+				<form	method="post" id="iterationEditForm" action="ajax/storeIteration.action">
+					<ww:hidden name="iterationId" value="#attr.iteration.id" />
 					<ww:date name="%{iteration.getTimeOfDayDate(6)}" id="start"
-						format="%{getText('webwork.shortDateTime.format')}" />
+						format="%{getText('struts.shortDateTime.format')}" />
 					<ww:date name="%{iteration.getTimeOfDayDate(18)}" id="end"
-						format="%{getText('webwork.shortDateTime.format')}" />
+						format="%{getText('struts.shortDateTime.format')}" />
 					<c:if test="${iteration.id > 0}">
 						<ww:date name="%{iteration.startDate}" id="start"
-							format="%{getText('webwork.shortDateTime.format')}" />
+							format="%{getText('struts.shortDateTime.format')}" />
 						<ww:date name="%{iteration.endDate}" id="end"
-							format="%{getText('webwork.shortDateTime.format')}" />
+							format="%{getText('struts.shortDateTime.format')}" />
 					</c:if>
 
 					<table class="formTable">
@@ -122,8 +126,7 @@
 							<td>Description</td>
 							<td></td>
 							<td colspan="2"><ww:textarea cols="70" rows="10"
-								id="iterationDescription" name="iteration.description"
-								value="${aef:nl2br(iteration.description)}" /></td>
+								id="iterationDescription" name="iteration.description">${aef:nl2br(iteration.description)} </ww:textarea></td>
 						</tr>
 						<tr>
 							<td>Project</td>
@@ -132,7 +135,7 @@
 								<option class="inactive" value="">(select project)</option>
 								<c:forEach items="${productList}" var="product">
 									<option value="" class="inactive productOption">${aef:out(product.name)}</option>
-									<c:forEach items="${product.projects}" var="project">
+									<c:forEach items="${product.children}" var="project">
 										<c:choose>
 											<c:when test="${project.id == currentProjectId}">
 												<option selected="selected" value="${project.id}"
@@ -157,24 +160,18 @@
 						<tr>
 							<td>Start date</td>
 							<td>*</td>
-							<td colspan="2"><%--<ww:datepicker value="%{#start}" size="15"
-										showstime="true"
-										format="%{getText('webwork.datepicker.format')}"
-										name="startDate" />--%> <aef:datepicker id="start_date"
+							<td colspan="2"> <aef:datepicker id="start_date"
 								name="startDate"
-								format="%{getText('webwork.shortDateTime.format')}"
-								value="%{#start}" /></td>
+								format="%{getText('struts.shortDateTime.format')}"
+								value="${start}" /></td>
 						</tr>
 						<tr>
 							<td>End date</td>
 							<td>*</td>
-							<td colspan="2"><%--<ww:datepicker value="%{#end}" size="15"
-										showstime="true"
-										format="%{getText('webwork.datepicker.format')}"
-										name="endDate" />--%> <aef:datepicker id="end_date"
+							<td colspan="2"> <aef:datepicker id="end_date"
 								name="endDate"
-								format="%{getText('webwork.shortDateTime.format')}"
-								value="%{#end}" /></td>
+								format="%{getText('struts.shortDateTime.format')}"
+								value="${end}" /></td>
 						</tr>
 						<tr>
 							<td></td>
@@ -185,20 +182,20 @@
 								</c:when>
 								<c:otherwise>
 									<td><ww:submit value="Save" id="saveButton" /></td>
-									<td class="deleteButton"><ww:submit disabled="disabled" cssClass="undisableMe"
-										action="deleteIteration" value="Delete" /></td>
+									<td class="deleteButton"><input type="button"  class="undisableMe"
+										onClick="javascript:deleteIteration(${iterationId},${projectId})" value="Delete" /></td>
 								</c:otherwise>
 							</c:choose>
 						</tr>
 					</table>
-				</ww:form></div>
+				</form></div>
 				</div>
 				</div>
 				</td>
 			</tr>
 		</tbody>
 	</table>
-
+<%--
 
 	<script type="text/javascript">
 	
@@ -285,7 +282,7 @@ $(document).ready( function() {
 								</c:choose>
 							</display:column>
 							<display:column sortable="true" sortProperty="businessTheme.metrics.donePercentage" title="Progress">
-								${row.businessTheme.metrics.donePercentage}% (${row.businessTheme.metrics.numberOfDoneBlis} / ${row.businessTheme.metrics.numberOfBlis})
+								${row.businessTheme.metrics.donePercentage}% (${row.businessTheme.metrics.numberOfDoneStories} / ${row.businessTheme.metrics.numberOfStories})
 							</display:column>
 							<display:column sortable="false" title="Actions">
 								<span class="uniqueId" style="display: none;">${row.id}</span>
@@ -315,30 +312,33 @@ $(document).ready( function() {
 		</td>
 	</tr>
 </table>
-<script type="text/javascript" src="static/js/dynamics/utils.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
-<script type="text/javascript" src="static/js/dynamics/model.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
-<script type="text/javascript" src="static/js/dynamics/controller.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
-<script type="text/javascript" src="static/js/dynamics/dynamicTable.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
-<script type="text/javascript" src="static/js/dynamics/commonView.js?<ww:text name="webwork.agilefantReleaseId" />"></script>
+--%>
 
-<form onsubmit="return false;"><div id="iterationGoals" style="min-width: 800px; width: 98%;">&nbsp;</div></form>
+<script type="text/javascript" src="static/js/dynamics/utils.js?<ww:text name="struts.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/dynamics/model.js?<ww:text name="struts.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/dynamics/controller.js?<ww:text name="struts.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/dynamics/dynamicTable.js?<ww:text name="struts.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/dynamics/dynamics.tabs.js?<ww:text name="struts.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/dynamics/commonView.js?<ww:text name="struts.agilefantReleaseId" />"></script>
+
+
+
+<form onsubmit="return false;"><div id="stories" style="min-width: 800px; width: 98%;">&nbsp;</div></form>
 <script type="text/javascript">
 $(document).ready(function() {
-  new IterationController(${iterationId}, $("#iterationGoals"));
+  new IterationController(${iterationId}, $("#stories"));
   $(document.body).bind("metricsUpdated", function() {
 	  var bigChart = $("#bigChart");
 	  bigChart.attr("src",bigChart.attr("src")+"#");
     var smallChart = $("#smallChart");
     smallChart.attr("src",smallChart.attr("src")+"#");
-    $("#iterationMetrics").load("iterationMetrics.action",{iterationId: ${iterationId}});
+    $("#iterationMetrics").load("ajax/iterationMetrics.action",{iterationId: ${iterationId}});
 	});
 });
 </script>
 
 
-
-
-<p><img src="drawChart.action?iterationId=${iteration.id}"
+<p><img src="drawIterationBurndown.action?backlogId=${iteration.id}"
 	id="bigChart" width="780" height="600" /></p>
 
 	<%@ include file="./inc/_footer.jsp"%>

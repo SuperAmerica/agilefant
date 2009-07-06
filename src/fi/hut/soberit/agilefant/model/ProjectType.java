@@ -1,19 +1,14 @@
 package fi.hut.soberit.agilefant.model;
 
-import java.util.Collection;
-import java.util.HashSet;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Type;
-import org.hibernate.validator.Range;
 
 import flexjson.JSON;
 
@@ -32,8 +27,8 @@ import flexjson.JSON;
  * @see fi.hut.soberit.agilefant.model.WorkType
  */
 @Entity
-@BatchSize(size=20)
-@Table(name = "projecttype")
+@BatchSize(size = 20)
+@Table(name = "projecttypes")
 public class ProjectType implements Comparable<ProjectType> {
 
     private int id;
@@ -41,10 +36,6 @@ public class ProjectType implements Comparable<ProjectType> {
     private String name;
 
     private String description;
-
-    private Collection<WorkType> workTypes = new HashSet<WorkType>();
-
-    private int targetSpendingPercentage = 0;
 
     /**
      * Get the id of this object.
@@ -55,8 +46,6 @@ public class ProjectType implements Comparable<ProjectType> {
     @Id
     // generate automatically
     @GeneratedValue(strategy = GenerationType.AUTO)
-    // not nullable
-    @Column(nullable = false)
     @JSON
     public int getId() {
         return id;
@@ -92,34 +81,11 @@ public class ProjectType implements Comparable<ProjectType> {
         this.name = name;
     }
 
-    /**
-     * Single activity type can contain many work types, single worktype is part
-     * of a single activity type.
-     */
-    @OneToMany(mappedBy = "projectType")
-    @JSON(include = false)
-    public Collection<WorkType> getWorkTypes() {
-        return workTypes;
-    }
-
-    public void setWorkTypes(Collection<WorkType> workTypes) {
-        this.workTypes = workTypes;
-    }
-
-    @Range(min = 0, max = 100)
-    @JSON(include = false)
-    public int getTargetSpendingPercentage() {
-        return targetSpendingPercentage;
-    }
-
-    public void setTargetSpendingPercentage(int targetSpendingPercentage) {
-        this.targetSpendingPercentage = targetSpendingPercentage;
-    }
-    
     public int compareTo(ProjectType o) {
         if (o == null) {
             return -1;
         }
         return getName().compareTo(o.getName());
     }
+
 }

@@ -1,6 +1,6 @@
-Agilefant 1.5.5
+Agilefant 1.6 RC2
 RELEASE NOTES
-26.3.2009
+2.6.2009 
 
 INSTALLATION INSTRUCTIONS AND SYSTEM REQUIREMENTS
 -------------------------------------------------
@@ -29,7 +29,7 @@ Project management
   + get an overview of progress through burndown graph and metrics
   
 Iteration management
-  + focus team efforts with iteration goals
+  + focus team efforts with stories
   + get an overview of progress through burndown graph and metrics
 
 Resource management
@@ -54,15 +54,27 @@ Timesheets
   + log spent effort to projects and/or individual backlog items
   + generate reports of spent effort
 
+CHANGES FROM AGILEFANT 1.6.1
+----------------------------
++ Due to migrating to the new data model burndowns start from zero for iterations
+  created before version 1.3.7. This only effects the first data point. Otherwise
+  the burndown data shows up as before.
+
 CHANGES FROM AGILEFANT 1.5.5
 ----------------------------
-+ Renamed overhead to baseline load
-+ Renamed iteration goal to story
-+ Renamed backlog item to story in products and projects, and to task in iterations
-+ Changed quick enter functionality from save to save & close
-+ Other small UI and usability tweaks
-+ A new team is working on Agilefant, for more info see 
-  http://www.agilefant.org/wiki/display/AEF/2009/05/25/Agilefant+Monza
++ Renovation of the iteration view (give us feedback at the forum!)
++ Calendar view to daily work view for browsing spent effort
++ Renamed Overhead as Baseline load
++ Renamed existing project statuses green, yellow and red
++ Added new project statuses grey and black
++ Terminology changed to match the concepts in Scrum:
+      * Iteration goal =>Story
+      * Backlog item in products and projects => Story
+      * Backlog item in an iteration => Task
++ Small UI and usability tweaks:
+      * Quick enter => save & close (instead of save)
+      * Improved interval selection in timesheets
+      * Improved displaying long backlog descriptions
 
 CHANGES FROM AGILEFANT 1.5.4
 ----------------------------

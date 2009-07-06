@@ -3,16 +3,22 @@ package fi.hut.soberit.agilefant.business.impl;
 import java.util.Date;
 import java.util.Random;
 
+import javax.annotation.Resource;
+
 import org.antlr.stringtemplate.StringTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.providers.encoding.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import fi.hut.soberit.agilefant.business.PasswordBusiness;
 import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.model.User;
 
-
+@Service("passwordBusiness")
+@Transactional
 public class PasswordBusinessImpl implements PasswordBusiness {
     private JavaMailSender mailSender;
 
@@ -22,6 +28,7 @@ public class PasswordBusinessImpl implements PasswordBusiness {
 
     private PasswordEncoder passwordEncoder;
 
+    @Transactional
     public void generateAndMailPassword(int user_id) {
         User user = userDAO.get(user_id);
         String password = generateNewPassword();
@@ -52,6 +59,7 @@ public class PasswordBusinessImpl implements PasswordBusiness {
         return mailSender;
     }
 
+    @Autowired
     public void setMailSender(JavaMailSender mailSender) {
         this.mailSender = mailSender;
     }
@@ -60,14 +68,12 @@ public class PasswordBusinessImpl implements PasswordBusiness {
         return newPasswordTemplate;
     }
 
+    @Resource(name = "newPasswordTemplate")
     public void setNewPasswordTemplate(SimpleMailMessage newPasswordTemplate) {
         this.newPasswordTemplate = newPasswordTemplate;
     }
 
-    public UserDAO getUserDDAO() {
-        return userDAO;
-    }
-
+    @Autowired
     public void setUserDAO(UserDAO userDAO) {
         this.userDAO = userDAO;
     }
@@ -76,7 +82,9 @@ public class PasswordBusinessImpl implements PasswordBusiness {
         return passwordEncoder;
     }
 
+    @Resource(name = "passwordEncoder")
     public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
     }
+
 }

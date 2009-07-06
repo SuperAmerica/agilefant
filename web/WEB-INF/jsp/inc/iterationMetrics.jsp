@@ -3,22 +3,27 @@
 <table>
 	<tr>
 		<th>Effort left</th>
-		<td><c:out value="${iterationMetrics.effortLeft}" /></td>
+		<td><c:out value="${aef:minutesToString(iterationMetrics.effortLeft.minorUnits)}" /></td>
 	</tr>
 	<tr>
 		<th>Original estimate</th>
-		<td><c:out value="${iterationMetrics.originalEstimate}" /></td>
+		<td><c:out value="${aef:minutesToString(iterationMetrics.originalEstimate.minorUnits)}" /></td>
 	</tr>
+  <tr>
+    <th>Story points</th>
+    <td><c:out value="${iterationMetrics.storyPoints}" /></td>
+  </tr>
 	<c:if test="${hourReporting}">
 		<tr>
 			<th>Spent effort</th>
-			<td><c:out value="${iterationMetrics.spentEffort}" /></td>
+			<td><c:out value="${aef:minutesToString(iterationMetrics.spentEffort.minorUnits)}" /></td>
 		</tr>
 	</c:if>
 	<tr>
 		<th>Velocity</th>
-		<td><c:out value="${iterationMetrics.dailyVelocity}" /> / day</td>
+		<td><c:out value="${aef:minutesToString(iterationMetrics.dailyVelocity.minorUnits)} / day" /></td>
 	</tr>
+  <%--
 	<c:if test="${iterationMetrics.backlogOngoing}">
 		<tr>
 			<th>Schedule variance</th>
@@ -51,11 +56,17 @@
 			</c:choose></td>
 		</tr>
 	</c:if>
+	  --%>
+	<tr>
+		<th>Stories done</th>
+		<td><c:out value="${iterationMetrics.percentDoneStories}" />% (<c:out
+			value="${iterationMetrics.completedStories}" /> / <c:out
+			value="${iterationMetrics.totalStories}" />)</td>
+	</tr>
 	<tr>
 		<th>Tasks done</th>
-		<td><c:out value="${iterationMetrics.percentDone}" />% (<c:out
-			value="${iterationMetrics.completedItems}" /> / <c:out
-			value="${iterationMetrics.totalItems}" />)</td>
+		<td><c:out value="${iterationMetrics.percentDoneTasks}" />% (<c:out
+			value="${iterationMetrics.completedTasks}" /> / <c:out
+			value="${iterationMetrics.totalTasks}" />)</td>
 	</tr>
-
 </table>

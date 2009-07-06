@@ -1,62 +1,4 @@
 var agilefantUtils = {
-	aftimeToString: function(aftime, hideDash) {
-		if(!hideDash && (typeof aftime !== "number" || isNaN(aftime) || aftime < 0)) {
-			return "&mdash;";
-		}
-		var hours = Math.round(aftime/360)/10;
-		if(isNaN(hours) && !hideDash) {
-			return "&mdash;";
-		}
-		if(isNaN(hours)) {
-			return "";
-		}
-		if(Math.round(hours) == hours) {
-			hours += ".0";
-		}
-		return hours + "h";
-	},
-	aftimeToMillis: function(string) {
-		string = jQuery.trim(string);
-		string = string.toLowerCase();
-		if(string === "") {
-			return 0;
-		}
-		string = string.replace(/,/,".");
-		var retVal = 0;
-		if(!agilefantUtils.isAftimeString(string)) {
-			return null;
-		}
-		var factors = {h: 3600, d: 3600*30, m: 60, min: 60};
-		var timeParts = string.split(" ");
-		for(var i = 0 ; i < timeParts.length; i++) {
-			var currentPart = timeParts[i];
-			var valueType = currentPart.split(/(\d+[.]?\d*)([h|min|m]?)/);
-			var value = valueType[1];
-			var type = valueType[2];
-			if(!type) {
-				retVal += value*3600;
-			} else {
-				if(factors[type]) {
-					retVal += factors[type]*value;
-				}
-			}
-		}
-		return retVal;
-	},
-	isAftimeString: function(string) {
-		if(!string) {
-			string = "";
-		}
-		string = string.toLowerCase();
-		if(string === "") {
-			return true;
-		}
-		var hourOnly = new RegExp("^[ ]*[0-9]+h?[ ]*$"); //10h
-		var minuteOnly = new RegExp("^[ ]*[0-9]+min[ ]*$"); //10min
-		var hourAndMinute = new RegExp("^[ ]*[0-9]+h[ ]+[0-9]+min[ ]*$"); //1h 10min
-		var shortFormat = new RegExp("^[0-9]+[.,][0-9]+h?$"); //1.5 or 1,5
-		return (hourOnly.test(string) || minuteOnly.test(string) || hourAndMinute.test(string) || shortFormat.test(string));
-	},
 	isTimesheetsEnabled: function() {
 		if(agilefantTimesheetsEnabled === true) {
 			return true;
@@ -91,7 +33,9 @@ var agilefantUtils = {
 				if(user.inProject) {
 					$("<span />").text(user.user.initials).appendTo(html);
 				} else {
-					$("<span />").text(user.user.initials).appendTo(html).addClass("unassigned");
+					$("<span />").text(user.user.initials).appendTo(html);
+					// TODO: 090609 Reko: Uncomment when project assignees back online
+					//.addClass("unassigned");
 				}
 				if(i+1 != len) {
 					$(document.createTextNode(", ")).appendTo(html);
@@ -170,6 +114,22 @@ var agilefantUtils = {
 		var text = agilefantUtils.stateToString(state);
 		return '<div class="taskState taskState'+state+'">'+text+'</div>';
 	},
+	storyStates: {
+		  "NOT_STARTED": "Not Started",
+		  "STARTED": "Started",
+		  "PENDING": "Pending",
+		  "BLOCKED": "Blocked",
+		  "IMPLEMENTED": "Implemented",
+		  "DONE": "Done"
+		},
+		storyStateToString: function(state) {
+		  return agilefantUtils.storyStates[state];
+		},
+		storyStateDecorator: function(state) {
+			var text = agilefantUtils.storyStateToString(state);
+			return '<div class="storyState storyState'+state+'">'+text+'</div>';
+		},	
+	
 	priorities: {
 	"UNDEFINED": "undefined",
     "BLOCKER": "+++++",
@@ -188,6 +148,20 @@ var agilefantUtils = {
   },
   priorityToString: function(priority) {
     return agilefantUtils.priorities[priority];
+  },
+  areExactEstimatesEqual: function(a, b) {
+    // Check for null values
+    // Nulls are equal with other nulls.
+    if (!a) {
+      if (!b) {
+        return true;
+      }
+      return false;
+    }
+    if (!b) {
+      return false;
+    }
+    return a.minorUnits === b.minorUnits;
   },
 	comparators: {
 	  nameComparator: function(a,b) {
@@ -208,7 +182,7 @@ var agilefantUtils = {
 		}
 		return -1;
 	  },
-	  bliPriorityComparator: function(a,b) {
+	  storyPriorityComparator: function(a,b) {
 		if((agilefantUtils.prioritiesToNumber[a.getPriority()] > agilefantUtils.prioritiesToNumber[b.getPriority()])) {
 		  return 1;
 		}
@@ -232,13 +206,13 @@ var agilefantUtils = {
 	    }
     	return -1;
     },
-    bliStateComparator: function(a,b) {
+    storyStateComparator: function(a,b) {
       if((a.getState() > b.getState())) {
         return 1;
       }
       return -1;
     },
-    bliPriorityAndStateComparator: function(a,b) {
+    storyPriorityAndStateComparator: function(a,b) {
       if (a.getState() === "DONE" && b.getState() !== "DONE") {
         return 1;
       }
@@ -246,7 +220,7 @@ var agilefantUtils = {
         return -1;
       }
       else {
-        return agilefantUtils.comparators.bliPriorityComparator(a, b);
+        return agilefantUtils.comparators.storyPriorityComparator(a, b);
       }
     }
 	}

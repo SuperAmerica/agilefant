@@ -1,84 +1,88 @@
 package fi.hut.soberit.agilefant.web;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
-import com.opensymphony.xwork.ActionSupport;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeConstants;
+import org.joda.time.LocalDate;
+import org.joda.time.MutableDateTime;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+import com.opensymphony.xwork2.Action;
+import com.opensymphony.xwork2.ActionSupport;
 
 import fi.hut.soberit.agilefant.business.HourEntryBusiness;
-import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.HourEntry;
-import fi.hut.soberit.agilefant.util.CalendarUtils;
-import fi.hut.soberit.agilefant.util.DailySpentEffort;
+import fi.hut.soberit.agilefant.transfer.DailySpentEffort;
 
+@Component("spentEffortAction")
+@Scope("prototype")
 public class SpentEffortAction extends ActionSupport {
 
     private static final long serialVersionUID = -8867256217181600965L;
+    public static final int WEEKS_IN_WEEK_SELECTION = 21;
     private int week = -1;
-    private int prevWeek;
-    private int nextWeek;
-    private int prevYear;
-    private int nextYear;
     private int year = 0;
     private int day = 1;
     private int currentWeek = 0;
     private int currentYear = 0;
+    @Autowired
     private HourEntryBusiness hourEntryBusiness;
     private int userId;
-    private AFTime weekEffort = new AFTime(0);
+    private long weekEffort = 0;
+    private LocalDate prevWeek;
+    private LocalDate nextWeek;
     
     private List<DailySpentEffort> dailyEffort;
-    private List<Object[]> weeks;
+    private List<LocalDate> weeks = new ArrayList<LocalDate>();
     private List<HourEntry> effortEntries;
     
     
-    public String getDaySumsByWeek() {
-        Calendar cal = Calendar.getInstance();
-        this.currentWeek = cal.get(Calendar.WEEK_OF_YEAR);
-        this.currentYear = cal.get(Calendar.YEAR);
-        if(week == -1) {
-            week = cal.get(Calendar.WEEK_OF_YEAR);
-            year = cal.get(Calendar.YEAR);
-        } else {
-            cal.set(Calendar.YEAR, this.year);
-            cal.set(Calendar.WEEK_OF_YEAR, this.week);
+    public void initializeWeekSelection(DateTime middle) {
+        this.weeks.clear();
+        MutableDateTime iteratorDate = new MutableDateTime(middle.minusWeeks(WEEKS_IN_WEEK_SELECTION/2));
+        for(int i = 0; i < WEEKS_IN_WEEK_SELECTION; i++) {
+            this.weeks.add(iteratorDate.toDateTime().toLocalDate());
+            iteratorDate.addWeeks(1);
         }
-        cal.add(Calendar.WEEK_OF_YEAR, 1);
-        nextWeek = cal.get(Calendar.WEEK_OF_YEAR);
-        nextYear = cal.get(Calendar.YEAR);
-        cal.add(Calendar.WEEK_OF_YEAR, -2);
-        prevWeek = cal.get(Calendar.WEEK_OF_YEAR);
-        prevYear = cal.get(Calendar.YEAR);
-        this.dailyEffort = this.hourEntryBusiness.getDailySpentEffortByWeekAndUser(this.week, this.year, this.userId);
-        cal.add(Calendar.WEEK_OF_YEAR, -9);
-        this.weeks = new ArrayList<Object[]>();
-        for(int i = 0; i < 20; i++) {
-            Object[] cur = new Object[] {cal.get(Calendar.YEAR),cal.get(Calendar.WEEK_OF_YEAR), 
-                    cal.get(Calendar.DAY_OF_MONTH), cal.get(Calendar.MONTH)+1};
-            this.weeks.add(cur);
-            cal.add(Calendar.WEEK_OF_YEAR, 1);
-        }
-        this.totalEffortForWeek();
-        return SUCCESS;
     }
+    
+    public DateTime getSelectedDate() {
+        MutableDateTime selectedTime = new MutableDateTime();
+        this.currentWeek = selectedTime.getWeekOfWeekyear();
+        this.currentYear = selectedTime.getYear(); 
+        if(this.week == 0 || this.year == 0) {
+            this.week = selectedTime.getWeekOfWeekyear();
+            this.year = selectedTime.getYear();
+        } else {
+            selectedTime.setYear(this.year);
+            selectedTime.setWeekOfWeekyear(this.week);
+        }
+        selectedTime.setDayOfWeek(DateTimeConstants.MONDAY);
+        DateTime selectedDate = selectedTime.toDateTime();
+        this.prevWeek = selectedDate.minusWeeks(1).toLocalDate();
+        this.nextWeek = selectedDate.plusWeeks(1).toLocalDate();
+        return selectedDate;
+    }
+    
+    public String getDaySumsByWeek() {
+        //get current day and initialize next and previous week properties
+        DateTime currentDay = this.getSelectedDate();
+        this.initializeWeekSelection(currentDay);
+        this.dailyEffort = this.hourEntryBusiness.getDailySpentEffortByWeek(currentDay.toLocalDate(), userId);
+        this.weekEffort = this.hourEntryBusiness.calculateWeekSum(currentDay.toLocalDate(), userId);
+        return Action.SUCCESS;
+    }
+
     
     public String getHourEntriesByUserAndDay() {
-        this.effortEntries = this.hourEntryBusiness.getEntriesByUserAndDay(day, year, userId);
-        return SUCCESS;
-    }
-    
-    public String totalEffortForWeek() {
-        Calendar monday = Calendar.getInstance();
-        Calendar sunday = Calendar.getInstance();
-        monday.set(Calendar.YEAR,this.year);
-        monday.set(Calendar.WEEK_OF_YEAR, this.week);
-        monday.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-        sunday.setTime(monday.getTime());
-        sunday.add(Calendar.DAY_OF_YEAR, 6);
-        CalendarUtils.setHoursMinutesAndSeconds(monday, 0, 0, 0);
-        CalendarUtils.setHoursMinutesAndSeconds(sunday, 23, 59, 59);
-        this.weekEffort = this.hourEntryBusiness.getEFfortSumByUserAndTimeInterval(userId, monday.getTime(), sunday.getTime());
+        MutableDateTime tmpDate = new MutableDateTime();
+        tmpDate.setYear(this.year);
+        tmpDate.setDayOfYear(this.day);
+        this.effortEntries = this.hourEntryBusiness.getEntriesByUserAndDay(tmpDate.toDateTime().toLocalDate(), userId);
         return SUCCESS;
     }
     
@@ -98,27 +102,11 @@ public class SpentEffortAction extends ActionSupport {
         return this.week;
     }
     
-    public int getPrevWeek() {
-        return prevWeek;
-    }
-
-    public int getNextWeek() {
-        return nextWeek;
-    }
-
     public void setYear(int year) {
         this.year = year;
     }
     public int getYear() {
         return this.year;
-    }
-
-    public int getPrevYear() {
-        return prevYear;
-    }
-
-    public int getNextYear() {
-        return nextYear;
     }
 
     public List<HourEntry> getEffortEntries() {
@@ -133,11 +121,11 @@ public class SpentEffortAction extends ActionSupport {
         this.day = day;
     }
 
-    public List<Object[]> getWeeks() {
+    public List<LocalDate> getWeeks() {
         return weeks;
     }
 
-    public void setWeeks(List<Object[]> weeks) {
+    public void setWeeks(List<LocalDate> weeks) {
         this.weeks = weeks;
     }
 
@@ -161,7 +149,15 @@ public class SpentEffortAction extends ActionSupport {
         return currentYear;
     }
 
-    public AFTime getWeekEffort() {
+    public long getWeekEffort() {
         return weekEffort;
+    }
+
+    public LocalDate getPrevWeek() {
+        return prevWeek;
+    }
+
+    public LocalDate getNextWeek() {
+        return nextWeek;
     }
 }

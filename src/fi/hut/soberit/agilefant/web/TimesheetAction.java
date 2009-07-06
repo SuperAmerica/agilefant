@@ -7,42 +7,34 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.Principal;
-import java.text.SimpleDateFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.Font;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.struts2.interceptor.PrincipalAware;
+import org.apache.struts2.interceptor.PrincipalProxy;
+import org.joda.time.DateTime;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.security.providers.UsernamePasswordAuthenticationToken;
 import org.springframework.security.providers.rememberme.RememberMeAuthenticationToken;
+import org.springframework.stereotype.Component;
 
-import com.opensymphony.webwork.interceptor.PrincipalAware;
-import com.opensymphony.webwork.interceptor.PrincipalProxy;
-import com.opensymphony.xwork.Action;
-import com.opensymphony.xwork.ActionSupport;
+import com.opensymphony.xwork2.Action;
+import com.opensymphony.xwork2.ActionSupport;
 
 import fi.hut.soberit.agilefant.business.TimesheetBusiness;
+import fi.hut.soberit.agilefant.business.TimesheetExportBusiness;
 import fi.hut.soberit.agilefant.business.UserBusiness;
-import fi.hut.soberit.agilefant.db.UserDAO;
-import fi.hut.soberit.agilefant.model.AFTime;
-import fi.hut.soberit.agilefant.model.Backlog;
-import fi.hut.soberit.agilefant.model.BacklogItem;
-import fi.hut.soberit.agilefant.model.HourEntry;
-import fi.hut.soberit.agilefant.model.Iteration;
-import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.security.AgilefantUserDetails;
-import fi.hut.soberit.agilefant.util.BacklogItemTimesheetNode;
-import fi.hut.soberit.agilefant.util.BacklogTimesheetNode;
+import fi.hut.soberit.agilefant.transfer.BacklogTimesheetNode;
+import fi.hut.soberit.agilefant.util.CalendarUtils;
 import flexjson.JSONSerializer;
 
 /**
@@ -51,14 +43,21 @@ import flexjson.JSONSerializer;
  * @author Pasi Pekkanen
  *
  */
+@Component("timesheetAction")
+@Scope("prototype")
 public class TimesheetAction extends ActionSupport implements PrincipalAware {
 
     private static final long serialVersionUID = -8988740967426943267L;
     
+    @Autowired
     private TimesheetBusiness timesheetBusiness;
     
-    private UserBusiness userBusiness;
+    @Autowired
+    private TimesheetExportBusiness timesheetExportBusiness;
 
+    @Autowired
+    private UserBusiness userBusiness;
+    
     private Set<Integer> productIds = new HashSet<Integer>();
     
     private Set<Integer> projectIds = new HashSet<Integer>();
@@ -67,14 +66,6 @@ public class TimesheetAction extends ActionSupport implements PrincipalAware {
     
     private List<BacklogTimesheetNode> products;
     
-    private List<Integer> selected = new ArrayList<Integer>();
-    
-    private List<User> selUser = new ArrayList<User>();
-    
-    private UserDAO userDAO;
-
-    private int[] backlogIds;
-
     private String startDate;
 
     private String endDate;
@@ -83,25 +74,15 @@ public class TimesheetAction extends ActionSupport implements PrincipalAware {
     
     private Set<Integer> userIds = new HashSet<Integer>();
     
-    private int backlogSelectionType = 0;
-    
-    private boolean onlyOngoing = false;
-    
-    private AFTime totalSpentTime;
-
     private int currentUserId = 0;
     
-    private ByteArrayOutputStream excelData;
-        
-    private CellStyle dateStyle;
+    private boolean onlyOngoing = true;
     
-    public int[] getBacklogIds() {
-        return backlogIds;
-    }
-
-    public void setBacklogIds(int[] backlogIds) {
-        this.backlogIds = backlogIds;
-    }
+    private long effortSum = 0;
+    
+    private ByteArrayOutputStream exportableReport;
+   
+    
     
     /**
      * Needed for xwork's execAndWait as action is executed in a different
@@ -121,9 +102,11 @@ public class TimesheetAction extends ActionSupport implements PrincipalAware {
         currentUserId = ud.getUserId();
         
     }
-    
-    private List<Integer> selectedBacklogs() {
-        List<Integer> ret = new ArrayList<Integer>();
+    /*
+     * -1 in product, project or iteration id array remarks "select all" option
+     */
+    public Set<Integer> getSelectedBacklogs() {
+        Set<Integer> ret = new HashSet<Integer>();
         if(this.projectIds.contains(-1)) {
             if(this.onlyOngoing) {
                 ret.addAll(this.projectIds);
@@ -145,215 +128,101 @@ public class TimesheetAction extends ActionSupport implements PrincipalAware {
                 ret.addAll(this.iterationIds);
             }
         }
+        ret.remove(-1);
         return ret;
     }
     public String initialize() {
         this.interval = "TODAY";
         this.onlyOngoing = false;
-        this.userIds.add(this.currentUserId);
+        //this.userIds.add(this.currentUserId);
         return Action.SUCCESS;
+    }
+    private DateTime getDateTimeFromString(String val) {
+        try {
+            Date dateVal = CalendarUtils.parseDateFromString(val);
+            return new DateTime(dateVal.getTime());
+        } catch (ParseException e) {
+            return null;
+        }
     }
     public String generateTree(){
-        List<Integer> ids = null;
-        Set<Integer> users = new HashSet<Integer>();
-        if(backlogSelectionType == 0) {
-            ids = this.selectedBacklogs();
-            users.addAll(userIds);
-        } else {
-            Date start = null;
-            Date end = null;
-            try {
-                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-                start = df.parse(this.startDate);
-                end = df.parse(this.endDate);
-            } catch(Exception e) {
-                start = null;
-                end = null;
-            }
-            Collection<Backlog> tmp = userBusiness.getOngoingBacklogsByUserAndInterval(currentUserId, start, end);
-            ids = new ArrayList<Integer>();
-            for(Backlog bl : tmp) {
-                ids.add(bl.getId());
-            }
-            //only for current user:
-            users.add(currentUserId);
-        }
-        if(ids == null || ids.size() == 0) {
+        Set<Integer> selectedBacklogIds = this.getSelectedBacklogs();
+        if(selectedBacklogIds == null || selectedBacklogIds.size() == 0) {
             addActionError("No backlogs selected.");
             return Action.ERROR;
-        }
-        try{
-            products = timesheetBusiness.generateTree(ids, startDate, endDate, users);
-            totalSpentTime = timesheetBusiness.calculateRootSum(products);
-        }catch(IllegalArgumentException e){
-            addActionError(e.getMessage());
-            return Action.ERROR;
-        }
+        }        
+        products = timesheetBusiness.getRootNodes(selectedBacklogIds, getDateTimeFromString(startDate), getDateTimeFromString(endDate), this.userIds);
+        effortSum = timesheetBusiness.getRootNodeSum(products);
         return Action.SUCCESS;
     }
-
-    public String generateExcel() {
-        
-        Workbook wb = new HSSFWorkbook();
-        Sheet effort = wb.createSheet("Agilefant timesheet");
-        if(generateTree().equals(Action.ERROR)) {
+    
+    public String generateExeclReport(){
+        Set<Integer> selectedBacklogIds = this.getSelectedBacklogs();
+        if(selectedBacklogIds == null || selectedBacklogIds.size() == 0) {
+            addActionError("No backlogs selected.");
             return Action.ERROR;
-        }
-        CellStyle boldStyle = wb.createCellStyle();
-        Font boldFont = wb.createFont();
-        boldStyle.setFont(boldFont);
-        boldFont.setBoldweight(Font.BOLDWEIGHT_BOLD);
-        dateStyle = wb.createCellStyle();
-        dateStyle.setDataFormat(wb.getCreationHelper().createDataFormat().getFormat("dd.mm.yyyy hh:mm"));
-        Row head = effort.createRow(0);
-        Cell tmp;
-        tmp = head.createCell(0);
-        tmp.setCellValue("Product");
-        tmp.setCellStyle(boldStyle);
-        tmp = head.createCell(1); 
-        tmp.setCellValue("Project");
-        tmp.setCellStyle(boldStyle);
-        tmp = head.createCell(2);
-        tmp.setCellValue("Iteration");
-        tmp.setCellStyle(boldStyle);
-        tmp = head.createCell(3);
-        tmp.setCellValue("Story");
-        tmp.setCellStyle(boldStyle);
-        tmp = head.createCell(4);
-        tmp.setCellValue("Task");
-        tmp.setCellStyle(boldStyle);
-        tmp = head.createCell(5);
-        tmp.setCellValue("Comment");
-        tmp.setCellStyle(boldStyle);
-        tmp = head.createCell(6);
-        tmp.setCellValue("User");
-        tmp.setCellStyle(boldStyle);
-        tmp = head.createCell(7);
-        tmp.setCellValue("Date");
-        tmp.setCellStyle(boldStyle);
-        tmp = head.createCell(8);
-        tmp.setCellValue("Spent effort (hours)");
-        tmp.setCellStyle(boldStyle);
-        
-        //effort.createFreezePane(0, 1, 0, 1);
-        
-        generateExcelNode(products, effort);
-        
-        effort.autoSizeColumn(0);
-        effort.autoSizeColumn(1);
-        effort.autoSizeColumn(2);
-        //try to autosize, but limit size to 55 characters
-        effort.autoSizeColumn(3);
-        if(effort.getColumnWidth(3) > 55*256) {
-            effort.setColumnWidth(3, 55*256);
-        }
-        effort.autoSizeColumn(4);
-        if(effort.getColumnWidth(4) > 55*256) {
-            effort.setColumnWidth(4, 55*256);
-        }
-        effort.autoSizeColumn(5);
-        if(effort.getColumnWidth(5) > 55*256) {
-            effort.setColumnWidth(5, 55*256);
-        }
-        effort.autoSizeColumn(6);
-        effort.setColumnWidth(7, 15*256);
-        effort.autoSizeColumn(8);
-        
+        }        
+        Workbook wb = this.timesheetExportBusiness.generateTimesheet(this, selectedBacklogIds, getDateTimeFromString(startDate), getDateTimeFromString(endDate), userIds);
+        this.exportableReport = new ByteArrayOutputStream();
         try {
-            excelData = new ByteArrayOutputStream();
-            wb.write(excelData);
+            wb.write(this.exportableReport);
         } catch (IOException e) {
             return Action.ERROR;
         }
         return Action.SUCCESS;
     }
-    
-    private void generateExcelNode(List<BacklogTimesheetNode> bls, Sheet effSheet) {
-        for(BacklogTimesheetNode rnode : bls) {
-            if(rnode.getChildBacklogs() != null) {
-                generateExcelNode(rnode.getChildBacklogs(), effSheet);
-            }
-            if(rnode.getHourEntries() != null) {
-                for(HourEntry entry : rnode.getHourEntries()) {
-                    Row row = effSheet.createRow(effSheet.getLastRowNum()+1);
-                    addExcelRow(row, entry, rnode.getBacklog(), null);
-                    
-                }
-            }
-            if(rnode.getChildBacklogItems() != null) {
-                for(BacklogItemTimesheetNode bnode : rnode.getChildBacklogItems()) {
-                    for(HourEntry bentry : bnode.getHourEntries()) {
-                        Row row = effSheet.createRow(effSheet.getLastRowNum()+1);
-                        addExcelRow(row, bentry, rnode.getBacklog(), bnode.getBacklogItem());
-                    }
-                }
+
+    public List<User> getSelectedUsers() {
+        if(this.userIds == null) {
+            return Collections.emptyList();
+        }
+        List<User> selectedUsers = new ArrayList<User>();
+        for(int userId : this.getUserIds()) {
+            User user = this.userBusiness.retrieve(userId);
+            if(user != null) {
+                selectedUsers.add(user);
             }
         }
-        
-    }
-    
-    private void addExcelRow(Row row, HourEntry entry, Backlog bl, BacklogItem bli) {
-        Cell prod = row.createCell(0);
-        Cell proj = row.createCell(1);
-        Cell iter = row.createCell(2);
-        Cell goal = row.createCell(3);
-        Cell blic = row.createCell(4);
-        Cell desc = row.createCell(5);
-        Cell user = row.createCell(6);
-        Cell time = row.createCell(7);
-        Cell eff = row.createCell(8);
-        
-        if(bl instanceof Iteration) {
-            Iteration ite = (Iteration)bl;
-            prod.setCellValue(ite.getProject().getProduct().getName());
-            proj.setCellValue(ite.getProject().getName());
-            iter.setCellValue(ite.getName());
-        } else if(bl instanceof Project) {
-            Project prj = (Project)bl;
-            proj.setCellValue(prj.getName());
-            prod.setCellValue(prj.getProduct().getName());
-        } else {
-            prod.setCellValue(bl.getName());
-        }
-        if(bli != null) {
-            blic.setCellValue(bli.getName());
-            if(bli.getIterationGoal() != null) {
-                goal.setCellValue(bli.getIterationGoal().getName());
-            }
-        }
-        if(entry.getUser() != null) {
-            user.setCellValue(entry.getUser().getFullName());
-        }
-        if(entry.getDate() != null) {
-            time.setCellValue(entry.getDate());
-            time.setCellStyle(dateStyle);
-        }
-        if(entry.getDescription() != null) {
-            desc.setCellValue(entry.getDescription());
-        }
-        if(entry.getTimeSpent() != null) {
-            eff.setCellValue(((double)Math.round(entry.getTimeSpent().toDouble()*100))/100);
-            eff.setCellType(Cell.CELL_TYPE_NUMERIC);
-        }
+        return selectedUsers;
     }
     public TimesheetBusiness getTimesheetBusiness() {
         return timesheetBusiness;
+    }
+
+    public void setTimesheetBusiness(TimesheetBusiness timesheetBusiness) {
+        this.timesheetBusiness = timesheetBusiness;
+    }
+
+    public Set<Integer> getProductIds() {
+        return productIds;
+    }
+
+    public void setProductIds(Set<Integer> productIds) {
+        this.productIds = productIds;
+    }
+
+    public Set<Integer> getProjectIds() {
+        return projectIds;
+    }
+
+    public void setProjectIds(Set<Integer> projectIds) {
+        this.projectIds = projectIds;
+    }
+
+    public Set<Integer> getIterationIds() {
+        return iterationIds;
+    }
+
+    public void setIterationIds(Set<Integer> iterationIds) {
+        this.iterationIds = iterationIds;
     }
 
     public List<BacklogTimesheetNode> getProducts() {
         return products;
     }
 
-    /**
-     * This should not be used anywhere
-     * @param products
-     */
     public void setProducts(List<BacklogTimesheetNode> products) {
         this.products = products;
-    }
-
-    public void setTimesheetBusiness(TimesheetBusiness timesheetBusiness) {
-        this.timesheetBusiness = timesheetBusiness;
     }
 
     public String getStartDate() {
@@ -380,60 +249,28 @@ public class TimesheetAction extends ActionSupport implements PrincipalAware {
         this.interval = interval;
     }
 
-    public List<Integer> getSelected() {
-        this.selected.clear();
-        for(int sel : backlogIds) {
-            this.selected.add(sel);
-        }
-        return selected;
+    public Set<Integer> getUserIds() {
+        return userIds;
     }
 
-    public List<User> getSelUser() {
-        this.selUser.clear();
-        for(int sel: userIds) {
-            this.selUser.add(userDAO.get(sel));
-        }
-        return selUser;
+    public void setUserIds(Set<Integer> userIds) {
+        this.userIds = userIds;
     }
 
-    public AFTime getTotalSpentTime() {
-        return totalSpentTime;
+    public int getCurrentUserId() {
+        return currentUserId;
     }
 
-    public void setTotalSpentTime(AFTime totalSpentTime) {
-        this.totalSpentTime = totalSpentTime;
+    public void setCurrentUserId(int currentUserId) {
+        this.currentUserId = currentUserId;
     }
 
-    public UserDAO getUserDAO() {
-        return userDAO;
+    public boolean isOnlyOngoing() {
+        return onlyOngoing;
     }
 
-    public void setUserDAO(UserDAO userDAO) {
-        this.userDAO = userDAO;
-    }
-
-    public Set<Integer> getProductIds() {
-        return productIds;
-    }
-
-    public void setProductIds(Set<Integer> productIds) {
-        this.productIds = productIds;
-    }
-
-    public Set<Integer> getProjectIds() {
-        return projectIds;
-    }
-
-    public void setProjectIds(Set<Integer> projectIds) {
-        this.projectIds = projectIds;
-    }
-
-    public Set<Integer> getIterationIds() {
-        return iterationIds;
-    }
-
-    public void setIterationIds(Set<Integer> iterationIds) {
-        this.iterationIds = iterationIds;
+    public void setOnlyOngoing(boolean onlyOngoing) {
+        this.onlyOngoing = onlyOngoing;
     }
     
     public String getJSONProducts() {
@@ -445,37 +282,21 @@ public class TimesheetAction extends ActionSupport implements PrincipalAware {
     public String getJSONIterations() {
         return new JSONSerializer().serialize(this.iterationIds);
     }
-
+    public long getEffortSum() {
+        return effortSum;
+    }
     public void setUserBusiness(UserBusiness userBusiness) {
         this.userBusiness = userBusiness;
     }
-
-    public int getBacklogSelectionType() {
-        return backlogSelectionType;
+    public void setTimesheetExportBusiness(
+            TimesheetExportBusiness timesheetExportBusiness) {
+        this.timesheetExportBusiness = timesheetExportBusiness;
     }
-
-    public void setBacklogSelectionType(int backlogSelectionType) {
-        this.backlogSelectionType = backlogSelectionType;
-    }
-
-    public boolean isOnlyOngoing() {
-        return onlyOngoing;
-    }
-
-    public void setOnlyOngoing(boolean onlyOngoing) {
-        this.onlyOngoing = onlyOngoing;
-    }
-
-    public Set<Integer> getUserIds() {
-        return userIds;
-    }
-
-    public void setUserIds(Set<Integer> userIds) {
-        this.userIds = userIds;
-    }
-    
     public InputStream getSheetData() {
-        return new ByteArrayInputStream(excelData.toByteArray());
+        return new ByteArrayInputStream(this.exportableReport.toByteArray());
+    }
+    public void setExportableReport(ByteArrayOutputStream exportableReport) {
+        this.exportableReport = exportableReport;
     }
     
 }

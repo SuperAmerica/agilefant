@@ -2,7 +2,7 @@
 
 <div class="validateWrapper validateNewUser">
 <ww:form method="POST" action="storeUser">
-    <ww:hidden name="userId" value="${user.id}" />
+    <ww:hidden name="userId" value="%{user.id}" />
 
     <table class="formTable">
         <tr>
@@ -23,17 +23,17 @@
         <tr>
             <td>Email</td>
             <td>*</td>
-            <td colspan="2"><ww:textfield name="user.email" value="${user.email}" /></td>
+            <td colspan="2"><ww:textfield name="user.email" value="%{user.email}" /></td>
         </tr>
         <tr>
             <td></td>
             <td></td>
-            <td colspan="2"><ww:checkbox name="user.enabled" value="${user.enabled}" /> Enabled</td>
+            <td colspan="2"><ww:checkbox name="user.enabled" value="%{user.enabled}" /> Enabled</td>
         </tr>
         <tr>
             <td>Weekly hours</td>
             <td>*</td>
-            <td colspan="2"><ww:textfield name="user.weekHours" value="${user.weekHours}" /></td>
+            <td colspan="2"><ww:textfield name="user.weekEffort" value="%{aef:minutesToString(user.weekEffort.minorUnits)}" /></td>
         </tr>       
         <tr>
             <td>Password</td>
@@ -48,11 +48,11 @@
         <tr>
         <c:choose>
         <c:when test="${fn:length(teamList) > 0}">
-            <td><a href="javascript:toggleDiv('createBLIteamlist');">Select teams</a></td>
+            <td><a href="javascript:toggleDiv('createStoryteamlist');">Select teams</a></td>
             <td></td>
             <td>
             <p>User is currently in <c:out value="${fn:length(user.teams)}" /> teams</p>
-            <ul id="createBLIteamlist" style="display:none;list-style-type:none;">
+            <ul id="createStoryteamlist" style="display:none;list-style-type:none;">
             
             <c:forEach items="${teamList}" var="team" varStatus="status">
                 <c:choose>
@@ -63,7 +63,7 @@
                         <c:set var="selected" value="" />
                     </c:otherwise>
                 </c:choose>
-                <li class="${(status.index % 2 == 0) ? 'even' : 'odd'}"><ww:checkbox name="teamIds[${team.id}]" value="${selected}"/>
+                <li class="${(status.index % 2 == 0) ? 'even' : 'odd'}"><ww:checkbox name="teamIds[%{team.id}]" value="%{selected}"/>
                 <c:out value="${team.name}" /></li>
             </c:forEach>
             </ul>

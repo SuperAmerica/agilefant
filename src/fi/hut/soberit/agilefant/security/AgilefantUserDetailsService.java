@@ -45,7 +45,7 @@ public class AgilefantUserDetailsService implements UserDetailsService {
             throw new AgilefantDataAccessException("userBusiness was null");
 
         // try getting user by given username
-        User user = userBusiness.getUser(userName);
+        User user = userBusiness.retrieveByLoginName(userName);
 
         // no user found, throw exception
         if (user == null)

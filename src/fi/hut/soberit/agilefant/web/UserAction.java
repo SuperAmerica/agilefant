@@ -7,25 +7,28 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.opensymphony.xwork.Action;
-import com.opensymphony.xwork.ActionSupport;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
-import fi.hut.soberit.agilefant.business.BacklogBusiness;
-import fi.hut.soberit.agilefant.business.HourEntryBusiness;
+import com.opensymphony.xwork2.Action;
+import com.opensymphony.xwork2.ActionSupport;
+
+import fi.hut.soberit.agilefant.business.TeamBusiness;
 import fi.hut.soberit.agilefant.business.UserBusiness;
-import fi.hut.soberit.agilefant.db.TeamDAO;
-import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.db.hibernate.EmailValidator;
-import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.Team;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.security.SecurityUtil;
+import flexjson.JSONSerializer;
 
 /**
  * UserAction
  * 
  * @author khel
  */
+@Component("userAction")
+@Scope("prototype")
 public class UserAction extends ActionSupport implements CRUDAction {
 
     private static final long serialVersionUID = 284890678155663442L;
@@ -34,23 +37,21 @@ public class UserAction extends ActionSupport implements CRUDAction {
 
     private User user;
 
-    private UserDAO userDAO;
+    @Autowired
+    private TeamBusiness teamBusiness;
 
-    private TeamDAO teamDAO;
-
-    private BacklogBusiness backlogBusiness;
-    
+    @Autowired
     private UserBusiness userBusiness;
     
-    private HourEntryBusiness hourEntryBusiness;
+    private String password1 = "";
 
-    private String password1;
-
-    private String password2;
+    private String password2 = "";
 
     private String email;
     
-    private AFTime weekHours;
+//    private AFTime weekHours;
+    
+    private Collection<User> users;
     
     private List<User> enabledUsers = new ArrayList<User>();
     
@@ -67,7 +68,7 @@ public class UserAction extends ActionSupport implements CRUDAction {
         userId = 0;
         user = new User();
         user.setEnabled(true);
-        user.setWeekHours(new AFTime("40h"));
+//        user.setWeekHours(new AFTime("40h"));
         return Action.SUCCESS;
     }
 
@@ -77,16 +78,16 @@ public class UserAction extends ActionSupport implements CRUDAction {
             return Action.ERROR;
         }
 
-        User u = userDAO.get(userId);
+        User u = userBusiness.retrieve(userId);
         if (u == null) {
             super.addActionError(super.getText("user.notFound"));
             return Action.ERROR;
         }
-        if (u.getAssignables().size() > 0) {
+        if (u.getAssignments().size() > 0) {
             super.addActionError(super.getText("user.hasLinkedItems"));
             return Action.ERROR;
         }
-        if(userBusiness.hasUserCreatedItems(u)) {
+        if(userBusiness.hasUserCreatedStories(u)) {
             super.addActionError(super.getText("user.hasCreatedItems"));
             return Action.ERROR;
         }
@@ -95,43 +96,44 @@ public class UserAction extends ActionSupport implements CRUDAction {
          * if user has hour reports but hour reporting is currently turned off and
          * thus user can not view associated objects.
          */
-        if(hourEntryBusiness.isAssociatedWithHourReport(u)) {
-            super.addActionError(super.getText("user.linkedJobEntries"));
-            return Action.ERROR;
-        }
+//      TODO: correct this while fixing hour entries
+//        if(hourEntryBusiness.isAssociatedWithHourReport(u)) {
+//            super.addActionError(super.getText("user.linkedJobEntries"));
+//            return Action.ERROR;
+//        }
         /* Prevent the deletion of administrator */
         if (userId == 1) {
             super.addActionError("User cannot be deleted");
             return Action.ERROR;
         }
-        /* Remove assignments before deleting user. */
-        backlogBusiness.removeAssignments(u);
+
         /* Clear the teams */
         u.getTeams().clear();
-        userDAO.remove(userId);
+        userBusiness.delete(userId);
         return Action.SUCCESS;
     }
 
-    public String edit() {
+    public String retrieve() {
+        user = userBusiness.retrieve(userId);
         createTeamList();
-        user = userDAO.get(userId);
-        if (user == null) {
-            super.addActionError(super.getText("user.notFound"));
-            return Action.ERROR;
-        }
+        return Action.SUCCESS;
+    }
+    
+    public String retrieveAll() {
+        users = userBusiness.retrieveAll();
         return Action.SUCCESS;
     }
     
     public String disable() {
-        user = userDAO.get(userId);
-        userBusiness.disableUser(user);
+        user = userBusiness.retrieve(userId);
+        userBusiness.disableUser(user.getId());
         
         return Action.SUCCESS;
     }
     
     public String enable() {
-        user = userDAO.get(userId);
-        userBusiness.enableUser(user);
+        user = userBusiness.retrieve(userId);
+        userBusiness.enableUser(user.getId());
         
         return Action.SUCCESS;
     }
@@ -140,7 +142,7 @@ public class UserAction extends ActionSupport implements CRUDAction {
         createTeamList();
         User storable = new User();
         if (userId > 0) {
-            storable = userDAO.get(userId);
+            storable = userBusiness.retrieve(userId);
             if (storable == null) {
                 super.addActionError(super.getText("user.notFound"));
                 return Action.ERROR;
@@ -151,30 +153,11 @@ public class UserAction extends ActionSupport implements CRUDAction {
             return Action.ERROR;
         }
 
-        userDAO.store(storable);
+        userBusiness.store(storable);
 
         return Action.SUCCESS;
     }
-
-    public String ajaxStoreUser() {
-        createTeamList();
-        User storable = new User();
-        if (userId > 0) {
-            storable = userDAO.get(userId);
-            if (storable == null) {
-                super.addActionError(super.getText("user.notFound"));
-                return CRUDAction.AJAX_ERROR;
-            }
-        }
-        this.fillStorable(storable);
-        if (super.hasActionErrors()) {
-            return CRUDAction.AJAX_ERROR;
-        }
-
-        userDAO.store(storable);
-
-        return CRUDAction.AJAX_SUCCESS;
-    }
+    
     
     protected void fillStorable(User storable) {
         String md5Pw = null;
@@ -196,7 +179,7 @@ public class UserAction extends ActionSupport implements CRUDAction {
                 md5Pw = SecurityUtil.MD5(password1);
             }
         }
-        User existingUser = userDAO.getUser(this.user.getLoginName());
+        User existingUser = userBusiness.retrieveByLoginName(this.user.getLoginName());
         if (existingUser != null && existingUser.getId() != storable.getId()) {
             super.addActionError(super.getText("user.loginNameInUse"));
             return;
@@ -214,19 +197,21 @@ public class UserAction extends ActionSupport implements CRUDAction {
             return;
         }
         
-        if (this.user.getWeekHours() == null) {
-            super.addActionError("Weekly working hours are required");
-            return;
-        }
-        else if (this.user.getWeekHours().getTime() < 0) {
-            super.addActionError("Weekly working hours must be positive");
-            return;
-        }
+//        TODO: week hours
+//        if (this.user.getWeekHours() == null) {
+//            super.addActionError("Weekly working hours are required");
+//            return;
+//        }
+//        else if (this.user.getWeekHours().getTime() < 0) {
+//            super.addActionError("Weekly working hours must be positive");
+//            return;
+//        }
                             
         storable.setFullName(this.user.getFullName());
         storable.setLoginName(this.user.getLoginName());
         storable.setEnabled(this.user.isEnabled());
-        storable.setWeekHours(this.user.getWeekHours());
+//        TODO: week hours
+//        storable.setWeekHours(this.user.getWeekHours());
         storable.setPassword(md5Pw);
 
         // Set the initials
@@ -253,7 +238,7 @@ public class UserAction extends ActionSupport implements CRUDAction {
 
         Collection<Team> listOfTeams = new ArrayList<Team>();
         for (int teamId : teamIds.keySet()) {
-            listOfTeams.add(teamDAO.get(teamId));
+            listOfTeams.add(teamBusiness.retrieve(teamId));
         }
 
         storable.getTeams().clear();
@@ -268,16 +253,16 @@ public class UserAction extends ActionSupport implements CRUDAction {
     }
 
     private void createTeamList() {
-        teamList.addAll(teamDAO.getAll());
+        teamList.addAll(teamBusiness.retrieveAll());
         Collections.sort(teamList);
     }
     
     public String getUserJSON() {
         if (userId > 0) {
-            jsonData = userBusiness.getUserJSON(userId);
+            jsonData = new JSONSerializer().serialize(userBusiness.retrieve(userId));
         }
         else {
-            jsonData = userBusiness.getAllUsersAsJSON();
+            jsonData = new JSONSerializer().serialize(userBusiness.retrieveAll());
         }
         if (super.hasActionErrors()) {
             return Action.ERROR;
@@ -300,19 +285,6 @@ public class UserAction extends ActionSupport implements CRUDAction {
     public void setUserId(int userId) {
         this.userId = userId;
     }
-
-    public void setUserDAO(UserDAO userDAO) {
-        this.userDAO = userDAO;
-    }
-
-    /**
-     * Method added for testing.
-     * 
-     * @return UserDAO-object
-     */
-    /*
-     * protected UserDAO getUserDAO() { return userDAO; }
-     */
 
     public String getPassword1() {
         return password1;
@@ -338,24 +310,16 @@ public class UserAction extends ActionSupport implements CRUDAction {
         this.email = email;
     }
 
-    public AFTime getWeekHours() {
-        return weekHours;
-    }
-    
-    public void setWeekHours(AFTime hours) {
-        this.weekHours = hours;
-    }
+//    public AFTime getWeekHours() {
+//        return weekHours;
+//    }
+//    
+//    public void setWeekHours(AFTime hours) {
+//        this.weekHours = hours;
+//    }
     
     public List<Team> getTeamList() {
         return teamList;
-    }
-
-    public TeamDAO getTeamDAO() {
-        return teamDAO;
-    }
-
-    public void setTeamDAO(TeamDAO teamDAO) {
-        this.teamDAO = teamDAO;
     }
 
     public Map<Integer, String> getTeamIds() {
@@ -366,20 +330,8 @@ public class UserAction extends ActionSupport implements CRUDAction {
         this.teamIds = teamIds;
     }
 
-    public UserDAO getUserDAO() {
-        return userDAO;
-    }
-
     public void setTeamList(List<Team> teamList) {
         this.teamList = teamList;
-    }
-
-    public void setBacklogBusiness(BacklogBusiness backlogBusiness) {
-        this.backlogBusiness = backlogBusiness;
-    }
-
-    public UserBusiness getUserBusiness() {
-        return userBusiness;
     }
 
     public void setUserBusiness(UserBusiness userBusiness) {
@@ -402,14 +354,6 @@ public class UserAction extends ActionSupport implements CRUDAction {
         this.disabledUsers = disabledUsers;
     }
 
-    public HourEntryBusiness getHourEntryBusiness() {
-        return hourEntryBusiness;
-    }
-
-    public void setHourEntryBusiness(HourEntryBusiness hourEntryBusiness) {
-        this.hourEntryBusiness = hourEntryBusiness;
-    }
-
     public String getJsonData() {
         return jsonData;
     }
@@ -417,4 +361,13 @@ public class UserAction extends ActionSupport implements CRUDAction {
     public void setJsonData(String jsonData) {
         this.jsonData = jsonData;
     }
+    
+    public void setTeamBusiness(TeamBusiness teamBusiness) {
+        this.teamBusiness = teamBusiness;
+    }
+
+    public Collection<User> getUsers() {
+        return users;
+    }
+    
 }

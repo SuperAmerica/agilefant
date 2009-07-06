@@ -1,105 +1,85 @@
 package fi.hut.soberit.agilefant.web;
 
-import fi.hut.soberit.agilefant.db.SettingDAO;
-import fi.hut.soberit.agilefant.model.Setting;
-import fi.hut.soberit.agilefant.util.SpringTestCase;
+import static org.easymock.EasyMock.createMock;
 
-public class SettingActionTest extends SpringTestCase {
+import org.apache.struts2.StrutsTestCase;
+import org.junit.Before;
+import org.junit.Test;
 
-    private SettingDAO settingDAO = null;
-    private SettingAction settingAction = null;
-    private Setting setting = null;
-    
-    /**
-     * Create test data.
-     */
-    public void onSetUpInTransaction() throws Exception {
-        // Create a new setting.
-        setting = new Setting();
-        setting.setName("Test");
-        setting.setDescription("Test Description");
-        setting.setId((Integer) settingDAO.create(setting));
-    }
-    
-    /**
-     * Test create operation.
-     */
-    public void testCreate() {
-        assertEquals("success", settingAction.create());
-        assertNotNull(settingAction.getSetting());
-    }
-    
-    /**
-     * Test delete operation.
-     */
-    public void testDelete() {
-        settingAction.setSettingId(setting.getId());
-        assertEquals("success", settingAction.delete());
-        assertNull(settingDAO.get(setting.getId()));
-    }
+import fi.hut.soberit.agilefant.business.SettingBusiness;
 
-    /**
-     * Test delete operation with a wrong setting id.
-     */
-    public void testDelete_withWrongSettingId() {
-        settingAction.setSettingId(-1);
-        assertEquals("error", settingAction.delete());
-        assertNotNull(settingDAO.get(setting.getId()));
-    }
+/**
+ * StrutsTestCase extends jUnit 3's <code>TestCase</code>.
+ * Therefore, the tests must be written in jUnit 3 style.
+ */
 
-    
-    /**
-     * Test store operation.
-     */
-    public void testStore() {
-        // execute edit operation
-        settingAction.setSettingId(setting.getId());
-        assertEquals("success", settingAction.edit());
+public class SettingActionTest extends StrutsTestCase {
+    public SettingAction testable;
+    public SettingBusiness settingBusiness;
         
-        // update action fields
-        settingAction.setValue("true");
-        settingAction.setName("Rautaesirippu");
-
-        // execute store operation
-        assertEquals("success", settingAction.store());
-        assertEquals("Rautaesirippu", settingDAO.get(setting.getId()).getName());
+    @Before
+    public void setUp() {
+        try {
+            super.setUp();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        settingBusiness = createMock(SettingBusiness.class);
+        testable = new SettingAction();
+        testable.setSettingBusiness(settingBusiness);
     }
     
-    /**
-     * Test store operation with wrong setting id.
-     * 
-     */
-    public void testStore_withWrongSettingId() {
-        // execute edit operation
-        settingAction.setSettingId(-1);
-        assertEquals("error", settingAction.edit());
+    @Test
+    public void testValidateLoadMeterValues() {
+        testable.setRangeLow(50);
+        testable.setOptimalLow(40);
+        testable.setOptimalHigh(30);
+        testable.setCriticalLow(20);
+        testable.setRangeHigh(10);
         
-        // update action fields
-        settingAction.setValue("true");
-        settingAction.setName("Rautaesirippu");
-
-        // execute store operation
-        assertEquals("error", settingAction.store());
-        assertEquals("Test", settingDAO.get(setting.getId()).getName());
+        assertFalse(testable.validateLoadMeterValues());
+        testable.setRangeLow(10);
+        
+        assertFalse(testable.validateLoadMeterValues());
+        testable.setOptimalLow(20);
+        
+        assertFalse(testable.validateLoadMeterValues());
+        testable.setOptimalHigh(30);
+        
+        assertFalse(testable.validateLoadMeterValues());
+        testable.setCriticalLow(40);
+        
+        assertFalse(testable.validateLoadMeterValues());
+        testable.setRangeHigh(50);
+        
+        assertTrue(testable.validateLoadMeterValues());
     }
     
-    /**
-     * Test edit operation.
-     */
-    public void testEdit() {
-        settingAction.setSettingId(setting.getId());
-        assertEquals("success", settingAction.edit());
-        assertNotNull(settingAction.getSetting());
-        assertEquals("Test", settingAction.getSetting().getName());
-        assertEquals("Test Description", settingAction.getSetting()
-                .getDescription());
+    @Test
+    public void testInitilizeEmptyLoadMeterValues_empty() {
+        testable.initilizeEmptyLoadMeterValues();
+        assertEquals(SettingBusiness.DEFAULT_CRITICAL_LOW, testable.getCriticalLow());
+        assertEquals(SettingBusiness.DEFAULT_OPTIMAL_HIGH, testable.getOptimalHigh());
+        assertEquals(SettingBusiness.DEFAULT_OPTIMAL_LOW, testable.getOptimalLow());
+        assertEquals(SettingBusiness.DEFAULT_RANGE_HIGH, testable.getRangeHigh());
+        assertEquals(SettingBusiness.DEFAULT_RANGE_LOW, testable.getRangeLow());
     }
     
-    public void setSettingDAO(SettingDAO settingDAO) {
-        this.settingDAO = settingDAO;
+    @Test
+    public void testInitilizeEmptyLoadMeterValues() {
+        testable.setRangeLow(5);
+        testable.setOptimalLow(3);
+        testable.setOptimalHigh(2);
+        testable.setCriticalLow(1);
+        testable.setRangeHigh(4);
+        testable.initilizeEmptyLoadMeterValues();
+        assertEquals(1, testable.getCriticalLow());
+        assertEquals(2, testable.getOptimalHigh());
+        assertEquals(3, testable.getOptimalLow());
+        assertEquals(4, testable.getRangeHigh());
+        assertEquals(5, testable.getRangeLow());
     }
 
-    public void setSettingAction(SettingAction settingAction) {
-        this.settingAction = settingAction;
-    }
+
+
 }

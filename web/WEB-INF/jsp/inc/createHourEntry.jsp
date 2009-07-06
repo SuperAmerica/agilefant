@@ -2,6 +2,7 @@
 
 <aef:currentUser />
 <aef:enabledUserList />
+ 
 <aef:userEffortSum user="${currentUser}" timeInterval="Today"
 	id="todayEffortSum" />
 <aef:userEffortSum user="${currentUser}" timeInterval="Yesterday"
@@ -10,6 +11,7 @@
 	id="weekEffortSum" />
 <aef:userEffortSum user="${currentUser}" timeInterval="This month"
 	id="monthEffortSum" />
+
 <script type="text/javascript">
 function updatePastEffort(immediate) {
     var data = new Object();
@@ -36,7 +38,7 @@ function updatePastEffort(immediate) {
 
 $(document).ready(function() {
     $('#userChooserLink-createHourEntry').userChooser({
-        backlogItemId: ${backlogItemId},
+        storyId: ${storyId},
         backlogId: ${backlogId},
         userListContainer: '#userListContainer-createHourEntry',
         selectThese: [${currentUser.id}],
@@ -50,7 +52,7 @@ $(document).ready(function() {
 });
 </script>
 
-<div class="validateWrapper validateNewHourEntry">
+<div class="validateWrapper validateNewHourEntryAjax">
 <form onsubmit="return false;">
 <table>
 	<tr>
@@ -60,17 +62,19 @@ $(document).ready(function() {
 			<tr>
 				<td>Effort spent</td>
 				<td></td>
-				<td colspan="2"><input type="text" size="10" name="hourEntry.timeSpent" />(e.g.
+				<td colspan="2"><input type="text" size="10" name="hourEntry.minutesSpent" />(e.g.
 				"2h 30min" or "2.5")</td>
 			</tr>
 			<tr>
 				<td>When</td>
 				<td></td>
-				<td><ww:date name="%{hourEntry.date}" id="date"
-					format="%{getText('webwork.shortDateTime.format')}" /> <aef:datepicker
-					id="he_date" name="date"
-					format="%{getText('webwork.shortDateTime.format')}"
-					value="%{#date}" /></td>
+				<td>
+				    <joda:format value="${hourEntry.date}" var="date"
+					pattern="yyyy-MM-dd HH:mm" /> 
+					<aef:datepicker id="he_date"
+					name="date" format="%{getText('struts.shortDateTime.format')}"
+					value="${date}" />
+				</td>
 			</tr>
 
 			<tr>
@@ -102,18 +106,18 @@ $(document).ready(function() {
 				<table>
 					<tr>
 						<td>Today:</td>
-						<td>${todayEffortSum}</td>
+						<td>${aef:minutesToString(todayEffortSum)}</td>
 						<td style="width: 50px;"></td>
 						<td>This week:</td>
-						<td>${weekEffortSum}</td>
+						<td>${aef:minutesToString(weekEffortSum)}</td>
 
 					</tr>
 					<tr>
 						<td>Yesterday:</td>
-						<td>${yesterdayEffortSum}</td>
+						<td>${aef:minutesToString(yesterdayEffortSum)}</td>
 						<td></td>
 						<td>This month:</td>
-						<td>${monthEffortSum}</td>
+						<td>${aef:minutesToString(monthEffortSum)}</td>
 					</tr>
 				</table>
 				</td>
@@ -126,11 +130,11 @@ $(document).ready(function() {
 				<table>
 					<tr>
 						<td><aef:datepicker id="effStartDate" name="effStartDate"
-							format="%{getText('webwork.shortDateTime.format')}" value="" />
+							format="%{getText('struts.shortDateTime.format')}" value="" />
 						</td>
 						<td style="width: 30px; text-align: center;">-</td>
 						<td><aef:datepicker id="effEndDate" name="effEndDate"
-							format="%{getText('webwork.shortDateTime.format')}" value="" />
+							format="%{getText('struts.shortDateTime.format')}" value="" />
 						</td>
 						<td><input type="button" value="Update"
 							onclick="javascript:updatePastEffort(true);" /></td>

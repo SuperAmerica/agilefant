@@ -1,18 +1,31 @@
 package fi.hut.soberit.agilefant.business.impl;
 
+import java.util.Collection;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import fi.hut.soberit.agilefant.business.ProductBusiness;
 import fi.hut.soberit.agilefant.db.ProductDAO;
+import fi.hut.soberit.agilefant.model.Product;
 
-public class ProductBusinessImpl implements ProductBusiness {
+@Service("productBusiness")
+@Transactional
+public class ProductBusinessImpl extends GenericBusinessImpl<Product> implements
+        ProductBusiness {
 
     private ProductDAO productDAO;
 
-    public int count() {
-        return productDAO.count();
+    @Autowired
+    public void setProductDAO(ProductDAO productDAO) {
+        this.genericDAO = productDAO;
+        this.productDAO = productDAO;
     }
 
-    public void setProductDAO(ProductDAO productDAO) {
-        this.productDAO = productDAO;
+    @Transactional(readOnly = true)
+    public Collection<Product> retrieveAllOrderByName() {
+        return productDAO.getAllOrderByName();
     }
 
 }

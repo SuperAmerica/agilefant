@@ -11,11 +11,10 @@
         
         <mapping class="fi.hut.soberit.agilefant.model.ProjectType"/>
         <mapping class="fi.hut.soberit.agilefant.model.Backlog"/>
-        <mapping class="fi.hut.soberit.agilefant.model.BacklogItem"/>
+        <mapping class="fi.hut.soberit.agilefant.model.Story"/>
         <mapping class="fi.hut.soberit.agilefant.model.Project"/>
         <mapping class="fi.hut.soberit.agilefant.model.Iteration"/>
         <mapping class="fi.hut.soberit.agilefant.model.Product"/>
-        <mapping class="fi.hut.soberit.agilefant.model.Todo"/>
         <mapping class="fi.hut.soberit.agilefant.model.Team"/>
         <mapping class="fi.hut.soberit.agilefant.model.User"/>
         <mapping class="fi.hut.soberit.agilefant.model.WorkType"/>
@@ -26,7 +25,7 @@
         <mapping class="fi.hut.soberit.agilefant.model.Assignment"/>
         <mapping class="fi.hut.soberit.agilefant.model.Setting"/>
         <mapping class="fi.hut.soberit.agilefant.model.HourEntry"/>
-        <mapping class="fi.hut.soberit.agilefant.model.BacklogItemHourEntry"/>
+        <mapping class="fi.hut.soberit.agilefant.model.StoryHourEntry"/>
         <mapping class="fi.hut.soberit.agilefant.model.BacklogHourEntry"/>
         <mapping class="fi.hut.soberit.agilefant.model.BusinessTheme"/>
         <mapping class="fi.hut.soberit.agilefant.model.BacklogThemeBinding"/>

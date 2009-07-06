@@ -7,7 +7,7 @@
      *  - url: where to get the json data from
      *  - legacyMode: true: the hidden fields' names will be 'userIds[XX]'
      *               false: the hidden fields' names will be 'userIds'
-     *  - backlogItemId: when rendering for backlog item, the item's id.
+     *  - storyId: when rendering for story, the item's id.
      *  - backlogId/backlogIdField: the backlog id can be given directly or
      *                              by a jQuery selector if the backlog can change.
      *  - userListContainer: the element where the list of assigned users' initials are shown
@@ -22,7 +22,7 @@
         var options = {
             url: "getUserChooserJSON.action",
             legacyMode: true,
-            backlogItemId: null,
+            storyId: null,
             backlogId: null,
             backlogIdField: null,
             userListContainer: null,
@@ -32,7 +32,7 @@
                 selectAtLeast: 0,
                 AFTime: false
             },
-            renderFor: 'backlogItem',
+            renderFor: 'story',
             overlayUpdate: function() {
                 $('.ui-dialog-overlay').css("height",$(document).height()).css("width",$(document).width());
             } 
@@ -102,15 +102,15 @@
                 }
                 this.renderForProject();
             }
-            else if (this.options.renderFor == 'backlogItem') {
+            else if (this.options.renderFor == 'story') {
               if (!this.options.selectCallback) {
-                this.options.selectCallback  = this.bliSelectAction;
+                this.options.selectCallback  = this.storySelectAction;
               }
-              this.renderForBLI();
+              this.renderForStory();
             }
             else {
               if (!this.options.selectCallback) {
-                this.options.selectCallback  = this.bliSelectAction;
+                this.options.selectCallback  = this.storySelectAction;
               }
               this.renderForAllUsers();
             }
@@ -126,10 +126,10 @@
             
             /* Render the columns */
             var nameList = $('<ul/>').addClass('projectAssigneeList').appendTo(this.assignedCell);
-            var overheadList = $('<ul/>').addClass('projectAssigneeList').appendTo(this.notAssignedCell);
+            var personalLoadList = $('<ul/>').addClass('projectAssigneeList').appendTo(this.notAssignedCell);
             $.each(this.data.showUsers, function() {
                 var nameLi = $('<li/>').appendTo(nameList);
-                var overheadLi = $('<li/>').appendTo(overheadList);
+                var personalLoadLi = $('<li/>').appendTo(personalLoadList);
 
                 /* Print the name */
                 var e = me.data.users[this.id];
@@ -140,29 +140,29 @@
                 }
                 nameLi.append(checkbox).append(label).appendTo(nameList);
                 
-                /* Print the overhead */
-                var overheadText = $('<span/>').appendTo(overheadLi).hide();
+                /* Print the personal load */
+                var personalLoadText = $('<span/>').appendTo(personalLoadLi).hide();
                 var deltaValue = "";
-                if (me.data.overheads[this.id] == null) {
+                if (me.data.personalLoads[this.id] == null) {
                     deltaValue = "";
-                } else if(typeof(me.data.overheads[this.id]) == 'number') {
-                    var a = me.data.overheads[this.id];
-                    deltaValue = Date.millisToAFTime((me.data.overheads[this.id] * 1000));
+                } else if(typeof(me.data.personalLoads[this.id]) == 'number') {
+                    var a = me.data.personalLoads[this.id];
+                    deltaValue = Date.millisToAFTime((me.data.personalLoads[this.id] * 1000));
                 } else {
-                    deltaValue = me.data.overheads[this.id];
+                    deltaValue = me.data.personalLoads[this.id];
                 }
                 var input = $('<input type="text" size="5"/>').attr('name','delta')
                     .attr('id','delta_user_' + e.id).val(deltaValue)
-                    .addClass('aftimeField').appendTo(overheadText);
+                    .addClass('aftimeField').appendTo(personalLoadText);
                 
                 /* Bind the hide/show event */
                 checkbox.change(function() {
                     if (checkbox.is(":checked")) {
-                        overheadText.show();
+                        personalLoadText.show();
                         input.removeAttr('disabled');
                     }
                     else {
-                        overheadText.hide();
+                        personalLoadText.hide();
                         input.attr('disabled','disabled');
                     }
                 });
@@ -180,7 +180,7 @@
             this.assignedCell.append(this.renderCheckboxList(firstList));
             this.notAssignedCell.append(this.renderCheckboxList(secondList));
         },
-        renderForBLI: function() {
+        renderForStory: function() {
             var me = this;
             if (this.data.notAssignedIds.length == 0 || this.data.assignments.length == 0) {
                 var firstLength = Math.ceil(me.data.showCount / 2);
@@ -350,7 +350,7 @@
                 data: {
 
                     backlogId: backlogId,
-                    backlogItemId: this.options.backlogItemId
+                    storyId: this.options.storyId
                 },
                 
                 success: function(data, status) {
@@ -439,7 +439,7 @@
             var userListContainer = $(me.options.userListContainer);
             var selectedInitials = "";
             
-            var overheads = {};
+            var personalLoads = {};
             
             userListContainer.empty();
             
@@ -453,9 +453,9 @@
                 
                 var assDelta = me.form.find('#delta_user_' + this).val();
                 var assD = $('<input type="hidden"/>').appendTo(userListContainer);
-                assD.attr('name','assignments[\'' + this + '\'].deltaOverhead').val(assDelta);
+                assD.attr('name','assignments[\'' + this + '\'].personalLoad').val(assDelta);
                 
-                overheads[this] = assDelta;
+                personalLoads[this] = assDelta;
             });
             
             if (selectedInitials.length > 0) {
@@ -465,7 +465,7 @@
                 userListContainer.append(me.options.emptySelectionText);
             }
             
-            me.data.overheads = overheads;
+            me.data.personalLoads = personalLoads;
             me.data.selectedList = me.getSelected();
             me.cache = me.data;
         },
@@ -479,7 +479,7 @@
             
             return list;
         },
-        bliSelectAction: function(me) {
+        storySelectAction: function(me) {
             var selectedList = me.getSelected();
             var userListContainer = $(me.options.userListContainer);
             var selectedInitials = "";

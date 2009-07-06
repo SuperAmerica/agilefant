@@ -5,114 +5,104 @@ import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 
-import org.easymock.EasyMock;
+import org.junit.*;
 
-import com.opensymphony.xwork.Action;
+import com.opensymphony.xwork2.Action;
+
+import static org.junit.Assert.*;
 
 import fi.hut.soberit.agilefant.business.HourEntryBusiness;
-import fi.hut.soberit.agilefant.db.BacklogItemDAO;
-import fi.hut.soberit.agilefant.db.UserDAO;
-import fi.hut.soberit.agilefant.model.BacklogItem;
+import fi.hut.soberit.agilefant.business.ProjectBusiness;
+import fi.hut.soberit.agilefant.business.StoryBusiness;
+import fi.hut.soberit.agilefant.business.TaskBusiness;
+import fi.hut.soberit.agilefant.business.UserBusiness;
+import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.HourEntry;
-import fi.hut.soberit.agilefant.model.TimesheetLoggable;
 import fi.hut.soberit.agilefant.model.User;
-import junit.framework.TestCase;
 
-public class HourEntryActionTest extends TestCase {
+public class HourEntryActionTest {
+    
     private HourEntryAction hourEntryAction;
+
     private HourEntryBusiness hourEntryBusiness;
-    private BacklogItemDAO backlogItemDAO;
-    private UserDAO userDAO;
+    private StoryBusiness storyBusiness;
+    private TaskBusiness taskBusiness;
+    private ProjectBusiness projectBusiness;
+    private UserBusiness userBusiness;
+    
     private HourEntry hourEntry;
-    private BacklogItem bli;
     private User user;
     
-    public void setUp() {
+    @Before
+    public void setUp_dependencies() {
+        hourEntryAction = new HourEntryAction();
+        
         hourEntryBusiness = createMock(HourEntryBusiness.class);
-        backlogItemDAO = createMock(BacklogItemDAO.class);
-        userDAO = createMock(UserDAO.class);
+        hourEntryAction.setHourEntryBusiness(hourEntryBusiness);
+        
+        storyBusiness = createMock(StoryBusiness.class);
+        hourEntryAction.setStoryBusiness(storyBusiness);
+        
+        taskBusiness = createMock(TaskBusiness.class);
+        hourEntryAction.setTaskBusiness(taskBusiness);
+        
+        projectBusiness = createMock(ProjectBusiness.class);
+        hourEntryAction.setProjectBusiness(projectBusiness);
+        
+        userBusiness = createMock(UserBusiness.class);
+        hourEntryAction.setUserBusiness(userBusiness);
+    }
+    
+    private void replayAll() {
+        replay(hourEntryBusiness, storyBusiness, taskBusiness, projectBusiness, userBusiness);
+    }
+    
+    private void verifyAll() {
+        verify(hourEntryBusiness, storyBusiness, taskBusiness, projectBusiness, userBusiness);
+    }
+    
+    @Before
+    public void setUp_data() {
         user = new User();
         user.setId(10);
-        bli = new BacklogItem();
-        bli.setId(2);
+
         hourEntry = new HourEntry();
         hourEntry.setId(1);
-        hourEntryAction = new HourEntryAction();
-        hourEntryAction.setHourEntryBusiness(hourEntryBusiness);
-        hourEntryAction.setBacklogItemDAO(backlogItemDAO);
-        hourEntryAction.setUserDAO(userDAO);
-        hourEntryAction.setHourEntry(hourEntry);
+    }
+    
+    @Test(expected = ObjectNotFoundException.class)
+    public void testDelete_nonExistentHourEntry() {
+        hourEntryAction.setHourEntryId(-1);
+        expect(hourEntryBusiness.retrieve(-1))
+            .andThrow(new ObjectNotFoundException());
+        replayAll();
+        
+        hourEntryAction.delete();
+        
+        verifyAll();
+    }
+    
+    @Test
+    public void testDelete_happyCase() {
         hourEntryAction.setHourEntryId(hourEntry.getId());
-        hourEntryAction.setUserId(user.getId());
-        hourEntryAction.setBacklogItemId(bli.getId());
+        
+        expect(hourEntryBusiness.retrieve(hourEntry.getId())).andReturn(hourEntry);
+        hourEntryBusiness.delete(hourEntry.getId());
+        replayAll();
+        
+        assertEquals(Action.SUCCESS, hourEntryAction.delete());
+        
+        verifyAll();
     }
     
-    public void testDelete() {
-        expect(hourEntryBusiness.getHourEntryById(hourEntry.getId())).andReturn(null);
+    @Test(expected = ObjectNotFoundException.class)
+    public void testRetrieve_noSuchHourEntry() {
+        hourEntryAction.setHourEntryId(-1);
+        expect(hourEntryBusiness.retrieve(-1)).andThrow(new ObjectNotFoundException());
+        replayAll();
         
-        // Start the test
-        replay(hourEntryBusiness);
+        hourEntryAction.retrieve();
         
-        assertEquals(CRUDAction.AJAX_ERROR, hourEntryAction.delete());
-        
-        verify(hourEntryBusiness);
-    }
-    
-    public void testEdit() {
-        expect(hourEntryBusiness.getHourEntryById(hourEntry.getId())).andReturn(null);
-        
-        // Start the test
-        replay(hourEntryBusiness);
-        
-        assertEquals(Action.ERROR, hourEntryAction.edit());
-        
-        verify(hourEntryBusiness);
-    }
-    
-    public void testStore() {
-        expect(hourEntryBusiness.getHourEntryById(hourEntry.getId())).andReturn(hourEntry);
-        expect(hourEntryBusiness.store(EasyMock.isA(TimesheetLoggable.class),
-                EasyMock.isA(HourEntry.class))).andReturn(hourEntry);
-        expect(userDAO.get(user.getId())).andReturn(user);
-        expect(backlogItemDAO.get(bli.getId())).andReturn(bli);
-        
-        // Start the test
-        replay(hourEntryBusiness);
-        replay(backlogItemDAO);
-        replay(userDAO);
-        
-        assertEquals(CRUDAction.AJAX_SUCCESS, hourEntryAction.store());
-        
-        verify(hourEntryBusiness);
-        verify(backlogItemDAO);
-        verify(userDAO);
-    }
-    
-    public void testStoreWithBadHourEntryId() {
-        expect(hourEntryBusiness.getHourEntryById(hourEntry.getId())).andReturn(null);
-        
-        // Start the test
-        replay(hourEntryBusiness);
-        
-        assertEquals(CRUDAction.AJAX_ERROR, hourEntryAction.store());
-        
-        verify(hourEntryBusiness);
-    }
-    
-    public void testStoreWithBadHourEntryIdAndUserId() {
-        hourEntryAction.setHourEntryId(0);
-        hourEntryAction.setUserId(0);
-        
-        // Start the test
-        assertEquals(CRUDAction.AJAX_ERROR, hourEntryAction.store());
-    }
-    
-    public HourEntryAction getHourEntryAction() {
-        return hourEntryAction;
-    }
-
-    public void setHourEntryAction(HourEntryAction hourEntryAction) {
-        this.hourEntryAction = hourEntryAction;
-    }
-    
+        verifyAll();
+    }    
 }

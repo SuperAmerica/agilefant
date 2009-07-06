@@ -24,7 +24,6 @@ Agilefant
 <script type="text/javascript" src="static/js/jquery.treeview.js?${fileTimestamp}"></script>
 <script type="text/javascript" src="static/js/jquery.treeview.async.js?${fileTimestamp}"></script>
 <script type="text/javascript" src="static/js/jquery-ui.min.js?${fileTimestamp}"></script>
-<script type="text/javascript" src="static/js/jquery-ui.tabs.js?${fileTimestamp}"></script>
 <script type="text/javascript" src="static/js/jquery.validate.js?${fileTimestamp}"></script>
 <script type="text/javascript" src="static/js/multiselect.js?${fileTimestamp}"></script>
 <script type="text/javascript" src="static/js/taskrank.js?${fileTimestamp}"></script>
@@ -85,7 +84,7 @@ $(document).ready(function() {
 </table>
 
 <c:choose>
-	<c:when test="${!(empty backlogItemsForUserInProgress)}" >
+	<c:when test="${!(empty storiesForUserInProgress)}" >
 		<%@ include file="./inc/_tinyWorkInProgress.jsp" %>
 	</c:when>
 	<c:otherwise>

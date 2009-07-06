@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+  
+  <package name="ajax" namespace="/ajax" extends="default">
+    
+    <result-types>
+      <!-- JSON result type -->
+      <result-type name="json" default="true" class="code.google.struts2jsonresult.JSONResult">
+        <param name="prettyPrint">true</param>
+        <param name="out.noCache">true</param>
+      </result-type>
+    </result-types>
+    
+    <!-- Interceptors -->
+    <interceptors>
+      <interceptor name="refreshUser" class="refreshUserInterceptor" />
+      <interceptor name="prefetch" class="prefetchInterceptor" />
+      
+      <interceptor-stack name="authenticationStack">
+        <interceptor-ref name="exception" />
+        <interceptor-ref name="completeStack" />
+        <interceptor-ref name="refreshUser" />
+      </interceptor-stack>
+      
+      <interceptor-stack name="prefetchStack">
+        <interceptor-ref name="exception" />
+        <interceptor-ref name="prefetch" />
+        <interceptor-ref name="completeStack" />
+        <interceptor-ref name="refreshUser" />
+      </interceptor-stack>
+    </interceptors>
+    
+    <default-interceptor-ref name="authenticationStack" />
+
+    <global-results>
+      <result name="input" type="json">
+        <param name="out.statusCode">500</param>
+        <param name="target">fieldErrors</param>
+      </result>
+      <result name="ajaxException" type="chain">
+        <param name="actionName">ajaxExceptionHandler</param>
+      </result>
+    </global-results>
+
+    <!-- AJAX exceptions -->
+    <global-exception-mappings>
+      <exception-mapping result="ajaxException"
+        exception="fi.hut.soberit.agilefant.exception.ObjectNotFoundException" />
+      <exception-mapping result="ajaxException"
+        exception="java.lang.IllegalArgumentException" />         
+    </global-exception-mappings>
+    
+    <action name="ajaxExceptionHandler" class="ajaxExceptionHandler" method="handle">
+      <result name="objectNotFound" type="json">
+        <param name="out.statusCode">404</param>
+        <param name="target">errorMessage</param>
+      </result>
+      <result name="conflict" type="json">
+        <param name="out.statusCode">409</param>
+        <param name="target">errorMessage</param>
+      </result>
+      <result name="input" type="json">
+        <param name="out.statusCode">500</param>
+        <param name="target">errorMessage</param>
+      </result>
+      <result name="genericException" type="json">
+        <param name="out.statusCode">500</param>
+        <param name="target">errorMessage</param>
+      </result>
+    </action>
+    
+    
+    <!-- AJAX actions -->
+    
+    <!-- Backlog actions -->
+    <action name="retrieveStories" method="retrieveStories" class="backlogAction">
+      <result name="success" type="json">
+        <param name="target">stories</param>
+      </result>
+    </action>
+    
+    <action name="retrieveSubBacklogs" method="retrieveSubBacklogs" class="backlogAction">
+      <result name="success" type="json">
+        <param name="target">backlogs</param>
+      </result>
+    </action>
+    <!-- /Backlog actions -->
+    
+    
+    
+    <!-- Product actions -->
+    <action name="createProduct" method="create" class="productAction">
+      <result type="dispatcher">/WEB-INF/jsp/forms/createProduct.jsp</result>
+    </action>
+    <!-- /Product actions -->
+    
+
+    
+    <!-- Project actions -->
+    <action name="createProject" method="create" class="projectAction">
+      <result type="dispatcher">/WEB-INF/jsp/forms/createProject.jsp</result>
+    </action>
+    
+    <action name="storeProject" method="store" class="projectAction">    
+      <result name="success" type="json">
+        <param name="target">project</param>
+      </result>
+    </action>
+    
+    <action name="projectData" class="projectAction" method="projectContents">
+      <result name="success" type="json">
+        <param name="target">projectContents</param>
+        <param name="patterns">+stories.userData, +stories.tasks, +stories.tasks.userData</param>
+      </result>
+    </action>
+    
+    <action name="projectTabs" method="retrieve" class="projectAction">
+      <result type="dispatcher">/WEB-INF/jsp/tabs/projectTabs.jsp</result>
+    </action>
+    <!-- /Project actions -->
+    
+
+    
+    <!-- Iteration actions -->
+    <action name="createIteration" method="create" class="iterationAction">
+      <result type="dispatcher">/WEB-INF/jsp/forms/createIteration.jsp</result>
+    </action>
+    
+    <action name="storeIteration" method="store" class="iterationAction">
+      <result name="success" type="json">
+        <param name="target">iteration</param>
+      </result>
+    </action>
+    
+    <action name="iterationData" class="iterationAction" method="iterationContents">
+      <result name="success" type="json">
+        <param name="target">iterationData</param>
+        <param name="patterns">+stories.tasks, +stories.userData, +stories.tasks.userData, +tasksWithoutStory, +tasksWithoutStory.userData</param>
+      </result>
+    </action>
+    
+    <action name="iterationMetrics" class="iterationAction" method="iterationMetrics">
+      <result name="success" type="dispatcher">/WEB-INF/jsp/inc/iterationMetrics.jsp</result>
+    </action>
+    
+    <action name="deleteIteration" method="delete" class="iterationAction" />
+    
+    <action name="iterationTabs" method="edit" class="iterationAction">
+      <result type="dispatcher">/WEB-INF/jsp/tabs/iterationTabs.jsp</result>
+    </action>
+    <!-- /Iteration actions -->
+
+
+
+    <!-- Story actions -->
+    <action name="createStoryForm" method="create" class="storyAction">
+          <result type="dispatcher">/WEB-INF/jsp/forms/createStory.jsp</result>
+    </action>
+    
+    <action name="createStory" method="store" class="storyAction">
+      <result type="json">
+        <param name="target">story</param>
+      </result>
+    </action>
+    
+    <action name="storeStory" method="store" class="storyAction">
+      <interceptor-ref name="prefetchStack"/>
+      <result type="json">
+        <param name="target">story</param>
+      </result>
+    </action>
+    
+    <action name="retrieveStory" method="retrieve" class="storyAction">
+       <result type="json">
+        <param name="target">story</param>
+       </result>
+    </action>
+    
+    <action name="deleteStory" method="delete" class="storyAction" />
+    
+    <action name="storyTabs" method="retrieve"  class="storyAction">
+      <result type="dispatcher">/WEB-INF/jsp/tabs/storyTabs.jsp</result>
+    </action>
+    <!-- /Story actions -->
+
+
+
+    <!-- Task actions -->
+    <action name="deleteTask" method="delete" class="taskAction" />
+    
+    <action name="storeTask" method="store" class="taskAction" >
+      <interceptor-ref name="prefetchStack" />
+      <result name="success" type="json">
+        <param name="target">task</param>
+      </result>
+    </action>
+    
+    <action name="createTask" method="store" class="taskAction" >
+      <result name="success" type="json">
+        <param name="target">task</param>
+      </result>
+    </action>
+    
+    <action name="retrieveTask" method="retrieve" class="taskAction">
+      <result name="success" type="json">
+        <param name="target">task</param>
+      </result>
+    </action>
+    
+    <action name="moveTask" method="move" class="taskAction">
+      <result name="success" type="json">
+        <param name="target">task</param>
+      </result>
+    </action>
+    
+    <action name="resetOriginalEstimate" method="resetOriginalEstimate" class="taskAction">
+      <result name="success" type="json">
+        <param name="target">task</param>
+      </result>
+    </action>
+    <!-- /Task actions -->
+
+
+
+    <!-- User actions -->
+    <action name="createUser" method="create" class="userAction">
+      <result type="dispatcher">/WEB-INF/jsp/forms/createUser.jsp</result>
+    </action>
+    
+    <action name="storeUser" method="store" class="userAction">
+      <result name="success" type="json">
+        <param name="target">user</param>
+      </result>
+    </action>
+    
+    <action name="userTabs" method="retrieve" class="userAction">
+      <result type="dispatcher">/WEB-INF/jsp/tabs/userTabs.jsp</result>
+    </action>
+    
+    <action name="retrieveAllUsers" method="retrieveAll" class="userAction">
+      <result name="success" type="json">
+        <param name="target">users</param>
+      </result>
+    </action>
+    <!-- /User actions -->
+
+
+
+    <!-- Team actions -->
+    <action name="createTeam" method="create" class="teamAction">
+      <result type="dispatcher">/WEB-INF/jsp/forms/createTeam.jsp</result>
+    </action>
+    
+    <action name="teamTabs" method="retrieve" class="teamAction">
+      <result type="dispatcher">/WEB-INF/jsp/tabs/teamTabs.jsp</result>
+    </action>
+    
+    <action name="retrieveAllTeams" method="retrieveAll" class="teamAction">
+      <result name="success" type="json">
+        <param name="target">teamList</param>
+      </result>
+    </action>
+    <!-- /Team actions -->
+    
+    
+    
+    <!-- User load actions -->
+    <action name="defaultUserLoad" method="retrieveUserLoad" class="userLoadAction">
+    	<result name="success" type="json">
+    		<param name="target">userLoadData</param>
+    	</result>
+    </action>
+    <!-- /User load actions -->
+
+  </package>
+  
+</struts>

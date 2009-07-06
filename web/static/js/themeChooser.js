@@ -3,7 +3,7 @@
         var me = this;
         var options = {
             legacyMode: true,
-            backlogItemId: null,
+            storyId: null,
             backlogId: null,
             themeListContainer: null,
             overlayUpdate: function() {

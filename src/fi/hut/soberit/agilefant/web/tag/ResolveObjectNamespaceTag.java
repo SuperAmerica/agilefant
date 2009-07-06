@@ -3,9 +3,6 @@ package fi.hut.soberit.agilefant.web.tag;
 import javax.servlet.jsp.JspException;
 
 import fi.hut.soberit.agilefant.model.Backlog;
-import fi.hut.soberit.agilefant.model.BacklogItem;
-import fi.hut.soberit.agilefant.model.BusinessTheme;
-import fi.hut.soberit.agilefant.model.IterationGoal;
 
 public class ResolveObjectNamespaceTag extends SpringTagSupport {
     
@@ -36,15 +33,15 @@ public class ResolveObjectNamespaceTag extends SpringTagSupport {
         } else if(this.item instanceof Backlog) {
             namespace = "BL";
             oid = ((Backlog)this.item).getId();
-        } else if(this.item instanceof BusinessTheme) {
-            namespace = "TH";
-            oid = ((BusinessTheme)this.item).getId();
-        } else if(this.item instanceof BacklogItem) {
-            namespace = "BLI";
-            oid = ((BacklogItem)this.item).getId();
-        } else if(this.item instanceof IterationGoal) {  
-            namespace = "IG";
-            oid = ((IterationGoal)this.item).getId();
+//        } else if(this.item instanceof BusinessTheme) {
+//            namespace = "TH";
+//            oid = ((BusinessTheme)this.item).getId();
+//        } else if(this.item instanceof BacklogItem) {
+//            namespace = "Story";
+//            oid = ((BacklogItem)this.item).getId();
+//        } else if(this.item instanceof IterationGoal) {  
+//            namespace = "IG";
+//            oid = ((IterationGoal)this.item).getId();
         } else {
             return SKIP_BODY;
         }

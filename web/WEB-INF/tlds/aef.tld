@@ -11,6 +11,17 @@
 	<description>Agilefant tag library</description>
 
 	<tag>
+		<name>text</name>
+		<tag-class>org.apache.struts2.views.jsp.TextTag</tag-class>
+		<body-content>JSP</body-content>
+		<attribute>
+			<name>name</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<description>Wrapper for struts2 text tag</description>
+	</tag>
+	<tag>
 		<name>productList</name>
 		<tag-class>fi.hut.soberit.agilefant.web.tag.ProductListTag</tag-class>
 		<body-content>JSP</body-content>
@@ -77,26 +88,6 @@
 	    </description>
 	</tag>
 	
-	
-	
-	<tag>
-		<name>allowedWorkTypes</name>
-		<tag-class>fi.hut.soberit.agilefant.web.tag.AllowedWorkTypesTag</tag-class>
-		<body-content>JSP</body-content>
-		<description>
-			Stores allowed work types to given attribute
-	    </description>
-	    <attribute>
-	    	<name>id</name>
-	    	<required>true</required>	    
-	    </attribute>
-	    <attribute>
-	    	<name>backlogItem</name>
-	    	<required>true</required>
-	    	<rtexprvalue>true</rtexprvalue>
-	    </attribute>
-	</tag>
-	
 	<tag>
 		<name>projectTypeList</name>
 		<tag-class>fi.hut.soberit.agilefant.web.tag.ProjectTypeListTag</tag-class>
@@ -118,7 +109,7 @@
 			Prints out a string of responsibles initials.
 		</description>
 		<attribute>
-			<name>backlogItemId</name>
+			<name>storyId</name>
 			<required>true</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
@@ -129,28 +120,24 @@
 		<tag-class>fi.hut.soberit.agilefant.web.tag.PercentDoneTag</tag-class>
 		<body-content>JSP</body-content>
 		<description>
-			Calculates bli's percent done todos 
+			Calculates story's percent done todos 
 	    </description>
 	    <attribute>
-	    	<name>backlogItemId</name>
+	    	<name>storyId</name>
 	    	<required>true</required>
 	    	<rtexprvalue>true</rtexprvalue>
 	    </attribute>
 	</tag>
 	
 	<tag>
-		<name>iterationGoalList</name>
-		<tag-class>fi.hut.soberit.agilefant.web.tag.IterationGoalListTag</tag-class>
+		<name>storyPointFormat</name>
+		<tag-class>fi.hut.soberit.agilefant.web.tag.StoryPointFormatTag</tag-class>
 		<body-content>JSP</body-content>
 		<description>
-			Stores available iteration goals
+			Gets a story and transforms it's estimate to string.
 	    </description>
 	    <attribute>
-	    	<name>id</name>
-	    	<required>true</required>	    
-	    </attribute>
-	    <attribute>
-	    	<name>backlogId</name>
+	    	<name>story</name>
 	    	<required>true</required>
 	    	<rtexprvalue>true</rtexprvalue>
 	    </attribute>
@@ -196,7 +183,7 @@
 	    	<required>true</required>	    
 	    </attribute>
 	    <attribute>
-	    	<name>backlogItemId</name>
+	    	<name>storyId</name>
 	    	<required>true</required>
 	    	<rtexprvalue>true</rtexprvalue>
 	    </attribute>
@@ -217,68 +204,6 @@
 	</tag>
 	
 	<tag>
-		<name>bct</name>
-		<tag-class>fi.hut.soberit.agilefant.web.tag.BreadCrumbTrailTag</tag-class>
-		<body-content>JSP</body-content>
-		<description>
-			Builds page hierarchy for bread crumb trail links
-	    </description>
-        <attribute>
-            <name>backlogId</name>
-            <required>false</required>
-			<rtexprvalue>true</rtexprvalue>            
-        </attribute>
-        <attribute>
-            <name>backlogItemId</name>
-            <required>false</required>
-			<rtexprvalue>true</rtexprvalue>            
-        </attribute>	    
-        <attribute>
-            <name>projectId</name>
-            <required>false</required>
-			<rtexprvalue>true</rtexprvalue>            
-        </attribute>	    
-        <attribute>
-            <name>iterationId</name>
-            <required>false</required>
-						<rtexprvalue>true</rtexprvalue>            
-        </attribute>
-        
-        <attribute>
-        	<name>iterationGoalId</name>
-        	<required>false</required>
-        	<rtexprvalue>true</rtexprvalue>   
-        </attribute>
-        
-        <attribute>
-            <name>productId</name>
-            <required>false</required>
-			<rtexprvalue>true</rtexprvalue>            
-        </attribute>
-        <attribute>
-            <name>taskId</name>
-            <required>false</required>
-			<rtexprvalue>true</rtexprvalue>            
-        </attribute>	    
-        <attribute>
-            <name>userId</name>
-            <required>false</required>
-			<rtexprvalue>true</rtexprvalue>            
-        </attribute>	    
-        <attribute>
-            <name>portfolioId</name>
-            <required>false</required>
-			<rtexprvalue>true</rtexprvalue>            
-        </attribute>	    
-        <attribute>
-            <name>managementPageId</name>
-            <required>false</required>
-			<rtexprvalue>true</rtexprvalue>            
-        </attribute>	    
-	</tag>
-	
-	
-	<tag>
 		<name>hourReporting</name>
 		<tag-class>fi.hut.soberit.agilefant.web.tag.HourReportingTag</tag-class>
 		<body-content>JSP</body-content>
@@ -296,7 +221,7 @@
 		<tag-class>fi.hut.soberit.agilefant.web.tag.HourEntryTag</tag-class>
 		<body-content>JSP</body-content>
 		<description>
-			Get hour entries according to BLI
+			Get hour entries according to story
 	   </description>
 	    <attribute>
 	    	<name>id</name>
@@ -314,7 +239,7 @@
 		<tag-class>fi.hut.soberit.agilefant.web.tag.BacklogHourEntrySumsTag</tag-class>
 		<body-content>JSP</body-content>
 		<description>
-			Get hour entry sums by BLI for BL
+			Get hour entry sums by story for BL
 	   </description>
 	    <attribute>
 	    	<name>id</name>
@@ -368,20 +293,32 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 	</tag>
-
+	
+  <tag>
+    <name>currentBacklog</name>
+    <description>Get the current backlog and save it to JSP variable and saves the hierarchy of ids to variables</description>
+    <body-content>JSP</body-content>
+    <tag-class>fi.hut.soberit.agilefant.web.tag.CurrentBacklogTag</tag-class>
+    <attribute>
+      <name>backlogId</name>
+      <required>true</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+  </tag>
+  
 	<tag>
-		<name>backlogItem</name>
-		<tag-class>fi.hut.soberit.agilefant.web.tag.BacklogItemById</tag-class>
+		<name>story</name>
+		<tag-class>fi.hut.soberit.agilefant.web.tag.StoryById</tag-class>
 		<body-content>JSP</body-content>
 		<description>
-			Get backlog item by id
+			Get story by id
 	    </description>
 	    <attribute>
 	    	<name>id</name>
 	    	<required>true</required>	  
 	    </attribute>  	    
 	     <attribute>
-	    	<name>backlogItemId</name>
+	    	<name>storyId</name>
 	    	<required>true</required>
 	    	<rtexprvalue>true</rtexprvalue> 
 	    </attribute>
@@ -406,8 +343,8 @@
     </tag>
 	
 	<tag-file>
-		<name>backlogItemProgressBar</name>
-		<path>/WEB-INF/tags/backlogItemProgressBar.tag</path>		
+		<name>storyProgressBar</name>
+		<path>/WEB-INF/tags/storyProgressBar.tag</path>		
 	</tag-file>
 	
 	<tag-file>
@@ -449,9 +386,21 @@
 	    <path>/WEB-INF/tags/datepicker.tag</path>
  	 </tag-file>
 	<tag-file>
-		<name>timesheetItem</name>
-		<path>/WEB-INF/tags/timesheetItem.tag</path>
+		<name>timesheetBacklogNode</name>
+		<path>/WEB-INF/tags/timesheetBacklogNode.tag</path>
 	</tag-file>
+	 <tag-file>
+    <name>timesheetStoryNode</name>
+    <path>/WEB-INF/tags/timesheetStoryNode.tag</path>
+  </tag-file>
+    <tag-file>
+    <name>timesheetTaskNode</name>
+    <path>/WEB-INF/tags/timesheetTaskNode.tag</path>
+  </tag-file>
+  <tag-file>
+    <name>timesheetHourEntryList</name>
+    <path>/WEB-INF/tags/timesheetHourEntryList.tag</path>
+  </tag-file>
 	<tag-file>
 		<name>quickReference</name>
 		<path>/WEB-INF/tags/quickReference.tag</path>
@@ -477,9 +426,9 @@
 	  <function-signature>boolean isIterationGoal(java.lang.Object)</function-signature>
 	</function>  	 
 	<function>
-	  <name>isBacklogItem</name>
+	  <name>isStory</name>
 	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
-	  <function-signature>boolean isBacklogItem(java.lang.Object)</function-signature>
+	  <function-signature>boolean isStory(java.lang.Object)</function-signature>
 	</function>  	 
 	<function>
 	  <name>isTodo</name>
@@ -517,9 +466,33 @@
 	</function>  
 	
 	<function>
+	  <name>dateTimeToFormattedString</name>
+	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
+	  <function-signature>String dateTimeToFormattedString(org.joda.time.DateTime)</function-signature>
+	</function>  
+	
+	<function>
+	  <name>dateTimeToDate</name>
+	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
+	  <function-signature>public static Date dateTimeToDate(org.joda.time.DateTime)</function-signature>
+	</function> 
+	
+	<function>
+	  <name>currentDateTime</name>
+	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
+	  <function-signature>public static DateTime currentDateTime()</function-signature>
+	</function>
+	
+	<function>
 	  <name>html</name>
 	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
 	  <function-signature>String htmlOut(java.lang.String)</function-signature>
+	</function> 
+	
+	<function>
+	  <name>minutesToString</name>
+	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
+	  <function-signature>String minutesToString(long)</function-signature>
 	</function> 
 	 	 
 	<function>

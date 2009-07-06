@@ -2,141 +2,114 @@ package fi.hut.soberit.agilefant.business.impl;
 
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeConstants;
+import org.joda.time.LocalDate;
+import org.joda.time.MutableDateTime;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
 import fi.hut.soberit.agilefant.business.HourEntryBusiness;
-import fi.hut.soberit.agilefant.business.SettingBusiness;
 import fi.hut.soberit.agilefant.db.BacklogHourEntryDAO;
-import fi.hut.soberit.agilefant.db.BacklogItemHourEntryDAO;
 import fi.hut.soberit.agilefant.db.HourEntryDAO;
+import fi.hut.soberit.agilefant.db.StoryHourEntryDAO;
+import fi.hut.soberit.agilefant.db.TaskHourEntryDAO;
 import fi.hut.soberit.agilefant.db.UserDAO;
-import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogHourEntry;
-import fi.hut.soberit.agilefant.model.BacklogItem;
-import fi.hut.soberit.agilefant.model.BacklogItemHourEntry;
 import fi.hut.soberit.agilefant.model.HourEntry;
+import fi.hut.soberit.agilefant.model.Iteration;
+import fi.hut.soberit.agilefant.model.Story;
+import fi.hut.soberit.agilefant.model.StoryHourEntry;
+import fi.hut.soberit.agilefant.model.Task;
+import fi.hut.soberit.agilefant.model.TaskHourEntry;
 import fi.hut.soberit.agilefant.model.TimesheetLoggable;
 import fi.hut.soberit.agilefant.model.User;
-import fi.hut.soberit.agilefant.security.SecurityUtil;
+import fi.hut.soberit.agilefant.transfer.DailySpentEffort;
+import fi.hut.soberit.agilefant.transfer.HourEntryTO;
 import fi.hut.soberit.agilefant.util.CalendarUtils;
-import fi.hut.soberit.agilefant.util.DailySpentEffort;
+import fi.hut.soberit.agilefant.util.HourEntryUtils;
 
-public class HourEntryBusinessImpl implements HourEntryBusiness {
-    private BacklogItemHourEntryDAO backlogItemHourEntryDAO;
-    private BacklogHourEntryDAO backlogHourEntryDAO; 
-    private UserDAO userDAO;
+@Service("hourEntryBusiness")
+@Transactional
+public class HourEntryBusinessImpl extends GenericBusinessImpl<HourEntry>
+        implements HourEntryBusiness {
+
     private HourEntryDAO hourEntryDAO;
-    private SettingBusiness settingBusiness;
-    
-    public HourEntryDAO getHourEntryDAO() {
-        return hourEntryDAO;
-    }
 
+    @Autowired
+    private StoryHourEntryDAO storyHourEntryDAO;
+    @Autowired
+    private BacklogHourEntryDAO backlogHourEntryDAO;
+    @Autowired
+    private UserDAO userDAO;
+
+    @Autowired
+    private TaskHourEntryDAO taskHourEntryDAO;
+
+    @Autowired
     public void setHourEntryDAO(HourEntryDAO hourEntryDAO) {
+        this.genericDAO = hourEntryDAO;
         this.hourEntryDAO = hourEntryDAO;
-    } 
-    
-    public void setBacklogItemHourEntryDAO(BacklogItemHourEntryDAO hourEntryDAO) {
-        this.backlogItemHourEntryDAO = hourEntryDAO;
-    }
-    
-    public BacklogItemHourEntryDAO getBacklogItemHourEntryDAO() {
-        return backlogItemHourEntryDAO;
-    }
-    public HourEntry getHourEntryById(int id) {
-        return (HourEntry)hourEntryDAO.get(id);
-    }
-    public void remove(int id) {
-        hourEntryDAO.remove(id);
     }
 
-    public UserDAO getUserDAO() {
-        return userDAO;
-    }
-
-    public void setUserDAO(UserDAO userDAO) {
-        this.userDAO = userDAO;
-    }
-    
-    public void setBacklogItemSpentEffortSum(BacklogItem bli) {
-        Collection<BacklogItemHourEntry> entries = bli.getHourEntries();
-        if(entries != null) {
-            AFTime sum = new AFTime(0);
-            for(BacklogItemHourEntry entry : entries) {
-                if(entry.getTimeSpent() != null) {
-                    sum.add(entry.getTimeSpent());
-                }
-            }
-            bli.setEffortSpent(sum);
-        }
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    public HourEntry store(TimesheetLoggable parent, HourEntry hourEntry) 
+    public HourEntry store(TimesheetLoggable parent, HourEntry hourEntry)
             throws IllegalArgumentException {
         HourEntry storable = null;
-        
-        if(parent == null) {
-            throw new IllegalArgumentException("Unknown parent type."); 
+
+        if (parent == null) {
+            throw new IllegalArgumentException("Unknown parent type.");
         }
-        if(hourEntry == null) {
+        if (hourEntry == null) {
             throw new IllegalArgumentException("No data given.");
         }
-        if (parent instanceof BacklogItem) {
-            if ((storable = backlogItemHourEntryDAO.get(hourEntry.getId())) == null) {
-                storable = new BacklogItemHourEntry();
+        if (parent instanceof Story) {
+            if ((storable = storyHourEntryDAO.get(hourEntry.getId())) == null) {
+                storable = new StoryHourEntry();
             }
-            ((BacklogItemHourEntry) storable)
-                    .setBacklogItem((BacklogItem) parent);
+            ((StoryHourEntry) storable).setStory((Story) parent);
         } else if (parent instanceof Backlog) {
             if ((storable = backlogHourEntryDAO.get(hourEntry.getId())) == null) {
                 storable = new BacklogHourEntry();
             }
             ((BacklogHourEntry) storable).setBacklog((Backlog) parent);
+        } else if (parent instanceof Task) {
+            if ((storable = taskHourEntryDAO.get(hourEntry.getId())) == null) {
+                storable = new TaskHourEntry();
+            }
+            ((TaskHourEntry) storable).setTask((Task) parent);
         } else {
             throw new IllegalArgumentException("Unknown parent type.");
         }
         storable.setDate(hourEntry.getDate());
         storable.setUser(hourEntry.getUser());
         storable.setDescription(hourEntry.getDescription());
-        storable.setTimeSpent(hourEntry.getTimeSpent());
+        storable.setMinutesSpent(hourEntry.getMinutesSpent());
         storable.setDate(hourEntry.getDate());
-        if (parent instanceof BacklogItem) {
-            backlogItemHourEntryDAO.store((BacklogItemHourEntry) storable);
+        if (parent instanceof Story) {
+            storyHourEntryDAO.store((StoryHourEntry) storable);
+        } else if(parent instanceof Task){
+            TaskHourEntry t = (TaskHourEntry) storable;
+            taskHourEntryDAO.store(t);
+            storable = new HourEntryTO(t);
         } else {
             backlogHourEntryDAO.store((BacklogHourEntry) storable);
-        }
+        } 
         return storable;
     }
-    
-    /**
-     * {@inheritDoc}
-     */
-    public void addEntryForCurrentUser(TimesheetLoggable parent, AFTime effort, String comment) {
-        User currentUser = SecurityUtil.getLoggedUser();
-        HourEntry store = new HourEntry();
-        Calendar cal = Calendar.getInstance();
-        store.setDate(cal.getTime());
-        store.setTimeSpent(effort);
-        store.setUser(currentUser);
-        store.setDescription(comment);
-        store(parent,store);
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    public void addEntryForCurrentUser(TimesheetLoggable parent, AFTime effort) {
-        this.addEntryForCurrentUser(parent, effort, null);
+
+    public List<BacklogHourEntry> retrieveByParent(Backlog parent) {
+        return backlogHourEntryDAO.retrieveByBacklog(parent);
     }
 
     /**
@@ -152,272 +125,149 @@ public class HourEntryBusinessImpl implements HourEntryBusiness {
         }
         hourEntry.setUser(null);
     }
-    /**
-     * {@inheritDoc}
-     */
-    public List<BacklogItemHourEntry> getEntriesByParent(BacklogItem parent) {
-        return backlogItemHourEntryDAO.getEntriesByBacklogItem(parent);
-    }
-    /**
-     * {@inheritDoc}
-     */
-    public List<BacklogHourEntry> getEntriesByParent(Backlog parent) {
-        return backlogHourEntryDAO.getEntriesByBacklog(parent);
-    }
 
-    public Map<BacklogItem, AFTime> getSumsByBacklog(Backlog parent) {
-        return hourEntryDAO.getSpentEffortSumsByBacklog(parent);
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    @Deprecated
-    public void loadSumsToBacklogItems(Backlog parent) {
-        if (settingBusiness.isHourReportingEnabled()) {
-            List<BacklogItemHourEntry> entries = 
-                backlogItemHourEntryDAO.getSumsByBacklog(parent);
-            
-            for (BacklogItemHourEntry entry : entries) {
-                AFTime currentSum = entry.getBacklogItem().getEffortSpent();
-                AFTime timeSpent = entry.getTimeSpent();
-                
-                if (currentSum == null) {
-                    currentSum = new AFTime(0);
-                }
-                
-                if (timeSpent != null) {
-                    currentSum.add(timeSpent);
-                }
-                
-                entry.getBacklogItem().setEffortSpent(currentSum);
-            }
-       }
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    @Deprecated
-    public Map<Integer, AFTime> getSumsByIterationGoal(Backlog parent) {
-        Map<Integer, AFTime> sums = new HashMap<Integer, AFTime>();
-        List<BacklogItemHourEntry> entries = 
-            backlogItemHourEntryDAO.getSumsByBacklog(parent);
-        
-        if(entries != null){
-            for (BacklogItemHourEntry entry : entries) {
-                if (entry.getBacklogItem().getIterationGoal() != null) {
-                AFTime currentSum = sums.get(entry.getBacklogItem().getIterationGoal().getId());
-                AFTime timeSpent = entry.getTimeSpent();
-                
-                if (currentSum == null) {
-                    currentSum = new AFTime(0);
-                }
-                
-                if (timeSpent != null) {
-                    currentSum.add(timeSpent);
-                }
-                
-                sums.put(entry.getBacklogItem().getIterationGoal().getId(), currentSum);
-                }
-            }
-        }
-        
-        return sums;
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    public void removeHourEntriesByParent(TimesheetLoggable parent) {
-        List<? extends HourEntry> removeThese = null;
-        if(parent == null) {
-            return;
-        }
-        if(parent instanceof BacklogItem) {
-          removeThese = backlogItemHourEntryDAO.getEntriesByBacklogItem( (BacklogItem)parent );
-        } else if(parent instanceof Backlog) {
-          removeThese = backlogHourEntryDAO.getEntriesByBacklog( (Backlog)parent );
-        } else {
-          return;
-        }
-        if(removeThese == null) {
-          return;
-        }
-        for(HourEntry removable : removeThese) {
-          try {
-            remove(removable.getId());
-          } catch(Exception e) { }
-        }
-      }   
-    
-    /**
-     * {@inheritDoc}
-     */
-    public AFTime getEffortSumByUserAndTimeInterval(User user, String startDate, String endDate)
-            throws IllegalArgumentException {
-        AFTime sum;
-        try {
-            Date start = CalendarUtils.parseDateFromString(startDate);
-            Date end = CalendarUtils.parseDateFromString(endDate);   
-            sum = getEffortSumByUserAndTimeInterval(user,start,end);
-        } catch (ParseException pe) {
-            throw new IllegalArgumentException("Invalid format.");
-        }
-        return sum;
-    }
-    
-    public AFTime getEFfortSumByUserAndTimeInterval(int userId, Date start, Date end) {
-        User user = userDAO.get(userId);
-        return this.getEffortSumByUserAndTimeInterval(user, start, end);
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    public AFTime getEffortSumByUserAndTimeInterval(User user, Date start, Date end)
-            throws IllegalArgumentException {        
-        AFTime sum;
-                
-        if (start.after(end)) {
-            throw new IllegalArgumentException("StartDate after endDate.");
-        } else {
-            sum = this.hourEntryDAO
-                      .getEffortSumByUserAndTimeInterval(user, start, end);
-        }  
-        
-        if (sum == null) {
-            sum = new AFTime(0);
-        }
-        
-        return sum;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public boolean isAssociatedWithHourReport(User user) {
-        List<HourEntry> entries = hourEntryDAO.getHourEntriesByUser(user);
-        if(entries == null) {
-            return false;
-        }
-        if(entries.size() > 0) {
-            return true;
-        }
-        return false;
-    }
-    
     public void updateMultiple(Map<Integer, String[]> userIds,
             Map<Integer, String[]> dates, Map<Integer, String[]> efforts,
             Map<Integer, String[]> descriptions) {
         Set<Integer> ids = userIds.keySet();
         for(Integer entryId : ids) {      
-            try { 
-                HourEntry entry = hourEntryDAO.get(entryId);
-                if(entry == null) throw new Exception();
-                Integer userId = Integer.parseInt(userIds.get(entryId)[0]);
-                String dateStr = dates.get(entryId)[0];
-                AFTime effort = new AFTime(efforts.get(entryId)[0]);      
-                Date date = CalendarUtils.parseDateFromString(dateStr);
+            HourEntry entry = hourEntryDAO.get(entryId);
+            if(entry == null)
+                continue;
+            Integer userId = Integer.parseInt(userIds.get(entryId)[0]);
+            String dateStr = dates.get(entryId)[0];
+            entry.setMinutesSpent(HourEntryUtils.convertFromString(efforts.get(entryId)[0]));
+            DateTime date;
+            try {
+                date = new DateTime(CalendarUtils.parseDateFromString(dateStr));
                 entry.setDate(date);
-                User user = userDAO.get(userId);
-                if(user == null) throw new Exception();
-                entry.setUser(user);
-                entry.setTimeSpent(effort);
-                entry.setDescription(descriptions.get(entryId)[0]);
-                hourEntryDAO.store(entry);
-            } catch(Exception e) { 
+            } catch (ParseException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
             }
+            User user = userDAO.get(userId);
+            if(user == null)
+                continue;
+            entry.setUser(user);
+            entry.setDescription(descriptions.get(entryId)[0]);
+            hourEntryDAO.store(entry);
         }
         
     }
-    public List<DailySpentEffort> getDailySpentEffortByWeekAndUser(int week, int year, int userId) {
-        Calendar start = Calendar.getInstance();
-        Calendar end = Calendar.getInstance();
-        start.set(Calendar.WEEK_OF_YEAR, week);
-        start.set(Calendar.YEAR, year);
-        start.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-        CalendarUtils.setHoursMinutesAndSeconds(start, 0, 0, 0);
-        end.setTime(start.getTime());
-        end.add(Calendar.DAY_OF_YEAR, 6);
-        CalendarUtils.setHoursMinutesAndSeconds(end, 23, 59, 59);
-        User user = this.userDAO.get(userId);
-        return this.getDailySpentEffortByIntervalAndUser(start.getTime(), end.getTime(), user);
+
+    @Transactional(readOnly = true)
+    public long calculateSumByUserAndTimeInterval(User user,
+            DateTime startDate, DateTime endDate) {
+        return hourEntryDAO.calculateSumByUserAndTimeInterval(user, startDate, endDate);
     }
     
-    public List<DailySpentEffort> getDailySpentEffortByIntervalAndUser(Date start, Date end, User user) {
-        Calendar cal = Calendar.getInstance();
-        Map<Date, AFTime> tmp = new HashMap<Date, AFTime>();
+    @Transactional(readOnly = true)
+    public long calculateSumByUserAndTimeInterval(int userId,
+            DateTime startDate, DateTime endDate) {
+        return hourEntryDAO.calculateSumByUserAndTimeInterval(userId, startDate, endDate);
+    }
+
+    @Transactional(propagation = Propagation.SUPPORTS)
+    public long calculateSum(Collection<? extends HourEntry> hourEntries) {
+        long effortSpent = 0;
+        for (HourEntry hourEntry : hourEntries) {
+            effortSpent += hourEntry.getMinutesSpent();
+        }
+        return effortSpent;
+    }
+    
+    @Transactional(readOnly = true)
+    public long calculateSumOfIterationsHourEntries(Iteration iteration) {
+        if (iteration == null) {
+            throw new IllegalArgumentException("Iteration can't be null");
+        }
+        return hourEntryDAO.calculateIterationHourEntriesSum(iteration.getId());
+    }
+    
+    public List<HourEntry> getEntriesByUserAndTimeInterval(int userId, DateTime startDate,
+            DateTime endDate) {
+        return this.hourEntryDAO.getHourEntriesByFilter(startDate, endDate, userId);
+    }
+    
+    public List<HourEntry> getEntriesByUserAndDay(LocalDate day, int userId) {
+        DateTime start = day.toDateMidnight().toDateTime();
+        DateTime end = start.plusDays(1).minusSeconds(1);
+        return this.hourEntryDAO.getHourEntriesByFilter(start, end, userId);
+    }
+
+    @Transactional(readOnly = true)
+    public long calculateWeekSum(LocalDate week, int userId) {
+        MutableDateTime tmp = new MutableDateTime(week.toDateMidnight());
+        tmp.setDayOfWeek(DateTimeConstants.MONDAY);
+        tmp.setSecondOfDay(1);
+        DateTime start = tmp.toDateTime();
+        tmp.addDays(6);
+        tmp.setHourOfDay(23);
+        tmp.setMinuteOfHour(59);
+        tmp.setSecondOfMinute(59);
+        DateTime end = tmp.toDateTime();
+        return this.hourEntryDAO.calculateSumByUserAndTimeInterval(userId, start, end);
+    }
+    
+    @Transactional(readOnly = true)
+    public List<DailySpentEffort> getDailySpentEffortByWeek(LocalDate week, int userId) {
+        MutableDateTime tmp = new MutableDateTime(week.toDateMidnight());
+        tmp.setDayOfWeek(DateTimeConstants.MONDAY);
+        tmp.setSecondOfDay(1);
+        DateTime start = tmp.toDateTime();
+        tmp.addDays(6);
+        tmp.setHourOfDay(23);
+        tmp.setMinuteOfHour(59);
+        tmp.setSecondOfMinute(59);
+        DateTime end = tmp.toDateTime();
+        return this.getDailySpentEffortByInterval(start, end, userId);
+    }
+    
+    @Transactional(readOnly = true)
+    public List<DailySpentEffort> getDailySpentEffortByInterval(DateTime start,
+            DateTime end, int userId) {
+        Map<Date, Long> dbData = new HashMap<Date, Long>();
         List<DailySpentEffort> dailyEffort = new ArrayList<DailySpentEffort>();
-        Calendar stop = Calendar.getInstance();
-        stop.setTime(end);
-        if(start.after(end)) {
-            return null;
+
+        if(start.compareTo(end) >= 0) {
+            return Collections.emptyList();
         }
-        List<HourEntry> entries = this.hourEntryDAO.getEntriesByIntervalAndUser(start, end, user);
+        List<HourEntry> entries = this.hourEntryDAO.getHourEntriesByFilter(start, end, userId);
         
-        //sum day entries
+        //sum efforts per day
         for(HourEntry entry : entries) {
-            cal.setTime(entry.getDate());
-            CalendarUtils.setHoursMinutesAndSeconds(cal, 0, 0, 0);
-            if(tmp.get(cal.getTime()) == null) {
-                tmp.put(cal.getTime(), new AFTime(0));
+            Date date = entry.getDate().toDateMidnight().toDate();
+            if(!dbData.containsKey(date)) {
+                dbData.put(date, 0L);
             }
-            if(entry.getTimeSpent() == null) {
-                tmp.get(cal.getTime()).add(new AFTime(0));
-            } else {
-                tmp.get(cal.getTime()).add(entry.getTimeSpent());
-            }
+            dbData.put(date, dbData.get(date) + entry.getMinutesSpent());
         }
-        
-        cal.setTime(start);
-        CalendarUtils.setHoursMinutesAndSeconds(cal, 0, 0, 0);
-        //construct list of all days in given interval
-        while(cal.before(stop)) {
-            DailySpentEffort dailyEntry = new DailySpentEffort();
-            Date day = cal.getTime();
-            if(tmp.get(day) != null) {
-                dailyEntry.setSpentEffort(tmp.get(day));
+        MutableDateTime iteratorDate = new MutableDateTime(start.toDateMidnight());
+        //construct list that has a single entry per day
+        while(iteratorDate.compareTo(end) <= 0) {
+            DailySpentEffort effortEntry = new DailySpentEffort();
+            Date currentDate = iteratorDate.toDate();
+            if(dbData.containsKey(currentDate)) {
+                effortEntry.setSpentEffort(dbData.get(currentDate));
             }
-            dailyEntry.setDay(day);
-            dailyEffort.add(dailyEntry);
-            cal.add(Calendar.DAY_OF_YEAR, 1);
-         }
+            effortEntry.setDay(currentDate);
+            dailyEffort.add(effortEntry);
+            iteratorDate.addDays(1);
+        }
         return dailyEffort;
     }
     
-    public List<HourEntry> getEntriesByUserAndDay(int day, int year, int userId) {
-        Calendar start = Calendar.getInstance();
-        Calendar end = Calendar.getInstance();
-        start.set(Calendar.DAY_OF_YEAR, day);
-        start.set(Calendar.YEAR, year);
-        CalendarUtils.setHoursMinutesAndSeconds(start, 0, 0, 0);
-        end.set(Calendar.DAY_OF_YEAR, day);
-        end.set(Calendar.YEAR, year);
-        CalendarUtils.setHoursMinutesAndSeconds(end, 23, 59, 59);
-        User user = this.userDAO.get(userId);
-        return this.hourEntryDAO.getEntriesByIntervalAndUser(start.getTime(), end.getTime(), user);
-    }
-    
-    public AFTime getTotalSpentEffrotByBacklog(Backlog backlog) {
-        return this.hourEntryDAO.getTotalSpentEffortByBacklog(backlog);
-    }
-    
-    public BacklogHourEntryDAO getBacklogHourEntryDAO() {
-        return backlogHourEntryDAO;
-    }
-
     public void setBacklogHourEntryDAO(BacklogHourEntryDAO backlogHourEntryDAO) {
         this.backlogHourEntryDAO = backlogHourEntryDAO;
     }
-
-    public SettingBusiness getSettingBusiness() {
-        return settingBusiness;
+    
+    public void setUserDAO(UserDAO userDAO) {
+        this.userDAO = userDAO;
     }
 
-    public void setSettingBusiness(SettingBusiness settingBusiness) {
-        this.settingBusiness = settingBusiness;
+    public void setTaskHourEntryDAO(TaskHourEntryDAO taskHourEntryDAO) {
+        this.taskHourEntryDAO = taskHourEntryDAO;
     }
 
-
+    
 }

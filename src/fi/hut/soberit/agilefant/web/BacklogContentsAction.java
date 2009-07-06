@@ -5,27 +5,24 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.opensymphony.xwork.ActionSupport;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.opensymphony.xwork2.ActionSupport;
 
 import fi.hut.soberit.agilefant.business.BacklogBusiness;
-import fi.hut.soberit.agilefant.business.BacklogItemBusiness;
-import fi.hut.soberit.agilefant.business.BusinessThemeBusiness;
 import fi.hut.soberit.agilefant.business.HourEntryBusiness;
 import fi.hut.soberit.agilefant.business.SettingBusiness;
+import fi.hut.soberit.agilefant.business.StoryBusiness;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
-import fi.hut.soberit.agilefant.model.AFTime;
 import fi.hut.soberit.agilefant.model.Backlog;
-import fi.hut.soberit.agilefant.model.BacklogItem;
-import fi.hut.soberit.agilefant.model.BusinessTheme;
-import fi.hut.soberit.agilefant.util.BacklogItemResponsibleContainer;
-import fi.hut.soberit.agilefant.util.EffortSumData;
-import fi.hut.soberit.agilefant.util.TodoMetrics;
+import fi.hut.soberit.agilefant.model.Story;
+import fi.hut.soberit.agilefant.util.ResponsibleContainer;
 
 /**
  * Action for listing backlogs contents.
  * 
- * Action contains caches for backlog item responsibles, themes, spent effort
- * entries and todos to ensure best performance compared to domain object lazy
+ * Action contains caches for story responsibles, themes and spent effort
+ * entries to ensure best performance compared to domain object lazy
  * fetching strategy.
  * 
  * ALL actions that list backlog contents should be derived from this class.
@@ -40,34 +37,39 @@ public class BacklogContentsAction extends ActionSupport {
     protected int backlogId;
 
     protected Backlog backlog;
+    
+    private List<Story> stories = new ArrayList<Story>();
 
-    private List<BacklogItem> backlogItems = new ArrayList<BacklogItem>();
+//    private List<BacklogItem> backlogItems = new ArrayList<BacklogItem>();
+//    
+    private Map<Story, List<ResponsibleContainer>> backlogResponsibles = new HashMap<Story, List<ResponsibleContainer>>();
     
-    private Map<BacklogItem, List<BacklogItemResponsibleContainer>> backlogResponsibles = new HashMap<BacklogItem, List<BacklogItemResponsibleContainer>>();
-
-    private Map<BacklogItem, List<BusinessTheme>> backlogThemes = new HashMap<BacklogItem, List<BusinessTheme>>();
-
-    private Map<BacklogItem, TodoMetrics> backlogTodos = new HashMap<BacklogItem, TodoMetrics>();
+    private int storyPointSum;
     
-    private EffortSumData origEstSum = new EffortSumData();
+//
+//    private Map<BacklogItem, List<BusinessTheme>> backlogThemes = new HashMap<BacklogItem, List<BusinessTheme>>();
+//
+//    private Map<BacklogItem, TodoMetrics> backlogTodos = new HashMap<BacklogItem, TodoMetrics>();
+//    
+//    private AFTime spentEffortSum = new AFTime(0);
+//    
+    @Autowired
+    private StoryBusiness storyBusiness;
     
-    private EffortSumData effortLeftSum = new EffortSumData();
-    
-    private AFTime spentEffortSum = new AFTime(0);
-    
+    @Autowired
     protected BacklogBusiness backlogBusiness;
     
-    protected BacklogItemBusiness backlogItemBusiness;
+//    protected BusinessThemeBusiness businessThemeBusiness;
     
-    protected BusinessThemeBusiness businessThemeBusiness;
-    
+    @Autowired
     protected HourEntryBusiness hourEntryBusiness;
     
+    @Autowired
     protected SettingBusiness settingBusiness;
 
     protected void initializeContents(int backlogId) {
         try {
-            backlog = backlogBusiness.getBacklog(backlogId);
+            backlog = backlogBusiness.retrieve(backlogId);
         } catch (ObjectNotFoundException e) {
             return;
         }
@@ -79,19 +81,22 @@ public class BacklogContentsAction extends ActionSupport {
             return;
         }
         
-        backlogItems = backlogItemBusiness.getBacklogItemsByBacklog(backlog);
-        backlogResponsibles = backlogItemBusiness.getResponsiblesByBacklog(backlog);
-        backlogTodos = backlogItemBusiness.getTodosByBacklog(backlog);
-        backlogThemes = businessThemeBusiness.getBacklogItemBusinessThemesByBacklog(backlog);
+        stories = storyBusiness.getStoriesByBacklog(backlog);
         
-        //calculate sum data
-        if(backlogItems != null) {
-            effortLeftSum = backlogBusiness.getEffortLeftSum(backlogItems);
-            origEstSum = backlogBusiness.getOriginalEstimateSum(backlogItems);
-            if(settingBusiness.isHourReportingEnabled()) {
-                spentEffortSum = backlogBusiness.getSpentEffortSum(backlogItems);
-            }
-        }
+//        backlogItems = backlogItemBusiness.getBacklogItemsByBacklog(backlog);
+        backlogResponsibles = backlogBusiness.getResponsiblesByBacklog(backlog);
+        storyPointSum = backlogBusiness.calculateStoryPointSum(backlog.getId());
+//        backlogTodos = backlogItemBusiness.getTodosByBacklog(backlog);
+//        backlogThemes = businessThemeBusiness.getBacklogItemBusinessThemesByBacklog(backlog);
+//        
+//        //calculate sum data
+//        if(backlogItems != null) {
+//            effortLeftSum = backlogBusiness.getEffortLeftSum(backlogItems);
+//            origEstSum = backlogBusiness.getOriginalEstimateSum(backlogItems);
+//            if(settingBusiness.isHourReportingEnabled()) {
+//                spentEffortSum = backlogBusiness.getSpentEffortSum(backlogItems);
+//            }
+//        }
         
         // TODO: themes
 
@@ -123,70 +128,67 @@ public class BacklogContentsAction extends ActionSupport {
         this.backlog = backlog;
     }
 
-    public Map<BacklogItem, List<BacklogItemResponsibleContainer>> getBacklogResponsibles() {
-        return backlogResponsibles;
-    }
-
-    public void setBacklogResponsibles(
-            Map<BacklogItem, List<BacklogItemResponsibleContainer>> backlogResponsibles) {
-        this.backlogResponsibles = backlogResponsibles;
-    }
-
-    public Map<BacklogItem, List<BusinessTheme>> getBacklogThemes() {
-        return backlogThemes;
-    }
-
-    public void setBacklogThemes(
-            Map<BacklogItem, List<BusinessTheme>> backlogThemes) {
-        this.backlogThemes = backlogThemes;
-    }
-
-    public Map<BacklogItem, TodoMetrics> getBacklogTodos() {
-        return backlogTodos;
-    }
-
-    public void setBacklogTodos(Map<BacklogItem, TodoMetrics> backlogTodos) {
-        this.backlogTodos = backlogTodos;
-    }
+//
+//    public Map<BacklogItem, List<BusinessTheme>> getBacklogThemes() {
+//        return backlogThemes;
+//    }
+//
+//    public void setBacklogThemes(
+//            Map<BacklogItem, List<BusinessTheme>> backlogThemes) {
+//        this.backlogThemes = backlogThemes;
+//    }
+//
+//    public Map<BacklogItem, TodoMetrics> getBacklogTodos() {
+//        return backlogTodos;
+//    }
+//
+//    public void setBacklogTodos(Map<BacklogItem, TodoMetrics> backlogTodos) {
+//        this.backlogTodos = backlogTodos;
+//    }
 
     public void setBacklogBusiness(BacklogBusiness backlogBusiness) {
         this.backlogBusiness = backlogBusiness;
     }
 
-    public List<BacklogItem> getBacklogItems() {
-        return backlogItems;
-    }
-
-    public void setBacklogItems(List<BacklogItem> backlogItems) {
-        this.backlogItems = backlogItems;
-    }
-
-    public void setBusinessThemeBusiness(BusinessThemeBusiness businessThemeBusiness) {
-        this.businessThemeBusiness = businessThemeBusiness;
-    }
-
-    public void setBacklogItemBusiness(BacklogItemBusiness backlogItemBusiness) {
-        this.backlogItemBusiness = backlogItemBusiness;
-    }
+//    public List<BacklogItem> getBacklogItems() {
+//        return backlogItems;
+//    }
+//
+//    public void setBacklogItems(List<BacklogItem> backlogItems) {
+//        this.backlogItems = backlogItems;
+//    }
+//
+//    public void setBusinessThemeBusiness(BusinessThemeBusiness businessThemeBusiness) {
+//        this.businessThemeBusiness = businessThemeBusiness;
+//    }
+//
 
     public void setHourEntryBusiness(HourEntryBusiness hourEntryBusiness) {
         this.hourEntryBusiness = hourEntryBusiness;
     }
 
-    public EffortSumData getOrigEstSum() {
-        return origEstSum;
-    }
-
-    public EffortSumData getEffortLeftSum() {
-        return effortLeftSum;
-    }
-
-    public AFTime getSpentEffortSum() {
-        return spentEffortSum;
-    }
-
     public void setSettingBusiness(SettingBusiness settingBusiness) {
         this.settingBusiness = settingBusiness;
+    }
+
+    public List<Story> getStories() {
+        return stories;
+    }
+
+    public void setStories(List<Story> stories) {
+        this.stories = stories;
+    }
+
+    public void setStoryBusiness(StoryBusiness storyBusiness) {
+        this.storyBusiness = storyBusiness;
+    }
+
+    public Map<Story, List<ResponsibleContainer>> getBacklogResponsibles() {
+        return backlogResponsibles;
+    }
+    
+    public int getStoryPointSum() {
+        return storyPointSum;
     }
 
 }

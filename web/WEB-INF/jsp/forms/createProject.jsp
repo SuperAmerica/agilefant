@@ -20,7 +20,7 @@ $(document).ready(function() {
 	format="%{getText('struts.shortDateTime.format')}" />
 
 <div class="validateWrapper validateNewProject">
-<ww:form action="storeNewProject" method="post">
+<form action="ajax/storeProject.action" method="post">
 	<div id="editProjectForm">
 			<ww:hidden name="projectId" id="createProject_backlogId" value="0" />
 			<table class="formTable">
@@ -126,5 +126,5 @@ $(document).ready(function() {
 				</tr>
 			</table>
 		</div>
-</ww:form>
+</form>
 </div>

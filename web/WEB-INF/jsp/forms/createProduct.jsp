@@ -1,7 +1,7 @@
 <%@ include file="../inc/_taglibs.jsp"%>
 
 <div class="validateWrapper validateNewProduct">
-<ww:form method="post" action="storeProduct">
+<form method="post" action="ajax/storeProduct.action">
 	<ww:hidden name="productId" value="%{product.id}" />
 	<table class="formTable">
 		<tr>
@@ -23,5 +23,5 @@
 				cssClass="closeDialogButton" /></td>
 		</tr>
 	</table>
-</ww:form>
+</form>
 </div>

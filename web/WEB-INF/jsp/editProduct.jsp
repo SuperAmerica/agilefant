@@ -94,8 +94,7 @@ SimileAjax.Platform = new Object();*/
 
 			<div id="editProductForm" style="display: none;">
 			<div class="validateWrapper validateExistingProduct">
-			<ww:form id="productEditForm" 
-				action="storeProduct" method="post">
+			<form id="productEditForm" action="ajax/storeProduct.action" method="post">
 				<ww:hidden name="productId" value="%{product.id}" />
 
 				<table class="formTable">
@@ -128,7 +127,7 @@ SimileAjax.Platform = new Object();*/
 						</c:choose>
 					</tr>
 				</table>
-			</ww:form></div></div>
+			</form></div></div>
 			</div>
 			</td>
 		</tr>

@@ -430,7 +430,7 @@ StoryModel.prototype.reloadTasks = function() {
   cache: false,
   dataType: "json",
   type: "POST",
-  url: "storyContents.action",
+  url: "ajax/storyContents.action",
   data: {storyId: this.id, iterationId: this.iteration.getId()}
   });
 };
@@ -556,7 +556,7 @@ StoryModel.prototype.moveToBacklog = function(backlogId, moveTasks) {
     },
     cache: false,
     type: "POST",
-    url: "moveStory.action",
+    url: "ajax/moveStory.action",
     data: {storyId: this.id, backlogId: backlogId, moveTasks: true}
   });
 };

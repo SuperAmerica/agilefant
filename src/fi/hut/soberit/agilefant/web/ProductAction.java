@@ -58,35 +58,11 @@ public class ProductAction extends BacklogContentsAction implements CRUDAction {
     public String retrieve() {
         // Date startDate = new Date(0);
         product = productBusiness.retrieve(productId);
-        if (product == null) {
-            super.addActionError(super.getText("product.notFound"));
-            return Action.ERROR;
-        }
+
         backlog = product;
 
         super.initializeContents();
-        
-        // Calculate product's projects' effort lefts and original estimates
-        
-//        effLeftSums = new HashMap<Project, EffortSumData>();
-//        origEstSums = new HashMap<Project, EffortSumData>();
-//        
-//        // Calculate themes' done blis
-//        themeMetrics = businessThemeBusiness.getThemeMetrics(productId);
-//        
-//        // Calculate projects' metrics.
-//        projectBusiness.calculateProjectMetrics(product);
-//        
-//        Collection<Project> projects = product.getProjects();
-//        
-//        for (Project pro : projects) {
-//            Collection<BacklogItem> blis = projectBusiness.getBlisInProjectAndItsIterations(pro);
-//            EffortSumData projectEffLeftSum = backlogBusiness.getEffortLeftSum(blis);
-//            EffortSumData projectOrigEstSum = backlogBusiness.getOriginalEstimateSum(blis);
-//            effLeftSums.put(pro, projectEffLeftSum);
-//            origEstSums.put(pro, projectOrigEstSum);
-//        }
-        
+
         return Action.SUCCESS;
     }
 
@@ -127,33 +103,38 @@ public class ProductAction extends BacklogContentsAction implements CRUDAction {
         storable.setDescription(this.product.getDescription());
     }
     
-    /**
-     * @return a string of JSON serialized products 
-     */
-    public String getAllProductsAsJSON() {
-        return new JSONSerializer().serialize(productBusiness.retrieveAll());
-    }
-    
-    public String getProductAsJSON() {
-        return new JSONSerializer().serialize(productBusiness.retrieve(productId));
-    }
-    
-    /**
-     * Get product data as JSON.
-     * <p>
-     * If given product id is greater than 0, return the product's data.
-     * Otherwise, return all products' data.
-     * @return product data as JSON string  
-     */
-    public String getProductJSON() {
-        if (productId > 0) {
-            jsonData = this.getProductAsJSON();
-        }
-        else {
-            jsonData = this.getAllProductsAsJSON();
-        }
+    public String retrieveAll() {
+        products = productBusiness.retrieveAll();
         return Action.SUCCESS;
     }
+    
+//    /**
+//     * @return a string of JSON serialized products 
+//     */
+//    public String getAllProductsAsJSON() {
+//        return new JSONSerializer().serialize(productBusiness.retrieveAll());
+//    }
+//    
+//    public String getProductAsJSON() {
+//        return new JSONSerializer().serialize(productBusiness.retrieve(productId));
+//    }
+//    
+//    /**
+//     * Get product data as JSON.
+//     * <p>
+//     * If given product id is greater than 0, return the product's data.
+//     * Otherwise, return all products' data.
+//     * @return product data as JSON string  
+//     */
+//    public String getProductJSON() {
+//        if (productId > 0) {
+//            jsonData = this.getProductAsJSON();
+//        }
+//        else {
+//            jsonData = this.getAllProductsAsJSON();
+//        }
+//        return Action.SUCCESS;
+//    }
 
     public Product getProduct() {
         return product;

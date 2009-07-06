@@ -34,7 +34,7 @@
 				
 				this.auxFields = $('<span />').appendTo(this.container).hide();
 
-				$.post("getProductJSON.action", {}, function(data,retType) {
+				$.post("ajax/retrieveProduct.action", {}, function(data,retType) {
 					if(data.length == 0) {
 						$('<option/>').appendTo(me.productContainer).text("There are no Products in the system.");
 					} else {

@@ -111,21 +111,13 @@
 			<result type="redirectAction">selectBacklog</result>
 		</action>
 		
-		<action name="storeProduct" method="store" class="productAction">
-			<result type="redirectAction">
-				<param name="actionName">contextView</param>
-				<param name="contextName">product</param>
-				<param name="contextObjectId">${productId}</param>
-				<param name="resetContextView">true</param>
-			</result>
-		</action>
+
 		<!-- /Product actions -->
 
 		<!-- Project actions -->
 		<action name="editProject" method="retrieve" class="projectAction">
-			<result>/WEB-INF/jsp/editProject.jsp</result>
+			<result type="dispatcher">/WEB-INF/jsp/editProject.jsp</result>
 		</action>
-
 
 		<action name="deleteProject" method="delete"
 			class="projectAction">
@@ -135,7 +127,7 @@
 
     <!-- Menu actions -->
     <action name="menuData" method="execute" class="menuAction">
-        <result>/WEB-INF/jsp/inc/_menuData.jsp</result>
+        <result type="dispatcher">/WEB-INF/jsp/inc/_menuData.jsp</result>
     </action>
     <action name="ajaxUpdateOpenMenus" method="ajaxUpdateOpenMenus"
         class="menuAction">
@@ -145,7 +137,7 @@
 		<!-- Iteration actions -->
 		 
 		<action name="editIteration" method="retrieve" class="iterationAction">
-			<result>/WEB-INF/jsp/editIteration.jsp</result>
+			<result type="dispatcher">/WEB-INF/jsp/editIteration.jsp</result>
 		</action>
 	 
     <action name="deleteIteration" method="delete"
@@ -160,7 +152,7 @@
 		<!-- User actions -->
 		
 		<action name="listUsers" method="list" class="userAction">
-			<result>/WEB-INF/jsp/administration/listUsers.jsp</result>
+			<result type="dispatcher">/WEB-INF/jsp/administration/listUsers.jsp</result>
 		</action>
 		<action name="deleteUser" method="delete" class="userAction">
 			<result type="redirectAction">listUsers</result>
@@ -174,14 +166,11 @@
 		<action name="storeUser" method="store" class="userAction">
 			<result type="redirectAction">listUsers</result>			
 		</action>
-		
-		
- 
 		<!-- /User actions -->
 
 		<!-- Team actions -->
 		<action name="listTeams" method="retrieveAll" class="teamAction">
-      <result>/WEB-INF/jsp/administration/listTeams.jsp</result>
+      <result type="dispatcher">/WEB-INF/jsp/administration/listTeams.jsp</result>
     </action>
 		
 		<action name="deleteTeam" method="delete" class="teamAction">
@@ -191,34 +180,10 @@
 
 		<!-- Daily work -->
 		<action name="dailyWork" class="dailyWorkAction">
-			<result>/WEB-INF/jsp/dailyWork.jsp</result>
+			<result type="dispatcher">/WEB-INF/jsp/dailyWork.jsp</result>
 		</action>
 		<!-- /Daily work -->
-		
-		<!-- Tiny Daily work -->
-		<!-- 
-		<action name="tinyDailyWork" class="dailyWorkAction">
-			<result>/WEB-INF/jsp/tinyDailyWork.jsp</result>
-		</action>
-		 -->
-		<!-- /Tiny Daily work -->
 
-		<!-- Story actions -->
-    <action name="moveStory" method="moveStory"
-      class="storyAction">
-    </action>
-    <action name="storyContents" method="getStoryContents" class="storyAction">
-      <result name="ajax_success" type="dispatcher">
-        <param name="location">/WEB-INF/jsp/jsonData.jsp</param>
-      </result>
-    </action>		
-		<action name="calculateStoryMetrics" method="getMetrics"
-      class="storyAction">
-      <result name="ajax_success" type="dispatcher">
-        <param name="location">/WEB-INF/jsp/jsonData.jsp</param>
-      </result>
-    </action>
-		<!-- /Story actions -->
 
 		<action name="drawProjectBurnup" method="getProjectBurnup" class="chartAction">
 			<result name="success" type="stream">
@@ -242,7 +207,7 @@
     </action>
 
 		<action name="selectBacklog">
-			<result>/WEB-INF/jsp/selectBacklog.jsp</result>
+			<result type="dispatcher">/WEB-INF/jsp/selectBacklog.jsp</result>
 		</action>
 		
 		<!-- Actions for generating a new password and e-mailing it to an <code>User</code> -->

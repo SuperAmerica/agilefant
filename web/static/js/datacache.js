@@ -4,7 +4,7 @@ var dataCacheClass = function() {
         "allUsers": "ajax/retrieveAllUsers.action",
         "allTeams": "ajax/retrieveAllTeams.action",
         "allProjectTypes": "getProjectTypeJSON.action",
-        "allProducts": "getProductJSON.action",
+        "allProducts": "ajax/retrieveAllProducts.action",
         "themesByProduct": "themesByProduct.action",
         "activeThemesByBacklog": "activeThemesByBacklog.action",
         "subBacklogs" : "getSubBacklogsAsJSON.action"

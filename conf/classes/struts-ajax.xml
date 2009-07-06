@@ -96,6 +96,24 @@
     <action name="createProduct" method="create" class="productAction">
       <result type="dispatcher">/WEB-INF/jsp/forms/createProduct.jsp</result>
     </action>
+    
+    <action name="retrieveProduct" method="retrieve" class="productAction">
+      <result name="success" type="json">
+        <param name="target">product</param>
+      </result>
+    </action>
+    
+    <action name="retrieveAllProducts" method="retrieveAll" class="productAction">
+      <result name="success" type="json">
+        <param name="target">products</param>
+      </result>
+    </action>
+    
+    <action name="storeProduct" method="store" class="productAction">
+      <result name="success" type="json">
+        <param name="target">product</param>
+      </result>
+    </action>
     <!-- /Product actions -->
     
 
@@ -186,8 +204,22 @@
     
     <action name="deleteStory" method="delete" class="storyAction" />
     
+    <action name="moveStory" method="moveStory" class="storyAction" />
+    
     <action name="storyTabs" method="retrieve"  class="storyAction">
       <result type="dispatcher">/WEB-INF/jsp/tabs/storyTabs.jsp</result>
+    </action>
+    
+    <action name="storyContents" method="storyContents" class="storyAction">
+      <result name="success" type="json">
+        <param name="target">storyContents</param>
+      </result>
+    </action>
+    
+    <action name="calculateStoryMetrics" method="metrics" class="storyAction">
+      <result name="success" type="json">
+        <param name="target">metrics</param>
+      </result>
     </action>
     <!-- /Story actions -->
 

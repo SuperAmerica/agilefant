@@ -125,14 +125,7 @@
 		</action>
 		<!-- /Project actions -->
 
-    <!-- Menu actions -->
-    <action name="menuData" method="execute" class="menuAction">
-        <result type="dispatcher">/WEB-INF/jsp/inc/_menuData.jsp</result>
-    </action>
-    <action name="ajaxUpdateOpenMenus" method="ajaxUpdateOpenMenus"
-        class="menuAction">
-    </action>
-    <!-- /Menu actions -->
+    
 
 		<!-- Iteration actions -->
 		 

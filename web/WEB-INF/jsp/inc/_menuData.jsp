@@ -7,7 +7,7 @@
 [
 
     {
-        <ww:url id="editLink" action="settings" includeParams="none"></ww:url>
+        <ww:url id="editLink" namespace="/" action="settings" includeParams="none"></ww:url>
         
         "text": '<a href="${editLink}">General settings</a>',
         "hasChildren": false,
@@ -17,7 +17,7 @@
         </c:if>
     },
     {
-        <ww:url id="editLink" action="contextView" includeParams="none">
+        <ww:url id="editLink" namespace="/" action="contextView" includeParams="none">
             <ww:param name="resetContextView" value="true" />
             <ww:param name="contextName" value="teams" />
         </ww:url>
@@ -30,7 +30,7 @@
         </c:if>
     },    
     {
-        <ww:url id="editLink" action="contextView" includeParams="none">
+        <ww:url id="editLink" namespace="/" action="contextView" includeParams="none">
             <ww:param name="resetContextView" value="true" />
         </ww:url>
         
@@ -49,7 +49,7 @@
 <c:when test="${navi == 'portfolio'}">
 [
     {
-        <ww:url id="editLink" action="projectPortfolio" includeParams="none"></ww:url>
+        <ww:url id="editLink" namespace="/" action="projectPortfolio" includeParams="none"></ww:url>
         
         "text": '<a href="${editLink}">Current projects</a>',
         "hasChildren": false,
@@ -59,7 +59,7 @@
         </c:if>
     },
     {
-        <ww:url id="editLink" action="globalThemes" includeParams="none"></ww:url>
+        <ww:url id="editLink" namespace="/" action="globalThemes" includeParams="none"></ww:url>
         
         "text": '<a href="${editLink}">Business themes</a>',
         "hasChildren": false,
@@ -69,7 +69,7 @@
         </c:if>
     },
     {
-        <ww:url id="editLink" action="listProjectTypes" includeParams="none"></ww:url>
+        <ww:url id="editLink" namespace="/" action="listProjectTypes" includeParams="none"></ww:url>
         
         "text": '<a href="${editLink}">Project types</a>',
         "hasChildren": false,
@@ -93,7 +93,7 @@
 
     {
         <%-- Create the link url --%>
-        <ww:url id="editLink" action="contextView" includeParams="none">
+        <ww:url id="editLink" namespace="/" action="contextView" includeParams="none">
             <ww:param name="contextObjectId">${item.id}</ww:param>
             <ww:param name="resetContextView" value="true" />
         </ww:url>
@@ -113,7 +113,7 @@
 	                <c:forEach items="${subMenuData.menuItems}" var="subItem">
 	                   <c:set var="subCount" value="${subCount + 1}" />
 	                   { 
-                            <ww:url id="subEditLink" action="contextView" includeParams="none">
+                            <ww:url id="subEditLink" namespace="/" action="contextView" includeParams="none">
                                 <ww:param name="contextObjectId">${subItem.id}</ww:param>
                                 <ww:param name="resetContextView" value="true" />
                             </ww:url>
@@ -132,7 +132,7 @@
                                 <c:forEach items="${subsubMenuData.menuItems}" var="subsubItem">
                                     <c:set var="subsubCount" value="${subsubCount + 1}"/>
                                     {
-                                        <ww:url id="subsubEditLink" action="contextView" includeParams="none">
+                                        <ww:url id="subsubEditLink" namespace="/" action="contextView" includeParams="none">
                                             <ww:param name="contextObjectId">${subsubItem.id}</ww:param>
                                             <ww:param name="resetContextView" value="true" />
                                         </ww:url>            

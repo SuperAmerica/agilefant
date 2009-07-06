@@ -76,6 +76,20 @@
     
     <!-- AJAX actions -->
     
+    
+    <!-- Menu actions -->
+    <action name="menuData" method="execute" class="menuAction">
+        <result type="dispatcher">/WEB-INF/jsp/inc/_menuData.jsp</result>
+    </action>
+    <action name="updateOpenMenus" method="updateOpenMenus" class="menuAction">
+      <result name="success" type="httpheader">
+        <param name="status">200</param>
+      </result>
+    </action>
+    <!-- /Menu actions -->
+    
+    
+    
     <!-- Backlog actions -->
     <action name="retrieveStories" method="retrieveStories" class="backlogAction">
       <result name="success" type="json">

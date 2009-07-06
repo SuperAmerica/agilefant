@@ -110,7 +110,7 @@ public class MenuAction extends ActionSupport {
      * 
      * @return
      */
-    public String ajaxUpdateOpenMenus() {
+    public String updateOpenMenus() {
         String[] openBacklogs = openString.split(",");
         String savedString = "";
 

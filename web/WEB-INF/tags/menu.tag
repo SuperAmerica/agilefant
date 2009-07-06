@@ -240,7 +240,7 @@ Agilefant
     var contextObjectId = '${menuContextId}';
     
     $("#treemenu").treeview({
-        url: "menuData.action?navi=" + navi + "&subnavi=" + subnavi + "&contextObjectId=" + contextObjectId,
+        url: "ajax/menuData.action?navi=" + navi + "&subnavi=" + subnavi + "&contextObjectId=" + contextObjectId,
         collapsed: false,
         unique: false,
         
@@ -254,7 +254,7 @@ Agilefant
             
             var openString = "" + openArray.join(",");
             
-            $.post("ajaxUpdateOpenMenus.action",
+            $.post("ajax/updateOpenMenus.action",
                 { "openString": openString }
             );
         }

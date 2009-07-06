@@ -600,7 +600,7 @@ StoryModel.prototype.reloadMetrics = function() {
     data.iterationId = this.iteration.getId();
   }
   jQuery.ajax({
-    url: "calculateStoryMetrics.action",
+    url: "ajax/calculateStoryMetrics.action",
     data: data,
     cache: false,
     type: "POST",

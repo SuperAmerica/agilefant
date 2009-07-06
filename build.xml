@@ -241,7 +241,7 @@
 		</copy>
 	</target>
 
-	<target name="deploy-local-web" depends="webapp" description="Deploys web app to local server without reloading webapp">
+	<target name="deploy-local-web" depends="webapp, simile_widgets" description="Deploys web app to local server without reloading webapp">
 		<mkdir dir="${deploy.dir.local}" />
 		<copy todir="${deploy.dir.local}">
 			<fileset dir="${build.webapp}" />
@@ -429,6 +429,7 @@
 		</taskdef>
 		<delete dir="${build.webapp}/static/js-packed/"/>
 		<mkdir dir="${build.webapp}/static/js-packed/" />
+<!--		
 		<copy todir="${build.webapp}/static/js-packed/">
 			<fileset dir="${build.webapp}/static/js/" >
 				<include name="**/*jquery*.js"/>
@@ -436,12 +437,15 @@
 				<include name="**/*simile*.js"/>
 			</fileset>
 		</copy>
+-->
 		<yuicompress linebreak="300" warn="false" munge="yes" preserveallsemicolons="true"
               outputfolder="${build.webapp}/static/js-packed/" >
 			<fileset dir="${build.webapp}/static/js/" >
+<!--				
 				<exclude name="**/*jquery*.js"/>
 				<exclude name="**/*timeline*.js"/>
 				<exclude name="**/*simile*.js"/>
+-->
 				<include name="**/*.js" />
 			</fileset>
 		</yuicompress>
@@ -468,7 +472,7 @@
 		</jslint>
 	</target>
 	
-	<target name="simile widgets" depends="webapp">
+	<target name="simile_widgets" depends="webapp">
 		<concat destfile="${build.webapp}/static/js/simile-widgets.js">
 		  <fileset dir="${build.webapp}/static/js/simile/timeline/">
 		  	<include name="**/*.js" />

@@ -19,7 +19,7 @@ AgilefantTimeplot.DefaultEventSource.prototype.userLoadData = function(userLoadD
                 var date = new Date();
                 date.setTime(userLoadData.date);
                 if (date) {
-                	var data = {row.totalAssignedLoad, row.totalUnassignedLoad, row.totalLoad};
+                	var data = [row.totalAssignedLoad, row.totalUnassignedLoad, row.totalLoad];
                     var evt = new Timeplot.DefaultEventSource.NumericEvent(date,data);
                     this._events.add(evt);
                     added = true;

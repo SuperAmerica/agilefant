@@ -3,7 +3,7 @@
 
 
 <aef:projectTypeList id="projectTypes"/>
-<aef:openDialogs context="iteration" id="openIterations" />
+
 <aef:currentBacklog backlogId="${project.id}"/>
 
 <c:set var="divId" value="1336" scope="page" />
@@ -19,9 +19,6 @@ var agilefantTimesheetsEnabled = ${hourReport};
 <!--
 $(document).ready(function() {
   <%--
-	<c:forEach items="${openIterations}" var="openIteration">
-        handleTabEvent("iterationTabContainer-${openIteration[0]}", "iteration", ${openIteration[0]}, ${openIteration[1]});
-    </c:forEach>
 
 	var iterationThemes = [<c:forEach items="${iterationThemes}" var="bind">${bind.businessTheme.id},</c:forEach>-1];
 	var getThemeData = function() {

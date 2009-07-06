@@ -1,7 +1,6 @@
 <%@ include file="./inc/_taglibs.jsp"%>
 <%@ include file="./inc/_header.jsp"%>
 
-<aef:openDialogs context="iterationGoal" id="openIterationGoalTabs" />
 <aef:currentBacklog backlogId="${iteration.id}"/>
 
 <c:set var="divId" value="1336" scope="page" />

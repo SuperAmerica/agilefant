@@ -140,8 +140,7 @@
 			<result type="dispatcher">/WEB-INF/jsp/editIteration.jsp</result>
 		</action>
 	 
-    <action name="deleteIteration" method="delete"
-			class="iterationAction">
+    <action name="deleteIteration" method="delete" class="iterationAction">
 			<result type="redirect">editProject.action?projectId=${projectId}</result>
 		</action>
 		

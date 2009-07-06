@@ -9,10 +9,6 @@
 <ww:actionerror />
 <ww:actionmessage />
 
-<aef:openDialogs context="businessTheme" id="openThemes" />
-
-<aef:openDialogs context="project" id="openProjects" />
-
 <script type="text/javascript">
 
 var productId = ${product.id};
@@ -20,19 +16,6 @@ var productId = ${product.id};
 function editProduct() {
     toggleDiv('editProductForm'); toggleDiv('descriptionDiv'); showWysiwyg('productDescription'); return false;
 }
-
-/*
-$(document).ready(function() {
-    <c:forEach items="${openThemes}" var="openTheme">
-        handleTabEvent("businessThemeTabContainer-${openTheme[0]}", "businessTheme", ${openTheme[0]}, ${openTheme[1]});
-    </c:forEach>
-    
-    <c:forEach items="${openProjects}" var="openProject">
-        handleTabEvent("projectTabContainer-${openProject[0]}", "project", ${openProject[0]}, ${openProject[1]});
-    </c:forEach>
-});
-*/
-
 
 /* Initialize the SimileAjax object */
 /*

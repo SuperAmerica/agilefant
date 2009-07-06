@@ -2,16 +2,6 @@
 <%@ include file="../inc/_header.jsp"%>
 <aef:menu navi="administration" subnavi="users" title="Users"/>
 
-<aef:openDialogs context="user" id="openUserTabs" />
-
-<script type="text/javascript">
-$(document).ready(function() {        
-    <c:forEach items="${openUserTabs}" var="openUser">
-        handleTabEvent("userTabContainer-${openUser[0]}", "user", ${openUser[0]}, ${openUser[1]});
-    </c:forEach>
-});
-</script>
-
 <h2>Users</h2>
 
 	<div class="subItems" style="width: 545px;" id="subItems_userList">

@@ -5,15 +5,6 @@
 <ww:actionerror />
 <ww:actionmessage />
 
-<aef:openDialogs context="businessTheme" id="openThemes" />
-
-<script type="text/javascript">
-$(document).ready(function() {
-    <c:forEach items="${openThemes}" var="openTheme">
-        handleTabEvent("businessThemeTabContainer-${openTheme[0]}", "businessTheme", ${openTheme[0]}, ${openTheme[1]});
-    </c:forEach>
-});
-</script>
 
 <c:set var="productId" value="-1" />
 

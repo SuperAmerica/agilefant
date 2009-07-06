@@ -2,8 +2,6 @@
 
 <aef:hourReporting id="hourReport" />
 
-<aef:openDialogs context="story" id="openStoryTabs" />
-
 <!-- context variable for story ajax to know its context -->
 <c:set var="storyListContext" value="backlogList" scope="session" />
 
@@ -29,9 +27,6 @@ function disableThemeSelect(value) {
 }
 
 $(document).ready(function() {
-    <c:forEach items="${openStoryTabs}" var="openStory">
-        handleTabEvent("storyTabContainer-${openStory[0]}-${storyListContext}", "story", ${openStory[0]}, ${openStory[1]}, '${storyListContext}');
-    </c:forEach>
     $('#themeChooserLink-multipleSelect').themeChooser({
         backlogId: 'select[name=targetBacklog]',
         themeListContainer: '#themeListContainer-multipleSelect'

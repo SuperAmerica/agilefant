@@ -5,19 +5,9 @@
 
 <c:set var="dialogContext" value="storyDWInterations" scope="session" />
 
-<aef:openDialogs context="storyDWInterations" id="openStoryTabs" />
-
 <c:if test="${hourReport}">
 	<c:set var="totalSum" value="${null}" />
 </c:if>
-
-<script language="javascript" type="text/javascript">
-
-$(document).ready(function() {        
-    <c:forEach items="${openStoryTabs}" var="openStory">
-        handleTabEvent("storyTabContainer-${openStory[0]}-${storyListContext}", "storyDWInterations", ${openStory[0]}, ${openStory[1]} ,'${storyListContext}');
-    </c:forEach>
-});
 
 </script>
 

@@ -2,22 +2,11 @@
 
 <aef:hourReporting id="hourReport"></aef:hourReporting>
 
-<aef:openDialogs context="storyDWProjects" id="openStoryTabs" />
-
 <!-- context variable for story ajax to know its context -->
 <c:set var="storyListContext" value="dailyWorkProjects" scope="session" />
 
 <c:set var="dialogContext" value="storyDWProjects" scope="session" />
 
-<script language="javascript" type="text/javascript">
-
-$(document).ready(function() {        
-    <c:forEach items="${openStoryTabs}" var="openStory">
-        handleTabEvent("storyTabContainer-${openStory[0]}-${storyListContext}", "storyDWProjects", ${openStory[0]}, ${openStory[1]}, '${storyListContext}');
-    </c:forEach>
-});
-
-</script>
 
 <c:if test="${!empty projects}">
 

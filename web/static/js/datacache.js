@@ -7,7 +7,7 @@ var dataCacheClass = function() {
         "allProducts": "ajax/retrieveAllProducts.action",
         "themesByProduct": "themesByProduct.action",
         "activeThemesByBacklog": "activeThemesByBacklog.action",
-        "subBacklogs" : "getSubBacklogsAsJSON.action"
+        "subBacklogs" : "ajax/retrieveSubBacklogs.action"
     };
     this.data = {};
 }

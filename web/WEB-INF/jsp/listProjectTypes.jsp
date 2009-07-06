@@ -1,15 +1,6 @@
 <%@ include file="inc/_taglibs.jsp"%>
 <%@ include file="inc/_header.jsp"%>
 <aef:menu navi="portfolio" subnavi="projectTypes" title="Project Types"/>
-<aef:openDialogs context="projectType" id="openProjectTypeTabs" />
-
-<script type="text/javascript">
-$(document).ready(function() {        
-    <c:forEach items="${openProjectTypeTabs}" var="openProjectType">
-        handleTabEvent("projectTypeTabContainer-${openProjectType[0]}", "projectType", ${openProjectType[0]}, ${openProjectType[1]});
-    </c:forEach>
-});
-</script>
 
 <ww:actionerror />
 <ww:actionmessage />

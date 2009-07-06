@@ -1,21 +1,9 @@
 <%@ include file="./_taglibs.jsp"%>
 
-<aef:openDialogs context="storyWorkInProgress" id="openStoryTabs" />
-
 <!-- context variable for story ajax to know its context -->
 <c:set var="storyListContext" value="workInProgress" scope="session" />
 
 <c:set var="dialogContext" value="storyWorkInProgress" scope="session" />
-
-<script language="javascript" type="text/javascript">
-
-$(document).ready(function() {        
-    <c:forEach items="${openStoryTabs}" var="openStory">
-        handleTabEvent("storyTabContainer-${openStory[0]}-${storyListContext}", "storyWorkInProgress", ${openStory[0]}, ${openStory[1]}, '${storyListContext}');
-    </c:forEach>
-});
-
-</script>
 
 <h2>Started stories and tasks assigned to <c:out value="${user.fullName}" /></h2>
 

@@ -2,16 +2,6 @@
 <%@ include file="../inc/_header.jsp"%>
 <aef:menu navi="administration" subnavi="teams"  title="Teams"/>
 
-<aef:openDialogs context="team" id="openTeamTabs" />
-
-<script type="text/javascript">
-$(document).ready(function() {        
-    <c:forEach items="${openTeamTabs}" var="openTeam">
-        handleTabEvent("teamTabContainer-${openTeam[0]}", "team", ${openTeam[0]}, ${openTeam[1]});
-    </c:forEach>
-});
-</script>
-
 <aef:userList />
 
 <h2>Teams</h2>

@@ -39,19 +39,48 @@ $(document).ready(function() {
 		}
 		});
 	  window.Timeline.DateTime = window.SimileAjax.DateTime;
-		  var eventSource = new Timeplot.DefaultEventSource();
-		  var plotInfo = [
-		    Timeplot.createPlotInfo({
-		      id: "plot1",
-		      dataSource: new Timeplot.ColumnSource(eventSource,1)
-		    })
-		  ];
-		  timeplot = Timeplot.create($("#loadPlot").get(0), plotInfo);
-		  //timeplot.loadText("data.txt", ",", eventSource);
+		  var eventSource = new AgilefantTimeplot.DefaultEventSource();
+
+		  var timeGeometry = new Timeplot.DefaultTimeGeometry({
+				    gridColor: new Timeplot.Color("#000000"),
+				    axisLabelsPlacement: "top"
+				  });
+
+			  var valueGeometry = new Timeplot.DefaultValueGeometry({
+			    gridColor: "#000000"
+			  });
+
+			  var plotInfo = [
+			    Timeplot.createPlotInfo({
+			      id: "plot1",
+			      dataSource: new Timeplot.ColumnSource(eventSource,1),
+			      timeGeometry: timeGeometry,
+			      valueGeometry: valueGeometry,
+			      lineColor: "#ff0000",
+			     /* fillColor: "#cc8080",*/
+			      showValues: true
+			    }),
+			    Timeplot.createPlotInfo({
+			      id: "plot2",
+			      dataSource: new Timeplot.ColumnSource(eventSource,2),
+			      timeGeometry: timeGeometry,
+			      valueGeometry: valueGeometry,
+			      lineColor: "#D0A825",
+			      showValues: true
+			    })
+			  ];
+			  $.getJSON("ajax/defaultUserLoad.action",{userId: ${userId}}, function(data) {
+				  timeplot = Timeplot.create($("#loadPlot").get(0), plotInfo);
+				  eventSource.userLoadData(data);
+				  //timeplot.loadText("data.txt", ",", eventSource);
+				  });
+					  
 			
 });
 </script>
+<link rel="stylesheet" href="static/css/timeplot.css" type="text/css"/>
 <script type="text/javascript" src="static/js/simile-widgets.js"></script>
+<script type="text/javascript" src="static/js/simile/extensions/user-load-timeplot-source.js"></script>
 <div id="dailyWorkTabs">
 	<ul id="dwTabs" style="display: none; height: 1px; width: 785px;">
 		<li><a href="#smallLoadTable"><span>Load</span></a></li>

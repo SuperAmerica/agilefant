@@ -131,24 +131,6 @@
 			class="projectAction">
 			<result type="redirect">editProduct.action?productId=${productId}</result>
 		</action>
-
-    <action name="storeProject" method="store"
-      class="projectAction">
-      <result type="redirectAction">
-        <param name="actionName">contextView</param>
-        <param name="contextName">project</param>
-        <param name="contextObjectId">${projectId}</param>
-        <param name="resetContextView">true</param>
-      </result>
-    </action>
-
-		<action name="storeNewProject" method="ajaxStoreProject" class="projectAction">
-		</action>
-
-    <action name="projectMetrics" class="projectAction" method="projectMetrics">
-      <result name="success" type="dispatcher">/WEB-INF/jsp/inc/projectMetrics.jsp</result>
-    </action>
-		
 		<!-- /Project actions -->
 
     <!-- Menu actions -->
@@ -187,8 +169,8 @@
 		    <result type="redirectAction">listUsers</result>
 		</action>
 		<action name="enableUser" method="enable" class="userAction">
-            <result type="redirectAction">listUsers</result>
-        </action>
+        <result type="redirectAction">listUsers</result>
+    </action>
 		<action name="storeUser" method="store" class="userAction">
 			<result type="redirectAction">listUsers</result>			
 		</action>
@@ -198,27 +180,13 @@
 		<!-- /User actions -->
 
 		<!-- Team actions -->
-		<action name="listTeams" method="list" class="teamAction">
+		<action name="listTeams" method="retrieveAll" class="teamAction">
       <result>/WEB-INF/jsp/administration/listTeams.jsp</result>
     </action>
 		
 		<action name="deleteTeam" method="delete" class="teamAction">
 			<result type="redirectAction">listTeams</result>
 		</action>
-		<action name="storeTeam" method="store" class="teamAction">
-			<result type="redirectAction">listTeams</result>
-		</action>
-		<action name="ajaxStoreTeam" method="ajaxStoreTeam"
-			class="teamAction">		
-			<result name="ajax_error" type="httpheader">
-				<param name="status">400</param>
-			</result>
-			<result name="ajax_success" type="dispatcher">
-				<param name="location">/WEB-INF/jsp/inc/ajaxTeamResult.jsp</param>
-			</result>
-		</action>
-		
-
 		<!-- /Team actions -->
 
 		<!-- Daily work -->

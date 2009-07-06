@@ -3,7 +3,7 @@
 <aef:userList />
 
 <div class="validateWrapper validateNewTeam">
-<ww:form action="storeTeam" method="post">
+<form action="ajax/storeTeam.action" method="post">
 
     <ww:hidden name="teamId" value="0" />
     <table class="formTable">
@@ -47,5 +47,5 @@
                 cssClass="closeDialogButton" /></td>
         </tr>
     </table>
-</ww:form>
+</form>
 </div>

@@ -121,6 +121,10 @@
     <action name="projectTabs" method="retrieve" class="projectAction">
       <result type="dispatcher">/WEB-INF/jsp/tabs/projectTabs.jsp</result>
     </action>
+    
+    <action name="projectMetrics" class="projectAction" method="projectMetrics">
+      <result name="success" type="dispatcher">/WEB-INF/jsp/inc/projectMetrics.jsp</result>
+    </action>
     <!-- /Project actions -->
     
 
@@ -253,6 +257,12 @@
     <!-- Team actions -->
     <action name="createTeam" method="create" class="teamAction">
       <result type="dispatcher">/WEB-INF/jsp/forms/createTeam.jsp</result>
+    </action>
+    
+    <action name="storeTeam" method="store" class="teamAction">   
+      <result name="success" type="json">
+        <param name="target">team</param>
+      </result>
     </action>
     
     <action name="teamTabs" method="retrieve" class="teamAction">

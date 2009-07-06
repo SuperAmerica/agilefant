@@ -614,9 +614,9 @@ $(document).ready(function() {
     bigChart.attr("src",bigChart.attr("src")+"#");
     var smallChart = $("#smallChart");
     smallChart.attr("src",smallChart.attr("src")+"#");*/
-    $("#projectMetrics").load("projectMetrics.action",{projectId: ${projectId}});
+    $("#projectMetrics").load("ajax/projectMetrics.action",{projectId: ${projectId}});
   });
-  $("#projectMetrics").load("projectMetrics.action",{projectId: ${projectId}});
+  $("#projectMetrics").load("ajax/projectMetrics.action",{projectId: ${projectId}});
 });
 </script>
 

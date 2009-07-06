@@ -50,11 +50,6 @@ public class TeamAction extends ActionSupport implements CRUDAction {
         return Action.SUCCESS;
     }
 
-    public String list() {
-        teamList.addAll(teamBusiness.retrieveAll());
-        return Action.SUCCESS;
-    }
-
     /**
      * Delete an existing team.
      */
@@ -86,32 +81,7 @@ public class TeamAction extends ActionSupport implements CRUDAction {
     public String store() {
         Team storable = new Team();
         if (teamId > 0) {
-            storable = teamBusiness.retrieveIfExists(teamId);
-            if (storable == null) {
-                super.addActionError("Team not found!");
-                return Action.ERROR;
-            }
-        }
-
-        // Fill the storable element
-        fillStorable(storable);
-
-        // Check, if action has errors.
-        if (super.hasActionErrors()) {
-            return Action.ERROR;
-        }
-        teamBusiness.store(storable);
-        return Action.SUCCESS;
-    }
-
-    public String ajaxStoreTeam() {
-        Team storable = new Team();
-        if (teamId > 0) {
             storable = teamBusiness.retrieve(teamId);
-            if (storable == null) {
-                super.addActionError("Team not found!");
-                return Action.ERROR;
-            }
         }
 
         // Fill the storable element

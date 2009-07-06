@@ -15,7 +15,7 @@
 			<div class="subItems" style="margin-top: 0px; width: 470px;">
 			<div id="editUserForm" class="validateWrapper validateTeam">
 
-				<ww:form action="ajaxStoreTeam" method="post">
+				<form action="ajax/storeTeam.action" method="post">
 				<ww:hidden name="teamId" value="%{teamId}" />
 				<table class="formTable">
 					<tr>
@@ -58,7 +58,7 @@
 						</td>	
 					</tr>
 				</table>
-				</ww:form>
+				</form>
 			</div>
 			</div>
 			</td>

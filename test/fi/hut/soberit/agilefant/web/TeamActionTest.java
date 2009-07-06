@@ -1,5 +1,11 @@
 package fi.hut.soberit.agilefant.web;
 
+import static org.easymock.EasyMock.createStrictMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
+import static org.junit.Assert.assertEquals;
+
 import java.util.Arrays;
 import java.util.Collection;
 
@@ -8,14 +14,8 @@ import org.junit.Test;
 
 import com.opensymphony.xwork2.Action;
 
-import static org.junit.Assert.*;
-import static org.easymock.EasyMock.*;
-
 import fi.hut.soberit.agilefant.business.TeamBusiness;
-import fi.hut.soberit.agilefant.business.UserBusiness;
-import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.Team;
-import fi.hut.soberit.agilefant.model.User;
 
 public class TeamActionTest {
     

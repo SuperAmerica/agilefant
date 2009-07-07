@@ -35,6 +35,8 @@ var DynamicTableRow = function(table, model, options, template) {
 	this.row.data("model", model);
 };
 
+DynamicTableRow.prototype = new DynamicsView();
+
 DynamicTableRow.prototype = {
 	createCell : function(options) {
 		var newCell = new DynamicTableCell(this, this.cells.length, options);

@@ -55,6 +55,7 @@ var DynamicTable = function(element, options) {
 	this.tableRowHashes = [];
 };
 
+DynamicTable.prototype = new DynamicsView();
 DynamicTable.prototype = {
 		createRow: function(model, opt, noSort) {
 	var newRow = new DynamicTableRow(this, model, opt);

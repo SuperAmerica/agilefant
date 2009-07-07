@@ -17,9 +17,31 @@ var DynamicTableStatics = {
 		borderPerColumn: 0.4
 };
 
-var dynamicTableId = 0;
+var DynamicTableColumnConfiguration = function() {
+	
+};
+DynamicTableColumnConfiguration.prototype.getWith = function() {
+	
+};
+DynamicTableColumnConfiguration.prototype.getMaxWidth = function() {
+	
+};
+DynamicTableColumnConfiguration.prototype.isFullWidth = function() {
+	
+};
 
-/** TABLE **/
+var DynamicTableConfiguration = function() {
+	this.columns = [];
+};
+
+DynamicTableConfiguration.prototype.getColumnConfiguration = function(columnNum) {
+	return this.columns[columnNum];
+};
+DynamicTableConfiguration.prototype.setColumnConfiguration = function(columnNum, config) {
+	this.columns[columnNum] = config;
+};
+
+/** TABLE * */
 var DynamicTable = function(element, options) {
 	this.options = {
 			colCss: {},
@@ -31,7 +53,7 @@ var DynamicTable = function(element, options) {
 			noHeader: false
 	};
 	$.extend(this.options,options);
-	this.tableId = dynamicTableId++;
+	this.tableId = DynamicTable.currentTableId++;
 	var widths = this.calculateColumnWidths(this.options.colWidths);
 	for (var i = 0; i < widths.length; i++) {
 		if (widths[i]) {
@@ -55,9 +77,11 @@ var DynamicTable = function(element, options) {
 	this.tableRowHashes = [];
 };
 
+DynamicTable.currentTableId = 0;
+
 DynamicTable.prototype = new DynamicsView();
-DynamicTable.prototype = {
-		createRow: function(model, opt, noSort) {
+
+DynamicTable.prototype.createRow = function(model, opt, noSort) {
 	var newRow = new DynamicTableRow(this, model, opt);
 	if(this.rows.length === 0 && this.headerRow) {
 		this.headerRow.getElement().show();
@@ -69,8 +93,8 @@ DynamicTable.prototype = {
 		this.tableRowHashes.push(model.getHashCode());
 	}
 	return newRow;
-},
-deleteRow: function(row) {
+};
+DynamicTable.prototype.deleteRow = function(row) {
 	var rows = [];
 	var i = 0;
 	for(i = 0 ; i < this.rows.length; i++) {
@@ -81,7 +105,8 @@ deleteRow: function(row) {
 	if(rows.length === 0) {
 		this.headerRow.getElement().hide();
 	}
-	//check if row is associated with a model that has a hash code, if so the hash must be removed
+	// check if row is associated with a model that has a hash code, if so the
+	// hash must be removed
 	if(row.model && typeof row.model.getHashCode == "function" && row.model.getHashCode()) {
 		var hashCode = row.model.getHashCode();
 		var tmp = this.tableRowHashes;
@@ -94,23 +119,23 @@ deleteRow: function(row) {
 	}
 	this.rows = rows;
 	$(document.body).trigger("dynamictable-close-actions");
-},
-getElement: function() {
+};
+DynamicTable.prototype.getElement = function() {
 	return this.table;
-},
-getOptions: function() {
+};
+DynamicTable.prototype.getOptions = function() {
 	return this.options;
-},
-getColWidth: function(colno) {
+};
+DynamicTable.prototype.getColWidth = function(colno) {
 	return this.options.colWidths[colno];
-},
-getColStyle: function(colno) {
+};
+DynamicTable.prototype.getColStyle = function(colno) {
 	return this.options.colStyle[colno];
-},
-getSorting: function() {
+};
+DynamicTable.prototype.getSorting = function() {
 	return this.sorting;
-},
-render: function() {
+};
+DynamicTable.prototype.render = function() {
 	if(!this.headerRow && !this.options.noHeader) {
 		this.renderHeader();
 	}
@@ -123,12 +148,12 @@ render: function() {
 	this.table.show();
 	this.sortTable();
 	this._sortable();
-},
-addCaptionAction: function(name, options) {
+};
+DynamicTable.prototype.addCaptionAction = function(name, options) {
 	if(this.options.noHeader) {
 		return;
 	}
-	//caption containers must be inserted first
+	// caption containers must be inserted first
 	if(!this.caption) {
 		this.renderCaption();
 	}
@@ -149,22 +174,22 @@ addCaptionAction: function(name, options) {
 		options.element.hide();
 	}
 	this.captionActions[name] = options;
-},
-//sort table without changing sort direction
-sortTable: function() {
+};
+// sort table without changing sort direction
+DynamicTable.prototype.sortTable = function() {
 	if(!this.sorting || !this.options.headerCols[this.sorting.column]) {
 		return;
 	}
 	this._sort(this.sorting.column, this.options.headerCols[this.sorting.column].sort, this.sorting.direction);
-},
-renderCaption: function() {
+};
+DynamicTable.prototype.renderCaption = function() {
 	if(!this.options.noHeader) {
 		this.caption = $('<div />').addClass(DynamicTableCssClasses.tableCaption).prependTo(this.container).width(this.maxWidth+"%");
 		$("<div />").css("float", "left").text(this.options.captionText).appendTo(this.caption).width("30%");
 		this.captionAction = $('<ul />').addClass(DynamicTableCssClasses.captionActions).appendTo(this.caption).css("float","right").width("68%");
 	}
-},
-renderHeader: function() {
+};
+DynamicTable.prototype.renderHeader = function() {
 	if (this.options.headerCols.length === 0) {
 		return false;
 	}
@@ -196,12 +221,12 @@ renderHeader: function() {
 	$.each(this.options.colCss, function(i,v) {
 		me.headerRow.getElement().children(i).css(v);
 	});
-},
-setActionCellParams: function(params) {
+};
+DynamicTable.prototype.setActionCellParams = function(params) {
 	this.actionParams = params;
-},
-//sort and change sort direction
-sortAndUpdateDirection: function(colNo, comparator) {
+};
+// sort and change sort direction
+DynamicTable.prototype.sortAndUpdateDirection = function(colNo, comparator) {
 	if (typeof(comparator) != "function") {
 		return false;
 	}
@@ -213,9 +238,9 @@ sortAndUpdateDirection: function(colNo, comparator) {
 	}
 	this.sorting.column = colNo;
 	this._sort(colNo, comparator, this.sorting.direction);
-},
-//private sort method
-_sort: function(colNo, comparator, direction) {
+};
+// private sort method
+DynamicTable.prototype._sort = function(colNo, comparator, direction) {
 	if (typeof(comparator) != "function") {
 		return false;
 	}
@@ -233,8 +258,8 @@ _sort: function(colNo, comparator, direction) {
 	for(var i = 0; i < sorted.length; i++) {
 		sorted[i].row.appendTo(this.table);
 	}
-},
-updateSortArrow: function(col, dir) {
+};
+DynamicTable.prototype.updateSortArrow = function(col, dir) {
 	this.headerRow.getElement().find('.' + DynamicTableCssClasses.sortImg).removeClass(DynamicTableCssClasses.sortImgDown)
 	.removeClass(DynamicTableCssClasses.sortImgUp);
 	var a = this.headerRow.getElement().find('.' + DynamicTableCssClasses.tableCell + ':eq('+col+')')
@@ -245,11 +270,11 @@ updateSortArrow: function(col, dir) {
 	else {
 		a.addClass(DynamicTableCssClasses.sortImgDown);
 	}
-},
-calculateColumnWidths: function(params) {
+};
+DynamicTable.prototype.calculateColumnWidths = function(params) {
 	var num = 0;
 	var totalwidth = 0;
-	//calculate total minimum width
+	// calculate total minimum width
 	for (var i = 0; i < params.length; i++) {
 		if (params[i].auto) {
 			num++;
@@ -259,10 +284,10 @@ calculateColumnWidths: function(params) {
 
 	var retval = [];
 
-	//percentage taken by column borders
+	// percentage taken by column borders
 	var totalPercentage = (DynamicTableStatics.borderPerColumn * num) / 100;
 
-	//scale total width down to 99% in order to prevent cell wrapping
+	// scale total width down to 99% in order to prevent cell wrapping
 	totalwidth = totalwidth / (0.99 - totalPercentage);
 	var j;
 
@@ -286,13 +311,13 @@ calculateColumnWidths: function(params) {
 		}
 	}
 	return retval;
-},
-activateSortable: function(options) {
+};
+DynamicTable.prototype.activateSortable = function(options) {
 	this.options.sortOptions = options;
 	this.options.sortable = true;
-},
-//activate drag'n'drop sorting within table rows
-_sortable: function() {
+};
+// activate drag'n'drop sorting within table rows
+DynamicTable.prototype._sortable = function() {
 	if(!this.sortActive && this.options.sortable) {
 		this.sortActive = true;
 		var defOpt = {
@@ -304,19 +329,19 @@ _sortable: function() {
 		$.extend(defOpt, this.options.sortOptions);
 		this.table.sortable(defOpt);
 	}
-},
-//check whether model (having a hash code) has been inserted into the table
-isInTable: function(model) {
+};
+// check whether model (having a hash code) has been inserted into the table
+DynamicTable.prototype.isInTable = function(model) {
 	if(typeof model.getHashCode == "function" && model.getHashCode()) {
 		return ($.inArray(model.getHashCode(), this.tableRowHashes) != -1);
 	}
 	return false;
-},
-setDataSource: function(dataSource) {
+};
+DynamicTable.prototype.setDataSource = function(dataSource) {
 	this.dataSource = dataSource;
 	this.dataSource.setListener(this.renderFromDataSource, this);
-},
-renderFromDataSource: function() {
+};
+DynamicTable.prototype.renderFromDataSource = function() {
 	var dataRows = this.dataSource.getArray();
 	for(var i = 0; i < dataRows.length; i++) {
 		var row = dataRows[i];
@@ -326,11 +351,11 @@ renderFromDataSource: function() {
 		}
 	}
 	this.render();
-},
-setRowTemplate: function(template) {
-	this.rowTemplate = template;
-}
 };
+DynamicTable.prototype.setRowTemplate = function(template) {
+	this.rowTemplate = template;
+};
+
 function addTableColumn(optObj, width,header, colStyle) {
 	if(!optObj.headerCols) {
 		optObj.headerCols = [];
@@ -352,7 +377,7 @@ function addTableColumn(optObj, width,header, colStyle) {
 	}
 }
 $.fn.extend({
-	//NOTE: WILL NOT RETURN CHAINABLE jQuery OBJECT!
+	// NOTE: WILL NOT RETURN CHAINABLE jQuery OBJECT!
 	DynamicTable: function(options) {
 	if(this.length == 1) {
 		var table;
@@ -472,14 +497,14 @@ releaseBacklogTable: function(options) {
 				tooltip: 'Estimate in story points',
 				sort: null
 			}, 'projectstory-row');
-//	if(agilefantUtils.isTimesheetsEnabled()) {
-//	addTableColumn(opts,
-//	{ minwidth: 30, auto: true },
-//	{ name: 'ES',
-//	tooltip: 'Total effort spent',
-//	sort: agilefantUtils.comparators.effortSpentComparator
-//	}, 'projectstory-row');
-//	}
+// if(agilefantUtils.isTimesheetsEnabled()) {
+// addTableColumn(opts,
+// { minwidth: 30, auto: true },
+// { name: 'ES',
+// tooltip: 'Total effort spent',
+// sort: agilefantUtils.comparators.effortSpentComparator
+// }, 'projectstory-row');
+// }
 
 	addTableColumn(opts,
 			{ minwidth: 48, auto: true},
@@ -515,12 +540,8 @@ taskTable: function(options) {
 			}, 'task-row'
 	);
 	/*
-        addTableColumn(opts,
-            { minwidth: 30, auto: true },
-                { name: "Themes",
-                  tooltip: "Task themes",
-                  sort: null
-                }, 'task-row');
+	 * addTableColumn(opts, { minwidth: 30, auto: true }, { name: "Themes",
+	 * tooltip: "Task themes", sort: null }, 'task-row');
 	 */
 	addTableColumn(opts,
 			{ minwidth: 180, auto: true },

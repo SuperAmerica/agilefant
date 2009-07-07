@@ -197,7 +197,7 @@ BacklogModel.prototype = new CommonAgilefantModel();
 
 BacklogModel.prototype.getId = function() {
   throw "Abstract method called";
-}
+};
 
 
 

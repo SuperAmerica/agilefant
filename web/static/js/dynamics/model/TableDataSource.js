@@ -20,5 +20,5 @@ DynamicsTableDataSource.prototype.update = function() {
 	} else {
 		this.listener();
 	}
-}
+};
 

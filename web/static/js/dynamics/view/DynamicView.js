@@ -5,6 +5,7 @@ var DynamicsView = function() {
 DynamicsView.prototype.init = function(controller, model) {
 	this.controller = controller;
 	this.model = model;
+	this.parentView = null;
 	var editListener = function(event) {
 		this.onEdit(event);
 	};
@@ -23,6 +24,10 @@ DynamicsView.prototype.getController = function() {
 };
 DynamicsView.prototype.addSubView = function(name, view) {
 	this.subViews[name] = view;
+	view.setParentView(this);
+};
+DynamicsView.prototype.setParentView = function(parentView) {
+	this.parentView = parentView;
 };
 
 //event handlers

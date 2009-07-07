@@ -11,7 +11,6 @@ import com.opensymphony.xwork2.Action;
 
 import fi.hut.soberit.agilefant.business.ProductBusiness;
 import fi.hut.soberit.agilefant.model.Product;
-import flexjson.JSONSerializer;
 
 @Component("productAction")
 @Scope("prototype")

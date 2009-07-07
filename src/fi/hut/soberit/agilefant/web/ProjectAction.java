@@ -27,7 +27,6 @@ import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.transfer.ProjectDataContainer;
 import fi.hut.soberit.agilefant.transfer.ProjectMetrics;
 import fi.hut.soberit.agilefant.util.CalendarUtils;
-import flexjson.JSONSerializer;
 
 @Component("projectAction")
 @Scope("prototype")

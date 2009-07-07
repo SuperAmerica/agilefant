@@ -486,13 +486,19 @@
       -->
 		</concat>
 		<concat destfile="${build.webapp}/static/js/dynamics/dynamicTable.js">
-			<filelist dir="${build.webapp}/static/js/dynamics/" files="Table.js, TableCell.js, TableEditors.js, TableRow.js" />
+			<fileset dir="${build.webapp}/static/js/dynamics/view/">
+				<include name="*.js" />	
+			</fileset>
 		</concat>
 		<concat destfile="${build.webapp}/static/js/dynamics/model.js">
-			<filelist dir="${build.webapp}/static/js/dynamics/" files="CommonModel.js, StoryModel.js, TaskModel.js" />
+			<fileset dir="${build.webapp}/static/js/dynamics/model/">
+				<include name="*.js" />	
+			</fileset>		
 		</concat>
 		<concat destfile="${build.webapp}/static/js/dynamics/controller.js">
-			<filelist dir="${build.webapp}/static/js/dynamics/" files="CommonController.js, IterationController.js" />
+			<fileset dir="${build.webapp}/static/js/dynamics/controller/">
+				<include name="*.js" />	
+			</fileset>		
 		</concat>
 	</target>
 

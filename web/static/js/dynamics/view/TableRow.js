@@ -1,5 +1,5 @@
 /** TABLE ROW **/
-var DynamicTableRow = function(table, model, options) {
+var DynamicTableRow = function(table, model, options, template) {
 	this.table = table;
 	this.model = model;
 	var me = this;

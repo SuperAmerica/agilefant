@@ -239,7 +239,7 @@ IterationModel = function(iterationData, iterationId) {
     });
   }
   this.stories = storyPointer;
-  this.dataSource = new TableDataSource(this,this.getStories);
+  this.dataSource = new DynamicsTableDataSource(this,this.getStories);
 };
 
 IterationModel.prototype = new BacklogModel();
@@ -569,3 +569,4 @@ TodoModel.prototype.save = function(synchronous, callback) {
   data: data
   });
 };
+

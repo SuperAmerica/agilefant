@@ -361,3 +361,4 @@ StoryModel.prototype.save = function(synchronous, callback) {
 		data : data
 	});
 };
+

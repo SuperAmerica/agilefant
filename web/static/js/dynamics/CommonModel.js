@@ -239,12 +239,16 @@ IterationModel = function(iterationData, iterationId) {
     });
   }
   this.stories = storyPointer;
+  this.dataSource = new TableDataSource(this,this.getStories);
 };
 
 IterationModel.prototype = new BacklogModel();
 
 IterationModel.prototype.getStories = function() {
   return this.stories;
+};
+IterationModel.prototype.getDataSource = function() {
+	return this.dataSource;
 };
 IterationModel.prototype.getId = function() {
   return this.iterationId;

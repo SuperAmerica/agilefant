@@ -233,7 +233,7 @@ StoryModel.prototype.remove = function() {
 					me.rollBack();
 					if (XMLHttpRequest.status === 403) {
 						commonView
-								.showError("Stories with task or story hour entries cannot be deleted.")
+								.showError("Stories with task or story hour entries cannot be deleted.");
 					} else {
 						commonView
 								.showError("An error occured while deleting a story.");

@@ -152,23 +152,7 @@ DynamicTableCell.prototype = {
 			});
 			uc.init();
 			return;
-		} else if (this.options.type == "theme") {
-			if (noAutoClose) {
-				return;
-			}
-			var tc = new AgilefantThemeChooser( {
-				selectedThemes : function() {
-					return agilefantUtils.objectToIdArray(me.options.get());
-				},
-				onSelect : function(themes) {
-					me.options.set(themes);
-					me.render();
-				},
-				backlogId : this.options.backlogId
-			});
-			tc.init();
-			return;
-		}
+		} 
 		var autoClose = true;
 		if (noAutoClose) {
 			autoClose = false;
@@ -180,20 +164,20 @@ DynamicTableCell.prototype = {
 				this.actionObj.getElement().hide();
 			}
 			if (this.options.type == "text") {
-				this.editor = new TextEdit(this, autoClose);
+				this.editor = new DynamicsEditors.TextEdit(this, autoClose);
 			} else if (this.options.type == "wysiwyg") {
-				this.editor = new WysiwygEdit(this, autoClose);
+				this.editor = new DynamicsEditors.WysiwygEdit(this, autoClose);
 			} else if (this.options.type == "effort") {
-				this.editor = new EffortEdit(this, autoClose);
+				this.editor = new DynamicsEditors.EffortEdit(this, autoClose);
 			} else if (this.options.type == "storyPoint") {
-				this.editor = new StoryPointEdit(this, autoClose);
+				this.editor = new DynamicsEditors.StoryPointEdit(this, autoClose);
 			} else if (this.options.type == "select") {
-				this.editor = new SelectEdit(this, this.options.items,
+				this.editor = new DynamicsEditors.SelectEdit(this, this.options.items,
 						autoClose);
 			} else if (this.options.type == "empty") {
-				this.editor = new EmptyEdit(this);
+				this.editor = new DynamicsEditors.EmptyEdit(this);
 			} else if (this.options.type == "date") {
-				this.editor = new DateEdit(this, autoClose);
+				this.editor = new DynamicsEditors.DateEdit(this, autoClose);
 			}
 			if (!autoClose && this.options.buttons) {
 				me.addedButtons = [];

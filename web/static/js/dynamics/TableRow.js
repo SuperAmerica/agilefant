@@ -58,6 +58,11 @@ DynamicTableRow.prototype = {
 	getTable : function() {
 		return this.table;
 	},
+	renderFromTemplate: function(template) {
+		for(var i = 0; i < template.length; i++) {
+			this.createCell(template[i]);
+		}
+	},
 	render : function() {
 		for ( var i = 0; i < this.cells.length; i++) {
 			this.cells[i].render();

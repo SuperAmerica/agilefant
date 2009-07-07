@@ -1,64 +1,67 @@
-var commonEdit = {
-	getValue : function() {
-		return this.field.val();
-	},
-	_cancel : function() {
-		this.cell.cancelEdit();
-	},
-	_store : function() {
-		this.cell.saveEdit();
-	},
-	focus : function() {
-		if (this.field) {
-			this.field.focus();
-			return true;
-		}
-		return false;
-	},
-	_storeRow : function() {
-		var opt = this.cell.getRow().options;
-		if (opt && typeof opt.saveCallback == "function") {
-			opt.saveCallback();
-		}
-	},
-	_handleKeyEvent : function(keyevent) {
-		if (keyevent.keyCode == 27 && this.autoClose) {
-			keyevent.stopPropagation();
-			this._cancel();
-		} else if (keyevent.keyCode == 13 && this.autoClose) {
-			keyevent.stopPropagation();
-			this._store();
-		} else if (keyevent.keyCode == 13 && !this.autoClose) {
-			keyevent.stopPropagation();
-			this._storeRow();
-		}
+var DynamicsEditors = {};
+DynamicsEditors.AbstractEditor = function() {
+
+};
+DynamicsEditors.AbstractEditor.prototype.getValue = function() {
+	return this.field.val();
+};
+DynamicsEditors.AbstractEditor.prototype._cancel = function() {
+	this.cell.cancelEdit();
+};
+DynamicsEditors.AbstractEditor.prototype._store = function() {
+	this.cell.saveEdit();
+};
+DynamicsEditors.AbstractEditor.prototype.focus = function() {
+	if (this.field) {
+		this.field.focus();
+		return true;
+	}
+	return false;
+};
+DynamicsEditors.AbstractEditor.prototype._storeRow = function() {
+	var opt = this.cell.getRow().options;
+	if (opt && typeof opt.saveCallback == "function") {
+		opt.saveCallback();
+	}
+};
+DynamicsEditors.AbstractEditor.prototype._handleKeyEvent = function() {
+	if (keyevent.keyCode == 27 && this.autoClose) {
+		keyevent.stopPropagation();
+		this._cancel();
+	} else if (keyevent.keyCode == 13 && this.autoClose) {
+		keyevent.stopPropagation();
+		this._store();
+	} else if (keyevent.keyCode == 13 && !this.autoClose) {
+		keyevent.stopPropagation();
+		this._storeRow();
 	}
 };
 
+
 /** EMPTY EDIT **/
-var EmptyEdit = function(cell) {
+DynamicsEditors.EmptyEdit = function(cell) {
 	this.cell = cell;
 	if (typeof cell.options.action == "function") {
 		cell.options.action();
 	}
 };
-EmptyEdit.prototype = {
-	_mouseClick : function(event) {
-		return false;
-	},
-	remove : function() {
-	},
-	isValid : function() {
-		return true;
-	},
-	getValue : function() {
-		return "";
-	}
+DynamicsEditors.EmptyEdit.prototype = {
+		_mouseClick : function(event) {
+	return false;
+},
+remove : function() {
+},
+isValid : function() {
+	return true;
+},
+getValue : function() {
+	return "";
+}
 };
 
 /** WYSIWYG EDIT **/
 
-var WysiwygEdit = function(cell, autoClose) {
+DynamicsEditors.WysiwygEdit = function(cell, autoClose) {
 	this.cell = cell;
 	var value = this.cell.options.get();
 	if (!value) {
@@ -85,34 +88,33 @@ var WysiwygEdit = function(cell, autoClose) {
 
 	}
 };
-WysiwygEdit.prototype = {
-	_mouseClick : function(event) {
-		if (event.target) {
-			var target = $(event.target);
-			var parent = target.closest("div.wysiwyg");
-			var wysiwyg = this.field.prev("div.wysiwyg");
-			if (parent.length > 0 && parent.get(0) == wysiwyg.get(0)) {
-				return false;
-			} else {
-				this._store();
-				$(document.body).unbind("click", this.mouseEvent);
-			}
+DynamicsEditors.WysiwygEdit.prototype = new DynamicsEditors.AbstractEditor();
+DynamicsEditors.WysiwygEdit.prototype._mouseClick  = function(event) {
+	if (event.target) {
+		var target = $(event.target);
+		var parent = target.closest("div.wysiwyg");
+		var wysiwyg = this.field.prev("div.wysiwyg");
+		if (parent.length > 0 && parent.get(0) == wysiwyg.get(0)) {
+			return false;
+		} else {
+			this._store();
+			$(document.body).unbind("click", this.mouseEvent);
 		}
-	},
-	remove : function() {
-		this.editor.remove();
-		this.field.remove();
-		$(document.body).unbind("click", this.mouseEvent);
-	},
-	isValid : function() {
-		return true;
 	}
 };
-$.extend(WysiwygEdit.prototype, commonEdit);
+DynamicsEditors.WysiwygEdit.prototype.remove = function() {
+	this.editor.remove();
+	this.field.remove();
+	$(document.body).unbind("click", this.mouseEvent);
+};
+DynamicsEditors.WysiwygEdit.prototype.isValid = function() {
+	return true;
+};
+
 
 /** TEXT EDIT **/
 
-var TextEdit = function(cell, autoClose) {
+DynamicsEditors.TextEdit = function(cell, autoClose) {
 	this.cell = cell;
 	this.autoClose = autoClose;
 	this.field = $('<input type="text"/>').width("80%").appendTo(
@@ -131,36 +133,36 @@ var TextEdit = function(cell, autoClose) {
 		this.field.focus();
 	}
 };
-TextEdit.prototype = {
-	isValid : function() {
-		if (this.cell.options.required && this.field.val().length === 0) {
-			this.field.addClass("invalidValue");
-			if (!this.errorMsg) {
-				this.errorMsg = commonView.requiredFieldError(this.cell
-						.getElement());
-				this.cell.getElement().addClass('cellError');
-			}
-			return false;
+
+DynamicsEditors.TextEdit.prototype = new DynamicsEditors.AbstractEditor();
+DynamicsEditors.TextEdit.prototype.isValid = function() {
+	if (this.cell.options.required && this.field.val().length === 0) {
+		this.field.addClass("invalidValue");
+		if (!this.errorMsg) {
+			this.errorMsg = commonView.requiredFieldError(this.cell
+					.getElement());
+			this.cell.getElement().addClass('cellError');
 		}
-		this.field.removeClass("invalidValue");
-		if (this.errorMsg) {
-			this.errorMsg.remove();
-			this.errorMsg = null;
-			this.cell.getElement().removeClass('cellError');
-		}
-		return true;
-	},
-	remove : function() {
-		if (this.errorMsg) {
-			this.errorMsg.remove();
-		}
-		this.field.remove();
+		return false;
 	}
+	this.field.removeClass("invalidValue");
+	if (this.errorMsg) {
+		this.errorMsg.remove();
+		this.errorMsg = null;
+		this.cell.getElement().removeClass('cellError');
+	}
+	return true;
 };
-$.extend(TextEdit.prototype, commonEdit);
+DynamicsEditors.TextEdit.prototype.remove = function() {
+	if (this.errorMsg) {
+		this.errorMsg.remove();
+	}
+	this.field.remove();
+};
+
 
 /** EFFORT EDIT **/
-var EffortEdit = function(cell, autoClose) {
+DynamicsEditors.EffortEdit = function(cell, autoClose) {
 	this.cell = cell;
 	this.autoClose = autoClose;
 	this.field = $('<input type="text"/>').width('80%').appendTo(
@@ -183,36 +185,36 @@ var EffortEdit = function(cell, autoClose) {
 		this.field.focus();
 	}
 };
-EffortEdit.prototype = {
-	isValid : function() {
-		if (agilefantParsers.isHourEntryString(this.field.val())) {
-			this.field.removeClass("invalidValue");
-			if (this.errorMsg) {
-				this.errorMsg.remove();
-				this.errorMsg = null;
-				this.cell.getElement().removeClass('cellError');
-			}
-			return true;
-		} else {
-			if (!this.errorMsg) {
-				this.errorMsg = commonView.effortError(this.cell.getElement());
-			}
-			this.field.addClass("invalidValue");
-			this.cell.getElement().addClass('cellError');
-			return false;
-		}
-	},
-	remove : function() {
+
+DynamicsEditors.EffortEdit.prototype = new DynamicsEditors.AbstractEditor();
+DynamicsEditors.EffortEdit.prototype.isValid = function() {
+	if (agilefantParsers.isHourEntryString(this.field.val())) {
+		this.field.removeClass("invalidValue");
 		if (this.errorMsg) {
 			this.errorMsg.remove();
+			this.errorMsg = null;
+			this.cell.getElement().removeClass('cellError');
 		}
-		this.field.remove();
+		return true;
+	} else {
+		if (!this.errorMsg) {
+			this.errorMsg = commonView.effortError(this.cell.getElement());
+		}
+		this.field.addClass("invalidValue");
+		this.cell.getElement().addClass('cellError');
+		return false;
 	}
 };
-$.extend(EffortEdit.prototype, commonEdit);
+DynamicsEditors.EffortEdit.prototype.remove = function() {
+	if (this.errorMsg) {
+		this.errorMsg.remove();
+	}
+	this.field.remove();
+};
+
 
 /** STORY POINT EDIT **/
-var StoryPointEdit = function(cell, autoClose) {
+DynamicsEditors.StoryPointEdit = function(cell, autoClose) {
 	this.cell = cell;
 	this.autoClose = autoClose;
 	this.field = $('<input type="text"/>').width('80%').appendTo(
@@ -232,37 +234,37 @@ var StoryPointEdit = function(cell, autoClose) {
 		this.field.focus();
 	}
 };
-StoryPointEdit.prototype = {
-	isValid : function() {
-		if (agilefantParsers.isStoryPointString(this.field.val())) {
-			this.field.removeClass("invalidValue");
-			if (this.errorMsg) {
-				this.errorMsg.remove();
-				this.errorMsg = null;
-				this.cell.getElement().removeClass('cellError');
-			}
-			return true;
-		} else {
-			if (!this.errorMsg) {
-				this.errorMsg = commonView.storyPointError(this.cell
-						.getElement());
-			}
-			this.field.addClass("invalidValue");
-			this.cell.getElement().addClass('cellError');
-			return false;
-		}
-	},
-	remove : function() {
+
+DynamicsEditors.StoryPointEdit.prototype = new DynamicsEditors.AbstractEditor();
+DynamicsEditors.StoryPointEdit.prototype.isValid = function() {
+	if (agilefantParsers.isStoryPointString(this.field.val())) {
+		this.field.removeClass("invalidValue");
 		if (this.errorMsg) {
 			this.errorMsg.remove();
+			this.errorMsg = null;
+			this.cell.getElement().removeClass('cellError');
 		}
-		this.field.remove();
+		return true;
+	} else {
+		if (!this.errorMsg) {
+			this.errorMsg = commonView.storyPointError(this.cell
+					.getElement());
+		}
+		this.field.addClass("invalidValue");
+		this.cell.getElement().addClass('cellError');
+		return false;
 	}
 };
-$.extend(StoryPointEdit.prototype, commonEdit);
+DynamicsEditors.StoryPointEdit.prototype.remove = function() {
+	if (this.errorMsg) {
+		this.errorMsg.remove();
+	}
+	this.field.remove();
+};
+
 
 /** DATE EDIT **/
-var DateEdit = function(cell, autoClose) {
+DynamicsEditors.DateEdit = function(cell, autoClose) {
 	this.cell = cell;
 	this.autoClose = autoClose;
 	this.field = $('<input type="text"/>').width('80%').appendTo(
@@ -285,35 +287,34 @@ var DateEdit = function(cell, autoClose) {
 		this.field.focus();
 	}
 };
-DateEdit.prototype = {
-	isValid : function() {
-		if (agilefantUtils.isDateString(this.field.val())) {
-			this.field.removeClass("invalidValue");
-			if (this.errorMsg) {
-				this.errorMsg.remove();
-				this.errorMsg = null;
-				this.cell.getElement().removeClass('cellError');
-			}
-			return true;
-		} else {
-			if (!this.errorMsg) {
-				this.errorMsg = commonView.dateError(this.cell.getElement());
-			}
-			this.field.addClass("invalidValue");
-			this.cell.getElement().addClass('cellError');
-			return false;
-		}
-	},
-	remove : function() {
+DynamicsEditors.DateEdit.prototype = new DynamicsEditors.AbstractEditor();
+DynamicsEditors.DateEdit.prototype.isValid = function() {
+	if (agilefantUtils.isDateString(this.field.val())) {
+		this.field.removeClass("invalidValue");
 		if (this.errorMsg) {
 			this.errorMsg.remove();
+			this.errorMsg = null;
+			this.cell.getElement().removeClass('cellError');
 		}
-		this.field.remove();
+		return true;
+	} else {
+		if (!this.errorMsg) {
+			this.errorMsg = commonView.dateError(this.cell.getElement());
+		}
+		this.field.addClass("invalidValue");
+		this.cell.getElement().addClass('cellError');
+		return false;
 	}
 };
-$.extend(DateEdit.prototype, commonEdit);
+DynamicsEditors.DateEdit.prototype.remove = function() {
+	if (this.errorMsg) {
+		this.errorMsg.remove();
+	}
+	this.field.remove();
+};
+
 /** SELECT EDIT **/
-var SelectEdit = function(cell, items, autoClose) {
+DynamicsEditors.SelectEdit = function(cell, items, autoClose) {
 	var me = this;
 	this.cell = cell;
 	this.autoClose = autoClose;
@@ -343,12 +344,10 @@ var SelectEdit = function(cell, items, autoClose) {
 		this.field.focus();
 	}
 };
-SelectEdit.prototype = {
-	isValid : function() {
-		return true;
-	},
-	remove : function() {
-		this.field.remove();
-	}
+DynamicsEditors.SelectEdit.prototype = new DynamicsEditors.AbstractEditor();
+DynamicsEditors.SelectEdit.prototype.isValid = function() {
+	return true;
 };
-$.extend(SelectEdit.prototype, commonEdit);
+DynamicsEditors.SelectEdit.prototype.remove = function() {
+	this.field.remove();
+};

@@ -1,5 +1,7 @@
 window.Timeline = new Object();
 window.Timeplot = new Object();
+window.Timeline.clientLocale = "en";
+window.Timeline.serverLocale = "en";
 var SimileAjax = {
         loaded:                 true,
         loadingScriptsCount:    0,

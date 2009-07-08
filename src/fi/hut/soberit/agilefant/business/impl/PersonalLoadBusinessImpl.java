@@ -26,9 +26,11 @@ import fi.hut.soberit.agilefant.db.TaskDAO;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.transfer.ComputedLoadData;
 import fi.hut.soberit.agilefant.transfer.IntervalLoadContainer;
 import fi.hut.soberit.agilefant.transfer.IterationLoadContainer;
 import fi.hut.soberit.agilefant.transfer.UnassignedLoadTO;
+import fi.hut.soberit.agilefant.util.Pair;
 
 @Service("personalLoadBusiness")
 @Transactional(readOnly=true)
@@ -276,25 +278,39 @@ public class PersonalLoadBusinessImpl implements PersonalLoadBusiness {
 
         return ret;
     }
+    
+    public List<Iteration> extractIterations(Map<Integer, IterationLoadContainer> iterationEffortLeft) {
+        List<Iteration> iterations = new ArrayList<Iteration>();
+        for(IterationLoadContainer container : iterationEffortLeft.values()) {
+            iterations.add(container.getIteration());
+        }
+        return iterations;
+    }
 
-    public List<IntervalLoadContainer> generatePersonalAssignedLoad(User user,
+    public ComputedLoadData generatePersonalAssignedLoad(User user,
             DateTime startDate, DateTime endDate, Period len) {
         Interval interval = new Interval(startDate, endDate);
         Map<Integer, IterationLoadContainer> iterationEffortLeft = this
                 .calculateTotalUserLoad(user, interval);
         List<IntervalLoadContainer> periods = this
                 .initializeLoadContainers(user, startDate, endDate, len);
+        List<Iteration> iterations = this.extractIterations(iterationEffortLeft);
         for (Integer iterationId : iterationEffortLeft.keySet()) {
             for (IntervalLoadContainer period : periods) {
                 this.updateUserLoadByInterval(period, iterationEffortLeft.get(iterationId), user);
             }
         }
-        return periods;
+        ComputedLoadData loadData = new ComputedLoadData();
+        loadData.setLoadContainers(periods);
+        loadData.setIterations(iterations);
+        loadData.setStartDate(startDate.toDate());
+        loadData.setEndDate(endDate.toDate());
+        return loadData;
     }
     
-    public List<IntervalLoadContainer> retrieveUserLoad(User user, int weeksAhead) {
+    public ComputedLoadData retrieveUserLoad(User user, int weeksAhead) {
         Period len = new Period();
-        len = len.plusWeeks(1);
+        len = len.plusDays(1);
         MutableDateTime currentWeekStart = new MutableDateTime();
         currentWeekStart.setDayOfWeek(DateTimeConstants.MONDAY);
         currentWeekStart.setMillisOfDay(0);

@@ -476,8 +476,8 @@
 		  <filelist dir="${build.webapp}/static/js/simile/" files="init.js" />
 		  <filelist dir="${build.webapp}/static/js/simile/ajax/" files="platform.js, debug.js, dom.js, graphics.js, date-time.js, string.js, 
 		  	html.js, data-structure.js, units.js, ajax.js, history.js, window-manager.js"/>
-	      <filelist dir="${build.webapp}/static/js/simile/timeline/" files="timeline.js, themes.js, ethers.js, event-utils.js, 
-	      	sources.js, original-painter.js, detailed-painter.js, overview-painter.js, compact-painter.js, decorators.js, units.js, labellers.js"/>
+	      <filelist dir="${build.webapp}/static/js/simile/timeline/" files="timeline.js, themes.js, ethers.js, event-utils.js, band.js, 
+	      	sources.js, original-painter.js, detailed-painter.js, overview-painter.js, ether-painters.js, compact-painter.js, decorators.js, units.js, labellers.js"/>
 		  <filelist dir="${build.webapp}/static/js/simile/timeplot/" files="timeplot.js, plot.js, sources.js, geometry.js, color.js, math.js, 
 		  	processor.js"/>
  <!--     <fileset dir="${build.webapp}/static/js/simile/extensions/">

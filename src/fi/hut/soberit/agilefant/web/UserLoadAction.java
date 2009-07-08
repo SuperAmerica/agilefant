@@ -12,6 +12,7 @@ import com.opensymphony.xwork2.ActionSupport;
 import fi.hut.soberit.agilefant.business.PersonalLoadBusiness;
 import fi.hut.soberit.agilefant.business.UserBusiness;
 import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.transfer.ComputedLoadData;
 import fi.hut.soberit.agilefant.transfer.IntervalLoadContainer;
 
 @Component("userLoadAction")
@@ -29,7 +30,7 @@ public class UserLoadAction extends ActionSupport {
     
     private int userId;
     
-    private List<IntervalLoadContainer> userLoadData;
+    private ComputedLoadData userLoadData;
     
     public String retrieveUserLoad() {
         User user = userBusiness.retrieve(userId);
@@ -37,11 +38,11 @@ public class UserLoadAction extends ActionSupport {
         return Action.SUCCESS;
     }
 
-    public List<IntervalLoadContainer> getUserLoadData() {
+    public ComputedLoadData getUserLoadData() {
         return userLoadData;
     }
 
-    public void setUserLoadData(List<IntervalLoadContainer> userLoadData) {
+    public void setUserLoadData(ComputedLoadData userLoadData) {
         this.userLoadData = userLoadData;
     }
 

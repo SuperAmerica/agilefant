@@ -13,6 +13,7 @@ import com.opensymphony.xwork2.Action;
 import fi.hut.soberit.agilefant.business.PersonalLoadBusiness;
 import fi.hut.soberit.agilefant.business.UserBusiness;
 import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.transfer.ComputedLoadData;
 import fi.hut.soberit.agilefant.transfer.IntervalLoadContainer;
 
 public class UserLoadActionTest {
@@ -38,7 +39,7 @@ public class UserLoadActionTest {
     @Test
     public void testRetrieveUserLoad() {
         User user = new User();
-        List<IntervalLoadContainer> loadData = Collections.emptyList();
+        ComputedLoadData loadData = new ComputedLoadData();
         expect(userBusiness.retrieve(1)).andReturn(user);
         expect(personalLoadBusiness.retrieveUserLoad(user, UserLoadAction.DEFAULT_LOAD_INTERVAL_LENGTH)).andReturn(loadData);
         userLoadAction.setUserId(1);

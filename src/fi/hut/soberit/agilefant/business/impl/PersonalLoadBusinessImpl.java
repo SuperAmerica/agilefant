@@ -144,12 +144,8 @@ public class PersonalLoadBusinessImpl implements PersonalLoadBusiness {
         rawUnassignedLoad.addAll(this.taskDAO
                 .getUnassignedStoryTasksWithEffortLeft(user, interval));
 
-        Set<Integer> iterationIds = new HashSet<Integer>();
-        for (UnassignedLoadTO row : rawUnassignedLoad) {
-            iterationIds.add(row.iterationId);
-        }
         // get iterations
-        loadIterationDetails(rawUnassignedLoad, iterationIds);
+        loadIterationDetails(rawUnassignedLoad);
 
         for (UnassignedLoadTO row : rawUnassignedLoad) {
             if (!iterationEffortData.containsKey(row.iterationId)) {
@@ -170,8 +166,20 @@ public class PersonalLoadBusinessImpl implements PersonalLoadBusiness {
         }
     }
 
-    public Map<Integer, Integer> loadIterationDetails(
-            List<UnassignedLoadTO> rawUnassignedLoad, Set<Integer> iterationIds) {
+    /**
+     * Sets iteration object and sum of each iterations assignment
+     * availabilities to the transfer object.
+     * 
+     * @param rawUnassignedLoad
+     *            Collection of UnassignedLoadTO transfer objects that each
+     *            contain an iteration id.
+     */
+    public void loadIterationDetails(
+            List<UnassignedLoadTO> rawUnassignedLoad) {
+        Set<Integer> iterationIds = new HashSet<Integer>();
+        for (UnassignedLoadTO row : rawUnassignedLoad) {
+            iterationIds.add(row.iterationId);
+        }
         List<Iteration> iterations = this.iterationDAO
                 .retrieveIterationsByIds(iterationIds);
         // get availability sums per iteration
@@ -190,8 +198,6 @@ public class PersonalLoadBusinessImpl implements PersonalLoadBusiness {
                 row.availabilitySum = 1;
             }
         }
-
-        return totalAvailabilities;
     }
 
     /**

@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -18,6 +19,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import fi.hut.soberit.agilefant.business.impl.PersonalLoadBusinessImpl;
+import fi.hut.soberit.agilefant.db.IterationDAO;
 import fi.hut.soberit.agilefant.db.StoryDAO;
 import fi.hut.soberit.agilefant.db.TaskDAO;
 import fi.hut.soberit.agilefant.model.ExactEstimate;
@@ -27,6 +29,7 @@ import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.transfer.IntervalLoadContainer;
 import fi.hut.soberit.agilefant.transfer.IterationLoadContainer;
+import fi.hut.soberit.agilefant.transfer.UnassignedLoadTO;
 import static org.easymock.EasyMock.*;
 
 public class PersonalLoadBusinessTest {
@@ -35,6 +38,7 @@ public class PersonalLoadBusinessTest {
     private UserBusiness userBusiness;
     private TaskDAO taskDAO;
     private StoryDAO storyDAO;
+    private IterationDAO iterationDAO;
     private User user;
     private Task task1;
     private Task task2;
@@ -49,9 +53,11 @@ public class PersonalLoadBusinessTest {
         userBusiness = createStrictMock(UserBusiness.class);
         taskDAO = createStrictMock(TaskDAO.class);
         storyDAO = createStrictMock(StoryDAO.class);
+        iterationDAO = createStrictMock(IterationDAO.class);
         personalLoadBusiness.setStoryDAO(storyDAO);
         personalLoadBusiness.setTaskDAO(taskDAO);
         personalLoadBusiness.setUserBusiness(userBusiness);
+        personalLoadBusiness.setIterationDAO(iterationDAO);
         user = new User();
 
     }
@@ -79,11 +85,11 @@ public class PersonalLoadBusinessTest {
     }
 
     private void replayAll() {
-        replay(userBusiness, taskDAO, storyDAO);
+        replay(userBusiness, taskDAO, storyDAO, iterationDAO);
     }
 
     private void verifyAll() {
-        verify(userBusiness, taskDAO, storyDAO);
+        verify(userBusiness, taskDAO, storyDAO, iterationDAO);
     }
 
     @Test
@@ -299,5 +305,70 @@ public class PersonalLoadBusinessTest {
         List<IntervalLoadContainer> actual = this.personalLoadBusiness
                 .initializeLoadContainers(user, start, end, period);
         assertEquals(5, actual.size());
+    }
+    
+    @Test
+    public void testLoadIterationDetails() {
+        UnassignedLoadTO transfer1 = new UnassignedLoadTO(null, 1, (short)1);
+        UnassignedLoadTO transfer2 = new UnassignedLoadTO(null, 2, (short)1);
+        
+        Iteration iter1 = new Iteration();
+        iter1.setId(1);
+        Iteration iter2 = new Iteration();
+        iter2.setId(2);
+        
+        Map<Integer, Integer> availabilitySums = new HashMap<Integer, Integer>();
+        availabilitySums.put(1, 5);
+        availabilitySums.put(2, 42);
+ 
+        Capture<Set<Integer>> iterationIds = new Capture<Set<Integer>>();
+        Capture<Set<Integer>> iterationIdsAvailSum = new Capture<Set<Integer>>();
+ 
+        expect(iterationDAO.retrieveIterationsByIds(EasyMock.capture(iterationIds))).andReturn(Arrays.asList(iter1, iter2));
+        expect(iterationDAO.getTotalAvailability(EasyMock.capture(iterationIdsAvailSum))).andReturn(availabilitySums);
+        
+        replayAll();
+        personalLoadBusiness.loadIterationDetails(Arrays.asList(transfer1, transfer2));
+        assertEquals(2, iterationIds.getValue().size());
+        assertEquals(2, iterationIdsAvailSum.getValue().size());
+        assertEquals(iter1, transfer1.iteration);
+        assertEquals(iter2, transfer2.iteration);
+        assertEquals(5, transfer1.availabilitySum);
+        assertEquals(42, transfer2.availabilitySum);
+        verifyAll();   
+    }
+    
+    @Test
+    public void testCalculateUnassignedTaskLoad() {
+        Interval interval = new Interval(500,600);
+        UnassignedLoadTO transfer1 = new UnassignedLoadTO(new ExactEstimate(1000), 1, (short)1);
+        UnassignedLoadTO transfer2 = new UnassignedLoadTO(new ExactEstimate(8000), 2, (short)1);
+        
+        Iteration iter1 = new Iteration();
+        iter1.setId(1);
+        Iteration iter2 = new Iteration();
+        iter2.setId(2);
+        
+        Map<Integer, Integer> availabilitySums = new HashMap<Integer, Integer>();
+        availabilitySums.put(1, 10);
+        availabilitySums.put(2, 100);
+        
+        Map<Integer, IterationLoadContainer> dataPerIteration = new HashMap<Integer, IterationLoadContainer>();
+
+        Set<Integer> iterationIds = new HashSet<Integer>(Arrays.asList(1,2));
+        
+        expect(taskDAO.getUnassignedIterationTasksWithEffortLeft(user, interval)).andReturn(Arrays.asList(transfer1));
+        expect(taskDAO.getUnassignedStoryTasksWithEffortLeft(user, interval)).andReturn(Arrays.asList(transfer2));
+
+        expect(iterationDAO.retrieveIterationsByIds(iterationIds)).andReturn(Arrays.asList(iter1, iter2));
+        expect(iterationDAO.getTotalAvailability(iterationIds)).andReturn(availabilitySums);
+        
+        replayAll();
+        personalLoadBusiness.calculateUnassignedTaskLoad(dataPerIteration, user, interval);
+        assertEquals(iter1, dataPerIteration.get(1).getIteration());
+        assertEquals(iter2, dataPerIteration.get(2).getIteration());
+        assertEquals(100L, dataPerIteration.get(1).getTotalUnassignedLoad());
+        assertEquals(80L, dataPerIteration.get(2).getTotalUnassignedLoad());
+        verifyAll();   
     }
 }

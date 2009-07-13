@@ -2,7 +2,9 @@ package fi.hut.soberit.agilefant.transfer;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import fi.hut.soberit.agilefant.model.Holiday;
 import fi.hut.soberit.agilefant.model.Iteration;
@@ -11,8 +13,8 @@ import flexjson.JSON;
 
 public class ComputedLoadData {
     private List<IntervalLoadContainer> loadContainers = new ArrayList<IntervalLoadContainer>();
-    private List<Iteration> iterations = new ArrayList<Iteration>();
-    private List<Project> projects = new ArrayList<Project>(); 
+    private Set<Iteration> iterations = new HashSet<Iteration>();
+    private Set<Project> projects = new HashSet<Project>(); 
     private List<Holiday> holidays = new ArrayList<Holiday>();
     private Date startDate;
     private Date endDate;
@@ -26,17 +28,17 @@ public class ComputedLoadData {
         this.loadContainers = loadContainers;
     }
     @JSON
-    public List<Iteration> getIterations() {
+    public Set<Iteration> getIterations() {
         return iterations;
     }
-    public void setIterations(List<Iteration> iterations) {
+    public void setIterations(Set<Iteration> iterations) {
         this.iterations = iterations;
     }
     @JSON
-    public List<Project> getProjects() {
+    public Set<Project> getProjects() {
         return projects;
     }
-    public void setProjects(List<Project> projects) {
+    public void setProjects(Set<Project> projects) {
         this.projects = projects;
     }
     @JSON

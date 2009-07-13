@@ -34,7 +34,7 @@ import flexjson.JSON;
  */
 @Entity
 @BatchSize(size = 20)
-public class Iteration extends Backlog {
+public class Iteration extends Backlog implements Schedulable {
  
     private Date startDate;
 

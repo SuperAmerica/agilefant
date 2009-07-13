@@ -45,9 +45,9 @@ public class Assignment implements Serializable {
     public Assignment() {
     }
 
-    public Assignment(User user, Project project) {
+    public Assignment(User user, Backlog backlog) {
         this.user = user;
-        this.backlog = project;
+        this.backlog = backlog;
     }
 
     @ManyToOne

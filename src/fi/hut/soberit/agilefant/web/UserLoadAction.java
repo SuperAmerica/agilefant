@@ -1,6 +1,5 @@
 package fi.hut.soberit.agilefant.web;
 
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -13,7 +12,6 @@ import fi.hut.soberit.agilefant.business.PersonalLoadBusiness;
 import fi.hut.soberit.agilefant.business.UserBusiness;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.transfer.ComputedLoadData;
-import fi.hut.soberit.agilefant.transfer.IntervalLoadContainer;
 
 @Component("userLoadAction")
 @Scope("prototype")

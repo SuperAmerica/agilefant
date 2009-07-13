@@ -19,14 +19,18 @@ import org.junit.Before;
 import org.junit.Test;
 
 import fi.hut.soberit.agilefant.business.impl.PersonalLoadBusinessImpl;
+import fi.hut.soberit.agilefant.db.AssignmentDAO;
 import fi.hut.soberit.agilefant.db.IterationDAO;
 import fi.hut.soberit.agilefant.db.StoryDAO;
 import fi.hut.soberit.agilefant.db.TaskDAO;
+import fi.hut.soberit.agilefant.model.Assignment;
 import fi.hut.soberit.agilefant.model.ExactEstimate;
 import fi.hut.soberit.agilefant.model.Iteration;
+import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.transfer.ComputedLoadData;
 import fi.hut.soberit.agilefant.transfer.IntervalLoadContainer;
 import fi.hut.soberit.agilefant.transfer.IterationLoadContainer;
 import fi.hut.soberit.agilefant.transfer.UnassignedLoadTO;
@@ -39,25 +43,29 @@ public class PersonalLoadBusinessTest {
     private TaskDAO taskDAO;
     private StoryDAO storyDAO;
     private IterationDAO iterationDAO;
+    private AssignmentDAO assignmentDAO;
     private User user;
     private Task task1;
     private Task task2;
     private Task task3;
     private Iteration iter;
+    private Project proj;
     private Story story;
     private Map<Integer, Integer> assigneeMap;
 
     @Before
     public void setUp() {
         personalLoadBusiness = new PersonalLoadBusinessImpl();
-        userBusiness = createStrictMock(UserBusiness.class);
+        userBusiness = createMock(UserBusiness.class);
         taskDAO = createStrictMock(TaskDAO.class);
         storyDAO = createStrictMock(StoryDAO.class);
         iterationDAO = createStrictMock(IterationDAO.class);
+        assignmentDAO = createStrictMock(AssignmentDAO.class);
         personalLoadBusiness.setStoryDAO(storyDAO);
         personalLoadBusiness.setTaskDAO(taskDAO);
         personalLoadBusiness.setUserBusiness(userBusiness);
         personalLoadBusiness.setIterationDAO(iterationDAO);
+        personalLoadBusiness.setAssignmentDAO(assignmentDAO);
         user = new User();
 
     }
@@ -75,6 +83,8 @@ public class PersonalLoadBusinessTest {
 
         iter = new Iteration();
         iter.setId(1);
+        proj = new Project();
+        proj.setId(2);
         story = new Story();
         story.setId(1);
         story.setBacklog(iter);
@@ -85,11 +95,11 @@ public class PersonalLoadBusinessTest {
     }
 
     private void replayAll() {
-        replay(userBusiness, taskDAO, storyDAO, iterationDAO);
+        replay(userBusiness, taskDAO, storyDAO, iterationDAO, assignmentDAO);
     }
 
     private void verifyAll() {
-        verify(userBusiness, taskDAO, storyDAO, iterationDAO);
+        verify(userBusiness, taskDAO, storyDAO, iterationDAO, assignmentDAO);
     }
 
     @Test
@@ -370,5 +380,52 @@ public class PersonalLoadBusinessTest {
         assertEquals(100L, dataPerIteration.get(1).getTotalUnassignedLoad());
         assertEquals(80L, dataPerIteration.get(2).getTotalUnassignedLoad());
         verifyAll();   
+    }
+    
+    @Test
+    public void testAddBaselineLoad() {
+        initDataset();
+        Assignment iterationAssignment = new Assignment(user, iter);
+        iterationAssignment.setId(1);
+        iterationAssignment.setPersonalLoad(new ExactEstimate(50));//10 per day
+        Assignment projectAssignmnet = new Assignment(user, proj);
+        projectAssignmnet.setId(2);
+        projectAssignmnet.setPersonalLoad(new ExactEstimate(500));//100 per day
+        
+        DateTime iterStart = new DateTime(2009, 6, 1, 0, 0, 0, 0);
+        DateTime iterEnd = new DateTime(2009, 6, 7, 0, 0, 0, 0);
+        Interval iterInterval = new Interval(iterStart, iterEnd);
+        DateTime projStart = new DateTime(2009, 6, 3, 0, 0, 0, 0);
+        DateTime projEnd = new DateTime(2009, 6, 10, 0, 0, 0, 0);
+        Interval projInterval = new Interval(projStart, projEnd);
+        iter.setStartDate(iterStart.toDate());
+        iter.setEndDate(iterEnd.toDate());//5 days for interval 1, zero for 2
+        proj.setStartDate(projStart.toDate());
+        proj.setEndDate(projEnd.toDate());//3 for interval 1, 3 for 2 
+        
+        //set up two intervals
+        ComputedLoadData preComputed = new ComputedLoadData();
+        IntervalLoadContainer interval1 = new IntervalLoadContainer();
+        Interval interv1 = new Interval(new DateTime(2009, 6, 1, 0, 0, 0, 0), new DateTime(2009, 6, 7, 0, 0, 0, 0));
+        interval1.setInterval(interv1);
+        IntervalLoadContainer interval2 = new IntervalLoadContainer();
+        Interval interv2 = new Interval(new DateTime(2009, 6, 8, 0, 0, 0, 0), new DateTime(2009, 6, 13, 0, 0, 0, 0));
+        interval2.setInterval(interv2);
+        preComputed.getLoadContainers().add(interval1);
+        preComputed.getLoadContainers().add(interval2);
+        
+        
+        
+        expect(assignmentDAO.assigmentsInBacklogTimeframe(null, user)).andReturn(Arrays.asList(iterationAssignment, projectAssignmnet));
+      //there will be 4 queries for user worktime
+        expect(userBusiness.calculateWorktimePerPeriod(user, interv1.overlap(iterInterval))).andReturn(new Duration(1000*3600*24*5));
+        expect(userBusiness.calculateWorktimePerPeriod(user, interv1.overlap(projInterval))).andReturn(new Duration(1000*3600*24*3));
+        expect(userBusiness.calculateWorktimePerPeriod(user, interv2.overlap(projInterval))).andReturn(new Duration(1000*3600*24*3));
+        
+        replayAll();
+        personalLoadBusiness.addBaselineLoad(preComputed, user, null);
+        assertEquals(350L, interval1.getBasellineLoad());
+        assertEquals(300L, interval2.getBasellineLoad());
+        verifyAll();
     }
 }

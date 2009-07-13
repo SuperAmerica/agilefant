@@ -20,17 +20,21 @@ import org.springframework.transaction.annotation.Transactional;
 
 import fi.hut.soberit.agilefant.business.PersonalLoadBusiness;
 import fi.hut.soberit.agilefant.business.UserBusiness;
+import fi.hut.soberit.agilefant.db.AssignmentDAO;
 import fi.hut.soberit.agilefant.db.IterationDAO;
 import fi.hut.soberit.agilefant.db.StoryDAO;
 import fi.hut.soberit.agilefant.db.TaskDAO;
+import fi.hut.soberit.agilefant.model.Assignment;
+import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Iteration;
+import fi.hut.soberit.agilefant.model.Project;
+import fi.hut.soberit.agilefant.model.Schedulable;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.transfer.ComputedLoadData;
 import fi.hut.soberit.agilefant.transfer.IntervalLoadContainer;
 import fi.hut.soberit.agilefant.transfer.IterationLoadContainer;
 import fi.hut.soberit.agilefant.transfer.UnassignedLoadTO;
-import fi.hut.soberit.agilefant.util.Pair;
 
 @Service("personalLoadBusiness")
 @Transactional(readOnly=true)
@@ -47,6 +51,9 @@ public class PersonalLoadBusinessImpl implements PersonalLoadBusiness {
     @Autowired
     private IterationDAO iterationDAO;
 
+    @Autowired
+    private AssignmentDAO assignmentDAO;
+    
     /**
      * Calculate sum of task effort left portions for given user per iteration
      * for tasks that don't have direct assignees, but have assignees for the
@@ -285,13 +292,68 @@ public class PersonalLoadBusinessImpl implements PersonalLoadBusiness {
         return ret;
     }
     
-    public List<Iteration> extractIterations(Map<Integer, IterationLoadContainer> iterationEffortLeft) {
-        List<Iteration> iterations = new ArrayList<Iteration>();
+    public void addBaselineLoad(ComputedLoadData preComputedLoad, User user,
+            Interval interval) {
+        List<IntervalLoadContainer> loadContainers = preComputedLoad
+                .getLoadContainers();
+        List<Assignment> assigments = this.assignmentDAO
+                .assigmentsInBacklogTimeframe(interval, user);
+        Map<Integer, Interval> assigmentIntervals = calculateAssigmentIntervals(assigments);
+        for (IntervalLoadContainer intervalLoad : loadContainers) {
+            for (Assignment assigment : assigments) {
+                Interval assigmentInterval = assigmentIntervals.get(assigment
+                        .getId());
+                if (intervalLoad.getInterval().overlaps(assigmentInterval)) {
+                    // NOTE: assumes 5-day-week
+                    long baselineLoadPerDay = assigment.getPersonalLoad()
+                            .longValue() / 5;
+                    //get intersection of current interval and assignment's backlog's timeframe 
+                    Interval overlap = intervalLoad.getInterval().overlap(assigmentInterval);
+                    //get number of workdays within this intersection
+                    Duration workdays = this.userBusiness.calculateWorktimePerPeriod(user, overlap);
+                    int days = (int)(workdays.getStandardSeconds()/(3600*24));
+                    long baselineLoadForInterval = days * baselineLoadPerDay;
+                    intervalLoad.setBasellineLoad(intervalLoad
+                            .getBasellineLoad()
+                            + baselineLoadForInterval);
+                    if (assigment.getBacklog() instanceof Iteration) {
+                        preComputedLoad.getIterations().add(
+                                (Iteration) assigment.getBacklog());
+                    } else if (assigment.getBacklog() instanceof Project) {
+                        preComputedLoad.getProjects().add(
+                                (Project) assigment.getBacklog());
+
+                    }
+                }
+
+            }
+        }
+    }
+
+    private Map<Integer, Interval> calculateAssigmentIntervals(List<Assignment> assigments) {
+        Map<Integer, Interval> assigmentIntervals = new HashMap<Integer, Interval>();
+        for(Assignment assigment : assigments) {
+            Interval blInterval;
+            Backlog backlog = assigment.getBacklog();
+            if(backlog instanceof Schedulable) {
+                Schedulable bl = (Schedulable)backlog;
+                blInterval = new Interval(new DateTime(bl.getStartDate()), new DateTime(bl.getEndDate()));
+            } else {
+                blInterval = new Interval(0);
+            }
+            assigmentIntervals.put(assigment.getId(), blInterval);
+        }
+        return assigmentIntervals;
+    }
+     
+    public Set<Iteration> extractIterations(Map<Integer, IterationLoadContainer> iterationEffortLeft) {
+        Set<Iteration> iterations = new HashSet<Iteration>();
         for(IterationLoadContainer container : iterationEffortLeft.values()) {
             iterations.add(container.getIteration());
         }
         return iterations;
     }
+    
 
     public ComputedLoadData generatePersonalAssignedLoad(User user,
             DateTime startDate, DateTime endDate, Period len) {
@@ -300,14 +362,19 @@ public class PersonalLoadBusinessImpl implements PersonalLoadBusiness {
                 .calculateTotalUserLoad(user, interval);
         List<IntervalLoadContainer> periods = this
                 .initializeLoadContainers(user, startDate, endDate, len);
-        List<Iteration> iterations = this.extractIterations(iterationEffortLeft);
+        ComputedLoadData loadData = new ComputedLoadData();
+        loadData.setLoadContainers(periods);
+        
+        Set<Iteration> iterations = this.extractIterations(iterationEffortLeft);
         for (Integer iterationId : iterationEffortLeft.keySet()) {
             for (IntervalLoadContainer period : periods) {
                 this.updateUserLoadByInterval(period, iterationEffortLeft.get(iterationId), user);
             }
         }
-        ComputedLoadData loadData = new ComputedLoadData();
-        loadData.setLoadContainers(periods);
+        this.addBaselineLoad(loadData, user, interval);
+        for(Iteration iteration : iterations) {
+            loadData.getProjects().add((Project)iteration.getParent());
+        }
         loadData.setIterations(iterations);
         loadData.setStartDate(startDate.toDate());
         loadData.setEndDate(endDate.toDate());
@@ -348,5 +415,9 @@ public class PersonalLoadBusinessImpl implements PersonalLoadBusiness {
 
     public void setIterationDAO(IterationDAO iterationDAO) {
         this.iterationDAO = iterationDAO;
+    }
+
+    public void setAssignmentDAO(AssignmentDAO assignmentDAO) {
+        this.assignmentDAO = assignmentDAO;
     }
 }

@@ -304,6 +304,7 @@ public class CustomXYStepRenderer extends XYStepRenderer {
             return wrapped.getClipBounds(r);
         }
 
+        @SuppressWarnings("deprecation")
         public Rectangle getClipRect() {
             return wrapped.getClipRect();
         }

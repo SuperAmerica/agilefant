@@ -2,9 +2,6 @@ package fi.hut.soberit.agilefant.web;
 import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
 
-import java.util.Collections;
-import java.util.List;
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -14,7 +11,6 @@ import fi.hut.soberit.agilefant.business.PersonalLoadBusiness;
 import fi.hut.soberit.agilefant.business.UserBusiness;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.transfer.ComputedLoadData;
-import fi.hut.soberit.agilefant.transfer.IntervalLoadContainer;
 
 public class UserLoadActionTest {
     private UserLoadAction userLoadAction;

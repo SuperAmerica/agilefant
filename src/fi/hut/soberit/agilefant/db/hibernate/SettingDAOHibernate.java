@@ -3,7 +3,7 @@ package fi.hut.soberit.agilefant.db.hibernate;
 import java.util.List;
 
 import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Expression;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import fi.hut.soberit.agilefant.db.SettingDAO;
@@ -23,7 +23,7 @@ public class SettingDAOHibernate extends GenericDAOHibernate<Setting> implements
         public Setting getByName(String name) {
             DetachedCriteria criteria = DetachedCriteria.forClass(this
                     .getPersistentClass());
-            criteria.add(Expression.eq("name", name));
+            criteria.add(Restrictions.eq("name", name));
             return super.getFirst(hibernateTemplate.findByCriteria(criteria));
         }
        

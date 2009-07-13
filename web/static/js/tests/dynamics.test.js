@@ -74,84 +74,84 @@ $(document).ready(function() {
     ok(agilefantUtils.areExactEstimatesEqual(a, d));
 	});
 
-	module("Dynamic Table", {
-		setup: function() {
-			$("<div />").appendTo(document.body).attr("id","testTable").hide();
-		},
-		teardown: function() {
-			$("#testTable").remove();
-		}
-	});
-	
-	test("insert table", function() { 
-		var temp = $("#testTable");
-		
-		var table = temp.genericTable();
-		
-		ok(temp.data("DynamicTable") != undefined && table, "Table data set");
-		ok(typeof(table.createRow) == "function", "Can create new row");	
-		var row = table.createRow();
-		
-		ok(row.getElement().parent().parent().parent().get(0) == temp.get(0), "Row has been created within the table");
-		ok(typeof(row.createCell) == "function", "Can create new cell");
-	});
-	
-	test("One row one cell", function() {
-		var table = $("#testTable").DynamicTable();
-		var row = table.createRow();
-		var cell = row.createCell();
-		
-		ok(cell.getElement().parent().get(0) == row.getElement().get(0), "Cell has correct parent");
-	});
-	
-	test("Cell value callback", function() {
-		var table = $("#testTable").DynamicTable();
-		var row = table.createRow();
-		var getter = function() {
-			return 11;
-		}
-		var cell = row.createCell({get: getter});
-		table.render();
-		
-		equals("11", cell.getElement().text(), "Cell has correct value");
-	});
-	
-	test("Test column width calculation", function() {
-	  var table = $('#testTable').DynamicTable();
-	  var widths = table.calculateColumnWidths([
-	                                             {
-	                                               minwidth: 39.6,
-	                                               auto: true
-	                                             },
-	                                             {
-                                                 minwidth: 39.6,
-                                                 auto: true
-                                               },
-	                                             {
-                                                 minwidth: 18.6,
-                                                 auto: true
-                                               }
-	                                             ]);
-	  same(widths, [39.6, 39.6, 18.6], "Column widths calculated correctly");
-	  widths = table.calculateColumnWidths([
-                                              {
-                                                minwidth: 39.6,
-                                                auto: true
-                                              },
-                                              {
-                                                minwidth: 39.6,
-                                                auto: true
-                                              },
-                                              {
-                                                minwidth: 18.6,
-                                                auto: true
-                                              },
-                                              {
-                                                setMaxWidth: true,
-                                                auto: false
-                                              }
-                                              ]);
-   same(widths, [39.6, 39.6, 18.6, 98.6], "Column widths calculated correctly");
-	});
+//	module("Dynamic Table", {
+//		setup: function() {
+//			$("<div />").appendTo(document.body).attr("id","testTable").hide();
+//		},
+//		teardown: function() {
+//			$("#testTable").remove();
+//		}
+//	});
+//	
+//	test("insert table", function() { 
+//		var temp = $("#testTable");
+//		
+//		var table = temp.genericTable();
+//		
+//		ok(temp.data("DynamicTable") != undefined && table, "Table data set");
+//		ok(typeof(table.createRow) == "function", "Can create new row");	
+//		var row = table.createRow();
+//		
+//		ok(row.getElement().parent().parent().parent().get(0) == temp.get(0), "Row has been created within the table");
+//		ok(typeof(row.createCell) == "function", "Can create new cell");
+//	});
+//	
+//	test("One row one cell", function() {
+//		var table = $("#testTable").DynamicTable();
+//		var row = table.createRow();
+//		var cell = row.createCell();
+//		
+//		ok(cell.getElement().parent().get(0) == row.getElement().get(0), "Cell has correct parent");
+//	});
+//	
+//	test("Cell value callback", function() {
+//		var table = $("#testTable").DynamicTable();
+//		var row = table.createRow();
+//		var getter = function() {
+//			return 11;
+//		}
+//		var cell = row.createCell({get: getter});
+//		table.render();
+//		
+//		equals("11", cell.getElement().text(), "Cell has correct value");
+//	});
+//	
+//	test("Test column width calculation", function() {
+//	  var table = $('#testTable').DynamicTable();
+//	  var widths = table.calculateColumnWidths([
+//	                                             {
+//	                                               minwidth: 39.6,
+//	                                               auto: true
+//	                                             },
+//	                                             {
+//                                                 minwidth: 39.6,
+//                                                 auto: true
+//                                               },
+//	                                             {
+//                                                 minwidth: 18.6,
+//                                                 auto: true
+//                                               }
+//	                                             ]);
+//	  same(widths, [39.6, 39.6, 18.6], "Column widths calculated correctly");
+//	  widths = table.calculateColumnWidths([
+//                                              {
+//                                                minwidth: 39.6,
+//                                                auto: true
+//                                              },
+//                                              {
+//                                                minwidth: 39.6,
+//                                                auto: true
+//                                              },
+//                                              {
+//                                                minwidth: 18.6,
+//                                                auto: true
+//                                              },
+//                                              {
+//                                                setMaxWidth: true,
+//                                                auto: false
+//                                              }
+//                                              ]);
+//   same(widths, [39.6, 39.6, 18.6, 98.6], "Column widths calculated correctly");
+//	});
 	
 });

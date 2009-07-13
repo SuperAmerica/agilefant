@@ -13,7 +13,7 @@ var DynamicTableColumnConfiguration = function(options) {
 			decorator: null,
 			buttions: null,
 			title: "",
-			sortCallback,
+			sortCallback: null,
 			sortDirection: 0,
 			cssClass: null
 	};

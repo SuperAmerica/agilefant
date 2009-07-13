@@ -12,6 +12,6 @@
 		<img src="static/img/status-grey.png" alt="Grey" title="Grey"/>
 	</c:when>
 	<c:when test="${row.status == 'BLACK'}">
-		<img src="static/img/status-black.png" alt="Black" title=""Black""/>
+		<img src="static/img/status-black.png" alt="Black" title="Black"/>
 	</c:when>
 </c:choose>

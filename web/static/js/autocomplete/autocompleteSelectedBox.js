@@ -5,3 +5,7 @@
 var AutocompleteSelected = function() {
   
 };
+
+AutocompleteSelected.prototype.isItemSelected = function(id) {
+    
+};

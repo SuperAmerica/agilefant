@@ -384,7 +384,7 @@ function test(name, callback) {
 	})
 	synchronize(function() {
 		try {
-			callback();
+			callback.call(lifecycle);
 		} catch(e) {
 			if( typeof console != "undefined" && console.error && console.warn ) {
 				console.error("Test " + name + " died, exception and test follows");

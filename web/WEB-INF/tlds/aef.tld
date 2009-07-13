@@ -305,64 +305,12 @@
       <rtexprvalue>true</rtexprvalue>
     </attribute>
   </tag>
-  
-	<tag>
-		<name>story</name>
-		<tag-class>fi.hut.soberit.agilefant.web.tag.StoryById</tag-class>
-		<body-content>JSP</body-content>
-		<description>
-			Get story by id
-	    </description>
-	    <attribute>
-	    	<name>id</name>
-	    	<required>true</required>	  
-	    </attribute>  	    
-	     <attribute>
-	    	<name>storyId</name>
-	    	<required>true</required>
-	    	<rtexprvalue>true</rtexprvalue> 
-	    </attribute>
-	</tag>
-	
-	<tag-file>
-		<name>storyProgressBar</name>
-		<path>/WEB-INF/tags/storyProgressBar.tag</path>		
-	</tag-file>
-	
-	<tag-file>
-		<name>backlogDropdown</name>
-		<path>/WEB-INF/tags/backlogDropdown.tag</path>
-	</tag-file>
-	
-	<tag-file>
-		<name>userJson</name>
-		<path>/WEB-INF/tags/userJson.tag</path>
-	</tag-file>
-
-	<tag-file>
-		<name>teamJson</name>
-		<path>/WEB-INF/tags/teamJson.tag</path>
-	</tag-file>
-
-	<tag-file>
-		<name>idJson</name>
-		<path>/WEB-INF/tags/idJson.tag</path>
-	</tag-file>
 
 	 <tag-file>
 	    <name>menu</name>
 	    <path>/WEB-INF/tags/menu.tag</path>
  	 </tag-file>
 	 
-	 <tag-file>
-	    <name>hiddenProjectList</name>
-	    <path>/WEB-INF/tags/hiddenProjectList.tag</path>
- 	 </tag-file>
-
-	 <tag-file>
-	    <name>projectMenu</name>
-	    <path>/WEB-INF/tags/projectMenu.tag</path>
- 	 </tag-file>
  	 <tag-file>
 	    <name>datepicker</name>
 	    <path>/WEB-INF/tags/datepicker.tag</path>

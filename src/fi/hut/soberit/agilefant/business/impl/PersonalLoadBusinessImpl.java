@@ -292,6 +292,11 @@ public class PersonalLoadBusinessImpl implements PersonalLoadBusiness {
         return ret;
     }
     
+    /**
+     * Computes baseline load portions per interval.
+     * 
+     * Baseline load will not be added for vacations or weekends.
+     */
     public void addBaselineLoad(ComputedLoadData preComputedLoad, User user,
             Interval interval) {
         List<IntervalLoadContainer> loadContainers = preComputedLoad

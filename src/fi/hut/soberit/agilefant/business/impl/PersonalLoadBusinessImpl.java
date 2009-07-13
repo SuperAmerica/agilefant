@@ -26,6 +26,7 @@ import fi.hut.soberit.agilefant.db.StoryDAO;
 import fi.hut.soberit.agilefant.db.TaskDAO;
 import fi.hut.soberit.agilefant.model.Assignment;
 import fi.hut.soberit.agilefant.model.Backlog;
+import fi.hut.soberit.agilefant.model.ExactEstimate;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Schedulable;
@@ -305,13 +306,13 @@ public class PersonalLoadBusinessImpl implements PersonalLoadBusiness {
                 .assigmentsInBacklogTimeframe(interval, user);
         Map<Integer, Interval> assigmentIntervals = calculateAssigmentIntervals(assigments);
         for (IntervalLoadContainer intervalLoad : loadContainers) {
-            for (Assignment assigment : assigments) {
-                Interval assigmentInterval = assigmentIntervals.get(assigment
+            for (Assignment assignment : assigments) {
+                Interval assigmentInterval = assigmentIntervals.get(assignment
                         .getId());
                 if (intervalLoad.getInterval().overlaps(assigmentInterval)) {
+                    long baselineLoad = determinateWeeklyBaselineLoad(assignment);
                     // NOTE: assumes 5-day-week
-                    long baselineLoadPerDay = assigment.getPersonalLoad()
-                            .longValue() / 5;
+                    long baselineLoadPerDay = baselineLoad / 5;
                     //get intersection of current interval and assignment's backlog's timeframe 
                     Interval overlap = intervalLoad.getInterval().overlap(assigmentInterval);
                     //get number of workdays within this intersection
@@ -321,18 +322,36 @@ public class PersonalLoadBusinessImpl implements PersonalLoadBusiness {
                     intervalLoad.setBasellineLoad(intervalLoad
                             .getBasellineLoad()
                             + baselineLoadForInterval);
-                    if (assigment.getBacklog() instanceof Iteration) {
+                    if (assignment.getBacklog() instanceof Iteration) {
                         preComputedLoad.getIterations().add(
-                                (Iteration) assigment.getBacklog());
-                    } else if (assigment.getBacklog() instanceof Project) {
+                                (Iteration) assignment.getBacklog());
+                    } else if (assignment.getBacklog() instanceof Project) {
                         preComputedLoad.getProjects().add(
-                                (Project) assigment.getBacklog());
+                                (Project) assignment.getBacklog());
 
                     }
                 }
 
             }
         }
+    }
+
+    private long determinateWeeklyBaselineLoad(Assignment assignment) {
+        long baselineLoad = 0L;
+        ExactEstimate backlogBaseline = null;
+        if(assignment.getBacklog() instanceof Iteration) {
+            backlogBaseline = ((Iteration)assignment.getBacklog()).getBaselineLoad();   
+        } else if(assignment.getBacklog() instanceof Project) {
+            backlogBaseline = ((Project)assignment.getBacklog()).getBaselineLoad(); 
+        }
+        if(backlogBaseline != null) {
+            baselineLoad = backlogBaseline.longValue();
+        }
+        
+        if(assignment.getPersonalLoad() != null) {
+            baselineLoad += assignment.getPersonalLoad().longValue();
+        }
+        return baselineLoad;
     }
 
     private Map<Integer, Interval> calculateAssigmentIntervals(List<Assignment> assigments) {

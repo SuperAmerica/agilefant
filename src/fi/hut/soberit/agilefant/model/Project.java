@@ -4,7 +4,10 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -58,7 +61,8 @@ public class Project extends Backlog implements Schedulable {
     private Collection<Assignment> assignments = new HashSet<Assignment>();
     
     private Integer backlogSize;
-
+    
+    private ExactEstimate baselineLoad = new ExactEstimate(0);
 
     @JSON
     public Date getStartDate() {
@@ -131,6 +135,16 @@ public class Project extends Backlog implements Schedulable {
 
     public void setBacklogSize(Integer backlogSize) {
         this.backlogSize = backlogSize;
+    }
+
+    @Embedded
+    @AttributeOverrides(@AttributeOverride(name = "minorUnits", column = @Column(name = "baselineLoad")))
+    public ExactEstimate getBaselineLoad() {
+        return baselineLoad;
+    }
+
+    public void setBaselineLoad(ExactEstimate baselineLoad) {
+        this.baselineLoad = baselineLoad;
     }
 
 }

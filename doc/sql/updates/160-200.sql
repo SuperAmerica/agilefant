@@ -77,6 +77,11 @@ ALTER TABLE backlogs DROP COLUMN owner_id;
 ALTER TABLE backlogs
 	CHANGE project_id parent_id INT(11);
 
+ALTER TABLE backlogs
+	CHANGE defaultOverhead baselineLoad BIGINT(20) DEFAULT NULL;
+	
+UPDATE backlogs SET baselineLoad = (baselineLoad/60) WHERE baselineLoad IS NOT NULL;
+	
 UPDATE backlogs
 	SET parent_id=product_id
 	WHERE backlogtype = 'Project';

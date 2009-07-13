@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
+import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 
@@ -47,6 +51,8 @@ public class Iteration extends Backlog implements Schedulable {
     private Collection<Task> tasks = new ArrayList<Task>();
 
     private Collection<IterationHistoryEntry> historyEntries = new ArrayList<IterationHistoryEntry>();
+    
+    private ExactEstimate baselineLoad = new ExactEstimate(0);
     
     @JSON
     public Date getEndDate() {
@@ -105,6 +111,16 @@ public class Iteration extends Backlog implements Schedulable {
 
     public void setHistoryEntries(Collection<IterationHistoryEntry> historyEntries) {
         this.historyEntries = historyEntries;
+    }
+    
+    @Embedded
+    @AttributeOverrides(@AttributeOverride(name = "minorUnits", column = @Column(name = "baselineLoad")))
+    public ExactEstimate getBaselineLoad() {
+        return baselineLoad;
+    }
+
+    public void setBaselineLoad(ExactEstimate baselineLoad) {
+        this.baselineLoad = baselineLoad;
     }
     
 }

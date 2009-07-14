@@ -40,11 +40,11 @@
 
 .autocomplete-suggestionList li:hover {
   cursor: pointer;
-  background-color: #dee7f8;
+  background-color: #dee7f8 !important;
 }
 
-.autocomplete-suggestionList li.selected {
-  
+.autocomplete-suggestionList li.autocomplete-selected {
+  background-color: #ffc; 
 }
 
 /*

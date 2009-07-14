@@ -46,7 +46,7 @@ AutocompleteSearch.prototype.bindEvents = function() {
       me.shiftSelectionDown();
     }
     else if (kc === AutocompleteVars.keyCodes.enter) {
-      me.selectCurrent();
+      me.selectCurrentItem();
     }
     else if (kc === AutocompleteVars.keyCodes.esc) {
       me.cancelSelection();
@@ -60,28 +60,43 @@ AutocompleteSearch.prototype.bindEvents = function() {
 
 
 AutocompleteSearch.prototype.shiftSelectionUp = function() {
-  if (this.selectedItem === -1) {
+  if (this.suggestionList.is(':hidden') || this.selectedItem === -1) {
     return;
   }
   this.selectedItem--;
+  this.updateSelectedListItem();
 };
 
 
 AutocompleteSearch.prototype.shiftSelectionDown = function() {
-  if (this.selectedItem === (this.matchedItems.length - 1)) {
+  if (this.suggestionList.is(':hidden') || this.selectedItem === (this.matchedItems.length - 1)) {
     return;
   }
   this.selectedItem++;
+  this.updateSelectedListItem();
 };
 
-AutocompleteSearch.prototype.selectCurrent = function() {
-  
+AutocompleteSearch.prototype.updateSelectedListItem = function() {
+  this.suggestionList.children().removeClass(AutocompleteVars.cssClasses.selectedLi);
+  var a = this.suggestionList.children().eq(this.selectedItem);
+  this.suggestionList.children().eq(this.selectedItem).addClass(AutocompleteVars.cssClasses.selectedLi);
+};
+
+
+AutocompleteSearch.prototype.selectCurrentItem = function() {
+  this.suggestionList.children('li').eq(this.selectedItem).click();
+};
+
+AutocompleteSearch.prototype.selectItem = function(item) {
+  this.selectedItemsBox.addItem(item);
+  this.cancelSelection();
 };
 
 AutocompleteSearch.prototype.cancelSelection = function() {
   this.selectedItem = -1;
   this.suggestionList.hide();
 };
+
 
 AutocompleteSearch.prototype.timeoutUpdateMatches = function() {
   var me = this;
@@ -141,11 +156,10 @@ AutocompleteSearch.prototype.renderSuggestionList = function() {
     return;
   }
   
-  for (var i = 0; i < this.matchedItems.length; i++) {
-    var item = this.matchedItems[i];
-    var listItem = $('<li/>').text(item.name).appendTo(this.suggestionList);
-    listItem.click(function() { alert(item.name + " was clicked")});
-  }
+  $.each(this.matchedItems, function(k,item) {
+    var listItem = $('<li/>').text(item.name).appendTo(me.suggestionList);
+    listItem.click(function() { me.selectItem(item); });
+  });
   this.suggestionList.show();
 };
 

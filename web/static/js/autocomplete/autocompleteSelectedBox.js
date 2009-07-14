@@ -16,3 +16,7 @@ AutocompleteSelected.prototype.initialize = function(element) {
 AutocompleteSelected.prototype.isItemSelected = function(id) {
   
 };
+
+AutocompleteSelected.prototype.addItem = function(item) {
+  
+};

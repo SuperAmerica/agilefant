@@ -78,7 +78,7 @@ $(document).ready(function() {
       selectionShiftedDownwards = true;
     };
     var currentSelected = false;
-    this.as.selectCurrent = function() {
+    this.as.selectCurrentItem = function() {
       currentSelected = true;
     };
     var selectionCancelled = 0;
@@ -175,8 +175,27 @@ $(document).ready(function() {
   
   
   test("Shift selection", function() {
+    var updateCount = 0;
+    this.as.updateSelectedListItem = function() {
+      updateCount++;
+    };
     this.as.items = [0, 1, 2, 3, 4, 5];
-    this.as.matchedItems = [0, 4, 5];
+    this.as.matchedItems = [
+      {
+        id: 1,
+        name: 'Foo'
+      },
+      {
+        id: 2,
+        name: 'Bar'
+      },
+      {
+        id: 3,
+        name: 'Foobar'
+      }
+    ];
+    
+    this.as.renderSuggestionList();
     
     // Upwards from no selection
     this.as.selectedItem = -1;
@@ -202,12 +221,81 @@ $(document).ready(function() {
     this.as.selectedItem = 2;
     this.as.shiftSelectionDown();
     same(this.as.selectedItem, 2, "Selection should not move beyond matched item count");
+    
+    same(updateCount, 3, "Selection update count should match");
+    
+    // Suggestion list hidden
+    this.as.cancelSelection();
+    this.as.selectedItem = 0;
+    
+    this.as.shiftSelectionDown();
+    same(this.as.selectedItem, 0, "Selection should not move if suggestion list is hidden");
+    
+    this.as.selectedItem = 0;
+    this.as.shiftSelectionUp();
+    same(this.as.selectedItem, 0, "Selection should not move if suggestion list is hidden");
+  });
+  
+  
+  test("Update selected list item", function() {
+    this.as.matchedItems = this.testDataSet;
+    this.as.selectedItem = -1;
+    
+    this.as.renderSuggestionList();
+    this.as.updateSelectedListItem();
+    same(this.as.suggestionList.children('.autocomplete-selected').length, 0,
+        "No list items should be selected");
+    
+    this.as.selectedItem = 1;
+    this.as.updateSelectedListItem();
+    same(this.as.suggestionList.children('.autocomplete-selected').length, 1,
+        "The second list item should be selected");
+    ok(this.as.suggestionList.children(':eq(1)').hasClass('.autocomplete-selected'),
+        "The selected item hasn't got the correct css class");
+    
+    this.as.selectedItem = -1;
+    this.as.updateSelectedListItem();
+    same(this.as.suggestionList.children('.autocomplete-selected').length, 0,
+        "No list items should be selected");
   });
   
   
   test("Select current item", function() {
-    // NOT IMPLEMENTED
+    this.as.matchedItems = this.testDataSet;
+    this.as.selectedItem = 1;
+    
+    this.as.renderSuggestionList();
+    
+    var clickedElement = this.as.suggestionList.children('li:eq(1)');
+    clickedElement.unbind("click");
+    var elementClicked = false;
+    clickedElement.click(function() {
+      elementClicked = true;
+    });
+    
+    this.as.selectCurrentItem();
+    
+    ok(elementClicked, "The element should be clicked");
   });
+  
+  
+  test("Select item", function() {
+    var selectionCancelled = false;
+    this.as.cancelSelection = function() {
+      selectionCancelled = true;
+    };
+    
+    var item = {
+        id: 5,
+        name: 'Taavi'
+    };
+    
+    this.selBox.expects().addItem(item);
+    
+    this.as.selectItem(item);
+    ok(selectionCancelled, "Suggestion list should be hidden");
+  });
+  
   
   test("Cancel selection", function() {
     this.as.selectedItem = 0;
@@ -292,9 +380,17 @@ $(document).ready(function() {
       }
     ];
     
+    var selectionCount = 0;
+    this.as.selectItem = function(item) {
+      selectionCount++;
+    };
+    
     this.as.renderSuggestionList();
     ok(this.as.suggestionList.is(':visible'), "The list should be visible");
     same(this.as.suggestionList.children('li').length, 3, "List item count should be equal to matched items");
+    
+    this.as.suggestionList.children('li').click();
+    same(selectionCount, 3, "The click events count should match")
     
     // Test with no entries
     this.as.matchedItems = [];

@@ -10,8 +10,8 @@ var AutocompleteSearch = function(selectedItemsBox) {
   this.suggestionList = null;
   
   // Data
-  this.items = new Array();
-  this.matchedItems = new Array();
+  this.items = [];
+  this.matchedItems = [];
   
   // No selection is -1
   this.selectedItem = -1;

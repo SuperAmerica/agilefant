@@ -9,7 +9,10 @@ var AutocompleteVars = {
       searchParent: 'autocomplete-searchBoxContainer',
       selectedParent: 'autocomplete-selectedBoxContainer',
       suggestionList: 'autocomplete-suggestionList',
-      selectedLi: 'autocomplete-selected'
+      selectedLi: 'autocomplete-selected',
+      selectedItemsList: 'autocomplete-selectedItemsList',
+      selectedItemName: 'autocomplete-selectedName',
+      selectedItemRemove: 'autocomplete-selectedRemove' 
     },
     keyCodes: {
       enter: 13,

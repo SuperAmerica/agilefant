@@ -426,25 +426,101 @@ $(document).ready(function() {
       this.searchBox = this.mockControl.createMock(AutocompleteSearch);
     
       this.as = new AutocompleteSelected(this.searchBox);
+      
+      this.parentElem = $('<div/>').appendTo(document.body);
+      this.as.initialize(this.parentElem);
     },
     teardown: function() {
       this.mockControl.verify();
+      this.parentElem.remove();
     } 
   });
  
   test("Initialization", function() {
     var elem = $('<span/>');
     this.as.initialize(elem);
-        
+    
     same(this.as.element, elem, "Element should be set");
     ok(this.as.element.hasClass(AutocompleteVars.cssClasses.selectedParent),
       "Parent element css class should be set");
+    
+    ok(this.as.selectedList, "Selected list should not be null");
+    ok(this.as.element.children(this.as.selectedList).length !== 0,
+        "Selected list should be appended to the parent element");
+    ok(this.as.selectedList.hasClass('autocomplete-selectedItemsList'),
+        "Selected list should have the correct css class");
+  });
+  
+  test("Is item selected", function() {
+    this.as.selectedIds = [ 1, 2, 5 ];
+    
+    ok(!this.as.isItemSelected(0), "Shouldn't be selected");
+    ok(this.as.isItemSelected(1), "Should be selected");
+    ok(this.as.isItemSelected(2), "Should be selected");
+    ok(!this.as.isItemSelected(3), "Shouldn't be selected");
+    ok(this.as.isItemSelected(5), "Should be selected");
+    
+    ok(!this.as.isItemSelected(null), "Null or empty shouldn't be selected");
+    ok(!this.as.isItemSelected(), "Null or empty shouldn't be selected");
+    ok(!this.as.isItemSelected('asd'), "String value shouldn't be selected");
   });
   
   
+  test("Adding an item", function () {
+    this.as.selectedIds = [];
+    
+    var listItemAddedCount = 0;
+    this.as.addListItem = function() {
+      listItemAddedCount++;
+    };
+    
+    var validTestItem = {
+        id: 313,
+        name: "Tauno"
+    };
+    var invalidTestItem = {};
+    
+    this.as.addItem(validTestItem);
+    same(this.as.selectedIds.length, 1, "Selected list length should match");
+    same(this.as.selectedIds[0], 313, "Selected item id should match");
+    
+    this.as.addItem(validTestItem);
+    same(this.as.selectedIds.length, 1, "Selected list length should match");
+    
+    this.as.addItem(invalidTestItem);
+    this.as.addItem();
+    this.as.addItem(null);
+    same(this.as.selectedIds.length, 1, "Selected list length should match");
+    
+    same(listItemAddedCount, 1, "List item addition should be called once");
+  });
   
   
+  test("Adding a list item", function () {
+    var validItem = {
+      id: 666,
+      name: "Agilefant Testarossa"
+    };
+    
+    this.as.addListItem(validItem);
+    
+    same(this.as.selectedList.children().length, 1, "Selected items list length should match");
+    
+    var actual = this.as.selectedList.children(':eq(0)');
+    
+    same(actual.children('span').length, 2, "The list item should contain two spans");
+    ok(actual.children(':eq(0)').hasClass('autocomplete-selectedName'),
+        "The first span should have the selectedName css class");
+    ok(actual.children(':eq(1)').hasClass('autocomplete-selectedRemove'),
+        "The second span should have the remove button css class");
+    same(actual.children(':eq(0)').text(), validItem.name, "The item text should match");
+  });
   
+  
+  test("Removing an item", function () {
+    
+    
+  });
   
   
   

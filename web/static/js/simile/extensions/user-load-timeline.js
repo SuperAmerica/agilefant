@@ -44,3 +44,4 @@ Timeline.DefaultEventSource.prototype.loadBacklogs = function(data) {
         this._fire("onAddMany", []);
     }
 };
+Timeplot.DefaultEventSource.prototype = Timeline.DefaultEventSource.prototype.loadBacklogs;

@@ -21,7 +21,7 @@ AgilefantTimeplot.DefaultEventSource.prototype.userLoadData = function(
 			end.setTime(row.end-1);
 
 			var data = [ row.assignedLoad/60, row.unassignedLoad/60,
-					row.totalLoad/60 ];
+					row.totalLoad/60, row.baselineLoad/60 ];
 			var evt = new Timeplot.DefaultEventSource.NumericEvent(start,
 					data);
 			this._events.add(evt);

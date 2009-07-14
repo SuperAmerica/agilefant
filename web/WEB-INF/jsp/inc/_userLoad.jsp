@@ -38,76 +38,14 @@ $(document).ready(function() {
 			}
 		}
 		});
-	  window.Timeline.DateTime = window.SimileAjax.DateTime;
-		  var eventSource = new AgilefantTimeplot.DefaultEventSource();
-
-		  var timeGeometry = new Timeplot.DefaultTimeGeometry({
-				    gridColor: new Timeplot.Color("#000000"),
-				    axisLabelsPlacement: "bottom"
-				  });
-
-			  var valueGeometry = new Timeplot.DefaultValueGeometry({
-			    gridColor: "#000000"
-			  });
-
-			  var plotInfo = [
-			    Timeplot.createPlotInfo({
-			      id: "plot1",
-			      dataSource: new Timeplot.ColumnSource(eventSource,1),
-			      timeGeometry: timeGeometry,
-			      valueGeometry: valueGeometry,
-			      lineColor: "#ff0000",
-			      fillColor: "#cc8080",
-			      showValues: false
-			    }),
-			    Timeplot.createPlotInfo({
-			      id: "plot2",
-			      dataSource: new Timeplot.ColumnSource(eventSource,2),
-			      timeGeometry: timeGeometry,
-			      valueGeometry: valueGeometry,
-			      lineColor: "#D0A825",
-			      showValues: false
-			    })
-			  ];
-			  $.getJSON("ajax/defaultUserLoad.action",{userId: ${userId}}, function(data) {
-	              var timelineEventSource = new Timeline.DefaultEventSource();
-				  Timeline.GregorianDateLabeller.monthNames["en"] = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" ];
-				  var theme = Timeline.ClassicTheme.create();
-				  var start = new Date();
-				  start.setTime(data.startDate);
-				  var end = new Date();
-				  end.setTime(data.endDate);
-				  theme.timeline_start = start;
-				  theme.timeline_stop = end;
-				  var bandInfos = [
-				                   Timeline.createBandInfo({
-				                       width:          "100%", 
-				                       eventSource: timelineEventSource,
-				                       intervalUnit:   Timeline.DateTime.WEEK, 
-				                       intervalPixels: 155,
-				                       theme: theme
-				                   })
-				                   ];
-	              
-	              var tl = Timeline.create($("#iterations").get(0), bandInfos);
-	              tl.getBand(0).setMinVisibleDate(start);
-	              tl.getBand(0).setMaxVisibleDate(end);
-	 
-				  timeplot = Timeplot.create($("#loadPlot").get(0), plotInfo);
-
-				  
-				  eventSource.userLoadData(data.loadContainers);
-				  timelineEventSource.loadBacklogs(data.iterations);
-				  //timeplot.loadText("data.txt", ",", eventSource);
-				  });
-					  
-			
+		init_user_load($("#iterations"),$("#loadPlot"),${userId});
 });
 </script>
 <link rel="stylesheet" href="static/css/timeplot.css" type="text/css"/>
 <script type="text/javascript" src="static/js/simile-widgets.js"></script>
 <script type="text/javascript" src="static/js/simile/extensions/user-load-timeplot-source.js"></script>
 <script type="text/javascript" src="static/js/simile/extensions/user-load-timeline.js"></script>
+<script type="text/javascript" src="static/js/simile/extensions/init-load.js"></script>
 <div id="dailyWorkTabs">
 	<ul id="dwTabs" style="display: none; height: 1px; width: 785px;">
 		<li><a href="#smallLoadTable"><span>Load</span></a></li>
@@ -121,8 +59,8 @@ $(document).ready(function() {
 		<div id="Spent_Effort"></div>
 		<div id="detailedLoadTable" class="ui-tabs-hide"></div>
 		<div id="smallLoadTable">
-			<div style="height: 100px; width: 100%;" id="iterations"></div>
-			<div style="height: 200px; width: 100%;" id="loadPlot"></div>
+			<div style="height: 100px;" id="iterations"></div>
+			<div style="height: 200px; margin-top: 10px;" id="loadPlot"></div>
 		</div>
 	</div>
 </div>

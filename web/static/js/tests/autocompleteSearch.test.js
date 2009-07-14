@@ -37,7 +37,105 @@ $(document).ready(function() {
   });
 
   
-  test("Search results", function() {
+  test("Initialization", function() {
+    var elem = $('<span/>');
+    
+    var keyEventsBound = false;
+    this.as.bindKeyEvents = function() {
+      keyEventsBound = true;
+    };
+    
+    this.as.initialize(elem);
+    
+    same(this.as.element, elem, "Element should be set");
+    ok(this.as.element.hasClass(AutocompleteVars.cssClasses.searchParent),
+      "Parent element css class should be set");
+    
+    ok(this.as.searchInput, "Input element should be added as a field");
+    same(this.as.element.children(':text').length, 1, "Input element should be added");
+    
+    ok(keyEventsBound, "Key events should be bound.");
+    
+    same(this.as.selectedItem, -1, "Selected item should be defaulted to -1");
+  });
+  
+  
+  test("Bind key events", function() {
+    var selectionShiftedUpwards = false;
+    this.as.shiftSelectionUp = function() {
+      selectionShiftedUpwards = true;
+    };
+    var selectionShiftedDownwards = false;
+    this.as.shiftSelectionDown = function() {
+      selectionShiftedDownwards = true;
+    };
+    var currentSelected = false;
+    this.as.selectCurrent = function() {
+      currentSelected = true;
+    };
+    var selectionCancelled = false;
+    this.as.cancelSelection = function() {
+      selectionCancelled = true;
+    };
+    
+    this.as.initialize($('<div/>'));
+    
+    var enterEvent = jQuery.Event("keypress");
+    enterEvent.keyCode = 13;
+    var escEvent = jQuery.Event("keypress");
+    escEvent.keyCode = 27;
+    var downEvent = jQuery.Event("keypress");
+    downEvent.keyCode = 40;
+    var upEvent = jQuery.Event("keypress");
+    upEvent.keyCode = 38;
+    
+    // Trigger the key events
+    this.as.searchInput.trigger(upEvent);
+    ok(selectionShiftedUpwards, "Selection should be shifted updwards with keypress");
+    
+    this.as.searchInput.trigger(downEvent);
+    ok(selectionShiftedDownwards, "Selection should be shifted downwards with keypress");
+    
+    this.as.searchInput.trigger(enterEvent);
+    ok(currentSelected, "Current value should be selected with enter");
+    
+    this.as.searchInput.trigger(escEvent);
+    ok(selectionCancelled, "Selection should be cancelled with esc");
+  });
+  
+  
+  test("Shift selection", function() {
+    this.as.items = [0, 1, 2, 3, 4, 5];
+    this.as.matchedItems = [0, 4, 5];
+    
+    // Upwards from no selection
+    this.as.selectedItem = -1;
+    this.as.shiftSelectionUp();
+    same(this.as.selectedItem, -1, "Selection should not move beyond -1");
+    
+    // Downwards from no selection
+    this.as.selectedItem = -1;
+    this.as.shiftSelectionDown();
+    same(this.as.selectedItem, 0, "Selection should move downwards by 1");
+    
+    // Upwards from selection
+    this.as.selectedItem = 0;
+    this.as.shiftSelectionUp();
+    same(this.as.selectedItem, -1, "Selection should move upwards by 1");
+    
+    // Downwards from selection
+    this.as.selectedItem = 0;
+    this.as.shiftSelectionDown();
+    same(this.as.selectedItem, 1, "Selection should move downwards by 1");
+    
+    // Downwards from last item
+    this.as.selectedItem = 2;
+    this.as.shiftSelectionDown();
+    same(this.as.selectedItem, 2, "Selection should not move beyond matched item count");
+  });
+  
+  
+  test("Search results filtering", function() {
     var me = this;
     
     this.selBox.expects().isItemSelected(1).andReturn(false);
@@ -55,6 +153,7 @@ $(document).ready(function() {
     same(0, getLength("A Man with No Name"), "Should match no entries");
     same(0, getLength(""), "Should match no entries");
   });
+  
 
   test("Match search string", function() {
     var name = "Timo Tuomarila";
@@ -94,8 +193,74 @@ $(document).ready(function() {
   });
   
   
-  module("Autocomplete: selected box");
+  
+  module("Autocomplete: selected box", {
+    setup: function() {
+      this.mockControl = new MockControl();
+      
+      this.searchBox = this.mockControl.createMock(AutocompleteSearch);
+    
+      this.as = new AutocompleteSelected(this.searchBox);
+    },
+    teardown: function() {
+      this.mockControl.verify();
+    } 
+  });
  
-  module("Autocomplete: bundle");
+  test("Initialization", function() {
+    var elem = $('<span/>');
+    this.as.initialize(elem);
+        
+    same(this.as.element, elem, "Element should be set");
+    ok(this.as.element.hasClass(AutocompleteVars.cssClasses.selectedParent),
+      "Parent element css class should be set");
+  });
+  
+  
+  
+  
+  module("Autocomplete: bundle", {
+    setup: function() {
+      this.mockControl = new MockControl();
+      this.searchBox = this.mockControl.createMock(AutocompleteSearch);
+      this.selectedBox = this.mockControl.createMock(AutocompleteSelected);
+      
+      this.ac = new Autocomplete($('<div/>'));
+      // Override the fields with mocks
+      this.ac.searchBox = this.searchBox;
+      this.ac.selectedBox = this.selectedBox;
+    },
+    teardown: function() {
+      this.mockControl.verify();
+    }
+  });
+  
+  
+  test("Parent element", function() {
+    var parent = $('<div/>');
+    var ac = new Autocomplete(parent);
+    
+    same(ac.parent, parent, 'Parent element not correct');
+  });
+  
+  
+  test("Initialization", function() {
+    this.searchBox.expects().initialize(this.ac.searchBoxContainer);
+    this.selectedBox.expects().initialize(this.ac.selectedBoxContainer);
+    
+    this.ac.initialize();
+    
+    ok(this.ac.element, 'Element should be initialized');
+    ok(this.ac.element.hasClass('.autocomplete'), 'Correct class should be added');
+    same(this.ac.parent.find('.autocomplete').length, 1, "Element should be appended to parent");
+    same(this.ac.element.children().length, 2, 'Children count should be 2');
+    
+    same(this.ac.element.children().get(0), this.ac.searchBoxContainer.get(0));
+    same(this.ac.element.children().get(1), this.ac.selectedBoxContainer.get(0));
+  });
+  
+  
+  
+  module("Autocomplete: dialog mode");
     
 });

@@ -1,17 +1,15 @@
 /* Main stylesheet file for Agilefant*/
 @import "jquery.treeview.css";
 
-@import "timeline-bundle.css";
-
 @import "jquery.tabs.css";
 
 @import "jquery.dialog.css";
 
 @import "jquery.wysiwyg.css";
 
-@import "userChooser.css";
-
 @import "dynamictable.css";
+
+@import "autocomplete.css";
 
 html {
 	margin: 0;

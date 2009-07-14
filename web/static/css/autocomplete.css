@@ -1,0 +1,86 @@
+.autocomplete {
+  border: 1px solid #ccc;
+  width: 400px;
+}
+
+.autocomplete-searchBoxContainer {
+  border-bottom: 1px solid #ccc;
+  margin: 0;
+  padding: 4px;
+}
+
+.autocomplete-searchBoxContainer input {
+  width: 80%;  
+}
+
+.autocomplete-selectedBoxContainer {
+  min-height: 20px;
+}
+
+/*
+li.laatikko {
+  padding: .3em .5em .3em .3em;
+  overflow: hidden;
+  width: 100%;
+  display: block;
+  -moz-border-radius: 6px;
+  -webkit-border-radius: 6px;
+  border-radius: 6px;
+  border: 1px solid #cad8f3;
+  background: #dee7f8;
+  padding: 1px 5px 2px;
+  margin-bottom: 3px;
+}
+
+
+
+div.search-row {
+  width: 100%;
+  background-color: #eee;
+  overflow: visible;
+  height: 22px;
+}
+
+div.userlist {
+  width: 100%;
+}
+
+ul.suggestions {
+  margin: 0;
+  padding: 0;
+  background-color: white;
+  position: relative;
+  width: 200px;
+  border: 1px solid #ccc;
+}
+
+ul.suggestions li {
+  list-style-type: none;
+  cursor: pointer;
+  border-top: 1px solid #ccc;
+}
+
+ul.suggestions li:hover {
+  background-color: #cff;
+}
+
+ul.suggestions li.active {
+  background-color: #ffc; 
+}
+
+li.laatikko span.item-text {
+  float: left;
+}
+
+li.laatikko span.closeButton {
+  float: right;
+  cursor: pointer;
+  font-family: cursive;
+  font-size: 11pt;
+  font-weight: bold;
+}
+
+li.laatikko span.closeButton:hover {
+  color: #999;
+}
+*/

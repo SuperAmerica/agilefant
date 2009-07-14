@@ -3,7 +3,7 @@
  */
 
 var AutocompleteSelected = function() {
-  
+  this.selected
 };
 
 AutocompleteSelected.prototype.initialize = function(element) {
@@ -18,5 +18,9 @@ AutocompleteSelected.prototype.isItemSelected = function(id) {
 };
 
 AutocompleteSelected.prototype.addItem = function(item) {
+  
+};
+
+AutocompleteSelected.prototype.removeItem = function(id) {
   
 };

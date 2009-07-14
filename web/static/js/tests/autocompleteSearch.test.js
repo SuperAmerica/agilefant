@@ -71,6 +71,8 @@ $(document).ready(function() {
     ok(!this.as.matchSearchString(name, ""), "Empty string shouldn't match");
     ok(!this.as.matchSearchString(name, null), "Null string shouldn't match");
     ok(!this.as.matchSearchString(name), "Undefined string shouldn't match");
+    ok(!this.as.matchSearchString('', "Timo"), "Empty string shouldn't match");
+    ok(!this.as.matchSearchString(null, "Timo"), "Null string shouldn't match");
     
     // Test with string fragment not from beginning
     ok(this.as.matchSearchString(name, "ila"), "The string 'ila' should match");

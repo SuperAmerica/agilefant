@@ -17,7 +17,7 @@ AutocompleteSearch.prototype.filterSuggestions = function(list, match) {
 };
 
 AutocompleteSearch.prototype.matchSearchString = function(text, match) {
-  if (!match) return false;
+  if (!match || !text) return false;
   
   // Split to fragments
   var replaceRe = /[!#$%&()*+,./:;<=>?@[\\\]_`{|}~]+/;

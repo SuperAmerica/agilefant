@@ -55,9 +55,7 @@ AutocompleteSearch.prototype.bindEvents = function() {
       me.timeoutUpdateMatches();
     }
   });
-  this.searchInput.blur(function() {
-    me.cancelSelection();
-  });
+  
 };
 
 
@@ -136,6 +134,7 @@ AutocompleteSearch.prototype.matchSearchString = function(text, match) {
 };
 
 AutocompleteSearch.prototype.renderSuggestionList = function() {
+  var me = this;
   this.suggestionList.empty();
   if (this.matchedItems.length === 0) {
     this.cancelSelection();
@@ -145,6 +144,7 @@ AutocompleteSearch.prototype.renderSuggestionList = function() {
   for (var i = 0; i < this.matchedItems.length; i++) {
     var item = this.matchedItems[i];
     var listItem = $('<li/>').text(item.name).appendTo(this.suggestionList);
+    listItem.click(function() { alert(item.name + " was clicked")});
   }
   this.suggestionList.show();
 };

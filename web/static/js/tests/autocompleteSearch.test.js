@@ -117,9 +117,6 @@ $(document).ready(function() {
     
     this.as.searchInput.trigger(genericKeyEvent);
     ok(matchingListUpdatedCount, "Selection should be updated with keypress");
-    
-    this.as.searchInput.blur();
-    same(selectionCancelled, 2, "Selection should be cancelled when focus is lost");
   });
   
   

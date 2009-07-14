@@ -14,6 +14,7 @@ var AutocompleteSearch = function(selectedItemsBox) {
   
   // No selection is -1
   this.selectedItem = -1;
+  this.timer = null;
 };
 
 
@@ -42,6 +43,9 @@ AutocompleteSearch.prototype.bindKeyEvents = function() {
     else if (kc === AutocompleteVars.keyCodes.esc) {
       me.cancelSelection();
     }
+    else {
+      me.timeoutUpdateMatches();
+    }
   });
 };
 
@@ -64,6 +68,21 @@ AutocompleteSearch.prototype.selectCurrent = function() {
 };
 
 AutocompleteSearch.prototype.cancelSelection = function() {
+  
+};
+
+AutocompleteSearch.prototype.timeoutUpdateMatches = function() {
+  var me = this;
+  if (this.timer) {
+    clearTimeout(this.timer);
+  }
+  this.timer = setTimeout(function() {
+    var a = me;
+    me.updateMatches();
+  }, AutocompleteVars.inputWaitTime);
+};
+
+AutocompleteSearch.prototype.updateMatches = function() {
   
 };
 

@@ -11,25 +11,6 @@ $(document).ready(function() {
       this.selBox = this.mockControl.createMock(AutocompleteSelected);
     
       this.as = new AutocompleteSearch(this.selBox);
-      this.testDataSet = [
-        {
-          id: 1,
-          name: "Timo Testi"
-        },
-        {
-          id: 4,
-          name: "Armas Testi"
-        },
-        {
-          id: 5,
-          name: "Selected Testi"
-        },
-        {
-          id: 7,
-          name: "Jutta Vahaniemi"
-        },
-      ];
-      this.testSelectedSet = [ 5 ];
     },
     teardown: function() {
       this.mockControl.verify();
@@ -77,6 +58,10 @@ $(document).ready(function() {
     this.as.cancelSelection = function() {
       selectionCancelled = true;
     };
+    var matchingListUpdated = false;
+    this.as.timeoutUpdateMatches = function() {
+      matchingListUpdated = true;
+    };
     
     this.as.initialize($('<div/>'));
     
@@ -88,6 +73,7 @@ $(document).ready(function() {
     downEvent.keyCode = 40;
     var upEvent = jQuery.Event("keypress");
     upEvent.keyCode = 38;
+    var genericKeyEvent = jQuery.Event("keypress");
     
     // Trigger the key events
     this.as.searchInput.trigger(upEvent);
@@ -101,6 +87,38 @@ $(document).ready(function() {
     
     this.as.searchInput.trigger(escEvent);
     ok(selectionCancelled, "Selection should be cancelled with esc");
+    
+    this.as.searchInput.trigger(genericKeyEvent);
+    ok(matchingListUpdated, "Selection should be updated with keypress");
+  });
+  
+  
+  test("Timeout updating matched list", function() {
+    var me = this;
+    var updateCounter = 0;
+    this.as.updateMatches = function() {
+      updateCounter++;
+    }
+    
+    this.as.timeoutUpdateMatches();
+    this.as.timeoutUpdateMatches();
+    this.as.timeoutUpdateMatches();
+    this.as.timeoutUpdateMatches();
+    setTimeout(function() {
+      same(updateCounter, 1, "Update count should match");
+      me.as.timeoutUpdateMatches();
+    }, 550);
+    
+    setTimeout(function() {
+      same(updateCounter, 2, "Update count should match");
+      start();
+    }, 1100)
+    stop(2000);
+  });
+  
+  
+  test("Updating matched list", function() {
+    
   });
   
   
@@ -136,6 +154,24 @@ $(document).ready(function() {
   
   
   test("Search results filtering", function() {
+    this.testDataSet = [
+      {
+        id: 1,
+        name: "Timo Testi"
+      },
+      {
+        id: 4,
+        name: "Armas Testi"
+      },
+      {
+        id: 5,
+        name: "Selected Testi"
+      },
+      {
+        id: 7,
+        name: "Jutta Vahaniemi"
+      },
+    ];
     var me = this;
     
     this.selBox.expects().isItemSelected(1).andReturn(false);

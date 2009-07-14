@@ -14,7 +14,8 @@ var AutocompleteVars = {
       esc:   27,
       down:  40,
       up:    38
-    }
+    },
+    inputWaitTime: 500
 };
 
 var Autocomplete = function(element) {

@@ -42,6 +42,9 @@ $(document).ready(function() {
 });
 </script>
 <link rel="stylesheet" href="static/css/timeplot.css" type="text/css"/>
+<link rel="stylesheet" href="static/css/timeline/timeline.css" type="text/css"/>
+<link rel="stylesheet" href="static/css/timeline/ether.css" type="text/css"/>
+<link rel="stylesheet" href="static/css/timeline/event.css" type="text/css"/>
 <script type="text/javascript" src="static/js/simile-widgets.js"></script>
 <script type="text/javascript" src="static/js/simile/extensions/user-load-timeplot-source.js"></script>
 <script type="text/javascript" src="static/js/simile/extensions/user-load-timeline.js"></script>
@@ -59,7 +62,7 @@ $(document).ready(function() {
 		<div id="Spent_Effort"></div>
 		<div id="detailedLoadTable" class="ui-tabs-hide"></div>
 		<div id="smallLoadTable">
-			<div style="height: 100px;" id="iterations"></div>
+			<div style="height: 100px; width: 96%; margin-left: 2%; margin-right: 2%;" id="iterations"></div>
 			<div style="height: 200px; margin-top: 10px;" id="loadPlot"></div>
 		</div>
 	</div>

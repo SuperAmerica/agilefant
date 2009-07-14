@@ -424,8 +424,8 @@ public class PersonalLoadBusinessTest {
         
         replayAll();
         personalLoadBusiness.addBaselineLoad(preComputed, user, null);
-        assertEquals(350L, interval1.getBasellineLoad());
-        assertEquals(300L, interval2.getBasellineLoad());
+        assertEquals(350L, interval1.getBaselineLoad());
+        assertEquals(300L, interval2.getBaselineLoad());
         verifyAll();
     }
 }

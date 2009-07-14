@@ -10,7 +10,7 @@ import flexjson.JSON;
 public class IntervalLoadContainer {
     private Interval interval;
     private long assignedLoad = 0L;
-    private long basellineLoad = 0L;
+    private long baselineLoad = 0L;
     private long unassignedLoad = 0L;
     private long workHours = 0L;
 
@@ -21,7 +21,7 @@ public class IntervalLoadContainer {
         this.assignedLoad = assignedLoad;
     }
     public long getTotalLoad() {
-        return assignedLoad + basellineLoad + unassignedLoad;
+        return assignedLoad + baselineLoad + unassignedLoad;
     }
     public long getWorkHours() {
         return workHours;
@@ -37,11 +37,11 @@ public class IntervalLoadContainer {
     public void setInterval(Interval interval) {
         this.interval = interval;
     }
-    public long getBasellineLoad() {
-        return basellineLoad;
+    public long getBaselineLoad() {
+        return baselineLoad;
     }
-    public void setBasellineLoad(long basellineLoad) {
-        this.basellineLoad = basellineLoad;
+    public void setBaselineLoad(long basellineLoad) {
+        this.baselineLoad = basellineLoad;
     }
     public long getUnassignedLoad() {
         return unassignedLoad;

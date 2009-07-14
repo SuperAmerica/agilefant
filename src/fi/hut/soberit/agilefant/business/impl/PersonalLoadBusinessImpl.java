@@ -319,8 +319,8 @@ public class PersonalLoadBusinessImpl implements PersonalLoadBusiness {
                     Duration workdays = this.userBusiness.calculateWorktimePerPeriod(user, overlap);
                     int days = (int)(workdays.getStandardSeconds()/(3600*24));
                     long baselineLoadForInterval = days * baselineLoadPerDay;
-                    intervalLoad.setBasellineLoad(intervalLoad
-                            .getBasellineLoad()
+                    intervalLoad.setBaselineLoad(intervalLoad
+                            .getBaselineLoad()
                             + baselineLoadForInterval);
                     if (assignment.getBacklog() instanceof Iteration) {
                         preComputedLoad.getIterations().add(

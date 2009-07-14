@@ -18,6 +18,9 @@ var AutocompleteSearch = function(selectedItemsBox) {
   this.timer = null;
 };
 
+AutocompleteSearch.prototype.setItems = function(items) {
+  this.items = items;
+};
 
 AutocompleteSearch.prototype.initialize = function(element) {
   this.element = element;
@@ -30,6 +33,7 @@ AutocompleteSearch.prototype.initialize = function(element) {
   
   this.bindEvents();
 };
+
 
 AutocompleteSearch.prototype.bindEvents = function() {
   var me = this;
@@ -51,7 +55,11 @@ AutocompleteSearch.prototype.bindEvents = function() {
       me.timeoutUpdateMatches();
     }
   });
+  this.searchInput.blur(function() {
+    me.cancelSelection();
+  });
 };
+
 
 AutocompleteSearch.prototype.shiftSelectionUp = function() {
   if (this.selectedItem === -1) {
@@ -59,6 +67,7 @@ AutocompleteSearch.prototype.shiftSelectionUp = function() {
   }
   this.selectedItem--;
 };
+
 
 AutocompleteSearch.prototype.shiftSelectionDown = function() {
   if (this.selectedItem === (this.matchedItems.length - 1)) {
@@ -72,7 +81,8 @@ AutocompleteSearch.prototype.selectCurrent = function() {
 };
 
 AutocompleteSearch.prototype.cancelSelection = function() {
-  
+  this.selectedItem = -1;
+  this.suggestionList.hide();
 };
 
 AutocompleteSearch.prototype.timeoutUpdateMatches = function() {
@@ -109,7 +119,7 @@ AutocompleteSearch.prototype.matchSearchString = function(text, match) {
   
   // Split to fragments
   var replaceRe = new RegExp("[!#$%&()*+,./:;<=>?@[\\\]_`{|}~]+");
-  var matchFragments = match.replace(replaceRe, '').split(' ');
+  var matchFragments = match.replace(replaceRe, ' ').split(' ');
   
   var a = 5;
   // Loop through fragments
@@ -126,6 +136,18 @@ AutocompleteSearch.prototype.matchSearchString = function(text, match) {
 };
 
 AutocompleteSearch.prototype.renderSuggestionList = function() {
+  this.suggestionList.empty();
+  if (this.matchedItems.length === 0) {
+    this.cancelSelection();
+    return;
+  }
   
+  for (var i = 0; i < this.matchedItems.length; i++) {
+    var item = this.matchedItems[i];
+    var listItem = $('<li/>').text(item.name).appendTo(this.suggestionList);
+  }
+  this.suggestionList.show();
 };
+
+
 

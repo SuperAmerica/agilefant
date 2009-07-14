@@ -7,10 +7,12 @@ $(document).ready(function() {
   module("Autocomplete: search box",{
     setup: function() {
       this.mockControl = new MockControl();
-      
       this.selBox = this.mockControl.createMock(AutocompleteSelected);
-    
+
+      this.asParent = $('<div/>').appendTo(document.body);
       this.as = new AutocompleteSearch(this.selBox);
+      
+      this.as.initialize(this.asParent);
       
       this.testDataSet = [
         {
@@ -33,12 +35,13 @@ $(document).ready(function() {
     },
     teardown: function() {
       this.mockControl.verify();
+      this.asParent.remove();
     }
   });
 
   
   test("Initialization", function() {
-    var elem = $('<span/>').appendTo(document.body);
+    var elem = $('<div/>');
     
     var keyEventsBound = false;
     this.as.bindEvents = function() {
@@ -62,8 +65,6 @@ $(document).ready(function() {
     ok(eventsBound, "Key events should be bound.");
     
     same(this.as.selectedItem, -1, "Selected item should be defaulted to -1");
-    
-    elem.remove();
   });
   
   
@@ -80,13 +81,13 @@ $(document).ready(function() {
     this.as.selectCurrent = function() {
       currentSelected = true;
     };
-    var selectionCancelled = false;
+    var selectionCancelled = 0;
     this.as.cancelSelection = function() {
-      selectionCancelled = true;
+      selectionCancelled++;
     };
-    var matchingListUpdatedCount = 0;
+    var matchingListUpdatedCount = false;
     this.as.timeoutUpdateMatches = function() {
-      matchingListUpdatedCount++;
+      matchingListUpdatedCount = true;
     };
     
     this.as.initialize($('<div/>'));
@@ -112,41 +113,43 @@ $(document).ready(function() {
     ok(currentSelected, "Current value should be selected with enter");
     
     this.as.searchInput.trigger(escEvent);
-    ok(selectionCancelled, "Selection should be cancelled with esc");
+    same(selectionCancelled, 1, "Selection should be cancelled with esc");
     
     this.as.searchInput.trigger(genericKeyEvent);
-    same(matchingListUpdatedCount, 1, "Selection should be updated with keypress");
+    ok(matchingListUpdatedCount, "Selection should be updated with keypress");
+    
+    this.as.searchInput.blur();
+    same(selectionCancelled, 2, "Selection should be cancelled when focus is lost");
   });
   
   
-  test("Timeout updating matched list", function() {
-    var me = this;
-    var updateCounter = 0;
-    this.as.updateMatches = function() {
-      updateCounter++;
-    }
-    
-    this.as.timeoutUpdateMatches();
-    this.as.timeoutUpdateMatches();
-    this.as.timeoutUpdateMatches();
-    this.as.timeoutUpdateMatches();
-    setTimeout(function() {
-      same(updateCounter, 1, "Update count should match");
-      me.as.timeoutUpdateMatches();
-    }, 550);
-    
-    setTimeout(function() {
-      same(updateCounter, 2, "Update count should match");
-      start();
-    }, 1100)
-    stop(2000);
-  });
+//  test("Timeout updating matched list", function() {
+//    var me = this;
+//    var updateCounter = 0;
+//    this.as.updateMatches = function() {
+//      updateCounter++;
+//    }
+//    
+//    this.as.timeoutUpdateMatches();
+//    this.as.timeoutUpdateMatches();
+//    this.as.timeoutUpdateMatches();
+//    this.as.timeoutUpdateMatches();
+//    setTimeout(function() {
+//      same(updateCounter, 1, "Update count should match");
+//      me.as.timeoutUpdateMatches();
+//    }, 550);
+//    
+//    setTimeout(function() {
+//      same(updateCounter, 2, "Update count should match");
+//      start();
+//    }, 1100)
+//    stop(2000);
+//  });
   
   
   test("Updating matched list", function() {
     var me = this;
-    this.as.initialize($('<div/>'));
-    
+
     var returnedList = [1,2,3];
     
     var filterSuggestionsCalled = false;
@@ -202,6 +205,17 @@ $(document).ready(function() {
     this.as.selectedItem = 2;
     this.as.shiftSelectionDown();
     same(this.as.selectedItem, 2, "Selection should not move beyond matched item count");
+  });
+  
+  
+  test("Select current item", function() {
+    // NOT IMPLEMENTED
+  });
+  
+  test("Cancel selection", function() {
+    this.as.selectedItem = 0;
+    this.as.cancelSelection();
+    same(this.as.selectedItem, -1, "The selected item is not cleared");
   });
   
   
@@ -264,8 +278,49 @@ $(document).ready(function() {
   });
   
   
-  test("Suggestion box rendering", function() {
+  test("Suggestion list rendering", function() {
+    // Test with three entries
+    this.as.matchedItems = [
+      {
+        id: 313,
+        name: 'Agilefant User'
+      },
+      {
+        id: 111,
+        name: 'Ernesti Eukko'
+      },
+      {
+        id: 666,
+        name: 'Keisari Nero'
+      }
+    ];
     
+    this.as.renderSuggestionList();
+    ok(this.as.suggestionList.is(':visible'), "The list should be visible");
+    same(this.as.suggestionList.children('li').length, 3, "List item count should be equal to matched items");
+    
+    // Test with no entries
+    this.as.matchedItems = [];
+    this.as.renderSuggestionList();
+    same(this.as.suggestionList.children('li').length, 0, "The list should be cleared");
+    ok(this.as.suggestionList.is(':hidden'), "Suggestion list should be hidden if there are no entries");
+  });
+  
+  
+  test("Suggestion list hiding", function() {
+    this.as.matchedItems = [
+      {
+        id: 555,
+        name: 'Petteri'
+      }
+    ];
+    this.as.renderSuggestionList();
+    ok(this.as.suggestionList.is(':visible'), "The list should be visible");
+    
+    this.as.selectedItem = 0;
+    this.as.cancelSelection();
+    
+    ok(this.as.suggestionList.is(':hidden'), "The list should be hidden");
   });
   
   
@@ -302,6 +357,9 @@ $(document).ready(function() {
       this.searchBox = this.mockControl.createMock(AutocompleteSearch);
       this.selectedBox = this.mockControl.createMock(AutocompleteSelected);
       
+      this.searchBox.selectedItemsBox = this.selectedBox;
+      this.selectedBox.selectedItemsBox = this.searchBox;
+      
       this.ac = new Autocomplete($('<div/>'));
       // Override the fields with mocks
       this.ac.searchBox = this.searchBox;
@@ -310,6 +368,37 @@ $(document).ready(function() {
     teardown: function() {
       this.mockControl.verify();
     }
+  });
+  
+  test("Autocomplete creation", function() {
+    var original = Autocomplete;
+    var parent = $('<div/>');
+    
+    var constructorCalled = false;
+    Autocomplete = function(elem) {
+      constructorCalled = true;
+      same(elem, parent, "The element should be the parent element");
+    };
+    var initializeCalled = false;
+    Autocomplete.prototype.initialize = function() {
+      initializeCalled = true;
+    };
+    
+    var options = {
+        items: [
+          {
+            id: 1,
+            name: 'Paavo'
+          }
+        ]
+    };
+    
+    parent.autocomplete(options);
+    
+    ok(constructorCalled, "The constructor should be called");
+    ok(initializeCalled, "The constructor should be called");
+    
+    Autocomplete = original;
   });
   
   
@@ -322,6 +411,23 @@ $(document).ready(function() {
   
   
   test("Initialization", function() {
+    this.ac.items = [
+      {
+        id: 1,
+        name: 'Timo Testi'
+      },
+      {
+        id: 2,
+        name: 'Teppo Tuomio'
+      },
+      {
+        id: 6,
+        name: 'Jake Vahamies'
+      }
+    ];
+    
+    this.searchBox.expects().setItems(this.ac.items);
+    
     this.searchBox.expects().initialize(this.ac.searchBoxContainer);
     this.selectedBox.expects().initialize(this.ac.selectedBoxContainer);
     

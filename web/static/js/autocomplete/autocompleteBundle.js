@@ -21,14 +21,16 @@ var AutocompleteVars = {
 
 var Autocomplete = function(element) {
   this.parent = element;
+  this.items = null;
   this.searchBoxContainer = $('<div/>');
   this.selectedBoxContainer = $('<div/>');
-  this.searchBox = new AutocompleteSearch();
   this.selectedBox = new AutocompleteSelected();
+  this.searchBox = new AutocompleteSearch(this.selectedBox);
 };
 
-jQuery.fn.autocomplete = function() {
+jQuery.fn.autocomplete = function(options) {
   var autocomplete = new Autocomplete(this);
+  autocomplete.items = options.items;
   autocomplete.initialize();
 };
 
@@ -39,6 +41,8 @@ Autocomplete.prototype.initialize = function() {
   
   this.searchBoxContainer.appendTo(this.element);
   this.selectedBoxContainer.appendTo(this.element);
+  
+  this.searchBox.setItems(this.items);
   
   this.searchBox.initialize(this.searchBoxContainer);
   this.selectedBox.initialize(this.selectedBoxContainer);

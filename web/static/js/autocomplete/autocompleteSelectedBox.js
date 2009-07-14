@@ -2,8 +2,8 @@
  * Box for displaying the selected items from autocompletion.
  */
 
-var AutocompleteSelected = function(searchBox) {
-  this.searchBox = searchBox;
+var AutocompleteSelected = function() {
+  
 };
 
 AutocompleteSelected.prototype.initialize = function(element) {

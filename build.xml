@@ -466,8 +466,9 @@
 
 		<jslint options="laxbreak">
 			<formatter type="plain" />
-			<fileset dir="${build.webapp}/static/js/dynamics/" >
-				<include name="**/*.js" />
+			<fileset dir="${build.webapp}/static/js/" >
+				<include name="dynamics/*.js" />
+				<include name="autocomplete/*.js" />
 			</fileset>
 		</jslint>
 	</target>

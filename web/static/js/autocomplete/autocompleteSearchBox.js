@@ -7,6 +7,7 @@ var AutocompleteSearch = function(selectedItemsBox) {
   this.element = null;
   this.searchInput = null;
   this.selectedItemsBox = selectedItemsBox;
+  this.suggestionList = null;
   
   // Data
   this.items = new Array();
@@ -24,10 +25,13 @@ AutocompleteSearch.prototype.initialize = function(element) {
   
   this.searchInput = $('<input type="text"/>').appendTo(this.element);
   
-  this.bindKeyEvents();
+  this.suggestionList = $('<ul/>').hide().addClass(AutocompleteVars.cssClasses.suggestionList)
+    .appendTo(this.element);
+  
+  this.bindEvents();
 };
 
-AutocompleteSearch.prototype.bindKeyEvents = function() {
+AutocompleteSearch.prototype.bindEvents = function() {
   var me = this;
   this.searchInput.bind("keypress", function(keyEvent) {
     var kc = keyEvent.keyCode;
@@ -35,7 +39,7 @@ AutocompleteSearch.prototype.bindKeyEvents = function() {
       me.shiftSelectionUp();
     }
     else if (kc === AutocompleteVars.keyCodes.down) {
-      me.shiftSelectionDown()
+      me.shiftSelectionDown();
     }
     else if (kc === AutocompleteVars.keyCodes.enter) {
       me.selectCurrent();
@@ -83,7 +87,10 @@ AutocompleteSearch.prototype.timeoutUpdateMatches = function() {
 };
 
 AutocompleteSearch.prototype.updateMatches = function() {
+  var inputValue = this.searchInput.val();
+  this.matchedItems = this.filterSuggestions(this.items, inputValue);
   
+  this.renderSuggestionList();
 };
 
 AutocompleteSearch.prototype.filterSuggestions = function(list, match) {
@@ -117,3 +124,8 @@ AutocompleteSearch.prototype.matchSearchString = function(text, match) {
   
   return allMatch;
 };
+
+AutocompleteSearch.prototype.renderSuggestionList = function() {
+  
+};
+

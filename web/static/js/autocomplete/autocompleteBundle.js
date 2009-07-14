@@ -7,7 +7,8 @@ var AutocompleteVars = {
     cssClasses: {
       autocompleteElement: 'autocomplete',
       searchParent: 'autocomplete-searchBoxContainer',
-      selectedParent: 'autocomplete-selectedBoxContainer'
+      selectedParent: 'autocomplete-selectedBoxContainer',
+      suggestionList: 'autocomplete-suggestionList'
     },
     keyCodes: {
       enter: 13,

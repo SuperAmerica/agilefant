@@ -11,6 +11,25 @@ $(document).ready(function() {
       this.selBox = this.mockControl.createMock(AutocompleteSelected);
     
       this.as = new AutocompleteSearch(this.selBox);
+      
+      this.testDataSet = [
+        {
+          id: 1,
+          name: "Timo Testi"
+        },
+        {
+          id: 4,
+          name: "Armas Testi"
+        },
+        {
+          id: 5,
+          name: "Selected Testi"
+        },
+        {
+          id: 7,
+          name: "Jutta Vahaniemi"
+        },
+      ];
     },
     teardown: function() {
       this.mockControl.verify();
@@ -19,11 +38,11 @@ $(document).ready(function() {
 
   
   test("Initialization", function() {
-    var elem = $('<span/>');
+    var elem = $('<span/>').appendTo(document.body);
     
     var keyEventsBound = false;
-    this.as.bindKeyEvents = function() {
-      keyEventsBound = true;
+    this.as.bindEvents = function() {
+      eventsBound = true;
     };
     
     this.as.initialize(elem);
@@ -33,15 +52,22 @@ $(document).ready(function() {
       "Parent element css class should be set");
     
     ok(this.as.searchInput, "Input element should be added as a field");
-    same(this.as.element.children(':text').length, 1, "Input element should be added");
+    same(this.as.element.children(':text').length, 1, "Input element should be added as an element");
     
-    ok(keyEventsBound, "Key events should be bound.");
+    ok(this.as.suggestionList, "Suggestion list should be added as a field");
+    same(this.as.element.children('ul').length, 1, "Input element should be added as an element");
+    ok(this.as.suggestionList.hasClass('autocomplete-suggestionList'), "Suggestion list should have the correct css class");
+    ok(this.as.suggestionList.is(':hidden'), "Suggestion list should be hidden by default");
+    
+    ok(eventsBound, "Key events should be bound.");
     
     same(this.as.selectedItem, -1, "Selected item should be defaulted to -1");
+    
+    elem.remove();
   });
   
   
-  test("Bind key events", function() {
+  test("Bind input events", function() {
     var selectionShiftedUpwards = false;
     this.as.shiftSelectionUp = function() {
       selectionShiftedUpwards = true;
@@ -58,9 +84,9 @@ $(document).ready(function() {
     this.as.cancelSelection = function() {
       selectionCancelled = true;
     };
-    var matchingListUpdated = false;
+    var matchingListUpdatedCount = 0;
     this.as.timeoutUpdateMatches = function() {
-      matchingListUpdated = true;
+      matchingListUpdatedCount++;
     };
     
     this.as.initialize($('<div/>'));
@@ -89,7 +115,7 @@ $(document).ready(function() {
     ok(selectionCancelled, "Selection should be cancelled with esc");
     
     this.as.searchInput.trigger(genericKeyEvent);
-    ok(matchingListUpdated, "Selection should be updated with keypress");
+    same(matchingListUpdatedCount, 1, "Selection should be updated with keypress");
   });
   
   
@@ -118,7 +144,33 @@ $(document).ready(function() {
   
   
   test("Updating matched list", function() {
+    var me = this;
+    this.as.initialize($('<div/>'));
     
+    var returnedList = [1,2,3];
+    
+    var filterSuggestionsCalled = false;
+    this.as.filterSuggestions = function(list, match) {
+      same(match, 'Testi', "Match should be the input element's value");
+      same(list, me.testDataSet, "List should be the autocomplete's given items");
+      filterSuggestionsCalled = true;
+      return returnedList;
+    };
+    
+    var renderSuggestionListCalled = false;
+    this.as.renderSuggestionList = function() {
+      renderSuggestionListCalled = true;
+    };
+    
+    this.as.searchInput.val('Testi');
+    this.as.items = this.testDataSet;
+    
+    this.as.updateMatches();
+    
+    ok(filterSuggestionsCalled, "Filter suggestions function should be called");
+    same(this.as.matchedItems, returnedList, "Matched items should be updated");
+    
+    ok(renderSuggestionListCalled, "Suggestions list renderer should be called");
   });
   
   
@@ -154,24 +206,7 @@ $(document).ready(function() {
   
   
   test("Search results filtering", function() {
-    this.testDataSet = [
-      {
-        id: 1,
-        name: "Timo Testi"
-      },
-      {
-        id: 4,
-        name: "Armas Testi"
-      },
-      {
-        id: 5,
-        name: "Selected Testi"
-      },
-      {
-        id: 7,
-        name: "Jutta Vahaniemi"
-      },
-    ];
+    
     var me = this;
     
     this.selBox.expects().isItemSelected(1).andReturn(false);
@@ -227,6 +262,12 @@ $(document).ready(function() {
     ok(this.as.matchSearchString("Isohookana-Asunmaa", "kana-asu"), "The string \"kana-asu\" should match");
     ok(this.as.matchSearchString("Jake \"Pee\"oo Vahis", "\"pee\"oo"), "The string \"\"pee\"oo\" should match");
   });
+  
+  
+  test("Suggestion box rendering", function() {
+    
+  });
+  
   
   
   

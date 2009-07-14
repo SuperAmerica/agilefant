@@ -28,7 +28,7 @@ var Autocomplete = function(element) {
   this.items = null;
   this.searchBoxContainer = $('<div/>');
   this.selectedBoxContainer = $('<div/>');
-  this.selectedBox = new AutocompleteSelected();
+  this.selectedBox = new AutocompleteSelected(this);
   this.searchBox = new AutocompleteSearch(this.selectedBox);
 };
 
@@ -51,3 +51,9 @@ Autocomplete.prototype.initialize = function() {
   this.searchBox.initialize(this.searchBoxContainer);
   this.selectedBox.initialize(this.selectedBoxContainer);
 };
+
+Autocomplete.prototype.focusSearchField = function() {
+  this.searchBox.focus();
+};
+
+

@@ -60,8 +60,11 @@ AutocompleteSearch.prototype.bindEvents = function() {
 
 
 AutocompleteSearch.prototype.shiftSelectionUp = function() {
-  if (this.suggestionList.is(':hidden') || this.selectedItem === -1) {
+  if (this.selectedItem === -1) {
     return;
+  }
+  else if (this.suggestionList.is(':hidden')) {
+    this.updateMatches();
   }
   this.selectedItem--;
   this.updateSelectedListItem();
@@ -69,8 +72,11 @@ AutocompleteSearch.prototype.shiftSelectionUp = function() {
 
 
 AutocompleteSearch.prototype.shiftSelectionDown = function() {
-  if (this.suggestionList.is(':hidden') || this.selectedItem === (this.matchedItems.length - 1)) {
+  if (this.selectedItem === (this.matchedItems.length - 1)) {
     return;
+  }
+  else if (this.suggestionList.is(':hidden')) {
+    this.updateMatches();
   }
   this.selectedItem++;
   this.updateSelectedListItem();
@@ -161,6 +167,11 @@ AutocompleteSearch.prototype.renderSuggestionList = function() {
     listItem.click(function() { me.selectItem(item); });
   });
   this.suggestionList.show();
+};
+
+
+AutocompleteSearch.prototype.focus = function() {
+  this.searchInput.focus();
 };
 
 

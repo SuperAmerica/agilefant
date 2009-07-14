@@ -175,6 +175,7 @@ $(document).ready(function() {
   
   
   test("Shift selection", function() {
+    var me = this;
     var updateCount = 0;
     this.as.updateSelectedListItem = function() {
       updateCount++;
@@ -225,15 +226,24 @@ $(document).ready(function() {
     same(updateCount, 3, "Selection update count should match");
     
     // Suggestion list hidden
+    var updateMatchesCount = 0;
+    this.as.updateMatches = function() {
+      me.as.suggestionList.show();
+      updateMatchesCount++;
+    };
+    
     this.as.cancelSelection();
-    this.as.selectedItem = 0;
+    ok(this.as.suggestionList.is(':hidden'), "Suggestion list should be hidden");
     
     this.as.shiftSelectionDown();
+    ok(this.as.suggestionList.is(':visible'), "Suggestion list should be visible");
     same(this.as.selectedItem, 0, "Selection should not move if suggestion list is hidden");
+    same(updateMatchesCount, 1, "Update count should match");
     
-    this.as.selectedItem = 0;
+    this.as.cancelSelection();
     this.as.shiftSelectionUp();
-    same(this.as.selectedItem, 0, "Selection should not move if suggestion list is hidden");
+    ok(this.as.suggestionList.is(':hidden'), "Suggestion list should not be visible");
+    same(updateMatchesCount, 1, "Update count should match");
   });
   
   
@@ -417,15 +427,30 @@ $(document).ready(function() {
   });
   
   
+  test("Focus to search box", function() {
+    var focused = false;
+    this.as.searchInput.focus(function() {
+      focused = true;
+    });
+    
+    this.as.searchInput.blur();
+    ok(!focused, "Search input should not have focus");
+    this.as.focus();
+    ok(focused, "Search input should have focus");
+  });
+  
+  
+  
+  
   
   
   module("Autocomplete: selected box", {
     setup: function() {
       this.mockControl = new MockControl();
       
-      this.searchBox = this.mockControl.createMock(AutocompleteSearch);
+      this.parentBundle = this.mockControl.createMock(Autocomplete);
     
-      this.as = new AutocompleteSelected(this.searchBox);
+      this.as = new AutocompleteSelected(this.parentBundle);
       
       this.parentElem = $('<div/>').appendTo(document.body);
       this.as.initialize(this.parentElem);
@@ -508,19 +533,47 @@ $(document).ready(function() {
     
     var actual = this.as.selectedList.children(':eq(0)');
     
+    var itemRemoved = false;
+    this.as.removeItem = function(id, elem) {
+      same(id, 666, "The id to be removed should match");
+      same(elem.get(0), actual.get(0), "The element to be removed should match");
+      itemRemoved = true;
+    };
+        
     same(actual.children('span').length, 2, "The list item should contain two spans");
     ok(actual.children(':eq(0)').hasClass('autocomplete-selectedName'),
         "The first span should have the selectedName css class");
     ok(actual.children(':eq(1)').hasClass('autocomplete-selectedRemove'),
         "The second span should have the remove button css class");
     same(actual.children(':eq(0)').text(), validItem.name, "The item text should match");
+    
+    actual.children(':eq(1)').click();
+    ok(itemRemoved, "The remove function should be called");
   });
   
   
   test("Removing an item", function () {
+    this.as.selectedIds = [1,2,666];
     
+    var item = {
+        id: 666,
+        name: "Teppo"
+    };
     
+    this.parentBundle.expects().focusSearchField();
+    
+    this.as.addListItem(item);
+    
+    this.as.removeItem(666, this.as.selectedList.children(':eq(0)'));
+    
+    same(this.as.selectedIds.length, 2, "Selected ids length should match");
+    same(this.as.selectedList.children().length, 0, "Selected items list length should match");
+    same(jQuery.inArray(666, this.as.selectedIds), -1, "The removed item should not be in selected ids list");
   });
+  
+  
+  
+  
   
   
   
@@ -615,7 +668,11 @@ $(document).ready(function() {
     same(this.ac.element.children().get(1), this.ac.selectedBoxContainer.get(0));
   });
   
-  
+  test("Focus search field", function() {
+    this.searchBox.expects().focus();
+    
+    this.ac.focusSearchField();
+  });
   
   module("Autocomplete: dialog mode");
     

@@ -41,7 +41,7 @@ AutocompleteDataProvider.prototype._fetchData = function(url,params) {
       returnedData = data;
     },
     error: function(request, status, error) {
-      CommonView.showError("Unable to load data for autocompletion");
+      commonView.showError("Unable to load data for autocompletion");
     }
   });
   return returnedData;

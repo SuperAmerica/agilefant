@@ -902,7 +902,6 @@ $(document).ready(function() {
     
     equals(this.dataProvider.get("usersAndTeams"), returnedData, "Correct data is returned");
     same(fetchDataCalledCount, 1, "Data is fetched");
-    same()
   });
 });
 

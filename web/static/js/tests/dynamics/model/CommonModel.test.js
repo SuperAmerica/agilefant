@@ -12,16 +12,6 @@ $(document).ready(function() {
       
     }
   });
-  
-  test("Abstract reload", function() {
-    var exceptionThrown = false;
-    try {
-      this.commonModel.reload();
-    }
-    catch(e) {
-      same(e,"Abstract method called", "Abstract method exception was thrown");
-      exceptionThrown = true;
-    }
-  });
+
   
 });

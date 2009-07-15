@@ -41,10 +41,15 @@ $(document).ready(function() {
           enabled: false
         }
       ];
+      
+      // Lower the wait time for test running 
+      this.originalVars = AutocompleteVars;
+      AutocompleteVars.inputWaitTime = 25;
     },
     teardown: function() {
       this.mockControl.verify();
       this.asParent.remove();
+      AutocompleteVars = this.originalVars;
     }
   });
 
@@ -143,13 +148,14 @@ $(document).ready(function() {
     setTimeout(function() {
       same(updateCounter, 1, "Update count should match");
       me.as.timeoutUpdateMatches();
-    }, 550);
+    }, 30);
     
     setTimeout(function() {
       same(updateCounter, 2, "Update count should match");
       start();
-    }, 1100)
-    stop(2000);
+    }, 60)
+    stop(100);
+    
   });
   
   

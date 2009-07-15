@@ -782,7 +782,7 @@ $(document).ready(function() {
   
   
   test("Initialization", function() {
-    this.ac.items = [
+    var returnedData = [
       {
         id: 1,
         name: 'Timo Testi'
@@ -797,13 +797,18 @@ $(document).ready(function() {
       }
     ];
     
-    this.searchBox.expects().setItems(this.ac.items);
-    this.selectedBox.expects().setItems(this.ac.items);
+    this.searchBox.expects().setItems(returnedData);
+    this.selectedBox.expects().setItems(returnedData);
     
     this.searchBox.expects().initialize(this.ac.searchBoxContainer);
     this.selectedBox.expects().initialize(this.ac.selectedBoxContainer);
     
-    
+    var dataProviderCallCount = 0;
+    AutocompleteDataProvider.instance = {};
+    AutocompleteDataProvider.instance.get = function(dataType) {
+      dataProviderCallCount++;
+      return returnedData; 
+    };
     
     this.ac.initialize();
     
@@ -815,6 +820,8 @@ $(document).ready(function() {
     
     same(this.ac.element.children().get(0), this.ac.searchBoxContainer.get(0));
     same(this.ac.element.children().get(1), this.ac.selectedBoxContainer.get(0));
+    
+    same(dataProviderCallCount, 1, "Data provider called");
   });
   
   test("Get data", function() {
@@ -880,15 +887,22 @@ $(document).ready(function() {
   });
   
   test("Load data", function() {
+    var returnedData = [
+      {
+        id: 1,
+        name: "Teppo Testi"
+      }
+    ];
     var fetchDataCalledCount = 0;
     this.dataProvider._fetchData = function(url, params) {
       same(url, AutocompleteDataProvider.vars.urls.usersAndTeams, "Urls match");
       fetchDataCalledCount++;
+      return returnedData; 
     };
     
-    this.dataProvider.get("usersAndTeams");
+    equals(this.dataProvider.get("usersAndTeams"), returnedData, "Correct data is returned");
     same(fetchDataCalledCount, 1, "Data is fetched");
-
+    same()
   });
 });
 

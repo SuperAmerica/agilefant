@@ -26,7 +26,7 @@ AutocompleteDataProvider.getInstance = function() {
 AutocompleteDataProvider.prototype.get = function(dataType) {
   var url = AutocompleteDataProvider.vars.urls[dataType];
   var params = {};
-  this._fetchData(url, params);
+  return this._fetchData(url, params);
 };
 
 AutocompleteDataProvider.prototype._fetchData = function(url,params) {
@@ -41,7 +41,7 @@ AutocompleteDataProvider.prototype._fetchData = function(url,params) {
       returnedData = data;
     },
     error: function(request, status, error) {
-      
+      CommonView.showError("Unable to load data for autocompletion");
     }
   });
   return returnedData;

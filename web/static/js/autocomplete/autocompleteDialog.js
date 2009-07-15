@@ -1,7 +1,10 @@
 (function($){
 	$.widget("ui.autocompleteDialog", {
 		_init: function() {
+			var elData = this.element.data(this.widgetName);
+			this.element.removeData(this.widgetName);
 			this.element = $('<div />').appendTo(document.body);
+			this.element.data(this.widgetName,elData);
 			var me = this;
 			var autocomplete = new Autocomplete(this.element, {
 				dataType: this.options.dataType
@@ -38,10 +41,6 @@
 			
 		},
 		destroy: function() {
-			$.widget.prototype.destroy.apply(this, arguments); 
-     		this.element.dialog('destroy');
-     		this.element.data("autocomplete").remove();
-			this.element.removeData("autocomplete");
 			this.element.remove();
 		}
 	});

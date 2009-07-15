@@ -5,18 +5,11 @@
     <title>Agilefant qUnit test suite</title>
     <link rel="Stylesheet" media="screen" href="testsuite.css"/>
     
+    <script type="text/javascript" src="../jquery.js"></script>
+    <script type="text/javascript" src="jsmock.js"></script>
+    <script type="text/javascript" src="qunit.js"></script>
     <script type="text/javascript">
     <!--
-    var necessaryImports = [
-                            "../jquery.js"
-                            ];
-
-    var testLibraries = [
-                         "jsmock.js",
-                         "qunit.js"
-                         ];
-
-    
     var tests = [
                  {
                    pathToFiles: "../autocomplete/",
@@ -56,17 +49,17 @@
                    pathToFiles: "../dynamics/view/",
                    pathToTests: "dynamics/view/",
                    filesUnderTest: [
-								"TableConfiguration.js",
-								"DynamicView.js",
-								"Table.js",
-								"Row.js",
-								"Cell.js"
+															"TableConfiguration.js",
+															"DynamicView.js",
+															"Table.js",
+															"Row.js",
+															"Cell.js"
                                     ],
                    testFiles: [
-								"DynamicView.test.js",
-								"Table.test.js",
-								"Row.test.js",
-								"Cell.test.js"
+														"DynamicView.test.js",
+														"Table.test.js",
+														"Row.test.js",
+														"Cell.test.js"
                                ]
                  },
                  {
@@ -109,26 +102,19 @@
     
     <script type="text/javascript">
     <!--
-    var i = 0;
-    for (i = 0; i < necessaryImports.length; i++) {
-      addImport(necessaryImports[i]);
-    }
-
-    for (i = 0; i < tests.length; i++) {
-      var currentIncludes = tests[i];
-      for (var j = 0; j < currentIncludes.filesUnderTest.length; j++) {
-        var filename = currentIncludes.pathToFiles + currentIncludes.filesUnderTest[j];
-        addImport(filename);
-      }
-      for (var k = 0; k < currentIncludes.testFiles.length; k++) {
-        var filename = currentIncludes.pathToTests + currentIncludes.testFiles[k];
-        addImport(filename);
-      } 
-    }
-
-    for (i = 0; i < testLibraries.length; i++) {
-      addImport(testLibraries[i]);
-    }
+    $(document).ready(function() {
+	    for (i = 0; i < tests.length; i++) {
+	      var currentIncludes = tests[i];
+	      for (var j = 0; j < currentIncludes.filesUnderTest.length; j++) {
+	        var filename = currentIncludes.pathToFiles + currentIncludes.filesUnderTest[j];
+	        addImport(filename);
+	      }
+	      for (var k = 0; k < currentIncludes.testFiles.length; k++) {
+	        var filename = currentIncludes.pathToTests + currentIncludes.testFiles[k];
+	        addImport(filename);
+	      } 
+	    }
+    });
     //-->
     </script>
   </body>

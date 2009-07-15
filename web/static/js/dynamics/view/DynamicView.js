@@ -1,8 +1,8 @@
-var DynamicsView = function() {
+var DynamicView = function() {
 	
 };
 //common base view class
-DynamicsView.prototype.init = function(controller, model) {
+DynamicView.prototype.init = function(controller, model) {
 	this.controller = controller;
 	this.model = model;
 	this.parentView = null;
@@ -16,27 +16,27 @@ DynamicsView.prototype.init = function(controller, model) {
 	this.model.addDeleteListener(deleteListener);
 	this.subViews = {};
 };
-DynamicsView.prototype.getModel = function() {
+DynamicView.prototype.getModel = function() {
 	return this.model;
 };
-DynamicsView.prototype.getController = function() {
+DynamicView.prototype.getController = function() {
 	return this.controller;
 };
-DynamicsView.prototype.addSubView = function(name, view) {
+DynamicView.prototype.addSubView = function(name, view) {
 	this.subViews[name] = view;
 	view.setParentView(this);
 };
-DynamicsView.prototype.setParentView = function(parentView) {
+DynamicView.prototype.setParentView = function(parentView) {
 	this.parentView = parentView;
 };
 
 //event handlers
-DynamicsView.prototype.onEdit = function(event) {
+DynamicView.prototype.onEdit = function(event) {
 	throw "Abstract method.";
 };
-DynamicsView.prototype.onDelete = function(event) {
+DynamicView.prototype.onDelete = function(event) {
 	throw "Abstract method.";
 };
-DynamicsView.prototype.onAdd = function(event) {
+DynamicView.prototype.onAdd = function(event) {
 	throw "Abstract method.";
 };

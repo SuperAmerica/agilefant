@@ -12,3 +12,10 @@ CommonModel.prototype.getId = function() {
   return this.id;
 };
 
+CommonModel.prototype.addEditListener = function() {
+	//TODO: implement
+};
+
+CommonModel.prototype.addDeleteListener = function() {
+	//TODO: implement
+};

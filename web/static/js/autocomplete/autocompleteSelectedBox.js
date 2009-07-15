@@ -13,6 +13,10 @@ AutocompleteSelected.prototype.setItems = function(items) {
   this.items = items;
 };
 
+AutocompleteSelected.prototype.getSelectedIds = function() {
+  return this.selectedIds;
+};
+
 AutocompleteSelected.prototype.initialize = function(element) {
   this.element = element;
   this.element.addClass(AutocompleteVars.cssClasses.selectedParent);

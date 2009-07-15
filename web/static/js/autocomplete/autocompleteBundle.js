@@ -57,4 +57,11 @@ Autocomplete.prototype.focusSearchField = function() {
   this.searchBox.focus();
 };
 
+Autocomplete.prototype.remove = function() {
+  this.element.remove();
+};
+
+Autocomplete.prototype.getSelectedIds = function() {
+  return this.selectedBox.getSelectedIds();
+};
 

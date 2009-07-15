@@ -2,16 +2,18 @@
  * Data provider singleton for Autocomplete.
  */
 
-
-AutocompleteDataProvider.urls = {
-  "usersAndTeams": "ajax/userChooserData.action";  
+AutocompleteDataProvider.vars = {
+  urls: {
+    "usersAndTeams": "ajax/userChooserData.action"
+  }
 };
+
+AutocompleteDataProvider.instance = null;
+
 
 function AutocompleteDataProvider() {
   
 };
-
-AutocompleteDataProvider.instance = null;
 
 AutocompleteDataProvider.getInstance = function() {
   if (!AutocompleteDataProvider.instance) {
@@ -19,3 +21,12 @@ AutocompleteDataProvider.getInstance = function() {
   }
   return AutocompleteDataProvider.instance;
 };
+
+
+
+AutocompleteDataProvider.prototype._fetchData = function(url,params) {
+  jQuery.getJSON(url,params, function() {
+    
+  });
+};
+

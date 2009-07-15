@@ -815,14 +815,34 @@ $(document).ready(function() {
   
   test("Focus search field", function() {
     this.searchBox.expects().focus();
-    
     this.ac.focusSearchField();
   });
   
-
+  
+  test("Remove bundle", function() {
+    var parent = $('<div/>').appendTo(document.body)
+    this.ac = new Autocomplete(parent);
+    this.ac.initialize();
+    
+    this.ac.remove();
+    
+    same(parent.children().length, 0, "Autocomplete has been removed");
+  });
+  
+  test("Get selected ids", function() {
+    this.selectedBox.expects().getSelectedIds().andReturn([1,2,3]);
+    
+    same(this.ac.getSelectedIds(), [1,2,3], "Selected ids match");
+  });
   
   
-  module("Autocomplete: Data provider");
+  
+  
+  module("Autocomplete: Data provider",{
+    teardown: function() {
+      AutocompleteDataProvider.instance = null;
+    }
+  });
   
   test("Get instance", function() {
     ok(!AutocompleteDataProvider.instance, "Data provider is undefined");
@@ -833,5 +853,15 @@ $(document).ready(function() {
     equals(AutocompleteDataProvider.getInstance(), AutocompleteDataProvider.instance, "Data provider is singleton");
   });
   
+  
+  test("Load data", function() {
+    var dataProvider = AutocompleteDataProvider.getInstance();
+    
+    var fetchDataCalledCount = 0;
+    dataProvider.fetchData = function(url, params) {
+      fetchDataCalledCount++;
+    };
+    
+  });
 });
 

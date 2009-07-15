@@ -1,9 +1,11 @@
 package fi.hut.soberit.agilefant.web;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.support.PropertyComparator;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -24,11 +26,15 @@ public class UserTeamAutcompleteAction extends ActionSupport {
     @Autowired
     private TransferObjectBusiness transferObjectBusiness;
     
+    @SuppressWarnings("unchecked")
     @Override
     public String execute() {
         userTeamData = new ArrayList<AutocompleteDataNode>();
         userTeamData.addAll(transferObjectBusiness.constructUserAutocompleteData());
         userTeamData.addAll(transferObjectBusiness.constructTeamAutocompleteData());
+        
+        Collections.sort(userTeamData, new PropertyComparator("name", true, true));
+        
         return Action.SUCCESS;
     }
 

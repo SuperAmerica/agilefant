@@ -28,7 +28,7 @@
 			this.destroy();
 		},
 		value: function() {
-			return this.data("autocomplete").getSelectedIds();
+			return this.element.data("autocomplete").getSelectedIds();
 		},
 		setValue: function() {
 			

@@ -1,6 +1,7 @@
 (function($){
 	$.widget("ui.autocompleteDialog", {
 		_init: function() {
+			this.element = $('<div />').appendTo(document.body);
 			var me = this;
 			var autocomplete = new Autocomplete(this.element, {
 				dataType: this.options.dataType
@@ -19,7 +20,10 @@
 				width: 500,
 				minHeight: 400,
 				position: 'top',
-				title: this.options.title
+				title: this.options.title,
+				close: function() {
+					me.destroy();
+				}
 			});
 			this.element.data("autocomplete", autocomplete);
 		},
@@ -38,6 +42,7 @@
      		this.element.dialog('destroy');
      		this.element.data("autocomplete").remove();
 			this.element.removeData("autocomplete");
+			this.element.remove();
 		}
 	});
 	$.extend($.ui.autocompleteDialog, {

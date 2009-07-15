@@ -1,19 +1,19 @@
 $(document).ready(function() {
-	module("Dynamics model");
-	test("Story (iteration) data test", function() {
-	  var data = {
-			  name: "Test",
-			  id: 1,
-			  description: "foofaa",
-			  priority: 1
-	  };
-	  var ig = new StoryModel(data);
-	  same(ig.getName(), data.name, "Name ok" );
-	  same(ig.getId(), data.id, "Id ok" );
-	  same(ig.getPriority(), data.priority, "Priority ok" );
-	  same(ig.getDescription(), data.description, "Description ok" );
-	  
-	});
+//	module("Dynamics model");
+//	test("Story (iteration) data test", function() {
+//	  var data = {
+//			  name: "Test",
+//			  id: 1,
+//			  description: "foofaa",
+//			  priority: 1
+//	  };
+//	  var ig = new StoryModel(data);
+//	  same(ig.getName(), data.name, "Name ok" );
+//	  same(ig.getId(), data.id, "Id ok" );
+//	  same(ig.getPriority(), data.priority, "Priority ok" );
+//	  same(ig.getDescription(), data.description, "Description ok" );
+//	  
+//	});
 	
 	module("Dynamics utils");
 	test("hour entry to string", function() {

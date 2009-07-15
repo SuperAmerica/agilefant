@@ -5,13 +5,12 @@ import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.isNull;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -23,7 +22,9 @@ import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
+import fi.hut.soberit.agilefant.model.Team;
 import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.transfer.AutocompleteDataNode;
 import fi.hut.soberit.agilefant.transfer.StoryTO;
 import fi.hut.soberit.agilefant.transfer.TaskTO;
 import fi.hut.soberit.agilefant.util.ResponsibleContainer;
@@ -35,6 +36,8 @@ public class TransferObjectBusinessTest {
     private HourEntryBusiness hourEntryBusiness;
     private TaskHourEntryDAO taskHourEntryDAO;
     private StoryBusiness storyBusiness;
+    private UserBusiness userBusiness;
+    private TeamBusiness teamBusiness;
     
     Project project;
     Iteration iteration;
@@ -57,6 +60,12 @@ public class TransferObjectBusinessTest {
         
         storyBusiness = createMock(StoryBusiness.class);
         transferObjectBusiness.setStoryBusiness(storyBusiness);
+        
+        userBusiness = createMock(UserBusiness.class);
+        transferObjectBusiness.setUserBusiness(userBusiness);
+        
+        teamBusiness = createMock(TeamBusiness.class);
+        transferObjectBusiness.setTeamBusiness(teamBusiness);
     }
     
     @Before
@@ -222,6 +231,47 @@ public class TransferObjectBusinessTest {
         }
         assertTrue("User not found in responsible containers",
                 assignedUserFound && notAssignedUserFound);
+    }
+    
+    @Test
+    public void testConstructUserAutocompleteData() {
+        User user = new User();
+        user.setId(1);
+        user.setFullName("daadaa");
+        
+        expect(userBusiness.retrieveAll()).andReturn(Arrays.asList(user));
+        
+        replay(userBusiness);
+        List<AutocompleteDataNode> actual = this.transferObjectBusiness.constructUserAutocompleteData();
+        assertEquals(1, actual.size());
+        assertEquals(1, (int)actual.get(0).getId());
+        assertEquals("daadaa", actual.get(0).getName());
+        assertEquals("fi.hut.soberit.agilefant.model.User", actual.get(0).getBaseClassName());
+        assertNull(actual.get(0).getIdList());
+        verify(userBusiness);
+    }
+    
+    @Test
+    public void testConstructTeamAutocompleteData() {
+        User user1 = new User();
+        User user2 = new User();
+        Team team = new Team();
+        user1.setId(1);
+        user2.setId(2);
+        team.setName("daa");
+        team.setId(1);
+        team.setUsers(Arrays.asList(user1,user2));
+        
+        expect(teamBusiness.retrieveAll()).andReturn(Arrays.asList(team));
+        
+        replay(teamBusiness);
+        List<AutocompleteDataNode> actual = this.transferObjectBusiness.constructTeamAutocompleteData();
+        assertEquals(1, actual.size());
+        assertEquals(1, (int)actual.get(0).getId());
+        assertEquals("daa", actual.get(0).getName());
+        assertEquals("fi.hut.soberit.agilefant.model.Team", actual.get(0).getBaseClassName());
+        assertEquals(2, actual.get(0).getIdList().size());
+        verify(teamBusiness);
     }
 
     /**

@@ -4,18 +4,22 @@ var DynamicTableColumnConfiguration = function(options) {
 			minWidth: 0,
 			fullWidth: true,
 			scaleWidth: true,
-			get: function() {},
-			set: function() {},
-			type: "empty",
+			get: null,
 			tooltip: "",
 			headerTooltip: "",
-			editDecorator: null,
 			decorator: null,
-			buttions: null,
 			title: "",
 			sortCallback: null,
-			sortDirection: 0,
-			cssClass: null
+			defaultSortColumn: false,
+			cssClass: null,
+			editable: false,
+			edit: {
+				decorator: null,
+				items: null,
+				set: function() {},
+				editor: null,
+				buttons: null
+			}
 	};
 	$.extend(this.options,options);
 };
@@ -25,14 +29,8 @@ DynamicTableColumnConfiguration.prototype.getWidth = function() {
 DynamicTableColumnConfiguration.prototype.getMinWidth = function() {
 	return this.options.minWidth;
 };
-DynamicTableColumnConfiguration.prototype.getSetter = function() {
-	return this.options.get;
-};
 DynamicTableColumnConfiguration.prototype.getGetter = function() {
 	return this.options.set;
-};
-DynamicTableColumnConfiguration.prototype.getType = function() {
-	return this.options.type;
 };
 DynamicTableColumnConfiguration.prototype.getTooltip = function() {
 	return this.options.tooltip;
@@ -43,9 +41,6 @@ DynamicTableColumnConfiguration.prototype.getHeaderTooltip = function() {
 DynamicTableColumnConfiguration.prototype.getDecorator = function() {
 	return this.options.decorator;
 };
-DynamicTableColumnConfiguration.prototype.getEditDecorator = function() {
-	return this.options.editDecorator;
-};
 DynamicTableColumnConfiguration.prototype.isFullWidth = function() {
 	return this.options.fullWidth;
 };
@@ -55,11 +50,17 @@ DynamicTableColumnConfiguration.prototype.getCssClass = function() {
 DynamicTableColumnConfiguration.prototype.getSortCallback = function() {
 	return this.options.sortCallback;
 };
-DynamicTableColumnConfiguration.prototype.getSortDirection = function() {
-	return this.options.sortDirection;
+DynamicTableColumnConfiguration.prototype.isDefaultSortColumn = function() {
+	return this.options.defaultSortColumn;
 };
-DynamicTableColumnConfiguration.prototype.setSortDirection = function(direction) {
-	this.options.sortDirection = direction;
+DynamicTableColumnConfiguration.prototype.setDefaultSortColumn = function(defaultSortColumn) {
+	this.options.defaultSortColumn = defaultSortColumn;
+};
+DynamicTableColumnConfiguration.prototype.isEditable = function() {
+	return this.options.editable;
+};
+DynamicTableColumnConfiguration.prototype.getEditOptions = function() {
+	return this.options.edit;
 };
 
 var DynamicTableConfiguration = function() {

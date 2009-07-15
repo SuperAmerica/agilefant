@@ -2,6 +2,9 @@ package fi.hut.soberit.agilefant.business.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,14 +13,18 @@ import org.springframework.transaction.annotation.Transactional;
 import fi.hut.soberit.agilefant.business.HourEntryBusiness;
 import fi.hut.soberit.agilefant.business.ProjectBusiness;
 import fi.hut.soberit.agilefant.business.StoryBusiness;
+import fi.hut.soberit.agilefant.business.TeamBusiness;
 import fi.hut.soberit.agilefant.business.TransferObjectBusiness;
+import fi.hut.soberit.agilefant.business.UserBusiness;
 import fi.hut.soberit.agilefant.db.TaskHourEntryDAO;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.TaskHourEntry;
+import fi.hut.soberit.agilefant.model.Team;
 import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.transfer.AutocompleteDataNode;
 import fi.hut.soberit.agilefant.transfer.HourEntryTO;
 import fi.hut.soberit.agilefant.transfer.StoryTO;
 import fi.hut.soberit.agilefant.transfer.TaskTO;
@@ -38,6 +45,12 @@ public class TransferObjectBusinessImpl implements TransferObjectBusiness {
     
     @Autowired
     private HourEntryBusiness hourEntryBusiness;
+    
+    @Autowired
+    private UserBusiness userBusiness;
+    
+    @Autowired
+    private TeamBusiness teamBusiness;
     
     /** {@inheritDoc} */
     @Transactional(readOnly = true)
@@ -106,6 +119,32 @@ public class TransferObjectBusinessImpl implements TransferObjectBusiness {
     }
     
     /** {@inheritDoc} */
+    public List<AutocompleteDataNode> constructUserAutocompleteData() {
+        Collection<User> allUsers = this.userBusiness.retrieveAll();
+        List<AutocompleteDataNode> autocompleteData = new ArrayList<AutocompleteDataNode>();
+        for(User user : allUsers) {
+            AutocompleteDataNode curNode = new AutocompleteDataNode(User.class, user.getId(), user.getFullName());
+            autocompleteData.add(curNode);
+        }
+        return autocompleteData;
+    }
+    
+    /** {@inheritDoc} */
+    public List<AutocompleteDataNode> constructTeamAutocompleteData() {
+        Collection<Team> allTeams = this.teamBusiness.retrieveAll();
+        List<AutocompleteDataNode> autocompleteData = new ArrayList<AutocompleteDataNode>();
+        for(Team team : allTeams) {
+            Set<Integer> userIds = new HashSet<Integer>();
+            for(User user : team.getUsers()) {
+                userIds.add(user.getId());
+            }
+            AutocompleteDataNode curNode = new AutocompleteDataNode(Team.class, team.getId(), team.getName(), userIds);
+            autocompleteData.add(curNode);
+        }
+        return autocompleteData;
+    }
+    
+    /** {@inheritDoc} */
     public TaskTO constructTaskTO(Task task) {
         Collection<User> assignedUsers;
         if (task.getStory() != null) {
@@ -132,6 +171,14 @@ public class TransferObjectBusinessImpl implements TransferObjectBusiness {
 
     public void setStoryBusiness(StoryBusiness storyBusiness) {
         this.storyBusiness = storyBusiness;
+    }
+
+    public void setUserBusiness(UserBusiness userBusiness) {
+        this.userBusiness = userBusiness;
+    }
+
+    public void setTeamBusiness(TeamBusiness teamBusiness) {
+        this.teamBusiness = teamBusiness;
     }
     
 }

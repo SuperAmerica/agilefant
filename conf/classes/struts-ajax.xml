@@ -336,6 +336,7 @@
 	<action name="userChooserData" class="userTeamAutocomplete">
 		<result name="success" type="json">
 			<param name="target">userTeamData</param>
+			<param name="patterns">-class</param>
 		</result>
 	</action>
 	<!-- /Utility actions -->

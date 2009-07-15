@@ -123,7 +123,7 @@ public class TransferObjectBusinessImpl implements TransferObjectBusiness {
         Collection<User> allUsers = this.userBusiness.retrieveAll();
         List<AutocompleteDataNode> autocompleteData = new ArrayList<AutocompleteDataNode>();
         for(User user : allUsers) {
-            AutocompleteDataNode curNode = new AutocompleteDataNode(User.class, user.getId(), user.getFullName());
+            AutocompleteDataNode curNode = new AutocompleteDataNode(User.class, user.getId(), user.getFullName(), user.isEnabled());
             autocompleteData.add(curNode);
         }
         return autocompleteData;

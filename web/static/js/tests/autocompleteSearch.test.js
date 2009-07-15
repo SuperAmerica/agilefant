@@ -819,6 +819,19 @@ $(document).ready(function() {
     this.ac.focusSearchField();
   });
   
-  module("Autocomplete: dialog mode");
+
+  
+  
+  module("Autocomplete: Data provider");
+  
+  test("Get instance", function() {
+    ok(!AutocompleteDataProvider.instance, "Data provider is undefined");
     
+    var actual = AutocompleteDataProvider.getInstance();
+    ok(AutocompleteDataProvider.instance, "Data provider is defined");
+    equals(AutocompleteDataProvider.instance, actual, "Data provider is correct");
+    equals(AutocompleteDataProvider.getInstance(), AutocompleteDataProvider.instance, "Data provider is singleton");
+  });
+  
 });
+

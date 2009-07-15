@@ -599,6 +599,7 @@ $(document).ready(function() {
   test("Adding a multiple id item", function() {
     this.as.selectedIds = [888];
     var validTestItem = {
+        id: 5,
         name: "Team Agilefant",
         idList: [1,765,888]
     };
@@ -802,8 +803,11 @@ $(document).ready(function() {
     this.searchBox.expects().initialize(this.ac.searchBoxContainer);
     this.selectedBox.expects().initialize(this.ac.selectedBoxContainer);
     
+    
+    
     this.ac.initialize();
     
+    ok(this.ac.dataProvider, "Data provider is set");
     ok(this.ac.element, 'Element should be initialized');
     ok(this.ac.element.hasClass('.autocomplete'), 'Correct class should be added');
     same(this.ac.parent.find('.autocomplete').length, 1, "Element should be appended to parent");
@@ -811,6 +815,29 @@ $(document).ready(function() {
     
     same(this.ac.element.children().get(0), this.ac.searchBoxContainer.get(0));
     same(this.ac.element.children().get(1), this.ac.selectedBoxContainer.get(0));
+  });
+  
+  test("Get data", function() {
+    var returnedData = [
+      {
+        id: 123,
+        name: "Timo"
+      }
+    ];
+    var dataProviderCalledCount = 0;
+    this.ac.dataProvider = {};
+    this.ac.dataProvider.get = function(type) {
+      same(type, "usersAndTeams", "Type matches");
+      dataProviderCalledCount++;
+      return returnedData;
+    };
+    
+    this.ac.options.dataType = "usersAndTeams";
+    
+    this.ac.getData();
+    
+    same(dataProviderCalledCount, 1, "Data provider is called once");
+    same(this.ac.items, returnedData, "Data is correctly set");
   });
   
   test("Focus search field", function() {
@@ -831,7 +858,6 @@ $(document).ready(function() {
   
   test("Get selected ids", function() {
     this.selectedBox.expects().getSelectedIds().andReturn([1,2,3]);
-    
     same(this.ac.getSelectedIds(), [1,2,3], "Selected ids match");
   });
   
@@ -839,29 +865,30 @@ $(document).ready(function() {
   
   
   module("Autocomplete: Data provider",{
-    teardown: function() {
+    setup: function() {
       AutocompleteDataProvider.instance = null;
+      this.dataProvider = AutocompleteDataProvider.getInstance();
     }
   });
   
   test("Get instance", function() {
-    ok(!AutocompleteDataProvider.instance, "Data provider is undefined");
-    
+    AutocompleteDataProvider.instance = null;
     var actual = AutocompleteDataProvider.getInstance();
     ok(AutocompleteDataProvider.instance, "Data provider is defined");
     equals(AutocompleteDataProvider.instance, actual, "Data provider is correct");
     equals(AutocompleteDataProvider.getInstance(), AutocompleteDataProvider.instance, "Data provider is singleton");
   });
   
-  
   test("Load data", function() {
-    var dataProvider = AutocompleteDataProvider.getInstance();
-    
     var fetchDataCalledCount = 0;
-    dataProvider.fetchData = function(url, params) {
+    this.dataProvider._fetchData = function(url, params) {
+      same(url, AutocompleteDataProvider.vars.urls.usersAndTeams, "Urls match");
       fetchDataCalledCount++;
     };
     
+    this.dataProvider.get("usersAndTeams");
+    same(fetchDataCalledCount, 1, "Data is fetched");
+
   });
 });
 

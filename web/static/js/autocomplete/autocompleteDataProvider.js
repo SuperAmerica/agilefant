@@ -2,6 +2,8 @@
  * Data provider singleton for Autocomplete.
  */
 
+AutocompleteDataProvider = function() {};
+
 AutocompleteDataProvider.vars = {
   urls: {
     "usersAndTeams": "ajax/userChooserData.action"
@@ -11,10 +13,9 @@ AutocompleteDataProvider.vars = {
 AutocompleteDataProvider.instance = null;
 
 
-function AutocompleteDataProvider() {
-  
-};
-
+/*
+ * Get the singleton instance and create if doesn't exist 
+ */
 AutocompleteDataProvider.getInstance = function() {
   if (!AutocompleteDataProvider.instance) {
     AutocompleteDataProvider.instance = new AutocompleteDataProvider();
@@ -22,11 +23,27 @@ AutocompleteDataProvider.getInstance = function() {
   return AutocompleteDataProvider.instance;
 };
 
-
+AutocompleteDataProvider.prototype.get = function(dataType) {
+  var url = AutocompleteDataProvider.vars.urls[dataType];
+  var params = {};
+  this._fetchData(url, params);
+};
 
 AutocompleteDataProvider.prototype._fetchData = function(url,params) {
-  jQuery.getJSON(url,params, function() {
-    
+  var returnedData = null;
+  jQuery.ajax({
+    async: false,
+    url: url,
+    cache: false,
+    dataType: "json",
+    type: "post",
+    success: function(data,status) {
+      returnedData = data;
+    },
+    error: function(request, status, error) {
+      
+    }
   });
+  return returnedData;
 };
 

@@ -55,14 +55,14 @@ AutocompleteSelected.prototype.addItem = function(item) {
   if (!this.checkValidityForAddition(item)) {
     return;
   }
-  else if (item.id) {
-    this.selectItem(item);
-  }
-  else {
+  else if (item.idList) {
     var items = this.getItemsByIdList(item.idList);
     for (var i = 0; i < items.length; i++) {      
       this.selectItem(items[i]);
     }
+  }
+  else  {
+    this.selectItem(item);
   }
 };
 

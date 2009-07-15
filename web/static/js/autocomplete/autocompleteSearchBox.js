@@ -125,7 +125,7 @@ AutocompleteSearch.prototype.updateMatches = function() {
 AutocompleteSearch.prototype.filterSuggestions = function(list, match) {
   var me = this;
   var returnedList = list.filter(function(element, index, array) {
-    return (me.matchSearchString(element.name, match) &&
+    return (element.enabled && me.matchSearchString(element.name, match) &&
         !me.selectedItemsBox.isItemSelected(element.id));
   });
   return returnedList;
@@ -163,10 +163,23 @@ AutocompleteSearch.prototype.renderSuggestionList = function() {
   }
   
   $.each(this.matchedItems, function(k,item) {
-    var listItem = $('<li/>').text(item.name).appendTo(me.suggestionList);
+    var listItem = $('<li/>').appendTo(me.suggestionList);
+    var icon = $('<span/>').appendTo(listItem);
+    me.addSuggestionListItemIcon(icon, item.baseClassName);
+    var text = $('<span/>').text(item.name).appendTo(listItem);
     listItem.click(function() { me.selectItem(item); });
   });
   this.suggestionList.show();
+};
+
+AutocompleteSearch.prototype.addSuggestionListItemIcon = function(element, baseClass) {
+  var classNamesToIconClasses = {
+      "fi.hut.soberit.agilefant.model.User": AutocompleteVars.cssClasses.suggestionUserIcon,
+      "fi.hut.soberit.agilefant.model.Team": AutocompleteVars.cssClasses.suggestionTeamIcon
+  };
+  
+  element.addClass(AutocompleteVars.cssClasses.suggestionIcon);
+  element.addClass(classNamesToIconClasses[baseClass]);
 };
 
 

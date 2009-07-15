@@ -26,7 +26,7 @@
   padding: 0;
   background-color: white;
   position: relative;
-  width: 200px;
+  width: 80%;
   border: 1px solid #ccc;
   border-top-width: 0;
   left: 5px;
@@ -35,9 +35,11 @@
 
 .autocomplete-suggestionList li {
   margin: 0;
-  padding: 0;
+  padding: 5px;
   list-style-type: none;
   border-top: 1px solid #ccc;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 .autocomplete-suggestionList li:hover {
@@ -68,6 +70,23 @@
   list-style-type: none;
   width: 80%;  
   font-size: 10pt;
+}
+
+.autocomplete-suggestionIcon {
+  float: left;
+  display: block;
+  width: 16px;
+  height: 16px;
+  margin-right: 6px;
+  background-repeat: none;
+}
+
+.autocomplete-userIcon {
+  background-image: url('../img/users.png');
+}
+
+.autocomplete-teamIcon {
+  
 }
 
 .autocomplete-selectedItemsList li .autocomplete-selectedName {

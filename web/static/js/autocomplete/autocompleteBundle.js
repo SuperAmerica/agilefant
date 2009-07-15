@@ -12,7 +12,11 @@ var AutocompleteVars = {
       selectedLi: 'autocomplete-selected',
       selectedItemsList: 'autocomplete-selectedItemsList',
       selectedItemName: 'autocomplete-selectedName',
-      selectedItemRemove: 'autocomplete-selectedRemove' 
+      selectedItemRemove: 'autocomplete-selectedRemove',
+      
+      suggestionIcon: 'autocomplete-suggestionIcon',
+      suggestionUserIcon: 'autocomplete-userIcon',
+      suggestionTeamIcon: 'autocomplete-teamIcon'
     },
     keyCodes: {
       enter: 13,

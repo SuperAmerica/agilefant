@@ -17,20 +17,29 @@ $(document).ready(function() {
       this.testDataSet = [
         {
           id: 1,
-          name: "Timo Testi"
+          name: "Timo Testi",
+          enabled: true
         },
         {
           id: 4,
-          name: "Armas Testi"
+          name: "Armas Testi",
+          enabled: true
         },
         {
           id: 5,
-          name: "Selected Testi"
+          name: "Selected Testi",
+          enabled: true
         },
         {
           id: 7,
-          name: "Jutta Vahaniemi"
+          name: "Jutta Vahaniemi",
+          enabled: true
         },
+        {
+          id: 9,
+          name: "Disabloitu Testi",
+          enabled: false
+        }
       ];
     },
     teardown: function() {
@@ -120,28 +129,28 @@ $(document).ready(function() {
   });
   
   
-//  test("Timeout updating matched list", function() {
-//    var me = this;
-//    var updateCounter = 0;
-//    this.as.updateMatches = function() {
-//      updateCounter++;
-//    }
-//    
-//    this.as.timeoutUpdateMatches();
-//    this.as.timeoutUpdateMatches();
-//    this.as.timeoutUpdateMatches();
-//    this.as.timeoutUpdateMatches();
-//    setTimeout(function() {
-//      same(updateCounter, 1, "Update count should match");
-//      me.as.timeoutUpdateMatches();
-//    }, 550);
-//    
-//    setTimeout(function() {
-//      same(updateCounter, 2, "Update count should match");
-//      start();
-//    }, 1100)
-//    stop(2000);
-//  });
+  test("Timeout updating matched list", function() {
+    var me = this;
+    var updateCounter = 0;
+    this.as.updateMatches = function() {
+      updateCounter++;
+    }
+    
+    this.as.timeoutUpdateMatches();
+    this.as.timeoutUpdateMatches();
+    this.as.timeoutUpdateMatches();
+    this.as.timeoutUpdateMatches();
+    setTimeout(function() {
+      same(updateCounter, 1, "Update count should match");
+      me.as.timeoutUpdateMatches();
+    }, 550);
+    
+    setTimeout(function() {
+      same(updateCounter, 2, "Update count should match");
+      start();
+    }, 1100)
+    stop(2000);
+  });
   
   
   test("Updating matched list", function() {
@@ -326,7 +335,8 @@ $(document).ready(function() {
     var getLength = function(text) {      
       return me.as.filterSuggestions(me.testDataSet, text).length;
     }
-                                      
+    
+    same(0, getLength("Disabl"), "Should not match disabled users");
     same(2, getLength("Testi"), "Should match two entries");
     same(1, getLength("Vahaniemi"), "Should match one entry");
     
@@ -394,13 +404,18 @@ $(document).ready(function() {
     this.as.selectItem = function(item) {
       selectionCount++;
     };
+    var iconAddedCount = 0;
+    this.as.addSuggestionListItemIcon = function(element, baseClass) {
+      iconAddedCount++;
+    };
     
     this.as.renderSuggestionList();
     ok(this.as.suggestionList.is(':visible'), "The list should be visible");
     same(this.as.suggestionList.children('li').length, 3, "List item count should be equal to matched items");
     
     this.as.suggestionList.children('li').click();
-    same(selectionCount, 3, "The click events count should match")
+    same(selectionCount, 3, "The click events count matches");
+    same(iconAddedCount, 3, "The icon count matches");
     
     // Test with no entries
     this.as.matchedItems = [];
@@ -439,6 +454,34 @@ $(document).ready(function() {
     ok(focused, "Search input should have focus");
   });
   
+  
+  test('Add suggestion list item icon for user', function() {
+    var elem = $('<li/>');
+    var baseClass = "fi.hut.soberit.agilefant.model.User";
+        
+    this.as.addSuggestionListItemIcon(elem, baseClass);
+    
+    ok(elem.hasClass(AutocompleteVars.cssClasses.suggestionIcon),
+      "Element has generic icon class");
+    ok(elem.hasClass(AutocompleteVars.cssClasses.suggestionUserIcon),
+      "Element has specific user icon class");
+    
+    
+  });
+  
+  test('Add suggestion list item icon for team', function() {
+    var elem = $('<li/>');
+    var baseClass = "fi.hut.soberit.agilefant.model.Team";
+        
+    this.as.addSuggestionListItemIcon(elem, baseClass);
+    
+    ok(elem.hasClass(AutocompleteVars.cssClasses.suggestionIcon),
+      "Element has generic icon class");
+    ok(elem.hasClass(AutocompleteVars.cssClasses.suggestionTeamIcon),
+      "Element has specific team icon class");
+    
+    
+  });
   
   
   

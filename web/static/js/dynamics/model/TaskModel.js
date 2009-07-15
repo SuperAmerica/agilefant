@@ -1,6 +1,9 @@
+/*
+ * DYNAMICS - MODEL - Task Model
+ */
+
 
 var TaskModel = function() {
-  
   
 };
 

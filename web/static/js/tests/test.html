@@ -35,22 +35,41 @@
                                ]
                  },
                  {
-                   pathToFiles: "../dynamics/model",
+                   pathToFiles: "../dynamics/model/",
                    pathToTests: "dynamics/model/",
                    filesUnderTest: [],
                    testFiles: []
                  },
                  {
-                   pathToFiles: "../dynamics/view",
+                   pathToFiles: "../dynamics/view/",
                    pathToTests: "dynamics/view/",
-                   filesUnderTest: [],
-                   testFiles: []
+                   filesUnderTest: [
+								"TableConfiguration.js",
+								"DynamicView.js",
+								"Table.js",
+								"Row.js",
+								"Cell.js"
+                                    ],
+                   testFiles: [
+								"DynamicView.test.js",
+								"Table.test.js",
+								"Row.test.js",
+								"Cell.test.js"
+                               ]
                  },
                  {
-                   pathToFiles: "../dynamics/controller",
+                   pathToFiles: "../dynamics/controller/",
                    pathToTests: "dynamics/controller/",
-                   filesUnderTest: [],
-                   testFiles: []
+                   filesUnderTest: [
+								"CommonController.js",
+								"BacklogController.js",
+								"IterationController.js"
+                                    ],
+                   testFiles: [
+								"CommonController.test.js",
+								"BacklogController.test.js",
+								"IterationController.test.js"
+                               ]
                  }
                  ];
 

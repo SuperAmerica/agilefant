@@ -25,7 +25,7 @@ var AutocompleteVars = {
 
 var Autocomplete = function(element) {
   this.parent = element;
-  this.items = null;
+  this.items = [];
   this.searchBoxContainer = $('<div/>');
   this.selectedBoxContainer = $('<div/>');
   this.selectedBox = new AutocompleteSelected(this);

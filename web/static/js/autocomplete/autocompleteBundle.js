@@ -47,6 +47,7 @@ Autocomplete.prototype.initialize = function() {
   this.selectedBoxContainer.appendTo(this.element);
   
   this.searchBox.setItems(this.items);
+  this.selectedBox.setItems(this.items);
   
   this.searchBox.initialize(this.searchBoxContainer);
   this.selectedBox.initialize(this.selectedBoxContainer);

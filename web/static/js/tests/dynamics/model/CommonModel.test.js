@@ -8,17 +8,37 @@ $(document).ready(function() {
     setup: function() {
       this.commonModel = new CommonModel();
       this.commonModel.initialize();
-      
-      
     },
-    teardown: function() {
-      
-    }
+    teardown: function() { }
   });
   
   test("Initialization", function() {
     ok(this.commonModel.editListeners, "Edit listeners field added");
     ok(this.commonModel.deleteListeners, "Delete listeners field added");
+  });
+  
+  
+  test("Set data", function() {
+    var editListenerCallCount = 0;
+    this.commonModel.callEditListeners = function() {
+      editListenerCallCount++;
+    };
+    
+    this.commonModel.currentData = {};
+    this.commonModel.persistedData = {};
+    
+    var data = {
+      id: 7413,
+      name: "Test model"
+    };
+    
+    this.commonModel.setData(data);
+    
+    same(this.commonModel.currentData, data, "Current data is set");
+    same(this.commonModel.persistedData, data, "Persisted data is set");
+    same(this.commonModel.getId(), data.id, "Id is ok");
+    
+    same(editListenerCallCount, 1, "Edit listeners are called once");
   });
   
   
@@ -68,12 +88,7 @@ $(document).ready(function() {
     
     same(editListenerCallCount, 2, "The edit listener is called two times");
   });
-  
-  
-
-  
-  
-  
+ 
   test("Adding delete listeners", function() {
     same(this.commonModel.deleteListeners.length, 0, "Delete listeners empty before adding");
 

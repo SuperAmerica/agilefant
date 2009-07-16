@@ -16,8 +16,13 @@ var CommonModel = function() {};
 CommonModel.prototype.initialize = function() {
   this.editListeners = [];
   this.deleteListeners = [];
-  this.currentData = {};
-  this.persistedData = {};
+  
+  var defaultData = {
+    id: null  
+  };
+  
+  this.currentData = defaultData;
+  this.persistedData = defaultData;
 };
 
 
@@ -29,17 +34,19 @@ CommonModel.prototype.reload = function() {
 };
 
 /**
- * Set the object's data.
+ * Set the object's persisted and current data.
  */
 CommonModel.prototype.setData = function(newData) {  
-  // TODO: implement
+  this.currentData = newData;
+  this.persistedData = newData;
+  this.callEditListeners();
 };
 
 /**
  * Every model instance should have an unique id.
  */
 CommonModel.prototype.getId = function() {
-  return this.id;
+  return this.currentData.id;
 };
 
 /**

@@ -76,7 +76,7 @@ var DynamicTableConfiguration = function(options) {
 	};
 };
 
-DynamicTableConfiguration.prototype.getRowController = function() {
+DynamicTableConfiguration.prototype.getRowControllerFactory = function() {
 	return this.options.rowControllerFactory;
 };
 DynamicTableConfiguration.prototype.getColumnConfiguration = function(columnNum) {

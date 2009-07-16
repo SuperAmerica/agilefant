@@ -1,13 +1,21 @@
 /**
  * @base DynamicView
  */
-var DynamicTable = function(controller, model, tableConfiguration, parentView) {
+var DynamicTable = function(controller, model, config, parentView) {
 	this.init(controller, model, parentView);
-	this.tableConfiguration = {};
-	if(tableConfiguration) {
-		jQuery.extend(this.tableConfiguration, tableConfiguration);
+	this.config = {};
+	//these will be rendered first and will not be sorted
+	this.upperRows = [];
+	//rendered after upper rows and will be sorted
+	this.middleRows = [];
+	//rendered last and won't be sorted
+	this.bottomRows = [];
+	//objects in the table (middle rows)
+	this.rowHashes = [];
+	if(config) {
+		this.config = config;
 	} else {
-		this.tableConfiguration = new DynamicTableConfiguration();
+		this.config = new DynamicTableConfiguration();
 	}
 	this.initialize();
 };
@@ -40,7 +48,7 @@ DynamicTable.prototype.initialize = function() {
 };
 
 DynamicTable.prototype._computeColumns = function() {
-	var columnConfigs = this.tableConfiguration.getColumns();
+	var columnConfigs = this.config.getColumns();
 	var numberOfColumns = 0;
 	var totalMinimumWidth = 0;
 	// calculate number of columns and minimum width of the row
@@ -86,8 +94,48 @@ DynamicTable.prototype.render = function() {
 	
 };
 
-DynamicTable.prototype.createRow = function() {
-	
+DynamicTable.prototype._renderFromDataSource = function(dataArray) {
+	for(var i = 0; i < dataArray.length; i++) {
+		var model = dataArray[i];
+		this._dataSourceRow(model);
+	}
+	this.layout();
+	this.render();
+};
+
+DynamicTable.prototype.createRow = function(controller, model, position) {
+	var row = new DynamicTableRow(this.config.getColumns());
+	this._createRow(row, controller, model, position);
+	return row;
+};
+
+DynamicTable.prototype._createRow = function(row, controller, model, position) {
+	if(position === "top") {
+		this.upperRows.splice(0,0,row);
+	} else if(position === "bottom") {
+		this.bottomRows.push(row);
+	} else {
+		alert(model instanceof )
+		if(model instanceof CommonModel) {
+			if(jQuery.inArray(model.getHashCode(), this.rowHashes) === -1) {
+				this.middleRows.push(row);
+				this.rowHashes.push(model.getHashCode());
+			} else {
+				delete row;
+				return;
+			}
+		} else {
+			this.middleRows.push(row);
+		}
+	}
+	row.init(controller, model, this);
+};
+
+DynamicTable.prototype._dataSourceRow = function(model, columnConfig) {
+	var row = new DynamicTableRow(this.config.getColumns());
+	var controller = this.config.getRowControllerFactory.call(this, row, model);
+	this._createRow(row, controller, model);
+	return row;
 };
 
 DynamicTable.prototype.setDataSource = function() {

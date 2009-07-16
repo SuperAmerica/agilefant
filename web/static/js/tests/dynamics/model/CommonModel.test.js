@@ -121,13 +121,14 @@ $(document).ready(function() {
   
   test("Calling delete listeners", function() {
     var deleteListenerCallCount = 0;
-    var deleteListener = function() {
+    var deleteListener = function(event) {
+      same(event, "Event", "Correct event passed");
       deleteListenerCallCount++;
     };
     
     this.commonModel.deleteListeners = [deleteListener, deleteListener];
     
-    this.commonModel.callDeleteListeners();
+    this.commonModel.callDeleteListeners("Event");
     
     same(deleteListenerCallCount, 2, "The delete listener is called two times");
   });

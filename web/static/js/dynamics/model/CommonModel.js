@@ -30,7 +30,7 @@ CommonModel.prototype.initialize = function() {
  * Reloads the object's and all its children's data from the server.
  */
 CommonModel.prototype.reload = function() {
-  throw "Abstract method called";
+  throw "Abstract method called: reload";
 };
 
 /**
@@ -105,9 +105,9 @@ CommonModel.prototype.removeDeleteListener = function(listener) {
  * Delete listeners are called, when object is deleted.
  * @see #addDeleteListener
  */
-CommonModel.prototype.callDeleteListeners = function() {
+CommonModel.prototype.callDeleteListeners = function(event) {
   for (var i = 0; i < this.deleteListeners.length; i++) {
-    this.deleteListeners[i]();
+    this.deleteListeners[i](event);
   }
 };
 
@@ -123,14 +123,14 @@ CommonModel.prototype.commit = function() {
 };
 
 /**
- * An internal method to submit the AJAX request.
+ * An internal abstract method to submit the AJAX request.
  * <p>
- * The method is called whenever 
+ * The method is called whenever changes are committed.
  * 
  * @see #commit
  */
 CommonModel.prototype._saveData = function() {
-  //TODO: implement
+  throw "Abstract method called: _saveData";
 };
 
 

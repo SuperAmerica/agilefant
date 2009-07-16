@@ -1,6 +1,7 @@
 
 /**
  * Convenience methods for editing arrays
+ * @constructor
  */
 ArrayUtils = {};
 

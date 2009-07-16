@@ -468,6 +468,7 @@
 			<fileset dir="${build.webapp}/static/js/">
 		    <include name="autocomplete/*.js" />
 				<include name="dynamics/*/*.js" />
+				<include name="utils/*.js" />
 		  </fileset>
 	  </jsdoctoolkit>
 	</target>

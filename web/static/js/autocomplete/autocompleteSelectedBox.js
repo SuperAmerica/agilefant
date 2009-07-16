@@ -7,6 +7,7 @@
  * Constructor for the <code>Autocomplete</code>'s selected items list.
  * 
  * @constructor
+ * @see Autocomplete
  */
 var AutocompleteSelected = function(parent) {
   this.selectedList = null;
@@ -15,14 +16,23 @@ var AutocompleteSelected = function(parent) {
   this.parent = parent;
 };
 
+/**
+ * Set the items to select from.
+ */
 AutocompleteSelected.prototype.setItems = function(items) {
   this.items = items;
 };
 
+/**
+ * Get the id numbers of all the selected elements.
+ */
 AutocompleteSelected.prototype.getSelectedIds = function() {
   return this.selectedIds;
 };
 
+/**
+ * Initialize the selection element.
+ */
 AutocompleteSelected.prototype.initialize = function(element) {
   this.element = element;
   this.element.addClass(AutocompleteVars.cssClasses.selectedParent);
@@ -31,10 +41,18 @@ AutocompleteSelected.prototype.initialize = function(element) {
     .appendTo(this.element);
 };
 
+/**
+ * Check if the item with the given id is already selected.
+ */
 AutocompleteSelected.prototype.isItemSelected = function(id) {
   return (jQuery.inArray(id, this.selectedIds) !== -1);
 };
 
+/**
+ * Gets all items as list by their id.
+ * 
+ * 
+ */
 AutocompleteSelected.prototype.getItemsByIdList = function(idList) {
   if (!idList) {
     return [];
@@ -96,17 +114,18 @@ AutocompleteSelected.prototype.addListItem = function(item) {
   });
 };
 
+/**
+ * Removes the given item from the selection.
+ * <p>
+ * Also focuses the search field.
+ * 
+ * @param {int} id the id of the item to be removed
+ * @param {li} the dom element to remove
+ */
 AutocompleteSelected.prototype.removeItem = function(id, listItem) {
-  var me = this;
-  var tmp = this.selectedIds;
-  this.selectedIds = [];
-  for (var i = 0; i < tmp.length; i++) {
-    if (tmp[i] !== id) {
-      this.selectedIds.push(tmp[i]);
-    }
-  }
+  ArrayUtils.remove(this.selectedIds, id);
   listItem.remove();
   
-  me.parent.focusSearchField();
+  this.parent.focusSearchField();
 };
 

@@ -27,6 +27,13 @@ var AutocompleteVars = {
     inputWaitTime: 500
 };
 
+/**
+ * Constructor for the class Autocomplete.
+ * 
+ * @param element the element in DOM to construct the Autocomplete in
+ * @param options
+ * @constructor
+ */
 var Autocomplete = function(element, options) {
   this.parent = element;
   this.items = [];

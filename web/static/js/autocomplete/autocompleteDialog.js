@@ -1,3 +1,4 @@
+/** @ignore */
 (function($){
 	$.widget("ui.autocompleteDialog", {
 		_init: function() {
@@ -30,6 +31,7 @@
 			});
 			this.element.data("autocomplete", autocomplete);
 		},
+	  
 		select: function() {
 			this.options.callback.apply(this, this.value());
 			this.destroy();

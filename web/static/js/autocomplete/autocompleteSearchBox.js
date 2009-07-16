@@ -2,6 +2,12 @@
  * Search box with autocompletion.
  */
 
+/**
+ * Constructor for the <code>Autocomplete</code>'s search field.
+ * 
+ * @see Autocomplete
+ * @constructor
+ */
 var AutocompleteSearch = function(selectedItemsBox) {
   // Elements
   this.element = null;

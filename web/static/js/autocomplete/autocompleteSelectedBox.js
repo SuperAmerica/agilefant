@@ -2,6 +2,12 @@
  * Box for displaying the selected items from autocompletion.
  */
 
+
+/**
+ * Constructor for the <code>Autocomplete</code>'s selected items list.
+ * 
+ * @constructor
+ */
 var AutocompleteSelected = function(parent) {
   this.selectedList = null;
   this.selectedIds = [];

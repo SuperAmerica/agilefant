@@ -2,6 +2,10 @@
  * Data provider singleton for Autocomplete.
  */
 
+/**
+ * Constructor for the singleton class AutocompleteDataProvider
+ * @constructor
+ */
 AutocompleteDataProvider = function() {};
 
 AutocompleteDataProvider.vars = {
@@ -13,8 +17,8 @@ AutocompleteDataProvider.vars = {
 AutocompleteDataProvider.instance = null;
 
 
-/*
- * Get the singleton instance and create if doesn't exist 
+/**
+ * Get the singleton instance and create if doesn't exist. 
  */
 AutocompleteDataProvider.getInstance = function() {
   if (!AutocompleteDataProvider.instance) {
@@ -23,11 +27,19 @@ AutocompleteDataProvider.getInstance = function() {
   return AutocompleteDataProvider.instance;
 };
 
+/**
+ * Get the data for <code>Autocomplete</code>.
+ * 
+ * @param {String} dataType predefined data type to get
+ * @see Autocomplete
+ * @see AutocompleteDataProvider.vars.urls
+ */
 AutocompleteDataProvider.prototype.get = function(dataType) {
   var url = AutocompleteDataProvider.vars.urls[dataType];
   var params = {};
   return this._fetchData(url, params);
 };
+
 
 AutocompleteDataProvider.prototype._fetchData = function(url,params) {
   var returnedData = null;

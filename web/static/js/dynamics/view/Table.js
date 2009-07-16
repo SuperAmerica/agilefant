@@ -91,7 +91,23 @@ DynamicTable.prototype.layout = function() {
 
 //render or re-render table rows
 DynamicTable.prototype.render = function() {
-	
+	this.table.children(":not(.static)").remove();
+	this._sort();
+	var i = 0;
+	this._addSectionToTable(this.upperRows);
+	this._addSectionToTable(this.middleRows);
+	this._addSectionToTable(this.bottomRows);
+	if(this.rowCount() === 0) {
+		//TODO: hide headers etc.
+	}
+	this.layout();
+};
+
+DynamicTable.prototype._addSectionToTable = function(section) {
+	for(i = 0; i < section.length; i++) {
+		section[i].getElement().appendTo(this.table);
+		section[i].render();
+	}
 };
 
 DynamicTable.prototype._renderFromDataSource = function(dataArray) {
@@ -99,7 +115,6 @@ DynamicTable.prototype._renderFromDataSource = function(dataArray) {
 		var model = dataArray[i];
 		this._dataSourceRow(model);
 	}
-	this.layout();
 	this.render();
 };
 
@@ -115,7 +130,6 @@ DynamicTable.prototype._createRow = function(row, controller, model, position) {
 	} else if(position === "bottom") {
 		this.bottomRows.push(row);
 	} else {
-		alert(model instanceof )
 		if(model instanceof CommonModel) {
 			if(jQuery.inArray(model.getHashCode(), this.rowHashes) === -1) {
 				this.middleRows.push(row);
@@ -138,10 +152,10 @@ DynamicTable.prototype._dataSourceRow = function(model, columnConfig) {
 	return row;
 };
 
-DynamicTable.prototype.setDataSource = function() {
-	
+DynamicTable.prototype.rowCount = function() {
+	return this.upperRows.length + this.middleRows.length + this.bottomRows.length;
 };
 
-DynamicTable.prototype.rowCount = function() {
+DynamicTable.prototype._sort = function() {
 	
 };

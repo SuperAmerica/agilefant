@@ -6,22 +6,26 @@ $(document).ready(function() {
   
   module("Dynamics: Common Model", {
     setup: function() {
+      this.original = CommonModel;
       this.commonModel = new CommonModel();
       this.commonModel.initialize();
     },
-    teardown: function() { }
+    teardown: function() {
+      CommonModel = this.original;
+    }
   });
   
   test("Initialization", function() {
-    ok(this.commonModel.editListeners, "Edit listeners field added");
-    ok(this.commonModel.deleteListeners, "Delete listeners field added");
+    ok(this.commonModel.listeners, "Listeners field added");
+    same(this.commonModel.getId(), null, "Id is null");
   });
   
   
   test("Set data", function() {
-    var editListenerCallCount = 0;
-    this.commonModel.callEditListeners = function() {
-      editListenerCallCount++;
+    var listenerCallCount = 0;
+    this.commonModel.callListeners = function(event) {
+      same(event.type, "edit", "Event types match");
+      listenerCallCount++;
     };
     
     this.commonModel.currentData = {};
@@ -38,99 +42,120 @@ $(document).ready(function() {
     same(this.commonModel.persistedData, data, "Persisted data is set");
     same(this.commonModel.getId(), data.id, "Id is ok");
     
-    same(editListenerCallCount, 1, "Edit listeners are called once");
+    same(listenerCallCount, 1, "Listeners are called once");
   });
   
   
-  test("Adding edit listeners", function() {
-    same(this.commonModel.editListeners.length, 0, "Edit listeners empty before adding");
+  test("Adding listener", function() {
+    same(this.commonModel.listeners.length, 0, "Listeners empty before adding");
 
     for(var i = 0; i < 5; i++) {
-      this.commonModel.addEditListener(function() {});
+      this.commonModel.addListener(function(event) {});
     }
     
-    same(this.commonModel.editListeners.length, 5, "Edit listeners empty after adding");
+    same(this.commonModel.listeners.length, 5, "Listeners empty after adding");
   });
   
-  test("Removing edit listener", function() {
-    var editListener = {
+  test("Removing listener", function() {
+    var listener = {
         id: 2,
         name: "Hobla",
         cb: function() {}
     };
     var el2 = {};
     var el3 = {};
-    jQuery.extend(el2, editListener);
-    jQuery.extend(el3, editListener);
+    jQuery.extend(el2, listener);
+    jQuery.extend(el3, listener);
     
-    this.commonModel.editListeners = [editListener, el2, el3];
+    this.commonModel.listeners = [listener, el2, el3];
     
-    this.commonModel.removeEditListener(el2);
+    this.commonModel.removeListener(el2);
     
-    ok(jQuery.inArray(editListener, this.commonModel.editListeners) !== -1, "Correct edit listener exists");
-    ok(jQuery.inArray(el2, this.commonModel.editListeners) === -1, "Correct edit listener was removed");
-    ok(jQuery.inArray(el3, this.commonModel.editListeners) !== -1, "Correct edit listener exists");
+    ok(jQuery.inArray(listener, this.commonModel.listeners) !== -1, "Correct listener exists");
+    ok(jQuery.inArray(el2, this.commonModel.listeners) === -1, "Correct listener was removed");
+    ok(jQuery.inArray(el3, this.commonModel.listeners) !== -1, "Correct listener exists");
   });  
   
   
-  test("Calling edit listeners", function() {
-    var editListenerCallCount = 0;
-    var expectedEvent = "Event";
+  test("Calling listeners", function() {
+    var listenerCallCount = 0;
+    var expectedEventType = "edit";
     
-    var editListener = function(event) {
-      editListenerCallCount++;
-      same(event, expectedEvent, "Event matches with the expected one");
+    var listener = function(event) {
+      listenerCallCount++;
+      same(event.type, expectedEventType, "Event matches with the expected one");
     };
     
-    this.commonModel.editListeners = [editListener, editListener];
+    this.commonModel.listeners = [listener, listener];
     
-    this.commonModel.callEditListeners("Event");
+    this.commonModel.callListeners(new DynamicsEvents.EditEvent());
     
-    same(editListenerCallCount, 2, "The edit listener is called two times");
+    same(listenerCallCount, 2, "The listener is called two times");
   });
  
-  test("Adding delete listeners", function() {
-    same(this.commonModel.deleteListeners.length, 0, "Delete listeners empty before adding");
 
-    for(var i = 0; i < 5; i++) {
-      this.commonModel.addDeleteListener(function() {});
+  
+  test("Commit an existing item", function() {
+    var expectedId = 517;
+    
+    var saveDataCallCount = 0;
+    this.commonModel._saveData = function(id, params) {
+      same(id, expectedId, "The id number matches");
+      same(params,
+          {
+            description: "Generic test object with a longer description",
+            childIds: [1,2,3]
+          },
+          "The expected parameters match");
+      saveDataCallCount++;
     }
     
-    same(this.commonModel.deleteListeners.length, 5, "Delete listeners empty after adding");
+    this.commonModel.persistedData = {
+      id: 517,
+      name: "Test",
+      description: "Generic test object",
+      childIds: [1,2,3,4]
+    };
+    this.commonModel.currentData = {
+      id: 517,
+      name: "Test",
+      description: "Generic test object with a longer description",
+      childIds: [1,2,3]
+    };
+    
+    this.commonModel.commit();
+    
+    same(saveDataCallCount, 1, "Data saving is called");
   });
   
-  test("Removing delete listener", function() {
-    var deleteListener = {
-        id: 2,
-        name: "Hobla",
-        cb: function() {}
-    };
-    var dl2 = {};
-    var dl3 = {};
-    jQuery.extend(dl2, deleteListener);
-    jQuery.extend(dl3, deleteListener);
-    
-    this.commonModel.deleteListeners = [deleteListener, dl2, dl3];
-    
-    this.commonModel.removeDeleteListener(dl2);
-    
-    ok(jQuery.inArray(deleteListener, this.commonModel.deleteListeners) !== -1, "Correct delete listener exists");
-    ok(jQuery.inArray(dl2, this.commonModel.deleteListeners) === -1, "Correct delete listener was removed");
-    ok(jQuery.inArray(dl3, this.commonModel.deleteListeners) !== -1, "Correct delete listener exists");
-  });  
   
-  test("Calling delete listeners", function() {
-    var deleteListenerCallCount = 0;
-    var deleteListener = function(event) {
-      same(event, "Event", "Correct event passed");
-      deleteListenerCallCount++;
+  test("Roll back", function() {
+    var persistedData = {
+      id: 517,
+      name: "Test",
+      description: "Generic test object",
+      childIds: [1,2,3,4]
+    };
+    var currentData = {
+      id: 517,
+      name: "Test",
+      description: "Generic test object with a longer description",
+      childIds: [1,2,3]
     };
     
-    this.commonModel.deleteListeners = [deleteListener, deleteListener];
+    this.commonModel.persistedData = persistedData;
+    this.commonModel.currentData = currentData;
     
-    this.commonModel.callDeleteListeners("Event");
+    var listenerCallCount = 0;
+    this.commonModel.callListeners = function() {
+      listenerCallCount++;
+    };
     
-    same(deleteListenerCallCount, 2, "The delete listener is called two times");
+    this.commonModel.rollback();
+    
+    same(listenerCallCount, 1, "Listeners are called once");
+    same(this.commonModel.persistedData, persistedData, "Persisted data matches");
+    same(this.commonModel.currentData, persistedData, "Current data matches");
   });
   
 });

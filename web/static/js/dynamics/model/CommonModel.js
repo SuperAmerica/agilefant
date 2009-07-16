@@ -14,13 +14,10 @@ var CommonModel = function() {};
  * Every subclass should call this method.
  */
 CommonModel.prototype.initialize = function() {
-  this.editListeners = [];
-  this.deleteListeners = [];
-  
+  this.listeners = []; 
   var defaultData = {
     id: null  
   };
-  
   this.currentData = defaultData;
   this.persistedData = defaultData;
 };
@@ -39,7 +36,7 @@ CommonModel.prototype.reload = function() {
 CommonModel.prototype.setData = function(newData) {  
   this.currentData = newData;
   this.persistedData = newData;
-  this.callEditListeners();
+  this.callListeners(new DynamicsEvents.EditEvent());
 };
 
 /**
@@ -50,76 +47,56 @@ CommonModel.prototype.getId = function() {
 };
 
 /**
- * Add an edit listener.
+ * Add an event listener.
  * 
  * @param {function} listener the listener to be added
- * @see #callEditListeners
+ * @see #callListeners
  */
-CommonModel.prototype.addEditListener = function(listener) {
-	this.editListeners.push(listener);
+CommonModel.prototype.addListener = function(listener) {
+	this.listeners.push(listener);
 };
 
 /**
- * Remove an edit listener
+ * Remove an event listener
  * 
  * @param {function} listener the listener to remove
+ * @see #addListener
  */
-CommonModel.prototype.removeEditListener = function(listener) {
-  ArrayUtils.remove(this.editListeners, listener);
+CommonModel.prototype.removeListener = function(listener) {
+  ArrayUtils.remove(this.listeners, listener);
 };
 
 /**
- * Call the object's edit listeners.
+ * Call the object's event listeners.
  * <p>
- * Edit listeners are called, when object data changes.
- * @see #addEditListener
+ * Listeners are called, when object data changes.
+ * @see #addListener
  */
-CommonModel.prototype.callEditListeners = function(event) {
-  for (var i = 0; i < this.editListeners.length; i++) {
-    this.editListeners[i](event);
+CommonModel.prototype.callListeners = function(event) {
+  for (var i = 0; i < this.listeners.length; i++) {
+    this.listeners[i](event);
   }
 };
 
 
-/**
- * Add a delete listener.
- * 
- * @see #callDeleteListeners
- */
-CommonModel.prototype.addDeleteListener = function(listener) {
-	this.deleteListeners.push(listener);
-};
-
-/**
- * Remove a delete listener.
- * 
- * @param {function} listener the listener to remove
- */
-CommonModel.prototype.removeDeleteListener = function(listener) {
-  ArrayUtils.remove(this.deleteListeners, listener);
-};
-
-/**
- * Call the object's delete listeners.
- * <p>
- * Delete listeners are called, when object is deleted.
- * @see #addDeleteListener
- */
-CommonModel.prototype.callDeleteListeners = function(event) {
-  for (var i = 0; i < this.deleteListeners.length; i++) {
-    this.deleteListeners[i](event);
-  }
-};
 
 
 /**
  * Commit the changes to the object.
  * <p>
  * Loops through the fields and submits the changed ones.
- * Then reloads the data from the server.
  */
 CommonModel.prototype.commit = function() {
-  //TODO: implement  
+  var changedData = {};
+  for (field in this.currentData) {
+    var currentValue = this.currentData[field];
+    var persistedValue = this.persistedData[field];
+    
+    if (currentValue !== persistedValue) {
+      changedData[field] = currentValue;
+    }
+  }
+  this._saveData(this.getId(), changedData);
 };
 
 /**
@@ -129,7 +106,7 @@ CommonModel.prototype.commit = function() {
  * 
  * @see #commit
  */
-CommonModel.prototype._saveData = function() {
+CommonModel.prototype._saveData = function(id, changedData) {
   throw "Abstract method called: _saveData";
 };
 
@@ -141,5 +118,6 @@ CommonModel.prototype._saveData = function() {
  * back to persisted data.
  */
 CommonModel.prototype.rollback = function() {
-  //TODO: implement
+  this.currentData = this.persistedData;
+  this.callListeners();
 };

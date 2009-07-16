@@ -22,6 +22,21 @@ CommonModel.prototype.initialize = function() {
   this.persistedData = defaultData;
 };
 
+/**
+ * Get the system-wide unique identifier for the object.
+ */
+CommonModel.prototype.getHashCode = function() {
+  throw "Abstract method called: getHashCode";
+};
+
+/**
+ * Return the object's persisted id.
+ * <p>
+ * Should be <code>null</code> if not persisted.
+ */
+CommonModel.prototype.getId = function() {
+  return this.currentData.id;
+};
 
 /**
  * Reloads the object's and all its children's data from the server.
@@ -39,12 +54,6 @@ CommonModel.prototype.setData = function(newData) {
   this.callListeners(new DynamicsEvents.EditEvent());
 };
 
-/**
- * Every model instance should have an unique id.
- */
-CommonModel.prototype.getId = function() {
-  return this.currentData.id;
-};
 
 /**
  * Add an event listener.

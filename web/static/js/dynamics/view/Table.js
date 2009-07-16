@@ -149,6 +149,7 @@ DynamicTable.prototype._dataSourceRow = function(model, columnConfig) {
 	var row = new DynamicTableRow(this.config.getColumns());
 	var controller = this.config.getRowControllerFactory.call(this, row, model);
 	this._createRow(row, controller, model);
+	row.autoCreateCells();
 	return row;
 };
 

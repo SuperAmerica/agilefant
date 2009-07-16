@@ -1,3 +1,3 @@
 $(document).ready(function() { 
-	module("Iteration controller");
+	module("Dynamics: Iteration controller");
 });

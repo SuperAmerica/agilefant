@@ -1,5 +1,5 @@
 $(document).ready(function() { 
-	module("Dynamic view", {
+	module("Dynamics: Dynamic view", {
 		setup: function() {
 			this.mockControl = new MockControl();
 			this.mockModel = this.mockControl.createMock(CommonModel);

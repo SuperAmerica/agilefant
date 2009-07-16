@@ -1,3 +1,3 @@
 $(document).ready(function() { 
-	module("DynamicTableRow");
+	module("Dynamics: DynamicTableRow");
 });

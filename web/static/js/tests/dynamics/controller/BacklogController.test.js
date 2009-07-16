@@ -1,3 +1,3 @@
 $(document).ready(function() { 
-	module("Backlog controller");
+	module("Dynamics: Backlog controller");
 });

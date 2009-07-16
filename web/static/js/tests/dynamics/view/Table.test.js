@@ -1,5 +1,5 @@
 $(document).ready(function() { 
-	module("DynamicTable", {
+	module("Dynamics: DynamicTable", {
 		setup: function() {
 			this.parent = $('<div />').appendTo(document.body);
 		}, teardown: function() {

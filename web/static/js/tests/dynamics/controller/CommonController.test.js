@@ -1,3 +1,3 @@
 $(document).ready(function() { 
-	module("Common controller");
+	module("Dynamics: Common controller");
 });

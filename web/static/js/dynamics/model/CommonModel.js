@@ -55,7 +55,7 @@ CommonModel.prototype.addEditListener = function(listener) {
 /**
  * Remove an edit listener
  * 
- * @param {int} viewId the id of the listening view
+ * @param {function} listener the listener to remove
  */
 CommonModel.prototype.removeEditListener = function(listener) {
   ArrayUtils.remove(this.editListeners, listener);
@@ -81,6 +81,15 @@ CommonModel.prototype.callEditListeners = function(event) {
  */
 CommonModel.prototype.addDeleteListener = function(listener) {
 	this.deleteListeners.push(listener);
+};
+
+/**
+ * Remove a delete listener.
+ * 
+ * @param {function} listener the listener to remove
+ */
+CommonModel.prototype.removeDeleteListener = function(listener) {
+  ArrayUtils.remove(this.deleteListeners, listener);
 };
 
 /**

@@ -12,8 +12,8 @@ $(document).ready(function() {
 	test("init with DOM parent", function() {
 		var testable = new DynamicView();
 		var parent = $('<div/>');
-		this.mockModel.expects().addEditListener(TypeOf.isA(Function));
-		this.mockModel.expects().addDeleteListener(TypeOf.isA(Function));
+		this.mockModel.expects().addListener(TypeOf.isA(Function));
+		this.mockModel.expects().addListener(TypeOf.isA(Function));
 		testable.init(this.mockController, this.mockModel, parent);
 		equals( testable.getController(), this.mockController, "Controller set");
 		equals( testable.getModel(), this.mockModel, "Model set");
@@ -29,8 +29,8 @@ $(document).ready(function() {
 		parent.parentElement = domParent;
 		parent.getElement = function() { return domParent; };
 		
-		this.mockModel.expects().addEditListener(TypeOf.isA(Function));
-		this.mockModel.expects().addDeleteListener(TypeOf.isA(Function));
+		this.mockModel.expects().addListener(TypeOf.isA(Function));
+		this.mockModel.expects().addListener(TypeOf.isA(Function));
 		testable.init(this.mockController, this.mockModel, parent);
 		same(testable.getParentView(), parent, "Parent view set");
 		same(testable.getParentElement(), domParent)

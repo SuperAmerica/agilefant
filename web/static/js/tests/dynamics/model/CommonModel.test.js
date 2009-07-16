@@ -50,6 +50,26 @@ $(document).ready(function() {
   });
   
   
+  test("Removing edit listener", function() {
+    var editListener = {
+        id: 2,
+        name: "Hobla",
+        cb: function() {}
+    };
+    var el2 = {};
+    var el3 = {};
+    jQuery.extend(el2, editListener);
+    jQuery.extend(el3, editListener);
+    
+    this.commonModel.editListeners = [editListener, el2, el3];
+    
+    this.commonModel.removeEditListener(el2);
+    
+    ok(jQuery.inArray(editListener, this.commonModel.editListeners) !== -1, "");
+    ok(jQuery.inArray(el2, this.commonModel.editListeners) === -1, "");
+    ok(jQuery.inArray(el3, this.commonModel.editListeners) !== -1, "");
+  });  
+  
   
   test("Adding delete listeners", function() {
     same(this.commonModel.deleteListeners.length, 0, "Delete listeners empty before adding");
@@ -74,6 +94,5 @@ $(document).ready(function() {
     
     same(deleteListenerCallCount, 2, "The delete listener is called two times");
   });
-  
   
 });

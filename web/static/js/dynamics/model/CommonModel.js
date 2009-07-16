@@ -9,11 +9,15 @@
 var CommonModel = function() {};
 
 /**
- * Every subclass should call this method
+ * Initialize the common components of all model classes.
+ * <p> 
+ * Every subclass should call this method.
  */
 CommonModel.prototype.initialize = function() {
   this.editListeners = [];
   this.deleteListeners = [];
+  this.currentData = {};
+  this.persistedData = {};
 };
 
 
@@ -24,6 +28,12 @@ CommonModel.prototype.reload = function() {
   throw "Abstract method called";
 };
 
+/**
+ * Set the object's data.
+ */
+CommonModel.prototype.setData = function(newData) {  
+  // TODO: implement
+};
 
 /**
  * Every model instance should have an unique id.
@@ -35,17 +45,27 @@ CommonModel.prototype.getId = function() {
 /**
  * Add an edit listener.
  * 
- * @see CommonModel.callEditListeners
+ * @param {function} listener the listener to be added
+ * @see #callEditListeners
  */
-CommonModel.prototype.addEditListener = function(listenerId, listener) {
+CommonModel.prototype.addEditListener = function(listener) {
 	this.editListeners.push(listener);
+};
+
+/**
+ * Remove an edit listener
+ * 
+ * @param {int} viewId the id of the listening view
+ */
+CommonModel.prototype.removeEditListener = function(listener) {
+  ArrayUtils.remove(this.editListeners, listener);
 };
 
 /**
  * Call the object's edit listeners.
  * <p>
  * Edit listeners are called, when object data changes.
- * @see CommonModel.addEditListener
+ * @see #addEditListener
  */
 CommonModel.prototype.callEditListeners = function(event) {
   for (var i = 0; i < this.editListeners.length; i++) {
@@ -57,9 +77,9 @@ CommonModel.prototype.callEditListeners = function(event) {
 /**
  * Add a delete listener.
  * 
- * @see CommonModel.callDeleteListeners
+ * @see #callDeleteListeners
  */
-CommonModel.prototype.addDeleteListener = function(listenerId, listener) {
+CommonModel.prototype.addDeleteListener = function(listener) {
 	this.deleteListeners.push(listener);
 };
 
@@ -67,7 +87,7 @@ CommonModel.prototype.addDeleteListener = function(listenerId, listener) {
  * Call the object's delete listeners.
  * <p>
  * Delete listeners are called, when object is deleted.
- * @see CommonModel.addDeleteListener
+ * @see #addDeleteListener
  */
 CommonModel.prototype.callDeleteListeners = function() {
   for (var i = 0; i < this.deleteListeners.length; i++) {
@@ -91,7 +111,7 @@ CommonModel.prototype.commit = function() {
  * <p>
  * The method is called whenever 
  * 
- * @see CommonModel.commit
+ * @see #commit
  */
 CommonModel.prototype._saveData = function() {
   //TODO: implement

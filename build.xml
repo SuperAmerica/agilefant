@@ -459,10 +459,24 @@
 		<delete dir="${build.webapp}/static/js-packed/"/>
 	</target>
 
+	<target name="jsdoc" description="Generate JSDoc documentation" depends="webapp">
+    <taskdef name="jsdoctoolkit" classname="uk.co.darrenhurley.ant.tasks.JsDocToolkit"
+      classpath="${lib}/build/jsdoctoolkit-ant-task-1.0.jar;${lib}/build/js4jsdoc.jar"/>
+		
+		<jsdoctoolkit jsdochome="${lib}/build/jsdoc-toolkit-2.3.0/" template="jsdoc" outputdir="${build.dir}/jsdoc"
+			verbose="true" includeundocumented="true">
+			<fileset dir="${build.webapp}/static/js/">
+		    <include name="autocomplete/*.js" />
+				<include name="dynamics/*/*.js" />
+		  </fileset>
+	  </jsdoctoolkit>
+	</target>
+	
+	
 	<target name="jslint" description="javascript check" depends="webapp">
 		<taskdef name="jslint"
                  classname="net.happygiraffe.jslint.ant.JSLintTask"
-                 classpath="${lib}/build/jslint4java-1.2.1+rhino.jar" />
+                 classpath="${lib}/build/jslint4java-1.2.1_rhino.jar" />
 
 		<jslint options="laxbreak">
 			<formatter type="plain" />

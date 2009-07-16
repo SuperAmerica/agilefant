@@ -1,9 +1,9 @@
 var DynamicTableColumnConfiguration = function(options) {
 	this.options = {
-			width: 100,
+			width: null,
 			minWidth: 0,
-			fullWidth: true,
-			scaleWidth: true,
+			fullWidth: false,
+			autoScale: false,
 			get: null,
 			tooltip: "",
 			headerTooltip: "",
@@ -25,6 +25,12 @@ var DynamicTableColumnConfiguration = function(options) {
 };
 DynamicTableColumnConfiguration.prototype.getWidth = function() {
 	return this.options.width;
+};
+DynamicTableColumnConfiguration.prototype.isAutoScale = function() {
+	return this.options.autoScale;
+};
+DynamicTableColumnConfiguration.prototype.setWidth = function(width) {
+	this.options.width = width;
 };
 DynamicTableColumnConfiguration.prototype.getMinWidth = function() {
 	return this.options.minWidth;
@@ -80,7 +86,7 @@ DynamicTableConfiguration.prototype.getColumns = function() {
 	return this.columns;
 };
 DynamicTableConfiguration.prototype.addColumnConfiguration = function(columnNum, options) {
-	this.columns[columnNum] = new DyynamicTableColumnConfiguration(options);
+	this.columns[columnNum] = new DynamicTableColumnConfiguration(options);
 };
 DynamicTableConfiguration.prototype.setColumnConfiguration = function(columnNum, config) {
 	this.columns[columnNum] = config;

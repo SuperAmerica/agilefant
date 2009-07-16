@@ -279,7 +279,8 @@ DynamicTable.prototype.calculateColumnWidths = function(params) {
 			retval.push(percent);
 		}
 	}
-	var maxWidth = Math.round(10 * (totalPercentage + ((num - 1) * DynamicTableStatics.borderPerColumn)))/10;
+	var maxWidth = Math.round(10 * (totalPercentage + 
+			((num - 1) * DynamicTableStatics.borderPerColumn)))/10;
 	this.maxWidth = maxWidth;
 	for (j = 0; j < params.length; j++) {
 		var curCell = params[j];

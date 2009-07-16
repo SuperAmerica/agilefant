@@ -30,14 +30,14 @@ DynamicView.prototype.init = function(controller, model, parent) {
 	} else {
 		this.parentElement = parent;
 	}
-	var editListener = function(event) {
+	this.editListener = function(event) {
 		this.onEdit(event);
 	};
-	var deleteListener = function(event) {
+	this.deleteListener = function(event) {
 		this.onDelete(event);
 	};
-	this.model.addEditListener(this.viewId, editListener);
-	this.model.addDeleteListener(this.viewId, deleteListener);
+	this.model.addEditListener(this.editListener);
+	this.model.addDeleteListener(this.deleteListener);
 	this.subViews = {};
 };
 

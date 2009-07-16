@@ -4,6 +4,7 @@ $(document).ready(function() {
 			this.mockControl = new MockControl();
 			this.mockModel = this.mockControl.createMock(CommonModel);
 			this.mockController = this.mockControl.createMock(CommonController);
+			DynamicView.instanceCounter = 1;
 		}, teardown: function() {
 			this.mockControl.verify();
 		}

@@ -37,7 +37,7 @@ CommonModel.prototype.getId = function() {
  * 
  * @see CommonModel.callEditListeners
  */
-CommonModel.prototype.addEditListener = function(listener) {
+CommonModel.prototype.addEditListener = function(listenerId, listener) {
 	this.editListeners.push(listener);
 };
 
@@ -59,7 +59,7 @@ CommonModel.prototype.callEditListeners = function(event) {
  * 
  * @see CommonModel.callDeleteListeners
  */
-CommonModel.prototype.addDeleteListener = function(listener) {
+CommonModel.prototype.addDeleteListener = function(listenerId, listener) {
 	this.deleteListeners.push(listener);
 };
 

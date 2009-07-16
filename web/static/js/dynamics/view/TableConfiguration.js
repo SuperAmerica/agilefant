@@ -63,10 +63,16 @@ DynamicTableColumnConfiguration.prototype.getEditOptions = function() {
 	return this.options.edit;
 };
 
-var DynamicTableConfiguration = function() {
+var DynamicTableConfiguration = function(options) {
 	this.columns = [];
+	this.options = {
+			rowControllerFactory: function() {}
+	};
 };
 
+DynamicTableConfiguration.prototype.getRowController = function() {
+	return this.options.rowControllerFactory;
+};
 DynamicTableConfiguration.prototype.getColumnConfiguration = function(columnNum) {
 	return this.columns[columnNum];
 };

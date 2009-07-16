@@ -17,29 +17,6 @@ var DynamicTableStatics = {
 		borderPerColumn: 0.4
 };
 
-var DynamicTableColumnConfiguration = function() {
-	
-};
-DynamicTableColumnConfiguration.prototype.getWith = function() {
-	
-};
-DynamicTableColumnConfiguration.prototype.getMaxWidth = function() {
-	
-};
-DynamicTableColumnConfiguration.prototype.isFullWidth = function() {
-	
-};
-
-var DynamicTableConfiguration = function() {
-	this.columns = [];
-};
-
-DynamicTableConfiguration.prototype.getColumnConfiguration = function(columnNum) {
-	return this.columns[columnNum];
-};
-DynamicTableConfiguration.prototype.setColumnConfiguration = function(columnNum, config) {
-	this.columns[columnNum] = config;
-};
 
 /** TABLE * */
 var DynamicTable = function(element, options) {

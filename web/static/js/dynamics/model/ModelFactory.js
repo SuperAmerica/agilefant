@@ -39,8 +39,16 @@ ModelFactory.initializeForTypes = {
     iteration:  "iteration"
 };
 
-ModelFactory.urls = {
-    iteration: "ajax/retrieveIteration.action"
+ModelFactory.dataParams = {
+  "iteration": {
+    url: "ajax/iterationData.action",
+    params: {
+      iterationId: id
+    },
+    callback: function() {
+      alert("Loaded");
+    }
+  }
 };
 
 /**
@@ -169,13 +177,16 @@ ModelFactory.prototype._createObject = function(type) {
  * Internal function to initialize
  */
 ModelFactory.prototype._initialize = function(type, id) {
-  
+  this._getData(type, id);
 }
 
 /**
  * Internal function to create an AJAX request.
  */
 ModelFactory.prototype._getData = function(type, id) {
-  
+  jQuery.getJSON(
+      ModelFactory.dataParams[type].url,
+      ModelFactory.dataParams[type].params,
+      ModelFactory.dataParams[type].callback);
 };
 

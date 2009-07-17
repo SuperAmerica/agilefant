@@ -14,10 +14,9 @@ var CommonModel = function() {};
  * Every subclass should call this method.
  */
 CommonModel.prototype.initialize = function() {
-  this.listeners = []; 
-  var defaultData = {
-    id: null  
-  };
+  this.listeners = [];
+  this.id = null;
+  var defaultData = {};
   this.currentData = defaultData;
   this.persistedData = defaultData;
 };
@@ -35,7 +34,7 @@ CommonModel.prototype.getHashCode = function() {
  * Should be <code>null</code> if not persisted.
  */
 CommonModel.prototype.getId = function() {
-  return this.currentData.id;
+  return this.id;
 };
 
 /**
@@ -56,13 +55,17 @@ CommonModel.prototype.reload = function() {
 
 /**
  * Set the object's persisted and current data.
+ * <p>
+ * Calls an abstract internal method, which should be overridden.
  */
 CommonModel.prototype.setData = function(newData) {  
-  this.currentData = newData;
-  this.persistedData = newData;
+  this._setData(newData);
   this.callListeners(new DynamicsEvents.EditEvent());
 };
 
+CommonModel.prototype._setData = function(newData) {
+  throw "Abstract method called";
+};
 
 /**
  * Add an event listener.

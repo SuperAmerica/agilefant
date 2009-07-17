@@ -27,9 +27,10 @@ $(document).ready(function() {
       same(event.type, "edit", "Event types match");
       listenerCallCount++;
     };
-    
-    this.commonModel.currentData = {};
-    this.commonModel.persistedData = {};
+    var internalCallCount = 0;
+    this.commonModel._setData = function() {
+      internalCallCount++;
+    };
     
     var data = {
       id: 7413,
@@ -38,10 +39,7 @@ $(document).ready(function() {
     
     this.commonModel.setData(data);
     
-    same(this.commonModel.currentData, data, "Current data is set");
-    same(this.commonModel.persistedData, data, "Persisted data is set");
-    same(this.commonModel.getId(), data.id, "Id is ok");
-    
+    same(internalCallCount, 1, "Internal method is called once");
     same(listenerCallCount, 1, "Listeners are called once");
   });
   
@@ -110,6 +108,7 @@ $(document).ready(function() {
       saveDataCallCount++;
     }
     
+    this.commonModel.id = 517;
     this.commonModel.persistedData = {
       id: 517,
       name: "Test",

@@ -74,11 +74,17 @@ $(document).ready(function() {
     
     var iter = new IterationModel();
     
+    var getDataCallCount = 0; 
     this.instance._getData = function(type, id) {
-      
+      getDataCallCount++;
+      same(type, expectedType, "Type matches");
+      same(id, expectedId, "Id matches");
     };
     
+    this.instance._initialize(expectedType, expectedId);
+    
     same(this.instance.initializedFor, iter, "Initialized for field set correctly");
+    same(getDataCallCount, 1, "Get data called once");
   });
   
   
@@ -142,9 +148,9 @@ $(document).ready(function() {
   test("Internal add object", function() {
     
     var task = new TaskModel();
-    task.currentData.id = 3;
+    task.id = 3;
     var story = new StoryModel();
-    story.currentData.id = 465;
+    story.id = 465;
     
     this.instance._addObject(task);
     this.instance._addObject(story);

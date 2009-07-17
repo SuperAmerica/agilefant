@@ -19,6 +19,9 @@ var TaskModel = function() {
 
 TaskModel.prototype = new CommonModel();
 
+TaskModel.prototype._setData = function(newData) {
+  
+};
 
 TaskModel.prototype.loadData = function() {
   

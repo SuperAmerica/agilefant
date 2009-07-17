@@ -5,7 +5,6 @@ $(document).ready(function() {
 			this.mockControl = new MockControl();
 			this.model = this.mockControl.createMock(CommonModel);
 			this.model.expects().addListener(TypeOf.isA(Function));
-			this.model.expects().addListener(TypeOf.isA(Function));
 			this.controller = this.mockControl.createMock(CommonController);
 		}, teardown: function() {
 			this.parent.remove();

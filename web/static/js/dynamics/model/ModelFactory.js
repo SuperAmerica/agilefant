@@ -39,17 +39,7 @@ ModelFactory.initializeForTypes = {
     iteration:  "iteration"
 };
 
-ModelFactory.dataParams = {
-  "iteration": {
-    url: "ajax/iterationData.action",
-    params: {
-      iterationId: id
-    },
-    callback: function() {
-      alert("Loaded");
-    }
-  }
-};
+
 
 /**
  * Get the singleton instance of the model factory.
@@ -184,9 +174,21 @@ ModelFactory.prototype._initialize = function(type, id) {
  * Internal function to create an AJAX request.
  */
 ModelFactory.prototype._getData = function(type, id) {
+  var dataParams = {
+    "iteration": {
+      url: "ajax/iterationData.action",
+      params: {
+        iterationId: id
+      },
+      callback: function() {
+        alert("Loaded");
+      }
+    }
+  };
+  
   jQuery.getJSON(
-      ModelFactory.dataParams[type].url,
-      ModelFactory.dataParams[type].params,
-      ModelFactory.dataParams[type].callback);
+      dataParams[type].url,
+      dataParams[type].params,
+      dataParams[type].callback);
 };
 

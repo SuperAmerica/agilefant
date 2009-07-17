@@ -160,6 +160,8 @@ ModelFactory.prototype._createObject = function(type) {
     returnedModel = new StoryModel();
     break;
   }
+  
+  returnedModel.addListener(this.listener);
   return returnedModel;
 };
 

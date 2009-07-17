@@ -265,10 +265,16 @@ $(document).ready(function() {
   
   
   test("Internal create object", function() {
-    ok(this.instance._createObject(ModelFactory.types.task) instanceof TaskModel,
-      "Task created correctly");
-    ok(this.instance._createObject(ModelFactory.types.story) instanceof StoryModel,
-      "Story created correctly");
+    var actualTask = this.instance._createObject(ModelFactory.types.task);
+    var actualStory = this.instance._createObject(ModelFactory.types.story);
+    
+    ok(actualTask instanceof TaskModel, "Task created correctly");
+    ok(actualStory instanceof StoryModel, "Story created correctly");
+    
+    ok(jQuery.inArray(this.instance.listener, actualTask.listeners) !== -1,
+        "ModelFactory listener set for task");
+    ok(jQuery.inArray(this.instance.listener, actualStory.listeners) !== -1,
+        "ModelFactory listener set for story");
   });
   
   test("Internal create object null checks", function() {    

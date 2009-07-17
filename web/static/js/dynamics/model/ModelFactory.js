@@ -33,12 +33,20 @@ ModelFactory.types = {
     
     story:      "story",
     task:       "task"
-}
+};
+
+ModelFactory.initializeForTypes = {
+    iteration:  "iteration"
+};
+
+ModelFactory.urls = {
+    iteration: "ajax/retrieveIteration.action"
+};
 
 /**
  * Get the singleton instance of the model factory.
  * <p>
- * Creates a new factory if non-existent.
+ * Creates a new instance if non-existent.
  */
 ModelFactory.getInstance = function() {
   if (!ModelFactory.instance) {
@@ -52,29 +60,39 @@ ModelFactory.getInstance = function() {
  * model objects.
  * <p>
  * Invokes the actual AJAX requests to fetch the data.
+ * 
+ * @throws {String "Type not recognized"} if type not recognized, null or undefined; if id null or undefined
  */
 ModelFactory.initializeFor = function(type, id) {
-  
+  if (!type || !id || !(type in ModelFactory.initializeForTypes)) {
+    throw "Type not recognized";
+  };
+  ModelFactory.getInstance()._initialize(type, id);
 };
 
 
 /**
  * Adds an object to the <code>ModelFactory</code>'s data.
  * 
- * @param An instance of model class inherited from <code>CommonModel</code>.
- * @throws String "Invalid argument" if null or undefined. 
- * @throws String "Invalid class" if class not recognized.
+ * @param objectToAdd An instance of model class inherited from <code>CommonModel</code>.
+ * @throws {String "Invalid argument"} if null or undefined. 
+ * @throws {String "Invalid class"} if class not recognized.
+ * @throws {String "Not initialized"} if instance not initialized.
  * @see CommonModel
  */
 ModelFactory.addObject = function(objectToAdd) {
-  if (!objectToAdd) {
+  var instance = ModelFactory.getInstance();
+  if (!instance.initializedFor) {
+    throw "Not initialized";
+  }
+  else if (!objectToAdd) {
     throw "Invalid argument: " + objectToAdd;
   }
   else if (!objectToAdd.getPersistedClass() ||
       !(objectToAdd.getPersistedClass() in ModelFactory.classNameToType)) {
     throw "Invalid class";
   }
-  this.getInstance()._addObject(objectToAdd);
+  instance._addObject(objectToAdd);
 };
 
 /**
@@ -83,20 +101,22 @@ ModelFactory.addObject = function(objectToAdd) {
  * @return the object
  * @see ModelFactory.types
  * @see CommonModel#getId
- * @throws String if type is invalid 
+ * @throws {String "Invalid type"} if type is invalid
+ * @throws {String "Not initialized"} if instance not initialized.
  */
 ModelFactory.getObject = function(type, id) {
-  return this.getInstance()._getObject(type,id);
+  return ModelFactory.getInstance()._getObject(type,id);
 };
 
 /**
  * Creates a new object of the given type.
  * @see ModelFactory.types
  * @return a new instance of the given object type
- * @throws String if type is invalid
+ * @throws {String "Invalid type"} if type is invalid
+ * @throws {String "Not initialized"} if instance not initialized.
  */
 ModelFactory.createObject = function(type) {
-  return this.getInstance()._createObject(type);
+  return ModelFactory.getInstance()._createObject(type);
 };
 
 
@@ -113,7 +133,10 @@ ModelFactory.prototype._addObject = function(obj) {
  * Internal function for getting the right object.
  */
 ModelFactory.prototype._getObject = function(type, id) {
-  if (!(type in ModelFactory.types)) {
+  if (!this.initializedFor) {
+    throw "Not initialized";
+  }
+  else if (!(type in ModelFactory.types)) {
     throw "Invalid type";
   }
   return this.data[type][id];
@@ -123,7 +146,10 @@ ModelFactory.prototype._getObject = function(type, id) {
  * Internal function for creating a new object.
  */
 ModelFactory.prototype._createObject = function(type) {
-  if (!(type in ModelFactory.types)) {
+  if (!this.initializedFor) {
+    throw "Not initialized";
+  }
+  else if (!(type in ModelFactory.types)) {
     throw "Invalid type";
   }
   var returnedModel = null;
@@ -139,4 +165,17 @@ ModelFactory.prototype._createObject = function(type) {
   return returnedModel;
 };
 
+/**
+ * Internal function to initialize
+ */
+ModelFactory.prototype._initialize = function(type, id) {
+  
+}
+
+/**
+ * Internal function to create an AJAX request.
+ */
+ModelFactory.prototype._getData = function(type, id) {
+  
+};
 

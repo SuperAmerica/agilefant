@@ -5,6 +5,7 @@ $(document).ready(function() {
     setup: function() {
       ModelFactory.instance = null;
       this.instance = ModelFactory.getInstance();
+      this.instance.initializedFor = new IterationModel();
       this.testObject = {
           id: 222,
           name: "Test Object"
@@ -26,14 +27,65 @@ $(document).ready(function() {
   
   
   test("Initialization", function() {
+    var expectedId = 222;
+    var expectedType = "iteration";
+    var internalInitializeCallCount = 0;
     
+    this.instance._initialize = function(type, id) {
+      same(type, expectedType, "Type was correct");
+      same(id, expectedId, "Id was correct");
+      internalInitializeCallCount++;
+    };
+    
+    ModelFactory.initializeFor("iteration", 222);
+    
+    same(internalInitializeCallCount, 1, "Internal initialize called");
+   });
+  
+  test("Initialization invalid checks", function() {
+    var exceptionCount = 0;
+    try {
+      ModelFactory.initializeFor();
+    }
+    catch (e) { exceptionCount++; }
+    
+    try {
+      ModelFactory.initializeFor(null);
+    }
+    catch (e) { exceptionCount++; }
+    
+    try {
+      ModelFactory.initializeFor(ModelFactory.initializeForTypes.iteration, null);
+    }
+    catch (e) { exceptionCount++; }
+    
+    try {
+      ModelFactory.initializeFor("Incorrect type", 555);
+    }
+    catch (e) { exceptionCount++; }
+    
+    same(exceptionCount, 4, "Correct number of exceptions")
+  });
+  
+  
+  test("Internal initialize", function() {
+    var expectedId = 212;
+    var expectedType = "iteration";
+    
+    var iter = new IterationModel();
+    
+    this.instance._getData = function(type, id) {
+      
+    };
+    
+    same(this.instance.initializedFor, iter, "Initialized for field set correctly");
   });
   
   
   test("Static add object", function() {
     var task = new TaskModel();
     var story = new StoryModel();
-        
+    
     var addObjectCallCount = 0;
     var taskAdded = false;
     var storyAdded = false;
@@ -65,6 +117,7 @@ $(document).ready(function() {
     UnknownClass.prototype = new CommonModel();
     
     var exceptionsThrown = 0;
+    
     try {
       ModelFactory.addObject();
     }
@@ -173,9 +226,11 @@ $(document).ready(function() {
   });
 
   
-  test("Internal create get null checks", function() {    
-    // Undefined
+  test("Internal get object null checks", function() {    
     var exceptionCount = 0;
+
+    
+    // Undefined
     try {
       this.instance._getObject();
     }
@@ -203,7 +258,6 @@ $(document).ready(function() {
   });
   
   
-  
   test("Internal create object", function() {
     ok(this.instance._createObject(ModelFactory.types.task) instanceof TaskModel,
       "Task created correctly");
@@ -212,8 +266,9 @@ $(document).ready(function() {
   });
   
   test("Internal create object null checks", function() {    
-    // Undefined
     var exceptionCount = 0;
+    
+    // Undefined
     try {
       this.instance._createObject();
     }
@@ -236,6 +291,30 @@ $(document).ready(function() {
     catch (e) {
       exceptionCount++;
     }
+    
+    same(exceptionCount, 3, "Correct number of exceptions thrown");
+  });
+  
+  
+  test("ModelFactory not initialized", function() {
+    this.instance.initializedFor = null;
+    
+    var exceptionCount = 0;
+    
+    try {
+      ModelFactory.addObject(new TaskModel());
+    }
+    catch (e) { if (e === "Not initialized") { exceptionCount++; }}
+    
+    try {
+      ModelFactory.getObject(ModelFactory.types.task, 111)
+    }
+    catch (e) { if (e === "Not initialized") { exceptionCount++; }}
+    
+    try {
+      ModelFactory.createObject(ModelFactory.types.task);
+    }
+    catch (e) { if (e === "Not initialized") { exceptionCount++; }}
     
     same(exceptionCount, 3, "Correct number of exceptions thrown");
   });

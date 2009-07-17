@@ -14,6 +14,7 @@
  */
 var TaskModel = function() {
   this.initialize();
+  this.persistedClassName = "fi.hut.soberit.agilefant.model.Task";
 };
 
 TaskModel.prototype = new CommonModel();

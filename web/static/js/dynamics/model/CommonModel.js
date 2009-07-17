@@ -39,6 +39,15 @@ CommonModel.prototype.getId = function() {
 };
 
 /**
+ * Get the object's persisted class name
+ * <p>
+ * @return the canonical name of the persisted class
+ */
+CommonModel.prototype.getPersistedClass = function() {
+  return this.persistedClassName;
+};
+
+/**
  * Reloads the object's and all its children's data from the server.
  */
 CommonModel.prototype.reload = function() {

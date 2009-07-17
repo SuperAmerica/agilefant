@@ -10,6 +10,7 @@ ModelFactory = function() {
     story: {},
     task: {}
   };
+  this.initializedFor = null;
 };
 
 ModelFactory.instance = null;
@@ -46,6 +47,35 @@ ModelFactory.getInstance = function() {
   return ModelFactory.instance;
 };
 
+/**
+ * Initializes the <code>ModelFactory</code> to be able to provide
+ * model objects.
+ * <p>
+ * Invokes the actual AJAX requests to fetch the data.
+ */
+ModelFactory.initializeFor = function(type, id) {
+  
+};
+
+
+/**
+ * Adds an object to the <code>ModelFactory</code>'s data.
+ * 
+ * @param An instance of model class inherited from <code>CommonModel</code>.
+ * @throws String "Invalid argument" if null or undefined. 
+ * @throws String "Invalid class" if class not recognized.
+ * @see CommonModel
+ */
+ModelFactory.addObject = function(objectToAdd) {
+  if (!objectToAdd) {
+    throw "Invalid argument: " + objectToAdd;
+  }
+  else if (!objectToAdd.getPersistedClass() ||
+      !(objectToAdd.getPersistedClass() in ModelFactory.classNameToType)) {
+    throw "Invalid class";
+  }
+  this.getInstance()._addObject(objectToAdd);
+};
 
 /**
  * Gets the object of the given type and id.
@@ -69,6 +99,15 @@ ModelFactory.createObject = function(type) {
   return this.getInstance()._createObject(type);
 };
 
+
+/**
+ * Internal function to add objects to the dataset.
+ */
+ModelFactory.prototype._addObject = function(obj) {
+  var type = ModelFactory.classNameToType[obj.getPersistedClass()];
+  var id = obj.getId();
+  this.data[type][obj.getId()] = obj;
+};
 
 /**
  * Internal function for getting the right object.
@@ -97,7 +136,7 @@ ModelFactory.prototype._createObject = function(type) {
     returnedModel = new StoryModel();
     break;
   }
-  
   return returnedModel;
 };
+
 

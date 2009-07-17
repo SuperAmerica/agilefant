@@ -22,6 +22,7 @@ $(document).ready(function() {
     var task = new TaskModel();
     
     ok(commonModelInitialized, "The common model initialize method is called");
+    same(task.getPersistedClass(), "fi.hut.soberit.agilefant.model.Task", "Class name correct" );
   });
   
   

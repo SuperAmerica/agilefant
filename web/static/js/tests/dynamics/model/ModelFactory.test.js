@@ -25,6 +25,82 @@ $(document).ready(function() {
   });
   
   
+  test("Initialization", function() {
+    
+  });
+  
+  
+  test("Static add object", function() {
+    var task = new TaskModel();
+    var story = new StoryModel();
+        
+    var addObjectCallCount = 0;
+    var taskAdded = false;
+    var storyAdded = false;
+    this.instance._addObject = function(obj) {
+      addObjectCallCount++;
+      if (obj === task) {
+        taskAdded = true;
+      }
+      else if (obj === story) {
+        storyAdded = true;
+      }
+    };
+    
+    ModelFactory.addObject(task);
+    ModelFactory.addObject(story);
+    
+    same(addObjectCallCount, 2, "Internal add object called twice");
+    ok(taskAdded, "Task is added");
+    ok(storyAdded, "Story is added");
+  });
+  
+  
+  test("Static add object - invalid checks", function() {
+    var invalidObject = {};
+    var UnknownClass = function() {
+      this.initialize();
+      this.persistedClassName = "faulty name";
+    };
+    UnknownClass.prototype = new CommonModel();
+    
+    var exceptionsThrown = 0;
+    try {
+      ModelFactory.addObject();
+    }
+    catch(e) { exceptionsThrown++; }
+    try {
+      ModelFactory.addObject(null);
+    }
+    catch(e) { exceptionsThrown++; }
+    try {
+      ModelFactory.addObject(new UnknownClass());
+    }
+    catch(e) { exceptionsThrown++; }
+    try {
+      ModelFactory.addObject(invalidObject);
+    }
+    catch(e) { exceptionsThrown++; }
+    
+    same(exceptionsThrown, 4, "Correct number of exceptions thrown");
+  });
+  
+  
+  test("Internal add object", function() {
+    
+    var task = new TaskModel();
+    task.currentData.id = 3;
+    var story = new StoryModel();
+    story.currentData.id = 465;
+    
+    this.instance._addObject(task);
+    this.instance._addObject(story);
+    
+    same(this.instance.data.task[3], task, "Task is added");
+    same(this.instance.data.story[465], story, "Story is added");
+  });
+  
+  
   test("Static get object", function() {
     var me = this;
     var expectedType = "object";
@@ -163,5 +239,6 @@ $(document).ready(function() {
     
     same(exceptionCount, 3, "Correct number of exceptions thrown");
   });
+
 });
 

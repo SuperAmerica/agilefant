@@ -4,7 +4,8 @@
 
 
 var StoryModel = function() {
-  
+  this.initialize();
+  this.persistedClassName = "fi.hut.soberit.agilefant.model.Story";
 };
 
 

@@ -65,6 +65,9 @@ DynamicTableColumnConfiguration.prototype.setDefaultSortColumn = function(defaul
 DynamicTableColumnConfiguration.prototype.isEditable = function() {
 	return this.options.editable;
 };
+DynamicTableColumnConfiguration.prototype.isSortable = function() {
+	return this.options.sortCallback !== null;
+};
 DynamicTableColumnConfiguration.prototype.getEditOptions = function() {
 	return this.options.edit;
 };

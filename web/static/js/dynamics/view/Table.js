@@ -1,5 +1,6 @@
 /**
  * @base DynamicView
+ * @constructor
  */
 var DynamicTable = function(controller, model, config, parentView) {
 	this.init(controller, model, parentView);
@@ -12,6 +13,8 @@ var DynamicTable = function(controller, model, config, parentView) {
 	this.bottomRows = [];
 	//objects in the table (middle rows)
 	this.rowHashes = [];
+	//headers
+	this.headers = null;
 	if(config) {
 		this.config = config;
 	} else {
@@ -37,14 +40,28 @@ DynamicTable.cssClasses = {
 
 DynamicTable.prototype = new DynamicView();
 DynamicTable.constants = {
-		borderPerColumn: 0.4
+		borderPerColumn: 0.4,
+		asc: 1,
+		desc: 2
 };
 
-//initialize table structure
+/**
+ * Initialize table
+ */
 DynamicTable.prototype.initialize = function() {
 	this.container = $("<div />").appendTo(this.getParentElement()).addClass(DynamicTable.cssClasses.table);
 	this.element = $("<div />").appendTo(this.container);
 	this._computeColumns();
+	var columnConfigs = this.config.getColumns();
+	//determinate default sort column index
+	this.currentSortColumn = null;
+	this.currentSortDirection = DynamicTable.constants.asc;
+	for ( var i = 0; i < columnConfigs.length; i++) {
+		if(columnConfigs[i].isDefaultSortColumn()) {
+			this.currentSortColumn = i;
+			break;
+		}
+	}
 };
 
 DynamicTable.prototype._computeColumns = function() {
@@ -85,11 +102,49 @@ DynamicTable.prototype._computeColumns = function() {
 	}
 	this.totalRowWidth = totalWidthPercentage;
 };
+
+/**
+ * Update table layout
+ */
 DynamicTable.prototype.layout = function() {
 	
 };
 
-//render or re-render table rows
+DynamicTable.prototype._renderHeader = function() {
+	this.header = $('<div />').preppendTo(this.table)
+		.addClass(DynamicTable.cssClasses.tableHeader)
+		.addClass(DynamicTable.cssClasses.tableRow);
+	var columnConfigs = this.config.getColumns();
+	for(var i = 0; i < columnConfigs.length; i++) {
+		this._renderHeaderColumn(i);
+	}
+};
+
+DynamicTable.prototype._renderHeaderColumn = function(index) {
+	var columnConf = this.config.getColumnConfiguration(index);
+	var columnHeader = $('<div />').addClass(DynamicTable.cssClasses.tableCell);
+	columnHeader.appendTo(this.header);
+	var nameElement;
+	var me = this;
+	if(columnConf.isSortable()) {
+		nameElement = $('<a />').click(function() {
+			me._sortByColumn(index);
+			return false;
+		});
+		$('<div/>').addClass(DynamicTable.cssClasses.sortImg).prependTo(nameElement);
+	} else {
+		nameElement = $('<span />');
+	}
+	nameElement.appendTo(columnHeader).text(columnConf.getTitle());
+	if(columnConf.getHeaderTooltip()) {
+		columnHeader.attr("title", columnConf.getHeaderTooltip());
+	}
+};
+
+
+/**
+ * Render all table rows
+ */
 DynamicTable.prototype.render = function() {
 	this._sort();
 	var i = 0;
@@ -117,6 +172,9 @@ DynamicTable.prototype._renderFromDataSource = function(dataArray) {
 	this.render();
 };
 
+/**
+ * Create a new row
+ */
 DynamicTable.prototype.createRow = function(controller, model, position) {
 	var row = new DynamicTableRow(this.config.getColumns());
 	this._createRow(row, controller, model, position);
@@ -134,7 +192,6 @@ DynamicTable.prototype._createRow = function(row, controller, model, position) {
 				this.middleRows.push(row);
 				this.rowHashes.push(model.getHashCode());
 			} else {
-				delete row;
 				return;
 			}
 		} else {
@@ -152,18 +209,75 @@ DynamicTable.prototype._dataSourceRow = function(model, columnConfig) {
 	return row;
 };
 
+/**
+ * Total rows in the table.
+ */
 DynamicTable.prototype.rowCount = function() {
 	return this.upperRows.length + this.middleRows.length + this.bottomRows.length;
 };
 
+DynamicTable.prototype._sortByColumn = function(column) {
+	if(column === this.currentSortColumn) {
+		if(this.currentSortDirection === DynamicTable.constants.asc) {
+			this.currentSortDirection = DynamicTable.constants.desc;
+		} else {
+			this.currentSortDirection = DynamicTable.constants.asc;
+		}
+	} else {
+		this.currentSortColumn = column;
+		this.currentSortDirection = DynamicTable.constants.asc;
+	}
+	this._updateSortArrow();
+	this._sort();
+};
+
+DynamicTable.prototype._updateSortArrow = function() {
+	this.header.find('.' + DynamicTable.cssClasses.sortImg).removeClass(DynamicTable.cssClasses.sortImgDown)
+	.removeClass(DynamicTable.cssClasses.sortImgUp);
+	
+	var a = this.header.find('.' + DynamicTable.cssClasses.tableCell + ':eq('+this.currentSortColumn+')')
+	.find('.' + DynamicTable.cssClasses.sortImg).addClass(DynamicTable.cssClasses.sortImgUp);
+	
+	if (this.currentSortDirection === DynamicTable.constants.asc) {
+		a.addClass(DynamicTable.cssClasses.sortImgUp);
+	}
+	else {
+		a.addClass(DynamicTable.cssClasses.sortImgDown);
+	}
+};
 DynamicTable.prototype._sort = function() {
-	
+	if(this.currentSortColumn === null) {
+		return;
+	}
+	var sortFunction = this.config.getColumnConfiguration(this.currentSortColumn).getSortCallback();
+	if(!sortFunction) {
+		return;
+	}
+	this.middleRows.sort(function(firstRow, secondRow) {
+		return sortFunction(firstRow.getModel(), secondRow.getModel());
+	});
+	if(this.currentSortDirection === DynamicTable.constants.desc) {
+		this.middleRows.reverse();
+	}
 };
 
+/**
+ * Remove row from the table
+ */
 DynamicTable.prototype.removeRow = function(row) {
-	
+	if(jQuery.inArray(row, this.middleRows) !== -1) {
+		ArrayUtils.remove(this.rowHashes, row.getModel().getHashCode());
+		ArrayUtils.remove(this.middleRows, row);
+	} else if(jQuery.inArray(row, this.bottomRows) !== -1) {
+		ArrayUtils.remove(this.bottomRows, row);
+	} else if(jQuery.inArray(row, this.upperRows) !== -1) {
+		ArrayUtils.remove(this.upperRows, row);
+	}
 };
 
+/**
+ * Remove the table
+ */
 DynamicTable.prototype.remove = function() {
-	
+	this.container.remove();
 };

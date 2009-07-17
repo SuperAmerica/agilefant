@@ -177,4 +177,24 @@ $(document).ready(function() {
 		var testable = new DynamicTable(this.controller, this.model, null, this.parent);
 
 	});
+	test("removeRow", function() {
+		var testable = new DynamicTable(this.controller, this.model, null, this.parent);
+		var model = this.mockControl.createMock(CommonModel);
+		var row = this.mockControl.createMock(DynamicTableRow);
+		row.expects().getModel().andReturn(model);
+		model.expects().getHashCode().andReturn("hash");
+		
+		testable.rowHashes.push("hash");
+		testable.middleRows.push(row);
+		testable.upperRows.push(row);
+		testable.bottomRows.push(row);
+		
+		testable.removeRow(row);
+		equals(testable.middleRows.length, 0, "Row removed");
+		equals(testable.rowHashes.length, 0, "Hash removed");
+		testable.removeRow(row);
+		equals(testable.bottomRows.length, 0, "Row removed");
+		testable.removeRow(row);
+		equals(testable.upperRows.length, 0, "Row removed");
+	});
 });

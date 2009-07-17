@@ -1,3 +1,8 @@
+/**
+ * @constructor
+ * @base DynamicView
+ * @param config
+ */
 var DynamicTableRow = function(config) {
 	this.config = config;
 	this.cells = [];

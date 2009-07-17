@@ -1,3 +1,8 @@
+/**
+ * @constructor
+ * @param row
+ * @param config
+ */
 var DynamicTableCell = function(row, config) {
 	this.config = config;
 	this.row = row;

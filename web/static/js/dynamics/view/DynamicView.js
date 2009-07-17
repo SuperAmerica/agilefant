@@ -3,6 +3,7 @@
  * A view requires a controller to which it will pass user
  * interactions and a model from which it will fetch data to be
  * displayed.
+ * @constructor
  */
 var DynamicView = function() {
 	

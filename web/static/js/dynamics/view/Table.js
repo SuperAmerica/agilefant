@@ -91,7 +91,6 @@ DynamicTable.prototype.layout = function() {
 
 //render or re-render table rows
 DynamicTable.prototype.render = function() {
-	this.table.children(":not(.static)").remove();
 	this._sort();
 	var i = 0;
 	this._addSectionToTable(this.upperRows);

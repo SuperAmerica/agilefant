@@ -325,5 +325,10 @@ $(document).ready(function() {
     same(exceptionCount, 3, "Correct number of exceptions thrown");
   });
 
+  
+  
+  module("Dynamics: ModelFactory: listener");
+  
+  
 });
 

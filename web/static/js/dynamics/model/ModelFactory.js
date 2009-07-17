@@ -192,3 +192,15 @@ ModelFactory.prototype._getData = function(type, id) {
       dataParams[type].callback);
 };
 
+/**
+ * Listener function to be added to every model object.
+ * <p>
+ * Listens to <code>DynamicsEvents</code>.
+ * 
+ * @see DynamicsEvents.EditEvent
+ * @see DynamicsEvents.DeleteEvent
+ */
+ModelFactory.prototype.listener = function(event) {
+  
+};
+

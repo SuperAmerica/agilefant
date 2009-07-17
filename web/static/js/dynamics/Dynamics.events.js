@@ -30,14 +30,27 @@ DynamicsEvents.CommonEvent.prototype.getType = function() {
 };
 
 /**
+ * Get the source object
+ */
+DynamicsEvents.CommonEvent.prototype.getObject = function() {
+  return this.object;
+};
+
+/**
  * Constructor for the edit event.
  * 
+ * @param {function} object The events target object
+ * @throws {String "Invalid argument"} if event target is not supplied
  * @constructor
  * @base DynamicsEvents.CommonEvent
  */
-DynamicsEvents.EditEvent = function() {
+DynamicsEvents.EditEvent = function(object) {
+  if (!object || !(object instanceof CommonModel)) {
+    throw "Invalid argument";
+  }
   this.initialize();
   this.type = "edit";
+  this.object = object;
 };
 DynamicsEvents.EditEvent.prototype = new DynamicsEvents.CommonEvent();
 
@@ -48,8 +61,14 @@ DynamicsEvents.EditEvent.prototype = new DynamicsEvents.CommonEvent();
  * @constructor
  * @base DynamicsEvents.CommonEvent
  */
-DynamicsEvents.DeleteEvent = function() {
+DynamicsEvents.DeleteEvent = function(object) {
+  if (!object || !(object instanceof CommonModel)) {
+    throw "Invalid argument";
+  }
   this.initialize();
   this.type = "delete";
+  this.object = object;
 };
 DynamicsEvents.DeleteEvent.prototype = new DynamicsEvents.CommonEvent();
+
+

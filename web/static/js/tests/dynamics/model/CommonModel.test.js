@@ -78,15 +78,17 @@ $(document).ready(function() {
   test("Calling listeners", function() {
     var listenerCallCount = 0;
     var expectedEventType = "edit";
+    var me = this;
     
     var listener = function(event) {
       listenerCallCount++;
-      same(event.type, expectedEventType, "Event matches with the expected one");
+      same(event.type, expectedEventType, "Event type matches with the expected one");
+      same(event.getObject(), me.commonModel, "Event target matches with the expected one");
     };
     
     this.commonModel.listeners = [listener, listener];
     
-    this.commonModel.callListeners(new DynamicsEvents.EditEvent());
+    this.commonModel.callListeners(new DynamicsEvents.EditEvent(this.commonModel));
     
     same(listenerCallCount, 2, "The listener is called two times");
   });
@@ -129,6 +131,7 @@ $(document).ready(function() {
   
   
   test("Roll back", function() {
+    var me = this;
     var persistedData = {
       id: 517,
       name: "Test",
@@ -146,8 +149,9 @@ $(document).ready(function() {
     this.commonModel.currentData = currentData;
     
     var listenerCallCount = 0;
-    this.commonModel.callListeners = function() {
+    this.commonModel.callListeners = function(event) {
       listenerCallCount++;
+      same(event.getObject(), me.commonModel, "Object is correct");
     };
     
     this.commonModel.rollback();

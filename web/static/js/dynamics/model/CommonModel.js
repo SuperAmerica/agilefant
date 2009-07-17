@@ -60,7 +60,7 @@ CommonModel.prototype.reload = function() {
  */
 CommonModel.prototype.setData = function(newData) {  
   this._setData(newData);
-  this.callListeners(new DynamicsEvents.EditEvent());
+  this.callListeners(new DynamicsEvents.EditEvent(this));
 };
 
 CommonModel.prototype._setData = function(newData) {
@@ -140,5 +140,5 @@ CommonModel.prototype._saveData = function(id, changedData) {
  */
 CommonModel.prototype.rollback = function() {
   this.currentData = this.persistedData;
-  this.callListeners();
+  this.callListeners(new DynamicsEvents.EditEvent(this));
 };

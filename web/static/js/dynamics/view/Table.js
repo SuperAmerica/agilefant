@@ -159,3 +159,11 @@ DynamicTable.prototype.rowCount = function() {
 DynamicTable.prototype._sort = function() {
 	
 };
+
+DynamicTable.prototype.removeRow = function(row) {
+	
+};
+
+DynamicTable.prototype.remove = function() {
+	
+};

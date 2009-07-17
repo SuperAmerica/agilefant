@@ -1,11 +1,12 @@
 var DynamicTableRow = function(config) {
 	this.config = config;
 	this.cells = [];
+	this.initialize();
 };
 
 DynamicTableRow.prototype = new DynamicView();
 
-DynamicTableRow.prototype.init = function() {
+DynamicTableRow.prototype.initialize = function() {
 	this.element = $("<div />").addClass(DynamicTable.cssClasses.tableRow);
 	this.element.data("row", this);
 };
@@ -38,4 +39,9 @@ DynamicTableRow.prototype.autoCreateCells = function() {
 	for(var i = 0; i < this.config.length; i ++) {
 		this.createCell(this.config[i]);
 	}
+};
+
+DynamicTableRow.prototype.remove = function() {
+	this.getParentView().removeRow(this);
+	this.element.remove();
 };

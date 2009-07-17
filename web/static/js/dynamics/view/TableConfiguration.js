@@ -36,7 +36,7 @@ DynamicTableColumnConfiguration.prototype.getMinWidth = function() {
 	return this.options.minWidth;
 };
 DynamicTableColumnConfiguration.prototype.getGetter = function() {
-	return this.options.set;
+	return this.options.get;
 };
 DynamicTableColumnConfiguration.prototype.getTooltip = function() {
 	return this.options.tooltip;

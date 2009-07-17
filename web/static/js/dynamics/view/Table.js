@@ -62,6 +62,7 @@ DynamicTable.prototype.initialize = function() {
 			break;
 		}
 	}
+	this._renderHeader();
 };
 
 DynamicTable.prototype._computeColumns = function() {
@@ -111,7 +112,7 @@ DynamicTable.prototype.layout = function() {
 };
 
 DynamicTable.prototype._renderHeader = function() {
-	this.header = $('<div />').preppendTo(this.table)
+	this.header = $('<div />').prependTo(this.table)
 		.addClass(DynamicTable.cssClasses.tableHeader)
 		.addClass(DynamicTable.cssClasses.tableRow);
 	var columnConfigs = this.config.getColumns();
@@ -152,7 +153,7 @@ DynamicTable.prototype.render = function() {
 	this._addSectionToTable(this.middleRows);
 	this._addSectionToTable(this.bottomRows);
 	if(this.rowCount() === 0) {
-		//TODO: hide headers etc.
+		this.header.hide();
 	}
 	this.layout();
 };
@@ -198,12 +199,15 @@ DynamicTable.prototype._createRow = function(row, controller, model, position) {
 			this.middleRows.push(row);
 		}
 	}
+	if(this.rowCount() === 1) {
+		this.header.show();
+	}
 	row.init(controller, model, this);
 };
 
 DynamicTable.prototype._dataSourceRow = function(model, columnConfig) {
 	var row = new DynamicTableRow(this.config.getColumns());
-	var controller = this.config.getRowControllerFactory.call(this, row, model);
+	var controller = this.config.getRowControllerFactory.call(this.getController(), row, model);
 	this._createRow(row, controller, model);
 	row.autoCreateCells();
 	return row;

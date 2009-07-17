@@ -41,6 +41,9 @@ DynamicTableColumnConfiguration.prototype.getGetter = function() {
 DynamicTableColumnConfiguration.prototype.getTooltip = function() {
 	return this.options.tooltip;
 };
+DynamicTableColumnConfiguration.prototype.getTitle = function() {
+	return this.options.title;
+};
 DynamicTableColumnConfiguration.prototype.getHeaderTooltip = function() {
 	return this.options.headerTooltip;
 };

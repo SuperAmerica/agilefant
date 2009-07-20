@@ -82,12 +82,16 @@ DynamicTableColumnConfiguration.prototype.getSubViewFactory = function() {
 var DynamicTableConfiguration = function(options) {
 	this.columns = [];
 	this.options = {
-			rowControllerFactory: function() {}
+			rowControllerFactory: function() {},
+			dataSource: null
 	};
 };
 
 DynamicTableConfiguration.prototype.getRowControllerFactory = function() {
 	return this.options.rowControllerFactory;
+};
+DynamicTableConfiguration.prototype.getDataSource = function() {
+	return this.dataSource;
 };
 DynamicTableConfiguration.prototype.getColumnConfiguration = function(columnNum) {
 	return this.columns[columnNum];

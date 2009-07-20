@@ -147,6 +147,10 @@ DynamicTable.prototype._renderHeaderColumn = function(index) {
  * Render all table rows
  */
 DynamicTable.prototype.render = function() {
+	if(this.config.getDataSource()) {
+		var rowData = this.config.getDataSource().call(this.getModel());
+		this._renderFromDataSource(rowData);
+	}
 	this._sort();
 	var i = 0;
 	this._addSectionToTable(this.upperRows);
@@ -170,7 +174,6 @@ DynamicTable.prototype._renderFromDataSource = function(dataArray) {
 		var model = dataArray[i];
 		this._dataSourceRow(model);
 	}
-	this.render();
 };
 
 /**

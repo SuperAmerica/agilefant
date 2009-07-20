@@ -74,3 +74,10 @@ DynamicTableRow.prototype.remove = function() {
 	this.getParentView().removeRow(this);
 	this.element.remove();
 };
+
+DynamicTableRow.prototype.onEdit = function() {
+	this.render();
+};
+DynamicTableRow.prototype.onDelete = function() {
+	this.remove();
+};

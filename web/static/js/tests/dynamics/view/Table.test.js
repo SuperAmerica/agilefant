@@ -86,13 +86,45 @@ $(document).ready(function() {
 		equals(columnConfigs[2].getWidth(), "49.1%");
 	});
 	
-	test("Layout", function() {
+	test("_renderHeaderColumn not sortable", function() {
+		var config = this.mockControl.createMock(DynamicTableConfiguration);
+		var colConfig = this.mockControl.createMock(DynamicTableColumnConfiguration);
+		config.expects().getColumnConfiguration(1).andReturn(colConfig);
+		colConfig.expects().isSortable().andReturn(false);
+		colConfig.expects().getTitle().andReturn("ColTitle");
+		colConfig.expects().getHeaderTooltip().andReturn("tooltipz");
+		colConfig.expects().getHeaderTooltip().andReturn("tooltipz");
+		
 		var testable = new DynamicTable(this.controller, this.model, null, this.parent);
-
+		var header = $('<div />');
+		testable.config = config;
+		testable.header = header;
+		testable._renderHeaderColumn(1);
+		same(header.children("div").children("span").text(), "ColTitle", "Title ok");
+		same(header.children("div").attr("title"), "tooltipz", "Tooltip ok");
 	});
 	
-	test("Render", function() {
+	test("_renderHeaderColumn sortable", function() {
+		var config = this.mockControl.createMock(DynamicTableConfiguration);
+		var colConfig = this.mockControl.createMock(DynamicTableColumnConfiguration);
+		config.expects().getColumnConfiguration(1).andReturn(colConfig);
+		colConfig.expects().isSortable().andReturn(true);
+		colConfig.expects().getTitle().andReturn("ColTitle");
+		colConfig.expects().getHeaderTooltip().andReturn(null);
+		
 		var testable = new DynamicTable(this.controller, this.model, null, this.parent);
+		var header = $('<div />');
+		testable.config = config;
+		testable.header = header;
+		testable._renderHeaderColumn(1);
+		var sortByColumnCalled = 0;
+		testable._sortByColumn = function(index) {
+			sortByColumnCalled++;
+			equals(index, 1, "Correct column index passed");
+		};
+		same(header.children("div").children("a").text(), "ColTitle", "Title ok");
+		header.children("div").children("a").click();
+		equals(sortByColumnCalled, 1, "Sorter called");
 
 	});
 	

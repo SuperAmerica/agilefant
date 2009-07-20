@@ -36,15 +36,17 @@ $(document).ready(function() {
     same(story.currentData, storyExpectedData, "The current data is set correctly");
     same(story.persistedData, storyExpectedData, "The persisted data is set correctly");
     
-    ok(false, "Story data not complete");
   });
 
 });
 
 var storyExpectedData = {
   name: "As a PO I want to estimate stories in story points in order to avoid the complexity of estimating possibly high level requirements in hours.",
-  "description" : "<span style=\"font-weight: bold;\">Todo<br></span><ul><li>Story point -luokkamallin lisääminen 2pt<br></li><li>Lisäys product- ja project-sivujen listoihin 3pt<br></li><li>Lisäys iteraationäkymään 4pt<br></li><li>Summadata pisteistä product- ja project-tasoille 2pt<br></li><li>Summadata pisteistä iteraatiotasolle 4pt<br></li><li>Konversio käyttöliittymästä kantaan 3pt<br></li><li>Validointi 3pt</li></ul>Total: 21pt",
-  backlogId: 538
+  description: "<span style=\"font-weight: bold;\">Todo<br></span><ul><li>Story point -luokkamallin lisääminen 2pt<br></li><li>Lisäys product- ja project-sivujen listoihin 3pt<br></li><li>Lisäys iteraationäkymään 4pt<br></li><li>Summadata pisteistä product- ja project-tasoille 2pt<br></li><li>Summadata pisteistä iteraatiotasolle 4pt<br></li><li>Konversio käyttöliittymästä kantaan 3pt<br></li><li>Validointi 3pt</li></ul>Total: 21pt",
+  backlogId: 538,
+  state: "NOT_STARTED",
+  priority: 5,
+  storyPoints: null
 };
 
 var storyInjectedData = {

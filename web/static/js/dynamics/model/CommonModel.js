@@ -1,6 +1,3 @@
-/*
- * Abstract common model for dynamics inheritance
- */
 
 /**
  * CommonModel is an abstract base class.

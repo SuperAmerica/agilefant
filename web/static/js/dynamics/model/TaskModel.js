@@ -17,6 +17,12 @@ var TaskModel = function() {
   this.persistedClassName = "fi.hut.soberit.agilefant.model.Task";
 };
 
+TaskModel.acceptedClasses =
+  [
+  "fi.hut.soberit.agilefant.model.Task",
+  "fi.hut.soberit.agilefant.model.TaskTO"
+   ];
+
 TaskModel.prototype = new CommonModel();
 
 TaskModel.prototype._setData = function(newData) {

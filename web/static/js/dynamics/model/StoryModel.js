@@ -28,7 +28,10 @@ StoryModel.prototype._setData = function(newData) {
   // Straight copied fields {newData's field name}: {object's field name}
   var copiedFields = {
     "name":        "name",
-    "description": "description"
+    "description": "description",
+    "storyPoints": "storyPoints",
+    "state":       "state",
+    "priority":    "priority"
   };
   for (field in copiedFields) {
     var ownField = copiedFields[field];

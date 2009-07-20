@@ -176,14 +176,19 @@ ModelFactory.prototype._initialize = function(type, id) {
  * Internal function to create an AJAX request.
  */
 ModelFactory.prototype._getData = function(type, id) {
+  var me = this;
   var dataParams = {
     "iteration": {
       url: "ajax/iterationData.action",
       params: {
         iterationId: id
       },
-      callback: function() {
-        alert("Loaded");
+      callback: function(data, status) {
+        if (status !== "success") {
+          alert("Data could not be loaded");
+          return false;
+        }
+        me._constructTree(data);
       }
     }
   };
@@ -192,6 +197,13 @@ ModelFactory.prototype._getData = function(type, id) {
       dataParams[type].url,
       dataParams[type].params,
       dataParams[type].callback);
+};
+
+/**
+ * Internal function to construct the dataset.
+ */
+ModelFactory.prototype._constructTree = function(data) {
+  
 };
 
 /**

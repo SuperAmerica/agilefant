@@ -7,14 +7,18 @@ $(document).ready(function() {
   module("Dynamics: Iteration Model");
   
   test("Construction", function() {
-    var commonModelInitialized = false;
-    CommonModel.prototype.initialize = function() {
-      commonModelInitialized = true;
+    var originalInit = BacklogModel.prototype.initializeBacklogModel;
+    
+    var backlogModelInitialized = false;
+    BacklogModel.prototype.initializeBacklogModel = function() {
+      backlogModelInitialized = true;
     };
     
     var iter = new IterationModel();
     
-    ok(commonModelInitialized, "The common model initialize method is called");
+    ok(backlogModelInitialized, "The backlog model initialize method is called");
     same(iter.getPersistedClass(), "fi.hut.soberit.agilefant.model.Iteration", "Class name correct" );
+    
+    BacklogModel.prototype.initializeBacklogModel = originalInit;
   });
 });

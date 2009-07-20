@@ -13,6 +13,7 @@ var DynamicTableColumnConfiguration = function(options) {
 			defaultSortColumn: false,
 			cssClass: null,
 			editable: false,
+			subViewFactory: null,
 			edit: {
 				decorator: null,
 				items: null,
@@ -73,6 +74,9 @@ DynamicTableColumnConfiguration.prototype.isSortable = function() {
 };
 DynamicTableColumnConfiguration.prototype.getEditOptions = function() {
 	return this.options.edit;
+};
+DynamicTableColumnConfiguration.prototype.getSubViewFactory = function() {
+	return this.options.subViewFactory;
 };
 
 var DynamicTableConfiguration = function(options) {

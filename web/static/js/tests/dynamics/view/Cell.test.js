@@ -17,7 +17,8 @@ $(document).ready(function() {
 		this.cellConfig.expects().isFullWidth().andReturn(false);
 		this.cellConfig.expects().getCssClass().andReturn("testClass");
 		this.cellConfig.expects().getCssClass().andReturn("testClass");
-				
+		this.cellConfig.expects().getSubViewFactory().andReturn(null);
+		
 		var testable = new DynamicTableCell(this.mockRow, this.cellConfig);
 
 		same(testable.getElement().css("width"), "10%", "Width correct");
@@ -30,6 +31,8 @@ $(document).ready(function() {
 		this.cellConfig.expects().getMinWidth().andReturn(null);
 		this.cellConfig.expects().isFullWidth().andReturn(true);
 		this.cellConfig.expects().getCssClass().andReturn("");
+		this.cellConfig.expects().getSubViewFactory().andReturn(null);
+
 				
 		var testable = new DynamicTableCell(this.mockRow, this.cellConfig);
 

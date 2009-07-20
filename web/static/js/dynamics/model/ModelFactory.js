@@ -64,7 +64,7 @@ ModelFactory.getInstance = function() {
 ModelFactory.initializeFor = function(type, id) {
   if (!type || !id || !(type in ModelFactory.initializeForTypes)) {
     throw "Type not recognized";
-  };
+  }
   ModelFactory.getInstance()._initialize(type, id);
 };
 
@@ -170,7 +170,7 @@ ModelFactory.prototype._createObject = function(type) {
  */
 ModelFactory.prototype._initialize = function(type, id) {
   this._getData(type, id);
-}
+};
 
 /**
  * Internal function to create an AJAX request.

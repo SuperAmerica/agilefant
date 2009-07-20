@@ -34,8 +34,10 @@ StoryModel.prototype._setData = function(newData) {
     "priority":    "priority"
   };
   for (field in copiedFields) {
-    var ownField = copiedFields[field];
-    data[ownField] = newData[field];
+	if(copiedFields.hasOwnProperty(field)) {
+		var ownField = copiedFields[field];
+    	data[ownField] = newData[field];
+	}
   }
   
   // Other fields

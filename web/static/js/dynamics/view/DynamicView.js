@@ -36,7 +36,7 @@ DynamicView.prototype.init = function(controller, model, parent) {
 	    this.onEdit(event);
 	  }
 	  else if (event instanceof DynamicsEvents.DeleteEvent) {
-	    this.onDelete(event)
+	    this.onDelete(event);
 	  }
 	};
 	this.model.addListener(this.listener);

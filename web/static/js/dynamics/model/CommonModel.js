@@ -107,11 +107,13 @@ CommonModel.prototype.callListeners = function(event) {
 CommonModel.prototype.commit = function() {
   var changedData = {};
   for (field in this.currentData) {
-    var currentValue = this.currentData[field];
-    var persistedValue = this.persistedData[field];
-    
-    if (currentValue !== persistedValue) {
-      changedData[field] = currentValue;
+    if(this.currentData.hasOwnProperty(field)) {
+		var currentValue = this.currentData[field];
+	    var persistedValue = this.persistedData[field];
+	    
+	    if (currentValue !== persistedValue) {
+	      changedData[field] = currentValue;
+	    }
     }
   }
   this._saveData(this.getId(), changedData);

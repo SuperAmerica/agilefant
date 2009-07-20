@@ -9,6 +9,6 @@ DynamicTableRowActions.prototype.open = function() {
 DynamicTableRowActions.prototype.close = function() {
   
 };
-DynamicTableRowActions.prototype.click = function() {
+DynamicTableRowActions.prototype._click = function(index) {
   
 };

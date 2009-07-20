@@ -7,7 +7,7 @@
  */
 var UserModel = function() {
   this.initialize();
-  this.persistedClassName = "fi.hut.soberit.agilefant.model.User"
+  this.persistedClassName = "fi.hut.soberit.agilefant.model.User";
 };
 
 UserModel.prototype = new CommonModel();

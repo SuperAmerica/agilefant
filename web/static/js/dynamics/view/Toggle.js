@@ -1,6 +1,11 @@
 var DynamicTableToggleView = function(options, controller, parentView) {
   this.currentMode = DynamicTableToggleView.up;
-  this.options = options;
+  this.options = {
+      collapse: function() {},
+      expand: function() {},
+      expanded: false
+  };
+  jQuery.extend(this.options, options);
   this.controller = controller;
   this.parentView = parentView;
   this.button = null;
@@ -17,7 +22,7 @@ DynamicTableToggleView.expanded = 2;
 
 DynamicTableToggleView.prototype.initialize = function() {
   this.button = $("<div />").appendTo(
-      this.paretnView.getElement());
+      this.parentView.getElement());
   var me = this;
   this.button.click(function(event) {
     if (me.button.hasClass("dynamictable-expand")) {

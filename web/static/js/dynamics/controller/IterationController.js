@@ -17,16 +17,9 @@ IterationController.columnIndexes = {
 	tasksData: 11
 };
 
-IterationController.prototype.deleteStory = function(row, story) {
-	
-};
-
-IterationController.prototype.editStory = function(row, story) {
-	
-};
-
-IterationController.prototype.prioritizeStory = function(row, story) {
-	
+IterationController.prototype.storyControllerFactory = function(view, model) {
+  var storyController = new StoryController(model, view, this);
+  return storyController;
 };
 
 IterationController.prototype.initializeStoryList = function() {

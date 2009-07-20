@@ -2,6 +2,7 @@
 /**
  * Model class for iterations
  * @constructor
+ * @base BacklogModel
  * @see BacklogModel#initializeBacklogModel
  */
 var IterationModel = function() {

@@ -5,7 +5,7 @@ $(document).ready(function() {
     setup: function() {
       ModelFactory.instance = null;
       this.instance = ModelFactory.getInstance();
-      this.instance.initializedFor = new IterationModel();
+      this.instance.initialized = true;
       this.testObject = {
           id: 222,
           name: "Test Object"
@@ -83,7 +83,7 @@ $(document).ready(function() {
     
     this.instance._initialize(expectedType, expectedId);
     
-    same(this.instance.initializedFor, iter, "Initialized for field set correctly");
+    ok(this.instance.initialized, "Initialized field set");
     same(getDataCallCount, 1, "Get data called once");
   });
   
@@ -309,7 +309,7 @@ $(document).ready(function() {
   
   
   test("ModelFactory not initialized", function() {
-    this.instance.initializedFor = null;
+    this.instance.initialized = false;
     
     var exceptionCount = 0;
     

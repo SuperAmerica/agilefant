@@ -7,10 +7,12 @@
  */
 ModelFactory = function() {
   this.data = {
+    iteration: {},
+    
     story: {},
     task: {}
   };
-  this.initializedFor = null;
+  this.initialized = false;
 };
 
 ModelFactory.instance = null;
@@ -23,7 +25,9 @@ ModelFactory.classNameToType = {
   "fi.hut.soberit.agilefant.model.Story":     "story",
   "fi.hut.soberit.agilefant.model.StoryTO":   "story",
   "fi.hut.soberit.agilefant.model.Task":      "task",
-  "fi.hut.soberit.agilefant.model.TaskTO":    "task"
+  "fi.hut.soberit.agilefant.model.TaskTO":    "task",
+    
+  "fi.hut.soberit.agilefant.model.User":    "user"
 };
 
 ModelFactory.types = {
@@ -32,7 +36,9 @@ ModelFactory.types = {
     project:    "project",
     
     story:      "story",
-    task:       "task"
+    task:       "task",
+    
+    user:       "user"
 };
 
 ModelFactory.initializeForTypes = {
@@ -80,7 +86,7 @@ ModelFactory.initializeFor = function(type, id) {
  */
 ModelFactory.addObject = function(objectToAdd) {
   var instance = ModelFactory.getInstance();
-  if (!instance.initializedFor) {
+  if (!instance.initialized) {
     throw "Not initialized";
   }
   else if (!objectToAdd) {
@@ -131,7 +137,7 @@ ModelFactory.prototype._addObject = function(obj) {
  * Internal function for getting the right object.
  */
 ModelFactory.prototype._getObject = function(type, id) {
-  if (!this.initializedFor) {
+  if (!this.initialized) {
     throw "Not initialized";
   }
   else if (!(type in ModelFactory.types)) {
@@ -144,7 +150,7 @@ ModelFactory.prototype._getObject = function(type, id) {
  * Internal function for creating a new object.
  */
 ModelFactory.prototype._createObject = function(type) {
-  if (!this.initializedFor) {
+  if (!this.initialized) {
     throw "Not initialized";
   }
   else if (!(type in ModelFactory.types)) {
@@ -169,6 +175,7 @@ ModelFactory.prototype._createObject = function(type) {
  * Internal function to initialize
  */
 ModelFactory.prototype._initialize = function(type, id) {
+  this.initialized = true;
   this._getData(type, id);
 };
 
@@ -180,30 +187,28 @@ ModelFactory.prototype._getData = function(type, id) {
   var dataParams = {
     "iteration": {
       url: "ajax/iterationData.action",
-      params: {
-        iterationId: id
-      },
-      callback: function(data, status) {
-        if (status !== "success") {
-          alert("Data could not be loaded");
-          return false;
-        }
-        me._constructTree(data);
-      }
+      params: { iterationId: id },
+      callback: me._constructIteration
     }
   };
   
   jQuery.getJSON(
       dataParams[type].url,
       dataParams[type].params,
-      dataParams[type].callback);
+      function(data,status) {
+        if (status !== "success") {
+          alert("Data could not be loaded");
+          return false;
+        }
+        dataParams[type].callback(id, data);
+      });
 };
 
 /**
- * Internal function to construct the dataset.
+ * Internal function to construct for iteration
  */
-ModelFactory.prototype._constructTree = function(data) {
-  
+ModelFactory.prototype._constructIteration = function(id, data) {
+
 };
 
 /**

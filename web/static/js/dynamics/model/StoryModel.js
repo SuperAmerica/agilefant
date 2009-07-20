@@ -1,8 +1,11 @@
-/*
- * DYNAMICS - MODEL - Story Model
+
+/**
+ * Constructor for the <code>StoryModel</code> class.
+ * 
+ * @constructor
+ * @base CommonModel
+ * @see CommonModel#initialize
  */
-
-
 var StoryModel = function() {
   this.initialize();
   this.persistedClassName = "fi.hut.soberit.agilefant.model.Story";
@@ -34,10 +37,10 @@ StoryModel.prototype._setData = function(newData) {
     "priority":    "priority"
   };
   for (field in copiedFields) {
-	if(copiedFields.hasOwnProperty(field)) {
-		var ownField = copiedFields[field];
-    	data[ownField] = newData[field];
-	}
+  	if(copiedFields.hasOwnProperty(field)) {
+  		var ownField = copiedFields[field];
+      data[ownField] = newData[field];
+  	}
   }
   
   // Other fields

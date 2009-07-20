@@ -22,7 +22,7 @@ CommonModel.prototype.initialize = function() {
  * Get the system-wide unique identifier for the object.
  */
 CommonModel.prototype.getHashCode = function() {
-  throw "Abstract method called: getHashCode";
+  return this.persistedClassName + "_" + this.id;
 };
 
 /**
@@ -32,6 +32,15 @@ CommonModel.prototype.getHashCode = function() {
  */
 CommonModel.prototype.getId = function() {
   return this.id;
+};
+
+/**
+ * Set the object's persisted id.
+ * <p>
+ * Should be <code>null</code> if not persisted.
+ */
+CommonModel.prototype.setId = function(id) {
+  this.id = id;
 };
 
 /**
@@ -108,7 +117,7 @@ CommonModel.prototype.commit = function() {
   var changedData = {};
   for (field in this.currentData) {
     if(this.currentData.hasOwnProperty(field)) {
-		var currentValue = this.currentData[field];
+      var currentValue = this.currentData[field];
 	    var persistedValue = this.persistedData[field];
 	    
 	    if (currentValue !== persistedValue) {

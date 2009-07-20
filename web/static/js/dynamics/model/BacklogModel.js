@@ -1,6 +1,7 @@
 /**
  * Common model class for backlogs.
  * @constructor
+ * @base CommonModel
  */
 var BacklogModel = function() {};
 

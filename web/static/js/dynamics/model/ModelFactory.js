@@ -45,9 +45,9 @@ ModelFactory.classNameToType = {
  */
 ModelFactory.types = {
     backlog:    "backlog",
-    iteration:  "backlog",
-    product:    "backlog",
-    project:    "backlog",
+    iteration:  "iteration",
+    product:    "product",
+    project:    "project",
     
     story:      "story",
     task:       "task",
@@ -210,6 +210,9 @@ ModelFactory.prototype._createObject = function(type) {
     break;
   case ModelFactory.types.story:
     returnedModel = new StoryModel();
+    break;
+  case ModelFactory.types.iteration:
+    returnedModel = new IterationModel();
     break;
   }
   

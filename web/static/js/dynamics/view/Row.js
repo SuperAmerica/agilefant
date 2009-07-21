@@ -67,6 +67,9 @@ DynamicTableRow.prototype.autoCreateCells = function() {
 	}
 };
 
+DynamicTableRow.prototype.getCell = function(index) {
+  return this.cells[index];
+};
 /**
  * Remove row
  */

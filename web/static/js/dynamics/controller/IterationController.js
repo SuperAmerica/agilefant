@@ -2,20 +2,6 @@ var IterationController = function() {
 	
 };
 IterationController.prototype = new BacklogController();
-IterationController.columnIndexes = {
-	priority: 0,
-	name: 1,
-	state: 2,
-	responsibles: 3,
-	tasks: 4,
-	points: 5,
-	el: 6,
-	oe: 7,
-	es: 8,
-	actions: 9,
-	description: 10,
-	tasksData: 11
-};
 
 IterationController.prototype.storyControllerFactory = function(view, model) {
   var storyController = new StoryController(model, view, this);
@@ -26,14 +12,14 @@ IterationController.prototype.initializeStoryList = function() {
 	var config = new DynamicTableConfiguration({
 		rowControllerFactory: IterationController.prototype.createStoryController
 	});
-	config.addColumnConfiguration(IterationController.columnIndexes.priority, {
+	config.addColumnConfiguration(StoryController.columnIndexes.priority, {
 		minWidth: 24,
 		autoScale: true,
 		cssClass: 'story-row',
 		title: "Prio",
 		headerTooltip: 'Priority'
 	});
-	config.addColumnConfiguration(IterationController.columnIndexes.name, {
+	config.addColumnConfiguration(StoryController.columnIndexes.name, {
 		minWidth: 280,
 		autoScale: true,
 		cssClass: 'story-row',
@@ -41,7 +27,7 @@ IterationController.prototype.initializeStoryList = function() {
 		headerTooltip: 'Story name',
 		get: StoryModel.prototype.getName
 	});
-	config.addColumnConfiguration(IterationController.columnIndexes.state, {
+	config.addColumnConfiguration(StoryController.columnIndexes.state, {
 		minWidth: 60,
 		autoScale: true,
 		cssClass: 'story-row',
@@ -49,7 +35,7 @@ IterationController.prototype.initializeStoryList = function() {
 		headerTooltip: 'Story state',
 		get: StoryModel.prototype.getState
 	});
-	config.addColumnConfiguration(IterationController.columnIndexes.responsibles, {
+	config.addColumnConfiguration(StoryController.columnIndexes.responsibles, {
 		minWidth: 60,
 		autoScale: true,
 		cssClass: 'story-row',
@@ -57,7 +43,7 @@ IterationController.prototype.initializeStoryList = function() {
 		headerTooltip: 'Story responsibles',
 		get: StoryModel.prototype.getResponsibles
 	});
-	config.addColumnConfiguration(IterationController.columnIndexes.tasks, {
+	config.addColumnConfiguration(StoryController.columnIndexes.tasks, {
 		minWidth: 60,
 		autoScale: true,
 		cssClass: 'story-row',
@@ -65,7 +51,7 @@ IterationController.prototype.initializeStoryList = function() {
 		headerTooltip: 'Tasks done / total',
 		get: StoryModel.prototype.getTaskMetrics
 	});
-	config.addColumnConfiguration(IterationController.columnIndexes.points, {
+	config.addColumnConfiguration(StoryController.columnIndexes.points, {
 		minWidth: 60,
 		autoScale: true,
 		cssClass: 'story-row',
@@ -73,7 +59,7 @@ IterationController.prototype.initializeStoryList = function() {
 		headerTooltip: 'Estimate in story points',
 		get: StoryModel.prototype.getStoryPoints
 	});
-	config.addColumnConfiguration(IterationController.columnIndexes.el, {
+	config.addColumnConfiguration(StoryController.columnIndexes.el, {
 		minWidth: 30,
 		autoScale: true,
 		cssClass: 'story-row',
@@ -81,7 +67,7 @@ IterationController.prototype.initializeStoryList = function() {
 		headerTooltip: 'Total task effort left',
 		get: StoryModel.prototype.getTotalEffortLeft
 	});
-	config.addColumnConfiguration(IterationController.columnIndexes.oe, {
+	config.addColumnConfiguration(StoryController.columnIndexes.oe, {
 		minWidth: 30,
 		autoScale: true,
 		cssClass: 'story-row',
@@ -90,7 +76,7 @@ IterationController.prototype.initializeStoryList = function() {
 		get: StoryModel.prototype.getTotalOriginalEstimate
 	});
 	if(agilefantUtils.isTimesheetsEnabled()) {
-		config.addColumnConfiguration(IterationController.columnIndexes.es, {
+		config.addColumnConfiguration(StoryController.columnIndexes.es, {
 			minWidth: 30,
 			autoScale: true,
 			cssClass: 'story-row',
@@ -99,17 +85,17 @@ IterationController.prototype.initializeStoryList = function() {
 			get: StoryModel.prototype.getTotalEffortSpent
 		});
 	}
-	config.addColumnConfiguration(IterationController.columnIndexes.actions, {
+	config.addColumnConfiguration(StoryController.columnIndexes.actions, {
 		minWidth: 48,
 		autoScale: true,
 		cssClass: 'story-row',
 		title: "Actions"
 	});
-	config.addColumnConfiguration(IterationController.columnIndexes.description, {
+	config.addColumnConfiguration(StoryController.columnIndexes.description, {
 		fullWidth: true,
 		cssClass: 'story-data'
 	});
-	config.addColumnConfiguration(IterationController.columnIndexes.tasksData, {
+	config.addColumnConfiguration(StoryController.columnIndexes.tasksData, {
 		fullWidth: true,
 		cssClass: 'story-data'
 	});

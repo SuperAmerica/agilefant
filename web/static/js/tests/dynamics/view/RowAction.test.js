@@ -17,7 +17,7 @@ $(document).ready(function() {
 		}
 	});
 	
-	test("..", function() {
+	test("interaction", function() {
     this.parentView.expects().getElement().andReturn(this.parent);
     
     var items = [{text: "Item 1", callback: this.controller.func1},

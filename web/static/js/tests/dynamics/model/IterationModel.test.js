@@ -32,13 +32,13 @@ $(document).ready(function() {
       listenersCalled = true;
     };
     iteration.listeners = [listener];
-    
+       
     iteration.setData(iterationInjectedData);
     
     same(iteration.getId(), 5151, "The id is correctly set");
     same(iteration.persistedData, iterationExpectedData, "Persisted data correctly set");
     same(iteration.currentData, iterationExpectedData, "Current data correctly set");
-    
+
     ok(listenersCalled, "The listeners are called");
   });
   

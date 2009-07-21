@@ -7,7 +7,7 @@
  */
 ModelFactory = function() {
   this.data = {
-    backlog: {},
+    iteration: {},
     
     story: {},
     task: {}
@@ -27,9 +27,9 @@ ModelFactory.instance = null;
  * @member ModelFactory
  */
 ModelFactory.classNameToType = {
-  "fi.hut.soberit.agilefant.model.Iteration": "backlog",
-  "fi.hut.soberit.agilefant.model.Product":   "backlog",
-  "fi.hut.soberit.agilefant.model.Project":   "backlog",
+  "fi.hut.soberit.agilefant.model.Iteration": "iteration",
+  "fi.hut.soberit.agilefant.model.Product":   "product",
+  "fi.hut.soberit.agilefant.model.Project":   "project",
   
   "fi.hut.soberit.agilefant.model.Story":     "story",
   "fi.hut.soberit.agilefant.model.StoryTO":   "story",
@@ -203,7 +203,7 @@ ModelFactory.prototype._getObject = function(type, id) {
  */
 ModelFactory.prototype._createObject = function(type) {
   var returnedModel = null;
-  
+
   switch(type) {
   case ModelFactory.types.task:
     returnedModel = new TaskModel();

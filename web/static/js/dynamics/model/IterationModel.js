@@ -39,5 +39,3 @@ IterationModel.prototype._setData = function(newData) {
   this.currentData = data;
 
 };
-
-

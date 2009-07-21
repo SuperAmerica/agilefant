@@ -32,9 +32,9 @@ $(document).ready(function() {
     var expectedType = "iteration";
     var internalInitializeCallCount = 0;
     
-    var cb = function() {};
+    var cb = function(data) {};
     
-    this.instance._initialize = function(type, id, callback) {
+    this.instance._getData = function(type, id, callback) {
       same(type, expectedType, "Type was correct");
       same(id, expectedId, "Id was correct");
       same(callback, cb, "Callback is correct");
@@ -75,27 +75,7 @@ $(document).ready(function() {
     same(exceptionCount, 4, "Correct number of exceptions")
   });
   
-  
-  test("Internal initialize", function() {
-    var expectedId = 212;
-    var expectedType = "iteration";
-    
-    var iter = new IterationModel();
-    
-    var getDataCallCount = 0; 
-    this.instance._getData = function(type, id) {
-      getDataCallCount++;
-      same(type, expectedType, "Type matches");
-      same(id, expectedId, "Id matches");
-    };
-    
-    this.instance._initialize(expectedType, expectedId);
-    
-    ok(this.instance.initialized, "Initialized field set");
-    same(getDataCallCount, 1, "Get data called once");
-  });
-  
-  
+ 
   test("Static add object", function() {
     var task = new TaskModel();
     var story = new StoryModel();
@@ -323,13 +303,19 @@ $(document).ready(function() {
     var actualTask = this.instance._createObject(ModelFactory.types.task);
     var actualStory = this.instance._createObject(ModelFactory.types.story);
     
+    var actualIteration = this.instance._createObject(ModelFactory.types.iteration);
+    
     ok(actualTask instanceof TaskModel, "Task created correctly");
     ok(actualStory instanceof StoryModel, "Story created correctly");
     
-    ok(jQuery.inArray(this.instance.listener, actualTask.listeners) !== -1,
-        "ModelFactory listener set for task");
-    ok(jQuery.inArray(this.instance.listener, actualStory.listeners) !== -1,
-        "ModelFactory listener set for story");
+    ok(actualIteration instanceof IterationModel, "Iteration created correctly");
+ 
+    var items = [actualIteration, actualStory, actualTask];
+    
+    for (var i = 0; i < items.length; i++) {
+      ok(jQuery.inArray(this.instance.listener, items[i].listeners) !== -1,
+          "ModelFactory listener set");
+    }
   });
   
 
@@ -361,7 +347,8 @@ $(document).ready(function() {
   
   module("Dynamics: ModelFactory: constructs",{
     setup: function() {
-    
+      ModelFactory.instance = null;
+      this.instance = ModelFactory.getInstance();
     },
     teardown: function() {
       
@@ -369,8 +356,27 @@ $(document).ready(function() {
   });
   
   test("Construct iteration", function() {
+    var mockControl = new MockControl();
+    var iter = mockControl.createMock(IterationModel);
+    var id = 123;
+    var data = {};
     
     
+    this.instance._createObject = function() {
+      return iter;
+    };
+    var addObjectCallCount = 0;
+    this.instance._addObject = function(obj) {
+      addObjectCallCount++;
+    };
+    
+    iter.expects().setId(id);
+    iter.expects().setData(data);
+    
+    this.instance._constructIteration(id, data);
+    
+    same(addObjectCallCount, 1, "Object added to ModelFactory singletons");
+    mockControl.verify();
   });
   
 });

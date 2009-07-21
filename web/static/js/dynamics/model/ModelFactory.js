@@ -93,7 +93,7 @@ ModelFactory.initializeFor = function(type, id, callback) {
   if (!type || !id || !(type in ModelFactory.initializeForTypes)) {
     throw "Type not recognized";
   }
-  ModelFactory.getInstance()._initialize(type, id, callback);
+  ModelFactory.getInstance()._getData(type, id, callback);
 };
 
 
@@ -218,13 +218,6 @@ ModelFactory.prototype._createObject = function(type) {
   
   returnedModel.addListener(this.listener);
   return returnedModel;
-};
-
-/**
- * Internal function to initialize
- */
-ModelFactory.prototype._initialize = function(type, id) {
-  this._getData(type, id);
 };
 
 /**

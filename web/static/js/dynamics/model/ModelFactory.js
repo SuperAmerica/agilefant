@@ -244,10 +244,10 @@ ModelFactory.prototype._getData = function(type, id, callback) {
         if (status !== "success") {
           return false;
         }
-        dataParams[type].callback(id, data);
+        var object = dataParams[type].callback.call(me, id, data);
         me.initialized = true;
         if (callback) {
-          callback();
+          callback(object);
         }
       });
 };
@@ -258,6 +258,11 @@ ModelFactory.prototype._getData = function(type, id, callback) {
 ModelFactory.prototype._constructIteration = function(id, data) {
   var iter = this._createObject("iteration");
   iter.setId(id);
+  iter.setData(data);
+  
+  // Set the stories
+  
+  this._addObject(iter);
 };
 
 /**

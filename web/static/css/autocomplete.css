@@ -86,7 +86,7 @@
 }
 
 .autocomplete-teamIcon {
-  
+  background-image: url('../img/team.png');
 }
 
 .autocomplete-selectedItemsList li .autocomplete-selectedName {

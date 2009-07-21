@@ -7,28 +7,40 @@ $(document).ready(function() {
 
   module("Dynamics: Story Model", {
     setup: function() {
-      this.originalCommonModel = CommonModel;
+      this.modelFactory = ModelFactory.getInstance();
+      this.modelFactory.initialized = true;
     },
     teardown: function() {
-      CommonModel = this.originalCommonModel;
+      ModelFactory.instance = null;
     }
   });
   
-  test("Construction", function() {
-    var commonModelInitialized = false;
-    CommonModel.prototype.initialize = function() {
-      commonModelInitialized = true;
-    };
-    
+  test("Construction", function() {   
     var story = new StoryModel();
     
-    ok(commonModelInitialized, "The common model initialize method is called");
+    ok(story instanceof CommonModel, "Story is a common model object");
+    
+    ok(story.relations, "Story relations object is defined");
+    ok(story.currentData, "Story current data object is defined");
+    ok(story.persistedData, "Story persisted data object is defined");
+    ok(story.listeners, "Story listeners object is defined");
+    
     same(story.getPersistedClass(), "fi.hut.soberit.agilefant.model.Story", "Class name correct" );
   });
   
   
   test("Internal set data", function() {
     var story = new StoryModel();
+    var iter = new IterationModel();
+    
+    var getObjectCalled = false;
+    var origGetObject = ModelFactory.getObject;
+    ModelFactory.getObject = function(type, id) {
+      getObjectCalled = true;
+      same(type, "backlog", "The type matches");
+      same(id, 538, "The id matches");
+      return iter;
+    };
     
     story._setData(storyInjectedData);
     
@@ -36,6 +48,10 @@ $(document).ready(function() {
     same(story.currentData, storyExpectedData, "The current data is set correctly");
     same(story.persistedData, storyExpectedData, "The persisted data is set correctly");
     
+    ok(getObjectCalled, "ModelFactory's getObject method called");
+    equals(story.getBacklog(), iter, "The backlog matches");
+    
+    ModelFactory.getObject = origGetObject;
   });
 
 });
@@ -43,7 +59,6 @@ $(document).ready(function() {
 var storyExpectedData = {
   name: "As a PO I want to estimate stories in story points in order to avoid the complexity of estimating possibly high level requirements in hours.",
   description: "<span style=\"font-weight: bold;\">Todo<br></span><ul><li>Story point -luokkamallin lisääminen 2pt<br></li><li>Lisäys product- ja project-sivujen listoihin 3pt<br></li><li>Lisäys iteraationäkymään 4pt<br></li><li>Summadata pisteistä product- ja project-tasoille 2pt<br></li><li>Summadata pisteistä iteraatiotasolle 4pt<br></li><li>Konversio käyttöliittymästä kantaan 3pt<br></li><li>Validointi 3pt</li></ul>Total: 21pt",
-  backlogId: 538,
   state: "NOT_STARTED",
   priority: 5,
   storyPoints: null

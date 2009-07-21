@@ -17,6 +17,9 @@ $(document).ready(function() {
   
   test("Initialization", function() {
     ok(this.commonModel.listeners, "Listeners field added");
+    ok(this.commonModel.relations, "Relations field added");
+    ok(this.commonModel.currentData, "Current data field added");
+    ok(this.commonModel.persistedData, "Persisted data field added");
     same(this.commonModel.getId(), null, "Id is null");
   });
   

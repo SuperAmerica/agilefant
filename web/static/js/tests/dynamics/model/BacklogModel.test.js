@@ -8,6 +8,7 @@ $(document).ready(function() {
   
   test("Initialization", function() {
     var commonModelInitialized = false;
+    var originalCMInit = CommonModel.prototype.initialize; 
     CommonModel.prototype.initialize = function() {
       commonModelInitialized = true;
     };
@@ -17,5 +18,6 @@ $(document).ready(function() {
     blog.initializeBacklogModel();
     
     ok(commonModelInitialized, "The common model initialize method is called");
+    CommonModel.prototype.initialize = originalCMInit;
   });
 });

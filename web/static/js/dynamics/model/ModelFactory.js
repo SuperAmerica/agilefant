@@ -7,7 +7,7 @@
  */
 ModelFactory = function() {
   this.data = {
-    iteration: {},
+    backlog: {},
     
     story: {},
     task: {}
@@ -17,10 +17,19 @@ ModelFactory = function() {
 
 ModelFactory.instance = null;
 
+/**
+ * Convert persisted class names to <code>ModelFactory</code> types.
+ * <p>
+ * Utility map to convert persisted class names, e.g.
+ * "fi.hut.soberit.agilefant.model.Story" to types understood by the
+ * <code>ModelFactory</code>.
+ * 
+ * @member ModelFactory
+ */
 ModelFactory.classNameToType = {
-  "fi.hut.soberit.agilefant.model.Iteration": "iteration",
-  "fi.hut.soberit.agilefant.model.Product":   "product",
-  "fi.hut.soberit.agilefant.model.Project":   "project",
+  "fi.hut.soberit.agilefant.model.Iteration": "backlog",
+  "fi.hut.soberit.agilefant.model.Product":   "backlog",
+  "fi.hut.soberit.agilefant.model.Project":   "backlog",
   
   "fi.hut.soberit.agilefant.model.Story":     "story",
   "fi.hut.soberit.agilefant.model.StoryTO":   "story",
@@ -30,10 +39,15 @@ ModelFactory.classNameToType = {
   "fi.hut.soberit.agilefant.model.User":    "user"
 };
 
+/**
+ * The different types the <code>ModelFactory</code> accepts.
+ * @member ModelFactory
+ */
 ModelFactory.types = {
-    iteration:  "iteration",
-    product:    "product",
-    project:    "project",
+    backlog:    "backlog",
+    iteration:  "backlog",
+    product:    "backlog",
+    project:    "backlog",
     
     story:      "story",
     task:       "task",
@@ -41,10 +55,14 @@ ModelFactory.types = {
     user:       "user"
 };
 
+/**
+ * The types the <code>ModelFactory</code> can be initialized for.
+ * @member ModelFactory
+ * @see ModelFactory.initializeFor
+ */
 ModelFactory.initializeForTypes = {
     iteration:  "iteration"
 };
-
 
 
 /**
@@ -65,13 +83,17 @@ ModelFactory.getInstance = function() {
  * <p>
  * Invokes the actual AJAX requests to fetch the data.
  * 
+ * @param {String} type the type of the object to initialize the dataset for
+ * @param {int} id the id number of the object to initialize the dataset for
+ * 
  * @throws {String "Type not recognized"} if type not recognized, null or undefined; if id null or undefined
+ * @see ModelFactory.types
  */
-ModelFactory.initializeFor = function(type, id) {
+ModelFactory.initializeFor = function(type, id, callback) {
   if (!type || !id || !(type in ModelFactory.initializeForTypes)) {
     throw "Type not recognized";
   }
-  ModelFactory.getInstance()._initialize(type, id);
+  ModelFactory.getInstance()._initialize(type, id, callback);
 };
 
 
@@ -107,8 +129,30 @@ ModelFactory.addObject = function(objectToAdd) {
  * @see CommonModel#getId
  * @throws {String "Invalid type"} if type is invalid
  * @throws {String "Not initialized"} if instance not initialized.
+ * @throws {String "Not found"} if object not found
  */
 ModelFactory.getObject = function(type, id) {
+  var obj = ModelFactory.getObjectIfExists(type, id);
+  if (!obj) {
+    throw "Not found";
+  }
+  return obj; 
+};
+
+/**
+ * Gets the object of the given type and id.
+ * <p>
+ * @return the object, null if doesn't exist
+ * @see ModelFactory.types
+ * @see CommonModel#getId
+ */
+ModelFactory.getObjectIfExists = function(type, id) {
+  if (!this.getInstance().isInitialized()) {
+    throw "Not initialized";
+  }
+  else if (!(type in ModelFactory.types)) {
+    throw "Invalid type";
+  }
   return ModelFactory.getInstance()._getObject(type,id);
 };
 
@@ -120,7 +164,21 @@ ModelFactory.getObject = function(type, id) {
  * @throws {String "Not initialized"} if instance not initialized.
  */
 ModelFactory.createObject = function(type) {
+  if (!this.getInstance().isInitialized()) {
+    throw "Not initialized";
+  }
+  else if (!(type in ModelFactory.types)) {
+    throw "Invalid type";
+  }
   return ModelFactory.getInstance()._createObject(type);
+};
+
+
+/**
+ * Check if the <code>ModelFactory</code> is initialized or not.
+ */
+ModelFactory.prototype.isInitialized = function() {
+  return this.initialized;
 };
 
 
@@ -137,12 +195,6 @@ ModelFactory.prototype._addObject = function(obj) {
  * Internal function for getting the right object.
  */
 ModelFactory.prototype._getObject = function(type, id) {
-  if (!this.initialized) {
-    throw "Not initialized";
-  }
-  else if (!(type in ModelFactory.types)) {
-    throw "Invalid type";
-  }
   return this.data[type][id];
 };
 
@@ -150,12 +202,6 @@ ModelFactory.prototype._getObject = function(type, id) {
  * Internal function for creating a new object.
  */
 ModelFactory.prototype._createObject = function(type) {
-  if (!this.initialized) {
-    throw "Not initialized";
-  }
-  else if (!(type in ModelFactory.types)) {
-    throw "Invalid type";
-  }
   var returnedModel = null;
   
   switch(type) {
@@ -175,14 +221,13 @@ ModelFactory.prototype._createObject = function(type) {
  * Internal function to initialize
  */
 ModelFactory.prototype._initialize = function(type, id) {
-  this.initialized = true;
   this._getData(type, id);
 };
 
 /**
  * Internal function to create an AJAX request.
  */
-ModelFactory.prototype._getData = function(type, id) {
+ModelFactory.prototype._getData = function(type, id, callback) {
   var me = this;
   var dataParams = {
     "iteration": {
@@ -197,10 +242,13 @@ ModelFactory.prototype._getData = function(type, id) {
       dataParams[type].params,
       function(data,status) {
         if (status !== "success") {
-          alert("Data could not be loaded");
           return false;
         }
         dataParams[type].callback(id, data);
+        me.initialized = true;
+        if (callback) {
+          callback();
+        }
       });
 };
 
@@ -208,7 +256,8 @@ ModelFactory.prototype._getData = function(type, id) {
  * Internal function to construct for iteration
  */
 ModelFactory.prototype._constructIteration = function(id, data) {
-
+  var iter = this._createObject("iteration");
+  iter.setId(id);
 };
 
 /**

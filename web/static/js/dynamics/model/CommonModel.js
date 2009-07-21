@@ -13,6 +13,7 @@ var CommonModel = function() {};
 CommonModel.prototype.initialize = function() {
   this.listeners = [];
   this.id = null;
+  this.relations = {};
   var defaultData = {};
   this.currentData = defaultData;
   this.persistedData = defaultData;

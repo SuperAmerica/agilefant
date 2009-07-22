@@ -58,3 +58,10 @@ IterationModel.prototype.addStory = function(story) {
   this.relations.stories.push(story);
   story.relations.backlog = this;
 };
+
+/* GETTERS */
+
+IterationModel.prototype.getStories = function() {
+  return this.relations.stories;
+};
+}

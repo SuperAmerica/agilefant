@@ -187,7 +187,7 @@ ModelFactory.updateObject = function(type, data) {
   if (!type ||
       !data    || typeof(data) !== "object" ||
       !data.id || typeof(data.id) !== "number") {
-    throw "Illegal argument for ModelFactory.updateObject";
+    throw new Error("Illegal argument for ModelFactory.updateObject");
   }
   var instance = ModelFactory.getInstance();
   var object = instance._getObject(type, data.id);

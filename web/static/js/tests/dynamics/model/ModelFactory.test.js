@@ -403,7 +403,8 @@ $(document).ready(function() {
         ModelFactory.updateObject(type, data);
       }
       catch (e) {
-        if (e === "Illegal argument for ModelFactory.updateObject") {
+        if (e instanceof Error &&
+            e.message === "Illegal argument for ModelFactory.updateObject") {
           exceptionCount++;
         }
       }

@@ -175,6 +175,7 @@
     <action name="retrieveIteration" class="iterationAction" method="retrieve">
       <result name="success" type="json">
         <param name="target">iteration</param>
+        <param name="patterns">+stories</param>
       </result>
     </action>
     

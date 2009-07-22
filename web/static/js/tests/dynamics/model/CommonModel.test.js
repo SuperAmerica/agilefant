@@ -46,6 +46,35 @@ $(document).ready(function() {
     same(listenerCallCount, 1, "Listeners are called once");
   });
   
+  test("Copy fields", function() {
+    var newData = {
+        name: "Foo field name",
+        desc: "Foo bar description",
+        fooValue: "Valuevalue"
+    };
+    this.commonModel.currentData = {
+        anotherField: "Another value"
+    };
+    this.commonModel.persistedData = {
+        anotherField: "Another value"
+    };
+    this.commonModel.copiedFields = {
+        "name":   "name",
+        "desc":   "description"
+    };
+    
+    this.commonModel._copyFields(newData);
+    
+    same(this.commonModel.currentData.name, "Foo field name", "Name copied");
+    same(this.commonModel.currentData.description, "Foo bar description", "Description copied");
+    ok(!this.commonModel.currentData.fooValue, "Field fooValue not copied");
+    
+    same(this.commonModel.persistedData.name, "Foo field name", "Name copied");
+    same(this.commonModel.persistedData.description, "Foo bar description", "Description copied");
+    ok(!this.commonModel.persistedData.fooValue, "Field fooValue not copied");
+    
+    same(this.commonModel.currentData.anotherField, "Another value", "Field not overwritten");
+  });
   
   test("Adding listener", function() {
     same(this.commonModel.listeners.length, 0, "Listeners empty before adding");

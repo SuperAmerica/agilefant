@@ -93,6 +93,9 @@ $(document).ready(function() {
     ok(jQuery.inArray(stories[1], iteration.relations.stories) !== -1,
         "Second story in iteration's stories");
     
+    same(stories[0].relations.backlog, iteration, "Story 0 iteration set correctly");
+    same(stories[1].relations.backlog, iteration, "Story 1 iteration set correctly");
+    
     ModelFactory.updateObject = origUpdateObject;
   });
 });

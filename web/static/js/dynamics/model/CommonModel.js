@@ -74,7 +74,17 @@ CommonModel.prototype._setData = function(newData) {
   throw "Abstract method called";
 };
 
-CommonModel.prototype._
+CommonModel.prototype._copyFields = function(newData) {
+  var data = {};
+  for (field in this.copiedFields) {
+    if(this.copiedFields.hasOwnProperty(field)) {
+      var ownField = this.copiedFields[field];
+      data[ownField] = newData[field];
+    }
+  }
+  jQuery.extend(this.currentData, data);
+  jQuery.extend(this.persistedData, data);
+};
 
 /**
  * Add an event listener.

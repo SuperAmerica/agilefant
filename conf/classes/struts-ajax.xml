@@ -175,14 +175,13 @@
     <action name="retrieveIteration" class="iterationAction" method="retrieve">
       <result name="success" type="json">
         <param name="target">iteration</param>
-        <param name="patterns">+stories</param>
       </result>
     </action>
     
-    <action name="iterationData" class="iterationAction" method="iterationContents">
+    <action name="iterationData" class="iterationAction" method="retrieve">
       <result name="success" type="json">
-        <param name="target">iterationData</param>
-        <param name="patterns">+stories.tasks, +stories.userData, +stories.tasks.userData, +tasksWithoutStory, +tasksWithoutStory.userData</param>
+        <param name="target">iteration</param>
+        <param name="patterns">+stories, +stories.tasks</param>
       </result>
     </action>
     

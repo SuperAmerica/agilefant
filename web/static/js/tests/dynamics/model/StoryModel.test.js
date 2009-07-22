@@ -33,13 +33,10 @@ $(document).ready(function() {
     var story = new StoryModel();
     var iter = new IterationModel();
     
-    var getObjectCalled = false;
-    var origGetObject = ModelFactory.getObject;
-    ModelFactory.getObject = function(type, id) {
-      getObjectCalled = true;
-      same(type, "backlog", "The type matches");
-      same(id, 538, "The id matches");
-      return iter;
+    var origUpdateObject = ModelFactory.updateObject;
+    var updateCallCount = 0;
+    ModelFactory.updateObject = function(type, data) {
+      updateCallCount++;
     };
     
     story._setData(storyInjectedData);
@@ -48,9 +45,60 @@ $(document).ready(function() {
     same(story.currentData, storyExpectedData, "The current data is set correctly");
     same(story.persistedData, storyExpectedData, "The persisted data is set correctly");
     
-//    ok(getObjectCalled, "ModelFactory's getObject method called");
+    same(updateCallCount, 0, "No tasks should be added");
     
-    ModelFactory.getObject = origGetObject;
+    ModelFactory.updateObject = origUpdateObject;
+  });
+  
+  test("Internal set data with tasks", function() {
+    
+    var origUpdateObject = ModelFactory.updateObject;
+    var updateCallCount = 0;
+    var tasks = [new TaskModel(), new TaskModel(), new TaskModel()];
+    ModelFactory.updateObject = function(type, data) {
+      var task = tasks[updateCallCount];
+      updateCallCount++;
+      same(type, ModelFactory.types.task, "Type is correct");
+      return task;
+    };
+    
+    var alteredData = {
+      tasks:
+        [
+         {
+           id: 123,
+           name: "Goo"
+         },
+         {
+           id: 1234,
+           name: "Foo"
+         },
+         {
+           id: 12345,
+           name: "Boo"
+         }
+         ]  
+    };
+    jQuery.extend(alteredData, storyInjectedData);
+    
+    var story = new StoryModel();
+    
+    story._setData(alteredData);
+    
+    same(updateCallCount, 3, "Three tasks added");
+    same(story.relations.tasks.length, 3, "Tasklist length correct")
+    ok(jQuery.inArray(tasks[0], story.relations.tasks) !== -1,
+      "First task in story's tasks");
+    ok(jQuery.inArray(tasks[1], story.relations.tasks) !== -1,
+      "Second task in story's tasks");
+    ok(jQuery.inArray(tasks[2], story.relations.tasks) !== -1,
+      "Second task in story's tasks");
+    
+    same(tasks[0].relations.story, story, "Task 0's story set correctly");
+    same(tasks[1].relations.story, story, "Task 1's story set correctly");
+    same(tasks[2].relations.story, story, "Task 2's story set correctly");
+    // Revert the original method
+    ModelFactory.updateObject = origUpdateObject;
   });
 
 });
@@ -91,31 +139,6 @@ var storyInjectedData = {
   "priority" : 5,
   "state" : "NOT_STARTED",
   "storyPoints" : null,
-  "tasks" : [ {
-    "class" : "fi.hut.soberit.agilefant.transfer.TaskTO",
-    "createdDate" : 1244095033000,
-    "creator" : {
-      "class" : "fi.hut.soberit.agilefant.model.User",
-      "email" : "juho.sorvettula@tkk.fi",
-      "enabled" : true,
-      "fullName" : "Juho Sorvettula",
-      "id" : 51,
-      "initials" : "Juho",
-      "loginName" : "jsorvett",
-      "name" : "jsorvett",
-      "weekEffort" : 1920
-    },
-    "description" : "Tehdään integerillä, ei omaa luokkaa",
-    "effortLeft" : 0,
-    "effortSpent" : 0,
-    "hourEntries" : [],
-    "id" : 4782,
-    "name" : "Story pointin lisääminen",
-    "originalEstimate" : 120,
-    "priority" : "BLOCKER",
-    "state" : "DONE",
-    "userData" : []
-  }],
   "userData" : [ {
     "class" : "fi.hut.soberit.agilefant.util.ResponsibleContainer",
     "inProject" : false,

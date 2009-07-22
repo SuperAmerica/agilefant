@@ -10,7 +10,15 @@ var StoryModel = function() {
   this.initialize();
   this.persistedClassName = "fi.hut.soberit.agilefant.model.Story";
   this.relations = {
-    backlog: {}  
+    backlog: {},
+    tasks: []
+  };
+  this.copiedFields = {
+    "name": "name",
+    "description": "description",
+    "state": "state",
+    "priority": "priority",
+    "storyPoints": "storyPoints"
   };
 };
 
@@ -25,46 +33,35 @@ StoryModel.acceptedClassNames = [
  * Internal function to parse data.
  * @throws {String "Invalid data"} if data is invalid
  */
-StoryModel.prototype._setData = function(newData) {
-  var data = {};
-  
+StoryModel.prototype._setData = function(newData) { 
   // Set the id
   this.id = newData.id;
   
   // Straight copied fields {newData's field name}: {object's field name}
-  this._copyFields(data, newData);
-  
-  // Set the object's data
-  this.currentData = data;
-  this.persistedData = data;
-  
+  this._copyFields(newData);
+
   // Set the parent backlog
 //  this.relations.backlog = ModelFactory.getObject("backlog", newData.backlog.id);
   
   // Set the tasks
-  this._populateTasks(newData.tasks);
-};
-
-StoryModel.prototype._copyFields = function(data, newData) {
-  var copiedFields = {
-    "name":        "name",
-    "description": "description",
-    "storyPoints": "storyPoints",
-    "state":       "state",
-    "priority":    "priority"
-  };
-  for (field in copiedFields) {
-    if(copiedFields.hasOwnProperty(field)) {
-      var ownField = copiedFields[field];
-      data[ownField] = newData[field];
-    }
+  if (newData.tasks) {
+    this._populateTasks(newData.tasks);
   }
 };
 
 StoryModel.prototype._populateTasks = function(tasks) {
-  
+  for (var i = 0; i < tasks.length; i++) {
+    var task = ModelFactory.updateObject(ModelFactory.types.task, tasks[i]);
+    this.addTask(task);
+    task.relations.story = this;
+  }
 };
 
+
+StoryModel.prototype.addTask = function(task) {
+  this.relations.tasks.push(task);
+  
+};
 
 // Getters in alphabetical order
 StoryModel.prototype.getBacklog = function() {

@@ -11,6 +11,9 @@ var IterationModel = function() {
   this.relations = {
     stories: []  
   };
+  this.copiedFields = {
+    "name":   "name"
+  };
 };
 
 IterationModel.prototype = new BacklogModel();
@@ -27,24 +30,12 @@ IterationModel.prototype._setData = function(newData) {
   this.id = newData.id;
   
   // Copy fields
-  var copiedFields = {
-    "name":   "name"
-  };
-  for (field in copiedFields) {
-    if(copiedFields.hasOwnProperty(field)) {
-      var ownField = copiedFields[field];
-      data[ownField] = newData[field];
-    }
-  }
-
+  this._copyFields(newData);
+  
   // Set stories
   if (newData.stories) {
     this._populateStories(newData.stories);
   }
-  
-  // Set the data
-  this.persistedData = data;
-  this.currentData = data;
 };
 
 IterationModel.prototype._populateStories = function(stories) {

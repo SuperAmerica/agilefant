@@ -9,6 +9,9 @@
 var StoryModel = function() {
   this.initialize();
   this.persistedClassName = "fi.hut.soberit.agilefant.model.Story";
+  this.relations = {
+    backlog: {}  
+  };
 };
 
 StoryModel.prototype = new CommonModel();

@@ -8,6 +8,9 @@
 var IterationModel = function() {
   this.initializeBacklogModel();
   this.persistedClassName = "fi.hut.soberit.agilefant.model.Iteration";
+  this.relations = {
+    stories: []  
+  };
 };
 
 IterationModel.prototype = new BacklogModel();
@@ -34,8 +37,24 @@ IterationModel.prototype._setData = function(newData) {
     }
   }
 
+  // Set stories
+  if (newData.stories) {
+    this._populateStories(newData.stories);
+  }
+  
   // Set the data
   this.persistedData = data;
   this.currentData = data;
+};
 
+IterationModel.prototype._populateStories = function(stories) {
+  for (var i = 0; i < stories.length; i++) {
+    var story = ModelFactory.updateObject(ModelFactory.types.story, stories[i]);
+    this.addStory(story);
+  }
+};
+
+IterationModel.prototype.addStory = function(story) {
+  this.relations.stories.push(story);
+  story.relations.backlog = this;
 };

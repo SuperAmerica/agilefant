@@ -4,7 +4,14 @@
 
 $(document).ready(function() {
   
-  module("Dynamics: Iteration Model");
+  module("Dynamics: Iteration Model",{
+    setup: function() {
+      this.mockControl = new MockControl();
+    },
+    teardown: function() {
+      this.mockControl.verify();
+    }
+  });
   
   test("Construction", function() {
     var originalInit = BacklogModel.prototype.initializeBacklogModel;
@@ -42,6 +49,52 @@ $(document).ready(function() {
     ok(listenersCalled, "The listeners are called");
   });
   
+ 
+  test("Set data with stories", function() {
+    var alteredData = {
+        stories:
+          [
+           {
+             id: 715,
+             name: "Foo story"
+           },
+           {
+             id: 888,
+             name: "Bar story"
+           }
+           ]
+    };
+    jQuery.extend(alteredData, iterationInjectedData);
+    
+    var iteration = new IterationModel();
+    
+    var listenersCalled = false;
+    var listener = function() {
+      listenersCalled = true;
+    };
+    iteration.listeners = [listener];
+    
+    var origUpdateObject = ModelFactory.updateObject;
+    var updateCallCount = 0;
+    var stories = [new StoryModel(), new StoryModel()];
+    ModelFactory.updateObject = function(type, data) {
+      var story = stories[updateCallCount];
+      updateCallCount++;
+      same(type, ModelFactory.types.story, "Type is correct");
+      return story;
+    };
+    
+    iteration.setData(alteredData);
+    
+    ok(listenersCalled, "The listeners are called");
+    same(updateCallCount, 2, "The stories are updated");
+    ok(jQuery.inArray(stories[0], iteration.relations.stories) !== -1,
+        "First story in iteration's stories");
+    ok(jQuery.inArray(stories[1], iteration.relations.stories) !== -1,
+        "Second story in iteration's stories");
+    
+    ModelFactory.updateObject = origUpdateObject;
+  });
 });
 
 var iterationExpectedData = {

@@ -208,10 +208,7 @@ $(document).ready(function() {
 		ok(testable.bottomRows[0] === firstRow, "1. row ok");
 		ok(testable.bottomRows[1] === secondRow, "2. row ok");
 	});
-	test("_dataSourceRow", function() {
-		var testable = new DynamicTable(this.controller, this.model, null, this.parent);
 
-	});
 	test("removeRow", function() {
 		var testable = new DynamicTable(this.controller, this.model, null, this.parent);
 		var model = this.mockControl.createMock(CommonModel);
@@ -231,5 +228,70 @@ $(document).ready(function() {
 		equals(testable.bottomRows.length, 0, "Row removed");
 		testable.removeRow(row);
 		equals(testable.upperRows.length, 0, "Row removed");
+	});
+	
+	test("_renderFromDataSource new rows", function() {
+	  var existingRowModel = this.mockControl.createMock(CommonModel);
+	  var existingRow = this.mockControl.createMock(DynamicTableRow);
+	  var newRowModel = this.mockControl.createMock(CommonModel);
+	  
+	  existingRowModel.expects().getHashCode().andReturn("model-1");
+	  newRowModel.expects().getHashCode().andReturn("model-2");  
+	  existingRow.expects().getModel().andReturn(existingRowModel);
+	  existingRowModel.expects().getHashCode().andReturn("model-1");
+	  existingRowModel.expects().getHashCode().andReturn("model-1");
+	  newRowModel.expects().getHashCode().andReturn("model-2");
+
+
+	  var newDataset = [existingRowModel, newRowModel]; 
+	  
+	  var testable = new DynamicTable(this.controller, this.model, null, this.parent);
+	  
+	  var dataSourceRowCallCount = 0;
+	  
+	  testable._dataSourceRow = function(model, config) {
+	     dataSourceRowCallCount++;
+	     same(newRowModel, model, "Correct model added");
+	  };
+	  
+	  testable.middleRows = [existingRow];
+	  testable.rowHashes = ["model-1"];
+	  
+	  testable._renderFromDataSource(newDataset);
+	  equals(dataSourceRowCallCount, 1, "Row added");
+	  
+	});
+	
+	test("_renderFromDataSource removed rows", function() {
+	  var existingRow1Model = this.mockControl.createMock(CommonModel); 
+	  var existingRow1 = this.mockControl.createMock(DynamicTableRow);
+	  var existingRow2Model = this.mockControl.createMock(CommonModel);
+	  var existingRow2 = this.mockControl.createMock(DynamicTableRow);
+	  
+	  existingRow1Model.expects().getHashCode().andReturn("model-1");
+	  
+	  existingRow1.expects().getModel().andReturn(existingRow1Model);
+	  existingRow1Model.expects().getHashCode().andReturn("model-1");
+	  existingRow2.expects().getModel().andReturn(existingRow2Model);
+	  existingRow2Model.expects().getHashCode().andReturn("model-2");
+	  existingRow2.expects().remove();
+	  
+	  existingRow1Model.expects().getHashCode().andReturn("model-1");
+	  
+	  var newDataSet = [existingRow1Model];
+	  
+	  var testable = new DynamicTable(this.controller, this.model, null, this.parent);
+
+	  var dataSourceRowCallCount = 0;
+    
+    testable._dataSourceRow = function(model, config) {
+       dataSourceRowCallCount++;
+    };
+    testable.middleRows = [existingRow1, existingRow2];
+    testable.rowHashes = ["model-1", "model-2"];
+    var newDataset = [existingRow1Model];
+    
+    testable._renderFromDataSource(newDataset);
+    equals(dataSourceRowCallCount, 0, "no new rows added");
 	});
 });

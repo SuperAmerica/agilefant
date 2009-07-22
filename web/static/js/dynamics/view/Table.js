@@ -175,9 +175,26 @@ DynamicTable.prototype._addSectionToTable = function(section) {
 };
 
 DynamicTable.prototype._renderFromDataSource = function(dataArray) {
+	var newHashes = [];
+	//get all hash codes for the new dataset
 	for(var i = 0; i < dataArray.length; i++) {
-		var model = dataArray[i];
-		this._dataSourceRow(model);
+	  newHashes.push(dataArray[i].getHashCode());
+	}
+	
+	//check if some rows have been removed
+  for(i = 0; i < this.middleRows.length; i++) {
+    var model = this.middleRows[i].getModel();
+    if(jQuery.inArray(model.getHashCode(), newHashes) === -1) {
+      this.middleRows[i].remove();
+    }
+  }
+  
+  //add new rows
+	for(i = 0; i < dataArray.length; i++) {
+	  var model = dataArray[i];
+	  if(jQuery.inArray(model.getHashCode(), this.rowHashes) === -1) {
+	    this._dataSourceRow(model);
+	  }
 	}
 };
 
@@ -292,4 +309,8 @@ DynamicTable.prototype.removeRow = function(row) {
  */
 DynamicTable.prototype.remove = function() {
 	this.container.remove();
+};
+
+DynamicTable.prototype.onRelationUpdate = function(event) {
+  this.render();
 };

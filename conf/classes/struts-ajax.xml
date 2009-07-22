@@ -172,6 +172,12 @@
       </result>
     </action>
     
+    <action name="retrieveIteration" class="iterationAction" method="retrieve">
+      <result name="success" type="json">
+        <param name="target">iteration</param>
+      </result>
+    </action>
+    
     <action name="iterationData" class="iterationAction" method="iterationContents">
       <result name="success" type="json">
         <param name="target">iterationData</param>

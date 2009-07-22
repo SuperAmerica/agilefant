@@ -248,7 +248,7 @@ ModelFactory.prototype._getData = function(type, id, callback) {
   var me = this;
   var dataParams = {
     "iteration": {
-      url: "ajax/iterationData.action",
+      url: "ajax/retrieveIteration.action",
       params: { iterationId: id },
       callback: me._constructIteration
     }

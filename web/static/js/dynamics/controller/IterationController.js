@@ -20,11 +20,45 @@ IterationController.prototype.initializeStoryList = function() {
   });
 };
 
+IterationController.prototype.createStory = function() {
+  var mockModel = ModelFactory.createObject(ModelFactory.types.story);
+  var row = this.storyListView.createRow(this,mockModel,"top");
+  row.autoCreateCells();
+  row.getCell(StoryController.columnIndexes.actions).hide();
+  row.getCell(StoryController.columnIndexes.priority).hide();
+};
+
 IterationController.prototype.initializeStoryConfig = function() {
 	var config = new DynamicTableConfiguration({
 	  rowControllerFactory: IterationController.prototype.storyControllerFactory,
-		dataSource: IterationModel.prototype.getStories
+		dataSource: IterationModel.prototype.getStories,
+		caption: "Stories"
 	});
+
+  config.addCaptionItem({
+    name: "createStory",
+    text: "Create story",
+    cssClass: "create",
+    callback: IterationController.prototype.createStory
+  });
+   
+	config.addCaptionItem({
+	  name: "showTasks",
+	  text: "Show tasks",
+	  connectWith: "hideTasks",
+	  cssClass: "hide"
+	  
+	});
+	config.addCaptionItem({
+	  name: "hideTasks",
+	  text: "Hide tasks",
+	  visible: false,
+	  connectWith: "showTasks",
+	  cssClass: "show"
+	});
+
+	
+	
 	config.addColumnConfiguration(StoryController.columnIndexes.priority, {
 		minWidth: 24,
 		autoScale: true,

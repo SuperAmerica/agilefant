@@ -52,6 +52,7 @@ DynamicTable.prototype.initialize = function() {
 	this.container = $("<div />").appendTo(this.getParentElement()).addClass(DynamicTable.cssClasses.table);
 	this.element = $("<div />").appendTo(this.container);
 	this._computeColumns();
+	this.captionElement = $('<div />').addClass(DynamicTable.cssClasses.tableCaption).prependTo(this.container).width(this.totalRowWidth+"%");
 	var columnConfigs = this.config.getColumns();
 	//determinate default sort column index
 	this.currentSortColumn = null;
@@ -61,6 +62,10 @@ DynamicTable.prototype.initialize = function() {
 			this.currentSortColumn = i;
 			break;
 		}
+	}
+	this.caption = null;
+	if(this.config.hasCaptionConfiguration()) {
+		this.caption = new DynamicTableCaption(this.captionElement, this.config.getCaptionConfiguration(), this.config.getCaption(), this.getController());
 	}
 	this._renderHeader();
 };
@@ -204,6 +209,7 @@ DynamicTable.prototype._renderFromDataSource = function(dataArray) {
 DynamicTable.prototype.createRow = function(controller, model, position) {
 	var row = new DynamicTableRow(this.config.getColumns());
 	this._createRow(row, controller, model, position);
+	this.render();
 	return row;
 };
 

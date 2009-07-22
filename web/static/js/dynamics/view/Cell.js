@@ -41,6 +41,18 @@ DynamicTableCell.prototype.getElement = function() {
 	return this.element;
 };
 
+DynamicTableCell.prototype.hide = function() {
+  this.cellContents.hide();
+  if(this.subView) {
+    this.subView.hide();
+  }
+};
+DynamicTableCell.prototype.show = function() {
+  this.cellContents.show();
+  if(this.subView) {
+    this.subView.show();
+  }
+};
 DynamicTableCell.prototype.render = function() {
 	var model = this.row.getModel();
 	var getter = this.config.getGetter();

@@ -37,6 +37,12 @@ DynamicTableToggleView.prototype.initialize = function() {
 DynamicTableToggleView.prototype.render = function() {
   
 };
+DynamicTableToggleView.prototype.show = function() {
+  this.button.show();
+};
+DynamicTableToggleView.prototype.hide = function() {
+  this.button.hide();
+};
 DynamicTableToggleView.prototype.collapse = function() {
   this.button.attr("title", "Expand").removeClass("dynamictable-collapse")
       .addClass("dynamictable-expand");

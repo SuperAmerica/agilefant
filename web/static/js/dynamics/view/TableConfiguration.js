@@ -94,7 +94,8 @@ DynamicTableCaptionItemConfiguration = function(options) {
       name: '',
       callback: function() {},
       visible: true,
-      connectWith: null
+      connectWith: null,
+      cssClass: null
   };
   jQuery.extend(this.options, options);
 };
@@ -119,6 +120,11 @@ DynamicTableCaptionItemConfiguration.prototype.getName = function() {
   return this.options.name;
 };
 
+DynamicTableCaptionItemConfiguration.prototype.getCssClass = function() {
+  return this.options.cssClass;
+};
+
+	
 /**
  * @constructor
  * @param options
@@ -128,7 +134,8 @@ var DynamicTableConfiguration = function(options) {
 	this.captionItems = [];
 	this.options = {
 			rowControllerFactory: function() {},
-			dataSource: null
+			dataSource: null,
+			caption: "Table"
 	};
 	jQuery.extend(this.options, options);
 };
@@ -145,8 +152,17 @@ DynamicTableConfiguration.prototype.getColumnConfiguration = function(columnNum)
 DynamicTableConfiguration.prototype.addCaptionItem = function(options) {
   this.captionItems.push(new DynamicTableCaptionItemConfiguration(options));
 };
+DynamicTableConfiguration.prototype.getCaptionConfiguration = function() {
+	return this.captionItems;
+};
+DynamicTableConfiguration.prototype.hasCaptionConfiguration = function() {
+	return this.captionItems.length > 0;
+};
 DynamicTableConfiguration.prototype.getColumns = function() {
 	return this.columns;
+};
+DynamicTableConfiguration.prototype.getCaption = function() {
+  return this.options.caption;
 };
 DynamicTableConfiguration.prototype.addColumnConfiguration = function(columnNum, options) {
 	this.columns[columnNum] = new DynamicTableColumnConfiguration(options);

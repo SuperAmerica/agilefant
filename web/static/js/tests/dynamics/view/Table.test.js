@@ -22,6 +22,7 @@ $(document).ready(function() {
 
 		equals(testable.container.parent()[0], parent[0], "Container inserted");
 		equals(testable.element.parent()[0], testable.container[0], "Table container set");
+		ok(parent.children("div:eq(0)").children("div:eq(0)").hasClass(DynamicTable.cssClasses.tableCaption), "Caption set");
 		equals(computeColsCallCount, 1, "Column data computed");
 	});
 	

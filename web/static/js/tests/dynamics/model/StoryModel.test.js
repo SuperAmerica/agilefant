@@ -48,8 +48,7 @@ $(document).ready(function() {
     same(story.currentData, storyExpectedData, "The current data is set correctly");
     same(story.persistedData, storyExpectedData, "The persisted data is set correctly");
     
-    ok(getObjectCalled, "ModelFactory's getObject method called");
-    equals(story.getBacklog(), iter, "The backlog matches");
+//    ok(getObjectCalled, "ModelFactory's getObject method called");
     
     ModelFactory.getObject = origGetObject;
   });

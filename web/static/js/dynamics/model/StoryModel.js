@@ -39,7 +39,7 @@ StoryModel.prototype._setData = function(newData) {
   this.persistedData = data;
   
   // Set the parent backlog
-  this.relations.backlog = ModelFactory.getObject("backlog", newData.backlog.id);
+//  this.relations.backlog = ModelFactory.getObject("backlog", newData.backlog.id);
   
   // Set the tasks
   this._populateTasks(newData.tasks);

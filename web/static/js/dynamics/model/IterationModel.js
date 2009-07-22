@@ -64,4 +64,4 @@ IterationModel.prototype.addStory = function(story) {
 IterationModel.prototype.getStories = function() {
   return this.relations.stories;
 };
-}
+

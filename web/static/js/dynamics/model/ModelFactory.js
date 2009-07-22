@@ -92,12 +92,12 @@ ModelFactory.getInstance = function() {
  * @param {String} type the type of the object to initialize the dataset for
  * @param {int} id the id number of the object to initialize the dataset for
  * 
- * @throws {String "Type not recognized"} if type not recognized, null or undefined; if id null or undefined
+ * @throws {TypeError} if type not recognized, null or undefined; if id null or undefined
  * @see ModelFactory.types
  */
 ModelFactory.initializeFor = function(type, id, callback) {
   if (!type || !id || !(type in ModelFactory.initializeForTypes)) {
-    throw "Type not recognized";
+    throw new TypeError("Type not recognized");
   }
   ModelFactory.getInstance()._getData(type, id, callback);
 };
@@ -107,18 +107,16 @@ ModelFactory.initializeFor = function(type, id, callback) {
  * Adds an object to the <code>ModelFactory</code>'s data.
  * 
  * @param objectToAdd An instance of model class inherited from <code>CommonModel</code>.
- * @throws {String "Invalid argument"} if null or undefined. 
- * @throws {String "Invalid class"} if class not recognized.
+ * @throws {TypeError} if null or undefined. 
+ * @throws {TypeError} if class not recognized.
  * @see CommonModel
  */
 ModelFactory.addObject = function(objectToAdd) {
   var instance = ModelFactory.getInstance();
-  if (!objectToAdd) {
-    throw "Invalid argument: " + objectToAdd;
-  }
-  else if (!objectToAdd.getPersistedClass() ||
+  if (!objectToAdd ||
+      !(objectToAdd instanceof CommonModel) ||
       !(objectToAdd.getPersistedClass() in ModelFactory.classNameToType)) {
-    throw "Invalid class";
+    throw new TypeError("Invalid argument");
   }
   instance._addObject(objectToAdd);
 };
@@ -129,13 +127,14 @@ ModelFactory.addObject = function(objectToAdd) {
  * @return the object
  * @see ModelFactory.types
  * @see CommonModel#getId
- * @throws {String "Invalid type"} if type is invalid
- * @throws {String "Not found"} if object not found
+ * 
+ * @throws {TypeError} if no such type
+ * @throws {Error} if not found 
  */
 ModelFactory.getObject = function(type, id) {
   var obj = ModelFactory.getObjectIfExists(type, id);
   if (!obj) {
-    throw "Not found";
+    throw new Error("Not found");
   }
   return obj; 
 };
@@ -149,7 +148,7 @@ ModelFactory.getObject = function(type, id) {
  */
 ModelFactory.getObjectIfExists = function(type, id) {
   if (!(type in ModelFactory.types)) {
-    throw "Invalid type";
+    throw new TypeError("Type not recognized");
   }
   return ModelFactory.getInstance()._getObject(type,id);
 };
@@ -158,30 +157,51 @@ ModelFactory.getObjectIfExists = function(type, id) {
  * Creates a new object of the given type.
  * @see ModelFactory.types
  * @return a new instance of the given object type
- * @throws {String "Invalid type"} if type is invalid
+ * @throws {String "Invalid type for ModelFactory.createObject"} if type is invalid
  */
 ModelFactory.createObject = function(type) {
   if (!(type in ModelFactory.types)) {
-    throw "Invalid type";
+    throw new TypeError("Invalid type");
   }
   return ModelFactory.getInstance()._createObject(type);
 };
 
 
 /**
- * Constructs a new model object.
+ * Updates the model object.
  * <p>
  * If object with the given id already exists, will overwrite it.
+ * Otherwise, creates a new one.
  * 
  * @param {ModelFactory.types} type the type of the object
- * @param {int} id the id of the object
- * @param {Object} data the object's data
+ * @param {Object} data the object's data, including the id
+ * 
+ * @return {CommonModel} returns the object with the corresponding type
+ * 
+ * @throws {String "Illegal argument for ModelFactory.updateObject"} if arguments are faulty
  * 
  * @see ModelFactory.types
+ * @see CommonModel
  */
-ModelFactory.construct = function(type, id, data) {
-  
+ModelFactory.updateObject = function(type, data) {
+  if (!type ||
+      !data    || typeof(data) !== "object" ||
+      !data.id || typeof(data.id) !== "number") {
+    throw "Illegal argument for ModelFactory.updateObject";
+  }
+  var instance = ModelFactory.getInstance();
+  var object = instance._getObject(type, data.id);
+  if (!object) {
+    object = ModelFactory.createObject(type);
+    object.setId(data.id);
+    instance._addObject(object);
+  }
+  object.setData(data);
+  return object;
 };
+
+
+/* OBJECT METHODS */
 
 /**
  * Internal function to add objects to the dataset.

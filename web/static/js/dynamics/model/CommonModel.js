@@ -74,6 +74,8 @@ CommonModel.prototype._setData = function(newData) {
   throw "Abstract method called";
 };
 
+CommonModel.prototype._
+
 /**
  * Add an event listener.
  * 

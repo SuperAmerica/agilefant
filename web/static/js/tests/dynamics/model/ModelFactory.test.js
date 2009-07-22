@@ -1,7 +1,7 @@
 
 $(document).ready(function() {
   
-  module("Dynamics: Model factory",{
+  module("Dynamics: ModelFactory",{
     setup: function() {
       ModelFactory.instance = null;
       this.instance = ModelFactory.getInstance();
@@ -52,26 +52,26 @@ $(document).ready(function() {
   
   test("Initialization invalid checks", function() {
     var exceptionCount = 0;
-    try {
-      ModelFactory.initializeFor();
-    }
-    catch (e) { exceptionCount++; }
     
-    try {
-      ModelFactory.initializeFor(null);
-    }
-    catch (e) { exceptionCount++; }
+    var params =
+      [
+       [],
+       [null],
+       [ModelFactory.initializeForTypes.iteration, null],
+       ["Incorrect type", 555]
+       ];
     
-    try {
-      ModelFactory.initializeFor(ModelFactory.initializeForTypes.iteration, null);
+    for (var i = 0; i < params.length; i++) {
+      try {
+        ModelFactory.initializeFor(params[i][0], params[i][1]);
+      }
+      catch (e) {
+        if (e instanceof TypeError && e.message === "Type not recognized") {
+          exceptionCount++;
+        }
+      }  
     }
-    catch (e) { exceptionCount++; }
-    
-    try {
-      ModelFactory.initializeFor("Incorrect type", 555);
-    }
-    catch (e) { exceptionCount++; }
-    
+
     same(exceptionCount, 4, "Correct number of exceptions")
   });
   
@@ -110,26 +110,28 @@ $(document).ready(function() {
     };
     UnknownClass.prototype = new CommonModel();
     
-    var exceptionsThrown = 0;
+    var exceptionCount = 0;
     
-    try {
-      ModelFactory.addObject();
-    }
-    catch(e) { exceptionsThrown++; }
-    try {
-      ModelFactory.addObject(null);
-    }
-    catch(e) { exceptionsThrown++; }
-    try {
-      ModelFactory.addObject(new UnknownClass());
-    }
-    catch(e) { exceptionsThrown++; }
-    try {
-      ModelFactory.addObject(invalidObject);
-    }
-    catch(e) { exceptionsThrown++; }
+    var params =
+      [
+       [],
+       [null],
+       [new UnknownClass()],
+       [invalidObject]
+       ];
     
-    same(exceptionsThrown, 4, "Correct number of exceptions thrown");
+    for (var i = 0; i < params.length; i++) {
+      try {
+        ModelFactory.addObject(params[i][0]);
+      }
+      catch (e) {
+        if (e instanceof TypeError && e.message === "Invalid argument") {
+          exceptionCount++;
+        }
+      }  
+    }
+    
+    same(exceptionCount, 4, "Correct number of exceptions thrown");
   });
   
   
@@ -157,11 +159,11 @@ $(document).ready(function() {
       ModelFactory.getObject("task", "not found id");
     }
     catch(e) {
-      if (e === "Not found") {
-       exceptionThrown = true; 
-      }
+      ok(e instanceof Error, "Error is of correct type");
+      same(e.message, "Not found", "Error message is correct");
+      exceptionThrown = true; 
     }
-    ok(exceptionThrown, "Not found exception thrown");
+    ok(exceptionThrown, "Exception thrown");
   });
   
   test("Static get object if exists", function () {
@@ -178,33 +180,29 @@ $(document).ready(function() {
       internalCallCount++;
     };
     
-    // Undefined
-    try {
-      ModelFactory.getObject();
-    }
-    catch (e) {
-      exceptionCount++;
+    var params =
+      [
+       [undefined,null,TypeError,"Type not recognized"],
+       [null,null,     TypeError,"Type not recognized"],
+       ["This is invalid",null,TypeError,"Type not recognized"],
+       [ModelFactory.types.iteration,123,Error,"Not found"]
+       ];
+    
+    for (var i = 0; i < params.length; i++) {
+      try {
+        ModelFactory.getObject(params[i][0], params[i][1]);
+      }
+      catch (e) {
+        if (e instanceof params[i][2] && e.message === params[i][3]) {
+          exceptionCount++;
+        }
+      }  
     }
     
-    // Null
-    try {
-      ModelFactory.getObject(null);
-    }
-    catch (e) {
-      exceptionCount++;
-    }
-    
-    // Invalid
-    try {
-      ModelFactory.getObject("This is invalid");
-    }
-    catch (e) {
-      exceptionCount++;
-    }
-    
-    same(exceptionCount, 3, "Correct number of exceptions thrown");
-    same(internalCallCount, 0, "Internal getObject not called");
+    same(exceptionCount, 4, "Correct number of exceptions thrown");
+    same(internalCallCount, 1, "Internal getObject called only once");
   });
+  
   
   test("Static create object", function() {
     var expectedType = "task";
@@ -221,6 +219,7 @@ $(document).ready(function() {
     same(internalCreateObjectCallCount, 1, "Internal createObject function called");
   });
   
+  
   test("Static create object null checks", function() {    
     var exceptionCount = 0;
     var internalCreateCallCount = 0;
@@ -234,6 +233,7 @@ $(document).ready(function() {
       ModelFactory.createObject();
     }
     catch (e) {
+      ok(e instanceof TypeError, "Error is of correct type");
       exceptionCount++;
     }
     
@@ -242,6 +242,7 @@ $(document).ready(function() {
       ModelFactory.createObject(null);
     }
     catch (e) {
+      ok(e instanceof TypeError, "Error is of correct type");
       exceptionCount++;
     }
     
@@ -250,6 +251,7 @@ $(document).ready(function() {
       ModelFactory.createObject("This is invalid");
     }
     catch (e) {
+      ok(e instanceof TypeError, "Error is of correct type");
       exceptionCount++;
     }
     
@@ -323,46 +325,117 @@ $(document).ready(function() {
     setup: function() {
       ModelFactory.instance = null;
       this.instance = ModelFactory.getInstance();
+      this.originalCMSetData = CommonModel.prototype.setData;
     },
     teardown: function() {
-      
+      CommonModel.prototype.setData = this.originalCMSetData;
     }
   });
   
   
-  test("Static construct - existing object", function() {
-    this.instance.data.iteration[123] = {
+  
+  test("Static update object - new object", function() {
+    var newIteration = {
         id: 123,
         name: "Test iteration"
     };
-    var actual = ModelFactory.construct(ModelFactory.types.iteration, 123, {});
     
-    equals(actual, this.instance.data.iteration[123]);
+    var setDataCalled = false;
+    CommonModel.prototype.setData = function(data) {
+      setDataCalled = true;
+      same(data, newIteration, "The data is correct");
+    };
+    
+    var actual = ModelFactory.updateObject(ModelFactory.types.iteration, newIteration);
+    
+    ok(actual instanceof IterationModel, "The returned object is an iteration");
+    ok(setDataCalled, "Model's setData is called");
+    equals(ModelFactory.getObject("iteration",123), actual, "The iteration object is stored");
+    equals(actual.getId(), 123, "The id is correct");
   });
   
-  test("Construct iteration", function() {
-    var mockControl = new MockControl();
-    var iter = mockControl.createMock(IterationModel);
-    var id = 123;
-    var data = {};
+  
+  
+  test("Static update object - existing object", function() {
+    var story = new StoryModel();
+    story.setId(666);
+    story.currentData.name = "Test story";
+    this.instance.data.story[666] = story;
     
-    
-    this.instance._createObject = function() {
-      return iter;
-    };
-    var addObjectCallCount = 0;
-    this.instance._addObject = function(obj) {
-      addObjectCallCount++;
+    var newData = {
+      id: 666
     };
     
-    iter.expects().setId(id);
-    iter.expects().setData(data);
+    var setDataCalled = false;
+    CommonModel.prototype.setData = function(data) {
+      setDataCalled = true;
+      same(data, newData, "The data is correct");
+    };
     
-    this.instance._constructIteration(id, data);
+    var actual = ModelFactory.updateObject(ModelFactory.types.story, newData);
     
-    same(addObjectCallCount, 1, "Object added to ModelFactory singletons");
-    mockControl.verify();
+    same(actual, story, "The story object is correct");
+    ok(setDataCalled, "Model's setData is called");
+    equals(ModelFactory.getObject("story",666), actual, "The iteration object is stored");
+    same(actual.getId(), 666, "The id is correct");
   });
+  
+  
+  
+  test("Static update object - faulty arguments", function() {
+    var exceptionCount = 0;
+    var params =
+      [
+       [],  // Undefined
+       [null, null], // all nulls
+       [null, {}], //type null
+       [ModelFactory.types.iteration, {id:null}], // id null
+       [ModelFactory.types.iteration, null], // data null
+       [ModelFactory.types.iteration, "Invalid string"], // invalid data
+       [ModelFactory.types.iteration, {id:"Jeejee"}], // invalid id
+       [ModelFactory.types.iteration, {id:123}] // all ok
+       ];
+    
+    for (var i = 0; i < params.length; i++) {
+      try {
+        var type = params[i][0];
+        var data = params[i][1];
+        ModelFactory.updateObject(type, data);
+      }
+      catch (e) {
+        if (e === "Illegal argument for ModelFactory.updateObject") {
+          exceptionCount++;
+        }
+      }
+    }
+    
+    same(exceptionCount, 7, "Exception count matches");
+  });
+
+  
+//  test("Construct iteration", function() {
+//    var mockControl = new MockControl();
+//    var iter = mockControl.createMock(IterationModel);
+//    var id = 123;
+//    var data = {};
+//    
+//    
+//    this.instance._createObject = function() {
+//      return iter;
+//    };
+//    var addObjectCallCount = 0;
+//    this.instance._addObject = function(obj) {
+//      addObjectCallCount++;
+//    };
+//    
+//    iter.expects().setId(id);
+//    iter.expects().setData(data);
+//    
+//    this.instance._constructIteration(id, data);
+//    
+//    same(addObjectCallCount, 1, "Object added to ModelFactory singletons");
+//    mockControl.verify();
+//  });
   
 });
 

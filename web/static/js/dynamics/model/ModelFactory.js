@@ -272,10 +272,7 @@ ModelFactory.prototype._getData = function(type, id, callback) {
  * Internal function to construct for iteration
  */
 ModelFactory.prototype._constructIteration = function(id, data) {
-  var iter = this._createObject("iteration");
-  iter.setId(id);
-  iter.setData(data);
-  this._addObject(iter);
+  ModelFactory.updateObject(ModelFactory.types.iteration, data);
 };
 
 /**

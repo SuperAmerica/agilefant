@@ -21,9 +21,14 @@ StoryController.columnIndexes = {
 
 StoryController.prototype = new CommonController();
 
+/**
+ * Remove story associated with controllers row 
+ * and the row itself.
+ */
 StoryController.prototype.removeStory = function() {
-
+  this.model.remove();
 };
+
 StoryController.prototype.editStory = function() {
 
 };

@@ -32,6 +32,9 @@ DynamicTableCell.prototype.initialize = function() {
 		this.subView = this.config.getSubViewFactory().call(this.row
 				.getController(), this, this.row.getModel());
 	}
+	if(!this.config.isVisible()) {
+	  this.element.hide();
+	}
 };
 
 DynamicTableCell.prototype.getElement = function() {

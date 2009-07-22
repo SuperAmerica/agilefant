@@ -14,6 +14,7 @@ var DynamicTableColumnConfiguration = function(options) {
 			cssClass: null,
 			editable: false,
 			subViewFactory: null,
+			visible: true,
 			edit: {
 				decorator: null,
 				items: null,
@@ -72,6 +73,9 @@ DynamicTableColumnConfiguration.prototype.isEditable = function() {
 DynamicTableColumnConfiguration.prototype.isSortable = function() {
 	return this.options.sortCallback !== null;
 };
+DynamicTableColumnConfiguration.prototype.isVisible = function() {
+  return this.options.visible;
+};
 DynamicTableColumnConfiguration.prototype.getEditOptions = function() {
 	return this.options.edit;
 };
@@ -85,13 +89,14 @@ var DynamicTableConfiguration = function(options) {
 			rowControllerFactory: function() {},
 			dataSource: null
 	};
+	jQuery.extend(this.options, options);
 };
 
 DynamicTableConfiguration.prototype.getRowControllerFactory = function() {
 	return this.options.rowControllerFactory;
 };
 DynamicTableConfiguration.prototype.getDataSource = function() {
-	return this.dataSource;
+	return this.options.dataSource;
 };
 DynamicTableConfiguration.prototype.getColumnConfiguration = function(columnNum) {
 	return this.columns[columnNum];

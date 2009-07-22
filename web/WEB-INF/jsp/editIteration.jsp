@@ -194,145 +194,37 @@
 			</tr>
 		</tbody>
 	</table>
-<%--
+<script type="text/javascript" src="static/js/dynamics/view/DynamicView.js"></script>
+<script type="text/javascript" src="static/js/dynamics/view/Table.js"></script>
+<script type="text/javascript" src="static/js/dynamics/view/Row.js"></script>
+<script type="text/javascript" src="static/js/dynamics/view/Cell.js"></script>
+<script type="text/javascript" src="static/js/dynamics/view/RowActions.js"></script>
+<script type="text/javascript" src="static/js/dynamics/view/TableConfiguration.js"></script>
+<script type="text/javascript" src="static/js/dynamics/view/Toggle.js"></script>
 
-	<script type="text/javascript">
-	
-$(document).ready( function() {
-	var projectThemes = [];
-    <c:if test="${!empty iteration.project.businessThemeBindings}">
-	    projectThemes = [<c:forEach items="${iteration.project.businessThemeBindings}" var="them">${them.businessTheme.id},</c:forEach>-1];
-	</c:if>
-	var getThemeData = function() {
-		var ret = {};
-		var data = jsonDataCache.get('themesByProduct',{data: {productId: ${iteration.project.product.id}, includeGlobalThemes: true}},${iteration.project.product.id});
-		jQuery.each(data,function() {
-			if(this.active === true) {
-				if(jQuery.inArray(this.id,projectThemes) > -1) {
-					ret[this.id] = this.name+" *";
-				} else {
-					ret[this.id] = this.name;
-				}
-			}
-		});
-		return ret;
-	};
-	
-	$('#businessThemeTable').inlineTableEdit({add: '#addIterationBusinessTheme', 
-											  submit: '#backlogThemeSave',
-											  submitParam: 'bindingId',
-											  deleteaction: 'removeThemeFromBacklog.action',
-											  fields: {
-											  	businessThemeIds: {cell: 0,type: 'select', data: getThemeData},
-											  	plannedSpendings: {cell: 1, type: 'text' },											  											  	
-											  	reset: {cell: 3, type: 'reset'}
-											  }
-											 });
-											  
-});
+<script type="text/javascript" src="static/js/dynamics/model/CommonModel.js"></script>
+<script type="text/javascript" src="static/js/dynamics/model/BacklogModel.js"></script>
+<script type="text/javascript" src="static/js/dynamics/model/IterationModel.js"></script>
+<script type="text/javascript" src="static/js/dynamics/model/StoryModel.js"></script>
+<script type="text/javascript" src="static/js/dynamics/model/TaskModel.js"></script>
+<script type="text/javascript" src="static/js/dynamics/model/UserModel.js"></script>
+<script type="text/javascript" src="static/js/dynamics/model/ModelFactory.js"></script>
 
-</script>
-<table>
-	<tr>
-		<td>
-			<c:if test="${iterationId != 0}">
-				<div class="subItems" id="subItems_editIterationThemesList">
-					<div class="subItemHeader">
-					    <table cellspacing="0" cellpadding="0">
-            			    <tr>
-            			    	<td class="header">Themes</td>
-            			    	<td class="icons">
-		                        <table cellspacing="0" cellpadding="0">
-		                            <tr>
-		                            <td>
-			                          <a href="#" id="addIterationBusinessTheme" title="Attach theme"
-			                          onclick="return false;" class="attachLink" />
-		                            </td>
-		                            </tr>
-		                            </table>      
-		                        </td>
-							</tr>
-						</table>
-					</div>
-					<div class="subItemContent">
-					<div class="validateWrapper validateEmpty">
-					<ww:form action="storeBacklogThemebinding" id="iterationBusinessThemesForm" method="post">
-					<ww:hidden name="backlogId" value="${iteration.id}"/>
-					<input type="hidden" name="contextViewName" value="iteration" />
-					<c:choose>
-					<c:when test="${!empty iteration.businessThemeBindings}">
-						<display:table htmlId="businessThemeTable" class="listTable" name="iteration.businessThemeBindings" id="row" requestURI="editIteration.action">
+<script type="text/javascript" src="static/js/dynamics/controller/CommonController.js"></script>
+<script type="text/javascript" src="static/js/dynamics/controller/BacklogController.js"></script>
+<script type="text/javascript" src="static/js/dynamics/controller/IterationController.js"></script>
+<script type="text/javascript" src="static/js/dynamics/controller/StoryController.js"></script>
 
-							<display:column sortable="true" title="Name" sortProperty="businessTheme.name">
-								<span style="display: none;">${row.businessTheme.id}</span>
-								<a style="cursor: pointer; color: #0055AA;" class="table_edit_edit">
-									<c:out value="${row.businessTheme.name}"/>
-								</a>
-							</display:column>
-							
-							<display:column sortable="true" sortProperty="boundEffort" title="Planned spending">
-								<c:choose>
-									<c:when test="${row.relativeBinding == true}">
-										<span style="display:none;">${row.percentage}%</span>
-										<c:out value="${row.boundEffort}"/>
-										(<c:out value="${row.percentage}"/>%)
-									</c:when>
-									<c:otherwise><c:out value="${row.fixedSize}"/></c:otherwise>
-								</c:choose>
-							</display:column>
-							<display:column sortable="true" sortProperty="businessTheme.metrics.donePercentage" title="Progress">
-								${row.businessTheme.metrics.donePercentage}% (${row.businessTheme.metrics.numberOfDoneStories} / ${row.businessTheme.metrics.numberOfStories})
-							</display:column>
-							<display:column sortable="false" title="Actions">
-								<span class="uniqueId" style="display: none;">${row.id}</span>
-								<img style="cursor: pointer;" class="table_edit_edit" src="static/img/edit.png" title="Edit" />
-								<img style="cursor: pointer;" class="table_edit_delete" src="static/img/delete_18.png" title="Delete" />
-							</display:column>
-						</display:table>
-						</c:when>
-						<c:otherwise>
-							<table id="businessThemeTable" style="display:none;" class="listTable">
-								<tr><th class="sortable">Name</th><th class="sortable">Planned spending</th><th>Progress</th><th>Actions</th></tr>
-							</table>
-						</c:otherwise>
-						</c:choose>
-						<div id="backlogThemeSave" style="display: none;">
-						<label id="themeLabel" style="padding: 3px; margin: 3px; display:block; border: 1px solid #ccc;">
-						    * = the theme has been attached to this project.<br/>
-						    Planned spending may be entered as time (e.g. 2h 30min) or a percentage
-                            (e.g. 40%).</label>
-						<input id="backlogThemeSave" type="submit" value="Save"/>
-						</div>
-						</ww:form>				
-						</div>
-						</div>
-				</div>
-			</c:if>
-		</td>
-	</tr>
-</table>
---%>
+<script type="text/javascript" src="static/js/dynamics/Dynamics.events.js"></script>
 
-<script type="text/javascript" src="static/js/dynamics/utils.js?<ww:text name="struts.agilefantReleaseId" />"></script>
-<script type="text/javascript" src="static/js/dynamics/model.js?<ww:text name="struts.agilefantReleaseId" />"></script>
-<script type="text/javascript" src="static/js/dynamics/controller.js?<ww:text name="struts.agilefantReleaseId" />"></script>
-<script type="text/javascript" src="static/js/dynamics/dynamicTable.js?<ww:text name="struts.agilefantReleaseId" />"></script>
-<script type="text/javascript" src="static/js/dynamics/dynamics.tabs.js?<ww:text name="struts.agilefantReleaseId" />"></script>
-<script type="text/javascript" src="static/js/dynamics/commonView.js?<ww:text name="struts.agilefantReleaseId" />"></script>
-
+<script type="text/javascript" src="static/js/utils/ArrayUtils.js"></script>
+<script type="text/javascript" src="static/js/utils/Configuration.js"></script>
 
 
 <form onsubmit="return false;"><div id="stories" style="min-width: 800px; width: 98%;">&nbsp;</div></form>
 <script type="text/javascript">
 $(document).ready(function() {
-  new IterationController(${iterationId}, $("#stories"));
-  $(document.body).bind("metricsUpdated", function() {
-	  var bigChart = $("#bigChart");
-	  bigChart.attr("src",bigChart.attr("src")+"#");
-    var smallChart = $("#smallChart");
-    smallChart.attr("src",smallChart.attr("src")+"#");
-    $("#iterationMetrics").load("ajax/iterationMetrics.action",{iterationId: ${iterationId}});
-	});
+  new IterationController(${iteration.id}, $('#stories'));
 });
 </script>
 

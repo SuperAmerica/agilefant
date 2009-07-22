@@ -1,5 +1,7 @@
-var IterationController = function() {
-	
+var IterationController = function(id, element) {
+	this.id = id;
+	this.parentView = element;
+	this.initializeStoryList();
 };
 IterationController.prototype = new BacklogController();
 
@@ -9,8 +11,19 @@ IterationController.prototype.storyControllerFactory = function(view, model) {
 };
 
 IterationController.prototype.initializeStoryList = function() {
+  this.initializeStoryConfig();
+  var me = this;
+  ModelFactory.initializeFor(ModelFactory.initializeForTypes.iteration, this.id, function(model) {
+    me.model = model;
+    me.storyListView = new DynamicTable(me, me.model, me.storyListConfig, me.parentView);
+    me.storyListView.render();
+  });
+};
+
+IterationController.prototype.initializeStoryConfig = function() {
 	var config = new DynamicTableConfiguration({
-		rowControllerFactory: IterationController.prototype.createStoryController
+	  rowControllerFactory: IterationController.prototype.storyControllerFactory,
+		dataSource: IterationModel.prototype.getStories
 	});
 	config.addColumnConfiguration(StoryController.columnIndexes.priority, {
 		minWidth: 24,
@@ -75,7 +88,7 @@ IterationController.prototype.initializeStoryList = function() {
 		headerTooltip: 'Total task original estimate',
 		get: StoryModel.prototype.getTotalOriginalEstimate
 	});
-	if(agilefantUtils.isTimesheetsEnabled()) {
+	if(Configuration.isTimesheetsEnabled()) {
 		config.addColumnConfiguration(StoryController.columnIndexes.es, {
 			minWidth: 30,
 			autoScale: true,
@@ -93,11 +106,14 @@ IterationController.prototype.initializeStoryList = function() {
 	});
 	config.addColumnConfiguration(StoryController.columnIndexes.description, {
 		fullWidth: true,
+		visible: false,
 		cssClass: 'story-data'
 	});
 	config.addColumnConfiguration(StoryController.columnIndexes.tasksData, {
 		fullWidth: true,
+		visible: false,
 		cssClass: 'story-data'
 	});
+	this.storyListConfig = config;
 };
 

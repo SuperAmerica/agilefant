@@ -112,18 +112,23 @@ DynamicTable.prototype.layout = function() {
 };
 
 DynamicTable.prototype._renderHeader = function() {
-	this.header = $('<div />').prependTo(this.table)
+	this.header = $('<div />').prependTo(this.element)
 		.addClass(DynamicTable.cssClasses.tableHeader)
 		.addClass(DynamicTable.cssClasses.tableRow);
 	var columnConfigs = this.config.getColumns();
 	for(var i = 0; i < columnConfigs.length; i++) {
-		this._renderHeaderColumn(i);
+		if(!columnConfigs[i].isFullWidth()) {
+		  this._renderHeaderColumn(i);
+		}
 	}
 };
 
 DynamicTable.prototype._renderHeaderColumn = function(index) {
 	var columnConf = this.config.getColumnConfiguration(index);
 	var columnHeader = $('<div />').addClass(DynamicTable.cssClasses.tableCell);
+	if(columnConf.getWidth()) {
+	  columnHeader.width(columnConf.getWidth());
+	}
 	columnHeader.appendTo(this.header);
 	var nameElement;
 	var me = this;
@@ -157,14 +162,14 @@ DynamicTable.prototype.render = function() {
 	this._addSectionToTable(this.middleRows);
 	this._addSectionToTable(this.bottomRows);
 	if(this.rowCount() === 0) {
-		this.header.hide();
+		//this.header.hide();
 	}
 	this.layout();
 };
 
 DynamicTable.prototype._addSectionToTable = function(section) {
 	for(i = 0; i < section.length; i++) {
-		section[i].getElement().appendTo(this.table);
+		section[i].getElement().appendTo(this.element);
 		section[i].render();
 	}
 };
@@ -210,7 +215,7 @@ DynamicTable.prototype._createRow = function(row, controller, model, position) {
 
 DynamicTable.prototype._dataSourceRow = function(model, columnConfig) {
 	var row = new DynamicTableRow(this.config.getColumns());
-	var controller = this.config.getRowControllerFactory.call(this.getController(), row, model);
+	var controller = this.config.getRowControllerFactory().call(this.getController(), row, model);
 	this._createRow(row, controller, model);
 	row.autoCreateCells();
 	return row;

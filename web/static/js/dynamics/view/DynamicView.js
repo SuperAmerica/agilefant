@@ -22,7 +22,7 @@ DynamicView.prototype.init = function(controller, model, parent) {
 	this.model = model;
 	this.parentView = null;
 	this.parentElement = null;
-	this.element = null;
+	//this.element = null;
 	this.viewId = DynamicView.instanceCounter++;
 	if(parent instanceof DynamicView) {
 		this.parentView = parent;

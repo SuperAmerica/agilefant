@@ -90,6 +90,7 @@ $(document).ready(function() {
 		var config = this.mockControl.createMock(DynamicTableConfiguration);
 		var colConfig = this.mockControl.createMock(DynamicTableColumnConfiguration);
 		config.expects().getColumnConfiguration(1).andReturn(colConfig);
+		colConfig.expects().getWidth().andReturn(null);
 		colConfig.expects().isSortable().andReturn(false);
 		colConfig.expects().getTitle().andReturn("ColTitle");
 		colConfig.expects().getHeaderTooltip().andReturn("tooltipz");
@@ -108,6 +109,8 @@ $(document).ready(function() {
 		var config = this.mockControl.createMock(DynamicTableConfiguration);
 		var colConfig = this.mockControl.createMock(DynamicTableColumnConfiguration);
 		config.expects().getColumnConfiguration(1).andReturn(colConfig);
+		colConfig.expects().getWidth().andReturn("10px");
+		colConfig.expects().getWidth().andReturn("10px");
 		colConfig.expects().isSortable().andReturn(true);
 		colConfig.expects().getTitle().andReturn("ColTitle");
 		colConfig.expects().getHeaderTooltip().andReturn(null);

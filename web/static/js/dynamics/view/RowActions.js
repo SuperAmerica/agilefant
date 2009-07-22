@@ -7,6 +7,9 @@ var DynamicTableRowActions = function(items, controller, model, parentView) {
   this.initialize();
 };
 
+/**
+ * @private
+ */
 DynamicTableRowActions.prototype.initialize = function() {
   var me = this;
   this.container = $('<div />').width("68px").appendTo(
@@ -26,6 +29,9 @@ DynamicTableRowActions.prototype.initialize = function() {
   this.button.click(this.toggleMenuListener);
 };
 
+/**
+ * Display the menu
+ */
 DynamicTableRowActions.prototype.open = function() {
   var me = this;
   $(window).click(this.toggleMenuListener);
@@ -50,6 +56,9 @@ DynamicTableRowActions.prototype.open = function() {
   });
 };
 
+/**
+ * Close the menu
+ */
 DynamicTableRowActions.prototype.close = function() {
   $(window).unbind('click', this.toggleMenuListener);
   this.menu.remove();

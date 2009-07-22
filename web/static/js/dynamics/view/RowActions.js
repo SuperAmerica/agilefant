@@ -29,6 +29,10 @@ DynamicTableRowActions.prototype.initialize = function() {
   this.button.click(this.toggleMenuListener);
 };
 
+DynamicTableRowActions.prototype.render = function() {
+  
+};
+
 /**
  * Display the menu
  */

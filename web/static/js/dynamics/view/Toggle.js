@@ -34,6 +34,9 @@ DynamicTableToggleView.prototype.initialize = function() {
   });
 };
 
+DynamicTableToggleView.prototype.render = function() {
+  
+};
 DynamicTableToggleView.prototype.collapse = function() {
   this.button.attr("title", "Expand").removeClass("dynamictable-collapse")
       .addClass("dynamictable-expand");

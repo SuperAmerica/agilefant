@@ -30,7 +30,8 @@ IterationController.prototype.initializeStoryConfig = function() {
 		autoScale: true,
 		cssClass: 'story-row',
 		title: "Prio",
-		headerTooltip: 'Priority'
+		headerTooltip: 'Priority',
+		subViewFactory: StoryController.prototype.taskToggleFactory
 	});
 	config.addColumnConfiguration(StoryController.columnIndexes.name, {
 		minWidth: 280,
@@ -102,11 +103,13 @@ IterationController.prototype.initializeStoryConfig = function() {
 		minWidth: 48,
 		autoScale: true,
 		cssClass: 'story-row',
-		title: "Actions"
+		title: "Actions",
+		subViewFactory: StoryController.prototype.storyActionFactory
 	});
 	config.addColumnConfiguration(StoryController.columnIndexes.description, {
 		fullWidth: true,
-		visible: false,
+		visible: true,
+		get: StoryModel.prototype.getDescription,
 		cssClass: 'story-data'
 	});
 	config.addColumnConfiguration(StoryController.columnIndexes.tasksData, {

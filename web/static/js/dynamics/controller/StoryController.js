@@ -62,7 +62,7 @@ StoryController.prototype.storyActionFactory = function(view, model) {
     callback : StoryController.prototype.moveStory
   }, {
     text : "Delete",
-    callback : StoryController.prototype.deleteStory
+    callback : StoryController.prototype.removeStory
   } ];
-  var actionView = new DynamicRowActions(actionItems, this, this.model, view);
+  var actionView = new DynamicTableRowActions(actionItems, this, this.model, view);
 };

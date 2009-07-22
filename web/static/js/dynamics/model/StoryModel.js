@@ -11,7 +11,7 @@ var StoryModel = function() {
   this.persistedClassName = "fi.hut.soberit.agilefant.model.Story";
   this.relations = {
     backlog: {},
-    tasks: []
+    task: []
   };
   this.copiedFields = {
     "name": "name",
@@ -37,9 +37,6 @@ StoryModel.prototype._setData = function(newData) {
   // Set the id
   this.id = newData.id;
   
-  // Straight copied fields {newData's field name}: {object's field name}
-  this._copyFields(newData);
-
   // Set the parent backlog
 //  this.relations.backlog = ModelFactory.getObject("backlog", newData.backlog.id);
   
@@ -59,7 +56,7 @@ StoryModel.prototype._populateTasks = function(tasks) {
 
 
 StoryModel.prototype.addTask = function(task) {
-  this.relations.tasks.push(task);
+  this.relations.task.push(task);
   
 };
 

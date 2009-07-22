@@ -67,6 +67,7 @@ CommonModel.prototype.reload = function() {
  */
 CommonModel.prototype.setData = function(newData) {  
   this._setData(newData);
+  this._copyFields(newData);
   this.callListeners(new DynamicsEvents.EditEvent(this));
 };
 
@@ -84,6 +85,10 @@ CommonModel.prototype._copyFields = function(newData) {
   }
   jQuery.extend(this.currentData, data);
   jQuery.extend(this.persistedData, data);
+};
+
+CommonModel.prototype._updateRelations = function(type, newData) {
+  
 };
 
 /**

@@ -9,7 +9,8 @@ var IterationModel = function() {
   this.initializeBacklogModel();
   this.persistedClassName = "fi.hut.soberit.agilefant.model.Iteration";
   this.relations = {
-    stories: []  
+    story: [],
+    task: []
   };
   this.copiedFields = {
     "name":   "name"
@@ -46,13 +47,13 @@ IterationModel.prototype._populateStories = function(stories) {
 };
 
 IterationModel.prototype.addStory = function(story) {
-  this.relations.stories.push(story);
+  this.relations.story.push(story);
   story.relations.backlog = this;
 };
 
 /* GETTERS */
 
 IterationModel.prototype.getStories = function() {
-  return this.relations.stories;
+  return this.relations["story"];
 };
 

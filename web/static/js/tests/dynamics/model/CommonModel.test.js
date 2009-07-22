@@ -9,9 +9,11 @@ $(document).ready(function() {
       this.original = CommonModel;
       this.commonModel = new CommonModel();
       this.commonModel.initialize();
+      this.mockControl = new MockControl();
     },
     teardown: function() {
       CommonModel = this.original;
+      this.mockControl.verify();
     }
   });
   
@@ -34,6 +36,10 @@ $(document).ready(function() {
     this.commonModel._setData = function() {
       internalCallCount++;
     };
+    var copyFieldsCallCount = 0;
+    this.commonModel._copyFields = function() {
+      copyFieldsCallCount++;
+    };
     
     var data = {
       id: 7413,
@@ -43,6 +49,7 @@ $(document).ready(function() {
     this.commonModel.setData(data);
     
     same(internalCallCount, 1, "Internal method is called once");
+    same(copyFieldsCallCount, 1, "Copy fields is called once");
     same(listenerCallCount, 1, "Listeners are called once");
   });
   
@@ -75,6 +82,23 @@ $(document).ready(function() {
     
     same(this.commonModel.currentData.anotherField, "Another value", "Field not overwritten");
   });
+  
+  
+  
+  test("Update relations", function() {
+    this.commonModel.relations = {
+        story: []
+    };
+    
+    this.commonModel._updateRelations();
+    
+  });
+  
+  
+  
+  
+  
+  
   
   test("Adding listener", function() {
     same(this.commonModel.listeners.length, 0, "Listeners empty before adding");

@@ -88,9 +88,9 @@ $(document).ready(function() {
     
     ok(listenersCalled, "The listeners are called");
     same(updateCallCount, 2, "The stories are updated");
-    ok(jQuery.inArray(stories[0], iteration.relations.stories) !== -1,
+    ok(jQuery.inArray(stories[0], iteration.relations.story) !== -1,
         "First story in iteration's stories");
-    ok(jQuery.inArray(stories[1], iteration.relations.stories) !== -1,
+    ok(jQuery.inArray(stories[1], iteration.relations.story) !== -1,
         "Second story in iteration's stories");
     
     same(stories[0].relations.backlog, iteration, "Story 0 iteration set correctly");

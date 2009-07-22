@@ -143,6 +143,9 @@ ModelFactory.getObject = function(type, id) {
  * Gets the object of the given type and id.
  * <p>
  * @return the object, null if doesn't exist
+ * 
+ * @throws {TypeError} if type not recognized
+ * 
  * @see ModelFactory.types
  * @see CommonModel#getId
  */
@@ -157,7 +160,7 @@ ModelFactory.getObjectIfExists = function(type, id) {
  * Creates a new object of the given type.
  * @see ModelFactory.types
  * @return a new instance of the given object type
- * @throws {String "Invalid type for ModelFactory.createObject"} if type is invalid
+ * @throws {TypeError} if type is invalid
  */
 ModelFactory.createObject = function(type) {
   if (!(type in ModelFactory.types)) {

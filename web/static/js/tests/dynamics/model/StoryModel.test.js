@@ -29,7 +29,7 @@ $(document).ready(function() {
   });
   
   
-  test("Internal set data", function() {
+  test("Set data", function() {
     var story = new StoryModel();
     var iter = new IterationModel();
     
@@ -39,7 +39,7 @@ $(document).ready(function() {
       updateCallCount++;
     };
     
-    story._setData(storyInjectedData);
+    story.setData(storyInjectedData);
     
     same(story.getId(), 5860, "The id is set correctly");
     same(story.currentData, storyExpectedData, "The current data is set correctly");
@@ -86,12 +86,12 @@ $(document).ready(function() {
     story._setData(alteredData);
     
     same(updateCallCount, 3, "Three tasks added");
-    same(story.relations.tasks.length, 3, "Tasklist length correct")
-    ok(jQuery.inArray(tasks[0], story.relations.tasks) !== -1,
+    same(story.relations.task.length, 3, "Tasklist length correct")
+    ok(jQuery.inArray(tasks[0], story.relations.task) !== -1,
       "First task in story's tasks");
-    ok(jQuery.inArray(tasks[1], story.relations.tasks) !== -1,
+    ok(jQuery.inArray(tasks[1], story.relations.task) !== -1,
       "Second task in story's tasks");
-    ok(jQuery.inArray(tasks[2], story.relations.tasks) !== -1,
+    ok(jQuery.inArray(tasks[2], story.relations.task) !== -1,
       "Second task in story's tasks");
     
     same(tasks[0].relations.story, story, "Task 0's story set correctly");

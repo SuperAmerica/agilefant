@@ -1,3 +1,7 @@
+/**
+ * @constructor
+ * @param options
+ */
 var DynamicTableColumnConfiguration = function(options) {
 	this.options = {
 			width: null,
@@ -83,8 +87,45 @@ DynamicTableColumnConfiguration.prototype.getSubViewFactory = function() {
 	return this.options.subViewFactory;
 };
 
+DynamicTableCaptionItemConfiguration = function(options) {
+  
+  this.options = {
+      text: '',
+      name: '',
+      callback: function() {},
+      visible: true,
+      connectWith: null
+  };
+  jQuery.extend(this.options, options);
+};
+
+DynamicTableCaptionItemConfiguration.prototype.getText = function() {
+  return this.options.text;
+};
+
+DynamicTableCaptionItemConfiguration.prototype.getCallback = function() {
+  return this.options.callback;
+};
+
+DynamicTableCaptionItemConfiguration.prototype.isVisible = function() {
+  return this.options.visible;
+};
+
+DynamicTableCaptionItemConfiguration.prototype.getConnected = function() {
+  return this.options.connectWith;
+};
+
+DynamicTableCaptionItemConfiguration.prototype.getName = function() {
+  return this.options.name;
+};
+
+/**
+ * @constructor
+ * @param options
+ */
 var DynamicTableConfiguration = function(options) {
 	this.columns = [];
+	this.captionItems = [];
 	this.options = {
 			rowControllerFactory: function() {},
 			dataSource: null
@@ -100,6 +141,9 @@ DynamicTableConfiguration.prototype.getDataSource = function() {
 };
 DynamicTableConfiguration.prototype.getColumnConfiguration = function(columnNum) {
 	return this.columns[columnNum];
+};
+DynamicTableConfiguration.prototype.addCaptionItem = function(options) {
+  this.captionItems.push(new DynamicTableCaptionItemConfiguration(options));
 };
 DynamicTableConfiguration.prototype.getColumns = function() {
 	return this.columns;

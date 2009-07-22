@@ -12,7 +12,6 @@ ModelFactory = function() {
     story: {},
     task: {}
   };
-  this.initialized = false;
 };
 
 ModelFactory.instance = null;
@@ -44,14 +43,21 @@ ModelFactory.classNameToType = {
  * @member ModelFactory
  */
 ModelFactory.types = {
+    /** @member ModelFactory */
     backlog:    "backlog",
+    /** @member ModelFactory */
     iteration:  "iteration",
+    /** @member ModelFactory */
     product:    "product",
+    /** @member ModelFactory */
     project:    "project",
     
+    /** @member ModelFactory */
     story:      "story",
+    /** @member ModelFactory */
     task:       "task",
     
+    /** @member ModelFactory */
     user:       "user"
 };
 
@@ -103,15 +109,11 @@ ModelFactory.initializeFor = function(type, id, callback) {
  * @param objectToAdd An instance of model class inherited from <code>CommonModel</code>.
  * @throws {String "Invalid argument"} if null or undefined. 
  * @throws {String "Invalid class"} if class not recognized.
- * @throws {String "Not initialized"} if instance not initialized.
  * @see CommonModel
  */
 ModelFactory.addObject = function(objectToAdd) {
   var instance = ModelFactory.getInstance();
-  if (!instance.initialized) {
-    throw "Not initialized";
-  }
-  else if (!objectToAdd) {
+  if (!objectToAdd) {
     throw "Invalid argument: " + objectToAdd;
   }
   else if (!objectToAdd.getPersistedClass() ||
@@ -128,7 +130,6 @@ ModelFactory.addObject = function(objectToAdd) {
  * @see ModelFactory.types
  * @see CommonModel#getId
  * @throws {String "Invalid type"} if type is invalid
- * @throws {String "Not initialized"} if instance not initialized.
  * @throws {String "Not found"} if object not found
  */
 ModelFactory.getObject = function(type, id) {
@@ -147,10 +148,7 @@ ModelFactory.getObject = function(type, id) {
  * @see CommonModel#getId
  */
 ModelFactory.getObjectIfExists = function(type, id) {
-  if (!this.getInstance().isInitialized()) {
-    throw "Not initialized";
-  }
-  else if (!(type in ModelFactory.types)) {
+  if (!(type in ModelFactory.types)) {
     throw "Invalid type";
   }
   return ModelFactory.getInstance()._getObject(type,id);
@@ -161,13 +159,9 @@ ModelFactory.getObjectIfExists = function(type, id) {
  * @see ModelFactory.types
  * @return a new instance of the given object type
  * @throws {String "Invalid type"} if type is invalid
- * @throws {String "Not initialized"} if instance not initialized.
  */
 ModelFactory.createObject = function(type) {
-  if (!this.getInstance().isInitialized()) {
-    throw "Not initialized";
-  }
-  else if (!(type in ModelFactory.types)) {
+  if (!(type in ModelFactory.types)) {
     throw "Invalid type";
   }
   return ModelFactory.getInstance()._createObject(type);
@@ -175,12 +169,19 @@ ModelFactory.createObject = function(type) {
 
 
 /**
- * Check if the <code>ModelFactory</code> is initialized or not.
+ * Constructs a new model object.
+ * <p>
+ * If object with the given id already exists, will overwrite it.
+ * 
+ * @param {ModelFactory.types} type the type of the object
+ * @param {int} id the id of the object
+ * @param {Object} data the object's data
+ * 
+ * @see ModelFactory.types
  */
-ModelFactory.prototype.isInitialized = function() {
-  return this.initialized;
+ModelFactory.construct = function(type, id, data) {
+  
 };
-
 
 /**
  * Internal function to add objects to the dataset.
@@ -241,7 +242,6 @@ ModelFactory.prototype._getData = function(type, id, callback) {
           return false;
         }
         var object = dataParams[type].callback.call(me, id, data);
-        me.initialized = true;
         if (callback) {
           callback(object);
         }
@@ -255,9 +255,6 @@ ModelFactory.prototype._constructIteration = function(id, data) {
   var iter = this._createObject("iteration");
   iter.setId(id);
   iter.setData(data);
-  
-  // Set the stories
-  
   this._addObject(iter);
 };
 

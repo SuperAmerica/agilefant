@@ -317,32 +317,6 @@ $(document).ready(function() {
           "ModelFactory listener set");
     }
   });
-  
-
-  
-  
-  test("ModelFactory not initialized", function() {
-    this.instance.initialized = false;
-    
-    var exceptionCount = 0;
-    
-    try {
-      ModelFactory.addObject(new TaskModel());
-    }
-    catch (e) { if (e === "Not initialized") { exceptionCount++; }}
-    
-    try {
-      ModelFactory.getObject(ModelFactory.types.task, 111)
-    }
-    catch (e) { if (e === "Not initialized") { exceptionCount++; }}
-    
-    try {
-      ModelFactory.createObject(ModelFactory.types.task);
-    }
-    catch (e) { if (e === "Not initialized") { exceptionCount++; }}
-    
-    same(exceptionCount, 3, "Correct number of exceptions thrown");
-  });
 
   
   module("Dynamics: ModelFactory: constructs",{
@@ -353,6 +327,17 @@ $(document).ready(function() {
     teardown: function() {
       
     }
+  });
+  
+  
+  test("Static construct - existing object", function() {
+    this.instance.data.iteration[123] = {
+        id: 123,
+        name: "Test iteration"
+    };
+    var actual = ModelFactory.construct(ModelFactory.types.iteration, 123, {});
+    
+    equals(actual, this.instance.data.iteration[123]);
   });
   
   test("Construct iteration", function() {

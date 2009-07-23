@@ -42,8 +42,13 @@ StoryModel.prototype._setData = function(newData) {
  * Internal function to send the data to server.
  */
 StoryModel.prototype._saveData = function(id, changedData) {
+  var me = this;
+  
   var url = "ajax/storeStory.action";
-  var data = changedData;
+  var data = {};
+  data.story = changedData;
+  
+  // Add the id
   jQuery.extend(data, {storyId: id});
   
   jQuery.ajax({
@@ -53,7 +58,7 @@ StoryModel.prototype._saveData = function(id, changedData) {
     data: data,
     dataType: "json",
     success: function(data, status) {
-      alert("Story saved");
+      me.setData(data);
     },
     error: function(request, status, error) {
       alert("Error saving story");

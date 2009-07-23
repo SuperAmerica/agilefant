@@ -350,7 +350,7 @@ $(document).ready(function() {
     
     ok(actual instanceof IterationModel, "The returned object is an iteration");
     ok(setDataCalled, "Model's setData is called");
-    equals(ModelFactory.getObject("iteration",123), actual, "The iteration object is stored");
+    equals(ModelFactory.getObject(ModelFactory.types.iteration,123), actual, "The iteration object is stored");
     equals(actual.getId(), 123, "The id is correct");
   });
   

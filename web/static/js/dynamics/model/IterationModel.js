@@ -35,7 +35,7 @@ IterationModel.prototype._setData = function(newData) {
   
   // Set stories
   if (newData.stories) {
-    this._populateStories(newData.stories);
+    this._updateRelations(ModelFactory.types.story, newData.stories);
   }
 };
 

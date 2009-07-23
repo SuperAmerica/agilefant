@@ -86,12 +86,58 @@ $(document).ready(function() {
   
   
   test("Update relations", function() {
+    var storyThatStays = new StoryModel();
+    storyThatStays.id = 555;
+    storyThatStays.relations.backlog = this.commonModel;
+    var storyThatIsRemoved = new StoryModel();
+    storyThatIsRemoved.id = 223;
+    storyThatIsRemoved.relations.backlog = this.commonModel;
+    
+    
+    this.commonModel.persistedClassName = "fi.hut.soberit.agilefant.model.Iteration";
     this.commonModel.relations = {
-        story: []
+        story: [storyThatStays, storyThatIsRemoved]
     };
     
-    this.commonModel._updateRelations();
+    var newData =
+      [
+       {
+         id: 555
+       },
+       {
+         id: 667
+       }
+       ];
     
+    this.commonModel._updateRelations(ModelFactory.types.story, newData);
+   
+    var me = this;
+    var checkInStories = function(item) {
+      for (var i = 0; i < me.commonModel.relations.story.length; i++) {
+        var loopItem = me.commonModel.relations.story[i];
+        if (item.getHashCode() === loopItem.getHashCode()) {
+          return true;
+        }
+      }
+      return false;
+    };
+    var checkParent = function(item) {
+      if (item.relations.backlog &&
+          item.relations.backlog.getHashCode() === me.commonModel.getHashCode()) {
+        return true;
+      }
+      return false;
+    };
+    
+    var newStory = ModelFactory.getObject(ModelFactory.types.story, 667);
+    
+    ok(checkInStories(storyThatStays), "Correct story stays");
+    ok(!checkInStories(storyThatIsRemoved), "Correct story is removed");
+    ok(checkInStories(newStory), "Correct story is added");
+    
+    ok(checkParent(storyThatStays), "Parent is correct for story that stays");
+    ok(!checkParent(storyThatIsRemoved), "Parent is removed from story");
+    ok(checkParent(newStory), "Parent is correct for added story");
   });
   
   

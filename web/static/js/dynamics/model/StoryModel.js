@@ -36,10 +36,7 @@ StoryModel.acceptedClassNames = [
 StoryModel.prototype._setData = function(newData) { 
   // Set the id
   this.id = newData.id;
-  
-  // Set the parent backlog
-//  this.relations.backlog = ModelFactory.getObject("backlog", newData.backlog.id);
-  
+    
   // Set the tasks
   if (newData.tasks) {
     this._populateTasks(newData.tasks);

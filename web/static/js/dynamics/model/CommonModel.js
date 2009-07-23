@@ -88,6 +88,58 @@ CommonModel.prototype._copyFields = function(newData) {
 };
 
 CommonModel.prototype._updateRelations = function(type, newData) {
+  var newHashes = [];
+  var currentHashes = [];
+  var newObjects = [];
+  // 1. New hashcodes to list
+  for (var i = 0; i < newData.length; i++) {
+    var object = ModelFactory.updateObject(type, newData[i]);
+    newObjects.push(object);
+    newHashes.push(object.getHashCode());
+  }
+  
+  // 2. Remove old relations that are not in the new ones
+  for (i = 0; i < this.relations[type].length; i++) {
+    var old = this.relations[type][i];
+    if (jQuery.inArray(old.getHashCode(), newHashes) === -1) {
+      this._removeRelation(old);
+      old._removeRelation(this);
+    }
+    else {
+      currentHashes.push(old.getHashCode());
+    }
+  }
+  
+  // 3. Update the new relations
+  for (var i = 0; i < newObjects.length; i++) {
+    var newObj = newObjects[i];
+    if (jQuery.inArray(newObj.getHashCode(), currentHashes) === -1) {
+      this._addRelation(newObj);
+      newObj._addRelation(this);
+      currentHashes.push(newObj.getHashCode());
+    }
+  }
+};
+
+CommonModel.prototype._addRelation = function(object) {
+  var class = object.getPersistedClass();
+  var type = ModelFactory.classNameToType[object.getPersistedClass()];
+  if (this.relations[type].constructor === Array) {
+    this.relations[type].push(object);
+  }
+  else {
+    this.relations[type] = object;
+  }
+};
+
+CommonModel.prototype._removeRelation = function(object) {
+  var type = ModelFactory.classNameToType[object.getPersistedClass()];
+  if (this.relations[type].constructor === Array) {
+    ArrayUtils.remove(this.relations[type], object);
+  }
+  else {
+    this.relations[type] = null;
+  }
   
 };
 

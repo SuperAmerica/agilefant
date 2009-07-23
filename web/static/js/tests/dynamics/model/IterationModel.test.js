@@ -31,7 +31,7 @@ $(document).ready(function() {
   });
   
   
-  test("Set data", function() {
+  test("Set data without stories", function() {
     var iteration = new IterationModel();
     
     var listenersCalled = false;
@@ -76,7 +76,11 @@ $(document).ready(function() {
     
     var origUpdateObject = ModelFactory.updateObject;
     var updateCallCount = 0;
-    var stories = [new StoryModel(), new StoryModel()];
+    var story1 = new StoryModel();
+    story1.setId(715);
+    var story2 = new StoryModel();
+    story2.setId(888);
+    var stories = [story1, story2];
     ModelFactory.updateObject = function(type, data) {
       var story = stories[updateCallCount];
       updateCallCount++;
@@ -93,8 +97,8 @@ $(document).ready(function() {
     ok(jQuery.inArray(stories[1], iteration.relations.story) !== -1,
         "Second story in iteration's stories");
     
-    same(stories[0].relations.backlog, iteration, "Story 0 iteration set correctly");
-    same(stories[1].relations.backlog, iteration, "Story 1 iteration set correctly");
+    same(story1.relations.backlog, iteration, "Story 0 iteration set correctly");
+    same(story2.relations.backlog, iteration, "Story 1 iteration set correctly");
     
     ModelFactory.updateObject = origUpdateObject;
   });

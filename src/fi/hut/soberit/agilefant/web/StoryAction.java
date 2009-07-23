@@ -79,8 +79,8 @@ public class StoryAction extends ActionSupport implements CRUDAction, Prefetchin
     }
 
     public String store() {
-        story = storyBusiness.store(storyId, backlogId, story, userIds, priority);
-        story = this.toTransferObject(story);
+        story = storyBusiness.store(storyId, story, null, null);
+//        story = this.toTransferObject(story);
         return Action.SUCCESS;
     }
     
@@ -118,7 +118,7 @@ public class StoryAction extends ActionSupport implements CRUDAction, Prefetchin
     }
     
     public void initializePrefetchedData(int objectId) {
-        storyBusiness.retrieve(objectId);
+        story = storyBusiness.retrieve(objectId);
     }
     
     

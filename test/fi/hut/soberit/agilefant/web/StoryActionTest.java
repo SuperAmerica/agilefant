@@ -101,9 +101,8 @@ public class StoryActionTest {
     
     @Test
     public void testStore() {
-        expect(storyBusiness.store(storyAction.getStoryId(),
-                storyAction.getBacklogId(), story, new HashSet<Integer>(),
-                storyAction.getPriority()))
+        expect(storyBusiness.store(story.getId(),
+                story, null, null))
                 .andReturn(story);
         expectStoryToTransferObject(null);
         replayAll();
@@ -194,12 +193,14 @@ public class StoryActionTest {
     
     @Test
     public void testInitializePrefetchingData() {
-        expect(storyBusiness.retrieve(story.getId())).andReturn(story);
+        Story newStory = new Story();
+        newStory.setId(2222);
+        expect(storyBusiness.retrieve(newStory.getId())).andReturn(newStory);
         
         replayAll();
         
-        storyAction.initializePrefetchedData(story.getId());
-        assertEquals(story, storyAction.getStory());
+        storyAction.initializePrefetchedData(newStory.getId());
+        assertEquals(newStory, storyAction.getStory());
         
         verifyAll();
     }

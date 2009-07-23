@@ -3,7 +3,9 @@ package fi.hut.soberit.agilefant.model;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -39,7 +41,7 @@ public class Story implements TimesheetLoggable, NamedObject {
     private User creator;
     private Date createdDate;
     
-    private List<User> responsibles = new ArrayList<User>();
+    private Set<User> responsibles = new HashSet<User>();
     private Collection<Task> tasks = new ArrayList<Task>();
     private Collection<StoryHourEntry> hourEntries = new ArrayList<StoryHourEntry>();
 
@@ -105,7 +107,7 @@ public class Story implements TimesheetLoggable, NamedObject {
         this.creator = creator;
     }
 
-    public void setResponsibles(List<User> responsibles) {
+    public void setResponsibles(Set<User> responsibles) {
         this.responsibles = responsibles;
     }
 
@@ -122,9 +124,8 @@ public class Story implements TimesheetLoggable, NamedObject {
             joinColumns={@JoinColumn(name = "Story_id")},
             inverseJoinColumns={@JoinColumn(name = "User_id")}
     )
-    @OrderBy("initials")
     @BatchSize(size=20)
-    public List<User> getResponsibles() {
+    public Set<User> getResponsibles() {
         return responsibles;
     }
     

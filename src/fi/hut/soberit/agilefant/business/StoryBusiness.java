@@ -15,8 +15,11 @@ import fi.hut.soberit.agilefant.util.StoryMetrics;
 
 public interface StoryBusiness extends GenericBusiness<Story> {
 
-    Story store(int storyId, int backlogId, Story dataItem,
-            Set<Integer> responsibles, int priority) throws ObjectNotFoundException;
+    /**
+     * Copies the dataItem's data to the persisted <code>Story</code> object.
+     * @return the newly persisted story
+     */
+    Story store(Integer storyId, Story dataItem, Integer backlogId, Set<Integer> responsibleIds) throws ObjectNotFoundException, IllegalArgumentException;
   
     public List<Story> getStoriesByBacklog(Backlog backlog);
 

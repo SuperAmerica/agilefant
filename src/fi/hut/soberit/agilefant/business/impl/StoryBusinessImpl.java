@@ -108,36 +108,10 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         return new ArrayList<User>();
     }
 
-    public Story store(int storyId, int backlogId, Story dataItem,
-            Set<Integer> responsibles, int priority)
-            throws ObjectNotFoundException {
-        Story item = null;
-        if (storyId > 0) {
-            item = storyDAO.get(storyId);
-            if (item == null) {
-                item = new Story();
-                item.setPriority(-1);
-            }
-        }
-        Backlog backlog = backlogDAO.get(backlogId);
-        if (backlog == null) {
-            throw new ObjectNotFoundException("backlog.notFound");
-        }
-
-        Set<User> responsibleUsers = new HashSet<User>();
-
-        for (int userId : responsibles) {
-            User responsible = userDAO.get(userId);
-            if (responsible != null) {
-                responsibleUsers.add(responsible);
-            }
-        }
-
-        return this.store(item, backlog, dataItem, responsibleUsers, priority);
-    }
 
     /** {@inheritDoc} */
     @Override
+    @Transactional
     public void delete(int storyId) throws ObjectNotFoundException {
         Story story = this.retrieve(storyId);
         Backlog backlog = story.getBacklog();
@@ -148,82 +122,111 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         backlogHistoryEntryBusiness.updateHistory(backlog.getId());
     }
 
-    public Story store(Story storable, Backlog backlog, Story dataItem,
-            Set<User> responsibles, Integer priority) {
-
-        boolean historyUpdated = false;
-
-        if (backlog == null) {
-            throw new IllegalArgumentException("Backlog must not be null.");
+    @Transactional
+    /** {@inheritDoc} */
+    public Story store(Integer storyId, Story dataItem, Integer backlogId, Set<Integer> responsibleIds)
+            throws ObjectNotFoundException, IllegalArgumentException {
+        if (storyId == null) {
+            throw new IllegalArgumentException("Story id should be given");
         }
-        if (dataItem == null) {
-            throw new IllegalArgumentException("No data given.");
+        Story persisted = this.retrieve(storyId);
+        
+        // Set the backlog if backlogId given
+        if (backlogId != null) {
+            Backlog backlog = backlogDAO.get(backlogId);
+            persisted.setBacklog(backlog);
+            // TODO: update histories
         }
-        if (storable == null) {
-            storable = new Story();
-            storable.setCreatedDate(Calendar.getInstance().getTime());
-            try {
-                storable.setCreator(SecurityUtil.getLoggedUser()); // may fail
-                // if request
-                // is
-                // multithreaded
-            } catch (Exception e) {
-            } // however, saving item should not fail.
-        }
-        storable.setDescription(dataItem.getDescription());
-        // storable.setEffortLeft(dataItem.getEffortLeft());
-        storable.setName(dataItem.getName());
-        // if(storable.getOriginalEstimate() == null) {
-        // if(dataItem.getOriginalEstimate() == null) {
-        // storable.setOriginalEstimate(dataItem.getEffortLeft());
-        // } else {
-        // storable.setOriginalEstimate(dataItem.getOriginalEstimate());
-        // }
-        // }
-
-        // storable.setPriority(dataItem.getPriority());
-        storable.setState(dataItem.getState());
-        storable.setStoryPoints(dataItem.getStoryPoints());
-
-        // if(dataItem.getState() == State.DONE) {
-        // storable.setEffortLeft(new AFTime(0));
-        // } else if(dataItem.getEffortLeft() == null) {
-        // storable.setEffortLeft(storable.getOriginalEstimate());
-        // }
-
-        if (storable.getBacklog() != null && storable.getBacklog() != backlog) {
-            this.moveStoryToBacklog(storable, backlog);
-            historyUpdated = true;
-        } else if (storable.getBacklog() == null) {
-            storable.setBacklog(backlog);
-        }
-
-        storable.getResponsibles().clear();
-        storable.getResponsibles().addAll(responsibles);
-
-        Story persisted;
-
-        if (storable.getId() == 0) {
-            storable.setPriority(-1);
-            backlog.getStories().add(storable);
-            int persistedId = (Integer) storyDAO.create(storable);
-            persisted = storyDAO.get(persistedId);
-        } else {
-            storyDAO.store(storable);
-            persisted = storable;
-        }
-        backlogHistoryEntryBusiness.updateHistory(persisted.getBacklog().getId());
-        if (persisted.getBacklog() instanceof Iteration) {
-            updateStoryPriority(persisted, priority);
-            if (!historyUpdated) {
-                iterationHistoryEntryBusiness.updateIterationHistory(backlog
-                        .getId());
+        
+        if (responsibleIds != null) {
+            persisted.getResponsibles().clear();
+            for (Integer userId : responsibleIds) {
+                persisted.getResponsibles().add(userDAO.get(userId));
             }
-        } else if (persisted.getBacklog() instanceof Project) {
-            updateStoryPriority(persisted, priority);
         }
+        
+        // Copy the fields
+        persisted.setDescription(dataItem.getDescription());
+        persisted.setName(dataItem.getName());
+        persisted.setState(dataItem.getState());
+        persisted.setStoryPoints(dataItem.getStoryPoints());
+        
+        // Store the story
+        storyDAO.store(persisted);
+        
         return persisted;
     }
+    
+//    public Story store(int storyId, int backlogId, Story dataItem,
+//            Set<Integer> responsibles, int priority)
+//            throws ObjectNotFoundException {
+//        Story item = null;
+//        if (storyId > 0) {
+//            item = storyDAO.get(storyId);
+//            if (item == null) {
+//                item = new Story();
+//                item.setPriority(-1);
+//            }
+//        }
+//
+//        return this.store(item, backlog, dataItem, responsibleUsers, priority);
+//    }
+//    
+//    public Story store(Story storable, Backlog backlog, Story dataItem,
+//            Set<User> responsibles, Integer priority) {
+//
+//        boolean historyUpdated = false;
+
+//        if (storable == null) {
+//            storable = new Story();
+//            storable.setCreatedDate(Calendar.getInstance().getTime());
+//            try {
+//                storable.setCreator(SecurityUtil.getLoggedUser()); // may fail
+//                // if request
+//                // is
+//                // multithreaded
+//            } catch (Exception e) {
+//            } // however, saving item should not fail.
+//        }
+//        storable.setDescription(dataItem.getDescription());
+//        storable.setName(dataItem.getName());
+//
+//        // storable.setPriority(dataItem.getPriority());
+//        storable.setState(dataItem.getState());
+//        storable.setStoryPoints(dataItem.getStoryPoints());
+//
+//
+//        if (storable.getBacklog() != null && storable.getBacklog() != backlog) {
+//            this.moveStoryToBacklog(storable, backlog);
+//            historyUpdated = true;
+//        } else if (storable.getBacklog() == null) {
+//            storable.setBacklog(backlog);
+//        }
+//
+//
+//        Story persisted;
+//
+//        if (storable.getId() == 0) {
+//            storable.setPriority(-1);
+//            backlog.getStories().add(storable);
+//            int persistedId = (Integer) storyDAO.create(storable);
+//            persisted = storyDAO.get(persistedId);
+//        } else {
+//            storyDAO.store(storable);
+//            persisted = storable;
+//        }
+//        backlogHistoryEntryBusiness.updateHistory(persisted.getBacklog().getId());
+//        if (persisted.getBacklog() instanceof Iteration) {
+//            updateStoryPriority(persisted, priority);
+//            if (!historyUpdated) {
+//                iterationHistoryEntryBusiness.updateIterationHistory(backlog
+//                        .getId());
+//            }
+//        } else if (persisted.getBacklog() instanceof Project) {
+//            updateStoryPriority(persisted, priority);
+//        }
+//        return persisted;
+//    }
 
     public void moveStoryToBacklog(Story story, Backlog backlog) {
 

@@ -6,6 +6,7 @@ import static org.junit.Assert.*;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 
 import org.joda.time.DateTime;
 import org.junit.Before;
@@ -76,7 +77,7 @@ public class ProjectBusinessTest {
         story1.setId(127);
         story2 = new Story();
         story2.setId(130);
-        story2.setResponsibles(Arrays.asList(user2));
+        story2.setResponsibles(new HashSet<User>(Arrays.asList(user2)));
         
         Task task = new Task();
         task.setId(86);

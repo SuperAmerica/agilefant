@@ -46,11 +46,10 @@ StoryModel.prototype._saveData = function(id, changedData) {
   
   var url = "ajax/storeStory.action";
   var data = {};
-  data.story = changedData;
   
   for (field in changedData) {
     if (changedData.hasOwnProperty(field)) {
-      data["story." + field] = changedData[field];
+      data["story.name"] = changedData[field];
     }
   }
   

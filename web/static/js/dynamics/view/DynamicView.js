@@ -31,12 +31,13 @@ DynamicView.prototype.init = function(controller, model, parent) {
 	} else {
 		this.parentElement = parent;
 	}
+	var me = this;
 	this.listener = function(event) {
 	  if (event instanceof DynamicsEvents.EditEvent) {
-	    this.onEdit(event);
+	    me.onEdit(event);
 	  }
 	  else if (event instanceof DynamicsEvents.DeleteEvent) {
-	    this.onDelete(event);
+	    me.onDelete(event);
 	  }
 	};
 	this.model.addListener(this.listener);

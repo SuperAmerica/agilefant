@@ -189,7 +189,7 @@
         },
         remove : function() {
           var self = $.data(this, 'wysiwyg');
-          self.editor.remove();
+          self.element.remove();
         },
         MSGS_EN : {
             nonSelection : 'select the text you wish to link'

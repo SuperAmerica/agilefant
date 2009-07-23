@@ -132,3 +132,8 @@ DynamicTableCell.prototype.isEditorValueValid = function() {
   }
   return true;
 };
+
+DynamicTableCell.prototype.editorClosing = function() {
+  this.show();
+  this.editor = null;
+};

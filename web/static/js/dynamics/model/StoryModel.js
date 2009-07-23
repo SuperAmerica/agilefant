@@ -53,6 +53,7 @@ StoryModel.prototype._saveData = function(id, changedData) {
   
   jQuery.ajax({
     type: "POST",
+    url: url,
     async: true,
     cache: false,
     data: data,

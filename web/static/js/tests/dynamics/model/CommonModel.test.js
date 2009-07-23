@@ -22,6 +22,7 @@ $(document).ready(function() {
     ok(this.commonModel.relations, "Relations field added");
     ok(this.commonModel.currentData, "Current data field added");
     ok(this.commonModel.persistedData, "Persisted data field added");
+    ok(this.commonModel.inTransaction === false, "The model is not in transaction mode");
     same(this.commonModel.getId(), null, "Id is null");
   });
   
@@ -150,9 +151,12 @@ $(document).ready(function() {
     story.setId(666);
     
     story.addRelation(iter);
+    story.addRelation(iter);
+    story.addRelation(iter);
     
     ok(jQuery.inArray(story, iter.relations.story) !== -1,
         "The story is added to iteration's stories");
+    same(iter.relations.story.length, 1, "The iteration relations' length is correct");
     same(story.relations.backlog, iter, "The story's parent is correct");
   });
   

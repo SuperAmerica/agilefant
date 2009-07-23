@@ -17,41 +17,9 @@ CommonModel.prototype.initialize = function() {
   var defaultData = {};
   this.currentData = defaultData;
   this.persistedData = defaultData;
+  this.inTransaction = false;
 };
 
-/**
- * Get the system-wide unique identifier for the object.
- */
-CommonModel.prototype.getHashCode = function() {
-  return this.persistedClassName + "_" + this.id;
-};
-
-/**
- * Return the object's persisted id.
- * <p>
- * Should be <code>null</code> if not persisted.
- */
-CommonModel.prototype.getId = function() {
-  return this.id;
-};
-
-/**
- * Set the object's persisted id.
- * <p>
- * Should be <code>null</code> if not persisted.
- */
-CommonModel.prototype.setId = function(id) {
-  this.id = id;
-};
-
-/**
- * Get the object's persisted class name
- * <p>
- * @return the canonical name of the persisted class
- */
-CommonModel.prototype.getPersistedClass = function() {
-  return this.persistedClassName;
-};
 
 /**
  * Reloads the object's and all its children's data from the server.
@@ -124,6 +92,8 @@ CommonModel.prototype._updateRelations = function(type, newData) {
  * <p>
  * Sets the relation for both sides by default. If the object this is called for
  * is not persisted, sets the relation only for the object.
+ * 
+ * @param {CommonModel} object the object to add the relation to
  */
 CommonModel.prototype.addRelation = function(object) {
   var objectType = ModelFactory.classNameToType[object.getPersistedClass()];
@@ -136,7 +106,10 @@ CommonModel.prototype.addRelation = function(object) {
 CommonModel.prototype._addOneWayRelation = function(object) {
   var type = ModelFactory.classNameToType[object.getPersistedClass()];
   if (this.relations[type].constructor === Array) {
-    this.relations[type].push(object);
+    // Do not add duplicates
+    if (jQuery.inArray(object, this.relations[type]) === -1) { 
+      this.relations[type].push(object);
+    }
   }
   else {
     this.relations[type] = object;
@@ -146,7 +119,9 @@ CommonModel.prototype._addOneWayRelation = function(object) {
 /**
  * Remove relation between two objects.
  * <p>
- * Use e.g. when moving objects. 
+ * Use e.g. when moving objects.
+ * 
+ * @param {CommonModel} object the object for which to remove the relation
  */
 CommonModel.prototype.removeRelation = function(object) {
   this._removeOneWayRelation(object);
@@ -239,4 +214,45 @@ CommonModel.prototype._saveData = function(id, changedData) {
 CommonModel.prototype.rollback = function() {
   this.currentData = this.persistedData;
   this.callListeners(new DynamicsEvents.EditEvent(this));
+};
+
+
+
+/* GETTERS AND SETTERS */
+
+/**
+ * Get the system-wide unique identifier for the object.
+ */
+CommonModel.prototype.getHashCode = function() {
+  return this.persistedClassName + "_" + this.id;
+};
+
+/**
+ * Get the object's persisted class name
+ * <p>
+ * @return the canonical name of the persisted class
+ */
+CommonModel.prototype.getPersistedClass = function() {
+  return this.persistedClassName;
+};
+
+
+/**
+ * Return the object's persisted id.
+ * <p>
+ * Should be <code>null</code> if not persisted.
+ */
+CommonModel.prototype.getId = function() {
+  return this.id;
+};
+CommonModel.prototype.setId = function(id) {
+  this.id = id;
+};
+
+
+CommonModel.prototype.isInTransaction = function() {
+  return this.inTransaction;
+};
+CommonModel.prototype.setInTransaction = function(val) {
+  this.inTransaction = val;
 };

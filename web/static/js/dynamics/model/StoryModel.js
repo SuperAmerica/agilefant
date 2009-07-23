@@ -24,11 +24,6 @@ var StoryModel = function() {
 
 StoryModel.prototype = new CommonModel();
 
-StoryModel.acceptedClassNames = [
-  "fi.hut.soberit.agilefant.model.Story",
-  "fi.hut.soberit.agilefant.transfer.StoryTO"
-];
-
 /**
  * Internal function to parse data.
  * @throws {String "Invalid data"} if data is invalid
@@ -44,9 +39,12 @@ StoryModel.prototype._setData = function(newData) {
 };
 
 
-// Getters in alphabetical order
+// Getters and setters in property alphabetical order
 StoryModel.prototype.getBacklog = function() {
   return this.relations.backlog;
+};
+StoryModel.prototype.setBacklog = function(backlog) {
+  this.addRelation(backlog);
 };
 
 StoryModel.prototype.getDescription = function() {

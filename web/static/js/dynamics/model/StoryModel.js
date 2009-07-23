@@ -39,23 +39,10 @@ StoryModel.prototype._setData = function(newData) {
     
   // Set the tasks
   if (newData.tasks) {
-    this._populateTasks(newData.tasks);
+    this._updateRelations(ModelFactory.types.task, newData.tasks);
   }
 };
 
-StoryModel.prototype._populateTasks = function(tasks) {
-  for (var i = 0; i < tasks.length; i++) {
-    var task = ModelFactory.updateObject(ModelFactory.types.task, tasks[i]);
-    this.addTask(task);
-    task.relations.story = this;
-  }
-};
-
-
-StoryModel.prototype.addTask = function(task) {
-  this.relations.task.push(task);
-  
-};
 
 // Getters in alphabetical order
 StoryModel.prototype.getBacklog = function() {

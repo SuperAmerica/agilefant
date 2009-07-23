@@ -53,8 +53,16 @@ $(document).ready(function() {
   test("Internal set data with tasks", function() {
     
     var origUpdateObject = ModelFactory.updateObject;
+    
+    var task1 = new TaskModel();
+    var task2 = new TaskModel();
+    var task3 = new TaskModel();
+    task1.setId(123);
+    task2.setId(1234);
+    task3.setId(12345);
+    var tasks = [task1, task2, task3];
+    
     var updateCallCount = 0;
-    var tasks = [new TaskModel(), new TaskModel(), new TaskModel()];
     ModelFactory.updateObject = function(type, data) {
       var task = tasks[updateCallCount];
       updateCallCount++;
@@ -84,6 +92,7 @@ $(document).ready(function() {
     var story = new StoryModel();
     
     story._setData(alteredData);
+    
     
     same(updateCallCount, 3, "Three tasks added");
     same(story.relations.task.length, 3, "Tasklist length correct")

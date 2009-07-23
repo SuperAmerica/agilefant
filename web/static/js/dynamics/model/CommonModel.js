@@ -91,7 +91,7 @@ CommonModel.prototype._updateRelations = function(type, newData) {
   var newHashes = [];
   var currentHashes = [];
   var newObjects = [];
-  // 1. New hashcodes to list
+  // 1. New hash codes to list
   for (var i = 0; i < newData.length; i++) {
     var object = ModelFactory.updateObject(type, newData[i]);
     newObjects.push(object);
@@ -102,8 +102,7 @@ CommonModel.prototype._updateRelations = function(type, newData) {
   for (i = 0; i < this.relations[type].length; i++) {
     var old = this.relations[type][i];
     if (jQuery.inArray(old.getHashCode(), newHashes) === -1) {
-      this._removeRelation(old);
-      old._removeRelation(this);
+      this.removeRelation(old);
     }
     else {
       currentHashes.push(old.getHashCode());
@@ -114,15 +113,27 @@ CommonModel.prototype._updateRelations = function(type, newData) {
   for (var i = 0; i < newObjects.length; i++) {
     var newObj = newObjects[i];
     if (jQuery.inArray(newObj.getHashCode(), currentHashes) === -1) {
-      this._addRelation(newObj);
-      newObj._addRelation(this);
+      this.addRelation(newObj);
       currentHashes.push(newObj.getHashCode());
     }
   }
 };
 
-CommonModel.prototype._addRelation = function(object) {
-  var class = object.getPersistedClass();
+/**
+ * Add relation between two objects.
+ * <p>
+ * Sets the relation for both sides by default. If the object this is called for
+ * is not persisted, sets the relation only for the object.
+ */
+CommonModel.prototype.addRelation = function(object) {
+  var objectType = ModelFactory.classNameToType[object.getPersistedClass()];
+  this._addOneWayRelation(object);
+  if (this.id) {
+    object._addOneWayRelation(this);
+  }
+};
+
+CommonModel.prototype._addOneWayRelation = function(object) {
   var type = ModelFactory.classNameToType[object.getPersistedClass()];
   if (this.relations[type].constructor === Array) {
     this.relations[type].push(object);
@@ -132,7 +143,17 @@ CommonModel.prototype._addRelation = function(object) {
   }
 };
 
-CommonModel.prototype._removeRelation = function(object) {
+/**
+ * Remove relation between two objects.
+ * <p>
+ * Use e.g. when moving objects. 
+ */
+CommonModel.prototype.removeRelation = function(object) {
+  this._removeOneWayRelation(object);
+  object._removeOneWayRelation(this);
+};
+
+CommonModel.prototype._removeOneWayRelation = function(object) {
   var type = ModelFactory.classNameToType[object.getPersistedClass()];
   if (this.relations[type].constructor === Array) {
     ArrayUtils.remove(this.relations[type], object);
@@ -140,7 +161,6 @@ CommonModel.prototype._removeRelation = function(object) {
   else {
     this.relations[type] = null;
   }
-  
 };
 
 /**

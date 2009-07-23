@@ -98,6 +98,7 @@ $(document).ready(function() {
     this.commonModel.relations = {
         story: [storyThatStays, storyThatIsRemoved]
     };
+    this.commonModel.setId(961);
     
     var newData =
       [
@@ -141,10 +142,52 @@ $(document).ready(function() {
   });
   
   
+  test("Add relation, persisted object", function() {
+    var iter = new IterationModel();
+    var story = new StoryModel();
+    // Both are persisted
+    iter.setId(123);
+    story.setId(666);
+    
+    story.addRelation(iter);
+    
+    ok(jQuery.inArray(story, iter.relations.story) !== -1,
+        "The story is added to iteration's stories");
+    same(story.relations.backlog, iter, "The story's parent is correct");
+  });
+  
+  test("Add relation, new object", function() {
+    var iter = new IterationModel();
+    var story = new StoryModel();
+    // Iteration is persisted
+    iter.setId(123);
+    
+    story.addRelation(iter);
+    
+    ok(jQuery.inArray(story, iter.relations.story) === -1,
+        "The story is not added to iteration's stories");
+    same(story.relations.backlog, iter, "The story's parent is correct");
+  });
   
   
-  
-  
+  test("Remove relation, persisted object", function() {
+    var iter = new IterationModel();
+    var story = new StoryModel();
+    // Both persisted
+    iter.setId(712);
+    story.setId(1);
+    
+    // Set relations
+    iter.relations.story.push(story);
+    story.relations.backlog = iter;
+    
+    story.removeRelation(iter);
+    
+    ok(jQuery.inArray(story, iter.relations.story) === -1,
+      "The story is not in iteration's stories");
+    same(story.relations.backlog, null, "The story's parent is null");
+  });
+
   
   test("Adding listener", function() {
     same(this.commonModel.listeners.length, 0, "Listeners empty before adding");

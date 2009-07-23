@@ -86,7 +86,12 @@ IterationController.prototype.initializeStoryConfig = function() {
 		cssClass: 'story-row',
 		title: "State",
 		headerTooltip: 'Story state',
-		get: StoryModel.prototype.getState
+		get: StoryModel.prototype.getState,
+		editable: true,
+    edit: {
+      editor: "SingleSelection",
+      set: StoryModel.prototype.setState
+    }
 	});
 	config.addColumnConfiguration(StoryController.columnIndexes.responsibles, {
 		minWidth: 60,

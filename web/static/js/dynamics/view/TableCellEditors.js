@@ -36,7 +36,7 @@ TableEditors.CommonEditor.prototype.close = function() {
     this.error.remove();
   }
   this.cell.editorClosing();
-  this.element = null;
+  //this.element = null;
 };
 TableEditors.CommonEditor.prototype.focus = function() {
   this.element.focus();
@@ -89,6 +89,7 @@ TableEditors.Text.prototype = new TableEditors.CommonEditor();
  * @base CommonEditor
  */
 TableEditors.SingleSelection = function(row, cell, options) {
+  this.element = $('<select />').appendTo(cell.getElement());
   this.init(row, cell, options);
 }
 
@@ -99,6 +100,8 @@ TableEditors.SingleSelection.prototype = new TableEditors.CommonEditor();
  * @base CommonEditor
  */
 TableEditors.Date = function(row, cell, options) {
+  this.element = $('<input type="text"/>').width("80%").appendTo(
+      cell.getElement());
   this.init(row, cell, options);
 };
 TableEditors.Date.prototype = new TableEditors.CommonEditor();
@@ -108,6 +111,8 @@ TableEditors.Date.prototype = new TableEditors.CommonEditor();
  * @base CommonEditor
  */
 TableEditors.Estimate = function(row, cell, options) {
+  this.element = $('<input type="text"/>').width("80%").appendTo(
+      cell.getElement());
   this.init(row, cell, options);
 };
 TableEditors.Estimate.prototype = new TableEditors.CommonEditor();
@@ -117,6 +122,8 @@ TableEditors.Estimate.prototype = new TableEditors.CommonEditor();
  * @base CommonEditor
  */
 TableEditors.Date = function(row, cell, options) {
+  this.element = $('<input type="text"/>').width("80%").appendTo(
+      cell.getElement());
   this.init(row, cell, options);
 };
 TableEditors.Date.prototype = new TableEditors.CommonEditor();
@@ -125,6 +132,7 @@ TableEditors.Date.prototype = new TableEditors.CommonEditor();
  * @constructor
  * @base CommonEditor
  */
+
 TableEditors.Wysiwyg = function(row, cell, options) {
   this.actualElement = $('<textarea></textarea>').appendTo(cell.getElement());
   this.actualElement.width("98%").height("240px");

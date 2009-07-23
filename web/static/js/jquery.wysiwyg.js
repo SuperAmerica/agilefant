@@ -44,26 +44,33 @@
 
     $.fn.wysiwyg = function( options )
     {
-        if ( arguments.length > 0 && arguments[0].constructor == String )
+      if ( arguments.length > 0 && arguments[0].constructor == String )
+      {
+        var action = arguments[0].toString();
+        var params = [];
+
+        for ( var i = 1; i < arguments.length; i++ )
+          params[i - 1] = arguments[i];
+
+        if ( action in Wysiwyg )
         {
-            var action = arguments[0].toString();
-            var params = [];
+          if(action.indexOf("get") === 0) {
+            var self = $.data(this, 'wysiwyg');
+            $.data(this.get(0), 'wysiwyg').designMode();
 
-            for ( var i = 1; i < arguments.length; i++ )
-                params[i - 1] = arguments[i];
-
-            if ( action in Wysiwyg )
-            {
-                return this.each(function()
+            return Wysiwyg[action].apply(this.get(0), params);
+          } else {
+            return this.each(function()
                 {
-                    $.data(this, 'wysiwyg')
-                     .designMode();
+              $.data(this, 'wysiwyg')
+              .designMode();
 
-                    Wysiwyg[action].apply(this, params);
+              Wysiwyg[action].apply(this, params);
                 });
-            }
-            else return this;
+          }
         }
+        else return this;
+      }
 
         var controls = {};
 
@@ -170,7 +177,20 @@
                 self.setContent('');
                 self.saveContent();
         },
-
+        
+        setValue : function(value)
+        {
+          var self = $.data(this, 'wysiwyg');
+          self.setContent(value);
+        },
+        getDocument: function() {
+          var self = $.data(this, 'wysiwyg');
+          return self.editorDoc;
+        },
+        remove : function() {
+          var self = $.data(this, 'wysiwyg');
+          self.editor.remove();
+        },
         MSGS_EN : {
             nonSelection : 'select the text you wish to link'
         },

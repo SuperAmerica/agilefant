@@ -149,7 +149,12 @@ IterationController.prototype.initializeStoryConfig = function() {
 		fullWidth: true,
 		visible: true,
 		get: StoryModel.prototype.getDescription,
-		cssClass: 'story-data'
+		cssClass: 'story-data',
+		editable: true,
+    edit: {
+      editor: "Wysiwyg",
+      set: StoryModel.prototype.setDescription
+    }
 	});
 	config.addColumnConfiguration(StoryController.columnIndexes.tasksData, {
 		fullWidth: true,

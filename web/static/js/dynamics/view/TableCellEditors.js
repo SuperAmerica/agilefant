@@ -26,7 +26,7 @@ TableEditors.CommonEditor.prototype.init = function(row, cell, options) {
  */
 TableEditors.CommonEditor.prototype.save = function() {
   if(this.isValid()) {
-    this.options.set.call(this.model);
+    this.options.set.call(this.model, this.element.val());
     this.close();
   }
 };
@@ -125,9 +125,26 @@ TableEditors.Date.prototype = new TableEditors.CommonEditor();
  * @base CommonEditor
  */
 TableEditors.Wysiwyg = function(row, cell, options) {
+  this.actualElement = $('<textarea></textarea>').appendTo(cell.getElement());
+  this.actualElement.width("90%");
+  this.actualElement.height("200px");
+  setUpWysiwyg(this.actualElement);
+  this.element = $(this.actualElement.wysiwyg("getDocument"));
   this.init(row, cell, options);
 };
 TableEditors.Wysiwyg.prototype = new TableEditors.CommonEditor();
+
+TableEditors.Wysiwyg.prototype.setEditorValue = function(value) {
+  if(!value) {
+    value = this.options.get.call(this.model);
+  }
+  this.actualElement.wysiwyg("setValue",value);
+};
+TableEditors.Wysiwyg.prototype.close = function() {
+  this.element.wysiwyg("remove");
+  this.actualElement.remove();
+  this.cell.show();
+};
 
 /**
  * @constructor

@@ -48,6 +48,12 @@ StoryModel.prototype._saveData = function(id, changedData) {
   var data = {};
   data.story = changedData;
   
+  for (field in changedData) {
+    if (changedData.hasOwnProperty(field)) {
+      data["story." + field] = changedData[field];
+    }
+  }
+  
   // Add the id
   jQuery.extend(data, {storyId: id});
   

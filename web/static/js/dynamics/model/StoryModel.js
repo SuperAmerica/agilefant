@@ -102,7 +102,7 @@ StoryModel.prototype.setState = function(state) {
 StoryModel.prototype.getStoryPoints = function() {
   return this.currentData.storyPoints;
 };
-StoryModel.prototype.getStoryPoints = function(storyPoints) {
+StoryModel.prototype.setStoryPoints = function(storyPoints) {
   this.currentData.storyPoints = storyPoints;
   this._commitIfNotInTransaction();
 };

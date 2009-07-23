@@ -104,7 +104,7 @@ public class StoryActionTest {
         expect(storyBusiness.store(story.getId(),
                 story, null, null))
                 .andReturn(story);
-        expectStoryToTransferObject(null);
+//        expectStoryToTransferObject(null);
         replayAll();
         assertEquals(Action.SUCCESS, storyAction.store());
         verifyAll();

@@ -28,6 +28,7 @@ var DynamicTableColumnConfiguration = function(options) {
 			}
 	};
 	$.extend(this.options,options);
+	this.options.edit.get = this.options.get;
 };
 DynamicTableColumnConfiguration.prototype.getWidth = function() {
 	return this.options.width;

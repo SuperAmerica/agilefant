@@ -202,6 +202,7 @@
 <script type="text/javascript" src="static/js/dynamics/view/TableConfiguration.js"></script>
 <script type="text/javascript" src="static/js/dynamics/view/Toggle.js"></script>
 <script type="text/javascript" src="static/js/dynamics/view/TableCaption.js"></script>
+<script type="text/javascript" src="static/js/dynamics/view/TableCellEditors.js"></script>
 
 
 <script type="text/javascript" src="static/js/dynamics/model/CommonModel.js"></script>

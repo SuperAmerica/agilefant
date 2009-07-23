@@ -73,7 +73,12 @@ IterationController.prototype.initializeStoryConfig = function() {
 		cssClass: 'story-row',
 		title: "Name",
 		headerTooltip: 'Story name',
-		get: StoryModel.prototype.getName
+		get: StoryModel.prototype.getName,
+		editable: true,
+		edit: {
+	    editor: "Text",
+	    set: StoryModel.prototype.setName
+	  }
 	});
 	config.addColumnConfiguration(StoryController.columnIndexes.state, {
 		minWidth: 60,

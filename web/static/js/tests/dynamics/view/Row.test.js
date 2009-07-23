@@ -7,7 +7,9 @@ $(document).ready(function() {
 			this.tableMock = this.mockControl.createMock(dynamicTable);
 			this.tmpParent = $('<div />').appendTo(document.body);
 			this.oldCell = DynamicTableCell;
-		}, teardown: function() {
+			this.mockableCell = function() {};
+			this.mockableCell.prototype = DynamicTableCell.prototype;
+	  }, teardown: function() {
 			DynamicTableCell = this.oldCell;
 			this.mockControl.verify();
 			this.tmpParent.remove();

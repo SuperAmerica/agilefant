@@ -7,6 +7,7 @@ var DynamicTableCell = function(row, config) {
 	this.config = config;
 	this.row = row;
 	this.subView = null;
+	this.editor = null;
 	this.initialize();
 };
 
@@ -14,7 +15,8 @@ var DynamicTableCell = function(row, config) {
  * Set up cell DOM elements and styles
  */
 DynamicTableCell.prototype.initialize = function() {
-	this.element = $('<div />').addClass(DynamicTable.cssClasses.tableCell);
+	var me = this;
+  this.element = $('<div />').addClass(DynamicTable.cssClasses.tableCell);
 	this.cellContents = $('<span />').appendTo(this.element);
 	if (this.config.getWidth()) {
 		this.element.css("width", this.config.getWidth());
@@ -34,6 +36,12 @@ DynamicTableCell.prototype.initialize = function() {
 	}
 	if(!this.config.isVisible()) {
 	  this.element.hide();
+	}
+	if(this.config.isEditable()) {
+	  this.element.attr("title", "Double click to edit");
+	  this.element.dblclick(function() {
+	    me.openEditor();
+	  });
 	}
 };
 
@@ -72,4 +80,55 @@ DynamicTableCell.prototype.render = function() {
 
 DynamicTableCell.prototype.setValue = function(value) {
 	this.cellContents.html(value);
+};
+
+/**
+ * Open cell contents editor if one isn't open and 
+ * if the editor has been configured
+ * 
+ * @return boolean
+ */
+DynamicTableCell.prototype.openEditor = function() {
+  if(this.editor) {
+   return false; 
+  }
+  var editorOptions = this.config.getEditOptions();
+  var editorName = editorOptions.editor;
+  var editorClass = TableEditors.getEditorClassByName(editorName);
+  if(editorClass) {
+    this.editor = new editorClass(this.row, this, this.config.getEditOptions());
+    return true;
+  }
+  return false;
+};
+
+/**
+ * Close cell contents editor if it's open
+ * 
+ * @return boolean
+ */
+DynamicTableCell.prototype.closeEditor = function() {
+  if(this.editor) {
+    this.editor.close();
+  }
+};
+
+/**
+ * Save and close table cell editor
+ * Editor will not close if editor contents is invalid.
+ * 
+ * @return boolean
+ */
+DynamicTableCell.prototype.saveEditorValue = function() {
+  if(this.editor) {
+    return this.editor.save();
+  }
+  return true;
+};
+
+DynamicTableCell.prototype.isEditorValueValid = function() {
+  if(this.editor) {
+    return this.editor.isValid();
+  }
+  return true;
 };

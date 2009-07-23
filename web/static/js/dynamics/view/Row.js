@@ -84,3 +84,27 @@ DynamicTableRow.prototype.onEdit = function() {
 DynamicTableRow.prototype.onDelete = function() {
 	this.remove();
 };
+
+DynamicTableRow.prototype._applyToAllCells = function(command) {
+  var retVal = true;
+  for(var i = 0; i < this.cells.length; i++) {
+    retVal = retVal && command.apply(this.cells[i]);
+  }
+  return retVal;
+};
+
+DynamicTableRow.prototype.editRow = function() {
+  this._applyToAllCells(DynamicTableCell.prototype.openEditor);
+};
+
+DynamicTableRow.prototype.closeRowEdit = function() {
+  this._applyToAllCells(DynamicTableCell.prototype.closeEditor);
+};
+
+DynamicTableRow.prototype.saveRowEdit = function() {
+  var isValid = this._applyToAllCells(DynamicTableCell.prototype.isEditorValueValid);
+  if(isValid) {
+    return this._applyToAllCells(DynamicTableCell.prototype.saveEditorValue);
+  }
+  return false;
+};

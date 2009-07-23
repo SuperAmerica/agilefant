@@ -179,6 +179,7 @@ CommonModel.prototype.callListeners = function(event) {
  * Loops through the fields and submits the changed ones.
  */
 CommonModel.prototype.commit = function() {
+  this.inTransaction = false;
   var changedData = {};
   for (field in this.currentData) {
     if(this.currentData.hasOwnProperty(field)) {
@@ -191,6 +192,17 @@ CommonModel.prototype.commit = function() {
     }
   }
   this._saveData(this.getId(), changedData);
+};
+
+/**
+ * Internal function for committing the changes, if not in transaction mode.
+ * <p>
+ * Used by model objects' setters.
+ */
+CommonModel.prototype._commitIfNotInTransaction = function() {
+  if (!this.inTransaction) {
+    this.commit();
+  }
 };
 
 /**

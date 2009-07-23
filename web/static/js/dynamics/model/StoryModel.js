@@ -47,6 +47,7 @@ StoryModel.prototype.setBacklog = function(backlog) {
   this.addRelation(backlog);
 };
 
+
 StoryModel.prototype.getDescription = function() {
   return this.currentData.description;
 };

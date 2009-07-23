@@ -259,6 +259,7 @@ $(document).ready(function() {
       saveDataCallCount++;
     }
     
+    this.commonModel.inTransaction = true;
     this.commonModel.id = 517;
     this.commonModel.persistedData = {
       id: 517,
@@ -276,6 +277,25 @@ $(document).ready(function() {
     this.commonModel.commit();
     
     same(saveDataCallCount, 1, "Data saving is called");
+    ok(!this.commonModel.inTransaction, "The transaction is cleared");
+  });
+  
+  
+  test("Commit if not in transaction", function() {
+    var commitCount = 0;
+    this.commonModel.commit = function() {
+      commitCount++;
+    };
+    
+    // Should not commit
+    this.commonModel.inTransaction = true;
+    this.commonModel._commitIfNotInTransaction();
+    same(commitCount, 0, "The model in transaction was not committed");
+    
+    // Should commit
+    this.commonModel.inTransaction = false;
+    this.commonModel._commitIfNotInTransaction();
+    same(commitCount, 1, "The model not in transaction was committed");
   });
   
   

@@ -18,7 +18,7 @@
 						me.select();
 					},
 					"Cancel": function() {
-						me.destroy();
+						me._cancel();
 					}
 				},
 				width: 500,
@@ -26,18 +26,22 @@
 				position: 'top',
 				title: this.options.title,
 				close: function() {
-					me.destroy();
+				  me._cancel();
 				}
 			});
 			this.element.data("autocomplete", autocomplete);
 		},
-	  
+	  _cancel: function() {
+		  this.options.cancel.call(this);
+		  this.destroy();
+		},
 		select: function() {
-			this.options.callback.apply(this, this.value());
+			this.options.callback.apply(this, [this.value()]);
 			this.destroy();
 		},
 		value: function() {
-			return this.element.data("autocomplete").getSelectedIds();
+			var ids = this.element.data("autocomplete").getSelectedIds();
+			return ids;
 		},
 		setValue: function() {
 			
@@ -50,6 +54,7 @@
 		getter: "value",
 		defaults: {
 			callback: function() {},
+			cancel: function() {},
 			title: 'Select',
 			dataType: '',
 			selected: []

@@ -36,7 +36,7 @@ TableEditors.CommonEditor.prototype.close = function() {
     this.error.remove();
   }
   this.cell.editorClosing();
-  //this.element = null;
+  this.element = null;
 };
 TableEditors.CommonEditor.prototype.focus = function() {
   this.element.focus();
@@ -183,10 +183,30 @@ TableEditors.Wysiwyg.prototype._handleKeyEvent = function(event) {
  */
 TableEditors.User = function(row, cell, options) {
   this.init(row, cell, options);
+  var me = this;
+  this.autocomplete = $(window).autocompleteDialog({
+    dataType: 'usersAndTeams',
+    callback: function(ids) { me.save(ids); },
+    cancel: function() { me.close(); },
+    title: 'Select users'
+  });
+  this.value = [];
 };
 TableEditors.User.prototype = new TableEditors.CommonEditor();
 
+TableEditors.User.prototype.save = function(ids) {
+  this.options.set.call(this.model, ids);
+  this.cell.editorClosing();
+};
 TableEditors.User.prototype._registerEvents = function() {
+};
+TableEditors.User.prototype.setEditorValue = function() { 
+};
+TableEditors.User.prototype.getEditorValue = function() { 
+  return this.value;
+};
+TableEditors.User.prototype.close = function() {
+  this.cell.editorClosing();
 };
 
 

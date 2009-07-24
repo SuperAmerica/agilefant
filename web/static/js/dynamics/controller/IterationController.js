@@ -107,7 +107,12 @@ IterationController.prototype.initializeStoryConfig = function() {
 		cssClass: 'story-row',
 		title: "Responsibles",
 		headerTooltip: 'Story responsibles',
-		get: StoryModel.prototype.getResponsibles
+		get: StoryModel.prototype.getResponsibles,
+    editable: true,
+    edit: {
+      editor: "User",
+      set: StoryModel.prototype.setResponsibles
+    }
 	});
 	config.addColumnConfiguration(StoryController.columnIndexes.tasks, {
 		minWidth: 60,

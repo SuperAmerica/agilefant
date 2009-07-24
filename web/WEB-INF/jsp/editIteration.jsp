@@ -223,6 +223,12 @@
 <script type="text/javascript" src="static/js/utils/ArrayUtils.js"></script>
 <script type="text/javascript" src="static/js/utils/Configuration.js"></script>
 
+<script type="text/javascript" src="static/js/autocomplete/autocompleteSearchBox.js"></script>
+<script type="text/javascript" src="static/js/autocomplete/autocompleteSelectedBox.js"></script>
+<script type="text/javascript" src="static/js/autocomplete/autocompleteBundle.js"></script>
+<script type="text/javascript" src="static/js/autocomplete/autocompleteDataProvider.js"></script>
+<script type="text/javascript" src="static/js/autocomplete/autocompleteDialog.js"></script>
+
 
 <form onsubmit="return false;"><div id="stories" style="min-width: 800px; width: 98%;">&nbsp;</div></form>
 <script type="text/javascript">

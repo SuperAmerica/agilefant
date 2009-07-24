@@ -57,3 +57,6 @@ IterationModel.prototype.getStories = function() {
   return this.relations["story"];
 };
 
+IterationModel.prototype.getTasks = function() {
+  return this.relations["task"];
+};

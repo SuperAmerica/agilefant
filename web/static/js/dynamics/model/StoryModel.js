@@ -109,6 +109,14 @@ StoryModel.prototype.setName = function(name) {
   this._commitIfNotInTransaction();
 };
 
+
+StoryModel.prototype.setResponsibles = function(userIds) {
+  this.currentData.userIds = userIds;
+  this.currentData.usersChanged = true;
+  this._commitIfNotInTransaction();
+};
+
+
 StoryModel.prototype.getState = function() {
   return this.currentData.state;
 };
@@ -116,6 +124,7 @@ StoryModel.prototype.setState = function(state) {
   this.currentData.state = state;
   this._commitIfNotInTransaction();
 };
+
 
 StoryModel.prototype.getStoryPoints = function() {
   return this.currentData.storyPoints;
@@ -126,10 +135,8 @@ StoryModel.prototype.setStoryPoints = function(storyPoints) {
 };
 
 
-StoryModel.prototype.setResponsibles = function(userIds) {
-  this.currentData.userIds = userIds;
-  this.currentData.usersChanged = true;
-  this._commitIfNotInTransaction();
+StoryModel.prototype.getTasks = function() {
+  return this.relations["task"];
 }
 
 

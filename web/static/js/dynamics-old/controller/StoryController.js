@@ -52,15 +52,7 @@ StoryController.prototype = {
     var me = this;
     var row = this.view.createRow(task);
     var expand = row.createCell();
-    /*
-    var themes = row.createCell({
-      type: "theme",
-      backlogId: task.backlog.getId(),
-      set: function(themes) { task.setThemes(themes); task.setThemeIds(agilefantUtils.objectToIdArray(themes)); },
-      get: function() { return task.getThemes(); },
-      decorator: agilefantUtils.themesToHTML
-    });
-    */
+
     var name = row.createCell({
       type: "text",
       required: true,
@@ -118,40 +110,7 @@ StoryController.prototype = {
       type: "effort",
       get: function() { return task.getOriginalEstimate(); },
       onEdit: function(noAutoClose) {
-        var a = task;
-        if (task.getState() == "DONE") {
-          return false;
-        }
-        else if (!task.getOriginalEstimate()) {
-          return true;
-        }
-        else if (noAutoClose) {
-          return false;
-        }
-        else {
-          var parent = $("<div />").appendTo(document.body).text("Do you want to reset the original estimate?");
-          var me = this;
-          parent.dialog({
-              resizable: false,
-              height:140,
-              modal: true,
-              close: function() { parent.dialog('destroy'); parent.remove(); },
-              buttons: {
-                'Yes': function() {
-                  $(this).dialog('destroy');
-                  parent.remove();
-                  task.resetOriginalEstimate();
-                  return false;
-                },
-                'No': function() {
-                  $(this).dialog('destroy');
-                  parent.remove();
-                  return false;
-                }
-              }
-          });
-        }
-        return false;
+
       },
       set: function(val) { task.setOriginalEstimate(val); },
       decorator: agilefantParsers.exactEstimateToString

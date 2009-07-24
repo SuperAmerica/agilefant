@@ -30,7 +30,7 @@ StoryController.prototype.removeStory = function() {
 };
 
 StoryController.prototype.editStory = function() {
-
+  this.view.editRow();
 };
 StoryController.prototype.moveStory = function() {
 

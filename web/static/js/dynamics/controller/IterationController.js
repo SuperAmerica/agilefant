@@ -90,7 +90,15 @@ IterationController.prototype.initializeStoryConfig = function() {
 		editable: true,
     edit: {
       editor: "SingleSelection",
-      set: StoryModel.prototype.setState
+      set: StoryModel.prototype.setState,
+      items: {
+        "NOT_STARTED": "Not Started",
+        "STARTED": "Started",
+        "PENDING": "Pending",
+        "BLOCKED": "Blocked",
+        "IMPLEMENTED": "Implemented",
+        "DONE": "Done"
+      }
     }
 	});
 	config.addColumnConfiguration(StoryController.columnIndexes.responsibles, {
@@ -115,7 +123,12 @@ IterationController.prototype.initializeStoryConfig = function() {
 		cssClass: 'story-row',
 		title: "Points",
 		headerTooltip: 'Estimate in story points',
-		get: StoryModel.prototype.getStoryPoints
+		get: StoryModel.prototype.getStoryPoints,
+    editable: true,
+    edit: {
+      editor: "Estimate",
+      set: StoryModel.prototype.setStoryPoints
+    }
 	});
 	config.addColumnConfiguration(StoryController.columnIndexes.el, {
 		minWidth: 30,

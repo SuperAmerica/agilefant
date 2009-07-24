@@ -91,10 +91,18 @@ TableEditors.Text.prototype = new TableEditors.CommonEditor();
 TableEditors.SingleSelection = function(row, cell, options) {
   this.element = $('<select />').appendTo(cell.getElement());
   this.init(row, cell, options);
+  this._renderOptions();
 }
 
 TableEditors.SingleSelection.prototype = new TableEditors.CommonEditor();
 
+TableEditors.SingleSelection.prototype._renderOptions = function() {
+  var me = this;
+  var items = this.options.items;
+  jQuery.each(items, function(key,val) {
+    $('<option />').val(key).text(val).appendTo(me.element);
+  });
+};
 /**
  * @constructor
  * @base CommonEditor
@@ -148,6 +156,15 @@ TableEditors.Wysiwyg.prototype.setEditorValue = function(value) {
   }
   this.actualElement.wysiwyg("setValue",value);
 };
+
+TableEditors.Wysiwyg.prototype.save = function() {
+  if(this.isValid() && this.element) {
+    var value = this.actualElement.val();
+    this.options.set.call(this.model, value);
+    this.close();
+  }
+};
+
 TableEditors.Wysiwyg.prototype.close = function() {
   this.element = null;
   this.actualElement.wysiwyg("remove");

@@ -87,6 +87,9 @@ $(document).ready(function() {
       dataProviderCallCount++;
       return returnedData; 
     };
+    AutocompleteDataProvider.instance.filterIdLists = function(items) {
+      return returnedData;
+    };
     
     this.ac.initialize();
     

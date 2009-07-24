@@ -67,7 +67,7 @@ Autocomplete.prototype.initialize = function() {
   this.getData();
   
   this.searchBox.setItems(this.items);
-  this.selectedBox.setItems(this.items);
+  this.selectedBox.setItems(this.dataProvider.filterIdLists(this.items));
   
   this.searchBox.initialize(this.searchBoxContainer);
   this.selectedBox.initialize(this.selectedBoxContainer);

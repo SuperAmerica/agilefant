@@ -18,7 +18,16 @@ $(document).ready(function() {
     equals(AutocompleteDataProvider.instance, actual, "Data provider is correct");
     equals(AutocompleteDataProvider.getInstance(), AutocompleteDataProvider.instance, "Data provider is singleton");
   });
-  
+  test("Filter items with idList attribute", function() {
+    var raw = [{id: 1, name: "foo", idList: null},
+               {id: 2, name: "foo", idList: []},
+               {id: 3, name: "foo", idList: null},
+               {id: 4, name: "foo", idList: [1,2,3]}];
+    var expected = [{id: 1, name: "foo", idList: null},
+                    {id: 3, name: "foo", idList: null}];
+    var actual = this.dataProvider.filterIdLists(raw);
+    same(actual, expected, "Filted correctly");
+  });
   test("Load data", function() {
     var returnedData = [
       {

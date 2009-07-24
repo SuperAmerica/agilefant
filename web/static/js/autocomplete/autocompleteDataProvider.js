@@ -40,7 +40,16 @@ AutocompleteDataProvider.prototype.get = function(dataType) {
   return this._fetchData(url, params);
 };
 
-
+AutocompleteDataProvider.prototype.filterIdLists = function(items) {
+  var retList = [];
+  for(var i = 0; i < items.length; i++) {
+    var item = items[i];
+    if(!item.idList) {
+      retList.push(item); 
+    }
+  }
+  return retList;
+};
 AutocompleteDataProvider.prototype._fetchData = function(url,params) {
   var returnedData = null;
   jQuery.ajax({

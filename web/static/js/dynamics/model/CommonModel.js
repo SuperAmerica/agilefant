@@ -14,9 +14,8 @@ CommonModel.prototype.initialize = function() {
   this.listeners = [];
   this.id = null;
   this.relations = {};
-  var defaultData = {};
-  this.currentData = defaultData;
-  this.persistedData = defaultData;
+  this.currentData = {};
+  this.persistedData = {};
   this.inTransaction = false;
 };
 
@@ -185,6 +184,8 @@ CommonModel.prototype.commit = function() {
     if(this.currentData.hasOwnProperty(field)) {
       var currentValue = this.currentData[field];
 	    var persistedValue = this.persistedData[field];
+	    
+	    var a = field;
 	    
 	    if (currentValue !== persistedValue) {
 	      changedData[field] = currentValue;

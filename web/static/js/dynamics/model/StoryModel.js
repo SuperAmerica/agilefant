@@ -49,7 +49,8 @@ StoryModel.prototype._saveData = function(id, changedData) {
   
   for (field in changedData) {
     if (changedData.hasOwnProperty(field)) {
-      data["story.name"] = changedData[field];
+      var fieldName = "story." + field;
+      data[fieldName] = changedData[field];
     }
   }
   

@@ -199,11 +199,11 @@
 
 
     <!-- Story actions -->
-    <action name="createStoryForm" method="create" class="storyAction">
+    <action name="createStoryForm" method="execute" class="storyAction">
           <result type="dispatcher">/WEB-INF/jsp/forms/createStory.jsp</result>
     </action>
     
-    <action name="createStory" method="store" class="storyAction">
+    <action name="createStory" method="create" class="storyAction">
       <result type="json">
         <param name="target">story</param>
       </result>

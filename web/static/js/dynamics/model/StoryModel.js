@@ -55,7 +55,13 @@ StoryModel.prototype._saveData = function(id, changedData) {
   }
   
   // Add the id
-  jQuery.extend(data, {storyId: id});
+  if (id) {
+    jQuery.extend(data, {storyId: id});    
+  }
+  else {
+    url = "ajax/createStory.action";
+    data["backlogId"] = 557;
+  }
   
   jQuery.ajax({
     type: "POST",

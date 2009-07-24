@@ -11,7 +11,9 @@ import static org.junit.Assert.assertTrue;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Set;
 
+import org.easymock.EasyMock;
 import org.hibernate.exception.ConstraintViolationException;
 import org.junit.Before;
 import org.junit.Test;
@@ -67,8 +69,10 @@ public class StoryActionTest {
         iter = new Iteration();
         iter.setId(6446);
         
-        storyAction.setStory(story);        
+        storyAction.setStory(story);
+        storyAction.setStoryId(story.getId());
     }
+    
     
     @Test
     public void testRetrieve() {
@@ -98,6 +102,18 @@ public class StoryActionTest {
         
         verifyAll();
     }
+    
+    @Test
+    public void testCreate() {
+        Story returnedStory = new Story();
+        expect(storyBusiness.create(storyAction.getStory(), storyAction.getBacklogId(), storyAction.getUserIds())).andReturn(returnedStory);
+        replayAll();
+        assertEquals(Action.SUCCESS, storyAction.create());
+        verifyAll();
+        
+        assertEquals(storyAction.getStory(), returnedStory);
+    }
+    
     
     @Test
     public void testStore() {

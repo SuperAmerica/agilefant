@@ -20,6 +20,17 @@ public interface StoryBusiness extends GenericBusiness<Story> {
      * @return the newly persisted story
      */
     Story store(Integer storyId, Story dataItem, Integer backlogId, Set<Integer> responsibleIds) throws ObjectNotFoundException, IllegalArgumentException;
+    
+    /**
+     * Create and persist a new story.
+     * @param dataItem the story's data
+     * @param backlogId the story's parent backlog's id
+     * @param responsibleIds the id's of the responsible users
+     * @return the newly persisted story
+     * @throws IllegalArgumentException TODO
+     * @throws ObjectNotFoundException TODO
+     */
+    Story create(Story dataItem, Integer backlogId, Set<Integer> responsibleIds) throws IllegalArgumentException, ObjectNotFoundException;
   
     public List<Story> getStoriesByBacklog(Backlog backlog);
 

@@ -14,6 +14,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.easymock.Capture;
 import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Test;
@@ -42,6 +43,9 @@ public class StoryBusinessTest {
     BacklogDAO backlogDAO;
     UserDAO userDAO;
     ProjectBusiness projectBusiness;
+    BacklogHistoryEntryBusiness blheBusiness;
+    IterationHistoryEntryBusiness iheBusiness;
+    
     
     Backlog backlog;
     Iteration iteration;
@@ -71,12 +75,9 @@ public class StoryBusinessTest {
     }
     
     @Before
-    public void setUp_testedClass() {
-        storyBusiness = new StoryBusinessImpl();
-        this.setUp_dependencies();
-    }
-    
     public void setUp_dependencies() {
+        storyBusiness = new StoryBusinessImpl();
+        
         backlogDAO = createMock(BacklogDAO.class);
         storyBusiness.setBacklogDAO(backlogDAO);
         
@@ -91,6 +92,12 @@ public class StoryBusinessTest {
         
         projectBusiness = createMock(ProjectBusiness.class);
         storyBusiness.setProjectBusiness(projectBusiness);
+        
+        blheBusiness = createMock(BacklogHistoryEntryBusiness.class);
+        storyBusiness.setBacklogHistoryEntryBusiness(blheBusiness);
+        
+        iheBusiness = createMock(IterationHistoryEntryBusiness.class);
+        storyBusiness.setIterationHistoryEntryBusiness(iheBusiness);
     }
     
     @Before
@@ -118,11 +125,11 @@ public class StoryBusinessTest {
     }
 
     private void replayAll() {
-        replay(backlogDAO, storyDAO, iterationDAO, userDAO, projectBusiness);
+        replay(backlogDAO, storyDAO, iterationDAO, userDAO, projectBusiness, iheBusiness, blheBusiness);
     }
     
     private void verifyAll() {
-        verify(backlogDAO, storyDAO, iterationDAO, userDAO, projectBusiness);
+        verify(backlogDAO, storyDAO, iterationDAO, userDAO, projectBusiness, iheBusiness, blheBusiness);
     }
 
     
@@ -322,7 +329,14 @@ public class StoryBusinessTest {
                 storyPriorityUpdated = true;
             }
         };
-        this.setUp_dependencies();
+        backlogDAO = createMock(BacklogDAO.class);
+        storyBusiness.setBacklogDAO(backlogDAO);
+        
+        storyDAO = createMock(StoryDAO.class);
+        storyBusiness.setStoryDAO(storyDAO);
+        
+        userDAO = createMock(UserDAO.class);
+        storyBusiness.setUserDAO(userDAO);
     }
     
     @Test
@@ -402,6 +416,95 @@ public class StoryBusinessTest {
         
         assertTrue(storyBacklogUpdated);
         assertTrue(storyPriorityUpdated);
+    }
+    
+    
+    private void expectHistoryUpdates(Backlog blog) {
+        if (blog instanceof Iteration) {
+            blheBusiness.updateHistory(blog.getId());
+            iheBusiness.updateIterationHistory(blog.getId());
+        }
+        else if (blog instanceof Project) {
+            blheBusiness.updateHistory(blog.getId());
+        }
+    }
+    
+    
+    @Test
+    public void testCreateStory_noResponsibles() {
+        Backlog blog = new Iteration();
+        expect(backlogDAO.get(5)).andReturn(blog);
+        
+        Capture<Story> capturedStory = new Capture<Story>();
+        expect(storyDAO.create(EasyMock.capture(capturedStory))).andReturn(88);
+        
+        expectHistoryUpdates(blog);
+        
+        Story returnedStory = new Story();
+        expect(storyDAO.get(88)).andReturn(returnedStory);
+        
+        Story dataItem = new Story();
+        dataItem.setName("Foofaa");
+        dataItem.setDescription("Foofaa");
+        dataItem.setStoryPoints(22);
+        dataItem.setState(StoryState.STARTED);
+        
+        replayAll();
+        Story actual = this.storyBusiness.create(dataItem, 5, null);
+        verifyAll();
+        
+        assertEquals(actual.getClass(), Story.class);
+        assertEquals(blog, capturedStory.getValue().getBacklog());
+        
+        assertEquals(dataItem.getName(), capturedStory.getValue().getName());
+        assertEquals(dataItem.getDescription(), capturedStory.getValue().getDescription());
+        assertEquals(dataItem.getStoryPoints(), capturedStory.getValue().getStoryPoints());
+        assertEquals(dataItem.getState(), capturedStory.getValue().getState());
+    }
+    
+    @Test
+    public void testCreateStory_withResponsibles() {
+        User user1 = new User();
+        User user2 = new User();
+        
+        Backlog blog = new Project();
+        expect(backlogDAO.get(5)).andReturn(blog);
+        expect(userDAO.get(2)).andReturn(user1);
+        expect(userDAO.get(23)).andReturn(user2);
+        
+        Capture<Story> capturedStory = new Capture<Story>();
+        expect(storyDAO.create(EasyMock.capture(capturedStory))).andReturn(88);
+        
+        expectHistoryUpdates(blog);
+        
+        Story returnedStory = new Story();
+        expect(storyDAO.get(88)).andReturn(returnedStory);
+        
+        replayAll();
+        Story actual = this.storyBusiness.create(new Story(), 5,
+                new HashSet<Integer>(Arrays.asList(2,23)));
+        verifyAll();
+        
+        assertSame(actual, returnedStory);
+        assertTrue(capturedStory.getValue().getResponsibles().contains(user1));
+        assertTrue(capturedStory.getValue().getResponsibles().contains(user2));
+        assertEquals(blog, capturedStory.getValue().getBacklog());
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void testCreateStory_nullDataItem() {
+        this.storyBusiness.create(null, 123, new HashSet<Integer>());
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void testCreateStory_nullBacklogId() {
+        this.storyBusiness.create(new Story(), null, new HashSet<Integer>());
+    }
+    
+    @Test(expected = ObjectNotFoundException.class)
+    public void testCreateStory_backlogNotFound() {
+        expect(backlogDAO.get(5)).andReturn(null);
+        this.storyBusiness.create(new Story(), 222, new HashSet<Integer>());
     }
 
 }

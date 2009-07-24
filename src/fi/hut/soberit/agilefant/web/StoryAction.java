@@ -30,7 +30,7 @@ public class StoryAction extends ActionSupport implements CRUDAction, Prefetchin
 
     private int backlogId = 0;
 
-    private int storyId;
+    private Integer storyId;
 
     private StoryState state;
     
@@ -58,11 +58,17 @@ public class StoryAction extends ActionSupport implements CRUDAction, Prefetchin
     @Autowired
     private TransferObjectBusiness transferObjectBusiness;
 
+
+    @Override
+    public String execute() throws Exception {
+        story = new Story();
+        return super.execute();
+    }
+    
     // CRUD
     
     public String create() {
-        story = new Story();
-        story.setPriority(-1);
+        story = this.storyBusiness.create(story, backlogId, userIds);
         return Action.SUCCESS;
     }
 
@@ -173,11 +179,11 @@ public class StoryAction extends ActionSupport implements CRUDAction, Prefetchin
         this.userIds = userIds;
     }
 
-    public int getStoryId() {
+    public Integer getStoryId() {
         return storyId;
     }
 
-    public void setStoryId(int storyId) {
+    public void setStoryId(Integer storyId) {
         this.storyId = storyId;
     }
     

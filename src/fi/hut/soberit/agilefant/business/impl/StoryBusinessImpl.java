@@ -129,35 +129,73 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         if (storyId == null) {
             throw new IllegalArgumentException("Story id should be given");
         }
-        Story persisted = this.retrieve(storyId);
-               
-        if (responsibleIds != null) {
-            persisted.getResponsibles().clear();
-            for (Integer userId : responsibleIds) {
-                persisted.getResponsibles().add(userDAO.get(userId));
-            }
-        }
         
-        // Copy the fields
-        persisted.setDescription(dataItem.getDescription());
-        persisted.setName(dataItem.getName());
-        persisted.setState(dataItem.getState());
-        persisted.setStoryPoints(dataItem.getStoryPoints());
+        Story persisted = this.retrieve(storyId);
+        
+        setResponsibles(persisted, responsibleIds);
+        populateStoryFields(persisted, dataItem);
         
         // Store the story
         storyDAO.store(persisted);
         
-        
         // Set the backlog if backlogId given
         if (backlogId != null) {
-            Backlog backlog = backlogDAO.get(backlogId);
-            this.moveStoryToBacklog(persisted, backlog);
+            this.moveStoryToBacklog(persisted, backlogDAO.get(backlogId));
         }
         
         this.updateStoryPriority(persisted, dataItem.getPriority());
         
         return persisted;
     }
+
+    private void populateStoryFields(Story persisted, Story dataItem) {
+        persisted.setDescription(dataItem.getDescription());
+        persisted.setName(dataItem.getName());
+        persisted.setState(dataItem.getState());
+        persisted.setStoryPoints(dataItem.getStoryPoints());
+    }
+
+    private void setResponsibles(Story story, Set<Integer> responsibleIds) {
+        if (responsibleIds != null) {
+            story.getResponsibles().clear();
+            for (Integer userId : responsibleIds) {
+                story.getResponsibles().add(userDAO.get(userId));
+            }
+        }
+    }
+    
+    
+    @Transactional
+    /** {@inheritDoc} */
+    public Story create(Story dataItem, Integer backlogId, Set<Integer> responsibleIds)
+        throws IllegalArgumentException, ObjectNotFoundException {
+        if (dataItem == null || backlogId == null) {
+            throw new IllegalArgumentException("DataItem and backlogId should not be null");
+        }
+        Backlog backlog = this.backlogDAO.get(backlogId);
+        if (backlog == null) {
+            throw new ObjectNotFoundException("backlog.notFound");
+        }
+        
+        Story story = new Story();
+        
+        this.setResponsibles(story, responsibleIds);
+        this.populateStoryFields(story, dataItem);
+        story.setBacklog(backlog);
+        
+        int newId = (Integer)storyDAO.create(story);
+        
+        if (backlog instanceof Iteration) {
+            iterationHistoryEntryBusiness.updateIterationHistory(backlog.getId());
+            backlogHistoryEntryBusiness.updateHistory(backlog.getId());
+        }
+        else if (backlog instanceof Project) {
+            backlogHistoryEntryBusiness.updateHistory(backlog.getId());
+        }
+        
+        return storyDAO.get(newId);
+    };
+    
     
 //    public Story store(int storyId, int backlogId, Story dataItem,
 //            Set<Integer> responsibles, int priority)

@@ -4,6 +4,7 @@ import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
+import static org.easymock.EasyMock.isA;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
@@ -13,7 +14,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.easymock.Capture;
 import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,7 +36,7 @@ import fi.hut.soberit.agilefant.util.ResponsibleContainer;
 
 public class StoryBusinessTest {
 
-    StoryBusinessImpl storyBusiness = new StoryBusinessImpl();
+    StoryBusinessImpl storyBusiness;
     StoryDAO storyDAO;
     IterationDAO iterationDAO;
     BacklogDAO backlogDAO;
@@ -54,6 +54,9 @@ public class StoryBusinessTest {
     Story storyInProject;
     Story storyInProduct;
     
+    Boolean storyPriorityUpdated;
+    Boolean storyBacklogUpdated;
+    
     @Before
     public void setUp() {
         backlog = new Product();
@@ -62,9 +65,17 @@ public class StoryBusinessTest {
         story1 = new Story();
         story1.setId(666);
         story2 = new Story();
+        
+        storyPriorityUpdated = false;
+        storyBacklogUpdated = false;
     }
     
     @Before
+    public void setUp_testedClass() {
+        storyBusiness = new StoryBusinessImpl();
+        this.setUp_dependencies();
+    }
+    
     public void setUp_dependencies() {
         backlogDAO = createMock(BacklogDAO.class);
         storyBusiness.setBacklogDAO(backlogDAO);
@@ -299,8 +310,25 @@ public class StoryBusinessTest {
     
     
     
+    private void store_createMockStoryBusiness() {       
+        this.storyBusiness = new StoryBusinessImpl() {
+            @Override
+            public void moveStoryToBacklog(Story story, Backlog backlog) {
+                storyBacklogUpdated = true;
+            }
+            
+            @Override
+            public void updateStoryPriority(Story story, int insertAtPriority) {
+                storyPriorityUpdated = true;
+            }
+        };
+        this.setUp_dependencies();
+    }
+    
     @Test
     public void testStore_updateResponsibles() {
+        this.store_createMockStoryBusiness();
+        
         Backlog backlog = storyInIteration.getBacklog();
         User user1 = new User();
         User user2 = new User();
@@ -316,6 +344,7 @@ public class StoryBusinessTest {
         dataItem.setDescription("Fubar");
         dataItem.setStoryPoints(333);
         dataItem.setState(StoryState.PENDING);
+        dataItem.setPriority(222);
         
         replayAll();
         Story actual = storyBusiness.store(storyInIteration.getId(),
@@ -329,18 +358,22 @@ public class StoryBusinessTest {
         assertEquals(dataItem.getDescription(), actual.getDescription());
         assertEquals(dataItem.getStoryPoints(), actual.getStoryPoints());
         assertEquals(dataItem.getState(), actual.getState());
-
+        
+        assertTrue(storyPriorityUpdated);
+        assertFalse(storyBacklogUpdated);
     }
     
     
     @Test(expected = IllegalArgumentException.class)
     public void testStore_nullStoryId() {
+        this.store_createMockStoryBusiness();
         storyBusiness.store(null, new Story(), 123, new HashSet<Integer>());
     }
     
     
     @Test(expected = ObjectNotFoundException.class)
     public void testStore_noSuchStory() {
+        this.store_createMockStoryBusiness();
         expect(storyDAO.get(222)).andReturn(null);
         replayAll();
         storyBusiness.store(222, new Story(), 123, new HashSet<Integer>());
@@ -350,6 +383,7 @@ public class StoryBusinessTest {
     
     @Test
     public void testStore_updateBacklogAndClearResponsibles() {
+        this.store_createMockStoryBusiness();
         Backlog newBacklog = new Project();
         newBacklog.setId(123);
         Set<User> users = new HashSet<User>(Arrays.asList(new User(), new User()));
@@ -364,8 +398,10 @@ public class StoryBusinessTest {
                 new Story(), newBacklog.getId(), new HashSet<Integer>());
         verifyAll();
         
-        assertSame(newBacklog, actual.getBacklog());
         assertEquals(0, actual.getResponsibles().size());
+        
+        assertTrue(storyBacklogUpdated);
+        assertTrue(storyPriorityUpdated);
     }
 
 }

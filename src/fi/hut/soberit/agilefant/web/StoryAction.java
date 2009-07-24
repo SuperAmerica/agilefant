@@ -42,7 +42,7 @@ public class StoryAction extends ActionSupport implements CRUDAction, Prefetchin
 
     private Backlog backlog;
 
-    private Set<Integer> userIds = new HashSet<Integer>();
+    private Set<Integer> userIds;
     
     private Collection<Task> storyContents = new ArrayList<Task>();
     

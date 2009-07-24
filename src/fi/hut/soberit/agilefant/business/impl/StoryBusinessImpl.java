@@ -130,14 +130,7 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
             throw new IllegalArgumentException("Story id should be given");
         }
         Story persisted = this.retrieve(storyId);
-        
-        // Set the backlog if backlogId given
-        if (backlogId != null) {
-            Backlog backlog = backlogDAO.get(backlogId);
-            persisted.setBacklog(backlog);
-            // TODO: update histories
-        }
-        
+               
         if (responsibleIds != null) {
             persisted.getResponsibles().clear();
             for (Integer userId : responsibleIds) {
@@ -153,6 +146,15 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         
         // Store the story
         storyDAO.store(persisted);
+        
+        
+        // Set the backlog if backlogId given
+        if (backlogId != null) {
+            Backlog backlog = backlogDAO.get(backlogId);
+            this.moveStoryToBacklog(persisted, backlog);
+        }
+        
+        this.updateStoryPriority(persisted, dataItem.getPriority());
         
         return persisted;
     }
@@ -288,11 +290,10 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
 
     // 090605 Reko: Copied from update iteration goal priority
     public void updateStoryPriority(Story story, int insertAtPriority) {
-        if (insertAtPriority == story.getPriority()) {
+        if (insertAtPriority == story.getPriority() || (story.getBacklog() instanceof Product)) {
             return;
         }
-        if (story.getBacklog() == null
-                || (story.getBacklog() instanceof Product)) {
+        if (story.getBacklog() == null) {
             throw new IllegalArgumentException("backlog.notFound");
         }
         Backlog backlog = story.getBacklog();

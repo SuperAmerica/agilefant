@@ -11,6 +11,8 @@ var DynamicTableCell = function(row, config) {
 	this.initialize();
 };
 
+DynamicTableCell.prototype = new ViewPart();
+
 /**
  * Set up cell DOM elements and styles
  */
@@ -33,6 +35,7 @@ DynamicTableCell.prototype.initialize = function() {
 	if (this.config.getSubViewFactory()) {
 		this.subView = this.config.getSubViewFactory().call(this.row
 				.getController(), this, this.row.getModel());
+	
 	}
 	if(!this.config.isVisible()) {
 	  this.element.hide();
@@ -51,12 +54,14 @@ DynamicTableCell.prototype.getElement = function() {
 
 DynamicTableCell.prototype.hide = function() {
   this.cellContents.hide();
+  this.element.hide();
   if(this.subView) {
     this.subView.hide();
   }
 };
 DynamicTableCell.prototype.show = function() {
   this.cellContents.show();
+  this.element.show();
   if(this.subView) {
     this.subView.show();
   }
@@ -72,9 +77,11 @@ DynamicTableCell.prototype.render = function() {
 	if (decorator) {
 		value = decorator(value);
 	}
+	/*
 	if (this.subView) {
-		this.subView.render();
+		//this.subView.render();
 	}
+	*/
 	this.setValue(value);
 };
 

@@ -17,6 +17,8 @@ var DynamicTableToggleView = function(options, controller, parentView) {
   }
 };
 
+DynamicTableToggleView.prototype = new ViewPart();
+
 DynamicTableToggleView.collapsed = 1;
 DynamicTableToggleView.expanded = 2;
 
@@ -32,17 +34,9 @@ DynamicTableToggleView.prototype.initialize = function() {
     }
     return false;
   });
+  this.element = this.button;
 };
 
-DynamicTableToggleView.prototype.render = function() {
-  
-};
-DynamicTableToggleView.prototype.show = function() {
-  this.button.show();
-};
-DynamicTableToggleView.prototype.hide = function() {
-  this.button.hide();
-};
 DynamicTableToggleView.prototype.collapse = function() {
   this.button.attr("title", "Expand").removeClass("dynamictable-collapse")
       .addClass("dynamictable-expand");

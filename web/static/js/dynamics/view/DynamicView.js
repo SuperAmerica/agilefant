@@ -9,6 +9,8 @@ var DynamicView = function() {
 	
 };
 
+DynamicView.prototype = new ViewPart();
+
 /**
  * Initialization method for views. Sets controller, model
  * and parent view. Attaches event listeners for the given model.
@@ -24,9 +26,9 @@ DynamicView.prototype.init = function(controller, model, parent) {
 	this.parentElement = null;
 	//this.element = null;
 	this.viewId = DynamicView.instanceCounter++;
-	if(parent instanceof DynamicView) {
+	if(parent instanceof ViewPart) {
 		this.parentView = parent;
-		this.parentView.addSubView(this.viewId, this);
+		//this.parentView.addSubView(this.viewId, this);
 		this.parentElement = parent.getElement();
 	} else {
 		this.parentElement = parent;
@@ -54,9 +56,6 @@ DynamicView.prototype.getController = function() {
 };
 DynamicView.prototype.getParentElement = function() {
 	return this.parentElement;
-};
-DynamicView.prototype.getElement = function() {
-	return this.element;
 };
 DynamicView.prototype.getParentView = function() {
 	return this.parentView;

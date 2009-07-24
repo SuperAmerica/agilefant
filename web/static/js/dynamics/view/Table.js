@@ -115,6 +115,14 @@ DynamicTable.prototype._computeColumns = function() {
 DynamicTable.prototype.layout = function() {
 	
 };
+DynamicTable.prototype.show = function() {
+  this.container.show();
+  this.element.show();
+};
+DynamicTable.prototype.hide = function() {
+  this.container.hide();
+  this.element.hide();
+}
 
 DynamicTable.prototype._renderHeader = function() {
 	this.header = $('<div />').prependTo(this.element)

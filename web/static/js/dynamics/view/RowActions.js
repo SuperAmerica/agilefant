@@ -7,6 +7,8 @@ var DynamicTableRowActions = function(items, controller, model, parentView) {
   this.initialize();
 };
 
+DynamicTableRowActions.prototype = new ViewPart();
+
 /**
  * @private
  */
@@ -27,19 +29,9 @@ DynamicTableRowActions.prototype.initialize = function() {
     return false;
   };
   this.button.click(this.toggleMenuListener);
+  this.element = this.container;
 };
 
-DynamicTableRowActions.prototype.render = function() {
-  
-};
-
-DynamicTableRowActions.prototype.show = function() {
-  this.container.show();
-};
-
-DynamicTableRowActions.prototype.hide = function() {
-  this.container.hide();
-};
 /**
  * Display the menu
  */

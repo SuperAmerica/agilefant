@@ -194,6 +194,7 @@
 			</tr>
 		</tbody>
 	</table>
+  <script type="text/javascript" src="static/js/dynamics/view/ViewPart.js"></script>
 <script type="text/javascript" src="static/js/dynamics/view/DynamicView.js"></script>
 <script type="text/javascript" src="static/js/dynamics/view/Table.js"></script>
 <script type="text/javascript" src="static/js/dynamics/view/Row.js"></script>
@@ -217,6 +218,8 @@
 <script type="text/javascript" src="static/js/dynamics/controller/BacklogController.js"></script>
 <script type="text/javascript" src="static/js/dynamics/controller/IterationController.js"></script>
 <script type="text/javascript" src="static/js/dynamics/controller/StoryController.js"></script>
+<script type="text/javascript" src="static/js/dynamics/controller/TaskController.js"></script>
+
 
 <script type="text/javascript" src="static/js/dynamics/Dynamics.events.js"></script>
 

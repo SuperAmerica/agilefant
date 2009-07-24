@@ -182,7 +182,8 @@ IterationController.prototype.initializeStoryConfig = function() {
 	config.addColumnConfiguration(StoryController.columnIndexes.tasksData, {
 		fullWidth: true,
 		visible: false,
-		cssClass: 'story-data'
+		cssClass: 'story-data' ,
+		subViewFactory: StoryController.prototype.taskListFactory
 	});
 	this.storyListConfig = config;
 };

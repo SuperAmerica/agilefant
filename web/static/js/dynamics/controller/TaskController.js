@@ -5,13 +5,11 @@ var TaskController = function() {
 TaskController.columnIndexes = {
     name: 0,
     state: 1,
-    state: 2,
-    priority: 3,
-    user: 4,
-    el: 5,
-    oe: 6,
-    es: 7,
-    actions: 8,
-    desc: 9,
-    data: 10
+    responsibles: 2,
+    el: 3,
+    oe: 4,
+    es: 5,
+    actions: 6,
+    description: 7,
+    data: 8
 };

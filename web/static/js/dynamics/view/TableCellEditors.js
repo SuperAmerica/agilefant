@@ -26,7 +26,7 @@ TableEditors.CommonEditor.prototype.init = function(row, cell, options) {
  */
 TableEditors.CommonEditor.prototype.save = function() {
   if(this.isValid() && this.element) {
-    this.options.set.call(this.model, this.element.val());
+    this.options.set.call(this.model, this.getEditorValue());
     this.close();
   }
 };
@@ -69,6 +69,10 @@ TableEditors.CommonEditor.prototype.setEditorValue = function(value) {
     value = this.options.get.call(this.model);
   }
   this.element.val(value);
+};
+
+TableEditors.CommonEditor.prototype.getEditorValue = function() {
+  return this.element.val();
 };
 
 /**
@@ -157,12 +161,8 @@ TableEditors.Wysiwyg.prototype.setEditorValue = function(value) {
   this.actualElement.wysiwyg("setValue",value);
 };
 
-TableEditors.Wysiwyg.prototype.save = function() {
-  if(this.isValid() && this.element) {
-    var value = this.actualElement.val();
-    this.options.set.call(this.model, value);
-    this.close();
-  }
+TableEditors.Wysiwyg.prototype.getEditorValue = function() {
+  return this.actualElement.val();
 };
 
 TableEditors.Wysiwyg.prototype.close = function() {
@@ -170,6 +170,11 @@ TableEditors.Wysiwyg.prototype.close = function() {
   this.actualElement.wysiwyg("remove");
   this.actualElement.remove();
   this.cell.editorClosing();
+};
+TableEditors.Wysiwyg.prototype._handleKeyEvent = function(event) {
+  if(event.keyCode === 27) {
+    this.close();
+  }
 };
 
 /**
@@ -181,5 +186,7 @@ TableEditors.User = function(row, cell, options) {
 };
 TableEditors.User.prototype = new TableEditors.CommonEditor();
 
+TableEditors.User.prototype._registerEvents = function() {
+};
 
 

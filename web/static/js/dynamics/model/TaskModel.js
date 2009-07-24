@@ -18,21 +18,40 @@ var TaskModel = function() {
   this.relations = {
     story: {}  
   };
+  this.copiedFields = {
+    "name": "name",
+    "state": "state",
+    "description": "description",
+    "effortLeft": "effortLeft",
+    "originalEstimate": "originalEstimate"
+  }
 };
-
-TaskModel.acceptedClasses =
-  [
-  "fi.hut.soberit.agilefant.model.Task",
-  "fi.hut.soberit.agilefant.model.TaskTO"
-   ];
 
 TaskModel.prototype = new CommonModel();
 
 TaskModel.prototype._setData = function(newData) {
-  
+  this.id = newData.id;
 };
 
-TaskModel.prototype.loadData = function() {
-  
+/* GETTERS AND SETTERS IN ALPHABETICAL ORDER */
+TaskModel.prototype.getDescription = function() {
+  return this.currentData.description
 };
+
+TaskModel.prototype.getEffortLeft = function() {
+  return this.currentData.effortLeft;
+};
+
+TaskModel.prototype.getName = function() {
+  return this.currentData.name;
+};
+
+TaskModel.prototype.getOriginalEstimate = function() {
+  return this.currentData.originalEstimate;
+};
+
+TaskModel.prototype.getState = function() {
+  return this.currentData.state;
+};
+
 

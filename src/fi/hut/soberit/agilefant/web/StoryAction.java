@@ -42,7 +42,9 @@ public class StoryAction extends ActionSupport implements CRUDAction, Prefetchin
 
     private Backlog backlog;
 
-    private Set<Integer> userIds;
+    private Set<Integer> userIds = new HashSet<Integer>();
+    
+    private boolean usersChanged = false;
     
     private Collection<Task> storyContents = new ArrayList<Task>();
     
@@ -85,7 +87,11 @@ public class StoryAction extends ActionSupport implements CRUDAction, Prefetchin
     }
 
     public String store() {
-        story = storyBusiness.store(storyId, story, null, null);
+        Set<Integer> users = null;
+        if (usersChanged) {
+            users = this.userIds;
+        }
+        story = storyBusiness.store(storyId, story, null, users);
 //        story = this.toTransferObject(story);
         return Action.SUCCESS;
     }
@@ -230,6 +236,10 @@ public class StoryAction extends ActionSupport implements CRUDAction, Prefetchin
 
     public StoryMetrics getMetrics() {
         return metrics;
+    }
+
+    public void setUsersChanged(boolean usersChanged) {
+        this.usersChanged = usersChanged;
     }
     
 }

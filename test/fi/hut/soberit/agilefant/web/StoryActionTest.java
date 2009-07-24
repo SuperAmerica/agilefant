@@ -117,15 +117,25 @@ public class StoryActionTest {
     
     @Test
     public void testStore() {
-        expect(storyBusiness.store(story.getId(),
-                story, null, null))
+        storyAction.setUsersChanged(false);
+        
+        expect(storyBusiness.store(story.getId(), story, null, null))
                 .andReturn(story);
-//        expectStoryToTransferObject(null);
         replayAll();
         assertEquals(Action.SUCCESS, storyAction.store());
         verifyAll();
     }
     
+    @Test
+    public void testStore_changeResponsibles() {
+        storyAction.setUsersChanged(true);
+        
+        expect(storyBusiness.store(story.getId(), story, null, storyAction.getUserIds()))
+                .andReturn(story);
+        replayAll();
+        assertEquals(Action.SUCCESS, storyAction.store());
+        verifyAll();
+    }
     
     @Test
     public void testStoryContents() {

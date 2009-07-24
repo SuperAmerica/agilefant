@@ -47,6 +47,11 @@ StoryModel.prototype._saveData = function(id, changedData) {
   var url = "ajax/storeStory.action";
   var data = {};
   
+  if (changedData["usersChanged"]) {
+    jQuery.extend(data, {userIds: changedData.userIds, usersChanged: true});
+    delete changedData.userIds;
+    delete changedData.usersChanged;
+  }
   for (field in changedData) {
     if (changedData.hasOwnProperty(field)) {
       var fieldName = "story." + field;
@@ -119,5 +124,12 @@ StoryModel.prototype.setStoryPoints = function(storyPoints) {
   this.currentData.storyPoints = storyPoints;
   this._commitIfNotInTransaction();
 };
+
+
+StoryModel.prototype.setResponsibles = function(userIds) {
+  this.currentData.userIds = userIds;
+  this.currentData.usersChanged = true;
+  this._commitIfNotInTransaction();
+}
 
 

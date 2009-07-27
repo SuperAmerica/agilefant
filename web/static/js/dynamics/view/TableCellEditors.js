@@ -19,7 +19,7 @@ TableEditors.CommonEditor.prototype.init = function(row, cell, options) {
   this.model = row.getModel();
   this._registerEvents();
   this.setEditorValue();
-  this.cell.hide();
+  this.cell.editorOpening();
 };
 /**
  * Save editor value if editor content is valid
@@ -78,7 +78,7 @@ TableEditors.CommonEditor.prototype.getEditorValue = function() {
 /**
  * 
  * @constructor
- * @base CommonEditor
+ * @base TableEditors.CommonEditor
  */
 TableEditors.Text = function(row, cell, options) {
   this.element = $('<input type="text"/>').width("80%").appendTo(
@@ -90,13 +90,13 @@ TableEditors.Text.prototype = new TableEditors.CommonEditor();
 /**
  * 
  * @constructor
- * @base CommonEditor
+ * @base TableEditors.CommonEditor
  */
 TableEditors.SingleSelection = function(row, cell, options) {
   this.element = $('<select />').appendTo(cell.getElement());
   this.init(row, cell, options);
   this._renderOptions();
-}
+};
 
 TableEditors.SingleSelection.prototype = new TableEditors.CommonEditor();
 
@@ -109,7 +109,7 @@ TableEditors.SingleSelection.prototype._renderOptions = function() {
 };
 /**
  * @constructor
- * @base CommonEditor
+ * @base TableEditors.CommonEditor
  */
 TableEditors.Date = function(row, cell, options) {
   this.element = $('<input type="text"/>').width("80%").appendTo(
@@ -120,7 +120,7 @@ TableEditors.Date.prototype = new TableEditors.CommonEditor();
 
 /**
  * @constructor
- * @base CommonEditor
+ * @base TableEditors.CommonEditor
  */
 TableEditors.Estimate = function(row, cell, options) {
   this.element = $('<input type="text"/>').width("80%").appendTo(
@@ -131,7 +131,7 @@ TableEditors.Estimate.prototype = new TableEditors.CommonEditor();
 
 /**
  * @constructor
- * @base CommonEditor
+ * @base TableEditors.CommonEditor
  */
 TableEditors.Date = function(row, cell, options) {
   this.element = $('<input type="text"/>').width("80%").appendTo(
@@ -142,7 +142,7 @@ TableEditors.Date.prototype = new TableEditors.CommonEditor();
 
 /**
  * @constructor
- * @base CommonEditor
+ * @base TableEditors.CommonEditor
  */
 
 TableEditors.Wysiwyg = function(row, cell, options) {
@@ -179,7 +179,7 @@ TableEditors.Wysiwyg.prototype._handleKeyEvent = function(event) {
 
 /**
  * @constructor
- * @base CommonEditor
+ * @base TableEditors.CommonEditor
  */
 TableEditors.User = function(row, cell, options) {
   this.init(row, cell, options);

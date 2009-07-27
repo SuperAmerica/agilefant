@@ -61,8 +61,13 @@ DynamicTableRow.prototype.createCell = function(config) {
 /**
  * Create cells from table configuration
  */
-DynamicTableRow.prototype.autoCreateCells = function() {
+DynamicTableRow.prototype.autoCreateCells = function(disableSubViews) {
 	for(var i = 0; i < this.config.length; i ++) {
+	  var cellConfig = this.config[i];
+	  if(disableSubViews) {
+	     cellConfig = $.extend(false, cellConfig);
+	     cellConfig.options.subViewFactory = null;
+	  }
 		this.createCell(this.config[i]);
 	}
 };

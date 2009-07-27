@@ -122,7 +122,7 @@ DynamicTable.prototype.show = function() {
 DynamicTable.prototype.hide = function() {
   this.container.hide();
   this.element.hide();
-}
+};
 
 DynamicTable.prototype._renderHeader = function() {
 	this.header = $('<div />').prependTo(this.element)
@@ -189,6 +189,7 @@ DynamicTable.prototype._addSectionToTable = function(section) {
 
 DynamicTable.prototype._renderFromDataSource = function(dataArray) {
 	var newHashes = [];
+	var model;
 	//get all hash codes for the new dataset
 	for(var i = 0; i < dataArray.length; i++) {
 	  newHashes.push(dataArray[i].getHashCode());
@@ -196,7 +197,7 @@ DynamicTable.prototype._renderFromDataSource = function(dataArray) {
 	
 	//check if some rows have been removed
   for(i = 0; i < this.middleRows.length; i++) {
-    var model = this.middleRows[i].getModel();
+    model = this.middleRows[i].getModel();
     if(jQuery.inArray(model.getHashCode(), newHashes) === -1) {
       this.middleRows[i].remove();
     }
@@ -204,7 +205,7 @@ DynamicTable.prototype._renderFromDataSource = function(dataArray) {
   
   //add new rows
 	for(i = 0; i < dataArray.length; i++) {
-	  var model = dataArray[i];
+	  model = dataArray[i];
 	  if(jQuery.inArray(model.getHashCode(), this.rowHashes) === -1) {
 	    this._dataSourceRow(model);
 	  }

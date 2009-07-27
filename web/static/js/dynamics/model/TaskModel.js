@@ -24,7 +24,7 @@ var TaskModel = function() {
     "description": "description",
     "effortLeft": "effortLeft",
     "originalEstimate": "originalEstimate"
-  }
+  };
 };
 
 TaskModel.prototype = new CommonModel();
@@ -35,7 +35,7 @@ TaskModel.prototype._setData = function(newData) {
 
 /* GETTERS AND SETTERS IN ALPHABETICAL ORDER */
 TaskModel.prototype.getDescription = function() {
-  return this.currentData.description
+  return this.currentData.description;
 };
 
 TaskModel.prototype.getEffortLeft = function() {

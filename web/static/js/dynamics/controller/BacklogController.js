@@ -1,3 +1,8 @@
+/**
+ * 
+ * @base CommonController
+ * @constructor
+ */
 var BacklogController = function() {
 	
 };

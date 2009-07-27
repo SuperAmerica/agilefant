@@ -1,16 +1,18 @@
 var DynamicTableToggleView = function(options, controller, parentView) {
   this.currentMode = DynamicTableToggleView.up;
   this.options = {
-      collapse: function() {},
-      expand: function() {},
-      expanded: false
+    collapse : function() {
+    },
+    expand : function() {
+    },
+    expanded : false
   };
   jQuery.extend(this.options, options);
   this.controller = controller;
   this.parentView = parentView;
   this.button = null;
   this.initialize();
-  if(this.options.expanded) {
+  if (this.options.expanded) {
     this.expand();
   } else {
     this.collapse();
@@ -23,8 +25,7 @@ DynamicTableToggleView.collapsed = 1;
 DynamicTableToggleView.expanded = 2;
 
 DynamicTableToggleView.prototype.initialize = function() {
-  this.button = $("<div />").appendTo(
-      this.parentView.getElement());
+  this.button = $("<div />").appendTo(this.parentView.getElement());
   var me = this;
   this.button.click(function(event) {
     if (me.button.hasClass("dynamictable-expand")) {
@@ -36,17 +37,21 @@ DynamicTableToggleView.prototype.initialize = function() {
   });
   this.element = this.button;
 };
-
-DynamicTableToggleView.prototype.collapse = function() {
+DynamicTableToggleView.prototype.showCollapsed = function() {
   this.button.attr("title", "Expand").removeClass("dynamictable-collapse")
       .addClass("dynamictable-expand");
   this.currentMode = DynamicTableToggleView.collapsed;
+};
+DynamicTableToggleView.prototype.collapse = function() {
+  this.showCollapsed();
   this.options.collapse.call(this.controller, this);
 };
-
-DynamicTableToggleView.prototype.expand = function() {
+DynamicTableToggleView.prototype.showExpanded = function() {
   this.button.attr("title", "Collapse").addClass("dynamictable-collapse")
       .removeClass("dynamictable-expand");
   this.currentMode = DynamicTableToggleView.expanded;
+};
+DynamicTableToggleView.prototype.expand = function() {
+  this.showExpanded();
   this.options.expand.call(this.controller, this);
 };

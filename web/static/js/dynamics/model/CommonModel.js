@@ -77,7 +77,7 @@ CommonModel.prototype._updateRelations = function(type, newData) {
   }
   
   // 3. Update the new relations
-  for (var i = 0; i < newObjects.length; i++) {
+  for (i = 0; i < newObjects.length; i++) {
     var newObj = newObjects[i];
     if (jQuery.inArray(newObj.getHashCode(), currentHashes) === -1) {
       this.addRelation(newObj);

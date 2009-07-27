@@ -54,9 +54,9 @@ IterationModel.prototype.addStory = function(story) {
 /* GETTERS */
 
 IterationModel.prototype.getStories = function() {
-  return this.relations["story"];
+  return this.relations.story;
 };
 
 IterationModel.prototype.getTasks = function() {
-  return this.relations["task"];
+  return this.relations.task;
 };

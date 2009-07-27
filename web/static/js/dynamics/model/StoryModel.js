@@ -47,7 +47,7 @@ StoryModel.prototype._saveData = function(id, changedData) {
   var url = "ajax/storeStory.action";
   var data = {};
   
-  if (changedData["usersChanged"]) {
+  if (changedData.usersChanged) {
     jQuery.extend(data, {userIds: changedData.userIds, usersChanged: true});
     delete changedData.userIds;
     delete changedData.usersChanged;
@@ -65,7 +65,7 @@ StoryModel.prototype._saveData = function(id, changedData) {
   }
   else {
     url = "ajax/createStory.action";
-    data["backlogId"] = 557;
+    data.backlogId = 557;
   }
   
   jQuery.ajax({
@@ -136,7 +136,7 @@ StoryModel.prototype.setStoryPoints = function(storyPoints) {
 
 
 StoryModel.prototype.getTasks = function() {
-  return this.relations["task"];
-}
+  return this.relations.task;
+};
 
 

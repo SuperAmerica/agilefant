@@ -33,8 +33,10 @@ DynamicTableCell.prototype.initialize = function() {
 		this.element.addClass(this.config.getCssClass());
 	}
 	if (this.config.getSubViewFactory()) {
-		this.subView = this.config.getSubViewFactory().call(this.row
+	  var factory = this.config.getSubViewFactory();
+		this.subView = factory.call(this.row
 				.getController(), this, this.row.getModel());
+		this.subView.render();
 	
 	}
 	if(!this.config.isVisible()) {
@@ -77,11 +79,6 @@ DynamicTableCell.prototype.render = function() {
 	if (decorator) {
 		value = decorator(value);
 	}
-	/*
-	if (this.subView) {
-		//this.subView.render();
-	}
-	*/
 	this.setValue(value);
 };
 
@@ -141,6 +138,9 @@ DynamicTableCell.prototype.isEditorValueValid = function() {
 };
 
 DynamicTableCell.prototype.editorClosing = function() {
-  this.show();
+  this.cellContents.show();
   this.editor = null;
+};
+DynamicTableCell.prototype.editorOpening = function() {
+  this.cellContents.hide();
 };

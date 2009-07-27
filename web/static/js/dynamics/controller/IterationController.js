@@ -112,6 +112,8 @@ IterationController.prototype.initializeStoryConfig = function() {
     title : "Name",
     headerTooltip : 'Story name',
     get : StoryModel.prototype.getName,
+    sortCallback: DynamicsComparators.nameComparator,
+    defaultSortColumn: true,
     editable : true,
     edit : {
       editor : "Text",

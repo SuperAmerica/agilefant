@@ -273,6 +273,7 @@ DynamicTable.prototype._sortByColumn = function(column) {
 	}
 	this._updateSortArrow();
 	this._sort();
+	this._addSectionToTable(this.middleRows);
 };
 
 DynamicTable.prototype._updateSortArrow = function() {

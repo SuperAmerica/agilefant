@@ -92,15 +92,18 @@ DynamicTableCell.prototype.setValue = function(value) {
  * 
  * @return boolean
  */
-DynamicTableCell.prototype.openEditor = function() {
+DynamicTableCell.prototype.openEditor = function(editRow) {
   if(this.editor) {
    return false; 
   }
   var editorOptions = this.config.getEditOptions();
+  if(editRow) {
+    editorOptions = jQuery.extend({editRow: true}, editorOptions);
+  }
   var editorName = editorOptions.editor;
   var editorClass = TableEditors.getEditorClassByName(editorName);
   if(editorClass) {
-    this.editor = new editorClass(this.row, this, this.config.getEditOptions());
+    this.editor = new editorClass(this.row, this, editorOptions);
     return true;
   }
   return false;

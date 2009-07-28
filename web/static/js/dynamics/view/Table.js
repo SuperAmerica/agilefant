@@ -98,8 +98,9 @@ DynamicTable.prototype._computeColumns = function() {
 	}
 	// add borders to the total width (reduce one as it will be included in the
 	// full with column as well)
-	totalWidthPercentage += Math
-			.round(10 * (totalBorderPercentage - DynamicTable.constants.borderPerColumn)) / 10;
+
+	totalWidthPercentage += DynamicTable.constants.borderPerColumn*(numberOfColumns - 1);
+	totalWidthPercentage = Math.round(10 * totalWidthPercentage)/10;
 	for (i = 0; i < columnConfigs.length; i++) {
 		var c = columnConfigs[i];
 		if (columnConfigs[i].isFullWidth() === true) {
@@ -150,7 +151,7 @@ DynamicTable.prototype._renderHeaderColumn = function(index) {
 			me._sortByColumn(index);
 			return false;
 		});
-		$('<div/>').addClass(DynamicTable.cssClasses.sortImg).prependTo(nameElement);
+		$('<div/>').addClass(DynamicTable.cssClasses.sortImg).appendTo(columnHeader);
 	} else {
 		nameElement = $('<span />');
 	}
@@ -329,4 +330,10 @@ DynamicTable.prototype.remove = function() {
 
 DynamicTable.prototype.onRelationUpdate = function(event) {
   this.render();
+};
+DynamicTable.prototype.onEdit = function(event) {
+  this.render();
+};
+DynamicTable.prototype.onDelete = function(event) {
+  this.remove();
 };

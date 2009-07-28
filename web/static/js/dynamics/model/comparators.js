@@ -13,7 +13,9 @@ var DynamicsComparators = {
     var value2 = targetMethod.call(obj2);
     return DynamicsComparators.doCompare(value1, value2);
   },
-  nameComparator : function(obj1, obj2) {
-    return DynamicsComparators.doCompare(obj1.getName(), obj2.getName());
+  valueComparatorFactory: function(targetMethod) {
+    return function(obj1, obj2) {
+      return DynamicsComparators.genericComparator(obj1, obj2, targetMethod);
+    };
   }
 };

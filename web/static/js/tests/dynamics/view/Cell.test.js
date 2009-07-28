@@ -4,8 +4,10 @@ $(document).ready(function() {
 			this.mockControl = new MockControl();
 			this.mockRow = this.mockControl.createMock(DynamicTableRow);
 			this.cellConfig = this.mockControl.createMock(DynamicTableColumnConfiguration);
+			this.oldTableEditors = TableEditors;
 	}, teardown: function() {
 			this.mockControl.verify();
+			TableEditors = this.oldTableEditors;
 		}
 	});
 	
@@ -99,9 +101,7 @@ $(document).ready(function() {
      };
      
      this.cellConfig.expects().getEditOptions().andReturn(editorOpt);
-     
-     this.cellConfig.expects().getEditOptions().andReturn(editorOpt);
-     
+          
 	   testable.openEditor();
 	   testable.openEditor();
 	   equals(getEditorCalled, 1, "Get Editor called once.");

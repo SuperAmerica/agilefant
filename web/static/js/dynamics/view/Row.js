@@ -90,16 +90,17 @@ DynamicTableRow.prototype.onDelete = function() {
 	this.remove();
 };
 
-DynamicTableRow.prototype._applyToAllCells = function(command) {
+DynamicTableRow.prototype._applyToAllCells = function(command, arguments) {
   var retVal = true;
   for(var i = 0; i < this.cells.length; i++) {
-    retVal = retVal && command.apply(this.cells[i]);
+    var commandRet = command.apply(this.cells[i], arguments);
+    retVal = retVal && commandRet;
   }
   return retVal;
 };
 
 DynamicTableRow.prototype.editRow = function() {
-  this._applyToAllCells(DynamicTableCell.prototype.openEditor);
+  this._applyToAllCells(DynamicTableCell.prototype.openEditor, [true]);
 };
 
 DynamicTableRow.prototype.closeRowEdit = function() {

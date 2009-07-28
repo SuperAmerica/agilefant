@@ -73,13 +73,13 @@ DynamicView.prototype.setParentView = function(parentView) {
 
 
 DynamicView.prototype.onEdit = function(event) {
-	throw "Abstract method.";
+	throw new Error("Abstract method.");
 };
 
 DynamicView.prototype.onDelete = function(event) {
-	throw "Abstract method.";
+  throw new Error("Abstract method.");
 };
 
 DynamicView.prototype.onRelationUpdate = function(event) {
-  throw "Abstract method.";
+  throw new Error("Abstract method.");
 };

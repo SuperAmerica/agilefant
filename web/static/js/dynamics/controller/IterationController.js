@@ -112,7 +112,7 @@ IterationController.prototype.initializeStoryConfig = function() {
     title : "Name",
     headerTooltip : 'Story name',
     get : StoryModel.prototype.getName,
-    sortCallback: DynamicsComparators.nameComparator,
+    sortCallback: DynamicsComparators.valueComparatorFactory(StoryModel.prototype.getName),
     defaultSortColumn: true,
     editable : true,
     edit : {
@@ -127,18 +127,12 @@ IterationController.prototype.initializeStoryConfig = function() {
     title : "State",
     headerTooltip : 'Story state',
     get : StoryModel.prototype.getState,
+    decorator: DynamicsDecorators.stateColorDecorator,
     editable : true,
     edit : {
       editor : "SingleSelection",
       set : StoryModel.prototype.setState,
-      items : {
-        "NOT_STARTED" : "Not Started",
-        "STARTED" : "Started",
-        "PENDING" : "Pending",
-        "BLOCKED" : "Blocked",
-        "IMPLEMENTED" : "Implemented",
-        "DONE" : "Done"
-      }
+      items : DynamicsDecorators.stateOptions
     }
   });
   config.addColumnConfiguration(StoryController.columnIndexes.responsibles, {
@@ -169,6 +163,7 @@ IterationController.prototype.initializeStoryConfig = function() {
     title : "Points",
     headerTooltip : 'Estimate in story points',
     get : StoryModel.prototype.getStoryPoints,
+    sortCallback: DynamicsComparators.valueComparatorFactory(StoryModel.prototype.getStoryPoints),
     editable : true,
     edit : {
       editor : "Estimate",

@@ -50,18 +50,22 @@ TableEditors.CommonEditor.prototype._registerEvents = function() {
     me._handleKeyEvent(event);
     return true;
   });
-  this.element.blur(function(event) {
-    me._handleBlurEvent(event);
-  });
+  if(!this.options.editRow) {
+    this.element.blur(function(event) {
+      me._handleBlurEvent(event);
+    });
+  }
 };
 TableEditors.CommonEditor.prototype._handleBlurEvent = function(event) {
   this.save();
 };
 TableEditors.CommonEditor.prototype._handleKeyEvent = function(event) {
-  if(event.keyCode === 27) {
+  if(event.keyCode === 27 && !this.options.editRow) {
     this.close();
-  } else if(event.keyCode === 13) {
+  } else if(event.keyCode === 13 && !this.options.editRow) {
     this.save();
+  } else if(event.keyCode === 13 && this.options.editRow) {
+    
   }
 };
 TableEditors.CommonEditor.prototype.setEditorValue = function(value) {
@@ -81,7 +85,7 @@ TableEditors.CommonEditor.prototype.getEditorValue = function() {
  * @base TableEditors.CommonEditor
  */
 TableEditors.Text = function(row, cell, options) {
-  this.element = $('<input type="text"/>').width("80%").appendTo(
+  this.element = $('<input type="text"/>').width("98%").appendTo(
       cell.getElement());
   this.init(row, cell, options);
 };
@@ -93,7 +97,7 @@ TableEditors.Text.prototype = new TableEditors.CommonEditor();
  * @base TableEditors.CommonEditor
  */
 TableEditors.SingleSelection = function(row, cell, options) {
-  this.element = $('<select />').appendTo(cell.getElement());
+  this.element = $('<select />').width("98%").appendTo(cell.getElement());
   this.init(row, cell, options);
   this._renderOptions();
 };
@@ -112,7 +116,7 @@ TableEditors.SingleSelection.prototype._renderOptions = function() {
  * @base TableEditors.CommonEditor
  */
 TableEditors.Date = function(row, cell, options) {
-  this.element = $('<input type="text"/>').width("80%").appendTo(
+  this.element = $('<input type="text"/>').width("98%").appendTo(
       cell.getElement());
   this.init(row, cell, options);
 };
@@ -123,7 +127,7 @@ TableEditors.Date.prototype = new TableEditors.CommonEditor();
  * @base TableEditors.CommonEditor
  */
 TableEditors.Estimate = function(row, cell, options) {
-  this.element = $('<input type="text"/>').width("80%").appendTo(
+  this.element = $('<input type="text"/>').width("98%").appendTo(
       cell.getElement());
   this.init(row, cell, options);
 };
@@ -134,7 +138,7 @@ TableEditors.Estimate.prototype = new TableEditors.CommonEditor();
  * @base TableEditors.CommonEditor
  */
 TableEditors.Date = function(row, cell, options) {
-  this.element = $('<input type="text"/>').width("80%").appendTo(
+  this.element = $('<input type="text"/>').width("98%").appendTo(
       cell.getElement());
   this.init(row, cell, options);
 };
@@ -172,7 +176,7 @@ TableEditors.Wysiwyg.prototype.close = function() {
   this.cell.editorClosing();
 };
 TableEditors.Wysiwyg.prototype._handleKeyEvent = function(event) {
-  if(event.keyCode === 27) {
+  if(event.keyCode === 27 && !this.options.editRow) {
     this.close();
   }
 };
@@ -182,6 +186,9 @@ TableEditors.Wysiwyg.prototype._handleKeyEvent = function(event) {
  * @base TableEditors.CommonEditor
  */
 TableEditors.User = function(row, cell, options) {
+  if(options.editRow) {
+    return false;
+  }
   this.init(row, cell, options);
   var me = this;
   this.autocomplete = $(window).autocompleteDialog({

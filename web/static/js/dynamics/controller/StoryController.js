@@ -145,8 +145,15 @@ StoryController.prototype.initTaskListConfiguration = function() {
     cssClass : "create",
     callback : StoryController.prototype.createTask
   });
+  config.addColumnConfiguration(TaskController.columnIndexes.prio, {
+    minWidth : 350,
+    autoScale : true,
+    cssClass : 'task-row',
+    title : "??",
+    headerTooltip : '??'
+  });
   config.addColumnConfiguration(TaskController.columnIndexes.name, {
-    minWidth : 280,
+    minWidth : 220,
     autoScale : true,
     cssClass : 'task-row',
     title : "Name",

@@ -136,7 +136,9 @@ var DynamicTableConfiguration = function(options) {
 	this.options = {
 			rowControllerFactory: function() {},
 			dataSource: null,
-			caption: "Table"
+			caption: "Table",
+			saveRowCallback: function() {},
+			cancelEditRowCallback: function() {}
 	};
 	jQuery.extend(this.options, options);
 };

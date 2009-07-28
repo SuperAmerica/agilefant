@@ -82,7 +82,7 @@ $(document).ready(function() {
 		});
 		var testable = new DynamicTable(this.controller, this.model, config, this.parent);
 		var columnConfigs = testable.config.getColumns();
-		equals(columnConfigs[0].getWidth(), "97.8%");
+		equals(columnConfigs[0].getWidth(), "98.6%");
 		equals(columnConfigs[1].getWidth(), "49.1%");
 		equals(columnConfigs[2].getWidth(), "49.1%");
 	});

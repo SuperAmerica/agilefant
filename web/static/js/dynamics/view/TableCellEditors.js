@@ -107,15 +107,25 @@ TableEditors.SingleSelection = function(row, cell, options) {
   this.element = $('<select />').width("98%").appendTo(cell.getElement());
   this.init(row, cell, options);
   this._renderOptions();
+  if(!this.options.editRow) {
+    var me = this;
+    this.element.change(function(event) {
+      me._handleBlurEvent(event);
+    });
+  }
 };
 
 TableEditors.SingleSelection.prototype = new TableEditors.CommonEditor();
 
 TableEditors.SingleSelection.prototype._renderOptions = function() {
   var me = this;
+  var selected = this.options.get.call(this.model);
   var items = this.options.items;
   jQuery.each(items, function(key,val) {
-    $('<option />').val(key).text(val).appendTo(me.element);
+    var el = $('<option />').val(key).text(val).appendTo(me.element);
+    if(key === selected) {
+      el.attr("selected", "selected");
+    }
   });
 };
 /**
@@ -193,6 +203,7 @@ TableEditors.Wysiwyg.prototype._handleKeyEvent = function(event) {
  * @base TableEditors.CommonEditor
  */
 TableEditors.User = function(row, cell, options) {
+  this.element = cell.getElement();
   this.init(row, cell, options);
   var me = this;
   this.autocomplete = $(window).autocompleteDialog({

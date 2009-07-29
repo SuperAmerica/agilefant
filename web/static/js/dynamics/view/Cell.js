@@ -48,8 +48,20 @@ DynamicTableCell.prototype.initialize = function() {
 	    me.openEditor();
 	  });
 	}
+	this._registerEventHandlers();
 };
 
+DynamicTableCell.prototype._registerEventHandlers = function() {
+  var me = this;
+  this.element.bind("editorClosing", function() {
+    me.editorClosing();
+    return false;
+  });
+  this.element.bind("editorOpening", function() {
+    me.editorOpening();
+    return false;
+  });
+};
 DynamicTableCell.prototype.getElement = function() {
 	return this.element;
 };
@@ -94,13 +106,19 @@ DynamicTableCell.prototype.setValue = function(value) {
  */
 DynamicTableCell.prototype.openEditor = function(editRow) {
   if(this.editor) {
-   return false; 
+   return true; 
   }
   var editorOptions = this.config.getEditOptions();
   if(editRow) {
     editorOptions = jQuery.extend({editRow: true}, editorOptions);
   }
+  
   var editorName = editorOptions.editor;
+  
+  if(editRow && TableEditors.isDialog(editorName)) {
+    return false;
+  }
+  
   var editorClass = TableEditors.getEditorClassByName(editorName);
   if(editorClass) {
     this.editor = new editorClass(this.row, this, editorOptions);
@@ -128,7 +146,7 @@ DynamicTableCell.prototype.closeEditor = function() {
  */
 DynamicTableCell.prototype.saveEditorValue = function() {
   if(this.editor) {
-    return this.editor.save();
+    this.editor.save();
   }
   return true;
 };

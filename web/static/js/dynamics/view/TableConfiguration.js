@@ -143,6 +143,12 @@ var DynamicTableConfiguration = function(options) {
 	jQuery.extend(this.options, options);
 };
 
+DynamicTableConfiguration.prototype.getSaveRowCallback = function() {
+  return this.options.saveRowCallback;
+};
+DynamicTableConfiguration.prototype.getCancelEditRowCallback = function() {
+  return this.options.cancelEditRowCallback;
+};
 DynamicTableConfiguration.prototype.getRowControllerFactory = function() {
 	return this.options.rowControllerFactory;
 };

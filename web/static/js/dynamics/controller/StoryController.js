@@ -39,6 +39,15 @@ StoryController.prototype.editStory = function() {
   this.view.editRow();
 };
 
+StoryController.prototype.saveStory = function() {
+  var createNewStory = !this.model.getId();
+  if(this.view.saveRowEdit()) {
+    this.model.commit();
+  }
+  if(createNewStory) {
+    this.view.remove();
+  }
+};
 /**
  * 
  */

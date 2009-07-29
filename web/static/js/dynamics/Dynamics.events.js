@@ -71,4 +71,28 @@ DynamicsEvents.DeleteEvent = function(object) {
 };
 DynamicsEvents.DeleteEvent.prototype = new DynamicsEvents.CommonEvent();
 
+/**
+ * 
+ * @constructor
+ * @base DynamicsEvents.CommonEvent
+ */
+DynamicsEvents.StoreRequested = function(origin) {
+  this.initialize();
+  this.type = "storeRequested";
+  this.object = origin;
+};
+DynamicsEvents.StoreRequested.prototype = new DynamicsEvents.CommonEvent();
+
+
+/**
+ * 
+ * @constructor
+ * @base DynamicsEvents.CommonEvent
+ */
+DynamicsEvents.CancelEdit = function(origin) {
+  this.initialize();
+  this.type = "cancelEdit";
+  this.object = origin;
+};
+DynamicsEvents.CancelEdit.prototype = new DynamicsEvents.CommonEvent();
 

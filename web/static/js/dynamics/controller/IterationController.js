@@ -57,19 +57,22 @@ IterationController.prototype.hideTasks = function() {
  */
 IterationController.prototype.createStory = function() {
   var mockModel = ModelFactory.createObject(ModelFactory.types.story);
-  var row = this.storyListView.createRow(this, mockModel, "top");
+  var controller = new StoryController(mockModel, null, this);
+  var row = this.storyListView.createRow(controller, mockModel, "top");
+  controller.view = row;
   row.autoCreateCells(true);
-  row.editRow();
+  controller.editStory();
   row.getCell(StoryController.columnIndexes.tasksData).hide();
 };
 
 /**
- * Initialize configuration for sotry lists.
+ * Initialize configuration for story lists.
  */
 IterationController.prototype.initializeStoryConfig = function() {
   var config = new DynamicTableConfiguration( {
         rowControllerFactory : IterationController.prototype.storyControllerFactory,
         dataSource : IterationModel.prototype.getStories,
+        saveRowCallback: StoryController.prototype.saveStory,
         caption : "Stories"
       });
 

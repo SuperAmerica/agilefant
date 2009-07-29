@@ -149,23 +149,27 @@ $(document).ready(function() {
 	test("_createRow to top", function() {
 		var testable = new DynamicTable(this.controller, this.model, null, this.parent);
 		var model = this.mockControl.createMock(CommonModel);
-		var firstRow = this.mockControl.createMock(DynamicView);
-		var secondRow = this.mockControl.createMock(DynamicView);
+		var firstRow = this.mockControl.createMock(DynamicTableRow);
+		var secondRow = this.mockControl.createMock(DynamicTableRow);
 		firstRow.expects().init(null, model, testable);
+		firstRow.expects().registerEventHandlers(testable.config);
 		secondRow.expects().init(null, model, testable);
+		secondRow.expects().registerEventHandlers(testable.config);
 		testable._createRow(firstRow, null, model, "top");
 		testable._createRow(secondRow, null, model, "top");
 		equals(testable.upperRows.length, 2, "Correct number of rows");
 		ok(testable.upperRows[0] === secondRow, "1. row ok");
 		ok(testable.upperRows[1] === firstRow, "2. row ok");
 	});
+	
 	test("_createRow new to data", function() {
 		var testable = new DynamicTable(this.controller, this.model, null, this.parent);
 		var model = new CommonModel(); 
 	    model.getHashCode = function() { return "a-1"; };
 	    
-		var row = this.mockControl.createMock(DynamicView);
+		var row = this.mockControl.createMock(DynamicTableRow);
 		row.expects().init(null, model, testable);
+		row.expects().registerEventHandlers(testable.config);
 		testable._createRow(row, null, model);
 		equals(testable.middleRows.length, 1, "Correct row count");
 		ok(testable.middleRows[0] == row, "Correct row insterted");
@@ -175,8 +179,9 @@ $(document).ready(function() {
 		var testable = new DynamicTable(this.controller, this.model, null, this.parent);
 		var model = new CommonModel(); 
 	    model.getHashCode = function() { return "a-1"; };
-		var row = this.mockControl.createMock(DynamicView);
+		var row = this.mockControl.createMock(DynamicTableRow);
 		row.expects().init(null, model, testable);
+		row.expects().registerEventHandlers(testable.config);
 		testable._createRow(row, null, model);
 		testable._createRow(row, null, model);
 		testable._createRow(row, null, model);
@@ -188,10 +193,12 @@ $(document).ready(function() {
 		var testable = new DynamicTable(this.controller, this.model, null, this.parent);
 		var model = new CommonModel(); 
 	    model.getHashCode = function() { return "a-1"; };
-		var row = this.mockControl.createMock(DynamicView);
+		var row = this.mockControl.createMock(DynamicTableRow);
 		var nonModel = {};
 		row.expects().init(null, model, testable);
+		row.expects().registerEventHandlers(testable.config);
 		row.expects().init(null, nonModel, testable);
+		row.expects().registerEventHandlers(testable.config);
 		testable._createRow(row, null, model);
 		testable._createRow(row, null, nonModel);
 		equals(testable.middleRows.length, 2, "Correct row count");
@@ -199,10 +206,12 @@ $(document).ready(function() {
 	test("_createRow to bottom", function() {
 		var testable = new DynamicTable(this.controller, this.model, null, this.parent);
 		var model = this.mockControl.createMock(CommonModel);
-		var firstRow = this.mockControl.createMock(DynamicView);
-		var secondRow = this.mockControl.createMock(DynamicView);
+		var firstRow = this.mockControl.createMock(DynamicTableRow);
+		var secondRow = this.mockControl.createMock(DynamicTableRow);
 		firstRow.expects().init(null, model, testable);
+		firstRow.expects().registerEventHandlers(testable.config);
 		secondRow.expects().init(null, model, testable);
+		secondRow.expects().registerEventHandlers(testable.config);
 		testable._createRow(firstRow, null, model, "bottom");
 		testable._createRow(secondRow, null, model, "bottom");
 		equals(testable.bottomRows.length, 2, "Correct number of rows");

@@ -34,6 +34,7 @@ $(document).ready(function() {
     testObj.options = {};
     testObj.expects().close();
     testObj.expects().save();
+    testObj.expects().saveRow();
     TableEditors.CommonEditor.prototype._handleKeyEvent.call(testObj, {keyCode: 27});
     TableEditors.CommonEditor.prototype._handleKeyEvent.call(testObj, {keyCode: 13});
     testObj.options = {editRow: true};

@@ -5,6 +5,10 @@ TableEditors.getEditorClassByName = function(name) {
   }
   return null;
 };
+TableEditors.isDialog = function(name) {
+  var dialogs = ["User"];
+  return jQuery.inArray(name, dialogs) !== -1;
+};
 /**
  * 
  * @constructor
@@ -19,7 +23,7 @@ TableEditors.CommonEditor.prototype.init = function(row, cell, options) {
   this.model = row.getModel();
   this._registerEvents();
   this.setEditorValue();
-  this.cell.editorOpening();
+  this.element.trigger("editorOpening");
 };
 /**
  * Save editor value if editor content is valid
@@ -31,11 +35,11 @@ TableEditors.CommonEditor.prototype.save = function() {
   }
 };
 TableEditors.CommonEditor.prototype.close = function() {
+  this.element.trigger("editorClosing");
   this.element.remove();
   if(this.error) {
     this.error.remove();
   }
-  this.cell.editorClosing();
   this.element = null;
 };
 TableEditors.CommonEditor.prototype.focus = function() {
@@ -59,13 +63,16 @@ TableEditors.CommonEditor.prototype._registerEvents = function() {
 TableEditors.CommonEditor.prototype._handleBlurEvent = function(event) {
   this.save();
 };
+TableEditors.CommonEditor.prototype.saveRow = function() {
+  this.cell.getElement().trigger("storeRequested", new DynamicsEvents.StoreRequested(this));
+};
 TableEditors.CommonEditor.prototype._handleKeyEvent = function(event) {
   if(event.keyCode === 27 && !this.options.editRow) {
     this.close();
   } else if(event.keyCode === 13 && !this.options.editRow) {
     this.save();
   } else if(event.keyCode === 13 && this.options.editRow) {
-    
+    this.saveRow();
   }
 };
 TableEditors.CommonEditor.prototype.setEditorValue = function(value) {
@@ -171,9 +178,9 @@ TableEditors.Wysiwyg.prototype.getEditorValue = function() {
 
 TableEditors.Wysiwyg.prototype.close = function() {
   this.element = null;
+  this.actualElement.trigger("editorClosing");
   this.actualElement.wysiwyg("remove");
   this.actualElement.remove();
-  this.cell.editorClosing();
 };
 TableEditors.Wysiwyg.prototype._handleKeyEvent = function(event) {
   if(event.keyCode === 27 && !this.options.editRow) {
@@ -186,9 +193,6 @@ TableEditors.Wysiwyg.prototype._handleKeyEvent = function(event) {
  * @base TableEditors.CommonEditor
  */
 TableEditors.User = function(row, cell, options) {
-  if(options.editRow) {
-    return false;
-  }
   this.init(row, cell, options);
   var me = this;
   this.autocomplete = $(window).autocompleteDialog({
@@ -203,7 +207,7 @@ TableEditors.User.prototype = new TableEditors.CommonEditor();
 
 TableEditors.User.prototype.save = function(ids) {
   this.options.set.call(this.model, ids);
-  this.cell.editorClosing();
+  this.cell.getElement().trigger("editorClosing");
 };
 TableEditors.User.prototype._registerEvents = function() {
 };
@@ -213,7 +217,7 @@ TableEditors.User.prototype.getEditorValue = function() {
   return this.value;
 };
 TableEditors.User.prototype.close = function() {
-  this.cell.editorClosing();
+  this.cell.getElement().trigger("editorClosing");
 };
 
 

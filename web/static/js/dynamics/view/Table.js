@@ -49,7 +49,8 @@ DynamicTable.constants = {
  * Initialize table
  */
 DynamicTable.prototype.initialize = function() {
-	this.container = $("<div />").appendTo(this.getParentElement()).addClass(DynamicTable.cssClasses.table);
+	var me = this;
+  this.container = $("<div />").appendTo(this.getParentElement()).addClass(DynamicTable.cssClasses.table);
 	this.element = $("<div />").appendTo(this.container);
 	this._computeColumns();
 	this.captionElement = $('<div />').addClass(DynamicTable.cssClasses.tableCaption).prependTo(this.container).width(this.totalRowWidth+"%");
@@ -244,6 +245,7 @@ DynamicTable.prototype._createRow = function(row, controller, model, position) {
 		this.header.show();
 	}
 	row.init(controller, model, this);
+	row.registerEventHandlers(this.config);
 };
 
 DynamicTable.prototype._dataSourceRow = function(model, columnConfig) {

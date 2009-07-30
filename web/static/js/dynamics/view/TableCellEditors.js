@@ -23,6 +23,7 @@ TableEditors.CommonEditor.prototype.init = function(row, cell, options) {
   this.model = row.getModel();
   this._registerEvents();
   this.setEditorValue();
+  this.errorMessageVisible = false;
   this.element.trigger("editorOpening");
 };
 /**
@@ -37,10 +38,28 @@ TableEditors.CommonEditor.prototype.save = function() {
 TableEditors.CommonEditor.prototype.close = function() {
   this.element.trigger("editorClosing");
   this.element.remove();
-  if(this.error) {
-    this.error.remove();
+  //this.element = null;
+};
+TableEditors.CommonEditor.prototype.showError = function() {  
+  if(this.errorMessageVisible) {
+    return;
   }
-  this.element = null;
+  var me = this;
+  this.element.addClass(DynamicTable.cssClasses.fieldError);
+  this.errorChangeListener = function() {
+    if(me.isValid()) {
+      me.hideError();
+    }
+  };
+  this.element.keypress(this.errorChangeListener);
+  this.errorMessageVisible = true;
+};
+TableEditors.CommonEditor.prototype.hideError = function() {
+  if(this.element) {
+    this.element.removeClass(DynamicTable.cssClasses.fieldError);
+    this.element.unbind("change", this.errorChangeListener);
+  }
+  this.errorMessageVisible = false;
 };
 TableEditors.CommonEditor.prototype.focus = function() {
   this.element.focus();
@@ -97,6 +116,19 @@ TableEditors.Text = function(row, cell, options) {
   this.init(row, cell, options);
 };
 TableEditors.Text.prototype = new TableEditors.CommonEditor();
+TableEditors.Text.prototype.isValid = function() {
+  var requiredLength = 0;
+  if(this.options.minlength) {
+    requiredLength = this.options.minlength;
+  } else if(this.options.required) {
+    requiredLength = 1;
+  }
+  var valid = this.element.val().length >= requiredLength;
+  if(!valid) {
+    this.showError();
+  }
+  return valid;
+};
 
 /**
  * 
@@ -138,6 +170,9 @@ TableEditors.Date = function(row, cell, options) {
   this.init(row, cell, options);
 };
 TableEditors.Date.prototype = new TableEditors.CommonEditor();
+TableEditors.Date.prototype.isValid = function() {
+  
+};
 
 /**
  * @constructor
@@ -149,17 +184,23 @@ TableEditors.Estimate = function(row, cell, options) {
   this.init(row, cell, options);
 };
 TableEditors.Estimate.prototype = new TableEditors.CommonEditor();
+TableEditors.Estimate.prototype.isValid = function() {
+  
+};
 
 /**
  * @constructor
  * @base TableEditors.CommonEditor
  */
-TableEditors.Date = function(row, cell, options) {
+TableEditors.ExactEstimate = function(row, cell, options) {
   this.element = $('<input type="text"/>').width("98%").appendTo(
       cell.getElement());
   this.init(row, cell, options);
 };
-TableEditors.Date.prototype = new TableEditors.CommonEditor();
+TableEditors.ExactEstimate.prototype = new TableEditors.CommonEditor();
+TableEditors.ExactEstimate.prototype.isValid = function() {
+  
+};
 
 /**
  * @constructor

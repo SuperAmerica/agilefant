@@ -35,7 +35,8 @@ DynamicTable.cssClasses = {
 		sortImgUp: "dynamictable-sortimg-up",
 		captionActions: "dynamictable-captionactions",
 		captionAction: "dynamictable-captionaction",
-		sortImgDown: "dynamictable-sortimg-down"
+		sortImgDown: "dynamictable-sortimg-down",
+		fieldError: "invalidValue"
 };
 
 DynamicTable.prototype = new DynamicView();

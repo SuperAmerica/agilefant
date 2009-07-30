@@ -24,7 +24,9 @@ var DynamicTableColumnConfiguration = function(options) {
 				items: null,
 				set: function() {},
 				editor: null,
-				buttons: null
+				buttons: null,
+				required: false,
+				minlength: null
 			}
 	};
 	$.extend(this.options,options);

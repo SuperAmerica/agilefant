@@ -42,5 +42,57 @@ $(document).ready(function() {
     TableEditors.CommonEditor.prototype._handleKeyEvent.call(testObj, {keyCode: 13});
     ok(true, "Callbacks called"); //verify only mock calls
  });
+  
+  test("Text edit validation", function() {
+    var mockElement = this.mockControl.createMock(jQuery);
+    
+    var empty = "";
+    var greater = "aaadddd";
+    var less = "aa";
+    var context = {element: mockElement};
+    context.showError = function() {};
+    
+    mockElement.expects().val().andReturn(empty);
+    mockElement.expects().val().andReturn(greater);
+    mockElement.expects().val().andReturn(empty);
+    mockElement.expects().val().andReturn(greater);
+    mockElement.expects().val().andReturn(empty);
+    mockElement.expects().val().andReturn(greater);
+    mockElement.expects().val().andReturn(less);
+    mockElement.expects().val().andReturn(empty);
+    mockElement.expects().val().andReturn(greater);
+    mockElement.expects().val().andReturn(less);
+    
+    context.options = {required: false, minlength: 0};
 
+    ok(TableEditors.Text.prototype.isValid.call(context), "Empty string without validation");
+    ok(TableEditors.Text.prototype.isValid.call(context), "String without validation");
+    
+    context.options = {required: true, minlength: 0};
+    ok(!TableEditors.Text.prototype.isValid.call(context), "Empty string with required");
+    ok(TableEditors.Text.prototype.isValid.call(context), "String with required");
+    
+    context.options = {required: false, minlength: 3};
+    ok(!TableEditors.Text.prototype.isValid.call(context), "Empty string with min length");
+    ok(TableEditors.Text.prototype.isValid.call(context), "OK string with min length");
+    ok(!TableEditors.Text.prototype.isValid.call(context), "Too short string with min length");
+    
+    context.options = {required: true, minlength: 3};
+    ok(!TableEditors.Text.prototype.isValid.call(context), "Empty string with min length and required");
+    ok(TableEditors.Text.prototype.isValid.call(context), "OK string with min length and required");
+    ok(!TableEditors.Text.prototype.isValid.call(context), "Too short string with min length and required");
+    
+  });
+  
+  test("Estimate edit validation", function() {
+    
+  });
+  
+  test("Date edit validation", function() {
+    
+  });
+  
+  test("Exact estimate edit validation", function() {
+    
+  });
 });

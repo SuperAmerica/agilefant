@@ -120,7 +120,8 @@ IterationController.prototype.initializeStoryConfig = function() {
     editable : true,
     edit : {
       editor : "Text",
-      set : StoryModel.prototype.setName
+      set : StoryModel.prototype.setName,
+      required: true
     }
   });
   config.addColumnConfiguration(StoryController.columnIndexes.state, {

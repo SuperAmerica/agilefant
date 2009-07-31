@@ -58,10 +58,17 @@ StoryController.prototype.moveStory = function() {
 /**
  * 
  */
-StoryController.prototype.taskListFactory = function(view, model) {
+StoryController.prototype.storyContentsFactory = function(view, model) {
+  this.contentsPanels = new DynamicsSplitPanel(view);
+  var info = this.contentsPanels.createPanel("storyInfo", {width: "40%"});
+  this.info = new DynamicsTabs(info);
+  this.info.add("info");
+  this.info.add("spent effort");
+  var tasks = this.contentsPanels.createPanel("tasks", {width: "58%"});
   this.taskListView = new DynamicTable(this, this.model, this.taskListConfig,
-      view);
-  return this.taskListView;
+      tasks);
+  this.taskListView.render();
+  return this.contentsPanels;
 };
 
 /**
@@ -155,11 +162,11 @@ StoryController.prototype.initTaskListConfiguration = function() {
     callback : StoryController.prototype.createTask
   });
   config.addColumnConfiguration(TaskController.columnIndexes.prio, {
-    minWidth : 350,
+    minWidth : 30,
     autoScale : true,
     cssClass : 'task-row',
-    title : "??",
-    headerTooltip : '??'
+    title : "#",
+    headerTooltip : 'Priority'
   });
   config.addColumnConfiguration(TaskController.columnIndexes.name, {
     minWidth : 220,

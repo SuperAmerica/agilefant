@@ -209,7 +209,7 @@ IterationController.prototype.initializeStoryConfig = function() {
   });
   config.addColumnConfiguration(StoryController.columnIndexes.description, {
     fullWidth : true,
-    visible : true,
+    visible : false,
     get : StoryModel.prototype.getDescription,
     cssClass : 'story-data',
     editable : true,
@@ -222,7 +222,7 @@ IterationController.prototype.initializeStoryConfig = function() {
     fullWidth : true,
     visible : false,
     cssClass : 'story-data',
-    subViewFactory : StoryController.prototype.taskListFactory
+    subViewFactory : StoryController.prototype.storyContentsFactory
   });
   this.storyListConfig = config;
 };

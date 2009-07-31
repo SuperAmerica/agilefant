@@ -36,7 +36,9 @@ DynamicTable.cssClasses = {
 		captionActions: "dynamictable-captionactions",
 		captionAction: "dynamictable-captionaction",
 		sortImgDown: "dynamictable-sortimg-down",
-		fieldError: "invalidValue"
+		fieldError: "invalidValue",
+		validationError: "validationError",
+		validationErrorContainer: "cellError"
 };
 
 DynamicTable.prototype = new DynamicView();
@@ -54,6 +56,9 @@ DynamicTable.prototype.initialize = function() {
   this.container = $("<div />").appendTo(this.getParentElement()).addClass(DynamicTable.cssClasses.table);
 	this.element = $("<div />").appendTo(this.container);
 	this._computeColumns();
+	if(this.totalRowWidth) {
+	  this.element.css("min-width", this.totalRowWidth);
+	}
 	this.captionElement = $('<div />').addClass(DynamicTable.cssClasses.tableCaption).prependTo(this.container).width(this.totalRowWidth+"%");
 	var columnConfigs = this.config.getColumns();
 	//determinate default sort column index
@@ -339,4 +344,26 @@ DynamicTable.prototype.onEdit = function(event) {
 };
 DynamicTable.prototype.onDelete = function(event) {
   this.remove();
+};
+
+var DynamicVerticalTable = function(controller, model, config, parentView) {
+  this.init(controller, model, parentView);
+  this.initialize();
+};
+DynamicVerticalTable.prototype = new DynamicView();
+
+DynamicVerticalTable.prototype.initialize = function() {
+  this.container = $("<div />").appendTo(this.getParentElement()).addClass(DynamicTable.cssClasses.table);
+  this.element = $("<div />").appendTo(this.container);
+  var columnConfigs = this.config.getColumns();
+  for(var i = 0; i < columnConfigs.length; i++) {
+    var columnConfig  =columnConfigs[i];
+    var row = new DynamicTableRow(null);
+    var title = row.createCell(null);
+    var value = row.createCell(null);
+  }
+};
+
+DynamicVerticalTable.prototype.render = function() {
+  
 };

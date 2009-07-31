@@ -85,7 +85,7 @@ $(document).ready(function() {
   });
   
   test("Estimate edit validation", function() {
-    var mockElement = this.mockControl.createMock(jQuery);;
+    var mockElement = this.mockControl.createMock(jQuery);
     var context = {element: mockElement};
     context.showError = function() {};
     
@@ -115,7 +115,7 @@ $(document).ready(function() {
   });
   
   test("Date edit validation", function() {
-    var mockElement = this.mockControl.createMock(jQuery);;
+    var mockElement = this.mockControl.createMock(jQuery);
     var context = {element: mockElement};
     context.showError = function() {};
     
@@ -146,7 +146,7 @@ $(document).ready(function() {
   });
   
   test("Date edit validation with time", function() {
-    var mockElement = this.mockControl.createMock(jQuery);;
+    var mockElement = this.mockControl.createMock(jQuery);
     var context = {element: mockElement};
     context.showError = function() {};
     
@@ -163,7 +163,7 @@ $(document).ready(function() {
   });
   
   test("Exact estimate edit validation", function() {
-    var mockElement = this.mockControl.createMock(jQuery);;
+    var mockElement = this.mockControl.createMock(jQuery);
     var context = {element: mockElement};
     context.showError = function() {};
     

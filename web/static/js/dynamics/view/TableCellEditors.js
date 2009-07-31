@@ -40,7 +40,7 @@ TableEditors.CommonEditor.prototype.close = function() {
   this.element.remove();
   //this.element = null;
 };
-TableEditors.CommonEditor.prototype.showError = function() {  
+TableEditors.CommonEditor.prototype.showError = function(message) {  
   if(this.errorMessageVisible) {
     return;
   }
@@ -53,6 +53,13 @@ TableEditors.CommonEditor.prototype.showError = function() {
   };
   this.element.keypress(this.errorChangeListener);
   this.errorMessageVisible = true;
+  if(message) {
+    this.errorMessage = $('<div />').appendTo(this.cell.getElement())
+    .css({"position": 'relative',
+          "z-index": '3400'}).addClass(DynamicTable.cssClasses.validationErrorContainer);
+    $('<div />').addClass(DynamicTable.cssClasses.validationError)
+    .appendTo(this.errorMessage).css("position", "relative").text(message);
+  }
 };
 TableEditors.CommonEditor.prototype.hideError = function() {
   if(this.element) {
@@ -60,6 +67,9 @@ TableEditors.CommonEditor.prototype.hideError = function() {
     this.element.unbind("change", this.errorChangeListener);
   }
   this.errorMessageVisible = false;
+  if(this.errorMessage) {
+    this.errorMessage.remove();
+  }
 };
 TableEditors.CommonEditor.prototype.focus = function() {
   this.element.focus();
@@ -125,7 +135,7 @@ TableEditors.Text.prototype.isValid = function() {
   }
   var valid = this.element.val().length >= requiredLength;
   if(!valid) {
-    this.showError();
+    this.showError("Minimum length for the field is " + requiredLength);
   }
   return valid;
 };
@@ -172,18 +182,26 @@ TableEditors.Date = function(row, cell, options) {
 TableEditors.Date.prototype = new TableEditors.CommonEditor();
 TableEditors.Date.prototype.isValid = function() {
   var pattern;
+  var errorMessage = "";
   if(this.options.withTime) {
     pattern = /^\d{4}-([1-9]|0[1-9]|1[0-2])-([1-9]|0[1-9]|[1-2][0-9]|3[0-1]) (\d|[0-1][0-9]|2[0-3]):(\d|[0-5][0-9])$/;
+    errorMessage = "Invalid format (yyy.mm.dd hh:mm)";
   } else {
     pattern = /^\d{4}-([1-9]|0[1-9]|1[0-2])-([1-9]|0[1-9]|[1-2][0-9]|3[0-1])$/;
+    errorMessage = "Invalid format (yyy.mm.dd)";
   }
   var value = jQuery.trim(this.element.val());
   if(this.options.required && !value) {
+    this.showError("Required field");
     return false;
   } else if(!this.options.required && !value) {
     return true;
   }
-  return value.match(pattern);
+  var valid = value.match(pattern);
+  if(!valid) {
+    this.showError(errorMessage);
+  }
+  return valid;
 };
 
 /**
@@ -204,7 +222,11 @@ TableEditors.Estimate.prototype.isValid = function() {
   } else if(!this.options.required && value.length === 0) {
     return true;
   }
-  return value.match(/^\d+/);
+  if(!value.match(/^\d+/)) {
+    this.showError("Invalid format (e.g. 10 or 10pt)");
+    return false;
+  }
+  return true;
 };
 
 /**
@@ -229,7 +251,11 @@ TableEditors.ExactEstimate.prototype.isValid = function() {
   var minorOnly = /^([1-9]|[1-5]\d)min$/; //10min
   var majorAndMinor = /^[ ]*[0-9]+h[ ]+[0-9]+min$/;
   var shortFormat = /^[0-9]+\.[0-9]+h?$/;
-  return (value.match(majorOnly) || value.match(minorOnly) || value.match(majorAndMinor) || value.match(shortFormat));
+  var valid = (value.match(majorOnly) || value.match(minorOnly) || value.match(majorAndMinor) || value.match(shortFormat));
+  if(!valid) {
+    this.showError("Invalid value (eg. 10h or 10h 30min or 1.5h");
+  }
+  return valid;
 };
 
 /**

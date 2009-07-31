@@ -150,11 +150,13 @@ div.gear {
 .invalidValue {
   background-color: #FF6666;
 }
-.dynamictable-row .cellError {
+.dynamictable-cell .cellError {
     position: relative !important;
     overflow: visible !important;
+    height: 2em;
+    width: 40em;
 }
-.cellErrorMessage {
+.validationError {
   width: 150px;
   background-color: #FFFF66;
   border: 1px solid #FFFFFF;

@@ -171,7 +171,19 @@ TableEditors.Date = function(row, cell, options) {
 };
 TableEditors.Date.prototype = new TableEditors.CommonEditor();
 TableEditors.Date.prototype.isValid = function() {
-  
+  var pattern;
+  if(this.options.withTime) {
+    pattern = /^\d{4}-([1-9]|0[1-9]|1[0-2])-([1-9]|0[1-9]|[1-2][0-9]|3[0-1]) (\d|[0-1][0-9]|2[0-3]):(\d|[0-5][0-9])$/;
+  } else {
+    pattern = /^\d{4}-([1-9]|0[1-9]|1[0-2])-([1-9]|0[1-9]|[1-2][0-9]|3[0-1])$/;
+  }
+  var value = jQuery.trim(this.element.val());
+  if(this.options.required && !value) {
+    return false;
+  } else if(!this.options.required && !value) {
+    return true;
+  }
+  return value.match(pattern);
 };
 
 /**
@@ -184,8 +196,15 @@ TableEditors.Estimate = function(row, cell, options) {
   this.init(row, cell, options);
 };
 TableEditors.Estimate.prototype = new TableEditors.CommonEditor();
+
 TableEditors.Estimate.prototype.isValid = function() {
-  
+  var value = jQuery.trim(this.element.val());
+  if(this.options.required && value.length === 0) {
+    return false;
+  } else if(!this.options.required && value.length === 0) {
+    return true;
+  }
+  return value.match(/^\d+/);
 };
 
 /**
@@ -198,8 +217,19 @@ TableEditors.ExactEstimate = function(row, cell, options) {
   this.init(row, cell, options);
 };
 TableEditors.ExactEstimate.prototype = new TableEditors.CommonEditor();
+
 TableEditors.ExactEstimate.prototype.isValid = function() {
-  
+  var value = jQuery.trim(this.element.val());
+  if(this.options.required && !value) {
+    return false;
+  } else if(!this.options.required && !value) {
+    return true;
+  }
+  var majorOnly = /^[0-9]+h?$/; //10h
+  var minorOnly = /^([1-9]|[1-5]\d)min$/; //10min
+  var majorAndMinor = /^[ ]*[0-9]+h[ ]+[0-9]+min$/;
+  var shortFormat = /^[0-9]+\.[0-9]+h?$/;
+  return (value.match(majorOnly) || value.match(minorOnly) || value.match(majorAndMinor) || value.match(shortFormat));
 };
 
 /**

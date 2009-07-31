@@ -85,14 +85,113 @@ $(document).ready(function() {
   });
   
   test("Estimate edit validation", function() {
+    var mockElement = this.mockControl.createMock(jQuery);;
+    var context = {element: mockElement};
+    context.showError = function() {};
     
+    mockElement.expects().val().andReturn(" ");
+    mockElement.expects().val().andReturn(" ");
+    mockElement.expects().val().andReturn("10")
+    mockElement.expects().val().andReturn("0");
+    mockElement.expects().val().andReturn("0pt");
+    mockElement.expects().val().andReturn("0points");
+    mockElement.expects().val().andReturn("692pt");
+    mockElement.expects().val().andReturn("aae");
+    mockElement.expects().val().andReturn("xpt");
+    
+    
+    context.options = {required: false};
+    ok(TableEditors.Estimate.prototype.isValid.call(context), "Not required and empty");
+
+    context.options = {required: true};
+    ok(!TableEditors.Estimate.prototype.isValid.call(context), "Required and empty");
+    ok(TableEditors.Estimate.prototype.isValid.call(context), "10");
+    ok(TableEditors.Estimate.prototype.isValid.call(context), "0");
+    ok(TableEditors.Estimate.prototype.isValid.call(context), "0pt");
+    ok(TableEditors.Estimate.prototype.isValid.call(context), "0points");
+    ok(TableEditors.Estimate.prototype.isValid.call(context), "692pt");
+    ok(!TableEditors.Estimate.prototype.isValid.call(context), "invalid");
+    ok(!TableEditors.Estimate.prototype.isValid.call(context), "invalid");
   });
   
   test("Date edit validation", function() {
+    var mockElement = this.mockControl.createMock(jQuery);;
+    var context = {element: mockElement};
+    context.showError = function() {};
     
+    mockElement.expects().val().andReturn("");
+    mockElement.expects().val().andReturn("");
+    mockElement.expects().val().andReturn(" ");
+    mockElement.expects().val().andReturn("2001-1-1");
+    mockElement.expects().val().andReturn("2001-01-01");
+    mockElement.expects().val().andReturn("2001-10-10");
+    mockElement.expects().val().andReturn("2001_10-01");
+    mockElement.expects().val().andReturn("2001-10");
+    mockElement.expects().val().andReturn("01-01-01");
+
+    context.options = {required: false};
+    ok(TableEditors.Date.prototype.isValid.call(context), "Not required and empty");
+
+    context.options = {required: true};
+    ok(!TableEditors.Date.prototype.isValid.call(context), "Required and empty");
+    ok(!TableEditors.Date.prototype.isValid.call(context), "Required and empty");
+    
+    ok(TableEditors.Date.prototype.isValid.call(context), "1-1-2001");
+    ok(TableEditors.Date.prototype.isValid.call(context), "01-01-2001");
+    ok(TableEditors.Date.prototype.isValid.call(context), "10-10-2001");
+    
+    ok(!TableEditors.Date.prototype.isValid.call(context), "10_10-2001");
+    ok(!TableEditors.Date.prototype.isValid.call(context), "-10-2001");
+    ok(!TableEditors.Date.prototype.isValid.call(context), "10-10-01");
+  });
+  
+  test("Date edit validation with time", function() {
+    var mockElement = this.mockControl.createMock(jQuery);;
+    var context = {element: mockElement};
+    context.showError = function() {};
+    
+    mockElement.expects().val().andReturn("2001-1-1 1:1");
+    mockElement.expects().val().andReturn("2001-01-01 01:01");
+    mockElement.expects().val().andReturn("2001-10-10 21:30");
+
+
+    context.options = {withTime: true};
+    ok(TableEditors.Date.prototype.isValid.call(context), "1-1-2001 1:1");
+    ok(TableEditors.Date.prototype.isValid.call(context), "01-01-2001 01:01");
+    ok(TableEditors.Date.prototype.isValid.call(context), "10-10-2001 21:30");
+
   });
   
   test("Exact estimate edit validation", function() {
+    var mockElement = this.mockControl.createMock(jQuery);;
+    var context = {element: mockElement};
+    context.showError = function() {};
     
+    mockElement.expects().val().andReturn(" ");
+    mockElement.expects().val().andReturn(" ");
+    mockElement.expects().val().andReturn("15min");
+    mockElement.expects().val().andReturn("1h");
+    mockElement.expects().val().andReturn("1h 15min");
+    mockElement.expects().val().andReturn("1.5h");
+    mockElement.expects().val().andReturn("1.5");
+    mockElement.expects().val().andReturn("1.2h 10min");
+    mockElement.expects().val().andReturn("10min 1h");
+    mockElement.expects().val().andReturn("10x 15min");
+    
+    context.options = {required: false};
+    ok(TableEditors.ExactEstimate.prototype.isValid.call(context), "Not required and empty");
+    context.options = {required: true};
+    ok(!TableEditors.ExactEstimate.prototype.isValid.call(context), "Required and empty");
+
+    ok(TableEditors.ExactEstimate.prototype.isValid.call(context), "15min");
+    ok(TableEditors.ExactEstimate.prototype.isValid.call(context), "1h");
+    ok(TableEditors.ExactEstimate.prototype.isValid.call(context), "1h 15min");
+    ok(TableEditors.ExactEstimate.prototype.isValid.call(context), "1.5h");
+    ok(TableEditors.ExactEstimate.prototype.isValid.call(context), "1.5");
+    
+    ok(!TableEditors.ExactEstimate.prototype.isValid.call(context), "1.2h 10min");
+    ok(!TableEditors.ExactEstimate.prototype.isValid.call(context), "10mn 1h");
+    ok(!TableEditors.ExactEstimate.prototype.isValid.call(context), "10x 15min");
+
   });
 });

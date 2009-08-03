@@ -9,16 +9,16 @@ var StoryController = function(model, view, backlogController) {
 StoryController.columnIndexes = {
   priority : 0,
   name : 1,
-  state : 2,
-  responsibles : 3,
-  tasks : 4,
-  points : 5,
+  points: 2,
+  state : 3,
+  responsibles : 4,
   el : 6,
   oe : 7,
   es : 8,
   actions : 9,
   description : 10,
-  tasksData : 11
+  buttons : 11,
+  tasksData : 12
 };
 
 StoryController.prototype = new CommonController();
@@ -37,6 +37,7 @@ StoryController.prototype.removeStory = function() {
 StoryController.prototype.editStory = function() {
   this.model.setInTransaction(true);
   this.view.getCell(StoryController.columnIndexes.description).show();
+  this.view.getCell(StoryController.columnIndexes.buttons).show();
   this.view.editRow();
 };
 
@@ -49,6 +50,15 @@ StoryController.prototype.saveStory = function() {
     this.view.remove();
   }
   this.view.getCell(StoryController.columnIndexes.description).hide();
+  this.view.getCell(StoryController.columnIndexes.buttons).hide();
+};
+
+StoryController.prototype.cancelEdit = function() {
+  this.model.setInTransaction(false);
+  this.view.closeRowEdit();
+  this.view.getCell(StoryController.columnIndexes.description).hide();
+  this.view.getCell(StoryController.columnIndexes.buttons).hide();
+  this.model.rollback();
 };
 /**
  * 
@@ -63,21 +73,21 @@ StoryController.prototype.moveStory = function() {
 StoryController.prototype.storyContentsFactory = function(view, model) {
   this.contentsPanels = new DynamicsSplitPanel(view);
   var info = this.contentsPanels.createPanel("storyInfo", {width: "30%"});
-  var config = new DynamicTableConfiguration();
+  var config = new DynamicTableConfiguration({
+    leftWidth: '0%',
+    rightWidth: '100%'
+  });
   config.addColumnConfiguration(0, {
     get : StoryModel.prototype.getDescription,
-    cssClass : 'task-data',
-    editable : true,
-    title: 'Desc',
-    edit : {
-      editor : "Wysiwyg",
-      set : StoryModel.prototype.setDescription
-    }
+    cssClass : 'task-data'
   });
   var infoContents = new DynamicVerticalTable(this, this.model, config, info);
   var tasks = this.contentsPanels.createPanel("tasks", {width: "70%"});
+  var tabs = new DynamicsTabs(tasks);
+  var taskTab = tabs.add("Tasks");
+  var heTab = tabs.add("Spent effort");
   this.taskListView = new DynamicTable(this, this.model, this.taskListConfig,
-      tasks);
+      taskTab);
   this.taskListView.render();
   return this.contentsPanels;
 };
@@ -122,7 +132,7 @@ StoryController.prototype.hideTasks = function() {
 StoryController.prototype.taskControllerFactory = function(view, model) {
   var taskController = new TaskController(model, view, this);
   this.addChildController("task", taskController);
-  return new TaskController();
+  return taskController;
 };
 
 /**
@@ -131,10 +141,17 @@ StoryController.prototype.taskControllerFactory = function(view, model) {
 StoryController.prototype.taskToggleFactory = function(view, model) {
   var options = {
     collapse : StoryController.prototype.hideTaskColumn,
-    expand : StoryController.prototype.showTaskColumn
+    expand : StoryController.prototype.showTaskColumn,
+    expanded: true
   };
   this.toggleView = new DynamicTableToggleView(options, this, view);
   return this.toggleView;
+};
+
+StoryController.prototype.storyButtonFactory = function(view, model) {
+  return new DynamicsButtons(this,[{text: 'Cancel', callback: StoryController.prototype.cancelEdit},
+                                   {text: 'Save', callback: StoryController.prototype.saveStory}
+                                   ] ,view);
 };
 
 /**
@@ -162,25 +179,18 @@ StoryController.prototype.storyActionFactory = function(view, model) {
 StoryController.prototype.initTaskListConfiguration = function() {
   var config = new DynamicTableConfiguration( {
     rowControllerFactory : StoryController.prototype.taskControllerFactory,
-    dataSource : StoryModel.prototype.getTasks,
-    caption : "Tasks"
-  });
-
-  config.addCaptionItem( {
-    name : "createTask",
-    text : "Create task",
-    cssClass : "create",
-    callback : StoryController.prototype.createTask
+    dataSource : StoryModel.prototype.getTasks
   });
   config.addColumnConfiguration(TaskController.columnIndexes.prio, {
-    minWidth : 20,
+    minWidth : 16,
     autoScale : true,
     cssClass : 'task-row',
     title : "#",
-    headerTooltip : 'Priority'
+    headerTooltip : 'Priority',
+    subViewFactory: TaskController.prototype.toggleFactory
   });
   config.addColumnConfiguration(TaskController.columnIndexes.name, {
-    minWidth : 220,
+    minWidth : 200,
     autoScale : true,
     cssClass : 'task-row',
     title : "Name",
@@ -262,7 +272,7 @@ StoryController.prototype.initTaskListConfiguration = function() {
     });
   }
   config.addColumnConfiguration(TaskController.columnIndexes.actions, {
-    minWidth : 48,
+    minWidth : 36,
     autoScale : true,
     cssClass : 'task-row',
     title : "Actions"

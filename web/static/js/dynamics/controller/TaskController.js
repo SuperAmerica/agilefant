@@ -1,5 +1,7 @@
-var TaskController = function() {
-  
+var TaskController = function(model, view, parentController) {
+  this.model = model;
+  this.view = view;
+  this.parentController = parentController;
 };
 
 TaskController.columnIndexes = {
@@ -13,4 +15,28 @@ TaskController.columnIndexes = {
     actions: 7,
     description: 8,
     data: 9
+};
+
+TaskController.prototype = new CommonController();
+TaskController.prototype.toggleFactory = function(view, model) {
+  var options = {
+      collapse : TaskController.prototype.hideDetails,
+      expand : TaskController.prototype.showDetails,
+      expanded: false
+    };
+    this.toggleView = new DynamicTableToggleView(options, this, view);
+    return this.toggleView;
+};
+TaskController.prototype.showDetails = function() {
+  var cell = this.view.getCell(TaskController.columnIndexes.description);
+  if (cell) {
+    cell.show();
+  }
+};
+
+TaskController.prototype.hideDetails = function() {
+  var cell = this.view.getCell(TaskController.columnIndexes.description);
+  if (cell) {
+    cell.show();
+  }
 };

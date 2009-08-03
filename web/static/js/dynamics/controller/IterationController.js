@@ -57,6 +57,7 @@ IterationController.prototype.hideTasks = function() {
  */
 IterationController.prototype.createStory = function() {
   var mockModel = ModelFactory.createObject(ModelFactory.types.story);
+  mockModel.setBacklog(this.model);
   var controller = new StoryController(mockModel, null, this);
   var row = this.storyListView.createRow(controller, mockModel, "top");
   controller.view = row;
@@ -88,13 +89,14 @@ IterationController.prototype.initializeStoryConfig = function() {
     text : "Show tasks",
     connectWith : "hideTasks",
     cssClass : "hide",
+    visible: false,
     callback : IterationController.prototype.showTasks
 
   });
   config.addCaptionItem( {
     name : "hideTasks",
     text : "Hide tasks",
-    visible : false,
+    visible : true,
     connectWith : "showTasks",
     cssClass : "show",
     callback : IterationController.prototype.hideTasks
@@ -124,6 +126,20 @@ IterationController.prototype.initializeStoryConfig = function() {
       required: true
     }
   });
+  config.addColumnConfiguration(StoryController.columnIndexes.points, {
+    minWidth : 60,
+    autoScale : true,
+    cssClass : 'story-row',
+    title : "Points",
+    headerTooltip : 'Estimate in story points',
+    get : StoryModel.prototype.getStoryPoints,
+    sortCallback: DynamicsComparators.valueComparatorFactory(StoryModel.prototype.getStoryPoints),
+    editable : true,
+    edit : {
+      editor : "Estimate",
+      set : StoryModel.prototype.setStoryPoints
+    }
+  });
   config.addColumnConfiguration(StoryController.columnIndexes.state, {
     minWidth : 60,
     autoScale : true,
@@ -150,28 +166,6 @@ IterationController.prototype.initializeStoryConfig = function() {
     edit : {
       editor : "User",
       set : StoryModel.prototype.setResponsibles
-    }
-  });
-  config.addColumnConfiguration(StoryController.columnIndexes.tasks, {
-    minWidth : 60,
-    autoScale : true,
-    cssClass : 'story-row',
-    title : "Tasks",
-    headerTooltip : 'Tasks done / total',
-    get : StoryModel.prototype.getTaskMetrics
-  });
-  config.addColumnConfiguration(StoryController.columnIndexes.points, {
-    minWidth : 60,
-    autoScale : true,
-    cssClass : 'story-row',
-    title : "Points",
-    headerTooltip : 'Estimate in story points',
-    get : StoryModel.prototype.getStoryPoints,
-    sortCallback: DynamicsComparators.valueComparatorFactory(StoryModel.prototype.getStoryPoints),
-    editable : true,
-    edit : {
-      editor : "Estimate",
-      set : StoryModel.prototype.setStoryPoints
     }
   });
   config.addColumnConfiguration(StoryController.columnIndexes.el, {
@@ -211,12 +205,18 @@ IterationController.prototype.initializeStoryConfig = function() {
     fullWidth : true,
     visible : false,
     get : StoryModel.prototype.getDescription,
-    cssClass : 'story-data',
+    cssClass : 'story-row',
     editable : true,
     edit : {
       editor : "Wysiwyg",
       set : StoryModel.prototype.setDescription
     }
+  });
+  config.addColumnConfiguration(StoryController.columnIndexes.buttons, {
+    fullWidth : true,
+    visible : false,
+    cssClass : 'story-row',
+    subViewFactory : StoryController.prototype.storyButtonFactory
   });
   config.addColumnConfiguration(StoryController.columnIndexes.tasksData, {
     fullWidth : true,

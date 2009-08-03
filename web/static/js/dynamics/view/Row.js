@@ -6,6 +6,7 @@
 var DynamicTableRow = function(config) {
   this.config = config;
   this.cells = [];
+  this.cellIndex = {};
   this.initialize();
 };
 
@@ -77,17 +78,21 @@ DynamicTableRow.prototype.createCell = function(config) {
  */
 DynamicTableRow.prototype.autoCreateCells = function(disableSubViews) {
   for ( var i = 0; i < this.config.length; i++) {
+    if(!this.config[i]) {
+      continue;
+    }
     var cellConfig = this.config[i];
     if (disableSubViews) {
       cellConfig = $.extend(false, cellConfig);
       cellConfig.options.subViewFactory = null;
     }
-    this.createCell(this.config[i]);
+    var cell = this.createCell(this.config[i]);
+    this.cellIndex[i] = cell;
   }
 };
 
 DynamicTableRow.prototype.getCell = function(index) {
-  return this.cells[index];
+  return this.cellIndex[index];
 };
 /**
  * Remove row

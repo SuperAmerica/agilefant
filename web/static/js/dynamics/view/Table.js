@@ -73,6 +73,8 @@ DynamicTable.prototype.initialize = function() {
 	this.caption = null;
 	if(this.config.hasCaptionConfiguration()) {
 		this.caption = new DynamicTableCaption(this.captionElement, this.config.getCaptionConfiguration(), this.config.getCaption(), this.getController());
+	} else {
+	  this.captionElement.hide(); 
 	}
 	this._renderHeader();
 };
@@ -83,6 +85,9 @@ DynamicTable.prototype._computeColumns = function() {
 	var totalMinimumWidth = 0;
 	// calculate number of columns and minimum width of the row
 	for ( var i = 0; i < columnConfigs.length; i++) {
+	  if(!columnConfigs[i]) {
+	    continue;
+	  }
 		if (columnConfigs[i].isAutoScale() === true) {
 			numberOfColumns++;
 			totalMinimumWidth += columnConfigs[i].getMinWidth();
@@ -96,6 +101,9 @@ DynamicTable.prototype._computeColumns = function() {
 	// sum of auto scaled columns for full width columns
 	var totalWidthPercentage = 0;
 	for (i = 0; i < columnConfigs.length; i++) {
+	  if(!columnConfigs[i]) {
+      continue;
+    }
 		if (columnConfigs[i].isAutoScale() === true) {
 			var columnWidth = Math
 					.round(1000 * (columnConfigs[i].getMinWidth() / totalMinimumWidth)) / 10;
@@ -109,7 +117,9 @@ DynamicTable.prototype._computeColumns = function() {
 	totalWidthPercentage += DynamicTable.constants.borderPerColumn*(numberOfColumns - 1);
 	totalWidthPercentage = Math.round(10 * totalWidthPercentage)/10;
 	for (i = 0; i < columnConfigs.length; i++) {
-		var c = columnConfigs[i];
+   if(!columnConfigs[i]) {
+      continue;
+    }
 		if (columnConfigs[i].isFullWidth() === true) {
 			columnConfigs[i].setWidth(totalWidthPercentage + "%");
 		}
@@ -138,7 +148,7 @@ DynamicTable.prototype._renderHeader = function() {
 		.addClass(DynamicTable.cssClasses.tableRow);
 	var columnConfigs = this.config.getColumns();
 	for(var i = 0; i < columnConfigs.length; i++) {
-		if(!columnConfigs[i].isFullWidth()) {
+		if(columnConfigs[i] && !columnConfigs[i].isFullWidth()) {
 		  this._renderHeaderColumn(i);
 		}
 	}
@@ -313,6 +323,7 @@ DynamicTable.prototype._sort = function() {
 	if(this.currentSortDirection === DynamicTable.constants.desc) {
 		this.middleRows.reverse();
 	}
+	this.element.find(".tableSortListener").trigger("tableSorted");
 };
 
 /**
@@ -359,7 +370,7 @@ DynamicVerticalTable.prototype.initialize = function() {
   this.element = $("<div />").appendTo(this.container);
   var columnConfigs = this.config.getColumns();
   var titleColumnConfig = new DynamicTableColumnConfiguration({
-    width: '20%',
+    width: this.config.leftWidth,
     autoScale: true
   });
   for(var i = 0; i < columnConfigs.length; i++) {
@@ -367,7 +378,7 @@ DynamicVerticalTable.prototype.initialize = function() {
     var row = new DynamicTableRow(null);
     row.init(this.getController(), this.getModel(), this);
     row.getElement().appendTo(this.element);
-    columnConfig.options.width = '78%';
+    columnConfig.options.width = this.config.rightWidth;
     var title = row.createCell(titleColumnConfig);
     var value = row.createCell(columnConfig);
     title.setValue(columnConfig.getTitle());

@@ -267,11 +267,17 @@ TableEditors.ExactEstimate.prototype.isValid = function() {
  */
 
 TableEditors.Wysiwyg = function(row, cell, options) {
+  var me = this;
   this.actualElement = $('<textarea></textarea>').appendTo(cell.getElement());
   this.actualElement.width("98%").height("240px");
   setUpWysiwyg(this.actualElement);
   this.element = $(this.actualElement.wysiwyg("getDocument"));
   this.init(row, cell, options);
+  this.actualElement.trigger("editorOpening");
+  this.actualElement.addClass("tableSortListener");
+  this.actualElement.bind("tableSorted", function() {
+    me.actualElement.wysiwyg("getDocument");
+  });
 };
 TableEditors.Wysiwyg.prototype = new TableEditors.CommonEditor();
 

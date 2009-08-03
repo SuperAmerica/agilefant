@@ -8,8 +8,8 @@ var DynamicsTabs = function(parent) {
 DynamicsTabs.prototype = new ViewPart();
 DynamicsTabs.prototype.add = function(name) {
   var id = this.id+"_"+this.tabs.length;
-  var el = $('<div />').attr("id", id).appendTo(this.element);
-  this.tabs.push(el);
   this.element.tabs('add', '#'+id, name);
+  var el = this.element.find("#"+id);
+  this.tabs.push(el);
   return el;
 };

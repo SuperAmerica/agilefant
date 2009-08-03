@@ -65,7 +65,7 @@ StoryModel.prototype._saveData = function(id, changedData) {
   }
   else {
     url = "ajax/createStory.action";
-    data.backlogId = 557;
+    data.backlogId = this.relations.backlog.getId();
   }
   
   jQuery.ajax({

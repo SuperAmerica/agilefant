@@ -36,6 +36,7 @@ StoryController.prototype.removeStory = function() {
  */
 StoryController.prototype.editStory = function() {
   this.model.setInTransaction(true);
+  this.view.getCell(StoryController.columnIndexes.description).show();
   this.view.editRow();
 };
 
@@ -47,6 +48,7 @@ StoryController.prototype.saveStory = function() {
   if(createNewStory) {
     this.view.remove();
   }
+  this.view.getCell(StoryController.columnIndexes.description).hide();
 };
 /**
  * 
@@ -60,11 +62,20 @@ StoryController.prototype.moveStory = function() {
  */
 StoryController.prototype.storyContentsFactory = function(view, model) {
   this.contentsPanels = new DynamicsSplitPanel(view);
-  var info = this.contentsPanels.createPanel("storyInfo", {width: "40%"});
-  this.info = new DynamicsTabs(info);
-  this.info.add("info");
-  this.info.add("spent effort");
-  var tasks = this.contentsPanels.createPanel("tasks", {width: "58%"});
+  var info = this.contentsPanels.createPanel("storyInfo", {width: "30%"});
+  var config = new DynamicTableConfiguration();
+  config.addColumnConfiguration(0, {
+    get : StoryModel.prototype.getDescription,
+    cssClass : 'task-data',
+    editable : true,
+    title: 'Desc',
+    edit : {
+      editor : "Wysiwyg",
+      set : StoryModel.prototype.setDescription
+    }
+  });
+  var infoContents = new DynamicVerticalTable(this, this.model, config, info);
+  var tasks = this.contentsPanels.createPanel("tasks", {width: "70%"});
   this.taskListView = new DynamicTable(this, this.model, this.taskListConfig,
       tasks);
   this.taskListView.render();
@@ -162,7 +173,7 @@ StoryController.prototype.initTaskListConfiguration = function() {
     callback : StoryController.prototype.createTask
   });
   config.addColumnConfiguration(TaskController.columnIndexes.prio, {
-    minWidth : 30,
+    minWidth : 20,
     autoScale : true,
     cssClass : 'task-row',
     title : "#",
@@ -188,18 +199,12 @@ StoryController.prototype.initTaskListConfiguration = function() {
     title : "State",
     headerTooltip : 'Task state',
     get : TaskModel.prototype.getState,
+    decorator: DynamicsDecorators.stateColorDecorator,
     editable : true,
     edit : {
       editor : "SingleSelection",
       set : TaskModel.prototype.setState,
-      items : {
-        "NOT_STARTED" : "Not Started",
-        "STARTED" : "Started",
-        "PENDING" : "Pending",
-        "BLOCKED" : "Blocked",
-        "IMPLEMENTED" : "Implemented",
-        "DONE" : "Done"
-      }
+      items : DynamicsDecorators.stateOptions
     }
   });
   config.addColumnConfiguration(TaskController.columnIndexes.responsibles, {
@@ -221,7 +226,14 @@ StoryController.prototype.initTaskListConfiguration = function() {
     cssClass : 'task-row',
     title : "EL",
     headerTooltip : 'Effort left',
-    get : TaskModel.prototype.getEffortLeft
+    get : TaskModel.prototype.getEffortLeft,
+    decorator: DynamicsDecorators.exactEstimateDecorator,
+    editable : true,
+    edit : {
+      editor : "ExactEstimate",
+      decorator: DynamicsDecorators.exactEstimateEditDecorator,
+      set : TaskModel.prototype.setEffortLeft
+    }
   });
   config.addColumnConfiguration(TaskController.columnIndexes.oe, {
     minWidth : 30,
@@ -229,7 +241,14 @@ StoryController.prototype.initTaskListConfiguration = function() {
     cssClass : 'task-row',
     title : "OE",
     headerTooltip : 'Original estimate',
-    get : TaskModel.prototype.getOriginalEstimate
+    get : TaskModel.prototype.getOriginalEstimate,
+    decorator: DynamicsDecorators.exactEstimateDecorator,
+    editable : true,
+    edit : {
+      editor : "ExactEstimate",
+      decorator: DynamicsDecorators.exactEstimateEditDecorator,
+      set : TaskModel.prototype.setOriginalEstimate
+    }
   });
   if (Configuration.isTimesheetsEnabled()) {
     config.addColumnConfiguration(TaskController.columnIndexes.es, {
@@ -238,7 +257,8 @@ StoryController.prototype.initTaskListConfiguration = function() {
       cssClass : 'task-row',
       title : "ES",
       headerTooltip : 'Effort spent',
-      get : TaskModel.prototype.getEffortSpent
+      get : TaskModel.prototype.getEffortSpent,
+      decorator: DynamicsDecorators.exactEstimateDecorator
     });
   }
   config.addColumnConfiguration(TaskController.columnIndexes.actions, {

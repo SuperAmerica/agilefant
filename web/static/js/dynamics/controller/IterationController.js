@@ -220,7 +220,7 @@ IterationController.prototype.initializeStoryConfig = function() {
   });
   config.addColumnConfiguration(StoryController.columnIndexes.tasksData, {
     fullWidth : true,
-    visible : false,
+    visible : true,
     cssClass : 'story-data',
     subViewFactory : StoryController.prototype.storyContentsFactory
   });

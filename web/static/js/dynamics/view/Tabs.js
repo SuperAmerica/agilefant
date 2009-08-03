@@ -11,4 +11,5 @@ DynamicsTabs.prototype.add = function(name) {
   var el = $('<div />').attr("id", id).appendTo(this.element);
   this.tabs.push(el);
   this.element.tabs('add', '#'+id, name);
+  return el;
 };

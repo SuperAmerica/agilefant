@@ -13,5 +13,17 @@ var DynamicsDecorators = {
   stateColorDecorator: function(state) {
     var text = DynamicsDecorators.stateDecorator(state);
     return '<div class="taskState taskState'+state+'">'+text+'</div>';
-  }
+  },
+  exactEstimateDecorator: function(value) {
+    if(value === null || value === undefined) {
+      return "&mdash;"
+    } else if(value === 0) {
+      return "0h";
+    } else {
+      return Math.round(100*value/60)/100+"h";
+    }
+  },
+  exactEstimateEditDecorator: function(value) {
+    return Math.round(100*value/60)/100+"h";
+  },
 };

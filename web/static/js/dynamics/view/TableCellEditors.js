@@ -10,7 +10,7 @@ TableEditors.isDialog = function(name) {
   return jQuery.inArray(name, dialogs) !== -1;
 };
 /**
- * 
+ * @
  * @constructor
  */
 TableEditors.CommonEditor = function() {
@@ -107,6 +107,9 @@ TableEditors.CommonEditor.prototype._handleKeyEvent = function(event) {
 TableEditors.CommonEditor.prototype.setEditorValue = function(value) {
   if(!value) {
     value = this.options.get.call(this.model);
+  }
+  if(this.options.decorator) {
+    value = this.options.decorator(value);
   }
   this.element.val(value);
 };

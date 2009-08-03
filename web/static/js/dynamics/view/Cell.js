@@ -87,6 +87,8 @@ DynamicTableCell.prototype.render = function() {
 	var value = "";
 	if (getter) {
 		value = getter.call(model);
+	} else {
+	  return;
 	}
 	if (decorator) {
 		value = decorator(value);

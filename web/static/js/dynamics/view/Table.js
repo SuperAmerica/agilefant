@@ -348,6 +348,8 @@ DynamicTable.prototype.onDelete = function(event) {
 
 var DynamicVerticalTable = function(controller, model, config, parentView) {
   this.init(controller, model, parentView);
+  this.config = config;
+  this.rows = [];
   this.initialize();
 };
 DynamicVerticalTable.prototype = new DynamicView();
@@ -356,14 +358,32 @@ DynamicVerticalTable.prototype.initialize = function() {
   this.container = $("<div />").appendTo(this.getParentElement()).addClass(DynamicTable.cssClasses.table);
   this.element = $("<div />").appendTo(this.container);
   var columnConfigs = this.config.getColumns();
+  var titleColumnConfig = new DynamicTableColumnConfiguration({
+    width: '20%',
+    autoScale: true
+  });
   for(var i = 0; i < columnConfigs.length; i++) {
-    var columnConfig  =columnConfigs[i];
+    var columnConfig = columnConfigs[i];
     var row = new DynamicTableRow(null);
-    var title = row.createCell(null);
-    var value = row.createCell(null);
+    row.init(this.getController(), this.getModel(), this);
+    row.getElement().appendTo(this.element);
+    columnConfig.options.width = '78%';
+    var title = row.createCell(titleColumnConfig);
+    var value = row.createCell(columnConfig);
+    title.setValue(columnConfig.getTitle());
+    this.rows.push(row);
   }
+  this.render();
 };
 
 DynamicVerticalTable.prototype.render = function() {
-  
+  for(var i = 0; i < this.rows.length; i++) {
+    this.rows[i].render();
+  }
+};
+DynamicVerticalTable.prototype.onEdit = function() {
+  this.render();
+};
+DynamicVerticalTable.prototype.onDelete = function() {
+  this.container.remove();
 };

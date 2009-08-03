@@ -69,6 +69,7 @@ DynamicTableRow.prototype.createCell = function(config) {
   var cell = new DynamicTableCell(this, config);
   cell.getElement().appendTo(this.element);
   this.cells.push(cell);
+  return cell;
 };
 
 /**

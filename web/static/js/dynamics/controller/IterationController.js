@@ -11,7 +11,7 @@ var IterationController = function(id, element, iterationInfoEl) {
   this.parentView = element;
   this.iterationInfoElement = iterationInfoEl;
   this.init();
-  this.initAssigneeConfiguration();
+  //this.initAssigneeConfiguration();
   this.initSpentEffortConfiguration();
   this.initializeStoryConfig();
   this.initIterationInfoConfig();

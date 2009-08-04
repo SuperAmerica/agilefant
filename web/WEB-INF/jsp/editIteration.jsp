@@ -17,7 +17,7 @@
 <div class="backlogInfo" id="backlogInfo">
 <ul class="backlogTabs">
   <li class=""><a href="#backlogDetails"><span><img
-    alt="Edit" src="static/img/edit.png" /> Info</span></a></li>
+    alt="Edit" src="static/img/info.png" /> Info</span></a></li>
   <li class=""><a href="#backlogAssignees"><span><img
     alt="Edit" src="static/img/team.png" /> Assignees</span></a></li>
   <li class=""><a href="#backlogSpentEffort"><span><img

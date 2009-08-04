@@ -40,3 +40,19 @@ TaskController.prototype.hideDetails = function() {
     cell.show();
   }
 };
+
+TaskController.prototype.actionColumnFactory = function(view, model) {
+  var actionItems = [ {
+    text : "Edit",
+    callback : TaskController.prototype.editStory
+  }, {
+    text : "Move",
+    callback : TaskController.prototype.moveStory
+  }, {
+    text : "Delete",
+    callback : TaskController.prototype.removeStory
+  } ];
+  var actionView = new DynamicTableRowActions(actionItems, this, this.model,
+      view);
+  return actionView;
+};

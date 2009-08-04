@@ -24,7 +24,7 @@ DynamicTableCell.prototype.initialize = function() {
 		this.element.css("width", this.config.getWidth());
 	}
 	if (this.config.getMinWidth()) {
-		this.element.attr("min-width", this.config.getMinWidth());
+		this.element.attr("min-width", this.config.getMinWidth() + "px");
 	}
 	if (this.config.isFullWidth()) {
 		this.element.css("clear", "left");

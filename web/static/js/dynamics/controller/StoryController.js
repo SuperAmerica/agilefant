@@ -86,6 +86,7 @@ StoryController.prototype.storyContentsFactory = function(view, model) {
   var tabs = new DynamicsTabs(tasks);
   var taskTab = tabs.add("Tasks");
   var heTab = tabs.add("Spent effort");
+  tabs.add("Create task", {float: 'right'});
   this.taskListView = new DynamicTable(this, this.model, this.taskListConfig,
       taskTab);
   this.taskListView.render();
@@ -182,7 +183,7 @@ StoryController.prototype.initTaskListConfiguration = function() {
     dataSource : StoryModel.prototype.getTasks
   });
   config.addColumnConfiguration(TaskController.columnIndexes.prio, {
-    minWidth : 16,
+    minWidth : 24,
     autoScale : true,
     cssClass : 'task-row',
     title : "#",
@@ -272,10 +273,11 @@ StoryController.prototype.initTaskListConfiguration = function() {
     });
   }
   config.addColumnConfiguration(TaskController.columnIndexes.actions, {
-    minWidth : 36,
+    minWidth : 35,
     autoScale : true,
     cssClass : 'task-row',
-    title : "Actions"
+    title : "Edit",
+    subViewFactory: TaskController.prototype.actionColumnFactory
   });
   config.addColumnConfiguration(TaskController.columnIndexes.description, {
     fullWidth : true,

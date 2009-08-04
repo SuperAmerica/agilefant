@@ -25,7 +25,7 @@ $(document).ready(function() {
 		var testable = new DynamicTableCell(this.mockRow, this.cellConfig);
 
 		same(testable.getElement().css("width"), "10%", "Width correct");
-		same(testable.getElement().attr("min-width"), "150", "Min-width correct");
+		same(testable.getElement().attr("min-width"), "150px", "Min-width correct");
 		same(testable.getElement().css("clear"), "none", "Clear correct");
 		ok(testable.getElement().hasClass("testClass"), "Css class correct");
 	});

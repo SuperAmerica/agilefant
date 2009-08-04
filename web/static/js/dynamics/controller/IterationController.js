@@ -195,10 +195,10 @@ IterationController.prototype.initializeStoryConfig = function() {
     });
   }
   config.addColumnConfiguration(StoryController.columnIndexes.actions, {
-    minWidth : 48,
+    minWidth : 26,
     autoScale : true,
     cssClass : 'story-row',
-    title : "Actions",
+    title : "Edit",
     subViewFactory : StoryController.prototype.storyActionFactory
   });
   config.addColumnConfiguration(StoryController.columnIndexes.description, {

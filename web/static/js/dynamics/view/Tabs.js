@@ -6,9 +6,13 @@ var DynamicsTabs = function(parent) {
   this.element.tabs();
 };
 DynamicsTabs.prototype = new ViewPart();
-DynamicsTabs.prototype.add = function(name) {
+DynamicsTabs.prototype.add = function(name, cssOpt) {
   var id = this.id+"_"+this.tabs.length;
   this.element.tabs('add', '#'+id, name);
+  var tabNum = this.tabs.length;
+  var newTab = this.element.find("ul li:eq("+tabNum+")");
+  
+  newTab.css(cssOpt);
   var el = this.element.find("#"+id);
   this.tabs.push(el);
   return el;

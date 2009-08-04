@@ -15,27 +15,34 @@
 
 <h2><c:out value="${iteration.name}" /></h2>
 <div class="backlogInfo" id="backlogInfo">
-  <ul class="backlogTabs">
-    <li class="">
-      <a href="#backlogDetails"><span><img alt="Edit" src="static/img/edit.png"/> Info</span></a>
-    </li>
-    <li class="">
-      <a href="#backlogAssignees"><span><img alt="Edit" src="static/img/team.png"/> Assignees</span></a>
-    </li>  
-    <li class="">
-      <a href="#backlogSpentEffort"><span><img alt="Edit" src="static/img/timesheets.png"/> Spent effort</span></a>
-    </li>  
-  </ul>
-  <div class="details" id="backlogDetails">
-    aaaaa
-  </div>
-  <div class="details" id="backlogAssignees">
-    bbbbb
-  </div>
-  <div class="details" id="backlogSpentEffort">
-    ccccc
-  </div>
+<ul class="backlogTabs">
+  <li class=""><a href="#backlogDetails"><span><img
+    alt="Edit" src="static/img/edit.png" /> Info</span></a></li>
+  <li class=""><a href="#backlogAssignees"><span><img
+    alt="Edit" src="static/img/team.png" /> Assignees</span></a></li>
+  <li class=""><a href="#backlogSpentEffort"><span><img
+    alt="Edit" src="static/img/timesheets.png" /> Spent effort</span></a></li>
+</ul>
+<div class="details" id="backlogDetails" style="overflow: auto;">
+<div id="detailContainer" style="width: 70%; float: left; "></div>
+<div style="width: 30%; float: right">
+<div class="smallBurndown"><a href="#bigChart"><img
+  id="smallChart"
+  src="drawSmallIterationBurndown.action?backlogId=${iteration.id}" /></a></div>
+<div id="iterationMetrics"><%@ include
+  file="./inc/iterationMetrics.jsp"%></div>
 </div>
+</div>
+<div class="details" id="backlogAssignees">bbbbb</div>
+<div class="details" id="backlogSpentEffort">ccccc</div>
+</div>
+
+<script type="text/javascript">
+$(document).ready(function() {
+  $("#backlogInfo").tabs();
+  var controller = new IterationController(${iteration.id}, $('#stories'), $('#detailContainer'));
+});
+</script>
 
 
 <script type="text/javascript" src="static/js/dynamics/view/ViewPart.js"></script>
@@ -83,12 +90,7 @@
 
 
 <form onsubmit="return false;"><div id="stories" style="min-width: 800px; width: 98%;">&nbsp;</div></form>
-<script type="text/javascript">
-$(document).ready(function() {
-  $("#backlogInfo").tabs();
-  new IterationController(${iteration.id}, $('#stories'));
-});
-</script>
+
 
 
 <p><img src="drawIterationBurndown.action?backlogId=${iteration.id}"

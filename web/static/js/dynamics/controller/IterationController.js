@@ -6,14 +6,19 @@
  * @param {Integer} id Iteration id.
  * @param {DOMElement} element DOM parent node for the story table. 
  */
-var IterationController = function(id, element) {
+var IterationController = function(id, element, iterationInfoEl) {
   this.id = id;
   this.parentView = element;
+  this.iterationInfoElement = iterationInfoEl;
   this.init();
-  this.initializeStoryList();
+  this.paint();
 };
 IterationController.prototype = new BacklogController();
 
+IterationController.prototype.paintIterationInfo = function() {
+  this.initIterationInfoConfig();
+  this.iterationInfoView = new DynamicVerticalTable(this, this.model, this.iterationDetailConfig, this.iterationInfoElement);
+}
 /**
  * Creates a new story controller.
  */
@@ -26,12 +31,13 @@ IterationController.prototype.storyControllerFactory = function(view, model) {
 /**
  * Initialize and render the story list.
  */
-IterationController.prototype.initializeStoryList = function() {
+IterationController.prototype.paint = function() {
   this.initializeStoryConfig();
   var me = this;
   ModelFactory.initializeFor(ModelFactory.initializeForTypes.iteration,
       this.id, function(model) {
         me.model = model;
+        me.paintIterationInfo();
         me.storyListView = new DynamicTable(me, me.model, me.storyListConfig,
             me.parentView);
         me.storyListView.render();
@@ -225,4 +231,54 @@ IterationController.prototype.initializeStoryConfig = function() {
     subViewFactory : StoryController.prototype.storyContentsFactory
   });
   this.storyListConfig = config;
+};
+IterationController.prototype.initIterationInfoConfig = function() {
+  var config = new DynamicTableConfiguration( {
+    leftWidth: '20%',
+    rightWidth: '79%'
+  });
+  config.addColumnConfiguration(0, {
+    title : "Name",
+    get : IterationModel.prototype.getName,
+    editable : true,
+    edit : {
+      editor : "Text",
+      required: true
+    }
+  });
+  config.addColumnConfiguration(1, {
+    title : "Start Date",
+    get : IterationModel.prototype.getStartDate,
+    decorator: DynamicsDecorators.dateDecorator,
+    editable : true,
+    edit : {
+      editor : "Date",
+      decorator: DynamicsDecorators.dateDecorator,
+      required: true
+    }
+  });  
+  config.addColumnConfiguration(2, {
+    title : "End Date",
+    get : IterationModel.prototype.getEndDate,
+    decorator: DynamicsDecorators.dateDecorator,
+    editable : true,
+    edit : {
+      editor : "Date",
+      decorator: DynamicsDecorators.dateDecorator,
+      required: true
+    }
+  });
+  config.addColumnConfiguration(3, {
+    title : "Planned Size",
+    get : IterationModel.prototype.getBacklogSize
+  });
+  config.addColumnConfiguration(4, {
+    title : "Description",
+    get : IterationModel.prototype.getDescription,
+    editable : true,
+    edit : {
+      editor : "Wysiwyg",
+    }
+  });
+  this.iterationDetailConfig = config;
 };

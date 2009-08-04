@@ -1275,6 +1275,7 @@ ul#dwTabs .ui-state-active a {
 
 .backlogInfo {
 	width: 98%;
+	min-width: 800px;
 }
 .backlogInfo ul.backlogTabs {
 	height: 24px !important;	

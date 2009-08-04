@@ -13,7 +13,11 @@ var IterationModel = function() {
     task: []
   };
   this.copiedFields = {
-    "name":   "name"
+    "name":   "name",
+    "description": "description",
+    "startDate": "startDate",
+    "endDate": "endDate",
+    "backlogSize": "backlogSize"
   };
 };
 
@@ -59,4 +63,20 @@ IterationModel.prototype.getStories = function() {
 
 IterationModel.prototype.getTasks = function() {
   return this.relations.task;
+};
+
+IterationModel.prototype.getName = function() {
+  return this.currentData.name;
+};
+IterationModel.prototype.getDescription = function() {
+  return this.currentData.description;
+};
+IterationModel.prototype.getStartDate = function() {
+  return this.currentData.startDate;
+};
+IterationModel.prototype.getEndDate = function() {
+  return this.currentData.endDate;
+};
+IterationModel.prototype.getBacklogSize = function() {
+  return this.currentData.backlogSize;
 };

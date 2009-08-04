@@ -388,7 +388,7 @@ DynamicVerticalTable.prototype.initialize = function() {
   this.element = $("<div />").appendTo(this.container);
   var columnConfigs = this.config.getColumns();
   var titleColumnConfig = new DynamicTableColumnConfiguration( {
-    width : this.config.leftWidth,
+    width : this.config.options.leftWidth,
     autoScale : true
   });
   for ( var i = 0; i < columnConfigs.length; i++) {
@@ -396,7 +396,7 @@ DynamicVerticalTable.prototype.initialize = function() {
     var row = new DynamicTableRow(null);
     row.init(this.getController(), this.getModel(), this);
     row.getElement().appendTo(this.element);
-    columnConfig.options.width = this.config.rightWidth;
+    columnConfig.options.width = this.config.options.rightWidth;
     var title = row.createCell(titleColumnConfig);
     var value = row.createCell(columnConfig);
     title.setValue(columnConfig.getTitle());

@@ -1,7 +1,5 @@
 <%@ include file="../inc/_taglibs.jsp"%>
 
-<aef:hourReporting id="hourReport" />
-<aef:currentUser />
 <aef:userList />
 <aef:teamList />
 <aef:productList />

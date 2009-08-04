@@ -1,6 +1,5 @@
 <%@ include file="../inc/_taglibs.jsp"%>
 
-<aef:currentUser />
 <aef:enabledUserList/>
 
 <aef:userEffortSum user="${currentUser}" timeInterval="Today" id="todayEffortSum" />

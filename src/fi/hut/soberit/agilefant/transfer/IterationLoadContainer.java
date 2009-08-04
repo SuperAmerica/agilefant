@@ -7,6 +7,7 @@ public class IterationLoadContainer {
     private long totalAssignedLoad = 0L;
     private long totalUnassignedLoad = 0L;
     private long totalBaselineLoad = 0L;
+    private long totalFutureLoad = 0L;
     
     
     public Iteration getIteration() {
@@ -32,6 +33,12 @@ public class IterationLoadContainer {
     }
     public void setTotalBaselineLoad(long totalBaselineLoad) {
         this.totalBaselineLoad = totalBaselineLoad;
+    }
+    public long getTotalFutureLoad() {
+        return totalFutureLoad;
+    }
+    public void setTotalFutureLoad(long totalFutureLoad) {
+        this.totalFutureLoad = totalFutureLoad;
     }
 
 }

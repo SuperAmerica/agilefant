@@ -69,7 +69,6 @@ Agilefant
 </h1>
 </div>
 <div id="logout">
-	<aef:currentUser />
 	<table border="0">
 		<tr>
 			<td>
@@ -317,8 +316,7 @@ Agilefant
 
 
 <%-- Timesheet --%>
-<aef:hourReporting id="hourReport" />
-<c:if test="${hourReport}">
+<c:if test="${settings.hourReportingEnabled}">
 <c:choose>
     <c:when test="${navi == 'timesheet'}">
         <li class="selected">

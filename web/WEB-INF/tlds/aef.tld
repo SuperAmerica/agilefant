@@ -80,15 +80,6 @@
 	</tag>
 	
 	<tag>
-		<name>currentUser</name>
-		<tag-class>fi.hut.soberit.agilefant.web.tag.CurrentUserTag</tag-class>
-		<body-content>JSP</body-content>
-		<description>
-			Stores currently logged in user to variable currentUser
-	    </description>
-	</tag>
-	
-	<tag>
 		<name>projectTypeList</name>
 		<tag-class>fi.hut.soberit.agilefant.web.tag.ProjectTypeListTag</tag-class>
 		<body-content>JSP</body-content>
@@ -196,19 +187,6 @@
 		<body-content>JSP</body-content>
 		<description>
 			Stores available projects
-	    </description>
-	    <attribute>
-	    	<name>id</name>
-	    	<required>true</required>	    
-	    </attribute>
-	</tag>
-	
-	<tag>
-		<name>hourReporting</name>
-		<tag-class>fi.hut.soberit.agilefant.web.tag.HourReportingTag</tag-class>
-		<body-content>JSP</body-content>
-		<description>
-			Get hour reporting setting
 	    </description>
 	    <attribute>
 	    	<name>id</name>

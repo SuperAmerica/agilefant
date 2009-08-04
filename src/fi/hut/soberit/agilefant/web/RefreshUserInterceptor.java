@@ -65,7 +65,9 @@ public class RefreshUserInterceptor implements Interceptor {
         // before the request:
         // set this user as the logged user
         SecurityUtil.setLoggedUser(user);
-
+        
+        //push current user to the value stack
+        invocation.getStack().set("currentUser", user);
         // perform request
         String result = invocation.invoke();
 

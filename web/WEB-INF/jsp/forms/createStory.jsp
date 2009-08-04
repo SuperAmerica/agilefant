@@ -2,7 +2,6 @@
 
 <aef:userList />
 <aef:teamList />
-<aef:currentUser />
 <aef:productList />
 
 <script type="text/javascript">

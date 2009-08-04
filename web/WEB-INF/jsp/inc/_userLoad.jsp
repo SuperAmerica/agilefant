@@ -1,5 +1,4 @@
 <%@ include file="./_taglibs.jsp"%>
-<aef:hourReporting id="hourReport"></aef:hourReporting>
 
 <script type="text/javascript">
 $(document).ready(function() {
@@ -53,7 +52,7 @@ $(document).ready(function() {
 	<ul id="dwTabs" style="display: none; height: 1px; width: 785px;">
 		<li><a href="#smallLoadTable"><span>Load</span></a></li>
 		<li><a href="#detailedLoadTable"><span>Detailed</span></a></li>
-		<c:if test="${hourReport}">
+		<c:if test="${settings.hourReportingEnabled}">
 			<li><a href="#Spent_Effort" title="Spent Effort"><span>Spent
 			effort</span></a></li>
 		</c:if>

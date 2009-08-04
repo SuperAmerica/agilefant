@@ -8,7 +8,7 @@
 @import "jquery.wysiwyg.css";
 
 @import "dynamictable.css";
-
+	
 @import "autocomplete.css";
 
 html {
@@ -1273,3 +1273,14 @@ ul#dwTabs .ui-state-active a {
 }
 	
 
+.backlogInfo {
+	width: 98%;
+}
+.backlogInfo ul.backlogTabs {
+	height: 24px !important;	
+}
+.backlogInfo div.details {
+	border: 1px solid black;
+	width: 100%;
+	min-height: 200px;
+}

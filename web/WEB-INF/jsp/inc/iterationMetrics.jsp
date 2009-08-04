@@ -1,5 +1,4 @@
 <%@ include file="./_taglibs.jsp"%>
-<aef:hourReporting id="hourReporting" />
 <table>
 	<tr>
 		<th>Effort left</th>
@@ -13,7 +12,7 @@
     <th>Story points</th>
     <td><c:out value="${iterationMetrics.storyPoints}" /></td>
   </tr>
-	<c:if test="${hourReporting}">
+	<c:if test="${settings.hourReportingEnabled}">
 		<tr>
 			<th>Spent effort</th>
 			<td><c:out value="${aef:minutesToString(iterationMetrics.spentEffort.minorUnits)}" /></td>

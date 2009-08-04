@@ -1,7 +1,5 @@
 <%@ include file="./_taglibs.jsp"%>
 
-<aef:hourReporting id="hourReport" />
-
 <!-- context variable for story ajax to know its context -->
 <c:set var="storyListContext" value="backlogList" scope="session" />
 

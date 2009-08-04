@@ -8,7 +8,6 @@
 <aef:menu navi="dailyWork" title="Daily Work"/> 
 	<ww:actionerror/>
 	<ww:actionmessage/>
-<aef:hourReporting id="hourReport" />
 
 <c:set var="currentAction" value="dailyWork" scope="session" />
 <c:set var="dailyWorkUserId" value="${userId}" scope="session" />

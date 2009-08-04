@@ -10,9 +10,8 @@
 <aef:menu navi="backlog" title="${project.name}" menuContextId="${project.id}"/>
 <ww:actionerror />
 <ww:actionmessage />
-<aef:hourReporting id="hourReport" />
 <script type="text/javascript">
-var agilefantTimesheetsEnabled = ${hourReport};
+var agilefantTimesheetsEnabled = ${settings.hourReportingEnabled};
 </script>
 
 <script type="text/javascript">
@@ -91,7 +90,7 @@ $(document).ready(function() {
 												<table cellpadding="0" cellspacing="0">
 												<tr>
 												
-                                                <c:if test="${hourReport}">
+                                                <c:if test="${settings.hourReportingEnabled}">
                                                 <td>
                                                         <ww:url id="createLink" action="ajaxCreateHourEntry" includeParams="none">
                                                             <ww:param name="backlogId" value="#attr.project.id" />
@@ -623,7 +622,7 @@ $(document).ready(function() {
 
 <%-- Hour reporting here - Remember to expel David H. --%>
 
-<c:if test="${hourReport == 'true' && project.id != 0}" >
+<c:if test="${settings.hourReportingEnabled && project.id != 0}" >
 	<c:set var="myAction" value="editProject" scope="session" />
 	<%@ include file="./inc/_hourEntryList.jsp"%>
 </c:if> 

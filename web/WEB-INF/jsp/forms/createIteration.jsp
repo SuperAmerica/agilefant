@@ -56,16 +56,16 @@
 			<td>Start date</td>
 			<td>*</td>
 			<td colspan="2"><aef:datepicker
-				id="create_iteration_start_date" name="startDate"
+				id="create_iteration_start_date" name="iteration.startDate"
 				format="%{getText('struts.shortDateTime.format')}"
-				value="${start}" /></td>
+				value="${iteration.startDate}" /></td>
 		</tr>
 		<tr>
 			<td>End date</td>
 			<td>*</td>
 			<td colspan="2"><aef:datepicker
-				id="create_iteration_end_date" name="endDate"
-				format="%{getText('struts.shortDateTime.format')}" value="${end}" />
+				id="create_iteration_end_date" name="iteration.endDate"
+				format="%{getText('struts.shortDateTime.format')}" value="${iteration.endDate}" />
 
 			</td>
 		</tr>

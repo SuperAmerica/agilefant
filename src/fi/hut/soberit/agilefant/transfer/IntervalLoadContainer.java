@@ -13,6 +13,7 @@ public class IntervalLoadContainer {
     private long baselineLoad = 0L;
     private long unassignedLoad = 0L;
     private long workHours = 0L;
+    private long futureLoad = 0L;
 
     public long getAssignedLoad() {
         return assignedLoad;
@@ -21,7 +22,7 @@ public class IntervalLoadContainer {
         this.assignedLoad = assignedLoad;
     }
     public long getTotalLoad() {
-        return assignedLoad + baselineLoad + unassignedLoad;
+        return assignedLoad + baselineLoad + unassignedLoad + futureLoad;
     }
     public long getWorkHours() {
         return workHours;
@@ -54,5 +55,11 @@ public class IntervalLoadContainer {
     }
     public Date getEnd() {
         return this.interval.getEnd().toDate();
+    }
+    public long getFutureLoad() {
+        return futureLoad;
+    }
+    public void setFutureLoad(long futureLoad) {
+        this.futureLoad = futureLoad;
     }
 }

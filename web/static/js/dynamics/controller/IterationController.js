@@ -11,14 +11,17 @@ var IterationController = function(id, element, iterationInfoEl) {
   this.parentView = element;
   this.iterationInfoElement = iterationInfoEl;
   this.init();
+  this.initAssigneeConfiguration();
+  this.initSpentEffortConfiguration();
+  this.initializeStoryConfig();
+  this.initIterationInfoConfig();
   this.paint();
 };
 IterationController.prototype = new BacklogController();
 
 IterationController.prototype.paintIterationInfo = function() {
-  this.initIterationInfoConfig();
   this.iterationInfoView = new DynamicVerticalTable(this, this.model, this.iterationDetailConfig, this.iterationInfoElement);
-}
+};
 /**
  * Creates a new story controller.
  */
@@ -28,19 +31,23 @@ IterationController.prototype.storyControllerFactory = function(view, model) {
   return storyController;
 };
 
+IterationController.prototype.paintStoryList = function() {
+  this.storyListView = new DynamicTable(this, this.model, this.storyListConfig,
+      this.parentView);
+  this.storyListView.render();
+};
 /**
  * Initialize and render the story list.
  */
 IterationController.prototype.paint = function() {
-  this.initializeStoryConfig();
   var me = this;
   ModelFactory.initializeFor(ModelFactory.initializeForTypes.iteration,
       this.id, function(model) {
         me.model = model;
         me.paintIterationInfo();
-        me.storyListView = new DynamicTable(me, me.model, me.storyListConfig,
-            me.parentView);
-        me.storyListView.render();
+        me.paintStoryList();
+        me.paintSpentEffortList();
+        me.paintAssigneeList();
       });
 };
 
@@ -277,7 +284,7 @@ IterationController.prototype.initIterationInfoConfig = function() {
     get : IterationModel.prototype.getDescription,
     editable : true,
     edit : {
-      editor : "Wysiwyg",
+      editor : "Wysiwyg"
     }
   });
   this.iterationDetailConfig = config;

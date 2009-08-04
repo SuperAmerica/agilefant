@@ -16,7 +16,7 @@ var DynamicsDecorators = {
   },
   exactEstimateDecorator: function(value) {
     if(value === null || value === undefined) {
-      return "&mdash;"
+      return "&mdash;";
     } else if(value === 0) {
       return "0h";
     } else {

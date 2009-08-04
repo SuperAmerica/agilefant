@@ -19,11 +19,13 @@
     <interceptors>
       <interceptor name="refreshUser" class="refreshUserInterceptor" />
       <interceptor name="prefetch" class="prefetchInterceptor" />
+      <interceptor name="settings"	class="settingsInterceptor" />
       
       <interceptor-stack name="authenticationStack">
         <interceptor-ref name="exception" />
         <interceptor-ref name="completeStack" />
         <interceptor-ref name="refreshUser" />
+        <interceptor-ref name="settings" />
       </interceptor-stack>
       
       <interceptor-stack name="prefetchStack">
@@ -31,6 +33,7 @@
         <interceptor-ref name="prefetch" />
         <interceptor-ref name="completeStack" />
         <interceptor-ref name="refreshUser" />
+        <interceptor-ref name="settings" />
       </interceptor-stack>
     </interceptors>
     

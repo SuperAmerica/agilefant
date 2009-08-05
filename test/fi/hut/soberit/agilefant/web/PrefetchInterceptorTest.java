@@ -10,21 +10,47 @@ import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
+import static org.junit.Assert.*;
 
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 
+import fi.hut.soberit.agilefant.annotations.PrefetchId;
+
 public class PrefetchInterceptorTest {
 
     PrefetchInterceptor prefetchInterceptor;
     
-    Prefetching mockAction;
     ActionInvocation mockInvocation;
     ActionContext mockContext;
     
     Map<String, Object> parameters;
     int validObjectId;
+    
+    /*
+     * Need inline classes to test against annotated fields 
+     */
+    
+    @SuppressWarnings("unused")
+    private class okIdAction implements Prefetching {       
+        @PrefetchId
+        private int testId;
+        public int calledWith = 0;
+        public void initializePrefetchedData(int objectId) {
+            calledWith = objectId;
+        }
+    }
+    
+    @SuppressWarnings("unused")
+    private class invalidTypeAction implements Prefetching {
+        @PrefetchId
+        private int invalidTestId;
+        public int calledWith = 0;
+        public void initializePrefetchedData(int objectId) {
+            calledWith = objectId;
+        }
+    }
     
     @Before
     public void setUp_data() {
@@ -40,7 +66,6 @@ public class PrefetchInterceptorTest {
         prefetchInterceptor = new PrefetchInterceptor();
         
         mockInvocation = createStrictMock(ActionInvocation.class);
-        mockAction = createStrictMock(Prefetching.class);
         
         mockContext = createStrictMock(ActionContext.class);
     }
@@ -49,43 +74,43 @@ public class PrefetchInterceptorTest {
     public void notSingleFieldEditable() throws Exception {
         expect(mockInvocation.getAction()).andReturn(new Object());
         expect(mockInvocation.invoke()).andReturn(Action.SUCCESS);
-        replay(mockInvocation, mockAction, mockContext);
+        replay(mockInvocation, mockContext);
         
         prefetchInterceptor.intercept(mockInvocation);
         
-        verify(mockInvocation, mockAction, mockContext);
+        verify(mockInvocation, mockContext);
     }
     
     @Test
     public void happyCase() throws Exception {
+        okIdAction mockAction = new okIdAction();
         expect(mockInvocation.getAction()).andReturn(mockAction).times(2);
         expect(mockInvocation.getInvocationContext()).andReturn(mockContext);
         expect(mockContext.getParameters()).andReturn(parameters);
         
-        expect(mockAction.getIdFieldName()).andReturn("testId");
-        mockAction.initializePrefetchedData(validObjectId);
-        
         expect(mockInvocation.invoke()).andReturn(Action.SUCCESS);
         
-        replay(mockInvocation, mockAction, mockContext);
+        replay(mockInvocation, mockContext);
         
         prefetchInterceptor.intercept(mockInvocation);
+        assertEquals(validObjectId, mockAction.calledWith);
+
         
-        verify(mockInvocation, mockAction, mockContext);
+        verify(mockInvocation, mockContext);
     }
     
     @Test(expected = IllegalArgumentException.class)
     public void incorrectIdException() throws Exception {
+        invalidTypeAction mockAction = new invalidTypeAction();
         expect(mockInvocation.getAction()).andReturn(mockAction).times(2);
         expect(mockInvocation.getInvocationContext()).andReturn(mockContext);
         expect(mockContext.getParameters()).andReturn(parameters);
-        
-        expect(mockAction.getIdFieldName()).andReturn("invalidTestId");
-                        
-        replay(mockInvocation, mockAction, mockContext);
+                                
+        replay(mockInvocation, mockContext);
         
         prefetchInterceptor.intercept(mockInvocation);
+        assertEquals(0, mockAction.calledWith);
         
-        verify(mockInvocation, mockAction, mockContext);
+        verify(mockInvocation, mockContext);
     }
 }

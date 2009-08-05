@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionSupport;
 
+import fi.hut.soberit.agilefant.annotations.PrefetchId;
 import fi.hut.soberit.agilefant.business.StoryBusiness;
 import fi.hut.soberit.agilefant.business.TransferObjectBusiness;
 import fi.hut.soberit.agilefant.model.Backlog;
@@ -30,6 +31,7 @@ public class StoryAction extends ActionSupport implements CRUDAction, Prefetchin
 
     private int backlogId = 0;
 
+    @PrefetchId
     private Integer storyId;
 
     private StoryState state;
@@ -124,10 +126,6 @@ public class StoryAction extends ActionSupport implements CRUDAction, Prefetchin
     }
 
     // PREFETCHING
-    
-    public String getIdFieldName() {
-        return "storyId";
-    }
     
     public void initializePrefetchedData(int objectId) {
         story = storyBusiness.retrieve(objectId);

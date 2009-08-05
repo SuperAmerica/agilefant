@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionSupport;
 
+import fi.hut.soberit.agilefant.annotations.PrefetchId;
 import fi.hut.soberit.agilefant.business.TaskBusiness;
 import fi.hut.soberit.agilefant.business.TransferObjectBusiness;
 import fi.hut.soberit.agilefant.model.Task;
@@ -29,6 +30,7 @@ public class TaskAction extends ActionSupport implements Prefetching, CRUDAction
     
     // Helper fields
     private Task task;
+    @PrefetchId
     private int taskId;
     private Integer iterationId;
     private Integer storyId;
@@ -81,10 +83,6 @@ public class TaskAction extends ActionSupport implements Prefetching, CRUDAction
     }
     
     // Prefetching
-    
-    public String getIdFieldName() {
-        return "taskId";
-    }
     
     public void initializePrefetchedData(int objectId) {
         task = taskBusiness.retrieve(objectId);

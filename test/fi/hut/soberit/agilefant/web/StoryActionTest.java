@@ -10,10 +10,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
 
-import org.easymock.EasyMock;
 import org.hibernate.exception.ConstraintViolationException;
 import org.junit.Before;
 import org.junit.Test;
@@ -206,15 +203,6 @@ public class StoryActionTest {
        storyAction.delete();
        
        verifyAll();
-    }
-    
-    /*
-     * TEST PREFETCHING
-     */
-    
-    @Test
-    public void getIdFieldName() {
-        assertEquals("storyId", storyAction.getIdFieldName());
     }
     
     @Test

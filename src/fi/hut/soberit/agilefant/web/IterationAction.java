@@ -24,9 +24,9 @@ public class IterationAction implements
 
     private Iteration iteration;
 
-    private Project project;
+    private Backlog parentBacklog;
 
-    private int projectId;
+    private int parentBacklogId;
 
     private IterationMetrics iterationMetrics;
 
@@ -41,8 +41,7 @@ public class IterationAction implements
 
     public String retrieve() {
         iteration = iterationBusiness.retrieve(iterationId);
-        project = (Project) iteration.getParent();
-        projectId = project.getId();
+        parentBacklog = (Project) iteration.getParent();
         // Load metrics data
         iterationMetrics = iterationBusiness.getIterationMetrics(iteration);
         return Action.SUCCESS;
@@ -61,7 +60,8 @@ public class IterationAction implements
     }
 
     public String store() {
-        return "";
+        iteration = this.iterationBusiness.store(iterationId, parentBacklogId, iteration);
+        return Action.SUCCESS;
     }
 
     public int getIterationId() {
@@ -80,12 +80,12 @@ public class IterationAction implements
         this.iteration = iteration;
     }
 
-    public int getProjectId() {
-        return projectId;
+    public int getParentBacklogId() {
+        return parentBacklogId;
     }
 
-    public void setProjectId(int projectId) {
-        this.projectId = projectId;
+    public void setParentBacklogId(int parentBacklogId) {
+        this.parentBacklogId = parentBacklogId;
     }
 
     public void setIterationBusiness(IterationBusiness iterationBusiness) {

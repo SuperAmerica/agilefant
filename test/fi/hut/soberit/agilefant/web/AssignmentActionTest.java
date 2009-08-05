@@ -9,33 +9,31 @@ import fi.hut.soberit.agilefant.business.AssignmentBusiness;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.Assignment;
 import fi.hut.soberit.agilefant.model.ExactEstimate;
-import fi.hut.soberit.agilefant.model.User;
 
 public class AssignmentActionTest {
 
     private AssignmentAction testable;
-    private User user;
     private Assignment assignment;
     private AssignmentBusiness assignmentBusiness;
-    
+
     @Before
     public void setUp() {
         testable = new AssignmentAction();
         assignmentBusiness = createStrictMock(AssignmentBusiness.class);
         testable.setAssignmentBusiness(assignmentBusiness);
-        user = new User();
-        user.setId(1);
         assignment = new Assignment();
         assignment.setPersonalLoad(null);
-        assignment.setAvailability((short)0);
+        assignment.setAvailability((short) 0);
         testable.setAssignment(assignment);
     }
 
     @Test
     public void testModifyAssignment() {
         assignment.setPersonalLoad(new ExactEstimate(3400));
-        assignment.setAvailability((short)400);
-        assignmentBusiness.store(313, assignment.getPersonalLoad(), (short)400, 0);
+        assignment.setAvailability((short) 400);
+        expect(
+                assignmentBusiness.store(313, assignment.getPersonalLoad(),
+                        (short) 400)).andReturn(assignment);
         replay(assignmentBusiness);
         testable.setAssignmentId(313);
         testable.modify();
@@ -44,8 +42,8 @@ public class AssignmentActionTest {
 
     @Test(expected = ObjectNotFoundException.class)
     public void testModifyAssignment_nonExisting() {
-        assignmentBusiness.store(313, null, (short)0, 0);
-        expectLastCall().andThrow(new ObjectNotFoundException());
+        expect(assignmentBusiness.store(313, null, (short) 0)).andThrow(
+                new ObjectNotFoundException());
         replay(assignmentBusiness);
         testable.setAssignmentId(313);
         testable.modify();

@@ -11,9 +11,12 @@ import fi.hut.soberit.agilefant.transfer.IterationMetrics;
 public interface IterationBusiness extends GenericBusiness<Iteration> {
 
     public IterationDataContainer getIterationContents(int iterationId);
-    
+
     public IterationMetrics getIterationMetrics(Iteration iteration);
 
-    ExactEstimate calculateDailyVelocity(LocalDate startDate, IterationHistoryEntry yesterdayEntry);
-    
+    ExactEstimate calculateDailyVelocity(LocalDate startDate,
+            IterationHistoryEntry yesterdayEntry);
+
+    public Iteration store(int iterationId, int parentBacklogId,
+            Iteration iterationData);
 }

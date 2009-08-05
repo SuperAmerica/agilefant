@@ -63,6 +63,8 @@ public abstract class Backlog implements TimesheetLoggable, NamedObject {
     
     private Collection<Story> stories = new ArrayList<Story>();
     
+    private Collection<BacklogHourEntry> hourEntries = new ArrayList<BacklogHourEntry>();
+    
     /**
      * Get the id of this object.
      * <p>
@@ -148,5 +150,14 @@ public abstract class Backlog implements TimesheetLoggable, NamedObject {
     
     public void setStories(Collection<Story> stories) {
         this.stories = stories;
+    }
+
+    @OneToMany(mappedBy="backlog")
+    public Collection<BacklogHourEntry> getHourEntries() {
+        return hourEntries;
+    }
+
+    public void setHourEntries(Collection<BacklogHourEntry> hourEntries) {
+        this.hourEntries = hourEntries;
     }
 }

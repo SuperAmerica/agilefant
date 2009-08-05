@@ -184,7 +184,7 @@
     <action name="iterationData" class="iterationAction" method="retrieve">
       <result name="success" type="json">
         <param name="target">iteration</param>
-        <param name="patterns">+stories, +stories.tasks</param>
+        <param name="patterns">+stories, +stories.tasks, +assignments, +hourEntries</param>
       </result>
     </action>
     
@@ -331,7 +331,18 @@
     </action>
     <!-- /Team actions -->
     
+    <!-- Assigment actions -->
     
+    <action name="modifyAssigment" method="modify" class="assignmentAction">
+    	<result name="success" type="json">
+    		<param name="target">assignment</param>
+    	</result>
+    </action>
+    
+    <action name="deleteAssignment" method="delete" class="assignmentAction">
+    </action>
+    
+    <!-- /Assigment actions -->
     
     <!-- User load actions -->
     <action name="defaultUserLoad" method="retrieveUserLoad" class="userLoadAction">

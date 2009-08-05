@@ -22,6 +22,9 @@
 				<interceptor-ref name="refreshUser" />
 				<interceptor-ref name="contextView" />
 				<interceptor-ref name="settings" />
+				<interceptor-ref name="validation">
+          <param name="validateAnnotatedMethodOnly">true</param>
+      </interceptor-ref>
 			</interceptor-stack>
 			<interceptor-stack name="noAuthenticationStack">
 				<interceptor-ref name="exception" />

@@ -26,6 +26,10 @@
         <interceptor-ref name="completeStack" />
         <interceptor-ref name="refreshUser" />
         <interceptor-ref name="settings" />
+       <interceptor-ref name="validation">
+          <param name="validateAnnotatedMethodOnly">true</param>
+      </interceptor-ref>
+        
       </interceptor-stack>
       
       <interceptor-stack name="prefetchStack">
@@ -34,6 +38,9 @@
         <interceptor-ref name="completeStack" />
         <interceptor-ref name="refreshUser" />
         <interceptor-ref name="settings" />
+        <interceptor-ref name="validation">
+          <param name="validateAnnotatedMethodOnly">true</param>
+      </interceptor-ref>
       </interceptor-stack>
     </interceptors>
     

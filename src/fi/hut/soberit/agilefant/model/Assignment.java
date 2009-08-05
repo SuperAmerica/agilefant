@@ -72,7 +72,6 @@ public class Assignment implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @JSON(include = false)
     public int getId() {
         return id;
     }

@@ -10,7 +10,10 @@ ModelFactory = function() {
     backlog: {},
     
     story: {},
-    task: {}
+    task: {},
+    
+    assignment: {},
+    hourEntry: {}
   };
 };
 
@@ -35,7 +38,15 @@ ModelFactory.classNameToType = {
   "fi.hut.soberit.agilefant.model.Task":      "task",
   "fi.hut.soberit.agilefant.model.TaskTO":    "task",
     
-  "fi.hut.soberit.agilefant.model.User":    "user"
+  "fi.hut.soberit.agilefant.model.User":    "user",
+    
+  "fi.hut.soberit.agilefant.model.Assignment": "assignment",
+  
+  "fi.hut.soberit.agilefant.model.HourEntry": "hourEntry",
+  "fi.hut.soberit.agilefant.model.BackogHourEntry": "hourEntry",
+  "fi.hut.soberit.agilefant.model.StoryHourEntry": "hourEntry",
+  "fi.hut.soberit.agilefant.model.TaskHourEntry": "hourEntry"
+    
 };
 
 /**
@@ -58,7 +69,11 @@ ModelFactory.types = {
     task:       "task",
     
     /** @member ModelFactory */
-    user:       "user"
+    user:       "user",
+    
+    hourEntry: "hourEntry",
+    
+    assignment: "assignment"
 };
 
 /**
@@ -237,6 +252,12 @@ ModelFactory.prototype._createObject = function(type) {
     break;
   case ModelFactory.types.iteration:
     returnedModel = new IterationModel();
+    break;
+  case ModelFactory.types.assignment:
+    returnedModel = new AssignmentModel();
+    break;
+  case ModelFactory.types.hourEntry:
+    returnedModel = new HourEntryModel();
     break;
   }
   

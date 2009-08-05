@@ -10,7 +10,9 @@ var IterationModel = function() {
   this.persistedClassName = "fi.hut.soberit.agilefant.model.Iteration";
   this.relations = {
     story: [],
-    task: []
+    task: [],
+    assignment: [],
+    hourEntry: []
   };
   this.copiedFields = {
     "name":   "name",
@@ -41,6 +43,15 @@ IterationModel.prototype._setData = function(newData) {
   if (newData.stories) {
     this._updateRelations(ModelFactory.types.story, newData.stories);
   }
+  //assignments
+  if(newData.assignments) {
+    this._updateRelations(ModelFactory.types.assignment, newData.assignments);
+  }
+  //hour entries
+  if(newData.hourEntries) {
+    this._updateRelations(ModelFactory.types.hourEntry, newData.hourEntries);
+  }
+  
 };
 
 IterationModel.prototype._populateStories = function(stories) {

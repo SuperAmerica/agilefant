@@ -27,13 +27,13 @@
 		<tr>
 			<td>Project</td>
 			<td>*</td>
-			<td colspan="2"><select name="projectId">
+			<td colspan="2"><select name="parentBacklogId">
 				<option class="inactive" value="">(select project)</option>
 				<c:forEach items="${productList}" var="product">
 					<option value="" class="inactive productOption">${aef:out(product.name)}</option>
 					<c:forEach items="${product.children}" var="project">
 						<c:choose>
-							<c:when test="${project.id == projectId}">
+							<c:when test="${project.id == parentBacklogId}">
 								<option selected="selected" value="${project.id}"
 									class="projectOption" title="${project.name}">${aef:out(project.name)}</option>
 							</c:when>

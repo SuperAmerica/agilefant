@@ -6,12 +6,13 @@
  * @param {Integer} id Iteration id.
  * @param {DOMElement} element DOM parent node for the story table. 
  */
-var IterationController = function(id, element, iterationInfoEl) {
-  this.id = id;
-  this.parentView = element;
-  this.iterationInfoElement = iterationInfoEl;
+var IterationController = function(options) {
+  this.id = options.id;
+  this.parentView = options.storyListElement;
+  this.iterationInfoElement = options.backlogDetailElement;
+  this.assigmentListElement = options.assigmentListElement;
   this.init();
-  //this.initAssigneeConfiguration();
+  this.initAssigneeConfiguration();
   this.initSpentEffortConfiguration();
   this.initializeStoryConfig();
   this.initIterationInfoConfig();

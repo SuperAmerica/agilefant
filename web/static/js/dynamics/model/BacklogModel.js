@@ -15,3 +15,9 @@ BacklogModel.prototype = new CommonModel();
 BacklogModel.prototype.initializeBacklogModel = function() {
   this.initialize();  
 };
+BacklogModel.prototype.getAssignments = function() {
+  return this.relations.assignment;
+};
+BacklogModel.prototype.getHourEntries = function() {
+  return this.relations.hourEntry;
+};

@@ -40,7 +40,16 @@
 <script type="text/javascript">
 $(document).ready(function() {
   $("#backlogInfo").tabs();
-  var controller = new IterationController(${iteration.id}, $('#stories'), $('#detailContainer'));
+  var controller = new IterationController({
+      id: ${iteration.id}, 
+      storyListElement: $('#stories'), 
+      backlogDetailElement: $('#detailContainer'),
+      smallBurndownElement: null,
+      burndownElement: null,
+      assigmentListElement: $("#backlogAssignees"),
+      hourEntryListElement: null,
+      taskListElement: null
+  });
 });
 </script>
 
@@ -69,6 +78,8 @@ $(document).ready(function() {
 <script type="text/javascript" src="static/js/dynamics/model/UserModel.js"></script>
 <script type="text/javascript" src="static/js/dynamics/model/ModelFactory.js"></script>
 <script type="text/javascript" src="static/js/dynamics/model/comparators.js"></script>
+<script type="text/javascript" src="static/js/dynamics/model/AssignmentModel.js"></script>
+<script type="text/javascript" src="static/js/dynamics/model/HourEntryModel.js"></script>
 
 <script type="text/javascript" src="static/js/dynamics/controller/CommonController.js"></script>
 <script type="text/javascript" src="static/js/dynamics/controller/BacklogController.js"></script>
